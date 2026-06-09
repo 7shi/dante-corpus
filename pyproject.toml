@@ -1,0 +1,15 @@
+[project]
+name = "dante-corpus"
+version = "0.1.0"
+description = "Queryable corpus package for Dante's Divine Comedy"
+readme = "README.md"
+license = { text = "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication" }
+requires-python = ">=3.10"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+dante-corpus = "dante_corpus.cli:main"
