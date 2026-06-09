@@ -19,6 +19,8 @@ This project uses the following Italian text source:
 
 ## Usage
 
+See [`dante_corpus/README.md`](dante_corpus/README.md) for the full CLI and API reference.
+
 ```bash
 uv run dante-corpus list canticles
 uv run dante-corpus list cantos inferno
@@ -26,28 +28,6 @@ uv run dante-corpus text lines inferno 1:1-3
 uv run dante-corpus text tokens inferno 1
 uv run dante-corpus quote show inferno 1 --format xml
 uv run dante-corpus canto show inferno 1 --format json
-```
-
-## CLI / library mapping
-
-| CLI | Library |
-|---|---|
-| `dante-corpus list canticles` | `dante_corpus.canticles()` |
-| `dante-corpus list cantos inferno` | `dante_corpus.cantos("inferno")` |
-| `dante-corpus text lines inferno 1:1-3` | `dante_corpus.ref("inferno 1:1-3")` → each `Line.text` |
-| `dante-corpus text tokens inferno 1:1-3` | `dante_corpus.ref("inferno 1:1-3")` → each `Line.tokens` |
-| `dante-corpus quote show inferno 1 --format json` | `dante_corpus.canto("inferno", 1).quotes()` |
-| `dante-corpus quote show inferno 1 --format xml` | `dante_corpus.api.quote_xml("inferno", 1)` |
-| `dante-corpus canto show inferno 1 --format json` | `dante_corpus.canto("inferno", 1)` |
-
-Example:
-
-```python
-import dante_corpus as dc
-
-canto = dc.canto("inferno", 1)
-for line in canto.lines(1, 3):
-    print(line.no, line.text, line.tokens)
 ```
 
 ## Use from another project
