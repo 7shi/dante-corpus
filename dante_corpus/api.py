@@ -46,6 +46,8 @@ class QuoteSpan:
     quote_id: str
     start_line: int
     end_line: int
+    start_col: int
+    end_col: int
     marker: str
     head: str | None
     children: tuple["QuoteSpan", ...]
@@ -55,6 +57,8 @@ class QuoteSpan:
             "id": self.quote_id,
             "start_line": self.start_line,
             "end_line": self.end_line,
+            "start_col": self.start_col,
+            "end_col": self.end_col,
             "marker": self.marker,
             "children": [child.to_dict() for child in self.children],
         }
@@ -134,12 +138,20 @@ def _parse_line_attr(value: str) -> tuple[int, int]:
     return point, point
 
 
+def _parse_col_attr(value: str) -> tuple[int, int]:
+    start, end = value.split("-", 1)
+    return int(start), int(end)
+
+
 def _parse_quote_node(node: ET.Element) -> QuoteSpan:
     start_line, end_line = _parse_line_attr(node.attrib["line"])
+    start_col, end_col = _parse_col_attr(node.attrib["col"])
     return QuoteSpan(
         quote_id=node.attrib["id"],
         start_line=start_line,
         end_line=end_line,
+        start_col=start_col,
+        end_col=end_col,
         marker=node.attrib["marker"],
         head=node.attrib.get("head"),
         children=tuple(_parse_quote_node(child) for child in node.findall("q")),

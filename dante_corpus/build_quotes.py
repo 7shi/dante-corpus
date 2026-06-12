@@ -74,11 +74,12 @@ def assign_ids(canto: int, lines: list[str], root: list[dict[str, object]]) -> N
 
 
 def parse_canto(canto: int, path: Path) -> list[dict[str, object]]:
-    lines = [
-        stripped
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if (stripped := line.strip())
+    raw_lines = [
+        line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
+    for ln, line in enumerate(raw_lines, start=1):
+        assert line == line.strip(), f"unexpected leading/trailing whitespace at line {ln}: {line!r}"
+    lines = raw_lines
     root = build_tree(lines)
     assign_ids(canto, lines, root)
     return root
@@ -99,7 +100,8 @@ def render(node: dict[str, object], depth: int) -> list[str]:
     eline = node["eline"]
     line_attr = f"{sline}" if sline == eline else f"{sline}-{eline}"
     marker = node["opener"] + OPENERS[node["opener"]]
-    attrs = f'id="{node["id"]}" line="{line_attr}" marker="{_esc(marker)}"'
+    col_attr = f'{node["scol"]}-{node["ecol"]}'
+    attrs = f'id="{node["id"]}" line="{line_attr}" col="{col_attr}" marker="{_esc(marker)}"'
     if "head" in node:
         attrs += f' head="{_esc(node["head"])}"'
     children = node["children"]

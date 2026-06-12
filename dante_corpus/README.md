@@ -80,6 +80,20 @@ src/       <canticle>/NN.txt    Italian source lines (one line per file line)
 quotes/    <canticle>.xml       Speech-quote tree (built by dante-build-quotes)
 ```
 
+### XML format (`quotes/<canticle>.xml`)
+
+Each `<q>` element has these attributes:
+
+| Attribute | Description |
+|-----------|-------------|
+| `id`      | Unique span id: `<canto>:<start_line>[A-Z]` |
+| `line`    | Line range: `N` (single) or `N-M` (multi-line) |
+| `col`     | Column range: `scol-ecol` (0-based offsets of the opening/closing quote chars on their respective lines) |
+| `marker`  | Opening+closing quote pair, e.g. `«»` or `""` |
+| `head`    | Disambiguating leading tokens (only when two spans share a start line) |
+
+Nested `<q>` elements represent embedded quotes (direct children only; deeper nesting is recursive).
+
 ---
 
 ## Public API
@@ -141,6 +155,8 @@ class QuoteSpan:
     quote_id: str
     start_line: int
     end_line: int
+    start_col: int            # 0-based column of the opening quote char on start_line
+    end_col: int              # 0-based column of the closing quote char on end_line
     marker: str               # opening+closing pair, e.g. "«»" or "''"
     head: str | None          # disambiguating head tokens (if needed)
     children: tuple[QuoteSpan, ...]
