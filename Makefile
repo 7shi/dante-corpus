@@ -9,7 +9,7 @@ split:
 	$(MAKE) -C src split
 
 quotes:
-	uv run python -m dante_corpus.build_quotes $(CANTICLES)
+	$(MAKE) -C quotes
 
 # Layer 2 morphology. LLM-built, so kept out of `all`; the TSV under morph/ is committed.
 # The model is set in model.mk (included by morph/Makefile); override with `make morph MODEL=...`.
@@ -18,6 +18,6 @@ morph:
 
 clean:
 	$(MAKE) -C src clean
-	rm -f $(foreach c,$(CANTICLES),quotes/$(c).xml)
+	$(MAKE) -C quotes clean
 
 .PHONY: all download split quotes morph clean

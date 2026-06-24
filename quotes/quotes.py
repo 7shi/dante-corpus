@@ -1,10 +1,22 @@
+"""Build driver for the quote-span layer — a per-step generation script.
+
+Like `morph/morph.py`, the script that *generates* an artifact lives in its own step directory
+(here `quotes/`), while the runtime reading stays in the package (`dante_corpus/api.py`, served
+via `Canto.quotes()` / `dante-corpus quote`). Generation is fully **deterministic**: it scans the
+normalized `src/<canticle>/NN.txt` for nested quotation delimiters (« » / ‘ ’ / “ ”), builds the
+nested span tree, assigns stable ids, and freezes one `quotes/<canticle>.xml` per canticle. No
+model is involved.
+
+    uv run quotes.py inferno purgatorio paradiso   # rebuild every canticle's XML
+"""
+
 import argparse
 import string
 import sys
 from pathlib import Path
 
-from ._paths import SRC_DIR, QUOTES_DIR
-from .tokenizer import has_alpha, tokenize
+from dante_corpus._paths import SRC_DIR, QUOTES_DIR
+from dante_corpus.tokenizer import has_alpha, tokenize
 
 OPENERS = {"«": "»", "‘": "’", "“": "”"}
 CLOSERS = {closer: opener for opener, closer in OPENERS.items()}

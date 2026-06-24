@@ -15,7 +15,8 @@ This project uses the following Italian text source:
   tokenization can split on apostrophes without confusing them with speech delimiters.
 - `quotes/` — per-canticle XML that captures the **nested structure of speech** (who quotes
   whom, embedded reported speech). Generated from the guillemet spans in `src/` by
-  `build_quotes.py`; consumed by dante-analyze for speaker/edge attribution.
+  `quotes/quotes.py` (see [`quotes/README.md`](quotes/README.md)); consumed by dante-analyze for
+  speaker/edge attribution.
 
 ## Plan
 

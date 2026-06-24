@@ -14,4 +14,4 @@ src/pg1000.txt
 src/inferno/
 src/purgatorio/
 src/paradiso/
-quotes/
+quotes/*.xml
