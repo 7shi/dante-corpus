@@ -11,14 +11,13 @@ split:
 quotes:
 	uv run python -m dante_corpus.build_quotes $(CANTICLES)
 
-# Layer 2 morphology. LLM-built, so kept out of `all`; the JSON under morph/ is committed.
-# Override MODEL to pick the local model, e.g. `make morph MODEL=ollama:gpt-oss`.
-MODEL ?= ollama:gpt-oss
+# Layer 2 morphology. LLM-built, so kept out of `all`; the TSV under morph/ is committed.
+# The model is set in model.mk (included by morph/Makefile); override with `make morph MODEL=...`.
 morph:
-	uv run python -m dante_corpus.build_morph $(CANTICLES) --model $(MODEL)
+	$(MAKE) -C morph morph
 
 morph-check:
-	uv run python -m dante_corpus.build_morph $(CANTICLES) --check
+	$(MAKE) -C morph check
 
 clean:
 	$(MAKE) -C src clean

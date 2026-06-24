@@ -14,9 +14,7 @@ This module stays free of `api` (which imports it) and depends only on `tokenize
 
 from __future__ import annotations
 
-import json
 import re
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -320,21 +318,24 @@ def validate_line(line_no: int, source_text: str, rows: list[MorphRow]) -> list[
 # --- Artifact I/O ------------------------------------------------------------------
 
 
+# The artifact is a tab-separated table: a `line` column plus the nine `COLUMNS`, one row
+# per token. The data is fully rectangular and contains no tabs or newlines, so plain TSV
+# round-trips without quoting and keeps git diffs token-granular (see PLAN.md).
+_TSV_HEADER = ("line", *COLUMNS)
+
+
 def _artifact_path(canticle: str, number: int) -> Path:
-    return MORPH_DIR / canticle / f"{number:02d}.json"
+    return MORPH_DIR / canticle / f"{number:02d}.tsv"
 
 
 def write_morph(canticle: str, number: int, lines: list[tuple[int, list[MorphRow]]]) -> Path:
     path = _artifact_path(canticle, number)
     path.parent.mkdir(parents=True, exist_ok=True)
-    data = {
-        "canticle": canticle,
-        "canto": number,
-        "lines": [
-            {"no": no, "rows": [row.to_dict() for row in rows]} for no, rows in lines
-        ],
-    }
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    out = ["\t".join(_TSV_HEADER)]
+    for no, rows in lines:
+        for row in rows:
+            out.append("\t".join((str(no), *(getattr(row, key) for key in COLUMNS))))
+    path.write_text("\n".join(out) + "\n", encoding="utf-8")
     return path
 
 
@@ -347,8 +348,13 @@ def load_morph(canticle: str, number: int) -> dict[int, tuple[MorphRow, ...]]:
     path = _artifact_path(canticle, number)
     if not path.exists():
         raise FileNotFoundError(path)
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return {
-        entry["no"]: tuple(MorphRow.from_dict(row) for row in entry["rows"])
-        for entry in data["lines"]
-    }
+    grouped: dict[int, list[MorphRow]] = {}
+    for lineno, text in enumerate(path.read_text(encoding="utf-8").splitlines()):
+        if lineno == 0 or not text:  # header / blank
+            continue
+        cells = text.split("\t")
+        cells += [""] * (len(_TSV_HEADER) - len(cells))  # tolerate dropped trailing blanks
+        no = int(cells[0])
+        data = dict(zip(COLUMNS, cells[1:]))
+        grouped.setdefault(no, []).append(MorphRow.from_dict(data))
+    return {no: tuple(rows) for no, rows in grouped.items()}

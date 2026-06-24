@@ -2,7 +2,7 @@
 
 Generation is a build-time, user-run step: a local LLM proposes a Markdown word table per
 chunk of lines, which is parsed and aligned to the deterministic tokens (`morph.align_chunk`)
-and frozen as `morph/<canticle>/NN.json`. The runtime API never calls a model.
+and frozen as `morph/<canticle>/NN.tsv`. The runtime API never calls a model.
 
     uv run python -m dante_corpus.build_morph inferno -m ollama:gpt-oss        # all of Inferno
     uv run python -m dante_corpus.build_morph inferno -c 1 -m ollama:gpt-oss   # just canto 1
@@ -100,7 +100,7 @@ def _build_canto(canticle: str, number: int, model: str, size: int) -> bool:
             return False
         out.extend((line.no, aligned[line.no]) for line in chunk)
     path = morph.write_morph(canticle, number, out)
-    print(f"Wrote: morph/{canticle}/{number:02d}.json ({path})")
+    print(f"Wrote: morph/{canticle}/{number:02d}.tsv ({path})")
     return True
 
 
@@ -109,7 +109,7 @@ def build(canticles: list[str], model: str, size: int, force: bool, only: int | 
         numbers = [only] if only else list(api.cantos(canticle))
         for number in numbers:
             if not force and morph.has_morph(canticle, number):
-                print(f"Skip (exists): morph/{canticle}/{number:02d}.json")
+                print(f"Skip (exists): morph/{canticle}/{number:02d}.tsv")
                 continue
             _build_canto(canticle, number, model, size)
     return 0
@@ -122,7 +122,7 @@ def check(canticles: list[str], only: int | None) -> int:
         numbers = [only] if only else list(api.cantos(canticle))
         for number in numbers:
             if not morph.has_morph(canticle, number):
-                print(f"Missing: morph/{canticle}/{number:02d}.json", file=sys.stderr)
+                print(f"Missing: morph/{canticle}/{number:02d}.tsv", file=sys.stderr)
                 hard += 1
                 continue
             data = morph.load_morph(canticle, number)

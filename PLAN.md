@@ -1,5 +1,19 @@
 # Plan: a shared grammatical-analysis stack in the corpus
 
+## Status
+
+- **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
+- **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md). *Inferno*
+  1 is built as the first artifact; the rest of the 100 cantos are not yet generated.
+- **Layers 3–5 — NP / dependency / skeleton**: design only (this document).
+
+**Next work**
+
+1. **Finish Layer 2 generation** across all 100 cantos (only *Inferno* 1 exists), then
+   **measure-then-freeze** the POS / tense / mood vocabularies that are currently soft-validated.
+2. **Layer 3 (noun-phrase enumeration)** — the next layer per *Sequencing*; the census/entity
+   substrate consumers most want.
+
 ## Why this lives in the corpus
 
 `dante-corpus` is the queryable, **canon-neutral source of truth** for the *Commedia*: it serves
@@ -52,38 +66,19 @@ and excludes punctuation (`has_alpha`).
 - **Generation**: deterministic (`tokenizer.py` over the normalized `src/`).
 - **Check**: each token is a verbatim, in-order substring of its source line.
 
-### Layer 2 — Morphology + lemma *(implemented)*
+### Layer 2 — Morphology + lemma *(implemented — see [`morph/README.md`](morph/README.md))*
 
-Per-token lemma, part of speech, and morphological features (gender, number, person, tense,
-mood), plus a note for contraction / apocope / elision. Implemented in
-`dante_corpus/morph.py` (parse + align + closed-tag validation + loader) and
-`dante_corpus/build_morph.py` (the `morph` / `morph-check` Make targets, with `-c`/`-m` for a
-single canto / model); served via `Canto.morph()` and `dante-corpus text morph`. The frozen
-artifact is `morph/<canticle>/NN.json` — per line, a list of per-token rows.
+Per-token lemma, part of speech, and morphological features (gender, number, person, tense, mood),
+plus a note for contraction / apocope / elision — generated from the Italian alone at build time,
+aligned 1:1 to the Layer-1 tokens, and frozen as TSV. This is the first layer that removes
+duplicated reading: the translation layer (`dante-dravidian` Step 1) currently regenerates the same
+morphology inline; this is what it would consume instead. A prior local-LLM experiment produced
+exactly this table from the source with no reference, evidence the layer is intrinsically
+recoverable.
 
-The columns (one row per Layer-1 token):
-
-| Word | Lemma | POS | Gender | Number | Person | Tense | Mood | Note |
-|---|---|---|---|---|---|---|---|---|
-| ritrovai | ritrovare | verb | | sg. | 1 | remote past | indicative | |
-| oscura | oscuro | adjective | f. | sg. | | | | |
-| Nel | in+il | preposition+article | m. | sg. | | | | contraction |
-
-- **Generation**: LLM at build time, then frozen. The column set and generation rules follow the
-  proven local-LLM word-table tooling (`dante-llm`): decompose contractions in the lemma
-  (`Nel → in + il`), separate apostrophe-linked words, exclude quotation marks, and leave
-  inapplicable features blank. A prior local-LLM experiment produced exactly this table from the
-  Italian alone, with no reference — evidence the layer is intrinsically recoverable. The
-  translation layer (`dante-dravidian` Step 1) currently regenerates the same morphology inline;
-  this layer is what it would consume instead.
-- **Check / alignment**: this is the load-bearing design point, because Layer 1 is the
-  deterministic anchor the LLM table must bind to. Each table row's `Word` is aligned to a
-  Layer-1 token so that **every token receives exactly one morphology row**. Since an LLM may
-  transform or hallucinate a word (`etterno → eterno`, spurious or duplicated rows), alignment
-  uses anchor-substring matching with salvage rules rather than naive equality — the `split_table`
-  algorithm in `dante-llm` (`dantetool/common.py`) is the reference. The structural features
-  (gender / number / person) validate against frozen closed sets; POS / tense / mood are collected
-  for later measure-then-freeze and reported as soft violations, not yet hard-failed.
+The mechanics — columns, generation rules, the token-alignment algorithm, validation tiers, and
+usage — live in [`morph/README.md`](morph/README.md). It is served via `Canto.morph()` and
+`dante-corpus text morph`.
 
 ### Layer 3 — Noun-phrase enumeration
 
@@ -146,9 +141,10 @@ API. The LLM is a build-time tool whose output is frozen and round-trip-checked 
 stable, reproducible asset, never a live model call. This follows the *measure-then-freeze*
 discipline already used for normalization and quotes.
 
-- **Artifact**: one structured JSON file per canto per layer, under its own directory (Layer 2 →
-  `morph/<canticle>/NN.json`, keyed by line → per-token rows). Layers join by token order; whether
-  later layers share a file or stay in sibling directories is decided per layer.
+- **Artifact**: one structured file per canto per layer, under its own directory. Rectangular
+  layers freeze as TSV (Layer 2 → `morph/<canticle>/NN.tsv`, one line-numbered row per token);
+  layers with nesting may use another structured form. Layers join by token order; whether later
+  layers share a file or stay in sibling directories is decided per layer.
 - **API**: extend the corpus query surface (alongside `text tokens`, `quote show`) with each
   grammatical layer, addressable by canticle / canto / line range (Layer 2: `Canto.morph()` /
   `dante-corpus text morph`).
