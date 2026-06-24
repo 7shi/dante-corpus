@@ -1,12 +1,20 @@
-"""Build driver for Layer 2 (morphology). Mirrors `build_quotes.py`.
+"""Build driver for Layer 2 (morphology) — a per-step generation script.
 
-Generation is a build-time, user-run step: a local LLM proposes a Markdown word table per
-chunk of lines, which is parsed and aligned to the deterministic tokens (`morph.align_chunk`)
-and frozen as `morph/<canticle>/NN.tsv`. The runtime API never calls a model.
+Like `02-markup/markup.py` in the dante-analyze project, the script that *generates* an
+artifact lives in its own step directory (here `morph/`), while the parsing, alignment, and
+I/O it depends on stay in the shared package (`dante_corpus/morph.py`, consumed by the
+runtime API). A local LLM proposes a Markdown word table per chunk of lines, which is parsed
+and aligned to the deterministic tokens (`morph.align_chunk`) and frozen as
+`morph/<canticle>/NN.tsv`. The runtime API never calls a model.
 
-    uv run python -m dante_corpus.build_morph inferno -m ollama:gpt-oss        # all of Inferno
-    uv run python -m dante_corpus.build_morph inferno -c 1 -m ollama:gpt-oss   # just canto 1
-    uv run python -m dante_corpus.build_morph inferno --check                  # code-only, no model
+Generation resumes from its own output: each chunk's rows are written back to the TSV as
+soon as they validate, so an interrupted run continues where it stopped — already-committed
+lines are skipped and only the remaining chunks are requested.
+
+    uv run morph.py inferno -m ollama:gpt-oss        # all of Inferno (resumes)
+    uv run morph.py inferno -c 1 -m ollama:gpt-oss   # just canto 1
+    uv run morph.py inferno --force -m ...           # rebuild from scratch
+    uv run morph.py inferno --check                  # code-only, no model
 
 `--check` validates committed artifacts against the deterministic tokens (every token gets
 exactly one row; words are verbatim; closed-tag membership) — the structural verification bar.
@@ -15,7 +23,8 @@ exactly one row; words are verbatim; closed-tag membership) — the structural v
 import argparse
 import sys
 
-from . import api, morph
+from dante_corpus import api, morph
+from dante_corpus.statusline import StatusLine
 
 SYSTEM_PROMPT = """\
 You are a morphological analyzer for archaic Italian (Dante's Divine Comedy).
@@ -62,7 +71,7 @@ def _chunks(lines: tuple[api.Line, ...], size: int):
         yield lines[start : start + size]
 
 
-def _generate_table(prompt: str, model: str) -> str:
+def _generate_table(prompt: str, model: str, stream) -> str:
     from llm7shi.compat import generate_with_schema
 
     response = generate_with_schema(
@@ -71,47 +80,74 @@ def _generate_table(prompt: str, model: str) -> str:
         model=model,
         system_prompt=SYSTEM_PROMPT,
         show_params=False,
+        file=stream,
     )
     return response.text
 
 
-def _build_canto(canticle: str, number: int, model: str, size: int) -> bool:
+def _load_committed(canticle: str, number: int) -> list[tuple[int, list[morph.MorphRow]]]:
+    """Already-frozen rows for a canto, ordered by line number — the checkpoint to resume from."""
+    if not morph.has_morph(canticle, number):
+        return []
+    data = morph.load_morph(canticle, number)
+    return [(no, list(rows)) for no, rows in sorted(data.items())]
+
+
+def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: int,
+                 force: bool, ui: StatusLine) -> bool:
     canto = api.canto(canticle, number)
-    out: list[tuple[int, list[morph.MorphRow]]] = []
-    for chunk in _chunks(canto.lines(), size):
-        nos = [line.no for line in chunk]
-        texts = [line.text for line in chunk]
-        prompt = "Create a word table for these lines:\n\n" + "\n".join(
-            f"{line.no} {line.text}" for line in chunk
-        )
-        for attempt in range(RETRIES + 1):
-            table_text = _generate_table(prompt, model)
-            try:
-                aligned = morph.align_chunk(nos, texts, table_text)
-                break
-            except ValueError as exc:
-                print(
-                    f"  {canticle} {number} lines {nos[0]}-{nos[-1]}: {exc} "
-                    f"(attempt {attempt + 1}/{RETRIES + 1})",
-                    file=sys.stderr,
-                )
-        else:
-            print(f"  {canticle} {number}: giving up, canto not written", file=sys.stderr)
-            return False
-        out.extend((line.no, aligned[line.no]) for line in chunk)
-    path = morph.write_morph(canticle, number, out)
-    print(f"Wrote: morph/{canticle}/{number:02d}.tsv ({path})")
+    lines = canto.lines()
+    out = [] if force else _load_committed(canticle, number)
+    done = {no for no, _ in out}
+
+    # Chunks are atomic — a chunk is written back only after all its lines validate — so a
+    # previously-finished chunk has every line in `done`. Re-request only the rest.
+    pending = [chunk for chunk in _chunks(lines, size)
+               if any(line.no not in done for line in chunk)]
+    label = f"{canticle} {number}/{n_cantos}"
+    if not pending:
+        ui.log(f"[dim]Skip (complete): morph/{canticle}/{number:02d}.tsv[/dim]")
+        return True
+    if done:
+        ui.log(f"Resume: morph/{canticle}/{number:02d}.tsv "
+               f"({len(done)} line(s) done, {len(pending)} chunk(s) left)")
+
+    with ui.progress(len(lines), start=max(done, default=0), label=label) as prog:
+        for chunk in pending:
+            nos = [line.no for line in chunk]
+            texts = [line.text for line in chunk]
+            prompt = "Create a word table for these lines:\n\n" + "\n".join(
+                f"{line.no} {line.text}" for line in chunk
+            )
+            for attempt in range(RETRIES + 1):
+                table_text = _generate_table(prompt, model, ui.stream)
+                ui.stream.end()
+                try:
+                    aligned = morph.align_chunk(nos, texts, table_text)
+                    break
+                except ValueError as exc:
+                    ui.log(f"  {canticle} {number} lines {nos[0]}-{nos[-1]}: {exc} "
+                           f"(attempt {attempt + 1}/{RETRIES + 1})")
+            else:
+                ui.log(f"  {canticle} {number}: giving up at line {nos[0]}; "
+                       f"earlier lines saved for resume")
+                return False
+            out.extend((line.no, aligned[line.no]) for line in chunk)
+            out.sort(key=lambda item: item[0])
+            morph.write_morph(canticle, number, out)
+            prog.update(nos[-1])
+    ui.log(f"Wrote: morph/{canticle}/{number:02d}.tsv")
     return True
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, only: int | None) -> int:
+    ui = StatusLine()
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        all_numbers = list(api.cantos(canticle))
+        n_cantos = len(all_numbers)
+        numbers = [only] if only else all_numbers
         for number in numbers:
-            if not force and morph.has_morph(canticle, number):
-                print(f"Skip (exists): morph/{canticle}/{number:02d}.tsv")
-                continue
-            _build_canto(canticle, number, model, size)
+            _build_canto(canticle, number, n_cantos, model, size, force, ui)
     return 0
 
 
@@ -140,7 +176,7 @@ def check(canticles: list[str], only: int | None) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(prog="dante_corpus.build_morph")
+    parser = argparse.ArgumentParser(prog="morph.py")
     parser.add_argument("canticles", nargs="+", help="canticle names, e.g. inferno")
     parser.add_argument("-m", "--model", help="LLM, e.g. ollama:gpt-oss (required unless --check)")
     parser.add_argument("--chunk", type=int, default=3, help="lines per LLM call (default 3)")

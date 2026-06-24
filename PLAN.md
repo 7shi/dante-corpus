@@ -145,6 +145,12 @@ discipline already used for normalization and quotes.
   layers freeze as TSV (Layer 2 → `morph/<canticle>/NN.tsv`, one line-numbered row per token);
   layers with nesting may use another structured form. Layers join by token order; whether later
   layers share a file or stay in sibling directories is decided per layer.
+- **Build driver**: each LLM-built layer's generator lives in its own step directory (Layer 2 →
+  `morph/morph.py`, the reference implementation) and is **resumable from its own output** — every
+  chunk's rows are written back to the artifact as soon as they validate, so an interrupted run
+  skips already-committed lines and re-requests only the remainder. Progress is shown live through
+  the shared `dante_corpus/statusline.py` (Rich) — a per-canto bar (`canticle canto/total |
+  line/total …`) with the model's streamed output routed through the same console.
 - **API**: extend the corpus query surface (alongside `text tokens`, `quote show`) with each
   grammatical layer, addressable by canticle / canto / line range (Layer 2: `Canto.morph()` /
   `dante-corpus text morph`).
@@ -164,7 +170,7 @@ discipline already used for normalization and quotes.
 
 ## Sequencing
 
-1. **Layer 2 (morphology + lemma)** — *implemented* (`morph.py` / `build_morph.py`). Lowest risk,
+1. **Layer 2 (morphology + lemma)** — *implemented* (`dante_corpus/morph.py` + `morph/morph.py`). Lowest risk,
    already shown feasible intrinsically, and immediately useful as a lemma-queryable index.
 2. **Layer 3 (noun phrases)** — the census/entity substrate consumers most want.
 3. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last, as they are the

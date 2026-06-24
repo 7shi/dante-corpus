@@ -10,7 +10,9 @@ judgment (entity-hood, coreference, reference equivalents) — those stay with t
 One LLM pass per chunk of source lines (default 3) emits a Markdown **word table**, one row per
 word, with columns `Word | Lemma | Part of Speech | Gender | Number | Person | Tense | Mood | Note`.
 Local models cannot reliably produce structured (JSON-schema) output, so the table is the
-interface; code parses and aligns it (`dante_corpus/morph.py`, `build_morph.py`).
+interface; code parses and aligns it. The generation driver lives in this directory
+(`morph/morph.py`); the parsing, alignment, and I/O it depends on stay in the shared
+package (`dante_corpus/morph.py`), which is what the runtime API consumes.
 
 Two things are deliberately **code's job**, never the model's:
 
@@ -45,8 +47,9 @@ call** (`validate_line`):
 - **Soft**: closed-tag membership for gender (`m./f./n.`), number (`sg./pl.`), person (`1/2/3`).
   POS / tense / mood are collected for later *measure-then-freeze*, reported but not yet enforced.
 
-The build itself retries a chunk (max 2) when alignment raises, and skips cantos whose TSV already
-exists, so an interrupted run resumes.
+The build itself retries a chunk (max 2) when alignment raises. Each chunk's rows are written
+back to the TSV as soon as they validate, so an interrupted run resumes from its own output:
+already-committed lines are skipped and only the remaining chunks are requested.
 
 ## Model
 
@@ -62,7 +65,7 @@ make -C morph                          # build all three canticles (model from m
 make -C morph MODEL=ollama:gpt-oss     # override the model
 make -C morph check                    # validate artifacts, no model call
 
-uv run python -m dante_corpus.build_morph inferno [-c 1] [-m MODEL] [--force] [--check]
+uv run morph/morph.py inferno [-c 1] [-m MODEL] [--force] [--check]
 ```
 
 Consumers read it deterministically via `Canto.morph()` (line-number → `MorphRow` tuples) or the

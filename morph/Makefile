@@ -5,9 +5,9 @@ CANTICLES = inferno purgatorio paradiso
 all: morph
 
 morph:
-	uv run python -m dante_corpus.build_morph $(CANTICLES) -m $(MODEL)
+	uv run morph.py $(CANTICLES) -m $(MODEL)
 
 check:
-	uv run python -m dante_corpus.build_morph $(CANTICLES) --check
+	uv run morph.py $(CANTICLES) --check
 
 .PHONY: all morph check
