@@ -28,8 +28,8 @@ duplicated reading.
 
 ## The layers
 
-Five layers, each a function of the source text. Layer 1 exists today; layers 2–5 are the new
-work. Examples use *Inferno* I.1–6.
+Five layers, each a function of the source text. Layers 1–2 are implemented; layers 3–5 are the
+remaining work. Examples use *Inferno* I.1–6.
 
 ```
 1  Nel mezzo del cammin di nostra vita
@@ -40,30 +40,50 @@ work. Examples use *Inferno* I.1–6.
 6  che nel pensier rinova la paura!
 ```
 
-### Layer 1 — Tokens *(existing)*
+### Layer 1 — Tokens *(implemented — no new work)*
 
-The token stream already served by the package. The foundation every higher layer cites.
+The token stream already produced by `dante_corpus/tokenizer.py` and served via `Line.tokens`.
+This is the deterministic foundation every higher layer cites and checks against; it needs no
+further design. Its unit already matches what the morphology layer expects: it splits
+apostrophe-linked elisions (`ch'` `i'`), keeps prepositional contractions whole (`Nel`, `del`),
+and excludes punctuation (`has_alpha`).
 
 - `mi` `ritrovai` `per` `una` `selva` `oscura` …
-- **Generation**: deterministic (from the normalized `src/`).
-- **Check**: token concatenation round-trips to the source line.
+- **Generation**: deterministic (`tokenizer.py` over the normalized `src/`).
+- **Check**: each token is a verbatim, in-order substring of its source line.
 
-### Layer 2 — Morphology + lemma
+### Layer 2 — Morphology + lemma *(implemented)*
 
 Per-token lemma, part of speech, and morphological features (gender, number, person, tense,
-mood), plus a note for contraction / apocope / elision.
+mood), plus a note for contraction / apocope / elision. Implemented in
+`dante_corpus/morph.py` (parse + align + closed-tag validation + loader) and
+`dante_corpus/build_morph.py` (the `morph` / `morph-check` Make targets, with `-c`/`-m` for a
+single canto / model); served via `Canto.morph()` and `dante-corpus text morph`. The frozen
+artifact is `morph/<canticle>/NN.json` — per line, a list of per-token rows.
 
-| Word | Lemma | POS | Features |
-|---|---|---|---|
-| ritrovai | ritrovare | verb | 1sg, passato remoto, indicative |
-| oscura | oscuro | adjective | f. sg. |
-| Nel | in + il | prep + article | m. sg. (contraction) |
+The columns (one row per Layer-1 token):
 
-- **Generation**: LLM at build time, then frozen. (A prior local-LLM experiment produced exactly
-  this table from the Italian alone, with no reference — evidence the layer is intrinsically
-  recoverable.)
-- **Check**: the `Word` column round-trips to the layer-1 token; features come from a closed tag
-  set.
+| Word | Lemma | POS | Gender | Number | Person | Tense | Mood | Note |
+|---|---|---|---|---|---|---|---|---|
+| ritrovai | ritrovare | verb | | sg. | 1 | remote past | indicative | |
+| oscura | oscuro | adjective | f. | sg. | | | | |
+| Nel | in+il | preposition+article | m. | sg. | | | | contraction |
+
+- **Generation**: LLM at build time, then frozen. The column set and generation rules follow the
+  proven local-LLM word-table tooling (`dante-llm`): decompose contractions in the lemma
+  (`Nel → in + il`), separate apostrophe-linked words, exclude quotation marks, and leave
+  inapplicable features blank. A prior local-LLM experiment produced exactly this table from the
+  Italian alone, with no reference — evidence the layer is intrinsically recoverable. The
+  translation layer (`dante-dravidian` Step 1) currently regenerates the same morphology inline;
+  this layer is what it would consume instead.
+- **Check / alignment**: this is the load-bearing design point, because Layer 1 is the
+  deterministic anchor the LLM table must bind to. Each table row's `Word` is aligned to a
+  Layer-1 token so that **every token receives exactly one morphology row**. Since an LLM may
+  transform or hallucinate a word (`etterno → eterno`, spurious or duplicated rows), alignment
+  uses anchor-substring matching with salvage rules rather than naive equality — the `split_table`
+  algorithm in `dante-llm` (`dantetool/common.py`) is the reference. The structural features
+  (gender / number / person) validate against frozen closed sets; POS / tense / mood are collected
+  for later measure-then-freeze and reported as soft violations, not yet hard-failed.
 
 ### Layer 3 — Noun-phrase enumeration
 
@@ -126,10 +146,12 @@ API. The LLM is a build-time tool whose output is frozen and round-trip-checked 
 stable, reproducible asset, never a live model call. This follows the *measure-then-freeze*
 discipline already used for normalization and quotes.
 
-- **Artifact**: one structured file per canto (JSON/JSONL), with the five layers keyed to token
-  offsets so any layer can be queried independently or joined.
-- **API**: extend the corpus query surface (alongside `text tokens`, `quote show`) with the
-  grammatical layers, addressable by canticle / canto / line range.
+- **Artifact**: one structured JSON file per canto per layer, under its own directory (Layer 2 →
+  `morph/<canticle>/NN.json`, keyed by line → per-token rows). Layers join by token order; whether
+  later layers share a file or stay in sibling directories is decided per layer.
+- **API**: extend the corpus query surface (alongside `text tokens`, `quote show`) with each
+  grammatical layer, addressable by canticle / canto / line range (Layer 2: `Canto.morph()` /
+  `dante-corpus text morph`).
 - **Strongest reader for the hard layers**: morphology (L2) is robust; NP/dependency/skeleton
   (L3–L5) are reading-bound and should use the strongest available model at build time, measured
   before freezing.
@@ -146,11 +168,11 @@ discipline already used for normalization and quotes.
 
 ## Sequencing
 
-1. **Layer 2 (morphology + lemma)** first — lowest risk, already shown feasible intrinsically, and
-   immediately useful as a lemma-queryable index.
+1. **Layer 2 (morphology + lemma)** — *implemented* (`morph.py` / `build_morph.py`). Lowest risk,
+   already shown feasible intrinsically, and immediately useful as a lemma-queryable index.
 2. **Layer 3 (noun phrases)** — the census/entity substrate consumers most want.
 3. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last, as they are the
    hardest and the most valuable to share.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-This is a design plan; no implementation here.
+Layer 2 is implemented; layers 3–5 remain design only.

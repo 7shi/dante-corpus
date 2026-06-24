@@ -13,6 +13,17 @@ def _token_rows(lines: tuple[api.Line, ...]) -> str:
     return "\n".join(f"{line.no}: {' | '.join(line.tokens)}" for line in lines)
 
 
+def _morph_rows(selected: list[tuple[api.Line, tuple[api.MorphRow, ...]]]) -> str:
+    out: list[str] = []
+    for line, rows in selected:
+        out.append(f"{line.no}: {line.text}")
+        for row in rows:
+            feats = " ".join(f for f in (row.gender, row.number, row.person, row.tense, row.mood) if f)
+            cells = [row.word, row.lemma, row.pos, feats, row.note]
+            out.append("    " + "  ".join(cell for cell in cells if cell))
+    return "\n".join(out)
+
+
 def _dump_json(data: object) -> None:
     json.dump(data, sys.stdout, ensure_ascii=False, indent=2)
     sys.stdout.write("\n")
@@ -42,6 +53,10 @@ def build_parser() -> argparse.ArgumentParser:
     text_tokens.add_argument("canticle")
     text_tokens.add_argument("reference", help="canto or canto:start-end")
     _add_format_argument(text_tokens, "text", "json", default="text")
+    text_morph = text_sub.add_parser("morph")
+    text_morph.add_argument("canticle")
+    text_morph.add_argument("reference", help="canto or canto:start-end")
+    _add_format_argument(text_morph, "text", "json", default="text")
 
     quote_parser = roots.add_parser("quote")
     quote_sub = quote_parser.add_subparsers(dest="action", required=True)
@@ -88,6 +103,18 @@ def _handle_text(args: argparse.Namespace) -> int:
             _dump_json([line.to_dict() for line in lines])
         else:
             print(_token_rows(lines))
+        return 0
+
+    if args.action == "morph":
+        canto_no = int(str(args.reference).split(":")[0])
+        data = api.canto(args.canticle, canto_no).morph()
+        selected = [(line, data.get(line.no, ())) for line in lines]
+        if args.format == "json":
+            _dump_json(
+                [{"no": line.no, "rows": [row.to_dict() for row in rows]} for line, rows in selected]
+            )
+        else:
+            print(_morph_rows(selected))
         return 0
 
     raise ValueError(f"unknown text action: {args.action}")
