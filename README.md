@@ -17,6 +17,13 @@ This project uses the following Italian text source:
   whom, embedded reported speech). Generated from the guillemet spans in `src/` by
   `build_quotes.py`; consumed by dante-analyze for speaker/edge attribution.
 
+## Plan
+
+[PLAN.md](PLAN.md) lays out the roadmap to extend the corpus from tokens and quotes into a
+shared, canon-neutral **grammatical-analysis stack** (morphology, noun phrases, dependency, and a
+predicate-argument skeleton) that downstream projects consume instead of each re-deriving the same
+parse.
+
 ## Usage
 
 See [`dante_corpus/README.md`](dante_corpus/README.md) for the full CLI and API reference.
