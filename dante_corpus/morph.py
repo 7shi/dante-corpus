@@ -15,7 +15,7 @@ This module stays free of `api` (which imports it) and depends only on `tokenize
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as dc_replace
 from pathlib import Path
 
 from ._paths import MORPH_DIR
@@ -313,6 +313,59 @@ def validate_line(line_no: int, source_text: str, rows: list[MorphRow]) -> list[
                     Violation(line_no, "tag", f"{column}={value!r} for {row.word!r}")
                 )
     return violations
+
+
+# --- Word auto-fix -----------------------------------------------------------------
+
+
+def _strip_word_punct(word: str, token: str) -> str | None:
+    """Strip trailing non-alpha, non-apostrophe punctuation from `word` if it equals `token`.
+
+    The tokenizer never separates apostrophes from adjacent alpha characters, so any suffix
+    that contains an apostrophe is not safe to strip automatically. Returns the fixed word on
+    success, or None if the mismatch is not auto-fixable.
+    """
+    if word == token:
+        return word
+    if word.startswith(token):
+        suffix = word[len(token):]
+        if suffix and not has_alpha(suffix) and "'" not in suffix:
+            return token
+    return None
+
+
+def fix_aligned_words(
+    nos: list[int],
+    texts: list[str],
+    aligned: dict[int, list[MorphRow]],
+) -> tuple[dict[int, list[MorphRow]], list[str]]:
+    """Auto-strip trailing punctuation from word fields after alignment.
+
+    For each line where the row count matches the token count, attempts to fix any word
+    mismatch by stripping safe trailing punctuation (non-alpha, non-apostrophe). Lines with
+    count mismatches are left untouched (handled by validate_line). Returns the (possibly
+    modified) aligned dict and a list of error strings for unfixable word mismatches.
+    """
+    result: dict[int, list[MorphRow]] = {}
+    errors: list[str] = []
+    for no, text in zip(nos, texts):
+        tokens = [t for t in tokenize(text) if has_alpha(t)]
+        rows = list(aligned.get(no, []))
+        if len(rows) != len(tokens):
+            result[no] = rows
+            continue
+        fixed: list[MorphRow] = []
+        for row, token in zip(rows, tokens):
+            stripped = _strip_word_punct(row.word, token)
+            if stripped is None:
+                errors.append(f"line {no}: {row.word!r} != {token!r}")
+                fixed.append(row)
+            elif stripped != row.word:
+                fixed.append(dc_replace(row, word=stripped))
+            else:
+                fixed.append(row)
+        result[no] = fixed
+    return result, errors
 
 
 # --- Artifact I/O ------------------------------------------------------------------
