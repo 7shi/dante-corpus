@@ -18,9 +18,11 @@ import time
 from rich.console import Console
 from rich.progress import (
     Progress, ProgressColumn, SpinnerColumn, TextColumn, BarColumn,
-    TaskProgressColumn, TimeElapsedColumn,
+    TaskProgressColumn,
 )
 from rich.text import Text
+
+_PROCESS_START = time.monotonic()
 
 
 class ConsoleStream:
@@ -55,6 +57,17 @@ class _MofNColumn(ProgressColumn):
         return Text(f"{int(task.completed)}/{n}", style="progress.download")
 
 
+class _ProcessElapsedColumn(ProgressColumn):
+    """Elapsed time since process start (not since this task was added)."""
+
+    def render(self, task) -> Text:
+        elapsed = time.monotonic() - _PROCESS_START
+        m, s = divmod(int(elapsed), 60)
+        h, m = divmod(m, 60)
+        text = f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+        return Text(text, style="progress.elapsed")
+
+
 class StatusLine:
     def __init__(self):
         self.console = Console()
@@ -77,7 +90,7 @@ class _ProgressContext:
         if label:
             columns.append(TextColumn("[bold cyan]{task.description}"))
             columns.append(TextColumn("|"))
-        columns += [_MofNColumn(), BarColumn(), TaskProgressColumn(), TimeElapsedColumn()]
+        columns += [_MofNColumn(), BarColumn(), TaskProgressColumn(), _ProcessElapsedColumn()]
 
         self._progress = Progress(*columns, console=console)
         self._total = total
