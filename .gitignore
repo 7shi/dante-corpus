@@ -15,3 +15,4 @@ src/inferno/
 src/purgatorio/
 src/paradiso/
 quotes/*.xml
+*.log

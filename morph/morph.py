@@ -24,6 +24,7 @@ exactly one row; words are verbatim; closed-tag membership) — the structural v
 
 import argparse
 import sys
+from pathlib import Path
 
 from dante_corpus import api, morph
 from dante_corpus.statusline import StatusLine
@@ -96,7 +97,8 @@ def _load_committed(canticle: str, number: int) -> list[tuple[int, list[morph.Mo
 
 
 def _try_align(nos: list[int], texts: list[str], model: str,
-               ui: StatusLine, label: str) -> dict | None:
+               ui: StatusLine, label: str,
+               log_path: Path | None = None) -> dict | None:
     """Call LLM and align; return aligned dict on success, None after all retries fail."""
     prompt = "Create a word table for these lines:\n\n" + "\n".join(
         f"{no} {text}" for no, text in zip(nos, texts)
@@ -118,8 +120,17 @@ def _try_align(nos: list[int], texts: list[str], model: str,
                 raise ValueError("; ".join(hard))
             return aligned
         except ValueError as exc:
-            ui.log(f"  {label} lines {nos[0]}-{nos[-1]}: {exc} "
+            msg = (f"  {label} lines {nos[0]}-{nos[-1]}: {exc} "
                    f"(attempt {attempt + 1}/{RETRIES + 1})")
+            ui.log(msg)
+            if log_path:
+                with log_path.open("a", encoding="utf-8") as f:
+                    f.write(f"=== {label} lines {nos[0]}-{nos[-1]} "
+                            f"attempt {attempt + 1}/{RETRIES + 1} ===\n")
+                    f.write(f"Error: {exc}\n")
+                    f.write("--- response ---\n")
+                    f.write(table_text.strip())
+                    f.write("\n\n")
     return None
 
 
@@ -134,7 +145,8 @@ def _classify_violations(
 
 
 def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: int,
-                 force: bool, dry_run: bool, ui: StatusLine) -> bool:
+                 force: bool, dry_run: bool, ui: StatusLine,
+                 log_path: Path | None = None) -> bool:
     canto = api.canto(canticle, number)
     lines = canto.lines()
     out = [] if force else _load_committed(canticle, number)
@@ -165,12 +177,12 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
             prog.update(nos[0])
             texts = [line.text for line in chunk]
             label = f"{canticle} {number}"
-            aligned = _try_align(nos, texts, model, ui, label)
+            aligned = _try_align(nos, texts, model, ui, label, log_path)
             if aligned is None and len(chunk) > 1:
                 ui.log(f"  {label}: chunk failed, retrying line by line")
                 aligned = {}
                 for line in chunk:
-                    result = _try_align([line.no], [line.text], model, ui, label)
+                    result = _try_align([line.no], [line.text], model, ui, label, log_path)
                     if result is None:
                         ui.log(f"  {label}: giving up at line {line.no}; "
                                f"earlier lines saved for resume")
@@ -190,14 +202,16 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, dry_run: bool,
-          only: int | None) -> int:
+          only: int | None, log_path: Path | None = None) -> int:
+    if log_path:
+        log_path.write_text("", encoding="utf-8")
     ui = StatusLine()
     for canticle in canticles:
         all_numbers = list(api.cantos(canticle))
         n_cantos = len(all_numbers)
         numbers = [only] if only else all_numbers
         for number in numbers:
-            _build_canto(canticle, number, n_cantos, model, size, force, dry_run, ui)
+            _build_canto(canticle, number, n_cantos, model, size, force, dry_run, ui, log_path)
     return 0
 
 
@@ -299,6 +313,8 @@ def main() -> int:
                         help="remove chunks with count violations, then exit")
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending chunks without calling the LLM")
+    parser.add_argument("--log", nargs="?", const="morph.log", metavar="FILE",
+                        help="append failed LLM responses to FILE (default: morph.log)")
     args = parser.parse_args()
 
     if args.check:
@@ -309,7 +325,9 @@ def main() -> int:
         return build(args.canticles, args.model or "", args.chunk, args.force, True, args.canto)
     if not args.model:
         parser.error("--model is required for building (or pass --check / --dry-run)")
-    return build(args.canticles, args.model, args.chunk, args.force, False, args.canto)
+    log_path = Path(args.log) if args.log else None
+    return build(args.canticles, args.model, args.chunk, args.force, False, args.canto,
+                 log_path)
 
 
 if __name__ == "__main__":

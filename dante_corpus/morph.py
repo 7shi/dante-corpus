@@ -319,11 +319,14 @@ def validate_line(line_no: int, source_text: str, rows: list[MorphRow]) -> list[
 
 
 def _strip_word_punct(word: str, token: str) -> str | None:
-    """Strip trailing non-alpha, non-apostrophe punctuation from `word` if it equals `token`.
+    """Attempt to reconcile `word` (LLM output) with `token` (deterministic).
 
-    The tokenizer never separates apostrophes from adjacent alpha characters, so any suffix
-    that contains an apostrophe is not safe to strip automatically. Returns the fixed word on
-    success, or None if the mismatch is not auto-fixable.
+    Handles three auto-fixable cases:
+    - trailing non-alpha, non-apostrophe punct on word  (e.g. "sono," -> "sono")
+    - trailing apostrophe missing from word             (e.g. "I"    -> "I'")
+    - leading apostrophe missing from word              (e.g. "nvidia" -> "'nvidia")
+
+    Returns the corrected word, or None if the mismatch is not auto-fixable.
     """
     if word == token:
         return word
@@ -331,6 +334,14 @@ def _strip_word_punct(word: str, token: str) -> str | None:
         suffix = word[len(token):]
         if suffix and not has_alpha(suffix) and "'" not in suffix:
             return token
+    if token == word + "'":
+        return token
+    if token == "'" + word:
+        return token
+    if word == token + "'":
+        return token
+    if word == "'" + token:
+        return token
     return None
 
 

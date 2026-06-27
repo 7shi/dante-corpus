@@ -107,6 +107,45 @@ def test_split_table_salvages_transformed_word():
     assert [row[0] for row in buckets[1]] == ["tre", "quattro"]
 
 
+def test_fix_aligned_words_trailing_punct():
+    rows = [morph.MorphRow(word="sono,"), morph.MorphRow(word="oscura,")]
+    result, errors = morph.fix_aligned_words([1], ["sono oscura"], {1: rows})
+    assert errors == []
+    assert [r.word for r in result[1]] == ["sono", "oscura"]
+
+
+def test_fix_aligned_words_apostrophe_cases():
+    cases = {
+        1: ([morph.MorphRow(word="I")],      "I'"),      # missing trailing '
+        2: ([morph.MorphRow(word="nvidia")],  "'nvidia"), # missing leading '
+        3: ([morph.MorphRow(word="'el")],    "el"),      # excess leading '
+        4: ([morph.MorphRow(word="el'")],    "el"),      # excess trailing '
+    }
+    nos = list(cases)
+    texts = [cases[n][1] for n in nos]
+    aligned = {n: cases[n][0] for n in nos}
+    result, errors = morph.fix_aligned_words(nos, texts, aligned)
+    assert errors == []
+    assert result[1][0].word == "I'"
+    assert result[2][0].word == "'nvidia"
+    assert result[3][0].word == "el"
+    assert result[4][0].word == "el"
+
+
+def test_fix_aligned_words_unfixable_mismatch():
+    rows = [morph.MorphRow(word="wrong")]
+    result, errors = morph.fix_aligned_words([1], ["right"], {1: rows})
+    assert errors != []
+    assert result[1][0].word == "wrong"  # unchanged
+
+
+def test_fix_aligned_words_count_mismatch_passthrough():
+    rows = [morph.MorphRow(word="a"), morph.MorphRow(word="b")]
+    result, errors = morph.fix_aligned_words([1], ["solo"], {1: rows})
+    assert errors == []  # count mismatch lines are skipped, not errored
+    assert result[1] == rows  # unchanged
+
+
 def test_write_load_round_trip(tmp_path, monkeypatch):
     monkeypatch.setattr(morph, "MORPH_DIR", tmp_path)
     rows = [morph.MorphRow(word="Nel", lemma="in+il", pos="preposition+article",
