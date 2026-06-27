@@ -51,6 +51,28 @@ The build itself retries a chunk (max 2) when alignment raises. Each chunk's row
 back to the TSV as soon as they validate, so an interrupted run resumes from its own output:
 already-committed lines are skipped and only the remaining chunks are requested.
 
+## Output recovery
+
+Local models occasionally produce incomplete or split output. Two recovery steps run before
+every alignment attempt:
+
+**1. Table merging (`_merge_tables`)**
+
+A model that hits its token limit mid-table will sometimes restart with a fresh header and
+separator rather than continuing the existing table. The merge step detects any repeated
+occurrence of the first header row (whether preceded by a blank line or appearing inline without
+one) and removes the duplicate header and separator, concatenating the body rows into a single
+continuous table. This handles the most common failure mode: the model emits six words, emits a
+new `| Word | Lemma | … |` / `|---|…|` pair, then continues from the seventh word.
+
+**2. Multi-turn continuation (`_continue_if_truncated`)**
+
+After merging, if any line still has fewer table rows than Layer-1 tokens (output was genuinely
+cut off), the driver sends a follow-up turn on the same `llm7shi.Client` session asking the
+model to continue with the remaining lines. The continuation response is itself passed through
+`_merge_tables` before being appended, then alignment is retried on the combined text. If the
+result still fails after all retries, the chunk falls through to the per-line fallback.
+
 ## Model
 
 Build-time only, set in [`../model.mk`](../model.mk) (the `vendor:name` form routed by `llm7shi`,

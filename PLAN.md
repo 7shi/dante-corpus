@@ -151,6 +151,19 @@ discipline already used for normalization and quotes.
   skips already-committed lines and re-requests only the remainder. Progress is shown live through
   the shared `dante_corpus/statusline.py` (Rich) — a per-canto bar (`canticle canto/total |
   line/total …`) with the model's streamed output routed through the same console.
+- **Output routing convention** (shared across all LLM build drivers): the `StatusLine` object
+  (`ui`) is the single output channel throughout the build flow. `ui.log()` is used for status
+  messages (skip, resume, wrote); `ui.stream` is passed as `file` to the `llm7shi.Client` so
+  streamed LLM tokens flow through the same console; `ui.stream.error()` is used for error
+  messages (attempt failures, giving up) so they appear in red and are visually distinct from
+  normal progress output. All future layer drivers follow this same convention.
+- **Multi-turn recovery** (shared pattern): the `llm7shi.Client` maintains a conversation session,
+  enabling two-stage recovery when a local model fails to produce a complete response in one turn.
+  First, split output is repaired before alignment (e.g. `_merge_tables()` in Layer 2 merges
+  consecutive pipe-tables into one). Second, if the aligned result still has lines with fewer
+  elements than expected, a follow-up turn on the same session asks the model to supply the missing
+  content, and the result is concatenated before retrying. These two stages — structural repair
+  then continuation — are the standard recovery pattern for all LLM-built layers.
 - **API**: extend the corpus query surface (alongside `text tokens`, `quote show`) with each
   grammatical layer, addressable by canticle / canto / line range (Layer 2: `Canto.morph()` /
   `dante-corpus text morph`).

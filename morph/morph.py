@@ -74,20 +74,6 @@ def _chunks(lines: tuple[api.Line, ...], size: int):
         yield lines[start : start + size]
 
 
-def _generate_table(prompt: str, model: str, stream) -> str:
-    from llm7shi import Client
-
-    client = Client(
-        model=model,
-        file=stream,
-        show_params=False,
-    )
-    client.set_system_prompt(SYSTEM_PROMPT)
-
-    response = client(prompt)
-    return response.text
-
-
 def _load_committed(canticle: str, number: int) -> list[tuple[int, list[morph.MorphRow]]]:
     """Already-frozen rows for a canto, ordered by line number — the checkpoint to resume from."""
     if not morph.has_morph(canticle, number):
@@ -96,16 +82,92 @@ def _load_committed(canticle: str, number: int) -> list[tuple[int, list[morph.Mo
     return [(no, list(rows)) for no, rows in sorted(data.items())]
 
 
+def _merge_tables(text: str) -> str:
+    """Merge multiple Markdown pipe-tables into one.
+
+    Handles two failure modes:
+    - Blank line between tables: gap + repeated header + separator are removed.
+    - No blank line: repeated header appears inline within the body and is removed in place.
+    In both cases trailing blank lines before the repeated header are also stripped.
+    """
+    lines = text.splitlines(keepends=True)
+    out: list[str] = []
+    first_header: list[str] | None = None
+
+    i = 0
+    while i < len(lines):
+        stripped = lines[i].rstrip()
+        if stripped.startswith("|"):
+            cells = [c.strip() for c in stripped.split("|")[1:-1]]
+            # Repeated header followed by a separator → skip both (and trailing blanks in out)
+            if (first_header is not None
+                    and cells == first_header
+                    and i + 1 < len(lines)
+                    and lines[i + 1].rstrip().startswith("|")
+                    and "---" in lines[i + 1]):
+                while out and out[-1].rstrip() == "":
+                    out.pop()
+                i += 2
+                continue
+            # First header: next line is a separator
+            if (first_header is None
+                    and i + 1 < len(lines)
+                    and lines[i + 1].rstrip().startswith("|")
+                    and "---" in lines[i + 1]):
+                first_header = cells
+            out.append(lines[i])
+        else:
+            out.append(lines[i])
+        i += 1
+
+    return "".join(out)
+
+
+def _continue_if_truncated(
+    client, nos: list[int], texts: list[str], table_text: str, ui: StatusLine
+) -> str:
+    """If any lines have fewer rows than tokens (genuine truncation), ask the client to continue."""
+    try:
+        partial = morph.align_chunk(nos, texts, table_text)
+    except ValueError:
+        return table_text
+    short = []
+    for no, text in zip(nos, texts):
+        rows = list(partial.get(no, []))
+        for v in morph.validate_line(no, text, rows):
+            if v.kind == "count":
+                parts = v.detail.split()  # "X rows vs Y tokens"
+                if len(parts) >= 4 and int(parts[0]) < int(parts[3]):
+                    short.append(no)
+                break
+    if not short:
+        return table_text
+    short_texts = [texts[nos.index(no)] for no in short]
+    cont_prompt = (
+        "The table was truncated. Please continue with the remaining rows for these lines:\n\n"
+        + "\n".join(f"{no} {text}" for no, text in zip(short, short_texts))
+    )
+    cont_text = client(cont_prompt).text
+    ui.stream.end()
+    return _merge_tables(table_text + "\n" + cont_text)
+
+
 def _try_align(nos: list[int], texts: list[str], model: str,
                ui: StatusLine, label: str,
                log_path: Path | None = None) -> dict | None:
     """Call LLM and align; return aligned dict on success, None after all retries fail."""
+    from llm7shi import Client
+
     prompt = "Create a word table for these lines:\n\n" + "\n".join(
         f"{no} {text}" for no, text in zip(nos, texts)
     )
     for attempt in range(RETRIES + 1):
-        table_text = _generate_table(prompt, model, ui.stream)
+        client = Client(model=model, file=ui.stream, show_params=False)
+        client.set_system_prompt(SYSTEM_PROMPT)
+        table_text = client(prompt).text
         ui.stream.end()
+        table_text = _merge_tables(table_text)
+        table_text = _continue_if_truncated(client, nos, texts, table_text, ui)
         try:
             aligned = morph.align_chunk(nos, texts, table_text)
             aligned, word_errors = morph.fix_aligned_words(nos, texts, aligned)
@@ -122,7 +184,7 @@ def _try_align(nos: list[int], texts: list[str], model: str,
         except ValueError as exc:
             msg = (f"  {label} lines {nos[0]}-{nos[-1]}: {exc} "
                    f"(attempt {attempt + 1}/{RETRIES + 1})")
-            ui.log(msg)
+            ui.stream.error(msg)
             if log_path:
                 with log_path.open("a", encoding="utf-8") as f:
                     f.write(f"=== {label} lines {nos[0]}-{nos[-1]} "
@@ -179,18 +241,18 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
             label = f"{canticle} {number}"
             aligned = _try_align(nos, texts, model, ui, label, log_path)
             if aligned is None and len(chunk) > 1:
-                ui.log(f"  {label}: chunk failed, retrying line by line")
+                ui.stream.error(f"  {label}: chunk failed, retrying line by line")
                 aligned = {}
                 for line in chunk:
                     result = _try_align([line.no], [line.text], model, ui, label, log_path)
                     if result is None:
-                        ui.log(f"  {label}: giving up at line {line.no}; "
-                               f"earlier lines saved for resume")
+                        ui.stream.error(f"  {label}: giving up at line {line.no}; "
+                                        f"earlier lines saved for resume")
                         return False
                     aligned.update(result)
             elif aligned is None:
-                ui.log(f"  {label}: giving up at line {nos[0]}; "
-                       f"earlier lines saved for resume")
+                ui.stream.error(f"  {label}: giving up at line {nos[0]}; "
+                                f"earlier lines saved for resume")
                 return False
             chunk_nos = {line.no for line in chunk}
             out = [(no, rows) for no, rows in out if no not in chunk_nos]
