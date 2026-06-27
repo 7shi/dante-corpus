@@ -75,16 +75,16 @@ def _chunks(lines: tuple[api.Line, ...], size: int):
 
 
 def _generate_table(prompt: str, model: str, stream) -> str:
-    from llm7shi.compat import generate_with_schema
+    from llm7shi import Client
 
-    response = generate_with_schema(
-        [prompt],
-        None,
+    client = Client(
         model=model,
-        system_prompt=SYSTEM_PROMPT,
-        show_params=False,
         file=stream,
+        show_params=False,
     )
+    client.set_system_prompt(SYSTEM_PROMPT)
+
+    response = client(prompt)
     return response.text
 
 

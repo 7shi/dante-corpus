@@ -1,8 +1,7 @@
 """Rich-based progress display for the build-time generation scripts (e.g. morph/morph.py).
 
-Adapted from multilingual-reader's `trtools/statusline.py`. `ConsoleStream` is folded in here
-(dante_corpus has no `llm` module) so the whole thing is self-contained: it is a build-time UI
-helper and is never imported by the runtime API.
+Adapted from multilingual-reader's `trtools/statusline.py`. `ConsoleStream` is imported from
+`llm7shi` so the progress line logic coexists with streamed model output.
 
 The progress line reads, per canto:
 
@@ -22,31 +21,9 @@ from rich.progress import (
 )
 from rich.text import Text
 
+from llm7shi import ConsoleStream
+
 _PROCESS_START = time.monotonic()
-
-
-class ConsoleStream:
-    """File-like wrapper for `generate_with_schema(file=...)`: buffers by line and forwards each
-    completed line to a Rich console, so streamed model output coexists with a live progress bar."""
-
-    def __init__(self, console: Console):
-        self._console = console
-        self._buf = ""
-
-    def write(self, text: str) -> None:
-        self._buf += text
-        while "\n" in self._buf:
-            line, self._buf = self._buf.split("\n", 1)
-            self._console.print(line, highlight=False)
-
-    def flush(self) -> None:
-        pass
-
-    def end(self) -> None:
-        """Flush any trailing partial line (no newline) after a generation finishes."""
-        if self._buf.strip():
-            self._console.print(self._buf, highlight=False)
-        self._buf = ""
 
 
 class _MofNColumn(ProgressColumn):
@@ -68,10 +45,43 @@ class _ProcessElapsedColumn(ProgressColumn):
         return Text(text, style="progress.elapsed")
 
 
+class StatusLineConsoleStream(ConsoleStream):
+    def __init__(self, console, status_line: "StatusLine"):
+        super().__init__(console)
+        self.status_line = status_line
+
+    def print(self, text: str, end: str = "\n") -> None:
+        self._console.print(text, end=end, highlight=False)
+
+    def wait_retry(self, delay: int, message: str = "Retrying...") -> None:
+        import time
+        width = len(str(delay))
+        if self.status_line.active_progress is not None:
+            title_msg = message.rstrip(".")
+            task = self.status_line.active_progress.add_task(f"[red]{message}", total=delay)
+            try:
+                for i in range(delay, -1, -1):
+                    self.status_line.active_progress.update(
+                        task, completed=delay - i, description=f"[red]{title_msg} in {i:>{width}}s..."
+                    )
+                    time.sleep(1)
+            finally:
+                self.status_line.active_progress.remove_task(task)
+        else:
+            for i in range(delay, -1, -1):
+                self.print(f"\r{message} {i:>{width}}s", end="")
+                time.sleep(1)
+            self.print("", end="\n")
+
+    def error(self, text: str) -> None:
+        self._console.print(f"[red]{text}")
+
+
 class StatusLine:
     def __init__(self):
         self.console = Console()
-        self.stream = ConsoleStream(self.console)
+        self.stream = StatusLineConsoleStream(self.console, self)
+        self.active_progress = None
 
     def write(self, text: str) -> None:
         self.stream.write(text)
@@ -81,24 +91,26 @@ class StatusLine:
         self.console.print(text, highlight=False)
 
     def progress(self, total: int, start: int = 0, label: str | None = None) -> "_ProgressContext":
-        return _ProgressContext(self.console, total, start, label)
+        return _ProgressContext(self, total, start, label)
 
 
 class _ProgressContext:
-    def __init__(self, console: Console, total: int, completed: int, label: str | None):
+    def __init__(self, status_line: StatusLine, total: int, completed: int, label: str | None):
         columns = [SpinnerColumn()]
         if label:
             columns.append(TextColumn("[bold cyan]{task.description}"))
             columns.append(TextColumn("|"))
         columns += [_MofNColumn(), BarColumn(), TaskProgressColumn(), _ProcessElapsedColumn()]
 
-        self._progress = Progress(*columns, console=console)
+        self._status_line = status_line
+        self._progress = Progress(*columns, console=status_line.console)
         self._total = total
         self._completed = completed
         self._label = label
         self._task = None
 
     def __enter__(self):
+        self._status_line.active_progress = self._progress
         self._progress.__enter__()
         self._task = self._progress.add_task(
             self._label or "", total=self._total, completed=self._completed
@@ -106,7 +118,9 @@ class _ProgressContext:
         return self
 
     def __exit__(self, *args):
+        self._status_line.active_progress = None
         return self._progress.__exit__(*args)
 
     def update(self, completed: int) -> None:
         self._progress.update(self._task, completed=completed)
+
