@@ -1,0 +1,957 @@
+line	word	lemma	pos	gender	number	person	tense	mood	note
+1	Come	come	adverb						
+1	l'	lo	article	m.	sg.				elision
+1	augello	augello	noun	m.	sg.				
+1	intra	intra	preposition						archaic
+1	l'	le	article	f.	pl.				elision
+1	amate	amato	adjective	f.	pl.				
+1	fronde	fronda	noun	f.	pl.				
+2	posato	posare	verb	m.	sg.		past participle		
+2	al	a+il	preposition+article	m.	sg.				contraction
+2	nido	nido	noun	m.	sg.				
+2	de'	di+i	preposition+article	m.	pl.				contraction
+2	suoi	suo	adjective	m.	pl.				
+2	dolci	dolce	adjective	m.	pl.				
+2	nati	nato	noun	m.	pl.				
+3	la	la	article	f.	sg.				
+3	notte	notte	noun	f.	sg.				
+3	che	che	pronoun		sg.				
+3	le	le	article	f.	pl.				
+3	cose	cosa	noun	f.	pl.				
+3	ci	ci	pronoun		pl.	1			
+3	nasconde	nascondere	verb		sg.	3	present	indicative	
+4	che	che	relative pronoun		sg.				
+4	per	per	preposition						
+4	veder	vedere	verb		sg.			infinitive	apocope
+4	li	lo	article	m.	pl.				archaic
+4	aspetti	aspetto	noun	m.	pl.				
+4	disïati	disiato	adjective	m.	pl.				archaic
+5	e	e	conjunction						
+5	per	per	preposition						
+5	trovar	trovare	verb		sg.			infinitive	apocope
+5	lo	lo	article	m.	sg.				
+5	cibo	cibo	noun	m.	sg.				
+5	onde	onde	relative pronoun		sg.				
+5	li	lo	pronoun	m.	pl.	3			
+5	pasca	pascare	verb		sg.	3	present	subjunctive	
+6	in	in	preposition						
+6	che	che	relative pronoun		sg.				
+6	gravi	grave	adjective		pl.				
+6	labor	lavoro	noun	m.	pl.				apocope
+6	li	li	pronoun	m.	pl.	3			dative
+6	sono	essere	verb		pl.	3	present	indicative	
+6	aggrati	aggrato	adjective	m.	pl.				archaic
+7	previene	prevenire	verb		sg.	3	present	indicative	
+7	il	il	article	m.	sg.				
+7	tempo	tempo	noun	m.	sg.				
+7	in	in	preposition						
+7	su	su	preposition						
+7	aperta	aperto	adjective	f.	sg.				
+7	frasca	frasca	noun	f.	sg.				
+8	e	e	conjunction						
+8	con	con	preposition						
+8	ardente	ardente	adjective	m.	sg.				
+8	affetto	affetto	noun	m.	sg.				
+8	il	il	article	m.	sg.				
+8	sole	sole	noun	m.	sg.				
+8	aspetta	aspettare	verb		sg.	3	present	indicative	
+9	fiso	fisso	adjective	m.	sg.				archaic
+9	guardando	guardare	verb					gerund	
+9	pur	pure	adverb						apocope
+9	che	che	conjunction						
+9	l'	la	article	f.	sg.				elision
+9	alba	alba	noun	f.	sg.				
+9	nasca	nascere	verb		sg.	3	present	subjunctive	
+10	così	così	adverb						
+10	la	lo	article	f.	sg.				
+10	donna	donna	noun	f.	sg.				
+10	mïa	mio	adjective	f.	sg.				
+10	stava	stare	verb		sg.	3	imperfect	indicative	
+10	eretta	eretto	adjective	f.	sg.				
+11	e	e	conjunction						
+11	attenta	attento	adjective	f.	sg.				
+11	rivolta	rivolto	adjective	f.	sg.				
+11	inver'	in+verso	preposition						contraction
+11	la	lo	article	f.	sg.				
+11	plaga	plaga	noun	f.	sg.				
+12	sotto	sotto	preposition						
+12	la	lo	article	f.	sg.				
+12	quale	quale	pronoun	f.	sg.				
+12	il	il	article	m.	sg.				
+12	sol	sole	noun	m.	sg.				apocope
+12	mostra	mostrare	verb		sg.	3	present	indicative	
+12	men	meno	adverb						apocope
+12	fretta	fretta	noun	f.	sg.				
+13	sì	sì	adverb						
+13	che	che	conjunction						
+13	veggendola	vedere+la	verb+pronoun	f.	sg.			gerund	contraction
+13	io	io	pronoun		sg.	1			
+13	sospesa	sospeso	adjective	f.	sg.				
+13	e	e	conjunction						
+13	vaga	vago	adjective	f.	sg.				
+14	fecimi	fare+mi	verb+pronoun		sg.	3	remote past	indicative	contraction
+14	qual	quale	adjective		sg.				apocope
+14	è	essere	verb		sg.	3	present	indicative	
+14	quei	quello	pronoun	m.	sg.				
+14	che	che	pronoun		sg.				
+14	disïando	desiderare	verb					gerund	archaic
+15	altro	altro	pronoun	m.	sg.				
+15	vorria	volere	verb		sg.	3	present	conditional	
+15	e	e	conjunction						
+15	sperando	sperare	verb					gerund	
+15	s'	si	pronoun		sg.	3			elision
+15	appaga	appagare	verb		sg.	3	present	indicative	
+16	Ma	ma	conjunction						
+16	poco	poco	adverb						
+16	fu	essere	verb		sg.	3	remote past	indicative	
+16	tra	tra	preposition						
+16	uno	uno	pronoun	m.	sg.				
+16	e	e	conjunction						
+16	altro	altro	pronoun	m.	sg.				
+16	quando	quando	conjunction						
+17	del	di+il	preposition+article	m.	sg.				contraction
+17	mio	mio	adjective	m.	sg.				
+17	attender	attendere	noun	m.	sg.				apocope
+17	dico	dire	verb		sg.	1	present	indicative	
+17	e	e	conjunction						
+17	del	di+il	preposition+article	m.	sg.				contraction
+17	vedere	vedere	noun	m.	sg.				
+18	lo	lo	article	m.	sg.				
+18	ciel	cielo	noun	m.	sg.				apocope
+18	venir	venire	verb				infinitive		apocope
+18	più	più	adverb						
+18	e	e	conjunction						
+18	più	più	adverb						
+18	rischiarando	rischiarare	verb				gerund		
+19	e	e	conjunction						
+19	Bëatrice	Beatrice	proper noun	f.	sg.				
+19	disse	dire	verb		sg.	3	remote past	indicative	
+19	Ecco	ecco	adverb						
+19	le	lo	article	f.	pl.				
+19	schiere	schiera	noun	f.	pl.				
+20	del	di+il	preposition+article	m.	sg.				contraction
+20	trïunfo	trionfo	noun	m.	sg.				
+20	di	di	preposition						
+20	Cristo	Cristo	proper noun	m.	sg.				
+20	e	e	conjunction						
+20	tutto	tutto	adjective	m.	sg.				
+20	'l	il	article	m.	sg.				elision
+20	frutto	frutto	noun	m.	sg.				
+21	ricolto	ricolgere	adjective	m.	sg.				
+21	del	di+il	preposition+article	m.	sg.				contraction
+21	girar	girare	noun	m.	sg.				apocope
+21	di	di	preposition						
+21	queste	questo	adjective	f.	pl.				
+21	spere	sfera	noun	f.	pl.				
+22	Pariemi	parere+mi	verb+pronoun		sg.	1	present	indicative	enclitic
+22	che	che	conjunction						
+22	'l	lo	article	m.	sg.				elision
+22	suo	suo	adjective	m.	sg.				
+22	viso	viso	noun	m.	sg.				
+22	ardesse	ardere	verb		sg.	3	imperfect	subjunctive	
+22	tutto	tutto	adjective	m.	sg.				
+23	e	e	conjunction						
+23	li	lo	article	m.	pl.				archaic
+23	occhi	occhio	noun	m.	pl.				
+23	avea	avere	verb		sg.	3	imperfect	indicative	apocope
+23	di	di	preposition						
+23	letizia	letizia	noun	f.	sg.				
+23	sì	sì	adverb						
+23	pieni	pieno	adjective	m.	pl.				
+24	che	che	conjunction						
+24	passarmen	passare+mi	verb+pronoun		sg.	1			enclitic
+24	convien	convenire	verb		sg.	3	present	indicative	apocope
+24	sanza	senza	preposition						archaic
+24	costrutto	costrutto	noun	m.	sg.				
+25	Quale	quale	adjective	m.	pl.				
+25	ne'	in+i	preposition+article	m.	pl.				contraction
+25	plenilunïi	plenilunio	noun	m.	pl.				
+25	sereni	sereno	adjective	m.	pl.				
+26	Trivïa	Trivia	proper noun	f.	sg.				
+26	ride	ridere	verb		sg.	3	present	indicative	
+26	tra	tra	preposition						
+26	le	il	article	f.	pl.				
+26	ninfe	ninfa	noun	f.	pl.				
+26	etterne	eterno	adjective	f.	pl.				archaic
+27	che	che	pronoun		pl.				relative
+27	dipingon	dipingere	verb		pl.	3	present	indicative	apocope
+27	lo	il	article	m.	sg.				
+27	ciel	cielo	noun	m.	sg.				apocope
+27	per	per	preposition						
+27	tutti	tutto	adjective	m.	pl.				
+27	i	il	article	m.	pl.				
+27	seni	seno	noun	m.	pl.				
+28	vid'	vedere	verb		sg.	1	remote past	indicative	apocope
+28	i'	io	pronoun		sg.	1			apocope
+28	sopra	sopra	preposition						
+28	migliaia	migliaia	noun	f.	pl.				
+28	di	di	preposition						
+28	lucerne	lucerna	noun	f.	pl.				
+29	un	uno	article	m.	sg.				indefinite
+29	sol	sole	noun	m.	sg.				apocope
+29	che	che	pronoun	m.	sg.				
+29	tutte	tutto	adjective	f.	pl.				
+29	quante	quanto	adjective	f.	pl.				
+29	l'	le	pronoun	f.	pl.				elision
+29	accendea	accendere	verb		sg.	3	imperfect	indicative	archaic
+30	come	come	conjunction						
+30	fa	fare	verb		sg.	3	present	indicative	
+30	'l	il	article	m.	sg.				elision
+30	nostro	nostro	adjective	m.	sg.				
+30	le	il	article	f.	pl.				
+30	viste	vista	noun	f.	pl.				
+30	superne	superno	adjective	f.	pl.				
+31	e	e	conjunction						
+31	per	per	preposition						
+31	la	lo	article	f.	sg.				
+31	viva	vivo	adjective	f.	sg.				
+31	luce	luce	noun	f.	sg.				
+31	trasparea	trasparire	verb		sg.	3	imperfect	indicative	archaic
+32	la	lo	article	f.	sg.				
+32	lucente	lucente	adjective	f.	sg.				
+32	sustanza	sostanza	noun	f.	sg.				archaic
+32	tanto	tanto	adverb						
+32	chiara	chiaro	adjective	f.	sg.				
+33	nel	in+il	preposition+article	m.	sg.				contraction
+33	viso	viso	noun	m.	sg.				
+33	mio	mio	adjective	m.	sg.				
+33	che	che	pronoun		sg.				
+33	non	non	adverb						
+33	la	lo	pronoun	f.	sg.				
+33	sostenea	sostenere	verb		sg.	3	imperfect	indicative	archaic
+34	Oh	oh	interjection						
+34	Bëatrice	Beatrice	proper noun	f.	sg.				
+34	dolce	dolce	adjective	f.	sg.				
+34	guida	guida	noun	f.	sg.				
+34	e	e	conjunction						
+34	cara	caro	adjective	f.	sg.				
+35	Ella	ella	pronoun	f.	sg.	3			
+35	mi	me	pronoun		sg.	1			
+35	disse	dire	verb		sg.	3	remote past	indicative	
+35	Quel	quello	pronoun	m.	sg.				
+35	che	che	pronoun		sg.				
+35	ti	te	pronoun		sg.	2			
+35	sobranza	sobranzare	verb		sg.	3	present	indicative	archaic
+36	è	essere	verb		sg.	3	present	indicative	
+36	virtù	virtù	noun	f.	sg.				
+36	da	da	preposition						
+36	cui	cui	pronoun		sg.				
+36	nulla	nulla	pronoun		sg.				
+36	si	si	pronoun		sg.	3			reflexive
+36	ripara	riparare	verb		sg.	3	present	indicative	
+37	Quivi	quivi	adverb						
+37	è	essere	verb		sg.	3	present	indicative	
+37	la	il	article	f.	sg.				
+37	sapïenza	sapienza	noun	f.	sg.				
+37	e	e	conjunction						
+37	la	il	article	f.	sg.				
+37	possanza	possanza	noun	f.	sg.				
+38	ch'	che	pronoun						elision
+38	aprì	aprire	verb		sg.	3	remote past	indicative	
+38	le	il	article	f.	pl.				
+38	strade	strada	noun	f.	pl.				
+38	tra	tra	preposition						
+38	'l	il	article	m.	sg.				elision
+38	cielo	cielo	noun	m.	sg.				
+38	e	e	conjunction						
+38	la	il	article	f.	sg.				
+38	terra	terra	noun	f.	sg.				
+39	onde	onde	adverb						
+39	fu	essere	verb		sg.	3	remote past	indicative	
+39	già	già	adverb						
+39	sì	sì	adverb						
+39	lunga	lungo	adjective	f.	sg.				
+39	disïanza	distanza	noun	f.	sg.				archaic
+40	Come	come	conjunction						
+40	foco	fuoco	noun	m.	sg.				archaic
+40	di	di	preposition						
+40	nube	nube	noun	f.	sg.				
+40	si	si	pronoun		sg.	3			reflexive
+40	diserra	diserrare	verb		sg.	3	present	indicative	
+41	per	per	preposition						
+41	dilatarsi	dilatare+si	verb						reflexive infinitive
+41	sì	sì	adverb						
+41	che	che	conjunction						
+41	non	non	adverb						
+41	vi	vi	pronoun		sg.	3			locative
+41	cape	capere	verb		sg.	3	present	indicative	archaic
+42	e	e	conjunction						
+42	fuor	fuori	adverb						apocope
+42	di	di	preposition						
+42	sua	suo	adjective	f.	sg.				
+42	natura	natura	noun	f.	sg.				
+42	in	in	preposition						
+42	giù	giù	adverb						
+42	s'	si	pronoun		sg.	3			elision
+42	atterra	atterrare	verb		sg.	3	present	indicative	
+43	la	lo	article	f.	sg.				
+43	mente	mente	noun	f.	sg.				
+43	mia	mio	adjective	f.	sg.				
+43	così	così	adverb						
+43	tra	tra	preposition						
+43	quelle	quello	adjective	f.	pl.				
+43	dape	dapis	noun	f.	pl.				archaic
+44	fatta	fare	verb	f.	sg.		past participle		
+44	più	più	adverb						
+44	grande	grande	adjective	f.	sg.				
+44	di	di	preposition						
+44	sé	sé	pronoun		sg.				
+44	stessa	stesso	adjective	f.	sg.				
+44	uscìo	uscire	verb		sg.	3	remote past	indicative	archaic
+45	e	e	conjunction						
+45	che	che	conjunction						
+45	si	si	pronoun		sg.	3			reflexive
+45	fesse	fare	verb		sg.	3	imperfect	subjunctive	
+45	rimembrar	rimembrare	verb						apocope
+45	non	non	adverb						
+45	sape	sapere	verb		sg.	3	imperfect	indicative	apocope
+46	Apri	aprire	verb		sg.	2	present	imperative	
+46	li	lo	article	m.	pl.				archaic
+46	occhi	occhio	noun	m.	pl.				
+46	e	e	conjunction						
+46	riguarda	riguardare	verb		sg.	2	present	imperative	
+46	qual	quale	pronoun		sg.				apocope
+46	son	essere	verb		sg.	1	present	indicative	apocope
+46	io	io	pronoun		sg.	1			
+47	tu	tu	pronoun		sg.	2			
+47	hai	avere	verb		sg.	2	present	indicative	
+47	vedute	vedere	verb	f.	pl.		past participle		
+47	cose	cosa	noun	f.	pl.				
+47	che	che	conjunction						
+47	possente	possente	adjective		sg.				
+48	se'	essere	verb		sg.	2	present	indicative	apocope
+48	fatto	fare	verb	m.	sg.		past participle		
+48	a	a	preposition						
+48	sostener	sostenere	verb				infinitive		apocope
+48	lo	lo	article	m.	sg.				
+48	riso	riso	noun	m.	sg.				
+48	mio	mio	adjective	m.	sg.				
+49	Io	io	pronoun		sg.	1			
+49	era	essere	verb		sg.	3	imperfect	indicative	
+49	come	come	conjunction						
+49	quei	quello	pronoun	m.	pl.				
+49	che	che	pronoun						
+49	si	si	pronoun		sg.	3			reflexive
+49	risente	risentire	verb		sg.	3	present	indicative	
+50	di	di	preposition						
+50	visïone	visione	noun	f.	sg.				
+50	oblita	oblitare	adjective	f.	sg.				
+50	e	e	conjunction						
+50	che	che	pronoun						
+50	s'	si	pronoun		sg.	3			elision
+50	ingegna	ingegnarsi	verb		sg.	3	present	indicative	
+51	indarno	indarno	adverb						archaic
+51	di	di	preposition						
+51	ridurlasi	ridurre+la+si	verb						enclitic pronouns
+51	a	a	preposition						
+51	la	la	article	f.	sg.				
+51	mente	mente	noun	f.	sg.				
+52	quand'	quando	conjunction						elision
+52	io	io	pronoun		sg.	1			
+52	udi'	udire	verb		sg.	1	remote past	indicative	apocope
+52	questa	questo	adjective	f.	sg.				
+52	proferta	proferta	noun	f.	sg.				
+52	degna	degno	adjective	f.	sg.				
+53	di	di	preposition						
+53	tanto	tanto	adjective	m.	sg.				
+53	grato	grato	noun	m.	sg.				
+53	che	che	conjunction						
+53	mai	mai	adverb						
+53	non	non	adverb						
+53	si	si	pronoun		sg.	3			reflexive
+53	stingue	stinguere	verb		sg.	3	present	indicative	
+54	del	di+il	preposition+article	m.	sg.				contraction
+54	libro	libro	noun	m.	sg.				
+54	che	che	pronoun						
+54	'l	lo	article	m.	sg.				elision
+54	preterito	preterito	noun	m.	sg.				
+54	rassegna	rassegnare	verb		sg.	3	present	indicative	
+55	Se	se	conjunction						
+55	mo	mo	adverb						archaic
+55	sonasser	sonare	verb		pl.	3	imperfect	subjunctive	
+55	tutte	tutto	adjective	f.	pl.				
+55	quelle	quello	adjective	f.	pl.				
+55	lingue	lingua	noun	f.	pl.				
+56	che	che	pronoun	f.	pl.				relative
+56	Polimnïa	Polimnia	proper noun	f.	sg.				
+56	con	con	preposition						
+56	le	il	article	f.	pl.				
+56	suore	suora	noun	f.	pl.				
+56	fero	ferre	verb		sg.	3	remote past	indicative	archaic
+57	del	di+il	preposition+article	m.	sg.				contraction
+57	latte	latte	noun	m.	sg.				
+57	lor	loro	adjective		pl.				apocope
+57	dolcissimo	dolce	adjective	m.	sg.				superlative
+57	più	più	adverb						
+57	pingue	pingue	adjective	m.	sg.				
+58	per	per	preposition						
+58	aiutarmi	aiutare+mi	verb+pronoun		sg.	1	infinitive		contraction
+58	al	a+il	preposition+article	m.	sg.				contraction
+58	millesmo	millesimo	adjective	m.	sg.				archaic
+58	del	di+il	preposition+article	m.	sg.				contraction
+58	vero	vero	noun	m.	sg.				
+59	non	non	adverb						
+59	si	si	pronoun		sg.	3			impersonal
+59	verria	venire	verb		sg.	3	present	conditional	archaic
+59	cantando	cantare	verb					gerund	
+59	il	il	article	m.	sg.				
+59	santo	santo	adjective	m.	sg.				
+59	riso	riso	noun	m.	sg.				
+60	e	e	conjunction						
+60	quanto	quanto	adverb						
+60	il	il	article	m.	sg.				
+60	santo	santo	adjective	m.	sg.				
+60	aspetto	aspetto	noun	m.	sg.				
+60	facea	fare	verb		sg.	3	imperfect	indicative	archaic
+60	mero	mero	adjective	m.	sg.				
+61	e	e	conjunction						
+61	così	così	adverb						
+61	figurando	figurare	verb				gerund		
+61	il	il	article	m.	sg.				
+61	paradiso	paradiso	noun	m.	sg.				
+62	convien	convenire	verb		sg.	3	present	indicative	apocope
+62	saltar	saltare	verb				infinitive		apocope
+62	lo	lo	article	m.	sg.				
+62	sacrato	sacrato	adjective	m.	sg.				
+62	poema	poema	noun	m.	sg.				
+63	come	come	conjunction						
+63	chi	chi	pronoun		sg.				
+63	trova	trovare	verb		sg.	3	present	indicative	
+63	suo	suo	adjective	m.	sg.				
+63	cammin	cammino	noun	m.	sg.				apocope
+63	riciso	riciso	adjective	m.	sg.				
+64	Ma	ma	conjunction						
+64	chi	chi	pronoun		sg.	3			
+64	pensasse	pensare	verb		sg.	3	imperfect	subjunctive	
+64	il	il	article	m.	sg.				
+64	ponderoso	ponderoso	adjective	m.	sg.				
+64	tema	tema	noun	m.	sg.				
+65	e	e	conjunction						
+65	l'	lo	article	m.	sg.				elision
+65	omero	omero	noun	m.	sg.				
+65	mortal	mortale	adjective	m.	sg.				apocope
+65	che	che	pronoun		sg.	3			
+65	se	si	pronoun		sg.	3			reflexive
+65	ne	ne	pronoun		sg.				
+65	carca	caricare	verb		sg.	3	present	indicative	
+66	nol	non+lo	adverb+pronoun	m.	sg.				contraction
+66	biasmerebbe	biasmare	verb		sg.	3	present	conditional	
+66	se	se	conjunction						
+66	sott'	sotto	preposition						elision
+66	esso	esso	pronoun	m.	sg.				
+66	trema	tremare	verb		sg.	3	present	indicative	
+67	non	non	adverb						
+67	è	essere	verb		sg.	3	present	indicative	
+67	pareggio	pareggio	noun	m.	sg.				
+67	da	da	preposition						
+67	picciola	piccolo	adjective	f.	sg.				archaic
+67	barca	barca	noun	f.	sg.				
+68	quel	quello	pronoun	m.	sg.				
+68	che	che	pronoun		sg.				
+68	fendendo	fendere	verb				gerund		
+68	va	andare	verb		sg.	3	present	indicative	
+68	l'	la	article	f.	sg.				elision
+68	ardita	ardito	adjective	f.	sg.				
+68	prora	prora	noun	f.	sg.				
+69	né	né	conjunction						
+69	da	da	preposition						
+69	nocchier	nocchiere	noun	m.	sg.				apocope
+69	ch'	che	pronoun		sg.				elision
+69	a	a	preposition						
+69	sé	sé	pronoun		sg.	3			
+69	medesmo	medesimo	adjective	m.	sg.				archaic
+69	parca	parcere	verb		sg.	3	present	subjunctive	
+70	Perché	perché	adverb						
+70	la	il	article	f.	sg.				
+70	faccia	faccia	noun	f.	sg.				
+70	mia	mio	adjective	f.	sg.				
+70	sì	sì	adverb						
+70	t'	ti	pronoun		sg.	2			elision
+70	innamora	innamorare	verb		sg.	3	present	indicative	
+71	che	che	conjunction						
+71	tu	tu	pronoun		sg.	2			
+71	non	non	adverb						
+71	ti	ti	pronoun		sg.	2			reflexive
+71	rivolgi	rivolgere	verb		sg.	2	present	indicative	
+71	al	a+il	preposition+article	m.	sg.				contraction
+71	bel	bello	adjective	m.	sg.				apocope
+71	giardino	giardino	noun	m.	sg.				
+72	che	che	pronoun	m.	sg.				relative
+72	sotto	sotto	preposition						
+72	i	il	article	m.	pl.				
+72	raggi	raggio	noun	m.	pl.				
+72	di	di	preposition						
+72	Cristo	Cristo	noun	m.	sg.				
+72	s'	si	pronoun		sg.	3			elision
+72	infiora	infiorare	verb		sg.	3	present	indicative	
+73	Quivi	quivi	adverb						
+73	è	essere	verb		sg.	3	present	indicative	
+73	la	il	article	f.	sg.				
+73	rosa	rosa	noun	f.	sg.				
+73	in	in	preposition						
+73	che	che	pronoun						
+73	'l	il	article	m.	sg.				elision
+73	verbo	verbo	noun	m.	sg.				
+73	divino	divino	adjective	m.	sg.				
+74	carne	carne	noun	f.	sg.				
+74	si	si	pronoun		sg.	3			reflexive
+74	fece	fare	verb		sg.	3	remote past	indicative	
+74	quivi	quivi	adverb						
+74	son	essere	verb		pl.	3	present	indicative	apocope
+74	li	il	article	m.	pl.				archaic
+74	gigli	giglio	noun	m.	pl.				
+75	al	a+il	preposition+article	m.	sg.				contraction
+75	cui	cui	pronoun						
+75	odor	odore	noun	m.	sg.				apocope
+75	si	si	pronoun		sg.	3			reflexive
+75	prese	prendere	verb		sg.	3	remote past	indicative	
+75	il	il	article	m.	sg.				
+75	buon	buono	adjective	m.	sg.				apocope
+75	cammino	cammino	noun	m.	sg.				
+76	Così	così	adverb						
+76	Beatrice	Beatrice	proper noun	f.	sg.				
+76	e	e	conjunction						
+76	io	io	pronoun		sg.	1			
+76	che	che	pronoun		sg.				
+76	a'	a+i	preposition+article	m.	pl.				contraction
+76	suoi	suo	adjective	m.	pl.				
+76	consigli	consiglio	noun	m.	pl.				
+77	tutto	tutto	adjective	m.	sg.				
+77	era	essere	verb		sg.	1	imperfect	indicative	
+77	pronto	pronto	adjective	m.	sg.				
+77	ancora	ancora	adverb						
+77	mi	mi	pronoun		sg.	1			reflexive
+77	rendei	rendere	verb		sg.	1	imperfect	indicative	
+78	a	a	preposition						
+78	la	la	article	f.	sg.				
+78	battaglia	battaglia	noun	f.	sg.				
+78	de'	di+i	preposition+article	m.	pl.				contraction
+78	debili	debole	adjective	m.	pl.				
+78	cigli	ciglio	noun	m.	pl.				
+79	Come	come	conjunction						
+79	a	a	preposition						
+79	raggio	raggio	noun	m.	sg.				
+79	di	di	preposition						
+79	sol	sole	noun	m.	sg.				apocope
+79	che	che	relative pronoun						
+79	puro	puro	adjective	m.	sg.				
+79	mei	mio	adjective	m.	pl.				
+80	per	per	preposition						
+80	fratta	fratto	adjective	f.	sg.				archaic
+80	nube	nube	noun	f.	sg.				
+80	già	già	adverb						
+80	prato	prato	noun	m.	sg.				
+80	di	di	preposition						
+80	fiori	fiore	noun	m.	pl.				
+81	vider	vedere	verb		sg.	1	remote past	indicative	apocope
+81	coverti	coperto	adjective	m.	pl.				archaic
+81	d'	di	preposition						elision
+81	ombra	ombra	noun	f.	sg.				
+81	li	il	article	m.	pl.				archaic
+81	occhi	occhio	noun	m.	pl.				
+81	miei	mio	adjective	m.	pl.				
+82	vid'	vedere	verb		sg.	1	remote past	indicative	apocope
+82	io	io	pronoun		sg.	1			
+82	così	così	adverb						
+82	più	più	adverb						
+82	turbe	turba	noun	f.	pl.				
+82	di	di	preposition						
+82	splendori	splendore	noun	m.	pl.				
+83	folgorate	folgorare	adjective	f.	pl.				
+83	di	di	preposition						
+83	sù	su	adverb						
+83	da	da	preposition						
+83	raggi	raggio	noun	m.	pl.				
+83	ardenti	ardente	adjective	m.	pl.				
+84	sanza	senza	preposition						archaic
+84	veder	vedere	verb				infinitive		apocope
+84	principio	principio	noun	m.	sg.				
+84	di	di	preposition						
+84	folgóri	folgore	noun	f.	pl.				
+85	O	O	interjection						
+85	benigna	benigno	adjective	f.	sg.				
+85	vertù	virtù	noun	f.	sg.				
+85	che	che	pronoun		sg.				
+85	sì	sì	adverb						
+85	li	lo	pronoun	m.	pl.				
+85	'mprenti	imprentare	verb		sg.	3	present	indicative	elision
+86	sù	su	adverb						
+86	t'	ti	pronoun		sg.	2			elision
+86	essaltasti	essaltare	verb		sg.	2	remote past	indicative	
+86	per	per	preposition						
+86	largirmi	largire+mi	verb+pronoun		sg.	1			contraction
+86	loco	luogo	noun	m.	sg.				archaic
+87	a	a	preposition						
+87	li	lo	article	m.	pl.				
+87	occhi	occhio	noun	m.	pl.				
+87	lì	lì	adverb						
+87	che	che	pronoun		pl.				
+87	non	non	adverb						
+87	t'	ti	pronoun		sg.	2			elision
+87	eran	essere	verb		pl.	3	imperfect	indicative	apocope
+87	possenti	possente	adjective	m.	pl.				
+88	Il	il	article	m.	sg.				
+88	nome	nome	noun	m.	sg.				
+88	del	di+il	preposition+article	m.	sg.				contraction
+88	bel	bello	adjective	m.	sg.				apocope
+88	fior	fiore	noun	m.	sg.				apocope
+88	ch'	che	conjunction						elision
+88	io	io	pronoun		sg.	1			
+88	sempre	sempre	adverb						
+88	invoco	invocare	verb		sg.	1	present	indicative	
+89	e	e	conjunction						
+89	mane	mane	noun	f.	sg.				archaic
+89	e	e	conjunction						
+89	sera	sera	noun	f.	sg.				
+89	tutto	tutto	adjective	m.	sg.				
+89	mi	mi	pronoun		sg.	1			
+89	ristrinse	restringere	verb		sg.	3	remote past	indicative	
+90	l'	lo	article	m.	sg.				elision
+90	animo	animo	noun	m.	sg.				
+90	ad	ad	preposition						
+90	avvisar	avvisare	verb						apocope
+90	lo	lo	article	m.	sg.				
+90	maggior	maggiore	adjective	m.	sg.				apocope
+90	foco	fuoco	noun	m.	sg.				archaic
+91	e	e	conjunction						
+91	come	come	adverb						
+91	ambo	ambo	adjective	m.	pl.				
+91	le	il	article	f.	pl.				
+91	luci	luce	noun	f.	pl.				
+91	mi	me	pronoun		sg.	1			reflexive
+91	dipinse	dipingere	verb		sg.	3	remote past	indicative	
+92	il	il	article	m.	sg.				
+92	quale	quale	pronoun	m.	sg.				
+92	e	e	conjunction						
+92	il	il	article	m.	sg.				
+92	quanto	quanto	pronoun	m.	sg.				
+92	de	di	preposition						archaic
+92	la	la	article	f.	sg.				
+92	viva	vivo	adjective	f.	sg.				
+92	stella	stella	noun	f.	sg.				
+93	che	che	pronoun		sg.				
+93	là	là	adverb						
+93	sù	su	adverb						
+93	vince	vincere	verb		sg.	3	present	indicative	
+93	come	come	adverb						
+93	qua	qua	adverb						
+93	giù	giù	adverb						
+93	vinse	vincere	verb		sg.	3	remote past	indicative	
+94	per	per	preposition						
+94	entro	entro	preposition						
+94	il	il	article	m.	sg.				
+94	cielo	cielo	noun	m.	sg.				
+94	scese	scendere	verb		sg.	3	remote past	indicative	
+94	una	uno	article	f.	sg.				indefinite
+94	facella	facella	noun	f.	sg.				
+95	formata	formare	adjective	f.	sg.				
+95	in	in	preposition						
+95	cerchio	cerchio	noun	m.	sg.				
+95	a	a	preposition						
+95	guisa	guisa	noun	f.	sg.				
+95	di	di	preposition						
+95	corona	corona	noun	f.	sg.				
+96	e	e	conjunction						
+96	cinsela	ci+cingere+la	verb		sg.	3	remote past	indicative	contraction
+96	e	e	conjunction						
+96	girossi	girare+si	verb		sg.	3	remote past	indicative	contraction
+96	intorno	intorno	adverb						
+96	ad	a	preposition						
+96	ella	ella	pronoun	f.	sg.				
+97	Qualunque	qualunque	adjective		sg.				
+97	melodia	melodia	noun	f.	sg.				
+97	più	più	adverb						
+97	dolce	dolce	adjective	f.	sg.				
+97	suona	suonare	verb		sg.	3	present	indicative	
+98	qua	qua	adverb						
+98	giù	giù	adverb						
+98	e	e	conjunction						
+98	più	più	adverb						
+98	a	a	preposition						
+98	sé	sé	pronoun		sg.				
+98	l'	la	article	f.	sg.				elision
+98	anima	anima	noun	f.	sg.				
+98	tira	tirare	verb		sg.	3	present	indicative	
+99	parrebbe	parere	verb		sg.	3	present	conditional	
+99	nube	nube	noun	f.	sg.				
+99	che	che	pronoun	f.	sg.				relative
+99	squarciata	squarciare	adjective	f.	sg.				
+99	tona	tonare	verb		sg.	3	present	indicative	
+100	comparata	comparare	adjective	f.	sg.				participle
+100	al	a+il	preposition+article	m.	sg.				contraction
+100	sonar	suono	noun	m.	sg.				archaic
+100	di	di	preposition						
+100	quella	quello	adjective	f.	sg.				
+100	lira	lira	noun	f.	sg.				
+101	onde	onde	pronoun						relative
+101	si	si	pronoun		sg.				reflexive
+101	coronava	coronare	verb		sg.	3	imperfect	indicative	
+101	il	il	article	m.	sg.				
+101	bel	bello	adjective	m.	sg.				apocope
+101	zaffiro	zaffiro	noun	m.	sg.				
+102	del	di+il	preposition+article	m.	sg.				contraction
+102	quale	quale	pronoun	m.	sg.				
+102	il	il	article	m.	sg.				
+102	ciel	cielo	noun	m.	sg.				apocope
+102	più	più	adverb						
+102	chiaro	chiaro	adjective	m.	sg.				
+102	s'	si	pronoun		sg.				elision
+102	inzaffira	inzaffirare	verb		sg.	3	present	indicative	
+103	Io	io	pronoun		sg.	1			
+103	sono	essere	verb		sg.	1	present	indicative	
+103	amore	amore	noun	m.	sg.				
+103	angelico	angelico	adjective	m.	sg.				
+103	che	che	pronoun		sg.				
+103	giro	girare	verb		sg.	1	present	indicative	
+104	l'	la	article	f.	sg.				elision
+104	alta	alto	adjective	f.	sg.				
+104	letizia	letizia	noun	f.	sg.				
+104	che	che	pronoun		sg.				
+104	spira	spirare	verb		sg.	3	present	indicative	
+104	del	di+il	preposition+article	m.	sg.				contraction
+104	ventre	ventre	noun	m.	sg.				
+105	che	che	pronoun		sg.				
+105	fu	essere	verb		sg.	3	remote past	indicative	
+105	albergo	albergo	noun	m.	sg.				
+105	del	di+il	preposition+article	m.	sg.				contraction
+105	nostro	nostro	adjective	m.	sg.				
+105	disiro	desiderio	noun	m.	sg.				apocope
+106	e	e	conjunction						
+106	girerommi	girare+mi	verb+pronoun		sg.	1	future	indicative	enclitic pronoun
+106	donna	donna	noun	f.	sg.				
+106	del	di+il	preposition+article	m.	sg.				contraction
+106	ciel	cielo	noun	m.	sg.				apocope
+106	mentre	mentre	conjunction						
+107	che	che	conjunction						
+107	seguirai	seguire	verb		sg.	2	future	indicative	
+107	tuo	tuo	adjective	m.	sg.				
+107	figlio	figlio	noun	m.	sg.				
+107	e	e	conjunction						
+107	farai	fare	verb		sg.	2	future	indicative	
+107	dia	dare	verb		sg.	3	present	subjunctive	
+108	più	più	adverb						
+108	la	la	article	f.	sg.				
+108	spera	sfera	noun	f.	sg.				archaic
+108	suprema	supremo	adjective	f.	sg.				
+108	perché	perché	conjunction						
+108	lì	lì	adverb						
+108	entre	entrare	verb		sg.	3	present	subjunctive	apocope
+109	Così	così	adverb						
+109	la	lo	article	f.	sg.				
+109	circulata	circulato	adjective	f.	sg.				
+109	melodia	melodia	noun	f.	sg.				
+110	si	si	pronoun		sg.	3			reflexive
+110	sigillava	sigillare	verb		sg.	3	imperfect	indicative	
+110	e	e	conjunction						
+110	tutti	tutto	adjective	m.	pl.				
+110	li	lo	article	m.	pl.				archaic
+110	altri	altro	adjective	m.	pl.				
+110	lumi	lume	noun	m.	pl.				
+111	facean	fare	verb		pl.	3	imperfect	indicative	apocope
+111	sonare	sonare	verb				infinitive		
+111	il	il	article	m.	sg.				
+111	nome	nome	noun	m.	sg.				
+111	di	di	preposition						
+111	Maria	Maria	noun	f.	sg.				
+112	Lo	lo	article	m.	sg.				
+112	real	reale	adjective	m.	sg.				apocope
+112	manto	manto	noun	m.	sg.				
+112	di	di	preposition						
+112	tutti	tutto	adjective	m.	pl.				
+112	i	il	article	m.	pl.				
+112	volumi	volume	noun	m.	pl.				
+113	del	di+il	preposition+article	m.	sg.				contraction
+113	mondo	mondo	noun	m.	sg.				
+113	che	che	pronoun						
+113	più	più	adverb						
+113	ferve	fervere	verb		sg.	3	present	indicative	
+113	e	e	conjunction						
+113	più	più	adverb						
+113	s'	si	pronoun		sg.	3			elision
+113	avviva	avvivare	verb		sg.	3	present	indicative	
+114	ne	in	preposition						archaic
+114	l'	lo	article	m.	sg.				elision
+114	alito	alito	noun	m.	sg.				
+114	di	di	preposition						
+114	Dio	Dio	noun	m.	sg.				
+114	e	e	conjunction						
+114	nei	in+i	preposition+article	m.	pl.				contraction
+114	costumi	costume	noun	m.	pl.				
+115	avea	avere	verb		sg.	3	imperfect	indicative	apocope
+115	sopra	sopra	preposition						
+115	di	di	preposition						
+115	noi	noi	pronoun		pl.	1			
+115	l'	la	article	f.	sg.				elision
+115	interna	interno	adjective	f.	sg.				
+115	riva	riva	noun	f.	sg.				
+116	tanto	tanto	adverb						
+116	distante	distante	adjective	f.	sg.				
+116	che	che	conjunction						
+116	la	la	article	f.	sg.				
+116	sua	suo	adjective	f.	sg.				
+116	parvenza	parvenza	noun	f.	sg.				
+117	là	là	adverb						
+117	dov'	dove	adverb						elision
+117	io	io	pronoun		sg.	1			
+117	era	essere	verb		sg.	1	imperfect	indicative	
+117	ancor	ancora	adverb						apocope
+117	non	non	adverb						
+117	appariva	apparire	verb		sg.	3	imperfect	indicative	
+118	però	però	conjunction						
+118	non	non	adverb						
+118	ebber	avere	verb		pl.	3	remote past	indicative	apocope
+118	li	lo	article	m.	pl.				archaic
+118	occhi	occhio	noun	m.	pl.				
+118	miei	mio	adjective	m.	pl.				
+118	potenza	potenza	noun	f.	sg.				
+119	di	di	preposition						
+119	seguitar	seguitare	verb				infinitive		apocope
+119	la	la	article	f.	sg.				
+119	coronata	coronato	adjective	f.	sg.				
+119	fiamma	fiamma	noun	f.	sg.				
+120	che	che	pronoun		sg.				relative
+120	si	si	pronoun		sg.	3			reflexive
+120	levò	levarsi	verb		sg.	3	remote past	indicative	
+120	appresso	appresso	preposition						
+120	sua	suo	adjective	f.	sg.				
+120	semenza	semenza	noun	f.	sg.				
+121	E	e	conjunction						
+121	come	come	conjunction						
+121	fantolin	fantolino	noun	m.	sg.				apocope
+121	che	che	pronoun						
+121	'nver'	invero	adverb						elision
+121	la	lo	article	f.	sg.				
+121	mamma	mamma	noun	f.	sg.				
+122	tende	tendere	verb		sg.	3	present	indicative	
+122	le	lo	article	f.	pl.				
+122	braccia	braccio	noun	f.	pl.				
+122	poi	poi	adverb						
+122	che	che	conjunction						
+122	'l	il	article	m.	sg.				elision
+122	latte	latte	noun	m.	sg.				
+122	prese	prendere	verb		sg.	3	remote past	indicative	
+123	per	per	preposition						
+123	l'	il	article	m.	sg.				elision
+123	animo	animo	noun	m.	sg.				
+123	che	che	pronoun						
+123	'nfin	infine	adverb						apocope
+123	di	di	preposition						
+123	fuor	fuori	adverb						apocope
+123	s'	si	pronoun		sg.	3			elision
+123	infiamma	infiammare	verb		sg.	3	present	indicative	
+124	ciascun	ciascuno	pronoun	m.	sg.				apocope
+124	di	di	preposition						
+124	quei	quello	adjective	m.	pl.				
+124	candori	candore	noun	m.	pl.				
+124	in	in	preposition						
+124	sù	su	adverb						
+124	si	si	pronoun		sg.	3			reflexive
+124	stese	stendere	verb		sg.	3	remote past	indicative	
+125	con	con	preposition						
+125	la	il	article	f.	sg.				
+125	sua	suo	adjective	f.	sg.				
+125	cima	cima	noun	f.	sg.				
+125	sì	così	adverb						
+125	che	che	conjunction						
+125	l'	lo	article	m.	sg.				elision
+125	alto	alto	adjective	m.	sg.				
+125	affetto	affetto	noun	m.	sg.				
+126	ch'	che	conjunction						elision
+126	elli	essi	pronoun	m.	pl.	3			archaic
+126	avieno	avere	verb		pl.	3	imperfect	indicative	archaic
+126	a	a	preposition						
+126	Maria	Maria	noun	f.	sg.				
+126	mi	mi	pronoun		sg.	1			
+126	fu	essere	verb		sg.	3	remote past	indicative	
+126	palese	palese	adjective	m.	sg.				
+127	Indi	indi	adverb						
+127	rimaser	rimanere	verb		sg.	3	remote past	indicative	archaic
+127	lì	lì	adverb						
+127	nel	in+il	preposition+article	m.	sg.				contraction
+127	mio	mio	adjective	m.	sg.				possessive
+127	cospetto	cospetto	noun	m.	sg.				
+128	Regina	regina	noun	f.	sg.				Latin
+128	celi	caelum	noun	n.	sg.				Latin
+128	cantando	cantare	verb				gerund		
+128	sì	sì	adverb						
+128	dolce	dolce	adjective		sg.				
+129	che	che	conjunction						
+129	mai	mai	adverb						
+129	da	da	preposition						
+129	me	me	pronoun		sg.	1			
+129	non	non	adverb						
+129	si	si	pronoun		sg.	3			reflexive
+129	partì	partire	verb		sg.	3	remote past	indicative	
+129	'l	il	article	m.	sg.				elision
+129	diletto	diletto	noun	m.	sg.				
+130	Oh	oh	interjection						
+130	quanta	quanto	adjective	f.	sg.				
+130	è	essere	verb		sg.	3	present	indicative	
+130	l'	lo	article	f.	sg.				elision
+130	ubertà	ubertà	noun	f.	sg.				
+130	che	che	pronoun						
+130	si	si	pronoun		sg.				reflexive
+130	soffolce	soffolcere	verb		sg.	3	present	indicative	archaic
+131	in	in	preposition						
+131	quelle	quello	adjective	f.	pl.				
+131	arche	arca	noun	f.	pl.				
+131	ricchissime	ricco	adjective	f.	pl.				
+131	che	che	pronoun						
+131	fuoro	essere	verb		pl.	3	remote past	indicative	archaic
+132	a	a	preposition						
+132	seminar	seminare	verb						apocope
+132	qua	qua	adverb						
+132	giù	giù	adverb						
+132	buone	buono	adjective	f.	pl.				
+132	bobolce	bobolce	noun	f.	pl.				archaic
+133	Quivi	quivi	adverb						
+133	si	si	pronoun		sg.	3			impersonal
+133	vive	vivere	verb		sg.	3	present	indicative	
+133	e	e	conjunction						
+133	gode	godere	verb		sg.	3	present	indicative	
+133	del	di+il	preposition+article	m.	sg.				contraction
+133	tesoro	tesoro	noun	m.	sg.				
+134	che	che	pronoun		sg.				
+134	s'	si	pronoun		sg.	3			elision
+134	acquistò	acquistare	verb		sg.	3	remote past	indicative	
+134	piangendo	piangere	verb						gerund
+134	ne	in	preposition						archaic
+134	lo	lo	article	m.	sg.				
+134	essilio	esilio	noun	m.	sg.				archaic
+135	di	di	preposition						
+135	Babillòn	Babillone	proper noun	m.	sg.				
+135	ove	ove	adverb						
+135	si	si	pronoun		sg.	3			impersonal
+135	lasciò	lasciare	verb		sg.	3	remote past	indicative	
+135	l'	lo	article	m.	sg.				elision
+135	oro	oro	noun	m.	sg.				
+136	Quivi	quivi	adverb						archaic
+136	trïunfa	trionfare	verb		sg.	3	present	indicative	
+136	sotto	sotto	preposition						
+136	l'	lo	article	m.	sg.				elision
+136	alto	alto	adjective	m.	sg.				
+136	Filio	figlio	noun	m.	sg.				archaic
+137	di	di	preposition						
+137	Dio	Dio	noun	m.	sg.				
+137	e	e	conjunction						
+137	di	di	preposition						
+137	Maria	Maria	noun	f.	sg.				
+137	di	di	preposition						
+137	sua	suo	adjective	f.	sg.				
+137	vittoria	vittoria	noun	f.	sg.				
+138	e	e	conjunction						
+138	con	con	preposition						
+138	l'	lo	article	m.	sg.				elision
+138	antico	antico	adjective	m.	sg.				
+138	e	e	conjunction						
+138	col	con+il	preposition+article	m.	sg.				contraction
+138	novo	nuovo	adjective	m.	sg.				archaic
+138	concilio	concilio	noun	m.	sg.				
+139	colui	colui	pronoun	m.	sg.				
+139	che	che	pronoun						relative
+139	tien	tenere	verb		sg.	3	present	indicative	apocope
+139	le	il	article	f.	pl.				
+139	chiavi	chiave	noun	f.	pl.				
+139	di	di	preposition						
+139	tal	tale	adjective	f.	sg.				apocope
+139	gloria	gloria	noun	f.	sg.				
