@@ -68,12 +68,12 @@ class StatusLineConsoleStream(ConsoleStream):
     def wait_retry(self, delay: int, message: str = "Retrying...") -> None:
         import time
         m = re.match(r"(.+) \((\d+/\d+)\)", message)
-        message = f"{m.group(1)} {m.group(2)}" if m else message
+        display_message = f"{m.group(1)} {m.group(2)}" if m else message
         width = len(str(delay))
         if self.status_line.active_progress is not None:
             progress = self.status_line.active_progress
             task = progress.add_task(
-                f"[red]{message}", total=delay, completed=0, remaining=delay, show_elapsed=False
+                f"[red]{display_message}", total=delay, completed=0, remaining=delay, show_elapsed=False
             )
             with progress._lock:
                 progress._tasks = {task: progress._tasks.pop(task), **progress._tasks}
@@ -85,9 +85,12 @@ class StatusLineConsoleStream(ConsoleStream):
                     time.sleep(1)
             finally:
                 progress.remove_task(task)
+            self.error(message)
         else:
+            file = self._console.file
             for i in range(delay, -1, -1):
-                self.print(f"\r{message} {i:>{width}}s", end="")
+                file.write(f"\r{message} {i:>{width}}s")
+                file.flush()
                 if i == 0:
                     break
                 time.sleep(1)
