@@ -12,6 +12,7 @@ line	start	end	head	text
 4	5	7	5	uom ch'ascolta
 4	5	5	5	uom
 5	2	3	3	l'occhio
+5	4	4	4	+lo
 5	8	8	8	lunga
 6	2	4	3	l'aere nero
 6	2	3	3	l'aere
@@ -73,6 +74,7 @@ line	start	end	head	text
 26	2	2	2	ella
 26	3	3	3	mi
 26	8	9	9	quel muro
+27	2	2	2	+ne
 27	3	8	4	un spirto del cerchio di Giuda
 27	3	4	4	un spirto
 27	4	8	4	spirto del cerchio di Giuda
@@ -141,6 +143,7 @@ line	start	end	head	text
 53	2	2	2	tutte
 54	5	5	5	Tesëo
 54	6	7	7	l'assalto
+55	1	1	1	+ti
 55	6	8	7	lo viso chiuso
 56	3	4	4	'l Gorgón
 56	8	8	8	tu
@@ -210,6 +213,7 @@ line	start	end	head	text
 84	5	5	5	angoscia
 85	5	5	5	elli
 85	8	8	8	ciel
+86	2	2	2	+mi
 86	3	4	4	al maestro
 86	4	4	4	maestro
 86	6	6	6	quei

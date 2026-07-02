@@ -8,7 +8,7 @@ line	start	end	head	text
 2	2	2	2	Pluto
 2	4	6	5	la voce chioccia
 3	2	4	3	quel savio gentil
-4	0	0	0	
+4	3	3	3	+mi
 5	1	3	3	la tua paura
 5	5	5	5	poder
 5	7	7	7	elli
@@ -24,6 +24,7 @@ line	start	end	head	text
 10	5	8	6	l'andare al cupo
 10	7	8	8	al cupo
 10	8	8	8	cupo
+11	1	1	1	+si
 11	3	4	4	l'alto
 11	4	4	4	alto
 11	7	7	7	Michele
@@ -180,6 +181,7 @@ line	start	end	head	text
 65	6	8	7	quest' anime stanche
 65	6	7	7	quest' anime
 65	7	8	7	anime stanche
+66	3	3	3	+ne
 66	5	5	5	una
 67	1	2	1	Maestro mio
 67	4	4	4	io
@@ -246,6 +248,7 @@ line	start	end	head	text
 92	3	8	3	color che le dovrien dar lode
 92	3	3	3	color
 92	8	8	8	lode
+93	1	1	1	+le
 93	2	7	2	biasmo a torto e mala voce
 93	2	4	2	biasmo a torto
 93	2	2	2	biasmo
@@ -333,6 +336,7 @@ line	start	end	head	text
 125	3	3	3	si
 125	6	7	7	la strozza
 125	7	7	7	strozza
+126	3	3	3	+lo
 126	6	7	6	parola integra
 126	6	6	6	parola
 127	4	6	6	la lorda pozza

@@ -27,7 +27,9 @@ line	start	end	head	text
 12	2	3	3	la quale
 12	4	5	5	il sol
 12	7	8	8	men fretta
+13	3	3	3	+la
 13	4	4	4	io
+14	1	1	1	+mi
 14	2	2	2	qual
 14	4	6	4	quei che disïando
 14	4	4	4	quei
@@ -48,9 +50,11 @@ line	start	end	head	text
 20	6	8	8	tutto 'l frutto
 21	3	6	3	girar di queste spere
 21	5	6	6	queste spere
+22	1	1	1	+mi
 22	3	5	5	'l suo viso
 23	2	3	3	li occhi
 23	6	6	6	letizia
+24	2	2	2	+mi
 24	5	5	5	costrutto
 25	3	4	3	plenilunïi sereni
 26	1	1	1	Trivïa
@@ -125,6 +129,7 @@ line	start	end	head	text
 56	2	6	2	Polimnïa con le suore fero
 56	4	6	5	le suore fero
 57	2	6	2	latte lor dolcissimo più pingue
+58	2	2	2	+mi
 58	4	6	4	millesmo del vero
 58	6	6	6	vero
 59	5	7	7	il santo riso
@@ -138,6 +143,7 @@ line	start	end	head	text
 65	2	8	3	l'omero mortal che se ne carca
 65	2	4	3	l'omero mortal
 65	5	5	5	che
+66	1	1	1	+lo
 66	5	5	5	esso
 67	3	6	3	pareggio da picciola barca
 67	5	6	6	picciola barca
@@ -186,6 +192,7 @@ line	start	end	head	text
 85	3	3	3	vertù
 85	6	6	6	li
 86	2	2	2	t'
+86	5	5	5	+mi
 86	6	6	6	loco
 87	2	9	3	li occhi lì che non t'eran possenti
 87	2	4	3	li occhi lì
@@ -236,6 +243,7 @@ line	start	end	head	text
 104	7	7	7	ventre
 105	3	6	3	albergo del nostro disiro
 105	5	6	6	nostro disiro
+106	2	2	2	+mi
 106	3	5	3	donna del ciel
 106	5	5	5	ciel
 107	3	4	4	tuo figlio

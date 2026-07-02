@@ -84,7 +84,9 @@ line	start	end	head	text
 37	3	7	4	l'aura grossa e scura
 37	3	4	4	l'aura
 38	6	7	7	la sponda
+39	1	1	1	+mi
 39	2	2	2	errore
+39	4	4	4	+mi
 39	5	5	5	paura
 40	5	7	6	la cerchia tonda
 41	1	3	1	Montereggion di torri
@@ -193,6 +195,7 @@ line	start	end	head	text
 78	2	5	3	un linguaggio nel mondo
 78	2	3	3	un linguaggio
 78	5	5	5	mondo
+79	1	1	1	+lo
 79	7	7	7	vòto
 80	5	5	5	lui
 80	6	7	7	ciascun linguaggio
@@ -298,6 +301,7 @@ line	start	end	head	text
 121	4	8	5	i figli de la terra
 121	4	5	5	i figli
 121	7	8	8	la terra
+122	1	1	1	+ne
 122	7	7	7	schifo
 123	2	2	2	Cocito
 123	3	4	4	la freddura
@@ -320,6 +324,7 @@ line	start	end	head	text
 129	4	4	4	grazia
 129	6	6	6	sé
 129	7	7	7	nol
+129	7	7	7	+lo
 130	3	4	4	'l maestro
 130	6	6	6	quelli
 130	8	8	8	fretta
@@ -343,6 +348,7 @@ line	start	end	head	text
 139	3	3	3	Antëo
 139	5	5	5	me
 139	9	9	9	bada
+140	2	2	2	+lo
 140	6	7	7	tal ora
 141	2	2	2	i'
 141	7	8	8	altra strada

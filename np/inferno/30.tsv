@@ -300,6 +300,7 @@ line	start	end	head	text
 120	5	7	7	tutto il mondo
 120	6	7	7	il mondo
 120	7	7	7	mondo
+120	8	8	8	+lo
 121	2	2	2	te
 121	5	9	6	la sete onde ti crepa
 121	5	6	6	la sete
@@ -324,6 +325,7 @@ line	start	end	head	text
 128	4	5	5	lo specchio
 128	7	7	7	Narcisso
 129	5	6	6	molte parole
+130	2	2	2	+li
 130	4	7	4	io del tutto fisso
 130	4	4	4	io
 130	6	6	6	tutto
@@ -332,11 +334,13 @@ line	start	end	head	text
 131	4	4	4	mi
 132	3	3	3	poco
 132	5	5	5	teco
+132	5	5	5	+te
 132	7	7	7	mi
 133	2	2	2	io
 133	3	3	3	'l
 133	6	6	6	me
 133	9	9	9	ira
+134	1	1	1	+mi
 134	3	3	3	lui
 134	5	6	6	tal vergogna
 134	6	6	6	vergogna
@@ -357,7 +361,9 @@ line	start	end	head	text
 139	4	4	4	io
 139	7	7	7	parlare
 140	3	3	3	scusarmi
+140	3	3	3	+mi
 141	1	1	1	me
+141	4	4	4	+lo
 141	5	5	5	mi
 141	7	7	7	fare
 142	1	2	2	Maggior difetto

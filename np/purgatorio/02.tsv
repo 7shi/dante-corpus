@@ -21,6 +21,7 @@ line	start	end	head	text
 8	6	8	8	la bella Aurora
 9	2	3	3	troppa etate
 10	1	1	1	Noi
+10	3	3	3	+esso
 10	4	4	4	mare
 11	2	7	2	gente che pensa a suo cammino
 11	2	2	2	gente
@@ -53,7 +54,7 @@ line	start	end	head	text
 20	1	2	2	l'occhio
 20	1	1	1	l'
 20	5	7	6	lo duca mio
-21	0	0	0	
+21	1	1	1	+lo
 22	3	4	4	ogne lato
 22	6	6	6	esso
 23	1	1	1	un
@@ -94,7 +95,10 @@ line	start	end	head	text
 38	2	2	2	uccel
 39	3	4	4	l'occhio
 39	4	4	4	occhio
+39	7	7	7	+lo
 40	5	5	5	quei
+40	6	6	6	+si
+40	6	6	6	+ne
 40	9	9	9	riva
 41	2	6	3	un vasello snelletto e leggero
 41	2	3	3	un vasello
@@ -141,6 +145,7 @@ line	start	end	head	text
 59	2	2	2	noi
 59	2	2	2	noi
 59	7	7	7	voi
+60	1	1	1	+ne
 60	2	7	3	la via di gire al monte
 60	2	3	3	la via
 60	6	7	7	al monte
@@ -176,10 +181,12 @@ line	start	end	head	text
 74	1	4	1	anime fortunate tutte quante
 74	1	2	1	anime fortunate
 74	1	1	1	anime
+75	6	6	6	+si
 75	7	7	7	belle
 76	1	1	1	Io
 76	3	5	3	una di lor
 76	5	5	5	lor
+77	2	2	2	+mi
 77	4	6	6	sì grande affetto
 78	3	3	3	me
 78	6	7	7	lo somigliante
@@ -197,7 +204,9 @@ line	start	end	head	text
 84	4	4	4	lei
 85	4	4	4	io
 86	3	3	3	chi
+87	3	3	3	+mi
 87	4	5	5	un poco
+88	1	1	1	+mi
 88	4	4	4	io
 89	2	3	3	mortal corpo
 89	3	3	3	corpo
@@ -285,6 +294,7 @@ line	start	end	head	text
 121	3	4	4	quale stare
 121	6	6	6	questo
 122	3	3	3	monte
+122	5	5	5	+vi
 122	6	7	7	lo scoglio
 123	6	6	6	voi
 123	7	8	7	Dio manifesto

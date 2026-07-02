@@ -56,6 +56,8 @@ line	start	end	head	text
 22	5	7	6	suo cammin vago
 23	2	3	2	canto mio
 23	5	5	5	qual
+24	2	2	2	+si
+24	2	2	2	+ne
 24	6	6	6	l'
 25	4	6	5	sua bocca richiusa
 25	4	5	5	sua bocca
@@ -75,6 +77,7 @@ line	start	end	head	text
 30	8	8	8	onesta
 31	1	2	2	L'altra
 32	2	3	3	i drappi
+32	5	5	5	+mi
 32	6	7	7	'l ventre
 33	1	1	1	quel
 33	5	8	5	puzzo che n'uscia
@@ -117,6 +120,7 @@ line	start	end	head	text
 45	6	8	8	questa mortal marca
 46	2	4	3	l'ali aperte
 46	8	8	8	cigno
+47	1	1	1	+ci
 47	4	7	4	colui che sì parlonne
 48	2	6	3	due pareti del duro macigno
 48	5	6	6	duro macigno
@@ -128,15 +132,18 @@ line	start	end	head	text
 52	1	1	1	Che
 52	6	7	7	la terra
 53	1	3	2	la guida mia
+53	6	6	6	+mi
 54	2	2	2	amendue
 54	4	5	5	l'angel
 55	2	2	2	io
 55	4	5	5	tanta sospeccion
+55	7	7	7	+mi
 56	1	7	2	novella visïon ch'a sé mi piega
 56	1	2	2	novella visïon
 56	5	5	5	sé
 57	3	3	3	io
 57	7	7	7	pensar
+57	8	8	8	+mi
 58	3	5	5	quell'antica strega
 59	1	2	1	che sola
 59	5	5	5	noi
@@ -231,6 +238,7 @@ line	start	end	head	text
 88	3	3	3	io
 88	6	6	6	me
 88	9	10	10	mio senno
+89	1	1	1	+mi
 89	3	4	4	quella creatura
 90	1	3	3	le cui parole
 90	3	3	3	parole
@@ -336,6 +344,7 @@ line	start	end	head	text
 133	6	6	6	frate
 134	4	4	4	conservo
 135	1	1	1	teco
+135	1	1	1	+te
 135	4	5	5	li altri
 135	7	8	8	una podestate
 136	3	6	6	quel santo evangelico suono

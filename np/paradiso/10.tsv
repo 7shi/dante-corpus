@@ -23,6 +23,7 @@ line	start	end	head	text
 7	3	3	3	lettore
 7	5	7	7	l'alte rote
 7	7	7	7	rote
+8	1	1	1	+me
 8	2	3	3	la vista
 8	3	3	3	vista
 8	6	7	7	quella parte
@@ -139,7 +140,7 @@ line	start	end	head	text
 43	3	3	3	lo
 43	6	7	7	l'arte
 43	9	10	10	l'uso
-44	0	0	0	
+44	2	2	2	+lo
 45	2	2	2	creder
 45	6	6	6	veder
 46	3	5	4	le fantasie nostre
@@ -166,6 +167,7 @@ line	start	end	head	text
 56	2	2	2	divozione
 56	5	7	5	rendersi a Dio
 56	5	5	5	rendersi
+56	5	5	5	+si
 56	7	7	7	Dio
 57	2	5	5	tutto 'l suo gradir
 57	3	5	5	'l suo gradir
@@ -278,6 +280,7 @@ line	start	end	head	text
 98	1	3	1	frate e maestro
 98	1	1	1	frate
 98	3	3	3	maestro
+98	4	4	4	+mi
 98	6	7	7	esso Alberto
 98	7	7	7	Alberto
 99	3	3	3	Cologna

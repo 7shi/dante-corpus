@@ -178,6 +178,7 @@ line	start	end	head	text
 74	2	7	2	color che sanno il nome tuo
 74	5	7	6	il nome tuo
 75	2	4	2	chi nol sa
+75	3	3	3	+lo
 75	6	6	6	elli
 75	8	10	9	la fede mia
 76	1	1	1	Tu
@@ -304,6 +305,7 @@ line	start	end	head	text
 124	2	2	2	terra
 124	5	7	7	il mio corpo
 124	6	7	7	mio corpo
+124	9	9	9	+gli
 125	3	4	4	li altri
 125	6	8	7	'l numero nostro
 125	7	8	7	numero nostro

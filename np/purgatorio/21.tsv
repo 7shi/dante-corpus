@@ -7,10 +7,12 @@ line	start	end	head	text
 2	7	8	8	la femminetta
 3	1	1	1	samaritana
 3	3	4	4	la grazia
+4	4	4	4	+mi
 4	5	6	6	la fretta
 5	2	8	4	la 'mpacciata via dietro al mio duca
 5	2	4	4	la 'mpacciata via
 5	7	8	8	mio duca
+6	2	2	2	+mi
 6	4	6	6	la giusta vendetta
 7	7	7	7	Luca
 8	2	2	2	Cristo
@@ -31,6 +33,7 @@ line	start	end	head	text
 13	8	8	8	pace
 14	1	1	1	Noi
 14	6	6	6	Virgilio
+15	1	1	1	+gli
 15	2	8	3	'l cenno ch'a ciò si conface
 15	2	3	3	'l cenno
 15	6	6	6	ciò
@@ -76,8 +79,11 @@ line	start	end	head	text
 31	2	2	2	io
 31	7	9	9	l'ampia gola
 32	2	2	2	inferno
+32	4	4	4	+li
+32	6	6	6	+li
 33	3	3	3	'l
 33	6	7	7	mia scola
+34	2	2	2	+mi
 34	4	4	4	tu
 34	7	8	8	tai crolli
 35	3	4	4	'l monte
@@ -129,10 +135,11 @@ line	start	end	head	text
 56	3	3	3	vento
 56	6	6	6	terra
 57	0	0	0	
+58	1	1	1	+ci
 58	3	5	4	alcuna anima monda
 58	3	4	4	alcuna anima
 58	4	5	4	anima monda
-59	0	0	0	
+59	1	1	1	+si
 60	5	6	6	tal grido
 61	2	3	3	la mondizia
 61	4	5	5	sol voler
@@ -234,6 +241,8 @@ line	start	end	head	text
 96	6	6	6	mille
 97	2	3	3	l'Eneïda
 97	5	7	7	la qual mamma
+98	1	1	1	+mi
+98	3	3	3	+mi
 98	4	4	4	nutrice
 99	2	2	2	essa
 99	5	7	5	peso di dramma
@@ -266,6 +275,7 @@ line	start	end	head	text
 109	5	8	6	l'uom ch'ammicca
 109	5	6	6	l'uom
 110	3	4	4	l'ombra
+110	8	8	8	+mi
 111	2	9	3	li occhi ove 'l sembiante più si ficca
 111	2	3	3	li occhi
 111	5	6	6	'l sembiante
@@ -279,6 +289,7 @@ line	start	end	head	text
 114	1	4	2	un lampeggiar di riso
 114	2	4	2	lampeggiar di riso
 114	4	4	4	riso
+114	5	5	5	+mi
 115	3	3	3	io
 115	5	6	6	una parte
 115	9	9	9	altra
@@ -288,7 +299,7 @@ line	start	end	head	text
 117	2	2	2	io
 118	2	3	3	mio maestro
 118	7	7	7	paura
-119	0	0	0	
+119	8	8	8	+gli
 120	1	4	1	quel ch'e' dimanda
 120	6	7	7	cotanta cura
 121	2	2	2	io
@@ -318,7 +329,7 @@ line	start	end	head	text
 127	2	6	2	cagion altra al mio rider
 127	2	3	2	cagion altra
 127	5	6	6	mio rider
-128	0	0	0	
+128	1	1	1	+la
 129	1	6	2	quelle parole che di lui dicesti
 129	1	2	2	quelle parole
 129	5	5	5	lui

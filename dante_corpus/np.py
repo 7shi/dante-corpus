@@ -38,11 +38,34 @@ def canon_header(header: str) -> str | None:
     return _HEADER_ALIASES.get(header.strip().lower())
 
 
-# A head token is expected to be nominal. Soft check only (measure-then-freeze): any POS whose
-# label contains "noun" or "pronoun" (noun, proper noun, pronoun, relative pronoun, …).
+# Frozen soft-check policy (measured 2026-07-03 over all 100 cantos; see np/README.md *Check*
+# and PLAN.md *Layer 3 check status*):
+#
+# - Coverage ("heads no NP") applies to nouns/proper nouns only. Bare clitic and relative
+#   pronouns were ~96% of the raw coverage misses (`che`, `si`, `mi`, …) and are not noun
+#   phrases — Layer 5 admits arguments that are "Layer-3 NPs or Layer-1 pronoun tokens" — so a
+#   pronoun heading no NP is by policy not a Layer-3 gap.
+# - A head may be any content POS: nominal, or adjective/verb/adverb/numeral — Dante
+#   substantivizes all of these (`'l più basso`, `lo sperar`, `un poco`, `l'un de' canti`).
+#   Function-word heads (article, conjunction, preposition, …) stay flagged: they are either
+#   alignment slips or Layer-2 mistags (most are `che` tagged `conjunction` where the model
+#   correctly read a relative pronoun).
 def _is_nominal(pos: str) -> bool:
     p = pos.lower()
     return "noun" in p or "pronoun" in p
+
+
+_CONTENT_POS = ("adjective", "verb", "adverb", "numeral")
+
+
+def _can_head_np(pos: str) -> bool:
+    p = pos.lower()
+    return _is_nominal(p) or any(c in p for c in _CONTENT_POS)
+
+
+def _needs_np(pos: str) -> bool:
+    p = pos.lower()
+    return "noun" in p and "pronoun" not in p
 
 
 # --- NPSpan ------------------------------------------------------------------------
@@ -275,11 +298,13 @@ def validate_line(
     must be single-token, and — when `morph_rows` is supplied — its suffix must be one of the
     host token's Layer-2 lemma components, in place of the verbatim-substring check (by
     construction, `"+xxx"` is never itself a source substring). Soft checks (only when
-    `morph_rows` — the Layer-2 row per token — is supplied): the head token is nominal, every
-    nominal token is the head of at least one NP (coverage), and every clitic mention Layer 2's
-    compound POS implies (see `clitic_mentions`) is actually present among `spans` (clitic
-    coverage — catches artifacts built before this mechanism existed, or any future regression).
-    Soft violations use kind "tag"; hard ones use "range"/"head"/"word".
+    `morph_rows` — the Layer-2 row per token — is supplied, under the frozen policy above):
+    the head token is a content POS (`_can_head_np`), every noun/proper-noun token is the head
+    of at least one NP (coverage, `_needs_np`), and every clitic mention Layer 2's compound POS
+    implies (see `clitic_mentions`) is actually present among `spans` (clitic coverage — catches
+    artifacts built before this mechanism existed, or any future regression; `np.py
+    --fix-clitics` backfills them deterministically). Soft violations use kind "tag"; hard ones
+    use "range"/"head"/"word".
     """
     tokens = _alpha_tokens(source_text)
     tspans = token_spans(source_text)
@@ -315,16 +340,16 @@ def validate_line(
 
     if morph_rows is not None and len(morph_rows) == n:
         for span in spans:
-            if 1 <= span.head <= n and not _is_nominal(morph_rows[span.head - 1].pos):
+            if 1 <= span.head <= n and not _can_head_np(morph_rows[span.head - 1].pos):
                 pos = morph_rows[span.head - 1].pos
                 violations.append(
-                    Violation(line_no, "tag", f"head {tokens[span.head - 1]!r} is {pos!r}, not nominal")
+                    Violation(line_no, "tag", f"head {tokens[span.head - 1]!r} is {pos!r}, not a content POS")
                 )
         heads = {span.head for span in spans}
         for i, row in enumerate(morph_rows, start=1):
-            if _is_nominal(row.pos) and i not in heads:
+            if _needs_np(row.pos) and i not in heads:
                 violations.append(
-                    Violation(line_no, "tag", f"nominal {tokens[i - 1]!r} (token {i}) heads no NP")
+                    Violation(line_no, "tag", f"noun {tokens[i - 1]!r} (token {i}) heads no NP")
                 )
         expected = {(m.head, m.text) for m in clitic_mentions(line_no, tokens, morph_rows)}
         actual = {(span.head, span.text) for span in spans if span.text.startswith("+")}

@@ -301,12 +301,15 @@ line	start	end	head	text
 109	3	3	3	colui
 109	6	7	7	tanto ben
 109	7	7	7	ben
+109	8	8	8	+lo
+110	3	3	3	+lo
 110	6	7	7	la mercede
 110	7	7	7	mercede
 111	2	2	2	el
 111	5	7	6	suo farsi pusillo
 111	6	7	6	farsi pusillo
 111	6	6	6	farsi
+111	6	6	6	+si
 112	2	3	2	frati suoi
 112	7	8	8	giuste rede
 113	2	6	3	la donna sua più cara
@@ -348,6 +351,7 @@ line	start	end	head	text
 130	4	8	4	quelle che temono 'l danno
 130	4	4	4	quelle
 130	7	8	8	'l danno
+131	2	2	2	+si
 131	3	4	4	al pastor
 131	4	4	4	pastor
 131	8	8	8	poche

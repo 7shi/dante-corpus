@@ -7,43 +7,27 @@
   Artifacts are built for all 100 cantos.
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
-  cantos, but **not yet committed** (branch `grammar-stack-plan`; code and TSVs are both
-  uncommitted). `--check` currently reports **462 hard / 8,466 soft** violations — see *Layer 3
-  check status* below.
+  cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 418 soft**
+  violations — see *Layer 3 check status* below.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
 
-1. **Finish Layer 3 generation** — resume the build for the 6 incomplete cantos (below) until
-   `--check` reports 0 hard violations. The two mechanisms behind every remaining hard failure
-   (elision spelling drift, fused enclitic pronouns) are now fixed in code — see *Layer 3 check
-   status* below — so resuming the build should close these out; not yet re-run.
-2. **Measure-then-freeze the Layer 3 soft checks** (below), update `_is_nominal` /
-   `validate_line` in `dante_corpus/np.py` accordingly, record the frozen policy in
-   `np/README.md`, then commit the code + generated TSVs (the build is excluded from `make all`;
-   artifacts are committed like `morph/`).
-3. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last (see *Sequencing*).
+1. **Land Layer 3** — generation is finished (0 hard) and the soft-check policy is frozen
+   (recorded in `np/README.md`); commit the freeze changes (policy predicates, `--fix-clitics`
+   backfill of the TSVs, docs) and merge `grammar-stack-plan` into `main` (the build is excluded
+   from `make all`; artifacts are committed like `morph/`).
+2. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last (see *Sequencing*).
    The design must also cover artifact **versioning** (content hashes for consumer invalidation)
    and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
 
-### Layer 3 check status (as of 2026-07-02, updated after a partial resume)
+### Layer 3 check status (as of 2026-07-03 — generation complete, soft policy frozen)
 
-`uv run np/np.py inferno purgatorio paradiso --check` reports **462 hard / 8,466 soft**
-violations. Inferno 6 and Purgatorio 1 have since resumed to completion (0 hard); 6 cantos remain
-incomplete:
-
-**Hard — all "missing lines"** (interrupted generation; the rows that *were* written have zero
-structural violations; the driver resumes from its own output, so rerunning the build closes
-these):
-
-| canticle   | canto | missing lines |
-|------------|------:|---------------|
-| inferno    |    18 | 55–136        |
-| inferno    |    21 | 22–139        |
-| inferno    |    23 | 34–148        |
-| inferno    |    26 | 106–142       |
-| purgatorio |    16 | 145           |
-| paradiso   |    28 | 31–139        |
+`uv run np/np.py inferno purgatorio paradiso --check` reports **0 hard / 418 soft** violations.
+The build resumed to completion for all 100 cantos (the 6 previously-incomplete cantos closed out
+once the two hard-failure mechanisms below were fixed), and the soft checks were then
+measured-and-frozen (see *Soft-check freeze* below).
 
 **Hard-failure root cause (fixed)**: every chunk that exhausted all 3 retries with "unalignable
 NP row(s)" (`np/np.log`) traced to exactly two mechanisms, both now fixed in
@@ -92,19 +76,28 @@ NP row(s)" (`np/np.log`) traced to exactly two mechanisms, both now fixed in
   the exact failing tables recorded in `np/np.log` for purgatorio 16:145 and paradiso 28:31-33 —
   both now align with 0 unaligned rows.
 
-**Soft — two classes, each pending a measure-then-freeze policy decision** (counts rise as more
-lines are generated; the *shape* of the two classes is what matters for the freeze decision, not
-the exact totals):
+**Soft-check freeze (2026-07-03)** — measured over all 100 completed cantos (9,298 raw soft
+violations), then frozen in `dante_corpus/np.py` (`_needs_np` / `_can_head_np`) and recorded in
+`np/README.md`:
 
-- **~6,000 × "nominal token heads no NP"** — dominated by clitic and relative pronouns (`che`,
-  `si`, `mi`, `s'`, `ch'`, `m'`, `ti`, `ne`, `cui`, …). This is arguably correct model behaviour,
-  not omission: bare clitics are not noun phrases, and Layer 5 below already admits arguments that
-  are "layer-3 NPs **or layer-1 pronoun tokens**". The likely freeze is to exclude clitic/relative
-  pronouns from the coverage check (`_is_nominal` in `dante_corpus/np.py`) — they are layer-2/4
-  objects, not layer-3 gaps.
-- **~2,400 × "head is not nominal"** — NP heads whose layer-2 POS is adjective/verb/adverb etc.
-  Many are legitimate Dante substantivizations (`quel`, `tal`, infinitive `veder`); some are model
-  errors. Needs an explicit allowed-head-POS policy before freezing.
+- **6,180 × "nominal token heads no NP"** — 96% were pronouns (bare `pronoun` 5,256, compound
+  `x+pronoun` ~545, `relative pronoun` 138; top lemmas `che` 2,025, `si` 1,347, `mi` 633). As
+  anticipated, this is correct model behaviour, not omission: bare clitics are not noun phrases,
+  and Layer 5 below admits arguments that are "layer-3 NPs **or layer-1 pronoun tokens**".
+  **Frozen**: coverage applies to noun/proper-noun POS only (`_needs_np`). The surviving **241**
+  noun gaps are genuine model omissions (often in repeated idioms: `a poco a poco`, `di gente in
+  gente`, `tra feltro e feltro`) and stay flagged as a reviewable list.
+- **2,498 × "head is not nominal"** — adjective 1,322, verb 493, adverb 284, numeral 222 are
+  legitimate Dante substantivizations (`'l più basso`, `lo sperar`, `un poco`, `l'un de' canti`).
+  **Frozen**: any content POS may head an NP (`_can_head_np`: nominal or
+  adjective/verb/adverb/numeral). The surviving **177** function-word heads (article 111,
+  conjunction 47, …) stay flagged; sampling shows most are `che` tagged `conjunction` by Layer 2
+  where the model correctly read a relative pronoun — a Layer-2 mistag signal as much as a
+  Layer-3 one.
+- **620 × "missing clitic mention"** — artifacts built before `clitic_mentions()` existed. These
+  are a pure function of the frozen Layer-2 artifact, so a new deterministic repair mode
+  (`np/np.py --fix-clitics`, no model call) backfilled all 620 in place; count is now 0 and any
+  future flag is a regression.
 
 ## Why this lives in the corpus
 

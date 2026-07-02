@@ -23,7 +23,10 @@ line	start	end	head	text
 9	5	6	6	sùbita distanza
 9	6	6	6	distanza
 10	1	1	1	Io
+10	5	5	5	+le
+10	6	6	6	+le
 11	2	2	2	me
+11	3	3	3	+le
 11	6	8	8	la mia donna
 12	2	2	2	mi
 12	5	7	7	le dolci stille
@@ -197,6 +200,7 @@ line	start	end	head	text
 79	5	5	5	quel
 79	6	6	6	che
 79	7	7	7	la
+80	2	2	2	+la
 80	4	6	6	al sommo bene
 80	5	6	6	sommo bene
 81	3	5	4	del lume suo
@@ -258,7 +262,7 @@ line	start	end	head	text
 110	4	7	7	tutte le sue vie
 110	5	7	7	le sue vie
 110	6	7	7	sue vie
-111	0	0	0	
+111	2	2	2	+vi
 112	3	9	5	l'ultima notte e 'l primo die
 112	3	5	5	l'ultima notte
 112	7	9	9	'l primo die
@@ -271,6 +275,7 @@ line	start	end	head	text
 115	8	8	8	sé
 116	3	7	4	l'uom sufficiente a rilevarsi
 116	3	4	4	l'uom
+116	7	7	7	+si
 117	3	3	3	elli
 117	7	7	7	sé
 118	2	5	5	tutti li altri modi
@@ -283,7 +288,9 @@ line	start	end	head	text
 119	6	8	6	Figliuol di Dio
 119	8	8	8	Dio
 120	0	0	0	
+121	3	3	3	+ti
 121	5	6	6	ogne disio
+122	3	3	3	+ti
 122	5	6	6	alcun loco
 123	2	2	2	tu
 123	7	7	7	io

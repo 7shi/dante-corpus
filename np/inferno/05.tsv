@@ -5,6 +5,7 @@ line	start	end	head	text
 3	2	4	4	tanto più dolor
 3	3	4	4	più dolor
 3	8	8	8	guaio
+4	1	1	1	+vi
 4	2	2	2	Minòs
 5	2	3	3	le colpe
 5	5	6	6	l'intrata
@@ -44,11 +45,12 @@ line	start	end	head	text
 21	3	4	3	duca mio
 21	6	6	6	lui
 22	3	6	6	lo suo fatale andare
-23	0	0	0	
+23	1	1	1	+si
 24	1	4	1	ciò che si vuole
 24	1	1	1	ciò
 25	3	5	5	le dolenti note
-26	0	0	0	
+26	2	2	2	+mi
+26	2	2	2	+si
 27	3	4	4	molto pianto
 27	5	5	5	mi
 28	1	1	1	Io
@@ -159,6 +161,8 @@ line	start	end	head	text
 67	5	7	5	più di mille
 67	7	7	7	mille
 68	1	1	1	ombre
+68	2	2	2	+mi
+68	4	4	4	+mi
 68	6	6	6	dito
 69	2	5	2	amor di nostra vita
 69	4	5	5	nostra vita
@@ -193,6 +197,7 @@ line	start	end	head	text
 81	3	3	3	noi
 81	6	6	6	altri
 81	7	7	7	nol
+81	7	7	7	+lo
 82	1	5	2	Quali colombe dal disio chiamate
 82	1	2	2	Quali colombe
 82	2	5	2	colombe dal disio chiamate
@@ -299,6 +304,7 @@ line	start	end	head	text
 116	5	6	6	tuoi martìri
 117	2	2	2	lagrimar
 117	3	3	3	mi
+118	2	2	2	+mi
 118	4	8	4	tempo d'i dolci sospiri
 118	6	8	8	i dolci sospiri
 119	2	2	2	che
@@ -328,6 +334,7 @@ line	start	end	head	text
 130	2	3	3	più fïate
 130	4	5	5	li occhi
 131	1	2	2	quella lettura
+131	4	4	4	+ci
 131	5	6	6	il viso
 132	2	4	4	solo un punto
 132	3	4	4	un punto

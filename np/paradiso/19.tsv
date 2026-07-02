@@ -58,8 +58,10 @@ line	start	end	head	text
 23	7	7	7	uno
 24	4	6	6	tutti vostri odori
 24	5	6	6	vostri odori
+25	1	1	1	+mi
 25	3	5	5	il gran digiuno
 26	7	7	7	fame
+27	2	2	2	+li
 27	4	4	4	terra
 27	5	6	5	cibo alcuno
 28	3	3	3	io
@@ -83,6 +85,7 @@ line	start	end	head	text
 35	7	7	7	ali
 36	1	1	1	voglia
 37	2	2	2	io
+37	3	3	3	+si
 37	4	8	5	quel segno, che di laude
 37	4	5	5	quel segno
 37	8	8	8	laude
@@ -142,6 +145,7 @@ line	start	end	head	text
 61	5	6	6	la proda
 61	8	9	9	il fondo
 62	2	2	2	pelago
+62	3	3	3	+lo
 63	1	1	1	èli
 63	4	4	4	lui
 63	5	7	6	l'esser profondo

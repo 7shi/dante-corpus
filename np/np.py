@@ -17,6 +17,7 @@ skipped and only the remaining chunks are requested.
     uv run np.py inferno --check                  # code-only, no model
     uv run np.py inferno -n                       # dry run: show pending chunks, no LLM
     uv run np.py inferno --clean                  # remove chunks with hard violations
+    uv run np.py inferno --fix-clitics            # backfill clitic mentions, no model
 
 `--check` validates committed artifacts against the deterministic tokens (every NP is a
 contiguous token run with its head inside and verbatim text), and — when Layer-2 morphology is
@@ -319,6 +320,43 @@ def check(canticles: list[str], only: int | None) -> int:
     return 1 if hard else 0
 
 
+def fix_clitics(canticles: list[str], only: int | None) -> int:
+    """Backfill missing clitic mentions into frozen artifacts — deterministic, no model call.
+
+    Artifacts built before `clitic_mentions()` existed lack the synthetic `+lemma` spans that
+    Layer 2's compound POS implies. Those spans are a pure function of the frozen Layer-2
+    artifact, so they can be added in place without rebuilding."""
+    added = 0
+    for canticle in canticles:
+        numbers = [only] if only else list(api.cantos(canticle))
+        for number in numbers:
+            if not np.has_np(canticle, number):
+                continue
+            data = np.load_np(canticle, number)
+            morph_rows = _morph_rows(canticle, number)
+            out: list[tuple[int, list[np.NPSpan]]] = []
+            n_added = 0
+            for line in api.canto(canticle, number).lines():
+                if line.no not in data:
+                    continue
+                spans = list(data[line.no])
+                rows = morph_rows.get(line.no)
+                if rows:
+                    tokens = [tok for tok, _, _ in np.token_spans(line.text)]
+                    have = {(s.head, s.text) for s in spans if s.text.startswith("+")}
+                    missing = [m for m in np.clitic_mentions(line.no, tokens, rows)
+                               if (m.head, m.text) not in have]
+                    spans.extend(missing)
+                    n_added += len(missing)
+                out.append((line.no, spans))
+            if n_added:
+                np.write_np(canticle, number, out)
+                print(f"Fixed np/{canticle}/{number:02d}.tsv — added {n_added} clitic mention(s)")
+                added += n_added
+    print(f"fix-clitics complete: {added} mention(s) added")
+    return 0
+
+
 def clean(canticles: list[str], size: int, only: int | None) -> int:
     removed = 0
     for canticle in canticles:
@@ -361,6 +399,8 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
     parser.add_argument("--clean", action="store_true",
                         help="remove chunks with hard violations, then exit")
+    parser.add_argument("--fix-clitics", action="store_true",
+                        help="backfill missing clitic mentions from Layer 2, no model call")
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending chunks without calling the LLM")
     parser.add_argument("--log", nargs="?", const="np.log", metavar="FILE",
@@ -369,6 +409,8 @@ def main() -> int:
 
     if args.check:
         return check(args.canticles, args.canto)
+    if args.fix_clitics:
+        return fix_clitics(args.canticles, args.canto)
     if args.clean:
         return clean(args.canticles, args.chunk, args.canto)
     if args.dry_run:

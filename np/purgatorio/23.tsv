@@ -124,6 +124,7 @@ line	start	end	head	text
 51	5	8	5	carne ch'io abbia
 51	5	5	5	carne
 51	7	7	7	io
+52	2	2	2	+mi
 52	3	6	4	il ver di te
 52	6	6	6	te
 52	8	8	8	chi
@@ -141,6 +142,7 @@ line	start	end	head	text
 56	7	8	8	minor doglia
 57	2	2	2	io
 57	3	3	3	lui
+57	4	4	4	+la
 58	2	2	2	mi
 58	5	5	5	Dio
 58	8	8	8	vi
@@ -272,6 +274,7 @@ line	start	end	head	text
 103	5	6	6	quai saracine
 103	6	6	6	saracine
 104	1	1	1	cui
+104	4	4	4	+le
 105	2	2	2	spiritali
 105	4	5	5	altre discipline
 105	5	5	5	discipline
@@ -294,7 +297,9 @@ line	start	end	head	text
 115	10	10	10	mente
 116	1	1	1	qual
 116	1	1	1	qual
+116	3	3	3	+me
 116	6	6	6	io
+116	7	7	7	+te
 117	4	6	5	il memorar presente
 117	5	6	5	memorar presente
 117	5	5	5	memorar
@@ -326,6 +331,7 @@ line	start	end	head	text
 126	3	3	3	voi
 126	5	6	6	'l mondo
 126	8	8	8	torti
+127	4	4	4	+mi
 127	5	6	6	sua compagna
 128	2	2	2	io
 128	7	7	7	Beatrice

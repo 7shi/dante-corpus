@@ -34,6 +34,7 @@ line	start	end	head	text
 13	4	5	5	le mani
 13	7	8	8	la cima
 14	2	4	4	le mie ciglia
+14	6	6	6	+mi
 14	7	8	8	'l solecchio
 15	3	4	3	soverchio visibile
 16	4	5	5	l'acqua
@@ -67,6 +68,7 @@ line	start	end	head	text
 30	1	1	1	messo
 30	8	8	8	om
 31	6	7	7	queste cose
+32	6	6	6	+ti
 32	7	7	7	diletto
 33	1	1	1	quanto
 33	2	2	2	natura
@@ -176,6 +178,7 @@ line	start	end	head	text
 82	2	2	2	io
 82	5	5	5	Tu
 82	6	6	6	m'
+83	1	1	1	+mi
 83	5	7	7	l'altro girone
 84	4	4	4	mi
 84	4	4	4	mi
@@ -313,6 +316,7 @@ line	start	end	head	text
 134	5	9	6	l'occhio che non vede
 134	5	6	6	l'occhio
 135	3	4	4	il corpo
+136	4	4	4	+ti
 136	5	7	5	forza al piede
 136	5	5	5	forza
 136	6	7	7	al piede

@@ -98,6 +98,8 @@ line	start	end	head	text
 42	6	7	7	moderno uso
 43	4	5	4	chi fosti
 43	7	8	8	la morte
+44	2	2	2	+me
+44	4	4	4	+me
 44	6	6	6	i'
 44	10	10	10	varco
 45	2	3	3	tue parole
@@ -347,13 +349,18 @@ line	start	end	head	text
 136	7	7	7	el
 136	8	8	8	mi
 137	3	3	3	me
+137	5	5	5	+mi
 138	3	5	5	del buon Gherardo
 138	4	5	5	buon Gherardo
 138	5	5	5	Gherardo
 138	6	6	6	nulla
 139	2	3	3	altro sopranome
 139	4	4	4	io
+139	5	5	5	+ne
+139	5	5	5	+lo
 140	2	2	2	io
+140	3	3	3	+ne
+140	3	3	3	+lo
 140	6	8	7	sua figlia Gaia
 140	6	7	7	sua figlia
 140	7	8	7	figlia Gaia
@@ -364,6 +371,7 @@ line	start	end	head	text
 142	2	3	3	l'albor
 142	6	7	7	lo fummo
 143	4	4	4	me
+143	6	6	6	+mi
 144	1	2	2	l'angelo
 144	7	7	7	io
 144	8	8	8	li

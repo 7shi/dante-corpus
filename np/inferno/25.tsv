@@ -17,12 +17,13 @@ line	start	end	head	text
 7	2	6	3	un'altra a le braccia
 7	2	3	3	un'altra
 7	5	6	6	le braccia
+7	8	8	8	+lo
 8	2	3	2	sé stessa
 9	5	5	5	esse
 9	7	8	8	un crollo
 10	2	2	2	Pistoia
 10	2	2	2	Pistoia
-11	0	0	0	
+11	2	2	2	+ti
 12	4	5	5	mal fare
 12	6	8	7	il seme tuo
 12	7	8	7	seme tuo
@@ -139,6 +140,7 @@ line	start	end	head	text
 55	1	1	1	li
 55	4	6	5	le cosce distese
 55	5	6	5	cosce distese
+56	2	2	2	+li
 56	3	4	4	la coda
 56	6	6	6	'mbedue
 57	4	5	5	le ren

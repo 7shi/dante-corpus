@@ -78,12 +78,27 @@ call** (`validate_line`):
   except a `"+"`-prefixed clitic mention, which is checked against the host token's Layer-2 lemma
   components instead (it is never a source substring by construction). Every source line must be
   present (or carry the zero-NP sentinel). `0 hard` is required before an artifact is trusted.
-- **Soft** (reported, not enforced — *measure-then-freeze*): when Layer-2 morphology is present, the
-  head token is expected to be nominal (POS containing `noun`/`pronoun`); **coverage** — every
-  nominal token should head at least one NP (catches omissions, since over-inclusion means there is
-  no one-row-per-token count anchor as in Layer 2); and **clitic coverage** — every fused-enclitic
-  mention that Layer 2's compound POS implies must actually be present among the artifact's spans.
-  This mainly flags artifacts built before `clitic_mentions()` existed; it clears on rebuild.
+- **Soft** (reported, not enforced). The policy was frozen 2026-07-03 after measuring all 100
+  cantos (measure-then-freeze; raw pre-freeze counts in PLAN.md's *Layer 3 check status*):
+  - **Head POS** — a head may be any *content* POS: nominal (`noun`/`pronoun` in the label) or
+    adjective/verb/adverb/numeral, since Dante substantivizes all of these (`'l più basso`,
+    `lo sperar`, `un poco`, `l'un de' canti`). Function-word heads (article, conjunction,
+    preposition, …) are flagged; measured, most are `che` tagged `conjunction` by Layer 2 where
+    the model correctly read a relative pronoun — i.e. the flag is a Layer-2 mistag signal as
+    much as a Layer-3 one.
+  - **Coverage** — every *noun/proper-noun* token should head at least one NP (catches omissions,
+    since over-inclusion means there is no one-row-per-token count anchor as in Layer 2).
+    Pronouns are excluded by policy: bare clitic and relative pronouns (`che`, `si`, `mi`, …)
+    were ~96% of the raw misses and are not noun phrases — Layer 5 admits arguments that are
+    "Layer-3 NPs or Layer-1 pronoun tokens", so they are layer-2/4 objects, not Layer-3 gaps.
+  - **Clitic coverage** — every fused-enclitic mention that Layer 2's compound POS implies must
+    actually be present among the artifact's spans. Artifacts built before `clitic_mentions()`
+    existed lacked them; `--fix-clitics` backfills them deterministically (done for all 100
+    cantos), so any new flag here is a regression.
+
+  Under the frozen policy the corpus-wide soft count is **418** (177 function-word heads + 241
+  noun coverage gaps) — a reviewable list of genuine model omissions (often in repeated idioms:
+  `a poco a poco`, `di gente in gente`) and Layer-2 mistags, kept visible rather than silenced.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
@@ -122,9 +137,10 @@ retried.
   harmless (it writes the sentinel) but worth knowing.
 - If the same exact token subsequence appears twice in one line, `align_chunk` picks the first
   occurrence. Extremely rare in a hendecasyllable; revisit only if `--check` surfaces it.
-- `_is_nominal` matches POS substrings `noun`/`pronoun`, so contracted POS like `preposition+noun`
-  count as nominal heads. Adjust in `dante_corpus/np.py` if the frozen soft-check policy (see
-  PLAN.md's *Layer 3 check status*) demands stricter matching.
+- The soft-check predicates (`_can_head_np`, `_needs_np` in `dante_corpus/np.py`) match POS by
+  substring, so contracted POS like `preposition+noun` still require coverage and
+  `verb+pronoun` counts as a content head. This is intentional under the frozen policy; the
+  edge cases are few (10 `preposition+noun` tokens corpus-wide).
 - `clitic_mentions()` only fires on genuinely compound POS (arity >= 2). A bare `pronoun` token
   (arity 1) is already its own Layer-1 token and gets an ordinary NP from the model, so it's
   intentionally excluded — including it would emit a redundant `"+xxx"` duplicate of that NP.
@@ -143,7 +159,7 @@ make -C np                          # build all three canticles (model from mode
 make -C np MODEL=ollama:gpt-oss     # override the model
 make -C np check                    # validate artifacts, no model call
 
-uv run np/np.py inferno [-c 1] [-m MODEL] [--force] [--check]
+uv run np/np.py inferno [-c 1] [-m MODEL] [--force] [--check] [--fix-clitics]
 ```
 
 Consumers read it deterministically via `Canto.np()` (a nested `NPSpan` forest, ordered by line)

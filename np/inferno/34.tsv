@@ -40,12 +40,14 @@ line	start	end	head	text
 15	7	7	7	piè
 16	2	2	2	noi
 17	3	4	4	mio maestro
+17	7	7	7	+me
 18	1	7	2	la creatura ch'ebbe il bel sembiante
 18	1	2	2	la creatura
 18	5	7	7	il bel sembiante
 19	2	2	2	innanzi
 19	3	3	3	mi
 19	4	4	4	si
+19	8	8	8	+mi
 20	2	2	2	Dite
 20	6	7	7	il loco
 20	7	7	7	loco
@@ -53,6 +55,7 @@ line	start	end	head	text
 21	6	6	6	t'
 22	2	2	2	io
 23	1	1	1	nol
+23	1	1	1	+lo
 23	3	3	3	lettor
 23	5	5	5	i'
 23	7	7	7	lo
@@ -217,6 +220,7 @@ line	start	end	head	text
 89	1	1	1	Lucifero
 89	3	3	3	io
 89	4	4	4	l'
+90	2	2	2	+lo
 90	3	4	4	le gambe
 91	3	3	3	io
 92	1	3	2	la gente grossa
@@ -242,6 +246,7 @@ line	start	end	head	text
 100	5	6	6	l'abisso
 101	1	2	1	maestro mio
 101	4	4	4	io
+102	2	2	2	+mi
 102	4	4	4	erro
 102	5	6	6	un poco
 103	3	4	4	la ghiaccia

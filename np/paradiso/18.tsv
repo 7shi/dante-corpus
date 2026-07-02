@@ -52,6 +52,7 @@ line	start	end	head	text
 19	6	7	7	un sorriso
 20	1	1	1	ella
 20	2	2	2	mi
+20	4	4	4	+ti
 21	5	6	6	miei occhi
 21	8	8	8	paradiso
 22	5	6	6	alcuna volta
@@ -67,6 +68,7 @@ line	start	end	head	text
 26	7	8	8	la voglia
 27	2	2	2	lui
 27	4	6	4	ragionarmi ancora alquanto
+27	4	4	4	+mi
 28	1	1	1	El
 28	4	6	6	questa quinta soglia
 28	5	6	6	quinta soglia
@@ -126,6 +128,7 @@ line	start	end	head	text
 49	4	8	5	altre luci mota e mista
 49	5	8	5	luci mota e mista
 49	5	5	5	luci
+50	1	1	1	+mi
 50	2	7	3	l'alma che m'avea parlato
 50	2	3	3	l'alma
 50	3	7	3	alma che m'avea parlato
@@ -223,11 +226,13 @@ line	start	end	head	text
 81	1	2	2	un poco
 82	2	3	3	diva Pegasëa
 82	5	6	6	li 'ngegni
-83	0	0	0	
+83	4	4	4	+li
 84	2	2	2	essi
+84	3	3	3	+te
 84	4	7	5	le cittadi e ' regni
 84	4	5	5	le cittadi
 84	7	7	7	regni
+85	1	1	1	+me
 85	3	3	3	te
 86	1	3	3	le lor figure
 86	3	3	3	figure

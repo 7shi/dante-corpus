@@ -27,12 +27,14 @@ line	start	end	head	text
 9	6	6	6	lui
 10	2	2	2	costui
 10	4	4	4	mestieri
+10	6	6	6	+lo
 11	3	4	4	la voce
 12	2	8	5	un altro vero andare a la radice
 12	2	5	5	un altro vero andare
 12	3	5	5	altro vero andare
 12	4	5	5	vero andare
 12	7	8	8	la radice
+13	1	1	1	+lo
 13	3	7	4	la luce onde s'infiora
 13	3	4	4	la luce
 14	1	2	2	vostra sustanza
@@ -147,6 +149,7 @@ line	start	end	head	text
 57	2	3	3	tutto dì
 57	4	5	5	la terra
 58	3	4	4	tanta luce
+58	5	5	5	+ne
 59	2	5	3	li organi del corpo
 59	2	3	3	li organi
 59	3	5	3	organi del corpo
@@ -154,6 +157,7 @@ line	start	end	head	text
 60	2	6	3	tutto ciò che potrà dilettarne
 60	2	3	3	tutto ciò
 60	3	6	3	ciò che potrà dilettarne
+60	6	6	6	+ne
 61	2	2	2	mi
 62	2	7	7	l'uno e l'altro coro
 62	2	3	3	l'uno
@@ -183,6 +187,7 @@ line	start	end	head	text
 71	3	4	4	lo ciel
 71	5	6	6	nove parvenze
 72	3	4	4	la vista
+73	1	1	1	+mi
 73	3	4	4	novelle sussistenze
 74	6	7	7	un giro
 75	4	7	7	l'altre due circunferenze
@@ -194,6 +199,7 @@ line	start	end	head	text
 78	2	4	3	li occhi miei
 78	3	4	3	occhi miei
 78	6	6	6	vinti
+78	7	7	7	+lo
 79	2	6	2	Bëatrice sì bella e ridente
 79	2	2	2	Bëatrice
 80	6	7	7	quelle vedute
@@ -340,8 +346,11 @@ line	start	end	head	text
 134	2	3	3	ogne bellezza
 135	3	3	3	io
 135	10	10	10	quelli
+136	2	2	2	+mi
 136	4	8	4	quel ch'io m'accuso
 136	6	6	6	io
+137	2	2	2	+mi
+137	4	4	4	+mi
 137	6	6	6	vero
 138	2	4	3	'l piacer santo
 138	3	4	3	piacer santo

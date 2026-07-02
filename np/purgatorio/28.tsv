@@ -108,8 +108,10 @@ line	start	end	head	text
 44	8	8	8	sembianti
 45	4	6	4	testimon del core
 45	6	6	6	core
+46	1	1	1	+ti
 46	3	6	3	voglia di trarreti avanti
 46	3	3	3	voglia
+46	5	5	5	+ti
 47	2	2	2	io
 47	4	4	4	lei
 47	6	7	7	questa rivera
@@ -200,6 +202,7 @@ line	start	end	head	text
 77	4	6	5	questo luogo eletto
 78	2	4	4	l'umana natura
 78	6	7	7	suo nido
+79	2	2	2	+vi
 79	3	4	4	alcun sospetto
 80	2	2	2	luce
 80	4	6	5	il salmo Delectasti
@@ -336,6 +339,7 @@ line	start	end	head	text
 134	0	0	0	
 135	1	3	2	la sete tua
 135	5	5	5	io
+136	1	1	1	+ti
 136	2	3	3	un corollario
 136	3	3	3	corollario
 136	6	6	6	grazia
@@ -344,6 +348,7 @@ line	start	end	head	text
 137	6	6	6	dir
 137	7	7	7	ti
 138	3	3	3	promession
+138	4	4	4	+te
 139	1	1	1	Quelli
 140	1	5	2	l'età de l'oro
 140	4	5	5	l'oro

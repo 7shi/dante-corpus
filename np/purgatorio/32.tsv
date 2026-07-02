@@ -5,6 +5,7 @@ line	start	end	head	text
 4	2	2	2	essi
 5	5	7	7	lo santo riso
 6	2	2	2	sé
+6	3	3	3	+li
 6	5	7	7	l'antica rete
 7	3	3	3	forza
 7	7	8	8	il viso
@@ -119,6 +120,7 @@ line	start	end	head	text
 49	4	8	4	temo ch'elli avea tirato
 49	4	4	4	temo
 49	6	6	6	elli
+50	1	1	1	+lo
 50	3	7	3	piè de la vedova frasca
 50	3	3	3	piè
 50	5	7	7	la vedova frasca
@@ -270,6 +272,7 @@ line	start	end	head	text
 100	4	5	5	poco tempo
 100	5	5	5	tempo
 100	6	6	6	silvano
+101	3	3	3	+me
 101	4	6	6	sanza fine cive
 101	5	5	5	fine
 101	6	6	6	cive
@@ -350,6 +353,7 @@ line	start	end	head	text
 130	6	7	7	la terra
 131	2	4	4	ambo le ruote
 131	3	4	4	le ruote
+131	7	7	7	+ne
 131	8	9	9	un drago
 132	3	4	4	lo carro
 132	6	7	7	la coda
@@ -368,7 +372,7 @@ line	start	end	head	text
 137	5	5	5	piuma
 138	3	6	3	intenzion sana e benigna
 138	3	3	3	intenzion
-139	0	0	0	
+139	4	4	4	+ne
 140	2	3	3	l'una
 140	5	7	7	l'altra rota
 140	5	6	6	l'altra
@@ -424,6 +428,7 @@ line	start	end	head	text
 157	7	7	7	ira
 158	2	3	3	il mostro
 158	3	3	3	mostro
+158	5	5	5	+lo
 158	7	8	8	la selva
 158	8	8	8	selva
 159	5	5	5	lei

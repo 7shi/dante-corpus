@@ -1,6 +1,8 @@
 line	start	end	head	text
 1	6	7	7	la fiamma
 2	8	8	8	noi
+2	9	9	9	+se
+2	9	9	9	+ne
 3	2	6	3	la licenza del dolce poeta
 3	2	3	3	la licenza
 3	3	6	3	licenza del dolce poeta
@@ -36,6 +38,7 @@ line	start	end	head	text
 15	3	5	4	le parole grame
 16	6	7	7	lor vïaggio
 17	3	4	4	la punta
+17	5	5	5	+le
 17	6	7	7	quel guizzo
 18	4	5	5	la lingua
 18	7	8	8	lor passaggio
@@ -49,6 +52,7 @@ line	start	end	head	text
 23	4	7	4	restare a parlar meco
 23	6	7	6	parlar meco
 23	7	7	7	meco
+23	7	7	7	+me
 24	6	6	6	me
 25	2	2	2	tu
 25	6	8	7	questo mondo cieco
@@ -61,6 +65,7 @@ line	start	end	head	text
 27	4	6	5	mia colpa tutta
 27	5	6	5	colpa tutta
 27	5	5	5	colpa
+28	1	1	1	+mi
 28	3	3	3	Romagnuoli
 28	5	7	5	pace o guerra
 28	5	5	5	pace
@@ -169,6 +174,7 @@ line	start	end	head	text
 67	3	5	3	uom d'arme
 67	5	5	5	arme
 67	9	9	9	cordigliero
+68	1	1	1	+mi
 68	5	5	5	ammenda
 69	3	5	4	il creder mio
 69	4	5	4	creder mio
@@ -244,6 +250,7 @@ line	start	end	head	text
 97	5	7	7	sua superba febbre
 97	6	7	7	superba febbre
 97	7	7	7	febbre
+98	1	1	1	+mi
 98	2	2	2	consiglio
 98	4	4	4	io
 99	2	4	4	le sue parole
@@ -302,10 +309,12 @@ line	start	end	head	text
 120	2	6	3	la contradizion che nol consente
 120	2	3	3	la contradizion
 120	5	5	5	nol
+120	5	5	5	+lo
 121	2	3	2	me dolente
 121	2	2	2	me
 121	5	5	5	mi
 122	2	2	2	mi
+122	4	4	4	+mi
 123	1	1	1	tu
 123	5	5	5	io
 124	2	2	2	Minòs

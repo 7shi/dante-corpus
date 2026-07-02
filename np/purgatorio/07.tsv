@@ -36,6 +36,7 @@ line	start	end	head	text
 13	3	3	3	quelli
 13	7	8	8	le ciglia
 14	5	5	5	lui
+15	2	2	2	+lo
 15	5	6	6	'l minor
 16	2	4	2	gloria di Latin
 16	4	4	4	Latin
@@ -54,6 +55,7 @@ line	start	end	head	text
 19	7	7	7	ti
 20	2	2	2	io
 20	6	8	8	le tue parole
+21	1	1	1	+mi
 21	5	5	5	inferno
 21	8	9	9	qual chiostra
 22	2	7	4	tutt' i cerchi del dolente regno
@@ -140,7 +142,7 @@ line	start	end	head	text
 60	3	4	4	l'orizzonte
 60	5	6	6	il dì
 61	2	4	4	il mio segnor
-62	0	0	0	
+62	1	1	1	+ne
 63	5	5	5	diletto
 64	6	6	6	lici
 65	2	2	2	io

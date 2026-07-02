@@ -17,6 +17,7 @@ line	start	end	head	text
 7	1	2	2	L'acqua
 7	4	4	4	io
 8	1	1	1	Minerva
+8	4	4	4	+mi
 8	5	5	5	Appollo
 9	2	3	3	nove Muse
 9	3	3	3	Muse
@@ -46,6 +47,8 @@ line	start	end	head	text
 18	5	5	5	bifolco
 19	1	5	5	La concreata e perpetüa sete
 20	2	3	3	deïforme regno
+20	4	4	4	+ce
+20	4	4	4	+ne
 21	4	5	5	'l ciel
 22	1	1	1	Beatrice
 22	3	3	3	suso
@@ -109,6 +112,7 @@ line	start	end	head	text
 48	1	2	2	lo qual
 48	4	5	5	mortal mondo
 48	6	6	6	m'
+49	2	2	2	+mi
 49	5	7	6	li segni bui
 50	2	3	3	questo corpo
 50	8	8	8	terra
@@ -126,6 +130,7 @@ line	start	end	head	text
 56	7	7	7	sensi
 57	3	4	4	la ragione
 57	6	8	8	corte l'ali
+58	2	2	2	+mi
 58	3	9	3	quel che tu da te ne pensi
 58	7	7	7	te
 59	2	2	2	io
@@ -215,6 +220,7 @@ line	start	end	head	text
 92	7	8	8	altre parti
 93	7	7	7	retro
 94	2	3	3	questa instanza
+94	5	5	5	+ti
 95	1	1	1	esperïenza
 95	5	5	5	la
 96	4	9	4	fonte ai rivi di vostr' arti
@@ -310,6 +316,7 @@ line	start	end	head	text
 131	3	4	3	mente profonda
 131	6	6	6	lui
 132	2	3	3	l'image
+132	5	5	5	+ne
 132	6	6	6	suggello
 133	3	8	4	l'alma dentro a vostra polve
 133	3	4	4	l'alma

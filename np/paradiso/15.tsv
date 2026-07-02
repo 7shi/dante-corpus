@@ -19,6 +19,7 @@ line	start	end	head	text
 8	1	6	2	quelle sustanze che, per darmi voglia
 8	1	2	2	quelle sustanze
 8	3	3	3	che
+8	5	5	5	+mi
 8	6	6	6	voglia
 9	2	2	2	io
 9	3	3	3	le
@@ -43,6 +44,8 @@ line	start	end	head	text
 17	5	10	6	la parte ond' e' s'accende
 17	5	6	6	la parte
 18	1	1	1	nulla
+18	2	2	2	+si
+18	2	2	2	+ne
 18	5	5	5	esso
 19	1	1	1	tale
 19	3	3	3	corno

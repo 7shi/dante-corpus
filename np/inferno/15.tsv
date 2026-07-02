@@ -88,11 +88,13 @@ line	start	end	head	text
 31	4	5	4	figliuol mio
 32	2	3	2	Brunetto Latino
 32	4	5	5	un poco
+32	6	6	6	+te
 33	7	8	8	la traccia
 34	1	1	1	I'
 34	3	3	3	lui
 34	6	6	6	ven
 35	6	6	6	voi
+36	1	1	1	+lo
 36	5	5	5	costui
 37	2	2	2	figliuol
 37	4	7	4	qual di questa greggia
@@ -135,6 +137,7 @@ line	start	end	head	text
 53	1	1	1	questi
 53	5	5	5	ïo
 53	7	7	7	quella
+54	2	2	2	+mi
 54	4	4	4	ca
 54	6	7	7	questo calle
 55	2	2	2	elli
@@ -236,10 +239,12 @@ line	start	end	head	text
 97	7	8	8	la gota
 98	1	1	1	destra
 98	5	5	5	dietro
+98	7	7	7	+mi
 99	5	7	5	chi la nota
 99	6	6	6	la
 100	3	3	3	tanto
 100	5	5	5	men
+100	7	7	7	+mi
 101	2	3	3	ser Brunetto
 101	6	6	6	chi
 102	1	8	3	li suoi compagni più noti e più sommi
@@ -253,6 +258,7 @@ line	start	end	head	text
 103	5	7	5	Saper d'alcuno
 103	7	7	7	alcuno
 104	2	3	3	li altri
+104	6	6	6	+ci
 105	2	3	3	'l tempo
 105	7	8	8	tanto suono
 106	2	2	2	somma
@@ -274,6 +280,7 @@ line	start	end	head	text
 110	2	4	2	Francesco d'Accorso
 110	2	2	2	Francesco
 110	4	4	4	Accorso
+110	7	7	7	+vi
 111	5	7	7	tal tigna brama
 111	5	6	6	tal tigna
 111	7	7	7	brama
@@ -294,6 +301,7 @@ line	start	end	head	text
 117	6	6	6	sabbione
 118	1	1	1	Gente
 118	4	5	5	la quale
+119	1	1	1	+ti
 119	3	5	5	il mio Tesoro
 120	2	2	2	qual
 120	3	3	3	io

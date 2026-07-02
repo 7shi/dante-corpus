@@ -200,6 +200,8 @@ line	start	end	head	text
 80	7	7	7	peccatrici
 81	3	4	4	la rena
 81	4	4	4	rena
+81	6	6	6	+si
+81	6	6	6	+ne
 81	8	8	8	quello
 82	1	7	2	Lo fondo suo e ambo le pendici
 82	1	3	2	Lo fondo suo
@@ -254,6 +256,7 @@ line	start	end	head	text
 100	2	2	2	la
 100	6	7	6	cuna fida
 101	2	3	3	suo figliuolo
+101	6	6	6	+lo
 102	6	7	7	le grida
 103	2	3	3	dal monte
 103	3	3	3	monte
@@ -296,6 +299,8 @@ line	start	end	head	text
 116	2	2	2	Acheronte
 116	3	3	3	Stige
 116	5	5	5	Flegetonta
+117	2	2	2	+si
+117	2	2	2	+ne
 117	6	8	8	questa stretta doccia
 118	0	0	0	
 119	2	2	2	Cocito

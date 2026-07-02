@@ -164,6 +164,7 @@ line	start	end	head	text
 71	2	3	3	ogne amor
 71	3	3	3	amor
 71	7	7	7	voi
+72	2	2	2	+lo
 72	5	5	5	voi
 72	6	7	7	la podestate
 72	7	7	7	podestate
@@ -280,6 +281,7 @@ line	start	end	head	text
 115	1	1	1	Noi
 115	4	6	4	voglia a muoverci
 115	4	4	4	voglia
+115	6	6	6	+ci
 116	2	2	2	restar
 117	2	3	2	villania nostra
 117	2	2	2	villania
@@ -316,6 +318,8 @@ line	start	end	head	text
 130	2	2	2	quei
 130	7	8	8	ogne uopo
 130	8	8	8	uopo
+131	2	2	2	+ti
+131	4	4	4	+ne
 131	5	5	5	due
 132	4	7	5	l'accidïa di morso
 132	4	5	5	l'accidïa
@@ -339,6 +343,7 @@ line	start	end	head	text
 139	5	5	5	noi
 140	1	2	2	quell' ombre
 140	2	2	2	ombre
+140	7	7	7	+si
 141	1	2	2	novo pensiero
 141	2	2	2	pensiero
 141	5	5	5	me

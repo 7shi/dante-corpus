@@ -66,6 +66,7 @@ line	start	end	head	text
 25	4	4	4	lui
 25	6	8	6	piè del ponticello
 25	8	8	8	ponticello
+26	1	1	1	+ti
 26	6	6	6	dito
 27	3	7	4	'l nominar Geri del Bello
 27	3	4	4	'l nominar
@@ -90,6 +91,7 @@ line	start	end	head	text
 33	8	8	8	consorte
 34	2	2	2	lui
 34	5	7	7	el sen gio
+35	2	2	2	+mi
 35	5	5	5	ïo
 36	3	3	3	ciò
 36	6	6	6	el
@@ -211,6 +213,7 @@ line	start	end	head	text
 86	9	9	9	loro
 87	5	5	5	esse
 87	7	7	7	tanaglie
+88	1	1	1	+ne
 88	3	4	4	alcun Latino
 88	7	7	7	costoro
 89	3	3	3	quinc'
@@ -252,10 +255,12 @@ line	start	end	head	text
 104	5	7	7	l'umane menti
 105	3	3	3	ella
 105	6	7	7	molti soli
+106	1	1	1	+mi
 106	2	2	2	chi
 106	3	3	3	voi
 106	7	8	8	che genti
 107	1	6	6	la vostra sconcia e fastidiosa pena
+108	2	2	2	+vi
 108	4	4	4	me
 109	1	1	1	Io
 109	4	4	4	Arezzo
@@ -283,6 +288,7 @@ line	start	end	head	text
 115	6	7	7	l'arte
 116	2	2	2	io
 116	3	3	3	nol
+116	3	3	3	+lo
 116	5	5	5	Dedalo
 116	6	6	6	mi
 117	3	3	3	tal
@@ -319,6 +325,8 @@ line	start	end	head	text
 124	6	6	6	m'
 125	3	4	3	detto mio
 125	3	3	3	detto
+125	6	6	6	+me
+125	6	6	6	+ne
 125	7	7	7	Stricca
 126	4	6	6	le temperate spese
 126	5	6	6	temperate spese

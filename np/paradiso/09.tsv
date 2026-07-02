@@ -39,6 +39,7 @@ line	start	end	head	text
 14	2	2	2	me
 14	6	8	8	'l suo voler
 14	8	8	8	voler
+14	9	9	9	+mi
 15	3	5	3	chiarir di fori
 15	3	3	3	chiarir
 15	5	5	5	fori
@@ -59,6 +60,7 @@ line	start	end	head	text
 19	7	7	7	compenso
 20	1	2	2	beato spirto
 20	2	2	2	spirto
+20	5	5	5	+mi
 20	6	6	6	prova
 21	5	5	5	te
 21	7	10	7	quel ch'io penso
@@ -156,6 +158,7 @@ line	start	end	head	text
 63	4	4	4	parlar
 63	5	5	5	ne
 64	2	2	2	si
+64	5	5	5	+mi
 64	6	6	6	sembiante
 65	4	5	5	altro volta
 65	7	8	8	la rota
@@ -205,6 +208,8 @@ line	start	end	head	text
 85	2	6	3	discordanti liti contra 'l sole
 85	2	3	3	discordanti liti
 85	5	6	6	'l sole
+86	2	2	2	+si
+86	2	2	2	+ne
 86	6	6	6	meridïano
 87	3	4	4	l'orizzonte
 88	2	3	3	quella valle
@@ -274,6 +279,8 @@ line	start	end	head	text
 109	5	7	6	tue voglie piene
 109	6	7	6	voglie piene
 109	6	6	6	voglie
+110	1	1	1	+te
+110	1	1	1	+ne
 110	7	8	8	questa spera
 110	8	8	8	spera
 111	1	1	1	proceder

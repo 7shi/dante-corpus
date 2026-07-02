@@ -21,6 +21,7 @@ line	start	end	head	text
 9	2	3	3	'l terzo
 9	8	9	9	l'ale
 10	2	2	2	io
+10	4	4	4	+me
 10	7	9	7	quel d'Adamo
 10	9	9	9	Adamo
 11	2	3	3	dal sonno
@@ -64,6 +65,7 @@ line	start	end	head	text
 25	5	5	5	questa
 26	4	4	4	uso
 26	8	9	9	altro loco
+27	3	3	3	+ne
 27	6	6	6	piede
 28	2	2	2	mi
 28	7	8	8	un poco
@@ -129,6 +131,7 @@ line	start	end	head	text
 55	2	3	3	una donna
 55	6	6	6	I'
 55	8	8	8	Lucia
+56	1	1	1	+mi
 56	3	5	3	costui che dorme
 56	3	3	3	costui
 57	5	7	7	la sua via
@@ -188,7 +191,7 @@ line	start	end	head	text
 72	6	6	6	la
 73	1	1	1	Noi
 73	7	7	7	parte
-74	0	0	0	
+74	4	4	4	+mi
 75	3	7	4	un fesso che muro diparte
 75	3	4	4	un fesso
 75	6	6	6	muro
@@ -201,6 +204,7 @@ line	start	end	head	text
 78	2	3	3	un portier
 78	8	8	8	motto
 79	3	4	4	l'occhio
+80	1	1	1	+lo
 80	4	6	5	'l grado sovrano
 81	3	4	4	la faccia
 81	6	6	6	io
@@ -314,8 +318,9 @@ line	start	end	head	text
 126	6	7	7	'l nodo
 127	2	2	2	Pier
 127	3	3	3	le
+127	6	6	6	+mi
 127	8	8	8	i'
-128	0	0	0	
+128	6	6	6	+la
 129	3	6	4	la gente a' piedi
 129	3	4	4	la gente
 129	4	6	4	gente a' piedi
@@ -325,7 +330,7 @@ line	start	end	head	text
 129	7	7	7	mi
 130	3	4	4	l'uscio
 130	6	8	7	la porta sacrata
-131	0	0	0	
+131	4	4	4	+vi
 132	3	3	3	fuor
 132	5	9	5	chi 'n dietro si guata
 132	7	7	7	dietro

@@ -54,6 +54,7 @@ line	start	end	head	text
 19	2	3	3	questo luogo
 19	5	6	6	la schiena
 20	2	2	2	Gerïon
+20	3	3	3	+ci
 20	5	6	6	'l poeta
 21	3	3	3	sinistra
 21	5	5	5	io
@@ -111,8 +112,10 @@ line	start	end	head	text
 41	4	4	4	io
 42	4	4	4	costui
 43	3	3	3	ïo
+43	5	5	5	+lo
 43	6	7	7	i piedi
 44	2	4	4	'l dolce duca
+44	5	5	5	+me
 45	4	4	4	alquanto
 45	6	6	6	dietro
 46	2	3	3	quel frustato
@@ -132,6 +135,7 @@ line	start	end	head	text
 52	2	2	2	elli
 52	4	4	4	me
 52	7	7	7	lo
+53	2	2	2	+mi
 53	3	6	6	la tua chiara favella
 54	2	2	2	mi
 54	6	7	6	mondo antico

@@ -188,6 +188,7 @@ line	start	end	head	text
 69	1	2	2	questo baràtro
 69	4	8	5	'l popol ch'e' possiede
 69	4	5	5	'l popol
+70	2	2	2	+mi
 70	3	7	3	quei de la palude pingue
 70	3	3	3	quei
 70	5	7	6	la palude pingue
@@ -287,6 +288,7 @@ line	start	end	head	text
 110	6	8	8	la sua seguace
 111	5	5	5	altro
 111	7	8	8	la spene
+112	2	2	2	+mi
 112	5	6	6	'l gir
 112	7	7	7	mi
 113	2	3	3	i Pesci

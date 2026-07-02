@@ -28,6 +28,7 @@ line	start	end	head	text
 12	5	6	6	mio canto
 13	2	3	3	buono Appollo
 13	5	7	7	l'ultimo lavoro
+14	1	1	1	+mi
 14	2	7	7	del tuo valor sì fatto vaso
 14	3	4	4	tuo valor
 14	5	7	7	sì fatto vaso
@@ -52,6 +53,7 @@ line	start	end	head	text
 24	3	4	4	mio capo
 25	4	8	4	piè del tuo diletto legno
 25	6	8	8	tuo diletto legno
+26	3	3	3	+mi
 26	5	6	6	le foglie
 27	2	5	3	la materia e tu
 27	2	3	3	la materia
@@ -135,7 +137,9 @@ line	start	end	head	text
 57	6	7	7	umana spece
 57	7	7	7	spece
 58	1	1	1	Io
+58	2	2	2	+lo
 59	2	2	2	io
+59	3	3	3	+lo
 60	2	7	2	ferro che bogliente esce del foco
 60	2	2	2	ferro
 60	7	7	7	foco
@@ -191,6 +195,7 @@ line	start	end	head	text
 77	4	4	4	mi
 78	2	7	3	l'armonia che temperi e discerni
 78	2	3	3	l'armonia
+79	1	1	1	+mi
 79	5	6	5	cielo acceso
 80	2	5	3	la fiamma del sol
 80	2	3	3	la fiamma
@@ -216,6 +221,7 @@ line	start	end	head	text
 85	2	2	2	ella
 85	5	5	5	me
 85	8	8	8	io
+86	2	2	2	+mi
 86	3	5	4	l'animo commosso
 86	3	4	4	l'animo
 86	4	5	4	animo commosso
@@ -324,6 +330,8 @@ line	start	end	head	text
 123	5	9	5	quel c'ha maggior fretta
 123	8	9	9	maggior fretta
 124	6	7	7	sito decreto
+125	1	1	1	+ci
+125	1	1	1	+ne
 125	3	7	4	la virtù di quella corda
 125	6	7	7	quella corda
 126	2	4	2	ciò che scocca

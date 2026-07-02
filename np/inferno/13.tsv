@@ -143,9 +143,11 @@ line	start	end	head	text
 50	3	4	3	cosa incredibile
 50	3	3	3	cosa
 50	5	5	5	mi
+51	1	1	1	+lo
 51	3	3	3	ovra
 51	6	7	6	me stesso
 51	6	6	6	me
+52	2	2	2	+gli
 52	3	5	3	chi tu fosti
 52	3	3	3	chi
 52	4	4	4	tu
@@ -232,6 +234,7 @@ line	start	end	head	text
 81	9	9	9	ti
 82	2	2	2	ïo
 82	4	4	4	lui
+82	5	5	5	+lo
 83	2	8	2	quel che credi ch'a me satisfaccia
 83	7	7	7	me
 84	2	2	2	i'
@@ -242,8 +245,10 @@ line	start	end	head	text
 86	4	6	6	'l tuo dir
 86	5	6	6	tuo dir
 87	1	2	1	spirito incarcerato
+88	2	2	2	+ne
 88	4	5	5	l'anima
 89	2	3	3	questi nocchi
+89	5	5	5	+ne
 89	7	7	7	tu
 90	2	6	2	alcuna mai di tai membra
 90	2	2	2	alcuna
@@ -364,10 +369,12 @@ line	start	end	head	text
 129	4	5	5	quelle membra
 129	5	6	5	membra dolenti
 129	5	5	5	membra
+130	1	1	1	+mi
 130	3	5	5	la mia scorta
 130	4	5	5	mia scorta
 130	5	5	5	scorta
 130	7	7	7	mano
+131	2	2	2	+mi
 131	4	6	4	cespuglio che piangea
 131	4	4	4	cespuglio
 132	2	4	3	le rotture sanguinenti
@@ -398,6 +405,7 @@ line	start	end	head	text
 141	3	9	5	le mie fronde sì da me disgiunte
 141	3	5	5	le mie fronde
 141	8	8	8	me
+142	1	1	1	+le
 142	3	6	3	piè del tristo cesto
 142	5	6	6	tristo cesto
 143	1	1	1	I'

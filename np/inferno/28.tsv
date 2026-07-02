@@ -76,6 +76,7 @@ line	start	end	head	text
 27	5	8	5	quel che si trangugia
 28	3	5	3	tutto in lui
 28	5	5	5	lui
+29	1	1	1	+mi
 29	4	5	5	le man
 29	8	9	9	il petto
 30	5	5	5	io
@@ -118,11 +119,13 @@ line	start	end	head	text
 47	2	4	4	'l mio maestro
 47	3	4	4	mio maestro
 47	4	4	4	maestro
+47	6	6	6	+lo
 48	4	4	4	lui
 48	5	6	5	esperïenza piena
 48	5	5	5	esperïenza
 49	2	5	2	me, che morto son
 49	2	2	2	me
+49	7	7	7	+lo
 50	2	5	3	lo 'nferno qua giù
 50	2	3	3	lo 'nferno
 50	7	7	7	giro
@@ -137,6 +140,7 @@ line	start	end	head	text
 52	5	5	5	che
 52	7	7	7	l'
 53	4	4	4	fosso
+53	6	6	6	+me
 54	2	2	2	maraviglia
 54	4	5	5	il martiro
 54	5	5	5	martiro
@@ -147,6 +151,7 @@ line	start	end	head	text
 56	5	6	6	il sole
 56	8	8	8	breve
 57	2	2	2	ello
+57	7	7	7	+mi
 58	3	3	3	vivanda
 58	5	7	5	stretta di neve
 58	7	7	7	neve
@@ -178,6 +183,7 @@ line	start	end	head	text
 71	3	3	3	io
 71	7	8	7	terra latina
 72	2	3	3	troppa simiglianza
+73	1	1	1	+ti
 73	3	5	3	Pier da Medicina
 73	5	5	5	Medicina
 74	6	8	8	lo dolce piano
@@ -207,7 +213,9 @@ line	start	end	head	text
 86	3	8	4	la terra che tale qui meco
 86	3	4	4	la terra
 86	6	6	6	tale
+86	8	8	8	+me
 87	5	5	5	digiuno
+88	2	2	2	+li
 88	4	5	4	parlamento seco
 88	4	4	4	parlamento
 89	6	8	6	vento di Focara
@@ -218,6 +226,7 @@ line	start	end	head	text
 90	4	4	4	mestier
 91	2	2	2	io
 91	4	4	4	lui
+91	5	5	5	+mi
 92	4	4	4	i'
 92	7	9	9	di te novella
 92	8	8	8	te
@@ -282,6 +291,7 @@ line	start	end	head	text
 113	7	7	7	paura
 114	2	3	3	più prova
 114	3	3	3	prova
+114	5	5	5	+la
 115	4	4	4	coscïenza
 116	1	7	3	la buona compagnia che l'uom francheggia
 116	1	3	3	la buona compagnia
@@ -289,6 +299,7 @@ line	start	end	head	text
 117	2	6	3	l'asbergo del sentirsi pura
 117	2	3	3	l'asbergo
 117	5	6	5	sentirsi pura
+117	5	5	5	+si
 118	1	1	1	Io
 118	9	9	9	'l
 119	1	4	2	un busto sanza capo
@@ -301,6 +312,7 @@ line	start	end	head	text
 121	3	3	3	capo
 121	7	8	8	le chiome
 121	8	8	8	chiome
+122	1	1	1	+lo
 122	3	3	3	mano
 122	5	7	5	guisa di lanterna
 122	7	7	7	lanterna
@@ -322,6 +334,7 @@ line	start	end	head	text
 128	3	4	3	braccio alto
 128	6	8	8	tutta la testa
 128	7	8	8	la testa
+129	2	2	2	+ne
 129	3	5	4	le parole sue
 129	4	5	4	parole sue
 130	5	7	6	la pena molesta

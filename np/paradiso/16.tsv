@@ -58,12 +58,14 @@ line	start	end	head	text
 20	6	6	6	sé
 20	8	8	8	letizia
 21	6	6	6	si
+22	1	1	1	+mi
 22	3	5	5	cara mia primizia
 22	4	5	5	mia primizia
 23	3	5	5	li vostri antichi
 23	4	5	5	vostri antichi
 23	9	10	10	li anni
 24	5	6	6	vostra püerizia
+25	1	1	1	+mi
 25	3	7	4	l'ovil di San Giovanni
 25	3	4	4	l'ovil
 25	4	7	4	ovil di San Giovanni
@@ -88,6 +90,7 @@ line	start	end	head	text
 31	4	6	5	li occhi miei
 32	3	7	3	voce più dolce e soave
 33	4	6	6	questa moderna favella
+34	1	1	1	+mi
 34	3	8	4	quel dì che fu detto ‘Ave
 34	3	4	4	quel dì
 34	8	8	8	Ave
@@ -120,6 +123,7 @@ line	start	end	head	text
 42	6	8	8	vostro annüal gioco
 42	8	8	8	gioco
 43	3	5	5	i miei maggiori
+43	6	6	6	+ne
 43	7	7	7	questo
 44	1	1	1	chi
 44	2	2	2	ei
@@ -149,6 +153,7 @@ line	start	end	head	text
 53	8	8	8	Galluzzo
 54	3	3	3	Trespiano
 54	5	6	6	vostro confine
+55	2	2	2	+le
 55	6	7	7	lo puzzo
 56	2	4	2	villan d'Aguglion
 56	4	4	4	Aguglion

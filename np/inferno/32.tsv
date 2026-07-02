@@ -68,6 +68,7 @@ line	start	end	head	text
 21	1	6	2	le teste de' fratei miseri lassi
 21	4	6	4	fratei miseri lassi
 22	3	3	3	io
+22	7	7	7	+mi
 23	3	4	4	i piedi
 23	5	9	6	un lago che per gelo
 23	5	6	6	un lago
@@ -111,10 +112,12 @@ line	start	end	head	text
 39	2	2	2	lor
 39	3	3	3	testimonianza
 40	2	2	2	io
+41	1	1	1	+mi
 41	3	3	3	piedi
 41	6	8	6	due sì stretti
 42	2	5	3	'l pel del capo
 42	5	5	5	capo
+43	1	1	1	+mi
 43	2	7	2	voi che sì strignete i petti
 43	2	2	2	voi
 43	6	7	7	i petti
@@ -269,8 +272,10 @@ line	start	end	head	text
 100	4	4	4	me
 100	6	6	6	tu
 100	7	7	7	mi
+100	8	8	8	+me
 101	2	2	2	ti
 101	5	5	5	io
+101	8	8	8	+te
 102	2	3	3	mille fiate
 102	3	3	3	fiate
 102	6	6	6	capo
@@ -280,6 +285,8 @@ line	start	end	head	text
 103	4	5	5	i capelli
 103	5	8	5	capelli in mano avvolti
 103	7	7	7	mano
+104	3	3	3	+gli
+104	3	3	3	+ne
 104	5	8	5	più d'una ciocca
 104	7	8	8	una ciocca
 105	2	2	2	lui
@@ -362,6 +369,7 @@ line	start	end	head	text
 134	3	7	3	colui che tu ti mangi
 134	3	3	3	colui
 134	5	5	5	tu
+135	1	1	1	+mi
 135	2	3	3	'l perché
 135	3	3	3	perché
 135	5	5	5	io

@@ -17,6 +17,7 @@ line	start	end	head	text
 7	4	8	5	al suon di questo motto
 7	5	8	5	suon di questo motto
 7	7	8	8	questo motto
+8	2	2	2	+li
 8	5	5	5	maraviglia
 9	2	2	2	me
 9	2	2	2	me
@@ -46,6 +47,7 @@ line	start	end	head	text
 19	1	1	1	Che
 19	3	3	3	io
 19	7	7	7	Io
+20	1	1	1	+lo
 20	2	5	2	alquanto del color consperso
 20	4	5	4	color consperso
 20	4	4	4	color
@@ -76,10 +78,13 @@ line	start	end	head	text
 28	6	8	6	forma di messaggi
 28	8	8	8	messaggi
 29	4	4	4	noi
+29	6	6	6	+ne
 30	2	3	3	vostra condizion
+30	4	4	4	+ne
 30	5	5	5	saggi
 31	2	4	4	'l mio maestro
 31	5	5	5	Voi
+31	7	7	7	+ne
 32	4	7	4	color che vi mandaro
 32	4	4	4	color
 33	2	5	3	'l corpo di costui
@@ -90,6 +95,7 @@ line	start	end	head	text
 34	5	6	6	sua ombra
 35	2	2	2	io
 35	6	6	6	lor
+36	1	1	1	+li
 36	2	2	2	onore
 36	6	6	6	lor
 37	1	2	1	Vapori accesi
@@ -112,6 +118,7 @@ line	start	end	head	text
 43	1	2	2	Questa gente
 43	2	6	2	gente che preme a noi
 43	6	6	6	noi
+44	2	2	2	+ti
 44	4	4	4	pregar
 44	6	7	7	'l poeta
 45	6	6	6	andando
@@ -167,6 +174,7 @@ line	start	end	head	text
 64	4	4	4	Ciascun
 65	2	3	2	beneficio tuo
 65	2	2	2	beneficio
+65	5	5	5	+lo
 66	3	4	4	'l voler
 66	4	4	4	voler
 67	2	2	2	io
@@ -343,6 +351,7 @@ line	start	end	head	text
 127	2	2	2	i'
 127	5	5	5	me
 127	7	8	8	'l dolor
+128	1	1	1	+mi
 128	3	4	4	le ripe
 128	7	8	8	lo fondo
 129	3	4	4	sua preda
@@ -352,12 +361,15 @@ line	start	end	head	text
 131	4	6	6	la lunga via
 132	2	4	4	'l terzo spirito
 132	6	6	6	secondo
+133	1	1	1	+ti
 133	3	3	3	me
 133	4	4	4	che
 133	6	7	7	la Pia
 134	1	1	1	Siena
 134	2	2	2	mi
+134	4	4	4	+mi
 134	5	5	5	Maremma
+135	1	1	1	+si
 135	2	5	2	colui che 'nnanellata pria
 135	2	2	2	colui
 135	3	5	3	che 'nnanellata pria

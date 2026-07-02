@@ -228,6 +228,7 @@ line	start	end	head	text
 98	5	5	5	vel
 98	6	6	6	Costanza
 99	3	3	3	ella
+99	6	6	6	+me
 100	1	2	2	Molte fïate
 100	4	4	4	frate
 101	4	4	4	periglio
@@ -291,6 +292,7 @@ line	start	end	head	text
 127	5	5	5	fera
 127	7	7	7	lustra
 128	4	4	4	l'
+128	8	8	8	+lo
 129	3	4	4	ciascun disio
 129	4	4	4	disio
 130	3	3	3	quello
@@ -308,6 +310,7 @@ line	start	end	head	text
 133	4	4	4	questo
 134	2	2	2	reverenza
 134	3	3	3	donna
+134	5	5	5	+vi
 135	2	8	4	un'altra verità che m'è oscura
 135	2	4	4	un'altra verità
 135	4	8	4	verità che m'è oscura
@@ -315,6 +318,7 @@ line	start	end	head	text
 136	1	1	1	Io
 136	5	6	6	l'uom
 136	6	6	6	uom
+136	8	8	8	+vi
 137	1	2	2	ai voti
 137	2	2	2	voti
 137	6	7	7	altri beni

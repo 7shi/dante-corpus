@@ -272,10 +272,12 @@ line	start	end	head	text
 112	3	4	4	la vista
 113	2	2	2	me
 113	4	6	6	una sola parvenza
+114	1	1	1	+mi
 114	2	2	2	io
 114	4	4	4	me
 115	2	6	6	la profonda e chiara sussistenza
 116	2	4	4	l'alto lume
+116	5	5	5	+mi
 116	6	7	7	tre giri
 117	2	3	3	tre colori
 117	6	7	7	una contenenza

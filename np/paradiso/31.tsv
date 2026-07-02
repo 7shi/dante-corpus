@@ -110,6 +110,7 @@ line	start	end	head	text
 42	2	6	3	non udire e starmi muto
 42	2	3	3	non udire
 42	5	6	5	starmi muto
+42	5	5	5	+mi
 43	3	6	3	peregrin che si ricrea
 43	3	3	3	peregrin
 44	2	5	2	tempio del suo voto
@@ -137,6 +138,7 @@ line	start	end	head	text
 53	2	4	4	tutta mïo sguardo
 53	3	4	4	mïo sguardo
 54	2	3	3	nulla parte
+55	2	2	2	+mi
 55	4	5	4	voglia rïaccesa
 56	3	5	5	la mia donna
 56	4	5	5	mia donna
@@ -224,7 +226,7 @@ line	start	end	head	text
 90	5	5	5	corpo
 91	4	6	4	quella, sì lontana
 91	4	4	4	quella
-92	0	0	0	
+92	5	5	5	+mi
 93	5	7	7	l'etterna fontana
 94	2	4	4	'l santo sene
 94	7	7	7	tu
@@ -233,6 +235,7 @@ line	start	end	head	text
 96	3	6	3	priego e amor santo
 96	3	3	3	priego
 96	5	6	5	amor santo
+96	7	7	7	+mi
 97	3	4	4	li occhi
 97	6	7	7	questo giardino
 98	2	3	2	veder lui

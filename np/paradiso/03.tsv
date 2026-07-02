@@ -13,6 +13,7 @@ line	start	end	head	text
 7	2	2	2	visïone
 8	2	2	2	sé
 8	3	3	3	me
+8	7	7	7	+si
 9	3	4	4	mia confession
 9	4	4	4	confession
 9	6	6	6	mi
@@ -52,6 +53,7 @@ line	start	end	head	text
 21	4	4	4	cui
 21	6	7	7	li occhi
 22	2	2	2	nulla
+22	5	5	5	+lo
 23	3	7	3	lume de la dolce guida
 23	5	7	7	la dolce guida
 24	1	1	1	che
@@ -157,10 +159,12 @@ line	start	end	head	text
 62	8	8	8	mi
 63	3	3	3	raffigurar
 63	4	4	4	m'
+64	2	2	2	+mi
 64	3	7	3	voi che siete qui felici
 64	3	3	3	voi
 65	2	2	2	voi
 65	3	5	5	più alto loco
+66	7	7	7	+vi
 66	8	8	8	amici
 67	2	4	4	quelle altr' ombre
 67	7	8	8	un poco
@@ -175,6 +179,7 @@ line	start	end	head	text
 70	4	5	4	volontà quïeta
 71	1	3	1	virtù di carità
 71	3	3	3	carità
+71	6	6	6	+ne
 72	2	4	2	quel ch'avemo
 72	2	2	2	quel
 72	7	7	7	altro
@@ -192,8 +197,10 @@ line	start	end	head	text
 78	3	5	5	la sua natura
 79	5	6	6	esto beato
 79	7	7	7	esse
+80	1	1	1	+si
 80	4	6	6	la divina voglia
 81	3	3	3	una
+81	4	4	4	+si
 81	5	7	6	nostre voglie stesse
 82	4	4	4	noi
 82	7	7	7	soglia
@@ -257,6 +264,7 @@ line	start	end	head	text
 102	4	5	5	suo piacer
 102	5	5	5	piacer
 103	2	2	2	mondo
+103	4	4	4	+la
 103	5	5	5	giovinetta
 104	5	6	6	suo abito
 105	3	8	4	la via de la sua setta
@@ -306,6 +314,7 @@ line	start	end	head	text
 119	6	6	6	Soave
 120	2	3	3	'l terzo
 120	5	7	7	l'ultima possanza
+121	2	2	2	+mi
 121	6	6	6	Ave
 122	1	1	1	Maria
 123	3	4	3	acqua cupa

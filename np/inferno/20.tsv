@@ -39,6 +39,7 @@ line	start	end	head	text
 17	4	4	4	alcun
 17	6	6	6	tutto
 18	2	2	2	io
+18	3	3	3	+lo
 19	2	2	2	Dio
 19	5	5	5	lettor
 19	7	7	7	frutto
@@ -250,6 +251,7 @@ line	start	end	head	text
 102	2	3	3	li altri
 102	4	4	4	mi
 102	6	7	6	carboni spenti
+103	2	2	2	+me
 103	4	7	5	la gente che procede
 103	4	5	5	la gente
 103	5	7	5	gente che procede
@@ -301,6 +303,7 @@ line	start	end	head	text
 121	6	7	7	l'ago
 122	1	2	2	la spuola
 122	4	5	5	'l fuso
+122	7	7	7	+si
 122	8	8	8	'ndivine
 123	2	2	2	malie
 123	4	4	4	erbe

@@ -178,6 +178,7 @@ line	start	end	head	text
 67	4	6	6	il suo processo
 68	2	3	3	la prova
 68	7	7	7	te
+69	1	1	1	+ti
 69	3	3	3	parte
 69	5	6	5	te stesso
 69	5	5	5	te
@@ -278,6 +279,7 @@ line	start	end	head	text
 107	1	2	2	lo tempo
 107	4	4	4	me
 107	6	6	6	colpo
+107	7	7	7	+mi
 108	1	1	1	tal
 108	7	10	7	chi più s'abbandona
 109	4	4	4	provedenza

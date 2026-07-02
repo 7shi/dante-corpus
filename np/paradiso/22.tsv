@@ -185,6 +185,7 @@ line	start	end	head	text
 72	2	2	2	li
 72	4	7	7	d'angeli sì carca
 72	5	5	5	angeli
+73	3	3	3	+la
 73	5	5	5	nessun
 74	2	2	2	terra
 74	3	4	4	i piedi
@@ -395,6 +396,7 @@ line	start	end	head	text
 151	1	7	2	L'aiuola che ci fa tanto feroci
 151	1	2	2	L'aiuola
 151	4	4	4	ci
+152	1	1	1	+ mi
 152	2	2	2	io
 152	4	6	6	li etterni Gemelli
 153	2	2	2	m'

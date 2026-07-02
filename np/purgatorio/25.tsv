@@ -73,6 +73,7 @@ line	start	end	head	text
 32	2	2	2	Stazio
 32	5	5	5	tu
 33	2	2	2	me
+33	4	4	4	+ti
 33	5	5	5	io
 33	7	7	7	nego
 34	4	6	5	le parole mie
@@ -96,6 +97,7 @@ line	start	end	head	text
 41	1	2	1	virtute informativa
 41	1	1	1	virtute
 41	4	4	4	quello
+42	3	3	3	+si
 42	4	4	4	quelle
 42	6	8	7	le vene vane
 42	7	8	7	vene vane
@@ -177,6 +179,7 @@ line	start	end	head	text
 73	2	6	2	ciò che trova attivo quivi
 73	2	2	2	ciò
 74	2	3	3	sua sustanzia
+74	5	5	5	+si
 74	6	8	7	un'alma sola
 75	6	6	6	sé
 75	6	6	6	sé
@@ -193,6 +196,7 @@ line	start	end	head	text
 79	2	2	2	Làchesis
 79	6	7	7	del lino
 79	7	7	7	lino
+80	1	1	1	+si
 80	3	4	4	la carne
 80	4	4	4	carne
 80	7	7	7	virtute
@@ -274,6 +278,7 @@ line	start	end	head	text
 118	6	7	7	questo loco
 119	5	6	6	li occhi
 119	8	9	9	il freno
+120	4	4	4	+si
 120	6	6	6	poco
 121	1	3	2	Summae Deus clementïae
 121	2	3	2	Deus clementïae
@@ -298,11 +303,13 @@ line	start	end	head	text
 128	3	3	3	Virum
 129	3	4	4	l'inno
 129	5	5	5	bassi
+130	1	1	1	+lo
 130	4	5	5	Al bosco
 130	5	5	5	bosco
 131	1	1	1	si
 131	3	3	3	Diana
 131	5	5	5	Elice
+131	6	6	6	+ne
 132	1	1	1	che
 132	3	3	3	Venere
 132	6	7	7	il tòsco

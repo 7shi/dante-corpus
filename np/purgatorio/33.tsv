@@ -36,6 +36,8 @@ line	start	end	head	text
 15	6	9	7	'l savio che ristette
 15	6	7	7	'l savio
 16	2	2	2	sen
+16	2	2	2	+si
+16	2	2	2	+ne
 17	1	7	4	lo decimo suo passo in terra posto
 17	1	6	4	lo decimo suo passo in terra
 17	1	4	4	lo decimo suo passo
@@ -50,12 +52,17 @@ line	start	end	head	text
 19	4	4	4	aspetto
 20	1	1	1	mi
 20	6	6	6	io
+21	2	2	2	+mi
 21	3	3	3	tu
 22	3	3	3	io
 22	3	3	3	io
 22	8	8	8	seco
+22	8	8	8	+sé
+23	1	1	1	+mi
 23	2	2	2	Frate
+24	2	2	2	+mi
 24	5	5	5	meco
+24	5	5	5	+me
 25	3	6	3	color che troppo reverenti
 25	3	3	3	color
 26	3	5	5	suo maggior parlando
@@ -99,6 +106,7 @@ line	start	end	head	text
 39	7	7	7	preda
 40	2	2	2	io
 40	7	7	7	il
+41	2	2	2	+ne
 41	3	3	3	tempo
 41	5	6	5	stelle propinque
 42	3	8	4	ogn' intoppo e d'ogne sbarro
@@ -335,6 +343,7 @@ line	start	end	head	text
 126	3	5	4	la mente sua
 126	7	8	8	li occhi
 127	3	3	3	Eünoè
+128	1	1	1	+lo
 128	3	3	3	esso
 128	6	6	6	tu
 128	7	7	7	se'

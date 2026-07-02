@@ -101,6 +101,7 @@ line	start	end	head	text
 44	4	4	4	ombre
 44	8	8	8	esse
 45	3	3	3	lor
+45	4	4	4	+vi
 46	1	3	3	Solo tre passi
 46	2	3	3	tre passi
 46	6	6	6	i'
@@ -285,6 +286,7 @@ line	start	end	head	text
 116	2	4	2	Val di Magra
 116	4	4	4	Magra
 116	7	8	7	parte vicina
+117	2	2	2	+lo
 117	4	4	4	me
 118	3	4	3	Currado Malaspina
 119	3	4	4	l'antico

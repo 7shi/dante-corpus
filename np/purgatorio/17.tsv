@@ -7,6 +7,7 @@ line	start	end	head	text
 3	5	6	5	pelle talpe
 3	6	6	6	talpe
 4	3	7	4	i vapori umidi e spessi
+5	3	3	3	+si
 5	4	5	5	la spera
 6	1	2	2	del sol
 6	6	6	6	essi
@@ -36,6 +37,7 @@ line	start	end	head	text
 16	3	3	3	te
 16	5	6	6	'l senso
 16	8	8	8	ti
+17	1	1	1	+ti
 17	2	7	2	lume che nel ciel s'informa
 17	2	2	2	lume
 17	5	5	5	ciel
@@ -143,6 +145,7 @@ line	start	end	head	text
 67	5	8	6	un muover d'ala
 67	6	8	6	muover d'ala
 67	8	8	8	ala
+68	2	2	2	+mi
 68	4	4	4	viso
 68	7	7	7	Beati
 69	1	1	1	pacifici

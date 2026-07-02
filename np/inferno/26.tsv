@@ -44,6 +44,7 @@ line	start	end	head	text
 21	3	4	4	lo 'ngegno
 21	7	7	7	i'
 22	5	5	5	virtù
+22	6	6	6	+lo
 23	4	8	4	stella bona o miglior cosa
 23	4	5	4	stella bona
 23	4	4	4	stella
@@ -53,6 +54,7 @@ line	start	end	head	text
 24	5	5	5	ben
 24	7	8	7	io stessi
 24	7	7	7	io
+24	9	9	9	+lo
 25	2	8	3	'l villan ch'al poggio si riposa
 25	2	3	3	'l villan
 25	6	6	6	poggio
@@ -86,6 +88,7 @@ line	start	end	head	text
 36	2	3	3	i cavalli
 36	5	5	5	cielo
 37	2	2	2	nol
+37	2	2	2	+lo
 37	6	7	7	li occhi
 38	2	2	2	el
 38	4	4	4	altro
@@ -115,9 +118,10 @@ line	start	end	head	text
 48	7	7	7	elli
 49	1	2	1	Maestro mio
 49	4	4	4	io
+49	6	6	6	+ti
 50	2	2	2	io
 50	9	9	9	avviso
-51	0	0	0	
+51	7	7	7	+ti
 52	1	1	1	chi
 52	4	9	5	quel foco che vien sì diviso
 52	4	5	5	quel foco
@@ -318,6 +322,7 @@ line	start	end	head	text
 133	4	6	5	una montagna, bruna
 133	4	5	5	una montagna
 134	2	3	3	la distanza
+134	5	5	5	+mi
 135	5	5	5	alcuna
 136	1	1	1	Noi
 136	8	8	8	pianto

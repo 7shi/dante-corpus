@@ -152,6 +152,7 @@ line	start	end	head	text
 58	4	6	6	il suo raggiare
 58	5	6	6	suo raggiare
 59	4	5	5	nove sussistenze
+60	2	2	2	+si
 60	3	3	3	una
 61	4	6	6	l'ultime potenze
 62	3	3	3	atto
@@ -274,6 +275,7 @@ line	start	end	head	text
 112	2	2	2	questo
 112	6	8	6	piombo a' piedi
 112	8	8	8	piedi
+113	2	2	2	+ti
 113	6	7	6	uom lasso
 114	3	3	3	sì
 114	6	6	6	no
@@ -349,6 +351,7 @@ line	start	end	head	text
 139	6	7	7	ser Martino
 140	3	4	4	un furare
 140	5	6	6	altro offerere
+141	1	1	1	+li
 141	3	5	4	al consiglio divino
 141	4	5	4	consiglio divino
 142	2	2	2	quel

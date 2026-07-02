@@ -18,11 +18,13 @@ line	start	end	head	text
 4	4	4	4	che
 4	6	8	8	li empi giri
 5	6	6	6	te
+6	1	1	1	+mi
+6	3	3	3	+mi
 6	5	6	6	miei disiri
 7	1	7	2	La gente che per li sepolcri giace
 7	1	2	2	La gente
 7	5	6	6	li sepolcri
-8	0	0	0	
+8	1	1	1	+si
 9	1	3	3	tutt' i coperchi
 9	2	3	3	i coperchi
 9	5	5	5	nessun
@@ -78,6 +80,7 @@ line	start	end	head	text
 30	5	7	6	al duca mio
 30	6	7	6	duca mio
 31	2	2	2	el
+31	5	5	5	+ti
 31	6	6	6	Che
 32	3	7	3	Farinata che s'è dritto
 32	3	3	3	Farinata
@@ -116,6 +119,7 @@ line	start	end	head	text
 40	2	2	2	io
 40	4	8	4	piè de la sua tomba
 40	6	8	8	la sua tomba
+41	1	1	1	+mi
 41	2	3	3	un poco
 42	1	1	1	mi
 42	3	3	3	Chi
@@ -124,7 +128,11 @@ line	start	end	head	text
 43	1	1	1	Io
 43	5	5	5	ubidir
 44	2	2	2	gliel
+44	2	2	2	+gli
+44	2	2	2	+lo
 44	6	6	6	gliel'
+44	6	6	6	+gli
+44	6	6	6	+lo
 45	2	2	2	ei
 45	4	5	5	le ciglia
 45	6	7	7	un poco
@@ -212,6 +220,7 @@ line	start	end	head	text
 81	5	6	6	quell' arte
 82	3	3	3	tu
 82	6	7	7	dolce mondo
+83	1	1	1	+mi
 83	3	4	4	quel popolo
 84	3	3	3	miei
 84	5	7	7	ciascuna sua legge
@@ -246,6 +255,7 @@ line	start	end	head	text
 94	6	6	6	semenza
 95	2	2	2	io
 95	3	3	3	lui
+95	4	4	4	+mi
 95	5	6	6	quel nodo
 95	6	6	6	nodo
 96	5	6	6	mia sentenza
@@ -294,6 +304,7 @@ line	start	end	head	text
 117	2	2	2	mi
 117	4	4	4	chi
 117	6	6	6	lu'
+118	1	1	1	+me
 118	4	6	4	più di mille
 118	6	6	6	mille
 119	4	6	6	'l secondo Federico

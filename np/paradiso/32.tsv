@@ -247,6 +247,7 @@ line	start	end	head	text
 98	2	3	3	tutte parti
 98	4	6	6	la beata corte
 99	3	4	4	ogne vista
+99	5	5	5	+si
 100	2	3	3	santo padre
 100	6	6	6	me
 101	1	4	2	l'esser qua giù
@@ -365,9 +366,11 @@ line	start	end	head	text
 146	2	4	3	l'ali tue
 146	2	3	3	l'ali
 146	3	4	3	ali tue
+146	6	6	6	+ti
 147	2	2	2	grazia
 148	1	6	1	grazia da quella che puote aiutarti
 148	3	6	3	quella che puote aiutarti
+148	6	6	6	+ti
 149	2	2	2	tu
 149	6	7	7	l'affezione
 150	4	5	4	dicer mio

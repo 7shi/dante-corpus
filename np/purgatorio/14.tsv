@@ -10,6 +10,7 @@ line	start	end	head	text
 3	6	7	7	sua voglia
 4	3	3	3	chi
 4	8	8	8	e'
+5	1	1	1	+lo
 5	2	2	2	tu
 5	5	5	5	li
 5	6	6	6	t'
@@ -23,6 +24,7 @@ line	start	end	head	text
 8	6	7	6	man dritta
 9	3	7	4	li visi, per dirmi, supini
 9	3	4	4	li visi
+9	6	6	6	+mi
 10	3	4	4	l'uno
 10	5	8	6	O anima che fitta
 10	5	6	6	O anima
@@ -48,9 +50,11 @@ line	start	end	head	text
 18	2	5	3	cento miglia di corso
 18	2	3	3	cento miglia
 18	5	5	5	corso
+18	6	6	6	+lo
 19	3	3	3	esso
 19	5	5	5	io
 19	6	7	7	questa persona
+20	1	1	1	+vi
 20	3	3	3	i'
 20	6	7	6	parlare indarno
 21	2	4	3	'l nome mio
@@ -165,6 +169,7 @@ line	start	end	head	text
 63	5	5	5	sé
 63	7	7	7	pregio
 64	4	6	6	la trista selva
+65	1	1	1	+la
 65	7	8	8	mille anni
 66	2	4	3	lo stato primaio
 67	3	7	4	l'annunzio di dogliosi danni
@@ -200,6 +205,7 @@ line	start	end	head	text
 75	6	6	6	prieghi
 76	3	8	4	lo spirto che di pria parlòmi
 76	3	4	4	lo spirto
+76	8	8	8	+mi
 77	2	2	2	Tu
 77	5	5	5	io
 78	2	11	2	fare a te ciò che tu far non vuo'mi
@@ -222,6 +228,7 @@ line	start	end	head	text
 82	3	4	3	sangue mio
 82	6	6	6	invidia
 83	5	5	5	uom
+83	6	6	6	+si
 84	5	5	5	livore
 85	2	3	3	mia semente
 85	4	5	5	cotal paglia
@@ -350,6 +357,7 @@ line	start	end	head	text
 131	4	5	5	l'aere
 132	1	6	1	voce che giunse di contra dicendo
 132	1	1	1	voce
+133	1	1	1	+mi
 133	2	4	2	qualunque m'apprende
 133	2	2	2	qualunque
 134	4	7	4	tuon che si dilegua
@@ -370,6 +378,7 @@ line	start	end	head	text
 139	3	6	3	Aglauro che divenni sasso
 139	3	3	3	Aglauro
 139	6	6	6	sasso
+140	4	4	4	+mi
 140	6	6	6	poeta
 141	2	2	2	destro
 141	7	8	8	il passo
@@ -391,6 +400,7 @@ line	start	end	head	text
 147	5	5	5	freno
 147	7	7	7	richiamo
 148	2	3	3	'l cielo
+149	1	1	1	+vi
 149	2	5	4	le sue bellezze etterne
 149	3	5	4	sue bellezze etterne
 149	4	5	4	bellezze etterne

@@ -60,6 +60,7 @@ line	start	end	head	text
 19	7	7	7	esso
 20	2	3	3	altra ragione
 20	5	5	5	contrario
+21	2	2	2	+loro
 21	4	7	6	li tuoi raggi duci
 21	4	6	6	li tuoi raggi
 21	5	7	6	tuoi raggi duci
@@ -118,6 +119,7 @@ line	start	end	head	text
 43	6	7	7	l'aere
 44	3	3	3	gente
 44	6	6	6	noi
+44	7	7	7	+si
 45	2	2	2	ciascun
 45	5	6	6	la grotta
 46	5	6	6	li occhi
@@ -241,6 +243,7 @@ line	start	end	head	text
 90	6	6	6	mente
 90	7	8	8	il fiume
 90	8	8	8	fiume
+91	1	1	1	+me
 91	3	3	3	mi
 92	2	2	2	anima
 92	6	6	6	voi
@@ -275,6 +278,8 @@ line	start	end	head	text
 104	4	7	4	quelli che mi rispondesti
 104	4	4	4	quelli
 104	6	6	6	mi
+105	1	1	1	+mi
+105	1	1	1	+ti
 105	2	2	2	conto
 105	5	5	5	luogo
 105	8	8	8	nome
@@ -364,6 +369,7 @@ line	start	end	head	text
 141	2	2	2	io
 141	3	10	3	Costui ch'è meco e non fa motto
 141	3	3	3	Costui
+141	6	6	6	+con
 141	10	10	10	motto
 142	6	6	6	mi
 143	1	2	1	spirito eletto
@@ -377,6 +383,7 @@ line	start	end	head	text
 146	3	4	4	gran segno
 146	7	7	7	Dio
 147	3	4	3	priego tuo
+148	2	2	2	+ti
 148	4	8	4	quel che tu più brami
 148	6	6	6	tu
 149	4	7	5	la terra di Toscana
@@ -390,6 +397,7 @@ line	start	end	head	text
 151	6	7	6	gente vana
 152	1	1	1	che
 152	4	4	4	Talamone
+152	6	6	6	+gli
 153	1	3	1	più di speranza
 153	3	3	3	speranza
 153	7	8	8	la Diana
