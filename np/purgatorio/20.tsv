@@ -1,0 +1,395 @@
+line	start	end	head	text
+1	2	3	3	miglior voler
+1	3	3	3	voler
+2	3	5	4	'l piacer mio
+2	7	7	7	piacerli
+3	3	6	4	l'acqua non sazia
+3	7	8	8	la spugna
+4	3	5	4	'l duca mio
+4	4	5	4	duca mio
+5	1	6	1	luoghi spediti pur lungo la roccia
+5	1	2	1	luoghi spediti
+5	5	6	6	la roccia
+6	5	8	5	muro stretto a' merli
+6	5	6	5	muro stretto
+6	7	8	8	a' merli
+7	2	9	3	la gente che fonde a goccia a goccia
+7	2	3	3	la gente
+7	7	7	7	goccia
+7	7	7	7	goccia
+8	2	3	3	li occhi
+8	4	10	5	il mal che tutto 'l mondo occupa
+8	4	5	5	il mal
+8	7	9	9	tutto 'l mondo
+8	8	9	9	'l mondo
+9	2	4	4	l'altra parte
+10	3	3	3	tu
+10	4	5	5	antica lupa
+11	4	7	7	tutte l'altre bestie
+11	5	7	7	l'altre bestie
+11	6	7	7	altre bestie
+11	7	7	7	bestie
+11	9	9	9	preda
+12	2	7	4	la tua fame sanza fine cupa
+12	2	4	4	la tua fame
+12	3	7	4	tua fame sanza fine cupa
+12	3	4	4	tua fame
+12	4	7	4	fame sanza fine cupa
+12	4	4	4	fame
+12	6	6	6	fine
+13	2	2	2	ciel
+13	4	5	5	cui girar
+13	4	4	4	cui
+13	5	5	5	girar
+14	1	5	2	le condizion di qua giù
+14	1	2	2	le condizion
+14	2	2	2	condizion
+15	4	4	4	cui
+15	5	5	5	questa
+16	1	1	1	Noi
+16	4	7	4	passi lenti e scarsi
+16	4	4	4	passi
+17	2	6	2	io attento a l'ombre
+17	2	2	2	io
+17	5	6	6	l'ombre
+17	6	6	6	ombre
+17	8	8	8	i'
+18	2	4	2	piangere e lagnarsi
+18	2	2	2	piangere
+18	4	4	4	lagnarsi
+19	3	3	3	ventura
+19	5	6	6	Dolce Maria
+19	6	6	6	Maria
+20	3	3	3	noi
+20	7	7	7	pianto
+21	3	7	3	donna che in parturir sia
+21	3	3	3	donna
+21	6	6	6	parturir
+22	0	0	0	
+23	6	7	7	quello ospizio
+24	3	6	5	il tuo portato santo
+25	4	5	5	buon Fabrizio
+26	2	2	2	povertà
+26	5	5	5	virtute
+27	2	3	3	gran ricchezza
+27	6	6	6	vizio
+28	1	2	2	Queste parole
+29	2	2	2	io
+29	8	8	8	contezza
+30	2	6	3	quello spirto onde parean venute
+30	2	3	3	quello spirto
+31	1	1	1	Esso
+31	5	6	6	la larghezza
+32	1	1	1	che
+32	3	3	3	Niccolò
+32	5	6	6	le pulcelle
+33	4	6	4	onor lor giovinezza
+33	5	6	6	lor giovinezza
+34	2	6	2	anima che tanto ben favelle
+34	2	2	2	anima
+35	2	2	2	chi
+36	1	1	1	tu
+36	2	4	4	queste degne lode
+37	4	4	4	mercé
+37	5	7	7	la tua parola
+38	2	2	2	io
+38	6	8	7	lo cammin corto
+39	2	7	3	quella vita ch'al termine vola
+39	2	3	3	quella vita
+39	6	6	6	termine
+40	2	2	2	elli
+40	3	3	3	Io
+40	4	4	4	ti
+40	8	8	8	conforto
+41	2	2	2	io
+41	5	5	5	là
+42	1	3	1	grazia in te
+42	1	1	1	grazia
+42	3	3	3	te
+43	1	1	1	Io
+43	3	7	3	radice de la mala pianta
+43	5	7	7	la mala pianta
+44	2	5	3	la terra cristiana tutta
+45	3	5	4	buon frutto rado
+46	3	7	7	Doagio, Lilla, Guanto e Bruggia
+46	3	3	3	Doagio
+46	4	4	4	Lilla
+46	5	5	5	Guanto
+46	7	7	7	Bruggia
+47	5	5	5	vendetta
+48	2	2	2	io
+48	3	3	3	la
+48	6	9	6	lui che tutto giuggia
+48	6	6	6	lui
+49	5	6	6	Ugo Ciappetta
+50	2	2	2	me
+50	5	9	6	i Filippi e i Luigi
+50	5	6	6	i Filippi
+50	8	9	9	i Luigi
+51	2	2	2	cui
+51	5	5	5	Francia
+52	1	1	1	Figliuol
+52	3	3	3	io
+52	5	8	6	un beccaio di Parigi
+52	6	8	6	beccaio di Parigi
+52	8	8	8	Parigi
+53	2	4	3	li regi antichi
+53	3	4	3	regi antichi
+53	3	3	3	regi
+54	1	1	1	tutti
+54	4	8	5	un renduto in panni bigi
+54	5	8	5	renduto in panni bigi
+54	7	8	7	panni bigi
+54	7	7	7	panni
+55	5	6	6	le mani
+55	7	8	8	il freno
+56	2	4	2	governo del regno
+56	4	4	4	regno
+56	6	7	7	tanta possa
+57	2	3	3	nuovo acquisto
+57	7	7	7	amici
+58	3	6	4	la corona vedova promossa
+58	3	4	4	la corona
+59	1	5	2	la testa di mio figlio
+59	1	2	2	la testa
+59	4	5	5	mio figlio
+59	8	8	8	quale
+60	3	3	3	costor
+60	4	6	6	le sacrate ossa
+61	3	6	5	la gran dota provenzale
+62	2	3	2	sangue mio
+62	6	7	7	la vergogna
+63	7	7	7	male
+64	4	4	4	forza
+64	7	7	7	menzogna
+65	1	3	3	la sua rapina
+65	2	3	3	sua rapina
+65	3	3	3	rapina
+65	7	7	7	ammenda
+66	1	3	1	Pontì e Normandia
+66	1	1	1	Pontì
+66	3	3	3	Normandia
+66	6	6	6	Guascogna
+67	1	1	1	Carlo
+67	4	4	4	Italia
+67	7	7	7	ammenda
+68	1	1	1	vittima
+68	4	4	4	Curradino
+69	2	3	3	al ciel
+69	3	3	3	ciel
+69	4	4	4	Tommaso
+69	5	6	6	per ammenda
+69	6	6	6	ammenda
+70	1	1	1	Tempo
+70	3	3	3	io
+70	7	7	7	ancoi
+71	3	5	5	un altro Carlo
+71	5	5	5	Carlo
+71	8	8	8	Francia
+72	6	6	6	sé
+72	8	8	8	suoi
+73	2	2	2	arme
+73	8	9	9	la lancia
+74	2	3	3	la qual
+74	5	5	5	Giuda
+74	7	8	8	quella ponta
+75	4	4	4	Fiorenza
+75	7	8	8	la pancia
+76	3	3	3	terra
+76	5	7	5	peccato e onta
+76	5	5	5	peccato
+76	7	7	7	onta
+77	3	3	3	sé
+78	4	5	5	simil danno
+78	5	5	5	danno
+79	1	2	2	L'altro
+79	7	8	8	di nave
+79	8	8	8	nave
+80	3	4	4	sua figlia
+81	3	4	4	i corsar
+81	5	8	8	de l'altre schiave
+81	6	8	8	l'altre schiave
+82	2	2	2	avarizia
+82	5	5	5	tu
+83	2	2	2	c'
+83	4	6	6	il mio sangue
+83	5	6	6	mio sangue
+83	6	6	6	sangue
+83	8	8	8	te
+84	6	8	8	la propria carne
+84	7	8	8	propria carne
+84	8	8	8	carne
+85	2	2	2	men
+85	4	9	5	il mal futuro e 'l fatto
+85	4	6	5	il mal futuro
+85	8	9	9	'l fatto
+86	3	3	3	Alagna
+86	5	6	6	lo fiordaliso
+87	3	4	3	vicario suo
+87	5	5	5	Cristo
+88	2	4	4	un'altra volta
+89	3	7	4	l'aceto e 'l fiele
+89	3	4	4	l'aceto
+89	6	7	7	'l fiele
+90	3	4	4	vivi ladroni
+91	2	6	4	il novo Pilato sì crudele
+91	2	4	4	il novo Pilato
+91	4	4	4	Pilato
+92	2	2	2	ciò
+92	7	7	7	decreto
+93	3	3	3	Tempio
+93	4	6	6	le cupide vele
+93	6	6	6	vele
+94	2	3	2	Segnor mio
+94	2	2	2	Segnor
+94	6	6	6	io
+95	3	6	4	la vendetta che, nascosa
+95	3	4	4	la vendetta
+95	4	6	4	vendetta che, nascosa
+95	4	4	4	vendetta
+96	3	8	4	l'ira tua nel tuo secreto
+96	3	5	4	l'ira tua
+96	3	4	4	l'ira
+96	4	8	4	ira tua nel tuo secreto
+96	4	5	4	ira tua
+96	4	4	4	ira
+96	7	8	8	tuo secreto
+96	8	8	8	secreto
+97	1	8	1	Ciò ch'io dicea di quell' unica sposa
+97	1	1	1	Ciò
+97	6	8	8	quell' unica sposa
+98	2	4	3	lo Spirito Santo
+98	3	4	3	Spirito Santo
+99	1	3	3	verso me volger
+99	2	2	2	me
+99	3	3	3	volger
+99	5	6	6	alcuna chiosa
+100	1	1	1	tanto
+100	5	7	7	tutte nostre prece
+100	6	7	7	nostre prece
+101	2	3	3	'l dì
+101	7	7	7	el
+102	1	2	2	contrario suon
+102	5	6	6	quella vece
+103	1	1	1	Noi
+103	3	3	3	Pigmalïon
+104	1	1	1	cui
+104	2	6	2	traditore e ladro e paricida
+104	2	2	2	traditore
+104	4	4	4	ladro
+104	6	6	6	paricida
+105	2	8	3	la voglia sua de l'oro ghiotta
+105	2	4	3	la voglia sua
+105	6	7	7	l'oro
+106	2	7	3	la miseria de l'avaro Mida
+106	2	3	3	la miseria
+106	5	7	7	l'avaro Mida
+106	7	7	7	Mida
+107	4	7	6	la sua dimanda gorda
+108	2	3	3	la qual
+109	2	3	3	folle Acàn
+109	4	4	4	ciascun
+110	3	4	4	le spoglie
+110	7	8	8	l'ira
+111	2	2	2	Iosüè
+111	7	7	7	lo
+112	4	5	4	marito Saffira
+112	5	5	5	Saffira
+113	2	6	3	i calci ch'ebbe Elïodoro
+113	2	3	3	i calci
+113	6	6	6	Elïodoro
+114	3	3	3	infamia
+114	4	6	6	tutto 'l monte
+114	5	6	6	'l monte
+115	1	4	1	Polinestòr ch'ancise Polidoro
+115	1	1	1	Polinestòr
+115	4	4	4	Polidoro
+116	5	5	5	Crasso
+117	3	3	3	'l
+117	6	7	7	che sapore
+117	9	10	10	l'oro
+118	3	5	4	l'uno alto
+118	3	4	4	l'uno
+118	7	9	8	l'altro basso
+118	7	8	8	l'altro
+119	2	8	3	l'affezion ch'ad ir ci sprona
+119	2	3	3	l'affezion
+119	6	6	6	ir
+120	3	3	3	maggiore
+120	7	8	8	minor passo
+120	8	8	8	passo
+121	3	9	3	ben che 'l dì ci si ragiona
+121	3	3	3	ben
+121	5	6	6	'l dì
+122	4	5	4	io sol
+122	4	4	4	io
+123	3	4	4	la voce
+123	5	6	6	altra persona
+124	1	1	1	Noi
+124	6	6	6	esso
+125	5	6	6	la strada
+126	4	4	4	poder
+126	5	5	5	n'
+127	2	2	2	io
+127	5	7	5	cosa che cada
+127	5	5	5	cosa
+128	2	3	3	lo monte
+128	7	8	8	un gelo
+129	4	8	4	colui ch'a morte vada
+129	4	4	4	colui
+129	7	7	7	morte
+130	6	7	7	forte Delo
+130	7	7	7	Delo
+131	3	3	3	Latona
+131	5	5	5	lei
+131	7	8	8	'l nido
+131	8	8	8	nido
+132	3	7	5	li due occhi del cielo
+132	3	5	5	li due occhi
+132	4	7	5	due occhi del cielo
+132	4	5	5	due occhi
+132	5	7	5	occhi del cielo
+132	5	5	5	occhi
+132	7	7	7	cielo
+133	4	5	5	tutte parti
+133	6	7	7	un grido
+134	3	5	4	'l maestro inverso
+134	3	4	4	'l maestro
+134	6	6	6	me
+135	5	5	5	io
+135	6	6	6	ti
+136	1	3	1	Glorïa in excelsis
+136	1	1	1	Glorïa
+136	3	3	3	excelsis
+136	4	4	4	tutti
+136	5	5	5	Deo
+137	3	8	3	quel ch'io da' vicin compresi
+137	3	3	3	quel
+137	5	5	5	io
+137	7	7	7	vicin
+138	3	4	4	lo grido
+138	4	4	4	grido
+139	1	1	1	No'
+140	2	8	3	i pastor che prima udir quel canto
+140	2	3	3	i pastor
+140	7	8	8	quel canto
+141	3	4	4	'l tremar
+141	7	7	7	el
+142	3	5	4	nostro cammin santo
+143	2	7	3	l'ombre che giacean per terra
+143	2	3	3	l'ombre
+143	7	7	7	terra
+144	5	7	7	l'usato pianto
+145	1	6	2	Nulla ignoranza mai con tanta guerra
+145	1	2	2	Nulla ignoranza
+145	5	6	6	tanta guerra
+146	3	5	3	desideroso di sapere
+146	5	5	5	sapere
+147	2	4	3	la memoria mia
+147	3	4	3	memoria mia
+147	6	6	6	ciò
+148	1	1	1	quanta
+149	3	4	4	la fretta
+150	3	3	3	me
+150	6	6	6	cosa
+151	2	2	2	m'

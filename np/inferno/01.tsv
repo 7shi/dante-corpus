@@ -1,0 +1,371 @@
+line	start	end	head	text
+1	2	7	2	mezzo del cammin di nostra vita
+1	4	7	4	cammin di nostra vita
+1	6	7	7	nostra vita
+2	4	6	5	una selva oscura
+3	2	4	4	la diritta via
+4	8	9	8	cosa dura
+5	1	7	2	esta selva selvaggia e aspra e forte
+6	3	3	3	pensier
+6	5	6	6	la paura
+7	5	5	5	poco
+7	8	8	8	morte
+8	5	9	5	ben ch'i' vi trovai
+8	5	5	5	ben
+8	7	7	7	i'
+9	3	10	5	l'altre cose ch'i' v'ho scorte
+9	3	5	5	l'altre cose
+9	4	10	5	altre cose ch'i' v'ho scorte
+9	4	5	5	altre cose
+9	5	10	5	cose ch'i' v'ho scorte
+9	5	5	5	cose
+9	7	7	7	i'
+10	1	1	1	Io
+10	7	7	7	i'
+11	5	5	5	sonno
+11	7	8	8	quel punto
+11	8	8	8	punto
+12	2	4	4	la verace via
+12	4	4	4	via
+13	4	4	4	i'
+13	7	10	7	piè d'un colle
+13	9	10	10	un colle
+14	4	5	5	quella valle
+15	2	2	2	m'
+15	5	5	5	paura
+15	6	8	7	il cor compunto
+15	6	7	7	il cor
+16	3	3	3	alto
+16	6	8	8	le sue spalle
+17	4	6	4	raggi del pianeta
+17	6	6	6	pianeta
+18	4	4	4	altrui
+18	6	7	7	ogne calle
+19	3	4	4	la paura
+19	5	6	6	un poco
+20	3	5	3	lago del cor
+20	5	5	5	cor
+21	1	5	2	la notte ch'i' passai
+21	1	2	2	la notte
+21	7	8	8	tanta pieta
+22	3	7	3	quei che con lena affannata
+22	3	3	3	quei
+22	6	7	6	lena affannata
+23	4	4	4	pelago
+23	6	7	7	la riva
+24	4	6	5	l'acqua perigliosa
+25	2	4	3	l'animo mio
+26	4	4	4	retro
+26	7	8	8	lo passo
+27	6	7	6	persona viva
+28	3	3	3	èi
+28	5	6	6	un poco
+28	7	9	8	il corpo lasso
+28	8	9	8	corpo lasso
+28	8	8	8	corpo
+29	2	2	2	via
+29	4	6	5	la piaggia diserta
+29	5	6	5	piaggia diserta
+29	5	5	5	piaggia
+30	3	5	4	'l piè fermo
+30	4	5	4	piè fermo
+30	4	4	4	piè
+30	8	10	10	'l più basso
+30	9	10	10	più basso
+30	10	10	10	basso
+31	5	8	5	cominciar de l'erta
+31	7	8	8	l'erta
+31	8	8	8	erta
+32	1	6	2	una lonza leggera e presta molto
+32	2	6	2	lonza leggera e presta molto
+32	2	2	2	lonza
+33	3	4	4	pel macolato
+33	4	4	4	macolato
+34	3	3	3	mi
+34	7	8	8	al volto
+34	8	8	8	volto
+35	4	6	6	il mio cammino
+35	5	6	6	mio cammino
+35	6	6	6	cammino
+36	2	2	2	i'
+36	6	7	7	più volte
+36	7	7	7	volte
+37	1	1	1	Temp'
+37	4	6	4	principio del mattino
+37	6	6	6	mattino
+38	2	3	3	'l sol
+38	3	3	3	sol
+38	8	9	9	quelle stelle
+38	9	9	9	stelle
+39	4	4	4	lui
+39	6	8	7	l'amor divino
+39	7	8	7	amor divino
+39	7	7	7	amor
+40	4	6	5	quelle cose belle
+40	5	6	5	cose belle
+40	5	5	5	cose
+41	4	5	5	bene sperar
+41	5	5	5	sperar
+41	8	8	8	cagione
+42	2	7	3	quella fiera a la gaetta pelle
+42	2	3	3	quella fiera
+42	3	3	3	fiera
+42	5	7	7	la gaetta pelle
+42	6	7	7	gaetta pelle
+42	7	7	7	pelle
+43	1	4	2	l'ora del tempo
+43	4	4	4	tempo
+43	6	8	8	la dolce stagione
+44	5	5	5	paura
+45	1	8	2	la vista che m'apparve d'un leone
+45	1	2	2	la vista
+45	7	8	8	un leone
+46	1	1	1	Questi
+46	5	5	5	me
+47	2	4	3	la test' alta
+47	7	8	8	rabbiosa fame
+48	5	6	6	l'aere
+49	2	3	3	una lupa
+49	6	7	7	tutte brame
+50	2	2	2	carca
+50	4	6	6	la sua magrezza
+51	2	3	3	molte genti
+52	1	1	1	questa
+52	4	6	4	tanto di gravezza
+52	6	6	6	gravezza
+53	2	8	3	la paura ch'uscia di sua vista
+53	2	3	3	la paura
+53	7	8	8	sua vista
+54	2	2	2	io
+54	4	8	5	la speranza de l'altezza
+54	4	5	5	la speranza
+54	7	8	8	l'altezza
+55	2	2	2	qual
+55	4	7	4	quei che volontieri acquista
+55	4	4	4	quei
+56	3	8	4	'l tempo che perder lo face
+56	3	4	4	'l tempo
+56	6	6	6	perder
+56	7	7	7	lo
+57	3	5	5	tutti suoi pensier
+58	1	1	1	tal
+58	4	7	5	la bestia sanza pace
+58	5	7	5	bestia sanza pace
+58	7	7	7	pace
+59	5	5	5	poco
+59	5	5	5	poco
+60	5	6	6	'l sol
+61	6	7	7	basso loco
+62	3	4	4	li occhi
+63	1	1	1	chi
+63	3	4	4	lungo silenzio
+64	3	3	3	costui
+64	5	6	6	gran diserto
+65	3	3	3	me
+65	6	6	6	lui
+66	1	1	1	qual
+66	3	3	3	tu
+66	6	6	6	ombra
+66	8	9	8	omo certo
+67	3	3	3	omo
+67	3	3	3	omo
+68	2	4	3	li parenti miei
+68	2	3	3	li parenti
+68	3	4	3	parenti miei
+68	3	3	3	parenti
+68	6	6	6	lombardi
+69	1	4	4	mantoani per patrïa ambedui
+69	1	3	1	mantoani per patrïa
+69	1	1	1	mantoani
+69	3	3	3	patrïa
+69	4	4	4	ambedui
+70	3	3	3	Iulio
+71	4	4	4	Roma
+71	6	8	8	'l buono Augusto
+71	7	8	8	buono Augusto
+71	8	8	8	Augusto
+72	2	8	2	tempo de li dèi falsi e bugiardi
+72	2	2	2	tempo
+72	4	8	5	li dèi falsi e bugiardi
+72	5	8	5	dèi falsi e bugiardi
+72	5	5	5	dèi
+73	1	1	1	Poeta
+73	6	7	7	quel giusto
+74	1	7	1	figliuol d'Anchise che venne di Troia
+74	1	3	1	figliuol d'Anchise
+74	3	3	3	Anchise
+74	7	7	7	Troia
+75	3	5	5	'l superbo Ilïón
+75	5	5	5	Ilïón
+76	2	2	2	tu
+76	6	7	7	tanta noia
+77	4	6	6	il dilettoso monte
+78	3	8	3	principio e cagion di tutta gioia
+78	3	3	3	principio
+78	5	8	5	cagion di tutta gioia
+78	7	8	8	tutta gioia
+79	3	3	3	tu
+79	4	5	5	quel Virgilio
+79	7	8	8	quella fonte
+80	4	4	4	parlar
+80	5	7	7	sì largo fiume
+81	2	2	2	io
+81	3	3	3	lui
+81	5	6	6	vergognosa fronte
+82	2	8	6	de li altri poeti onore e lume
+82	3	5	5	li altri poeti
+82	4	5	5	altri poeti
+82	5	5	5	poeti
+82	6	8	6	onore e lume
+82	6	6	6	onore
+82	8	8	8	lume
+83	2	8	4	'l lungo studio e 'l grande amore
+83	2	4	4	'l lungo studio
+83	3	4	4	lungo studio
+83	4	4	4	studio
+83	6	8	8	'l grande amore
+83	7	8	8	grande amore
+83	8	8	8	amore
+84	6	8	8	lo tuo volume
+84	7	8	8	tuo volume
+84	8	8	8	volume
+85	1	1	1	Tu
+85	3	5	5	lo mio maestro
+85	7	9	9	'l mio autore
+86	1	1	1	tu
+86	4	4	4	colui
+86	7	7	7	io
+87	1	8	3	lo bello stilo che m'ha fatto onore
+87	1	3	3	lo bello stilo
+87	8	8	8	onore
+88	2	3	3	la bestia
+88	5	5	5	cu'
+88	6	6	6	io
+89	3	3	3	lei
+89	4	5	5	famoso saggio
+90	2	2	2	ella
+90	6	10	7	le vene e i polsi
+90	6	7	7	le vene
+90	9	10	10	i polsi
+91	2	2	2	te
+91	5	6	6	altro vïaggio
+92	5	5	5	mi
+93	5	7	6	esto loco selvaggio
+94	2	3	3	questa bestia
+94	5	6	6	la qual
+94	7	7	7	tu
+95	3	3	3	altrui
+95	6	8	8	la sua via
+96	3	3	3	lo
+96	6	6	6	l'
+97	3	7	3	natura sì malvagia e ria
+98	5	7	7	la bramosa voglia
+99	3	4	4	'l pasto
+99	6	7	7	più fame
+100	1	1	1	Molti
+100	3	4	4	li animali
+101	2	2	2	più
+101	7	8	8	'l veltro
+102	3	3	3	la
+102	7	7	7	doglia
+103	1	1	1	Questi
+103	4	6	4	terra né peltro
+103	4	4	4	terra
+103	6	6	6	peltro
+104	2	5	2	sapïenza, amore e virtute
+104	2	2	2	sapïenza
+104	3	3	3	amore
+104	5	5	5	virtute
+105	2	3	3	sua nazion
+105	3	3	3	nazion
+105	6	8	6	feltro e feltro
+105	6	6	6	feltro
+105	6	6	6	feltro
+106	2	4	4	quella umile Italia
+106	3	4	4	umile Italia
+106	4	4	4	Italia
+106	6	6	6	salute
+107	4	6	6	la vergine Cammilla
+107	5	6	6	vergine Cammilla
+107	5	5	5	vergine
+107	6	6	6	Cammilla
+108	1	7	1	Eurialo e Turno e Niso di ferute
+108	1	5	1	Eurialo e Turno e Niso
+108	1	1	1	Eurialo
+108	3	3	3	Turno
+108	5	7	5	Niso di ferute
+108	5	5	5	Niso
+108	7	7	7	ferute
+109	1	1	1	Questi
+109	5	6	6	ogne villa
+109	6	6	6	villa
+110	7	8	8	lo 'nferno
+110	8	8	8	'nferno
+111	3	3	3	'nvidia
+112	2	2	2	io
+112	4	6	6	lo tuo me'
+112	5	6	6	tuo me'
+113	2	2	2	tu
+113	3	3	3	mi
+113	6	6	6	io
+113	8	9	9	tua guida
+114	4	4	4	qui
+114	6	7	6	loco etterno
+115	3	5	5	le disperate strida
+116	2	5	4	li antichi spiriti dolenti
+117	3	5	5	la seconda morte
+117	6	6	6	ciascun
+118	3	6	3	color che son contenti
+119	2	2	2	foco
+119	6	6	6	venire
+120	5	7	7	le beate genti
+121	2	3	3	le quai
+121	3	3	3	quai
+121	6	6	6	tu
+122	1	1	1	anima
+122	4	4	4	ciò
+122	7	7	7	me
+123	2	2	2	lei
+123	3	3	3	ti
+123	6	7	7	mio partire
+123	7	7	7	partire
+124	2	7	3	quello imperador che là sù regna
+124	2	3	3	quello imperador
+124	3	3	3	imperador
+125	2	2	2	i'
+125	6	8	8	la sua legge
+125	7	8	8	sua legge
+125	8	8	8	legge
+126	5	6	6	sua città
+126	6	6	6	città
+126	8	8	8	me
+127	2	3	3	tutte parti
+128	3	5	5	la sua città
+128	7	9	9	l'alto seggio
+129	2	6	3	felice colui cu' ivi elegge
+129	3	6	3	colui cu' ivi elegge
+129	3	3	3	colui
+130	2	2	2	io
+130	2	2	2	io
+130	4	4	4	lui
+130	5	5	5	Poeta
+130	7	7	7	ti
+131	2	7	3	quello Dio che tu non conoscesti
+131	2	3	3	quello Dio
+131	5	5	5	tu
+132	3	3	3	io
+132	5	8	6	questo male e peggio
+132	5	6	6	questo male
+132	8	8	8	peggio
+133	2	2	2	tu
+133	3	3	3	mi
+134	3	3	3	io
+134	5	9	6	la porta di san Pietro
+134	5	6	6	la porta
+134	8	9	9	san Pietro
+135	2	7	2	color cui tu fai cotanto mesti
+135	2	2	2	color
+135	3	3	3	cui
+135	4	4	4	tu
+136	5	5	5	io
+136	6	6	6	li

@@ -1,0 +1,336 @@
+line	start	end	head	text
+1	2	6	3	due cibi, distanti e moventi
+1	2	3	3	due cibi
+1	3	3	3	cibi
+2	2	3	3	un modo
+2	3	3	3	modo
+2	8	8	8	fame
+3	2	3	3	liber' omo
+3	3	3	3	omo
+3	4	5	5	l'un
+3	8	8	8	denti
+4	4	5	5	un agno
+4	7	8	8	due brame
+5	2	3	3	fieri lupi
+6	4	5	5	un cane
+6	7	8	8	due dame
+7	2	2	2	che
+7	4	4	4	i'
+7	7	7	7	me
+8	2	8	4	li miei dubbi d'un modo sospinto
+8	2	4	4	li miei dubbi
+8	6	8	7	un modo sospinto
+9	2	2	2	ch'
+10	1	1	1	Io
+10	5	8	7	'l mio disir dipinto
+10	5	7	7	'l mio disir
+10	6	8	7	mio disir dipinto
+10	6	7	7	mio disir
+10	7	8	7	disir dipinto
+11	4	4	4	viso
+11	6	9	7	'l dimandar con ello
+11	6	7	7	'l dimandar
+11	7	9	7	dimandar con ello
+11	9	9	9	ello
+12	6	7	6	parlar distinto
+12	6	6	6	parlar
+13	3	3	3	Beatrice
+13	6	6	6	Danïello
+14	1	1	1	Nabuccodonosor
+14	4	4	4	ira
+15	2	2	2	l'
+16	3	3	3	Io
+16	7	7	7	ti
+17	1	4	4	uno e altro disio
+17	7	8	8	tua cura
+18	1	2	1	sé stessa
+19	1	1	1	Tu
+19	4	6	6	'l buon voler
+19	5	6	6	buon voler
+20	1	3	2	la vïolenza altrui
+20	1	2	2	la vïolenza
+20	2	3	2	vïolenza altrui
+20	5	6	6	qual ragione
+21	2	2	2	meritar
+21	3	3	3	mi
+21	5	6	6	la misura
+22	3	3	3	dubitar
+22	4	4	4	ti
+22	6	6	6	cagione
+23	3	4	4	l'anime
+23	6	7	7	le stelle
+24	2	5	3	la sentenza di Platone
+24	2	3	3	la sentenza
+24	5	5	5	Platone
+25	1	1	1	Queste
+25	3	8	4	le question che nel tuo velle
+25	3	4	4	le question
+25	7	8	8	tuo velle
+26	0	0	0	
+27	2	7	2	quella che più ha di felle
+27	2	2	2	quella
+27	7	7	7	felle
+28	2	3	3	i Serafin
+28	3	3	3	Serafin
+28	4	8	4	colui che più s'india
+28	4	4	4	colui
+29	1	5	5	Moïsè, Samuel, e quel Giovanni
+29	1	1	1	Moïsè
+29	2	2	2	Samuel
+29	4	5	5	quel Giovanni
+29	5	5	5	Giovanni
+30	4	4	4	io
+30	7	7	7	Maria
+31	4	5	5	altro cielo
+31	6	8	8	i loro scanni
+31	7	8	8	loro scanni
+32	2	7	3	questi spirti che mo t'appariro
+32	2	3	3	questi spirti
+32	3	7	3	spirti che mo t'appariro
+33	4	6	5	l'esser lor
+33	6	6	6	lor
+33	7	10	10	più o meno anni
+34	2	2	2	tutti
+34	5	7	7	il primo giro
+35	4	5	5	dolce vita
+36	6	8	8	l'etterno spiro
+37	0	0	0	
+38	2	4	3	questa spera lor
+38	2	3	3	questa spera
+38	4	4	4	lor
+38	8	8	8	segno
+39	2	3	3	la celestïal
+39	6	7	7	men salita
+39	7	7	7	salita
+40	2	2	2	parlar
+40	5	6	6	vostro ingegno
+40	6	6	6	ingegno
+41	5	5	5	sensato
+42	1	7	1	ciò che fa poscia d'intelletto degno
+42	1	1	1	ciò
+42	6	7	6	intelletto degno
+42	6	6	6	intelletto
+43	2	2	2	questo
+43	3	4	4	la Scrittura
+44	2	3	3	vostra facultate
+44	5	5	5	piedi
+44	7	7	7	mano
+45	3	3	3	Dio
+45	5	5	5	altro
+46	2	6	3	Santa Chiesa con aspetto umano
+46	2	3	3	Santa Chiesa
+46	5	6	5	aspetto umano
+47	1	3	1	Gabrïel e Michel
+47	1	1	1	Gabrïel
+47	3	3	3	Michel
+48	2	7	3	l'altro che Tobia rifece sano
+48	2	3	3	l'altro
+48	5	5	5	Tobia
+49	1	7	1	Quel che Timeo de l'anime argomenta
+49	3	3	3	Timeo
+49	5	6	6	l'anime
+49	6	6	6	anime
+50	5	9	5	ciò che qui si vede
+50	5	5	5	ciò
+51	0	0	0	
+52	3	4	4	l'alma
+52	6	8	8	la sua stella
+53	2	2	2	quella
+54	2	2	2	natura
+54	4	4	4	forma
+55	3	4	4	sua sentenza
+55	7	8	8	altra guisa
+56	2	3	3	la voce
+57	2	6	2	intenzion da non esser derisa
+57	2	2	2	intenzion
+58	2	2	2	elli
+58	6	7	7	queste ruote
+59	1	5	2	l'onor de la influenza
+59	4	5	5	la influenza
+59	7	8	8	'l biasmo
+60	2	5	5	alcun vero suo arco
+61	1	2	2	Questo principio
+62	2	4	4	tutto il mondo
+62	3	4	4	il mondo
+62	8	8	8	Giove
+63	1	3	1	Mercurio e Marte
+63	1	1	1	Mercurio
+63	3	3	3	Marte
+64	1	6	3	L'altra dubitazion che ti commove
+64	1	3	3	L'altra dubitazion
+65	2	3	3	men velen
+65	6	7	7	sua malizia
+66	6	6	6	me
+67	3	5	5	la nostra giustizia
+67	4	5	5	nostra giustizia
+67	5	5	5	giustizia
+68	2	6	3	li occhi d'i mortali
+68	2	3	3	li occhi
+68	3	6	3	occhi d'i mortali
+68	3	3	3	occhi
+68	5	6	6	i mortali
+68	6	6	6	mortali
+68	8	8	8	argomento
+69	2	2	2	fede
+69	6	7	7	eretica nequizia
+69	7	7	7	nequizia
+70	4	5	5	vostro accorgimento
+71	4	5	5	questa veritate
+72	3	3	3	ti
+73	2	2	2	vïolenza
+73	5	7	5	quel che pate
+74	1	1	1	nïente
+74	4	6	4	quel che sforza
+75	3	4	4	quest' alme
+75	6	6	6	essa
+76	2	2	2	volontà
+77	4	4	4	natura
+77	7	7	7	foco
+78	2	3	3	mille volte
+78	4	4	4	vïolenza
+78	5	5	5	il
+79	4	4	4	ella
+80	2	3	3	la forza
+80	6	7	7	queste fero
+81	4	5	5	santo loco
+82	4	6	5	lor volere intero
+83	3	3	3	Lorenzo
+83	6	7	7	la grada
+84	3	3	3	Muzio
+84	5	7	7	la sua man
+84	6	7	7	sua man
+85	2	2	2	l'
+85	6	7	7	la strada
+86	0	0	0	
+87	2	4	4	così salda voglia
+87	4	4	4	voglia
+88	3	4	4	queste parole
+89	1	1	1	l'
+89	4	4	4	dei
+89	6	8	7	l'argomento casso
+90	2	2	2	t'
+90	5	5	5	noia
+90	7	8	8	più volte
+91	6	8	8	un altro passo
+92	3	4	4	li occhi
+92	8	9	8	te stesso
+93	0	0	0	
+94	1	1	1	Io
+94	7	8	8	la mente
+95	2	3	2	alma beata
+96	6	7	7	primo vero
+97	5	5	5	Piccarda
+98	2	5	3	l'affezion del vel
+98	2	3	3	l'affezion
+98	3	5	3	affezion del vel
+98	3	3	3	affezion
+98	4	5	5	del vel
+98	5	5	5	vel
+98	6	6	6	Costanza
+99	3	3	3	ella
+100	1	2	2	Molte fïate
+100	4	4	4	frate
+101	4	4	4	periglio
+101	6	6	6	grato
+102	4	9	4	quel che far non si convenne
+102	4	4	4	quel
+103	2	2	2	Almeone
+103	5	5	5	ciò
+104	2	3	2	padre suo
+104	4	6	6	la propria madre
+105	4	4	4	pietà
+106	2	3	3	questo punto
+107	2	3	3	la forza
+107	5	5	5	voler
+108	7	8	8	l'offense
+109	1	2	1	Voglia assoluta
+109	6	6	6	danno
+110	4	4	4	tanto
+110	6	6	6	quanto
+111	6	7	7	più affanno
+111	7	7	7	affanno
+112	3	3	3	Piccarda
+112	4	4	4	quello
+113	2	4	3	la voglia assoluta
+113	3	4	3	voglia assoluta
+113	7	7	7	io
+114	2	3	3	l'altra
+114	6	6	6	ver
+115	3	7	4	l'ondeggiar del santo rio
+115	5	7	7	del santo rio
+115	6	7	7	santo rio
+116	3	8	4	del fonte ond' ogne ver deriva
+116	3	4	4	del fonte
+116	6	7	7	ogne ver
+117	4	4	4	pace
+117	5	8	8	uno e altro disio
+117	7	8	8	altro disio
+118	2	5	2	amanza del primo amante
+118	4	5	5	primo amante
+118	7	7	7	diva
+119	2	2	2	io
+119	4	6	6	il cui parlar
+120	8	8	8	m'
+121	3	5	4	l'affezion mia
+122	5	5	5	voi
+122	6	8	6	grazia per grazia
+122	6	6	6	grazia
+122	6	6	6	grazia
+123	2	6	2	quei che vede e puote
+123	2	2	2	quei
+123	8	8	8	ciò
+124	1	1	1	Io
+125	1	2	2	nostro intelletto
+125	4	5	5	'l ver
+125	7	7	7	lo
+126	2	4	2	fuor dal qual
+126	3	4	4	dal qual
+126	5	6	6	nessun vero
+127	3	3	3	esso
+127	5	7	5	fera in lustra
+127	5	5	5	fera
+127	7	7	7	lustra
+128	4	4	4	l'
+129	3	4	4	ciascun disio
+129	4	4	4	disio
+130	3	3	3	quello
+130	5	7	5	guisa di rampollo
+130	7	7	7	rampollo
+131	2	4	2	piè del vero
+131	4	4	4	vero
+131	5	6	6	il dubbio
+131	9	9	9	natura
+132	3	3	3	sommo
+132	5	5	5	noi
+132	7	7	7	collo
+132	7	7	7	collo
+133	1	1	1	Questo
+133	4	4	4	questo
+134	2	2	2	reverenza
+134	3	3	3	donna
+135	2	8	4	un'altra verità che m'è oscura
+135	2	4	4	un'altra verità
+135	4	8	4	verità che m'è oscura
+135	4	4	4	verità
+136	1	1	1	Io
+136	5	6	6	l'uom
+136	6	6	6	uom
+137	1	2	2	ai voti
+137	2	2	2	voti
+137	6	7	7	altri beni
+137	7	7	7	beni
+138	3	5	5	la vostra statera
+138	4	5	5	vostra statera
+138	5	5	5	statera
+139	1	1	1	Beatrice
+139	5	7	6	li occhi pieni
+139	5	6	6	li occhi
+140	2	6	2	faville d'amor così divini
+140	2	4	2	faville d'amor
+140	4	4	4	amor
+141	3	4	4	mia virtute
+141	6	7	7	le reni
+142	3	3	3	mi
+142	6	8	7	li occhi chini
+142	7	8	7	occhi chini
+142	7	7	7	occhi

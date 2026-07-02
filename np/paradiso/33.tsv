@@ -1,0 +1,354 @@
+line	start	end	head	text
+1	1	2	2	Vergine Madre
+1	3	6	3	figlia del tuo figlio
+1	5	6	6	tuo figlio
+2	6	6	6	creatura
+3	1	5	1	termine fisso d'etterno consiglio
+3	4	5	5	etterno consiglio
+4	1	1	1	tu
+4	3	3	3	colei
+4	5	7	7	l'umana natura
+5	4	6	6	'l suo fattore
+6	5	6	6	sua fattura
+7	2	3	2	ventre tuo
+7	6	7	7	l'amore
+8	2	4	4	lo cui caldo
+8	6	8	8	l'etterna pace
+9	4	5	5	questo fiore
+10	4	4	4	noi
+10	5	6	6	meridïana face
+11	2	2	2	caritate
+11	6	6	6	mortali
+12	2	5	4	di speranza fontana vivace
+12	3	3	3	speranza
+12	4	5	4	fontana vivace
+13	1	1	1	Donna
+14	2	2	2	qual
+14	4	4	4	grazia
+14	7	7	7	te
+15	1	2	2	sua disïanza
+15	2	2	2	disïanza
+15	6	6	6	ali
+16	1	3	3	La tua benignità
+17	2	3	2	chi domanda
+17	2	2	2	chi
+17	5	6	6	molte fïate
+18	3	3	3	dimandar
+19	2	2	2	te
+19	2	2	2	te
+19	3	3	3	misericordia
+19	6	6	6	pietate
+20	2	2	2	te
+20	2	2	2	te
+20	3	3	3	magnificenza
+21	1	1	1	quantunque
+21	3	3	3	creatura
+21	6	6	6	bontate
+22	2	2	2	questi
+22	5	7	7	l'infima lacuna
+22	6	7	7	infima lacuna
+22	7	7	7	lacuna
+23	2	3	3	l'universo
+23	3	3	3	universo
+24	1	3	2	le vite spiritali
+24	2	3	2	vite spiritali
+24	2	2	2	vite
+24	5	5	5	una
+24	5	5	5	una
+25	3	3	3	te
+25	5	5	5	grazia
+25	7	7	7	virtute
+26	5	6	6	li occhi
+26	6	6	6	occhi
+27	4	6	6	l'ultima salute
+27	5	6	6	ultima salute
+27	6	6	6	salute
+28	2	2	2	io
+28	6	7	7	mio veder
+29	3	3	3	i'
+29	6	7	7	lo suo
+29	8	10	10	tutti miei prieghi
+29	9	10	10	miei prieghi
+30	1	1	1	ti
+31	2	2	2	tu
+31	3	4	4	ogne nube
+31	4	4	4	nube
+31	5	5	5	li
+32	2	3	3	sua mortalità
+32	3	3	3	mortalità
+32	5	6	5	prieghi tuoi
+32	5	5	5	prieghi
+33	3	5	5	'l sommo piacer
+33	4	5	5	sommo piacer
+33	5	5	5	piacer
+33	6	6	6	li
+34	2	2	2	ti
+34	4	4	4	regina
+35	1	4	1	ciò che tu vuoli
+35	1	1	1	ciò
+35	3	3	3	tu
+36	2	3	3	tanto veder
+36	4	6	5	li affetti suoi
+37	2	3	3	tua guardia
+37	4	6	5	i movimenti umani
+38	2	2	2	Beatrice
+38	4	5	5	quanti beati
+39	2	4	4	li miei prieghi
+39	7	8	8	le mani
+40	1	7	2	Li occhi da Dio diletti e venerati
+40	1	2	2	Li occhi
+40	4	4	4	Dio
+41	2	2	2	ne
+41	3	4	4	l'orator
+42	2	4	4	i devoti prieghi
+42	5	5	5	le
+43	3	5	5	l'etterno lume
+44	2	2	2	qual
+45	2	2	2	creatura
+45	3	6	4	l'occhio tanto chiaro
+46	2	2	2	io
+46	5	9	5	fine di tutt' i disii
+46	7	9	9	tutt' i disii
+46	8	9	9	i disii
+47	4	4	4	io
+48	1	4	2	l'ardor del desiderio
+48	4	4	4	desiderio
+48	6	6	6	me
+49	1	1	1	Bernardo
+49	2	2	2	m'
+50	2	2	2	io
+50	2	2	2	io
+51	3	4	3	me stesso
+51	3	3	3	me
+51	7	7	7	ei
+52	2	4	4	la mia vista
+53	7	8	8	lo raggio
+54	2	9	4	l'alta luce che da sé è vera
+54	2	4	4	l'alta luce
+54	7	7	7	sé
+55	4	6	6	il mio veder
+55	5	6	6	mio veder
+55	6	6	6	veder
+56	2	3	3	'l parlar
+56	3	3	3	parlar
+56	7	8	8	tal vista
+56	8	8	8	vista
+57	3	4	4	la memoria
+57	4	4	4	memoria
+57	6	7	7	tanto oltraggio
+57	7	7	7	oltraggio
+58	1	1	1	Qual
+58	3	6	3	colüi che sognando vede
+58	3	3	3	colüi
+59	3	4	4	'l sogno
+59	5	7	6	la passione impressa
+60	3	4	4	l'altro
+60	6	7	7	la mente
+61	3	3	3	io
+61	6	6	6	tutta
+62	1	2	2	mia visïone
+62	5	5	5	mi
+63	2	2	2	core
+63	3	8	4	il dolce che nacque da essa
+63	3	4	4	il dolce
+63	8	8	8	essa
+64	2	3	3	la neve
+64	5	5	5	sol
+65	3	3	3	vento
+65	5	7	6	le foglie levi
+66	3	6	4	la sentenza di Sibilla
+66	3	4	4	la sentenza
+66	4	6	4	sentenza di Sibilla
+66	6	6	6	Sibilla
+67	2	3	3	somma luce
+68	2	3	2	concetti mortali
+68	5	7	7	la mia mente
+69	2	7	3	un poco di quel che parevi
+69	2	3	3	un poco
+69	5	7	5	quel che parevi
+70	3	5	4	la lingua mia
+70	4	5	4	lingua mia
+71	2	8	3	una favilla sol de la tua gloria
+71	2	4	3	una favilla sol
+71	2	3	3	una favilla
+71	3	8	3	favilla sol de la tua gloria
+71	3	4	3	favilla sol
+71	6	8	8	la tua gloria
+71	7	8	8	tua gloria
+72	4	6	6	la futura gente
+72	5	6	6	futura gente
+73	6	7	7	mia memoria
+74	4	5	5	un poco
+74	7	8	8	questi versi
+75	5	6	6	tua vittoria
+76	1	1	1	Io
+76	4	8	5	l'acume ch'io soffersi
+76	4	5	5	l'acume
+76	7	7	7	io
+77	1	3	3	del vivo raggio
+77	2	3	3	vivo raggio
+77	5	5	5	i'
+78	2	4	3	li occhi miei
+78	6	6	6	lui
+79	1	1	1	E'
+79	5	5	5	io
+80	2	2	2	questo
+80	7	7	7	i'
+81	1	3	2	l'aspetto mio
+81	5	6	5	valore infinito
+82	2	6	3	abbondante grazia ond' io presunsi
+82	2	3	3	abbondante grazia
+82	5	5	5	io
+83	2	3	3	lo viso
+83	5	7	6	la luce etterna
+84	3	4	4	la veduta
+84	5	5	5	vi
+85	2	3	3	suo profondo
+86	3	3	3	amore
+86	5	6	6	un volume
+87	1	7	1	ciò che per l'universo si squaderna
+87	4	5	5	l'universo
+88	1	6	1	sustanze e accidenti e lor costume
+88	1	1	1	sustanze
+88	3	3	3	accidenti
+88	5	6	6	lor costume
+88	6	6	6	costume
+89	5	6	6	tal modo
+89	6	6	6	modo
+90	2	5	2	ciò ch'i' dico
+90	2	2	2	ciò
+90	7	9	9	un semplice lume
+90	8	9	9	semplice lume
+90	9	9	9	lume
+91	1	6	2	La forma universal di questo nodo
+91	1	3	2	La forma universal
+91	2	6	2	forma universal di questo nodo
+91	2	3	2	forma universal
+91	5	6	6	questo nodo
+92	3	3	3	i'
+92	6	8	8	più di largo
+92	8	8	8	largo
+93	2	2	2	questo
+93	3	3	3	mi
+93	6	6	6	i'
+94	1	3	2	Un punto solo
+94	6	7	7	maggior letargo
+95	2	3	3	venticinque secoli
+95	5	6	6	la 'mpresa
+96	3	3	3	Nettuno
+96	5	8	6	l'ombra d'Argo
+96	8	8	8	Argo
+97	2	6	3	la mente mia, tutta sospesa
+97	2	4	3	la mente mia
+97	3	4	3	mente mia
+98	0	0	0	
+99	4	4	4	mirar
+100	2	4	3	quella luce cotal
+100	3	3	3	luce
+101	4	4	4	lei
+101	6	7	7	altro aspetto
+101	7	7	7	aspetto
+102	5	5	5	si
+103	3	4	4	'l ben
+103	7	9	9	del volere obietto
+103	8	8	8	volere
+104	1	1	1	tutto
+104	5	5	5	lei
+104	9	9	9	quella
+105	3	7	3	ciò ch'è lì perfetto
+105	3	3	3	ciò
+106	5	6	6	mia favella
+107	3	6	3	quel ch'io ricordo
+107	5	5	5	io
+107	9	10	10	un fante
+108	4	5	5	la lingua
+108	7	8	8	la mammella
+109	5	7	7	un semplice sembiante
+110	3	7	4	vivo lume ch'io mirava
+110	3	4	4	vivo lume
+110	6	6	6	io
+111	2	2	2	tal
+112	3	7	4	la vista che s'avvalorava
+112	3	4	4	la vista
+113	2	2	2	me
+113	4	6	6	una sola parvenza
+114	2	2	2	io
+114	4	4	4	me
+115	2	6	6	la profonda e chiara sussistenza
+116	2	4	4	l'alto lume
+116	6	7	7	tre giri
+117	2	3	3	tre colori
+117	6	7	7	una contenenza
+118	2	6	3	l'un da l'altro
+118	2	3	3	l'un
+118	5	6	6	l'altro
+118	8	10	8	iri da iri
+118	8	8	8	iri
+118	8	8	8	iri
+119	4	5	5	'l terzo
+119	7	7	7	foco
+120	1	1	1	che
+120	6	6	6	si
+121	5	6	6	il dire
+122	2	3	3	mio concetto
+122	5	5	5	questo
+122	7	10	7	quel ch'i' vidi
+122	9	9	9	i'
+123	8	8	8	poco
+124	2	8	2	luce etterna che sola in te sidi
+124	2	3	2	luce etterna
+124	4	4	4	che
+124	7	7	7	te
+125	2	2	2	t'
+125	6	6	6	te
+126	3	3	3	te
+127	1	5	2	Quella circulazion che sì concetta
+127	1	2	2	Quella circulazion
+128	3	3	3	te
+128	5	6	5	lume reflesso
+129	2	6	3	li occhi miei alquanto circunspetta
+129	2	4	3	li occhi miei
+129	2	3	3	li occhi
+129	3	4	3	occhi miei
+130	3	3	3	sé
+130	5	7	6	suo colore stesso
+130	6	7	6	colore stesso
+131	5	7	7	la nostra effige
+131	6	7	7	nostra effige
+132	3	5	5	'l mio viso
+132	4	5	5	mio viso
+132	7	7	7	lei
+133	1	1	1	Qual
+133	3	8	4	'l geomètra che tutto s'affige
+133	3	4	4	'l geomètra
+134	3	4	4	lo cerchio
+135	2	6	3	quel principio ond' elli indige
+135	2	3	3	quel principio
+135	5	5	5	elli
+136	3	3	3	io
+136	5	7	6	quella vista nova
+137	1	1	1	veder
+138	1	2	2	l'imago
+138	3	4	4	al cerchio
+139	5	5	5	ciò
+139	6	8	8	le proprie penne
+140	4	6	6	la mia mente
+141	2	3	3	un fulgore
+141	5	5	5	che
+141	6	7	7	sua voglia
+142	2	4	4	l'alta fantasia
+142	3	4	4	alta fantasia
+142	4	4	4	fantasia
+142	7	7	7	possa
+143	4	6	6	il mio disio
+143	5	6	6	mio disio
+143	6	6	6	disio
+143	8	9	9	'l velle
+143	9	9	9	velle
+144	3	7	3	rota ch'igualmente è mossa
+144	3	3	3	rota
+145	1	10	2	l'amor che move il sole e l'altre stelle
+145	1	2	2	l'amor
+145	5	10	6	il sole e l'altre stelle
+145	5	6	6	il sole
+145	8	10	10	l'altre stelle

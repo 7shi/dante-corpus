@@ -1,0 +1,348 @@
+line	start	end	head	text
+1	2	3	2	Simon mago
+1	2	2	2	Simon
+1	3	3	3	mago
+1	5	6	6	miseri seguaci
+1	6	6	6	seguaci
+2	2	5	3	le cose di Dio
+2	2	3	3	le cose
+2	3	5	3	cose di Dio
+2	5	5	5	Dio
+2	8	8	8	bontate
+3	5	6	5	voi rapaci
+3	5	5	5	voi
+3	6	6	6	rapaci
+4	2	2	2	oro
+4	5	5	5	argento
+5	5	5	5	voi
+5	7	8	8	la tromba
+5	8	8	8	tromba
+6	4	6	6	la terza bolgia
+6	5	6	6	terza bolgia
+6	6	6	6	bolgia
+7	4	6	6	la seguente tomba
+8	3	4	4	lo scoglio
+8	6	7	7	quella parte
+9	5	7	5	mezzo 'l fosso
+9	6	7	7	'l fosso
+10	2	3	3	somma sapïenza
+10	6	7	7	l'arte
+11	4	4	4	cielo
+11	6	6	6	terra
+11	9	10	10	mal mondo
+12	4	5	5	tua virtù
+13	1	1	1	Io
+13	4	5	5	le coste
+13	8	9	9	lo fondo
+14	1	6	3	piena la pietra livida di fóri
+14	2	6	3	la pietra livida di fóri
+14	2	4	3	la pietra livida
+14	6	6	6	fóri
+15	2	3	3	un largo
+15	3	3	3	largo
+15	4	4	4	tutti
+15	6	6	6	ciascun
+16	2	2	2	mi
+17	2	9	2	que' che son nel mio bel San Giovanni
+17	2	2	2	que'
+17	6	9	8	mio bel San Giovanni
+17	7	9	8	bel San Giovanni
+17	8	9	8	San Giovanni
+18	3	6	3	loco d'i battezzatori
+18	3	3	3	loco
+18	5	6	6	i battezzatori
+19	1	5	2	l'un de li quali
+19	1	2	2	l'un
+19	4	5	5	li quali
+19	9	10	10	molt' anni
+20	2	2	2	io
+20	4	8	4	un che dentro v'annegava
+20	4	4	4	un
+21	2	2	2	questo
+21	4	8	4	suggel ch'ogn' omo sganni
+21	4	4	4	suggel
+21	6	7	7	ogn' omo
+22	3	4	4	la bocca
+22	6	6	6	ciascun
+23	1	5	5	d'un peccator li piedi
+23	2	3	3	un peccator
+23	4	5	5	li piedi
+23	8	9	9	le gambe
+24	2	3	3	al grosso
+24	5	6	6	l'altro
+25	1	2	2	Le piante
+25	5	5	5	tutti
+25	7	7	7	intrambe
+26	6	7	7	le giunte
+27	1	1	1	che
+27	2	2	2	spezzate
+27	4	6	4	ritorte e strambe
+27	4	4	4	ritorte
+27	6	6	6	strambe
+28	3	8	4	il fiammeggiar de le cose unte
+28	3	4	4	il fiammeggiar
+28	6	8	7	le cose unte
+28	7	8	7	cose unte
+29	5	7	7	la strema buccia
+30	5	5	5	calcagni
+30	7	8	8	le punte
+31	1	1	1	Chi
+31	3	3	3	colui
+31	4	4	4	maestro
+32	4	7	7	li altri suoi consorti
+32	5	7	7	altri suoi consorti
+32	6	7	7	suoi consorti
+32	7	7	7	consorti
+33	2	2	2	io
+33	4	4	4	cui
+33	5	7	7	più roggia fiamma
+34	2	2	2	elli
+34	4	4	4	me
+34	6	6	6	tu
+34	9	9	9	i'
+35	4	8	5	quella ripa che più giace
+35	4	5	5	quella ripa
+36	2	2	2	lui
+36	5	5	5	sé
+36	7	9	9	de' suoi torti
+36	8	9	9	suoi torti
+37	2	2	2	io
+37	3	3	3	Tanto
+37	9	9	9	te
+38	1	1	1	tu
+38	3	3	3	segnore
+38	7	7	7	i'
+39	2	3	3	tuo volere
+39	3	3	3	volere
+39	6	9	6	quel che si tace
+39	6	6	6	quel
+40	5	7	6	l'argine quarto
+41	5	6	5	mano stanca
+42	4	7	4	fondo foracchiato e arto
+43	1	3	3	Lo buon maestro
+43	6	8	8	la sua anca
+44	7	8	8	al rotto
+45	2	8	2	quel che si piangeva con la zanca
+45	2	5	2	quel che si piangeva
+45	7	8	8	la zanca
+46	2	2	2	qual
+46	6	8	6	'l di sù
+47	1	5	1	anima trista come pal commessa
+47	1	2	1	anima trista
+47	4	5	5	pal commessa
+48	2	2	2	io
+48	8	8	8	motto
+49	1	1	1	Io
+49	4	7	5	'l frate che confessa
+49	4	5	5	'l frate
+50	1	3	3	lo perfido assessin
+51	2	2	2	lui
+51	5	6	6	la morte
+52	2	2	2	el
+52	5	5	5	tu
+53	2	2	2	tu
+53	6	6	6	Bonifazio
+54	2	3	3	parecchi anni
+54	3	3	3	anni
+54	4	4	4	mi
+54	6	7	7	lo scritto
+54	7	7	7	scritto
+55	2	2	2	tu
+55	6	7	7	quell' aver
+55	7	7	7	aver
+56	2	3	3	lo qual
+56	3	3	3	qual
+56	8	8	8	'nganno
+57	1	3	3	la bella donna
+57	3	3	3	donna
+57	8	8	8	strazio
+58	1	1	1	Tal
+58	4	4	4	io
+58	7	9	7	color che stanno
+58	7	7	7	color
+59	4	8	4	ciò ch'è lor risposto
+59	4	4	4	ciò
+59	7	7	7	lor
+60	1	2	2	quasi scornati
+60	2	2	2	scornati
+60	4	4	4	risponder
+61	2	2	2	Virgilio
+62	3	3	3	colui
+62	3	3	3	colui
+62	6	8	6	colui che credi
+63	2	2	2	io
+63	6	6	6	me
+64	3	4	4	lo spirto
+64	7	8	8	i piedi
+65	5	7	5	voce di pianto
+65	7	7	7	pianto
+66	4	4	4	che
+66	6	6	6	me
+67	3	6	3	saper ch'i' sia
+67	5	5	5	i'
+68	2	2	2	tu
+68	5	7	6	la ripa corsa
+69	3	3	3	i'
+69	6	8	8	del gran manto
+69	7	8	8	gran manto
+70	4	7	4	figliuol de l'orsa
+70	6	7	7	l'orsa
+71	5	6	6	li orsatti
+72	3	4	4	l'avere
+72	10	10	10	borsa
+73	4	5	4	capo mio
+73	7	9	9	li altri tratti
+74	3	3	3	me
+75	2	6	3	le fessure de la pietra
+75	2	3	3	le fessure
+75	5	6	6	la pietra
+76	4	4	4	io
+77	2	8	2	colui ch'i' credea che tu fossi
+77	2	2	2	colui
+77	3	3	3	ch'
+77	4	4	4	i'
+77	7	7	7	tu
+78	3	3	3	i'
+78	5	7	7	'l sùbito dimando
+79	4	5	5	'l tempo
+79	8	9	9	i piè
+80	3	3	3	i'
+81	2	2	2	el
+81	7	8	7	piè rossi
+82	3	3	3	lui
+82	6	8	8	più laida opra
+82	7	8	8	laida opra
+83	2	3	3	ver' ponente
+83	4	7	5	un pastor sanza legge
+83	5	7	5	pastor sanza legge
+83	7	7	7	legge
+84	1	1	1	tal
+84	5	7	5	lui e me
+84	5	5	5	lui
+84	7	7	7	me
+85	1	2	2	Nuovo Iasón
+85	2	2	2	Iasón
+85	5	5	5	cui
+86	1	2	2	ne' Maccabei
+86	2	2	2	Maccabei
+86	6	6	6	quel
+87	1	2	2	suo re
+87	2	2	2	re
+87	5	5	5	lui
+87	6	8	6	chi Francia regge
+87	7	7	7	Francia
+88	1	1	1	Io
+88	5	5	5	i'
+89	2	2	2	i'
+89	5	5	5	lui
+89	7	8	8	questo metro
+90	3	3	3	mi
+90	5	6	6	quanto tesoro
+91	1	2	2	Nostro Segnore
+91	4	4	4	prima
+91	6	7	7	san Pietro
+92	2	2	2	ei
+92	4	5	5	le chiavi
+92	7	8	8	sua balìa
+93	0	0	0	
+94	2	2	2	Pier
+94	4	5	5	li altri
+94	8	8	8	Matia
+95	1	1	1	oro
+95	3	3	3	argento
+96	2	7	2	loco che perdé l'anima ria
+96	2	2	2	loco
+96	5	7	6	l'anima ria
+96	6	7	6	anima ria
+96	6	6	6	anima
+97	2	2	2	ti
+97	5	5	5	tu
+98	4	7	7	la mal tolta moneta
+98	5	7	7	mal tolta moneta
+98	7	7	7	moneta
+99	2	2	2	esser
+99	3	3	3	ti
+99	6	7	6	Carlo ardito
+99	6	6	6	Carlo
+100	7	7	7	lo
+100	8	8	8	mi
+101	1	6	2	la reverenza de le somme chiavi
+101	4	6	6	le somme chiavi
+102	2	2	2	tu
+102	5	7	6	la vita lieta
+103	1	1	1	io
+103	3	6	3	parole ancor più gravi
+104	2	4	4	la vostra avarizia
+104	5	6	6	il mondo
+105	2	3	3	i buoni
+105	6	7	7	i pravi
+106	2	3	3	voi pastor
+106	2	2	2	voi
+106	3	3	3	pastor
+106	6	7	7	il Vangelista
+107	2	7	2	colei che siede sopra l'acque
+107	2	2	2	colei
+107	6	7	7	l'acque
+108	2	3	3	coi regi
+108	3	3	3	regi
+108	5	5	5	lui
+109	1	7	1	quella che con le sette teste nacque
+109	1	1	1	quella
+109	4	6	6	le sette teste
+110	3	5	5	le diece corna
+110	7	7	7	argomento
+111	3	3	3	virtute
+111	5	6	6	suo marito
+112	4	9	4	dio d'oro e d'argento
+112	6	6	6	oro
+112	9	9	9	argento
+113	3	3	3	altro
+113	6	6	6	voi
+113	8	9	9	l'idolatre
+114	4	4	4	elli
+114	5	5	5	uno
+114	7	7	7	voi
+114	10	10	10	cento
+115	2	2	2	Costantin
+115	4	5	5	quanto mal
+115	7	7	7	matre
+116	2	4	4	la tua conversion
+116	6	7	7	quella dote
+117	3	3	3	te
+117	5	8	8	il primo ricco patre
+118	3	3	3	io
+118	4	4	4	li
+118	6	7	7	cotai note
+119	2	2	2	ira
+119	4	7	4	coscïenza che 'l mordesse
+119	4	4	4	coscïenza
+119	6	6	6	'l
+120	4	6	6	ambo le piote
+120	5	6	6	le piote
+121	1	1	1	I'
+121	6	7	7	mio duca
+122	2	4	4	sì contenta labbia
+123	1	7	2	lo suon de le parole vere espresse
+123	1	2	2	lo suon
+123	4	7	5	le parole vere espresse
+124	3	5	5	ambo le braccia
+124	4	5	5	le braccia
+124	6	6	6	mi
+125	6	6	6	mi
+125	10	10	10	petto
+126	3	6	4	la via onde discese
+126	3	4	4	la via
+127	7	7	7	sé
+128	2	2	2	men
+128	5	9	6	'l colmo de l'arco
+128	5	6	6	'l colmo
+128	8	9	9	l'arco
+129	3	3	3	quarto
+129	5	6	6	quinto argine
+129	6	6	6	argine
+130	4	5	5	il carco
+131	3	7	4	lo scoglio sconcio ed erto
+132	4	5	5	le capre
+132	6	7	7	duro varco
+133	2	4	4	un altro vallon
+133	5	5	5	mi

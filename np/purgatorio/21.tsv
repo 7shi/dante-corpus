@@ -1,0 +1,342 @@
+line	start	end	head	text
+1	1	7	2	La sete natural che mai non sazia
+1	1	3	2	La sete natural
+1	2	3	2	sete natural
+2	4	8	5	l'acqua onde la femminetta
+2	4	5	5	l'acqua
+2	7	8	8	la femminetta
+3	1	1	1	samaritana
+3	3	4	4	la grazia
+4	5	6	6	la fretta
+5	2	8	4	la 'mpacciata via dietro al mio duca
+5	2	4	4	la 'mpacciata via
+5	7	8	8	mio duca
+6	4	6	6	la giusta vendetta
+7	7	7	7	Luca
+8	2	2	2	Cristo
+8	5	9	5	due ch'erano in via
+8	5	5	5	due
+8	9	9	9	via
+9	5	7	7	la sepulcral buca
+9	6	7	7	sepulcral buca
+9	7	7	7	buca
+10	3	4	4	un'ombra
+10	8	8	8	noi
+11	2	2	2	piè
+11	4	7	5	la turba che giace
+11	4	5	5	la turba
+12	5	5	5	lei
+13	3	4	3	frati miei
+13	5	5	5	Dio
+13	8	8	8	pace
+14	1	1	1	Noi
+14	6	6	6	Virgilio
+15	2	8	3	'l cenno ch'a ciò si conface
+15	2	3	3	'l cenno
+15	6	6	6	ciò
+16	4	5	5	beato concilio
+17	4	4	4	pace
+17	5	7	7	la verace corte
+18	2	2	2	me
+18	5	7	7	l'etterno essilio
+19	3	3	3	elli
+19	5	5	5	parte
+20	2	2	2	voi
+20	4	9	4	ombre che Dio sù non degni
+20	4	4	4	ombre
+20	6	6	6	Dio
+21	1	1	1	chi
+21	5	7	7	la sua scala
+21	8	9	9	tanto scorte
+22	2	4	3	'l dottor mio
+22	8	9	9	a' segni
+23	2	2	2	questi
+23	6	7	7	l'angel
+24	4	5	5	coi buon
+24	8	8	8	e'
+25	3	8	3	lei che dì e notte fila
+25	3	3	3	lei
+25	4	8	4	che dì e notte fila
+25	5	7	5	dì e notte
+25	5	5	5	dì
+25	7	7	7	notte
+26	2	2	2	li
+26	6	7	7	la conocchia
+27	1	1	1	che
+27	2	2	2	Cloto
+27	5	5	5	ciascuno
+28	1	3	2	l'anima sua
+28	2	2	2	anima
+28	6	9	9	tua e mia serocchia
+28	9	9	9	serocchia
+29	0	0	0	
+30	4	5	5	nostro modo
+30	5	5	5	modo
+31	1	1	1	Ond'
+31	2	2	2	io
+31	7	9	9	l'ampia gola
+32	2	2	2	inferno
+33	3	3	3	'l
+33	6	7	7	mia scola
+34	4	4	4	tu
+34	7	8	8	tai crolli
+35	3	4	4	'l monte
+36	5	7	6	suoi piè molli
+37	6	7	7	la cruna
+38	2	3	3	mio disio
+38	7	8	8	la speranza
+39	3	5	5	la mia sete
+39	4	5	5	mia sete
+40	1	1	1	Quei
+40	3	3	3	Cosa
+41	1	1	1	ordine
+41	3	4	4	la religïone
+42	2	3	3	la montagna
+42	9	9	9	usanza
+43	5	6	6	ogne alterazione
+44	2	10	2	quel che 'l ciel da sé in sé riceve
+44	4	5	5	'l ciel
+44	7	7	7	sé
+44	7	7	7	sé
+45	7	7	7	altro
+45	8	8	8	cagione
+46	4	4	4	pioggia
+46	6	6	6	grando
+46	8	8	8	neve
+47	2	2	2	rugiada
+47	4	4	4	brina
+48	2	7	3	la scaletta di tre gradi breve
+48	2	3	3	la scaletta
+48	3	7	3	scaletta di tre gradi breve
+48	3	3	3	scaletta
+48	5	6	6	tre gradi
+48	6	6	6	gradi
+49	1	2	1	nuvole spesse
+50	2	2	2	coruscar
+50	4	6	4	figlia di Taumante
+50	6	6	6	Taumante
+51	6	6	6	contrade
+52	1	2	2	secco vapor
+53	3	7	3	sommo d'i tre gradi
+53	5	7	7	i tre gradi
+53	9	9	9	io
+54	3	6	4	'l vicario di Pietro
+54	3	4	4	'l vicario
+54	6	6	6	Pietro
+54	7	8	8	le piante
+55	0	0	0	
+56	3	8	3	vento che 'n terra si nasconda
+56	3	3	3	vento
+56	6	6	6	terra
+57	0	0	0	
+58	3	5	4	alcuna anima monda
+58	3	4	4	alcuna anima
+58	4	5	4	anima monda
+59	0	0	0	
+60	5	6	6	tal grido
+61	2	3	3	la mondizia
+61	4	5	5	sol voler
+61	7	7	7	prova
+62	5	6	5	mutar convento
+62	6	6	6	convento
+63	1	2	2	l'alma
+63	6	6	6	voler
+64	3	3	3	ben
+64	7	8	8	il talento
+64	8	8	8	talento
+65	2	3	3	divina giustizia
+65	3	3	3	giustizia
+65	5	5	5	voglia
+66	4	4	4	peccar
+66	7	7	7	tormento
+67	2	2	2	io
+67	7	8	8	questa doglia
+68	1	4	2	cinquecent' anni e più
+68	1	2	2	cinquecent' anni
+69	1	5	2	libera volontà di miglior soglia
+69	2	5	2	volontà di miglior soglia
+69	4	5	5	miglior soglia
+70	3	4	4	il tremoto
+70	6	7	7	li pii
+71	1	4	1	spiriti per lo monte
+71	1	1	1	spiriti
+71	3	4	4	lo monte
+71	6	6	6	lode
+72	2	8	3	quel Segnor, che tosto sù li 'nvii
+72	2	3	3	quel Segnor
+72	7	7	7	li
+73	7	7	7	el
+74	2	3	3	del ber
+74	3	3	3	ber
+74	7	8	8	la sete
+75	5	5	5	el
+76	2	4	4	'l savio duca
+76	7	8	8	la rete
+77	1	1	1	che
+78	6	6	6	che
+79	2	2	2	chi
+79	6	6	6	io
+80	3	4	4	tanti secoli
+81	4	6	5	le parole tue
+81	5	6	5	parole tue
+81	7	7	7	mi
+82	2	9	2	tempo che 'l buon Tito, con l'aiuto
+82	2	2	2	tempo
+82	4	6	6	'l buon Tito
+82	5	6	6	buon Tito
+82	6	6	6	Tito
+82	8	9	9	l'aiuto
+83	2	3	3	sommo rege
+83	3	3	3	rege
+83	5	6	6	le fóra
+83	6	6	6	fóra
+84	3	7	4	'l sangue per Giuda venduto
+84	3	4	4	'l sangue
+84	4	7	4	sangue per Giuda venduto
+84	4	4	4	sangue
+84	6	7	6	Giuda venduto
+84	6	6	6	Giuda
+85	1	8	2	col nome che più dura e più onora
+85	2	8	2	nome che più dura e più onora
+85	2	2	2	nome
+86	2	2	2	io
+86	6	7	7	quello spirto
+86	7	7	7	spirto
+87	6	6	6	fede
+88	4	6	6	mio vocale spirto
+88	6	6	6	spirto
+89	2	2	2	tolosano
+89	4	4	4	sé
+89	7	7	7	Roma
+90	3	4	4	le tempie
+90	4	4	4	tempie
+90	7	7	7	mirto
+91	1	1	1	Stazio
+91	2	6	3	la gente ancor di là
+91	2	3	3	la gente
+91	3	3	3	gente
+92	3	3	3	Tebe
+92	7	8	8	grande Achille
+92	8	8	8	Achille
+93	4	4	4	via
+93	6	8	8	la seconda soma
+93	7	8	8	seconda soma
+93	8	8	8	soma
+94	2	3	3	mio ardor
+94	3	3	3	ardor
+94	5	5	5	seme
+94	6	7	7	le faville
+94	7	7	7	faville
+95	5	7	7	la divina fiamma
+95	6	7	7	divina fiamma
+95	7	7	7	fiamma
+96	4	6	6	più di mille
+96	6	6	6	mille
+97	2	3	3	l'Eneïda
+97	5	7	7	la qual mamma
+98	4	4	4	nutrice
+99	2	2	2	essa
+99	5	7	5	peso di dramma
+99	7	7	7	dramma
+100	3	4	4	esser vivuto
+101	2	2	2	Virgilio
+101	4	5	5	un sole
+102	6	9	7	mio uscir di bando
+102	7	9	7	uscir di bando
+102	9	9	9	bando
+103	2	2	2	Virgilio
+103	4	4	4	me
+103	5	6	6	queste parole
+104	2	6	2	viso che, tacendo, disse ‘Taci
+104	2	2	2	viso
+105	4	4	4	tutto
+105	5	8	6	la virtù che vuole
+105	5	6	6	la virtù
+106	2	4	2	riso e pianto
+106	2	2	2	riso
+106	4	4	4	pianto
+107	2	3	3	la passion
+107	3	3	3	passion
+107	6	6	6	ciascun
+108	4	4	4	voler
+108	5	7	7	ne' più veraci
+108	6	7	7	più veraci
+108	7	7	7	veraci
+109	1	1	1	Io
+109	5	8	6	l'uom ch'ammicca
+109	5	6	6	l'uom
+110	3	4	4	l'ombra
+111	2	9	3	li occhi ove 'l sembiante più si ficca
+111	2	3	3	li occhi
+111	5	6	6	'l sembiante
+112	3	6	4	tanto labore in bene
+112	3	4	4	tanto labore
+112	6	6	6	bene
+113	3	6	5	la tua faccia testeso
+113	3	5	5	la tua faccia
+113	4	6	5	tua faccia testeso
+113	4	5	5	tua faccia
+114	1	4	2	un lampeggiar di riso
+114	2	4	2	lampeggiar di riso
+114	4	4	4	riso
+115	3	3	3	io
+115	5	6	6	una parte
+115	9	9	9	altra
+116	1	2	2	l'una
+116	6	7	7	l'altra
+117	2	2	2	io
+117	2	2	2	io
+118	2	3	3	mio maestro
+118	7	7	7	paura
+119	0	0	0	
+120	1	4	1	quel ch'e' dimanda
+120	6	7	7	cotanta cura
+121	2	2	2	io
+121	5	5	5	tu
+122	1	2	2	antico spirto
+122	4	7	4	rider ch'io fei
+122	4	4	4	rider
+122	6	6	6	io
+123	4	4	4	ammirazion
+123	7	7	7	ti
+124	1	8	1	Questi che guida in alto li occhi miei
+124	1	1	1	Questi
+124	6	8	7	li occhi miei
+124	7	8	7	occhi miei
+124	7	7	7	occhi
+125	2	7	3	quel Virgilio dal qual tu togliesti
+125	2	3	3	quel Virgilio
+125	3	3	3	Virgilio
+125	5	5	5	qual
+125	6	6	6	tu
+126	3	10	3	cantar de li uomini e d'i dèi
+126	3	3	3	cantar
+126	5	6	6	li uomini
+126	6	6	6	uomini
+126	9	10	10	i dèi
+126	10	10	10	dèi
+127	2	6	2	cagion altra al mio rider
+127	2	3	2	cagion altra
+127	5	6	6	mio rider
+128	0	0	0	
+129	1	6	2	quelle parole che di lui dicesti
+129	1	2	2	quelle parole
+129	5	5	5	lui
+130	6	7	7	li piedi
+131	1	3	3	al mio dottor
+131	2	3	3	mio dottor
+131	5	5	5	el
+131	6	6	6	li
+131	8	8	8	Frate
+132	4	4	4	tu
+132	6	6	6	ombra
+132	6	6	6	ombra
+133	2	2	2	ei
+133	6	7	7	la quantitate
+134	3	9	4	l'amor ch'a te mi scalda
+134	3	4	4	l'amor
+134	7	7	7	te
+135	2	2	2	io
+135	4	5	5	nostra vanitate
+136	2	3	3	l'ombre
+136	5	6	5	cosa salda

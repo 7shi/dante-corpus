@@ -1,0 +1,335 @@
+line	start	end	head	text
+1	3	8	4	l'ora che volge il disio
+1	3	4	4	l'ora
+1	7	8	8	il disio
+2	2	2	2	navicanti
+2	5	6	6	il core
+3	1	9	2	lo dì c'han detto ai dolci amici addio
+3	1	2	2	lo dì
+3	7	8	8	dolci amici
+3	9	9	9	addio
+4	3	7	5	lo novo peregrin d'amore
+4	3	5	5	lo novo peregrin
+4	4	5	5	novo peregrin
+4	5	7	5	peregrin d'amore
+4	5	5	5	peregrin
+4	7	7	7	amore
+5	4	6	4	squilla di lontano
+5	4	4	4	squilla
+5	6	6	6	lontano
+6	1	1	1	che
+6	3	4	4	il giorno
+6	4	4	4	giorno
+7	2	2	2	io
+8	1	2	2	l'udire
+8	6	9	6	una de l'alme
+8	8	9	9	l'alme
+9	3	4	4	l'ascoltar
+9	7	7	7	mano
+10	1	1	1	Ella
+10	5	7	7	ambo le palme
+10	6	7	7	le palme
+11	2	3	3	li occhi
+11	5	6	6	l'orïente
+12	4	4	4	Dio
+12	6	6	6	altro
+13	1	3	1	Te lucis ante
+13	1	1	1	Te
+13	2	2	2	lucis
+14	1	1	1	le
+14	4	4	4	bocca
+14	7	9	9	sì dolci note
+14	9	9	9	note
+15	3	3	3	me
+15	3	3	3	me
+15	8	8	8	mente
+16	2	3	3	l'altre
+17	2	2	2	lei
+17	4	7	6	tutto l'inno intero
+17	5	7	6	l'inno intero
+17	5	6	6	l'inno
+18	2	3	3	li occhi
+18	5	7	7	le superne rote
+19	3	3	3	lettor
+19	5	6	6	li occhi
+19	8	8	8	vero
+20	2	3	3	'l velo
+21	3	5	4	'l trapassar dentro
+21	3	4	4	'l trapassar
+22	1	1	1	Io
+22	3	5	4	quello essercito gentile
+23	5	5	5	sùe
+24	0	0	0	
+25	5	6	6	l'alto
+26	1	6	2	due angeli con due spade affocate
+26	1	2	2	due angeli
+26	4	6	5	due spade affocate
+27	5	7	6	le punte sue
+28	3	6	3	fogliette pur mo nate
+28	3	3	3	fogliette
+29	3	3	3	veste
+29	6	7	7	verdi penne
+29	7	7	7	penne
+30	0	0	0	
+31	1	2	2	L'un
+31	5	5	5	noi
+32	2	3	3	l'altro
+32	6	8	8	l'opposita sponda
+33	3	4	4	la gente
+33	6	6	6	mezzo
+34	4	4	4	lor
+34	5	7	6	la testa bionda
+35	3	4	4	la faccia
+35	5	6	6	l'occhio
+36	2	7	2	virtù ch'a troppo si confonda
+36	2	2	2	virtù
+36	5	5	5	troppo
+37	1	1	1	Ambo
+37	4	6	4	grembo di Maria
+37	6	6	6	Maria
+38	2	2	2	Sordello
+38	4	7	4	guardia de la valle
+38	6	7	7	la valle
+39	2	7	3	lo serpente che verrà vie via
+39	2	3	3	lo serpente
+40	2	2	2	io
+40	7	8	8	qual calle
+41	0	0	0	
+42	4	6	6	le fidate spalle
+43	2	2	2	Sordello
+44	2	4	4	le grandi ombre
+44	4	4	4	ombre
+44	8	8	8	esse
+45	3	3	3	lor
+46	1	3	3	Solo tre passi
+46	2	3	3	tre passi
+46	6	6	6	i'
+47	7	9	7	un che mirava
+47	7	7	7	un
+48	2	2	2	me
+49	1	1	1	Temp'
+49	5	6	6	l'aere
+50	6	10	7	li occhi suoi e ' miei
+50	6	8	7	li occhi suoi
+50	6	7	7	li occhi
+50	7	8	7	occhi suoi
+50	10	10	10	miei
+51	3	6	3	ciò che pria serrava
+51	3	3	3	ciò
+52	2	2	2	me
+52	6	6	6	io
+52	8	8	8	lui
+53	1	3	1	giudice Nin gentil
+53	2	3	2	Nin gentil
+53	5	5	5	mi
+54	2	2	2	ti
+54	7	7	7	rei
+55	1	5	3	Nullo bel salutar tra noi
+55	1	3	3	Nullo bel salutar
+55	2	5	3	bel salutar tra noi
+55	2	3	3	bel salutar
+55	3	5	3	salutar tra noi
+55	3	3	3	salutar
+55	5	5	5	noi
+56	6	6	6	tu
+57	2	4	2	piè del monte
+57	2	2	2	piè
+57	4	4	4	monte
+57	6	8	8	le lontane acque
+57	7	8	8	lontane acque
+57	8	8	8	acque
+58	3	3	3	io
+58	4	4	4	lui
+58	7	9	8	i luoghi tristi
+58	8	9	8	luoghi tristi
+59	6	7	7	prima vita
+59	7	7	7	vita
+60	3	4	4	l'altra
+60	4	4	4	altra
+61	4	7	6	la mia risposta udita
+61	4	6	6	la mia risposta
+61	5	7	6	mia risposta udita
+61	5	6	6	mia risposta
+61	6	7	6	risposta udita
+61	6	6	6	risposta
+62	1	3	3	Sordello ed elli
+62	1	1	1	Sordello
+62	3	3	3	elli
+63	2	5	2	gente di sùbito smarrita
+63	2	2	2	gente
+64	1	2	2	L'uno
+64	4	4	4	Virgilio
+64	6	7	7	l'altro
+64	9	9	9	un
+65	6	6	6	Currado
+66	5	5	5	Dio
+66	7	7	7	grazia
+67	4	4	4	me
+67	6	8	8	quel singular grado
+68	2	2	2	tu
+68	5	8	5	colui che sì nasconde
+68	5	5	5	colui
+69	1	4	4	lo suo primo perché
+69	9	9	9	guado
+70	6	8	8	le larghe onde
+71	3	4	3	Giovanna mia
+71	7	7	7	me
+72	4	5	5	li 'nnocenti
+73	4	6	6	la sua madre
+74	4	6	6	le bianche bende
+75	1	2	2	le quai
+75	5	5	5	misera
+76	2	2	2	lei
+76	5	5	5	lieve
+77	3	3	3	femmina
+77	4	6	4	foco d'amor
+77	6	6	6	amor
+78	2	6	3	l'occhio o 'l tatto
+78	2	3	3	l'occhio
+78	2	2	2	l'
+78	5	6	6	'l tatto
+79	4	6	6	sì bella sepultura
+80	1	5	2	la vipera che Melanesi accampa
+80	1	2	2	la vipera
+80	4	4	4	Melanesi
+81	4	7	5	il gallo di Gallura
+81	4	5	5	il gallo
+81	7	7	7	Gallura
+82	5	6	6	la stampa
+83	2	3	3	suo aspetto
+83	5	7	7	quel dritto zelo
+84	1	1	1	che
+84	4	4	4	core
+85	1	4	2	Li occhi miei ghiotti
+85	1	3	2	Li occhi miei
+85	1	2	2	Li occhi
+85	2	4	2	occhi miei ghiotti
+85	2	3	2	occhi miei
+85	2	2	2	occhi
+85	8	8	8	cielo
+86	4	5	5	le stelle
+86	5	5	5	stelle
+87	3	8	3	rota più presso a lo stelo
+87	3	3	3	rota
+87	7	8	8	lo stelo
+87	8	8	8	stelo
+88	2	4	3	'l duca mio
+88	5	5	5	Figliuol
+89	2	2	2	io
+89	4	4	4	lui
+89	6	8	8	quelle tre facelle
+89	7	8	8	tre facelle
+90	3	8	4	'l polo di qua tutto quanto
+90	3	6	4	'l polo di qua
+90	3	4	4	'l polo
+90	4	6	4	polo di qua
+90	6	6	6	qua
+91	2	2	2	elli
+91	4	4	4	me
+91	5	8	8	Le quattro chiare stelle
+92	1	1	1	che
+93	2	2	2	queste
+93	7	7	7	quelle
+94	2	2	2	ei
+94	5	5	5	Sordello
+94	7	7	7	sé
+94	8	8	8	il
+95	4	6	6	'l nostro avversaro
+95	5	6	6	nostro avversaro
+96	3	4	4	il dito
+97	2	7	3	quella parte onde non ha riparo
+97	2	3	3	quella parte
+97	7	7	7	riparo
+98	1	3	3	la picciola vallea
+98	5	6	6	una biscia
+99	5	5	5	Eva
+99	6	8	7	il cibo amaro
+100	2	5	3	l'erba e ' fior
+100	2	3	3	l'erba
+100	5	5	5	fior
+100	7	9	9	la mala striscia
+101	3	3	3	ora
+101	5	5	5	or
+101	6	7	7	la testa
+101	9	10	10	'l dosso
+102	3	6	3	bestia che si liscia
+102	3	3	3	bestia
+103	1	1	1	Io
+104	3	5	4	li astor celestïali
+105	5	6	6	l'uno
+105	8	10	9	l'altro mosso
+105	8	9	9	l'altro
+106	3	4	4	l'aere
+106	6	8	8	le verdi ali
+107	2	3	3	'l serpente
+107	5	6	6	li angeli
+107	8	8	8	volta
+108	3	4	4	le poste
+109	1	8	2	L'ombra che s'era al giudice raccolta
+109	1	2	2	L'ombra
+109	6	7	7	al giudice
+109	7	7	7	giudice
+110	4	6	6	tutto quello assalto
+110	5	6	6	quello assalto
+110	6	6	6	assalto
+111	5	5	5	me
+112	2	8	3	la lucerna che ti mena in alto
+112	2	3	3	la lucerna
+112	8	8	8	alto
+113	3	4	4	tuo arbitrio
+113	5	6	6	tanta cera
+114	3	3	3	mestiere
+114	6	7	7	sommo smalto
+115	2	2	2	ella
+115	4	5	4	novella vera
+116	2	4	2	Val di Magra
+116	4	4	4	Magra
+116	7	8	7	parte vicina
+117	4	4	4	me
+118	3	4	3	Currado Malaspina
+119	3	4	4	l'antico
+119	7	7	7	lui
+120	2	2	2	miei
+120	4	8	5	l'amor che qui raffina
+120	4	5	5	l'amor
+120	6	6	6	che
+121	3	3	3	io
+121	4	4	4	lui
+121	6	8	8	li vostri paesi
+122	0	0	0	
+123	2	3	3	tutta Europa
+123	5	5	5	ei
+124	1	7	2	La fama che la vostra casa onora
+124	1	2	2	La fama
+124	4	6	6	la vostra casa
+125	2	3	3	i segnori
+125	6	7	7	la contrada
+126	5	9	5	chi non vi fu ancora
+127	2	2	2	io
+127	2	2	2	io
+128	2	4	3	vostra gente onrata
+129	2	9	2	pregio de la borsa e de la spada
+129	4	5	5	la borsa
+129	8	9	9	la spada
+130	1	3	3	Uso e natura
+130	1	1	1	Uso
+130	3	3	3	natura
+130	5	5	5	la
+131	3	5	4	il capo reo
+131	6	7	7	il mondo
+132	5	7	7	'l mal cammin
+133	2	2	2	elli
+133	6	7	7	'l sol
+134	1	2	2	sette volte
+134	4	4	4	letto
+134	6	7	7	'l Montone
+135	2	6	6	tutti e quattro i piè
+135	4	6	6	quattro i piè
+135	5	6	6	i piè
+136	2	4	4	cotesta cortese oppinïone
+137	5	8	5	mezzo de la testa
+137	7	8	8	la testa
+138	2	3	3	maggior chiovi
+138	6	7	7	altrui sermone
+139	2	4	2	corso di giudicio
+139	4	4	4	giudicio

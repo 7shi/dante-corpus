@@ -1,0 +1,248 @@
+line	start	end	head	text
+1	2	2	2	Fiorenza
+2	3	3	3	mare
+2	6	6	6	terra
+2	8	9	9	l'ali
+3	3	4	4	lo 'nferno
+3	5	6	6	tuo nome
+4	2	3	3	li ladron
+4	5	6	6	cinque cotali
+5	1	2	2	tuoi cittadini
+5	6	6	6	vergogna
+6	2	2	2	tu
+6	4	5	5	grande orranza
+7	5	7	5	mattin del ver
+7	7	7	7	ver
+8	1	1	1	tu
+8	6	7	7	picciol tempo
+8	7	7	7	tempo
+9	2	9	2	quel che Prato, non ch'altri, t'agogna
+9	4	4	4	Prato
+9	7	7	7	altri
+10	8	8	8	tempo
+11	3	3	3	ei
+12	3	3	3	mi
+12	7	7	7	m'
+13	1	1	1	Noi
+13	7	8	8	le scalee
+14	5	5	5	iborni
+15	2	4	3	'l duca mio
+15	7	7	7	mee
+16	3	5	5	la solinga via
+17	2	3	3	le schegge
+17	6	9	6	rocchi de lo scoglio
+17	8	9	9	lo scoglio
+18	1	5	2	lo piè sanza la man
+18	1	2	2	lo piè
+18	4	5	5	la man
+19	2	2	2	mi
+19	2	2	2	mi
+20	3	4	4	la mente
+20	6	9	6	ciò ch'io vidi
+20	6	6	6	ciò
+20	8	8	8	io
+21	3	4	4	lo 'ngegno
+21	7	7	7	i'
+22	5	5	5	virtù
+23	4	8	4	stella bona o miglior cosa
+23	4	5	4	stella bona
+23	4	4	4	stella
+23	7	8	8	miglior cosa
+23	8	8	8	cosa
+24	4	5	5	'l ben
+24	5	5	5	ben
+24	7	8	7	io stessi
+24	7	7	7	io
+25	2	8	3	'l villan ch'al poggio si riposa
+25	2	3	3	'l villan
+25	6	6	6	poggio
+26	2	8	2	tempo che colui che 'l mondo schiara
+26	2	2	2	tempo
+26	4	8	4	colui che 'l mondo schiara
+26	4	4	4	colui
+26	6	7	7	'l mondo
+27	1	3	2	la faccia sua
+27	5	5	5	noi
+28	2	3	3	la mosca
+28	6	7	7	la zanzara
+29	2	2	2	lucciole
+29	5	6	6	la vallea
+30	5	7	5	vendemmia e ara
+30	5	5	5	vendemmia
+30	7	7	7	ara
+31	2	3	3	tante fiamme
+32	1	3	3	l'ottava bolgia
+32	6	6	6	io
+33	6	7	7	'l fondo
+34	3	9	3	colui che si vengiò con li orsi
+34	3	3	3	colui
+34	8	9	9	li orsi
+35	2	5	3	'l carro d'Elia
+35	2	3	3	'l carro
+35	4	5	5	d'Elia
+35	5	5	5	Elia
+35	7	7	7	dipartire
+36	2	6	3	i cavalli al cielo erti
+36	2	3	3	i cavalli
+36	5	5	5	cielo
+37	2	2	2	nol
+37	6	7	7	li occhi
+38	2	2	2	el
+38	4	4	4	altro
+38	6	8	7	la fiamma sola
+39	3	3	3	nuvoletta
+40	4	4	4	ciascuna
+40	6	7	7	la gola
+41	2	2	2	fosso
+41	4	4	4	nessuna
+41	6	7	7	'l furto
+42	2	3	3	ogne fiamma
+42	4	5	5	un peccatore
+43	1	1	1	Io
+43	4	5	5	'l ponte
+44	4	4	4	io
+44	7	9	8	un ronchion preso
+44	7	8	8	un ronchion
+45	5	6	5	esser urto
+46	2	8	3	'l duca che mi vide tanto atteso
+46	2	3	3	'l duca
+46	5	5	5	mi
+47	3	4	4	dai fuochi
+47	4	4	4	fuochi
+47	6	7	7	li spirti
+48	1	1	1	catun
+48	5	9	5	quel ch'elli è inceso
+48	7	7	7	elli
+49	1	2	1	Maestro mio
+49	4	4	4	io
+50	2	2	2	io
+50	9	9	9	avviso
+51	0	0	0	
+52	1	1	1	chi
+52	4	9	5	quel foco che vien sì diviso
+52	4	5	5	quel foco
+53	7	8	8	la pira
+54	2	2	2	Eteòcle
+54	3	4	4	col fratel
+54	4	4	4	fratel
+55	3	3	3	me
+56	1	3	1	Ulisse e Dïomede
+56	1	1	1	Ulisse
+56	3	3	3	Dïomede
+57	2	3	3	la vendetta
+57	7	8	8	l'ira
+58	4	6	6	la lor fiamma
+59	1	8	2	l'agguato del caval che fé la porta
+59	3	8	4	del caval che fé la porta
+59	4	8	4	caval che fé la porta
+59	7	8	8	la porta
+60	3	4	4	de' Romani
+60	5	7	7	il gentil seme
+61	3	4	4	l'arte
+62	1	1	1	Deïdamìa
+62	5	6	6	d'Achille
+63	2	4	4	del Palladio pena
+63	2	3	3	del Palladio
+64	2	2	2	ei
+64	6	7	7	quelle faville
+64	7	7	7	faville
+65	3	3	3	io
+65	4	4	4	maestro
+65	6	6	6	ten
+66	4	5	5	'l priego
+66	5	5	5	priego
+66	7	7	7	mille
+67	6	7	7	l'attender
+68	3	5	4	la fiamma cornuta
+69	4	6	4	disio ver' lei
+69	6	6	6	lei
+70	2	2	2	elli
+70	4	4	4	me
+70	5	7	7	La tua preghiera
+71	2	3	3	molta loda
+71	5	5	5	io
+71	7	7	7	l'
+72	4	6	6	la tua lingua
+73	4	4	4	me
+73	6	6	6	i'
+74	1	4	1	ciò che tu vuoi
+74	3	3	3	tu
+74	6	6	6	ei
+75	2	2	2	e'
+75	4	4	4	greci
+75	7	8	8	tuo detto
+75	8	8	8	detto
+76	3	4	4	la fiamma
+77	4	5	5	mio duca
+77	6	8	6	tempo e loco
+77	6	6	6	tempo
+77	8	8	8	loco
+78	2	3	3	questa forma
+78	4	4	4	lui
+79	2	9	2	voi che siete due dentro ad un foco
+79	2	2	2	voi
+79	5	9	5	due dentro ad un foco
+79	5	5	5	due
+79	8	9	9	un foco
+80	2	2	2	io
+80	2	2	2	io
+80	5	5	5	voi
+81	2	2	2	io
+81	5	5	5	voi
+82	3	3	3	mondo
+82	4	6	6	li alti versi
+82	6	6	6	versi
+83	5	8	6	l'un di voi
+83	5	6	6	l'un
+83	8	8	8	voi
+84	3	3	3	lui
+84	6	6	6	morir
+85	1	7	3	Lo maggior corno de la fiamma antica
+85	1	3	3	Lo maggior corno
+85	5	7	6	la fiamma antica
+86	0	0	0	
+87	3	3	3	quella
+87	5	5	5	vento
+88	2	3	3	la cima
+89	3	6	4	la lingua che parlasse
+89	3	4	4	la lingua
+90	2	4	2	voce di fuori
+90	2	2	2	voce
+90	4	4	4	fuori
+91	4	4	4	Circe
+92	4	5	5	un anno
+92	9	9	9	Gaeta
+93	4	4	4	Enëa
+94	2	4	2	dolcezza di figlio
+94	4	4	4	figlio
+94	6	7	7	la pieta
+95	2	3	3	vecchio padre
+95	5	7	7	'l debito amore
+96	1	2	2	lo qual
+96	4	4	4	Penelopè
+97	5	5	5	me
+97	6	7	7	l'ardore
+97	7	7	7	ardore
+98	2	2	2	i'
+98	6	7	7	del mondo
+98	7	7	7	mondo
+99	2	5	4	de li vizi umani
+99	3	5	4	li vizi umani
+99	4	5	4	vizi umani
+99	4	4	4	vizi
+99	7	8	8	del valore
+99	8	8	8	valore
+100	3	3	3	me
+100	5	8	7	l'alto mare aperto
+101	3	4	4	un legno
+101	7	8	8	quella compagna
+102	3	4	4	la qual
+103	1	3	3	L'un lito
+103	5	6	6	l'altro
+103	9	10	10	la Spagna
+104	3	3	3	Morrocco
+104	5	9	6	l'isola d'i Sardi
+104	8	9	9	i Sardi
+105	2	8	3	l'altre che quel mare intorno bagna
+105	2	3	3	l'altre
+105	5	6	6	quel mare

@@ -1,0 +1,367 @@
+line	start	end	head	text
+1	1	1	1	Io
+1	5	6	6	quell' ombre
+2	3	7	4	l'orme del mio duca
+2	6	7	7	mio duca
+3	3	5	3	retro a me
+3	5	5	5	me
+3	7	8	8	'l dito
+4	1	1	1	una
+5	1	8	2	lo raggio da sinistra a quel di sotto
+5	1	2	2	lo raggio
+5	4	4	4	sinistra
+5	6	8	6	quel di sotto
+5	8	8	8	sotto
+6	6	6	6	si
+7	1	2	2	Li occhi
+7	4	8	5	al suon di questo motto
+7	5	8	5	suon di questo motto
+7	7	8	8	questo motto
+8	5	5	5	maraviglia
+9	2	2	2	me
+9	2	2	2	me
+9	6	10	7	'l lume ch'era rotto
+9	6	7	7	'l lume
+10	2	4	3	l'animo tuo
+11	2	3	3	'l maestro
+11	5	6	6	l'andare
+12	4	8	4	ciò che quivi si pispiglia
+12	4	4	4	ciò
+13	4	4	4	me
+13	8	9	9	le genti
+14	3	4	3	torre ferma
+15	3	4	4	la cima
+15	6	8	6	soffiar di venti
+15	8	8	8	venti
+16	3	8	4	l'omo in cui pensier rampolla
+16	3	4	4	l'omo
+16	7	7	7	pensier
+17	2	2	2	pensier
+17	4	4	4	sé
+17	6	7	7	il segno
+18	2	3	3	la foga
+18	4	8	5	l'un de l'altro
+18	4	5	5	l'un
+18	7	8	8	l'altro
+19	1	1	1	Che
+19	3	3	3	io
+19	7	7	7	Io
+20	2	5	2	alquanto del color consperso
+20	4	5	4	color consperso
+20	4	4	4	color
+21	1	1	1	che
+21	3	8	4	l'uom di perdon talvolta degno
+21	3	4	4	l'uom
+21	6	6	6	perdon
+22	4	7	5	la costa di traverso
+22	4	5	5	la costa
+22	5	7	5	costa di traverso
+22	7	7	7	traverso
+23	2	2	2	genti
+23	5	5	5	noi
+23	6	7	7	un poco
+24	2	2	2	Miserere
+24	4	4	4	verso
+24	4	4	4	verso
+25	5	5	5	i'
+25	8	8	8	loco
+26	2	4	4	lo mio corpo
+26	6	9	6	trapassar d'i raggi
+26	8	9	9	i raggi
+27	1	3	1	mutar lor canto
+27	2	3	3	lor canto
+27	5	9	6	un «oh!» lungo e roco
+28	2	4	2	due di loro
+28	4	4	4	loro
+28	6	8	6	forma di messaggi
+28	8	8	8	messaggi
+29	4	4	4	noi
+30	2	3	3	vostra condizion
+30	5	5	5	saggi
+31	2	4	4	'l mio maestro
+31	5	5	5	Voi
+32	4	7	4	color che vi mandaro
+32	4	4	4	color
+33	2	5	3	'l corpo di costui
+33	3	5	3	corpo di costui
+33	5	5	5	costui
+33	7	8	8	vera carne
+34	4	6	6	la sua ombra
+34	5	6	6	sua ombra
+35	2	2	2	io
+35	6	6	6	lor
+36	2	2	2	onore
+36	6	6	6	lor
+37	1	2	1	Vapori accesi
+37	5	5	5	io
+38	2	3	3	prima notte
+38	3	3	3	notte
+38	6	6	6	sereno
+39	2	2	2	sol
+39	4	6	4	nuvole d'agosto
+39	6	6	6	agosto
+40	2	2	2	color
+40	7	7	7	meno
+41	5	6	6	li altri
+41	8	8	8	noi
+41	10	10	10	volta
+42	2	6	2	schiera che scorre sanza freno
+42	2	2	2	schiera
+42	6	6	6	freno
+43	1	6	2	Questa gente che preme a noi
+43	1	2	2	Questa gente
+43	2	6	2	gente che preme a noi
+43	6	6	6	noi
+44	4	4	4	pregar
+44	6	7	7	'l poeta
+45	6	6	6	andando
+46	2	7	2	anima che vai per esser lieta
+46	2	2	2	anima
+47	2	7	3	quelle membra con le quai nascesti
+47	2	3	3	quelle membra
+47	3	3	3	membra
+47	5	6	6	le quai
+48	3	4	4	un poco
+48	5	6	6	il passo
+48	6	6	6	passo
+49	3	5	3	alcun di noi
+49	5	5	5	noi
+50	4	4	4	lui
+50	7	7	7	novella
+51	7	7	7	t'
+52	1	1	1	Noi
+52	3	3	3	tutti
+52	6	6	6	forza
+53	2	2	2	peccatori
+53	5	7	7	l'ultima ora
+53	7	7	7	ora
+54	2	4	2	lume del ciel
+54	4	4	4	ciel
+54	5	5	5	ne
+55	0	0	0	
+56	2	2	2	vita
+56	5	5	5	Dio
+57	3	6	3	disio di sé veder
+57	3	5	3	disio di sé
+57	3	3	3	disio
+57	5	6	6	sé veder
+57	5	5	5	sé
+57	6	6	6	veder
+57	7	7	7	n'
+58	2	2	2	io
+58	5	7	6	vostri visi guati
+59	3	3	3	alcun
+59	7	7	7	voi
+60	1	4	1	cosa ch'io possa
+60	3	3	3	io
+60	5	7	5	spiriti ben nati
+61	1	1	1	voi
+61	4	4	4	io
+61	7	8	8	quella pace
+62	4	8	4	piedi di sì fatta guida
+62	6	8	8	sì fatta guida
+63	2	2	2	mondo
+63	2	2	2	mondo
+63	5	5	5	cercar
+64	2	2	2	uno
+64	4	4	4	Ciascun
+65	2	3	2	beneficio tuo
+65	2	2	2	beneficio
+66	3	4	4	'l voler
+66	4	4	4	voler
+67	2	2	2	io
+67	7	8	8	li altri
+68	1	1	1	ti
+68	6	7	7	quel paese
+69	4	8	4	Romagna e quel di Carlo
+69	4	4	4	Romagna
+69	6	8	6	quel di Carlo
+69	8	8	8	Carlo
+70	2	2	2	tu
+70	6	7	7	tuoi prieghi
+71	2	2	2	Fano
+71	7	7	7	me
+72	3	3	3	i'
+72	6	8	8	le gravi offese
+73	3	3	3	io
+73	5	7	7	li profondi fóri
+74	3	4	4	'l sangue
+74	7	7	7	quale
+74	8	8	8	io
+75	5	5	5	grembo
+75	7	8	8	li Antenori
+76	3	3	3	io
+77	1	3	1	quel da Esti
+77	3	3	3	Esti
+77	4	4	4	il
+77	7	7	7	che
+77	8	8	8	m'
+77	11	11	11	ira
+78	0	0	0	
+79	3	3	3	io
+79	7	8	8	la Mira
+80	5	5	5	Orïaco
+81	6	6	6	si
+82	2	3	3	al palude
+82	3	3	3	palude
+82	5	6	6	le cannucce
+82	6	6	6	cannucce
+82	8	9	9	'l braco
+82	9	9	9	braco
+83	1	1	1	m'
+83	10	10	10	io
+84	2	4	4	le mie vene
+84	3	4	4	mie vene
+84	4	4	4	vene
+84	7	7	7	terra
+84	8	8	8	laco
+85	3	4	4	un altro
+85	7	8	8	quel disio
+86	7	9	9	l'alto monte
+87	2	3	3	buona pïetate
+87	5	6	6	il mio
+88	1	1	1	Io
+88	4	4	4	Montefeltro
+88	5	5	5	io
+88	7	7	7	Bonconte
+89	1	1	1	Giovanna
+89	3	3	3	altri
+89	7	7	7	me
+89	8	8	8	cura
+90	3	3	3	io
+90	6	6	6	costor
+90	8	9	9	bassa fronte
+90	9	9	9	fronte
+91	2	2	2	io
+91	4	4	4	lui
+91	5	9	6	Qual forza o qual ventura
+91	5	6	6	Qual forza
+91	8	9	9	qual ventura
+92	6	6	6	Campaldino
+93	6	7	7	tua sepultura
+94	3	3	3	elli
+94	5	7	5	piè del Casentino
+94	6	7	7	del Casentino
+94	7	7	7	Casentino
+95	2	8	3	un'acqua c'ha nome l'Archiano
+95	2	3	3	un'acqua
+95	6	8	6	nome l'Archiano
+95	7	8	8	l'Archiano
+96	3	4	4	l'Ermo
+96	7	7	7	Apennino
+97	3	5	4	'l vocabol suo
+97	4	5	4	vocabol suo
+97	4	4	4	vocabol
+98	2	3	2	io forato
+98	2	2	2	io
+98	5	6	6	la gola
+98	6	6	6	gola
+99	3	3	3	piede
+99	6	7	7	il piano
+99	7	7	7	piano
+100	3	7	4	la vista e la parola
+100	3	4	4	la vista
+100	6	7	7	la parola
+101	2	4	2	nome di Maria
+101	4	4	4	Maria
+102	4	7	6	la mia carne sola
+102	4	6	6	la mia carne
+102	5	7	6	mia carne sola
+102	5	6	6	mia carne
+102	6	7	6	carne sola
+102	6	6	6	carne
+103	1	1	1	Io
+103	3	3	3	vero
+103	5	5	5	tu
+103	6	6	6	'l
+103	9	9	9	vivi
+104	1	4	2	l'angel di Dio
+104	1	2	2	l'angel
+104	4	4	4	Dio
+104	8	10	8	quel d'inferno
+104	10	10	10	inferno
+105	3	5	3	tu del ciel
+105	3	3	3	tu
+105	5	5	5	ciel
+106	1	1	1	Tu
+106	5	8	8	di costui l'etterno
+106	6	6	6	costui
+106	7	8	8	l'etterno
+107	2	7	3	una lagrimetta che 'l mi toglie
+107	2	3	3	una lagrimetta
+107	5	5	5	'l
+108	2	2	2	io
+108	4	8	8	de l'altro altro governo
+108	5	6	6	l'altro
+108	7	8	8	altro governo
+109	5	6	6	l'aere
+110	1	7	3	quell' umido vapor che in acqua riede
+110	1	3	3	quell' umido vapor
+110	6	6	6	acqua
+111	5	6	6	'l freddo
+111	7	7	7	il
+112	2	8	4	quel mal voler che pur mal chiede
+112	2	4	4	quel mal voler
+112	3	4	4	mal voler
+113	2	3	3	lo 'ntelletto
+113	6	7	7	il fummo
+113	9	10	10	'l vento
+114	2	7	3	la virtù che sua natura diede
+114	2	3	3	la virtù
+114	5	6	6	sua natura
+115	2	3	3	la valle
+115	5	6	6	'l dì
+116	2	2	2	Pratomagno
+116	4	5	5	gran giogo
+117	2	2	2	nebbia
+117	4	7	5	'l ciel di sopra
+117	4	5	5	'l ciel
+118	3	5	5	'l pregno aere
+118	7	7	7	acqua
+119	1	2	2	la pioggia
+119	6	6	6	fossati
+120	2	2	2	lei
+120	3	8	3	ciò che la terra non sofferse
+120	3	3	3	ciò
+120	5	6	6	la terra
+121	4	5	4	rivi grandi
+122	2	6	3	lo fiume real tanto veloce
+123	4	4	4	nulla
+123	5	5	5	la
+124	1	4	2	Lo corpo mio gelato
+124	1	2	2	Lo corpo
+124	2	4	2	corpo mio gelato
+124	7	8	8	la foce
+125	2	4	3	l'Archian rubesto
+125	2	3	3	l'Archian
+125	3	4	3	Archian rubesto
+125	6	6	6	quel
+126	2	3	3	l'Arno
+126	3	3	3	Arno
+126	7	8	8	mio petto
+126	9	10	10	la croce
+127	2	2	2	i'
+127	5	5	5	me
+127	7	8	8	'l dolor
+128	3	4	4	le ripe
+128	7	8	8	lo fondo
+129	3	4	4	sua preda
+129	5	5	5	mi
+130	3	3	3	tu
+130	7	7	7	mondo
+131	4	6	6	la lunga via
+132	2	4	4	'l terzo spirito
+132	6	6	6	secondo
+133	3	3	3	me
+133	4	4	4	che
+133	6	7	7	la Pia
+134	1	1	1	Siena
+134	2	2	2	mi
+134	5	5	5	Maremma
+135	2	5	2	colui che 'nnanellata pria
+135	2	2	2	colui
+135	3	5	3	che 'nnanellata pria
+135	3	3	3	che
+136	2	2	2	m'
+136	5	7	7	la sua gemma
+136	6	7	7	sua gemma

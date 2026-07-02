@@ -1,0 +1,405 @@
+line	start	end	head	text
+1	3	3	3	stupore
+1	5	7	7	la mia guida
+1	6	7	7	mia guida
+1	7	7	7	guida
+2	4	6	4	parvol che ricorre
+2	4	4	4	parvol
+3	5	5	5	si
+4	2	2	2	quella
+4	4	6	4	madre che soccorre
+4	4	4	4	madre
+5	3	6	3	figlio palido e anelo
+5	3	3	3	figlio
+6	2	4	4	la sua voce
+6	4	4	4	voce
+6	6	7	7	'l suol
+6	7	7	7	suol
+7	1	1	1	mi
+7	5	5	5	tu
+7	5	5	5	tu
+7	10	10	10	cielo
+8	4	4	4	tu
+8	6	7	7	'l cielo
+9	2	6	2	ciò che ci si fa
+9	2	2	2	ciò
+9	9	10	10	buon zelo
+10	2	2	2	t'
+10	5	6	6	il canto
+11	2	2	2	io
+11	6	6	6	lo
+12	3	4	4	'l grido
+12	5	5	5	t'
+13	2	2	2	qual
+13	6	8	7	i prieghi suoi
+14	2	2	2	ti
+14	5	6	6	la vendetta
+15	1	1	1	che
+15	2	2	2	tu
+15	2	2	2	tu
+16	1	5	2	La spada di qua sù
+16	1	2	2	La spada
+16	2	5	2	spada di qua sù
+16	2	2	2	spada
+16	4	5	5	qua sù
+16	9	9	9	fretta
+17	6	8	6	parer di colui
+17	6	6	6	parer
+17	8	8	8	colui
+18	5	5	5	l'
+19	5	5	5	altrui
+20	2	4	4	assai illustri spiriti
+20	4	4	4	spiriti
+21	3	3	3	io
+21	5	7	6	l'aspetto redui
+21	6	6	6	aspetto
+22	3	3	3	lei
+22	5	6	6	li occhi
+22	6	6	6	occhi
+23	3	4	4	cento sperule
+23	4	4	4	sperule
+24	5	6	6	mutüi rai
+24	6	6	6	rai
+25	1	1	1	Io
+25	4	8	4	quei che 'n sé repreme
+25	4	4	4	quei
+25	7	7	7	sé
+26	1	4	2	la punta del disio
+26	1	2	2	la punta
+26	3	4	4	del disio
+26	4	4	4	disio
+27	2	2	2	domandar
+27	4	5	5	del troppo
+27	5	5	5	troppo
+28	2	3	3	la maggiore
+28	5	7	7	la più luculenta
+29	2	5	3	quelle margherite innanzi fessi
+30	4	4	4	sé
+30	5	8	7	la mia voglia contenta
+31	4	4	4	lei
+31	7	7	7	tu
+32	2	2	2	io
+32	3	8	4	la carità che tra noi arde
+32	3	4	4	la carità
+32	7	7	7	noi
+33	1	3	3	li tuoi concetti
+34	3	3	3	tu
+35	2	4	4	l'alto fine
+35	5	5	5	io
+35	8	8	8	risposta
+36	3	3	3	pensier
+36	5	5	5	che
+37	1	9	2	Quel monte a cui Cassino è ne la costa
+37	1	2	2	Quel monte
+37	5	5	5	Cassino
+37	8	9	9	la costa
+38	6	7	7	la cima
+39	2	7	3	la gente ingannata e mal disposta
+39	2	3	3	la gente
+40	2	2	2	quel
+40	4	4	4	io
+41	1	8	2	lo nome di colui che 'n terra addusse
+41	1	2	2	lo nome
+41	4	8	4	colui che 'n terra addusse
+41	4	4	4	colui
+41	7	7	7	terra
+42	1	6	2	la verità che tanto ci soblima
+42	1	2	2	la verità
+43	2	3	3	tanta grazia
+43	5	5	5	me
+44	2	2	2	io
+44	4	6	5	le ville circunstanti
+45	2	8	3	l'empio cólto che 'l mondo sedusse
+45	2	4	3	l'empio cólto
+45	6	7	7	'l mondo
+46	1	5	3	Questi altri fuochi tutti contemplanti
+46	1	3	3	Questi altri fuochi
+46	2	5	3	altri fuochi tutti contemplanti
+46	2	3	3	altri fuochi
+46	3	5	3	fuochi tutti contemplanti
+46	3	3	3	fuochi
+47	1	1	1	uomini
+47	5	6	6	quel caldo
+47	6	6	6	caldo
+48	4	8	5	i fiori e ' frutti santi
+48	4	5	5	i fiori
+48	5	8	5	fiori e ' frutti santi
+48	5	5	5	fiori
+48	7	8	7	frutti santi
+48	7	8	7	frutti santi
+48	7	7	7	frutti
+49	3	3	3	Maccario
+49	6	6	6	Romoaldo
+50	3	5	4	li frati miei
+50	4	5	4	frati miei
+50	4	4	4	frati
+50	9	9	9	chiostri
+51	2	3	3	li piedi
+51	3	3	3	piedi
+51	6	8	7	il cor saldo
+51	7	8	7	cor saldo
+51	7	7	7	cor
+52	2	2	2	io
+52	4	4	4	lui
+52	5	8	6	L'affetto che dimostri
+52	5	6	6	L'affetto
+52	7	7	7	che
+53	4	6	6	la buona sembianza
+54	1	1	1	ch'
+54	2	2	2	io
+54	7	10	9	tutti li ardor vostri
+54	8	10	9	li ardor vostri
+54	9	10	9	ardor vostri
+55	2	2	2	m'
+55	5	6	6	mia fidanza
+56	2	3	3	'l sol
+56	5	6	6	la rosa
+57	4	4	4	ell'
+57	7	7	7	possanza
+58	5	5	5	tu
+58	6	6	6	padre
+59	2	2	2	io
+59	2	2	2	io
+59	5	6	6	tanta grazia
+60	4	5	4	imagine scoverta
+61	2	2	2	elli
+61	3	3	3	Frate
+61	4	7	7	il tuo alto disio
+62	5	7	7	l'ultima spera
+63	4	6	6	tutti li altri
+63	5	6	6	li altri
+63	8	9	9	'l mio
+64	0	0	0	
+65	1	2	2	ciascuna disïanza
+65	4	5	4	quella sola
+66	2	3	3	ogne parte
+67	5	5	5	loco
+68	2	3	3	nostra scala
+68	3	3	3	scala
+68	6	6	6	essa
+69	4	4	4	viso
+70	4	4	4	la
+70	6	7	7	il patriarca
+71	1	1	1	Iacobbe
+71	3	5	5	la superna parte
+72	2	2	2	li
+72	4	7	7	d'angeli sì carca
+72	5	5	5	angeli
+73	5	5	5	nessun
+74	2	2	2	terra
+74	3	4	4	i piedi
+74	6	8	7	la regola mia
+75	4	7	4	danno de le carte
+75	6	7	7	le carte
+76	1	6	2	Le mura che solieno esser badia
+76	1	2	2	Le mura
+76	6	6	6	badia
+77	3	3	3	spelonche
+77	5	6	6	le cocolle
+78	1	1	1	sacca
+78	5	6	5	farina ria
+79	2	3	3	grave usura
+80	2	5	3	'l piacer di Dio
+80	5	5	5	Dio
+80	7	8	8	quel frutto
+81	3	6	4	il cor de' monaci
+81	5	6	6	de' monaci
+82	3	4	4	la Chiesa
+82	6	6	6	tutto
+83	3	8	4	la gente che per Dio dimanda
+83	3	4	4	la gente
+83	7	7	7	Dio
+84	3	3	3	parenti
+84	6	8	6	altro più brutto
+84	6	6	6	altro
+85	1	5	2	La carne d'i mortali
+85	4	5	5	i mortali
+86	5	6	6	buon cominciamento
+87	2	5	2	nascer de la quercia
+87	4	5	5	la quercia
+87	7	9	7	far la ghianda
+87	8	9	9	la ghianda
+88	1	1	1	Pier
+88	4	4	4	oro
+88	7	7	7	argento
+89	2	2	2	io
+89	4	4	4	orazione
+89	7	7	7	digiuno
+90	2	2	2	Francesco
+90	4	6	6	il suo convento
+90	5	6	6	suo convento
+91	4	7	5	'l principio di ciascuno
+91	4	5	5	'l principio
+91	5	7	5	principio di ciascuno
+91	5	5	5	principio
+91	7	7	7	ciascuno
+92	0	0	0	
+93	1	1	1	tu
+93	3	6	4	del bianco fatto bruno
+93	3	4	4	del bianco
+93	4	6	4	bianco fatto bruno
+93	4	4	4	bianco
+93	6	6	6	bruno
+94	2	4	2	Iordan vòlto retrorso
+94	2	2	2	Iordan
+95	4	5	5	'l mar
+95	8	8	8	Dio
+96	6	7	7	'l soccorso
+97	2	2	2	mi
+97	6	6	6	si
+98	1	3	3	al suo collegio
+98	2	3	3	suo collegio
+98	3	3	3	collegio
+98	3	3	3	collegio
+98	5	6	6	'l collegio
+98	7	7	7	si
+99	3	3	3	turbo
+99	7	7	7	s'
+100	1	3	3	La dolce donna
+100	6	6	6	lor
+100	7	7	7	mi
+101	2	4	4	un sol cenno
+101	7	8	8	quella scala
+102	2	3	3	sua virtù
+102	4	6	6	la mia natura
+103	0	0	0	
+104	3	5	5	sì ratto moto
+105	6	8	8	la mia ala
+106	2	2	2	io
+106	5	5	5	lettore
+106	7	8	8	quel divoto
+107	1	1	1	trïunfo
+107	3	4	4	lo quale
+107	5	5	5	io
+108	1	3	3	le mie peccata
+108	3	3	3	peccata
+108	5	6	6	'l petto
+108	6	6	6	petto
+109	1	1	1	tu
+109	5	6	6	tanto tratto
+110	1	2	2	nel foco
+110	2	2	2	foco
+110	3	4	4	il dito
+110	7	7	7	io
+110	9	10	10	'l segno
+111	3	4	4	il Tauro
+111	9	9	9	esso
+112	2	3	3	glorïose stelle
+112	3	3	3	stelle
+112	5	6	5	lume pregno
+112	5	5	5	lume
+113	2	3	3	gran virtù
+113	3	3	3	virtù
+113	5	5	5	quale
+113	6	6	6	io
+114	1	1	1	tutto
+114	2	2	2	qual
+114	6	8	8	il mio ingegno
+114	7	8	8	mio ingegno
+114	8	8	8	ingegno
+115	2	2	2	voi
+116	1	8	1	quelli ch'è padre d'ogne mortal vita
+116	1	1	1	quelli
+116	4	8	4	padre d'ogne mortal vita
+116	6	8	8	ogne mortal vita
+117	2	2	2	io
+117	6	8	7	l'aere tosco
+118	6	6	6	grazia
+119	4	9	6	l'alta rota che vi gira
+119	4	6	6	l'alta rota
+119	6	6	6	rota
+120	1	3	3	la vostra regïon
+120	2	3	3	vostra regïon
+120	3	3	3	regïon
+121	2	2	2	voi
+122	1	3	2	l'anima mia
+122	1	2	2	l'anima
+122	2	3	2	anima mia
+122	2	2	2	anima
+122	6	6	6	virtute
+123	2	8	2	passo forte che a sé la tira
+123	2	3	2	passo forte
+123	2	2	2	passo
+123	6	6	6	sé
+123	7	7	7	la
+124	1	1	1	Tu
+124	6	8	8	l'ultima salute
+125	2	2	2	Bëatrice
+125	4	4	4	tu
+126	2	7	3	le luci tue chiare e acute
+127	5	5	5	tu
+128	6	7	7	quanto mondo
+129	2	3	3	li piedi
+129	6	6	6	ti
+130	3	5	5	'l tuo cor
+131	4	6	5	la turba trïunfante
+132	5	7	6	questo etera tondo
+133	1	2	2	Col viso
+133	2	2	2	viso
+133	5	6	5	tutte quante
+133	5	5	5	tutte
+133	6	6	6	quante
+134	1	3	3	le sette spere
+134	2	3	3	sette spere
+134	3	3	3	spere
+134	6	7	7	questo globo
+134	7	7	7	globo
+135	3	3	3	io
+135	6	8	8	suo vil sembiante
+135	7	8	8	vil sembiante
+135	8	8	8	sembiante
+136	2	3	3	quel consiglio
+136	3	3	3	consiglio
+136	5	5	5	migliore
+137	2	2	2	l'
+137	5	5	5	meno
+137	7	7	7	chi
+137	9	9	9	altro
+138	5	5	5	probo
+139	2	6	3	la figlia di Latona incensa
+139	2	5	3	la figlia di Latona
+139	2	3	3	la figlia
+139	3	6	3	figlia di Latona incensa
+139	3	5	3	figlia di Latona
+139	5	5	5	Latona
+140	2	7	3	quell' ombra che mi fu cagione
+140	2	3	3	quell' ombra
+140	3	3	3	ombra
+140	7	7	7	cagione
+141	4	4	4	la
+142	1	5	2	L'aspetto del tuo nato
+142	1	2	2	L'aspetto
+142	4	5	5	tuo nato
+142	6	6	6	Iperïone
+143	0	0	0	
+144	5	5	5	lui
+144	6	8	6	Maia e Dïone
+144	6	6	6	Maia
+144	8	8	8	Dïone
+145	4	7	5	il temperar di Giove
+145	4	5	5	il temperar
+145	7	7	7	Giove
+146	2	6	3	'l padre e 'l figlio
+146	2	3	3	'l padre
+146	5	6	6	'l figlio
+147	1	7	2	il varïar che fanno di lor dove
+147	1	2	2	il varïar
+147	6	6	6	lor
+148	2	4	2	tutti e sette
+148	2	2	2	tutti
+148	4	4	4	sette
+148	5	5	5	mi
+148	6	6	6	si
+149	0	0	0	
+150	5	6	6	distante riparo
+151	1	7	2	L'aiuola che ci fa tanto feroci
+151	1	2	2	L'aiuola
+151	4	4	4	ci
+152	2	2	2	io
+152	4	6	6	li etterni Gemelli
+153	2	2	2	m'
+153	2	2	2	m'
+153	5	5	5	colli
+153	7	8	8	le foci
+154	3	4	4	li occhi
+154	6	8	7	li occhi belli

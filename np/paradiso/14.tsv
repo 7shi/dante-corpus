@@ -1,0 +1,350 @@
+line	start	end	head	text
+1	2	2	2	centro
+1	2	2	2	centro
+1	4	4	4	cerchio
+1	4	4	4	cerchio
+2	2	3	3	l'acqua
+2	5	7	7	un ritondo vaso
+3	2	2	2	ch'
+3	5	5	5	fuori
+3	7	7	7	dentro
+4	2	4	4	la mia mente
+4	3	4	4	mia mente
+4	6	7	7	sùbito caso
+5	1	4	1	questo ch'io dico
+5	1	1	1	questo
+5	3	3	3	io
+6	1	5	3	la glorïosa vita di Tommaso
+6	1	3	3	la glorïosa vita
+6	3	5	3	vita di Tommaso
+6	5	5	5	Tommaso
+7	2	5	3	la similitudine che nacque
+7	2	3	3	la similitudine
+8	2	3	3	suo parlare
+8	6	8	6	quel di Beatrice
+8	8	8	8	Beatrice
+9	2	2	2	cui
+9	6	6	6	lui
+10	2	2	2	costui
+10	4	4	4	mestieri
+11	3	4	4	la voce
+12	2	8	5	un altro vero andare a la radice
+12	2	5	5	un altro vero andare
+12	3	5	5	altro vero andare
+12	4	5	5	vero andare
+12	7	8	8	la radice
+13	3	7	4	la luce onde s'infiora
+13	3	4	4	la luce
+14	1	2	2	vostra sustanza
+14	5	5	5	voi
+15	4	4	4	ell'
+16	0	0	0	
+17	0	0	0	
+18	4	5	5	al veder
+18	7	7	7	vi
+18	8	8	8	nòi
+19	3	4	4	più letizia
+20	2	3	3	la fïata
+20	4	8	4	quei che vanno a rota
+20	4	4	4	quei
+20	8	8	8	rota
+21	2	3	3	la voce
+21	6	7	7	li atti
+22	3	7	4	l'orazion pronta e divota
+22	4	7	4	orazion pronta e divota
+22	4	4	4	orazion
+23	1	2	2	li santi
+23	2	2	2	santi
+23	5	6	6	nova gioia
+23	6	6	6	gioia
+24	2	2	2	torneare
+24	5	7	6	la mira nota
+24	6	7	6	mira nota
+24	6	6	6	mira
+25	1	1	1	Qual
+26	2	2	2	viver
+27	1	6	2	lo refrigerio de l'etterna ploia
+27	1	2	2	lo refrigerio
+27	4	6	6	l'etterna ploia
+28	1	6	2	Quell' uno e due e tre
+28	1	2	2	Quell' uno
+28	2	6	2	uno e due e tre
+28	2	2	2	uno
+28	4	4	4	due
+28	6	6	6	tre
+29	5	11	5	tre e 'n due e 'n uno
+29	5	5	5	tre
+29	8	8	8	due
+29	11	11	11	uno
+30	1	2	2	non circunscritto
+30	4	4	4	tutto
+31	1	2	2	tre volte
+31	6	6	6	ciascuno
+32	2	6	3	quelli spirti con tal melodia
+32	2	3	3	quelli spirti
+32	3	6	3	spirti con tal melodia
+32	5	6	6	tal melodia
+33	3	4	4	ogne merto
+33	6	7	7	giusto muno
+34	2	2	2	io
+34	5	8	6	la luce più dia
+34	6	8	6	luce più dia
+35	1	3	3	del minor cerchio
+35	2	3	3	minor cerchio
+35	4	6	5	una voce modesta
+35	5	6	5	voce modesta
+36	5	6	6	l'angelo
+36	8	8	8	Maria
+37	5	6	6	la festa
+38	2	2	2	paradiso
+38	4	6	6	il nostro amore
+39	4	5	5	cotal vesta
+40	1	3	3	La sua chiarezza
+40	5	6	6	l'ardore
+41	1	2	2	l'ardor
+41	3	4	4	la visïone
+41	6	6	6	quella
+42	4	4	4	grazia
+42	6	7	7	suo valore
+43	2	6	3	la carne glorïosa e santa
+43	3	6	3	carne glorïosa e santa
+44	3	5	5	la nostra persona
+44	4	5	5	nostra persona
+45	5	7	5	esser tutta quanta
+45	6	7	7	tutta quanta
+46	5	8	5	ciò che ne dona
+46	5	5	5	ciò
+47	2	3	3	gratüito lume
+47	3	3	3	lume
+47	4	6	6	il sommo bene
+47	5	6	6	sommo bene
+47	6	6	6	bene
+48	1	7	1	lume ch'a lui veder ne condiziona
+48	1	1	1	lume
+48	4	4	4	lui
+48	5	5	5	veder
+49	2	3	3	la visïon
+50	2	8	3	l'ardor che di quella s'accende
+50	2	3	3	l'ardor
+50	6	6	6	quella
+51	2	7	3	lo raggio che da esso vene
+51	2	3	3	lo raggio
+51	6	6	6	esso
+52	4	7	4	carbon che fiamma rende
+52	4	4	4	carbon
+52	6	6	6	fiamma
+53	3	4	4	vivo candor
+53	4	4	4	candor
+53	5	5	5	quella
+54	3	5	5	la sua parvenza
+54	4	5	5	sua parvenza
+54	5	5	5	parvenza
+55	2	7	3	questo folgór che già ne cerchia
+55	2	3	3	questo folgór
+55	6	6	6	ne
+56	4	4	4	apparenza
+56	6	7	7	la carne
+57	2	3	3	tutto dì
+57	4	5	5	la terra
+58	3	4	4	tanta luce
+59	2	5	3	li organi del corpo
+59	2	3	3	li organi
+59	3	5	3	organi del corpo
+59	5	5	5	corpo
+60	2	6	3	tutto ciò che potrà dilettarne
+60	2	3	3	tutto ciò
+60	3	6	3	ciò che potrà dilettarne
+61	2	2	2	mi
+62	2	7	7	l'uno e l'altro coro
+62	2	3	3	l'uno
+62	5	7	7	l'altro coro
+62	5	6	6	l'altro
+62	10	10	10	Amme
+63	4	8	4	disio d'i corpi morti
+63	4	4	4	disio
+63	6	8	7	i corpi morti
+63	7	8	7	corpi morti
+64	5	5	5	lor
+64	8	9	9	le mamme
+65	2	3	3	li padri
+65	6	10	7	li altri che fuor cari
+65	6	7	7	li altri
+66	4	5	5	sempiterne fiamme
+67	5	6	5	chiarezza pari
+67	5	5	5	chiarezza
+68	2	3	3	un lustro
+68	5	8	5	quel che v'era
+69	2	6	2	guisa d'orizzonte che rischiari
+69	2	4	2	guisa d'orizzonte
+69	4	6	4	orizzonte che rischiari
+69	4	4	4	orizzonte
+70	5	8	5	salir di prima sera
+70	7	8	8	prima sera
+71	3	4	4	lo ciel
+71	5	6	6	nove parvenze
+72	3	4	4	la vista
+73	3	4	4	novelle sussistenze
+74	6	7	7	un giro
+75	4	7	7	l'altre due circunferenze
+76	2	6	3	vero sfavillar del Santo Spiro
+76	3	6	3	sfavillar del Santo Spiro
+76	5	6	6	Santo Spiro
+77	2	2	2	si
+78	2	8	3	li occhi miei che, vinti, nol soffriro
+78	2	4	3	li occhi miei
+78	3	4	3	occhi miei
+78	6	6	6	vinti
+79	2	6	2	Bëatrice sì bella e ridente
+79	2	2	2	Bëatrice
+80	6	7	7	quelle vedute
+80	7	7	7	vedute
+81	7	8	8	la mente
+81	8	8	8	mente
+82	3	5	4	li occhi miei
+82	6	6	6	virtute
+83	0	0	0	
+84	3	4	4	mia donna
+84	6	8	8	più alta salute
+85	4	4	4	io
+85	4	4	4	io
+86	2	7	4	l'affocato riso de la stella
+86	2	4	4	l'affocato riso
+86	4	7	4	riso de la stella
+86	6	7	7	la stella
+87	7	8	8	l'usato
+88	2	4	4	tutto 'l core
+88	3	4	4	'l core
+88	7	8	8	quella favella
+89	1	1	1	ch'
+89	3	5	3	una in tutti
+89	3	3	3	una
+89	5	5	5	tutti
+89	7	7	7	Dio
+89	9	9	9	olocausto
+90	1	1	1	qual
+90	4	6	5	la grazia novella
+91	6	7	7	mio petto
+92	1	4	2	l'ardor del sacrificio
+92	4	4	4	sacrificio
+92	6	6	6	io
+93	1	2	2	esso litare
+94	3	7	4	tanto lucore e tanto robbi
+94	3	4	4	tanto lucore
+94	6	7	7	tanto robbi
+95	1	1	1	m'
+95	3	3	3	splendor
+95	6	7	7	due raggi
+96	2	2	2	io
+96	5	5	5	Elïòs
+96	8	8	8	li
+97	4	6	4	minori e maggi
+97	4	4	4	minori
+97	6	6	6	maggi
+98	1	1	1	lumi
+98	4	6	4	poli del mondo
+98	6	6	6	mondo
+99	1	1	1	Galassia
+99	7	7	7	saggi
+100	4	5	5	nel profondo
+101	1	1	1	Marte
+101	2	3	3	quei raggi
+101	4	6	6	il venerabil segno
+102	3	7	3	giunture di quadranti in tondo
+102	3	5	3	giunture di quadranti
+102	5	7	5	quadranti in tondo
+102	5	5	5	quadranti
+102	7	7	7	tondo
+103	3	5	4	la memoria mia
+103	6	7	7	lo 'ngegno
+104	2	3	3	quella croce
+104	5	5	5	Cristo
+105	3	3	3	io
+105	7	8	7	essempro degno
+106	2	8	2	chi prende sua croce e segue Cristo
+106	4	5	5	sua croce
+106	8	8	8	Cristo
+107	5	8	5	quel ch'io lasso
+107	7	7	7	io
+108	3	4	4	quell' albor
+108	6	6	6	Cristo
+109	2	2	2	corno
+109	2	2	2	corno
+109	7	11	8	la cima e 'l basso
+109	7	8	8	la cima
+109	10	11	11	'l basso
+110	3	3	3	lumi
+111	2	3	2	congiugnersi insieme
+111	2	2	2	congiugnersi
+111	6	6	6	trapasso
+112	5	7	5	diritte e torte
+113	1	3	1	veloci e tarde
+113	5	5	5	vista
+114	1	8	2	le minuzie d'i corpi, lunghe e corte
+114	1	5	2	le minuzie d'i corpi
+114	1	2	2	le minuzie
+114	5	5	5	corpi
+114	6	8	6	lunghe e corte
+115	3	7	4	lo raggio onde si lista
+115	3	4	4	lo raggio
+116	2	7	3	l'ombra che, per sua difesa
+116	2	3	3	l'ombra
+116	6	7	7	sua difesa
+117	1	2	2	la gente
+117	4	6	4	ingegno e arte
+117	4	4	4	ingegno
+117	6	6	6	arte
+118	3	5	3	giga e arpa
+118	3	3	3	giga
+118	5	5	5	arpa
+118	7	8	7	tempra tesa
+118	7	7	7	tempra
+119	2	3	3	molte corde
+119	3	3	3	corde
+119	5	6	6	dolce tintinno
+119	6	6	6	tintinno
+120	2	2	2	tal
+120	5	6	6	la nota
+120	6	6	6	nota
+121	3	7	3	lumi che lì m'apparinno
+121	3	3	3	lumi
+122	4	5	5	la croce
+122	5	5	5	croce
+122	6	7	7	una melode
+122	7	7	7	melode
+123	6	7	7	l'inno
+123	7	7	7	inno
+124	2	2	2	m'
+124	4	4	4	io
+124	6	6	6	elli
+124	9	10	10	alte lode
+125	4	4	4	me
+125	6	8	6	Resurgi» e «Vinci
+125	6	6	6	Resurgi
+125	8	8	8	Vinci
+126	3	8	3	colui che non intende e ode
+126	3	3	3	colui
+127	1	1	1	Ïo
+128	7	8	8	alcuna cosa
+128	8	8	8	cosa
+129	2	2	2	mi
+129	5	7	7	sì dolci vinci
+129	7	7	7	vinci
+130	2	4	4	la mia parola
+131	2	7	3	il piacer de li occhi belli
+131	5	7	6	li occhi belli
+132	1	2	2	ne' quai
+132	4	5	5	mio disio
+132	7	7	7	posa
+133	2	2	2	chi
+133	6	8	8	i vivi suggelli
+134	2	3	3	ogne bellezza
+135	3	3	3	io
+135	10	10	10	quelli
+136	4	8	4	quel ch'io m'accuso
+136	6	6	6	io
+137	6	6	6	vero
+138	2	4	3	'l piacer santo
+138	3	4	3	piacer santo
+138	3	3	3	piacer
+139	2	2	2	si
+139	5	6	6	più sincero

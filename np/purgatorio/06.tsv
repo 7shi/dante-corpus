@@ -1,0 +1,394 @@
+line	start	end	head	text
+1	4	8	5	il gioco de la zara
+1	4	5	5	il gioco
+1	5	8	5	gioco de la zara
+1	7	8	8	la zara
+2	1	3	1	colui che perde
+2	1	1	1	colui
+3	2	3	3	le volte
+4	2	3	3	l'altro
+4	7	9	9	tutta la gente
+4	8	9	9	la gente
+5	1	1	1	qual
+5	1	1	1	qual
+5	7	7	7	dietro
+5	8	8	8	il
+6	2	2	2	qual
+6	4	4	4	li
+6	8	8	8	mente
+7	1	1	1	el
+7	3	3	3	s'
+7	6	8	6	questo e quello
+7	6	6	6	questo
+7	8	8	8	quello
+8	2	2	2	cui
+8	4	5	5	la man
+8	9	9	9	pressa
+9	4	5	5	la calca
+9	6	6	6	si
+10	3	3	3	io
+10	5	7	6	quella turba spessa
+11	3	3	3	loro
+11	8	9	9	la faccia
+12	6	6	6	essa
+13	3	4	4	l'Aretin
+13	7	8	8	le braccia
+14	3	5	3	Ghin di Tacco
+14	5	5	5	Tacco
+14	7	8	8	la morte
+15	2	3	3	l'altro
+15	8	8	8	caccia
+16	4	6	5	le mani sporte
+17	1	2	1	Federigo Novello
+17	4	6	4	quel da Pisa
+17	6	6	6	Pisa
+18	4	7	6	lo buon Marzucco forte
+19	2	3	3	conte Orso
+19	2	2	2	conte
+19	5	7	6	l'anima divisa
+19	5	6	6	l'anima
+20	2	3	2	corpo suo
+20	2	2	2	corpo
+20	5	5	5	astio
+20	8	8	8	inveggia
+21	6	7	6	colpa commisa
+21	6	6	6	colpa
+22	1	4	1	Pier da la Broccia
+22	3	4	4	la Broccia
+23	5	8	6	la donna di Brabante
+23	8	8	8	Brabante
+24	7	8	8	peggior greggia
+25	5	6	5	tutte quante
+26	1	8	2	quell' ombre che pregar pur ch'altri prieghi
+26	1	2	2	quell' ombre
+26	2	8	2	ombre che pregar pur ch'altri prieghi
+26	2	2	2	ombre
+26	7	7	7	altri
+27	5	7	6	lor divenir sante
+28	0	0	0	
+29	2	3	2	luce mia
+29	6	7	7	alcun testo
+30	2	4	2	decreto del cielo
+30	4	4	4	cielo
+30	5	5	5	orazion
+31	2	3	3	questa gente
+31	7	7	7	questo
+32	3	5	4	loro speme vana
+32	3	4	4	loro speme
+32	4	5	4	speme vana
+33	3	3	3	m'
+33	5	7	6	'l detto tuo
+33	5	6	6	'l detto
+33	6	7	6	detto tuo
+34	2	2	2	elli
+34	4	4	4	me
+34	5	7	7	La mia scrittura
+35	2	5	3	la speranza di costor
+35	5	5	5	costor
+36	6	8	7	la mente sana
+37	2	4	2	cima di giudicio
+37	4	4	4	giudicio
+38	2	4	2	foco d'amor
+38	4	4	4	amor
+38	7	8	8	un punto
+39	1	1	1	ciò
+39	5	5	5	chi
+40	4	4	4	io
+40	6	7	7	cotesto punto
+41	5	5	5	pregar
+41	6	6	6	difetto
+42	2	5	3	'l priego da Dio
+42	2	3	3	'l priego
+42	5	5	5	Dio
+43	3	5	5	così alto sospetto
+44	5	5	5	quella
+45	2	2	2	lume
+45	5	9	6	'l vero e lo 'ntelletto
+45	5	6	6	'l vero
+45	8	9	9	lo 'ntelletto
+46	5	5	5	io
+46	7	8	8	di Beatrice
+46	8	8	8	Beatrice
+47	1	1	1	tu
+47	2	2	2	la
+47	8	9	9	la vetta
+47	9	9	9	vetta
+48	1	3	3	di questo monte
+48	2	3	3	questo monte
+48	3	3	3	monte
+49	2	2	2	io
+49	3	3	3	Segnore
+49	6	7	7	maggior fretta
+49	7	7	7	fretta
+50	4	4	4	m'
+51	5	6	6	'l poggio
+51	6	6	6	poggio
+51	7	8	8	l'ombra
+51	8	8	8	ombra
+52	1	1	1	Noi
+52	4	6	5	questo giorno innanzi
+52	4	5	5	questo giorno
+52	5	6	5	giorno innanzi
+53	0	0	0	
+54	2	3	3	'l fatto
+54	6	7	7	altra forma
+55	0	0	0	
+56	1	8	1	colui che già si cuopre de la costa
+56	1	1	1	colui
+56	7	8	8	la costa
+57	3	4	4	suoi raggi
+57	4	4	4	raggi
+57	5	5	5	tu
+58	4	5	5	un'anima
+59	4	4	4	noi
+60	1	1	1	quella
+60	4	7	5	la via più tosta
+61	3	3	3	lei
+61	5	6	5	anima lombarda
+62	2	2	2	ti
+63	3	6	3	mover de li occhi
+63	5	6	6	li occhi
+64	1	1	1	Ella
+64	5	6	6	alcuna cosa
+65	0	0	0	
+66	2	4	2	guisa di leon
+66	4	4	4	leon
+67	2	2	2	Virgilio
+67	6	6	6	lei
+68	4	6	6	la miglior salita
+69	2	2	2	quella
+69	6	7	7	suo dimando
+70	3	4	4	nostro paese
+70	7	8	8	la vita
+71	4	6	6	'l dolce duca
+72	1	1	1	Mantüa
+72	3	8	4	l'ombra, tutta in sé romita
+72	3	4	4	l'ombra
+72	7	7	7	sé
+73	3	3	3	lui
+73	5	8	5	loco ove pria stava
+73	5	5	5	loco
+74	3	3	3	Mantoano
+74	4	4	4	io
+74	6	6	6	Sordello
+75	2	4	4	la tua terra
+75	6	7	7	l'un
+75	8	9	9	l'altro
+76	2	3	3	serva Italia
+76	4	6	6	di dolore ostello
+76	5	5	5	dolore
+77	1	6	1	nave sanza nocchiere in gran tempesta
+77	1	3	1	nave sanza nocchiere
+77	3	3	3	nocchiere
+77	5	6	6	gran tempesta
+78	2	4	2	donna di province
+78	4	4	4	province
+78	6	6	6	bordello
+79	1	3	2	Quell' anima gentil
+79	2	3	2	anima gentil
+80	3	9	5	lo dolce suon de la sua terra
+80	3	5	5	lo dolce suon
+80	4	9	5	dolce suon de la sua terra
+80	4	5	5	dolce suon
+80	5	9	5	suon de la sua terra
+80	7	9	9	la sua terra
+80	8	9	9	sua terra
+81	3	5	4	al cittadin suo
+81	4	5	4	cittadin suo
+81	7	7	7	festa
+82	4	4	4	te
+82	8	8	8	guerra
+83	1	3	3	li vivi tuoi
+83	5	6	6	l'un
+83	7	8	8	l'altro
+84	2	9	2	quei ch'un muro e una fossa serra
+84	2	2	2	quei
+84	4	8	5	un muro e una fossa
+84	4	5	5	un muro
+84	7	8	8	una fossa
+85	2	2	2	misera
+85	5	6	6	le prode
+86	1	3	3	le tue marine
+86	9	9	9	seno
+87	2	3	3	alcuna parte
+87	5	5	5	te
+87	7	7	7	pace
+88	1	1	1	Che
+88	6	7	7	il freno
+89	1	1	1	Iustinïano
+89	3	4	4	la sella
+90	2	2	2	esso
+90	4	5	5	la vergogna
+91	2	6	2	gente che dovresti esser devota
+91	2	2	2	gente
+92	4	4	4	Cesare
+92	6	7	7	la sella
+93	4	8	4	ciò che Dio ti nota
+93	4	4	4	ciò
+93	6	6	6	Dio
+94	3	4	4	esta fiera
+95	6	7	7	li sproni
+96	4	4	4	mano
+96	6	7	7	la predella
+97	2	5	2	Alberto tedesco ch'abbandoni
+97	2	3	2	Alberto tedesco
+97	2	2	2	Alberto
+98	1	7	1	costei ch'è fatta indomita e selvaggia
+98	1	1	1	costei
+99	4	6	6	li suoi arcioni
+99	6	6	6	arcioni
+100	1	5	2	giusto giudicio da le stelle
+100	1	2	2	giusto giudicio
+100	4	5	5	le stelle
+101	2	4	4	'l tuo sangue
+101	3	4	4	tuo sangue
+102	3	5	5	'l tuo successor
+102	4	5	5	tuo successor
+102	6	6	6	temenza
+103	3	7	3	tu e 'l tuo padre
+103	3	3	3	tu
+103	5	7	7	'l tuo padre
+103	6	7	7	tuo padre
+103	7	7	7	padre
+104	2	2	2	cupidigia
+105	2	6	3	'l giardin de lo 'mperio
+105	2	3	3	'l giardin
+105	3	6	3	giardin de lo 'mperio
+105	3	3	3	giardin
+105	5	6	6	lo 'mperio
+105	6	6	6	'mperio
+106	4	6	4	Montecchi e Cappelletti
+106	4	4	4	Montecchi
+106	6	6	6	Cappelletti
+107	1	3	1	Monaldi e Filippeschi
+107	1	1	1	Monaldi
+107	3	3	3	Filippeschi
+107	4	6	4	uom sanza cura
+107	6	6	6	cura
+108	1	3	1	color già tristi
+108	5	7	5	questi con sospetti
+108	7	7	7	sospetti
+109	2	2	2	crudel
+109	6	7	7	la pressura
+110	2	4	4	i tuoi gentili
+110	7	8	8	lor magagne
+111	3	3	3	Santafior
+112	4	8	6	la tua Roma che piagne
+112	4	6	6	la tua Roma
+112	6	6	6	Roma
+113	5	7	5	dì e notte
+113	5	5	5	dì
+113	7	7	7	notte
+114	1	2	1	Cesare mio
+114	1	1	1	Cesare
+115	4	5	5	la gente
+116	3	5	3	nulla di noi
+116	5	5	5	noi
+116	6	6	6	pietà
+117	6	8	8	la tua fama
+118	7	8	8	sommo Giove
+118	8	8	8	Giove
+119	4	4	4	terra
+119	6	6	6	noi
+120	2	7	4	li giusti occhi tuoi rivolti altrove
+120	2	5	4	li giusti occhi tuoi
+120	2	4	4	li giusti occhi
+120	3	5	4	giusti occhi tuoi
+120	3	4	4	giusti occhi
+120	4	5	4	occhi tuoi
+120	4	4	4	occhi
+121	3	3	3	preparazion
+121	6	7	7	l'abisso
+121	7	7	7	abisso
+122	2	3	3	tuo consiglio
+122	3	3	3	consiglio
+122	6	7	7	alcun bene
+122	7	7	7	bene
+123	2	2	2	tutto
+123	4	7	5	l'accorger nostro scisso
+123	4	5	5	l'accorger
+123	5	7	5	accorger nostro scisso
+123	5	5	5	accorger
+124	2	7	3	le città d'Italia tutte piene
+124	2	5	3	le città d'Italia
+124	3	5	3	città d'Italia
+124	5	5	5	Italia
+125	3	3	3	tiranni
+125	5	6	6	un Marcel
+126	1	5	2	ogne villan che parteggiando viene
+126	1	2	2	ogne villan
+126	2	2	2	villan
+127	1	2	1	Fiorenza mia
+127	1	1	1	Fiorenza
+128	2	7	3	questa digression che non ti tocca
+128	2	3	3	questa digression
+128	3	3	3	digression
+129	1	7	1	mercé del popol tuo che si argomenta
+129	1	1	1	mercé
+129	3	7	3	popol tuo che si argomenta
+129	3	4	3	popol tuo
+129	3	3	3	popol
+130	1	1	1	Molti
+130	3	5	3	giustizia in cuore
+130	5	5	5	cuore
+131	5	5	5	consiglio
+131	7	8	8	l'arco
+132	2	4	3	il popol tuo
+132	3	4	3	popol tuo
+132	5	5	5	l'
+132	8	11	8	sommo de la bocca
+132	10	11	11	la bocca
+133	1	1	1	Molti
+133	3	5	5	lo comune incarco
+134	2	5	3	il popol tuo solicito
+135	2	2	2	chiamare
+135	5	5	5	I'
+136	6	6	6	tu
+136	8	9	9	ben onde
+137	1	2	1	tu ricca
+137	1	1	1	tu
+137	1	1	1	tu
+137	1	1	1	tu
+137	3	5	3	tu con pace
+137	5	5	5	pace
+137	7	9	7	tu con senno
+137	9	9	9	senno
+138	2	2	2	io
+138	4	5	5	'l ver
+138	6	7	7	l'effetto
+139	1	3	1	Atene e Lacedemona
+139	1	1	1	Atene
+139	3	3	3	Lacedemona
+140	1	3	3	l'antiche leggi
+140	2	3	3	antiche leggi
+141	3	4	3	viver bene
+141	5	7	7	un picciol cenno
+141	6	7	7	picciol cenno
+142	1	3	1	verso di te
+142	3	3	3	te
+142	4	4	4	che
+143	1	1	1	provedimenti
+143	4	5	4	mezzo novembre
+143	5	5	5	novembre
+144	3	3	3	quel
+144	4	4	4	che
+144	5	5	5	tu
+144	7	7	7	ottobre
+145	1	2	2	Quante volte
+145	3	6	4	del tempo che rimembre
+145	4	6	4	tempo che rimembre
+146	1	1	1	legge
+146	2	2	2	moneta
+146	3	3	3	officio
+146	5	5	5	costume
+147	2	2	2	tu
+147	5	6	6	rinovate membre
+148	8	8	8	lume
+149	2	6	2	te somigliante a quella inferma
+149	2	2	2	te
+149	5	6	6	quella inferma
+150	5	5	5	posa
+150	8	9	9	le piume
+151	3	4	3	dar volta
+151	4	4	4	volta
+151	5	6	6	suo dolore

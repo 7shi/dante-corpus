@@ -1,0 +1,338 @@
+line	start	end	head	text
+1	2	2	2	me
+1	6	8	7	la città dolente
+2	2	2	2	me
+2	6	8	8	l'etterno dolore
+3	2	2	2	me
+3	6	8	8	la perduta gente
+4	1	1	1	Giustizia
+4	3	6	6	il mio alto fattore
+5	2	4	4	la divina podestate
+6	1	3	3	la somma sapïenza
+6	5	7	7	'l primo amore
+7	3	3	3	me
+7	6	7	6	cose create
+8	3	3	3	etterne
+8	5	5	5	io
+9	2	3	3	ogne speranza
+9	4	4	4	voi
+10	1	5	2	Queste parole di colore oscuro
+10	2	5	2	parole di colore oscuro
+10	4	5	4	colore oscuro
+11	2	2	2	ïo
+11	5	8	5	sommo d'una porta
+11	7	8	8	una porta
+12	3	3	3	io
+12	4	4	4	Maestro
+12	5	7	6	il senso lor
+13	2	2	2	elli
+13	4	4	4	me
+13	6	7	6	persona accorta
+14	5	6	6	ogne sospetto
+15	1	2	2	ogne viltà
+16	1	1	1	Noi
+16	5	10	5	loco ov' i' t'ho detto
+16	5	5	5	loco
+16	7	7	7	i'
+17	2	2	2	tu
+17	4	6	5	le genti dolorose
+17	5	6	5	genti dolorose
+18	4	8	5	il ben de l'intelletto
+18	4	5	5	il ben
+18	5	8	5	ben de l'intelletto
+18	7	8	8	l'intelletto
+19	4	6	6	la sua mano
+19	8	9	9	la mia
+20	2	3	3	lieto volto
+20	5	5	5	io
+21	5	7	7	le segrete cose
+22	2	6	2	sospiri, pianti e alti guai
+22	2	2	2	sospiri
+22	3	3	3	pianti
+22	5	6	6	alti guai
+22	6	6	6	guai
+23	3	6	4	l'aere sanza stelle
+23	4	6	4	aere sanza stelle
+23	6	6	6	stelle
+24	3	3	3	io
+24	4	5	5	al cominciar
+24	5	5	5	cominciar
+25	1	2	2	Diverse lingue
+25	3	4	4	orribili favelle
+26	1	3	1	parole di dolore
+26	3	3	3	dolore
+26	4	6	4	accenti d'ira
+26	6	6	6	ira
+27	1	4	1	voci alte e fioche
+27	6	10	6	suon di man con elle
+27	8	10	8	man con elle
+27	8	8	8	man
+27	10	10	10	elle
+28	2	3	3	un tumulto
+28	4	5	5	il qual
+29	3	7	4	quell' aura sanza tempo tinta
+29	4	7	4	aura sanza tempo tinta
+29	6	6	6	tempo
+30	2	3	3	la rena
+30	5	5	5	turbo
+31	2	2	2	io
+31	5	9	8	d'error la testa cinta
+31	6	6	6	error
+31	7	9	8	la testa cinta
+31	7	8	8	la testa
+32	2	2	2	Maestro
+32	5	8	5	quel ch'i' odo
+32	5	5	5	quel
+32	7	7	7	i'
+33	2	3	3	che gent'
+33	3	3	3	gent'
+33	8	8	8	duol
+34	2	2	2	elli
+34	4	4	4	me
+34	5	7	7	Questo misero modo
+35	2	6	3	l'anime triste di coloro
+35	2	4	3	l'anime triste
+35	6	6	6	coloro
+36	4	4	4	'nfamia
+36	7	7	7	lodo
+37	4	6	6	quel cattivo coro
+38	2	7	3	li angeli che non furon ribelli
+38	2	3	3	li angeli
+38	7	7	7	ribelli
+39	3	3	3	fedeli
+39	5	5	5	Dio
+39	8	8	8	sé
+40	2	3	3	i ciel
+41	2	4	4	lo profondo inferno
+42	2	3	3	alcuna gloria
+42	4	5	5	i rei
+42	8	8	8	elli
+43	2	2	2	io
+43	3	3	3	Maestro
+43	4	4	4	che
+44	2	8	2	lor che lamentar li fa sì forte
+44	2	2	2	lor
+44	3	3	3	che
+44	4	4	4	lamentar
+44	5	5	5	li
+45	3	4	4	molto breve
+45	4	4	4	breve
+46	1	1	1	Questi
+46	4	6	4	speranza di morte
+46	6	6	6	morte
+47	2	5	5	la lor cieca vita
+48	5	7	7	ogne altra sorte
+49	1	3	1	Fama di loro
+49	3	3	3	loro
+49	4	5	5	il mondo
+50	1	3	1	misericordia e giustizia
+50	1	1	1	misericordia
+50	3	3	3	giustizia
+50	4	4	4	li
+51	4	4	4	lor
+52	2	2	2	io
+52	6	7	7	una 'nsegna
+53	1	1	1	che
+54	1	1	1	che
+54	3	4	4	ogne posa
+55	3	3	3	le
+55	5	7	7	sì lunga tratta
+56	2	2	2	gente
+56	4	4	4	i'
+57	2	3	2	morte tanta
+57	4	4	4	n'
+58	3	3	3	io
+58	6	7	7	alcun riconosciuto
+59	4	7	5	l'ombra di colui
+59	4	5	5	l'ombra
+59	7	7	7	colui
+60	1	1	1	che
+60	4	4	4	viltade
+60	5	7	7	il gran rifiuto
+61	0	0	0	
+62	2	2	2	questa
+62	4	8	5	la setta d'i cattivi
+62	4	5	5	la setta
+62	7	8	8	i cattivi
+63	2	2	2	Dio
+63	6	7	6	nemici sui
+64	1	2	2	Questi sciaurati
+64	2	2	2	sciaurati
+65	0	0	0	
+66	2	2	2	mosconi
+66	5	8	5	vespe ch'eran ivi
+66	5	5	5	vespe
+67	1	1	1	Elle
+67	3	7	7	lor di sangue il volto
+67	3	3	3	lor
+67	4	7	7	di sangue il volto
+67	5	5	5	sangue
+67	6	7	7	il volto
+68	1	1	1	che
+68	4	4	4	lagrime
+68	6	7	7	lor piedi
+69	2	3	3	fastidiosi vermi
+70	7	7	7	mi
+71	2	2	2	genti
+71	4	9	5	la riva d'un gran fiume
+71	4	5	5	la riva
+71	7	9	9	un gran fiume
+72	3	3	3	io
+72	5	5	5	Maestro
+72	7	7	7	mi
+73	2	2	2	i'
+73	4	4	4	quali
+73	7	8	8	qual costume
+74	1	1	1	le
+75	2	2	2	i'
+75	5	7	7	lo fioco lume
+76	2	2	2	elli
+76	4	4	4	me
+76	5	6	6	Le cose
+76	9	9	9	conte
+77	2	2	2	noi
+77	4	6	6	li nostri passi
+78	2	6	4	la trista riviera d'Acheronte
+78	2	4	4	la trista riviera
+78	6	6	6	Acheronte
+79	3	7	4	li occhi vergognosi e bassi
+79	4	7	4	occhi vergognosi e bassi
+79	4	4	4	occhi
+80	3	5	5	'l mio dir
+80	4	5	5	mio dir
+80	5	5	5	dir
+80	6	6	6	li
+81	3	5	3	fiume del parlar
+81	5	5	5	parlar
+81	6	6	6	mi
+82	4	4	4	noi
+82	7	7	7	nave
+83	1	6	2	un vecchio, bianco per antico pelo
+83	1	2	2	un vecchio
+83	5	6	6	antico pelo
+84	2	4	2	Guai a voi
+84	2	2	2	Guai
+84	4	4	4	voi
+84	5	6	5	anime prave
+85	5	6	6	lo cielo
+86	1	1	1	i'
+86	6	8	8	l'altra riva
+87	2	4	3	le tenebre etterne
+87	6	6	6	caldo
+87	9	9	9	gelo
+88	2	2	2	tu
+88	3	3	3	che
+88	6	7	6	anima viva
+89	3	6	3	cotesti che son morti
+89	3	3	3	cotesti
+89	4	4	4	che
+90	6	6	6	io
+91	3	4	4	altra via
+91	6	7	7	altri porti
+92	3	3	3	piaggia
+93	1	3	3	più lieve legno
+94	2	3	3	'l duca
+94	4	4	4	lui
+94	5	5	5	Caron
+95	0	0	0	
+96	1	4	1	ciò che si vuole
+96	1	1	1	ciò
+97	4	6	6	le lanose gote
+98	2	6	2	nocchier de la livida palude
+98	4	6	6	la livida palude
+99	4	5	5	li occhi
+99	8	9	8	fiamme rote
+100	2	3	3	quell' anime
+100	3	3	3	anime
+101	2	2	2	colore
+101	5	6	6	i denti
+101	6	6	6	denti
+102	4	6	5	le parole crude
+102	5	6	5	parole crude
+102	5	5	5	parole
+103	2	5	2	Dio e lor parenti
+103	2	2	2	Dio
+103	4	5	5	lor parenti
+104	1	12	3	l'umana spezie e 'l loco e 'l tempo e 'l seme
+104	1	3	3	l'umana spezie
+104	5	6	6	'l loco
+104	8	9	9	'l tempo
+104	11	12	12	'l seme
+105	2	3	3	lor semenza
+105	6	7	7	lor nascimenti
+106	4	5	4	tutte quante
+106	4	4	4	tutte
+106	5	5	5	quante
+107	4	6	5	la riva malvagia
+107	5	6	5	riva malvagia
+108	3	8	4	ciascun uom che Dio non teme
+108	3	4	4	ciascun uom
+108	6	6	6	Dio
+109	1	2	2	Caron dimonio
+109	1	1	1	Caron
+109	2	2	2	dimonio
+109	4	6	4	occhi di bragia
+109	4	4	4	occhi
+109	6	6	6	bragia
+110	1	1	1	loro
+110	3	3	3	tutte
+110	4	4	4	le
+111	3	3	3	remo
+111	4	6	4	qualunque s'adagia
+111	4	4	4	qualunque
+112	3	3	3	autunno
+112	6	7	7	le foglie
+113	1	2	2	l'una
+113	5	6	6	l'altra
+113	9	10	10	'l ramo
+114	3	4	4	la terra
+114	5	8	8	tutte le sue spoglie
+114	6	8	8	le sue spoglie
+114	7	8	8	sue spoglie
+115	2	6	4	il mal seme d'Adamo
+115	3	6	4	mal seme d'Adamo
+115	4	6	4	seme d'Adamo
+115	6	6	6	Adamo
+116	3	4	4	quel lito
+116	6	6	6	una
+116	6	6	6	una
+117	2	2	2	cenni
+117	4	7	4	augel per suo richiamo
+117	4	4	4	augel
+117	6	7	7	suo richiamo
+117	7	7	7	richiamo
+118	6	8	7	l'onda bruna
+119	0	0	0	
+120	4	5	5	nuova schiera
+121	1	2	1	Figliuol mio
+121	4	6	5	'l maestro cortese
+122	1	8	1	quelli che muoion ne l'ira di Dio
+122	5	8	6	l'ira di Dio
+122	8	8	8	Dio
+123	5	6	6	ogne paese
+124	6	7	7	lo rio
+125	2	4	4	la divina giustizia
+125	5	5	5	li
+126	3	4	4	la tema
+126	8	8	8	disio
+127	5	6	5	anima buona
+128	4	4	4	Caron
+128	6	6	6	te
+129	6	8	8	'l suo dir
+130	2	2	2	questo
+130	3	5	5	la buia campagna
+131	6	7	7	lo spavento
+132	1	4	2	la mente di sudore
+132	1	2	2	la mente
+132	4	4	4	sudore
+132	6	6	6	mi
+133	1	3	2	La terra lagrimosa
+133	2	3	2	terra lagrimosa
+133	5	5	5	vento
+134	3	5	4	una luce vermiglia
+134	4	5	4	luce vermiglia
+135	1	2	2	la qual
+135	5	6	6	ciascun sentimento
+136	4	8	5	l'uom cui sonno piglia
+136	4	5	5	l'uom
+136	7	7	7	sonno

@@ -1,0 +1,311 @@
+line	start	end	head	text
+1	2	3	3	l'augello
+1	5	7	7	l'amate fronde
+2	2	7	3	al nido de' suoi dolci nati
+2	3	7	3	nido de' suoi dolci nati
+2	5	7	7	suoi dolci nati
+3	1	7	2	la notte che le cose ci nasconde
+3	1	2	2	la notte
+3	4	5	5	le cose
+4	1	1	1	che
+4	4	6	5	li aspetti disïati
+5	4	8	5	lo cibo onde li pasca
+5	4	5	5	lo cibo
+5	7	7	7	li
+6	2	2	2	che
+6	3	4	4	gravi labor
+6	5	5	5	li
+7	2	3	3	il tempo
+7	5	7	7	su aperta frasca
+7	6	7	7	aperta frasca
+8	3	4	4	ardente affetto
+8	5	6	6	il sole
+9	5	6	6	l'alba
+10	2	4	3	la donna mïa
+10	3	4	3	donna mïa
+11	5	6	6	la plaga
+12	2	3	3	la quale
+12	4	5	5	il sol
+12	7	8	8	men fretta
+13	4	4	4	io
+14	2	2	2	qual
+14	4	6	4	quei che disïando
+14	4	4	4	quei
+15	1	1	1	altro
+16	2	2	2	poco
+16	5	7	7	uno e altro
+16	5	5	5	uno
+16	7	7	7	altro
+17	2	3	3	mio attender
+17	3	3	3	attender
+17	7	7	7	vedere
+18	1	2	2	lo ciel
+18	2	2	2	ciel
+19	2	2	2	Bëatrice
+19	5	6	6	le schiere
+20	2	4	2	trïunfo di Cristo
+20	4	4	4	Cristo
+20	6	8	8	tutto 'l frutto
+21	3	6	3	girar di queste spere
+21	5	6	6	queste spere
+22	3	5	5	'l suo viso
+23	2	3	3	li occhi
+23	6	6	6	letizia
+24	5	5	5	costrutto
+25	3	4	3	plenilunïi sereni
+26	1	1	1	Trivïa
+26	4	6	5	le ninfe etterne
+27	1	1	1	che
+27	3	4	4	lo ciel
+27	6	8	8	tutti i seni
+28	2	2	2	i'
+28	4	6	4	migliaia di lucerne
+28	6	6	6	lucerne
+29	1	7	2	un sol che tutte quante l'accendea
+29	1	2	2	un sol
+29	4	5	4	tutte quante
+30	3	4	4	'l nostro
+30	5	7	6	le viste superne
+31	3	5	5	la viva luce
+32	1	5	3	la lucente sustanza tanto chiara
+33	2	3	2	viso mio
+33	6	6	6	la
+34	2	2	2	Bëatrice
+34	3	6	4	dolce guida e cara
+34	3	4	4	dolce guida
+34	6	6	6	cara
+35	1	1	1	Ella
+35	4	7	4	Quel che ti sobranza
+35	4	4	4	Quel
+36	2	2	2	virtù
+36	5	5	5	nulla
+37	3	7	4	la sapïenza e la possanza
+37	3	4	4	la sapïenza
+37	6	7	7	la possanza
+38	3	10	4	le strade tra 'l cielo e la terra
+38	3	4	4	le strade
+38	6	10	7	'l cielo e la terra
+38	6	7	7	'l cielo
+38	9	10	10	la terra
+39	4	6	6	sì lunga disïanza
+40	2	4	2	foco di nube
+40	2	2	2	foco
+40	4	4	4	nube
+41	0	0	0	
+42	4	5	5	sua natura
+42	5	5	5	natura
+43	1	3	2	la mente mia
+43	2	3	2	mente mia
+43	6	7	7	quelle dape
+44	5	6	5	sé stessa
+45	3	3	3	si
+46	2	3	3	li occhi
+46	8	8	8	io
+47	1	1	1	tu
+47	4	4	4	cose
+48	5	7	6	lo riso mio
+48	6	7	6	riso mio
+49	1	1	1	Io
+49	4	7	4	quei che si risente
+49	4	4	4	quei
+50	2	3	2	visïone oblita
+50	2	2	2	visïone
+51	5	6	6	la mente
+51	6	6	6	mente
+52	2	2	2	io
+52	4	6	5	questa proferta, degna
+52	4	5	5	questa proferta
+53	2	3	3	tanto grato
+53	4	4	4	che
+54	2	6	2	libro che 'l preterito rassegna
+54	2	2	2	libro
+54	3	3	3	che
+54	4	5	5	'l preterito
+55	4	6	6	tutte quelle lingue
+56	2	6	2	Polimnïa con le suore fero
+56	4	6	5	le suore fero
+57	2	6	2	latte lor dolcissimo più pingue
+58	4	6	4	millesmo del vero
+58	6	6	6	vero
+59	5	7	7	il santo riso
+60	3	5	5	il santo aspetto
+61	4	5	5	il paradiso
+62	3	5	5	lo sacrato poema
+63	2	6	2	chi trova suo cammin riciso
+63	4	6	5	suo cammin riciso
+64	2	2	2	chi
+64	4	6	6	il ponderoso tema
+65	2	8	3	l'omero mortal che se ne carca
+65	2	4	3	l'omero mortal
+65	5	5	5	che
+66	5	5	5	esso
+67	3	6	3	pareggio da picciola barca
+67	5	6	6	picciola barca
+68	1	1	1	quel
+68	5	7	7	l'ardita prora
+69	3	8	3	nocchier ch'a sé medesmo parca
+69	3	3	3	nocchier
+69	6	7	6	sé medesmo
+70	2	4	3	la faccia mia
+70	3	4	3	faccia mia
+71	2	2	2	tu
+71	7	8	8	bel giardino
+72	3	6	4	i raggi di Cristo
+72	4	6	4	raggi di Cristo
+72	6	6	6	Cristo
+73	3	9	4	la rosa in che 'l verbo divino
+73	3	4	4	la rosa
+73	7	9	8	'l verbo divino
+74	1	1	1	carne
+74	6	7	7	li gigli
+75	2	3	3	cui odor
+75	6	8	8	il buon cammino
+76	2	2	2	Beatrice
+76	4	4	4	io
+76	7	8	8	suoi consigli
+77	1	1	1	tutto
+77	5	5	5	mi
+78	2	6	3	la battaglia de' debili cigli
+78	5	6	6	debili cigli
+79	3	5	3	raggio di sol
+79	5	5	5	sol
+80	2	3	3	fratta nube
+80	5	7	5	prato di fiori
+80	7	7	7	fiori
+81	4	4	4	ombra
+81	5	7	6	li occhi miei
+82	2	2	2	io
+82	4	7	5	più turbe di splendori
+82	5	7	5	turbe di splendori
+82	7	7	7	splendori
+83	5	6	5	raggi ardenti
+84	2	2	2	veder
+84	3	5	3	principio di folgóri
+84	5	5	5	folgóri
+85	2	3	3	benigna vertù
+85	3	3	3	vertù
+85	6	6	6	li
+86	2	2	2	t'
+86	6	6	6	loco
+87	2	9	3	li occhi lì che non t'eran possenti
+87	2	4	3	li occhi lì
+87	3	3	3	occhi
+87	7	7	7	t'
+88	1	9	2	Il nome del bel fior ch'io sempre invoco
+88	1	2	2	Il nome
+88	4	9	5	bel fior ch'io sempre invoco
+88	4	5	5	bel fior
+88	5	5	5	fior
+88	7	7	7	io
+89	2	2	2	mane
+89	4	4	4	sera
+90	1	2	2	l'animo
+90	5	7	7	lo maggior foco
+90	7	7	7	foco
+91	3	5	5	ambo le luci
+91	4	5	5	le luci
+92	1	2	2	il quale
+92	4	9	5	il quanto de la viva stella
+92	4	5	5	il quanto
+92	7	9	9	la viva stella
+93	1	1	1	che
+94	3	4	4	il cielo
+94	6	7	7	una facella
+95	3	3	3	cerchio
+95	5	7	5	guisa di corona
+95	7	7	7	corona
+96	7	7	7	ella
+97	1	4	2	Qualunque melodia più dolce
+97	2	4	2	melodia più dolce
+97	2	2	2	melodia
+98	6	6	6	sé
+98	7	8	8	l'anima
+98	8	8	8	anima
+99	2	5	2	nube che squarciata tona
+99	2	2	2	nube
+99	3	3	3	che
+100	3	6	3	sonar di quella lira
+100	5	6	6	quella lira
+101	4	6	6	il bel zaffiro
+102	2	2	2	quale
+102	3	6	4	il ciel più chiaro
+103	1	1	1	Io
+103	3	4	3	amore angelico
+104	1	7	3	l'alta letizia che spira del ventre
+104	1	3	3	l'alta letizia
+104	7	7	7	ventre
+105	3	6	3	albergo del nostro disiro
+105	5	6	6	nostro disiro
+106	3	5	3	donna del ciel
+106	5	5	5	ciel
+107	3	4	4	tuo figlio
+108	2	4	3	la spera suprema
+108	3	4	3	spera suprema
+109	2	4	4	la circulata melodia
+110	4	7	7	tutti li altri lumi
+111	3	6	4	il nome di Maria
+111	6	6	6	Maria
+112	1	7	3	Lo real manto di tutti i volumi
+112	1	3	3	Lo real manto
+112	5	7	7	tutti i volumi
+112	6	7	7	i volumi
+113	2	2	2	mondo
+114	2	5	3	l'alito di Dio
+114	5	5	5	Dio
+114	8	8	8	costumi
+115	4	4	4	noi
+115	5	7	7	l'interna riva
+116	4	6	6	la sua parvenza
+117	3	3	3	io
+118	4	6	5	li occhi miei
+118	5	6	5	occhi miei
+118	7	7	7	potenza
+119	3	5	5	la coronata fiamma
+119	4	5	5	coronata fiamma
+120	5	6	6	sua semenza
+121	3	7	3	fantolin che 'nver' la mamma
+121	3	3	3	fantolin
+121	6	7	7	la mamma
+122	2	3	3	le braccia
+122	6	7	7	'l latte
+123	2	9	3	l'animo che 'nfin di fuor s'infiamma
+123	2	3	3	l'animo
+123	7	7	7	fuor
+124	1	4	1	ciascun di quei candori
+124	3	4	4	quei candori
+125	2	4	4	la sua cima
+125	7	9	9	l'alto affetto
+126	2	2	2	elli
+126	5	5	5	Maria
+127	5	6	6	mio cospetto
+128	1	2	1	Regina celi
+128	2	2	2	celi
+129	4	4	4	me
+129	8	9	9	'l diletto
+130	4	8	5	l'ubertà che si soffolce
+130	4	5	5	l'ubertà
+131	2	6	3	quelle arche ricchissime che fuoro
+131	2	4	3	quelle arche ricchissime
+131	3	4	3	arche ricchissime
+132	5	6	6	buone bobolce
+133	6	7	7	del tesoro
+133	7	7	7	tesoro
+134	1	1	1	che
+134	6	7	7	lo essilio
+134	7	7	7	essilio
+135	1	2	2	di Babillòn
+135	2	2	2	Babillòn
+135	6	7	7	l'oro
+135	7	7	7	oro
+136	4	6	6	l'alto Filio
+137	2	2	2	Dio
+137	5	5	5	Maria
+137	7	8	8	sua vittoria
+138	3	8	8	l'antico e col novo concilio
+138	3	4	4	l'antico
+138	6	8	8	col novo concilio
+138	7	8	8	novo concilio
+139	1	8	1	colui che tien le chiavi di tal gloria
+139	4	8	5	le chiavi di tal gloria
+139	4	5	5	le chiavi
+139	7	8	8	tal gloria

@@ -1,0 +1,428 @@
+line	start	end	head	text
+1	6	6	6	Nesso
+2	2	2	2	noi
+2	6	7	7	un bosco
+3	3	4	4	neun sentiero
+4	1	3	2	Non fronda verde
+4	2	3	2	fronda verde
+4	6	7	6	color fosco
+5	1	3	2	non rami schietti
+5	2	3	2	rami schietti
+5	5	7	5	nodosi e 'nvolti
+6	1	2	2	non pomi
+6	2	2	2	pomi
+6	6	8	6	stecchi con tòsco
+6	6	6	6	stecchi
+6	8	8	8	tòsco
+7	3	8	5	sì aspri sterpi né sì folti
+7	3	5	5	sì aspri sterpi
+7	7	8	8	sì folti
+8	1	7	2	quelle fiere selvagge che 'n odio hanno
+8	1	3	2	quelle fiere selvagge
+8	6	6	6	odio
+9	2	4	2	Cecina e Corneto
+9	2	2	2	Cecina
+9	4	4	4	Corneto
+9	5	7	6	i luoghi cólti
+10	2	4	4	le brutte Arpie
+10	5	6	6	lor nidi
+11	4	5	5	le Strofade
+11	6	7	7	i Troiani
+12	2	6	3	tristo annunzio di futuro danno
+12	5	6	6	futuro danno
+13	1	1	1	Ali
+13	5	5	5	colli
+13	7	8	7	visi umani
+13	7	7	7	visi
+14	1	3	1	piè con artigli
+14	1	1	1	piè
+14	3	3	3	artigli
+14	5	8	8	pennuto 'l gran ventre
+14	6	8	8	'l gran ventre
+14	7	8	8	gran ventre
+14	8	8	8	ventre
+15	2	2	2	lamenti
+15	5	7	6	li alberi strani
+15	6	7	6	alberi strani
+15	6	6	6	alberi
+16	2	4	4	'l buon maestro
+17	5	6	6	secondo girone
+18	1	1	1	mi
+19	2	2	2	tu
+19	5	7	7	l'orribil sabbione
+19	6	7	7	orribil sabbione
+20	0	0	0	
+21	1	7	1	cose che torrien fede al mio sermone
+21	1	1	1	cose
+21	4	7	4	fede al mio sermone
+21	4	4	4	fede
+21	6	7	7	mio sermone
+21	7	7	7	sermone
+22	1	1	1	Io
+22	4	5	5	ogne parte
+22	7	7	7	guai
+23	4	7	4	persona che 'l facesse
+23	4	4	4	persona
+23	6	6	6	'l
+24	3	5	3	io tutto smarrito
+24	3	3	3	io
+25	2	2	2	ïo
+25	4	4	4	ei
+25	7	7	7	io
+26	2	3	3	tante voci
+26	6	7	7	quei bronchi
+27	2	7	2	gente che per noi si nascondesse
+27	2	2	2	gente
+27	5	5	5	noi
+28	3	4	4	'l maestro
+28	6	6	6	tu
+29	1	7	2	qualche fraschetta d'una d'este piante
+29	1	2	2	qualche fraschetta
+29	4	7	4	una d'este piante
+29	6	7	7	este piante
+30	1	4	2	li pensier c'hai
+30	1	2	2	li pensier
+31	3	4	4	la mano
+31	5	6	6	un poco
+32	3	8	4	un ramicel da un gran pruno
+32	3	4	4	un ramicel
+32	6	8	8	un gran pruno
+33	2	4	3	'l tronco suo
+33	2	3	3	'l tronco
+34	7	8	7	sangue bruno
+35	5	5	5	mi
+36	3	3	3	tu
+36	4	7	4	spirto di pietade alcuno
+36	6	6	6	pietade
+37	1	1	1	Uomini
+37	7	7	7	sterpi
+38	4	8	6	la tua man più pia
+38	4	6	6	la tua man
+38	5	8	6	tua man più pia
+38	5	6	6	tua man
+38	6	8	6	man più pia
+38	6	6	6	man
+39	4	6	4	anime di serpi
+39	4	4	4	anime
+39	6	6	6	serpi
+40	3	8	4	un stizzo verde ch'arso sia
+40	3	5	4	un stizzo verde
+40	3	4	4	un stizzo
+40	4	5	4	stizzo verde
+40	4	4	4	stizzo
+41	2	5	3	l'un de' capi
+41	2	3	3	l'un
+41	4	5	5	de' capi
+41	5	5	5	capi
+41	8	9	9	l'altro
+42	4	7	4	vento che va via
+42	4	4	4	vento
+43	3	5	4	la scheggia rotta
+43	3	4	4	la scheggia
+43	4	5	4	scheggia rotta
+44	1	3	1	parole e sangue
+44	1	1	1	parole
+44	3	3	3	sangue
+44	5	5	5	io
+44	7	8	8	la cima
+45	5	8	6	l'uom che teme
+45	5	6	6	l'uom
+45	6	8	6	uom che teme
+46	2	2	2	elli
+47	2	4	3	'l savio mio
+47	5	6	5	anima lesa
+48	1	1	1	ciò
+48	7	9	9	la mia rima
+49	4	4	4	te
+49	5	7	6	la man distesa
+49	5	6	6	la man
+49	6	7	6	man distesa
+49	6	6	6	man
+50	2	4	3	la cosa incredibile
+50	2	3	3	la cosa
+50	3	4	3	cosa incredibile
+50	3	3	3	cosa
+50	5	5	5	mi
+51	3	3	3	ovra
+51	6	7	6	me stesso
+51	6	6	6	me
+52	3	5	3	chi tu fosti
+52	3	3	3	chi
+52	4	4	4	tu
+52	9	9	9	vece
+53	2	3	3	alcun' ammenda
+53	3	3	3	ammenda
+53	4	5	5	tua fama
+53	5	5	5	fama
+54	2	3	2	mondo sù
+54	2	2	2	mondo
+54	6	7	7	li lece
+54	6	6	6	li
+54	7	7	7	lece
+55	2	3	3	'l tronco
+55	6	7	7	dolce dir
+56	2	2	2	i'
+56	7	7	7	voi
+57	2	2	2	ïo
+57	3	4	4	un poco
+57	6	6	6	ragionar
+58	1	1	1	Io
+58	3	8	3	colui che tenni ambo le chiavi
+58	6	8	8	ambo le chiavi
+58	7	8	8	le chiavi
+59	2	4	2	cor di Federigo
+59	4	4	4	Federigo
+59	7	7	7	le
+60	0	0	0	
+61	3	4	3	secreto suo
+61	6	7	7	ogn' uom
+62	1	1	1	fede
+62	4	5	5	glorïoso offizio
+63	6	9	7	li sonni e ' polsi
+63	6	7	7	li sonni
+63	9	9	9	polsi
+64	1	7	2	La meretrice che mai da l'ospizio
+64	1	2	2	La meretrice
+64	6	7	7	l'ospizio
+65	2	2	2	Cesare
+65	5	7	6	li occhi putti
+65	6	7	6	occhi putti
+66	1	7	1	morte comune e de le corti vizio
+66	1	2	1	morte comune
+66	4	7	7	de le corti vizio
+66	5	6	6	le corti
+67	3	3	3	me
+67	4	6	5	li animi tutti
+68	2	3	3	li 'nfiammati
+68	6	6	6	Augusto
+69	2	3	3	lieti onor
+69	6	7	7	tristi lutti
+70	1	3	2	L'animo mio
+70	1	2	2	L'animo
+70	2	3	2	animo mio
+70	5	6	6	disdegnoso gusto
+71	3	3	3	morir
+71	5	5	5	disdegno
+72	3	3	3	me
+72	3	3	3	me
+73	2	7	4	le nove radici d'esto legno
+73	2	4	4	le nove radici
+73	4	7	4	radici d'esto legno
+73	6	7	7	esto legno
+74	8	8	8	fede
+75	2	3	3	mio segnor
+75	7	7	7	onor
+76	4	4	4	voi
+76	5	5	5	alcun
+76	7	7	7	mondo
+77	2	4	3	la memoria mia
+77	2	3	3	la memoria
+77	3	4	3	memoria mia
+77	5	5	5	che
+78	3	7	3	colpo che 'nvidia le diede
+78	3	3	3	colpo
+78	4	4	4	che
+78	5	5	5	'nvidia
+79	1	2	2	Un poco
+79	8	8	8	el
+80	2	3	3	'l poeta
+80	5	5	5	me
+80	8	9	9	l'ora
+81	6	6	6	lui
+81	9	9	9	ti
+82	2	2	2	ïo
+82	4	4	4	lui
+83	2	8	2	quel che credi ch'a me satisfaccia
+83	7	7	7	me
+84	2	2	2	i'
+84	5	6	6	tanta pietà
+85	4	5	5	l'om
+86	2	7	2	ciò che 'l tuo dir priega
+86	2	2	2	ciò
+86	4	6	6	'l tuo dir
+86	5	6	6	tuo dir
+87	1	2	1	spirito incarcerato
+88	4	5	5	l'anima
+89	2	3	3	questi nocchi
+89	7	7	7	tu
+90	2	6	2	alcuna mai di tai membra
+90	2	2	2	alcuna
+90	5	6	6	tai membra
+91	3	5	4	il tronco forte
+92	3	4	4	quel vento
+92	6	7	7	cotal voce
+93	5	5	5	voi
+94	4	6	5	l'anima feroce
+94	5	6	5	anima feroce
+94	5	5	5	anima
+95	2	8	2	corpo ond' ella stessa s'è disvelta
+95	2	2	2	corpo
+95	4	5	4	ella stessa
+95	4	4	4	ella
+96	1	1	1	Minòs
+96	2	2	2	la
+96	5	7	7	la settima foce
+96	6	7	7	settima foce
+96	7	7	7	foce
+97	3	4	4	la selva
+97	7	7	7	l'
+97	9	10	9	parte scelta
+98	4	4	4	fortuna
+98	5	6	6	la balestra
+99	4	6	4	gran di spelta
+99	6	6	6	spelta
+100	3	3	3	vermena
+100	6	7	6	pianta silvestra
+100	6	6	6	pianta
+101	1	2	2	l'Arpie
+101	2	2	2	Arpie
+101	6	8	8	le sue foglie
+101	7	8	8	sue foglie
+101	8	8	8	foglie
+102	2	2	2	dolore
+102	5	6	6	dolor fenestra
+102	5	5	5	dolor
+102	6	6	6	fenestra
+103	2	3	3	l'altre
+103	6	7	7	nostre spoglie
+104	5	5	5	alcuna
+105	6	10	6	ciò ch'om si toglie
+105	6	6	6	ciò
+105	8	8	8	om
+106	2	2	2	le
+107	1	1	1	selva
+107	3	6	5	i nostri corpi appesi
+107	3	5	5	i nostri corpi
+107	4	6	5	nostri corpi appesi
+107	4	5	5	nostri corpi
+107	5	6	5	corpi appesi
+107	5	5	5	corpi
+108	1	1	1	ciascuno
+108	3	8	3	prun de l'ombra sua molesta
+108	3	3	3	prun
+108	5	8	6	l'ombra sua molesta
+108	5	6	6	l'ombra
+108	6	8	6	ombra sua molesta
+108	6	6	6	ombra
+109	1	1	1	Noi
+109	5	5	5	tronco
+110	3	3	3	altro
+111	2	2	2	noi
+111	5	6	6	un romor
+112	3	5	3	colui che venire
+112	3	3	3	colui
+113	2	10	3	'l porco e la caccia a la sua posta
+113	2	3	3	'l porco
+113	5	10	6	la caccia a la sua posta
+113	5	6	6	la caccia
+113	8	10	10	la sua posta
+113	9	10	10	sua posta
+114	3	8	4	le bestie, e le frasche stormire
+114	3	4	4	le bestie
+114	6	8	7	le frasche stormire
+114	6	7	7	le frasche
+115	3	7	3	due da la sinistra costa
+115	3	3	3	due
+115	5	7	7	la sinistra costa
+115	7	7	7	costa
+116	0	0	0	
+117	3	4	4	la selva
+117	4	4	4	selva
+117	6	7	7	ogne rosta
+117	7	7	7	rosta
+118	1	2	1	Quel dinanzi
+118	6	6	6	morte
+119	2	3	3	l'altro
+119	4	4	4	cui
+120	2	2	2	Lano
+121	1	8	2	le gambe tue a le giostre dal Toppo
+121	1	3	2	le gambe tue
+121	5	8	6	le giostre dal Toppo
+121	5	6	6	le giostre
+121	8	8	8	Toppo
+122	7	8	8	la lena
+123	2	2	2	sé
+123	5	6	6	un cespuglio
+123	8	9	9	un groppo
+124	2	2	2	rietro
+124	4	4	4	loro
+124	6	8	7	la selva piena
+124	6	7	7	la selva
+125	2	6	3	nere cagne, bramose e correnti
+125	2	3	3	nere cagne
+125	3	3	3	cagne
+126	2	6	2	veltri ch'uscisser di catena
+126	2	2	2	veltri
+126	6	6	6	catena
+127	2	8	2	quel che s'appiattò miser li denti
+127	2	2	2	quel
+127	7	8	8	li denti
+128	2	2	2	quel
+128	5	5	5	brano
+128	5	5	5	brano
+129	4	6	5	quelle membra dolenti
+129	4	5	5	quelle membra
+129	5	6	5	membra dolenti
+129	5	5	5	membra
+130	3	5	5	la mia scorta
+130	4	5	5	mia scorta
+130	5	5	5	scorta
+130	7	7	7	mano
+131	4	6	4	cespuglio che piangea
+131	4	4	4	cespuglio
+132	2	4	3	le rotture sanguinenti
+132	3	4	3	rotture sanguinenti
+132	3	3	3	rotture
+132	6	6	6	vano
+133	2	2	2	Iacopo
+133	5	6	6	Santo Andrea
+134	2	2	2	t'
+134	6	6	6	me
+134	8	8	8	schermo
+135	1	2	2	che colpa
+135	4	4	4	io
+135	6	9	8	la tua vita rea
+135	7	9	8	tua vita rea
+135	8	9	8	vita rea
+136	2	3	3	'l maestro
+136	6	6	6	esso
+137	2	2	2	Chi
+137	6	7	7	tante punte
+138	3	5	5	sangue doloroso sermo
+138	3	4	3	sangue doloroso
+139	2	2	2	elli
+139	4	4	4	noi
+139	6	8	6	anime che giunte
+139	7	7	7	che
+140	4	6	5	lo strazio disonesto
+141	3	9	5	le mie fronde sì da me disgiunte
+141	3	5	5	le mie fronde
+141	8	8	8	me
+142	3	6	3	piè del tristo cesto
+142	5	6	6	tristo cesto
+143	1	1	1	I'
+143	4	8	5	la città che nel Batista
+143	4	5	5	la città
+143	8	8	8	Batista
+144	2	4	4	'l primo padrone
+144	3	4	4	primo padrone
+144	6	6	6	ei
+144	8	8	8	questo
+145	3	5	4	l'arte sua
+145	6	6	6	la
+146	8	10	8	passo d'Arno
+146	10	10	10	Arno
+147	4	4	4	lui
+147	5	6	6	alcuna vista
+148	1	6	2	que' cittadin che poi la rifondarno
+148	1	2	2	que' cittadin
+148	5	5	5	la
+149	2	7	3	'l cener che d'Attila rimase
+149	2	3	3	'l cener
+149	6	6	6	Attila
+150	0	0	0	
+151	1	1	1	Io
+151	3	3	3	gibetto
+151	5	5	5	me
+151	7	9	9	le mie case
+151	8	9	9	mie case

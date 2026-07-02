@@ -1,0 +1,365 @@
+line	start	end	head	text
+1	2	9	3	l'ora che non può 'l calor dïurno
+1	2	3	3	l'ora
+1	7	9	8	'l calor dïurno
+1	8	9	8	calor dïurno
+2	3	7	4	'l freddo de la luna
+2	4	7	4	freddo de la luna
+2	6	7	7	la luna
+3	3	3	3	terra
+3	7	7	7	Saturno
+4	2	3	3	i geomanti
+4	4	6	6	lor Maggior Fortuna
+5	3	3	3	orïente
+5	6	7	7	l'alba
+6	3	8	3	via che poco le sta bruna
+6	6	6	6	le
+7	4	4	4	sogno
+7	5	7	6	una femmina balba
+8	2	4	3	li occhi guercia
+8	7	9	8	i piè distorta
+9	2	4	3	le man monche
+9	7	8	7	colore scialba
+10	1	1	1	Io
+10	2	2	2	la
+10	6	7	7	'l sol
+11	1	7	3	le fredde membra che la notte aggrava
+11	1	3	3	le fredde membra
+11	5	6	6	la notte
+12	2	4	3	lo sguardo mio
+12	5	5	5	le
+12	7	7	7	scorta
+13	1	2	2	la lingua
+14	2	4	2	poco d'ora
+14	4	4	4	ora
+14	6	8	8	lo smarrito volto
+15	2	2	2	amor
+16	3	3	3	ell'
+16	5	8	6	'l parlar così disciolto
+16	5	6	6	'l parlar
+17	7	7	7	pena
+18	2	2	2	lei
+18	4	6	5	mio intento rivolto
+18	4	5	5	mio intento
+19	1	1	1	Io
+19	1	1	1	Io
+19	6	7	7	dolce serena
+19	7	7	7	serena
+20	2	2	2	marinari
+20	2	2	2	marinari
+20	4	5	5	mezzo mar
+20	5	5	5	mar
+21	4	4	4	piacere
+22	1	1	1	Io
+22	3	7	3	Ulisse del suo cammin vago
+22	3	3	3	Ulisse
+22	5	7	6	suo cammin vago
+23	2	3	2	canto mio
+23	5	5	5	qual
+24	6	6	6	l'
+25	4	6	5	sua bocca richiusa
+25	4	5	5	sua bocca
+25	5	6	5	bocca richiusa
+26	2	3	3	una donna
+27	2	2	2	me
+27	5	5	5	colei
+28	2	2	2	Virgilio
+28	2	2	2	Virgilio
+28	4	4	4	chi
+28	6	6	6	questa
+29	4	4	4	el
+30	2	4	3	li occhi fitti
+30	3	4	3	occhi fitti
+30	3	3	3	occhi
+30	7	8	8	quella onesta
+30	8	8	8	onesta
+31	1	2	2	L'altra
+32	2	3	3	i drappi
+32	6	7	7	'l ventre
+33	1	1	1	quel
+33	5	8	5	puzzo che n'uscia
+34	1	1	1	Io
+34	3	4	4	li occhi
+34	4	4	4	occhi
+34	6	8	8	'l buon maestro
+34	7	8	8	buon maestro
+34	8	8	8	maestro
+35	1	1	1	voci
+35	2	2	2	t'
+36	2	3	3	l'aperta
+36	3	3	3	aperta
+36	5	6	6	la qual
+36	6	6	6	qual
+36	7	7	7	tu
+37	2	2	2	mi
+37	5	5	5	tutti
+38	2	4	4	l'alto dì
+38	5	9	6	i giron del sacro monte
+38	8	9	9	sacro monte
+39	4	5	4	sol novo
+39	7	8	8	le reni
+40	2	2	2	lui
+40	4	6	6	la mia fronte
+40	5	6	6	mia fronte
+41	2	8	2	colui che l'ha di pensier carca
+41	2	2	2	colui
+41	4	4	4	l'
+41	7	7	7	pensier
+42	4	4	4	sé
+42	5	9	7	un mezzo arco di ponte
+42	6	9	7	mezzo arco di ponte
+42	7	9	7	arco di ponte
+42	9	9	9	ponte
+43	2	2	2	io
+44	1	6	1	parlare in modo soave e benigno
+44	3	6	3	modo soave e benigno
+45	1	1	1	qual
+45	6	8	8	questa mortal marca
+46	2	4	3	l'ali aperte
+46	8	8	8	cigno
+47	4	7	4	colui che sì parlonne
+48	2	6	3	due pareti del duro macigno
+48	5	6	6	duro macigno
+49	2	3	3	le penne
+50	5	5	5	beati
+51	5	7	6	l'anime donne
+51	5	6	6	l'anime
+51	7	7	7	donne
+52	1	1	1	Che
+52	6	7	7	la terra
+53	1	3	2	la guida mia
+54	2	2	2	amendue
+54	4	5	5	l'angel
+55	2	2	2	io
+55	4	5	5	tanta sospeccion
+56	1	7	2	novella visïon ch'a sé mi piega
+56	1	2	2	novella visïon
+56	5	5	5	sé
+57	3	3	3	io
+57	7	7	7	pensar
+58	3	5	5	quell'antica strega
+59	1	2	1	che sola
+59	5	5	5	noi
+60	3	4	4	l'uom
+60	6	6	6	lei
+61	5	5	5	terra
+61	6	7	7	le calcagne
+61	7	7	7	calcagne
+62	1	2	2	li occhi
+62	2	2	2	occhi
+62	5	7	5	logoro che gira
+62	5	5	5	logoro
+63	1	3	2	lo rege etterno
+63	2	3	2	rege etterno
+63	2	2	2	rege
+63	5	7	6	le rote magne
+63	6	7	6	rote magne
+63	6	6	6	rote
+64	2	9	3	'l falcon, che prima a' pié si mira
+64	2	3	3	'l falcon
+64	6	7	7	a' pié
+64	7	7	7	pié
+65	4	5	5	al grido
+65	5	5	5	grido
+66	2	9	3	lo disio del pasto che là il tira
+66	2	5	3	lo disio del pasto
+66	2	3	3	lo disio
+66	4	9	5	del pasto che là il tira
+66	4	5	5	del pasto
+66	5	9	5	pasto che là il tira
+66	5	5	5	pasto
+66	8	8	8	il
+67	1	1	1	tal
+67	1	1	1	tal
+67	4	4	4	io
+68	1	2	2	la roccia
+68	5	9	5	via a chi va suso
+68	5	5	5	via
+68	7	9	7	chi va suso
+68	7	7	7	chi
+69	5	6	6	'l cerchiar
+70	2	2	2	io
+70	4	5	5	quinto giro
+71	2	6	2	gente per esso che piangea
+71	2	4	2	gente per esso
+71	2	2	2	gente
+71	4	4	4	esso
+72	3	3	3	terra
+72	7	7	7	giuso
+73	2	2	2	pavimento
+73	3	4	3	anima mea
+73	3	3	3	anima
+74	3	3	3	lor
+74	5	7	7	sì alti sospiri
+74	7	7	7	sospiri
+75	2	3	3	la parola
+75	3	3	3	parola
+75	5	5	5	pena
+76	2	4	2	eletti di Dio
+76	2	2	2	eletti
+76	4	4	4	Dio
+76	5	7	7	li cui soffriri
+76	7	7	7	soffriri
+77	2	4	2	giustizia e speranza
+77	2	2	2	giustizia
+77	4	4	4	speranza
+78	2	2	2	noi
+78	4	6	6	li alti saliri
+78	6	6	6	saliri
+79	2	2	2	voi
+79	5	6	5	giacer sicuri
+80	4	5	5	la via
+81	1	3	3	le vostre destre
+81	7	7	7	fori
+82	3	4	4	'l poeta
+83	4	4	4	noi
+83	9	9	9	io
+84	2	2	2	parlare
+84	4	6	5	l'altro nascosto
+85	3	4	4	li occhi
+85	3	4	4	li occhi
+85	6	10	7	li occhi al segnor mio
+85	9	10	9	segnor mio
+86	2	2	2	elli
+86	6	7	7	lieto cenno
+87	1	7	1	ciò che chiedea la vista del disio
+87	1	1	1	ciò
+87	4	7	5	la vista del disio
+87	4	5	5	la vista
+87	5	7	5	vista del disio
+87	7	7	7	disio
+88	3	3	3	io
+88	6	6	6	me
+88	9	10	10	mio senno
+89	3	4	4	quella creatura
+90	1	3	3	le cui parole
+90	3	3	3	parole
+90	6	6	6	mi
+90	6	6	6	mi
+91	2	6	2	Spirto in cui pianger matura
+91	5	5	5	pianger
+92	1	9	1	quel sanza 'l quale a Dio tornar non pòssi
+92	3	4	4	'l quale
+92	6	6	6	Dio
+92	7	7	7	tornar
+93	2	3	3	un poco
+93	5	5	5	me
+93	6	8	8	tua maggior cura
+94	1	1	1	Chi
+94	7	8	8	i dossi
+95	1	2	2	al sù
+95	3	3	3	mi
+95	9	9	9	io
+95	10	10	10	t'
+96	1	7	1	cosa di là ond' io vivendo mossi
+96	1	3	1	cosa di là
+96	1	1	1	cosa
+96	5	5	5	io
+97	2	2	2	elli
+97	4	4	4	me
+97	6	8	8	i nostri diretri
+98	2	3	3	il cielo
+98	5	5	5	sé
+99	3	3	3	ego
+99	5	6	5	successor Petri
+99	6	6	6	Petri
+100	2	4	2	Sïestri e Chiaveri
+100	2	2	2	Sïestri
+100	4	4	4	Chiaveri
+101	1	3	2	una fiumana bella
+101	6	7	7	suo nome
+102	1	5	2	lo titol del mio sangue
+102	4	5	5	mio sangue
+102	7	8	8	sua cima
+103	1	5	2	Un mese e poco più
+103	1	2	2	Un mese
+103	4	5	4	poco più
+103	7	7	7	io
+104	2	4	4	il gran manto
+104	2	2	2	il
+104	6	10	6	chi dal fango il guarda
+104	8	8	8	fango
+105	2	2	2	piuma
+105	4	7	7	tutte l'altre some
+105	5	7	7	l'altre some
+106	1	3	3	La mia conversïone
+107	5	6	6	roman pastore
+108	3	5	4	la vita bugiarda
+109	7	8	8	il core
+110	6	7	7	quella vita
+111	4	4	4	questa
+111	6	6	6	me
+111	9	9	9	amore
+112	3	4	4	quel punto
+113	2	2	2	Dio
+113	3	3	3	anima
+113	6	6	6	tutto
+114	5	5	5	ne
+115	1	4	1	Quel ch'avarizia fa
+115	3	3	3	avarizia
+116	2	6	2	purgazion de l'anime converse
+116	4	6	5	l'anime converse
+116	5	6	5	anime converse
+117	2	3	3	nulla pena
+117	4	5	5	il monte
+118	3	5	4	l'occhio nostro
+119	2	2	2	alto
+119	5	7	6	le cose terrene
+120	2	2	2	giustizia
+120	5	5	5	terra
+121	2	2	2	avarizia
+121	5	6	6	ciascun bene
+122	1	3	3	lo nostro amore
+122	2	3	3	nostro amore
+122	5	5	5	operar
+123	2	2	2	giustizia
+123	5	5	5	ne
+124	2	2	2	piedi
+124	5	6	6	le man
+124	6	6	6	man
+125	4	7	4	piacer del giusto Sire
+125	4	4	4	piacer
+125	6	7	7	giusto Sire
+125	7	7	7	Sire
+126	0	0	0	
+127	1	1	1	Io
+128	3	3	3	io
+128	6	6	6	el
+129	4	5	5	mio reverire
+129	5	5	5	reverire
+130	1	2	2	Qual cagion
+131	2	2	2	io
+131	4	4	4	lui
+131	6	7	7	vostra dignitate
+132	1	2	2	mia coscïenza
+133	2	3	3	le gambe
+133	6	6	6	frate
+134	4	4	4	conservo
+135	1	1	1	teco
+135	4	5	5	li altri
+135	7	8	8	una podestate
+136	3	6	6	quel santo evangelico suono
+137	1	1	1	che
+137	3	4	3	Neque nubent
+138	5	5	5	io
+139	7	7	7	t'
+140	2	4	4	la tua stanza
+140	5	6	6	mio pianger
+141	1	2	2	col qual
+141	2	2	2	qual
+141	4	7	4	ciò che tu dicesti
+141	4	4	4	ciò
+141	6	6	6	tu
+142	1	1	1	Nepote
+142	3	3	3	io
+142	8	9	8	nome Alagia
+142	9	9	9	Alagia
+143	3	3	3	sé
+143	6	8	8	la nostra casa
+143	7	8	8	nostra casa
+143	8	8	8	casa
+144	3	3	3	lei
+144	5	5	5	essempro
+145	2	3	2	questa sola
+145	2	2	2	questa
+145	6	6	6	m'

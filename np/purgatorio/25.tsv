@@ -1,0 +1,327 @@
+line	start	end	head	text
+1	4	5	5	'l salir
+2	2	3	3	'l sole
+2	5	8	6	il cerchio di merigge
+2	8	8	8	merigge
+3	2	3	3	al Tauro
+3	5	6	6	la notte
+3	7	9	9	a lo Scorpio
+4	5	10	6	l'uom che non s'affigge
+4	5	6	6	l'uom
+5	4	6	5	la via sua
+5	7	10	7	che che li appaia
+5	7	7	7	che
+6	2	4	4	di bisogno stimolo
+6	3	3	3	bisogno
+6	4	4	4	stimolo
+7	3	3	3	noi
+7	5	6	6	la callaia
+8	1	1	1	uno
+8	3	3	3	altro
+8	5	6	6	la scala
+9	3	3	3	artezza
+9	4	5	5	i salitor
+10	3	8	4	il cicognin che leva l'ala
+10	3	4	4	il cicognin
+10	7	8	8	l'ala
+11	2	4	2	voglia di volare
+11	2	2	2	voglia
+11	4	4	4	volare
+12	3	4	4	lo nido
+12	7	7	7	la
+13	3	3	3	io
+13	5	8	5	voglia accesa e spenta
+14	2	2	2	dimandar
+14	6	7	7	l'atto
+15	3	8	3	colui ch'a dicer s'argomenta
+15	3	3	3	colui
+15	6	6	6	dicer
+16	4	8	5	l'andar che fosse ratto
+16	4	5	5	l'andar
+17	1	4	3	lo dolce padre mio
+17	3	4	3	padre mio
+18	1	4	2	l'arco del dir
+18	1	2	2	l'arco
+18	3	4	4	del dir
+18	4	4	4	dir
+18	7	8	8	al ferro
+18	8	8	8	ferro
+19	4	5	5	la bocca
+20	0	0	0	
+21	3	6	4	l'uopo di nodrir
+21	6	6	6	nodrir
+22	5	5	5	Meleagro
+23	4	7	4	consumar d'un stizzo
+23	6	7	7	un stizzo
+24	5	5	5	te
+24	6	8	6	questo sì agro
+25	6	7	7	vostro guizzo
+26	4	5	5	lo specchio
+26	6	7	7	vostra image
+27	1	4	1	ciò che par duro
+27	1	1	1	ciò
+27	7	7	7	vizzo
+28	5	6	6	tuo voler
+29	3	3	3	Stazio
+29	5	5	5	io
+29	6	6	6	lui
+30	4	8	4	sanator de le tue piage
+30	6	8	8	le tue piage
+30	7	8	8	tue piage
+31	2	4	3	la veduta etterna
+31	5	5	5	li
+32	2	2	2	Stazio
+32	5	5	5	tu
+33	2	2	2	me
+33	5	5	5	io
+33	7	7	7	nego
+34	4	6	5	le parole mie
+35	1	1	1	figlio
+35	2	4	3	la mente tua
+36	1	1	1	lume
+36	5	8	5	come che tu die
+36	7	7	7	tu
+37	1	2	1	Sangue perfetto
+37	1	1	1	Sangue
+38	2	4	4	l'assetate vene
+38	3	4	4	assetate vene
+38	4	4	4	vene
+39	2	6	2	alimento che di mensa leve
+39	2	2	2	alimento
+39	5	5	5	mensa
+40	3	3	3	core
+40	5	7	6	tutte membra umane
+40	6	7	6	membra umane
+40	6	6	6	membra
+41	1	2	1	virtute informativa
+41	1	1	1	virtute
+41	4	4	4	quello
+42	4	4	4	quelle
+42	6	8	7	le vene vane
+42	7	8	7	vene vane
+42	7	7	7	vene
+43	0	0	0	
+44	1	1	1	tacer
+44	3	3	3	dire
+45	2	3	3	altrui sangue
+45	5	6	6	natural vasello
+46	4	8	5	l'uno e l'altro
+46	4	5	5	l'uno
+46	7	8	8	l'altro
+47	1	5	2	l'un disposto a patire
+47	1	2	2	l'un
+47	7	10	8	l'altro a fare
+47	7	8	8	l'altro
+48	2	7	4	lo perfetto loco onde si preme
+48	2	4	4	lo perfetto loco
+49	3	3	3	lui
+50	0	0	0	
+51	1	7	1	ciò che per sua matera fé constare
+51	4	5	5	sua matera
+52	1	1	1	Anima
+52	3	5	4	la virtute attiva
+52	4	5	4	virtute attiva
+53	3	4	4	una pianta
+53	6	7	7	tanto differente
+54	2	2	2	questa
+54	5	5	5	via
+54	7	7	7	quella
+54	11	11	11	riva
+55	0	0	0	
+56	2	3	2	spungo marino
+56	2	2	2	spungo
+57	3	7	4	le posse ond' è semente
+57	3	4	4	le posse
+57	4	4	4	posse
+57	7	7	7	semente
+58	4	4	4	figliuolo
+59	1	8	2	la virtù ch'è dal cor del generante
+59	1	2	2	la virtù
+59	6	8	6	cor del generante
+59	8	8	8	generante
+60	2	2	2	natura
+60	4	5	5	tutte membra
+61	4	4	4	animal
+61	6	6	6	fante
+62	3	3	3	tu
+62	5	5	5	quest'
+62	7	8	8	tal punto
+62	8	8	8	punto
+63	3	5	3	savio di te
+63	3	3	3	savio
+63	5	5	5	te
+63	8	8	8	errante
+64	4	5	5	sua dottrina
+65	2	3	3	l'anima
+65	4	6	6	il possibile intelletto
+66	3	3	3	lui
+66	6	7	6	organo assunto
+67	3	6	4	la verità che viene
+67	3	4	4	la verità
+67	7	8	8	il petto
+68	8	8	8	feto
+69	1	4	2	l'articular del cerebro
+69	1	2	2	l'articular
+69	4	4	4	cerebro
+70	1	3	2	lo motor primo
+70	1	2	2	lo motor
+70	2	3	2	motor primo
+70	5	5	5	lui
+71	2	5	3	tant' arte di natura
+71	2	3	3	tant' arte
+71	3	5	3	arte di natura
+71	5	5	5	natura
+72	1	5	1	spirito novo, di vertù repleto
+72	1	2	1	spirito novo
+72	4	4	4	vertù
+73	2	6	2	ciò che trova attivo quivi
+73	2	2	2	ciò
+74	2	3	3	sua sustanzia
+74	6	8	7	un'alma sola
+75	6	6	6	sé
+75	6	6	6	sé
+76	5	6	6	la parola
+77	2	9	3	il calor del sole che si fa vino
+77	2	5	3	il calor del sole
+77	2	3	3	il calor
+77	5	9	5	sole che si fa vino
+77	5	5	5	sole
+77	9	9	9	vino
+78	3	9	4	l'omor che de la vite cola
+78	3	4	4	l'omor
+78	7	8	8	la vite
+79	2	2	2	Làchesis
+79	6	7	7	del lino
+79	7	7	7	lino
+80	3	4	4	la carne
+80	4	4	4	carne
+80	7	7	7	virtute
+81	5	6	6	l'umano
+81	6	6	6	umano
+81	8	9	9	'l divino
+81	9	9	9	divino
+82	1	6	3	l'altre potenze tutte quante mute
+82	1	3	3	l'altre potenze
+82	3	6	3	potenze tutte quante mute
+82	3	3	3	potenze
+83	1	4	4	memoria, intelligenza e volontade
+83	1	1	1	memoria
+83	2	2	2	intelligenza
+83	4	4	4	volontade
+84	2	2	2	atto
+85	4	5	4	sé stessa
+86	3	7	4	l'una de le rive
+86	6	7	7	le rive
+87	4	6	6	le sue strade
+88	3	3	3	loco
+88	5	5	5	la
+89	1	3	2	la virtù formativa
+89	2	3	2	virtù formativa
+89	2	2	2	virtù
+90	5	6	6	le membra
+90	6	6	6	membra
+91	3	4	4	l'aere
+92	2	9	4	l'altrui raggio che 'n sé si reflette
+92	2	4	4	l'altrui raggio
+92	7	7	7	sé
+93	2	3	3	diversi color
+93	5	5	5	addorno
+94	2	4	3	l'aere vicin
+94	2	3	3	l'aere
+95	3	8	4	quella forma ch'è in lui
+95	3	4	4	quella forma
+95	8	8	8	lui
+96	2	5	3	l'alma che ristette
+96	2	3	3	l'alma
+97	5	6	6	la fiammella
+98	3	4	4	il foco
+99	2	3	3	lo spirto
+99	4	6	5	sua forma novella
+100	6	7	7	sua paruta
+101	3	3	3	ombra
+102	1	2	2	ciascun sentire
+102	5	6	6	la veduta
+103	6	6	6	noi
+104	3	6	4	le lagrime e ' sospiri
+104	3	4	4	le lagrime
+104	6	6	6	sospiri
+105	1	1	1	che
+105	3	4	4	lo monte
+106	5	6	6	i disiri
+107	2	4	4	li altri affetti
+107	5	6	6	l'ombra
+108	2	2	2	quest'
+108	4	9	5	la cagion di che tu miri
+108	4	5	5	la cagion
+109	5	7	7	l'ultima tortura
+110	4	4	4	noi
+110	8	10	9	la man destra
+111	5	6	6	altra cura
+112	2	3	3	la ripa
+112	6	6	6	fuor
+113	2	3	3	la cornice
+113	5	5	5	fiato
+113	7	7	7	suso
+114	2	2	2	la
+114	7	7	7	lei
+115	6	7	6	lato schiuso
+116	2	2	2	uno
+116	2	2	2	uno
+116	6	6	6	io
+116	8	9	9	'l foco
+117	5	5	5	cader
+118	1	3	2	Lo duca mio
+118	6	7	7	questo loco
+119	5	6	6	li occhi
+119	8	9	9	il freno
+120	6	6	6	poco
+121	1	3	2	Summae Deus clementïae
+121	2	3	2	Deus clementïae
+121	2	2	2	Deus
+121	3	3	3	clementïae
+121	5	5	5	seno
+122	2	3	3	grande ardore
+122	3	3	3	ardore
+123	1	1	1	che
+123	3	3	3	volger
+123	4	4	4	mi
+124	3	7	3	spirti per la fiamma andando
+124	3	3	3	spirti
+124	5	6	6	la fiamma
+125	3	3	3	io
+125	6	6	6	loro
+125	9	10	10	miei passi
+126	2	3	3	la vista
+127	2	8	3	il fine ch'a quell' inno fassi
+127	2	3	3	il fine
+127	6	7	7	quell' inno
+128	3	3	3	Virum
+129	3	4	4	l'inno
+129	5	5	5	bassi
+130	4	5	5	Al bosco
+130	5	5	5	bosco
+131	1	1	1	si
+131	3	3	3	Diana
+131	5	5	5	Elice
+132	1	1	1	che
+132	3	3	3	Venere
+132	6	7	7	il tòsco
+132	7	7	7	tòsco
+133	2	3	3	al cantar
+133	3	3	3	cantar
+133	6	6	6	donne
+134	3	6	3	mariti che fuor casti
+134	3	3	3	mariti
+135	2	2	2	virtute
+135	4	4	4	matrimonio
+136	2	3	3	questo modo
+136	6	6	6	lor
+137	2	4	4	tutto il tempo
+137	3	4	4	il tempo
+137	6	7	7	'l foco
+137	8	8	8	li
+138	2	3	3	tal cura
+138	7	8	8	tai pasti
+139	2	5	3	la piaga da sezzo
+139	2	3	3	la piaga
+139	5	5	5	sezzo

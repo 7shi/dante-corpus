@@ -1,0 +1,404 @@
+line	start	end	head	text
+1	4	8	5	al soglio de la porta
+1	4	5	5	al soglio
+1	5	8	5	soglio de la porta
+1	5	5	5	soglio
+1	7	8	8	la porta
+1	8	8	8	porta
+2	2	8	4	'l mal amor de l'anime disusa
+2	2	4	4	'l mal amor
+2	3	8	4	mal amor de l'anime disusa
+2	3	4	4	mal amor
+2	4	8	4	amor de l'anime disusa
+2	4	4	4	amor
+2	6	8	7	l'anime disusa
+2	7	8	7	anime disusa
+2	7	7	7	anime
+3	5	7	6	la via torta
+3	6	7	6	via torta
+3	6	6	6	via
+4	2	2	2	la
+5	3	3	3	io
+5	5	7	6	li occhi vòlti
+5	5	6	6	li occhi
+5	9	9	9	essa
+6	1	1	1	qual
+6	5	5	5	fallo
+6	6	7	7	degna scusa
+7	1	1	1	Noi
+7	4	6	5	una pietra fessa
+8	6	6	6	una
+8	9	10	10	altra parte
+8	10	10	10	parte
+9	3	9	4	l'onda che fugge e s'appressa
+9	3	4	4	l'onda
+10	5	8	6	un poco d'arte
+10	5	6	6	un poco
+10	8	8	8	arte
+11	2	4	3	'l duca mio
+11	3	4	3	duca mio
+11	3	3	3	duca
+12	6	9	6	lato che si parte
+12	6	6	6	lato
+13	2	2	2	questo
+13	4	7	6	i nostri passi scarsi
+13	4	6	6	i nostri passi
+13	5	7	6	nostri passi scarsi
+13	5	6	6	nostri passi
+13	6	7	6	passi scarsi
+14	4	8	5	lo scemo de la luna
+14	4	5	5	lo scemo
+14	7	8	8	la luna
+15	3	4	3	letto suo
+16	2	2	2	noi
+16	6	7	7	quella cruna
+17	0	0	0	
+18	3	4	4	il monte
+19	1	2	1	ïo stancato
+19	1	1	1	ïo
+19	4	5	4	amendue incerti
+19	4	4	4	amendue
+20	2	3	3	nostra via
+20	3	3	3	via
+20	7	8	8	un piano
+20	8	8	8	piano
+21	4	6	4	strade per diserti
+21	4	4	4	strade
+21	6	6	6	diserti
+22	2	4	4	la sua sponda
+22	7	8	8	il vano
+23	2	9	2	piè de l'alta ripa che pur sale
+23	4	9	6	l'alta ripa che pur sale
+23	4	6	6	l'alta ripa
+24	3	4	4	tre volte
+24	5	7	6	un corpo umano
+25	3	5	4	l'occhio mio
+25	4	4	4	occhio
+25	9	9	9	ale
+26	3	3	3	sinistro
+26	7	8	8	destro fianco
+26	8	8	8	fianco
+27	1	2	2	questa cornice
+27	2	2	2	cornice
+28	6	8	7	i piè nostri
+28	7	8	7	piè nostri
+29	2	2	2	io
+29	4	6	5	quella ripa intorno
+29	4	5	5	quella ripa
+29	5	6	5	ripa intorno
+29	5	5	5	ripa
+30	4	4	4	salita
+30	6	6	6	manco
+31	3	6	3	marmo candido e addorno
+31	3	4	3	marmo candido
+31	3	3	3	marmo
+32	2	2	2	intagli
+32	7	7	7	Policleto
+33	2	3	3	la natura
+33	3	3	3	natura
+33	6	6	6	scorno
+34	1	8	2	L'angel che venne in terra col decreto
+34	1	2	2	L'angel
+34	2	8	2	angel che venne in terra col decreto
+34	2	2	2	angel
+34	6	6	6	terra
+34	7	8	8	col decreto
+34	8	8	8	decreto
+35	2	6	6	la molt' anni lagrimata pace
+35	3	6	6	molt' anni lagrimata pace
+35	3	4	4	molt' anni
+35	4	4	4	anni
+35	6	6	6	pace
+36	3	8	4	il ciel del suo lungo divieto
+36	3	4	4	il ciel
+36	4	8	4	ciel del suo lungo divieto
+36	4	4	4	ciel
+36	5	8	8	del suo lungo divieto
+36	6	8	8	suo lungo divieto
+36	7	8	8	lungo divieto
+36	8	8	8	divieto
+37	3	3	3	noi
+38	4	6	5	un atto soave
+38	4	5	5	un atto
+38	5	6	5	atto soave
+39	1	1	1	che
+39	4	6	4	imagine che tace
+39	4	4	4	imagine
+40	5	5	5	el
+40	7	7	7	Ave
+41	5	5	5	quella
+42	4	6	6	l'alto amor
+42	8	9	9	la chiave
+43	4	4	4	atto
+43	6	7	7	esta favella
+44	2	3	2	ancilla Deï
+44	3	3	3	Deï
+45	2	4	2	figura in cera
+45	2	2	2	figura
+45	4	4	4	cera
+46	5	6	6	un loco
+46	7	8	8	la mente
+47	2	4	4	'l dolce maestro
+48	2	3	3	quella parte
+48	5	6	6	'l cuore
+48	8	9	9	la gente
+49	3	3	3	i'
+49	4	4	4	mi
+49	7	7	7	viso
+50	2	2	2	retro
+50	4	4	4	Maria
+50	6	7	7	quella costa
+51	2	2	2	m'
+51	4	7	4	colui che mi movea
+51	4	4	4	colui
+51	6	6	6	mi
+52	1	3	3	un'altra storia
+52	5	7	6	la roccia imposta
+53	3	3	3	io
+53	5	5	5	Virgilio
+54	5	7	6	li occhi miei
+55	5	6	5	marmo stesso
+56	1	4	2	lo carro e ' buoi
+56	1	2	2	lo carro
+56	4	4	4	buoi
+56	6	8	7	l'arca santa
+57	5	7	5	officio non commesso
+58	3	3	3	gente
+58	5	6	6	tutta quanta
+59	3	4	4	sette cori
+59	4	4	4	cori
+59	6	8	8	due mie' sensi
+59	7	8	8	mie' sensi
+59	8	8	8	sensi
+60	3	4	4	l'un
+60	6	7	7	l'altro
+61	3	6	3	fummo de li 'ncensi
+61	3	3	3	fummo
+61	5	6	6	li 'ncensi
+61	6	6	6	'ncensi
+62	5	9	6	li occhi e 'l naso
+62	5	6	6	li occhi
+62	6	6	6	occhi
+62	8	9	9	'l naso
+62	9	9	9	naso
+63	3	3	3	sì
+63	6	6	6	no
+64	4	5	5	benedetto vaso
+65	3	5	5	l'umile salmista
+66	6	6	6	re
+66	9	10	10	quel caso
+67	5	6	6	una vista
+68	2	4	4	un gran palazzo
+68	5	5	5	Micòl
+69	3	6	3	donna dispettosa e trista
+70	1	1	1	I'
+70	3	9	4	i piè del loco dov' io stava
+70	3	4	4	i piè
+70	6	9	6	loco dov' io stava
+70	6	6	6	loco
+70	8	8	8	io
+71	5	7	7	un'altra istoria
+71	7	7	7	istoria
+72	1	1	1	che
+72	5	5	5	Micòl
+72	6	6	6	mi
+73	4	6	6	l'alta gloria
+74	1	3	3	del roman principato
+74	2	3	3	roman principato
+74	4	6	6	il cui valore
+75	2	2	2	Gregorio
+75	4	7	7	la sua gran vittoria
+76	1	1	1	i'
+76	4	5	4	Traiano imperadore
+76	4	4	4	Traiano
+76	5	5	5	imperadore
+77	2	3	3	una vedovella
+77	3	3	3	vedovella
+77	4	4	4	li
+77	7	7	7	freno
+78	2	2	2	lagrime
+78	6	6	6	dolore
+79	3	3	3	lui
+80	2	2	2	cavalieri
+80	4	8	5	l'aguglie ne l'oro
+80	4	5	5	l'aguglie
+80	7	8	8	l'oro
+81	2	2	2	essi
+81	4	4	4	vista
+81	6	6	6	vento
+82	1	2	2	La miserella
+82	2	2	2	miserella
+82	4	5	5	tutti costoro
+82	5	5	5	costoro
+83	3	3	3	Segnor
+83	5	5	5	vendetta
+84	2	6	3	mio figliuol ch'è morto
+84	2	3	3	mio figliuol
+84	3	3	3	figliuol
+84	8	8	8	io
+85	2	2	2	elli
+85	4	4	4	lei
+86	3	3	3	i'
+86	6	6	6	quella
+86	7	8	7	Segnor mio
+87	2	7	2	persona in cui dolor s'affretta
+87	2	2	2	persona
+87	4	4	4	cui
+87	5	5	5	dolor
+88	2	2	2	tu
+88	6	6	6	ei
+88	7	7	7	Chi
+88	10	10	10	io
+89	1	1	1	la
+89	5	5	5	ella
+89	6	8	8	L'altrui bene
+90	2	2	2	te
+90	6	7	7	'l tuo
+90	10	10	10	oblio
+91	2	2	2	elli
+91	7	7	7	ei
+92	2	2	2	i'
+92	2	2	2	i'
+92	4	6	6	il mio dovere
+92	5	6	6	mio dovere
+92	6	6	6	dovere
+93	1	1	1	giustizia
+93	4	4	4	pietà
+94	1	7	1	Colui che mai non vide cosa nova
+94	1	1	1	Colui
+94	6	7	6	cosa nova
+95	2	4	4	esto visibile parlare
+96	3	3	3	noi
+97	2	2	2	io
+98	1	5	2	l'imagini di tante umilitadi
+98	1	2	2	l'imagini
+98	4	5	5	tante umilitadi
+99	3	5	4	lo fabbro loro
+99	3	4	4	lo fabbro
+99	5	5	5	loro
+100	6	8	7	i passi radi
+100	7	8	7	passi radi
+100	7	7	7	passi
+101	2	3	3	il poeta
+101	3	3	3	poeta
+101	4	5	5	molte genti
+101	5	5	5	genti
+102	1	1	1	questi
+102	5	7	7	li alti gradi
+102	6	7	7	alti gradi
+102	7	7	7	gradi
+103	1	3	2	Li occhi miei
+103	2	3	2	occhi miei
+103	2	2	2	occhi
+103	6	6	6	mirare
+104	2	7	2	veder novitadi ond' e' son vaghi
+104	3	7	3	novitadi ond' e' son vaghi
+104	3	3	3	novitadi
+104	5	5	5	e'
+105	3	3	3	lui
+106	4	4	4	lettor
+106	6	6	6	tu
+107	2	3	3	buon proponimento
+107	3	3	3	proponimento
+108	2	2	2	Dio
+108	5	6	6	'l debito
+108	6	6	6	debito
+109	3	6	4	la forma del martìre
+109	3	4	4	la forma
+109	4	6	4	forma del martìre
+109	4	4	4	forma
+109	5	6	6	del martìre
+109	6	6	6	martìre
+110	2	3	3	la succession
+110	3	3	3	succession
+110	6	7	7	al peggio
+110	7	7	7	peggio
+111	2	4	4	la gran sentenza
+111	3	4	4	gran sentenza
+111	4	4	4	sentenza
+112	1	1	1	Io
+112	3	3	3	Maestro
+112	4	7	4	quel ch'io veggio
+112	6	6	6	io
+113	3	3	3	noi
+113	7	7	7	persone
+114	4	4	4	che
+114	7	7	7	veder
+115	2	2	2	elli
+115	4	4	4	me
+115	5	7	7	La grave condizione
+116	2	3	3	lor tormento
+116	5	5	5	terra
+116	6	6	6	li
+117	3	4	4	miei occhi
+117	6	6	6	n'
+117	8	8	8	tencione
+118	0	0	0	
+119	1	2	2	col viso
+119	2	2	2	viso
+119	3	9	3	quel che vien sotto a quei sassi
+119	8	9	9	quei sassi
+119	9	9	9	sassi
+120	5	5	5	ciascun
+121	2	3	3	superbi cristian
+121	4	5	5	miseri lassi
+122	3	7	4	la vista de la mente
+122	3	4	4	la vista
+122	6	7	7	la mente
+123	1	1	1	fidanza
+123	4	5	5	retrosi passi
+124	4	4	4	voi
+124	6	6	6	noi
+124	8	8	8	vermi
+125	4	6	6	l'angelica farfalla
+125	5	6	6	angelica farfalla
+125	6	6	6	farfalla
+126	1	1	1	che
+126	4	7	5	la giustizia sanza schermi
+126	4	5	5	la giustizia
+126	5	7	5	giustizia sanza schermi
+126	5	5	5	giustizia
+126	7	7	7	schermi
+127	2	2	2	che
+127	3	5	4	l'animo vostro
+127	4	5	4	animo vostro
+127	4	4	4	animo
+127	7	7	7	alto
+128	4	4	4	antomata
+128	6	6	6	difetto
+129	3	3	3	vermo
+129	6	6	6	formazion
+130	4	6	4	solaio o tetto
+130	4	4	4	solaio
+130	6	6	6	tetto
+131	2	2	2	mensola
+131	4	5	5	una figura
+131	5	5	5	figura
+132	4	7	5	le ginocchia al petto
+132	4	5	5	le ginocchia
+132	5	5	5	ginocchia
+132	6	7	7	al petto
+132	7	7	7	petto
+133	1	2	2	la qual
+133	4	8	8	del non ver vera rancura
+133	5	6	6	non ver
+133	7	8	8	vera rancura
+134	3	5	3	chi la vede
+134	3	3	3	chi
+135	2	2	2	io
+135	3	3	3	color
+135	6	7	7	ben cura
+136	1	1	1	Vero
+136	4	6	4	più e meno
+136	4	4	4	più
+136	6	6	6	meno
+137	4	6	4	più e meno
+137	4	4	4	più
+137	6	6	6	meno
+137	8	8	8	dosso
+138	2	2	2	qual
+138	3	4	4	più pazïenza
+138	4	4	4	pazïenza
+138	7	8	8	li atti
+138	8	8	8	atti
+139	4	4	4	Più

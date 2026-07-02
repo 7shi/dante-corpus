@@ -1,0 +1,382 @@
+line	start	end	head	text
+1	3	8	4	l'angel dietro a noi rimaso
+1	3	4	4	l'angel
+1	7	7	7	noi
+2	1	9	2	l'angel che n'avea vòlti al sesto giro
+2	1	2	2	l'angel
+2	8	9	9	sesto giro
+3	3	3	3	viso
+3	4	6	5	un colpo raso
+4	2	2	2	quei
+4	6	6	6	giustizia
+4	7	8	8	lor disiro
+5	4	4	4	beati
+5	6	8	8	le sue voci
+6	2	2	2	sitiunt
+6	4	4	4	altro
+6	5	5	5	ciò
+7	2	2	2	io
+7	7	9	9	l'altre foci
+8	1	1	1	m'
+8	6	7	7	alcun labore
+9	4	6	5	li spiriti veloci
+10	2	2	2	Virgilio
+10	4	4	4	Amore
+11	3	3	3	virtù
+11	5	5	5	altro
+12	3	5	4	la fiamma sua
+12	3	4	4	la fiamma
+12	4	5	4	fiamma sua
+12	4	4	4	fiamma
+13	3	8	4	l'ora che tra noi discese
+13	3	4	4	l'ora
+13	7	7	7	noi
+14	2	5	2	limbo de lo 'nferno
+14	4	5	5	lo 'nferno
+14	6	6	6	Giovenale
+15	2	4	4	la tua affezion
+15	5	5	5	mi
+16	1	4	2	mia benvoglienza inverso te
+16	1	2	2	mia benvoglienza
+16	2	4	2	benvoglienza inverso te
+16	4	4	4	te
+17	5	7	7	non vista persona
+18	7	8	8	queste scale
+19	5	5	5	amico
+19	6	6	6	mi
+20	2	3	3	troppa sicurtà
+20	3	3	3	sicurtà
+20	4	4	4	m'
+20	6	7	7	il freno
+20	7	7	7	freno
+21	3	3	3	amico
+22	6	7	7	tuo seno
+23	1	2	1	loco avarizia
+23	1	1	1	loco
+23	2	2	2	avarizia
+23	4	5	5	cotanto senno
+24	2	2	2	quanto
+24	4	5	5	tua cura
+25	1	2	2	Queste parole
+25	3	3	3	Stazio
+26	1	2	2	un poco
+26	4	4	4	riso
+27	1	5	3	Ogne tuo dir d'amor
+27	2	5	3	tuo dir d'amor
+27	3	5	3	dir d'amor
+27	5	5	5	amor
+27	8	9	9	caro cenno
+28	2	3	3	più volte
+28	5	5	5	cose
+29	5	6	6	falsa matera
+30	2	7	4	le vere ragion che son nascose
+30	2	4	4	le vere ragion
+31	1	3	3	La tua dimanda
+31	4	5	5	tuo creder
+32	7	9	9	l'altra vita
+33	3	4	4	quella cerchia
+33	6	6	6	io
+34	4	4	4	avarizia
+35	3	3	3	me
+35	5	6	6	questa dismisura
+36	1	3	1	migliaia di lunari
+36	3	3	3	lunari
+37	6	6	6	io
+37	8	9	9	mia cura
+38	2	2	2	io
+38	6	6	6	tu
+39	4	6	6	l'umana natura
+40	5	5	5	tu
+40	7	8	8	sacra fame
+41	2	3	3	l'oro
+41	4	7	5	l'appetito de' mortali
+41	7	7	7	mortali
+42	3	5	4	le giostre grame
+43	7	8	8	l'ali
+44	2	3	3	le mani
+45	3	3	3	quel
+45	6	8	8	li altri mali
+46	1	1	1	Quanti
+46	4	5	4	crini scemi
+46	4	4	4	crini
+47	2	2	2	ignoranza
+47	5	6	6	questa pecca
+47	6	6	6	pecca
+48	2	4	3	'l penter vivendo
+48	3	4	3	penter vivendo
+48	3	3	3	penter
+48	7	8	8	li stremi
+48	8	8	8	stremi
+49	3	3	3	che
+49	4	7	5	la colpa che rimbecca
+49	4	5	5	la colpa
+50	2	3	3	dritta opposizione
+50	4	5	5	alcun peccato
+51	2	2	2	esso
+51	5	6	6	suo verde
+52	3	3	3	io
+52	6	7	7	quella gente
+52	7	7	7	gente
+53	3	4	4	l'avarizia
+53	4	4	4	avarizia
+54	2	4	3	lo contrario suo
+54	3	3	3	contrario
+54	5	5	5	m'
+55	3	3	3	tu
+55	5	7	7	le crude armi
+55	6	7	7	crude armi
+56	2	6	4	la doppia trestizia di Giocasta
+56	2	4	4	la doppia trestizia
+56	3	6	4	doppia trestizia di Giocasta
+56	3	4	4	doppia trestizia
+56	4	6	4	trestizia di Giocasta
+56	6	6	6	Giocasta
+57	2	6	3	'l cantor de' buccolici carmi
+57	2	3	3	'l cantor
+57	3	6	3	cantor de' buccolici carmi
+57	5	6	6	buccolici carmi
+58	2	7	2	quello che Clïò teco lì tasta
+58	4	4	4	Clïò
+59	4	4	4	ti
+60	1	2	2	la fede
+60	4	4	4	qual
+61	4	8	5	qual sole o quai candele
+61	4	5	5	qual sole
+61	7	8	8	quai candele
+62	1	1	1	ti
+62	5	5	5	tu
+63	3	3	3	retro
+63	4	5	5	al pescator
+63	6	7	7	le vele
+64	2	2	2	elli
+64	4	4	4	lui
+64	5	5	5	Tu
+65	2	2	2	Parnaso
+65	6	8	8	le sue grotte
+65	8	8	8	grotte
+66	4	4	4	Dio
+67	3	7	3	quei che va di notte
+67	7	7	7	notte
+68	3	4	4	il lume
+68	7	7	7	sé
+69	3	3	3	sé
+69	5	7	6	le persone dotte
+70	3	3	3	Secol
+71	2	6	2	giustizia e primo tempo umano
+71	2	2	2	giustizia
+71	4	6	5	primo tempo umano
+71	4	5	5	primo tempo
+71	5	6	5	tempo umano
+71	5	5	5	tempo
+72	2	2	2	progenïe
+72	5	5	5	ciel
+73	2	2	2	te
+73	2	2	2	te
+73	3	3	3	poeta
+73	7	7	7	cristiano
+74	4	4	4	mei
+74	5	8	5	ciò ch'io disegno
+74	7	7	7	io
+75	4	5	5	la mano
+76	3	7	4	'l mondo tutto quanto pregno
+76	3	4	4	'l mondo
+77	2	5	4	la vera credenza, seminata
+77	2	4	4	la vera credenza
+78	2	7	3	li messaggi de l'etterno regno
+78	2	3	3	li messaggi
+78	5	7	7	l'etterno regno
+79	2	6	3	la parola tua sopra toccata
+79	3	6	3	parola tua sopra toccata
+79	3	3	3	parola
+80	4	5	5	nuovi predicanti
+80	5	5	5	predicanti
+81	2	2	2	io
+82	5	5	5	santi
+83	3	3	3	Domizian
+83	4	4	4	li
+84	2	3	3	mio lagrimar
+84	3	3	3	lagrimar
+84	6	7	7	lor pianti
+84	7	7	7	pianti
+85	7	7	7	me
+86	1	1	1	io
+86	2	2	2	li
+86	5	8	8	i lor dritti costumi
+87	4	4	4	me
+87	5	7	7	tutte altre sette
+88	4	4	4	io
+88	6	7	7	i Greci
+88	9	9	9	fiumi
+89	2	2	2	Tebe
+89	5	5	5	io
+89	6	6	6	battesmo
+90	3	3	3	paura
+90	4	5	5	chiuso cristian
+90	5	5	5	cristian
+90	7	7	7	mi
+91	3	3	3	paganesmo
+92	2	3	3	questa tepidezza
+92	3	3	3	tepidezza
+92	4	6	6	il quarto cerchio
+92	5	6	6	quarto cerchio
+92	6	6	6	cerchio
+93	1	1	1	cerchiar
+93	2	2	2	mi
+93	6	8	8	'l quarto centesmo
+93	7	8	8	quarto centesmo
+93	8	8	8	centesmo
+94	1	1	1	Tu
+94	6	7	7	il coperchio
+95	4	5	5	quanto bene
+95	6	6	6	io
+96	3	4	4	del salire
+96	4	4	4	salire
+96	6	6	6	soverchio
+97	4	6	4	Terrenzio nostro antico
+97	4	4	4	Terrenzio
+97	5	6	6	nostro antico
+98	1	5	1	Cecilio e Plauto e Varro
+98	1	1	1	Cecilio
+98	3	3	3	Plauto
+98	5	5	5	Varro
+98	7	7	7	lo
+99	7	8	8	qual vico
+100	1	8	1	Costoro e Persio e io e altri assai
+100	1	1	1	Costoro
+100	3	3	3	Persio
+100	5	5	5	io
+100	7	8	7	altri assai
+100	7	7	7	altri
+101	2	4	3	il duca mio
+101	3	4	3	duca mio
+101	7	8	8	quel Greco
+102	2	3	3	le Muse
+102	7	8	7	altri mai
+102	7	7	7	altri
+103	2	6	3	primo cinghio del carcere cieco
+103	3	6	3	cinghio del carcere cieco
+103	5	6	5	carcere cieco
+103	5	5	5	carcere
+104	1	2	2	spesse fïate
+104	2	2	2	fïate
+104	5	5	5	monte
+105	4	6	5	le nutrice nostre
+105	5	6	5	nutrice nostre
+105	5	5	5	nutrice
+106	1	1	1	Euripide
+106	6	6	6	Antifonte
+107	1	1	1	Simonide
+107	2	2	2	Agatone
+107	4	5	4	altri piùe
+108	1	8	1	Greci che già di lauro ornar la fronte
+108	1	1	1	Greci
+108	5	5	5	lauro
+108	7	8	8	la fronte
+109	5	7	6	le genti tue
+109	6	7	6	genti tue
+110	1	1	1	Antigone
+110	2	2	2	Deïfile
+110	4	4	4	Argia
+111	2	6	2	Ismene sì trista come fue
+111	2	2	2	Ismene
+112	2	2	2	quella
+112	5	5	5	Langia
+113	2	5	3	la figlia di Tiresia
+113	3	5	3	figlia di Tiresia
+113	5	5	5	Tiresia
+113	7	7	7	Teti
+114	3	6	4	le suore sue Deïdamia
+114	3	5	4	le suore sue
+114	4	5	4	suore sue
+114	6	6	6	Deïdamia
+115	2	2	2	ambedue
+115	4	5	5	li poeti
+116	2	2	2	novo
+116	5	5	5	riguardar
+117	3	3	3	saliri
+117	6	6	6	pareti
+118	3	5	5	le quattro ancelle
+118	4	5	5	quattro ancelle
+118	5	5	5	ancelle
+118	8	8	8	giorno
+119	3	3	3	dietro
+119	5	6	6	la quinta
+119	6	6	6	quinta
+119	9	9	9	temo
+120	5	7	7	l'ardente corno
+120	6	7	7	ardente corno
+120	7	7	7	corno
+121	2	4	4	il mio duca
+121	5	5	5	Io
+121	9	10	10	lo stremo
+122	1	3	3	le destre spalle
+123	2	3	3	il monte
+124	2	3	3	l'usanza
+124	6	7	7	nostra insegna
+125	3	4	4	la via
+125	6	7	7	men sospetto
+126	2	7	3	l'assentir di quell' anima degna
+126	2	3	3	l'assentir
+126	5	7	6	quell' anima degna
+127	1	1	1	Elli
+127	5	6	5	io soletto
+127	5	5	5	io
+128	2	2	2	retro
+128	5	7	7	i lor sermoni
+128	6	7	7	lor sermoni
+129	6	6	6	intelletto
+130	4	6	6	le dolci ragioni
+131	1	7	2	un alber che trovammo in mezza strada
+131	1	2	2	un alber
+131	6	7	7	mezza strada
+132	2	7	2	pomi a odorar soavi e buoni
+132	2	2	2	pomi
+133	3	5	3	abete in alto
+133	3	3	3	abete
+133	5	5	5	alto
+134	2	2	2	ramo
+134	2	2	2	ramo
+134	6	8	6	quello in giuso
+134	6	6	6	quello
+134	8	8	8	giuso
+135	2	2	2	io
+135	4	4	4	persona
+136	2	8	2	lato onde 'l cammin nostro era chiuso
+136	4	6	5	'l cammin nostro
+137	3	5	5	l'alta roccia
+137	6	8	7	un liquor chiaro
+138	5	6	6	le foglie
+139	1	3	3	Li due poeti
+139	5	6	6	l'alber
+140	2	3	3	una voce
+140	6	7	7	le fronde
+141	3	4	4	questo cibo
+142	5	5	5	Maria
+143	2	6	3	le nozze orrevoli e intere
+143	2	3	3	le nozze
+144	3	5	5	la sua bocca
+144	9	9	9	voi
+145	2	4	3	le Romane antiche
+145	6	7	7	lor bere
+146	4	4	4	acqua
+146	6	6	6	Danïello
+147	2	2	2	cibo
+147	5	5	5	savere
+148	1	3	2	Lo secol primo
+148	2	3	2	secol primo
+148	5	5	5	oro
+149	4	4	4	fame
+149	5	6	6	le ghiande
+149	6	6	6	ghiande
+150	2	2	2	nettare
+150	4	4	4	sete
+150	5	6	6	ogne ruscello
+150	6	6	6	ruscello
+151	1	3	1	Mele e locuste
+151	1	1	1	Mele
+151	3	3	3	locuste
+151	5	6	6	le vivande
+152	3	4	4	il Batista
+152	6	6	6	diserto
+153	3	3	3	elli
+154	3	4	4	lo Vangelio

@@ -1,0 +1,353 @@
+line	start	end	head	text
+1	4	5	4	cerchio primaio
+2	3	3	3	secondo
+2	5	6	6	men loco
+3	2	4	4	tanto più dolor
+3	3	4	4	più dolor
+3	8	8	8	guaio
+4	2	2	2	Minòs
+5	2	3	3	le colpe
+5	5	6	6	l'intrata
+6	5	5	5	ch'
+7	4	7	5	l'anima mal nata
+7	4	5	5	l'anima
+8	0	0	0	
+9	2	6	3	quel conoscitor de le peccata
+9	3	6	3	conoscitor de le peccata
+9	5	6	6	le peccata
+10	2	5	3	qual loco d'inferno
+10	3	5	3	loco d'inferno
+10	5	5	5	inferno
+10	8	8	8	essa
+11	3	4	4	la coda
+11	5	6	6	tante volte
+12	1	2	2	quantunque gradi
+13	4	4	4	lui
+13	7	7	7	molte
+14	3	3	3	vicenda
+14	4	4	4	ciascuna
+14	6	6	6	giudizio
+15	0	0	0	
+16	2	7	2	tu che vieni al doloroso ospizio
+16	2	2	2	tu
+16	6	7	7	doloroso ospizio
+17	2	2	2	Minòs
+17	4	4	4	me
+17	6	6	6	mi
+18	2	6	3	l'atto di cotanto offizio
+18	5	6	6	cotanto offizio
+19	6	6	6	cui
+20	4	8	5	l'ampiezza de l'intrare
+20	4	5	5	l'ampiezza
+20	7	8	8	l'intrare
+21	2	4	3	'l duca mio
+21	3	4	3	duca mio
+21	6	6	6	lui
+22	3	6	6	lo suo fatale andare
+23	0	0	0	
+24	1	4	1	ciò che si vuole
+24	1	1	1	ciò
+25	3	5	5	le dolenti note
+26	0	0	0	
+27	3	4	4	molto pianto
+27	5	5	5	mi
+28	1	1	1	Io
+28	4	8	4	loco d'ogne luce muto
+28	6	8	7	ogne luce muto
+28	6	7	7	ogne luce
+28	7	7	7	luce
+29	5	7	5	mar per tempesta
+29	5	5	5	mar
+29	7	7	7	tempesta
+30	3	4	4	contrari venti
+30	4	4	4	venti
+31	1	3	2	La bufera infernal
+31	2	3	2	bufera infernal
+32	2	3	3	li spirti
+32	5	7	7	la sua rapina
+32	6	7	7	sua rapina
+33	4	4	4	li
+34	5	6	6	la ruina
+35	2	3	3	le strida
+35	4	5	5	il compianto
+35	6	7	7	il lamento
+36	3	5	4	la virtù divina
+37	4	6	6	così fatto tormento
+37	6	6	6	tormento
+38	3	5	4	i peccator carnali
+38	4	5	4	peccator carnali
+38	4	4	4	peccator
+39	2	3	3	la ragion
+39	3	3	3	ragion
+39	6	6	6	talento
+40	3	4	4	li stornei
+40	7	8	8	l'ali
+41	2	3	3	freddo tempo
+41	5	8	5	schiera larga e piena
+42	2	3	3	quel fiato
+42	4	6	5	li spiriti mali
+43	9	9	9	li
+44	1	2	2	nulla speranza
+44	3	3	3	li
+45	4	4	4	posa
+45	7	8	8	minor pena
+46	3	4	4	i gru
+46	7	8	8	lor lai
+47	3	5	3	aere di sé
+47	3	3	3	aere
+47	4	7	7	di sé lunga riga
+47	5	5	5	sé
+47	6	7	7	lunga riga
+48	3	3	3	io
+48	6	6	6	guai
+49	1	6	1	ombre portate da la detta briga
+49	1	1	1	ombre
+49	4	6	6	la detta briga
+50	3	3	3	i'
+50	5	5	5	Maestro
+50	8	8	8	quelle
+51	1	7	1	genti che l'aura nera sì gastiga
+51	1	1	1	genti
+51	3	5	4	l'aura nera
+52	1	7	2	La prima di color di cui novelle
+52	1	2	2	La prima
+52	4	7	4	color di cui novelle
+52	4	4	4	color
+52	6	7	7	cui novelle
+52	7	7	7	novelle
+53	1	1	1	tu
+53	4	4	4	mi
+53	6	7	6	quelli allotta
+53	6	6	6	quelli
+54	2	5	2	imperadrice di molte favelle
+54	2	2	2	imperadrice
+54	4	5	5	molte favelle
+54	5	5	5	favelle
+55	2	4	2	vizio di lussuria
+55	4	4	4	lussuria
+56	2	2	2	libito
+56	4	4	4	licito
+56	6	7	7	sua legge
+57	3	4	4	il biasmo
+58	1	1	1	Ell'
+58	3	3	3	Semiramìs
+58	5	5	5	cui
+59	4	4	4	Nino
+59	7	8	8	sua sposa
+60	2	7	3	la terra che 'l Soldan corregge
+60	2	3	3	la terra
+60	5	6	6	'l Soldan
+61	1	2	2	L'altra
+61	4	8	4	colei che s'ancise amorosa
+61	4	4	4	colei
+62	3	3	3	fede
+62	4	7	5	al cener di Sicheo
+62	5	7	5	cener di Sicheo
+62	7	7	7	Sicheo
+63	3	4	3	Cleopatràs lussurïosa
+63	3	3	3	Cleopatràs
+64	1	1	1	Elena
+64	4	4	4	cui
+65	1	1	1	tempo
+65	6	8	8	'l grande Achille
+65	8	8	8	Achille
+66	1	1	1	che
+66	3	3	3	amore
+66	5	5	5	fine
+67	2	2	2	Parìs
+67	3	3	3	Tristano
+67	5	7	5	più di mille
+67	7	7	7	mille
+68	1	1	1	ombre
+68	6	6	6	dito
+69	2	5	2	amor di nostra vita
+69	4	5	5	nostra vita
+70	3	3	3	io
+70	5	7	7	'l mio dottore
+70	6	7	7	mio dottore
+71	2	6	3	le donne antiche e ' cavalieri
+71	2	4	3	le donne antiche
+71	3	4	3	donne antiche
+71	6	6	6	cavalieri
+72	1	1	1	pietà
+72	2	2	2	mi
+73	1	1	1	I'
+73	3	3	3	Poeta
+74	3	7	4	quei due che 'nsieme vanno
+74	3	4	4	quei due
+75	4	5	5	al vento
+76	2	2	2	elli
+76	4	4	4	me
+77	4	4	4	noi
+77	6	6	6	tu
+77	8	8	8	li
+78	2	6	3	quello amor che i mena
+78	2	3	3	quello amor
+78	5	5	5	i
+78	8	8	8	ei
+79	4	5	5	il vento
+79	7	7	7	noi
+79	8	8	8	li
+80	2	3	3	la voce
+80	5	6	5	anime affannate
+81	3	3	3	noi
+81	6	6	6	altri
+81	7	7	7	nol
+82	1	5	2	Quali colombe dal disio chiamate
+82	1	2	2	Quali colombe
+82	2	5	2	colombe dal disio chiamate
+82	4	4	4	disio
+83	2	9	3	l'ali alzate e ferme al dolce nido
+83	2	3	3	l'ali
+83	8	9	9	dolce nido
+84	3	4	4	l'aere
+84	6	6	6	voler
+85	1	1	1	cotali
+85	4	8	5	la schiera ov' è Dido
+85	4	5	5	la schiera
+85	8	8	8	Dido
+86	2	2	2	noi
+86	5	7	6	l'aere maligno
+87	4	6	6	l'affettüoso grido
+88	2	5	2	animal grazïoso e benigno
+88	2	2	2	animal
+89	5	7	6	l'aere perso
+89	6	7	6	aere perso
+89	6	6	6	aere
+90	1	1	1	noi
+90	4	7	5	il mondo di sanguigno
+90	4	5	5	il mondo
+90	5	7	5	mondo di sanguigno
+90	5	5	5	mondo
+90	7	7	7	sanguigno
+91	4	8	5	il re de l'universo
+91	7	8	8	l'universo
+92	1	1	1	noi
+92	3	3	3	lui
+92	5	7	7	la tua pace
+93	4	8	4	pietà del nostro mal perverso
+93	6	8	7	nostro mal perverso
+93	7	8	7	mal perverso
+94	2	9	2	quel che udire e che parlar vi piace
+94	2	2	2	quel
+94	4	4	4	udire
+94	7	7	7	parlar
+94	8	8	8	vi
+95	1	1	1	noi
+95	6	6	6	voi
+96	3	4	4	'l vento
+96	4	4	4	vento
+96	7	7	7	ci
+97	2	6	3	la terra dove nata fui
+97	2	3	3	la terra
+98	2	7	3	la marina dove 'l Po discende
+98	2	3	3	la marina
+98	5	6	6	'l Po
+99	3	3	3	pace
+99	5	6	5	seguaci sui
+100	1	1	1	Amor
+100	4	5	4	cor gentil
+100	4	4	4	cor
+101	2	2	2	costui
+101	4	6	6	la bella persona
+101	5	6	6	bella persona
+101	6	6	6	persona
+102	1	1	1	che
+102	6	7	7	'l modo
+102	7	7	7	modo
+103	1	1	1	Amor
+103	4	5	5	nullo amato
+103	4	4	4	nullo
+103	5	5	5	amato
+103	6	6	6	amar
+104	3	7	5	del costui piacer sì forte
+104	4	7	5	costui piacer sì forte
+104	4	4	4	costui
+104	5	7	5	piacer sì forte
+104	5	5	5	piacer
+105	6	6	6	m'
+106	1	1	1	Amor
+106	3	3	3	noi
+106	5	6	6	una morte
+107	1	1	1	Caina
+107	3	7	3	chi a vita ci spense
+107	5	5	5	vita
+107	6	6	6	ci
+108	1	2	2	Queste parole
+108	4	4	4	lor
+108	5	5	5	ci
+109	2	2	2	io
+109	4	6	5	quell' anime offense
+109	5	6	5	anime offense
+110	2	3	3	il viso
+110	2	2	2	il
+111	3	4	4	'l poeta
+111	5	5	5	mi
+112	5	5	5	lasso
+113	1	3	3	quanti dolci pensier
+113	2	3	3	dolci pensier
+113	3	3	3	pensier
+113	4	5	5	quanto disio
+113	5	5	5	disio
+114	2	2	2	costoro
+114	4	5	5	doloroso passo
+114	5	5	5	passo
+115	5	5	5	loro
+115	8	8	8	io
+116	3	3	3	Francesca
+116	4	6	6	i tuoi martìri
+116	5	6	6	tuoi martìri
+117	2	2	2	lagrimar
+117	3	3	3	mi
+118	4	8	4	tempo d'i dolci sospiri
+118	6	8	8	i dolci sospiri
+119	2	2	2	che
+119	6	6	6	amore
+120	3	5	5	i dubbiosi disiri
+121	2	2	2	quella
+121	4	4	4	me
+121	5	7	7	Nessun maggior dolore
+122	4	5	4	tempo felice
+123	2	2	2	miseria
+123	4	4	4	ciò
+123	6	8	8	'l tuo dottore
+124	5	7	7	la prima radice
+125	1	3	3	del nostro amor
+125	2	3	3	nostro amor
+125	4	4	4	tu
+125	6	7	7	cotanto affetto
+126	3	7	3	colui che piange e dice
+126	3	3	3	colui
+127	1	1	1	Noi
+127	3	4	4	un giorno
+127	6	6	6	diletto
+128	2	2	2	Lancialotto
+128	4	4	4	amor
+128	5	5	5	lo
+129	5	6	6	alcun sospetto
+130	2	3	3	più fïate
+130	4	5	5	li occhi
+131	1	2	2	quella lettura
+131	5	6	6	il viso
+132	2	4	4	solo un punto
+132	3	4	4	un punto
+132	6	9	6	quel che ci vinse
+133	3	5	5	il disïato riso
+134	4	5	5	cotanto amante
+135	1	1	1	questi
+135	5	5	5	me
+136	1	2	2	la bocca
+137	1	1	1	Galeotto
+137	3	4	4	'l libro
+137	6	8	6	chi lo scrisse
+138	1	2	2	quel giorno
+139	3	5	5	l'uno spirto
+139	4	5	5	uno spirto
+139	6	6	6	questo
+140	1	2	2	l'altro
+140	2	2	2	altro
+140	7	7	7	pietade
+141	1	1	1	io
+141	1	1	1	io
+142	4	5	4	corpo morto
+142	4	4	4	corpo

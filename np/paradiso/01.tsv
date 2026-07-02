@@ -1,0 +1,363 @@
+line	start	end	head	text
+1	1	7	2	La gloria di colui che tutto move
+1	1	2	2	La gloria
+1	4	7	4	colui che tutto move
+2	2	3	3	l'universo
+3	2	7	3	una parte più e meno altrove
+3	2	3	3	una parte
+4	2	9	2	ciel che più de la sua luce prende
+4	2	2	2	ciel
+4	6	8	8	la sua luce
+4	7	8	8	sua luce
+4	8	8	8	luce
+5	2	2	2	io
+5	5	7	5	cose che ridire
+5	5	5	5	cose
+6	5	9	5	chi di là sù discende
+6	5	5	5	chi
+7	3	3	3	sé
+7	5	6	6	suo disire
+8	1	2	2	nostro intelletto
+9	3	4	4	la memoria
+10	3	3	3	io
+10	5	6	5	regno santo
+11	1	1	1	ne
+11	2	4	4	la mia mente
+11	7	7	7	tesoro
+12	3	6	3	materia del mio canto
+12	5	6	6	mio canto
+13	2	3	3	buono Appollo
+13	5	7	7	l'ultimo lavoro
+14	2	7	7	del tuo valor sì fatto vaso
+14	3	4	4	tuo valor
+14	5	7	7	sì fatto vaso
+15	5	7	7	l'amato alloro
+16	4	8	6	l'un giogo di Parnaso
+16	6	8	6	giogo di Parnaso
+16	8	8	8	Parnaso
+17	7	7	7	amendue
+18	3	3	3	uopo
+18	6	8	7	l'aringo rimaso
+19	3	4	3	petto mio
+19	7	7	7	tue
+20	4	4	4	Marsïa
+21	2	7	3	la vagina de le membra sue
+21	2	3	3	la vagina
+21	5	7	6	le membra sue
+21	6	7	6	membra sue
+22	2	3	3	divina virtù
+23	3	7	4	l'ombra del beato regno
+23	3	4	4	l'ombra
+23	6	7	7	beato regno
+24	3	4	4	mio capo
+25	4	8	4	piè del tuo diletto legno
+25	6	8	8	tuo diletto legno
+26	5	6	6	le foglie
+27	2	5	3	la materia e tu
+27	2	3	3	la materia
+27	5	5	5	tu
+27	6	6	6	mi
+28	1	3	3	Sì rade volte
+28	3	3	3	volte
+28	4	4	4	padre
+29	2	2	2	trïunfare
+29	4	4	4	cesare
+29	6	6	6	poeta
+30	1	7	1	colpa e vergogna de l'umane voglie
+30	1	3	1	colpa e vergogna
+30	1	1	1	colpa
+30	3	7	3	vergogna de l'umane voglie
+30	3	3	3	vergogna
+30	5	7	7	l'umane voglie
+30	7	7	7	voglie
+31	3	3	3	letizia
+31	6	7	7	la lieta
+32	1	2	2	delfica deïtà
+32	4	5	5	la fronda
+33	1	1	1	peneia
+33	3	3	3	alcun
+33	5	5	5	sé
+34	1	2	2	Poca favilla
+34	3	4	4	gran fiamma
+35	3	5	3	retro a me
+35	5	5	5	me
+35	7	8	8	miglior voci
+36	4	4	4	Cirra
+37	3	3	3	mortali
+37	5	6	6	diverse foci
+38	1	4	2	la lucerna del mondo
+38	2	4	2	lucerna del mondo
+38	4	4	4	mondo
+38	7	7	7	quella
+39	2	3	3	quattro cerchi
+39	6	7	7	tre croci
+40	2	3	3	miglior corso
+40	6	7	7	migliore stella
+41	4	6	6	la mondana cera
+42	3	4	4	suo modo
+43	5	5	5	mane
+43	9	9	9	sera
+44	1	2	2	tal foce
+44	5	5	5	tutto
+45	1	2	2	quello emisperio
+45	4	7	6	l'altra parte nera
+45	4	6	6	l'altra parte
+45	6	7	6	parte nera
+46	2	2	2	Beatrice
+46	5	6	6	sinistro fianco
+47	6	6	6	sole
+48	1	1	1	aguglia
+49	4	5	5	secondo raggio
+49	5	5	5	raggio
+50	3	3	3	primo
+50	7	7	7	suso
+51	3	6	3	pelegrin che tornar vuole
+51	3	3	3	pelegrin
+52	3	9	4	l'atto suo, per li occhi infuso
+52	3	5	4	l'atto suo
+52	4	5	4	atto suo
+52	7	8	8	li occhi
+53	2	4	3	l'imagine mia
+53	3	4	3	imagine mia
+53	5	6	6	il mio
+54	3	4	4	li occhi
+54	6	6	6	sole
+54	8	9	9	nostr' uso
+55	1	1	1	Molto
+56	2	4	4	le nostre virtù
+56	3	4	4	nostre virtù
+56	4	4	4	virtù
+56	5	7	5	mercé del loco
+56	6	7	7	del loco
+56	7	7	7	loco
+57	3	7	3	proprio de l'umana spece
+57	5	7	7	l'umana spece
+57	6	7	7	umana spece
+57	7	7	7	spece
+58	1	1	1	Io
+59	2	2	2	io
+60	2	7	2	ferro che bogliente esce del foco
+60	2	2	2	ferro
+60	7	7	7	foco
+61	3	3	3	sùbito
+61	5	7	5	giorno a giorno
+61	5	5	5	giorno
+61	5	5	5	giorno
+62	4	4	4	quei
+63	2	8	3	il ciel d'un altro sole addorno
+63	2	7	3	il ciel d'un altro sole
+63	2	3	3	il ciel
+63	5	7	7	un altro sole
+63	7	7	7	sole
+64	1	6	1	Beatrice tutta ne l'etterne rote
+64	1	1	1	Beatrice
+64	4	6	6	l'etterne rote
+64	6	6	6	rote
+65	3	4	4	li occhi
+65	4	4	4	occhi
+65	7	7	7	io
+65	9	9	9	lei
+66	1	2	2	le luci
+66	2	2	2	luci
+67	2	3	3	suo aspetto
+68	4	4	4	Glauco
+68	6	9	6	gustar de l'erba
+68	8	9	9	l'erba
+69	2	2	2	'l
+69	6	10	6	mar de li altri dèi
+69	8	10	10	li altri dèi
+70	1	1	1	Trasumanar
+70	2	2	2	significar
+70	4	4	4	verba
+71	5	6	6	l'essemplo
+72	2	2	2	cui
+72	3	3	3	esperïenza
+72	4	4	4	grazia
+73	2	2	2	i'
+73	6	6	6	me
+73	7	9	7	quel che creasti
+73	7	7	7	quel
+74	2	6	2	amor che 'l ciel governi
+74	2	2	2	amor
+74	4	5	5	'l ciel
+75	1	1	1	tu
+75	2	2	2	'l
+75	6	7	7	tuo lume
+75	8	8	8	mi
+76	2	6	3	la rota che tu sempiterni
+76	2	3	3	la rota
+76	5	5	5	tu
+77	3	3	3	sé
+77	4	4	4	mi
+78	2	7	3	l'armonia che temperi e discerni
+78	2	3	3	l'armonia
+79	5	6	5	cielo acceso
+80	2	5	3	la fiamma del sol
+80	2	3	3	la fiamma
+80	3	5	3	fiamma del sol
+80	5	5	5	sol
+80	7	7	7	pioggia
+80	9	9	9	fiume
+81	1	1	1	lago
+81	4	6	4	alcun tanto disteso
+82	1	8	2	La novità del suono e 'l grande lume
+82	1	4	2	La novità del suono
+82	2	4	2	novità del suono
+82	4	4	4	suono
+82	6	8	8	'l grande lume
+82	7	8	8	grande lume
+82	8	8	8	lume
+83	2	3	3	lor cagion
+83	3	3	3	cagion
+83	6	7	7	un disio
+83	7	7	7	disio
+84	5	6	6	cotanto acume
+84	6	6	6	acume
+85	2	2	2	ella
+85	5	5	5	me
+85	8	8	8	io
+86	3	5	4	l'animo commosso
+86	3	4	4	l'animo
+86	4	5	4	animo commosso
+86	4	4	4	animo
+87	3	3	3	io
+87	6	7	7	la bocca
+87	7	7	7	bocca
+88	3	4	3	Tu stesso
+89	1	3	3	col falso imaginar
+89	2	3	3	falso imaginar
+90	1	3	1	ciò che vedresti
+90	1	1	1	ciò
+91	1	1	1	Tu
+91	5	5	5	terra
+91	8	8	8	tu
+92	2	2	2	folgore
+92	4	6	6	il proprio sito
+92	6	6	6	sito
+93	4	4	4	tu
+93	7	7	7	esso
+94	2	2	2	io
+94	5	6	6	primo dubbio
+95	2	5	4	le sorrise parolette brevi
+95	3	5	4	sorrise parolette brevi
+95	4	5	4	parolette brevi
+96	3	4	4	un nuovo
+97	0	0	0	
+98	2	3	3	grande ammirazion
+98	3	3	3	ammirazion
+99	2	2	2	io
+99	4	6	5	questi corpi levi
+99	5	6	5	corpi levi
+99	5	5	5	corpi
+100	2	2	2	ella
+100	5	7	7	un pïo sospiro
+100	6	7	7	pïo sospiro
+100	7	7	7	sospiro
+101	1	2	2	li occhi
+101	2	2	2	occhi
+101	5	5	5	me
+101	7	8	8	quel sembiante
+101	8	8	8	sembiante
+102	2	2	2	madre
+102	5	6	5	figlio deliro
+102	5	5	5	figlio
+103	3	6	4	Le cose tutte quante
+104	2	4	2	ordine tra loro
+104	4	4	4	loro
+104	6	6	6	questo
+104	8	8	8	forma
+105	2	3	3	l'universo
+105	5	5	5	Dio
+106	3	5	5	l'alte creature
+106	6	7	7	l'orma
+107	2	4	4	l'etterno valore
+107	5	6	6	il qual
+107	8	8	8	fine
+108	2	2	2	quale
+108	5	7	7	la toccata norma
+109	2	6	3	l'ordine ch'io dico
+109	2	3	3	l'ordine
+109	5	5	5	io
+110	1	2	2	tutte nature
+110	2	2	2	nature
+110	4	5	5	diverse sorti
+110	5	5	5	sorti
+111	3	4	3	principio loro
+111	3	3	3	principio
+111	4	4	4	loro
+112	5	6	6	diversi porti
+112	6	6	6	porti
+113	2	7	4	lo gran mar de l'essere
+113	2	4	4	lo gran mar
+113	3	7	4	gran mar de l'essere
+113	3	4	4	gran mar
+113	4	7	4	mar de l'essere
+113	4	4	4	mar
+113	6	7	7	l'essere
+113	7	7	7	essere
+113	9	9	9	ciascuna
+114	2	5	2	istinto a lei dato
+114	2	2	2	istinto
+114	4	4	4	lei
+114	7	7	7	la
+115	1	1	1	Questi
+115	4	5	5	il foco
+115	7	8	8	la luna
+116	1	1	1	questi
+116	3	4	3	cor mortali
+116	6	6	6	permotore
+117	1	1	1	questi
+117	2	3	3	la terra
+117	5	5	5	sé
+118	3	7	4	le creature che son fore
+118	3	4	4	le creature
+119	2	2	2	intelligenza
+119	3	4	4	quest' arco
+120	2	2	2	quelle
+120	5	7	5	intelletto e amore
+120	5	5	5	intelletto
+120	7	7	7	amore
+121	1	2	2	La provedenza
+122	2	3	3	suo lume
+122	5	6	6	'l ciel
+123	2	2	2	qual
+123	5	9	5	quel c'ha maggior fretta
+123	8	9	9	maggior fretta
+124	6	7	7	sito decreto
+125	3	7	4	la virtù di quella corda
+125	6	7	7	quella corda
+126	2	4	2	ciò che scocca
+126	7	8	7	segno lieto
+127	1	1	1	Vero
+127	5	5	5	forma
+128	1	2	2	molte fïate
+128	4	8	5	l'intenzion de l'arte
+128	5	8	5	intenzion de l'arte
+128	7	8	8	l'arte
+129	3	3	3	risponder
+129	4	5	5	la materia
+130	3	4	4	questo corso
+131	2	3	3	la creatura
+131	6	6	6	podere
+132	6	7	7	altra parte
+133	0	0	0	
+134	1	3	1	foco di nube
+134	3	3	3	nube
+134	5	7	6	l'impeto primo
+135	1	1	1	l'
+135	5	6	6	falso piacere
+136	0	0	0	
+137	1	3	3	lo tuo salir
+137	8	9	9	un rivo
+138	3	4	4	alto monte
+138	8	8	8	imo
+139	1	1	1	Maraviglia
+139	4	4	4	te
+140	2	2	2	impedimento
+141	3	3	3	terra
+141	4	7	4	quïete in foco vivo
+141	4	4	4	quïete
+141	6	7	6	foco vivo
+141	6	6	6	foco
+142	4	5	5	lo cielo
+142	6	7	7	il viso

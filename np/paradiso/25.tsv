@@ -1,0 +1,338 @@
+line	start	end	head	text
+1	5	7	6	'l poema sacro
+2	2	2	2	quale
+2	5	9	5	mano e cielo e terra
+2	5	5	5	mano
+2	7	9	7	cielo e terra
+2	7	7	7	cielo
+2	9	9	9	terra
+3	3	3	3	m'
+3	7	8	8	molti anni
+4	2	7	3	la crudeltà che fuor mi serra
+4	2	3	3	la crudeltà
+5	2	3	3	bello ovile
+5	5	5	5	io
+5	7	7	7	agnello
+6	3	7	3	lupi che li danno guerra
+6	7	7	7	guerra
+7	2	3	3	altra voce
+7	6	7	7	altro vello
+8	2	2	2	poeta
+8	6	6	6	fonte
+9	2	3	3	mio battesmo
+9	5	6	6	'l cappello
+10	4	5	5	la fede
+10	8	8	8	conte
+11	1	4	2	l'anime a Dio
+11	1	2	2	l'anime
+11	4	4	4	Dio
+11	7	7	7	io
+12	1	1	1	Pietro
+12	3	3	3	lei
+12	7	8	8	la fronte
+13	4	5	5	un lume
+13	7	7	7	noi
+14	2	7	3	quella spera ond' uscì la primizia
+14	2	3	3	quella spera
+14	6	7	7	la primizia
+15	3	3	3	Cristo
+15	5	7	6	i vicari suoi
+16	2	7	4	la mia donna, piena di letizia
+16	2	4	4	la mia donna
+16	7	7	7	letizia
+17	6	7	7	il barone
+18	7	7	7	Galizia
+19	4	5	5	il colombo
+20	2	3	3	al compagno
+20	3	3	3	compagno
+20	4	5	5	l'uno
+20	7	8	8	l'altro
+21	4	5	5	l'affezione
+22	3	3	3	ïo
+22	4	5	5	l'un
+22	5	5	5	un
+22	7	9	8	l'altro grande
+22	7	8	8	l'altro
+22	8	8	8	altro
+23	1	2	1	principe glorïoso
+23	1	1	1	principe
+24	2	8	3	il cibo che là sù li prande
+24	2	3	3	il cibo
+24	3	3	3	cibo
+24	4	4	4	che
+25	4	5	5	'l gratular
+26	3	3	3	me
+26	4	4	4	ciascun
+27	5	7	7	'l mio volto
+28	3	3	3	Bëatrice
+29	1	2	2	Inclita vita
+29	4	4	4	cui
+29	5	6	6	la larghezza
+30	2	4	4	la nostra basilica
+31	3	4	4	la spene
+31	4	4	4	spene
+31	6	7	7	questa altezza
+31	7	7	7	altezza
+32	1	1	1	tu
+32	4	5	5	tante fiate
+32	5	5	5	fiate
+32	6	6	6	la
+33	2	2	2	Iesù
+33	4	4	4	tre
+33	6	7	7	più carezza
+33	7	7	7	carezza
+34	2	3	3	la testa
+35	2	9	2	ciò che vien qua sù del mortal mondo
+35	8	9	9	mortal mondo
+36	4	5	5	nostri raggi
+37	1	5	2	Questo conforto del foco secondo
+37	4	5	4	foco secondo
+38	4	4	4	io
+38	6	7	7	li occhi
+38	9	9	9	monti
+39	2	2	2	li
+39	6	7	7	troppo pondo
+40	4	4	4	grazia
+41	1	3	3	lo nostro Imperadore
+41	2	3	3	nostro Imperadore
+41	3	3	3	Imperadore
+41	5	6	6	la morte
+41	6	6	6	morte
+42	2	5	3	l'aula più secreta
+42	2	3	3	l'aula
+42	3	3	3	aula
+42	7	8	8	suoi conti
+42	8	8	8	conti
+43	4	8	5	il ver di questa corte
+43	4	5	5	il ver
+43	7	8	8	questa corte
+44	1	2	2	la spene
+45	2	2	2	te
+45	5	5	5	altrui
+45	7	7	7	ciò
+45	8	8	8	conforte
+46	2	5	2	quel ch'ell' è
+46	4	4	4	ell'
+47	1	3	2	la mente tua
+47	8	8	8	te
+48	3	5	5	'l secondo lume
+49	2	7	3	quella pïa che guidò le penne
+49	2	3	3	quella pïa
+49	6	7	7	le penne
+50	2	4	4	le mie ali
+50	6	8	8	così alto volo
+51	2	3	3	la risposta
+52	1	3	2	La Chiesa militante
+52	1	2	2	La Chiesa
+52	2	3	2	Chiesa militante
+52	4	5	5	alcun figliuolo
+53	4	5	5	più speranza
+54	2	7	2	Sol che raggia tutto nostro stuolo
+54	2	2	2	Sol
+54	5	7	7	tutto nostro stuolo
+54	6	7	7	nostro stuolo
+55	2	2	2	li
+55	7	7	7	Egitto
+56	3	3	3	Ierusalemme
+57	3	4	4	'l militar
+57	4	4	4	militar
+57	5	5	5	li
+58	1	4	4	Li altri due punti
+58	8	8	8	sapere
+59	5	6	6	ei rapporti
+60	2	3	3	questa virtù
+60	7	7	7	piacere
+61	2	2	2	lui
+61	4	4	4	io
+62	3	3	3	iattanza
+62	5	5	5	elli
+62	7	7	7	ciò
+63	2	5	3	la grazia di Dio
+63	3	5	3	grazia di Dio
+63	5	5	5	Dio
+63	6	6	6	ciò
+63	7	7	7	li
+64	2	2	2	discente
+64	5	5	5	dottor
+65	5	9	5	quel ch'elli è esperto
+65	7	7	7	elli
+66	2	4	4	la sua bontà
+67	1	1	1	Spene
+67	3	3	3	io
+67	5	7	6	uno attender certo
+68	1	4	3	de la gloria futura
+68	2	4	3	la gloria futura
+68	5	6	6	il qual
+69	1	5	1	grazia divina e precedente merto
+69	1	2	1	grazia divina
+69	4	5	5	precedente merto
+70	2	3	3	molte stelle
+70	6	7	7	questa luce
+71	2	2	2	quei
+71	3	3	3	la
+71	6	7	7	mio cor
+72	3	7	4	sommo cantor del sommo duce
+72	6	7	7	sommo duce
+73	3	3	3	te
+73	5	7	7	la sua tëodia
+74	2	7	2	color che sanno il nome tuo
+74	5	7	6	il nome tuo
+75	2	4	2	chi nol sa
+75	6	6	6	elli
+75	8	10	9	la fede mia
+76	1	1	1	Tu
+76	5	7	6	lo stillar suo
+76	6	7	6	stillar suo
+77	2	3	3	la pistola
+77	7	7	7	io
+78	3	5	5	altrui vostra pioggia
+78	4	5	5	vostra pioggia
+79	2	2	2	io
+79	5	7	7	al vivo seno
+79	6	7	7	vivo seno
+80	2	3	3	quello incendio
+80	5	6	6	un lampo
+81	5	7	5	guisa di baleno
+81	7	7	7	baleno
+82	3	7	4	L'amore ond' ïo avvampo
+82	3	4	4	L'amore
+82	6	6	6	ïo
+83	3	7	4	la virtù che mi seguette
+83	3	4	4	la virtù
+83	6	6	6	mi
+84	2	3	3	la palma
+84	6	9	7	l'uscir del campo
+84	8	9	9	del campo
+85	3	3	3	io
+85	6	9	6	te che ti dilette
+85	6	6	6	te
+85	8	8	8	ti
+86	2	2	2	lei
+86	8	8	8	tu
+87	1	6	1	quello che la speranza ti 'mpromette
+87	1	1	1	quello
+87	3	4	4	la speranza
+87	5	5	5	ti
+88	2	2	2	io
+88	3	8	4	Le nove e le scritture antiche
+88	3	4	4	Le nove
+88	6	8	7	le scritture antiche
+88	7	8	7	scritture antiche
+89	2	3	3	lo segno
+89	2	2	2	lo
+89	5	5	5	esso
+90	2	9	3	l'anime che Dio s'ha fatte amiche
+90	2	3	3	l'anime
+90	5	5	5	Dio
+91	2	2	2	Isaia
+91	4	5	4	ciascuna vestita
+92	2	4	4	la sua terra
+92	7	8	8	doppia vesta
+93	2	4	4	la sua terra
+93	6	8	8	questa dolce vita
+94	2	8	4	'l tuo fratello assai vie più digesta
+94	2	4	4	'l tuo fratello
+94	3	4	4	tuo fratello
+95	5	7	7	le bianche stole
+95	6	7	7	bianche stole
+96	1	2	2	questa revelazion
+97	5	8	5	fin d'este parole
+97	7	8	8	este parole
+98	3	3	3	te
+98	7	7	7	noi
+99	4	6	6	tutte le carole
+100	3	3	3	esse
+100	4	5	5	un lume
+101	4	5	5	'l Cancro
+101	7	9	9	un tal cristallo
+102	1	2	2	l'inverno
+102	4	9	5	un mese d'un sol dì
+102	7	9	9	un sol dì
+103	9	9	9	ballo
+104	1	2	1	vergine lieta
+104	6	6	6	onore
+105	2	3	3	la novizia
+105	6	7	7	alcun fallo
+106	3	3	3	io
+106	4	6	6	lo schiarato splendore
+106	6	6	6	splendore
+107	3	8	3	due che si volgieno a nota
+107	3	3	3	due
+107	8	8	8	nota
+108	4	6	6	loro ardente amore
+108	6	6	6	amore
+109	4	4	4	canto
+109	7	8	8	la rota
+110	2	4	4	la mia donna
+110	6	6	6	lor
+110	8	9	9	l'aspetto
+111	3	6	3	sposa tacita e immota
+112	1	1	1	Questi
+112	3	8	3	colui che giacque sopra 'l petto
+112	3	3	3	colui
+112	7	8	8	'l petto
+113	1	3	3	del nostro pellicano
+113	2	3	3	nostro pellicano
+113	5	5	5	questi
+114	3	4	4	la croce
+114	6	8	7	grande officio eletto
+114	6	7	7	grande officio
+115	1	3	2	La donna mia
+115	2	3	2	donna mia
+116	2	7	3	la vista sua di stare attenta
+116	2	4	3	la vista sua
+116	3	4	3	vista sua
+117	4	6	5	le parole sue
+117	5	6	5	parole sue
+118	1	1	1	Qual
+118	3	8	3	colui ch'adocchia e s'argomenta
+118	3	3	3	colui
+119	4	5	5	lo sole
+119	6	7	7	un poco
+120	1	1	1	che
+120	5	5	5	vedente
+121	1	1	1	tal
+121	4	4	4	ïo
+121	6	8	8	quell' ultimo foco
+121	7	8	8	ultimo foco
+121	8	8	8	foco
+122	6	6	6	t'
+123	3	8	3	cosa che qui non ha loco
+123	3	3	3	cosa
+123	8	8	8	loco
+124	2	2	2	terra
+124	2	2	2	terra
+124	5	7	7	il mio corpo
+124	6	7	7	mio corpo
+125	3	4	4	li altri
+125	6	8	7	'l numero nostro
+125	7	8	7	numero nostro
+126	2	4	4	l'etterno proposito
+126	3	4	4	etterno proposito
+127	2	7	4	le due stole nel beato chiostro
+127	2	4	4	le due stole
+127	6	7	7	beato chiostro
+128	2	7	4	le due luci sole che saliro
+128	2	5	4	le due luci sole
+128	4	5	4	luci sole
+129	2	2	2	questo
+129	5	6	5	mondo vostro
+130	2	3	3	questa voce
+130	4	6	6	l'infiammato giro
+131	4	4	4	esso
+131	5	7	7	il dolce mischio
+132	5	8	5	suon del trino spiro
+132	7	8	8	trino spiro
+133	5	7	5	fatica o rischio
+133	5	5	5	fatica
+133	7	7	7	rischio
+134	1	2	2	li remi
+134	5	6	6	l'acqua
+135	1	1	1	tutti
+135	5	8	5	sonar d'un fischio
+135	7	8	8	un fischio
+136	4	5	5	la mente
+137	6	6	6	Beatrice
+138	6	6	6	io
+139	3	3	3	lei
+139	6	7	6	mondo felice

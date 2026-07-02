@@ -1,0 +1,362 @@
+line	start	end	head	text
+1	3	7	4	lo mondo in suo periclo
+1	3	4	4	lo mondo
+1	6	7	7	suo periclo
+2	2	4	4	la bella Ciprigna
+2	5	7	7	il folle amore
+3	4	5	5	terzo epiciclo
+4	6	6	6	lei
+4	8	8	8	onore
+5	2	2	2	sacrificio
+5	5	6	6	votivo grido
+5	6	6	6	grido
+6	1	3	2	le genti antiche
+6	2	3	2	genti antiche
+6	2	2	2	genti
+6	5	7	7	l'antico errore
+6	6	7	7	antico errore
+6	7	7	7	errore
+7	2	2	2	Dïone
+7	5	5	5	Cupido
+8	1	1	1	quella
+8	3	4	3	madre sua
+8	5	5	5	questo
+8	7	7	7	figlio
+9	4	4	4	el
+9	7	9	7	grembo a Dido
+9	9	9	9	Dido
+10	3	3	3	costei
+10	5	5	5	io
+10	6	6	6	principio
+11	2	6	3	il vocabol de la stella
+11	2	3	3	il vocabol
+11	5	6	6	la stella
+12	2	3	3	'l sol
+12	7	7	7	coppa
+12	10	10	10	ciglio
+13	1	1	1	Io
+13	5	8	6	del salire in ella
+13	6	8	6	salire in ella
+13	8	8	8	ella
+14	8	8	8	fede
+15	1	9	2	la donna mia ch'i' vidi far più bella
+15	1	3	2	la donna mia
+15	2	3	2	donna mia
+15	5	5	5	i'
+16	4	4	4	fiamma
+16	5	5	5	favilla
+17	4	4	4	voce
+17	4	4	4	voce
+18	2	2	2	una
+18	6	6	6	altra
+19	2	2	2	io
+19	4	5	5	essa luce
+19	6	7	7	altre lucerne
+20	3	7	3	giro più e men correnti
+20	3	3	3	giro
+21	2	7	2	modo, credo, di lor viste interne
+21	2	2	2	modo
+21	5	7	6	lor viste interne
+21	6	7	6	viste interne
+22	2	3	3	fredda nube
+22	6	6	6	venti
+23	2	2	2	visibili
+23	4	4	4	no
+24	4	6	4	impediti e lenti
+24	4	4	4	impediti
+24	6	6	6	lenti
+25	2	2	2	chi
+25	4	6	5	quei lumi divini
+25	5	6	5	lumi divini
+26	3	3	3	noi
+26	6	7	7	il giro
+26	7	7	7	giro
+27	4	6	6	li alti Serafini
+27	5	6	6	alti Serafini
+27	6	6	6	Serafini
+28	4	8	4	quei che più innanzi appariro
+28	4	4	4	quei
+29	2	2	2	Osanna
+30	2	2	2	rïudir
+30	6	6	6	disiro
+31	4	5	5	l'un
+31	9	9	9	noi
+32	4	4	4	Tutti
+33	2	3	3	tuo piacer
+33	6	6	6	noi
+34	1	1	1	Noi
+34	5	6	5	principi celesti
+35	2	3	3	un giro
+35	6	7	7	un girare
+35	10	11	11	una sete
+36	2	2	2	quali
+36	3	3	3	tu
+36	5	5	5	mondo
+37	1	7	1	Voi che 'ntendendo il terzo ciel movete
+37	1	1	1	Voi
+37	4	6	6	il terzo ciel
+38	6	6	6	amor
+38	9	9	9	piacerti
+39	5	8	6	un poco di quïete
+39	5	6	6	un poco
+39	8	8	8	quïete
+40	3	5	4	li occhi miei
+40	4	5	4	occhi miei
+41	2	4	4	la mia donna
+41	3	4	4	mia donna
+41	7	7	7	essa
+42	2	2	2	li
+42	5	5	5	sé
+43	3	6	4	la luce che promessa
+43	3	4	4	la luce
+44	6	6	6	chi
+45	1	7	2	la voce mia di grande affetto impressa
+45	1	6	2	la voce mia di grande affetto
+45	1	3	2	la voce mia
+45	5	6	6	grande affetto
+46	2	4	2	quanta e quale
+46	2	2	2	quanta
+46	4	4	4	quale
+46	6	6	6	io
+46	7	7	7	lei
+47	2	6	2	allegrezza nova che s'accrebbe
+47	2	3	2	allegrezza nova
+47	2	2	2	allegrezza
+47	4	4	4	che
+48	4	6	5	l'allegrezze sue
+48	5	6	5	allegrezze sue
+48	5	5	5	allegrezze
+49	3	3	3	mi
+49	5	6	6	Il mondo
+49	7	7	7	m'
+50	2	3	3	poco tempo
+51	1	1	1	molto
+51	4	4	4	mal
+51	5	5	5	che
+52	1	3	3	La mia letizia
+53	0	0	0	
+54	2	6	2	animal di sua seta fasciato
+54	2	5	2	animal di sua seta
+54	4	5	5	sua seta
+55	2	2	2	m'
+55	7	7	7	onde
+56	3	3	3	io
+56	3	3	3	io
+56	8	8	8	ti
+57	2	3	3	mio amor
+57	7	8	8	le fronde
+58	1	6	3	Quella sinistra riva che si lava
+58	1	3	3	Quella sinistra riva
+58	2	3	3	sinistra riva
+58	3	3	3	riva
+59	2	2	2	Rodano
+59	8	8	8	Sorga
+60	2	3	3	suo segnore
+60	3	3	3	segnore
+60	5	5	5	tempo
+61	2	5	3	quel corno d'Ausonia
+61	2	3	3	quel corno
+61	3	5	3	corno d'Ausonia
+61	5	5	5	Ausonia
+62	2	2	2	Bari
+62	5	5	5	Gaeta
+62	8	8	8	Catona
+63	3	5	3	Tronto e Verde
+63	3	3	3	Tronto
+63	5	5	5	Verde
+63	7	7	7	mare
+64	4	4	4	fronte
+64	5	6	6	la corona
+65	2	7	3	quella terra che 'l Danubio riga
+65	2	3	3	quella terra
+65	5	6	6	'l Danubio
+66	3	5	4	le ripe tedesche
+67	2	4	4	la bella Trinacria
+67	4	4	4	Trinacria
+68	2	4	2	Pachino e Peloro
+68	2	2	2	Pachino
+68	4	4	4	Peloro
+68	6	7	7	'l golfo
+68	7	7	7	golfo
+69	4	4	4	Euro
+69	5	6	6	maggior briga
+69	6	6	6	briga
+70	3	3	3	Tifeo
+70	6	7	7	nascente solfo
+70	7	7	7	solfo
+71	3	5	5	li suoi regi
+71	4	5	5	suoi regi
+71	5	5	5	regi
+72	3	3	3	me
+72	5	5	5	Carlo
+72	8	8	8	Ridolfo
+73	2	3	3	mala segnoria
+74	1	3	2	li popoli suggetti
+75	2	2	2	Palermo
+76	3	4	4	mio frate
+76	4	4	4	frate
+76	5	5	5	questo
+77	1	5	3	l'avara povertà di Catalogna
+77	1	3	3	l'avara povertà
+77	2	5	3	avara povertà di Catalogna
+77	2	3	3	avara povertà
+77	3	5	3	povertà di Catalogna
+77	3	3	3	povertà
+77	5	5	5	Catalogna
+78	5	5	5	li
+79	0	0	0	
+80	2	2	2	lui
+80	5	5	5	altrui
+80	9	10	10	sua barca
+81	1	4	1	carcata più d'incarco
+81	4	4	4	incarco
+82	1	3	3	La sua natura
+82	6	7	7	larga parca
+83	3	6	3	mestier di tal milizia
+83	5	6	6	tal milizia
+84	7	7	7	arca
+85	6	8	8	l'alta letizia
+86	2	4	4	'l tuo parlar
+86	7	8	7	segnor mio
+87	3	4	4	ogne ben
+88	2	2	2	te
+88	3	3	3	si
+88	6	6	6	la
+88	8	8	8	io
+89	2	2	2	m'
+89	7	7	7	quest'
+90	2	2	2	'l
+90	6	6	6	Dio
+91	0	0	0	
+92	5	5	5	dubitar
+93	5	6	6	dolce seme
+93	6	6	6	seme
+94	1	1	1	Questo
+94	2	2	2	io
+94	2	2	2	io
+94	4	4	4	lui
+94	6	6	6	elli
+94	8	8	8	me
+95	2	3	3	un vero
+95	5	8	5	quel che tu dimandi
+95	7	7	7	tu
+96	2	3	3	lo viso
+96	6	7	7	lo dosso
+97	1	2	2	Lo ben
+97	4	9	6	tutto il regno che tu scandi
+97	4	6	6	tutto il regno
+97	5	9	6	il regno che tu scandi
+97	6	6	6	regno
+97	8	8	8	tu
+98	6	6	6	virtute
+99	1	2	2	sua provedenza
+99	2	2	2	provedenza
+99	4	6	5	questi corpi grandi
+99	5	6	5	corpi grandi
+99	5	5	5	corpi
+100	4	6	5	le nature provedute
+100	5	6	5	nature provedute
+101	3	9	4	la mente ch'è da sé perfetta
+101	3	4	4	la mente
+101	8	8	8	sé
+102	2	2	2	esse
+102	5	7	7	la lor salute
+102	6	7	7	lor salute
+103	4	6	6	quest' arco saetta
+103	4	5	5	quest' arco
+103	6	6	6	saetta
+104	4	5	5	proveduto fine
+105	3	7	3	cosa in suo segno diretta
+105	5	6	6	suo segno
+106	2	2	2	ciò
+106	5	9	6	il ciel che tu cammine
+106	5	6	6	il ciel
+106	8	8	8	tu
+107	3	5	5	li suoi effetti
+108	4	4	4	arti
+108	6	6	6	ruine
+109	2	2	2	ciò
+109	7	8	8	li 'ntelletti
+110	3	4	4	queste stelle
+111	3	4	4	il primo
+111	7	7	7	li
+112	2	2	2	tu
+112	4	5	5	questo ver
+113	2	2	2	io
+114	2	3	3	la natura
+114	5	8	5	quel ch'è uopo
+114	8	8	8	uopo
+115	2	2	2	elli
+115	7	8	8	il peggio
+116	2	5	3	l'omo in terra
+116	2	3	3	l'omo
+116	5	5	5	terra
+116	9	9	9	cive
+117	3	3	3	io
+117	6	6	6	ragion
+118	3	3	3	elli
+119	3	4	4	diversi offici
+120	3	5	4	'l maestro vostro
+121	0	0	0	
+122	0	0	0	
+123	2	6	6	di vostri effetti le radici
+123	3	4	4	vostri effetti
+123	5	6	6	le radici
+124	3	3	3	un
+124	5	5	5	Solone
+124	7	8	8	altro Serse
+124	8	8	8	Serse
+125	1	2	2	altro Melchisedèch
+125	2	2	2	Melchisedèch
+125	4	5	5	altro quello
+125	5	5	5	quello
+126	1	1	1	che
+126	4	5	5	l'aere
+126	5	5	5	aere
+126	6	7	7	il figlio
+126	7	7	7	figlio
+127	1	3	3	La circular natura
+127	6	6	6	suggello
+128	2	4	3	la cera mortal
+128	7	8	8	sua arte
+129	4	5	5	l'un
+129	7	9	9	l'altro ostello
+130	4	4	4	Esaù
+131	2	4	2	seme da Iacòb
+131	2	2	2	seme
+131	4	4	4	Iacòb
+131	7	7	7	Quirino
+132	2	4	4	sì vil padre
+132	4	4	4	padre
+132	9	9	9	Marte
+133	1	2	1	Natura generata
+133	3	5	5	il suo cammino
+134	5	5	5	generanti
+135	4	6	5	il proveder divino
+136	2	6	2	quel che t'era dietro
+136	2	2	2	quel
+137	6	6	6	te
+138	1	2	2	un corollario
+138	2	2	2	corollario
+139	2	2	2	natura
+139	4	4	4	fortuna
+140	3	3	3	sé
+140	5	7	7	ogne altra semente
+141	3	4	4	sua regïon
+141	6	7	7	mala prova
+142	3	4	4	'l mondo
+142	8	8	8	mente
+143	1	5	2	al fondamento che natura pone
+143	2	5	2	fondamento che natura pone
+143	4	4	4	natura
+144	2	2	2	lui
+144	5	6	6	la gente
+145	2	2	2	voi
+145	5	6	6	la religïone
+146	1	8	1	tal che fia nato a cignersi la spada
+146	7	8	8	la spada
+147	3	9	3	re di tal ch'è da sermone
+147	5	9	5	tal ch'è da sermone
+147	9	9	9	sermone
+148	2	4	3	la traccia vostra
+148	8	8	8	strada

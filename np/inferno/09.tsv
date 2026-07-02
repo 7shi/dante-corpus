@@ -1,0 +1,322 @@
+line	start	end	head	text
+1	1	8	2	Quel color che viltà di fuor mi pinse
+1	1	2	2	Quel color
+1	4	6	4	viltà di fuor
+1	6	6	6	fuor
+2	2	4	3	il duca mio
+2	2	3	3	il duca
+2	3	4	3	duca mio
+2	7	7	7	volta
+3	4	6	6	il suo novo
+3	5	6	6	suo novo
+4	5	7	5	uom ch'ascolta
+4	5	5	5	uom
+5	2	3	3	l'occhio
+5	8	8	8	lunga
+6	2	4	3	l'aere nero
+6	2	3	3	l'aere
+6	7	9	8	la nebbia folta
+6	7	8	8	la nebbia
+7	3	3	3	noi
+7	6	7	7	la punga
+8	2	2	2	el
+8	5	5	5	Tal
+9	5	5	5	me
+9	7	7	7	altri
+10	1	1	1	I'
+10	6	6	6	ei
+11	1	8	2	lo cominciar con l'altro che poi venne
+11	1	2	2	lo cominciar
+11	4	8	5	l'altro che poi venne
+11	4	5	5	l'altro
+12	3	7	3	parole a le prime diverse
+12	3	3	3	parole
+12	5	7	7	le prime diverse
+12	6	7	7	prime diverse
+13	3	3	3	paura
+13	4	6	6	il suo dir
+13	6	6	6	dir
+14	2	2	2	io
+14	4	6	5	la parola tronca
+14	5	6	5	parola tronca
+14	5	5	5	parola
+15	3	4	4	peggior sentenzia
+15	4	4	4	sentenzia
+16	2	7	3	questo fondo de la trista conca
+16	2	3	3	questo fondo
+16	3	7	3	fondo de la trista conca
+16	5	7	7	la trista conca
+16	6	7	7	trista conca
+17	3	6	3	alcun del primo grado
+17	3	3	3	alcun
+17	5	6	6	primo grado
+18	4	4	4	pena
+18	6	8	7	la speranza cionca
+18	7	8	7	speranza cionca
+19	1	2	2	Questa question
+19	4	4	4	io
+19	6	6	6	quei
+20	2	2	2	mi
+20	6	6	6	noi
+21	2	4	3	il cammino alcun
+21	2	3	3	il cammino
+21	6	6	6	qual
+21	7	7	7	io
+22	1	1	1	Ver
+22	4	5	5	altra fïata
+23	3	5	4	quella Eritón cruda
+24	3	4	4	l'ombre
+24	6	7	6	corpi sui
+25	2	2	2	poco
+25	5	5	5	me
+25	6	8	7	la carne nuda
+26	2	2	2	ella
+26	3	3	3	mi
+26	8	9	9	quel muro
+27	3	8	4	un spirto del cerchio di Giuda
+27	3	4	4	un spirto
+27	4	8	4	spirto del cerchio di Giuda
+27	6	8	6	cerchio di Giuda
+27	8	8	8	Giuda
+28	1	1	1	Quell'
+28	3	6	6	'l più basso loco
+28	8	10	10	'l più oscuro
+29	2	9	4	'l più lontan dal ciel che tutto gira
+29	6	9	6	ciel che tutto gira
+29	6	6	6	ciel
+29	8	8	8	tutto
+30	3	4	4	'l cammin
+31	1	2	2	Questa palude
+31	4	6	6	'l gran puzzo
+32	3	5	4	la città dolente
+33	7	7	7	ira
+34	2	2	2	altro
+34	6	6	6	l'
+34	9	9	9	mente
+35	3	4	4	l'occhio
+36	2	4	4	l'alta torre
+36	6	8	7	la cima rovente
+37	3	4	4	un punto
+38	1	6	2	tre furïe infernal di sangue tinte
+38	1	3	2	tre furïe infernal
+38	1	2	2	tre furïe
+38	2	6	2	furïe infernal di sangue tinte
+38	2	3	2	furïe infernal
+38	2	2	2	furïe
+38	5	5	5	sangue
+39	2	3	2	membra feminine
+39	6	6	6	atto
+40	3	4	3	idre verdissime
+41	1	3	1	serpentelli e ceraste
+41	1	1	1	serpentelli
+41	3	3	3	ceraste
+41	6	6	6	crine
+42	2	4	4	le fiere tempie
+43	2	2	2	quei
+43	6	7	7	le meschine
+44	2	7	3	la regina de l'etterno pianto
+44	2	3	3	la regina
+44	5	7	7	l'etterno pianto
+45	4	6	6	le feroci Erine
+46	1	1	1	Quest'
+46	3	6	3	Megera dal sinistro canto
+46	5	6	6	sinistro canto
+47	1	5	1	quella che piange dal destro
+47	1	1	1	quella
+47	5	5	5	destro
+47	7	7	7	Aletto
+48	1	1	1	Tesifón
+48	4	4	4	mezzo
+48	8	8	8	tanto
+49	2	3	3	l'unghie
+49	6	6	6	ciascuna
+49	7	8	8	il petto
+50	3	3	3	palme
+51	2	2	2	i'
+51	6	6	6	poeta
+51	8	8	8	sospetto
+52	2	2	2	Medusa
+52	4	4	4	'l
+52	7	7	7	smalto
+53	2	2	2	tutte
+54	5	5	5	Tesëo
+54	6	7	7	l'assalto
+55	6	8	7	lo viso chiuso
+56	3	4	4	'l Gorgón
+56	8	8	8	tu
+57	1	1	1	nulla
+57	4	6	4	tornar mai suso
+58	3	4	4	'l maestro
+58	6	7	6	elli stessi
+59	8	10	10	le mie mani
+60	3	4	4	le sue
+61	2	2	2	voi
+61	5	7	6	li 'ntelletti sani
+61	6	7	6	'ntelletti sani
+62	2	6	3	la dottrina che s'asconde
+62	2	3	3	la dottrina
+63	2	7	3	'l velame de li versi strani
+63	2	3	3	'l velame
+63	5	7	6	li versi strani
+63	6	7	6	versi strani
+64	6	8	8	le torbide onde
+65	1	8	2	un fracasso d'un suon, pien di spavento
+65	1	5	2	un fracasso d'un suon
+65	1	2	2	un fracasso
+65	4	8	5	un suon, pien di spavento
+65	4	5	5	un suon
+65	8	8	8	spavento
+66	2	2	2	cui
+66	4	6	6	amendue le sponde
+66	5	6	6	le sponde
+67	6	7	7	un vento
+68	3	5	5	li avversi ardori
+69	3	4	4	la selva
+69	7	8	8	alcun rattento
+70	1	2	2	li rami
+71	0	0	0	
+72	4	8	5	le fiere e li pastori
+72	4	5	5	le fiere
+72	7	8	8	li pastori
+73	1	2	2	Li occhi
+73	9	10	10	il nerbo
+74	2	2	2	viso
+74	5	7	6	quella schiuma antica
+74	6	7	6	schiuma antica
+75	4	5	5	quel fummo
+76	2	3	3	le rane
+76	6	7	7	la nimica
+77	1	1	1	biscia
+77	3	4	4	l'acqua
+77	7	7	7	tutte
+78	4	5	5	la terra
+78	6	6	6	ciascuna
+79	2	2	2	io
+79	3	7	6	più di mille anime distrutte
+79	5	7	6	mille anime distrutte
+79	6	7	6	anime distrutte
+80	5	8	5	un ch'al passo
+80	5	5	5	un
+80	8	8	8	passo
+81	2	2	2	Stige
+81	4	6	5	le piante asciutte
+81	5	6	5	piante asciutte
+82	2	2	2	volto
+82	4	6	5	quell' aere grasso
+82	5	6	5	aere grasso
+83	2	3	3	la sinistra
+83	3	3	3	sinistra
+84	4	5	5	quell' angoscia
+84	5	5	5	angoscia
+85	5	5	5	elli
+85	8	8	8	ciel
+86	3	4	4	al maestro
+86	4	4	4	maestro
+86	6	6	6	quei
+86	8	8	8	segno
+87	2	2	2	i'
+87	8	8	8	esso
+88	3	3	3	mi
+88	7	7	7	disdegno
+89	3	4	4	la porta
+89	7	8	8	una verghetta
+90	1	1	1	l'
+90	7	8	8	alcun ritegno
+91	2	4	2	cacciati del ciel
+91	4	4	4	ciel
+91	5	6	5	gente dispetta
+92	2	2	2	elli
+92	5	7	7	l'orribil soglia
+92	7	7	7	soglia
+93	2	3	3	esta oltracotanza
+93	3	3	3	oltracotanza
+93	5	5	5	voi
+94	4	5	5	quella voglia
+95	5	6	6	il fin
+96	3	4	4	più volte
+96	7	8	8	cresciuta doglia
+97	4	5	5	le fata
+97	8	8	8	cozzo
+98	1	2	1	Cerbero vostro
+99	5	9	6	il mento e 'l gozzo
+99	5	6	6	il mento
+99	8	9	9	'l gozzo
+100	5	7	6	la strada lorda
+101	4	4	4	motto
+101	6	6	6	noi
+101	9	9	9	sembiante
+102	2	8	2	omo cui altra cura stringa e morda
+102	4	5	5	altra cura
+103	2	8	2	quella di colui che li è davante
+103	4	8	4	colui che li è davante
+104	2	2	2	noi
+104	4	5	5	i piedi
+104	7	8	8	la terra
+105	3	5	4	le parole sante
+106	2	2	2	li
+106	5	6	6	alcuna guerra
+107	2	2	2	io
+107	7	7	7	disio
+108	1	6	2	la condizion che tal fortezza serra
+108	1	2	2	la condizion
+108	4	5	5	tal fortezza
+109	2	2	2	io
+109	5	6	6	l'occhio
+109	6	6	6	occhio
+110	4	5	5	ogne man
+110	5	5	5	man
+110	6	7	7	grande campagna
+110	7	7	7	campagna
+111	3	3	3	duolo
+111	6	7	6	tormento rio
+111	6	6	6	tormento
+112	4	4	4	Arli
+112	6	6	6	Rodano
+113	4	4	4	Pola
+113	6	7	7	del Carnaro
+113	7	7	7	Carnaro
+114	2	2	2	Italia
+114	5	6	6	suoi termini
+114	6	6	6	termini
+115	2	3	3	i sepulcri
+115	4	7	6	tutt' il loco varo
+115	5	7	6	il loco varo
+115	6	7	6	loco varo
+116	5	6	6	ogne parte
+117	3	4	4	'l modo
+118	3	4	4	li avelli
+118	5	5	5	fiamme
+119	2	3	3	le quali
+119	7	7	7	tutto
+120	2	2	2	ferro
+120	6	7	7	verun' arte
+121	1	4	4	Tutti li lor coperchi
+121	2	4	4	li lor coperchi
+121	3	4	4	lor coperchi
+121	4	4	4	coperchi
+122	5	7	7	sì duri lamenti
+122	6	7	7	duri lamenti
+122	7	7	7	lamenti
+123	5	5	5	miseri
+123	8	8	8	offesi
+124	2	2	2	io
+124	3	3	3	Maestro
+124	6	7	7	quelle genti
+125	5	6	6	quell' arche
+126	5	6	5	sospiri dolenti
+127	2	2	2	quelli
+127	4	4	4	me
+127	7	8	8	li eresïarche
+128	2	6	3	lor seguaci, d'ogne setta
+128	2	3	3	lor seguaci
+128	5	6	6	ogne setta
+129	6	8	7	le tombe carche
+130	1	1	1	Simile
+130	4	4	4	simile
+131	2	3	3	i monimenti
+132	5	7	6	la man destra
+132	6	7	6	man destra
+132	6	6	6	man
+133	3	8	4	i martìri e li alti spaldi
+133	3	4	4	i martìri
+133	6	8	8	li alti spaldi

@@ -24,6 +24,26 @@ def _morph_rows(selected: list[tuple[api.Line, tuple[api.MorphRow, ...]]]) -> st
     return "\n".join(out)
 
 
+def _np_rows(lines: tuple[api.Line, ...], spans: tuple[api.NPSpan, ...]) -> str:
+    by_line: dict[int, list[api.NPSpan]] = {}
+    for span in spans:
+        by_line.setdefault(span.line, []).append(span)
+
+    out: list[str] = []
+    for line in lines:
+        out.append(f"{line.no}: {line.text}")
+        for span in by_line.get(line.no, []):
+            _append_np(out, line, span, depth=1)
+    return "\n".join(out)
+
+
+def _append_np(out: list[str], line: api.Line, span: api.NPSpan, depth: int) -> None:
+    head_word = line.tokens[span.head - 1] if 1 <= span.head <= len(line.tokens) else ""
+    out.append(f"{'    ' * depth}[{span.text}]  ({span.np_id}) head={head_word}")
+    for child in span.children:
+        _append_np(out, line, child, depth + 1)
+
+
 def _dump_json(data: object) -> None:
     json.dump(data, sys.stdout, ensure_ascii=False, indent=2)
     sys.stdout.write("\n")
@@ -57,6 +77,10 @@ def build_parser() -> argparse.ArgumentParser:
     text_morph.add_argument("canticle")
     text_morph.add_argument("reference", help="canto or canto:start-end")
     _add_format_argument(text_morph, "text", "json", default="text")
+    text_np = text_sub.add_parser("np")
+    text_np.add_argument("canticle")
+    text_np.add_argument("reference", help="canto or canto:start-end")
+    _add_format_argument(text_np, "text", "json", default="text")
 
     quote_parser = roots.add_parser("quote")
     quote_sub = quote_parser.add_subparsers(dest="action", required=True)
@@ -115,6 +139,16 @@ def _handle_text(args: argparse.Namespace) -> int:
             )
         else:
             print(_morph_rows(selected))
+        return 0
+
+    if args.action == "np":
+        canto_no = int(str(args.reference).split(":")[0])
+        nos = {line.no for line in lines}
+        spans = tuple(s for s in api.canto(args.canticle, canto_no).np() if s.line in nos)
+        if args.format == "json":
+            _dump_json([span.to_dict() for span in spans])
+        else:
+            print(_np_rows(lines, spans))
         return 0
 
     raise ValueError(f"unknown text action: {args.action}")

@@ -1,0 +1,388 @@
+line	start	end	head	text
+1	3	4	3	donna innamorata
+2	3	6	3	fin di sue parole
+2	5	6	6	sue parole
+3	1	1	1	Beati
+3	5	5	5	peccata
+4	3	7	3	ninfe che si givan sole
+4	3	3	3	ninfe
+5	2	4	4	le salvatiche ombre
+5	4	4	4	ombre
+6	1	3	1	qual di veder
+6	1	1	1	qual
+6	1	1	1	qual
+6	3	3	3	veder
+6	4	6	4	qual di fuggir
+6	6	6	6	fuggir
+6	7	8	8	lo sole
+6	8	8	8	sole
+7	5	6	6	'l fiume
+8	3	4	4	la riva
+8	6	9	6	io pari di lei
+8	6	6	6	io
+8	9	9	9	lei
+9	1	2	2	picciol passo
+9	4	5	5	picciol seguitando
+10	3	8	3	cento tra ' suoi passi e ' miei
+10	3	3	3	cento
+10	5	8	6	suoi passi e ' miei
+10	5	6	6	suoi passi
+10	6	6	6	passi
+10	8	8	8	miei
+11	2	3	3	le ripe
+11	3	3	3	ripe
+11	6	6	6	volta
+12	2	2	2	modo
+12	5	5	5	levante
+13	5	7	6	nostra via molta
+13	5	6	6	nostra via
+14	2	4	3	la donna tutta
+14	2	3	3	la donna
+14	6	6	6	me
+15	2	3	2	Frate mio
+16	3	5	4	un lustro sùbito
+17	2	3	3	tutte parti
+17	5	7	7	la gran foresta
+18	4	4	4	balenar
+18	8	8	8	forse
+19	3	4	4	'l balenar
+20	2	2	2	quel
+21	2	3	3	mio pensier
+21	5	6	6	Che cosa
+21	8	8	8	questa
+22	2	4	3	una melodia dolce
+23	2	4	3	l'aere luminoso
+23	6	7	7	buon zelo
+24	4	7	5	l'ardimento d'Eva
+24	7	7	7	Eva
+25	5	9	6	la terra e 'l cielo
+25	5	6	6	la terra
+25	8	9	9	'l cielo
+26	1	6	1	femmina, sola e pur testé formata
+26	1	1	1	femmina
+27	6	7	7	alcun velo
+28	2	3	3	'l qual
+28	4	4	4	se
+29	2	4	4	quelle ineffabili delizie
+30	4	6	6	più lunga fïata
+31	2	2	2	io
+31	6	7	7	tante primizie
+32	2	6	4	l'etterno piacer tutto sospeso
+32	2	4	4	l'etterno piacer
+33	5	6	6	più letizie
+34	3	3	3	noi
+34	6	8	7	un foco acceso
+35	4	9	5	l'aere sotto i verdi rami
+35	4	5	5	l'aere
+35	7	9	9	i verdi rami
+36	2	6	4	'l dolce suon per canti
+36	2	4	4	'l dolce suon
+36	6	6	6	canti
+37	2	3	3	sacrosante Vergini
+37	5	5	5	fami
+38	1	1	1	freddi
+38	3	3	3	vigilie
+38	6	6	6	voi
+39	1	1	1	cagion
+39	5	5	5	io
+39	6	6	6	mercé
+40	4	4	4	Elicona
+40	6	6	6	me
+41	2	2	2	Uranìe
+41	6	7	7	suo coro
+42	1	2	2	forti cose
+42	7	7	7	versi
+43	4	7	5	sette alberi d'oro
+43	5	7	5	alberi d'oro
+43	7	7	7	oro
+44	3	3	3	parere
+44	4	6	6	il lungo tratto
+44	5	6	6	lungo tratto
+45	2	9	2	mezzo ch'era ancor tra noi e loro
+45	2	2	2	mezzo
+45	7	9	7	noi e loro
+45	7	7	7	noi
+45	9	9	9	loro
+46	3	3	3	i'
+46	8	8	8	lor
+47	2	4	3	l'obietto comun
+47	3	4	3	obietto comun
+47	3	3	3	obietto
+47	6	7	7	'l senso
+47	7	7	7	senso
+48	4	4	4	distanza
+48	5	7	7	alcun suo atto
+48	6	7	7	suo atto
+48	7	7	7	atto
+49	1	7	2	la virtù ch'a ragion discorso ammanna
+49	1	2	2	la virtù
+49	5	6	6	ragion discorso
+49	5	5	5	ragion
+50	3	3	3	elli
+50	5	6	5	candelabri apprese
+51	3	7	4	le voci del cantare ‘Osanna
+51	3	4	4	le voci
+51	6	7	6	cantare ‘Osanna
+51	7	7	7	Osanna
+52	4	6	6	il bello arnese
+53	5	5	5	luna
+53	7	7	7	sereno
+54	2	3	3	mezza notte
+54	5	7	7	suo mezzo mese
+55	1	1	1	Io
+55	5	5	5	ammirazion
+56	2	3	3	buon Virgilio
+56	5	5	5	esso
+57	2	7	2	vista carca di stupor non meno
+57	5	7	5	stupor non meno
+58	3	4	4	l'aspetto
+58	6	8	8	l'alte cose
+59	6	6	6	noi
+60	5	6	6	novelle spose
+61	1	2	2	La donna
+62	3	8	4	l'affetto de le vive luci
+62	3	4	4	l'affetto
+62	6	8	8	le vive luci
+63	2	8	2	ciò che vien di retro a lor
+63	2	2	2	ciò
+63	6	8	6	retro a lor
+63	8	8	8	lor
+64	1	1	1	Genti
+64	3	3	3	io
+64	7	8	8	lor duci
+64	8	8	8	duci
+65	5	5	5	bianco
+66	2	5	3	tal candor di qua
+66	3	5	3	candor di qua
+66	3	3	3	candor
+67	1	2	2	L'acqua
+67	4	6	6	dal sinistro fianco
+67	5	6	6	sinistro fianco
+68	3	3	3	me
+68	4	7	7	la mia sinistra costa
+69	2	2	2	io
+69	5	5	5	lei
+69	7	7	7	specchio
+70	2	2	2	io
+70	4	6	6	la mia riva
+70	5	6	6	mia riva
+70	8	9	9	tal posta
+71	3	4	4	il fiume
+72	5	5	5	passi
+72	7	7	7	sosta
+73	3	4	4	le fiammelle
+74	4	4	4	sé
+74	5	7	6	l'aere dipinto
+75	3	3	3	tratti
+75	4	4	4	pennelli
+75	6	6	6	sembiante
+76	0	0	0	
+77	2	3	3	sette liste
+77	4	4	4	tutte
+77	6	7	7	quei colori
+78	3	4	4	l'arco
+78	5	6	6	il Sole
+78	8	8	8	Delia
+78	9	10	10	il cinto
+79	1	4	2	Questi ostendali in dietro
+79	1	2	2	Questi ostendali
+79	4	4	4	dietro
+80	2	4	4	la mia vista
+80	8	9	9	mio avviso
+81	1	2	2	diece passi
+81	4	6	4	quei di fori
+81	6	6	6	fori
+82	2	4	4	così bel ciel
+82	6	6	6	io
+83	1	2	2	ventiquattro seniori
+83	4	4	4	due
+83	4	4	4	due
+84	4	4	4	fiordaliso
+85	1	1	1	Tutti
+85	4	4	4	tue
+86	2	5	3	le figlie d'Adamo
+86	3	5	3	figlie d'Adamo
+86	5	5	5	Adamo
+87	3	3	3	etterno
+87	4	6	5	le bellezze tue
+87	5	6	5	bellezze tue
+88	3	9	4	i fiori e l'altre fresche erbette
+88	3	4	4	i fiori
+88	6	9	9	l'altre fresche erbette
+89	2	4	2	rimpetto di me
+89	4	4	4	me
+89	6	8	8	l'altra sponda
+90	4	6	5	quelle genti elette
+91	3	3	3	luce
+91	3	3	3	luce
+91	4	7	4	luce in ciel seconda
+91	6	7	6	ciel seconda
+91	6	6	6	ciel
+92	3	3	3	lor
+92	4	5	5	quattro animali
+92	5	5	5	animali
+93	2	2	2	ciascun
+93	4	5	5	verde fronda
+93	5	5	5	fronda
+94	1	1	1	Ognuno
+94	5	6	6	sei ali
+94	6	6	6	ali
+95	1	5	2	le penne piene d'occhi
+95	1	2	2	le penne
+95	5	5	5	occhi
+95	7	10	8	li occhi d'Argo
+95	7	8	8	li occhi
+95	10	10	10	Argo
+96	3	3	3	vivi
+96	5	5	5	cotali
+97	3	4	4	lor forme
+98	1	1	1	rime
+98	2	2	2	lettor
+98	4	5	5	altra spesa
+99	4	4	4	questa
+100	3	3	3	Ezechïel
+101	5	7	7	la fredda parte
+102	3	3	3	vento
+102	6	6	6	nube
+102	9	9	9	igne
+103	2	2	2	quali
+103	3	3	3	i
+103	6	8	8	le sue carte
+103	7	8	8	sue carte
+104	1	1	1	tali
+104	7	8	8	le penne
+105	1	1	1	Giovanni
+105	6	6	6	lui
+106	1	6	2	Lo spazio dentro a lor quattro
+106	1	2	2	Lo spazio
+106	5	6	6	lor quattro
+107	1	7	2	un carro, in su due rote, trïunfale
+107	1	2	2	un carro
+107	5	6	6	due rote
+108	3	6	3	collo d'un grifon
+108	5	6	6	un grifon
+109	1	1	1	Esso
+109	5	10	10	l'una e l'altra ale
+109	5	6	6	l'una
+109	8	10	10	l'altra ale
+109	8	9	9	l'altra
+110	2	9	9	la mezzana e le tre e tre liste
+110	2	3	3	la mezzana
+110	5	9	9	le tre e tre liste
+111	4	4	4	nulla
+111	7	7	7	male
+112	0	0	0	
+113	1	4	2	le membra d'oro
+113	4	4	4	oro
+113	8	8	8	uccello
+114	3	4	4	l'altre
+114	6	6	6	vermiglio
+115	3	3	3	Roma
+115	5	7	5	carro così bello
+116	2	2	2	Affricano
+116	4	5	5	vero Augusto
+117	2	4	2	quel del Sol
+117	4	4	4	Sol
+117	8	8	8	ello
+118	1	3	1	quel del Sol
+118	1	1	1	quel
+118	3	3	3	Sol
+119	2	7	3	l'orazion de la Terra devota
+119	2	3	3	l'orazion
+119	3	7	3	orazion de la Terra devota
+119	5	7	6	la Terra devota
+119	6	7	6	Terra devota
+119	6	6	6	Terra
+120	3	5	3	Giove arcanamente giusto
+120	3	3	3	Giove
+121	1	2	2	Tre donne
+121	4	8	4	giro da la destra rota
+121	4	4	4	giro
+121	6	8	8	la destra rota
+122	3	4	4	l'una
+123	7	7	7	foco
+124	1	2	2	l'altr'
+124	6	10	7	le carni e l'ossa
+124	6	7	7	le carni
+124	9	10	10	l'ossa
+125	4	4	4	smeraldo
+126	1	2	2	la terza
+126	4	6	4	neve testé mossa
+126	4	4	4	neve
+127	5	6	6	la bianca
+128	3	4	4	la rossa
+128	7	9	7	canto di questa
+128	9	9	9	questa
+129	1	2	2	l'altre
+129	4	5	5	l'andare
+130	2	3	3	la sinistra
+130	4	4	4	quattro
+130	6	6	6	festa
+131	2	3	2	porpore vestite
+131	5	6	6	al modo
+132	2	10	2	una di lor ch'avea tre occhi in testa
+132	2	4	2	una di lor
+132	2	2	2	una
+132	4	4	4	lor
+132	7	10	8	tre occhi in testa
+132	7	8	8	tre occhi
+132	10	10	10	testa
+133	2	5	5	tutto il pertrattato nodo
+133	3	5	5	il pertrattato nodo
+133	4	5	5	pertrattato nodo
+133	5	5	5	nodo
+134	2	6	3	due vecchi in abito dispari
+134	2	3	3	due vecchi
+134	3	3	3	vecchi
+134	5	6	5	abito dispari
+134	5	5	5	abito
+135	4	4	4	atto
+136	1	2	2	L'un
+136	5	7	5	alcun de' famigliari
+136	7	7	7	famigliari
+137	2	4	4	quel sommo Ipocràte
+137	4	4	4	Ipocràte
+137	6	6	6	natura
+138	2	3	3	li animali
+138	3	3	3	animali
+138	6	6	6	ell'
+139	2	3	3	l'altro
+139	4	6	6	la contraria cura
+140	2	6	3	una spada lucida e aguta
+141	6	6	6	rio
+141	9	9	9	paura
+142	3	3	3	quattro
+142	5	6	6	umile paruta
+142	6	6	6	paruta
+143	3	3	3	retro
+143	5	5	5	tutti
+143	6	8	7	un vecchio solo
+143	7	7	7	vecchio
+144	4	6	5	la faccia arguta
+144	5	5	5	faccia
+145	2	6	3	questi sette col primaio stuolo
+145	2	3	3	questi sette
+145	4	6	6	col primaio stuolo
+145	5	6	6	primaio stuolo
+146	5	5	5	gigli
+147	2	3	3	al capo
+147	3	3	3	capo
+147	6	6	6	brolo
+148	3	3	3	rose
+148	6	8	7	altri fior vermigli
+148	7	8	7	fior vermigli
+148	7	7	7	fior
+149	3	5	5	poco lontano aspetto
+149	4	5	5	lontano aspetto
+149	5	5	5	aspetto
+150	2	2	2	tutti
+150	7	7	7	cigli
+151	3	4	4	il carro
+151	6	6	6	me
+151	9	9	9	rimpetto
+152	1	2	2	un tuon
+152	6	8	7	quelle genti degne
+152	7	8	7	genti degne
+153	3	6	4	l'andar più interdetto
+153	4	6	4	andar più interdetto
+154	4	6	6	le prime insegne

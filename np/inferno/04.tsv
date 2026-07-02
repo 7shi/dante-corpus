@@ -1,0 +1,409 @@
+line	start	end	head	text
+1	2	4	4	l'alto sonno
+1	6	7	7	la testa
+2	1	3	3	un greve truono
+2	6	6	6	io
+3	2	7	2	persona ch'è per forza desta
+3	2	2	2	persona
+3	6	6	6	forza
+4	2	4	3	l'occhio riposato
+4	2	3	3	l'occhio
+5	0	0	0	
+6	3	7	4	lo loco dov' io fossi
+6	3	4	4	lo loco
+6	6	6	6	io
+7	1	1	1	Vero
+7	6	7	7	la proda
+8	2	6	3	la valle d'abisso dolorosa
+8	2	5	3	la valle d'abisso
+8	3	6	3	valle d'abisso dolorosa
+8	3	5	3	valle d'abisso
+8	5	6	5	abisso dolorosa
+8	5	5	5	abisso
+9	2	2	2	'ntrono
+9	5	6	6	infiniti guai
+10	0	0	0	
+11	5	6	6	lo viso
+11	8	8	8	fondo
+12	1	1	1	io
+12	5	6	6	alcuna cosa
+13	6	7	7	cieco mondo
+14	2	5	3	il poeta tutto smorto
+14	2	3	3	il poeta
+15	1	1	1	Io
+15	5	5	5	tu
+16	2	2	2	io
+16	4	5	5	del color
+16	5	5	5	color
+17	5	5	5	tu
+18	3	5	5	al mio dubbiare
+18	4	5	5	mio dubbiare
+18	5	5	5	dubbiare
+18	7	7	7	conforto
+19	2	2	2	elli
+19	4	4	4	me
+19	5	9	6	L'angoscia de le genti
+19	8	9	9	le genti
+20	1	1	1	che
+20	6	6	6	viso
+20	7	7	7	mi
+21	1	7	2	quella pietà che tu per tema senti
+21	1	2	2	quella pietà
+21	3	3	3	che
+21	4	4	4	tu
+21	6	6	6	tema
+22	3	5	4	la via lunga
+23	0	0	0	
+24	2	7	3	primo cerchio che l'abisso cigne
+24	2	3	3	primo cerchio
+24	5	6	6	l'abisso
+25	0	0	0	
+26	3	3	3	pianto
+26	7	7	7	sospiri
+27	2	4	3	l'aura etterna
+27	3	4	3	aura etterna
+27	3	3	3	aura
+28	1	1	1	ciò
+28	4	6	4	duol sanza martìri
+28	6	6	6	martìri
+29	3	4	4	le turbe
+30	2	2	2	infanti
+30	5	5	5	femmine
+30	8	8	8	viri
+31	1	3	3	Lo buon maestro
+31	5	5	5	me
+31	6	6	6	Tu
+32	1	2	2	che spiriti
+32	2	2	2	spiriti
+32	4	7	4	questi che tu vedi
+32	4	4	4	questi
+32	6	6	6	tu
+33	0	0	0	
+34	2	2	2	ei
+34	7	7	7	elli
+34	9	9	9	mercedi
+35	6	6	6	battesmo
+36	3	9	3	porta de la fede che tu credi
+36	5	9	6	la fede che tu credi
+36	5	6	6	la fede
+36	8	8	8	tu
+37	3	3	3	e'
+37	7	7	7	cristianesmo
+38	5	5	5	Dio
+39	3	4	3	questi cotai
+39	3	3	3	questi
+39	4	4	4	cotai
+39	6	7	6	io medesmo
+39	6	6	6	io
+40	2	3	3	tai difetti
+40	6	7	7	altro rio
+41	6	6	6	tanto
+42	3	3	3	speme
+42	6	6	6	disio
+43	1	2	2	Gran duol
+43	5	6	6	al cor
+43	8	8	8	lo
+44	3	6	3	gente di molto valore
+44	5	6	6	molto valore
+45	4	5	5	quel limbo
+46	2	3	2	maestro mio
+46	5	5	5	segnore
+47	2	2	2	io
+48	2	7	3	quella fede che vince ogne errore
+48	2	3	3	quella fede
+48	6	7	7	ogne errore
+49	3	3	3	alcuno
+49	6	7	7	suo merto
+50	3	3	3	altrui
+51	2	8	2	quei che 'ntese il mio parlar coverto
+51	2	2	2	quei
+51	5	8	7	il mio parlar coverto
+51	6	8	7	mio parlar coverto
+51	7	8	7	parlar coverto
+52	2	2	2	Io
+52	6	7	7	questo stato
+53	5	6	6	un possente
+54	2	4	2	segno di vittoria
+54	4	4	4	vittoria
+55	2	6	3	l'ombra del primo parente
+55	2	3	3	l'ombra
+55	4	6	6	del primo parente
+55	5	6	6	primo parente
+56	2	4	2	Abèl suo figlio
+56	2	2	2	Abèl
+56	3	4	4	suo figlio
+56	6	8	6	quella di Noè
+56	6	6	6	quella
+56	8	8	8	Noè
+57	2	5	2	Moïsè legista e ubidente
+57	2	2	2	Moïsè
+58	1	2	1	Abraàm patrïarca
+58	1	1	1	Abraàm
+58	2	2	2	patrïarca
+58	4	5	4	Davìd re
+58	4	4	4	Davìd
+58	5	5	5	re
+59	1	1	1	Israèl
+59	3	4	4	lo padre
+59	4	4	4	padre
+59	7	8	8	suoi nati
+59	8	8	8	nati
+60	3	3	3	Rachele
+60	5	5	5	cui
+61	2	3	2	altri molti
+61	2	2	2	altri
+62	8	8	8	essi
+63	1	2	1	spiriti umani
+63	1	1	1	spiriti
+64	3	4	4	l'andar
+64	6	6	6	ei
+65	3	4	4	la selva
+66	1	6	2	la selva, dico, di spiriti spessi
+66	1	2	2	la selva
+66	5	6	5	spiriti spessi
+67	5	7	7	la nostra via
+67	6	7	7	nostra via
+67	7	7	7	via
+68	4	4	4	sonno
+68	6	6	6	io
+68	8	9	9	un foco
+68	9	9	9	foco
+69	2	4	2	emisperio di tenebre
+69	2	2	2	emisperio
+69	4	4	4	tenebre
+70	2	2	2	lungi
+70	6	7	7	un poco
+71	5	5	5	io
+71	9	9	9	parte
+72	2	3	3	orrevol gente
+72	5	6	6	quel loco
+73	2	7	2	tu ch'onori scïenzïa e arte
+73	2	2	2	tu
+73	3	3	3	ch'
+73	5	7	5	scïenzïa e arte
+73	5	5	5	scïenzïa
+73	7	7	7	arte
+74	1	3	1	questi chi son
+74	1	1	1	questi
+74	2	2	2	chi
+74	6	7	7	cotanta onranza
+75	3	6	3	modo de li altri
+75	5	6	6	li altri
+75	5	5	5	li
+76	2	2	2	quelli
+76	4	4	4	me
+76	5	7	7	L'onrata nominanza
+76	6	7	7	onrata nominanza
+77	3	3	3	lor
+77	7	9	9	la tua vita
+77	8	9	9	tua vita
+78	1	1	1	grazïa
+78	4	4	4	ciel
+78	7	7	7	li
+79	2	2	2	voce
+79	5	5	5	me
+80	2	4	4	l'altissimo poeta
+81	1	3	2	l'ombra sua
+82	3	4	4	la voce
+83	2	4	4	quattro grand' ombre
+83	6	6	6	noi
+84	1	1	1	sembianz'
+85	1	3	3	Lo buon maestro
+86	2	7	2	colui con quella spada in mano
+86	2	2	2	colui
+86	4	7	5	quella spada in mano
+86	4	5	5	quella spada
+86	7	7	7	mano
+87	4	5	5	ai tre
+87	5	5	5	tre
+87	8	8	8	sire
+88	1	1	1	quelli
+88	3	5	3	Omero poeta sovrano
+88	3	3	3	Omero
+88	4	5	4	poeta sovrano
+89	1	2	2	l'altro
+89	4	7	4	Orazio satiro che vene
+89	4	4	4	Orazio
+89	5	7	5	satiro che vene
+90	1	1	1	Ovidio
+90	3	4	4	'l terzo
+90	6	8	8	l'ultimo Lucano
+90	6	7	7	l'ultimo
+90	8	8	8	Lucano
+91	3	3	3	ciascun
+92	2	7	2	nome che sonò la voce sola
+92	2	2	2	nome
+92	5	7	6	la voce sola
+93	2	2	2	onore
+93	5	5	5	ciò
+93	7	7	7	bene
+94	3	3	3	i'
+94	5	7	7	la bella scola
+95	2	7	3	quel segnor de l'altissimo canto
+95	2	3	3	quel segnor
+95	5	7	7	l'altissimo canto
+96	3	4	4	li altri
+96	6	6	6	aquila
+97	0	0	0	
+98	3	3	3	me
+98	5	6	6	salutevol cenno
+99	2	4	4	'l mio maestro
+99	7	7	7	tanto
+100	2	4	4	più d'onore
+100	4	4	4	onore
+101	2	2	2	e'
+101	7	9	9	la loro schiera
+101	8	9	9	loro schiera
+101	9	9	9	schiera
+102	3	3	3	io
+102	7	8	8	cotanto senno
+102	8	8	8	senno
+103	5	6	6	la lumera
+104	2	7	2	cose che 'l tacere è bello
+104	2	2	2	cose
+104	4	5	5	'l tacere
+105	4	5	5	'l parlar
+106	3	7	3	piè d'un nobile castello
+106	5	7	7	un nobile castello
+107	1	2	2	sette volte
+107	5	6	6	alte mura
+108	4	6	6	un bel fiumicello
+109	1	1	1	Questo
+109	4	5	4	terra dura
+110	2	3	3	sette porte
+110	6	7	7	questi savi
+111	3	6	3	prato di fresca verdura
+111	5	6	6	fresca verdura
+112	1	1	1	Genti
+112	5	8	5	occhi tardi e gravi
+113	2	6	3	grande autorità ne' lor sembianti
+113	2	3	3	grande autorità
+113	3	6	3	autorità ne' lor sembianti
+113	5	6	6	lor sembianti
+114	4	5	4	voci soavi
+115	4	7	5	l'un de' canti
+115	4	5	5	l'un
+115	7	7	7	canti
+116	2	6	2	loco aperto, luminoso e alto
+116	2	2	2	loco
+117	6	7	6	tutti quanti
+117	6	6	6	tutti
+117	7	7	7	quanti
+118	4	6	6	'l verde smalto
+119	4	6	5	li spiriti magni
+120	2	6	3	del vedere in me stesso
+120	2	3	3	del vedere
+120	3	6	3	vedere in me stesso
+120	3	3	3	vedere
+120	5	6	5	me stesso
+120	5	5	5	me
+121	3	6	3	Eletra con molti compagni
+121	3	3	3	Eletra
+121	5	6	6	molti compagni
+121	6	6	6	compagni
+122	2	2	2	quai
+122	4	6	4	Ettòr ed Enea
+122	4	4	4	Ettòr
+122	6	6	6	Enea
+123	1	6	1	Cesare armato con li occhi grifagni
+123	1	2	1	Cesare armato
+123	1	1	1	Cesare
+123	4	6	5	li occhi grifagni
+123	4	5	5	li occhi
+123	5	6	5	occhi grifagni
+123	5	5	5	occhi
+124	2	2	2	Cammilla
+124	4	5	5	la Pantasilea
+124	5	5	5	Pantasilea
+125	2	4	4	l'altra parte
+125	3	4	4	altra parte
+125	6	8	7	'l re Latino
+125	7	8	7	re Latino
+126	3	5	3	Lavina sua figlia
+126	3	3	3	Lavina
+126	4	5	5	sua figlia
+127	2	6	3	quel Bruto che cacciò Tarquino
+127	2	3	3	quel Bruto
+127	3	3	3	Bruto
+127	6	6	6	Tarquino
+128	1	1	1	Lucrezia
+128	2	2	2	Iulia
+128	3	3	3	Marzïa
+128	5	5	5	Corniglia
+129	4	4	4	parte
+129	6	7	7	'l Saladino
+129	7	7	7	Saladino
+130	4	5	5	un poco
+130	7	8	8	le ciglia
+131	2	7	3	'l maestro di color che sanno
+131	2	3	3	'l maestro
+131	5	7	5	color che sanno
+132	3	4	4	filosofica famiglia
+133	1	1	1	Tutti
+133	2	2	2	lo
+133	4	4	4	tutti
+133	5	5	5	onor
+133	6	6	6	li
+134	3	3	3	ïo
+134	4	6	4	Socrate e Platone
+134	4	4	4	Socrate
+134	6	6	6	Platone
+135	4	5	5	li altri
+135	4	4	4	li
+135	5	5	5	altri
+136	1	7	1	Democrito che 'l mondo a caso pone
+136	1	1	1	Democrito
+136	3	4	4	'l mondo
+136	6	6	6	caso
+137	1	1	1	Dïogenès
+137	2	2	2	Anassagora
+137	4	4	4	Tale
+138	1	1	1	Empedoclès
+138	2	2	2	Eraclito
+138	4	4	4	Zenone
+139	3	7	5	il buono accoglitor del quale
+139	3	5	5	il buono accoglitor
+139	7	7	7	quale
+140	1	1	1	Dïascoride
+140	5	5	5	Orfeo
+141	1	6	1	Tulïo e Lino e Seneca morale
+141	1	1	1	Tulïo
+141	3	3	3	Lino
+141	5	6	5	Seneca morale
+142	1	4	4	Euclide geomètra e Tolomeo
+142	1	2	1	Euclide geomètra
+142	1	1	1	Euclide
+142	2	2	2	geomètra
+142	4	4	4	Tolomeo
+143	1	4	4	Ipocràte, Avicenna e Galïeno
+143	1	1	1	Ipocràte
+143	2	2	2	Avicenna
+143	4	4	4	Galïeno
+144	1	1	1	Averoìs
+144	3	5	5	'l gran comento
+144	4	5	5	gran comento
+144	5	5	5	comento
+145	1	1	1	Io
+145	6	6	6	tutti
+145	8	8	8	pieno
+146	4	4	4	mi
+146	6	8	8	il lungo tema
+147	2	3	3	molte volte
+147	4	5	5	al fatto
+147	5	5	5	fatto
+147	6	7	7	il dir
+148	1	3	3	La sesta compagnia
+148	3	3	3	compagnia
+148	5	5	5	due
+149	2	3	3	altra via
+149	3	3	3	via
+149	6	8	8	il savio duca
+149	8	8	8	duca
+150	3	4	4	la queta
+150	4	4	4	queta
+150	6	9	7	l'aura che trema
+150	6	7	7	l'aura
+150	7	7	7	aura
+151	4	9	4	parte ove non è che luca
+151	4	4	4	parte
+151	9	9	9	luca

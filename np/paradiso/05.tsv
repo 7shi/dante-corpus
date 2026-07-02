@@ -1,0 +1,341 @@
+line	start	end	head	text
+1	2	2	2	io
+1	3	3	3	ti
+1	6	8	6	caldo d'amore
+1	6	6	6	caldo
+1	8	8	8	amore
+2	4	9	4	modo che 'n terra si vede
+2	4	4	4	modo
+2	7	7	7	terra
+3	4	5	4	viso tuo
+3	4	4	4	viso
+3	7	8	8	il valore
+3	8	8	8	valore
+4	5	5	5	ciò
+5	2	3	3	perfetto veder
+6	3	4	3	bene appreso
+6	6	7	7	il piede
+7	1	1	1	Io
+8	2	4	3	l'intelletto tuo
+8	3	4	3	intelletto tuo
+8	5	7	7	l'etterna luce
+8	6	7	7	etterna luce
+9	1	1	1	che
+9	6	6	6	amore
+10	3	4	4	altra cosa
+10	5	6	6	vostro amor
+11	6	6	6	quella
+11	7	8	8	alcun vestigio
+12	3	3	3	che
+13	1	1	1	Tu
+13	6	7	7	altro servigio
+14	2	3	3	manco voto
+14	7	7	7	tanto
+15	2	6	3	l'anima sicuri di letigio
+15	2	3	3	l'anima
+15	6	6	6	letigio
+16	3	3	3	Beatrice
+16	4	5	5	questo canto
+17	4	9	4	uom che suo parlar non spezza
+17	4	4	4	uom
+17	6	7	7	suo parlar
+18	3	5	4	'l processo santo
+19	1	8	3	Lo maggior don che Dio per sua larghezza
+19	1	3	3	Lo maggior don
+19	5	5	5	Dio
+19	7	8	8	sua larghezza
+20	5	7	7	la sua bontate
+21	4	8	4	quel ch'e' più apprezza
+21	4	4	4	quel
+22	3	4	4	la volontà
+22	5	6	6	la libertate
+23	2	2	2	che
+23	3	5	4	le creature intelligenti
+24	2	4	2	tutte e sole
+24	2	2	2	tutte
+24	4	4	4	sole
+25	2	2	2	ti
+25	5	5	5	tu
+26	1	5	3	l'alto valor del voto
+26	1	3	3	l'alto valor
+26	2	5	3	alto valor del voto
+26	2	3	3	alto valor
+26	3	5	3	valor del voto
+26	3	3	3	valor
+26	5	5	5	voto
+26	6	6	6	s'
+27	2	2	2	Dio
+27	5	5	5	tu
+28	3	10	3	fermar tra Dio e l'omo il patto
+28	5	8	5	Dio e l'omo
+28	5	5	5	Dio
+28	7	8	8	l'omo
+28	9	10	10	il patto
+29	1	1	1	vittima
+29	4	5	5	questo tesoro
+29	5	5	5	tesoro
+30	1	1	1	tal
+30	3	3	3	io
+30	8	9	9	suo atto
+31	2	2	2	che
+31	6	6	6	ristoro
+32	5	8	5	quel c'hai offerto
+32	5	5	5	quel
+33	2	2	2	maltolletto
+33	5	6	6	buon lavoro
+34	1	1	1	Tu
+34	5	7	6	maggior punto certo
+35	3	4	4	Santa Chiesa
+35	6	6	6	ciò
+36	4	10	5	lo ver ch'i' t'ho scoverto
+36	4	5	5	lo ver
+36	7	7	7	i'
+37	4	5	5	un poco
+37	7	7	7	mensa
+38	3	5	4	'l cibo rigido
+38	3	4	4	'l cibo
+38	4	5	4	cibo rigido
+39	3	3	3	aiuto
+39	5	6	6	tua dispensa
+40	2	3	3	la mente
+40	5	9	5	quel ch'io ti paleso
+40	7	7	7	io
+41	7	7	7	scïenza
+42	2	3	3	lo ritenere
+42	4	5	4	avere inteso
+43	1	2	2	Due cose
+43	6	7	7	l'essenza
+44	2	3	3	questo sacrificio
+44	4	5	5	l'una
+44	7	7	7	quella
+45	2	2	2	che
+45	5	6	6	l'altr'
+45	8	9	9	la convenenza
+46	1	2	2	Quest' ultima
+47	7	7	7	lei
+48	3	4	4	di sopra
+48	5	5	5	si
+49	5	6	6	li Ebrei
+50	2	3	3	l'offerere
+50	6	7	7	alcuna offerta
+51	4	5	4	saver dei
+51	5	5	5	dei
+52	1	2	2	L'altra
+52	5	5	5	materia
+53	4	4	4	tal
+54	3	4	4	altra materia
+54	4	4	4	materia
+55	4	8	4	carco a la sua spalla
+55	4	4	4	carco
+55	6	8	8	la sua spalla
+55	7	8	8	sua spalla
+55	8	8	8	spalla
+56	2	4	3	suo arbitrio alcun
+56	2	3	3	suo arbitrio
+56	3	3	3	arbitrio
+56	6	7	7	la volta
+56	7	7	7	volta
+57	3	5	4	la chiave bianca
+57	4	5	4	chiave bianca
+57	4	4	4	chiave
+57	8	9	9	la gialla
+57	9	9	9	gialla
+58	2	3	3	ogne permutanza
+59	2	7	3	la cosa dimessa in la sorpresa
+59	2	4	3	la cosa dimessa
+59	2	3	3	la cosa
+59	6	7	7	la sorpresa
+60	2	3	3	'l quattro
+60	5	5	5	sei
+61	2	3	3	qualunque cosa
+62	2	7	3	suo valor che tragga ogne bilancia
+62	2	3	3	suo valor
+62	6	7	7	ogne bilancia
+63	6	7	7	altra spesa
+64	3	4	4	li mortali
+64	5	8	6	il voto a ciancia
+64	8	8	8	ciancia
+65	5	5	5	ciò
+66	2	2	2	Ieptè
+66	4	7	7	la sua prima mancia
+67	1	1	1	cui
+68	6	7	7	così stolto
+68	7	7	7	stolto
+69	3	7	5	il gran duca de' Greci
+69	3	5	5	il gran duca
+69	4	7	5	gran duca de' Greci
+69	4	5	5	gran duca
+69	5	7	5	duca de' Greci
+69	5	5	5	duca
+69	7	7	7	Greci
+70	3	3	3	Efigènia
+70	4	7	7	il suo bel volto
+70	7	7	7	volto
+71	5	5	5	sé
+71	6	10	7	i folli e i savi
+71	6	7	7	i folli
+71	7	7	7	folli
+71	9	10	10	i savi
+71	10	10	10	savi
+72	5	7	7	così fatto cólto
+72	7	7	7	cólto
+73	2	2	2	Cristiani
+74	4	7	4	penna ad ogne vento
+74	4	4	4	penna
+74	6	7	7	ogne vento
+75	5	6	6	ogne acqua
+76	2	7	7	il novo e 'l vecchio Testamento
+76	2	3	3	il novo
+76	5	7	7	'l vecchio Testamento
+76	6	7	7	vecchio Testamento
+77	2	9	3	'l pastor de la Chiesa che vi guida
+77	3	9	3	pastor de la Chiesa che vi guida
+77	5	9	6	la Chiesa che vi guida
+77	5	6	6	la Chiesa
+78	1	1	1	questo
+78	5	6	6	vostro salvamento
+79	2	3	3	mala cupidigia
+79	3	3	3	cupidigia
+80	1	1	1	uomini
+80	5	6	5	pecore matte
+80	5	5	5	pecore
+81	3	8	4	'l Giudeo di voi tra voi
+81	3	4	4	'l Giudeo
+81	6	6	6	voi
+81	6	6	6	voi
+82	4	8	4	agnel che lascia il latte
+82	4	4	4	agnel
+82	7	8	8	il latte
+83	2	4	4	la sua madre
+83	3	4	4	sua madre
+83	4	4	4	madre
+84	1	2	1	seco medesmo
+84	4	5	5	suo piacer
+84	5	5	5	piacer
+85	2	2	2	Beatrice
+85	4	4	4	me
+85	6	6	6	ïo
+86	0	0	0	
+87	2	9	3	quella parte ove 'l mondo è più vivo
+87	2	3	3	quella parte
+87	5	6	6	'l mondo
+88	1	7	3	Lo suo tacere e 'l trasmutar sembiante
+88	1	3	3	Lo suo tacere
+88	5	7	6	'l trasmutar sembiante
+88	7	7	7	sembiante
+89	2	2	2	silenzio
+89	4	6	6	mio cupido ingegno
+90	3	4	4	nuove questioni
+91	4	4	4	saetta
+91	7	7	7	segno
+92	5	7	6	la corda queta
+92	6	6	6	corda
+93	4	5	5	secondo regno
+93	5	5	5	regno
+94	2	4	3	la donna mia
+94	6	6	6	io
+95	3	6	3	lume di quel ciel
+95	5	6	6	quel ciel
+96	7	8	8	'l pianeta
+97	3	4	4	la stella
+98	4	4	4	io
+98	8	9	9	mia natura
+99	4	5	5	tutte guise
+100	3	8	3	peschiera ch'è tranquilla e pura
+100	3	3	3	peschiera
+101	2	3	3	i pesci
+101	5	9	5	ciò che vien di fori
+101	5	5	5	ciò
+102	2	7	2	modo che lo stimin lor pastura
+102	2	2	2	modo
+102	6	7	7	lor pastura
+103	3	3	3	io
+103	5	8	5	più di mille splendori
+103	7	8	8	mille splendori
+103	8	8	8	splendori
+104	3	3	3	noi
+104	6	6	6	ciascun
+105	2	6	2	chi crescerà li nostri amori
+105	4	6	6	li nostri amori
+105	5	6	6	nostri amori
+105	6	6	6	amori
+106	4	4	4	ciascuno
+106	6	6	6	noi
+107	2	6	3	l'ombra piena di letizia
+107	2	3	3	l'ombra
+107	6	6	6	letizia
+108	2	7	2	folgór chiaro che di lei uscia
+108	2	3	2	folgór chiaro
+108	6	6	6	lei
+109	2	2	2	lettor
+109	4	8	4	quel che qui s'inizia
+110	4	4	4	tu
+111	3	5	3	savere angosciosa carizia
+111	3	3	3	savere
+111	4	5	5	angosciosa carizia
+112	3	3	3	te
+112	7	7	7	questi
+113	4	8	4	disio d'udir lor condizioni
+113	7	8	8	lor condizioni
+114	4	5	5	li occhi
+115	2	3	3	bene nato
+115	6	8	6	veder li troni
+115	7	8	8	li troni
+116	1	3	2	del trïunfo etternal
+116	2	3	2	trïunfo etternal
+116	5	5	5	grazia
+117	3	4	4	la milizia
+118	2	9	2	lume che per tutto il ciel si spazia
+118	2	2	2	lume
+118	5	7	7	tutto il ciel
+118	6	7	7	il ciel
+118	7	7	7	ciel
+119	1	1	1	noi
+120	2	2	2	noi
+120	5	6	6	tuo piacer
+120	6	6	6	piacer
+121	3	7	3	un di quelli spirti pii
+121	5	7	6	quelli spirti pii
+121	6	7	6	spirti pii
+122	2	2	2	mi
+122	6	6	6	Beatrice
+123	6	6	6	dii
+124	1	1	1	Io
+125	2	3	3	proprio lume
+125	7	8	8	li occhi
+125	9	9	9	il
+126	2	2	2	e'
+126	6	6	6	tu
+127	4	4	4	chi
+127	5	5	5	tu
+128	1	2	1	anima degna
+128	3	7	4	il grado de la spera
+128	6	7	7	la spera
+129	5	5	5	mortai
+129	7	8	8	altrui raggi
+130	1	1	1	Questo
+130	3	3	3	io
+130	6	7	7	la lumera
+131	1	1	1	che
+131	3	3	3	m'
+131	7	7	7	ella
+132	5	8	5	quel ch'ell' era
+132	7	7	7	ell'
+133	3	9	4	il sol che si cela elli stessi
+133	3	4	4	il sol
+133	8	9	8	elli stessi
+134	2	3	3	troppa luce
+134	5	6	6	'l caldo
+135	1	6	2	le temperanze d'i vapori spessi
+135	1	2	2	le temperanze
+135	4	6	5	i vapori spessi
+136	2	3	3	più letizia
+136	3	3	3	letizia
+137	3	4	4	suo raggio
+137	4	4	4	raggio
+137	5	7	6	la figura santa
+137	6	7	6	figura santa
+137	6	6	6	figura
+138	5	5	5	mi
+139	2	7	2	modo che 'l seguente canto canta
+139	4	6	6	'l seguente canto

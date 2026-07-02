@@ -1,0 +1,419 @@
+line	start	end	head	text
+1	1	2	2	La bocca
+1	5	6	6	fiero pasto
+2	1	2	2	quel peccator
+2	5	5	5	capelli
+3	2	8	2	capo ch'elli avea di retro guasto
+3	2	2	2	capo
+3	4	4	4	elli
+3	7	7	7	retro
+4	3	3	3	Tu
+4	6	6	6	io
+5	1	7	2	disperato dolor che 'l cor mi preme
+5	1	2	2	disperato dolor
+5	4	5	5	'l cor
+6	6	6	6	io
+7	3	5	5	le mie parole
+7	8	8	8	seme
+8	3	3	3	infamia
+8	4	8	5	al traditor ch'i' rodo
+8	4	5	5	al traditor
+8	5	8	5	traditor ch'i' rodo
+8	5	5	5	traditor
+8	7	7	7	i'
+9	1	3	3	parlar e lagrimar
+9	1	1	1	parlar
+9	3	3	3	lagrimar
+10	1	1	1	Io
+10	5	5	5	tu
+10	9	10	10	che modo
+11	6	6	6	fiorentino
+12	1	1	1	mi
+12	5	5	5	io
+12	6	6	6	t'
+13	1	1	1	Tu
+13	5	5	5	i'
+13	7	8	7	conte Ugolino
+13	8	8	8	Ugolino
+14	2	2	2	questi
+14	4	6	5	l'arcivescovo Ruggieri
+14	6	6	6	Ruggieri
+15	2	2	2	ti
+15	5	5	5	i
+16	3	8	4	l'effetto de' suo' mai pensieri
+16	3	4	4	l'effetto
+16	6	8	8	suo' mai pensieri
+17	3	3	3	lui
+17	4	4	4	io
+18	7	7	7	mestieri
+19	2	7	2	quel che non puoi avere inteso
+20	3	5	4	la morte mia
+21	5	5	5	e'
+21	6	6	6	m'
+22	1	6	2	Breve pertugio dentro da la Muda
+22	1	2	2	Breve pertugio
+22	5	6	6	la Muda
+23	1	2	2	la qual
+23	4	4	4	me
+23	6	10	7	'l titol de la fame
+23	9	10	10	la fame
+24	2	2	2	che
+24	6	6	6	altrui
+25	5	7	7	lo suo forame
+26	1	2	2	più lune
+26	5	5	5	io
+26	7	9	9	'l mal sonno
+27	3	3	3	futuro
+27	6	7	7	'l velame
+28	1	1	1	Questi
+28	4	4	4	me
+28	5	7	5	maestro e donno
+28	5	5	5	maestro
+28	7	7	7	donno
+29	2	5	3	il lupo e ' lupicini
+29	2	3	3	il lupo
+29	5	5	5	lupicini
+29	6	7	7	al monte
+29	7	7	7	monte
+30	3	4	4	i Pisan
+30	6	6	6	Lucca
+31	2	6	2	cagne magre, studïose e conte
+32	1	6	1	Gualandi con Sismondi e con Lanfranchi
+32	1	1	1	Gualandi
+32	3	3	3	Sismondi
+32	6	6	6	Lanfranchi
+33	6	7	7	la fronte
+34	2	3	3	picciol corso
+35	1	4	4	lo padre e ' figli
+35	1	2	2	lo padre
+35	4	4	4	figli
+35	7	9	9	l'agute scane
+36	6	7	7	li fianchi
+37	5	6	6	la dimane
+38	4	5	5	'l sonno
+38	6	8	8	i miei figliuoli
+39	4	4	4	meco
+39	7	8	8	del pane
+40	3	3	3	crudel
+40	5	5	5	tu
+41	2	8	2	ciò che 'l mio cor s'annunziava
+41	2	2	2	ciò
+41	4	6	6	'l mio cor
+41	5	6	6	mio cor
+42	6	6	6	che
+43	5	6	6	l'ora
+44	2	3	3	'l cibo
+45	3	4	4	suo sogno
+45	5	5	5	ciascun
+46	2	2	2	io
+46	5	8	6	l'uscio di sotto
+46	5	6	6	l'uscio
+46	6	8	6	uscio di sotto
+47	2	4	4	l'orribile torre
+47	3	4	4	orribile torre
+47	6	6	6	io
+48	2	5	2	viso a' mie' figliuoi
+48	2	2	2	viso
+48	4	5	5	mie' figliuoi
+48	8	8	8	motto
+49	1	1	1	Io
+50	2	2	2	elli
+50	4	5	4	Anselmuccio mio
+51	2	2	2	Tu
+51	5	5	5	padre
+51	6	6	6	che
+52	6	6	6	io
+53	1	3	3	tutto quel giorno
+53	5	7	6	la notte appresso
+54	3	5	5	l'altro sol
+54	7	7	7	mondo
+55	2	5	3	un poco di raggio
+55	2	3	3	un poco
+55	3	5	3	poco di raggio
+55	5	5	5	raggio
+56	2	3	3	doloroso carcere
+56	5	5	5	io
+57	2	3	3	quattro visi
+57	4	7	6	il mio aspetto stesso
+57	5	7	6	mio aspetto stesso
+57	6	7	6	aspetto stesso
+58	1	3	3	ambo le man
+58	2	3	3	le man
+58	5	6	6	lo dolor
+59	2	2	2	ei
+59	5	5	5	io
+59	6	6	6	'l
+59	9	9	9	voglia
+60	2	2	2	manicar
+60	4	4	4	sùbito
+61	3	3	3	Padre
+61	5	5	5	ci
+61	7	8	8	men doglia
+62	2	2	2	tu
+62	2	2	2	tu
+62	5	5	5	noi
+62	7	7	7	ne
+63	1	3	3	queste misere carni
+63	5	5	5	tu
+63	6	6	6	le
+64	0	0	0	
+65	1	5	2	lo dì e l'altro
+65	1	2	2	lo dì
+65	4	5	5	l'altro
+65	7	7	7	tutti
+66	2	3	3	dura terra
+67	5	6	6	quarto dì
+67	6	6	6	dì
+68	1	1	1	Gaddo
+68	7	7	7	piedi
+69	2	3	2	Padre mio
+69	2	2	2	Padre
+70	5	5	5	tu
+70	6	6	6	mi
+71	2	2	2	io
+71	4	5	5	li tre
+71	7	7	7	uno
+71	7	7	7	uno
+72	2	7	4	'l quinto dì e 'l sesto
+72	2	4	4	'l quinto dì
+72	6	7	7	'l sesto
+72	9	9	9	io
+72	10	10	10	mi
+73	2	2	2	cieco
+73	6	6	6	ciascuno
+74	2	3	3	due dì
+74	4	4	4	li
+74	9	9	9	morti
+75	4	5	5	'l dolor
+75	7	8	8	'l digiuno
+76	4	4	4	ciò
+76	6	8	7	li occhi torti
+76	7	8	7	occhi torti
+77	2	4	3	'l teschio misero
+77	3	4	3	teschio misero
+77	6	6	6	denti
+78	1	1	1	che
+78	4	5	5	l'osso
+78	5	5	5	osso
+78	8	9	9	un can
+78	9	9	9	can
+79	2	2	2	Pisa
+79	3	6	3	vituperio de le genti
+79	5	6	6	le genti
+80	1	3	3	del bel paese
+80	2	3	3	bel paese
+80	6	7	7	'l sì
+81	3	4	4	i vicini
+81	6	6	6	te
+82	2	6	3	la Capraia e la Gorgona
+82	2	3	3	la Capraia
+82	5	6	6	la Gorgona
+83	3	5	3	siepe ad Arno
+83	3	3	3	siepe
+83	5	5	5	Arno
+83	8	9	9	la foce
+84	3	3	3	elli
+84	6	6	6	te
+84	7	8	8	ogne persona
+85	3	5	4	'l conte Ugolino
+85	5	5	5	Ugolino
+85	7	7	7	voce
+86	4	4	4	te
+86	6	7	7	le castella
+87	3	3	3	tu
+87	4	5	5	i figliuoi
+87	8	9	9	tal croce
+88	1	1	1	Innocenti
+88	3	5	4	l'età novella
+89	1	6	6	novella Tebe, Uguiccione e 'l Brigata
+89	1	2	2	novella Tebe
+89	3	3	3	Uguiccione
+89	5	6	6	'l Brigata
+90	2	9	4	li altri due che 'l canto suso appella
+90	2	4	4	li altri due
+90	6	8	7	'l canto suso
+91	1	1	1	Noi
+91	6	7	7	la gelata
+92	2	4	4	un'altra gente
+93	1	4	2	non volta in giù
+93	6	7	7	tutta riversata
+94	1	3	2	Lo pianto stesso
+94	2	2	2	pianto
+95	2	10	3	'l duol che truova in su li occhi rintoppo
+95	2	3	3	'l duol
+95	3	3	3	duol
+95	8	10	9	li occhi rintoppo
+95	8	9	9	li occhi
+95	9	9	9	occhi
+96	8	9	9	l'ambascia
+96	9	9	9	ambascia
+97	2	4	3	le lagrime prime
+97	6	6	6	groppo
+98	4	6	4	visiere di cristallo
+98	6	6	6	cristallo
+99	3	4	4	'l ciglio
+99	5	7	7	tutto il coppo
+99	6	7	7	il coppo
+100	7	8	8	un callo
+101	2	3	3	la freddura
+101	4	5	5	ciascun sentimento
+102	3	6	6	del mio viso stallo
+102	4	5	5	mio viso
+103	5	6	6	alquanto vento
+104	3	3	3	io
+104	4	5	4	Maestro mio
+104	6	6	6	questo
+104	7	7	7	chi
+105	5	7	6	ogne vapore spento
+106	2	2	2	elli
+106	4	4	4	me
+106	5	5	5	Avaccio
+107	2	2	2	ciò
+107	5	6	6	l'occhio
+107	7	8	8	la risposta
+108	2	7	3	la cagion che 'l fiato piove
+108	2	3	3	la cagion
+108	5	6	6	'l fiato
+109	2	8	2	un de' tristi de la fredda crosta
+109	2	4	2	un de' tristi
+109	4	8	4	tristi de la fredda crosta
+109	4	4	4	tristi
+109	6	8	8	la fredda crosta
+109	7	8	8	fredda crosta
+109	8	8	8	crosta
+110	3	3	3	noi
+110	5	6	5	anime crudeli
+110	5	5	5	anime
+111	6	8	8	l'ultima posta
+111	7	8	8	ultima posta
+111	8	8	8	posta
+112	2	3	3	dal viso
+112	3	3	3	viso
+112	4	6	6	i duri veli
+112	6	6	6	veli
+113	3	3	3	ïo
+113	5	11	6	'l duol che 'l cor m'impregna
+113	5	6	6	'l duol
+113	6	6	6	duol
+113	8	9	9	'l cor
+113	9	9	9	cor
+114	1	2	2	un poco
+114	2	2	2	poco
+114	5	6	6	'l pianto
+114	6	6	6	pianto
+115	3	3	3	io
+115	5	5	5	lui
+115	9	9	9	i'
+115	10	10	10	ti
+116	2	2	2	chi
+116	6	6	6	io
+116	8	8	8	ti
+117	2	5	2	fondo de la ghiaccia
+117	4	5	5	la ghiaccia
+117	7	7	7	mi
+117	7	7	7	mi
+118	3	3	3	I'
+118	5	6	6	frate Alberigo
+119	1	1	1	i'
+119	3	9	3	quel da le frutta del mal orto
+119	5	9	6	le frutta del mal orto
+119	5	6	6	le frutta
+119	6	9	6	frutta del mal orto
+119	7	9	9	del mal orto
+119	8	9	9	mal orto
+120	1	1	1	che
+120	4	4	4	dattero
+120	6	6	6	figo
+121	3	3	3	io
+121	4	4	4	lui
+121	7	7	7	tu
+122	2	2	2	elli
+122	4	4	4	me
+122	6	8	8	'l mio corpo
+122	7	8	8	mio corpo
+123	2	3	2	mondo sù
+123	4	5	5	nulla scïenza
+124	1	2	2	Cotal vantaggio
+124	4	5	5	questa Tolomea
+125	2	3	3	spesse volte
+125	4	5	5	l'anima
+126	3	4	3	Atropòs mossa
+126	3	3	3	Atropòs
+127	3	3	3	tu
+128	1	5	3	le 'nvetrïate lagrime dal volto
+128	1	3	3	le 'nvetrïate lagrime
+128	5	5	5	volto
+129	5	6	6	l'anima
+130	3	3	3	ïo
+130	4	6	5	il corpo suo
+130	5	6	5	corpo suo
+130	7	7	7	l'
+131	2	3	3	un demonio
+131	4	4	4	che
+131	6	6	6	il
+132	3	6	4	'l tempo suo tutto
+132	4	6	4	tempo suo tutto
+132	4	5	4	tempo suo
+133	1	1	1	Ella
+133	4	6	6	sì fatta cisterna
+134	5	7	6	lo corpo suso
+135	2	9	3	l'ombra che di qua dietro mi verna
+135	2	3	3	l'ombra
+135	4	4	4	che
+136	1	1	1	Tu
+136	2	2	2	'l
+136	6	6	6	tu
+137	1	1	1	elli
+137	3	5	4	ser Branca Doria
+137	4	5	4	Branca Doria
+137	8	9	9	più anni
+138	4	4	4	el
+139	1	1	1	Io
+139	4	4	4	io
+139	5	5	5	lui
+139	7	7	7	tu
+140	2	3	2	Branca Doria
+141	9	9	9	panni
+142	2	3	2	fosso sù
+142	2	2	2	fosso
+142	5	5	5	el
+142	7	7	7	Malebranche
+143	4	6	6	la tenace pece
+143	5	6	6	tenace pece
+143	6	6	6	pece
+144	5	6	6	Michel Zanche
+144	6	6	6	Zanche
+145	2	2	2	questi
+145	4	8	5	il diavolo in sua vece
+145	4	5	5	il diavolo
+145	7	8	8	sua vece
+146	2	3	2	corpo suo
+146	5	7	7	un suo prossimano
+147	2	3	3	'l tradimento
+147	6	6	6	lui
+148	6	7	7	la mano
+149	2	3	3	li occhi
+149	5	5	5	io
+149	7	7	7	gliel'
+150	2	2	2	cortesia
+150	4	4	4	lui
+150	6	6	6	villano
+151	2	2	2	Genovesi
+151	3	4	3	uomini diversi
+152	2	3	3	ogne costume
+152	7	8	8	ogne magagna
+153	4	7	4	voi del mondo spersi
+153	4	4	4	voi
+153	6	6	6	mondo
+154	2	6	4	col peggiore spirto di Romagna
+154	3	6	4	peggiore spirto di Romagna
+154	3	4	4	peggiore spirto
+154	4	6	4	spirto di Romagna
+154	6	6	6	Romagna
+155	3	3	3	voi
+155	4	5	5	un tal
+155	8	9	9	sua opra
+156	2	2	2	anima
+156	4	4	4	Cocito
+157	3	3	3	corpo
+157	7	8	8	di sopra

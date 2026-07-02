@@ -1,0 +1,406 @@
+line	start	end	head	text
+1	2	5	3	semilia miglia di lontano
+1	5	5	5	lontano
+2	3	5	4	l'ora sesta
+2	7	8	8	questo mondo
+3	3	4	4	l'ombra
+3	7	8	7	letto piano
+4	2	5	3	'l mezzo del cielo
+4	3	5	3	mezzo del cielo
+4	5	5	5	cielo
+4	7	7	7	noi
+5	6	7	7	alcuna stella
+5	7	7	7	stella
+6	2	3	3	il parere
+6	3	3	3	parere
+6	6	7	7	questo fondo
+6	7	7	7	fondo
+7	4	6	6	la chiarissima ancella
+8	1	2	2	del sol
+8	2	2	2	sol
+8	6	7	7	'l ciel
+9	1	2	2	di vista
+9	2	2	2	vista
+9	2	2	2	vista
+9	3	4	4	in vista
+9	7	9	9	la più bella
+10	3	6	4	il trïunfo che lude
+10	3	4	4	il trïunfo
+10	4	6	4	trïunfo che lude
+10	4	4	4	trïunfo
+11	4	7	4	punto che mi vinse
+11	4	4	4	punto
+11	6	6	6	mi
+12	4	7	4	quel ch'elli 'nchiude
+12	4	4	4	quel
+12	6	6	6	elli
+13	6	7	7	mio veder
+13	7	7	7	veder
+14	5	6	6	li occhi
+14	6	6	6	occhi
+14	8	8	8	Bëatrice
+15	1	1	1	nulla
+15	4	4	4	amor
+16	2	7	2	quanto infino a qui di lei
+16	5	5	5	qui
+16	7	7	7	lei
+17	3	3	3	tutto
+17	5	6	6	una loda
+18	5	6	6	questa vice
+19	1	5	2	La bellezza ch'io vidi
+19	1	2	2	La bellezza
+19	4	4	4	io
+20	6	6	6	noi
+20	9	9	9	io
+21	3	5	5	il suo fattor
+21	7	7	7	la
+22	2	4	3	questo passo vinto
+22	2	3	3	questo passo
+22	3	4	3	passo vinto
+23	6	9	6	punto di suo tema
+23	6	6	6	punto
+23	8	9	9	suo tema
+24	3	5	3	comico o tragedo
+24	3	3	3	comico
+24	5	5	5	tragedo
+25	3	5	3	sole in viso
+25	3	3	3	sole
+25	5	5	5	viso
+26	2	6	3	lo rimembrar del dolce riso
+26	2	3	3	lo rimembrar
+26	4	6	6	del dolce riso
+26	5	6	6	dolce riso
+26	6	6	6	riso
+27	1	3	2	la mente mia
+27	2	3	2	mente mia
+27	2	2	2	mente
+27	5	6	5	me medesmo
+27	5	5	5	me
+28	2	9	3	primo giorno ch'i' vidi il suo viso
+28	2	3	3	primo giorno
+28	5	5	5	i'
+28	7	9	9	il suo viso
+29	2	3	3	questa vita
+29	6	7	7	questa vista
+30	2	2	2	m'
+30	4	9	5	il seguire al mio cantar preciso
+30	4	5	5	il seguire
+30	7	9	8	mio cantar preciso
+30	7	8	8	mio cantar
+31	5	6	6	mio seguir
+32	4	5	5	sua bellezza
+33	3	5	4	l'ultimo suo
+33	6	7	7	ciascuno artista
+34	3	3	3	io
+34	6	7	7	maggior bando
+35	2	6	2	quel de la mia tuba
+35	4	6	6	la mia tuba
+35	5	6	6	mia tuba
+36	1	4	4	l'ardüa sua matera
+36	2	4	4	ardüa sua matera
+36	3	4	4	sua matera
+37	2	7	2	atto e voce di spedito duce
+37	2	4	2	atto e voce
+37	2	2	2	atto
+37	4	7	4	voce di spedito duce
+37	4	4	4	voce
+37	6	7	7	spedito duce
+37	7	7	7	duce
+38	2	2	2	Noi
+39	2	9	3	maggior corpo al ciel ch'è pura luce
+39	2	3	3	maggior corpo
+39	3	3	3	corpo
+39	5	9	5	ciel ch'è pura luce
+39	5	5	5	ciel
+39	8	9	9	pura luce
+39	9	9	9	luce
+40	1	5	1	luce intellettüal, piena d'amore
+40	1	2	1	luce intellettüal
+40	1	1	1	luce
+40	5	5	5	amore
+41	1	7	1	amor di vero ben, pien di letizia
+41	1	4	1	amor di vero ben
+41	1	1	1	amor
+41	3	4	4	vero ben
+41	4	4	4	ben
+41	7	7	7	letizia
+42	1	5	1	letizia che trascende ogne dolzore
+42	1	1	1	letizia
+42	4	5	5	ogne dolzore
+42	5	5	5	dolzore
+43	3	8	8	l'una e l'altra milizia
+43	3	4	4	l'una
+43	6	8	8	l'altra milizia
+43	6	7	7	l'altra
+44	2	2	2	paradiso
+44	4	5	5	l'una
+44	7	8	8	quelli aspetti
+45	5	7	7	l'ultima giustizia
+46	2	3	3	sùbito lampo
+46	3	3	3	lampo
+47	1	3	2	li spiriti visivi
+47	2	3	2	spiriti visivi
+47	2	2	2	spiriti
+48	2	3	3	l'atto
+48	3	3	3	atto
+48	4	9	5	l'occhio di più forti obietti
+48	4	5	5	l'occhio
+48	5	9	5	occhio di più forti obietti
+48	5	5	5	occhio
+48	7	9	9	più forti obietti
+48	9	9	9	obietti
+49	4	5	4	luce viva
+50	5	6	6	tal velo
+51	2	3	3	suo fulgor
+51	5	5	5	nulla
+52	2	7	3	l'amor che queta questo cielo
+52	2	3	3	l'amor
+52	6	7	7	questo cielo
+53	3	3	3	sé
+53	5	7	7	sì fatta salute
+54	5	6	6	sua fiamma
+54	7	8	8	il candelo
+55	7	7	7	me
+56	1	3	2	queste parole brievi
+56	5	5	5	io
+57	1	1	1	me
+57	6	7	7	mia virtute
+58	3	4	4	novella vista
+59	3	4	4	nulla luce
+60	2	4	3	li occhi miei
+60	3	4	3	occhi miei
+61	3	7	3	lume in forma di rivera
+61	3	3	3	lume
+61	5	7	5	forma di rivera
+61	5	5	5	forma
+61	7	7	7	rivera
+62	3	3	3	fulgore
+62	5	6	6	due rive
+62	6	6	6	rive
+63	3	4	4	mirabil primavera
+63	4	4	4	primavera
+64	2	3	3	tal fiumana
+64	5	6	5	faville vive
+65	3	4	4	ogne parte
+65	7	8	8	ne' fiori
+65	8	8	8	fiori
+66	2	5	2	rubin che oro circunscrive
+66	2	2	2	rubin
+66	4	4	4	oro
+67	5	6	6	li odori
+68	2	2	2	sé
+68	4	5	5	miro gurge
+69	3	3	3	una
+69	5	6	6	un'altra
+70	1	9	3	L'alto disio che mo t'infiamma e urge
+70	1	3	3	L'alto disio
+70	6	6	6	t'
+71	3	8	3	notizia di ciò che tu vei
+71	3	3	3	notizia
+71	5	8	5	ciò che tu vei
+71	5	5	5	ciò
+71	7	7	7	tu
+72	2	2	2	mi
+73	3	4	4	quest' acqua
+73	7	7	7	tu
+74	3	4	4	tanta sete
+74	6	6	6	te
+75	2	2	2	mi
+75	4	9	5	il sol de li occhi miei
+75	7	9	8	li occhi miei
+75	8	9	8	occhi miei
+76	3	7	7	Il fiume e li topazi
+76	3	4	4	Il fiume
+76	6	7	7	li topazi
+77	6	10	7	'l rider de l'erbe
+77	9	10	10	l'erbe
+78	3	3	3	lor
+78	4	6	6	vero umbriferi prefazi
+79	4	4	4	sé
+79	6	8	7	queste cose acerbe
+79	6	7	7	queste cose
+79	7	8	7	cose acerbe
+80	3	3	3	difetto
+80	5	7	6	la parte tua
+80	6	7	6	parte tua
+81	6	7	7	tanto superbe
+81	7	7	7	superbe
+82	3	3	3	fantin
+83	1	5	2	col volto verso il latte
+83	1	2	2	col volto
+83	2	5	2	volto verso il latte
+83	4	5	5	il latte
+84	4	6	5	l'usanza sua
+85	3	3	3	io
+85	6	7	7	migliori spegli
+85	7	7	7	spegli
+86	3	4	4	li occhi
+86	4	4	4	occhi
+86	7	8	8	l'onda
+86	8	8	8	onda
+87	1	1	1	che
+88	5	5	5	lei
+88	7	8	8	la gronda
+89	2	4	3	le palpebre mie
+89	3	4	3	palpebre mie
+90	2	5	3	sua lunghezza divenuta tonda
+90	2	3	3	sua lunghezza
+90	3	5	3	lunghezza divenuta tonda
+91	3	6	3	gente stata sotto larve
+91	3	3	3	gente
+91	6	6	6	larve
+92	1	1	1	che
+92	3	3	3	altro
+93	1	4	2	la sembianza non süa
+93	1	2	2	la sembianza
+93	2	2	2	sembianza
+93	6	6	6	che
+94	6	7	7	maggior feste
+95	1	2	2	li fiori
+95	4	5	5	le faville
+95	8	8	8	io
+96	1	6	3	ambo le corti del ciel manifeste
+96	1	3	3	ambo le corti
+96	2	6	3	le corti del ciel manifeste
+96	2	3	3	le corti
+96	3	6	3	corti del ciel manifeste
+96	5	6	5	ciel manifeste
+97	2	4	2	isplendor di Dio
+97	4	4	4	Dio
+97	7	7	7	io
+98	1	6	3	l'alto trïunfo del regno verace
+98	1	3	3	l'alto trïunfo
+98	2	6	3	alto trïunfo del regno verace
+98	5	6	5	regno verace
+99	2	2	2	virtù
+99	6	6	6	ïo
+99	7	7	7	il
+100	1	1	1	Lume
+100	6	7	7	visibile face
+101	1	2	2	lo creatore
+101	4	5	5	quella creatura
+102	4	4	4	lui
+102	7	9	9	la sua pace
+103	5	6	6	circular figura
+104	2	2	2	tanto
+104	4	6	6	la sua circunferenza
+105	3	3	3	sol
+105	4	6	6	troppo larga cintura
+106	3	3	3	raggio
+106	4	6	6	tutta sua parvenza
+107	3	6	3	sommo del mobile primo
+107	5	6	5	mobile primo
+108	4	4	4	vivere
+108	6	6	6	potenza
+109	3	3	3	clivo
+109	5	8	5	acqua di suo imo
+109	5	5	5	acqua
+109	7	8	8	suo imo
+110	0	0	0	
+111	4	4	4	verde
+111	7	8	7	fioretti opimo
+111	7	7	7	fioretti
+112	4	6	4	lume intorno intorno
+112	4	4	4	lume
+113	4	7	7	più di mille soglie
+113	6	7	7	mille soglie
+113	7	7	7	soglie
+114	1	3	1	quanto di noi
+114	3	3	3	noi
+114	8	8	8	ritorno
+115	3	5	5	l'infimo grado
+115	7	7	7	sé
+116	1	3	3	sì grande lume
+116	6	7	7	la larghezza
+117	2	7	3	questa rosa ne l'estreme foglie
+117	2	3	3	questa rosa
+117	5	7	7	l'estreme foglie
+118	1	3	2	La vista mia
+118	5	6	6	l'ampio
+118	9	10	10	l'altezza
+119	5	5	5	tutto
+120	1	8	2	il quanto e 'l quale di quella allegrezza
+120	1	5	2	il quanto e 'l quale
+120	1	2	2	il quanto
+120	4	8	5	'l quale di quella allegrezza
+120	4	5	5	'l quale
+120	7	8	8	quella allegrezza
+121	6	6	6	pon
+121	8	8	8	leva
+122	3	5	3	Dio sanza mezzo
+122	3	3	3	Dio
+122	5	5	5	mezzo
+123	1	3	2	la legge natural
+123	2	3	2	legge natural
+123	2	2	2	legge
+124	2	6	2	giallo de la rosa sempiterna
+124	2	2	2	giallo
+124	4	6	5	la rosa sempiterna
+124	4	5	5	la rosa
+124	5	6	5	rosa sempiterna
+124	5	5	5	rosa
+125	1	1	1	che
+126	1	3	1	odor di lode
+126	1	1	1	odor
+126	3	3	3	lode
+126	5	8	5	sol che sempre verna
+126	5	5	5	sol
+127	1	1	1	qual
+127	3	8	3	colui che tace e dicer vole
+127	3	3	3	colui
+128	3	3	3	Bëatrice
+129	3	8	4	'l convento de le bianche stole
+129	3	4	4	'l convento
+129	6	8	8	le bianche stole
+129	7	8	8	bianche stole
+130	2	3	3	nostra città
+130	5	5	5	ella
+131	2	6	4	li nostri scanni sì ripieni
+131	2	4	4	li nostri scanni
+131	3	6	4	nostri scanni sì ripieni
+131	3	4	4	nostri scanni
+131	4	6	4	scanni sì ripieni
+132	2	3	3	poca gente
+133	3	5	5	quel gran seggio
+133	9	10	10	li occhi
+134	2	9	3	la corona che già v'è sù posta
+134	2	3	3	la corona
+135	5	6	6	queste nozze
+136	2	7	3	l'alma, che fia giù agosta
+136	2	3	3	l'alma
+137	2	8	4	l'alto Arrigo, ch'a drizzare Italia
+137	2	4	4	l'alto Arrigo
+137	8	8	8	Italia
+138	3	3	3	prima
+138	5	5	5	ella
+139	1	6	3	La cieca cupidigia che v'ammalia
+139	1	3	3	La cieca cupidigia
+139	2	6	3	cieca cupidigia che v'ammalia
+139	2	3	3	cieca cupidigia
+139	3	6	3	cupidigia che v'ammalia
+139	3	3	3	cupidigia
+140	1	2	2	simili fatti
+140	2	2	2	fatti
+140	6	6	6	fantolino
+141	4	4	4	fame
+141	8	9	9	la balia
+141	9	9	9	balia
+142	3	3	3	prefetto
+142	5	6	5	foro divino
+143	2	2	2	tal
+143	4	6	4	palese e coverto
+143	4	4	4	palese
+143	6	6	6	coverto
+144	4	4	4	lui
+144	6	7	7	un cammino
+145	6	6	6	Dio
+146	2	3	3	santo officio
+146	3	3	3	officio
+146	5	5	5	el
+147	3	4	3	Simon mago
+147	3	3	3	Simon
+147	4	4	4	mago
+147	7	8	8	suo merto
+147	8	8	8	merto
+148	3	5	3	quel d'Alagna
+148	5	5	5	Alagna

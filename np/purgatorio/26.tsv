@@ -1,0 +1,366 @@
+line	start	end	head	text
+1	5	6	6	l'orlo
+1	7	7	7	uno
+1	9	9	9	altro
+2	6	8	8	il buon maestro
+3	5	5	5	io
+3	6	6	6	ti
+4	2	3	3	il sole
+4	6	8	7	l'omero destro
+5	4	6	6	tutto l'occidente
+5	5	6	6	l'occidente
+6	3	6	4	bianco aspetto di cilestro
+6	4	6	4	aspetto di cilestro
+6	6	6	6	cilestro
+7	2	2	2	io
+7	5	8	6	l'ombra più rovente
+7	5	6	6	l'ombra
+8	2	3	3	la fiamma
+8	7	8	8	tanto indizio
+9	2	3	3	molt' ombre
+9	6	6	6	mente
+10	1	1	1	Questa
+10	3	7	4	la cagion che diede inizio
+10	3	4	4	la cagion
+10	7	7	7	inizio
+11	1	1	1	loro
+11	5	5	5	me
+12	3	3	3	Colui
+12	6	7	6	corpo fittizio
+13	3	3	3	me
+14	1	1	1	certi
+14	2	2	2	si
+14	6	6	6	riguardo
+15	2	7	3	non uscir dove non fosser arsi
+15	2	3	3	non uscir
+15	3	3	3	uscir
+16	2	4	2	tu che vai
+16	2	2	2	tu
+17	5	6	6	li altri
+18	3	10	3	me che 'n sete e 'n foco ardo
+18	3	3	3	me
+18	6	6	6	sete
+18	9	9	9	foco
+19	4	4	4	me
+19	5	7	7	la tua risposta
+19	9	9	9	uopo
+20	2	3	3	tutti questi
+20	6	7	7	maggior sete
+21	3	4	3	acqua fredda
+21	5	5	5	Indo
+21	7	7	7	Etïopo
+22	7	7	7	te
+22	8	8	8	parete
+23	2	2	2	sol
+23	5	5	5	tu
+24	2	2	2	morte
+24	6	7	7	la rete
+24	7	7	7	rete
+25	4	6	4	un d'essi
+25	6	6	6	essi
+25	8	8	8	io
+26	4	4	4	io
+27	2	6	3	altra novità ch'apparve allora
+27	2	3	3	altra novità
+27	3	3	3	novità
+28	3	7	4	lo mezzo del cammino acceso
+28	3	4	4	lo mezzo
+28	4	7	4	mezzo del cammino acceso
+28	6	7	6	cammino acceso
+29	2	2	2	gente
+29	3	4	4	col viso
+29	4	4	4	viso
+29	5	7	5	incontro a questa
+29	7	7	7	questa
+30	1	2	2	la qual
+31	4	5	5	ogne parte
+32	1	2	2	ciascun' ombra
+32	5	5	5	una
+32	5	5	5	una
+33	2	2	2	restar
+33	5	6	6	brieve festa
+34	4	6	5	loro schiera bruna
+34	5	6	5	schiera bruna
+35	3	4	4	l'una
+35	6	8	8	l'altra formica
+35	7	8	8	altra formica
+36	4	5	5	lor via
+36	7	8	8	lor fortuna
+37	4	6	5	l'accoglienza amica
+38	3	5	5	'l primo passo
+39	1	1	1	sopragridar
+39	2	2	2	ciascuna
+40	1	3	3	la nova gente
+40	4	6	4	Soddoma e Gomorra
+40	4	4	4	Soddoma
+40	6	6	6	Gomorra
+41	2	3	3	l'altra
+41	5	6	6	la vacca
+41	8	8	8	Pasife
+42	2	3	3	'l torello
+42	5	6	6	sua lussuria
+43	3	3	3	grue
+43	6	8	7	le montagne Rife
+43	7	8	7	montagne Rife
+43	7	7	7	montagne
+44	2	2	2	parte
+44	2	2	2	parte
+44	6	7	7	l'arene
+44	7	7	7	arene
+45	1	3	1	queste del gel
+45	3	3	3	gel
+45	4	6	4	quelle del sole
+45	6	6	6	sole
+46	1	3	3	l'una gente
+46	6	7	7	l'altra
+47	5	6	6	primi canti
+48	3	8	3	gridar che più lor si convene
+48	3	3	3	gridar
+48	6	6	6	lor
+49	4	4	4	me
+50	1	6	1	essi medesmi che m'avean pregato
+50	1	2	1	essi medesmi
+50	4	4	4	m'
+51	5	6	6	lor sembianti
+52	1	1	1	Io
+52	3	4	4	due volte
+52	4	4	4	volte
+52	7	8	8	lor grato
+52	8	8	8	grato
+53	3	4	3	anime sicure
+53	3	3	3	anime
+54	7	8	8	pace stato
+54	7	7	7	pace
+55	0	0	0	
+56	1	5	2	le membra mie di là
+56	1	3	2	le membra mie
+56	1	2	2	le membra
+56	2	3	2	membra mie
+56	9	9	9	meco
+57	2	3	2	sangue suo
+57	6	8	8	le sue giunture
+57	7	8	8	sue giunture
+58	0	0	0	
+59	1	1	1	donna
+59	5	5	5	che
+59	6	6	6	m'
+59	8	8	8	grazia
+60	3	4	4	'l mortal
+60	6	7	7	vostro mondo
+61	3	7	6	la vostra maggior voglia sazia
+62	5	6	6	'l ciel
+63	5	5	5	amore
+64	5	5	5	carte
+65	1	1	1	chi
+65	1	1	1	chi
+65	3	3	3	voi
+65	7	8	8	quella turba
+66	8	9	9	vostri terghi
+67	3	3	3	stupido
+67	4	4	4	si
+68	1	2	2	lo montanaro
+69	2	4	2	rozzo e salvatico
+69	2	2	2	rozzo
+69	4	4	4	salvatico
+69	5	5	5	s'
+70	2	3	3	ciascun' ombra
+70	6	7	7	sua paruta
+71	6	6	6	stupore
+72	1	2	2	lo qual
+72	4	6	6	li alti cuor
+73	1	2	2	Beato te
+73	2	2	2	te
+73	5	7	7	le nostre marche
+73	6	7	7	nostre marche
+73	7	7	7	marche
+74	2	6	2	colei che pria m'inchiese
+74	2	2	2	colei
+75	4	4	4	esperïenza
+76	1	7	2	La gente che non vien con noi
+76	1	2	2	La gente
+76	7	7	7	noi
+77	2	2	2	ciò
+77	6	6	6	Cesar
+78	1	1	1	Regina
+78	3	3	3	sé
+79	4	4	4	Soddoma
+80	3	3	3	sé
+81	3	4	4	l'arsura
+82	1	2	2	Nostro peccato
+83	5	6	6	umana legge
+84	3	3	3	bestie
+84	4	5	5	l'appetito
+85	2	4	2	obbrobrio di noi
+85	4	4	4	noi
+85	4	4	4	noi
+86	3	6	4	il nome di colei
+86	4	6	4	nome di colei
+86	6	6	6	colei
+87	5	7	7	le 'mbestiate schegge
+88	3	4	4	nostri atti
+88	4	4	4	atti
+88	7	7	7	che
+89	4	4	4	nome
+89	7	7	7	chi
+90	1	1	1	tempo
+90	5	5	5	dire
+91	1	1	1	Farotti
+91	4	4	4	me
+92	2	3	3	Guido Guinizzelli
+92	2	2	2	Guido
+92	3	3	3	Guinizzelli
+92	6	6	6	mi
+93	7	8	8	lo stremo
+93	8	8	8	stremo
+94	3	6	4	la tristizia di Ligurgo
+94	3	4	4	la tristizia
+94	4	6	4	tristizia di Ligurgo
+94	6	6	6	Ligurgo
+95	3	4	4	due figli
+95	7	8	8	la madre
+96	4	4	4	io
+97	2	2	2	io
+97	5	6	5	sé stesso
+97	7	8	8	il padre
+98	1	1	1	mio
+98	4	7	7	li altri miei miglior
+98	4	5	5	li altri
+98	5	7	7	altri miei miglior
+98	6	7	7	miei miglior
+99	1	3	1	rime d'amore
+99	3	3	3	amore
+100	3	5	3	udire e dir
+100	3	3	3	udire
+100	5	5	5	dir
+101	1	2	2	lunga fïata
+101	4	4	4	lui
+102	3	4	4	lo foco
+103	4	4	4	riguardar
+104	6	7	7	suo servigio
+104	7	7	7	servigio
+105	2	3	3	l'affermar
+105	7	7	7	altrui
+106	2	2	2	elli
+106	4	4	4	me
+106	7	8	8	tal vestigio
+107	2	5	2	quel ch'i' odo
+107	4	4	4	i'
+107	7	7	7	me
+108	2	2	2	Letè
+109	3	5	5	le tue parole
+109	4	5	5	tue parole
+109	5	5	5	parole
+110	4	4	4	cagion
+111	2	2	2	dire
+111	5	8	5	guardar d'avermi caro
+111	5	5	5	guardar
+112	2	2	2	io
+112	4	4	4	lui
+112	5	8	7	Li dolci detti vostri
+112	7	8	7	detti vostri
+113	4	6	5	l'uso moderno
+113	4	5	5	l'uso
+113	5	6	5	uso moderno
+114	4	6	6	i loro incostri
+114	5	6	6	loro incostri
+115	2	2	2	frate
+115	4	8	4	questi ch'io ti cerno
+115	4	4	4	questi
+116	1	2	2	col dito
+116	5	7	6	un spirto innanzi
+116	5	6	6	un spirto
+117	2	6	3	miglior fabbro del parlar materno
+117	2	3	3	miglior fabbro
+117	3	6	3	fabbro del parlar materno
+117	4	6	5	del parlar materno
+117	5	6	5	parlar materno
+118	1	3	1	Versi d'amore
+118	3	3	3	amore
+118	5	7	5	prose di romanzi
+118	7	7	7	romanzi
+119	2	2	2	tutti
+119	6	7	7	li stolti
+120	2	4	2	quel di Lemosì
+120	4	4	4	Lemosì
+121	2	6	2	voce più ch'al ver
+121	2	2	2	voce
+121	6	6	6	ver
+121	8	9	9	li volti
+122	4	5	5	sua oppinïone
+122	5	5	5	oppinïone
+123	3	7	3	arte o ragion per lor
+123	3	5	3	arte o ragion
+123	3	3	3	arte
+123	5	7	5	ragion per lor
+123	5	5	5	ragion
+123	7	7	7	lor
+124	3	6	4	molti antichi di Guittone
+124	3	4	4	molti antichi
+124	4	6	4	antichi di Guittone
+124	6	6	6	Guittone
+125	2	2	2	grido
+125	2	2	2	grido
+125	6	6	6	lui
+125	8	8	8	pregio
+126	3	3	3	l'
+126	6	7	7	il ver
+126	9	10	10	più persone
+126	10	10	10	persone
+127	3	3	3	tu
+127	5	7	7	sì ampio privilegio
+127	7	7	7	privilegio
+128	3	3	3	ti
+128	5	8	6	l'andare al chiostro
+128	6	8	6	andare al chiostro
+128	8	8	8	chiostro
+129	2	2	2	quale
+129	4	4	4	Cristo
+129	5	7	5	abate del collegio
+129	7	7	7	collegio
+130	1	1	1	falli
+130	3	3	3	me
+130	4	8	5	un dir d'un paternostro
+130	5	8	5	dir d'un paternostro
+130	7	8	8	un paternostro
+131	4	4	4	noi
+131	6	7	7	questo mondo
+132	2	3	2	poter peccar
+132	7	7	7	nostro
+133	5	6	5	luogo altrui
+133	5	5	5	luogo
+133	6	6	6	altrui
+134	6	7	7	lo foco
+134	7	7	7	foco
+135	3	4	4	l'acqua
+135	4	4	4	acqua
+135	5	6	6	il pesce
+135	6	6	6	pesce
+135	9	9	9	fondo
+136	1	1	1	Io
+136	5	5	5	mostrato
+136	7	8	8	un poco
+137	5	6	6	suo nome
+137	7	9	9	il mio disire
+138	2	3	3	grazïoso loco
+139	1	1	1	El
+140	2	2	2	m'
+140	4	6	6	vostre cortes deman
+141	2	2	2	ieu
+141	4	4	4	me
+141	9	9	9	vos
+142	1	1	1	Ieu
+142	3	3	3	Arnaut
+143	3	5	5	la passada folor
+144	4	7	5	lo joi qu'esper
+144	4	5	5	lo joi
+144	6	6	6	qu'
+145	2	2	2	vos
+145	5	6	6	aquella valor
+146	2	2	2	vos
+146	5	8	5	som de l'escalina
+146	7	8	8	l'escalina
+147	2	2	2	vos
+147	4	7	4	temps de ma dolor
+147	6	7	7	ma dolor
+148	5	8	5	foco che li affina
+148	5	5	5	foco

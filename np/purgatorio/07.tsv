@@ -1,0 +1,352 @@
+line	start	end	head	text
+1	3	7	4	l'accoglienze oneste e liete
+1	3	4	4	l'accoglienze
+1	4	7	4	accoglienze oneste e liete
+1	4	4	4	accoglienze
+2	3	6	6	tre e quattro volte
+2	6	6	6	volte
+3	1	1	1	Sordel
+3	6	6	6	Voi
+4	4	5	5	questo monte
+5	1	7	2	l'anime degne di salire a Dio
+5	2	7	2	anime degne di salire a Dio
+5	2	3	2	anime degne
+5	5	7	5	salire a Dio
+5	7	7	7	Dio
+6	2	4	3	l'ossa mie
+6	3	4	3	ossa mie
+6	6	6	6	Ottavian
+7	1	1	1	Io
+7	3	3	3	Virgilio
+7	6	8	8	null' altro rio
+7	7	8	8	altro rio
+8	1	2	2	lo ciel
+8	8	8	8	fé
+9	4	6	5	il duca mio
+9	5	6	5	duca mio
+10	1	1	1	Qual
+10	3	7	3	colui che cosa innanzi sé
+10	3	3	3	colui
+10	5	7	5	cosa innanzi sé
+10	5	5	5	cosa
+10	7	7	7	sé
+11	4	4	4	e'
+12	6	6	6	Ella
+13	1	1	1	tal
+13	3	3	3	quelli
+13	7	8	8	le ciglia
+14	5	5	5	lui
+15	5	6	6	'l minor
+16	2	4	2	gloria di Latin
+16	4	4	4	Latin
+17	2	7	2	ciò che potea la lingua nostra
+17	5	7	6	la lingua nostra
+18	2	8	2	pregio etterno del loco ond' io fui
+18	2	3	2	pregio etterno
+18	5	8	5	loco ond' io fui
+18	5	5	5	loco
+18	7	7	7	io
+19	1	5	2	qual merito o qual grazia
+19	1	2	2	qual merito
+19	4	5	5	qual grazia
+19	6	6	6	mi
+19	6	6	6	mi
+19	7	7	7	ti
+20	2	2	2	io
+20	6	8	8	le tue parole
+21	5	5	5	inferno
+21	8	9	9	qual chiostra
+22	2	7	4	tutt' i cerchi del dolente regno
+22	3	7	4	i cerchi del dolente regno
+22	4	7	4	cerchi del dolente regno
+22	6	7	7	dolente regno
+23	2	2	2	lui
+23	4	4	4	io
+24	1	3	1	virtù del ciel
+24	3	3	3	ciel
+24	4	4	4	mi
+24	8	8	8	lei
+25	3	3	3	far
+25	6	7	7	non fare
+26	2	8	2	veder l'alto Sol che tu disiri
+26	3	8	5	l'alto Sol che tu disiri
+26	3	5	5	l'alto Sol
+26	6	6	6	che
+26	7	7	7	tu
+27	2	2	2	che
+27	6	6	6	me
+28	1	1	1	Luogo
+28	8	8	8	martìri
+29	3	3	3	tenebre
+29	6	7	7	i lamenti
+29	7	7	7	lamenti
+30	4	4	4	guai
+30	7	7	7	sospiri
+31	3	3	3	io
+31	5	6	5	pargoli innocenti
+32	2	6	2	denti morsi de la morte
+32	2	3	2	denti morsi
+32	5	6	6	la morte
+33	4	6	6	l'umana colpa
+34	3	3	3	io
+34	5	5	5	quei
+35	1	1	1	virtù
+35	7	7	7	vizio
+36	2	3	3	l'altre
+36	6	7	6	tutte quante
+37	3	3	3	tu
+37	7	8	8	alcuno indizio
+38	2	2	2	noi
+39	3	3	3	purgatorio
+39	5	6	6	dritto inizio
+40	2	3	2	Loco certo
+40	2	2	2	Loco
+40	7	7	7	posto
+41	4	4	4	andar
+42	2	2	2	quanto
+42	3	3	3	ir
+42	6	6	6	guida
+43	6	7	7	il giorno
+44	5	5	5	notte
+45	6	7	7	bel soggiorno
+46	1	1	1	Anime
+46	4	4	4	destra
+47	2	2	2	mi
+47	4	4	4	io
+47	5	5	5	ti
+47	8	8	8	esse
+48	4	4	4	diletto
+48	5	5	5	ti
+49	3	3	3	ciò
+49	6	6	6	Chi
+50	3	3	3	notte
+50	5	5	5	elli
+51	2	2	2	altrui
+52	2	4	4	'l buon Sordello
+52	6	6	6	terra
+52	8	9	9	'l dito
+53	4	5	5	questa riga
+54	4	6	6	'l sol partito
+55	4	5	5	altra cosa
+55	7	7	7	briga
+56	2	4	4	la notturna tenebra
+57	1	3	1	quella col nonpoder
+57	1	1	1	quella
+57	2	3	3	col nonpoder
+57	3	3	3	nonpoder
+57	4	5	5	la voglia
+58	5	5	5	lei
+59	3	4	4	la costa
+60	3	4	4	l'orizzonte
+60	5	6	6	il dì
+61	2	4	4	il mio segnor
+62	0	0	0	
+63	5	5	5	diletto
+64	6	6	6	lici
+65	2	2	2	io
+65	6	7	7	'l monte
+65	7	7	7	monte
+66	2	8	2	guisa che i vallon li sceman quici
+66	2	2	2	guisa
+66	4	5	5	i vallon
+66	5	5	5	vallon
+66	6	6	6	li
+67	3	4	4	quell' ombra
+68	2	3	3	la costa
+68	6	6	6	sé
+68	7	7	7	grembo
+69	3	5	5	il novo giorno
+70	2	4	2	erto e piano
+70	2	2	2	erto
+70	4	4	4	piano
+70	6	8	7	un sentiero schembo
+71	5	8	5	fianco de la lacca
+71	7	8	8	la lacca
+72	6	6	6	mezzo
+72	8	9	9	il lembo
+73	1	4	1	Oro e argento fine
+73	1	1	1	Oro
+73	3	4	3	argento fine
+73	3	3	3	argento
+73	5	7	5	cocco e biacca
+73	5	5	5	cocco
+73	7	7	7	biacca
+74	1	1	1	indaco
+74	2	5	2	legno lucido e sereno
+74	2	2	2	legno
+75	1	8	2	fresco smeraldo in l'ora che si fiacca
+75	1	2	2	fresco smeraldo
+75	2	2	2	smeraldo
+75	4	8	5	l'ora che si fiacca
+75	4	5	5	l'ora
+75	5	5	5	ora
+76	2	3	3	l'erba
+76	6	7	7	li fior
+76	10	11	11	quel seno
+77	2	2	2	ciascun
+77	5	6	5	color vinto
+77	5	5	5	color
+78	3	4	4	suo maggiore
+78	4	4	4	maggiore
+78	7	8	8	il meno
+78	8	8	8	meno
+79	4	4	4	natura
+80	3	6	3	soavità di mille odori
+80	3	3	3	soavità
+80	5	6	6	mille odori
+80	6	6	6	odori
+81	3	6	4	uno incognito e indistinto
+81	4	6	4	incognito e indistinto
+81	4	4	4	incognito
+81	6	6	6	indistinto
+82	1	2	2	Salve, Regina
+82	2	2	2	Regina
+82	5	5	5	verde
+82	8	9	9	su' fiori
+83	4	4	4	anime
+84	3	4	4	la valle
+84	8	8	8	fuori
+85	3	5	5	'l poco sole
+86	2	7	3	'l Mantoan che ci avea vòlti
+86	2	3	3	'l Mantoan
+87	2	2	2	color
+88	2	3	3	questo balzo
+88	5	8	6	li atti e ' volti
+88	5	6	6	li atti
+88	8	8	8	volti
+89	2	2	2	voi
+89	4	5	4	tutti quanti
+90	3	4	4	la lama
+90	7	7	7	essi
+91	1	8	1	Colui che più siede alto e fa sembianti
+91	1	1	1	Colui
+91	8	8	8	sembianti
+92	4	7	4	ciò che far dovea
+92	4	4	4	ciò
+93	5	9	5	bocca a li altrui canti
+93	5	5	5	bocca
+93	7	9	9	li altrui canti
+93	8	9	9	altrui canti
+94	1	1	1	Rodolfo
+94	2	2	2	imperador
+95	2	7	3	le piaghe c'hanno Italia morta
+95	2	3	3	le piaghe
+95	6	7	6	Italia morta
+95	6	6	6	Italia
+96	5	5	5	altri
+97	1	2	2	L'altro
+97	5	6	6	la vista
+98	2	7	3	la terra dove l'acqua nasce
+98	2	3	3	la terra
+98	5	6	6	l'acqua
+99	2	2	2	Molta
+99	4	4	4	Albia
+99	4	4	4	Albia
+99	8	8	8	mar
+100	1	1	1	Ottacchero
+100	3	3	3	nome
+100	6	7	7	le fasce
+100	7	7	7	fasce
+101	5	7	5	Vincislao suo figlio
+101	5	5	5	Vincislao
+101	6	7	7	suo figlio
+101	7	7	7	figlio
+102	3	5	3	lussuria e ozio
+102	3	3	3	lussuria
+102	5	5	5	ozio
+103	2	7	3	quel nasetto che stretto a consiglio
+103	2	3	3	quel nasetto
+103	7	7	7	consiglio
+104	3	8	3	colui c'ha sì benigno aspetto
+104	3	3	3	colui
+104	6	8	8	sì benigno aspetto
+105	5	6	6	il giglio
+106	6	7	7	il petto
+107	1	2	2	L'altro
+107	8	9	9	la guancia
+108	2	4	4	la sua palma
+109	1	3	1	Padre e suocero
+109	1	1	1	Padre
+109	3	3	3	suocero
+109	6	8	6	mal di Francia
+109	8	8	8	Francia
+110	2	7	3	la vita sua viziata e lorda
+110	3	7	3	vita sua viziata e lorda
+110	3	4	3	vita sua
+110	3	3	3	vita
+111	4	9	5	il duol che sì li lancia
+111	5	9	5	duol che sì li lancia
+111	5	5	5	duol
+112	1	9	1	Quel che par sì membruto e che s'accorda
+112	1	1	1	Quel
+113	3	6	3	colui dal maschio naso
+113	3	3	3	colui
+113	5	6	6	maschio naso
+114	2	3	3	ogne valor
+114	6	7	7	la corda
+115	3	5	3	re dopo lui
+115	3	3	3	re
+115	5	5	5	lui
+116	1	7	2	lo giovanetto che retro a lui siede
+116	1	2	2	lo giovanetto
+116	6	6	6	lui
+117	3	8	4	il valor di vaso in vaso
+117	3	4	4	il valor
+117	4	8	4	valor di vaso in vaso
+117	6	6	6	vaso
+117	6	6	6	vaso
+118	7	9	9	l'altre rede
+118	8	9	9	altre rede
+118	9	9	9	rede
+119	1	3	1	Iacomo e Federigo
+119	1	1	1	Iacomo
+119	3	3	3	Federigo
+119	5	6	6	i reami
+119	6	6	6	reami
+120	2	3	2	retaggio miglior
+120	2	2	2	retaggio
+120	4	4	4	nessun
+121	1	2	2	Rade volte
+121	5	6	6	li rami
+122	1	3	3	l'umana probitate
+122	5	5	5	questo
+123	1	4	1	quei che la dà
+123	1	1	1	quei
+123	3	3	3	la
+123	7	7	7	lui
+124	3	3	3	nasuto
+124	5	6	6	mie parole
+125	5	6	6	l'altro
+125	7	7	7	Pier
+125	10	10	10	lui
+126	2	4	2	Puglia e Proenza
+126	2	2	2	Puglia
+126	4	4	4	Proenza
+127	3	5	4	del seme suo
+127	4	5	4	seme suo
+127	7	8	8	la pianta
+128	4	6	4	Beatrice e Margherita
+128	4	4	4	Beatrice
+128	6	6	6	Margherita
+129	1	1	1	Costanza
+129	2	3	3	di marito
+129	3	3	3	marito
+130	2	7	3	il re de la semplice vita
+130	2	3	3	il re
+130	5	7	7	la semplice vita
+131	4	6	4	Arrigo d'Inghilterra
+131	6	6	6	Inghilterra
+132	1	1	1	questi
+132	4	5	4	rami suoi
+132	6	7	7	migliore uscita
+133	1	1	1	Quel
+133	6	6	6	costor
+134	3	3	3	suso
+134	5	6	5	Guiglielmo marchese
+134	6	6	6	marchese
+135	2	2	2	cui
+135	4	4	4	Alessandria
+135	6	8	8	la sua guerra
+136	3	5	3	Monferrato e Canavese
+136	3	3	3	Monferrato
+136	5	5	5	Canavese

@@ -1,0 +1,297 @@
+line	start	end	head	text
+1	3	8	4	l'estremità d'un'alta ripa
+1	3	4	4	l'estremità
+1	4	8	4	estremità d'un'alta ripa
+1	4	4	4	estremità
+1	6	8	8	un'alta ripa
+1	8	8	8	ripa
+2	3	5	4	gran pietre rotte
+2	3	4	4	gran pietre
+2	4	5	4	pietre rotte
+2	4	4	4	pietre
+2	7	7	7	cerchio
+3	3	5	5	più crudele stipa
+3	5	5	5	stipa
+4	4	6	6	l'orribile soperchio
+5	2	7	2	puzzo che 'l profondo abisso gitta
+5	2	2	2	puzzo
+5	4	6	6	'l profondo abisso
+6	6	7	7	un coperchio
+7	2	4	4	un grand' avello
+7	6	6	6	io
+7	8	9	9	una scritta
+8	3	4	4	Anastasio papa
+8	3	3	3	Anastasio
+8	4	4	4	papa
+9	1	2	2	lo qual
+9	4	4	4	Fotin
+9	6	8	7	la via dritta
+10	1	3	3	Lo nostro scender
+11	5	6	6	un poco
+11	9	10	10	il senso
+12	2	3	3	tristo fiato
+12	9	9	9	riguardo
+13	2	3	3	'l maestro
+13	5	5	5	io
+13	6	7	7	Alcun compenso
+14	2	2	2	lui
+14	5	6	6	'l tempo
+15	3	3	3	elli
+15	7	7	7	ciò
+16	1	2	1	Figliuol mio
+16	5	6	6	cotesti sassi
+17	6	7	7	tre cerchietti
+18	2	2	2	grado
+18	2	2	2	grado
+18	6	8	6	que' che lassi
+18	6	6	6	que'
+19	1	1	1	Tutti
+19	5	6	5	spirti maladetti
+20	7	8	8	la vista
+21	0	0	0	
+22	2	3	3	ogne malizia
+22	5	5	5	odio
+22	7	7	7	cielo
+23	1	1	1	ingiuria
+23	3	4	4	'l fine
+23	6	8	7	ogne fin cotale
+24	3	3	3	forza
+24	6	7	6	frode altrui
+24	7	7	7	altrui
+25	3	3	3	frode
+25	5	9	9	de l'uom proprio male
+25	6	7	7	l'uom
+25	8	9	9	proprio male
+26	4	4	4	Dio
+27	1	2	2	li frodolenti
+27	4	5	5	più dolor
+28	2	2	2	vïolenti
+28	3	5	5	il primo cerchio
+29	5	5	5	forza
+29	7	8	8	tre persone
+30	2	3	3	tre gironi
+31	2	2	2	Dio
+31	4	4	4	sé
+31	5	6	6	al prossimo
+31	6	6	6	prossimo
+32	2	2	2	forza
+32	5	5	5	loro
+32	8	9	9	lor cose
+32	9	9	9	cose
+33	4	5	5	aperta ragione
+33	5	5	5	ragione
+34	1	6	1	Morte per forza e ferute dogliose
+34	1	1	1	Morte
+34	3	6	3	forza e ferute dogliose
+34	3	3	3	forza
+34	5	6	5	ferute dogliose
+35	2	2	2	prossimo
+35	7	8	8	suo avere
+36	1	5	1	ruine, incendi e tollette dannose
+36	1	1	1	ruine
+36	2	2	2	incendi
+36	4	5	4	tollette dannose
+37	2	7	2	omicide e ciascun che mal fiere
+37	2	2	2	omicide
+37	4	7	4	ciascun che mal fiere
+37	4	4	4	ciascun
+38	1	3	1	guastatori e predon
+38	1	1	1	guastatori
+38	3	3	3	predon
+38	4	4	4	tutti
+39	1	6	2	lo giron primo per diverse schiere
+39	1	3	2	lo giron primo
+39	5	6	6	diverse schiere
+40	2	2	2	omo
+40	5	5	5	sé
+40	6	7	6	man vïolenta
+40	6	6	6	man
+41	3	4	4	suoi beni
+41	4	4	4	beni
+41	8	8	8	secondo
+42	1	1	1	giron
+42	5	5	5	pro
+43	1	1	1	qualunque
+43	3	3	3	sé
+43	4	6	6	del vostro mondo
+43	5	6	6	vostro mondo
+44	4	6	6	la sua facultade
+44	5	6	6	sua facultade
+45	6	7	7	de' giocondo
+45	7	7	7	giocondo
+46	3	3	3	forza
+46	5	6	6	la deïtade
+47	1	2	2	col cor
+47	6	6	6	quella
+48	3	6	3	natura e sua bontade
+48	3	3	3	natura
+48	5	6	6	sua bontade
+49	3	5	5	lo minor giron
+50	2	7	2	segno suo e Soddoma e Caorsa
+50	2	5	2	segno suo e Soddoma
+50	2	3	2	segno suo
+50	5	7	5	Soddoma e Caorsa
+50	5	5	5	Soddoma
+50	7	7	7	Caorsa
+51	2	2	2	chi
+51	4	4	4	Dio
+51	6	6	6	cor
+52	1	2	2	La frode
+52	4	5	5	ogne coscïenza
+53	2	3	3	l'omo
+53	6	10	6	colui che 'n lui fida
+53	6	6	6	colui
+53	9	9	9	lui
+54	3	7	3	quel che fidanza non imborsa
+54	3	3	3	quel
+54	5	5	5	fidanza
+55	1	4	2	Questo modo di retro
+55	2	4	2	modo di retro
+55	4	4	4	retro
+56	2	8	3	lo vinco d'amor che fa natura
+56	2	5	3	lo vinco d'amor
+56	3	5	3	vinco d'amor
+56	5	5	5	amor
+56	8	8	8	natura
+57	3	4	3	cerchio secondo
+58	1	1	1	ipocresia
+58	2	2	2	lusinghe
+58	4	5	4	chi affattura
+59	1	1	1	falsità
+59	2	2	2	ladroneccio
+59	4	4	4	simonia
+60	1	1	1	ruffian
+60	2	2	2	baratti
+60	4	5	5	simile lordura
+61	2	4	4	l'altro modo
+61	5	6	6	quell' amor
+62	1	1	1	che
+62	3	3	3	natura
+62	5	9	5	quel ch'è poi aggiunto
+62	6	6	6	ch'
+63	2	2	2	che
+63	3	5	4	la fede spezïal
+64	3	4	3	cerchio minore
+64	3	3	3	cerchio
+64	7	8	8	'l punto
+64	8	8	8	punto
+65	2	5	3	l'universo in su
+65	2	3	3	l'universo
+65	3	3	3	universo
+65	7	7	7	Dite
+66	1	2	2	qualunque trade
+66	2	2	2	trade
+66	4	4	4	etterno
+67	2	2	2	io
+67	3	3	3	Maestro
+68	1	3	3	la tua ragione
+69	1	2	2	questo baràtro
+69	4	8	5	'l popol ch'e' possiede
+69	4	5	5	'l popol
+70	3	7	3	quei de la palude pingue
+70	3	3	3	quei
+70	5	7	6	la palude pingue
+71	3	4	4	il vento
+71	8	9	9	la pioggia
+72	6	8	8	sì aspre lingue
+73	5	7	6	la città roggia
+74	2	2	2	ei
+74	5	5	5	Dio
+74	9	9	9	ira
+75	4	4	4	li
+75	9	10	10	tal foggia
+76	2	2	2	elli
+76	4	4	4	me
+77	2	4	3	lo 'ngegno tuo
+77	2	3	3	lo 'ngegno
+77	3	4	3	'ngegno tuo
+77	3	3	3	'ngegno
+77	6	8	6	quel che sòle
+77	6	6	6	quel
+78	3	4	4	la mente
+78	4	4	4	mente
+79	5	6	6	quelle parole
+80	2	3	3	le quai
+80	4	6	6	la tua Etica
+81	1	8	3	le tre disposizion che 'l ciel non vole
+81	1	3	3	le tre disposizion
+81	5	6	6	'l ciel
+82	1	1	1	incontenenza
+82	2	2	2	malizia
+82	4	5	5	la matta
+83	1	1	1	bestialitade
+83	4	4	4	incontenenza
+84	2	2	2	Dio
+84	6	6	6	biasimo
+85	2	2	2	tu
+85	5	6	6	questa sentenza
+86	4	5	5	la mente
+86	6	6	6	chi
+86	8	8	8	quelli
+87	1	1	1	che
+87	4	4	4	fuor
+87	6	6	6	penitenza
+88	1	1	1	tu
+88	6	7	7	questi felli
+89	0	0	0	
+90	1	3	3	la divina vendetta
+90	4	4	4	li
+91	2	7	2	sol che sani ogne vista turbata
+91	2	2	2	sol
+91	5	7	6	ogne vista turbata
+91	6	7	6	vista turbata
+92	1	1	1	tu
+92	1	1	1	tu
+93	5	5	5	saver
+93	6	6	6	dubbiar
+94	4	5	5	un poco
+95	2	2	2	io
+95	7	7	7	usura
+96	1	3	3	la divina bontade
+96	5	6	6	'l groppo
+97	1	1	1	Filosofia
+97	5	7	5	chi la 'ntende
+98	5	7	7	una sola parte
+99	2	2	2	natura
+99	3	5	5	lo suo corso
+100	2	3	3	divino 'ntelletto
+100	3	3	3	'ntelletto
+100	6	7	7	sua arte
+100	7	7	7	arte
+101	3	3	3	tu
+101	5	7	7	la tua Fisica
+101	6	7	7	tua Fisica
+101	7	7	7	Fisica
+102	1	1	1	tu
+102	5	6	6	molte carte
+102	6	6	6	carte
+103	2	5	3	l'arte vostra quella
+103	2	3	3	l'arte
+104	3	4	4	'l maestro
+104	6	7	7	'l discente
+105	3	4	4	vostr' arte
+105	6	6	6	Dio
+105	9	9	9	nepote
+106	2	3	3	queste due
+106	5	5	5	tu
+106	9	9	9	mente
+107	1	4	2	lo Genesì dal principio
+107	1	2	2	lo Genesì
+107	4	4	4	principio
+108	2	3	3	sua vita
+108	6	7	7	la gente
+109	3	4	4	l'usuriere
+109	5	6	6	altra via
+110	2	2	2	sé
+110	3	3	3	natura
+110	6	8	8	la sua seguace
+111	5	5	5	altro
+111	7	8	8	la spene
+112	5	6	6	'l gir
+112	7	7	7	mi
+113	2	3	3	i Pesci
+113	7	8	8	l'orizzonta
+114	2	4	3	'l Carro tutto
+114	2	3	3	'l Carro
+114	6	7	7	'l Coro
+115	2	3	3	'l balzo

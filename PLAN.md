@@ -3,16 +3,59 @@
 ## Status
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
-- **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md). *Inferno*
-  1 is built as the first artifact; the rest of the 100 cantos are not yet generated.
-- **Layers 3–5 — NP / dependency / skeleton**: design only (this document).
+- **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
+  Artifacts are built for all 100 cantos.
+- **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
+  `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
+  cantos, but **not yet committed** (branch `grammar-stack-plan`; code and TSVs are both
+  uncommitted). `--check` currently reports **462 hard / 8,466 soft** violations — see *Layer 3
+  check status* below.
+- **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
 
-1. **Finish Layer 2 generation** across all 100 cantos (only *Inferno* 1 exists), then
-   **measure-then-freeze** the POS / tense / mood vocabularies that are currently soft-validated.
-2. **Layer 3 (noun-phrase enumeration)** — the next layer per *Sequencing*; the census/entity
-   substrate consumers most want.
+1. **Finish Layer 3 generation** — resume the build for the 8 incomplete cantos (below) until
+   `--check` reports 0 hard violations.
+2. **Measure-then-freeze the Layer 3 soft checks** (below), update `_is_nominal` /
+   `validate_line` in `dante_corpus/np.py` accordingly, record the frozen policy in
+   `np/README.md`, then commit the code + generated TSVs (the build is excluded from `make all`;
+   artifacts are committed like `morph/`).
+3. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last (see *Sequencing*).
+   The design must also cover artifact **versioning** (content hashes for consumer invalidation)
+   and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
+
+### Layer 3 check status (as of 2026-07-02, updated after a partial resume)
+
+`uv run np/np.py inferno purgatorio paradiso --check` reports **462 hard / 8,466 soft**
+violations. Inferno 6 and Purgatorio 1 have since resumed to completion (0 hard); 6 cantos remain
+incomplete:
+
+**Hard — all "missing lines"** (interrupted generation; the rows that *were* written have zero
+structural violations; the driver resumes from its own output, so rerunning the build closes
+these):
+
+| canticle   | canto | missing lines |
+|------------|------:|---------------|
+| inferno    |    18 | 55–136        |
+| inferno    |    21 | 22–139        |
+| inferno    |    23 | 34–148        |
+| inferno    |    26 | 106–142       |
+| purgatorio |    16 | 145           |
+| paradiso   |    28 | 31–139        |
+
+**Soft — two classes, each pending a measure-then-freeze policy decision** (counts rise as more
+lines are generated; the *shape* of the two classes is what matters for the freeze decision, not
+the exact totals):
+
+- **~6,000 × "nominal token heads no NP"** — dominated by clitic and relative pronouns (`che`,
+  `si`, `mi`, `s'`, `ch'`, `m'`, `ti`, `ne`, `cui`, …). This is arguably correct model behaviour,
+  not omission: bare clitics are not noun phrases, and Layer 5 below already admits arguments that
+  are "layer-3 NPs **or layer-1 pronoun tokens**". The likely freeze is to exclude clitic/relative
+  pronouns from the coverage check (`_is_nominal` in `dante_corpus/np.py`) — they are layer-2/4
+  objects, not layer-3 gaps.
+- **~2,400 × "head is not nominal"** — NP heads whose layer-2 POS is adjective/verb/adverb etc.
+  Many are legitimate Dante substantivizations (`quel`, `tal`, infinitive `veder`); some are model
+  errors. Needs an explicit allowed-head-POS policy before freezing.
 
 ## Why this lives in the corpus
 
@@ -42,7 +85,7 @@ duplicated reading.
 
 ## The layers
 
-Five layers, each a function of the source text. Layers 1–2 are implemented; layers 3–5 are the
+Five layers, each a function of the source text. Layers 1–3 are implemented; layers 4–5 are the
 remaining work. Examples use *Inferno* I.1–6.
 
 ```
@@ -80,11 +123,13 @@ The mechanics — columns, generation rules, the token-alignment algorithm, vali
 usage — live in [`morph/README.md`](morph/README.md). It is served via `Canto.morph()` and
 `dante-corpus text morph`.
 
-### Layer 3 — Noun-phrase enumeration
+### Layer 3 — Noun-phrase enumeration *(implemented — see [`np/README.md`](np/README.md))*
 
 Every noun phrase in the line, with its head, source span, and modifiers — enumerated
 **exhaustively and over-inclusively**. The corpus does **not** decide whether an NP is an entity;
-it lists every candidate so consumers can decide.
+it lists every candidate so consumers can decide. Each NP is frozen as a contiguous Layer-1 token
+range (`start`/`end`) with a `head` token index and verbatim `text`; nesting is derived by span
+containment at serve time. Served via `Canto.np()` and `dante-corpus text np`.
 
 - `[nostra vita]` · `[una selva oscura]` · `[la diritta via]` · `[esta selva selvaggia e aspra e
   forte]` · `[la paura]`
@@ -92,6 +137,10 @@ it lists every candidate so consumers can decide.
   nostra vita`) is represented explicitly; over-inclusion is correct behaviour, not noise.
 - **Check**: each NP span reproduces a verbatim source substring; the head token lies within the
   span.
+- **Scope**: NP spans are **single-line** by design (each is a verbatim substring of one source
+  line), so an enjambed phrase appears as its per-line pieces and is rejoined by layer-4
+  attachment. Bare clitic and relative pronouns are **not** NPs — they are layer-1/2 tokens that
+  receive their clause function in layer 4.
 
 ### Layer 4 — Dependency / grammatical role
 
@@ -101,6 +150,11 @@ Each token and noun phrase tagged with its function in the clause and the head i
 - `mi` = reflexive object → `ritrovai`
 - `[una selva oscura]` = locative complement → `ritrovai`
 - `che` (l.6) = relative pronoun, subject of `rinova`, antecedent `[esta selva …]`
+- **Pronoun mentions become enumerable here**: bare clitic / relative / personal pronoun tokens —
+  deliberately not listed as layer-3 NPs — each carry a role and a head at this layer, so a
+  consumer can enumerate every pronoun mention from layer-2 POS + layer-4 role. Attachment may
+  cross line boundaries (a subject on one line, its predicate on the next), which is also what
+  rejoins enjambed NP pieces.
 - **Generation**: LLM at build time, frozen.
 - **Check**: every token carries a role; every cited head id exists; relative-pronoun antecedents
   resolve to an in-scope NP.
@@ -114,6 +168,9 @@ normalization.**
 - `(subject = ∅ pro-drop, predicate = ritrovare, locative = NP[una selva oscura])`
 - `(subject = NP[la diritta via], predicate = smarrire)`
 - `(subject = NP[esta selva …], predicate = rinovare, object = NP[la paura], locative = pensier)`
+- **Ids**: each tuple is addressable by a stable id (`<line>.<ordinal>` in line order, mirroring
+  layer-3 NP ids, derived at serve time), so a consumer artifact can **cite** a skeleton tuple
+  rather than paraphrase it — consumers annotate tuples by id, they never re-derive them.
 - **Generation**: LLM at build time, frozen.
 - **Check**: cited NP ids exist in layer 3; the predicate token exists in layer 1; arguments are
   layer-3 NPs or layer-1 pronoun tokens.
@@ -145,6 +202,11 @@ discipline already used for normalization and quotes.
   layers freeze as TSV (Layer 2 → `morph/<canticle>/NN.tsv`, one line-numbered row per token);
   layers with nesting may use another structured form. Layers join by token order; whether later
   layers share a file or stay in sibling directories is decided per layer.
+- **Versioning**: every canto×layer artifact is **content-addressed** — the serve API exposes a
+  content hash alongside the data, so a consumer can record exactly which parse a derived artifact
+  annotated and recompute only what a regeneration actually changed (granular invalidation, per
+  `dante-analyze`'s REARCHITECTURE.md). Regenerating one canto changes only that canto's hash;
+  nothing else downstream is invalidated.
 - **Build driver**: each LLM-built layer's generator lives in its own step directory (Layer 2 →
   `morph/morph.py`, the reference implementation) and is **resumable from its own output** — every
   chunk's rows are written back to the artifact as soon as they validate, so an interrupted run
@@ -185,9 +247,10 @@ discipline already used for normalization and quotes.
 
 1. **Layer 2 (morphology + lemma)** — *implemented* (`dante_corpus/morph.py` + `morph/morph.py`). Lowest risk,
    already shown feasible intrinsically, and immediately useful as a lemma-queryable index.
-2. **Layer 3 (noun phrases)** — the census/entity substrate consumers most want.
+2. **Layer 3 (noun phrases)** — *implemented* (`dante_corpus/np.py` + `np/np.py`). The census/entity
+   substrate consumers most want.
 3. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last, as they are the
    hardest and the most valuable to share.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-Layer 2 is implemented; layers 3–5 remain design only.
+Layers 2–3 are implemented; layers 4–5 remain design only.

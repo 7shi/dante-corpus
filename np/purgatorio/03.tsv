@@ -1,0 +1,368 @@
+line	start	end	head	text
+1	3	5	5	la subitana fuga
+2	2	2	2	color
+2	4	5	5	la campagna
+3	3	7	3	monte ove ragion ne fruga
+3	3	3	3	monte
+3	5	5	5	ragion
+4	1	1	1	i'
+4	5	7	7	la fida compagna
+5	4	4	4	io
+5	6	6	6	lui
+6	1	1	1	chi
+6	7	8	8	la montagna
+7	1	1	1	El
+7	5	6	5	sé stesso
+7	5	5	5	sé
+8	2	5	3	dignitosa coscïenza e netta
+8	2	3	3	dignitosa coscïenza
+8	3	3	3	coscïenza
+9	4	7	7	picciol fallo amaro morso
+9	4	5	5	picciol fallo
+9	5	5	5	fallo
+9	6	7	7	amaro morso
+9	7	7	7	morso
+10	2	4	3	li piedi suoi
+10	6	7	7	la fretta
+11	2	3	3	l'onestade
+11	5	6	6	ogn' atto
+12	1	3	2	la mente mia
+12	4	4	4	che
+13	1	2	2	lo 'ntento
+13	2	2	2	'ntento
+14	3	5	4	'l viso mio
+14	4	5	4	viso mio
+14	4	4	4	viso
+14	8	8	8	poggio
+15	3	6	4	'l ciel più alto
+15	3	4	4	'l ciel
+15	4	6	4	ciel più alto
+15	4	4	4	ciel
+16	1	2	2	Lo sol
+17	6	7	7	la figura
+18	4	4	4	me
+18	5	7	7	de' suoi raggi
+18	6	7	7	suoi raggi
+18	8	9	9	l'appoggio
+19	1	1	1	Io
+19	6	6	6	paura
+20	5	5	5	io
+21	4	4	4	me
+21	5	7	6	la terra oscura
+22	2	4	4	'l mio conforto
+23	3	3	3	mi
+24	3	3	3	tu
+24	4	4	4	me
+24	8	8	8	io
+24	9	9	9	ti
+25	1	1	1	Vespero
+26	1	8	2	lo corpo dentro al quale io facea ombra
+26	1	2	2	lo corpo
+26	4	5	5	al quale
+26	6	6	6	io
+26	8	8	8	ombra
+27	1	1	1	Napoli
+27	2	2	2	l'
+27	6	6	6	Brandizio
+28	5	5	5	me
+28	6	6	6	nulla
+29	7	8	8	i cieli
+30	2	3	3	l'uno
+30	5	7	7	l'altro raggio
+30	6	7	7	altro raggio
+31	3	6	3	tormenti, caldi e geli
+31	3	3	3	tormenti
+31	4	6	4	caldi e geli
+31	4	4	4	caldi
+31	6	6	6	geli
+32	1	2	2	simili corpi
+32	3	4	4	la Virtù
+33	8	8	8	noi
+34	1	1	1	Matto
+34	3	3	3	chi
+34	6	7	7	nostra ragione
+35	3	5	5	la infinita via
+36	1	1	1	che
+36	3	4	4	una sustanza
+36	6	7	7	tre persone
+37	3	4	4	umana gente
+37	5	6	6	al quia
+38	6	6	6	tutto
+39	1	1	1	mestier
+39	4	5	4	parturir Maria
+39	5	5	5	Maria
+40	2	2	2	disïar
+40	5	5	5	frutto
+41	1	1	1	tai
+41	4	6	5	lor disio quetato
+41	4	5	5	lor disio
+41	5	5	5	disio
+42	5	5	5	lor
+42	7	7	7	lutto
+43	1	1	1	io
+43	4	4	4	Aristotile
+43	7	7	7	Plato
+44	3	4	4	molt' altri
+44	8	9	9	la fronte
+45	0	0	0	
+46	1	1	1	Noi
+46	5	7	5	piè del monte
+46	5	5	5	piè
+46	6	7	7	del monte
+46	7	7	7	monte
+47	3	6	4	la roccia sì erta
+47	3	4	4	la roccia
+47	4	4	4	roccia
+48	5	7	6	le gambe pronte
+48	5	6	6	le gambe
+48	6	6	6	gambe
+49	2	4	2	Lerice e Turbìa
+49	2	2	2	Lerice
+49	4	4	4	Turbìa
+49	5	7	7	la più diserta
+50	1	4	4	la più rotta ruina
+50	4	4	4	ruina
+50	6	7	7	una scala
+50	7	7	7	scala
+51	1	3	1	verso di quella
+51	3	3	3	quella
+52	2	2	2	chi
+52	5	6	6	qual man
+52	7	8	8	la costa
+53	2	4	3	'l maestro mio
+53	6	7	7	'l passo
+54	5	5	5	chi
+54	8	8	8	ala
+55	6	8	7	'l viso basso
+55	6	7	7	'l viso
+55	7	8	7	viso basso
+56	2	5	5	del cammin la mente
+56	2	3	3	del cammin
+56	3	3	3	cammin
+56	4	5	5	la mente
+57	2	2	2	io
+57	6	7	7	al sasso
+57	7	7	7	sasso
+58	2	3	2	man sinistra
+58	6	7	7	una gente
+59	2	2	2	anime
+59	5	6	6	i piè
+59	8	8	8	noi
+60	0	0	0	
+61	3	3	3	io
+61	4	4	4	maestro
+61	5	7	6	li occhi tuoi
+61	6	7	6	occhi tuoi
+62	4	7	4	chi ne darà consiglio
+62	7	7	7	consiglio
+63	2	2	2	tu
+63	4	5	4	te medesmo
+63	7	7	7	nol
+64	5	6	6	libero piglio
+65	6	6	6	ei
+66	2	2	2	tu
+66	4	5	5	la spene
+66	6	7	7	dolce figlio
+67	3	6	4	quel popol di lontano
+67	4	6	4	popol di lontano
+67	4	4	4	popol
+67	6	6	6	lontano
+68	1	1	1	i'
+68	4	7	7	i nostri mille passi
+68	5	7	7	nostri mille passi
+68	6	7	7	mille passi
+68	7	7	7	passi
+69	2	4	4	un buon gittator
+69	3	4	4	buon gittator
+69	4	4	4	gittator
+69	7	7	7	mano
+70	4	4	4	tutti
+70	6	7	7	duri massi
+71	2	4	4	l'alta ripa
+71	3	4	4	alta ripa
+72	4	6	4	chi va dubbiando
+72	4	4	4	chi
+73	2	3	3	ben finiti
+73	5	7	6	già spiriti eletti
+73	6	7	6	spiriti eletti
+74	1	1	1	Virgilio
+74	4	5	5	quella pace
+75	6	7	6	voi tutti
+76	3	4	4	la montagna
+77	5	8	6	l'andare in suso
+77	8	8	8	suso
+78	2	3	2	perder tempo
+78	3	3	3	tempo
+78	5	7	5	chi più sa
+79	2	3	3	le pecorelle
+79	6	6	6	chiuso
+80	2	2	2	una
+80	4	4	4	due
+80	6	6	6	tre
+80	8	9	9	l'altre
+81	3	4	4	l'occhio
+81	6	7	7	'l muso
+82	2	6	2	ciò che fa la prima
+82	2	2	2	ciò
+82	5	6	6	la prima
+82	8	9	9	l'altre
+83	3	3	3	lei
+83	5	5	5	ella
+84	5	6	6	lo 'mperché
+85	3	3	3	io
+85	7	8	8	la testa
+86	2	5	3	quella mandra fortunata allotta
+86	2	3	3	quella mandra
+86	3	5	3	mandra fortunata allotta
+86	3	3	3	mandra
+87	3	3	3	faccia
+87	6	7	7	l'andare
+88	2	2	2	color
+89	1	8	2	la luce in terra dal mio destro canto
+89	1	2	2	la luce
+89	4	8	4	terra dal mio destro canto
+89	4	4	4	terra
+89	6	8	8	mio destro canto
+90	3	4	4	l'ombra
+90	7	7	7	me
+90	9	10	10	la grotta
+91	4	4	4	sé
+92	2	7	4	tutti li altri che venieno appresso
+92	2	4	4	tutti li altri
+92	3	7	4	li altri che venieno appresso
+92	3	4	4	li altri
+92	4	4	4	altri
+92	5	5	5	che
+93	3	4	4	'l perché
+93	6	6	6	altrettanto
+94	2	3	3	vostra domanda
+94	3	3	3	domanda
+94	4	4	4	io
+95	2	2	2	questo
+95	4	5	4	corpo uman
+95	4	4	4	corpo
+95	7	7	7	voi
+96	3	6	4	'l lume del sole
+96	3	4	4	'l lume
+96	4	6	4	lume del sole
+96	4	4	4	lume
+96	6	6	6	sole
+96	8	8	8	terra
+97	2	2	2	vi
+98	4	8	4	virtù che da ciel vegna
+98	4	4	4	virtù
+98	7	7	7	ciel
+99	4	5	5	questa parete
+99	5	5	5	parete
+100	2	3	3	'l maestro
+100	5	7	6	quella gente degna
+101	0	0	0	
+102	2	5	2	dossi de le man
+102	4	5	5	le man
+102	7	7	7	insegna
+103	2	4	2	un di loro
+103	4	4	4	loro
+103	6	6	6	Chiunque
+104	1	1	1	tu
+104	6	7	7	'l viso
+105	2	2	2	mente
+105	6	6	6	mi
+106	1	1	1	Io
+106	5	5	5	lui
+107	7	8	8	gentile aspetto
+108	2	5	3	l'un de' cigli
+108	4	5	5	de' cigli
+108	6	7	7	un colpo
+109	2	2	2	io
+110	5	5	5	el
+111	3	8	4	una piaga a sommo 'l petto
+111	3	4	4	una piaga
+111	6	8	6	sommo 'l petto
+111	7	8	8	'l petto
+112	4	4	4	Io
+112	6	6	6	Manfredi
+113	1	4	1	nepote di Costanza imperadrice
+113	3	4	3	Costanza imperadrice
+114	2	2	2	io
+114	7	7	7	tu
+115	3	5	5	mia bella figlia
+115	6	6	6	genitrice
+116	2	8	3	l'onor di Cicilia e d'Aragona
+116	2	3	3	l'onor
+116	3	8	3	onor di Cicilia e d'Aragona
+116	5	8	8	Cicilia e d'Aragona
+116	5	5	5	Cicilia
+116	7	8	8	d'Aragona
+117	3	4	4	'l vero
+117	6	6	6	lei
+117	8	8	8	altro
+118	3	3	3	io
+118	6	7	7	la persona
+119	2	4	3	due punte mortali
+119	5	5	5	io
+120	3	6	3	quei che volontier perdona
+120	3	3	3	quei
+121	3	5	4	li peccati miei
+122	2	4	3	la bontà infinita
+122	6	8	8	sì gran braccia
+123	3	8	3	ciò che si rivolge a lei
+123	3	3	3	ciò
+123	8	8	8	lei
+124	2	5	3	'l pastor di Cosenza
+124	2	3	3	'l pastor
+124	3	5	3	pastor di Cosenza
+124	5	5	5	Cosenza
+124	8	9	9	la caccia
+125	2	2	2	me
+125	6	6	6	Clemente
+126	3	3	3	Dio
+126	6	7	7	questa faccia
+127	1	5	2	l'ossa del corpo mio
+127	1	2	2	l'ossa
+127	4	5	4	corpo mio
+128	2	7	2	co del ponte presso a Benevento
+128	2	2	2	co
+128	4	7	4	ponte presso a Benevento
+128	4	4	4	ponte
+128	7	7	7	Benevento
+129	2	7	3	la guardia de la grave mora
+129	2	3	3	la guardia
+129	5	7	7	la grave mora
+130	4	5	5	la pioggia
+130	8	9	9	il vento
+131	2	4	2	fuor dal regno
+131	3	4	4	dal regno
+131	7	8	8	'l Verde
+132	6	7	6	lume spento
+133	2	3	3	lor maladizion
+134	5	7	7	l'etterno amore
+135	3	4	4	la speranza
+135	6	8	6	fior del verde
+135	8	8	8	verde
+136	1	1	1	Vero
+136	4	4	4	quale
+136	6	6	6	contumacia
+137	2	3	3	Santa Chiesa
+137	3	3	3	Chiesa
+137	7	7	7	fin
+138	2	2	2	li
+138	5	6	6	questa ripa
+138	6	6	6	ripa
+139	2	7	3	ognun tempo ch'elli è stato
+139	2	3	3	ognun tempo
+139	5	5	5	elli
+139	8	8	8	trenta
+140	2	3	3	sua presunzïon
+140	5	6	6	tal decreto
+141	4	5	5	buon prieghi
+142	4	4	4	tu
+142	5	5	5	mi
+143	3	6	6	la mia buona Costanza
+143	4	6	6	mia buona Costanza
+143	5	6	6	buona Costanza
+143	6	6	6	Costanza
+144	2	2	2	m'
+144	7	8	8	esto divieto
+144	8	8	8	divieto
+145	4	6	4	quei di là
+145	4	4	4	quei

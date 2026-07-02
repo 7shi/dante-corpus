@@ -1,0 +1,335 @@
+line	start	end	head	text
+1	1	2	1	Vexilla regis
+1	2	2	2	regis
+1	4	4	4	inferni
+2	3	3	3	noi
+3	2	4	3	'l maestro mio
+3	2	2	2	'l
+3	3	4	3	maestro mio
+3	6	6	6	tu
+4	3	5	5	una grossa nebbia
+5	3	5	4	l'emisperio nostro
+6	4	9	5	un molin che 'l vento gira
+6	4	5	5	un molin
+6	7	8	8	'l vento
+7	1	1	1	veder
+7	4	7	6	un tal dificio allotta
+7	5	7	6	tal dificio allotta
+7	6	7	6	dificio allotta
+8	3	4	4	lo vento
+9	1	3	2	al duca mio
+9	2	3	2	duca mio
+9	8	9	9	altra grotta
+10	5	5	5	paura
+10	6	6	6	il
+10	9	9	9	metro
+11	3	5	4	l'ombre tutte
+11	4	4	4	ombre
+12	4	6	4	festuca in vetro
+12	4	4	4	festuca
+12	6	6	6	vetro
+13	1	1	1	Altre
+13	5	5	5	altre
+14	1	3	1	quella col capo
+14	3	3	3	capo
+14	5	8	5	quella con le piante
+14	7	8	8	le piante
+15	1	1	1	altra
+15	3	3	3	arco
+15	4	5	5	il volto
+15	7	7	7	piè
+16	2	2	2	noi
+17	3	4	4	mio maestro
+18	1	7	2	la creatura ch'ebbe il bel sembiante
+18	1	2	2	la creatura
+18	5	7	7	il bel sembiante
+19	2	2	2	innanzi
+19	3	3	3	mi
+19	4	4	4	si
+20	2	2	2	Dite
+20	6	7	7	il loco
+20	7	7	7	loco
+21	5	5	5	fortezza
+21	6	6	6	t'
+22	2	2	2	io
+23	1	1	1	nol
+23	3	3	3	lettor
+23	5	5	5	i'
+23	7	7	7	lo
+24	3	4	4	ogne parlar
+24	4	4	4	parlar
+25	1	1	1	Io
+26	4	4	4	te
+26	7	9	7	fior d'ingegno
+26	9	9	9	ingegno
+27	2	2	2	io
+27	5	8	5	uno e d'altro
+27	5	5	5	uno
+27	8	8	8	altro
+28	1	5	2	Lo 'mperador del doloroso regno
+28	4	5	5	doloroso regno
+29	2	4	2	mezzo 'l petto
+29	3	4	4	'l petto
+29	8	9	9	la ghiaccia
+30	4	5	5	un gigante
+30	6	6	6	io
+31	2	3	3	i giganti
+31	7	9	9	le sue braccia
+32	6	7	7	quel tutto
+33	3	5	5	così fatta parte
+34	2	2	2	el
+34	7	7	7	elli
+35	3	5	5	'l suo fattore
+35	7	8	8	le ciglia
+36	4	4	4	lui
+36	6	7	7	ogne lutto
+37	5	5	5	me
+37	6	7	7	gran maraviglia
+37	7	7	7	maraviglia
+38	2	2	2	io
+38	4	5	5	tre facce
+38	5	5	5	facce
+38	7	9	9	la sua testa
+38	8	9	9	sua testa
+38	9	9	9	testa
+39	1	2	2	L'una
+39	2	2	2	una
+39	5	5	5	quella
+40	1	2	2	l'altr'
+40	4	4	4	due
+40	9	9	9	questa
+41	2	6	3	'l mezzo di ciascuna spalla
+41	2	3	3	'l mezzo
+41	3	6	3	mezzo di ciascuna spalla
+41	5	6	6	ciascuna spalla
+42	5	8	5	loco de la cresta
+42	7	8	8	la cresta
+43	2	3	3	la destra
+43	6	6	6	bianca
+43	8	8	8	gialla
+44	1	2	2	la sinistra
+44	4	4	4	vedere
+45	3	3	3	là
+45	5	6	6	'l Nilo
+46	2	2	2	ciascuna
+46	4	6	6	due grand' ali
+47	5	6	6	tanto uccello
+48	1	3	1	vele di mar
+48	3	3	3	mar
+48	6	6	6	io
+49	3	3	3	penne
+49	6	6	6	vispistrello
+50	2	3	3	lor modo
+50	3	3	3	modo
+50	5	5	5	quelle
+51	3	4	4	tre venti
+51	4	4	4	venti
+51	8	8	8	ello
+52	2	3	2	Cocito tutto
+52	2	2	2	Cocito
+53	2	3	3	sei occhi
+53	3	3	3	occhi
+53	7	8	8	tre menti
+53	8	8	8	menti
+54	2	6	3	'l pianto e sanguinosa bava
+54	2	3	3	'l pianto
+54	3	3	3	pianto
+54	5	6	6	sanguinosa bava
+54	6	6	6	bava
+55	2	3	3	ogne bocca
+55	6	6	6	denti
+56	1	2	2	un peccatore
+56	4	6	4	guisa di maciulla
+56	6	6	6	maciulla
+57	3	3	3	tre
+58	2	3	3	quel dinanzi
+58	4	5	5	il mordere
+58	7	7	7	nulla
+59	2	3	3	'l graffiar
+59	6	7	7	la schiena
+60	3	6	4	la pelle tutta brulla
+60	3	4	4	la pelle
+61	1	4	2	Quell' anima là sù
+61	1	2	2	Quell' anima
+61	7	8	8	maggior pena
+62	2	3	3	'l maestro
+62	5	6	5	Giuda Scarïotto
+63	2	3	3	'l capo
+63	8	9	9	le gambe
+64	2	4	4	li altri due
+64	7	10	8	il capo di sotto
+64	7	8	8	il capo
+65	1	6	1	quel che pende dal nero ceffo
+65	5	6	6	nero ceffo
+65	8	8	8	Bruto
+66	8	8	8	motto
+67	2	3	3	l'altro
+67	5	5	5	Cassio
+68	2	3	3	la notte
+69	5	5	5	tutto
+70	3	3	3	lui
+70	5	6	6	il collo
+70	6	6	6	collo
+70	7	7	7	li
+71	2	2	2	el
+71	5	7	7	tempo e loco
+71	5	5	5	tempo
+71	7	7	7	loco
+72	3	4	4	l'ali
+72	4	4	4	ali
+73	2	2	2	sé
+73	4	6	6	le vellute coste
+74	2	2	2	vello
+74	2	2	2	vello
+75	2	8	4	'l folto pelo e le gelate croste
+75	2	4	4	'l folto pelo
+75	6	8	8	le gelate croste
+76	2	2	2	noi
+76	6	7	7	la coscia
+77	4	4	4	punto
+77	7	10	7	grosso de l'anche
+77	9	10	10	l'anche
+78	1	2	2	lo duca
+78	4	4	4	fatica
+78	7	7	7	angoscia
+79	2	3	3	la testa
+79	5	5	5	elli
+79	7	8	8	le zanche
+80	3	4	4	al pel
+80	4	4	4	pel
+80	6	8	6	om che sale
+80	6	6	6	om
+80	7	7	7	che
+81	4	4	4	inferno
+81	5	5	5	i'
+82	5	6	6	cotali scale
+83	2	3	3	'l maestro
+83	6	7	6	uom lasso
+84	4	5	5	tanto male
+85	5	9	6	lo fóro d'un sasso
+85	8	9	9	un sasso
+86	3	3	3	me
+86	6	7	7	l'orlo
+87	4	4	4	me
+87	5	7	7	l'accorto passo
+88	1	1	1	Io
+88	3	4	4	li occhi
+89	1	1	1	Lucifero
+89	3	3	3	io
+89	4	4	4	l'
+90	3	4	4	le gambe
+91	3	3	3	io
+92	1	3	2	la gente grossa
+92	4	4	4	il
+93	1	1	1	qual
+93	3	8	4	quel punto ch'io avea passato
+93	3	4	4	quel punto
+93	4	8	4	punto ch'io avea passato
+93	6	6	6	io
+94	4	5	5	'l maestro
+94	7	7	7	piede
+95	1	2	2	la via
+95	6	7	7	'l cammino
+96	3	4	4	il sole
+96	6	7	7	mezza terza
+97	3	5	3	camminata di palagio
+97	5	5	5	palagio
+98	5	6	6	natural burella
+99	3	4	4	mal suolo
+99	6	8	8	di lume disagio
+99	7	7	7	lume
+100	3	3	3	io
+100	5	6	6	l'abisso
+101	1	2	1	maestro mio
+101	4	4	4	io
+102	4	4	4	erro
+102	5	6	6	un poco
+103	3	4	4	la ghiaccia
+103	4	4	4	ghiaccia
+103	6	6	6	questi
+104	6	8	8	sì poc' ora
+104	7	8	8	poc' ora
+104	8	8	8	ora
+105	2	2	2	sera
+105	4	4	4	mane
+105	7	9	9	il sol tragitto
+105	8	9	9	sol tragitto
+105	9	9	9	tragitto
+106	2	2	2	elli
+106	4	4	4	me
+106	5	5	5	Tu
+107	6	6	6	centro
+107	8	8	8	io
+108	2	9	2	pel del vermo reo che 'l mondo fóra
+108	4	9	4	vermo reo che 'l mondo fóra
+108	4	5	4	vermo reo
+108	7	8	8	'l mondo
+109	6	6	6	io
+110	2	2	2	io
+110	5	5	5	tu
+110	7	8	8	'l punto
+111	2	2	2	qual
+111	6	7	7	ogne parte
+111	8	9	9	i pesi
+112	5	7	6	l'emisperio giunto
+113	5	5	5	quel
+113	7	9	9	la gran secca
+114	4	7	6	'l cui colmo consunto
+115	2	9	3	l'uom che nacque e visse sanza pecca
+115	2	3	3	l'uom
+115	9	9	9	pecca
+116	1	1	1	tu
+116	3	4	4	i piedi
+116	7	8	8	picciola spera
+117	2	4	4	l'altra faccia
+117	7	8	8	la Giudecca
+118	4	4	4	man
+118	9	9	9	sera
+119	2	8	2	questi, che ne fé scala col pelo
+119	2	2	2	questi
+119	6	8	6	scala col pelo
+119	6	6	6	scala
+119	8	8	8	pelo
+120	0	0	0	
+121	2	3	3	questa parte
+121	7	7	7	cielo
+122	2	3	3	la terra
+123	2	4	2	paura di lui
+123	2	2	2	paura
+123	4	4	4	lui
+123	6	8	8	del mar velo
+123	7	7	7	mar
+124	4	6	5	l'emisperio nostro
+125	3	3	3	lui
+125	6	7	6	loco vòto
+126	1	5	1	quella ch'appar di qua
+126	1	1	1	quella
+127	1	1	1	Luogo
+127	6	7	6	Belzebù remoto
+128	3	4	4	la tomba
+129	4	4	4	vista
+129	7	7	7	suono
+130	2	6	3	un ruscelletto che quivi discende
+130	2	3	3	un ruscelletto
+131	2	6	3	la buca d'un sasso
+131	2	3	3	la buca
+131	5	6	6	un sasso
+131	8	8	8	elli
+132	2	5	2	corso ch'elli avvolge
+132	2	2	2	corso
+132	4	4	4	elli
+133	1	4	2	Lo duca e io
+133	1	2	2	Lo duca
+133	4	4	4	io
+133	6	8	7	quel cammino ascoso
+134	5	6	6	chiaro mondo
+135	3	3	3	cura
+135	6	7	7	alcun riposo
+136	3	4	4	el primo
+136	6	7	6	io secondo
+136	6	6	6	io
+137	3	3	3	i'
+137	6	8	7	le cose belle
+138	3	4	4	'l ciel
+138	6	8	7	un pertugio tondo
+139	6	7	7	le stelle

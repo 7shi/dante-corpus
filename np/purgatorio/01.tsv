@@ -1,0 +1,330 @@
+line	start	end	head	text
+1	3	4	4	miglior acque
+1	6	7	7	le vele
+2	2	6	3	la navicella del mio ingegno
+2	3	6	3	navicella del mio ingegno
+2	5	6	6	mio ingegno
+3	5	5	5	sé
+3	6	8	6	mar sì crudele
+4	4	6	6	quel secondo regno
+5	2	4	4	l'umano spirito
+6	3	5	3	salire al ciel
+6	5	5	5	ciel
+7	3	5	5	la morta poesì
+8	2	3	3	sante Muse
+8	6	6	6	vostro
+9	3	3	3	Calïopè
+10	2	4	4	il mio canto
+10	6	7	7	quel suono
+11	2	2	2	cui
+11	3	5	4	le Piche misere
+12	1	3	2	lo colpo tal
+12	6	6	6	perdono
+13	1	5	2	Dolce color d'orïental zaffiro
+13	2	5	2	color d'orïental zaffiro
+13	4	5	5	orïental zaffiro
+13	5	5	5	zaffiro
+14	5	6	6	sereno aspetto
+14	6	6	6	aspetto
+15	2	2	2	mezzo
+15	6	7	7	primo giro
+15	7	7	7	giro
+16	2	4	3	li occhi miei
+16	2	3	3	li occhi
+16	3	4	3	occhi miei
+16	6	6	6	diletto
+17	3	3	3	io
+17	7	9	8	l'aura morta
+17	8	9	8	aura morta
+18	2	2	2	m'
+18	5	9	6	li occhi e 'l petto
+18	5	6	6	li occhi
+18	8	9	9	'l petto
+19	1	7	3	Lo bel pianeto che d'amar conforta
+19	1	3	3	Lo bel pianeto
+19	6	6	6	amar
+20	4	5	5	l'orïente
+21	2	8	3	i Pesci ch'erano in sua scorta
+21	2	3	3	i Pesci
+21	7	8	8	sua scorta
+22	1	1	1	I'
+22	2	2	2	mi
+22	5	6	5	man destra
+22	9	9	9	mente
+23	2	4	4	l'altro polo
+23	7	8	8	quattro stelle
+24	7	9	9	la prima gente
+25	3	7	4	'l ciel di lor fiammelle
+25	3	4	4	'l ciel
+25	6	7	7	lor fiammelle
+26	2	4	4	settentrïonal vedovo sito
+27	6	7	6	mirar quelle
+27	7	7	7	quelle
+28	2	2	2	io
+28	4	5	5	loro sguardo
+29	1	2	2	un poco
+29	3	3	3	me
+29	6	8	8	l 'altro polo
+30	3	4	4	'l Carro
+31	4	4	4	me
+31	5	7	6	un veglio solo
+31	6	7	6	veglio solo
+31	6	6	6	veglio
+32	3	6	4	tanta reverenza in vista
+32	3	4	4	tanta reverenza
+32	4	4	4	reverenza
+32	6	6	6	vista
+33	6	6	6	padre
+33	7	8	8	alcun figliuolo
+33	8	8	8	figliuolo
+34	2	3	3	la barba
+34	6	7	6	pel bianco
+35	2	4	4	a' suoi capelli
+35	3	4	4	suoi capelli
+36	1	2	2	de' quai
+36	4	5	5	al petto
+36	5	5	5	petto
+36	6	7	7	doppia lista
+37	1	7	2	Li raggi de le quattro luci sante
+37	1	2	2	Li raggi
+37	4	7	6	le quattro luci sante
+37	5	7	6	quattro luci sante
+37	6	7	6	luci sante
+38	3	7	5	la sua faccia di lume
+38	3	5	5	la sua faccia
+38	4	5	5	sua faccia
+38	7	7	7	lume
+39	2	2	2	i'
+39	3	3	3	'l
+39	6	7	7	'l sol
+39	7	7	7	sol
+40	1	1	1	Chi
+40	3	3	3	voi
+40	7	8	8	cieco fiume
+41	3	5	4	la pregione etterna
+42	2	2	2	el
+42	4	6	6	quelle oneste piume
+43	1	1	1	Chi
+43	6	6	6	che
+43	9	9	9	lucerna
+44	4	6	6	la profonda notte
+44	5	6	6	profonda notte
+44	6	6	6	notte
+45	1	1	1	che
+45	5	7	6	la valle inferna
+45	6	7	6	valle inferna
+45	6	6	6	valle
+46	2	5	3	le leggi d'abisso
+46	2	3	3	le leggi
+46	3	5	3	leggi d'abisso
+46	5	5	5	abisso
+47	5	5	5	ciel
+47	6	7	7	novo consiglio
+48	2	2	2	dannati
+48	5	7	7	le mie grotte
+49	1	3	2	Lo duca mio
+49	2	3	2	duca mio
+49	2	2	2	duca
+49	8	8	8	piglio
+50	3	3	3	parole
+50	6	6	6	mani
+50	9	9	9	cenni
+51	4	8	5	le gambe e 'l ciglio
+51	4	5	5	le gambe
+51	5	5	5	gambe
+51	7	8	8	'l ciglio
+51	8	8	8	ciglio
+52	3	3	3	lui
+52	5	5	5	me
+53	1	1	1	donna
+53	4	4	4	ciel
+53	6	8	8	li cui prieghi
+53	7	8	8	cui prieghi
+53	8	8	8	prieghi
+54	2	4	4	la mia compagnia
+54	3	4	4	mia compagnia
+54	4	4	4	compagnia
+54	5	5	5	costui
+55	5	6	6	tuo voler
+56	2	3	3	nostra condizion
+56	5	5	5	ell'
+57	4	5	5	il mio
+57	8	8	8	te
+58	1	1	1	Questi
+58	5	7	7	l'ultima sera
+59	3	5	5	la sua follia
+60	2	4	4	molto poco tempo
+60	3	4	4	poco tempo
+61	3	3	3	io
+61	8	8	8	esso
+62	2	2	2	lui
+62	8	9	9	altra via
+63	2	2	2	questa
+63	4	5	5	la quale
+63	6	6	6	i'
+64	3	3	3	lui
+64	4	7	6	tutta la gente ria
+64	5	7	6	la gente ria
+64	6	7	6	gente ria
+65	5	6	6	quelli spirti
+66	3	3	3	sé
+66	5	7	7	la tua balìa
+66	6	7	7	tua balìa
+67	2	2	2	io
+67	3	3	3	l'
+68	2	3	3	l'alto
+68	5	8	5	virtù che m'aiuta
+68	5	5	5	virtù
+68	6	6	6	che
+68	7	7	7	m'
+69	1	6	1	conducerlo a vederti e a udirti
+69	1	1	1	conducerlo
+69	3	3	3	vederti
+69	6	6	6	udirti
+70	5	7	7	la sua venuta
+71	1	1	1	libertà
+72	3	7	3	chi per lei vita rifiuta
+72	5	5	5	lei
+72	6	6	6	vita
+73	1	1	1	Tu
+73	2	2	2	'l
+73	9	9	9	lei
+74	2	2	2	Utica
+74	3	4	4	la morte
+75	1	9	2	la vesta ch'al gran dì sarà sì chiara
+75	1	2	2	la vesta
+75	5	6	6	gran dì
+76	3	5	4	li editti etterni
+76	7	7	7	noi
+77	2	2	2	questi
+77	5	5	5	Minòs
+77	6	6	6	me
+78	4	9	4	cerchio ove son li occhi casti
+78	7	9	8	li occhi casti
+79	2	3	2	Marzia tua
+79	6	6	6	vista
+80	2	3	3	santo petto
+81	2	4	4	lo suo amore
+81	7	7	7	noi
+82	4	7	7	li tuoi sette regni
+82	5	7	7	tuoi sette regni
+82	6	7	7	sette regni
+82	7	7	7	regni
+83	1	1	1	grazie
+83	4	4	4	te
+83	6	6	6	lei
+84	7	7	7	degni
+85	1	1	1	Marzïa
+85	5	7	6	li occhi miei
+85	5	6	6	li occhi
+85	6	7	6	occhi miei
+85	6	6	6	occhi
+86	3	3	3	i'
+86	8	8	8	elli
+87	2	3	3	quante grazie
+87	3	3	3	grazie
+87	6	6	6	me
+88	6	7	7	mal fiume
+89	2	2	2	muover
+89	4	4	4	mi
+89	7	8	8	quella legge
+90	1	1	1	che
+90	5	5	5	me
+90	6	6	6	n'
+91	3	5	3	donna del ciel
+91	5	5	5	ciel
+91	6	6	6	ti
+92	2	2	2	tu
+92	7	8	7	mestier lusinghe
+92	8	8	8	lusinghe
+93	5	5	5	lei
+93	6	6	6	mi
+94	6	6	6	tu
+94	7	7	7	costui
+95	2	4	3	un giunco schietto
+95	7	7	7	li
+95	9	10	10	'l viso
+96	3	4	4	ogne sucidume
+97	5	7	6	l'occhio sorpriso
+97	5	6	6	l'occhio
+97	6	6	6	occhio
+98	2	3	3	alcuna nebbia
+98	3	3	3	nebbia
+98	6	7	7	al primo
+98	7	7	7	primo
+99	1	1	1	ministro
+99	5	7	5	quei di paradiso
+99	5	5	5	quei
+99	7	7	7	paradiso
+100	1	2	2	Questa isoletta
+100	5	5	5	imo
+100	5	5	5	imo
+101	7	8	8	l'onda
+102	1	3	1	porta di giunchi
+102	3	3	3	giunchi
+102	5	7	7	'l molle limo
+103	1	6	3	null' altra pianta che facesse fronda
+103	1	3	3	null' altra pianta
+103	6	6	6	fronda
+104	6	6	6	vita
+105	4	5	5	le percosse
+106	6	7	7	vostra reddita
+107	1	2	2	lo sol
+107	5	5	5	che
+108	2	3	3	il monte
+108	5	7	7	più lieve salita
+109	4	4	4	io
+110	2	2	2	parlare
+111	2	3	2	duca mio
+111	5	6	6	li occhi
+111	8	8	8	lui
+112	1	1	1	El
+112	3	3	3	Figliuol
+112	5	7	7	i miei passi
+113	0	0	0	
+114	1	2	2	questa pianura
+114	4	6	5	suoi termini bassi
+114	5	6	5	termini bassi
+115	1	2	2	L'alba
+115	4	6	5	l'ora mattutina
+116	1	1	1	che
+116	7	7	7	lontano
+117	2	6	3	il tremolar de la marina
+117	5	6	6	la marina
+118	1	1	1	Noi
+118	4	6	6	lo solingo piano
+119	2	8	2	om che torna a la perduta strada
+119	2	2	2	om
+119	6	8	8	la perduta strada
+120	4	4	4	essa
+120	9	9	9	vano
+121	2	2	2	noi
+121	6	7	7	la rugiada
+122	3	3	3	sole
+122	7	7	7	parte
+123	3	3	3	orezza
+124	1	8	3	ambo le mani in su l'erbetta sparte
+124	1	3	3	ambo le mani
+124	2	3	3	le mani
+124	6	7	7	l'erbetta
+125	2	4	4	'l mio maestro
+125	3	4	4	mio maestro
+126	2	2	2	io
+126	7	8	8	sua arte
+127	3	3	3	lui
+127	4	6	5	le guance lagrimose
+128	2	2	2	mi
+129	1	7	2	quel color che l'inferno mi nascose
+129	1	2	2	quel color
+129	4	5	5	l'inferno
+129	6	6	6	mi
+130	5	6	5	lito diserto
+131	6	7	7	sue acque
+132	1	1	1	omo
+132	4	4	4	tornar
+133	6	6	6	altrui
+134	2	2	2	maraviglia
+134	5	5	5	elli
+135	1	3	3	l'umile pianta
+135	3	3	3	pianta
+136	4	4	4	l'

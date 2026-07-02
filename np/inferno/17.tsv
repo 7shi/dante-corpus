@@ -1,0 +1,337 @@
+line	start	end	head	text
+1	2	7	3	la fiera con la coda aguzza
+1	2	3	3	la fiera
+1	5	7	6	la coda aguzza
+1	5	6	6	la coda
+2	3	4	4	i monti
+2	7	8	8	i muri
+2	10	11	11	l'armi
+3	2	2	2	colei
+3	4	6	6	tutto 'l mondo
+3	5	6	6	'l mondo
+4	3	5	5	lo mio duca
+5	6	6	6	proda
+6	3	7	3	fin d'i passeggiati marmi
+6	5	7	7	i passeggiati marmi
+7	2	6	4	quella sozza imagine di froda
+7	2	4	4	quella sozza imagine
+7	4	6	4	imagine di froda
+7	6	6	6	froda
+8	5	6	6	la testa
+8	8	9	9	'l busto
+9	4	5	5	la riva
+9	8	9	9	la coda
+10	1	3	2	La faccia sua
+10	5	8	5	faccia d'uom giusto
+10	7	8	7	uom giusto
+11	6	7	7	la pelle
+12	3	4	4	un serpente
+12	5	8	8	tutto l'altro fusto
+12	6	8	8	l'altro fusto
+13	1	2	2	due branche
+13	6	7	7	l'ascelle
+14	1	9	2	lo dosso e 'l petto e ambedue le coste
+14	1	5	2	lo dosso e 'l petto
+14	1	2	2	lo dosso
+14	4	9	5	'l petto e ambedue le coste
+14	4	5	5	'l petto
+14	7	9	9	ambedue le coste
+14	8	9	9	le coste
+15	4	4	4	nodi
+15	7	7	7	rotelle
+16	2	6	3	più color, sommesse e sovraposte
+16	2	3	3	più color
+16	3	3	3	color
+17	4	7	4	drappi Tartari né Turchi
+17	4	5	4	drappi Tartari
+17	4	4	4	drappi
+17	7	7	7	Turchi
+18	3	7	4	tai tele per Aragne imposte
+18	3	4	4	tai tele
+18	4	4	4	tele
+18	6	6	6	Aragne
+19	5	5	5	riva
+19	6	7	7	i burchi
+20	2	2	2	parte
+20	2	2	2	parte
+20	5	5	5	acqua
+20	9	9	9	terra
+21	5	7	7	li Tedeschi lurchi
+21	5	6	6	li Tedeschi
+21	6	7	7	Tedeschi lurchi
+21	7	7	7	lurchi
+22	1	2	2	lo bivero
+22	7	8	8	sua guerra
+23	2	4	3	la fiera pessima
+24	2	7	3	l'orlo ch'è di pietra
+24	2	3	3	l'orlo
+24	7	7	7	pietra
+24	9	10	10	'l sabbion
+25	2	2	2	vano
+25	3	5	5	tutta sua coda
+25	4	5	5	sua coda
+26	4	6	6	la venenosa forca
+27	3	5	3	guisa di scorpion
+27	5	5	5	scorpion
+27	6	7	7	la punta
+28	1	2	2	Lo duca
+29	1	3	3	la nostra via
+29	4	5	5	un poco
+29	8	8	8	quella
+30	1	6	1	bestia malvagia che colà si corca
+30	1	2	1	bestia malvagia
+31	4	6	6	la destra mammella
+32	2	3	3	diece passi
+32	7	8	8	lo stremo
+33	4	8	5	la rena e la fiammella
+33	4	5	5	la rena
+33	7	8	8	la fiammella
+34	3	3	3	noi
+34	5	5	5	lei
+35	7	8	8	la rena
+36	1	1	1	gente
+36	5	6	5	loco scemo
+37	2	3	3	'l maestro
+38	1	4	1	esperïenza d'esto giron
+38	3	4	4	esto giron
+39	1	1	1	mi
+39	6	8	8	la lor mena
+40	1	3	3	Li tuoi ragionamenti
+41	6	6	6	questa
+42	4	7	6	i suoi omeri forti
+43	5	7	7	la strema testa
+44	2	6	4	quel settimo cerchio tutto solo
+44	2	4	4	quel settimo cerchio
+45	4	6	5	la gente mesta
+46	2	3	3	li occhi
+46	6	7	7	lor duolo
+47	7	8	8	le mani
+48	3	3	3	vapori
+48	7	8	8	caldo suolo
+49	5	5	5	state
+49	6	7	7	i cani
+49	7	7	7	cani
+50	2	3	3	col ceffo
+50	3	3	3	ceffo
+50	5	6	6	col piè
+50	6	6	6	piè
+51	3	3	3	pulci
+51	6	6	6	mosche
+51	9	9	9	tafani
+52	4	4	4	viso
+52	6	8	8	certi li occhi
+52	6	6	6	certi
+52	7	8	8	li occhi
+52	8	8	8	occhi
+53	2	2	2	quali
+53	3	5	5	'l doloroso foco
+53	4	5	5	doloroso foco
+53	5	5	5	foco
+54	2	2	2	ne
+54	4	4	4	alcun
+54	6	6	6	io
+55	3	3	3	collo
+55	5	5	5	ciascun
+55	7	8	8	una tasca
+55	8	8	8	tasca
+56	3	4	4	certo colore
+56	4	4	4	colore
+56	6	7	7	certo segno
+56	7	7	7	segno
+57	5	7	7	'l loro occhio
+57	6	7	7	loro occhio
+57	7	7	7	occhio
+58	3	3	3	io
+58	6	6	6	lor
+59	2	4	3	una borsa gialla
+59	6	6	6	azzurro
+60	3	4	4	un leone
+60	6	8	6	faccia e contegno
+60	6	6	6	faccia
+60	8	8	8	contegno
+61	3	7	7	di mio sguardo il curro
+61	4	5	5	mio sguardo
+61	6	7	7	il curro
+62	2	6	3	un'altra come sangue rossa
+62	2	3	3	un'altra
+62	4	5	5	come sangue
+62	5	5	5	sangue
+63	2	7	3	un'oca bianca più che burro
+63	2	4	3	un'oca bianca
+63	5	7	7	più che burro
+63	7	7	7	burro
+64	2	9	2	un che d'una scrofa azzurra e grossa
+64	2	2	2	un
+64	5	9	6	una scrofa azzurra e grossa
+64	6	9	6	scrofa azzurra e grossa
+65	3	6	5	lo suo sacchetto bianco
+65	4	6	5	suo sacchetto bianco
+65	5	6	5	sacchetto bianco
+66	1	1	1	mi
+66	5	5	5	tu
+66	7	8	8	questa fossa
+67	2	2	2	te
+67	3	3	3	ne
+68	3	6	6	'l mio vicin Vitalïano
+68	4	6	6	mio vicin Vitalïano
+68	4	5	5	mio vicin
+68	5	6	6	vicin Vitalïano
+68	5	5	5	vicin
+68	6	6	6	Vitalïano
+69	4	6	6	mio sinistro fianco
+69	5	6	6	sinistro fianco
+69	6	6	6	fianco
+70	2	3	3	questi Fiorentin
+71	1	2	2	spesse fïate
+71	5	6	6	li orecchi
+72	3	5	4	'l cavalier sovrano
+73	3	7	4	la tasca con tre becchi
+73	3	4	4	la tasca
+73	6	7	7	tre becchi
+74	3	4	4	la bocca
+75	1	2	2	la lingua
+75	4	8	4	bue che 'l naso lecchi
+75	4	4	4	bue
+75	6	7	7	'l naso
+76	2	2	2	io
+76	5	6	6	'l più
+77	1	8	1	lui che di poco star m'avea 'mmonito
+77	1	1	1	lui
+77	4	4	4	poco
+78	4	4	4	dietro
+78	6	8	7	l'anime lasse
+78	7	8	7	anime lasse
+79	2	4	3	il duca mio
+79	2	3	3	il duca
+79	3	4	3	duca mio
+80	3	7	4	la groppa del fiero animale
+80	3	4	4	la groppa
+80	4	7	4	groppa del fiero animale
+80	6	7	7	fiero animale
+81	4	4	4	me
+82	5	7	7	sì fatte scale
+83	4	4	4	i'
+83	7	7	7	mezzo
+84	3	4	4	la coda
+84	8	8	8	male
+85	1	1	1	Qual
+85	3	9	3	colui che sì presso ha 'l riprezzo
+85	3	3	3	colui
+85	8	9	9	'l riprezzo
+86	2	3	3	la quartana
+86	7	9	8	l'unghie smorte
+87	6	7	7	'l rezzo
+88	3	3	3	io
+88	5	7	6	le parole porte
+88	5	6	6	le parole
+88	6	7	6	parole porte
+88	6	6	6	parole
+89	2	2	2	vergogna
+89	3	3	3	mi
+89	5	7	7	le sue minacce
+89	6	7	7	sue minacce
+89	7	7	7	minacce
+90	1	1	1	che
+90	4	5	5	buon segnor
+90	5	5	5	segnor
+90	7	8	7	servo forte
+90	7	7	7	servo
+91	1	1	1	I'
+91	6	7	7	quelle spallacce
+92	5	6	6	la voce
+93	2	2	2	io
+93	6	6	6	tu
+93	7	7	7	m'
+94	2	2	2	esso
+94	4	5	5	altra volta
+95	2	2	2	altro
+95	6	6	6	i'
+96	2	3	3	le braccia
+96	4	4	4	m'
+96	7	7	7	mi
+97	3	3	3	Gerïon
+98	1	3	2	le rote larghe
+98	5	6	6	lo scender
+99	2	7	4	la nova soma che tu hai
+99	2	4	4	la nova soma
+99	6	6	6	tu
+100	2	3	3	la navicella
+100	6	6	6	loco
+101	0	0	0	
+102	5	5	5	tutto
+102	9	9	9	gioco
+103	4	5	5	'l petto
+103	6	8	7	la coda rivolse
+104	2	3	2	quella tesa
+104	5	5	5	anguilla
+105	3	4	4	le branche
+105	5	6	6	l'aere
+105	8	8	8	sé
+106	1	2	2	Maggior paura
+107	2	2	2	Fetonte
+107	4	5	5	li freni
+108	3	4	4	'l ciel
+109	3	3	3	Icaro
+109	5	6	6	le reni
+110	4	6	6	la scaldata cera
+111	2	3	3	il padre
+111	5	5	5	lui
+111	6	7	7	Mala via
+112	1	1	1	che
+112	3	4	4	la mia
+112	8	8	8	i'
+113	2	6	3	l'aere d'ogne parte
+113	2	3	3	l'aere
+113	3	6	3	aere d'ogne parte
+113	5	6	6	ogne parte
+114	1	2	2	ogne veduta
+114	6	7	7	la fera
+115	1	1	1	Ella
+116	6	6	6	me
+116	7	7	7	n'
+117	4	5	5	al viso
+117	5	5	5	viso
+117	9	9	9	mi
+118	1	1	1	Io
+118	5	7	6	la man destra
+118	8	9	9	il gorgo
+119	3	3	3	noi
+119	4	6	6	un orribile scroscio
+120	4	7	5	li occhi 'n giù
+120	4	5	5	li occhi
+120	8	9	9	la testa
+121	3	3	3	io
+121	7	8	8	lo stoscio
+122	3	3	3	i'
+122	5	5	5	fuochi
+122	8	8	8	pianti
+123	2	2	2	io
+124	0	0	0	
+125	1	9	2	lo scendere e 'l girar per li gran mali
+125	1	5	2	lo scendere e 'l girar
+125	1	2	2	lo scendere
+125	1	1	1	lo
+125	4	5	5	'l girar
+125	7	9	9	li gran mali
+126	1	1	1	che
+126	5	6	6	diversi canti
+127	2	10	3	'l falcon ch'è stato assai su l'ali
+127	2	3	3	'l falcon
+127	9	10	10	l'ali
+128	3	6	3	veder logoro o uccello
+128	4	6	6	logoro o uccello
+128	6	6	6	uccello
+129	3	4	4	al falconiere
+129	4	4	4	falconiere
+130	0	0	0	
+131	2	3	3	cento rote
+131	6	6	6	lunge
+132	2	3	3	suo maestro
+133	5	5	5	fondo
+133	6	6	6	Gerïone
+134	4	8	4	piè de la stagliata rocca
+134	6	8	8	la stagliata rocca
+135	3	5	5	le nostre persone
+135	4	5	5	nostre persone
+136	1	1	1	si
+136	5	6	5	corda cocca

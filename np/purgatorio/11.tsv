@@ -1,0 +1,343 @@
+line	start	end	head	text
+1	2	3	2	Padre nostro
+1	6	6	6	cieli
+2	5	6	6	più amore
+3	3	7	4	primi effetti di là sù
+3	3	4	4	primi effetti
+3	4	7	4	effetti di là sù
+4	3	9	5	'l tuo nome e 'l tuo valore
+4	3	5	5	'l tuo nome
+4	7	9	9	'l tuo valore
+5	2	3	3	ogne creatura
+6	3	7	3	grazie al tuo dolce vapore
+6	5	7	7	tuo dolce vapore
+7	3	3	3	noi
+7	4	8	5	la pace del tuo regno
+7	7	8	8	tuo regno
+8	2	2	2	noi
+8	2	2	2	noi
+8	4	4	4	essa
+9	2	2	2	ella
+9	6	8	8	tutto nostro ingegno
+9	7	8	8	nostro ingegno
+10	3	4	4	suo voler
+10	5	7	6	li angeli tuoi
+11	2	2	2	sacrificio
+11	4	4	4	te
+11	6	6	6	osanna
+12	3	6	4	li uomini de' suoi
+12	3	4	4	li uomini
+12	6	6	6	suoi
+13	4	4	4	noi
+13	5	7	7	la cotidiana manna
+13	7	7	7	manna
+14	2	3	3	la qual
+14	3	3	3	qual
+14	5	7	7	questo aspro diserto
+14	7	7	7	diserto
+15	4	9	4	chi più di gir s'affanna
+15	4	4	4	chi
+15	7	7	7	gir
+16	3	3	3	noi
+16	4	8	5	lo mal ch'avem sofferto
+16	4	5	5	lo mal
+17	3	3	3	ciascuno
+17	5	5	5	tu
+18	5	7	7	lo nostro merto
+19	1	7	2	Nostra virtù che di legger s'adona
+19	1	2	2	Nostra virtù
+19	5	5	5	legger
+20	4	6	6	l'antico avversaro
+21	4	8	4	lui che sì la sprona
+21	4	4	4	lui
+22	1	3	3	Quest' ultima preghiera
+22	4	5	4	segnor caro
+23	6	6	6	noi
+24	3	8	3	color che dietro a noi restaro
+24	3	3	3	color
+24	7	7	7	noi
+25	3	5	5	sé e noi
+25	3	3	3	sé
+25	5	5	5	noi
+25	6	7	7	buona ramogna
+26	1	2	2	quell' ombre
+26	6	7	7	'l pondo
+27	3	7	3	quel che talvolta si sogna
+27	3	3	3	quel
+28	3	3	3	tutte
+28	5	5	5	tondo
+29	5	7	7	la prima cornice
+30	2	5	3	la caligine del mondo
+30	2	3	3	la caligine
+30	5	5	5	mondo
+31	7	7	7	noi
+32	4	6	4	dire e far
+32	4	4	4	dire
+32	6	6	6	far
+32	8	8	8	lor
+33	2	8	2	quei c'hanno al voler buona radice
+33	2	2	2	quei
+33	6	6	6	voler
+33	7	8	8	buona radice
+34	4	5	5	loro atar
+34	7	8	8	le note
+35	1	1	1	che
+36	4	6	6	le stellate ruote
+37	3	5	3	giustizia e pietà
+37	3	3	3	giustizia
+37	5	5	5	pietà
+38	6	7	7	l'ala
+39	3	5	4	il disio vostro
+40	3	4	4	qual mano
+40	6	7	7	la scala
+41	9	12	9	più d'un varco
+41	11	12	12	un varco
+42	1	1	1	quel
+42	4	4	4	che
+43	2	5	2	questi che vien meco
+43	2	2	2	questi
+43	7	8	8	lo 'ncarco
+43	8	8	8	'ncarco
+44	2	5	3	la carne d'Adamo
+44	3	5	3	carne d'Adamo
+44	5	5	5	Adamo
+45	2	3	2	montar sù
+45	2	2	2	montar
+45	5	6	6	sua voglia
+45	6	6	6	voglia
+46	1	3	3	Le lor parole
+46	2	3	3	lor parole
+46	3	3	3	parole
+46	4	4	4	che
+46	7	7	7	queste
+47	1	1	1	che
+47	4	7	4	colui cu' io seguiva
+47	4	4	4	colui
+47	5	5	5	cu'
+47	6	6	6	io
+48	4	4	4	cui
+49	5	6	5	man destra
+49	8	9	9	la riva
+50	2	2	2	noi
+50	6	7	7	il passo
+51	4	5	4	persona viva
+52	3	3	3	io
+52	7	8	8	dal sasso
+52	8	8	8	sasso
+53	2	5	3	la cervice mia superba
+54	4	6	5	il viso basso
+55	1	1	1	cotesti
+56	2	2	2	io
+56	6	6	6	i'
+56	7	7	7	'l
+57	6	7	7	questa soma
+58	1	1	1	Io
+58	7	9	9	un gran Tosco
+58	8	9	9	gran Tosco
+58	9	9	9	Tosco
+59	1	2	1	Guiglielmo Aldobrandesco
+59	4	5	5	mio padre
+59	5	5	5	padre
+60	4	6	5	'l nome suo
+60	5	6	5	nome suo
+60	5	5	5	nome
+61	1	7	3	L'antico sangue e l'opere leggiadre
+61	1	3	3	L'antico sangue
+61	5	7	6	l'opere leggiadre
+62	2	4	4	i miei maggior
+63	5	7	7	la comune madre
+64	1	2	2	ogn' uomo
+64	5	5	5	despetto
+65	2	2	2	io
+65	6	7	7	i Sanesi
+66	4	4	4	Campagnatico
+66	5	6	6	ogne fante
+67	1	1	1	Io
+67	3	3	3	Omberto
+67	8	8	8	me
+67	9	9	9	danno
+68	1	1	1	superbia
+68	4	6	6	tutti miei consorti
+68	5	6	6	miei consorti
+69	2	2	2	ella
+69	6	6	6	malanno
+70	5	5	5	io
+70	6	7	7	questo peso
+70	7	7	7	peso
+71	2	2	2	lei
+71	6	6	6	Dio
+72	3	3	3	io
+72	7	7	7	vivi
+72	7	7	7	vivi
+72	10	10	10	morti
+72	10	10	10	morti
+73	5	6	6	la faccia
+74	2	4	2	un di lor
+74	4	4	4	lor
+74	6	8	6	questi che parlava
+74	6	6	6	questi
+75	4	8	5	il peso che li 'mpaccia
+75	4	5	5	il peso
+76	0	0	0	
+77	2	3	3	li occhi
+77	5	5	5	fatica
+78	2	2	2	me
+78	7	7	7	loro
+79	3	3	3	io
+79	4	4	4	lui
+79	7	7	7	tu
+79	8	8	8	Oderisi
+80	1	10	2	l'onor d'Agobbio e l'onor di quell' arte
+80	1	4	2	l'onor d'Agobbio
+80	4	4	4	Agobbio
+80	6	10	7	l'onor di quell' arte
+80	9	10	10	quell' arte
+81	2	2	2	alluminar
+81	6	6	6	Parisi
+82	1	1	1	Frate
+82	3	3	3	elli
+82	6	7	7	le carte
+83	3	4	3	Franco Bolognese
+84	1	2	2	l'onore
+84	6	6	6	suo
+84	8	10	8	mio in parte
+84	10	10	10	parte
+85	4	4	4	io
+86	3	3	3	io
+86	6	8	8	lo gran disio
+87	2	3	3	l'eccellenza
+87	5	6	6	mio core
+88	2	3	3	tal superbia
+88	7	8	8	il fio
+89	0	0	0	
+90	7	7	7	Dio
+91	2	7	3	vana gloria de l'umane posse
+91	2	3	3	vana gloria
+91	5	7	7	l'umane posse
+92	2	3	3	poco verde
+92	6	8	7	la cima dura
+93	6	8	7	l'etati grosse
+94	2	2	2	Cimabue
+94	4	5	5	la pittura
+95	2	3	3	lo campo
+95	7	7	7	Giotto
+95	8	9	9	il grido
+96	3	6	4	la fama di colui
+96	3	4	4	la fama
+96	6	6	6	colui
+97	4	5	5	l'uno
+97	7	8	8	l'altro
+97	9	9	9	Guido
+98	1	5	2	la gloria de la lingua
+98	4	5	5	la lingua
+99	1	1	1	chi
+99	2	6	3	l'uno e l'altro
+99	2	3	3	l'uno
+99	5	6	6	l'altro
+99	9	9	9	nido
+100	3	5	5	il mondan romore
+100	6	6	6	altro
+100	8	9	9	un fiato
+101	2	2	2	vento
+102	3	3	3	nome
+102	6	6	6	lato
+103	1	2	2	Che voce
+103	4	4	4	tu
+104	2	2	2	te
+104	3	4	4	la carne
+105	3	3	3	tu
+105	5	9	6	il ‘pappo’ e 'l ‘dindi
+105	5	6	6	il ‘pappo
+105	8	9	9	'l ‘dindi
+106	4	5	5	mill' anni
+106	5	5	5	anni
+107	1	1	1	spazio
+107	3	4	4	l'etterno
+107	4	4	4	etterno
+107	6	9	7	un muover di ciglia
+107	7	9	7	muover di ciglia
+107	9	9	9	ciglia
+108	2	9	2	cerchio che più tardi in cielo è torto
+108	2	2	2	cerchio
+108	7	7	7	cielo
+109	1	7	1	Colui che del cammin sì poco piglia
+109	1	1	1	Colui
+109	4	4	4	cammin
+110	3	3	3	me
+110	4	4	4	Toscana
+111	6	6	6	Siena
+112	3	3	3	sire
+113	1	3	2	la rabbia fiorentina
+113	1	2	2	la rabbia
+113	2	3	2	rabbia fiorentina
+113	2	2	2	rabbia
+113	4	4	4	che
+114	3	4	4	quel tempo
+114	4	4	4	tempo
+114	9	9	9	putta
+115	1	3	3	La vostra nominanza
+115	5	7	5	color d'erba
+115	7	7	7	erba
+116	1	1	1	che
+116	6	6	6	quei
+116	7	7	7	la
+117	2	2	2	cui
+117	3	3	3	ella
+117	6	8	7	la terra acerba
+118	2	2	2	io
+118	4	4	4	lui
+118	5	7	7	Tuo vero dir
+119	1	2	2	bona umiltà
+119	4	5	5	gran tumor
+120	2	2	2	chi
+120	4	9	4	quei di cui tu parlavi ora
+120	6	6	6	cui
+120	7	7	7	tu
+121	1	1	1	Quelli
+121	4	5	4	Provenzan Salvani
+122	0	0	0	
+123	3	4	3	Siena tutta
+123	3	3	3	Siena
+123	6	8	8	le sue mani
+123	8	8	8	mani
+124	1	1	1	Ito
+124	7	7	7	riposo
+125	4	5	5	cotal moneta
+125	5	5	5	moneta
+126	3	8	3	chi è di là troppo oso
+126	3	3	3	chi
+127	2	2	2	io
+127	4	7	5	quello spirito ch'attende
+127	4	5	5	quello spirito
+128	3	3	3	si
+128	5	9	6	l'orlo de la vita
+128	8	9	9	la vita
+129	0	0	0	
+130	2	3	3	buona orazïon
+130	3	3	3	orazïon
+130	4	4	4	lui
+131	4	6	4	tempo quanto visse
+131	4	4	4	tempo
+132	3	6	4	la venuta lui largita
+132	3	4	4	la venuta
+132	4	4	4	venuta
+132	5	5	5	lui
+133	0	0	0	
+134	3	5	3	Campo di Siena
+134	5	5	5	Siena
+135	1	3	2	ogne vergogna diposta
+135	2	2	2	vergogna
+136	5	9	6	l'amico suo di pena
+136	5	7	6	l'amico suo
+136	9	9	9	pena
+137	5	8	6	la prigion di Carlo
+137	5	6	6	la prigion
+137	8	8	8	Carlo
+138	6	7	7	ogne vena
+139	0	0	0	
+140	2	3	3	poco tempo
+140	6	7	7	tuoi vicini
+141	4	4	4	tu
+142	1	2	2	Quest' opera
+142	3	3	3	li
+142	5	6	6	quei confini

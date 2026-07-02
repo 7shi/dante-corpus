@@ -1,0 +1,410 @@
+line	start	end	head	text
+1	3	4	4	suo Figlio
+1	4	4	4	Figlio
+1	6	7	7	l'Amore
+1	7	7	7	Amore
+2	2	6	3	l'uno e l'altro
+2	2	3	3	l'uno
+2	3	3	3	uno
+2	5	6	6	l'altro
+2	6	6	6	altro
+3	1	5	5	lo primo e ineffabile Valore
+3	2	5	5	primo e ineffabile Valore
+3	4	5	5	ineffabile Valore
+3	5	5	5	Valore
+4	3	3	3	mente
+4	6	6	6	loco
+5	2	3	3	tant' ordine
+5	3	3	3	ordine
+6	2	4	2	gustar di lui
+6	4	4	4	lui
+6	5	7	5	chi ciò rimira
+6	6	6	6	ciò
+7	3	3	3	lettore
+7	5	7	7	l'alte rote
+7	7	7	7	rote
+8	2	3	3	la vista
+8	3	3	3	vista
+8	6	7	7	quella parte
+8	7	7	7	parte
+9	2	7	4	l'un moto e l'altro
+9	2	4	4	l'un moto
+9	4	4	4	moto
+9	6	7	7	l'altro
+9	7	7	7	altro
+10	7	8	8	l'arte
+11	2	9	3	quel maestro che dentro a sé l'ama
+11	2	3	3	quel maestro
+11	7	7	7	sé
+11	8	8	8	l'
+12	5	5	5	lei
+12	6	7	7	l'occhio
+13	5	5	5	si
+14	1	7	3	l'oblico cerchio che i pianeti porta
+14	1	3	3	l'oblico cerchio
+14	5	6	6	i pianeti
+15	4	7	4	mondo che li chiama
+15	4	4	4	mondo
+15	6	6	6	li
+16	3	5	4	la strada lor
+16	3	4	4	la strada
+16	4	5	4	strada lor
+16	4	4	4	strada
+17	1	4	2	molta virtù nel ciel
+17	1	2	2	molta virtù
+17	2	4	2	virtù nel ciel
+17	2	2	2	virtù
+17	4	4	4	ciel
+17	7	7	7	vano
+18	2	7	4	quasi ogne potenza qua giù morta
+18	3	7	4	ogne potenza qua giù morta
+18	3	4	4	ogne potenza
+18	4	7	4	potenza qua giù morta
+18	4	4	4	potenza
+19	4	8	4	dritto più o men lontano
+19	4	4	4	dritto
+20	2	3	3	'l partire
+20	3	3	3	partire
+21	6	8	7	l'ordine mondano
+21	7	8	7	ordine mondano
+21	7	7	7	ordine
+22	2	2	2	ti
+22	4	4	4	lettor
+22	6	8	8	'l tuo banco
+23	4	7	4	ciò che si preliba
+23	4	4	4	ciò
+23	6	6	6	si
+24	4	4	4	lieto
+24	8	8	8	stanco
+25	2	2	2	t'
+25	7	7	7	te
+25	8	8	8	ti
+26	3	3	3	sé
+26	5	8	8	tutta la mia cura
+26	6	8	8	la mia cura
+26	7	8	8	mia cura
+27	1	7	2	quella materia ond' io son fatto scriba
+27	1	2	2	quella materia
+27	3	3	3	ond'
+27	4	4	4	io
+27	7	7	7	scriba
+28	1	6	2	Lo ministro maggior de la natura
+28	1	3	2	Lo ministro maggior
+28	2	3	2	ministro maggior
+28	5	6	6	la natura
+29	3	5	3	valor del ciel
+29	4	5	5	del ciel
+29	6	7	7	lo mondo
+30	3	4	4	suo lume
+30	5	6	6	il tempo
+31	2	7	3	quella parte che sù si rammenta
+31	2	3	3	quella parte
+31	3	7	3	parte che sù si rammenta
+31	3	3	3	parte
+31	4	4	4	che
+32	5	6	6	le spire
+32	6	6	6	spire
+33	2	2	2	che
+34	2	2	2	io
+34	5	5	5	lui
+34	8	8	8	salire
+35	4	4	4	io
+35	8	8	8	uom
+36	2	4	4	'l primo pensier
+36	4	4	4	pensier
+36	6	7	7	suo venire
+36	7	7	7	venire
+37	2	2	2	Bëatrice
+37	3	6	3	quella che sì scorge
+37	3	3	3	quella
+38	2	2	2	bene
+38	4	4	4	meglio
+39	2	6	3	l'atto suo per tempo
+39	2	4	3	l'atto suo
+39	2	3	3	l'atto
+39	3	4	3	atto suo
+39	3	3	3	atto
+39	6	6	6	tempo
+40	5	5	5	sé
+41	1	10	1	quel ch'era dentro al sol dov' io entra'mi
+41	6	10	6	sol dov' io entra'mi
+41	6	6	6	sol
+41	8	8	8	io
+42	3	3	3	color
+42	6	7	6	lume parvente
+42	6	6	6	lume
+43	2	2	2	io
+43	3	10	4	lo 'ngegno e l'arte e l'uso
+43	3	4	4	lo 'ngegno
+43	3	3	3	lo
+43	6	7	7	l'arte
+43	9	10	10	l'uso
+44	0	0	0	
+45	2	2	2	creder
+45	6	6	6	veder
+46	3	5	4	le fantasie nostre
+46	3	4	4	le fantasie
+46	4	5	4	fantasie nostre
+47	2	3	3	tanta altezza
+47	6	6	6	maraviglia
+48	3	4	4	'l sol
+48	7	9	7	occhio ch'andasse
+48	7	7	7	occhio
+49	4	6	6	la quarta famiglia
+50	2	4	4	l'alto Padre
+50	7	7	7	la
+51	3	3	3	spira
+51	6	6	6	figlia
+52	2	2	2	Bëatrice
+53	2	6	3	il Sol de li angeli
+53	5	6	6	li angeli
+53	9	9	9	questo
+54	1	1	1	sensibil
+54	6	7	7	sua grazia
+55	1	3	1	Cor di mortal
+55	3	3	3	mortal
+56	2	2	2	divozione
+56	5	7	5	rendersi a Dio
+56	5	5	5	rendersi
+56	7	7	7	Dio
+57	2	5	5	tutto 'l suo gradir
+57	3	5	5	'l suo gradir
+57	4	5	5	suo gradir
+57	5	5	5	gradir
+58	3	4	4	quelle parole
+58	7	7	7	io
+59	4	6	6	'l mio amore
+59	8	8	8	lui
+60	2	2	2	Bëatrice
+60	5	6	6	l'oblio
+61	2	2	2	le
+61	6	6	6	se
+61	7	7	7	ne
+62	2	8	3	lo splendor de li occhi suoi ridenti
+62	2	3	3	lo splendor
+62	5	8	6	li occhi suoi ridenti
+62	6	8	6	occhi suoi ridenti
+63	1	7	2	mia mente unita in più cose divise
+63	1	3	2	mia mente unita
+63	1	2	2	mia mente
+63	5	7	6	più cose divise
+63	6	7	6	cose divise
+64	1	1	1	Io
+64	3	7	4	più folgór vivi e vincenti
+64	4	7	4	folgór vivi e vincenti
+64	4	4	4	folgór
+65	2	4	4	di noi centro
+65	3	3	3	noi
+65	4	4	4	centro
+65	7	7	7	sé
+65	9	9	9	corona
+66	4	4	4	voce
+66	7	7	7	vista
+67	3	6	4	la figlia di Latona
+67	6	6	6	Latona
+68	4	5	5	l'aere
+69	4	9	5	il fil che fa la zona
+69	4	5	5	il fil
+69	8	9	9	la zona
+70	2	5	3	la corte del cielo
+70	2	3	3	la corte
+70	3	5	3	corte del cielo
+70	3	3	3	corte
+70	5	5	5	cielo
+70	7	7	7	io
+71	3	7	4	molte gioie care e belle
+71	3	4	4	molte gioie
+71	4	7	4	gioie care e belle
+71	4	4	4	gioie
+72	8	8	8	regno
+73	2	6	3	'l canto di quei lumi
+73	2	3	3	'l canto
+73	3	3	3	canto
+73	5	6	6	quei lumi
+73	6	6	6	lumi
+73	9	9	9	quelle
+74	1	1	1	chi
+75	2	2	2	muto
+75	5	6	6	le novelle
+75	6	6	6	novelle
+76	4	6	6	quelli ardenti soli
+77	6	6	6	noi
+77	7	8	8	tre volte
+78	2	6	2	stelle vicine a' fermi poli
+78	2	3	2	stelle vicine
+78	5	6	6	fermi poli
+79	1	1	1	donne
+79	6	6	6	ballo
+80	0	0	0	
+81	3	5	5	le nove note
+81	5	5	5	note
+82	4	5	5	l'un
+83	1	5	2	lo raggio de la grazia
+83	4	5	5	la grazia
+84	1	2	2	verace amore
+85	3	3	3	te
+86	2	2	2	ti
+86	6	7	7	quella scala
+86	7	7	7	scala
+87	3	3	3	risalir
+87	4	4	4	nessun
+88	4	9	5	il vin de la sua fiala
+88	4	5	5	il vin
+88	7	9	9	la sua fiala
+89	2	4	4	la tua sete
+89	6	6	6	libertà
+90	4	10	4	acqua ch'al mar non si cala
+90	4	4	4	acqua
+90	7	7	7	mar
+91	1	1	1	Tu
+91	5	6	6	quai piante
+92	1	5	2	questa ghirlanda che 'ntorno vagheggia
+92	1	2	2	questa ghirlanda
+93	1	8	3	la bella donna ch'al ciel t'avvalora
+93	1	3	3	la bella donna
+93	6	6	6	ciel
+94	1	1	1	Io
+94	4	9	5	li agni de la santa greggia
+94	5	9	5	agni de la santa greggia
+94	7	9	9	la santa greggia
+94	8	9	9	santa greggia
+95	2	2	2	Domenico
+95	5	5	5	cammino
+96	3	3	3	s'
+96	7	7	7	si
+97	1	8	1	Questi che m'è a destra più vicino
+97	1	1	1	Questi
+97	6	6	6	destra
+98	1	3	1	frate e maestro
+98	1	1	1	frate
+98	3	3	3	maestro
+98	6	7	7	esso Alberto
+98	7	7	7	Alberto
+99	3	3	3	Cologna
+99	5	5	5	io
+99	6	8	6	Thomas d'Aquino
+99	8	8	8	Aquino
+100	4	6	6	tutti li altri
+100	5	6	6	li altri
+101	2	2	2	retro
+101	4	5	5	mio parlar
+101	9	9	9	viso
+102	4	6	6	lo beato serto
+103	1	3	3	Quell' altro fiammeggiare
+103	2	3	3	altro fiammeggiare
+103	3	3	3	fiammeggiare
+103	6	6	6	riso
+104	2	2	2	Grazïan
+104	4	9	9	l'uno e l'altro foro
+104	4	5	5	l'uno
+104	5	5	5	uno
+104	7	9	9	l'altro foro
+104	8	9	9	altro foro
+104	9	9	9	foro
+105	6	6	6	paradiso
+106	1	2	2	L'altro
+106	6	8	8	il nostro coro
+107	1	2	2	quel Pietro
+107	6	7	7	la poverella
+108	3	4	4	Santa Chiesa
+108	5	6	6	suo tesoro
+109	1	3	3	La quinta luce
+109	7	7	7	noi
+110	3	4	4	tale amor
+110	6	8	8	tutto 'l mondo
+110	7	8	8	'l mondo
+111	6	7	6	saper novella
+111	7	7	7	novella
+112	4	6	6	l'alta mente
+113	1	1	1	saver
+113	6	7	7	'l vero
+113	7	7	7	vero
+114	2	3	2	veder tanto
+114	6	7	7	il secondo
+115	3	7	4	il lume di quel cero
+115	6	7	7	quel cero
+116	4	7	4	carne più a dentro
+117	1	6	3	l'angelica natura e 'l ministero
+117	1	3	3	l'angelica natura
+117	5	6	6	'l ministero
+118	2	5	5	l'altra piccioletta luce
+118	3	5	5	altra piccioletta luce
+118	4	5	5	piccioletta luce
+118	5	5	5	luce
+119	1	5	2	quello avvocato de' tempi cristiani
+119	1	2	2	quello avvocato
+119	2	5	2	avvocato de' tempi cristiani
+119	2	2	2	avvocato
+119	4	5	4	tempi cristiani
+119	4	4	4	tempi
+120	2	3	3	cui latino
+120	3	3	3	latino
+120	4	4	4	Augustin
+121	3	3	3	tu
+121	4	8	5	l'occhio de la mente
+121	4	5	5	l'occhio
+121	7	8	8	la mente
+122	2	2	2	luce
+122	2	2	2	luce
+122	7	9	9	le mie lode
+122	8	9	9	mie lode
+123	3	4	4	l'ottava
+123	6	6	6	sete
+124	3	4	4	ogne ben
+125	1	3	2	l'anima santa
+125	5	7	6	'l mondo fallace
+126	4	8	4	chi di lei ben ode
+126	6	6	6	lei
+127	1	6	2	Lo corpo ond' ella fu cacciata
+127	1	2	2	Lo corpo
+127	4	4	4	ella
+128	3	3	3	Cieldauro
+128	5	5	5	essa
+128	7	7	7	martiro
+129	3	3	3	essilio
+129	6	7	7	questa pace
+130	4	6	6	l'ardente spiro
+131	2	2	2	Isidoro
+131	4	4	4	Beda
+131	7	7	7	Riccardo
+132	7	7	7	viro
+133	1	1	1	Questi
+133	4	4	4	me
+133	6	8	8	il tuo riguardo
+134	2	6	3	'l lume d'uno spirto
+134	2	3	3	'l lume
+134	5	6	6	uno spirto
+134	9	9	9	pensieri
+135	4	4	4	li
+136	1	1	1	essa
+136	3	7	4	la luce etterna di Sigieri
+136	4	7	4	luce etterna di Sigieri
+136	7	7	7	Sigieri
+137	1	1	1	che
+137	4	7	4	Vico de li Strami
+137	6	7	7	li Strami
+137	7	7	7	Strami
+138	2	3	3	invidïosi veri
+139	3	6	3	orologio che ne chiami
+139	3	3	3	orologio
+140	2	9	3	l'ora che la sposa di Dio surge
+140	2	3	3	l'ora
+140	5	8	6	la sposa di Dio
+140	5	6	6	la sposa
+140	8	8	8	Dio
+141	3	4	4	lo sposo
+142	2	7	4	l'una parte e l'altra
+142	2	4	4	l'una parte
+142	6	7	7	l'altra
+143	5	7	7	sì dolce nota
+144	2	7	5	'l ben disposto spirto d'amor
+144	5	7	5	spirto d'amor
+144	7	7	7	amor
+145	3	3	3	ïo
+145	4	6	6	la gloriosa rota
+146	4	4	4	voce
+146	4	4	4	voce
+146	8	8	8	tempra
+147	3	8	3	dolcezza ch'esser non pò nota
+147	3	3	3	dolcezza
+148	5	5	5	gioir

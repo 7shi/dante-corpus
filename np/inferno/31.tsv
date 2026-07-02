@@ -1,0 +1,357 @@
+line	start	end	head	text
+1	1	3	3	Una medesma lingua
+2	5	10	10	l'una e l'altra guancia
+2	5	6	5	l'una
+2	8	10	10	l'altra guancia
+2	8	9	8	l'altra
+3	3	4	4	la medicina
+4	3	3	3	io
+4	7	8	8	la lancia
+5	2	2	2	Achille
+5	5	6	6	suo padre
+5	8	8	8	cagione
+6	3	3	3	trista
+6	7	8	8	buona mancia
+7	1	1	1	Noi
+7	3	4	4	il dosso
+7	5	7	7	al misero vallone
+7	6	7	7	misero vallone
+8	3	8	4	la ripa che 'l cinge dintorno
+8	3	4	4	la ripa
+8	6	6	6	'l
+9	3	4	4	alcun sermone
+10	5	5	5	notte
+10	9	9	9	giorno
+11	3	4	4	'l viso
+11	5	5	5	m'
+12	2	2	2	io
+12	5	7	7	un alto corno
+13	4	5	5	ogne tuon
+13	5	5	5	tuon
+14	3	3	3	sé
+14	4	6	6	la sua via
+14	5	6	6	sua via
+14	6	6	6	via
+15	2	5	3	li occhi miei tutti
+15	2	4	3	li occhi miei
+15	2	3	3	li occhi
+15	3	5	3	occhi miei tutti
+15	3	4	3	occhi miei
+15	3	3	3	occhi
+15	7	8	8	un loco
+15	8	8	8	loco
+16	2	4	4	la dolorosa rotta
+17	1	2	1	Carlo Magno
+17	4	6	6	la santa gesta
+18	5	5	5	Orlando
+19	6	7	7	la testa
+20	5	7	7	molte alte torri
+21	2	2	2	io
+21	3	3	3	Maestro
+21	5	6	6	che terra
+21	8	8	8	questa
+22	2	2	2	elli
+22	4	4	4	me
+22	7	7	7	tu
+23	2	3	3	le tenebre
+23	6	7	7	la lungi
+24	5	5	5	maginare
+25	1	1	1	Tu
+25	5	5	5	tu
+26	2	3	3	'l senso
+26	3	3	3	senso
+26	7	7	7	lontano
+27	4	5	4	te stesso
+27	4	4	4	te
+28	3	3	3	mi
+28	6	6	6	mano
+29	5	5	5	noi
+30	3	4	4	'l fatto
+30	6	6	6	ti
+31	5	5	5	torri
+31	7	7	7	giganti
+32	4	5	4	pozzo intorno
+32	4	4	4	pozzo
+32	7	8	8	la ripa
+33	2	3	3	l'umbilico
+33	6	7	6	tutti quanti
+34	3	4	4	la nebbia
+35	1	2	2	lo sguardo
+36	1	9	1	ciò che cela 'l vapor che l'aere stipa
+36	4	9	5	'l vapor che l'aere stipa
+36	4	5	5	'l vapor
+36	7	8	8	l'aere
+37	3	7	4	l'aura grossa e scura
+37	3	4	4	l'aura
+38	6	7	7	la sponda
+39	2	2	2	errore
+39	5	5	5	paura
+40	5	7	6	la cerchia tonda
+41	1	3	1	Montereggion di torri
+41	3	3	3	torri
+42	2	7	3	la proda che 'l pozzo circonda
+42	2	3	3	la proda
+42	5	6	6	'l pozzo
+43	3	5	5	mezza la persona
+43	3	3	3	mezza
+43	4	5	5	la persona
+44	1	3	3	li orribili giganti
+44	4	4	4	cui
+45	1	3	1	Giove del cielo
+45	3	3	3	cielo
+46	2	2	2	io
+46	5	8	8	d'alcun la faccia
+46	6	6	6	alcun
+46	7	8	8	la faccia
+47	1	2	2	le spalle
+47	4	5	5	'l petto
+47	7	10	10	del ventre gran parte
+47	8	8	8	ventre
+47	9	10	10	gran parte
+48	3	4	4	le coste
+48	6	8	8	ambo le braccia
+48	7	8	8	le braccia
+49	1	1	1	Natura
+49	5	6	6	l'arte
+50	2	4	4	sì fatti animali
+50	7	7	7	bene
+51	3	6	4	tali essecutori a Marte
+51	3	4	4	tali essecutori
+51	6	6	6	Marte
+52	3	3	3	ella
+52	5	5	5	elefanti
+52	8	8	8	balene
+53	4	6	4	chi guarda sottilmente
+53	4	4	4	chi
+54	6	6	6	la
+55	3	7	4	l'argomento de la mente
+55	6	7	7	la mente
+56	4	5	5	mal volere
+56	8	9	9	la possa
+57	1	2	2	nessun riparo
+57	6	7	7	la gente
+58	1	3	2	La faccia sua
+58	2	3	2	faccia sua
+59	2	8	3	la pina di San Pietro a Roma
+59	3	8	3	pina di San Pietro a Roma
+59	5	8	6	San Pietro a Roma
+59	5	6	6	San Pietro
+59	8	8	8	Roma
+60	3	4	4	sua proporzione
+60	6	8	8	l'altre ossa
+60	7	8	8	altre ossa
+61	3	4	4	la ripa
+62	2	2	2	mezzo
+62	8	8	8	tanto
+63	2	2	2	sovra
+63	7	8	8	la chioma
+64	1	2	2	tre Frison
+64	6	7	7	mal vanto
+65	3	3	3	i'
+65	6	8	8	trenta gran palmi
+66	2	4	2	loco in giù
+66	2	2	2	loco
+66	6	6	6	omo
+66	8	9	9	'l manto
+67	1	1	1	Raphèl
+67	4	5	4	zabì almi
+67	4	4	4	zabì
+68	4	6	6	la fiera bocca
+68	5	6	6	fiera bocca
+68	6	6	6	bocca
+69	1	1	1	cui
+69	6	7	7	dolci salmi
+69	7	7	7	salmi
+70	2	4	3	'l duca mio
+70	3	4	3	duca mio
+70	3	3	3	duca
+70	6	6	6	lui
+70	7	8	7	Anima sciocca
+70	7	7	7	Anima
+71	3	3	3	corno
+71	6	6	6	quel
+72	2	5	2	ira o altra passïon
+72	2	2	2	ira
+72	4	5	5	altra passïon
+72	5	5	5	passïon
+73	3	3	3	collo
+73	6	7	7	la soga
+73	7	7	7	soga
+74	2	2	2	'l
+74	6	7	6	anima confusa
+74	6	6	6	anima
+75	3	3	3	lui
+75	5	7	7	'l gran petto
+75	6	7	7	gran petto
+75	7	7	7	petto
+76	4	4	4	me
+76	5	6	5	Elli stessi
+76	5	5	5	Elli
+77	1	1	1	questi
+77	3	3	3	Nembrotto
+77	5	6	6	lo cui
+78	2	5	3	un linguaggio nel mondo
+78	2	3	3	un linguaggio
+78	5	5	5	mondo
+79	7	7	7	vòto
+80	5	5	5	lui
+80	6	7	7	ciascun linguaggio
+80	7	7	7	linguaggio
+81	2	3	3	'l suo
+81	3	3	3	suo
+81	5	5	5	altrui
+81	8	8	8	nullo
+82	3	5	5	più lungo vïaggio
+83	3	3	3	sinistra
+83	6	9	6	trar d'un balestro
+83	8	9	9	un balestro
+84	2	8	3	l'altro assai più fero e maggio
+85	3	3	3	lui
+85	4	4	4	qual
+85	7	8	8	'l maestro
+85	8	8	8	maestro
+86	3	3	3	io
+86	6	6	6	el
+87	2	3	3	l'altro
+87	3	3	3	altro
+87	6	8	7	il braccio destro
+87	7	8	7	braccio destro
+87	7	7	7	braccio
+88	2	7	3	una catena che 'l tenea avvinto
+88	2	3	3	una catena
+89	2	2	2	collo
+89	9	10	10	lo scoperto
+90	5	6	5	giro quinto
+90	5	5	5	giro
+91	1	2	2	Questo superbo
+92	2	7	3	sua potenza contra 'l sommo Giove
+92	2	3	3	sua potenza
+92	3	7	3	potenza contra 'l sommo Giove
+92	5	7	7	'l sommo Giove
+92	6	7	7	sommo Giove
+93	2	4	4	'l mio duca
+93	3	4	4	mio duca
+93	6	6	6	elli
+93	8	9	9	cotal merto
+94	1	1	1	Fïalte
+94	3	3	3	nome
+94	6	8	8	le gran prove
+95	2	3	3	i giganti
+95	5	5	5	paura
+95	7	7	7	dèi
+96	1	5	2	le braccia ch'el menò
+96	1	2	2	le braccia
+96	4	4	4	el
+97	2	2	2	io
+97	2	2	2	io
+97	4	4	4	lui
+98	3	5	5	lo smisurato Brïareo
+99	1	1	1	esperïenza
+99	3	5	4	li occhi mei
+100	2	2	2	ei
+100	4	4	4	Tu
+100	6	6	6	Anteo
+101	3	3	3	qui
+101	4	4	4	che
+102	1	1	1	che
+102	2	2	2	ne
+102	5	8	5	fondo d'ogne reo
+102	7	8	8	ogne reo
+103	1	5	1	Quel che tu vuo' veder
+103	1	1	1	Quel
+103	3	3	3	tu
+104	7	7	7	questo
+105	7	7	7	volto
+106	3	6	3	tremoto già tanto rubesto
+106	3	3	3	tremoto
+107	3	6	4	una torre così forte
+107	3	4	4	una torre
+107	4	4	4	torre
+108	2	2	2	Fïalte
+109	3	3	3	io
+109	6	6	6	mai
+109	7	8	8	la morte
+110	5	5	5	mestier
+110	8	9	9	la dotta
+111	2	2	2	io
+111	6	7	7	le ritorte
+112	1	1	1	Noi
+113	4	4	4	Anteo
+113	6	8	8	ben cinque alle
+114	2	3	3	la testa
+114	7	8	8	la grotta
+115	2	2	2	tu
+115	5	7	7	la fortunata valle
+116	3	3	3	Scipïon
+116	5	6	5	gloria reda
+117	2	2	2	Anibàl
+117	4	4	4	suoi
+117	6	7	7	le spalle
+118	3	4	4	mille leon
+118	4	4	4	leon
+118	6	6	6	preda
+119	7	9	9	l'alta guerra
+119	8	9	9	alta guerra
+119	9	9	9	guerra
+120	2	3	3	tuoi fratelli
+120	3	3	3	fratelli
+121	4	8	5	i figli de la terra
+121	4	5	5	i figli
+121	7	8	8	la terra
+122	7	7	7	schifo
+123	2	2	2	Cocito
+123	3	4	4	la freddura
+124	6	6	6	Tizio
+124	9	9	9	Tifo
+125	1	1	1	questi
+125	5	9	5	quel che qui si brama
+125	5	5	5	quel
+126	7	8	8	lo grifo
+126	8	8	8	grifo
+127	2	2	2	ti
+127	4	5	5	nel mondo
+127	5	5	5	mondo
+127	7	7	7	fama
+128	2	2	2	el
+128	5	6	6	lunga vita
+128	6	6	6	vita
+129	2	3	3	'nnanzi tempo
+129	3	3	3	tempo
+129	4	4	4	grazia
+129	6	6	6	sé
+129	7	7	7	nol
+130	3	4	4	'l maestro
+130	6	6	6	quelli
+130	8	8	8	fretta
+131	1	2	2	le man
+131	6	8	7	'l duca mio
+132	2	2	2	Ercule
+132	5	6	6	grande stretta
+133	1	1	1	Virgilio
+134	3	3	3	me
+134	8	8	8	io
+134	9	9	9	ti
+135	5	6	6	un fascio
+135	8	10	8	elli e io
+135	8	8	8	elli
+135	10	10	10	io
+136	5	6	6	la Carisenda
+137	2	3	3	'l chinato
+137	5	6	6	un nuvol
+138	2	2	2	essa
+138	5	5	5	ella
+139	3	3	3	Antëo
+139	5	5	5	me
+139	9	9	9	bada
+140	6	7	7	tal ora
+141	2	2	2	i'
+141	7	8	8	altra strada
+142	4	6	4	fondo che divora
+142	4	4	4	fondo
+143	1	3	1	Lucifero con Giuda
+143	1	1	1	Lucifero
+143	3	3	3	Giuda
+144	6	6	6	dimora
+145	3	5	3	albero in nave
+145	3	3	3	albero
+145	5	5	5	nave

@@ -1,0 +1,352 @@
+line	start	end	head	text
+1	2	9	2	tu che se' di là dal fiume sacro
+1	2	2	2	tu
+1	8	9	8	fiume sacro
+2	2	3	3	suo parlare
+2	5	5	5	me
+2	7	7	7	punta
+3	4	4	4	taglio
+3	5	5	5	m'
+4	4	4	4	cunta
+5	4	4	4	questo
+5	8	9	9	tanta accusa
+5	9	9	9	accusa
+6	1	2	2	tua confession
+6	2	2	2	confession
+7	2	4	4	la mia virtù
+8	2	3	3	la voce
+9	3	5	4	li organi suoi
+10	5	5	5	Che
+11	3	3	3	me
+11	5	7	6	le memorie triste
+11	6	7	6	memorie triste
+11	6	6	6	memorie
+12	2	2	2	te
+12	7	8	8	l'acqua
+12	8	8	8	acqua
+13	1	5	1	Confusione e paura insieme miste
+13	1	3	1	Confusione e paura
+13	1	1	1	Confusione
+13	3	3	3	paura
+14	3	5	5	un tal «sì
+14	5	5	5	sì
+14	8	9	9	la bocca
+14	9	9	9	bocca
+15	2	2	2	quale
+15	5	5	5	mestier
+15	6	7	7	le viste
+15	7	7	7	viste
+16	2	2	2	balestro
+17	2	3	3	troppa tesa
+17	4	6	6	la sua corda
+17	8	9	9	l'arco
+18	3	4	4	men foga
+18	5	6	6	l'asta
+18	7	8	8	il segno
+19	3	3	3	io
+19	5	6	6	grave carco
+20	3	5	3	lagrime e sospiri
+20	3	3	3	lagrime
+20	5	5	5	sospiri
+21	2	3	3	la voce
+21	6	8	8	lo suo varco
+22	2	2	2	ella
+22	4	4	4	me
+22	7	9	9	i mie' disiri
+23	1	1	1	che
+23	2	2	2	ti
+23	6	7	7	lo bene
+24	4	4	4	qual
+24	8	8	8	che
+25	1	1	1	quai
+25	5	6	6	quai catene
+25	6	6	6	catene
+26	5	6	5	passare innanzi
+26	5	5	5	passare
+27	4	5	5	la spene
+27	5	5	5	spene
+28	2	6	3	quali agevolezze o quali avanzi
+28	2	3	3	quali agevolezze
+28	5	6	6	quali avanzi
+29	2	6	3	la fronte de li altri
+29	2	3	3	la fronte
+29	5	6	6	li altri
+30	4	4	4	lor
+31	2	7	3	la tratta d'un sospiro amaro
+31	2	3	3	la tratta
+31	5	7	6	un sospiro amaro
+31	5	6	6	un sospiro
+32	2	2	2	pena
+32	4	7	5	la voce che rispuose
+32	4	5	5	la voce
+33	2	3	3	le labbra
+33	5	5	5	fatica
+33	6	6	6	la
+34	3	5	5	Le presenti cose
+34	4	5	5	presenti cose
+35	2	4	4	falso lor piacer
+35	3	4	4	lor piacer
+35	6	7	7	miei passi
+36	3	5	5	'l vostro viso
+36	4	5	5	vostro viso
+37	2	2	2	ella
+38	1	3	1	ciò che confessi
+38	1	1	1	ciò
+39	1	3	2	la colpa tua
+39	2	3	2	colpa tua
+39	5	6	6	tal giudice
+40	5	7	7	la propria gota
+41	1	4	2	l'accusa del peccato
+41	4	4	4	peccato
+41	6	7	7	nostra corte
+42	2	2	2	sé
+42	4	5	5	'l taglio
+42	6	7	7	la rota
+43	4	4	4	vergogna
+44	2	3	3	tuo errore
+44	6	7	7	altra volta
+45	2	3	3	le serene
+46	3	6	4	il seme del piangere
+46	3	4	4	il seme
+46	4	6	4	seme del piangere
+46	4	4	4	seme
+46	6	6	6	piangere
+47	5	6	6	contraria parte
+47	6	6	6	parte
+48	3	5	4	mia carne sepolta
+48	3	4	4	mia carne
+48	4	5	4	carne sepolta
+48	4	4	4	carne
+49	3	3	3	t'
+49	5	7	5	natura o arte
+49	5	5	5	natura
+49	7	7	7	arte
+50	1	1	1	piacer
+50	3	5	5	le belle membra
+50	4	5	5	belle membra
+50	5	5	5	membra
+50	8	8	8	io
+51	7	8	7	terra sparte
+51	7	7	7	terra
+52	3	5	5	'l sommo piacer
+52	4	5	5	sommo piacer
+53	2	4	4	la mia morte
+53	3	4	4	mia morte
+53	5	7	6	qual cosa mortale
+53	6	7	6	cosa mortale
+54	4	4	4	te
+54	6	7	7	suo disio
+55	2	2	2	ti
+55	5	7	7	lo primo strale
+56	2	4	3	le cose fallaci
+57	2	4	2	retro a me
+57	2	2	2	retro
+57	4	4	4	me
+57	9	9	9	tale
+58	2	2	2	ti
+58	5	8	6	le penne in giuso
+58	5	6	6	le penne
+58	8	8	8	giuso
+59	3	4	4	più colpo
+59	4	4	4	colpo
+59	6	6	6	pargoletta
+60	2	7	3	altra novità con sì breve uso
+60	2	3	3	altra novità
+60	3	3	3	novità
+60	5	7	7	sì breve uso
+60	6	7	7	breve uso
+60	7	7	7	uso
+61	1	2	2	Novo augelletto
+61	3	5	5	due o tre
+62	4	8	5	li occhi d'i pennuti
+62	5	8	5	occhi d'i pennuti
+62	7	8	8	i pennuti
+63	1	1	1	rete
+64	1	2	2	Quali fanciulli
+64	2	2	2	fanciulli
+65	2	5	3	li occhi a terra
+65	2	3	3	li occhi
+65	5	5	5	terra
+66	2	2	2	sé
+67	4	4	4	io
+67	6	6	6	ella
+68	3	4	3	se' dolente
+68	3	3	3	se'
+68	6	7	7	la barba
+69	3	4	4	più doglia
+70	2	4	2	men di resistenza
+70	4	4	4	resistenza
+71	1	2	2	robusto cerro
+71	6	7	7	nostral vento
+72	4	9	4	quel de la terra di Iarba
+72	6	9	7	la terra di Iarba
+72	7	9	7	terra di Iarba
+72	9	9	9	Iarba
+73	2	2	2	io
+73	6	7	7	suo comando
+73	8	9	9	il mento
+74	4	5	5	la barba
+74	6	7	7	il viso
+75	3	7	4	il velen de l'argomento
+75	6	7	7	l'argomento
+76	3	5	5	la mia faccia
+77	2	4	4	quelle prime creature
+78	2	3	3	loro aspersïon
+78	4	5	5	l'occhio
+79	2	4	4	le mie luci
+80	2	7	2	Beatrice volta in su la fiera
+80	2	2	2	Beatrice
+80	6	7	7	la fiera
+81	4	8	5	una persona in due nature
+81	4	5	5	una persona
+81	7	8	8	due nature
+82	2	4	4	'l suo velo
+82	7	8	8	la rivera
+83	4	6	4	sé stessa antica
+83	4	5	4	sé stessa
+83	4	4	4	sé
+84	3	4	4	l'altre
+84	7	7	7	ella
+85	2	2	2	penter
+85	7	8	8	l'ortica
+85	8	8	8	ortica
+86	3	5	5	tutte altre cose
+86	5	5	5	cose
+86	6	6	6	qual
+87	3	4	4	suo amor
+87	4	4	4	amor
+87	9	9	9	nemica
+88	1	2	2	Tanta riconoscenza
+88	3	4	4	il cor
+89	2	2	2	io
+89	6	6	6	quale
+90	2	7	2	colei che la cagion mi porse
+90	2	2	2	colei
+90	4	5	5	la cagion
+91	3	4	4	il cor
+91	5	7	5	virtù di fuor
+91	7	7	7	fuor
+92	1	7	2	la donna ch'io avea trovata sola
+92	1	2	2	la donna
+92	3	3	3	ch'
+92	4	4	4	io
+93	2	2	2	me
+94	5	5	5	fiume
+94	7	8	8	la gola
+95	3	3	3	me
+96	2	6	3	l'acqua lieve come scola
+96	2	4	3	l'acqua lieve
+96	2	3	3	l'acqua
+96	6	6	6	scola
+97	5	7	7	la beata riva
+98	1	2	1	Asperges me
+98	2	2	2	me
+99	7	7	7	io
+99	8	8	8	lo
+100	1	3	3	La bella donna
+100	5	6	6	le braccia
+101	2	3	3	la testa
+102	4	4	4	io
+102	5	6	6	l'acqua
+103	2	2	2	mi
+103	6	6	6	m'
+104	3	8	4	la danza de le quattro belle
+104	3	4	4	la danza
+104	6	8	8	le quattro belle
+105	2	2	2	ciascuna
+105	3	4	4	del braccio
+105	4	4	4	braccio
+105	5	5	5	mi
+106	1	1	1	Noi
+106	4	4	4	ninfe
+106	7	7	7	ciel
+106	9	9	9	stelle
+107	3	3	3	Beatrice
+107	6	6	6	mondo
+108	4	4	4	lei
+108	6	7	7	sue ancelle
+108	7	7	7	ancelle
+109	1	5	1	Merrenti a li occhi suoi
+109	3	5	4	li occhi suoi
+109	3	4	4	li occhi
+109	4	5	4	occhi suoi
+110	1	4	1	lume ch'è dentro
+110	1	1	1	lume
+110	6	7	7	i tuoi
+111	1	4	2	le tre di là
+111	1	2	2	le tre
+112	0	0	0	
+113	2	4	2	petto del grifon
+113	4	4	4	grifon
+113	5	5	5	seco
+114	2	2	2	Beatrice
+114	6	6	6	noi
+115	4	5	5	le viste
+116	6	7	7	li smeraldi
+117	2	2	2	Amor
+117	6	8	8	le sue armi
+118	1	6	2	Mille disiri più che fiamma caldi
+118	1	2	2	Mille disiri
+118	5	5	5	fiamma
+119	2	3	3	li occhi
+119	2	3	3	li occhi
+119	5	7	6	li occhi rilucenti
+120	4	5	5	'l grifone
+121	3	4	4	lo specchio
+121	5	6	6	il sol
+122	1	3	3	la doppia fiera
+123	3	3	3	altri
+123	6	7	7	altri reggimenti
+124	2	2	2	lettor
+124	4	4	4	io
+125	3	6	4	la cosa in sé
+125	3	4	4	la cosa
+125	6	6	6	sé
+126	3	5	4	l'idolo suo
+127	5	5	5	stupore
+128	1	3	2	l'anima mia
+128	6	7	7	quel cibo
+129	1	1	1	che
+129	4	4	4	sé
+129	4	4	4	sé
+130	1	1	1	sé
+130	4	6	6	più alto tribo
+131	2	3	3	li atti
+131	4	6	6	l'altre tre
+132	3	5	5	loro angelico caribo
+133	2	2	2	Beatrice
+133	4	6	5	li occhi santi
+134	2	4	4	la sua canzone
+134	6	7	7	tuo fedele
+135	6	7	6	passi tanti
+136	2	2	2	grazia
+136	2	2	2	grazia
+136	4	4	4	noi
+136	5	7	5	grazia che disvele
+137	2	2	2	lui
+137	3	5	4	la bocca tua
+137	4	5	4	bocca tua
+137	4	4	4	bocca
+138	1	6	3	la seconda bellezza che tu cele
+138	1	3	3	la seconda bellezza
+138	2	6	3	seconda bellezza che tu cele
+138	2	3	3	seconda bellezza
+138	3	6	3	bellezza che tu cele
+138	3	3	3	bellezza
+138	5	5	5	tu
+139	2	6	2	isplendor di viva luce etterna
+139	4	6	5	viva luce etterna
+140	1	1	1	chi
+140	6	7	7	l'ombra
+141	3	3	3	Parnaso
+141	7	8	8	sua cisterna
+142	5	7	6	la mente ingombra
+142	5	6	6	la mente
+142	6	7	6	mente ingombra
+143	4	4	4	te
+143	6	6	6	tu
+144	4	5	5	il ciel
+144	6	6	6	t'
+145	3	5	4	l'aere aperto
+145	3	4	4	l'aere
+145	6	6	6	ti

@@ -1,0 +1,355 @@
+line	start	end	head	text
+1	3	6	3	fine al suo ragionamento
+1	5	6	6	suo ragionamento
+2	1	3	3	l'alto dottore
+3	2	4	4	la mia vista
+3	6	6	6	io
+4	2	2	2	io
+4	4	5	5	nova sete
+5	2	2	2	fuor
+6	1	6	3	lo troppo dimandar ch'io fo
+6	1	3	3	lo troppo dimandar
+6	5	5	5	io
+6	7	7	7	li
+7	2	4	3	quel padre verace
+7	3	4	3	padre verace
+7	3	3	3	padre
+8	1	7	3	del timido voler che non s'apriva
+8	2	7	3	timido voler che non s'apriva
+8	2	3	3	timido voler
+8	3	3	3	voler
+9	2	3	3	di parlare
+9	3	3	3	parlare
+9	4	4	4	ardir
+10	2	2	2	io
+10	3	3	3	Maestro
+10	4	6	6	il mio veder
+10	5	6	6	mio veder
+11	3	4	4	tuo lume
+11	6	6	6	io
+12	2	4	4	la tua ragion
+12	3	4	4	tua ragion
+13	4	6	5	dolce padre caro
+14	4	4	4	amore
+15	1	3	3	ogne buono operare
+15	5	7	7	'l suo contraro
+16	4	4	4	me
+16	5	7	7	l'agute luci
+17	2	3	3	lo 'ntelletto
+18	1	8	2	l'error de' ciechi che si fanno duci
+18	4	8	4	ciechi che si fanno duci
+18	8	8	8	duci
+19	1	2	2	L'animo
+20	2	3	3	ogne cosa
+21	4	6	4	piacere in atto
+21	4	4	4	piacere
+21	6	6	6	atto
+22	1	5	2	Vostra apprensiva da esser verace
+22	1	2	2	Vostra apprensiva
+22	4	5	4	esser verace
+23	2	2	2	intenzione
+23	6	6	6	voi
+23	7	7	7	la
+24	3	4	4	l'animo
+24	6	6	6	essa
+24	7	7	7	volger
+25	6	6	6	lei
+26	1	2	2	quel piegare
+26	4	4	4	amor
+26	5	5	5	quell'
+26	7	7	7	natura
+27	3	5	3	piacer di novo
+27	3	3	3	piacer
+27	5	5	5	novo
+27	7	7	7	voi
+28	3	4	4	'l foco
+28	7	7	7	altura
+29	2	9	4	la sua forma ch'è nata a salire
+29	2	4	4	la sua forma
+29	3	4	4	sua forma
+30	5	6	6	sua matera
+31	2	4	3	l'animo preso
+31	7	7	7	disire
+32	3	4	3	moto spiritale
+33	3	5	4	la cosa amata
+34	2	2	2	ti
+34	5	5	5	quant'
+35	1	2	2	la veritate
+35	4	7	5	la gente ch'avvera
+35	4	5	5	la gente
+36	1	2	2	ciascun amore
+36	4	4	4	sé
+36	5	6	6	laudabil cosa
+37	5	7	7	la sua matera
+38	6	7	7	ciascun segno
+39	7	8	8	la cera
+40	1	8	3	Le tue parole e 'l mio seguace ingegno
+40	1	3	3	Le tue parole
+40	5	8	8	'l mio seguace ingegno
+41	2	2	2	io
+41	3	3	3	lui
+41	6	6	6	amor
+42	2	2	2	ciò
+42	7	7	7	dubbiar
+43	3	3	3	amore
+43	8	8	8	noi
+44	2	3	3	l'anima
+44	7	8	8	altro piede
+45	8	9	9	suo merto
+46	2	2	2	elli
+46	4	4	4	me
+46	5	6	6	Quanto ragion
+47	4	4	4	io
+48	3	3	3	Beatrice
+48	6	8	6	opra di fede
+48	8	8	8	fede
+49	1	3	2	Ogne forma sustanzïal
+49	2	3	2	forma sustanzïal
+49	2	2	2	forma
+49	4	4	4	che
+50	3	3	3	matera
+50	7	7	7	lei
+51	1	2	2	specifica vertute
+51	2	2	2	vertute
+51	5	5	5	sé
+52	1	2	2	la qual
+52	4	4	4	operar
+53	7	7	7	effetto
+54	3	4	4	verdi fronde
+54	6	7	6	pianta vita
+54	7	7	7	vita
+55	5	6	6	lo 'ntelletto
+56	2	4	4	le prime notizie
+56	5	5	5	omo
+57	3	4	4	primi appetibili
+57	5	6	6	l'affetto
+58	4	4	4	voi
+58	7	9	7	studio in ape
+58	7	7	7	studio
+58	9	9	9	ape
+59	3	4	4	lo mele
+59	6	8	8	questa prima voglia
+60	1	6	1	merto di lode o di biasmo
+60	1	3	1	merto di lode
+60	3	3	3	lode
+60	6	6	6	biasmo
+61	4	4	4	questa
+61	5	6	6	ogn' altra
+62	4	7	5	la virtù che consiglia
+62	4	5	5	la virtù
+63	3	8	4	l'assenso de' tener la soglia
+63	3	4	4	l'assenso
+63	6	8	6	tener la soglia
+63	7	8	8	la soglia
+64	1	1	1	Quest'
+64	3	4	4	'l principio
+64	4	4	4	principio
+65	1	5	1	ragion di meritare in voi
+65	1	1	1	ragion
+65	3	5	3	meritare in voi
+65	5	5	5	voi
+66	2	5	5	buoni e rei amori
+66	5	5	5	amori
+67	1	6	1	Color che ragionando andaro al fondo
+67	1	1	1	Color
+67	5	6	6	al fondo
+67	6	6	6	fondo
+68	4	6	6	esta innata libertate
+68	6	6	6	libertate
+69	2	2	2	moralità
+69	4	5	5	al mondo
+69	5	5	5	mondo
+70	5	5	5	necessitate
+71	2	9	3	ogne amor che dentro a voi s'accende
+71	2	3	3	ogne amor
+71	3	3	3	amor
+71	7	7	7	voi
+72	5	5	5	voi
+72	6	7	7	la podestate
+72	7	7	7	podestate
+73	1	3	3	La nobile virtù
+73	2	3	3	nobile virtù
+73	3	3	3	virtù
+73	4	4	4	Beatrice
+74	2	4	4	lo libero arbitrio
+74	3	4	4	libero arbitrio
+74	4	4	4	arbitrio
+75	2	2	2	l'
+75	5	5	5	mente
+76	1	2	2	La luna
+76	5	7	6	mezza notte tarda
+76	5	6	6	mezza notte
+76	6	7	6	notte tarda
+77	2	3	3	le stelle
+77	5	5	5	noi
+78	3	7	4	un secchion che tuttor arda
+78	3	4	4	un secchion
+79	4	5	5	'l ciel
+79	7	8	8	quelle strade
+80	2	3	3	'l sole
+80	7	9	7	quel da Roma
+80	9	9	9	Roma
+81	2	4	2	Sardi e ' Corsi
+81	2	2	2	Sardi
+81	4	4	4	Corsi
+81	5	5	5	il
+82	2	8	3	quell' ombra gentil per cui si noma
+82	2	4	3	quell' ombra gentil
+82	6	6	6	cui
+83	1	1	1	Pietola
+83	4	5	4	villa mantoana
+84	2	3	3	mio carcar
+84	6	7	7	la soma
+85	3	3	3	io
+85	5	9	6	la ragione aperta e piana
+86	2	4	4	le mie quistioni
+87	3	6	3	om che sonnolento vana
+87	3	3	3	om
+88	2	3	3	questa sonnolenza
+89	3	5	3	gente che dopo
+89	3	3	3	gente
+90	1	3	3	le nostre spalle
+90	2	3	3	nostre spalle
+90	5	5	5	noi
+91	3	3	3	Ismeno
+91	7	7	7	Asopo
+92	3	3	3	sè
+92	4	8	6	di notte furia e calca
+92	5	5	5	notte
+92	6	8	6	furia e calca
+92	6	6	6	furia
+92	8	8	8	calca
+93	3	6	4	i Teban di Bacco
+93	3	4	4	i Teban
+93	6	6	6	Bacco
+93	8	8	8	uopo
+94	1	1	1	cotal
+94	3	4	4	quel giron
+94	5	6	6	suo passo
+95	2	7	2	quel ch'io vidi di color
+95	4	4	4	io
+95	7	7	7	color
+96	1	1	1	cui
+96	2	6	3	buon volere e giusto amor
+96	2	3	3	buon volere
+96	5	6	6	giusto amor
+97	5	5	5	noi
+98	3	6	5	tutta quella turba magna
+98	4	6	5	quella turba magna
+98	5	6	5	turba magna
+98	5	5	5	turba
+99	2	2	2	due
+100	1	1	1	Maria
+100	4	4	4	fretta
+100	6	7	7	la montagna
+101	2	2	2	Cesare
+101	5	5	5	Ilerda
+102	2	2	2	Marsilia
+102	7	7	7	Ispagna
+103	4	5	5	'l tempo
+104	2	3	3	poco amor
+104	5	6	6	li altri
+105	2	6	2	studio di ben far grazia
+105	4	6	5	ben far grazia
+105	6	6	6	grazia
+106	1	2	2	O gente
+106	2	2	2	gente
+106	5	6	5	fervore aguto
+106	5	5	5	fervore
+107	3	5	3	negligenza e indugio
+107	3	3	3	negligenza
+107	5	5	5	indugio
+108	2	2	2	voi
+108	4	8	4	tepidezza in ben far messo
+108	4	4	4	tepidezza
+108	6	8	8	ben far messo
+108	6	7	7	ben far
+109	1	3	1	questi che vive
+109	1	1	1	questi
+109	6	6	6	i'
+110	6	7	7	'l sol
+111	7	8	8	il pertugio
+112	1	1	1	Parole
+112	3	6	3	queste del mio duca
+112	5	6	6	mio duca
+113	2	5	2	un di quelli spirti
+113	4	5	5	quelli spirti
+114	2	2	2	retro
+114	4	4	4	noi
+114	7	8	8	la buca
+115	1	1	1	Noi
+115	4	6	4	voglia a muoverci
+115	4	4	4	voglia
+116	2	2	2	restar
+117	2	3	2	villania nostra
+117	2	2	2	villania
+117	4	4	4	giustizia
+118	1	1	1	Io
+118	3	3	3	abate
+118	5	6	6	San Zeno
+118	8	8	8	Verona
+119	2	6	3	lo 'mperio del buon Barbarossa
+119	2	3	3	lo 'mperio
+119	4	6	6	del buon Barbarossa
+119	5	6	6	buon Barbarossa
+120	2	2	2	cui
+120	5	5	5	Milan
+121	2	2	2	tale
+121	5	7	7	l'un piè
+121	9	10	10	la fossa
+122	4	5	5	quel monastero
+123	7	7	7	possa
+124	2	3	3	suo figlio
+124	4	7	4	mal del corpo intero
+124	6	7	6	corpo intero
+125	3	4	4	la mente
+125	7	7	7	che
+126	4	8	4	loco di suo pastor vero
+126	4	4	4	loco
+126	6	8	7	suo pastor vero
+127	1	1	1	Io
+127	9	9	9	ei
+128	7	7	7	noi
+129	2	2	2	questo
+129	6	6	6	mi
+130	2	9	2	quei che m'era ad ogne uopo soccorso
+130	2	2	2	quei
+130	7	8	8	ogne uopo
+130	8	8	8	uopo
+131	5	5	5	due
+132	4	7	5	l'accidïa di morso
+132	4	5	5	l'accidïa
+132	7	7	7	morso
+133	2	4	2	retro a tutti
+133	2	2	2	retro
+133	4	4	4	tutti
+134	2	9	3	la gente a cui il mar s'aperse
+134	2	3	3	la gente
+134	6	7	7	il mar
+135	3	3	3	Iordan
+135	4	6	5	le rede sue
+136	2	7	2	quella che l'affanno non sofferse
+136	4	5	5	l'affanno
+137	3	4	4	la fine
+137	6	8	6	figlio d'Anchise
+137	8	8	8	Anchise
+138	1	2	1	sé stessa
+138	4	6	4	vita sanza gloria
+138	6	6	6	gloria
+139	5	5	5	noi
+140	1	2	2	quell' ombre
+140	2	2	2	ombre
+141	1	2	2	novo pensiero
+141	2	2	2	pensiero
+141	5	5	5	me
+142	2	2	2	qual
+142	3	4	4	più altri
+142	4	4	4	altri
+142	7	7	7	diversi
+143	4	4	4	uno
+143	6	6	6	altro
+144	2	3	3	li occhi
+144	3	3	3	occhi
+144	5	5	5	vaghezza
+145	2	3	3	'l pensamento
+145	5	5	5	sogno

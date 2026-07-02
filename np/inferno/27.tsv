@@ -1,0 +1,339 @@
+line	start	end	head	text
+1	6	7	7	la fiamma
+2	8	8	8	noi
+3	2	6	3	la licenza del dolce poeta
+3	2	3	3	la licenza
+3	3	6	3	licenza del dolce poeta
+3	5	6	6	dolce poeta
+4	2	3	3	un'altra
+4	7	7	7	lei
+5	4	5	5	li occhi
+5	7	9	9	la sua cima
+6	2	4	4	un confuso suon
+7	2	7	3	'l bue cicilian che mugghiò prima
+7	2	4	3	'l bue cicilian
+7	3	4	3	bue cicilian
+8	2	4	2	pianto di colui
+8	4	4	4	colui
+8	6	6	6	ciò
+9	2	2	2	l'
+9	6	7	7	sua lima
+10	3	7	4	la voce de l'afflitto
+10	3	4	4	la voce
+10	4	7	4	voce de l'afflitto
+10	6	7	7	l'afflitto
+11	4	4	4	tutto
+11	8	8	8	rame
+12	2	2	2	el
+12	5	5	5	dolor
+13	5	7	5	via né forame
+13	5	5	5	via
+13	7	7	7	forame
+14	2	4	2	principio nel foco
+14	2	2	2	principio
+14	4	4	4	foco
+14	6	7	7	suo linguaggio
+15	3	5	4	le parole grame
+16	6	7	7	lor vïaggio
+17	3	4	4	la punta
+17	6	7	7	quel guizzo
+18	4	5	5	la lingua
+18	7	8	8	lor passaggio
+19	4	4	4	tu
+19	6	6	6	cu'
+20	1	2	2	la voce
+20	7	7	7	lombardo
+21	2	2	2	Istra
+22	2	2	2	io
+23	2	2	2	t'
+23	4	7	4	restare a parlar meco
+23	6	7	6	parlar meco
+23	7	7	7	meco
+24	6	6	6	me
+25	2	2	2	tu
+25	6	8	7	questo mondo cieco
+25	7	8	7	mondo cieco
+25	7	7	7	mondo
+26	4	6	6	quella dolce terra
+26	5	6	6	dolce terra
+26	6	6	6	terra
+27	3	3	3	io
+27	4	6	5	mia colpa tutta
+27	5	6	5	colpa tutta
+27	5	5	5	colpa
+28	3	3	3	Romagnuoli
+28	5	7	5	pace o guerra
+28	5	5	5	pace
+28	7	7	7	guerra
+29	2	2	2	io
+29	5	6	6	i monti
+29	9	9	9	Orbino
+30	2	8	3	'l giogo di che Tever si diserra
+30	2	3	3	'l giogo
+30	6	6	6	Tever
+31	1	1	1	Io
+32	2	4	4	il mio duca
+32	3	4	4	mio duca
+32	5	5	5	mi
+32	8	8	8	costa
+33	3	3	3	tu
+33	4	4	4	questi
+33	6	6	6	latino
+34	2	2	2	io
+34	7	8	8	la risposta
+35	2	2	2	indugio
+36	2	7	2	anima che se' là giù nascosta
+36	2	2	2	anima
+37	1	2	1	Romagna tua
+38	2	7	2	guerra ne' cuor de' suoi tiranni
+38	4	7	4	cuor de' suoi tiranni
+38	6	7	7	suoi tiranni
+39	3	3	3	palese
+39	4	4	4	nessuna
+40	1	1	1	Ravenna
+40	6	7	7	molt' anni
+41	1	4	2	l'aguglia da Polenta
+41	1	2	2	l'aguglia
+41	4	4	4	Polenta
+42	3	3	3	Cervia
+42	6	7	7	suoi vanni
+43	1	8	2	La terra che fé già la lunga prova
+43	1	2	2	La terra
+43	6	8	8	la lunga prova
+44	2	5	5	di Franceschi sanguinoso mucchio
+44	3	3	3	Franceschi
+44	4	5	5	sanguinoso mucchio
+45	2	4	3	le branche verdi
+46	2	4	3	'l mastin vecchio
+46	6	9	7	'l nuovo da Verrucchio
+46	6	7	7	'l nuovo
+46	9	9	9	Verrucchio
+47	4	4	4	Montagna
+47	5	7	7	il mal governo
+48	5	8	8	d'i denti succhio
+48	6	7	7	i denti
+48	8	8	8	succhio
+49	1	7	2	Le città di Lamone e di Santerno
+49	4	4	4	Lamone
+49	7	7	7	Santerno
+50	2	3	3	il lïoncel
+50	4	6	5	dal nido bianco
+50	5	6	5	nido bianco
+51	3	8	3	parte da la state al verno
+51	3	3	3	parte
+51	4	6	6	da la state
+51	5	6	6	la state
+51	7	8	8	al verno
+51	8	8	8	verno
+52	2	2	2	quella
+52	4	5	5	il Savio
+52	7	8	8	il fianco
+53	3	3	3	ella
+53	6	10	7	'l piano e 'l monte
+53	6	7	7	'l piano
+53	9	10	10	'l monte
+54	2	2	2	tirannia
+54	6	7	6	stato franco
+55	2	3	2	chi se'
+55	2	2	2	chi
+55	3	3	3	se'
+55	4	4	4	ti
+55	7	7	7	ne
+56	6	6	6	altri
+57	2	4	3	'l nome tuo
+57	3	3	3	nome
+57	6	6	6	mondo
+57	8	8	8	fronte
+58	3	4	4	'l foco
+59	2	3	2	modo suo
+59	4	6	6	l'aguta punta
+60	2	2	2	qua
+60	4	4	4	là
+60	8	9	9	cotal fiato
+61	2	2	2	i'
+61	5	6	6	mia risposta
+62	2	7	2	persona che mai tornasse al mondo
+62	2	2	2	persona
+62	6	7	7	al mondo
+62	7	7	7	mondo
+63	1	2	2	questa fiamma
+63	5	6	6	più scosse
+64	7	8	8	questo fondo
+65	4	4	4	alcun
+65	6	6	6	i'
+65	8	9	9	il vero
+66	2	4	2	tema d'infamia
+66	4	4	4	infamia
+66	5	5	5	ti
+67	1	1	1	Io
+67	3	5	3	uom d'arme
+67	5	5	5	arme
+67	9	9	9	cordigliero
+68	5	5	5	ammenda
+69	3	5	4	il creder mio
+69	4	5	4	creder mio
+70	4	6	6	il gran prete
+70	8	8	8	cui
+71	2	2	2	mi
+71	5	7	7	le prime colpe
+72	7	7	7	m'
+73	3	3	3	io
+73	4	4	4	forma
+73	7	7	7	ossa
+73	10	10	10	polpe
+74	1	1	1	che
+74	2	3	3	la madre
+74	3	3	3	madre
+74	4	4	4	mi
+74	6	8	7	l'opere mie
+74	7	7	7	opere
+75	5	6	6	di volpe
+75	6	6	6	volpe
+76	1	6	2	Li accorgimenti e le coperte vie
+76	1	2	2	Li accorgimenti
+76	4	6	6	le coperte vie
+77	1	1	1	io
+77	3	3	3	tutte
+77	7	8	8	lor arte
+78	3	6	3	fine de la terra
+78	5	6	6	la terra
+78	7	8	8	il suono
+79	2	2	2	mi
+79	6	7	7	quella parte
+80	2	3	3	mia etade
+80	5	5	5	ciascun
+81	2	3	3	le vele
+81	6	7	7	le sarte
+82	1	5	1	ciò che pria mi piacëa
+82	1	1	1	ciò
+82	4	4	4	mi
+83	5	5	5	mi
+84	2	3	2	miser lasso
+84	2	2	2	miser
+84	3	3	3	lasso
+85	1	6	2	Lo principe d'i novi Farisei
+85	4	6	6	i novi Farisei
+86	2	2	2	guerra
+86	5	5	5	Laterano
+87	4	4	4	Saracin
+87	7	7	7	Giudei
+88	2	4	4	ciascun suo nimico
+88	6	6	6	cristiano
+89	2	2	2	nessun
+89	7	7	7	Acri
+90	2	6	2	mercatante in terra di Soldano
+90	2	2	2	mercatante
+90	4	6	4	terra di Soldano
+90	6	6	6	Soldano
+91	2	3	3	sommo officio
+91	5	6	5	ordini sacri
+92	3	3	3	sé
+92	6	6	6	me
+92	7	8	8	quel capestro
+93	4	8	6	i suoi cinti più macri
+93	5	8	6	suoi cinti più macri
+93	6	8	6	cinti più macri
+93	6	6	6	cinti
+94	3	3	3	Costantin
+94	5	5	5	Silvestro
+95	3	3	3	Siratti
+95	7	8	8	la lebbre
+96	4	4	4	questi
+96	6	6	6	maestro
+97	4	7	7	la sua superba febbre
+97	5	7	7	sua superba febbre
+97	6	7	7	superba febbre
+97	7	7	7	febbre
+98	2	2	2	consiglio
+98	4	4	4	io
+99	2	4	4	le sue parole
+99	3	4	4	sue parole
+99	4	4	4	parole
+100	4	5	5	Tuo cuor
+100	5	5	5	cuor
+101	2	2	2	t'
+101	5	5	5	tu
+101	6	6	6	m'
+102	3	3	3	Penestrino
+102	5	5	5	terra
+103	1	2	2	Lo ciel
+103	4	4	4	io
+104	2	2	2	tu
+104	6	6	6	due
+104	7	8	8	le chiavi
+105	2	4	4	'l mio antecessor
+105	3	4	4	mio antecessor
+106	4	6	5	li argomenti gravi
+106	5	6	5	argomenti gravi
+107	3	4	4	'l tacer
+107	8	9	9	'l peggio
+108	3	3	3	Padre
+108	6	6	6	tu
+109	2	8	3	quel peccato ov' io mo cader deggio
+109	2	3	3	quel peccato
+109	5	5	5	io
+110	1	6	2	lunga promessa con l'attender corto
+110	1	2	2	lunga promessa
+110	4	6	5	l'attender corto
+111	1	1	1	ti
+111	5	7	7	l'alto seggio
+112	1	1	1	Francesco
+112	5	5	5	io
+113	2	2	2	me
+113	4	8	4	un d'i neri cherubini
+113	6	8	8	i neri cherubini
+113	7	8	8	neri cherubini
+114	1	1	1	li
+114	6	6	6	mi
+114	8	8	8	torto
+115	7	8	8	miei meschini
+115	8	8	8	meschini
+116	3	5	4	'l consiglio frodolente
+116	4	5	4	consiglio frodolente
+116	4	4	4	consiglio
+117	2	2	2	quale
+117	8	9	9	a' crini
+117	9	9	9	crini
+118	6	9	6	chi non si pente
+118	6	6	6	chi
+119	2	4	2	pentere e volere
+119	2	2	2	pentere
+119	4	4	4	volere
+120	2	6	3	la contradizion che nol consente
+120	2	3	3	la contradizion
+120	5	5	5	nol
+121	2	3	2	me dolente
+121	2	2	2	me
+121	5	5	5	mi
+122	2	2	2	mi
+123	1	1	1	tu
+123	5	5	5	io
+124	2	2	2	Minòs
+124	6	6	6	quelli
+125	1	2	2	otto volte
+125	3	4	4	la coda
+125	6	7	6	dosso duro
+126	5	6	6	gran rabbia
+126	7	7	7	la
+127	2	2	2	Questi
+127	5	9	6	i rei del foco furo
+127	6	9	6	rei del foco furo
+127	8	9	8	foco furo
+128	3	3	3	io
+129	5	5	5	mi
+130	2	2	2	elli
+130	4	8	6	'l suo dir così compiuto
+130	4	6	6	'l suo dir
+131	1	2	2	la fiamma
+132	4	6	5	'l corno aguto
+133	1	1	1	Noi
+133	5	5	5	io
+133	7	9	8	'l duca mio
+133	8	9	8	duca mio
+134	3	4	4	lo scoglio
+134	8	10	10	l'altr' arco
+135	3	4	4	'l fosso
+135	9	10	10	il fio
+136	2	6	2	quei che scommettendo acquistan carco
+136	2	2	2	quei
+136	6	6	6	carco

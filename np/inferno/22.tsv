@@ -1,0 +1,370 @@
+line	start	end	head	text
+1	1	1	1	Io
+1	4	4	4	cavalier
+1	6	6	6	campo
+2	3	3	3	stormo
+2	6	7	7	lor mostra
+2	7	7	7	mostra
+3	5	6	6	loro scampo
+3	6	6	6	scampo
+4	1	1	1	corridor
+4	4	6	5	la terra vostra
+4	5	6	5	terra vostra
+4	5	5	5	terra
+5	2	2	2	Aretini
+5	5	6	6	gir gualdane
+5	6	6	6	gualdane
+6	1	2	2	fedir torneamenti
+6	2	2	2	torneamenti
+6	4	5	5	correr giostra
+6	5	5	5	giostra
+7	3	3	3	trombe
+7	7	7	7	campane
+8	2	2	2	tamburi
+8	5	7	5	cenni di castella
+8	7	7	7	castella
+9	3	4	3	cose nostrali
+9	7	7	7	istrane
+10	4	6	6	sì diversa cennamella
+10	6	6	6	cennamella
+11	1	1	1	cavalier
+11	5	5	5	pedoni
+12	2	9	2	nave a segno di terra o di stella
+12	4	9	4	segno di terra o di stella
+12	6	6	6	terra
+12	9	9	9	stella
+13	1	1	1	Noi
+13	4	6	6	li diece demoni
+14	2	3	3	fiera compagnia
+14	6	7	7	la chiesa
+15	1	2	2	coi santi
+15	5	5	5	taverna
+15	6	7	7	coi ghiottoni
+16	3	4	4	la pegola
+16	6	8	8	la mia 'ntesa
+17	3	7	7	de la bolgia ogne contegno
+17	4	5	5	la bolgia
+17	6	7	7	ogne contegno
+18	3	9	4	la gente ch'entro v'era incesa
+18	3	4	4	la gente
+19	2	3	3	i dalfini
+19	6	6	6	segno
+20	1	2	2	a' marinar
+20	4	8	5	l'arco de la schiena
+20	4	5	5	l'arco
+20	7	8	8	la schiena
+21	6	7	7	lor legno
+22	5	6	6	la pena
+23	2	4	2	alcun de' peccatori
+23	2	2	2	alcun
+23	4	4	4	peccatori
+23	5	6	6	'l dosso
+24	4	7	4	men che non balena
+24	4	4	4	men
+25	4	11	5	l'orlo de l'acqua d'un fosso
+25	4	8	5	l'orlo de l'acqua
+25	4	5	5	l'orlo
+25	7	11	8	l'acqua d'un fosso
+25	7	8	8	l'acqua
+25	10	11	11	un fosso
+26	2	3	3	i ranocchi
+26	5	6	6	col muso
+27	4	5	5	i piedi
+27	7	9	9	l'altro grosso
+28	4	5	5	ogne parte
+28	6	7	7	i peccatori
+29	5	5	5	Barbariccia
+30	5	6	6	i bollori
+31	5	6	6	il cor
+32	1	2	2	uno aspettar
+32	2	2	2	aspettar
+32	5	5	5	elli
+33	2	3	3	una rana
+33	6	7	7	l'altra
+34	2	2	2	Graffiacan
+34	3	3	3	che
+34	4	4	4	li
+34	8	8	8	contra
+35	1	1	1	li
+35	3	5	5	le 'mpegolate chiome
+35	4	5	5	'mpegolate chiome
+35	5	5	5	chiome
+36	5	5	5	mi
+36	7	8	8	una lontra
+36	8	8	8	lontra
+37	1	1	1	I'
+37	5	8	8	tutti quanti 'l nome
+37	5	6	5	tutti quanti
+37	7	8	8	'l nome
+38	2	2	2	li
+39	4	4	4	e'
+40	2	2	2	Rubicante
+40	5	5	5	tu
+41	1	4	2	li unghioni a dosso
+41	1	2	2	li unghioni
+41	4	4	4	dosso
+41	7	7	7	tu
+41	8	8	8	lo
+42	2	2	2	tutti
+42	4	5	5	i maladetti
+43	2	2	2	io
+43	3	4	3	Maestro mio
+43	7	7	7	tu
+44	2	2	2	tu
+44	4	4	4	chi
+44	6	7	7	lo sciagurato
+45	3	7	3	man de li avversari suoi
+45	5	7	6	li avversari suoi
+46	1	3	2	Lo duca mio
+47	3	3	3	ei
+47	6	6	6	quei
+48	1	1	1	I'
+48	4	6	4	regno di Navarra
+48	6	6	6	Navarra
+49	1	2	2	Mia madre
+49	4	7	4	servo d'un segnor
+49	6	7	7	un segnor
+49	8	8	8	mi
+50	2	2	2	m'
+50	6	7	7	un ribaldo
+51	1	7	1	distruggitor di sé e di sue cose
+51	3	3	3	sé
+51	6	7	7	sue cose
+52	3	7	3	famiglia del buon re Tebaldo
+52	5	7	6	buon re Tebaldo
+52	6	7	6	re Tebaldo
+52	7	7	7	Tebaldo
+53	2	2	2	mi
+53	6	6	6	baratteria
+54	3	3	3	io
+54	5	5	5	ragione
+54	7	8	8	questo caldo
+55	2	2	2	Cirïatto
+55	6	6	6	bocca
+56	2	3	3	ogne parte
+56	4	8	5	una sanna come a porco
+56	4	5	5	una sanna
+56	8	8	8	porco
+57	5	6	6	l'una
+58	2	3	3	male gatte
+58	6	7	7	'l sorco
+59	2	2	2	Barbariccia
+59	3	3	3	il
+59	6	7	7	le braccia
+60	7	7	7	io
+60	8	8	8	lo
+61	3	4	3	maestro mio
+61	6	7	7	la faccia
+62	0	0	0	
+63	3	3	3	lui
+63	6	6	6	altri
+63	7	7	7	'l
+64	1	2	2	Lo duca
+64	7	9	9	li altri rii
+65	2	2	2	tu
+65	3	6	3	alcun che sia latino
+65	3	3	3	alcun
+66	2	3	3	la pece
+66	5	5	5	quelli
+66	6	6	6	I'
+67	1	1	1	poco
+67	4	9	4	un che fu di là vicino
+67	5	5	5	che
+68	3	3	3	io
+68	6	6	6	lui
+69	2	2	2	i'
+69	5	7	5	unghia né uncino
+69	5	5	5	unghia
+69	7	7	7	uncino
+70	2	2	2	Libicocco
+71	4	5	5	'l braccio
+71	6	7	7	col runciglio
+72	6	7	7	un lacerto
+73	1	1	1	Draghignazzo
+73	3	3	3	i
+73	7	7	7	piglio
+74	3	4	4	le gambe
+74	4	4	4	gambe
+74	6	8	7	'l decurio loro
+74	7	8	7	decurio loro
+74	7	7	7	decurio
+75	6	7	7	mal piglio
+75	7	7	7	piglio
+76	2	2	2	elli
+76	3	4	4	un poco
+77	2	2	2	lui
+77	6	7	7	sua ferita
+78	2	4	3	'l duca mio
+78	6	6	6	dimoro
+79	1	1	1	Chi
+79	3	3	3	colui
+79	6	7	7	mala partita
+80	7	7	7	proda
+81	2	2	2	ei
+81	5	6	6	frate Gomita
+82	1	3	1	quel di Gallura
+82	3	3	3	Gallura
+82	4	7	4	vasel d'ogne froda
+82	6	7	7	ogne froda
+83	3	7	4	i nemici di suo donno
+83	3	4	4	i nemici
+83	4	7	4	nemici di suo donno
+83	6	7	7	suo donno
+83	9	9	9	mano
+84	4	4	4	lor
+84	6	6	6	ciascun
+85	1	1	1	Danar
+86	3	3	3	e'
+86	7	9	9	li altri offici
+87	1	1	1	barattier
+87	4	4	4	picciol
+87	6	6	6	sovrano
+88	3	3	3	esso
+88	4	6	4	donno Michel Zanche
+88	5	6	6	Michel Zanche
+89	2	2	2	Logodoro
+89	5	7	5	dir di Sardigna
+89	7	7	7	Sardigna
+90	1	3	2	le lingue lor
+90	2	3	2	lingue lor
+90	2	2	2	lingue
+91	3	6	4	l'altro che digrigna
+91	3	4	4	l'altro
+92	1	1	1	i'
+92	1	1	1	i'
+92	8	8	8	ello
+93	6	7	7	la tigna
+94	2	4	4	'l gran proposto
+94	7	7	7	Farfarello
+95	3	4	4	li occhi
+95	6	6	6	fedire
+96	4	4	4	costà
+96	5	6	6	malvagio uccello
+97	2	2	2	voi
+98	2	3	3	lo spaürato
+99	1	3	3	Toschi o Lombardi
+99	1	1	1	Toschi
+99	3	3	3	Lombardi
+99	4	4	4	io
+99	5	5	5	ne
+100	3	4	4	i Malebranche
+100	5	6	6	un poco
+100	8	8	8	cesso
+101	3	3	3	ei
+101	7	9	9	le lor vendette
+101	8	9	9	lor vendette
+102	2	2	2	io
+102	5	7	6	questo loco stesso
+103	2	5	2	un ch'io son
+103	4	4	4	io
+103	9	9	9	sette
+104	2	2	2	io
+104	6	7	7	nostro uso
+104	7	7	7	uso
+105	6	6	6	alcun
+106	1	1	1	Cagnazzo
+106	3	4	4	cotal motto
+106	6	7	7	'l muso
+107	2	3	3	'l capo
+107	7	7	7	malizia
+108	2	2	2	elli
+109	2	2	2	ei
+109	5	8	5	lacciuoli a gran divizia
+109	7	8	8	gran divizia
+110	4	4	4	io
+111	2	2	2	io
+111	5	7	7	mia maggior trestizia
+112	1	1	1	Alichin
+112	3	3	3	si
+112	7	7	7	rintoppo
+113	2	3	3	li altri
+113	3	3	3	altri
+113	6	6	6	lui
+113	8	8	8	tu
+113	9	9	9	ti
+114	1	1	1	io
+114	3	3	3	ti
+114	7	7	7	gualoppo
+115	4	5	5	la pece
+115	6	7	7	l'ali
+116	2	3	3	'l collo
+116	6	7	7	la ripa
+116	8	8	8	scudo
+117	4	5	4	tu sol
+117	4	4	4	tu
+117	8	8	8	noi
+118	2	4	2	tu che leggi
+118	2	2	2	tu
+118	6	7	7	nuovo ludo
+118	7	7	7	ludo
+119	1	1	1	ciascun
+119	3	5	5	l'altra costa
+119	5	5	5	costa
+119	6	7	7	li occhi
+119	7	7	7	occhi
+120	1	1	1	quel
+120	5	5	5	ciò
+121	1	2	2	Lo Navarrese
+121	4	5	5	suo tempo
+122	2	3	3	le piante
+122	5	5	5	terra
+122	8	9	9	un punto
+123	4	5	4	proposto lor
+123	5	5	5	lor
+124	3	3	3	ciascun
+124	5	5	5	colpa
+125	2	2	2	quei
+125	5	5	5	cagion
+125	7	8	8	del difetto
+125	8	8	8	difetto
+126	6	6	6	Tu
+127	3	3	3	i
+127	6	7	7	l'ali
+127	8	9	9	al sospetto
+128	4	4	4	quelli
+129	2	2	2	quei
+129	6	7	7	il petto
+130	3	6	4	l'anitra di botto
+130	3	4	4	l'anitra
+130	6	6	6	botto
+131	2	3	3	'l falcon
+132	2	2	2	ei
+133	1	5	2	Irato Calcabrina de la buffa
+133	2	5	2	Calcabrina de la buffa
+133	2	2	2	Calcabrina
+133	4	5	5	la buffa
+134	3	3	3	li
+135	2	2	2	quei
+135	6	7	7	la zuffa
+136	3	4	4	'l barattier
+137	3	4	4	li artigli
+137	6	7	7	suo compagno
+138	4	4	4	lui
+138	6	7	7	'l fosso
+139	2	3	3	l'altro
+139	6	7	6	sparvier grifagno
+140	4	4	4	lui
+140	6	6	6	amendue
+141	3	6	3	mezzo del bogliente stagno
+141	5	6	6	bogliente stagno
+142	1	3	3	Lo caldo sghermitor
+143	4	4	4	levarsi
+143	6	6	6	neente
+144	4	6	5	l'ali sue
+145	1	1	1	Barbariccia
+145	3	5	4	li altri suoi
+145	3	4	4	li altri
+145	4	5	4	altri suoi
+145	5	5	5	suoi
+146	1	1	1	quattro
+146	2	2	2	ne
+146	6	8	8	l'altra costa
+146	7	8	8	altra costa
+147	2	4	4	tutt' i raffi
+147	3	4	4	i raffi
+148	7	8	8	la posta
+149	2	3	3	li uncini
+149	5	6	6	li 'mpaniati
+150	7	8	8	la crosta
+151	2	2	2	noi
+151	4	4	4	lor

@@ -1,0 +1,403 @@
+line	start	end	head	text
+1	2	2	2	Padre
+1	4	4	4	Figlio
+1	6	8	7	lo Spirito Santo
+1	7	8	7	Spirito Santo
+1	7	7	7	Spirito
+2	2	2	2	gloria
+2	3	5	5	tutto 'l paradiso
+2	4	5	5	'l paradiso
+2	5	5	5	paradiso
+3	5	7	7	il dolce canto
+3	6	7	7	dolce canto
+3	7	7	7	canto
+4	1	4	1	Ciò ch'io vedeva
+4	1	1	1	Ciò
+4	3	3	3	io
+4	7	8	8	un riso
+5	2	3	3	l'universo
+5	6	7	7	mia ebbrezza
+6	3	4	4	l'udire
+6	7	8	8	lo viso
+7	2	2	2	gioia
+7	4	5	5	ineffabile allegrezza
+7	5	5	5	allegrezza
+8	2	8	2	vita intègra d'amore e di pace
+8	2	3	2	vita intègra
+8	2	2	2	vita
+8	5	5	5	amore
+8	8	8	8	pace
+9	2	5	5	sanza brama sicura ricchezza
+9	3	3	3	brama
+9	4	5	5	sicura ricchezza
+9	5	5	5	ricchezza
+10	3	5	4	li occhi miei
+10	3	4	4	li occhi
+10	4	5	4	occhi miei
+10	4	4	4	occhi
+10	6	8	8	le quattro face
+10	7	8	8	quattro face
+10	8	8	8	face
+11	4	7	4	quella che pria venne
+11	4	4	4	quella
+12	4	5	5	più vivace
+12	5	5	5	vivace
+13	2	2	2	tal
+13	4	6	5	la sembianza sua
+14	3	3	3	Iove
+14	5	7	7	elli e Marte
+14	5	5	5	elli
+14	7	7	7	Marte
+15	2	2	2	augelli
+15	5	5	5	penne
+16	1	2	2	La provedenza
+17	1	3	1	vice e officio
+17	1	1	1	vice
+17	3	3	3	officio
+17	5	6	6	beato coro
+18	1	2	1	silenzio posto
+18	5	6	6	ogne parte
+19	2	2	2	ïo
+19	5	5	5	io
+20	6	6	6	io
+21	3	4	4	tutti costoro
+21	4	4	4	costoro
+22	1	8	1	Quelli ch'usurpa in terra il luogo mio
+22	1	1	1	Quelli
+22	5	5	5	terra
+22	6	8	7	il luogo mio
+23	1	3	2	il luogo mio
+23	1	3	2	il luogo mio
+23	4	8	5	il luogo mio, che vaca
+24	2	7	3	la presenza del Figliuol di Dio
+24	5	7	5	Figliuol di Dio
+24	7	7	7	Dio
+25	4	5	4	cimitero mio
+25	4	4	4	cimitero
+25	6	6	6	cloaca
+26	2	2	2	sangue
+26	5	6	6	la puzza
+26	6	6	6	puzza
+26	8	9	9	'l perverso
+26	9	9	9	perverso
+27	1	1	1	che
+28	2	8	3	quel color che per lo sole avverso
+28	2	3	3	quel color
+28	6	8	7	lo sole avverso
+29	1	1	1	nube
+29	4	4	4	sera
+29	7	7	7	mane
+30	2	2	2	ïo
+30	4	7	6	tutto 'l ciel cosperso
+30	5	7	6	'l ciel cosperso
+30	5	6	6	'l ciel
+31	3	6	3	donna onesta che permane
+31	3	4	3	donna onesta
+31	3	3	3	donna
+32	2	2	2	sé
+32	6	8	8	l'altrui fallanza
+32	8	8	8	fallanza
+33	4	4	4	si
+34	2	2	2	Beatrice
+34	4	4	4	sembianza
+35	2	3	3	tale eclissi
+35	3	3	3	eclissi
+35	7	7	7	ciel
+36	3	5	5	la supprema possanza
+36	4	5	5	supprema possanza
+36	5	5	5	possanza
+37	3	5	4	le parole sue
+38	2	6	2	voce tanto da sé trasmutata
+38	5	5	5	sé
+39	2	3	3	la sembianza
+39	5	5	5	si
+40	3	6	4	la sposa di Cristo
+40	6	6	6	Cristo
+41	2	3	2	sangue mio
+41	5	5	5	Lin
+41	7	9	7	quel di Cleto
+41	9	9	9	Cleto
+42	4	6	4	acquisto d'oro
+42	6	6	6	oro
+43	3	7	3	acquisto d'esto viver lieto
+43	5	7	6	esto viver lieto
+43	6	7	6	viver lieto
+44	2	2	2	Sisto
+44	4	4	4	Pïo
+44	6	6	6	Calisto
+44	8	8	8	Urbano
+45	2	3	3	lo sangue
+45	5	6	6	molto fleto
+46	3	4	4	nostra intenzion
+46	7	8	8	destra mano
+47	1	5	5	d'i nostri successor parte
+47	2	4	4	i nostri successor
+47	3	4	4	nostri successor
+47	5	5	5	parte
+48	1	7	1	parte da l'altra del popol cristiano
+48	1	1	1	parte
+48	3	7	4	l'altra del popol cristiano
+48	3	4	4	l'altra
+48	6	7	6	popol cristiano
+49	3	8	4	le chiavi che mi fuor concesse
+49	3	4	4	le chiavi
+49	6	6	6	mi
+50	2	2	2	signaculo
+50	4	4	4	vessillo
+51	3	3	3	battezzati
+52	3	3	3	io
+52	5	7	5	figura di sigillo
+52	7	7	7	sigillo
+53	2	5	2	privilegi venduti e mendaci
+54	2	2	2	io
+55	2	4	2	vesta di pastor
+55	4	4	4	pastor
+55	5	6	5	lupi rapaci
+56	7	9	9	tutti i paschi
+56	8	9	9	i paschi
+57	2	4	2	difesa di Dio
+57	4	4	4	Dio
+58	2	3	2	sangue nostro
+58	2	2	2	sangue
+58	4	6	4	Caorsini e Guaschi
+58	4	4	4	Caorsini
+58	6	6	6	Guaschi
+59	4	4	4	bere
+59	6	7	7	buon principio
+59	7	7	7	principio
+60	2	4	4	che vil fine
+60	3	4	4	vil fine
+60	4	4	4	fine
+60	7	7	7	tu
+61	2	4	4	l'alta provedenza
+61	4	4	4	provedenza
+61	7	7	7	Scipio
+62	3	3	3	Roma
+62	4	7	5	la gloria del mondo
+62	4	5	5	la gloria
+62	5	7	5	gloria del mondo
+62	5	5	5	gloria
+62	6	7	7	del mondo
+62	7	7	7	mondo
+63	5	5	5	io
+64	2	2	2	tu
+64	3	3	3	figliuol
+64	6	8	8	lo mortal pondo
+65	5	6	6	la bocca
+66	4	8	4	quel ch'io non ascondo
+66	6	6	6	io
+67	4	6	6	vapor gelati fiocca
+67	4	5	4	vapor gelati
+67	4	4	4	vapor
+67	6	6	6	fiocca
+68	3	5	4	l'aere nostro
+68	3	4	4	l'aere
+68	4	5	4	aere nostro
+68	4	4	4	aere
+68	7	8	8	'l corno
+68	8	8	8	corno
+69	2	5	3	la capra del ciel
+69	2	3	3	la capra
+69	3	5	3	capra del ciel
+69	3	3	3	capra
+69	5	5	5	ciel
+69	7	7	7	sol
+70	4	4	4	io
+70	6	8	7	l'etera addorno
+70	6	7	7	l'etera
+71	5	6	5	vapor trïunfanti
+72	5	5	5	noi
+72	6	7	7	quivi soggiorno
+73	1	3	2	Lo viso mio
+73	5	7	7	i suoi sembianti
+74	5	6	6	'l mezzo
+74	8	9	9	lo molto
+75	3	7	4	il trapassar del più avanti
+75	6	7	7	più avanti
+76	2	3	3	la donna
+77	2	5	3	l'attendere in sù
+77	2	3	3	l'attendere
+78	1	2	2	il viso
+79	2	8	3	l'ora ch'ïo avea guardato prima
+79	2	3	3	l'ora
+79	5	5	5	ïo
+80	1	1	1	i'
+80	4	4	4	me
+80	6	8	8	tutto l'arco
+80	7	8	8	l'arco
+81	4	4	4	mezzo
+81	6	6	6	fine
+81	7	9	9	il primo clima
+82	3	3	3	io
+82	8	8	8	Gade
+82	9	10	10	il varco
+83	3	3	3	Ulisse
+83	8	9	9	il lito
+84	2	2	2	qual
+84	5	5	5	Europa
+84	6	7	7	dolce carco
+85	6	7	7	il sito
+86	2	3	3	questa aiuola
+86	5	6	6	'l sol
+87	2	4	4	i mie' piedi
+87	5	9	6	un segno e più partito
+87	5	6	6	un segno
+88	1	3	2	La mente innamorata
+89	2	4	4	la mia donna
+90	2	2	2	essa
+90	3	4	4	li occhi
+91	3	3	3	natura
+91	5	5	5	arte
+91	7	7	7	pasture
+92	3	3	3	occhi
+92	6	7	7	la mente
+92	7	7	7	mente
+93	2	3	2	carne umana
+93	2	2	2	carne
+93	6	8	8	le sue pitture
+93	7	8	8	sue pitture
+93	8	8	8	pitture
+94	1	1	1	tutte
+94	4	4	4	nïente
+95	2	7	3	lo piacer divin che mi refulse
+95	2	4	3	lo piacer divin
+95	2	3	3	lo piacer
+95	3	4	3	piacer divin
+95	3	3	3	piacer
+95	6	6	6	mi
+96	2	2	2	mi
+96	5	7	6	suo viso ridente
+96	5	6	6	suo viso
+96	6	7	6	viso ridente
+96	6	6	6	viso
+97	2	8	3	la virtù che lo sguardo m'indulse
+97	2	3	3	la virtù
+97	5	6	6	lo sguardo
+98	2	5	3	bel nido di Leda
+98	2	3	3	bel nido
+98	5	5	5	Leda
+99	3	4	3	ciel velocissimo
+100	1	6	2	Le parti sue vivissime ed eccelse
+100	2	6	2	parti sue vivissime ed eccelse
+100	2	2	2	parti
+101	5	5	5	i'
+102	2	2	2	Bëatrice
+102	4	4	4	loco
+103	2	2	2	ella
+103	3	3	3	che
+103	5	7	7	'l mio disire
+103	6	7	7	mio disire
+103	7	7	7	disire
+104	0	0	0	
+105	2	2	2	Dio
+105	5	6	6	suo volto
+105	6	6	6	volto
+106	1	4	2	La natura del mondo
+106	2	4	2	natura del mondo
+106	3	4	4	del mondo
+106	4	4	4	mondo
+107	1	2	2	il mezzo
+107	2	2	2	mezzo
+107	4	6	6	tutto l'altro
+107	5	6	6	l'altro
+107	6	6	6	altro
+108	5	6	6	sua meta
+108	6	6	6	meta
+109	2	3	3	questo cielo
+109	6	7	7	altro dove
+110	1	1	1	che
+110	2	4	3	la mente divina
+111	1	5	2	l'amor che 'l volge
+111	1	2	2	l'amor
+111	3	3	3	che
+111	4	4	4	'l
+111	7	11	8	la virtù ch'ei piove
+111	7	8	8	la virtù
+111	9	9	9	ch'
+111	10	10	10	ei
+112	1	6	1	Luce e amor d'un cerchio
+112	1	1	1	Luce
+112	3	6	3	amor d'un cerchio
+112	5	6	6	un cerchio
+112	7	7	7	lui
+113	3	3	3	questo
+113	4	5	5	li altri
+113	7	8	8	quel precinto
+114	1	4	1	colui che 'l cinge
+114	1	1	1	colui
+114	3	3	3	'l
+115	3	4	4	suo moto
+115	6	6	6	altro
+116	2	3	3	li altri
+116	7	7	7	questo
+117	3	3	3	diece
+117	5	5	5	mezzo
+117	8	8	8	quinto
+118	3	4	4	il tempo
+118	7	8	8	cotal testo
+119	1	3	3	le sue radici
+119	6	7	7	li altri
+119	8	9	9	le fronde
+120	3	3	3	te
+121	2	6	2	cupidigia che i mortali affonde
+121	2	2	2	cupidigia
+121	4	5	5	i mortali
+122	3	3	3	te
+122	5	5	5	nessuno
+122	7	7	7	podere
+123	3	4	4	li occhi
+123	7	9	9	le tue onde
+123	8	9	9	tue onde
+124	4	5	5	li uomini
+124	6	7	7	il volere
+125	2	4	3	la pioggia continüa
+126	2	2	2	bozzacchioni
+126	3	5	4	le sosine vere
+127	1	3	1	Fede e innocenza
+127	1	1	1	Fede
+127	3	3	3	innocenza
+128	3	3	3	parvoletti
+128	5	5	5	ciascuna
+129	4	5	5	le guance
+129	5	5	5	guance
+130	1	1	1	Tale
+131	5	7	6	la lingua sciolta
+132	1	5	2	qualunque cibo per qualunque luna
+132	1	2	2	qualunque cibo
+132	4	5	5	qualunque luna
+133	2	2	2	tal
+134	1	3	2	la madre sua
+134	1	2	2	la madre
+134	1	1	1	la
+134	2	3	2	madre sua
+134	4	4	4	che
+134	6	7	6	loquela intera
+135	0	0	0	
+136	4	7	5	la pelle bianca nera
+137	2	7	3	primo aspetto de la bella figlia
+137	3	7	3	aspetto de la bella figlia
+137	5	7	7	la bella figlia
+138	2	8	2	quel ch'apporta mane e lascia sera
+138	5	5	5	mane
+138	8	8	8	sera
+139	1	1	1	Tu
+139	6	6	6	maraviglia
+140	4	4	4	terra
+140	7	8	7	chi governi
+141	4	6	6	l'umana famiglia
+141	6	6	6	famiglia
+142	4	5	4	gennaio tutto
+142	4	4	4	gennaio
+143	2	3	3	la centesma
+143	3	3	3	centesma
+144	3	5	4	questi cerchi superni
+144	3	4	4	questi cerchi
+144	4	5	4	cerchi superni
+144	4	4	4	cerchi
+145	2	7	3	la fortuna che tanto s'aspetta
+145	2	3	3	la fortuna
+146	1	2	2	le poppe
+146	6	7	7	le prore
+147	3	4	4	la classe
+148	2	3	3	vero frutto
+148	6	7	7	'l fiore

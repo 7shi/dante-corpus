@@ -4,10 +4,12 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from . import morph as _morph
+from . import np as _np
 from ._paths import SRC_DIR, QUOTES_DIR
 from .tokenizer import has_alpha, tokenize
 
 MorphRow = _morph.MorphRow
+NPSpan = _np.NPSpan
 
 VALID_CANTICLES = ("inferno", "purgatorio", "paradiso")
 REF_RE = re.compile(
@@ -98,6 +100,13 @@ class Canto:
     def morph(self) -> dict[int, tuple[MorphRow, ...]]:
         """Frozen Layer-2 morphology: line-number -> per-token MorphRows (no model call)."""
         return _morph.load_morph(self.canticle, self.number)
+
+    def np(self) -> tuple[NPSpan, ...]:
+        """Frozen Layer-3 noun phrases as a nested forest, ordered by (line, start, -end).
+
+        Each span carries its line, token range, head index, verbatim text, a derived id, and
+        its nested children (no model call)."""
+        return _np.nest_canto(self.canticle, self.number)
 
     def to_dict(self) -> dict[str, object]:
         return {

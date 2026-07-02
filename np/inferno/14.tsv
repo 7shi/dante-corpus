@@ -1,0 +1,352 @@
+line	start	end	head	text
+1	3	7	4	la carità del natio loco
+1	3	4	4	la carità
+1	4	7	4	carità del natio loco
+1	6	7	7	natio loco
+2	1	1	1	mi
+2	4	6	5	le fronde sparte
+2	4	5	5	le fronde
+2	5	6	5	fronde sparte
+3	3	3	3	le
+3	5	9	5	colui, ch'era già fioco
+3	5	5	5	colui
+4	4	4	4	fine
+5	1	5	3	lo secondo giron dal terzo
+5	1	3	3	lo secondo giron
+5	3	3	3	giron
+5	5	5	5	terzo
+6	3	6	6	di giustizia orribil arte
+6	4	4	4	giustizia
+6	5	6	6	orribil arte
+6	6	6	6	arte
+7	4	6	5	le cose nove
+8	5	6	6	una landa
+9	3	4	4	suo letto
+9	5	6	6	ogne pianta
+10	1	3	3	La dolorosa selva
+10	6	6	6	ghirlanda
+11	3	5	4	'l fosso tristo
+11	7	7	7	essa
+12	3	4	4	i passi
+12	6	6	6	randa
+12	6	6	6	randa
+13	1	2	2	Lo spazzo
+13	4	8	5	una rena arida e spessa
+14	3	4	4	altra foggia
+14	7	7	7	colei
+15	4	6	4	piè di Caton
+15	6	6	6	Caton
+16	2	4	2	vendetta di Dio
+16	4	4	4	Dio
+16	6	6	6	tu
+17	4	6	4	ciascun che legge
+17	4	4	4	ciascun
+18	1	8	1	ciò che fu manifesto a li occhi mei
+18	1	1	1	ciò
+18	6	8	7	li occhi mei
+18	7	8	7	occhi mei
+19	2	3	2	anime nude
+19	2	2	2	anime
+19	5	6	6	molte gregge
+19	6	6	6	gregge
+20	3	3	3	tutte
+21	4	6	6	lor diversa legge
+21	5	6	6	diversa legge
+21	6	6	6	legge
+22	4	4	4	terra
+22	5	6	6	alcuna gente
+22	6	6	6	gente
+23	1	1	1	alcuna
+24	2	2	2	altra
+25	1	4	1	Quella che giva 'ntorno
+25	1	1	1	Quella
+26	2	7	2	quella men che giacëa al tormento
+26	2	2	2	quella
+26	7	7	7	tormento
+27	4	4	4	duolo
+27	6	8	7	la lingua sciolta
+27	7	8	7	lingua sciolta
+27	7	7	7	lingua
+28	2	4	4	tutto 'l sabbion
+28	3	4	4	'l sabbion
+28	4	4	4	sabbion
+28	6	8	7	un cader lento
+28	7	7	7	cader
+29	2	5	5	di foco dilatate falde
+29	3	3	3	foco
+29	4	5	5	dilatate falde
+29	5	5	5	falde
+30	3	3	3	neve
+30	5	7	5	alpe sanza vento
+30	5	5	5	alpe
+30	7	7	7	vento
+31	2	2	2	Alessandro
+31	4	6	5	quelle parti calde
+32	2	2	2	Indïa
+32	5	7	7	'l süo stuolo
+33	1	1	1	fiamme
+33	5	5	5	terra
+34	3	3	3	ei
+34	7	8	8	lo suolo
+35	2	4	4	le sue schiere
+35	7	8	8	lo vapore
+36	1	1	1	mei
+37	3	5	5	l'etternale ardore
+38	2	3	3	la rena
+38	7	7	7	esca
+39	2	2	2	focile
+39	5	6	6	lo dolore
+40	2	2	2	riposo
+40	5	6	6	la tresca
+41	2	4	4	le misere mani
+41	3	4	4	misere mani
+41	4	4	4	mani
+42	3	3	3	sé
+42	4	6	5	l'arsura fresca
+42	5	6	5	arsura fresca
+42	5	5	5	arsura
+43	1	1	1	I'
+43	3	3	3	Maestro
+43	4	4	4	tu
+44	1	3	3	tutte le cose
+44	2	3	3	le cose
+44	6	7	6	demon duri
+45	3	7	4	l'intrar de la porta
+45	3	4	4	l'intrar
+45	6	7	7	la porta
+46	1	1	1	chi
+46	3	4	4	quel grande
+47	1	2	2	lo 'ncendio
+48	3	4	4	la pioggia
+48	8	8	8	'l
+49	2	3	3	quel medesmo
+50	2	2	2	io
+50	4	8	6	il mio duca di lui
+50	4	6	6	il mio duca
+50	8	8	8	lui
+51	3	3	3	io
+52	2	2	2	Giove
+52	4	6	6	'l suo fabbro
+52	5	6	6	suo fabbro
+53	3	5	4	la folgore aguta
+53	4	5	4	folgore aguta
+54	2	4	4	l'ultimo dì
+54	3	4	4	ultimo dì
+55	3	3	3	elli
+55	5	6	6	li altri
+55	8	8	8	muta
+55	8	8	8	muta
+56	2	2	2	Mongibello
+56	4	6	5	la focina negra
+56	5	6	5	focina negra
+57	2	3	3	Buon Vulcano
+57	3	3	3	Vulcano
+58	3	3	3	el
+58	6	9	7	la pugna di Flegra
+58	7	9	7	pugna di Flegra
+58	9	9	9	Flegra
+59	2	2	2	me
+59	5	7	7	tutta sua forza
+59	6	7	7	sua forza
+60	2	2	2	ne
+60	5	6	5	vendetta allegra
+61	2	4	3	il duca mio
+61	3	4	3	duca mio
+61	7	7	7	forza
+62	3	3	3	i'
+62	5	5	5	l'
+63	2	2	2	Capaneo
+63	4	4	4	ciò
+64	1	3	3	la tua superbia
+64	5	5	5	tu
+65	1	2	2	nullo martiro
+65	5	7	7	la tua rabbia
+66	3	4	4	tuo furor
+66	5	6	5	dolor compito
+67	5	5	5	me
+67	7	8	8	miglior labbia
+67	8	8	8	labbia
+68	2	2	2	Quei
+68	4	9	5	l'un d'i sette regi
+68	4	5	5	l'un
+68	7	9	9	i sette regi
+68	9	9	9	regi
+69	3	3	3	Tebe
+69	9	9	9	elli
+70	1	3	1	Dio in disdegno
+70	1	1	1	Dio
+70	3	3	3	disdegno
+70	8	8	8	'l
+71	3	3	3	io
+71	5	5	5	lui
+71	6	8	8	li suoi dispetti
+72	3	4	4	suo petto
+72	5	7	7	assai debiti fregi
+73	2	2	2	mi
+74	2	3	3	li piedi
+74	5	7	6	la rena arsiccia
+75	3	4	4	al bosco
+75	6	8	7	li piedi stretti
+76	0	0	0	
+77	3	4	4	la selva
+77	5	7	7	un picciol fiumicello
+77	6	7	7	picciol fiumicello
+78	1	3	3	lo cui rossore
+79	2	3	3	del Bulicame
+79	3	3	3	Bulicame
+79	5	5	5	ruscello
+80	5	5	5	lor
+80	6	7	7	le peccatrici
+80	7	7	7	peccatrici
+81	3	4	4	la rena
+81	4	4	4	rena
+81	8	8	8	quello
+82	1	7	2	Lo fondo suo e ambo le pendici
+82	1	3	2	Lo fondo suo
+82	2	3	2	fondo suo
+82	5	7	7	ambo le pendici
+82	6	7	7	le pendici
+83	4	4	4	pietra
+83	6	7	6	margini dallato
+83	6	6	6	margini
+84	3	3	3	io
+84	7	8	8	'l passo
+85	2	9	4	tutto l'altro ch'i' t'ho dimostrato
+85	2	4	4	tutto l'altro
+85	3	4	4	l'altro
+85	6	6	6	i'
+86	3	3	3	noi
+86	6	7	7	la porta
+87	1	3	3	lo cui sogliare
+87	3	3	3	sogliare
+87	5	5	5	nessuno
+88	1	1	1	cosa
+88	5	7	7	li tuoi occhi
+88	6	7	7	tuoi occhi
+88	7	7	7	occhi
+89	4	6	6	'l presente rio
+89	5	6	6	presente rio
+89	6	6	6	rio
+90	3	3	3	sé
+90	4	5	5	tutte fiammelle
+90	5	5	5	fiammelle
+91	1	2	2	Queste parole
+91	5	6	5	duca mio
+92	3	3	3	io
+92	4	4	4	'l
+92	9	10	10	'l pasto
+93	2	2	2	cui
+93	4	4	4	m'
+93	6	7	7	il disio
+94	2	3	2	mezzo mar
+94	3	3	3	mar
+94	5	7	6	un paese guasto
+95	2	2	2	elli
+95	7	7	7	Creta
+96	2	4	4	'l cui rege
+96	7	9	8	'l mondo casto
+97	1	2	2	Una montagna
+98	2	2	2	acqua
+98	5	5	5	fronde
+98	9	9	9	Ida
+99	5	6	5	cosa vieta
+100	1	1	1	Rëa
+100	2	2	2	la
+100	6	7	6	cuna fida
+101	2	3	3	suo figliuolo
+102	6	7	7	le grida
+103	2	3	3	dal monte
+103	3	3	3	monte
+103	6	8	8	un gran veglio
+103	7	8	8	gran veglio
+103	8	8	8	veglio
+104	4	5	5	le spalle
+104	5	5	5	spalle
+104	6	7	7	inver' Dammiata
+104	7	7	7	Dammiata
+105	2	2	2	Roma
+105	5	6	6	süo speglio
+105	6	6	6	speglio
+106	1	3	3	La sua testa
+106	6	7	7	fin oro
+107	2	3	3	puro argento
+107	5	6	6	le braccia
+107	8	9	9	'l petto
+108	4	8	4	rame infino a la forcata
+108	7	8	8	la forcata
+109	6	8	7	tutto ferro eletto
+109	7	8	7	ferro eletto
+110	3	5	5	'l destro piede
+110	4	5	5	destro piede
+110	7	8	7	terra cotta
+111	5	5	5	quel
+111	10	11	11	l'altro
+111	11	11	11	altro
+112	1	2	2	Ciascuna parte
+112	5	6	6	l'oro
+113	2	6	3	una fessura che lagrime goccia
+113	2	3	3	una fessura
+113	5	5	5	lagrime
+114	1	2	2	le quali
+114	5	6	6	quella grotta
+115	1	5	2	Lor corso in questa valle
+115	1	2	2	Lor corso
+115	4	5	5	questa valle
+116	2	5	2	Acheronte, Stige e Flegetonta
+116	2	2	2	Acheronte
+116	3	3	3	Stige
+116	5	5	5	Flegetonta
+117	6	8	8	questa stretta doccia
+118	0	0	0	
+119	2	2	2	Cocito
+119	6	7	7	quello stagno
+119	7	7	7	stagno
+120	1	1	1	tu
+120	2	2	2	lo
+121	2	2	2	io
+121	4	4	4	lui
+121	6	8	8	'l presente rigagno
+122	5	6	6	nostro mondo
+123	6	7	7	questo vivagno
+124	2	2	2	elli
+124	4	4	4	me
+124	5	5	5	Tu
+124	8	9	9	'l loco
+125	4	4	4	tu
+126	3	3	3	sinistra
+126	7	7	7	fondo
+127	5	7	7	tutto 'l cerchio
+127	6	7	7	'l cerchio
+128	4	4	4	cosa
+128	5	5	5	n'
+129	4	4	4	maraviglia
+129	6	7	7	tuo volto
+130	2	2	2	io
+130	4	4	4	Maestro
+131	1	3	1	Flegetonta e Letè
+131	1	1	1	Flegetonta
+131	3	3	3	Letè
+131	6	7	7	l'un
+132	2	3	3	l'altro
+132	9	10	10	esta piova
+133	2	4	4	tutte tue question
+133	3	4	4	tue question
+134	3	8	4	'l bollor de l'acqua rossa
+134	4	8	4	bollor de l'acqua rossa
+134	6	8	7	l'acqua rossa
+135	4	8	5	l'una che tu faci
+135	4	5	5	l'una
+136	1	1	1	Letè
+136	6	7	7	questa fossa
+137	4	5	5	l'anime
+138	2	4	3	la colpa pentuta
+139	5	7	5	tempo da scostarsi
+139	5	5	5	tempo
+140	2	2	2	bosco
+140	6	8	6	retro a me
+140	8	8	8	me
+141	1	2	2	li margini
+141	2	2	2	margini
+141	4	4	4	via
+142	3	3	3	loro
+142	4	5	5	ogne vapor

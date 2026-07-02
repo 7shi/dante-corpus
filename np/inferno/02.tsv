@@ -1,0 +1,406 @@
+line	start	end	head	text
+1	1	2	2	Lo giorno
+1	7	9	8	l'aere bruno
+2	2	7	3	li animai che sono in terra
+2	2	3	3	li animai
+2	7	7	7	terra
+3	2	4	3	le fatiche loro
+3	6	6	6	io
+3	8	8	8	uno
+4	1	1	1	m'
+4	5	6	6	la guerra
+5	3	3	3	cammino
+5	7	8	8	la pietate
+6	3	7	4	la mente che non erra
+6	3	4	4	la mente
+7	2	2	2	muse
+7	4	5	5	alto ingegno
+8	2	8	2	mente che scrivesti ciò ch'io vidi
+8	2	2	2	mente
+8	5	8	5	ciò ch'io vidi
+9	4	6	6	la tua nobilitate
+10	1	1	1	Io
+10	3	6	3	Poeta che mi guidi
+10	3	3	3	Poeta
+11	2	4	4	la mia virtù
+11	3	4	4	mia virtù
+11	4	4	4	virtù
+11	6	6	6	ell'
+12	4	6	6	l'alto passo
+12	5	6	6	alto passo
+12	6	6	6	passo
+12	7	7	7	tu
+13	1	1	1	Tu
+13	4	7	7	di Silvïo il parente
+13	5	5	5	Silvïo
+13	6	7	7	il parente
+14	0	0	0	
+15	1	1	1	secolo
+16	3	7	4	l'avversario d'ogne male
+16	4	7	4	avversario d'ogne male
+16	6	7	7	ogne male
+17	2	2	2	i
+17	5	7	7	l'alto effetto
+17	6	7	7	alto effetto
+18	5	5	5	lui
+18	7	8	8	'l chi
+18	10	11	11	'l quale
+19	5	7	5	omo d'intelletto
+19	5	5	5	omo
+19	7	7	7	intelletto
+20	2	2	2	e'
+20	5	7	7	l'alma Roma
+20	7	7	7	Roma
+20	10	11	11	suo impero
+20	11	11	11	impero
+21	2	4	4	l'empireo ciel
+21	4	4	4	ciel
+21	6	7	6	padre eletto
+21	6	6	6	padre
+22	1	2	2	la quale
+22	4	5	5	'l quale
+22	9	10	10	lo vero
+23	4	6	5	lo loco santo
+24	3	7	4	il successor del maggior Piero
+24	5	7	7	del maggior Piero
+24	6	7	7	maggior Piero
+25	2	3	3	quest' andata
+25	5	5	5	li
+25	8	8	8	vanto
+26	2	5	2	cose che furon cagione
+26	2	2	2	cose
+26	5	5	5	cagione
+27	1	7	3	di sua vittoria e del papale ammanto
+27	1	3	3	di sua vittoria
+27	2	3	3	sua vittoria
+27	5	7	7	del papale ammanto
+27	6	7	7	papale ammanto
+28	3	6	4	lo Vas d'elezïone
+28	6	6	6	elezïone
+29	3	3	3	conforto
+29	5	6	6	quella fede
+30	3	3	3	principio
+30	5	8	6	la via di salvazione
+30	6	8	6	via di salvazione
+30	8	8	8	salvazione
+31	2	2	2	io
+31	6	6	6	chi
+32	1	1	1	Io
+32	3	3	3	Enëa
+32	4	4	4	io
+32	6	6	6	Paulo
+33	1	4	1	me degno a ciò
+33	1	1	1	me
+33	4	4	4	ciò
+33	6	6	6	io
+33	8	8	8	altri
+34	4	5	5	del venire
+34	5	5	5	venire
+34	6	6	6	io
+35	3	4	4	la venuta
+35	4	4	4	venuta
+36	1	1	1	Se'
+36	2	2	2	savio
+36	4	4	4	me'
+36	6	6	6	i'
+37	2	2	2	qual
+37	4	9	4	quei che disvuol ciò che volle
+37	4	4	4	quei
+37	7	9	7	ciò che volle
+37	7	7	7	ciò
+38	3	4	4	novi pensier
+38	6	6	6	proposta
+39	4	4	4	cominciar
+39	5	5	5	tutto
+40	1	1	1	tal
+40	4	4	4	ïo
+40	6	8	8	quella oscura costa
+41	4	5	5	la 'mpresa
+42	4	4	4	cominciar
+43	2	2	2	i'
+43	5	7	6	la parola tua
+43	6	7	6	parola tua
+43	6	6	6	parola
+44	2	3	3	del magnanimo
+44	3	3	3	magnanimo
+44	4	5	5	quell' ombra
+44	5	5	5	ombra
+45	1	3	2	l'anima tua
+45	2	3	2	anima tua
+45	2	2	2	anima
+45	6	6	6	viltade
+46	1	2	2	la qual
+46	3	4	4	molte fïate
+46	5	6	6	l'omo
+47	4	5	5	onrata impresa
+48	2	3	3	falso veder
+48	4	4	4	bestia
+48	6	6	6	ombra
+49	2	3	3	questa tema
+50	3	3	3	io
+50	3	3	3	io
+50	6	9	6	quel ch'io 'ntesi
+51	2	8	3	primo punto che di te mi dolve
+51	2	3	3	primo punto
+51	6	6	6	te
+52	1	1	1	Io
+52	4	7	4	color che son sospesi
+52	4	4	4	color
+53	2	2	2	donna
+53	3	3	3	mi
+54	4	4	4	comandare
+54	5	5	5	io
+54	6	6	6	la
+55	2	4	3	li occhi suoi
+55	3	4	3	occhi suoi
+55	7	8	8	la stella
+56	0	0	0	
+57	2	3	3	angelica voce
+57	5	6	6	sua favella
+58	2	4	2	anima cortese mantoana
+59	2	2	2	cui
+59	3	4	4	la fama
+59	7	7	7	mondo
+60	4	5	5	'l mondo
+61	1	3	2	l'amico mio
+61	7	8	8	la ventura
+62	2	4	4	la diserta piaggia
+63	3	3	3	cammin
+63	8	8	8	paura
+64	0	0	0	
+65	2	2	2	io
+65	7	7	7	soccorso
+66	2	10	2	quel ch'i' ho di lui nel cielo udito
+66	2	2	2	quel
+66	4	4	4	i'
+66	7	7	7	lui
+66	9	9	9	cielo
+67	5	8	7	la tua parola ornata
+67	6	8	7	tua parola ornata
+67	7	8	7	parola ornata
+67	7	7	7	parola
+68	3	3	3	ciò
+68	4	4	4	c'
+68	6	6	6	mestieri
+68	8	9	9	suo campare
+68	9	9	9	campare
+69	1	1	1	l'
+69	5	5	5	i'
+69	6	6	6	ne
+70	1	1	1	I'
+70	3	3	3	Beatrice
+70	4	4	4	che
+71	3	6	3	loco ove tornar disio
+71	5	6	6	tornar disio
+72	1	1	1	amor
+72	4	4	4	che
+73	4	6	5	al segnor mio
+73	5	6	5	segnor mio
+74	2	2	2	te
+74	7	7	7	lui
+75	6	6	6	io
+76	2	5	2	donna di virtù sola
+76	2	2	2	donna
+76	4	5	4	virtù sola
+76	4	4	4	virtù
+77	1	3	3	l'umana spezie
+77	3	3	3	spezie
+77	5	6	6	ogne contento
+77	6	6	6	contento
+78	2	3	3	quel ciel
+78	3	3	3	ciel
+78	7	9	8	li cerchi sui
+78	8	9	8	cerchi sui
+78	8	8	8	cerchi
+79	4	6	6	il tuo comandamento
+80	2	3	3	l'ubidir
+81	5	5	5	uo'
+81	8	10	10	il tuo talento
+82	3	8	4	la cagion che non ti guardi
+82	3	4	4	la cagion
+82	7	7	7	ti
+83	2	8	3	lo scender qua giuso in questo centro
+83	2	3	3	lo scender
+83	7	8	8	questo centro
+84	2	8	4	l'ampio loco ove tornar tu ardi
+84	2	4	4	l'ampio loco
+84	7	7	7	tu
+85	3	3	3	tu
+85	6	6	6	cotanto
+85	8	8	8	dentro
+86	3	3	3	mi
+87	2	2	2	i'
+87	8	8	8	entro
+88	5	7	7	sole quelle cose
+88	6	7	7	quelle cose
+89	3	7	3	potenza di fare altrui male
+89	3	3	3	potenza
+89	6	7	7	altrui male
+90	2	3	3	l'altre
+91	1	1	1	I'
+91	5	5	5	Dio
+91	6	7	7	sua mercé
+92	2	4	4	la vostra miseria
+92	6	6	6	mi
+93	2	5	2	fiamma d'esto 'ncendio
+93	4	5	5	esto 'ncendio
+93	7	7	7	m'
+94	1	1	1	Donna
+94	5	8	5	ciel che si compiange
+94	5	5	5	ciel
+95	2	3	3	questo 'mpedimento
+95	3	3	3	'mpedimento
+95	5	5	5	io
+95	6	6	6	ti
+96	3	4	4	duro giudicio
+96	4	4	4	giudicio
+97	1	1	1	Questa
+97	3	3	3	Lucia
+97	5	6	6	suo dimando
+97	6	6	6	dimando
+98	5	5	5	bisogno
+98	6	8	8	il tuo fedele
+98	7	8	8	tuo fedele
+98	8	8	8	fedele
+99	2	2	2	te
+99	2	2	2	te
+99	4	4	4	io
+99	7	7	7	lo
+100	1	5	1	Lucia, nimica di ciascun crudele
+100	1	1	1	Lucia
+100	2	5	2	nimica di ciascun crudele
+100	4	5	5	ciascun crudele
+101	6	9	6	loco dov' i' era
+101	6	6	6	loco
+101	8	8	8	i'
+102	2	2	2	mi
+102	5	7	7	l'antica Rachele
+103	2	2	2	Beatrice
+103	3	6	3	loda di Dio vera
+103	5	5	5	Dio
+104	4	8	4	quei che t'amò tanto
+104	4	4	4	quei
+105	4	4	4	te
+105	6	8	8	la volgare schiera
+106	3	3	3	tu
+106	4	8	5	la pieta del suo pianto
+106	5	8	5	pieta del suo pianto
+106	7	8	8	suo pianto
+107	3	3	3	tu
+107	4	8	5	la morte che 'l combatte
+107	4	5	5	la morte
+107	7	7	7	'l
+108	2	9	3	la fiumana ove 'l mar non ha vanto
+108	2	3	3	la fiumana
+108	5	6	6	'l mar
+108	9	9	9	vanto
+109	2	2	2	mondo
+109	6	7	6	persone ratte
+110	3	4	4	lor pro
+110	8	9	9	lor danno
+111	2	2	2	io
+111	4	6	5	cotai parole fatte
+112	5	7	7	mio beato scanno
+112	6	7	7	beato scanno
+112	7	7	7	scanno
+113	3	5	4	tuo parlare onesto
+113	4	5	4	parlare onesto
+113	4	4	4	parlare
+114	1	1	1	ch'
+114	3	9	3	te e quei ch'udito l'hanno
+114	3	3	3	te
+114	5	9	5	quei ch'udito l'hanno
+114	5	5	5	quei
+114	8	8	8	l'
+115	6	6	6	questo
+116	1	3	2	li occhi lucenti
+116	1	2	2	li occhi
+116	2	3	2	occhi lucenti
+116	2	2	2	occhi
+117	2	2	2	che
+117	6	8	6	venir più presto
+117	6	6	6	venir
+118	4	4	4	te
+118	7	7	7	ella
+119	4	5	5	quella fiera
+119	5	5	5	fiera
+119	6	6	6	ti
+120	3	4	4	bel monte
+120	4	4	4	monte
+120	5	7	7	il corto andar
+120	7	7	7	andar
+120	8	8	8	ti
+121	2	2	2	che
+122	2	5	3	tanta viltà nel core
+122	2	3	3	tanta viltà
+122	4	5	5	nel core
+122	5	5	5	core
+123	2	4	2	ardire e franchezza
+123	2	2	2	ardire
+123	4	4	4	franchezza
+124	3	6	5	tai tre donne benedette
+125	3	3	3	te
+125	5	8	6	la corte del cielo
+125	8	8	8	cielo
+126	2	4	4	'l mio parlar
+126	7	7	7	ti
+127	1	5	2	Quali fioretti dal notturno gelo
+127	1	2	2	Quali fioretti
+127	2	2	2	fioretti
+127	4	5	5	notturno gelo
+127	5	5	5	gelo
+128	6	7	7	'l sol
+128	7	7	7	sol
+129	6	7	7	loro stelo
+129	7	7	7	stelo
+130	1	1	1	tal
+130	4	4	4	io
+130	6	8	7	mia virtude stanca
+130	6	7	7	mia virtude
+130	7	8	7	virtude stanca
+130	7	7	7	virtude
+131	2	4	4	tanto buono ardire
+131	3	4	4	buono ardire
+131	4	4	4	ardire
+131	6	6	6	cor
+132	2	2	2	i'
+132	5	6	5	persona franca
+132	5	5	5	persona
+133	2	6	3	pietosa colei che mi soccorse
+133	2	3	3	pietosa colei
+133	3	6	3	colei che mi soccorse
+133	3	3	3	colei
+133	5	5	5	mi
+134	2	6	2	te cortese ch'ubidisti tosto
+134	2	3	2	te cortese
+134	2	2	2	te
+134	4	4	4	ch'
+135	2	7	4	le vere parole che ti porse
+135	2	4	4	le vere parole
+135	3	7	4	vere parole che ti porse
+135	3	4	4	vere parole
+135	4	7	4	parole che ti porse
+135	4	4	4	parole
+135	5	5	5	che
+135	6	6	6	ti
+136	1	1	1	Tu
+136	2	2	2	m'
+136	5	5	5	disiderio
+136	6	7	7	il cor
+137	3	7	3	venir con le parole tue
+137	5	7	6	le parole tue
+138	2	2	2	i'
+138	6	7	7	primo proposto
+139	4	6	6	un sol volere
+139	9	9	9	ambedue
+140	1	2	2	tu duca
+140	1	1	1	tu
+140	1	1	1	tu
+140	1	1	1	tu
+140	2	2	2	duca
+140	3	4	4	tu segnore
+140	4	4	4	segnore
+140	6	7	7	tu maestro
+140	7	7	7	maestro
+141	2	2	2	li
+142	3	7	4	lo cammino alto e silvestro

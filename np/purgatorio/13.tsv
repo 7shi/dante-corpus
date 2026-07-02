@@ -1,0 +1,397 @@
+line	start	end	head	text
+1	1	1	1	Noi
+1	4	7	4	sommo de la scala
+1	6	7	7	la scala
+2	0	0	0	
+3	1	6	2	lo monte che salendo altrui dismala
+3	1	2	2	lo monte
+3	5	5	5	altrui
+4	3	4	4	una cornice
+5	2	3	3	il poggio
+5	5	6	6	la primaia
+6	4	6	5	l'arco suo
+6	4	5	5	l'arco
+7	1	1	1	Ombra
+7	6	9	6	segno che si paia
+7	6	6	6	segno
+8	2	3	3	la ripa
+8	3	3	3	ripa
+8	6	8	7	la via schietta
+8	7	8	7	via schietta
+8	7	7	7	via
+9	2	6	3	livido color de la petraia
+9	2	3	3	livido color
+9	3	6	3	color de la petraia
+9	3	3	3	color
+9	5	6	6	la petraia
+9	6	6	6	petraia
+10	5	5	5	gente
+11	2	3	3	il poeta
+11	3	3	3	poeta
+11	4	4	4	io
+12	5	5	5	indugio
+12	6	7	7	nostra eletta
+12	7	7	7	eletta
+13	3	4	4	al sole
+13	4	4	4	sole
+13	5	6	6	li occhi
+13	6	6	6	occhi
+14	2	4	4	del destro lato
+14	3	4	4	destro lato
+14	4	4	4	lato
+14	7	7	7	centro
+15	2	6	4	la sinistra parte di sé
+15	2	4	4	la sinistra parte
+15	3	4	4	sinistra parte
+15	4	6	4	parte di sé
+15	4	4	4	parte
+15	6	6	6	sé
+16	2	8	3	dolce lume a cui fidanza i' entro
+16	2	3	3	dolce lume
+16	5	5	5	cui
+16	6	6	6	fidanza
+16	7	7	7	i'
+17	2	4	4	lo novo cammin
+17	5	5	5	tu
+18	4	4	4	si
+19	1	1	1	Tu
+19	3	4	4	il mondo
+19	5	5	5	tu
+19	7	7	7	esso
+20	2	3	3	altra ragione
+20	5	5	5	contrario
+21	4	7	6	li tuoi raggi duci
+21	4	6	6	li tuoi raggi
+21	5	7	6	tuoi raggi duci
+21	5	6	6	tuoi raggi
+21	6	7	6	raggi duci
+22	1	3	1	Quanto di qua
+22	1	1	1	Quanto
+22	5	6	6	un migliaio
+23	1	3	1	tanto di là
+23	1	1	1	tanto
+23	5	5	5	noi
+24	2	3	3	poco tempo
+24	5	7	6	la voglia pronta
+25	3	3	3	noi
+25	4	4	4	volar
+26	4	5	4	spiriti parlando
+26	4	4	4	spiriti
+27	2	5	3	la mensa d'amor
+27	2	3	3	la mensa
+27	5	5	5	amor
+27	6	7	7	cortesi inviti
+28	1	6	3	La prima voce che passò volando
+28	1	3	3	La prima voce
+29	1	1	1	Vinum
+30	4	4	4	noi
+30	5	5	5	l'
+31	5	5	5	tutto
+32	3	7	5	un'altra ‘I' sono Oreste
+32	5	7	5	I' sono Oreste
+32	5	5	5	I'
+32	7	7	7	Oreste
+33	6	6	6	s'
+34	3	3	3	io
+34	4	4	4	padre
+34	5	6	6	che voci
+34	8	8	8	queste
+35	3	3	3	io
+35	6	7	7	la terza
+36	4	4	4	cui
+36	5	5	5	male
+37	2	4	4	'l buon maestro
+37	5	6	6	Questo cinghio
+38	1	5	2	la colpa de la invidia
+38	4	5	5	la invidia
+39	3	3	3	amor
+39	4	8	5	le corde de la ferza
+39	7	8	8	la ferza
+40	1	2	2	Lo fren
+40	6	7	7	contrario suono
+41	3	3	3	l'
+41	6	7	7	mio avviso
+42	5	7	5	passo del perdono
+42	7	7	7	perdono
+43	3	4	4	li occhi
+43	6	9	7	l'aere ben fiso
+43	6	7	7	l'aere
+44	3	3	3	gente
+44	6	6	6	noi
+45	2	2	2	ciascun
+45	5	6	6	la grotta
+46	5	6	6	li occhi
+47	2	2	2	mi
+47	6	8	6	ombre con manti
+47	6	6	6	ombre
+47	8	8	8	manti
+48	2	5	2	color de la pietra
+48	2	2	2	color
+48	4	5	5	la pietra
+49	5	6	6	un poco
+50	3	3	3	Maria
+50	6	6	6	noi
+51	2	2	2	Michele
+51	4	4	4	Pietro
+51	6	7	7	Tutti santi
+51	7	7	7	santi
+52	5	5	5	terra
+53	1	3	1	omo sì duro
+53	1	1	1	omo
+54	2	8	2	compassion di quel ch'i' vidi poi
+54	2	2	2	compassion
+54	4	8	4	quel ch'i' vidi poi
+54	4	4	4	quel
+55	7	7	7	lor
+56	2	4	3	li atti loro
+56	2	3	3	li atti
+56	4	4	4	loro
+56	6	6	6	me
+57	2	3	3	li occhi
+57	6	7	7	grave dolor
+58	2	3	3	vil ciliccio
+58	3	3	3	ciliccio
+59	2	3	3	l'un
+59	3	3	3	un
+59	5	6	6	l'altro
+59	6	6	6	altro
+59	8	9	9	la spalla
+59	9	9	9	spalla
+60	2	2	2	tutti
+60	4	5	5	la ripa
+60	5	5	5	ripa
+61	2	8	3	li ciechi a cui la roba falla
+61	2	3	3	li ciechi
+61	6	7	7	la roba
+62	2	3	3	a' perdoni
+62	6	7	7	lor bisogna
+63	2	3	3	l'uno
+63	4	5	5	il capo
+63	7	8	8	l'altro
+64	2	4	4	'n altrui pietà
+64	3	4	4	altrui pietà
+64	4	4	4	pietà
+65	4	8	5	lo sonar de le parole
+65	4	5	5	lo sonar
+65	5	8	5	sonar de le parole
+65	7	8	8	le parole
+65	8	8	8	parole
+66	3	8	4	la vista che non meno agogna
+66	3	4	4	la vista
+66	4	4	4	vista
+67	4	5	5	li orbi
+67	8	9	9	il sole
+68	3	5	4	l'ombre quivi
+68	3	4	4	l'ombre
+68	7	7	7	io
+69	1	5	1	luce del ciel di sé
+69	1	1	1	luce
+69	3	5	3	ciel di sé
+69	3	3	3	ciel
+69	5	5	5	sé
+70	3	3	3	tutti
+70	4	7	5	un fil di ferro
+70	5	7	5	fil di ferro
+70	7	7	7	ferro
+70	8	9	9	i cigli
+71	2	2	2	cusce
+71	6	7	6	sparvier selvaggio
+71	6	6	6	sparvier
+72	1	1	1	si
+72	5	5	5	queto
+73	2	2	2	me
+73	6	6	6	oltraggio
+74	2	2	2	altrui
+75	3	3	3	io
+75	7	9	8	mio consiglio saggio
+75	8	9	8	consiglio saggio
+76	3	3	3	ei
+76	7	8	8	lo muto
+77	5	6	6	mia dimanda
+78	0	0	0	
+79	1	1	1	Virgilio
+79	5	6	6	quella banda
+80	2	7	3	la cornice onde cader si puote
+80	2	3	3	la cornice
+80	5	5	5	cader
+81	3	4	4	nulla sponda
+82	2	4	4	l'altra parte
+82	7	8	8	le divote
+83	1	1	1	ombre
+83	4	6	6	l'orribile costura
+84	5	6	6	le gote
+85	3	3	3	loro
+85	6	7	6	gente sicura
+85	6	6	6	gente
+86	4	6	6	l'alto lume
+86	5	6	6	alto lume
+86	6	6	6	lume
+87	2	4	3	'l disio vostro
+87	3	4	3	disio vostro
+87	3	3	3	disio
+87	8	9	9	sua cura
+87	9	9	9	cura
+88	3	3	3	grazia
+88	5	6	6	le schiume
+88	6	6	6	schiume
+89	2	3	3	vostra coscïenza
+89	3	3	3	coscïenza
+90	2	2	2	essa
+90	5	6	6	la mente
+90	6	6	6	mente
+90	7	8	8	il fiume
+90	8	8	8	fiume
+91	3	3	3	mi
+92	2	2	2	anima
+92	6	6	6	voi
+93	3	3	3	lei
+93	7	7	7	i'
+93	8	8	8	l'
+94	2	3	2	frate mio
+94	2	2	2	frate
+94	4	4	4	ciascuna
+95	2	4	4	una vera città
+95	4	4	4	città
+95	6	6	6	tu
+96	4	5	4	Italia peregrina
+96	4	4	4	Italia
+97	1	1	1	Questo
+97	5	5	5	risposta
+98	7	7	7	io
+99	2	2	2	io
+100	2	3	3	l'altre
+100	5	8	6	un'ombra ch'aspettava
+100	5	6	6	un'ombra
+101	2	2	2	vista
+101	6	6	6	alcun
+102	1	2	2	lo mento
+102	4	6	4	guisa d'orbo
+102	6	6	6	orbo
+103	1	1	1	Spirto
+103	3	3	3	io
+103	6	6	6	salir
+103	7	7	7	ti
+104	2	2	2	tu
+104	4	7	4	quelli che mi rispondesti
+104	4	4	4	quelli
+104	6	6	6	mi
+105	2	2	2	conto
+105	5	5	5	luogo
+105	8	8	8	nome
+106	1	1	1	Io
+106	7	7	7	questi
+107	1	1	1	altri
+107	4	6	5	la vita ria
+108	3	7	3	colui che sé ne presti
+108	3	3	3	colui
+108	5	5	5	sé
+109	1	1	1	Savia
+109	6	6	6	Sapìa
+110	6	8	8	li altrui danni
+110	7	8	8	altrui danni
+110	8	8	8	danni
+111	6	7	6	ventura mia
+111	6	6	6	ventura
+112	3	3	3	tu
+112	7	7	7	io
+112	8	8	8	t'
+113	3	3	3	i'
+113	6	6	6	io
+113	7	7	7	ti
+113	9	9	9	folle
+114	3	8	4	l'arco d'i miei anni
+114	3	4	4	l'arco
+114	6	8	8	i miei anni
+115	2	4	3	li cittadin miei
+115	7	7	7	Colle
+116	2	2	2	campo
+116	5	6	6	loro avversari
+117	2	2	2	io
+117	4	4	4	Iddio
+117	6	9	6	quel ch'e' volle
+118	7	8	8	li amari
+119	1	3	1	passi di fuga
+119	3	3	3	fuga
+119	6	7	7	la caccia
+120	1	1	1	letizia
+120	4	6	5	tutte altre dispari
+121	3	3	3	io
+121	7	9	9	l'ardita faccia
+122	3	3	3	Dio
+122	7	7	7	ti
+123	3	4	4	'l merlo
+123	6	7	7	poca bonaccia
+124	1	1	1	Pace
+124	4	4	4	Dio
+124	7	8	8	lo stremo
+125	2	4	4	la mia vita
+125	3	4	4	mia vita
+125	4	4	4	vita
+126	1	6	3	lo mio dover per penitenza scemo
+126	1	3	3	lo mio dover
+126	2	3	3	mio dover
+126	3	3	3	dover
+126	5	5	5	penitenza
+127	2	2	2	ciò
+127	7	7	7	memoria
+127	8	8	8	m'
+128	1	2	1	Pier Pettinaio
+128	4	6	6	sue sante orazioni
+129	2	2	2	cui
+129	4	4	4	me
+129	6	6	6	caritate
+130	2	2	2	tu
+130	3	3	3	chi
+130	6	7	7	nostre condizioni
+131	5	7	6	li occhi sciolti
+132	3	3	3	io
+132	7	7	7	ragioni
+133	1	2	2	Li occhi
+133	4	4	4	io
+134	2	3	3	picciol tempo
+134	7	8	8	l'offesa
+135	5	5	5	invidia
+136	4	5	5	la paura
+137	1	7	2	l'anima mia del tormento di sotto
+137	1	3	2	l'anima mia
+137	5	7	5	tormento di sotto
+138	3	7	4	lo 'ncarco di là giù
+138	3	4	4	lo 'ncarco
+139	2	2	2	ella
+139	4	4	4	me
+139	5	5	5	Chi
+140	4	4	4	noi
+141	2	2	2	io
+141	3	10	3	Costui ch'è meco e non fa motto
+141	3	3	3	Costui
+141	10	10	10	motto
+142	6	6	6	mi
+143	1	2	1	spirito eletto
+143	4	4	4	tu
+143	7	7	7	i'
+144	4	4	4	te
+144	6	8	8	li mortai piedi
+145	2	2	2	questa
+145	6	8	7	sì cosa nuova
+145	7	8	7	cosa nuova
+146	3	4	4	gran segno
+146	7	7	7	Dio
+147	3	4	3	priego tuo
+148	4	8	4	quel che tu più brami
+148	6	6	6	tu
+149	4	7	5	la terra di Toscana
+149	7	7	7	Toscana
+150	3	4	4	miei propinqui
+150	5	5	5	tu
+150	7	7	7	mi
+151	1	1	1	Tu
+151	2	2	2	li
+151	5	7	6	quella gente vana
+151	6	7	6	gente vana
+152	1	1	1	che
+152	4	4	4	Talamone
+153	1	3	1	più di speranza
+153	3	3	3	speranza
+153	7	8	8	la Diana
+153	8	8	8	Diana
+154	5	6	6	li ammiragli

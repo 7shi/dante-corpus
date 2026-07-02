@@ -1,0 +1,373 @@
+line	start	end	head	text
+1	2	5	3	insensata cura de' mortali
+1	2	3	3	insensata cura
+1	3	5	3	cura de' mortali
+1	5	5	5	mortali
+2	3	4	4	difettivi silogismi
+3	1	9	1	quei che ti fanno in basso batter l'ali
+3	6	6	6	basso
+3	8	9	9	l'ali
+4	1	1	1	Chi
+4	4	4	4	iura
+4	6	6	6	chi
+4	8	8	8	amforismi
+5	4	4	4	chi
+5	6	6	6	sacerdozio
+6	2	2	2	chi
+6	5	5	5	forza
+6	8	8	8	sofismi
+7	2	2	2	chi
+7	2	2	2	chi
+7	6	7	7	civil negozio
+8	1	7	1	chi nel diletto de la carne involto
+8	1	1	1	chi
+8	3	6	3	diletto de la carne
+8	5	6	6	la carne
+9	4	4	4	chi
+9	8	9	9	l'ozio
+10	3	5	5	tutte queste cose
+10	4	5	5	queste cose
+10	5	5	5	cose
+11	2	2	2	Bëatrice
+11	3	3	3	m'
+11	7	7	7	cielo
+12	1	3	3	cotanto glorïosamente accolto
+12	3	3	3	accolto
+13	3	3	3	ciascuno
+14	1	8	1	punto del cerchio in che avanti s'era
+14	1	3	1	punto del cerchio
+14	3	8	3	cerchio in che avanti s'era
+14	3	3	3	cerchio
+14	5	5	5	che
+15	4	4	4	candellier
+15	5	5	5	candelo
+16	2	2	2	io
+16	6	7	7	quella lumera
+17	1	1	1	che
+17	3	3	3	m'
+18	1	1	1	incominciar
+19	3	3	3	io
+19	5	6	6	suo raggio
+20	4	6	5	la luce etterna
+21	1	3	3	li tuoi pensieri
+21	5	5	5	cagioni
+22	1	1	1	Tu
+22	5	5	5	voler
+23	2	8	8	sì aperta e 'n sì distesa lingua
+23	6	8	8	sì distesa lingua
+24	1	3	2	lo dicer mio
+24	1	2	2	lo dicer
+24	2	3	2	dicer mio
+24	6	7	7	tuo sentir
+25	0	0	0	
+26	7	8	8	il secondo
+27	4	8	4	uopo che ben si distingua
+27	4	4	4	uopo
+28	1	2	2	La provedenza
+28	5	6	6	il mondo
+29	2	3	3	quel consiglio
+29	5	5	5	quale
+29	6	7	7	ogne aspetto
+30	1	1	1	creato
+30	8	8	8	fondo
+31	5	7	7	lo suo diletto
+32	1	8	2	la sposa di colui ch'ad alte grida
+32	1	2	2	la sposa
+32	4	8	4	colui ch'ad alte grida
+32	7	8	8	alte grida
+33	2	2	2	lei
+33	4	5	4	sangue benedetto
+34	2	2	2	sé
+34	7	7	7	lui
+35	1	2	2	due principi
+35	2	2	2	principi
+35	5	6	6	suo favore
+35	6	6	6	favore
+36	1	1	1	che
+36	5	5	5	le
+36	8	8	8	guida
+37	1	2	2	L'un
+37	7	7	7	ardore
+38	1	2	2	l'altro
+38	4	4	4	sapïenza
+38	6	6	6	terra
+39	1	5	5	di cherubica luce uno splendore
+39	2	3	3	cherubica luce
+39	4	5	5	uno splendore
+40	2	3	3	l'un
+40	8	8	8	amendue
+41	3	4	4	l'un
+41	8	8	8	om
+42	3	4	4	un fine
+42	6	8	7	l'opere sue
+43	2	2	2	Tupino
+43	4	7	5	l'acqua che discende
+43	4	5	5	l'acqua
+44	2	6	2	colle eletto dal beato Ubaldo
+44	2	3	2	colle eletto
+44	2	2	2	colle
+44	5	6	6	beato Ubaldo
+44	6	6	6	Ubaldo
+45	1	5	2	fertile costa d'alto monte
+45	1	2	2	fertile costa
+45	2	2	2	costa
+45	4	5	5	alto monte
+45	5	5	5	monte
+46	2	2	2	Perugia
+46	4	6	4	freddo e caldo
+46	4	4	4	freddo
+46	6	6	6	caldo
+47	2	3	2	Porta Sole
+47	3	3	3	Sole
+47	6	6	6	rietro
+47	7	7	7	le
+48	2	3	3	grave giogo
+48	4	6	4	Nocera con Gualdo
+48	4	4	4	Nocera
+48	6	6	6	Gualdo
+49	2	3	3	questa costa
+49	3	3	3	costa
+49	6	6	6	ella
+50	2	3	3	sua rattezza
+50	3	3	3	rattezza
+50	6	6	6	mondo
+50	7	8	8	un sole
+50	8	8	8	sole
+51	3	3	3	questo
+51	6	6	6	Gange
+52	2	7	2	chi d'esso loco fa parole
+52	4	5	5	esso loco
+52	7	7	7	parole
+53	3	3	3	Ascesi
+54	2	2	2	Orïente
+55	7	8	8	l'orto
+56	2	2	2	el
+56	7	8	8	la terra
+57	1	7	7	de la sua gran virtute alcun conforto
+57	2	5	5	la sua gran virtute
+57	6	7	7	alcun conforto
+58	3	4	4	tal donna
+58	4	4	4	donna
+58	5	5	5	giovinetto
+58	7	7	7	guerra
+59	2	2	2	padre
+59	5	5	5	cui
+59	8	9	9	la morte
+59	9	9	9	morte
+60	1	4	2	la porta del piacer
+60	1	2	2	la porta
+60	2	4	2	porta del piacer
+60	2	2	2	porta
+60	4	4	4	piacer
+60	5	5	5	nessun
+61	4	7	7	la sua spirital corte
+62	3	3	3	patre
+62	4	4	4	le
+63	3	3	3	dì
+63	3	3	3	dì
+63	6	6	6	l'
+64	1	1	1	Questa
+64	4	5	5	primo marito
+65	1	2	2	millecent' anni
+66	3	3	3	costui
+66	7	7	7	invito
+67	3	3	3	udir
+67	5	5	5	la
+68	2	2	2	Amiclate
+68	4	8	4	suon de la sua voce
+68	6	8	8	la sua voce
+69	1	8	1	colui ch'a tutto 'l mondo fé paura
+69	4	6	6	tutto 'l mondo
+69	5	6	6	'l mondo
+69	8	8	8	paura
+70	3	6	3	esser costante né feroce
+71	4	4	4	Maria
+72	1	1	1	ella
+72	3	3	3	Cristo
+72	7	8	8	la croce
+73	3	3	3	io
+74	1	3	1	Francesco e Povertà
+74	1	1	1	Francesco
+74	3	3	3	Povertà
+74	5	6	6	questi amanti
+75	4	6	5	mio parlar diffuso
+75	4	5	5	mio parlar
+75	5	6	5	parlar diffuso
+76	1	8	3	La lor concordia e i lor lieti sembianti
+76	1	3	3	La lor concordia
+76	2	3	3	lor concordia
+76	3	3	3	concordia
+76	5	8	8	i lor lieti sembianti
+76	6	8	8	lor lieti sembianti
+76	7	8	8	lieti sembianti
+76	8	8	8	sembianti
+77	1	6	1	amore e maraviglia e dolce sguardo
+77	1	1	1	amore
+77	3	3	3	maraviglia
+77	5	6	6	dolce sguardo
+77	6	6	6	sguardo
+78	3	6	3	cagion di pensier santi
+78	3	3	3	cagion
+78	5	6	5	pensier santi
+78	5	5	5	pensier
+79	3	5	5	'l venerabile Bernardo
+80	7	8	8	tanta pace
+81	4	4	4	li
+82	2	3	3	ignota ricchezza
+82	5	6	5	ben ferace
+83	2	2	2	Egidio
+83	4	4	4	Silvestro
+84	3	4	4	lo sposo
+84	6	7	7	la sposa
+85	4	8	5	quel padre e quel maestro
+85	4	5	5	quel padre
+85	7	8	8	quel maestro
+86	2	4	4	la sua donna
+86	7	8	8	quella famiglia
+87	4	6	6	l'umile capestro
+88	2	2	2	li
+88	4	6	4	viltà di cuor
+88	6	6	6	cuor
+88	7	8	8	le ciglia
+89	3	6	3	fi' di Pietro Bernardone
+89	5	6	6	Pietro Bernardone
+89	5	5	5	Pietro
+89	6	6	6	Bernardone
+90	4	6	4	dispetto a maraviglia
+90	4	4	4	dispetto
+90	6	6	6	maraviglia
+91	3	5	5	sua dura intenzione
+91	4	5	5	dura intenzione
+91	5	5	5	intenzione
+92	2	2	2	Innocenzio
+92	6	6	6	lui
+93	1	5	2	primo sigillo a sua religïone
+93	1	2	2	primo sigillo
+93	2	5	2	sigillo a sua religïone
+93	2	2	2	sigillo
+93	4	5	5	sua religïone
+93	5	5	5	religïone
+94	3	5	4	la gente poverella
+95	3	3	3	costui
+95	4	7	7	la cui mirabil vita
+96	3	5	3	gloria del ciel
+96	5	5	5	ciel
+97	2	4	3	seconda corona redimita
+97	2	3	3	seconda corona
+97	3	3	3	corona
+98	3	3	3	Onorio
+98	5	7	7	l'Etterno Spiro
+98	6	7	7	Etterno Spiro
+98	7	7	7	Spiro
+99	1	6	3	la santa voglia d'esto archimandrita
+99	1	3	3	la santa voglia
+99	2	3	3	santa voglia
+99	3	3	3	voglia
+99	5	6	6	esto archimandrita
+99	6	6	6	archimandrita
+100	5	8	6	la sete del martiro
+100	5	6	6	la sete
+100	6	8	6	sete del martiro
+100	8	8	8	martiro
+101	2	6	3	la presenza del Soldan superba
+101	2	3	3	la presenza
+101	3	6	3	presenza del Soldan superba
+101	5	5	5	Soldan
+102	2	2	2	Cristo
+102	4	8	5	li altri che 'l seguiro
+102	4	5	5	li altri
+103	5	6	5	conversione acerba
+104	2	3	3	la gente
+105	3	7	3	frutto de l'italica erba
+105	5	7	7	l'italica erba
+106	1	7	3	nel crudo sasso intra Tevero e Arno
+106	1	3	3	nel crudo sasso
+106	2	7	3	crudo sasso intra Tevero e Arno
+106	2	3	3	crudo sasso
+106	3	3	3	sasso
+106	5	7	5	Tevero e Arno
+106	5	5	5	Tevero
+106	7	7	7	Arno
+107	2	2	2	Cristo
+107	4	6	6	l'ultimo sigillo
+107	5	6	6	ultimo sigillo
+107	6	6	6	sigillo
+108	2	4	4	le sue membra
+108	3	4	4	sue membra
+108	4	4	4	membra
+108	5	6	6	due anni
+108	6	6	6	anni
+109	3	8	3	colui ch'a tanto ben sortillo
+109	3	3	3	colui
+109	6	7	7	tanto ben
+109	7	7	7	ben
+110	6	7	7	la mercede
+110	7	7	7	mercede
+111	2	2	2	el
+111	5	7	6	suo farsi pusillo
+111	6	7	6	farsi pusillo
+111	6	6	6	farsi
+112	2	3	2	frati suoi
+112	7	8	8	giuste rede
+113	2	6	3	la donna sua più cara
+114	4	4	4	l'
+114	7	7	7	fede
+115	2	7	6	del suo grembo l'anima preclara
+115	3	4	4	suo grembo
+115	5	7	6	l'anima preclara
+116	6	7	7	suo regno
+117	3	4	4	suo corpo
+117	7	8	8	altra bara
+118	3	3	3	qual
+118	5	7	5	colui che degno
+118	5	5	5	colui
+119	1	1	1	collega
+119	5	6	6	la barca
+120	2	2	2	Pietro
+120	4	5	5	alto mar
+120	7	8	8	dritto segno
+121	2	2	2	questo
+121	4	6	6	il nostro patrïarca
+121	5	6	6	nostro patrïarca
+122	3	3	3	qual
+122	5	5	5	lui
+122	7	7	7	el
+123	4	5	5	buone merce
+124	2	7	4	'l suo pecuglio di nova vivanda
+124	2	4	4	'l suo pecuglio
+124	3	7	4	suo pecuglio di nova vivanda
+124	3	4	4	suo pecuglio
+124	4	7	4	pecuglio di nova vivanda
+124	6	7	7	nova vivanda
+125	0	0	0	
+126	3	4	4	diversi salti
+127	3	6	5	le sue pecore remote
+128	5	5	5	esso
+129	4	8	5	l'ovil di latte vòte
+129	7	8	7	latte vòte
+130	4	8	4	quelle che temono 'l danno
+130	4	4	4	quelle
+130	7	8	8	'l danno
+131	3	4	4	al pastor
+131	4	4	4	pastor
+131	8	8	8	poche
+132	2	3	3	le cappe
+132	5	6	6	poco panno
+133	3	5	5	le mie parole
+134	2	4	4	la tua audïenza
+135	2	5	2	ciò ch'è detto
+135	7	8	8	la mente
+136	2	2	2	parte
+136	4	7	6	la tua voglia contenta
+136	4	6	6	la tua voglia
+136	5	7	6	tua voglia contenta
+136	5	6	6	tua voglia
+136	6	7	6	voglia contenta
+136	6	6	6	voglia
+137	3	4	4	la pianta
+137	4	4	4	pianta
+138	3	6	4	il corrègger che argomenta
+138	3	4	4	il corrègger
+138	4	6	4	corrègger che argomenta
+138	4	4	4	corrègger
+139	1	2	2	U' ben

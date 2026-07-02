@@ -1,0 +1,355 @@
+line	start	end	head	text
+1	1	1	1	Imagini
+1	2	5	2	chi bene intender cupe
+2	1	5	1	quel ch'i' or vidi
+2	3	3	3	i'
+2	8	9	9	l'image
+3	3	3	3	io
+3	6	7	7	ferma rupe
+4	1	6	2	quindici stelle che 'n diverse plage
+4	1	2	2	quindici stelle
+4	5	6	6	diverse plage
+5	1	2	2	lo ciel
+5	5	6	6	tanto sereno
+6	3	7	7	de l'aere ogne compage
+6	4	5	5	l'aere
+6	6	7	7	ogne compage
+7	2	3	3	quel carro
+7	6	7	7	il seno
+8	3	8	4	nostro cielo e notte e giorno
+8	3	4	4	nostro cielo
+8	6	8	6	notte e giorno
+8	6	6	6	notte
+8	8	8	8	giorno
+9	4	6	4	volger del temo
+9	6	6	6	temo
+10	2	6	3	la bocca di quel corno
+10	2	3	3	la bocca
+10	3	6	3	bocca di quel corno
+10	5	6	6	quel corno
+11	5	8	5	punta de lo stelo
+11	7	8	8	lo stelo
+12	3	5	5	la prima rota
+13	4	4	4	sé
+13	5	8	6	due segni in cielo
+13	5	6	6	due segni
+13	8	8	8	cielo
+14	3	6	4	la figliuola di Minoi
+14	3	4	4	la figliuola
+14	6	6	6	Minoi
+15	4	7	7	di morte il gelo
+15	5	5	5	morte
+15	6	7	7	il gelo
+16	2	3	3	l'un
+16	5	6	6	l'altro
+16	8	10	9	li raggi suoi
+16	9	10	9	raggi suoi
+17	2	2	2	amendue
+17	5	5	5	maniera
+18	2	3	3	l'uno
+18	6	6	6	primo
+18	8	9	9	l'altro
+18	11	11	11	poi
+19	4	8	5	l'ombra de la vera
+19	4	5	5	l'ombra
+19	7	8	8	la vera
+20	1	1	1	costellazione
+20	4	6	6	la doppia danza
+21	3	7	4	il punto dov' io era
+21	3	4	4	il punto
+21	6	6	6	io
+22	8	9	9	nostra usanza
+23	4	8	5	dal mover de la Chiana
+23	5	8	5	mover de la Chiana
+23	7	8	8	la Chiana
+24	3	9	4	il ciel che tutti li altri avanza
+24	3	4	4	il ciel
+24	6	8	8	tutti li altri
+24	7	8	8	li altri
+25	5	5	5	Bacco
+25	7	7	7	Peana
+26	2	6	3	tre persone in divina natura
+26	2	3	3	tre persone
+26	5	6	6	divina natura
+27	3	8	4	una persona essa e l'umana
+27	3	4	4	una persona
+27	5	8	8	essa e l'umana
+27	5	5	5	essa
+27	7	8	8	l'umana
+28	2	3	3	'l cantare
+28	5	8	6	'l volger sua misura
+28	7	8	8	sua misura
+29	4	4	4	noi
+29	5	7	7	quei santi lumi
+30	2	2	2	sé
+30	4	4	4	cura
+30	4	4	4	cura
+31	2	3	3	il silenzio
+31	5	6	6	concordi numi
+32	2	3	3	la luce
+32	6	7	7	mirabil vita
+33	2	4	2	poverel di Dio
+33	4	4	4	Dio
+34	4	6	6	l'una paglia
+34	5	6	6	una paglia
+35	2	4	4	la sua semenza
+35	3	4	4	sua semenza
+36	3	4	4	l'altra
+36	5	6	6	dolce amor
+37	1	1	1	Tu
+37	5	8	5	petto onde la costa
+37	5	5	5	petto
+37	7	8	8	la costa
+38	5	7	7	la bella guancia
+39	1	3	3	il cui palato
+39	5	7	7	tutto 'l mondo
+39	6	7	7	'l mondo
+40	3	4	3	quel che
+40	7	8	8	la lancia
+41	0	0	0	
+42	3	4	4	ogne colpa
+42	6	7	7	la bilancia
+43	3	5	4	la natura umana
+44	3	3	3	lume
+44	4	4	4	tutto
+45	2	10	3	quel valor che l'uno e l'altro fece
+45	2	3	3	quel valor
+45	5	9	6	l'uno e l'altro
+45	5	6	6	l'uno
+45	8	9	9	l'altro
+46	5	9	5	ciò ch'io dissi suso
+46	5	5	5	ciò
+47	6	7	7	'l secondo
+48	1	9	2	lo ben che ne la quinta luce è chiuso
+48	1	2	2	lo ben
+48	5	7	7	la quinta luce
+48	6	7	7	quinta luce
+49	3	4	4	li occhi
+49	6	10	6	quel ch'io ti rispondo
+50	3	5	5	il tuo credere
+50	7	9	9	'l mio dire
+51	2	3	3	vero farsi
+51	5	5	5	centro
+51	7	7	7	tondo
+52	1	9	6	Ciò che non more e ciò che può morire
+52	1	4	4	Ciò che non more
+52	6	9	6	ciò che può morire
+53	5	8	5	splendor di quella idea
+53	7	8	8	quella idea
+54	4	6	6	il nostro Sire
+55	2	7	4	quella viva luce che sì mea
+55	2	4	4	quella viva luce
+55	4	4	4	luce
+55	7	7	7	mea
+56	2	3	3	suo lucente
+56	3	3	3	lucente
+57	2	2	2	lui
+57	5	11	6	l'amor ch'a lor s'intrea
+57	5	6	6	l'amor
+57	6	6	6	amor
+57	9	9	9	lor
+58	2	3	3	sua bontate
+58	4	6	6	il suo raggiare
+58	5	6	6	suo raggiare
+59	4	5	5	nove sussistenze
+60	3	3	3	una
+61	4	6	6	l'ultime potenze
+62	3	3	3	atto
+62	3	3	3	atto
+63	6	7	7	brevi contingenze
+64	2	3	3	queste contingenze
+65	1	3	2	le cose generate
+65	2	3	2	cose generate
+65	4	4	4	che
+66	2	2	2	seme
+66	2	2	2	seme
+66	6	7	7	il ciel
+67	1	4	2	La cera di costoro
+67	1	2	2	La cera
+67	2	4	2	cera di costoro
+67	4	4	4	costoro
+67	6	8	6	chi la duce
+67	7	7	7	la
+68	4	5	5	un modo
+68	9	10	10	'l segno
+69	1	1	1	idëale
+70	2	2	2	elli
+70	5	7	7	un medesimo legno
+70	7	7	7	legno
+71	2	2	2	specie
+72	2	2	2	voi
+72	5	6	6	diverso ingegno
+72	6	6	6	ingegno
+73	4	4	4	punto
+73	5	7	6	la cera dedutta
+73	6	7	6	cera dedutta
+73	6	6	6	cera
+74	3	4	4	il cielo
+74	4	4	4	cielo
+74	6	8	7	sua virtù supprema
+74	7	8	7	virtù supprema
+74	7	7	7	virtù
+75	1	4	2	la luce del suggel
+75	1	2	2	la luce
+75	2	4	2	luce del suggel
+75	2	2	2	luce
+75	3	4	4	del suggel
+75	4	4	4	suggel
+76	2	3	3	la natura
+76	2	2	2	la
+77	4	5	5	l'artista
+78	3	7	4	l'abito de l'arte
+78	6	7	7	l'arte
+78	9	11	9	man che trema
+78	9	9	9	man
+79	3	5	5	'l caldo amor
+79	6	8	8	la chiara vista
+80	2	4	4	la prima virtù
+81	1	3	3	tutta la perfezion
+82	5	7	6	la terra degna
+83	2	5	5	tutta l'animal perfezïone
+83	3	5	5	l'animal perfezïone
+84	4	6	5	la Vergine pregna
+85	3	3	3	io
+85	5	6	6	tua oppinïone
+86	2	4	4	l'umana natura
+87	3	3	3	qual
+87	6	8	8	quelle due persone
+88	3	3	3	i'
+89	3	3	3	costui
+89	6	6	6	pare
+90	2	4	3	le parole tue
+90	3	4	3	parole tue
+91	5	8	5	ciò che non pare
+91	5	5	5	ciò
+92	2	3	2	chi era
+92	2	2	2	chi
+92	5	9	6	la cagion che 'l mosse
+92	5	6	6	la cagion
+92	8	8	8	'l
+93	4	4	4	Chiedi
+94	6	6	6	tu
+95	4	4	4	el
+95	6	6	6	re
+95	9	9	9	senno
+96	3	4	3	re sufficïente
+96	3	3	3	re
+97	4	8	5	il numero in che enno
+97	4	5	5	il numero
+97	7	7	7	che
+98	1	5	2	li motor di qua sù
+98	1	2	2	li motor
+98	2	5	2	motor di qua sù
+98	8	8	8	necesse
+99	2	2	2	contingente
+99	4	4	4	necesse
+100	5	6	6	primum motum
+100	6	6	6	motum
+101	3	5	5	del mezzo cerchio
+101	4	5	5	mezzo cerchio
+101	5	5	5	cerchio
+102	1	1	1	trïangol
+102	4	5	5	un retto
+102	5	5	5	retto
+103	3	6	3	ciò ch'io dissi
+103	8	8	8	questo
+104	1	2	2	regal prudenza
+104	4	6	5	quel vedere impari
+105	3	7	4	lo stral di mia intenzion
+105	6	7	7	mia intenzion
+106	4	4	4	surse
+106	6	8	7	li occhi chiari
+106	7	8	7	occhi chiari
+106	7	7	7	occhi
+107	4	4	4	respetto
+108	2	2	2	regi
+108	5	5	5	molti
+108	7	7	7	buon
+108	9	9	9	rari
+109	2	3	3	questa distinzion
+109	5	7	7	'l mio detto
+110	6	8	6	quel che credi
+111	2	3	3	primo padre
+111	6	7	7	nostro Diletto
+112	2	2	2	questo
+112	6	8	6	piombo a' piedi
+112	8	8	8	piedi
+113	6	7	6	uom lasso
+114	3	3	3	sì
+114	6	6	6	no
+114	8	8	8	tu
+115	2	2	2	quelli
+115	5	6	6	li stolti
+115	9	9	9	basso
+116	3	3	3	distinzione
+117	2	3	3	l'un
+117	7	9	9	l'altro passo
+118	2	2	2	elli
+118	5	6	6	più volte
+119	1	6	2	l'oppinïon corrente in falsa parte
+119	1	3	2	l'oppinïon corrente
+119	1	2	2	l'oppinïon
+119	2	3	2	oppinïon corrente
+119	5	6	6	falsa parte
+120	3	4	4	l'affetto
+120	5	6	6	l'intelletto
+121	1	8	1	Vie più che 'ndarno da riva si parte
+121	1	2	1	Vie più
+121	1	1	1	Vie
+121	4	4	4	'ndarno
+121	6	6	6	riva
+122	4	8	4	tal qual e' si move
+122	4	4	4	tal
+122	5	5	5	qual
+123	1	10	1	chi pesca per lo vero e non ha l'arte
+123	1	1	1	chi
+123	4	5	5	lo vero
+123	5	5	5	vero
+123	9	10	10	l'arte
+123	10	10	10	arte
+124	3	3	3	ciò
+124	6	6	6	mondo
+124	7	8	8	aperte prove
+124	8	8	8	prove
+125	1	1	1	Parmenide
+125	2	2	2	Melisso
+125	4	4	4	Brisso
+125	6	6	6	molti
+126	1	2	2	li quali
+127	3	8	8	Sabellio e Arrio e quelli stolti
+127	3	3	3	Sabellio
+127	5	5	5	Arrio
+127	7	8	8	quelli stolti
+128	4	7	4	spade a le Scritture
+128	4	4	4	spade
+128	6	7	7	le Scritture
+129	4	6	5	li diritti volti
+129	4	5	5	li diritti
+129	5	6	5	diritti volti
+130	3	4	4	le genti
+131	5	7	5	quei che stima
+131	5	5	5	quei
+132	1	4	2	le biade in campo
+132	1	2	2	le biade
+132	4	4	4	campo
+133	2	2	2	i'
+133	5	7	7	tutto 'l verno
+133	6	7	7	'l verno
+134	1	2	2	lo prun
+135	3	4	4	la rosa
+135	7	8	8	la cima
+136	2	2	2	legno
+137	2	3	3	lo mar
+137	5	7	7	tutto suo cammino
+138	2	3	3	al fine
+138	5	9	6	l'intrar de la foce
+138	8	9	9	la foce
+139	3	7	7	donna Berta e ser Martino
+139	3	4	4	donna Berta
+139	6	7	7	ser Martino
+140	3	4	4	un furare
+140	5	6	6	altro offerere
+141	3	5	4	al consiglio divino
+141	4	5	4	consiglio divino
+142	2	2	2	quel
+142	2	2	2	quel

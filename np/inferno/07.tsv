@@ -1,0 +1,356 @@
+line	start	end	head	text
+1	1	2	2	Pape Satàn
+1	1	1	1	Pape
+1	2	2	2	Satàn
+1	2	2	2	Satàn
+1	3	5	4	pape Satàn aleppe
+1	3	3	3	pape
+2	2	2	2	Pluto
+2	4	6	5	la voce chioccia
+3	2	4	3	quel savio gentil
+4	0	0	0	
+5	1	3	3	la tua paura
+5	5	5	5	poder
+5	7	7	7	elli
+6	2	2	2	ci
+6	4	7	5	lo scender questa roccia
+6	4	5	5	lo scender
+6	6	7	7	questa roccia
+7	5	7	7	quella 'nfiata labbia
+8	4	5	5	maladetto lupo
+9	3	3	3	te
+9	5	7	7	la tua rabbia
+10	4	4	4	cagion
+10	5	8	6	l'andare al cupo
+10	7	8	8	al cupo
+10	8	8	8	cupo
+11	3	4	4	l'alto
+11	4	4	4	alto
+11	7	7	7	Michele
+12	2	6	3	la vendetta del superbo strupo
+12	2	3	3	la vendetta
+12	4	6	6	del superbo strupo
+12	5	6	6	superbo strupo
+12	6	6	6	strupo
+13	3	3	3	vento
+13	4	6	6	le gonfiate vele
+13	5	6	6	gonfiate vele
+13	6	6	6	vele
+14	5	7	6	l'alber fiacca
+14	5	6	6	l'alber
+14	6	6	6	alber
+15	4	4	4	terra
+15	5	7	6	la fiera crudele
+15	6	7	6	fiera crudele
+15	6	6	6	fiera
+16	4	6	6	la quarta lacca
+17	4	6	6	la dolente ripa
+18	2	7	3	'l mal de l'universo tutto
+18	2	3	3	'l mal
+18	5	7	6	l'universo tutto
+19	2	4	2	giustizia di Dio
+19	4	4	4	Dio
+19	5	5	5	tante
+19	6	6	6	chi
+20	1	4	2	nove travaglie e pene
+20	1	2	2	nove travaglie
+20	4	4	4	pene
+20	5	5	5	quant'
+20	6	6	6	io
+21	3	4	4	nostra colpa
+21	6	6	6	ne
+22	3	7	4	l'onda là sovra Cariddi
+22	3	4	4	l'onda
+22	7	7	7	Cariddi
+23	1	1	1	che
+23	5	9	5	quella in cui s'intoppa
+23	5	5	5	quella
+23	7	7	7	cui
+24	5	6	6	la gente
+25	3	3	3	i'
+25	4	8	4	gente più ch'altrove troppa
+25	4	4	4	gente
+26	3	4	4	una parte
+26	4	4	4	parte
+26	7	7	7	altra
+26	9	10	10	grand' urli
+26	10	10	10	urli
+27	2	2	2	pesi
+27	4	6	4	forza di poppa
+27	4	4	4	forza
+27	6	6	6	poppa
+28	2	2	2	'ncontro
+29	3	3	3	ciascun
+29	6	6	6	retro
+30	0	0	0	
+31	4	6	5	lo cerchio tetro
+32	2	3	3	ogne mano
+32	5	7	7	l'opposito punto
+33	3	5	5	loro ontoso metro
+34	4	4	4	ciascun
+35	2	5	5	lo suo mezzo cerchio
+35	3	5	5	suo mezzo cerchio
+35	4	5	5	mezzo cerchio
+35	7	9	9	l'altra giostra
+35	8	9	9	altra giostra
+36	2	2	2	io
+36	5	8	6	lo cor quasi compunto
+36	5	6	6	lo cor
+36	6	8	6	cor quasi compunto
+37	2	3	2	Maestro mio
+38	2	2	2	gente
+38	4	4	4	questa
+38	7	7	7	tutti
+38	9	9	9	cherci
+39	1	2	2	questi chercuti
+39	4	6	5	la sinistra nostra
+39	5	6	5	sinistra nostra
+40	2	2	2	elli
+40	4	4	4	me
+40	5	6	5	Tutti quanti
+40	8	8	8	guerci
+41	3	4	4	la mente
+41	6	8	7	la vita primaia
+42	3	3	3	misura
+42	4	5	5	nullo spendio
+43	2	4	3	la voce lor
+43	3	3	3	voce
+44	4	7	5	due punti del cerchio
+44	4	5	5	due punti
+44	5	7	5	punti del cerchio
+44	6	7	7	del cerchio
+44	7	7	7	cerchio
+45	2	3	2	colpa contraria
+45	2	2	2	colpa
+46	1	3	3	Questi fuor cherci
+46	3	3	3	cherci
+46	7	7	7	coperchio
+47	2	3	3	al capo
+47	3	3	3	capo
+47	5	5	5	papi
+47	7	7	7	cardinali
+48	4	4	4	avarizia
+48	5	7	7	il suo soperchio
+48	7	7	7	soperchio
+49	2	2	2	io
+49	3	3	3	Maestro
+49	5	6	6	questi cotali
+50	2	2	2	io
+50	5	5	5	alcuni
+51	1	1	1	che
+51	5	6	6	cotesti mali
+52	2	2	2	elli
+52	4	4	4	me
+52	5	6	6	Vano pensiero
+52	6	6	6	pensiero
+53	1	7	3	la sconoscente vita che i fé sozzi
+53	1	3	3	la sconoscente vita
+53	3	3	3	vita
+53	5	5	5	i
+54	2	3	3	ogne conoscenza
+54	3	3	3	conoscenza
+54	5	5	5	li
+55	2	2	2	etterno
+55	5	7	7	li due cozzi
+56	1	1	1	questi
+56	4	4	4	sepulcro
+57	2	3	2	pugno chiuso
+57	5	5	5	questi
+57	7	8	7	crin mozzi
+58	1	8	2	Mal dare e mal tener lo mondo pulcro
+58	1	2	2	Mal dare
+58	4	8	5	mal tener lo mondo pulcro
+58	4	5	5	mal tener
+58	6	8	7	lo mondo pulcro
+59	3	3	3	loro
+59	7	8	8	questa zuffa
+60	2	2	2	ella
+60	4	4	4	parole
+61	3	3	3	figliuol
+61	5	7	7	la corta buffa
+62	2	9	3	i ben che son commessi a la fortuna
+62	2	3	3	i ben
+62	8	9	9	la fortuna
+63	3	5	5	l'umana gente
+64	2	9	4	tutto l'oro ch'è sotto la luna
+64	2	4	4	tutto l'oro
+64	3	9	4	l'oro ch'è sotto la luna
+64	3	4	4	l'oro
+64	8	9	9	la luna
+65	6	8	7	quest' anime stanche
+65	6	7	7	quest' anime
+65	7	8	7	anime stanche
+66	5	5	5	una
+67	1	2	1	Maestro mio
+67	4	4	4	io
+68	1	7	2	questa fortuna di che tu mi tocche
+68	1	2	2	questa fortuna
+68	4	4	4	che
+68	5	5	5	tu
+69	1	1	1	che
+69	4	7	5	i ben del mondo
+69	4	5	5	i ben
+69	7	7	7	mondo
+69	11	11	11	branche
+70	2	2	2	quelli
+70	4	4	4	me
+70	6	7	6	creature sciocche
+71	1	2	2	quanta ignoranza
+71	4	7	4	quella che v'offende
+71	4	4	4	quella
+72	4	4	4	tu
+72	5	6	6	mia sentenza
+73	1	6	1	Colui lo cui saver tutto trascende
+73	2	4	4	lo cui saver
+73	4	4	4	saver
+74	2	3	3	li cieli
+74	6	6	6	lor
+74	7	8	7	chi conduce
+75	3	4	4	ogne parte
+75	3	4	4	ogne parte
+76	3	4	4	la luce
+77	3	5	4	li splendor mondani
+78	2	5	3	general ministra e duce
+78	2	3	3	general ministra
+78	5	5	5	duce
+79	4	4	4	tempo
+79	5	7	6	li ben vani
+80	2	2	2	gente
+80	2	2	2	gente
+80	7	7	7	uno
+80	9	10	10	altro sangue
+81	2	7	3	la difension d'i senni umani
+81	5	7	6	i senni umani
+82	3	4	4	una gente
+82	7	8	8	l'altra
+83	2	5	3	lo giudicio di costei
+83	5	5	5	costei
+84	6	6	6	erba
+84	7	8	8	l'angue
+85	1	2	2	Vostro saver
+85	7	7	7	lei
+86	1	1	1	questa
+87	1	2	2	suo regno
+87	4	5	5	il loro
+87	6	8	8	li altri dèi
+88	1	3	3	Le sue permutazion
+88	6	6	6	triegue
+89	1	1	1	necessità
+89	2	2	2	la
+90	4	6	4	chi vicenda consegue
+90	5	5	5	vicenda
+91	1	1	1	Quest'
+91	3	9	3	colei ch'è tanto posta in croce
+91	3	3	3	colei
+91	9	9	9	croce
+92	3	8	3	color che le dovrien dar lode
+92	3	3	3	color
+92	8	8	8	lode
+93	2	7	2	biasmo a torto e mala voce
+93	2	4	2	biasmo a torto
+93	2	2	2	biasmo
+93	4	4	4	torto
+93	6	7	7	mala voce
+93	7	7	7	voce
+94	2	2	2	ella
+94	7	7	7	ciò
+95	2	5	5	l'altre prime creature
+95	3	5	5	altre prime creature
+95	4	5	5	prime creature
+95	5	5	5	creature
+96	2	3	3	sua spera
+96	3	3	3	spera
+97	5	6	6	maggior pieta
+98	2	3	3	ogne stella
+99	2	2	2	io
+99	6	8	8	'l troppo star
+100	1	1	1	Noi
+100	3	4	4	il cerchio
+100	6	8	8	l'altra riva
+101	2	7	3	una fonte che bolle e riversa
+101	2	3	3	una fonte
+101	4	4	4	che
+102	2	7	3	un fossato che da lei deriva
+102	2	3	3	un fossato
+102	4	4	4	che
+102	6	6	6	lei
+103	1	2	2	L'acqua
+104	2	2	2	noi
+104	4	8	4	compagnia de l'onde bige
+104	6	8	7	l'onde bige
+105	4	6	5	una via diversa
+106	2	3	3	la palude
+106	7	8	7	nome Stige
+106	8	8	8	Stige
+107	1	3	3	questo tristo ruscel
+108	2	7	2	piè de le maligne piagge grige
+108	4	7	6	le maligne piagge grige
+109	2	2	2	io
+109	5	5	5	mirare
+110	2	3	2	genti fangose
+110	2	2	2	genti
+110	5	6	6	quel pantano
+110	6	6	6	pantano
+111	4	5	4	sembiante offeso
+111	4	4	4	sembiante
+112	1	1	1	Queste
+112	7	7	7	mano
+113	3	10	4	la testa e col petto e coi piedi
+113	3	4	4	la testa
+113	6	7	7	col petto
+113	9	10	10	coi piedi
+114	2	3	3	co' denti
+114	5	5	5	brano
+114	5	5	5	brano
+115	1	3	3	Lo buon maestro
+115	5	5	5	Figlio
+116	1	8	2	l'anime di color cui vinse l'ira
+116	1	2	2	l'anime
+116	4	8	4	color cui vinse l'ira
+116	7	8	8	l'ira
+117	5	5	5	tu
+118	3	4	4	l'acqua
+118	6	8	6	gente che sospira
+118	6	6	6	gente
+119	4	5	5	quest' acqua
+119	7	7	7	summo
+120	2	3	3	l'occhio
+121	3	3	3	limo
+122	2	9	3	l'aere dolce che dal sol s'allegra
+122	2	4	3	l'aere dolce
+122	2	3	3	l'aere
+122	3	9	3	aere dolce che dal sol s'allegra
+122	3	4	3	aere dolce
+122	3	3	3	aere
+122	7	7	7	sol
+123	3	3	3	accidïoso
+124	2	2	2	ci
+124	5	7	6	la belletta negra
+124	6	7	6	belletta negra
+124	6	6	6	belletta
+125	1	2	2	Quest' inno
+125	2	2	2	inno
+125	3	3	3	si
+125	6	7	7	la strozza
+125	7	7	7	strozza
+126	6	7	6	parola integra
+126	6	6	6	parola
+127	4	6	6	la lorda pozza
+128	1	9	2	grand' arco tra la ripa secca e 'l mézzo
+128	1	2	2	grand' arco
+128	4	9	5	la ripa secca e 'l mézzo
+128	4	6	5	la ripa secca
+128	8	9	9	'l mézzo
+129	2	9	3	li occhi vòlti a chi del fango ingozza
+129	2	4	3	li occhi vòlti
+129	2	3	3	li occhi
+129	6	9	6	chi del fango ingozza
+129	8	8	8	fango
+130	3	9	3	piè d'una torre al da sezzo
+130	3	3	3	piè
+130	5	9	6	una torre al da sezzo
+130	5	6	6	una torre
+130	6	9	6	torre al da sezzo
+130	6	6	6	torre
+130	8	9	9	da sezzo
+130	9	9	9	sezzo

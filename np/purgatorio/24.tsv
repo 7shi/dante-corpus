@@ -1,0 +1,405 @@
+line	start	end	head	text
+1	2	5	3	'l dir l'andar
+1	2	3	3	'l dir
+1	4	5	5	l'andar
+1	4	5	5	l'andar
+1	7	11	8	l'andar lui più lento
+1	9	11	9	lui più lento
+2	0	0	0	
+3	3	7	3	nave pinta da buon vento
+3	3	4	3	nave pinta
+3	6	7	7	buon vento
+4	2	3	3	l'ombre
+4	6	7	6	cose rimorte
+5	2	6	3	le fosse de li occhi
+5	5	6	6	li occhi
+5	7	7	7	ammirazione
+6	3	3	3	me
+6	5	6	6	mio vivere
+7	2	2	2	io
+7	5	6	6	mio sermone
+8	2	2	2	Ella
+9	5	6	6	altrui cagione
+10	4	4	4	tu
+10	8	8	8	Piccarda
+11	3	3	3	io
+11	5	7	7	da notar persona
+11	7	7	7	persona
+12	2	7	3	questa gente che sì mi riguarda
+12	2	3	3	questa gente
+12	3	3	3	gente
+12	6	6	6	mi
+13	1	3	3	La mia sorella
+13	2	3	3	mia sorella
+13	3	3	3	sorella
+13	4	4	4	che
+13	6	8	6	bella e buona
+13	6	6	6	bella
+13	8	8	8	buona
+14	3	3	3	qual
+15	2	4	4	l'alto Olimpo
+15	3	4	4	alto Olimpo
+15	4	4	4	Olimpo
+15	7	8	8	sua corona
+15	8	8	8	corona
+16	0	0	0	
+17	3	3	3	ciascun
+18	1	2	2	nostra sembianza
+18	5	6	6	la dïeta
+19	1	1	1	Questi
+19	4	5	5	col dito
+19	5	5	5	dito
+19	7	7	7	Bonagiunta
+20	1	3	1	Bonagiunta da Lucca
+20	3	3	3	Lucca
+20	5	6	6	quella faccia
+21	4	4	4	lui
+21	7	8	8	l'altre
+22	2	4	4	la Santa Chiesa
+22	6	8	8	le sue braccia
+23	2	2	2	Torso
+23	7	7	7	digiuno
+24	1	4	2	l'anguille di Bolsena
+24	4	4	4	Bolsena
+24	6	7	7	la vernaccia
+25	1	2	2	Molti altri
+25	6	6	6	uno
+25	6	6	6	uno
+26	3	3	3	nomar
+26	5	5	5	tutti
+27	3	3	3	io
+27	7	9	8	un atto bruno
+28	3	3	3	fame
+28	5	5	5	vòto
+28	7	8	8	li denti
+29	1	6	1	Ubaldin da la Pila e Bonifazio
+29	1	4	1	Ubaldin da la Pila
+29	1	1	1	Ubaldin
+29	3	4	4	la Pila
+29	6	6	6	Bonifazio
+30	4	4	4	rocco
+30	5	6	6	molte genti
+31	2	3	3	messer Marchese
+31	2	2	2	messer
+31	3	3	3	Marchese
+31	6	6	6	spazio
+32	3	8	3	bere a Forlì con men secchezza
+32	3	3	3	bere
+32	5	5	5	Forlì
+32	7	8	8	men secchezza
+32	8	8	8	secchezza
+33	4	4	4	tal
+34	4	9	4	chi guarda e poi s'apprezza
+35	3	3	3	un
+35	6	6	6	altro
+35	9	11	9	quel da Lucca
+35	11	11	11	Lucca
+36	5	5	5	me
+36	7	7	7	contezza
+37	1	1	1	El
+37	7	7	7	Gentucca
+38	2	2	2	io
+38	5	5	5	el
+38	7	8	8	la piaga
+39	2	7	3	la giustizia che sì li pilucca
+39	2	3	3	la giustizia
+39	6	6	6	li
+40	1	2	2	O anima
+40	2	2	2	anima
+40	4	4	4	io
+41	7	7	7	io
+42	2	2	2	te
+42	4	4	4	me
+42	6	7	7	tuo parlare
+42	7	7	7	parlare
+43	1	1	1	Femmina
+43	8	8	8	benda
+44	2	2	2	el
+44	6	6	6	piacere
+45	1	3	3	la mia città
+45	3	3	3	città
+45	6	6	6	om
+46	1	1	1	Tu
+46	6	7	7	questo antivedere
+47	3	4	4	mio mormorar
+47	6	6	6	errore
+48	3	5	4	le cose vere
+49	4	4	4	i'
+49	7	9	7	colui che fore
+49	7	7	7	colui
+50	2	4	4	le nove rime
+51	1	6	1	Donne ch'avete intelletto d'amore
+51	1	1	1	Donne
+51	4	6	4	intelletto d'amore
+51	6	6	6	amore
+52	2	2	2	io
+52	4	4	4	lui
+52	5	5	5	I'
+52	8	9	8	un che
+52	9	9	9	che
+53	1	1	1	Amor
+53	7	8	8	quel modo
+53	8	8	8	modo
+54	1	1	1	ch'
+55	2	2	2	frate
+55	5	5	5	io
+55	7	7	7	elli
+55	8	9	9	il nodo
+56	2	7	3	'l Notaro e Guittone e me
+56	2	3	3	'l Notaro
+56	5	5	5	Guittone
+56	7	7	7	me
+57	4	9	5	dolce stil novo ch'i' odo
+57	4	6	5	dolce stil novo
+57	5	6	5	stil novo
+57	8	8	8	i'
+58	1	1	1	Io
+58	5	7	7	le vostre penne
+59	2	4	2	retro al dittator
+59	4	4	4	dittator
+60	3	4	4	le nostre
+61	2	2	2	qual
+62	5	6	6	l'uno
+62	8	10	10	l'altro stilo
+63	3	3	3	contentato
+64	2	8	3	li augei che vernan lungo 'l Nilo
+64	2	3	3	li augei
+64	7	8	8	'l Nilo
+65	1	2	2	alcuna volta
+65	4	4	4	aere
+65	6	6	6	schiera
+66	5	5	5	fretta
+66	9	9	9	filo
+67	2	7	4	tutta la gente che lì era
+67	2	4	4	tutta la gente
+67	3	7	4	la gente che lì era
+67	3	4	4	la gente
+67	4	4	4	gente
+67	5	5	5	che
+68	2	3	3	'l viso
+68	3	3	3	viso
+68	5	6	6	suo passo
+68	6	6	6	passo
+69	3	3	3	magrezza
+69	6	7	6	voler leggera
+69	6	6	6	voler
+70	3	9	4	l'uom che di trottare è lasso
+70	3	4	4	l'uom
+70	7	7	7	trottare
+71	3	4	4	li compagni
+72	5	8	6	l'affollar del casso
+72	5	6	6	l'affollar
+72	8	8	8	casso
+73	4	6	6	la santa greggia
+73	6	6	6	greggia
+74	1	1	1	Forese
+74	4	4	4	meco
+75	5	5	5	io
+75	6	6	6	ti
+76	4	4	4	io
+76	4	4	4	io
+76	5	5	5	lui
+77	5	7	6	il tornar mio
+77	5	6	6	il tornar
+77	6	7	6	tornar mio
+78	2	2	2	io
+78	6	6	6	voler
+78	9	10	10	la riva
+79	3	9	4	'l loco u' fui a viver posto
+79	3	4	4	'l loco
+80	2	2	2	giorno
+80	2	2	2	giorno
+80	7	7	7	ben
+81	3	4	4	trista ruina
+81	4	4	4	ruina
+82	4	4	4	el
+82	6	11	6	quei che più n'ha colpa
+82	6	6	6	quei
+82	11	11	11	colpa
+83	2	2	2	ïo
+83	4	7	4	coda d'una bestia
+83	6	7	7	una bestia
+84	2	8	3	la valle ove mai non si scolpa
+84	2	3	3	la valle
+85	1	2	2	La bestia
+85	4	5	5	ogne passo
+86	5	5	5	ella
+86	6	6	6	il
+87	3	6	4	il corpo vilmente disfatto
+87	3	4	4	il corpo
+88	3	3	3	molto
+88	6	7	7	quelle ruote
+89	3	4	4	li occhi
+89	6	6	6	ciel
+90	1	9	1	ciò che 'l mio dir più dichiarar non puote
+90	3	5	5	'l mio dir
+90	4	5	5	mio dir
+91	1	1	1	Tu
+91	2	2	2	ti
+91	6	7	7	'l tempo
+92	2	3	3	questo regno
+92	6	6	6	io
+93	2	2	2	teco
+93	5	5	5	paro
+93	5	5	5	paro
+94	3	4	4	alcuna volta
+94	6	6	6	gualoppo
+95	1	6	2	lo cavalier di schiera che cavalchi
+95	1	4	2	lo cavalier di schiera
+95	2	4	2	cavalier di schiera
+95	4	4	4	schiera
+96	5	8	5	onor del primo intoppo
+96	5	5	5	onor
+96	7	8	8	primo intoppo
+97	1	1	1	tal
+97	5	5	5	noi
+97	7	8	8	maggior valchi
+97	8	8	8	valchi
+98	2	2	2	io
+98	5	5	5	via
+98	7	7	7	esso
+98	8	9	9	i due
+98	9	9	9	due
+99	3	4	4	del mondo
+99	4	4	4	mondo
+99	5	7	7	sì gran marescalchi
+99	6	7	7	gran marescalchi
+99	7	7	7	marescalchi
+100	5	5	5	noi
+101	2	4	3	li occhi miei
+101	3	4	3	occhi miei
+101	8	8	8	lui
+102	2	3	3	la mente
+102	5	7	6	le parole sue
+102	6	7	6	parole sue
+103	2	6	3	i rami gravidi e vivaci
+104	2	4	4	un altro pomo
+105	7	7	7	laci
+106	2	2	2	gente
+106	4	4	4	esso
+106	6	7	7	le mani
+107	5	5	5	che
+107	7	8	8	le fronde
+108	2	5	3	bramosi fantolini e vani
+108	3	3	3	fantolini
+109	1	1	1	che
+109	4	5	5	'l pregato
+110	6	8	7	la voglia acuta
+111	3	4	4	lor disio
+112	6	6	6	ricreduta
+113	2	2	2	noi
+113	4	6	6	al grande arbore
+113	5	6	6	grande arbore
+114	2	5	3	tanti prieghi e lagrime
+114	2	3	3	tanti prieghi
+114	5	5	5	lagrime
+115	0	0	0	
+116	1	1	1	legno
+116	9	9	9	Eva
+117	2	3	3	questa pianta
+117	7	7	7	esso
+118	3	4	4	le frasche
+118	7	7	7	chi
+119	3	7	7	Virgilio e Stazio e io
+119	3	5	5	Virgilio e Stazio
+119	3	3	3	Virgilio
+119	5	5	5	Stazio
+119	7	7	7	io
+120	4	7	4	lato che si leva
+120	4	4	4	lato
+121	4	5	5	i maladetti
+121	5	5	5	maladetti
+122	2	3	2	nuvoli formati
+122	2	2	2	nuvoli
+122	4	5	4	che, satolli
+122	4	4	4	che
+123	1	1	1	Tesëo
+123	4	5	5	doppi petti
+123	5	5	5	petti
+124	3	10	4	li Ebrei ch'al ber si mostrar molli
+124	3	4	4	li Ebrei
+124	6	7	7	al ber
+125	4	4	4	i
+125	6	6	6	Gedeon
+125	7	7	7	compagni
+126	3	3	3	Madïan
+126	5	6	6	i colli
+127	4	9	5	l'un d'i due vivagni
+127	4	5	5	l'un
+127	7	9	9	i due vivagni
+127	8	9	9	due vivagni
+127	9	9	9	vivagni
+128	3	6	3	colpe de la gola
+128	3	3	3	colpe
+128	5	6	6	la gola
+128	6	6	6	gola
+129	4	5	5	miseri guadagni
+129	5	5	5	guadagni
+130	4	6	5	la strada sola
+130	5	6	5	strada sola
+131	2	5	3	mille passi e più
+131	2	3	3	mille passi
+131	3	3	3	passi
+131	6	6	6	ci
+132	2	2	2	ciascun
+132	4	4	4	parola
+133	5	7	5	voi sol tre
+133	5	5	5	voi
+133	7	7	7	tre
+134	1	2	2	sùbita voce
+134	2	2	2	voce
+134	5	5	5	io
+135	3	6	3	bestie spaventate e poltre
+135	3	4	3	bestie spaventate
+135	3	3	3	bestie
+135	6	6	6	poltre
+136	2	3	3	la testa
+137	8	8	8	fornace
+138	1	7	1	vetri o metalli sì lucenti e rossi
+138	1	1	1	vetri
+138	3	7	3	metalli sì lucenti e rossi
+138	3	3	3	metalli
+139	2	2	2	io
+139	4	4	4	un
+139	9	9	9	voi
+140	8	8	8	volta
+141	4	8	4	chi vuole andar per pace
+141	8	8	8	pace
+142	1	3	2	L'aspetto suo
+142	6	7	7	la vista
+143	3	3	3	io
+143	7	9	9	a' miei dottori
+143	8	9	9	miei dottori
+144	2	8	2	om che va secondo ch'elli ascolta
+144	2	2	2	om
+144	7	7	7	elli
+145	3	6	3	annunziatrice de li albori
+145	3	3	3	annunziatrice
+145	5	6	6	li albori
+146	1	4	2	l'aura di maggio
+146	1	2	2	l'aura
+146	2	2	2	aura
+146	4	4	4	maggio
+147	4	5	5	l'erba
+147	5	5	5	erba
+147	7	8	8	da' fiori
+147	8	8	8	fiori
+148	1	1	1	tal
+148	4	5	5	un vento
+148	8	8	8	mezza
+149	1	2	2	la fronte
+149	7	8	8	la piuma
+150	4	7	7	d'ambrosïa l'orezza
+150	5	5	5	ambrosïa
+150	6	7	7	l'orezza
+151	4	4	4	Beati
+151	5	5	5	cui
+152	3	3	3	grazia
+152	5	8	6	l'amor del gusto
+152	6	8	6	amor del gusto
+152	8	8	8	gusto
+153	2	3	2	petto lor
+153	2	2	2	petto
+153	4	5	5	troppo disir
+153	5	5	5	disir
+154	3	3	3	quanto

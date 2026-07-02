@@ -1,0 +1,382 @@
+line	start	end	head	text
+1	2	2	2	ïo
+1	4	8	5	le rime aspre e chiocce
+2	4	6	6	al tristo buco
+2	5	6	6	tristo buco
+3	2	3	3	'l qual
+3	5	8	8	tutte l'altre rocce
+3	6	8	8	l'altre rocce
+3	7	8	8	altre rocce
+4	1	1	1	io
+4	3	7	7	di mio concetto il suco
+4	4	5	5	mio concetto
+4	6	7	7	il suco
+5	5	5	5	io
+5	7	7	7	l'
+6	3	3	3	tema
+6	6	6	6	mi
+7	4	8	4	impresa da pigliare a gabbo
+7	4	4	4	impresa
+7	6	8	6	pigliare a gabbo
+7	8	8	8	gabbo
+8	1	6	1	discriver fondo a tutto l'universo
+8	2	6	2	fondo a tutto l'universo
+8	2	2	2	fondo
+8	4	6	6	tutto l'universo
+8	5	6	6	l'universo
+9	3	8	3	lingua che chiami mamma o babbo
+9	3	3	3	lingua
+9	6	8	6	mamma o babbo
+9	6	6	6	mamma
+9	8	8	8	babbo
+10	2	3	3	quelle donne
+10	3	3	3	donne
+10	5	7	7	il mio verso
+10	6	7	7	mio verso
+10	7	7	7	verso
+11	3	3	3	Anfïone
+11	6	6	6	Tebe
+12	4	4	4	fatto
+12	5	6	6	il dir
+12	6	6	6	dir
+13	3	3	3	tutte
+13	4	6	6	mal creata plebe
+14	1	1	1	che
+14	4	8	4	loco onde parlare è duro
+14	4	4	4	loco
+14	6	6	6	parlare
+15	1	1	1	mei
+15	5	7	5	pecore o zebe
+15	5	5	5	pecore
+15	7	7	7	zebe
+16	2	2	2	noi
+16	6	7	6	pozzo scuro
+16	6	6	6	pozzo
+17	2	8	3	i piè del gigante assai più bassi
+17	2	5	3	i piè del gigante
+17	2	3	3	i piè
+17	3	8	3	piè del gigante assai più bassi
+17	3	5	3	piè del gigante
+17	3	3	3	piè
+17	5	5	5	gigante
+18	2	2	2	io
+18	6	8	8	l'alto muro
+18	7	8	8	alto muro
+18	8	8	8	muro
+19	1	1	1	dicere
+20	8	9	9	le piante
+21	1	6	2	le teste de' fratei miseri lassi
+21	4	6	4	fratei miseri lassi
+22	3	3	3	io
+23	3	4	4	i piedi
+23	5	9	6	un lago che per gelo
+23	5	6	6	un lago
+23	9	9	9	gelo
+24	3	3	3	vetro
+24	7	8	7	acqua sembiante
+24	7	7	7	acqua
+25	4	5	4	corso suo
+25	6	8	8	sì grosso velo
+26	2	2	2	verno
+26	3	6	4	la Danoia in Osterlicchi
+26	3	4	4	la Danoia
+26	6	6	6	Osterlicchi
+27	2	2	2	Tanaï
+27	5	7	7	'l freddo cielo
+28	6	6	6	Tambernicchi
+29	6	6	6	Pietrapana
+30	5	6	6	l'orlo
+30	8	8	8	cricchi
+31	4	4	4	gracidar
+31	7	8	8	la rana
+32	1	6	2	col muso fuor de l'acqua
+32	1	2	2	col muso
+32	2	6	2	muso fuor de l'acqua
+32	5	6	6	l'acqua
+33	2	5	2	spigolar sovente la villana
+33	4	5	5	la villana
+34	6	6	6	vergogna
+35	2	4	3	l'ombre dolenti
+35	6	7	7	la ghiaccia
+36	2	3	3	i denti
+36	5	7	5	nota di cicogna
+36	7	7	7	cicogna
+37	1	1	1	Ognuna
+37	6	7	7	la faccia
+38	2	2	2	bocca
+38	3	4	4	il freddo
+38	7	8	8	li occhi
+38	9	11	10	il cor tristo
+39	2	3	3	lor testimonianza
+39	2	2	2	lor
+39	3	3	3	testimonianza
+40	2	2	2	io
+41	3	3	3	piedi
+41	6	8	6	due sì stretti
+42	2	5	3	'l pel del capo
+42	5	5	5	capo
+43	2	7	2	voi che sì strignete i petti
+43	2	2	2	voi
+43	6	7	7	i petti
+44	2	2	2	io
+44	3	3	3	chi
+44	6	6	6	quei
+44	8	9	9	i colli
+45	5	9	6	li visi a me eretti
+45	5	6	6	li visi
+45	8	8	8	me
+46	1	3	2	li occhi lor
+46	1	2	2	li occhi
+46	2	3	2	occhi lor
+47	4	5	5	le labbra
+47	7	8	8	'l gelo
+48	1	4	2	le lagrime tra essi
+48	1	2	2	le lagrime
+48	4	4	4	essi
+49	2	4	4	legno legno spranga
+49	2	2	2	legno
+49	2	2	2	legno
+49	3	4	4	legno spranga
+49	4	4	4	spranga
+50	4	4	4	ei
+50	6	7	7	due becchi
+50	7	7	7	becchi
+51	3	4	4	tanta ira
+51	4	4	4	ira
+51	5	5	5	li
+52	2	8	2	un ch'avea perduti ambo li orecchi
+52	2	2	2	un
+52	6	8	8	ambo li orecchi
+52	7	8	8	li orecchi
+53	2	3	3	la freddura
+53	6	8	6	viso in giùe
+53	6	6	6	viso
+53	8	8	8	giùe
+54	5	5	5	noi
+55	4	4	4	chi
+55	6	7	7	cotesti due
+56	1	6	2	la valle onde Bisenzo si dichina
+56	1	2	2	la valle
+56	4	4	4	Bisenzo
+57	2	4	2	padre loro Alberto
+57	2	3	2	padre loro
+57	4	4	4	Alberto
+57	7	7	7	lor
+58	2	3	3	un corpo
+58	6	8	8	tutta la Caina
+58	7	8	8	la Caina
+59	6	6	6	ombra
+60	7	7	7	gelatina
+61	2	11	2	quelli a cui fu rotto il petto e l'ombra
+61	2	2	2	quelli
+61	7	11	8	il petto e l'ombra
+61	7	8	8	il petto
+61	10	11	11	l'ombra
+62	2	2	2	esso
+62	3	9	4	un colpo per la man d'Artù
+62	3	4	4	un colpo
+62	6	9	7	la man d'Artù
+62	6	7	7	la man
+62	9	9	9	Artù
+63	2	2	2	Focaccia
+63	4	7	4	questi che m'ingombra
+63	4	4	4	questi
+64	1	2	2	col capo
+64	2	2	2	capo
+64	5	5	5	i'
+65	4	5	4	Sassol Mascheroni
+66	2	3	3	tosco se'
+66	3	3	3	se'
+66	7	7	7	chi
+67	7	8	8	più sermoni
+68	3	3	3	i'
+68	5	8	6	il Camiscion de' Pazzi
+68	8	8	8	Pazzi
+69	3	3	3	Carlin
+70	3	3	3	io
+70	4	6	5	mille visi cagnazzi
+70	5	6	5	visi cagnazzi
+71	3	3	3	freddo
+71	5	5	5	mi
+71	7	7	7	riprezzo
+72	4	6	6	de' gelati guazzi
+72	5	6	6	gelati guazzi
+73	6	7	7	lo mezzo
+74	2	2	2	quale
+74	3	4	4	ogne gravezza
+75	2	2	2	io
+75	5	7	7	l'etterno rezzo
+76	2	2	2	voler
+76	5	5	5	destino
+76	7	7	7	fortuna
+77	6	7	7	le teste
+78	3	4	4	'l piè
+78	6	6	6	viso
+78	8	8	8	una
+79	2	2	2	mi
+79	2	2	2	mi
+80	2	2	2	tu
+80	7	8	8	la vendetta
+81	2	2	2	Montaperti
+81	4	4	4	mi
+82	2	2	2	io
+82	3	4	3	Maestro mio
+82	7	7	7	m'
+83	3	3	3	io
+83	6	9	7	un dubbio per costui
+83	6	7	7	un dubbio
+83	9	9	9	costui
+84	2	2	2	mi
+84	4	4	4	quantunque
+84	6	6	6	fretta
+85	1	2	2	Lo duca
+85	5	5	5	io
+85	8	8	8	colui
+86	1	1	1	che
+87	3	7	3	tu che così rampogni altrui
+87	3	3	3	tu
+87	4	4	4	che
+87	7	7	7	altrui
+88	2	2	2	tu
+88	3	3	3	chi
+88	8	9	9	l'Antenora
+89	3	5	5	altrui le gote
+89	4	5	5	le gote
+90	0	0	0	
+91	3	3	3	io
+92	2	3	3	mia risposta
+92	6	6	6	fama
+93	2	2	2	io
+93	4	6	5	il nome tuo
+93	8	10	10	l'altre note
+94	2	2	2	elli
+94	4	4	4	me
+94	5	6	6	Del contrario
+94	6	6	6	contrario
+94	8	8	8	io
+94	9	9	9	brama
+95	5	5	5	mi
+95	8	8	8	lagna
+96	6	7	7	questa lama
+96	7	7	7	lama
+97	2	2	2	lo
+97	5	6	6	la cuticagna
+98	3	3	3	El
+98	6	6	6	tu
+99	3	3	3	capel
+99	7	7	7	ti
+100	2	2	2	elli
+100	4	4	4	me
+100	6	6	6	tu
+100	7	7	7	mi
+101	2	2	2	ti
+101	5	5	5	io
+102	2	3	3	mille fiate
+102	3	3	3	fiate
+102	6	6	6	capo
+102	7	7	7	mi
+103	1	1	1	Io
+103	4	8	5	i capelli in mano avvolti
+103	4	5	5	i capelli
+103	5	8	5	capelli in mano avvolti
+103	7	7	7	mano
+104	5	8	5	più d'una ciocca
+104	7	8	8	una ciocca
+105	2	2	2	lui
+105	4	8	5	li occhi in giù raccolti
+105	4	5	5	li occhi
+105	5	8	5	occhi in giù raccolti
+106	2	3	3	un altro
+106	5	5	5	Che
+106	7	7	7	tu
+106	8	8	8	Bocca
+107	2	2	2	ti
+107	6	7	7	le mascelle
+108	2	2	2	tu
+108	5	6	6	qual diavol
+108	7	7	7	ti
+109	3	3	3	io
+110	1	2	2	malvagio traditor
+110	5	7	7	la tua onta
+111	1	1	1	io
+111	4	4	4	te
+111	5	6	6	vere novelle
+112	5	8	5	ciò che tu vuoi
+112	7	7	7	tu
+113	5	5	5	tu
+114	2	9	2	quel ch'ebbe or così la lingua pronta
+114	7	9	8	la lingua pronta
+115	1	1	1	El
+115	4	7	5	l'argento de' Franceschi
+115	6	7	7	de' Franceschi
+115	7	7	7	Franceschi
+116	1	1	1	Io
+116	5	7	5	quel da Duera
+116	7	7	7	Duera
+117	3	4	4	i peccatori
+118	4	4	4	Altri
+119	1	1	1	tu
+119	4	6	4	quel di Beccheria
+119	6	6	6	Beccheria
+120	2	2	2	cui
+120	4	4	4	Fiorenza
+120	5	6	6	la gorgiera
+121	1	3	1	Gianni de' Soldanier
+121	3	3	3	Soldanier
+122	4	6	4	Ganellone e Tebaldello
+122	4	4	4	Ganellone
+122	6	6	6	Tebaldello
+123	3	3	3	Faenza
+124	1	1	1	Noi
+124	6	6	6	ello
+125	2	2	2	io
+125	4	5	5	due ghiacciati
+125	7	8	8	una buca
+126	3	5	5	l'un capo
+126	4	5	5	un capo
+126	7	8	8	l'altro
+126	10	10	10	cappello
+127	3	6	4	'l pan per fame
+127	3	4	4	'l pan
+127	6	6	6	fame
+128	2	3	3	'l sovran
+128	4	5	5	li denti
+128	7	8	8	l'altro
+129	3	4	4	'l cervel
+129	8	9	9	la nuca
+130	3	3	3	Tidëo
+131	1	4	2	le tempie a Menalippo
+131	1	2	2	le tempie
+131	4	4	4	Menalippo
+131	6	6	6	disdegno
+132	2	2	2	quei
+132	4	9	5	il teschio e l'altre cose
+132	4	5	5	il teschio
+132	7	9	9	l'altre cose
+132	8	9	9	altre cose
+133	2	2	2	tu
+133	6	8	8	sì bestial segno
+133	8	8	8	segno
+134	1	7	1	odio sovra colui che tu ti mangi
+134	1	1	1	odio
+134	3	7	3	colui che tu ti mangi
+134	3	3	3	colui
+134	5	5	5	tu
+135	2	3	3	'l perché
+135	3	3	3	perché
+135	5	5	5	io
+135	7	8	8	tal convegno
+135	8	8	8	convegno
+136	3	3	3	tu
+136	5	7	5	ragion di lui
+136	7	7	7	lui
+137	2	2	2	chi
+137	3	3	3	voi
+137	6	8	8	la sua pecca
+138	2	3	2	mondo suso
+138	5	5	5	io
+138	6	6	6	te
+138	7	7	7	ne
+139	2	6	2	quella con ch'io parlo
+139	2	2	2	quella
+139	5	5	5	io
