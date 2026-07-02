@@ -27,11 +27,16 @@ _PROCESS_START = time.monotonic()
 
 
 class _MofNColumn(ProgressColumn):
-    """`completed/total` — here line-number / lines-in-canto."""
+    """`completed/total` — here line-number / lines-in-canto.
+
+    A task may override the numerator via the `remaining` field (e.g. the retry
+    countdown, where the bar fills forward but the number counts down).
+    """
 
     def render(self, task) -> Text:
         n = int(task.total) if task.total is not None else "?"
-        return Text(f"{int(task.completed)}/{n}", style="progress.download")
+        numerator = task.fields.get("remaining", task.completed)
+        return Text(f"{int(numerator)}/{n}", style="progress.download")
 
 
 class _ProcessElapsedColumn(ProgressColumn):
@@ -65,13 +70,13 @@ class StatusLineConsoleStream(ConsoleStream):
         if self.status_line.active_progress is not None:
             progress = self.status_line.active_progress
             task = progress.add_task(
-                f"[red]{message}", total=delay, completed=delay, show_elapsed=False
+                f"[red]{message}", total=delay, completed=0, remaining=delay, show_elapsed=False
             )
             with progress._lock:
                 progress._tasks = {task: progress._tasks.pop(task), **progress._tasks}
             try:
                 for i in range(delay, -1, -1):
-                    progress.update(task, completed=i)
+                    progress.update(task, completed=delay - i, remaining=i)
                     if i == 0:
                         break
                     time.sleep(1)
