@@ -35,9 +35,15 @@ class _MofNColumn(ProgressColumn):
 
 
 class _ProcessElapsedColumn(ProgressColumn):
-    """Elapsed time since process start (not since this task was added)."""
+    """Elapsed time since process start (not since this task was added).
+
+    Suppressed for tasks with `show_elapsed=False` (e.g. the retry countdown row),
+    since it would duplicate the elapsed time already shown on the main progress line.
+    """
 
     def render(self, task) -> Text:
+        if not task.fields.get("show_elapsed", True):
+            return Text("")
         elapsed = time.monotonic() - _PROCESS_START
         m, s = divmod(int(elapsed), 60)
         h, m = divmod(m, 60)
@@ -57,22 +63,25 @@ class StatusLineConsoleStream(ConsoleStream):
         import time
         width = len(str(delay))
         if self.status_line.active_progress is not None:
-            title_msg = message.rstrip(".")
             progress = self.status_line.active_progress
-            task = progress.add_task(f"[red]{message}", total=delay)
+            task = progress.add_task(
+                f"[red]{message}", total=delay, completed=delay, show_elapsed=False
+            )
             with progress._lock:
                 progress._tasks = {task: progress._tasks.pop(task), **progress._tasks}
             try:
                 for i in range(delay, -1, -1):
-                    progress.update(
-                        task, completed=delay - i, description=f"[red]{title_msg} in {i:>{width}}s..."
-                    )
+                    progress.update(task, completed=i)
+                    if i == 0:
+                        break
                     time.sleep(1)
             finally:
                 progress.remove_task(task)
         else:
             for i in range(delay, -1, -1):
                 self.print(f"\r{message} {i:>{width}}s", end="")
+                if i == 0:
+                    break
                 time.sleep(1)
             self.print("", end="\n")
 
