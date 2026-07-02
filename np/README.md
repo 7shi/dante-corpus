@@ -19,10 +19,25 @@ Two things are deliberately **code's job**, never the model's:
 - **Alignment to tokens.** Layer 1 (`tokenizer.py`) is the deterministic anchor: each phrase is
   located as a *contiguous run* of Layer-1 tokens, recorded as 1-based `start`/`end` indices, a
   `head` token index, and the verbatim source `text` it spans. The model's free-text phrase is thus
-  bound to exact token positions even when it transforms spacing or punctuation.
+  bound to exact token positions even when it transforms spacing or punctuation. Alignment tolerates
+  elision-spelling drift (e.g. the model writes `I` where the token is `I'`) by falling back to
+  `morph.strip_word_punct` — the same predicate Layer 2 uses for its own word alignment — when an
+  exact match fails.
 - **Nesting.** Parent/child structure is *derived* by span containment at serve time (the smallest
   enclosing phrase is the parent), exactly as the quote tree is built — it is not asked of the model
   or stored. The model only needs to list the phrases, including the nested ones.
+- **Fused enclitic pronouns.** Italian enclitics attach directly to infinitive/gerund/imperative verb
+  forms with no apostrophe (e.g. `udirmi`), so Layer 1 never tokenizes them separately — the model
+  cannot align a phrase to a token that doesn't exist. Layer 3 build reads Layer 2's morphology for
+  each line: any token whose POS is a genuinely compound `x+pronoun[+...]` shape (arity >= 2, e.g.
+  `udirmi` → lemma `udire+me`, pos `verb+pronoun`) gets a synthetic single-token mention generated
+  **deterministically** from the frozen Layer 2 artifact, independent of what the model proposed —
+  see *Output* and `clitic_mentions()` in `dante_corpus/np.py`. This is Layer 3's first build-time
+  dependency on Layer 2 (previously Layer 2 was only read for `--check`'s soft checks). The model
+  often still tries to name the bare pronoun as its own table row (e.g. `mi` for `udirmi`) — that
+  row can never align to a token, so `align_chunk` is given the line's Layer-2 rows and excuses a
+  single-word row labelled on a fused-enclitic line from the `unaligned` count instead of failing
+  the whole chunk; the mention it would have added is already covered deterministically.
 
 ## Output
 
@@ -42,19 +57,33 @@ line	start	end	head	text
 
 (`start`/`end`/`head` index into `Line.tokens`; e.g. line 1 token 2 is `mezzo`, token 7 is `vita`.)
 
+A fused-enclitic mention is a single-token row (`start == end == head`) whose `text` is `"+"`
+followed by the pronoun's lemma, e.g. for `udirmi` (token 7 of purgatorio 16.145):
+
+```
+line	start	end	head	text
+145	7	7	7	+me
+```
+
+This is not a substring of the source line by construction — it stands for the bound pronoun that
+Layer 1 couldn't split out on its own.
+
 ## Check
 
 `--check` validates every committed artifact against the deterministic tokens, with **no model
 call** (`validate_line`):
 
 - **Hard** (the structural bar): each NP is a contiguous, in-order run of Layer-1 tokens; the head
-  index lies inside the range; the stored `text` is the verbatim source substring of that range.
-  Every source line must be present (or carry the zero-NP sentinel). `0 hard` is required before an
-  artifact is trusted.
+  index lies inside the range; the stored `text` is the verbatim source substring of that range —
+  except a `"+"`-prefixed clitic mention, which is checked against the host token's Layer-2 lemma
+  components instead (it is never a source substring by construction). Every source line must be
+  present (or carry the zero-NP sentinel). `0 hard` is required before an artifact is trusted.
 - **Soft** (reported, not enforced — *measure-then-freeze*): when Layer-2 morphology is present, the
-  head token is expected to be nominal (POS containing `noun`/`pronoun`), and **coverage** — every
-  nominal token should head at least one NP. Coverage catches omissions, since over-inclusion means
-  there is no one-row-per-token count anchor as in Layer 2.
+  head token is expected to be nominal (POS containing `noun`/`pronoun`); **coverage** — every
+  nominal token should head at least one NP (catches omissions, since over-inclusion means there is
+  no one-row-per-token count anchor as in Layer 2); and **clitic coverage** — every fused-enclitic
+  mention that Layer 2's compound POS implies must actually be present among the artifact's spans.
+  This mainly flags artifacts built before `clitic_mentions()` existed; it clears on rebuild.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
@@ -96,6 +125,9 @@ retried.
 - `_is_nominal` matches POS substrings `noun`/`pronoun`, so contracted POS like `preposition+noun`
   count as nominal heads. Adjust in `dante_corpus/np.py` if the frozen soft-check policy (see
   PLAN.md's *Layer 3 check status*) demands stricter matching.
+- `clitic_mentions()` only fires on genuinely compound POS (arity >= 2). A bare `pronoun` token
+  (arity 1) is already its own Layer-1 token and gets an ordinary NP from the model, so it's
+  intentionally excluded — including it would emit a redundant `"+xxx"` duplicate of that NP.
 
 ## Model
 

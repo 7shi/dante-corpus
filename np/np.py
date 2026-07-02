@@ -153,7 +153,8 @@ def _hard_violations(nos: list[int], texts: list[str],
 
 def _try_align(nos: list[int], texts: list[str], model: str,
                ui: StatusLine, label: str,
-               log_path: Path | None = None) -> dict | None:
+               log_path: Path | None = None,
+               morph_rows: dict[int, list] | None = None) -> dict | None:
     """Call LLM and align; return aligned dict on success, None after all retries fail."""
     from llm7shi import Client
 
@@ -168,7 +169,7 @@ def _try_align(nos: list[int], texts: list[str], model: str,
         table_text = _merge_tables(table_text)
         table_text = _continue_if_truncated(client, nos, texts, table_text, ui)
         try:
-            aligned, unaligned = np.align_chunk(nos, texts, table_text)
+            aligned, unaligned = np.align_chunk(nos, texts, table_text, morph_rows)
             hard = _hard_violations(nos, texts, aligned, unaligned)
             if hard:
                 raise ValueError("; ".join(hard))
@@ -212,6 +213,7 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
     lines = canto.lines()
     out = [] if force else _load_committed(canticle, number)
     done = {no for no, _ in out}
+    morph_rows = _morph_rows(canticle, number)
 
     pending = [chunk for chunk in _chunks(lines, size)
                if any(line.no not in done for line in chunk)]
@@ -236,12 +238,14 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
             prog.update(nos[0])
             texts = [line.text for line in chunk]
             label = f"{canticle} {number}"
-            aligned = _try_align(nos, texts, model, ui, label, log_path)
+            aligned = _try_align(nos, texts, model, ui, label, log_path, morph_rows)
             if aligned is None and len(chunk) > 1:
                 ui.stream.error(f"  {label}: chunk failed, retrying line by line")
                 aligned = {}
                 for line in chunk:
-                    result = _try_align([line.no], [line.text], model, ui, label, log_path)
+                    result = _try_align(
+                        [line.no], [line.text], model, ui, label, log_path, morph_rows
+                    )
                     if result is None:
                         ui.stream.error(f"  {label}: giving up at line {line.no}; "
                                         f"earlier lines saved for resume")
@@ -251,6 +255,13 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
                 ui.stream.error(f"  {label}: giving up at line {nos[0]}; "
                                 f"earlier lines saved for resume")
                 return False
+            for line in chunk:
+                rows = morph_rows.get(line.no)
+                if rows:
+                    tokens = [tok for tok, _, _ in np.token_spans(line.text)]
+                    aligned.setdefault(line.no, []).extend(
+                        np.clitic_mentions(line.no, tokens, rows)
+                    )
             chunk_nos = {line.no for line in chunk}
             out = [(no, spans) for no, spans in out if no not in chunk_nos]
             out.extend((line.no, aligned.get(line.no, [])) for line in chunk)

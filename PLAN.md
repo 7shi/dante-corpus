@@ -14,8 +14,10 @@
 
 **Next work**
 
-1. **Finish Layer 3 generation** — resume the build for the 8 incomplete cantos (below) until
-   `--check` reports 0 hard violations.
+1. **Finish Layer 3 generation** — resume the build for the 6 incomplete cantos (below) until
+   `--check` reports 0 hard violations. The two mechanisms behind every remaining hard failure
+   (elision spelling drift, fused enclitic pronouns) are now fixed in code — see *Layer 3 check
+   status* below — so resuming the build should close these out; not yet re-run.
 2. **Measure-then-freeze the Layer 3 soft checks** (below), update `_is_nominal` /
    `validate_line` in `dante_corpus/np.py` accordingly, record the frozen policy in
    `np/README.md`, then commit the code + generated TSVs (the build is excluded from `make all`;
@@ -42,6 +44,53 @@ these):
 | inferno    |    26 | 106–142       |
 | purgatorio |    16 | 145           |
 | paradiso   |    28 | 31–139        |
+
+**Hard-failure root cause (fixed)**: every chunk that exhausted all 3 retries with "unalignable
+NP row(s)" (`np/np.log`) traced to exactly two mechanisms, both now fixed in
+`dante_corpus/np.py`:
+
+- **Elision spelling drift** (e.g. inferno 18:55: the model writes `I` where the deterministic
+  token is `I'`) — `_find_run`/`_head_index` now fall back to `morph.strip_word_punct` (the same
+  predicate Layer 2 already uses for its own word alignment) when an exact token match fails.
+- **Fused enclitic pronouns** (e.g. inferno 23:36 `volerne`, purgatorio 16:145 `udirmi`, paradiso
+  28:33 `contenerlo` — Italian enclitics attach directly to infinitive/gerund/imperative verb
+  forms with no apostrophe, so Layer 1 never tokenizes them separately, and no amount of
+  retrying lets the model align a phrase to a token that doesn't exist). Layer 2 already tags
+  these tokens with a compound POS/lemma (`udirmi` → lemma `udire+me`, pos `verb+pronoun`; 579
+  such tokens across the corpus, in 7 POS shapes). Layer 3 now reads Layer 2 at build time — a
+  formal extension of the layer-stack principle that later layers depend on earlier ones' results
+  (Layer 1 was already a mandatory dependency; Layer 2 was previously only consulted for the soft
+  checks in `np/np.py`'s `check()`). A new `clitic_mentions()` in `dante_corpus/np.py`
+  **deterministically** derives one single-token `NPSpan` per bound pronoun straight from the
+  frozen Layer 2 artifact (`text` = `"+"` + the lemma component, e.g. `+me`), independent of what
+  the LLM proposes. `validate_line` accepts these via a dedicated `"+"`-prefixed branch (checked
+  against the host token's Layer-2 lemma components instead of a verbatim source substring). This
+  is additive to — not a replacement for — the existing
+  soft-coverage check: since `_is_nominal` already treats any POS containing `pronoun` as
+  nominal, these mentions also resolve that token's own "nominal token heads no NP" soft
+  violation as a side effect. Only genuinely compound POS (arity >= 2, e.g. `verb+pronoun`)
+  qualify — a bare `pronoun` token (arity 1) is already its own Layer-1 token, so the model
+  aligns an ordinary NP to it and no synthetic mention is generated (avoids a redundant "+xxx"
+  duplicate). `validate_line` also gained a soft "clitic coverage" check (mirrors the existing
+  nominal-head coverage check): for every token whose Layer-2 POS implies a mention,
+  `clitic_mentions` is re-derived and diffed against `spans` — a "missing clitic mention" tag
+  violation flags any artifact (chiefly ones built before this mechanism existed) whose `"+xxx"`
+  mention wasn't actually generated. Currently 620 such violations corpus-wide, matching
+  expectation: only lines regenerated after this change carry mentions; existing artifacts will
+  clear this on rebuild.
+
+  A follow-up gap surfaced by re-checking `np/np.log`: `clitic_mentions()` alone doesn't stop the
+  original retry-exhaustion failures, because the model's *own* table row naming the bare
+  pronoun (e.g. `| 145 | mi | mi |` for `udirmi`) still can't align to any token — that row was
+  still counted in `align_chunk`'s `unaligned` total, so the chunk still hard-failed and burned
+  all 3 retries exactly as before, even though the correct mention now gets added independently
+  once/if the chunk succeeds. Fixed by giving `align_chunk` an optional `morph_rows` parameter:
+  a single-word row labelled with a line that has a fused-enclitic token (arity >= 2 compound
+  POS) is no longer counted as unalignable — it's redundant with what `clitic_mentions()` already
+  supplies, not an error. `np/np.py` now threads the canto's Layer-2 rows through `_try_align` (
+  both the chunk attempt and the per-line retry fallback) into `align_chunk`. Verified against
+  the exact failing tables recorded in `np/np.log` for purgatorio 16:145 and paradiso 28:31-33 —
+  both now align with 0 unaligned rows.
 
 **Soft — two classes, each pending a measure-then-freeze policy decision** (counts rise as more
 lines are generated; the *shape* of the two classes is what matters for the freeze decision, not

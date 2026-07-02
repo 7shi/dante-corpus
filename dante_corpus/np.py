@@ -18,7 +18,7 @@ from dataclasses import dataclass, field, replace as dc_replace
 from pathlib import Path
 
 from ._paths import NP_DIR
-from .morph import Violation, read_table
+from .morph import MorphRow, Violation, read_table, strip_word_punct
 from .tokenizer import has_alpha, tokenize
 
 # --- Table columns -----------------------------------------------------------------
@@ -102,13 +102,19 @@ def _alpha_tokens(text: str) -> list[str]:
     return [t for t in tokenize(text) if has_alpha(t)]
 
 
+def _tokens_match(word: str, token: str) -> bool:
+    """Loose token equality: exact match, or an elision-spelling difference (e.g. `I` / `I'`)
+    that `morph.strip_word_punct` already reconciles for Layer 2."""
+    return word == token or strip_word_punct(word, token) is not None
+
+
 def _find_run(tokens: list[str], needle: list[str]) -> int:
     """Index of the first contiguous occurrence of `needle` within `tokens`, or -1."""
     if not needle:
         return -1
     last = len(tokens) - len(needle)
     for i in range(last + 1):
-        if tokens[i : i + len(needle)] == needle:
+        if all(_tokens_match(needle[j], tokens[i + j]) for j in range(len(needle))):
             return i
     return -1
 
@@ -152,7 +158,7 @@ def _head_index(tokens: list[str], head_text: str, start: int, end: int) -> int:
     if head_tokens:
         word = head_tokens[0]
         for i in range(start - 1, end):
-            if tokens[i] == word:
+            if _tokens_match(word, tokens[i]):
                 return i + 1
     return end
 
@@ -161,12 +167,20 @@ def align_chunk(
     line_numbers: list[int],
     line_texts: list[str],
     table_text: str,
+    morph_rows: dict[int, list[MorphRow]] | None = None,
 ) -> tuple[dict[int, list[NPSpan]], int]:
     """Parse an NP table and align its rows to the given source lines.
 
     Returns (mapping line-number -> aligned NPSpans, count of unalignable rows). Raises
     ValueError if the table cannot be parsed at all. Every requested line gets an entry (an
     empty list if it has no NPs).
+
+    When `morph_rows` (per-line Layer-2 rows) is supplied, a single-word row labelled with a
+    line that has a fused enclitic pronoun (a compound `x+pronoun[+...]` POS, arity >= 2) is
+    *not* counted as unalignable even if no matching token exists: the model is correctly
+    naming the bound pronoun, but Layer 1 never tokenized it separately, so it can never align
+    — `clitic_mentions()` already supplies the equivalent span deterministically from Layer 2,
+    making the model's own attempt redundant rather than an error.
     """
     table = read_table(table_text)
     if table is None:
@@ -174,6 +188,13 @@ def align_chunk(
     keys = [canon_header(h) for h in table[0]]
     token_lists = [_alpha_tokens(t) for t in line_texts]
     span_lists = [token_spans(t) for t in line_texts]
+    clitic_lines = {
+        no
+        for no, rows in (morph_rows or {}).items()
+        for row in rows
+        for part in row.pos.split("+")
+        if len(row.pos.split("+")) >= 2 and part.strip().lower() == "pronoun"
+    }
 
     result: dict[int, list[NPSpan]] = {no: [] for no in line_numbers}
     unaligned = 0
@@ -188,6 +209,8 @@ def align_chunk(
             line_numbers, token_lists, span_lists, line_texts, labelled, np_text, head_text
         )
         if aligned is None:
+            if labelled in clitic_lines and len(_alpha_tokens(np_text)) == 1:
+                continue
             unaligned += 1
             continue
         no, span = aligned
@@ -202,6 +225,39 @@ def _parse_int(value: str | None) -> int | None:
     return int(digits) if digits else None
 
 
+# --- Clitic mentions (derived deterministically from Layer 2) ----------------------
+
+
+def clitic_mentions(line_no: int, tokens: list[str], morph_rows: list[MorphRow]) -> list[NPSpan]:
+    """Bound-pronoun mentions for tokens Layer 2 tagged with a compound `x+pronoun[+...]` POS
+    (e.g. `udirmi` -> lemma `udire+me`, pos `verb+pronoun` — an enclitic fused to a verb with no
+    apostrophe, so Layer 1 never split it into its own token). Unlike ordinary NPs, these are not
+    proposed by the model: they are generated purely from the already-frozen Layer 2 artifact, so
+    they exist regardless of what the LLM did or didn't align for that line.
+
+    Each qualifying component yields a single-token NPSpan whose `text` is `"+"` followed by that
+    component's lemma, copied verbatim from Layer 2 (no surface-form normalization — Layer 2's own
+    `mi`/`me` inconsistency is a Layer-2 concern, not fixed here). Tokens where the pos/lemma
+    `+`-split arity disagrees (a rare Layer-2 data slip) are skipped rather than guessed at. A
+    token whose POS is bare `pronoun` (no `+`, arity 1) is *not* compound — Layer 1 already
+    tokenized it on its own, so the model can (and does) align an ordinary NP to it; only
+    genuine fusions (arity >= 2) get a synthetic mention here, to avoid a redundant "+xxx"
+    duplicate of that ordinary NP.
+    """
+    mentions: list[NPSpan] = []
+    if len(morph_rows) != len(tokens):
+        return mentions
+    for i, row in enumerate(morph_rows, start=1):
+        pos_parts = row.pos.split("+")
+        lemma_parts = row.lemma.split("+")
+        if len(pos_parts) < 2 or len(pos_parts) != len(lemma_parts):
+            continue
+        for pos_part, lemma_part in zip(pos_parts, lemma_parts):
+            if pos_part.strip().lower() == "pronoun":
+                mentions.append(NPSpan(line=line_no, start=i, end=i, head=i, text="+" + lemma_part))
+    return mentions
+
+
 # --- Validation --------------------------------------------------------------------
 
 
@@ -214,10 +270,16 @@ def validate_line(
     """Check that `spans` are well-formed against the deterministic tokens of `source_text`.
 
     Hard checks (structural bar): each NP's token range is in-bounds and ordered; the head lies
-    within the range; `text` is the verbatim source substring of that range. Soft checks (only
-    when `morph_rows` — the Layer-2 row per token — is supplied): the head token is nominal, and
-    every nominal token is the head of at least one NP (coverage). Soft violations use kind
-    "tag"; hard ones use "range"/"head"/"word".
+    within the range; `text` is the verbatim source substring of that range. A span whose `text`
+    starts with `"+"` is a clitic mention (see `clitic_mentions`) rather than an ordinary NP: it
+    must be single-token, and — when `morph_rows` is supplied — its suffix must be one of the
+    host token's Layer-2 lemma components, in place of the verbatim-substring check (by
+    construction, `"+xxx"` is never itself a source substring). Soft checks (only when
+    `morph_rows` — the Layer-2 row per token — is supplied): the head token is nominal, every
+    nominal token is the head of at least one NP (coverage), and every clitic mention Layer 2's
+    compound POS implies (see `clitic_mentions`) is actually present among `spans` (clitic
+    coverage — catches artifacts built before this mechanism existed, or any future regression).
+    Soft violations use kind "tag"; hard ones use "range"/"head"/"word".
     """
     tokens = _alpha_tokens(source_text)
     tspans = token_spans(source_text)
@@ -233,6 +295,18 @@ def validate_line(
             violations.append(
                 Violation(line_no, "head", f"head {span.head} outside [{span.start},{span.end}]")
             )
+        if span.text.startswith("+"):
+            if span.start != span.end:
+                violations.append(
+                    Violation(line_no, "word", f"clitic mention {span.text!r} spans more than one token")
+                )
+            elif morph_rows is not None and len(morph_rows) == n:
+                lemma_parts = morph_rows[span.head - 1].lemma.split("+")
+                if span.text[1:] not in lemma_parts:
+                    violations.append(
+                        Violation(line_no, "word", f"{span.text!r} not in lemma parts {lemma_parts!r}")
+                    )
+            continue
         expected = source_text[tspans[span.start - 1][1] : tspans[span.end - 1][2]]
         if span.text != expected:
             violations.append(
@@ -252,6 +326,12 @@ def validate_line(
                 violations.append(
                     Violation(line_no, "tag", f"nominal {tokens[i - 1]!r} (token {i}) heads no NP")
                 )
+        expected = {(m.head, m.text) for m in clitic_mentions(line_no, tokens, morph_rows)}
+        actual = {(span.head, span.text) for span in spans if span.text.startswith("+")}
+        for head, text in sorted(expected - actual):
+            violations.append(
+                Violation(line_no, "tag", f"token {head} {tokens[head - 1]!r} missing clitic mention {text!r}")
+            )
     return violations
 
 

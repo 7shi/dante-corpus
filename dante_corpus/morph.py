@@ -318,7 +318,7 @@ def validate_line(line_no: int, source_text: str, rows: list[MorphRow]) -> list[
 # --- Word auto-fix -----------------------------------------------------------------
 
 
-def _strip_word_punct(word: str, token: str) -> str | None:
+def strip_word_punct(word: str, token: str) -> str | None:
     """Attempt to reconcile `word` (LLM output) with `token` (deterministic).
 
     Handles three auto-fixable cases:
@@ -367,7 +367,7 @@ def fix_aligned_words(
             continue
         fixed: list[MorphRow] = []
         for row, token in zip(rows, tokens):
-            stripped = _strip_word_punct(row.word, token)
+            stripped = strip_word_punct(row.word, token)
             if stripped is None:
                 errors.append(f"line {no}: {row.word!r} != {token!r}")
                 fixed.append(row)
