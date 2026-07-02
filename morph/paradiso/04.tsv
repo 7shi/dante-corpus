@@ -43,7 +43,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 6	due	due	numeral		pl.				
 6	dame	dama	noun	f.	pl.				
 7	per	per	preposition						
-7	che	che	conjunction						
+7	che	che	relative pronoun						
 7	s'	se	conjunction						elision
 7	i'	io	pronoun		sg.	1			elision
 7	mi	mi	pronoun		sg.	1			reflexive

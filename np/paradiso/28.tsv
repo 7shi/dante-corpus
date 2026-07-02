@@ -86,7 +86,7 @@ line	start	end	head	text
 34	2	3	3	l'ottavo
 34	5	6	6	'l nono
 34	8	8	8	chiascheduno
-35	6	6	6	ch'
+35	0	0	0	
 36	2	7	2	numero distante più da l'uno
 36	2	3	2	numero distante
 36	2	2	2	numero

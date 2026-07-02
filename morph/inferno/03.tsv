@@ -310,7 +310,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 43	greve	greve	adjective	m.	sg.				
 44	a	a	preposition						
 44	lor	loro	pronoun		pl.				apocope
-44	che	che	conjunction						
+44	che	che	relative pronoun						
 44	lamentar	lamentare	verb						apocope
 44	li	lo	pronoun		pl.				
 44	fa	fare	verb		sg.	3	present	indicative	
@@ -615,7 +615,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 87	gelo	gelo	noun	m.	sg.				
 88	E	e	conjunction						
 88	tu	tu	pronoun		sg.	2			
-88	che	che	conjunction						
+88	che	che	relative pronoun						
 88	se'	essere	verb		sg.	2	present	indicative	archaic
 88	costì	costì	adverb						
 88	anima	anima	noun	f.	sg.				

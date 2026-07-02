@@ -521,7 +521,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 72	amor	amore	noun	m.	sg.				apocope
 72	mi	mi	pronoun		sg.	1			
 72	mosse	muovere	verb		sg.	3	remote past	indicative	
-72	che	che	conjunction						
+72	che	che	relative pronoun						
 72	mi	mi	pronoun		sg.	1			
 72	fa	fare	verb		sg.	3	present	indicative	
 72	parlare	parlare	verb				present	infinitive	
@@ -826,7 +826,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 113	tuo	tuo	adjective	m.	sg.				
 113	parlare	parlare	noun	m.	sg.				
 113	onesto	onesto	adjective	m.	sg.				
-114	ch'	che	conjunction						elision
+114	ch'	che	relative pronoun						elision
 114	onora	onorare	verb		sg.	3	present	indicative	
 114	te	te	pronoun		sg.	2			
 114	e	e	conjunction						
@@ -847,7 +847,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 116	lagrimando	lagrimare	verb					gerund	
 116	volse	volgere	verb		sg.	3	remote past	indicative	
 117	per	per	preposition						
-117	che	che	conjunction						
+117	che	che	relative pronoun						
 117	mi	mi	pronoun		sg.	1			
 117	fece	fare	verb		sg.	3	remote past	indicative	
 117	del	di+il	preposition+article	m.	sg.				contraction

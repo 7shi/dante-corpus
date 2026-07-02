@@ -332,7 +332,7 @@ line	start	end	head	text
 140	3	8	4	un grido di sì alto suono
 140	3	4	4	un grido
 140	6	8	8	sì alto suono
-141	1	1	1	che
+141	0	0	0	
 142	2	2	2	io
 142	3	3	3	lo
 142	6	6	6	mi

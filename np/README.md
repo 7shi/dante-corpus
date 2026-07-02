@@ -83,9 +83,14 @@ call** (`validate_line`):
   - **Head POS** — a head may be any *content* POS: nominal (`noun`/`pronoun` in the label) or
     adjective/verb/adverb/numeral, since Dante substantivizes all of these (`'l più basso`,
     `lo sperar`, `un poco`, `l'un de' canti`). Function-word heads (article, conjunction,
-    preposition, …) are flagged; measured, most are `che` tagged `conjunction` by Layer 2 where
-    the model correctly read a relative pronoun — i.e. the flag is a Layer-2 mistag signal as
-    much as a Layer-3 one.
+    preposition, …) are flagged; a hand review of every `che`/`ch'` conjunction head (36 cases)
+    found 24 were a genuine Layer-2 mistag (Dante's relative pronoun `che`, not the subordinating
+    conjunction) and corrected the frozen `morph/` TSVs directly to `relative pronoun`; the other
+    12 are real conjunctions (consecutive `tanto/sì … che`, the idiom `secondo che`, complementizer
+    `che`, causal `poi che`) where Layer 3 had wrongly proposed the bare conjunction as its own
+    single-token NP — those 12 spans were removed directly from the frozen `np/` TSVs (4 lines
+    left with no spans got the zero-NP sentinel) — see PLAN.md's *`che` mistag correction*.
+    Remaining function-word heads are mostly articles (`un`/`una`/`'l`/…).
   - **Coverage** — every *noun/proper-noun* token should head at least one NP (catches omissions,
     since over-inclusion means there is no one-row-per-token count anchor as in Layer 2).
     Pronouns are excluded by policy: bare clitic and relative pronouns (`che`, `si`, `mi`, …)
@@ -96,9 +101,11 @@ call** (`validate_line`):
     existed lacked them; `--fix-clitics` backfills them deterministically (done for all 100
     cantos), so any new flag here is a regression.
 
-  Under the frozen policy the corpus-wide soft count is **418** (177 function-word heads + 241
-  noun coverage gaps) — a reviewable list of genuine model omissions (often in repeated idioms:
-  `a poco a poco`, `di gente in gente`) and Layer-2 mistags, kept visible rather than silenced.
+  Under the frozen policy the corpus-wide soft count is **382** (141 function-word heads + 241
+  noun coverage gaps, after correcting 24 `che` mistags in Layer 2 and removing 12 over-included
+  `che` spans from Layer 3 — see PLAN.md) — a reviewable list of genuine model omissions (often
+  in repeated idioms: `a poco a poco`, `di gente in gente`) and residual function-word heads,
+  kept visible rather than silenced.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

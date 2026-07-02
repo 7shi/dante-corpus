@@ -8,7 +8,7 @@
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
   cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 418 soft**
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 382 soft**
   violations — see *Layer 3 check status* below.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
@@ -90,14 +90,48 @@ violations), then frozen in `dante_corpus/np.py` (`_needs_np` / `_can_head_np`) 
 - **2,498 × "head is not nominal"** — adjective 1,322, verb 493, adverb 284, numeral 222 are
   legitimate Dante substantivizations (`'l più basso`, `lo sperar`, `un poco`, `l'un de' canti`).
   **Frozen**: any content POS may head an NP (`_can_head_np`: nominal or
-  adjective/verb/adverb/numeral). The surviving **177** function-word heads (article 111,
-  conjunction 47, …) stay flagged; sampling shows most are `che` tagged `conjunction` by Layer 2
-  where the model correctly read a relative pronoun — a Layer-2 mistag signal as much as a
-  Layer-3 one.
+  adjective/verb/adverb/numeral). The **177** function-word heads (article 111, conjunction 47, …)
+  were sampled and most `che`/`ch'` conjunction heads turned out to be a Layer-2 mistag, not a
+  Layer-3 artifact — see *`che` mistag correction* below. The surviving **153** stay flagged
+  (mostly article heads: `un`/`una`/`'l`/`il`/…, plus the 12 genuinely-conjunction `che` cases
+  confirmed below).
 - **620 × "missing clitic mention"** — artifacts built before `clitic_mentions()` existed. These
   are a pure function of the frozen Layer-2 artifact, so a new deterministic repair mode
   (`np/np.py --fix-clitics`, no model call) backfilled all 620 in place; count is now 0 and any
   future flag is a regression.
+
+**`che` mistag correction (2026-07-03)** — all 36 `head 'che'/"ch'" is 'conjunction'` soft
+violations were reviewed by hand against their terzina context (verified with exact token
+position, since several lines carry more than one `che`). **24** are Dante's relative pronoun
+`che`/`ch'` (subject/object of the following clause, referring back to an antecedent — e.g.
+inferno 2:72 `amor mi mosse, che mi fa parlare`, paradiso 33:120 `foco che quinci e quindi
+igualmente si spiri`) mistagged `conjunction` by Layer 2's build model; these were corrected
+in the committed `morph/<canticle>/NN.tsv` artifacts to `relative pronoun` (the POS label the
+corpus already uses elsewhere for unambiguous cases), directly in the frozen TSVs — no model
+call, no Layer 2 rebuild. `morph --check` still reports 0 hard / 0 soft after the edit (POS
+isn't in Layer 2's own closed-tag soft check). **12** are genuinely `conjunction` and were left
+alone — Layer 3 over-including them as NP heads, not a Layer 2 error:
+- **6** consecutive `tanto`/`sì … che` ("so … that"): inferno 3:54, 19:27; purgatorio 17:51;
+  paradiso 21:141, 23:53, plus the `più … che` comparative-adjacent paradiso 27:110 `non ha
+  altro dove che` ("has no other where *than*" — comparative `che`, not consecutive, same
+  disposition).
+- **3** the fixed idiom `secondo che` ("according to how/the extent that"): inferno 5:6;
+  paradiso 14:3, 28:35.
+- **2** complementizer `che` introducing a noun clause (`sappie che …`, `pensa che …`):
+  purgatorio 22:49; paradiso 18:131.
+- **1** causal `poi che` ("since"): paradiso 4:9.
+
+For these 12, the Layer-3 artifact itself was wrong: the model had proposed the bare conjunction
+as its own single-token NP (`[che]`/`[ch']`, `start == end == head`) alongside its legitimate
+sibling NPs on the line — a subordinating/comparative/complementizer conjunction cannot head a
+noun phrase, so this is Layer 3 over-inclusion, not the "exhaustive and over-inclusive by design"
+kind. All 12 spans were removed directly from the committed `np/<canticle>/NN.tsv` artifacts (no
+model call); the 4 lines left with zero spans (inferno 5:6; paradiso 4:9, 21:141, 28:35 — each
+had only the bad `che` span) got the documented zero-NP sentinel row (`start == end == head ==
+0`) in its place.
+
+Layer 3's `--check` count is now **382** soft (down from 418: 141 function-word heads + 241 noun
+coverage gaps).
 
 ## Why this lives in the corpus
 

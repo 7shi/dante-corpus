@@ -272,7 +272,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	un	uno	article	m.	sg.				indefinite
 38	atto	atto	noun	m.	sg.				
 38	soave	soave	adjective	m.	sg.				
-39	che	che	conjunction						
+39	che	che	relative pronoun						
 39	non	non	adverb						
 39	sembiava	sembrare	verb		sg.	3	imperfect	indicative	
 39	imagine	imagine	noun	f.	sg.				archaic
