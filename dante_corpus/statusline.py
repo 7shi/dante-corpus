@@ -12,6 +12,7 @@ The progress line reads, per canto:
 model's streamed output is routed through the same console and coexists with the live bar.
 """
 
+import re
 import time
 
 from rich.console import Console
@@ -66,6 +67,8 @@ class StatusLineConsoleStream(ConsoleStream):
 
     def wait_retry(self, delay: int, message: str = "Retrying...") -> None:
         import time
+        m = re.match(r"(.+) \((\d+/\d+)\)", message)
+        message = f"{m.group(1)} {m.group(2)}" if m else message
         width = len(str(delay))
         if self.status_line.active_progress is not None:
             progress = self.status_line.active_progress
