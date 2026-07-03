@@ -382,7 +382,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 52	I'	io	pronoun		sg.	1			apocope
 52	mi	mi	pronoun		sg.	1			reflexive
 52	son	essere	verb		sg.	1	present	indicative	apocope
-52	un	uno	article	m.	sg.				indefinite
+52	un	uno	pronoun	m.	sg.				
 52	che	che	pronoun		sg.				relative
 52	quando	quando	conjunction						
 53	Amor	amore	noun	m.	sg.				apocope
@@ -1018,7 +1018,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 139	com'	come	adverb						elision
 139	io	io	pronoun		sg.	1			
 139	vidi	vedere	verb		sg.	1	remote past	indicative	
-139	un	uno	article	m.	sg.				indefinite
+139	un	uno	pronoun	m.	sg.				
 139	che	che	pronoun						relative
 139	dicea	dire	verb		sg.	3	imperfect	indicative	archaic
 139	S'	se	conjunction						elision

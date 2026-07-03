@@ -918,7 +918,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 131	al	a+il	preposition+article	m.	sg.				contraction
 131	modo	modo	noun	m.	sg.				
 132	d'	di	preposition						elision
-132	una	uno	article	f.	sg.				indefinite
+132	una	uno	pronoun	f.	sg.				
 132	di	di	preposition						
 132	lor	loro	pronoun		pl.	3			apocope
 132	ch'	che	pronoun						elision

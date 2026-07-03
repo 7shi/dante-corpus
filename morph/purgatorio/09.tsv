@@ -871,7 +871,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 120	contento	contento	adjective	m.	sg.				
 121	Quandunque	quandunque	conjunction						
 121	l'	la	article	f.	sg.				elision
-121	una	uno	article	f.	sg.				indefinite
+121	una	uno	pronoun	f.	sg.				
 121	d'	di	preposition						elision
 121	este	questo	adjective	f.	pl.				archaic
 121	chiavi	chiave	noun	f.	pl.				

@@ -189,7 +189,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 28	suono	suono	noun	m.	sg.				
 28	uscìo	uscire	verb		sg.	3	remote past	indicative	archaic
 29	d'	di	preposition						elision
-29	una	uno	article	f.	sg.				indefinite
+29	una	uno	pronoun	f.	sg.				
 29	de	di	preposition						archaic
 29	l'	le	article	f.	pl.				elision
 29	arche	arca	noun	f.	pl.				
@@ -352,7 +352,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 50	io	io	pronoun		sg.	1			
 50	lui	lui	pronoun	m.	sg.	3			
 50	l'	la	article	f.	sg.				elision
-50	una	uno	article	f.	sg.				indefinite
+50	una	uno	pronoun	f.	sg.				
 50	e	e	conjunction						
 50	l'	la	article	f.	sg.				elision
 50	altra	altro	adjective	f.	sg.				

@@ -152,7 +152,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	esso	esso	pronoun	m.	sg.				
 22	m'	mi	pronoun		sg.	1			elision
 22	appario	apparire	verb		sg.	3	remote past	indicative	
-23	un	uno	article	m.	sg.				indefinite
+23	un	uno	pronoun	m.	sg.				
 23	non	non	adverb						
 23	sapeva	sapere	verb		sg.	3	imperfect	indicative	
 23	che	che	pronoun						archaic

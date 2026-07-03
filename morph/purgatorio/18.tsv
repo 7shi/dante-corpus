@@ -810,7 +810,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 112	mio	mio	adjective	m.	sg.				
 112	duca	duca	noun	m.	sg.				
 113	e	e	conjunction						
-113	un	uno	article	m.	sg.				indefinite
+113	un	uno	pronoun	m.	sg.				
 113	di	di	preposition						
 113	quelli	quello	adjective	m.	pl.				
 113	spirti	spirito	noun	m.	pl.				apocope

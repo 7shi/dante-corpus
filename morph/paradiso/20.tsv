@@ -728,7 +728,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 105	piedi	piede	noun	m.	pl.				
 106	Ché	che	conjunction						archaic
 106	l'	la	article	f.	sg.				elision
-106	una	uno	article	f.	sg.				indefinite
+106	una	uno	pronoun	f.	sg.				
 106	de	di	preposition						archaic
 106	lo	lo	article	m.	sg.				
 106	'nferno	inferno	noun	m.	sg.				apocope

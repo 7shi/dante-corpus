@@ -884,7 +884,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 123	radici	radice	noun	f.	pl.				
 124	per	per	preposition						
 124	ch'	che	conjunction						elision
-124	un	uno	article	m.	sg.				indefinite
+124	un	uno	pronoun	m.	sg.				
 124	nasce	nascere	verb		sg.	3	present	indicative	
 124	Solone	Solone	proper noun	m.	sg.				
 124	e	e	conjunction						

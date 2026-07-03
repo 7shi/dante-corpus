@@ -544,7 +544,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 75	terra	terra	noun	f.	sg.				
 75	e	e	conjunction						
 75	l'	lo	article	m.	sg.				elision
-75	un	uno	article	m.	sg.				indefinite
+75	un	uno	pronoun	m.	sg.				
 75	l'	lo	article	m.	sg.				elision
 75	altro	altro	adjective	m.	sg.				
 75	abbracciava	abbracciare	verb		sg.	3	imperfect	indicative	

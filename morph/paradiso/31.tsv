@@ -51,7 +51,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 8	una	uno	article	f.	sg.				indefinite
 8	fïata	fiata	noun	f.	sg.				archaic
 8	e	e	conjunction						
-8	una	uno	article	f.	sg.				indefinite
+8	una	uno	numeral	f.	sg.				
 8	si	si	pronoun		sg.	3			reflexive
 8	ritorna	ritornare	verb		sg.	3	present	indicative	
 9	là	la	adverb						

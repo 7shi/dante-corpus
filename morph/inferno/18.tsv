@@ -817,7 +817,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 115	occhio	occhio	noun	m.	sg.				
 115	cerco	cercare	verb		sg.	1	present	indicative	
 116	vidi	vedere	verb		sg.	1	remote past	indicative	
-116	un	uno	article	m.	sg.				indefinite
+116	un	uno	pronoun	m.	sg.				
 116	col	con+il	preposition+article	m.	sg.				contraction
 116	capo	capo	noun	m.	sg.				
 116	sì	sì	adverb						

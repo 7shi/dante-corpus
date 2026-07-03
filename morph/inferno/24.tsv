@@ -702,7 +702,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	Ed	e	conjunction						additive
 97	ecco	ecco	adverb						
 97	a	a	preposition						
-97	un	uno	article	m.	sg.				indefinite
+97	un	uno	pronoun	m.	sg.				
 97	ch'	che	pronoun						elision
 97	era	essere	verb		sg.	3	imperfect	indicative	
 97	da	da	preposition						

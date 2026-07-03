@@ -302,7 +302,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 43	Qui	qui	adverb						
 43	vederai	vedere	verb		sg.	2	future	indicative	
 43	l'	la	article	f.	sg.				elision
-43	una	uno	article	f.	sg.				indefinite
+43	una	uno	pronoun	f.	sg.				
 43	e	e	conjunction						
 43	l'	la	article	f.	sg.				elision
 43	altra	altro	adjective	f.	sg.				
@@ -311,7 +311,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 44	paradiso	paradiso	noun	m.	sg.				
 44	e	e	conjunction						
 44	l'	la	article	f.	sg.				elision
-44	una	uno	article	f.	sg.				indefinite
+44	una	uno	pronoun	f.	sg.				
 44	in	in	preposition						
 44	quelli	quello	adjective	m.	pl.				
 44	aspetti	aspetto	noun	m.	pl.				
@@ -473,7 +473,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 68	gurge	gorgo	noun	m.	sg.				archaic
 69	e	e	conjunction						
 69	s'	si	pronoun		sg.	3			elision
-69	una	uno	article	f.	sg.				indefinite
+69	una	uno	pronoun	f.	sg.				
 69	intrava	intrare	verb		sg.	3	imperfect	indicative	
 69	un'	uno	article	f.	sg.				elision
 69	altra	altro	adjective	f.	sg.				

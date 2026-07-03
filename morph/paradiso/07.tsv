@@ -523,7 +523,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 77	creatura	creatura	noun	f.	sg.				
 77	e	e	conjunction						
 77	s'	se	conjunction						elision
-77	una	uno	article	f.	sg.				indefinite
+77	una	uno	pronoun	f.	sg.				
 77	manca	mancare	verb		sg.	3	present	indicative	
 78	di	di	preposition						
 78	sua	suo	adjective	f.	sg.				
@@ -602,7 +602,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 90	sanza	senza	preposition						archaic
 90	passar	passare	verb						apocope
 90	per	per	preposition						
-90	un	uno	article	m.	sg.				indefinite
+90	un	uno	pronoun	m.	sg.				
 90	di	di	preposition						
 90	questi	questo	adjective	m.	pl.				
 90	guadi	guado	noun	m.	pl.				

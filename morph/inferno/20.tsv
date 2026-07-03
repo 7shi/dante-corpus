@@ -170,7 +170,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 25	piangea	piangere	verb		sg.	1	imperfect	indicative	archaic
 25	poggiato	poggiato	adjective	m.	sg.				
 25	a	a	preposition						
-25	un	uno	article	m.	sg.				indefinite
+25	un	uno	pronoun	m.	sg.				
 25	de'	di+i	preposition+article	m.	pl.				contraction
 25	rocchi	rocchio	noun	m.	pl.				
 26	del	di+il	preposition+article	m.	sg.				contraction

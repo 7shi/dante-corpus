@@ -259,7 +259,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 37	quante	quanto	adjective	f.	pl.				
 38	fuor	fuori	adverb						apocope
 38	d'	di	preposition						elision
-38	una	uno	article	f.	sg.				indefinite
+38	una	uno	pronoun	f.	sg.				
 38	ch'	che	pronoun						elision
 38	a	a	preposition						
 38	seder	sedere	verb					infinitive	apocope

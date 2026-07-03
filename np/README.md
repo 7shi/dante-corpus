@@ -133,10 +133,18 @@ call** (`validate_line`):
   without deleting a legitimate NP; and several coverage gaps (`fin che`, `inver'`, verb+clitic
   forms) are function words the model correctly declines to treat as nouns — the flag traces to a
   Layer-2 POS question, not a Layer-3 omission, exactly the pattern the `che` review already found.
-  The corpus-wide soft count after `--fix-repeats` and this `--fix` pass is **186** (104
-  function-word heads + 82 noun coverage gaps). The `un`/`una` cases are the next hand-review
-  candidate, the same way the `che` cases were: decide per line whether Layer 2 mistagged the
-  word (pronoun/numeral, not article) or Layer 3 over-included the span.
+  The corpus-wide soft count after `--fix-repeats` and this `--fix` pass was **186** (104
+  function-word heads + 82 noun coverage gaps).
+
+  A hand review of all 41 lines flagged `head 'un'/'una' is 'article'` (see PLAN.md's `un`/`una`
+  mistag correction) found the same split the `che` review did: **38** are Dante's substantivized
+  indefinite pronoun (`un de' tuoi`, `l'una e l'altra milizia`) mistagged `article` by Layer 2,
+  corrected to `pronoun`; **2** are genuinely `numeral` (predicative "become as one", and a
+  counting context parallel to an already-`numeral` `tre`); **1** was a Layer-3 alignment
+  mismatch (a repeated-word case our per-exact-needle occurrence tracking doesn't cover — it
+  matches only within one exact phrase, not across two different phrases sharing a word), fixed
+  by reassigning the span to the correct token. Corpus-wide soft count is now **139** (57
+  function-word heads + 82 noun coverage gaps).
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

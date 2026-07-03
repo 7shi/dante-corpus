@@ -578,7 +578,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	così	così	adverb						
 80	dinanzi	dinanzi	adverb						
 80	ad	a	preposition						
-80	un	uno	article	m.	sg.				indefinite
+80	un	uno	pronoun	m.	sg.				
 80	ch'	che	pronoun						elision
 80	al	a+il	preposition+article	m.	sg.				contraction
 80	passo	passo	noun	m.	sg.				

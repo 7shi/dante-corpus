@@ -721,7 +721,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 102	loco	luogo	noun	m.	sg.				archaic
 102	stesso	stesso	adjective	m.	sg.				
 103	per	per	preposition						
-103	un	uno	article	m.	sg.				indefinite
+103	un	uno	pronoun	m.	sg.				
 103	ch'	che	conjunction						elision
 103	io	io	pronoun		sg.	1			
 103	son	essere	verb		sg.	1	present	indicative	apocope

@@ -674,7 +674,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 94	disse	dire	verb		sg.	3	remote past	indicative	
 94	I'	io	pronoun		sg.	1			apocope
 94	son	essere	verb		sg.	1	present	indicative	apocope
-94	un	uno	article	m.	sg.				indefinite
+94	un	uno	pronoun	m.	sg.				
 94	che	che	pronoun		sg.	3			relative
 94	discendo	discendere	verb		sg.	1	present	indicative	
 95	con	con	preposition						

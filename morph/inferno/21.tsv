@@ -258,7 +258,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 37	O	o	interjection						
 37	Malebranche	Malebranche	proper noun		pl.				
 38	ecco	ecco	adverb						
-38	un	uno	article	m.	sg.				indefinite
+38	un	uno	pronoun	m.	sg.				
 38	de	di	preposition						archaic
 38	li	lo	article	m.	pl.				
 38	anzïan	anziano	noun	m.	pl.				apocope

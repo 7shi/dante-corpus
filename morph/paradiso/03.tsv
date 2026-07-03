@@ -560,7 +560,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	voglia	voglia	noun	f.	sg.				
 81	per	per	preposition						
 81	ch'	che	conjunction						elision
-81	una	uno	article	f.	sg.				indefinite
+81	una	uno	numeral	f.	sg.				
 81	fansi	fare+si	verb+pronoun		pl.	3	present	indicative	archaic
 81	nostre	nostro	adjective	f.	pl.				
 81	voglie	voglia	noun	f.	pl.				

@@ -678,7 +678,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 92	selvaggia	selvaggio	adjective	f.	sg.				
 92	strada	strada	noun	f.	sg.				
 93	danne	dare+ne	verb+pronoun		sg.	2	present	imperative	contraction
-93	un	uno	article	m.	sg.				indefinite
+93	un	uno	pronoun	m.	sg.				
 93	de'	di+i	preposition+article	m.	pl.				contraction
 93	tuoi	tuo	pronoun	m.	pl.				
 93	a	a	preposition						

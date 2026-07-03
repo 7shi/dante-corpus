@@ -813,7 +813,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 113	per	per	preposition						
 113	me	me	pronoun		sg.	1			
 113	ma	ma	conjunction						
-113	un	uno	article	m.	sg.				indefinite
+113	un	uno	pronoun	m.	sg.				
 113	d'	di	preposition						elision
 113	i	i	article	m.	pl.				
 113	neri	nero	adjective	m.	pl.				

@@ -1018,7 +1018,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 144	'l	il	article	m.	sg.				elision
 144	temo	temo	noun	m.	sg.				
 144	e	e	conjunction						
-144	una	uno	article	f.	sg.				indefinite
+144	una	uno	numeral	f.	sg.				
 144	in	in	preposition						
 144	ciascun	ciascuno	adjective	m.	sg.				apocope
 144	canto	canto	noun	m.	sg.				

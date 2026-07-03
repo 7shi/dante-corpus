@@ -789,7 +789,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 108	fiato	fiato	noun	m.	sg.				
 108	piove	piovere	verb		sg.	3	present	indicative	
 109	E	e	conjunction						
-109	un	uno	article	m.	sg.				indefinite
+109	un	uno	pronoun	m.	sg.				
 109	de'	di+i	preposition+article	m.	pl.				contraction
 109	tristi	triste	noun	m.	pl.				
 109	de	di	preposition						archaic

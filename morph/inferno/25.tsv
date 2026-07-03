@@ -32,7 +32,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 4	serpi	serpe	noun	f.	pl.				
 4	amiche	amico	adjective	f.	pl.				
 5	perch'	perché	conjunction						elision
-5	una	uno	article	f.	sg.				indefinite
+5	una	uno	pronoun	f.	sg.				
 5	li	lo	pronoun	m.	sg.				archaic
 5	s'	si	pronoun		sg.	3			elision
 5	avvolse	avvolgere	verb		sg.	3	remote past	indicative	

@@ -8,9 +8,9 @@
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
   cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 186 soft**
-  violations (after `--fix-repeats` and a `--fix` pass, both diagnosed in `np/README.md`) — see
-  *Layer 3 check status* below.
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 139 soft**
+  violations (after `--fix-repeats`, a `--fix` pass, and the `un`/`una` mistag correction, all
+  diagnosed in `np/README.md`) — see *Layer 3 check status* below.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
@@ -171,6 +171,31 @@ design, not a prompt-engineering gap — most remaining violations are not Layer
 
 Corpus-wide soft count after `--fix-repeats` and this `--fix` pass: **186** (104 function-word
 heads + 82 noun coverage gaps).
+
+**`un`/`una` mistag correction (2026-07-03)** — all 41 lines flagged `head 'un'/'una' is
+'article'` (47 violations; some lines carry the same head token twice via nested spans, e.g. a
+bare pronoun NP nested inside a relative-clause-modified NP it also heads) were reviewed by hand
+against their terzina context, the same way the `che` cases were. **38** are Dante's
+substantivized indefinite pronoun `un`/`una` ("one [of them]", partitive or anaphoric —
+`un de' tuoi`, `un di quelli spirti`, `l'una e l'altra milizia`, `l'un l'altro`), mistagged
+`article` by Layer 2's build model; corrected directly in the frozen `morph/<canticle>/NN.tsv`
+artifacts to `pronoun` (lemma stays `uno`, the `indefinite` note cleared — matching the corpus's
+existing `pronoun`-tagged `un`/`una` rows elsewhere, e.g. inferno 7:66 `farne posare una`). **2**
+(paradiso 3:81 `per ch'una fansi nostre voglie stesse` — predicative "become as one"; purgatorio
+32:144 `tre sovra 'l temo e una in ciascun canto` — counting, parallel to the already-`numeral`
+`tre`) are genuinely `numeral`, matching the corpus's existing `numeral`-tagged standalone `uno`
+(inferno 2:3 `io sol uno`) — corrected to `numeral` the same way. **1** (paradiso 31:8 `una fïata
+e una si ritorna`) was a Layer-3 alignment mismatch, not a mistag: the model's table proposed a
+standalone `una` NP meaning "once more" (the elliptical second `una`, token 4), but `align_chunk`
+matched the word to the *first* `una` (token 1, already correctly part of `una fïata` and not
+itself a separate referring expression) since both are the identical word and the fix only tracks
+occurrences per exact-phrase key, not cross-phrase token claims. The span was reassigned to token
+4 directly in `np/paradiso/31.tsv`, and token 4's Layer-2 POS corrected to `numeral` (token 1 stays
+`article`, correctly modifying `fïata`). `morph --check` and `np --check` both remained clean
+after every edit (0 hard throughout).
+
+Layer 3's `--check` count is now **139** soft (down from 186: 57 function-word heads + 82 noun
+coverage gaps — `un`/`una` no longer among them).
 
 ## Why this lives in the corpus
 
