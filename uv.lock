@@ -292,15 +292,11 @@ name = "dante-corpus"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "llm7shi" },
-    { name = "rich" },
+    { name = "llm7shi", extra = ["statusline"] },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "llm7shi", git = "https://github.com/7shi/llm7shi.git" },
-    { name = "rich" },
-]
+requires-dist = [{ name = "llm7shi", extras = ["statusline"], git = "https://github.com/7shi/llm7shi.git" }]
 
 [[package]]
 name = "distro"
@@ -518,14 +514,19 @@ wheels = [
 
 [[package]]
 name = "llm7shi"
-version = "0.13.1"
-source = { git = "https://github.com/7shi/llm7shi.git#8a02e4f89b4b5bb503346a4855a7bdfd034f17ba" }
+version = "0.14.0"
+source = { git = "https://github.com/7shi/llm7shi.git#e71b57987769b86422797b62497aa24f1b847793" }
 dependencies = [
     { name = "colorama" },
     { name = "google-genai" },
     { name = "ollama" },
     { name = "openai" },
     { name = "pytest" },
+]
+
+[package.optional-dependencies]
+statusline = [
+    { name = "rich" },
 ]
 
 [[package]]

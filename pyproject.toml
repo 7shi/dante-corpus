@@ -6,8 +6,7 @@ readme = "README.md"
 license = { text = "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication" }
 requires-python = ">=3.10"
 dependencies = [
-    "llm7shi",
-    "rich",
+    "llm7shi[statusline]",
 ]
 
 [build-system]

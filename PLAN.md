@@ -287,7 +287,7 @@ discipline already used for normalization and quotes.
   `morph/morph.py`, the reference implementation) and is **resumable from its own output** — every
   chunk's rows are written back to the artifact as soon as they validate, so an interrupted run
   skips already-committed lines and re-requests only the remainder. Progress is shown live through
-  the shared `dante_corpus/statusline.py` (Rich) — a per-canto bar (`canticle canto/total |
+  `llm7shi.statusline` (Rich) — a per-canto bar (`canticle canto/total |
   line/total …`) with the model's streamed output routed through the same console.
 - **Output routing convention** (shared across all LLM build drivers): the `StatusLine` object
   (`ui`) is the single output channel throughout the build flow. `ui.log()` is used for status

@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 
 from dante_corpus import api, morph
-from dante_corpus.statusline import StatusLine
+from llm7shi.statusline import StatusLine
 
 SYSTEM_PROMPT = """\
 You are a morphological analyzer for archaic Italian (Dante's Divine Comedy).

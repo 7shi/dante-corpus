@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 
 from dante_corpus import api, morph, np
-from dante_corpus.statusline import StatusLine
+from llm7shi.statusline import StatusLine
 
 SYSTEM_PROMPT = """\
 You are a syntactic analyzer for archaic Italian (Dante's Divine Comedy).
