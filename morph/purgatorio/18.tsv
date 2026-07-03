@@ -589,7 +589,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 81	Sardi	Sardo	noun	m.	pl.				
 81	e	e	conjunction						
 81	Corsi	Corso	noun	m.	pl.				
-81	il	il	article	m.	sg.				
+81	il	lo	pronoun	m.	sg.				archaic
 81	vede	vedere	verb		sg.	3	present	indicative	
 81	quando	quando	conjunction						
 81	cade	cadere	verb		sg.	3	present	indicative	

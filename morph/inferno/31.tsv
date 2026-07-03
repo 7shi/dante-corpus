@@ -520,7 +520,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 73	la	il	article	f.	sg.				
 73	soga	soga	noun	f.	sg.				
 74	che	che	pronoun		sg.				relative
-74	'l	lo	article	m.	sg.				elision
+74	'l	lo	pronoun	m.	sg.				elision
 74	tien	tenere	verb		sg.	3	present	indicative	apocope
 74	legato	legato	adjective	m.	sg.				
 74	o	o	interjection						

@@ -159,7 +159,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 23	la	la	article	f.	sg.				
 23	luce	luce	noun	f.	sg.				
 23	che	che	pronoun		sg.				relative
-23	'l	lo	article	m.	sg.				elision
+23	'l	lo	pronoun	m.	sg.				elision
 23	dipigne	dipingere	verb		sg.	3	present	indicative	archaic
 24	quando	quando	conjunction						
 24	'l	lo	article	m.	sg.				elision

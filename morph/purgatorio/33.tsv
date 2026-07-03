@@ -530,7 +530,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 76	almen	almeno	adverb						apocope
 76	dipinto	dipingere	adjective	m.	sg.				
 77	che	che	conjunction						
-77	'l	lo	article	m.	sg.				elision
+77	'l	lo	pronoun	m.	sg.				elision
 77	te	te	pronoun		sg.	2			
 77	ne	ne	pronoun		sg.				
 77	porti	portare	verb		sg.	3	present	subjunctive	

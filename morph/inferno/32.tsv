@@ -842,7 +842,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 114	la	il	article	f.	sg.				
 114	lingua	lingua	noun	f.	sg.				
 114	pronta	pronto	adjective	f.	sg.				
-115	El	il	article	m.	sg.				archaic
+115	El	egli	pronoun	m.	sg.				archaic
 115	piange	piangere	verb		sg.	3	present	indicative	
 115	qui	qui	adverb						
 115	l'	lo	article	m.	sg.				elision

@@ -687,7 +687,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 96	trasse	trarre	verb		sg.	3	remote past	indicative	
 96	infino	infino	adverb						
 96	a	a	preposition						
-96	co	con	preposition						apocope
+96	co	capo	noun	m.	sg.				apocope
 96	la	la	article	f.	sg.				
 96	spuola	spola	noun	f.	sg.				archaic
 97	Perfetta	perfetto	adjective	f.	sg.				

@@ -200,7 +200,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 27	canto	canto	noun	m.	sg.				
 27	in	in	preposition						
 27	un	uno	article	m.	sg.				indefinite
-27	oh	oh	interjection						
+27	oh	oh	noun	m.	sg.				
 27	lungo	lungo	adjective	m.	sg.				
 27	e	e	conjunction						
 27	roco	roco	adjective	m.	sg.				
@@ -562,7 +562,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 77	quel	quello	pronoun	m.	sg.				
 77	da	da	preposition						
 77	Esti	Esti	proper noun	m.	sg.				
-77	il	il	article	m.	sg.				
+77	il	lo	pronoun	m.	sg.				archaic
 77	fé	fare	verb		sg.	3	remote past	indicative	archaic
 77	far	fare	verb						apocope
 77	che	che	pronoun		sg.				
@@ -761,7 +761,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 103	vero	vero	noun	m.	sg.				
 103	e	e	conjunction						
 103	tu	tu	pronoun		sg.	2			
-103	'l	lo	article	m.	sg.				elision
+103	'l	lo	pronoun	m.	sg.				elision
 103	ridì	ridire	verb		sg.	2	present	imperative	
 103	tra	tra	preposition						
 103	vivi	vivo	noun	m.	pl.				

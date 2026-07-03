@@ -23,7 +23,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 3	via	via	noun	f.	sg.				
 3	torta	torto	adjective	f.	sg.				
 4	sonando	sonare	verb				present	gerund	
-4	la	lo	article	f.	sg.				
+4	la	la	pronoun	f.	sg.				clitic
 4	senti'	sentire	verb		sg.	3	present	indicative	apocope
 4	esser	essere	verb					infinitive	apocope
 4	richiusa	richiuso	adjective	f.	sg.				

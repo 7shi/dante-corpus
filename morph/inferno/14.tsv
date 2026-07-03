@@ -324,7 +324,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 48	non	non	adverb						
 48	par	parere	verb		sg.	3	present	indicative	apocope
 48	che	che	conjunction						
-48	'l	lo	article	m.	sg.				elision
+48	'l	lo	pronoun	m.	sg.				elision
 48	marturi	marturire	verb		sg.	3	present	subjunctive	
 49	E	e	conjunction						
 49	quel	quello	adjective	m.	sg.				
@@ -489,7 +489,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 70	poco	poco	adverb						
 70	par	parere	verb		sg.	3	present	indicative	apocope
 70	che	che	conjunction						
-70	'l	lo	article	m.	sg.				elision
+70	'l	lo	pronoun	m.	sg.				elision
 70	pregi	pregiare	verb		sg.	3	present	subjunctive	
 71	ma	ma	conjunction						
 71	com'	come	conjunction						elision

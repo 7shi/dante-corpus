@@ -143,8 +143,23 @@ call** (`validate_line`):
   counting context parallel to an already-`numeral` `tre`); **1** was a Layer-3 alignment
   mismatch (a repeated-word case our per-exact-needle occurrence tracking doesn't cover — it
   matches only within one exact phrase, not across two different phrases sharing a word), fixed
-  by reassigning the span to the correct token. Corpus-wide soft count is now **139** (57
+  by reassigning the span to the correct token. Corpus-wide soft count was then **139** (57
   function-word heads + 82 noun coverage gaps).
+
+  The remaining 57 function-word-head cases were reviewed the same way (see PLAN.md's
+  *Function-word-head cluster review*), this time delegating the largest cluster's hand review
+  (42 lines headed by a bare/elided article form `il/la/lo/li/le/el/'l/l'/El/I`) to an LLM
+  subagent briefed with the corpus's own precedent rows, since Old Italian frequently uses these
+  same word forms as unstressed clitic pronouns homographic with the article. Its output — 25
+  Layer-2 mistags corrected to `pronoun`, 20 redundant Layer-3 spans removed — was spot-checked
+  against the raw data before applying, plus 2 cases it flagged as needing direct judgment. The
+  remaining 15 heterogeneous cases (interjections, conjunctions, prepositions, a determiner)
+  were each resolved by matching an existing corpus tagging convention (`guai`/`tutto`/`perché`/
+  `onde`/`capo`/`quantunque` all already have precedent rows for the target POS elsewhere in the
+  corpus) rather than inventing new categories; one case (paradiso 7:1 `Osanna`, a
+  self-contained quoted interjection with no content word to shift the span head to) was left as
+  an accepted soft violation. Corpus-wide soft count is now **83** (1 function-word head — the
+  accepted `Osanna` exception — + 82 noun coverage gaps).
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

@@ -8,9 +8,10 @@
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
   cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 139 soft**
-  violations (after `--fix-repeats`, a `--fix` pass, and the `un`/`una` mistag correction, all
-  diagnosed in `np/README.md`) — see *Layer 3 check status* below.
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 83 soft**
+  violations (after `--fix-repeats`, a `--fix` pass, the `un`/`una` mistag correction, and the
+  function-word-head cluster review, all diagnosed in `np/README.md`) — see *Layer 3 check
+  status* below.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
@@ -196,6 +197,55 @@ after every edit (0 hard throughout).
 
 Layer 3's `--check` count is now **139** soft (down from 186: 57 function-word heads + 82 noun
 coverage gaps — `un`/`una` no longer among them).
+
+**Function-word-head cluster review (2026-07-04)** — the remaining 57 function-word-head
+violations were reviewed the same way, this time with the hand review itself delegated to an
+LLM subagent for the largest, most uniform cluster (42 lines headed by an elided/bare article
+form: `il/la/lo/li/le/el/'l/l'/El/I`), briefed with the corpus's own precedent rows (many
+correctly-tagged `pronoun` clitics already exist, e.g. `morph/inferno/08.tsv` `il`→lemma `lo`,
+note "archaic") and asked to classify each case as either a Layer-2 mistag (Old Italian
+unstressed clitic object/subject pronoun homographic with the article, e.g. `Quivi il
+lasciammo` = "there we left him") or a Layer-3 over-inclusion (a redundant single-token span
+duplicating an already-correct larger span, e.g. `de li altri` already headed at `altri`, with
+a spurious extra `li`-headed span alongside it). Its classifications were spot-checked against
+the raw span/morph dumps before applying: **25** corrected to `pronoun`, **20** duplicate spans
+removed, plus 2 cases the subagent flagged as fitting neither pattern and left for direct
+review — inferno 24:100 `Né O sì tosto mai né I si scrisse` (both `O` and `I` are cited letter
+shapes, i.e. mentioned rather than used; retagged `noun`) and purgatorio 23:87 `la Nella mia`
+(the real bug was token 2 `Nella`, mistagged `preposition+article` "in+la" instead of the
+proper noun — Forese's wife's name in Tuscan article-before-name style; retagged `proper noun`
+and the three fragment spans `la`/`mia`/(missing `Nella`) merged into one `la Nella mia` span
+headed at `Nella`).
+
+The remaining 15 heterogeneous cases (interjections, conjunctions, prepositions, a determiner)
+were reviewed directly, each resolved by matching an existing corpus tagging convention rather
+than inventing a new one: `Guai a voi` → `noun` (cf. many other `guai`/`guaio` noun rows,
+including one for the *same* line's earlier duplicate token); `Tutti son pien...` → `pronoun`
+(substantivized `tutto`, cf. existing `tutto`-as-pronoun rows); `lo 'mperché` → `noun`
+(substantivized "the wherefore", cf. `perché`-as-noun rows — one nine lines later in the very
+same canto); `un «oh!» lungo e roco` / `strinse in «uhi!»` → `noun` (nominalized cries,
+syntactically real nouns inside their sentences, unlike a bare quoted exclamation); `sensibile
+onde` → `adverb` (relative "whereby", cf. an existing `onde`/adverb row already noted
+"relative"); `infino a co` → `noun` (apocope of `capo`, "to the end", cf. `capo`-as-noun rows);
+`quantunque vedi` → `pronoun` (indefinite relative "whatever", cf. existing
+`quantunque`-as-pronoun rows). Two `verso di quella...` spans (purgatorio 3:51, 28:30) were
+Layer-3 over-inclusion like the article cluster: the PP headed at `verso` duplicated an
+already-correct span headed at `quella`, so the `verso`-headed span was removed. Purgatorio
+19:137's `Neque nubent` (a Latin quotation, Matthew 22:30) needed no Layer-2 change at all —
+the corpus already keeps genuine POS for Latin words (cf. `Vexilla regis prodeunt inferni`,
+tagged verb/preposition/noun with note "Latin", not force-nouned) — only the span's head index
+was wrong, pointing at the conjunction `Neque` instead of the verb `nubent`, exactly like
+`Vexilla regis` already heads on the noun rather than the leading word.
+
+One case, paradiso 7:1 `Osanna, sanctus Deus sabaòth...`, was left as an accepted soft
+violation rather than force-fixed: `Osanna` is a genuine, self-contained interjection (a fully
+quoted angelic acclamation) with no content word in its own single-token span to shift the head
+to, unlike the surrounding multi-token Latin/Hebrew spans in the same line which already head
+correctly on `Deus`/`sabaòth`.
+
+`morph --check` and `np --check` both remained clean (0 hard throughout, `morph --check` also 0
+soft). Layer 3's `--check` count is now **83** soft (down from 139: 1 function-word head —
+the accepted `Osanna` exception — + 82 noun coverage gaps).
 
 ## Why this lives in the corpus
 

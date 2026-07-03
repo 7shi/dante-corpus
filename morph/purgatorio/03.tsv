@@ -589,7 +589,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 84	quete	quieto	adjective	f.	pl.				
 84	e	e	conjunction						
 84	lo	lo	article	m.	sg.				
-84	'mperché	imperché	conjunction						apocope
+84	'mperché	perché	noun	m.	sg.				apocope
 84	non	non	adverb						
 84	sanno	sapere	verb		pl.	3	present	indicative	
 85	sì	sì	adverb						

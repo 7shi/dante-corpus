@@ -533,7 +533,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 77	questa	questo	adjective	f.	sg.				
 77	giustizia	giustizia	noun	f.	sg.				
 77	che	che	pronoun						
-77	'l	lo	article	m.	sg.				elision
+77	'l	lo	pronoun	m.	sg.				elision
 77	condanna	condannare	verb		sg.	3	present	indicative	
 78	ov'	ove	adverb						elision
 78	è	essere	verb		sg.	3	present	indicative	
@@ -1005,7 +1005,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 144	del	di+il	preposition+article	m.	sg.				contraction
 144	monte	monte	noun	m.	sg.				
 144	che	che	pronoun		sg.				relative
-144	la	lo	article	f.	sg.				
+144	la	la	pronoun	f.	sg.				clitic
 144	fascia	fasciare	verb		sg.	3	present	indicative	
 145	E	e	conjunction						
 145	creder	credere	verb					infinitive	apocope

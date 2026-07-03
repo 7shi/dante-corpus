@@ -16,7 +16,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 2	carca	carico	adjective	f.	sg.				archaic
 3	fin	fine	noun	m.	sg.				apocope
 3	che	che	conjunction						
-3	'l	lo	article	m.	sg.				elision
+3	'l	lo	pronoun	m.	sg.				elision
 3	sofferse	soffrire	verb		sg.	3	remote past	indicative	
 3	il	il	article	m.	sg.				
 3	dolce	dolce	adjective	m.	sg.				

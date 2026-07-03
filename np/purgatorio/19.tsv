@@ -286,7 +286,6 @@ line	start	end	head	text
 103	4	5	4	poco più
 103	7	7	7	io
 104	2	4	4	il gran manto
-104	2	2	2	il
 104	6	10	6	chi dal fango il guarda
 104	8	8	8	fango
 105	2	2	2	piuma
@@ -351,7 +350,7 @@ line	start	end	head	text
 135	7	8	8	una podestate
 136	3	6	6	quel santo evangelico suono
 137	1	1	1	che
-137	3	4	3	Neque nubent
+137	3	4	4	Neque nubent
 138	5	5	5	io
 139	7	7	7	t'
 140	2	4	4	la tua stanza

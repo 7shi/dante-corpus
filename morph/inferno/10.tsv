@@ -223,7 +223,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 33	in	in	preposition						
 33	sù	su	adverb						
 33	tutto	tutto	adjective	m.	sg.				
-33	'l	lo	article	m.	sg.				elision
+33	'l	lo	pronoun	m.	sg.				elision
 33	vedrai	vedere	verb		sg.	2	future	indicative	
 34	Io	io	pronoun		sg.	1			
 34	avea	avere	verb		sg.	1	imperfect	indicative	apocope
@@ -683,7 +683,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 96	'nviluppata	involuppare	verb	f.	sg.		past participle		elision
 96	mia	mio	adjective	f.	sg.				
 96	sentenza	sentenza	noun	f.	sg.				
-97	El	il	article	m.	sg.				
+97	El	egli	pronoun	m.	sg.				archaic
 97	par	parere	verb		sg.	3	present	indicative	
 97	che	che	conjunction						
 97	voi	voi	pronoun		pl.	2			
@@ -802,7 +802,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 113	i	voi	pronoun		pl.	2			archaic
 113	saper	sapere	verb						apocope
 113	che	che	conjunction						
-113	'l	lo	article	m.	sg.				elision
+113	'l	lo	pronoun	m.	sg.				elision
 113	fei	fare	verb		sg.	1	remote past	indicative	
 113	perché	perché	conjunction						
 113	pensava	pensare	verb		sg.	1	imperfect	indicative	

@@ -417,7 +417,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 57	voler	volere	noun	m.	sg.				apocope
 57	di	di	preposition						
 57	Roma	Roma	noun	f.	sg.				
-57	il	il	article	m.	sg.				
+57	il	lo	pronoun	m.	sg.				archaic
 57	tolle	tollere	verb		sg.	3	remote past	indicative	
 58	E	e	conjunction						
 58	quel	quello	pronoun	m.	sg.				

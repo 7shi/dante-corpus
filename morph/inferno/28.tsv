@@ -45,7 +45,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 6	poco	poco	adjective	m.	sg.				
 6	seno	seno	noun	m.	sg.				
 7	S'	se	conjunction						elision
-7	el	il	article	m.	sg.				archaic
+7	el	egli	pronoun	m.	sg.				archaic
 7	s'	si	pronoun		sg.	3			elision
 7	aunasse	aunare	verb		sg.	3	imperfect	subjunctive	
 7	ancor	ancora	adverb						apocope

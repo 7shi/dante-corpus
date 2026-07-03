@@ -725,12 +725,12 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 99	s'	si	pronoun		sg.	3			elision
 99	annoda	annodare	verb		sg.	3	present	indicative	
 100	Né	né	conjunction						
-100	O	o	conjunction						
+100	O	o	noun		sg.				
 100	sì	sì	adverb						
 100	tosto	tosto	adverb						
 100	mai	mai	adverb						
 100	né	né	conjunction						
-100	I	il	article	m.	sg.				
+100	I	i	noun		sg.				
 100	si	si	pronoun		sg.	3			reflexive
 100	scrisse	scrivere	verb		sg.	3	remote past	indicative	
 101	com'	come	adverb						elision

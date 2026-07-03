@@ -474,7 +474,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 64	duolo	duolo	noun	m.	sg.				
 64	strinse	stringere	verb		sg.	3	remote past	indicative	
 64	in	in	preposition						
-64	uhi	uhi	interjection						
+64	uhi	uhi	noun	m.	sg.				
 65	mise	mettere	verb		sg.	3	remote past	indicative	
 65	fuor	fuori	adverb						apocope
 65	prima	prima	adverb						

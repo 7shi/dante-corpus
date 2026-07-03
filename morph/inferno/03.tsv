@@ -585,7 +585,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 83	antico	antico	adjective	m.	sg.				
 83	pelo	pelo	noun	m.	sg.				
 84	gridando	gridare	verb						gerund
-84	Guai	guai	interjection		pl.				
+84	Guai	guaio	noun	m.	pl.				
 84	a	a	preposition						
 84	voi	voi	pronoun		pl.	2			
 84	anime	anima	noun	f.	pl.				

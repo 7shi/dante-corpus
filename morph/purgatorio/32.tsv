@@ -103,7 +103,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 14	al	a+il	preposition+article	m.	sg.				contraction
 14	molto	molto	noun	m.	sg.				
 15	sensibile	sensibile	adjective		sg.				
-15	onde	onde	conjunction						
+15	onde	onde	adverb						relative
 15	a	a	preposition						
 15	forza	forza	noun	f.	sg.				
 15	mi	mi	pronoun		sg.	1			reflexive
