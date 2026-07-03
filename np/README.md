@@ -103,9 +103,9 @@ call** (`validate_line`):
 
   Under the frozen policy the corpus-wide soft count was **382** (141 function-word heads + 241
   noun coverage gaps, after correcting 24 `che` mistags in Layer 2 and removing 12 over-included
-  `che` spans from Layer 3 — see PLAN.md) — a reviewable list of genuine model omissions (often
-  in repeated idioms: `a poco a poco`, `di gente in gente`) and residual function-word heads,
-  kept visible rather than silenced.
+  `che` spans from Layer 3 — see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)) — a
+  reviewable list of genuine model omissions (often in repeated idioms: `a poco a poco`, `di
+  gente in gente`) and residual function-word heads, kept visible rather than silenced.
 
   A first `--fix` pass found only 16/276 lines improved — suspiciously low. Investigating showed
   ~30% of the remaining coverage gaps were not model misses at all: `align_chunk` collapsed every
@@ -136,43 +136,29 @@ call** (`validate_line`):
   The corpus-wide soft count after `--fix-repeats` and this `--fix` pass was **186** (104
   function-word heads + 82 noun coverage gaps).
 
-  A hand review of all 41 lines flagged `head 'un'/'una' is 'article'` (see PLAN.md's `un`/`una`
-  mistag correction) found the same split the `che` review did: **38** are Dante's substantivized
-  indefinite pronoun (`un de' tuoi`, `l'una e l'altra milizia`) mistagged `article` by Layer 2,
-  corrected to `pronoun`; **2** are genuinely `numeral` (predicative "become as one", and a
-  counting context parallel to an already-`numeral` `tre`); **1** was a Layer-3 alignment
-  mismatch (a repeated-word case our per-exact-needle occurrence tracking doesn't cover — it
-  matches only within one exact phrase, not across two different phrases sharing a word), fixed
-  by reassigning the span to the correct token. Corpus-wide soft count was then **139** (57
-  function-word heads + 82 noun coverage gaps).
+  A hand review of all 41 lines flagged `head 'un'/'una' is 'article'` found the same split the
+  `che` review did: 38 were a Layer-2 mistag (corrected to `pronoun`), 2 were genuinely `numeral`,
+  and 1 was a Layer-3 alignment mismatch (a repeated-word case our per-exact-needle occurrence
+  tracking doesn't cover — it matches only within one exact phrase, not across two different
+  phrases sharing a word), fixed by reassigning the span. Corpus-wide soft count was then **139**
+  (57 function-word heads + 82 noun coverage gaps).
 
-  The remaining 57 function-word-head cases were reviewed the same way (see PLAN.md's
-  *Function-word-head cluster review*), this time delegating the largest cluster's hand review
-  (42 lines headed by a bare/elided article form `il/la/lo/li/le/el/'l/l'/El/I`) to an LLM
-  subagent briefed with the corpus's own precedent rows, since Old Italian frequently uses these
-  same word forms as unstressed clitic pronouns homographic with the article. Its output — 25
-  Layer-2 mistags corrected to `pronoun`, 20 redundant Layer-3 spans removed — was spot-checked
-  against the raw data before applying, plus 2 cases it flagged as needing direct judgment. The
-  remaining 15 heterogeneous cases (interjections, conjunctions, prepositions, a determiner)
-  were each resolved by matching an existing corpus tagging convention (`guai`/`tutto`/`perché`/
-  `onde`/`capo`/`quantunque` all already have precedent rows for the target POS elsewhere in the
-  corpus) rather than inventing new categories; one case (paradiso 7:1 `Osanna`, a
-  self-contained quoted interjection with no content word to shift the span head to) was left as
-  an accepted soft violation. Corpus-wide soft count was then **83** (1 function-word head — the
-  accepted `Osanna` exception — + 82 noun coverage gaps).
+  The remaining 57 function-word-head cases were reviewed the same way — the largest cluster's
+  hand review (42 lines headed by a bare/elided article form) was delegated to an LLM subagent,
+  spot-checked before applying: 25 Layer-2 mistags corrected to `pronoun`, 20 redundant Layer-3
+  spans removed, plus a handful needing direct judgment or left as an accepted soft violation
+  (paradiso 7:1 `Osanna`). Corpus-wide soft count was then **83** (1 function-word head + 82
+  noun coverage gaps).
 
-  The 82 noun-coverage-gap cases were then classified by cause (see PLAN.md's *Noun-coverage-gap
-  mistag pass*) before fixing anything, since most of them aren't Layer-2 problems at all: 25 are
-  accepted non-NP function-word/idiom cases (`fin che`, apocopated prepositions, `allotta`), 29
-  are two-token proper-name/title pairs where Layer 3 picked only one word as head (a span-merge
-  gap, left for a future pass), and 13 are single content words Layer 2 already tags correctly
-  but Layer 3 never spanned (also left for a future pass). Only **11** were genuine Layer-2
-  mistags — each checked against its own corpus-wide precedent before fixing, catching two false
-  leads (`animal`, `forme`) that turned out to already match established convention and were left
-  alone. 3 more (`ben`/`bene` before an infinitive) were deliberately left unfixed: the corpus
-  tags the same "ben/bene + infinitive" construction inconsistently in different places, so
-  there's no clean precedent to match without a real design decision. Corpus-wide soft count is
-  now **72**.
+  The 82 noun-coverage-gap cases were then classified by cause before fixing anything, since most
+  of them aren't Layer-2 problems at all — accepted non-NP idioms, Layer-3 span-merge gaps for
+  two-token proper names, and unspanned single nouns account for most of the total. Only 11 were
+  genuine Layer-2 mistags. Corpus-wide soft count is now **72**.
+
+  See [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) for the full per-case record of every
+  Layer-2 correction made across all of these reviews (the `che`, `un`/`una`, function-word-head
+  cluster, and noun-coverage-gap passes) — this file only tracks the Layer-3 soft-violation
+  counts and the mechanics behind them.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

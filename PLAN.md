@@ -103,34 +103,12 @@ violations), then frozen in `dante_corpus/np.py` (`_needs_np` / `_can_head_np`) 
   future flag is a regression.
 
 **`che` mistag correction (2026-07-03)** — all 36 `head 'che'/"ch'" is 'conjunction'` soft
-violations were reviewed by hand against their terzina context (verified with exact token
-position, since several lines carry more than one `che`). **24** are Dante's relative pronoun
-`che`/`ch'` (subject/object of the following clause, referring back to an antecedent — e.g.
-inferno 2:72 `amor mi mosse, che mi fa parlare`, paradiso 33:120 `foco che quinci e quindi
-igualmente si spiri`) mistagged `conjunction` by Layer 2's build model; these were corrected
-in the committed `morph/<canticle>/NN.tsv` artifacts to `relative pronoun` (the POS label the
-corpus already uses elsewhere for unambiguous cases), directly in the frozen TSVs — no model
-call, no Layer 2 rebuild. `morph --check` still reports 0 hard / 0 soft after the edit (POS
-isn't in Layer 2's own closed-tag soft check). **12** are genuinely `conjunction` and were left
-alone — Layer 3 over-including them as NP heads, not a Layer 2 error:
-- **6** consecutive `tanto`/`sì … che` ("so … that"): inferno 3:54, 19:27; purgatorio 17:51;
-  paradiso 21:141, 23:53, plus the `più … che` comparative-adjacent paradiso 27:110 `non ha
-  altro dove che` ("has no other where *than*" — comparative `che`, not consecutive, same
-  disposition).
-- **3** the fixed idiom `secondo che` ("according to how/the extent that"): inferno 5:6;
-  paradiso 14:3, 28:35.
-- **2** complementizer `che` introducing a noun clause (`sappie che …`, `pensa che …`):
-  purgatorio 22:49; paradiso 18:131.
-- **1** causal `poi che` ("since"): paradiso 4:9.
-
-For these 12, the Layer-3 artifact itself was wrong: the model had proposed the bare conjunction
-as its own single-token NP (`[che]`/`[ch']`, `start == end == head`) alongside its legitimate
-sibling NPs on the line — a subordinating/comparative/complementizer conjunction cannot head a
-noun phrase, so this is Layer 3 over-inclusion, not the "exhaustive and over-inclusive by design"
-kind. All 12 spans were removed directly from the committed `np/<canticle>/NN.tsv` artifacts (no
-model call); the 4 lines left with zero spans (inferno 5:6; paradiso 4:9, 21:141, 28:35 — each
-had only the bad `che` span) got the documented zero-NP sentinel row (`start == end == head ==
-0`) in its place.
+violations were reviewed by hand against their terzina context: 24 were a Layer-2 mistag
+(Dante's relative pronoun `che`/`ch'` frozen as `conjunction`), corrected to `relative pronoun`;
+12 were genuinely `conjunction`, with the bug on the Layer-3 side instead (the model had proposed
+the bare conjunction as its own NP span) — those 12 spans were removed. See
+[`morph/CORRECTIONS.md`](morph/CORRECTIONS.md) for the full per-case breakdown of the Layer-2
+side.
 
 Layer 3's `--check` count is now **382** soft (down from 418: 141 function-word heads + 241 noun
 coverage gaps).
@@ -174,74 +152,28 @@ Corpus-wide soft count after `--fix-repeats` and this `--fix` pass: **186** (104
 heads + 82 noun coverage gaps).
 
 **`un`/`una` mistag correction (2026-07-03)** — all 41 lines flagged `head 'un'/'una' is
-'article'` (47 violations; some lines carry the same head token twice via nested spans, e.g. a
-bare pronoun NP nested inside a relative-clause-modified NP it also heads) were reviewed by hand
-against their terzina context, the same way the `che` cases were. **38** are Dante's
-substantivized indefinite pronoun `un`/`una` ("one [of them]", partitive or anaphoric —
-`un de' tuoi`, `un di quelli spirti`, `l'una e l'altra milizia`, `l'un l'altro`), mistagged
-`article` by Layer 2's build model; corrected directly in the frozen `morph/<canticle>/NN.tsv`
-artifacts to `pronoun` (lemma stays `uno`, the `indefinite` note cleared — matching the corpus's
-existing `pronoun`-tagged `un`/`una` rows elsewhere, e.g. inferno 7:66 `farne posare una`). **2**
-(paradiso 3:81 `per ch'una fansi nostre voglie stesse` — predicative "become as one"; purgatorio
-32:144 `tre sovra 'l temo e una in ciascun canto` — counting, parallel to the already-`numeral`
-`tre`) are genuinely `numeral`, matching the corpus's existing `numeral`-tagged standalone `uno`
-(inferno 2:3 `io sol uno`) — corrected to `numeral` the same way. **1** (paradiso 31:8 `una fïata
-e una si ritorna`) was a Layer-3 alignment mismatch, not a mistag: the model's table proposed a
-standalone `una` NP meaning "once more" (the elliptical second `una`, token 4), but `align_chunk`
-matched the word to the *first* `una` (token 1, already correctly part of `una fïata` and not
-itself a separate referring expression) since both are the identical word and the fix only tracks
-occurrences per exact-phrase key, not cross-phrase token claims. The span was reassigned to token
-4 directly in `np/paradiso/31.tsv`, and token 4's Layer-2 POS corrected to `numeral` (token 1 stays
-`article`, correctly modifying `fïata`). `morph --check` and `np --check` both remained clean
-after every edit (0 hard throughout).
+'article'` were reviewed the same way: 38 corrected to `pronoun` (Dante's substantivized
+indefinite pronoun `un`/`una`), 2 to `numeral` (genuine counting/predicative uses), and 1
+(paradiso 31:8) was a Layer-3 alignment mismatch rather than a mistag — `align_chunk` had matched
+a proposed span to the wrong occurrence of a repeated word across two different phrases, fixed by
+reassigning the span. See [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md) for the full breakdown.
+`morph --check` and `np --check` both remained clean after every edit (0 hard throughout).
 
 Layer 3's `--check` count is now **139** soft (down from 186: 57 function-word heads + 82 noun
 coverage gaps — `un`/`una` no longer among them).
 
 **Function-word-head cluster review (2026-07-04)** — the remaining 57 function-word-head
-violations were reviewed the same way, this time with the hand review itself delegated to an
-LLM subagent for the largest, most uniform cluster (42 lines headed by an elided/bare article
-form: `il/la/lo/li/le/el/'l/l'/El/I`), briefed with the corpus's own precedent rows (many
-correctly-tagged `pronoun` clitics already exist, e.g. `morph/inferno/08.tsv` `il`→lemma `lo`,
-note "archaic") and asked to classify each case as either a Layer-2 mistag (Old Italian
-unstressed clitic object/subject pronoun homographic with the article, e.g. `Quivi il
-lasciammo` = "there we left him") or a Layer-3 over-inclusion (a redundant single-token span
-duplicating an already-correct larger span, e.g. `de li altri` already headed at `altri`, with
-a spurious extra `li`-headed span alongside it). Its classifications were spot-checked against
-the raw span/morph dumps before applying: **25** corrected to `pronoun`, **20** duplicate spans
-removed, plus 2 cases the subagent flagged as fitting neither pattern and left for direct
-review — inferno 24:100 `Né O sì tosto mai né I si scrisse` (both `O` and `I` are cited letter
-shapes, i.e. mentioned rather than used; retagged `noun`) and purgatorio 23:87 `la Nella mia`
-(the real bug was token 2 `Nella`, mistagged `preposition+article` "in+la" instead of the
-proper noun — Forese's wife's name in Tuscan article-before-name style; retagged `proper noun`
-and the three fragment spans `la`/`mia`/(missing `Nella`) merged into one `la Nella mia` span
-headed at `Nella`).
-
-The remaining 15 heterogeneous cases (interjections, conjunctions, prepositions, a determiner)
-were reviewed directly, each resolved by matching an existing corpus tagging convention rather
-than inventing a new one: `Guai a voi` → `noun` (cf. many other `guai`/`guaio` noun rows,
-including one for the *same* line's earlier duplicate token); `Tutti son pien...` → `pronoun`
-(substantivized `tutto`, cf. existing `tutto`-as-pronoun rows); `lo 'mperché` → `noun`
-(substantivized "the wherefore", cf. `perché`-as-noun rows — one nine lines later in the very
-same canto); `un «oh!» lungo e roco` / `strinse in «uhi!»` → `noun` (nominalized cries,
-syntactically real nouns inside their sentences, unlike a bare quoted exclamation); `sensibile
-onde` → `adverb` (relative "whereby", cf. an existing `onde`/adverb row already noted
-"relative"); `infino a co` → `noun` (apocope of `capo`, "to the end", cf. `capo`-as-noun rows);
-`quantunque vedi` → `pronoun` (indefinite relative "whatever", cf. existing
-`quantunque`-as-pronoun rows). Two `verso di quella...` spans (purgatorio 3:51, 28:30) were
-Layer-3 over-inclusion like the article cluster: the PP headed at `verso` duplicated an
-already-correct span headed at `quella`, so the `verso`-headed span was removed. Purgatorio
-19:137's `Neque nubent` (a Latin quotation, Matthew 22:30) needed no Layer-2 change at all —
-the corpus already keeps genuine POS for Latin words (cf. `Vexilla regis prodeunt inferni`,
-tagged verb/preposition/noun with note "Latin", not force-nouned) — only the span's head index
-was wrong, pointing at the conjunction `Neque` instead of the verb `nubent`, exactly like
-`Vexilla regis` already heads on the noun rather than the leading word.
-
-One case, paradiso 7:1 `Osanna, sanctus Deus sabaòth...`, was left as an accepted soft
-violation rather than force-fixed: `Osanna` is a genuine, self-contained interjection (a fully
-quoted angelic acclamation) with no content word in its own single-token span to shift the head
-to, unlike the surrounding multi-token Latin/Hebrew spans in the same line which already head
-correctly on `Deus`/`sabaòth`.
+violations were reviewed the same way, this time with the largest, most uniform cluster (42
+lines headed by a bare/elided article form: `il/la/lo/li/le/el/'l/l'/El/I`) delegated to an LLM
+subagent briefed with the corpus's own precedent rows. Its classifications were spot-checked
+against the raw span/morph dumps before applying: 25 corrected to `pronoun` (an Old Italian
+clitic pronoun homographic with the article), 20 were Layer-3 over-inclusion (a redundant span
+duplicating an already-correct larger one) and had the span removed instead, plus 2 needed direct
+judgment. The remaining 15 heterogeneous cases (interjections, conjunctions, prepositions, a
+determiner) were each resolved by matching an existing corpus tagging convention. See
+[`morph/CORRECTIONS.md`](morph/CORRECTIONS.md) for the full per-case breakdown, including which
+of these 57 were Layer-2 fixes vs. Layer-3-only fixes vs. left as an accepted soft violation
+(paradiso 7:1 `Osanna`).
 
 `morph --check` and `np --check` both remained clean (0 hard throughout, `morph --check` also 0
 soft). Layer 3's `--check` count is now **83** soft (down from 139: 1 function-word head —
@@ -249,71 +181,19 @@ the accepted `Osanna` exception — + 82 noun coverage gaps).
 
 **Noun-coverage-gap mistag pass (2026-07-04)** — the 82 remaining "noun heads no NP" cases were
 classified by cause before touching anything, since only a subset are actually Layer-2 mistags:
+25 are accepted non-NP function-word/idiom cases (`fin che`, apocopated prepositions, `allotta`
+— no fix needed), 29 are two-token proper-name/title pairs where Layer 3 picked only one word as
+head (a Layer-3 span-merge gap, left for a future pass), and 13 are single content words Layer 2
+already tags correctly that Layer 3 simply never spanned (also left for a future pass). Only
+**11** were genuine Layer-2 mistags, each matched against an existing precedent row before
+fixing — see [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md) for the full table and the two false
+leads (`animal`, `forme`) caught and left alone during the check. Three more cases (`ben`/`bene`
+before an infinitive) were deliberately excluded — the corpus tags that construction
+inconsistently elsewhere, so there's no clean precedent to fix against without a real design
+decision.
 
-- **14** are the `fin che` ("until") conjunctional idiom — `fin` is correctly tagged `noun`
-  (lemma `fine`) by the corpus's own convention, but a fixed function-word idiom isn't a real NP.
-  Accepted as-is, no fix.
-- **10** are apocopated preposition forms (`inver'`/`'nver'`/`inverso`, `incontr'`/`incontro`,
-  `'ntorno`) that govern their own following NP but don't head one themselves. Accepted as-is.
-- **1** (`allotta`, purgatorio 27:85, fused "a l'otta" = "then") is the same kind of non-NP
-  function phrase. Accepted as-is.
-- **29** are two-token proper names/titles where Layer 3 picked only one word as head and left
-  the other floating uncovered — a genuine Layer-3 span-merge gap, not a Layer-2 problem: titles
-  (`ser Brunetto` ×2, `ser Branca Doria`, `ser Martino`, `messer Guido`, `mastro Adamo`,
-  `fra Dolcin`, `fra Tommaso`, `San Pietro`, `San Giovanni`, `donna Berta`) and given-name+surname
-  or place-name pairs (`Carlo Magno` ×3, `Filippo Argenti`, `Michele Scotto`, `Michel Zanche`,
-  `Buoso Donati`, `Guiglielmo Borsiere`, `Puccio Sciancato`, `Federigo Novello`,
-  `Federigo Tignoso`, `Pier Pettinaio`, `Ubertin Donato`, `Ruberto Guiscardo`,
-  `Ramondo Beringhiere`, `Monte Viso`, `le montagne Rife`). Left for a future Layer-3 span-merge
-  pass — not attempted here.
-- **13** are single content words Layer 2 already tags correctly, where Layer 3 simply never
-  generated any span (`legista`, `cocca`, `fummo`, `rintoppo`, `duci`, `anella`, `cerchi`, `sol`,
-  `vero` ×3, plus two words that first looked like adjective-mistag candidates but turned out to
-  already match established corpus convention: `animal` (paradiso 13:83, "l'animal
-  perfezïone") and `forme` (purgatorio 9:58, "l'altre genti forme") — every other occurrence of
-  `animale`/`forma` in the corpus is tagged `noun` too, including in near-identical
-  constructions, so both were left alone as Layer-3-only gaps instead of miscorrected). Left for
-  a future Layer-3 span-completion pass.
-- **11** were genuine Layer-2 mistags, each matched against an existing precedent row before
-  fixing:
-  - `stato` (inferno 27:117, periphrastic "stato...sono a' crini") → `verb` (essere, past
-    participle), not noun.
-  - `conte` (inferno 33:31, "cagne...studïose e conte", agrees with fem. pl. `cagne`) →
-    `adjective` (archaic `conto` = wise/known), not the noun "count".
-  - `giuso` (purgatorio 2:40) → `adverb` (`giù`, archaic) — the *only* one of 33 `giuso`
-    occurrences in the whole corpus tagged `noun`; all others are already `adverb`.
-  - `U'` (paradiso 11:139, "U' ben s'impingua") → `adverb` (apocope of `ove`), not noun
-    `uomo` (nonsensical here).
-  - `luce` (paradiso 20:37, "Colui che luce in mezzo") → `verb` (`lucere`, "shines"), matching 5
-    other `luce`/`lucere`/verb rows already in the corpus.
-  - `via` (paradiso 21:37, "vanno via sanza ritorno") → `adverb`, matching the `andare via`
-    ("go away") idiom tagged adverb everywhere else in the corpus.
-  - `vòlto` (paradiso 22:94, "Iordan vòlto retrorso più fu", enjambed periphrastic passive) →
-    `verb` (`volgere`, past participle), matching the identical construction at inferno 9:132.
-  - `reflesso` (paradiso 30:107, "di raggio...reflesso al sommo", agrees with masc. `raggio` not
-    fem. `parvenza`) → `adjective` (`riflesso`), matching the other 2 `reflesso` rows in the
-    corpus (both already adjective).
-  - `dia` (paradiso 14:34, "la luce più dia") → `adjective` (`divo`, archaic "divine/radiant"),
-    not noun `dì` ("day", nonsensical here). (The *other* flagged `dia`, paradiso 26:10, was
-    deliberately left untouched — it carries an existing note="split word" that looks like an
-    intentional prior design choice, not an obvious mistag.)
-  - `parlonne` (purgatorio 19:47, "colui che sì parlonne") → `verb+pronoun`
-    (`parlare+ne`, enclitic "ne"), matching the sibling fused-enclitic row on the very same line
-    (`volseci` → `volgere+ci`).
-  - `mundo` (purgatorio 27:8, Latin quotation "Beati mundo corde", Matthew 5:8) → `adjective`
-    (`mondo`, archaic "pure", agreeing with `corde`), not noun `mondo` ("world") — the corpus
-    already maps this quotation's other words to Italian equivalents by genuine POS
-    (`Beati`→`beato` adjective, `corde`→`cuore` noun), so this keeps the same style.
-
-  Three cases were deliberately excluded from this "just fix Layer 2" pass despite superficially
-  looking similar, because the corpus is internally inconsistent about them: `ben`/`bene` before
-  an infinitive (inferno 15:64, paradiso 9:24, paradiso 20:59 — "ben far"/"bene operar") is
-  tagged noun+noun in some places and noun+verb-infinitive in others across the corpus, so there
-  isn't a clean precedent to match; fixing it needs a real design decision about how nominalized
-  infinitives are tagged, not a mechanical lookup.
-
-  Retagging fired the frozen clitic-mention check for `parlonne` (its span had no `+ne` mention
-  yet); `np/np.py purgatorio --fix-clitics` backfilled it deterministically, no model call needed.
+Retagging fired the frozen clitic-mention check for `parlonne` (its span had no `+ne` mention
+yet); `np/np.py purgatorio --fix-clitics` backfilled it deterministically, no model call needed.
 
 `morph --check` and `np --check` both remained clean (0 hard throughout). Layer 3's `--check`
 count is now **72** soft (down from 83: the accepted `Osanna` exception + 25 accepted non-NP

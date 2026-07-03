@@ -51,6 +51,11 @@ The build itself retries a chunk (max 2) when alignment raises. Each chunk's row
 back to the TSV as soon as they validate, so an interrupted run resumes from its own output:
 already-committed lines are skipped and only the remaining chunks are requested.
 
+`--check`'s own POS check is only a closed-tag membership test, so it can't catch a token that's
+structurally fine but tagged the wrong part of speech. Those surfaced instead through Layer 3's
+soft-check review and were hand-corrected directly in the frozen artifacts — see
+[`CORRECTIONS.md`](CORRECTIONS.md) for the full record of every such correction.
+
 ## Output recovery
 
 Local models occasionally produce incomplete or split output. Two recovery steps run before
