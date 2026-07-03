@@ -57,7 +57,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 8	e	e	conjunction						
 8	cantava	cantare	verb		sg.	3	imperfect	indicative	
 8	Beati	beato	adjective	m.	pl.				
-8	mundo	mondo	noun	m.	sg.				archaic
+8	mundo	mondo	adjective	m.	sg.				archaic
 8	corde	cuore	noun	m.	sg.				archaic
 9	in	in	preposition						
 9	voce	voce	noun	f.	sg.				

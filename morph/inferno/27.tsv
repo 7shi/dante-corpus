@@ -843,7 +843,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 117	quale	quale	pronoun	m.	sg.				
 117	in	in	preposition						
 117	qua	qua	adverb						
-117	stato	stato	noun	m.	sg.				
+117	stato	essere	verb	m.	sg.		past participle		
 117	li	lo	pronoun	m.	pl.	3			
 117	sono	essere	verb		pl.	3	present	indicative	
 117	a'	a+i	preposition+article	m.	pl.				contraction

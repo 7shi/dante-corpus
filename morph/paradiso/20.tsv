@@ -250,7 +250,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 36	sommi	sommo	adjective	m.	pl.				
 37	Colui	colui	pronoun	m.	sg.				
 37	che	che	pronoun	m.	sg.				
-37	luce	luce	noun	f.	sg.				
+37	luce	lucere	verb		sg.	3	present	indicative	
 37	in	in	preposition						
 37	mezzo	mezzo	noun	m.	sg.				
 37	per	per	preposition						

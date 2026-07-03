@@ -342,7 +342,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 47	colui	colui	pronoun	m.	sg.				
 47	che	che	pronoun		sg.				
 47	sì	sì	adverb						
-47	parlonne	parlonne	noun	m.	sg.				archaic
+47	parlonne	parlare+ne	verb+pronoun		sg.	3	remote past	indicative	enclitic
 48	tra	tra	preposition						
 48	due	due	numeral		pl.				
 48	pareti	parete	noun	f.	pl.				

@@ -661,7 +661,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 93	bruno	bruno	adjective	m.	sg.				
 94	Veramente	veramente	adverb						
 94	Iordan	Iordan	noun	m.	sg.				
-94	vòlto	volto	noun	m.	sg.				
+94	vòlto	volgere	verb	m.	sg.				past participle
 94	retrorso	retrorso	adjective	m.	sg.				
 95	più	più	adverb						
 95	fu	essere	verb		sg.	3	remote past	indicative	

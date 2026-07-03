@@ -255,7 +255,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 37	poi	poi	adverb						
 37	altre	altro	adjective	f.	pl.				
 37	vanno	andare	verb		pl.	3	present	indicative	
-37	via	via	noun	f.	sg.				
+37	via	via	adverb						
 37	sanza	senza	preposition						archaic
 37	ritorno	ritorno	noun	m.	sg.				
 38	altre	altro	adjective	f.	pl.				

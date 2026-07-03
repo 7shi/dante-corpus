@@ -158,8 +158,21 @@ call** (`validate_line`):
   `onde`/`capo`/`quantunque` all already have precedent rows for the target POS elsewhere in the
   corpus) rather than inventing new categories; one case (paradiso 7:1 `Osanna`, a
   self-contained quoted interjection with no content word to shift the span head to) was left as
-  an accepted soft violation. Corpus-wide soft count is now **83** (1 function-word head — the
+  an accepted soft violation. Corpus-wide soft count was then **83** (1 function-word head — the
   accepted `Osanna` exception — + 82 noun coverage gaps).
+
+  The 82 noun-coverage-gap cases were then classified by cause (see PLAN.md's *Noun-coverage-gap
+  mistag pass*) before fixing anything, since most of them aren't Layer-2 problems at all: 25 are
+  accepted non-NP function-word/idiom cases (`fin che`, apocopated prepositions, `allotta`), 29
+  are two-token proper-name/title pairs where Layer 3 picked only one word as head (a span-merge
+  gap, left for a future pass), and 13 are single content words Layer 2 already tags correctly
+  but Layer 3 never spanned (also left for a future pass). Only **11** were genuine Layer-2
+  mistags — each checked against its own corpus-wide precedent before fixing, catching two false
+  leads (`animal`, `forme`) that turned out to already match established convention and were left
+  alone. 3 more (`ben`/`bene` before an infinitive) were deliberately left unfixed: the corpus
+  tags the same "ben/bene + infinitive" construction inconsistently in different places, so
+  there's no clean precedent to match without a real design decision. Corpus-wide soft count is
+  now **72**.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
