@@ -39,7 +39,7 @@ line	start	end	head	text
 18	3	3	3	bordone
 18	5	7	7	le sue rime
 19	4	4	4	ramo
-19	4	4	4	ramo
+19	6	6	6	ramo
 20	2	3	3	la pineta
 20	6	9	7	'l lito di Chiassi
 20	7	9	7	lito di Chiassi
@@ -55,9 +55,11 @@ line	start	end	head	text
 25	4	4	4	andar
 25	5	5	5	mi
 25	7	8	8	un rio
-26	1	1	1	che
+26	2	3	2	'nver' sinistra
 26	3	3	3	sinistra
 26	5	7	7	sue picciole onde
+26	6	7	7	picciole onde
+26	7	7	7	onde
 27	2	8	3	l'erba che 'n sua ripa uscìo
 27	2	3	3	l'erba
 27	4	4	4	che
@@ -137,7 +139,7 @@ line	start	end	head	text
 53	6	8	6	donna che balli
 53	6	6	6	donna
 54	2	2	2	piede
-54	2	2	2	piede
+54	4	4	4	piede
 54	6	6	6	pena
 55	4	5	5	i vermigli
 55	5	5	5	vermigli
@@ -295,8 +297,13 @@ line	start	end	head	text
 116	2	2	2	questo
 116	4	5	5	alcuna pianta
 117	2	3	2	seme palese
-118	3	3	3	dei
+118	2	7	2	saper dei che la campagna santa
+118	2	3	2	saper dei
+118	2	2	2	saper
+118	4	4	4	che
 118	5	7	6	la campagna santa
+118	6	7	6	campagna santa
+118	6	6	6	campagna
 119	2	2	2	tu
 119	5	6	6	ogne semenza
 120	2	2	2	frutto

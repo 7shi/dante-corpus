@@ -198,13 +198,14 @@ line	start	end	head	text
 90	2	2	2	lor
 91	7	7	7	quelle
 92	3	4	4	il sonno
-92	3	4	4	il sonno
 92	5	8	6	il sonno che sovente
+92	5	6	6	il sonno
 93	3	4	4	'l fatto
 93	7	8	8	le novelle
 94	2	3	3	l'ora
 94	7	8	8	l'orïente
 95	4	5	4	monte Citerea
+95	5	5	5	Citerea
 96	3	5	3	foco d'amor
 96	5	5	5	amor
 97	5	5	5	sogno
@@ -272,7 +273,7 @@ line	start	end	head	text
 121	1	4	2	Tanto voler sopra voler
 121	1	2	2	Tanto voler
 121	2	2	2	voler
-121	2	2	2	voler
+121	4	4	4	voler
 122	2	4	3	l'esser sù
 122	3	4	3	esser sù
 122	7	8	8	ogne passo
@@ -328,7 +329,7 @@ line	start	end	head	text
 141	7	8	8	suo senno
 142	3	3	3	io
 142	4	4	4	te
-142	4	4	4	te
+142	6	6	6	te
 142	7	9	7	corono e mitrio
 142	7	7	7	corono
 142	9	9	9	mitrio

@@ -1,6 +1,7 @@
 line	start	end	head	text
 1	2	3	3	miglior voler
 1	3	3	3	voler
+1	4	4	4	voler
 2	3	5	4	'l piacer mio
 2	7	7	7	piacerli
 2	7	7	7	+gli
@@ -18,7 +19,7 @@ line	start	end	head	text
 7	2	9	3	la gente che fonde a goccia a goccia
 7	2	3	3	la gente
 7	7	7	7	goccia
-7	7	7	7	goccia
+7	9	9	9	goccia
 8	2	3	3	li occhi
 8	4	10	5	il mal che tutto 'l mondo occupa
 8	4	5	5	il mal
@@ -125,6 +126,8 @@ line	start	end	head	text
 48	6	9	6	lui che tutto giuggia
 48	6	6	6	lui
 49	5	6	6	Ugo Ciappetta
+49	5	5	5	Ugo
+49	6	6	6	Ciappetta
 50	2	2	2	me
 50	5	9	6	i Filippi e i Luigi
 50	5	6	6	i Filippi

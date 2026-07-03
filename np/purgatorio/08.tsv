@@ -41,7 +41,7 @@ line	start	end	head	text
 14	7	9	9	sì dolci note
 14	9	9	9	note
 15	3	3	3	me
-15	3	3	3	me
+15	5	5	5	me
 15	8	8	8	mente
 16	2	3	3	l'altre
 17	2	2	2	lei
@@ -288,7 +288,9 @@ line	start	end	head	text
 116	7	8	7	parte vicina
 117	2	2	2	+lo
 117	4	4	4	me
-118	3	4	3	Currado Malaspina
+118	3	4	4	Currado Malaspina
+118	3	3	3	Currado
+118	4	4	4	Malaspina
 119	3	4	4	l'antico
 119	7	7	7	lui
 120	2	2	2	miei
@@ -308,7 +310,7 @@ line	start	end	head	text
 125	6	7	7	la contrada
 126	5	9	5	chi non vi fu ancora
 127	2	2	2	io
-127	2	2	2	io
+127	6	6	6	io
 128	2	4	3	vostra gente onrata
 129	2	9	2	pregio de la borsa e de la spada
 129	4	5	5	la borsa

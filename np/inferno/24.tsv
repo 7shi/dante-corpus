@@ -79,7 +79,7 @@ line	start	end	head	text
 32	8	9	8	io sospinto
 32	8	8	8	io
 33	5	5	5	chiappa
-33	5	5	5	chiappa
+33	7	7	7	chiappa
 34	7	8	8	quel precinto
 35	4	5	5	l'altro
 35	7	9	8	la costa corta
@@ -299,6 +299,8 @@ line	start	end	head	text
 125	4	4	4	mul
 125	6	6	6	i'
 125	9	10	10	Vanni Fucci
+125	9	9	9	Vanni
+125	10	10	10	Fucci
 126	1	1	1	bestia
 126	3	3	3	Pistoia
 126	4	4	4	mi

@@ -35,12 +35,12 @@ line	start	end	head	text
 17	5	6	6	molte fïate
 18	3	3	3	dimandar
 19	2	2	2	te
-19	2	2	2	te
 19	3	3	3	misericordia
+19	5	5	5	te
 19	6	6	6	pietate
 20	2	2	2	te
-20	2	2	2	te
 20	3	3	3	magnificenza
+20	5	5	5	te
 21	1	1	1	quantunque
 21	3	3	3	creatura
 21	6	6	6	bontate
@@ -54,7 +54,7 @@ line	start	end	head	text
 24	2	3	2	vite spiritali
 24	2	2	2	vite
 24	5	5	5	una
-24	5	5	5	una
+24	7	7	7	una
 25	3	3	3	te
 25	5	5	5	grazia
 25	7	7	7	virtute
@@ -98,8 +98,8 @@ line	start	end	head	text
 40	1	7	2	Li occhi da Dio diletti e venerati
 40	1	2	2	Li occhi
 40	4	4	4	Dio
-41	2	2	2	ne
 41	3	4	4	l'orator
+41	4	4	4	orator
 42	2	4	4	i devoti prieghi
 42	5	5	5	le
 43	3	5	5	l'etterno lume
@@ -117,7 +117,7 @@ line	start	end	head	text
 49	1	1	1	Bernardo
 49	2	2	2	m'
 50	2	2	2	io
-50	2	2	2	io
+50	6	6	6	io
 51	3	4	3	me stesso
 51	3	3	3	me
 51	7	7	7	ei
@@ -190,7 +190,7 @@ line	start	end	head	text
 77	5	5	5	i'
 78	2	4	3	li occhi miei
 78	6	6	6	lui
-79	1	1	1	E'
+79	2	2	2	mi
 79	5	5	5	io
 80	2	2	2	questo
 80	7	7	7	i'
@@ -286,7 +286,7 @@ line	start	end	head	text
 118	5	6	6	l'altro
 118	8	10	8	iri da iri
 118	8	8	8	iri
-118	8	8	8	iri
+118	10	10	10	iri
 119	4	5	5	'l terzo
 119	7	7	7	foco
 120	1	1	1	che

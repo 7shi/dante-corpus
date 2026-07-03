@@ -23,6 +23,7 @@ line	start	end	head	text
 7	4	6	6	la seguente tomba
 8	3	4	4	lo scoglio
 8	6	7	7	quella parte
+9	3	3	3	punto
 9	5	7	5	mezzo 'l fosso
 9	6	7	7	'l fosso
 10	2	3	3	somma sapïenza
@@ -125,8 +126,9 @@ line	start	end	head	text
 45	2	8	2	quel che si piangeva con la zanca
 45	2	5	2	quel che si piangeva
 45	7	8	8	la zanca
+46	2	11	2	qual che se' che 'l di sù tien di sotto
 46	2	2	2	qual
-46	6	8	6	'l di sù
+46	6	8	8	'l di sù
 47	1	5	1	anima trista come pal commessa
 47	1	2	1	anima trista
 47	4	5	5	pal commessa
@@ -170,8 +172,8 @@ line	start	end	head	text
 61	2	2	2	Virgilio
 61	4	4	4	+gli
 62	3	3	3	colui
-62	3	3	3	colui
 62	6	8	6	colui che credi
+62	6	6	6	colui
 63	2	2	2	io
 63	6	6	6	me
 64	3	4	4	lo spirto

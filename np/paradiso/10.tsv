@@ -137,7 +137,6 @@ line	start	end	head	text
 43	2	2	2	io
 43	3	10	4	lo 'ngegno e l'arte e l'uso
 43	3	4	4	lo 'ngegno
-43	3	3	3	lo
 43	6	7	7	l'arte
 43	9	10	10	l'uso
 44	2	2	2	+lo
@@ -348,7 +347,7 @@ line	start	end	head	text
 121	4	5	5	l'occhio
 121	7	8	8	la mente
 122	2	2	2	luce
-122	2	2	2	luce
+122	4	4	4	luce
 122	7	9	9	le mie lode
 122	8	9	9	mie lode
 123	3	4	4	l'ottava
@@ -406,7 +405,7 @@ line	start	end	head	text
 145	3	3	3	ïo
 145	4	6	6	la gloriosa rota
 146	4	4	4	voce
-146	4	4	4	voce
+146	6	6	6	voce
 146	8	8	8	tempra
 147	3	8	3	dolcezza ch'esser non pò nota
 147	3	3	3	dolcezza

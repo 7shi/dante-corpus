@@ -55,8 +55,8 @@ line	start	end	head	text
 19	5	5	5	riva
 19	6	7	7	i burchi
 20	2	2	2	parte
-20	2	2	2	parte
 20	5	5	5	acqua
+20	7	7	7	parte
 20	9	9	9	terra
 21	5	7	7	li Tedeschi lurchi
 21	5	6	6	li Tedeschi
@@ -313,7 +313,7 @@ line	start	end	head	text
 125	1	9	2	lo scendere e 'l girar per li gran mali
 125	1	5	2	lo scendere e 'l girar
 125	1	2	2	lo scendere
-125	1	1	1	lo
+125	4	9	5	'l girar per li gran mali
 125	4	5	5	'l girar
 125	7	9	9	li gran mali
 126	1	1	1	che
@@ -332,7 +332,9 @@ line	start	end	head	text
 132	2	3	3	suo maestro
 133	5	5	5	fondo
 133	6	6	6	Gerïone
+134	2	2	2	piè
 134	4	8	4	piè de la stagliata rocca
+134	4	4	4	piè
 134	6	8	8	la stagliata rocca
 135	3	5	5	le nostre persone
 135	4	5	5	nostre persone

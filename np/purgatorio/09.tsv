@@ -241,8 +241,8 @@ line	start	end	head	text
 95	1	2	2	bianco marmo
 95	2	2	2	marmo
 96	2	2	2	io
-96	2	2	2	io
 96	6	6	6	esso
+96	8	8	8	io
 97	2	3	3	il secondo
 97	3	3	3	secondo
 98	2	6	3	una petrina ruvida e arsiccia
@@ -301,7 +301,6 @@ line	start	end	head	text
 120	3	4	4	la porta
 120	7	7	7	i'
 121	2	6	3	l'una d'este chiavi
-121	2	3	3	l'una
 121	5	6	6	este chiavi
 122	7	8	8	la toppa
 123	2	2	2	elli
@@ -346,7 +345,11 @@ line	start	end	head	text
 138	1	1	1	Metello
 139	1	1	1	Io
 139	6	7	7	primo tuono
-140	2	4	2	Te Deum laudamus
+140	2	4	4	Te Deum laudamus
+140	2	3	3	Te Deum
+140	2	2	2	Te
+140	3	3	3	Deum
+140	5	5	5	mi
 141	3	7	3	voce mista al dolce suono
 141	3	4	3	voce mista
 141	6	7	7	dolce suono

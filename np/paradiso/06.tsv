@@ -26,7 +26,7 @@ line	start	end	head	text
 7	6	8	8	le sacre penne
 8	2	3	3	'l mondo
 8	6	6	6	mano
-8	6	6	6	mano
+8	8	8	8	mano
 9	6	7	7	la mia
 10	1	1	1	Cesare
 10	5	5	5	Iustinïano
@@ -82,8 +82,8 @@ line	start	end	head	text
 32	4	6	6	al sacrosanto segno
 32	5	6	6	sacrosanto segno
 33	2	2	2	chi
-33	2	2	2	chi
 33	3	3	3	'l
+33	7	7	7	chi
 33	9	9	9	lui
 34	2	3	3	quanta virtù
 34	4	4	4	l'
@@ -115,9 +115,9 @@ line	start	end	head	text
 44	1	1	1	Romani
 44	2	4	2	incontro a Brenno
 44	2	2	2	incontro
-44	2	2	2	incontro
 44	4	4	4	Brenno
 44	5	7	5	incontro a Pirro
+44	5	5	5	incontro
 44	7	7	7	Pirro
 45	1	7	1	incontro a li altri principi e collegi
 45	1	1	1	incontro
@@ -383,6 +383,6 @@ line	start	end	head	text
 140	9	9	9	elli
 141	2	3	3	sua vita
 141	5	5	5	frusto
-141	5	5	5	frusto
+141	7	7	7	frusto
 142	2	2	2	lo
-142	2	2	2	lo
+142	6	6	6	lo

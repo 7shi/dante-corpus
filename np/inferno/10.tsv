@@ -143,7 +143,7 @@ line	start	end	head	text
 48	4	5	5	due fïate
 48	6	6	6	li
 49	2	2	2	ei
-49	2	2	2	ei
+49	5	5	5	ei
 49	8	9	9	ogne parte
 50	2	2	2	io
 50	3	3	3	lui
@@ -192,7 +192,7 @@ line	start	end	head	text
 66	3	4	4	la risposta
 67	2	2	2	sùbito
 68	2	2	2	elli
-68	2	2	2	elli
+68	6	6	6	elli
 69	3	5	4	li occhi suoi
 69	6	8	8	lo dolce lume
 70	5	6	6	alcuna dimora
@@ -353,5 +353,5 @@ line	start	end	head	text
 135	2	3	3	un sentier
 135	6	7	7	una valle
 136	1	1	1	che
+136	6	6	6	spiacer
 136	7	8	8	suo lezzo
-136	8	8	8	lezzo

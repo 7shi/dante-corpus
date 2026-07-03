@@ -1,5 +1,9 @@
 line	start	end	head	text
+1	3	3	3	'ncontro
 1	5	7	6	la vita presente
+1	5	6	6	la vita
+1	6	7	6	vita presente
+1	6	6	6	vita
 2	2	4	4	i miseri mortali
 2	6	7	7	'l vero
 3	1	1	1	quella
@@ -44,7 +48,7 @@ line	start	end	head	text
 20	5	5	5	esso
 21	2	4	2	stella con stella
 21	2	2	2	stella
-21	2	2	2	stella
+21	4	4	4	stella
 22	2	2	2	cotanto
 23	1	2	2	alo cigner
 23	3	7	4	la luce che 'l dipigne
@@ -67,15 +71,15 @@ line	start	end	head	text
 28	6	6	6	altro
 29	2	2	2	quel
 29	4	4	4	terzo
-29	4	4	4	terzo
 29	6	7	7	'l terzo
+29	7	7	7	terzo
 29	10	10	10	quarto
-30	2	2	2	quinto
 30	2	2	2	quinto
 30	3	4	4	il quarto
 30	4	4	4	quarto
 30	8	8	8	sesto
 30	9	10	10	il quinto
+30	10	10	10	quinto
 31	3	6	4	il settimo sì sparto
 31	3	4	4	il settimo
 32	3	3	3	larghezza
@@ -124,9 +128,9 @@ line	start	end	head	text
 47	5	5	5	io
 47	8	9	9	quelle rote
 48	2	2	2	m'
-48	2	2	2	m'
 48	4	8	4	ciò che m'è proposto
 48	4	4	4	ciò
+48	6	6	6	m'
 49	3	4	3	mondo sensibile
 50	2	6	3	le volte tanto più divine
 50	2	3	3	le volte
@@ -239,7 +243,7 @@ line	start	end	head	text
 93	7	7	7	scacchi
 94	1	1	1	Io
 94	5	5	5	coro
-94	5	5	5	coro
+94	7	7	7	coro
 95	2	9	2	punto fisso che li tiene a li ubi
 95	2	3	2	punto fisso
 95	5	5	5	li
@@ -294,7 +298,7 @@ line	start	end	head	text
 113	5	6	6	buona voglia
 113	6	6	6	voglia
 114	3	3	3	grado
-114	3	3	3	grado
+114	5	5	5	grado
 115	1	3	3	L'altro ternaro
 116	2	4	3	questa primavera sempiterna
 117	2	3	3	notturno Arïete
@@ -325,7 +329,7 @@ line	start	end	head	text
 128	3	3	3	giù
 128	8	8	8	Dio
 129	1	1	1	tutti
-129	1	1	1	tutti
+129	5	5	5	tutti
 130	2	2	2	Dïonisio
 130	4	5	5	tanto disio
 131	3	4	4	questi ordini

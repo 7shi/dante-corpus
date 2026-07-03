@@ -166,8 +166,9 @@ line	start	end	head	text
 68	1	2	2	l'un
 68	4	5	5	l'altro
 69	4	6	6	lo tristo calle
+70	1	2	2	Passo passo
 70	1	1	1	Passo
-70	1	1	1	Passo
+70	2	2	2	passo
 70	5	5	5	sermone
 71	4	5	5	li ammalati
 71	5	5	5	ammalati
@@ -179,7 +180,7 @@ line	start	end	head	text
 73	6	6	6	sé
 74	3	3	3	scaldar
 74	6	6	6	tegghia
-74	6	6	6	tegghia
+74	8	8	8	tegghia
 75	2	2	2	capo
 75	4	7	4	piè di schianze macolati
 75	4	4	4	piè
@@ -228,11 +229,10 @@ line	start	end	head	text
 93	3	3	3	chi
 93	7	7	7	noi
 94	2	3	3	'l duca
-94	7	9	7	un che discendo
 94	7	7	7	un
 95	2	3	3	questo vivo
 95	6	6	6	balzo
-95	6	6	6	balzo
+95	8	8	8	balzo
 96	4	5	5	lo 'nferno
 96	7	7	7	lui
 97	4	6	6	lo comun rincalzo
@@ -346,7 +346,7 @@ line	start	end	head	text
 131	3	3	3	Ascian
 131	4	5	5	la vigna
 131	7	9	9	la gran fonda
-132	2	5	5	l'Abbagliato suo senno
+132	2	3	3	l'Abbagliato
 132	4	5	5	suo senno
 133	4	4	4	chi
 134	2	3	3	i Sanesi

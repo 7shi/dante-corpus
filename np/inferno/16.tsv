@@ -98,6 +98,7 @@ line	start	end	head	text
 37	5	6	6	buona Gualdrada
 37	6	6	6	Gualdrada
 38	1	2	2	Guido Guerra
+38	1	1	1	Guido
 38	4	4	4	nome
 38	7	8	8	sua vita
 38	8	8	8	vita
@@ -109,14 +110,19 @@ line	start	end	head	text
 40	5	5	5	me
 40	6	8	7	la rena trita
 41	2	3	2	Tegghiaio Aldobrandi
+41	2	2	2	Tegghiaio
+41	3	3	3	Aldobrandi
 41	4	6	6	la cui voce
+41	6	6	6	voce
 42	2	3	2	mondo sù
 42	2	2	2	mondo
 43	2	9	2	io, che posto son con loro in croce
 43	2	2	2	io
 43	7	7	7	loro
 43	9	9	9	croce
-44	1	2	1	Iacopo Rusticucci
+44	1	2	2	Iacopo Rusticucci
+44	1	1	1	Iacopo
+44	2	2	2	Rusticucci
 45	1	3	3	la fiera moglie
 45	6	6	6	altro
 46	2	2	2	i'
@@ -220,6 +226,7 @@ line	start	end	head	text
 92	2	3	3	'l suon
 92	5	6	6	l'acqua
 93	3	3	3	parlar
+93	6	6	6	pena
 94	2	3	3	quel fiume
 94	6	7	7	proprio cammino
 95	3	4	3	Monte Viso
@@ -238,6 +245,7 @@ line	start	end	head	text
 101	2	3	3	l'Alpe
 101	7	8	8	una scesa
 102	4	4	4	mille
+102	6	6	6	recetto
 103	4	6	5	una ripa discoscesa
 103	5	6	5	ripa discoscesa
 104	2	5	2	risonar quell' acqua tinta

@@ -151,8 +151,8 @@ line	start	end	head	text
 57	7	8	8	il cinque
 57	10	11	11	'l sei
 58	4	4	4	io
-58	4	4	4	io
 58	5	5	5	mi
+58	9	9	9	io
 59	4	4	4	te
 59	6	6	6	mi
 60	2	3	3	alcun altro
@@ -166,7 +166,6 @@ line	start	end	head	text
 61	9	9	9	grandi
 62	2	3	3	questa vita
 62	6	7	7	lo speglio
-63	2	2	2	che
 63	2	2	2	che
 63	6	7	7	il pensier
 64	3	9	5	'l sacro amore in che io veglio
@@ -287,6 +286,8 @@ line	start	end	head	text
 111	2	2	2	montar
 111	7	7	7	calo
 112	1	2	2	Bellincion Berti
+112	1	1	1	Bellincion
+112	2	2	2	Berti
 112	4	4	4	io
 113	2	5	2	cuoio e d'osso
 113	2	2	2	cuoio
@@ -328,8 +329,11 @@ line	start	end	head	text
 126	8	8	8	Roma
 127	4	5	5	tal maraviglia
 128	1	2	2	una Cianghella
+128	2	2	2	Cianghella
 128	3	5	4	un Lapo Salterello
 128	4	5	4	Lapo Salterello
+128	4	4	4	Lapo
+128	5	5	5	Salterello
 129	4	6	4	Cincinnato e Corniglia
 129	4	4	4	Cincinnato
 129	6	6	6	Corniglia

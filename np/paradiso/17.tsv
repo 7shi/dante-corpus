@@ -3,6 +3,8 @@ line	start	end	head	text
 1	4	4	4	Climenè
 2	2	8	2	ciò ch'avëa incontro a sé udito
 2	2	2	2	ciò
+2	5	7	5	incontro a sé
+2	5	5	5	incontro
 2	7	7	7	sé
 3	1	9	1	quei ch'ancor fa li padri ai figli scarsi
 3	1	1	1	quei
@@ -11,8 +13,8 @@ line	start	end	head	text
 3	8	9	8	figli scarsi
 3	8	8	8	figli
 4	1	1	1	tal
-4	1	1	1	tal
 4	3	3	3	io
+4	5	5	5	tal
 5	3	3	3	Beatrice
 5	6	8	8	la santa lampa
 5	7	8	8	santa lampa
@@ -300,10 +302,10 @@ line	start	end	head	text
 114	4	6	6	la mia donna
 115	4	5	5	lo ciel
 115	7	7	7	lume
-115	7	7	7	lume
-116	2	2	2	io
+115	9	9	9	lume
 116	2	2	2	io
 116	4	4	4	quel
+116	7	7	7	io
 117	2	2	2	molti
 117	4	7	4	sapor di forte agrume
 117	6	7	7	forte agrume

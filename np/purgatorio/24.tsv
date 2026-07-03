@@ -2,8 +2,8 @@ line	start	end	head	text
 1	2	5	3	'l dir l'andar
 1	2	3	3	'l dir
 1	4	5	5	l'andar
-1	4	5	5	l'andar
 1	7	11	8	l'andar lui più lento
+1	7	8	8	l'andar
 1	9	11	9	lui più lento
 2	0	0	0	
 3	3	7	3	nave pinta da buon vento
@@ -68,7 +68,7 @@ line	start	end	head	text
 24	6	7	7	la vernaccia
 25	1	2	2	Molti altri
 25	6	6	6	uno
-25	6	6	6	uno
+25	8	8	8	uno
 26	3	3	3	nomar
 26	5	5	5	tutti
 27	3	3	3	io
@@ -205,8 +205,8 @@ line	start	end	head	text
 75	5	5	5	io
 75	6	6	6	ti
 76	4	4	4	io
-76	4	4	4	io
 76	5	5	5	lui
+76	7	7	7	io
 77	5	7	6	il tornar mio
 77	5	6	6	il tornar
 77	6	7	6	tornar mio
@@ -216,7 +216,7 @@ line	start	end	head	text
 79	3	9	4	'l loco u' fui a viver posto
 79	3	4	4	'l loco
 80	2	2	2	giorno
-80	2	2	2	giorno
+80	4	4	4	giorno
 80	7	7	7	ben
 81	3	4	4	trista ruina
 81	4	4	4	ruina
@@ -250,7 +250,7 @@ line	start	end	head	text
 93	2	2	2	teco
 93	2	2	2	+te
 93	5	5	5	paro
-93	5	5	5	paro
+93	7	7	7	paro
 94	3	4	4	alcuna volta
 94	6	6	6	gualoppo
 95	1	6	2	lo cavalier di schiera che cavalchi

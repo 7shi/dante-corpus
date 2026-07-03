@@ -29,7 +29,7 @@ line	start	end	head	text
 11	7	7	7	essa
 12	3	4	4	i passi
 12	6	6	6	randa
-12	6	6	6	randa
+12	8	8	8	randa
 13	1	2	2	Lo spazzo
 13	4	8	5	una rena arida e spessa
 14	3	4	4	altra foggia
@@ -135,7 +135,7 @@ line	start	end	head	text
 55	3	3	3	elli
 55	5	6	6	li altri
 55	8	8	8	muta
-55	8	8	8	muta
+55	10	10	10	muta
 56	2	2	2	Mongibello
 56	4	6	5	la focina negra
 56	5	6	5	focina negra

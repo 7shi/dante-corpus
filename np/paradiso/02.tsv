@@ -92,7 +92,7 @@ line	start	end	head	text
 38	3	3	3	dimensione
 39	5	7	5	corpo in corpo
 39	5	5	5	corpo
-39	5	5	5	corpo
+39	7	7	7	corpo
 40	5	6	6	il disio
 41	3	8	4	quella essenza in che si vede
 41	3	4	4	quella essenza
@@ -199,9 +199,9 @@ line	start	end	head	text
 81	5	7	7	altro raro ingesto
 82	1	1	1	Questo
 83	2	3	3	l'altro
-83	2	3	3	l'altro
 83	6	6	6	elli
 83	9	9	9	io
+83	10	11	11	l'altro
 84	3	5	5	lo tuo parere
 85	2	2	2	elli
 85	5	6	6	questo raro
@@ -269,7 +269,7 @@ line	start	end	head	text
 116	1	2	2	quell' esser
 116	5	6	6	diverse essenze
 117	2	2	2	lui
-117	2	2	2	lui
+117	6	6	6	lui
 118	1	3	3	Li altri giron
 118	5	6	6	varie differenze
 119	1	7	2	le distinzion che dentro da sé hanno
@@ -283,7 +283,7 @@ line	start	end	head	text
 121	4	4	4	mondo
 122	2	2	2	tu
 122	6	6	6	grado
-122	6	6	6	grado
+122	8	8	8	grado
 123	3	3	3	sù
 123	7	7	7	sotto
 124	6	6	6	io
@@ -354,7 +354,7 @@ line	start	end	head	text
 145	4	9	4	ciò che da luce a luce
 145	4	4	4	ciò
 145	7	7	7	luce
-145	7	7	7	luce
+145	9	9	9	luce
 146	5	7	7	denso e raro
 146	5	5	5	denso
 146	7	7	7	raro

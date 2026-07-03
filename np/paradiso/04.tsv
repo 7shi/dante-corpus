@@ -276,7 +276,7 @@ line	start	end	head	text
 122	5	5	5	voi
 122	6	8	6	grazia per grazia
 122	6	6	6	grazia
-122	6	6	6	grazia
+122	8	8	8	grazia
 123	2	6	2	quei che vede e puote
 123	2	2	2	quei
 123	8	8	8	ciò
@@ -305,7 +305,7 @@ line	start	end	head	text
 132	3	3	3	sommo
 132	5	5	5	noi
 132	7	7	7	collo
-132	7	7	7	collo
+132	9	9	9	collo
 133	1	1	1	Questo
 133	4	4	4	questo
 134	2	2	2	reverenza

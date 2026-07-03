@@ -128,7 +128,7 @@ line	start	end	head	text
 52	6	6	6	terra
 52	8	9	9	'l dito
 53	4	5	5	questa riga
-54	4	6	6	'l sol partito
+54	4	6	5	'l sol partito
 55	4	5	5	altra cosa
 55	7	7	7	briga
 56	2	4	4	la notturna tenebra
@@ -243,7 +243,7 @@ line	start	end	head	text
 98	5	6	6	l'acqua
 99	2	2	2	Molta
 99	4	4	4	Albia
-99	4	4	4	Albia
+99	6	6	6	Albia
 99	8	8	8	mar
 100	1	1	1	Ottacchero
 100	3	3	3	nome
@@ -296,7 +296,7 @@ line	start	end	head	text
 117	3	4	4	il valor
 117	4	8	4	valor di vaso in vaso
 117	6	6	6	vaso
-117	6	6	6	vaso
+117	8	8	8	vaso
 118	7	9	9	l'altre rede
 118	8	9	9	altre rede
 118	9	9	9	rede

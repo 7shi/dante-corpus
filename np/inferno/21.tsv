@@ -1,6 +1,6 @@
 line	start	end	head	text
 1	3	3	3	ponte
-1	3	3	3	ponte
+1	5	5	5	ponte
 1	6	6	6	altro
 2	2	4	4	la mia comedìa
 2	4	4	4	comedìa
@@ -22,19 +22,19 @@ line	start	end	head	text
 9	3	7	4	i legni lor non sani
 10	6	7	7	quella vece
 11	1	1	1	chi
-11	1	1	1	chi
 11	3	5	4	suo legno novo
+11	7	7	7	chi
 12	1	2	2	le coste
 12	4	8	4	quel che più vïaggi fece
 12	4	4	4	quel
 12	6	7	7	più vïaggi
 13	1	1	1	chi
-13	1	1	1	chi
 13	4	4	4	proda
+13	6	6	6	chi
 13	8	8	8	poppa
 14	1	1	1	altri
-14	1	1	1	altri
 14	3	3	3	remi
+14	5	5	5	altri
 14	7	7	7	sarte
 15	1	1	1	chi
 15	2	4	2	terzeruolo e artimon
@@ -342,7 +342,6 @@ line	start	end	head	text
 135	2	2	2	e'
 135	4	4	4	ciò
 135	6	8	7	li lessi dolenti
-135	6	6	6	li
 136	2	4	3	l'argine sinistro
 136	3	4	3	argine sinistro
 137	4	4	4	ciascun

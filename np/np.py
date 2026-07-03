@@ -18,6 +18,8 @@ skipped and only the remaining chunks are requested.
     uv run np.py inferno -n                       # dry run: show pending chunks, no LLM
     uv run np.py inferno --clean                  # remove chunks with hard violations
     uv run np.py inferno --fix-clitics            # backfill clitic mentions, no model
+    uv run np.py inferno --fix-repeats            # reassign duplicate repeat spans, no model
+    uv run np.py inferno --fix -m ollama:gpt-oss  # regenerate lines with soft violations
 
 `--check` validates committed artifacts against the deterministic tokens (every NP is a
 contiguous token run with its head inside and verbatim text), and — when Layer-2 morphology is
@@ -357,6 +359,125 @@ def fix_clitics(canticles: list[str], only: int | None) -> int:
     return 0
 
 
+def fix_repeats(canticles: list[str], only: int | None) -> int:
+    """Backfill repeated-word/phrase spans onto distinct occurrences — deterministic, no model call.
+
+    Artifacts built before `align_chunk` tracked claimed occurrences collapsed every proposal for
+    a repeated word or phrase in one line (e.g. "a poco a poco") onto the first occurrence,
+    leaving identical duplicate rows. Reassigns each duplicate to a further, unclaimed occurrence
+    of the same run when one exists."""
+    changed = 0
+    for canticle in canticles:
+        numbers = [only] if only else list(api.cantos(canticle))
+        for number in numbers:
+            if not np.has_np(canticle, number):
+                continue
+            data = np.load_np(canticle, number)
+            out: list[tuple[int, list[np.NPSpan]]] = []
+            n_changed = 0
+            for line in api.canto(canticle, number).lines():
+                if line.no not in data:
+                    continue
+                spans, n = np.dedupe_repeats(line.no, line.text, list(data[line.no]))
+                out.append((line.no, spans))
+                n_changed += n
+            if n_changed:
+                np.write_np(canticle, number, out)
+                print(f"Fixed np/{canticle}/{number:02d}.tsv — reassigned {n_changed} repeat(s)")
+                changed += n_changed
+    print(f"fix-repeats complete: {changed} span(s) reassigned")
+    return 0
+
+
+def _fix_canto(canticle: str, number: int, n_cantos: int, model: str, ui: StatusLine,
+               log_path: Path | None = None) -> tuple[int, int]:
+    """Fix one canto's flagged lines under a progress bar; returns (fixed, attempted)."""
+    data = np.load_np(canticle, number)
+    morph_rows = _morph_rows(canticle, number)
+    if not morph_rows:
+        return 0, 0
+    lines = api.canto(canticle, number).lines()
+    lines_by_no = {line.no: line for line in lines}
+    out: list[tuple[int, list[np.NPSpan]]] = []
+    changed = False
+    fixed = 0
+    attempted = 0
+    label = f"{canticle} {number}/{n_cantos}"
+    with ui.progress(len(lines), label=label) as prog:
+        for no, spans in sorted(data.items()):
+            prog.update(no)
+            spans = list(spans)
+            line = lines_by_no[no]
+            _, soft_before = _classify_violations(no, line.text, spans, morph_rows.get(no))
+            tag_before = [v for v in soft_before if "clitic mention" not in v.detail]
+            if not tag_before:
+                out.append((no, spans))
+                continue
+            attempted += 1
+            result = _try_align([no], [line.text], model, ui, label, log_path, morph_rows)
+            if result is None:
+                out.append((no, spans))
+                continue
+            new_spans = list(result.get(no, []))
+            rows = morph_rows.get(no)
+            if rows:
+                tokens = [tok for tok, _, _ in np.token_spans(line.text)]
+                new_spans.extend(np.clitic_mentions(no, tokens, rows))
+            _, soft_after = _classify_violations(no, line.text, new_spans, morph_rows.get(no))
+            tag_after = [v for v in soft_after if "clitic mention" not in v.detail]
+            if len(tag_after) < len(tag_before):
+                out.append((no, new_spans))
+                fixed += 1
+                changed = True
+                ui.log(f"Fixed {canticle} {number}:{no} — "
+                       f"{len(tag_before)} -> {len(tag_after)} soft violation(s)")
+            else:
+                out.append((no, spans))
+                if log_path:
+                    with log_path.open("a", encoding="utf-8") as f:
+                        f.write(f"=== {label} line {no}: not improved "
+                                f"({len(tag_before)} -> {len(tag_after)}) ===\n")
+                        for v in tag_before:
+                            f.write(f"before: {v.detail}\n")
+                        for v in tag_after:
+                            f.write(f"after:  {v.detail}\n")
+                        f.write("\n")
+    if changed:
+        np.write_np(canticle, number, out)
+        ui.log(f"Wrote: np/{canticle}/{number:02d}.tsv")
+    return fixed, attempted
+
+
+def fix(canticles: list[str], model: str, only: int | None, log_path: Path | None = None) -> int:
+    """Re-run the model on lines carrying soft ("tag") violations, keeping only real improvements.
+
+    A soft violation can reflect either a genuine Layer 3 omission/over-inclusion or a legitimate
+    reading (Dante substantivizing a function word) — the `che` mistag review (PLAN.md) found
+    both occur in the same population, and telling them apart needed hand review per case. This
+    regenerates each flagged line in isolation (same prompt as `build`) and swaps in the new spans
+    only if they carry strictly fewer tag violations than before, with no new hard violations —
+    a no-worse-off guarantee, not a promise every case clears. Clitic-coverage violations are
+    excluded since `--fix-clitics` already handles those deterministically.
+    """
+    if log_path:
+        log_path.write_text("", encoding="utf-8")
+    ui = StatusLine()
+    fixed = 0
+    attempted = 0
+    for canticle in canticles:
+        all_numbers = list(api.cantos(canticle))
+        n_cantos = len(all_numbers)
+        numbers = [only] if only else all_numbers
+        for number in numbers:
+            if not np.has_np(canticle, number):
+                continue
+            f, a = _fix_canto(canticle, number, n_cantos, model, ui, log_path)
+            fixed += f
+            attempted += a
+    print(f"fix complete: {fixed}/{attempted} line(s) improved")
+    return 0
+
+
 def clean(canticles: list[str], size: int, only: int | None) -> int:
     removed = 0
     for canticle in canticles:
@@ -401,6 +522,10 @@ def main() -> int:
                         help="remove chunks with hard violations, then exit")
     parser.add_argument("--fix-clitics", action="store_true",
                         help="backfill missing clitic mentions from Layer 2, no model call")
+    parser.add_argument("--fix-repeats", action="store_true",
+                        help="reassign duplicate repeated-word spans to distinct occurrences, no model call")
+    parser.add_argument("--fix", action="store_true",
+                        help="regenerate lines with soft violations, keep only improvements")
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending chunks without calling the LLM")
     parser.add_argument("--log", nargs="?", const="np.log", metavar="FILE",
@@ -411,13 +536,19 @@ def main() -> int:
         return check(args.canticles, args.canto)
     if args.fix_clitics:
         return fix_clitics(args.canticles, args.canto)
+    if args.fix_repeats:
+        return fix_repeats(args.canticles, args.canto)
     if args.clean:
         return clean(args.canticles, args.chunk, args.canto)
     if args.dry_run:
         return build(args.canticles, args.model or "", args.chunk, args.force, True, args.canto)
+    log_path = Path(args.log) if args.log else None
+    if args.fix:
+        if not args.model:
+            parser.error("--model is required for --fix")
+        return fix(args.canticles, args.model, args.canto, log_path)
     if not args.model:
         parser.error("--model is required for building (or pass --check / --dry-run)")
-    log_path = Path(args.log) if args.log else None
     return build(args.canticles, args.model, args.chunk, args.force, False, args.canto,
                  log_path)
 

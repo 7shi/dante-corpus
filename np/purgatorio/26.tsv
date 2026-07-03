@@ -80,7 +80,7 @@ line	start	end	head	text
 31	4	5	5	ogne parte
 32	1	2	2	ciascun' ombra
 32	5	5	5	una
-32	5	5	5	una
+32	7	7	7	una
 33	2	2	2	restar
 33	5	6	6	brieve festa
 34	4	6	5	loro schiera bruna
@@ -108,7 +108,7 @@ line	start	end	head	text
 43	7	8	7	montagne Rife
 43	7	7	7	montagne
 44	2	2	2	parte
-44	2	2	2	parte
+44	4	4	4	parte
 44	6	7	7	l'arene
 44	7	7	7	arene
 45	1	3	1	queste del gel
@@ -162,8 +162,8 @@ line	start	end	head	text
 64	1	1	1	+mi
 64	5	5	5	carte
 65	1	1	1	chi
-65	1	1	1	chi
 65	3	3	3	voi
+65	5	5	5	chi
 65	7	8	8	quella turba
 66	8	9	9	vostri terghi
 67	3	3	3	stupido
@@ -202,7 +202,7 @@ line	start	end	head	text
 84	4	5	5	l'appetito
 85	2	4	2	obbrobrio di noi
 85	4	4	4	noi
-85	4	4	4	noi
+85	6	6	6	noi
 86	2	2	2	+ci
 86	3	6	4	il nome di colei
 86	4	6	4	nome di colei
@@ -315,7 +315,7 @@ line	start	end	head	text
 124	4	6	4	antichi di Guittone
 124	6	6	6	Guittone
 125	2	2	2	grido
-125	2	2	2	grido
+125	4	4	4	grido
 125	6	6	6	lui
 125	8	8	8	pregio
 126	3	3	3	l'

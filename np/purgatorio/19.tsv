@@ -45,9 +45,9 @@ line	start	end	head	text
 19	1	1	1	Io
 19	6	7	7	dolce serena
 19	7	7	7	serena
+20	2	5	2	marinari in mezzo mar
 20	2	2	2	marinari
-20	2	2	2	marinari
-20	4	5	5	mezzo mar
+20	4	5	4	mezzo mar
 20	5	5	5	mar
 21	4	4	4	piacere
 22	1	1	1	Io
@@ -56,9 +56,11 @@ line	start	end	head	text
 22	5	7	6	suo cammin vago
 23	2	3	2	canto mio
 23	5	5	5	qual
+24	2	2	2	sen
 24	2	2	2	+si
 24	2	2	2	+ne
-24	6	6	6	l'
+24	5	7	7	tutto l'appago
+24	6	7	7	l'appago
 25	4	6	5	sua bocca richiusa
 25	4	5	5	sua bocca
 25	5	6	5	bocca richiusa
@@ -66,7 +68,7 @@ line	start	end	head	text
 27	2	2	2	me
 27	5	5	5	colei
 28	2	2	2	Virgilio
-28	2	2	2	Virgilio
+28	3	3	3	Virgilio
 28	4	4	4	chi
 28	6	6	6	questa
 29	4	4	4	el
@@ -177,8 +179,8 @@ line	start	end	head	text
 66	5	5	5	pasto
 66	8	8	8	il
 67	1	1	1	tal
-67	1	1	1	tal
 67	4	4	4	io
+67	6	6	6	tal
 68	1	2	2	la roccia
 68	5	9	5	via a chi va suso
 68	5	5	5	via
@@ -224,8 +226,8 @@ line	start	end	head	text
 84	2	2	2	parlare
 84	4	6	5	l'altro nascosto
 85	3	4	4	li occhi
-85	3	4	4	li occhi
 85	6	10	7	li occhi al segnor mio
+85	6	7	7	li occhi
 85	9	10	9	segnor mio
 86	2	2	2	elli
 86	6	7	7	lieto cenno

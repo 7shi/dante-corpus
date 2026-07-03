@@ -142,7 +142,6 @@ line	start	end	head	text
 52	6	6	6	ambedui
 53	3	6	3	levante ond' eravam saliti
 53	3	3	3	levante
-53	4	4	4	ond'
 54	1	1	1	che
 54	4	4	4	riguardar
 54	6	6	6	altrui
@@ -199,7 +198,7 @@ line	start	end	head	text
 76	2	3	2	maestro mio
 76	5	5	5	io
 77	3	3	3	io
-77	3	3	3	io
+77	7	7	7	io
 78	3	4	4	mio ingegno
 79	2	7	4	'l mezzo cerchio del moto superno
 79	2	4	4	'l mezzo cerchio
@@ -233,7 +232,7 @@ line	start	end	head	text
 90	10	10	10	male
 91	3	3	3	ella
 92	4	4	4	andar
-93	5	7	5	andar per nave
+93	3	3	3	seconda
 93	7	7	7	nave
 94	4	7	4	fin d'esto sentiero
 94	6	7	7	esto sentiero
@@ -314,7 +313,9 @@ line	start	end	head	text
 123	5	5	5	me
 124	2	2	2	te
 124	5	5	5	+mi
+125	1	1	1	quiritto
 125	4	4	4	tu
+125	5	5	5	iscorta
 126	3	5	4	lo modo usato
 126	4	5	4	modo usato
 126	4	4	4	modo

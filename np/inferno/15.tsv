@@ -86,8 +86,11 @@ line	start	end	head	text
 30	5	6	6	ser Brunetto
 31	2	2	2	quelli
 31	4	5	4	figliuol mio
-32	2	3	2	Brunetto Latino
+32	2	3	3	Brunetto Latino
+32	2	2	2	Brunetto
+32	3	3	3	Latino
 32	4	5	5	un poco
+32	6	6	6	teco
 32	6	6	6	+te
 33	7	8	8	la traccia
 34	1	1	1	I'
@@ -208,11 +211,11 @@ line	start	end	head	text
 84	2	2	2	voi
 84	5	5	5	mondo
 84	7	7	7	ora
-84	7	7	7	ora
+84	9	9	9	ora
 85	4	5	5	l'uom
 86	3	3	3	io
-86	3	3	3	io
 86	7	7	7	grado
+86	9	9	9	io
 87	4	6	6	la mia lingua
 88	1	6	1	Ciò che narrate di mio corso
 88	1	1	1	Ciò

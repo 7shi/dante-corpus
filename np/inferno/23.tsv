@@ -64,7 +64,7 @@ line	start	end	head	text
 23	5	5	5	li
 24	1	1	1	io
 24	2	2	2	li
-24	2	2	2	li
+24	7	7	7	li
 25	2	2	2	quei
 25	4	4	4	i'
 25	7	8	8	piombato vetro
@@ -153,9 +153,9 @@ line	start	end	head	text
 50	5	6	6	suo petto
 51	2	3	3	suo figlio
 51	6	6	6	compagno
+52	2	2	2	pena
 52	4	6	5	i piè suoi
-52	5	6	5	piè suoi
-52	8	9	9	al letto
+52	9	9	9	letto
 53	1	3	2	del fondo giù
 53	2	3	2	fondo giù
 53	5	5	5	+essi
@@ -288,9 +288,9 @@ line	start	end	head	text
 88	1	1	1	+costui
 88	5	9	6	l'atto de la gola
 88	8	9	9	la gola
-89	1	1	1	e
-89	3	3	3	+essi
+89	2	3	3	s'e'
 89	7	8	8	qual privilegio
+89	8	8	8	privilegio
 90	4	6	6	la grave stola
 91	3	3	3	me
 91	3	3	3	+me
@@ -373,8 +373,10 @@ line	start	end	head	text
 109	6	7	7	vostri mali
 110	7	8	8	l'occhio
 110	9	9	9	+mi
-111	1	1	1	un
+111	1	7	2	un, crucifisso in terra con tre pali
 111	2	7	2	crucifisso in terra con tre pali
+111	2	4	2	crucifisso in terra
+111	2	2	2	crucifisso
 111	4	4	4	terra
 111	6	7	7	tre pali
 112	2	2	2	mi
@@ -384,10 +386,9 @@ line	start	end	head	text
 113	3	4	4	la barba
 113	6	6	6	sospiri
 114	2	4	3	'l frate Catalan
-114	5	5	5	+che
+114	3	4	3	frate Catalan
+114	4	4	4	Catalan
 114	7	7	7	ciò
-114	7	7	7	+ciò
-114	8	8	8	+si
 115	1	1	1	mi
 115	1	1	1	+mi
 115	3	7	4	Quel confitto che tu miri

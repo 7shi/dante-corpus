@@ -10,4 +10,7 @@ np:
 check:
 	uv run np.py $(CANTICLES) --check
 
-.PHONY: all np check
+fix:
+	uv run np.py $(CANTICLES) --fix -m $(MODEL)
+
+.PHONY: all np check fix

@@ -290,10 +290,15 @@ line	start	end	head	text
 119	0	0	0	
 120	6	6	6	si
 121	2	3	3	quel loco
+121	3	3	3	loco
 121	5	7	5	io Pietro Damiano
 121	5	5	5	io
-121	6	7	6	Pietro Damiano
+121	6	7	7	Pietro Damiano
+121	6	6	6	Pietro
+121	7	7	7	Damiano
 122	2	3	2	Pietro Peccator
+122	2	2	2	Pietro
+122	3	3	3	Peccator
 122	6	7	7	la casa
 123	2	3	3	Nostra Donna
 123	6	7	6	lito adriano
@@ -324,7 +329,7 @@ line	start	end	head	text
 136	5	5	5	io
 136	6	7	7	più fiammelle
 137	2	2	2	grado
-137	2	2	2	grado
+137	4	4	4	grado
 137	7	7	7	+si
 138	2	3	3	ogne giro
 138	4	4	4	le

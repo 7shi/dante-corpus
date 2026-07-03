@@ -151,8 +151,8 @@ line	start	end	head	text
 61	5	5	5	ci
 61	7	8	8	men doglia
 62	2	2	2	tu
-62	2	2	2	tu
 62	5	5	5	noi
+62	6	6	6	tu
 62	7	7	7	ne
 63	1	3	3	queste misere carni
 63	5	5	5	tu
@@ -174,7 +174,7 @@ line	start	end	head	text
 71	2	2	2	io
 71	4	5	5	li tre
 71	7	7	7	uno
-71	7	7	7	uno
+71	9	9	9	uno
 72	2	7	4	'l quinto dì e 'l sesto
 72	2	4	4	'l quinto dì
 72	6	7	7	'l sesto
@@ -276,12 +276,8 @@ line	start	end	head	text
 108	2	3	3	la cagion
 108	5	6	6	'l fiato
 109	2	8	2	un de' tristi de la fredda crosta
-109	2	4	2	un de' tristi
 109	4	8	4	tristi de la fredda crosta
-109	4	4	4	tristi
 109	6	8	8	la fredda crosta
-109	7	8	8	fredda crosta
-109	8	8	8	crosta
 110	3	3	3	noi
 110	5	6	5	anime crudeli
 110	5	5	5	anime
@@ -317,6 +313,8 @@ line	start	end	head	text
 117	7	7	7	mi
 118	3	3	3	I'
 118	5	6	6	frate Alberigo
+118	5	5	5	frate
+118	6	6	6	Alberigo
 119	1	1	1	i'
 119	3	9	3	quel da le frutta del mal orto
 119	5	9	6	le frutta del mal orto
@@ -367,15 +365,20 @@ line	start	end	head	text
 136	2	2	2	'l
 136	6	6	6	tu
 137	1	1	1	elli
-137	3	5	4	ser Branca Doria
-137	4	5	4	Branca Doria
+137	3	5	5	ser Branca Doria
+137	4	5	5	Branca Doria
+137	4	4	4	Branca
+137	5	5	5	Doria
 137	8	9	9	più anni
+137	9	9	9	anni
 138	4	4	4	el
 139	1	1	1	Io
 139	4	4	4	io
 139	5	5	5	lui
 139	7	7	7	tu
 140	2	3	2	Branca Doria
+140	2	2	2	Branca
+140	3	3	3	Doria
 141	9	9	9	panni
 142	2	3	2	fosso sù
 142	2	2	2	fosso

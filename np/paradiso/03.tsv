@@ -204,7 +204,7 @@ line	start	end	head	text
 81	5	7	6	nostre voglie stesse
 82	4	4	4	noi
 82	7	7	7	soglia
-82	7	7	7	soglia
+82	9	9	9	soglia
 83	2	3	3	questo regno
 83	5	7	7	tutto il regno
 83	6	7	7	il regno
@@ -233,7 +233,7 @@ line	start	end	head	text
 92	3	4	4	un altro
 92	7	8	8	la gola
 93	2	2	2	quel
-93	2	2	2	quel
+93	7	7	7	quel
 94	3	3	3	io
 94	5	5	5	atto
 94	8	8	8	parola

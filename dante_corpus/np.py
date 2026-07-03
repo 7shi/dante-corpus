@@ -131,12 +131,21 @@ def _tokens_match(word: str, token: str) -> bool:
     return word == token or strip_word_punct(word, token) is not None
 
 
-def _find_run(tokens: list[str], needle: list[str]) -> int:
-    """Index of the first contiguous occurrence of `needle` within `tokens`, or -1."""
+def _find_run(tokens: list[str], needle: list[str], exclude: set[int] | None = None) -> int:
+    """Index of the first contiguous occurrence of `needle` within `tokens`, or -1.
+
+    `exclude` skips run-start indices already claimed by an earlier occurrence of this same
+    needle (see `align_chunk`'s `used` tracking) so a repeated word/phrase within one line
+    (e.g. "a poco a poco") aligns each proposal to a distinct occurrence instead of collapsing
+    them all onto the first.
+    """
     if not needle:
         return -1
+    exclude = exclude or set()
     last = len(tokens) - len(needle)
     for i in range(last + 1):
+        if i in exclude:
+            continue
         if all(_tokens_match(needle[j], tokens[i + j]) for j in range(len(needle))):
             return i
     return -1
@@ -150,18 +159,27 @@ def _align_row(
     labelled_line: int | None,
     np_text: str,
     head_text: str,
+    used: dict[int, dict[tuple[str, ...], set[int]]],
 ) -> tuple[int, NPSpan] | None:
-    """Align one NP table row to a (line, NPSpan). Returns None if no contiguous run is found."""
+    """Align one NP table row to a (line, NPSpan). Returns None if no contiguous run is found.
+
+    `used` tracks, per chunk-line index and exact needle, which run-start indices earlier rows
+    already claimed in this same chunk — so two rows proposing the same repeated word/phrase
+    (e.g. "poco" occurring twice in one line) land on distinct occurrences instead of both
+    aligning to the first.
+    """
     needle = _alpha_tokens(np_text)
     if not needle:
         return None
+    needle_key = tuple(needle)
     # Try the labelled line first, then salvage by scanning the other chunk lines.
     order = list(range(len(line_numbers)))
     if labelled_line in line_numbers:
         idx = line_numbers.index(labelled_line)
         order = [idx] + [i for i in order if i != idx]
     for li in order:
-        run = _find_run(token_lists[li], needle)
+        exclude = used.get(li, {}).get(needle_key, set())
+        run = _find_run(token_lists[li], needle, exclude)
         if run < 0:
             continue
         start = run + 1
@@ -169,6 +187,7 @@ def _align_row(
         spans = span_lists[li]
         text = line_texts[li][spans[run][1] : spans[end - 1][2]]
         head = _head_index(token_lists[li], head_text, start, end)
+        used.setdefault(li, {}).setdefault(needle_key, set()).add(run)
         return line_numbers[li], NPSpan(
             line=line_numbers[li], start=start, end=end, head=head, text=text
         )
@@ -220,6 +239,7 @@ def align_chunk(
     }
 
     result: dict[int, list[NPSpan]] = {no: [] for no in line_numbers}
+    used: dict[int, dict[tuple[str, ...], set[int]]] = {}
     unaligned = 0
     for raw in table[2:]:  # skip header + separator
         cells = dict(zip(keys, raw))
@@ -229,7 +249,7 @@ def align_chunk(
         head_text = (cells.get("head") or "").strip()
         labelled = _parse_int(cells.get("line"))
         aligned = _align_row(
-            line_numbers, token_lists, span_lists, line_texts, labelled, np_text, head_text
+            line_numbers, token_lists, span_lists, line_texts, labelled, np_text, head_text, used
         )
         if aligned is None:
             if labelled in clitic_lines and len(_alpha_tokens(np_text)) == 1:
@@ -279,6 +299,50 @@ def clitic_mentions(line_no: int, tokens: list[str], morph_rows: list[MorphRow])
             if pos_part.strip().lower() == "pronoun":
                 mentions.append(NPSpan(line=line_no, start=i, end=i, head=i, text="+" + lemma_part))
     return mentions
+
+
+# --- Repeat-word dedupe (deterministic repair of a fixed `align_chunk` bug) ---------
+
+
+def dedupe_repeats(line_no: int, text: str, spans: list[NPSpan]) -> tuple[list[NPSpan], int]:
+    """Reassign exact-duplicate spans to a further, unclaimed occurrence of the same run.
+
+    Before `align_chunk` tracked claimed occurrences, every proposal for a repeated word or
+    phrase in one line (e.g. "a poco a poco", "feltro e feltro") collapsed onto the *first*
+    occurrence, leaving identical duplicate rows in artifacts built earlier. This repairs those
+    in place with the same first-available-occurrence search `align_chunk` now uses at build
+    time — no model call. A duplicate with no further occurrence to move to (e.g. the model's own
+    row was itself redundant) is left unchanged. Returns (possibly-updated spans, count changed).
+    """
+    tokens = [tok for tok, _, _ in token_spans(text)]
+    char_spans = token_spans(text)
+    used: dict[tuple[str, ...], set[int]] = {}
+    for s in spans:
+        needle = tuple(tokens[s.start - 1 : s.end])
+        used.setdefault(needle, set()).add(s.start - 1)
+
+    seen: dict[tuple, int] = {}
+    result: list[NPSpan] = []
+    changed = 0
+    for s in spans:
+        key = (s.start, s.end, s.head, s.text)
+        seen[key] = seen.get(key, 0) + 1
+        if seen[key] == 1:
+            result.append(s)
+            continue
+        needle = tuple(tokens[s.start - 1 : s.end])
+        run = _find_run(tokens, list(needle), used.get(needle, set()))
+        if run < 0:
+            result.append(s)
+            continue
+        new_start = run + 1
+        new_end = run + len(needle)
+        new_head = new_start + (s.head - s.start)
+        new_text = text[char_spans[run][1] : char_spans[new_end - 1][2]]
+        result.append(NPSpan(line=line_no, start=new_start, end=new_end, head=new_head, text=new_text))
+        used.setdefault(needle, set()).add(run)
+        changed += 1
+    return result, changed
 
 
 # --- Validation --------------------------------------------------------------------

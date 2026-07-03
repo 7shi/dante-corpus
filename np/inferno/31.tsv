@@ -1,9 +1,9 @@
 line	start	end	head	text
 1	1	3	3	Una medesma lingua
 2	5	10	10	l'una e l'altra guancia
-2	5	6	5	l'una
+2	5	6	6	l'una
 2	8	10	10	l'altra guancia
-2	8	9	8	l'altra
+2	10	10	10	guancia
 3	3	4	4	la medicina
 4	3	3	3	io
 4	7	8	8	la lancia
@@ -246,8 +246,8 @@ line	start	end	head	text
 96	1	2	2	le braccia
 96	4	4	4	el
 97	2	2	2	io
-97	2	2	2	io
 97	4	4	4	lui
+97	8	8	8	io
 98	3	5	5	lo smisurato Brïareo
 99	1	1	1	esperïenza
 99	3	5	4	li occhi mei
@@ -279,6 +279,7 @@ line	start	end	head	text
 111	2	2	2	io
 111	6	7	7	le ritorte
 112	1	1	1	Noi
+112	5	5	5	allotta
 113	4	4	4	Anteo
 113	6	8	8	ben cinque alle
 114	2	3	3	la testa

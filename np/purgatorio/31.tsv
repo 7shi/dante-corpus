@@ -303,8 +303,8 @@ line	start	end	head	text
 118	5	5	5	fiamma
 119	1	1	1	+mi
 119	2	3	3	li occhi
-119	2	3	3	li occhi
 119	5	7	6	li occhi rilucenti
+119	5	6	6	li occhi
 120	4	5	5	'l grifone
 121	3	4	4	lo specchio
 121	5	6	6	il sol
@@ -322,7 +322,7 @@ line	start	end	head	text
 128	6	7	7	quel cibo
 129	1	1	1	che
 129	4	4	4	sé
-129	4	4	4	sé
+129	6	6	6	sé
 130	1	1	1	sé
 130	4	6	6	più alto tribo
 131	2	3	3	li atti
@@ -335,9 +335,9 @@ line	start	end	head	text
 135	3	3	3	+ti
 135	6	7	6	passi tanti
 136	2	2	2	grazia
-136	2	2	2	grazia
 136	4	4	4	noi
 136	5	7	5	grazia che disvele
+136	5	5	5	grazia
 137	2	2	2	lui
 137	3	5	4	la bocca tua
 137	4	5	4	bocca tua

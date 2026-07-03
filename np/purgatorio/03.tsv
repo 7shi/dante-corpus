@@ -213,10 +213,10 @@ line	start	end	head	text
 84	5	6	6	lo 'mperché
 85	3	3	3	io
 85	7	8	8	la testa
-86	2	5	3	quella mandra fortunata allotta
+86	2	5	5	quella mandra fortunata allotta
+86	2	4	3	quella mandra fortunata
 86	2	3	3	quella mandra
-86	3	5	3	mandra fortunata allotta
-86	3	3	3	mandra
+86	3	4	3	mandra fortunata
 87	3	3	3	faccia
 87	6	7	7	l'andare
 88	2	2	2	color
@@ -288,6 +288,8 @@ line	start	end	head	text
 112	6	6	6	Manfredi
 113	1	4	1	nepote di Costanza imperadrice
 113	3	4	3	Costanza imperadrice
+113	3	3	3	Costanza
+113	4	4	4	imperadrice
 114	2	2	2	io
 114	7	7	7	tu
 115	3	5	5	mia bella figlia

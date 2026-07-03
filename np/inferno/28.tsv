@@ -40,6 +40,8 @@ line	start	end	head	text
 13	6	6	6	colpi
 13	7	7	7	doglie
 14	4	5	4	Ruberto Guiscardo
+14	4	4	4	Ruberto
+14	5	5	5	Guiscardo
 15	2	9	3	l'altra il cui ossame ancor s'accoglie
 15	2	3	3	l'altra
 15	4	6	6	il cui ossame
@@ -60,8 +62,11 @@ line	start	end	head	text
 21	1	7	2	il modo de la nona bolgia sozzo
 21	4	6	6	la nona bolgia
 21	5	6	6	nona bolgia
-22	4	7	5	mezzul perdere o lulla
-22	4	5	5	mezzul perdere
+22	4	7	4	mezzul perdere o lulla
+22	4	5	4	mezzul perdere
+22	4	4	4	mezzul
+22	5	7	5	perdere o lulla
+22	5	5	5	perdere
 22	7	7	7	lulla
 23	2	2	2	io
 23	4	4	4	un
@@ -71,9 +76,9 @@ line	start	end	head	text
 26	1	2	2	la corata
 26	5	7	7	'l tristo sacco
 27	1	1	1	che
-27	1	1	1	che
 27	2	2	2	merda
 27	5	8	5	quel che si trangugia
+27	6	6	6	che
 28	3	5	3	tutto in lui
 28	5	5	5	lui
 29	1	1	1	+mi
@@ -129,7 +134,7 @@ line	start	end	head	text
 50	2	5	3	lo 'nferno qua giù
 50	2	3	3	lo 'nferno
 50	7	7	7	giro
-50	7	7	7	giro
+50	9	9	9	giro
 51	2	2	2	quest'
 51	4	4	4	ver
 51	7	7	7	io
@@ -171,7 +176,7 @@ line	start	end	head	text
 66	6	8	7	una orecchia sola
 67	5	5	5	maraviglia
 68	2	3	3	li altri
-68	2	3	3	li altri
+68	6	7	7	li altri
 68	9	10	10	la canna
 69	4	7	4	fuor d'ogne parte
 69	6	7	7	ogne parte
@@ -282,6 +287,7 @@ line	start	end	head	text
 110	3	3	3	elli
 110	5	5	5	duol
 110	7	7	7	duolo
+111	1	2	2	sen gio
 111	4	7	4	persona trista e matta
 112	2	2	2	io
 112	6	7	7	lo stuolo
@@ -323,9 +329,9 @@ line	start	end	head	text
 124	5	6	5	sé stesso
 124	7	7	7	lucerna
 125	3	3	3	due
-125	3	3	3	due
 125	5	5	5	uno
-125	5	5	5	uno
+125	7	7	7	uno
+125	9	9	9	due
 126	4	4	4	quei
 126	6	6	6	che
 127	4	6	4	piè del ponte

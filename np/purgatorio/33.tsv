@@ -46,7 +46,7 @@ line	start	end	head	text
 17	4	6	4	passo in terra
 17	6	6	6	terra
 18	3	4	4	li occhi
-18	3	4	4	li occhi
+18	5	6	6	li occhi
 18	7	7	7	mi
 19	3	4	4	tranquillo aspetto
 19	4	4	4	aspetto
@@ -55,7 +55,7 @@ line	start	end	head	text
 21	2	2	2	+mi
 21	3	3	3	tu
 22	3	3	3	io
-22	3	3	3	io
+22	6	6	6	io
 22	8	8	8	seco
 22	8	8	8	+sé
 23	1	1	1	+mi
@@ -162,7 +162,7 @@ line	start	end	head	text
 57	5	5	5	volte
 58	1	1	1	Qualunque
 58	3	3	3	quella
-58	3	3	3	quella
+58	5	5	5	quella
 59	2	4	2	bestemmia di fatto
 59	2	2	2	bestemmia
 59	4	4	4	fatto
@@ -218,7 +218,7 @@ line	start	end	head	text
 76	0	0	0	
 77	2	2	2	'l
 77	3	3	3	te
-77	3	3	3	te
+77	8	8	8	te
 77	10	10	10	quello
 78	4	8	5	il bordon di palma cinto
 78	4	5	5	il bordon
@@ -322,7 +322,7 @@ line	start	end	head	text
 116	4	4	4	questa
 117	2	3	3	un principio
 117	5	5	5	sé
-117	5	5	5	sé
+117	7	7	7	sé
 118	2	3	3	cotal priego
 119	1	1	1	Matelda
 120	3	7	3	chi da colpa si dislega

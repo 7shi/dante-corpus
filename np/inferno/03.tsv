@@ -213,7 +213,6 @@ line	start	end	head	text
 83	1	2	2	un vecchio
 83	5	6	6	antico pelo
 84	2	4	2	Guai a voi
-84	2	2	2	Guai
 84	4	4	4	voi
 84	5	6	5	anime prave
 85	5	6	6	lo cielo
@@ -298,7 +297,7 @@ line	start	end	head	text
 115	6	6	6	Adamo
 116	3	4	4	quel lito
 116	6	6	6	una
-116	6	6	6	una
+116	8	8	8	una
 117	2	2	2	cenni
 117	4	7	4	augel per suo richiamo
 117	4	4	4	augel

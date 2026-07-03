@@ -20,7 +20,7 @@ line	start	end	head	text
 7	9	10	10	'l senno
 8	2	2	2	Questo
 8	3	3	3	che
-8	3	3	3	che
+8	6	6	6	che
 9	1	3	3	quell' altro foco
 9	2	3	3	altro foco
 9	5	5	5	chi
@@ -56,7 +56,7 @@ line	start	end	head	text
 18	1	1	1	che
 18	6	7	6	anima fella
 19	1	1	1	Flegïàs
-19	1	1	1	Flegïàs
+19	2	2	2	Flegïàs
 19	3	3	3	tu
 19	6	6	6	vòto
 20	2	4	4	lo mio segnore

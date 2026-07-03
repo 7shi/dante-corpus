@@ -61,9 +61,7 @@ line	start	end	head	text
 26	2	5	3	alto valor del voto
 26	2	3	3	alto valor
 26	3	5	3	valor del voto
-26	3	3	3	valor
 26	5	5	5	voto
-26	6	6	6	s'
 27	2	2	2	Dio
 27	5	5	5	tu
 28	3	10	3	fermar tra Dio e l'omo il patto
@@ -205,7 +203,7 @@ line	start	end	head	text
 81	3	8	4	'l Giudeo di voi tra voi
 81	3	4	4	'l Giudeo
 81	6	6	6	voi
-81	6	6	6	voi
+81	8	8	8	voi
 82	4	8	4	agnel che lascia il latte
 82	4	4	4	agnel
 82	7	8	8	il latte
@@ -296,6 +294,7 @@ line	start	end	head	text
 118	6	7	7	il ciel
 118	7	7	7	ciel
 119	1	1	1	noi
+119	7	7	7	disii
 120	2	2	2	noi
 120	3	3	3	+ti
 120	5	6	6	tuo piacer

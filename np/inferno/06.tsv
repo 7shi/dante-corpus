@@ -10,8 +10,8 @@ line	start	end	head	text
 5	1	1	1	mi
 5	6	6	6	io
 6	3	3	3	io
-6	3	3	3	io
 6	4	4	4	mi
+6	9	9	9	io
 7	1	1	1	Io
 7	4	5	5	terzo cerchio
 7	7	8	8	la piova
@@ -161,8 +161,8 @@ line	start	end	head	text
 58	5	7	7	il tuo affanno
 59	1	1	1	mi
 59	1	1	1	mi
-59	1	1	1	mi
 59	6	6	6	lagrimar
+59	7	7	7	mi
 60	2	2	2	+mi
 60	4	4	4	tu
 60	7	7	7	che
@@ -237,8 +237,8 @@ line	start	end	head	text
 83	7	7	7	savere
 84	2	3	3	'l ciel
 84	4	4	4	li
-84	4	4	4	li
 84	7	8	8	lo 'nferno
+84	9	9	9	li
 85	2	2	2	quelli
 85	3	3	3	Ei
 85	6	9	7	l'anime più nere
@@ -254,7 +254,7 @@ line	start	end	head	text
 89	5	6	5	mente altrui
 89	7	7	7	mi
 90	3	3	3	ti
-90	3	3	3	ti
+90	8	8	8	ti
 91	1	3	3	Li diritti occhi
 91	7	7	7	biechi
 92	1	1	1	+me

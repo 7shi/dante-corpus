@@ -141,8 +141,8 @@ line	start	end	head	text
 48	6	6	6	ombra
 49	2	3	3	questa tema
 50	3	3	3	io
-50	3	3	3	io
 50	6	9	6	quel ch'io 'ntesi
+50	8	8	8	io
 51	2	8	3	primo punto che di te mi dolve
 51	2	3	3	primo punto
 51	6	6	6	te
@@ -268,8 +268,8 @@ line	start	end	head	text
 98	7	8	8	tuo fedele
 98	8	8	8	fedele
 99	2	2	2	te
-99	2	2	2	te
 99	4	4	4	io
+99	6	6	6	te
 99	7	7	7	lo
 100	1	5	1	Lucia, nimica di ciascun crudele
 100	1	1	1	Lucia
@@ -400,12 +400,12 @@ line	start	end	head	text
 139	9	9	9	ambedue
 140	1	2	2	tu duca
 140	1	1	1	tu
-140	1	1	1	tu
-140	1	1	1	tu
 140	2	2	2	duca
 140	3	4	4	tu segnore
+140	3	3	3	tu
 140	4	4	4	segnore
 140	6	7	7	tu maestro
+140	6	6	6	tu
 140	7	7	7	maestro
 141	2	2	2	li
 142	3	7	4	lo cammino alto e silvestro

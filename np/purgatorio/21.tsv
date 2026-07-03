@@ -103,7 +103,7 @@ line	start	end	head	text
 44	2	10	2	quel che 'l ciel da sé in sé riceve
 44	4	5	5	'l ciel
 44	7	7	7	sé
-44	7	7	7	sé
+44	9	9	9	sé
 45	7	7	7	altro
 45	8	8	8	cagione
 46	4	4	4	pioggia
@@ -296,7 +296,7 @@ line	start	end	head	text
 116	1	2	2	l'una
 116	6	7	7	l'altra
 117	2	2	2	io
-117	2	2	2	io
+117	5	5	5	io
 118	2	3	3	mio maestro
 118	7	7	7	paura
 119	8	8	8	+gli
@@ -341,7 +341,7 @@ line	start	end	head	text
 131	8	8	8	Frate
 132	4	4	4	tu
 132	6	6	6	ombra
-132	6	6	6	ombra
+132	8	8	8	ombra
 133	2	2	2	ei
 133	6	7	7	la quantitate
 134	3	9	4	l'amor ch'a te mi scalda

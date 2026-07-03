@@ -40,14 +40,14 @@ line	start	end	head	text
 12	5	5	5	mei
 13	2	2	2	tu
 13	6	6	6	soglia
-13	6	6	6	soglia
+13	8	8	8	soglia
 14	4	4	4	io
 14	7	8	8	proprio nome
 14	8	8	8	nome
 15	3	4	4	la rosa
 15	4	4	4	rosa
 15	7	7	7	foglia
-15	7	7	7	foglia
+15	9	9	9	foglia
 16	3	4	4	settimo grado
 16	4	4	4	grado
 17	3	3	3	esso
@@ -108,7 +108,7 @@ line	start	end	head	text
 35	4	4	4	Augustino
 36	2	2	2	altri
 36	7	7	7	giro
-36	7	7	7	giro
+36	9	9	9	giro
 37	3	6	5	l'alto proveder divino
 38	2	10	7	l'uno e l'altro aspetto de la fede
 38	2	7	7	l'uno e l'altro aspetto
@@ -139,7 +139,7 @@ line	start	end	head	text
 47	4	6	5	le voci püerili
 48	2	2	2	tu
 48	3	3	3	li
-48	3	3	3	li
+48	8	8	8	li
 49	3	3	3	tu
 50	2	2	2	io
 50	4	6	6	'l forte legame

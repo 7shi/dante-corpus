@@ -8,8 +8,9 @@
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
   cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 382 soft**
-  violations — see *Layer 3 check status* below.
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 186 soft**
+  violations (after `--fix-repeats` and a `--fix` pass, both diagnosed in `np/README.md`) — see
+  *Layer 3 check status* below.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
@@ -132,6 +133,44 @@ had only the bad `che` span) got the documented zero-NP sentinel row (`start == 
 
 Layer 3's `--check` count is now **382** soft (down from 418: 141 function-word heads + 241 noun
 coverage gaps).
+
+**Repeat-word alignment bug + `--fix` diagnosis (2026-07-03)** — a first `--fix` pass (regenerate
+each flagged line, keep the new spans only if strictly fewer tag violations) found just 16/276
+improved. Root cause of most of the shortfall: `align_chunk` collapsed every proposal for a
+repeated word/phrase in one line (e.g. both `poco`s in `a poco a poco`) onto its *first*
+occurrence, so the second was structurally uncoverable no matter how many times `--fix` re-asked
+the model — confirmed by manual line inspection and quantified corpus-wide with a Fable 5
+subagent's independent investigation (~30% of remaining coverage gaps were this artifact, not
+model misses). Fixed in `dante_corpus/np.py`: `_find_run`/`_align_row`/`align_chunk` now track
+claimed occurrences (a per-chunk-line, per-needle `used` set of run-starts) so future builds align
+each repeat to a distinct token run. `np/np.py --fix-repeats` (deterministic, no model call)
+repaired the existing artifacts the same way, reassigning 204 duplicate spans corpus-wide and
+clearing 80 of the then-276 soft violations for free — see `np/README.md`'s *Check* section for
+the mechanism and *Things to watch* for the invariant going forward.
+
+A subsequent full-corpus `--fix` run (after the repeat fix) improved only 6 more lines out of
+~180 attempted. A second Fable 5 consult (given the full `np.log` and the `_fix_canto`/prompt
+code) found 162/174 "not improved" lines came back with the byte-identical violation set: the
+retry re-asks the same single-line, no-feedback prompt, so it mostly reproduces its own prior
+answer rather than correcting anything. Diagnosis: this is close to the ceiling for that retry
+design, not a prompt-engineering gap — most remaining violations are not Layer-3 mistakes:
+- **Function-word heads (104 remaining, 89 of them `article`)**: 47 are `un`/`una` alone, mostly
+  Dante's *pronominal* `un`/`una`/`el` ("ad un ch'al passo", "d'una di lor") where the flagged
+  head is the actual, correct NP head — Layer 2 froze it as `article` when it should be
+  `pronoun`/`numeral`. No re-generation can lower this count without deleting a legitimate NP;
+  clearing it needs the same per-case hand review the `che` cases got (Layer 2 retag vs. Layer 3
+  span deletion). **Next candidate for that review**, isolated by grepping `--check` output for
+  `head 'un'|'una' is 'article'`.
+- **Noun coverage gaps (82 remaining)**: roughly half are Layer-2 mistags the model is correctly
+  declining to nominalize (`fin che` = *finché* a conjunction, the `inver'`/`'nver'`/`'ntorno`
+  family, `sol`/`ben`/`U'` as adverbs, verb+clitic forms like `parlonne`) — same disposition as
+  the `che` review. The other half are title/surname head-competition (`ser Brunetto`, `fra
+  Dolcin`, `Argenti`, `Buoso`, `Magno`) where the model won't spontaneously split off a second,
+  minimal NP for the bare title/surname; an informed retry prompt (state the specific violation,
+  don't just re-ask blind) could plausibly recover these, unlike the two categories above.
+
+Corpus-wide soft count after `--fix-repeats` and this `--fix` pass: **186** (104 function-word
+heads + 82 noun coverage gaps).
 
 ## Why this lives in the corpus
 

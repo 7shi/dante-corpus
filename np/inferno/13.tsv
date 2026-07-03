@@ -159,7 +159,6 @@ line	start	end	head	text
 54	2	3	2	mondo sù
 54	2	2	2	mondo
 54	6	7	7	li lece
-54	6	6	6	li
 54	7	7	7	lece
 55	2	3	3	'l tronco
 55	6	7	7	dolce dir
@@ -206,7 +205,7 @@ line	start	end	head	text
 71	3	3	3	morir
 71	5	5	5	disdegno
 72	3	3	3	me
-72	3	3	3	me
+72	5	5	5	me
 73	2	7	4	le nove radici d'esto legno
 73	2	4	4	le nove radici
 73	4	7	4	radici d'esto legno
@@ -270,7 +269,6 @@ line	start	end	head	text
 96	6	7	7	settima foce
 96	7	7	7	foce
 97	3	4	4	la selva
-97	7	7	7	l'
 97	9	10	9	parte scelta
 98	4	4	4	fortuna
 98	5	6	6	la balestra
@@ -364,7 +362,7 @@ line	start	end	head	text
 127	7	8	8	li denti
 128	2	2	2	quel
 128	5	5	5	brano
-128	5	5	5	brano
+128	7	7	7	brano
 129	4	6	5	quelle membra dolenti
 129	4	5	5	quelle membra
 129	5	6	5	membra dolenti

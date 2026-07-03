@@ -47,7 +47,7 @@ line	start	end	head	text
 16	4	4	4	fiamma
 16	5	5	5	favilla
 17	4	4	4	voce
-17	4	4	4	voce
+17	5	5	5	voce
 18	2	2	2	una
 18	6	6	6	altra
 19	2	2	2	io
@@ -144,7 +144,7 @@ line	start	end	head	text
 55	2	2	2	m'
 55	7	7	7	onde
 56	3	3	3	io
-56	3	3	3	io
+56	7	7	7	io
 56	8	8	8	ti
 57	2	3	3	mio amor
 57	7	8	8	le fronde
@@ -237,10 +237,10 @@ line	start	end	head	text
 93	6	6	6	seme
 94	1	1	1	Questo
 94	2	2	2	io
-94	2	2	2	io
 94	4	4	4	lui
 94	6	6	6	elli
 94	8	8	8	me
+94	10	10	10	io
 95	1	1	1	+ti
 95	2	3	3	un vero
 95	5	8	5	quel che tu dimandi

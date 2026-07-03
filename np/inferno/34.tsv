@@ -156,7 +156,10 @@ line	start	end	head	text
 61	1	2	2	Quell' anima
 61	7	8	8	maggior pena
 62	2	3	3	'l maestro
-62	5	6	5	Giuda Scarïotto
+62	3	3	3	maestro
+62	5	6	6	Giuda Scarïotto
+62	5	5	5	Giuda
+62	6	6	6	Scarïotto
 63	2	3	3	'l capo
 63	8	9	9	le gambe
 64	2	4	4	li altri due
@@ -183,7 +186,7 @@ line	start	end	head	text
 73	2	2	2	sé
 73	4	6	6	le vellute coste
 74	2	2	2	vello
-74	2	2	2	vello
+74	4	4	4	vello
 75	2	8	4	'l folto pelo e le gelate croste
 75	2	4	4	'l folto pelo
 75	6	8	8	le gelate croste

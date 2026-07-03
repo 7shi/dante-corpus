@@ -172,8 +172,8 @@ line	start	end	head	text
 78	3	3	3	nave
 78	6	7	7	la piaggia
 79	2	2	2	io
-79	2	2	2	io
 79	4	5	5	un poco
+79	7	7	7	io
 80	1	5	2	alcuna cosa nel novo girone
 80	1	2	2	alcuna cosa
 80	4	5	5	novo girone
@@ -222,7 +222,7 @@ line	start	end	head	text
 96	6	8	6	poco di vigore
 96	8	8	8	vigore
 97	3	3	3	elli
-97	6	8	6	primo ben diretto
+97	6	8	7	primo ben diretto
 98	3	3	3	secondi
 98	4	5	4	sé stesso
 99	4	7	4	cagion di mal diletto

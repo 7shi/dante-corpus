@@ -128,8 +128,6 @@ line	start	end	head	text
 46	3	4	4	il baccialier
 47	3	4	4	'l maestro
 47	5	6	6	la question
-47	5	5	5	la
-47	5	5	5	la
 48	2	2	2	+la
 48	5	5	5	+la
 49	4	4	4	io
@@ -154,8 +152,8 @@ line	start	end	head	text
 58	1	9	2	La Grazia che mi dà ch'io mi confessi
 58	1	2	2	La Grazia
 58	4	4	4	mi
-58	4	4	4	mi
 58	7	7	7	io
+58	8	8	8	mi
 59	2	2	2	io
 59	4	6	6	l'alto primipilo
 60	2	6	4	li miei concetti bene espressi
@@ -286,7 +284,7 @@ line	start	end	head	text
 114	2	3	3	la melode
 115	2	3	3	quel baron
 115	7	7	7	ramo
-115	7	7	7	ramo
+115	9	9	9	ramo
 116	4	4	4	m'
 117	3	5	5	l'ultime fronde
 117	5	5	5	fronde
@@ -315,7 +313,7 @@ line	start	end	head	text
 126	4	6	6	più giovani piedi
 126	6	6	6	piedi
 127	2	2	2	io
-127	2	2	2	io
+127	6	6	6	io
 128	1	7	2	la forma qui del pronto creder mio
 128	1	3	2	la forma qui
 128	1	2	2	la forma

@@ -101,11 +101,42 @@ call** (`validate_line`):
     existed lacked them; `--fix-clitics` backfills them deterministically (done for all 100
     cantos), so any new flag here is a regression.
 
-  Under the frozen policy the corpus-wide soft count is **382** (141 function-word heads + 241
+  Under the frozen policy the corpus-wide soft count was **382** (141 function-word heads + 241
   noun coverage gaps, after correcting 24 `che` mistags in Layer 2 and removing 12 over-included
   `che` spans from Layer 3 — see PLAN.md) — a reviewable list of genuine model omissions (often
   in repeated idioms: `a poco a poco`, `di gente in gente`) and residual function-word heads,
   kept visible rather than silenced.
+
+  A first `--fix` pass found only 16/276 lines improved — suspiciously low. Investigating showed
+  ~30% of the remaining coverage gaps were not model misses at all: `align_chunk` collapsed every
+  proposal for a repeated word/phrase in one line (e.g. both `poco`s in `a poco a poco`) onto its
+  *first* occurrence, so the second was structurally uncoverable no matter how many times `--fix`
+  re-asked the model. `align_chunk` now tracks claimed occurrences per chunk-line so future builds
+  align each repeat to a distinct token run (see *Things to watch*); `--fix-repeats`
+  (deterministic, no model call) repairs existing artifacts the same way — reassigning 204
+  duplicate spans corpus-wide and clearing 80 of the then-276 soft violations for free.
+
+  `--fix` (`make -C np fix`) regenerates just the flagged lines and keeps the new spans only when
+  they carry strictly fewer tag violations than before, with no new hard ones — the `che` review
+  showed a flagged line can be either a genuine miss or a legitimate substantivized reading, and
+  a fresh model pass can't reliably tell those apart in bulk, so this is a best-effort pass with a
+  no-worse-off guarantee rather than a promise every case clears. Anything still flagged after
+  `--fix` is a candidate for the same kind of hand review the `che` cases got.
+
+  A full-corpus `--fix` run after the repeat-word fix improved only 6 more lines (of ~180
+  attempted), logging the rest as "not improved" (`np.log`, gitignored). Diagnosis: 162/174 of
+  those lines came back with the byte-identical violation set — the retry re-asks the same
+  single-line prompt with no feedback about what was flagged, so it is mostly re-rolling dice, not
+  correcting a mistake. Two structural reasons this ceiling is expected rather than a prompt bug:
+  a flagged span's head is often *correct* (Dante using `un`/`el` pronominally — 47 of the 89
+  remaining article-head violations are `un`/`una` alone), so no re-generation can lower the count
+  without deleting a legitimate NP; and several coverage gaps (`fin che`, `inver'`, verb+clitic
+  forms) are function words the model correctly declines to treat as nouns — the flag traces to a
+  Layer-2 POS question, not a Layer-3 omission, exactly the pattern the `che` review already found.
+  The corpus-wide soft count after `--fix-repeats` and this `--fix` pass is **186** (104
+  function-word heads + 82 noun coverage gaps). The `un`/`una` cases are the next hand-review
+  candidate, the same way the `che` cases were: decide per line whether Layer 2 mistagged the
+  word (pronoun/numeral, not article) or Layer 3 over-included the span.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
@@ -142,8 +173,10 @@ retried.
 - `_continue_if_truncated` treats "last line of chunk has no NPs" as the truncation signal. A chunk
   whose final line genuinely has no NPs triggers one wasted continuation turn per attempt —
   harmless (it writes the sentinel) but worth knowing.
-- If the same exact token subsequence appears twice in one line, `align_chunk` picks the first
-  occurrence. Extremely rare in a hendecasyllable; revisit only if `--check` surfaces it.
+- If the same exact token subsequence appears twice in one line, `align_chunk` aligns each
+  proposal to a distinct occurrence in table-row order (a per-chunk-line, per-needle `used` set of
+  claimed run-starts) rather than collapsing them all onto the first. `--fix-repeats` repairs
+  artifacts built before this tracking existed (`dedupe_repeats`, no model call).
 - The soft-check predicates (`_can_head_np`, `_needs_np` in `dante_corpus/np.py`) match POS by
   substring, so contracted POS like `preposition+noun` still require coverage and
   `verb+pronoun` counts as a content head. This is intentional under the frozen policy; the
@@ -165,8 +198,9 @@ build tool whose output is frozen and round-trip-checked; consumers see a stable
 make -C np                          # build all three canticles (model from model.mk)
 make -C np MODEL=ollama:gpt-oss     # override the model
 make -C np check                    # validate artifacts, no model call
+make -C np fix                      # regenerate lines with soft violations (model from model.mk)
 
-uv run np/np.py inferno [-c 1] [-m MODEL] [--force] [--check] [--fix-clitics]
+uv run np/np.py inferno [-c 1] [-m MODEL] [--force] [--check] [--fix-clitics] [--fix-repeats] [--fix]
 ```
 
 Consumers read it deterministically via `Canto.np()` (a nested `NPSpan` forest, ordered by line)

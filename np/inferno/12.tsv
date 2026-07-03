@@ -188,7 +188,7 @@ line	start	end	head	text
 73	2	3	3	al fosso
 73	3	3	3	fosso
 73	6	6	6	mille
-73	6	6	6	mille
+73	8	8	8	mille
 74	2	3	3	qual anima
 74	3	3	3	anima
 75	1	7	2	del sangue più che sua colpa sortille
@@ -287,9 +287,9 @@ line	start	end	head	text
 110	2	2	2	Azzolino
 110	4	5	5	quell' altro
 111	2	4	2	Opizzo da Esti
-111	2	2	2	Opizzo
 111	4	4	4	Esti
 111	5	6	6	il qual
+111	8	8	8	vero
 112	3	4	4	dal figliastro
 112	4	4	4	figliastro
 112	6	7	7	nel mondo

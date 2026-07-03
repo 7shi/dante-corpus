@@ -182,7 +182,7 @@ line	start	end	head	text
 74	5	5	5	+si
 74	6	8	7	un'alma sola
 75	6	6	6	sé
-75	6	6	6	sé
+75	8	8	8	sé
 76	5	6	6	la parola
 77	2	9	3	il calor del sole che si fa vino
 77	2	5	3	il calor del sole
@@ -261,8 +261,12 @@ line	start	end	head	text
 110	4	4	4	noi
 110	8	10	9	la man destra
 111	5	6	6	altra cura
+112	2	4	3	la ripa fiamma
 112	2	3	3	la ripa
-112	6	6	6	fuor
+112	3	4	3	ripa fiamma
+112	3	3	3	ripa
+112	4	4	4	fiamma
+112	7	7	7	balestra
 113	2	3	3	la cornice
 113	5	5	5	fiato
 113	7	7	7	suso
@@ -270,7 +274,7 @@ line	start	end	head	text
 114	7	7	7	lei
 115	6	7	6	lato schiuso
 116	2	2	2	uno
-116	2	2	2	uno
+116	4	4	4	uno
 116	6	6	6	io
 116	8	9	9	'l foco
 117	5	5	5	cader

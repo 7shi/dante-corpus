@@ -22,8 +22,8 @@ line	start	end	head	text
 8	6	7	7	'l ciel
 9	1	2	2	di vista
 9	2	2	2	vista
-9	2	2	2	vista
 9	3	4	4	in vista
+9	4	4	4	vista
 9	7	9	9	la più bella
 10	3	6	4	il trïunfo che lude
 10	3	4	4	il trïunfo
@@ -35,8 +35,9 @@ line	start	end	head	text
 12	4	7	4	quel ch'elli 'nchiude
 12	4	4	4	quel
 12	6	6	6	elli
+13	2	2	2	poco
+13	4	4	4	poco
 13	6	7	7	mio veder
-13	7	7	7	veder
 14	5	6	6	li occhi
 14	6	6	6	occhi
 14	8	8	8	Bëatrice

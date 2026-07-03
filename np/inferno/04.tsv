@@ -21,7 +21,8 @@ line	start	end	head	text
 8	3	5	3	valle d'abisso
 8	5	6	5	abisso dolorosa
 8	5	5	5	abisso
-9	2	2	2	'ntrono
+9	1	1	1	che
+9	4	6	6	d'infiniti guai
 9	5	6	6	infiniti guai
 10	0	0	0	
 11	5	6	6	lo viso
@@ -290,7 +291,6 @@ line	start	end	head	text
 114	4	5	4	voci soavi
 115	1	1	1	+ci
 115	4	7	5	l'un de' canti
-115	4	5	5	l'un
 115	7	7	7	canti
 116	2	6	2	loco aperto, luminoso e alto
 116	2	2	2	loco
@@ -327,6 +327,7 @@ line	start	end	head	text
 125	3	4	4	altra parte
 125	6	8	7	'l re Latino
 125	7	8	7	re Latino
+125	8	8	8	Latino
 126	3	5	3	Lavina sua figlia
 126	3	3	3	Lavina
 126	4	5	5	sua figlia

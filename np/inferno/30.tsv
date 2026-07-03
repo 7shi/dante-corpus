@@ -74,7 +74,10 @@ line	start	end	head	text
 31	2	3	3	l'Aretin
 32	1	1	1	mi
 32	3	4	4	Quel folletto
+32	4	4	4	folletto
 32	6	7	7	Gianni Schicchi
+32	6	6	6	Gianni
+32	7	7	7	Schicchi
 33	4	4	4	altrui
 34	3	3	3	io
 34	4	4	4	lui
@@ -141,7 +144,8 @@ line	start	end	head	text
 61	2	6	3	la miseria del maestro Adamo
 61	2	3	3	la miseria
 61	3	6	3	miseria del maestro Adamo
-61	5	6	6	maestro Adamo
+61	5	6	5	maestro Adamo
+61	6	6	6	Adamo
 62	1	1	1	io
 62	4	9	4	assai di quel ch'i' volli
 62	6	9	6	quel ch'i' volli
@@ -184,6 +188,7 @@ line	start	end	head	text
 77	5	5	5	Alessandro
 77	8	9	9	lor frate
 78	2	3	2	Fonte Branda
+78	3	3	3	Branda
 78	6	7	7	la vista
 79	4	5	5	l'una
 79	8	9	9	l'arrabbiate
@@ -213,8 +218,8 @@ line	start	end	head	text
 88	1	1	1	Io
 88	4	4	4	lor
 88	6	8	8	sì fatta famiglia
-89	1	1	1	e'
 89	6	7	7	li fiorini
+89	7	7	7	fiorini
 90	3	6	4	tre carati di mondiglia
 90	4	6	4	carati di mondiglia
 90	6	6	6	mondiglia

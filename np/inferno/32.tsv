@@ -138,8 +138,8 @@ line	start	end	head	text
 48	4	4	4	essi
 49	2	4	4	legno legno spranga
 49	2	2	2	legno
-49	2	2	2	legno
 49	3	4	4	legno spranga
+49	3	3	3	legno
 49	4	4	4	spranga
 50	4	4	4	ei
 50	6	7	7	due becchi
@@ -188,6 +188,8 @@ line	start	end	head	text
 64	2	2	2	capo
 64	5	5	5	i'
 65	4	5	4	Sassol Mascheroni
+65	4	4	4	Sassol
+65	5	5	5	Mascheroni
 66	2	3	3	tosco se'
 66	3	3	3	se'
 66	7	7	7	chi
@@ -217,7 +219,7 @@ line	start	end	head	text
 78	6	6	6	viso
 78	8	8	8	una
 79	2	2	2	mi
-79	2	2	2	mi
+79	5	5	5	mi
 80	2	2	2	tu
 80	7	8	8	la vendetta
 81	2	2	2	Montaperti
@@ -230,7 +232,6 @@ line	start	end	head	text
 83	6	7	7	un dubbio
 83	9	9	9	costui
 84	2	2	2	mi
-84	4	4	4	quantunque
 84	6	6	6	fretta
 85	1	2	2	Lo duca
 85	5	5	5	io

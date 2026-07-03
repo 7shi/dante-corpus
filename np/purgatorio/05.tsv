@@ -20,7 +20,7 @@ line	start	end	head	text
 8	2	2	2	+li
 8	5	5	5	maraviglia
 9	2	2	2	me
-9	2	2	2	me
+9	4	4	4	me
 9	6	10	7	'l lume ch'era rotto
 9	6	7	7	'l lume
 10	2	4	3	l'animo tuo
@@ -64,7 +64,7 @@ line	start	end	head	text
 23	6	7	7	un poco
 24	2	2	2	Miserere
 24	4	4	4	verso
-24	4	4	4	verso
+24	6	6	6	verso
 25	5	5	5	i'
 25	8	8	8	loco
 26	2	4	4	lo mio corpo
@@ -168,7 +168,7 @@ line	start	end	head	text
 62	4	8	4	piedi di sì fatta guida
 62	6	8	8	sì fatta guida
 63	2	2	2	mondo
-63	2	2	2	mondo
+63	4	4	4	mondo
 63	5	5	5	cercar
 64	2	2	2	uno
 64	4	4	4	Ciascun

@@ -22,7 +22,7 @@ line	start	end	head	text
 9	5	5	5	esse
 9	7	8	8	un crollo
 10	2	2	2	Pistoia
-10	2	2	2	Pistoia
+10	3	3	3	Pistoia
 11	2	2	2	+ti
 12	4	5	5	mal fare
 12	6	8	7	il seme tuo
@@ -115,12 +115,11 @@ line	start	end	head	text
 47	1	4	1	ciò ch'io dirò
 47	3	3	3	io
 47	7	7	7	maraviglia
-48	2	5	2	io che 'l vidi
 48	2	2	2	io
 48	4	4	4	'l
 48	7	7	7	pena
-48	8	8	8	il
-48	9	9	9	mi
+48	8	10	10	il mi consento
+48	9	10	10	mi consento
 49	2	2	2	io
 49	6	6	6	lor
 49	7	8	8	le ciglia
@@ -188,8 +187,11 @@ line	start	end	head	text
 77	1	1	1	due
 77	3	3	3	nessun
 77	4	6	5	l'imagine perversa
-78	3	5	5	tal sen gio
+78	3	5	4	tal sen gio
+78	4	5	4	sen gio
+78	5	5	5	gio
 78	7	8	8	lento passo
+78	8	8	8	passo
 79	2	7	3	'l ramarro sotto la gran fersa
 79	2	3	3	'l ramarro
 79	5	7	7	la gran fersa
@@ -249,7 +251,7 @@ line	start	end	head	text
 99	5	5	5	lo
 100	2	3	3	due nature
 100	6	6	6	fronte
-100	6	6	6	fronte
+100	8	8	8	fronte
 101	5	7	7	amendue le forme
 101	6	7	7	le forme
 102	3	4	4	lor matera

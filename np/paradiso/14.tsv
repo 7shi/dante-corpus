@@ -1,8 +1,8 @@
 line	start	end	head	text
 1	2	2	2	centro
-1	2	2	2	centro
 1	4	4	4	cerchio
-1	4	4	4	cerchio
+1	8	8	8	cerchio
+1	10	10	10	centro
 2	2	3	3	l'acqua
 2	5	7	7	un ritondo vaso
 3	5	5	5	fuori
@@ -23,6 +23,7 @@ line	start	end	head	text
 8	6	8	6	quel di Beatrice
 8	8	8	8	Beatrice
 9	2	2	2	cui
+9	4	4	4	cominciar
 9	6	6	6	lui
 10	2	2	2	costui
 10	4	4	4	mestieri
@@ -211,7 +212,7 @@ line	start	end	head	text
 84	3	4	4	mia donna
 84	6	8	8	più alta salute
 85	4	4	4	io
-85	4	4	4	io
+85	6	6	6	io
 86	2	7	4	l'affocato riso de la stella
 86	2	4	4	l'affocato riso
 86	4	7	4	riso de la stella
@@ -273,7 +274,7 @@ line	start	end	head	text
 108	3	4	4	quell' albor
 108	6	6	6	Cristo
 109	2	2	2	corno
-109	2	2	2	corno
+109	4	4	4	corno
 109	7	11	8	la cima e 'l basso
 109	7	8	8	la cima
 109	10	11	11	'l basso

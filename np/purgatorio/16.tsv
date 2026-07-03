@@ -142,9 +142,9 @@ line	start	end	head	text
 60	3	3	3	malizia
 61	6	7	7	la cagione
 62	3	3	3	i'
-62	3	3	3	i'
 62	4	4	4	la
-62	4	4	4	la
+62	8	8	8	i'
+62	9	9	9	la
 62	11	11	11	altrui
 63	3	3	3	cielo
 63	4	4	4	uno
@@ -202,8 +202,8 @@ line	start	end	head	text
 81	11	12	12	sua cura
 82	3	5	4	'l mondo presente
 83	2	2	2	voi
-83	2	2	2	voi
 83	4	5	5	la cagione
+83	7	7	7	voi
 84	2	2	2	io
 84	3	3	3	te
 84	7	8	8	vera spia
@@ -260,8 +260,9 @@ line	start	end	head	text
 106	4	6	6	'l buon mondo
 107	1	2	2	due soli
 107	5	10	10	l'una e l'altra strada
-107	5	6	5	l'una
+107	5	6	6	l'una
 107	8	10	10	l'altra strada
+107	8	9	9	l'altra
 108	5	5	5	mondo
 108	8	8	8	Deo
 109	1	2	2	L'un

@@ -192,7 +192,6 @@ line	start	end	head	text
 75	3	3	3	fiume
 75	6	7	7	verdi paschi
 76	3	4	4	l'acqua
-76	8	8	8	co
 77	3	3	3	Benaco
 77	5	5	5	Mencio
 78	3	3	3	Governol
@@ -293,7 +292,9 @@ line	start	end	head	text
 116	1	2	2	Michele Scotto
 117	2	4	4	le magiche frode
 117	6	7	7	'l gioco
-118	2	3	3	Guido Bonatti
+118	2	3	2	Guido Bonatti
+118	2	2	2	Guido
+118	3	3	3	Bonatti
 118	5	5	5	Asdente
 119	5	5	5	cuoio
 119	8	9	9	lo spago

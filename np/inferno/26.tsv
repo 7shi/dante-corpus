@@ -36,7 +36,7 @@ line	start	end	head	text
 18	1	2	2	lo piè
 18	4	5	5	la man
 19	2	2	2	mi
-19	2	2	2	mi
+19	6	6	6	mi
 20	3	4	4	la mente
 20	6	9	6	ciò ch'io vidi
 20	6	6	6	ciò
@@ -189,8 +189,8 @@ line	start	end	head	text
 79	5	5	5	due
 79	8	9	9	un foco
 80	2	2	2	io
-80	2	2	2	io
 80	5	5	5	voi
+80	8	8	8	io
 81	2	2	2	io
 81	5	5	5	voi
 82	3	3	3	mondo

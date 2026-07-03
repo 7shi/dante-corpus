@@ -21,8 +21,8 @@ line	start	end	head	text
 9	3	4	4	la memoria
 10	3	3	3	io
 10	5	6	5	regno santo
-11	1	1	1	ne
 11	2	4	4	la mia mente
+11	3	4	4	mia mente
 11	7	7	7	tesoro
 12	3	6	3	materia del mio canto
 12	5	6	6	mio canto
@@ -146,7 +146,7 @@ line	start	end	head	text
 61	3	3	3	sùbito
 61	5	7	5	giorno a giorno
 61	5	5	5	giorno
-61	5	5	5	giorno
+61	7	7	7	giorno
 62	4	4	4	quei
 63	2	8	3	il ciel d'un altro sole addorno
 63	2	7	3	il ciel d'un altro sole

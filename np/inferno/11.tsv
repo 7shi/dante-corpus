@@ -42,7 +42,7 @@ line	start	end	head	text
 16	5	6	6	cotesti sassi
 17	6	7	7	tre cerchietti
 18	2	2	2	grado
-18	2	2	2	grado
+18	4	4	4	grado
 18	6	8	6	que' che lassi
 18	6	6	6	que'
 19	1	1	1	Tutti
@@ -242,7 +242,7 @@ line	start	end	head	text
 91	5	7	6	ogne vista turbata
 91	6	7	6	vista turbata
 92	1	1	1	tu
-92	1	1	1	tu
+92	6	6	6	tu
 93	5	5	5	saver
 93	6	6	6	dubbiar
 94	4	5	5	un poco

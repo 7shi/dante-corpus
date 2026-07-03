@@ -83,7 +83,7 @@ line	start	end	head	text
 29	5	7	7	quei santi lumi
 30	2	2	2	sé
 30	4	4	4	cura
-30	4	4	4	cura
+30	6	6	6	cura
 31	2	3	3	il silenzio
 31	5	6	6	concordi numi
 32	2	3	3	la luce
@@ -156,14 +156,14 @@ line	start	end	head	text
 60	3	3	3	una
 61	4	6	6	l'ultime potenze
 62	3	3	3	atto
-62	3	3	3	atto
+62	5	5	5	atto
 63	6	7	7	brevi contingenze
 64	2	3	3	queste contingenze
 65	1	3	2	le cose generate
 65	2	3	2	cose generate
 65	4	4	4	che
 66	2	2	2	seme
-66	2	2	2	seme
+66	5	5	5	seme
 66	6	7	7	il ciel
 67	1	4	2	La cera di costoro
 67	1	2	2	La cera
@@ -355,4 +355,4 @@ line	start	end	head	text
 141	3	5	4	al consiglio divino
 141	4	5	4	consiglio divino
 142	2	2	2	quel
-142	2	2	2	quel
+142	6	6	6	quel

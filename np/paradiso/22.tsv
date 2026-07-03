@@ -17,7 +17,7 @@ line	start	end	head	text
 6	7	7	7	suol
 7	1	1	1	mi
 7	5	5	5	tu
-7	5	5	5	tu
+7	7	7	7	tu
 7	10	10	10	cielo
 8	4	4	4	tu
 8	6	7	7	'l cielo
@@ -36,7 +36,7 @@ line	start	end	head	text
 14	5	6	6	la vendetta
 15	1	1	1	che
 15	2	2	2	tu
-15	2	2	2	tu
+15	6	6	6	tu
 16	1	5	2	La spada di qua sù
 16	1	2	2	La spada
 16	2	5	2	spada di qua sù
@@ -159,8 +159,8 @@ line	start	end	head	text
 58	5	5	5	tu
 58	6	6	6	padre
 59	2	2	2	io
-59	2	2	2	io
 59	5	6	6	tanta grazia
+59	8	8	8	io
 60	4	5	4	imagine scoverta
 61	2	2	2	elli
 61	3	3	3	Frate
@@ -251,8 +251,8 @@ line	start	end	head	text
 98	1	3	3	al suo collegio
 98	2	3	3	suo collegio
 98	3	3	3	collegio
-98	3	3	3	collegio
 98	5	6	6	'l collegio
+98	6	6	6	collegio
 98	7	7	7	si
 99	3	3	3	turbo
 99	7	7	7	s'

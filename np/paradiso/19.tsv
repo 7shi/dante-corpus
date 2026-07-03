@@ -17,6 +17,7 @@ line	start	end	head	text
 7	2	2	2	quel
 7	4	4	4	mi
 8	3	3	3	voce
+8	7	7	7	incostro
 9	4	4	4	fantasia
 10	2	2	2	io
 10	8	9	9	lo rostro
@@ -122,7 +123,7 @@ line	start	end	head	text
 51	6	9	9	sé con sé misura
 51	6	8	6	sé con sé
 51	6	6	6	sé
-51	6	6	6	sé
+51	8	8	8	sé
 51	9	9	9	misura
 52	2	3	3	vostra veduta
 53	2	7	2	alcun de' raggi de la mente
@@ -149,7 +150,6 @@ line	start	end	head	text
 63	1	1	1	èli
 63	4	4	4	lui
 63	5	7	6	l'esser profondo
-63	5	5	5	l'
 63	6	7	6	esser profondo
 64	1	1	1	Lume
 64	8	8	8	sereno
@@ -237,6 +237,7 @@ line	start	end	head	text
 98	6	6	6	te
 99	3	5	4	il giudicio etterno
 99	7	8	7	voi mortali
+99	8	8	8	mortali
 100	4	6	6	quei lucenti incendi
 101	2	4	3	lo Spirito Santo
 101	3	4	3	Spirito Santo
@@ -251,7 +252,7 @@ line	start	end	head	text
 105	10	10	10	legno
 106	3	3	3	molti
 106	5	5	5	Cristo
-106	5	5	5	Cristo
+106	6	6	6	Cristo
 107	4	4	4	giudicio
 108	2	2	2	lui
 108	4	4	4	tal

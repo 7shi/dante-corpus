@@ -110,7 +110,9 @@ line	start	end	head	text
 40	5	6	5	occhi miei
 40	8	8	8	uno
 41	4	4	4	io
+42	3	4	3	veder costui
 42	4	4	4	costui
+42	7	7	7	digiuno
 43	3	3	3	ïo
 43	5	5	5	+lo
 43	6	7	7	i piedi
@@ -353,6 +355,8 @@ line	start	end	head	text
 121	6	7	6	capelli asciutti
 122	3	6	3	Alessio Interminei da Lucca
 122	3	4	3	Alessio Interminei
+122	3	3	3	Alessio
+122	4	4	4	Interminei
 122	6	6	6	Lucca
 123	2	2	2	t'
 123	2	2	2	+ti

@@ -40,9 +40,12 @@ line	start	end	head	text
 15	3	3	3	neve
 15	5	6	6	quel termine
 15	6	6	6	termine
+16	3	4	4	nel fior
 16	4	4	4	fior
+16	5	6	6	di banco
 16	6	6	6	banco
-16	6	6	6	banco
+16	7	8	8	in banco
+16	8	8	8	banco
 17	3	4	4	la pace
 17	4	4	4	pace
 17	7	8	8	l'ardore
@@ -261,7 +264,10 @@ line	start	end	head	text
 107	1	4	1	Segnor mio Iesù Cristo
 107	1	2	1	Segnor mio
 107	3	4	3	Iesù Cristo
+107	3	3	3	Iesù
+107	4	4	4	Cristo
 107	5	6	5	Dio verace
+107	5	5	5	Dio
 108	5	7	6	la sembianza vostra
 109	3	3	3	io
 110	1	7	1	carità di colui che 'n questo mondo
