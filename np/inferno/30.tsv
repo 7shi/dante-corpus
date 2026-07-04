@@ -105,6 +105,7 @@ line	start	end	head	text
 43	6	7	7	la torma
 44	3	3	3	sé
 44	4	5	5	Buoso Donati
+44	4	4	4	Buoso
 45	5	5	5	testamento
 45	6	6	6	norma
 46	4	6	6	i due rabbiosi
@@ -258,6 +259,7 @@ line	start	end	head	text
 103	1	1	1	Quella
 103	5	6	6	un tamburo
 104	2	3	3	mastro Adamo
+104	2	2	2	mastro
 104	4	4	4	li
 104	6	7	7	il volto
 105	1	3	2	col braccio suo

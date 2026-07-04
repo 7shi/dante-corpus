@@ -129,6 +129,7 @@ line	start	end	head	text
 50	3	5	5	il tuo credere
 50	7	9	9	'l mio dire
 51	2	3	3	vero farsi
+51	2	2	2	vero
 51	5	5	5	centro
 51	7	7	7	tondo
 52	1	9	6	Ciò che non more e ciò che può morire
@@ -209,6 +210,7 @@ line	start	end	head	text
 82	5	7	6	la terra degna
 83	2	5	5	tutta l'animal perfezïone
 83	3	5	5	l'animal perfezïone
+83	4	4	4	animal
 84	4	6	5	la Vergine pregna
 85	3	3	3	io
 85	5	6	6	tua oppinïone
@@ -347,7 +349,9 @@ line	start	end	head	text
 138	8	9	9	la foce
 139	3	7	7	donna Berta e ser Martino
 139	3	4	4	donna Berta
+139	3	3	3	donna
 139	6	7	7	ser Martino
+139	6	6	6	ser
 140	3	4	4	un furare
 140	5	6	6	altro offerere
 141	1	1	1	+li

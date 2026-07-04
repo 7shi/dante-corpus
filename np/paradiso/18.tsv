@@ -111,6 +111,7 @@ line	start	end	head	text
 42	4	4	4	ferza
 42	6	6	6	paleo
 43	3	4	3	Carlo Magno
+43	4	4	4	Magno
 43	7	7	7	Orlando
 44	1	1	1	due
 44	4	7	7	lo mio attento sguardo
@@ -124,6 +125,7 @@ line	start	end	head	text
 47	5	7	7	la mia vista
 48	2	3	3	quella croce
 48	5	6	5	Ruberto Guiscardo
+48	6	6	6	Guiscardo
 49	3	8	5	l'altre luci mota e mista
 49	4	8	5	altre luci mota e mista
 49	5	8	5	luci mota e mista

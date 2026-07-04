@@ -214,8 +214,12 @@ call** (`validate_line`):
   (`Argenti`, `Guiglielmo`, `Magno`, `ben`/`bene`/`vero`, etc.) — no Layer-2 mistags among them.
   Rerunning `--fix` again over these did **not** converge further (`np/np.log` shows all 36 lines
   unchanged, "not improved"): the model doesn't reliably add a redundant single-token span for a
-  word it already covered inside a larger span, so this last batch needs the nested spans added
-  directly rather than through repeated LLM regeneration.
+  word it already covered inside a larger span, so this last batch needed the nested spans added
+  directly rather than through repeated LLM regeneration. A small deterministic script did exactly
+  that — for every noun/proper-noun token flagged by `_needs_np` and not already a span's head, it
+  appended `NPSpan(line, i, i, i, tokens[i - 1])` and rewrote the artifact via `write_np` — and
+  resolved all 37 in one pass, matching the classification exactly (one line, paradiso 13:139,
+  needed two). Corpus-wide soft count is now **0**.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

@@ -246,6 +246,7 @@ line	start	end	head	text
 95	8	10	9	li occhi rintoppo
 95	8	9	9	li occhi
 95	9	9	9	occhi
+95	10	10	10	rintoppo
 96	8	9	9	l'ambascia
 96	9	9	9	ambascia
 97	2	4	3	le lagrime prime
@@ -366,6 +367,7 @@ line	start	end	head	text
 136	6	6	6	tu
 137	1	1	1	elli
 137	3	5	5	ser Branca Doria
+137	3	3	3	ser
 137	4	5	5	Branca Doria
 137	4	4	4	Branca
 137	5	5	5	Doria
@@ -388,6 +390,7 @@ line	start	end	head	text
 143	5	6	6	tenace pece
 143	6	6	6	pece
 144	5	6	6	Michel Zanche
+144	5	5	5	Michel
 144	6	6	6	Zanche
 145	2	2	2	questi
 145	4	8	5	il diavolo in sua vece
