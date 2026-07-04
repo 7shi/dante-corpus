@@ -326,7 +326,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 46	e	e	conjunction						
 46	non	non	adverb						
 46	parla	parlare	verb		sg.	3	present	indicative	
-47	fin	fine	noun	m.	sg.				apocope
+47	fin	fine	noun	m.	sg.				apocope, NO_NP
 47	che	che	conjunction						
 47	'l	il	article	m.	sg.				elision
 47	maestro	maestro	noun	m.	sg.				

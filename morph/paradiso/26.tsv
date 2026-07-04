@@ -527,7 +527,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 74	la	la	article	f.	sg.				
 74	sùbita	subito	adjective	f.	sg.				
 74	vigilia	vigilia	noun	f.	sg.				
-75	fin	fine	noun		sg.				apocope
+75	fin	fine	noun		sg.				apocope, NO_NP
 75	che	che	conjunction						
 75	la	la	article	f.	sg.				
 75	stimativa	stimativa	noun	f.	sg.				

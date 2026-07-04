@@ -528,7 +528,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 71	e	e	conjunction						
 71	sì	così	adverb						apocope
 71	passeggia	passeggiare	verb		sg.	3	present	indicative	
-72	fin	fine	noun	m.	sg.				apocope
+72	fin	fine	noun	m.	sg.				apocope, NO_NP
 72	che	che	conjunction						
 72	si	si	pronoun		sg.	3			reflexive
 72	sfoghi	sfogare	verb		sg.	3	present	subjunctive	
@@ -643,7 +643,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 85	ratto	ratto	adjective	m.	sg.				adverbially used
 86	crescendo	crescere	verb				gerund		
 86	sempre	sempre	adverb						
-86	fin	fine	noun	m.	sg.				apocope
+86	fin	fine	noun	m.	sg.				apocope, NO_NP
 86	ch'	che	conjunction						elision
 86	ella	ella	pronoun	f.	sg.	3			
 86	il	lo	pronoun	m.	sg.	3			

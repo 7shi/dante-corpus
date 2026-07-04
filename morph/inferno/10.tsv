@@ -863,7 +863,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 121	ascose	ascondere	verb		sg.	3	remote past	indicative	
 121	e	e	conjunction						
 121	io	io	pronoun		sg.	1			
-121	inver'	in+verso	preposition+noun	m.	sg.				contraction
+121	inver'	in+verso	preposition+noun	m.	sg.				contraction, NO_NP
 121	l'	il	article	m.	sg.				elision
 121	antico	antico	adjective	m.	sg.				
 122	poeta	poeta	noun	m.	sg.				

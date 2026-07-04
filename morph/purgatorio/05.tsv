@@ -213,7 +213,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 28	di	di	preposition						
 28	messaggi	messaggio	noun	m.	pl.				
 29	corsero	correre	verb		pl.	3	remote past	indicative	
-29	incontr'	incontro	noun	m.	sg.				apocope
+29	incontr'	incontro	noun	m.	sg.				apocope, NO_NP
 29	a	a	preposition						
 29	noi	noi	pronoun		pl.	1			
 29	e	e	conjunction						

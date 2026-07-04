@@ -138,3 +138,46 @@ lookup.
 
 Retagging `parlonne` triggered the frozen clitic-mention check (its span had no `+ne` mention yet);
 `np/np.py purgatorio --fix-clitics` backfilled it deterministically, no model call needed.
+
+## `NO_NP` idiom flag (2026-07-04)
+
+The 25 "no real NP expected" cases identified in the pass above are not a Layer-2 tagging error at
+all: Layer 2 correctly tags each token's part of speech (`fin`→`noun` "fine", apocope; `inver'`/
+`incontr'`/`inverso`/`incontro`→`noun` "inverso", contraction/apocope; `'nver'`/`'ntorno`→`noun`,
+elision/contraction; `allotta`→`noun`, contraction). The token is simply never the head of a genuine
+noun phrase, because it only ever occurs as a fixed piece of an idiom — `fin che` ("until"), `inver'
+di`/`incontr'a` ("toward"), `allotta` ("at that time") — not as a standalone referring expression.
+Layer 3's coverage check (`_needs_np` in `dante_corpus/np.py`) has no way to know that from the POS
+alone, so it flagged all 25 as "noun heads no NP" even though Layer 3 correctly chose not to span
+them.
+
+Rather than leave these as unexplained accepted violations, each of the 25 rows now carries a
+machine-readable `NO_NP` flag in its `note` column, comma-separated alongside any existing note
+(e.g. `apocope` → `apocope, NO_NP`; an empty note becomes `NO_NP` on its own) — the same
+comma-separated convention the corpus already uses for multi-note rows (`reflexive, elision`, etc.).
+`_needs_np` now splits `note` on `,`, strips each piece, and treats a POS that would otherwise need
+an NP as exempt if `NO_NP` is among them. This is a targeted, hand-verified exemption — each of the
+25 lines was checked against its terzina context (see the classification above) before flagging —
+not a blanket rule for these word forms in general.
+
+Layer 3's `--check` count is now **47** soft (down from 72: 25 idiom-flagged noun-coverage gaps
+removed by the `NO_NP` exemption, leaving 30 title/proper-name span-merge gaps, 12 unspanned single
+content words, 3 `ben`/`bene` cases, the `dia` at paradiso 26:10, and the accepted `Osanna` exception).
+
+## Layer-2-POS-aware generation prompt resolves `Osanna` (2026-07-04)
+
+The `Osanna` exception noted throughout this file (function-word-head cluster review, above) and
+in `np/README.md`/`PLAN.md` as "an accepted soft violation with no fix on either layer" is now
+resolved — not by a Layer-2 change, but by making Layer 3's generation prompt aware of Layer 2's
+POS data in the first place (see `PLAN.md`'s Layer 3 check status for the design). Given a
+"Function words (never choose as Head)" hint listing `Osanna (interjection)`, the local model
+regenerated paradiso 7:1 without ever choosing `Osanna` as a head, and — as a side effect — also
+added a nested single-token span for `sabaòth`, closing what would otherwise have become a new
+noun-coverage gap.
+
+Running `--fix` with the new hint across all 47 then-flagged lines improved 4 of them: `Osanna`
+itself, plus three unrelated noun-coverage gaps that incidentally picked up a nested single-token
+span for their previously-unspanned noun (inferno 16:95 `Viso`, inferno 28:55 `fra`, paradiso
+6:134 `Ramondo`). The other 43 lines regenerated but were rejected by `--fix`'s no-worse-off
+guarantee (same violation count, sometimes on a different token) and kept their original artifact.
+Layer 3's `--check` count is now **43** soft (down from 47).

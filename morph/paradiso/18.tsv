@@ -107,7 +107,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 15	ogne	ogni	adjective		sg.				archaic
 15	altro	altro	adjective	m.	sg.				
 15	disire	desiderio	noun	m.	sg.				archaic
-16	fin	fine	noun	m.	sg.				
+16	fin	fine	noun	m.	sg.				NO_NP
 16	che	che	conjunction						
 16	'l	il	article	m.	sg.				elision
 16	piacere	piacere	noun	m.	sg.				

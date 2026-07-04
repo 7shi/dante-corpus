@@ -401,7 +401,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 59	che	che	pronoun						
 59	si	si	pronoun		pl.	3			reflexive
 59	movieno	muovere	verb		pl.	3	imperfect	indicative	archaic
-59	incontr'	incontro	noun	m.	sg.				apocope
+59	incontr'	incontro	noun	m.	sg.				apocope, NO_NP
 59	a	a	preposition						
 59	noi	noi	pronoun		pl.	1			
 59	sì	sì	adverb						

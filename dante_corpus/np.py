@@ -45,6 +45,10 @@ def canon_header(header: str) -> str | None:
 #   pronouns were ~96% of the raw coverage misses (`che`, `si`, `mi`, …) and are not noun
 #   phrases — Layer 5 admits arguments that are "Layer-3 NPs or Layer-1 pronoun tokens" — so a
 #   pronoun heading no NP is by policy not a Layer-3 gap.
+# - A noun/proper-noun token whose Layer-2 `note` carries the `NO_NP` flag (comma-separated,
+#   alongside other notes like `apocope`) is also exempt from coverage: Layer 2 tags its part
+#   of speech correctly, but the token only ever occurs as part of a fixed idiom (`fin che`,
+#   `'nver'`, `allotta`, …) and never heads a genuine noun phrase — see morph/CORRECTIONS.md.
 # - A head may be any content POS: nominal, or adjective/verb/adverb/numeral — Dante
 #   substantivizes all of these (`'l più basso`, `lo sperar`, `un poco`, `l'un de' canti`).
 #   Function-word heads (article, conjunction, preposition, …) stay flagged: they are either
@@ -63,9 +67,26 @@ def _can_head_np(pos: str) -> bool:
     return _is_nominal(p) or any(c in p for c in _CONTENT_POS)
 
 
-def _needs_np(pos: str) -> bool:
+def _needs_np(pos: str, note: str = "") -> bool:
     p = pos.lower()
-    return "noun" in p and "pronoun" not in p
+    if not ("noun" in p and "pronoun" not in p):
+        return False
+    flags = {f.strip() for f in note.split(",")}
+    return "NO_NP" not in flags
+
+
+def non_content_tokens(text: str, morph_rows: list[MorphRow]) -> list[tuple[str, str]]:
+    """(word, pos) pairs for `text`'s tokens whose Layer-2 POS can never head an NP.
+
+    Used to warn the Layer-3 generation prompt away from picking a function-word token as a
+    phrase's head (`_can_head_np`), rather than only catching it after the fact in
+    `validate_line`.
+    """
+    tokens = _alpha_tokens(text)
+    if len(tokens) != len(morph_rows):
+        return []
+    return [(tokens[i], morph_rows[i].pos)
+            for i in range(len(tokens)) if not _can_head_np(morph_rows[i].pos)]
 
 
 # --- NPSpan ------------------------------------------------------------------------
@@ -411,7 +432,7 @@ def validate_line(
                 )
         heads = {span.head for span in spans}
         for i, row in enumerate(morph_rows, start=1):
-            if _needs_np(row.pos) and i not in heads:
+            if _needs_np(row.pos, row.note) and i not in heads:
                 violations.append(
                     Violation(line_no, "tag", f"noun {tokens[i - 1]!r} (token {i}) heads no NP")
                 )

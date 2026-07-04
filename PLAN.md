@@ -8,10 +8,11 @@
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
   cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 72 soft**
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 43 soft**
   violations (after `--fix-repeats`, a `--fix` pass, the `un`/`una` mistag correction, the
-  function-word-head cluster review, and a noun-coverage-gap mistag pass, all diagnosed in
-  `np/README.md`) — see *Layer 3 check status* below.
+  function-word-head cluster review, a noun-coverage-gap mistag pass, the `NO_NP` idiom flag,
+  and a Layer-2-POS-aware generation-prompt hint, all diagnosed in `np/README.md`) — see *Layer 3
+  check status* below.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
@@ -200,6 +201,31 @@ count is now **72** soft (down from 83: the accepted `Osanna` exception + 25 acc
 function-word/idiom cases + 29 title/name span-merge gaps + 13 unspanned single nouns + 4 cases
 left open — the 3 `ben`/`bene` instances pending a nominalized-infinitive tagging decision, plus
 paradiso 26:10's `dia`).
+
+**`NO_NP` idiom flag (2026-07-04)** — rather than leave the 25 accepted non-NP function-word/idiom
+cases as unexplained violations, each token now carries a machine-readable `NO_NP` flag in its
+Layer-2 `note` column (comma-separated alongside any existing note, matching the corpus's existing
+multi-note convention). `_needs_np` (`dante_corpus/np.py`) now treats a noun as exempt from
+coverage if `NO_NP` is among its note's comma-split, stripped values. This dropped Layer 3's
+`--check` count to **47** soft (down from 72) with no artifact change beyond the 25 `note` edits —
+see [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md) for the full rationale.
+
+**Layer-2-POS-aware generation prompt (2026-07-04)** — the remaining `Osanna` exception
+(paradiso 7:1, tagged `interjection`) was traced to a genuine generation-time blind spot: Layer 3's
+prompt never told the model which tokens are function-word POS, so it had no way to know `Osanna`
+couldn't be a valid phrase head. Added `dante_corpus.np.non_content_tokens()` and a
+"Function words (never choose as Head):" hint block to `_try_align`'s prompt (`np/np.py`), plus a
+matching `SYSTEM_PROMPT` rule and worked example, so this is now a second, generation-time
+dependency on Layer 2 (alongside the existing deterministic clitic-mention one). Applied via
+`np/np.py inferno purgatorio paradiso --fix` — safe because of `--fix`'s no-worse-off guarantee
+(keeps a regenerated line only if it strictly reduces violations with no new hard ones). Of the 47
+flagged lines, **4 improved**: the `Osanna` head-POS violation itself (the model now nests a
+separate single-token `sabaòth` span instead), plus three coverage gaps that incidentally gained a
+nested single-token span for their previously-unspanned noun (inferno 16:95 `Viso`, inferno 28:55
+`fra`, paradiso 6:134 `Ramondo`) — the other 43 flagged lines regenerated with the hint applied but
+were rejected as not-improved (same violation count, sometimes shifting which token was flagged)
+and so kept their original artifact, per the no-worse-off guarantee. Layer 3's `--check` count is
+now **43** soft (down from 47).
 
 ## Why this lives in the corpus
 

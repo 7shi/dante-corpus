@@ -609,7 +609,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 85	tutti	tutto	adjective	m.	pl.				
 85	e	e	conjunction						
 85	tre	tre	numeral						
-85	allotta	a+l'otta	preposition+article+noun	f.	sg.				contraction
+85	allotta	a+l'otta	preposition+article+noun	f.	sg.				contraction, NO_NP
 86	io	io	pronoun		sg.	1			
 86	come	come	conjunction						
 86	capra	capra	noun	f.	sg.				

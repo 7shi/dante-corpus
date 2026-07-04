@@ -793,7 +793,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 113	de	di	preposition						archaic
 113	l'	il	article	f.	sg.				elision
 113	altra	altro	adjective	f.	sg.				
-113	fin	fine	noun	m.	sg.				apocope
+113	fin	fine	noun	m.	sg.				apocope, NO_NP
 113	che	che	conjunction						
 113	'l	il	article	m.	sg.				elision
 113	ramo	ramo	noun	m.	sg.				

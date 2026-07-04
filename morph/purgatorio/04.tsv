@@ -285,7 +285,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	a	a	preposition						
 38	me	me	pronoun		sg.	1			
 38	acquista	acquistare	verb		sg.	2	present	imperative	
-39	fin	fine	noun	m.	sg.				apocope
+39	fin	fine	noun	m.	sg.				apocope, NO_NP
 39	che	che	conjunction						
 39	n'	ne	pronoun		sg.	3			elision
 39	appaia	apparire	verb		sg.	3	present	subjunctive	

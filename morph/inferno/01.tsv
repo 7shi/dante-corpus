@@ -793,7 +793,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 109	per	per	preposition						
 109	ogne	ogni	adjective		sg.				archaic
 109	villa	villa	noun	f.	sg.				
-110	fin	fine	noun	m.	sg.				apocope
+110	fin	fine	noun	m.	sg.				apocope, NO_NP
 110	che	che	conjunction						
 110	l'	la	article	f.	sg.				elision
 110	avrà	avere	verb		sg.	3	future	indicative	

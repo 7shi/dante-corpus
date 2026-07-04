@@ -33,8 +33,10 @@ Two things are deliberately **code's job**, never the model's:
   `udirmi` → lemma `udire+me`, pos `verb+pronoun`) gets a synthetic single-token mention generated
   **deterministically** from the frozen Layer 2 artifact, independent of what the model proposed —
   see *Output* and `clitic_mentions()` in `dante_corpus/np.py`. This is Layer 3's first build-time
-  dependency on Layer 2 (previously Layer 2 was only read for `--check`'s soft checks). The model
-  often still tries to name the bare pronoun as its own table row (e.g. `mi` for `udirmi`) — that
+  dependency on Layer 2 that touches the artifact itself (previously Layer 2 was only read for
+  `--check`'s soft checks); a second, earlier dependency feeds Layer 2's POS straight into the
+  generation prompt — see *Layer-2-POS-aware generation hints*, below. The model often still tries
+  to name the bare pronoun as its own table row (e.g. `mi` for `udirmi`) — that
   row can never align to a token, so `align_chunk` is given the line's Layer-2 rows and excuses a
   single-word row labelled on a fused-enclitic line from the `unaligned` count instead of failing
   the whole chunk; the mention it would have added is already covered deterministically.
@@ -155,10 +157,36 @@ call** (`validate_line`):
   two-token proper names, and unspanned single nouns account for most of the total. Only 11 were
   genuine Layer-2 mistags. Corpus-wide soft count is now **72**.
 
+  Rather than leave the 25 accepted non-NP idiom cases (`fin che`, apocopated prepositions,
+  `allotta`) as unexplained violations, each token now carries a machine-readable `NO_NP` flag in
+  its Layer-2 `note` (comma-separated alongside any existing note); `_needs_np` treats a noun as
+  exempt from coverage when `NO_NP` is among its note's stripped, comma-split values. This dropped
+  the count to **47** — see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s *`NO_NP` idiom
+  flag* section.
+
   See [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) for the full per-case record of every
   Layer-2 correction made across all of these reviews (the `che`, `un`/`una`, function-word-head
   cluster, and noun-coverage-gap passes) — this file only tracks the Layer-3 soft-violation
   counts and the mechanics behind them.
+
+- **Layer-2-POS-aware generation hints.** The one remaining function-word-head case, paradiso 7:1
+  `Osanna` (tagged `interjection`), exposed a genuine generation-time gap: the prompt built by
+  `_try_align` (`np/np.py`) never told the model which tokens are function-word POS, so it had no
+  way to know `Osanna` couldn't be a valid phrase head — it could only be caught after the fact by
+  `--check`. `dante_corpus.np.non_content_tokens()` now derives, from each line's Layer-2 rows,
+  the tokens whose POS can never head an NP (`_can_head_np`), and `_try_align` appends them to the
+  prompt as a "Function words (never choose as Head):" hint, with a matching `SYSTEM_PROMPT` rule
+  and worked example. Since `_try_align` backs both `build()` and `fix()`, this took effect for
+  both without a separate code path.
+
+  Applied via `np/np.py inferno purgatorio paradiso --fix` (no full regeneration) against the 47
+  then-flagged lines: 4 improved — `Osanna` itself (the model now nests a separate single-token
+  `sabaòth` span instead of choosing `Osanna` as head), plus three unrelated coverage gaps that
+  incidentally gained a nested single-token span for their previously-unspanned noun (inferno
+  16:95 `Viso`, inferno 28:55 `fra`, paradiso 6:134 `Ramondo`). The other 43 lines regenerated
+  under the new hint but were rejected by `--fix`'s no-worse-off guarantee (same violation count,
+  sometimes on a different token) and kept their original artifact. Corpus-wide soft count is now
+  **43**.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

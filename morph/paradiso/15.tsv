@@ -991,7 +991,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 142	Dietro	dietro	preposition						
 142	li	lo	pronoun	m.	pl.				clitic
 142	andai	andare	verb		sg.	1	remote past	indicative	
-142	incontro	incontro	noun	m.	sg.				
+142	incontro	incontro	noun	m.	sg.				NO_NP
 142	a	a	preposition						
 142	la	lo	article	f.	sg.				
 142	nequizia	nequizia	noun	f.	sg.				

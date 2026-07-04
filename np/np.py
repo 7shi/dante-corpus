@@ -24,6 +24,10 @@ skipped and only the remaining chunks are requested.
 `--check` validates committed artifacts against the deterministic tokens (every NP is a
 contiguous token run with its head inside and verbatim text), and — when Layer-2 morphology is
 present — reports soft coverage (every nominal token heads at least one NP).
+
+When Layer-2 morphology is present, generation itself also consumes it: the prompt is annotated
+with each line's function-word tokens (`dante_corpus.np.non_content_tokens`) so the model avoids
+picking one as a phrase's head, rather than only catching it after the fact in `--check`.
 """
 
 import argparse
@@ -46,6 +50,9 @@ Rules:
 * Head is the single head word of the phrase, copied verbatim from it.
 * Line is the source line number the phrase belongs to.
 * It is correct to over-include; do not decide whether a phrase is important.
+* Some input lines may be followed by a "Function words (never choose as Head):" list — words
+  in that list must never be a phrase's Head; if the only candidate head for what would be a
+  phrase is one of them, omit that phrase entirely.
 * Output only the table, with no commentary before or after it.
 
 Example input:
@@ -61,6 +68,16 @@ Example output:
 | 1 | nostra vita | vita |
 | 2 | una selva oscura | selva |
 | 3 | la diritta via | via |
+
+Example input with function-word hints:
+1 «Osanna, sanctus Deus sabaòth,
+Function words (never choose as Head):
+1: Osanna (interjection)
+
+Example output:
+| Line | Noun Phrase | Head |
+|---|---|---|
+| 1 | sanctus Deus sabaòth | Deus |
 """
 
 RETRIES = 2
@@ -161,9 +178,22 @@ def _try_align(nos: list[int], texts: list[str], model: str,
     """Call LLM and align; return aligned dict on success, None after all retries fail."""
     from llm7shi import Client
 
+    hints = []
+    if morph_rows is not None:
+        for no, text in zip(nos, texts):
+            rows = morph_rows.get(no)
+            if not rows:
+                continue
+            flagged = np.non_content_tokens(text, rows)
+            if flagged:
+                hints.append(
+                    f"{no}: " + ", ".join(f"{word} ({pos})" for word, pos in flagged)
+                )
     prompt = "List the noun phrases for these lines:\n\n" + "\n".join(
         f"{no} {text}" for no, text in zip(nos, texts)
     )
+    if hints:
+        prompt += "\n\nFunction words (never choose as Head):\n" + "\n".join(hints)
     for attempt in range(RETRIES + 1):
         client = Client(model=model, file=ui.stream, show_params=False)
         client.set_system_prompt(SYSTEM_PROMPT)

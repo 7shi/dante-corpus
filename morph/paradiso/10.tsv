@@ -595,7 +595,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	arrestin	arrestare	verb		pl.	3	present	subjunctive	apocope
 80	tacite	tacito	adjective	f.	pl.				
 80	ascoltando	ascoltare	verb				gerund		
-81	fin	fine	noun	m.	sg.				apocope
+81	fin	fine	noun	m.	sg.				apocope, NO_NP
 81	che	che	conjunction						
 81	le	il	article	f.	pl.				
 81	nove	nove	numeral	f.	pl.				

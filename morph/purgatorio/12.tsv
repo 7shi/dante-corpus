@@ -14,7 +14,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 2	quell'	quello	adjective	f.	sg.				elision
 2	anima	anima	noun	f.	sg.				
 2	carca	carico	adjective	f.	sg.				archaic
-3	fin	fine	noun	m.	sg.				apocope
+3	fin	fine	noun	m.	sg.				apocope, NO_NP
 3	che	che	conjunction						
 3	'l	lo	pronoun	m.	sg.				elision
 3	sofferse	soffrire	verb		sg.	3	remote past	indicative	
@@ -468,7 +468,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 69	quant'	quanto	adverb						elision
 69	io	io	pronoun		sg.	1			
 69	calcai	calcare	verb		sg.	1	remote past	indicative	
-69	fin	fine	noun	m.	sg.				
+69	fin	fine	noun	m.	sg.				NO_NP
 69	che	che	conjunction						
 69	chinato	chinare	adjective	m.	sg.				
 69	givi	andare	verb		sg.	1	imperfect	indicative	archaic

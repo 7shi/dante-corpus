@@ -714,7 +714,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 106	dice	dire	verb		sg.	3	present	indicative	
 106	nel	in+il	preposition+article	m.	sg.				contraction
 106	pensier	pensiero	noun	m.	sg.				apocope
-106	fin	fine	noun	m.	sg.				apocope
+106	fin	fine	noun	m.	sg.				apocope, NO_NP
 106	che	che	conjunction						
 106	si	si	pronoun		sg.	3			reflexive
 106	mostra	mostrare	verb		sg.	3	present	indicative	

@@ -793,7 +793,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 112	ei	egli	pronoun	m.	sg.	3			
 112	si	si	pronoun		sg.	3			reflexive
 112	volse	volgere	verb		sg.	3	remote past	indicative	
-112	inver'	in+verso	preposition+noun	m.	sg.				contraction
+112	inver'	in+verso	preposition+noun	m.	sg.				contraction, NO_NP
 112	lo	lo	article	m.	sg.				
 112	destro	destro	adjective	m.	sg.				
 112	lato	lato	noun	m.	sg.				

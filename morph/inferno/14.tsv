@@ -160,7 +160,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 25	Quella	quello	pronoun	f.	sg.				
 25	che	che	pronoun		sg.				
 25	giva	girare	verb		sg.	3	imperfect	indicative	archaic
-25	'ntorno	in+torno	preposition+noun	m.	sg.				elision
+25	'ntorno	in+torno	preposition+noun	m.	sg.				elision, NO_NP
 25	era	essere	verb		sg.	3	imperfect	indicative	
 25	più	più	adverb						
 25	molta	molto	adjective	f.	sg.				

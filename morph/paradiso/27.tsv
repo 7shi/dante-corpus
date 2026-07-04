@@ -493,7 +493,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 73	sembianti	sembiante	noun	m.	pl.				
 74	e	e	conjunction						
 74	seguì	seguire	verb		sg.	3	remote past	indicative	
-74	fin	fine	noun	m.	sg.				apocope
+74	fin	fine	noun	m.	sg.				apocope, NO_NP
 74	che	che	conjunction						
 74	'l	il	article	m.	sg.				elision
 74	mezzo	mezzo	noun	m.	sg.				

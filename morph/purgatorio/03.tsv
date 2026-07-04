@@ -89,7 +89,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 14	'l	il	article	m.	sg.				elision
 14	viso	viso	noun	m.	sg.				
 14	mio	mio	adjective	m.	sg.				
-14	incontr'	incontro	noun	m.	sg.				apocope
+14	incontr'	incontro	noun	m.	sg.				apocope, NO_NP
 14	al	a+il	preposition+article	m.	sg.				contraction
 14	poggio	poggio	noun	m.	sg.				
 15	che	che	pronoun		sg.				

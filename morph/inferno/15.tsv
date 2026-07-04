@@ -35,7 +35,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 5	'l	il	article	m.	sg.				elision
 5	fiotto	fiotto	noun	m.	sg.				
 5	che	che	relative pronoun						
-5	'nver'	in+verso	preposition+noun	m.	sg.				contraction
+5	'nver'	in+verso	preposition+noun	m.	sg.				contraction, NO_NP
 5	lor	loro	pronoun		pl.	3			
 5	s'	si	pronoun		sg.	3			elision
 5	avventa	avventarsi	verb		sg.	3	present	indicative	

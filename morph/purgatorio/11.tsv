@@ -285,7 +285,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 40	da	da	preposition						
 40	qual	quale	adjective	f.	sg.				
 40	mano	mano	noun	f.	sg.				
-40	inver'	in+vero	preposition+noun	m.	sg.				apocope
+40	inver'	in+vero	preposition+noun	m.	sg.				apocope, NO_NP
 40	la	il	article	f.	sg.				
 40	scala	scala	noun	f.	sg.				
 41	si	si	pronoun		sg.	3			impersonal

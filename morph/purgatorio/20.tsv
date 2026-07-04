@@ -939,7 +939,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 134	che	che	conjunction						
 134	'l	il	article	m.	sg.				elision
 134	maestro	maestro	noun	m.	sg.				
-134	inverso	in+verso	preposition+noun	m.	sg.				contraction
+134	inverso	in+verso	preposition+noun	m.	sg.				contraction, NO_NP
 134	me	me	pronoun		sg.	1			
 134	si	si	pronoun		sg.	3			reflexive
 134	feo	fare	verb		sg.	3	remote past	indicative	archaic
@@ -982,7 +982,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 140	udir	udire	verb						apocope
 140	quel	quello	adjective	m.	sg.				
 140	canto	canto	noun	m.	sg.				
-141	fin	fine	noun	m.	sg.				
+141	fin	fine	noun	m.	sg.				NO_NP
 141	che	che	conjunction						
 141	'l	il	article	m.	sg.				elision
 141	tremar	tremore	noun	m.	sg.				apocope
