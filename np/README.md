@@ -6,6 +6,10 @@ over-inclusively**, including nested phrases; it makes **no** interpretive judgm
 entity, coreference, reference equivalents) — those stay with the consumer projects. The corpus
 lists every candidate so consumers can decide.
 
+**Status: complete.** Artifacts are generated for all 100 cantos and `--check` reports **0 hard /
+0 soft** violations (down from an initial 418 soft, measured 2026-07-03 before any correction
+pass — see *Check* below and [`CORRECTIONS.md`](CORRECTIONS.md) for how the count reached 0).
+
 ## What it does
 
 One LLM pass per chunk of source lines (default 3) emits a Markdown table, one row per noun phrase,
@@ -81,145 +85,46 @@ call** (`validate_line`):
   components instead (it is never a source substring by construction). Every source line must be
   present (or carry the zero-NP sentinel). `0 hard` is required before an artifact is trusted.
 - **Soft** (reported, not enforced). The policy was frozen 2026-07-03 after measuring all 100
-  cantos (measure-then-freeze; raw pre-freeze counts in PLAN.md's *Layer 3 check status*):
+  cantos (measure-then-freeze):
   - **Head POS** — a head may be any *content* POS: nominal (`noun`/`pronoun` in the label) or
     adjective/verb/adverb/numeral, since Dante substantivizes all of these (`'l più basso`,
     `lo sperar`, `un poco`, `l'un de' canti`). Function-word heads (article, conjunction,
-    preposition, …) are flagged; a hand review of every `che`/`ch'` conjunction head (36 cases)
-    found 24 were a genuine Layer-2 mistag (Dante's relative pronoun `che`, not the subordinating
-    conjunction) and corrected the frozen `morph/` TSVs directly to `relative pronoun`; the other
-    12 are real conjunctions (consecutive `tanto/sì … che`, the idiom `secondo che`, complementizer
-    `che`, causal `poi che`) where Layer 3 had wrongly proposed the bare conjunction as its own
-    single-token NP — those 12 spans were removed directly from the frozen `np/` TSVs (4 lines
-    left with no spans got the zero-NP sentinel) — see morph/CORRECTIONS.md's *`che`/`ch'` mistag
-    correction*.
-    Remaining function-word heads are mostly articles (`un`/`una`/`'l`/…).
+    preposition, …) are flagged.
   - **Coverage** — every *noun/proper-noun* token should head at least one NP (catches omissions,
     since over-inclusion means there is no one-row-per-token count anchor as in Layer 2).
     Pronouns are excluded by policy: bare clitic and relative pronouns (`che`, `si`, `mi`, …)
     were ~96% of the raw misses and are not noun phrases — Layer 5 admits arguments that are
-    "Layer-3 NPs or Layer-1 pronoun tokens", so they are layer-2/4 objects, not Layer-3 gaps.
+    "Layer-3 NPs or Layer-1 pronoun tokens", so they are layer-2/4 objects, not Layer-3 gaps. A
+    noun exempt for a structural reason (fixed idiom, or split across an enjambed line break)
+    carries a machine-readable flag in its Layer-2 `note` (`NO_NP`, `CONT_NEXT`) that `_needs_np`
+    checks instead of requiring coverage.
   - **Clitic coverage** — every fused-enclitic mention that Layer 2's compound POS implies must
     actually be present among the artifact's spans. Artifacts built before `clitic_mentions()`
     existed lacked them; `--fix-clitics` backfills them deterministically (done for all 100
     cantos), so any new flag here is a regression.
 
-  Under the frozen policy the corpus-wide soft count was **382** (141 function-word heads + 241
-  noun coverage gaps, after correcting 24 `che` mistags in Layer 2 and removing 12 over-included
-  `che` spans from Layer 3 — see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)) — a
-  reviewable list of genuine model omissions (often in repeated idioms: `a poco a poco`, `di
-  gente in gente`) and residual function-word heads, kept visible rather than silenced.
-
-  A first `--fix` pass found only 16/276 lines improved — suspiciously low. Investigating showed
-  ~30% of the remaining coverage gaps were not model misses at all: `align_chunk` collapsed every
-  proposal for a repeated word/phrase in one line (e.g. both `poco`s in `a poco a poco`) onto its
-  *first* occurrence, so the second was structurally uncoverable no matter how many times `--fix`
-  re-asked the model. `align_chunk` now tracks claimed occurrences per chunk-line so future builds
-  align each repeat to a distinct token run (see *Things to watch*); `--fix-repeats`
-  (deterministic, no model call) repairs existing artifacts the same way — reassigning 204
-  duplicate spans corpus-wide and clearing 80 of the then-276 soft violations for free.
-
   `--fix` (`make -C np fix`) regenerates just the flagged lines and keeps the new spans only when
-  they carry strictly fewer tag violations than before, with no new hard ones — the `che` review
-  showed a flagged line can be either a genuine miss or a legitimate substantivized reading, and
-  a fresh model pass can't reliably tell those apart in bulk, so this is a best-effort pass with a
-  no-worse-off guarantee rather than a promise every case clears. Anything still flagged after
-  `--fix` is a candidate for the same kind of hand review the `che` cases got.
+  they carry strictly fewer tag violations than before, with no new hard ones — a flagged line can
+  be either a genuine model miss or a legitimate substantivized reading, and a fresh model pass
+  can't reliably tell those apart in bulk, so this is a best-effort pass with a no-worse-off
+  guarantee rather than a promise every case clears.
 
-  A full-corpus `--fix` run after the repeat-word fix improved only 6 more lines (of ~180
-  attempted), logging the rest as "not improved" (`np.log`, gitignored). Diagnosis: 162/174 of
-  those lines came back with the byte-identical violation set — the retry re-asks the same
-  single-line prompt with no feedback about what was flagged, so it is mostly re-rolling dice, not
-  correcting a mistake. Two structural reasons this ceiling is expected rather than a prompt bug:
-  a flagged span's head is often *correct* (Dante using `un`/`el` pronominally — 47 of the 89
-  remaining article-head violations are `un`/`una` alone), so no re-generation can lower the count
-  without deleting a legitimate NP; and several coverage gaps (`fin che`, `inver'`, verb+clitic
-  forms) are function words the model correctly declines to treat as nouns — the flag traces to a
-  Layer-2 POS question, not a Layer-3 omission, exactly the pattern the `che` review already found.
-  The corpus-wide soft count after `--fix-repeats` and this `--fix` pass was **186** (104
-  function-word heads + 82 noun coverage gaps).
+  The corpus-wide soft count went from an initial **382** down to **0** through a sequence of
+  hand reviews, code fixes (a repeat-word alignment bug via `--fix-repeats`, the `NO_NP`/
+  `CONT_NEXT` note flags, a Layer-2-POS-aware generation-prompt hint), and — for a residual cluster
+  the model couldn't reliably resolve on its own — a deterministic script adding missing
+  single-token spans directly. See [`CORRECTIONS.md`](CORRECTIONS.md) for the full
+  pass-by-pass history and running counts, and [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)
+  for the Layer-2 mistags found along the way.
 
-  A hand review of all 41 lines flagged `head 'un'/'una' is 'article'` found the same split the
-  `che` review did: 38 were a Layer-2 mistag (corrected to `pronoun`), 2 were genuinely `numeral`,
-  and 1 was a Layer-3 alignment mismatch (a repeated-word case our per-exact-needle occurrence
-  tracking doesn't cover — it matches only within one exact phrase, not across two different
-  phrases sharing a word), fixed by reassigning the span. Corpus-wide soft count was then **139**
-  (57 function-word heads + 82 noun coverage gaps).
-
-  The remaining 57 function-word-head cases were reviewed the same way — the largest cluster's
-  hand review (42 lines headed by a bare/elided article form) was delegated to an LLM subagent,
-  spot-checked before applying: 25 Layer-2 mistags corrected to `pronoun`, 20 redundant Layer-3
-  spans removed, plus a handful needing direct judgment or left as an accepted soft violation
-  (paradiso 7:1 `Osanna`). Corpus-wide soft count was then **83** (1 function-word head + 82
-  noun coverage gaps).
-
-  The 82 noun-coverage-gap cases were then classified by cause before fixing anything, since most
-  of them aren't Layer-2 problems at all — accepted non-NP idioms, Layer-3 span-merge gaps for
-  two-token proper names, and unspanned single nouns account for most of the total. Only 11 were
-  genuine Layer-2 mistags. Corpus-wide soft count is now **72**.
-
-  Rather than leave the 25 accepted non-NP idiom cases (`fin che`, apocopated prepositions,
-  `allotta`) as unexplained violations, each token now carries a machine-readable `NO_NP` flag in
-  its Layer-2 `note` (comma-separated alongside any existing note); `_needs_np` treats a noun as
-  exempt from coverage when `NO_NP` is among its note's stripped, comma-split values. This dropped
-  the count to **47** — see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s *`NO_NP` idiom
-  flag* section.
-
-  See [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) for the full per-case record of every
-  Layer-2 correction made across all of these reviews (the `che`, `un`/`una`, function-word-head
-  cluster, and noun-coverage-gap passes) — this file only tracks the Layer-3 soft-violation
-  counts and the mechanics behind them.
-
-- **Layer-2-POS-aware generation hints.** The one remaining function-word-head case, paradiso 7:1
-  `Osanna` (tagged `interjection`), exposed a genuine generation-time gap: the prompt built by
-  `_try_align` (`np/np.py`) never told the model which tokens are function-word POS, so it had no
-  way to know `Osanna` couldn't be a valid phrase head — it could only be caught after the fact by
-  `--check`. `dante_corpus.np.non_content_tokens()` now derives, from each line's Layer-2 rows,
-  the tokens whose POS can never head an NP (`_can_head_np`), and `_try_align` appends them to the
-  prompt as a "Function words (never choose as Head):" hint, with a matching `SYSTEM_PROMPT` rule
-  and worked example. Since `_try_align` backs both `build()` and `fix()`, this took effect for
-  both without a separate code path.
-
-  Applied via `np/np.py inferno purgatorio paradiso --fix` (no full regeneration) against the 47
-  then-flagged lines: 4 improved — `Osanna` itself (the model now nests a separate single-token
-  `sabaòth` span instead of choosing `Osanna` as head), plus three unrelated coverage gaps that
-  incidentally gained a nested single-token span for their previously-unspanned noun (inferno
-  16:95 `Viso`, inferno 28:55 `fra`, paradiso 6:134 `Ramondo`). The other 43 lines regenerated
-  under the new hint but were rejected by `--fix`'s no-worse-off guarantee (same violation count,
-  sometimes on a different token) and kept their original artifact. Corpus-wide soft count is now
-  **43**.
-
-  The remaining 43 (all noun-coverage gaps) were checked one by one against precedent elsewhere in
-  the corpus; only one, `Rife` (purgatorio 26:43, "montagne Rife"), was a genuine Layer-2 mistag —
-  tagged `proper noun` but agreeing in gender/number with `montagne` like a demonym adjective
-  ("Riphean"), matching the corpus's `troiano`/`latino`/`romano` pattern. Corrected to `adjective`,
-  exempting it from coverage. Corpus-wide soft count is now **42**.
-
-  The last case, paradiso 26:10's `dia`, is one word (archaic "divine") split across an enjambed
-  line break with `regïon` on the next line — Layer 2 already records this via lemma `regione` and
-  note `split word`. Since Layer 3 spans are single-line by design, `dia` can never head a
-  same-line NP; a second flag, `CONT_NEXT` ("continues on next line"), was added alongside `NO_NP`
-  for this structurally-distinct-but-same-shaped case. `_needs_np` exempts a noun from coverage if
-  either flag is present. Corpus-wide soft count is now **41**.
-
-  A further `--fix` rerun over the remaining 41 lines picked up 4 more this same way — the model
-  nested a previously-missing single-token span for the noun that a larger span's head had
-  eclipsed (inferno 4:57 `legista`, inferno 20:116 `Michele`/`Scotto`, paradiso 16:119
-  `Ubertin`/`Donato`, purgatorio 13:128 `Pier`/`Pettinaio`/`orazioni`). Corpus-wide soft count is
-  now **37** (36 lines, one — paradiso 13:139 — with two violations).
-
-  The remaining 36 lines were reclassified, and every one is this same eclipsed-head shape: either
-  a title/epithet word before a proper name (`ser`, `messer`, `mastro`, `San`, `fra`, `donna`)
-  whose 2-token span's head is the name, or a name/noun that's the non-head half of such a span
-  (`Argenti`, `Guiglielmo`, `Magno`, `ben`/`bene`/`vero`, etc.) — no Layer-2 mistags among them.
-  Rerunning `--fix` again over these did **not** converge further (`np/np.log` shows all 36 lines
-  unchanged, "not improved"): the model doesn't reliably add a redundant single-token span for a
-  word it already covered inside a larger span, so this last batch needed the nested spans added
-  directly rather than through repeated LLM regeneration. A small deterministic script did exactly
-  that — for every noun/proper-noun token flagged by `_needs_np` and not already a span's head, it
-  appended `NPSpan(line, i, i, i, tokens[i - 1])` and rewrote the artifact via `write_np` — and
-  resolved all 37 in one pass, matching the classification exactly (one line, paradiso 13:139,
-  needed two). Corpus-wide soft count is now **0**.
+- **Layer-2-POS-aware generation hints.** The prompt built by `_try_align` (`np/np.py`) tells the
+  model which tokens are function-word POS, so it avoids choosing one as a phrase's head instead of
+  only being caught after the fact by `--check`. `dante_corpus.np.non_content_tokens()` derives,
+  from each line's Layer-2 rows, the tokens whose POS can never head an NP (`_can_head_np`), and
+  `_try_align` appends them to the prompt as a "Function words (never choose as Head):" hint, with
+  a matching `SYSTEM_PROMPT` rule and worked example. Since `_try_align` backs both `build()` and
+  `fix()`, this took effect for both without a separate code path — see
+  [`CORRECTIONS.md`](CORRECTIONS.md) for the case (`Osanna`) that motivated it.
 
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes

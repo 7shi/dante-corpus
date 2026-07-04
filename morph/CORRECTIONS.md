@@ -19,7 +19,7 @@ no model call, no Layer-2 rebuild — and `morph --check` was re-run after each 
 0 hard / 0 soft throughout. Several of the same review passes *also* found genuine Layer-3 span
 errors (over-inclusion, wrong head index, missing merges) sitting alongside the Layer-2 mistags on
 the same flagged lines; those are only summarized here for context — see
-[`../np/README.md`](../np/README.md) and [`../PLAN.md`](../PLAN.md) for the Layer-3 side and the
+[`../np/CORRECTIONS.md`](../np/CORRECTIONS.md) for the Layer-3 side and the
 running soft-violation counts.
 
 ## `che`/`ch'` mistag correction (2026-07-03)

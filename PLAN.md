@@ -2,50 +2,28 @@
 
 ## Status
 
+**Next up: Layer 4 (dependency / grammatical role)** — Layers 1–3 are implemented and frozen; see
+*The layers* below for Layer 4's design.
+
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
   Artifacts are built for all 100 cantos.
-- **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
-  `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
-  cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 0 soft**
-  violations — see *Layer 3 check status* below and [`np/README.md`](np/README.md)'s *Check*
-  section for the full history.
+- **Layer 3 — Noun phrases**: implemented and complete; see [`np/README.md`](np/README.md). Build
+  driver `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for
+  all 100 cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`).
+  `--check` reports **0 hard / 0 soft** violations — see [`np/README.md`](np/README.md)'s *Check*
+  section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md) for the full history.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
 
 **Next work**
 
-1. **Land Layer 3** — generation is finished (0 hard) and the soft-check policy is frozen
-   (recorded in `np/README.md`); commit the freeze changes (policy predicates, `--fix-clitics`
-   backfill of the TSVs, docs) and merge `grammar-stack-plan` into `main` (the build is excluded
-   from `make all`; artifacts are committed like `morph/`).
-2. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last (see *Sequencing*).
-   The design must also cover artifact **versioning** (content hashes for consumer invalidation)
-   and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
-
-### Layer 3 check status (as of 2026-07-04 — generation complete, soft policy frozen)
-
-`uv run np/np.py inferno purgatorio paradiso --check` reports **0 hard / 0 soft** violations,
-down from an initial **418 soft** (measured 2026-07-03 over all 100 completed cantos, before any
-correction pass). Two hard-failure mechanisms — elision-spelling drift and fused enclitic
-pronouns not tokenized by Layer 1 — were found and fixed first so all 100 cantos could complete;
-the soft-check policy (`_needs_np`/`_can_head_np` in `dante_corpus/np.py`) was then measured and
-frozen. From there, a sequence of hand-reviewed correction passes (`che`/`ch'` mistags, `un`/`una`
-mistags, a repeat-word alignment bug, the function-word-head cluster, the noun-coverage-gap
-cluster, the `NO_NP` and `CONT_NEXT` note flags, a Layer-2-POS-aware generation-prompt hint, and
-individual mistag fixes) brought the count down to 41, further reduced to 37 by a `--fix` rerun
-that nested single-token spans for 4 more eclipsed-head nouns. The remaining 37 (36 lines) were all
-the same eclipsed-head shape — a title/epithet or non-head half of a two-token proper-name span —
-confirmed by a further `--fix` rerun not to converge further (the model doesn't reliably add a
-redundant single-token span for a word already covered by a larger one); none were Layer-2
-mistags, so a deterministic script added the missing nested single-token spans directly, bringing
-the soft count to 0.
-
-The full mechanism-by-mechanism history — including every intermediate count, the reasoning behind
-each frozen policy predicate, and how `--fix`/`--fix-repeats`/`--fix-clitics` work — lives in
-[`np/README.md`](np/README.md)'s *Check* section. The per-case Layer-2 correction record (what was
-retagged, to what, and why, each verified against an existing precedent row) lives in
-[`morph/CORRECTIONS.md`](morph/CORRECTIONS.md).
+1. **Merge Layer 3** — generation is complete and the soft-check policy is frozen at 0 hard / 0
+   soft (recorded in `np/README.md`/`np/CORRECTIONS.md`); merge `grammar-stack-plan` into `main`
+   (the build is excluded from `make all`; artifacts are committed like `morph/`).
+2. **Layer 4 (dependency, grammatical role)** — the next layer to implement (see *Sequencing*).
+   Layer 5 design must also cover artifact **versioning** (content hashes for consumer
+   invalidation) and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build &
+   serve model).
 
 ## Why this lives in the corpus
 
