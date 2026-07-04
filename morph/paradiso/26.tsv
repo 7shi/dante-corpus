@@ -69,7 +69,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 10	che	che	pronoun		sg.				
 10	per	per	preposition						
 10	questa	questo	adjective	f.	sg.				
-10	dia	regione	noun	f.	sg.				split word
+10	dia	regione	noun	f.	sg.				split word, CONT_NEXT
 11	regïon	regione	noun	f.	sg.				apocope, split word
 11	ti	te	pronoun		sg.	2			
 11	conduce	condurre	verb		sg.	3	present	indicative	

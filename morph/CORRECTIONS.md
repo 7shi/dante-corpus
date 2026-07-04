@@ -195,3 +195,19 @@ a demonym adjective ("Riphean"), not a proper noun, matching the corpus's existi
 other place-derived adjectives (`troiano`, `latino`, `romano`, all tagged `adjective`). Corrected
 to `adjective`, which exempts it from `_needs_np`'s coverage check. Layer 3's `--check` count is
 now **42** soft (down from 43); `morph --check` remained 0 hard / 0 soft.
+
+## `CONT_NEXT` split-word flag (2026-07-04)
+
+The last remaining case, paradiso 26:10's `dia`, is not a mistag either: "questa dia / regïon" is
+one word (archaic `dia`/`dio` "divine", modifying `regïon`, i.e. "questa dia regïon" — "this divine
+region") split across an enjambed line break. Layer 2 already records this by giving both halves
+the lemma `regione` and the note `split word`. Layer 3 spans are single-line by design (see
+PLAN.md's Layer 3 *Scope* note), so `dia` can never head a same-line NP no matter what Layer 3
+does — a structural impossibility, not a generation gap, exactly the same shape of problem the
+`NO_NP` idiom flag solves, just for a different reason.
+
+Rather than reuse `NO_NP` (whose docstring specifically means "part of a fixed idiom"), a second,
+distinct flag `CONT_NEXT` ("continues on next line") was added to the same comma-separated `note`
+convention — `dia`'s note becomes `split word, CONT_NEXT`. `_needs_np` now exempts a noun from
+coverage if either `NO_NP` or `CONT_NEXT` is among its note's flags. Layer 3's `--check` count is
+now **41** soft (down from 42); `morph --check` remained 0 hard / 0 soft.

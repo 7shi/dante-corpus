@@ -49,6 +49,10 @@ def canon_header(header: str) -> str | None:
 #   alongside other notes like `apocope`) is also exempt from coverage: Layer 2 tags its part
 #   of speech correctly, but the token only ever occurs as part of a fixed idiom (`fin che`,
 #   `'nver'`, `allotta`, …) and never heads a genuine noun phrase — see morph/CORRECTIONS.md.
+# - A noun token whose Layer-2 `note` carries the `CONT_NEXT` flag is exempt from coverage for a
+#   different structural reason: it is one half of a single word split by an enjambed line break
+#   (e.g. `dia` / `regïon`), so it can never head a same-line NP — Layer 3 spans are single-line
+#   by design (see PLAN.md's Layer 3 *Scope* note) — see morph/CORRECTIONS.md.
 # - A head may be any content POS: nominal, or adjective/verb/adverb/numeral — Dante
 #   substantivizes all of these (`'l più basso`, `lo sperar`, `un poco`, `l'un de' canti`).
 #   Function-word heads (article, conjunction, preposition, …) stay flagged: they are either
@@ -72,7 +76,7 @@ def _needs_np(pos: str, note: str = "") -> bool:
     if not ("noun" in p and "pronoun" not in p):
         return False
     flags = {f.strip() for f in note.split(",")}
-    return "NO_NP" not in flags
+    return not flags & {"NO_NP", "CONT_NEXT"}
 
 
 def non_content_tokens(text: str, morph_rows: list[MorphRow]) -> list[tuple[str, str]]:

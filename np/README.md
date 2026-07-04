@@ -194,6 +194,13 @@ call** (`validate_line`):
   ("Riphean"), matching the corpus's `troiano`/`latino`/`romano` pattern. Corrected to `adjective`,
   exempting it from coverage. Corpus-wide soft count is now **42**.
 
+  The last case, paradiso 26:10's `dia`, is one word (archaic "divine") split across an enjambed
+  line break with `regïon` on the next line — Layer 2 already records this via lemma `regione` and
+  note `split word`. Since Layer 3 spans are single-line by design, `dia` can never head a
+  same-line NP; a second flag, `CONT_NEXT` ("continues on next line"), was added alongside `NO_NP`
+  for this structurally-distinct-but-same-shaped case. `_needs_np` exempts a noun from coverage if
+  either flag is present. Corpus-wide soft count is now **41**.
+
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
 from its own output: already-committed lines are skipped and only the remaining chunks are requested.
