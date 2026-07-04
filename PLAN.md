@@ -8,7 +8,7 @@
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build driver
   `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for all 100
   cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`). Generation is
-  complete and the soft-check policy is frozen: `--check` reports **0 hard / 41 soft**
+  complete and the soft-check policy is frozen: `--check` reports **0 hard / 37 soft**
   violations — see *Layer 3 check status* below and [`np/README.md`](np/README.md)'s *Check*
   section for the full history.
 - **Layers 4–5 — dependency / skeleton**: design only (this document).
@@ -25,7 +25,7 @@
 
 ### Layer 3 check status (as of 2026-07-04 — generation complete, soft policy frozen)
 
-`uv run np/np.py inferno purgatorio paradiso --check` reports **0 hard / 41 soft** violations,
+`uv run np/np.py inferno purgatorio paradiso --check` reports **0 hard / 37 soft** violations,
 down from an initial **418 soft** (measured 2026-07-03 over all 100 completed cantos, before any
 correction pass). Two hard-failure mechanisms — elision-spelling drift and fused enclitic
 pronouns not tokenized by Layer 1 — were found and fixed first so all 100 cantos could complete;
@@ -33,8 +33,12 @@ the soft-check policy (`_needs_np`/`_can_head_np` in `dante_corpus/np.py`) was t
 frozen. From there, a sequence of hand-reviewed correction passes (`che`/`ch'` mistags, `un`/`una`
 mistags, a repeat-word alignment bug, the function-word-head cluster, the noun-coverage-gap
 cluster, the `NO_NP` and `CONT_NEXT` note flags, a Layer-2-POS-aware generation-prompt hint, and
-individual mistag fixes) brought the count down to 41, split between Layer-2 mistags (corrected in
-the frozen `morph/` artifacts) and genuine Layer-3 gaps (span/coverage omissions, left flagged).
+individual mistag fixes) brought the count down to 41, further reduced to 37 by a `--fix` rerun
+that nested single-token spans for 4 more eclipsed-head nouns. The remaining 37 (36 lines) are all
+the same eclipsed-head shape — a title/epithet or non-head half of a two-token proper-name span —
+confirmed by a further `--fix` rerun not to converge further (the model doesn't reliably add a
+redundant single-token span for a word already covered by a larger one); these need the nested
+spans added directly. None are Layer-2 mistags.
 
 The full mechanism-by-mechanism history — including every intermediate count, the reasoning behind
 each frozen policy predicate, and how `--fix`/`--fix-repeats`/`--fix-clitics` work — lives in

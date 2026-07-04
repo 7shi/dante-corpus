@@ -289,7 +289,9 @@ line	start	end	head	text
 115	1	8	2	Quell' altro che ne' fianchi è così poco
 115	1	2	2	Quell' altro
 115	5	5	5	fianchi
-116	1	2	2	Michele Scotto
+116	1	2	1	Michele Scotto
+116	1	1	1	Michele
+116	2	2	2	Scotto
 117	2	4	4	le magiche frode
 117	6	7	7	'l gioco
 118	2	3	2	Guido Bonatti

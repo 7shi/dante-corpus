@@ -202,6 +202,21 @@ call** (`validate_line`):
   for this structurally-distinct-but-same-shaped case. `_needs_np` exempts a noun from coverage if
   either flag is present. Corpus-wide soft count is now **41**.
 
+  A further `--fix` rerun over the remaining 41 lines picked up 4 more this same way — the model
+  nested a previously-missing single-token span for the noun that a larger span's head had
+  eclipsed (inferno 4:57 `legista`, inferno 20:116 `Michele`/`Scotto`, paradiso 16:119
+  `Ubertin`/`Donato`, purgatorio 13:128 `Pier`/`Pettinaio`/`orazioni`). Corpus-wide soft count is
+  now **37** (36 lines, one — paradiso 13:139 — with two violations).
+
+  The remaining 36 lines were reclassified, and every one is this same eclipsed-head shape: either
+  a title/epithet word before a proper name (`ser`, `messer`, `mastro`, `San`, `fra`, `donna`)
+  whose 2-token span's head is the name, or a name/noun that's the non-head half of such a span
+  (`Argenti`, `Guiglielmo`, `Magno`, `ben`/`bene`/`vero`, etc.) — no Layer-2 mistags among them.
+  Rerunning `--fix` again over these did **not** converge further (`np/np.log` shows all 36 lines
+  unchanged, "not improved"): the model doesn't reliably add a redundant single-token span for a
+  word it already covered inside a larger span, so this last batch needs the nested spans added
+  directly rather than through repeated LLM regeneration.
+
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
 from its own output: already-committed lines are skipped and only the remaining chunks are requested.
