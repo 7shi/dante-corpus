@@ -91,7 +91,8 @@ call** (`validate_line`):
     12 are real conjunctions (consecutive `tanto/sì … che`, the idiom `secondo che`, complementizer
     `che`, causal `poi che`) where Layer 3 had wrongly proposed the bare conjunction as its own
     single-token NP — those 12 spans were removed directly from the frozen `np/` TSVs (4 lines
-    left with no spans got the zero-NP sentinel) — see PLAN.md's *`che` mistag correction*.
+    left with no spans got the zero-NP sentinel) — see morph/CORRECTIONS.md's *`che`/`ch'` mistag
+    correction*.
     Remaining function-word heads are mostly articles (`un`/`una`/`'l`/…).
   - **Coverage** — every *noun/proper-noun* token should head at least one NP (catches omissions,
     since over-inclusion means there is no one-row-per-token count anchor as in Layer 2).
