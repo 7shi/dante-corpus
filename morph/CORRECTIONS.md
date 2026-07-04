@@ -181,3 +181,17 @@ span for their previously-unspanned noun (inferno 16:95 `Viso`, inferno 28:55 `f
 6:134 `Ramondo`). The other 43 lines regenerated but were rejected by `--fix`'s no-worse-off
 guarantee (same violation count, sometimes on a different token) and kept their original artifact.
 Layer 3's `--check` count is now **43** soft (down from 47).
+
+## `Rife` mistag correction (2026-07-04)
+
+The remaining 43 soft violations (all noun-coverage gaps, no function-word heads left) were
+classified by cause: 24 are title/proper-name span-merge gaps (`ser Brunetto`, `Carlo Magno`, …),
+15 are single content words Layer 2 already tags correctly that Layer 3 simply never spanned, 3
+are the still-unresolved `ben`/`bene`-before-infinitive cases, and 1 is the deliberately-untouched
+`dia` at paradiso 26:10. Checking each violation's actual Layer-2 POS against precedent elsewhere
+in the corpus found exactly one genuine mistag: `Rife` (purgatorio 26:43, "come grue ch'a le
+montagne Rife"), tagged `proper noun` (f. pl.), agrees in gender/number with `montagne` (f. pl.) —
+a demonym adjective ("Riphean"), not a proper noun, matching the corpus's existing pattern for
+other place-derived adjectives (`troiano`, `latino`, `romano`, all tagged `adjective`). Corrected
+to `adjective`, which exempts it from `_needs_np`'s coverage check. Layer 3's `--check` count is
+now **42** soft (down from 43); `morph --check` remained 0 hard / 0 soft.

@@ -188,6 +188,12 @@ call** (`validate_line`):
   sometimes on a different token) and kept their original artifact. Corpus-wide soft count is now
   **43**.
 
+  The remaining 43 (all noun-coverage gaps) were checked one by one against precedent elsewhere in
+  the corpus; only one, `Rife` (purgatorio 26:43, "montagne Rife"), was a genuine Layer-2 mistag —
+  tagged `proper noun` but agreeing in gender/number with `montagne` like a demonym adjective
+  ("Riphean"), matching the corpus's `troiano`/`latino`/`romano` pattern. Corrected to `adjective`,
+  exempting it from coverage. Corpus-wide soft count is now **42**.
+
 The build retries a chunk (max 2) when alignment fails, then falls back to per-line requests. Each
 chunk's spans are written back to the TSV as soon as they validate, so an interrupted run resumes
 from its own output: already-committed lines are skipped and only the remaining chunks are requested.
