@@ -21,8 +21,13 @@ morph:
 np:
 	$(MAKE) -C np
 
+# Layer 4 dependencies. LLM-built, so kept out of `all`; the TSV under dep/ is committed.
+# The model is set in model.mk (included by dep/Makefile); override with `make dep MODEL=...`.
+dep:
+	$(MAKE) -C dep
+
 clean:
 	$(MAKE) -C src clean
 	$(MAKE) -C quotes clean
 
-.PHONY: all download split quotes morph np clean
+.PHONY: all download split quotes morph np dep clean

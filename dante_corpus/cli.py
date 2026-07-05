@@ -3,6 +3,7 @@ import json
 import sys
 
 from . import api
+from . import dep as _dep
 
 
 def _line_rows(lines: tuple[api.Line, ...]) -> str:
@@ -24,7 +25,11 @@ def _morph_rows(selected: list[tuple[api.Line, tuple[api.MorphRow, ...]]]) -> st
     return "\n".join(out)
 
 
-def _np_rows(lines: tuple[api.Line, ...], spans: tuple[api.NPSpan, ...]) -> str:
+def _np_rows(
+    lines: tuple[api.Line, ...],
+    spans: tuple[api.NPSpan, ...],
+    dep_idx: dict[tuple[int, int], api.DepRow] | None = None,
+) -> str:
     by_line: dict[int, list[api.NPSpan]] = {}
     for span in spans:
         by_line.setdefault(span.line, []).append(span)
@@ -33,15 +38,69 @@ def _np_rows(lines: tuple[api.Line, ...], spans: tuple[api.NPSpan, ...]) -> str:
     for line in lines:
         out.append(f"{line.no}: {line.text}")
         for span in by_line.get(line.no, []):
-            _append_np(out, line, span, depth=1)
+            _append_np(out, line, span, depth=1, dep_idx=dep_idx)
     return "\n".join(out)
 
 
-def _append_np(out: list[str], line: api.Line, span: api.NPSpan, depth: int) -> None:
+def _append_np(
+    out: list[str],
+    line: api.Line,
+    span: api.NPSpan,
+    depth: int,
+    dep_idx: dict[tuple[int, int], api.DepRow] | None = None,
+) -> None:
     head_word = line.tokens[span.head - 1] if 1 <= span.head <= len(line.tokens) else ""
-    out.append(f"{'    ' * depth}[{span.text}]  ({span.np_id}) head={head_word}")
+    role = _dep.np_role(span, dep_idx) if dep_idx is not None else ""
+    role_suffix = f" role={role}" if role else ""
+    out.append(f"{'    ' * depth}[{span.text}]  ({span.np_id}) head={head_word}{role_suffix}")
     for child in span.children:
-        _append_np(out, line, child, depth + 1)
+        _append_np(out, line, child, depth + 1, dep_idx=dep_idx)
+
+
+def _np_to_dict(
+    span: api.NPSpan, dep_idx: dict[tuple[int, int], api.DepRow] | None
+) -> dict[str, object]:
+    data = span.to_dict()
+    if dep_idx is not None:
+        role = _dep.np_role(span, dep_idx)
+        if role:
+            data["role"] = role
+    if span.children:
+        data["children"] = [_np_to_dict(child, dep_idx) for child in span.children]
+    return data
+
+
+def _dep_rows(
+    canto: api.Canto, lines: tuple[api.Line, ...], data: dict[int, tuple[api.DepRow, ...]]
+) -> str:
+    out: list[str] = []
+    for line in lines:
+        out.append(f"{line.no}: {line.text}")
+        for row in data.get(line.no, ()):
+            if row.deprel == "root":
+                out.append(f"    {row.word:<10} {row.deprel}")
+                continue
+            head_word = _head_word(canto, row.head_line, row.head_token)
+            out.append(
+                f"    {row.word:<10} {row.deprel:<10} -> {head_word} "
+                f"({row.head_line}.{row.head_token})"
+            )
+    return "\n".join(out)
+
+
+def _head_word(canto: api.Canto, head_line: int, head_token: int) -> str:
+    if not head_line or not head_token:
+        return ""
+    tokens = canto.line(head_line).tokens
+    return tokens[head_token - 1] if 1 <= head_token <= len(tokens) else ""
+
+
+def _dep_row_dict(canto: api.Canto, row: api.DepRow) -> dict[str, object]:
+    data = row.to_dict()
+    head_word = _head_word(canto, row.head_line, row.head_token)
+    if head_word:
+        data["head_word"] = head_word
+    return data
 
 
 def _dump_json(data: object) -> None:
@@ -81,6 +140,10 @@ def build_parser() -> argparse.ArgumentParser:
     text_np.add_argument("canticle")
     text_np.add_argument("reference", help="canto or canto:start-end")
     _add_format_argument(text_np, "text", "json", default="text")
+    text_dep = text_sub.add_parser("dep")
+    text_dep.add_argument("canticle")
+    text_dep.add_argument("reference", help="canto or canto:start-end")
+    _add_format_argument(text_dep, "text", "json", default="text")
 
     quote_parser = roots.add_parser("quote")
     quote_sub = quote_parser.add_subparsers(dest="action", required=True)
@@ -143,12 +206,29 @@ def _handle_text(args: argparse.Namespace) -> int:
 
     if args.action == "np":
         canto_no = int(str(args.reference).split(":")[0])
+        canto = api.canto(args.canticle, canto_no)
         nos = {line.no for line in lines}
-        spans = tuple(s for s in api.canto(args.canticle, canto_no).np() if s.line in nos)
+        spans = tuple(s for s in canto.np() if s.line in nos)
+        dep_idx = _dep.index(canto.dep()) if _dep.has_dep(args.canticle, canto_no) else None
         if args.format == "json":
-            _dump_json([span.to_dict() for span in spans])
+            _dump_json([_np_to_dict(span, dep_idx) for span in spans])
         else:
-            print(_np_rows(lines, spans))
+            print(_np_rows(lines, spans, dep_idx=dep_idx))
+        return 0
+
+    if args.action == "dep":
+        canto_no = int(str(args.reference).split(":")[0])
+        canto = api.canto(args.canticle, canto_no)
+        data = canto.dep()
+        nos = {line.no for line in lines}
+        selected = {no: rows for no, rows in data.items() if no in nos}
+        if args.format == "json":
+            _dump_json([
+                {"no": no, "rows": [_dep_row_dict(canto, row) for row in rows]}
+                for no, rows in sorted(selected.items())
+            ])
+        else:
+            print(_dep_rows(canto, lines, selected))
         return 0
 
     raise ValueError(f"unknown text action: {args.action}")

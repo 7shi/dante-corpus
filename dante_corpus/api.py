@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from functools import cached_property
 
+from . import dep as _dep
 from . import morph as _morph
 from . import np as _np
 from ._paths import SRC_DIR, QUOTES_DIR
@@ -10,6 +11,7 @@ from .tokenizer import has_alpha, tokenize
 
 MorphRow = _morph.MorphRow
 NPSpan = _np.NPSpan
+DepRow = _dep.DepRow
 
 VALID_CANTICLES = ("inferno", "purgatorio", "paradiso")
 REF_RE = re.compile(
@@ -107,6 +109,10 @@ class Canto:
         Each span carries its line, token range, head index, verbatim text, a derived id, and
         its nested children (no model call)."""
         return _np.nest_canto(self.canticle, self.number)
+
+    def dep(self) -> dict[int, tuple[DepRow, ...]]:
+        """Frozen Layer-4 dependencies: line-number -> per-token DepRows (no model call)."""
+        return _dep.load_dep(self.canticle, self.number)
 
     def to_dict(self) -> dict[str, object]:
         return {

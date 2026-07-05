@@ -2,8 +2,8 @@
 
 ## Status
 
-**Next up: Layer 4 (dependency / grammatical role)** — Layers 1–3 are implemented and frozen; see
-*The layers* below for Layer 4's design.
+**Next up: Layer 5 (predicate-argument skeleton)** — Layers 1–4 are implemented; see *The layers*
+below for Layer 5's design.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -13,17 +13,22 @@
   all 100 cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`).
   `--check` reports **0 hard / 0 soft** violations — see [`np/README.md`](np/README.md)'s *Check*
   section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md) for the full history.
-- **Layers 4–5 — dependency / skeleton**: design only (this document).
+- **Layer 4 — Dependency / grammatical role**: implemented; see [`dep/README.md`](dep/README.md).
+  Build driver `dep/dep.py`, served via `Canto.dep()` and `dante-corpus text dep` (with `text np`
+  gaining a derived `role=` per noun phrase). A pilot artifact (Inferno I) is committed; the
+  remaining 99 cantos are left to `make -C dep` (LLM build time is significant).
+- **Layer 5 — skeleton**: design only (this document).
 
 **Next work**
 
-1. **Merge Layer 3** — generation is complete and the soft-check policy is frozen at 0 hard / 0
-   soft (recorded in `np/README.md`/`np/CORRECTIONS.md`); merge `grammar-stack-plan` into `main`
-   (the build is excluded from `make all`; artifacts are committed like `morph/`).
-2. **Layer 4 (dependency, grammatical role)** — the next layer to implement (see *Sequencing*).
-   Layer 5 design must also cover artifact **versioning** (content hashes for consumer
-   invalidation) and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build &
-   serve model).
+1. **Merge Layers 3–4** — generation is complete for Layer 3 (0 hard / 0 soft, frozen) and
+   implemented for Layer 4 (pilot artifact committed); merge `grammar-stack-plan` into `main` (the
+   builds are excluded from `make all`; artifacts are committed like `morph/`).
+2. **Full Layer 4 build** — run `make -C dep` over all 100 cantos, then `make -C dep check`;
+   measure the soft-violation count before freezing the `DEPRELS` vocabulary (`dep/README.md`).
+3. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
+   Its design must also cover artifact **versioning** (content hashes for consumer invalidation)
+   and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
 
 ## Why this lives in the corpus
 
@@ -53,7 +58,7 @@ duplicated reading.
 
 ## The layers
 
-Five layers, each a function of the source text. Layers 1–3 are implemented; layers 4–5 are the
+Five layers, each a function of the source text. Layers 1–4 are implemented; layer 5 is the
 remaining work. Examples use *Inferno* I.1–6.
 
 ```
@@ -110,7 +115,7 @@ containment at serve time. Served via `Canto.np()` and `dante-corpus text np`.
   attachment. Bare clitic and relative pronouns are **not** NPs — they are layer-1/2 tokens that
   receive their clause function in layer 4.
 
-### Layer 4 — Dependency / grammatical role
+### Layer 4 — Dependency / grammatical role *(implemented — see [`dep/README.md`](dep/README.md))*
 
 Each token and noun phrase tagged with its function in the clause and the head it attaches to.
 
@@ -217,8 +222,11 @@ discipline already used for normalization and quotes.
    already shown feasible intrinsically, and immediately useful as a lemma-queryable index.
 2. **Layer 3 (noun phrases)** — *implemented* (`dante_corpus/np.py` + `np/np.py`). The census/entity
    substrate consumers most want.
-3. **Layers 4–5 (dependency, skeleton)** — the syntactic spine; freeze last, as they are the
-   hardest and the most valuable to share.
+3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`); pilot artifact
+   committed, full 100-canto build pending. The syntactic spine that rejoins enjambed NPs and
+   makes pronoun mentions enumerable.
+4. **Layer 5 (skeleton)** — the remaining work; freeze last, binding layers 3–4 into bare
+   propositions.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-Layers 2–3 are implemented; layers 4–5 remain design only.
+Layers 2–4 are implemented; layer 5 remains design only.
