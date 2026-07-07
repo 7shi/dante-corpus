@@ -58,8 +58,12 @@ def canon_header(header: str) -> str | None:
 # treebanks; measure-then-freeze — see dep/README.md and PLAN.md). `punct`/`goeswith`/`clf`/
 # `list`/`reparandum` are excluded: punctuation is never tokenized here. `dep` is kept as the
 # generic escape hatch UD itself defines for a relation that resists closed-set classification.
+# `attr` (non-UD, spaCy-style) is kept too: measured across the full 100-canto build it was the
+# model's single dominant, systematic label for predicate-nominal/adjective complements of a
+# copula (340 of 637 soft violations, an order of magnitude above any other off-vocabulary
+# label) — frozen in as a one-time adjustment rather than left as permanent noise.
 DEPRELS = frozenset({
-    "acl", "acl:relcl", "advcl", "advmod", "amod", "appos",
+    "acl", "acl:relcl", "advcl", "advmod", "amod", "appos", "attr",
     "aux", "aux:pass", "case", "cc", "ccomp", "compound", "conj", "cop",
     "csubj", "csubj:pass", "dep", "det", "det:poss", "det:predet",
     "discourse", "dislocated", "expl", "expl:impers", "expl:pass",

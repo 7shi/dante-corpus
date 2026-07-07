@@ -13,20 +13,19 @@ below for Layer 5's design.
   all 100 cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`).
   `--check` reports **0 hard / 0 soft** violations — see [`np/README.md`](np/README.md)'s *Check*
   section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md) for the full history.
-- **Layer 4 — Dependency / grammatical role**: implemented; see [`dep/README.md`](dep/README.md).
-  Build driver `dep/dep.py`, served via `Canto.dep()` and `dante-corpus text dep` (with `text np`
-  gaining a derived `role=` per noun phrase). A pilot artifact (Inferno I) is committed; the
-  remaining 99 cantos are left to `make -C dep` (LLM build time is significant).
+- **Layer 4 — Dependency / grammatical role**: implemented and built for all 100 cantos;
+  `--check` reports **0 hard / 296 soft** violations — see [`dep/README.md`](dep/README.md)'s
+  *Check* section for the breakdown and the one frozen-`DEPRELS` adjustment made against this
+  measurement. Build driver `dep/dep.py`, served via `Canto.dep()` and `dante-corpus text dep`
+  (with `text np` gaining a derived `role=` per noun phrase).
 - **Layer 5 — skeleton**: design only (this document).
 
 **Next work**
 
-1. **Merge Layers 3–4** — generation is complete for Layer 3 (0 hard / 0 soft, frozen) and
-   implemented for Layer 4 (pilot artifact committed); merge `grammar-stack-plan` into `main` (the
-   builds are excluded from `make all`; artifacts are committed like `morph/`).
-2. **Full Layer 4 build** — run `make -C dep` over all 100 cantos, then `make -C dep check`;
-   measure the soft-violation count before freezing the `DEPRELS` vocabulary (`dep/README.md`).
-3. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
+1. **Merge Layers 3–4** — generation is complete for Layer 3 (0 hard / 0 soft, frozen) and Layer 4
+   (0 hard / 296 soft, frozen); merge `grammar-stack-plan` into `main` (the builds are excluded
+   from `make all`; artifacts are committed like `morph/`).
+2. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
    Its design must also cover artifact **versioning** (content hashes for consumer invalidation)
    and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
 
@@ -222,9 +221,9 @@ discipline already used for normalization and quotes.
    already shown feasible intrinsically, and immediately useful as a lemma-queryable index.
 2. **Layer 3 (noun phrases)** — *implemented* (`dante_corpus/np.py` + `np/np.py`). The census/entity
    substrate consumers most want.
-3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`); pilot artifact
-   committed, full 100-canto build pending. The syntactic spine that rejoins enjambed NPs and
-   makes pronoun mentions enumerable.
+3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`); all 100 cantos
+   built (0 hard / 296 soft). The syntactic spine that rejoins enjambed NPs and makes pronoun
+   mentions enumerable.
 4. **Layer 5 (skeleton)** — the remaining work; freeze last, binding layers 3–4 into bare
    propositions.
 

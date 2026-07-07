@@ -6,9 +6,9 @@ grammatical stack ([PLAN.md](../PLAN.md)) after noun phrases. It uses **Universa
 closed relation vocabulary) — those stay with the consumer projects; Layer 4 only exposes the
 text's own syntactic structure.
 
-**Status: implemented.** A pilot artifact for Inferno I is committed; the remaining 99 cantos are
-left to `make -C dep` (LLM build time is significant, so the full corpus build is a deliberate,
-separate step — see PLAN.md).
+**Status: implemented and built.** All 100 cantos are committed. `--check` across the full corpus:
+**0 hard, 296 soft** violations (see *Check* below for the breakdown and the one frozen-vocabulary
+adjustment made against this measurement).
 
 ## What it does
 
@@ -90,6 +90,26 @@ call** (`validate_unit`):
     decisions*), so reported rather than hard-failed.
   - **Non-nominal `acl:relcl` head** — only checked when Layer-2 morphology is present; flags a
     relative clause whose antecedent's POS is not nominal (a likely mis-attachment).
+
+**Measured over the full 100-canto build** (`--check`, post-freeze): **0 hard, 296 soft**.
+- **Deprel vocabulary (61 of 296)**: before freezing, `attr` (a non-UD, spaCy-style label for
+  predicate-nominal/adjective complements of a copula) was by far the model's dominant off-
+  vocabulary choice — 340 occurrences, an order of magnitude above any other label — so it was
+  added to `DEPRELS` as the one-time adjustment the plan calls for. What's left after that
+  adjustment (296 total) is a long tail too thin and varied to be worth freezing in further:
+  `nmod:poss` (17), `nsubjpass`/`refl` (~10 each), and a scatter of one-off labels (`relcl`,
+  `pred`, `reflex`, `pron`, `obj:comp`, `intj`, `indobj`, `auxpass`, `acomp`, `predadj`,
+  `obj:pred`, `numeral`, `iobl`, `interjection` — 1-4 occurrences each), mostly near-miss
+  respellings of standard relations (`nsubjpass`→`nsubj:pass`, `auxpass`→`aux:pass`) or one-off
+  substitutions the model didn't repeat elsewhere.
+- **Non-nominal `acl:relcl` head (214 of 296)**: adjective (131), adverb (55), verb (14), numeral
+  (14). The adverb cases are mostly locative "dove"/"là" constructions (a free relative/adverbial
+  clause attaching to a place adverb, which UD would call `advcl` rather than `acl:relcl`); the
+  rest are comparable "attach a relative clause to something that isn't quite a noun" choices.
+  Reported, not corrected — this check's job is to flag likely mis-attachments for a consumer to
+  weigh, not to force a re-attachment.
+- **Multiple roots per unit (15 of 296)**: as expected for genuinely multi-clause parse units
+  (see *Design decisions*).
 
 The build retries a parse unit (max 2) before giving up on the canto; there is **no per-line
 fallback** — a lone line cannot host cross-line heads, so the parse unit is the smallest thing
