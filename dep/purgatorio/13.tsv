@@ -388,7 +388,7 @@ line	token	word	deprel	head_line	head_token
 56	1	che	mark	56	7
 56	2	li	det	56	3
 56	3	atti	nsubj	56	7
-56	4	loro	nmod:poss	56	3
+56	4	loro	det:poss	56	3
 56	5	a	case	56	6
 56	6	me	obl	56	7
 56	7	venivan	advcl	55	8

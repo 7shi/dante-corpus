@@ -856,7 +856,7 @@ line	token	word	deprel	head_line	head_token
 125	5	terra	conj	125	2
 125	6	e	cc	125	5
 125	7	tutte	det	125	9
-125	8	lor	nmod:poss	125	9
+125	8	lor	det:poss	125	9
 125	9	misture	conj	125	5
 126	1	venire	xcomp	124	8
 126	2	a	case	126	3

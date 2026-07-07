@@ -643,7 +643,7 @@ line	token	word	deprel	head_line	head_token
 88	9	Antenora	obl	88	6
 89	1	percotendo	advcl	88	6
 89	2	rispuose	root	0	0
-89	3	altrui	nmod:poss	89	5
+89	3	altrui	det:poss	89	5
 89	4	le	det	89	5
 89	5	gote	obj	89	1
 90	1	sì	advmod	90	7

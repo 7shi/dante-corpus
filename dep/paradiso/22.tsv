@@ -387,7 +387,7 @@ line	token	word	deprel	head_line	head_token
 54	7	tutti	det	54	9
 54	8	li	det	54	9
 54	9	ardor	obl	54	3
-54	10	vostri	nmod:poss	54	9
+54	10	vostri	det:poss	54	9
 55	1	così	advmod	55	4
 55	2	m'	obj	55	4
 55	3	ha	aux	55	4
@@ -1059,7 +1059,7 @@ line	token	word	deprel	head_line	head_token
 148	3	e	cc	148	2
 148	4	sette	conj	148	2
 148	5	mi	iobj	148	7
-148	6	si	refl	148	7
+148	6	si	expl:pass	148	7
 148	7	dimostraro	conj	145	3
 149	1	quanto	mark	149	3
 149	2	son	cop	149	3

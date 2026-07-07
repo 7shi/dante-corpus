@@ -418,7 +418,7 @@ line	token	word	deprel	head_line	head_token
 57	5	'l	det	57	7
 57	6	loro	det:poss	57	7
 57	7	occhio	nsubj	57	9
-57	8	si	reflex	57	9
+57	8	si	expl:pass	57	9
 57	9	pasca	ccomp	57	3
 58	1	E	cc	59	5
 58	2	com'	mark	58	7

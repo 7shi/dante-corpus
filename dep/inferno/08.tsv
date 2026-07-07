@@ -902,7 +902,7 @@ line	token	word	deprel	head_line	head_token
 124	3	tracotanza	nsubj	124	5
 124	4	non	advmod	124	5
 124	5	è	root	0	0
-124	6	nova	acomp	124	5
+124	6	nova	attr	124	5
 125	1	ché	mark	125	4
 125	2	già	advmod	125	4
 125	3	l'	obj	125	4

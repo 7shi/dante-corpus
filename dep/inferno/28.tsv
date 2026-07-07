@@ -633,7 +633,7 @@ line	token	word	deprel	head_line	head_token
 89	8	Focara	nmod	89	6
 90	1	non	advmod	90	2
 90	2	sarà	cop	90	5
-90	3	lor	nmod:poss	90	4
+90	3	lor	det:poss	90	4
 90	4	mestier	nsubj	90	5
 90	5	voto	ccomp	89	2
 90	6	né	cc	90	7

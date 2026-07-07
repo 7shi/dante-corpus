@@ -895,7 +895,7 @@ line	token	word	deprel	head_line	head_token
 125	9	apparve	acl:relcl	125	6
 126	1	quando	mark	126	7
 126	2	le	det	126	3
-126	3	gambe	nsubjpass	126	7
+126	3	gambe	nsubj:pass	126	7
 126	4	mi	obl	126	7
 126	5	furon	aux	126	7
 126	6	sì	advmod	126	7

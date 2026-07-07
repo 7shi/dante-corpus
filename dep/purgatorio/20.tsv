@@ -352,7 +352,7 @@ line	token	word	deprel	head_line	head_token
 51	4	è	aux	51	6
 51	5	Francia	nsubj	51	6
 51	6	retta	acl:relcl	50	9
-52	1	Figliuol	pred	52	2
+52	1	Figliuol	attr	52	2
 52	2	fu'	root	0	0
 52	3	io	nsubj	52	2
 52	4	d'	case	52	6

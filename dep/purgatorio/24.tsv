@@ -1008,7 +1008,7 @@ line	token	word	deprel	head_line	head_token
 137	6	videro	conj	136	1
 137	7	in	case	137	8
 137	8	fornace	obl	137	6
-138	1	vetri	nsubjpass	137	6
+138	1	vetri	nsubj:pass	137	6
 138	2	o	cc	138	3
 138	3	metalli	conj	138	1
 138	4	sì	advmod	138	5
@@ -1126,7 +1126,7 @@ line	token	word	deprel	head_line	head_token
 152	8	gusto	nmod	152	6
 153	1	nel	case	153	2
 153	2	petto	obl	153	7
-153	3	lor	nmod:poss	153	2
+153	3	lor	det:poss	153	2
 153	4	troppo	amod	153	5
 153	5	disir	obj	153	7
 153	6	non	advmod	153	7

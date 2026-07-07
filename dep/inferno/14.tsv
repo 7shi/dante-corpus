@@ -427,7 +427,7 @@ line	token	word	deprel	head_line	head_token
 62	7	sì	advmod	62	8
 62	8	forte	advmod	62	9
 62	9	udito	advcl	61	5
-63	1	O	interjection	63	2
+63	1	O	discourse	63	2
 63	2	Capaneo	vocative	61	5
 63	3	in	case	63	4
 63	4	ciò	obl	64	7

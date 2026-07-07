@@ -443,7 +443,7 @@ line	token	word	deprel	head_line	head_token
 64	4	allor	advmod	64	2
 64	5	come	advmod	65	1
 64	6	a	case	64	8
-64	7	lor	nmod:poss	64	8
+64	7	lor	det:poss	64	8
 64	8	duci	obl	65	1
 65	1	venire	xcomp	64	2
 65	2	appresso	advmod	65	1

@@ -331,7 +331,7 @@ line	token	word	deprel	head_line	head_token
 45	4	onde	mark	45	8
 45	5	'l	det	45	6
 45	6	Nilo	nsubj	45	8
-45	7	s'	refl	45	8
+45	7	s'	expl:pass	45	8
 45	8	avvalla	acl:relcl	45	3
 46	1	Sotto	case	46	2
 46	2	ciascuna	obl	46	3

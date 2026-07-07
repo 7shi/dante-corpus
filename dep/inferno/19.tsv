@@ -997,7 +997,7 @@ line	token	word	deprel	head_line	head_token
 133	1	Indi	advmod	133	7
 133	2	un	det	133	4
 133	3	altro	amod	133	4
-133	4	vallon	nsubjpass	133	7
+133	4	vallon	nsubj:pass	133	7
 133	5	mi	iobj	133	7
 133	6	fu	aux	133	7
 133	7	scoperto	root	0	0

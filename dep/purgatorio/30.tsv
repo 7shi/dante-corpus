@@ -506,7 +506,7 @@ line	token	word	deprel	head_line	head_token
 75	9	felice	amod	75	8
 76	1	Li	det	76	2
 76	2	occhi	nsubj	76	4
-76	3	mi	indobj	76	4
+76	3	mi	iobj	76	4
 76	4	cadder	root	0	0
 76	5	giù	advmod	76	4
 76	6	nel	case	76	8
@@ -523,7 +523,7 @@ line	token	word	deprel	head_line	head_token
 77	9	erba	obl	77	6
 78	1	tanta	amod	78	2
 78	2	vergogna	nsubj	78	4
-78	3	mi	indobj	78	4
+78	3	mi	iobj	78	4
 78	4	gravò	advcl	77	6
 78	5	la	det	78	6
 78	6	fronte	obj	78	4

@@ -502,7 +502,7 @@ line	token	word	deprel	head_line	head_token
 73	1	che	mark	73	6
 73	2	l'	det	73	3
 73	3	esser	nsubj	73	6
-73	4	loro	nmod:poss	73	3
+73	4	loro	det:poss	73	3
 73	5	v'	obl	73	6
 73	6	è	advcl	72	9
 73	7	in	case	73	9

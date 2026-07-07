@@ -215,7 +215,7 @@ line	token	word	deprel	head_line	head_token
 29	4	Non	advmod	29	5
 29	5	so	ccomp	29	2
 29	6	ma	cc	30	2
-29	7	degno	pred	30	2
+29	7	degno	attr	30	2
 30	1	ben	advmod	30	2
 30	2	è	conj	29	2
 30	3	che	mark	30	9
@@ -232,13 +232,13 @@ line	token	word	deprel	head_line	head_token
 31	5	ov'	obl	31	6
 31	6	è	acl:relcl	31	3
 31	7	sì	advmod	31	8
-31	8	pregno	pred	31	6
+31	8	pregno	attr	31	6
 32	1	l'	det	32	3
 32	2	alpestro	amod	32	3
 32	3	monte	nsubj	31	6
 32	4	ond'	obl	32	5
 32	5	è	acl:relcl	32	3
-32	6	tronco	pred	32	5
+32	6	tronco	attr	32	5
 32	7	Peloro	nsubj	32	5
 33	1	che	mark	33	5
 33	2	'n	case	33	4

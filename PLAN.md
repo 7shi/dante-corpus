@@ -14,7 +14,7 @@ below for Layer 5's design.
   `--check` reports **0 hard / 0 soft** violations — see [`np/README.md`](np/README.md)'s *Check*
   section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md) for the full history.
 - **Layer 4 — Dependency / grammatical role**: implemented and built for all 100 cantos;
-  `--check` reports **0 hard / 296 soft** violations — see [`dep/README.md`](dep/README.md)'s
+  `--check` reports **0 hard / 230 soft** violations — see [`dep/README.md`](dep/README.md)'s
   *Check* section for the breakdown and the one frozen-`DEPRELS` adjustment made against this
   measurement. Build driver `dep/dep.py`, served via `Canto.dep()` and `dante-corpus text dep`
   (with `text np` gaining a derived `role=` per noun phrase).
@@ -23,7 +23,7 @@ below for Layer 5's design.
 **Next work**
 
 1. **Merge Layers 3–4** — generation is complete for Layer 3 (0 hard / 0 soft, frozen) and Layer 4
-   (0 hard / 296 soft, frozen); merge `grammar-stack-plan` into `main` (the builds are excluded
+   (0 hard / 230 soft, frozen); merge `grammar-stack-plan` into `main` (the builds are excluded
    from `make all`; artifacts are committed like `morph/`).
 2. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
    Its design must also cover artifact **versioning** (content hashes for consumer invalidation)
@@ -222,7 +222,7 @@ discipline already used for normalization and quotes.
 2. **Layer 3 (noun phrases)** — *implemented* (`dante_corpus/np.py` + `np/np.py`). The census/entity
    substrate consumers most want.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`); all 100 cantos
-   built (0 hard / 296 soft). The syntactic spine that rejoins enjambed NPs and makes pronoun
+   built (0 hard / 230 soft). The syntactic spine that rejoins enjambed NPs and makes pronoun
    mentions enumerable.
 4. **Layer 5 (skeleton)** — the remaining work; freeze last, binding layers 3–4 into bare
    propositions.

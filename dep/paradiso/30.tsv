@@ -611,11 +611,11 @@ line	token	word	deprel	head_line	head_token
 86	7	l'	det	86	8
 86	8	onda	obl	86	5
 87	1	che	nsubj	87	3
-87	2	si	refl	87	3
+87	2	si	expl:pass	87	3
 87	3	deriva	acl:relcl	86	8
 87	4	perché	mark	87	7
 87	5	vi	advmod	87	7
-87	6	s'	refl	87	7
+87	6	s'	expl:pass	87	7
 87	7	immegli	advcl	87	3
 88	1	e	cc	89	7
 88	2	sì	advmod	89	7

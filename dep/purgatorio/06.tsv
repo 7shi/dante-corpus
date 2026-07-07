@@ -273,7 +273,7 @@ line	token	word	deprel	head_line	head_token
 37	3	di	case	37	4
 37	4	giudicio	nmod	37	2
 37	5	non	advmod	37	7
-37	6	s'	pron	37	7
+37	6	s'	expl:pass	37	7
 37	7	avvalla	advcl	35	7
 38	1	perché	mark	38	5
 38	2	foco	nsubj	38	5
@@ -289,7 +289,7 @@ line	token	word	deprel	head_line	head_token
 39	4	sodisfar	acl:relcl	39	1
 39	5	chi	obj	39	4
 39	6	qui	advmod	39	8
-39	7	s'	pron	39	8
+39	7	s'	expl:pass	39	8
 39	8	astalla	acl:relcl	39	5
 40	1	e	cc	41	3
 40	2	là	obl	41	3
@@ -299,7 +299,7 @@ line	token	word	deprel	head_line	head_token
 40	6	cotesto	det	40	7
 40	7	punto	obj	40	5
 41	1	non	advmod	41	3
-41	2	s'	pron	41	3
+41	2	s'	expl:pass	41	3
 41	3	ammendava	conj	35	7
 41	4	per	case	41	5
 41	5	pregar	obl	41	3

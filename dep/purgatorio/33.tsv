@@ -111,7 +111,7 @@ line	token	word	deprel	head_line	head_token
 18	4	occhi	obl	18	8
 18	5	li	det	18	6
 18	6	occhi	obj	18	8
-18	7	mi	nmod:poss	18	6
+18	7	mi	det:poss	18	6
 18	8	percosse	advcl	17	7
 19	1	e	cc	20	2
 19	2	con	case	19	4
@@ -825,7 +825,7 @@ line	token	word	deprel	head_line	head_token
 120	4	da	case	120	5
 120	5	colpa	obl	120	7
 120	6	si	expl	120	7
-120	7	dislega	relcl	120	3
+120	7	dislega	acl:relcl	120	3
 121	1	la	det	121	3
 121	2	bella	amod	121	3
 121	3	donna	nsubj	119	8

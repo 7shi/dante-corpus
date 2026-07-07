@@ -318,7 +318,7 @@ line	token	word	deprel	head_line	head_token
 44	7	duca	nsubj	44	8
 44	8	stesse	advcl	45	2
 44	9	attento	xcomp	44	8
-45	1	mi	iobl	45	2
+45	1	mi	iobj	45	2
 45	2	puosi	advcl	40	7
 45	3	'l	det	45	4
 45	4	dito	obj	45	2

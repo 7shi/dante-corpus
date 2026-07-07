@@ -653,7 +653,7 @@ line	token	word	deprel	head_line	head_token
 91	5	tu	nsubj	91	6
 91	6	vedi	acl:relcl	91	3
 91	7	sì	advmod	91	8
-91	8	guasti	obj:pred	91	6
+91	8	guasti	xcomp	91	6
 92	1	qui	advmod	91	6
 92	2	ambedue	appos	91	3
 92	3	rispuose	root	0	0

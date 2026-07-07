@@ -64,7 +64,7 @@ line	token	word	deprel	head_line	head_token
 9	2	tutta	advmod	9	1
 9	3	ond'	mark	9	6
 9	4	ei	nsubj	9	6
-9	5	si	refl	9	6
+9	5	si	expl:pass	9	6
 9	6	batte	advcl	8	6
 9	7	l'	det	9	8
 9	8	anca	obj	9	6
@@ -75,7 +75,7 @@ line	token	word	deprel	head_line	head_token
 10	5	qua	advmod	10	9
 10	6	e	cc	10	7
 10	7	là	advmod	10	9
-10	8	si	refl	10	9
+10	8	si	expl:pass	10	9
 10	9	lagna	conj	8	2
 11	1	come	case	11	3
 11	2	'l	det	11	3
@@ -289,7 +289,7 @@ line	token	word	deprel	head_line	head_token
 39	6	porta	advcl	41	3
 40	1	che	mark	40	5
 40	2	l'	det	40	4
-40	3	una	numeral	40	4
+40	3	una	nummod	40	4
 40	4	costa	nsubj	40	5
 40	5	surge	ccomp	39	6
 40	6	e	cc	40	9

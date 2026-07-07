@@ -330,11 +330,11 @@ line	token	word	deprel	head_line	head_token
 48	4	partir	nsubj	48	6
 48	5	ti	iobj	48	6
 48	6	convene	root	0	0
-49	1	Questo	nsubjpass	49	3
+49	1	Questo	nsubj:pass	49	3
 49	2	si	expl	49	3
 49	3	vuole	root	0	0
 49	4	e	cc	49	8
-49	5	questo	nsubjpass	49	8
+49	5	questo	nsubj:pass	49	8
 49	6	già	advmod	49	8
 49	7	si	expl	49	8
 49	8	cerca	conj	49	3

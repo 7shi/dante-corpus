@@ -978,7 +978,7 @@ line	token	word	deprel	head_line	head_token
 135	6	d'	case	135	8
 135	7	un	det	135	8
 135	8	fischio	nmod	135	5
-136	1	Ahi	intj	136	7
+136	1	Ahi	discourse	136	7
 136	2	quanto	advmod	136	7
 136	3	ne	case	136	5
 136	4	la	det	136	5

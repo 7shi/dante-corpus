@@ -227,7 +227,7 @@ line	token	word	deprel	head_line	head_token
 33	1	che	mark	33	3
 33	2	l'	det	33	3
 33	3	ali	obl	32	5
-33	4	sue	nmod:poss	33	3
+33	4	sue	det:poss	33	3
 33	5	tra	case	33	6
 33	6	liti	obl	32	5
 33	7	sì	advmod	33	8
@@ -674,7 +674,7 @@ line	token	word	deprel	head_line	head_token
 97	3	giusto	amod	97	4
 97	4	voler	obl	97	8
 97	5	lo	det	97	4
-97	6	suo	nmod:poss	97	4
+97	6	suo	det:poss	97	4
 97	7	si	expl	97	8
 97	8	face	advcl	96	5
 98	1	veramente	advmod	98	7
@@ -732,7 +732,7 @@ line	token	word	deprel	head_line	head_token
 105	3	Acheronte	obl	105	6
 105	4	non	advmod	105	6
 105	5	si	expl	105	6
-105	6	cala	relcl	105	1
+105	6	cala	acl:relcl	105	1
 106	1	E	cc	109	4
 106	2	io	discourse	109	4
 106	3	Se	mark	106	8

@@ -23,7 +23,7 @@ line	token	word	deprel	head_line	head_token
 4	4	giro	obl	4	8
 4	5	tutta	advmod	4	8
 4	6	non	advmod	4	8
-4	7	si	reflex	4	8
+4	7	si	expl:pass	4	8
 4	8	volse	conj	3	3
 5	1	prima	advmod	4	8
 5	2	ch'	mark	5	8
@@ -485,7 +485,7 @@ line	token	word	deprel	head_line	head_token
 69	4	cui	nsubj	69	5
 69	5	era	acl:relcl	69	2
 69	6	tutto	attr	69	5
-70	1	Domenico	nsubjpass	70	3
+70	1	Domenico	nsubj:pass	70	3
 70	2	fu	aux	70	3
 70	3	detto	root	0	0
 70	4	e	cc	70	7

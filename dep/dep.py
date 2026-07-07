@@ -20,6 +20,7 @@ soon as they validate, so an interrupted run continues where it stopped.
     uv run dep.py inferno --check                  # code-only, no model
     uv run dep.py inferno -n                       # dry run: show pending units, no LLM
     uv run dep.py inferno --clean                  # remove parse units with hard violations
+    uv run dep.py inferno --fix-labels             # relabel off-vocabulary respellings, no model
 
 `--check` validates committed artifacts against the deterministic tokens (every token has
 exactly one row, every head resolves in-unit, no cycles, at least one root per unit) and reports
@@ -31,6 +32,7 @@ token's part of speech, and the `acl:relcl`-head soft check uses it too.
 """
 
 import argparse
+import dataclasses
 import sys
 from pathlib import Path
 
@@ -413,6 +415,61 @@ def clean(canticles: list[str], size: int, only: int | None) -> int:
     return 0
 
 
+# Off-vocabulary labels the model used that are pure respellings or near-synonyms of a relation
+# already in `dep.DEPRELS` — safe to rewrite deterministically, no model call. Measured across the
+# full 100-canto build; see dep/README.md's *Check* section for the counts behind each mapping.
+LABEL_ALIASES = {
+    "relcl": "acl:relcl",
+    "nsubjpass": "nsubj:pass",
+    "auxpass": "aux:pass",
+    "indobj": "iobj",
+    "iobl": "iobj",
+    "numeral": "nummod",
+    "nmod:poss": "det:poss",
+    "intj": "discourse",
+    "interjection": "discourse",
+    "refl": "expl:pass",
+    "reflex": "expl:pass",
+    "pron": "expl:pass",
+    "pred": "attr",
+    "predadj": "attr",
+    "acomp": "attr",
+    "obj:comp": "xcomp",
+    "obj:pred": "xcomp",
+}
+
+
+def fix_labels(canticles: list[str], only: int | None) -> int:
+    """Rewrite off-vocabulary deprels that are pure respellings of a frozen label in place.
+
+    Deterministic, no model call: `LABEL_ALIASES` maps each label to the `dep.DEPRELS` member it
+    stands in for (e.g. `nsubjpass` -> `nsubj:pass`, `refl`/`reflex`/`pron` -> `expl:pass`)."""
+    changed = 0
+    for canticle in canticles:
+        numbers = [only] if only else list(api.cantos(canticle))
+        for number in numbers:
+            if not dep.has_dep(canticle, number):
+                continue
+            data = dep.load_dep(canticle, number)
+            n_changed = 0
+            out: list[tuple[int, list[dep.DepRow]]] = []
+            for no, rows in sorted(data.items()):
+                new_rows = []
+                for row in rows:
+                    alias = LABEL_ALIASES.get(row.deprel)
+                    if alias:
+                        row = dataclasses.replace(row, deprel=alias)
+                        n_changed += 1
+                    new_rows.append(row)
+                out.append((no, new_rows))
+            if n_changed:
+                dep.write_dep(canticle, number, out)
+                print(f"Fixed dep/{canticle}/{number:02d}.tsv — relabeled {n_changed} row(s)")
+                changed += n_changed
+    print(f"fix-labels complete: {changed} row(s) relabeled")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="dep.py")
     parser.add_argument("canticles", nargs="+", help="canticle names, e.g. inferno")
@@ -424,6 +481,8 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
     parser.add_argument("--clean", action="store_true",
                         help="remove parse units with hard violations, then exit")
+    parser.add_argument("--fix-labels", action="store_true",
+                        help="relabel off-vocabulary deprels that are pure respellings, no model call")
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending parse units without calling the LLM")
     parser.add_argument("--log", nargs="?", const="dep.log", metavar="FILE",
@@ -434,6 +493,8 @@ def main() -> int:
         return check(args.canticles, args.canto)
     if args.clean:
         return clean(args.canticles, args.chunk, args.canto)
+    if args.fix_labels:
+        return fix_labels(args.canticles, args.canto)
     if args.dry_run:
         return build(args.canticles, args.model or "", args.chunk, args.force, True, args.canto)
     log_path = Path(args.log) if args.log else None

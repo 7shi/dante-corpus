@@ -388,7 +388,7 @@ line	token	word	deprel	head_line	head_token
 53	2	la	det	53	3
 53	3	paura	obl	52	3
 53	4	ch'	mark	53	5
-53	5	uscia	relcl	53	3
+53	5	uscia	acl:relcl	53	3
 53	6	di	case	53	8
 53	7	sua	det	53	8
 53	8	vista	obl	53	5

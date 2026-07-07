@@ -570,7 +570,7 @@ line	token	word	deprel	head_line	head_token
 82	7	grande	amod	82	8
 82	8	lume	conj	82	2
 83	1	di	case	83	3
-83	2	lor	nmod:poss	83	3
+83	2	lor	det:poss	83	3
 83	3	cagion	nmod	82	8
 83	4	m'	iobj	83	5
 83	5	accesero	root	0	0

@@ -1007,7 +1007,7 @@ line	token	word	deprel	head_line	head_token
 139	6	né	cc	139	8
 139	7	mio	det	139	8
 139	8	cenno	conj	139	4
-140	1	libero	predadj	140	5
+140	1	libero	attr	140	5
 140	2	dritto	conj	140	1
 140	3	e	cc	140	4
 140	4	sano	conj	140	1

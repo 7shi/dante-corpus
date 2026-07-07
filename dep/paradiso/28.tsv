@@ -479,7 +479,7 @@ line	token	word	deprel	head_line	head_token
 66	3	distende	acl:relcl	65	9
 66	4	per	case	66	7
 66	5	tutte	det	66	7
-66	6	lor	nmod:poss	66	7
+66	6	lor	det:poss	66	7
 66	7	parti	obl	66	3
 67	1	Maggior	amod	67	2
 67	2	bontà	nsubj	67	3

@@ -771,7 +771,7 @@ line	token	word	deprel	head_line	head_token
 109	2	era	aux	109	3
 109	3	vinto	root	0	0
 109	4	ancora	advmod	109	3
-109	5	Montemalo	nsubjpass	109	3
+109	5	Montemalo	nsubj:pass	109	3
 110	1	dal	case	110	3
 110	2	vostro	det	110	3
 110	3	Uccellatoio	obl	109	3

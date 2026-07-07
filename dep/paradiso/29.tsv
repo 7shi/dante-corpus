@@ -406,7 +406,7 @@ line	token	word	deprel	head_line	head_token
 61	2	che	mark	61	7
 61	3	le	det	61	4
 61	4	viste	nsubj	61	7
-61	5	lor	nmod:poss	61	4
+61	5	lor	det:poss	61	4
 61	6	furo	aux	61	7
 61	7	essaltate	advcl	58	6
 62	1	con	case	62	2
@@ -414,7 +414,7 @@ line	token	word	deprel	head_line	head_token
 62	3	illuminante	amod	62	2
 62	4	e	cc	62	7
 62	5	con	case	62	7
-62	6	lor	nmod:poss	62	7
+62	6	lor	det:poss	62	7
 62	7	merto	obl	61	7
 63	1	si	advmod	63	3
 63	2	c'	obl	63	3

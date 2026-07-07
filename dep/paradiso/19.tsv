@@ -1024,7 +1024,7 @@ line	token	word	deprel	head_line	head_token
 147	2	la	det	147	4
 147	3	lor	det:poss	147	4
 147	4	bestia	obl	147	6
-147	5	si	refl	147	6
+147	5	si	expl:pass	147	6
 147	6	lamenti	ccomp	145	2
 147	7	e	cc	147	8
 147	8	garra	conj	147	6
@@ -1035,5 +1035,5 @@ line	token	word	deprel	head_line	head_token
 148	5	l'	det	148	6
 148	6	altre	nmod	148	3
 148	7	non	advmod	148	9
-148	8	si	refl	148	9
+148	8	si	expl:pass	148	9
 148	9	scosta	acl:relcl	147	4

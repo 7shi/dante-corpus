@@ -580,7 +580,7 @@ line	token	word	deprel	head_line	head_token
 79	4	scoperta	advcl	80	1
 79	5	la	det	79	7
 79	6	gran	amod	79	7
-79	7	bocca	nsubjpass	79	4
+79	7	bocca	nsubj:pass	79	4
 80	1	disse	root	0	0
 80	2	a'	case	80	3
 80	3	compagni	obl	80	1

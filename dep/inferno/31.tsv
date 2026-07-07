@@ -836,7 +836,7 @@ line	token	word	deprel	head_line	head_token
 116	3	Scipïon	nsubj	116	2
 116	4	di	case	116	5
 116	5	gloria	nmod	116	6
-116	6	reda	obj:comp	116	2
+116	6	reda	xcomp	116	2
 117	1	quand'	mark	117	5
 117	2	Anibàl	nsubj	117	5
 117	3	co'	case	117	4

@@ -91,24 +91,28 @@ call** (`validate_unit`):
   - **Non-nominal `acl:relcl` head** — only checked when Layer-2 morphology is present; flags a
     relative clause whose antecedent's POS is not nominal (a likely mis-attachment).
 
-**Measured over the full 100-canto build** (`--check`, post-freeze): **0 hard, 296 soft**.
-- **Deprel vocabulary (61 of 296)**: before freezing, `attr` (a non-UD, spaCy-style label for
-  predicate-nominal/adjective complements of a copula) was by far the model's dominant off-
-  vocabulary choice — 340 occurrences, an order of magnitude above any other label — so it was
-  added to `DEPRELS` as the one-time adjustment the plan calls for. What's left after that
-  adjustment (296 total) is a long tail too thin and varied to be worth freezing in further:
-  `nmod:poss` (17), `nsubjpass`/`refl` (~10 each), and a scatter of one-off labels (`relcl`,
-  `pred`, `reflex`, `pron`, `obj:comp`, `intj`, `indobj`, `auxpass`, `acomp`, `predadj`,
-  `obj:pred`, `numeral`, `iobl`, `interjection` — 1-4 occurrences each), mostly near-miss
-  respellings of standard relations (`nsubjpass`→`nsubj:pass`, `auxpass`→`aux:pass`) or one-off
-  substitutions the model didn't repeat elsewhere.
-- **Non-nominal `acl:relcl` head (214 of 296)**: adjective (131), adverb (55), verb (14), numeral
-  (14). The adverb cases are mostly locative "dove"/"là" constructions (a free relative/adverbial
-  clause attaching to a place adverb, which UD would call `advcl` rather than `acl:relcl`); the
-  rest are comparable "attach a relative clause to something that isn't quite a noun" choices.
-  Reported, not corrected — this check's job is to flag likely mis-attachments for a consumer to
-  weigh, not to force a re-attachment.
-- **Multiple roots per unit (15 of 296)**: as expected for genuinely multi-clause parse units
+**Measured over the full 100-canto build** (`--check`, post-freeze, post-`--fix-labels`):
+**0 hard, 230 soft**.
+- **Deprel vocabulary**: before freezing, `attr` (a non-UD, spaCy-style label for predicate-
+  nominal/adjective complements of a copula) was by far the model's dominant off-vocabulary
+  choice — 340 occurrences, an order of magnitude above any other label — so it was added to
+  `DEPRELS` as the one-time adjustment the plan calls for (636 -> 296 soft). What remained (296)
+  was a long tail of labels that turned out to be pure respellings or near-synonyms of a relation
+  already in `DEPRELS` (`nsubjpass`->`nsubj:pass`, `auxpass`->`aux:pass`, `indobj`/`iobl`->`iobj`,
+  `numeral`->`nummod`, `nmod:poss`->`det:poss`, `intj`/`interjection`->`discourse`,
+  `refl`/`reflex`/`pron`->`expl:pass`, `pred`/`predadj`/`acomp`->`attr`, `obj:comp`/`obj:pred`-
+  >`xcomp`) — 67 rows across all three canticles, rewritten in place by `dep/dep.py --fix-labels`
+  (deterministic, no model call; see `LABEL_ALIASES` in `dep/dep.py`). Renaming `relcl` to
+  `acl:relcl` surfaced one further non-nominal-head case (below), for a net **-66** (296 -> 230).
+- **Non-nominal `acl:relcl` head (215 of 230)**: adjective (131), adverb (55), verb (14), numeral
+  (14), plus the one surfaced by the `relcl` relabel above. The adverb cases are mostly locative
+  "dove"/"là" constructions (a free relative/adverbial clause attaching to a place adverb, which
+  UD would call `advcl` rather than `acl:relcl`); the rest are comparable "attach a relative
+  clause to something that isn't quite a noun" choices. Reported, not corrected — this check's
+  job is to flag likely mis-attachments for a consumer to weigh, not to force a re-attachment
+  (unlike the vocabulary respellings above, fixing these needs contextual judgment, not a lookup
+  table — left for an LLM-based `--fix` pass rather than `--fix-labels`).
+- **Multiple roots per unit (15 of 230)**: as expected for genuinely multi-clause parse units
   (see *Design decisions*).
 
 The build retries a parse unit (max 2) before giving up on the canto; there is **no per-line
@@ -177,6 +181,7 @@ make -C dep MODEL=ollama:gpt-oss     # override the model
 make -C dep check                    # validate artifacts, no model call
 
 uv run dep/dep.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [--clean] [-n]
+uv run dep/dep.py inferno purgatorio paradiso --fix-labels   # relabel respellings, no model call
 ```
 
 Consumers read it deterministically via `Canto.dep()` (line-number -> `DepRow` tuples) or the CLI

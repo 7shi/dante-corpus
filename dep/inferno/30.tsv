@@ -477,7 +477,7 @@ line	token	word	deprel	head_line	head_token
 68	1	ché	mark	68	8
 68	2	l'	det	68	3
 68	3	imagine	nsubj	68	8
-68	4	lor	nmod:poss	68	3
+68	4	lor	det:poss	68	3
 68	5	vie	conj	68	8
 68	6	più	advmod	68	8
 68	7	m'	obj	68	8
@@ -903,10 +903,10 @@ line	token	word	deprel	head_line	head_token
 124	2	il	det	124	3
 124	3	monetier	nsubj	124	6
 124	4	Così	advmod	124	6
-124	5	si	auxpass	124	6
+124	5	si	aux:pass	124	6
 124	6	squarcia	root	0	0
 125	1	la	det	125	2
-125	2	bocca	nsubjpass	124	6
+125	2	bocca	nsubj:pass	124	6
 125	3	tua	amod	125	2
 125	4	per	case	125	6
 125	5	tuo	det:poss	125	6
