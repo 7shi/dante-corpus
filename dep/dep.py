@@ -21,6 +21,7 @@ soon as they validate, so an interrupted run continues where it stopped.
     uv run dep.py inferno -n                       # dry run: show pending units, no LLM
     uv run dep.py inferno --clean                  # remove parse units with hard violations
     uv run dep.py inferno --fix-labels             # relabel off-vocabulary respellings, no model
+    uv run dep.py inferno --fix -m ollama:gpt-oss  # regenerate units with soft violations
 
 `--check` validates committed artifacts against the deterministic tokens (every token has
 exactly one row, every head resolves in-unit, no cycles, at least one root per unit) and reports
@@ -470,6 +471,90 @@ def fix_labels(canticles: list[str], only: int | None) -> int:
     return 0
 
 
+def _fix_canto(
+    canticle: str, number: int, n_cantos: int, model: str, ui: StatusLine,
+    log_path: Path | None = None,
+) -> tuple[int, int]:
+    """Fix one canto's flagged parse units under a progress bar; returns (fixed, attempted)."""
+    data = dep.load_dep(canticle, number)
+    morph_rows = _morph_rows(canticle, number)
+    lines = api.canto(canticle, number).lines()
+    text_by_no = {line.no: line.text for line in lines}
+    nos_all = [line.no for line in lines]
+    texts_all = [line.text for line in lines]
+    out = dict(data)
+    changed = False
+    fixed = 0
+    attempted = 0
+    label = f"{canticle} {number}/{n_cantos}"
+    units = dep.sentence_groups(nos_all, texts_all, dep.MAX_UNIT_LINES)
+    with ui.progress(len(lines), label=label) as prog:
+        for unit in units:
+            prog.update(unit[0])
+            if any(no not in out for no in unit):
+                continue  # unit incomplete; leave it to `build`/resume
+            unit_texts = [text_by_no[no] for no in unit]
+            rows_by_line = {no: list(out[no]) for no in unit}
+            _, soft_before = _classify_violations(unit, unit_texts, rows_by_line, morph_rows)
+            if not soft_before:
+                continue
+            attempted += 1
+            new_rows = _try_parse(unit, unit_texts, model, ui, label, log_path, morph_rows)
+            if new_rows is None:
+                continue
+            _, soft_after = _classify_violations(unit, unit_texts, new_rows, morph_rows)
+            if len(soft_after) < len(soft_before):
+                for no in unit:
+                    out[no] = tuple(new_rows.get(no, []))
+                fixed += 1
+                changed = True
+                ui.log(f"Fixed {canticle} {number}:{unit[0]}-{unit[-1]} — "
+                       f"{len(soft_before)} -> {len(soft_after)} soft violation(s)")
+            elif log_path:
+                with log_path.open("a", encoding="utf-8") as f:
+                    f.write(f"=== {label} lines {unit[0]}-{unit[-1]}: not improved "
+                            f"({len(soft_before)} -> {len(soft_after)}) ===\n")
+                    for v in soft_before:
+                        f.write(f"before: {v.detail}\n")
+                    for v in soft_after:
+                        f.write(f"after:  {v.detail}\n")
+                    f.write("\n")
+    if changed:
+        dep.write_dep(canticle, number, [(no, list(rows)) for no, rows in sorted(out.items())])
+        ui.log(f"Wrote: dep/{canticle}/{number:02d}.tsv")
+    return fixed, attempted
+
+
+def fix(canticles: list[str], model: str, only: int | None, log_path: Path | None = None) -> int:
+    """Re-run the model on parse units carrying soft ("tag") violations, keeping only real improvements.
+
+    Unlike Layer 3's per-line `--fix` (whose spans never cross lines), a dependency parse unit's
+    rows can head each other across its lines, so the smallest thing worth regenerating is the
+    whole unit, not a single line (mirrors `build`'s no-per-line-fallback rule). Swaps in the
+    regenerated rows only if the unit carries strictly fewer soft violations than before and no
+    new hard ones — `_try_parse` already guarantees zero hard violations in whatever it returns,
+    so the only check needed here is the soft-count improvement. A no-worse-off guarantee, not a
+    promise every case clears.
+    """
+    if log_path:
+        log_path.write_text("", encoding="utf-8")
+    ui = StatusLine()
+    fixed = 0
+    attempted = 0
+    for canticle in canticles:
+        all_numbers = list(api.cantos(canticle))
+        n_cantos = len(all_numbers)
+        numbers = [only] if only else all_numbers
+        for number in numbers:
+            if not dep.has_dep(canticle, number):
+                continue
+            f, a = _fix_canto(canticle, number, n_cantos, model, ui, log_path)
+            fixed += f
+            attempted += a
+    print(f"fix complete: {fixed}/{attempted} unit(s) improved")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="dep.py")
     parser.add_argument("canticles", nargs="+", help="canticle names, e.g. inferno")
@@ -483,6 +568,8 @@ def main() -> int:
                         help="remove parse units with hard violations, then exit")
     parser.add_argument("--fix-labels", action="store_true",
                         help="relabel off-vocabulary deprels that are pure respellings, no model call")
+    parser.add_argument("--fix", action="store_true",
+                        help="regenerate parse units carrying soft violations, keep only improvements")
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending parse units without calling the LLM")
     parser.add_argument("--log", nargs="?", const="dep.log", metavar="FILE",
@@ -495,9 +582,13 @@ def main() -> int:
         return clean(args.canticles, args.chunk, args.canto)
     if args.fix_labels:
         return fix_labels(args.canticles, args.canto)
+    log_path = Path(args.log) if args.log else None
+    if args.fix:
+        if not args.model:
+            parser.error("--model is required for --fix")
+        return fix(args.canticles, args.model, args.canto, log_path)
     if args.dry_run:
         return build(args.canticles, args.model or "", args.chunk, args.force, True, args.canto)
-    log_path = Path(args.log) if args.log else None
     if not args.model:
         parser.error("--model is required for building (or pass --check / --dry-run)")
     return build(args.canticles, args.model, args.chunk, args.force, False, args.canto, log_path)

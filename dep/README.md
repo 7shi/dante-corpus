@@ -179,9 +179,12 @@ build tool whose output is frozen and round-trip-checked; consumers see a stable
 make -C dep                          # build all three canticles (model from model.mk)
 make -C dep MODEL=ollama:gpt-oss     # override the model
 make -C dep check                    # validate artifacts, no model call
+make -C dep fix-labels                # relabel off-vocabulary respellings, no model call
+make -C dep fix                      # regenerate parse units carrying soft violations
 
 uv run dep/dep.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [--clean] [-n]
 uv run dep/dep.py inferno purgatorio paradiso --fix-labels   # relabel respellings, no model call
+uv run dep/dep.py inferno -m ollama:gpt-oss --fix            # regenerate flagged units
 ```
 
 Consumers read it deterministically via `Canto.dep()` (line-number -> `DepRow` tuples) or the CLI
