@@ -4,6 +4,10 @@ import sys
 
 from . import api
 from . import dep as _dep
+from . import hashes as _hashes
+from . import morph as _morph
+from . import np as _np
+from . import skel as _skel
 
 
 def _line_rows(lines: tuple[api.Line, ...]) -> str:
@@ -103,6 +107,76 @@ def _dep_row_dict(canto: api.Canto, row: api.DepRow) -> dict[str, object]:
     return data
 
 
+def _arg_repr(
+    arg: api.SkelArg,
+    np_idx: dict[tuple[int, int], api.NPSpan] | None,
+) -> str:
+    if arg.line == 0 and arg.token == 0:
+        return "∅"
+    span = np_idx.get((arg.line, arg.token)) if np_idx is not None else None
+    if span is not None:
+        return f"[{span.text}] ({span.np_id})"
+    return f"{arg.line}.{arg.token}"
+
+
+def _skel_rows(
+    lines: tuple[api.Line, ...],
+    tuples: tuple[api.SkelTuple, ...],
+    np_idx: dict[tuple[int, int], api.NPSpan] | None,
+    dep_idx: dict[tuple[int, int], api.DepRow] | None,
+    morph_idx: dict[tuple[int, int], api.MorphRow] | None,
+    children_idx: dict[tuple[int, int], list] | None,
+) -> str:
+    by_line: dict[int, list[api.SkelTuple]] = {}
+    for t in tuples:
+        by_line.setdefault(t.line, []).append(t)
+
+    out: list[str] = []
+    for line in lines:
+        out.append(f"{line.no}: {line.text}")
+        for t in sorted(by_line.get(line.no, ()), key=lambda t: t.token):
+            suffix = ""
+            if dep_idx is not None:
+                ante = _skel.antecedent(t, dep_idx)
+                if ante is not None:
+                    ante_span = np_idx.get(ante) if np_idx is not None else None
+                    shown = f"[{ante_span.text}] ({ante_span.np_id})" if ante_span else f"{ante[0]}.{ante[1]}"
+                    suffix = f" (antecedent {shown})"
+            out.append(f"    ({t.skel_id}) {t.word}{suffix}")
+            for arg in t.args:
+                shown = _arg_repr(arg, np_idx)
+                if (arg.line, arg.token) == (0, 0) and morph_idx is not None and children_idx is not None:
+                    feats = _skel.pro_drop_features(t, morph_idx, children_idx)
+                    if feats:
+                        shown = f"∅ ({feats})"
+                out.append(f"        {arg.role:<8} {shown}")
+    return "\n".join(out)
+
+
+def _skel_tuple_to_dict(
+    t: api.SkelTuple,
+    np_idx: dict[tuple[int, int], api.NPSpan] | None,
+    dep_idx: dict[tuple[int, int], api.DepRow] | None,
+    morph_idx: dict[tuple[int, int], api.MorphRow] | None,
+    children_idx: dict[tuple[int, int], list] | None,
+) -> dict[str, object]:
+    data = t.to_dict()
+    if dep_idx is not None:
+        ante = _skel.antecedent(t, dep_idx)
+        if ante is not None:
+            data["antecedent"] = {"line": ante[0], "token": ante[1]}
+    for arg_data, arg in zip(data["args"], t.args):
+        if np_idx is not None:
+            span = _skel.arg_np(arg, np_idx)
+            if span is not None:
+                arg_data["np_id"] = span.np_id
+        if (arg.line, arg.token) == (0, 0) and morph_idx is not None and children_idx is not None:
+            feats = _skel.pro_drop_features(t, morph_idx, children_idx)
+            if feats:
+                arg_data["features"] = feats
+    return data
+
+
 def _dump_json(data: object) -> None:
     json.dump(data, sys.stdout, ensure_ascii=False, indent=2)
     sys.stdout.write("\n")
@@ -144,6 +218,15 @@ def build_parser() -> argparse.ArgumentParser:
     text_dep.add_argument("canticle")
     text_dep.add_argument("reference", help="canto or canto:start-end")
     _add_format_argument(text_dep, "text", "json", default="text")
+    text_skel = text_sub.add_parser("skel")
+    text_skel.add_argument("canticle")
+    text_skel.add_argument("reference", help="canto or canto:start-end")
+    _add_format_argument(text_skel, "text", "json", default="text")
+
+    hash_parser = roots.add_parser("hash")
+    hash_parser.add_argument("canticle")
+    hash_parser.add_argument("canto", type=int)
+    _add_format_argument(hash_parser, "text", "json", default="text")
 
     quote_parser = roots.add_parser("quote")
     quote_sub = quote_parser.add_subparsers(dest="action", required=True)
@@ -231,7 +314,38 @@ def _handle_text(args: argparse.Namespace) -> int:
             print(_dep_rows(canto, lines, selected))
         return 0
 
+    if args.action == "skel":
+        canto_no = int(str(args.reference).split(":")[0])
+        canto = api.canto(args.canticle, canto_no)
+        nos = {line.no for line in lines}
+        tuples = tuple(t for t in canto.skel() if t.line in nos)
+        np_idx = _skel.np_head_index(canto.np()) if _np.has_np(args.canticle, canto_no) else None
+        dep_idx = _dep.index(canto.dep()) if _dep.has_dep(args.canticle, canto_no) else None
+        morph_idx = (
+            _skel.morph_index(canto.morph()) if _morph.has_morph(args.canticle, canto_no) else None
+        )
+        children_idx = (
+            _skel.children_index(canto.dep()) if _dep.has_dep(args.canticle, canto_no) else None
+        )
+        if args.format == "json":
+            _dump_json([
+                _skel_tuple_to_dict(t, np_idx, dep_idx, morph_idx, children_idx) for t in tuples
+            ])
+        else:
+            print(_skel_rows(lines, tuples, np_idx, dep_idx, morph_idx, children_idx))
+        return 0
+
     raise ValueError(f"unknown text action: {args.action}")
+
+
+def _handle_hash(args: argparse.Namespace) -> int:
+    data = api.canto(args.canticle, args.canto).hashes()
+    if args.format == "json":
+        _dump_json(data)
+    else:
+        for layer, digest in data.items():
+            print(f"{layer}\t{digest}")
+    return 0
 
 
 def _handle_quote(args: argparse.Namespace) -> int:
@@ -266,6 +380,8 @@ def main() -> int:
             return _handle_list(args)
         if args.root == "text":
             return _handle_text(args)
+        if args.root == "hash":
+            return _handle_hash(args)
         if args.root == "quote":
             return _handle_quote(args)
         if args.root == "canto":

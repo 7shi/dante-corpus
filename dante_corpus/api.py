@@ -4,14 +4,18 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from . import dep as _dep
+from . import hashes as _hashes
 from . import morph as _morph
 from . import np as _np
+from . import skel as _skel
 from ._paths import SRC_DIR, QUOTES_DIR
 from .tokenizer import has_alpha, tokenize
 
 MorphRow = _morph.MorphRow
 NPSpan = _np.NPSpan
 DepRow = _dep.DepRow
+SkelArg = _skel.SkelArg
+SkelTuple = _skel.SkelTuple
 
 VALID_CANTICLES = ("inferno", "purgatorio", "paradiso")
 REF_RE = re.compile(
@@ -113,6 +117,16 @@ class Canto:
     def dep(self) -> dict[int, tuple[DepRow, ...]]:
         """Frozen Layer-4 dependencies: line-number -> per-token DepRows (no model call)."""
         return _dep.load_dep(self.canticle, self.number)
+
+    def skel(self) -> tuple[SkelTuple, ...]:
+        """Frozen Layer-5 predicate-argument skeleton: grouped, identified tuples, ordered by
+        (line, token) (no model call)."""
+        return _skel.tuples_canto(self.canticle, self.number)
+
+    def hashes(self) -> dict[str, str]:
+        """Content hash (sha256) of every layer artifact that exists for this canto, keyed by
+        layer name (`text`/`morph`/`np`/`dep`/`skel`). See PLAN.md "Versioning"."""
+        return _hashes.canto_hashes(self.canticle, self.number)
 
     def to_dict(self) -> dict[str, object]:
         return {

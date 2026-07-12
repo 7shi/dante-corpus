@@ -2,8 +2,10 @@
 
 ## Status
 
-**Next up: Layer 5 (predicate-argument skeleton)** — Layers 1–4 are implemented and merged to
-`main`; see *The layers* below for Layer 5's design.
+**Next up: Layer 5 (predicate-argument skeleton) — core module done, LLM build driver and
+100-canto artifacts remain.** Layers 1–4 are implemented and merged to `main`; see *The
+layers* below for Layer 5's design and the *Handoff* section at the end of this document for
+exactly what a fresh session needs to pick up next.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -19,16 +21,24 @@
   built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — see
   [`dep/README.md`](dep/README.md)'s *Check* section and
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
-- **Layer 5 — skeleton**: design only (this document).
+- **Layer 5 — skeleton**: **core module implemented and committed** (`f7819b0`,
+  "Add Layer 5 (skel) core module: predicate-argument skeleton + content hashes"):
+  `dante_corpus/skel.py` (dataclasses, role vocabulary, deterministic derivation, table
+  parsing, validation, TSV I/O, serve-time joins), `dante_corpus/hashes.py` (content-hash
+  versioning, all layers), `Canto.skel()`/`Canto.hashes()` in `api.py`, `dante-corpus text
+  skel`/`dante-corpus hash` in `cli.py`, `tests/test_skel.py` + `tests/test_hashes.py` (28
+  tests, all passing; 64 total in the suite, no regressions). **Not yet done**: the LLM build
+  driver (`skel/skel.py`), `skel/README.md`/`Makefile`/`CORRECTIONS.md`, and the 100-canto
+  build run. See *Handoff* below.
 
 `grammar-stack-plan` was merged into `main` (fast-forward) and pushed; Layers 1–4 and their
 artifacts now live on `main`.
 
 **Next work**
 
-1. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
-   Its design must also cover artifact **versioning** (content hashes for consumer invalidation)
-   and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
+1. **Layer 5 build driver** (`skel/skel.py`) — write the LLM-facing half of Layer 5, structurally
+   mirroring `dep/dep.py`, then pilot-build Inferno canto 1, measure the divergence-from-
+   `derive_unit` soft-check count, and triage per the *Handoff* section's plan. See *Sequencing*.
 
 ## Why this lives in the corpus
 
@@ -125,21 +135,44 @@ layer-3 NPs) each carry a role and a head here, making every pronoun mention enu
 mechanics — parse units, index-citing generation, validation tiers, and usage — live in
 [`dep/README.md`](dep/README.md). It is served via `Canto.dep()` and `dante-corpus text dep`.
 
-### Layer 5 — Predicate-argument skeleton
+### Layer 5 — Predicate-argument skeleton *(core module implemented — see `dante_corpus/skel.py`)*
 
-Noun-phrase ↔ verb tuples binding layers 3 and 4 into bare propositions — citing ids, **not** raw
-text. This is the *raw* skeleton only: **no semantic frame, no coreference, no vocabulary
-normalization.**
+Predicate ↔ argument tuples binding layers 2–4 into bare propositions, citing **token
+positions**, not raw text or lemmas. This is the *raw* skeleton only: **no semantic frame, no
+coreference, no vocabulary normalization.** Role labels are **UD-derived**
+(`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic — an
+earlier draft of this section used a semantic label (`locative`) for the oblique example below;
+that was replaced with `obl:in`/`obl:per` etc. once the design was implemented, to keep the
+vocabulary canon-neutral and directly comparable with the deterministic derivation below.
 
-- `(subject = ∅ pro-drop, predicate = ritrovare, locative = NP[una selva oscura])`
-- `(subject = NP[la diritta via], predicate = smarrire)`
-- `(subject = NP[esta selva …], predicate = rinovare, object = NP[la paura], locative = pensier)`
+Unlike Layers 2–4, **the LLM authors the artifact but a deterministic derivation is the
+checker**: `derive_unit` in `dante_corpus/skel.py` computes the same predicate-argument
+structure mechanically from the frozen Layers 2–4, and the LLM proposes its own, independent
+reading of the same parse unit (it is **not shown** the Layer-4 parse). Soft checks report every
+divergence between the two. A purely deterministic Layer 5 would just be `f(dep)` and could
+never disagree with Layer 4; giving the LLM an independent read means a divergence can surface
+a genuine Layer-4 mis-parse, not just an LLM slip — Layer 5 doubles as an audit of Layer 4,
+triaged with the same measure-then-freeze discipline as `dep/CORRECTIONS.md`.
+
+Worked example, Inferno I.1–9 (verified by hand against the frozen `dep`/`np`/`morph` artifacts;
+reproduced exactly by `derive_unit`, see `tests/test_skel.py::test_derive_unit_inferno_1_1_9`):
+
+- `ritrovai` (2.2): `subj = ∅` (pro-drop), `obl:in = [mezzo del cammin di nostra vita]` (1.1),
+  `obl:per = [una selva oscura]` (2.1)
+- `smarrita` (3.6): `subj = [la diritta via]` (3.1)
+- `rinova` (6.4): `subj = che` (the relative pronoun token itself — its antecedent, `[esta selva
+  selvaggia e aspra e forte]`, is *derived*, not stored, via `skel.antecedent`), `obj = [la
+  paura]` (6.2), `obl:in = pensier` (6.1)
 - **Ids**: each tuple is addressable by a stable id (`<line>.<ordinal>` in line order, mirroring
-  layer-3 NP ids, derived at serve time), so a consumer artifact can **cite** a skeleton tuple
-  rather than paraphrase it — consumers annotate tuples by id, they never re-derive them.
-- **Generation**: LLM at build time, frozen.
-- **Check**: cited NP ids exist in layer 3; the predicate token exists in layer 1; arguments are
-  layer-3 NPs or layer-1 pronoun tokens.
+  layer-3 NP ids, derived at serve time via `skel.tuples_canto`), so a consumer artifact can
+  **cite** a skeleton tuple rather than paraphrase it — consumers annotate tuples by id, they
+  never re-derive them.
+- **Generation**: LLM at build time, frozen (build driver **not yet written** — see *Handoff*).
+- **Check**: hard — the predicate token exists in layer 1 and every argument position is a
+  valid in-unit token position (or the `(0,0)` pro-drop/zero-argument sentinel). Soft — an
+  argument citing a nominal role must be a layer-3 NP head, a layer-1 pronoun token, or an
+  in-unit predicate (clausal argument); and, the central check, every divergence from
+  `derive_unit` (`missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`).
 
 ## Out of scope — consumer responsibilities
 
@@ -217,8 +250,84 @@ discipline already used for normalization and quotes.
    substrate consumers most want.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
-4. **Layer 5 (skeleton)** — the remaining work; freeze last, binding layers 3–4 into bare
-   propositions.
+4. **Layer 5 (skeleton)** — *core module implemented* (`dante_corpus/skel.py` +
+   `dante_corpus/hashes.py`); the LLM build driver (`skel/skel.py`) and the 100-canto artifact
+   build are the remaining work. See *Handoff*.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-Layers 2–4 are implemented and merged to `main`; layer 5 remains design only.
+Layers 2–4 are implemented and merged to `main`; layer 5's core module is implemented and
+committed (`f7819b0`) — its build driver and artifacts are the remaining work.
+
+## Handoff (2026-07-13, for a fresh session)
+
+Layer 5's **core module** (the deterministic/served half) is done, committed, and tested. What's
+left is entirely the **LLM-facing build driver** and the resulting artifacts. A new session
+picking this up needs no further design discussion — the design is finished and verified; this
+section is a concrete punch list.
+
+**What exists now** (commit `f7819b0`, "Add Layer 5 (skel) core module: predicate-argument
+skeleton + content hashes"):
+
+- `dante_corpus/skel.py` — read its module docstring first; it explains the LLM-authors /
+  derivation-checks design. Key entry points a build driver will call: `resolve_chunk` (parse
+  the LLM's Markdown table into `SkelRow`s), `validate_unit` (hard + soft checks, call with
+  `morph_rows`/`np_rows`/`dep_rows` all supplied once artifacts exist to get every soft check),
+  `derive_unit` (the deterministic checker — also useful standalone for measuring how far off
+  an un-triaged canto is), `write_skel`/`has_skel`/`load_skel` (TSV I/O, same shape as
+  `dep.py`'s), `tuples_canto` (serve-time grouping + id assignment).
+- `dante_corpus/hashes.py` — `artifact_hash`/`canto_hashes`, already wired to all four TSV
+  layers plus `text`; needs no further work for Layer 5.
+- `Canto.skel()` / `Canto.hashes()` in `api.py`; `dante-corpus text skel` / `dante-corpus hash`
+  in `cli.py` — both manually smoke-tested against a hand-generated pilot artifact for Inferno
+  I.1–9 (matches the worked example above exactly; that pilot artifact was deleted after
+  verification, it is not committed).
+- `tests/test_skel.py` (25 tests) + `tests/test_hashes.py` (3 tests) — all passing, no
+  regressions in the existing 61.
+
+**What's not started**: the build driver itself. Concretely, in order:
+
+1. **`skel/skel.py`** — structurally copy `dep/dep.py` (same file the design plan cited as the
+   template): `SYSTEM_PROMPT` with one full worked example (use Inferno I.1–3: `ritrovai`
+   subj-∅/obl:in/obl:per, `smarrita` subj), reuse `dep.sentence_groups` verbatim for parse units
+   (must stay unit-aligned with Layer 4 for the divergence check to mean anything), a prompt
+   builder that shows numbered lines + POS-annotated token list (dep's format) + the Layer-3 NP
+   list as citation anchors — **deliberately omit the Layer-4 parse** from the prompt (that's
+   what makes the divergence check meaningful; see `skel.py`'s docstring). Output table columns:
+   `Pred Line | Pred Token | Pred Word | Role | Arg Line | Arg Token | Arg Word` (zero-arg
+   predicate = Role `-`; pro-drop = Arg Line/Token `0`/`0`, Arg Word `∅`). Recovery: copy
+   `_merge_tables` verbatim; `_continue_if_missing` should be keyed off `derive_unit`'s
+   predicate set (request rows for derived predicates the model's output is missing). `RETRIES
+   = 2`; per-unit `write_skel` after zero hard violations; resume from committed TSV; modes
+   `--check`/`--clean`/`--fix`/`--dry-run`/`--log`; `--fix` keeps a unit only under the
+   no-worse-off guarantee (strictly fewer soft, zero hard) exactly like `dep/dep.py`'s `_fix_canto`.
+2. **`skel/Makefile`** — mirror `dep/Makefile` (`include ../model.mk`; `all`/`skel`/`check`/`fix`
+   targets).
+3. **Pilot build**: `uv run skel/skel.py inferno -c 1 -m ollama:gemma4:31b-it-qat` (the local
+   model in `model.mk`), then `--check`. **Expect a nontrivial soft-divergence count on the
+   first pass** — the mixed copular styles frozen into the Layer-4 corpus (UD-style `amara`/`è
+   cop` vs spaCy-style `è root`/`cosa attr`, see `dep.py`'s `attr` comment) are the likely
+   largest single source, by analogy with `dep/CORRECTIONS.md`'s `attr`-vocabulary story. Record
+   the raw count before touching anything (measure-then-freeze).
+4. **Triage the divergences**, same ladder as `dep/CORRECTIONS.md`: deterministic fix first (if
+   a divergence class turns out to be a `derive_unit` bug, fix `skel.py`, not the artifact) →
+   LLM `--fix` regeneration (no-worse-off guaranteed) → hand-verified exemption (only if a
+   genuine reading `derive_unit` structurally can't express) → hand-edit as an absolute last
+   resort (document in `skel/CORRECTIONS.md`, following `dep/CORRECTIONS.md`'s precedent of
+   checking each instance against its terzina rather than blanket-applying a rule).
+5. **`skel/README.md`** — write once the first canto's numbers are known; follow the structure
+   of `dep/README.md` (artifact format, generation approach, validation tiers, CLI usage,
+   *Check* section with the measured hard/soft counts).
+6. **Scale to all 100 cantos**, gate on `--check` = 0 hard (soft count reported, triaged same as
+   above until it converges or is exemption-flagged).
+7. **Final `dante_corpus/README.md` update** — add `text skel` / `hash` CLI sections and
+   `Canto.skel()`/`Canto.hashes()`/`SkelTuple` to the Public API listing (Layers 2–4's sections
+   there are the template).
+8. **This document** — once the build is complete, update the *Status* section's Layer 5 entry
+   to "implemented and complete" with the final hard/soft counts, matching how Layers 3–4 are
+   currently described.
+
+No further design decisions are expected to be needed for any of the above — every open question
+(role vocabulary, artifact schema, predicate definition, checker semantics, id scheme, hashing)
+was resolved and implemented in commit `f7819b0`. If a build-time surprise contradicts something
+this document states, prefer what the code and tests actually do (they're authoritative) and
+update this document to match, rather than re-deriving the design from scratch.

@@ -503,6 +503,9 @@ def _artifact_path(canticle: str, number: int) -> Path:
     return NP_DIR / canticle / f"{number:02d}.tsv"
 
 
+artifact_path = _artifact_path
+
+
 def write_np(canticle: str, number: int, lines: list[tuple[int, list[NPSpan]]]) -> Path:
     path = _artifact_path(canticle, number)
     path.parent.mkdir(parents=True, exist_ok=True)
