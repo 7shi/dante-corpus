@@ -13,13 +13,12 @@ below for Layer 5's design.
   all 100 cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`).
   `--check` reports **0 hard / 0 soft** violations — see [`np/README.md`](np/README.md)'s *Check*
   section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md) for the full history.
-- **Layer 4 — Dependency / grammatical role**: implemented and built for all 100 cantos;
-  `--check` reports **0 hard / 0 soft** violations — see [`dep/README.md`](dep/README.md)'s
-  *Check* section and [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history
-  (frozen-`DEPRELS` adjustment, `--fix-labels`, LLM `--fix`, `RELCL_HEAD` note flag, one
-  hand-corrected mis-attachment). Build driver `dep/dep.py`, served via `Canto.dep()` and
-  `dante-corpus text dep` (with `text np` gaining a
-  derived `role=` per noun phrase).
+- **Layer 4 — Dependency / grammatical role**: implemented and complete; see
+  [`dep/README.md`](dep/README.md). Build driver `dep/dep.py`, served via `Canto.dep()` and
+  `dante-corpus text dep` (with `text np` gaining a derived `role=` per noun phrase). Artifacts
+  built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — see
+  [`dep/README.md`](dep/README.md)'s *Check* section and
+  [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
 - **Layer 5 — skeleton**: design only (this document).
 
 **Next work**
@@ -118,20 +117,13 @@ containment at serve time. Served via `Canto.np()` and `dante-corpus text np`.
 
 ### Layer 4 — Dependency / grammatical role *(implemented — see [`dep/README.md`](dep/README.md))*
 
-Each token and noun phrase tagged with its function in the clause and the head it attaches to.
-
-- `[la diritta via]` = subject of `era smarrita`
-- `mi` = reflexive object → `ritrovai`
-- `[una selva oscura]` = locative complement → `ritrovai`
-- `che` (l.6) = relative pronoun, subject of `rinova`, antecedent `[esta selva …]`
-- **Pronoun mentions become enumerable here**: bare clitic / relative / personal pronoun tokens —
-  deliberately not listed as layer-3 NPs — each carry a role and a head at this layer, so a
-  consumer can enumerate every pronoun mention from layer-2 POS + layer-4 role. Attachment may
-  cross line boundaries (a subject on one line, its predicate on the next), which is also what
-  rejoins enjambed NP pieces.
-- **Generation**: LLM at build time, frozen.
-- **Check**: every token carries a role; every cited head id exists; relative-pronoun antecedents
-  resolve to an in-scope NP.
+Each token tagged with its function in the clause (a Universal Dependencies relation) and the head
+it attaches to — `[la diritta via]` = subject of `era smarrita`; `che` (l.6) = relative pronoun,
+subject of `rinova`, antecedent `[esta selva …]`. Attachment may cross line boundaries, which is
+what rejoins layer-3's single-line enjambed NP pieces; bare pronoun tokens (deliberately not
+layer-3 NPs) each carry a role and a head here, making every pronoun mention enumerable. The
+mechanics — parse units, index-citing generation, validation tiers, and usage — live in
+[`dep/README.md`](dep/README.md). It is served via `Canto.dep()` and `dante-corpus text dep`.
 
 ### Layer 5 — Predicate-argument skeleton
 
@@ -223,9 +215,8 @@ discipline already used for normalization and quotes.
    already shown feasible intrinsically, and immediately useful as a lemma-queryable index.
 2. **Layer 3 (noun phrases)** — *implemented* (`dante_corpus/np.py` + `np/np.py`). The census/entity
    substrate consumers most want.
-3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`); all 100 cantos
-   built (0 hard / 0 soft). The syntactic spine that rejoins enjambed NPs and makes pronoun
-   mentions enumerable.
+3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
+   spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — the remaining work; freeze last, binding layers 3–4 into bare
    propositions.
 

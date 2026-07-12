@@ -27,7 +27,7 @@ are not stored in the frozen artifact. The generation driver lives in this direc
 the parsing, resolution, validation, and I/O it depends on stay in the shared package
 (`dante_corpus/dep.py`), which is what the runtime API consumes.
 
-Two things PLAN.md asks for are deliberately **derived, never stored**:
+Three things PLAN.md asks for are deliberately **derived, never stored**:
 
 - **Enjambed attachment.** A head may be on a different line than its dependent (a subject on one
   line, its predicate on the next) — this is what rejoins Layer 3's single-line noun phrases across
@@ -39,6 +39,10 @@ Two things PLAN.md asks for are deliberately **derived, never stored**:
   check that every `acl:relcl` head is a nominal Layer-2 POS — or carries the `RELCL_HEAD` note
   flag for hand-verified substantivized exceptions (see [CORRECTIONS.md](CORRECTIONS.md)) — rather
   than anything stored.
+- **Pronoun mentions.** Bare clitic / relative / personal pronouns are deliberately not Layer-3
+  NPs; here each is just an ordinary token row with a deprel and a head. A consumer enumerates
+  every pronoun mention by joining Layer-2 POS (`PRON`) with the Layer-4 role — no separate
+  mention list is stored.
 
 ## Output
 
