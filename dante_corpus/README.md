@@ -1,7 +1,8 @@
 # dante_corpus
 
 Source text library for Dante's *Divina Commedia*. Provides line-level access to
-the Italian source, tokenization, and quote-span (speech attribution) data.
+the Italian source, tokenization, quote-span (speech attribution) data, and the frozen
+grammatical-analysis stack (morphology, noun phrases, dependencies — see PLAN.md).
 
 ---
 
@@ -25,11 +26,15 @@ Lists available canticles or canto numbers, one per line.
 ```bash
 dante-corpus text lines  <canticle> <reference> [--format text|json]
 dante-corpus text tokens <canticle> <reference> [--format text|json]
+dante-corpus text morph  <canticle> <reference> [--format text|json]
+dante-corpus text np     <canticle> <reference> [--format text|json]
+dante-corpus text dep    <canticle> <reference> [--format text|json]
 ```
 
-Prints source lines or their tokens for a reference range.
-`reference` is a canto number or `canto:start-end`, e.g. `1`, `1:1-12`.
-Default format: `text`.
+Prints source lines, tokens, or a grammatical layer (morphology, noun phrases, dependencies)
+for a reference range. `reference` is a canto number or `canto:start-end`, e.g. `1`, `1:1-12`.
+Default format: `text`. `morph`/`np`/`dep` read the frozen artifacts under `morph/`, `np/`,
+`dep/` (see their own READMEs); no model call happens at query time.
 
 **Examples**
 
@@ -37,9 +42,42 @@ Default format: `text`.
 dante-corpus text lines  inferno 1
 dante-corpus text lines  inferno 1:1-12 --format json
 dante-corpus text tokens inferno 1:8-9
+dante-corpus text morph  inferno 1:1-2
+dante-corpus text np     inferno 1:1-2
+dante-corpus text dep    inferno 1:1-2
 ```
 
 Text format: `<no>: <text>` per line. Token format: `<no>: tok | tok | …`.
+
+**`text morph`** prints one indented line per token: `word  lemma  pos  features  note`.
+
+```
+1: Nel mezzo del cammin di nostra vita
+    Nel  in+il  preposition+article  m. sg.  contraction
+    mezzo  mezzo  noun  m. sg.
+    ...
+```
+
+**`text np`** prints noun phrases nested under their line, most-specific innermost. Each span
+shows its text, id (`<line>.<ordinal>`), head token, and — when a Layer-4 `dep/` artifact exists
+for the canto — its derived grammatical `role`.
+
+```
+1: Nel mezzo del cammin di nostra vita
+    [mezzo del cammin di nostra vita]  (1.1) head=mezzo role=obl
+        [cammin di nostra vita]  (1.2) head=cammin role=nmod
+            [nostra vita]  (1.3) head=vita role=nmod
+```
+
+**`text dep`** prints one indented line per token: the Universal Dependencies relation and the
+head it attaches to (as `word (line.token)`); the sentence root has no head.
+
+```
+2: mi ritrovai per una selva oscura,
+    mi         expl       -> ritrovai (2.2)
+    ritrovai   root
+    per        case       -> selva (2.5)
+```
 
 ### `quote`
 
@@ -78,6 +116,9 @@ dante-corpus canto show inferno 1 --format text
 ```
 src/       <canticle>/NN.txt    Italian source lines (one line per file line)
 quotes/    <canticle>.xml       Speech-quote tree (built by dante-build-quotes)
+morph/     <canticle>/NN.tsv    Layer 2: per-token morphology + lemma (see morph/README.md)
+np/        <canticle>/NN.tsv    Layer 3: noun phrases (see np/README.md)
+dep/       <canticle>/NN.tsv    Layer 4: dependency relations (see dep/README.md)
 ```
 
 ### XML format (`quotes/<canticle>.xml`)
@@ -147,7 +188,14 @@ class Canto:
 canto.line(number: int) -> Line
 canto.lines(start: int = 1, end: int | None = None) -> tuple[Line, ...]
 canto.quotes() -> tuple[QuoteSpan, ...]
+canto.morph() -> dict[int, tuple[MorphRow, ...]]   # Layer 2, line no -> per-token rows
+canto.np()    -> tuple[NPSpan, ...]                # Layer 3, nested forest
+canto.dep()   -> dict[int, tuple[DepRow, ...]]     # Layer 4, line no -> per-token rows
 ```
+
+`morph`/`np`/`dep` load the frozen build-time artifacts (see [`morph/README.md`](../morph/README.md),
+[`np/README.md`](../np/README.md), [`dep/README.md`](../dep/README.md)); no model call happens on
+these calls, and they raise `FileNotFoundError` if the canto's artifact hasn't been built.
 
 ```python
 @dataclass(frozen=True)
@@ -161,6 +209,47 @@ class QuoteSpan:
     head: str | None          # disambiguating head tokens (if needed)
     children: tuple[QuoteSpan, ...]
 ```
+
+```python
+@dataclass(frozen=True)
+class MorphRow:  # Layer 2 — one per Layer-1 token, aligned 1:1
+    word: str
+    lemma: str = ""
+    pos: str = ""
+    gender: str = ""    # closed: m. / f. / n.
+    number: str = ""    # closed: sg. / pl.
+    person: str = ""    # closed: 1 / 2 / 3
+    tense: str = ""
+    mood: str = ""
+    note: str = ""       # e.g. contraction / apocope / elision
+```
+
+```python
+@dataclass(frozen=True)
+class NPSpan:  # Layer 3 — noun phrase, over-inclusive, single-line
+    line: int
+    start: int   # 1-based token index of first token (inclusive)
+    end: int     # 1-based token index of last token (inclusive)
+    head: int    # 1-based token index of the head (start <= head <= end)
+    text: str    # verbatim source substring spanning [start, end]
+    np_id: str   # derived at serve time: f"{line}.{ordinal}"
+    children: tuple["NPSpan", ...]  # nested NPs, by span containment
+```
+
+```python
+@dataclass(frozen=True)
+class DepRow:  # Layer 4 — one per Layer-1 token (incl. bare pronouns not in any NP)
+    line: int
+    token: int       # 1-based alpha-token index within `line` (matches Line.tokens order)
+    word: str
+    deprel: str      # Universal Dependencies relation, or "root"
+    head_line: int   # 0 together with head_token == 0 marks the sentence root
+    head_token: int
+```
+
+Helpers in `dep.py`: `index(canto.dep()) -> dict[tuple[int, int], DepRow]` builds a
+`(line, token)` lookup; `np_role(span, idx) -> str` derives an `NPSpan`'s grammatical role from
+that index (used by `text np`'s `role=` column).
 
 ---
 
