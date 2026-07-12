@@ -548,7 +548,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 76	levata	levato	adjective	f.	sg.				
 77	e	e	conjunction						
 77	i	il	article	m.	pl.				
-77	tre	tre	numeral	m.	pl.				
+77	tre	tre	numeral	m.	pl.				RELCL_HEAD
 77	che	che	pronoun	m.	pl.				
 77	ciò	ciò	pronoun		sg.				
 77	inteser	intendere	verb		pl.	3	remote past	indicative	apocope

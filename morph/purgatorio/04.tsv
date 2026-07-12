@@ -983,7 +983,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 134	grazia	grazia	noun	f.	sg.				
 134	viva	vivo	adjective	f.	sg.				
 135	l'	la	article	f.	sg.				elision
-135	altra	altro	adjective	f.	sg.				
+135	altra	altro	adjective	f.	sg.				RELCL_HEAD
 135	che	che	pronoun		sg.				
 135	val	valere	verb		sg.	3	present	indicative	apocope
 135	che	che	conjunction						

@@ -646,7 +646,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 92	e	e	conjunction						
 92	tutti	tutto	adjective	m.	pl.				
 92	li	lo	article	m.	pl.				archaic
-92	altri	altro	adjective	m.	pl.				
+92	altri	altro	adjective	m.	pl.				RELCL_HEAD
 92	che	che	pronoun						relative
 92	venieno	venire	verb		pl.	3	present	indicative	archaic
 92	appresso	appresso	adverb						

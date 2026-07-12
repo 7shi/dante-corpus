@@ -740,7 +740,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 98	con	con	preposition						
 98	esso	esso	pronoun	m.	sg.				
 98	i	il	article	m.	pl.				
-98	due	due	numeral	m.	pl.				
+98	due	due	numeral	m.	pl.				RELCL_HEAD
 99	che	che	pronoun	m.	pl.				
 99	fuor	fuori	adverb						apocope
 99	del	di+il	preposition+article	m.	sg.				contraction
@@ -901,7 +901,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 121	dicea	dire	verb		sg.	3	imperfect	indicative	apocope
 121	d'	di	preposition						elision
 121	i	il	article	m.	pl.				
-121	maladetti	maledetto	adjective	m.	pl.				
+121	maladetti	maledetto	adjective	m.	pl.				RELCL_HEAD
 122	nei	in+i	preposition+article	m.	pl.				contraction
 122	nuvoli	nuvola	noun	m.	pl.				archaic
 122	formati	formare	adjective	m.	pl.				
@@ -1113,7 +1113,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 151	E	e	conjunction						
 151	senti'	sentire	verb		sg.	2	remote past	indicative	apocope
 151	dir	dire	verb						apocope
-151	Beati	beato	adjective	m.	pl.				
+151	Beati	beato	adjective	m.	pl.				RELCL_HEAD
 151	cui	cui	pronoun		sg.				
 151	alluma	allumare	verb		sg.	3	present	indicative	archaic
 152	tanto	tanto	adverb						

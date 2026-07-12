@@ -237,7 +237,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 34	E	e	conjunction						
 34	tutti	tutto	adjective	m.	pl.				
 34	li	lo	article	m.	pl.				archaic
-34	altri	altro	adjective	m.	pl.				
+34	altri	altro	adjective	m.	pl.				RELCL_HEAD
 34	che	che	pronoun						relative
 34	tu	tu	pronoun		sg.	2			
 34	vedi	vedere	verb		sg.	2	present	indicative	

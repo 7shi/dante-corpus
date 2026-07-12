@@ -216,7 +216,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 30	pria	prima	adverb						apocope
 30	s'	se	conjunction						elision
 30	è	essere	verb		sg.	3	present	indicative	
-30	tal	tale	adjective		sg.				
+30	tal	tale	adjective		sg.				RELCL_HEAD
 30	ch'	che	conjunction						elision
 30	ella	ella	pronoun	f.	sg.	3			
 30	ti	ti	pronoun		sg.	2			

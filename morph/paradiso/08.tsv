@@ -788,7 +788,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 111	e	e	conjunction						
 111	manco	manco	adverb						
 111	il	il	article	m.	sg.				
-111	primo	primo	adjective	m.	sg.				
+111	primo	primo	adjective	m.	sg.				RELCL_HEAD
 111	che	che	pronoun		sg.				relative
 111	non	non	adverb						
 111	li	lo	pronoun	m.	pl.	3			
@@ -814,7 +814,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 114	la	lo	article	f.	sg.				
 114	natura	natura	noun	f.	sg.				
 114	in	in	preposition						
-114	quel	quello	adjective	m.	sg.				
+114	quel	quello	adjective	m.	sg.				RELCL_HEAD
 114	ch'	che	pronoun		sg.	3			elision
 114	è	essere	verb		sg.	3	present	indicative	
 114	uopo	uopo	noun	m.	sg.				archaic
@@ -1043,7 +1043,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 147	fate	fare	verb		pl.	2	present	indicative	
 147	re	re	noun	m.	sg.				
 147	di	di	preposition						
-147	tal	tale	adjective		sg.				
+147	tal	tale	adjective		sg.				RELCL_HEAD
 147	ch'	che	pronoun		sg.				elision
 147	è	essere	verb		sg.	3	present	indicative	
 147	da	da	preposition						

@@ -842,7 +842,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 117	pregava	pregare	verb		sg.	1	imperfect	indicative	
 117	Iddio	Dio	noun	m.	sg.				
 117	di	di	preposition						
-117	quel	quello	adjective	m.	sg.				
+117	quel	quello	adjective	m.	sg.				RELCL_HEAD
 117	ch'	che	pronoun						elision
 117	e'	egli	pronoun		sg.	3			contraction
 117	volle	volere	verb		sg.	3	remote past	indicative	
@@ -1080,7 +1080,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 148	E	e	conjunction						
 148	cheggioti	che+ti+giovare	conjunction+pronoun+verb			2	present	subjunctive	contraction
 148	per	per	preposition						
-148	quel	quello	adjective	m.	sg.				
+148	quel	quello	adjective	m.	sg.				RELCL_HEAD
 148	che	che	pronoun						
 148	tu	tu	pronoun		sg.	2			
 148	più	più	adverb						

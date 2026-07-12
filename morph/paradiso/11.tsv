@@ -690,7 +690,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 102	Cristo	Cristo	noun	m.	sg.				
 102	e	e	conjunction						
 102	li	lo	article	m.	pl.				archaic
-102	altri	altro	adjective	m.	pl.				
+102	altri	altro	adjective	m.	pl.				RELCL_HEAD
 102	che	che	pronoun	m.	pl.				
 102	'l	lo	pronoun	m.	sg.				elision
 102	seguiro	seguire	verb		pl.	3	future	indicative	archaic

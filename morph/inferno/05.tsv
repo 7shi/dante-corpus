@@ -6,7 +6,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 1	primaio	primario	adjective	m.	sg.				archaic
 2	giù	giù	adverb						
 2	nel	in+il	preposition+article	m.	sg.				contraction
-2	secondo	secondo	adjective	m.	sg.				
+2	secondo	secondo	adjective	m.	sg.				RELCL_HEAD
 2	che	che	pronoun		sg.				relative
 2	men	meno	adverb						apocope
 2	loco	luogo	noun	m.	sg.				archaic
@@ -491,7 +491,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 74	parlerei	parlare	verb		sg.	1	present	conditional	
 74	a	a	preposition						
 74	quei	quello	adjective	m.	pl.				
-74	due	due	numeral	m.	pl.				
+74	due	due	numeral	m.	pl.				RELCL_HEAD
 74	che	che	pronoun	m.	pl.				relative
 74	'nsieme	insieme	adverb						aphesis
 74	vanno	andare	verb		pl.	3	present	indicative	
@@ -635,7 +635,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 93	mal	male	noun	m.	sg.				apocope
 93	perverso	perverso	adjective	m.	sg.				
 94	Di	di	preposition						
-94	quel	quello	adjective	m.	sg.				
+94	quel	quello	adjective	m.	sg.				RELCL_HEAD
 94	che	che	pronoun		sg.				
 94	udire	udire	verb				present	infinitive	
 94	e	e	conjunction						
@@ -895,7 +895,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 132	un	uno	article	m.	sg.				indefinite
 132	punto	punto	noun	m.	sg.				
 132	fu	essere	verb		sg.	3	remote past	indicative	
-132	quel	quello	adjective	m.	sg.				demonstrative
+132	quel	quello	adjective	m.	sg.				demonstrative, RELCL_HEAD
 132	che	che	pronoun		sg.				relative
 132	ci	ci	pronoun		pl.	1			
 132	vinse	vincere	verb		sg.	3	remote past	indicative	

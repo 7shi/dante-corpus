@@ -127,7 +127,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 18	in	in	preposition						
 18	grado	grado	noun	m.	sg.				
 18	come	come	conjunction						
-18	que'	quello	adjective	m.	pl.				apocope
+18	que'	quello	adjective	m.	pl.				apocope, RELCL_HEAD
 18	che	che	pronoun						
 18	lassi	lasciare	verb		sg.	2	present	subjunctive	
 19	Tutti	tutto	pronoun	m.	pl.				
@@ -430,7 +430,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	fa	fare	verb		sg.	3	present	indicative	
 62	natura	natura	noun	f.	sg.				
 62	e	e	conjunction						
-62	quel	quello	adjective	m.	sg.				
+62	quel	quello	adjective	m.	sg.				RELCL_HEAD
 62	ch'	che	pronoun						elision
 62	è	essere	verb		sg.	3	present	indicative	
 62	poi	poi	adverb						

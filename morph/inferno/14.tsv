@@ -328,7 +328,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 48	marturi	marturire	verb		sg.	3	present	subjunctive	
 49	E	e	conjunction						
 49	quel	quello	adjective	m.	sg.				
-49	medesmo	medesimo	adjective	m.	sg.				archaic
+49	medesmo	medesimo	adjective	m.	sg.				archaic, RELCL_HEAD
 49	che	che	pronoun		sg.				
 49	si	si	pronoun		sg.	3			reflexive
 49	fu	essere	verb		sg.	3	remote past	indicative	
@@ -595,7 +595,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 85	Tra	tra	preposition						
 85	tutto	tutto	adjective	m.	sg.				
 85	l'	lo	article	m.	sg.				elision
-85	altro	altro	adjective	m.	sg.				
+85	altro	altro	adjective	m.	sg.				RELCL_HEAD
 85	ch'	che	relative pronoun						elision
 85	i'	io	pronoun		sg.	1			apocope
 85	t'	ti	pronoun		sg.	2			elision

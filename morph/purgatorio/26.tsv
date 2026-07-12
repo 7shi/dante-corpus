@@ -693,7 +693,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 98	li	i	article	m.	pl.				archaic
 98	altri	altro	adjective	m.	pl.				
 98	miei	mio	adjective	m.	pl.				
-98	miglior	migliore	adjective	m.	pl.				apocope
+98	miglior	migliore	adjective	m.	pl.				apocope, RELCL_HEAD
 98	che	che	pronoun						
 98	mai	mai	adverb						
 99	rime	rima	noun	f.	pl.				
@@ -752,7 +752,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 106	tal	tale	adjective		sg.				apocope
 106	vestigio	vestigio	noun	m.	sg.				
 107	per	per	preposition						
-107	quel	quello	adjective	m.	sg.				apocope
+107	quel	quello	adjective	m.	sg.				apocope, RELCL_HEAD
 107	ch'	che	pronoun		sg.				elision
 107	i'	io	pronoun		sg.	1			apocope
 107	odo	udire	verb		sg.	1	present	indicative	

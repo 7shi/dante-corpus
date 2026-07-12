@@ -877,7 +877,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 121	Quando	quando	adverb						
 121	noi	noi	pronoun		pl.	1			
 121	fummo	essere	verb		pl.	1	remote past	indicative	
-121	là	là	adverb						
+121	là	là	adverb						RELCL_HEAD
 121	've	ove	adverb						elision
 121	la	il	article	f.	sg.				
 121	rugiada	rugiada	noun	f.	sg.				
@@ -973,7 +973,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 135	si	si	pronoun		sg.	3			reflexive
 135	rinacque	rinascere	verb		sg.	3	remote past	indicative	
 136	subitamente	subitamente	adverb						
-136	là	là	adverb						
+136	là	là	adverb						RELCL_HEAD
 136	onde	onde	conjunction						
 136	l'	lo	pronoun	m.	sg.				elision
 136	avelse	avere+si	verb		sg.	3	imperfect	indicative	reflexive

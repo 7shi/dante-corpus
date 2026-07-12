@@ -20,7 +20,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 3	sposa	sposa	noun	f.	sg.				
 4	ma	ma	conjunction						
 4	l'	la	article	f.	sg.				elision
-4	altra	altro	adjective	f.	sg.				
+4	altra	altro	adjective	f.	sg.				RELCL_HEAD
 4	che	che	pronoun						relative
 4	volando	volare	verb						gerund
 4	vede	vedere	verb		sg.	3	present	indicative	

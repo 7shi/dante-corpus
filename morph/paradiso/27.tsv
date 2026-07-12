@@ -892,7 +892,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 129	guance	guancia	noun	f.	pl.				
 129	sian	essere	verb		pl.	3	present	subjunctive	apocope
 129	coperte	coprire	adjective	f.	pl.				
-130	Tale	tale	adjective		sg.				
+130	Tale	tale	adjective		sg.				RELCL_HEAD
 130	balbuzïendo	balbuzire	verb				gerund		archaic
 130	ancor	ancora	adverb						apocope
 130	digiuna	digiunare	verb		sg.	3	present	indicative	
@@ -941,7 +941,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 137	bella	bello	adjective	f.	sg.				
 137	figlia	figlia	noun	f.	sg.				
 138	di	di	preposition						
-138	quel	quello	adjective	m.	sg.				
+138	quel	quello	adjective	m.	sg.				RELCL_HEAD
 138	ch'	che	pronoun						elision
 138	apporta	apportare	verb		sg.	3	present	indicative	
 138	mane	mane	noun	f.	sg.				archaic
@@ -977,7 +977,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 142	sverni	svernare	verb		sg.	3	present	subjunctive	
 143	per	per	preposition						
 143	la	il	article	f.	sg.				
-143	centesma	centesimo	adjective	f.	sg.				
+143	centesma	centesimo	adjective	f.	sg.				RELCL_HEAD
 143	ch'	che	pronoun		sg.				elision
 143	è	essere	verb		sg.	3	present	indicative	
 143	là	là	adverb						

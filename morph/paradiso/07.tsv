@@ -218,7 +218,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 34	il	il	article	m.	sg.				
 34	viso	viso	noun	m.	sg.				
 34	a	a	preposition						
-34	quel	quello	adjective	m.	sg.				
+34	quel	quello	adjective	m.	sg.				RELCL_HEAD
 34	ch'	che	pronoun						elision
 34	or	ora	adverb						apocope
 34	si	si	pronoun		sg.	3			reflexive

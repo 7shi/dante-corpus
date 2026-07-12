@@ -413,7 +413,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 61	Tosto	tosto	adverb						
 61	che	che	conjunction						
 61	fu	essere	verb		sg.	3	remote past	indicative	
-61	là	là	adverb						
+61	là	là	adverb						RELCL_HEAD
 61	dove	dove	adverb						
 61	l'	le	article	f.	pl.				elision
 61	erbe	erba	noun	f.	pl.				

@@ -557,7 +557,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 75	malizia	malizia	noun	f.	sg.				
 76	e	e	conjunction						
 76	libero	libero	adjective	m.	sg.				
-76	voler	volere	verb				infinitive		apocope
+76	voler	volere	verb				infinitive		apocope, RELCL_HEAD
 76	che	che	conjunction						
 76	se	se	conjunction						
 76	fatica	fatica	noun	f.	sg.				

@@ -248,7 +248,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 33	tosto	tosto	adverb						
 33	che	che	conjunction						
 33	fui	essere	verb		sg.	1	remote past	indicative	
-33	là	là	adverb						
+33	là	là	adverb						RELCL_HEAD
 33	've	dove	adverb						apocope
 33	'l	il	article	m.	sg.				elision
 33	fondo	fondo	noun	m.	sg.				
@@ -782,7 +782,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 104	Sardi	Sardo	noun	m.	pl.				
 105	e	e	conjunction						
 105	l'	le	article	f.	pl.				elision
-105	altre	altro	adjective	f.	pl.				
+105	altre	altro	adjective	f.	pl.				RELCL_HEAD
 105	che	che	pronoun	f.	pl.				relative
 105	quel	quello	adjective	m.	sg.				
 105	mare	mare	noun	m.	sg.				

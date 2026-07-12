@@ -642,7 +642,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 91	Omè	omè	interjection						
 91	vedete	vedere	verb		pl.	2	present	indicative	
 91	l'	lo	article	m.	sg.				elision
-91	altro	altro	adjective	m.	sg.				
+91	altro	altro	adjective	m.	sg.				RELCL_HEAD
 91	che	che	pronoun		sg.				
 91	digrigna	digrignare	verb		sg.	3	present	indicative	
 92	i'	io	pronoun		sg.	1			apocope
@@ -1053,7 +1053,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 149	uncini	uncino	noun	m.	pl.				
 149	verso	verso	preposition						
 149	li	lo	article	m.	pl.				
-149	'mpaniati	impanare	adjective	m.	pl.				apheresis
+149	'mpaniati	impanare	adjective	m.	pl.				apheresis, RELCL_HEAD
 150	ch'	che	conjunction						elision
 150	eran	essere	verb		pl.	3	imperfect	indicative	apocope
 150	già	già	adverb						

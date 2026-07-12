@@ -26,7 +26,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 3	poeta	poeta	noun	m.	sg.				
 4	quand'	quando	conjunction						elision
 4	un'	uno	article	f.	sg.				elision
-4	altra	altro	adjective	f.	sg.				
+4	altra	altro	adjective	f.	sg.				RELCL_HEAD
 4	che	che	pronoun		sg.				relative
 4	dietro	dietro	adverb						
 4	a	a	preposition						

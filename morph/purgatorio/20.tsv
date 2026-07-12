@@ -544,7 +544,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 78	danno	danno	noun	m.	sg.				
 78	conta	contare	verb		sg.	3	present	indicative	
 79	L'	lo	article	m.	sg.				elision
-79	altro	altro	adjective	m.	sg.				
+79	altro	altro	adjective	m.	sg.				RELCL_HEAD
 79	che	che	pronoun						relative
 79	già	già	adverb						
 79	uscì	uscire	verb		sg.	3	remote past	indicative	
@@ -957,7 +957,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 136	Deo	deus	noun	m.	sg.				
 137	dicean	dire	verb		pl.	3	imperfect	indicative	apocope
 137	per	per	preposition						
-137	quel	quello	adjective	m.	sg.				
+137	quel	quello	adjective	m.	sg.				RELCL_HEAD
 137	ch'	che	pronoun						elision
 137	io	io	pronoun		sg.	1			
 137	da'	da+i	preposition+article	m.	pl.				contraction

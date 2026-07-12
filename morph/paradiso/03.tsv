@@ -121,7 +121,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 17	contrario	contrario	adjective	m.	sg.				
 17	corsi	correre	verb		sg.	1	remote past	indicative	
 18	a	a	preposition						
-18	quel	quello	adjective	m.	sg.				
+18	quel	quello	adjective	m.	sg.				RELCL_HEAD
 18	ch'	che	pronoun		sg.	3			elision
 18	accese	accendere	verb		sg.	3	remote past	indicative	
 18	amor	amore	noun	m.	sg.				apocope

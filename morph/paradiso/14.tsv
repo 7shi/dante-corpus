@@ -185,7 +185,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 27	etterna	eterno	adjective	f.	sg.				
 27	ploia	pioggia	noun	f.	sg.				archaic
 28	Quell'	quello	adjective	m.	sg.				elision
-28	uno	uno	numeral	m.	sg.				
+28	uno	uno	numeral	m.	sg.				RELCL_HEAD
 28	e	e	conjunction						
 28	due	due	numeral	m.	sg.				
 28	e	e	conjunction						
@@ -444,7 +444,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 65	e	e	conjunction						
 65	per	per	preposition						
 65	li	lo	article	m.	pl.				archaic
-65	altri	altro	adjective	m.	pl.				
+65	altri	altro	adjective	m.	pl.				RELCL_HEAD
 65	che	che	pronoun	m.	pl.				
 65	fuor	essere	verb		pl.	3	remote past	indicative	apocope
 65	cari	caro	adjective	m.	pl.				
@@ -734,7 +734,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 107	mi	me	pronoun		sg.	1			
 107	scuserà	scusare	verb		sg.	3	future	indicative	
 107	di	di	preposition						
-107	quel	quello	adjective	m.	sg.				
+107	quel	quello	adjective	m.	sg.				RELCL_HEAD
 107	ch'	che	pronoun						elision
 107	io	io	pronoun		sg.	1			
 107	lasso	lasso	adjective	m.	sg.				
@@ -822,7 +822,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 119	dolce	dolce	adjective	m.	sg.				
 119	tintinno	tintinno	noun	m.	sg.				
 120	a	a	preposition						
-120	tal	tale	adjective	m.	sg.				apocope
+120	tal	tale	adjective	m.	sg.				apocope, RELCL_HEAD
 120	da	da	preposition						
 120	cui	cui	pronoun	m.	sg.				
 120	la	il	article	f.	sg.				

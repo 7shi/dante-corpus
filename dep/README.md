@@ -7,8 +7,10 @@ closed relation vocabulary) — those stay with the consumer projects; Layer 4 o
 text's own syntactic structure.
 
 **Status: implemented and built.** All 100 cantos are committed. `--check` across the full corpus:
-**0 hard, 296 soft** violations (see *Check* below for the breakdown and the one frozen-vocabulary
-adjustment made against this measurement).
+**0 hard, 1 soft** violation (see *Check* below for the breakdown, and
+[dep/CORRECTIONS.md](CORRECTIONS.md) for the correction history — frozen-vocabulary adjustment,
+deterministic respelling cleanup, LLM `--fix` regeneration, and the `RELCL_HEAD`
+substantivization flag).
 
 ## What it does
 
@@ -34,7 +36,9 @@ Two things PLAN.md asks for are deliberately **derived, never stored**:
 - **Relative-pronoun antecedents.** UD encodes them structurally: a relative clause's verb attaches
   to its antecedent noun via `acl:relcl`, and the relative pronoun gets its own role inside the
   clause. So PLAN.md's "relative-pronoun antecedents resolve to an in-scope NP" becomes the soft
-  check that every `acl:relcl` head is a nominal Layer-2 POS, rather than anything stored.
+  check that every `acl:relcl` head is a nominal Layer-2 POS — or carries the `RELCL_HEAD` note
+  flag for hand-verified substantivized exceptions (see [CORRECTIONS.md](CORRECTIONS.md)) — rather
+  than anything stored.
 
 ## Output
 
@@ -89,31 +93,16 @@ call** (`validate_unit`):
   - **Multiple roots per unit** — expected for `;`/`:`-sub-split long sentences (see *Design
     decisions*), so reported rather than hard-failed.
   - **Non-nominal `acl:relcl` head** — only checked when Layer-2 morphology is present; flags a
-    relative clause whose antecedent's POS is not nominal (a likely mis-attachment).
+    relative clause whose antecedent's POS is not nominal and does not carry the `RELCL_HEAD` note
+    flag (a likely mis-attachment; see [CORRECTIONS.md](CORRECTIONS.md)).
 
-**Measured over the full 100-canto build** (`--check`, post-freeze, post-`--fix-labels`):
-**0 hard, 230 soft**.
-- **Deprel vocabulary**: before freezing, `attr` (a non-UD, spaCy-style label for predicate-
-  nominal/adjective complements of a copula) was by far the model's dominant off-vocabulary
-  choice — 340 occurrences, an order of magnitude above any other label — so it was added to
-  `DEPRELS` as the one-time adjustment the plan calls for (636 -> 296 soft). What remained (296)
-  was a long tail of labels that turned out to be pure respellings or near-synonyms of a relation
-  already in `DEPRELS` (`nsubjpass`->`nsubj:pass`, `auxpass`->`aux:pass`, `indobj`/`iobl`->`iobj`,
-  `numeral`->`nummod`, `nmod:poss`->`det:poss`, `intj`/`interjection`->`discourse`,
-  `refl`/`reflex`/`pron`->`expl:pass`, `pred`/`predadj`/`acomp`->`attr`, `obj:comp`/`obj:pred`-
-  >`xcomp`) — 67 rows across all three canticles, rewritten in place by `dep/dep.py --fix-labels`
-  (deterministic, no model call; see `LABEL_ALIASES` in `dep/dep.py`). Renaming `relcl` to
-  `acl:relcl` surfaced one further non-nominal-head case (below), for a net **-66** (296 -> 230).
-- **Non-nominal `acl:relcl` head (215 of 230)**: adjective (131), adverb (55), verb (14), numeral
-  (14), plus the one surfaced by the `relcl` relabel above. The adverb cases are mostly locative
-  "dove"/"là" constructions (a free relative/adverbial clause attaching to a place adverb, which
-  UD would call `advcl` rather than `acl:relcl`); the rest are comparable "attach a relative
-  clause to something that isn't quite a noun" choices. Reported, not corrected — this check's
-  job is to flag likely mis-attachments for a consumer to weigh, not to force a re-attachment
-  (unlike the vocabulary respellings above, fixing these needs contextual judgment, not a lookup
-  table — left for an LLM-based `--fix` pass rather than `--fix-labels`).
-- **Multiple roots per unit (15 of 230)**: as expected for genuinely multi-clause parse units
-  (see *Design decisions*).
+**Measured over the full 100-canto build** (`--check`): **0 hard, 1 soft**. The one remaining
+violation (inferno 19:74, an `acl:relcl` attaching to a passive participle instead of its more
+plausible nominal antecedent) is a likely genuine mis-attachment, reproduced identically across
+`--fix` regenerations, and is left as the corpus's one accepted soft violation. See
+[CORRECTIONS.md](CORRECTIONS.md) for the full path from the initial pilot measurement (636 soft)
+down to this: the `attr` vocabulary freeze, `--fix-labels`' deterministic respelling cleanup, the
+LLM `--fix` regeneration pass, and the `RELCL_HEAD` substantivization flag.
 
 The build retries a parse unit (max 2) before giving up on the canto; there is **no per-line
 fallback** — a lone line cannot host cross-line heads, so the parse unit is the smallest thing

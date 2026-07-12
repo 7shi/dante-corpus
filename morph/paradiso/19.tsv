@@ -644,7 +644,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 92	figli	figlio	noun	m.	pl.				
 93	e	e	conjunction						
 93	come	come	adverb						
-93	quel	quello	adjective	m.	sg.				
+93	quel	quello	adjective	m.	sg.				RELCL_HEAD
 93	ch'	che	pronoun						elision
 93	è	essere	verb		sg.	3	present	indicative	
 93	pasto	pascere	verb	m.	sg.		past participle		
@@ -737,7 +737,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 105	legno	legno	noun	m.	sg.				
 106	Ma	ma	conjunction						
 106	vedi	vedere	verb		sg.	2	present	indicative	
-106	molti	molto	adjective	m.	pl.				
+106	molti	molto	adjective	m.	pl.				RELCL_HEAD
 106	gridan	gridare	verb		pl.	3	present	indicative	apocope
 106	Cristo	Cristo	noun	m.	sg.				
 106	Cristo	Cristo	noun	m.	sg.				
@@ -751,7 +751,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 108	a	a	preposition						
 108	lui	lui	pronoun	m.	sg.				
 108	che	che	pronoun		sg.				
-108	tal	tale	adjective	m.	sg.				apocope
+108	tal	tale	adjective	m.	sg.				apocope, RELCL_HEAD
 108	che	che	conjunction						
 108	non	non	adverb						
 108	conosce	conoscere	verb		sg.	3	present	indicative	

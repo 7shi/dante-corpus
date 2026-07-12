@@ -738,7 +738,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 102	il	il	article	m.	sg.				
 102	petto	petto	noun	m.	sg.				
 103	Quai	quale	adjective	f.	pl.				
-103	barbare	barbaro	adjective	f.	pl.				
+103	barbare	barbaro	adjective	f.	pl.				RELCL_HEAD
 103	fuor	essere	verb		pl.	3	remote past	indicative	apocope
 103	mai	mai	adverb						
 103	quai	quale	adjective	f.	pl.				
@@ -761,7 +761,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 106	fosser	essere	verb		pl.	3	imperfect	subjunctive	apocope
 106	certe	certo	adjective	f.	pl.				
 107	di	di	preposition						
-107	quel	quello	adjective	m.	sg.				
+107	quel	quello	adjective	m.	sg.				RELCL_HEAD
 107	che	che	pronoun		sg.				
 107	'l	lo	article	m.	sg.				elision
 107	ciel	cielo	noun	m.	sg.				apocope

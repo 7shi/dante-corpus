@@ -649,7 +649,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 91	ciascuno	ciascuno	pronoun	m.	sg.				
 92	poscia	poscia	adverb						archaic
 92	riguardi	riguardi	verb		sg.	2	present	subjunctive	
-92	là	là	adverb						
+92	là	là	adverb						RELCL_HEAD
 92	dov'	dove	adverb						elision
 92	è	essere	verb		sg.	3	present	indicative	
 92	trascorso	trascorrere	verb	m.	sg.		past participle		

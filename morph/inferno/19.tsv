@@ -297,7 +297,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 39	volere	volere	noun	m.	sg.				
 39	e	e	conjunction						
 39	sai	sapere	verb		sg.	2	present	indicative	
-39	quel	quello	adjective	m.	sg.				
+39	quel	quello	adjective	m.	sg.				RELCL_HEAD
 39	che	che	pronoun		sg.				
 39	si	si	pronoun		sg.				reflexive
 39	tace	tacere	verb		sg.	3	present	indicative	

@@ -349,7 +349,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 48	ancora	ancora	adverb						
 49	E	e	conjunction						
 49	quella	quello	pronoun	f.	sg.				
-49	pïa	pio	adjective	f.	sg.				archaic spelling
+49	pïa	pio	adjective	f.	sg.				archaic spelling, RELCL_HEAD
 49	che	che	pronoun		sg.				relative
 49	guidò	guidare	verb		sg.	3	remote past	indicative	
 49	le	il	article	f.	pl.				
@@ -771,7 +771,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 106	splendore	splendore	noun	m.	sg.				
 107	venire	venire	verb		sg.				
 107	a'	a	preposition						elision
-107	due	due	numeral		pl.				
+107	due	due	numeral		pl.				RELCL_HEAD
 107	che	che	pronoun						
 107	si	si	pronoun		pl.	3			reflexive
 107	volgieno	volgersi	verb		pl.	3	present	indicative	archaic

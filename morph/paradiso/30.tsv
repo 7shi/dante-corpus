@@ -82,7 +82,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 12	parendo	parere	verb				gerund		
 12	inchiuso	inchiudere	adjective	m.	sg.				
 12	da	da	preposition						
-12	quel	quello	adjective	m.	sg.				apocope
+12	quel	quello	adjective	m.	sg.				apocope, RELCL_HEAD
 12	ch'	che	pronoun		sg.				elision
 12	elli	egli	pronoun	m.	sg.	3			archaic
 12	'nchiude	inchiudere	verb		sg.	3	present	indicative	elision

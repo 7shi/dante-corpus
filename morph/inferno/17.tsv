@@ -432,7 +432,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 59	borsa	borsa	noun	f.	sg.				
 59	gialla	giallo	adjective	f.	sg.				
 59	vidi	vedere	verb		sg.	1	remote past	indicative	
-59	azzurro	azzurro	adjective	m.	sg.				
+59	azzurro	azzurro	adjective	m.	sg.				RELCL_HEAD
 60	che	che	pronoun		sg.				relative
 60	d'	di	preposition						elision
 60	un	uno	article	m.	sg.				indefinite

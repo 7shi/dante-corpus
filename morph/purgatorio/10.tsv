@@ -792,7 +792,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 112	Io	io	pronoun		sg.	1			
 112	cominciai	cominciare	verb		sg.	1	remote past	indicative	
 112	Maestro	maestro	noun	m.	sg.				
-112	quel	quello	adjective	m.	sg.				
+112	quel	quello	adjective	m.	sg.				RELCL_HEAD
 112	ch'	che	pronoun						elision
 112	io	io	pronoun		sg.	1			
 112	veggio	vedere	verb		sg.	1	present	indicative	

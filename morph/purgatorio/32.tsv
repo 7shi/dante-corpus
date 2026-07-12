@@ -564,7 +564,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 82	e	e	conjunction						
 82	vidi	vedere	verb		sg.	1	remote past	indicative	
 82	quella	quello	adjective	f.	sg.				
-82	pia	pio	adjective	f.	sg.				
+82	pia	pio	adjective	f.	sg.				RELCL_HEAD
 83	sovra	sopra	preposition						archaic
 83	me	me	pronoun		sg.	1			
 83	starsi	stare	verb		sg.		infinitive		reflexive
@@ -724,7 +724,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 104	li	lo	article	m.	pl.				archaic
 104	occhi	occhio	noun	m.	pl.				
 104	e	e	conjunction						
-104	quel	quello	adjective	m.	sg.				
+104	quel	quello	adjective	m.	sg.				RELCL_HEAD
 104	che	che	pronoun						relative
 104	vedi	vedere	verb		sg.	2	present	indicative	
 105	ritornato	ritornare	verb	m.	sg.				past participle

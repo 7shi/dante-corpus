@@ -49,7 +49,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 8	Cristo	Cristo	proper noun	m.	sg.				
 8	apparve	apparire	verb		sg.	3	remote past	indicative	
 8	a'	a+i	preposition+article	m.	pl.				contraction
-8	due	due	numeral		pl.				
+8	due	due	numeral		pl.				RELCL_HEAD
 8	ch'	che	pronoun		pl.				elision
 8	erano	essere	verb		pl.	3	imperfect	indicative	
 8	in	in	preposition						

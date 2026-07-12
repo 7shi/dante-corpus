@@ -65,7 +65,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 10	e	e	conjunction						
 10	non	non	adverb						
 10	dimando	domandare	verb		sg.	1	present	indicative	archaic
-11	quel	quello	adjective	m.	sg.				
+11	quel	quello	adjective	m.	sg.				RELCL_HEAD
 11	che	che	pronoun		sg.				
 11	tu	tu	pronoun		sg.	2			
 11	vuoli	volere	verb		sg.	2	present	indicative	
@@ -75,7 +75,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 11	l'	lo	pronoun	m.	sg.				elision
 11	ho	avere	verb		sg.	1	present	indicative	
 11	visto	vedere	verb						past participle
-12	là	là	adverb						
+12	là	là	adverb						RELCL_HEAD
 12	've	dove	adverb						apocope
 12	s'	si	pronoun		sg.	3			elision
 12	appunta	appuntare	verb		sg.	3	present	indicative	
@@ -844,7 +844,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 124	sant'	santo	adjective	m.	sg.				elision
 124	Antonio	Antonio	noun	m.	sg.				
 125	e	e	conjunction						
-125	altri	altro	adjective	m.	pl.				
+125	altri	altro	adjective	m.	pl.				RELCL_HEAD
 125	assai	assai	adverb						
 125	che	che	pronoun		pl.				relative
 125	sono	essere	verb		pl.	3	present	indicative	

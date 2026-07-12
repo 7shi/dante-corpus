@@ -128,7 +128,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 18	è	essere	verb		sg.	3	present	indicative	
 18	mestieri	mestiere	noun	m.	sg.				archaic
 19	però	però	adverb						
-19	quel	quello	adjective	m.	sg.				
+19	quel	quello	adjective	m.	sg.				RELCL_HEAD
 19	che	che	pronoun		sg.				
 19	non	non	adverb						
 19	puoi	potere	verb		sg.	2	present	indicative	
@@ -656,7 +656,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 90	e	e	conjunction						
 90	li	lo	article	m.	pl.				archaic
 90	altri	altro	adjective	m.	pl.				
-90	due	due	numeral	m.	pl.				
+90	due	due	numeral	m.	pl.				RELCL_HEAD
 90	che	che	pronoun						relative
 90	'l	lo	article	m.	sg.				elision
 90	canto	canto	noun	m.	sg.				
@@ -1132,7 +1132,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 155	di	di	preposition						
 155	voi	voi	pronoun		pl.	2			
 155	un	uno	article	m.	sg.				indefinite
-155	tal	tale	adjective	m.	sg.				apocope
+155	tal	tale	adjective	m.	sg.				apocope, RELCL_HEAD
 155	che	che	conjunction						
 155	per	per	preposition						
 155	sua	suo	adjective	f.	sg.				

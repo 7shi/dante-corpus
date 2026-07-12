@@ -444,7 +444,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 61	poi	poi	adverb						
 61	disse	dire	verb		sg.	3	remote past	indicative	
 61	Piglia	pigliare	verb		sg.	2	present	imperative	
-62	quel	quello	adjective	m.	sg.				
+62	quel	quello	adjective	m.	sg.				RELCL_HEAD
 62	ch'	che	pronoun						elision
 62	io	io	pronoun		sg.	1			
 62	ti	te	pronoun		sg.	2			
@@ -786,7 +786,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 110	vede	vedere	verb		sg.	3	present	indicative	
 111	non	non	adverb						
 111	in	in	preposition						
-111	quel	quello	adjective	m.	sg.				
+111	quel	quello	adjective	m.	sg.				RELCL_HEAD
 111	ch'	che	pronoun		sg.	3			elision
 111	ama	amare	verb		sg.	3	present	indicative	
 111	che	che	pronoun		sg.	3			

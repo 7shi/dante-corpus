@@ -727,7 +727,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 106	favella	favella	noun	f.	sg.				
 107	pur	pure	adverb						apocope
 107	a	a	preposition						
-107	quel	quello	adjective	m.	sg.				
+107	quel	quello	adjective	m.	sg.				RELCL_HEAD
 107	ch'	che	pronoun		sg.				elision
 107	io	io	pronoun		sg.	1			
 107	ricordo	ricordare	verb		sg.	1	present	indicative	

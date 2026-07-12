@@ -516,7 +516,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 73	Ma	ma	conjunction						
 73	quell'	quello	adjective	m.	sg.				elision
 73	altro	altro	adjective	m.	sg.				
-73	magnanimo	magnanimo	adjective	m.	sg.				
+73	magnanimo	magnanimo	adjective	m.	sg.				RELCL_HEAD
 73	a	a	preposition						
 73	cui	cui	pronoun		sg.				
 73	posta	posto	adjective	f.	sg.				
@@ -692,7 +692,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	ben	bene	adverb						apocope
 97	odo	udire	verb		sg.	1	present	indicative	
 98	dinanzi	dinanzi	adverb						
-98	quel	quello	adjective	m.	sg.				
+98	quel	quello	adjective	m.	sg.				RELCL_HEAD
 98	che	che	pronoun						
 98	'l	il	article	m.	sg.				elision
 98	tempo	tempo	noun	m.	sg.				

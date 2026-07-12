@@ -908,7 +908,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 126	di	di	preposition						
 126	catena	catena	noun	f.	sg.				
 127	In	in	preposition						
-127	quel	quello	adjective	m.	sg.				
+127	quel	quello	adjective	m.	sg.				RELCL_HEAD
 127	che	che	pronoun		sg.				
 127	s'	si	pronoun		sg.	3			elision
 127	appiattò	appiattare	verb		sg.	3	remote past	indicative	

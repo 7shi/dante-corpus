@@ -384,7 +384,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 55	pensier	pensiero	noun	m.	pl.				apocope
 55	mei	mio	adjective	m.	pl.				
 56	da	da	preposition						
-56	quel	quello	adjective	m.	sg.				
+56	quel	quello	adjective	m.	sg.				RELCL_HEAD
 56	ch'	che	pronoun						elision
 56	è	essere	verb		sg.	3	present	indicative	
 56	primo	primo	adjective	m.	sg.				

@@ -563,7 +563,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	ma	ma	conjunction						
 80	celasi	celarsi	verb		sg.	3	present	indicative	reflexive
 80	in	in	preposition						
-80	alcuna	alcuno	adjective	f.	sg.				
+80	alcuna	alcuno	adjective	f.	sg.				RELCL_HEAD
 81	che	che	pronoun		sg.				relative
 81	dura	durare	verb		sg.	3	present	indicative	
 81	molto	molto	adverb						
@@ -988,7 +988,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 141	li	lo	article	m.	pl.				archaic
 141	altrui	altrui	adjective		pl.				
 141	conforti	conforto	noun	m.	pl.				
-142	Molti	molto	adjective	m.	pl.				
+142	Molti	molto	adjective	m.	pl.				RELCL_HEAD
 142	sarebber	essere	verb		pl.	3	present	conditional	apocope
 142	lieti	lieto	adjective	m.	pl.				
 142	che	che	pronoun		pl.	3			

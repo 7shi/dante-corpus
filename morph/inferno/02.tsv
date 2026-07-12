@@ -471,7 +471,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 65	soccorso	soccorso	noun	m.	sg.				
 65	levata	levare	adjective	f.	sg.				
 66	per	per	preposition						
-66	quel	quello	adjective	m.	sg.				
+66	quel	quello	adjective	m.	sg.				RELCL_HEAD
 66	ch'	che	pronoun						elision
 66	i'	io	pronoun		sg.	1			apocope
 66	ho	avere	verb		sg.	1	present	indicative	

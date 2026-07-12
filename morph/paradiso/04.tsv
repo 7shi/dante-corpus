@@ -267,7 +267,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	segno	segno	noun	m.	sg.				
 39	de	di	preposition						archaic
 39	la	la	article	f.	sg.				
-39	celestïal	celestiale	adjective	f.	sg.				apocope
+39	celestïal	celestiale	adjective	f.	sg.				apocope, RELCL_HEAD
 39	c'	che	pronoun						elision
 39	ha	avere	verb		sg.	3	present	indicative	
 39	men	meno	adverb						apocope

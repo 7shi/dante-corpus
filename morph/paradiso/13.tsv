@@ -906,7 +906,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 125	e	e	conjunction						
 125	Brisso	Brisso	proper noun	m.	sg.				
 125	e	e	conjunction						
-125	molti	molto	adjective	m.	pl.				
+125	molti	molto	adjective	m.	pl.				RELCL_HEAD
 126	li	lo	article	m.	pl.				
 126	quali	quale	pronoun	m.	pl.				
 126	andaro	andare	verb		pl.	3	remote past	indicative	archaic
@@ -921,7 +921,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 127	Arrio	Arrio	noun	m.	sg.				
 127	e	e	conjunction						
 127	quelli	quello	adjective	m.	pl.				
-127	stolti	stolto	adjective	m.	pl.				
+127	stolti	stolto	adjective	m.	pl.				RELCL_HEAD
 128	che	che	pronoun		pl.				
 128	furon	essere	verb		pl.	3	remote past	indicative	apocope
 128	come	come	conjunction						

@@ -73,7 +73,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 12	le	lo	article	f.	pl.				
 12	coste	costa	noun	f.	pl.				
 12	a	a	preposition						
-12	quel	quello	adjective	m.	sg.				
+12	quel	quello	adjective	m.	sg.				RELCL_HEAD
 12	che	che	pronoun		sg.				
 12	più	più	adverb						
 12	vïaggi	viaggio	noun	m.	pl.				archaic

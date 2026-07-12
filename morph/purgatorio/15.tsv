@@ -135,7 +135,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 18	modo	modo	noun	m.	sg.				
 18	parecchio	parecchio	adjective	m.	sg.				
 19	a	a	preposition						
-19	quel	quello	adjective	m.	sg.				
+19	quel	quello	adjective	m.	sg.				RELCL_HEAD
 19	che	che	pronoun		sg.	3			
 19	scende	scendere	verb		sg.	3	present	indicative	
 19	e	e	conjunction						
@@ -948,7 +948,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 133	Che	che	pronoun		sg.				
 133	hai	avere	verb		sg.	2	present	indicative	
 133	per	per	preposition						
-133	quel	quello	adjective	m.	sg.				
+133	quel	quello	adjective	m.	sg.				RELCL_HEAD
 133	che	che	pronoun		sg.				
 133	face	fare	verb		sg.	3	present	indicative	
 134	chi	chi	pronoun						

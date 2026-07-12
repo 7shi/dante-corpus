@@ -280,7 +280,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 40	la	il	article	f.	sg.				
 40	mente	mente	noun	f.	sg.				
 40	a	a	preposition						
-40	quel	quello	adjective	m.	sg.				
+40	quel	quello	adjective	m.	sg.				RELCL_HEAD
 40	ch'	che	conjunction						elision
 40	io	io	pronoun		sg.	1			
 40	ti	te	pronoun		sg.	2			
@@ -359,7 +359,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 51	saver	sapere	verb				infinitive		apocope
 51	dei	dovere	verb		sg.	2	present	indicative	
 52	L'	la	article	f.	sg.				elision
-52	altra	altro	adjective	f.	sg.				
+52	altra	altro	adjective	f.	sg.				RELCL_HEAD
 52	che	che	pronoun		sg.				
 52	per	per	preposition						
 52	materia	materia	noun	f.	sg.				
@@ -812,7 +812,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 114	manifesti	manifesto	adjective	m.	pl.				
 115	O	o	interjection						
 115	bene	bene	adverb						
-115	nato	nato	adjective	m.	sg.				
+115	nato	nato	adjective	m.	sg.				RELCL_HEAD
 115	a	a	preposition						
 115	cui	cui	pronoun		sg.				
 115	veder	vedere	verb						apocope

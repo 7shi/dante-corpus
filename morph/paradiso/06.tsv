@@ -493,7 +493,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 67	mosse	muovere	verb		sg.	3	remote past	indicative	
 68	rivide	rivedere	verb		sg.	3	remote past	indicative	
 68	e	e	conjunction						
-68	là	là	adverb						
+68	là	là	adverb						RELCL_HEAD
 68	dov'	dove	adverb						elision
 68	Ettore	Ettore	noun	m.	sg.				
 68	si	si	pronoun		sg.	3			reflexive
@@ -638,7 +638,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 89	in	in	preposition						
 89	mano	mano	noun	f.	sg.				
 89	a	a	preposition						
-89	quel	quello	adjective	m.	sg.				
+89	quel	quello	adjective	m.	sg.				RELCL_HEAD
 89	ch'	che	pronoun						elision
 89	i'	io	pronoun		sg.	1			elision
 89	dico	dire	verb		sg.	1	present	indicative	
@@ -696,7 +696,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	giudicar	giudicare	verb						apocope
 97	di	di	preposition						
 97	quei	quello	adjective	m.	pl.				
-97	cotali	cotale	adjective	m.	pl.				
+97	cotali	cotale	adjective	m.	pl.				RELCL_HEAD
 98	ch'	che	conjunction						elision
 98	io	io	pronoun		sg.	1			
 98	accusai	accusare	verb		sg.	1	remote past	indicative	

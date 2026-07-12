@@ -291,7 +291,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 42	è	essere	verb		sg.	3	present	indicative	
 42	altrettanto	altrettanto	adverb						
 43	Dei	di+i	preposition+article	m.	pl.				contraction
-43	cinque	cinque	numeral	m.	pl.				
+43	cinque	cinque	numeral	m.	pl.				RELCL_HEAD
 43	che	che	pronoun	m.	pl.				relative
 43	mi	mi	pronoun		sg.	1			
 43	fan	fare	verb		pl.	3	present	indicative	apocope
@@ -369,7 +369,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 54	l'	il	article	m.	sg.				elision
 54	odïerno	odierno	adjective	m.	sg.				archaic
 55	L'	lo	article	m.	sg.				elision
-55	altro	altro	adjective	m.	sg.				
+55	altro	altro	adjective	m.	sg.				RELCL_HEAD
 55	che	che	pronoun						
 55	segue	seguire	verb		sg.	3	present	indicative	
 55	con	con	preposition						

@@ -494,7 +494,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 69	la	la	article	f.	sg.				
 69	forza	forza	noun	f.	sg.				
 69	di	di	preposition						
-69	tal	tale	adjective		sg.				apocope
+69	tal	tale	adjective		sg.				apocope, RELCL_HEAD
 69	che	che	pronoun		sg.	3			relative
 69	testé	testé	adverb						
 69	piaggia	piaggiare	verb		sg.	3	present	indicative	
@@ -579,7 +579,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	Mosca	Mosca	noun	m.	sg.				proper noun
 81	e	e	conjunction						
 81	li	i	article	m.	pl.				
-81	altri	altro	adjective	m.	pl.				
+81	altri	altro	adjective	m.	pl.				RELCL_HEAD
 81	ch'	che	pronoun						elision
 81	a	a	preposition						
 81	ben	bene	adverb						apocope

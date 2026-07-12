@@ -716,7 +716,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 99	per	per	preposition						
 99	traverso	traverso	noun	m.	sg.				
 100	Lo	lo	article	m.	sg.				
-100	terzo	terzo	adjective	m.	sg.				
+100	terzo	terzo	adjective	m.	sg.				RELCL_HEAD
 100	che	che	pronoun		sg.				
 100	di	di	preposition						
 100	sopra	sopra	adverb						

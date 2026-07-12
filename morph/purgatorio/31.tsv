@@ -94,7 +94,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 14	pinsero	pingere	verb		pl.	3	remote past	indicative	
 14	un	uno	article	m.	sg.				indefinite
 14	tal	tale	adjective	m.	sg.				
-14	sì	sì	adverb						
+14	sì	sì	adverb						RELCL_HEAD
 14	fuor	fuori	adverb						apocope
 14	de	di	preposition						archaic
 14	la	la	article	f.	sg.				
@@ -771,7 +771,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 110	i	il	article	m.	pl.				
 110	tuoi	tuo	adjective	m.	pl.				
 111	le	la	article	f.	pl.				
-111	tre	tre	numeral	f.	pl.				
+111	tre	tre	numeral	f.	pl.				RELCL_HEAD
 111	di	di	preposition						
 111	là	là	adverb						
 111	che	che	pronoun		pl.	3			

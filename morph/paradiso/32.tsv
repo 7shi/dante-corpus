@@ -788,7 +788,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 117	e	e	conjunction						
 117	pio	pio	adjective	m.	sg.				
 118	Quei	quello	adjective	m.	pl.				
-118	due	due	numeral		pl.				
+118	due	due	numeral		pl.				RELCL_HEAD
 118	che	che	pronoun		pl.				relative
 118	seggon	sedere	verb		pl.	3	present	indicative	apocope
 118	là	là	adverb						
@@ -848,7 +848,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 126	fior	fiore	noun	m.	sg.				apocope
 126	venusto	venusto	adjective	m.	sg.				
 127	E	e	conjunction						
-127	quei	quello	adjective	m.	pl.				
+127	quei	quello	adjective	m.	pl.				RELCL_HEAD
 127	che	che	pronoun						relative
 127	vide	vedere	verb		sg.	3	remote past	indicative	
 127	tutti	tutto	adjective	m.	pl.				

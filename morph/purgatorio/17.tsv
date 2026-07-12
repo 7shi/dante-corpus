@@ -497,7 +497,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 68	e	e	conjunction						
 68	dir	dire	verb						apocope
 68	Beati	beato	adjective	m.	pl.				
-69	pacifici	pacifico	adjective	m.	pl.				
+69	pacifici	pacifico	adjective	m.	pl.				RELCL_HEAD
 69	che	che	pronoun		pl.	3			
 69	son	essere	verb		pl.	3	present	indicative	apocope
 69	sanz'	senza	preposition						elision

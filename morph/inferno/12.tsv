@@ -11,7 +11,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 2	alpestro	alpestre	adjective	m.	sg.				
 2	e	e	conjunction						
 2	per	per	preposition						
-2	quel	quello	adjective	m.	sg.				
+2	quel	quello	adjective	m.	sg.				RELCL_HEAD
 2	che	che	pronoun						
 2	v'	vi	pronoun						elision
 2	er'	essere	verb		sg.	3	imperfect	indicative	apocope
@@ -812,7 +812,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 110	Azzolino	Azzolino	proper noun	m.	sg.				
 110	e	e	conjunction						
 110	quell'	quello	adjective	m.	sg.				elision
-110	altro	altro	adjective	m.	sg.				
+110	altro	altro	adjective	m.	sg.				RELCL_HEAD
 110	ch'	che	relative pronoun						elision
 110	è	essere	verb		sg.	3	present	indicative	
 110	biondo	biondo	adjective	m.	sg.				

@@ -721,7 +721,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 104	opere	opera	noun	f.	pl.				
 104	fosser	essere	verb		pl.	3	imperfect	subjunctive	apocope
 104	Quel	quello	adjective	m.	sg.				
-104	medesmo	medesimo	adjective	m.	sg.				archaic
+104	medesmo	medesimo	adjective	m.	sg.				archaic, RELCL_HEAD
 105	che	che	pronoun						
 105	vuol	volere	verb		sg.	3	present	indicative	apocope
 105	provarsi	provare+si	verb+pronoun						reflexive

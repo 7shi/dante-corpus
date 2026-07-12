@@ -753,7 +753,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 107	per	per	preposition						
 107	colpo	colpo	noun	m.	sg.				
 107	darmi	dare+mi	verb+pronoun				infinitive		enclitic
-108	tal	tale	adjective		sg.				apocope
+108	tal	tale	adjective		sg.				apocope, RELCL_HEAD
 108	ch'	che	conjunction						elision
 108	è	essere	verb		sg.	3	present	indicative	
 108	più	più	adverb						

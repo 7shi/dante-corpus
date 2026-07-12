@@ -314,7 +314,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 46	che	che	conjunction						
 46	i	il	article	m.	pl.				
 46	due	due	numeral		pl.				
-46	rabbiosi	rabbioso	adjective	m.	pl.				
+46	rabbiosi	rabbioso	adjective	m.	pl.				RELCL_HEAD
 46	fuor	fuori	adverb						apocope
 46	passati	passare	verb	m.	pl.		past participle		
 47	sovra	sovra	preposition						
@@ -435,7 +435,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	vivo	vivo	adjective	m.	sg.				
 62	assai	assai	adverb						
 62	di	di	preposition						
-62	quel	quello	adjective	m.	sg.				
+62	quel	quello	adjective	m.	sg.				RELCL_HEAD
 62	ch'	che	pronoun						elision
 62	i'	io	pronoun		sg.	1			apocope
 62	volli	volere	verb		sg.	1	remote past	indicative	
@@ -695,7 +695,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	una	uno	pronoun	f.	sg.				
 97	è	essere	verb		sg.	3	present	indicative	
 97	la	la	article	f.	sg.				
-97	falsa	falso	adjective	f.	sg.				
+97	falsa	falso	adjective	f.	sg.				RELCL_HEAD
 97	ch'	che	pronoun		sg.				elision
 97	accusò	accusare	verb		sg.	3	remote past	indicative	
 97	Gioseppo	Gioseppo	proper noun	m.	sg.				
@@ -1004,7 +1004,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 137	sognare	sognare	verb				infinitive		
 138	sì	sì	adverb						
 138	che	che	conjunction						
-138	quel	quello	adjective	m.	sg.				
+138	quel	quello	adjective	m.	sg.				RELCL_HEAD
 138	ch'	che	pronoun		sg.				elision
 138	è	essere	verb		sg.	3	present	indicative	
 138	come	come	conjunction						

@@ -290,7 +290,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 40	l'	lo	article	m.	sg.				elision
 40	altr'	altro	adjective	m.	sg.				apocope
 40	eran	essere	verb		pl.	3	imperfect	indicative	apocope
-40	due	due	numeral		pl.				
+40	due	due	numeral		pl.				RELCL_HEAD
 40	che	che	relative pronoun		pl.				
 40	s'	si	pronoun		pl.	3			elision
 40	aggiugnieno	aggiungere	verb		pl.	3	present	indicative	archaic
@@ -323,7 +323,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 44	a	a	preposition						
 44	vedere	vedere	verb				present	infinitive	
 44	era	essere	verb		sg.	3	imperfect	indicative	
-44	tal	tale	adjective		sg.				
+44	tal	tale	adjective		sg.				RELCL_HEAD
 44	quali	quale	adjective		pl.				
 45	vegnon	venire	verb		pl.	3	present	indicative	apocope
 45	di	di	preposition						
@@ -458,14 +458,14 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 64	De	di	preposition						archaic
 64	li	lo	article	m.	pl.				
 64	altri	altro	adjective	m.	pl.				
-64	due	due	numeral		pl.				
+64	due	due	numeral		pl.				RELCL_HEAD
 64	c'	che	pronoun						elision
 64	hanno	avere	verb		pl.	3	present	indicative	
 64	il	il	article	m.	sg.				
 64	capo	capo	noun	m.	sg.				
 64	di	di	preposition						
 64	sotto	sotto	adverb						
-65	quel	quello	adjective	m.	sg.				
+65	quel	quello	adjective	m.	sg.				RELCL_HEAD
 65	che	che	pronoun		sg.				
 65	pende	pendere	verb		sg.	3	present	indicative	
 65	dal	da+il	preposition+article	m.	sg.				contraction
@@ -833,7 +833,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 113	è	essere	verb		sg.	3	present	indicative	
 113	contraposto	contrapporre	adjective	m.	sg.				archaic, past participle
 113	a	a	preposition						
-113	quel	quello	adjective	m.	sg.				demonstrative
+113	quel	quello	adjective	m.	sg.				demonstrative, RELCL_HEAD
 113	che	che	pronoun						
 113	la	il	article	f.	sg.				
 113	gran	grande	adjective	f.	sg.				apocope

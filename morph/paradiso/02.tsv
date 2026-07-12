@@ -98,7 +98,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 15	ritorna	ritornare	verb		sg.	3	present	indicative	
 15	equale	eguale	adjective	f.	sg.				archaic
 16	Que'	quei	adjective	m.	pl.				apocope
-16	glorïosi	glorioso	adjective	m.	pl.				
+16	glorïosi	glorioso	adjective	m.	pl.				RELCL_HEAD
 16	che	che	pronoun		pl.				
 16	passaro	passare	verb		pl.	3	remote past	indicative	
 16	al	a+il	preposition+article	m.	sg.				contraction
@@ -385,7 +385,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 57	ali	ala	noun	f.	pl.				
 58	Ma	ma	conjunction						
 58	dimmi	dire+mi	verb+pronoun		sg.	2	present	imperative	contraction
-58	quel	quello	adjective	m.	sg.				
+58	quel	quello	adjective	m.	sg.				RELCL_HEAD
 58	che	che	pronoun						
 58	tu	tu	pronoun		sg.	2			
 58	da	da	preposition						

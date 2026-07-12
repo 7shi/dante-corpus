@@ -801,7 +801,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 114	tutta	tutto	adjective	f.	sg.				
 114	quanta	quanto	adjective	f.	sg.				
 115	Quell'	quello	pronoun	m.	sg.				elision
-115	altro	altro	adjective	m.	sg.				
+115	altro	altro	adjective	m.	sg.				RELCL_HEAD
 115	che	che	pronoun						
 115	ne'	in+i	preposition+article	m.	pl.				contraction
 115	fianchi	fianco	noun	m.	pl.				
@@ -842,7 +842,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 120	pente	pentirsi	verb		sg.	3	present	indicative	
 121	Vedi	vedere	verb		sg.	2	present	indicative	
 121	le	il	article	f.	pl.				
-121	triste	triste	adjective	f.	pl.				
+121	triste	triste	adjective	f.	pl.				RELCL_HEAD
 121	che	che	pronoun		pl.				relative
 121	lasciaron	lasciare	verb		pl.	3	remote past	indicative	apocope
 121	l'	il	article	m.	sg.				elision

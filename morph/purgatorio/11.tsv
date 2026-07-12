@@ -189,7 +189,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 26	pondo	pondo	noun	m.	sg.				archaic
 27	simile	simile	adjective		sg.				
 27	a	a	preposition						
-27	quel	quello	adjective	m.	sg.				
+27	quel	quello	adjective	m.	sg.				RELCL_HEAD
 27	che	che	pronoun		sg.	3			
 27	talvolta	talvolta	adverb						
 27	si	si	pronoun		sg.	3			reflexive
@@ -300,7 +300,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 41	d'	di	preposition						elision
 41	un	uno	article	m.	sg.				indefinite
 41	varco	varco	noun	m.	sg.				
-42	quel	quello	adjective	m.	sg.				
+42	quel	quello	adjective	m.	sg.				RELCL_HEAD
 42	ne	ne	pronoun						
 42	'nsegnate	insegnare	verb		pl.	2	present	imperative	apocope
 42	che	che	pronoun						relative
@@ -392,7 +392,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 54	il	il	article	m.	sg.				
 54	viso	viso	noun	m.	sg.				
 54	basso	basso	adjective	m.	sg.				
-55	cotesti	cotesto	adjective	m.	pl.				
+55	cotesti	cotesto	adjective	m.	pl.				RELCL_HEAD
 55	ch'	che	pronoun						elision
 55	ancor	ancora	adverb						apocope
 55	vive	vivere	verb		sg.	3	present	indicative	

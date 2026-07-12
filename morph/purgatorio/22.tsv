@@ -109,7 +109,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 16	inverso	inverso	preposition						archaic
 16	te	tu	pronoun		sg.	2			
 16	fu	essere	verb		sg.	3	remote past	indicative	
-16	quale	quale	adjective		sg.				
+16	quale	quale	adjective		sg.				RELCL_HEAD
 17	più	più	adverb						
 17	strinse	stringere	verb		sg.	3	remote past	indicative	
 17	mai	mai	adverb						

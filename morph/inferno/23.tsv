@@ -82,7 +82,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 11	di	di	preposition						
 11	quello	quello	pronoun	m.	sg.				
 11	un	uno	article	m.	sg.				indefinite
-11	altro	altro	adjective	m.	sg.				
+11	altro	altro	adjective	m.	sg.				RELCL_HEAD
 11	poi	poi	adverb						
 12	che	che	conjunction						
 12	la	la	article	f.	sg.				

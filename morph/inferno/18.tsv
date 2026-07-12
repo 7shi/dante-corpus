@@ -509,7 +509,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 73	Quando	quando	adverb						
 73	noi	noi	pronoun		pl.	1			
 73	fummo	essere	verb		pl.	1	remote past	indicative	
-73	là	là	adverb						
+73	là	là	adverb						RELCL_HEAD
 73	dov'	dove	adverb						elision
 73	el	egli	pronoun	m.	sg.	3			archaic
 73	vaneggia	vaneggiare	verb		sg.	3	present	indicative	
@@ -535,7 +535,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 76	te	te	pronoun		sg.	2			
 76	di	di	preposition						
 76	quest'	questo	adjective	m.	pl.				elision
-76	altri	altro	adjective	m.	pl.				
+76	altri	altro	adjective	m.	pl.				RELCL_HEAD
 76	mal	male	adverb						
 76	nati	nascere	verb	m.	pl.		past participle		
 77	ai	a+i	preposition+article	m.	pl.				contraction

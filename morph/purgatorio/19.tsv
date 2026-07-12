@@ -253,7 +253,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 35	vieni	venire	verb		sg.	2	present	imperative	
 36	troviam	trovare	verb		pl.	1	present	subjunctive	apocope
 36	l'	la	article	f.	sg.				elision
-36	aperta	aperto	adjective	f.	sg.				
+36	aperta	aperto	adjective	f.	sg.				RELCL_HEAD
 36	per	per	preposition						
 36	la	la	article	f.	sg.				
 36	qual	quale	pronoun	f.	sg.				apocope
@@ -542,7 +542,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 75	s'	si	pronoun		sg.	3			elision
 75	intendea	intendere	verb		sg.	3	imperfect	indicative	archaic
 76	O	O	interjection						
-76	eletti	eletto	adjective	m.	pl.				
+76	eletti	eletto	adjective	m.	pl.				RELCL_HEAD
 76	di	di	preposition						
 76	Dio	Dio	noun	m.	sg.				
 76	li	il	article	m.	pl.				archaic
@@ -692,7 +692,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 95	impetri	impetrare	verb		sg.	1	present	subjunctive	
 96	cosa	cosa	noun	f.	sg.				
 96	di	di	preposition						
-96	là	là	adverb						
+96	là	là	adverb						RELCL_HEAD
 96	ond'	onde	pronoun						elision
 96	io	io	pronoun		sg.	1			
 96	vivendo	vivere	verb				gerund		
@@ -827,7 +827,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 114	ne	ne	pronoun						
 114	son	essere	verb		sg.	1	present	indicative	apocope
 114	punita	punire	adjective	f.	sg.				
-115	Quel	quello	adjective	m.	sg.				
+115	Quel	quello	adjective	m.	sg.				RELCL_HEAD
 115	ch'	che	pronoun						elision
 115	avarizia	avarizia	noun	f.	sg.				
 115	fa	fare	verb		sg.	3	present	indicative	

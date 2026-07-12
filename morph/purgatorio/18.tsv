@@ -684,7 +684,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 94	passo	passo	noun	m.	sg.				
 94	falca	falcare	verb		sg.	3	present	indicative	
 95	per	per	preposition						
-95	quel	quello	adjective	m.	sg.				
+95	quel	quello	adjective	m.	sg.				RELCL_HEAD
 95	ch'	che	pronoun		sg.				elision
 95	io	io	pronoun		sg.	1			
 95	vidi	vedere	verb		sg.	1	remote past	indicative	

@@ -17,7 +17,11 @@ clause function is *derived* at serve time as the deprel of the Layer-4 row at
 Relative-pronoun antecedents are likewise not stored: UD encodes them structurally (a relative
 clause's verb attaches to its antecedent noun via `acl:relcl`; the pronoun gets its own role
 inside the clause), so PLAN.md's "antecedent resolves to an in-scope NP" check becomes the soft
-check that every `acl:relcl` head is a nominal Layer-2 POS.
+check that every `acl:relcl` head is a nominal Layer-2 POS — or carries the `RELCL_HEAD` flag in
+its Layer-2 `note` (mirroring `np.py`'s `NO_NP`/`CONT_NEXT` convention), a hand-verified exemption
+for archaic substantivized adjectives/numerals/participles/adverbs (`quel`, `altri`, `due`,
+`eletti`, `là dove`, …) that function as the antecedent despite a non-nominal part of speech (see
+dep/CORRECTIONS.md).
 
 Like `dante_corpus/np.py`, this stays free of `api` (which imports it) and depends only on
 `tokenizer`/`_paths`/`morph` (the generic Markdown-table parser is reused from `morph`).
@@ -73,9 +77,12 @@ DEPRELS = frozenset({
 })
 
 
-def _is_nominal(pos: str) -> bool:
+def _is_nominal(pos: str, note: str = "") -> bool:
     p = pos.lower()
-    return "noun" in p or "pronoun" in p
+    if "noun" in p or "pronoun" in p:
+        return True
+    flags = {f.strip() for f in note.split(",")}
+    return "RELCL_HEAD" in flags
 
 
 # --- DepRow --------------------------------------------------------------------------
@@ -319,12 +326,12 @@ def validate_unit(
         if row.deprel == "acl:relcl" and morph_rows is not None:
             head_rows = morph_rows.get(row.head_line)
             if head_rows and 1 <= row.head_token <= len(head_rows):
-                pos = head_rows[row.head_token - 1].pos
-                if not _is_nominal(pos):
+                head_row = head_rows[row.head_token - 1]
+                if not _is_nominal(head_row.pos, head_row.note):
                     violations.append(
                         Violation(row.line, "tag",
                                   f"acl:relcl head {row.head_line}.{row.head_token} "
-                                  f"is {pos!r}, not nominal")
+                                  f"is {head_row.pos!r}, not nominal")
                     )
 
     return violations
