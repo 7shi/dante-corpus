@@ -252,6 +252,47 @@ def test_validate_unit_membership_accepts_np_head():
     assert not any(v.kind == "tag" and "heads no NP" in v.detail for v in violations)
 
 
+def test_validate_unit_membership_accepts_relative_pronoun_mistagged_conjunction():
+    from dante_corpus.morph import MorphRow
+
+    # "che" mistagged conjunction (see morph/CORRECTIONS.md) still counts as a pronoun by word form.
+    nos, texts = [1], ["mezzo che"]
+    rows = [skel.SkelRow(1, 1, "mezzo", "obj", 1, 2)]
+    morph_rows = {1: [MorphRow(word="mezzo", pos="noun"), MorphRow(word="che", pos="conjunction")]}
+    violations = skel.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows, np_rows={1: []})
+    assert not any(v.kind == "tag" and "heads no NP" in v.detail for v in violations)
+
+
+def test_validate_unit_membership_accepts_elided_che():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["mezzo ch'"]
+    rows = [skel.SkelRow(1, 1, "mezzo", "obj", 1, 2)]
+    morph_rows = {1: [MorphRow(word="mezzo", pos="noun"), MorphRow(word="ch'", pos="conjunction")]}
+    violations = skel.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows, np_rows={1: []})
+    assert not any(v.kind == "tag" and "heads no NP" in v.detail for v in violations)
+
+
+def test_validate_unit_membership_accepts_adverb_obl():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["mezzo quivi"]
+    rows = [skel.SkelRow(1, 1, "mezzo", "obl", 1, 2)]
+    morph_rows = {1: [MorphRow(word="mezzo", pos="noun"), MorphRow(word="quivi", pos="adverb")]}
+    violations = skel.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows, np_rows={1: []})
+    assert not any(v.kind == "tag" and "heads no NP" in v.detail for v in violations)
+
+
+def test_validate_unit_membership_rejects_adverb_for_non_obl_role():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["mezzo quivi"]
+    rows = [skel.SkelRow(1, 1, "mezzo", "obj", 1, 2)]  # obj, not obl -> adverb still doesn't count
+    morph_rows = {1: [MorphRow(word="mezzo", pos="noun"), MorphRow(word="quivi", pos="adverb")]}
+    violations = skel.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows, np_rows={1: []})
+    assert any(v.kind == "tag" and "heads no NP" in v.detail for v in violations)
+
+
 def _unit_1_3():
     nos, texts = _lines(1, 3)
     dep_all, morph_all = _canto1_dep(), _canto1_morph()

@@ -64,6 +64,12 @@ def canon_header(header: str) -> str | None:
 ROLES = frozenset({"subj", "obj", "iobj", "attr", "xcomp", "ccomp", "obl"})
 OBL_RE = re.compile(r"obl:[a-zàèéìòù']+")
 
+# Relative-pronoun word forms accepted by the membership soft check regardless of the frozen
+# Layer-2 POS tag: "che" is tagged inconsistently between `pronoun` and `conjunction` even in
+# its relative use (see `morph/CORRECTIONS.md`), so the word form itself is checked too.
+# "ch'" is che's elided form (trailing apostrophe replaces the final "e").
+_REL_PRONOUN_WORDS = frozenset({"che", "ch'", "cui", "qual", "quale", "chi"})
+
 
 def _role_valid(role: str) -> bool:
     return role == "" or role in ROLES or bool(OBL_RE.fullmatch(role))
@@ -435,7 +441,11 @@ def validate_unit(
 
     Soft checks (kind `tag`; measure-then-freeze): a role outside the frozen vocabulary;
     a nominal-role (`subj`/`obj`/`iobj`/`obl*`) argument that heads no Layer-3 NP, is not a
-    Layer-2 pronoun, and is not itself an in-unit predicate (only when *both* `morph_rows` and
+    Layer-2 pronoun or relative-pronoun word form (`che`/`ch'`/`cui`/`qual`/`quale`/`chi`,
+    regardless of the frozen Layer-2 POS tag — `morph/CORRECTIONS.md` documents that "che" is
+    tagged inconsistently between `pronoun` and `conjunction` even in its relative use), is not
+    an adverb heading an `obl`/`obl:*` argument (an adverbial oblique like `quivi`/`là`/`sù` has
+    no NP to cite), and is not itself an in-unit predicate (only when *both* `morph_rows` and
     `np_rows` are supplied); and — the core of this layer's design — every divergence from
     `derive_unit`
     (only when `dep_rows`/`morph_rows` supplied): `missing_tuple`, `extra_tuple`, `missing_arg`,
@@ -498,7 +508,13 @@ def validate_unit(
             (no, i + 1)
             for no, rows in morph_rows.items()
             for i, r in enumerate(rows)
-            if "pronoun" in r.pos.lower()
+            if "pronoun" in r.pos.lower() or r.word.lower() in _REL_PRONOUN_WORDS
+        }
+        adverb_obl_positions = {
+            (no, i + 1)
+            for no, rows in morph_rows.items()
+            for i, r in enumerate(rows)
+            if "adverb" in r.pos.lower()
         }
         np_head_positions = {(no, s.head) for no, spans in np_rows.items() for s in spans}
         for row in all_rows:
@@ -508,6 +524,8 @@ def validate_unit(
             if arg == (0, 0) or arg == (row.line, row.token):
                 continue
             if arg in np_head_positions or arg in pronoun_positions or arg in predicate_positions:
+                continue
+            if (row.role == "obl" or row.role.startswith("obl:")) and arg in adverb_obl_positions:
                 continue
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")
