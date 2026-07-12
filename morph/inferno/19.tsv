@@ -556,7 +556,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 73	mio	mio	adjective	m.	sg.				
 73	son	essere	verb		pl.	3	present	indicative	apocope
 73	li	lo	article	m.	pl.				archaic
-73	altri	altro	adjective	m.	pl.				
+73	altri	altro	adjective	m.	pl.				RELCL_HEAD
 73	tratti	traere	verb	m.	pl.				past participle
 74	che	che	pronoun		pl.				
 74	precedetter	precedere	verb		pl.	3	remote past	indicative	apocope

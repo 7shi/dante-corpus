@@ -7,10 +7,10 @@ closed relation vocabulary) — those stay with the consumer projects; Layer 4 o
 text's own syntactic structure.
 
 **Status: implemented and built.** All 100 cantos are committed. `--check` across the full corpus:
-**0 hard, 1 soft** violation (see *Check* below for the breakdown, and
+**0 hard, 0 soft** violations (see *Check* below for the breakdown, and
 [dep/CORRECTIONS.md](CORRECTIONS.md) for the correction history — frozen-vocabulary adjustment,
-deterministic respelling cleanup, LLM `--fix` regeneration, and the `RELCL_HEAD`
-substantivization flag).
+deterministic respelling cleanup, LLM `--fix` regeneration, the `RELCL_HEAD` substantivization
+flag, and one hand-corrected mis-attachment).
 
 ## What it does
 
@@ -96,13 +96,12 @@ call** (`validate_unit`):
     relative clause whose antecedent's POS is not nominal and does not carry the `RELCL_HEAD` note
     flag (a likely mis-attachment; see [CORRECTIONS.md](CORRECTIONS.md)).
 
-**Measured over the full 100-canto build** (`--check`): **0 hard, 1 soft**. The one remaining
-violation (inferno 19:74, an `acl:relcl` attaching to a passive participle instead of its more
-plausible nominal antecedent) is a likely genuine mis-attachment, reproduced identically across
-`--fix` regenerations, and is left as the corpus's one accepted soft violation. See
+**Measured over the full 100-canto build** (`--check`): **0 hard, 0 soft**. See
 [CORRECTIONS.md](CORRECTIONS.md) for the full path from the initial pilot measurement (636 soft)
 down to this: the `attr` vocabulary freeze, `--fix-labels`' deterministic respelling cleanup, the
-LLM `--fix` regeneration pass, and the `RELCL_HEAD` substantivization flag.
+LLM `--fix` regeneration pass, the `RELCL_HEAD` substantivization flag, and one hand-corrected
+mis-attachment (inferno 19:73-74, an `acl:relcl`/`nsubj` chain that had attached to a passive
+participle instead of its more plausible nominal antecedent).
 
 The build retries a parse unit (max 2) before giving up on the canto; there is **no per-line
 fallback** — a lone line cannot host cross-line heads, so the parse unit is the smallest thing
