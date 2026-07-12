@@ -428,7 +428,7 @@ line	token	word	deprel	head_line	head_token
 64	6	tema	obj	64	3
 65	1	e	cc	65	3
 65	2	l'	det	65	3
-65	3	omero	conj	64	6
+65	3	omero	nsubj	66	2
 65	4	mortal	amod	65	3
 65	5	che	nsubj	65	8
 65	6	se	obj	65	8
@@ -441,13 +441,13 @@ line	token	word	deprel	head_line	head_token
 66	5	esso	obl	66	6
 66	6	trema	advcl	66	2
 67	1	non	advmod	67	2
-67	2	è	root	0	0
-67	3	pareggio	attr	67	2
+67	2	è	advcl	66	2
+67	3	pareggio	nsubj	67	2
 67	4	da	case	67	6
 67	5	picciola	amod	67	6
 67	6	barca	obl	67	2
-68	1	quel	nsubj	67	2
-68	2	che	obj	68	3
+68	1	quel	obl	67	2
+68	2	che	obj	68	4
 68	3	fendendo	advcl	68	4
 68	4	va	acl:relcl	68	1
 68	5	l'	det	68	7
@@ -455,7 +455,7 @@ line	token	word	deprel	head_line	head_token
 68	7	prora	nsubj	68	4
 69	1	né	cc	69	3
 69	2	da	case	69	3
-69	3	nocchier	conj	67	6
+69	3	nocchier	obl	67	2
 69	4	ch'	nsubj	69	8
 69	5	a	case	69	6
 69	6	sé	obl	69	8

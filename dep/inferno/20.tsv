@@ -366,7 +366,7 @@ line	token	word	deprel	head_line	head_token
 53	7	trecce	obl	52	4
 53	8	sciolte	amod	53	7
 54	1	e	cc	54	2
-54	2	ha	acl:relcl	52	2
+54	2	ha	conj	52	4
 54	3	di	case	54	4
 54	4	là	obl	54	2
 54	5	ogne	det	54	7
@@ -383,14 +383,14 @@ line	token	word	deprel	head_line	head_token
 56	2	si	obj	56	3
 56	3	puose	conj	55	2
 56	4	là	obl	56	3
-56	5	dove	advmod	56	6
-56	6	nacqu'	acl:relcl	56	4
+56	5	dove	mark	56	6
+56	6	nacqu'	advcl	56	3
 56	7	io	nsubj	56	6
 57	1	onde	mark	57	5
 57	2	un	det	57	3
 57	3	poco	advmod	57	5
 57	4	mi	iobj	57	5
-57	5	piace	advcl	56	3
+57	5	piace	conj	56	3
 57	6	che	mark	57	8
 57	7	m'	obj	57	8
 57	8	ascolte	ccomp	57	5

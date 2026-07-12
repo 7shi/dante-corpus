@@ -398,9 +398,9 @@ line	token	word	deprel	head_line	head_token
 54	6	pianta	nmod	54	4
 54	7	vita	amod	54	6
 55	1	Però	advmod	56	7
-55	2	là	advmod	55	4
+55	2	là	obl	56	7
 55	3	onde	mark	55	4
-55	4	vegna	ccomp	56	7
+55	4	vegna	advcl	55	2
 55	5	lo	det	55	6
 55	6	'ntelletto	nsubj	55	4
 56	1	de	case	56	4
@@ -415,9 +415,9 @@ line	token	word	deprel	head_line	head_token
 57	3	primi	amod	57	4
 57	4	appetibili	nmod	57	6
 57	5	l'	det	57	6
-57	6	affetto	nsubj	55	4
+57	6	affetto	obj	56	7
 58	1	che	nsubj	58	2
-58	2	sono	acl:relcl	57	4
+58	2	sono	acl:relcl	57	6
 58	3	in	case	58	4
 58	4	voi	obl	58	2
 58	5	sì	advmod	58	6
@@ -426,7 +426,7 @@ line	token	word	deprel	head_line	head_token
 58	8	in	case	58	9
 58	9	ape	nmod	58	7
 59	1	di	mark	59	2
-59	2	far	xcomp	58	7
+59	2	far	acl	58	7
 59	3	lo	det	59	4
 59	4	mele	obj	59	2
 59	5	e	cc	60	8
@@ -438,7 +438,7 @@ line	token	word	deprel	head_line	head_token
 60	3	lode	nmod	60	1
 60	4	o	cc	60	6
 60	5	di	case	60	6
-60	6	biasmo	conj	60	3
+60	6	biasmo	nmod	60	1
 60	7	non	advmod	60	8
 60	8	cape	conj	56	7
 61	1	Or	advmod	62	3
@@ -653,7 +653,7 @@ line	token	word	deprel	head_line	head_token
 90	6	era	aux	90	8
 90	7	già	advmod	90	8
 90	8	volta	acl:relcl	89	3
-91	1	E	cc	94	7
+91	1	E	conj	94	7
 91	2	quale	mark	91	5
 91	3	Ismeno	nsubj	91	5
 91	4	già	advmod	91	5
@@ -697,7 +697,7 @@ line	token	word	deprel	head_line	head_token
 96	4	e	cc	96	6
 96	5	giusto	amod	96	6
 96	6	amor	conj	96	3
-96	7	cavalca	acl:relcl	95	2
+96	7	cavalca	acl:relcl	95	7
 97	1	Tosto	advmod	97	2
 97	2	fur	root	0	0
 97	3	sovr'	obl	97	2

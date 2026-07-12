@@ -568,7 +568,7 @@ line	token	word	deprel	head_line	head_token
 79	7	vòto	obl	79	5
 80	1	ché	mark	80	3
 80	2	così	advmod	80	3
-80	3	è	advcl	79	5
+80	3	è	advcl	79	1
 80	4	a	case	80	5
 80	5	lui	obl	80	3
 80	6	ciascun	det	80	7
@@ -582,7 +582,7 @@ line	token	word	deprel	head_line	head_token
 81	7	a	case	81	8
 81	8	nullo	obl	81	10
 81	9	è	cop	81	10
-81	10	noto	acl:relcl	81	3
+81	10	noto	acl:relcl	80	7
 82	1	Facemmo	root	0	0
 82	2	adunque	advmod	82	1
 82	3	più	advmod	82	4

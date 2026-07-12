@@ -695,7 +695,7 @@ line	token	word	deprel	head_line	head_token
 99	8	assanna	acl:relcl	99	4
 100	1	Già	advmod	100	2
 100	2	eravam	root	0	0
-100	3	là	obl	100	2
+100	3	là	advmod	100	2
 100	4	've	obl	101	6
 100	5	lo	det	100	7
 100	6	stretto	amod	100	7
@@ -704,8 +704,8 @@ line	token	word	deprel	head_line	head_token
 101	2	l'	det	101	3
 101	3	argine	obl	101	6
 101	4	secondo	amod	101	3
-101	5	s'	obj	101	6
-101	6	incrocicchia	acl:relcl	100	3
+101	5	s'	expl	101	6
+101	6	incrocicchia	advcl	100	2
 102	1	e	cc	102	2
 102	2	fa	conj	101	6
 102	3	di	case	102	4

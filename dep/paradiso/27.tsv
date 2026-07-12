@@ -376,7 +376,7 @@ line	token	word	deprel	head_line	head_token
 57	4	Dio	nmod	57	2
 57	5	perché	advmod	57	7
 57	6	pur	advmod	57	7
-57	7	giaci	root	0	0
+57	7	giaci	parataxis	56	2
 58	1	Del	case	58	2
 58	2	sangue	obj	59	4
 58	3	nostro	det:poss	58	2

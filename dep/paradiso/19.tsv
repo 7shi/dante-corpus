@@ -14,12 +14,12 @@ line	token	word	deprel	head_line	head_token
 2	5	nel	case	2	7
 2	6	dolce	amod	2	7
 2	7	frui	obl	3	2
-3	1	liete	obj	3	2
+3	1	liete	xcomp	3	2
 3	2	facevan	acl:relcl	2	3
 3	3	l'	det	3	4
 3	4	anime	obj	3	2
 3	5	conserte	amod	3	4
-4	1	parea	root	0	0
+4	1	parea	conj	1	1
 4	2	ciascuna	nsubj	4	1
 4	3	rubinetto	obj	4	1
 4	4	in	case	4	5
@@ -29,7 +29,7 @@ line	token	word	deprel	head_line	head_token
 5	3	sole	nmod	5	1
 5	4	ardesse	acl:relcl	4	3
 5	5	sì	advmod	5	6
-5	6	acceso	advmod	5	4
+5	6	acceso	xcomp	5	4
 6	1	che	mark	6	5
 6	2	ne'	case	6	4
 6	3	miei	det:poss	6	4

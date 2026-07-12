@@ -92,7 +92,7 @@ line	token	word	deprel	head_line	head_token
 12	5	sanza	case	12	6
 12	6	fine	nmod	12	4
 12	7	cupa	amod	12	4
-13	1	O	advmod	13	2
+13	1	O	mark	13	2
 13	2	ciel	vocative	15	2
 13	3	nel	case	13	5
 13	4	cui	nmod	13	5
@@ -106,13 +106,13 @@ line	token	word	deprel	head_line	head_token
 14	3	di	case	14	4
 14	4	qua	nmod	14	2
 14	5	giù	advmod	14	4
-14	6	trasmutarsi	csubj	13	9
+14	6	trasmutarsi	xcomp	13	9
 15	1	quando	advmod	15	2
 15	2	verrà	root	0	0
 15	3	per	case	15	4
 15	4	cui	obl	15	6
 15	5	questa	nsubj	15	6
-15	6	disceda	acl:relcl	15	2
+15	6	disceda	advcl	15	2
 16	1	Noi	nsubj	16	2
 16	2	andavam	root	0	0
 16	3	con	case	16	4

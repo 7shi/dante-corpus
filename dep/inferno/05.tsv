@@ -175,11 +175,11 @@ line	token	word	deprel	head_line	head_token
 26	5	son	aux	26	6
 26	6	venuto	conj	25	2
 27	1	là	obl	26	6
-27	2	dove	obl	27	6
+27	2	dove	advmod	27	6
 27	3	molto	amod	27	4
 27	4	pianto	nsubj	27	6
 27	5	mi	obj	27	6
-27	6	percuote	acl:relcl	27	1
+27	6	percuote	advcl	27	1
 28	1	Io	nsubj	28	2
 28	2	venni	root	0	0
 28	3	in	case	28	4

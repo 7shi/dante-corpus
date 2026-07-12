@@ -349,8 +349,8 @@ line	token	word	deprel	head_line	head_token
 48	2	fur	root	0	0
 48	3	da	case	48	4
 48	4	cui	obl	48	5
-48	5	venisser	acl:relcl	48	2
-48	6	manifeste	attr	48	5
+48	5	venisser	acl	48	2
+48	6	manifeste	xcomp	48	5
 49	1	ma	cc	49	3
 49	2	fu	aux	49	3
 49	3	detto	conj	48	2
@@ -369,7 +369,7 @@ line	token	word	deprel	head_line	head_token
 50	7	passo	obj	50	5
 51	1	possibile	amod	50	7
 51	2	a	case	51	3
-51	3	salir	acl	50	7
+51	3	salir	xcomp	51	1
 51	4	persona	nsubj	51	3
 51	5	viva	amod	51	4
 52	1	E	cc	56	1

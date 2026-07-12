@@ -983,10 +983,10 @@ line	token	word	deprel	head_line	head_token
 136	4	fuor	obl	136	2
 136	5	di	case	136	7
 136	6	questa	det	136	7
-136	7	fossa	obl	136	4
-137	1	là	advmod	136	4
-137	2	dove	advmod	137	3
-137	3	vanno	acl:relcl	137	1
+136	7	fossa	nmod	136	4
+137	1	là	advmod	137	2
+137	2	dove	obl	137	3
+137	3	vanno	acl:relcl	136	7
 137	4	l'	det	137	5
 137	5	anime	nsubj	137	3
 137	6	a	mark	137	7
@@ -995,7 +995,7 @@ line	token	word	deprel	head_line	head_token
 138	2	la	det	138	3
 138	3	colpa	nsubj	138	6
 138	4	pentuta	amod	138	3
-138	5	è	aux	138	6
+138	5	è	cop	138	6
 138	6	rimossa	advcl	137	7
 139	1	Poi	advmod	139	2
 139	2	disse	root	0	0

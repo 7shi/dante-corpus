@@ -218,7 +218,7 @@ line	token	word	deprel	head_line	head_token
 33	1	e	cc	33	6
 33	2	quinci	advmod	33	6
 33	3	e	cc	33	4
-33	4	quindi	advmod	33	6
+33	4	quindi	conj	33	2
 33	5	stupefatto	xcomp	33	6
 33	6	fui	conj	32	2
 34	1	ché	mark	34	7
@@ -233,7 +233,7 @@ line	token	word	deprel	head_line	head_token
 35	1	tal	amod	34	9
 35	2	ch'	mark	35	4
 35	3	io	nsubj	35	4
-35	4	pensai	acl:relcl	35	1
+35	4	pensai	advcl	34	7
 35	5	co'	case	35	6
 35	6	miei	obl	35	7
 35	7	toccar	xcomp	35	4

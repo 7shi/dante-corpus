@@ -6,13 +6,13 @@ line	token	word	deprel	head_line	head_token
 1	5	ponte	conj	1	3
 1	6	altro	obj	1	7
 1	7	parlando	advcl	3	1
-2	1	che	nsubj	2	7
+2	1	che	mark	2	7
 2	2	la	det	2	4
-2	3	mia	amod	2	4
+2	3	mia	det:poss	2	4
 2	4	comedìa	obj	2	5
 2	5	cantar	obj	2	7
 2	6	non	advmod	2	7
-2	7	cura	acl:relcl	1	6
+2	7	cura	advcl	1	7
 3	1	venimmo	root	0	0
 3	2	e	cc	3	3
 3	3	tenavamo	conj	3	1
@@ -21,7 +21,7 @@ line	token	word	deprel	head_line	head_token
 3	6	quando	mark	4	1
 4	1	restammo	advcl	3	3
 4	2	per	case	4	3
-4	3	veder	advcl	4	1
+4	3	veder	xcomp	4	1
 4	4	l'	det	4	6
 4	5	altra	amod	4	6
 4	6	fessura	obj	4	3
@@ -33,7 +33,7 @@ line	token	word	deprel	head_line	head_token
 5	6	pianti	conj	4	6
 5	7	vani	amod	5	6
 6	1	e	cc	6	2
-6	2	vidila	conj	3	1
+6	2	vidila	conj	3	3
 6	3	mirabilmente	advmod	6	4
 6	4	oscura	xcomp	6	2
 7	1	Quale	advmod	8	1

@@ -636,7 +636,7 @@ line	token	word	deprel	head_line	head_token
 90	4	parlare	nmod	90	2
 90	5	ond'	obl	90	7
 90	6	ïo	nsubj	90	7
-90	7	ardeva	acl:relcl	90	4
+90	7	ardeva	acl:relcl	90	2
 91	1	E	cc	91	2
 91	2	cominciai	root	0	0
 91	3	O	mark	91	4

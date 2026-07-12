@@ -494,8 +494,8 @@ line	token	word	deprel	head_line	head_token
 72	6	discerna	advcl	70	2
 72	7	il	det	72	8
 72	8	fondo	obj	72	6
-73	1	Quale	amod	73	2
-73	2	allodetta	obl	76	3
+73	1	Quale	advmod	76	3
+73	2	allodetta	nmod	73	1
 73	3	che	nsubj	73	7
 73	4	'n	case	73	5
 73	5	aere	obl	73	7
@@ -505,8 +505,8 @@ line	token	word	deprel	head_line	head_token
 74	2	cantando	advcl	73	7
 74	3	e	cc	74	5
 74	4	poi	advmod	74	5
-74	5	tace	conj	74	2
-74	6	contenta	acl	74	5
+74	5	tace	conj	73	7
+74	6	contenta	xcomp	74	5
 75	1	de	case	75	4
 75	2	l'	det	75	4
 75	3	ultima	amod	75	4
@@ -514,7 +514,7 @@ line	token	word	deprel	head_line	head_token
 75	5	che	nsubj	75	7
 75	6	la	obj	75	7
 75	7	sazia	acl:relcl	75	4
-76	1	tal	advmod	76	3
+76	1	tal	xcomp	76	3
 76	2	mi	iobj	76	3
 76	3	sembiò	root	0	0
 76	4	l'	det	76	5
@@ -531,9 +531,9 @@ line	token	word	deprel	head_line	head_token
 77	7	disio	obl	78	6
 78	1	ciascuna	det	78	2
 78	2	cosa	nsubj	78	6
-78	3	qual	xcomp	78	6
+78	3	qual	mark	78	5
 78	4	ell'	nsubj	78	5
-78	5	è	acl:relcl	78	3
+78	5	è	advcl	78	6
 78	6	diventa	acl:relcl	77	4
 79	1	E	cc	79	2
 79	2	avvegna	root	0	0

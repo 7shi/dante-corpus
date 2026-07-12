@@ -467,10 +467,10 @@ line	token	word	deprel	head_line	head_token
 66	1	è	conj	64	3
 66	2	ogne	det	66	3
 66	3	parte	nsubj	66	1
-66	4	là	obl	66	1
-66	5	ove	obl	66	7
+66	4	là	advmod	66	1
+66	5	ove	mark	66	7
 66	6	sempr'	advmod	66	7
-66	7	era	acl:relcl	66	4
+66	7	era	advcl	66	1
 67	1	perché	mark	67	3
 67	2	non	advmod	67	3
 67	3	è	advcl	66	1
@@ -478,12 +478,12 @@ line	token	word	deprel	head_line	head_token
 67	5	loco	obl	67	3
 67	6	e	cc	67	9
 67	7	non	advmod	67	9
-67	8	s'	obj	67	9
+67	8	s'	expl	67	9
 67	9	impola	conj	67	3
 68	1	e	cc	68	7
 68	2	nostra	det:poss	68	3
 68	3	scala	nsubj	68	7
-68	4	infino	advmod	68	7
+68	4	infino	advmod	68	5
 68	5	ad	case	68	6
 68	6	essa	obl	68	7
 68	7	varca	conj	66	1
@@ -492,7 +492,7 @@ line	token	word	deprel	head_line	head_token
 69	3	dal	case	69	4
 69	4	viso	obl	69	7
 69	5	ti	iobj	69	7
-69	6	s'	obj	69	7
+69	6	s'	expl	69	7
 69	7	invola	advcl	68	7
 70	1	Infin	advmod	70	5
 70	2	là	advmod	70	5

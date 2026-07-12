@@ -10,8 +10,8 @@ line	token	word	deprel	head_line	head_token
 2	5	sue	det:poss	2	6
 2	6	parole	nmod	2	3
 3	1	Beati	ccomp	2	1
-3	2	quorum	case	3	5
-3	3	tecta	acl:relcl	3	1
+3	2	quorum	nmod	3	5
+3	3	tecta	nsubj	3	1
 3	4	sunt	aux	3	3
 3	5	peccata	nsubj	3	3
 4	1	E	cc	7	3
