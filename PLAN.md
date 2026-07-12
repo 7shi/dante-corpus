@@ -2,17 +2,17 @@
 
 ## Status
 
-**Next up: Layer 5 (predicate-argument skeleton)** — Layers 1–4 are implemented; see *The layers*
-below for Layer 5's design.
+**Next up: Layer 5 (predicate-argument skeleton)** — Layers 1–4 are implemented and merged to
+`main`; see *The layers* below for Layer 5's design.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
   Artifacts are built for all 100 cantos.
 - **Layer 3 — Noun phrases**: implemented and complete; see [`np/README.md`](np/README.md). Build
   driver `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for
-  all 100 cantos and committed on branch `grammar-stack-plan` (not yet merged to `main`).
-  `--check` reports **0 hard / 0 soft** violations — see [`np/README.md`](np/README.md)'s *Check*
-  section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md) for the full history.
+  all 100 cantos. `--check` reports **0 hard / 0 soft** violations — see
+  [`np/README.md`](np/README.md)'s *Check* section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md)
+  for the full history.
 - **Layer 4 — Dependency / grammatical role**: implemented and complete; see
   [`dep/README.md`](dep/README.md). Build driver `dep/dep.py`, served via `Canto.dep()` and
   `dante-corpus text dep` (with `text np` gaining a derived `role=` per noun phrase). Artifacts
@@ -21,12 +21,12 @@ below for Layer 5's design.
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
 - **Layer 5 — skeleton**: design only (this document).
 
+`grammar-stack-plan` was merged into `main` (fast-forward) and pushed; Layers 1–4 and their
+artifacts now live on `main`.
+
 **Next work**
 
-1. **Merge Layers 3–4** — generation is complete for Layer 3 (0 hard / 0 soft, frozen) and Layer 4
-   (0 hard / 0 soft, frozen); merge `grammar-stack-plan` into `main` (the builds are excluded
-   from `make all`; artifacts are committed like `morph/`).
-2. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
+1. **Layer 5 (predicate-argument skeleton)** — the next layer to implement (see *Sequencing*).
    Its design must also cover artifact **versioning** (content hashes for consumer invalidation)
    and **stable skeleton tuple ids** (both specified below, under Layer 5 / Build & serve model).
 
@@ -221,4 +221,4 @@ discipline already used for normalization and quotes.
    propositions.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-Layers 2–4 are implemented; layer 5 remains design only.
+Layers 2–4 are implemented and merged to `main`; layer 5 remains design only.
