@@ -2,10 +2,11 @@
 
 ## Status
 
-**Next up: Layer 5 (predicate-argument skeleton) — core module done, LLM build driver and
-100-canto artifacts remain.** Layers 1–4 are implemented and merged to `main`; see *The
-layers* below for Layer 5's design and the *Handoff* section at the end of this document for
-exactly what a fresh session needs to pick up next.
+**Next up: Layer 5 (predicate-argument skeleton) — build driver written, all 100 cantos built
+(0 hard), corpus-wide soft-divergence triage and `skel/README.md` remain.** Layers 1–4 are
+implemented and merged to `main`; see *The layers* below for Layer 5's design and the
+*Handoff* section at the end of this document for exactly what a fresh session needs to pick
+up next.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -21,24 +22,31 @@ exactly what a fresh session needs to pick up next.
   built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — see
   [`dep/README.md`](dep/README.md)'s *Check* section and
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
-- **Layer 5 — skeleton**: **core module implemented and committed** (`f7819b0`,
-  "Add Layer 5 (skel) core module: predicate-argument skeleton + content hashes"):
-  `dante_corpus/skel.py` (dataclasses, role vocabulary, deterministic derivation, table
-  parsing, validation, TSV I/O, serve-time joins), `dante_corpus/hashes.py` (content-hash
-  versioning, all layers), `Canto.skel()`/`Canto.hashes()` in `api.py`, `dante-corpus text
-  skel`/`dante-corpus hash` in `cli.py`, `tests/test_skel.py` + `tests/test_hashes.py` (28
-  tests, all passing; 64 total in the suite, no regressions). **Not yet done**: the LLM build
-  driver (`skel/skel.py`), `skel/README.md`/`Makefile`/`CORRECTIONS.md`, and the 100-canto
-  build run. See *Handoff* below.
+- **Layer 5 — skeleton**: **core module implemented** (`f7819b0`) and **build driver written,
+  all 100 cantos built** (`e4dece2` pilot + a follow-up build covering the remaining 99
+  cantos): `dante_corpus/skel.py` (dataclasses, role vocabulary, deterministic derivation,
+  table parsing, validation, TSV I/O, serve-time joins), `dante_corpus/hashes.py`
+  (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()` in `api.py`,
+  `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM build driver,
+  mirrors `dep/dep.py`), `skel/Makefile`, `skel/CORRECTIONS.md`, `tests/test_skel.py` +
+  `tests/test_hashes.py` (68 tests total, all passing, no regressions). `skel/<canticle>/NN.tsv`
+  now exists for all 100 cantos; `--check` across all three canticles reports **0 hard, 17438
+  soft** (inferno 5644, purgatorio 6295, paradiso 5499). **Not yet done**: corpus-wide
+  soft-divergence triage beyond Inferno canto 1 (only canto 1 has been hand-inspected and
+  documented in `skel/CORRECTIONS.md`, at 125 soft after its own fixes — the other 99 cantos'
+  ~17.3k remaining soft violations are unclassified), `skel/README.md`, and the final
+  `dante_corpus/README.md` update. See *Handoff* below.
 
 `grammar-stack-plan` was merged into `main` (fast-forward) and pushed; Layers 1–4 and their
 artifacts now live on `main`.
 
 **Next work**
 
-1. **Layer 5 build driver** (`skel/skel.py`) — write the LLM-facing half of Layer 5, structurally
-   mirroring `dep/dep.py`, then pilot-build Inferno canto 1, measure the divergence-from-
-   `derive_unit` soft-check count, and triage per the *Handoff* section's plan. See *Sequencing*.
+1. **Corpus-wide soft-divergence triage** — classify the ~17.3k soft violations across
+   purgatorio/paradiso and the rest of inferno against the four root-cause categories
+   `skel/CORRECTIONS.md` established from canto 1 (xcomp control, elliptical predicate
+   nominals, NP-membership false positives, single-instance boundary cases), fixing what's
+   deterministic and exempting/documenting the rest, per the *Handoff* section's plan.
 
 ## Why this lives in the corpus
 
@@ -135,7 +143,7 @@ layer-3 NPs) each carry a role and a head here, making every pronoun mention enu
 mechanics — parse units, index-citing generation, validation tiers, and usage — live in
 [`dep/README.md`](dep/README.md). It is served via `Canto.dep()` and `dante-corpus text dep`.
 
-### Layer 5 — Predicate-argument skeleton *(core module implemented — see `dante_corpus/skel.py`)*
+### Layer 5 — Predicate-argument skeleton *(built for all 100 cantos — see `dante_corpus/skel.py` and `skel/CORRECTIONS.md`)*
 
 Predicate ↔ argument tuples binding layers 2–4 into bare propositions, citing **token
 positions**, not raw text or lemmas. This is the *raw* skeleton only: **no semantic frame, no
@@ -167,7 +175,10 @@ reproduced exactly by `derive_unit`, see `tests/test_skel.py::test_derive_unit_i
   layer-3 NP ids, derived at serve time via `skel.tuples_canto`), so a consumer artifact can
   **cite** a skeleton tuple rather than paraphrase it — consumers annotate tuples by id, they
   never re-derive them.
-- **Generation**: LLM at build time, frozen (build driver **not yet written** — see *Handoff*).
+- **Generation**: LLM at build time, frozen (`skel/skel.py`, mirroring `dep/dep.py`). Built for
+  all 100 cantos; `--check` reports **0 hard, 17438 soft** across the corpus — see *Handoff*
+  for the triage status (only Inferno canto 1 has been fully triaged so far, in
+  `skel/CORRECTIONS.md`).
 - **Check**: hard — the predicate token exists in layer 1 and every argument position is a
   valid in-unit token position (or the `(0,0)` pro-drop/zero-argument sentinel). Soft — an
   argument citing a nominal role must be a layer-3 NP head, a layer-1 pronoun token, or an
@@ -251,83 +262,85 @@ discipline already used for normalization and quotes.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *core module implemented* (`dante_corpus/skel.py` +
-   `dante_corpus/hashes.py`); the LLM build driver (`skel/skel.py`) and the 100-canto artifact
-   build are the remaining work. See *Handoff*.
+   `dante_corpus/hashes.py`) and *build driver written, all 100 cantos built* (`skel/skel.py`,
+   `skel/<canticle>/NN.tsv`, 0 hard / 17438 soft); corpus-wide soft-divergence triage and
+   `skel/README.md` are the remaining work. See *Handoff*.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-Layers 2–4 are implemented and merged to `main`; layer 5's core module is implemented and
-committed (`f7819b0`) — its build driver and artifacts are the remaining work.
+Layers 2–4 are implemented and merged to `main`; layer 5's core module and build driver are
+implemented, and its artifacts are built for all 100 cantos — soft-divergence triage beyond
+canto 1, `skel/README.md`, and the final `dante_corpus/README.md` update are the remaining work.
 
-## Handoff (2026-07-13, for a fresh session)
+## Handoff (2026-07-15, for a fresh session)
 
-Layer 5's **core module** (the deterministic/served half) is done, committed, and tested. What's
-left is entirely the **LLM-facing build driver** and the resulting artifacts. A new session
-picking this up needs no further design discussion — the design is finished and verified; this
-section is a concrete punch list.
+Layer 5's **core module** and **LLM build driver** are both done, committed, and all 100
+cantos are built. What's left is **corpus-wide soft-divergence triage** (only Inferno canto 1
+has been hand-triaged so far), `skel/README.md`, and the final `dante_corpus/README.md`
+update. A new session picking this up needs no further design discussion — the design is
+finished and verified; this section is a concrete punch list.
 
-**What exists now** (commit `f7819b0`, "Add Layer 5 (skel) core module: predicate-argument
-skeleton + content hashes"):
+**What exists now**:
 
-- `dante_corpus/skel.py` — read its module docstring first; it explains the LLM-authors /
-  derivation-checks design. Key entry points a build driver will call: `resolve_chunk` (parse
-  the LLM's Markdown table into `SkelRow`s), `validate_unit` (hard + soft checks, call with
-  `morph_rows`/`np_rows`/`dep_rows` all supplied once artifacts exist to get every soft check),
-  `derive_unit` (the deterministic checker — also useful standalone for measuring how far off
-  an un-triaged canto is), `write_skel`/`has_skel`/`load_skel` (TSV I/O, same shape as
-  `dep.py`'s), `tuples_canto` (serve-time grouping + id assignment).
-- `dante_corpus/hashes.py` — `artifact_hash`/`canto_hashes`, already wired to all four TSV
-  layers plus `text`; needs no further work for Layer 5.
+- `dante_corpus/skel.py` (`f7819b0`) — read its module docstring first; it explains the
+  LLM-authors / derivation-checks design. Key entry points: `resolve_chunk` (parse the LLM's
+  Markdown table into `SkelRow`s), `validate_unit` (hard + soft checks), `derive_unit` (the
+  deterministic checker, also useful standalone for measuring an un-triaged canto's
+  divergence), `write_skel`/`has_skel`/`load_skel` (TSV I/O), `tuples_canto` (serve-time
+  grouping + id assignment).
+- `dante_corpus/hashes.py` — `artifact_hash`/`canto_hashes`, wired to all four TSV layers plus
+  `text`.
 - `Canto.skel()` / `Canto.hashes()` in `api.py`; `dante-corpus text skel` / `dante-corpus hash`
-  in `cli.py` — both manually smoke-tested against a hand-generated pilot artifact for Inferno
-  I.1–9 (matches the worked example above exactly; that pilot artifact was deleted after
-  verification, it is not committed).
-- `tests/test_skel.py` (25 tests) + `tests/test_hashes.py` (3 tests) — all passing, no
-  regressions in the existing 61.
+  in `cli.py`.
+- `skel/skel.py` (`e4dece2`) — the LLM-facing build driver, structurally mirrors `dep/dep.py`:
+  `SYSTEM_PROMPT` with a worked example, parse units reused verbatim from
+  `dep.sentence_groups`, prompt shows POS-annotated tokens and Layer-3 NP anchors but
+  **deliberately omits the Layer-4 parse** (so `derive_unit`'s divergence check stays
+  meaningful), includes a rule against citing a fused-enclitic-pronoun verb (e.g.
+  `venendomi`) as its own argument (added after the canto-1 pilot hit a hard self-citation
+  violation). Same recovery/resume/mode conventions as `dep/dep.py` (`--check`/`--clean`/
+  `--fix`/`--dry-run`/`--log`, `--fix` under the no-worse-off guarantee).
+- `skel/Makefile` — mirrors `dep/Makefile`.
+- `skel/CORRECTIONS.md` — documents the **Inferno canto 1** triage only: four root-cause
+  categories found (xcomp-complement subject/object control — the largest class and an open
+  design question, deferred not fixed; elliptical predicate nominals with no verb token —
+  exemption, not fixable by `derive_unit`; two NP-membership soft-check false positives, fixed
+  deterministically in `validate_unit`; two single-instance boundary cases left as-is). Canto 1
+  itself: **0 hard, 125 soft** after the deterministic fixes.
+- `skel/<canticle>/NN.tsv` — **all 100 cantos built** (43037 rows total). `--check` across all
+  three canticles: **0 hard, 17438 soft** (inferno 5644, purgatorio 6295, paradiso 5499). The
+  **other 99 cantos' soft violations are not yet classified** — canto 1's 125 (after its own
+  fixes) is the only triaged data point; the remaining ~17.3k across the corpus have not been
+  inspected against canto 1's four categories or for new ones.
+- `tests/test_skel.py` + `tests/test_hashes.py` — 68 tests total in the suite, all passing, no
+  regressions.
 
-**What's not started**: the build driver itself. Concretely, in order:
+**What's left**, concretely, in order:
 
-1. **`skel/skel.py`** — structurally copy `dep/dep.py` (same file the design plan cited as the
-   template): `SYSTEM_PROMPT` with one full worked example (use Inferno I.1–3: `ritrovai`
-   subj-∅/obl:in/obl:per, `smarrita` subj), reuse `dep.sentence_groups` verbatim for parse units
-   (must stay unit-aligned with Layer 4 for the divergence check to mean anything), a prompt
-   builder that shows numbered lines + POS-annotated token list (dep's format) + the Layer-3 NP
-   list as citation anchors — **deliberately omit the Layer-4 parse** from the prompt (that's
-   what makes the divergence check meaningful; see `skel.py`'s docstring). Output table columns:
-   `Pred Line | Pred Token | Pred Word | Role | Arg Line | Arg Token | Arg Word` (zero-arg
-   predicate = Role `-`; pro-drop = Arg Line/Token `0`/`0`, Arg Word `∅`). Recovery: copy
-   `_merge_tables` verbatim; `_continue_if_missing` should be keyed off `derive_unit`'s
-   predicate set (request rows for derived predicates the model's output is missing). `RETRIES
-   = 2`; per-unit `write_skel` after zero hard violations; resume from committed TSV; modes
-   `--check`/`--clean`/`--fix`/`--dry-run`/`--log`; `--fix` keeps a unit only under the
-   no-worse-off guarantee (strictly fewer soft, zero hard) exactly like `dep/dep.py`'s `_fix_canto`.
-2. **`skel/Makefile`** — mirror `dep/Makefile` (`include ../model.mk`; `all`/`skel`/`check`/`fix`
-   targets).
-3. **Pilot build**: `uv run skel/skel.py inferno -c 1 -m ollama:gemma4:31b-it-qat` (the local
-   model in `model.mk`), then `--check`. **Expect a nontrivial soft-divergence count on the
-   first pass** — the mixed copular styles frozen into the Layer-4 corpus (UD-style `amara`/`è
-   cop` vs spaCy-style `è root`/`cosa attr`, see `dep.py`'s `attr` comment) are the likely
-   largest single source, by analogy with `dep/CORRECTIONS.md`'s `attr`-vocabulary story. Record
-   the raw count before touching anything (measure-then-freeze).
-4. **Triage the divergences**, same ladder as `dep/CORRECTIONS.md`: deterministic fix first (if
-   a divergence class turns out to be a `derive_unit` bug, fix `skel.py`, not the artifact) →
-   LLM `--fix` regeneration (no-worse-off guaranteed) → hand-verified exemption (only if a
-   genuine reading `derive_unit` structurally can't express) → hand-edit as an absolute last
-   resort (document in `skel/CORRECTIONS.md`, following `dep/CORRECTIONS.md`'s precedent of
-   checking each instance against its terzina rather than blanket-applying a rule).
-5. **`skel/README.md`** — write once the first canto's numbers are known; follow the structure
-   of `dep/README.md` (artifact format, generation approach, validation tiers, CLI usage,
-   *Check* section with the measured hard/soft counts).
-6. **Scale to all 100 cantos**, gate on `--check` = 0 hard (soft count reported, triaged same as
-   above until it converges or is exemption-flagged).
-7. **Final `dante_corpus/README.md` update** — add `text skel` / `hash` CLI sections and
+1. **Corpus-wide soft-divergence triage** — for purgatorio, paradiso, and inferno cantos 2–34,
+   classify soft violations against `skel/CORRECTIONS.md`'s four established categories
+   (xcomp control, elliptical predicate nominals, NP-membership false positives,
+   single-instance boundary cases), watching for new categories the single-canto sample
+   didn't surface. Same triage ladder as `dep/CORRECTIONS.md` and canto 1's own triage:
+   deterministic fix first (if a divergence class is actually a `derive_unit` bug, fix
+   `skel.py`, not the artifact) → LLM `--fix` regeneration (no-worse-off guaranteed) →
+   hand-verified exemption (only if a genuine reading `derive_unit` structurally can't
+   express) → hand-edit as an absolute last resort, checking each instance against its terzina
+   rather than blanket-applying a rule. At 17.3k soft violations, expect this to be
+   categorized and mostly resolved/exempted in bulk by pattern, not violation-by-violation.
+2. **`skel/README.md`** — write once triage has converged enough to report stable numbers;
+   follow the structure of `dep/README.md` (artifact format, generation approach, validation
+   tiers, CLI usage, *Check* section with final hard/soft counts).
+3. **Final `dante_corpus/README.md` update** — add `text skel` / `hash` CLI sections and
    `Canto.skel()`/`Canto.hashes()`/`SkelTuple` to the Public API listing (Layers 2–4's sections
    there are the template).
-8. **This document** — once the build is complete, update the *Status* section's Layer 5 entry
-   to "implemented and complete" with the final hard/soft counts, matching how Layers 3–4 are
-   currently described.
+4. **This document** — once triage converges (or the remainder is exemption-flagged) and
+   `skel/README.md` exists, update the *Status* section's Layer 5 entry to "implemented and
+   complete" with the final hard/soft counts, matching how Layers 3–4 are currently described.
 
-No further design decisions are expected to be needed for any of the above — every open question
-(role vocabulary, artifact schema, predicate definition, checker semantics, id scheme, hashing)
-was resolved and implemented in commit `f7819b0`. If a build-time surprise contradicts something
-this document states, prefer what the code and tests actually do (they're authoritative) and
-update this document to match, rather than re-deriving the design from scratch.
+No further design decisions are expected to be needed for any of the above — every open
+question (role vocabulary, artifact schema, predicate definition, checker semantics, id
+scheme, hashing) was resolved and implemented in commit `f7819b0`, and the build driver's
+conventions were validated against the canto-1 pilot. This is now a measurement/triage task at
+scale, not a design task. If a build-time surprise contradicts something this document states,
+prefer what the code and tests actually do (they're authoritative) and update this document to
+match, rather than re-deriving the design from scratch.
