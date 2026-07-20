@@ -23,6 +23,7 @@ soon as they validate (zero hard violations), so an interrupted run continues wh
     uv run skel.py inferno -c 1 -m ollama:gpt-oss   # just canto 1
     uv run skel.py inferno --force -m ...           # rebuild from scratch
     uv run skel.py inferno --check                  # code-only, no model
+    uv run skel.py inferno --stats                  # code-only; soft violations by class
     uv run skel.py inferno -n                        # dry run: show pending units, no LLM
     uv run skel.py inferno --clean                   # remove parse units with hard violations
     uv run skel.py inferno --fix -m ollama:gpt-oss   # regenerate units with soft violations
@@ -35,6 +36,7 @@ the derivation: `missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mi
 
 import argparse
 import sys
+from collections import Counter
 from pathlib import Path
 
 from dante_corpus import api, dep, morph, np, skel
@@ -420,6 +422,88 @@ def check(canticles: list[str], only: int | None) -> int:
     return 1 if hard else 0
 
 
+# Divergence-check details all start with one of these prefixes (see `skel._classify_divergence`);
+# membership/unknown-role soft checks don't, so they're recognized by a detail substring instead.
+_DIVERGENCE_KINDS = ("missing_tuple", "extra_tuple", "missing_arg", "extra_arg", "role_mismatch")
+
+
+def _violation_class(v: morph.Violation) -> str:
+    prefix = v.detail.split(":", 1)[0]
+    if prefix in _DIVERGENCE_KINDS:
+        return prefix
+    if "heads no NP" in v.detail:
+        return "membership"
+    if "not in frozen vocabulary" in v.detail:
+        return "unknown_role"
+    return "other"
+
+
+def _print_stats(violations: list[morph.Violation]) -> None:
+    by_kind: Counter[str] = Counter()
+    by_role: Counter[tuple[str, str]] = Counter()
+    by_role_null: Counter[tuple[str, str]] = Counter()
+    role_mismatch_pairs: Counter[tuple[str | None, str | None]] = Counter()
+
+    for v in violations:
+        kind = _violation_class(v)
+        by_kind[kind] += 1
+        if kind in ("extra_arg", "missing_arg") and v.role is not None:
+            by_role[(kind, v.role)] += 1
+            if v.arg == (0, 0):
+                by_role_null[(kind, v.role)] += 1
+        if kind == "role_mismatch":
+            role_mismatch_pairs[(v.given_role, v.role)] += 1
+
+    print("By kind:", file=sys.stderr)
+    for kind, count in by_kind.most_common():
+        print(f"  {kind:15s} {count:6d}", file=sys.stderr)
+
+    print("\nBy role (extra_arg / missing_arg):", file=sys.stderr)
+    for (kind, role), count in by_role.most_common():
+        null_count = by_role_null[(kind, role)]
+        null_tag = f" (of which ∅ (0,0): {null_count})" if null_count else ""
+        print(f"  {kind:12s} {role:12s} {count:6d}{null_tag}", file=sys.stderr)
+
+    if role_mismatch_pairs:
+        print("\nTop role_mismatch pairs (given vs derived):", file=sys.stderr)
+        for (grole, drole), count in role_mismatch_pairs.most_common():
+            print(f"  {grole!r:14s} vs {drole!r:14s} {count:6d}", file=sys.stderr)
+
+
+def stats(canticles: list[str], only: int | None) -> int:
+    hard = 0
+    all_soft: list[morph.Violation] = []
+    for canticle in canticles:
+        numbers = [only] if only else list(api.cantos(canticle))
+        for number in numbers:
+            if not skel.has_skel(canticle, number):
+                hard += 1
+                continue
+            data = skel.load_skel(canticle, number)
+            morph_rows = _morph_rows(canticle, number)
+            np_rows = _np_rows(canticle, number)
+            dep_rows = _dep_rows(canticle, number)
+            lines = api.canto(canticle, number).lines()
+            text_by_no = {line.no: line.text for line in lines}
+            nos_all = [line.no for line in lines]
+            texts_all = [line.text for line in lines]
+            missing = [no for no in nos_all if no not in data]
+            hard += len(missing)
+            for unit in dep.sentence_groups(nos_all, texts_all, dep.MAX_UNIT_LINES):
+                if any(no in missing for no in unit):
+                    continue
+                unit_texts = [text_by_no[no] for no in unit]
+                rows_by_line = {no: list(data[no]) for no in unit}
+                hard_vs, soft_vs = _classify_violations(
+                    unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows,
+                )
+                hard += len(hard_vs)
+                all_soft.extend(soft_vs)
+    _print_stats(all_soft)
+    print(f"stats complete: {len(all_soft)} soft violation(s) ({hard} hard)")
+    return 1 if hard else 0
+
+
 def clean(canticles: list[str], size: int, only: int | None) -> int:
     removed = 0
     for canticle in canticles:
@@ -553,6 +637,8 @@ def main() -> int:
     parser.add_argument("-c", "--canto", type=int, help="limit to a single canto number")
     parser.add_argument("--force", action="store_true", help="rebuild even if artifact exists")
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
+    parser.add_argument("--stats", action="store_true",
+                        help="validate artifacts, no model call; print soft-violation counts by class")
     parser.add_argument("--clean", action="store_true",
                         help="remove parse units with hard violations, then exit")
     parser.add_argument("--fix", action="store_true",
@@ -565,6 +651,8 @@ def main() -> int:
 
     if args.check:
         return check(args.canticles, args.canto)
+    if args.stats:
+        return stats(args.canticles, args.canto)
     if args.clean:
         return clean(args.canticles, args.chunk, args.canto)
     log_path = Path(args.log) if args.log else None

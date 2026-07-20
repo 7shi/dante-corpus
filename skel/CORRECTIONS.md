@@ -1,5 +1,75 @@
 # skel — Layer 5 correction history
 
+## Checker Phases 0-2: normalization + authority model (2026-07-20)
+
+Corpus-wide baseline before this round (`make -C skel check`, all 100 cantos): **0 hard, 14329
+soft**. Per `skel/PLAN.md`'s own phasing, Phases 0-2 are pure checker changes — no artifact
+edited — that shrink the soft-violation count deterministically before any TSV is touched
+(Phase 3) or the LLM is re-invoked (Phase 4). All three phases (`dante_corpus/skel.py`,
+`skel/skel.py`) landed together in this pass; measured **corpus-wide `--stats` after each
+phase**, not just the final number, so each phase's own contribution is on record.
+
+1. **Phase 0 — `--stats`** (`skel/skel.py`): added a `--stats` flag/`stats()` function that
+   aggregates `validate_unit`'s soft `Violation`s by kind, by `(kind, role, ∅-or-real)`, and by
+   `role_mismatch` pair, instead of the one-line-per-violation dump `--check` prints. Required
+   extending the shared `Violation` dataclass (`dante_corpus/morph.py`) with optional
+   `role`/`given_role`/`arg`/`predicate` fields, populated only by `skel._classify_divergence` —
+   additive, no other layer's `Violation` construction changed. Baseline reproduced exactly:
+   7035 extra_arg / 3782 missing_arg / 2392 role_mismatch / 914 extra_tuple / 117 missing_tuple /
+   89 membership = 14329, matching `PLAN.md`'s published table verbatim (measurement only, no
+   count changed).
+2. **Phase 1 — normalization layer** (`dante_corpus/skel.py`, `_canonicalize_role`/
+   `_normalize_prep_lemma`, applied inside `_classify_divergence`'s `by_arg` comparison and
+   inside `derive_unit`'s own `obl:<lemma>` construction): canonicalized both sides of the diff
+   toward the derived side's convention before comparing.
+   - Preposition-lemma orthographic variants: `sanza`/`sanz`/`sans` → `senza`,
+     `sovra`/`sovr'`/`sor` → `sopra`, `de` → `di`, `contra`/`contr` → `contro`, `ver` → `verso`,
+     `ad` → `a`, `col`/`coi` → `con` (the last four extend `PLAN.md`'s three named pairs, found
+     via `--stats`'s role_mismatch-pairs table as it recommends).
+   - Role-label splits for one reading: `attr` ≡ `xcomp` (copular-complement labeling),
+     `iobj` ≡ `obl:a` (dative alternation) — both canonicalize to the derived side's label.
+   - Clausal-complement double-listing: a `missing_arg` for a `ccomp`/`xcomp` derived role is
+     suppressed when the argument token is itself proposed as its own predicate tuple by the LLM.
+   - Effect: **14329 → 12825** (Δ1504, close to `PLAN.md`'s ~1500 estimate). `role_mismatch`
+     dropped 2392 → 1584; the `attr`/`xcomp`, `iobj`/`obl:a`, and all seven orthographic prep
+     pairs no longer appear in the pairs table. Tests: `test_validate_unit_divergence_
+     normalizes_attr_xcomp_and_prep_variants`, `test_validate_unit_divergence_ccomp_double_
+     listing_suppressed` (`tests/test_skel.py`).
+3. **Phase 2 — authority model for `subj`** (`dante_corpus/skel.py`, `_apply_subj_authority`,
+   threaded into `_classify_divergence` via a new `dep_index_by_pos` parameter built from
+   `dep_rows` at `validate_unit`'s call site): made the `subj` slot LLM-authoritative (validated
+   against a candidate set, not exact-matched) in exactly the three cases `PLAN.md` names, no
+   further:
+   - **Pro-drop antecedent** — `derive_unit` produced `subj (0,0)`: any concrete subject the LLM
+     resolves is accepted (strictly more informative than ∅, not wrong).
+   - **Non-finite ∅** — `derive_unit` produced no `subj` row at all for the predicate: an
+     LLM-proposed `(0,0)` is accepted.
+   - **xcomp/ccomp control subject** — `derive_unit` produced no `subj` row and the predicate's
+     own deprel (via `dep_index_by_pos`) is `xcomp`/`ccomp`: an LLM-proposed subject is accepted
+     iff it equals the matrix predicate's derived `subj` or `obj` — replaces the verb-specific
+     control lexicon the pilot-build note above (Item 1, 2026-07-13) explicitly deferred, with a
+     structural candidate-set check instead (no lexicon, still UD-deprel-only).
+   - Every other role, and `subj` where `derive_unit` derives a real (non-∅) subject, stay
+     exact-match — this is deliberately narrower than "any subject disagreement is fine": a
+     control-subject candidate outside the matrix subj/obj pair, or a `subj` disagreement on a
+     predicate `derive_unit` already resolves, still flags (`test_classify_divergence_xcomp_
+     control_subject_rejects_unrelated_arg` asserts this negative case explicitly).
+   - Effect: **12825 → 9672** (Δ3153; `PLAN.md`'s ~6000-7000 estimate for this phase was
+     explicitly rough/non-additive — the actual figure is lower because a meaningful share of
+     `extra_arg subj`/`missing_arg subj` are genuine LLM/derivation disagreements on predicates
+     `derive_unit` *does* resolve a real subject for, which correctly remain exact-match and
+     unaffected). `extra_arg subj` dropped 4666 → 2133 (of which ∅ 2227 → 878); `missing_arg
+     subj` dropped 1718 → 1127. Tests: `test_classify_divergence_non_finite_predicate_accepts_
+     null_subject`, `test_classify_divergence_xcomp_control_subject_accepts_matrix_arg`,
+     `test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg`.
+
+**Current state**: `make -C skel check` — **0 hard, 9672 soft** (down from 14329; Δ4657, 32.5%).
+No artifact under `skel/*/` was touched — this is checker-only, per `PLAN.md`'s gate before
+Phase 3 (`--repair`, mechanical TSV rewriting) and Phase 4 (targeted `--fix`/hand corrections),
+both still open. `dante_corpus/README.md`'s Layer-5 section (still to be written — see root
+`PLAN.md`'s Handoff) and root `PLAN.md`'s Layer-5 "Check" paragraph should describe the
+derive-authoritative/LLM-authoritative distinction once Phase 3/4 land alongside it.
+
 ## Pilot build, Inferno 1 (2026-07-13)
 
 First build (`uv run skel/skel.py inferno -c 1 -m ollama:gemma4:31b-it-qat`) hit 3/3 retry

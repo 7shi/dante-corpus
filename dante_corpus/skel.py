@@ -167,6 +167,38 @@ def _prep_lemma(row: MorphRow) -> str:
     return row.lemma.split("+")[0].strip().lower()
 
 
+# --- Divergence-check normalization (Phase 1, PLAN.md) -------------------------------
+#
+# Label-level equivalences the checker treats as identical, not disagreements about the parse:
+# archaic/orthographic preposition-lemma variants of the same preposition (measured via
+# `--stats`'s role_mismatch pairs table), and two role-label splits for the same UD reading
+# (`attr`/`xcomp` for a copular complement, `iobj`/`obl:a` for the dative alternation) — in both
+# cases canonicalized to the derived side's convention, per PLAN.md's own instruction.
+
+_PREP_LEMMA_NORM = {
+    "sanza": "senza", "sanz": "senza", "sans": "senza",
+    "sovra": "sopra", "sovr'": "sopra", "sor": "sopra",
+    "de": "di",
+    "contra": "contro", "contr": "contro",
+    "ver": "verso",
+    "ad": "a",
+    "col": "con", "coi": "con",
+}
+
+_ROLE_CANON = {"attr": "xcomp", "iobj": "obl:a"}
+
+
+def _normalize_prep_lemma(lemma: str) -> str:
+    return _PREP_LEMMA_NORM.get(lemma, lemma)
+
+
+def _canonicalize_role(role: str) -> str:
+    if OBL_RE.fullmatch(role):
+        prep = role.split(":", 1)[1]
+        return f"obl:{_normalize_prep_lemma(prep)}"
+    return _ROLE_CANON.get(role, role)
+
+
 def derive_unit(
     nos: list[int],
     dep_rows_by_line: dict[int, "list[DepRow] | tuple[DepRow, ...]"],
@@ -245,7 +277,7 @@ def derive_unit(
                     prep_morph = morph_at(case_children[0].line, case_children[0].token)
                     lemma = _prep_lemma(prep_morph) if prep_morph else ""
                     if lemma:
-                        role = f"obl:{lemma}"
+                        role = f"obl:{_normalize_prep_lemma(lemma)}"
                 pred_args.append(SkelRow(line, token, pred_row.word, role, child.line, child.token))
 
         # 3. conj shared-subject propagation: inherit the nearest conj-ancestor's subject.
@@ -374,17 +406,58 @@ def _predicate_positions_in(rows_by_line: dict[int, list[SkelRow]]) -> set[tuple
     }
 
 
+def _subj_arg(by_arg_map: dict[tuple[int, int], str]) -> tuple[int, int] | None:
+    return next((arg for arg, role in by_arg_map.items() if role == "subj"), None)
+
+
+def _apply_subj_authority(
+    g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+    pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+) -> None:
+    """Mutate `g`/`d` in place: drop the subj arg where PLAN.md's authority model makes the slot
+    LLM-authoritative (validated against a candidate set) rather than derive-authoritative (exact
+    match, the default `by_arg` diff already handles).
+    """
+    d_subj = _subj_arg(d)
+    if d_subj == (0, 0):
+        # Pro-drop antecedent: derive_unit only knows ∅; any concrete subject the LLM resolves is
+        # strictly more informative, not wrong.
+        g_subj = _subj_arg(g)
+        if g_subj is not None:
+            g.pop(g_subj, None)
+        d.pop((0, 0), None)
+    elif d_subj is None:
+        # derive_unit asserted no subject at all: non-finite ∅, or an xcomp/ccomp control subject
+        # inherited from the matrix predicate's subj/obj.
+        g_subj = _subj_arg(g)
+        if g_subj is None:
+            return
+        candidates = {(0, 0)}
+        dep_row = dep_index_by_pos.get(pos)
+        if dep_row is not None and dep_row.deprel in ("xcomp", "ccomp"):
+            matrix_pos = (dep_row.head_line, dep_row.head_token)
+            for row in derived_by_pred.get(matrix_pos, ()):
+                if row.role in ("subj", "obj"):
+                    candidates.add((row.arg_line, row.arg_token))
+        if g_subj in candidates:
+            g.pop(g_subj, None)
+
+
 def _classify_divergence(
-    given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]]
+    given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
     given_preds = _predicate_positions_in(given)
     derived_preds = _predicate_positions_in(derived)
 
     for line, token in sorted(derived_preds - given_preds):
-        violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed"))
+        violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
+                                     predicate=(line, token)))
     for line, token in sorted(given_preds - derived_preds):
-        violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived"))
+        violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
+                                     predicate=(line, token)))
 
     given_by_pred: dict[tuple[int, int], list[SkelRow]] = {}
     for rows in given.values():
@@ -401,24 +474,33 @@ def _classify_divergence(
 
         def by_arg(rows: list[SkelRow]) -> dict[tuple[int, int], str]:
             return {
-                (r.arg_line, r.arg_token): r.role
+                (r.arg_line, r.arg_token): _canonicalize_role(r.role)
                 for r in rows
                 if r.role and (r.arg_line, r.arg_token) != pos
             }
 
         g = by_arg(given_by_pred.get(pos, []))
         d = by_arg(derived_by_pred.get(pos, []))
+        if dep_index_by_pos is not None:
+            _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos)
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)
             if grole is None:
-                violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}"))
+                if drole in ("ccomp", "xcomp") and arg in given_preds:
+                    # Clausal-complement double-listing: the LLM lists the clause as its own
+                    # tuple instead of also citing it as this predicate's argument.
+                    continue
+                violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
+                                             role=drole, arg=arg, predicate=pos))
             elif grole != drole:
                 violations.append(
-                    Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}")
+                    Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
+                              role=drole, given_role=grole, arg=arg, predicate=pos)
                 )
         for arg, grole in sorted(g.items()):
             if arg not in d:
-                violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}"))
+                violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",
+                                             role=grole, arg=arg, predicate=pos))
     return violations
 
 
@@ -533,7 +615,7 @@ def validate_unit(
 
     if dep_rows is not None and morph_rows is not None:
         derived = derive_unit(nos, dep_rows, morph_rows)
-        violations.extend(_classify_divergence(rows_by_line, derived))
+        violations.extend(_classify_divergence(rows_by_line, derived, dep_index(dep_rows)))
 
     return violations
 

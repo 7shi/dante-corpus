@@ -1,9 +1,19 @@
 # skel — Layer 5 soft-violation elimination plan
 
-Status as of 2026-07-20: `make -C skel check` reports **0 hard, 14329 soft** violations across
-all 100 cantos (down from 17438 after three days of per-canto fix rounds). The project goal is
-**0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
-tolerate (see the corpus-wide premise recorded after the first full check).
+Status as of 2026-07-20: `make -C skel check` reports **0 hard, 9672 soft** violations across
+all 100 cantos (down from 17438 after three days of per-canto fix rounds, then 14329 at this
+plan's start-of-day baseline). The project goal is **0 soft violations** — soft divergences are
+rule mismatches to eliminate, not a baseline to tolerate (see the corpus-wide premise recorded
+after the first full check).
+
+**Phases 0-2 are done** (landed 2026-07-20, checker-only, no artifact under `skel/*/` touched):
+`--stats` measurement, the normalization layer, and the subj authority model took the corpus
+from 14329 → 9672 soft violations (Δ4657, 32.5%). Phases 3 (`--repair`) and 4 (targeted
+`--fix`/hand corrections) below are still open — that's the next work. See `skel/CORRECTIONS.md`'s
+"Checker Phases 0-2" entry for the full per-phase breakdown with measured (not estimated) counts
+and the tests added for each. The sections below are marked done/open accordingly; the original
+"Measured violation distribution"/"Expected impact" numbers are left as the historical baseline
+this plan was written against.
 
 ## Why the current process is inefficient
 
@@ -51,7 +61,7 @@ total, and most of it traces to two known structural gaps already documented in
 
 ## Plan
 
-### Phase 0 — add `--stats` to the checker (measurement first)
+### Phase 0 — add `--stats` to the checker (measurement first) — done
 
 `skel/skel.py --check` currently prints one line per violation and a total; per-class impact of
 a fix round is invisible without ad-hoc grep/awk. Add a `--stats` flag that aggregates
@@ -60,7 +70,12 @@ Every subsequent phase is then measured as "class X: N → M" instead of a bare 
 
 Touches: `skel/skel.py` (CLI + report), no artifact changes.
 
-### Phase 1 — normalization layer before the diff
+**Landed**: `--stats` flag + `stats()` in `skel/skel.py`, a `stats:` Makefile target, and
+optional `role`/`given_role`/`arg`/`predicate` fields added to the shared `Violation` dataclass
+(`dante_corpus/morph.py`) so aggregation reads structured fields instead of regex-parsing
+`detail`. Reproduced the 14329 baseline exactly. See `skel/CORRECTIONS.md`.
+
+### Phase 1 — normalization layer before the diff — done
 
 Insert a canonicalization step in `dante_corpus/skel.py` applied to **both** the given and the
 derived side before `_classify_divergence` compares them. All of these are label-level
@@ -80,7 +95,17 @@ equivalences, not disagreements about the parse:
 Touches: `dante_corpus/skel.py` (`_classify_divergence` or a `_canonicalize` helper),
 `tests/test_skel.py`. No artifact changes — pure checker fix.
 
-### Phase 2 — authority model: exact match only where the parse determines the answer
+**Landed**: `_canonicalize_role`/`_normalize_prep_lemma` in `dante_corpus/skel.py`, applied in
+`_classify_divergence`'s `by_arg` comparison and in `derive_unit`'s own `obl:<lemma>`
+construction. Preposition variants covered: `sanza`/`sanz`/`sans → senza`,
+`sovra`/`sovr'`/`sor → sopra`, `de → di`, plus (found via `--stats`, not in the original list
+above) `contra`/`contr → contro`, `ver → verso`, `ad → a`, `col`/`coi → con`. Both role
+equivalences (`attr`≡`xcomp`, `iobj`≡`obl:a`) and the ccomp/xcomp double-listing suppression
+landed as specified. Effect: **14329 → 12825** (Δ1504, matching the ~1500 estimate below).
+Tests: `test_validate_unit_divergence_normalizes_attr_xcomp_and_prep_variants`,
+`test_validate_unit_divergence_ccomp_double_listing_suppressed`.
+
+### Phase 2 — authority model: exact match only where the parse determines the answer — done
 
 The root design tension: the checker demands exact equality on slots the Layer 4 tree does not
 determine. Make the authority explicit per slot:
@@ -104,7 +129,20 @@ determine. Make the authority explicit per slot:
 Touches: `dante_corpus/skel.py` (`_classify_divergence` needs access to the derived matrix
 tuples; thread them through), `tests/test_skel.py`.
 
-### Phase 3 — `--repair`: mechanical TSV rewriting for derive-authoritative errors
+**Landed**: `_apply_subj_authority` in `dante_corpus/skel.py`, wired into `_classify_divergence`
+via a new `dep_index_by_pos` parameter (built from `dep_rows` in `validate_unit`). Implements
+all three cases above, with the control-subject candidate set replacing the verb-specific
+lexicon exactly as proposed (no `sembiare`/`fare` lexicon needed). Every other role, and `subj`
+where `derive_unit` resolves a real subject, stay exact-match — a negative-case test
+(`test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg`) checks this doesn't
+over-accept. Effect: **12825 → 9672** (Δ3153 — lower than the ~6000-7000 estimate below because
+a meaningful share of subj extra_arg/missing_arg are genuine disagreements on predicates
+`derive_unit` *does* resolve a real subject for, which correctly stay flagged). Tests:
+`test_classify_divergence_non_finite_predicate_accepts_null_subject`,
+`test_classify_divergence_xcomp_control_subject_accepts_matrix_arg`,
+`test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg`.
+
+### Phase 3 — `--repair`: mechanical TSV rewriting for derive-authoritative errors — open, next
 
 For divergences where the derived answer is trusted and the LLM's is wrong, do **not**
 regenerate with the LLM. Add a `--repair` mode that rewrites the committed TSVs
@@ -122,7 +160,7 @@ commit the diff as one reviewable change.
 Touches: `skel/skel.py` (new mode), `dante_corpus/skel.py` (expose repair candidates from the
 diff), artifacts under `skel/*/`.
 
-### Phase 4 — targeted LLM regeneration, last resort only
+### Phase 4 — targeted LLM regeneration, last resort only — open
 
 After Phases 1-3, re-run `--stats`. What remains should be genuine LLM misreadings
 (e.g. inferno 1:4's subject mix-up across the enjambment, subj/obj reversals) plus the small
@@ -137,16 +175,25 @@ consistent with the goal that even "exemptions" must not remain as nonzero count
 Rough attribution of the 14329 (some instances pair up — one disagreement produces both a
 missing_arg and an extra_arg — so classes overlap and these do not sum linearly):
 
-- Phase 1: ~1500 instances (normalizations + double-listing)
-- Phase 2: ~6000-7000 instances (the subj-related 45% is mostly this)
-- Phase 3: ~1000-2000 instances (∅→real-subject repairs and residual role rewrites)
-- Phase 4: the remainder, expected in the low thousands at most, handled per class.
+- Phase 1: ~1500 instances (normalizations + double-listing) — **actual: Δ1504**, matched.
+- Phase 2: ~6000-7000 instances (the subj-related 45% is mostly this) — **actual: Δ3153**, lower
+  than estimated (see Phase 2's "Landed" note above for why: genuine subj disagreements on
+  derive-authoritative predicates correctly stay flagged, and this phase's rough estimate never
+  accounted for that).
+- Phase 3: ~1000-2000 instances (∅→real-subject repairs and residual role rewrites) — not yet
+  run; 9672 soft violations remain as the input to this phase.
+- Phase 4: the remainder, expected in the low thousands at most, handled per class — not yet run.
 
 Phases 0-2 are pure checker changes (no artifact edits) and should land first; they are safe,
-testable, and shrink the problem before any TSV is touched.
+testable, and shrink the problem before any TSV is touched. **Done** — see `skel/CORRECTIONS.md`.
+Phase 3 is next.
 
 ## Documentation to update on completion
 
 - `skel/CORRECTIONS.md`: record each phase's class → count reduction (measure-then-freeze).
+  **Done for Phases 0-2** (see the "Checker Phases 0-2" entry); Phase 3/4 entries still to add.
 - `dante_corpus/README.md` / root `PLAN.md`: checker semantics changes (normalization,
-  authority model, `--repair`, `--stats`).
+  authority model, `--repair`, `--stats`). **Not yet done** — `dante_corpus/README.md` still has
+  no Layer 5 section at all (a pre-existing gap, tracked in root `PLAN.md`'s Handoff section);
+  best done once Phase 3/4 land too, so the authority-model + `--repair` + `--stats` semantics
+  are documented together rather than in two passes.

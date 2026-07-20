@@ -326,6 +326,85 @@ def test_validate_unit_divergence_role_mismatch():
     assert any("role_mismatch" in v.detail for v in violations)
 
 
+def test_validate_unit_divergence_normalizes_attr_xcomp_and_prep_variants():
+    nos, texts, dep_data, morph_data = _unit_1_3()
+    rows = _unit([
+        skel.SkelRow(2, 2, "ritrovai", "subj", 0, 0),
+        skel.SkelRow(2, 2, "ritrovai", "attr", 1, 2),  # derived: xcomp — should canonicalize equal
+        skel.SkelRow(2, 2, "ritrovai", "obl:sanza", 2, 5),  # derived: obl:per — genuine mismatch survives
+    ])
+    violations = skel.validate_unit(nos, texts, rows, morph_rows=morph_data, dep_rows=dep_data)
+    details = [v.detail for v in violations]
+    assert not any("attr" in d and "xcomp" in d and "role_mismatch" in d for d in details)
+    assert any("role_mismatch" in d for d in details)  # obl:sanza vs obl:per still a real mismatch
+
+
+def test_validate_unit_divergence_ccomp_double_listing_suppressed():
+    nos, texts = _lines(4, 5)
+    dep_all, morph_all = _canto1_dep(), _canto1_morph()
+    dep_data = {no: dep_all[no] for no in nos}
+    morph_data = {no: morph_all[no] for no in nos}
+    # Derived: dir (4.4) has a ccomp arg citing 4.6 ("era"). Given side omits that arg but lists
+    # 4.6 as its own predicate tuple instead — the double-listing derive_unit doesn't dedupe.
+    rows = _unit([
+        skel.SkelRow(4, 6, "era", "subj", 5, 2),
+        skel.SkelRow(4, 6, "era", "attr", 4, 5),
+        skel.SkelRow(4, 7, "è", "subj", 4, 4),
+        skel.SkelRow(4, 7, "è", "attr", 4, 8),
+    ])
+    violations = skel.validate_unit(nos, texts, rows, morph_rows=morph_data, dep_rows=dep_data)
+    details = [v.detail for v in violations]
+    assert not any("missing_arg" in d and "ccomp" in d for d in details)
+    assert any("missing_tuple" in d and "4.4" in d for d in details)  # dir itself still unproposed
+
+
+# --- _classify_divergence: authority model (Phase 2, PLAN.md) -------------------------
+
+
+def test_classify_divergence_non_finite_predicate_accepts_null_subject():
+    # trattar-style: no derived subj row at all (non-finite), LLM marks pro-drop ∅ anyway.
+    derived = {1: [skel.SkelRow(1, 3, "trattar", "obl:di", 1, 5)]}
+    given = {1: [
+        skel.SkelRow(1, 3, "trattar", "obl:di", 1, 5),
+        skel.SkelRow(1, 3, "trattar", "subj", 0, 0),
+    ]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="trattar", deprel="advcl", head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_xcomp_control_subject_accepts_matrix_arg():
+    matrix = skel.SkelRow(2, 2, "vuole", "subj", 2, 1)
+    matrix_xcomp = skel.SkelRow(2, 2, "vuole", "xcomp", 2, 3)
+    derived = {2: [matrix, matrix_xcomp, skel.SkelRow(2, 3, "partire", "", 0, 0)]}
+    given = {2: [
+        skel.SkelRow(2, 2, "vuole", "subj", 2, 1),
+        skel.SkelRow(2, 2, "vuole", "xcomp", 2, 3),
+        skel.SkelRow(2, 3, "partire", "subj", 2, 1),  # LLM resolves the control subject explicitly
+    ]}
+    dep_index_by_pos = {
+        (2, 3): dep.DepRow(line=2, token=3, word="partire", deprel="xcomp", head_line=2, head_token=2),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg():
+    matrix = skel.SkelRow(2, 2, "vuole", "subj", 2, 1)
+    matrix_xcomp = skel.SkelRow(2, 2, "vuole", "xcomp", 2, 3)
+    derived = {2: [matrix, matrix_xcomp, skel.SkelRow(2, 3, "partire", "", 0, 0)]}
+    given = {2: [
+        skel.SkelRow(2, 2, "vuole", "subj", 2, 1),
+        skel.SkelRow(2, 2, "vuole", "xcomp", 2, 3),
+        skel.SkelRow(2, 3, "partire", "subj", 2, 5),  # neither matrix subj nor obj -> genuine disagreement
+    ]}
+    dep_index_by_pos = {
+        (2, 3): dep.DepRow(line=2, token=3, word="partire", deprel="xcomp", head_line=2, head_token=2),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (2, 5) for v in violations)
+
+
 def test_validate_unit_clean_matches_derivation():
     nos, texts, dep_data, morph_data = _unit_1_3()
     derived = skel.derive_unit(nos, dep_data, morph_data)

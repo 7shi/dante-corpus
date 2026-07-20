@@ -287,6 +287,13 @@ class Violation:
     line: int
     kind: str
     detail: str
+    # Structured payload for divergence violations (skel.py's `_classify_divergence`), so
+    # `--stats`-style aggregation doesn't need to regex-parse `detail`. Unused (None) by every
+    # other layer's Violations.
+    role: str | None = None
+    given_role: str | None = None  # role_mismatch only: the given (LLM) side's role
+    arg: tuple[int, int] | None = None
+    predicate: tuple[int, int] | None = None
 
 
 def validate_line(line_no: int, source_text: str, rows: list[MorphRow]) -> list[Violation]:
