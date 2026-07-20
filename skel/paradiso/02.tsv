@@ -10,9 +10,9 @@ line	token	word	role	arg_line	arg_token
 3	7	varca	subj	3	5
 4	1	tornate	subj	1	2
 4	1	tornate	xcomp	4	3
-4	3	riveder	subj	0	0
+4	3	riveder	subj	1	2
 4	3	riveder	obj	4	6
-5	3	mettete	subj	0	0
+5	3	mettete	subj	1	2
 5	3	mettete	obj	5	2
 5	3	mettete	obl:in	5	5
 6	1	perdendo	subj	0	0
@@ -35,16 +35,13 @@ line	token	word	role	arg_line	arg_token
 11	0			0	0
 12	1	vivesi	subj	0	0
 12	1	vivesi	obl:di	11	9
-12	6	vien	subj	0	0
+12	6	vien	subj	12	5
 12	6	vien	attr	12	7
-12	6	vien	obl:di	12	5
-12	7	satollo	subj	0	0
-13	1	metter	subj	10	1
+12	7	satollo	subj	12	5
 13	1	metter	obj	14	2
 13	1	metter	obl:per	13	7
 13	2	potete	subj	10	1
 13	2	potete	xcomp	13	1
-14	3	servando	subj	0	0
 14	3	servando	obj	14	5
 14	3	servando	obl:a	15	4
 15	6	ritorna	subj	15	5
@@ -63,7 +60,6 @@ line	token	word	role	arg_line	arg_token
 19	0			0	0
 20	5	portava	subj	19	5
 20	5	portava	obj	20	4
-20	5	portava	attr	21	1
 20	5	portava	obl:di	20	4
 21	6	vedete	subj	0	0
 21	6	vedete	obj	21	5
@@ -129,28 +125,29 @@ line	token	word	role	arg_line	arg_token
 39	8	repe	subj	39	5
 39	8	repe	obl:in	39	7
 40	1	accender	subj	40	6
-40	1	accender	obj	40	2
+40	1	accender	obl:di	40	2
 40	3	dovria	subj	40	6
 40	3	dovria	xcomp	40	1
 41	2	veder	subj	0	0
 41	2	veder	obj	41	4
-41	8	vede	subj	41	6
+41	8	vede	subj	0	0
+41	8	vede	ccomp	42	7
+41	8	vede	obl:in	41	6
 42	7	unio	subj	42	3
-43	3	vedrà	subj	43	4
-43	3	vedrà	obl:a	45	2
+43	3	vedrà	subj	0	0
+43	3	vedrà	obj	43	4
 43	6	tenem	subj	0	0
 43	6	tenem	obj	43	5
 43	6	tenem	obl:per	43	8
 44	2	dimostrato	subj	43	4
 44	7	noto	subj	43	4
 44	7	noto	obl:per	44	6
+44	7	noto	obl:a	45	2
 45	9	crede	subj	45	8
 45	9	crede	obj	45	6
 46	2	rispuosi	subj	46	1
-46	2	rispuosi	iobj	46	3
 46	5	devoto	subj	46	1
 47	2	esser	subj	0	0
-47	2	esser	attr	46	5
 47	3	posso	subj	0	0
 47	3	posso	xcomp	47	2
 47	5	ringrazio	subj	0	0
@@ -164,7 +161,6 @@ line	token	word	role	arg_line	arg_token
 49	4	son	attr	49	3
 50	0			0	0
 51	1	fan	subj	50	4
-51	1	fan	obj	51	5
 51	1	fan	xcomp	51	4
 51	1	fan	obl:in	50	8
 51	4	favoleggiare	subj	51	5
@@ -213,18 +209,16 @@ line	token	word	role	arg_line	arg_token
 64	5	dimostra	iobj	64	4
 65	0			0	0
 66	1	notar	subj	65	3
-66	1	notar	obl:in	65	6
-66	1	notar	obl:in	65	9
-66	1	notar	obl:di	66	6
 66	3	posson	subj	65	3
 66	3	posson	xcomp	66	1
+66	3	posson	obl:in	65	6
+66	3	posson	obl:in	65	9
+66	3	posson	obl:di	66	6
 67	6	facesser	subj	67	2
 67	6	facesser	obj	67	5
 68	4	sarebbe	subj	68	3
-68	4	sarebbe	attr	69	4
 68	4	sarebbe	obl:in	68	6
 69	4	distributa	subj	68	3
-69	4	distributa	obl:in	68	6
 70	4	convegnon	subj	70	1
 70	4	convegnon	xcomp	70	5
 70	5	frutti	subj	70	1
@@ -234,13 +228,17 @@ line	token	word	role	arg_line	arg_token
 72	1	seguiterieno	obl:a	72	4
 72	5	distrutti	subj	71	5
 73	3	raro	subj	74	1
-73	3	raro	obl:di	73	7
+73	4	fosse	subj	74	1
+73	4	fosse	attr	73	3
+73	4	fosse	obl:di	73	7
 74	4	dimandi	subj	74	3
 74	4	dimandi	obj	74	2
+75	1	fora	subj	76	2
+75	1	fora	attr	75	6
+75	1	fora	obl:di	74	7
+75	1	fora	obl:in	74	9
+75	1	fora	obl:di	75	4
 75	6	digiuno	subj	76	2
-75	6	digiuno	obl:di	74	7
-75	6	digiuno	obl:in	74	9
-75	6	digiuno	obl:di	75	4
 76	6	comparte	subj	77	7
 76	6	comparte	obj	77	2
 77	0			0	0
@@ -250,16 +248,16 @@ line	token	word	role	arg_line	arg_token
 79	4	fosse	subj	79	3
 79	6	manifesto	subj	0	0
 79	6	manifesto	obl:in	80	3
-79	6	manifesto	obl:per	80	7
 80	7	trasparere	subj	81	2
 80	7	trasparere	obl:in	81	7
 81	0			0	0
 82	3	è	subj	82	1
-82	5	è	subj	0	0
+82	5	è	subj	82	1
 82	5	è	attr	82	7
 82	7	vedere	subj	0	0
 82	7	vedere	obl:di	83	3
 83	7	avvien	subj	83	6
+83	7	avvien	ccomp	83	12
 83	12	cassi	subj	83	9
 83	12	cassi	obj	83	11
 84	1	falsificato	subj	84	5
@@ -284,17 +282,13 @@ line	token	word	role	arg_line	arg_token
 91	2	dirai	subj	91	3
 91	2	dirai	ccomp	91	8
 91	7	dimostra	subj	91	5
+91	7	dimostra	obj	91	6
 91	7	dimostra	attr	91	8
-91	7	dimostra	obl	92	1
-91	7	dimostra	obl:in	92	8
 91	8	tetro	subj	91	5
 91	8	tetro	obl:in	92	8
-91	8	tetro	obl:per	93	4
 92	0			0	0
 93	2	esser	subj	0	0
 93	2	esser	attr	93	4
-93	2	esser	obl	93	3
-93	2	esser	obl:a	93	7
 93	4	refratto	subj	0	0
 93	4	refratto	obl:a	93	7
 94	5	deliberarti	subj	95	1
@@ -303,9 +297,7 @@ line	token	word	role	arg_line	arg_token
 95	6	provi	obj	95	5
 96	2	esser	subj	96	1
 96	2	esser	attr	96	4
-96	3	suol	subj	96	1
-96	3	suol	xcomp	96	2
-96	4	fonte	obl:a	96	6
+96	4	fonte	subj	96	1
 97	3	prenderai	subj	0	0
 97	3	prenderai	obj	97	2
 97	7	rimovi	subj	0	0
@@ -341,7 +333,6 @@ line	token	word	role	arg_line	arg_token
 107	4	riman	subj	107	7
 107	4	riman	attr	107	5
 107	4	riman	obl:a	106	4
-107	4	riman	obl:di	107	3
 107	5	nudo	subj	107	7
 108	7	primai	subj	107	7
 108	7	primai	obl:da	108	3
@@ -349,6 +340,7 @@ line	token	word	role	arg_line	arg_token
 109	2	rimaso	subj	109	3
 110	1	voglio	subj	0	0
 110	1	voglio	xcomp	110	2
+110	2	informar	subj	0	0
 110	2	informar	obj	109	3
 110	2	informar	obl:in	109	6
 110	2	informar	obl:di	110	4
@@ -357,7 +349,7 @@ line	token	word	role	arg_line	arg_token
 111	3	tremolerà	obl:in	111	6
 112	0			0	0
 113	2	gira	subj	113	4
-113	2	gira	obl:in	112	3
+113	2	gira	obl:da	112	3
 114	7	giace	subj	114	2
 114	7	giace	obl:in	113	8
 115	5	ha	subj	115	4
@@ -416,7 +408,7 @@ line	token	word	role	arg_line	arg_token
 134	5	conformate	subj	133	4
 134	5	conformate	obl:a	135	3
 135	5	risolve	subj	133	4
-135	5	risolve	obl:a	133	8
+135	5	risolve	obl:dentro	133	8
 135	5	risolve	obl:per	134	3
 136	0			0	0
 137	1	multiplicata	subj	136	5
@@ -436,7 +428,7 @@ line	token	word	role	arg_line	arg_token
 141	9	lega	subj	0	0
 141	9	lega	obl:in	141	2
 142	6	deriva	subj	0	0
-142	6	deriva	obl:da	142	5
+142	6	deriva	obl	142	5
 143	7	luce	subj	143	2
 143	7	luce	obl:per	142	3
 143	7	luce	obl:per	143	6
@@ -446,6 +438,9 @@ line	token	word	role	arg_line	arg_token
 145	3	vien	obl:da	145	2
 146	1	par	subj	145	5
 146	1	par	attr	146	2
+146	1	par	obl:da	145	7
+146	1	par	obl:a	145	9
+146	1	par	obl:da	146	7
 146	2	differente	subj	145	5
 146	2	differente	obl:da	145	7
 146	2	differente	obl:a	145	9
@@ -454,5 +449,5 @@ line	token	word	role	arg_line	arg_token
 147	6	produce	subj	147	5
 147	6	produce	obj	148	6
 147	6	produce	obl:a	148	4
-148	1	conforme	subj	147	5
+148	1	conforme	subj	147	4
 148	1	conforme	obl:a	148	4

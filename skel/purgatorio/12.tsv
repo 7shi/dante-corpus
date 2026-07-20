@@ -11,22 +11,20 @@ line	token	word	role	arg_line	arg_token
 4	3	disse	ccomp	4	4
 4	4	Lascia	subj	0	0
 4	4	Lascia	obj	4	5
-4	7	varca		0	0
 4	7	varca	subj	0	0
-5	4	buono	subj	6	4
+5	4	buono	subj	0	0
 5	4	buono	obl:con	5	7
 5	4	buono	obl:con	5	10
 6	2	può	subj	6	3
 6	2	può	xcomp	6	4
 6	4	pinger	subj	6	3
 6	4	pinger	obj	6	6
-7	4	andar		0	0
 7	4	andar	subj	0	0
 7	5	vuolsi	subj	0	0
 7	5	vuolsi	xcomp	7	4
 7	6	rife'	subj	0	0
-7	6	rife'	obj	7	7
-7	6	rife'	attr	7	1
+7	6	rife'	iobj	7	7
+7	6	rife'	obl	7	1
 7	6	rife'	obl:con	8	3
 8	4	avvegna	subj	0	0
 8	4	avvegna	ccomp	9	2
@@ -35,9 +33,7 @@ line	token	word	role	arg_line	arg_token
 9	2	rimanessero	attr	9	4
 9	2	rimanessero	attr	9	6
 9	4	chinati	subj	8	7
-9	4	chinati	iobj	9	1
 9	6	scemi	subj	8	7
-9	6	scemi	iobj	9	1
 10	4	mosso	subj	10	1
 10	6	seguia	subj	0	0
 10	6	seguia	obj	11	5
@@ -66,7 +62,6 @@ line	token	word	role	arg_line	arg_token
 18	6	eran	subj	18	5
 18	6	eran	attr	18	4
 19	6	ripiagne	subj	0	0
-19	6	ripiagne	obl	19	4
 19	6	ripiagne	obl:per	20	3
 20	0			0	0
 21	5	dà	subj	21	1
@@ -77,19 +72,17 @@ line	token	word	role	arg_line	arg_token
 22	2	vid'	obl:di	22	8
 22	2	vid'	obl:secondo	23	3
 23	0			0	0
-24	8	avanza	subj	24	1
+24	8	avanza	subj	0	0
 24	8	avanza	obl:per	24	3
 25	1	Vedea	subj	0	0
 25	1	Vedea	obj	25	2
 25	1	Vedea	xcomp	27	2
-25	1	Vedea	obl:da	26	7
-25	1	Vedea	obl:da	27	6
 25	6	creato	subj	25	3
-25	6	creato	attr	25	5
-25	6	creato	obl	26	4
 26	0			0	0
 27	1	folgoreggiando	subj	25	2
 27	2	scender	subj	25	2
+27	2	scender	obl:da	26	7
+27	2	scender	obl:da	27	6
 28	1	Vedëa	subj	0	0
 28	1	Vedëa	obj	28	2
 28	1	Vedëa	xcomp	29	2
@@ -102,12 +95,10 @@ line	token	word	role	arg_line	arg_token
 30	1	grave	obl:per	30	8
 31	1	Vedea	subj	0	0
 31	1	Vedea	obj	31	2
-31	1	Vedea	xcomp	33	1
 31	3	vedea	subj	0	0
 31	3	vedea	obj	31	6
 31	3	vedea	xcomp	33	1
 32	1	armati	subj	31	6
-33	1	mirar	subj	31	2
 33	1	mirar	subj	31	6
 33	1	mirar	obj	33	3
 33	1	mirar	obl:a	32	5
@@ -258,7 +249,6 @@ line	token	word	role	arg_line	arg_token
 81	0			0	0
 82	8	addorna	subj	0	0
 82	8	addorna	obj	82	4
-82	8	addorna	obj	82	7
 82	8	addorna	obl:di	82	2
 83	6	'nvïarci	subj	83	4
 83	6	'nvïarci	obj	83	5
@@ -267,8 +257,8 @@ line	token	word	role	arg_line	arg_token
 84	1	pensa	ccomp	84	7
 84	7	raggiorna	subj	84	4
 85	7	uso	subj	85	1
+85	7	uso	xcomp	86	4
 85	7	uso	obl:di	85	6
-85	7	uso	obl:di	86	4
 86	4	perder	subj	0	0
 86	4	perder	obj	86	5
 87	3	potea	subj	0	0
@@ -289,17 +279,17 @@ line	token	word	role	arg_line	arg_token
 91	6	aperse	subj	0	0
 91	6	aperse	obj	91	8
 92	1	disse	subj	0	0
+92	1	disse	ccomp	92	2
 92	2	Venite	subj	0	0
 92	4	son	subj	0	0
 92	4	son	obl:presso	92	7
 93	5	sale	subj	93	4
-94	4	vegnon	subj	0	0
-94	4	vegnon	attr	94	6
+94	4	vegnon	subj	94	6
 94	4	vegnon	obl:a	94	3
 95	5	volar	subj	0	0
 95	7	nata	subj	95	2
 95	7	nata	obl:per	95	5
-96	6	cadi	subj	95	2
+96	6	cadi	subj	0	0
 96	6	cadi	obl:a	96	4
 97	6	tagliata	subj	97	4
 97	6	tagliata	obl	97	2
@@ -348,8 +338,6 @@ line	token	word	role	arg_line	arg_token
 116	4	parea	subj	116	2
 116	4	parea	iobj	116	3
 116	4	parea	attr	116	7
-116	7	lieve	subj	116	2
-116	7	lieve	iobj	116	3
 117	7	parea	subj	0	0
 117	7	parea	iobj	117	6
 117	7	parea	obl:per	117	4
@@ -377,25 +365,23 @@ line	token	word	role	arg_line	arg_token
 127	2	fec'	subj	127	3
 127	2	fec'	obl:come	127	5
 127	7	vanno	subj	127	6
+127	7	vanno	obl:con	128	2
 128	8	saputa	subj	128	2
-128	8	saputa	obl:in	128	4
 128	8	saputa	obl:da	128	7
-129	6	sospecciar	subj	0	0
+129	6	sospecciar	subj	129	5
 129	6	sospecciar	obj	129	4
-129	7	fanno	subj	0	0
+129	7	fanno	subj	127	6
 129	7	fanno	xcomp	129	6
-130	6	accertar	subj	0	0
+130	6	accertar	subj	130	4
 130	8	aiuta	subj	130	4
-130	8	aiuta	obj	130	7
 130	8	aiuta	xcomp	130	6
-131	2	cerca	subj	0	0
-131	4	truova	subj	0	0
-131	8	adempie	subj	0	0
+131	2	cerca	subj	130	4
+131	4	truova	subj	130	4
+131	8	adempie	subj	130	4
 131	8	adempie	obj	131	7
 132	4	può	subj	132	1
 132	4	può	xcomp	132	5
-132	5	fornir	subj	0	0
-132	5	fornir	obj	132	3
+132	5	fornir	subj	132	1
 132	5	fornir	obl:per	132	8
 133	0			0	0
 134	1	trovai	subj	0	0
@@ -403,10 +389,9 @@ line	token	word	role	arg_line	arg_token
 134	1	trovai	obl:con	133	4
 134	7	'ncise	subj	135	1
 134	7	'ncise	obj	134	6
-134	7	'ncise	obl:da	135	4
 134	7	'ncise	obl:a	135	6
 134	7	'ncise	obl:sovra	135	9
 135	0			0	0
-136	3	guardando	subj	0	0
+136	3	guardando	subj	136	6
 136	3	guardando	obl:a	136	2
 136	7	sorrise	subj	136	6

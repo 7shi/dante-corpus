@@ -5,7 +5,6 @@ line	token	word	role	arg_line	arg_token
 3	7	seppe	subj	3	5
 3	7	seppe	obj	3	6
 4	1	disse	subj	3	3
-4	1	disse	obl:per	4	3
 4	3	confortarmi	subj	0	0
 4	6	noccia	subj	5	3
 4	6	noccia	iobj	4	5
@@ -14,12 +13,12 @@ line	token	word	role	arg_line	arg_token
 6	3	torrà	subj	0	0
 6	3	torrà	obj	6	5
 6	3	torrà	iobj	6	2
-6	5	scender	obj	6	7
 7	3	rivolse	subj	0	0
 7	3	rivolse	obl:a	7	7
 8	2	disse	subj	0	0
 8	2	disse	ccomp	8	3
-8	3	Taci	subj	8	5
+8	3	Taci	subj	0	0
+8	3	Taci	obl	8	5
 9	1	consuma	subj	0	0
 9	1	consuma	obl:dentro	9	3
 9	1	consuma	obl:con	9	7
@@ -31,23 +30,22 @@ line	token	word	role	arg_line	arg_token
 12	1	fé	obj	12	3
 13	0			0	0
 14	1	caggiono	subj	13	6
-14	1	caggiono	attr	14	2
 14	1	caggiono	obl:da	13	3
 14	7	fiacca	subj	14	6
 15	2	cadde	subj	15	6
 15	2	cadde	obl:a	15	4
 16	2	scendemmo	subj	0	0
-16	2	scendemmo	obl:in	16	6
+16	2	scendemmo	obl:ne	16	6
 17	1	pigliando	subj	0	0
-17	1	pigliando	obl:di	17	6
-18	8	insacca	subj	18	3
-18	8	insacca	obj	18	1
+17	1	pigliando	obl:de	17	6
+18	8	insacca	subj	18	1
+18	8	insacca	obj	18	3
 19	7	stipa	subj	19	6
 19	7	stipa	obj	20	2
 20	7	viddi	subj	20	6
 20	7	viddi	obj	20	5
 21	7	scipa	subj	21	4
-21	7	scipa	obl:di	21	6
+21	7	scipa	obj	21	6
 22	2	fa	subj	22	4
 22	2	fa	obl:sovra	22	7
 23	3	frange	subj	23	1
@@ -67,11 +65,13 @@ line	token	word	role	arg_line	arg_token
 27	1	voltando	obj	27	2
 27	1	voltando	obl:per	27	4
 28	1	Percotëansi	subj	0	0
-28	1	Percotëansi	obl:contro	28	2
+28	1	Percotëansi	obl	28	2
 29	2	rivolgea	subj	29	3
 29	4	voltando	subj	29	3
 29	4	voltando	obl:a	29	6
 30	1	gridando	subj	29	3
+30	1	gridando	ccomp	30	3
+30	1	gridando	ccomp	30	6
 30	3	tieni	subj	0	0
 30	6	burli	subj	0	0
 31	2	tornavan	subj	0	0
@@ -100,9 +100,6 @@ line	token	word	role	arg_line	arg_token
 38	9	cherci	obj	39	2
 38	9	cherci	obl:a	39	5
 39	0			0	0
-40	1	Ed	subj	40	2
-40	1	Ed	ccomp	40	8
-40	1	Ed	obl:a	40	4
 40	8	guerci	subj	40	5
 40	8	guerci	obl:di	41	4
 40	8	guerci	obl:in	41	7
@@ -176,6 +173,7 @@ line	token	word	role	arg_line	arg_token
 66	2	poterebbe	xcomp	66	3
 66	3	farne	subj	0	0
 66	3	farne	obj	66	5
+66	3	farne	xcomp	66	4
 66	4	posare	subj	66	5
 67	3	diss'	subj	67	4
 67	7	dì	subj	0	0
@@ -187,35 +185,35 @@ line	token	word	role	arg_line	arg_token
 69	8	ha	subj	69	5
 69	8	ha	obj	69	3
 69	8	ha	obl:tra	69	11
-70	0			0	0
+70	1	E		0	0
+70	2	quelli	subj	0	0
+70	2	quelli	obl:a	70	4
 71	2	ignoranza	subj	71	4
-71	3	è	subj	71	4
-71	3	è	attr	71	2
 71	7	offende	subj	71	5
 71	7	offende	obj	71	6
 72	2	vo'	subj	0	0
 72	2	vo'	ccomp	72	8
 72	8	'mbocche	subj	72	4
 72	8	'mbocche	obj	72	6
-72	8	'mbocche	obl:di	72	7
+72	8	'mbocche	obl	72	7
 73	6	trascende	subj	73	4
 73	6	trascende	obj	73	5
 74	1	fece	subj	73	1
 74	1	fece	obj	74	3
-74	5	diè	subj	0	0
+74	5	diè	subj	73	1
 74	5	diè	obj	74	7
 74	5	diè	iobj	74	6
 74	8	conduce	subj	74	7
 75	8	splende	subj	75	4
-75	8	splende	obl:ad	75	7
-76	1	distribuendo	subj	0	0
+75	8	splende	obl:a	75	7
+76	1	distribuendo	subj	73	1
 76	1	distribuendo	obj	76	4
 77	0			0	0
 78	1	ordinò	subj	0	0
 78	1	ordinò	obj	78	3
 78	1	ordinò	ccomp	79	2
 78	1	ordinò	obl:a	77	4
-79	2	permutasse	subj	78	3
+79	2	permutasse	subj	0	0
 79	2	permutasse	obj	79	6
 79	2	permutasse	obl:a	79	4
 79	2	permutasse	obl:di	80	2
@@ -227,7 +225,7 @@ line	token	word	role	arg_line	arg_token
 81	0			0	0
 82	5	impera	subj	82	4
 82	9	langue	subj	82	8
-83	1	seguendo	subj	82	4
+83	1	seguendo	subj	0	0
 83	1	seguendo	obj	83	3
 84	3	occulto	subj	84	1
 84	6	erba	subj	84	8
@@ -263,21 +261,19 @@ line	token	word	role	arg_line	arg_token
 92	7	dar	subj	92	4
 92	7	dar	obj	92	8
 92	7	dar	iobj	92	5
-93	1	dandole	subj	0	0
+93	1	dandole	subj	92	3
 93	1	dandole	obj	93	2
 93	1	dandole	obl:a	93	4
 94	4	è	subj	94	2
-94	4	è	obj	94	3
 94	4	è	attr	94	5
 94	5	beata	subj	94	2
-94	9	ode	subj	0	0
+94	9	ode	subj	94	2
 94	9	ode	obj	94	7
 95	0			0	0
-96	1	volve	subj	0	0
+96	1	volve	subj	94	2
 96	1	volve	obj	96	3
 96	1	volve	obl:con	95	5
-96	7	gode	subj	0	0
-96	7	gode	attr	96	5
+96	7	gode	subj	94	2
 97	2	discendiamo	subj	0	0
 97	2	discendiamo	obl:a	97	6
 98	4	cade	subj	98	3
@@ -287,10 +283,10 @@ line	token	word	role	arg_line	arg_token
 100	2	ricidemmo	subj	100	1
 100	2	ricidemmo	obj	100	4
 100	2	ricidemmo	obl:a	100	8
-100	2	ricidemmo	obl:sovr	101	3
-100	2	ricidemmo	obl:per	102	3
+100	2	ricidemmo	obl:sopra	101	3
 101	5	bolle	subj	101	4
 101	7	riversa	subj	101	4
+101	7	riversa	obl:per	102	3
 102	7	deriva	subj	102	4
 102	7	deriva	obl:da	102	6
 103	4	buia	subj	103	2
@@ -303,7 +299,7 @@ line	token	word	role	arg_line	arg_token
 106	4	va	obl:in	106	3
 106	6	ha	subj	106	5
 106	6	ha	obj	106	7
-107	6	disceso	subj	107	3
+107	6	disceso	subj	0	0
 107	6	disceso	obl:a	108	2
 108	0			0	0
 109	5	mirare	subj	0	0
@@ -315,6 +311,7 @@ line	token	word	role	arg_line	arg_token
 110	1	vidi	obl:con	111	4
 111	1	ignude	subj	110	2
 112	3	percotean	subj	112	1
+112	3	percotean	obj	112	2
 112	3	percotean	obl:con	112	7
 112	3	percotean	obl:con	113	4
 112	3	percotean	obl:con	113	7
@@ -337,7 +334,7 @@ line	token	word	role	arg_line	arg_token
 118	5	è	subj	118	6
 118	5	è	obl:sotto	118	4
 118	8	sospira	subj	118	7
-119	2	fanno	subj	0	0
+119	2	fanno	subj	118	6
 119	2	fanno	xcomp	119	3
 119	3	pullular	subj	119	5
 119	3	pullular	obl:a	119	7
@@ -345,12 +342,10 @@ line	token	word	role	arg_line	arg_token
 120	5	dice	iobj	120	4
 120	5	dice	ccomp	120	9
 120	9	aggira	subj	120	7
-120	9	aggira	obl	120	6
 121	1	Fitti	subj	0	0
 121	1	Fitti	obl:in	121	3
 121	4	dicon	subj	0	0
 121	5	Tristi	subj	0	0
-121	5	Tristi	obl:in	122	3
 121	6	fummo	subj	0	0
 121	6	fummo	attr	121	5
 121	6	fummo	obl:in	122	3
@@ -358,7 +353,6 @@ line	token	word	role	arg_line	arg_token
 122	9	allegra	obj	122	8
 122	9	allegra	obl:da	122	7
 123	1	portando	subj	0	0
-123	1	portando	obj	123	3
 123	3	accidïoso	subj	0	0
 123	4	fummo	subj	0	0
 123	4	fummo	attr	123	3
@@ -368,7 +362,6 @@ line	token	word	role	arg_line	arg_token
 125	4	gorgoglian	subj	0	0
 125	4	gorgoglian	obj	125	2
 125	4	gorgoglian	obl:in	125	7
-126	2	dir	subj	0	0
 126	2	dir	obj	126	3
 126	4	posson	subj	0	0
 126	4	posson	xcomp	126	2
@@ -376,6 +369,7 @@ line	token	word	role	arg_line	arg_token
 127	2	girammo	subj	0	0
 127	2	girammo	obj	128	2
 127	2	girammo	obl:di	127	6
+127	2	girammo	obl:con	129	3
 128	0			0	0
 129	4	vòlti	subj	129	3
 129	4	vòlti	obl:a	129	6

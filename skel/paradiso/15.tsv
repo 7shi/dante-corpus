@@ -4,7 +4,7 @@ line	token	word	role	arg_line	arg_token
 2	6	spira	subj	2	4
 3	3	fa	subj	3	2
 3	3	fa	obl:in	3	6
-4	2	puose	subj	0	0
+4	2	puose	subj	1	2
 4	2	puose	obj	4	1
 4	2	puose	obl:a	4	6
 5	2	fece	subj	0	0
@@ -18,13 +18,13 @@ line	token	word	role	arg_line	arg_token
 7	6	sorde	obl:a	7	5
 8	5	darmi	subj	8	3
 8	5	darmi	obj	8	6
-8	5	darmi	ccomp	9	4
 9	4	pregassi	subj	9	2
 9	4	pregassi	obj	9	3
-9	6	tacer	subj	8	3
+9	6	tacer	subj	0	0
 9	8	concorde	subj	8	3
-9	8	concorde	xcomp	9	6
-10	2	è	subj	10	3
+9	8	concorde	obl:a	9	6
+10	1	Bene	subj	10	7
+10	2	è	subj	10	7
 10	2	è	attr	10	1
 10	7	doglia	subj	11	1
 10	7	doglia	obl:sanza	10	5
@@ -35,10 +35,10 @@ line	token	word	role	arg_line	arg_token
 13	0			0	0
 14	1	discorre	subj	14	7
 14	1	discorre	obl:per	13	4
-14	1	discorre	obl:a	14	3
-14	1	discorre	obl:a	14	5
 15	1	movendo	subj	0	0
 15	1	movendo	obj	15	3
+15	5	stavan	subj	15	4
+15	5	stavan	attr	15	6
 15	6	sicuri	subj	15	4
 16	2	pare	subj	0	0
 16	2	pare	attr	16	3
@@ -52,7 +52,6 @@ line	token	word	role	arg_line	arg_token
 19	8	stende	subj	19	4
 19	8	stende	obl:in	19	6
 20	6	corse	subj	20	8
-20	6	corse	obl:da	19	3
 20	6	corse	obl:a	20	2
 21	6	resplende	subj	21	4
 22	3	partì	subj	22	5
@@ -63,7 +62,6 @@ line	token	word	role	arg_line	arg_token
 24	2	parve	attr	24	3
 24	2	parve	obl:a	24	6
 25	8	porse	subj	25	4
-25	8	porse	attr	25	2
 26	3	merta	subj	26	6
 26	3	merta	obj	26	2
 27	7	accorse	subj	0	0
@@ -72,11 +70,10 @@ line	token	word	role	arg_line	arg_token
 28	0			0	0
 29	0			0	0
 30	5	reclusa	subj	30	4
-30	5	reclusa	iobj	29	4
-30	5	reclusa	iobj	29	5
+30	5	reclusa	obl	29	4
+30	5	reclusa	obl	29	5
 31	7	attesi	subj	31	5
-31	7	attesi	obj	31	6
-31	7	attesi	obl	31	4
+31	7	attesi	obl:da	31	4
 31	7	attesi	obl:a	31	9
 32	2	rivolsi	subj	0	0
 32	2	rivolsi	obj	32	8
@@ -88,9 +85,9 @@ line	token	word	role	arg_line	arg_token
 34	7	ardeva	obl:dentro	34	5
 35	4	pensai	subj	35	3
 35	4	pensai	ccomp	35	7
-35	7	toccar	subj	0	0
+35	7	toccar	subj	35	3
 35	7	toccar	obj	35	9
-35	7	toccar	obl:co	35	6
+35	7	toccar	obl:con	35	6
 36	0			0	0
 37	3	udire	subj	38	3
 37	6	veder	subj	38	3
@@ -133,14 +130,17 @@ line	token	word	role	arg_line	arg_token
 50	2	leggendo	obl:di	50	5
 51	4	muta	subj	51	1
 51	4	muta	attr	51	6
+51	4	muta	attr	51	8
 52	1	solvuto	subj	0	0
 52	1	solvuto	obj	49	6
+52	1	solvuto	obl:in	52	7
+52	1	solvuto	obl	53	6
 52	2	hai	subj	0	0
+52	2	hai	obj	49	6
 52	2	hai	obl:in	52	7
-52	2	hai	obl:mercè	53	6
+52	2	hai	obl	53	6
 53	5	parlo	subj	53	3
 53	5	parlo	iobj	53	4
-53	5	parlo	obl:in	53	2
 54	7	vestì	subj	54	1
 54	7	vestì	obj	54	9
 54	7	vestì	iobj	54	6
@@ -177,14 +177,14 @@ line	token	word	role	arg_line	arg_token
 62	4	miran	obl:in	62	7
 63	5	pensi	subj	0	0
 63	8	pandi	subj	63	7
-63	8	pandi	obj	63	2
+63	8	pandi	obl:in	63	2
 64	9	veglio	subj	64	8
 64	9	veglio	obl:in	64	7
+64	9	veglio	obl:con	65	3
 65	7	asseta	subj	65	5
 65	7	asseta	obj	65	6
 65	7	asseta	obl:di	66	3
 66	5	adempia	subj	64	5
-66	5	adempia	obj	66	4
 67	0			0	0
 68	1	suoni	subj	67	2
 68	1	suoni	obj	68	3
@@ -196,7 +196,7 @@ line	token	word	role	arg_line	arg_token
 70	3	volsi	obl:a	70	5
 70	8	udio	subj	70	7
 71	4	parlassi	subj	71	3
-71	6	arrisemi	subj	0	0
+71	6	arrisemi	subj	70	7
 71	6	arrisemi	obj	71	8
 72	2	fece	subj	72	1
 72	2	fece	xcomp	72	3
@@ -297,8 +297,8 @@ line	token	word	role	arg_line	arg_token
 106	2	avea	subj	0	0
 106	2	avea	obj	106	3
 107	4	giunto	subj	107	6
-107	4	giunto	obl:in	107	2
-108	2	mostrar	subj	0	0
+107	4	giunto	obl	107	2
+108	2	mostrar	subj	107	6
 108	2	mostrar	obj	108	3
 108	8	puote	subj	108	4
 108	8	puote	obl:in	108	6
@@ -332,12 +332,13 @@ line	token	word	role	arg_line	arg_token
 116	2	contenti	subj	115	3
 116	2	contenti	obl:a	116	5
 117	0			0	0
-118	2	fortunate	subj	0	0
 118	5	certa	subj	118	3
 118	5	certa	obl:di	119	4
 119	0			0	0
 120	1	era	subj	119	7
 120	1	era	attr	120	6
+120	1	era	obl:per	120	3
+120	1	era	obl:in	120	5
 120	6	diserta	subj	119	7
 120	6	diserta	obl:per	120	3
 120	6	diserta	obl:in	120	5
@@ -359,7 +360,6 @@ line	token	word	role	arg_line	arg_token
 127	2	tenuta	attr	127	5
 128	0			0	0
 129	3	saria	subj	129	4
-129	3	saria	subj	129	6
 129	3	saria	attr	129	1
 130	0			0	0
 131	0			0	0

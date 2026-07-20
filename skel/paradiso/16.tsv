@@ -25,10 +25,12 @@ line	token	word	role	arg_line	arg_token
 9	3	va	subj	9	2
 9	3	va	obl:con	9	7
 10	8	offerie	subj	10	3
+10	8	offerie	obj	10	7
 10	8	offerie	obl:a	10	6
 11	7	persevra	subj	11	5
 11	7	persevra	obl:in	11	2
 12	1	ricominciaron	subj	12	3
+12	1	ricominciaron	obl:da	10	2
 13	7	scevra	subj	13	3
 14	1	ridendo	subj	13	2
 14	2	parve	subj	13	2
@@ -41,14 +43,12 @@ line	token	word	role	arg_line	arg_token
 17	3	date	subj	17	1
 17	3	date	iobj	17	2
 17	3	date	xcomp	17	5
-17	5	parlar	subj	0	0
 17	5	parlar	obj	17	7
 18	3	levate	subj	18	1
 18	3	levate	obj	18	2
 18	7	son	subj	18	6
 18	7	son	attr	18	8
 18	8	più	subj	18	6
-18	8	più	obl	18	10
 19	5	empie	subj	20	2
 19	5	empie	obl:per	19	3
 19	5	empie	obl:di	19	7
@@ -57,7 +57,6 @@ line	token	word	role	arg_line	arg_token
 20	7	fa	obl:di	20	6
 21	2	può	subj	0	0
 21	2	può	xcomp	21	3
-21	3	sostener	subj	0	0
 21	3	sostener	ccomp	21	7
 21	7	spezza	subj	21	6
 22	1	Ditemi	subj	0	0
@@ -87,24 +86,26 @@ line	token	word	role	arg_line	arg_token
 29	5	vid'	xcomp	30	2
 30	2	risplendere	subj	30	1
 30	2	risplendere	obl:a	30	5
-31	8	fé	subj	30	1
+31	8	fé	subj	0	0
 31	8	fé	attr	31	10
 31	8	fé	obl:a	31	5
-31	10	bella	subj	30	1
+31	10	bella	subj	0	0
 31	10	bella	obl:a	31	5
 32	0			0	0
 33	0			0	0
-34	1	dissemi	subj	35	6
-34	1	dissemi	ccomp	38	4
+34	1	dissemi	subj	0	0
+34	1	dissemi	obl:con	32	3
+34	1	dissemi	obl:con	33	6
 34	7	detto	subj	34	8
-34	7	detto	obl:da	34	4
-35	10	santa	subj	35	7
+34	7	detto	obl:in	34	5
+34	7	detto	obl:a	35	2
+35	10	santa	subj	35	6
 36	2	allevïò	subj	35	6
-36	2	allevïò	obl:a	35	2
 36	2	allevïò	obl:di	36	4
-36	6	era	subj	36	5
+36	6	era	subj	0	0
 36	6	era	attr	36	7
-36	7	grave	subj	36	5
+36	7	grave	subj	0	0
+36	7	grave	obl	36	5
 37	0			0	0
 38	4	venne	subj	38	6
 38	4	venne	xcomp	39	2
@@ -133,9 +134,9 @@ line	token	word	role	arg_line	arg_token
 45	6	onesto	subj	45	5
 46	7	eran	subj	46	3
 46	7	eran	obl:a	46	6
-46	7	eran	obl	46	8
 47	2	poter	subj	0	0
 47	2	poter	obj	47	3
+47	2	poter	obl:tra	47	5
 48	1	eran	subj	46	2
 48	1	eran	attr	48	3
 48	3	quinto	subj	46	2
@@ -173,27 +174,30 @@ line	token	word	role	arg_line	arg_token
 58	8	traligna	obl:a	58	6
 59	3	stata	subj	58	3
 59	3	stata	attr	59	6
+59	3	stata	attr	60	7
 59	3	stata	obl:a	59	5
+59	3	stata	obl:come	60	3
+59	3	stata	obl:a	60	6
 59	6	noverca	subj	58	3
 59	6	noverca	obl:a	59	5
-60	3	madre	subj	0	0
-60	3	madre	obl:a	60	6
-60	7	benigna	subj	0	0
+60	7	benigna	subj	58	3
 60	7	benigna	obl:a	60	6
 61	3	è	subj	61	2
 61	3	è	attr	61	4
 61	4	fiorentino	subj	61	2
-61	6	cambia	subj	0	0
-61	8	merca	subj	0	0
+61	6	cambia	subj	61	2
+61	8	merca	subj	61	2
 62	4	vòlto	subj	0	0
+62	4	vòlto	obj	62	2
 62	4	vòlto	obl:a	62	6
 63	3	andava	subj	63	5
 63	3	andava	obl:a	63	8
 64	1	sariesi	subj	64	2
 64	1	sariesi	obl:di	64	5
-64	5	Conti	subj	64	2
 65	1	sarieno	subj	65	3
+65	1	sarieno	subj	66	6
 65	1	sarieno	obl:in	65	5
+65	1	sarieno	obl:in	66	4
 66	0			0	0
 67	0			0	0
 68	1	principio	subj	67	3
@@ -290,14 +294,14 @@ line	token	word	role	arg_line	arg_token
 99	7	preso	obj	98	7
 100	5	sapeva	subj	100	1
 100	5	sapeva	ccomp	101	3
-101	1	regger	subj	101	2
+101	1	regger		0	0
 101	3	vuole	subj	101	2
 101	3	vuole	xcomp	101	1
 101	5	avea	subj	0	0
 101	5	avea	obj	101	6
 101	5	avea	obj	102	7
 101	5	avea	obl:in	102	3
-102	1	dorata	attr	102	7
+102	0			0	0
 103	1	Grand'	subj	103	5
 104	0			0	0
 105	6	arrossan	subj	105	5
@@ -320,6 +324,7 @@ line	token	word	role	arg_line	arg_token
 112	2	facieno	subj	112	4
 113	7	vaca	subj	113	6
 114	2	fanno	subj	113	1
+114	2	fanno	obj	114	1
 114	2	fanno	attr	114	3
 114	3	grassi	subj	113	1
 114	4	stando	subj	113	1
@@ -346,7 +351,7 @@ line	token	word	role	arg_line	arg_token
 123	2	cittadino	subj	123	3
 124	2	dirò	subj	124	1
 124	2	dirò	obj	124	3
-125	5	entrava	subj	125	4
+125	5	entrava	subj	0	0
 125	5	entrava	obl:in	125	3
 125	5	entrava	obl:per	125	7
 126	3	nomava	subj	126	1
@@ -366,8 +371,6 @@ line	token	word	role	arg_line	arg_token
 131	6	rauni	subj	132	2
 131	6	rauni	obl:con	131	4
 132	5	fascia	subj	132	3
-132	5	fascia	obj	132	4
-132	5	fascia	obl:con	132	7
 133	2	eran	subj	133	3
 134	6	quïeto	subj	134	4
 135	6	digiuni	subj	0	0
@@ -381,16 +384,16 @@ line	token	word	role	arg_line	arg_token
 138	2	puose	obj	138	3
 138	2	puose	obl:a	138	6
 139	2	onorata	subj	136	2
-139	2	onorata	subj	139	3
-140	5	fuggisti	subj	140	2
+140	5	fuggisti	subj	0	0
 140	5	fuggisti	obj	141	2
 140	5	fuggisti	obl:per	141	7
 141	0			0	0
 142	3	lieti	subj	142	1
 142	6	tristi	subj	142	4
 143	5	conceduto	subj	143	2
-143	5	conceduto	obj	144	3
+143	5	conceduto	iobj	143	3
 143	5	conceduto	obl:a	143	7
+143	5	conceduto	obl	144	3
 144	7	venisti	subj	0	0
 144	7	venisti	obl:a	144	6
 145	2	conveniesi	subj	0	0
@@ -411,7 +414,7 @@ line	token	word	role	arg_line	arg_token
 150	3	avea	subj	0	0
 150	3	avea	obj	150	4
 150	6	piangesse	subj	0	0
-150	6	piangesse	obl:onde	150	5
+150	6	piangesse	obl	150	5
 151	4	vid'	subj	151	5
 151	4	vid'	obj	152	4
 151	4	vid'	attr	151	6

@@ -68,7 +68,7 @@ line	token	word	role	arg_line	arg_token
 22	3	divenni	attr	22	7
 22	5	gelato	subj	22	2
 22	7	fioco	subj	22	2
-23	2	dimandar	subj	23	3
+23	2	dimandar	subj	0	0
 23	2	dimandar	obj	23	1
 23	8	scrivo	subj	23	5
 23	8	scrivo	obj	23	7
@@ -158,10 +158,8 @@ line	token	word	role	arg_line	arg_token
 50	1	era	attr	49	6
 50	6	svolazzava	subj	50	5
 51	6	movean	subj	51	4
-51	6	movean	obj	51	5
 51	6	movean	obl:da	51	8
 52	5	aggelava	subj	52	2
-52	5	aggelava	obj	52	4
 53	4	piangëa	subj	0	0
 53	4	piangëa	obl:con	53	3
 54	1	gocciava	subj	54	3
@@ -180,20 +178,18 @@ line	token	word	role	arg_line	arg_token
 58	7	nulla	obl:verso	59	3
 59	0			0	0
 60	1	rimanea	subj	59	7
-60	1	rimanea	obl:de	60	4
+60	1	rimanea	obl:di	60	4
 61	6	ha	subj	61	2
 61	6	ha	obj	61	8
 62	1	disse	subj	62	3
 62	4	è	subj	0	0
 62	4	è	attr	62	6
-62	6	Scarïotto	subj	0	0
 63	4	ha	subj	63	1
 63	4	ha	obj	63	3
 63	10	mena	subj	63	1
 63	10	mena	obj	63	9
 64	6	hanno	subj	64	5
 64	6	hanno	obj	64	8
-64	6	hanno	obl:di	64	4
 65	3	pende	subj	65	2
 65	3	pende	obl:da	65	6
 65	7	è	subj	65	1
@@ -201,7 +197,6 @@ line	token	word	role	arg_line	arg_token
 65	8	Bruto	subj	65	1
 66	1	vedi	subj	0	0
 66	1	vedi	ccomp	66	4
-66	1	vedi	ccomp	66	7
 66	4	storce	subj	0	0
 66	4	storce	obj	66	3
 66	7	fa	subj	0	0
@@ -303,6 +298,7 @@ line	token	word	role	arg_line	arg_token
 94	1	Lèvati	subj	0	0
 94	1	Lèvati	obl:in	94	7
 94	3	disse	subj	94	5
+94	3	disse	ccomp	94	1
 95	4	lunga	subj	95	2
 95	9	malvagio	subj	95	7
 96	8	riede	subj	96	4
@@ -348,7 +344,7 @@ line	token	word	role	arg_line	arg_token
 108	9	fóra	subj	108	6
 108	9	fóra	obj	108	8
 109	3	fosti	subj	0	0
-109	3	fosti	obl	109	2
+109	3	fosti	obl:di	109	2
 109	7	scesi	subj	109	6
 110	4	volsi	subj	110	2
 110	4	volsi	obj	110	3
@@ -427,11 +423,8 @@ line	token	word	role	arg_line	arg_token
 135	4	aver	obj	135	3
 135	4	aver	obl:di	135	7
 136	1	salimmo	subj	133	2
-136	1	salimmo	attr	136	4
-136	1	salimmo	attr	136	6
-136	1	salimmo	obl:sanza	135	3
 137	4	vidi	subj	137	3
-137	4	vidi	obl:di	137	7
+137	4	vidi	obj	137	7
 137	4	vidi	obl:per	138	7
 138	2	porta	subj	138	4
 138	2	porta	obj	138	1

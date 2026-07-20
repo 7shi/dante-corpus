@@ -16,7 +16,7 @@ line	token	word	role	arg_line	arg_token
 9	3	germinato	obl:per	8	4
 9	3	germinato	obl:in	8	8
 10	6	face	subj	0	0
-10	6	face	iobj	10	4
+10	6	face	obl:a	10	4
 10	6	face	obl:di	11	2
 11	0			0	0
 12	4	fontana	subj	0	0
@@ -28,11 +28,11 @@ line	token	word	role	arg_line	arg_token
 13	7	vali	subj	0	0
 14	3	vuol	subj	14	2
 14	3	vuol	obj	14	4
-14	9	ricorre	subj	0	0
+14	9	ricorre	subj	14	2
 14	9	ricorre	obl:a	14	7
 15	3	vuol	subj	15	2
 15	3	vuol	xcomp	15	4
-15	4	volar	subj	0	0
+15	4	volar	subj	15	2
 15	4	volar	obl:sanz	15	6
 16	6	soccorre	subj	16	3
 16	6	soccorre	obl:a	17	2
@@ -72,7 +72,7 @@ line	token	word	role	arg_line	arg_token
 28	9	arsi	obl:per	28	7
 29	4	fo	subj	29	3
 29	4	fo	obl:per	29	7
-30	2	porgo	subj	0	0
+30	2	porgo	subj	28	2
 30	2	porgo	obj	29	10
 30	2	porgo	iobj	30	1
 30	4	priego	subj	0	0
@@ -103,9 +103,9 @@ line	token	word	role	arg_line	arg_token
 37	1	Vinca	obj	37	5
 38	1	vedi	subj	0	0
 38	1	vedi	obj	38	2
+38	1	vedi	obl:con	38	5
 39	6	chiudon	subj	39	8
 39	6	chiudon	iobj	39	5
-39	6	chiudon	obl:con	38	5
 39	6	chiudon	obl:per	39	4
 40	5	diletti	subj	40	2
 40	5	diletti	obl:da	40	4
@@ -114,8 +114,8 @@ line	token	word	role	arg_line	arg_token
 41	1	fissi	subj	40	2
 41	1	fissi	obl:in	41	4
 41	6	dimostraro	subj	40	2
-41	6	dimostraro	obj	42	1
-41	6	dimostraro	obl:in	41	5
+41	6	dimostraro	obj	41	5
+41	6	dimostraro	ccomp	42	7
 42	7	grati	subj	42	4
 42	7	grati	iobj	42	5
 43	7	addrizzaro	subj	40	2
@@ -124,8 +124,8 @@ line	token	word	role	arg_line	arg_token
 44	5	dee	xcomp	44	6
 44	6	creder	subj	0	0
 44	6	creder	ccomp	44	9
+44	6	creder	obl:in	44	2
 44	9	invii	subj	45	4
-44	9	invii	obl:in	44	2
 44	9	invii	obl:per	45	2
 45	0			0	0
 46	0			0	0
@@ -141,6 +141,7 @@ line	token	word	role	arg_line	arg_token
 50	3	guardassi	subj	50	2
 50	7	era	subj	50	6
 50	7	era	attr	51	5
+50	7	era	obl:per	51	3
 51	5	tal	subj	50	6
 51	5	tal	obl:per	51	3
 51	8	volea	subj	51	7
@@ -152,6 +153,7 @@ line	token	word	role	arg_line	arg_token
 53	5	intrava	obl:per	53	8
 54	8	è	subj	54	5
 54	8	è	attr	54	9
+54	8	è	obl:da	54	7
 54	9	vera	subj	54	5
 54	9	vera	obl:da	54	7
 55	8	maggio	subj	55	6
@@ -221,8 +223,8 @@ line	token	word	role	arg_line	arg_token
 79	3	ricorda	ccomp	79	8
 79	8	ardito	subj	79	5
 79	8	ardito	xcomp	80	4
+79	8	ardito	obl:per	80	2
 80	4	sostener	subj	79	5
-80	4	sostener	obl:per	80	2
 80	8	giunsi	subj	80	7
 80	8	giunsi	obj	81	2
 80	8	giunsi	obl:con	81	5
@@ -237,10 +239,9 @@ line	token	word	role	arg_line	arg_token
 84	6	consunsi	obj	84	4
 84	6	consunsi	obl	84	5
 85	4	vidi	subj	0	0
-85	4	vidi	obj	85	5
+85	4	vidi	ccomp	85	7
 85	4	vidi	obl:in	85	3
 85	7	interna	subj	87	1
-85	7	interna	obl:in	86	6
 86	1	legato	subj	87	1
 86	1	legato	obl:con	86	3
 86	1	legato	obl:in	86	6
@@ -249,9 +250,10 @@ line	token	word	role	arg_line	arg_token
 88	0			0	0
 89	2	conflati	subj	88	1
 90	5	dico	subj	90	4
-90	5	dico	obj	90	2
+90	5	dico	obj	90	3
 90	6	è	subj	90	2
 90	6	è	attr	90	9
+90	9	lume	subj	90	2
 91	0			0	0
 92	1	credo	subj	0	0
 92	1	credo	ccomp	92	4
@@ -315,11 +317,10 @@ line	token	word	role	arg_line	arg_token
 111	3	è	subj	111	2
 111	3	è	attr	111	5
 111	7	era	subj	111	5
+111	7	era	obl	111	8
 112	7	avvalorava	subj	112	5
 112	7	avvalorava	obl:in	113	2
 113	3	guardando	subj	0	0
-113	3	guardando	obj	113	6
-113	3	guardando	obl:in	113	2
 114	1	mutandom'	subj	114	2
 114	6	travagliava	subj	113	6
 114	6	travagliava	obl:a	114	4
@@ -386,7 +387,7 @@ line	token	word	role	arg_line	arg_token
 134	7	ritrova	obj	135	3
 135	1	pensando	subj	0	0
 135	6	indige	subj	135	5
-135	6	indige	obj	135	4
+135	6	indige	obl:di	135	4
 136	2	era	subj	136	3
 136	2	era	attr	136	1
 136	2	era	obl:a	136	6
@@ -397,8 +398,8 @@ line	token	word	role	arg_line	arg_token
 137	2	voleva	xcomp	137	1
 137	5	convenne	subj	138	2
 137	5	convenne	obl:a	138	4
-138	9	indova	subj	0	0
-138	9	indova	obl	138	7
+138	9	indova	subj	138	2
+138	9	indova	obl:in	138	7
 139	3	eran	subj	139	8
 139	3	eran	obl:da	139	5
 140	8	percossa	subj	140	6

@@ -10,10 +10,8 @@ line	token	word	role	arg_line	arg_token
 4	5	volando	subj	4	4
 4	6	vede	subj	4	4
 4	6	vede	obj	5	2
-4	6	vede	obj	6	3
 4	8	canta	subj	4	4
 4	8	canta	obj	5	2
-4	8	canta	obj	6	3
 5	7	'nnamora	subj	5	5
 5	7	'nnamora	obj	5	6
 6	6	fece	subj	6	4
@@ -21,9 +19,9 @@ line	token	word	role	arg_line	arg_token
 6	6	fece	attr	6	7
 7	8	infiora	subj	7	6
 7	8	infiora	obj	7	7
+7	8	infiora	obl	8	2
 8	6	ritorna	subj	7	6
 8	6	ritorna	obj	8	5
-8	6	ritorna	obl	8	2
 8	6	ritorna	obl	8	4
 9	6	insapora	subj	9	4
 9	6	insapora	obj	9	5
@@ -33,12 +31,10 @@ line	token	word	role	arg_line	arg_token
 10	7	addorna	obj	10	6
 10	7	addorna	obl:di	11	3
 11	6	risaliva	subj	4	3
-11	6	risaliva	obl	12	2
 12	7	soggiorna	subj	12	5
-12	7	soggiorna	obl	12	2
-13	4	avean	subj	0	0
-13	4	avean	obj	13	2
+13	4	avean	subj	13	2
 13	4	avean	obj	14	3
+13	4	avean	obl:di	13	6
 14	10	bianco	subj	14	8
 15	7	arriva	subj	15	3
 15	7	arriva	obl:a	15	6
@@ -55,12 +51,16 @@ line	token	word	role	arg_line	arg_token
 18	4	ventilando	obj	18	6
 19	3	interporsi	subj	0	0
 19	3	interporsi	obl:tra	19	9
+19	3	interporsi	obl:di	20	3
 20	0			0	0
 21	1	impediva	subj	19	3
+21	1	impediva	obj	21	3
 21	1	impediva	obj	21	6
 22	6	penetrante	subj	22	3
 22	6	penetrante	obl:per	23	3
-23	7	degno	subj	23	5
+23	7	degno	subj	0	0
+24	5	puote	subj	24	3
+24	5	puote	xcomp	24	7
 24	7	ostante	subj	24	3
 24	7	ostante	iobj	24	4
 25	0			0	0
@@ -105,13 +105,13 @@ line	token	word	role	arg_line	arg_token
 40	6	compiuto	obl:di	40	3
 41	8	facea	subj	0	0
 41	8	facea	iobj	41	7
-41	8	facea	xcomp	42	1
+41	8	facea	attr	42	1
 41	8	facea	obl:tra	41	3
 42	1	libito	subj	42	3
-42	1	libito	subj	42	5
-42	3	udire	subj	0	0
-42	5	starmi	xcomp	42	6
-42	6	muto	subj	0	0
+42	3	udire		0	0
+42	5	starmi	subj	0	0
+42	5	starmi	attr	42	6
+42	6	muto	subj	42	5
 43	6	ricrea	subj	43	4
 43	6	ricrea	obj	43	5
 43	6	ricrea	obl:in	44	2
@@ -171,17 +171,17 @@ line	token	word	role	arg_line	arg_token
 63	6	convene	subj	63	1
 63	6	convene	obl:a	63	4
 64	3	è	subj	64	4
-64	3	è	obl	64	2
 64	6	diss'	subj	64	7
 64	6	diss'	ccomp	64	3
-65	4	terminar	subj	66	2
+65	4	terminar	subj	0	0
 65	4	terminar	obj	65	7
 66	1	mosse	subj	66	2
 66	1	mosse	obj	66	3
 66	1	mosse	xcomp	65	4
 66	1	mosse	obl:di	66	5
-67	3	riguardi	subj	68	4
+67	3	riguardi	subj	0	0
 67	3	riguardi	obl:in	67	7
+67	3	riguardi	obl:da	68	3
 68	6	rivedrai	subj	68	4
 68	6	rivedrai	obj	68	5
 68	6	rivedrai	obl:in	69	2
@@ -201,13 +201,17 @@ line	token	word	role	arg_line	arg_token
 72	1	reflettendo	obl:da	72	3
 73	7	tona	subj	73	4
 74	6	dista	subj	74	1
+74	6	dista	subj	76	7
 74	6	dista	obl:da	73	3
+74	6	dista	obl:da	76	4
 75	7	abbandona	subj	75	1
+75	7	abbandona	obj	75	6
 75	7	abbandona	obl:in	75	3
 76	0			0	0
 77	4	facea	subj	77	2
 77	4	facea	iobj	77	3
 78	2	discendëa	subj	77	7
+78	2	discendëa	attr	78	7
 78	2	discendëa	obl:a	78	4
 78	2	discendëa	obl:per	78	6
 78	7	mista	subj	77	7
@@ -290,7 +294,7 @@ line	token	word	role	arg_line	arg_token
 105	8	sazia	obl:per	105	5
 106	2	dice	subj	105	1
 106	2	dice	obl:in	106	4
-106	8	mostra	subj	0	0
+106	8	mostra	subj	106	7
 107	0			0	0
 108	4	fatta	subj	108	6
 109	1	tal	subj	109	3
@@ -301,10 +305,10 @@ line	token	word	role	arg_line	arg_token
 110	0			0	0
 111	1	contemplando	subj	110	4
 111	2	gustò	subj	110	4
-111	2	gustò	obl:in	110	7
 111	2	gustò	obl:di	111	5
 112	6	giocondo	subj	112	4
 113	1	cominciò	subj	113	2
+113	1	cominciò	ccomp	113	6
 113	6	noto	subj	112	5
 113	6	noto	iobj	113	4
 114	1	tenendo	subj	0	0
@@ -314,7 +318,6 @@ line	token	word	role	arg_line	arg_token
 115	2	guarda	obj	115	4
 115	2	guarda	obl:a	115	8
 116	3	veggi	subj	0	0
-116	3	veggi	obj	116	6
 116	3	veggi	xcomp	116	4
 116	4	seder	subj	116	6
 117	5	suddito	subj	117	3
@@ -363,17 +366,18 @@ line	token	word	role	arg_line	arg_token
 132	2	distinto	obl:di	132	7
 133	1	Vidi	subj	0	0
 133	1	Vidi	obj	134	3
-133	1	Vidi	xcomp	134	1
+133	1	Vidi	obl:a	133	4
+133	1	Vidi	obl:a	133	9
 134	1	ridere	subj	134	3
-134	1	ridere	obl:a	133	4
-134	1	ridere	obl:a	133	9
-135	1	era	subj	134	5
+135	1	era	subj	134	4
+135	1	era	attr	134	5
 135	1	era	obl:in	135	4
 135	1	era	obl:a	135	9
 136	4	avessi	subj	136	3
 136	4	avessi	obj	136	8
 136	4	avessi	obl:in	136	6
-136	4	avessi	obl:a	137	3
+136	6	dir	subj	0	0
+137	3	imaginar	subj	0	0
 137	5	ardirei	subj	0	0
 137	5	ardirei	obj	138	3
 138	3	tentar	subj	0	0

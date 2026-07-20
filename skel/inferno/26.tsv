@@ -36,13 +36,13 @@ line	token	word	role	arg_line	arg_token
 12	8	attempo	subj	0	0
 12	8	attempo	obj	12	7
 13	3	partimmo	subj	13	1
-13	3	partimmo	obl:per	13	8
-14	4	fatto	subj	14	5
+14	4	fatto	subj	0	0
 14	4	fatto	obj	14	1
-14	4	fatto	xcomp	14	7
+14	4	fatto	attr	14	5
 14	4	fatto	obl:di	14	2
-14	7	scender	subj	14	5
+14	7	scender	subj	0	0
 15	1	rimontò	subj	15	3
+15	1	rimontò	obl:per	13	8
 15	6	trasse	subj	0	0
 15	6	trasse	obj	15	7
 16	2	proseguendo	subj	0	0
@@ -64,7 +64,6 @@ line	token	word	role	arg_line	arg_token
 21	5	affreno	subj	0	0
 21	5	affreno	obj	21	4
 21	9	soglio	subj	21	7
-21	9	soglio	xcomp	21	5
 22	3	corra	subj	0	0
 22	7	guidi	subj	22	5
 22	7	guidi	obj	22	6
@@ -166,7 +165,7 @@ line	token	word	role	arg_line	arg_token
 54	6	miso	subj	54	2
 54	6	miso	obl:col	54	4
 55	1	Rispuose	subj	0	0
-55	1	Rispuose	iobj	55	3
+55	1	Rispuose	obl:a	55	3
 55	7	martira	subj	56	1
 56	0			0	0
 57	4	vanno	subj	0	0
@@ -190,9 +189,9 @@ line	token	word	role	arg_line	arg_token
 65	1	parlar	subj	64	2
 65	2	diss'	subj	65	3
 65	7	priego	subj	0	0
-65	7	priego	iobj	65	6
+65	7	priego	obj	65	6
 66	2	ripriego	subj	0	0
-66	2	ripriego	iobj	65	6
+66	2	ripriego	obj	65	6
 66	6	vaglia	subj	66	5
 66	6	vaglia	obj	66	7
 67	4	facci	subj	0	0
@@ -202,9 +201,9 @@ line	token	word	role	arg_line	arg_token
 67	8	niego	obl:di	67	7
 68	7	vegna	subj	68	4
 69	1	vedi	subj	0	0
-69	8	piego	subj	0	0
-69	8	piego	obj	69	7
+69	8	piego	subj	69	7
 69	8	piego	obl:di	69	4
+69	8	piego	obl:ver	69	6
 70	9	degna	subj	70	7
 70	9	degna	obl:di	71	3
 71	8	accetto	subj	71	5
@@ -215,7 +214,7 @@ line	token	word	role	arg_line	arg_token
 72	8	sostegna	obj	72	7
 73	1	Lascia	subj	0	0
 73	1	Lascia	xcomp	73	2
-73	2	parlare	iobj	73	4
+73	2	parlare	obl:a	73	4
 73	8	concetto	subj	73	6
 73	8	concetto	obj	74	1
 74	4	vuoi	subj	74	3
@@ -268,6 +267,7 @@ line	token	word	role	arg_line	arg_token
 90	1	gittò	obj	90	2
 90	6	disse	subj	0	0
 91	2	diparti'	subj	0	0
+91	2	diparti'	obj	91	1
 91	2	diparti'	obl:da	91	4
 91	6	sottrasse	subj	91	5
 91	6	sottrasse	obj	92	1
@@ -279,10 +279,10 @@ line	token	word	role	arg_line	arg_token
 94	0			0	0
 95	0			0	0
 96	3	dovea	subj	96	2
-96	3	dovea	xcomp	96	6
+96	3	dovea	xcomp	96	5
 96	5	far	subj	96	2
 96	5	far	obj	96	4
-96	5	far	attr	96	6
+96	5	far	xcomp	96	6
 96	6	lieta	subj	96	4
 97	1	vincer	subj	97	7
 97	1	vincer	obj	94	2
@@ -292,9 +292,9 @@ line	token	word	role	arg_line	arg_token
 97	2	potero	subj	97	7
 97	2	potero	xcomp	97	1
 98	3	ebbi	subj	98	2
-98	3	ebbi	xcomp	98	8
+98	3	ebbi	xcomp	98	5
 98	5	divenir	subj	98	2
-98	5	divenir	attr	98	8
+98	5	divenir	xcomp	98	8
 98	8	esperto	subj	98	2
 98	8	esperto	obl:di	98	7
 98	8	esperto	obl:di	99	4
@@ -336,15 +336,15 @@ line	token	word	role	arg_line	arg_token
 113	3	giunti	subj	112	4
 113	3	giunti	obl:per	113	1
 113	3	giunti	obl:a	113	6
+113	3	giunti	obl:di	117	2
+113	3	giunti	obl:di	117	6
 114	0			0	0
 115	6	è	subj	115	5
-115	6	è	attr	115	8
+115	6	è	obl:di	115	8
 116	2	vogliate	subj	0	0
 116	2	vogliate	xcomp	116	3
 116	3	negar	obj	116	5
 116	3	negar	obl:a	114	5
-116	3	negar	obl:di	117	2
-116	3	negar	obl:di	117	6
 117	0			0	0
 118	1	Considerate	subj	0	0
 118	1	Considerate	obj	118	4
@@ -378,21 +378,18 @@ line	token	word	role	arg_line	arg_token
 128	1	vedea	subj	128	3
 128	1	vedea	obj	127	3
 128	8	basso	subj	128	6
-129	3	surgëa	subj	129	1
+129	3	surgëa	subj	0	0
 129	3	surgëa	obl:di	129	7
 130	3	racceso	subj	131	2
 130	3	racceso	obl	130	2
-130	6	casso	subj	0	0
-130	6	casso	obj	131	2
+130	6	casso	subj	131	2
 130	6	casso	obl	130	5
 131	3	era	subj	131	2
 131	3	era	obl:da	131	8
 132	3	'ntrati	subj	0	0
 132	3	'ntrati	obl:in	132	8
 133	3	apparve	subj	133	5
-133	3	apparve	obl:in	133	2
-133	6	bruna	subj	133	5
-133	6	bruna	obl:per	134	3
+133	3	apparve	obl	133	2
 134	5	parvemi	subj	133	5
 134	5	parvemi	attr	134	6
 134	6	alta	subj	133	5
@@ -403,7 +400,7 @@ line	token	word	role	arg_line	arg_token
 136	6	tornò	subj	0	0
 136	6	tornò	obl:in	136	8
 137	8	nacque	subj	137	7
-137	8	nacque	obl:de	137	5
+137	8	nacque	obl:di	137	5
 138	2	percosse	subj	0	0
 138	2	percosse	obj	138	7
 139	4	fé	subj	0	0
@@ -417,9 +414,9 @@ line	token	word	role	arg_line	arg_token
 140	4	levar	subj	139	3
 140	4	levar	obj	140	6
 140	4	levar	obl:a	140	3
-140	4	levar	obl	140	8
+140	4	levar	obl:in	140	8
 141	4	ire	subj	141	3
-141	4	ire	obl	141	6
+141	4	ire	obl:in	141	6
 141	9	piacque	subj	141	8
 142	8	richiuso	subj	142	4
 142	8	richiuso	obl:sovra	142	7
