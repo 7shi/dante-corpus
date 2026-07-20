@@ -1,5 +1,47 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 4a: attr/xcomp double-listing + elided-copula whitelist (2026-07-20)
+
+Corpus-wide baseline before this round (`make -C skel check`): **0 hard, 8090 soft** — Phase 3's
+ending state. Phase 4 opens with a measure-first pass over the two candidate checker
+refinements this file's *Next steps* named, rather than assuming their rough estimates: a
+read-only analysis (calling `derive_unit`/`validate_unit` directly over the frozen corpus, no
+artifact touched) sized each pattern before writing any rule.
+
+1. **Attr/xcomp double-listing** (`dante_corpus/skel.py`'s `_classify_divergence`, new
+   `double_listed` set gating the `extra_tuple` loop): a predicate nominal/adjective the LLM
+   lists both as another predicate's `attr`/`xcomp` row *and* as its own redundant predicate
+   tuple with the same subj — pure restatement, not new information (e.g. `inferno 1:100`, "Molti
+   son li animali...": `son`'s `attr Molti` already captures the reading; the LLM's extra `Molti
+   subj=animali` tuple adds nothing). Structurally identical to Phase 1's already-landed
+   `ccomp`/`xcomp` double-listing suppression for `missing_arg`, just never extended to the
+   `extra_tuple` side or to `attr`. Measured: **264** of 914 `extra_tuple` violations.
+2. **Elided-copula predicate nominal whitelist** (same function, new `_elided_copula_nominal`
+   helper, gated on both the predicate's dep deprel — `conj`/`appos`/`attr` — and a non-verb
+   Layer-2 POS, via a new `morph_pos_by_position` parameter threaded from `validate_unit`'s
+   `morph_rows`): a predicate nominal coordinate or apposed to a real clause with no copula token
+   anywhere (`mantoani per patrïa ambedui`, `Non omo, omo già fui`) — `derive_unit` structurally
+   cannot produce this (no verb, no clause-head deprel), but it's a genuine reading, not an error.
+   **Narrower than this file's own earlier description** ("no verb token in the unit at all"):
+   measuring the full 289 non-verb-POS `extra_tuple` predicates by dep deprel showed only
+   `conj`/`appos`/`attr` (**~50**) look like genuine elided copulas. The dominant sub-pattern,
+   **150** with deprel `amod` (plus `advmod` 22, `obj` 13, `nsubj` 13, `nmod` 4), are NP-internal
+   participial/adjectival modifiers (`unta`, `atra`, `spiacenti`, `cinta`...) the LLM wrongly
+   promoted to independent predicate status — genuine LLM errors, deliberately left flagged for
+   `--fix`, not swallowed by a blanket "non-verb POS" rule.
+   - Effect: `extra_tuple` dropped **914 → 600** (Δ314, exactly 264 + 50 — the two rules'
+     measured sizes, confirming no unintended overlap or side effect on other kinds).
+   - Tests (`tests/test_skel.py`): `test_classify_divergence_attr_double_listing_suppressed`,
+     `test_classify_divergence_elided_copula_conj_whitelisted`,
+     `test_classify_divergence_amod_extra_tuple_not_whitelisted` (negative case proving the
+     whitelist doesn't swallow genuine errors).
+
+**Current state**: `make -C skel check` — **0 hard, 7776 soft** (down from 8090, Δ314, 3.9%; down
+from 14329 at the start of Phases 0-2, overall Δ6553, 45.7%). No artifact under `skel/*/` was
+touched — checker-only, like Phases 0-2. `extra_tuple` (600), `missing_tuple` (117), `role_mismatch`
+(1466), and the remaining `extra_arg`/`missing_arg`/`membership` are left for `--fix` (LLM
+regeneration) or hand triage — see `skel/README.md`'s *Next steps*.
+
 ## Checker Phase 3: `--repair` mechanical TSV rewriting (2026-07-20)
 
 Corpus-wide baseline before this round (`make -C skel check`, all 100 cantos): **0 hard, 9672

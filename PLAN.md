@@ -2,11 +2,12 @@
 
 ## Status
 
-**Next up: Layer 5 (predicate-argument skeleton), Phase 4 — targeted `--fix`/hand corrections
+**Next up: Layer 5 (predicate-argument skeleton), Phase 4b — targeted `--fix`/hand corrections
 for the soft violations that survive the deterministic checker phases.** Layers 1–4 are
-implemented and merged to `main`; Layer 5's core module, build driver, and checker (three
-mechanical phases: normalization, authority model, `--repair`) are also done — see *The layers*
-below and [`skel/README.md`](skel/README.md) for its design and current status.
+implemented and merged to `main`; Layer 5's core module, build driver, and checker (four
+mechanical phases: normalization, authority model, `--repair`, double-listing/elided-copula) are
+also done — see *The layers* below and [`skel/README.md`](skel/README.md) for its design and
+current status.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -22,29 +23,32 @@ below and [`skel/README.md`](skel/README.md) for its design and current status.
   built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — see
   [`dep/README.md`](dep/README.md)'s *Check* section and
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
-- **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through three
-  mechanical phases (normalization, authority model, `--repair`); see
-  [`skel/README.md`](skel/README.md). `dante_corpus/skel.py` (dataclasses, role vocabulary,
-  deterministic derivation, table parsing, validation, TSV I/O, serve-time joins),
+- **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through four
+  mechanical phases (normalization, authority model, `--repair`, double-listing/elided-copula
+  whitelist); see [`skel/README.md`](skel/README.md). `dante_corpus/skel.py` (dataclasses, role
+  vocabulary, deterministic derivation, table parsing, validation, TSV I/O, serve-time joins),
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 8090 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 7776 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history. **Not yet
-  done**: Phase 4 — targeted `--fix`/hand corrections for the soft violations that remain
+  done**: Phase 4b — targeted `--fix`/hand corrections for the soft violations that remain
   genuine LLM/derivation disagreements (see `skel/README.md`'s *Next steps*), and the final
-  `dante_corpus/README.md` update.
+  `dante_corpus/README.md` update. Phase 4b is **LLM-regeneration work the user runs
+  themselves** (`make -C skel fix`, local `ollama:gemma4:31b-it-qat`) — Phase 4a's checker-only
+  refinement was the last piece delegated to the assistant.
 
 `grammar-stack-plan` was merged into `main` (fast-forward) and pushed; Layers 1–4 and their
 artifacts now live on `main`.
 
 **Next work**
 
-1. **Layer 5 Phase 4** — targeted `--fix`/hand corrections for the soft violations that remain
-   genuine LLM/derivation disagreements after the mechanical checker phases (subj/obj/iobj
-   reversals, elided-copula predicates, membership false positives); see
-   [`skel/README.md`](skel/README.md)'s *Next steps*.
+1. **Layer 5 Phase 4b** *(user-run, LLM regeneration)* — targeted `--fix`/hand corrections for
+   the soft violations that remain genuine LLM/derivation disagreements after the mechanical
+   checker phases (subj/obj/iobj reversals, residual elided-copula-adjacent structural cases,
+   membership false positives); see [`skel/README.md`](skel/README.md)'s *Next steps*. Not
+   started yet — corpus is still at the Phase 4a checker-only state (0 hard, 7776 soft).
 
 ## Why this lives in the corpus
 
@@ -241,10 +245,11 @@ discipline already used for normalization and quotes.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
-   `skel/skel.py`), all 100 cantos built, checker refined through three mechanical phases
-   (`--check`: 0 hard / 8090 soft). Phase 4 (targeted `--fix`/hand corrections) is the remaining
-   work. See [`skel/README.md`](skel/README.md).
+   `skel/skel.py`), all 100 cantos built, checker refined through four mechanical phases
+   (`--check`: 0 hard / 7776 soft). Phase 4b (targeted `--fix`/hand corrections, user-run) is the
+   remaining work. See [`skel/README.md`](skel/README.md).
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
-Layers 1–5 are implemented and merged to `main`; Layer 5's remaining work is Phase 4 (targeted
-`--fix`/hand corrections) and the final `dante_corpus/README.md` update.
+Layers 1–5 are implemented and merged to `main`; Layer 5's remaining work is Phase 4b (targeted
+`--fix`/hand corrections, user-run LLM regeneration) and the final `dante_corpus/README.md`
+update.

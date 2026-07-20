@@ -8,9 +8,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 3.** `make -C skel check`:
-**0 hard, 8090 soft** violations (down from 17438 at the first full-corpus measurement). See
-[skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. Phase 4 — targeted
+**Status: built for all 100 cantos, checker refined through Phase 4a.** `make -C skel check`:
+**0 hard, 7776 soft** violations (down from 17438 at the first full-corpus measurement). See
+[skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. Phase 4b — targeted
 `--fix`/hand corrections for the soft violations that remain genuine LLM/derivation
 disagreements — is the open next step (see *Next steps* below).
 
@@ -69,7 +69,7 @@ line	token	word	role	arg_line	arg_token
   the central check, every divergence from `derive_unit`:
   `missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`.
 
-Three refinements make that divergence check meaningful rather than noisy — landed as three
+Four refinements make that divergence check meaningful rather than noisy — landed as four
 successive phases, each measured before/after (`--stats` aggregates violations by kind, by
 `(kind, role, ∅-or-real)`, and by `role_mismatch` pair):
 
@@ -98,21 +98,31 @@ successive phases, each measured before/after (`--stats` aggregates violations b
      `obl:<lemma>` (the dep tree's `case`-child detection) — the role cell is rewritten.
    - Genuine disagreements (`subj`/`obj` reversals, `iobj`/`obj` reversals, cross-lemma `obl`
      pairs) are deliberately excluded from both rules and left for hand/LLM triage.
+4. **Phase 4a — double-listing + elided-copula whitelist** (`_classify_divergence`, gating the
+   `extra_tuple` set): a predicate nominal/adjective double-listed as both another predicate's
+   `attr`/`xcomp` argument *and* its own redundant predicate tuple is suppressed (extends Phase
+   1's `ccomp`/`xcomp` double-listing suppression to `attr` and to `extra_tuple`); separately, a
+   predicate nominal with **no verb token at all**, coordinate or apposed to a real clause (dep
+   deprel `conj`/`appos`/`attr` — e.g. "mantoani per patrïa ambedui") is exempted as a genuine
+   elided-copula reading `derive_unit` structurally can't produce. Deliberately narrower than a
+   blanket "non-verb POS" rule: the majority of non-verb `extra_tuple` predicates (dep deprel
+   `amod`/`advmod`/`obj`/`nsubj`/`nmod`) are NP-internal modifiers the LLM wrongly promoted to
+   predicate status — genuine errors, left flagged for `--fix`, not swallowed by the whitelist.
 
-**Measured over the full 100-canto corpus** (`--check`, 2026-07-20): **0 hard, 8090 soft** — by
-kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466, `extra_tuple` 914,
+**Measured over the full 100-canto corpus** (`--check`, 2026-07-20): **0 hard, 7776 soft** — by
+kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466, `extra_tuple` 600,
 `missing_tuple` 117, `membership` 94. See [CORRECTIONS.md](CORRECTIONS.md) for the measured
-before/after at every phase (14329 → 12825 → 9672 → 8090) and the tests backing each rule.
+before/after at every phase (14329 → 12825 → 9672 → 8090 → 7776) and the tests backing each rule.
 
 ## Next steps
 
 What remains past the mechanical phases above should be genuine LLM misreadings (subject
-mix-ups across enjambment, `subj`/`obj`/`iobj` reversals) plus small structural classes
-(elided-copula `extra_tuple`s, `membership`). Only these should need `--fix` (LLM regeneration),
-restricted to the specific flagged lines, re-checked per class. Elided-copula predicate nominals
-(no verb token in the unit at all, e.g. "mantoani per patrïa ambedui") may end as a narrow,
-explicitly whitelisted acceptance rule in `validate_unit` rather than as standing violations —
-the goal is **0 soft violations**, treating every remaining class as something to fix or
+mix-ups across enjambment, `subj`/`obj`/`iobj` reversals) plus a residual `extra_tuple` tail
+(non-finite verbs used as nominalized oblique complements and other one-off structural cases)
+and `membership` (a scattered long tail of individual boundary cases, not one mechanical
+pattern — Phase 0 already caught the two big mechanical membership fixes). Only these should
+need `--fix` (LLM regeneration), restricted to the specific flagged lines, re-checked per class
+— the goal is **0 soft violations**, treating every remaining class as something to fix or
 formally exempt, not a baseline to tolerate.
 
 ## Model

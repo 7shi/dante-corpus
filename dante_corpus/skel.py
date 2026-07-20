@@ -445,18 +445,49 @@ def _apply_subj_authority(
             g.pop(g_subj, None)
 
 
+_ELIDED_COPULA_DEPRELS = frozenset({"conj", "appos", "attr"})
+
+
 def _classify_divergence(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
     given_preds = _predicate_positions_in(given)
     derived_preds = _predicate_positions_in(derived)
 
+    # Double-listing: a predicate nominal/adjective the LLM lists both as another predicate's
+    # attr/xcomp row and (redundantly) as its own predicate tuple — pure restatement, not a
+    # divergence. Mirrors the ccomp/xcomp missing_arg suppression below, extended to attr.
+    double_listed = {
+        (r.arg_line, r.arg_token)
+        for rows in given.values()
+        for r in rows
+        if r.role in ("attr", "xcomp") and (r.arg_line, r.arg_token) != (r.line, r.token)
+    }
+
+    def _elided_copula_nominal(pos: tuple[int, int]) -> bool:
+        # A predicate nominal coordinate/apposed to a real clause with no copula token at all
+        # (e.g. "mantoani per patrïa ambedui") — derive_unit structurally can't produce this
+        # (no verb, no clause-head deprel). Gated on deprel, not just "non-verb POS": most
+        # non-verb extra_tuple predicates (amod/advmod/obj/nsubj/nmod) are NP-internal modifiers
+        # the LLM wrongly promoted to predicate status, a genuine error, not an elided copula.
+        if dep_index_by_pos is None or morph_pos_by_position is None:
+            return False
+        dep_row = dep_index_by_pos.get(pos)
+        if dep_row is None or dep_row.deprel not in _ELIDED_COPULA_DEPRELS:
+            return False
+        pos_tag = morph_pos_by_position.get(pos, "")
+        return "verb" not in pos_tag.lower()
+
     for line, token in sorted(derived_preds - given_preds):
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
                                      predicate=(line, token)))
     for line, token in sorted(given_preds - derived_preds):
+        pos = (line, token)
+        if pos in double_listed or _elided_copula_nominal(pos):
+            continue
         violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
                                      predicate=(line, token)))
 
@@ -678,7 +709,12 @@ def validate_unit(
 
     if dep_rows is not None and morph_rows is not None:
         derived = derive_unit(nos, dep_rows, morph_rows)
-        violations.extend(_classify_divergence(rows_by_line, derived, dep_index(dep_rows)))
+        morph_pos_by_position = {
+            (no, i + 1): row.pos for no, rows in morph_rows.items() for i, row in enumerate(rows)
+        }
+        violations.extend(_classify_divergence(
+            rows_by_line, derived, dep_index(dep_rows), morph_pos_by_position,
+        ))
 
     return violations
 

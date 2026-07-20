@@ -358,6 +358,50 @@ def test_validate_unit_divergence_ccomp_double_listing_suppressed():
     assert any("missing_tuple" in d and "4.4" in d for d in details)  # dir itself still unproposed
 
 
+# --- _classify_divergence: attr/xcomp double-listing + elided copula (Phase 4) --------
+
+
+def test_classify_divergence_attr_double_listing_suppressed():
+    # "son" (2.2) has an attr row citing "Molti" (2.1); the LLM also lists "Molti" as its own
+    # redundant predicate tuple with the same subj — pure restatement, not a divergence.
+    derived = {2: [
+        skel.SkelRow(2, 2, "son", "subj", 2, 4),
+        skel.SkelRow(2, 2, "son", "attr", 2, 1),
+    ]}
+    given = {2: [
+        skel.SkelRow(2, 2, "son", "subj", 2, 4),
+        skel.SkelRow(2, 2, "son", "attr", 2, 1),
+        skel.SkelRow(2, 1, "Molti", "subj", 2, 4),  # double-listed, not derived as its own predicate
+    ]}
+    assert skel._classify_divergence(given, derived) == []
+
+
+def test_classify_divergence_elided_copula_conj_whitelisted():
+    # "mantoani" (1.1) is coordinate (conj) with a real clause and carries no copula token at
+    # all — derive_unit structurally can't produce it, but it's a genuine reading, not an error.
+    derived = {1: []}
+    given = {1: [skel.SkelRow(1, 1, "mantoani", "subj", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="mantoani", deprel="conj", head_line=0, head_token=6),
+    }
+    morph_pos_by_position = {(1, 1): "adjective"}
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos_by_position)
+    assert violations == []
+
+
+def test_classify_divergence_amod_extra_tuple_not_whitelisted():
+    # A plain NP-internal participial modifier (amod) the LLM wrongly promoted to predicate
+    # status — a genuine error, must still flag (not swallowed by the elided-copula whitelist).
+    derived = {1: []}
+    given = {1: [skel.SkelRow(1, 3, "unta", "subj", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="unta", deprel="amod", head_line=1, head_token=5),
+    }
+    morph_pos_by_position = {(1, 3): "adjective"}
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos_by_position)
+    assert any(v.detail.startswith("extra_tuple") and "1.3" in v.detail for v in violations)
+
+
 # --- _classify_divergence: authority model (Phase 2, PLAN.md) -------------------------
 
 
