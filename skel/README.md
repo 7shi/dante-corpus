@@ -125,6 +125,30 @@ need `--fix` (LLM regeneration), restricted to the specific flagged lines, re-ch
 — the goal is **0 soft violations**, treating every remaining class as something to fix or
 formally exempt, not a baseline to tolerate.
 
+`--fix` (`skel/skel.py`) regenerates a flagged parse unit and keeps the result only if its soft
+violation count strictly drops. As of Phase 4b's `_fix_hint`, a regeneration attempt gets a
+per-predicate pointer built from the unit's prior soft violations — which predicate looks
+unwarranted or missing, which role slot looks missing/extra/mislabeled — appended to the prompt
+`build`'s initial parse never receives. The hint deliberately withholds `derive_unit`'s actual
+argument citations and its correct role label (a `role_mismatch` hint names the LLM's *own*
+prior label, not the derived one), so the retry still reads the sentence independently rather
+than parroting back a guess; without it, a systematic misreading (e.g. resolving an `xcomp`
+control subject from the wrong constituent) tends to reproduce itself verbatim across attempts.
+
+## `--fix` hint (Phase 4b)
+
+`skel/skel.py`:
+
+- **`_fix_hint(nos, texts, violations)`**: summarizes a unit's `soft_before` violations into a
+  short list, one line per `(predicate, role)` pair, phrased per violation kind
+  (`missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`) — see
+  `_HINT_PHRASING`. Only violations carrying a `.predicate` (i.e. `_classify_divergence`'s
+  output) are included; `membership`/`unknown_role` violations (no predicate attached) are
+  skipped.
+- **`_prompt`/`_try_parse`** gained an optional `hint` parameter, appended as a final prompt
+  section when present. `_fix_canto` is the only caller that supplies one, computed from each
+  unit's `soft_before` right before regenerating; `build`'s call sites pass none.
+
 ## Model
 
 Build-time only, set in [`../model.mk`](../model.mk), overridable with `make skel MODEL=...`.

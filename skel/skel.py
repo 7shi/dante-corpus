@@ -199,6 +199,7 @@ def _merge_tables(text: str) -> str:
 
 def _prompt(
     nos: list[int], texts: list[str], morph_rows: dict[int, list], np_rows: dict[int, list],
+    hint: str | None = None,
 ) -> str:
     lines_block = "\n".join(f"{no} {text}" for no, text in zip(nos, texts))
     token_lines: list[str] = []
@@ -218,7 +219,66 @@ def _prompt(
     ]
     if np_lines:
         parts.append("Noun phrases (Line.Head [text]):\n" + "\n".join(np_lines))
+    if hint:
+        parts.append(hint)
     return "\n\n".join(parts)
+
+
+# --- --fix hints (Phase 4b): point a regeneration attempt at what needs re-reading, without ----
+# --- revealing the derivation's actual answer (arg citations), so it isn't just parroted back ---
+
+_HINT_PHRASING = {
+    "missing_tuple": "may be missing a predicate near '{word}' ({line}.{token}) — check whether "
+                      "it heads its own clause",
+    "extra_tuple": "the predicate '{word}' ({line}.{token}) you proposed may not be warranted — "
+                   "reconsider whether it is really an independent predicate",
+    "missing_arg": "the predicate '{word}' ({line}.{token}) may be missing a '{role}' argument — "
+                   "check for one",
+    "extra_arg": "the predicate '{word}' ({line}.{token})'s '{role}' argument may not belong — "
+                "recheck it",
+    "role_mismatch": "the predicate '{word}' ({line}.{token})'s argument currently labeled "
+                     "'{given_role}' may need a different role — recheck it",
+}
+
+
+def _fix_hint(
+    nos: list[int], texts: list[str], violations: list[morph.Violation],
+) -> str | None:
+    """Summarize a prior attempt's divergence violations into a re-read hint: which predicates
+    and role slots to re-examine, without citing the derivation's actual argument positions —
+    the model still reads the sentence independently, it just isn't blind on a retry."""
+    token_lists = {no: _alpha_tokens(t) for no, t in zip(nos, texts)}
+
+    def word_at(pos: tuple[int, int]) -> str:
+        line, token = pos
+        tokens = token_lists.get(line)
+        return tokens[token - 1] if tokens and 1 <= token <= len(tokens) else "?"
+
+    lines: list[str] = []
+    seen: set[tuple[str, tuple[int, int], str | None]] = set()
+    for v in violations:
+        if v.predicate is None:
+            continue
+        kind = _violation_class(v)
+        phrasing = _HINT_PHRASING.get(kind)
+        if phrasing is None:
+            continue
+        key = (kind, v.predicate, v.role)
+        if key in seen:
+            continue
+        seen.add(key)
+        line, token = v.predicate
+        lines.append("- " + phrasing.format(
+            word=word_at(v.predicate), line=line, token=token,
+            role=v.role or v.given_role, given_role=v.given_role or v.role,
+        ))
+    if not lines:
+        return None
+    return (
+        "A previous independent reading of this sentence had issues in these spots (read the "
+        "sentence fresh and decide for yourself — this is a pointer to re-examine, not the "
+        "answer):\n" + "\n".join(lines)
+    )
 
 
 def _continue_if_missing(
@@ -266,15 +326,22 @@ def _try_parse(
     nos: list[int], texts: list[str], model: str, ui: StatusLine, label: str,
     log_path: Path | None = None, morph_rows: dict[int, list] | None = None,
     np_rows: dict[int, list] | None = None, dep_rows: dict[int, list] | None = None,
+    hint: str | None = None,
 ) -> dict[int, list[skel.SkelRow]] | None:
-    """Call LLM and resolve; return rows-by-line on success, None after all retries fail."""
+    """Call LLM and resolve; return rows-by-line on success, None after all retries fail.
+
+    `hint` (set only by `--fix`, see `_fix_hint`) points a regeneration attempt at which
+    predicates/roles a prior attempt got wrong, without citing the derivation's actual argument
+    positions — `build`'s initial parse never gets one, preserving the independent-reading
+    design the module docstring describes.
+    """
     from llm7shi import Client
 
     derived = (
         skel.derive_unit(nos, dep_rows, morph_rows) if dep_rows is not None and morph_rows is not None
         else {}
     )
-    prompt = _prompt(nos, texts, morph_rows or {}, np_rows or {})
+    prompt = _prompt(nos, texts, morph_rows or {}, np_rows or {}, hint)
     for attempt in range(RETRIES + 1):
         client = Client(model=model, file=ui.stream, show_params=False)
         client.set_system_prompt(SYSTEM_PROMPT)
@@ -633,8 +700,9 @@ def _fix_canto(
             if not soft_before:
                 continue
             attempted += 1
+            hint = _fix_hint(unit, unit_texts, soft_before)
             new_rows = _try_parse(
-                unit, unit_texts, model, ui, label, log_path, morph_rows, np_rows, dep_rows,
+                unit, unit_texts, model, ui, label, log_path, morph_rows, np_rows, dep_rows, hint,
             )
             if new_rows is None:
                 continue
