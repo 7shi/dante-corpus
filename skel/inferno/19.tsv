@@ -112,11 +112,11 @@ line	token	word	role	arg_line	arg_token
 37	10	piace	subj	0	0
 37	10	piace	obl:a	37	9
 38	3	segnore	subj	38	1
-38	5	sai	subj	0	0
+38	5	sai	subj	37	2
 38	5	sai	ccomp	38	10
 38	10	parto	subj	38	7
 38	10	parto	obl:da	39	3
-39	5	sai	subj	0	0
+39	5	sai	subj	37	2
 39	5	sai	obj	39	6
 39	9	tace	subj	39	7
 40	2	venimmo	subj	0	0
@@ -130,7 +130,7 @@ line	token	word	role	arg_line	arg_token
 44	3	dipuose	subj	43	3
 44	3	dipuose	obj	44	2
 44	3	dipuose	obl:di	43	8
-44	6	giunse	subj	0	0
+44	6	giunse	subj	43	3
 44	6	giunse	iobj	44	5
 44	6	giunse	obl:a	44	8
 45	5	piangeva	subj	45	3
@@ -216,7 +216,7 @@ line	token	word	role	arg_line	arg_token
 69	1	sappi	ccomp	69	5
 69	5	vestito	subj	69	3
 69	5	vestito	obl:di	69	8
-70	4	figliuol	subj	0	0
+70	4	figliuol	subj	69	3
 70	4	figliuol	obl:di	70	7
 71	1	cupido	subj	0	0
 71	4	avanzar	subj	0	0

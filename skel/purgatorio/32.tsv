@@ -53,7 +53,7 @@ line	token	word	role	arg_line	arg_token
 19	6	salvarsi	subj	20	2
 20	1	volgesi	subj	20	2
 20	1	volgesi	obl:sotto	19	4
-20	5	gira	subj	0	0
+20	5	gira	subj	20	2
 20	5	gira	obj	20	4
 20	5	gira	obl:con	20	7
 21	3	possa	subj	21	4
@@ -95,7 +95,7 @@ line	token	word	role	arg_line	arg_token
 37	3	mormorare	subj	0	0
 37	3	mormorare	obj	37	6
 37	3	mormorare	obl:a	37	5
-38	2	cerchiaro	subj	0	0
+38	2	cerchiaro	subj	37	1
 38	2	cerchiaro	obj	38	4
 39	0			0	0
 40	7	dilata	subj	40	4
@@ -154,7 +154,7 @@ line	token	word	role	arg_line	arg_token
 61	9	canta	subj	62	2
 62	7	cantaro	subj	62	5
 62	7	cantaro	obj	62	3
-63	4	soffersi	subj	0	0
+63	4	soffersi	subj	61	1
 63	4	soffersi	obj	63	3
 64	3	potessi	subj	64	2
 64	3	potessi	xcomp	64	4
@@ -205,7 +205,7 @@ line	token	word	role	arg_line	arg_token
 77	3	ritornaro	obl:a	77	6
 78	7	rotti	subj	78	6
 78	7	rotti	obl:da	78	3
-79	2	videro	subj	0	0
+79	2	videro	subj	76	1
 79	2	videro	obj	79	5
 79	2	videro	obj	81	6
 79	3	scemata	subj	79	5
@@ -232,7 +232,7 @@ line	token	word	role	arg_line	arg_token
 85	5	dissi	obl:in	85	4
 85	7	è	subj	85	8
 85	7	è	obl	85	6
-86	3	Vedi	subj	0	0
+86	3	Vedi	subj	86	2
 86	3	Vedi	obj	86	4
 86	3	Vedi	xcomp	87	2
 87	2	sedere	subj	86	4
@@ -279,7 +279,7 @@ line	token	word	role	arg_line	arg_token
 100	2	sarai	subj	100	3
 100	2	sarai	attr	100	6
 100	2	sarai	obl	100	5
-101	2	sarai	subj	0	0
+101	2	sarai	subj	100	3
 101	2	sarai	attr	101	6
 101	2	sarai	obl:con	101	3
 102	6	è	subj	102	5
@@ -422,11 +422,11 @@ line	token	word	role	arg_line	arg_token
 150	2	apparve	obl:con	150	5
 151	7	tolta	subj	0	0
 151	7	tolta	iobj	151	5
-152	1	vidi	subj	0	0
+152	1	vidi	subj	149	4
 152	1	vidi	obj	152	8
 152	1	vidi	obl:di	152	3
 152	1	vidi	obl:a	152	5
-153	2	basciavansi	subj	0	0
+153	2	basciavansi	subj	149	4
 153	2	basciavansi	obl	153	5
 154	0			0	0
 155	3	rivolse	subj	155	6

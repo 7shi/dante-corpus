@@ -128,7 +128,7 @@ line	token	word	role	arg_line	arg_token
 48	0			0	0
 49	3	circunfulse	subj	49	4
 49	3	circunfulse	iobj	49	2
-50	2	lasciommi	subj	0	0
+50	2	lasciommi	subj	49	4
 50	2	lasciommi	attr	50	3
 50	3	fasciato	obl:di	50	6
 51	7	appariva	subj	51	5
@@ -149,11 +149,11 @@ line	token	word	role	arg_line	arg_token
 56	6	compresi	obj	57	1
 57	2	sormontar	subj	57	1
 57	2	sormontar	obl:a	57	7
-58	6	raccesi	subj	0	0
+58	6	raccesi	subj	56	2
 58	6	raccesi	obl:di	58	4
 59	7	mera	subj	59	4
 60	8	difesi	subj	60	3
-61	2	vidi	subj	0	0
+61	2	vidi	subj	56	2
 61	2	vidi	obj	61	3
 62	1	fulvido	subj	61	3
 62	1	fulvido	obl:di	62	3
@@ -162,7 +162,7 @@ line	token	word	role	arg_line	arg_token
 63	1	dipinte	obl:di	63	4
 64	4	uscian	subj	64	5
 64	4	uscian	obl:di	64	3
-65	6	mettien	subj	0	0
+65	6	mettien	subj	64	5
 65	6	mettien	obj	65	5
 65	6	mettien	obl:di	65	4
 65	6	mettien	obl:in	65	8
@@ -170,7 +170,7 @@ line	token	word	role	arg_line	arg_token
 66	5	circunscrive	obj	66	4
 67	3	inebrïate	subj	0	0
 67	3	inebrïate	obl:da	67	6
-68	1	riprofondavan	subj	0	0
+68	1	riprofondavan	subj	64	5
 68	1	riprofondavan	obj	68	2
 68	1	riprofondavan	obl:in	68	5
 69	4	intrava	subj	69	3
@@ -223,7 +223,7 @@ line	token	word	role	arg_line	arg_token
 87	7	immegli	obl:in	87	5
 88	6	bevve	subj	88	8
 88	6	bevve	obl:di	88	5
-89	7	parve	subj	0	0
+89	7	parve	subj	82	3
 89	7	parve	iobj	89	6
 89	7	parve	ccomp	90	4
 90	4	divenuta	subj	90	3
@@ -384,7 +384,7 @@ line	token	word	role	arg_line	arg_token
 146	7	detruso	subj	146	5
 147	5	è	subj	147	3
 147	5	è	obl:per	147	8
-148	2	farà	subj	0	0
+148	2	farà	subj	146	5
 148	2	farà	obj	148	3
 148	2	farà	xcomp	148	6
 148	6	intrar	subj	148	3

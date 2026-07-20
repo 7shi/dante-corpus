@@ -16,14 +16,14 @@ line	token	word	role	arg_line	arg_token
 6	4	abbia	obj	6	3
 6	4	abbia	obl:in	6	6
 6	4	abbia	obl:in	6	9
-7	3	rivolge	subj	0	0
+7	3	rivolge	subj	5	2
 7	3	rivolge	obj	7	2
 7	5	veder	subj	0	0
 7	5	veder	ccomp	8	2
 8	2	dice	subj	7	8
 8	2	dice	obj	8	4
 8	2	dice	iobj	8	1
-8	6	vede	subj	0	0
+8	6	vede	subj	5	2
 8	6	vede	ccomp	8	10
 8	10	accorda	subj	8	8
 8	10	accorda	obl	8	9
@@ -61,7 +61,7 @@ line	token	word	role	arg_line	arg_token
 19	4	par	subj	19	3
 19	4	par	attr	19	7
 19	7	poca	subj	19	3
-20	1	parrebbe	subj	0	0
+20	1	parrebbe	subj	19	3
 20	1	parrebbe	attr	20	2
 20	2	luna	subj	0	0
 20	3	locata	subj	20	2
@@ -111,7 +111,7 @@ line	token	word	role	arg_line	arg_token
 37	3	avea	obj	37	5
 38	3	distava	subj	38	5
 38	3	distava	iobj	38	1
-39	1	credo	subj	0	0
+39	1	credo	subj	34	3
 39	1	credo	ccomp	39	8
 39	8	invera	subj	0	0
 39	8	invera	obl:di	39	6
@@ -146,7 +146,7 @@ line	token	word	role	arg_line	arg_token
 48	3	avrebbe	attr	48	1
 48	8	proposto	subj	48	5
 48	8	proposto	iobj	48	6
-49	6	puote	subj	0	0
+49	6	puote	subj	46	2
 49	6	puote	xcomp	50	1
 50	1	veder	obj	50	3
 50	1	veder	obl:in	49	3
@@ -261,7 +261,7 @@ line	token	word	role	arg_line	arg_token
 90	6	sfavillaro	subj	90	5
 91	4	seguiva	subj	91	2
 91	4	seguiva	obj	91	6
-92	3	tante	subj	0	0
+92	3	tante	subj	91	2
 93	9	inmilla	subj	92	6
 94	2	sentiva	subj	94	1
 94	2	sentiva	xcomp	94	3
@@ -287,7 +287,7 @@ line	token	word	role	arg_line	arg_token
 101	2	somigliarsi	subj	0	0
 101	2	somigliarsi	obl:a	101	4
 101	6	ponno	subj	0	0
-102	2	posson	subj	0	0
+102	2	posson	subj	100	6
 102	5	veder	subj	0	0
 102	7	soblimi	subj	0	0
 103	7	vonno	subj	103	4
@@ -346,7 +346,7 @@ line	token	word	role	arg_line	arg_token
 126	7	ludi	subj	126	2
 127	7	ammirano	subj	127	2
 127	7	ammirano	obj	127	6
-128	4	vincon	subj	0	0
+128	4	vincon	subj	127	2
 128	4	vincon	obl:di	128	3
 129	2	tirati	subj	129	1
 129	2	tirati	obl:verso	128	8

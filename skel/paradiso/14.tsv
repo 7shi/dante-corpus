@@ -27,7 +27,7 @@ line	token	word	role	arg_line	arg_token
 10	3	fa	subj	12	5
 10	3	fa	obj	10	4
 10	3	fa	iobj	10	2
-10	8	dice	subj	0	0
+10	8	dice	subj	12	5
 10	8	dice	obj	10	6
 10	8	dice	obl	10	7
 10	8	dice	obl:con	11	4
@@ -110,7 +110,7 @@ line	token	word	role	arg_line	arg_token
 37	4	lunga	subj	37	6
 38	0			0	0
 39	2	raggerà	subj	38	6
-39	2	raggerà	obl	39	5
+39	2	raggerà	obl:dintorno	39	5
 40	4	séguita	subj	40	3
 40	4	séguita	obj	40	6
 41	8	tanta	subj	41	6
@@ -232,7 +232,7 @@ line	token	word	role	arg_line	arg_token
 82	2	ripreser	obj	82	6
 82	2	ripreser	xcomp	83	2
 83	2	rilevarsi	subj	82	4
-83	4	vidimi	subj	0	0
+83	4	vidimi	subj	82	4
 83	4	vidimi	xcomp	83	5
 83	5	translato	obl:con	84	4
 83	5	translato	obl:in	84	8

@@ -71,7 +71,7 @@ line	token	word	role	arg_line	arg_token
 24	8	dischiava	subj	23	8
 24	8	dischiava	obl:da	24	6
 25	1	giunto	subj	0	0
-25	3	vidi	subj	0	0
+25	3	vidi	subj	22	1
 25	3	vidi	obj	25	2
 25	3	vidi	ccomp	26	2
 26	2	torse	subj	25	6
@@ -168,7 +168,7 @@ line	token	word	role	arg_line	arg_token
 52	2	sorrise	subj	52	1
 52	8	erra	subj	52	7
 52	8	erra	obj	53	2
-53	4	disse	subj	0	0
+53	4	disse	subj	52	1
 53	4	disse	iobj	53	3
 54	6	diserra	subj	54	2
 55	5	punger	subj	55	7
@@ -192,7 +192,7 @@ line	token	word	role	arg_line	arg_token
 60	1	credo	ccomp	60	3
 60	3	fanno	subj	60	5
 60	3	fanno	obj	59	3
-61	5	vedrai	subj	0	0
+61	5	vedrai	subj	61	2
 61	5	vedrai	obj	62	4
 61	5	vedrai	xcomp	61	6
 61	6	sommerso	subj	62	4
@@ -425,7 +425,7 @@ line	token	word	role	arg_line	arg_token
 140	6	avviva	obj	140	4
 141	4	come	subj	141	5
 141	4	come	obl:in	141	7
-141	9	lega	subj	0	0
+141	9	lega	subj	139	1
 141	9	lega	obl:in	141	2
 142	6	deriva	subj	0	0
 142	6	deriva	obl	142	5

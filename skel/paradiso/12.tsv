@@ -6,12 +6,12 @@ line	token	word	role	arg_line	arg_token
 3	2	rotar	subj	3	6
 3	3	cominciò	subj	3	6
 3	3	cominciò	xcomp	3	2
-4	8	volse	subj	0	0
+4	8	volse	subj	3	6
 4	8	volse	obj	4	7
 4	8	volse	obl:in	4	4
 5	8	chiuse	subj	5	4
 5	8	chiuse	obj	5	7
-6	9	colse	subj	0	0
+6	9	colse	subj	3	6
 6	9	colse	obj	6	2
 6	9	colse	obj	6	6
 7	4	vince	subj	7	2
@@ -33,7 +33,7 @@ line	token	word	role	arg_line	arg_token
 15	3	consunse	subj	15	2
 15	3	consunse	obj	15	1
 15	3	consunse	obl:come	15	6
-16	2	fanno	subj	0	0
+16	2	fanno	subj	11	2
 16	2	fanno	obj	16	5
 16	2	fanno	xcomp	16	6
 16	6	esser	subj	16	5
@@ -75,7 +75,7 @@ line	token	word	role	arg_line	arg_token
 30	3	fece	xcomp	30	1
 30	5	volgermi	subj	0	0
 30	5	volgermi	obl:a	30	8
-31	2	cominciò	subj	0	0
+31	2	cominciò	subj	29	3
 31	7	fa	subj	31	5
 31	7	fa	obj	31	6
 31	7	fa	attr	31	8
@@ -111,7 +111,7 @@ line	token	word	role	arg_line	arg_token
 42	6	esser	attr	42	7
 42	7	degna	subj	0	0
 43	4	detto	subj	0	0
-43	8	soccorse	subj	0	0
+43	8	soccorse	subj	37	2
 43	8	soccorse	obl:a	43	7
 43	8	soccorse	obl:con	44	3
 44	0			0	0

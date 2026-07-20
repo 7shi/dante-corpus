@@ -6,7 +6,7 @@ line	token	word	role	arg_line	arg_token
 2	6	dolente	subj	2	1
 3	1	repetendo	subj	0	0
 3	1	repetendo	obj	3	3
-3	6	impara	subj	0	0
+3	6	impara	subj	2	1
 4	6	va	subj	4	9
 4	6	va	obl:con	4	3
 5	2	va	subj	5	1
@@ -18,14 +18,14 @@ line	token	word	role	arg_line	arg_token
 6	6	reca	obl:da	6	3
 6	6	reca	obl:a	6	8
 7	4	arresta	subj	7	1
-7	9	intende	subj	0	0
+7	9	intende	subj	7	1
 7	9	intende	obj	7	6
 8	3	porge	subj	0	0
 8	3	porge	obj	8	5
 8	3	porge	iobj	8	2
-8	8	fa	subj	0	0
+8	8	fa	subj	7	1
 8	8	fa	obj	8	9
-9	7	difende	subj	0	0
+9	7	difende	subj	7	1
 9	7	difende	obj	9	6
 9	7	difende	obl:da	9	5
 10	1	Tal	subj	10	3
@@ -36,7 +36,7 @@ line	token	word	role	arg_line	arg_token
 11	1	volgendo	obl	11	5
 11	1	volgendo	obl	11	7
 12	2	promettendo	subj	10	3
-12	4	sciogliea	subj	0	0
+12	4	sciogliea	subj	10	3
 12	4	sciogliea	obj	12	3
 12	4	sciogliea	obl:da	12	6
 13	2	era	subj	13	4
@@ -151,11 +151,11 @@ line	token	word	role	arg_line	arg_token
 47	3	vedrai	obl:in	47	9
 48	4	ridere	subj	47	2
 48	6	felice	subj	47	2
-49	4	andiamo	subj	0	0
+49	4	andiamo	subj	49	2
 49	4	andiamo	obl:a	49	7
 50	5	affatico	subj	0	0
 50	5	affatico	obj	50	4
-51	2	vedi	subj	0	0
+51	2	vedi	subj	49	2
 51	2	vedi	ccomp	51	9
 51	9	getta	subj	51	6
 51	9	getta	obj	51	8
@@ -202,7 +202,7 @@ line	token	word	role	arg_line	arg_token
 64	4	dicëa	subj	64	1
 64	4	dicëa	obj	64	6
 64	4	dicëa	iobj	64	3
-65	2	lasciavane	subj	0	0
+65	2	lasciavane	subj	64	1
 65	2	lasciavane	xcomp	65	3
 65	3	gir		0	0
 65	5	sguardando	obl:a	66	2
@@ -408,7 +408,7 @@ line	token	word	role	arg_line	arg_token
 130	2	han	subj	130	1
 130	2	han	obj	130	3
 130	2	han	obl:in	130	5
-130	8	scocca	subj	0	0
+130	8	scocca	subj	130	1
 131	3	venir	subj	0	0
 131	3	venir	obl:sanza	131	5
 131	3	venir	obl:a	131	8

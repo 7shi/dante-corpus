@@ -5,9 +5,9 @@ line	token	word	role	arg_line	arg_token
 2	8	riscossi	subj	2	6
 3	7	desta	subj	3	3
 3	7	desta	obl:per	3	6
-4	6	mossi	subj	0	0
+4	6	mossi	subj	2	3
 4	6	mossi	obj	4	3
-5	5	riguardai	subj	0	0
+5	5	riguardai	subj	2	3
 6	2	conoscer	subj	0	0
 6	2	conoscer	obj	6	4
 6	7	fossi	subj	6	6
@@ -272,7 +272,7 @@ line	token	word	role	arg_line	arg_token
 98	1	volsersi	obl:con	98	6
 99	5	sorrise	subj	99	4
 99	5	sorrise	obl:di	99	7
-100	8	fenno	subj	0	0
+100	8	fenno	subj	99	4
 100	8	fenno	obj	100	4
 100	8	fenno	iobj	100	7
 101	5	fecer	subj	101	2
@@ -308,7 +308,7 @@ line	token	word	role	arg_line	arg_token
 112	3	eran	obl:con	112	5
 112	3	eran	obl:di	113	3
 113	0			0	0
-114	1	parlavan	subj	0	0
+114	1	parlavan	subj	112	1
 114	1	parlavan	obl:con	114	4
 115	1	Traemmoci	subj	0	0
 115	1	Traemmoci	obl:da	115	5
@@ -379,11 +379,11 @@ line	token	word	role	arg_line	arg_token
 136	7	pone	obl:a	136	6
 137	0			0	0
 138	0			0	0
-139	2	vidi	subj	0	0
+139	2	vidi	subj	134	3
 139	2	vidi	obj	139	5
 140	2	dico	subj	0	0
 140	2	dico	obj	140	1
-140	4	vidi	subj	0	0
+140	4	vidi	subj	134	3
 140	4	vidi	obj	140	5
 140	4	vidi	obj	141	1
 140	4	vidi	obj	142	4

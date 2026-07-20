@@ -201,8 +201,8 @@ line	token	word	role	arg_line	arg_token
 61	4	va	subj	61	2
 61	5	soggiunse	subj	0	0
 61	7	vien	subj	61	9
-62	3	arrestate	subj	0	0
-62	5	studiate	subj	0	0
+62	3	arrestate	subj	61	9
+62	5	studiate	subj	61	9
 62	5	studiate	obj	62	7
 63	7	annera	subj	63	4
 64	2	salia	subj	64	4
@@ -271,7 +271,7 @@ line	token	word	role	arg_line	arg_token
 87	1	fasciati	obl:di	87	7
 88	2	parer	subj	88	6
 88	2	parer	attr	88	1
-88	3	potea	subj	0	0
+88	3	potea	subj	88	1
 88	3	potea	xcomp	88	2
 89	5	vedea	subj	89	6
 89	5	vedea	obj	89	8
@@ -373,7 +373,7 @@ line	token	word	role	arg_line	arg_token
 119	2	usò	subj	118	1
 119	2	usò	obj	119	1
 119	2	usò	obl:inverso	118	3
-119	7	strenne	subj	0	0
+119	7	strenne	subj	118	1
 120	7	iguali	subj	0	0
 120	7	iguali	obl:di	120	4
 120	7	iguali	obl:a	120	6
@@ -390,12 +390,12 @@ line	token	word	role	arg_line	arg_token
 123	5	crescer	obl:a	123	2
 124	0			0	0
 125	2	corsa	subj	124	3
-125	4	fummo	subj	0	0
+125	4	fummo	subj	124	3
 125	4	fummo	obl:in	125	8
 126	3	ficcò	subj	126	4
 126	3	ficcò	obj	126	6
 126	3	ficcò	obl:in	126	2
-127	2	disse	subj	0	0
+127	2	disse	subj	126	4
 128	1	veduto	subj	0	0
 128	1	veduto	obj	127	5
 128	6	venuto	subj	0	0
@@ -435,9 +435,9 @@ line	token	word	role	arg_line	arg_token
 137	7	fenno	obj	137	6
 137	7	fenno	xcomp	137	5
 138	1	seder	obj	138	2
-138	3	puoi	subj	0	0
+138	3	puoi	subj	138	2
 138	3	puoi	xcomp	138	1
-138	5	puoi	subj	0	0
+138	5	puoi	subj	138	2
 138	5	puoi	xcomp	138	6
 138	6	andar	obl:tra	138	8
 139	2	aspettar	subj	0	0

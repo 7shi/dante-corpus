@@ -151,14 +151,14 @@ line	token	word	role	arg_line	arg_token
 55	5	stai	subj	55	3
 55	5	stai	attr	55	6
 55	6	nascosta	obl:a	56	5
-56	6	fammi	subj	0	0
+56	6	fammi	subj	52	6
 56	6	fammi	obj	57	2
 56	6	fammi	attr	56	7
 56	7	nota		0	0
 57	9	posta	subj	57	3
 57	9	posta	obj	57	6
 57	9	posta	iobj	57	7
-58	2	dì	subj	0	0
+58	2	dì	subj	52	6
 58	2	dì	ccomp	58	5
 58	5	tace	subj	59	3
 58	5	tace	obl:in	58	8
@@ -307,7 +307,7 @@ line	token	word	role	arg_line	arg_token
 108	5	suonan	subj	108	3
 108	5	suonan	attr	108	7
 108	7	bassi	subj	108	3
-109	2	fanno	subj	0	0
+109	2	fanno	subj	106	7
 109	2	fanno	obj	109	4
 109	7	chiama	subj	109	5
 109	7	chiama	obj	109	8

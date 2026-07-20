@@ -87,10 +87,10 @@ line	token	word	role	arg_line	arg_token
 32	0			0	0
 33	6	coverta	subj	33	1
 33	6	coverta	obl:di	33	3
-34	5	partia	subj	0	0
+34	5	partia	subj	32	2
 34	5	partia	iobj	34	3
 34	5	partia	obl:dinanzi	34	8
-35	2	'mpediva	subj	0	0
+35	2	'mpediva	subj	32	2
 35	2	'mpediva	obj	35	6
 36	5	ritornar	subj	0	0
 36	8	vòlto	subj	36	2
@@ -160,9 +160,9 @@ line	token	word	role	arg_line	arg_token
 56	8	face	subj	56	5
 56	8	face	obj	56	7
 56	8	face	xcomp	56	6
-57	6	piange	subj	0	0
+57	6	piange	subj	57	1
 57	6	piange	obl:in	57	5
-57	9	attrista	subj	0	0
+57	9	attrista	subj	57	1
 58	3	fece	subj	58	5
 58	3	fece	obj	58	2
 58	3	fece	attr	58	1
@@ -277,11 +277,11 @@ line	token	word	role	arg_line	arg_token
 95	2	lascia	xcomp	95	4
 95	4	passar	subj	95	3
 95	4	passar	obl:per	95	8
-96	4	'mpedisce	subj	0	0
+96	4	'mpedisce	subj	94	3
 96	4	'mpedisce	obj	96	3
 96	7	uccide	subj	0	0
 96	7	uccide	obj	96	6
-97	2	ha	subj	0	0
+97	2	ha	subj	94	3
 97	2	ha	obj	97	3
 98	4	empie	subj	0	0
 98	4	empie	obj	98	7
@@ -293,7 +293,7 @@ line	token	word	role	arg_line	arg_token
 100	2	son	attr	100	1
 100	8	ammoglia	subj	0	0
 100	8	ammoglia	obl:a	100	6
-101	2	più	subj	0	0
+101	2	più	subj	100	4
 101	3	saranno	subj	0	0
 101	3	saranno	attr	101	2
 102	1	verrà	subj	101	8
@@ -334,7 +334,7 @@ line	token	word	role	arg_line	arg_token
 113	7	sarò	subj	113	6
 113	7	sarò	attr	113	9
 113	9	guida	subj	113	6
-114	2	trarrotti	subj	0	0
+114	2	trarrotti	subj	113	6
 114	2	trarrotti	obl:di	114	4
 114	2	trarrotti	obl:per	114	6
 115	2	udirai	subj	0	0

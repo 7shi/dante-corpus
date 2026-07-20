@@ -20,7 +20,7 @@ line	token	word	role	arg_line	arg_token
 6	0			0	0
 7	4	fatto	subj	7	1
 7	4	fatto	obl:a	7	9
-8	1	pensa	subj	0	0
+8	1	pensa	subj	7	1
 8	1	pensa	ccomp	9	6
 8	4	annoverar	subj	8	3
 8	4	annoverar	obj	8	5
@@ -207,7 +207,7 @@ line	token	word	role	arg_line	arg_token
 75	7	macolati	obl:da	75	2
 75	7	macolati	obl:a	75	4
 75	7	macolati	obl:di	75	6
-76	3	vidi	subj	0	0
+76	3	vidi	subj	73	1
 76	3	vidi	obj	76	6
 76	6	menare	obj	76	7
 76	6	menare	obl:a	77	2
@@ -269,7 +269,7 @@ line	token	word	role	arg_line	arg_token
 96	3	mostrar	subj	0	0
 96	3	mostrar	obj	96	5
 96	3	mostrar	iobj	96	7
-96	8	intendo	subj	0	0
+96	8	intendo	subj	94	5
 96	8	intendo	xcomp	96	3
 97	3	ruppe	subj	97	6
 98	2	tremando	subj	98	3

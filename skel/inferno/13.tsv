@@ -62,7 +62,7 @@ line	token	word	role	arg_line	arg_token
 22	2	sentia	obl:di	22	5
 22	6	trarre	subj	0	0
 22	6	trarre	obj	22	7
-23	3	vedea	subj	0	0
+23	3	vedea	subj	22	1
 23	3	vedea	obj	23	4
 23	7	facesse	subj	23	5
 23	7	facesse	obj	23	6
@@ -182,7 +182,7 @@ line	token	word	role	arg_line	arg_token
 61	8	tolsi	subj	0	0
 61	8	tolsi	obj	61	7
 61	8	tolsi	obl:da	61	3
-62	2	portai	subj	0	0
+62	2	portai	subj	58	1
 62	2	portai	obj	62	1
 62	2	portai	obl:a	62	5
 63	5	perde'	subj	63	3
@@ -232,7 +232,7 @@ line	token	word	role	arg_line	arg_token
 78	7	diede	subj	78	5
 78	7	diede	obj	78	4
 78	7	diede	iobj	78	6
-79	3	attese	subj	0	0
+79	3	attese	subj	80	3
 79	3	attese	obl	79	2
 79	10	tace	subj	79	8
 80	1	disse	subj	80	3
@@ -264,7 +264,7 @@ line	token	word	role	arg_line	arg_token
 88	2	dirne	ccomp	88	7
 88	7	lega	subj	88	5
 88	7	lega	obl:in	89	3
-89	5	dinne	subj	0	0
+89	5	dinne	subj	88	2
 89	5	dinne	ccomp	90	8
 89	8	puoi	subj	89	7
 90	8	spiega	subj	90	2
@@ -286,7 +286,7 @@ line	token	word	role	arg_line	arg_token
 98	6	balestra	subj	98	4
 99	2	germoglia	subj	0	0
 99	2	germoglia	obl:come	99	4
-100	1	Surge	subj	0	0
+100	1	Surge	subj	101	2
 100	1	Surge	obl:in	100	3
 100	1	Surge	obl:in	100	6
 101	3	pascendo	subj	101	2
@@ -377,7 +377,7 @@ line	token	word	role	arg_line	arg_token
 129	3	portar	obj	129	5
 130	1	Presemi	subj	130	5
 130	1	Presemi	obl:per	130	7
-131	2	menommi	subj	0	0
+131	2	menommi	subj	130	5
 131	2	menommi	obl:a	131	4
 131	6	piangea	subj	131	5
 131	6	piangea	obl:per	132	3
@@ -408,7 +408,7 @@ line	token	word	role	arg_line	arg_token
 141	2	ha	obj	141	5
 141	9	disgiunte	subj	141	5
 141	9	disgiunte	obl:da	141	8
-142	1	raccoglietele	subj	0	0
+142	1	raccoglietele	subj	139	2
 142	1	raccoglietele	obl:a	142	3
 143	2	fui	subj	143	1
 143	2	fui	obl:di	143	5

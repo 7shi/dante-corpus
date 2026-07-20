@@ -109,7 +109,7 @@ line	token	word	role	arg_line	arg_token
 39	8	sostenne	subj	39	4
 39	8	sostenne	obj	39	7
 39	8	sostenne	obl:da	39	6
-40	2	chinail	subj	0	0
+40	2	chinail	subj	39	4
 40	7	venne	subj	40	5
 40	7	venne	iobj	40	6
 40	7	venne	obl	40	6
@@ -144,7 +144,7 @@ line	token	word	role	arg_line	arg_token
 52	4	rimase	subj	52	3
 53	1	parea	subj	52	2
 53	1	parea	obl:di	53	3
-53	1	parea	obl	54	2
+53	1	parea	obl:come	54	2
 53	4	rimirando	subj	0	0
 54	6	assaggia	subj	54	3
 54	6	assaggia	obj	54	5

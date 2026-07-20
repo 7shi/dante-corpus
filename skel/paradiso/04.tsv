@@ -31,11 +31,11 @@ line	token	word	role	arg_line	arg_token
 14	2	levando	subj	13	6
 14	2	levando	obj	14	1
 14	2	levando	obl:di	14	4
-15	4	fatto	subj	0	0
+15	4	fatto	subj	15	1
 15	4	fatto	obj	15	2
 15	4	fatto	xcomp	15	6
 15	6	fello	subj	15	2
-16	2	disse	subj	0	0
+16	2	disse	subj	13	3
 16	4	veggio	subj	16	3
 16	4	veggio	ccomp	16	8
 16	8	tira	subj	17	4
@@ -66,7 +66,7 @@ line	token	word	role	arg_line	arg_token
 25	2	son	attr	25	4
 26	1	pontano	subj	25	5
 26	1	pontano	obl:in	25	8
-27	1	tratterò	subj	0	0
+27	1	tratterò	subj	25	1
 27	1	tratterò	obj	27	2
 27	5	ha	subj	27	3
 27	5	ha	obl:di	27	7
@@ -82,19 +82,19 @@ line	token	word	role	arg_line	arg_token
 31	2	hanno	obj	31	8
 31	2	hanno	obl:in	31	5
 32	7	appariro	subj	32	4
-33	2	hanno	subj	0	0
+33	2	hanno	subj	28	4
 33	2	hanno	obj	33	10
 33	2	hanno	obl:a	33	5
 34	3	fanno	subj	34	2
 34	3	fanno	obj	34	7
 34	3	fanno	attr	34	4
-35	3	han	subj	0	0
+35	3	han	subj	28	4
 35	3	han	obj	35	5
 36	2	sentir	subj	0	0
 36	2	sentir	obj	36	8
 37	3	mostraro	subj	0	0
 37	6	sortita	subj	38	3
-38	7	far	subj	0	0
+38	7	far	subj	38	3
 38	7	far	obj	38	8
 39	7	salita	subj	39	4
 40	3	conviensi	subj	40	2
@@ -109,11 +109,11 @@ line	token	word	role	arg_line	arg_token
 43	5	condescende	obl:per	43	2
 43	5	condescende	obl:a	44	3
 44	0			0	0
-45	1	attribuisce	subj	0	0
+45	1	attribuisce	subj	43	4
 45	1	attribuisce	obj	44	5
 45	1	attribuisce	obj	44	7
 45	1	attribuisce	obl:a	45	3
-45	6	intende	subj	0	0
+45	6	intende	subj	43	4
 45	6	intende	obj	45	5
 46	0			0	0
 47	5	rappresenta	subj	46	3
@@ -256,7 +256,7 @@ line	token	word	role	arg_line	arg_token
 96	3	è	attr	96	8
 96	8	appresso	subj	0	0
 96	8	appresso	obl:a	96	7
-97	3	potesti	subj	0	0
+97	3	potesti	subj	94	1
 97	3	potesti	xcomp	97	6
 97	6	udire	subj	0	0
 97	6	udire	ccomp	98	7
@@ -293,14 +293,14 @@ line	token	word	role	arg_line	arg_token
 106	7	pense	ccomp	107	7
 107	7	mischia	subj	107	3
 107	7	mischia	obl:a	107	5
-107	9	fanno	subj	0	0
+107	9	fanno	subj	107	3
 107	9	fanno	ccomp	108	6
 108	3	scusar	subj	108	8
 108	6	posson	subj	108	8
 108	6	posson	xcomp	108	3
 109	4	consente	subj	109	1
 109	4	consente	obl:a	109	6
-110	2	consentevi	subj	0	0
+110	2	consentevi	subj	109	1
 110	2	consentevi	obl:in	110	4
 110	7	teme	subj	0	0
 110	7	teme	xcomp	111	4
@@ -395,6 +395,6 @@ line	token	word	role	arg_line	arg_token
 141	2	vinta	subj	141	4
 141	5	diè	subj	141	4
 141	5	diè	obj	141	7
-142	4	perdei	subj	0	0
+142	4	perdei	subj	141	4
 142	4	perdei	obj	142	3
 142	4	perdei	obl:con	142	7

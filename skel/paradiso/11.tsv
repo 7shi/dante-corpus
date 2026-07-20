@@ -198,7 +198,7 @@ line	token	word	role	arg_line	arg_token
 67	2	valse	xcomp	67	3
 67	3	udir	subj	0	0
 67	3	udir	ccomp	67	6
-67	6	trovò	subj	0	0
+67	6	trovò	subj	69	1
 67	6	trovò	obj	67	5
 67	6	trovò	attr	67	7
 67	6	trovò	obl:con	68	2
@@ -269,7 +269,7 @@ line	token	word	role	arg_line	arg_token
 92	3	aperse	subj	0	0
 92	3	aperse	obj	91	5
 92	3	aperse	obl:a	92	2
-92	7	ebbe	subj	0	0
+92	7	ebbe	subj	91	5
 92	7	ebbe	obj	93	2
 92	7	ebbe	obl:da	92	6
 93	0			0	0
@@ -296,7 +296,7 @@ line	token	word	role	arg_line	arg_token
 103	3	trovare	obj	104	3
 103	3	trovare	obl:a	103	5
 104	7	stare	subj	0	0
-105	1	redissi	subj	0	0
+105	1	redissi	subj	102	2
 105	1	redissi	obl:a	105	3
 106	0			0	0
 107	3	prese	subj	0	0
@@ -372,7 +372,7 @@ line	token	word	role	arg_line	arg_token
 127	0			0	0
 128	6	vanno	subj	127	5
 128	6	vanno	obl:da	128	5
-129	2	tornano	subj	0	0
+129	2	tornano	subj	124	4
 129	2	tornano	obl:a	129	5
 130	2	son	subj	0	0
 130	2	son	obl:di	130	4

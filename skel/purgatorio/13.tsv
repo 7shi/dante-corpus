@@ -77,7 +77,7 @@ line	token	word	role	arg_line	arg_token
 29	3	habent	obj	29	1
 29	5	disse	subj	28	3
 29	5	disse	ccomp	29	3
-30	6	andò	subj	0	0
+30	6	andò	subj	28	3
 30	6	andò	xcomp	30	7
 30	6	andò	obl:a	30	4
 30	7	reïterando	obj	30	5
@@ -110,7 +110,7 @@ line	token	word	role	arg_line	arg_token
 40	3	vuol	xcomp	40	4
 40	4	esser	subj	40	2
 40	4	esser	attr	40	7
-41	1	credo	subj	0	0
+41	1	credo	subj	40	2
 41	1	credo	ccomp	41	4
 41	1	credo	obl:per	41	7
 41	4	udirai	subj	0	0
@@ -221,13 +221,13 @@ line	token	word	role	arg_line	arg_token
 75	5	volsi	obl:a	75	8
 76	2	sapev'	subj	76	3
 76	2	sapev'	ccomp	76	5
-76	5	volea	subj	0	0
+76	5	volea	subj	76	8
 76	5	volea	xcomp	76	6
 76	6	dir	subj	0	0
 76	6	dir	obj	76	8
-77	4	attese	subj	0	0
+77	4	attese	subj	76	3
 77	4	attese	obj	77	6
-78	2	disse	subj	0	0
+78	2	disse	subj	76	3
 78	2	disse	ccomp	78	3
 78	3	Parla	subj	0	0
 78	5	sie	subj	0	0
@@ -322,7 +322,7 @@ line	token	word	role	arg_line	arg_token
 105	1	fammiti	obl:per	105	8
 106	3	sanese	subj	106	1
 106	4	rispuose	subj	0	0
-107	2	rimendo	subj	0	0
+107	2	rimendo	subj	106	1
 107	2	rimendo	obj	107	5
 107	2	rimendo	obl:con	107	1
 108	1	lagrimando	subj	0	0

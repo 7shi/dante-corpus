@@ -93,7 +93,7 @@ line	token	word	role	arg_line	arg_token
 31	10	bella	obl:a	31	5
 32	0			0	0
 33	0			0	0
-34	1	dissemi	subj	0	0
+34	1	dissemi	subj	29	6
 34	1	dissemi	obl:con	32	3
 34	1	dissemi	obl:con	33	6
 34	7	detto	subj	34	8
@@ -160,9 +160,9 @@ line	token	word	role	arg_line	arg_token
 54	4	aver	obj	54	6
 54	4	aver	obl:a	53	8
 54	4	aver	obl:a	54	3
-55	2	averle	subj	0	0
+55	2	averle	subj	53	2
 55	2	averle	obl	55	3
-55	5	sostener	subj	0	0
+55	5	sostener	subj	53	2
 55	5	sostener	obj	55	7
 55	5	sostener	obl:di	56	2
 55	5	sostener	obl:di	56	6
@@ -233,7 +233,7 @@ line	token	word	role	arg_line	arg_token
 79	5	hanno	subj	79	3
 79	5	hanno	obj	79	7
 80	2	come	subj	80	3
-80	5	celasi	subj	0	0
+80	5	celasi	subj	79	3
 80	5	celasi	obl:in	80	7
 81	2	dura	subj	81	1
 81	8	corte	subj	81	6
@@ -297,7 +297,7 @@ line	token	word	role	arg_line	arg_token
 101	1	regger		0	0
 101	3	vuole	subj	101	2
 101	3	vuole	xcomp	101	1
-101	5	avea	subj	0	0
+101	5	avea	subj	100	1
 101	5	avea	obj	101	6
 101	5	avea	obj	102	7
 101	5	avea	obl:in	102	3
@@ -366,7 +366,7 @@ line	token	word	role	arg_line	arg_token
 130	3	ebbe	obj	130	4
 130	3	ebbe	obj	130	6
 130	3	ebbe	obl:da	130	2
-131	1	avvegna	subj	0	0
+131	1	avvegna	subj	127	1
 131	1	avvegna	ccomp	131	6
 131	6	rauni	subj	132	2
 131	6	rauni	obl:con	131	4

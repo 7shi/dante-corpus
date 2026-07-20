@@ -12,7 +12,7 @@ line	token	word	role	arg_line	arg_token
 4	4	fa	subj	4	6
 4	10	affigge	subj	4	7
 4	10	affigge	obj	4	9
-5	2	vassi	subj	0	0
+5	2	vassi	subj	4	6
 5	2	vassi	obl:a	5	5
 5	10	appaia	subj	5	7
 5	10	appaia	obj	5	9
@@ -155,11 +155,11 @@ line	token	word	role	arg_line	arg_token
 48	7	preme	subj	0	0
 48	7	preme	obl	48	5
 49	2	giunto	subj	49	3
-49	4	comincia	subj	0	0
+49	4	comincia	subj	46	5
 49	4	comincia	xcomp	49	6
 49	6	operare	subj	0	0
 50	1	coagulando	subj	0	0
-50	5	avviva	subj	0	0
+50	5	avviva	subj	46	5
 50	5	avviva	obj	51	1
 51	6	fé	subj	0	0
 51	6	fé	obj	51	2
@@ -174,12 +174,12 @@ line	token	word	role	arg_line	arg_token
 54	3	è	obl:in	54	5
 54	8	è	subj	54	7
 54	8	è	obl:a	54	11
-55	2	ovra	subj	0	0
+55	2	ovra	subj	52	1
 55	7	move	subj	0	0
 55	7	move	obj	55	6
 55	9	sente	subj	0	0
 55	9	sente	obj	55	6
-56	6	imprende	subj	0	0
+56	6	imprende	subj	52	1
 56	6	imprende	xcomp	57	2
 57	2	organar	subj	0	0
 57	2	organar	obj	57	4
@@ -352,7 +352,7 @@ line	token	word	role	arg_line	arg_token
 115	4	convenia	subj	115	2
 116	7	temëa	subj	116	6
 116	7	temëa	obj	116	9
-117	4	temeva	subj	0	0
+117	4	temeva	subj	116	6
 117	4	temeva	xcomp	117	5
 117	5	cader	subj	0	0
 118	4	dicea	subj	118	2

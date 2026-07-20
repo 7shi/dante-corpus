@@ -124,7 +124,7 @@ line	token	word	role	arg_line	arg_token
 47	5	rimaso	obj	47	3
 47	5	rimaso	obl:di	47	2
 47	8	tremi	subj	0	0
-48	1	conosco	subj	0	0
+48	1	conosco	subj	46	7
 48	1	conosco	obj	48	3
 49	5	lasciati	subj	49	2
 49	5	lasciati	obj	49	3
@@ -138,7 +138,7 @@ line	token	word	role	arg_line	arg_token
 51	7	die'	obl:per	51	6
 52	3	perdeo	subj	0	0
 52	3	perdeo	obj	52	6
-53	1	valse	subj	0	0
+53	1	valse	subj	49	2
 53	1	valse	obl:a	53	4
 54	2	lagrimando	subj	53	4
 54	4	tornasser	subj	54	5
@@ -216,7 +216,7 @@ line	token	word	role	arg_line	arg_token
 76	4	cadder	obl:in	76	8
 77	2	veggendomi	subj	0	0
 77	2	veggendomi	obl:in	77	4
-77	6	trassi	subj	0	0
+77	6	trassi	subj	76	2
 77	6	trassi	obj	77	5
 77	6	trassi	obl:a	77	9
 78	4	gravò	subj	78	2
@@ -237,7 +237,7 @@ line	token	word	role	arg_line	arg_token
 82	7	cantaro	ccomp	83	6
 83	6	speravi	subj	0	0
 83	6	speravi	obl:in	83	4
-84	6	passaro	subj	0	0
+84	6	passaro	subj	82	6
 84	6	passaro	obl:oltre	84	3
 85	0			0	0
 86	7	congela	subj	85	3
@@ -377,7 +377,7 @@ line	token	word	role	arg_line	arg_token
 129	6	cara	obl:a	129	4
 129	9	gradita	subj	129	2
 129	9	gradita	obl:a	129	4
-130	2	volse	subj	0	0
+130	2	volse	subj	129	2
 130	2	volse	obj	130	4
 130	2	volse	obl:per	130	7
 131	4	seguendo	subj	0	0

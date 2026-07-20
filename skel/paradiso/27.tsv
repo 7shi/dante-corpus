@@ -100,7 +100,7 @@ line	token	word	role	arg_line	arg_token
 33	5	fane	attr	33	3
 34	3	trasmutò	subj	34	2
 34	3	trasmutò	obj	34	4
-35	4	credo	subj	0	0
+35	4	credo	subj	34	2
 35	4	credo	ccomp	35	8
 35	8	fue	subj	35	3
 35	8	fue	obl:in	35	7
@@ -202,7 +202,7 @@ line	token	word	role	arg_line	arg_token
 72	3	avien	obl:con	72	5
 73	4	seguiva	subj	73	2
 73	4	seguiva	obj	73	7
-74	2	seguì	subj	0	0
+74	2	seguì	subj	73	2
 75	2	tolse	subj	75	4
 75	2	tolse	obj	75	1
 75	2	tolse	obl	74	6

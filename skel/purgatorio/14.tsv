@@ -20,14 +20,14 @@ line	token	word	role	arg_line	arg_token
 5	7	avvicini	subj	0	0
 5	7	avvicini	obj	5	5
 6	5	parli	subj	0	0
-6	6	acco'	subj	0	0
+6	6	acco'	subj	5	2
 6	6	acco'	obj	6	7
 7	9	chini	subj	7	5
 7	9	chini	obl:a	7	8
 8	1	ragionavan	subj	7	3
 8	1	ragionavan	obl:di	8	3
 8	1	ragionavan	obl:a	8	6
-9	2	fer	subj	0	0
+9	2	fer	subj	7	3
 9	2	fer	obj	9	4
 9	2	fer	attr	9	7
 9	6	dirmi	subj	0	0
@@ -67,7 +67,7 @@ line	token	word	role	arg_line	arg_token
 20	4	sia	subj	20	3
 20	5	saria	subj	20	1
 20	5	saria	attr	20	6
-20	6	parlare	subj	0	0
+20	6	parlare	subj	20	1
 21	8	suona	subj	21	3
 22	6	accarno	subj	22	4
 22	6	accarno	obl:con	23	3
@@ -229,7 +229,7 @@ line	token	word	role	arg_line	arg_token
 74	3	voglioso	obl:di	74	5
 74	5	saper	subj	0	0
 74	5	saper	obj	74	7
-75	4	fei	subj	0	0
+75	4	fei	subj	73	2
 75	4	fei	obj	75	2
 75	4	fei	obl:di	75	3
 75	4	fei	obl:con	75	6
@@ -386,7 +386,7 @@ line	token	word	role	arg_line	arg_token
 128	2	sentivano	xcomp	128	3
 128	3	andar	subj	128	1
 128	5	tacendo	subj	0	0
-129	1	facëan	subj	0	0
+129	1	facëan	subj	127	1
 129	1	facëan	obj	129	2
 129	1	facëan	xcomp	129	5
 129	5	confidare	subj	129	2
@@ -408,7 +408,7 @@ line	token	word	role	arg_line	arg_token
 133	4	apprende	subj	133	2
 133	4	apprende	obj	133	3
 134	2	fuggì	subj	132	1
-134	2	fuggì	obl	134	4
+134	2	fuggì	obl:come	134	4
 134	7	dilegua	subj	134	5
 135	5	scoscende	subj	135	4
 136	7	ebbe	subj	136	5

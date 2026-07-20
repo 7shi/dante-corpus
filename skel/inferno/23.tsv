@@ -68,7 +68,7 @@ line	token	word	role	arg_line	arg_token
 24	8	sento	obj	24	7
 25	5	fossi	subj	25	4
 25	5	fossi	obl:di	25	8
-26	7	trarrei	subj	0	0
+26	7	trarrei	subj	25	2
 26	7	trarrei	obj	26	2
 26	7	trarrei	obl:a	27	4
 27	8	'mpetro	subj	0	0
@@ -193,7 +193,7 @@ line	token	word	role	arg_line	arg_token
 71	7	nuovi	obl:di	72	2
 71	7	nuovi	obl:a	72	5
 72	0			0	0
-73	7	Fa	subj	0	0
+73	7	Fa	subj	73	3
 73	7	Fa	ccomp	73	10
 73	10	trovi	subj	73	9
 73	10	trovi	obj	74	1
@@ -201,7 +201,7 @@ line	token	word	role	arg_line	arg_token
 74	9	conosca	obl:a	74	4
 74	9	conosca	obl:a	74	7
 75	5	andando	subj	0	0
-75	7	movi	subj	0	0
+75	7	movi	subj	73	3
 75	7	movi	obj	75	3
 75	7	movi	obl	75	6
 76	4	'ntese	subj	76	3
@@ -275,7 +275,7 @@ line	token	word	role	arg_line	arg_token
 94	9	cresciuto	obl:sovra	95	4
 94	9	cresciuto	obl:a	95	10
 95	0			0	0
-96	2	son	subj	0	0
+96	2	son	subj	94	2
 96	2	son	obl:con	96	4
 96	9	avuto	subj	96	6
 96	9	avuto	obj	96	5
@@ -304,26 +304,26 @@ line	token	word	role	arg_line	arg_token
 105	1	nomati	subj	104	4
 105	1	nomati	attr	104	2
 105	1	nomati	attr	104	5
-105	7	presi	subj	0	0
+105	7	presi	subj	104	1
 105	7	presi	obl:da	105	5
 106	2	suole	subj	106	6
 106	2	suole	xcomp	106	4
 106	4	tolto	subj	106	6
 107	2	conservar	subj	0	0
 107	2	conservar	obj	107	4
-107	6	fummo	subj	0	0
+107	6	fummo	subj	103	1
 107	6	fummo	attr	107	7
 108	4	pare	subj	108	3
 108	4	pare	obl:da	108	7
 109	2	cominciai	subj	109	1
-110	4	dissi	subj	0	0
+110	4	dissi	subj	109	1
 110	10	corse	subj	111	2
 110	10	corse	iobj	110	9
 110	10	corse	obl:a	110	8
 111	0			0	0
 112	3	vide	subj	0	0
 112	3	vide	obj	112	2
-112	6	distorse	subj	0	0
+112	6	distorse	subj	114	3
 112	6	distorse	obj	112	5
 113	1	soffiando	subj	0	0
 113	1	soffiando	obl:in	113	4
@@ -406,7 +406,7 @@ line	token	word	role	arg_line	arg_token
 136	9	coperchia	subj	0	0
 136	9	coperchia	obj	136	8
 137	1	montar	obl:per	137	6
-137	2	potrete	subj	0	0
+137	2	potrete	subj	134	4
 137	2	potrete	xcomp	137	1
 138	2	giace	subj	138	1
 138	2	giace	obl:in	138	4
@@ -415,7 +415,7 @@ line	token	word	role	arg_line	arg_token
 139	3	stette	subj	139	2
 139	3	stette	obl	139	5
 139	3	stette	obl:a	139	7
-140	2	disse	subj	0	0
+140	2	disse	subj	139	2
 140	2	disse	ccomp	140	4
 140	4	contava	subj	141	1
 140	4	contava	obj	140	6

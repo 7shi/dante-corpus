@@ -49,11 +49,11 @@ line	token	word	role	arg_line	arg_token
 18	7	morta	subj	18	4
 19	8	lontano	subj	20	3
 19	8	lontano	obl:da	19	4
-20	6	manco	subj	0	0
+20	6	manco	subj	17	2
 20	6	manco	obl:di	21	7
-21	2	giù	subj	0	0
+21	2	giù	subj	17	2
 21	2	giù	obl:di	21	7
-21	4	sù	subj	0	0
+21	4	sù	subj	17	2
 21	4	sù	obl:di	21	7
 22	3	riman	subj	0	0
 22	3	riman	iobj	22	2
@@ -190,7 +190,7 @@ line	token	word	role	arg_line	arg_token
 66	0			0	0
 67	2	cinger	subj	0	0
 67	2	cinger	obj	67	4
-68	1	vedem	subj	0	0
+68	1	vedem	subj	64	1
 68	1	vedem	obj	67	2
 68	7	pregno	subj	68	5
 69	3	ritenga	subj	0	0

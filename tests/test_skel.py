@@ -405,6 +405,118 @@ def test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg():
     assert any(v.detail.startswith("extra_arg") and v.arg == (2, 5) for v in violations)
 
 
+# --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
+
+
+def test_find_repairs_null_subject_pairs_missing_and_extra():
+    derived = {2: [skel.SkelRow(2, 2, "vede", "subj", 3, 4)]}
+    given = {2: [skel.SkelRow(2, 2, "vede", "subj", 0, 0)]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations)
+    assert len(repairs) == 1
+    r = repairs[0]
+    assert r.kind == "null_subject"
+    assert (r.before.arg_line, r.before.arg_token) == (0, 0)
+    assert (r.after.arg_line, r.after.arg_token) == (3, 4)
+    assert r.after.role == "subj" and r.after.line == 2 and r.after.token == 2
+
+
+def test_find_repairs_null_subject_then_reclassify_is_clean():
+    derived = {2: [skel.SkelRow(2, 2, "vede", "subj", 3, 4)]}
+    given = {2: [skel.SkelRow(2, 2, "vede", "subj", 0, 0)]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations)
+    repaired = {2: [repairs[0].after]}
+    assert skel._classify_divergence(repaired, derived) == []
+
+
+def test_find_repairs_null_subject_not_produced_when_pro_drop_authoritative():
+    # Same fixture as test_classify_divergence_non_finite_predicate_accepts_null_subject: the
+    # authority model already accepts this, so no divergence violation reaches _find_repairs.
+    derived = {1: [skel.SkelRow(1, 3, "trattar", "obl:di", 1, 5)]}
+    given = {1: [
+        skel.SkelRow(1, 3, "trattar", "obl:di", 1, 5),
+        skel.SkelRow(1, 3, "trattar", "subj", 0, 0),
+    ]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="trattar", deprel="advcl", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert violations == []
+    assert skel._find_repairs(given, derived, violations) == []
+
+
+def test_find_repairs_null_subject_not_produced_for_xcomp_control_accept():
+    # Same fixture as test_classify_divergence_xcomp_control_subject_accepts_matrix_arg.
+    matrix = skel.SkelRow(2, 2, "vuole", "subj", 2, 1)
+    matrix_xcomp = skel.SkelRow(2, 2, "vuole", "xcomp", 2, 3)
+    derived = {2: [matrix, matrix_xcomp, skel.SkelRow(2, 3, "partire", "", 0, 0)]}
+    given = {2: [
+        skel.SkelRow(2, 2, "vuole", "subj", 2, 1),
+        skel.SkelRow(2, 2, "vuole", "xcomp", 2, 3),
+        skel.SkelRow(2, 3, "partire", "subj", 2, 1),
+    ]}
+    dep_index_by_pos = {
+        (2, 3): dep.DepRow(line=2, token=3, word="partire", deprel="xcomp", head_line=2, head_token=2),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert violations == []
+    assert skel._find_repairs(given, derived, violations) == []
+
+
+def test_find_repairs_null_subject_not_produced_for_genuine_disagreement():
+    # Both sides cite a real (non-∅) subject, just a different one — not the ∅-vs-real shape
+    # rule 1 requires.
+    derived = {2: [skel.SkelRow(2, 2, "vede", "subj", 3, 4)]}
+    given = {2: [skel.SkelRow(2, 2, "vede", "subj", 5, 1)]}
+    violations = skel._classify_divergence(given, derived)
+    assert skel._find_repairs(given, derived, violations) == []
+
+
+def test_find_repairs_role_label_bare_obl_to_lemma():
+    derived = {2: [skel.SkelRow(2, 2, "pred", "obl:di", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "pred", "obl", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations)
+    assert len(repairs) == 1
+    r = repairs[0]
+    assert r.kind == "role_label"
+    assert r.before.role == "obl" and r.after.role == "obl:di"
+    assert (r.after.arg_line, r.after.arg_token) == (1, 3)
+
+
+def test_find_repairs_role_label_then_reclassify_is_clean():
+    derived = {2: [skel.SkelRow(2, 2, "pred", "obl:di", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "pred", "obl", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations)
+    repaired = {2: [repairs[0].after]}
+    assert skel._classify_divergence(repaired, derived) == []
+
+
+def test_find_repairs_role_label_rejects_subj_obj_reversal():
+    derived = {2: [skel.SkelRow(2, 2, "pred", "obj", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "pred", "subj", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+    assert skel._find_repairs(given, derived, violations) == []
+
+
+def test_find_repairs_role_label_rejects_different_obl_lemma():
+    derived = {2: [skel.SkelRow(2, 2, "pred", "obl:di", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "pred", "obl:con", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+    assert skel._find_repairs(given, derived, violations) == []
+
+
+def test_find_repairs_role_label_rejects_iobj_obj_reversal():
+    derived = {2: [skel.SkelRow(2, 2, "pred", "obj", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "pred", "iobj", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
+    assert skel._find_repairs(given, derived, violations) == []
+
+
 def test_validate_unit_clean_matches_derivation():
     nos, texts, dep_data, morph_data = _unit_1_3()
     derived = skel.derive_unit(nos, dep_data, morph_data)

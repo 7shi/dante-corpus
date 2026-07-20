@@ -56,7 +56,7 @@ line	token	word	role	arg_line	arg_token
 21	4	lasciò	obj	21	7
 21	4	lasciò	obl	21	3
 22	0			0	0
-23	2	volse	subj	0	0
+23	2	volse	subj	20	2
 23	2	volse	obl	22	3
 23	2	volse	obl:di	22	6
 23	2	volse	obl:con	23	5
@@ -64,7 +64,7 @@ line	token	word	role	arg_line	arg_token
 24	7	ridice	obj	24	5
 24	7	ridice	iobj	24	6
 25	2	salta	subj	25	4
-25	8	scrivo	subj	0	0
+25	8	scrivo	subj	25	4
 25	8	scrivo	obj	25	7
 26	0			0	0
 27	7	color	subj	26	3
@@ -141,7 +141,7 @@ line	token	word	role	arg_line	arg_token
 53	6	levai	obl:in	54	3
 54	5	spirava	subj	54	6
 54	5	spirava	obl	54	4
-55	3	volsi	subj	0	0
+55	3	volsi	subj	53	5
 55	3	volsi	obl:a	55	5
 56	2	femmi	subj	55	7
 56	2	femmi	obj	56	1
@@ -205,7 +205,7 @@ line	token	word	role	arg_line	arg_token
 77	1	silogizzar	subj	0	0
 77	3	avere	subj	0	0
 77	3	avere	obj	77	5
-78	5	tene	subj	0	0
+78	5	tene	subj	77	1
 78	5	tene	obj	78	2
 79	2	udi'	subj	0	0
 79	6	acquista	subj	79	4
@@ -220,7 +220,7 @@ line	token	word	role	arg_line	arg_token
 83	6	trascorsa	subj	84	6
 83	6	trascorsa	obl:di	84	3
 84	0			0	0
-85	2	dimmi	subj	0	0
+85	2	dimmi	subj	84	6
 85	2	dimmi	ccomp	85	6
 85	6	hai	subj	85	4
 85	6	hai	obj	85	5
@@ -360,7 +360,7 @@ line	token	word	role	arg_line	arg_token
 127	7	manifesti	subj	127	6
 127	7	manifesti	obj	128	2
 128	0			0	0
-129	7	chiedesti	subj	0	0
+129	7	chiedesti	subj	127	3
 129	7	chiedesti	obj	129	4
 130	3	rispondo	subj	130	2
 130	5	credo	subj	130	4
@@ -374,7 +374,7 @@ line	token	word	role	arg_line	arg_token
 133	6	ho	subj	133	7
 133	6	ho	obj	133	9
 133	6	ho	obl:a	133	4
-134	5	dalmi	subj	0	0
+134	5	dalmi	subj	133	7
 134	5	dalmi	obj	135	3
 135	6	piove	subj	135	4
 135	6	piove	obl:per	136	2
@@ -388,9 +388,9 @@ line	token	word	role	arg_line	arg_token
 138	7	fé	obj	138	6
 138	7	fé	attr	138	8
 138	8	almi	subj	138	6
-139	2	credo	subj	0	0
+139	2	credo	subj	133	7
 139	2	credo	obl:in	139	5
-140	1	credo	subj	0	0
+140	1	credo	subj	133	7
 140	1	credo	obj	139	8
 140	1	credo	attr	140	3
 140	3	essenza	subj	139	8

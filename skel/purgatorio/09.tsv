@@ -111,7 +111,7 @@ line	token	word	role	arg_line	arg_token
 40	3	scoss'	obj	40	2
 41	2	fuggì	subj	41	4
 41	2	fuggì	iobj	41	1
-41	6	diventa'	subj	0	0
+41	6	diventa'	subj	41	4
 41	6	diventa'	attr	41	7
 41	7	ismorto	subj	40	4
 42	2	fa	subj	42	4
@@ -120,7 +120,7 @@ line	token	word	role	arg_line	arg_token
 43	1	Dallato	subj	43	7
 43	1	Dallato	iobj	43	2
 44	5	alto	subj	44	3
-44	5	alto	obl	44	10
+44	5	alto	obl:che	44	10
 45	9	torto	subj	45	3
 45	9	torto	iobj	45	4
 45	9	torto	obl:a	45	8
@@ -138,11 +138,11 @@ line	token	word	role	arg_line	arg_token
 48	4	rallarga	obj	48	6
 49	6	giunto	subj	49	1
 49	6	giunto	obl:a	49	5
-50	1	vedi	subj	0	0
+50	1	vedi	subj	49	1
 50	1	vedi	obj	50	4
 50	7	chiude	subj	50	5
 50	7	chiude	obj	50	6
-51	1	vedi	subj	0	0
+51	1	vedi	subj	49	1
 51	1	vedi	obj	51	3
 51	7	digiunto	subj	0	0
 52	6	procede	subj	52	5
@@ -172,7 +172,7 @@ line	token	word	role	arg_line	arg_token
 59	3	tolse	subj	59	1
 59	3	tolse	obj	59	2
 59	9	chiaro	subj	59	7
-60	2	venne	subj	0	0
+60	2	venne	subj	59	1
 60	2	venne	subj	60	5
 60	2	venne	obl:da	60	1
 60	2	venne	obl:per	60	9
@@ -204,7 +204,7 @@ line	token	word	role	arg_line	arg_token
 70	7	innalzo	subj	70	6
 70	7	innalzo	obj	71	3
 71	0			0	0
-72	3	maravigliar	subj	0	0
+72	3	maravigliar	subj	70	2
 72	3	maravigliar	obj	72	2
 72	3	maravigliar	ccomp	72	7
 72	3	maravigliar	obl:con	71	8
@@ -213,7 +213,7 @@ line	token	word	role	arg_line	arg_token
 73	3	appressammo	subj	73	1
 73	5	eravamo	subj	73	1
 73	5	eravamo	obl:in	73	7
-74	4	pareami	subj	0	0
+74	4	pareami	subj	74	6
 74	6	rotto	subj	0	0
 75	7	diparte	subj	75	5
 75	7	diparte	obj	75	6
@@ -279,7 +279,7 @@ line	token	word	role	arg_line	arg_token
 91	8	avanzi	obl:in	91	7
 92	1	ricominciò	subj	92	4
 92	1	ricominciò	ccomp	91	8
-93	1	Venite	subj	0	0
+93	1	Venite	subj	91	2
 93	1	Venite	obl:a	93	5
 94	3	venimmo	subj	0	0
 94	3	venimmo	obl	94	1

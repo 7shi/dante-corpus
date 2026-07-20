@@ -11,7 +11,7 @@ line	token	word	role	arg_line	arg_token
 4	2	cominciò	subj	4	5
 4	2	cominciò	xcomp	4	7
 4	7	parlarmi	subj	4	5
-5	2	accennolle	subj	0	0
+5	2	accennolle	subj	4	5
 5	2	accennolle	ccomp	5	4
 5	4	venisse	subj	0	0
 5	4	venisse	obl:a	5	6
@@ -21,7 +21,7 @@ line	token	word	role	arg_line	arg_token
 8	2	venne	subj	7	4
 8	4	arrivò	subj	8	6
 8	4	arrivò	subj	8	9
-9	7	trasse	subj	0	0
+9	7	trasse	subj	8	6
 9	7	trasse	obj	9	9
 9	7	trasse	obl:in	9	5
 10	4	era	subj	10	2
@@ -32,7 +32,7 @@ line	token	word	role	arg_line	arg_token
 11	3	avea	subj	11	7
 11	3	avea	attr	11	2
 12	4	serpente	subj	12	8
-13	3	avea	subj	0	0
+13	3	avea	subj	10	2
 13	3	avea	obj	13	2
 13	3	avea	attr	13	4
 13	3	avea	obl:insin	13	7
@@ -109,7 +109,7 @@ line	token	word	role	arg_line	arg_token
 39	5	vedi	obj	39	8
 40	6	corti	subj	40	3
 41	3	torni	subj	0	0
-41	4	parlerò	subj	0	0
+41	4	parlerò	subj	40	3
 41	4	parlerò	obl:con	41	6
 42	3	conceda	subj	0	0
 42	3	conceda	obj	42	6
@@ -121,7 +121,7 @@ line	token	word	role	arg_line	arg_token
 45	3	sedea	subj	45	5
 46	5	scoppiava	subj	46	7
 46	5	scoppiava	obl:per	46	3
-47	5	soccorrien	subj	0	0
+47	5	soccorrien	subj	46	7
 47	5	soccorrien	obl:di	47	2
 47	5	soccorrien	obl:di	47	4
 47	5	soccorrien	obl:con	47	8
@@ -263,7 +263,7 @@ line	token	word	role	arg_line	arg_token
 91	3	assettai	subj	91	1
 91	3	assettai	obj	91	2
 91	3	assettai	obl:su	91	7
-92	2	volli	subj	0	0
+92	2	volli	subj	91	1
 92	2	volli	xcomp	92	3
 92	3	dir	subj	0	0
 92	3	dir	ccomp	93	4
@@ -306,7 +306,7 @@ line	token	word	role	arg_line	arg_token
 104	6	mosse	subj	0	0
 104	6	mosse	obj	104	2
 104	6	mosse	obl:come	104	5
-105	9	raccolse	subj	0	0
+105	9	raccolse	subj	104	2
 105	9	raccolse	obj	105	6
 105	9	raccolse	obl:con	105	4
 105	9	raccolse	obl:a	105	8
@@ -344,7 +344,7 @@ line	token	word	role	arg_line	arg_token
 115	4	notando	subj	115	1
 116	1	rota	subj	115	1
 116	3	discende	subj	115	1
-116	8	accorgo	subj	0	0
+116	8	accorgo	subj	115	1
 116	8	accorgo	obl:di	116	7
 117	10	venta	subj	115	1
 117	10	venta	obj	117	9

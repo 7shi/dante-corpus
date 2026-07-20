@@ -75,7 +75,7 @@ line	token	word	role	arg_line	arg_token
 30	2	porgo	subj	28	2
 30	2	porgo	obj	29	10
 30	2	porgo	iobj	30	1
-30	4	priego	subj	0	0
+30	4	priego	subj	28	2
 30	4	priego	ccomp	30	8
 30	8	scarsi	subj	0	0
 31	6	disleghi	subj	31	2
@@ -101,7 +101,7 @@ line	token	word	role	arg_line	arg_token
 36	0			0	0
 37	1	Vinca	subj	37	3
 37	1	Vinca	obj	37	5
-38	1	vedi	subj	0	0
+38	1	vedi	subj	37	3
 38	1	vedi	obj	38	2
 38	1	vedi	obl:con	38	5
 39	6	chiudon	subj	39	8
@@ -158,7 +158,7 @@ line	token	word	role	arg_line	arg_token
 54	9	vera	obl:da	54	7
 55	8	maggio	subj	55	6
 56	4	mostra	subj	56	3
-56	9	cede	subj	0	0
+56	9	cede	subj	56	5
 56	9	cede	obl:a	56	8
 57	2	cede	subj	57	4
 57	2	cede	obl:a	57	7
@@ -278,7 +278,7 @@ line	token	word	role	arg_line	arg_token
 97	6	sospesa	subj	97	3
 98	1	mirava	subj	97	3
 99	4	mirar		0	0
-99	5	faceasi	subj	0	0
+99	5	faceasi	subj	97	3
 99	5	faceasi	attr	99	6
 99	6	accesa	subj	0	0
 99	6	accesa	obl:di	99	4
@@ -394,7 +394,7 @@ line	token	word	role	arg_line	arg_token
 137	1	veder	subj	0	0
 137	1	veder	ccomp	137	5
 137	1	veder	ccomp	138	9
-137	2	voleva	subj	0	0
+137	2	voleva	subj	136	3
 137	2	voleva	xcomp	137	1
 137	5	convenne	subj	138	2
 137	5	convenne	obl:a	138	4

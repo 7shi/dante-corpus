@@ -185,13 +185,13 @@ line	token	word	role	arg_line	arg_token
 65	1	volgemmo	obl:a	65	7
 66	8	fui	subj	66	4
 66	8	fui	obl:a	66	7
-67	1	senti'	subj	0	0
+67	1	senti'	subj	64	7
 67	1	senti'	obj	67	6
 67	1	senti'	iobj	67	2
 67	1	senti'	obl:presso	67	6
-68	2	ventarmi	subj	0	0
+68	2	ventarmi	subj	64	7
 68	2	ventarmi	obl:in	68	4
-68	6	dir	subj	0	0
+68	6	dir	subj	64	7
 68	6	dir	ccomp	68	7
 68	7	Beati	subj	69	1
 69	3	son	subj	69	2
@@ -217,7 +217,7 @@ line	token	word	role	arg_line	arg_token
 77	5	eravamo	subj	76	1
 77	5	eravamo	attr	77	6
 77	6	affissi	subj	0	0
-77	6	affissi	obl	78	3
+77	6	affissi	obl:come	78	3
 78	8	arriva	subj	78	4
 78	8	arriva	obl:a	78	7
 79	3	attesi	subj	79	2
@@ -226,10 +226,10 @@ line	token	word	role	arg_line	arg_token
 79	8	udissi	obj	80	2
 79	8	udissi	obl:in	80	5
 80	0			0	0
-81	3	volsi	subj	0	0
+81	3	volsi	subj	79	2
 81	3	volsi	obj	81	2
 81	3	volsi	obl:a	81	5
-81	8	dissi	subj	0	0
+81	8	dissi	subj	79	2
 81	8	dissi	ccomp	82	4
 82	4	dì	subj	0	0
 82	4	dì	iobj	82	3
@@ -269,10 +269,10 @@ line	token	word	role	arg_line	arg_token
 96	0			0	0
 97	8	diretto	subj	97	3
 97	8	diretto	obl:in	97	7
-98	6	misura	subj	0	0
+98	6	misura	subj	97	3
 98	6	misura	obj	98	4
 98	6	misura	obl:in	98	3
-99	1	esser	subj	0	0
+99	1	esser	subj	99	4
 99	3	può	subj	99	4
 99	3	può	xcomp	99	1
 100	6	torce	subj	0	0
@@ -361,7 +361,7 @@ line	token	word	role	arg_line	arg_token
 122	4	fa	obl:de	122	7
 122	8	ghiotto	subj	121	3
 122	8	ghiotto	obl:de	122	7
-123	3	convien	subj	0	0
+123	3	convien	subj	123	2
 123	3	convien	ccomp	123	8
 123	8	impronti	subj	123	2
 123	8	impronti	obj	123	6
@@ -416,9 +416,9 @@ line	token	word	role	arg_line	arg_token
 137	6	piange	subj	136	2
 137	6	piange	obl:a	137	4
 137	6	piange	obl:per	137	9
-138	5	ragiona	subj	0	0
+138	5	ragiona	subj	136	2
 138	5	ragiona	attr	138	3
-139	1	tacciolo	subj	0	0
+139	1	tacciolo	subj	136	2
 139	1	tacciolo	ccomp	138	5
 139	8	cerchi	subj	139	4
 139	8	cerchi	obj	139	7

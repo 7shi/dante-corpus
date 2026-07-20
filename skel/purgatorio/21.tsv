@@ -53,7 +53,7 @@ line	token	word	role	arg_line	arg_token
 19	1	Come		0	0
 19	2	diss'	subj	19	3
 19	2	diss'	ccomp	19	1
-19	6	andavam	subj	0	0
+19	6	andavam	subj	19	3
 20	4	ombre	subj	20	2
 20	9	degni	subj	20	6
 20	9	degni	obj	20	5
@@ -67,7 +67,7 @@ line	token	word	role	arg_line	arg_token
 23	3	porta	obj	23	1
 23	8	profila	subj	23	7
 23	8	profila	obj	23	5
-24	2	vedrai	subj	0	0
+24	2	vedrai	subj	22	3
 24	2	vedrai	ccomp	24	6
 24	6	convien	subj	24	9
 24	6	convien	obl:con	24	5
@@ -104,7 +104,7 @@ line	token	word	role	arg_line	arg_token
 34	5	sai	ccomp	36	1
 35	1	diè	subj	35	4
 35	1	diè	obj	34	8
-36	1	parve	subj	0	0
+36	1	parve	subj	35	4
 36	1	parve	xcomp	36	2
 36	2	gridare	subj	0	0
 36	2	gridare	obl:a	36	6
@@ -203,7 +203,7 @@ line	token	word	role	arg_line	arg_token
 68	7	sentii	subj	67	2
 68	7	sentii	obj	69	2
 69	0			0	0
-70	2	sentisti	subj	0	0
+70	2	sentisti	subj	67	2
 70	2	sentisti	obj	70	4
 70	2	sentisti	obj	71	1
 70	2	sentisti	xcomp	71	5
@@ -227,7 +227,7 @@ line	token	word	role	arg_line	arg_token
 75	8	prode	subj	75	5
 75	8	prode	obj	75	6
 76	1	E		0	0
-76	6	veggio	subj	0	0
+76	6	veggio	subj	76	4
 76	6	veggio	obj	76	8
 76	6	veggio	ccomp	77	8
 76	6	veggio	ccomp	78	3
@@ -249,7 +249,7 @@ line	token	word	role	arg_line	arg_token
 80	5	giaciuto	subj	0	0
 80	5	giaciuto	obl	80	4
 80	5	giaciuto	obl	81	1
-81	8	cappia	subj	0	0
+81	8	cappia	subj	79	6
 81	8	cappia	obj	81	7
 81	8	cappia	obl:in	81	5
 82	0			0	0
@@ -279,10 +279,10 @@ line	token	word	role	arg_line	arg_token
 91	8	noma	subj	91	3
 91	8	noma	obj	91	7
 91	8	noma	attr	91	1
-92	1	cantai	subj	0	0
+92	1	cantai	subj	91	3
 92	1	cantai	obl:di	92	3
 92	1	cantai	obl:di	92	8
-93	2	caddi	subj	0	0
+93	2	caddi	subj	91	3
 93	2	caddi	obl:in	93	4
 93	2	caddi	obl:con	93	8
 94	4	fuor	subj	94	7
@@ -295,14 +295,14 @@ line	token	word	role	arg_line	arg_token
 95	3	scaldar	obl:di	95	7
 96	3	allumati	subj	96	6
 96	3	allumati	obl	96	1
-97	4	dico	subj	0	0
+97	4	dico	subj	94	7
 97	4	dico	obl:di	97	3
 98	1	fummi	subj	97	6
 98	1	fummi	attr	97	7
 98	3	fummi	subj	97	6
 98	3	fummi	attr	98	4
 98	5	poetando	subj	0	0
-99	4	fermai	subj	0	0
+99	4	fermai	subj	94	7
 99	4	fermai	obj	99	5
 99	4	fermai	obl:sanza	99	2
 100	4	vivuto	subj	0	0
@@ -341,7 +341,7 @@ line	token	word	role	arg_line	arg_token
 112	7	assommi	subj	0	0
 112	7	assommi	obj	112	4
 112	7	assommi	obl:in	112	6
-113	1	disse	subj	0	0
+113	1	disse	subj	109	1
 114	5	dimostrommi	subj	113	5
 114	5	dimostrommi	obj	114	2
 115	10	preso	subj	115	3
@@ -355,11 +355,11 @@ line	token	word	role	arg_line	arg_token
 116	8	scongiura	ccomp	117	3
 117	3	dica	subj	117	2
 117	6	sospiro	subj	117	5
-117	9	inteso	subj	0	0
+117	9	inteso	subj	117	5
 117	9	inteso	obl:da	118	3
 118	6	aver	subj	0	0
 118	6	aver	obj	118	7
-119	2	dice	subj	0	0
+119	2	dice	subj	117	5
 119	2	dice	iobj	119	1
 119	2	dice	ccomp	118	6
 119	4	parlar	subj	0	0
@@ -375,7 +375,7 @@ line	token	word	role	arg_line	arg_token
 121	7	maravigli	obl:di	122	4
 122	7	fei	subj	122	6
 122	7	fei	obj	122	5
-123	5	vo'	subj	0	0
+123	5	vo'	subj	121	5
 123	5	vo'	ccomp	123	8
 123	8	pigli	subj	0	0
 123	8	pigli	obj	123	7
@@ -415,7 +415,7 @@ line	token	word	role	arg_line	arg_token
 131	7	disse	ccomp	132	2
 132	2	far	subj	0	0
 132	6	ombra	subj	132	4
-132	9	vedi	subj	0	0
+132	9	vedi	subj	132	4
 132	9	vedi	obj	132	8
 133	3	surgendo	subj	133	2
 133	5	puoi	subj	0	0

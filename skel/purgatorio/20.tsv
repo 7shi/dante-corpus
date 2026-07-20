@@ -42,7 +42,7 @@ line	token	word	role	arg_line	arg_token
 17	9	sentia	xcomp	18	2
 18	2	piangere	subj	17	7
 18	4	lagnarsi	subj	17	7
-19	4	udi'	subj	0	0
+19	4	udi'	subj	16	1
 19	4	udi'	obj	19	6
 19	4	udi'	xcomp	20	4
 19	4	udi'	obl:per	19	3
@@ -166,18 +166,18 @@ line	token	word	role	arg_line	arg_token
 64	2	cominciò	obl:con	64	4
 64	2	cominciò	obl:con	64	7
 65	0			0	0
-66	4	prese	subj	0	0
+66	4	prese	subj	65	3
 66	4	prese	obj	66	1
 66	4	prese	obj	66	3
 66	4	prese	obj	66	6
 66	4	prese	obl:per	65	7
 67	2	venne	subj	67	1
 67	2	venne	obl:in	67	4
-68	2	fé	subj	0	0
+68	2	fé	subj	67	1
 68	2	fé	obj	68	1
 68	2	fé	obl:per	67	7
 68	2	fé	obl:di	68	4
-69	1	ripinse	subj	0	0
+69	1	ripinse	subj	67	1
 69	1	ripinse	obj	69	4
 69	1	ripinse	obl:a	69	3
 69	1	ripinse	obl:per	69	6
@@ -278,7 +278,7 @@ line	token	word	role	arg_line	arg_token
 101	4	dura	subj	101	3
 101	9	annotta	subj	101	7
 101	9	annotta	obj	101	8
-102	3	prendemo	subj	0	0
+102	3	prendemo	subj	97	1
 102	3	prendemo	obj	102	2
 102	3	prendemo	obl:in	102	6
 103	2	repetiam	subj	103	1
@@ -316,7 +316,7 @@ line	token	word	role	arg_line	arg_token
 114	7	gira	obl	114	6
 115	3	ancise	subj	115	2
 115	3	ancise	obj	115	4
-116	4	grida	subj	0	0
+116	4	grida	subj	115	1
 116	4	grida	iobj	116	2
 117	1	dilci	subj	0	0
 117	4	sai	subj	117	3
@@ -343,7 +343,7 @@ line	token	word	role	arg_line	arg_token
 123	2	alzava	obj	123	4
 124	3	partiti	subj	124	1
 124	3	partiti	obl:da	124	6
-125	2	brigavam	subj	0	0
+125	2	brigavam	subj	124	1
 125	2	brigavam	xcomp	125	4
 125	4	soverchiar	subj	0	0
 125	4	soverchiar	obj	125	6
@@ -422,7 +422,7 @@ line	token	word	role	arg_line	arg_token
 149	7	oso	subj	149	6
 149	7	oso	xcomp	149	5
 149	7	oso	obl:per	149	4
-150	5	potea	subj	0	0
+150	5	potea	subj	149	6
 150	5	potea	xcomp	150	7
 150	5	potea	obl:per	150	3
 150	7	vedere	obj	150	6

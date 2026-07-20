@@ -44,7 +44,7 @@ line	token	word	role	arg_line	arg_token
 16	2	cominciò	obj	16	5
 17	9	spezza	subj	17	5
 17	9	spezza	obj	17	7
-18	1	continüò	subj	0	0
+18	1	continüò	subj	16	3
 18	1	continüò	obj	18	4
 19	0			0	0
 20	1	fesse	subj	19	5
@@ -54,7 +54,7 @@ line	token	word	role	arg_line	arg_token
 20	2	creando	obj	19	4
 21	2	conformato	subj	19	4
 21	2	conformato	obl:a	20	7
-21	8	apprezza	subj	0	0
+21	8	apprezza	subj	21	6
 21	8	apprezza	obj	21	5
 22	1	fu	subj	19	3
 22	1	fu	attr	22	6
@@ -115,7 +115,7 @@ line	token	word	role	arg_line	arg_token
 37	3	sedere	obl:a	37	7
 38	8	preso	subj	38	4
 38	8	preso	iobj	38	6
-39	1	richiede	subj	0	0
+39	1	richiede	subj	34	1
 39	1	richiede	obj	39	3
 39	1	richiede	obl:a	39	6
 40	1	Apri	subj	0	0
@@ -181,7 +181,7 @@ line	token	word	role	arg_line	arg_token
 64	2	prendan	subj	64	4
 64	2	prendan	obj	64	6
 64	2	prendan	obl:a	64	8
-65	1	siate	subj	0	0
+65	1	siate	subj	64	4
 65	1	siate	attr	65	2
 65	1	siate	attr	65	8
 65	2	fedeli	subj	0	0
@@ -203,11 +203,11 @@ line	token	word	role	arg_line	arg_token
 69	1	ritrovar	subj	0	0
 69	1	ritrovar	obj	69	5
 69	1	ritrovar	attr	68	7
-69	2	puoi	subj	0	0
+69	2	puoi	subj	67	5
 69	2	puoi	xcomp	69	1
 70	2	pianse	subj	70	3
 70	2	pianse	obj	70	7
-71	2	fé	subj	0	0
+71	2	fé	subj	70	3
 71	2	fé	obj	71	7
 71	2	fé	xcomp	71	3
 71	3	pianger	subj	71	7
@@ -246,7 +246,7 @@ line	token	word	role	arg_line	arg_token
 81	10	rida	obl:di	81	6
 81	10	rida	obl:tra	81	8
 82	2	fate	subj	0	0
-82	2	fate	obl	82	4
+82	2	fate	obl:come	82	4
 82	6	lascia	subj	82	5
 82	6	lascia	obj	82	8
 83	0			0	0
@@ -269,7 +269,7 @@ line	token	word	role	arg_line	arg_token
 92	1	percuote	subj	91	5
 92	1	percuote	obl:in	91	7
 92	7	queta	subj	92	6
-93	2	corremmo	subj	0	0
+93	2	corremmo	subj	88	3
 93	2	corremmo	obl:in	93	5
 94	5	vid'	subj	94	6
 94	5	vid'	obj	94	3
@@ -306,7 +306,7 @@ line	token	word	role	arg_line	arg_token
 103	2	vid'	xcomp	104	1
 104	1	trarsi	subj	103	8
 104	1	trarsi	obl:ver	104	3
-104	8	udia	subj	0	0
+104	8	udia	subj	103	3
 104	8	udia	obl:in	104	6
 105	1	Ecco	subj	105	2
 105	3	crescerà	subj	105	2
@@ -373,7 +373,7 @@ line	token	word	role	arg_line	arg_token
 125	10	traggi	obl:de	125	8
 126	3	corusca	subj	126	2
 126	7	ridi	subj	126	6
-127	3	so	subj	0	0
+127	3	so	subj	124	1
 127	3	so	ccomp	127	6
 127	3	so	ccomp	127	9
 127	6	se'	subj	127	5
@@ -411,7 +411,7 @@ line	token	word	role	arg_line	arg_token
 137	0			0	0
 138	3	chiusa	subj	0	0
 138	4	chiusa	subj	0	0
-138	6	rispuose	subj	0	0
+138	6	rispuose	subj	137	6
 138	6	rispuose	iobj	138	5
 138	6	rispuose	obl:in	139	2
 139	7	canta	subj	139	6

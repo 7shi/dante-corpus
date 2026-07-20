@@ -127,7 +127,7 @@ line	token	word	role	arg_line	arg_token
 48	6	convene	iobj	48	5
 49	3	vuole	subj	49	1
 49	8	cerca	subj	49	5
-50	4	fatto	subj	0	0
+50	4	fatto	subj	49	5
 50	4	fatto	obl:a	50	6
 50	8	pensa	subj	50	6
 50	8	pensa	obj	50	7
@@ -186,7 +186,7 @@ line	token	word	role	arg_line	arg_token
 72	6	porta	subj	72	1
 72	6	porta	obj	72	9
 72	6	porta	obl:su	72	5
-73	4	avrà	subj	0	0
+73	4	avrà	subj	73	1
 73	4	avrà	obj	73	7
 73	4	avrà	obl:in	73	3
 74	0			0	0
@@ -240,12 +240,12 @@ line	token	word	role	arg_line	arg_token
 89	4	trasmutata	obl:per	89	2
 90	1	cambiando	subj	90	3
 90	1	cambiando	obj	90	2
-91	2	portera'	subj	0	0
+91	2	portera'	subj	89	6
 91	2	portera'	obj	91	3
 91	2	portera'	obl:in	91	7
-92	5	dirai	subj	0	0
+92	5	dirai	subj	89	6
 92	5	dirai	obj	92	4
-92	7	disse	subj	0	0
+92	7	disse	subj	88	3
 92	7	disse	obj	92	8
 92	7	disse	obl:a	93	3
 93	6	presente	subj	93	4
@@ -323,7 +323,7 @@ line	token	word	role	arg_line	arg_token
 118	6	son	attr	118	8
 118	6	son	obl:a	118	5
 118	8	amico	subj	118	3
-119	1	temo	subj	0	0
+119	1	temo	subj	116	2
 119	1	temo	ccomp	119	3
 119	3	perder	subj	0	0
 119	3	perder	obj	119	4
@@ -340,7 +340,7 @@ line	token	word	role	arg_line	arg_token
 122	6	fé	attr	122	8
 122	8	corusca	subj	121	2
 123	0			0	0
-124	2	rispuose	subj	0	0
+124	2	rispuose	subj	121	2
 125	0			0	0
 126	2	sentirà	subj	124	3
 126	2	sentirà	obj	126	5

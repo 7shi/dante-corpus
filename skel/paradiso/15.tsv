@@ -7,7 +7,7 @@ line	token	word	role	arg_line	arg_token
 4	2	puose	subj	1	2
 4	2	puose	obj	4	1
 4	2	puose	obl:a	4	6
-5	2	fece	subj	0	0
+5	2	fece	subj	1	2
 5	2	fece	xcomp	5	3
 5	3	quïetar	subj	5	6
 6	6	allenta	subj	6	3
@@ -40,7 +40,7 @@ line	token	word	role	arg_line	arg_token
 15	5	stavan	subj	15	4
 15	5	stavan	attr	15	6
 15	6	sicuri	subj	15	4
-16	2	pare	subj	0	0
+16	2	pare	subj	14	7
 16	2	pare	attr	16	3
 16	5	tramuti	subj	16	4
 16	5	tramuti	obj	16	6
@@ -56,7 +56,7 @@ line	token	word	role	arg_line	arg_token
 21	6	resplende	subj	21	4
 22	3	partì	subj	22	5
 22	3	partì	obl:da	22	8
-23	6	trascorse	subj	0	0
+23	6	trascorse	subj	20	8
 23	6	trascorse	obl:per	23	4
 24	2	parve	subj	24	1
 24	2	parve	attr	24	3
@@ -96,7 +96,7 @@ line	token	word	role	arg_line	arg_token
 39	5	'ntesi	subj	39	2
 39	5	'ntesi	obj	39	4
 39	7	parlò	subj	0	0
-40	6	nascose	subj	0	0
+40	6	nascose	subj	38	3
 40	6	nascose	obj	40	5
 40	6	nascose	iobj	40	4
 40	6	nascose	obl:per	40	3
@@ -165,7 +165,7 @@ line	token	word	role	arg_line	arg_token
 59	2	gaudïoso	subj	58	9
 59	2	gaudïoso	iobj	58	5
 59	2	gaudïoso	obl:a	59	4
-59	7	domandi	subj	0	0
+59	7	domandi	subj	55	1
 59	7	domandi	obj	59	6
 59	7	domandi	obj	60	3
 59	7	domandi	obl:in	60	6
@@ -262,7 +262,7 @@ line	token	word	role	arg_line	arg_token
 94	3	fu	attr	94	2
 94	7	fue	subj	91	4
 94	7	fue	attr	94	6
-95	3	convien	subj	0	0
+95	3	convien	subj	91	4
 95	3	convien	ccomp	96	3
 96	3	raccorci	subj	96	1
 96	3	raccorci	obj	96	2
@@ -321,7 +321,7 @@ line	token	word	role	arg_line	arg_token
 113	7	venir	subj	114	2
 113	7	venir	obl:da	113	10
 114	0			0	0
-115	2	vidi	subj	0	0
+115	2	vidi	subj	112	4
 115	2	vidi	obj	115	3
 115	2	vidi	obj	117	4
 115	2	vidi	xcomp	116	1
@@ -373,7 +373,7 @@ line	token	word	role	arg_line	arg_token
 133	4	chiamata	subj	133	1
 133	4	chiamata	obl:in	133	7
 134	0			0	0
-135	2	fui	subj	0	0
+135	2	fui	subj	133	1
 135	2	fui	attr	135	3
 135	2	fui	attr	135	5
 135	2	fui	obl:in	134	6
@@ -409,6 +409,6 @@ line	token	word	role	arg_line	arg_token
 146	1	disviluppato	obl:da	146	3
 147	6	deturpa	subj	147	3
 147	6	deturpa	obj	147	5
-148	2	venni	subj	0	0
+148	2	venni	subj	145	3
 148	2	venni	obl:da	148	4
 148	2	venni	obl:a	148	7

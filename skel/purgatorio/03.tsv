@@ -34,7 +34,7 @@ line	token	word	role	arg_line	arg_token
 13	3	rallargò	subj	12	2
 13	3	rallargò	obj	13	2
 13	6	vaga	subj	0	0
-14	2	diedi	subj	0	0
+14	2	diedi	subj	12	2
 14	2	diedi	obj	14	4
 14	2	diedi	obl:a	14	8
 15	8	dislaga	subj	15	1
@@ -76,7 +76,7 @@ line	token	word	role	arg_line	arg_token
 26	7	facea	obl:dentro	26	5
 27	3	ha	subj	27	1
 27	3	ha	obj	27	2
-27	8	tolto	subj	0	0
+27	8	tolto	subj	27	1
 27	8	tolto	obl:da	27	6
 28	3	innanzi	obl:a	28	5
 28	8	aombra	subj	28	6
@@ -125,15 +125,15 @@ line	token	word	role	arg_line	arg_token
 43	2	dico	obl:di	43	4
 43	2	dico	obl:di	43	7
 43	2	dico	obl:di	44	4
-44	7	chinò	subj	0	0
+44	7	chinò	subj	43	1
 44	7	chinò	obj	44	9
-45	4	disse	subj	0	0
-45	6	rimase	subj	0	0
+45	4	disse	subj	43	1
+45	6	rimase	subj	43	1
 45	6	rimase	attr	45	7
 45	7	turbato	subj	0	0
 46	2	divenimmo	subj	46	1
 46	2	divenimmo	obl:a	46	5
-47	2	trovammo	subj	0	0
+47	2	trovammo	subj	46	1
 47	2	trovammo	obj	47	4
 47	6	erta	subj	47	4
 48	7	pronte	subj	48	6
@@ -171,7 +171,7 @@ line	token	word	role	arg_line	arg_token
 59	4	movieno	subj	59	3
 59	4	movieno	obj	59	6
 59	4	movieno	obl:verso	59	8
-60	3	pareva	subj	0	0
+60	3	pareva	subj	58	7
 60	5	venïan	subj	0	0
 60	5	venïan	attr	60	6
 61	1	Leva	subj	0	0
@@ -205,7 +205,7 @@ line	token	word	role	arg_line	arg_token
 70	3	strinser	subj	70	4
 70	3	strinser	obj	70	2
 70	3	strinser	obl:a	70	7
-71	6	stetter	subj	0	0
+71	6	stetter	subj	70	4
 71	6	stetter	attr	71	7
 71	6	stetter	attr	71	9
 71	7	fermi	subj	0	0
@@ -250,7 +250,7 @@ line	token	word	role	arg_line	arg_token
 83	7	arresta	obj	83	6
 84	1	semplici	subj	82	9
 84	3	quete	subj	82	9
-84	8	sanno	subj	0	0
+84	8	sanno	subj	82	9
 84	8	sanno	obj	84	6
 85	2	vid'	subj	85	3
 85	2	vid'	obj	85	8
@@ -322,9 +322,9 @@ line	token	word	role	arg_line	arg_token
 105	7	vedesti	obl:di	105	5
 106	3	volsi	subj	106	1
 106	3	volsi	obl:ver'	106	5
-106	7	guardail	subj	0	0
+106	7	guardail	subj	106	1
 107	1	biondo	subj	0	0
-107	2	era	subj	0	0
+107	2	era	subj	106	1
 107	2	era	attr	107	1
 107	2	era	attr	107	4
 107	2	era	attr	107	8

@@ -116,7 +116,7 @@ line	token	word	role	arg_line	arg_token
 39	4	traslatò	obj	39	3
 39	4	traslatò	obl:di	39	6
 39	4	traslatò	obl:in	39	8
-40	2	conosce	subj	0	0
+40	2	conosce	subj	37	1
 40	2	conosce	obj	40	4
 41	4	fu	subj	0	0
 41	4	fu	attr	41	3
@@ -133,7 +133,7 @@ line	token	word	role	arg_line	arg_token
 45	3	consolò	subj	44	1
 45	3	consolò	obj	45	2
 45	3	consolò	obl:di	45	5
-46	2	conosce	subj	0	0
+46	2	conosce	subj	44	1
 46	2	conosce	ccomp	46	5
 46	2	conosce	obl:per	47	6
 46	5	costa	subj	47	2
@@ -162,10 +162,10 @@ line	token	word	role	arg_line	arg_token
 56	5	fé	obj	56	7
 57	2	cedere	subj	0	0
 57	2	cedere	obl:a	57	4
-57	6	fece	subj	0	0
+57	6	fece	subj	55	2
 57	6	fece	attr	57	7
 57	7	greco	subj	0	0
-58	2	conosce	subj	0	0
+58	2	conosce	subj	55	2
 58	2	conosce	ccomp	59	8
 59	8	nocivo	subj	58	5
 59	8	nocivo	obl:da	59	4
@@ -183,12 +183,12 @@ line	token	word	role	arg_line	arg_token
 63	2	piagne	subj	63	1
 63	2	piagne	obj	63	3
 63	2	piagne	obj	63	5
-64	2	conosce	subj	0	0
+64	2	conosce	subj	61	2
 64	2	conosce	ccomp	64	5
 64	5	innamora	subj	65	2
 64	5	innamora	obl:di	65	5
 65	0			0	0
-66	5	fa	subj	0	0
+66	5	fa	subj	61	2
 66	5	fa	obj	66	4
 66	5	fa	xcomp	66	6
 66	6	vedere	subj	66	4
@@ -235,7 +235,7 @@ line	token	word	role	arg_line	arg_token
 81	2	aspettar	obj	81	1
 81	3	tacendo		0	0
 81	3	tacendo	subj	0	0
-81	5	patio	subj	0	0
+81	5	patio	subj	79	4
 81	5	patio	obj	81	2
 82	7	son	subj	82	8
 82	7	son	attr	82	6
@@ -260,7 +260,7 @@ line	token	word	role	arg_line	arg_token
 88	5	credi	obj	88	7
 89	4	dico	subj	89	2
 89	4	dico	obj	89	3
-89	7	vedi	subj	0	0
+89	7	vedi	subj	88	4
 89	7	vedi	obj	89	8
 90	4	son	subj	0	0
 90	4	son	attr	90	5
@@ -287,13 +287,13 @@ line	token	word	role	arg_line	arg_token
 96	2	vince	obj	96	5
 97	10	sobranza	subj	97	6
 97	10	sobranza	obl:a	97	9
-98	2	vince	subj	0	0
+98	2	vince	subj	96	1
 98	2	vince	obj	98	3
 98	5	vuole	subj	0	0
 98	5	vuole	xcomp	98	7
 98	7	vinta	subj	0	0
 99	2	vinta	subj	0	0
-99	3	vince	subj	0	0
+99	3	vince	subj	96	1
 99	3	vince	obl:con	99	6
 100	0			0	0
 101	2	fa	subj	100	3

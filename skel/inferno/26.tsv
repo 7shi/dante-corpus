@@ -29,7 +29,7 @@ line	token	word	role	arg_line	arg_token
 10	6	saria	obl:per	10	8
 11	2	foss'	subj	11	3
 11	7	esser	subj	0	0
-11	8	dee	subj	0	0
+11	8	dee	subj	11	5
 11	8	dee	xcomp	11	7
 12	4	graverà	subj	0	0
 12	4	graverà	obj	12	3
@@ -43,7 +43,7 @@ line	token	word	role	arg_line	arg_token
 14	7	scender	subj	0	0
 15	1	rimontò	subj	15	3
 15	1	rimontò	obl:per	13	8
-15	6	trasse	subj	0	0
+15	6	trasse	subj	15	3
 15	6	trasse	obj	15	7
 16	2	proseguendo	subj	0	0
 16	2	proseguendo	obj	16	5
@@ -105,7 +105,7 @@ line	token	word	role	arg_line	arg_token
 36	6	erti	obl:a	36	5
 36	7	levorsi	subj	36	3
 36	7	levorsi	obl:a	36	5
-37	3	potea	subj	0	0
+37	3	potea	subj	37	1
 37	3	potea	xcomp	37	8
 37	8	seguire	subj	0	0
 37	8	seguire	obj	37	2
@@ -150,7 +150,7 @@ line	token	word	role	arg_line	arg_token
 50	9	avviso	subj	51	3
 50	9	avviso	iobj	50	7
 51	3	fosse	subj	0	0
-51	6	voleva	subj	0	0
+51	6	voleva	subj	50	2
 51	6	voleva	xcomp	51	7
 51	7	dirti	subj	0	0
 52	2	è	subj	52	1
@@ -168,7 +168,7 @@ line	token	word	role	arg_line	arg_token
 55	1	Rispuose	obl:a	55	3
 55	7	martira	subj	56	1
 56	0			0	0
-57	4	vanno	subj	0	0
+57	4	vanno	subj	56	1
 57	4	vanno	obl:a	57	3
 57	4	vanno	obl:a	57	8
 58	8	geme	subj	59	2
@@ -208,7 +208,7 @@ line	token	word	role	arg_line	arg_token
 70	9	degna	obl:di	71	3
 71	8	accetto	subj	71	5
 71	8	accetto	obj	71	7
-72	2	fa	subj	0	0
+72	2	fa	subj	71	5
 72	2	fa	ccomp	72	8
 72	8	sostegna	subj	72	6
 72	8	sostegna	obj	72	7
@@ -368,7 +368,7 @@ line	token	word	role	arg_line	arg_token
 123	7	ritenuti	obl:a	123	3
 124	2	volta	subj	124	4
 124	2	volta	obl:in	124	6
-125	3	facemmo	subj	0	0
+125	3	facemmo	subj	121	5
 125	3	facemmo	obj	125	4
 125	3	facemmo	obl:di	125	2
 125	3	facemmo	obl:a	125	7
@@ -397,11 +397,11 @@ line	token	word	role	arg_line	arg_token
 135	2	veduta	obj	135	5
 136	3	allegrammo	subj	136	1
 136	3	allegrammo	obj	136	2
-136	6	tornò	subj	0	0
+136	6	tornò	subj	136	1
 136	6	tornò	obl:in	136	8
 137	8	nacque	subj	137	7
 137	8	nacque	obl:di	137	5
-138	2	percosse	subj	0	0
+138	2	percosse	subj	137	7
 138	2	percosse	obj	138	7
 139	4	fé	subj	0	0
 139	4	fé	obj	139	3

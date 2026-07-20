@@ -3,7 +3,7 @@ line	token	word	role	arg_line	arg_token
 1	1	Cantando	obl:come	1	3
 2	1	continüò	subj	0	0
 2	1	continüò	obl:con	2	3
-3	1	Beati	subj	0	0
+3	1	Beati	subj	3	3
 3	3	tecta	subj	3	5
 3	3	tecta	obl:di	3	2
 4	6	givan	subj	4	4
@@ -72,7 +72,7 @@ line	token	word	role	arg_line	arg_token
 27	4	star	obl:sotto	27	7
 28	5	divota	subj	28	3
 29	0			0	0
-30	1	sentite	subj	0	0
+30	1	sentite	subj	23	7
 30	1	sentite	obj	29	4
 30	1	sentite	obl	30	6
 31	4	andava	subj	31	2
@@ -338,7 +338,7 @@ line	token	word	role	arg_line	arg_token
 126	3	parea	attr	126	4
 126	6	mossa	subj	126	4
 127	1	e		0	0
-127	3	parëan	subj	0	0
+127	3	parëan	subj	126	2
 127	3	parëan	xcomp	127	7
 127	7	tratte	subj	0	0
 127	7	tratte	obl:da	127	6
@@ -402,14 +402,14 @@ line	token	word	role	arg_line	arg_token
 144	2	dormendo	subj	143	7
 145	0			0	0
 146	2	abitüati	subj	145	3
-147	5	facëan	subj	0	0
+147	5	facëan	subj	145	2
 147	5	facëan	obj	147	6
 147	5	facëan	obl:di	146	5
 147	5	facëan	obl:a	147	3
 147	5	facëan	obl:di	148	3
 147	5	facëan	obl:di	148	7
 148	0			0	0
-149	1	giurato	subj	0	0
+149	1	giurato	subj	145	2
 149	1	giurato	obj	149	5
 149	1	giurato	ccomp	150	3
 150	3	ardesser	subj	150	2

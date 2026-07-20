@@ -35,7 +35,7 @@ line	token	word	role	arg_line	arg_token
 9	4	chinati	subj	8	7
 9	6	scemi	subj	8	7
 10	4	mosso	subj	10	1
-10	6	seguia	subj	0	0
+10	6	seguia	subj	10	1
 10	6	seguia	obj	11	5
 11	0			0	0
 12	2	mostravam	subj	11	7
@@ -341,7 +341,7 @@ line	token	word	role	arg_line	arg_token
 117	7	parea	subj	0	0
 117	7	parea	iobj	117	6
 117	7	parea	obl:per	117	4
-118	4	dì	subj	0	0
+118	4	dì	subj	118	2
 118	4	dì	obj	118	6
 119	1	levata	subj	118	6
 119	1	levata	obl:da	119	5
@@ -384,7 +384,7 @@ line	token	word	role	arg_line	arg_token
 132	5	fornir	subj	132	1
 132	5	fornir	obl:per	132	8
 133	0			0	0
-134	1	trovai	subj	0	0
+134	1	trovai	subj	127	3
 134	1	trovai	obj	134	5
 134	1	trovai	obl:con	133	4
 134	7	'ncise	subj	135	1

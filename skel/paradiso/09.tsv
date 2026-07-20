@@ -89,13 +89,13 @@ line	token	word	role	arg_line	arg_token
 30	2	fece	subj	30	1
 30	2	fece	obj	30	8
 30	2	fece	obl:a	30	5
-31	4	nacqui	subj	0	0
+31	4	nacqui	subj	31	6
 31	4	nacqui	obl:di	31	3
 32	3	chiamata	subj	32	1
-32	6	refulgo	subj	0	0
+32	6	refulgo	subj	32	1
 33	3	vinse	subj	33	5
 33	3	vinse	obj	33	2
-34	6	indulgo	subj	0	0
+34	6	indulgo	subj	32	1
 34	6	indulgo	obj	35	2
 34	6	indulgo	obl:a	34	4
 35	9	noia	subj	35	2
@@ -111,7 +111,7 @@ line	token	word	role	arg_line	arg_token
 39	3	rimase	obl:di	37	6
 39	7	moia	subj	0	0
 40	6	incinqua	subj	40	3
-41	1	vedi	subj	0	0
+41	1	vedi	subj	39	2
 41	1	vedi	ccomp	41	5
 41	3	far	subj	41	7
 41	5	dee	subj	41	7
@@ -125,9 +125,9 @@ line	token	word	role	arg_line	arg_token
 45	3	esser	subj	0	0
 45	3	esser	attr	45	4
 45	4	battuta	subj	0	0
-45	7	pente	subj	0	0
+45	7	pente	subj	43	6
 45	7	pente	obl:per	45	3
-46	3	fia	subj	0	0
+46	3	fia	subj	43	6
 46	3	fia	ccomp	47	1
 47	1	cangerà	subj	46	5
 47	1	cangerà	obj	47	3
@@ -232,7 +232,7 @@ line	token	word	role	arg_line	arg_token
 84	8	inghirlanda	subj	84	7
 84	8	inghirlanda	obj	84	5
 85	0			0	0
-86	3	va	subj	0	0
+86	3	va	subj	82	3
 86	3	va	obl	86	2
 86	5	fa	subj	0	0
 86	5	fa	obj	86	6
@@ -313,7 +313,7 @@ line	token	word	role	arg_line	arg_token
 112	5	è	obl:in	112	8
 113	6	scintilla	subj	113	1
 113	6	scintilla	obl:appresso	113	4
-113	6	scintilla	obl	114	2
+113	6	scintilla	obl:come	114	2
 114	0			0	0
 115	2	sappi	subj	0	0
 115	2	sappi	ccomp	115	7
@@ -363,7 +363,7 @@ line	token	word	role	arg_line	arg_token
 133	0			0	0
 134	2	derelitti	subj	133	4
 134	2	derelitti	obl:per	133	2
-135	2	studia	subj	0	0
+135	2	studia	subj	133	4
 135	2	studia	obl:a	134	6
 135	5	pare	subj	0	0
 135	5	pare	obl:a	135	8

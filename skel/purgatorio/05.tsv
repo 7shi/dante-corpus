@@ -1,7 +1,7 @@
 line	token	word	role	arg_line	arg_token
 1	7	partito	subj	1	1
 1	7	partito	obl:da	1	6
-2	2	seguitava	subj	0	0
+2	2	seguitava	subj	1	1
 2	2	seguitava	obj	2	4
 3	6	drizzando	subj	4	1
 3	6	drizzando	obj	3	8
@@ -133,7 +133,7 @@ line	token	word	role	arg_line	arg_token
 40	4	tornasser	obl:in	40	7
 41	2	giunti	subj	0	0
 41	2	giunti	obl	41	3
-41	9	dier	subj	0	0
+41	9	dier	subj	37	5
 41	9	dier	obj	41	10
 41	9	dier	obl:con	41	6
 41	9	dier	obl:a	41	8
@@ -208,7 +208,7 @@ line	token	word	role	arg_line	arg_token
 62	0			0	0
 63	5	cercar	subj	0	0
 63	5	cercar	obj	62	1
-63	8	face	subj	0	0
+63	8	face	subj	62	1
 63	8	face	iobj	63	6
 63	8	face	xcomp	63	5
 63	8	face	obl:dietro	62	4
@@ -369,7 +369,7 @@ line	token	word	role	arg_line	arg_token
 112	1	Giunse	obl:con	113	3
 112	1	Giunse	obl:per	114	3
 112	8	chiede	subj	112	5
-113	5	mosse	subj	0	0
+113	5	mosse	subj	112	4
 113	5	mosse	obj	113	7
 113	5	mosse	obj	113	10
 114	7	diede	subj	114	6
@@ -394,7 +394,7 @@ line	token	word	role	arg_line	arg_token
 121	7	convenne	subj	0	0
 121	7	convenne	obl:a	121	4
 122	0			0	0
-123	2	ruinò	subj	0	0
+123	2	ruinò	subj	120	3
 123	2	ruinò	obl:ver	122	3
 123	6	ritenne	subj	123	4
 123	6	ritenne	obj	123	5

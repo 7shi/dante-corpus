@@ -27,6 +27,7 @@ Layer 3); it still stays free of `api` (which imports it).
 
 from __future__ import annotations
 
+import dataclasses
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -502,6 +503,68 @@ def _classify_divergence(
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",
                                              role=grole, arg=arg, predicate=pos))
     return violations
+
+
+@dataclass(frozen=True)
+class Repair:
+    """One Phase 3 (PLAN.md) mechanical rewrite: `before` (the committed row) replaced by
+    `after`. `kind` is "null_subject" (rule 1) or "role_label" (rule 2)."""
+
+    kind: str
+    predicate: tuple[int, int]
+    before: SkelRow
+    after: SkelRow
+
+
+def _safe_role_repair(given_role: str, derived_role: str) -> bool:
+    """Only a bare `obl` -> `obl:<lemma>` refinement is dep-tree-explicit (derive_unit only
+    emits the lemma-qualified form when a `case` child makes the preposition explicit); every
+    other role_mismatch pair surviving Phase 1/2 normalization (subj/obj, iobj/obj, cross-lemma
+    obl pairs) is a genuine disagreement, left for Phase 4."""
+    return given_role == "obl" and bool(OBL_RE.fullmatch(derived_role))
+
+
+def _find_repairs(
+    given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
+    violations: list[Violation],
+) -> list[Repair]:
+    """Phase 3 repair candidates, sourced purely from `_classify_divergence`'s own violation
+    list (already passed through Phase 2's `_apply_subj_authority` when `dep_index_by_pos` was
+    given) — does not recompute the given/derived diff independently."""
+    by_pred: dict[tuple[int, int], list[Violation]] = {}
+    for v in violations:
+        if v.predicate is not None:
+            by_pred.setdefault(v.predicate, []).append(v)
+
+    def find_row(pos: tuple[int, int], role: str, arg: tuple[int, int]) -> SkelRow | None:
+        for row in given.get(pos[0], ()):
+            if (row.line, row.token) == pos and row.role == role and (row.arg_line, row.arg_token) == arg:
+                return row
+        return None
+
+    repairs: list[Repair] = []
+    for pos, vs in by_pred.items():
+        missing_subj = [v for v in vs if v.detail.startswith("missing_arg") and v.role == "subj"]
+        extra_null_subj = [
+            v for v in vs
+            if v.detail.startswith("extra_arg") and v.role == "subj" and v.arg == (0, 0)
+        ]
+        if len(missing_subj) == 1 and len(extra_null_subj) == 1:
+            before = find_row(pos, "subj", (0, 0))
+            if before is not None:
+                arg_line, arg_token = missing_subj[0].arg
+                after = dataclasses.replace(before, arg_line=arg_line, arg_token=arg_token)
+                repairs.append(Repair("null_subject", pos, before, after))
+
+        for v in vs:
+            if (v.detail.startswith("role_mismatch") and v.given_role is not None
+                    and v.role is not None and v.arg is not None
+                    and _safe_role_repair(v.given_role, v.role)):
+                before = find_row(pos, v.given_role, v.arg)
+                if before is not None:
+                    after = dataclasses.replace(before, role=v.role)
+                    repairs.append(Repair("role_label", pos, before, after))
+    return repairs
 
 
 def validate_unit(

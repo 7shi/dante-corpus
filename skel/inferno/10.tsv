@@ -78,7 +78,7 @@ line	token	word	role	arg_line	arg_token
 27	7	molesto	obl:a	27	3
 28	4	uscìo	subj	28	3
 28	4	uscìo	obl:di	29	2
-29	8	accostai	subj	0	0
+29	8	accostai	subj	28	3
 29	8	accostai	obj	29	7
 29	8	accostai	obl	30	3
 29	8	accostai	obl:a	30	6
@@ -154,7 +154,7 @@ line	token	word	role	arg_line	arg_token
 52	2	surse	obl:lungo	53	4
 52	2	surse	obl:a	53	7
 53	0			0	0
-54	1	credo	subj	0	0
+54	1	credo	subj	53	2
 54	1	credo	ccomp	54	7
 54	7	levata	subj	0	0
 54	7	levata	obl:in	54	6
@@ -174,7 +174,7 @@ line	token	word	role	arg_line	arg_token
 59	2	vai	obl:per	59	1
 59	2	vai	obl:per	59	4
 60	4	è	subj	60	2
-60	8	è	subj	0	0
+60	8	è	subj	60	2
 60	8	è	obl	60	9
 61	9	vegno	subj	61	2
 61	9	vegno	obl:da	61	6
@@ -215,16 +215,16 @@ line	token	word	role	arg_line	arg_token
 74	1	restato	obl:a	74	2
 74	5	mutò	subj	73	4
 74	5	mutò	obj	74	6
-75	2	mosse	subj	0	0
+75	2	mosse	subj	73	4
 75	2	mosse	obj	75	3
-75	5	piegò	subj	0	0
+75	5	piegò	subj	73	4
 75	5	piegò	obj	75	7
 76	3	continüando	subj	0	0
 76	3	continüando	obj	76	2
 76	3	continüando	obl:a	76	6
 77	3	han	subj	77	2
 77	3	han	obj	77	5
-77	6	disse	subj	0	0
+77	6	disse	subj	73	4
 77	6	disse	ccomp	77	3
 77	6	disse	ccomp	78	3
 77	8	appresa	subj	77	5
@@ -263,7 +263,7 @@ line	token	word	role	arg_line	arg_token
 89	7	disse	subj	0	0
 89	7	disse	ccomp	89	6
 89	7	disse	ccomp	90	7
-90	7	mosso	subj	0	0
+90	7	mosso	subj	89	5
 90	7	mosso	obl:sanza	90	2
 90	7	mosso	obl:con	90	5
 91	7	sofferto	subj	92	6
@@ -287,7 +287,7 @@ line	token	word	role	arg_line	arg_token
 97	8	odo	subj	0	0
 98	7	adduce	subj	98	5
 98	7	adduce	obj	98	3
-99	4	tenete	subj	0	0
+99	4	tenete	subj	97	4
 99	4	tenete	obj	99	6
 99	4	tenete	obl:in	99	3
 100	2	veggiam	subj	100	1
@@ -356,7 +356,7 @@ line	token	word	role	arg_line	arg_token
 118	7	giaccio	obl:con	118	4
 119	3	è	subj	119	6
 119	3	è	subj	120	3
-120	9	taccio	subj	0	0
+120	9	taccio	subj	119	6
 120	9	taccio	obj	120	8
 120	9	taccio	obl:di	120	7
 121	3	ascose	subj	0	0
@@ -374,7 +374,7 @@ line	token	word	role	arg_line	arg_token
 124	3	mosse	subj	124	1
 124	3	mosse	obj	124	2
 124	7	andando		0	0
-125	2	disse	subj	0	0
+125	2	disse	subj	124	1
 125	2	disse	iobj	125	1
 125	2	disse	ccomp	125	7
 125	7	smarrito	subj	125	5
@@ -392,7 +392,7 @@ line	token	word	role	arg_line	arg_token
 128	5	comandò	ccomp	127	4
 129	3	attendi	subj	0	0
 129	3	attendi	obl	129	4
-129	6	drizzò	subj	0	0
+129	6	drizzò	subj	128	7
 129	6	drizzò	obj	129	8
 130	2	sarai	subj	0	0
 130	2	sarai	obl:a	130	6

@@ -10,7 +10,7 @@ line	token	word	role	arg_line	arg_token
 4	9	prende	obl:di	4	8
 5	1	fu'	subj	5	2
 5	1	fu'	obl:in	4	2
-5	4	vidi	subj	0	0
+5	4	vidi	subj	5	2
 5	4	vidi	obj	5	5
 5	7	ridire	subj	6	5
 5	7	ridire	obj	5	6
@@ -96,7 +96,7 @@ line	token	word	role	arg_line	arg_token
 34	5	seconda	subj	34	2
 34	5	seconda	obj	34	4
 35	0			0	0
-36	2	pregherà	subj	0	0
+36	2	pregherà	subj	34	2
 36	2	pregherà	ccomp	36	5
 36	2	pregherà	obl:di	35	3
 36	2	pregherà	obl:con	35	8
@@ -151,7 +151,7 @@ line	token	word	role	arg_line	arg_token
 52	9	infuso	obl:in	53	3
 53	8	fece	subj	53	6
 53	8	fece	obl:di	52	4
-54	2	fissi	subj	0	0
+54	2	fissi	subj	53	6
 54	2	fissi	obj	54	4
 54	2	fissi	obl:a	54	6
 54	2	fissi	obl:oltre	54	9
@@ -212,7 +212,7 @@ line	token	word	role	arg_line	arg_token
 74	6	governi	obj	74	5
 75	3	sai	subj	75	1
 75	3	sai	obj	75	2
-75	9	levasti	subj	0	0
+75	9	levasti	subj	75	4
 75	9	levasti	obj	75	8
 75	9	levasti	obl:con	75	7
 76	0			0	0
@@ -319,7 +319,7 @@ line	token	word	role	arg_line	arg_token
 110	0			0	0
 111	7	vicine	subj	110	2
 111	7	vicine	obl:a	111	3
-112	3	muovono	subj	0	0
+112	3	muovono	subj	113	9
 112	3	muovono	obl:a	112	6
 112	3	muovono	obl:per	113	4
 113	0			0	0
@@ -401,7 +401,7 @@ line	token	word	role	arg_line	arg_token
 139	2	sarebbe	obl:in	139	4
 139	6	privo	subj	0	0
 139	6	privo	obl:di	140	2
-140	6	assiso	subj	0	0
+140	6	assiso	subj	140	4
 141	4	quïete	subj	0	0
 141	4	quïete	obl:a	141	3
 141	4	quïete	obl:in	141	6

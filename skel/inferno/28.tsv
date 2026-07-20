@@ -96,7 +96,7 @@ line	token	word	role	arg_line	arg_token
 35	1	seminator	obl:di	35	3
 35	1	seminator	obl:di	35	6
 36	2	vivi	subj	34	4
-36	6	fessi	subj	0	0
+36	6	fessi	subj	34	4
 37	3	è	subj	37	2
 37	8	accisma	subj	37	6
 37	8	accisma	obl:di	37	7
@@ -150,7 +150,7 @@ line	token	word	role	arg_line	arg_token
 53	6	riguardarmi	obl:per	54	2
 54	3	oblïando	subj	52	5
 54	3	oblïando	obj	54	5
-55	2	dì	subj	0	0
+55	2	dì	subj	56	1
 55	2	dì	iobj	55	5
 55	2	dì	ccomp	55	9
 55	9	armi	subj	0	0
@@ -174,7 +174,7 @@ line	token	word	role	arg_line	arg_token
 62	3	disse	obj	62	5
 62	3	disse	iobj	62	2
 63	3	partirsi	subj	63	6
-63	7	distese	subj	0	0
+63	7	distese	subj	62	1
 63	7	distese	obj	63	6
 63	7	distese	xcomp	63	3
 63	7	distese	obl:in	63	5
@@ -203,7 +203,7 @@ line	token	word	role	arg_line	arg_token
 71	4	vidi	obl:in	71	7
 72	6	inganna	subj	72	3
 72	6	inganna	obj	72	5
-73	1	rimembriti	subj	0	0
+73	1	rimembriti	subj	70	4
 73	1	rimembriti	obl:di	73	3
 74	3	torni	subj	0	0
 74	3	torni	xcomp	74	5
@@ -253,9 +253,9 @@ line	token	word	role	arg_line	arg_token
 90	5	voto	obl:a	89	6
 90	7	preco	subj	90	4
 90	7	preco	obl:a	89	6
-91	5	Dimostrami	subj	0	0
+91	5	Dimostrami	subj	91	2
 91	5	Dimostrami	ccomp	93	2
-91	7	dichiara	subj	0	0
+91	7	dichiara	subj	91	2
 91	7	dichiara	ccomp	93	2
 92	2	vuo'	subj	0	0
 92	2	vuo'	ccomp	92	5
@@ -330,7 +330,7 @@ line	token	word	role	arg_line	arg_token
 112	3	rimasi	xcomp	112	5
 112	5	riguardar	subj	112	2
 112	5	riguardar	obj	112	7
-113	2	vidi	subj	0	0
+113	2	vidi	subj	112	2
 113	2	vidi	obj	113	3
 113	6	avrei	subj	113	5
 113	6	avrei	obj	113	7
@@ -348,13 +348,13 @@ line	token	word	role	arg_line	arg_token
 118	2	vidi	subj	118	1
 118	2	vidi	obj	119	2
 118	2	vidi	xcomp	119	5
-118	6	par	subj	0	0
+118	6	par	subj	118	1
 118	6	par	ccomp	118	10
 118	10	veggia	subj	118	8
 118	10	veggia	obj	118	9
 119	5	andar	subj	119	2
 120	1	andavan	subj	120	3
-121	5	tenea	subj	0	0
+121	5	tenea	subj	118	1
 121	5	tenea	obj	121	3
 121	5	tenea	obl:per	121	8
 122	1	pesol	subj	0	0
@@ -394,7 +394,7 @@ line	token	word	role	arg_line	arg_token
 131	4	vai	xcomp	131	5
 131	5	veggendo	subj	131	2
 131	5	veggendo	obj	131	7
-132	1	vedi	subj	0	0
+132	1	vedi	subj	131	1
 132	1	vedi	ccomp	132	5
 132	5	grande	subj	132	3
 132	5	grande	obl:come	132	7

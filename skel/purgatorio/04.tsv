@@ -100,7 +100,7 @@ line	token	word	role	arg_line	arg_token
 36	7	faremo	subj	0	0
 36	7	faremo	obj	36	6
 37	8	caggia	subj	37	7
-38	8	acquista	subj	0	0
+38	8	acquista	subj	37	7
 38	8	acquista	obl:a	38	4
 38	8	acquista	obl:dietro	38	7
 39	4	appaia	subj	39	6
@@ -210,7 +210,7 @@ line	token	word	role	arg_line	arg_token
 73	1	vedrai	ccomp	73	5
 73	5	convien	subj	73	7
 73	5	convien	obl:a	73	4
-73	7	vada	subj	0	0
+73	7	vada	subj	71	6
 73	7	vada	obl:da	74	3
 74	0			0	0
 75	7	bada	subj	75	3
@@ -285,7 +285,7 @@ line	token	word	role	arg_line	arg_token
 99	7	distretta	obl:di	99	3
 100	9	torse	subj	100	5
 100	9	torse	obl:a	100	2
-101	2	vedemmo	subj	0	0
+101	2	vedemmo	subj	100	5
 101	2	vedemmo	obj	101	7
 101	2	vedemmo	obl:a	101	4
 102	9	accorse	subj	102	4
@@ -347,7 +347,7 @@ line	token	word	role	arg_line	arg_token
 117	3	impedì	iobj	117	2
 118	5	giunto	subj	0	0
 118	5	giunto	obl:a	118	3
-118	6	alzò	subj	0	0
+118	6	alzò	subj	115	7
 118	6	alzò	obj	118	8
 118	6	alzò	obl:a	118	10
 119	1	dicendo	subj	0	0
@@ -363,7 +363,7 @@ line	token	word	role	arg_line	arg_token
 122	1	mosser	obj	122	3
 122	1	mosser	obl	122	6
 122	1	mosser	obl:a	122	8
-123	2	cominciai	subj	0	0
+123	2	cominciai	subj	121	2
 123	7	dole	subj	0	0
 123	7	dole	obl:a	123	5
 123	7	dole	obl:di	124	2
@@ -410,7 +410,7 @@ line	token	word	role	arg_line	arg_token
 135	10	udita	obl:in	135	7
 136	7	saliva	subj	136	4
 136	7	saliva	iobj	136	6
-137	2	dicea	subj	0	0
+137	2	dicea	subj	136	4
 137	2	dicea	ccomp	137	3
 137	3	Vienne	subj	0	0
 137	5	vedi	subj	0	0

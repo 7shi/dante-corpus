@@ -46,7 +46,7 @@ line	token	word	role	arg_line	arg_token
 13	3	concetta	obl:in	13	7
 14	3	vide	subj	0	0
 14	3	vide	obj	14	4
-14	7	morse	subj	0	0
+14	7	morse	subj	12	2
 14	7	morse	obj	14	5
 15	8	fiacca	subj	15	6
 15	8	fiacca	obj	15	4
@@ -63,7 +63,7 @@ line	token	word	role	arg_line	arg_token
 19	1	Pàrtiti	subj	0	0
 20	1	ammaestrato	subj	19	4
 20	1	ammaestrato	obl:da	20	5
-21	2	vassi	subj	0	0
+21	2	vassi	subj	19	4
 21	4	veder	subj	0	0
 21	4	veder	obj	21	7
 22	2	è	subj	22	4
@@ -230,7 +230,7 @@ line	token	word	role	arg_line	arg_token
 76	3	appressammo	obl:a	76	6
 77	2	prese	subj	77	1
 77	2	prese	obj	77	4
-78	1	fece	subj	0	0
+78	1	fece	subj	77	1
 78	1	fece	obj	78	3
 78	1	fece	obl:con	77	8
 78	1	fece	obl:a	78	8
@@ -261,7 +261,7 @@ line	token	word	role	arg_line	arg_token
 87	4	'nduce	subj	87	1
 87	4	'nduce	subj	87	7
 87	4	'nduce	obj	87	2
-87	4	'nduce	obl	87	3
+87	4	'nduce	obl:a	87	3
 88	3	partì	subj	88	1
 88	3	partì	obl:da	88	5
 88	5	cantare	subj	0	0
@@ -269,7 +269,7 @@ line	token	word	role	arg_line	arg_token
 89	3	commise	subj	0	0
 89	3	commise	obj	89	5
 89	3	commise	iobj	89	2
-90	2	è	subj	0	0
+90	2	è	subj	88	1
 90	2	è	attr	90	3
 90	7	fuia	subj	90	5
 90	7	fuia	attr	90	6
@@ -297,7 +297,7 @@ line	token	word	role	arg_line	arg_token
 97	3	volse	subj	97	1
 97	3	volse	obj	97	2
 97	3	volse	obl:in	97	8
-98	2	disse	subj	0	0
+98	2	disse	subj	97	1
 98	2	disse	iobj	98	4
 98	2	disse	ccomp	98	5
 98	5	Torna	subj	0	0
@@ -410,7 +410,7 @@ line	token	word	role	arg_line	arg_token
 133	6	punge	obj	135	4
 134	5	flagello	subj	134	3
 134	5	flagello	obl:in	134	7
-135	8	munge	subj	0	0
+135	8	munge	subj	133	3
 135	8	munge	obj	136	2
 135	8	munge	iobj	137	2
 135	8	munge	iobj	137	6

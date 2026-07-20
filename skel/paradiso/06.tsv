@@ -15,13 +15,13 @@ line	token	word	role	arg_line	arg_token
 6	7	uscìo	subj	0	0
 6	7	uscìo	obl:di	6	5
 7	0			0	0
-8	1	governò	subj	0	0
+8	1	governò	subj	4	8
 8	1	governò	obj	8	3
 8	1	governò	obl:sotto	7	4
 8	1	governò	obl:di	8	6
 8	1	governò	obl:in	8	8
 9	3	cangiando	subj	0	0
-9	8	pervenne	subj	0	0
+9	8	pervenne	subj	4	8
 9	8	pervenne	obl:in	9	7
 10	1	Cesare	subj	0	0
 10	5	Iustinïano	subj	0	0
@@ -35,9 +35,9 @@ line	token	word	role	arg_line	arg_token
 13	9	attento	subj	13	4
 13	9	attento	obl:a	13	7
 14	5	esser	subj	14	2
-15	1	credea	subj	0	0
+15	1	credea	subj	16	4
 15	1	credea	ccomp	14	5
-15	7	contento	subj	0	0
+15	7	contento	subj	16	4
 15	7	contento	obl:di	15	5
 16	0			0	0
 17	2	pastore	subj	16	5
@@ -75,7 +75,7 @@ line	token	word	role	arg_line	arg_token
 27	3	fu	attr	27	2
 27	6	dovessi	subj	27	5
 27	6	dovessi	xcomp	27	7
-27	7	posarmi	subj	0	0
+27	7	posarmi	subj	27	5
 28	8	appunta	subj	29	3
 28	8	appunta	obl:a	28	5
 29	0			0	0
@@ -159,7 +159,7 @@ line	token	word	role	arg_line	arg_token
 53	0			0	0
 54	5	nascesti	subj	54	4
 54	5	nascesti	obl:sotto	54	3
-54	6	parve	subj	0	0
+54	6	parve	subj	53	1
 54	6	parve	attr	54	7
 54	6	parve	obl:a	53	7
 54	7	amaro	subj	0	0
@@ -331,7 +331,7 @@ line	token	word	role	arg_line	arg_token
 109	4	pianser	subj	109	6
 109	4	pianser	obl	109	2
 109	4	pianser	obl:per	110	3
-110	9	creda	subj	0	0
+110	9	creda	subj	109	6
 110	9	creda	ccomp	111	3
 111	3	trasmuti	subj	111	2
 111	3	trasmuti	obj	111	5
@@ -343,7 +343,7 @@ line	token	word	role	arg_line	arg_token
 114	6	succeda	obj	114	5
 115	5	poggian	subj	115	4
 116	2	disvïando	subj	0	0
-116	4	convien	subj	0	0
+116	4	convien	subj	112	3
 116	4	convien	ccomp	117	6
 117	6	poggin	subj	116	7
 117	6	poggin	obl:in	117	5
@@ -406,7 +406,7 @@ line	token	word	role	arg_line	arg_token
 141	1	mendicando	obj	141	3
 141	1	mendicando	obl:a	141	5
 141	1	mendicando	obl:a	141	7
-142	3	loda	subj	0	0
+142	3	loda	subj	136	3
 142	3	loda	obj	142	2
-142	7	loderebbe	subj	0	0
+142	7	loderebbe	subj	136	3
 142	7	loderebbe	obj	142	6

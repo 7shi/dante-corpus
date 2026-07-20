@@ -61,7 +61,7 @@ line	token	word	role	arg_line	arg_token
 22	6	confina	subj	22	8
 22	6	confina	obl	22	4
 23	9	sale	subj	23	7
-24	1	misurrebbe	subj	0	0
+24	1	misurrebbe	subj	27	2
 24	1	misurrebbe	obj	24	6
 24	1	misurrebbe	obl:da	22	4
 24	1	misurrebbe	obl:a	23	2
@@ -157,7 +157,7 @@ line	token	word	role	arg_line	arg_token
 52	0			0	0
 53	4	varcai	subj	53	3
 53	4	varcai	obj	53	5
-53	7	fe'	subj	0	0
+53	7	fe'	subj	53	3
 53	7	fe'	obj	53	8
 54	8	disposta	subj	0	0
 54	8	disposta	obl:a	54	6
@@ -194,7 +194,7 @@ line	token	word	role	arg_line	arg_token
 65	1	trescando	subj	65	5
 66	6	re	subj	0	0
 66	6	re	obl:in	66	10
-66	7	era	subj	0	0
+66	7	era	subj	65	5
 66	7	era	attr	66	6
 66	7	era	obl:in	66	10
 67	3	effigïata	subj	68	5
@@ -255,7 +255,7 @@ line	token	word	role	arg_line	arg_token
 88	6	ei	ccomp	88	8
 88	8	fia	subj	88	7
 88	9	dov'	subj	88	10
-89	3	farà	subj	0	0
+89	3	farà	subj	88	7
 89	3	farà	obj	89	1
 89	3	farà	iobj	89	2
 89	5	ella	ccomp	90	4
@@ -293,7 +293,7 @@ line	token	word	role	arg_line	arg_token
 99	7	veder	attr	99	8
 99	7	veder	obl:per	99	4
 100	1	Ecco	obj	101	5
-100	1	Ecco	obl	100	3
+100	1	Ecco	obl:di	100	3
 100	5	fanno	subj	101	5
 100	5	fanno	obj	100	7
 101	1	mormorava	subj	101	3
@@ -340,9 +340,9 @@ line	token	word	role	arg_line	arg_token
 113	6	sembian	subj	112	4
 113	6	sembian	iobj	113	5
 113	6	sembian	attr	113	7
-114	3	so	subj	0	0
+114	3	so	subj	112	4
 114	3	so	obj	114	4
-114	8	vaneggio	subj	0	0
+114	8	vaneggio	subj	112	4
 114	8	vaneggio	obl:in	114	7
 115	2	elli	iobj	115	4
 115	2	elli	ccomp	116	7
@@ -417,7 +417,7 @@ line	token	word	role	arg_line	arg_token
 138	5	avea	obj	138	4
 138	5	avea	obl:ne	138	8
 139	1	piangendo		0	0
-139	2	parea	subj	0	0
+139	2	parea	subj	138	2
 139	2	parea	xcomp	139	3
 139	3	dicer	ccomp	139	6
 139	6	posso	subj	0	0

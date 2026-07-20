@@ -72,7 +72,7 @@ line	token	word	role	arg_line	arg_token
 23	4	elli	obl:a	23	6
 23	9	apprendi	subj	23	7
 23	9	apprendi	obj	23	8
-24	5	solvendo	subj	0	0
+24	5	solvendo	subj	23	7
 24	5	solvendo	obj	24	7
 24	5	solvendo	obl:di	24	3
 25	3	chi	subj	25	2
@@ -101,7 +101,7 @@ line	token	word	role	arg_line	arg_token
 32	3	bella	subj	0	0
 32	8	fece	subj	32	6
 32	8	fece	obj	32	7
-33	2	udirai	subj	0	0
+33	2	udirai	subj	31	2
 33	2	udirai	obj	33	1
 33	5	secondi	subj	0	0
 33	5	secondi	obj	33	4
@@ -187,7 +187,7 @@ line	token	word	role	arg_line	arg_token
 55	2	era	subj	0	0
 55	2	era	attr	55	3
 55	3	scempio	subj	0	0
-55	7	fatto	subj	0	0
+55	7	fatto	subj	55	3
 55	7	fatto	attr	55	8
 55	7	fatto	obl:in	56	3
 55	8	doppio	subj	0	0
@@ -207,7 +207,7 @@ line	token	word	role	arg_line	arg_token
 60	4	gravido	obl:di	60	3
 60	6	coverto	subj	58	2
 60	6	coverto	obl:di	60	3
-61	2	priego	subj	0	0
+61	2	priego	subj	58	2
 61	2	priego	ccomp	61	5
 61	5	addite	subj	0	0
 61	5	addite	obj	61	7
@@ -226,7 +226,7 @@ line	token	word	role	arg_line	arg_token
 64	5	strinse	obl:in	64	7
 65	1	mise	subj	0	0
 65	1	mise	obj	64	2
-65	6	cominciò	subj	0	0
+65	6	cominciò	subj	64	2
 66	4	cieco	subj	66	2
 66	7	vien	subj	66	6
 66	7	vien	obl:da	66	10
@@ -249,7 +249,7 @@ line	token	word	role	arg_line	arg_token
 72	7	aver	obl:per	72	6
 73	6	inizia	subj	73	2
 73	6	inizia	obj	73	5
-74	2	dico	subj	0	0
+74	2	dico	subj	73	2
 74	2	dico	obj	74	3
 74	5	posto	ccomp	74	9
 74	9	dica	subj	74	7
@@ -280,7 +280,7 @@ line	token	word	role	arg_line	arg_token
 82	6	disvia	subj	82	4
 83	3	è	subj	83	5
 83	3	è	obl:in	83	2
-83	9	cheggia	subj	0	0
+83	9	cheggia	subj	83	5
 83	9	cheggia	obl:in	83	7
 84	5	sarò	subj	84	2
 84	5	sarò	iobj	84	3
@@ -376,7 +376,7 @@ line	token	word	role	arg_line	arg_token
 109	9	giunta	subj	109	11
 109	9	giunta	obl:con	110	2
 110	0			0	0
-111	5	convien	subj	0	0
+111	5	convien	subj	109	11
 111	5	convien	ccomp	111	7
 111	7	vada	subj	110	5
 111	7	vada	obl:con	110	8
@@ -398,7 +398,7 @@ line	token	word	role	arg_line	arg_token
 116	5	trovarsi	obl:in	115	3
 117	4	avesse	subj	117	3
 117	4	avesse	obj	117	5
-118	5	passarsi	subj	0	0
+118	5	passarsi	subj	116	2
 118	5	passarsi	obl:per	119	2
 118	5	passarsi	obl:per	119	5
 119	3	lasciasse	subj	0	0

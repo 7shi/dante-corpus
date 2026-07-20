@@ -160,9 +160,9 @@ line	token	word	role	arg_line	arg_token
 61	7	essaltate	obl:con	62	2
 61	7	essaltate	obl:con	62	7
 62	0			0	0
-63	3	hanno	subj	0	0
+63	3	hanno	subj	58	1
 63	3	hanno	obj	63	7
-64	3	voglio	subj	0	0
+64	3	voglio	subj	58	1
 64	3	voglio	ccomp	64	5
 64	5	dubbi	subj	0	0
 64	8	certo	subj	0	0
@@ -282,7 +282,7 @@ line	token	word	role	arg_line	arg_token
 110	3	predicate	subj	0	0
 110	3	predicate	obj	110	6
 110	3	predicate	obl:a	110	5
-111	2	diede	subj	0	0
+111	2	diede	subj	109	3
 111	2	diede	obj	111	5
 111	2	diede	iobj	111	3
 112	4	sonò	subj	112	2
@@ -341,7 +341,7 @@ line	token	word	role	arg_line	arg_token
 133	4	guardi	obj	133	5
 133	8	revela	subj	133	6
 133	8	revela	obl:per	134	2
-134	3	vedrai	subj	0	0
+134	3	vedrai	subj	130	2
 134	3	vedrai	ccomp	135	4
 135	4	cela	subj	135	2
 135	4	cela	obl:in	134	7

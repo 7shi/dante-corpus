@@ -128,7 +128,7 @@ line	token	word	role	arg_line	arg_token
 47	0			0	0
 48	4	guardi	subj	48	2
 48	4	guardi	obj	48	3
-48	9	ascolti	subj	0	0
+48	9	ascolti	subj	48	2
 48	9	ascolti	obj	48	8
 49	2	dubbi	subj	49	3
 49	5	dubitando	subj	0	0
@@ -204,7 +204,7 @@ line	token	word	role	arg_line	arg_token
 77	5	aver	obj	77	6
 78	0			0	0
 79	7	compiute	subj	79	5
-80	1	convenne	subj	0	0
+80	1	convenne	subj	78	3
 80	1	convenne	obl:a	80	3
 80	1	convenne	obl:a	80	7
 81	2	circuncidere	subj	0	0
@@ -288,7 +288,7 @@ line	token	word	role	arg_line	arg_token
 110	3	puote	obl:in	110	8
 111	2	è	subj	109	7
 111	2	è	obl:in	111	4
-111	7	volem	subj	0	0
+111	7	volem	subj	109	2
 111	7	volem	ccomp	111	9
 111	9	sia		0	0
 111	9	sia	subj	0	0

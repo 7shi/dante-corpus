@@ -67,7 +67,7 @@ line	token	word	role	arg_line	arg_token
 23	3	riguardare	subj	22	4
 23	3	riguardare	obl:in	23	5
 24	2	aspettando	subj	22	4
-25	2	vidi	subj	0	0
+25	2	vidi	subj	22	1
 25	2	vidi	obj	26	2
 25	2	vidi	xcomp	25	3
 25	2	vidi	xcomp	25	8
@@ -114,9 +114,9 @@ line	token	word	role	arg_line	arg_token
 41	7	accostai	subj	40	2
 41	7	accostai	obl:a	42	6
 42	0			0	0
-43	5	avvalliamo	subj	0	0
+43	5	avvalliamo	subj	43	2
 43	5	avvalliamo	obl:tra	44	4
-44	6	parleremo	subj	0	0
+44	6	parleremo	subj	43	2
 44	6	parleremo	obl:a	44	8
 45	1	grazïoso	subj	45	4
 45	1	grazïoso	iobj	45	3
@@ -137,7 +137,7 @@ line	token	word	role	arg_line	arg_token
 49	2	era	subj	49	1
 49	2	era	ccomp	49	8
 49	8	annerava	subj	49	6
-50	3	sì	subj	0	0
+50	3	sì	subj	49	1
 50	3	sì	ccomp	51	2
 51	2	dichiarisse	subj	0	0
 51	2	dichiarisse	obj	51	3
@@ -157,7 +157,7 @@ line	token	word	role	arg_line	arg_token
 54	5	esser	obl:tra	54	7
 55	7	tacque	subj	55	3
 55	7	tacque	obl:tra	55	5
-56	2	dimandò	subj	0	0
+56	2	dimandò	subj	55	3
 56	2	dimandò	ccomp	56	4
 56	4	è	subj	56	7
 56	4	è	attr	56	3
@@ -176,7 +176,7 @@ line	token	word	role	arg_line	arg_token
 61	7	udita	subj	61	6
 62	7	raccolse	subj	62	3
 62	7	raccolse	obl:in	62	5
-62	7	raccolse	obl	63	2
+62	7	raccolse	obl:come	63	2
 63	0			0	0
 64	11	volse	subj	64	2
 64	11	volse	subj	64	7
@@ -269,7 +269,7 @@ line	token	word	role	arg_line	arg_token
 95	2	Vedi	subj	0	0
 95	2	Vedi	obj	95	6
 95	2	Vedi	obl	95	3
-96	2	drizzò	subj	0	0
+96	2	drizzò	subj	94	5
 96	2	drizzò	obj	96	4
 96	8	guardasse	subj	0	0
 96	8	guardasse	obl:in	96	7
@@ -294,10 +294,10 @@ line	token	word	role	arg_line	arg_token
 103	3	vidi	subj	103	1
 103	6	dicer	subj	0	0
 103	6	dicer	ccomp	104	2
-103	8	posso	subj	0	0
+103	8	posso	subj	103	1
 103	8	posso	xcomp	103	6
 104	2	mosser	subj	104	4
-105	2	vidi	subj	0	0
+105	2	vidi	subj	103	1
 105	2	vidi	obj	105	6
 105	2	vidi	obj	105	9
 105	10	mosso	attr	105	6

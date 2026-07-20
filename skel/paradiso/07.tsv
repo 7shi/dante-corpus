@@ -43,7 +43,7 @@ line	token	word	role	arg_line	arg_token
 15	7	assonna	subj	15	6
 16	2	sofferse	subj	16	5
 16	2	sofferse	obj	16	3
-17	2	cominciò	subj	0	0
+17	2	cominciò	subj	16	5
 17	3	raggiandomi	subj	0	0
 17	3	raggiandomi	obl:di	17	6
 18	5	faria	subj	18	2
@@ -194,7 +194,7 @@ line	token	word	role	arg_line	arg_token
 71	6	soggiace	obl:a	72	3
 72	0			0	0
 73	4	conforme	subj	73	2
-73	9	piace	subj	0	0
+73	9	piace	subj	73	2
 73	9	piace	iobj	73	8
 74	8	raggia	subj	74	5
 74	8	raggia	obj	74	7
@@ -228,7 +228,7 @@ line	token	word	role	arg_line	arg_token
 87	5	remota	subj	85	2
 87	5	remota	obl:da	86	6
 88	2	ricovrar	subj	0	0
-88	3	potiensi	subj	0	0
+88	3	potiensi	subj	85	2
 88	3	potiensi	xcomp	88	2
 88	6	badi	subj	88	5
 88	6	badi	obl:per	89	5
@@ -392,7 +392,7 @@ line	token	word	role	arg_line	arg_token
 142	6	spira	subj	143	3
 142	6	spira	obj	142	3
 142	6	spira	obl:sanza	142	5
-143	6	innamora	subj	0	0
+143	6	innamora	subj	142	3
 143	6	innamora	obj	143	5
 143	6	innamora	obl:di	144	2
 144	8	disira	subj	0	0

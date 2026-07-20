@@ -113,7 +113,7 @@ line	token	word	role	arg_line	arg_token
 39	3	divenne	attr	39	4
 39	3	divenne	attr	39	7
 40	3	veggio	subj	40	2
-40	8	narro	subj	0	0
+40	8	narro	subj	40	2
 40	8	narro	obj	40	7
 41	2	darne	subj	41	5
 41	2	darne	obj	41	3
@@ -129,7 +129,7 @@ line	token	word	role	arg_line	arg_token
 46	0			0	0
 47	7	persuade	subj	46	6
 47	7	persuade	obj	47	6
-47	7	persuade	obl	47	2
+47	7	persuade	obl:quale	47	2
 48	7	attuia	subj	0	0
 48	7	attuia	obj	48	6
 48	7	attuia	obl:a	48	4
@@ -142,7 +142,7 @@ line	token	word	role	arg_line	arg_token
 52	2	nota	subj	52	1
 52	9	porte	subj	0	0
 52	9	porte	obl:da	52	7
-53	4	segna	subj	0	0
+53	4	segna	subj	52	1
 53	4	segna	obj	53	3
 53	4	segna	obl:a	53	6
 54	6	correre	subj	54	3
@@ -262,7 +262,7 @@ line	token	word	role	arg_line	arg_token
 92	3	stranïasse	subj	92	2
 92	3	stranïasse	obj	92	4
 92	3	stranïasse	obl:da	92	8
-93	3	coscïenza	subj	0	0
+93	3	coscïenza	subj	92	2
 93	5	rimorda	subj	93	4
 94	4	ricordar	subj	0	0
 94	4	ricordar	obj	94	6
@@ -343,7 +343,7 @@ line	token	word	role	arg_line	arg_token
 122	1	dette	subj	121	7
 122	1	dette	iobj	122	2
 122	1	dette	obl:per	122	5
-122	8	sicura	subj	0	0
+122	8	sicura	subj	121	4
 122	8	sicura	ccomp	123	8
 123	8	nascose	subj	123	3
 123	8	nascose	obj	123	7

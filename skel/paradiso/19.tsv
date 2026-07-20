@@ -53,7 +53,7 @@ line	token	word	role	arg_line	arg_token
 15	4	lascia	xcomp	15	5
 15	5	vincere	subj	15	1
 15	5	vincere	obl:a	15	7
-16	4	lasciai	subj	0	0
+16	4	lasciai	subj	14	2
 16	4	lasciai	obj	16	7
 16	4	lasciai	obl:in	16	3
 17	2	fatta	subj	16	7
@@ -109,9 +109,9 @@ line	token	word	role	arg_line	arg_token
 33	7	vecchio	subj	33	2
 34	4	esce	subj	34	3
 34	4	esce	obl:di	34	6
-35	1	move	subj	0	0
+35	1	move	subj	34	3
 35	1	move	obj	35	3
-35	9	plaude	subj	0	0
+35	9	plaude	subj	34	3
 35	9	plaude	obl:con	35	7
 36	2	mostrando	subj	0	0
 36	2	mostrando	obj	36	1
@@ -197,7 +197,7 @@ line	token	word	role	arg_line	arg_token
 61	7	veggia	subj	0	0
 61	7	veggia	obj	61	9
 61	7	veggia	obl:da	61	6
-62	4	vede	subj	0	0
+62	4	vede	subj	63	1
 62	4	vede	obl:in	62	2
 63	3	cela	subj	63	1
 63	3	cela	obj	63	6
@@ -209,7 +209,7 @@ line	token	word	role	arg_line	arg_token
 64	6	vien	subj	0	0
 64	6	vien	obl:da	64	8
 65	4	turba	subj	65	1
-65	7	è	subj	0	0
+65	7	è	subj	64	1
 65	7	è	attr	65	8
 65	7	è	attr	66	2
 65	7	è	attr	66	8

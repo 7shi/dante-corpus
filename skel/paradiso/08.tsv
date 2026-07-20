@@ -84,7 +84,7 @@ line	token	word	role	arg_line	arg_token
 31	3	fece	subj	31	5
 31	3	fece	obj	31	2
 31	3	fece	obl:a	31	9
-32	3	incominciò	subj	0	0
+32	3	incominciò	subj	31	5
 32	6	presti	subj	32	4
 32	6	presti	obl:a	33	3
 33	8	gioi	subj	0	0
@@ -104,7 +104,7 @@ line	token	word	role	arg_line	arg_token
 37	3	'ntendendo	obj	37	6
 37	7	movete	subj	37	2
 37	7	movete	obj	37	6
-38	4	pien	subj	0	0
+38	4	pien	subj	34	1
 38	4	pien	obl:di	38	6
 38	9	piacerti	subj	0	0
 39	4	dolce	subj	39	6
@@ -254,7 +254,7 @@ line	token	word	role	arg_line	arg_token
 89	3	è	subj	85	8
 89	3	è	iobj	89	2
 89	3	è	attr	89	1
-89	8	ho	subj	0	0
+89	8	ho	subj	85	8
 89	8	ho	obj	89	7
 89	8	ho	attr	89	9
 89	9	caro	subj	89	7
@@ -283,7 +283,7 @@ line	token	word	role	arg_line	arg_token
 93	7	amaro	obl:di	93	6
 94	1	Questo	subj	94	2
 94	1	Questo	obl:a	94	4
-94	6	elli	subj	0	0
+94	6	elli	subj	94	2
 94	6	elli	obl:a	94	8
 94	11	posso	subj	94	10
 94	11	posso	xcomp	95	1
@@ -350,7 +350,7 @@ line	token	word	role	arg_line	arg_token
 114	7	è	attr	114	8
 114	9	stanchi	subj	114	3
 114	9	stanchi	obl:in	114	5
-115	5	dì	subj	0	0
+115	5	dì	subj	115	2
 115	5	dì	ccomp	115	6
 115	6	sarebbe	subj	0	0
 115	6	sarebbe	attr	115	8
@@ -359,7 +359,7 @@ line	token	word	role	arg_line	arg_token
 116	8	fosse	attr	116	9
 117	2	rispuos'	subj	117	3
 117	2	rispuos'	obj	117	1
-117	8	cheggio	subj	0	0
+117	8	cheggio	subj	117	3
 117	8	cheggio	obj	117	6
 118	2	puot'	subj	118	3
 118	2	puot'	xcomp	118	4
@@ -389,7 +389,7 @@ line	token	word	role	arg_line	arg_token
 127	6	suggello	obl:a	128	3
 128	5	fa	subj	127	3
 128	5	fa	obj	128	8
-129	3	distingue	subj	0	0
+129	3	distingue	subj	127	3
 129	3	distingue	obj	129	5
 129	3	distingue	obl:da	129	9
 130	2	addivien	subj	0	0
@@ -421,7 +421,7 @@ line	token	word	role	arg_line	arg_token
 137	8	giova	subj	0	0
 137	8	giova	iobj	137	7
 137	8	giova	obl:di	137	6
-138	3	voglio	subj	0	0
+138	3	voglio	subj	136	2
 138	3	voglio	ccomp	138	6
 138	6	ammanti	subj	138	2
 138	6	ammanti	obj	138	5
@@ -448,7 +448,7 @@ line	token	word	role	arg_line	arg_token
 146	4	nato	subj	146	2
 146	4	nato	xcomp	146	6
 146	6	cignersi	obj	146	8
-147	2	fate	subj	0	0
+147	2	fate	subj	145	2
 147	2	fate	obj	147	3
 147	7	è	subj	147	6
 147	7	è	attr	147	9

@@ -271,7 +271,7 @@ line	token	word	role	arg_line	arg_token
 89	8	face	subj	89	5
 89	8	face	obj	89	7
 89	8	face	xcomp	89	6
-90	2	purgherò	subj	0	0
+90	2	purgherò	subj	88	3
 90	2	purgherò	obj	90	4
 90	7	fiede	subj	90	5
 90	7	fiede	obj	90	6
@@ -307,7 +307,7 @@ line	token	word	role	arg_line	arg_token
 100	5	facesse	obl:a	100	3
 101	3	salìo	subj	101	2
 101	3	salìo	obl:verso	101	6
-102	2	libero	subj	0	0
+102	2	libero	subj	101	2
 102	2	libero	obl:di	102	3
 102	2	libero	obl:di	102	6
 102	9	serra	subj	102	8
@@ -387,7 +387,7 @@ line	token	word	role	arg_line	arg_token
 130	2	Letè	subj	0	0
 131	3	chiama	subj	131	1
 131	3	chiama	obl:da	130	7
-131	6	adopra	subj	0	0
+131	6	adopra	subj	131	1
 132	8	gustato	subj	0	0
 133	6	è	subj	133	5
 133	6	è	attr	133	8
@@ -423,7 +423,7 @@ line	token	word	role	arg_line	arg_token
 145	3	rivolsi	subj	145	1
 145	3	rivolsi	obl:in	145	5
 145	3	rivolsi	obl:a	146	3
-146	5	vidi	subj	0	0
+146	5	vidi	subj	145	1
 146	5	vidi	ccomp	147	1
 147	1	udito	subj	0	0
 147	1	udito	obj	147	5

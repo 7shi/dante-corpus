@@ -249,7 +249,7 @@ line	token	word	role	arg_line	arg_token
 85	9	dilette	subj	85	7
 85	9	dilette	iobj	85	8
 85	9	dilette	obl:di	86	2
-86	4	emmi	subj	0	0
+86	4	emmi	subj	82	4
 86	4	emmi	attr	86	6
 86	6	grato	subj	0	0
 86	6	grato	ccomp	86	9
@@ -365,7 +365,7 @@ line	token	word	role	arg_line	arg_token
 124	3	è	obl:in	124	2
 124	4	terra	subj	124	7
 124	4	terra	obl:in	124	2
-124	9	saragli	subj	0	0
+124	9	saragli	subj	124	7
 124	9	saragli	obl:con	125	4
 125	0			0	0
 126	6	agguagli	subj	125	7
@@ -374,7 +374,7 @@ line	token	word	role	arg_line	arg_token
 128	1	son	subj	128	4
 128	1	son	obl:con	127	4
 128	7	saliro	subj	128	6
-129	3	apporterai	subj	0	0
+129	3	apporterai	subj	128	4
 129	3	apporterai	obj	129	2
 129	3	apporterai	obl:in	129	5
 130	0			0	0

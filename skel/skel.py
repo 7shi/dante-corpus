@@ -537,6 +537,70 @@ def clean(canticles: list[str], size: int, only: int | None) -> int:
     return 0
 
 
+def _repair_unit(
+    unit: list[int], unit_texts: list[str], rows_by_line: dict[int, list[skel.SkelRow]],
+    morph_rows: dict[int, list], np_rows: dict[int, list], dep_rows: dict[int, list],
+) -> list[skel.Repair]:
+    derived = skel.derive_unit(unit, dep_rows, morph_rows)
+    violations = [
+        v for v in skel.validate_unit(unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows)
+        if v.kind == "tag"
+    ]
+    return skel._find_repairs(rows_by_line, derived, violations)
+
+
+def repair(canticles: list[str], only: int | None) -> int:
+    """Phase 3 (skel/PLAN.md): mechanically rewrite committed TSVs for divergences the dep tree
+    fully determines — no model call, one deterministic pass. See skel._find_repairs."""
+    n_null_total = 0
+    n_role_total = 0
+    cantos_touched = 0
+    for canticle in canticles:
+        numbers = [only] if only else list(api.cantos(canticle))
+        for number in numbers:
+            if not skel.has_skel(canticle, number):
+                continue
+            data = skel.load_skel(canticle, number)
+            morph_rows = _morph_rows(canticle, number)
+            np_rows = _np_rows(canticle, number)
+            dep_rows = _dep_rows(canticle, number)
+            lines = api.canto(canticle, number).lines()
+            text_by_no = {line.no: line.text for line in lines}
+            nos_all = [line.no for line in lines]
+            texts_all = [line.text for line in lines]
+            missing = [no for no in nos_all if no not in data]
+            out = {no: list(rows) for no, rows in data.items()}
+            n_null = n_role = 0
+            for unit in dep.sentence_groups(nos_all, texts_all, dep.MAX_UNIT_LINES):
+                if any(no in missing for no in unit):
+                    continue
+                unit_texts = [text_by_no[no] for no in unit]
+                rows_by_line = {no: list(out[no]) for no in unit}
+                for r in _repair_unit(unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows):
+                    rows = out[r.before.line]
+                    rows[rows.index(r.before)] = r.after
+                    if r.kind == "null_subject":
+                        n_null += 1
+                        print(f"{canticle} {number}:{r.before.line}.{r.before.token} "
+                              f"[null_subject] subj (0,0) -> "
+                              f"({r.after.arg_line},{r.after.arg_token})")
+                    else:
+                        n_role += 1
+                        print(f"{canticle} {number}:{r.before.line}.{r.before.token} "
+                              f"[role_label] {r.before.role} -> {r.after.role} "
+                              f"arg ({r.before.arg_line},{r.before.arg_token})")
+            if n_null or n_role:
+                skel.write_skel(canticle, number, [(no, rows) for no, rows in sorted(out.items())])
+                print(f"Repaired skel/{canticle}/{number:02d}.tsv — "
+                      f"{n_null} null-subject, {n_role} role-label rewrite(s)")
+                cantos_touched += 1
+            n_null_total += n_null
+            n_role_total += n_role
+    print(f"repair complete: {n_null_total} null-subject + {n_role_total} role-label = "
+          f"{n_null_total + n_role_total} rewrite(s) across {cantos_touched} canto(s)")
+    return 0
+
+
 def _fix_canto(
     canticle: str, number: int, n_cantos: int, model: str, ui: StatusLine,
     log_path: Path | None = None,
@@ -641,6 +705,9 @@ def main() -> int:
                         help="validate artifacts, no model call; print soft-violation counts by class")
     parser.add_argument("--clean", action="store_true",
                         help="remove parse units with hard violations, then exit")
+    parser.add_argument("--repair", action="store_true",
+                        help="rewrite committed TSVs deterministically for derive-authoritative "
+                             "errors, no model call")
     parser.add_argument("--fix", action="store_true",
                         help="regenerate parse units carrying soft violations, keep only improvements")
     parser.add_argument("-n", "--dry-run", action="store_true",
@@ -655,6 +722,8 @@ def main() -> int:
         return stats(args.canticles, args.canto)
     if args.clean:
         return clean(args.canticles, args.chunk, args.canto)
+    if args.repair:
+        return repair(args.canticles, args.canto)
     log_path = Path(args.log) if args.log else None
     if args.fix:
         if not args.model:

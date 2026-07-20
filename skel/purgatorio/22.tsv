@@ -10,7 +10,7 @@ line	token	word	role	arg_line	arg_token
 4	4	hanno	subj	4	3
 4	4	hanno	obj	4	8
 4	4	hanno	obl:a	4	6
-5	1	detto	subj	0	0
+5	1	detto	subj	1	4
 5	1	detto	obj	4	2
 5	1	detto	xcomp	5	4
 5	4	beati	subj	5	2
@@ -51,12 +51,12 @@ line	token	word	role	arg_line	arg_token
 19	2	dimmi	ccomp	22	2
 19	7	perdona	subj	0	0
 19	7	perdona	obj	19	6
-19	7	perdona	obl	19	5
+19	7	perdona	obl:come	19	5
 20	5	allarga	subj	20	3
 20	5	allarga	obj	20	7
 20	5	allarga	iobj	20	4
 21	6	ragiona	subj	0	0
-21	6	ragiona	obl	21	3
+21	6	ragiona	obl:come	21	3
 21	6	ragiona	obl:con	21	5
 22	2	poté	subj	23	2
 22	2	poté	xcomp	22	3
@@ -74,7 +74,7 @@ line	token	word	role	arg_line	arg_token
 25	5	fenno	obj	25	3
 25	5	fenno	xcomp	25	4
 26	4	riso	subj	25	3
-26	7	rispuose	subj	0	0
+26	7	rispuose	subj	25	3
 27	9	cenno	subj	27	3
 27	9	cenno	iobj	27	6
 28	4	appaion	subj	28	5
@@ -190,7 +190,7 @@ line	token	word	role	arg_line	arg_token
 64	8	invïasti	xcomp	65	4
 64	8	invïasti	obl:verso	65	2
 65	4	ber	obl:in	65	8
-66	6	alluminasti	subj	0	0
+66	6	alluminasti	subj	64	2
 66	6	alluminasti	obj	66	5
 66	6	alluminasti	obl:appresso	66	4
 67	1	Facesti	subj	0	0
@@ -286,13 +286,13 @@ line	token	word	role	arg_line	arg_token
 96	5	avem	subj	0	0
 96	5	avem	obj	96	6
 96	5	avem	obl:di	96	4
-97	1	dimmi	subj	0	0
+97	1	dimmi	subj	94	1
 97	1	dimmi	ccomp	97	3
 97	3	è	subj	97	4
 97	3	è	obl	97	2
 98	8	sai	subj	0	0
 98	8	sai	obj	98	7
-99	1	dimmi	subj	0	0
+99	1	dimmi	subj	94	1
 99	1	dimmi	ccomp	99	3
 99	3	son	subj	0	0
 99	3	son	obl:in	99	8
@@ -308,7 +308,7 @@ line	token	word	role	arg_line	arg_token
 102	4	lattar	obj	102	1
 102	4	lattar	obl:di	102	7
 103	0			0	0
-104	3	ragioniam	subj	0	0
+104	3	ragioniam	subj	100	1
 104	3	ragioniam	obl	104	2
 104	3	ragioniam	obl:di	104	5
 105	3	ha	subj	105	1
@@ -369,7 +369,7 @@ line	token	word	role	arg_line	arg_token
 123	6	solemo	subj	0	0
 123	6	solemo	xcomp	123	5
 124	7	insegna	subj	124	3
-125	2	prendemmo	subj	0	0
+125	2	prendemmo	subj	124	3
 125	2	prendemmo	obj	125	4
 125	2	prendemmo	obl:con	125	7
 125	2	prendemmo	obl:per	126	3
@@ -405,7 +405,7 @@ line	token	word	role	arg_line	arg_token
 137	1	cadea	subj	137	7
 137	1	cadea	obl:da	136	2
 137	1	cadea	obl:de	137	5
-138	3	spandeva	subj	0	0
+138	3	spandeva	subj	137	7
 138	3	spandeva	obl:per	138	6
 139	8	appressaro	subj	139	3
 139	8	appressaro	obl:a	139	6

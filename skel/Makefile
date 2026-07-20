@@ -13,7 +13,10 @@ check:
 stats:
 	uv run skel.py $(CANTICLES) --stats
 
+repair:
+	uv run skel.py $(CANTICLES) --repair
+
 fix:
 	uv run skel.py $(CANTICLES) --fix -m $(MODEL)
 
-.PHONY: all skel check stats fix
+.PHONY: all skel check stats repair fix

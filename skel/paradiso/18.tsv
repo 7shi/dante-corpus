@@ -144,7 +144,7 @@ line	token	word	role	arg_line	arg_token
 53	2	vedere	obl:in	53	4
 54	3	parlare	subj	0	0
 54	6	atto	subj	0	0
-55	2	vidi	subj	0	0
+55	2	vidi	subj	52	1
 55	2	vidi	obj	55	5
 55	7	mere	attr	55	5
 56	2	gioconde	attr	55	5
@@ -292,7 +292,7 @@ line	token	word	role	arg_line	arg_token
 105	8	sortille	subj	105	4
 106	2	quïetata	subj	106	3
 106	2	quïetata	obl:in	106	6
-107	9	vidi	subj	0	0
+107	9	vidi	subj	104	1
 107	9	vidi	obj	107	2
 107	9	vidi	xcomp	108	1
 108	1	rappresentare	subj	107	2
@@ -364,7 +364,7 @@ line	token	word	role	arg_line	arg_token
 130	6	cancellare		0	0
 130	7	scrivi	subj	130	3
 130	7	scrivi	obl:per	130	6
-131	1	pensa	subj	0	0
+131	1	pensa	subj	130	2
 131	1	pensa	ccomp	132	8
 131	7	moriro	subj	131	6
 131	7	moriro	obl:per	132	3
