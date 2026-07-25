@@ -6,15 +6,84 @@ refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 51
 4846 after Phase 5b). The project goal is unchanged: **0 soft violations** — soft divergences
 are rule mismatches to eliminate, not a baseline to tolerate.
 
-**Phases 5a, 5b, 5c and 5d have landed** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each
-round's rules, measurements and rejected candidates); **only 5e remains open**. Everything below
-is the measurement that motivated the phase plan, kept as the record of what was tried and
-rejected. All violation counts in the analysis sections are the **pre-5a** figures unless
-stated otherwise.
+**Phases 5a–5d have landed** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+measurements and rejected candidates). **Phase 5e — a `--fix` regeneration pass — is running
+now.** Everything after the *Landed phases* table below is the measurement that motivated this
+plan, kept as the record of what was tried and rejected; its violation counts are **pre-5a**
+unless stated otherwise.
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
-landed). It exists because Phase 4b's LLM-regeneration approach has measurably stalled, and the
-measurement explains *why* in a way that changes what should be done next.
+landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
+measurement explained *why* in a way that changed what was done next.
+
+## Phase 5e — `--fix` on what actually remains (in progress)
+
+The four deterministic phases removed exactly the violations regeneration could never have
+fixed, so what is left is the material `--fix` exists for. Workload as of 4846, re-measured
+after 5b:
+
+| | before Phase 5 | now |
+|---|---|---|
+| flagged parse units (1 LLM call each) | 2235 of 3477 (64.3%) | **2037 of 3477 (58.6%)** |
+| soft violations | 5919 | **4846** |
+
+Flagged units split evenly across the canticles — inferno 659, purgatorio 727, paradiso 651 —
+which is what makes the usual 3-way parallel run (one process per canticle) balanced. The
+per-unit tail is short: 838 units carry exactly one violation, 1364 carry two or fewer, and the
+maximum is 14.
+
+```bash
+make -C skel fix                                  # all three canticles, MODEL from ../model.mk
+uv run skel.py inferno --fix -m <model> --log     # one canticle; --log appends to skel.log
+```
+
+Both write each unit's rows back to the TSV as soon as they are accepted (`1955ff5`), so an
+interrupted run loses at most one unit. Acceptance is now Phase 5c's criterion: the soft count
+must drop **and** no violation class may appear that wasn't already in the unit.
+
+### What the residue is, by class
+
+Triage (Phase 5b) says these are genuine reading disagreements, not derivation blind spots:
+
+| class | count | what it is |
+|---|---|---|
+| `extra_arg` | 1991 | 936 are `subj`, of which 73% cite a token *unrelated* to the predicate in the dep tree — enjambment and pro-drop resolution. 107 are the `expl` clitics of pronominal verbs (5d), read as `obj`/oblique against the frozen UD convention. |
+| `missing_arg` | 1305 | 716 obliques and 265 objects sitting on **explicit** dep edges the LLM simply did not list. |
+| `role_mismatch` | 1250 | 99.9% on edges both sides see — pure label disagreement (`subj`/`obj` reversals, cross-lemma `obl` pairs). |
+| `extra_tuple` | 176 | mostly NP-internal modifiers (`amod`) promoted to predicate status. |
+| `membership` | 96 | a scattered long tail of individual boundary cases, no mechanical pattern left. |
+| `missing_tuple` | 26 | residual after 5b removed the conjunction-promotion class. |
+| `unknown_role` | 2 | roles outside the frozen vocabulary; Phase 5c stops `--fix` from adding more. |
+
+### What to measure when the pass finishes
+
+The **unit success rate** is the number that decides whether a second pass is worth its calls —
+it was 10.5% before Phase 5, and the deterministic phases should have raised it by removing the
+structurally unfixable units from the denominator. `--fix` prints `fix complete: N/M unit(s)
+improved`; record N/M alongside the `--stats` before/after in `CORRECTIONS.md`.
+
+Then re-run `--stats` and compare the **per-class** deltas, not just the total:
+
+- A class that barely moves after a full pass is evidence it is *checker-side*, not an LLM
+  error — the same signal that produced Rules C/D and the Phase 5b rules. Route it to a new
+  deterministic rule, not to more calls.
+- A class that moves well is worth a second targeted pass.
+- Watch `role_mismatch`: it is the class most likely to churn (a regeneration can trade one
+  label disagreement for another) and Phase 5c only blocks *new kinds*, not swapped roles.
+
+Do not start a second full pass before that measurement exists.
+
+## Landed phases
+
+| phase | what landed | measured |
+|---|---|---|
+| **5a** | Rule C (coordination normalization) + Rule D (`nmod` oblique of a derived argument) | 5919 → **5105** |
+| **5b** | no conjunction promoted to predicate; copula/modal double-listing suppressed; adverbial obliques accepted | 5105 → **4846** |
+| **5c** | `--fix` acceptance requires no new violation *kind* (`_is_improvement`) | — |
+| **5d** | audit of the `expl` class: Layer 4 is right, nothing to route back | — |
+
+Details, per-rule negative tests and the rejected variants are in
+[`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## Why Phase 4b (`--fix`) stalled
 
@@ -66,9 +135,10 @@ children. So the second conjunct can never appear on the derived side.
 
 **These units are structurally unfixable by `--fix`.** A regeneration reproduces the same
 correct reading, the violation survives, `_fix_canto` rejects the attempt as "not improved",
-and the LLM call is spent for nothing. This is the mechanism behind the 10.5%.
+and the LLM call is spent for nothing. This is the mechanism behind the 10.5%. Phase 5a's Rule
+C is what removed this class.
 
-## Measured violation anatomy (2026-07-26, 5919 total)
+## Measured violation anatomy (2026-07-26, at 5919 — pre-5a)
 
 By kind:
 
@@ -99,7 +169,7 @@ least one violation**; 788 carry exactly one, and the tail reaches 15.
 ## Candidate rules — all measured before proposing
 
 Each rule was implemented as a monkeypatch over `derive_unit` / `_classify_divergence` /
-`_apply_subj_authority` and re-measured across all 100 cantos. Nothing below is frozen yet.
+`_apply_subj_authority` and re-measured across all 100 cantos. C and D landed as Phase 5a.
 
 | rule | what it does | measured |
 |---|---|---|
@@ -126,87 +196,19 @@ swallowing violations.
 Rule E is reported because it disproves a plausible hypothesis: the residual
 `extra_arg subj` mass (1105, the single largest role bucket) is **not** control-licensed, so
 widening the authority model is not the lever. Those are genuine subject disagreements
-(enjambment, pro-drop resolution) and belong to hand/LLM triage.
+(enjambment, pro-drop resolution) and belong to hand/LLM triage — i.e. to Phase 5e.
 
 ## Cost comparison
 
 | approach | violations removed | cost |
 |---|---|---|
 | `--fix`, measured (inferno 1, serial, local) | 4 | 3 h, 19 LLM calls |
-| `--fix`, full corpus pass (extrapolated) | ~450 | **2235 LLM calls** |
-| **Rules C + D** | **820** | **0 LLM calls, minutes** |
+| `--fix`, full corpus pass (extrapolated from that rate) | ~450 | **2235 LLM calls** |
+| **Phases 5a + 5b (deterministic)** | **1073** | **0 LLM calls, minutes** |
 
-The deterministic phase delivers roughly **1.8× an entire `--fix` pass, instantly**. It also
-shrinks the `--fix` workload from 2235 to **2081 flagged units**, and the units it removes are
-precisely the ones regeneration could never have fixed — so the success rate of any subsequent
-`--fix` pass should rise as well.
-
-## Plan
-
-### Phase 5a — implement Rules C and D (deterministic, no model call) — **done (2026-07-26)**
-
-Add both to `dante_corpus/skel.py` as normalization applied before the divergence comparison,
-alongside `_canonicalize_role`/`_normalize_prep_lemma`:
-
-- **Rule C** in `_classify_divergence`: map each `(arg_line, arg_token)` to its coordination
-  head by walking `conj` edges up (bounded), on both the given and derived side, de-duplicating
-  the resulting rows. Roles are preserved, so a real role disagreement still surfaces.
-- **Rule D**: suppress a given `obl`/`obl:<prep>` row whose argument is an `nmod` dependent of a
-  token that `derive_unit` already derived as an argument of the same predicate.
-
-Tests mirroring `tests/test_skel.py`'s existing per-rule cases, and a measured before/after
-recorded in `CORRECTIONS.md`. Expected: **0 hard, 5099 soft**.
-
-**Landed**: measured **0 hard, 5105 soft** — 6 above the monkeypatched estimate, because the
-implementation applies `_apply_subj_authority` *before* collapsing, leaving Phase 2's behaviour
-exactly intact. Five tests, each rule paired with a negative case.
-
-### Phase 5b — re-triage on the reduced set — **done (2026-07-26)**
-
-Re-run `--stats` after 5a and re-classify what remains before spending any further model calls.
-The classes standing after 5a, in descending order, are `extra_arg` (2065; `subj` 936 of them),
-`missing_arg` (1317), `role_mismatch` (1250). Determine for each whether it is an LLM error, a
-`derive_unit` gap, or a Layer-4 error, and route accordingly — Phase 4a's whitelist work is the
-model for how narrowly such a decision should be scoped.
-
-**Landed**: classifying every violation by its dep-tree context isolated three mechanical
-classes — a `derive_unit` over-generation (coordinating conjunctions promoted to predicates,
-−93), a copula/modal double-listing (−99), and adverbial obliques (−67) — for **5105 → 4846**.
-Two variants of the copula rule that *remap* rather than suppress were measured and rejected
-(−6 and −2). Six tests. See `CORRECTIONS.md`.
-
-### Phase 5c — tighten `--fix`'s acceptance criterion — **done (2026-07-26)**
-
-`_fix_canto` accepts a regeneration when `len(soft_after) < len(soft_before)`. This total-count
-test admits regressions in kind: the Phase 4b round introduced `unknown_role` 0 → 2, a role
-outside the frozen vocabulary, in exchange for a net count drop. Require no new violation
-*kind* in addition to the count decrease. (Landed as `_is_improvement` in `skel/skel.py`.)
-
-(The related per-unit checkpointing bug — `_fix_canto` wrote the TSV only after finishing an
-entire canto, losing hours of work on any interruption — was fixed in `1955ff5`.)
-
-### Phase 5d — route Layer-4 errors back to Layer 4 — **done (2026-07-26): nothing to route**
-
-Some residual classes are likely `dep` errors rather than `skel` errors — most visibly the 105
-`expl` cases, where the dep tree marks a clitic pleonastic and the LLM reads it as a real
-object. Layer 5 doubling as an audit of Layer 4 is the stated design intent (see
-[`README.md`](README.md) and [`../PLAN.md`](../PLAN.md)); such cases belong in
-`dep/CORRECTIONS.md`, not in a skel whitelist.
-
-**Measured, and the hypothesis is disproved**: 99 of the 107 such violations cite the clitic of
-an inherently pronominal verb (`si`/`mi`/`s'`/`ti`/`ci` — `andarsene`, `muoversi`, `rimanersi`),
-which Layer 4 tags correctly as `expl`; the LLM promotes it to `obj` (78) or an oblique (18).
-That is an LLM reading against the frozen UD convention, so the class belongs to 5e, and no
-Layer-4 correction was opened.
-
-### Phase 5e — `--fix` on what actually remains — **open, the only phase left**
-
-Only after 5a–5d, and only on classes triage has confirmed are genuine LLM misreadings. As of
-4846 those are: `extra_arg subj` 936 (73% citing a token unrelated to the predicate in the dep
-tree — enjambment and pro-drop resolution), `missing_arg` on explicit `obl` (716) and `obj`
-(265) dep edges the LLM simply did not list, `role_mismatch` 1250 (99.9% on edges both sides
-see), and the `expl` clitics from 5d. `--fix` now runs under the Phase 5c acceptance criterion,
-and its flagged-unit workload is down from 2235 to what remains after Δ1073 of Phase 5.
+The deterministic phases delivered roughly **2.4× an entire `--fix` pass, instantly**, and cut
+the `--fix` workload from 2235 to 2037 flagged units — removing precisely the units regeneration
+could never have fixed, which is why the Phase 5e success rate should come in above 10.5%.
 
 ## What is deliberately not proposed
 
