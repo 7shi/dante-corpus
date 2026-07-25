@@ -447,6 +447,71 @@ def _apply_subj_authority(
 
 _ELIDED_COPULA_DEPRELS = frozenset({"conj", "appos", "attr"})
 
+# --- Divergence-check normalization (Phase 5, PLAN.md) --------------------------------
+#
+# Two further equivalences of the same shape as the Phase 1 ones above — notation conventions,
+# not parse disagreements. Measured over all 100 cantos before being frozen (PLAN.md Phase 5a).
+
+_CONJ_WALK_LIMIT = 8
+
+
+def _coordination_head(
+    pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
+) -> tuple[int, int]:
+    """Rule C: the head of `pos`'s coordination, walking `conj` edges up (bounded)."""
+    seen = {pos}
+    cur = pos
+    for _ in range(_CONJ_WALK_LIMIT):
+        row = dep_index_by_pos.get(cur)
+        if row is None or row.deprel != "conj":
+            break
+        head = (row.head_line, row.head_token)
+        if head in seen or head not in dep_index_by_pos:
+            break
+        seen.add(head)
+        cur = head
+    return cur
+
+
+def _collapse_coordination(
+    by_arg: dict[tuple[int, int], str], pos: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+) -> dict[tuple[int, int], str]:
+    """Rule C: map every argument citation onto its coordination head, de-duplicating.
+
+    "si ciberà di terra e di sapïenza" — the LLM lists both conjuncts as `obj`, `derive_unit`
+    reads only the predicate's direct children and so sees the first only. Enumerating conjuncts
+    on the derived side instead was measured net-zero (PLAN.md Rule A): the LLM's own enumeration
+    is inconsistent, so the divergence is a notation mismatch and normalization is the
+    instrument. Roles are preserved, so a genuine role disagreement still surfaces.
+    """
+    out: dict[tuple[int, int], str] = {}
+    for arg, role in by_arg.items():
+        key = arg
+        if arg != (0, 0):
+            head = _coordination_head(arg, dep_index_by_pos)
+            if head != pos:  # never collapse an argument onto its own predicate
+                key = head
+        prev = out.get(key)
+        if prev is None or (_role_rank(role), role) < (_role_rank(prev), prev):
+            out[key] = role
+    return out
+
+
+def _drop_nmod_obliques(
+    g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+    derived_args: set[tuple[int, int]], dep_index_by_pos: dict[tuple[int, int], DepRow],
+) -> None:
+    """Rule D: accept an oblique whose argument hangs as `nmod` off one of the predicate's own
+    derived arguments ("ha *bisogno* **di te**" — the dep tree attaches "te" to the noun, the
+    LLM reads it as the predicate's oblique). Mutates `g` in place."""
+    for arg, role in list(g.items()):
+        if arg in d or not (role == "obl" or OBL_RE.fullmatch(role)):
+            continue
+        row = dep_index_by_pos.get(arg)
+        if row is not None and row.deprel == "nmod" and (row.head_line, row.head_token) in derived_args:
+            g.pop(arg)
+
 
 def _classify_divergence(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
@@ -515,6 +580,10 @@ def _classify_divergence(
         d = by_arg(derived_by_pred.get(pos, []))
         if dep_index_by_pos is not None:
             _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos)
+            derived_args = set(d)
+            g = _collapse_coordination(g, pos, dep_index_by_pos)
+            d = _collapse_coordination(d, pos, dep_index_by_pos)
+            _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)
             if grole is None:

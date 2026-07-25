@@ -8,12 +8,13 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 4a; Phase 4b `--fix`
-regeneration in progress.** `make -C skel check`: **0 hard, 5923 soft** violations (down from
-17438 at the first full-corpus measurement, 7776 at the Phase 4a checkpoint). See
-[skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. Gains from further
-`--fix` passes (run 3-way parallel) have slowed; remaining violations should be triaged rather
-than assumed to keep dropping at the earlier rate (see *Next steps* below).
+**Status: built for all 100 cantos, checker refined through Phase 5a.** `make -C skel check`:
+**0 hard, 5105 soft** violations (down from 17438 at the first full-corpus measurement, 7776 at
+the Phase 4a checkpoint, 5919 after one Phase 4b `--fix` round). See
+[skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. `--fix` regeneration was
+measured to improve only 10.5% of the units it attempts — most flagged units are checker-side
+notation mismatches regeneration cannot fix — so Phase 5 returned to deterministic
+normalization; the residue is now triage material (see [PLAN.md](PLAN.md) and *Next steps*).
 
 ## What it does
 
@@ -109,6 +110,17 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    blanket "non-verb POS" rule: the majority of non-verb `extra_tuple` predicates (dep deprel
    `amod`/`advmod`/`obj`/`nsubj`/`nmod`) are NP-internal modifiers the LLM wrongly promoted to
    predicate status — genuine errors, left flagged for `--fix`, not swallowed by the whitelist.
+5. **Phase 5a — coordination + `nmod`-oblique normalization** (`_collapse_coordination` /
+   `_drop_nmod_obliques`, applied to the argument maps after the authority model, before the
+   diff): every argument citation is collapsed onto its coordination head by walking `conj`
+   edges up, on **both** sides ("si ciberà di terra e di sapïenza" — the LLM lists both
+   conjuncts, `derive_unit` reads only a predicate's direct dep children and sees the first
+   alone); and an `obl`/`obl:<prep>` whose argument is an `nmod` dependent of one of the same
+   predicate's own derived arguments is accepted ("ha *bisogno* **di te**"). Both are
+   notation-convention equivalences like Phase 1's, not new derived rows — emitting a derived
+   row per conjunct instead was measured at net −2 (`extra_arg` −554 against `missing_arg` +529),
+   because the LLM's own enumeration of coordinations is inconsistent. Roles are preserved, so a
+   genuine role disagreement on a conjunct still surfaces.
 
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
@@ -116,13 +128,18 @@ hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_misma
 for the measured before/after at every phase (14329 → 12825 → 9672 → 8090 → 7776) and the tests
 backing each rule.
 
-After a round of Phase 4b `--fix` regeneration (2026-07-25, run 3-way parallel): **0 hard, 5923
-soft** — by kind, `extra_arg` 2852, `missing_arg` 1353, `role_mismatch` 1245, `extra_tuple` 275,
-`missing_tuple` 100, `membership` 96, `unknown_role` 2. Every kind dropped, but the pace has
-slowed noticeably compared to the mechanical phases above; `subj`/`obj` remain the largest
-`extra_arg`/`missing_arg` role buckets (`extra_arg subj` 1105, `missing_arg subj` 346),
-suggesting the residual violations skew toward genuine subject/object misreadings rather than
-further mechanical patterns.
+After a round of Phase 4b `--fix` regeneration (2026-07-25, run 3-way parallel): **0 hard, 5919
+soft** — by kind, `extra_arg` 2848, `missing_arg` 1353, `role_mismatch` 1245, `extra_tuple` 275,
+`missing_tuple` 100, `membership` 96, `unknown_role` 2. Every kind dropped, but the pace slowed
+noticeably compared to the mechanical phases above — and the measurement in [PLAN.md](PLAN.md)
+showed why: most flagged units are checker-side notation mismatches, not LLM errors.
+
+After Phase 5a (2026-07-26, checker-only, no model call): **0 hard, 5105 soft** — by kind,
+`extra_arg` 2065, `missing_arg` 1317, `role_mismatch` 1250, the rest unchanged. Δ814 in minutes,
+roughly 1.8× what a full 2235-call `--fix` pass was extrapolated to remove. `subj` remains the
+largest role bucket (`extra_arg subj` 936, `missing_arg subj` 323), and that residue is genuine
+subject disagreement (enjambment, pro-drop resolution) — widening the control-subject authority
+model was measured at −22 and rejected.
 
 ## Next steps
 
@@ -136,7 +153,9 @@ need `--fix` (LLM regeneration), restricted to the specific flagged lines, re-ch
 formally exempt, not a baseline to tolerate.
 
 `--fix` (`skel/skel.py`) regenerates a flagged parse unit and keeps the result only if its soft
-violation count strictly drops. As of Phase 4b's `_fix_hint`, a regeneration attempt gets a
+violation count strictly drops **and** no violation class appears that wasn't already there
+(`_is_improvement`, Phase 5c — the plain count test let the Phase 4b round trade a net drop for
+`unknown_role` 0 → 2, a role outside the frozen vocabulary). As of Phase 4b's `_fix_hint`, a regeneration attempt gets a
 per-predicate pointer built from the unit's prior soft violations — which predicate looks
 unwarranted or missing, which role slot looks missing/extra/mislabeled — appended to the prompt
 `build`'s initial parse never receives. The hint deliberately withholds `derive_unit`'s actual

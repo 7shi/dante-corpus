@@ -668,6 +668,19 @@ def repair(canticles: list[str], only: int | None) -> int:
     return 0
 
 
+def _is_improvement(
+    soft_before: list[morph.Violation], soft_after: list[morph.Violation]
+) -> bool:
+    """A regeneration is accepted only if it removes violations *without* introducing a class
+    that was not already there (PLAN.md Phase 5c). The plain count test admitted regressions in
+    kind — the Phase 4b round traded a net count drop for `unknown_role` 0 -> 2, a role outside
+    the frozen vocabulary."""
+    if len(soft_after) >= len(soft_before):
+        return False
+    before_classes = {_violation_class(v) for v in soft_before}
+    return all(_violation_class(v) in before_classes for v in soft_after)
+
+
 def _fix_canto(
     canticle: str, number: int, n_cantos: int, model: str, ui: StatusLine,
     log_path: Path | None = None,
@@ -714,7 +727,7 @@ def _fix_canto(
             _, soft_after = _classify_violations(
                 unit, unit_texts, new_rows, morph_rows, np_rows, dep_rows,
             )
-            if len(soft_after) < len(soft_before):
+            if _is_improvement(soft_before, soft_after):
                 for no in unit:
                     out[no] = tuple(new_rows.get(no, []))
                 fixed += 1

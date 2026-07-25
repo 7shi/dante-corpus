@@ -449,6 +449,79 @@ def test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg():
     assert any(v.detail.startswith("extra_arg") and v.arg == (2, 5) for v in violations)
 
 
+# --- _classify_divergence: coordination / nmod normalization (Phase 5, PLAN.md) -------
+
+
+def test_classify_divergence_coordinated_argument_collapsed():
+    # "si ciberà di terra e di sapïenza": both conjuncts are objects and the LLM lists both;
+    # derive_unit reads only the predicate's direct children, so it sees "terra" (1.3) alone.
+    derived = {1: [skel.SkelRow(1, 2, "ciberà", "obj", 1, 3)]}
+    given = {1: [
+        skel.SkelRow(1, 2, "ciberà", "obj", 1, 3),
+        skel.SkelRow(1, 2, "ciberà", "obj", 1, 5),  # second conjunct
+    ]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="terra", deprel="obj", head_line=1, head_token=2),
+        (1, 5): dep.DepRow(line=1, token=5, word="sapïenza", deprel="conj", head_line=1, head_token=3),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_coordination_collapse_preserves_role_disagreement():
+    # Collapsing the coordination must not swallow a genuine role disagreement on the conjunct.
+    derived = {1: [skel.SkelRow(1, 2, "ciberà", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 2, "ciberà", "subj", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="terra", deprel="obj", head_line=1, head_token=2),
+        (1, 5): dep.DepRow(line=1, token=5, word="sapïenza", deprel="conj", head_line=1, head_token=3),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert [v.detail.split(":", 1)[0] for v in violations] == ["role_mismatch"]
+
+
+def test_classify_divergence_uncoordinated_extra_argument_still_flagged():
+    derived = {1: [skel.SkelRow(1, 2, "ciberà", "obj", 1, 3)]}
+    given = {1: [
+        skel.SkelRow(1, 2, "ciberà", "obj", 1, 3),
+        skel.SkelRow(1, 2, "ciberà", "obj", 1, 5),
+    ]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="terra", deprel="obj", head_line=1, head_token=2),
+        (1, 5): dep.DepRow(line=1, token=5, word="sapïenza", deprel="nmod", head_line=1, head_token=4),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 5) for v in violations)
+
+
+def test_classify_divergence_nmod_oblique_of_derived_argument_accepted():
+    # "ha bisogno di te": the dep tree hangs "te" off the noun "bisogno" (nmod), which is itself
+    # a derived argument of "ha"; the LLM reads it as the predicate's oblique.
+    derived = {1: [skel.SkelRow(1, 1, "ha", "obj", 1, 2)]}
+    given = {1: [
+        skel.SkelRow(1, 1, "ha", "obj", 1, 2),
+        skel.SkelRow(1, 1, "ha", "obl:di", 1, 4),
+    ]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="bisogno", deprel="obj", head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="te", deprel="nmod", head_line=1, head_token=2),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_nmod_oblique_of_unrelated_token_still_flagged():
+    derived = {1: [skel.SkelRow(1, 1, "ha", "obj", 1, 2)]}
+    given = {1: [
+        skel.SkelRow(1, 1, "ha", "obj", 1, 2),
+        skel.SkelRow(1, 1, "ha", "obl:di", 1, 4),
+    ]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="bisogno", deprel="obj", head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="te", deprel="nmod", head_line=1, head_token=6),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 4) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

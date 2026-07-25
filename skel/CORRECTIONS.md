@@ -1,5 +1,63 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5a/5c: coordination + `nmod`-oblique normalization; `--fix` acceptance (2026-07-26)
+
+Baseline before this round (`make -C skel check`): **0 hard, 5919 soft** — the state after one
+Phase 4b `--fix` regeneration pass. That pass is what motivated the round: measured on inferno 1
+it improved **2 of 19** flagged units (10.5%) in 3 hours, because a large share of flagged units
+cannot be fixed by regeneration at all — the LLM's reading is already correct and the divergence
+is on the checker's side. `PLAN.md` records the full measurement, including the four candidate
+rules that were implemented, measured corpus-wide, and **rejected**.
+
+Two rules landed in `dante_corpus/skel.py`'s `_classify_divergence`, both applied to the
+`by_arg` maps after `_apply_subj_authority` and before the diff — normalizations of the same
+shape as Phase 1's preposition-lemma and `attr`≡`xcomp` equivalences, not new derived rows:
+
+1. **Rule C — coordination normalization** (`_coordination_head` / `_collapse_coordination`):
+   every argument citation is mapped onto its coordination head by walking `conj` edges up
+   (bounded to 8, never collapsing onto the predicate's own position), on **both** sides, with
+   de-duplication. "si ciberà di terra e di sapïenza" — both conjuncts are objects and the LLM
+   lists both, while `derive_unit` reads only a predicate's *direct* dep children and so sees
+   the first alone. Coordination was the dominant `extra_arg` bucket (38.5% of them attached at
+   dep depth 2, overwhelmingly `conj`). Roles are preserved, so a genuine role disagreement on a
+   conjunct still surfaces. Emitting a derived row per conjunct instead (PLAN.md's Rule A) was
+   measured at net **−2** — `extra_arg` −554 against `missing_arg` +529 — proving the divergence
+   is a notation-convention mismatch, not a parse disagreement, and that normalization is the
+   right instrument.
+2. **Rule D — `nmod` oblique of a derived argument** (`_drop_nmod_obliques`): a given
+   `obl`/`obl:<prep>` row is accepted when its argument is an `nmod` dependent of a token
+   `derive_unit` already derived as an argument of the same predicate ("ha *bisogno* **di te**"
+   — the dep tree hangs "te" off the noun, the LLM reads it as the predicate's oblique).
+
+- Measured (all 100 cantos): **5919 → 5105 soft, Δ814 (13.8%), 0 hard throughout, 0 LLM calls.**
+  By kind: `extra_arg` 2848 → 2065, `missing_arg` 1353 → 1317, `role_mismatch` 1245 → 1250;
+  `extra_tuple` (275), `missing_tuple` (100), `membership` (96), `unknown_role` (2) unchanged.
+  The slight `role_mismatch` **rise** is the expected sign of a normalization that is not merely
+  suppressing: collapsing a coordination exposes role disagreements previously split across an
+  `extra_arg`/`missing_arg` pair. (PLAN.md's monkeypatched pre-measurement predicted 5099; the
+  landed version differs by 6 because it applies the authority model before collapsing, keeping
+  Phase 2 behaviour exactly intact.)
+- No artifact under `skel/*/` was touched — checker-only, like Phases 0-2 and 4a.
+- Tests (`tests/test_skel.py`): `test_classify_divergence_coordinated_argument_collapsed`,
+  `..._coordination_collapse_preserves_role_disagreement`,
+  `..._uncoordinated_extra_argument_still_flagged`,
+  `..._nmod_oblique_of_derived_argument_accepted`,
+  `..._nmod_oblique_of_unrelated_token_still_flagged` — each rule paired with a negative case
+  proving it doesn't swallow genuine errors.
+
+**Phase 5c** (`skel/skel.py`, new `_is_improvement`): `--fix` accepted a regeneration on
+`len(soft_after) < len(soft_before)` alone, a total-count test that admits regressions in *kind*
+— the Phase 4b round traded a net count drop for `unknown_role` 0 → 2, a role outside the frozen
+vocabulary. Acceptance now additionally requires that every surviving violation's class was
+already present before the regeneration.
+
+**Current state**: `make -C skel check` — **0 hard, 5105 soft** (down from 5919, Δ814; down from
+17438 at the first full-corpus measurement, overall Δ12333, 70.7%). Remaining, in order:
+`extra_arg` 2065 (of which `subj` 936), `missing_arg` 1317, `role_mismatch` 1250. Next is
+PLAN.md's Phase 5b re-triage on this reduced set — no further `--fix` calls until it says which
+classes are genuine LLM misreadings, since 5d expects part of the residue (the `expl` cases) to
+be Layer-4 errors belonging in `dep/CORRECTIONS.md`.
+
 ## Checker Phase 4a: attr/xcomp double-listing + elided-copula whitelist (2026-07-20)
 
 Corpus-wide baseline before this round (`make -C skel check`): **0 hard, 8090 soft** — Phase 3's
