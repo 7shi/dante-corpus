@@ -243,6 +243,13 @@ def derive_unit(
     for row in all_rows:
         pos = (row.line, row.token)
         if row.deprel == "conj" and pos not in predicate_positions and conj_resolves(row, set()):
+            # A coordinating conjunction is a function word, never a predicate: Layer 4 routinely
+            # attaches a line-initial "E"/"Ed"/"Ma" to the previous clause head with deprel `conj`
+            # ("E 'l mio buon duca, che già li er' al petto"), which this rule would otherwise
+            # promote. Gapped/elided predicates of other POS stay promoted — those are real.
+            conj_morph = morph_at(row.line, row.token)
+            if conj_morph is not None and "conjunction" in conj_morph.pos.lower():
+                continue
             predicate_positions.add(pos)
 
     # 2. argument-bearing non-auxiliary verbs.
@@ -498,6 +505,41 @@ def _collapse_coordination(
     return out
 
 
+def _aux_head(
+    pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
+) -> tuple[int, int]:
+    """Rule I: the lexical head an `aux`/`aux:pass`/`cop` token attaches to (bounded walk)."""
+    seen = {pos}
+    cur = pos
+    for _ in range(_CONJ_WALK_LIMIT):
+        row = dep_index_by_pos.get(cur)
+        if row is None or row.deprel not in _AUX_DEPRELS:
+            break
+        head = (row.head_line, row.head_token)
+        if head in seen or head not in dep_index_by_pos:
+            break
+        seen.add(head)
+        cur = head
+    return cur
+
+
+def _adverbial_oblique(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule J: a given `obl`/`obl:<prep>` whose argument is an adverb attached to that same
+    predicate as `advmod` ("quivi", "là", "dinanzi") — an adverbial oblique. `derive_unit` only
+    reads `obl` deprel children, so it can't produce one; the membership soft check already
+    accepts exactly these tokens as `obl` arguments for the same reason."""
+    if not (role == "obl" or OBL_RE.fullmatch(role)):
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+        return False
+    return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+
 def _drop_nmod_obliques(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     derived_args: set[tuple[int, int]], dep_index_by_pos: dict[tuple[int, int], DepRow],
@@ -546,12 +588,23 @@ def _classify_divergence(
         pos_tag = morph_pos_by_position.get(pos, "")
         return "verb" not in pos_tag.lower()
 
+    def _aux_of_derived_predicate(pos: tuple[int, int]) -> bool:
+        # The LLM names the auxiliary/modal/copula as the predicate ("Molti *son* li animali",
+        # "se tu *vorrai* salire") where derive_unit, following UD, names the lexical head it
+        # attaches to — a labeling-convention split, and the head is nearly always listed by the
+        # LLM as well, so this is the same double-listing as the attr/xcomp case above. Gated on
+        # the head being a *derived* predicate: if it isn't, the reading is a genuine divergence.
+        if dep_index_by_pos is None:
+            return False
+        head = _aux_head(pos, dep_index_by_pos)
+        return head != pos and head in derived_preds
+
     for line, token in sorted(derived_preds - given_preds):
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
                                      predicate=(line, token)))
     for line, token in sorted(given_preds - derived_preds):
         pos = (line, token)
-        if pos in double_listed or _elided_copula_nominal(pos):
+        if pos in double_listed or _elided_copula_nominal(pos) or _aux_of_derived_predicate(pos):
             continue
         violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
                                      predicate=(line, token)))
@@ -600,6 +653,10 @@ def _classify_divergence(
                 )
         for arg, grole in sorted(g.items()):
             if arg not in d:
+                if dep_index_by_pos is not None and _adverbial_oblique(
+                    pos, arg, grole, dep_index_by_pos, morph_pos_by_position
+                ):
+                    continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",
                                              role=grole, arg=arg, predicate=pos))
     return violations

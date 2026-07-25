@@ -522,6 +522,92 @@ def test_classify_divergence_nmod_oblique_of_unrelated_token_still_flagged():
     assert any(v.detail.startswith("extra_arg") and v.arg == (1, 4) for v in violations)
 
 
+# --- derive_unit / _classify_divergence: Phase 5b rules --------------------------------
+
+
+def _conj_unit(conj_pos: str):
+    """A line-initial coordinating word attached to the previous clause head with deprel `conj`
+    ("E 'l mio buon duca ...", inferno 12:83) — Layer 4's routine treatment of such a token."""
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="disse", deprel="root", head_line=0, head_token=0),
+        dep.DepRow(line=1, token=2, word="E", deprel="conj", head_line=1, head_token=1),
+        dep.DepRow(line=1, token=3, word="duca", deprel="nsubj", head_line=1, head_token=2),
+    ]}
+    morph_rows = {1: [
+        morph.MorphRow(word="disse", pos="verb", person="3"),
+        morph.MorphRow(word="E", pos=conj_pos),
+        morph.MorphRow(word="duca", pos="noun"),
+    ]}
+    return skel.derive_unit([1], dep_rows, morph_rows)
+
+
+def test_derive_unit_does_not_promote_coordinating_conjunction():
+    derived = _conj_unit("conjunction")
+    assert {(r.line, r.token) for rows in derived.values() for r in rows} == {(1, 1)}
+
+
+def test_derive_unit_still_promotes_gapped_non_conjunction_conj():
+    # Same shape, but the coordinated token is a real (gapped) predicate — still derived.
+    derived = _conj_unit("verb")
+    assert (1, 2) in {(r.line, r.token) for rows in derived.values() for r in rows}
+
+
+def test_classify_divergence_copula_predicate_double_listing_suppressed():
+    # "Molti son li animali": derive_unit's predicate is the nominal "Molti" (UD suppresses the
+    # copula); the LLM lists "son" as the predicate too — a labeling-convention split.
+    derived = {1: [skel.SkelRow(1, 1, "Molti", "subj", 1, 4)]}
+    given = {1: [
+        skel.SkelRow(1, 1, "Molti", "subj", 1, 4),
+        skel.SkelRow(1, 2, "son", "subj", 1, 4),
+    ]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Molti", deprel="root", head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="son", deprel="cop", head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, {}) == []
+
+
+def test_classify_divergence_copula_of_underived_head_still_flagged():
+    # The copula's head is not a derived predicate: a genuine extra tuple, not a notation split.
+    derived = {1: []}
+    given = {1: [skel.SkelRow(1, 2, "son", "subj", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Molti", deprel="amod", head_line=1, head_token=4),
+        (1, 2): dep.DepRow(line=1, token=2, word="son", deprel="cop", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, {})
+    assert any(v.detail.startswith("extra_tuple") and "1.2" in v.detail for v in violations)
+
+
+def test_classify_divergence_adverbial_oblique_accepted():
+    # "quivi" as an obl argument: an adverb attached advmod, which derive_unit can't emit as obl.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 3)]}
+    given = {1: [
+        skel.SkelRow(1, 1, "vidi", "obj", 1, 3),
+        skel.SkelRow(1, 1, "vidi", "obl", 1, 2),
+    ]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="quivi", deprel="advmod", head_line=1, head_token=1),
+    }
+    morph_pos = {(1, 2): "adverb"}
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_adverbial_argument_of_nominal_role_still_flagged():
+    # Same adverb cited as an obj — a genuine miscitation, not an adverbial oblique.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 3)]}
+    given = {1: [
+        skel.SkelRow(1, 1, "vidi", "obj", 1, 3),
+        skel.SkelRow(1, 1, "vidi", "obj", 1, 2),
+    ]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="quivi", deprel="advmod", head_line=1, head_token=1),
+    }
+    morph_pos = {(1, 2): "adverb"}
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

@@ -1,5 +1,71 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5b/5d: re-triage of the reduced set (2026-07-26)
+
+Baseline: **0 hard, 5105 soft** (the Phase 5a state). Every surviving violation was re-classified
+by its dep-tree context — for `extra_arg`/`missing_arg`/`role_mismatch`, how the cited argument
+attaches under the predicate (direct child + deprel, descendant depth, unrelated, ∅); for
+`extra_tuple`/`missing_tuple`, the predicate's own deprel and Layer-2 POS. Three mechanical
+classes fell out, all measured corpus-wide before implementing, and all landing additively
+(5105 → 5012 → 5006 → 4945 → **4846**, exactly the sum of the three measured sizes):
+
+1. **Coordinating conjunctions promoted to predicates** (`derive_unit` rule 1, −93):
+   `missing_tuple` was **74% a single pattern** — a line-initial `E`/`Ed`/`Ma` that Layer 4
+   attaches to the previous clause head with deprel `conj` ("E 'l mio buon duca, che già li er'
+   al petto"), which `derive_unit`'s conj-promotion then made a predicate. A coordinating
+   conjunction is a function word and can never be a predicate: this is a **derivation
+   over-generation**, not an LLM omission — the LLM was right to not propose it. Gated on the
+   Layer-2 POS being `conjunction`, so gapped predicates of other POS (the `conj`/`noun` and
+   `conj`/`pronoun` cases, real ellipsis) stay derived. `missing_tuple` **100 → 26**.
+2. **Copula/auxiliary listed as the predicate** (`_classify_divergence`, `_aux_head`, −99):
+   "Molti *son* li animali", "se tu *vorrai* salire" — the LLM names the copula or modal as the
+   predicate where `derive_unit`, following UD, names the lexical head it attaches to. In
+   essentially every instance the LLM lists the head **as well**, so this is the same
+   double-listing the Phase 4a `attr`/`xcomp` whitelist already suppresses, and it is gated the
+   same way: only when the `aux`/`aux:pass`/`cop` token's head is itself a derived predicate.
+   `extra_tuple` **275 → 176**, with `extra_arg`/`missing_arg` untouched (an `extra_tuple`
+   predicate's argument rows were never compared, so nothing stops being checked).
+3. **Adverbial obliques** (`_adverbial_oblique`, −67): `obl`/`obl:<prep>` citing an adverb that
+   hangs off the same predicate as `advmod` (`quivi`, `là`, `dinanzi`) — 67% of all remaining
+   bare-`obl` `extra_arg`. `derive_unit` builds obliques only from `obl` deprel children, so it
+   structurally can't emit one; the membership soft check **already** accepts exactly these
+   tokens as `obl` arguments for exactly this reason (Pilot-build item 3), so this closes an
+   inconsistency between the two checks rather than adding an exemption.
+
+Rejected by the same measurement — recorded because each disproves a plausible rule:
+
+| candidate | measured |
+|---|---|
+| remap every given `aux`/`cop` predicate onto its head (instead of suppressing) | **−6** ❌ — merging the two argument sets adds `extra_arg` +19 as fast as it removes tuples |
+| remap only when the head is derived but *not* also listed by the LLM | −2 ❌ — the pattern is double-listing, so this variant almost never fires |
+
+**Phase 5d (route Layer-4 errors back to Layer 4): the hypothesis is disproved.** PLAN.md
+expected the `extra_arg` cases citing an `expl` child (107, counting `expl:pass`) to be `dep`
+mistags. Enumerating them: **99 of 107** cite a clitic — `si` 30, `mi` 27, `s'` 20, `ti` 7, `m'`
+7, `ci` 3, `se`/`sen`/`v'` 5 — i.e. Layer 4 correctly marks the clitic of an inherently
+pronominal verb (`andarsene`, `muoversi`, `rimanersi`, `raccostarsi`) as `expl`, and the LLM
+promotes it to `obj` (78) or an oblique (18). The 8 non-clitic stragglers (`noi`, `io`, `te`...)
+are too few to constitute a class.
+That is an **LLM reading against the frozen UD convention**, not a Layer-4 error — `--fix`
+material for Phase 5e, and nothing to file in `dep/CORRECTIONS.md`. No Layer-4 correction was
+opened this round.
+
+- Tests (`tests/test_skel.py`): `test_derive_unit_does_not_promote_coordinating_conjunction` +
+  `..._still_promotes_gapped_non_conjunction_conj`,
+  `test_classify_divergence_copula_predicate_double_listing_suppressed` +
+  `..._copula_of_underived_head_still_flagged`, `..._adverbial_oblique_accepted` +
+  `..._adverbial_argument_of_nominal_role_still_flagged` — again one negative case per rule.
+- No artifact under `skel/*/` was touched; checker-only, no model call.
+
+**Current state**: `make -C skel check` — **0 hard, 4846 soft** (5105 → 4846, Δ259; Δ1073 across
+Phase 5 so far, 18.1%). Remaining: `extra_arg` 1991, `missing_arg` 1305, `role_mismatch` 1250,
+`extra_tuple` 176, `membership` 96, `missing_tuple` 26, `unknown_role` 2. What is left in the
+three big classes is now dominated by patterns triage says are genuine reading disagreements:
+`extra_arg subj` 936 (73% citing a token *unrelated* to the predicate in the dep tree —
+enjambment and pro-drop resolution), `missing_arg` 716 obliques and 265 objects `derive_unit`
+reads off explicit dep edges the LLM simply didn't list, and `role_mismatch` 99.9% on edges both
+sides see. Those are Phase 5e (`--fix`) material.
+
 ## Checker Phase 5a/5c: coordination + `nmod`-oblique normalization; `--fix` acceptance (2026-07-26)
 
 Baseline before this round (`make -C skel check`): **0 hard, 5919 soft** — the state after one

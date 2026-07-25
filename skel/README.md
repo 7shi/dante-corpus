@@ -8,9 +8,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5a.** `make -C skel check`:
-**0 hard, 5105 soft** violations (down from 17438 at the first full-corpus measurement, 7776 at
-the Phase 4a checkpoint, 5919 after one Phase 4b `--fix` round). See
+**Status: built for all 100 cantos, checker refined through Phase 5b.** `make -C skel check`:
+**0 hard, 4846 soft** violations (down from 17438 at the first full-corpus measurement, 7776 at
+the Phase 4a checkpoint, 5919 after one Phase 4b `--fix` round, 5105 after Phase 5a). See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. `--fix` regeneration was
 measured to improve only 10.5% of the units it attempts — most flagged units are checker-side
 notation mismatches regeneration cannot fix — so Phase 5 returned to deterministic
@@ -121,6 +121,15 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    row per conjunct instead was measured at net −2 (`extra_arg` −554 against `missing_arg` +529),
    because the LLM's own enumeration of coordinations is inconsistent. Roles are preserved, so a
    genuine role disagreement on a conjunct still surfaces.
+6. **Phase 5b — three classes the re-triage isolated**: (a) `derive_unit` no longer promotes a
+   **coordinating conjunction** to predicate status via its `conj` rule — Layer 4 routinely
+   attaches a line-initial `E`/`Ma` to the previous clause head, and a function word is never a
+   predicate (gated on Layer-2 POS, so gapped predicates of other POS stay derived); (b) a given
+   predicate that is an `aux`/`cop` whose head `derive_unit` derived as the predicate is
+   suppressed (`_aux_head`) — "Molti *son* li animali", the copula/modal double-listing, same
+   shape as the Phase 4a `attr`/`xcomp` rule; (c) an `obl`/`obl:*` citing an adverb attached
+   `advmod` to the same predicate (`quivi`, `là`, `dinanzi`) is accepted (`_adverbial_oblique`)
+   — the membership check already accepts exactly these tokens as `obl` arguments.
 
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
@@ -140,6 +149,12 @@ roughly 1.8× what a full 2235-call `--fix` pass was extrapolated to remove. `su
 largest role bucket (`extra_arg subj` 936, `missing_arg subj` 323), and that residue is genuine
 subject disagreement (enjambment, pro-drop resolution) — widening the control-subject authority
 model was measured at −22 and rejected.
+
+After Phase 5b (2026-07-26, checker-only): **0 hard, 4846 soft** — `extra_arg` 1991,
+`missing_arg` 1305, `role_mismatch` 1250, `extra_tuple` 176, `membership` 96, `missing_tuple`
+26, `unknown_role` 2. Phase 5d's hypothesis that the `expl` cases are Layer-4 mistags was
+**disproved** by enumeration (99 of 107 cite the clitic of an inherently pronominal verb, which
+Layer 4 tags correctly) — no `dep/CORRECTIONS.md` entry was opened.
 
 ## Next steps
 

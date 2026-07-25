@@ -1,15 +1,16 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-26: `make -C skel check` reports **0 hard, 5105 soft** violations across
+Status as of 2026-07-26: `make -C skel check` reports **0 hard, 4846 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
-refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a,
-below). The project goal is unchanged: **0 soft violations** — soft divergences are rule
-mismatches to eliminate, not a baseline to tolerate.
+refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
+4846 after Phase 5b). The project goal is unchanged: **0 soft violations** — soft divergences
+are rule mismatches to eliminate, not a baseline to tolerate.
 
-**Phases 5a and 5c have landed** (see [`CORRECTIONS.md`](CORRECTIONS.md)); everything below the
-Phase 5a heading is the measurement that motivated them, kept as the record of what was tried
-and rejected. 5b/5d/5e are open. All violation counts in the analysis sections are the
-**pre-5a** figures unless stated otherwise.
+**Phases 5a, 5b, 5c and 5d have landed** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each
+round's rules, measurements and rejected candidates); **only 5e remains open**. Everything below
+is the measurement that motivated the phase plan, kept as the record of what was tried and
+rejected. All violation counts in the analysis sections are the **pre-5a** figures unless
+stated otherwise.
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach has measurably stalled, and the
@@ -160,13 +161,19 @@ recorded in `CORRECTIONS.md`. Expected: **0 hard, 5099 soft**.
 implementation applies `_apply_subj_authority` *before* collapsing, leaving Phase 2's behaviour
 exactly intact. Five tests, each rule paired with a negative case.
 
-### Phase 5b — re-triage on the reduced set — **next**
+### Phase 5b — re-triage on the reduced set — **done (2026-07-26)**
 
 Re-run `--stats` after 5a and re-classify what remains before spending any further model calls.
 The classes standing after 5a, in descending order, are `extra_arg` (2065; `subj` 936 of them),
 `missing_arg` (1317), `role_mismatch` (1250). Determine for each whether it is an LLM error, a
 `derive_unit` gap, or a Layer-4 error, and route accordingly — Phase 4a's whitelist work is the
 model for how narrowly such a decision should be scoped.
+
+**Landed**: classifying every violation by its dep-tree context isolated three mechanical
+classes — a `derive_unit` over-generation (coordinating conjunctions promoted to predicates,
+−93), a copula/modal double-listing (−99), and adverbial obliques (−67) — for **5105 → 4846**.
+Two variants of the copula rule that *remap* rather than suppress were measured and rejected
+(−6 and −2). Six tests. See `CORRECTIONS.md`.
 
 ### Phase 5c — tighten `--fix`'s acceptance criterion — **done (2026-07-26)**
 
@@ -178,7 +185,7 @@ outside the frozen vocabulary, in exchange for a net count drop. Require no new 
 (The related per-unit checkpointing bug — `_fix_canto` wrote the TSV only after finishing an
 entire canto, losing hours of work on any interruption — was fixed in `1955ff5`.)
 
-### Phase 5d — route Layer-4 errors back to Layer 4
+### Phase 5d — route Layer-4 errors back to Layer 4 — **done (2026-07-26): nothing to route**
 
 Some residual classes are likely `dep` errors rather than `skel` errors — most visibly the 105
 `expl` cases, where the dep tree marks a clitic pleonastic and the LLM reads it as a real
@@ -186,9 +193,20 @@ object. Layer 5 doubling as an audit of Layer 4 is the stated design intent (see
 [`README.md`](README.md) and [`../PLAN.md`](../PLAN.md)); such cases belong in
 `dep/CORRECTIONS.md`, not in a skel whitelist.
 
-### Phase 5e — `--fix` on what actually remains
+**Measured, and the hypothesis is disproved**: 99 of the 107 such violations cite the clitic of
+an inherently pronominal verb (`si`/`mi`/`s'`/`ti`/`ci` — `andarsene`, `muoversi`, `rimanersi`),
+which Layer 4 tags correctly as `expl`; the LLM promotes it to `obj` (78) or an oblique (18).
+That is an LLM reading against the frozen UD convention, so the class belongs to 5e, and no
+Layer-4 correction was opened.
 
-Only after 5a–5d, and only on classes triage has confirmed are genuine LLM misreadings.
+### Phase 5e — `--fix` on what actually remains — **open, the only phase left**
+
+Only after 5a–5d, and only on classes triage has confirmed are genuine LLM misreadings. As of
+4846 those are: `extra_arg subj` 936 (73% citing a token unrelated to the predicate in the dep
+tree — enjambment and pro-drop resolution), `missing_arg` on explicit `obl` (716) and `obj`
+(265) dep edges the LLM simply did not list, `role_mismatch` 1250 (99.9% on edges both sides
+see), and the `expl` clitics from 5d. `--fix` now runs under the Phase 5c acceptance criterion,
+and its flagged-unit workload is down from 2235 to what remains after Δ1073 of Phase 5.
 
 ## What is deliberately not proposed
 
@@ -199,4 +217,9 @@ Only after 5a–5d, and only on classes triage has confirmed are genuine LLM mis
   the large `extra_arg subj` bucket is control-licensed is disproved.
 - **A blanket rule over the `advmod`/`expl`/`mark` direct-child deprels** — these are a mix of
   genuine LLM over-promotion and probable Layer-4 mistags; a blanket exemption would swallow
-  both. Phase 5b/5d triage them instead.
+  both. Phase 5b/5d triaged them instead, and the outcome vindicates the caution: of the
+  `advmod` mass only the *adverbial oblique* half (adverb POS, `obl` role — 67) was accepted,
+  the `xcomp`-over-`advmod` half (91) stays flagged; the `expl` cases turned out to be neither
+  exemptible nor Layer-4 errors but plain LLM misreadings; `mark` was left untouched.
+- **Remapping a given `aux`/`cop` predicate onto its lexical head** (as opposed to suppressing
+  the redundant tuple) — measured −6, and −2 in its narrower variant; see 5b.
