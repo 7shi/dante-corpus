@@ -8,11 +8,12 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 4a.** `make -C skel check`:
-**0 hard, 7776 soft** violations (down from 17438 at the first full-corpus measurement). See
-[skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. Phase 4b — targeted
-`--fix`/hand corrections for the soft violations that remain genuine LLM/derivation
-disagreements — is the open next step (see *Next steps* below).
+**Status: built for all 100 cantos, checker refined through Phase 4a; Phase 4b `--fix`
+regeneration in progress.** `make -C skel check`: **0 hard, 5923 soft** violations (down from
+17438 at the first full-corpus measurement, 7776 at the Phase 4a checkpoint). See
+[skel/CORRECTIONS.md](CORRECTIONS.md) for the full correction history. Gains from further
+`--fix` passes (run 3-way parallel) have slowed; remaining violations should be triaged rather
+than assumed to keep dropping at the earlier rate (see *Next steps* below).
 
 ## What it does
 
@@ -109,10 +110,19 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    `amod`/`advmod`/`obj`/`nsubj`/`nmod`) are NP-internal modifiers the LLM wrongly promoted to
    predicate status — genuine errors, left flagged for `--fix`, not swallowed by the whitelist.
 
-**Measured over the full 100-canto corpus** (`--check`, 2026-07-20): **0 hard, 7776 soft** — by
-kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466, `extra_tuple` 600,
-`missing_tuple` 117, `membership` 94. See [CORRECTIONS.md](CORRECTIONS.md) for the measured
-before/after at every phase (14329 → 12825 → 9672 → 8090 → 7776) and the tests backing each rule.
+**Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
+hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
+`extra_tuple` 600, `missing_tuple` 117, `membership` 94. See [CORRECTIONS.md](CORRECTIONS.md)
+for the measured before/after at every phase (14329 → 12825 → 9672 → 8090 → 7776) and the tests
+backing each rule.
+
+After a round of Phase 4b `--fix` regeneration (2026-07-25, run 3-way parallel): **0 hard, 5923
+soft** — by kind, `extra_arg` 2852, `missing_arg` 1353, `role_mismatch` 1245, `extra_tuple` 275,
+`missing_tuple` 100, `membership` 96, `unknown_role` 2. Every kind dropped, but the pace has
+slowed noticeably compared to the mechanical phases above; `subj`/`obj` remain the largest
+`extra_arg`/`missing_arg` role buckets (`extra_arg subj` 1105, `missing_arg subj` 346),
+suggesting the residual violations skew toward genuine subject/object misreadings rather than
+further mechanical patterns.
 
 ## Next steps
 

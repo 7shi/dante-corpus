@@ -4,12 +4,12 @@ line	token	word	role	arg_line	arg_token
 2	2	ritrovai	obl:in	1	2
 2	2	ritrovai	obl:per	2	5
 3	6	smarrita	subj	3	4
-4	4	dir	ccomp	4	6
+4	4	dir	subj	0	0
+4	4	dir	obj	4	5
 4	6	era	subj	5	2
 4	6	era	attr	4	5
-4	7	è	subj	5	2
+4	7	è	subj	4	4
 4	7	è	attr	4	8
-4	8	cosa	subj	4	4
 5	0			0	0
 6	4	rinova	subj	6	1
 6	4	rinova	obj	6	6
@@ -67,15 +67,17 @@ line	token	word	role	arg_line	arg_token
 23	1	uscito	obl:a	23	7
 24	2	volge	subj	22	4
 24	2	volge	obl:a	24	5
+24	8	guata		0	0
 24	8	guata	subj	22	4
 25	7	fuggiva	subj	25	5
 26	2	volse	subj	25	3
 26	2	volse	xcomp	26	6
+26	2	volse	obl:come	22	3
 26	2	volse	obl:a	26	4
-26	6	rimirar	subj	0	0
+26	6	rimirar	subj	25	3
 26	6	rimirar	obj	26	8
-27	3	lasciò	subj	27	1
-27	3	lasciò	obj	27	6
+27	3	lasciò	subj	27	6
+27	3	lasciò	obj	27	1
 28	4	posato	subj	28	3
 28	4	posato	obj	28	8
 29	1	ripresi	subj	0	0
@@ -136,10 +138,11 @@ line	token	word	role	arg_line	arg_token
 49	0			0	0
 50	1	sembiava	subj	49	4
 50	1	sembiava	attr	50	2
+50	1	sembiava	obl:in	50	6
 50	2	carca	subj	49	4
 50	2	carca	obl:di	49	7
 50	2	carca	obl:in	50	6
-51	4	fé	subj	0	0
+51	4	fé	subj	52	1
 51	4	fé	obj	51	3
 51	4	fé	xcomp	51	6
 51	6	viver	subj	51	3
@@ -148,6 +151,7 @@ line	token	word	role	arg_line	arg_token
 52	3	porse	subj	52	1
 52	3	porse	obj	52	6
 52	3	porse	iobj	52	2
+52	3	porse	obl:con	53	3
 53	5	uscia	subj	53	4
 53	5	uscia	obl:di	53	8
 54	3	perdei	subj	54	2
@@ -220,7 +224,6 @@ line	token	word	role	arg_line	arg_token
 77	3	sali	obj	77	6
 78	3	principio	subj	78	1
 78	5	cagion	subj	78	1
-78	5	cagion	obl:di	78	8
 79	5	Virgilio	subj	79	3
 79	8	fonte	subj	79	3
 80	2	spandi	subj	80	1
@@ -255,7 +258,8 @@ line	token	word	role	arg_line	arg_token
 90	4	fa	subj	90	2
 90	4	fa	obj	90	3
 90	4	fa	xcomp	90	5
-90	5	tremar	subj	90	7
+90	5	tremar	subj	90	3
+90	5	tremar	obj	90	7
 91	3	convien	subj	0	0
 91	3	convien	xcomp	91	4
 91	3	convien	obl:a	91	2
@@ -357,12 +361,11 @@ line	token	word	role	arg_line	arg_token
 120	3	sia	obl:a	120	7
 121	7	vorrai	subj	121	6
 121	7	vorrai	xcomp	121	8
-121	8	salire	subj	0	0
+121	8	salire	subj	121	6
 121	8	salire	obl:a	121	3
 122	5	più	obl:di	122	7
 122	8	degna	subj	122	1
 122	8	degna	obl:a	122	4
-122	8	degna	obl:di	122	7
 123	4	lascerò	subj	0	0
 123	4	lascerò	obj	123	3
 123	4	lascerò	obl:con	123	2

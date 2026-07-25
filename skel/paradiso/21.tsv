@@ -9,16 +9,17 @@ line	token	word	role	arg_line	arg_token
 4	4	ridea	subj	4	2
 4	8	ridessi	subj	4	7
 5	2	cominciò	subj	0	0
-5	2	cominciò	iobj	5	1
+5	2	cominciò	obj	5	1
 5	5	faresti	subj	5	3
 5	5	faresti	attr	5	6
+5	6	quale	subj	5	3
 6	1	fu	subj	6	2
+6	1	fu	attr	5	6
 6	6	fessi	subj	0	0
 6	6	fessi	obl:di	6	5
 7	0			0	0
 8	7	accende	subj	7	5
 8	7	accende	obl:per	7	8
-8	7	accende	obl:di	8	4
 9	3	veduto	subj	0	0
 9	7	sale	subj	9	6
 10	4	temperasse	subj	0	0
@@ -27,6 +28,7 @@ line	token	word	role	arg_line	arg_token
 12	1	sarebbe	subj	11	5
 12	1	sarebbe	attr	12	2
 12	1	sarebbe	obl:a	11	8
+12	2	fronda	subj	11	5
 12	5	scoscende	subj	12	3
 12	5	scoscende	obj	12	4
 13	3	levati	subj	13	1
@@ -63,7 +65,7 @@ line	token	word	role	arg_line	arg_token
 24	1	contrapesando	obl:con	24	7
 25	7	porta	subj	25	6
 25	7	porta	obj	25	4
-26	1	cerchiando	subj	25	3
+26	1	cerchiando	subj	0	0
 26	1	cerchiando	obj	26	3
 27	3	giacque	subj	27	5
 27	3	giacque	obl:sotto	27	2
@@ -140,9 +142,9 @@ line	token	word	role	arg_line	arg_token
 51	3	Solvi	obj	51	7
 52	3	incominciai	subj	52	2
 53	3	fa	subj	52	6
-53	3	fa	iobj	53	2
-53	3	fa	attr	53	4
-53	4	degno	obl:de	53	8
+53	3	fa	obj	53	2
+53	3	fa	xcomp	53	4
+53	4	degno	obl:di	53	8
 54	6	chieder	subj	0	0
 54	6	chieder	obj	54	5
 54	8	concede	subj	54	4
@@ -150,15 +152,18 @@ line	token	word	role	arg_line	arg_token
 54	8	concede	iobj	54	7
 55	5	stai	subj	55	3
 55	5	stai	attr	55	6
-55	6	nascosta	obl:a	56	5
-56	6	fammi	subj	52	6
+55	5	stai	obl:dentro	56	5
+55	6	nascosta	subj	55	3
+55	6	nascosta	obl:dentro	56	5
+56	6	fammi	subj	0	0
 56	6	fammi	obj	57	2
 56	6	fammi	attr	56	7
-56	7	nota		0	0
+56	6	fammi	obl:per	54	3
+56	7	nota	subj	57	2
 57	9	posta	subj	57	3
-57	9	posta	obj	57	6
-57	9	posta	iobj	57	7
-58	2	dì	subj	52	6
+57	9	posta	obj	57	7
+57	9	posta	obl	57	6
+58	2	dì	subj	0	0
 58	2	dì	ccomp	58	5
 58	5	tace	subj	59	3
 58	5	tace	obl:in	58	8
@@ -169,9 +174,9 @@ line	token	word	role	arg_line	arg_token
 60	8	divota	subj	60	1
 61	2	hai	subj	61	1
 61	2	hai	obj	61	4
+61	2	hai	obj	61	9
 62	1	rispuose	subj	0	0
 62	1	rispuose	iobj	62	3
-62	1	rispuose	ccomp	61	2
 62	8	canta	subj	0	0
 62	8	canta	obl:per	63	2
 63	7	riso	subj	63	4
@@ -179,10 +184,11 @@ line	token	word	role	arg_line	arg_token
 64	0			0	0
 65	1	discesi	subj	0	0
 65	1	discesi	obl:per	64	4
+65	1	discesi	obl:per	65	5
+65	1	discesi	obl:con	66	2
+65	1	discesi	obl:con	66	6
 65	5	farti	subj	0	0
 65	5	farti	obj	65	6
-65	5	farti	obl:con	66	2
-65	5	farti	obl:con	66	6
 66	9	ammanta	subj	66	7
 66	9	ammanta	obj	66	8
 67	5	fece	subj	67	3
@@ -190,7 +196,7 @@ line	token	word	role	arg_line	arg_token
 67	5	fece	xcomp	67	6
 67	6	esser	subj	67	4
 67	6	esser	attr	67	8
-67	8	presta	subj	67	4
+67	8	presta	subj	0	0
 68	8	ferve	subj	68	5
 69	6	manifesta	subj	69	4
 69	6	manifesta	iobj	69	5
@@ -213,19 +219,18 @@ line	token	word	role	arg_line	arg_token
 75	3	seguir	obj	75	5
 76	3	è	subj	76	2
 76	3	è	attr	76	4
+76	4	quel	subj	76	2
 76	7	cerner	subj	0	0
 76	9	par	subj	76	5
 76	9	par	iobj	76	8
 76	9	par	attr	76	10
-76	9	par	obl:a	76	7
+76	10	forte	subj	76	5
+76	10	forte	iobj	76	8
+76	10	forte	xcomp	76	7
 77	2	predestinata	subj	0	0
+77	2	predestinata	attr	77	4
 77	2	predestinata	obl:a	78	3
 77	2	predestinata	obl:tra	78	7
-77	3	fosti	subj	0	0
-77	3	fosti	attr	77	2
-77	3	fosti	attr	77	4
-77	3	fosti	obl:a	78	3
-77	3	fosti	obl:tra	78	7
 78	0			0	0
 79	2	venni	subj	0	0
 79	2	venni	obl:a	79	7
@@ -287,7 +292,8 @@ line	token	word	role	arg_line	arg_token
 100	8	fumma	obl:in	100	7
 101	2	riguarda	subj	0	0
 101	2	riguarda	ccomp	101	4
-101	4	può	subj	102	1
+101	4	può	subj	0	0
+101	4	può	obj	102	1
 102	4	pote	subj	102	2
 102	9	assumma	subj	102	7
 102	9	assumma	obj	102	8
@@ -348,7 +354,6 @@ line	token	word	role	arg_line	arg_token
 121	4	fu'	obl:in	121	3
 122	4	fu'	subj	122	2
 122	4	fu'	obl:in	122	7
-122	4	fu'	obl:in	123	6
 123	0			0	0
 124	6	rimasa	subj	124	2
 124	6	rimasa	iobj	124	4
@@ -404,8 +409,6 @@ line	token	word	role	arg_line	arg_token
 139	6	fermarsi	subj	0	0
 140	2	fero	subj	0	0
 140	2	fero	obj	140	4
-141	3	potrebbe	subj	0	0
-141	3	potrebbe	xcomp	141	5
 141	5	assomigliarsi	subj	0	0
 142	4	'ntesi	subj	142	2
 142	4	'ntesi	obj	142	3

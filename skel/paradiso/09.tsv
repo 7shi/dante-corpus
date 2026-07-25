@@ -10,8 +10,6 @@ line	token	word	role	arg_line	arg_token
 3	3	dovea	subj	3	6
 3	3	dovea	xcomp	3	2
 4	2	disse	subj	0	0
-4	2	disse	ccomp	4	3
-4	2	disse	ccomp	4	5
 4	3	Taci	subj	0	0
 4	5	lascia	subj	0	0
 4	5	lascia	xcomp	4	6
@@ -26,6 +24,7 @@ line	token	word	role	arg_line	arg_token
 7	0			0	0
 8	1	rivolta	subj	7	4
 8	1	rivolta	obl:a	8	5
+8	1	rivolta	obl:come	9	3
 8	8	rïempie	subj	8	6
 8	8	rïempie	obj	8	7
 9	9	tanto	subj	9	4
@@ -47,8 +46,6 @@ line	token	word	role	arg_line	arg_token
 16	7	fermi	subj	16	5
 16	7	fermi	obl:sovra	17	2
 17	0			0	0
-18	4	certificato	subj	17	7
-18	4	certificato	obl:a	18	3
 18	5	fermi	subj	16	2
 18	5	fermi	obl:di	17	7
 19	2	metti	subj	0	0
@@ -81,14 +78,15 @@ line	token	word	role	arg_line	arg_token
 26	3	siede	obl:tra	27	3
 27	0			0	0
 28	2	leva	subj	28	4
+28	2	leva	obl:in	25	3
 28	7	surge	subj	28	4
 28	7	surge	attr	28	9
 28	9	alto	subj	28	4
 29	3	scese	subj	29	6
-29	3	scese	obl	29	2
+29	3	scese	obl	29	1
 30	2	fece	subj	30	1
 30	2	fece	obj	30	8
-30	2	fece	obl:a	30	5
+30	2	fece	iobj	30	5
 31	4	nacqui	subj	31	6
 31	4	nacqui	obl:di	31	3
 32	3	chiamata	subj	32	1
@@ -182,7 +180,6 @@ line	token	word	role	arg_line	arg_token
 64	3	tacette	subj	64	2
 64	5	fecemi	subj	0	0
 64	5	fecemi	obj	64	6
-64	5	fecemi	ccomp	65	2
 65	2	fosse	subj	0	0
 65	2	fosse	obl:a	65	5
 65	2	fosse	obl:per	65	8
@@ -190,6 +187,7 @@ line	token	word	role	arg_line	arg_token
 66	4	mise	obl:in	66	2
 66	6	era	subj	0	0
 66	6	era	attr	66	7
+66	7	davante	subj	0	0
 67	8	nota	subj	67	4
 67	8	nota	iobj	67	5
 67	8	nota	obl:per	68	3
@@ -241,7 +239,6 @@ line	token	word	role	arg_line	arg_token
 87	7	suole	xcomp	87	6
 88	6	litorano	subj	88	5
 88	6	litorano	obl:di	88	3
-88	6	litorano	obl:tra	89	2
 89	0			0	0
 90	1	parte	subj	90	3
 90	1	parte	obl	89	5
@@ -288,7 +285,6 @@ line	token	word	role	arg_line	arg_token
 105	5	ordinò	subj	0	0
 105	5	ordinò	obj	105	4
 105	7	provide	subj	0	0
-105	7	provide	obj	105	4
 106	3	rimira	subj	0	0
 106	3	rimira	obl:in	106	6
 106	8	addorna	subj	106	7
@@ -323,6 +319,7 @@ line	token	word	role	arg_line	arg_token
 117	7	sigilla	subj	116	1
 117	7	sigilla	obl:di	117	2
 117	7	sigilla	obl:in	117	5
+118	3	cielo		0	0
 118	9	appunta	subj	118	7
 118	9	appunta	obl:in	118	5
 119	5	face	subj	119	1

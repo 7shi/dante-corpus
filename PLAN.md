@@ -30,14 +30,15 @@ current status.
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 7776 soft** (down from 17438 at the first full-corpus
-  measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
-  [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history. **Not yet
-  done**: Phase 4b — targeted `--fix`/hand corrections for the soft violations that remain
-  genuine LLM/derivation disagreements (see `skel/README.md`'s *Next steps*), and the final
-  `dante_corpus/README.md` update. Phase 4b is **LLM-regeneration work the user runs
-  themselves** (`make -C skel fix`, local `ollama:gemma4:31b-it-qat`) — Phase 4a's checker-only
-  refinement was the last piece delegated to the assistant.
+  three canticles reports **0 hard, 5923 soft** (down from 17438 at the first full-corpus
+  measurement, 7776 at the Phase 4a checkpoint) — see [`skel/README.md`](skel/README.md)'s
+  *Check* section and [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction
+  history. **In progress**: Phase 4b — targeted `--fix`/hand corrections for the soft violations
+  that remain genuine LLM/derivation disagreements (see `skel/README.md`'s *Next steps*), plus
+  the final `dante_corpus/README.md` update. Phase 4b is **LLM-regeneration work the user runs
+  themselves** (`make -C skel fix`, run 3-way parallel, local `ollama:gemma4:31b-it-qat`) —
+  Phase 4a's checker-only refinement was the last piece delegated to the assistant. Gains from
+  further `--fix` passes have slowed (7776 → 5923 over the first round).
 
 `grammar-stack-plan` was merged into `main` (fast-forward) and pushed; Layers 1–4 and their
 artifacts now live on `main`.
@@ -47,8 +48,9 @@ artifacts now live on `main`.
 1. **Layer 5 Phase 4b** *(user-run, LLM regeneration)* — targeted `--fix`/hand corrections for
    the soft violations that remain genuine LLM/derivation disagreements after the mechanical
    checker phases (subj/obj/iobj reversals, residual elided-copula-adjacent structural cases,
-   membership false positives); see [`skel/README.md`](skel/README.md)'s *Next steps*. Not
-   started yet — corpus is still at the Phase 4a checker-only state (0 hard, 7776 soft).
+   membership false positives); see [`skel/README.md`](skel/README.md)'s *Next steps*. In
+   progress — corpus is at **0 hard, 5923 soft** (down from the Phase 4a checkpoint of 7776),
+   but the rate of improvement from further `--fix` passes has slowed.
 
 ## Why this lives in the corpus
 

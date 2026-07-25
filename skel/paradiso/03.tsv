@@ -40,19 +40,22 @@ line	token	word	role	arg_line	arg_token
 13	1	tornan	obl:per	10	3
 13	1	tornan	obl:per	11	4
 13	1	tornan	obl:di	13	5
-14	1	debili	subj	13	7
+14	0			0	0
 15	2	vien	subj	14	4
 15	2	vien	attr	15	4
+15	2	vien	obl:in	14	7
 15	2	vien	obl:a	15	8
 16	2	vid'	subj	16	3
 16	2	vid'	obj	16	5
 16	2	vid'	attr	16	1
-16	7	parlar	subj	16	5
+16	7	parlar		0	0
 17	9	corsi	subj	17	3
-17	9	corsi	obl:a	17	7
+17	9	corsi	obl:in	17	7
+17	9	corsi	obl:a	18	2
 18	4	accese	subj	18	3
 18	4	accese	obj	18	5
 18	4	accese	obl:tra	18	8
+18	4	accese	obl:tra	18	11
 19	8	accorsi	subj	19	4
 19	8	accorsi	obl:di	19	6
 20	2	stimando	subj	0	0
@@ -76,16 +79,16 @@ line	token	word	role	arg_line	arg_token
 25	6	sorrida	subj	25	5
 26	2	disse	subj	0	0
 26	2	disse	iobj	26	1
-26	2	disse	ccomp	25	3
-26	2	disse	obl:appresso	26	7
 27	9	fida	subj	27	7
+27	9	fida	obl:appresso	26	7
 27	9	fida	obl:sopra	27	4
 28	3	rivolve	subj	27	7
 28	3	rivolve	obj	28	2
 28	3	rivolve	obl:a	28	7
-28	5	suole	subj	0	0
+28	5	suole	subj	27	7
 29	3	son	subj	29	2
 29	3	son	attr	29	4
+29	4	ciò	subj	29	2
 29	7	vedi	subj	29	6
 29	7	vedi	obj	29	5
 30	2	rilegate	subj	29	2
@@ -163,13 +166,13 @@ line	token	word	role	arg_line	arg_token
 52	6	infiammati	obl:in	53	3
 53	0			0	0
 54	1	letizian	subj	52	3
-54	5	formati	subj	52	3
 54	5	formati	obl:di	54	4
 55	5	par	subj	55	4
 56	4	data	subj	55	3
 56	4	data	obl:di	56	2
 56	7	negletti	subj	57	3
 56	7	negletti	subj	57	5
+56	7	negletti	obl:in	57	8
 57	0			0	0
 58	0			0	0
 59	2	risplende	subj	59	6
@@ -199,9 +202,10 @@ line	token	word	role	arg_line	arg_token
 66	7	farvi	attr	66	8
 67	6	sorrise	subj	0	0
 67	6	sorrise	obl:con	67	4
+67	6	sorrise	obl	67	8
 68	4	rispuose	subj	0	0
 68	4	rispuose	iobj	68	3
-68	4	rispuose	attr	68	6
+68	4	rispuose	obl:da	68	2
 69	2	arder	subj	0	0
 69	2	arder	obl:di	69	5
 69	2	arder	obl:in	69	8
@@ -296,6 +300,7 @@ line	token	word	role	arg_line	arg_token
 97	6	inciela	obj	97	2
 98	5	disse	subj	0	0
 98	5	disse	iobj	98	4
+98	5	disse	ccomp	97	6
 99	6	veste	subj	0	0
 99	6	veste	obl:a	98	9
 99	6	veste	obl:in	99	3
@@ -310,8 +315,8 @@ line	token	word	role	arg_line	arg_token
 100	8	dorma	obl:con	101	3
 101	7	accetta	subj	101	4
 101	7	accetta	obj	101	6
-102	6	conforma	subj	102	1
-102	6	conforma	obj	102	2
+102	6	conforma	subj	102	2
+102	6	conforma	obj	102	1
 102	6	conforma	obl:a	102	5
 103	4	seguirla	subj	0	0
 104	1	fuggi'	subj	0	0
@@ -330,8 +335,9 @@ line	token	word	role	arg_line	arg_token
 107	3	rapiron	obl:de	107	7
 108	3	sa	subj	108	1
 108	3	sa	ccomp	108	8
-108	8	fusi	subj	108	7
+108	8	fusi	subj	0	0
 108	8	fusi	attr	108	4
+108	8	fusi	obl	108	7
 109	8	mostra	subj	109	5
 109	8	mostra	iobj	109	6
 109	8	mostra	obl:da	110	5

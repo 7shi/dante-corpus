@@ -9,7 +9,7 @@ line	token	word	role	arg_line	arg_token
 4	2	puose	obl:a	4	6
 5	2	fece	subj	1	2
 5	2	fece	xcomp	5	3
-5	3	quïetar	subj	5	6
+5	3	quïetar	obj	5	6
 6	6	allenta	subj	6	3
 6	6	allenta	obj	6	1
 6	8	tira	subj	6	3
@@ -23,14 +23,14 @@ line	token	word	role	arg_line	arg_token
 9	6	tacer	subj	0	0
 9	8	concorde	subj	8	3
 9	8	concorde	obl:a	9	6
-10	1	Bene	subj	10	7
-10	2	è	subj	10	7
-10	2	è	attr	10	1
+10	1	Bene	subj	10	3
 10	7	doglia	subj	11	1
+10	7	doglia	obj	10	6
 10	7	doglia	obl:sanza	10	5
 11	8	duri	subj	11	6
 12	5	spoglia	subj	11	1
 12	5	spoglia	obj	12	3
+12	5	spoglia	obj	12	4
 12	5	spoglia	obl:per	11	3
 13	0			0	0
 14	1	discorre	subj	14	7
@@ -116,7 +116,6 @@ line	token	word	role	arg_line	arg_token
 47	2	sia	subj	47	3
 47	2	sia	attr	47	1
 47	4	fu	subj	46	3
-47	4	fu	attr	47	1
 47	5	trino	subj	47	3
 47	7	uno	subj	47	3
 48	5	se'	subj	48	1
@@ -125,20 +124,14 @@ line	token	word	role	arg_line	arg_token
 48	7	cortese	subj	48	1
 48	7	cortese	obl:in	48	4
 49	2	seguì	subj	0	0
-50	1	tratto	subj	49	6
 50	2	leggendo	subj	0	0
 50	2	leggendo	obl:di	50	5
 51	4	muta	subj	51	1
 51	4	muta	attr	51	6
 51	4	muta	attr	51	8
 52	1	solvuto	subj	0	0
-52	1	solvuto	obj	49	6
 52	1	solvuto	obl:in	52	7
 52	1	solvuto	obl	53	6
-52	2	hai	subj	0	0
-52	2	hai	obj	49	6
-52	2	hai	obl:in	52	7
-52	2	hai	obl	53	6
 53	5	parlo	subj	53	3
 53	5	parlo	iobj	53	4
 54	7	vestì	subj	54	1
@@ -173,11 +166,10 @@ line	token	word	role	arg_line	arg_token
 61	2	credi	subj	61	1
 61	2	credi	obj	61	4
 62	4	miran	subj	61	7
-62	4	miran	obl:di	62	3
 62	4	miran	obl:in	62	7
 63	5	pensi	subj	0	0
 63	8	pandi	subj	63	7
-63	8	pandi	obl:in	63	2
+63	8	pandi	obj	63	2
 64	9	veglio	subj	64	8
 64	9	veglio	obl:in	64	7
 64	9	veglio	obl:con	65	3
@@ -192,7 +184,6 @@ line	token	word	role	arg_line	arg_token
 68	4	suoni	obj	68	6
 69	8	decreta	subj	69	5
 70	3	volsi	subj	70	1
-70	3	volsi	obj	70	2
 70	3	volsi	obl:a	70	5
 70	8	udio	subj	70	7
 71	4	parlassi	subj	71	3
@@ -200,7 +191,7 @@ line	token	word	role	arg_line	arg_token
 71	6	arrisemi	obj	71	8
 72	2	fece	subj	72	1
 72	2	fece	xcomp	72	3
-72	3	crescer	subj	72	5
+72	3	crescer	obj	72	5
 72	3	crescer	obl:a	72	7
 73	2	cominciai	subj	0	0
 74	6	apparse	subj	74	4
@@ -290,7 +281,7 @@ line	token	word	role	arg_line	arg_token
 103	2	faceva	subj	104	2
 103	2	faceva	obj	103	5
 103	2	faceva	iobj	104	4
-103	3	nascendo	subj	104	2
+103	3	nascendo		0	0
 104	0			0	0
 105	2	fuggien	subj	104	7
 105	2	fuggien	obj	105	7
@@ -344,12 +335,11 @@ line	token	word	role	arg_line	arg_token
 120	6	diserta	obl:in	120	5
 121	3	vegghiava	subj	121	2
 121	3	vegghiava	obl:a	121	5
-122	2	consolando	subj	121	2
+122	2	consolando		0	0
 122	3	usava	subj	121	2
 122	3	usava	obj	122	5
 123	8	trastulla	subj	123	1
 123	8	trastulla	obj	123	4
-124	3	traendo	subj	124	2
 124	3	traendo	obj	124	8
 124	3	traendo	obl:a	124	6
 125	1	favoleggiava	subj	124	2

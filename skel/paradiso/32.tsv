@@ -20,31 +20,29 @@ line	token	word	role	arg_line	arg_token
 7	5	fanno	obj	7	4
 8	1	siede	subj	8	2
 8	1	siede	obl:in	7	3
-8	1	siede	obl:da	8	6
+8	1	siede	obl:di	8	4
 8	1	siede	obl:con	9	2
 9	6	vedi	subj	9	5
 10	0			0	0
 11	3	bisava	subj	11	1
 11	3	bisava	obl:a	11	5
 12	3	disse	subj	11	6
-12	3	disse	obj	12	4
+12	3	disse	ccomp	12	4
 12	3	disse	obl:per	11	8
+12	3	disse	obl:di	12	2
 12	4	Miserere	subj	0	0
 12	4	Miserere	obj	12	5
-13	1	puoi	subj	13	2
-13	1	puoi	xcomp	13	3
 13	3	veder	subj	13	2
 13	3	veder	obj	10	1
 13	3	veder	xcomp	14	2
+13	3	veder	obl:di	13	6
 14	2	digradar	subj	10	1
-14	2	digradar	obl:di	13	6
-14	2	digradar	obl:in	13	8
 15	1	vo	subj	14	4
 15	1	vo	obl:a	14	8
 15	1	vo	obl:per	15	4
 15	1	vo	obl:di	15	7
-15	1	vo	obl:in	15	9
-16	8	come		0	0
+16	8	come	subj	17	5
+16	8	come	obl:a	17	3
 17	4	succedono	subj	17	5
 17	4	succedono	obl:da	16	4
 17	4	succedono	obl:a	17	3
@@ -54,6 +52,7 @@ line	token	word	role	arg_line	arg_token
 19	6	fée	subj	20	2
 19	6	fée	obj	19	5
 20	8	muro	subj	20	5
+20	8	muro	obl:secondo	19	4
 21	4	parton	subj	21	7
 21	4	parton	obl:a	21	2
 22	8	maturo	subj	22	6
@@ -77,6 +76,7 @@ line	token	word	role	arg_line	arg_token
 30	6	fanno	subj	28	6
 30	6	fanno	subj	29	9
 30	6	fanno	obj	30	5
+30	6	fanno	obl:di	30	3
 31	0			0	0
 32	0			0	0
 33	1	sofferse	subj	32	1
@@ -92,9 +92,9 @@ line	token	word	role	arg_line	arg_token
 34	6	sortiro	subj	35	2
 34	6	sortiro	subj	35	4
 34	6	sortiro	subj	36	2
-34	6	sortiro	xcomp	34	5
 34	6	sortiro	obl:contra	31	4
 34	6	sortiro	obl:sotto	34	3
+34	6	sortiro	obl:fin	36	4
 34	6	sortiro	obl:di	36	7
 35	0			0	0
 36	0			0	0
@@ -131,7 +131,6 @@ line	token	word	role	arg_line	arg_token
 48	9	ascolti	subj	48	2
 48	9	ascolti	obj	48	8
 49	2	dubbi	subj	49	3
-49	5	dubitando	subj	0	0
 49	6	sili	subj	49	3
 50	3	discioglierò	subj	50	2
 50	3	discioglierò	obj	50	6
@@ -140,28 +139,28 @@ line	token	word	role	arg_line	arg_token
 51	4	stringon	obl:in	51	2
 52	0			0	0
 53	4	puote	subj	53	2
-53	4	puote	xcomp	53	5
+53	4	puote	xcomp	53	6
+53	4	puote	obl:dentro	52	4
 53	5	aver	subj	53	2
 53	5	aver	xcomp	53	6
 53	6	sito	subj	53	2
 53	6	sito	attr	54	4
-53	6	sito	obl:dentro	52	4
 54	0			0	0
 55	6	stabilito	subj	56	1
 55	6	stabilito	obl:per	55	4
 56	2	vedi	subj	0	0
 56	2	vedi	obj	56	1
-57	3	risponde	subj	57	2
+57	3	risponde	subj	0	0
 57	3	risponde	iobj	57	1
 57	3	risponde	obl:da	57	6
 57	3	risponde	obl:a	57	8
 58	0			0	0
 59	5	è	subj	58	5
 59	5	è	attr	60	7
-60	7	eccellente	subj	58	5
-60	7	eccellente	obl:a	59	3
-60	7	eccellente	obl:sine	59	7
-60	7	eccellente	obl:intra	60	2
+59	5	è	obl:a	59	3
+59	5	è	obl:sine	59	7
+59	5	è	obl:intra	60	2
+60	0			0	0
 61	7	pausa	subj	61	6
 61	7	pausa	obl:per	61	4
 61	7	pausa	obl:in	62	3
@@ -169,11 +168,10 @@ line	token	word	role	arg_line	arg_token
 62	0			0	0
 63	7	ausa	subj	63	3
 64	0			0	0
-65	1	creando	subj	61	2
+65	1	creando	subj	0	0
 65	1	creando	obj	64	2
 65	1	creando	obl:in	64	7
 65	7	dota	subj	61	2
-65	7	dota	obj	64	2
 65	7	dota	obl:a	65	4
 65	7	dota	obl:di	65	6
 66	4	basti	subj	66	6
@@ -225,21 +223,21 @@ line	token	word	role	arg_line	arg_token
 87	6	veder	subj	87	2
 87	6	veder	obj	87	7
 88	2	vidi	subj	88	1
-88	2	vidi	obj	88	6
 88	2	vidi	xcomp	89	1
 88	2	vidi	obl:sopra	88	4
 89	1	piover	subj	88	6
 89	2	portata	subj	88	6
-89	2	portata	obl:ne	89	5
+89	2	portata	obl:in	89	5
 90	1	create	subj	89	5
 90	1	create	xcomp	90	3
 90	3	trasvolar	subj	89	5
 90	3	trasvolar	obl:per	90	6
 91	5	visto	subj	91	3
-92	6	sospese	subj	0	0
+91	5	visto	obj	91	1
+92	6	sospese	subj	91	1
 92	6	sospese	obj	92	5
 92	6	sospese	obl:di	92	3
-93	3	mostrò	subj	0	0
+93	3	mostrò	subj	91	1
 93	3	mostrò	obj	93	7
 93	3	mostrò	iobj	93	2
 94	7	discese	subj	94	4
@@ -255,7 +253,6 @@ line	token	word	role	arg_line	arg_token
 98	0			0	0
 99	6	fé	subj	99	4
 99	6	fé	attr	99	8
-99	6	fé	obl:di	99	5
 99	8	serena	subj	99	4
 100	7	comporte	subj	100	4
 100	7	comporte	obj	101	2
@@ -314,21 +311,12 @@ line	token	word	role	arg_line	arg_token
 117	0			0	0
 118	4	seggon	subj	118	3
 118	4	seggon	attr	118	8
-119	2	esser	subj	0	0
-119	2	esser	attr	119	3
-119	2	esser	obl:ad	119	5
 119	3	propinquissimi	subj	0	0
-119	3	propinquissimi	obl:ad	119	5
-120	1	son	subj	118	2
-120	1	son	attr	120	7
-120	1	son	obl:di	120	4
+119	3	propinquissimi	obl:a	119	5
 120	7	radici	subj	118	2
-120	7	radici	obl:di	120	4
 121	7	aggiusta	subj	121	2
 121	7	aggiusta	obj	121	5
 121	7	aggiusta	obl:da	121	4
-122	1	è	subj	121	1
-122	1	è	attr	122	3
 122	3	padre	subj	121	1
 123	6	gusta	subj	123	3
 123	6	gusta	obj	123	5
@@ -340,7 +328,6 @@ line	token	word	role	arg_line	arg_token
 126	1	raccomandò	subj	125	6
 126	1	raccomandò	obj	125	8
 126	1	raccomandò	iobj	125	5
-126	1	raccomandò	obl:di	126	4
 127	4	vide	subj	127	3
 127	4	vide	obj	127	7
 128	3	morisse	subj	0	0
@@ -357,29 +344,27 @@ line	token	word	role	arg_line	arg_token
 131	5	visse	obl:di	131	7
 132	0			0	0
 133	5	vedi	subj	0	0
-133	5	vedi	obj	133	7
-133	5	vedi	xcomp	133	6
-133	5	vedi	obl:a	133	4
+133	5	vedi	obj	133	6
 133	6	sedere	subj	133	7
+133	6	sedere	obl:di	133	4
 134	2	contenta	subj	133	7
-134	2	contenta	obl:di	134	4
+134	2	contenta	xcomp	134	4
 134	4	mirar	subj	0	0
 134	4	mirar	obj	134	6
 135	3	move	subj	0	0
 135	3	move	obj	135	4
-135	3	move	obl:per	135	6
+135	3	move	xcomp	135	6
 135	6	cantare	subj	0	0
 135	6	cantare	obj	135	7
 136	0			0	0
 137	1	siede	subj	137	2
-137	1	siede	obl:contro	136	5
+137	1	siede	obl:a	136	5
 137	4	mosse	subj	137	3
 137	4	mosse	obj	137	7
 138	2	chinavi	subj	0	0
 138	2	chinavi	obj	138	6
-138	2	chinavi	obl:a	138	4
-138	4	rovinar	subj	0	0
-138	4	rovinar	obj	138	6
+138	2	chinavi	xcomp	138	4
+138	4	rovinar		0	0
 139	5	fugge	subj	139	4
 139	8	assonna	subj	139	6
 139	8	assonna	obj	139	7
@@ -403,15 +388,15 @@ line	token	word	role	arg_line	arg_token
 146	1	movendo	obj	146	3
 146	5	credendo	subj	0	0
 146	5	credendo	xcomp	146	6
-146	6	oltrarti	subj	0	0
+146	6	oltrarti		0	0
 147	1	orando	subj	0	0
 147	1	orando	obj	147	2
-147	3	conven	ccomp	147	6
-147	6	impetri	subj	147	5
-147	6	impetri	obj	148	1
+147	3	conven	subj	147	4
+147	6	impetri	subj	148	1
+147	6	impetri	obl:da	148	3
 148	5	puote	subj	148	4
 148	5	puote	xcomp	148	6
-148	6	aiutarti	subj	0	0
+148	6	aiutarti		0	0
 149	4	seguirai	subj	149	2
 149	4	seguirai	obj	149	3
 149	4	seguirai	obl:con	149	7

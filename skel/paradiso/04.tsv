@@ -13,52 +13,56 @@ line	token	word	role	arg_line	arg_token
 6	3	starebbe	subj	6	5
 6	3	starebbe	obl:intra	6	8
 7	6	tacea	subj	7	4
-7	6	tacea	obj	7	5
 7	9	riprendo	subj	0	0
 7	9	riprendo	obj	7	7
-8	8	sospinto	subj	0	0
+7	9	riprendo	obl:per	7	2
+8	8	sospinto	subj	7	4
 8	8	sospinto	obl:da	8	4
 8	8	sospinto	obl:di	8	7
 9	4	necessario	subj	0	0
 9	6	commendo	subj	0	0
 10	3	tacea	subj	10	1
+10	8	dipinto	subj	10	7
+10	8	dipinto	obl:a	11	1
+10	8	dipinto	obl:in	11	4
 11	2	era	subj	10	7
+11	2	era	obl:a	11	1
 11	2	era	obl:in	11	4
 12	2	caldo	subj	11	7
-12	6	parlar	subj	0	0
+12	2	caldo	obl:per	12	6
 13	1	Fé	subj	13	3
+13	1	Fé	obj	13	4
 13	5	fé	subj	13	6
-14	2	levando	subj	13	6
-14	2	levando	obj	14	1
+13	5	fé	obj	14	1
+14	2	levando	subj	0	0
 14	2	levando	obl:di	14	4
 15	4	fatto	subj	15	1
 15	4	fatto	obj	15	2
-15	4	fatto	xcomp	15	6
+15	4	fatto	attr	15	6
 15	6	fello	subj	15	2
-16	2	disse	subj	13	3
+16	2	disse	subj	0	0
+16	2	disse	ccomp	16	4
 16	4	veggio	subj	16	3
-16	4	veggio	ccomp	16	8
+16	4	veggio	obj	16	8
 16	8	tira	subj	17	4
 16	8	tira	obj	16	7
 17	0			0	0
 18	3	lega	subj	17	8
 18	3	lega	obj	18	1
-18	8	spira	subj	0	0
+18	8	spira	subj	17	8
 19	2	argomenti	subj	19	1
-19	2	argomenti	ccomp	21	4
 19	7	dura	subj	19	6
 20	0			0	0
-21	2	meritar	subj	0	0
 21	4	scema	subj	20	2
 21	4	scema	obj	21	6
 21	4	scema	iobj	21	3
 21	4	scema	obl:per	20	6
-22	3	dubitar	subj	0	0
 22	5	dà	subj	23	1
 22	5	dà	obj	22	6
 22	5	dà	iobj	22	4
 22	5	dà	obl:secondo	24	3
-23	1	parer	subj	23	2
+23	1	parer	subj	0	0
+23	1	parer	ccomp	23	2
 23	2	tornarsi	subj	23	4
 23	2	tornarsi	obl:a	23	7
 24	0			0	0
@@ -152,11 +156,11 @@ line	token	word	role	arg_line	arg_token
 57	6	derisa	subj	57	2
 58	3	intende	subj	58	2
 58	3	intende	xcomp	58	4
+58	4	tornare	obj	59	2
+58	4	tornare	obj	59	8
 58	4	tornare	obl:a	58	7
 59	0			0	0
 60	6	percuote	subj	0	0
-60	6	percuote	obj	59	2
-60	6	percuote	obj	59	8
 60	6	percuote	obl:in	60	5
 61	4	inteso	subj	61	2
 61	5	torse	subj	61	2
@@ -181,8 +185,7 @@ line	token	word	role	arg_line	arg_token
 68	8	argomento	obl:di	69	2
 68	8	argomento	obl:di	69	7
 69	0			0	0
-70	3	puote	subj	70	5
-70	3	puote	xcomp	71	2
+70	0			0	0
 71	2	penetrare	subj	70	5
 71	2	penetrare	obl:a	71	5
 72	2	disiri	subj	0	0
@@ -191,7 +194,7 @@ line	token	word	role	arg_line	arg_token
 72	4	farò	xcomp	72	5
 72	5	contento	subj	72	3
 73	3	è	subj	73	2
-73	3	è	attr	74	2
+73	3	è	attr	73	4
 73	7	pate	subj	73	6
 74	2	conferisce	subj	73	5
 74	2	conferisce	obj	74	1
@@ -201,7 +204,6 @@ line	token	word	role	arg_line	arg_token
 75	7	scusate	obl:per	75	6
 76	5	vuol	subj	76	2
 76	8	ammorza	subj	76	2
-76	8	ammorza	obj	76	7
 77	2	fa	subj	76	2
 77	5	face	subj	77	4
 77	5	face	obl:in	77	7
@@ -241,8 +243,7 @@ line	token	word	role	arg_line	arg_token
 90	4	fatto	iobj	90	2
 90	4	fatto	obl	90	8
 91	5	attraversa	subj	91	8
-91	5	attraversa	iobj	91	3
-91	5	attraversa	obl:a	92	4
+91	5	attraversa	obl:a	91	3
 92	0			0	0
 93	2	usciresti	subj	0	0
 93	2	usciresti	obl:per	92	8
@@ -267,7 +268,8 @@ line	token	word	role	arg_line	arg_token
 99	4	par	xcomp	99	7
 99	7	contradire	subj	99	3
 99	7	contradire	obl:cum	99	6
-100	5	addivenne	subj	0	0
+100	5	addivenne	subj	101	1
+100	5	addivenne	obl	100	2
 101	3	fuggir	subj	0	0
 101	3	fuggir	obj	101	4
 102	2	fé	subj	0	0
@@ -327,11 +329,15 @@ line	token	word	role	arg_line	arg_token
 118	0			0	0
 119	1	diss'	subj	119	2
 119	8	inonda	subj	119	6
+119	8	inonda	obj	119	7
 120	2	scalda	subj	119	6
-120	9	avviva	subj	0	0
+120	2	scalda	obj	119	7
+120	9	avviva	subj	119	6
+120	9	avviva	obj	120	8
 121	7	profonda	subj	121	4
-122	2	basti	subj	0	0
+122	2	basti	subj	121	4
 122	2	basti	xcomp	122	4
+122	4	render	subj	0	0
 122	4	render	obj	122	6
 122	4	render	iobj	122	5
 123	4	vede	subj	123	3
@@ -359,9 +365,9 @@ line	token	word	role	arg_line	arg_token
 130	1	Nasce	obl:per	130	3
 130	1	Nasce	obl:a	130	5
 130	1	Nasce	obl:a	131	2
-131	8	è	subj	132	1
+131	8	è	subj	132	4
 131	8	è	attr	131	9
-131	9	natura	subj	132	1
+131	9	natura	subj	132	4
 132	4	pinge	subj	0	0
 132	4	pinge	obj	132	5
 132	4	pinge	obl:a	132	3
@@ -379,12 +385,13 @@ line	token	word	role	arg_line	arg_token
 135	8	oscura	iobj	135	6
 136	2	vo'	subj	136	1
 136	2	vo'	xcomp	136	3
+136	3	saper	subj	0	0
 136	3	saper	ccomp	136	7
 136	7	può	subj	136	6
 136	7	può	xcomp	136	8
-136	8	sodisfarvi	subj	136	6
+136	8	sodisfarvi	subj	0	0
+136	8	sodisfarvi	obl:a	137	2
 137	3	manchi	subj	0	0
-137	3	manchi	obl:a	137	2
 137	3	manchi	obl:con	137	7
 138	8	parvi	subj	137	7
 138	8	parvi	obl:a	138	5

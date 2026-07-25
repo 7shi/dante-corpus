@@ -10,23 +10,26 @@ line	token	word	role	arg_line	arg_token
 4	6	givan	attr	4	7
 4	6	givan	obl:per	5	4
 5	5	disïando	subj	0	0
-5	5	disïando	obj	6	1
-5	5	disïando	obj	6	4
+5	5	disïando	ccomp	6	3
+5	5	disïando	ccomp	6	6
 6	3	veder	subj	6	1
 6	3	veder	obj	6	8
 6	6	fuggir	subj	6	4
 6	6	fuggir	obj	6	8
 7	3	mosse	subj	0	0
+7	3	mosse	obl:come	4	3
 7	3	mosse	obl:contra	7	6
 7	7	andando	subj	0	0
 7	7	andando	obl:per	8	4
 8	0			0	0
 9	5	seguitando	subj	8	6
 9	5	seguitando	obj	9	2
+9	5	seguitando	obl:con	9	4
 10	2	eran	subj	10	3
 10	2	eran	obl:tra	10	6
 11	5	dier	subj	11	3
 11	5	dier	obj	11	6
+11	5	dier	obl:per	12	2
 12	7	rendei	subj	0	0
 12	7	rendei	obj	12	6
 12	7	rendei	obl:a	12	5
@@ -42,14 +45,13 @@ line	token	word	role	arg_line	arg_token
 16	6	trascorse	obl:da	17	3
 16	6	trascorse	obl:per	17	7
 17	0			0	0
-18	4	balenar		0	0
 18	6	mise	subj	0	0
 18	6	mise	obj	18	5
 18	6	mise	obl:di	18	4
 18	6	mise	obl:in	18	8
 19	6	vien	subj	19	4
 19	7	resta	subj	19	4
-20	3	durando	subj	20	2
+20	3	durando	subj	0	0
 20	7	splendeva	subj	20	2
 21	4	dicea	subj	0	0
 21	4	dicea	ccomp	21	7
@@ -132,16 +134,11 @@ line	token	word	role	arg_line	arg_token
 51	0			0	0
 52	3	fiammeggiava	subj	52	6
 52	3	fiammeggiava	obl:di	52	2
-53	2	chiaro	subj	52	6
-53	2	chiaro	obl:che	53	5
-53	2	chiaro	obl:per	53	7
-53	2	chiaro	obl:di	54	3
-53	2	chiaro	obl:in	54	7
+53	0			0	0
 54	0			0	0
 55	3	rivolsi	subj	55	1
+55	3	rivolsi	obj	55	2
 55	3	rivolsi	obl:a	56	3
-55	6	pieno	subj	55	1
-55	6	pieno	obl:di	55	5
 56	7	rispuose	subj	56	5
 56	7	rispuose	iobj	56	6
 56	7	rispuose	obl:con	57	2
@@ -171,6 +168,7 @@ line	token	word	role	arg_line	arg_token
 65	3	vestite	subj	64	1
 65	3	vestite	obl:di	65	5
 66	9	fuci	subj	66	3
+66	9	fuci	obl:di	66	5
 67	3	imprendëa	subj	67	2
 67	3	imprendëa	obl:da	67	6
 68	2	rendea	subj	67	2
@@ -220,10 +218,8 @@ line	token	word	role	arg_line	arg_token
 84	1	coronati	subj	83	2
 84	1	coronati	obl:di	84	4
 84	2	venien	subj	83	2
-84	2	venien	attr	84	1
 84	2	venien	obl:sotto	82	4
 84	2	venien	obl:a	83	4
-84	2	venien	obl:a	83	6
 85	2	cantavan	subj	85	1
 85	3	Benedicta	subj	85	4
 85	3	Benedicta	obl:in	86	3
@@ -303,8 +299,8 @@ line	token	word	role	arg_line	arg_token
 112	6	viste	subj	0	0
 113	5	avea	subj	0	0
 113	5	avea	obj	113	2
-113	7	era	subj	113	6
-113	7	era	attr	113	8
+113	7	era	subj	113	8
+113	8	uccello	subj	113	6
 114	2	bianche	subj	114	4
 114	7	miste	subj	114	4
 114	7	miste	obl:di	114	6
@@ -364,31 +360,26 @@ line	token	word	role	arg_line	arg_token
 134	1	vidi	subj	0	0
 134	1	vidi	obj	134	3
 134	1	vidi	obl:appresso	133	5
-135	2	pari	subj	134	3
-135	2	pari	obl:in	135	4
-135	6	onesto	subj	134	3
-135	8	sodo	subj	134	3
+135	0			0	0
 136	4	mostrava	subj	136	2
-136	4	mostrava	attr	136	5
 136	5	alcun	subj	136	2
-136	5	alcun	obl:di	136	7
 137	0			0	0
 138	4	fé	subj	137	6
-138	4	fé	ccomp	138	7
+138	4	fé	obj	137	5
+138	4	fé	ccomp	138	9
 138	4	fé	obl:a	138	3
 138	7	ha	subj	138	6
 138	7	ha	obj	137	5
 138	7	ha	attr	138	9
 138	9	cari	subj	138	6
-138	9	cari	obj	137	5
 139	1	mostrava	subj	139	3
 139	1	mostrava	obj	139	6
 139	1	mostrava	obl:con	140	3
 140	0			0	0
-141	8	fé	subj	0	0
+141	8	fé	subj	140	3
 141	8	fé	obj	141	9
 141	8	fé	iobj	141	7
-141	8	fé	obl:dal	141	6
+141	8	fé	obl:di	141	4
 142	2	vidi	subj	0	0
 142	2	vidi	obj	142	3
 142	2	vidi	obj	143	7

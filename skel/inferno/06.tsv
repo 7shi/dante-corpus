@@ -1,7 +1,7 @@
 line	token	word	role	arg_line	arg_token
 1	8	chiuse	subj	1	6
 1	8	chiuse	obj	1	7
-1	8	chiuse	obl:a	2	4
+1	8	chiuse	obl:dinanzi	2	4
 2	0			0	0
 3	6	confuse	subj	3	1
 3	6	confuse	obj	3	5
@@ -9,7 +9,9 @@ line	token	word	role	arg_line	arg_token
 4	0			0	0
 5	2	veggio	subj	0	0
 5	2	veggio	obj	4	2
+5	2	veggio	obj	4	5
 5	2	veggio	obj	5	1
+5	2	veggio	obl:a	1	2
 5	2	veggio	obl	5	3
 5	8	mova	subj	5	6
 5	8	mova	obj	5	7
@@ -33,17 +35,14 @@ line	token	word	role	arg_line	arg_token
 15	7	sommersa	subj	15	4
 16	3	ha	subj	0	0
 16	3	ha	obj	16	2
-16	3	ha	attr	16	4
-16	7	unta	subj	16	6
-16	9	atra	subj	16	6
-17	4	largo	subj	17	3
-17	6	unghiate	subj	17	8
+16	3	ha	obj	16	6
+16	3	ha	obj	17	3
+16	3	ha	obj	17	8
+17	0			0	0
 18	1	graffia	subj	0	0
 18	1	graffia	obj	18	3
 18	5	iscoia	subj	0	0
-18	5	iscoia	obj	18	3
 18	7	isquatra	subj	0	0
-18	7	isquatra	obj	18	3
 19	1	Urlar	subj	19	2
 19	1	Urlar	obl:come	19	7
 19	3	fa	subj	19	5
@@ -131,7 +130,7 @@ line	token	word	role	arg_line	arg_token
 45	8	vedessi	subj	45	6
 45	8	vedessi	obj	45	7
 46	2	dimmi	subj	0	0
-46	2	dimmi	obj	46	3
+46	2	dimmi	ccomp	46	3
 46	3	chi	subj	46	4
 46	5	se'	subj	46	4
 46	5	se'	attr	46	3
@@ -311,17 +310,15 @@ line	token	word	role	arg_line	arg_token
 101	0			0	0
 102	1	toccando	subj	0	0
 102	1	toccando	obj	102	5
-102	1	toccando	obl	102	3
 103	4	dissi	subj	103	3
-103	4	dissi	ccomp	104	1
 104	1	crescerann'	subj	104	2
 104	1	crescerann'	obl:dopo	104	6
-105	2	fier	subj	104	2
+105	2	fier	subj	0	0
 105	2	fier	attr	105	3
-105	3	minori	subj	104	2
-105	5	saran	subj	104	2
+105	3	minori	subj	0	0
+105	5	saran	subj	0	0
 105	5	saran	attr	105	7
-105	7	cocenti	subj	104	2
+105	7	cocenti	subj	0	0
 106	5	Ritorna	subj	106	2
 106	5	Ritorna	obl:a	106	8
 107	2	vuol	subj	107	1
@@ -333,11 +330,10 @@ line	token	word	role	arg_line	arg_token
 109	0			0	0
 110	7	vada	subj	109	4
 110	7	vada	obl:in	110	3
-111	7	essere	subj	109	4
+111	7	essere	subj	0	0
 111	7	essere	obl:di	111	2
 111	7	essere	obl:di	111	6
-111	8	aspetta	subj	0	0
-111	8	aspetta	xcomp	111	7
+111	8	aspetta	subj	111	7
 112	2	aggirammo	subj	112	1
 112	2	aggirammo	obj	112	6
 112	2	aggirammo	obl:a	112	4

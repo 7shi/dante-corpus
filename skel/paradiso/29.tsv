@@ -23,39 +23,42 @@ line	token	word	role	arg_line	arg_token
 9	7	vinto	subj	9	4
 9	7	vinto	obj	9	5
 10	2	cominciò	subj	0	0
-10	2	cominciò	ccomp	10	4
 10	4	dico	subj	10	3
 10	4	dico	obj	11	1
 10	7	dimando	subj	10	3
-10	7	dimando	obj	11	1
 11	4	vuoli	subj	11	3
 11	4	vuoli	xcomp	11	5
 11	5	udir	subj	11	3
 11	5	udir	obj	11	2
 11	10	visto	subj	11	7
 11	10	visto	obj	11	8
+11	10	visto	obl	12	1
 12	4	appunta	subj	12	6
-12	4	appunta	obj	12	3
+12	4	appunta	obl	12	2
+13	3	aver	subj	0	0
 13	3	aver	obj	13	8
 13	3	aver	obl:a	13	5
-14	2	esser		0	0
+14	2	esser	subj	0	0
 14	4	può	subj	0	0
 14	4	può	xcomp	14	2
 15	1	potesse	subj	14	8
 15	1	potesse	xcomp	15	3
-15	2	risplendendo		0	0
-15	3	dir	ccomp	15	4
+15	2	risplendendo	subj	0	0
+15	3	dir	subj	0	0
+15	3	dir	obj	15	4
+15	3	dir	obl:in	16	3
 15	4	Subsisto	subj	0	0
 16	0			0	0
-17	5	comprender		0	0
-17	8	piacque	subj	17	7
+17	5	comprender	subj	0	0
+17	5	comprender	obl:di	17	4
+17	8	piacque	subj	0	0
+17	8	piacque	obl:a	17	7
 18	2	aperse	subj	18	8
-18	2	aperse	obl:in	16	3
-18	2	aperse	obl:di	17	5
 18	2	aperse	obl:in	18	5
 19	6	giacque	subj	0	0
 19	6	giacque	attr	19	4
 20	6	procedette	subj	21	2
+20	6	procedette	obl:sovra	21	7
 21	0			0	0
 22	4	congiunte	subj	22	1
 22	6	purette	subj	22	1
@@ -69,12 +72,7 @@ line	token	word	role	arg_line	arg_token
 24	0			0	0
 25	0			0	0
 26	2	resplende	subj	26	1
-26	2	resplende	obl:in	25	4
-26	2	resplende	obl:in	25	6
-26	2	resplende	obl:in	25	9
 27	6	è	subj	27	7
-27	6	è	obl:da	26	6
-27	6	è	obl:a	27	3
 28	0			0	0
 29	5	raggiò	subj	28	4
 29	5	raggiò	obj	29	7
@@ -116,17 +114,12 @@ line	token	word	role	arg_line	arg_token
 45	4	fosser	attr	45	5
 45	4	fosser	obl:sanza	45	3
 46	2	sai	subj	46	3
-46	2	sai	ccomp	47	2
 47	2	creati	subj	46	8
-47	2	creati	obl	46	4
-47	2	creati	obl	46	6
-47	2	creati	obl	47	4
 47	7	spenti	subj	48	7
 47	7	spenti	obl:in	48	3
 48	0			0	0
 49	2	giugneriesi	subj	0	0
 49	2	giugneriesi	obl:a	49	5
-49	3	numerando	subj	0	0
 50	0			0	0
 51	1	turbò	subj	50	7
 51	1	turbò	obj	51	3
@@ -239,7 +232,7 @@ line	token	word	role	arg_line	arg_token
 92	6	piace	subj	93	1
 93	6	accosta	subj	93	1
 93	6	accosta	obl:con	93	4
-94	2	apparer	subj	94	3
+94	2	apparer	subj	0	0
 94	5	ingegna	subj	94	3
 94	7	face	subj	94	3
 94	7	face	obj	95	2
@@ -257,6 +250,8 @@ line	token	word	role	arg_line	arg_token
 100	7	nascose	subj	100	5
 100	7	nascose	obl:da	101	2
 101	0			0	0
+102	1	come	subj	0	0
+102	1	come	obl:a	102	3
 102	6	rispuose	subj	102	5
 102	6	rispuose	obl:a	101	6
 102	6	rispuose	obl:a	101	10
@@ -346,8 +341,8 @@ line	token	word	role	arg_line	arg_token
 135	4	cela	subj	135	2
 135	4	cela	obl:in	134	7
 136	7	raia	subj	136	4
-137	7	recepe	subj	136	4
-137	7	recepe	obj	136	7
+136	7	raia	obj	136	6
+137	7	recepe	subj	136	7
 137	7	recepe	obl:per	137	3
 137	7	recepe	obl:in	137	5
 138	2	son	subj	138	4

@@ -73,9 +73,10 @@ line	token	word	role	arg_line	arg_token
 22	2	è	attr	22	1
 22	7	ascolta	subj	22	4
 22	7	ascolta	obj	22	6
-23	4	fatto	subj	0	0
+23	4	fatto	subj	23	1
 23	4	fatto	iobj	23	2
 23	9	rammarca	subj	22	4
+23	9	rammarca	obj	23	7
 23	9	rammarca	obl:di	23	8
 24	1	fecesi	subj	24	2
 24	1	fecesi	obl:in	24	5
@@ -106,14 +107,14 @@ line	token	word	role	arg_line	arg_token
 33	4	se'	subj	33	5
 33	4	se'	attr	33	3
 33	7	vieni	subj	33	6
+34	2	io	subj	0	0
+34	2	io	obl:a	34	4
 34	7	vegno	subj	34	6
 34	9	rimango	subj	0	0
 35	3	chi	subj	35	2
-35	4	se'	subj	35	2
-35	4	se'	attr	35	3
-35	8	fatto	subj	0	0
+35	8	fatto	subj	35	2
 35	8	fatto	attr	35	9
-35	9	brutto	subj	35	5
+35	9	brutto	subj	0	0
 36	1	Rispuose	subj	0	0
 36	1	Rispuose	ccomp	36	2
 36	2	Vedi	subj	0	0
@@ -166,13 +167,12 @@ line	token	word	role	arg_line	arg_token
 50	3	staranno	attr	50	5
 51	3	lasciando	subj	0	0
 51	3	lasciando	obj	51	5
-51	3	lasciando	obl:di	51	2
 52	1	E	subj	52	2
 52	6	vago	subj	52	2
 52	6	vago	xcomp	53	2
 53	2	vederlo	subj	0	0
 53	2	vederlo	xcomp	53	3
-53	3	attuffare	subj	53	2
+53	3	attuffare	subj	0	0
 53	3	attuffare	obl:in	53	6
 54	4	uscissimo	subj	54	3
 54	4	uscissimo	obl:di	54	6
@@ -190,16 +190,13 @@ line	token	word	role	arg_line	arg_token
 58	4	vid'	subj	58	5
 58	4	vid'	obj	58	7
 58	4	vid'	xcomp	59	1
-58	4	vid'	obl:dopo	58	2
-59	1	far	subj	59	3
-59	1	far	obj	58	7
+59	1	far	obl:di	59	3
 59	1	far	obl:a	59	7
 60	5	lodo	subj	0	0
 60	5	lodo	obj	60	2
-60	5	lodo	obl:ne	60	4
+60	5	lodo	obl:di	60	4
 60	8	ringrazio	subj	0	0
-60	8	ringrazio	obj	60	2
-60	8	ringrazio	obl:ne	60	7
+60	8	ringrazio	obl:di	60	7
 61	2	gridavano	subj	61	1
 61	2	gridavano	obl:a	61	4
 62	0			0	0
@@ -217,7 +214,6 @@ line	token	word	role	arg_line	arg_token
 65	6	percosse	obl:in	65	4
 66	8	sbarro	subj	66	3
 66	8	sbarro	obj	66	6
-66	8	sbarro	obl	66	4
 67	4	disse	subj	67	3
 67	4	disse	ccomp	68	2
 68	2	appressa	subj	68	4
@@ -255,12 +251,14 @@ line	token	word	role	arg_line	arg_token
 79	4	far	subj	0	0
 79	4	far	obj	79	6
 80	1	venimmo	subj	0	0
+80	1	venimmo	obl:sanza	79	4
 80	1	venimmo	obl:in	80	3
 81	1	Usciteci	subj	0	0
 81	2	gridò	subj	80	6
-81	2	gridò	ccomp	81	1
-81	2	gridò	obl	80	4
+81	2	gridò	obj	81	1
+81	2	gridò	obj	81	4
 81	4	è	subj	81	6
+81	4	è	obl	81	3
 82	2	vidi	subj	82	1
 82	2	vidi	obj	82	5
 82	2	vidi	obl:su	82	9
@@ -299,7 +297,6 @@ line	token	word	role	arg_line	arg_token
 94	1	Pensa	subj	0	0
 94	1	Pensa	ccomp	94	6
 94	6	sconfortai	subj	94	4
-94	6	sconfortai	obj	94	5
 94	6	sconfortai	obl:in	95	2
 95	0			0	0
 96	3	credetti	subj	0	0
@@ -314,7 +311,7 @@ line	token	word	role	arg_line	arg_token
 98	7	tratto	obj	98	2
 98	7	tratto	obl:di	99	3
 99	7	stette	subj	99	4
-99	7	stette	obl:incontra	99	6
+99	7	stette	obj	99	6
 100	3	lasciar	subj	0	0
 100	3	lasciar	obj	100	2
 100	4	diss'	subj	100	5
