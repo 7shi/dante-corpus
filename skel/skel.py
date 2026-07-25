@@ -672,7 +672,12 @@ def _fix_canto(
     canticle: str, number: int, n_cantos: int, model: str, ui: StatusLine,
     log_path: Path | None = None,
 ) -> tuple[int, int]:
-    """Fix one canto's flagged parse units under a progress bar; returns (fixed, attempted)."""
+    """Fix one canto's flagged parse units under a progress bar; returns (fixed, attempted).
+
+    Writes the TSV after every accepted improvement (not just once at the end), mirroring
+    `_build_canto`'s resumability — an interrupted run keeps whatever it already fixed instead
+    of losing the whole canto's progress.
+    """
     data = skel.load_skel(canticle, number)
     morph_rows = _morph_rows(canticle, number)
     np_rows = _np_rows(canticle, number)
@@ -714,6 +719,7 @@ def _fix_canto(
                     out[no] = tuple(new_rows.get(no, []))
                 fixed += 1
                 changed = True
+                skel.write_skel(canticle, number, [(no, list(rows)) for no, rows in sorted(out.items())])
                 ui.log(f"Fixed {canticle} {number}:{unit[0]}-{unit[-1]} — "
                        f"{len(soft_before)} -> {len(soft_after)} soft violation(s)")
             elif log_path:
@@ -726,7 +732,6 @@ def _fix_canto(
                         f.write(f"after:  {v.detail}\n")
                     f.write("\n")
     if changed:
-        skel.write_skel(canticle, number, [(no, list(rows)) for no, rows in sorted(out.items())])
         ui.log(f"Wrote: skel/{canticle}/{number:02d}.tsv")
     return fixed, attempted
 
