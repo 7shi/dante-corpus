@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4097 soft** violations across
+Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4068 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -8,14 +8,17 @@ refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 51
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
 
-**All of Phase 5 has now run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
-measurements and rejected candidates). Its central finding, stated up front: **`--fix` yields
+**Phases 5a-5h have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
 about 0.11 violations per LLM call and that rate does not depend on how the flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
 calls) did *not* raise the success rate. What remains is closed by measuring classes and
-normalizing, not by more model calls. Everything after the *Landed phases* table below is the
-measurement that motivated this plan; its violation counts are **pre-5a** unless stated
-otherwise.
+normalizing, not by more model calls.
+
+**How to read this file.** Only *Next session — start here* describes work still to do;
+everything from *Phase 5e* onward is the historical record that produced it, and **its violation
+counts are stale by construction** — each section states the state it was written at. The
+authoritative current numbers are the status line above and `--stats`.
 
 **Resuming work? Go to [*Next session — start here*](#next-session--start-here) directly below.**
 Rules L, M and N landed as Phases 5f/5g/5h (−288, −230, −29; all checker-side, zero model
@@ -29,6 +32,21 @@ measurement explained *why* in a way that changed what was done next.
 ---
 
 # Next session — start here
+
+## Where the tree is
+
+Everything through Phase 5h is **committed** — the three rule commits are the most recent `skel:`
+entries in `git log`, and nothing is left uncommitted for a next session to discover. Confirm
+before starting:
+
+```bash
+make -C skel check      # expect: 0 hard, 4068 soft
+uv run pytest -q        # expect: 106 passed
+make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
+```
+
+If those numbers differ, the sections below are describing a different state — re-measure before
+trusting any count in this file.
 
 ## 0. Rules L, M and N landed — Phases 5f/5g/5h, 4615 → 4068 (2026-07-28)
 
@@ -61,6 +79,14 @@ sides make a case claim about the same token**, so neither is "strictly more inf
 "mi pesa" is a dative, Layer 4's `obj` is a mistag and the fix belongs in
 [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
+**How to regenerate the 127** (the measurement script was a throwaway; see *How to measure a
+candidate rule* below for the loop): wrap `skel._classify_divergence`, keep the violations whose
+detail starts with `role_mismatch` where one side is `obl:<lemma>` and the other is
+`obj`/`subj`, and bucket each by (a) whether `dep_index_by_pos` holds a `case` child of the
+argument and with which normalized lemma, and (b) the argument's Layer-2 POS. The 97 are
+`given obl:* / derived obj|subj` + no `case` child + pronoun POS; the 30 are the mirror
+direction (`given obj|subj / derived obl:*`) with dep deprel `iobj`.
+
 **What it needs before anything is opened**: Layer 2 records no case feature (`MorphRow` has
 gender/number/person), so deciding these 127 requires either adding one or a clitic lexicon —
 both larger moves than a rule, and the project has twice preferred a structural check to a
@@ -88,13 +114,50 @@ decide whether the population is genuinely dative; Phase 5d's `expl` audit is th
 ### How to measure a candidate rule
 
 There is no checked-in harness for this; every rule in this document was measured with a
-throwaway script (scratchpad, not committed) that mirrors `skel/skel.py`'s `stats()` loop:
-iterate `api.cantos()` × `dep.sentence_groups()`, call `skel_driver._classify_violations(...)`
-per unit, and either monkeypatch `dante_corpus.skel._classify_divergence` / `derive_unit` or
-filter the returned violations. Run it from `skel/` (`uv run <script>.py`) so the driver module
-imports; report the full-corpus by-kind counter, and always measure the **negative** variant of
-a rule too (the narrower gate) — twice in Phase 5 the two differed and that difference was the
-finding.
+throwaway script (scratchpad, not committed) that mirrors `skel/skel.py`'s `stats()` loop and
+monkeypatches `dante_corpus.skel._classify_divergence`. Run it **from `skel/`** (`uv run
+<script>.py`) so the driver module imports. The skeleton, which every Phase 5 measurement used:
+
+```python
+import sys; sys.path.insert(0, ".")
+import skel as driver
+from dante_corpus import api, dep, skel
+
+orig = skel._classify_divergence
+
+def wrapper(given, derived, dep_index_by_pos=None, morph_pos_by_position=None):
+    vs = orig(given, derived, dep_index_by_pos, morph_pos_by_position)
+    ...  # classify/filter vs; `dep_index_by_pos` is the whole dep tree of the unit,
+         # `morph_pos_by_position` the Layer-2 POS, both keyed by (line, token)
+    return vs
+
+skel._classify_divergence = wrapper
+driver.skel._classify_divergence = wrapper   # both bindings, or the driver keeps the original
+
+for canticle in api.canticles():
+    for number in api.cantos(canticle):
+        data = skel.load_skel(canticle, number)
+        morph_rows, np_rows = driver._morph_rows(canticle, number), driver._np_rows(canticle, number)
+        dep_rows = driver._dep_rows(canticle, number)
+        lines = api.canto(canticle, number).lines()
+        text_by_no = {ln.no: ln.text for ln in lines}
+        nos, texts = [ln.no for ln in lines], [ln.text for ln in lines]
+        for unit in dep.sentence_groups(nos, texts, dep.MAX_UNIT_LINES):
+            if any(no not in data for no in unit):
+                continue
+            driver._classify_violations(
+                unit, [text_by_no[no] for no in unit],
+                {no: list(data[no]) for no in unit}, morph_rows, np_rows, dep_rows)
+```
+
+Token positions are 1-based over the **alpha-only** tokens of a line
+(`[t for t in tokenize(text) if has_alpha(t)]`, `dante_corpus.tokenizer`) — indexing raw
+`tokenize` output instead silently misaligns every word you print.
+
+Report the full-corpus by-kind counter, and always measure the **negative** variant of a rule
+too (the narrower gate). Three times in Phase 5 that mattered: rule L's two variants were
+identical (which was the evidence), rule M's gate turned out to separate the wrong thing, and
+rule N's "narrow" bucket was the only sound part of its class.
 
 ---
 
@@ -120,7 +183,10 @@ different tool. It stays useful as a finishing pass, not as the instrument that 
 ones moved 2.9-5.2% — by this plan's own criterion, a class that barely moves after a full pass
 is checker-side, not an LLM error awaiting another attempt.
 
-## Next round — normalize the systematic `role_mismatch` pairs
+## Next round — normalize the systematic `role_mismatch` pairs — **historical, written at 4615**
+
+*(Both items below have since landed, as Phases 5f and 5g. Kept for the measurements and the
+rejected variants; the pair counts are pre-5f.)*
 
 `role_mismatch` (1214) moved least of all while sitting **99.9% on edges both sides see**, and
 its pair distribution is far from a scatter of one-off disagreements:
@@ -160,6 +226,7 @@ full-corpus re-count), immediately after the 5e round:
 
 The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay `--fix` material
 — but as measured above, that route removes them at 0.11 per call, so they are last, not first.
+(Still true post-5h, and still the plan: see *Next session*, section 2.)
 
 ## Landed phases
 
@@ -230,7 +297,7 @@ correct reading, the violation survives, `_fix_canto` rejects the attempt as "no
 and the LLM call is spent for nothing. This is the mechanism behind the 10.5%. Phase 5a's Rule
 C is what removed this class.
 
-## Measured violation anatomy (2026-07-26, at 5919 — pre-5a)
+## Measured violation anatomy — **historical, measured 2026-07-26 at 5919 (pre-5a)**
 
 By kind:
 
@@ -258,7 +325,7 @@ least one violation**; 788 carry exactly one, and the tail reaches 15.
 `extra_arg` direct-child cases by the dep deprel that `derive_unit`'s map omits: `advmod` 190,
 `expl` 105, `nmod` 66, `advcl` 54, `mark` 36, then a thin tail.
 
-## Candidate rules — all measured before proposing
+## Candidate rules — all measured before proposing — **historical, measured at 5919 (pre-5a)**
 
 Each rule was implemented as a monkeypatch over `derive_unit` / `_classify_divergence` /
 `_apply_subj_authority` and re-measured across all 100 cantos. C and D landed as Phase 5a.
