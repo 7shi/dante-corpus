@@ -713,6 +713,76 @@ def test_classify_divergence_clitic_object_without_case_child_still_flagged():
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 1) for v in violations)
 
 
+# --- Phase 5j: preposition-lemma normalization + rule O --------------------------------
+
+
+def test_normalize_prep_lemma_contractions_and_variants():
+    # Preposition+article contractions collapse onto the base preposition (the LLM names the
+    # contraction, derive_unit the base, since Layer 2 lemmatizes "nel" as "in+il").
+    assert skel._normalize_prep_lemma("nel") == "in"
+    assert skel._normalize_prep_lemma("dal") == "da"
+    assert skel._normalize_prep_lemma("al") == "a"
+    assert skel._normalize_prep_lemma("del") == "di"
+    assert skel._normalize_prep_lemma("sul") == "su"
+    # Archaic/apocopated spellings of the same preposition.
+    assert skel._normalize_prep_lemma("sovr'") == "sopra"
+    assert skel._normalize_prep_lemma("ver'") == "verso"
+    assert skel._normalize_prep_lemma("'nnanzi") == "innanzi"
+    assert skel._normalize_prep_lemma("fin") == "fino"
+    # The `in+verso` univerbation family, normalized onto the derived side's convention.
+    assert skel._normalize_prep_lemma("inver'") == "in"
+    assert skel._normalize_prep_lemma("inverso") == "in"
+    # A preposition that is nobody's variant is left alone.
+    assert skel._normalize_prep_lemma("dentro") == "dentro"
+
+
+def test_classify_divergence_contraction_lemma_is_not_a_divergence():
+    # "ne la quarta lacca": the LLM writes `obl:ne`, derive_unit `obl:in` — one preposition.
+    derived = {1: [skel.SkelRow(1, 1, "scendemmo", "obl:in", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "scendemmo", "obl:ne", 1, 3)]}
+    assert skel._classify_divergence(given, derived) == []
+
+
+def test_classify_divergence_co_present_preposition_accepted():
+    # "in su le porte": both prepositions are `case` children of the argument and derive_unit
+    # reports only one of them, so naming the other is a choice, not a contradiction.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obl:su", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obl:in", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="in", deprel="case", head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="su", deprel="case", head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="porte", deprel="obl", head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_co_present_preposition_mirror_still_flagged():
+    # The mirror direction: the *derived* lemma is the argument's only `case` child and the LLM
+    # named a preposition the tree does not attach there — measured as a heterogeneous class
+    # (see CORRECTIONS.md's Phase 5j), so it stays flagged.
+    derived = {1: [skel.SkelRow(1, 1, "giunse", "obl:su", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "giunse", "obl:in", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="su", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="ripa", deprel="obl", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
+def test_classify_divergence_co_present_preposition_requires_both_sides_oblique():
+    # Rule O only ever compares two `obl:<lemma>` labels; a given `obl:<lemma>` against a
+    # derived `obj`/`subj` is rule N's business and keeps its own, narrower gate.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obl:con", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="in", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="porte", deprel="obj", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

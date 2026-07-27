@@ -8,12 +8,13 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5h, one Phase 5e `--fix` round
+**Status: built for all 100 cantos, checker refined through Phase 5j, one Phase 5e `--fix` round
 run, and one Layer-4 correction round (Phase 5i) fed back into `dep/`.** `make -C skel check`:
-**0 hard, 4042 soft** violations (down from 17438 at the first
+**0 hard, 3924 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
-Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
+Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i). See
+[skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
 the deterministic phases had cleared the unfixable units out of the flagged set — so the
@@ -151,6 +152,13 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    preposition — `derive_unit` takes the role from the deprel alone, so a case-marked nominal
    Layer 4 attached as `obj` loses the preposition that is sitting in the tree. Naming a
    *different* preposition than the `case` child stays flagged, as does the mirror direction.
+9. **Phase 5j — co-present prepositions** (`_co_present_preposition`) and a rebuilt
+   preposition-lemma table: Italian stacks prepositions and the dep tree attaches both markers
+   to the nominal ("**in su** le porte", "dietro **a** noi"), while `derive_unit` reports only
+   one, so a given `obl:<lemma>` naming another `case` child of the same argument is accepted.
+   Phase 1's `_PREP_LEMMA_NORM` was at the same time rebuilt from every `case`-child word form
+   in `dep/`, so preposition+article contractions (`nel` → `in`, `dal` → `da`, `al` → `a`) and
+   archaic spellings (`sovr'` → `sopra`, `'nnanzi` → `innanzi`) stop reading as disagreements.
 
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
@@ -213,6 +221,15 @@ which UD forbids, so the clitic cannot be the direct object. 26 survived hand-ve
 were retagged in `dep/` (22 → `iobj`, 4 → `obl` for partitive `ne`), each closing its Layer-5
 divergence; `dep --check` stays 0 hard / 0 soft. This is the **first Layer-4 mis-parse Layer 5's
 audit role actually produced** — see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+After Phase 5j (2026-07-28, checker-only, rule O + normalization): **0 hard, 3924 soft** —
+`role_mismatch` 641 → **523** (−118), every other kind unchanged. The 140 `obl:<lemma>` vs
+`obl:<other>` mismatches were two mechanical classes: one preposition spelled two ways (−57,
+absorbed into `_PREP_LEMMA_NORM`) and two co-present prepositions of which the derivation
+reports one (−61, rule O). The two-directional variant of rule O was measured at a further −30
+and **rejected** — in the mirror direction the given preposition is attached elsewhere in the
+unit (17), is an `advmod`/`obl` token (7), or is absent from the unit altogether (5), and no
+single gate separates the Layer-4 inconsistency from the LLM invention.
 
 ## Next steps
 

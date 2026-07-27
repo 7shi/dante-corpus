@@ -1,5 +1,62 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5j: preposition-lemma normalization + rule O (2026-07-28)
+
+Baseline: **0 hard, 4042 soft** (the Phase 5i state). 4042 → **3924** (−118), all
+`role_mismatch` (641 → **523**); every other kind unchanged. Checker-side, zero model calls,
+zero artifacts touched.
+
+The 140 remaining `obl:<lemma>` vs `obl:<other>` mismatches were enumerated with each argument's
+`case`-child words beside them, which split them into two mechanical classes and a small
+residue.
+
+**1. Same preposition, different spelling (−57).** `_PREP_LEMMA_NORM` — Phase 1's normalization
+table, until now eight entries hand-picked from the pair list — was rebuilt from what the corpus
+actually contains: every `case`-child word form in `dep/`, cross-checked against the pair table.
+Three kinds of key, all spellings of their value, never a different preposition:
+
+- **preposition+article contractions** (`nel`/`ne`/`ne'` → `in`, `al`/`ai`/`a'` → `a`, `dal` →
+  `da`, `del`/`de'` → `di`, `sul` → `su`, `pel` → `per`) — the LLM names the contraction it sees
+  ("scendemmo **ne la** quarta lacca" → `obl:ne`), while Layer 2 lemmatizes it as `in+il` and
+  `_prep_lemma` keeps the first part, so `derive_unit` says `obl:in`. `col`/`coi` were already
+  in the table for exactly this reason; this generalizes them.
+- **archaic/apocopated spellings** (`sovr'`/`sovresso` → `sopra`, `ver'` → `verso`, `'nnanzi` →
+  `innanzi`, `fin`/`infin`/`insin` → `fino`, `contr'` → `contro`, `tr'`/`fra`/`intra` → `tra`,
+  `incontr'` → `incontra`, `lunghesso` → `lungo`, `apo` → `appresso`).
+- **the `in+verso` univerbation family** (`inver`, `inver'`, `'nver'`, `inverso`, `invero` →
+  `in`) — Layer 2 analyses `inver'` as the compound `in+verso` (21 of the 30 occurrences), so
+  `_prep_lemma`'s split reports `in`. Normalizing onto `in` rather than onto `verso` follows
+  this table's stated convention (canonicalize to the derived side), and it collapses the pair
+  in both directions at once: `obl:inver` vs `obl:in` (5), `obl:inver'` vs `obl:in` (4),
+  `obl:in` vs `obl:invero` (2), `obl:inverso` vs `obl:in` (2).
+
+**2. Rule O — co-present prepositions (−61)** (`_co_present_preposition`): two different
+`obl:<lemma>` labels for the same argument where the **given** lemma is one of that argument's
+own `case` children. Italian stacks prepositions and the dep tree attaches both markers to the
+nominal — "**in su** le porte", "dietro **a** noi", "dentro **a** lo specchio", "infino **al**
+giro quinto" — while `derive_unit` reports whichever it reaches first. The LLM naming the other
+one is a choice between two markers that are both in the tree, not a contradiction of it. Same
+shape and the same one-directional gate as rules L/M/N.
+
+**The negative (two-directional) variant was measured and rejected: it would remove 30 more, on
+much weaker evidence.** In the mirror direction — the *derived* lemma is the argument's `case`
+child, the given one is not — the given preposition is a `case` marker attached **elsewhere** in
+the unit in 17 instances ("in su la ripa", where Layer 4 attached only `su` to `ripa`), an
+`advmod`/`obl` token in 7, and **absent from the unit entirely** in 5. The first group is a
+Layer-4 inconsistency (multiword prepositions sometimes get both `case` children, sometimes
+one), the last is plainly the LLM inventing a preposition, and a single gate cannot tell them
+apart — so the mirror stays flagged, as it does for L, M and N. What is left after rule O is 3
+instances where neither side's preposition is anywhere near the argument.
+
+Five tests in `tests/test_skel.py` (`test_normalize_prep_lemma_contractions_and_variants`,
+`test_classify_divergence_contraction_lemma_is_not_a_divergence`, rule O accepted / mirror
+flagged / both-sides-oblique gate), 111 passing.
+
+**Current state**: `make -C skel check` — **0 hard, 3924 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13514, 77.5%; Δ1995 across Phase 5). By kind: `extra_arg`
+1887, `missing_arg` 1239, `role_mismatch` 523, `extra_tuple` 155, `membership` 94,
+`missing_tuple` 24, `unknown_role` 2.
+
 ## Phase 5i: the clitic-case question, resolved as a Layer-4 correction (2026-07-28)
 
 Baseline: **0 hard, 4042 soft** (from the Phase 5h state of 4068, −26, all `role_mismatch`:

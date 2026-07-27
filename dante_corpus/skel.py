@@ -176,14 +176,37 @@ def _prep_lemma(row: MorphRow) -> str:
 # (`attr`/`xcomp` for a copular complement, `iobj`/`obl:a` for the dative alternation) — in both
 # cases canonicalized to the derived side's convention, per PLAN.md's own instruction.
 
+# Written target-first: every key is a spelling of the value, never a different preposition.
+# Three kinds of key, all enumerated from what the corpus actually contains (the `case`-child
+# word forms of `dep/`, cross-checked against `--stats`'s role_mismatch pair table): archaic or
+# apocopated spellings (`sanz'`, `sovr'`, `ver'`, `'nnanzi`), preposition+article contractions
+# (`al`, `dal`, `nel`, `col`, `sul` — the LLM names the contraction, `derive_unit` the base
+# preposition, since Layer 2 lemmatizes these as `a+il` and `_prep_lemma` keeps the first part),
+# and univerbations Layer 2 analyses as a compound (`inver'` -> `in+verso`, so the derivation
+# reports `in`; the family is normalized onto that derived-side convention rather than onto
+# `verso`, exactly as this table's docstring above prescribes).
 _PREP_LEMMA_NORM = {
-    "sanza": "senza", "sanz": "senza", "sans": "senza",
-    "sovra": "sopra", "sovr'": "sopra", "sor": "sopra",
-    "de": "di",
-    "contra": "contro", "contr": "contro",
-    "ver": "verso",
-    "ad": "a",
-    "col": "con", "coi": "con",
+    **{k: "senza" for k in ("sanza", "sanz", "sanz'", "sans")},
+    **{k: "sopra" for k in ("sovra", "sovr'", "sovr", "sor", "sovresso")},
+    **{k: "di" for k in ("de", "de'", "d'", "del", "dei", "dello", "della", "delle", "degli")},
+    **{k: "da" for k in ("dal", "da'", "dai", "dallo", "dalla", "dalle", "dagli")},
+    **{k: "a" for k in ("ad", "al", "a'", "ai", "alo", "allo", "alla", "alle", "agli", "ab")},
+    **{k: "con" for k in ("col", "coi", "co'", "co", "collo", "colla")},
+    **{k: "su" for k in ("sul", "su'", "sù", "sui", "sullo", "sulla")},
+    **{k: "per" for k in ("pel", "pei", "pe'")},
+    **{k: "contro" for k in ("contra", "contr", "contr'")},
+    **{k: "verso" for k in ("ver", "ver'")},
+    # `in`: article contractions, the apocopated `'n`, and the `in+verso`/`in+vero` compounds.
+    **{k: "in" for k in ("nel", "nei", "ne", "ne'", "n'", "nella", "nello", "nelle", "'n",
+                         "inver", "inver'", "'nver", "'nver'", "inverso", "'nverso", "invero")},
+    **{k: "fino" for k in ("fin", "infin", "infine", "infino", "'nfino", "insin", "insino")},
+    **{k: "tra" for k in ("tr'", "fra", "intra", "infra")},
+    **{k: "incontra" for k in ("incontr", "incontr'", "incontro", "'ncontro")},
+    **{k: "innanzi" for k in ("'nnanzi", "nnanzi")},
+    **{k: "intorno" for k in ("dintorno", "d'intorno")},
+    **{k: "lungo" for k in ("lunghesso", "lungh'")},
+    "sott'": "sotto",
+    "apo": "appresso",
 }
 
 _ROLE_CANON = {"attr": "xcomp", "iobj": "obl:a"}
@@ -587,6 +610,25 @@ def _case_marked_object(
     return grole.split(":", 1)[1] in case_lemmas.get(arg, set())
 
 
+def _co_present_preposition(
+    grole: str, drole: str, arg: tuple[int, int],
+    case_lemmas: dict[tuple[int, int], set[str]],
+) -> bool:
+    """Rule O: two different `obl:<lemma>` labels for the same argument, where the *given* lemma
+    is one of the argument's own `case` children. Italian stacks prepositions ("in su le porte",
+    "dietro a noi", "dentro a lo specchio", "infino al giro quinto"), and `derive_unit` reports
+    exactly one of them — whichever `case` child it reaches first — so the LLM naming another
+    preposition that is literally in the tree is a choice between two co-present markers, not a
+    contradiction of the parse.
+
+    One-directional like rules L/M/N: the mirror case (the *derived* lemma is a `case` child and
+    the given one is not) means the LLM named a preposition the tree does not carry, which stays
+    flagged."""
+    if not (OBL_RE.fullmatch(grole) and OBL_RE.fullmatch(drole)):
+        return False
+    return grole.split(":", 1)[1] in case_lemmas.get(arg, set())
+
+
 def _predicative_complement(grole: str, drole: str) -> bool:
     """Rule M: a given `xcomp` against a derived `obj`/`subj`. UD has no relation for secondary
     predication: an object complement is attached as plain `obj` ("mi chiamaste **Ciacco**", "li
@@ -704,7 +746,8 @@ def _classify_divergence(
             elif grole != drole:
                 if (_oblique_lemma_refinement(grole, drole, arg, case_children)
                         or _predicative_complement(grole, drole)
-                        or _case_marked_object(grole, drole, arg, case_lemmas)):
+                        or _case_marked_object(grole, drole, arg, case_lemmas)
+                        or _co_present_preposition(grole, drole, arg, case_lemmas)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
