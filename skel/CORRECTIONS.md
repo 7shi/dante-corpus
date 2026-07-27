@@ -1,5 +1,53 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5m: rule S — `nmod` complements of the predicate (2026-07-28)
+
+Baseline: **0 hard, 3808 soft** (the Phase 5l state). 3808 → **3746** (−62), all `extra_arg`
+(1819 → **1757**); every other kind unchanged. Checker-side, zero model calls, zero artifacts
+touched. This is the second cut into the `extra_arg` **direct-child** bucket Phase 5l identified
+as the most promising remaining structural population.
+
+Re-triage of that bucket (324 after rule R), by the deprel `derive_unit`'s map omits:
+
+| deprel | count | | deprel | count |
+|---|---|---|---|---|
+| `expl` | 87 | | `mark` | 35 |
+| `nmod` | 62 | | `cop` | 9 |
+| `advcl` | 51 | | `conj` | 8 |
+| `advmod` | 50 | | `vocative` | 7 |
+| | | | tail (`case`, `aux`, …) | 15 |
+
+**Rule S (−62)** (`_nmod_complement_of_predicate`): a given `obl:<lemma>` whose argument is an
+`nmod` child **of the predicate itself** and carries a `case` child naming that same preposition.
+Rule D already accepts this shape one edge further out (an `nmod` of one of the predicate's
+*derived arguments*, "ha bisogno **di te**"); this is the direct-child case, which `derive_unit`
+cannot produce because `nmod` is outside `ARG_DEPRELS`.
+
+The population is completely uniform on the gate — **all 62** `nmod` direct-child `extra_arg`
+instances are `obl:<lemma>` with a same-lemma `case` child, so the strict and loose variants
+return the identical set, the same evidence rule L's two variants gave. By the predicate's POS it
+splits into two constructions, both of which leave the tree uncontradicted:
+
+- **58 nominal or adjectival predicates** (noun 32, adjective 26): "intese cose che furon
+  *cagione* **di sua vittoria**", "di quanto *mal* fu matre", "*Oppresso* **di stupore**", "di
+  sospetto *pieno* e d'ira crudo". UD correctly attaches the PP complement of a predicate nominal
+  as `nmod`, and it is an argument of the predication all the same.
+- **4 verbal predicates** where Layer 4 wrote `nmod` for a plain oblique: "nel *fermar* **tra Dio
+  e l'omo** il patto", "*mischiato* **di lagrime**".
+
+**Shipped ungated on the predicate's POS**, for the reason measured for rule M's proposed gate:
+the two shapes are both correct readings, so a gate there would separate the wrong thing rather
+than sound from unsound. The lemma match is the structural gate — the LLM names the preposition
+literally present on that edge, and naming a different one stays flagged.
+
+Three tests in `tests/test_skel.py` (accepted; different `case` lemma still flagged; `nmod` of a
+non-predicate head still flagged), 121 passing.
+
+**Current state**: `make -C skel check` — **0 hard, 3746 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13692, 78.5%; Δ2173 across Phase 5). By kind: `extra_arg`
+1757, `missing_arg` 1239, `role_mismatch` 475, `extra_tuple` 155, `membership` 94,
+`missing_tuple` 24, `unknown_role` 2.
+
 ## Checker Phase 5l: rule R — predicative adjectives attached as `advmod` (2026-07-28)
 
 Baseline: **0 hard, 3876 soft** (the Phase 5k state). 3876 → **3808** (−68), all `extra_arg`

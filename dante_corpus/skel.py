@@ -586,6 +586,37 @@ def _predicative_advmod(
     return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
 
 
+def _nmod_complement_of_predicate(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    case_lemmas: dict[tuple[int, int], set[str]],
+) -> bool:
+    """Rule S: a given `obl:<lemma>` whose argument is an `nmod` child **of the predicate itself**
+    and carries a `case` child naming that same preposition. Rule D already accepts the same
+    shape one edge further out (an `nmod` of one of the predicate's derived arguments); this is
+    the direct-child case, which `derive_unit` cannot produce because `nmod` is outside
+    `ARG_DEPRELS`.
+
+    Two constructions make up the population, and both leave the tree uncontradicted. Most
+    (58/62) are **nominal or adjectival predicates** — "furon cagione **di sua vittoria**",
+    "di quanto mal fu matre", "Oppresso **di stupore**" — where UD correctly attaches the PP
+    complement of the predicate nominal as `nmod`, and it is an argument of the predication all
+    the same. The rest are verbal predicates where Layer 4 wrote `nmod` for what is plainly an
+    oblique ("nel fermar **tra Dio e l'omo** il patto", "mischiato **di lagrime**"). Gating on
+    the predicate's POS would separate those two correct readings rather than sound from
+    unsound, the mistake measured for rule M's proposed gate, so this ships ungated.
+
+    Requiring the *same* lemma as the `case` child is what keeps it structural — the LLM names
+    the preposition literally present on that edge. All 62 instances in the corpus satisfy it, so
+    the strict and loose variants return the identical set, exactly as for rule L."""
+    if not OBL_RE.fullmatch(role):
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "nmod" or (row.head_line, row.head_token) != pos:
+        return False
+    return role.split(":", 1)[1] in case_lemmas.get(arg, set())
+
+
 def _drop_nmod_obliques(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     derived_args: set[tuple[int, int]], dep_index_by_pos: dict[tuple[int, int], DepRow],
@@ -813,6 +844,8 @@ def _classify_divergence(
                     _adverbial_oblique(pos, arg, grole, dep_index_by_pos, morph_pos_by_position)
                     or _predicative_advmod(pos, arg, grole, dep_index_by_pos,
                                            morph_pos_by_position)
+                    or _nmod_complement_of_predicate(pos, arg, grole, dep_index_by_pos,
+                                                     case_lemmas)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

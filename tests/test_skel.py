@@ -835,6 +835,60 @@ def test_classify_divergence_predicative_advmod_requires_xcomp_role():
     assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
 
 
+# --- Phase 5m: rule S ------------------------------------------------------------------
+
+
+def test_classify_divergence_nmod_complement_of_predicate_accepted():
+    # "furon cagione di sua vittoria": the PP complement of a nominal predicate is attached
+    # `nmod`, outside ARG_DEPRELS, so derive_unit can produce no argument for it — while the
+    # `case` child names the very preposition the LLM cites.
+    derived = {1: [skel.SkelRow(1, 1, "cagione", "subj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "cagione", "subj", 1, 4),
+                 skel.SkelRow(1, 1, "cagione", "obl:di", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="di", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="vittoria", deprel="nmod", head_line=1,
+                           head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="cose", deprel="nsubj", head_line=1,
+                           head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_nmod_complement_requires_matching_case_child():
+    # Naming a preposition the `nmod` edge does not carry is a real disagreement, the same
+    # narrowing rules N and O apply.
+    derived = {1: [skel.SkelRow(1, 1, "cagione", "subj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "cagione", "subj", 1, 4),
+                 skel.SkelRow(1, 1, "cagione", "obl:a", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="di", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="vittoria", deprel="nmod", head_line=1,
+                           head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="cose", deprel="nsubj", head_line=1,
+                           head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 3) for v in violations)
+
+
+def test_classify_divergence_nmod_complement_requires_predicate_as_head():
+    # An `nmod` hanging off some other token of the unit is not the predicate's own edge; rule D
+    # covers the one case that is (an `nmod` of a *derived argument*), and nothing else.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 5),
+                 skel.SkelRow(1, 1, "vidi", "obl:di", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="di", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="pietra", deprel="nmod", head_line=1,
+                           head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="torre", deprel="obl", head_line=1, head_token=1),
+        (1, 5): dep.DepRow(line=1, token=5, word="gente", deprel="obj", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 3) for v in violations)
+
+
 # --- Phase 5k: rules P and Q -----------------------------------------------------------
 
 

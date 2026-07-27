@@ -8,12 +8,13 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5l, one Phase 5e `--fix` round
+**Status: built for all 100 cantos, checker refined through Phase 5m, one Phase 5e `--fix` round
 run, and one Layer-4 correction round (Phase 5i) fed back into `dep/`.** `make -C skel check`:
-**0 hard, 3808 soft** violations (down from 17438 at the first
+**0 hard, 3746 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
-Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j, 3876 after Phase 5k).
+Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
+3876 after Phase 5k, 3808 after Phase 5l).
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
@@ -258,6 +259,14 @@ produced it also settled what those classes are made of: `missing_arg` is **90% 
 (the LLM omitting an argument sitting on the very edge `derive_unit` reads — LLM incompleteness,
 not a checker artifact), and only 70 `extra_arg`/`missing_arg` pairs across the corpus are the
 same NP cited at two different tokens.
+
+After Phase 5m (2026-07-28, checker-only, rule S): **0 hard, 3746 soft** — `extra_arg` 1819 →
+**1757** (−62), every other kind unchanged. A given `obl:<lemma>` whose argument is an `nmod`
+child of the predicate itself and carries a `case` child naming that same preposition — rule D's
+shape one edge in. The whole `nmod` direct-child population (62) satisfies the gate, splitting
+into PP complements of nominal predicates ("furon **cagione di sua vittoria**", 58) and plain
+Layer-4 `nmod`-for-`obl` mistags on verbs (4); both are correct readings, so the rule ships
+ungated on the predicate's POS.
 
 ## Next steps
 
