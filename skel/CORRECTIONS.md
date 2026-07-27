@@ -1,5 +1,54 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5g: rule M — given `xcomp` vs derived `obj`/`subj` (2026-07-28)
+
+Baseline: **0 hard, 4327 soft** (the Phase 5f state). One rule, no LLM call, no artifact touched:
+4327 → **4097** (−230, −5.3%), all of it `role_mismatch` (926 → **696**, −24.8%).
+
+**The gate this plan proposed was measured and abandoned, in both variants.** PLAN.md's candidate
+was to accept the pair only in the object-complement configuration — the predicate carrying
+*another* `obj`/`subj` argument. Measured full-corpus: the **given-side** gate admits **227 of
+230** (98.7%), so it is the ungated rule under another name and discriminates nothing; the
+**derived-side** gate admits **163** (71%). The derived-side variant looked principled — of the
+73 adjective arguments 63 pass it, against 60 of 100 nouns — until the excluded 67 were read:
+
+```
+  gated:    "tal mi fece la bestia"   "li chiama orbi"      "hanno Italia morta"
+            "mi chiamaste Ciacco"     "si fa vino"          "chi tu se'"
+  excluded: "non son torri"           "mi parve una lontra"  "fummo Frati godenti"
+            "è tempo da scostarsi"    "sarà maraviglia"      "ben son Beatrice"
+```
+
+The excluded set is not a different phenomenon; it is the **copular** half of the same one. The
+gate separates object complements from predicate nominals, which is not the distinction the rule
+turns on, and leaving the second group flagged would keep 67 known-correct readings in the
+violation count. So the rule ships ungated.
+
+**Why the pair is a notation split**: UD has no relation for secondary predication. An object
+complement is attached as a plain `obj`, and a copular predicate nominal as `nsubj`, so
+`derive_unit` can only ever report the *attachment* — the LLM names the same token's *predicative
+function*. This is exactly the split Phase 1 already canonicalizes `attr` → `xcomp` for, one step
+further. Both descriptions are true of the same token and nothing in the dep tree contradicts the
+LLM, the same "strictly more informative" argument as Rule L.
+
+**One-directional, deliberately.** The mirror pairs (given `obj`/`subj` vs derived `xcomp` — 15
+and 22) stay flagged: there the dep tree *did* carry an explicit `xcomp`/`ccomp` deprel and the
+LLM contradicted it. Same asymmetry as `_safe_role_repair` and Rule L.
+
+Evidence and its limits: roughly 110 of the 230 were read by hand across every POS bucket
+(adjective 73, noun 100, pronoun 31, verb 11). No case was found where the LLM's `xcomp` labels a
+plain direct object — the residual doubt is a handful (~3%) of arguable readings such as
+"n'andavam l'un dinanzi" and "Femmina è nata", where the token is defensibly the subject. The
+`verb`-argument cases are causative/modal infinitives ("perder lo face", "pianger non lascia"),
+where `xcomp` is if anything the better UD label.
+
+Implemented as `_predicative_complement` (`dante_corpus/skel.py`), consulted from the same
+`elif grole != drole:` branch as Rule L. Three tests: object complement accepted, copular
+predicate nominal accepted, mirror direction still flagged.
+
+**Current state**: `make -C skel check` — **0 hard, 4097 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13341, 76.5%; Δ1822 across Phase 5).
+
 ## Checker Phase 5f: rule L — `obl:<lemma>` given vs bare `obl` derived (2026-07-28)
 
 Baseline: **0 hard, 4615 soft** (the Phase 5e state). One rule, measured corpus-wide before

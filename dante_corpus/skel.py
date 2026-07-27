@@ -567,6 +567,20 @@ def _oblique_lemma_refinement(
     return drole == "obl" and bool(OBL_RE.fullmatch(grole)) and arg not in case_children
 
 
+def _predicative_complement(grole: str, drole: str) -> bool:
+    """Rule M: a given `xcomp` against a derived `obj`/`subj`. UD has no relation for secondary
+    predication: an object complement is attached as plain `obj` ("mi chiamaste **Ciacco**", "li
+    chiama **orbi**", "hanno Italia **morta**") and a copular predicate nominal as `nsubj` ("non
+    son **torri**", "mi parve una **lontra**", "chi tu **se'**"), so `derive_unit` can only ever
+    report the attachment. The LLM names the same token's predicative function instead — the
+    labeling split Phase 1 already canonicalizes `attr` -> `xcomp` for, one step further.
+
+    One-directional, for the same reason as `_safe_role_repair`/`_oblique_lemma_refinement`: a
+    given `obj`/`subj` against a derived `xcomp` means the dep tree *did* carry an explicit
+    `xcomp`/`ccomp` deprel and the LLM contradicted it, which stays flagged."""
+    return grole == "xcomp" and drole in ("obj", "subj")
+
+
 def _classify_divergence(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
@@ -665,7 +679,8 @@ def _classify_divergence(
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
-                if _oblique_lemma_refinement(grole, drole, arg, case_children):
+                if (_oblique_lemma_refinement(grole, drole, arg, case_children)
+                        or _predicative_complement(grole, drole)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",

@@ -647,6 +647,33 @@ def test_classify_divergence_bare_oblique_with_case_child_still_flagged():
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
+# --- _classify_divergence: Phase 5g rule M ---------------------------------------------
+
+
+def test_classify_divergence_object_complement_accepted():
+    # "Voi cittadini mi chiamaste Ciacco": UD attaches the object complement as a plain `obj`,
+    # the LLM names its predicative function.
+    derived = {1: [skel.SkelRow(1, 4, "chiamaste", "obj", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 4, "chiamaste", "xcomp", 1, 5)]}
+    assert skel._classify_divergence(given, derived) == []
+
+
+def test_classify_divergence_copular_predicate_nominal_accepted():
+    # "non son torri, ma giganti": the predicate nominal is attached as a subject.
+    derived = {1: [skel.SkelRow(1, 2, "son", "subj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 2, "son", "xcomp", 1, 3)]}
+    assert skel._classify_divergence(given, derived) == []
+
+
+def test_classify_divergence_explicit_xcomp_contradicted_still_flagged():
+    # The mirror direction: the dep tree carried an explicit xcomp deprel and the LLM called it
+    # an object — a real disagreement, not a notation split.
+    derived = {1: [skel.SkelRow(1, 1, "vuolsi", "xcomp", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "vuolsi", "obj", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

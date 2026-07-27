@@ -8,10 +8,11 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5f, one Phase 5e `--fix` round
-run.** `make -C skel check`: **0 hard, 4327 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5g, one Phase 5e `--fix` round
+run.** `make -C skel check`: **0 hard, 4097 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
-5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the
+5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
+Phase 5f). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the
 full correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
 the deterministic phases had cleared the unfixable units out of the flagged set — so the
@@ -132,6 +133,18 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    shape as the Phase 4a `attr`/`xcomp` rule; (c) an `obl`/`obl:*` citing an adverb attached
    `advmod` to the same predicate (`quivi`, `là`, `dinanzi`) is accepted (`_adverbial_oblique`)
    — the membership check already accepts exactly these tokens as `obl` arguments.
+7. **Phases 5f/5g — two `role_mismatch` acceptances, both one-directional**
+   (`_oblique_lemma_refinement` / `_predicative_complement`): a given `obl:<lemma>` against a
+   derived bare `obl` is accepted, because `derive_unit` emits the bare form only when no `case`
+   child names the preposition — it is fused into the token (`che nel lago del cor **m'**era
+   durata`), so the LLM's label adds information rather than contradicting the tree; and a given
+   `xcomp` against a derived `obj`/`subj` is accepted, because UD has no relation for secondary
+   predication — an object complement is attached as plain `obj` ("mi chiamaste **Ciacco**") and
+   a copular predicate nominal as `nsubj` ("non son **torri**"), so the derivation can only
+   report the attachment while the LLM names the predicative function. Both **mirror** directions
+   stay flagged (given bare `obl` vs derived `obl:<lemma>`; given `obj`/`subj` vs derived
+   `xcomp`): there the dep tree is explicit and the LLM contradicts it — the same asymmetry
+   `--repair`'s `role_label` rule already rewrites on.
 
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
@@ -170,6 +183,13 @@ derived bare `obl` is not a disagreement: `derive_unit` emits the bare form only
 child names the preposition, which holds in all 288 instances (the preposition is fused into the
 token — a clitic dative or a preposition+article contraction), so the LLM's label is strictly
 more informative. One deterministic rule removed more than the whole Phase 5e `--fix` pass.
+
+After Phase 5g (2026-07-28, checker-only, rule M): **0 hard, 4097 soft** — `role_mismatch` falls
+926 → **696** (−230, −24.8%), every other class unchanged. UD has no relation for secondary
+predication: an object complement is attached as plain `obj` ("mi chiamaste **Ciacco**") and a
+copular predicate nominal as `nsubj` ("non son **torri**"), so a given `xcomp` against a derived
+`obj`/`subj` is the same labeling split Phase 1 canonicalizes `attr` → `xcomp` for. The mirror
+direction stays flagged, since there the dep tree carries an explicit `xcomp` deprel.
 
 ## Next steps
 

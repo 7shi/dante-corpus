@@ -1,11 +1,11 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4327 soft** violations across
+Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4097 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
-4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L). The
-project goal is unchanged: **0 soft violations** — soft divergences are rule mismatches to
-eliminate, not a baseline to tolerate.
+4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
+4097 after Phase 5g's rule M). The project goal is unchanged: **0 soft violations** — soft
+divergences are rule mismatches to eliminate, not a baseline to tolerate.
 
 **All of Phase 5 has now run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). Its central finding, stated up front: **`--fix` yields
@@ -17,8 +17,8 @@ measurement that motivated this plan; its violation counts are **pre-5a** unless
 otherwise.
 
 **Resuming work? Go to [*Next session — start here*](#next-session--start-here) directly below.**
-Rule L landed as Phase 5f (−288, exactly as measured); the queued task is now the
-secondary-predicate gate for the `xcomp` pairs, which must be **measured before implementing**.
+Rules L and M landed as Phases 5f/5g (−288 and −230, both checker-side, zero model calls); the
+queued task is the `obl:<lemma>` vs `obj` pairs (~160), **unmeasured**.
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
@@ -28,47 +28,51 @@ measurement explained *why* in a way that changed what was done next.
 
 # Next session — start here
 
-## 0. Rule L landed — Phase 5f, 4615 → 4327 (2026-07-28)
+## 0. Rules L and M landed — Phases 5f/5g, 4615 → 4327 → 4097 (2026-07-28)
 
-`_oblique_lemma_refinement` in `dante_corpus/skel.py`, consulted from the `elif grole != drole:`
-branch of `_classify_divergence`; `case_children` built once at the top of that function from
-`dep_index_by_pos`. Three tests in `tests/test_skel.py` (accepted case, cross-lemma pair still
-flagged, `case`-child case still flagged), 100 passing. Checker-side only — no `--repair` rule,
-no artifact touched, no model call. The measured −288 landed exactly, entirely in
-`role_mismatch` (1214 → 926). Write-up: `CORRECTIONS.md`, *Checker Phase 5f*.
+Both are checker-side acceptances in the `elif grole != drole:` branch of `_classify_divergence`,
+both one-directional, both zero model calls and zero artifacts touched:
 
-## 1. The secondary-predicate gate — **measured 2026-07-28, decision pending**
+- `_oblique_lemma_refinement` (rule L, −288): given `obl:<lemma>` vs derived bare `obl`.
+  `case_children` is built once at the top of `_classify_divergence` from `dep_index_by_pos`.
+- `_predicative_complement` (rule M, −230): given `xcomp` vs derived `obj`/`subj`. **Shipped
+  ungated** — the secondary-predicate gate this plan proposed was measured and abandoned; see
+  `CORRECTIONS.md`'s Phase 5g section for the 230/227/163 measurement and why the gate separates
+  the wrong thing (object complements from copular predicate nominals, both of which are correct
+  readings).
 
-`xcomp` vs `obj` (170) + `xcomp` vs `subj` (60) are **predicative complements**, not nominalized
-infinitives (that hypothesis was measured and rejected — 8 and 15 respectively; see the *Next
-round* section below for the evidence and examples). The candidate gate was "accept the pair only
-when the predicate already carries **another** `obj`/`subj` argument", i.e. the object-complement
-configuration ("mi chiamaste **Ciacco**"). Measured full-corpus, both sides of the "another
-argument" test:
+Six tests in `tests/test_skel.py` between them, 103 passing. `role_mismatch` 1214 → **696**.
 
-| variant | accepted |
-|---|---|
-| blanket `xcomp`≡`obj`/`subj` (no gate) | 230 |
-| gate on the **given** side (the LLM's own other arguments) | **227 (98.7% of the blanket set)** |
-| gate on the **derived** side (`derive_unit`'s other arguments) | **163 (71%)** |
+## 1. Measure the `obl:<lemma>` vs `obj` pairs (~160) — **unmeasured, next**
 
-**The given-side gate is not a gate.** It admits 227 of 230, so it is the blanket equivalence
-under another name — the LLM almost always lists another `obj`/`subj` for these predicates, which
-means the configuration carries no discriminating information about whether *this* argument is a
-secondary predicate. Rejected on that ground alone.
+Post-5g the `role_mismatch` distribution is:
 
-The derived-side gate does discriminate (163 of 230), and the POS split of the argument is what
-makes it interesting: of the 73 **adjective** arguments, **63 pass** the gate, against 60 of 100
-nouns; the excluded set is noun-dominated (40 of 67). Adjectives predicated of an existing object
-are the clearest secondary-predicate reading ("**tal** mi fece la bestia"), so the gate is
-enriching for the right population rather than cutting arbitrarily.
+```
+'obl:a' vs 'obj'   92    'obj' vs 'subj'  81    'subj' vs 'obj'   67
+'obl:di' vs 'obj'  38    'obj' vs 'obl:a' 30    'xcomp' vs 'obl'  25
+'ccomp' vs 'obj'   23    'subj' vs 'xcomp' 22   'ccomp' vs 'xcomp' 21
+```
 
-**Not implemented, deliberately.** −163 is worth having, but the residual risk this plan flagged
-is unchanged for the noun half: a predicate that happens to have another object does not prove
-*this* noun is a complement rather than a mislabeled second object. Before landing it, sample the
-163 by hand (or split the rule: adjective/pronoun arguments unconditionally, nouns only under the
-derived-side gate) — the previous rounds' discipline is that a rule ships with evidence about
-what it *wrongly* accepts, and that evidence does not exist yet for the nouns.
+`obl:a`/`obl:di` vs `obj` (130, plus 30 in the mirror direction) is the largest untouched
+systematic pair. The hypothesis to test: these are **prepositionally marked objects** — the
+partitive/genitive `di` ("mangiar del pane") and the `a`-marked personal object — where Layer 4
+attaches the argument as `obj` and the LLM names the preposition, or vice versa. The measurement
+is the same shape as rule L's: for each instance, does the argument carry a `case` child naming
+that preposition? If it does and `derive_unit` still emitted `obj`, the two sides are describing
+the same token from different conventions; if it does not, the LLM invented a preposition and the
+violation is real. **Measure both variants** (with and without the `case`-child gate) — in rule L
+they were identical, in rule M the gate turned out to separate the wrong thing, and either
+outcome is the finding.
+
+Then, in order: the `xcomp`/`ccomp`/`obj` cluster (25 + 23 + 22 + 21 + 15 ≈ 120, a
+clausal-vs-predicative labeling split, and note the two mirror directions rule M deliberately
+left flagged live here), and only last the `subj`/`obj` reversals (81 + 67 = 148), which are
+genuine reading disagreements and therefore `--fix` material at 0.11 violations per call.
+
+**The two big classes are still `extra_arg` 1887 (of which `subj` 896, ∅ 131) and `missing_arg`
+1239**, both untouched since Phase 5b. Once the `role_mismatch` pairs above are exhausted, the
+next move is a Phase-5b-style full re-triage of those two by dep-tree context, not more rules
+guessed from the pair table.
 
 ### How to measure a candidate rule
 
@@ -138,10 +142,10 @@ full-corpus re-count), immediately after the 5e round:
    "si tegnon gran **regi**", "le mura mi parean che **ferro** fosse". The dep tree attaches an
    object complement as plain `obj`/`nsubj` (there is no copula to hang it from), while the LLM
    labels it a complement predicated of that argument — which Phase 1 already canonicalizes
-   `attr` → `xcomp` for. A blanket `xcomp`≡`obj` equivalence would swallow genuine
-   object-mislabeling, so this needs a configurational gate (e.g. the predicate already carries
-   another `obj`/`subj` argument, the secondary-predicate configuration) — measure that before
-   proposing it.
+   `attr` → `xcomp` for. The configurational gate proposed here (the predicate already carrying
+   another `obj`/`subj` argument) **was measured and abandoned** — it admits 227 of 230 on the
+   given side and separates the wrong thing on the derived side. Landed ungated as Phase 5g's
+   rule M, −230; see `CORRECTIONS.md`.
 
 The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay `--fix` material
 — but as measured above, that route removes them at 0.11 per call, so they are last, not first.
@@ -156,6 +160,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5d** | audit of the `expl` class: Layer 4 is right, nothing to route back | — |
 | **5e** | one full-corpus `--fix` pass, 178/2037 units accepted, none regressed | 4846 → **4615** |
 | **5f** | Rule L (`obl:<lemma>` given vs bare `obl` derived), checker-side, 0 calls | 4615 → **4327** |
+| **5g** | Rule M (given `xcomp` vs derived `obj`/`subj` — secondary predication), 0 calls | 4327 → **4097** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).
@@ -282,6 +287,7 @@ widening the authority model is not the lever. Those are genuine subject disagre
 | `--fix`, full corpus pass (Phase 5e, **actually measured**) | **231** | **2037 LLM calls** |
 | **Phases 5a + 5b (deterministic)** | **1073** | **0 LLM calls, minutes** |
 | **Phase 5f, one rule (deterministic)** | **288** | **0 LLM calls, minutes** |
+| **Phase 5g, one rule (deterministic)** | **230** | **0 LLM calls, minutes** |
 
 The deterministic phases delivered roughly **4.6× the `--fix` pass that followed them, instantly**
 — and the extrapolation above turned out to be optimistic by 2×, because the 8.7% success rate
