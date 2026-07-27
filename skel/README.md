@@ -8,12 +8,12 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5g, one Phase 5e `--fix` round
-run.** `make -C skel check`: **0 hard, 4097 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5h, one Phase 5e `--fix` round
+run.** `make -C skel check`: **0 hard, 4068 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
-Phase 5f). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the
-full correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
+Phase 5f, 4097 after Phase 5g). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
+correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
 the deterministic phases had cleared the unfixable units out of the flagged set — so the
 remaining gap is closed by measuring classes and normalizing, not by more model calls (see
@@ -74,7 +74,7 @@ line	token	word	role	arg_line	arg_token
   the central check, every divergence from `derive_unit`:
   `missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`.
 
-Four refinements make that divergence check meaningful rather than noisy — landed as four
+Eight refinements make that divergence check meaningful rather than noisy — landed as
 successive phases, each measured before/after (`--stats` aggregates violations by kind, by
 `(kind, role, ∅-or-real)`, and by `role_mismatch` pair):
 
@@ -145,6 +145,11 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    stay flagged (given bare `obl` vs derived `obl:<lemma>`; given `obj`/`subj` vs derived
    `xcomp`): there the dep tree is explicit and the LLM contradicts it — the same asymmetry
    `--repair`'s `role_label` rule already rewrites on.
+8. **Phase 5h — case-marked objects** (`_case_marked_object`): a given `obl:<lemma>` against a
+   derived `obj`/`subj` is accepted when the argument carries a `case` child naming that same
+   preposition — `derive_unit` takes the role from the deprel alone, so a case-marked nominal
+   Layer 4 attached as `obj` loses the preposition that is sitting in the tree. Naming a
+   *different* preposition than the `case` child stays flagged, as does the mirror direction.
 
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
@@ -190,6 +195,14 @@ predication: an object complement is attached as plain `obj` ("mi chiamaste **Ci
 copular predicate nominal as `nsubj` ("non son **torri**"), so a given `xcomp` against a derived
 `obj`/`subj` is the same labeling split Phase 1 canonicalizes `attr` → `xcomp` for. The mirror
 direction stays flagged, since there the dep tree carries an explicit `xcomp` deprel.
+
+After Phase 5h (2026-07-28, checker-only, rule N): **0 hard, 4068 soft** — `role_mismatch` 696 →
+**667**. A given `obl:<lemma>` against a derived `obj`/`subj` is accepted when the argument
+carries a `case` child naming *that same* preposition ("curan **di te**"): Layer 4 attached a
+case-marked nominal as `obj`, and `derive_unit` reads the deprel alone. The other 97 instances of
+that pair are **clitics** ("**mi** pesa", "**li** convien") where both sides make a case claim
+the tree cannot settle — left flagged, and filed as a Layer-4 question in
+[CORRECTIONS.md](CORRECTIONS.md).
 
 ## Next steps
 

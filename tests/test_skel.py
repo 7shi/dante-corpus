@@ -674,6 +674,45 @@ def test_classify_divergence_explicit_xcomp_contradicted_still_flagged():
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
+# --- _classify_divergence: Phase 5h rule N ---------------------------------------------
+
+
+def test_classify_divergence_case_marked_object_accepted():
+    # "curan di te ne la corte del cielo": the argument carries the `case` child "di", but Layer
+    # 4 attached it as `obj`, so derive_unit reports the deprel and drops the preposition.
+    derived = {1: [skel.SkelRow(1, 1, "curan", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "curan", "obl:di", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="di", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="te", deprel="obj", head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_case_marked_object_other_lemma_still_flagged():
+    # The LLM names a different preposition than the one in the tree — a real disagreement.
+    derived = {1: [skel.SkelRow(1, 1, "curan", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "curan", "obl:a", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="di", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="te", deprel="obj", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
+def test_classify_divergence_clitic_object_without_case_child_still_flagged():
+    # No `case` child at all (a clitic whose case the tree cannot express): both sides make a
+    # case claim, so this stays a divergence — see CORRECTIONS.md's Phase 5h.
+    derived = {1: [skel.SkelRow(1, 2, "pesa", "obj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "pesa", "obl:a", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="mi", deprel="obj", head_line=1, head_token=2),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 1) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

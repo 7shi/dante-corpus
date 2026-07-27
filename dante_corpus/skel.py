@@ -567,6 +567,26 @@ def _oblique_lemma_refinement(
     return drole == "obl" and bool(OBL_RE.fullmatch(grole)) and arg not in case_children
 
 
+def _case_marked_object(
+    grole: str, drole: str, arg: tuple[int, int],
+    case_lemmas: dict[tuple[int, int], set[str]],
+) -> bool:
+    """Rule N: a given `obl:<lemma>` against a derived `obj`/`subj`, where the argument carries a
+    `case` child naming **that same** preposition ("curan **di te**", "contastare **a Ruberto**",
+    "gridavano «**A Filippo** Argenti!»"). `derive_unit` takes the role from the deprel alone, so
+    a case-marked nominal Layer 4 attached as `obj`/`nsubj` is reported as a direct argument and
+    the preposition sitting in the tree is dropped. The LLM reads the preposition that is there,
+    so nothing in the dep tree is contradicted.
+
+    One-directional, as for rules L and M: a given `obj`/`subj` against a derived `obl:<lemma>`
+    means the LLM dropped a preposition the tree makes explicit, which stays flagged. Requiring
+    the *same* lemma is what keeps it narrow — naming a different preposition than the `case`
+    child (12 instances) is a real disagreement."""
+    if not (OBL_RE.fullmatch(grole) and drole in ("obj", "subj")):
+        return False
+    return grole.split(":", 1)[1] in case_lemmas.get(arg, set())
+
+
 def _predicative_complement(grole: str, drole: str) -> bool:
     """Rule M: a given `xcomp` against a derived `obj`/`subj`. UD has no relation for secondary
     predication: an object complement is attached as plain `obj` ("mi chiamaste **Ciacco**", "li
@@ -587,12 +607,15 @@ def _classify_divergence(
     morph_pos_by_position: dict[tuple[int, int], str] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
-    # Rule L: positions that have at least one `case` dep child, i.e. an explicit preposition.
-    case_children = {
-        (row.head_line, row.head_token)
-        for row in (dep_index_by_pos or {}).values()
-        if row.deprel == "case"
-    }
+    # Rules L and N: the preposition lemmas each position's `case` dep children name (empty set
+    # = no explicit preposition, which is what rule L turns on).
+    case_lemmas: dict[tuple[int, int], set[str]] = {}
+    for row in (dep_index_by_pos or {}).values():
+        if row.deprel == "case":
+            case_lemmas.setdefault((row.head_line, row.head_token), set()).add(
+                _normalize_prep_lemma(row.word.lower())
+            )
+    case_children = set(case_lemmas)
     given_preds = _predicate_positions_in(given)
     derived_preds = _predicate_positions_in(derived)
 
@@ -680,7 +703,8 @@ def _classify_divergence(
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
                 if (_oblique_lemma_refinement(grole, drole, arg, case_children)
-                        or _predicative_complement(grole, drole)):
+                        or _predicative_complement(grole, drole)
+                        or _case_marked_object(grole, drole, arg, case_lemmas)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",

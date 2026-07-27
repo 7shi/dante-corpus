@@ -1,5 +1,52 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5h: rule N — case-marked objects, and the clitic-case finding (2026-07-28)
+
+Baseline: **0 hard, 4097 soft** (the Phase 5g state). 4097 → **4068** (−29), all `role_mismatch`
+(696 → **667**). The small number is the point: the class it came from is 148 instances, and the
+measurement split it into two populations that are *not* the same phenomenon.
+
+The `obl:<lemma>` vs `obj`/`subj` pairs (148 given-side, 45 in the mirror direction), classified
+by what the dep tree says about the argument:
+
+| bucket | count | reading |
+|---|---|---|
+| argument has a `case` child naming **the same** preposition | **29** | notation split — **accepted (rule N)** |
+| argument has **no** `case` child, and is a **pronoun** | **97** | clitic case — see below |
+| argument has a `case` child naming a **different** preposition | 12 | real disagreement — stays flagged |
+| argument has no `case` child and is a noun/adjective/article | 10 | stays flagged |
+
+**Rule N (−29)**: the argument carries an explicit `case` child, but Layer 4 attached it as
+`obj`/`nsubj`, and `derive_unit` takes the role from the deprel alone — so the preposition
+sitting in the tree is dropped ("curan **di te**", "contastare **a Ruberto**", "gridavano «**A
+Filippo** Argenti!»", "pigliando più **de la** dolente ripa"). The LLM reads the preposition that
+is there; nothing is contradicted. Same one-directional shape as rules L and M (given
+`obj`/`subj` vs derived `obl:<lemma>` means the LLM *dropped* an explicit preposition — flagged),
+and requiring the *same* lemma is what keeps it narrow: the 12 different-lemma instances stay
+flagged. Implemented as `_case_marked_object`; `case_children` from rule L became `case_lemmas`
+(position → normalized `case`-child lemmas) to serve both.
+
+**The 97 pronominal cases are deliberately not accepted, and they are a Layer-4 finding.** They
+are clitics — 84 of them `obl:a` — where the LLM names a case the token carries morphologically
+and the tree cannot express: "**mi** pesa", "non **ti** noccia", "**li** convien fuggire", "fa
+che **gliel'** accocchi", "**n'**accorgo", "**ne** portò un lacerto". Layer 4 tags them `obj`.
+Unlike rules L/M/N, **both sides here make a case claim about the same token**, so the
+"strictly more informative" argument does not apply — and the mirror direction confirms it is a
+real disagreement rather than a convention split: in 30 further instances Layer 4 tags the clitic
+`iobj` (which Phase 1 canonicalizes to `obl:a`) and the *LLM* says `obj`. The two sides disagree
+about clitic case in **both** directions, on the same syncretic pronoun set (`mi`/`ti`/`ci`/`vi`/
+`li`/`ne`, accusative and dative alike in Italian).
+
+That makes it a Layer-2/Layer-4 question, not a checker rule: if "mi pesa" is a dative, Layer 4's
+`obj` is a mistag, and the correction belongs in [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)
+under the same measure-then-freeze discipline Phase 5d used to *reject* the `expl` hypothesis. No
+correction is opened here — Layer 2 records no case feature (`MorphRow` has gender/number/person,
+not case), so deciding it needs either that feature or a clitic lexicon, and both are larger
+moves than this round. **Filed as the open question for the next round.**
+
+**Current state**: `make -C skel check` — **0 hard, 4068 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13370, 76.7%; Δ1851 across Phase 5).
+
 ## Checker Phase 5g: rule M — given `xcomp` vs derived `obj`/`subj` (2026-07-28)
 
 Baseline: **0 hard, 4327 soft** (the Phase 5f state). One rule, no LLM call, no artifact touched:
