@@ -1,5 +1,37 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5f: rule L — `obl:<lemma>` given vs bare `obl` derived (2026-07-28)
+
+Baseline: **0 hard, 4615 soft** (the Phase 5e state). One rule, measured corpus-wide before
+implementing, **no LLM call and no artifact touched**: 4615 → **4327** (−288, −6.2%), all of it
+`role_mismatch` (1214 → **926**, −23.7%).
+
+`derive_unit` emits a bare `obl` in exactly one situation: the argument has no `case` child
+naming the preposition (the `obl`/`obl:agent` branch of its argument loop builds the
+lemma-qualified form from that lookup). In **all 288** instances of this pair that condition
+holds — the strict variant of the rule (gated on the absence of a `case` child) and the loose one
+(ungated) return the identical set, which is itself the evidence that the two sides are not
+disagreeing. The preposition is fused into the token: a clitic dative (`che nel lago del cor
+**m'**era durata` — derived `obl`, given `obl:a`) or a preposition+article contraction. The LLM's
+label is therefore **strictly more informative, not a divergence** — the same argument the Phase 2
+authority model makes for pro-drop subjects, and the mirror of `--repair`'s `role_label` rule
+(`_safe_role_repair`), which rewrites the *opposite* direction, given bare `obl` → derived
+`obl:<lemma>`, precisely because *there* the dep tree is explicit.
+
+Implemented checker-side as `_oblique_lemma_refinement` (`dante_corpus/skel.py`), consulted in
+the `elif grole != drole:` branch of `_classify_divergence`. Deliberately **not** a `--repair`
+rule: the derivation is the less informative side here, so there is nothing to rewrite the
+artifact towards. Three tests, per the file's per-rule convention: the accepted case, a
+cross-lemma pair (`obl:a` vs `obl:di`, still flagged — that disagreement is real), and the
+defensive negative where the argument *does* carry a `case` child (still flagged: that
+combination means the derivation had the preposition and dropped it).
+
+This single deterministic rule removed **more than the entire Phase 5e `--fix` pass** (288 vs
+231) at zero model calls — the third time in Phase 5 that measuring a class beat regenerating it.
+
+**Current state**: `make -C skel check` — **0 hard, 4327 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13111, 75.2%; Δ1592 across Phase 5).
+
 ## Phase 5e: full-corpus `--fix` regeneration round (2026-07-28)
 
 Baseline: **0 hard, 4846 soft** (the Phase 5b state), 2037 flagged parse units. One full pass,

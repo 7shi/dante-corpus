@@ -608,6 +608,45 @@ def test_classify_divergence_adverbial_argument_of_nominal_role_still_flagged():
     assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
 
 
+# --- _classify_divergence: Phase 5f rule L ---------------------------------------------
+
+
+def test_classify_divergence_oblique_lemma_refinement_accepted():
+    # "che nel lago del cor m'era durata": the dative is a clitic fused into the token, so the
+    # dep tree gives it no `case` child and derive_unit can only emit a bare `obl`; the LLM
+    # naming the preposition is strictly more informative.
+    derived = {1: [skel.SkelRow(1, 1, "era", "obl", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "era", "obl:a", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="m'", deprel="obl", head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_cross_lemma_oblique_still_flagged():
+    # Both sides name a preposition and they disagree — a real divergence.
+    derived = {1: [skel.SkelRow(1, 1, "era", "obl:di", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "era", "obl:a", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="cor", deprel="obl", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 2) for v in violations)
+
+
+def test_classify_divergence_bare_oblique_with_case_child_still_flagged():
+    # The argument does have an explicit preposition, so a bare derived `obl` means derive_unit
+    # had the lemma and dropped it — not the situation rule L describes.
+    derived = {1: [skel.SkelRow(1, 1, "era", "obl", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "era", "obl:a", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="nel", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="lago", deprel="obl", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

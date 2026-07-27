@@ -8,10 +8,10 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5b, one Phase 5e `--fix` round
-run.** `make -C skel check`: **0 hard, 4615 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5f, one Phase 5e `--fix` round
+run.** `make -C skel check`: **0 hard, 4327 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
-5105 after Phase 5a, 4846 after Phase 5b). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the
+5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the
 full correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
 the deterministic phases had cleared the unfixable units out of the flagged set — so the
@@ -163,6 +163,13 @@ hard, 4615 soft** — `extra_arg` 1887, `missing_arg` 1239, `role_mismatch` 1214
 155, `membership` 94, `missing_tuple` 24, `unknown_role` 2. 178 units accepted (8.7%), none
 regressed, 231 violations removed. No class moved more than 11.9% and the three large ones moved
 2.9-5.2%, which is the signal that what remains is checker-side rather than LLM error.
+
+After Phase 5f (2026-07-28, checker-only, rule L): **0 hard, 4327 soft** — `role_mismatch` falls
+1214 → **926** (−288, −23.7%), every other class unchanged. A given `obl:<lemma>` against a
+derived bare `obl` is not a disagreement: `derive_unit` emits the bare form only when no `case`
+child names the preposition, which holds in all 288 instances (the preposition is fused into the
+token — a clitic dative or a preposition+article contraction), so the LLM's label is strictly
+more informative. One deterministic rule removed more than the whole Phase 5e `--fix` pass.
 
 ## Next steps
 

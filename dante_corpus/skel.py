@@ -555,12 +555,30 @@ def _drop_nmod_obliques(
             g.pop(arg)
 
 
+def _oblique_lemma_refinement(
+    grole: str, drole: str, arg: tuple[int, int], case_children: set[tuple[int, int]]
+) -> bool:
+    """Rule L: derived bare `obl` (no `case` child naming the preposition) vs a given
+    `obl:<lemma>` — the LLM names a fused/clitic preposition the dep tree leaves implicit
+    ("che nel lago del cor **m'**era durata": clitic dative, derive_unit `obl`, LLM `obl:a`).
+    `derive_unit` emits the lemma-qualified form only when a `case` child makes the preposition
+    explicit, so the given label is strictly more informative, not a disagreement — the mirror
+    of `_safe_role_repair`, which rewrites the opposite direction for the same reason."""
+    return drole == "obl" and bool(OBL_RE.fullmatch(grole)) and arg not in case_children
+
+
 def _classify_divergence(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
     morph_pos_by_position: dict[tuple[int, int], str] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
+    # Rule L: positions that have at least one `case` dep child, i.e. an explicit preposition.
+    case_children = {
+        (row.head_line, row.head_token)
+        for row in (dep_index_by_pos or {}).values()
+        if row.deprel == "case"
+    }
     given_preds = _predicate_positions_in(given)
     derived_preds = _predicate_positions_in(derived)
 
@@ -647,6 +665,8 @@ def _classify_divergence(
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
+                if _oblique_lemma_refinement(grole, drole, arg, case_children):
+                    continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
                               role=drole, given_role=grole, arg=arg, predicate=pos)

@@ -1,11 +1,11 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4615 soft** violations across
+Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4327 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
-4846 after Phase 5b → 4615 after the Phase 5e `--fix` round). The project goal is unchanged:
-**0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
-tolerate.
+4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L). The
+project goal is unchanged: **0 soft violations** — soft divergences are rule mismatches to
+eliminate, not a baseline to tolerate.
 
 **All of Phase 5 has now run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). Its central finding, stated up front: **`--fix` yields
@@ -17,8 +17,8 @@ measurement that motivated this plan; its violation counts are **pre-5a** unless
 otherwise.
 
 **Resuming work? Go to [*Next session — start here*](#next-session--start-here) directly below.**
-It has the one task queued (Rule L, −288 already measured), where in the code it goes, the tests
-to write, and the fact that the working tree currently holds an uncommitted `--fix` round.
+Rule L landed as Phase 5f (−288, exactly as measured); the queued task is now the
+secondary-predicate gate for the `xcomp` pairs, which must be **measured before implementing**.
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
@@ -28,72 +28,16 @@ measurement explained *why* in a way that changed what was done next.
 
 # Next session — start here
 
-## 0. The working tree is dirty; commit it first
+## 0. Rule L landed — Phase 5f, 4615 → 4327 (2026-07-28)
 
-The Phase 5e `--fix` round's output is **not yet committed**: 85 changed artifacts under
-`skel/{inferno,purgatorio,paradiso}/*.tsv` plus the doc updates in `CORRECTIONS.md`,
-`README.md` and this file. Verify and commit that as its own commit before touching code, so the
-`--fix` round and the rule work that follows stay separable:
+`_oblique_lemma_refinement` in `dante_corpus/skel.py`, consulted from the `elif grole != drole:`
+branch of `_classify_divergence`; `case_children` built once at the top of that function from
+`dep_index_by_pos`. Three tests in `tests/test_skel.py` (accepted case, cross-lemma pair still
+flagged, `case`-child case still flagged), 100 passing. Checker-side only — no `--repair` rule,
+no artifact touched, no model call. The measured −288 landed exactly, entirely in
+`role_mismatch` (1214 → 926). Write-up: `CORRECTIONS.md`, *Checker Phase 5f*.
 
-```bash
-make -C skel check      # expect: 0 hard, 4615 soft
-uv run pytest -q        # expect: 97 passed
-git add -A && git commit
-```
-
-Suggested subject: `skel: Phase 5e --fix round — 178/2037 units, 4846 -> 4615 soft`. The
-measured body numbers are in `CORRECTIONS.md`'s Phase 5e section.
-
-## 1. Implement Rule L — `obl:<lemma>` given vs bare `obl` derived (**−288, already measured**)
-
-This is the whole task for the session. Expected: **0 hard, 4615 → 4327 soft**, no model call,
-no artifact touched.
-
-**Why it is sound** (do not re-derive; this was measured on 2026-07-28): `derive_unit` emits a
-bare `obl` in exactly one situation — the argument has no `case` child naming the preposition
-(the `elif child.deprel in ("obl", "obl:agent")` branch of `derive_unit`'s argument loop, whose
-`case_children` lookup is what produces the `obl:<lemma>` form). In **all 288** instances of
-this pair that condition holds; gating on it or not returns the identical set. The preposition is fused into
-the token: a clitic dative (`che nel lago del cor **m'**era durata` — derived `obl`, LLM
-`obl:a`) or a preposition+article contraction. So the LLM's label is **strictly more
-informative, not a disagreement** — the same argument the Phase 2 authority model makes for
-pro-drop subjects, and the mirror of `--repair`'s `_safe_role_repair`, which rewrites the
-opposite direction (given bare `obl`, derived `obl:<lemma>`) precisely because *there* the dep
-tree is explicit.
-
-**Where**: `dante_corpus/skel.py`, `_classify_divergence`, the `elif grole != drole:` branch of
-the per-predicate comparison loop — accept instead of emitting `role_mismatch`. Keep it a
-checker-side acceptance; **do not** add a `--repair` rule rewriting the artifact (the derivation
-is the less informative side here, so there is nothing to rewrite towards).
-
-Suggested shape, next to `_adverbial_oblique`/`_drop_nmod_obliques`:
-
-```python
-def _oblique_lemma_refinement(grole, drole, arg, case_children) -> bool:
-    """Rule L: derived bare `obl` (no `case` child named the preposition) vs a given
-    `obl:<lemma>` — the LLM names a fused/clitic preposition the dep tree leaves implicit."""
-    return drole == "obl" and OBL_RE.fullmatch(grole) and arg not in case_children
-```
-
-`case_children` = the set of positions having at least one `case` dep child; build it once at
-the top of `_classify_divergence` from `dep_index_by_pos` (scan `.values()` for rows with
-`deprel == "case"`, collect `(head_line, head_token)`).
-
-**Tests** (`tests/test_skel.py`, one positive + two negatives, matching the file's per-rule
-convention):
-
-- given `obl:a` / derived `obl`, argument with no `case` child → no violation;
-- given `obl:a` / derived `obl:di` → still `role_mismatch` (cross-lemma disagreement is real);
-- given `obl:a` / derived `obl` but the argument *does* have a `case` child → still flagged
-  (defensive: that combination means the derivation had a preposition and dropped it, which is
-  not the situation this rule describes).
-
-**Then**: `make -C skel check` (expect 4327), `make -C skel stats`, and write the round up in
-`CORRECTIONS.md` above the Phase 5e section, updating the status lines in `README.md` and at the
-top of this file. Same discipline as every previous round: measured before/after, per-rule
-negative tests, no artifact touched.
-
-## 2. Only if time remains — measure the secondary-predicate gate
+## 1. Measure the secondary-predicate gate
 
 `xcomp` vs `obj` (170) + `xcomp` vs `subj` (60) are **predicative complements**, not nominalized
 infinitives (that hypothesis was measured and rejected — 8 and 15 respectively; see the *Next
@@ -151,7 +95,8 @@ its pair distribution is far from a scatter of one-off disagreements:
 Both large pairs were measured the same way every rule in this document was (monkeypatch +
 full-corpus re-count), immediately after the 5e round:
 
-1. **Rule L — `obl:<lemma>` given vs bare `obl` derived: −288, measured.** `derive_unit` emits a
+1. **Rule L — `obl:<lemma>` given vs bare `obl` derived: −288, measured — landed as Phase 5f.**
+   `derive_unit` emits a
    bare `obl` in exactly one situation: the argument has no `case` child naming the preposition.
    In **all 288** instances that is the case (the strict and loose variants of the rule return
    the identical set), and the missing preposition is typically fused into the token itself — a
@@ -160,7 +105,7 @@ full-corpus re-count), immediately after the 5e round:
    not a disagreement** — the same argument the Phase 2 authority model already makes for
    pro-drop subjects, and the mirror of `--repair`'s `role_label` rule, which rewrites the
    *opposite* direction (given bare `obl`, derived `obl:<lemma>`) because the dep tree makes it
-   explicit. This is the next thing to land: **more than the entire 5e `--fix` pass, at zero
+   explicit. It landed as Phase 5f and removed **more than the entire 5e `--fix` pass, at zero
    calls.**
 2. **`xcomp` vs `obj` (170) / `xcomp` vs `subj` (60) — the nominalized-infinitive hypothesis is
    wrong.** Gating on the argument being an infinitive removes 8; on its being any verb form,
@@ -185,6 +130,8 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5b** | no conjunction promoted to predicate; copula/modal double-listing suppressed; adverbial obliques accepted | 5105 → **4846** |
 | **5c** | `--fix` acceptance requires no new violation *kind* (`_is_improvement`) | — |
 | **5d** | audit of the `expl` class: Layer 4 is right, nothing to route back | — |
+| **5e** | one full-corpus `--fix` pass, 178/2037 units accepted, none regressed | 4846 → **4615** |
+| **5f** | Rule L (`obl:<lemma>` given vs bare `obl` derived), checker-side, 0 calls | 4615 → **4327** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).
@@ -310,6 +257,7 @@ widening the authority model is not the lever. Those are genuine subject disagre
 | `--fix`, full corpus pass (extrapolated from that rate) | ~450 | **2235 LLM calls** |
 | `--fix`, full corpus pass (Phase 5e, **actually measured**) | **231** | **2037 LLM calls** |
 | **Phases 5a + 5b (deterministic)** | **1073** | **0 LLM calls, minutes** |
+| **Phase 5f, one rule (deterministic)** | **288** | **0 LLM calls, minutes** |
 
 The deterministic phases delivered roughly **4.6× the `--fix` pass that followed them, instantly**
 — and the extrapolation above turned out to be optimistic by 2×, because the 8.7% success rate
