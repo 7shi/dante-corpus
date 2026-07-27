@@ -1,5 +1,54 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5l: rule R — predicative adjectives attached as `advmod` (2026-07-28)
+
+Baseline: **0 hard, 3876 soft** (the Phase 5k state). 3876 → **3808** (−68), all `extra_arg`
+(1887 → **1819**); every other kind unchanged. Checker-side, zero model calls, zero artifacts
+touched. **This is the first cut into `extra_arg`/`missing_arg` since Phase 5b.**
+
+The re-triage of the two big classes started as this plan prescribed — classifying every
+instance by how the cited argument reaches the predicate in the dep tree:
+
+| `extra_arg` (1887) | count | | `missing_arg` (1239) | count |
+|---|---|---|---|---|
+| unrelated | 659 | | direct child | 1116 |
+| descendant, depth 2 | 398 | | unrelated | 123 |
+| direct child | 392 | | | |
+| predicate is a descendant of the argument | 268 | | | |
+| pro-drop ∅ | 131 | | | |
+| descendant, depth ≥ 3 | 39 | | | |
+
+`missing_arg` is now **90% direct-child** — the LLM omitting an argument the tree carries on the
+very edge `derive_unit` reads. That is LLM incompleteness, not a checker artifact, and no
+structural rule can absorb it. (The pairing hypothesis was tested and is small: only **70**
+`extra_arg`/`missing_arg` pairs on the same predicate cite two tokens of the same NP span or two
+adjacent tokens — "Pape/Satàn", "Anastasio/papa", "Caron/dimonio" — so citation-token drift is
+not what these classes are made of.)
+
+**Rule R (−68)** (`_predicative_advmod`): a given `xcomp` whose argument is an **adjective**
+attached to that same predicate as `advmod` — "e io etterno **duro**", "dinanzi polveroso va
+**superbo**", "il primo cerchio è **tutto**", "tal mi **fec'** io". These are the predicative
+complements rule M already covers, which Layer 4 attached adverbially instead; `derive_unit`
+only reads `ARG_DEPRELS`, so it can produce no argument for them at all. The whole direct-child
+`advmod` population is 118, and the rule takes the 68 that are adjectives.
+
+**The adjective gate was measured against its alternatives and is what keeps this from being a
+blanket `advmod` exemption**: the same shape with an **adverb** argument (17 — "che fu nel
+cominciar cotanto **tosta**", "m'è **tardi**", "lungi **fia** dal becco l'erba") is Layer 2
+calling the word an adverb, which leaves the predicative reading genuinely undecided, so it
+stays flagged; so does everything with a non-`xcomp` role (33, mostly `obl`/`obj` over a
+quantifier adverb — "guardommi **un poco**", "ebbi **assai**"). This is the split Phase 5b
+predicted but did not have the POS breakdown to make: it left the "`xcomp`-over-`advmod` half"
+whole, and it divides cleanly.
+
+Three tests in `tests/test_skel.py` (accepted; adverb POS still flagged; non-`xcomp` role still
+flagged), 118 passing.
+
+**Current state**: `make -C skel check` — **0 hard, 3808 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13630, 78.2%; Δ2111 across Phase 5). By kind: `extra_arg`
+1819, `missing_arg` 1239, `role_mismatch` 475, `extra_tuple` 155, `membership` 94,
+`missing_tuple` 24, `unknown_role` 2.
+
 ## Checker Phase 5k: rules P and Q — the clausal-complement cluster (2026-07-28)
 
 Baseline: **0 hard, 3924 soft** (the Phase 5j state). 3924 → **3876** (−48), all

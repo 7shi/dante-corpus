@@ -783,6 +783,58 @@ def test_classify_divergence_co_present_preposition_requires_both_sides_oblique(
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
+# --- Phase 5l: rule R ------------------------------------------------------------------
+
+
+def test_classify_divergence_predicative_advmod_accepted():
+    # "e io etterno duro": the predicative adjective is attached as `advmod`, a deprel
+    # derive_unit never reads, so it can produce no argument at all for it.
+    derived = {1: [skel.SkelRow(1, 3, "duro", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 3, "duro", "subj", 1, 1),
+                 skel.SkelRow(1, 3, "duro", "xcomp", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="io", deprel="nsubj", head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="etterno", deprel="advmod", head_line=1,
+                           head_token=3),
+    }
+    morph_pos = {(1, 1): "pronoun", (1, 2): "adjective"}
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_predicative_advmod_requires_adjective():
+    # "che fu nel cominciar cotanto tosta": Layer 2 calls "tosta" an adverb, which leaves the
+    # predicative reading undecided — still flagged.
+    derived = {1: [skel.SkelRow(1, 1, "fu", "subj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "fu", "subj", 1, 3),
+                 skel.SkelRow(1, 1, "fu", "xcomp", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="tosta", deprel="advmod", head_line=1,
+                           head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="ella", deprel="nsubj", head_line=1,
+                           head_token=1),
+    }
+    morph_pos = {(1, 2): "adverb", (1, 3): "pronoun"}
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
+
+
+def test_classify_divergence_predicative_advmod_requires_xcomp_role():
+    # An adjective attached as `advmod` and cited as an *object* is a different claim, and one
+    # the tree does not support — still flagged.
+    derived = {1: [skel.SkelRow(1, 1, "va", "subj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "va", "subj", 1, 3),
+                 skel.SkelRow(1, 1, "va", "obj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="superbo", deprel="advmod", head_line=1,
+                           head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="elli", deprel="nsubj", head_line=1,
+                           head_token=1),
+    }
+    morph_pos = {(1, 2): "adjective", (1, 3): "pronoun"}
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
+
+
 # --- Phase 5k: rules P and Q -----------------------------------------------------------
 
 

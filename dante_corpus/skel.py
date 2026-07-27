@@ -563,6 +563,29 @@ def _adverbial_oblique(
     return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
 
 
+def _predicative_advmod(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule R: a given `xcomp` whose argument is an **adjective** attached to that same predicate
+    as `advmod` ("e io etterno **duro**", "dinanzi polveroso va **superbo**", "il primo cerchio è
+    **tutto**"). These are predicative complements — the construction rule M already covers — that
+    Layer 4 attached adverbially instead; `derive_unit` only reads `ARG_DEPRELS`, so it cannot
+    produce them at all.
+
+    The adjective-POS gate is what keeps this structural rather than a blanket `advmod`
+    exemption: the same shape with an adverb argument ("che fu nel cominciar cotanto **tosta**",
+    "m'è **tardi**") is Layer 2 calling the word an adverb, which leaves the reading genuinely
+    undecided, and stays flagged — the same caution `_adverbial_oblique` applies in reverse."""
+    if role != "xcomp":  # `attr` is already canonicalized to `xcomp` before comparison
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+        return False
+    return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+
 def _drop_nmod_obliques(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     derived_args: set[tuple[int, int]], dep_index_by_pos: dict[tuple[int, int], DepRow],
@@ -786,8 +809,10 @@ def _classify_divergence(
                 )
         for arg, grole in sorted(g.items()):
             if arg not in d:
-                if dep_index_by_pos is not None and _adverbial_oblique(
-                    pos, arg, grole, dep_index_by_pos, morph_pos_by_position
+                if dep_index_by_pos is not None and (
+                    _adverbial_oblique(pos, arg, grole, dep_index_by_pos, morph_pos_by_position)
+                    or _predicative_advmod(pos, arg, grole, dep_index_by_pos,
+                                           morph_pos_by_position)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

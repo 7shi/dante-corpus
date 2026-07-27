@@ -8,12 +8,12 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5k, one Phase 5e `--fix` round
+**Status: built for all 100 cantos, checker refined through Phase 5l, one Phase 5e `--fix` round
 run, and one Layer-4 correction round (Phase 5i) fed back into `dep/`.** `make -C skel check`:
-**0 hard, 3876 soft** violations (down from 17438 at the first
+**0 hard, 3808 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
-Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j).
+Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j, 3876 after Phase 5k).
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
@@ -77,7 +77,7 @@ line	token	word	role	arg_line	arg_token
   the central check, every divergence from `derive_unit`:
   `missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`.
 
-Ten refinements make that divergence check meaningful rather than noisy — landed as
+Eleven refinements make that divergence check meaningful rather than noisy — landed as
 successive phases, each measured before/after (`--stats` aggregates violations by kind, by
 `(kind, role, ∅-or-real)`, and by `role_mismatch` pair):
 
@@ -167,6 +167,12 @@ successive phases, each measured before/after (`--stats` aggregates violations b
     the argument is a **verb**, since Layer 4 attaches a complement clause's head verb straight
     to the matrix predicate ("or mi concedi ch'io **sappia**"). The mirror of the second (a
     given `obj`/`subj` against an explicit derived `ccomp`) stays flagged.
+11. **Phase 5l — predicative adjectives attached adverbially** (`_predicative_advmod`): a given
+    `xcomp` whose argument is an **adjective** attached to that predicate as `advmod` ("e io
+    etterno **duro**", "va **superbo**") is accepted — rule M's construction, which Layer 4
+    attached adverbially, and which `derive_unit` cannot produce at all since `advmod` is not in
+    `ARG_DEPRELS`. The adjective gate is load-bearing: the same shape with an adverb argument,
+    and any non-`xcomp` role, stay flagged.
 
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
@@ -245,6 +251,13 @@ After Phase 5k (2026-07-28, checker-only, rules P and Q): **0 hard, 3876 soft** 
 object cases (−25) are mechanical; the predicative-PP half (≈55, "sta **come torre** ferma",
 "fu **di grado** maggior") is **not** — separating the copular readings would need a verb
 lexicon, so it stays flagged.
+
+After Phase 5l (2026-07-28, checker-only, rule R): **0 hard, 3808 soft** — `extra_arg` 1887 →
+**1819** (−68), the first cut into the two big classes since Phase 5b. The re-triage that
+produced it also settled what those classes are made of: `missing_arg` is **90% direct-child**
+(the LLM omitting an argument sitting on the very edge `derive_unit` reads — LLM incompleteness,
+not a checker artifact), and only 70 `extra_arg`/`missing_arg` pairs across the corpus are the
+same NP cited at two different tokens.
 
 ## Next steps
 
