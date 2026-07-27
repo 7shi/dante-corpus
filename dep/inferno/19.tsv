@@ -861,7 +861,7 @@ line	token	word	deprel	head_line	head_token
 114	5	uno	obj	114	9
 114	6	e	cc	114	9
 114	7	voi	nsubj	114	9
-114	8	ne	obj	114	9
+114	8	ne	obl	114	9
 114	9	orate	advcl	113	4
 114	10	cento	obj	114	9
 115	1	Ahi	discourse	115	7

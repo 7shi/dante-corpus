@@ -236,7 +236,7 @@ line	token	word	deprel	head_line	head_token
 34	6	più	advmod	34	8
 34	7	di	case	34	8
 34	8	contra	obl	34	5
-35	1	li	obj	35	2
+35	1	li	iobj	35	2
 35	2	arruncigliò	conj	31	2
 35	3	le	det	35	5
 35	4	'mpegolate	amod	35	5
@@ -276,7 +276,7 @@ line	token	word	deprel	head_line	head_token
 40	3	fa	ccomp	42	1
 40	4	che	mark	40	7
 40	5	tu	nsubj	40	7
-40	6	li	obj	40	7
+40	6	li	iobj	40	7
 40	7	metti	ccomp	40	3
 41	1	li	det	41	2
 41	2	unghioni	obj	40	7
@@ -506,7 +506,7 @@ line	token	word	deprel	head_line	head_token
 72	1	sì	advmod	72	2
 72	2	che	mark	72	5
 72	3	stracciando	advcl	72	5
-72	4	ne	obj	72	5
+72	4	ne	obl	72	5
 72	5	portò	advcl	71	3
 72	6	un	det	72	7
 72	7	lacerto	obj	72	5

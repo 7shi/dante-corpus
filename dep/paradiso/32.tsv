@@ -310,7 +310,7 @@ line	token	word	deprel	head_line	head_token
 45	5	elezïoni	obj	45	3
 46	1	Ben	advmod	46	5
 46	2	te	obj	46	5
-46	3	ne	obj	46	5
+46	3	ne	obl	46	5
 46	4	puoi	aux	46	5
 46	5	accorger	root	0	0
 46	6	per	case	46	8

@@ -1,5 +1,45 @@
 # skel — Layer 5 correction history
 
+## Phase 5i: the clitic-case question, resolved as a Layer-4 correction (2026-07-28)
+
+Baseline: **0 hard, 4042 soft** (from the Phase 5h state of 4068, −26, all `role_mismatch`:
+667 → **641**). **No checker code changed and no skel artifact was touched** — the 26 came from
+correcting Layer 4, which is what Phase 5h filed this class as.
+
+Phase 5h left 97 instances where the LLM labels a clitic `obl:a`/`obl:di` against Layer 4's
+`obj`, and argued they could not be a checker rule because both sides make a case claim about
+the same token. Reading them confirmed that, and sharpened it: the population is genuinely
+**mixed**. Most are datives Layer 4 mistagged (`mi pesa`, `ti noccia`, `li convien fuggire`,
+`ha tolto loro`), but some are plain accusatives the LLM got wrong (`m'avea 'mmonito`,
+`ti priego`) — so no blanket routing was possible either.
+
+**What decides a subset is structural, and needs no case feature.** In 30 of the 97 the
+predicate carries a *second* `obj` child in the dep tree. UD allows at most one `obj` per
+predicate, so the tree contradicts itself independently of the LLM, and the non-clitic object is
+the direct one. Those 30 were hand-read against their terzine, 4 rejected, and the remaining 26
+retagged in `dep/` (22 → `iobj`, 4 → `obl` for partitive `ne`); see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) for the full list and the rejections. `dep
+--check` stays **0 hard, 0 soft**; every retagged row closed its Layer-5 divergence, because
+Phase 1 canonicalizes `iobj` → `obl:a` and rule L reconciles bare derived `obl` with a given
+`obl:<lemma>`.
+
+**This is the first Layer-4 correction Layer 5 produced**, which is the audit role the layer was
+built for (see the README's *What it does*): a divergence between two independent readings
+located a real mis-parse in the frozen dependency artifact, not just an LLM slip.
+
+**Still open** (unchanged in count, now with a measured reason): the other **67** — no second
+`obj`, so nothing structural decides them — and the **30** mirror-direction instances (`iobj`
+given by Layer 4, `obj` by the LLM: `mi bagna`, `mi tormenta`, `ti conforta`, `lui non aita`).
+Several of the mirror cases look like Layer-4 datives over real accusatives, i.e. errors running
+the other way. Deciding either group needs a Layer-2 case feature or a clitic lexicon.
+
+**A wider Layer-4 finding**, recorded in `dep/CORRECTIONS.md` and not acted on: **231**
+predicates corpus-wide carry two or more `obj` children (84 with a clitic, 147 without —
+flattened coordinations and object complements).
+
+**Current state**: `make -C skel check` — **0 hard, 4042 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13396, 76.8%; Δ1877 across Phase 5).
+
 ## Checker Phase 5h: rule N — case-marked objects, and the clitic-case finding (2026-07-28)
 
 Baseline: **0 hard, 4097 soft** (the Phase 5g state). 4097 → **4068** (−29), all `role_mismatch`

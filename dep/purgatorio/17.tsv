@@ -314,7 +314,7 @@ line	token	word	deprel	head_line	head_token
 44	3	lume	nsubj	44	7
 44	4	il	det	44	5
 44	5	volto	obj	44	7
-44	6	mi	obj	44	7
+44	6	mi	iobj	44	7
 44	7	percosse	advcl	43	5
 45	1	maggior	amod	43	3
 45	2	assai	advmod	45	1

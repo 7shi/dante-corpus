@@ -643,7 +643,7 @@ line	token	word	deprel	head_line	head_token
 87	4	nessun	nsubj	87	5
 87	5	discende	acl:relcl	86	7
 88	1	qual	mark	88	3
-88	2	ti	obj	88	3
+88	2	ti	iobj	88	3
 88	3	negasse	advcl	89	8
 88	4	il	det	88	5
 88	5	vin	obj	88	3

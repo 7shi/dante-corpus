@@ -312,7 +312,7 @@ line	token	word	deprel	head_line	head_token
 46	4	ch'	nsubj	46	9
 46	5	al	case	46	6
 46	6	ventre	obl	46	9
-46	7	li	obj	46	9
+46	7	li	iobj	46	9
 46	8	s'	obj	46	9
 46	9	atterga	acl:relcl	46	3
 47	1	che	nsubj	49	1

@@ -977,7 +977,7 @@ line	token	word	deprel	head_line	head_token
 137	5	questo	det	137	6
 137	6	giusto	obl	137	2
 138	1	che	nsubj	138	3
-138	2	li	obj	138	3
+138	2	li	iobj	138	3
 138	3	assegnò	acl:relcl	137	6
 138	4	sette	obj	138	3
 138	5	e	cc	138	6

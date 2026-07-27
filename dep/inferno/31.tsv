@@ -533,7 +533,7 @@ line	token	word	deprel	head_line	head_token
 75	5	'l	det	75	7
 75	6	gran	amod	75	7
 75	7	petto	nsubj	75	9
-75	8	ti	obj	75	9
+75	8	ti	iobj	75	9
 75	9	doga	acl:relcl	75	3
 76	1	Poi	advmod	76	2
 76	2	disse	root	0	0

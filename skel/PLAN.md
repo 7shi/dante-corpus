@@ -1,14 +1,15 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4068 soft** violations across
+Status as of 2026-07-28: `make -C skel check` reports **0 hard, 4042 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
-4097 after Phase 5g's rule M → 4068 after Phase 5h's rule N). The project goal is unchanged:
+4097 after Phase 5g's rule M → 4068 after Phase 5h's rule N → 4042 after Phase 5i's Layer-4
+correction). The project goal is unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
 
-**Phases 5a-5h have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+**Phases 5a-5i have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
 about 0.11 violations per LLM call and that rate does not depend on how the flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
@@ -22,8 +23,9 @@ authoritative current numbers are the status line above and `--stats`.
 
 **Resuming work? Go to [*Next session — start here*](#next-session--start-here) directly below.**
 Rules L, M and N landed as Phases 5f/5g/5h (−288, −230, −29; all checker-side, zero model
-calls). The queued item is the **clitic-case question**, which 5h's measurement turned into a
-Layer-4 audit rather than a checker rule.
+calls), and Phase 5i closed the decidable half of the **clitic-case question** by correcting
+Layer 4 (−26, zero model calls, no checker change). The queued items are now the
+`xcomp`/`ccomp`/`obj` cluster and then the two big classes, `extra_arg` and `missing_arg`.
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
@@ -35,12 +37,13 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5h is **committed** — the three rule commits are the most recent `skel:`
-entries in `git log`, and nothing is left uncommitted for a next session to discover. Confirm
-before starting:
+Everything through Phase 5i is **committed** — the rule commits and the Layer-4 correction are
+the most recent `skel:`/`dep:` entries in `git log`, and nothing is left uncommitted for a next
+session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 4068 soft
+make -C skel check      # expect: 0 hard, 4042 soft
+make -C dep check       # expect: 0 hard, 0 soft  (Phase 5i edited dep artifacts)
 uv run pytest -q        # expect: 106 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
@@ -65,34 +68,41 @@ all one-directional, all zero model calls and zero artifacts touched:
 `_classify_divergence`) serves L and N both. Nine tests in `tests/test_skel.py`, 106 passing.
 `role_mismatch` 1214 → **667**.
 
-## 1. The clitic-case question — a Layer-4 audit, not a checker rule
+## 1. The clitic-case question — half closed as Phase 5i, half parked
 
-Rule N's measurement split its class in two, and the larger half is the open item. In **97**
-instances the LLM labels a **clitic** `obl:a`/`obl:di` where Layer 4 tags it `obj` ("**mi**
-pesa", "non **ti** noccia", "**li** convien fuggire", "**n'**accorgo", "**ne** portò un
-lacerto"); 84 of them are `obl:a`. In a further **30**, Layer 4 tags the clitic `iobj` (Phase 1
-canonicalizes that to `obl:a`) and the **LLM** says `obj` — the same disagreement running the
-other way, on the same case-syncretic pronoun set (`mi`/`ti`/`ci`/`vi`/`li`/`ne`).
+**Done (−26).** Reading the 97 answered the question this section used to ask: the population is
+**mixed**, not uniformly dative — `mi pesa`, `ti noccia`, `li convien fuggire` are Layer-4
+mistags, but `m'avea 'mmonito` and `ti priego` are plain accusatives where the LLM is wrong. So
+neither a checker rule nor a blanket reroute was available. What *is* available is a structural
+subset needing no case feature: in **30** of the 97 the predicate carries a **second** `obj`
+child, and UD allows at most one `obj` per predicate — the tree contradicts itself regardless of
+the LLM, and the non-clitic object is the direct one. 26 survived hand-verification against
+their terzine and were retagged in `dep/` (22 → `iobj`, 4 → `obl` for partitive `ne`); the other
+4 were rejected. Each closed its Layer-5 divergence, `dep --check` stayed 0/0, and no checker
+code or skel artifact changed. Full list in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
-That two-directional symmetry is what disqualifies it as a checker rule: unlike L/M/N, **both
-sides make a case claim about the same token**, so neither is "strictly more informative". If
-"mi pesa" is a dative, Layer 4's `obj` is a mistag and the fix belongs in
-[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+**Parked, with a measured reason.** The other **67** (no second `obj`, nothing structural to go
+on) and the **30** mirror-direction cases (Layer 4 `iobj`, LLM `obj` — `mi bagna`, `mi
+tormenta`, `ti conforta`, `lui non aita`; several look like Layer-4 datives over real
+accusatives) both need a Layer-2 case feature or a clitic lexicon. The project has twice
+preferred a structural check to a lexicon (the control-subject authority model, Phase 2), so
+neither is opened here.
 
-**How to regenerate the 127** (the measurement script was a throwaway; see *How to measure a
-candidate rule* below for the loop): wrap `skel._classify_divergence`, keep the violations whose
-detail starts with `role_mismatch` where one side is `obl:<lemma>` and the other is
-`obj`/`subj`, and bucket each by (a) whether `dep_index_by_pos` holds a `case` child of the
-argument and with which normalized lemma, and (b) the argument's Layer-2 POS. The 97 are
-`given obl:* / derived obj|subj` + no `case` child + pronoun POS; the 30 are the mirror
-direction (`given obj|subj / derived obl:*`) with dep deprel `iobj`.
+**A wider Layer-4 finding, not acted on**: corpus-wide, **231** predicates carry two or more
+`obj` children — 84 with a clitic, 147 without. The non-clitic majority splits into flattened
+coordinations (`Ali hanno late, e colli e visi umani`) and object complements (`mi chiamaste
+Ciacco`, `li chiama orbi`), the latter being exactly what skel's rule M already accepts
+checker-side. A dep `--check` rule for "at most one `obj` per predicate" would put Layer 4 at
+231 soft; opening it is its own round, and it would need the coordination half re-attached
+(`conj`) rather than exempted.
 
-**What it needs before anything is opened**: Layer 2 records no case feature (`MorphRow` has
-gender/number/person), so deciding these 127 requires either adding one or a clitic lexicon —
-both larger moves than a rule, and the project has twice preferred a structural check to a
-lexicon (the control-subject authority model, Phase 2). Read a sample of the 127 first and
-decide whether the population is genuinely dative; Phase 5d's `expl` audit is the precedent for
-*rejecting* such a hypothesis after measurement.
+**How to regenerate any of these populations** (the measurement scripts were throwaways; see
+*How to measure a candidate rule* below): keep the violations whose detail starts with
+`role_mismatch` where one side is `obl:<lemma>` and the other is `obj`/`subj`, and bucket by
+(a) whether `dep_index_by_pos` holds a `case` child of the argument and with which normalized
+lemma, (b) the argument's Layer-2 POS, and (c) whether the predicate has another `obj` child.
+The 67 are `given obl:* / derived obj|subj` + no `case` child + pronoun POS + no second `obj`;
+the 30 mirror cases are `given obj|subj / derived obl:*` with dep deprel `iobj`.
 
 ## 2. After that, in order
 
@@ -240,6 +250,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5f** | Rule L (`obl:<lemma>` given vs bare `obl` derived), checker-side, 0 calls | 4615 → **4327** |
 | **5g** | Rule M (given `xcomp` vs derived `obj`/`subj` — secondary predication), 0 calls | 4327 → **4097** |
 | **5h** | Rule N (given `obl:<lemma>` vs derived `obj`/`subj` with a matching `case` child) | 4097 → **4068** |
+| **5i** | Layer-4 correction: 26 double-`obj` clitics retagged `iobj`/`obl` in `dep/` | 4068 → **4042** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).
@@ -368,6 +379,7 @@ widening the authority model is not the lever. Those are genuine subject disagre
 | **Phase 5f, one rule (deterministic)** | **288** | **0 LLM calls, minutes** |
 | **Phase 5g, one rule (deterministic)** | **230** | **0 LLM calls, minutes** |
 | **Phase 5h, one rule (deterministic)** | **29** | **0 LLM calls, minutes** |
+| **Phase 5i, Layer-4 correction (hand-verified)** | **26** | **0 LLM calls, 26 dep rows** |
 
 The deterministic phases delivered roughly **4.6× the `--fix` pass that followed them, instantly**
 — and the extrapolation above turned out to be optimistic by 2×, because the 8.7% success rate

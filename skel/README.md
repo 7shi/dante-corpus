@@ -9,10 +9,11 @@ LLM's roles and the derivation's roles are directly comparable and the corpus st
 canon-neutral.
 
 **Status: built for all 100 cantos, checker refined through Phase 5h, one Phase 5e `--fix` round
-run.** `make -C skel check`: **0 hard, 4068 soft** violations (down from 17438 at the first
+run, and one Layer-4 correction round (Phase 5i) fed back into `dep/`.** `make -C skel check`:
+**0 hard, 4042 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
-Phase 5f, 4097 after Phase 5g). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
+Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h). See [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
 the deterministic phases had cleared the unfixable units out of the flagged set — so the
@@ -203,6 +204,15 @@ case-marked nominal as `obj`, and `derive_unit` reads the deprel alone. The othe
 that pair are **clitics** ("**mi** pesa", "**li** convien") where both sides make a case claim
 the tree cannot settle — left flagged, and filed as a Layer-4 question in
 [CORRECTIONS.md](CORRECTIONS.md).
+
+After Phase 5i (2026-07-28, **Layer-4 correction**, no checker change and no skel artifact
+touched): **0 hard, 4042 soft** — `role_mismatch` 667 → **641**. Phase 5h's 97 clitic cases were
+read: the population is mixed (real Layer-4 dative mistags *and* real LLM errors), but a
+structural subset decides itself — in 30 of them the predicate carries a **second** `obj` child,
+which UD forbids, so the clitic cannot be the direct object. 26 survived hand-verification and
+were retagged in `dep/` (22 → `iobj`, 4 → `obl` for partitive `ne`), each closing its Layer-5
+divergence; `dep --check` stays 0 hard / 0 soft. This is the **first Layer-4 mis-parse Layer 5's
+audit role actually produced** — see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
 ## Next steps
 

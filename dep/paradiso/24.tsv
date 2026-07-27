@@ -40,7 +40,7 @@ line	token	word	deprel	head_line	head_token
 6	2	che	mark	6	6
 6	3	morte	nsubj	6	6
 6	4	tempo	obj	6	6
-6	5	li	obj	6	6
+6	5	li	iobj	6	6
 6	6	prescriba	advcl	7	1
 7	1	ponete	root	0	0
 7	2	mente	obj	7	1

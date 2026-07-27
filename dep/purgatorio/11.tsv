@@ -1043,7 +1043,7 @@ line	token	word	deprel	head_line	head_token
 141	6	chiosarlo	xcomp	141	5
 142	1	Quest'	det	142	2
 142	2	opera	nsubj	142	4
-142	3	li	obj	142	4
+142	3	li	iobj	142	4
 142	4	tolse	root	0	0
 142	5	quei	det	142	6
 142	6	confini	obj	142	4

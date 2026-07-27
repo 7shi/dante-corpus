@@ -852,7 +852,7 @@ line	token	word	deprel	head_line	head_token
 122	5	in	case	122	6
 122	6	grazia	obl	122	9
 122	7	Dio	nsubj	122	9
-122	8	li	obj	122	9
+122	8	li	iobj	122	9
 122	9	aperse	advcl	121	6
 123	1	l'	det	123	2
 123	2	occhio	obj	122	9

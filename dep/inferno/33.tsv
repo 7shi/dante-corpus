@@ -825,7 +825,7 @@ line	token	word	deprel	head_line	head_token
 113	7	che	obj	113	11
 113	8	'l	det	113	9
 113	9	cor	nsubj	113	11
-113	10	m'	obj	113	11
+113	10	m'	iobj	113	11
 113	11	impregna	acl:relcl	113	6
 114	1	un	det	114	2
 114	2	poco	advmod	113	4

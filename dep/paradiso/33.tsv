@@ -201,7 +201,7 @@ line	token	word	deprel	head_line	head_token
 31	2	tu	nsubj	31	6
 31	3	ogne	det	31	4
 31	4	nube	obj	31	6
-31	5	li	obj	31	6
+31	5	li	iobj	31	6
 31	6	disleghi	advcl	30	4
 32	1	di	case	32	3
 32	2	sua	det:poss	32	3

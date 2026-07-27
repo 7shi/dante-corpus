@@ -143,7 +143,7 @@ line	token	word	deprel	head_line	head_token
 19	4	io	nsubj	19	3
 19	5	che	mark	19	8
 19	6	tante	obj	19	8
-19	7	n'	obj	19	8
+19	7	n'	obl	19	8
 19	8	abbia	ccomp	19	3
 20	1	quante	det	20	2
 20	2	bisce	obj	20	4
@@ -382,7 +382,7 @@ line	token	word	deprel	head_line	head_token
 52	2	piè	obl	52	6
 52	3	di	case	52	4
 52	4	mezzo	nmod	52	2
-52	5	li	obj	52	6
+52	5	li	iobj	52	6
 52	6	avvinse	root	0	0
 52	7	la	det	52	8
 52	8	pancia	obj	52	6
@@ -1016,7 +1016,7 @@ line	token	word	deprel	head_line	head_token
 138	7	parlando	advcl	138	8
 138	8	sputa	conj	137	3
 139	1	Poscia	advmod	139	3
-139	2	li	obj	139	3
+139	2	li	iobj	139	3
 139	3	volse	root	0	0
 139	4	le	det	139	6
 139	5	novelle	amod	139	6

@@ -306,7 +306,7 @@ line	token	word	deprel	head_line	head_token
 44	3	celai	root	0	0
 44	4	ma	cc	44	7
 44	5	tutto	obj	44	7
-44	6	gliel'	obj	44	7
+44	6	gliel'	iobj	44	7
 44	7	apersi	conj	44	3
 45	1	ond'	mark	45	3
 45	2	ei	nsubj	45	3

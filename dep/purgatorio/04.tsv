@@ -832,7 +832,7 @@ line	token	word	deprel	head_line	head_token
 115	6	quella	det	115	7
 115	7	angoscia	nsubj	117	3
 116	1	che	nsubj	116	3
-116	2	m'	obj	116	3
+116	2	m'	iobj	116	3
 116	3	avacciava	acl:relcl	115	7
 116	4	un	det	116	5
 116	5	poco	advmod	116	3
@@ -840,7 +840,7 @@ line	token	word	deprel	head_line	head_token
 116	7	la	det	116	8
 116	8	lena	obj	116	3
 117	1	non	advmod	117	3
-117	2	m'	obj	117	3
+117	2	m'	iobj	117	3
 117	3	impedì	conj	115	1
 117	4	l'	det	117	5
 117	5	andare	obj	117	3

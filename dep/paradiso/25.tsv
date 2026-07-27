@@ -42,7 +42,7 @@ line	token	word	deprel	head_line	head_token
 6	2	ai	case	6	3
 6	3	lupi	obl	6	1
 6	4	che	nsubj	6	6
-6	5	li	obj	6	6
+6	5	li	iobj	6	6
 6	6	danno	acl:relcl	6	3
 6	7	guerra	obj	6	6
 7	1	con	case	7	3
@@ -85,7 +85,7 @@ line	token	word	deprel	head_line	head_token
 12	2	per	case	12	3
 12	3	lei	obl	12	6
 12	4	sì	advmod	12	6
-12	5	mi	obj	12	6
+12	5	mi	iobj	12	6
 12	6	girò	conj	11	6
 12	7	la	det	12	8
 12	8	fronte	obj	12	6

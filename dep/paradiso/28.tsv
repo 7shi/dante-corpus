@@ -50,7 +50,7 @@ line	token	word	deprel	head_line	head_token
 7	6	se	mark	8	2
 7	7	'l	det	7	8
 7	8	vetro	nsubj	8	2
-8	1	li	obj	8	2
+8	1	li	iobj	8	2
 8	2	dice	ccomp	7	5
 8	3	il	det	8	4
 8	4	vero	obj	8	2

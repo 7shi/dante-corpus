@@ -509,7 +509,7 @@ line	token	word	deprel	head_line	head_token
 70	4	piacque	advcl	70	8
 70	5	il	det	70	6
 70	6	collo	obj	70	8
-70	7	li	obj	70	8
+70	7	li	iobj	70	8
 70	8	avvinghiai	root	0	0
 71	1	ed	cc	71	3
 71	2	el	obj	71	3
