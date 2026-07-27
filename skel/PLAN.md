@@ -1,16 +1,16 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-28: `make -C skel check` reports **0 hard, 3924 soft** violations across
+Status as of 2026-07-28: `make -C skel check` reports **0 hard, 3876 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
 4097 after Phase 5g's rule M → 4068 after Phase 5h's rule N → 4042 after Phase 5i's Layer-4
-correction → 3924 after Phase 5j's rule O and lemma normalization). The project goal is
-unchanged:
+correction → 3924 after Phase 5j's rule O and lemma normalization → 3876 after Phase 5k's rules
+P and Q). The project goal is unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
 
-**Phases 5a-5j have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+**Phases 5a-5k have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
 about 0.11 violations per LLM call and that rate does not depend on how the flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
@@ -23,11 +23,12 @@ counts are stale by construction** — each section states the state it was writ
 authoritative current numbers are the status line above and `--stats`.
 
 **Resuming work? Go to [*Next session — start here*](#next-session--start-here) directly below.**
-Rules L, M, N and O landed as Phases 5f/5g/5h/5j (−288, −230, −29, −118; all checker-side, zero
-model calls), and Phase 5i closed the decidable half of the **clitic-case question** by
-correcting Layer 4 (−26, zero model calls, no checker change). `role_mismatch` is down from 1214
-to 523 and the `obl:<lemma>` pairs are now exhausted. The queued items are the
-`xcomp`/`ccomp`/`obj` cluster and then the two big classes, `extra_arg` and `missing_arg`.
+Rules L, M, N, O, P and Q landed as Phases 5f/5g/5h/5j/5k (−288, −230, −29, −118, −48; all
+checker-side, zero model calls), and Phase 5i closed the decidable half of the **clitic-case
+question** by correcting Layer 4 (−26, zero model calls, no checker change). `role_mismatch` is
+down from 1214 to **475**: the `obl:<lemma>` pairs are exhausted and so is the mechanical half
+of the clausal cluster. **The queued item is now the two big classes, `extra_arg` (1887) and
+`missing_arg` (1239) — together 80% of what is left, and untouched since Phase 5b.**
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
@@ -39,14 +40,14 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5j is **committed** — the rule commits and the Layer-4 correction are
+Everything through Phase 5k is **committed** — the rule commits and the Layer-4 correction are
 the most recent `skel:`/`dep:` entries in `git log`, and nothing is left uncommitted for a next
 session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3924 soft
+make -C skel check      # expect: 0 hard, 3876 soft
 make -C dep check       # expect: 0 hard, 0 soft  (Phase 5i edited dep artifacts)
-uv run pytest -q        # expect: 111 passed
+uv run pytest -q        # expect: 115 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
 
@@ -116,30 +117,38 @@ lemma, (b) the argument's Layer-2 POS, and (c) whether the predicate has another
 The 67 are `given obl:* / derived obj|subj` + no `case` child + pronoun POS + no second `obj`;
 the 30 mirror cases are `given obj|subj / derived obl:*` with dep deprel `iobj`.
 
-## 2. After that, in order
+## 2. Next: the two big classes — `extra_arg` and `missing_arg`
 
-Post-5j pair table (`role_mismatch` 523; the `obl:<lemma>` vs `obl:<other>` pairs that used to
-sit here are gone):
+**This is the head item now.** `extra_arg` **1887** (of which `subj` 896, ∅ 131) and
+`missing_arg` **1239** are untouched since Phase 5b and together are **80%** of what is left.
+The move is a Phase-5b-style full re-triage by dep-tree context — classify every instance by how
+the cited argument attaches to the predicate (direct child with a deprel `derive_unit`'s map
+omits / indirect descendant at depth 2 / `conj`-relative / unrelated / pro-drop ∅), exactly as
+the *Measured cost* section below did for `extra_arg` at 5919, and re-read that table's shape at
+the current count before proposing anything. Do **not** guess further rules from the pair table:
+what remains there is thin and each surviving pair has been triaged already.
+
+Post-5k pair table (`role_mismatch` 475 — the `obl:<lemma>` pairs and the mechanical half of the
+clausal cluster are gone):
 
 ```
 'obj' vs 'subj'  81    'subj' vs 'obj'  67    'obl:a' vs 'obj'  61
-'obj' vs 'obl:a' 30    'xcomp' vs 'obl' 25    'ccomp' vs 'obj'  23
-'subj' vs 'xcomp' 22   'ccomp' vs 'xcomp' 21  'obj' vs 'obl'    15
-'obj' vs 'xcomp' 15    'xcomp' vs 'obl:di' 13
+'obj' vs 'obl:a' 30    'xcomp' vs 'obl' 25    'subj' vs 'xcomp' 22
+'obj' vs 'obl'   15    'obj' vs 'xcomp' 15    'xcomp' vs 'obl:di' 13
 ```
 
-(`obl:a` vs `obj` 61 and its mirror 30 are the clitic-case population section 1 parked — do not
-re-derive them as a new rule.)
+Everything in it has a recorded verdict, so read them as *closed*, not as candidates:
 
-- The `xcomp`/`ccomp`/`obj` cluster (≈110) — a clausal-vs-predicative labeling split; note the
-  two mirror directions rule M deliberately left flagged live here, so measure whether the dep
-  tree's explicit `xcomp`/`ccomp` deprel really is being contradicted.
-- The `subj`/`obj` reversals (148) — genuine reading disagreements, `--fix` material, and
-  therefore last: that route removes them at 0.11 violations per call.
-- **The two big classes remain `extra_arg` 1887 (of which `subj` 896, ∅ 131) and `missing_arg`
-  1239**, untouched since Phase 5b and together 77% of what is left. Once the `role_mismatch`
-  pairs are exhausted, the next move is a Phase-5b-style full re-triage of those two by dep-tree
-  context — not more rules guessed from the pair table.
+- `obl:a` vs `obj` (61) and its mirror (30) are the clitic-case population section 1 parked.
+- `xcomp` vs `obl`/`obl:<lemma>` (≈55, spread across several rows) is the predicative-PP half of
+  the clausal cluster Phase 5k deliberately left flagged: separating the copular readings needs
+  a verb lexicon (`essere`/`stare`/`parere`), which this project refuses on principle.
+- `subj` vs `xcomp` (22) and `obj` vs `xcomp` (15) are the mirror directions rules M and Q keep
+  flagged on purpose — there the dep tree is explicit and the LLM contradicts it.
+- The `subj`/`obj` reversals (148) are genuine reading disagreements and the one class that is
+  real `--fix` material. They stay **last**: that route removes them at 0.11 violations per
+  call, so they are worth one user-run regeneration pass only once the deterministic work is
+  exhausted.
 
 ### How to measure a candidate rule
 
@@ -272,6 +281,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5h** | Rule N (given `obl:<lemma>` vs derived `obj`/`subj` with a matching `case` child) | 4097 → **4068** |
 | **5i** | Layer-4 correction: 26 double-`obj` clitics retagged `iobj`/`obl` in `dep/` | 4068 → **4042** |
 | **5j** | Rule O (co-present prepositions) + `_PREP_LEMMA_NORM` rebuilt from the corpus | 4042 → **3924** |
+| **5k** | Rule P (`ccomp`≡`xcomp`) + rule Q (clause attached as `obj`/`subj`) | 3924 → **3876** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).
@@ -402,6 +412,7 @@ widening the authority model is not the lever. Those are genuine subject disagre
 | **Phase 5h, one rule (deterministic)** | **29** | **0 LLM calls, minutes** |
 | **Phase 5i, Layer-4 correction (hand-verified)** | **26** | **0 LLM calls, 26 dep rows** |
 | **Phase 5j, one rule + normalization (deterministic)** | **118** | **0 LLM calls, minutes** |
+| **Phase 5k, two rules (deterministic)** | **48** | **0 LLM calls, minutes** |
 
 The deterministic phases delivered roughly **4.6× the `--fix` pass that followed them, instantly**
 — and the extrapolation above turned out to be optimistic by 2×, because the 8.7% success rate

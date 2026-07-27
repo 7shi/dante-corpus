@@ -783,6 +783,49 @@ def test_classify_divergence_co_present_preposition_requires_both_sides_oblique(
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
+# --- Phase 5k: rules P and Q -----------------------------------------------------------
+
+
+def test_classify_divergence_clausal_complement_flavor_accepted_both_ways():
+    # "Fa che tu m'abbracce": Layer 4 tags the complement `xcomp` although its subject is overt,
+    # the LLM calls it `ccomp`. Both say "clausal complement"; only the control judgment differs.
+    derived = {1: [skel.SkelRow(1, 1, "Fa", "xcomp", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "Fa", "ccomp", 1, 4)]}
+    assert skel._classify_divergence(given, derived) == []
+    derived = {1: [skel.SkelRow(1, 1, "par", "ccomp", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "par", "xcomp", 1, 4)]}
+    assert skel._classify_divergence(given, derived) == []
+
+
+def test_classify_divergence_clausal_object_accepted():
+    # "or mi concedi ch'io sappia": the complement clause's verb is attached straight to the
+    # matrix predicate as `obj`, so derive_unit reports a direct argument for a whole clause.
+    derived = {1: [skel.SkelRow(1, 1, "concedi", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "concedi", "ccomp", 1, 3)]}
+    morph_pos = {(1, 3): "verb"}
+    assert skel._classify_divergence(given, derived, {}, morph_pos) == []
+
+
+def test_classify_divergence_clausal_object_requires_verb_argument():
+    # "che non parëa s'era laico o cherco": the cited argument is a noun, so calling it a clausal
+    # complement is a misreading, not a more informative label.
+    derived = {1: [skel.SkelRow(1, 1, "parëa", "subj", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 1, "parëa", "ccomp", 1, 5)]}
+    morph_pos = {(1, 5): "noun"}
+    violations = skel._classify_divergence(given, derived, {}, morph_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 5) for v in violations)
+
+
+def test_classify_divergence_explicit_ccomp_flattened_still_flagged():
+    # The mirror of rule Q: the tree carried an explicit `ccomp` deprel and the LLM flattened it
+    # to an object.
+    derived = {1: [skel.SkelRow(1, 1, "sappi", "ccomp", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "sappi", "obj", 1, 3)]}
+    morph_pos = {(1, 3): "verb"}
+    violations = skel._classify_divergence(given, derived, {}, morph_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

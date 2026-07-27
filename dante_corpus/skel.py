@@ -629,6 +629,35 @@ def _co_present_preposition(
     return grole.split(":", 1)[1] in case_lemmas.get(arg, set())
 
 
+def _clausal_complement_flavor(grole: str, drole: str) -> bool:
+    """Rule P: `ccomp` against `xcomp` (either way round). Both labels say "clausal complement of
+    this predicate"; they differ only on whether the complement has its own subject or takes one
+    by control — a judgment Layer 4 itself makes inconsistently for the same construction ("Fa
+    che tu m'abbracce" is tagged `xcomp` although "tu" is overt). Neither side is more
+    informative, so this is a Phase-1-style label equivalence rather than an acceptance of one
+    reading over the other — the same move `_ROLE_CANON` already makes for `attr`/`xcomp`, kept
+    local to the divergence check because the two roles stay distinct in the artifact."""
+    return {grole, drole} == {"ccomp", "xcomp"}
+
+
+def _clausal_object(
+    grole: str, drole: str, arg: tuple[int, int],
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule Q: a given `ccomp` against a derived `obj`/`subj` whose argument is a **verb**. Layer
+    4 attaches the complement clause's head verb straight to the matrix predicate as `obj`/`nsubj`
+    ("or mi concedi ch'io **sappia**", "dimmi se tu **sai**", "avvien che poi nel maginare
+    **abborri**"), and `derive_unit` reads the deprel alone, so a whole clause is reported as a
+    direct argument. The LLM names it a clausal complement; the verb POS is what makes that
+    strictly more informative rather than a competing reading.
+
+    One-directional, as for rules L/M/N/O: a given `obj`/`subj` against a derived `ccomp` means
+    the tree carried an explicit `ccomp` deprel and the LLM flattened it, which stays flagged."""
+    if not (grole == "ccomp" and drole in ("obj", "subj")):
+        return False
+    return "verb" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+
 def _predicative_complement(grole: str, drole: str) -> bool:
     """Rule M: a given `xcomp` against a derived `obj`/`subj`. UD has no relation for secondary
     predication: an object complement is attached as plain `obj` ("mi chiamaste **Ciacco**", "li
@@ -747,7 +776,9 @@ def _classify_divergence(
                 if (_oblique_lemma_refinement(grole, drole, arg, case_children)
                         or _predicative_complement(grole, drole)
                         or _case_marked_object(grole, drole, arg, case_lemmas)
-                        or _co_present_preposition(grole, drole, arg, case_lemmas)):
+                        or _co_present_preposition(grole, drole, arg, case_lemmas)
+                        or _clausal_complement_flavor(grole, drole)
+                        or _clausal_object(grole, drole, arg, morph_pos_by_position)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",

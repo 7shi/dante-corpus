@@ -1,5 +1,55 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5k: rules P and Q — the clausal-complement cluster (2026-07-28)
+
+Baseline: **0 hard, 3924 soft** (the Phase 5j state). 3924 → **3876** (−48), all
+`role_mismatch` (523 → **475**); every other kind unchanged. Checker-side, zero model calls,
+zero artifacts touched.
+
+The `xcomp`/`ccomp`/`obj` cluster this plan queued was enumerated by (given role, derived role,
+the argument's dep deprel, its Layer-2 POS), 173 instances. Two sub-classes are mechanical; the
+rest are not, and are left alone.
+
+**Rule P — `ccomp` against `xcomp`, either direction (−22)** (`_clausal_complement_flavor`).
+Both labels say *clausal complement of this predicate*; they differ only on whether the
+complement has its own subject or takes one by control. Layer 4 makes that judgment
+inconsistently on the same construction — "Fa che tu **m'abbracce**" is tagged `xcomp` with an
+overt "tu" — so neither side is more informative. This is therefore a **label equivalence**, the
+move `_ROLE_CANON` already makes for `attr`/`xcomp`, and it is the one rule in Phase 5 that is
+deliberately two-directional: the asymmetry argument L/M/N/O/Q rest on ("one side names
+something the tree makes explicit") does not apply when both labels name the same tree edge.
+Kept local to the divergence check, so `ccomp` and `xcomp` remain distinct in the artifact and
+in the role vocabulary. Distribution: 21 given `ccomp` / derived `xcomp`, 1 the other way.
+
+**Rule Q — given `ccomp` against derived `obj`/`subj` with a verb argument (−25)**
+(`_clausal_object`). Layer 4 attaches the complement clause's head verb straight to the matrix
+predicate as `obj`/`nsubj` — "or mi concedi ch'io **sappia**", "dimmi se tu **sai**", "avvien
+che poi nel maginare **abborri**" — and `derive_unit` reads the deprel alone, so a whole clause
+is reported as a direct argument. Same shape as rule N: the LLM's label is strictly more
+informative, and one-directional (a given `obj`/`subj` against a derived `ccomp` means the tree
+*did* carry the explicit deprel and the LLM flattened it — 4 instances, still flagged).
+
+**The ungated variant was measured: dropping the verb-POS gate would admit exactly one more
+instance, and it is an error** — inferno 18:117 "che non parëa s'era **laico** o cherco", where
+the cited argument is a noun. Small, but it is the difference between a structural claim and a
+blanket exemption, so the gate stays.
+
+**Deliberately not proposed: the predicative-PP half of the cluster (≈55).** Given `xcomp`
+against a derived `obl`/`obl:<lemma>` whose argument is an `obl` dependent — "sta **come torre**
+ferma", "fu **di grado** maggior", "son io medesmo **di questi cotai**". The LLM reads the PP as
+the copula's predicative complement, which is a real reading, but so is the tree's: both sides
+make a claim about the same edge, and separating the copular cases would need a verb lexicon
+(`essere`/`stare`/`parere`/`sembrare`), which this project has consistently refused in favour of
+structural checks. Left flagged.
+
+Four tests in `tests/test_skel.py` (rule P both directions, rule Q accepted, the verb-POS gate,
+the flattened-`ccomp` mirror), 115 passing.
+
+**Current state**: `make -C skel check` — **0 hard, 3876 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13562, 77.8%; Δ2043 across Phase 5). By kind: `extra_arg`
+1887, `missing_arg` 1239, `role_mismatch` 475, `extra_tuple` 155, `membership` 94,
+`missing_tuple` 24, `unknown_role` 2.
+
 ## Checker Phase 5j: preposition-lemma normalization + rule O (2026-07-28)
 
 Baseline: **0 hard, 4042 soft** (the Phase 5i state). 4042 → **3924** (−118), all
