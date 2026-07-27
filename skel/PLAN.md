@@ -37,14 +37,38 @@ flagged, `case`-child case still flagged), 100 passing. Checker-side only — no
 no artifact touched, no model call. The measured −288 landed exactly, entirely in
 `role_mismatch` (1214 → 926). Write-up: `CORRECTIONS.md`, *Checker Phase 5f*.
 
-## 1. Measure the secondary-predicate gate
+## 1. The secondary-predicate gate — **measured 2026-07-28, decision pending**
 
 `xcomp` vs `obj` (170) + `xcomp` vs `subj` (60) are **predicative complements**, not nominalized
 infinitives (that hypothesis was measured and rejected — 8 and 15 respectively; see the *Next
-round* section below for the evidence and examples). Candidate gate: accept the pair only when
-the predicate already carries **another** `obj`/`subj` argument, i.e. the object-complement
-configuration ("mi chiamaste **Ciacco**"). **Measure it before implementing** — a blanket
-`xcomp`≡`obj` equivalence would swallow genuine object mislabeling.
+round* section below for the evidence and examples). The candidate gate was "accept the pair only
+when the predicate already carries **another** `obj`/`subj` argument", i.e. the object-complement
+configuration ("mi chiamaste **Ciacco**"). Measured full-corpus, both sides of the "another
+argument" test:
+
+| variant | accepted |
+|---|---|
+| blanket `xcomp`≡`obj`/`subj` (no gate) | 230 |
+| gate on the **given** side (the LLM's own other arguments) | **227 (98.7% of the blanket set)** |
+| gate on the **derived** side (`derive_unit`'s other arguments) | **163 (71%)** |
+
+**The given-side gate is not a gate.** It admits 227 of 230, so it is the blanket equivalence
+under another name — the LLM almost always lists another `obj`/`subj` for these predicates, which
+means the configuration carries no discriminating information about whether *this* argument is a
+secondary predicate. Rejected on that ground alone.
+
+The derived-side gate does discriminate (163 of 230), and the POS split of the argument is what
+makes it interesting: of the 73 **adjective** arguments, **63 pass** the gate, against 60 of 100
+nouns; the excluded set is noun-dominated (40 of 67). Adjectives predicated of an existing object
+are the clearest secondary-predicate reading ("**tal** mi fece la bestia"), so the gate is
+enriching for the right population rather than cutting arbitrarily.
+
+**Not implemented, deliberately.** −163 is worth having, but the residual risk this plan flagged
+is unchanged for the noun half: a predicate that happens to have another object does not prove
+*this* noun is a complement rather than a mislabeled second object. Before landing it, sample the
+163 by hand (or split the rule: adjective/pronoun arguments unconditionally, nouns only under the
+derived-side gate) — the previous rounds' discipline is that a rule ships with evidence about
+what it *wrongly* accepts, and that evidence does not exist yet for the nouns.
 
 ### How to measure a candidate rule
 
