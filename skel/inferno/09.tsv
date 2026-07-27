@@ -70,7 +70,6 @@ line	token	word	role	arg_line	arg_token
 24	2	richiamava	obj	24	4
 24	2	richiamava	obl:a	24	6
 25	3	era	subj	25	7
-25	3	era	obl:di	25	2
 25	3	era	obl:di	25	5
 26	4	fece	subj	26	2
 26	4	fece	obj	26	3

@@ -103,8 +103,8 @@ line	token	word	role	arg_line	arg_token
 40	7	dilata	subj	40	4
 41	4	è	subj	0	0
 41	4	è	attr	41	5
-41	5	sù	subj	0	0
 42	6	ammirata	subj	40	2
+42	6	ammirata	obl	41	6
 42	6	ammirata	obl:da	41	9
 42	6	ammirata	obl:in	42	2
 42	6	ammirata	obl:per	42	5
@@ -178,9 +178,7 @@ line	token	word	role	arg_line	arg_token
 69	4	sia	ccomp	69	9
 69	9	finga	subj	69	7
 70	2	trascorro	subj	0	0
-70	2	trascorro	obl:a	70	6
 70	6	svegliai	subj	0	0
-70	6	svegliai	obj	70	5
 71	2	dico	subj	0	0
 71	2	dico	ccomp	71	7
 71	7	squarciò	subj	71	5
@@ -248,10 +246,9 @@ line	token	word	role	arg_line	arg_token
 93	8	chiuso	obj	93	6
 93	8	chiuso	obl:a	93	5
 94	2	sedeasi	subj	0	0
-94	2	sedeasi	obl:in	94	6
-94	2	sedeasi	obl:come	95	2
-95	3	lasciata	subj	95	2
-95	3	lasciata	obl:di	95	6
+94	2	sedeasi	attr	95	2
+94	2	sedeasi	obl:su	94	6
+95	3	lasciata	subj	0	0
 96	2	legar	subj	96	1
 96	2	legar	obl:a	96	7
 96	3	vidi	subj	0	0
@@ -290,15 +287,13 @@ line	token	word	role	arg_line	arg_token
 105	4	fa	ccomp	105	7
 105	7	scrive	subj	105	6
 105	7	scrive	obj	104	8
-106	2	Beatrice		0	0
+106	2	Beatrice	subj	0	0
 107	6	divoto	subj	106	5
 107	6	divoto	obl:a	106	8
 108	8	volle	subj	108	7
-108	8	volle	xcomp	108	9
 108	9	diedi	subj	106	4
 108	9	diedi	obj	108	2
 108	9	diedi	obj	108	5
-108	9	diedi	obl	108	6
 109	2	scese	subj	110	1
 109	2	scese	obl:con	109	7
 110	6	piove	subj	0	0

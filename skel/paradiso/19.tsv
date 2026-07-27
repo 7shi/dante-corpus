@@ -136,14 +136,13 @@ line	token	word	role	arg_line	arg_token
 41	0			0	0
 42	1	distinse	subj	40	4
 42	1	distinse	obj	42	3
-42	1	distinse	obl:a	41	9
+42	1	distinse	obl:ad	41	9
 43	2	poté	subj	40	3
 43	2	poté	xcomp	43	6
 43	6	fare	obj	43	4
-43	6	fare	attr	43	7
+43	6	fare	xcomp	43	7
 43	6	fare	obl:in	44	4
 43	7	impresso	subj	43	4
-43	7	impresso	obl:in	44	4
 44	0			0	0
 45	2	rimanesse	subj	44	8
 45	2	rimanesse	obl:in	45	5
@@ -171,6 +170,7 @@ line	token	word	role	arg_line	arg_token
 53	1	esser	subj	53	2
 54	6	son	subj	54	5
 54	6	son	attr	54	7
+54	6	son	obl:di	54	2
 54	7	ripiene	subj	54	5
 54	7	ripiene	obl:di	54	2
 55	2	pò	subj	52	3
@@ -182,9 +182,8 @@ line	token	word	role	arg_line	arg_token
 56	5	discerna	subj	0	0
 56	5	discerna	obj	56	4
 56	5	discerna	obl:da	57	5
-57	3	là		0	0
+57	3	là	obl:da	57	5
 57	8	è	subj	57	6
-57	8	è	iobj	57	7
 57	8	è	attr	57	9
 57	9	parvente	subj	57	6
 57	9	parvente	obl	57	7

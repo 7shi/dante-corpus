@@ -84,8 +84,8 @@ line	token	word	role	arg_line	arg_token
 34	7	ardeva	subj	34	9
 34	7	ardeva	obl:dentro	34	5
 35	4	pensai	subj	35	3
-35	4	pensai	ccomp	35	7
-35	7	toccar	subj	35	3
+35	4	pensai	xcomp	35	7
+35	7	toccar	subj	0	0
 35	7	toccar	obj	35	9
 35	7	toccar	obl:con	35	6
 36	0			0	0
@@ -347,7 +347,7 @@ line	token	word	role	arg_line	arg_token
 126	0			0	0
 127	2	tenuta	subj	128	2
 127	2	tenuta	subj	128	4
-127	2	tenuta	attr	127	5
+127	2	tenuta	obl	127	5
 128	0			0	0
 129	3	saria	subj	129	4
 129	3	saria	attr	129	1

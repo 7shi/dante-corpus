@@ -156,6 +156,7 @@ line	token	word	role	arg_line	arg_token
 62	3	campare	subj	0	0
 62	3	campare	obl:per	62	2
 62	7	era	subj	62	9
+62	7	era	obl	62	6
 63	9	messo	subj	63	6
 63	9	messo	obj	63	7
 63	9	messo	obl:per	63	5

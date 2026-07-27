@@ -300,8 +300,11 @@ line	token	word	role	arg_line	arg_token
 100	0			0	0
 101	1	Tornate	subj	0	0
 101	2	disse	subj	100	3
+101	2	disse	iobj	100	6
+101	2	disse	ccomp	101	1
+101	2	disse	ccomp	101	3
 101	3	intrate	subj	0	0
-102	6	faccendo	subj	100	3
+102	6	faccendo	subj	0	0
 102	6	faccendo	obj	102	7
 102	6	faccendo	obl:con	102	2
 103	5	incominciò	subj	103	2

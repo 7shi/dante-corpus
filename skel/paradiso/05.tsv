@@ -2,16 +2,16 @@ line	token	word	role	arg_line	arg_token
 1	4	fiammeggio	subj	1	2
 1	4	fiammeggio	obj	1	3
 1	4	fiammeggio	obl:in	1	6
+1	4	fiammeggio	obl:di	1	8
 1	4	fiammeggio	obl:da	2	4
 2	9	vede	subj	2	5
 2	9	vede	obl:in	2	7
 3	6	vinco	subj	0	0
 3	6	vinco	obj	3	8
+3	6	vinco	obl:di	3	4
 4	3	maravigliar	subj	0	0
-4	3	maravigliar	obj	4	2
 4	6	procede	subj	4	5
 4	6	procede	obl:da	5	3
-5	6	apprende		0	0
 5	6	apprende	subj	5	4
 6	5	move	subj	5	4
 6	5	move	obj	6	7
@@ -31,10 +31,10 @@ line	token	word	role	arg_line	arg_token
 12	5	traluce	subj	12	3
 13	2	vuo'	subj	13	1
 13	2	vuo'	xcomp	13	3
-13	3	saper	subj	13	1
-13	3	saper	ccomp	14	6
+13	3	saper	subj	0	0
+14	5	può	subj	0	0
+14	5	può	xcomp	14	6
 14	6	render	subj	0	0
-14	6	render	obj	14	7
 14	6	render	obl:con	13	7
 14	6	render	obl:per	14	3
 15	4	sicuri	subj	15	3
@@ -120,10 +120,11 @@ line	token	word	role	arg_line	arg_token
 40	9	paleso	obj	40	6
 40	9	paleso	iobj	40	8
 41	2	fermalvi	subj	0	0
+41	2	fermalvi	obl	41	3
 41	6	fa	subj	42	4
 41	6	fa	obj	41	7
 41	6	fa	obl:sanza	42	3
-42	5	inteso	subj	0	0
+42	0			0	0
 43	4	convegnono	subj	43	2
 43	4	convegnono	obl:a	43	7
 44	7	quella	subj	44	5

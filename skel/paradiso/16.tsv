@@ -227,13 +227,15 @@ line	token	word	role	arg_line	arg_token
 83	3	discuopre	obl:sanza	83	7
 84	2	fa	subj	84	6
 84	2	fa	obl:di	84	4
+85	4	dee	subj	86	1
+85	4	dee	xcomp	85	5
 85	5	parer	subj	86	1
 85	5	parer	attr	85	7
 86	4	dirò	subj	86	3
 86	4	dirò	obj	86	2
-86	4	dirò	obl:de	86	8
+86	4	dirò	obl:di	86	8
 87	7	nascosa	subj	87	4
-87	7	nascosa	obl:de	87	1
+87	7	nascosa	obl	87	1
 87	7	nascosa	obl:in	87	6
 88	2	vidi	subj	88	1
 88	2	vidi	obj	88	4

@@ -43,9 +43,9 @@ line	token	word	role	arg_line	arg_token
 20	1	mostrasse	subj	0	0
 20	1	mostrasse	obj	19	5
 20	1	mostrasse	obj	19	8
-20	3	aequar		0	0
+20	3	aequar	subj	21	2
 20	5	nulla	subj	21	2
-20	5	nulla	obl:di	20	3
+20	5	nulla	xcomp	20	3
 21	0			0	0
 22	2	veggia	subj	0	0
 22	2	veggia	obl:per	22	4
@@ -209,12 +209,18 @@ line	token	word	role	arg_line	arg_token
 75	6	dichina	obl:a	75	5
 76	2	fa	subj	0	0
 76	2	fa	xcomp	76	3
-76	3	saper	obj	78	1
-76	3	saper	iobj	76	6
+76	3	saper	subj	78	1
+76	3	saper	obl:a	76	6
+76	3	saper	obl:a	77	3
+76	3	saper	obl:a	77	7
 77	0			0	0
 78	8	vano	subj	78	4
 79	1	gittati	subj	0	0
 79	1	gittati	obl:di	79	6
+79	1	gittati	obl:per	81	2
+79	2	saran	subj	0	0
+79	2	saran	attr	79	1
+79	2	saran	attr	80	2
 80	2	mazzerati	subj	0	0
 80	2	mazzerati	obl:presso	80	6
 80	2	mazzerati	obl:per	81	2
@@ -311,7 +317,7 @@ line	token	word	role	arg_line	arg_token
 109	4	aggiunsi	subj	109	2
 109	4	aggiunsi	obj	109	6
 109	4	aggiunsi	iobj	109	3
-110	4	accumulando	subj	110	3
+110	4	accumulando	subj	0	0
 110	4	accumulando	obj	110	5
 110	4	accumulando	obl:con	110	7
 111	2	gio	subj	110	3

@@ -49,8 +49,8 @@ line	token	word	role	arg_line	arg_token
 18	8	fui	obl	18	6
 19	8	mostra	subj	19	2
 19	8	mostra	subj	19	5
+19	8	mostra	obj	19	7
 19	8	mostra	iobj	19	6
-19	8	mostra	iobj	19	7
 20	5	udir	obj	20	8
 20	9	degno	subj	20	2
 20	9	degno	xcomp	20	5
@@ -162,18 +162,19 @@ line	token	word	role	arg_line	arg_token
 52	7	fregò	subj	52	4
 52	7	fregò	obj	52	9
 52	7	fregò	obl:in	52	6
-53	1	dicendo	subj	52	4
-53	1	dicendo	ccomp	53	2
+53	1	dicendo		0	0
 53	2	Vedi	subj	0	0
+53	2	Vedi	ccomp	54	2
 54	2	varcheresti	subj	0	0
 54	2	varcheresti	obj	53	5
 54	2	varcheresti	obl:dopo	54	6
 54	6	partito	subj	54	5
 55	6	desse	subj	55	5
 55	6	desse	obj	55	7
-56	6	ir	subj	56	4
+56	6	ir		0	0
 57	6	intriga	subj	57	1
 57	6	intriga	obj	57	5
+57	6	intriga	obl:con	57	3
 58	3	poria	subj	0	0
 58	3	poria	xcomp	58	6
 58	3	poria	xcomp	59	2
@@ -348,7 +349,7 @@ line	token	word	role	arg_line	arg_token
 113	1	cantando	subj	0	0
 114	4	portò	subj	112	1
 114	4	portò	obj	114	7
-114	4	portò	attr	114	5
+114	4	portò	obl:di	114	3
 114	5	cinta	subj	114	7
 115	3	re	subj	116	2
 115	7	rimaso	subj	116	2
@@ -362,7 +363,7 @@ line	token	word	role	arg_line	arg_token
 118	4	puote	subj	0	0
 118	4	puote	xcomp	118	5
 118	5	dir	subj	0	0
-118	5	dir	obl:di	118	9
+118	5	dir	obl:de	118	9
 119	4	hanno	subj	119	1
 119	4	hanno	obj	119	6
 120	5	possiede	subj	120	4

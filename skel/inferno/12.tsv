@@ -123,6 +123,7 @@ line	token	word	role	arg_line	arg_token
 39	1	levò	subj	38	4
 39	1	levò	obj	38	7
 39	1	levò	obl:a	39	3
+39	1	levò	obl:di	39	5
 40	0			0	0
 41	1	tremò	subj	40	6
 41	1	tremò	obl:da	40	3
@@ -139,10 +140,12 @@ line	token	word	role	arg_line	arg_token
 43	7	converso	obl:in	43	6
 44	0			0	0
 45	5	fece	subj	44	7
-45	5	fece	obj	45	4
 45	5	fece	xcomp	45	6
 45	5	fece	obl:in	44	4
-45	6	riverso	subj	45	4
+45	5	fece	obl	45	1
+45	5	fece	obl	45	3
+45	6	riverso		0	0
+45	6	riverso	subj	44	7
 46	2	ficca	subj	0	0
 46	2	ficca	obj	46	4
 46	2	ficca	obl:a	46	6
@@ -353,10 +356,10 @@ line	token	word	role	arg_line	arg_token
 113	3	volsi	subj	0	0
 113	3	volsi	obl:a	113	5
 113	8	disse	subj	113	7
+113	8	disse	ccomp	114	5
 114	5	primo	subj	114	1
 114	5	primo	iobj	114	2
 114	8	secondo	subj	114	7
-114	8	secondo	iobj	114	2
 115	7	affisse	subj	115	5
 115	7	affisse	obj	115	6
 115	7	affisse	obl:sopra	116	3

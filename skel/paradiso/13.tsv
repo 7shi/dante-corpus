@@ -58,10 +58,8 @@ line	token	word	role	arg_line	arg_token
 21	7	era	subj	21	6
 22	3	è	subj	0	0
 22	3	è	obl:di	22	6
-22	6	là	subj	0	0
-22	6	là	obl:da	22	9
-23	3	là	subj	0	0
-23	3	là	obl:da	23	5
+22	3	è	obl:da	22	9
+23	0			0	0
 24	2	move	subj	24	4
 24	9	avanza	subj	24	5
 24	9	avanza	obj	24	8
@@ -311,10 +309,14 @@ line	token	word	role	arg_line	arg_token
 109	4	prendi	subj	0	0
 109	4	prendi	obj	109	7
 109	4	prendi	obl:con	109	3
+110	3	puote	subj	0	0
+110	3	puote	xcomp	110	4
 110	4	star	subj	0	0
 110	4	star	obl:con	110	6
 110	8	credi	subj	0	0
 110	8	credi	obj	110	7
+110	8	credi	obl:di	111	3
+110	8	credi	obl:di	111	7
 111	0			0	0
 112	4	sia	subj	112	2
 112	4	sia	iobj	112	3
@@ -410,9 +412,12 @@ line	token	word	role	arg_line	arg_token
 139	2	creda	subj	139	7
 140	2	vedere	subj	0	0
 140	2	vedere	obj	140	4
-140	6	offerere	subj	0	0
-140	6	offerere	obj	140	5
+140	2	vedere	obj	140	6
 141	1	vederli	subj	0	0
 141	1	vederli	obl:in	141	4
+142	3	può	subj	142	2
+142	3	può	xcomp	142	4
 142	4	surgere	subj	142	2
+142	7	può	subj	142	6
+142	7	può	xcomp	142	8
 142	8	cadere	subj	142	6

@@ -59,7 +59,7 @@ line	token	word	role	arg_line	arg_token
 25	2	vid'	obl:di	26	7
 25	2	vid'	obl:con	26	10
 26	0			0	0
-27	1	voltando	subj	25	4
+27	1	voltando	subj	0	0
 27	1	voltando	obj	27	2
 27	1	voltando	obl:per	27	4
 28	1	Percotëansi	subj	0	0

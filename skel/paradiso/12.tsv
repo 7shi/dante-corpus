@@ -247,6 +247,9 @@ line	token	word	role	arg_line	arg_token
 91	2	dispensare	subj	0	0
 91	2	dispensare	obj	91	4
 91	2	dispensare	obj	91	6
+91	2	dispensare	obj	92	3
+91	2	dispensare	obj	93	2
+91	2	dispensare	obl:a	88	4
 91	2	dispensare	obl:a	89	4
 91	2	dispensare	obl:per	89	7
 91	2	dispensare	obl:per	90	3
@@ -255,17 +258,14 @@ line	token	word	role	arg_line	arg_token
 93	4	sunt	subj	93	3
 93	4	sunt	attr	93	5
 94	1	addimandò	subj	0	0
-94	1	addimandò	obj	92	3
-94	1	addimandò	obj	93	2
 94	1	addimandò	obj	95	1
-94	1	addimandò	ccomp	91	2
-94	1	addimandò	obl:a	88	4
-94	1	addimandò	obl:contro	94	5
+94	1	addimandò	xcomp	91	2
 95	3	combatter	subj	0	0
+95	3	combatter	obl:contro	94	5
 95	3	combatter	obl:per	95	6
 96	4	fascian	subj	96	6
-96	4	fascian	obj	96	2
-96	4	fascian	iobj	96	3
+96	4	fascian	obj	96	3
+96	4	fascian	obl:di	96	2
 97	0			0	0
 98	6	mosse	subj	0	0
 98	6	mosse	obl:con	97	3
@@ -313,17 +313,18 @@ line	token	word	role	arg_line	arg_token
 115	6	mosse	obl:con	116	2
 115	6	mosse	obl:a	116	6
 116	9	volta	subj	115	3
-117	3	dinanzi	subj	117	2
 117	3	dinanzi	obl:a	117	5
 117	8	gitta	subj	117	2
 117	8	gitta	obl:a	117	5
+117	8	gitta	obl:di	117	7
 118	4	vedrà	subj	118	7
+118	4	vedrà	obl:di	119	4
 119	0			0	0
 120	2	lagnerà	subj	119	7
-120	2	lagnerà	ccomp	120	8
 120	8	tolta	subj	120	5
 120	8	tolta	iobj	120	6
 121	2	dico	subj	0	0
+121	2	dico	ccomp	122	4
 121	4	cercasse	subj	121	3
 121	4	cercasse	obj	122	2
 121	4	cercasse	obl:a	121	6
@@ -331,8 +332,9 @@ line	token	word	role	arg_line	arg_token
 122	4	troveria	subj	121	3
 122	4	troveria	obj	122	5
 123	2	leggerebbe	subj	121	3
+123	2	leggerebbe	ccomp	123	5
+123	2	leggerebbe	obl	123	1
 123	5	son	subj	123	3
-123	5	son	obj	123	4
 123	5	son	attr	123	6
 123	9	soglio	subj	123	8
 123	9	soglio	attr	123	7
@@ -340,6 +342,7 @@ line	token	word	role	arg_line	arg_token
 124	3	fia	obl:da	124	5
 124	3	fia	obl:di	124	8
 125	3	vegnon	subj	125	4
+125	3	vegnon	obl	125	2
 125	3	vegnon	obl:a	125	7
 126	4	fugge	subj	126	2
 126	4	fugge	obj	126	3

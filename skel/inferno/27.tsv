@@ -11,11 +11,13 @@ line	token	word	role	arg_line	arg_token
 4	8	venìa	obl:a	4	7
 5	2	fece	subj	4	3
 5	2	fece	xcomp	5	3
-5	2	fece	obl:da	5	1
+5	2	fece	obl:di	5	1
+5	2	fece	obl:per	6	4
+5	3	volger	subj	0	0
 5	3	volger	obj	5	5
 5	3	volger	obl:a	5	9
 6	8	uscia	subj	6	5
-6	8	uscia	obl:da	6	7
+6	8	uscia	obl:di	6	7
 7	6	mugghiò	subj	7	5
 7	6	mugghiò	obl:con	8	2
 8	7	fu	subj	8	6
@@ -393,12 +395,10 @@ line	token	word	role	arg_line	arg_token
 129	6	rancuro	obj	129	5
 130	8	compiuto	subj	130	2
 130	8	compiuto	obj	130	6
-131	3	dolorando	subj	131	2
+131	3	dolorando		0	0
 131	5	partio	subj	131	2
-132	1	torcendo	subj	131	2
 132	1	torcendo	obj	132	5
-132	3	dibattendo	subj	131	2
-132	3	dibattendo	obj	132	5
+132	3	dibattendo		0	0
 133	2	passamm'	subj	133	1
 133	2	passamm'	obl:per	134	4
 133	2	passamm'	obl:in	134	10

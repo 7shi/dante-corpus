@@ -154,10 +154,7 @@ line	token	word	role	arg_line	arg_token
 58	5	alzò	subj	58	4
 58	5	alzò	obj	58	7
 58	5	alzò	obl:ver	59	2
-59	3	dicendo	subj	58	4
-59	3	dicendo	ccomp	59	8
-59	3	dicendo	ccomp	60	1
-59	3	dicendo	obl:a	59	5
+59	3	dicendo	iobj	59	5
 59	8	sapete	subj	59	7
 60	1	mostratene	subj	0	0
 60	1	mostratene	obj	60	3
@@ -307,6 +304,7 @@ line	token	word	role	arg_line	arg_token
 106	8	toglie	subj	106	5
 106	8	toglie	obj	107	1
 106	8	toglie	iobj	106	7
+106	8	toglie	obl:a	107	7
 107	0			0	0
 108	4	quetar	subj	108	1
 108	4	quetar	obj	108	7
@@ -317,7 +315,7 @@ line	token	word	role	arg_line	arg_token
 109	5	consolare	obj	110	2
 109	5	consolare	obl:di	109	2
 110	0			0	0
-111	1	venendo	subj	110	4
+111	1	venendo	subj	0	0
 111	1	venendo	obl:con	110	8
 111	4	affannata	subj	110	4
 112	7	ragiona	subj	112	2

@@ -87,10 +87,12 @@ line	token	word	role	arg_line	arg_token
 31	0			0	0
 32	1	voglio	subj	31	2
 32	1	voglio	ccomp	32	6
+32	1	voglio	obl:a	31	4
 32	6	disviluppe	subj	32	3
+32	6	disviluppe	obj	32	5
 32	6	disviluppe	obl:da	31	6
 32	6	disviluppe	obl:da	31	9
-33	4	parli	subj	0	0
+33	4	parli	subj	32	3
 33	4	parli	obl:come	33	7
 33	9	sogna	subj	33	8
 34	1	Sappi	subj	0	0
@@ -187,9 +189,10 @@ line	token	word	role	arg_line	arg_token
 63	8	punio	obl:in	63	7
 64	1	Dorme	subj	64	3
 64	7	estima	subj	0	0
-64	7	estima	ccomp	65	5
-64	7	estima	obl:per	65	3
+64	7	estima	xcomp	65	5
+64	7	estima	xcomp	66	5
 65	5	eccelsa	subj	66	1
+65	5	eccelsa	obl:per	65	3
 66	5	travolta	subj	66	1
 66	5	travolta	obl:in	66	8
 67	3	stati	subj	68	2
@@ -328,8 +331,9 @@ line	token	word	role	arg_line	arg_token
 116	3	è	subj	116	4
 116	3	è	attr	116	2
 116	8	dispiega	subj	116	5
+116	8	dispiega	obj	117	5
 116	8	dispiega	obl:da	117	3
-117	8	lontana	subj	117	5
+117	8	lontana	subj	116	5
 117	8	lontana	obl:da	117	7
 118	4	detto	subj	0	0
 118	4	detto	iobj	118	5

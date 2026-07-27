@@ -79,8 +79,10 @@ line	token	word	role	arg_line	arg_token
 26	0			0	0
 27	0			0	0
 28	2	era	subj	0	0
+28	2	era	obl	28	3
 29	4	caduto	subj	28	6
 29	4	caduto	subj	29	6
+29	4	caduto	obl	29	1
 30	7	fatto	subj	0	0
 30	7	fatto	obj	30	8
 30	7	fatto	obl:da	30	6

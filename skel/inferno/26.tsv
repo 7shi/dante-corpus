@@ -221,6 +221,7 @@ line	token	word	role	arg_line	arg_token
 77	2	parve	obl:a	77	5
 78	5	parlare	subj	78	4
 78	6	audivi	subj	0	0
+78	6	audivi	obj	78	4
 78	6	audivi	xcomp	78	5
 78	6	audivi	obl:in	78	3
 79	4	siete	subj	79	3
@@ -235,15 +236,13 @@ line	token	word	role	arg_line	arg_token
 82	7	scrissi	obj	82	6
 82	7	scrissi	obl:in	82	3
 83	3	movete	subj	0	0
+83	3	movete	obj	83	2
 83	9	dica	subj	83	6
-83	9	dica	ccomp	84	7
 84	4	perduto	subj	0	0
-84	4	perduto	obl:a	84	6
+84	4	perduto	xcomp	84	6
 84	6	morir	subj	0	0
 84	7	gissi	subj	0	0
-84	7	gissi	attr	84	4
 84	7	gissi	obl:per	84	3
-84	7	gissi	obl:a	84	6
 85	0			0	0
 86	1	cominciò	subj	85	3
 86	1	cominciò	xcomp	86	3
@@ -256,13 +255,12 @@ line	token	word	role	arg_line	arg_token
 88	7	menando	obj	88	3
 89	2	fosse	subj	0	0
 89	2	fosse	attr	89	4
-89	4	lingua	subj	0	0
 89	6	parlasse	subj	89	5
 90	1	gittò	subj	0	0
 90	1	gittò	obj	90	2
+90	1	gittò	obl:di	90	4
 90	6	disse	subj	0	0
 91	2	diparti'	subj	0	0
-91	2	diparti'	obj	91	1
 91	2	diparti'	obl:da	91	4
 91	6	sottrasse	subj	91	5
 91	6	sottrasse	obj	92	1
@@ -275,25 +273,23 @@ line	token	word	role	arg_line	arg_token
 95	0			0	0
 96	3	dovea	subj	96	2
 96	3	dovea	xcomp	96	5
-96	5	far	subj	96	2
 96	5	far	obj	96	4
-96	5	far	xcomp	96	6
+96	5	far	attr	96	6
 96	6	lieta	subj	96	4
-97	1	vincer	subj	97	7
-97	1	vincer	obj	94	2
-97	1	vincer	obj	94	7
-97	1	vincer	obj	95	7
-97	1	vincer	obl:a	97	5
-97	2	potero	subj	97	7
+97	1	vincer	obj	97	7
+97	2	potero	subj	94	2
+97	2	potero	subj	94	7
+97	2	potero	subj	95	7
 97	2	potero	xcomp	97	1
+97	2	potero	obl:a	97	5
 98	3	ebbi	subj	98	2
 98	3	ebbi	xcomp	98	5
-98	5	divenir	subj	98	2
-98	5	divenir	xcomp	98	8
+98	5	divenir	subj	0	0
+98	5	divenir	attr	98	8
+98	5	divenir	obl:di	98	7
+98	5	divenir	obl:di	99	4
+98	5	divenir	obl:di	99	8
 98	8	esperto	subj	98	2
-98	8	esperto	obl:di	98	7
-98	8	esperto	obl:di	99	4
-98	8	esperto	obl:di	99	8
 99	0			0	0
 100	2	misi	subj	0	0
 100	2	misi	obj	100	3
@@ -313,15 +309,19 @@ line	token	word	role	arg_line	arg_token
 104	0			0	0
 105	8	bagna	subj	105	6
 105	8	bagna	obj	105	4
+106	4	eravam	subj	106	3
 106	5	vecchi	subj	106	3
 106	7	tardi	subj	106	3
 107	2	venimmo	subj	0	0
 107	2	venimmo	obl:a	107	5
 108	3	segnò	subj	108	2
 108	3	segnò	obj	108	6
+108	3	segnò	obl	108	1
 109	9	metta	subj	109	4
+109	9	metta	obl	109	6
 110	6	lasciai	subj	0	0
 110	6	lasciai	obj	110	7
+110	6	lasciai	iobj	110	5
 110	6	lasciai	obl:da	110	3
 111	7	lasciata	subj	111	8
 111	7	lasciata	obj	111	5

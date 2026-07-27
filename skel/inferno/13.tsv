@@ -379,8 +379,11 @@ line	token	word	role	arg_line	arg_token
 133	3	dicea	subj	0	0
 134	4	giovato	subj	134	1
 134	4	giovato	iobj	134	2
-134	4	giovato	obl:di	134	7
+134	4	giovato	xcomp	134	7
+134	4	giovato	obl:da	133	6
+134	7	fare	subj	0	0
 134	7	fare	obj	134	8
+134	7	fare	obl:di	134	6
 135	3	ho	subj	135	4
 135	3	ho	obj	135	2
 136	7	fermo	subj	136	3

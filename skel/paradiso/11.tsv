@@ -200,7 +200,6 @@ line	token	word	role	arg_line	arg_token
 70	4	costante	subj	0	0
 70	6	feroce	subj	0	0
 71	5	rimase	subj	71	4
-71	5	rimase	attr	71	6
 72	4	pianse	subj	72	1
 72	4	pianse	obl:con	72	3
 72	4	pianse	obl:in	72	8

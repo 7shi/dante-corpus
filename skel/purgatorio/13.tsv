@@ -32,8 +32,9 @@ line	token	word	role	arg_line	arg_token
 13	7	porse	obl:a	13	4
 14	1	fece	subj	0	0
 14	1	fece	xcomp	14	6
-14	1	fece	obl:di	14	4
+14	6	muover	subj	0	0
 14	6	muover	obj	14	7
+14	6	muover	obl:di	14	4
 15	7	torse	subj	0	0
 15	7	torse	obj	15	4
 16	8	entro	subj	16	7
@@ -52,8 +53,10 @@ line	token	word	role	arg_line	arg_token
 19	8	luci	obl:sopra	19	7
 20	7	ponta	subj	20	3
 20	7	ponta	obl:in	20	5
+21	1	esser	subj	21	6
+21	1	esser	attr	21	7
+21	1	esser	obl:in	21	2
 21	7	duci	subj	21	6
-21	7	duci	obl:di	21	2
 22	8	conta	subj	22	1
 22	8	conta	obl:per	22	6
 23	7	iti	subj	23	5
@@ -118,7 +121,7 @@ line	token	word	role	arg_line	arg_token
 44	2	vedrai	obj	44	3
 44	2	vedrai	xcomp	44	7
 44	7	sedersi	subj	44	3
-44	7	sedersi	obl:a	44	6
+44	7	sedersi	obl:innanzi	44	6
 45	7	assiso	subj	45	2
 45	7	assiso	obl:lungo	45	6
 46	7	apersi	subj	0	0

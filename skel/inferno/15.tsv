@@ -93,6 +93,7 @@ line	token	word	role	arg_line	arg_token
 35	3	volete	subj	0	0
 35	3	volete	ccomp	35	8
 35	8	asseggia	subj	0	0
+35	8	asseggia	obj	35	7
 35	8	asseggia	obl:con	35	6
 36	1	faròl	subj	0	0
 36	3	piace	subj	36	7

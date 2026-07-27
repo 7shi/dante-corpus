@@ -151,7 +151,6 @@ line	token	word	role	arg_line	arg_token
 48	4	ha	subj	48	8
 48	4	ha	obj	48	5
 49	3	nuota	subj	0	0
-49	3	nuota	obl:in	49	7
 49	4	altrimenti	obl:in	49	7
 50	5	vuo'	subj	50	3
 50	5	vuo'	obl:di	50	8
@@ -244,12 +243,12 @@ line	token	word	role	arg_line	arg_token
 78	8	approda	subj	78	6
 78	8	approda	obj	78	7
 79	1	Credi	subj	79	2
-79	1	Credi	ccomp	79	5
+79	1	Credi	obj	79	5
 79	5	vedermi	subj	79	2
 79	5	vedermi	xcomp	80	2
 80	2	venuto	subj	0	0
 80	3	disse	subj	80	6
-80	3	disse	obj	79	1
+80	3	disse	ccomp	79	1
 81	1	sicuro	subj	0	0
 81	1	sicuro	obl:da	81	6
 81	1	sicuro	obl:sanza	82	2
@@ -371,7 +370,13 @@ line	token	word	role	arg_line	arg_token
 119	4	dire	subj	119	2
 120	3	guidi	subj	120	2
 120	3	guidi	obj	120	5
-121	2	vegn'	subj	0	0
+121	2	vegn'	subj	121	1
+121	2	vegn'	subj	121	5
+121	2	vegn'	subj	122	1
+121	2	vegn'	subj	122	4
+121	2	vegn'	subj	123	2
+121	2	vegn'	subj	123	4
+121	2	vegn'	obl	121	3
 122	0			0	0
 123	0			0	0
 124	1	Cercate	subj	0	0
@@ -380,7 +385,6 @@ line	token	word	role	arg_line	arg_token
 125	2	sian	attr	125	3
 125	2	sian	obl:a	125	8
 125	3	salvi	subj	125	1
-125	3	salvi	obl:a	125	8
 126	3	intero	subj	126	1
 126	4	va	subj	126	1
 126	4	va	obl:sovra	126	7

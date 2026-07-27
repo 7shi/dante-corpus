@@ -77,7 +77,6 @@ line	token	word	role	arg_line	arg_token
 27	1	faceva	obl:in	26	7
 28	0			0	0
 29	1	rende	subj	28	3
-29	1	rende	subj	30	7
 29	1	rende	obj	29	4
 29	1	rende	obj	29	7
 29	1	rende	obl:in	29	3
@@ -85,6 +84,7 @@ line	token	word	role	arg_line	arg_token
 31	7	pieghi	subj	31	2
 31	7	pieghi	obj	31	6
 31	7	pieghi	xcomp	32	2
+31	7	pieghi	obl	30	7
 32	2	dirne	subj	31	6
 32	2	dirne	obj	32	3
 32	5	se'	subj	32	4
@@ -330,7 +330,8 @@ line	token	word	role	arg_line	arg_token
 118	6	esser	subj	118	5
 118	6	esser	attr	118	3
 118	7	dienno	subj	118	5
-118	7	dienno	obl:a	119	3
+118	7	dienno	xcomp	118	6
+118	7	dienno	obl:presso	119	3
 119	6	veggion	subj	119	4
 119	6	veggion	obj	119	9
 120	6	miran	subj	119	4

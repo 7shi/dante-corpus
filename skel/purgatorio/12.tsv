@@ -110,7 +110,6 @@ line	token	word	role	arg_line	arg_token
 37	0			0	0
 38	1	vedea	subj	38	2
 38	1	vedea	obj	38	3
-38	1	vedea	attr	38	4
 38	1	vedea	obl:con	37	5
 38	4	segnata	subj	38	3
 38	4	segnata	obl:su	38	8

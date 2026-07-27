@@ -12,7 +12,7 @@ line	token	word	role	arg_line	arg_token
 5	1	veggiono	xcomp	6	1
 5	1	veggiono	obl:in	5	3
 5	1	veggiono	obl:a	5	7
-5	4	innanzi		0	0
+5	4	innanzi	obl:a	5	7
 6	1	surger	subj	4	6
 6	1	surger	obl:per	6	3
 6	7	sta	subj	6	4
@@ -237,8 +237,8 @@ line	token	word	role	arg_line	arg_token
 74	1	sentia	xcomp	74	2
 74	1	sentia	obl:con	74	7
 74	2	dir	subj	74	3
+74	2	dir	ccomp	73	1
 75	7	intendea	subj	75	3
-75	7	intendea	obl:a	75	5
 76	0			0	0
 77	5	fa	subj	77	2
 77	5	fa	obj	76	7

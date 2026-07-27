@@ -130,6 +130,7 @@ line	token	word	role	arg_line	arg_token
 40	1	prende	obj	41	1
 40	1	prende	obl:in	40	3
 40	1	prende	obl:a	40	6
+40	1	prende	obl:come	41	4
 41	0			0	0
 42	3	farsi	subj	42	1
 42	3	farsi	obj	42	4
@@ -187,24 +188,23 @@ line	token	word	role	arg_line	arg_token
 61	5	divegna	obl:di	61	4
 61	6	fante	subj	0	0
 62	2	vedi	subj	62	3
-62	6	è	subj	62	5
-62	6	è	attr	62	8
 62	8	punto	subj	62	5
 63	3	savio	subj	0	0
 63	3	savio	obl:di	63	5
 63	6	fé	subj	63	1
-63	6	fé	obj	63	3
-63	6	fé	attr	63	8
+63	6	fé	obj	63	8
+63	6	fé	attr	63	3
 63	8	errante	subj	0	0
-64	6	fé	subj	0	0
+64	6	fé	subj	64	2
 64	6	fé	obj	65	6
-64	6	fé	attr	64	7
+64	6	fé	xcomp	64	7
 64	6	fé	obl:per	64	5
 64	7	disgiunto	subj	65	6
 64	7	disgiunto	obl:da	65	3
 65	0			0	0
 66	5	vide	subj	0	0
 66	5	vide	obj	66	6
+66	5	vide	obl:da	66	3
 67	1	Apri	subj	0	0
 67	1	Apri	obl:a	67	4
 67	6	viene	subj	67	8

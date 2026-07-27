@@ -1,5 +1,64 @@
 # skel — Layer 5 correction history
 
+## Phase 5e: full-corpus `--fix` regeneration round (2026-07-28)
+
+Baseline: **0 hard, 4846 soft** (the Phase 5b state), 2037 flagged parse units. One full pass,
+all three canticles, under the Phase 5c acceptance criterion. This is the first `--fix` round
+run on a residue the deterministic phases had already cleared of structurally unfixable units.
+
+| metric | measured |
+|---|---|
+| units attempted | 2037 |
+| units accepted (rewritten) | **178 (8.7%)** |
+| units that got *worse* | **0** |
+| soft violations removed | **231** (4846 → **4615**, −4.8%) |
+| violations removed per accepted unit | 1.3 |
+| cantos touched | 85 |
+| accepted per canticle | inferno 56, purgatorio 58, paradiso 64 |
+
+Per class:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| extra_arg | 1991 | 1887 | −104 (−5.2%) |
+| missing_arg | 1305 | 1239 | −66 (−5.1%) |
+| role_mismatch | 1250 | 1214 | −36 (−2.9%) |
+| extra_tuple | 176 | 155 | −21 (−11.9%) |
+| missing_tuple | 26 | 24 | −2 |
+| membership | 96 | 94 | −2 |
+| unknown_role | 2 | 2 | 0 |
+
+**The expected rise in success rate did not materialize.** PLAN.md predicted the rate would come
+in above the pre-Phase-5 10.5%, since 5a/5b had removed from the denominator precisely the units
+regeneration could never fix. It came in at **8.7%** instead — statistically indistinguishable
+from the earlier figure (which was itself 2 of 19 units on a local model), so the honest reading
+is that the method's yield is **flat at roughly 0.11 violations per LLM call**, independent of
+how the flagged set is composed. Regeneration is not the lever that closes the remaining gap.
+
+Phase 5c's tightened acceptance held: **no unit regressed**, and `unknown_role` stayed at 2 —
+the failure mode that motivated the rule did not recur.
+
+**PLAN.md's stop rule therefore applies: no second pass.** No class moved more than 11.9%, and
+the three large ones moved 5.2%/5.1%/2.9% — a class that barely moves after a full pass is
+evidence of a checker-side rule mismatch, not of an LLM error awaiting another attempt.
+`role_mismatch` moved least while sitting 99.9% on edges *both* sides see, and its top pairs are
+strikingly systematic:
+
+```
+'xcomp' vs 'obj'   170    'obl:a' vs 'obl'  94    'obl:a' vs 'obj'  92
+'obl:di' vs 'obl'   84    'obj'  vs 'subj'  81    'subj'  vs 'obj'  67
+'xcomp' vs 'subj'   60
+```
+
+The `xcomp`/`obj` and `obl:<lemma>`/bare-`obl` pairs in particular look like the same kind of
+labeling-convention split Phase 1 and Phase 5a/5b already normalized elsewhere (a nominalized
+infinitive read as a clausal complement; a preposition the dep tree attaches without a `case`
+child) — they should be measured before any further model calls. That is the next round.
+
+**Current state**: `make -C skel check` — **0 hard, 4615 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ12823, 73.5%; Δ1304 across Phase 5). The artifacts changed
+this round are the 85 cantos listed above — the first `skel/*/` change since the Phase 4b round.
+
 ## Checker Phase 5b/5d: re-triage of the reduced set (2026-07-26)
 
 Baseline: **0 hard, 5105 soft** (the Phase 5a state). Every surviving violation was re-classified

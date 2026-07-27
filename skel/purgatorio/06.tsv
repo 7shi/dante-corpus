@@ -107,10 +107,11 @@ line	token	word	role	arg_line	arg_token
 36	4	guarda	subj	0	0
 36	4	guarda	obl:con	36	7
 37	7	avvalla	subj	37	2
-37	7	avvalla	obj	37	6
 38	5	compia	subj	38	2
 38	5	compia	obj	39	1
 38	5	compia	obl:in	38	8
+39	3	de'	subj	39	2
+39	3	de'	xcomp	39	4
 39	4	sodisfar	subj	39	2
 39	4	sodisfar	obj	39	5
 39	8	astalla	subj	39	5
@@ -118,10 +119,10 @@ line	token	word	role	arg_line	arg_token
 40	5	fermai	subj	40	4
 40	5	fermai	obj	40	7
 41	3	ammendava	subj	41	6
-41	3	ammendava	obj	41	2
 41	3	ammendava	obl:per	41	5
 42	6	era	subj	42	3
 42	6	era	attr	42	7
+42	6	era	obl:da	42	5
 42	7	disgiunto	subj	42	3
 42	7	disgiunto	obl:da	42	5
 43	0			0	0

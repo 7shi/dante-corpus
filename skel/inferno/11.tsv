@@ -103,13 +103,16 @@ line	token	word	role	arg_line	arg_token
 35	4	danno	subj	0	0
 35	4	danno	obj	34	1
 35	4	danno	obj	36	1
+35	4	danno	iobj	35	3
 35	4	danno	obl:in	35	2
 35	4	danno	obl:in	35	8
 36	0			0	0
 37	7	fiere	subj	37	5
 38	5	tormenta	subj	39	2
 38	5	tormenta	obj	37	2
+38	5	tormenta	obj	37	4
 38	5	tormenta	obj	38	1
+38	5	tormenta	obj	38	3
 38	5	tormenta	obj	38	4
 38	5	tormenta	obl:per	39	6
 39	0			0	0

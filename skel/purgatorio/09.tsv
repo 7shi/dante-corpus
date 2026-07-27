@@ -266,15 +266,15 @@ line	token	word	role	arg_line	arg_token
 87	1	Guardate	ccomp	87	8
 87	8	nòi	subj	87	4
 87	8	nòi	obj	87	7
-88	7	accorta	subj	88	1
-88	7	accorta	obl:di	88	6
+88	0			0	0
 89	1	rispuose	subj	89	4
 89	1	rispuose	iobj	89	6
-89	1	rispuose	ccomp	90	2
 90	2	disse	subj	0	0
 90	2	disse	obj	90	1
 90	3	Andate	subj	0	0
+90	3	Andate	obl	90	4
 90	6	è	subj	90	8
+90	6	è	obl	90	5
 91	8	avanzi	subj	91	2
 91	8	avanzi	obj	91	4
 91	8	avanzi	obl:in	91	7
@@ -354,7 +354,7 @@ line	token	word	role	arg_line	arg_token
 115	7	cavi	subj	115	4
 115	7	cavi	attr	115	5
 116	4	fora	subj	115	4
-116	4	fora	attr	116	3
+116	4	fora	obl:di	116	3
 116	4	fora	obl:con	116	7
 117	6	trasse	subj	0	0
 117	6	trasse	obj	117	8

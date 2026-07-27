@@ -2,16 +2,14 @@ line	token	word	role	arg_line	arg_token
 1	7	alluma	subj	1	3
 1	7	alluma	obj	1	6
 2	6	discende	subj	1	2
-2	6	discende	obl:de	2	3
+2	6	discende	obl:di	2	3
 3	8	consuma	subj	3	3
-3	8	consuma	obl:di	3	6
 4	9	accende	subj	4	3
 4	9	accende	obl:di	4	6
 5	3	rifà	subj	4	2
 5	3	rifà	attr	5	4
 5	3	rifà	obl:per	6	3
 5	4	parvente	subj	4	2
-5	4	parvente	obl:per	6	3
 6	7	risplende	subj	6	6
 6	7	risplende	obl:in	6	5
 7	7	venne	subj	7	3

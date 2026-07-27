@@ -79,7 +79,6 @@ line	token	word	role	arg_line	arg_token
 32	4	dire	subj	0	0
 32	4	dire	obj	32	3
 32	6	far	subj	0	0
-32	6	far	obj	32	3
 32	10	puote	subj	0	0
 32	10	puote	xcomp	32	4
 32	10	puote	xcomp	32	6

@@ -1,16 +1,14 @@
 line	token	word	role	arg_line	arg_token
-1	5	conven	subj	0	0
+1	5	conven	subj	1	6
 1	5	conven	iobj	1	4
-1	5	conven	xcomp	1	6
-1	5	conven	obl:di	1	3
 1	6	far	subj	0	0
 1	6	far	obj	1	7
+1	6	far	obl:di	1	3
 2	2	dar	subj	0	0
 2	2	dar	obj	2	3
 2	2	dar	obl:a	2	6
 3	6	è	subj	3	5
 3	6	è	obl:di	3	9
-3	9	sommersi	subj	3	5
 4	4	disposto	subj	4	1
 4	4	disposto	xcomp	5	2
 5	2	riguardar	subj	4	1
@@ -73,13 +71,13 @@ line	token	word	role	arg_line	arg_token
 24	3	bagnava	obj	24	2
 24	3	bagnava	obl:per	24	6
 25	3	piangea	subj	25	2
-25	4	poggiato	subj	25	2
 25	4	poggiato	obl:a	25	6
 26	0			0	0
 27	2	disse	subj	26	8
 27	2	disse	iobj	27	1
+27	2	disse	ccomp	27	4
 27	4	se'	subj	27	5
-27	4	se'	obl:di	27	9
+27	4	se'	obl:de	27	9
 28	2	vive	subj	28	4
 28	8	morta	subj	0	0
 29	4	scellerato	subj	29	1

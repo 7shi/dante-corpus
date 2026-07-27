@@ -103,16 +103,17 @@ line	token	word	role	arg_line	arg_token
 40	5	scritto	obl:da	41	3
 41	0			0	0
 42	5	avvedrai	subj	42	2
-42	5	avvedrai	iobj	42	3
 42	5	avvedrai	obl:di	42	4
 42	8	agguati	subj	0	0
 43	6	vede	subj	43	4
 43	6	vede	obj	43	5
-44	3	concederebbe	subj	44	1
+44	3	concederebbe	subj	0	0
 44	3	concederebbe	ccomp	45	4
 45	4	fosser	subj	44	5
 45	4	fosser	attr	45	5
 45	4	fosser	obl:sanza	45	3
+45	5	cotanto	subj	44	5
+45	5	cotanto	obl:sanza	45	3
 46	2	sai	subj	46	3
 47	2	creati	subj	46	8
 47	7	spenti	subj	48	7
@@ -135,8 +136,7 @@ line	token	word	role	arg_line	arg_token
 55	4	fu	attr	55	1
 56	6	vedesti	subj	56	5
 56	6	vedesti	obj	56	4
-57	7	costretto	subj	56	4
-57	7	costretto	obl:da	57	4
+57	0			0	0
 58	3	vedi	subj	0	0
 58	3	vedi	obj	58	2
 58	6	modesti	subj	58	1
@@ -171,20 +171,18 @@ line	token	word	role	arg_line	arg_token
 69	3	ricolte	obl:sanza	69	6
 70	0			0	0
 71	2	legge	subj	0	0
-71	2	legge	obj	71	3
+71	2	legge	ccomp	72	2
 71	2	legge	obl:in	70	4
 71	2	legge	obl:per	70	8
 72	2	tal	subj	71	6
 72	4	'ntende	subj	72	3
 72	7	ricorda	subj	72	3
-72	7	ricorda	obj	72	6
 72	9	vole	subj	72	3
 73	2	dirò	subj	0	0
 73	5	veggi	subj	73	4
 73	5	veggi	obj	74	2
 73	5	veggi	attr	73	6
 74	7	confonde	subj	74	3
-74	7	confonde	obj	74	6
 75	1	equivocando	subj	0	0
 75	1	equivocando	obl:in	75	5
 76	6	gioconde	subj	76	2
@@ -365,5 +363,6 @@ line	token	word	role	arg_line	arg_token
 143	0			0	0
 144	2	fatti	subj	144	1
 144	8	spezza	subj	144	6
+144	8	spezza	obl:in	144	6
 145	2	manendo	subj	145	1
 145	2	manendo	obl:in	145	4

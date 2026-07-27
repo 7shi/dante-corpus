@@ -165,9 +165,7 @@ line	token	word	role	arg_line	arg_token
 61	3	parver	subj	62	7
 61	3	parver	iobj	61	2
 61	4	sùbiti	subj	62	7
-61	4	sùbiti	iobj	61	2
 61	6	accorti	subj	62	7
-61	6	accorti	iobj	61	2
 62	9	dicer	subj	62	7
 62	9	dicer	obj	62	10
 63	3	mostrar	subj	0	0
@@ -281,9 +279,9 @@ line	token	word	role	arg_line	arg_token
 99	4	fa	xcomp	99	5
 99	5	dubbiar	subj	99	7
 100	3	facean	subj	101	3
-100	3	facean	obj	101	6
+100	3	facean	obj	101	1
+100	3	facean	attr	101	6
 100	3	facean	obl:in	100	5
-100	3	facean	obl:di	101	1
 101	0			0	0
 102	2	fan	subj	102	1
 102	2	fan	obj	102	3

@@ -217,11 +217,14 @@ line	token	word	role	arg_line	arg_token
 72	2	metter	obj	72	6
 72	2	metter	obl:in	72	8
 73	2	è	subj	73	3
+73	2	è	obl	73	1
 73	7	falsai	subj	73	6
 73	7	falsai	obj	74	2
+73	7	falsai	obl	73	5
 74	0			0	0
 75	8	lasciai	subj	75	3
 75	8	lasciai	obj	75	5
+75	8	lasciai	obl	75	6
 76	4	vedessi	subj	76	3
 76	4	vedessi	obj	76	7
 77	0			0	0
@@ -340,7 +343,7 @@ line	token	word	role	arg_line	arg_token
 116	4	son	subj	0	0
 116	4	son	obl:per	116	8
 117	2	tu	obl:per	117	4
-117	4	più	subj	117	2
+117	4	più	obl	117	8
 118	1	Ricorditi	subj	0	0
 118	1	Ricorditi	obj	118	4
 119	1	rispuose	subj	119	2
@@ -436,9 +439,8 @@ line	token	word	role	arg_line	arg_token
 144	6	disgrava	obl:di	144	4
 145	2	fa	subj	0	0
 145	2	fa	obj	145	3
-145	2	fa	ccomp	145	9
 145	9	allato	subj	145	5
-145	9	allato	iobj	145	6
+145	9	allato	obj	145	6
 146	3	avvien	subj	0	0
 146	3	avvien	ccomp	146	7
 146	7	accoglia	subj	146	5

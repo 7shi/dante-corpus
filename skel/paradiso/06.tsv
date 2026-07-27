@@ -291,6 +291,8 @@ line	token	word	role	arg_line	arg_token
 96	5	soccorse	subj	96	1
 96	5	soccorse	obj	96	4
 96	5	soccorse	obl:sotto	95	7
+97	2	puoi	subj	0	0
+97	2	puoi	xcomp	97	3
 97	3	giudicar	subj	0	0
 97	3	giudicar	obl:di	97	6
 98	3	accusai	subj	98	2
@@ -298,7 +300,6 @@ line	token	word	role	arg_line	arg_token
 98	3	accusai	obl:di	98	5
 98	3	accusai	obl:di	98	9
 99	3	cagion	subj	99	1
-99	3	cagion	obl:di	99	7
 100	0			0	0
 101	1	oppone	subj	100	2
 101	1	oppone	obj	100	7

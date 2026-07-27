@@ -39,6 +39,9 @@ line	token	word	role	arg_line	arg_token
 18	4	precorre	obl	17	6
 18	4	precorre	obl:a	18	3
 19	0			0	0
+20	7	aduna	subj	19	3
+20	7	aduna	subj	19	6
+20	7	aduna	subj	20	3
 20	7	aduna	subj	21	1
 20	7	aduna	obl:in	19	2
 20	7	aduna	obl:in	19	5
@@ -47,8 +50,6 @@ line	token	word	role	arg_line	arg_token
 21	4	è	subj	21	1
 21	4	è	attr	21	6
 21	4	è	obl:in	21	3
-21	6	bontate	subj	21	1
-21	6	bontate	obl:in	21	3
 22	0			0	0
 23	7	vedute	subj	22	3
 23	7	vedute	obj	24	2
@@ -346,7 +347,6 @@ line	token	word	role	arg_line	arg_token
 126	4	ami	subj	124	4
 126	4	ami	obj	126	3
 126	6	arridi	subj	124	4
-126	6	arridi	obj	126	3
 127	5	concetta	subj	127	3
 128	1	pareva	subj	127	3
 128	1	pareva	obl:in	128	3

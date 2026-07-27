@@ -305,7 +305,6 @@ line	token	word	role	arg_line	arg_token
 106	2	vo'	ccomp	106	8
 106	8	smaghi	subj	106	6
 106	8	smaghi	obl:di	107	3
-106	8	smaghi	obl:per	107	5
 107	5	udire	subj	0	0
 107	5	udire	ccomp	108	3
 108	3	vuol	subj	108	2

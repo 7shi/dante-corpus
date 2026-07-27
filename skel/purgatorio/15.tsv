@@ -152,9 +152,8 @@ line	token	word	role	arg_line	arg_token
 54	3	sarebbe	subj	54	7
 54	3	sarebbe	iobj	54	2
 54	3	sarebbe	obl:a	54	5
-55	5	dice	subj	0	0
-55	5	dice	obj	55	8
-55	5	dice	obl:per	55	3
+55	5	dice	subj	55	3
+55	5	dice	attr	55	8
 56	2	possiede	subj	56	6
 56	2	possiede	obj	56	5
 57	5	arde	subj	56	6

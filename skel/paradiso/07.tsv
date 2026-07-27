@@ -237,7 +237,7 @@ line	token	word	role	arg_line	arg_token
 94	1	Ficca	subj	0	0
 94	1	Ficca	obj	94	4
 94	1	Ficca	obl:entro	94	8
-94	1	Ficca	obl:a	96	3
+95	6	puoi		0	0
 95	6	puoi	subj	0	0
 96	5	fisso	subj	0	0
 96	5	fisso	obl:a	96	3
@@ -264,9 +264,8 @@ line	token	word	role	arg_line	arg_token
 102	6	dischiuso	obl:da	102	2
 103	4	convenia	subj	104	1
 103	4	convenia	obl:a	103	3
-103	4	convenia	obl:con	103	7
-104	1	riparar	subj	0	0
 104	1	riparar	obj	104	3
+104	1	riparar	obl:con	103	7
 104	1	riparar	obl:a	104	7
 105	1	dico	subj	0	0
 105	1	dico	obl:con	105	4

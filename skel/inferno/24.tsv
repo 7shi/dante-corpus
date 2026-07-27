@@ -212,10 +212,9 @@ line	token	word	role	arg_line	arg_token
 68	1	fossi	obl:sovra	67	9
 68	7	varca	subj	68	6
 69	3	parlava	subj	69	2
-69	5	ire	subj	69	2
+69	5	ire		0	0
 69	6	parea	subj	69	2
 69	6	parea	attr	69	7
-69	7	mosso	subj	69	2
 69	7	mosso	xcomp	69	5
 70	3	vòlto	subj	70	1
 70	3	vòlto	obl:in	70	5

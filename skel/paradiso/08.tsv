@@ -131,9 +131,10 @@ line	token	word	role	arg_line	arg_token
 49	2	fatta	subj	0	0
 49	4	disse	subj	0	0
 49	4	disse	iobj	49	3
+49	4	disse	ccomp	49	8
 49	8	ebbe	subj	49	6
 49	8	ebbe	obj	49	7
-49	8	ebbe	obl	50	3
+49	8	ebbe	obj	50	3
 50	8	stato	subj	0	0
 51	2	sarà	subj	51	1
 51	2	sarà	obl:di	51	4
@@ -257,10 +258,12 @@ line	token	word	role	arg_line	arg_token
 91	1	Fatto	attr	91	4
 91	4	lieto	subj	91	2
 91	8	fa	subj	0	0
-91	8	fa	obj	91	7
+91	8	fa	iobj	91	7
 91	8	fa	attr	91	9
 91	9	chiaro	subj	0	0
+92	3	parlando		0	0
 92	3	parlando	subj	0	0
+92	5	dubitar	subj	92	6
 92	5	dubitar	ccomp	93	3
 92	8	mosso	subj	0	0
 92	8	mosso	obj	92	6

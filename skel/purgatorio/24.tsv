@@ -35,8 +35,8 @@ line	token	word	role	arg_line	arg_token
 13	0			0	0
 14	2	so	subj	0	0
 14	2	so	ccomp	14	4
-14	4	fosse	subj	13	4
-14	4	fosse	attr	14	3
+14	2	so	obl:di	13	4
+14	4	fosse	subj	14	3
 14	4	fosse	obl:tra	13	6
 14	6	trïunfa	subj	13	3
 14	6	trïunfa	attr	14	7
@@ -288,13 +288,13 @@ line	token	word	role	arg_line	arg_token
 90	9	puote	subj	90	5
 90	9	puote	xcomp	90	7
 91	3	rimani	subj	91	1
-91	3	rimani	obj	91	2
 91	9	caro	subj	91	7
 91	9	caro	obl:in	92	3
 92	7	perdo	subj	92	6
 93	1	venendo	subj	0	0
 93	1	venendo	obl:con	93	2
 93	1	venendo	obl:a	93	5
+93	1	venendo	obl:a	93	7
 94	2	esce	subj	95	2
 94	2	esce	obl	94	4
 94	2	esce	obl:di	94	6
@@ -368,8 +368,8 @@ line	token	word	role	arg_line	arg_token
 117	5	levò	obl:da	117	7
 118	6	so	subj	0	0
 118	6	so	ccomp	118	8
+118	6	so	obl:tra	118	4
 118	8	diceva	subj	118	7
-118	8	diceva	obl:tra	118	4
 119	8	ristretti	subj	119	7
 120	2	andavam	subj	119	7
 120	2	andavam	obl:da	120	4
@@ -453,13 +453,13 @@ line	token	word	role	arg_line	arg_token
 147	2	impregnata	obl:da	147	5
 147	2	impregnata	obl:da	147	8
 148	3	senti'	subj	0	0
+148	3	senti'	iobj	148	2
 148	3	senti'	xcomp	148	6
 148	6	dar	subj	148	5
-148	6	dar	iobj	148	2
 148	6	dar	obl:per	149	2
 149	5	senti'	subj	0	0
 149	5	senti'	xcomp	149	6
-149	6	mover	subj	0	0
+149	6	mover	subj	148	5
 149	6	mover	obj	149	8
 150	2	fé	subj	150	1
 150	2	fé	xcomp	150	3

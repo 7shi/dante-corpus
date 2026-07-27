@@ -211,11 +211,10 @@ line	token	word	role	arg_line	arg_token
 75	6	posta	subj	75	2
 75	6	posta	obl:in	75	8
 76	2	eravam	subj	76	1
-76	2	eravam	obl	76	3
 76	6	saliva	subj	77	2
 77	5	eravamo	subj	76	1
 77	5	eravamo	attr	77	6
-77	6	affissi	subj	0	0
+77	6	affissi	subj	76	1
 77	6	affissi	obl:come	78	3
 78	8	arriva	subj	78	4
 78	8	arriva	obl:a	78	7
@@ -241,6 +240,7 @@ line	token	word	role	arg_line	arg_token
 84	7	stea	subj	84	9
 85	0			0	0
 86	6	ristora	subj	85	6
+86	6	ristora	obj	86	5
 87	3	ribatte	subj	87	7
 88	5	intendi	subj	0	0
 89	1	volgi	subj	0	0

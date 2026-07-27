@@ -257,8 +257,8 @@ line	token	word	role	arg_line	arg_token
 89	4	ebb'	subj	89	5
 89	4	ebb'	obj	89	6
 90	4	chiuso	subj	90	7
-90	4	chiuso	obl:per	90	3
 90	5	cristian	subj	90	7
+90	5	cristian	obl:per	90	3
 90	6	fu'	subj	90	7
 90	6	fu'	attr	90	4
 90	6	fu'	attr	90	5
@@ -268,6 +268,7 @@ line	token	word	role	arg_line	arg_token
 92	0			0	0
 93	1	cerchiar	subj	93	2
 93	1	cerchiar	obj	92	6
+93	1	cerchiar	obl:che	93	8
 93	3	fé	subj	92	3
 93	3	fé	obj	93	2
 93	3	fé	xcomp	93	1

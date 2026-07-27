@@ -277,7 +277,7 @@ line	token	word	role	arg_line	arg_token
 90	2	purgherò	obj	90	4
 90	7	fiede	subj	90	5
 90	7	fiede	obj	90	6
-91	9	piace	subj	91	6
+91	9	piace	subj	91	4
 91	9	piace	obl:a	91	8
 92	1	fé	subj	91	3
 92	1	fé	obj	92	3

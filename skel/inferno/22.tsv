@@ -14,8 +14,9 @@ line	token	word	role	arg_line	arg_token
 4	2	vidi	obj	4	1
 4	2	vidi	obl:per	4	5
 5	4	vidi	subj	0	0
-5	4	vidi	obj	5	6
 5	4	vidi	xcomp	5	5
+5	4	vidi	xcomp	6	1
+5	4	vidi	xcomp	6	4
 5	4	vidi	obl:con	7	3
 5	4	vidi	obl:con	7	7
 5	4	vidi	obl:con	8	2
@@ -23,9 +24,9 @@ line	token	word	role	arg_line	arg_token
 5	4	vidi	obl:con	9	3
 5	4	vidi	obl:con	9	7
 5	5	gir	subj	5	6
-6	1	fedir	subj	5	6
+6	1	fedir	subj	0	0
 6	1	fedir	obj	6	2
-6	4	correr	subj	5	6
+6	4	correr	subj	0	0
 6	4	correr	obj	6	5
 7	0			0	0
 8	0			0	0
@@ -37,6 +38,7 @@ line	token	word	role	arg_line	arg_token
 11	2	vidi	obj	12	2
 11	2	vidi	xcomp	11	3
 11	2	vidi	obl:con	10	6
+11	2	vidi	obl:a	12	4
 11	3	muover	subj	11	1
 11	3	muover	subj	11	5
 12	0			0	0
@@ -295,12 +297,12 @@ line	token	word	role	arg_line	arg_token
 93	3	apparecchi	xcomp	93	5
 93	5	grattarmi	subj	0	0
 93	5	grattarmi	obj	93	7
-94	5	vòlto	subj	94	4
-94	5	vòlto	obl:a	94	7
+94	0			0	0
 95	2	stralunava	subj	95	1
 95	2	stralunava	obj	95	4
 95	6	fedire	subj	0	0
 96	1	disse	subj	94	4
+96	1	disse	ccomp	96	2
 96	2	Fatti	subj	0	0
 96	2	Fatti	obl:in	96	4
 97	3	volete	subj	97	2

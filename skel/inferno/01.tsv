@@ -5,11 +5,11 @@ line	token	word	role	arg_line	arg_token
 2	2	ritrovai	obl:per	2	5
 3	6	smarrita	subj	3	4
 4	4	dir	subj	0	0
-4	4	dir	obj	4	5
 4	6	era	subj	5	2
 4	6	era	attr	4	5
 4	7	è	subj	4	4
 4	7	è	attr	4	8
+4	8	cosa	subj	4	4
 5	0			0	0
 6	4	rinova	subj	6	1
 6	4	rinova	obj	6	6
@@ -106,7 +106,8 @@ line	token	word	role	arg_line	arg_token
 39	2	eran	obl:con	39	4
 40	1	mosse	subj	39	7
 40	1	mosse	obj	40	5
-41	5	sperar		0	0
+41	5	sperar	subj	0	0
+41	5	sperar	obl:di	42	3
 41	7	era	subj	43	2
 41	7	era	subj	43	8
 41	7	era	iobj	41	6
@@ -114,8 +115,7 @@ line	token	word	role	arg_line	arg_token
 41	8	cagione	subj	43	2
 41	8	cagione	subj	43	8
 41	8	cagione	iobj	41	6
-41	8	cagione	obl:a	41	5
-41	8	cagione	obl:di	42	3
+41	8	cagione	xcomp	41	5
 42	0			0	0
 43	0			0	0
 44	8	desse	subj	45	2
@@ -203,7 +203,6 @@ line	token	word	role	arg_line	arg_token
 70	1	Nacqui	subj	0	0
 70	1	Nacqui	obl:sub	70	3
 70	6	fosse	subj	0	0
-70	6	fosse	attr	70	7
 71	2	vissi	subj	0	0
 71	2	vissi	obl:a	71	4
 71	2	vissi	obl:sotto	71	8

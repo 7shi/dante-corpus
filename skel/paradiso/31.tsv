@@ -12,23 +12,19 @@ line	token	word	role	arg_line	arg_token
 4	6	vede	obj	5	2
 4	8	canta	subj	4	4
 4	8	canta	obj	5	2
+4	8	canta	obj	6	3
 5	7	'nnamora	subj	5	5
 5	7	'nnamora	obj	5	6
 6	6	fece	subj	6	4
 6	6	fece	obj	6	5
 6	6	fece	attr	6	7
 7	8	infiora	subj	7	6
-7	8	infiora	obj	7	7
-7	8	infiora	obl	8	2
-8	6	ritorna	subj	7	6
-8	6	ritorna	obj	8	5
-8	6	ritorna	obl	8	4
+8	6	ritorna	subj	8	4
 9	6	insapora	subj	9	4
-9	6	insapora	obj	9	5
 10	4	discendeva	subj	4	3
+10	4	discendeva	obl:come	7	3
 10	4	discendeva	obl:in	10	3
 10	7	addorna	subj	10	5
-10	7	addorna	obj	10	6
 10	7	addorna	obl:di	11	3
 11	6	risaliva	subj	4	3
 12	7	soggiorna	subj	12	5
@@ -61,9 +57,7 @@ line	token	word	role	arg_line	arg_token
 24	7	ostante	subj	24	3
 24	7	ostante	obl:a	24	4
 25	0			0	0
-26	1	frequente	subj	25	5
-26	1	frequente	obl:in	26	3
-26	1	frequente	obl:in	26	7
+26	0			0	0
 27	4	avea	subj	25	5
 27	4	avea	obj	27	1
 27	4	avea	obj	27	3

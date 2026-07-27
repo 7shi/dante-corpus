@@ -153,7 +153,6 @@ line	token	word	role	arg_line	arg_token
 57	3	par	ccomp	57	9
 57	9	pasca	subj	57	7
 57	9	pasca	obj	57	8
-58	4	riguardando	subj	58	3
 58	4	riguardando	obl:tra	58	6
 58	7	vegno	subj	58	3
 59	5	vidi	subj	0	0
@@ -161,6 +160,7 @@ line	token	word	role	arg_line	arg_token
 59	5	vidi	obl:in	59	3
 60	5	avea	subj	60	1
 60	5	avea	obj	60	6
+60	5	avea	obl:di	60	4
 61	2	procedendo	subj	0	0
 61	2	procedendo	obj	61	7
 61	2	procedendo	obl:di	61	5
@@ -245,7 +245,6 @@ line	token	word	role	arg_line	arg_token
 86	5	ha	subj	86	4
 86	5	ha	obj	86	8
 87	2	triema	subj	85	4
-87	5	guardando	subj	85	4
 87	5	guardando	obj	87	7
 88	2	divenn'	subj	88	3
 88	2	divenn'	attr	88	1

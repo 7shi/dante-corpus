@@ -52,11 +52,11 @@ line	token	word	role	arg_line	arg_token
 16	3	fu	subj	16	2
 16	3	fu	obl:tra	16	7
 17	4	dico	subj	0	0
-17	4	dico	obl:di	17	3
-17	4	dico	obl:di	17	7
+18	3	venir	subj	18	2
+18	3	venir	xcomp	18	7
 18	7	rischiarando	subj	18	2
 19	3	disse	subj	19	2
-19	3	disse	ccomp	19	4
+19	3	disse	obj	19	4
 19	4	Ecco	subj	19	6
 19	4	Ecco	subj	20	8
 20	0			0	0
@@ -242,12 +242,15 @@ line	token	word	role	arg_line	arg_token
 89	7	ristrinse	obj	90	2
 89	7	ristrinse	iobj	89	6
 89	7	ristrinse	xcomp	90	4
+89	7	ristrinse	obl	89	2
+89	7	ristrinse	obl	89	4
 90	4	avvisar	subj	90	2
 90	4	avvisar	obj	90	7
 91	7	dipinse	subj	88	2
 91	7	dipinse	obj	92	2
 91	7	dipinse	obj	92	5
 91	7	dipinse	iobj	91	6
+91	7	dipinse	obl:in	91	5
 92	0			0	0
 93	4	vince	subj	93	1
 93	8	vinse	subj	0	0
@@ -258,7 +261,7 @@ line	token	word	role	arg_line	arg_token
 95	1	formata	obl:a	95	5
 96	2	cinsela	subj	94	7
 96	4	girossi	subj	94	7
-96	4	girossi	obl:intorno	96	7
+96	4	girossi	obl:a	96	7
 97	5	suona	subj	97	2
 98	9	tira	subj	0	0
 98	9	tira	obj	98	8
@@ -305,7 +308,7 @@ line	token	word	role	arg_line	arg_token
 115	1	avea	subj	112	3
 115	1	avea	obj	115	7
 115	1	avea	obl:sopra	115	4
-116	2	distante	subj	115	7
+116	0			0	0
 117	4	era	subj	117	3
 117	7	appariva	subj	116	6
 118	3	ebber	subj	118	5
