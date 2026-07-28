@@ -692,7 +692,7 @@ line	token	word	deprel	head_line	head_token
 96	4	specchiai	advcl	95	5
 96	5	in	case	96	6
 96	6	esso	obl	96	4
-96	7	qual	mark	96	9
+96	7	qual	attr	96	9
 96	8	io	nsubj	96	9
 96	9	paio	advcl	96	4
 97	1	Era	cop	97	7

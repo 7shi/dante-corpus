@@ -199,7 +199,7 @@ line	token	word	deprel	head_line	head_token
 28	1	Dal	case	28	3
 28	2	primo	amod	28	3
 28	3	giorno	obl	30	9
-28	4	ch'	mark	28	6
+28	4	ch'	obl	28	6
 28	5	i'	nsubj	28	6
 28	6	vidi	acl:relcl	28	3
 28	7	il	det	28	9

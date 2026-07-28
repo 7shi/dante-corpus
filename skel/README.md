@@ -9,12 +9,12 @@ LLM's roles and the derivation's roles are directly comparable and the corpus st
 canon-neutral.
 
 **Status: built for all 100 cantos, checker refined through Phase 5m, one Phase 5e `--fix` round
-run, and one Layer-4 correction round (Phase 5i) fed back into `dep/`.** `make -C skel check`:
-**0 hard, 3746 soft** violations (down from 17438 at the first
+run, and two Layer-4 correction rounds (Phases 5i and 5n) fed back into `dep/`.**
+`make -C skel check`: **0 hard, 3725 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
-3876 after Phase 5k, 3808 after Phase 5l).
+3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m).
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
@@ -267,6 +267,16 @@ shape one edge in. The whole `nmod` direct-child population (62) satisfies the g
 into PP complements of nominal predicates ("furon **cagione di sua vittoria**", 58) and plain
 Layer-4 `nmod`-for-`obl` mistags on verbs (4); both are correct readings, so the rule ships
 ungated on the predicate's POS.
+
+After Phase 5n (2026-07-28, a Layer-4 correction, not a checker change): **0 hard, 3725 soft** —
+`extra_arg` 1757 → **1735**, `role_mismatch` 475 → **476**. The `mark` direct-child population
+(35 instances where Layer 4 tags a relative or interrogative word `mark` on a predicate and the
+LLM cites it as that predicate's argument) was read in full against its terzine: **22 are
+Layer-4 mistags** and were retagged in `dep/` (8 → `obl`, 7 → `obj`, 7 → `attr`), 11 are cases
+where Layer 4 is right and the LLM misreads (complex subordinators, comparative and consecutive
+`che`, the idiomatic concessives), and 2 need a multi-edge restructuring. No gate separates
+them, so this is the second audit finding routed back to Layer 4 rather than absorbed by a
+checker rule — see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md). `dep --check` stayed 0/0.
 
 ## Next steps
 

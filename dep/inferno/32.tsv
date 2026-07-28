@@ -610,7 +610,7 @@ line	token	word	deprel	head_line	head_token
 84	1	poi	advmod	84	3
 84	2	mi	iobj	84	3
 84	3	farai	conj	82	8
-84	4	quantunque	mark	84	5
+84	4	quantunque	obj	84	5
 84	5	vorrai	advcl	84	3
 84	6	fretta	obj	84	3
 85	1	Lo	det	85	2

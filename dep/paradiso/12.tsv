@@ -873,7 +873,7 @@ line	token	word	deprel	head_line	head_token
 124	7	d'	case	124	8
 124	8	Acquasparta	conj	124	5
 125	1	là	advmod	125	3
-125	2	onde	mark	125	3
+125	2	onde	obl	125	3
 125	3	vegnon	acl:relcl	124	5
 125	4	tali	nsubj	125	3
 125	5	a	case	125	7

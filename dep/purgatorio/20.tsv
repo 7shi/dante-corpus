@@ -273,7 +273,7 @@ line	token	word	deprel	head_line	head_token
 40	6	non	advmod	40	8
 40	7	per	case	40	8
 40	8	conforto	obl	40	5
-41	1	ch'	mark	41	3
+41	1	ch'	obj	41	3
 41	2	io	nsubj	41	3
 41	3	attenda	acl:relcl	40	8
 41	4	di	case	41	5

@@ -92,7 +92,7 @@ line	token	word	deprel	head_line	head_token
 13	6	segni	obj	13	2
 13	7	in	case	13	8
 13	8	cielo	obl	13	2
-14	1	qual	mark	14	2
+14	1	qual	obj	14	2
 14	2	fece	advcl	13	2
 14	3	la	det	14	4
 14	4	figliuola	nsubj	14	2
@@ -333,7 +333,7 @@ line	token	word	deprel	head_line	head_token
 46	3	miri	conj	37	2
 46	4	a	case	46	5
 46	5	ciò	obl	46	3
-46	6	ch'	mark	46	8
+46	6	ch'	obj	46	8
 46	7	io	nsubj	46	8
 46	8	dissi	acl:relcl	46	5
 46	9	suso	advmod	46	8

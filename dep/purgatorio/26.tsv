@@ -778,7 +778,7 @@ line	token	word	deprel	head_line	head_token
 109	7	ver	advmod	109	8
 109	8	giuraro	advcl	110	1
 110	1	dimmi	root	0	0
-110	2	che	mark	110	3
+110	2	che	attr	110	3
 110	3	è	ccomp	110	1
 110	4	cagion	nsubj	110	3
 110	5	per	case	110	6

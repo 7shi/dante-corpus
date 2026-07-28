@@ -322,7 +322,7 @@ line	token	word	deprel	head_line	head_token
 46	6	accostò	root	0	0
 46	7	allato	advmod	46	6
 47	1	domandollo	advcl	46	6
-47	2	ond'	mark	47	4
+47	2	ond'	obl	47	4
 47	3	ei	nsubj	47	4
 47	4	fosse	ccomp	47	1
 47	5	e	cc	47	7
@@ -722,7 +722,7 @@ line	token	word	deprel	head_line	head_token
 102	7	stesso	amod	102	6
 103	1	per	case	103	2
 103	2	un	obl	103	7
-103	3	ch'	mark	103	5
+103	3	ch'	attr	103	5
 103	4	io	nsubj	103	5
 103	5	son	acl:relcl	103	2
 103	6	ne	obj	103	7

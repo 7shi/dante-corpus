@@ -405,7 +405,7 @@ line	token	word	deprel	head_line	head_token
 56	6	mi	expl	56	7
 56	7	pensai	acl:relcl	56	1
 57	1	che	mark	57	7
-57	2	qual	mark	57	4
+57	2	qual	attr	57	4
 57	3	voi	nsubj	57	4
 57	4	siete	advcl	57	7
 57	5	tal	det	57	6

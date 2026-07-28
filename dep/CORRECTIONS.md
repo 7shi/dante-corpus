@@ -118,3 +118,66 @@ chiamaste Ciacco`, `li chiama orbi`, `si tegnon gran regi` — the predicative n
 Neither is decidable by the double-`obj` signal alone, and the second class is exactly what
 skel's rule M already accepts checker-side. A `--check` rule for "at most one `obj` per
 predicate" would put Layer 4 at 231 soft violations; opening it is a separate round.
+
+## Relative/interrogative words mistagged `mark`, retagged from the Layer-5 audit (2026-07-28)
+
+The second Layer-4 correction Layer 5's audit role produced (see the double-`obj` round above
+for the procedure). skel's Phase 5m triage of the `extra_arg` **direct-child** bucket left 35
+instances where Layer 4 tags a relative or interrogative word `mark` on a predicate while the
+LLM — which never sees this parse — cites that same token as an argument of it. Layer 2's POS
+is not a usable discriminator here: it calls most of these words "conjunction", including the
+ones that are plainly relative pronouns. So all 35 were read against their terzine by hand, and
+the population turned out **mixed**, exactly as the clitic one had been.
+
+**22 retagged** in `dep/<canticle>/NN.tsv`, no model call, one row each — the word fills an
+argument slot of the predicate and `mark` is a mistag. The target deprel is the one it fills,
+and each was checked not to duplicate a core argument the predicate already carries:
+
+- **8 → `obl`** — relative/interrogative adverbs and temporal relatives: `domandollo **ond'** ei
+  fosse` (inferno 22:47), `volse la testa **ov'** elli avea le zanche` (inferno 34:79), `là
+  **onde** vegnon tali a la scrittura` (paradiso 12:125), `dì **onde** a te venne` (paradiso
+  25:47), `Da l'ora **ch'**ïo avea guardato prima` (paradiso 27:79), `Dal primo giorno **ch'**i'
+  vidi il suo viso` (paradiso 30:28), `**ond'** io mi feci ancor più là sentire` (purgatorio
+  13:99), `ne li occhi **ove** 'l sembiante più si ficca` (purgatorio 21:111).
+- **7 → `obj`** — relative and quantifier pronouns filling the direct-object slot: `poi mi
+  farai, **quantunque** vorrai, fretta` (inferno 32:84), `**qual** fece la figliuola di Minoi`
+  (paradiso 13:14), `miri a ciò **ch'**io dissi suso` (paradiso 13:46), `ché **quantunque** la
+  Chiesa guarda` (paradiso 22:82), `dal punto **che** 'l cenìt inlibra` (paradiso 29:4), `per la
+  ragion **che** di'` (purgatorio 4:82), `non per conforto **ch'**io attenda di là` (purgatorio
+  20:41).
+- **7 → `attr`** — predicative `qual`/`quai`/`che` on a copular or change-of-state predicate:
+  `che **qual** voi siete, tal gente venisse` (inferno 16:57), `**quai** son color che stanno`
+  (inferno 19:58), `per un **ch'**io son` (inferno 22:103), `ciascuna cosa **qual** ell' è
+  diventa` (paradiso 20:78), `**qual** diverrebbe Iove` (paradiso 27:14), `mi specchiai in esso
+  **qual** io paio` (purgatorio 9:96), `dimmi **che** è cagion` (purgatorio 26:110).
+
+**11 left as they are** — Layer 4 is right, or nothing decides:
+
+- complex subordinators, where the LLM citing the second element as an argument is a plain
+  misreading: `secondo **ch'**avea detto la mia scorta` (inferno 12:54), `secondo **ch'**elli
+  ascolta` (purgatorio 24:144).
+- comparative and consecutive `che`: `più speso **che** non stimava l'animo` (purgatorio 12:75),
+  `lo più **che** padre mi dicea` (purgatorio 23:4), `volse a lei, **che** ' miei ... fé più
+  ardenti` (paradiso 31:142), `l'ultimo **che** voli` (paradiso 24:15).
+- idiomatic concessives, undecidable: `**qual che** si sia` (paradiso 22:114), `**che che** li
+  appaia` (purgatorio 25:5), and the frozen `un non sapeva **che** bianco` (purgatorio 2:23).
+- degree `quanto` as a subordinator: `**quanto** ragione umana vede` (paradiso 19:74).
+- `**che** vedrai non capere in questi giri` (paradiso 3:76) — the editorial reading `ché`
+  (causal) versus relative `che` is itself disputed; not decided here.
+
+**2 read but deliberately not acted on**, because a sound fix needs a multi-edge restructuring
+rather than the single-row retag this round is scoped to, and a partial one would create a
+second core argument on the same predicate:
+
+- purgatorio 8:114 `tanta cera **quant'** è mestiere` — `quant'` is the subject of `è`, but
+  Layer 4 already has `mestiere` as `nsubj` where it is the predicate nominal (`attr`).
+- purgatorio 22:15 `Giovenale, **che** la tua affezion mi fé palese` — `che` is the subject
+  (antecedent Giovenale), `affezion` the object and `palese` the predicative complement; Layer 4
+  has `affezion` as `nsubj`, `palese` as `obj`, and attaches `fé` to `ora` rather than to
+  `Giovenale`.
+
+`dep --check` after the retag: **0 hard, 0 soft** — unchanged. `skel --check`: **3746 → 3725
+soft** (−21). All 22 closed their `extra_arg`; the net is −21 because paradiso 27:79 converts
+rather than closes — there `ch'` is a temporal oblique, and the LLM had cited it as an `obj`, so
+the divergence is now correctly reported as a `role_mismatch` against a reading that is still
+wrong. The 19 cantos' content hashes change, as expected for an artifact correction.

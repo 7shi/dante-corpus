@@ -440,7 +440,7 @@ line	token	word	deprel	head_line	head_token
 58	2	mi	obj	58	3
 58	3	fec'	root	0	0
 58	4	io	nsubj	58	3
-58	5	quai	mark	58	6
+58	5	quai	attr	58	6
 58	6	son	advcl	58	3
 58	7	color	nsubj	58	6
 58	8	che	nsubj	58	9

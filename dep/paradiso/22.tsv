@@ -576,7 +576,7 @@ line	token	word	deprel	head_line	head_token
 81	7	sì	advmod	81	8
 81	8	folle	xcomp	81	2
 82	1	ché	mark	83	1
-82	2	quantunque	mark	82	5
+82	2	quantunque	obj	82	5
 82	3	la	det	82	4
 82	4	Chiesa	nsubj	82	5
 82	5	guarda	advcl	83	1

@@ -799,7 +799,7 @@ line	token	word	deprel	head_line	head_token
 111	1	ne	case	111	3
 111	2	li	det	111	3
 111	3	occhi	obl	110	8
-111	4	ove	mark	111	9
+111	4	ove	obl	111	9
 111	5	'l	det	111	6
 111	6	sembiante	nsubj	111	9
 111	7	più	advmod	111	9

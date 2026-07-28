@@ -584,7 +584,7 @@ line	token	word	deprel	head_line	head_token
 82	1	per	case	82	3
 82	2	la	det	82	3
 82	3	ragion	obl	82	8
-82	4	che	mark	82	5
+82	4	che	obj	82	5
 82	5	di'	acl:relcl	82	3
 82	6	quinci	advmod	82	8
 82	7	si	expl	82	8

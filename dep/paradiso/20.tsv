@@ -531,7 +531,7 @@ line	token	word	deprel	head_line	head_token
 77	7	disio	obl	78	6
 78	1	ciascuna	det	78	2
 78	2	cosa	nsubj	78	6
-78	3	qual	mark	78	5
+78	3	qual	attr	78	5
 78	4	ell'	nsubj	78	5
 78	5	è	advcl	78	6
 78	6	diventa	acl:relcl	77	4

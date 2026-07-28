@@ -701,7 +701,7 @@ line	token	word	deprel	head_line	head_token
 98	6	dov'	case	98	8
 98	7	io	nsubj	98	8
 98	8	stava	advcl	98	2
-99	1	ond'	mark	99	4
+99	1	ond'	obl	99	4
 99	2	io	nsubj	99	4
 99	3	mi	obj	99	8
 99	4	feci	advcl	97	3

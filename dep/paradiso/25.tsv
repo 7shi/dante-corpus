@@ -337,7 +337,7 @@ line	token	word	deprel	head_line	head_token
 47	3	tua	amod	47	2
 47	4	e	cc	47	5
 47	5	dì	conj	46	1
-47	6	onde	mark	47	9
+47	6	onde	obl	47	9
 47	7	a	case	47	8
 47	8	te	obl	47	9
 47	9	venne	ccomp	47	5

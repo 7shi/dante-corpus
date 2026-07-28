@@ -87,7 +87,7 @@ line	token	word	deprel	head_line	head_token
 13	5	sembianza	obl	13	7
 13	6	sua	det:poss	13	5
 13	7	divenne	conj	12	1
-14	1	qual	mark	14	2
+14	1	qual	attr	14	2
 14	2	diverrebbe	advcl	13	7
 14	3	Iove	nsubj	14	2
 14	4	s'	mark	15	1
@@ -533,7 +533,7 @@ line	token	word	deprel	head_line	head_token
 79	1	Da	case	79	3
 79	2	l'	det	79	3
 79	3	ora	obl	80	2
-79	4	ch'	mark	79	7
+79	4	ch'	obl	79	7
 79	5	ïo	nsubj	79	7
 79	6	avea	aux	79	7
 79	7	guardato	acl:relcl	79	3

@@ -1,5 +1,41 @@
 # skel — Layer 5 correction history
 
+## Phase 5n: the `mark` bucket, resolved as a Layer-4 correction (2026-07-28)
+
+Baseline: **0 hard, 3746 soft** (the Phase 5m state). 3746 → **3725** (−21). Zero model calls,
+zero checker code changed, zero skel artifacts touched — the whole round is 22 retagged rows in
+`dep/`, and the full reading of all 35 instances lives in
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+This is the second correction Layer 5's audit role produced (Phase 5i was the first), and it
+closes the last **open** row of the `extra_arg` direct-child triage table apart from `advcl`.
+The population: Layer 4 tags a relative or interrogative word `mark` on a predicate, and the
+LLM — which never sees that parse — cites the same token as an argument of it.
+
+**Why a correction and not a rule.** All 35 were read against their terzine, and the population
+is mixed the way the clitic-case one was: 22 are Layer-4 mistags (the word fills a real argument
+slot — `poi mi farai, **quantunque** vorrai, fretta`; `per la ragion **che** di'`; `**qual**
+diverrebbe Iove`), 11 are cases where Layer 4 is right and the LLM misreads (complex
+subordinators `secondo che`, comparative and consecutive `che`, the idiomatic concessives `qual
+che si sia` / `che che li appaia`), and 2 need a multi-edge restructuring this round is not
+scoped to. **No gate separates them.** Layer 2's POS is not usable either — it calls most of
+these words "conjunction", including the ones that are plainly relative pronouns. A blanket
+`mark` exemption would have swallowed the 11 correct Layer-4 tags along with the mistags, which
+is exactly what PLAN.md's *What is deliberately not proposed* warned against.
+
+**Measured.** `dep --check` stays **0 hard, 0 soft**; `pytest` 121 passed. All 22 retags closed
+their `extra_arg` violation; the net is −21 rather than −22 because paradiso 27:79 (`Da l'ora
+**ch'**ïo avea guardato prima`) **converts** instead of closing — `ch'` is a temporal oblique,
+which is what the retag says, but the LLM had cited it as an `obj`, so the divergence is now
+reported as a `role_mismatch` against a reading that is still wrong. That is the checker
+classifying more precisely rather than the correction failing, the same sign rule C gave in
+Phase 5a.
+
+**Current state**: `make -C skel check` — **0 hard, 3725 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13713, 78.6%; Δ2194 across Phase 5). By kind: `extra_arg`
+1735, `missing_arg` 1239, `role_mismatch` 476, `extra_tuple` 155, `membership` 94,
+`missing_tuple` 24, `unknown_role` 2.
+
 ## Checker Phase 5m: rule S — `nmod` complements of the predicate (2026-07-28)
 
 Baseline: **0 hard, 3808 soft** (the Phase 5l state). 3808 → **3746** (−62), all `extra_arg`
@@ -43,7 +79,7 @@ literally present on that edge, and naming a different one stays flagged.
 Three tests in `tests/test_skel.py` (accepted; different `case` lemma still flagged; `nmod` of a
 non-predicate head still flagged), 121 passing.
 
-**Current state**: `make -C skel check` — **0 hard, 3746 soft** (down from 17438 at the first
+**State at this phase**: `make -C skel check` — **0 hard, 3746 soft** (down from 17438 at the first
 full-corpus measurement, overall Δ13692, 78.5%; Δ2173 across Phase 5). By kind: `extra_arg`
 1757, `missing_arg` 1239, `role_mismatch` 475, `extra_tuple` 155, `membership` 94,
 `missing_tuple` 24, `unknown_role` 2.

@@ -22,7 +22,7 @@ line	token	word	deprel	head_line	head_token
 4	2	è	advcl	8	2
 4	3	dal	case	4	4
 4	4	punto	obl	4	2
-4	5	che	mark	4	8
+4	5	che	obj	4	8
 4	6	'l	det	4	7
 4	7	cenìt	nsubj	4	8
 4	8	inlibra	acl:relcl	4	4
