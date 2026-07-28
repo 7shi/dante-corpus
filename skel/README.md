@@ -9,12 +9,13 @@ LLM's roles and the derivation's roles are directly comparable and the corpus st
 canon-neutral.
 
 **Status: built for all 100 cantos, checker refined through Phase 5o, one Phase 5e `--fix` round
-run, and two Layer-4 correction rounds (Phases 5i and 5n) fed back into `dep/`.**
-`make -C skel check`: **0 hard, 3712 soft** violations (down from 17438 at the first
+run, and four Layer-4 correction rounds (Phases 5i, 5n and 5p's two) fed back into `dep/`.**
+`make -C skel check`: **0 hard, 3702 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
-3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m, 3725 after Phase 5n).
+3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m, 3725 after Phase 5n, 3712 after
+Phase 5o).
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
@@ -287,8 +288,17 @@ closes the last open row of the `extra_arg` direct-child bucket: the other 35 `a
 give a complement role (`ccomp`/`xcomp`) over an adverbial clause, which is the
 complement-vs-adjunct distinction and would need the verb lexicon Phase 5k refused — after
 excluding the copular/aspectual matrix verbs the remainder is 43 instances over 37 lemmas, so no
-cheaper gate exists. They stay flagged, with a hand-verified `dep/` correction round over the ~8
-plausible complement cases recorded as an option.
+cheaper gate exists. 6 of them turned out to be Layer-4 mistags and were retagged by Phase 5p; the other 29 stay
+flagged.
+
+After Phase 5p (2026-07-28, two Layer-4 correction rounds, not a checker change): **0 hard, 3702
+soft** — `extra_arg` 1722 → **1714**, `missing_arg` 1239 → **1238**, `role_mismatch` 476 →
+**475**. Round A retagged 6 of Phase 5o's 35 `ccomp`/`xcomp`-over-`advcl` instances (5 →
+`ccomp`, 1 → `csubj`, plus 2 supporting rows) and left the 29 where Layer 4 is right — purposive
+`per`/`a` + infinitive, consecutive `sì`/`tanto … che`, conditional and temporal adverbials,
+gerunds after perception verbs, depictive adjectives. Round B closed the two multi-edge
+deferrals Phase 5n had left (purgatorio 8:114, purgatorio 22:15). `dep --check` stayed 0/0; see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
 ## Next steps
 

@@ -695,7 +695,7 @@ line	token	word	deprel	head_line	head_token
 99	3	lo	det	99	5
 99	4	suo	det:poss	99	5
 99	5	corso	obj	99	6
-99	6	prende	advcl	98	1
+99	6	prende	ccomp	98	1
 100	1	dal	case	100	3
 100	2	divino	amod	100	3
 100	3	'ntelletto	obl	99	6

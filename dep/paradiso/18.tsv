@@ -358,7 +358,7 @@ line	token	word	deprel	head_line	head_token
 51	5	cantor	obl	51	2
 51	6	del	case	51	7
 51	7	cielo	nmod	51	5
-51	8	artista	advcl	50	1
+51	8	artista	ccomp	50	1
 52	1	Io	nsubj	52	3
 52	2	mi	obj	52	3
 52	3	rivolsi	root	0	0

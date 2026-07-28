@@ -181,3 +181,70 @@ soft** (−21). All 22 closed their `extra_arg`; the net is −21 because paradi
 rather than closes — there `ch'` is a temporal oblique, and the LLM had cited it as an `obj`, so
 the divergence is now correctly reported as a `role_mismatch` against a reading that is still
 wrong. The 19 cantos' content hashes change, as expected for an artifact correction.
+
+## Clausal complements mistagged `advcl`, plus the two `mark` deferrals (2026-07-28)
+
+The third and fourth Layer-4 correction rounds Layer 5's audit produced, run together (same
+procedure as the two rounds above). Two populations, 14 rows across 7 cantos, no model call:
+
+**Round A — `advcl` over a clausal complement (7 rows, 6 units).** skel's Phase 5o verdict on the
+`extra_arg` direct-child `advcl` bucket left 35 instances where Layer 4 attaches a clause as an
+adverbial (`advcl`) while the LLM — which never sees this parse — cites it as a complement
+(`ccomp` 18, `xcomp` 14, `subj` 2, `obj` 1) of the same predicate. The complement-vs-adjunct
+distinction is not mechanizable here (it needs a verb lexicon; see [`../skel/PLAN.md`](../skel/PLAN.md)),
+so all 35 were read against their terzine with the whole dep sub-tree, and the corpus-wide
+convention was measured first: `ccomp` is a live tag for clauses marked by `che`/`ch'` (520),
+`se` (45) and `come` (48), and `csubj` for `che` (24), so each retag below uses a deprel the
+corpus already uses for that marker.
+
+**6 retagged**, each an argument slot of the matrix predicate that no other core argument
+occupied:
+
+- **5 → `ccomp`** — an indirect question or content clause read as the complement of a verb of
+  saying, showing, recalling or enduring: `nota … **come natura lo suo corso prende**` (inferno
+  11:99), `Ch'avete … sofferto … **che 'l giardin de lo 'mperio sia diserto**` (purgatorio
+  6:105, with `Ch'` retagged below), `Ricorditi, lettor, **se mai … ti colse nebbia**`
+  (purgatorio 17:2), `mostrommi l'alma … **qual era … artista**` (paradiso 18:51), `ciascuna
+  cosa **qual ell' è** diventa` (paradiso 20:78 — the companion edge to the `qual` → `attr`
+  retag of the round above).
+- **1 → `csubj`** — `Quant' è **che tu venisti**` (purgatorio 8:56): the `che` clause is the
+  logical subject of `è`, so `Quant'` (Layer 4's `nsubj`) is retagged `attr` in the same unit,
+  the predicative it actually is.
+
+Plus **1 supporting row**: purgatorio 6:103 `Ch'` `obj` → `mark`. The line reads "**Ch'**avete tu
+e 'l tuo padre sofferto … che 'l giardin … sia diserto" — the initial `Ch'` is causal *ché*
+("for"), not the object of `sofferto`; the object slot is the `che` clause. Retagging the clause
+alone would have given `sofferto` both an `obj` and a `ccomp` for one slot, which is the gate the
+previous round's deferrals were held on.
+
+**29 left as they are** — Layer 4 is right, or nothing decides. They fall into recurring shapes
+worth recording so they are not re-triaged: purposive `per`/`a` + infinitive (`vegno **per
+menarvi**`, `Correte al monte **a spogliarvi**`, `dimandai **per darti forza**` — 10),
+consecutive `sì`/`tanto` … `che` (`non sì **ch'io non discernissi**`, `tanto puote **che … l'aura
+impregna**` — 8), conditional and temporal adverbials the LLM promotes to complements (`non ti
+maravigliar **s'io la rincalzo**`, `dimmi, **se tu sai**, perché…`, `quanto mi piacque **quando ti
+vidi**`), gerunds after a perception or inceptive verb (`udi' **cantando**`, `cominciò «Ave
+Maria» **cantando**`, `vedine due venir **dando**`), and depictive adjectives (`Già **contento**
+requïevi`) — the last confirmed conventional rather than anomalous by the corpus sweep, which
+finds 350 `advcl` heads with an adjective POS. `supplica … tanto **che possa levarsi**`
+(paradiso 33:26) was read and left with the consecutives: `tanto … che` is the same shape, and
+the content-of-supplication reading is not decided by anything in the tree.
+
+**Round B — the two multi-edge deferrals of the `mark` round (6 rows, 2 units).** Both were read
+in that round and left because a single-row retag would have created a second core argument;
+each is now closed with the full restructuring:
+
+- purgatorio 8:114 `tanta cera **quant'** è mestiere` — `quant'` `mark` → `nsubj` and `mestiere`
+  `nsubj` → `attr`: "as much wax **as is needful**", where `quanto` is the subject of `è` and
+  `mestiere` its predicate nominal. (`è` stays attached to `tanta`; the correlative's attachment
+  is not what the divergence is about.)
+- purgatorio 22:15 `Giovenale, **che** la tua affezion mi fé palese` — four rows: `che` `mark` →
+  `nsubj` (relative subject, antecedent Giovenale), `affezion` `nsubj` → `obj`, `palese` `obj` →
+  `attr` (predicative complement), and `fé` re-attached from `ora` (13:4) to `Giovenale` (14:6),
+  its actual antecedent.
+
+`dep --check` after both rounds: **0 hard, 0 soft** — unchanged. `skel --check`: **3712 → 3702
+soft** (−10; Round A −7, Round B −3). The one violation these rounds could not close is Layer 2's,
+not Layer 4's: purgatorio 8:114 `quant'` still reports `argument (114, 1) for role subj heads no
+NP/pronoun/predicate`, because that check reads the morphology POS, which calls the word a
+conjunction. The 7 cantos' content hashes change, as expected for an artifact correction.

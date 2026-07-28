@@ -1,5 +1,38 @@
 # skel — Layer 5 correction history
 
+## Phase 5p: two Layer-4 correction rounds — clausal complements and the `mark` deferrals (2026-07-28)
+
+Baseline: **0 hard, 3702 soft** (from 3712, the Phase 5o state) — −10, no checker code and no
+skel artifact touched, zero model calls. Both rounds are Layer-4 edits, the third and fourth the
+audit role has produced; the full reading is in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md),
+and this section records only what it means for Layer 5.
+
+- **Round A (−7)** — the `ccomp`/`xcomp`-over-`advcl` population Phase 5o left with a verdict but
+  no rule. All 35 were re-read with their sub-trees; **6 were retagged** (5 `advcl` → `ccomp`, 1
+  → `csubj`, plus one supporting `obj` → `mark` and one `nsubj` → `attr`), and **29 were left**
+  because Layer 4 is right. Phase 5o predicted 5-8 plausible cases and named four of them; three
+  of those four were retagged and the fourth (`supplica … tanto che possa levarsi`) was left with
+  the consecutives, `tanto … che` being the shape Phase 5o had already assigned to Layer 4.
+  The 29 residuals are now classified by shape in `dep/CORRECTIONS.md`, so the class does not
+  need re-triaging: purposive `per`/`a` + infinitive (10), consecutive `sì`/`tanto … che` (8),
+  conditional/temporal adverbials, gerunds after perception or inceptive verbs, and depictive
+  adjectives — the last confirmed conventional by a corpus sweep (350 `advcl` heads carry an
+  adjective POS).
+- **Round B (−3)** — the two multi-edge deferrals of the Phase 5n `mark` round (purgatorio 8:114,
+  purgatorio 22:15), closed with the full restructuring (2 and 4 rows) rather than the single-row
+  retag 5n was scoped to.
+
+Both rounds kept `dep --check` at **0 hard, 0 soft**. One flagged violation survived by design:
+purgatorio 8:114 `quant'` still reports `argument (114, 1) for role subj heads no
+NP/pronoun/predicate`, which reads Layer 2's POS (it calls the word a conjunction), not Layer 4's
+tree.
+
+By kind, `extra_arg` 1722 → **1714**, `missing_arg` 1239 → **1238** and `role_mismatch` 476 →
+**475**. With this the audit route
+Phases 5i/5n/5p worked has no measured population left either: every structural bucket the plan
+enumerated is closed, and the residual is the reading disagreement the user-run `--fix` pass is
+for.
+
 ## Checker Phase 5o: rule T — marked adverbial clauses, and the `advcl` verdict (2026-07-28)
 
 Baseline: **0 hard, 3725 soft** (the Phase 5n state). 3725 → **3712** (−13), all `extra_arg`
@@ -58,7 +91,8 @@ distribution confirms no cheaper gate exists: after splitting off the copular/as
 exactly once — not a coherent population. The honest residual route is Phase 5i/5n's, a
 hand-verified `dep/` correction round over the handful of plausible complement cases (**5-8** of
 the 35 on this reading, each needing the sub-tree check 5n established); it is recorded as an
-option, not opened here, and is worth at most −8.
+option, not opened here, and is worth at most −8. **It ran as Phase 5p** — 6 retagged, −7 with
+its supporting rows.
 
 Four tests in `tests/test_skel.py` (accepted; non-preposition marker still flagged; a given
 `xcomp` over an `advcl` still flagged; an `advcl` of another verb still flagged), 125 passing.

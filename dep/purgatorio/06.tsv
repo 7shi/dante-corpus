@@ -740,7 +740,7 @@ line	token	word	deprel	head_line	head_token
 102	6	temenza	obj	102	8
 102	7	n'	case	102	6
 102	8	aggia	advcl	101	9
-103	1	Ch'	obj	103	8
+103	1	Ch'	mark	103	8
 103	2	avete	aux	103	8
 103	3	tu	nsubj	103	8
 103	4	e	cc	103	7
@@ -760,7 +760,7 @@ line	token	word	deprel	head_line	head_token
 105	5	lo	det	105	6
 105	6	'mperio	nmod	105	3
 105	7	sia	cop	105	8
-105	8	diserto	advcl	103	8
+105	8	diserto	ccomp	103	8
 106	1	Vieni	root	0	0
 106	2	a	mark	106	3
 106	3	veder	xcomp	106	1

@@ -7,7 +7,7 @@ line	token	word	deprel	head_line	head_token
 1	6	l'	det	1	7
 1	7	alpe	obl	2	2
 2	1	ti	iobj	2	2
-2	2	colse	advcl	1	1
+2	2	colse	ccomp	1	1
 2	3	nebbia	nsubj	2	2
 2	4	per	case	2	6
 2	5	la	det	2	6

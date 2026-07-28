@@ -392,11 +392,11 @@ line	token	word	deprel	head_line	head_token
 55	7	tacque	root	0	0
 56	1	poi	advmod	56	2
 56	2	dimandò	conj	55	7
-56	3	Quant'	nsubj	56	4
+56	3	Quant'	attr	56	4
 56	4	è	ccomp	56	2
 56	5	che	mark	56	7
 56	6	tu	nsubj	56	7
-56	7	venisti	advcl	56	4
+56	7	venisti	csubj	56	4
 57	1	a	case	57	2
 57	2	piè	obl	56	7
 57	3	del	case	57	4
@@ -823,9 +823,9 @@ line	token	word	deprel	head_line	head_token
 113	4	arbitrio	obl	113	1
 113	5	tanta	det	113	6
 113	6	cera	obj	113	1
-114	1	quant'	mark	114	2
+114	1	quant'	nsubj	114	2
 114	2	è	advcl	113	5
-114	3	mestiere	nsubj	114	2
+114	3	mestiere	attr	114	2
 114	4	infino	advmod	114	2
 114	5	al	case	114	7
 114	6	sommo	amod	114	7

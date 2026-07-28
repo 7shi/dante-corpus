@@ -533,7 +533,7 @@ line	token	word	deprel	head_line	head_token
 78	2	cosa	nsubj	78	6
 78	3	qual	attr	78	5
 78	4	ell'	nsubj	78	5
-78	5	è	advcl	78	6
+78	5	è	ccomp	78	6
 78	6	diventa	acl:relcl	77	4
 79	1	E	cc	79	2
 79	2	avvegna	root	0	0

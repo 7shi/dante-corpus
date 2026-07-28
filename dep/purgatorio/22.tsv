@@ -97,13 +97,13 @@ line	token	word	deprel	head_line	head_token
 14	4	lo	det	14	5
 14	5	'nferno	nmod	14	2
 14	6	Giovenale	nsubj	13	8
-15	1	che	mark	15	6
+15	1	che	nsubj	15	6
 15	2	la	det	15	4
 15	3	tua	amod	15	4
-15	4	affezion	nsubj	15	6
+15	4	affezion	obj	15	6
 15	5	mi	iobj	15	6
-15	6	fé	acl:relcl	13	4
-15	7	palese	obj	15	6
+15	6	fé	acl:relcl	14	6
+15	7	palese	attr	15	6
 16	1	mia	amod	16	2
 16	2	benvoglienza	nsubj	16	5
 16	3	inverso	case	16	4
