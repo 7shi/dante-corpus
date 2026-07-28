@@ -5,7 +5,7 @@
 **Next up: Layer 5 (predicate-argument skeleton), Phase 5 — driving the residual soft violations
 to zero, tracked in [`skel/PLAN.md`](skel/PLAN.md).** Layers 1–4 are implemented and merged to
 `main`; Layer 5's core module, build driver, and checker are also done, the checker having been
-refined through Phases 0-5n — see *The layers* below and [`skel/README.md`](skel/README.md) for
+refined through Phases 0-5o — see *The layers* below and [`skel/README.md`](skel/README.md) for
 its design and current status.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
@@ -22,21 +22,22 @@ its design and current status.
   built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — see
   [`dep/README.md`](dep/README.md)'s *Check* section and
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
-- **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through four
-  mechanical phases (normalization, authority model, `--repair`, double-listing/elided-copula
-  whitelist); see [`skel/README.md`](skel/README.md). `dante_corpus/skel.py` (dataclasses, role
+- **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through Phases 0-5o
+  — the four mechanical phases (normalization, authority model, `--repair`,
+  double-listing/elided-copula whitelist) plus Phase 5's rule series; see
+  [`skel/README.md`](skel/README.md). `dante_corpus/skel.py` (dataclasses, role
   vocabulary, deterministic derivation, table parsing, validation, TSV I/O, serve-time joins),
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3725 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3712 soft** (down from 17438 at the first full-corpus
   measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round) — see
   [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history. **In progress**:
   Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) — the measured finding is that `--fix` yields a
   flat ~0.11 violations per LLM call regardless of how the flagged set is composed, so the
   residual is closed by deterministic checker rules and cross-layer corrections instead. Phases
-  5a-5n have landed (rules C/D/L/M/N/O/P/Q/R/S, two re-triage rounds, one full `--fix` pass, and
+  5a-5o have landed (rules C/D/L/M/N/O/P/Q/R/S/T, two re-triage rounds, one full `--fix` pass, and
   the two
   Layer-4 correction rounds Layer 5's audit role produced — the clitic datives of Phase 5i and
   the `mark` mistags of Phase 5n; see
@@ -50,12 +51,12 @@ artifacts now live on `main`.
 **Next work**
 
 1. **Layer 5 Phase 5** — eliminate the residual soft violations, tracked in
-   [`skel/PLAN.md`](skel/PLAN.md) (*Next session — start here*). Corpus is at **0 hard, 3725
-   soft**. The head item is the `advcl` row (51) — the last open row of the `extra_arg`
-   direct-child triage — and behind it the rest of `extra_arg` (1735) and `missing_arg` (1239),
-   which together are 80% of what remains; Phase 5l/5m/5n's re-triage maps them. The
-   `subj`/`obj` reversals are the one class left for a user-run `--fix` round, and are
-   deliberately last.
+   [`skel/PLAN.md`](skel/PLAN.md) (*Next session — start here*). Corpus is at **0 hard, 3712
+   soft**. Phase 5o closed the last open row of the `extra_arg` direct-child triage (`advcl`),
+   so **every measured structural population now has a verdict and the deterministic route is at
+   its end**. What is left — `extra_arg` (1722) and `missing_arg` (1239), 80% of the residual —
+   is reading disagreement, so the head item is now **one user-run `--fix` pass**; two small
+   hand-verified `dep/` correction rounds (~−10) remain as assistant work alongside it.
 
 ## Why this lives in the corpus
 
@@ -252,8 +253,8 @@ discipline already used for normalization and quotes.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
-   `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5n
-   (`--check`: 0 hard / 3725 soft). Driving that residual to zero is the remaining work, tracked
+   `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5o
+   (`--check`: 0 hard / 3712 soft). Driving that residual to zero is the remaining work, tracked
    in [`skel/PLAN.md`](skel/PLAN.md). See [`skel/README.md`](skel/README.md).
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.

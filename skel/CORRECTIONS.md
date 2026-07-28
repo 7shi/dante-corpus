@@ -1,5 +1,73 @@
 # skel — Layer 5 correction history
 
+## Checker Phase 5o: rule T — marked adverbial clauses, and the `advcl` verdict (2026-07-28)
+
+Baseline: **0 hard, 3725 soft** (the Phase 5n state). 3725 → **3712** (−13), all `extra_arg`
+(1735 → **1722**); every other kind unchanged. Checker-side, zero model calls, zero artifacts
+touched. This closes the **last open row** of the `extra_arg` direct-child bucket.
+
+The 51 `advcl` instances were measured before proposing, as the plan required, and they split
+into two populations that need opposite treatment:
+
+- **16 give an oblique role** (`obl:per` 8, `obl:a` 4, bare `obl` 3, `obl:senza` 1). These are
+  **prepositional infinitive clauses** — "un angel che s'appresta **per venir** verso noi", "**A
+  descriver** lor forme più non spargo rime", "Ciascun si fida del beneficio tuo **sanza
+  giurarlo**", "discesi tanto sol **per farti** festa". Layer 4 attaches them as `advcl`, outside
+  `ARG_DEPRELS`, so `derive_unit` cannot produce them at all; the LLM reads the same edge as an
+  oblique and names the preposition literally sitting on it as a `mark`.
+- **35 give a complement role** (`ccomp` 18, `xcomp` 14, `subj` 2, `obj` 1) — the
+  complement-vs-adjunct distinction, treated separately below.
+
+**Rule T (−13)** (`_marked_adverbial_clause`): a given `obl:<lemma>` whose argument is an `advcl`
+child **of the predicate itself** and carries a `mark`/`case` child naming that same preposition.
+This is rule S's shape with `advcl` in place of `nmod`, and it inherits rule N's gate — the lemma
+must be one the tree itself carries. `_classify_divergence`'s `case_lemmas` map gained a sibling
+`marker_lemmas` that also indexes `mark` children, because the preposition of an infinitive
+clause is a `mark`, not a `case`; `case_lemmas` is unchanged, so rules L/N/O/S keep their exact
+populations (measured: their counts do not move).
+
+**The loose variant was measured at a further −2 and rejected.** Accepting a bare given `obl`
+whenever the clause carries any marker admits markers that are not prepositions at all — "infin
+ch'el si raggiunge **ove** la tirannia convien che gema" (marker `ove`) and "**quando** a' vapori"
+— where nothing in the tree confirms an oblique reading. This is the same narrowing rules N, O
+and S apply, and the third time in Phase 5 that measuring the loose variant changed the shipped
+rule.
+
+**The `ccomp`/`xcomp` half stays flagged — verdict, not rule.** Read against their terzine, the
+35 are mixed in exactly the way the `mark` and clitic populations were, and the split is a
+*lexical argument-structure* judgment:
+
+- **Layer 4 is right in the purposive and consecutive cases**, where the LLM over-promotes an
+  adjunct to a complement: "i' vegno **per menarvi** a l'altra riva", "non sì **ch'io non
+  discernessi** in parte", "e fé sì lor, **che ciascun se ne loda**", "la percossa pianta tanto
+  puote, **che de la sua virtute l'aura impregna**".
+- **Layer 4 looks wrong in the indirect questions and true complements**: "nota … **come natura
+  lo suo corso prende**", "Ch'avete tu e 'l tuo padre sofferto … **che 'l giardin de lo 'mperio
+  sia diserto**", "supplica a te … **che possa … levarsi**", "mostrommi l'alma … **qual era tra i
+  cantor del cielo artista**".
+
+  The boundary between the two is genuinely fine, which is the argument against ruling on it: in
+  "dimmi, **se tu sai**, perché tai crolli diè" the `se` clause is a parenthetical conditional and
+  Layer 4's `advcl` is right, while in the superficially identical "Ricorditi, lettor, **se** mai
+  … ti colse nebbia" it heads the recalled content. Only a per-case reading separates them.
+
+Separating the two requires knowing which matrix verbs take clausal complements, i.e. the verb
+lexicon Phase 5k refused for the predicative-PP half of the clausal cluster. The matrix-lemma
+distribution confirms no cheaper gate exists: after splitting off the copular/aspectual verbs
+(8 instances), the remaining 43 are spread over **37 distinct lemmas**, 33 of them appearing
+exactly once — not a coherent population. The honest residual route is Phase 5i/5n's, a
+hand-verified `dep/` correction round over the handful of plausible complement cases (**5-8** of
+the 35 on this reading, each needing the sub-tree check 5n established); it is recorded as an
+option, not opened here, and is worth at most −8.
+
+Four tests in `tests/test_skel.py` (accepted; non-preposition marker still flagged; a given
+`xcomp` over an `advcl` still flagged; an `advcl` of another verb still flagged), 125 passing.
+
+**State at this phase**: `make -C skel check` — **0 hard, 3712 soft** (down from 17438 at the
+first full-corpus measurement, overall Δ13726, 78.7%; Δ2207 across Phase 5). By kind: `extra_arg`
+1722, `missing_arg` 1239, `role_mismatch` 476, `extra_tuple` 155, `membership` 94,
+`missing_tuple` 24, `unknown_role` 2.
+
 ## Phase 5n: the `mark` bucket, resolved as a Layer-4 correction (2026-07-28)
 
 Baseline: **0 hard, 3746 soft** (the Phase 5m state). 3746 → **3725** (−21). Zero model calls,

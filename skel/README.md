@@ -8,13 +8,13 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5m, one Phase 5e `--fix` round
+**Status: built for all 100 cantos, checker refined through Phase 5o, one Phase 5e `--fix` round
 run, and two Layer-4 correction rounds (Phases 5i and 5n) fed back into `dep/`.**
-`make -C skel check`: **0 hard, 3725 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 3712 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
-3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m).
+3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m, 3725 after Phase 5n).
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
@@ -277,6 +277,18 @@ where Layer 4 is right and the LLM misreads (complex subordinators, comparative 
 `che`, the idiomatic concessives), and 2 need a multi-edge restructuring. No gate separates
 them, so this is the second audit finding routed back to Layer 4 rather than absorbed by a
 checker rule — see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md). `dep --check` stayed 0/0.
+
+After Phase 5o (2026-07-28, checker-only, rule T): **0 hard, 3712 soft** — `extra_arg` 1735 →
+**1722** (−13), every other kind unchanged. A given `obl:<lemma>` whose argument is an `advcl`
+child of the predicate itself and carries a `mark`/`case` child naming that same preposition —
+rule S's shape with `advcl` in place of `nmod`, covering the prepositional infinitive clause
+("s'appresta **per venir** verso noi", "**A descriver** lor forme più non spargo rime"). This
+closes the last open row of the `extra_arg` direct-child bucket: the other 35 `advcl` instances
+give a complement role (`ccomp`/`xcomp`) over an adverbial clause, which is the
+complement-vs-adjunct distinction and would need the verb lexicon Phase 5k refused — after
+excluding the copular/aspectual matrix verbs the remainder is 43 instances over 37 lemmas, so no
+cheaper gate exists. They stay flagged, with a hand-verified `dep/` correction round over the ~8
+plausible complement cases recorded as an option.
 
 ## Next steps
 

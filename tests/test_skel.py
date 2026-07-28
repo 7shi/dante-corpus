@@ -889,6 +889,78 @@ def test_classify_divergence_nmod_complement_requires_predicate_as_head():
     assert any(v.detail.startswith("extra_arg") and v.arg == (1, 3) for v in violations)
 
 
+# --- Phase 5o: rule T ------------------------------------------------------------------
+
+
+def test_classify_divergence_marked_adverbial_clause_accepted():
+    # "un angel che s'appresta per venir verso noi": the infinitive clause hangs off the
+    # predicate as `advcl` (outside ARG_DEPRELS, so derive_unit emits nothing), and its `mark`
+    # child is the very preposition the LLM names.
+    derived = {1: [skel.SkelRow(1, 2, "appresta", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "appresta", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "appresta", "obl:per", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="angel", deprel="nsubj", head_line=1,
+                           head_token=2),
+        (1, 3): dep.DepRow(line=1, token=3, word="per", deprel="mark", head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="venir", deprel="advcl", head_line=1,
+                           head_token=2),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_marked_adverbial_clause_requires_matching_marker():
+    # The rejected loose variant: a clause marked by something that is not the cited preposition
+    # — "infin ch'el si raggiunge ove la tirannia convien che gema" — leaves the oblique reading
+    # unconfirmed by the tree and stays flagged.
+    derived = {1: [skel.SkelRow(1, 2, "raggiunge", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "raggiunge", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "raggiunge", "obl:a", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="el", deprel="nsubj", head_line=1, head_token=2),
+        (1, 3): dep.DepRow(line=1, token=3, word="ove", deprel="mark", head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="convien", deprel="advcl", head_line=1,
+                           head_token=2),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 4) for v in violations)
+
+
+def test_classify_divergence_marked_adverbial_clause_leaves_complement_readings_flagged():
+    # The complement-vs-adjunct half of the `advcl` bucket: a given `xcomp`/`ccomp` over an
+    # adverbial clause is a lexical argument-structure judgment, not a preposition the tree
+    # carries, so rule T does not touch it ("i' vegno per menarvi a l'altra riva").
+    derived = {1: [skel.SkelRow(1, 2, "vegno", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "vegno", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "vegno", "xcomp", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="i", deprel="nsubj", head_line=1, head_token=2),
+        (1, 3): dep.DepRow(line=1, token=3, word="per", deprel="mark", head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="menarvi", deprel="advcl", head_line=1,
+                           head_token=2),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 4) for v in violations)
+
+
+def test_classify_divergence_marked_adverbial_clause_requires_predicate_as_head():
+    # An `advcl` of some other verb in the unit is not this predicate's own edge.
+    derived = {1: [skel.SkelRow(1, 1, "disse", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "disse", "subj", 1, 2),
+                 skel.SkelRow(1, 1, "disse", "obl:per", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="duca", deprel="nsubj", head_line=1,
+                           head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="venne", deprel="conj", head_line=1,
+                           head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="per", deprel="mark", head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="veder", deprel="advcl", head_line=1,
+                           head_token=3),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 5) for v in violations)
+
+
 # --- Phase 5k: rules P and Q -----------------------------------------------------------
 
 

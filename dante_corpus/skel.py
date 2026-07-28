@@ -617,6 +617,34 @@ def _nmod_complement_of_predicate(
     return role.split(":", 1)[1] in case_lemmas.get(arg, set())
 
 
+def _marked_adverbial_clause(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    marker_lemmas: dict[tuple[int, int], set[str]],
+) -> bool:
+    """Rule T: a given `obl:<lemma>` whose argument is an `advcl` child **of the predicate itself**
+    and carries a `mark`/`case` child naming that same preposition — the prepositional infinitive
+    ("s'appresta **per venir** verso noi", "**A descriver** lor forme più non spargo rime",
+    "Ciascun si fida del beneficio tuo **sanza giurarlo**"). Layer 4 attaches these as adverbial
+    clauses, which is outside `ARG_DEPRELS`, so `derive_unit` cannot produce them at all; the LLM
+    reads the same edge as an oblique and names the preposition literally sitting on it.
+
+    This is rule S's shape with `advcl` in place of `nmod`, and it inherits rule N's gate: the
+    lemma must be one the tree itself carries. That gate is what keeps it structural rather than
+    a blanket `advcl` exemption — the complement-vs-adjunct half of this deprel (a given
+    `ccomp`/`xcomp` over an adverbial clause) is a lexical argument-structure judgment and stays
+    flagged. The loose variant, accepting a bare given `obl` whenever the clause carries any
+    marker, was measured at a further −2 and **rejected**: it admits markers that are not
+    prepositions at all ("infin ch'el si raggiunge **ove** la tirannia convien che gema"), where
+    nothing in the tree confirms the oblique reading."""
+    if not OBL_RE.fullmatch(role):
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "advcl" or (row.head_line, row.head_token) != pos:
+        return False
+    return role.split(":", 1)[1] in marker_lemmas.get(arg, set())
+
+
 def _drop_nmod_obliques(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     derived_args: set[tuple[int, int]], dep_index_by_pos: dict[tuple[int, int], DepRow],
@@ -735,11 +763,15 @@ def _classify_divergence(
     # Rules L and N: the preposition lemmas each position's `case` dep children name (empty set
     # = no explicit preposition, which is what rule L turns on).
     case_lemmas: dict[tuple[int, int], set[str]] = {}
+    # Rule T: the same, widened to `mark` children — the preposition of an infinitive adverbial
+    # clause ("per venir", "a descriver") is a `mark`, not a `case`.
+    marker_lemmas: dict[tuple[int, int], set[str]] = {}
     for row in (dep_index_by_pos or {}).values():
-        if row.deprel == "case":
-            case_lemmas.setdefault((row.head_line, row.head_token), set()).add(
-                _normalize_prep_lemma(row.word.lower())
-            )
+        if row.deprel in ("case", "mark"):
+            lemma = _normalize_prep_lemma(row.word.lower())
+            marker_lemmas.setdefault((row.head_line, row.head_token), set()).add(lemma)
+            if row.deprel == "case":
+                case_lemmas.setdefault((row.head_line, row.head_token), set()).add(lemma)
     case_children = set(case_lemmas)
     given_preds = _predicate_positions_in(given)
     derived_preds = _predicate_positions_in(derived)
@@ -846,6 +878,8 @@ def _classify_divergence(
                                            morph_pos_by_position)
                     or _nmod_complement_of_predicate(pos, arg, grole, dep_index_by_pos,
                                                      case_lemmas)
+                    or _marked_adverbial_clause(pos, arg, grole, dep_index_by_pos,
+                                                marker_lemmas)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",
