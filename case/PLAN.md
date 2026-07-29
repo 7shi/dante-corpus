@@ -2,11 +2,20 @@
 
 ## Status
 
-**Proposed, not started. No artifact, no driver, no module exists yet — this directory holds
-only this file.** Nothing here is committed to; the plan's own first step is a pilot whose
-purpose is to *kill* the idea cheaply if the measurement comes out wrong. Written 2026-07-29,
-immediately after Layer 5's Phase 5 closed at **0 hard, 3551 soft**
+**Step 1 (the pilot) is built and ready to run; nothing beyond it is started.** No artifact, no
+build driver, no `dante_corpus/` module exists — this directory holds this file,
+[`CORRECTIONS.md`](CORRECTIONS.md) and the pilot harness, all on the branch `case-pilot` so the
+whole annex can be dropped in one move if the pilot kills it. Nothing here is committed to; the first step is a pilot
+whose purpose is to *kill* the idea cheaply if the measurement comes out wrong. Written
+2026-07-29, immediately after Layer 5's Phase 5 closed at **0 hard, 3551 soft**
 (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where Phase 5 ended*).
+
+**Where the pilot stands (2026-07-29).** The state check below was re-run and matches; the
+disputed population was rebuilt and came out at exactly **67 + 28**, with a **95**-position
+control group; the harness (`population.py`, `pilot.py`, `report.py`) is written and
+smoke-tested against the local debug backend. What is left is
+the **570 calls against `google:gemma-4-31b-it`** — LLM work the user runs — and then the
+verdict. Setup, method and numbers live in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 **Resuming cold? Read [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)** —
 it carries the state check, how to rebuild the disputed population, which model to use, who runs
@@ -216,8 +225,9 @@ That blindness is the whole point (see *Independence* above).
 
 ### Who runs it
 
-**The pilot is the assistant's work** — a few hundred calls, ~1 hour, no artifact written. This
-differs from the corpus pass in step 3, which is `--fix`-scale LLM regeneration and follows the
+**The harness is the assistant's work; the calls are the user's** — a few hundred calls,
+~1 hour, no artifact written. (This plan originally assigned the whole pilot to the assistant;
+in the event the user ran the calls, as they do for every other LLM-scale job here.) Step 3 is `--fix`-scale LLM regeneration and follows the
 convention Phase 5 settled on: **the user runs the corpus-scale generation**
 (cf. [`../skel/PLAN.md`](../skel/PLAN.md), where `make -C skel fix` is explicitly the user's).
 
@@ -228,8 +238,10 @@ comparison, the model and date, and the verdict. **Do this even if the verdict i
 plan.** This repository's discipline is that rejected candidates are recorded with their
 measurements (see the *rejected variants* throughout [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)
 and its *What is deliberately not proposed* counterpart in the plan); a killed case annex with a
-measured reason is a finished piece of work, not a failure to clean up. The script itself stays a
-throwaway in the scratchpad and is not committed.
+measured reason is a finished piece of work, not a failure to clean up. The scripts themselves
+live alongside it (`population.py`, `pilot.py`, `report.py`) on the branch `case-pilot`, so the
+measurement is reproducible rather than merely reported; the branch is the revert path if the
+verdict is to kill the annex.
 
 ## Sequencing
 
@@ -237,8 +249,9 @@ throwaway in the scratchpad and is not committed.
    Over the disputed clitic positions rebuilt as described above, ask for case **three times
    independently** (fresh sessions; vary the surrounding-context presentation so the runs are not
    trivially correlated), and over the control group the same way.
-   Report per-position agreement for both. Throwaway script in the scratchpad, **nothing
-   committed** except `case/CORRECTIONS.md`; cost on the order of a few hundred calls / ~1 hour.
+   Report per-position agreement for both. Harness in `case/` on the branch `case-pilot`; **no
+   artifact is written** — the deliverable is `case/CORRECTIONS.md`. Cost, as sized against the
+   rebuilt population: 190 positions × 3 runs = **570 calls**, ~1 hour.
    - **Stop rule, fixed in advance**: if the model does not agree with itself on the disputed
      positions at a clearly higher rate than on a control sample of *undisputed* clitics, the
      column is measuring noise and **this plan ends here**. A case column that waffles on exactly

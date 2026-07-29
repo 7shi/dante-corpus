@@ -1,0 +1,5578 @@
+[
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 2,
+  "unit": [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  "texts": [
+   "Però, se l'avversario d'ogne male",
+   "cortese i fu, pensando l'alto effetto",
+   "ch'uscir dovea di lui, e 'l chi e 'l quale",
+   "non pare indegno ad omo d'intelletto;",
+   "ch'e' fu de l'alma Roma e di suo impero",
+   "ne l'empireo ciel per padre eletto:",
+   "la quale e 'l quale, a voler dir lo vero,",
+   "fu stabilita per lo loco santo",
+   "u' siede il successor del maggior Piero."
+  ],
+  "line": 17,
+  "token": 2,
+  "word": "i",
+  "pred_line": 17,
+  "pred_token": 1,
+  "pred_word": "cortese",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 4,
+  "unit": [
+   51,
+   52,
+   53,
+   54
+  ],
+  "texts": [
+   "E quei che 'ntese il mio parlar coverto,",
+   "rispuose: «Io era nuovo in questo stato,",
+   "quando ci vidi venire un possente,",
+   "con segno di vittoria coronato."
+  ],
+  "line": 53,
+  "token": 2,
+  "word": "ci",
+  "pred_line": 53,
+  "pred_token": 3,
+  "pred_word": "vidi",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 6,
+  "unit": [
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "texts": [
+   "Io li rispuosi: «Ciacco, il tuo affanno",
+   "mi pesa sì, ch'a lagrimar mi 'nvita;",
+   "ma dimmi, se tu sai, a che verranno",
+   "li cittadin de la città partita;",
+   "s'alcun v'è giusto; e dimmi la cagione",
+   "per che l'ha tanta discordia assalita»."
+  ],
+  "line": 59,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 59,
+  "pred_token": 2,
+  "pred_word": "pesa",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 7,
+  "unit": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "texts": [
+   "«Pape Satàn, pape Satàn aleppe!»,",
+   "cominciò Pluto con la voce chioccia;",
+   "e quel savio gentil, che tutto seppe,",
+   "disse per confortarmi: «Non ti noccia",
+   "la tua paura; ché, poder ch'elli abbia,",
+   "non ci torrà lo scender questa roccia»."
+  ],
+  "line": 4,
+  "token": 5,
+  "word": "ti",
+  "pred_line": 4,
+  "pred_token": 6,
+  "pred_word": "noccia",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 7,
+  "unit": [
+   58,
+   59,
+   60
+  ],
+  "texts": [
+   "Mal dare e mal tener lo mondo pulcro",
+   "ha tolto loro, e posti a questa zuffa:",
+   "qual ella sia, parole non ci appulcro."
+  ],
+  "line": 59,
+  "token": 3,
+  "word": "loro",
+  "pred_line": 59,
+  "pred_token": 2,
+  "pred_word": "tolto",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 9,
+  "unit": [
+   106,
+   107,
+   108,
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Dentro li 'ntrammo sanz' alcuna guerra;",
+   "e io, ch'avea di riguardar disio",
+   "la condizion che tal fortezza serra,",
+   "com' io fui dentro, l'occhio intorno invio:",
+   "e veggio ad ogne man grande campagna,",
+   "piena di duolo e di tormento rio."
+  ],
+  "line": 106,
+  "token": 2,
+  "word": "li",
+  "pred_line": 106,
+  "pred_token": 3,
+  "pred_word": "'ntrammo",
+  "given_role": "obl:in",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 10,
+  "unit": [
+   43,
+   44,
+   45,
+   46,
+   47,
+   48
+  ],
+  "texts": [
+   "Io ch'era d'ubidir disideroso,",
+   "non gliel celai, ma tutto gliel' apersi;",
+   "ond' ei levò le ciglia un poco in suso;",
+   "poi disse: «Fieramente furo avversi",
+   "a me e a miei primi e a mia parte,",
+   "sì che per due fïate li dispersi»."
+  ],
+  "line": 44,
+  "token": 2,
+  "word": "gliel",
+  "pred_line": 44,
+  "pred_token": 3,
+  "pred_word": "celai",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun+pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 17,
+  "unit": [
+   76,
+   77,
+   78
+  ],
+  "texts": [
+   "E io, temendo no 'l più star crucciasse",
+   "lui che di poco star m'avea 'mmonito,",
+   "torna'mi in dietro da l'anime lasse."
+  ],
+  "line": 77,
+  "token": 6,
+  "word": "m'",
+  "pred_line": 77,
+  "pred_token": 8,
+  "pred_word": "'mmonito",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 17,
+  "unit": [
+   115,
+   116,
+   117
+  ],
+  "texts": [
+   "Ella sen va notando lenta lenta;",
+   "rota e discende, ma non me n'accorgo",
+   "se non che al viso e di sotto mi venta."
+  ],
+  "line": 116,
+  "token": 7,
+  "word": "n'",
+  "pred_line": 116,
+  "pred_token": 8,
+  "pred_word": "accorgo",
+  "given_role": "obl:di",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 19,
+  "unit": [
+   43,
+   44,
+   45
+  ],
+  "texts": [
+   "Lo buon maestro ancor de la sua anca",
+   "non mi dipuose, sì mi giunse al rotto",
+   "di quel che si piangeva con la zanca."
+  ],
+  "line": 44,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 44,
+  "pred_token": 6,
+  "pred_word": "giunse",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 19,
+  "unit": [
+   88,
+   89,
+   90,
+   91,
+   92
+  ],
+  "texts": [
+   "Io non so s'i' mi fui qui troppo folle,",
+   "ch'i' pur rispuosi lui a questo metro:",
+   "«Deh, or mi dì: quanto tesoro volle",
+   "Nostro Segnore in prima da san Pietro",
+   "ch'ei ponesse le chiavi in sua balìa?"
+  ],
+  "line": 89,
+  "token": 5,
+  "word": "lui",
+  "pred_line": 89,
+  "pred_token": 4,
+  "pred_word": "rispuosi",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 19,
+  "unit": [
+   97,
+   98,
+   99
+  ],
+  "texts": [
+   "Però ti sta, ché tu se' ben punito;",
+   "e guarda ben la mal tolta moneta",
+   "ch'esser ti fece contra Carlo ardito."
+  ],
+  "line": 97,
+  "token": 2,
+  "word": "ti",
+  "pred_line": 97,
+  "pred_token": 3,
+  "pred_word": "sta",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 21,
+  "unit": [
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ],
+  "texts": [
+   "Allor mi volsi come l'uom cui tarda",
+   "di veder quel che li convien fuggire",
+   "e cui paura sùbita sgagliarda,",
+   "che, per veder, non indugia 'l partire:",
+   "e vidi dietro a noi un diavol nero",
+   "correndo su per lo scoglio venire."
+  ],
+  "line": 26,
+  "token": 5,
+  "word": "li",
+  "pred_line": 26,
+  "pred_token": 6,
+  "pred_word": "convien",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 21,
+  "unit": [
+   102
+  ],
+  "texts": [
+   "E rispondien: «Sì, fa che gliel' accocchi»."
+  ],
+  "line": 102,
+  "token": 6,
+  "word": "gliel'",
+  "pred_line": 102,
+  "pred_token": 7,
+  "pred_word": "accocchi",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun+pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 23,
+  "unit": [
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Io cominciai: «O frati, i vostri mali . . . »;",
+   "ma più non dissi, ch'a l'occhio mi corse",
+   "un, crucifisso in terra con tre pali."
+  ],
+  "line": 110,
+  "token": 9,
+  "word": "mi",
+  "pred_line": 110,
+  "pred_token": 10,
+  "pred_word": "corse",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 26,
+  "unit": [
+   64,
+   65,
+   66,
+   67,
+   68,
+   69
+  ],
+  "texts": [
+   "«S'ei posson dentro da quelle faville",
+   "parlar», diss' io, «maestro, assai ten priego",
+   "e ripriego, che 'l priego vaglia mille,",
+   "che non mi facci de l'attender niego",
+   "fin che la fiamma cornuta qua vegna;",
+   "vedi che del disio ver' lei mi piego!»."
+  ],
+  "line": 65,
+  "token": 6,
+  "word": "ten",
+  "pred_line": 65,
+  "pred_token": 7,
+  "pred_word": "priego",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 26,
+  "unit": [
+   106,
+   107,
+   108,
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Io e ' compagni eravam vecchi e tardi",
+   "quando venimmo a quella foce stretta",
+   "dov' Ercule segnò li suoi riguardi",
+   "acciò che l'uom più oltre non si metta;",
+   "da la man destra mi lasciai Sibilia,",
+   "da l'altra già m'avea lasciata Setta."
+  ],
+  "line": 110,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 110,
+  "pred_token": 6,
+  "pred_word": "lasciai",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 27,
+  "unit": [
+   55,
+   56,
+   57
+  ],
+  "texts": [
+   "Ora chi se', ti priego che ne conte;",
+   "non esser duro più ch'altri sia stato,",
+   "se 'l nome tuo nel mondo tegna fronte»."
+  ],
+  "line": 55,
+  "token": 4,
+  "word": "ti",
+  "pred_line": 55,
+  "pred_token": 5,
+  "pred_word": "priego",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 28,
+  "unit": [
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  "texts": [
+   "«Né morte 'l giunse ancor, né colpa 'l mena»,",
+   "rispuose 'l mio maestro, «a tormentarlo;",
+   "ma per dar lui esperïenza piena,",
+   "a me, che morto son, convien menarlo",
+   "per lo 'nferno qua giù di giro in giro;",
+   "e quest' è ver così com' io ti parlo»."
+  ],
+  "line": 51,
+  "token": 8,
+  "word": "ti",
+  "pred_line": 51,
+  "pred_token": 9,
+  "pred_word": "parlo",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 29,
+  "unit": [
+   31,
+   32,
+   33,
+   34,
+   35,
+   36
+  ],
+  "texts": [
+   "«O duca mio, la vïolenta morte",
+   "che non li è vendicata ancor», diss' io,",
+   "«per alcun che de l'onta sia consorte,",
+   "fece lui disdegnoso; ond' el sen gio",
+   "sanza parlarmi, sì com' ïo estimo:",
+   "e in ciò m'ha el fatto a sé più pio»."
+  ],
+  "line": 32,
+  "token": 3,
+  "word": "li",
+  "pred_line": 32,
+  "pred_token": 5,
+  "pred_word": "vendicata",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 30,
+  "unit": [
+   121,
+   122,
+   123
+  ],
+  "texts": [
+   "«E te sia rea la sete onde ti crepa»,",
+   "disse 'l Greco, «la lingua, e l'acqua marcia",
+   "che 'l ventre innanzi a li occhi sì t'assiepa!»."
+  ],
+  "line": 121,
+  "token": 8,
+  "word": "ti",
+  "pred_line": 121,
+  "pred_token": 9,
+  "pred_word": "crepa",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 30,
+  "unit": [
+   124,
+   125,
+   126,
+   127,
+   128,
+   129
+  ],
+  "texts": [
+   "Allora il monetier: «Così si squarcia",
+   "la bocca tua per tuo mal come suole;",
+   "ché, s'i' ho sete e omor mi rinfarcia,",
+   "tu hai l'arsura e 'l capo che ti duole,",
+   "e per leccar lo specchio di Narcisso,",
+   "non vorresti a 'nvitar molte parole»."
+  ],
+  "line": 126,
+  "token": 8,
+  "word": "mi",
+  "pred_line": 126,
+  "pred_token": 9,
+  "pred_word": "rinfarcia",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 30,
+  "unit": [
+   136,
+   137,
+   138,
+   139,
+   140,
+   141
+  ],
+  "texts": [
+   "Qual è colui che suo dannaggio sogna,",
+   "che sognando desidera sognare,",
+   "sì che quel ch'è, come non fosse, agogna,",
+   "tal mi fec' io, non possendo parlare,",
+   "che disïava scusarmi, e scusava",
+   "me tuttavia, e nol mi credea fare."
+  ],
+  "line": 141,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 141,
+  "pred_token": 6,
+  "pred_word": "credea",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 33,
+  "unit": [
+   148,
+   149,
+   150
+  ],
+  "texts": [
+   "Ma distendi oggimai in qua la mano;",
+   "aprimi li occhi». E io non gliel' apersi;",
+   "e cortesia fu lui esser villano."
+  ],
+  "line": 149,
+  "token": 7,
+  "word": "gliel'",
+  "pred_line": 149,
+  "pred_token": 8,
+  "pred_word": "apersi",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun+pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "inferno",
+  "canto": 34,
+  "unit": [
+   100,
+   101,
+   102,
+   103,
+   104,
+   105
+  ],
+  "texts": [
+   "«Prima ch'io de l'abisso mi divella,",
+   "maestro mio», diss' io quando fui dritto,",
+   "«a trarmi d'erro un poco mi favella:",
+   "ov' è la ghiaccia? e questi com' è fitto",
+   "sì sottosopra? e come, in sì poc' ora,",
+   "da sera a mane ha fatto il sol tragitto?»."
+  ],
+  "line": 102,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 102,
+  "pred_token": 8,
+  "pred_word": "favella",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 3,
+  "unit": [
+   136,
+   137,
+   138,
+   139,
+   140,
+   141
+  ],
+  "texts": [
+   "Vero è che quale in contumacia more",
+   "di Santa Chiesa, ancor ch'al fin si penta,",
+   "star li convien da questa ripa in fore,",
+   "per ognun tempo ch'elli è stato, trenta,",
+   "in sua presunzïon, se tal decreto",
+   "più corto per buon prieghi non diventa."
+  ],
+  "line": 139,
+  "token": 4,
+  "word": "ch'",
+  "pred_line": 139,
+  "pred_token": 7,
+  "pred_word": "stato",
+  "given_role": "obl:per",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 7,
+  "unit": [
+   46,
+   47,
+   48
+  ],
+  "texts": [
+   "Anime sono a destra qua remote;",
+   "se mi consenti, io ti merrò ad esse,",
+   "e non sanza diletto ti fier note»."
+  ],
+  "line": 47,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 47,
+  "pred_token": 3,
+  "pred_word": "consenti",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 9,
+  "unit": [
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42
+  ],
+  "texts": [
+   "Non altrimenti Achille si riscosse,",
+   "li occhi svegliati rivolgendo in giro",
+   "e non sappiendo là dove si fosse,",
+   "quando la madre da Chirón a Schiro",
+   "trafuggò lui dormendo in le sue braccia,",
+   "là onde poi li Greci il dipartiro;",
+   "che mi scoss' io, sì come da la faccia",
+   "mi fuggì 'l sonno, e diventa' ismorto,",
+   "come fa l'uom che, spaventato, agghiaccia."
+  ],
+  "line": 41,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 41,
+  "pred_token": 2,
+  "pred_word": "fuggì",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 10,
+  "unit": [
+   70,
+   71,
+   72
+  ],
+  "texts": [
+   "I' mossi i piè del loco dov' io stava,",
+   "per avvisar da presso un'altra istoria,",
+   "che di dietro a Micòl mi biancheggiava."
+  ],
+  "line": 72,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 72,
+  "pred_token": 7,
+  "pred_word": "biancheggiava",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 11,
+  "unit": [
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45
+  ],
+  "texts": [
+   "«Deh, se giustizia e pietà vi disgrievi",
+   "tosto, sì che possiate muover l'ala,",
+   "che secondo il disio vostro vi lievi,",
+   "mostrate da qual mano inver' la scala",
+   "si va più corto; e se c'è più d'un varco,",
+   "quel ne 'nsegnate che men erto cala;",
+   "ché questi che vien meco, per lo 'ncarco",
+   "de la carne d'Adamo onde si veste,",
+   "al montar sù, contra sua voglia, è parco»."
+  ],
+  "line": 39,
+  "token": 6,
+  "word": "vi",
+  "pred_line": 39,
+  "pred_token": 7,
+  "pred_word": "lievi",
+  "given_role": "obl:in",
+  "derived_role": "subj",
+  "dep_deprel": "nsubj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 11,
+  "unit": [
+   109,
+   110,
+   111,
+   112,
+   113,
+   114
+  ],
+  "texts": [
+   "Colui che del cammin sì poco piglia",
+   "dinanzi a me, Toscana sonò tutta;",
+   "e ora a pena in Siena sen pispiglia,",
+   "ond' era sire quando fu distrutta",
+   "la rabbia fiorentina, che superba",
+   "fu a quel tempo sì com' ora è putta."
+  ],
+  "line": 111,
+  "token": 7,
+  "word": "sen",
+  "pred_line": 111,
+  "pred_token": 8,
+  "pred_word": "pispiglia",
+  "given_role": "obl:di",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun+pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 12,
+  "unit": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "texts": [
+   "Ma quando disse: «Lascia lui e varca;",
+   "ché qui è buono con l'ali e coi remi,",
+   "quantunque può, ciascun pinger sua barca»;",
+   "dritto sì come andar vuolsi rife'mi",
+   "con la persona, avvegna che i pensieri",
+   "mi rimanessero e chinati e scemi."
+  ],
+  "line": 9,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 9,
+  "pred_token": 2,
+  "pred_word": "rimanessero",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 13,
+  "unit": [
+   106,
+   107,
+   108
+  ],
+  "texts": [
+   "«Io fui sanese», rispuose, «e con questi",
+   "altri rimendo qui la vita ria,",
+   "lagrimando a colui che sé ne presti."
+  ],
+  "line": 108,
+  "token": 5,
+  "word": "sé",
+  "pred_line": 108,
+  "pred_token": 7,
+  "pred_word": "presti",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 13,
+  "unit": [
+   136,
+   137,
+   138
+  ],
+  "texts": [
+   "Troppa è più la paura ond' è sospesa",
+   "l'anima mia del tormento di sotto,",
+   "che già lo 'ncarco di là giù mi pesa»."
+  ],
+  "line": 138,
+  "token": 8,
+  "word": "mi",
+  "pred_line": 138,
+  "pred_token": 9,
+  "pred_word": "pesa",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 14,
+  "unit": [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "texts": [
+   "Così due spirti, l'uno a l'altro chini,",
+   "ragionavan di me ivi a man dritta;",
+   "poi fer li visi, per dirmi, supini;",
+   "e disse l'uno: «O anima che fitta",
+   "nel corpo ancora inver' lo ciel ten vai,",
+   "per carità ne consola e ne ditta",
+   "onde vieni e chi se'; ché tu ne fai",
+   "tanto maravigliar de la tua grazia,",
+   "quanto vuol cosa che non fu più mai»."
+  ],
+  "line": 12,
+  "token": 3,
+  "word": "ne",
+  "pred_line": 12,
+  "pred_token": 4,
+  "pred_word": "consola",
+  "given_role": "obl:di",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 14,
+  "unit": [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "texts": [
+   "Così due spirti, l'uno a l'altro chini,",
+   "ragionavan di me ivi a man dritta;",
+   "poi fer li visi, per dirmi, supini;",
+   "e disse l'uno: «O anima che fitta",
+   "nel corpo ancora inver' lo ciel ten vai,",
+   "per carità ne consola e ne ditta",
+   "onde vieni e chi se'; ché tu ne fai",
+   "tanto maravigliar de la tua grazia,",
+   "quanto vuol cosa che non fu più mai»."
+  ],
+  "line": 12,
+  "token": 6,
+  "word": "ne",
+  "pred_line": 12,
+  "pred_token": 7,
+  "pred_word": "ditta",
+  "given_role": "obl:di",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 15,
+  "unit": [
+   25,
+   26,
+   27
+  ],
+  "texts": [
+   "«Che è quel, dolce padre, a che non posso",
+   "schermar lo viso tanto che mi vaglia»,",
+   "diss' io, «e pare inver' noi esser mosso?»."
+  ],
+  "line": 26,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 26,
+  "pred_token": 7,
+  "pred_word": "vaglia",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 15,
+  "unit": [
+   94,
+   95,
+   96,
+   97,
+   98,
+   99,
+   100,
+   101
+  ],
+  "texts": [
+   "Indi m'apparve un'altra con quell' acque",
+   "giù per le gote che 'l dolor distilla",
+   "quando di gran dispetto in altrui nacque,",
+   "e dir: «Se tu se' sire de la villa",
+   "del cui nome ne' dèi fu tanta lite,",
+   "e onde ogne scïenza disfavilla,",
+   "vendica te di quelle braccia ardite",
+   "ch'abbracciar nostra figlia, o Pisistràto»."
+  ],
+  "line": 94,
+  "token": 2,
+  "word": "m'",
+  "pred_line": 94,
+  "pred_token": 3,
+  "pred_word": "apparve",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 16,
+  "unit": [
+   34,
+   35,
+   36
+  ],
+  "texts": [
+   "«Io ti seguiterò quanto mi lece»,",
+   "rispuose; «e se veder fummo non lascia,",
+   "l'udir ci terrà giunti in quella vece»."
+  ],
+  "line": 34,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 34,
+  "pred_token": 6,
+  "pred_word": "lece",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 19,
+  "unit": [
+   142,
+   143,
+   144,
+   145
+  ],
+  "texts": [
+   "Nepote ho io di là c'ha nome Alagia,",
+   "buona da sé, pur che la nostra casa",
+   "non faccia lei per essempro malvagia;",
+   "e questa sola di là m'è rimasa»."
+  ],
+  "line": 145,
+  "token": 6,
+  "word": "m'",
+  "pred_line": 145,
+  "pred_token": 8,
+  "pred_word": "rimasa",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 21,
+  "unit": [
+   130,
+   131,
+   132
+  ],
+  "texts": [
+   "Già s'inchinava ad abbracciar li piedi",
+   "al mio dottor, ma el li disse: «Frate,",
+   "non far, ché tu se' ombra e ombra vedi»."
+  ],
+  "line": 131,
+  "token": 6,
+  "word": "li",
+  "pred_line": 131,
+  "pred_token": 7,
+  "pred_word": "disse",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 27,
+  "unit": [
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "texts": [
+   "Poscia «Più non si va, se pria non morde,",
+   "anime sante, il foco: intrate in esso,",
+   "e al cantar di là non siate sorde»,",
+   "ci disse come noi li fummo presso;",
+   "per ch'io divenni tal, quando lo 'ntesi,",
+   "qual è colui che ne la fossa è messo."
+  ],
+  "line": 13,
+  "token": 5,
+  "word": "li",
+  "pred_line": 13,
+  "pred_token": 7,
+  "pred_word": "presso",
+  "given_role": "obl",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 27,
+  "unit": [
+   37,
+   38,
+   39,
+   40,
+   41,
+   42
+  ],
+  "texts": [
+   "Come al nome di Tisbe aperse il ciglio",
+   "Piramo in su la morte, e riguardolla,",
+   "allor che 'l gelso diventò vermiglio;",
+   "così, la mia durezza fatta solla,",
+   "mi volsi al savio duca, udendo il nome",
+   "che ne la mente sempre mi rampolla."
+  ],
+  "line": 42,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 42,
+  "pred_token": 7,
+  "pred_word": "rampolla",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 27,
+  "unit": [
+   46,
+   47,
+   48
+  ],
+  "texts": [
+   "Poi dentro al foco innanzi mi si mise,",
+   "pregando Stazio che venisse retro,",
+   "che pria per lunga strada ci divise."
+  ],
+  "line": 46,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 46,
+  "pred_token": 8,
+  "pred_word": "mise",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 29,
+  "unit": [
+   55,
+   56,
+   57
+  ],
+  "texts": [
+   "Io mi rivolsi d'ammirazion pieno",
+   "al buon Virgilio, ed esso mi rispuose",
+   "con vista carca di stupor non meno."
+  ],
+  "line": 56,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 56,
+  "pred_token": 7,
+  "pred_word": "rispuose",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 30,
+  "unit": [
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  "texts": [
+   "Io vidi già nel cominciar del giorno",
+   "la parte orïental tutta rosata,",
+   "e l'altro ciel di bel sereno addorno;",
+   "e la faccia del sol nascere ombrata,",
+   "sì che per temperanza di vapori",
+   "l'occhio la sostenea lunga fïata:",
+   "così dentro una nuvola di fiori",
+   "che da le mani angeliche saliva",
+   "e ricadeva in giù dentro e di fori,",
+   "sovra candido vel cinta d'uliva",
+   "donna m'apparve, sotto verde manto",
+   "vestita di color di fiamma viva."
+  ],
+  "line": 32,
+  "token": 2,
+  "word": "m'",
+  "pred_line": 32,
+  "pred_token": 3,
+  "pred_word": "apparve",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 32,
+  "unit": [
+   148,
+   149,
+   150,
+   151,
+   152,
+   153
+  ],
+  "texts": [
+   "Sicura, quasi rocca in alto monte,",
+   "seder sovresso una puttana sciolta",
+   "m'apparve con le ciglia intorno pronte;",
+   "e come perché non li fosse tolta,",
+   "vidi di costa a lei dritto un gigante;",
+   "e basciavansi insieme alcuna volta."
+  ],
+  "line": 150,
+  "token": 1,
+  "word": "m'",
+  "pred_line": 150,
+  "pred_token": 2,
+  "pred_word": "apparve",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "purgatorio",
+  "canto": 33,
+  "unit": [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  "texts": [
+   "Così sen giva; e non credo che fosse",
+   "lo decimo suo passo in terra posto,",
+   "quando con li occhi li occhi mi percosse;",
+   "e con tranquillo aspetto «Vien più tosto»,",
+   "mi disse, «tanto che, s'io parlo teco,",
+   "ad ascoltarmi tu sie ben disposto»."
+  ],
+  "line": 20,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 20,
+  "pred_token": 2,
+  "pred_word": "disse",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 1,
+  "unit": [
+   121,
+   122,
+   123,
+   124,
+   125,
+   126
+  ],
+  "texts": [
+   "La provedenza, che cotanto assetta,",
+   "del suo lume fa 'l ciel sempre quïeto",
+   "nel qual si volge quel c'ha maggior fretta;",
+   "e ora lì, come a sito decreto,",
+   "cen porta la virtù di quella corda",
+   "che ciò che scocca drizza in segno lieto."
+  ],
+  "line": 125,
+  "token": 1,
+  "word": "cen",
+  "pred_line": 125,
+  "pred_token": 2,
+  "pred_word": "porta",
+  "given_role": "obl:in",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun+pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 2,
+  "unit": [
+   19,
+   20,
+   21
+  ],
+  "texts": [
+   "La concreata e perpetüa sete",
+   "del deïforme regno cen portava",
+   "veloci quasi come 'l ciel vedete."
+  ],
+  "line": 20,
+  "token": 4,
+  "word": "cen",
+  "pred_line": 20,
+  "pred_token": 5,
+  "pred_word": "portava",
+  "given_role": "obl:di",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun+pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 3,
+  "unit": [
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  "texts": [
+   "I' fui nel mondo vergine sorella;",
+   "e se la mente tua ben sé riguarda,",
+   "non mi ti celerà l'esser più bella,",
+   "ma riconoscerai ch'i' son Piccarda,",
+   "che, posta qui con questi altri beati,",
+   "beata sono in la spera più tarda."
+  ],
+  "line": 48,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 48,
+  "pred_token": 4,
+  "pred_word": "celerà",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 5,
+  "unit": [
+   133,
+   134,
+   135,
+   136,
+   137,
+   138,
+   139
+  ],
+  "texts": [
+   "Sì come il sol che si cela elli stessi",
+   "per troppa luce, come 'l caldo ha róse",
+   "le temperanze d'i vapori spessi,",
+   "per più letizia sì mi si nascose",
+   "dentro al suo raggio la figura santa;",
+   "e così chiusa chiusa mi rispuose",
+   "nel modo che 'l seguente canto canta."
+  ],
+  "line": 136,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 136,
+  "pred_token": 7,
+  "pred_word": "nascose",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 5,
+  "unit": [
+   133,
+   134,
+   135,
+   136,
+   137,
+   138,
+   139
+  ],
+  "texts": [
+   "Sì come il sol che si cela elli stessi",
+   "per troppa luce, come 'l caldo ha róse",
+   "le temperanze d'i vapori spessi,",
+   "per più letizia sì mi si nascose",
+   "dentro al suo raggio la figura santa;",
+   "e così chiusa chiusa mi rispuose",
+   "nel modo che 'l seguente canto canta."
+  ],
+  "line": 138,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 138,
+  "pred_token": 6,
+  "pred_word": "rispuose",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 8,
+  "unit": [
+   136,
+   137,
+   138
+  ],
+  "texts": [
+   "Or quel che t'era dietro t'è davanti:",
+   "ma perché sappi che di te mi giova,",
+   "un corollario voglio che t'ammanti."
+  ],
+  "line": 137,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 137,
+  "pred_token": 8,
+  "pred_word": "giova",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 10,
+  "unit": [
+   22,
+   23,
+   24
+  ],
+  "texts": [
+   "Or ti riman, lettor, sovra 'l tuo banco,",
+   "dietro pensando a ciò che si preliba,",
+   "s'esser vuoi lieto assai prima che stanco."
+  ],
+  "line": 22,
+  "token": 2,
+  "word": "ti",
+  "pred_line": 22,
+  "pred_token": 3,
+  "pred_word": "riman",
+  "given_role": "obl:a",
+  "derived_role": "subj",
+  "dep_deprel": "nsubj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 11,
+  "unit": [
+   55,
+   56,
+   57,
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "texts": [
+   "Non era ancor molto lontan da l'orto,",
+   "ch'el cominciò a far sentir la terra",
+   "de la sua gran virtute alcun conforto;",
+   "ché per tal donna, giovinetto, in guerra",
+   "del padre corse, a cui, come a la morte,",
+   "la porta del piacer nessun diserra;",
+   "e dinanzi a la sua spirital corte",
+   "et coram patre le si fece unito;",
+   "poscia di dì in dì l'amò più forte."
+  ],
+  "line": 62,
+  "token": 4,
+  "word": "le",
+  "pred_line": 62,
+  "pred_token": 6,
+  "pred_word": "fece",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 14,
+  "unit": [
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "Ben m'accors' io ch'io era più levato,",
+   "per l'affocato riso de la stella,",
+   "che mi parea più roggio che l'usato."
+  ],
+  "line": 87,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 87,
+  "pred_token": 3,
+  "pred_word": "parea",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 14,
+  "unit": [
+   91,
+   92,
+   93,
+   94,
+   95,
+   96
+  ],
+  "texts": [
+   "E non er' anco del mio petto essausto",
+   "l'ardor del sacrificio, ch'io conobbi",
+   "esso litare stato accetto e fausto;",
+   "ché con tanto lucore e tanto robbi",
+   "m'apparvero splendor dentro a due raggi,",
+   "ch'io dissi: «O Elïòs che sì li addobbi!»."
+  ],
+  "line": 95,
+  "token": 1,
+  "word": "m'",
+  "pred_line": 95,
+  "pred_token": 2,
+  "pred_word": "apparvero",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 15,
+  "unit": [
+   130,
+   131,
+   132,
+   133,
+   134,
+   135
+  ],
+  "texts": [
+   "A così riposato, a così bello",
+   "viver di cittadini, a così fida",
+   "cittadinanza, a così dolce ostello,",
+   "Maria mi diè, chiamata in alte grida;",
+   "e ne l'antico vostro Batisteo",
+   "insieme fui cristiano e Cacciaguida."
+  ],
+  "line": 133,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 133,
+  "pred_token": 3,
+  "pred_word": "diè",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 21,
+  "unit": [
+   64,
+   65,
+   66,
+   67,
+   68,
+   69
+  ],
+  "texts": [
+   "Giù per li gradi de la scala santa",
+   "discesi tanto sol per farti festa",
+   "col dire e con la luce che mi ammanta;",
+   "né più amor mi fece esser più presta,",
+   "ché più e tanto amor quinci sù ferve,",
+   "sì come il fiammeggiar ti manifesta."
+  ],
+  "line": 69,
+  "token": 5,
+  "word": "ti",
+  "pred_line": 69,
+  "pred_token": 6,
+  "pred_word": "manifesta",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 24,
+  "unit": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "texts": [
+   "«O sodalizio eletto a la gran cena",
+   "del benedetto Agnello, il qual vi ciba",
+   "sì, che la vostra voglia è sempre piena,",
+   "se per grazia di Dio questi preliba",
+   "di quel che cade de la vostra mensa,",
+   "prima che morte tempo li prescriba,",
+   "ponete mente a l'affezione immensa",
+   "e roratelo alquanto: voi bevete",
+   "sempre del fonte onde vien quel ch'ei pensa»."
+  ],
+  "line": 2,
+  "token": 6,
+  "word": "vi",
+  "pred_line": 2,
+  "pred_token": 7,
+  "pred_word": "ciba",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 25,
+  "unit": [
+   82,
+   83,
+   84,
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "Indi spirò: «L'amore ond' ïo avvampo",
+   "ancor ver' la virtù che mi seguette",
+   "infin la palma e a l'uscir del campo,",
+   "vuol ch'io respiri a te che ti dilette",
+   "di lei; ed emmi a grato che tu diche",
+   "quello che la speranza ti 'mpromette»."
+  ],
+  "line": 85,
+  "token": 8,
+  "word": "ti",
+  "pred_line": 85,
+  "pred_token": 9,
+  "pred_word": "dilette",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 26,
+  "unit": [
+   91,
+   92,
+   93,
+   94,
+   95,
+   96
+  ],
+  "texts": [
+   "E cominciai: «O pomo che maturo",
+   "solo prodotto fosti, o padre antico",
+   "a cui ciascuna sposa è figlia e nuro,",
+   "divoto quanto posso a te supplìco",
+   "perché mi parli: tu vedi mia voglia,",
+   "e per udirti tosto non la dico»."
+  ],
+  "line": 95,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 95,
+  "pred_token": 3,
+  "pred_word": "parli",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 28,
+  "unit": [
+   136,
+   137,
+   138,
+   139
+  ],
+  "texts": [
+   "E se tanto secreto ver proferse",
+   "mortale in terra, non voglio ch'ammiri:",
+   "ché chi 'l vide qua sù gliel discoperse",
+   "con altro assai del ver di questi giri»."
+  ],
+  "line": 138,
+  "token": 7,
+  "word": "gliel",
+  "pred_line": 138,
+  "pred_token": 8,
+  "pred_word": "discoperse",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 30,
+  "unit": [
+   82,
+   83,
+   84,
+   85,
+   86,
+   87,
+   88,
+   89,
+   90
+  ],
+  "texts": [
+   "Non è fantin che sì sùbito rua",
+   "col volto verso il latte, se si svegli",
+   "molto tardato da l'usanza sua,",
+   "come fec' io, per far migliori spegli",
+   "ancor de li occhi, chinandomi a l'onda",
+   "che si deriva perché vi s'immegli;",
+   "e sì come di lei bevve la gronda",
+   "de le palpebre mie, così mi parve",
+   "di sua lunghezza divenuta tonda."
+  ],
+  "line": 89,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 89,
+  "pred_token": 7,
+  "pred_word": "parve",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 31,
+  "unit": [
+   103,
+   104,
+   105,
+   106,
+   107,
+   108,
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Qual è colui che forse di Croazia",
+   "viene a veder la Veronica nostra,",
+   "che per l'antica fame non sen sazia,",
+   "ma dice nel pensier, fin che si mostra:",
+   "‘Segnor mio Iesù Cristo, Dio verace,",
+   "or fu sì fatta la sembianza vostra?’;",
+   "tal era io mirando la vivace",
+   "carità di colui che 'n questo mondo,",
+   "contemplando, gustò di quella pace."
+  ],
+  "line": 105,
+  "token": 7,
+  "word": "sen",
+  "pred_line": 105,
+  "pred_token": 8,
+  "pred_word": "sazia",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "parked",
+  "canticle": "paradiso",
+  "canto": 33,
+  "unit": [
+   28,
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  "texts": [
+   "E io, che mai per mio veder non arsi",
+   "più ch'i' fo per lo suo, tutti miei prieghi",
+   "ti porgo, e priego che non sieno scarsi,",
+   "perché tu ogne nube li disleghi",
+   "di sua mortalità co' prieghi tuoi,",
+   "sì che 'l sommo piacer li si dispieghi."
+  ],
+  "line": 33,
+  "token": 6,
+  "word": "li",
+  "pred_line": 33,
+  "pred_token": 8,
+  "pred_word": "dispieghi",
+  "given_role": "obl:a",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 3,
+  "unit": [
+   130,
+   131,
+   132
+  ],
+  "texts": [
+   "Finito questo, la buia campagna",
+   "tremò sì forte, che de lo spavento",
+   "la mente di sudore ancor mi bagna."
+  ],
+  "line": 132,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 132,
+  "pred_token": 7,
+  "pred_word": "bagna",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 10,
+  "unit": [
+   73,
+   74,
+   75,
+   76,
+   77,
+   78
+  ],
+  "texts": [
+   "Ma quell' altro magnanimo, a cui posta",
+   "restato m'era, non mutò aspetto,",
+   "né mosse collo, né piegò sua costa;",
+   "e sé continüando al primo detto,",
+   "«S'elli han quell' arte», disse, «male appresa,",
+   "ciò mi tormenta più che questo letto."
+  ],
+  "line": 78,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 78,
+  "pred_token": 3,
+  "pred_word": "tormenta",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 10,
+  "unit": [
+   118,
+   119,
+   120
+  ],
+  "texts": [
+   "Dissemi: «Qui con più di mille giaccio:",
+   "qua dentro è 'l secondo Federico",
+   "e 'l Cardinale; e de li altri mi taccio»."
+  ],
+  "line": 120,
+  "token": 8,
+  "word": "mi",
+  "pred_line": 120,
+  "pred_token": 9,
+  "pred_word": "taccio",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 19,
+  "unit": [
+   79,
+   80,
+   81,
+   82,
+   83,
+   84
+  ],
+  "texts": [
+   "Ma più è 'l tempo già che i piè mi cossi",
+   "e ch'i' son stato così sottosopra,",
+   "ch'el non starà piantato coi piè rossi:",
+   "ché dopo lui verrà di più laida opra,",
+   "di ver' ponente, un pastor sanza legge,",
+   "tal che convien che lui e me ricuopra."
+  ],
+  "line": 79,
+  "token": 10,
+  "word": "mi",
+  "pred_line": 79,
+  "pred_token": 11,
+  "pred_word": "cossi",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 22,
+  "unit": [
+   31,
+   32,
+   33,
+   34,
+   35,
+   36
+  ],
+  "texts": [
+   "I' vidi, e anco il cor me n'accapriccia,",
+   "uno aspettar così, com' elli 'ncontra",
+   "ch'una rana rimane e l'altra spiccia;",
+   "e Graffiacan, che li era più di contra,",
+   "li arruncigliò le 'mpegolate chiome",
+   "e trassel sù, che mi parve una lontra."
+  ],
+  "line": 31,
+  "token": 7,
+  "word": "me",
+  "pred_line": 31,
+  "pred_token": 9,
+  "pred_word": "accapriccia",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 24,
+  "unit": [
+   136,
+   137,
+   138,
+   139
+  ],
+  "texts": [
+   "Io non posso negar quel che tu chiedi;",
+   "in giù son messo tanto perch' io fui",
+   "ladro a la sagrestia d'i belli arredi,",
+   "e falsamente già fu apposto altrui."
+  ],
+  "line": 139,
+  "token": 6,
+  "word": "altrui",
+  "pred_line": 139,
+  "pred_token": 5,
+  "pred_word": "apposto",
+  "given_role": "subj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "inferno",
+  "canto": 27,
+  "unit": [
+   94,
+   95,
+   96,
+   97,
+   98,
+   99
+  ],
+  "texts": [
+   "Ma come Costantin chiese Silvestro",
+   "d'entro Siratti a guerir de la lebbre,",
+   "così mi chiese questi per maestro",
+   "a guerir de la sua superba febbre;",
+   "domandommi consiglio, e io tacetti",
+   "perché le sue parole parver ebbre."
+  ],
+  "line": 96,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 96,
+  "pred_token": 3,
+  "pred_word": "chiese",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 2,
+  "unit": [
+   80,
+   81
+  ],
+  "texts": [
+   "tre volte dietro a lei le mani avvinsi,",
+   "e tante mi tornai con esse al petto."
+  ],
+  "line": 81,
+  "token": 3,
+  "word": "mi",
+  "pred_line": 81,
+  "pred_token": 4,
+  "pred_word": "tornai",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 6,
+  "unit": [
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31,
+   32,
+   33
+  ],
+  "texts": [
+   "Come libero fui da tutte quante",
+   "quell' ombre che pregar pur ch'altri prieghi,",
+   "sì che s'avacci lor divenir sante,",
+   "io cominciai: «El par che tu mi nieghi,",
+   "o luce mia, espresso in alcun testo",
+   "che decreto del cielo orazion pieghi;",
+   "e questa gente prega pur di questo:",
+   "sarebbe dunque loro speme vana,",
+   "o non m'è 'l detto tuo ben manifesto?»."
+  ],
+  "line": 28,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 28,
+  "pred_token": 8,
+  "pred_word": "nieghi",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 10,
+  "unit": [
+   82,
+   83,
+   84,
+   85,
+   86,
+   87,
+   88,
+   89,
+   90,
+   91,
+   92,
+   93
+  ],
+  "texts": [
+   "La miserella intra tutti costoro",
+   "pareva dir: «Segnor, fammi vendetta",
+   "di mio figliuol ch'è morto, ond' io m'accoro»;",
+   "ed elli a lei rispondere: «Or aspetta",
+   "tanto ch'i' torni»; e quella: «Segnor mio»,",
+   "come persona in cui dolor s'affretta,",
+   "«se tu non torni?»; ed ei: «Chi fia dov' io,",
+   "la ti farà»; ed ella: «L'altrui bene",
+   "a te che fia, se 'l tuo metti in oblio?»;",
+   "ond' elli: «Or ti conforta; ch'ei convene",
+   "ch'i' solva il mio dovere anzi ch'i' mova:",
+   "giustizia vuole e pietà mi ritene»."
+  ],
+  "line": 91,
+  "token": 4,
+  "word": "ti",
+  "pred_line": 91,
+  "pred_token": 5,
+  "pred_word": "conforta",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 11,
+  "unit": [
+   127,
+   128,
+   129,
+   130,
+   131,
+   132
+  ],
+  "texts": [
+   "E io: «Se quello spirito ch'attende,",
+   "pria che si penta, l'orlo de la vita,",
+   "qua giù dimora e qua sù non ascende,",
+   "se buona orazïon lui non aita,",
+   "prima che passi tempo quanto visse,",
+   "come fu la venuta lui largita?»."
+  ],
+  "line": 130,
+  "token": 4,
+  "word": "lui",
+  "pred_line": 130,
+  "pred_token": 6,
+  "pred_word": "aita",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 17,
+  "unit": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "texts": [
+   "Ricorditi, lettor, se mai ne l'alpe",
+   "ti colse nebbia per la qual vedessi",
+   "non altrimenti che per pelle talpe,",
+   "come, quando i vapori umidi e spessi",
+   "a diradar cominciansi, la spera",
+   "del sol debilemente entra per essi;",
+   "e fia la tua imagine leggera",
+   "in giugnere a veder com' io rividi",
+   "lo sole in pria, che già nel corcar era."
+  ],
+  "line": 2,
+  "token": 1,
+  "word": "ti",
+  "pred_line": 2,
+  "pred_token": 2,
+  "pred_word": "colse",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 20,
+  "unit": [
+   103,
+   104,
+   105,
+   106,
+   107,
+   108
+  ],
+  "texts": [
+   "Noi repetiam Pigmalïon allotta,",
+   "cui traditore e ladro e paricida",
+   "fece la voglia sua de l'oro ghiotta;",
+   "e la miseria de l'avaro Mida,",
+   "che seguì a la sua dimanda gorda,",
+   "per la qual sempre convien che si rida."
+  ],
+  "line": 104,
+  "token": 1,
+  "word": "cui",
+  "pred_line": 105,
+  "pred_token": 1,
+  "pred_word": "fece",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 24,
+  "unit": [
+   151,
+   152,
+   153,
+   154
+  ],
+  "texts": [
+   "E senti' dir: «Beati cui alluma",
+   "tanto di grazia, che l'amor del gusto",
+   "nel petto lor troppo disir non fuma,",
+   "esurïendo sempre quanto è giusto!»."
+  ],
+  "line": 151,
+  "token": 5,
+  "word": "cui",
+  "pred_line": 151,
+  "pred_token": 6,
+  "pred_word": "alluma",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 26,
+  "unit": [
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  "texts": [
+   "Poi, come grue ch'a le montagne Rife",
+   "volasser parte, e parte inver' l'arene,",
+   "queste del gel, quelle del sole schife,",
+   "l'una gente sen va, l'altra sen vene;",
+   "e tornan, lagrimando, a' primi canti",
+   "e al gridar che più lor si convene;",
+   "e raccostansi a me, come davanti,",
+   "essi medesmi che m'avean pregato,",
+   "attenti ad ascoltar ne' lor sembianti."
+  ],
+  "line": 50,
+  "token": 4,
+  "word": "m'",
+  "pred_line": 50,
+  "pred_token": 6,
+  "pred_word": "pregato",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 27,
+  "unit": [
+   76,
+   77,
+   78,
+   79,
+   80,
+   81,
+   82,
+   83,
+   84,
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "Quali si stanno ruminando manse",
+   "le capre, state rapide e proterve",
+   "sovra le cime avante che sien pranse,",
+   "tacite a l'ombra, mentre che 'l sol ferve,",
+   "guardate dal pastor, che 'n su la verga",
+   "poggiato s'è e lor di posa serve;",
+   "e quale il mandrïan che fori alberga,",
+   "lungo il pecuglio suo queto pernotta,",
+   "guardando perché fiera non lo sperga;",
+   "tali eravamo tutti e tre allotta,",
+   "io come capra, ed ei come pastori,",
+   "fasciati quinci e quindi d'alta grotta."
+  ],
+  "line": 81,
+  "token": 5,
+  "word": "lor",
+  "pred_line": 81,
+  "pred_token": 8,
+  "pred_word": "serve",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 29,
+  "unit": [
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ],
+  "texts": [
+   "E una melodia dolce correva",
+   "per l'aere luminoso; onde buon zelo",
+   "mi fé riprender l'ardimento d'Eva,",
+   "che là dove ubidia la terra e 'l cielo,",
+   "femmina, sola e pur testé formata,",
+   "non sofferse di star sotto alcun velo;",
+   "sotto 'l qual se divota fosse stata,",
+   "avrei quelle ineffabili delizie",
+   "sentite prima e più lunga fïata."
+  ],
+  "line": 24,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 24,
+  "pred_token": 2,
+  "pred_word": "fé",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 29,
+  "unit": [
+   37,
+   38,
+   39
+  ],
+  "texts": [
+   "O sacrosante Vergini, se fami,",
+   "freddi o vigilie mai per voi soffersi,",
+   "cagion mi sprona ch'io mercé vi chiami."
+  ],
+  "line": 39,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 39,
+  "pred_token": 3,
+  "pred_word": "sprona",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "purgatorio",
+  "canto": 30,
+  "unit": [
+   49,
+   50,
+   51,
+   52,
+   53,
+   54
+  ],
+  "texts": [
+   "Ma Virgilio n'avea lasciati scemi",
+   "di sé, Virgilio dolcissimo patre,",
+   "Virgilio a cui per mia salute die'mi;",
+   "né quantunque perdeo l'antica matre,",
+   "valse a le guance nette di rugiada,",
+   "che, lagrimando, non tornasser atre."
+  ],
+  "line": 51,
+  "token": 8,
+  "word": "mi",
+  "pred_line": 51,
+  "pred_token": 7,
+  "pred_word": "die'",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 3,
+  "unit": [
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "texts": [
+   "Ond' io a lei: «Ne' mirabili aspetti",
+   "vostri risplende non so che divino",
+   "che vi trasmuta da' primi concetti:",
+   "però non fui a rimembrar festino;",
+   "ma or m'aiuta ciò che tu mi dici,",
+   "sì che raffigurar m'è più latino."
+  ],
+  "line": 62,
+  "token": 3,
+  "word": "m'",
+  "pred_line": 62,
+  "pred_token": 4,
+  "pred_word": "aiuta",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 6,
+  "unit": [
+   82,
+   83,
+   84,
+   85,
+   86,
+   87,
+   88,
+   89,
+   90
+  ],
+  "texts": [
+   "Ma ciò che 'l segno che parlar mi face",
+   "fatto avea prima e poi era fatturo",
+   "per lo regno mortal ch'a lui soggiace,",
+   "diventa in apparenza poco e scuro,",
+   "se in mano al terzo Cesare si mira",
+   "con occhio chiaro e con affetto puro;",
+   "ché la viva giustizia che mi spira,",
+   "li concedette, in mano a quel ch'i' dico,",
+   "gloria di far vendetta a la sua ira."
+  ],
+  "line": 82,
+  "token": 8,
+  "word": "mi",
+  "pred_line": 82,
+  "pred_token": 9,
+  "pred_word": "face",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 6,
+  "unit": [
+   82,
+   83,
+   84,
+   85,
+   86,
+   87,
+   88,
+   89,
+   90
+  ],
+  "texts": [
+   "Ma ciò che 'l segno che parlar mi face",
+   "fatto avea prima e poi era fatturo",
+   "per lo regno mortal ch'a lui soggiace,",
+   "diventa in apparenza poco e scuro,",
+   "se in mano al terzo Cesare si mira",
+   "con occhio chiaro e con affetto puro;",
+   "ché la viva giustizia che mi spira,",
+   "li concedette, in mano a quel ch'i' dico,",
+   "gloria di far vendetta a la sua ira."
+  ],
+  "line": 88,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 88,
+  "pred_token": 7,
+  "pred_word": "spira",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 12,
+  "unit": [
+   88,
+   89,
+   90,
+   91,
+   92,
+   93,
+   94,
+   95,
+   96
+  ],
+  "texts": [
+   "E a la sedia che fu già benigna",
+   "più a' poveri giusti, non per lei,",
+   "ma per colui che siede, che traligna,",
+   "non dispensare o due o tre per sei,",
+   "non la fortuna di prima vacante,",
+   "non decimas, quae sunt pauperum Dei,",
+   "addimandò, ma contro al mondo errante",
+   "licenza di combatter per lo seme",
+   "del qual ti fascian ventiquattro piante."
+  ],
+  "line": 96,
+  "token": 3,
+  "word": "ti",
+  "pred_line": 96,
+  "pred_token": 4,
+  "pred_word": "fascian",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 15,
+  "unit": [
+   91,
+   92,
+   93,
+   94,
+   95,
+   96
+  ],
+  "texts": [
+   "Poscia mi disse: «Quel da cui si dice",
+   "tua cognazione e che cent' anni e piùe",
+   "girato ha 'l monte in la prima cornice,",
+   "mio figlio fu e tuo bisavol fue:",
+   "ben si convien che la lunga fatica",
+   "tu li raccorci con l'opere tue."
+  ],
+  "line": 96,
+  "token": 2,
+  "word": "li",
+  "pred_line": 96,
+  "pred_token": 3,
+  "pred_word": "raccorci",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 21,
+  "unit": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "texts": [
+   "E quella non ridea; ma «S'io ridessi»,",
+   "mi cominciò, «tu ti faresti quale",
+   "fu Semelè quando di cener fessi:",
+   "ché la bellezza mia, che per le scale",
+   "de l'etterno palazzo più s'accende,",
+   "com' hai veduto, quanto più si sale,",
+   "se non si temperasse, tanto splende,",
+   "che 'l tuo mortal podere, al suo fulgore,",
+   "sarebbe fronda che trono scoscende."
+  ],
+  "line": 5,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 5,
+  "pred_token": 2,
+  "pred_word": "cominciò",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 22,
+  "unit": [
+   124,
+   125,
+   126,
+   127,
+   128,
+   129,
+   130,
+   131,
+   132
+  ],
+  "texts": [
+   "«Tu se' sì presso a l'ultima salute»,",
+   "cominciò Bëatrice, «che tu dei",
+   "aver le luci tue chiare e acute;",
+   "e però, prima che tu più t'inlei,",
+   "rimira in giù, e vedi quanto mondo",
+   "sotto li piedi già esser ti fei;",
+   "sì che 'l tuo cor, quantunque può, giocondo",
+   "s'appresenti a la turba trïunfante",
+   "che lieta vien per questo etera tondo»."
+  ],
+  "line": 129,
+  "token": 6,
+  "word": "ti",
+  "pred_line": 129,
+  "pred_token": 7,
+  "pred_word": "fei",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 26,
+  "unit": [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "texts": [
+   "Comincia dunque; e dì ove s'appunta",
+   "l'anima tua, e fa ragion che sia",
+   "la vista in te smarrita e non defunta:",
+   "perché la donna che per questa dia",
+   "regïon ti conduce, ha ne lo sguardo",
+   "la virtù ch'ebbe la man d'Anania»."
+  ],
+  "line": 11,
+  "token": 2,
+  "word": "ti",
+  "pred_line": 11,
+  "pred_token": 3,
+  "pred_word": "conduce",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "mirror",
+  "canticle": "paradiso",
+  "canto": 31,
+  "unit": [
+   52,
+   53,
+   54,
+   55,
+   56,
+   57
+  ],
+  "texts": [
+   "La forma general di paradiso",
+   "già tutta mïo sguardo avea compresa,",
+   "in nulla parte ancor fermato fiso;",
+   "e volgeami con voglia rïaccesa",
+   "per domandar la mia donna di cose",
+   "di che la mente mia era sospesa."
+  ],
+  "line": 56,
+  "token": 5,
+  "word": "donna",
+  "pred_line": 56,
+  "pred_token": 2,
+  "pred_word": "domandar",
+  "given_role": "obj",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "noun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 18,
+  "unit": [
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Lo fondo è cupo sì, che non ci basta",
+   "loco a veder sanza montare al dosso",
+   "de l'arco, ove lo scoglio più sovrasta."
+  ],
+  "line": 109,
+  "token": 8,
+  "word": "ci",
+  "pred_line": 109,
+  "pred_token": 9,
+  "pred_word": "basta",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 29,
+  "unit": [
+   5,
+   6
+  ],
+  "texts": [
+   "perché la vista tua pur si soffolge",
+   "là giù tra l'ombre triste smozzicate?"
+  ],
+  "line": 5,
+  "token": 6,
+  "word": "si",
+  "pred_line": 5,
+  "pred_token": 7,
+  "pred_word": "soffolge",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 13,
+  "unit": [
+   73,
+   74,
+   75,
+   76,
+   77,
+   78
+  ],
+  "texts": [
+   "Se fosse a punto la cera dedutta",
+   "e fosse il cielo in sua virtù supprema,",
+   "la luce del suggel parrebbe tutta;",
+   "ma la natura la dà sempre scema,",
+   "similemente operando a l'artista",
+   "ch'a l'abito de l'arte ha man che trema."
+  ],
+  "line": 76,
+  "token": 4,
+  "word": "la",
+  "pred_line": 76,
+  "pred_token": 5,
+  "pred_word": "dà",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 3,
+  "unit": [
+   76,
+   77,
+   78
+  ],
+  "texts": [
+   "Ed elli a me: «Le cose ti fier conte",
+   "quando noi fermerem li nostri passi",
+   "su la trista riviera d'Acheronte»."
+  ],
+  "line": 76,
+  "token": 7,
+  "word": "ti",
+  "pred_line": 76,
+  "pred_token": 8,
+  "pred_word": "fier",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 26,
+  "unit": [
+   70,
+   71,
+   72
+  ],
+  "texts": [
+   "Ed elli a me: «La tua preghiera è degna",
+   "di molta loda, e io però l'accetto;",
+   "ma fa che la tua lingua si sostegna."
+  ],
+  "line": 72,
+  "token": 7,
+  "word": "si",
+  "pred_line": 72,
+  "pred_token": 8,
+  "pred_word": "sostegna",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 12,
+  "unit": [
+   115,
+   116,
+   117
+  ],
+  "texts": [
+   "Già montavam su per li scaglion santi,",
+   "ed esser mi parea troppo più lieve",
+   "che per lo pian non mi parea davanti."
+  ],
+  "line": 117,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 117,
+  "pred_token": 7,
+  "pred_word": "parea",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 30,
+  "unit": [
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "texts": [
+   "Non altrimenti il trïunfo che lude",
+   "sempre dintorno al punto che mi vinse,",
+   "parendo inchiuso da quel ch'elli 'nchiude,",
+   "a poco a poco al mio veder si stinse:",
+   "per che tornar con li occhi a Bëatrice",
+   "nulla vedere e amor mi costrinse."
+  ],
+  "line": 11,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 11,
+  "pred_token": 7,
+  "pred_word": "vinse",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 3,
+  "unit": [
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Caron dimonio, con occhi di bragia",
+   "loro accennando, tutte le raccoglie;",
+   "batte col remo qualunque s'adagia."
+  ],
+  "line": 110,
+  "token": 4,
+  "word": "le",
+  "pred_line": 110,
+  "pred_token": 5,
+  "pred_word": "raccoglie",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 6,
+  "unit": [
+   58,
+   59,
+   60,
+   61,
+   62,
+   63
+  ],
+  "texts": [
+   "Io li rispuosi: «Ciacco, il tuo affanno",
+   "mi pesa sì, ch'a lagrimar mi 'nvita;",
+   "ma dimmi, se tu sai, a che verranno",
+   "li cittadin de la città partita;",
+   "s'alcun v'è giusto; e dimmi la cagione",
+   "per che l'ha tanta discordia assalita»."
+  ],
+  "line": 58,
+  "token": 2,
+  "word": "li",
+  "pred_line": 58,
+  "pred_token": 3,
+  "pred_word": "rispuosi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 24,
+  "unit": [
+   25,
+   26,
+   27
+  ],
+  "texts": [
+   "Però salta la penna e non lo scrivo:",
+   "ché l'imagine nostra a cotai pieghe,",
+   "non che 'l parlare, è troppo color vivo."
+  ],
+  "line": 25,
+  "token": 7,
+  "word": "lo",
+  "pred_line": 25,
+  "pred_token": 8,
+  "pred_word": "scrivo",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 15,
+  "unit": [
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  "texts": [
+   "Già eravam da la selva rimossi",
+   "tanto, ch'i' non avrei visto dov' era,",
+   "perch' io in dietro rivolto mi fossi,",
+   "quando incontrammo d'anime una schiera",
+   "che venian lungo l'argine, e ciascuna",
+   "ci riguardava come suol da sera",
+   "guardare uno altro sotto nuova luna;",
+   "e sì ver' noi aguzzavan le ciglia",
+   "come 'l vecchio sartor fa ne la cruna."
+  ],
+  "line": 18,
+  "token": 1,
+  "word": "ci",
+  "pred_line": 18,
+  "pred_token": 2,
+  "pred_word": "riguardava",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 5,
+  "unit": [
+   115,
+   116,
+   117,
+   118,
+   119,
+   120
+  ],
+  "texts": [
+   "«O bene nato a cui veder li troni",
+   "del trïunfo etternal concede grazia",
+   "prima che la milizia s'abbandoni,",
+   "del lume che per tutto il ciel si spazia",
+   "noi semo accesi; e però, se disii",
+   "di noi chiarirti, a tuo piacer ti sazia»."
+  ],
+  "line": 120,
+  "token": 7,
+  "word": "ti",
+  "pred_line": 120,
+  "pred_token": 8,
+  "pred_word": "sazia",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 3,
+  "unit": [
+   103,
+   104,
+   105
+  ],
+  "texts": [
+   "Dal mondo, per seguirla, giovinetta",
+   "fuggi'mi, e nel suo abito mi chiusi",
+   "e promisi la via de la sua setta."
+  ],
+  "line": 104,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 104,
+  "pred_token": 8,
+  "pred_word": "chiusi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 14,
+  "unit": [
+   103,
+   104,
+   105,
+   106,
+   107,
+   108
+  ],
+  "texts": [
+   "Qui vince la memoria mia lo 'ngegno;",
+   "ché quella croce lampeggiava Cristo,",
+   "sì ch'io non so trovare essempro degno;",
+   "ma chi prende sua croce e segue Cristo,",
+   "ancor mi scuserà di quel ch'io lasso,",
+   "vedendo in quell' albor balenar Cristo."
+  ],
+  "line": 107,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 107,
+  "pred_token": 3,
+  "pred_word": "scuserà",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 5,
+  "unit": [
+   97,
+   98,
+   99
+  ],
+  "texts": [
+   "E se la stella si cambiò e rise,",
+   "qual mi fec' io che pur da mia natura",
+   "trasmutabile son per tutte guise!"
+  ],
+  "line": 97,
+  "token": 5,
+  "word": "si",
+  "pred_line": 97,
+  "pred_token": 6,
+  "pred_word": "cambiò",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 14,
+  "unit": [
+   82,
+   83,
+   84
+  ],
+  "texts": [
+   "Fu il sangue mio d'invidia sì rïarso,",
+   "che se veduto avesse uom farsi lieto,",
+   "visto m'avresti di livore sparso."
+  ],
+  "line": 84,
+  "token": 2,
+  "word": "m'",
+  "pred_line": 84,
+  "pred_token": 1,
+  "pred_word": "visto",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 4,
+  "unit": [
+   49,
+   50,
+   51
+  ],
+  "texts": [
+   "Sì mi spronaron le parole sue,",
+   "ch'i' mi sforzai carpando appresso lui,",
+   "tanto che 'l cinghio sotto i piè mi fue."
+  ],
+  "line": 50,
+  "token": 3,
+  "word": "mi",
+  "pred_line": 50,
+  "pred_token": 4,
+  "pred_word": "sforzai",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 19,
+  "unit": [
+   139,
+   140,
+   141
+  ],
+  "texts": [
+   "E quel di Portogallo e di Norvegia",
+   "lì si conosceranno, e quel di Rascia",
+   "che male ha visto il conio di Vinegia."
+  ],
+  "line": 140,
+  "token": 2,
+  "word": "si",
+  "pred_line": 140,
+  "pred_token": 3,
+  "pred_word": "conosceranno",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 1,
+  "unit": [
+   109,
+   110,
+   111,
+   112,
+   113,
+   114
+  ],
+  "texts": [
+   "Ne l'ordine ch'io dico sono accline",
+   "tutte nature, per diverse sorti,",
+   "più al principio loro e men vicine;",
+   "onde si muovono a diversi porti",
+   "per lo gran mar de l'essere, e ciascuna",
+   "con istinto a lei dato che la porti."
+  ],
+  "line": 114,
+  "token": 7,
+  "word": "la",
+  "pred_line": 114,
+  "pred_token": 8,
+  "pred_word": "porti",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 2,
+  "unit": [
+   70,
+   71,
+   72
+  ],
+  "texts": [
+   "I' son Beatrice che ti faccio andare;",
+   "vegno del loco ove tornar disio;",
+   "amor mi mosse, che mi fa parlare."
+  ],
+  "line": 72,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 72,
+  "pred_token": 3,
+  "pred_word": "mosse",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 9,
+  "unit": [
+   127,
+   128,
+   129
+  ],
+  "texts": [
+   "Da Pier le tegno; e dissemi ch'i' erri",
+   "anzi ad aprir ch'a tenerla serrata,",
+   "pur che la gente a' piedi mi s'atterri»."
+  ],
+  "line": 129,
+  "token": 8,
+  "word": "s'",
+  "pred_line": 129,
+  "pred_token": 9,
+  "pred_word": "atterri",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 5,
+  "unit": [
+   133,
+   134,
+   135,
+   136
+  ],
+  "texts": [
+   "Quando leggemmo il disïato riso",
+   "esser basciato da cotanto amante,",
+   "questi, che mai da me non fia diviso,",
+   "la bocca mi basciò tutto tremante."
+  ],
+  "line": 136,
+  "token": 3,
+  "word": "mi",
+  "pred_line": 136,
+  "pred_token": 4,
+  "pred_word": "basciò",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 31,
+  "unit": [
+   49,
+   50,
+   51,
+   52,
+   53,
+   54
+  ],
+  "texts": [
+   "Mai non t'appresentò natura o arte",
+   "piacer, quanto le belle membra in ch'io",
+   "rinchiusa fui, e che so' 'n terra sparte;",
+   "e se 'l sommo piacer sì ti fallio",
+   "per la mia morte, qual cosa mortale",
+   "dovea poi trarre te nel suo disio?"
+  ],
+  "line": 49,
+  "token": 3,
+  "word": "t'",
+  "pred_line": 49,
+  "pred_token": 4,
+  "pred_word": "appresentò",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 3,
+  "unit": [
+   19,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  "texts": [
+   "Io mi volsi dallato con paura",
+   "d'essere abbandonato, quand' io vidi",
+   "solo dinanzi a me la terra oscura;",
+   "e 'l mio conforto: «Perché pur diffidi?»,",
+   "a dir mi cominciò tutto rivolto;",
+   "«non credi tu me teco e ch'io ti guidi?"
+  ],
+  "line": 23,
+  "token": 3,
+  "word": "mi",
+  "pred_line": 23,
+  "pred_token": 2,
+  "pred_word": "dir",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 17,
+  "unit": [
+   28,
+   29,
+   30
+  ],
+  "texts": [
+   "Così diss' io a quella luce stessa",
+   "che pria m'avea parlato; e come volle",
+   "Beatrice, fu la mia voglia confessa."
+  ],
+  "line": 29,
+  "token": 3,
+  "word": "m'",
+  "pred_line": 29,
+  "pred_token": 5,
+  "pred_word": "parlato",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 17,
+  "unit": [
+   94,
+   95,
+   96,
+   97,
+   98,
+   99
+  ],
+  "texts": [
+   "Ma esso, ch'altra volta mi sovvenne",
+   "ad altro forse, tosto ch'i' montai",
+   "con le braccia m'avvinse e mi sostenne;",
+   "e disse: «Gerïon, moviti omai:",
+   "le rote larghe, e lo scender sia poco;",
+   "pensa la nova soma che tu hai»."
+  ],
+  "line": 96,
+  "token": 4,
+  "word": "m'",
+  "pred_line": 96,
+  "pred_token": 5,
+  "pred_word": "avvinse",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 5,
+  "unit": [
+   40,
+   41,
+   42
+  ],
+  "texts": [
+   "Apri la mente a quel ch'io ti paleso",
+   "e fermalvi entro; ché non fa scïenza,",
+   "sanza lo ritenere, avere inteso."
+  ],
+  "line": 40,
+  "token": 8,
+  "word": "ti",
+  "pred_line": 40,
+  "pred_token": 9,
+  "pred_word": "paleso",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 22,
+  "unit": [
+   145,
+   146,
+   147,
+   148,
+   149,
+   150
+  ],
+  "texts": [
+   "Quindi m'apparve il temperar di Giove",
+   "tra 'l padre e 'l figlio; e quindi mi fu chiaro",
+   "il varïar che fanno di lor dove;",
+   "e tutti e sette mi si dimostraro",
+   "quanto son grandi e quanto son veloci",
+   "e come sono in distante riparo."
+  ],
+  "line": 146,
+  "token": 9,
+  "word": "mi",
+  "pred_line": 146,
+  "pred_token": 11,
+  "pred_word": "chiaro",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 16,
+  "unit": [
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  "texts": [
+   "S'i' fossi stato dal foco coperto,",
+   "gittato mi sarei tra lor di sotto,",
+   "e credo che 'l dottor l'avria sofferto;",
+   "ma perch' io mi sarei brusciato e cotto,",
+   "vinse paura la mia buona voglia",
+   "che di loro abbracciar mi facea ghiotto."
+  ],
+  "line": 48,
+  "token": 6,
+  "word": "l'",
+  "pred_line": 48,
+  "pred_token": 8,
+  "pred_word": "sofferto",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 19,
+  "unit": [
+   64,
+   65,
+   66,
+   67,
+   68,
+   69
+  ],
+  "texts": [
+   "Quale 'l falcon, che prima a' pié si mira,",
+   "indi si volge al grido e si protende",
+   "per lo disio del pasto che là il tira,",
+   "tal mi fec' io; e tal, quanto si fende",
+   "la roccia per dar via a chi va suso,",
+   "n'andai infin dove 'l cerchiar si prende."
+  ],
+  "line": 69,
+  "token": 1,
+  "word": "n'",
+  "pred_line": 69,
+  "pred_token": 2,
+  "pred_word": "andai",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 8,
+  "unit": [
+   106,
+   107,
+   108,
+   109,
+   110,
+   111
+  ],
+  "texts": [
+   "Se ciò non fosse, il ciel che tu cammine",
+   "producerebbe sì li suoi effetti,",
+   "che non sarebbero arti, ma ruine;",
+   "e ciò esser non può, se li 'ntelletti",
+   "che muovon queste stelle non son manchi,",
+   "e manco il primo, che non li ha perfetti."
+  ],
+  "line": 111,
+  "token": 7,
+  "word": "li",
+  "pred_line": 111,
+  "pred_token": 8,
+  "pred_word": "ha",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 29,
+  "unit": [
+   136,
+   137,
+   138,
+   139,
+   140,
+   141
+  ],
+  "texts": [
+   "L'un si mostrava alcun de' famigliari",
+   "di quel sommo Ipocràte che natura",
+   "a li animali fé ch'ell' ha più cari;",
+   "mostrava l'altro la contraria cura",
+   "con una spada lucida e aguta,",
+   "tal che di qua dal rio mi fé paura."
+  ],
+  "line": 141,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 141,
+  "pred_token": 8,
+  "pred_word": "fé",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 23,
+  "unit": [
+   118,
+   119,
+   120,
+   121,
+   122,
+   123
+  ],
+  "texts": [
+   "Di quella vita mi volse costui",
+   "che mi va innanzi, l'altr' ier, quando tonda",
+   "vi si mostrò la suora di colui»,",
+   "e 'l sol mostrai; «costui per la profonda",
+   "notte menato m'ha d'i veri morti",
+   "con questa vera carne che 'l seconda."
+  ],
+  "line": 120,
+  "token": 1,
+  "word": "vi",
+  "pred_line": 120,
+  "pred_token": 3,
+  "pred_word": "mostrò",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 17,
+  "unit": [
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "Ed elli a me: «L'amor del bene, scemo",
+   "del suo dover, quiritta si ristora;",
+   "qui si ribatte il mal tardato remo."
+  ],
+  "line": 86,
+  "token": 5,
+  "word": "si",
+  "pred_line": 86,
+  "pred_token": 6,
+  "pred_word": "ristora",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 10,
+  "unit": [
+   115,
+   116,
+   117
+  ],
+  "texts": [
+   "Ed elli a me: «La grave condizione",
+   "di lor tormento a terra li rannicchia,",
+   "sì che ' miei occhi pria n'ebber tencione."
+  ],
+  "line": 116,
+  "token": 6,
+  "word": "li",
+  "pred_line": 116,
+  "pred_token": 7,
+  "pred_word": "rannicchia",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 5,
+  "unit": [
+   97,
+   98,
+   99
+  ],
+  "texts": [
+   "E se la stella si cambiò e rise,",
+   "qual mi fec' io che pur da mia natura",
+   "trasmutabile son per tutte guise!"
+  ],
+  "line": 98,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 98,
+  "pred_token": 3,
+  "pred_word": "fec'",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 7,
+  "unit": [
+   72
+  ],
+  "texts": [
+   "Or vo' che tu mia sentenza ne 'mbocche."
+  ],
+  "line": 72,
+  "token": 7,
+  "word": "ne",
+  "pred_line": 72,
+  "pred_token": 8,
+  "pred_word": "'mbocche",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 4,
+  "unit": [
+   103,
+   104,
+   105
+  ],
+  "texts": [
+   "Là ci traemmo; e ivi eran persone",
+   "che si stavano a l'ombra dietro al sasso",
+   "come l'uom per negghienza a star si pone."
+  ],
+  "line": 103,
+  "token": 2,
+  "word": "ci",
+  "pred_line": 103,
+  "pred_token": 3,
+  "pred_word": "traemmo",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 10,
+  "unit": [
+   28,
+   29,
+   30
+  ],
+  "texts": [
+   "Subitamente questo suono uscìo",
+   "d'una de l'arche; però m'accostai,",
+   "temendo, un poco più al duca mio."
+  ],
+  "line": 29,
+  "token": 7,
+  "word": "m'",
+  "pred_line": 29,
+  "pred_token": 8,
+  "pred_word": "accostai",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 11,
+  "unit": [
+   76,
+   77,
+   78,
+   79,
+   80,
+   81
+  ],
+  "texts": [
+   "La lor concordia e i lor lieti sembianti,",
+   "amore e maraviglia e dolce sguardo",
+   "facieno esser cagion di pensier santi;",
+   "tanto che 'l venerabile Bernardo",
+   "si scalzò prima, e dietro a tanta pace",
+   "corse e, correndo, li parve esser tardo."
+  ],
+  "line": 81,
+  "token": 4,
+  "word": "li",
+  "pred_line": 81,
+  "pred_token": 5,
+  "pred_word": "parve",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 11,
+  "unit": [
+   61,
+   62,
+   63,
+   64,
+   65,
+   66
+  ],
+  "texts": [
+   "L'antico sangue e l'opere leggiadre",
+   "d'i miei maggior mi fer sì arrogante,",
+   "che, non pensando a la comune madre,",
+   "ogn' uomo ebbi in despetto tanto avante,",
+   "ch'io ne mori', come i Sanesi sanno,",
+   "e sallo in Campagnatico ogne fante."
+  ],
+  "line": 62,
+  "token": 5,
+  "word": "mi",
+  "pred_line": 62,
+  "pred_token": 6,
+  "pred_word": "fer",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 4,
+  "unit": [
+   37,
+   38,
+   39
+  ],
+  "texts": [
+   "Ed elli a me: «Nessun tuo passo caggia;",
+   "pur su al monte dietro a me acquista,",
+   "fin che n'appaia alcuna scorta saggia»."
+  ],
+  "line": 39,
+  "token": 3,
+  "word": "n'",
+  "pred_line": 39,
+  "pred_token": 4,
+  "pred_word": "appaia",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 1,
+  "unit": [
+   7,
+   8,
+   9
+  ],
+  "texts": [
+   "Tant' è amara che poco è più morte;",
+   "ma per trattar del ben ch'i' vi trovai,",
+   "dirò de l'altre cose ch'i' v'ho scorte."
+  ],
+  "line": 8,
+  "token": 8,
+  "word": "vi",
+  "pred_line": 8,
+  "pred_token": 9,
+  "pred_word": "trovai",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 28,
+  "unit": [
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70,
+   71,
+   72,
+   73,
+   74,
+   75
+  ],
+  "texts": [
+   "Un altro, che forata avea la gola",
+   "e tronco 'l naso infin sotto le ciglia,",
+   "e non avea mai ch'una orecchia sola,",
+   "ristato a riguardar per maraviglia",
+   "con li altri, innanzi a li altri aprì la canna,",
+   "ch'era di fuor d'ogne parte vermiglia,",
+   "e disse: «O tu cui colpa non condanna",
+   "e cu' io vidi su in terra latina,",
+   "se troppa simiglianza non m'inganna,",
+   "rimembriti di Pier da Medicina,",
+   "se mai torni a veder lo dolce piano",
+   "che da Vercelli a Marcabò dichina."
+  ],
+  "line": 72,
+  "token": 5,
+  "word": "m'",
+  "pred_line": 72,
+  "pred_token": 6,
+  "pred_word": "inganna",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 29,
+  "unit": [
+   97,
+   98,
+   99,
+   100,
+   101,
+   102,
+   103,
+   104,
+   105
+  ],
+  "texts": [
+   "A descriver lor forme più non spargo",
+   "rime, lettor; ch'altra spesa mi strigne,",
+   "tanto ch'a questa non posso esser largo;",
+   "ma leggi Ezechïel, che li dipigne",
+   "come li vide da la fredda parte",
+   "venir con vento e con nube e con igne;",
+   "e quali i troverai ne le sue carte,",
+   "tali eran quivi, salvo ch'a le penne",
+   "Giovanni è meco e da lui si diparte."
+  ],
+  "line": 100,
+  "token": 5,
+  "word": "li",
+  "pred_line": 100,
+  "pred_token": 6,
+  "pred_word": "dipigne",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 6,
+  "unit": [
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "E quelli: «Ei son tra l'anime più nere;",
+   "diverse colpe giù li grava al fondo:",
+   "se tanto scendi, là i potrai vedere."
+  ],
+  "line": 86,
+  "token": 4,
+  "word": "li",
+  "pred_line": 86,
+  "pred_token": 5,
+  "pred_word": "grava",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 9,
+  "unit": [
+   79,
+   80,
+   81,
+   82,
+   83,
+   84
+  ],
+  "texts": [
+   "E come l'occhio più e più v'apersi,",
+   "vidil seder sovra 'l grado sovrano,",
+   "tal ne la faccia ch'io non lo soffersi;",
+   "e una spada nuda avëa in mano,",
+   "che reflettëa i raggi sì ver' noi,",
+   "ch'io drizzava spesso il viso in vano."
+  ],
+  "line": 81,
+  "token": 8,
+  "word": "lo",
+  "pred_line": 81,
+  "pred_token": 9,
+  "pred_word": "soffersi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 27,
+  "unit": [
+   79,
+   80,
+   81,
+   82,
+   83,
+   84
+  ],
+  "texts": [
+   "Quando mi vidi giunto in quella parte",
+   "di mia etade ove ciascun dovrebbe",
+   "calar le vele e raccoglier le sarte,",
+   "ciò che pria mi piacëa, allor m'increbbe,",
+   "e pentuto e confesso mi rendei;",
+   "ahi miser lasso! e giovato sarebbe."
+  ],
+  "line": 82,
+  "token": 4,
+  "word": "mi",
+  "pred_line": 82,
+  "pred_token": 5,
+  "pred_word": "piacëa",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 31,
+  "unit": [
+   73,
+   74,
+   75
+  ],
+  "texts": [
+   "Cércati al collo, e troverai la soga",
+   "che 'l tien legato, o anima confusa,",
+   "e vedi lui che 'l gran petto ti doga»."
+  ],
+  "line": 75,
+  "token": 8,
+  "word": "ti",
+  "pred_line": 75,
+  "pred_token": 9,
+  "pred_word": "doga",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 1,
+  "unit": [
+   76,
+   77,
+   78,
+   79,
+   80,
+   81
+  ],
+  "texts": [
+   "Non son li editti etterni per noi guasti,",
+   "ché questi vive e Minòs me non lega;",
+   "ma son del cerchio ove son li occhi casti",
+   "di Marzia tua, che 'n vista ancor ti priega,",
+   "o santo petto, che per tua la tegni:",
+   "per lo suo amore adunque a noi ti piega."
+  ],
+  "line": 81,
+  "token": 8,
+  "word": "ti",
+  "pred_line": 81,
+  "pred_token": 9,
+  "pred_word": "piega",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 16,
+  "unit": [
+   31,
+   32,
+   33
+  ],
+  "texts": [
+   "E io: «O creatura che ti mondi",
+   "per tornar bella a colui che ti fece,",
+   "maraviglia udirai, se mi secondi»."
+  ],
+  "line": 33,
+  "token": 4,
+  "word": "mi",
+  "pred_line": 33,
+  "pred_token": 5,
+  "pred_word": "secondi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 2,
+  "unit": [
+   52,
+   53,
+   54
+  ],
+  "texts": [
+   "Io era tra color che son sospesi,",
+   "e donna mi chiamò beata e bella,",
+   "tal che di comandare io la richiesi."
+  ],
+  "line": 54,
+  "token": 6,
+  "word": "la",
+  "pred_line": 54,
+  "pred_token": 7,
+  "pred_word": "richiesi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 16,
+  "unit": [
+   55,
+   56,
+   57
+  ],
+  "texts": [
+   "Prima era scempio, e ora è fatto doppio",
+   "ne la sentenza tua, che mi fa certo",
+   "qui, e altrove, quello ov' io l'accoppio."
+  ],
+  "line": 56,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 56,
+  "pred_token": 7,
+  "pred_word": "fa",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 29,
+  "unit": [
+   133,
+   134,
+   135,
+   136,
+   137,
+   138,
+   139
+  ],
+  "texts": [
+   "Ma perché sappi chi sì ti seconda",
+   "contra i Sanesi, aguzza ver' me l'occhio,",
+   "sì che la faccia mia ben ti risponda:",
+   "sì vedrai ch'io son l'ombra di Capocchio,",
+   "che falsai li metalli con l'alchìmia;",
+   "e te dee ricordar, se ben t'adocchio,",
+   "com' io fui di natura buona scimia»."
+  ],
+  "line": 138,
+  "token": 7,
+  "word": "t'",
+  "pred_line": 138,
+  "pred_token": 8,
+  "pred_word": "adocchio",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 32,
+  "unit": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "texts": [
+   "Ed essi quinci e quindi avien parete",
+   "di non caler—così lo santo riso",
+   "a sé traéli con l'antica rete!—;",
+   "quando per forza mi fu vòlto il viso",
+   "ver' la sinistra mia da quelle dee,",
+   "perch' io udi' da loro un «Troppo fiso!»;",
+   "e la disposizion ch'a veder èe",
+   "ne li occhi pur testé dal sol percossi,",
+   "sanza la vista alquanto esser mi fée."
+  ],
+  "line": 12,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 12,
+  "pred_token": 7,
+  "pred_word": "fée",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 15,
+  "unit": [
+   124,
+   125,
+   126
+  ],
+  "texts": [
+   "«O dolce padre mio, se tu m'ascolte,",
+   "io ti dirò», diss' io, «ciò che m'apparve",
+   "quando le gambe mi furon sì tolte»."
+  ],
+  "line": 124,
+  "token": 7,
+  "word": "m'",
+  "pred_line": 124,
+  "pred_token": 8,
+  "pred_word": "ascolte",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 3,
+  "unit": [
+   58,
+   59,
+   60
+  ],
+  "texts": [
+   "Poscia ch'io v'ebbi alcun riconosciuto,",
+   "vidi e conobbi l'ombra di colui",
+   "che fece per viltade il gran rifiuto."
+  ],
+  "line": 58,
+  "token": 4,
+  "word": "v'",
+  "pred_line": 58,
+  "pred_token": 7,
+  "pred_word": "riconosciuto",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 8,
+  "unit": [
+   91,
+   92,
+   93
+  ],
+  "texts": [
+   "Fatto m'hai lieto, e così mi fa chiaro,",
+   "poi che, parlando, a dubitar m'hai mosso",
+   "com' esser può, di dolce seme, amaro»."
+  ],
+  "line": 91,
+  "token": 2,
+  "word": "m'",
+  "pred_line": 91,
+  "pred_token": 1,
+  "pred_word": "Fatto",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 16,
+  "unit": [
+   52,
+   53,
+   54
+  ],
+  "texts": [
+   "E io a lui: «Per fede mi ti lego",
+   "di far ciò che mi chiedi; ma io scoppio",
+   "dentro ad un dubbio, s'io non me ne spiego."
+  ],
+  "line": 52,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 52,
+  "pred_token": 9,
+  "pred_word": "lego",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 17,
+  "unit": [
+   46,
+   47,
+   48
+  ],
+  "texts": [
+   "Qual si partio Ipolito d'Atene",
+   "per la spietata e perfida noverca,",
+   "tal di Fiorenza partir ti convene."
+  ],
+  "line": 48,
+  "token": 5,
+  "word": "ti",
+  "pred_line": 48,
+  "pred_token": 6,
+  "pred_word": "convene",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 19,
+  "unit": [
+   91,
+   92,
+   93,
+   94,
+   95,
+   96
+  ],
+  "texts": [
+   "Quale sovresso il nido si rigira",
+   "poi c'ha pasciuti la cicogna i figli,",
+   "e come quel ch'è pasto la rimira;",
+   "cotal si fece, e sì leväi i cigli,",
+   "la benedetta imagine, che l'ali",
+   "movea sospinte da tanti consigli."
+  ],
+  "line": 93,
+  "token": 7,
+  "word": "la",
+  "pred_line": 93,
+  "pred_token": 8,
+  "pred_word": "rimira",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 3,
+  "unit": [
+   142,
+   143,
+   144,
+   145
+  ],
+  "texts": [
+   "Vedi oggimai se tu mi puoi far lieto,",
+   "revelando a la mia buona Costanza",
+   "come m'hai visto, e anco esto divieto;",
+   "ché qui per quei di là molto s'avanza»."
+  ],
+  "line": 144,
+  "token": 2,
+  "word": "m'",
+  "pred_line": 144,
+  "pred_token": 4,
+  "pred_word": "visto",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 10,
+  "unit": [
+   16,
+   17,
+   18
+  ],
+  "texts": [
+   "Però a la dimanda che mi faci",
+   "quinc' entro satisfatto sarà tosto,",
+   "e al disio ancor che tu mi taci»."
+  ],
+  "line": 16,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 16,
+  "pred_token": 7,
+  "pred_word": "faci",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 4,
+  "unit": [
+   64,
+   65,
+   66
+  ],
+  "texts": [
+   "L'altra dubitazion che ti commove",
+   "ha men velen, però che sua malizia",
+   "non ti poria menar da me altrove."
+  ],
+  "line": 66,
+  "token": 2,
+  "word": "ti",
+  "pred_line": 66,
+  "pred_token": 4,
+  "pred_word": "menar",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 4,
+  "unit": [
+   52,
+   53,
+   54,
+   55,
+   56,
+   57
+  ],
+  "texts": [
+   "Dice che l'alma a la sua stella riede,",
+   "credendo quella quindi esser decisa",
+   "quando natura per forma la diede;",
+   "e forse sua sentenza è d'altra guisa",
+   "che la voce non suona, ed esser puote",
+   "con intenzion da non esser derisa."
+  ],
+  "line": 54,
+  "token": 5,
+  "word": "la",
+  "pred_line": 54,
+  "pred_token": 6,
+  "pred_word": "diede",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 31,
+  "unit": [
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "Di penter sì mi punse ivi l'ortica,",
+   "che di tutte altre cose qual mi torse",
+   "più nel suo amor, più mi si fé nemica."
+  ],
+  "line": 87,
+  "token": 6,
+  "word": "mi",
+  "pred_line": 87,
+  "pred_token": 8,
+  "pred_word": "fé",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 10,
+  "unit": [
+   55,
+   56,
+   57,
+   58,
+   59,
+   60
+  ],
+  "texts": [
+   "Dintorno mi guardò, come talento",
+   "avesse di veder s'altri era meco;",
+   "e poi che 'l sospecciar fu tutto spento,",
+   "piangendo disse: «Se per questo cieco",
+   "carcere vai per altezza d'ingegno,",
+   "mio figlio ov' è? e perché non è teco?»."
+  ],
+  "line": 55,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 55,
+  "pred_token": 3,
+  "pred_word": "guardò",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 9,
+  "unit": [
+   58,
+   59,
+   60
+  ],
+  "texts": [
+   "Così disse 'l maestro; ed elli stessi",
+   "mi volse, e non si tenne a le mie mani,",
+   "che con le sue ancor non mi chiudessi."
+  ],
+  "line": 60,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 60,
+  "pred_token": 8,
+  "pred_word": "chiudessi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 5,
+  "unit": [
+   67,
+   68,
+   69,
+   70,
+   71,
+   72
+  ],
+  "texts": [
+   "Ond' io, che solo innanzi a li altri parlo,",
+   "ti priego, se mai vedi quel paese",
+   "che siede tra Romagna e quel di Carlo,",
+   "che tu mi sie di tuoi prieghi cortese",
+   "in Fano, sì che ben per me s'adori",
+   "pur ch'i' possa purgar le gravi offese."
+  ],
+  "line": 68,
+  "token": 1,
+  "word": "ti",
+  "pred_line": 68,
+  "pred_token": 2,
+  "pred_word": "priego",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 1,
+  "unit": [
+   121,
+   122,
+   123,
+   124,
+   125,
+   126,
+   127,
+   128,
+   129
+  ],
+  "texts": [
+   "Quando noi fummo là 've la rugiada",
+   "pugna col sole, per essere in parte",
+   "dove, ad orezza, poco si dirada,",
+   "ambo le mani in su l'erbetta sparte",
+   "soavemente 'l mio maestro pose:",
+   "ond' io, che fui accorto di sua arte,",
+   "porsi ver' lui le guance lagrimose;",
+   "ivi mi fece tutto discoverto",
+   "quel color che l'inferno mi nascose."
+  ],
+  "line": 128,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 128,
+  "pred_token": 3,
+  "pred_word": "fece",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 14,
+  "unit": [
+   52,
+   53,
+   54
+  ],
+  "texts": [
+   "Discesa poi per più pelaghi cupi,",
+   "trova le volpi sì piene di froda,",
+   "che non temono ingegno che le occùpi."
+  ],
+  "line": 54,
+  "token": 6,
+  "word": "le",
+  "pred_line": 54,
+  "pred_token": 7,
+  "pred_word": "occùpi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 23,
+  "unit": [
+   112,
+   113,
+   114,
+   115,
+   116,
+   117
+  ],
+  "texts": [
+   "Quando mi vide, tutto si distorse,",
+   "soffiando ne la barba con sospiri;",
+   "e 'l frate Catalan, ch'a ciò s'accorse,",
+   "mi disse: «Quel confitto che tu miri,",
+   "consigliò i Farisei che convenia",
+   "porre un uom per lo popolo a' martìri."
+  ],
+  "line": 115,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 115,
+  "pred_token": 2,
+  "pred_word": "disse",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 11,
+  "unit": [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21
+  ],
+  "texts": [
+   "E io senti' dentro a quella lumera",
+   "che pria m'avea parlato, sorridendo",
+   "incominciar, faccendosi più mera:",
+   "«Così com' io del suo raggio resplendo,",
+   "sì, riguardando ne la luce etterna,",
+   "li tuoi pensieri onde cagioni apprendo."
+  ],
+  "line": 17,
+  "token": 3,
+  "word": "m'",
+  "pred_line": 17,
+  "pred_token": 5,
+  "pred_word": "parlato",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 1,
+  "unit": [
+   43,
+   44,
+   45
+  ],
+  "texts": [
+   "«Chi v'ha guidati, o che vi fu lucerna,",
+   "uscendo fuor de la profonda notte",
+   "che sempre nera fa la valle inferna?"
+  ],
+  "line": 43,
+  "token": 7,
+  "word": "vi",
+  "pred_line": 43,
+  "pred_token": 9,
+  "pred_word": "lucerna",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 21,
+  "unit": [
+   130,
+   131,
+   132
+  ],
+  "texts": [
+   "Or voglion quinci e quindi chi rincalzi",
+   "li moderni pastori e chi li meni,",
+   "tanto son gravi, e chi di rietro li alzi."
+  ],
+  "line": 131,
+  "token": 6,
+  "word": "li",
+  "pred_line": 131,
+  "pred_token": 7,
+  "pred_word": "meni",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 13,
+  "unit": [
+   79,
+   80,
+   81,
+   82,
+   83,
+   84
+  ],
+  "texts": [
+   "Virgilio mi venìa da quella banda",
+   "de la cornice onde cader si puote,",
+   "perché da nulla sponda s'inghirlanda;",
+   "da l'altra parte m'eran le divote",
+   "ombre, che per l'orribile costura",
+   "premevan sì, che bagnavan le gote."
+  ],
+  "line": 82,
+  "token": 5,
+  "word": "m'",
+  "pred_line": 82,
+  "pred_token": 6,
+  "pred_word": "eran",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 27,
+  "unit": [
+   85,
+   86,
+   87
+  ],
+  "texts": [
+   "E più mi fora discoverto il sito",
+   "di questa aiuola; ma 'l sol procedea",
+   "sotto i mie' piedi un segno e più partito."
+  ],
+  "line": 85,
+  "token": 3,
+  "word": "mi",
+  "pred_line": 85,
+  "pred_token": 5,
+  "pred_word": "discoverto",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 5,
+  "unit": [
+   127,
+   128,
+   129
+  ],
+  "texts": [
+   "Noi leggiavamo un giorno per diletto",
+   "di Lancialotto come amor lo strinse;",
+   "soli eravamo e sanza alcun sospetto."
+  ],
+  "line": 128,
+  "token": 5,
+  "word": "lo",
+  "pred_line": 128,
+  "pred_token": 6,
+  "pred_word": "strinse",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 30,
+  "unit": [
+   64,
+   65,
+   66,
+   67,
+   68,
+   69
+  ],
+  "texts": [
+   "Li ruscelletti che d'i verdi colli",
+   "del Casentin discendon giuso in Arno,",
+   "faccendo i lor canali freddi e molli,",
+   "sempre mi stanno innanzi, e non indarno,",
+   "ché l'imagine lor vie più m'asciuga",
+   "che 'l male ond' io nel volto mi discarno."
+  ],
+  "line": 69,
+  "token": 8,
+  "word": "mi",
+  "pred_line": 69,
+  "pred_token": 9,
+  "pred_word": "discarno",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 19,
+  "unit": [
+   112,
+   113,
+   114
+  ],
+  "texts": [
+   "Fino a quel punto misera e partita",
+   "da Dio anima fui, del tutto avara;",
+   "or, come vedi, qui ne son punita."
+  ],
+  "line": 114,
+  "token": 5,
+  "word": "ne",
+  "pred_line": 114,
+  "pred_token": 7,
+  "pred_word": "punita",
+  "given_role": "obl",
+  "derived_role": "obl",
+  "dep_deprel": "obl",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 26,
+  "unit": [
+   25,
+   26,
+   27,
+   28,
+   29,
+   30
+  ],
+  "texts": [
+   "Sì mi parlava un d'essi; e io mi fora",
+   "già manifesto, s'io non fossi atteso",
+   "ad altra novità ch'apparve allora;",
+   "ché per lo mezzo del cammino acceso",
+   "venne gente col viso incontro a questa,",
+   "la qual mi fece a rimirar sospeso."
+  ],
+  "line": 30,
+  "token": 3,
+  "word": "mi",
+  "pred_line": 30,
+  "pred_token": 4,
+  "pred_word": "fece",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 24,
+  "unit": [
+   103,
+   104,
+   105
+  ],
+  "texts": [
+   "Risposto fummi: «Dì, chi t'assicura",
+   "che quell' opere fosser? Quel medesmo",
+   "che vuol provarsi, non altri, il ti giura»."
+  ],
+  "line": 105,
+  "token": 7,
+  "word": "ti",
+  "pred_line": 105,
+  "pred_token": 8,
+  "pred_word": "giura",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 4,
+  "unit": [
+   73,
+   74,
+   75
+  ],
+  "texts": [
+   "«O tu ch'onori scïenzïa e arte,",
+   "questi chi son c'hanno cotanta onranza,",
+   "che dal modo de li altri li diparte?»."
+  ],
+  "line": 74,
+  "token": 4,
+  "word": "c'",
+  "pred_line": 74,
+  "pred_token": 5,
+  "pred_word": "hanno",
+  "given_role": "subj",
+  "derived_role": "subj",
+  "dep_deprel": "nsubj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 19,
+  "unit": [
+   142,
+   143,
+   144,
+   145
+  ],
+  "texts": [
+   "Nepote ho io di là c'ha nome Alagia,",
+   "buona da sé, pur che la nostra casa",
+   "non faccia lei per essempro malvagia;",
+   "e questa sola di là m'è rimasa»."
+  ],
+  "line": 142,
+  "token": 6,
+  "word": "c'",
+  "pred_line": 142,
+  "pred_token": 7,
+  "pred_word": "ha",
+  "given_role": "subj",
+  "derived_role": "subj",
+  "dep_deprel": "nsubj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 3,
+  "unit": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "texts": [
+   "Avvegna che la subitana fuga",
+   "dispergesse color per la campagna,",
+   "rivolti al monte ove ragion ne fruga,",
+   "i' mi ristrinsi a la fida compagna:",
+   "e come sare' io sanza lui corso?"
+  ],
+  "line": 4,
+  "token": 2,
+  "word": "mi",
+  "pred_line": 4,
+  "pred_token": 3,
+  "pred_word": "ristrinsi",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 14,
+  "unit": [
+   73,
+   74,
+   75,
+   76,
+   77,
+   78
+  ],
+  "texts": [
+   "Lo dir de l'una e de l'altra la vista",
+   "mi fer voglioso di saper lor nomi,",
+   "e dimanda ne fei con prieghi mista;",
+   "per che lo spirto che di pria parlòmi",
+   "ricominciò: «Tu vuo' ch'io mi deduca",
+   "nel fare a te ciò che tu far non vuo'mi."
+  ],
+  "line": 74,
+  "token": 1,
+  "word": "mi",
+  "pred_line": 74,
+  "pred_token": 2,
+  "pred_word": "fer",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 5,
+  "unit": [
+   124,
+   125,
+   126,
+   127,
+   128,
+   129
+  ],
+  "texts": [
+   "Lo corpo mio gelato in su la foce",
+   "trovò l'Archian rubesto; e quel sospinse",
+   "ne l'Arno, e sciolse al mio petto la croce",
+   "ch'i' fe' di me quando 'l dolor mi vinse;",
+   "voltòmmi per le ripe e per lo fondo,",
+   "poi di sua preda mi coperse e cinse»."
+  ],
+  "line": 127,
+  "token": 9,
+  "word": "mi",
+  "pred_line": 127,
+  "pred_token": 10,
+  "pred_word": "vinse",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 6,
+  "unit": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "texts": [
+   "Al tornar de la mente, che si chiuse",
+   "dinanzi a la pietà d'i due cognati,",
+   "che di trestizia tutto mi confuse,",
+   "novi tormenti e novi tormentati",
+   "mi veggio intorno, come ch'io mi mova",
+   "e ch'io mi volga, e come che io guati."
+  ],
+  "line": 1,
+  "token": 7,
+  "word": "si",
+  "pred_line": 1,
+  "pred_token": 8,
+  "pred_word": "chiuse",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 22,
+  "unit": [
+   34,
+   35,
+   36
+  ],
+  "texts": [
+   "Ma perché tu, aspettando, non tarde",
+   "a l'alto fine, io ti farò risposta",
+   "pur al pensier, da che sì ti riguarde."
+  ],
+  "line": 36,
+  "token": 7,
+  "word": "ti",
+  "pred_line": 36,
+  "pred_token": 8,
+  "pred_word": "riguarde",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 8,
+  "unit": [
+   91,
+   92,
+   93
+  ],
+  "texts": [
+   "Fatto m'hai lieto, e così mi fa chiaro,",
+   "poi che, parlando, a dubitar m'hai mosso",
+   "com' esser può, di dolce seme, amaro»."
+  ],
+  "line": 91,
+  "token": 7,
+  "word": "mi",
+  "pred_line": 91,
+  "pred_token": 8,
+  "pred_word": "fa",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 27,
+  "unit": [
+   133,
+   134,
+   135
+  ],
+  "texts": [
+   "Vedi lo sol che 'n fronte ti riluce;",
+   "vedi l'erbette, i fiori e li arbuscelli",
+   "che qui la terra sol da sé produce."
+  ],
+  "line": 133,
+  "token": 7,
+  "word": "ti",
+  "pred_line": 133,
+  "pred_token": 8,
+  "pred_word": "riluce",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 11,
+  "unit": [
+   118,
+   119,
+   120
+  ],
+  "texts": [
+   "E io a lui: «Tuo vero dir m'incora",
+   "bona umiltà, e gran tumor m'appiani;",
+   "ma chi è quei di cui tu parlavi ora?»."
+  ],
+  "line": 118,
+  "token": 8,
+  "word": "m'",
+  "pred_line": 118,
+  "pred_token": 9,
+  "pred_word": "incora",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "purgatorio",
+  "canto": 2,
+  "unit": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "texts": [
+   "Già era 'l sole a l'orizzonte giunto",
+   "lo cui meridïan cerchio coverchia",
+   "Ierusalèm col suo più alto punto;",
+   "e la notte, che opposita a lui cerchia,",
+   "uscia di Gange fuor con le Bilance,",
+   "che le caggion di man quando soverchia;",
+   "sì che le bianche e le vermiglie guance,",
+   "là dov' i' era, de la bella Aurora",
+   "per troppa etate divenivan rance."
+  ],
+  "line": 6,
+  "token": 2,
+  "word": "le",
+  "pred_line": 6,
+  "pred_token": 3,
+  "pred_word": "caggion",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "inferno",
+  "canto": 26,
+  "unit": [
+   19,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  "texts": [
+   "Allor mi dolsi, e ora mi ridoglio",
+   "quando drizzo la mente a ciò ch'io vidi,",
+   "e più lo 'ngegno affreno ch'i' non soglio,",
+   "perché non corra che virtù nol guidi;",
+   "sì che, se stella bona o miglior cosa",
+   "m'ha dato 'l ben, ch'io stessi nol m'invidi."
+  ],
+  "line": 24,
+  "token": 10,
+  "word": "m'",
+  "pred_line": 24,
+  "pred_token": 11,
+  "pred_word": "invidi",
+  "given_role": "obl:a",
+  "derived_role": "obl:a",
+  "dep_deprel": "iobj",
+  "morph_pos": "pronoun"
+ },
+ {
+  "bucket": "control",
+  "canticle": "paradiso",
+  "canto": 15,
+  "unit": [
+   37,
+   38,
+   39,
+   40,
+   41,
+   42
+  ],
+  "texts": [
+   "Indi, a udire e a veder giocondo,",
+   "giunse lo spirto al suo principio cose,",
+   "ch'io non lo 'ntesi, sì parlò profondo;",
+   "né per elezïon mi si nascose,",
+   "ma per necessità, ché 'l suo concetto",
+   "al segno d'i mortal si soprapuose."
+  ],
+  "line": 42,
+  "token": 6,
+  "word": "si",
+  "pred_line": 42,
+  "pred_token": 7,
+  "pred_word": "soprapuose",
+  "given_role": "obj",
+  "derived_role": "obj",
+  "dep_deprel": "obj",
+  "morph_pos": "pronoun"
+ }
+]
