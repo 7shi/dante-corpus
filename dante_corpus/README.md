@@ -3,7 +3,7 @@
 Source text library for Dante's *Divina Commedia*. Provides line-level access to
 the Italian source, tokenization, quote-span (speech attribution) data, and the frozen
 grammatical-analysis stack (morphology, noun phrases, dependencies, predicate-argument
-skeleton — see PLAN.md), plus a content hash per canto×layer.
+skeleton, plus the pronoun-case annex — see PLAN.md), plus a content hash per canto×layer.
 
 ---
 
@@ -28,16 +28,18 @@ Lists available canticles or canto numbers, one per line.
 dante-corpus text lines  <canticle> <reference> [--format text|json]
 dante-corpus text tokens <canticle> <reference> [--format text|json]
 dante-corpus text morph  <canticle> <reference> [--format text|json]
+dante-corpus text case   <canticle> <reference> [--format text|json]
 dante-corpus text np     <canticle> <reference> [--format text|json]
 dante-corpus text dep    <canticle> <reference> [--format text|json]
 dante-corpus text skel   <canticle> <reference> [--format text|json]
 ```
 
-Prints source lines, tokens, or a grammatical layer (morphology, noun phrases, dependencies,
-predicate-argument skeleton)
+Prints source lines, tokens, or a grammatical layer (morphology, pronoun case, noun phrases,
+dependencies, predicate-argument skeleton)
 for a reference range. `reference` is a canto number or `canto:start-end`, e.g. `1`, `1:1-12`.
-Default format: `text`. `morph`/`np`/`dep`/`skel` read the frozen artifacts under `morph/`,
-`np/`, `dep/`, `skel/` (see their own READMEs); no model call happens at query time.
+Default format: `text`. `morph`/`case`/`np`/`dep`/`skel` read the frozen artifacts under
+`morph/`, `case/`, `np/`, `dep/`, `skel/` (see their own READMEs); no model call happens at
+query time.
 
 **Examples**
 
@@ -46,6 +48,7 @@ dante-corpus text lines  inferno 1
 dante-corpus text lines  inferno 1:1-12 --format json
 dante-corpus text tokens inferno 1:8-9
 dante-corpus text morph  inferno 1:1-2
+dante-corpus text case   inferno 1:1-12
 dante-corpus text np     inferno 1:1-2
 dante-corpus text dep    inferno 1:1-2
 dante-corpus text skel   inferno 1:1-3
@@ -60,6 +63,18 @@ Text format: `<no>: <text>` per line. Token format: `<no>: tok | tok | …`.
     Nel  in+il  preposition+article  m. sg.  contraction
     mezzo  mezzo  noun  m. sg.
     ...
+```
+
+**`text case`** prints one indented line per pronoun: `token  word  case`. The artifact is
+sparse, so a line with no pronoun prints only its text. A token fusing two pronouns carries one
+case per pronoun, joined with `+` (`gliel'` -> `dative+accusative`).
+
+```
+2: mi ritrovai per una selva oscura,
+    1  mi  accusative
+8: ma per trattar del ben ch'i' vi trovai,
+    7  i'  nominative
+    8  vi  locative
 ```
 
 **`text np`** prints noun phrases nested under their line, most-specific innermost. Each span
@@ -144,7 +159,7 @@ dante-corpus hash <canticle> <canto> [--format text|json]
 ```
 
 Prints the content hash (sha256) of every layer artifact that exists for the canto, one
-`<layer>\t<hash>` row per line (`text`, `morph`, `np`, `dep`, `skel`). Consumers record these to
+`<layer>\t<hash>` row per line (`text`, `morph`, `np`, `dep`, `skel`, `case`). Consumers record these to
 tell exactly which parse a derived artifact annotated, and to recompute only what a regeneration
 actually changed — regenerating one canto changes only that canto's hashes. Default format:
 `text`.
@@ -164,6 +179,7 @@ dante-corpus hash inferno 1 --format json
 src/       <canticle>/NN.txt    Italian source lines (one line per file line)
 quotes/    <canticle>.xml       Speech-quote tree (built by dante-build-quotes)
 morph/     <canticle>/NN.tsv    Layer 2: per-token morphology + lemma (see morph/README.md)
+case/      <canticle>/NN.tsv    Layer-2 annex: pronoun case, sparse (see case/README.md)
 np/        <canticle>/NN.tsv    Layer 3: noun phrases (see np/README.md)
 dep/       <canticle>/NN.tsv    Layer 4: dependency relations (see dep/README.md)
 skel/      <canticle>/NN.tsv    Layer 5: predicate-argument skeleton (see skel/README.md)
@@ -237,13 +253,15 @@ canto.line(number: int) -> Line
 canto.lines(start: int = 1, end: int | None = None) -> tuple[Line, ...]
 canto.quotes() -> tuple[QuoteSpan, ...]
 canto.morph() -> dict[int, tuple[MorphRow, ...]]   # Layer 2, line no -> per-token rows
+canto.case()  -> dict[int, tuple[CaseRow, ...]]    # Layer-2 annex, sparse: pronouns only
 canto.np()    -> tuple[NPSpan, ...]                # Layer 3, nested forest
 canto.dep()   -> dict[int, tuple[DepRow, ...]]     # Layer 4, line no -> per-token rows
 canto.skel()  -> tuple[SkelTuple, ...]             # Layer 5, grouped tuples by (line, token)
 canto.hashes() -> dict[str, str]                   # layer name -> sha256 of its artifact
 ```
 
-`morph`/`np`/`dep`/`skel` load the frozen build-time artifacts (see [`morph/README.md`](../morph/README.md),
+`morph`/`case`/`np`/`dep`/`skel` load the frozen build-time artifacts (see
+[`morph/README.md`](../morph/README.md), [`case/README.md`](../case/README.md),
 [`np/README.md`](../np/README.md), [`dep/README.md`](../dep/README.md),
 [`skel/README.md`](../skel/README.md)); no model call happens on
 these calls, and they raise `FileNotFoundError` if the canto's artifact hasn't been built.
@@ -276,6 +294,21 @@ class MorphRow:  # Layer 2 — one per Layer-1 token, aligned 1:1
     mood: str = ""
     note: str = ""       # e.g. contraction / apocope / elision
 ```
+
+```python
+@dataclass(frozen=True)
+class CaseRow:  # Layer-2 annex — one per pronoun-POS token (sparse, not per token)
+    line: int
+    token: int   # 1-based alpha-token index within `line` (matches Line.tokens order)
+    word: str
+    case: str    # closed: nominative / accusative / dative / genitive / ablative / locative;
+                 # one value per pronoun component of the Layer-2 pos, joined with "+"
+```
+
+Helpers in `case.py`: `scope_slots(pos) -> int` decides from Layer 2's `pos` how many case
+values a token carries (0 = out of scope); `case_index(canto.case()) -> dict[tuple[int, int], str]`
+builds the `(line, token) -> case` lookup Layer 5's checker consumes as a third read. See
+[`case/README.md`](../case/README.md).
 
 ```python
 @dataclass(frozen=True)
@@ -344,7 +377,7 @@ served artifact is always the frozen, LLM-authored table (see [`skel/README.md`]
 ### Content hashes (`hashes.py`)
 
 ```python
-LAYERS = ("text", "morph", "np", "dep", "skel")
+LAYERS = ("text", "morph", "np", "dep", "skel", "case")
 
 artifact_path(layer: str, canticle: str, number: int) -> Path
 artifact_hash(layer: str, canticle: str, number: int) -> str        # sha256 of the file bytes

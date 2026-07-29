@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from functools import cached_property
 
+from . import case as _case
 from . import dep as _dep
 from . import hashes as _hashes
 from . import morph as _morph
@@ -12,6 +13,7 @@ from ._paths import SRC_DIR, QUOTES_DIR
 from .tokenizer import has_alpha, tokenize
 
 MorphRow = _morph.MorphRow
+CaseRow = _case.CaseRow
 NPSpan = _np.NPSpan
 DepRow = _dep.DepRow
 SkelArg = _skel.SkelArg
@@ -107,6 +109,12 @@ class Canto:
         """Frozen Layer-2 morphology: line-number -> per-token MorphRows (no model call)."""
         return _morph.load_morph(self.canticle, self.number)
 
+    def case(self) -> dict[int, tuple[CaseRow, ...]]:
+        """Frozen pronoun case (the Layer-2 annex): line-number -> CaseRows (no model call).
+
+        Sparse — only pronoun-POS tokens carry a row, so a line without one has no key."""
+        return _case.load_case(self.canticle, self.number)
+
     def np(self) -> tuple[NPSpan, ...]:
         """Frozen Layer-3 noun phrases as a nested forest, ordered by (line, start, -end).
 
@@ -125,7 +133,7 @@ class Canto:
 
     def hashes(self) -> dict[str, str]:
         """Content hash (sha256) of every layer artifact that exists for this canto, keyed by
-        layer name (`text`/`morph`/`np`/`dep`/`skel`). See PLAN.md "Versioning"."""
+        layer name (`text`/`morph`/`np`/`dep`/`skel`/`case`). See PLAN.md "Versioning"."""
         return _hashes.canto_hashes(self.canticle, self.number)
 
     def to_dict(self) -> dict[str, object]:

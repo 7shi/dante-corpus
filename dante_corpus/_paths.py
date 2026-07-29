@@ -5,6 +5,7 @@ ROOT_DIR = PACKAGE_DIR.parent
 SRC_DIR = ROOT_DIR / "src"
 QUOTES_DIR = ROOT_DIR / "quotes"
 MORPH_DIR = ROOT_DIR / "morph"
+CASE_DIR = ROOT_DIR / "case"
 NP_DIR = ROOT_DIR / "np"
 DEP_DIR = ROOT_DIR / "dep"
 SKEL_DIR = ROOT_DIR / "skel"

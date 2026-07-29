@@ -2,10 +2,13 @@
 
 ## Status
 
-**Step 1 (the pilot) is done and passed; step 2 is next.** No artifact, no build driver, no
-`dante_corpus/` module exists yet — this directory holds this file,
-[`CORRECTIONS.md`](CORRECTIONS.md) and the pilot harness, all on the branch `case-pilot` so the
-whole annex can still be dropped in one move. Written 2026-07-29, immediately after Layer 5's
+**Steps 1 (pilot) and 2 (freeze + driver) are done; step 3 is next.** The vocabulary and scope
+are frozen and the code exists — [`case.py`](case.py) (build driver, `--check`/`--stats`/
+`--clean`), [`README.md`](README.md), [`Makefile`](Makefile), `dante_corpus/case.py`,
+`Canto.case()`, `dante-corpus text case`, `"case"` appended to `hashes.LAYERS`, and
+`tests/test_case.py`. **No artifact is built yet**: step 3 is the blind corpus pass, which is
+LLM-scale generation the user runs. Everything still lives on the branch `case-pilot` so the
+whole annex can be dropped in one move. Written 2026-07-29, immediately after Layer 5's
 Phase 5 closed at **0 hard, 3551 soft** (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where
 Phase 5 ended*).
 
@@ -20,7 +23,44 @@ independent read should look like, and its own vocabulary census (`accusative` 2
 measurement, including how the stop rule's wording was corrected, in
 [`CORRECTIONS.md`](CORRECTIONS.md).
 
-**Next: step 2** — freeze the vocabulary and scope from that census, then write the driver.
+**Step 2 result (2026-07-30).** Vocabulary frozen at the census's own six values —
+`accusative` / `dative` / `ablative` / `nominative` / `genitive` / `locative`, with `ablative`
+(not the `oblique` this plan guessed) as the model's word for the partitive/locative class —
+plus `vocative`, the one value added rather than measured (the pilot sampled clitic argument
+positions, which cannot hold a term of address; the frozen scope is every pronoun, and direct
+address is pervasive in the poem). `--stats` over the built artifact measures whether it is
+used at all. The oblique tail is left **open on purpose**: `ablative` is a residual class, the
+tail was 6% of the pilot's answers and is where the model was least stable, and `genitive` is
+weak under the criterion the `instrumental` rejection implies (a value earns its place if it
+changes the *slot* the pronoun fills, not what the oblique means). Seven values are frozen
+anyway because folding one into `ablative` afterwards is a mechanical rewrite while dropping it
+now and being wrong costs a corpus pass — see [`CORRECTIONS.md`](CORRECTIONS.md)'s
+*The oblique tail*.
+
+Scope frozen at **every pronoun-POS token** (13113 tokens over 8542 lines), read off Layer 2's
+own `pos` column rather than a hand-frozen list of word forms, at a measured **1340 calls**; the
+clitic-only alternative was 3710 tokens for ~446 calls but needed a curated form list and left
+the *mirror* bucket's tonic forms (`cui`, `me`, `lui`, `altrui`, `lor`) unanswered. Driver,
+module, serve surface and tests written; see [`README.md`](README.md) and
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 2*.
+
+**Step 3 smoke test (2026-07-30).** Inferno 1 was built before committing to the corpus pass.
+`--check` passed at **0 hard**, and cross-tabulating against Layer 4 found two things the
+checker structurally cannot see: the prompt's worked example taught `accusative` for the
+reflexive `mi ritrovai`, and the reflexive/impersonal clitic (**1411 tokens, 10.8% of the
+scope**, Layer 4's `expl`) had no home in the vocabulary. Both are fixed — the example now reads
+`reflexive`, and **`reflexive` is an eighth value** — and `case/inferno/01.tsv` must be rebuilt
+with `--force`. See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 3 smoke test*.
+
+Inferno 1 was then **rebuilt** under the corrected prompt: 0 hard, and `reflexive` maps onto
+Layer 4's `expl` at 9/10. The rebuild also surfaced a third adjudication class the clitic-only
+pilot could not have sampled — relative pronouns that are the subject of their clause, read
+`nominative` by `case` and `obj`/`obl` by Layer 4 — so `--stats` gained `nsubj` → `nominative`
+and an *impossible pairings* report (`obl` × `nominative`). Report-side only; generation is
+unchanged.
+
+**Next: step 3** — the rest of the corpus pass (`make -C case`), which the user runs. Inferno 1
+is done and needs no rebuild.
 
 **Resuming cold? Read [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)** —
 it carries the state check, how to rebuild the disputed population, which model to use, who runs
@@ -268,7 +308,11 @@ verdict is to kill the annex.
      in; see [`CORRECTIONS.md`](CORRECTIONS.md)'s *How the stop rule was read*.)*
    - Also report the *direction* of the answers: if the model systematically sides with `dep`, or
      systematically against it, that is itself the finding, and it changes what step 3 does.
-2. **If the pilot passes: freeze the vocabulary and scope, then write the driver.** Sizing, from
+2. **If the pilot passes: freeze the vocabulary and scope, then write the driver.** ✅ **done
+   2026-07-30** — see *Step 2 result* above and [`README.md`](README.md). The sizing below is what
+   the decision was taken against; the pass went to the full pronoun population rather than the
+   clitic subset, and the unit of work is the parse unit rather than a fixed line count, so the
+   measured cost is 1340 calls at the default `--chunk 12` (1069 at 15, 888 at 18). Sizing, from
    the current corpus:
 
    | population | count |

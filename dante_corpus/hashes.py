@@ -16,16 +16,20 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
+from . import case as _case
 from . import dep as _dep
 from . import morph as _morph
 from . import np as _np
 from . import skel as _skel
 from ._paths import SRC_DIR
 
-LAYERS = ("text", "morph", "np", "dep", "skel")
+# `case` is appended, not inserted: adding a key moves no existing artifact's hash, which is
+# the whole reason the pronoun case annex is a sibling directory (see case/PLAN.md).
+LAYERS = ("text", "morph", "np", "dep", "skel", "case")
 
 _ARTIFACT_PATH = {
     "morph": _morph.artifact_path,
+    "case": _case.artifact_path,
     "np": _np.artifact_path,
     "dep": _dep.artifact_path,
     "skel": _skel.artifact_path,

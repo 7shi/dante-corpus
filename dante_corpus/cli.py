@@ -3,6 +3,7 @@ import json
 import sys
 
 from . import api
+from . import case as _case
 from . import dep as _dep
 from . import hashes as _hashes
 from . import morph as _morph
@@ -26,6 +27,15 @@ def _morph_rows(selected: list[tuple[api.Line, tuple[api.MorphRow, ...]]]) -> st
             feats = " ".join(f for f in (row.gender, row.number, row.person, row.tense, row.mood) if f)
             cells = [row.word, row.lemma, row.pos, feats, row.note]
             out.append("    " + "  ".join(cell for cell in cells if cell))
+    return "\n".join(out)
+
+
+def _case_rows(selected: list[tuple[api.Line, tuple[api.CaseRow, ...]]]) -> str:
+    out: list[str] = []
+    for line, rows in selected:
+        out.append(f"{line.no}: {line.text}")
+        for row in rows:
+            out.append(f"    {row.token}  {row.word}  {row.case}")
     return "\n".join(out)
 
 
@@ -210,6 +220,10 @@ def build_parser() -> argparse.ArgumentParser:
     text_morph.add_argument("canticle")
     text_morph.add_argument("reference", help="canto or canto:start-end")
     _add_format_argument(text_morph, "text", "json", default="text")
+    text_case = text_sub.add_parser("case")
+    text_case.add_argument("canticle")
+    text_case.add_argument("reference", help="canto or canto:start-end")
+    _add_format_argument(text_case, "text", "json", default="text")
     text_np = text_sub.add_parser("np")
     text_np.add_argument("canticle")
     text_np.add_argument("reference", help="canto or canto:start-end")
@@ -285,6 +299,19 @@ def _handle_text(args: argparse.Namespace) -> int:
             )
         else:
             print(_morph_rows(selected))
+        return 0
+
+    if args.action == "case":
+        canto_no = int(str(args.reference).split(":")[0])
+        data = api.canto(args.canticle, canto_no).case()
+        selected = [(line, data.get(line.no, ())) for line in lines]
+        if args.format == "json":
+            _dump_json(
+                [{"no": line.no, "rows": [row.to_dict() for row in rows]}
+                 for line, rows in selected]
+            )
+        else:
+            print(_case_rows(selected))
         return 0
 
     if args.action == "np":

@@ -25,6 +25,7 @@ def test_artifact_hash_and_canto_hashes(tmp_path, monkeypatch):
     monkeypatch.setattr(hashes._np, "NP_DIR", tmp_path / "np")
     monkeypatch.setattr(hashes._dep, "DEP_DIR", tmp_path / "dep")
     monkeypatch.setattr(hashes._skel, "SKEL_DIR", tmp_path / "skel")
+    monkeypatch.setattr(hashes._case, "CASE_DIR", tmp_path / "case")
 
     text_path = src_dir / "inferno" / "01.txt"
     text_path.parent.mkdir(parents=True)
@@ -34,7 +35,7 @@ def test_artifact_hash_and_canto_hashes(tmp_path, monkeypatch):
     assert hashes.artifact_hash("text", "inferno", 1) == expected
 
     data = hashes.canto_hashes("inferno", 1)
-    assert data == {"text": expected}  # morph/np/dep/skel artifacts don't exist yet
+    assert data == {"text": expected}  # morph/np/dep/skel/case artifacts don't exist yet
 
     # Regenerating the file (content change) changes the hash.
     text_path.write_text("Nel mezzo del cammin di nostra vita, altered\n", encoding="utf-8")
