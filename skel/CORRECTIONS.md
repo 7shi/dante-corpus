@@ -1,5 +1,54 @@
 # skel — Layer 5 correction history
 
+## Phase 5q: the final `--fix` regeneration pass, and the `ioj` typo (2026-07-29)
+
+Baseline: **0 hard, 3702 soft** (the Phase 5p state), **1702 flagged parse units**. One full
+`--fix` pass over all three canticles, run by the user as `make -C skel fix` 3-way parallel,
+**≈28 hours wall time**. This is the work item PLAN.md had reserved for the user once the
+deterministic route was exhausted, and it is the second (and last) full regeneration round.
+
+| metric | measured |
+|---|---|
+| units flagged before | 1702 |
+| units flagged after | 1644 (**−58 cleared outright**) |
+| soft violations removed | **147** (3702 → **3555**, −4.0%) |
+| violations removed per LLM call | **≈0.086** |
+| units that got *worse* | **0** (Phase 5c's criterion held) |
+| cantos touched | 66 — inferno 25, purgatorio 21, paradiso 20 |
+
+Per class:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| extra_arg | 1714 | 1639 | −75 (−4.4%) |
+| missing_arg | 1238 | 1193 | −45 (−3.6%) |
+| role_mismatch | 475 | 459 | −16 (−3.4%) |
+| extra_tuple | 155 | 145 | −10 (−6.5%) |
+| missing_tuple | 24 | 23 | −1 |
+| membership | 94 | 94 | 0 |
+| unknown_role | 2 | 2 | 0 |
+
+**The Phase 5e result reproduced, on a residue two Layer-4 correction rounds and nine checker
+rules further along.** The yield came in at 0.086 violations per call against 5e's 0.11 — the
+same flat rate, on a flagged set composed very differently. Every class moved less than it did in
+5e (the three large ones 4.4%/3.6%/3.4% against 5.2%/5.1%/2.9%), so **PLAN.md's stop rule applies
+again and no third pass is warranted**: what is left does not respond to regeneration.
+
+The per-unit acceptance count is not recoverable for this round — `skel/skel.log` was left empty
+by the parallel invocation — so the table reports the flagged-unit delta (−58) instead, which is
+a lower bound on accepted units (a unit can be improved without being cleared).
+
+**The `ioj` typo (−4).** `--stats` had reported `unknown_role 2` since the Phase 4b round; the
+two rows were `purgatorio 13:103 dome` and `13:104 rispondesti`, both carrying the role `ioj` —
+a plain misspelling of `iobj`, not a reading. Layer 4 tags both arguments (`ti dome`, `mi
+rispondesti`) `iobj`, so the correction is mechanical and agrees with the tree. Fixing it removed
+the 2 `unknown_role` violations and the 2 `role_mismatch` rows they carried (`'ioj' vs 'obl:a'`):
+3555 → **3551**, and **`unknown_role` is now 0 for the first time**.
+
+**Current state**: `make -C skel check` — **0 hard, 3551 soft** (down from 17438 at the first
+full-corpus measurement, overall Δ13887, 79.7%; Δ2368 across Phase 5). `make -C dep check` stays
+0 hard / 0 soft; `uv run pytest -q` 125 passed.
+
 ## Phase 5p: two Layer-4 correction rounds — clausal complements and the `mark` deferrals (2026-07-28)
 
 Baseline: **0 hard, 3702 soft** (from 3712, the Phase 5o state) — −10, no checker code and no

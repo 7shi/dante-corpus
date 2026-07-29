@@ -8,21 +8,22 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5o, one Phase 5e `--fix` round
-run, and four Layer-4 correction rounds (Phases 5i, 5n and 5p's two) fed back into `dep/`.**
-`make -C skel check`: **0 hard, 3702 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5q, two full `--fix` rounds
+run (Phases 5e and 5q), and four Layer-4 correction rounds (Phases 5i, 5n and 5p's two) fed back
+into `dep/`.**
+`make -C skel check`: **0 hard, 3551 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
 3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m, 3725 after Phase 5n, 3712 after
-Phase 5o).
+Phase 5o, 3702 after Phase 5p).
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
-the deterministic phases had cleared the unfixable units out of the flagged set — so the
-remaining gap is closed by measuring classes and normalizing, not by more model calls (see
-[PLAN.md](PLAN.md) and *Next steps*).
+the deterministic phases had cleared the unfixable units out of the flagged set — Phase 5q
+measured 0.086 per call on a residue nine rules further along, the same flat figure. So the
+remaining gap is not closed by more model calls (see [PLAN.md](PLAN.md) and *Next steps*).
 
 ## What it does
 
@@ -300,16 +301,25 @@ gerunds after perception verbs, depictive adjectives. Round B closed the two mul
 deferrals Phase 5n had left (purgatorio 8:114, purgatorio 22:15). `dep --check` stayed 0/0; see
 [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
+After Phase 5q (2026-07-29, the user-run `--fix` pass plus the `ioj` typo fix): **0 hard, 3551
+soft** — `extra_arg` 1714 → **1639**, `missing_arg` 1238 → **1193**, `role_mismatch` 475 →
+**457**, `extra_tuple` 155 → **145**, `unknown_role` 2 → **0**. One full pass over all three
+canticles, 1702 flagged parse units, ≈28 hours wall time run 3-way parallel, 66 cantos touched,
+no unit regressed: **−147**, i.e. 0.086 violations per LLM call. The two `unknown_role` rows
+(`purgatorio 13:103`, `13:104`) held the role `ioj`, a misspelling of `iobj` that Layer 4's tree
+confirms; fixing it took 3555 → **3551**.
+
 ## Next steps
 
-What remains past the mechanical phases above should be genuine LLM misreadings (subject
-mix-ups across enjambment, `subj`/`obj`/`iobj` reversals) plus a residual `extra_tuple` tail
-(non-finite verbs used as nominalized oblique complements and other one-off structural cases)
-and `membership` (a scattered long tail of individual boundary cases, not one mechanical
-pattern — Phase 0 already caught the two big mechanical membership fixes). Only these should
-need `--fix` (LLM regeneration), restricted to the specific flagged lines, re-checked per class
-— the goal is **0 soft violations**, treating every remaining class as something to fix or
-formally exempt, not a baseline to tolerate.
+What remains past the mechanical phases above is **reading disagreement between two independent
+parses**, not a class with a known instrument: subject resolution across enjambment and pro-drop
+(`extra_arg subj` 865), the direct-child `missing_arg` mass, the clitic dative/accusative
+question (needs a Layer-2 case feature), and the complement-vs-adjunct distinction (needs a verb
+lexicon). Both routes are now measured out — regeneration at a flat ~0.09-0.11 violations per
+call over two full passes, and deterministic rules against every population
+[PLAN.md](PLAN.md) triaged. The goal remains **0 soft violations**, but reaching it needs an
+instrument this project has declined on principle, so it is a new plan rather than more of this
+one.
 
 `--fix` (`skel/skel.py`) regenerates a flagged parse unit and keeps the result only if its soft
 violation count strictly drops **and** no violation class appears that wasn't already there
