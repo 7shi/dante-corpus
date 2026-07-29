@@ -6,9 +6,10 @@
 checker was refined through Phases 0-5q and its soft residue is at **3551** — every route the
 Phase 5 plan opened now has a measured verdict and none is open (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
-[`skel/README.md`](skel/README.md) for the design and current status. One follow-on is **open at
-its kill gate**: the pronoun case annex, [`case/PLAN.md`](case/PLAN.md) — its pilot harness is
-built and its population rebuilt on the branch `case-pilot`, awaiting the measurement run.
+[`skel/README.md`](skel/README.md) for the design and current status. One follow-on is **in
+progress on the branch `case-pilot`**: the pronoun case annex, [`case/PLAN.md`](case/PLAN.md) —
+its kill-gate pilot ran on 2026-07-30 and passed (81% self-agreement on the disputed clitics vs
+95% on a control, zero three-way splits); the driver is step 2.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -52,8 +53,24 @@ artifacts now live on `main`.
 
 **Next work**
 
-**Nothing in the five-layer stack is outstanding; the one open item is the case annex's pilot
-run** (below). Layer 5 Phase 5 closed at **0 hard, 3551 soft** (see
+**The five-layer stack has nothing outstanding. The one open item is the case annex, and its
+next step is step 2 of [`case/PLAN.md`](case/PLAN.md): freeze the case vocabulary and scope from
+the pilot's own census, then write `case/case.py` on the model of `morph/morph.py`.** Concretely,
+on the branch `case-pilot`:
+
+| step | what | who | state |
+|---|---|---|---|
+| 1 | kill-gate pilot — self-consistency on the disputed clitics vs a control | user ran the calls | **done, passed** (2026-07-30) |
+| 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative`, from the pilot census) and scope (clitics, or all pronoun-POS tokens); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **next** |
+| 3 | blind corpus pass over the clitic-bearing lines (~300–500 calls), validate, **commit**, *then* join to `dep` | user runs the calls | not started |
+| 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started |
+| 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) | assistant | not started |
+
+The order in step 3 is load-bearing: generating blind and freezing *before* looking at `dep` is
+what keeps the column a third independent read rather than an artifact manufactured to close
+violations. Expected return is ≈90–100 of the 3551, not zero — see the follow-on paragraph below.
+
+Layer 5 Phase 5 closed at **0 hard, 3551 soft** (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*): Phase 5o closed the last open row of the
 `extra_arg` direct-child triage (`advcl`), Phase 5p ran the two hand-verified `dep/` correction
 rounds its verdicts left over (−10), and Phase 5q spent the one remaining item — the user-run
@@ -62,18 +79,18 @@ took `unknown_role` to 0. What remains is documented reading disagreement betwee
 parses: `extra_arg` (1639) and `missing_arg` (1193) are 80% of it, and both regeneration and
 deterministic rules now have a measured stop verdict against them.
 
-**One follow-on is open at its kill gate**: [`case/PLAN.md`](case/PLAN.md), a
+**One follow-on is open, past its kill gate**: [`case/PLAN.md`](case/PLAN.md), a
 **pronoun case annex to Layer 2** — the instrument Phase 5i/5h's parked verdicts named. It is the
 sibling directory `case/`, not a new column in `morph/*.tsv`, so no existing artifact hash moves;
 it is authored blind to the disputed positions so it stays a genuine **third independent read**;
 and its contradictions with `dep` feed a hand-verified Layer-4 correction round rather than a
-checker exemption. Its first step is a **kill-gate pilot** measuring whether the model agrees
-with itself on the disputed clitics at all, and that pilot is now **built and staged on the
-branch `case-pilot`**: the state check re-run and matching, the disputed population rebuilt at
-exactly **67 + 28** with a **95**-position control group, and the harness
-(`case/population.py`, `case/pilot.py`, `case/report.py`) written and smoke-tested. What remains
-is the **570 calls against `google:gemma-4-31b-it`** — LLM work the user runs, as with
-`make -C skel fix` — and then the verdict, recorded either way in
+checker exemption. Its first step was a **kill-gate pilot** measuring whether the model agrees
+with itself on the disputed clitics at all, and that pilot **ran on 2026-07-30 and passed**
+(570 calls, `google:gemma-4-31b-it`, on the branch `case-pilot`): **81%** unanimity across three
+presentation variants on the disputed positions with **zero** three-way splits, against **95%**
+on a control group of undisputed clitics, and answers that split both ways against `dep` rather
+than restating either existing read. Next is step 2 — freeze the vocabulary from the pilot's own
+census and write the driver. Measurement in
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md). Expected value is stated up front as
 **≈90–100 of the 3551** — it does not reach zero, and the rest of the residual (subject
 resolution across enjambment and pro-drop) is untouched by it. The paired proposal, a **verb lexicon** for the
@@ -148,7 +165,7 @@ The mechanics — columns, generation rules, the token-alignment algorithm, vali
 usage — live in [`morph/README.md`](morph/README.md). It is served via `Canto.morph()` and
 `dante-corpus text morph`.
 
-**Proposed annex (at its kill gate)**: pronominal **case**, the one morphological feature this layer
+**Annex in progress (pilot passed, driver not written)**: pronominal **case**, the one morphological feature this layer
 omits and the instrument Layer 5's parked clitic verdicts named. Planned as the sibling directory
 `case/` rather than a new `morph/*.tsv` column, so no existing artifact hash moves and the
 experiment stays revertible; merging into Layer 2 is the natural end state if it proves out. See
@@ -293,13 +310,13 @@ discipline already used for normalization and quotes.
    (`--check`: 0 hard / 3551 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 
-5. **Pronoun case annex** — *at its kill gate* ([`case/PLAN.md`](case/PLAN.md), branch
+5. **Pronoun case annex** — *pilot passed, driver next* ([`case/PLAN.md`](case/PLAN.md), branch
    `case-pilot`). Not a sixth layer: a Layer-2 morphological feature held in its own directory,
    worth ≈90–100 of Layer 5's 3551 soft violations and useful to consumers on its own terms. The
-   pilot that gates it is built and the population rebuilt (67 + 28 disputed, 95 control); only
-   its 570 model calls and the verdict are outstanding.
+   kill-gate pilot ran over the rebuilt population (67 + 28 disputed, 95 control) and passed;
+   steps 2–5 — freeze, blind corpus pass, Layer-4 correction round, re-measure — are outstanding.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
 Layers 1–5 are implemented, built for all 100 cantos, and merged to `main`; the grammatical
-stack this plan describes is complete. The only follow-on is the case annex above, which is
-open at its kill gate on the branch `case-pilot`.
+stack this plan describes is complete. The only follow-on is the case annex above, in progress
+on the branch `case-pilot` with its kill gate passed.

@@ -2,20 +2,25 @@
 
 ## Status
 
-**Step 1 (the pilot) is built and ready to run; nothing beyond it is started.** No artifact, no
-build driver, no `dante_corpus/` module exists — this directory holds this file,
+**Step 1 (the pilot) is done and passed; step 2 is next.** No artifact, no build driver, no
+`dante_corpus/` module exists yet — this directory holds this file,
 [`CORRECTIONS.md`](CORRECTIONS.md) and the pilot harness, all on the branch `case-pilot` so the
-whole annex can be dropped in one move if the pilot kills it. Nothing here is committed to; the first step is a pilot
-whose purpose is to *kill* the idea cheaply if the measurement comes out wrong. Written
-2026-07-29, immediately after Layer 5's Phase 5 closed at **0 hard, 3551 soft**
-(see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where Phase 5 ended*).
+whole annex can still be dropped in one move. Written 2026-07-29, immediately after Layer 5's
+Phase 5 closed at **0 hard, 3551 soft** (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where
+Phase 5 ended*).
 
-**Where the pilot stands (2026-07-29).** The state check below was re-run and matches; the
-disputed population was rebuilt and came out at exactly **67 + 28**, with a **95**-position
-control group; the harness (`population.py`, `pilot.py`, `report.py`) is written and
-smoke-tested against the local debug backend. What is left is
-the **570 calls against `google:gemma-4-31b-it`** — LLM work the user runs — and then the
-verdict. Setup, method and numbers live in [`CORRECTIONS.md`](CORRECTIONS.md).
+**Pilot result (2026-07-30, 570 calls, `google:gemma-4-31b-it`).** The state check below was
+re-run and matched; the disputed population rebuilt at exactly **67 + 28**, with a **95**-position
+control group. Self-agreement across the three presentation variants: **81% unanimous on the
+disputed positions with zero three-way splits**, against **95%** on the control — stable
+answering, not noise, so the kill gate is **passed**. The model sides with neither existing read
+systematically (Layer 4 on 29 positions, the Layer-5 LLM on 61), which is what a genuine third
+independent read should look like, and its own vocabulary census (`accusative` 276, `dative` 252,
+`ablative` 28, `nominative` 7, `genitive` 5, `locative` 2) is what step 2 freezes. Full
+measurement, including how the stop rule's wording was corrected, in
+[`CORRECTIONS.md`](CORRECTIONS.md).
+
+**Next: step 2** — freeze the vocabulary and scope from that census, then write the driver.
 
 **Resuming cold? Read [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)** —
 it carries the state check, how to rebuild the disputed population, which model to use, who runs
@@ -253,9 +258,14 @@ verdict is to kill the annex.
    artifact is written** — the deliverable is `case/CORRECTIONS.md`. Cost, as sized against the
    rebuilt population: 190 positions × 3 runs = **570 calls**, ~1 hour.
    - **Stop rule, fixed in advance**: if the model does not agree with itself on the disputed
-     positions at a clearly higher rate than on a control sample of *undisputed* clitics, the
-     column is measuring noise and **this plan ends here**. A case column that waffles on exactly
-     the cases it was built for is worthless regardless of its aggregate accuracy.
+     positions at a rate clearly above noise — with the control sample of *undisputed* clitics as
+     the yardstick for what stable answering looks like on this corpus — the column is measuring
+     noise and **this plan ends here**. A case column that waffles on exactly the cases it was
+     built for is worthless regardless of its aggregate accuracy.
+     *(Corrected wording. As first written this asked for disputed agreement **higher than** the
+     control's, which is unpassable by construction — the control is the ceiling, being the
+     positions two reads already agree on. The bar itself was not moved after the numbers came
+     in; see [`CORRECTIONS.md`](CORRECTIONS.md)'s *How the stop rule was read*.)*
    - Also report the *direction* of the answers: if the model systematically sides with `dep`, or
      systematically against it, that is itself the finding, and it changes what step 3 does.
 2. **If the pilot passes: freeze the vocabulary and scope, then write the driver.** Sizing, from
