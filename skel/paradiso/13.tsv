@@ -366,10 +366,13 @@ line	token	word	role	arg_line	arg_token
 124	4	sono	attr	124	7
 124	4	sono	obl:di	124	3
 124	4	sono	obl:a	124	6
+124	7	aperte	subj	124	8
+124	7	aperte	obl:di	124	3
+124	7	aperte	obl:a	124	6
 125	0			0	0
 126	3	andaro	subj	126	2
 126	6	sapëan	subj	126	2
-126	6	sapëan	obj	126	7
+126	6	sapëan	obl	126	7
 127	2	fé	subj	127	8
 128	2	furon	subj	128	1
 128	2	furon	attr	128	4

@@ -232,10 +232,10 @@ line	token	word	role	arg_line	arg_token
 90	1	libere	obl:a	89	2
 90	1	libere	obl:da	89	8
 90	1	libere	obl:da	90	5
-90	2	fuor	subj	88	4
+90	2	fuor	subj	0	0
 90	2	fuor	obl:da	90	5
 91	7	seconda	subj	91	3
-91	7	seconda	attr	91	4
+91	7	seconda	obj	91	4
 91	7	seconda	obl:in	91	6
 92	1	vennero	subj	92	5
 92	1	vennero	obl:appresso	92	3
@@ -303,7 +303,6 @@ line	token	word	role	arg_line	arg_token
 113	5	avea	subj	0	0
 113	5	avea	obj	113	2
 113	7	era	subj	113	8
-113	8	uccello	subj	113	6
 114	2	bianche	subj	114	4
 114	7	miste	subj	114	4
 114	7	miste	obl:di	114	6

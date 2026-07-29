@@ -176,9 +176,7 @@ line	token	word	role	arg_line	arg_token
 61	7	distributo	subj	61	6
 61	7	distributo	obl:in	62	3
 62	4	faccia	subj	61	6
-62	4	faccia	obj	62	6
-62	4	faccia	obl:di	63	2
-62	6	ricchi	subj	0	0
+62	4	faccia	attr	62	6
 62	6	ricchi	obl:di	63	2
 63	8	posseduto	subj	0	0
 63	8	posseduto	obl:da	63	6

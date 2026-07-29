@@ -29,11 +29,17 @@ line	token	word	role	arg_line	arg_token
 9	7	ire	subj	0	0
 9	7	ire	obl:dietro	9	4
 10	0			0	0
+11	5	potei	subj	10	3
+11	5	potei	xcomp	11	6
 11	6	far	subj	10	3
 11	6	far	obj	10	2
+11	6	far	obj	11	7
 11	6	far	obl:di	10	5
 11	6	far	obl:in	11	4
+12	1	sarà	subj	10	2
+12	1	sarà	attr	12	3
 12	3	materia	subj	10	2
+12	3	materia	obl:di	12	6
 13	0			0	0
 14	1	fammi	subj	0	0
 14	1	fammi	attr	14	7
@@ -187,8 +193,8 @@ line	token	word	role	arg_line	arg_token
 63	8	addorno	subj	63	3
 63	8	addorno	obl:di	63	7
 64	0			0	0
-65	1	fissa	subj	64	1
 65	5	stava	subj	64	1
+65	5	stava	attr	65	1
 65	5	stava	obl:in	64	6
 65	5	stava	obl:con	65	4
 66	3	fissi	subj	65	7

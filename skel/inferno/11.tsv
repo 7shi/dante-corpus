@@ -278,9 +278,9 @@ line	token	word	role	arg_line	arg_token
 95	1	diss'	ccomp	94	7
 95	5	di'	subj	0	0
 95	5	di'	ccomp	95	8
-95	5	di'	obl	95	4
 95	8	offende	subj	95	7
 95	8	offende	obj	96	3
+95	8	offende	obl	95	4
 96	7	solvi	subj	0	0
 96	7	solvi	obj	96	6
 97	3	disse	subj	0	0

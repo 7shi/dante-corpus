@@ -302,7 +302,8 @@ line	token	word	role	arg_line	arg_token
 95	11	impetri	subj	95	9
 95	11	impetri	obj	96	1
 95	11	impetri	iobj	95	10
-96	6	vivendo	subj	96	5
+95	11	impetri	obl:di	96	3
+96	6	vivendo	subj	0	0
 96	7	mossi	subj	96	5
 96	7	mossi	obl	96	4
 97	0			0	0

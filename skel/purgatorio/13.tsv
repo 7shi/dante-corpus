@@ -189,7 +189,7 @@ line	token	word	role	arg_line	arg_token
 67	7	approda	obl:a	67	5
 68	8	parlo	subj	68	7
 68	8	parlo	obl	68	6
-69	6	largir	subj	0	0
+69	6	largir	subj	69	1
 69	6	largir	obl:di	69	5
 69	8	vole	subj	69	1
 69	8	vole	xcomp	69	6
@@ -199,10 +199,10 @@ line	token	word	role	arg_line	arg_token
 70	10	fóra	obl:a	70	3
 71	2	cusce	subj	70	5
 71	2	cusce	obj	70	9
-71	2	cusce	obl:a	70	3
 72	2	fa	subj	72	1
+72	2	fa	ccomp	72	7
 72	2	fa	obl:a	71	6
-72	7	dimora	subj	0	0
+72	7	dimora	subj	71	6
 72	7	dimora	attr	72	5
 73	3	pareva	subj	73	5
 73	3	pareva	iobj	73	2

@@ -132,9 +132,16 @@ line	token	word	role	arg_line	arg_token
 45	6	onesto	subj	45	5
 46	7	eran	subj	46	3
 46	7	eran	obl:a	46	6
+46	7	eran	obl	46	8
 47	2	poter	subj	0	0
 47	2	poter	obj	47	3
+47	2	poter	obl:tra	47	5
+48	1	eran	subj	46	2
+48	1	eran	attr	48	3
 48	3	quinto	subj	46	2
+48	3	quinto	obl:di	48	5
+48	8	son	subj	48	6
+48	8	son	attr	48	9
 48	9	vivi	subj	48	6
 49	7	mista	subj	49	4
 49	7	mista	obl:di	50	2

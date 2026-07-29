@@ -392,10 +392,11 @@ line	token	word	role	arg_line	arg_token
 133	8	dicesti	subj	0	0
 134	4	veggia	subj	134	3
 134	4	veggia	obj	134	6
+134	4	veggia	obj	135	2
 135	5	fai	subj	135	4
 135	5	fai	obj	135	3
 135	5	fai	attr	135	7
-135	7	mesti	subj	135	2
+135	7	mesti	subj	135	3
 136	3	mosse	subj	0	0
 136	7	tenni	subj	136	5
 136	7	tenni	obj	136	6

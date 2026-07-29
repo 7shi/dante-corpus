@@ -346,14 +346,14 @@ line	token	word	role	arg_line	arg_token
 119	9	senta	obl	120	4
 120	2	passa	subj	120	1
 121	8	stenta	subj	121	6
+121	8	stenta	subj	122	6
 121	8	stenta	obl:a	121	4
 121	8	stenta	obl:in	122	3
+121	8	stenta	obl:da	122	8
 122	0			0	0
 123	2	fu	subj	123	1
 123	2	fu	attr	123	7
 123	2	fu	obl:per	123	5
-123	7	sementa	subj	123	1
-123	7	sementa	obl:per	123	5
 124	2	vid'	subj	124	3
 124	2	vid'	xcomp	124	4
 124	4	maravigliar	subj	124	5

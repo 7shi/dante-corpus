@@ -166,6 +166,7 @@ line	token	word	role	arg_line	arg_token
 60	1	conformi	subj	59	7
 60	1	conformi	obl:a	60	4
 61	2	sono	subj	61	3
+61	2	sono	obl	61	1
 61	5	dicete	subj	61	4
 61	5	dicete	obj	61	6
 62	2	refulge	subj	62	5
@@ -173,9 +174,8 @@ line	token	word	role	arg_line	arg_token
 62	2	refulge	obl:a	62	4
 63	6	paion	subj	63	4
 63	6	paion	attr	63	7
-63	6	paion	obl	63	5
+63	6	paion	obl:di	63	5
 63	7	buoni	subj	63	4
-63	7	buoni	obl	63	5
 64	3	tacette	subj	64	2
 64	5	fecemi	subj	0	0
 64	5	fecemi	obj	64	6

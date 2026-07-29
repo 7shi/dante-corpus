@@ -4,7 +4,10 @@ line	token	word	role	arg_line	arg_token
 1	6	crucciata	obl:contra	2	5
 2	0			0	0
 3	2	mostrò	subj	0	0
+3	2	mostrò	obl	3	6
 4	2	divenne	subj	4	1
+4	2	divenne	attr	4	4
+4	2	divenne	obl:in	1	2
 4	4	insano	subj	4	1
 5	2	veggendo	subj	0	0
 5	2	veggendo	obj	5	4
@@ -13,10 +16,11 @@ line	token	word	role	arg_line	arg_token
 6	2	carcata	subj	5	4
 6	2	carcata	obl:da	6	5
 7	1	gridò	subj	0	0
+7	1	gridò	ccomp	7	2
+7	2	Tendiam	subj	0	0
 7	2	Tendiam	obj	7	4
 7	8	pigli	subj	7	7
 7	8	pigli	obj	8	2
-7	8	pigli	obj	8	4
 7	8	pigli	obl:a	8	6
 8	0			0	0
 9	3	distese	subj	0	0
@@ -292,15 +296,14 @@ line	token	word	role	arg_line	arg_token
 99	4	gittan	subj	97	2
 99	4	gittan	obj	99	6
 99	4	gittan	obl:per	99	2
-100	1	E		0	0
 100	8	recò	subj	100	6
 100	8	recò	obl:a	100	10
 101	4	nomato	subj	0	0
 101	4	nomato	attr	101	6
-101	6	oscuro	subj	100	6
+101	6	oscuro	subj	0	0
 102	4	percosse	subj	100	3
-102	4	percosse	obj	102	3
 102	4	percosse	obj	102	6
+102	4	percosse	iobj	102	3
 102	4	percosse	obl:con	102	2
 103	2	sonò	subj	103	1
 103	4	fosse	subj	0	0

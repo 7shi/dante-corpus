@@ -49,7 +49,6 @@ line	token	word	role	arg_line	arg_token
 18	2	contentava	iobj	18	1
 18	2	contentava	obl:da	17	6
 18	2	contentava	obl:con	18	5
-19	1	Vincendo	subj	20	1
 19	1	Vincendo	obj	19	2
 19	1	Vincendo	obl:con	19	4
 20	3	disse	subj	20	1
@@ -250,13 +249,14 @@ line	token	word	role	arg_line	arg_token
 96	6	distinto	subj	96	2
 96	6	distinto	obl:di	96	5
 97	2	vidi	subj	0	0
-97	2	vidi	obj	97	5
-97	2	vidi	obj	99	4
+97	2	vidi	ccomp	97	3
+97	2	vidi	ccomp	98	9
 97	3	scendere	subj	97	5
 98	1	era	subj	98	3
 98	9	quetarsi	subj	97	5
-99	1	cantando	subj	97	5
+99	1	cantando		0	0
 99	2	credo	subj	0	0
+99	2	credo	obj	99	4
 99	9	move	subj	99	5
 99	9	move	obj	99	8
 99	9	move	obl:a	99	7
@@ -303,8 +303,8 @@ line	token	word	role	arg_line	arg_token
 116	2	dimostraro	subj	115	7
 116	2	dimostraro	iobj	116	1
 116	2	dimostraro	ccomp	117	1
-116	2	dimostraro	obl:a	115	3
 117	1	effetto	subj	116	5
+117	1	effetto	obl:di	117	4
 117	7	ingemme	subj	117	6
 117	7	ingemme	obj	117	5
 118	4	prego	subj	118	3

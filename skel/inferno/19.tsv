@@ -63,13 +63,11 @@ line	token	word	role	arg_line	arg_token
 21	8	sganni	obj	21	5
 22	7	soperchiava	subj	23	5
 22	7	soperchiava	subj	23	9
+22	7	soperchiava	iobj	22	6
 22	7	soperchiava	obl:de	22	4
-22	7	soperchiava	obl:a	22	6
-22	7	soperchiava	obl:a	24	3
 23	0			0	0
 24	8	stava	subj	24	6
 25	6	accese	subj	25	2
-25	6	accese	attr	25	7
 25	6	accese	obl:a	25	5
 26	5	guizzavan	subj	26	7
 27	3	averien	subj	0	0

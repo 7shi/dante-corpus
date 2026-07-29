@@ -313,7 +313,7 @@ line	token	word	role	arg_line	arg_token
 97	6	diventa	attr	97	7
 97	7	vano	subj	97	4
 98	1	arriva'	subj	98	2
-98	3	forato	subj	98	2
+98	3	forato	subj	0	0
 98	3	forato	obl:in	98	6
 99	1	fuggendo	subj	0	0
 99	1	fuggendo	obl:a	99	3
@@ -338,8 +338,10 @@ line	token	word	role	arg_line	arg_token
 105	8	privi	subj	0	0
 105	8	privi	obj	105	7
 106	4	porti	subj	106	1
+106	4	porti	obj	106	2
 106	4	porti	obj	106	8
-106	4	porti	obl	106	3
+106	4	porti	obl:di	106	3
+106	4	porti	obl:di	106	6
 106	4	porti	obl:per	107	3
 107	7	toglie	subj	107	4
 107	7	toglie	obj	107	5

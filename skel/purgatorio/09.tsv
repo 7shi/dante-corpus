@@ -32,26 +32,20 @@ line	token	word	role	arg_line	arg_token
 12	7	sedavamo	obl	12	1
 13	5	comincia	subj	14	2
 13	5	comincia	obj	13	8
+13	5	comincia	obl:presso	14	6
 13	5	comincia	obl:a	15	3
 14	0			0	0
 15	0			0	0
 16	0			0	0
 17	0			0	0
 18	7	divina	subj	16	4
-18	7	divina	obl:a	18	4
 19	4	parea	subj	0	0
 19	4	parea	iobj	19	3
 19	4	parea	xcomp	19	5
-19	4	parea	obl:in	13	3
-19	4	parea	obl:in	19	2
 19	5	veder	subj	0	0
 19	5	veder	obj	20	2
-19	6	sospesa	subj	20	2
-19	6	sospesa	obl:in	20	4
 20	0			0	0
-21	7	calare		0	0
-21	8	intesa	subj	20	2
-21	8	intesa	xcomp	21	7
+21	7	calare	subj	0	0
 22	2	esser	subj	0	0
 22	2	esser	obl	22	5
 22	4	parea	subj	0	0
@@ -60,7 +54,7 @@ line	token	word	role	arg_line	arg_token
 23	1	abbandonati	subj	23	3
 23	1	abbandonati	obl:da	23	5
 24	3	ratto	subj	0	0
-24	3	ratto	obl:a	24	6
+24	3	ratto	obl:al	24	6
 25	3	pensava	subj	0	0
 25	3	pensava	obl:fra	25	2
 25	6	fiede	subj	25	5
@@ -230,19 +224,15 @@ line	token	word	role	arg_line	arg_token
 77	2	gire	obl:ad	77	4
 78	7	facea	subj	78	4
 78	7	facea	obj	78	8
-79	1	E		0	0
 79	9	apersi	subj	0	0
 79	9	apersi	obj	79	4
-79	9	apersi	obl	79	8
+79	9	apersi	obl:in	79	8
 80	1	vidil	subj	0	0
 80	1	vidil	xcomp	80	2
-80	2	seder	subj	80	1
+80	1	vidil	obl:in	81	4
 80	2	seder	obl:sovra	80	5
-81	1	tal	subj	0	0
-81	1	tal	obl:ne	81	4
 81	9	soffersi	subj	81	6
 81	9	soffersi	obj	81	8
-82	1	e		0	0
 82	5	avëa	subj	0	0
 82	5	avëa	obj	82	3
 82	5	avëa	obl:in	82	7
@@ -311,22 +301,23 @@ line	token	word	role	arg_line	arg_token
 103	3	tenëa	subj	104	2
 103	3	tenëa	obj	103	6
 103	3	tenëa	obl:sovra	103	2
-104	5	sedendo	subj	104	2
+104	5	sedendo	subj	0	0
 104	5	sedendo	obl:in	104	9
 105	3	sembiava	subj	105	1
 105	3	sembiava	iobj	105	2
 105	3	sembiava	attr	105	4
+105	4	pietra	subj	105	1
+105	4	pietra	iobj	105	2
 106	0			0	0
 107	2	trasse	subj	107	4
 107	2	trasse	obj	107	1
 107	2	trasse	obl:per	106	4
 107	2	trasse	obl:di	106	8
-107	6	dicendo	subj	0	0
+107	6	dicendo	subj	107	4
 107	6	dicendo	ccomp	107	7
 107	7	Chiedi	subj	0	0
 107	7	Chiedi	ccomp	108	5
-108	5	scioglia	subj	0	0
-108	5	scioglia	obj	108	4
+108	5	scioglia	subj	108	4
 109	3	gittai	subj	0	0
 109	3	gittai	obj	109	2
 109	3	gittai	obl:a	109	6
@@ -352,12 +343,12 @@ line	token	word	role	arg_line	arg_token
 114	6	disse	subj	0	0
 114	6	disse	ccomp	113	7
 115	7	cavi	subj	115	4
-115	7	cavi	attr	115	5
 116	4	fora	subj	115	4
 116	4	fora	obl:di	116	3
 116	4	fora	obl:con	116	7
 117	6	trasse	subj	0	0
 117	6	trasse	obj	117	8
+117	6	trasse	obl:di	117	3
 117	6	trasse	obl:da	117	5
 118	5	oro	subj	118	2
 118	11	argento	subj	118	8

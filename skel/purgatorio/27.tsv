@@ -417,17 +417,18 @@ line	token	word	role	arg_line	arg_token
 135	8	produce	obl:da	135	7
 136	3	vegnan	subj	136	6
 136	3	vegnan	attr	136	4
-137	2	lagrimando	subj	137	1
+137	2	lagrimando		0	0
 137	5	venir	subj	137	6
 137	5	venir	obl:a	137	4
 137	7	fenno	subj	137	1
 137	7	fenno	obj	137	6
 137	7	fenno	xcomp	137	5
-138	1	seder	obj	138	2
+138	1	seder	subj	138	2
 138	3	puoi	subj	138	2
 138	3	puoi	xcomp	138	1
 138	5	puoi	subj	138	2
 138	5	puoi	xcomp	138	6
+138	6	andar	subj	138	2
 138	6	andar	obl:tra	138	8
 139	2	aspettar	subj	0	0
 139	2	aspettar	obj	139	4

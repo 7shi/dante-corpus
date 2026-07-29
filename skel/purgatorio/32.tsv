@@ -299,25 +299,22 @@ line	token	word	role	arg_line	arg_token
 110	6	piove	subj	0	0
 110	6	piove	obl:da	111	3
 111	6	va	subj	111	4
-111	6	va	attr	111	7
 111	7	remoto	subj	111	4
 112	3	vidi	subj	112	2
+112	3	vidi	obj	112	6
 112	3	vidi	xcomp	112	4
 112	4	calar	subj	112	6
 112	4	calar	obl:per	113	3
-113	5	rompendo	subj	112	6
-113	5	rompendo	obl:di	113	8
-113	5	rompendo	obl:di	114	5
-113	5	rompendo	obl:di	114	9
+113	5	rompendo	obl:de	113	8
+113	5	rompendo	obl:de	114	5
+113	5	rompendo	obl:de	114	9
 114	0			0	0
 115	2	ferì	subj	112	6
 115	2	ferì	obj	115	4
 115	2	ferì	obl:di	115	8
 116	3	piegò	subj	116	2
-117	1	vinta	subj	116	5
-117	1	vinta	obl:da	117	4
-117	1	vinta	obl:da	117	7
-117	1	vinta	obl:da	117	10
+116	3	piegò	obl:come	116	5
+117	0			0	0
 118	2	vidi	subj	0	0
 118	2	vidi	xcomp	118	3
 118	3	avventarsi	subj	119	5
@@ -333,6 +330,7 @@ line	token	word	role	arg_line	arg_token
 122	5	volse	obl:in	122	8
 123	2	sofferser	subj	123	4
 124	7	venuta	subj	124	4
+124	7	venuta	obl:per	124	3
 125	3	vidi	subj	0	0
 125	3	vidi	obj	125	2
 125	3	vidi	xcomp	125	4
@@ -346,7 +344,8 @@ line	token	word	role	arg_line	arg_token
 127	8	rammarca	subj	127	6
 128	3	uscì	subj	128	2
 128	3	uscì	obl:di	128	5
-128	8	disse	subj	128	7
+128	8	disse	subj	128	2
+128	8	disse	iobj	128	7
 129	7	carca	subj	129	2
 130	2	parve	subj	130	5
 130	2	parve	obl:a	130	4

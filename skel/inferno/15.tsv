@@ -139,7 +139,7 @@ line	token	word	role	arg_line	arg_token
 50	1	rispuos'	subj	50	2
 50	1	rispuos'	iobj	50	3
 50	5	smarri'	subj	0	0
-50	5	smarri'	obj	50	4
+50	5	smarri'	obl:di	49	4
 50	5	smarri'	obl:in	49	7
 50	5	smarri'	obl:in	50	8
 51	7	piena	subj	51	4
@@ -154,7 +154,7 @@ line	token	word	role	arg_line	arg_token
 54	2	reducemi	subj	53	1
 54	2	reducemi	obl:a	54	4
 54	2	reducemi	obl:per	54	7
-55	1	Ed		0	0
+55	2	elli	subj	0	0
 55	2	elli	obl:a	55	4
 55	7	segui	subj	55	6
 55	7	segui	obj	55	9
@@ -163,12 +163,13 @@ line	token	word	role	arg_line	arg_token
 56	3	fallire	subj	0	0
 56	3	fallire	obl:a	56	6
 57	4	accorsi	subj	0	0
+57	4	accorsi	obj	57	3
 57	4	accorsi	obl:ne	57	7
-58	1	e		0	0
 58	9	morto	subj	58	3
 58	9	morto	obl:per	58	8
 59	1	veggendo	subj	0	0
 59	1	veggendo	obj	59	3
+59	1	veggendo	attr	59	7
 59	7	benigno	subj	59	3
 59	7	benigno	obl:a	59	5
 60	1	dato	subj	0	0

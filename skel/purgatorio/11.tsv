@@ -22,10 +22,12 @@ line	token	word	role	arg_line	arg_token
 10	0			0	0
 11	1	fan	subj	10	6
 11	1	fan	obj	11	2
+11	1	fan	obl:di	10	4
 11	1	fan	obl:a	11	4
 11	5	cantando	subj	0	0
 11	5	cantando	obj	11	6
 12	2	facciano	subj	12	4
+12	2	facciano	obl:di	12	6
 13	1	Dà	subj	0	0
 13	1	Dà	obj	13	7
 13	1	Dà	iobj	13	4
@@ -262,7 +264,7 @@ line	token	word	role	arg_line	arg_token
 90	5	volsi	obl:a	90	7
 91	3	gloria	subj	0	0
 92	3	verde	subj	0	0
-92	3	verde	obl:in	92	7
+92	3	verde	obl:su	92	7
 93	4	giunta	subj	0	0
 93	4	giunta	obl:da	93	7
 94	1	Credette	subj	94	2
@@ -331,7 +333,7 @@ line	token	word	role	arg_line	arg_token
 118	9	incora	obj	119	2
 118	9	incora	iobj	118	8
 119	7	appiani	subj	119	5
-119	7	appiani	obj	119	6
+119	7	appiani	iobj	119	6
 120	3	è	subj	120	4
 120	3	è	attr	120	2
 120	8	parlavi	subj	120	7

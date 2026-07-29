@@ -281,10 +281,10 @@ line	token	word	role	arg_line	arg_token
 103	7	vonno	obj	103	6
 104	2	chiaman	subj	103	3
 104	2	chiaman	attr	104	3
-105	6	terminonno	subj	105	5
+105	6	terminonno	subj	0	0
+105	6	terminonno	obj	105	5
 106	6	hanno	subj	106	5
 106	6	hanno	obj	106	7
-106	6	hanno	obl:di	106	4
 107	6	profonda	subj	107	4
 107	6	profonda	obl:in	108	2
 108	6	queta	subj	108	8

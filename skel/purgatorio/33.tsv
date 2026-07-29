@@ -60,7 +60,6 @@ line	token	word	role	arg_line	arg_token
 22	4	fui	subj	22	3
 22	4	fui	obl:con	22	8
 22	7	dovëa	subj	22	6
-22	7	dovëa	obl:con	22	8
 23	1	dissemi	subj	0	0
 23	1	dissemi	ccomp	23	6
 23	6	attenti	subj	0	0
@@ -153,14 +152,13 @@ line	token	word	role	arg_line	arg_token
 54	6	correre	subj	54	3
 54	6	correre	obl:a	54	9
 55	2	aggi	subj	0	0
-55	2	aggi	xcomp	56	3
+55	2	aggi	ccomp	56	3
 55	2	aggi	obl:a	55	4
 55	8	scrivi	subj	55	6
 55	8	scrivi	iobj	55	7
 56	3	celar	subj	0	0
-56	3	celar	ccomp	56	6
-56	6	vista	subj	0	0
-56	6	vista	obj	56	8
+56	3	celar	obj	56	4
+56	6	vista	subj	56	8
 56	6	vista	attr	56	4
 57	6	dirubata	subj	57	1
 57	6	dirubata	obl	57	5
@@ -197,7 +195,7 @@ line	token	word	role	arg_line	arg_token
 66	5	travolta	obl:in	66	8
 67	3	stati	subj	68	2
 67	3	stati	attr	67	6
-67	6	acqua	subj	68	2
+67	3	stati	obl:intorno	68	8
 68	0			0	0
 69	6	Piramo	subj	69	3
 69	6	Piramo	obl:a	69	9
@@ -221,12 +219,14 @@ line	token	word	role	arg_line	arg_token
 76	1	voglio	ccomp	77	5
 76	6	scritto	subj	77	2
 76	8	dipinto	subj	77	2
-77	5	porti	subj	77	2
-77	5	porti	obj	77	4
+77	5	porti	subj	0	0
+77	5	porti	obj	77	2
 77	5	porti	iobj	77	3
-77	5	porti	obl:a	77	8
+77	5	porti	obl:ne	77	4
+77	5	porti	obl:in	77	6
 77	5	porti	obl:per	77	10
-77	6	dentro		0	0
+77	6	dentro	subj	77	2
+77	6	dentro	obl:a	77	8
 78	3	reca	subj	78	1
 78	3	reca	obj	78	5
 78	8	cinto	subj	78	5
@@ -234,6 +234,7 @@ line	token	word	role	arg_line	arg_token
 80	6	trasmuta	subj	80	1
 80	6	trasmuta	obj	80	3
 81	1	segnato	subj	81	8
+81	1	segnato	obl:come	79	5
 81	1	segnato	obl:da	81	5
 82	0			0	0
 83	4	vola	subj	83	2

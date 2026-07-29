@@ -138,11 +138,7 @@ line	token	word	role	arg_line	arg_token
 46	1	Dimmi	subj	0	0
 46	4	dimmi	subj	0	0
 47	1	comincia'	subj	47	2
-47	1	comincia'	ccomp	46	1
-47	1	comincia'	ccomp	49	1
-47	4	voler	subj	47	2
 47	4	voler	xcomp	47	6
-47	6	certo	subj	47	2
 47	6	certo	obl:di	48	3
 48	5	vince	subj	48	4
 48	5	vince	obj	48	7
@@ -192,9 +188,7 @@ line	token	word	role	arg_line	arg_token
 69	5	vincia	obj	69	2
 70	4	eravamo	subj	0	0
 70	4	eravamo	obl:di	70	2
-70	4	eravamo	obl	70	3
-70	4	eravamo	obl	70	7
-71	3	sì	subj	0	0
+70	4	eravamo	obl:di	70	3
 71	3	sì	ccomp	71	7
 71	7	discernessi	subj	71	5
 71	7	discernessi	ccomp	72	4

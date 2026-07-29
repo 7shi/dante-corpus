@@ -359,7 +359,6 @@ line	token	word	role	arg_line	arg_token
 136	2	vedrai	subj	0	0
 136	2	vedrai	obj	136	1
 136	2	vedrai	obl:di	136	7
-136	2	vedrai	obl	137	2
 137	3	vanno	subj	137	5
 137	3	vanno	xcomp	137	7
 137	3	vanno	obl	137	2

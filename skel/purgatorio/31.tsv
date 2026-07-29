@@ -172,7 +172,6 @@ line	token	word	role	arg_line	arg_token
 63	3	spiega	subj	63	1
 63	3	spiega	obl:da	62	5
 63	7	saetta	subj	63	1
-63	7	saetta	obl:da	62	5
 64	3	vergognando		0	0
 65	6	stannosi	subj	64	2
 65	6	stannosi	attr	64	4
@@ -266,6 +265,7 @@ line	token	word	role	arg_line	arg_token
 95	2	tirandosi	subj	0	0
 95	2	tirandosi	obj	95	3
 95	6	giva	subj	0	0
+95	6	giva	obl	95	5
 95	6	giva	obl:sovresso	96	3
 96	0			0	0
 97	2	fui	subj	0	0
@@ -311,7 +311,7 @@ line	token	word	role	arg_line	arg_token
 109	1	Merrenti	subj	111	2
 109	1	Merrenti	obl:a	109	4
 110	3	è	subj	110	2
-110	3	è	attr	110	4
+110	3	è	obl	110	4
 110	5	aguzzeranno	subj	111	2
 110	5	aguzzeranno	obj	110	7
 110	5	aguzzeranno	obl:in	110	1

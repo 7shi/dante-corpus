@@ -10,6 +10,7 @@ line	token	word	role	arg_line	arg_token
 4	5	volando	subj	4	4
 4	6	vede	subj	4	4
 4	6	vede	obj	5	2
+4	6	vede	obj	6	3
 4	8	canta	subj	4	4
 4	8	canta	obj	5	2
 4	8	canta	obj	6	3
@@ -19,10 +20,12 @@ line	token	word	role	arg_line	arg_token
 6	6	fece	obj	6	5
 6	6	fece	attr	6	7
 7	8	infiora	subj	7	6
-8	6	ritorna	subj	8	4
+7	8	infiora	obl	8	2
+8	6	ritorna	subj	7	6
+8	6	ritorna	obl	8	4
 9	6	insapora	subj	9	4
 10	4	discendeva	subj	4	3
-10	4	discendeva	obl:come	7	3
+10	4	discendeva	obl	7	3
 10	4	discendeva	obl:in	10	3
 10	7	addorna	subj	10	5
 10	7	addorna	obl:di	11	3

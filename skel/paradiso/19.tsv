@@ -70,6 +70,7 @@ line	token	word	role	arg_line	arg_token
 24	1	parer	subj	24	6
 24	1	parer	attr	23	7
 24	3	fate	subj	23	5
+24	3	fate	obj	24	6
 24	3	fate	iobj	24	2
 24	3	fate	xcomp	24	1
 25	1	solvetemi	subj	0	0

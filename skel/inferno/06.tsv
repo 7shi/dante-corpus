@@ -231,9 +231,10 @@ line	token	word	role	arg_line	arg_token
 77	6	vo'	subj	77	2
 77	6	vo'	ccomp	77	9
 77	6	vo'	ccomp	78	7
+77	6	vo'	obl:a	77	4
 77	9	'nsegni	subj	0	0
 77	9	'nsegni	iobj	77	8
-78	5	parlar	subj	0	0
+78	5	parlar		0	0
 78	7	facci	subj	0	0
 78	7	facci	obj	78	8
 78	7	facci	iobj	78	6
@@ -290,8 +291,10 @@ line	token	word	role	arg_line	arg_token
 93	1	cadde	obl:con	93	3
 93	1	cadde	obl:a	93	5
 94	4	disse	subj	94	3
+94	4	disse	ccomp	94	10
 94	4	disse	obl:a	94	6
 94	10	desta	subj	0	0
+94	10	desta	obl:di	95	2
 94	10	desta	obl:da	95	4
 95	0			0	0
 96	2	verrà	subj	96	5
@@ -299,7 +302,6 @@ line	token	word	role	arg_line	arg_token
 97	2	rivederà	obj	97	5
 98	1	ripiglierà	subj	97	1
 98	1	ripiglierà	obj	98	3
-98	1	ripiglierà	obj	98	6
 99	1	udirà	subj	97	1
 99	1	udirà	obj	99	2
 99	6	rimbomba	subj	99	3

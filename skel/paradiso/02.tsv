@@ -35,11 +35,13 @@ line	token	word	role	arg_line	arg_token
 12	1	vivesi	obl:di	11	9
 12	6	vien	subj	12	5
 12	6	vien	attr	12	7
-12	7	satollo	subj	12	5
+12	7	satollo	subj	0	0
+13	1	metter	subj	10	1
 13	1	metter	obj	14	2
 13	1	metter	obl:per	13	7
 13	2	potete	subj	10	1
 13	2	potete	xcomp	13	1
+14	3	servando	subj	0	0
 14	3	servando	obj	14	5
 14	3	servando	obl:a	15	4
 15	6	ritorna	subj	15	5
@@ -371,6 +373,7 @@ line	token	word	role	arg_line	arg_token
 129	4	convien	subj	0	0
 129	4	convien	ccomp	129	6
 129	6	spiri	subj	127	2
+129	6	spiri	subj	127	5
 129	6	spiri	obl:da	129	3
 130	7	fanno	subj	130	6
 130	7	fanno	obj	130	4
@@ -379,9 +382,9 @@ line	token	word	role	arg_line	arg_token
 131	7	volve	obj	131	5
 132	1	prende	subj	130	3
 132	1	prende	obj	132	3
-132	1	prende	obl:di	131	3
+132	1	prende	obl:de	131	3
 132	5	fassene	subj	130	3
-132	5	fassene	obj	132	6
+132	5	fassene	attr	132	6
 133	0			0	0
 134	5	conformate	subj	133	4
 134	5	conformate	obl:a	135	3

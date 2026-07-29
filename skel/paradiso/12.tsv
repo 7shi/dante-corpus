@@ -91,9 +91,10 @@ line	token	word	role	arg_line	arg_token
 33	9	favella	iobj	33	7
 33	9	favella	obl:per	33	2
 33	9	favella	obl:di	33	6
-34	1	Degno	subj	34	3
-34	2	è	subj	34	3
+34	1	Degno	subj	34	11
+34	2	è	subj	0	0
 34	2	è	attr	34	1
+34	2	è	ccomp	34	11
 34	5	è	subj	34	7
 34	11	induca	subj	34	9
 35	7	militaro	subj	35	4

@@ -241,6 +241,8 @@ line	token	word	role	arg_line	arg_token
 84	5	avvampa	obl:in	84	4
 85	5	andavan	subj	85	2
 85	5	andavan	obl:a	85	8
+85	5	andavan	obl	86	2
+85	5	andavan	obl	87	3
 86	8	tarde	subj	86	5
 87	0			0	0
 88	3	duca	subj	0	0

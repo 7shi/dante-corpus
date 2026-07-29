@@ -247,7 +247,7 @@ line	token	word	role	arg_line	arg_token
 84	6	sarebbe	subj	82	1
 84	6	sarebbe	attr	84	5
 85	0			0	0
-86	1	avendo	subj	85	2
+86	1	avendo	subj	0	0
 86	1	avendo	obj	86	2
 86	1	avendo	obl:presso	86	5
 86	1	avendo	obl:con	87	4
@@ -255,11 +255,9 @@ line	token	word	role	arg_line	arg_token
 87	0			0	0
 88	6	cristiano	subj	88	4
 89	4	stato	subj	89	2
-89	4	stato	xcomp	89	6
 89	6	vincer	subj	89	2
 89	6	vincer	obj	89	7
 90	2	mercatante	subj	89	2
-90	2	mercatante	obl:in	90	4
 91	0			0	0
 92	1	guardò	subj	85	2
 92	1	guardò	obj	91	3
@@ -267,6 +265,7 @@ line	token	word	role	arg_line	arg_token
 92	1	guardò	obj	92	8
 92	1	guardò	obl:in	92	3
 92	1	guardò	obl:in	92	6
+93	2	solea	subj	93	1
 93	3	fare	subj	93	1
 93	3	fare	obj	93	6
 93	3	fare	attr	93	8

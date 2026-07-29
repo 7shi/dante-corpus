@@ -89,16 +89,22 @@ line	token	word	role	arg_line	arg_token
 33	8	gioi	obj	33	7
 33	8	gioi	obl:di	33	6
 34	3	volgiam	subj	34	1
+34	3	volgiam	obj	34	2
 34	3	volgiam	obl:con	34	5
+34	3	volgiam	obl:di	35	3
+34	3	volgiam	obl:di	35	7
+34	3	volgiam	obl:di	35	11
 35	0			0	0
 36	7	dicesti	subj	36	3
-36	7	dicesti	obl:a	36	2
+36	7	dicesti	iobj	36	2
+36	7	dicesti	ccomp	37	7
 36	7	dicesti	obl:di	36	5
 37	3	'ntendendo	subj	37	2
 37	3	'ntendendo	obj	37	6
 37	7	movete	subj	37	2
 38	4	pien	subj	0	0
-38	9	piacerti	subj	39	6
+38	4	pien	obl:di	38	6
+38	9	piacerti	subj	0	0
 39	4	dolce	subj	39	6
 40	8	offerti	subj	40	4
 40	8	offerti	obl:a	41	4
@@ -119,11 +125,10 @@ line	token	word	role	arg_line	arg_token
 44	8	fue	attr	44	7
 45	0			0	0
 46	5	vid'	subj	46	6
-46	5	vid'	obj	46	7
 46	5	vid'	xcomp	46	8
 46	8	far	subj	46	7
-46	8	far	obj	46	2
-46	8	far	obj	46	4
+46	8	far	attr	46	2
+46	8	far	attr	46	4
 46	8	far	obl:per	47	2
 47	6	accrebbe	subj	47	4
 48	2	parlai	subj	0	0
@@ -337,10 +342,11 @@ line	token	word	role	arg_line	arg_token
 112	9	imbianchi	iobj	112	7
 113	6	impossibil	subj	114	9
 113	7	veggio	subj	113	2
-113	7	veggio	obj	113	6
+113	7	veggio	attr	113	6
 113	7	veggio	ccomp	114	9
 114	7	è	subj	114	6
 114	7	è	attr	114	8
+114	8	uopo	subj	114	6
 114	9	stanchi	subj	114	3
 114	9	stanchi	obl:in	114	5
 115	5	dì	subj	115	2

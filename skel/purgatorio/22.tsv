@@ -319,8 +319,10 @@ line	token	word	role	arg_line	arg_token
 109	3	veggion	subj	110	2
 109	3	veggion	subj	110	4
 109	3	veggion	subj	111	2
+109	3	veggion	obl	109	1
+109	3	veggion	obl:di	109	6
 110	0			0	0
-111	4	trista	subj	111	2
+111	4	trista	subj	0	0
 111	6	fue	subj	0	0
 111	6	fue	attr	111	4
 112	1	Védeisi	subj	112	2
@@ -374,7 +376,7 @@ line	token	word	role	arg_line	arg_token
 129	5	davano	subj	129	1
 129	5	davano	obj	129	6
 129	5	davano	iobj	129	4
-129	5	davano	obl:a	129	3
+129	5	davano	xcomp	129	3
 130	3	ruppe	subj	131	2
 130	3	ruppe	obj	130	6
 131	4	trovammo	subj	0	0

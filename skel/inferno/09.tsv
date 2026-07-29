@@ -254,7 +254,6 @@ line	token	word	role	arg_line	arg_token
 86	2	volsimi	obl:a	86	4
 86	7	fé	subj	86	6
 86	7	fé	obj	86	8
-86	7	fé	ccomp	87	4
 87	3	stessi	subj	87	2
 87	3	stessi	attr	87	4
 87	4	queto	subj	87	2

@@ -417,7 +417,7 @@ line	token	word	role	arg_line	arg_token
 136	7	ebbe	obl:da	136	3
 137	2	ecco	subj	137	4
 137	2	ecco	obl:con	137	8
-138	2	somigliò	subj	0	0
+138	2	somigliò	subj	138	1
 138	2	somigliò	obj	138	3
 138	6	segua	subj	138	4
 139	2	sono	subj	139	1
@@ -425,12 +425,12 @@ line	token	word	role	arg_line	arg_token
 139	3	Aglauro	subj	139	1
 139	5	divenni	subj	139	4
 139	5	divenni	attr	139	6
-139	6	sasso	subj	139	4
 140	4	ristrignermi	subj	0	0
 140	4	ristrignermi	obl:a	140	6
 141	3	feci	subj	0	0
 141	3	feci	obj	141	8
 141	3	feci	obl:in	141	2
+141	3	feci	obl	141	6
 142	8	queta	subj	142	4
 143	4	disse	subj	143	2
 143	4	disse	iobj	143	3

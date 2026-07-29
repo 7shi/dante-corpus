@@ -110,7 +110,6 @@ line	token	word	role	arg_line	arg_token
 40	9	fui	subj	40	2
 40	9	fui	obl:a	40	4
 41	1	guardommi	subj	0	0
-41	1	guardommi	obl	41	3
 41	7	sdegnoso	subj	0	0
 42	2	dimandò	subj	0	0
 42	2	dimandò	iobj	42	1
@@ -358,7 +357,6 @@ line	token	word	role	arg_line	arg_token
 122	2	volsi	subj	121	5
 122	2	volsi	obj	122	4
 122	2	volsi	obl:in	122	1
-122	5	ripensando	subj	121	5
 122	5	ripensando	obl:a	123	3
 123	6	parea	subj	123	4
 123	6	parea	iobj	123	5

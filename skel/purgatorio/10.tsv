@@ -109,6 +109,8 @@ line	token	word	role	arg_line	arg_token
 39	6	tace	subj	39	5
 40	1	Giurato	subj	0	0
 40	1	Giurato	ccomp	40	6
+40	3	saria	subj	0	0
+40	3	saria	ccomp	40	6
 40	6	dicesse	subj	40	5
 40	6	dicesse	obj	40	7
 41	4	imaginata	subj	41	5
@@ -117,16 +119,12 @@ line	token	word	role	arg_line	arg_token
 42	3	aprir	obj	42	6
 42	7	volse	subj	42	1
 42	7	volse	obj	42	9
-42	7	volse	xcomp	42	3
+42	7	volse	obl:a	42	3
 43	2	avea	subj	0	0
 43	2	avea	obj	43	7
-43	2	avea	attr	43	5
 43	2	avea	obl:in	43	4
-43	5	impressa	subj	0	0
-43	5	impressa	obj	43	7
-43	5	impressa	obl:in	43	4
-44	1	Ecce	obj	44	2
-45	6	suggella	subj	0	0
+44	0			0	0
+45	6	suggella	subj	43	7
 45	6	suggella	obl	45	2
 46	2	tener	subj	0	0
 46	2	tener	obj	46	8

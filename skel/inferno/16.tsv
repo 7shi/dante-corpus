@@ -182,10 +182,9 @@ line	token	word	role	arg_line	arg_token
 61	1	Lascio	obj	61	3
 61	5	vo	subj	0	0
 61	5	vo	obl:per	61	8
-62	1	promessi	subj	61	8
-62	1	promessi	obl:a	62	3
+62	1	promessi	iobj	62	3
 62	1	promessi	obl:per	62	7
-63	6	convien	subj	63	9
+63	6	convien	ccomp	63	9
 63	9	tomi	subj	63	8
 63	9	tomi	obl:a	63	4
 64	5	conduca	subj	64	4
@@ -309,6 +308,8 @@ line	token	word	role	arg_line	arg_token
 110	7	comandato	subj	110	4
 110	7	comandato	obj	110	5
 111	1	porsila	subj	0	0
+111	1	porsila	attr	111	4
+111	1	porsila	attr	111	6
 111	1	porsila	obl:a	111	3
 112	4	volse	subj	112	2
 112	4	volse	obl:in	112	8

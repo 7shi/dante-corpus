@@ -247,10 +247,10 @@ line	token	word	role	arg_line	arg_token
 85	4	veder	subj	0	0
 85	4	veder	obj	85	6
 86	2	vegno	subj	86	1
-86	2	vegno	xcomp	86	4
-86	4	menarvi	subj	0	0
+86	2	vegno	obl:per	86	4
+86	4	menarvi	subj	86	1
 86	4	menarvi	obl:a	86	8
-86	4	menarvi	obl:in	87	3
+86	4	menarvi	obl:ne	87	3
 86	4	menarvi	obl:in	87	6
 86	4	menarvi	obl:in	87	9
 87	0			0	0

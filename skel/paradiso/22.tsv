@@ -147,7 +147,6 @@ line	token	word	role	arg_line	arg_token
 51	1	fermar	obl:a	50	9
 51	5	tennero	subj	50	6
 51	5	tennero	obj	51	7
-51	5	tennero	attr	51	8
 52	2	io	iobj	52	4
 52	8	dimostri	subj	52	7
 52	8	dimostri	obl:con	53	1
@@ -406,8 +405,10 @@ line	token	word	role	arg_line	arg_token
 140	7	cagione	iobj	140	5
 141	5	credetti	subj	0	0
 141	5	credetti	obj	141	4
+141	5	credetti	xcomp	141	6
+141	5	credetti	xcomp	141	8
 141	6	rara	subj	141	4
-141	8	densa	subj	141	4
+141	8	densa		0	0
 142	0			0	0
 143	2	sostenni	subj	0	0
 143	2	sostenni	obj	142	2

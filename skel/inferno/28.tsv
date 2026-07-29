@@ -65,6 +65,7 @@ line	token	word	role	arg_line	arg_token
 27	8	trangugia	subj	27	6
 28	6	veder	subj	0	0
 28	6	veder	obj	28	3
+28	6	veder	obl:in	28	5
 28	8	attacco	subj	0	0
 28	8	attacco	xcomp	28	6
 29	1	guardommi	subj	0	0

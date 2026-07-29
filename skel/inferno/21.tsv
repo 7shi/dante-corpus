@@ -28,7 +28,7 @@ line	token	word	role	arg_line	arg_token
 10	4	ponno	xcomp	10	2
 11	2	fa	subj	11	1
 11	2	fa	obj	11	4
-11	2	fa	obl:in	7	4
+11	2	fa	obl:in	10	7
 11	8	ristoppa	subj	11	7
 11	8	ristoppa	obj	12	2
 11	8	ristoppa	obl:a	12	4
@@ -46,10 +46,12 @@ line	token	word	role	arg_line	arg_token
 15	5	rintoppa	obj	15	2
 16	0			0	0
 17	1	bollia	subj	17	5
+17	1	bollia	attr	16	1
 17	1	bollia	obl:per	16	4
 17	1	bollia	obl:per	16	8
 18	2	'nviscava	subj	18	1
 18	2	'nviscava	obj	18	4
+18	2	'nviscava	obl:di	18	7
 19	2	vedea	subj	19	1
 19	2	vedea	obj	19	3
 19	6	vedëa	subj	19	1

@@ -225,7 +225,9 @@ line	token	word	role	arg_line	arg_token
 75	3	liberò	subj	0	0
 75	3	liberò	obj	75	2
 75	3	liberò	obl:con	75	7
-76	0			0	0
+76	2	io	subj	0	0
+76	2	io	ccomp	78	5
+76	2	io	obl:a	76	4
 77	3	mutasti	subj	0	0
 77	3	mutasti	obj	77	4
 77	3	mutasti	obl:in	77	2

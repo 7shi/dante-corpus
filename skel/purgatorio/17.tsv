@@ -201,8 +201,7 @@ line	token	word	role	arg_line	arg_token
 71	7	segue	obj	71	4
 72	4	apparivan	subj	72	3
 72	4	apparivan	obl:da	72	7
-73	7	dilegue	subj	73	2
-73	7	dilegue	obj	73	6
+73	7	dilegue	subj	73	6
 74	4	dicea	subj	0	0
 74	4	dicea	obl:fra	74	2
 74	7	sentiva	subj	0	0

@@ -344,14 +344,14 @@ line	token	word	role	arg_line	arg_token
 128	0			0	0
 129	2	fugge	subj	128	5
 129	7	coperte	subj	129	5
-130	2	balbuzïendo	subj	130	1
+130	2	balbuzïendo	subj	0	0
 130	4	digiuna	subj	130	1
 131	3	divora	subj	131	1
 131	3	divora	obj	132	2
 131	3	divora	obl:con	131	6
 131	3	divora	obl:per	132	5
 132	0			0	0
-133	3	balbuzïendo	subj	133	2
+133	3	balbuzïendo	subj	0	0
 133	4	ama	subj	133	2
 133	4	ama	obj	134	2
 133	6	ascolta	subj	133	2

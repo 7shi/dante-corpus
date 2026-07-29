@@ -125,15 +125,14 @@ line	token	word	role	arg_line	arg_token
 47	1	faccendo	obj	47	7
 47	1	faccendo	obl:in	47	3
 48	2	vid'	subj	48	3
-48	2	vid'	obj	49	1
-48	2	vid'	xcomp	48	4
+48	2	vid'	ccomp	48	4
 48	4	venir	subj	49	1
 48	5	traendo	subj	49	1
 48	5	traendo	obj	48	6
 49	2	portate	subj	49	1
 49	2	portate	obl:da	49	6
 50	4	dissi	subj	50	3
-50	4	dissi	ccomp	50	7
+50	6	chi	subj	51	1
 50	7	son	subj	51	1
 50	7	son	attr	50	6
 51	7	gastiga	subj	51	4
@@ -337,8 +336,6 @@ line	token	word	role	arg_line	arg_token
 111	8	pense	obj	111	7
 112	2	rispuosi	subj	0	0
 112	3	cominciai	subj	0	0
-112	3	cominciai	ccomp	114	1
-112	5	lasso	subj	0	0
 113	0			0	0
 114	1	menò	subj	114	2
 114	1	menò	obj	113	3

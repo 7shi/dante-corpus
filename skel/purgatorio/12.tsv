@@ -13,21 +13,22 @@ line	token	word	role	arg_line	arg_token
 4	4	Lascia	obj	4	5
 4	7	varca	subj	0	0
 5	4	buono	subj	6	4
+5	4	buono	obl:con	5	7
+5	4	buono	obl:con	5	10
 6	2	può	subj	6	3
 6	2	può	xcomp	6	4
 6	4	pinger	subj	6	3
 6	4	pinger	obj	6	6
-6	4	pinger	obl:con	5	7
-6	4	pinger	obl:con	5	10
 7	4	andar	subj	0	0
+7	5	vuolsi	subj	0	0
 7	5	vuolsi	xcomp	7	4
 7	6	rife'	subj	0	0
 7	6	rife'	obj	7	7
 7	6	rife'	attr	7	1
 7	6	rife'	obl:con	8	3
-8	4	avvegna	subj	0	0
+8	4	avvegna	ccomp	9	2
 9	2	rimanessero	subj	8	7
-9	2	rimanessero	obl:a	9	1
+9	2	rimanessero	iobj	9	1
 9	4	chinati	subj	8	7
 9	6	scemi	subj	8	7
 10	4	mosso	subj	10	1
@@ -53,7 +54,6 @@ line	token	word	role	arg_line	arg_token
 17	0			0	0
 18	1	portan	subj	17	5
 18	1	portan	obj	18	3
-18	1	portan	attr	18	2
 18	1	portan	obl:sovra	17	3
 18	6	eran	subj	18	5
 18	6	eran	attr	18	4
@@ -66,17 +66,16 @@ line	token	word	role	arg_line	arg_token
 21	5	dà	obl:di	21	8
 22	2	vid'	subj	22	3
 22	2	vid'	obj	23	4
-22	2	vid'	attr	22	8
-22	2	vid'	obl:secondo	23	3
 23	0			0	0
-24	8	avanza	subj	0	0
+24	8	avanza	subj	24	1
 24	8	avanza	obl:per	24	3
 25	1	Vedea	subj	0	0
 25	1	Vedea	obj	25	2
 25	1	Vedea	xcomp	27	2
 25	6	creato	subj	25	3
+25	6	creato	attr	25	5
 26	0			0	0
-27	1	folgoreggiando	subj	25	2
+27	1	folgoreggiando		0	0
 27	2	scender	subj	25	2
 27	2	scender	obl:da	26	7
 27	2	scender	obl:da	27	6
