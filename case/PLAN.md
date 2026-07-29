@@ -8,6 +8,10 @@ purpose is to *kill* the idea cheaply if the measurement comes out wrong. Writte
 immediately after Layer 5's Phase 5 closed at **0 hard, 3551 soft**
 (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where Phase 5 ended*).
 
+**Resuming cold? Read [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)** —
+it carries the state check, how to rebuild the disputed population, which model to use, who runs
+what, and where the measurements are recorded. Everything above it is rationale.
+
 ## Why this exists
 
 Layer 5's residual is documented reading disagreement, and its largest *decidable-looking*
@@ -30,12 +34,14 @@ Layer 5's audit surfaced this as a concrete population and then had to park it:
 - **Phase 5h** measured 97 divergences where Layer 4 and the LLM disagree exactly here.
 - **Phase 5i** closed the 26 that a *structural* argument could settle (the predicate already
   carried a second `obj`, and UD allows at most one) — hand-verified, retagged in `dep/`.
-- **The other 67, plus 30 mirror-direction cases** (Layer 4 `iobj`, LLM `obj` — `mi bagna`,
+- **The other 67, plus the mirror-direction cases** (Layer 4 `iobj`, LLM `obj` — `mi bagna`,
   `mi tormenta`, `ti conforta`) were parked with an explicit reason: *"both need a Layer-2 case
   feature or a clitic lexicon"* ([`../skel/PLAN.md`](../skel/PLAN.md), section 1).
 
-In the current `role_mismatch` pair table that population is `'obl:a' vs 'obj'` (61) and
-`'obj' vs 'obl:a'` (30). This plan is the instrument those verdicts named.
+In the `role_mismatch` pair table that population is `'obl:a' vs 'obj'` (61) and
+`'obj' vs 'obl:a'` (28) as of the post-Phase-5q state; the mirror figure was 30 before that
+round. **Re-measure before using any count here** — see *Starting from a cold session* below.
+This plan is the instrument those verdicts named.
 
 ## What it is — and what it is not
 
@@ -144,13 +150,95 @@ dante_corpus/case.py   dataclass, TSV I/O, serve-time index
   not a checker rule that silences the violation. Layer 5's soft count falls because `dep` got
   more correct, which is the same mechanism every audit round in Phase 5 used.
 
+## Starting from a cold session — everything the pilot needs
+
+Read this section before running anything. It exists so a session that has only read
+[`../PLAN.md`](../PLAN.md) and this file can execute step 1 without reconstructing context from
+the Phase 5 history.
+
+### Confirm the state first
+
+```bash
+make -C skel check     # expect: 0 hard, 3551 soft   (the state this plan was written at)
+make -C dep check      # expect: 0 hard, 0 soft
+uv run pytest -q       # expect: 125 passed
+make -C skel stats     # by-kind + the role_mismatch pair table
+```
+
+If those differ, every count in this file is describing a different corpus — **re-measure the
+population and update this file before proceeding**. The counts here are already one round old in
+one place (the mirror pair was 30 pre-5q, 28 after), which is exactly the failure this check
+catches.
+
+### How to rebuild the disputed population
+
+There is no checked-in harness; every Phase 5 measurement used a throwaway script. **Copy the
+skeleton from [`../skel/PLAN.md`](../skel/PLAN.md)'s *How to measure a candidate rule*** — it
+loops the corpus, monkeypatches `dante_corpus.skel._classify_divergence`, and gives access to the
+whole dep sub-tree and Layer-2 POS of each unit. Two things from that section are load-bearing:
+
+- Run the script **from `skel/`** (`cd skel && uv run <script>.py`) so `import skel as driver`
+  resolves to the build driver.
+- Token positions are **1-based over the alpha-only tokens** of a line
+  (`[t for t in tokenize(text) if has_alpha(t)]`). Indexing raw `tokenize` output silently
+  misaligns every word you print — this has bitten previous rounds.
+
+The two buckets, per [`../skel/PLAN.md`](../skel/PLAN.md) section 1's *How to regenerate any of
+these populations*:
+
+| bucket | selector | ~count |
+|---|---|---|
+| the parked 67 | `role_mismatch` with given `obl:*` / derived `obj`\|`subj`, argument has **no** `case` child, argument POS is pronoun, predicate has **no** second `obj` child | 67 |
+| the mirror cases | given `obj`\|`subj` / derived `obl:*`, where the argument's dep deprel is `iobj` | 28 |
+
+**Control group** (needed for the kill gate, and not optional): clitic tokens where `dep` and
+`skel` already **agree** — same clitic word forms, same terzina-shaped context, drawn corpus-wide,
+sampled to roughly the size of the disputed set. Without it, a raw self-agreement number means
+nothing: a model that answers "accusative" to everything scores perfectly on consistency.
+
+### Which model — the pilot must use the artifact's author
+
+**`google:gemma-4-31b-it` (Gemini API)**, i.e. the second line of [`../model.mk`](../model.mk),
+which is what the production layers were built with. Note that `model.mk`'s **default `MODEL` is
+`ollama:gemma4:31b-it-qat`, the local debug backend** — the same model, but the quantized local
+serving path, used for cheap smoke tests.
+
+This is not a detail. The kill gate measures a property *of the model that would author the
+column*, so measuring the debug backend and killing the plan on that number would be a wrong
+verdict for the wrong reason. Set the model explicitly in the pilot script rather than relying on
+the Makefile default.
+
+Call it through `llm7shi.Client`, as every build driver does; `morph/morph.py` is the reference
+implementation for prompt shape, chunking and multi-turn recovery. The pilot is a throwaway, so
+it needs neither `StatusLine` wiring nor resumability — but it **must** show the model the
+terzina and nothing else: no `dep/` row, no `skel/` row, no hint that the position is disputed.
+That blindness is the whole point (see *Independence* above).
+
+### Who runs it
+
+**The pilot is the assistant's work** — a few hundred calls, ~1 hour, no artifact written. This
+differs from the corpus pass in step 3, which is `--fix`-scale LLM regeneration and follows the
+convention Phase 5 settled on: **the user runs the corpus-scale generation**
+(cf. [`../skel/PLAN.md`](../skel/PLAN.md), where `make -C skel fix` is explicitly the user's).
+
+### Where the numbers go
+
+Create **`case/CORRECTIONS.md`** and record the pilot there — agreement rates, the control
+comparison, the model and date, and the verdict. **Do this even if the verdict is to kill the
+plan.** This repository's discipline is that rejected candidates are recorded with their
+measurements (see the *rejected variants* throughout [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)
+and its *What is deliberately not proposed* counterpart in the plan); a killed case annex with a
+measured reason is a finished piece of work, not a failure to clean up. The script itself stays a
+throwaway in the scratchpad and is not committed.
+
 ## Sequencing
 
 1. **Pilot: measure self-consistency. This is a kill gate, not a formality.**
-   Over the ~97 disputed clitic positions, ask for case **three times independently** (fresh
-   sessions; vary the surrounding-context presentation so the runs are not trivially correlated).
-   Report per-position agreement. Throwaway script in the scratchpad, **nothing committed**,
-   cost on the order of a few hundred calls / ~1 hour.
+   Over the disputed clitic positions rebuilt as described above, ask for case **three times
+   independently** (fresh sessions; vary the surrounding-context presentation so the runs are not
+   trivially correlated), and over the control group the same way.
+   Report per-position agreement for both. Throwaway script in the scratchpad, **nothing
+   committed** except `case/CORRECTIONS.md`; cost on the order of a few hundred calls / ~1 hour.
    - **Stop rule, fixed in advance**: if the model does not agree with itself on the disputed
      positions at a clearly higher rate than on a control sample of *undisputed* clitics, the
      column is measuring noise and **this plan ends here**. A case column that waffles on exactly

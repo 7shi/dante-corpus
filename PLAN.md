@@ -66,9 +66,11 @@ sibling directory `case/`, not a new column in `morph/*.tsv`, so no existing art
 it is authored blind to the disputed positions so it stays a genuine **third independent read**;
 and its contradictions with `dep` feed a hand-verified Layer-4 correction round rather than a
 checker exemption. Its own first step is a **kill-gate pilot** measuring whether the model agrees
-with itself on the disputed clitics at all. Expected value is stated up front as **≈90–100 of the
-3551** — it does not reach zero, and the rest of the residual (subject resolution across
-enjambment and pro-drop) is untouched by it. The paired proposal, a **verb lexicon** for the
+with itself on the disputed clitics at all — that plan's *Starting from a cold session* section
+is self-contained enough to execute it (state check, how to rebuild the population, the model to
+use, who runs what, where the numbers are recorded). Expected value is stated up front as
+**≈90–100 of the 3551** — it does not reach zero, and the rest of the residual (subject
+resolution across enjambment and pro-drop) is untouched by it. The paired proposal, a **verb lexicon** for the
 complement-vs-adjunct distinction, stays **rejected**: it would import an external authority,
 which the *Neutrality audit* invariant below forbids. (A case pass does not — that invariant
 constrains the build prompt's *inputs*, and an LLM reading case from the Italian alone meets it
