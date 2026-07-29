@@ -6,7 +6,8 @@
 checker was refined through Phases 0-5q and its soft residue is at **3551** — every route the
 Phase 5 plan opened now has a measured verdict and none is open (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
-[`skel/README.md`](skel/README.md) for the design and current status.
+[`skel/README.md`](skel/README.md) for the design and current status. One follow-on is written up
+and **deliberately not started**: the pronoun case annex, [`case/PLAN.md`](case/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -50,16 +51,28 @@ artifacts now live on `main`.
 
 **Next work**
 
-None outstanding. Layer 5 Phase 5 closed at **0 hard, 3551 soft** (see
+**Nothing in this plan is outstanding.** Layer 5 Phase 5 closed at **0 hard, 3551 soft** (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*): Phase 5o closed the last open row of the
 `extra_arg` direct-child triage (`advcl`), Phase 5p ran the two hand-verified `dep/` correction
 rounds its verdicts left over (−10), and Phase 5q spent the one remaining item — the user-run
 `--fix` pass (−147, ≈28 h 3-way parallel) — plus a mechanical `ioj` → `iobj` typo fix (−4) that
 took `unknown_role` to 0. What remains is documented reading disagreement between two independent
 parses: `extra_arg` (1639) and `missing_arg` (1193) are 80% of it, and both regeneration and
-deterministic rules now have a measured stop verdict against them. Reducing it further would need
-an instrument this project has declined on principle (a Layer-2 case feature or a verb lexicon),
-i.e. a new plan rather than a Phase 5 continuation.
+deterministic rules now have a measured stop verdict against them.
+
+**One follow-on is written up but deliberately not started**: [`case/PLAN.md`](case/PLAN.md), a
+**pronoun case annex to Layer 2** — the instrument Phase 5i/5h's parked verdicts named. It is the
+sibling directory `case/`, not a new column in `morph/*.tsv`, so no existing artifact hash moves;
+it is authored blind to the disputed positions so it stays a genuine **third independent read**;
+and its contradictions with `dep` feed a hand-verified Layer-4 correction round rather than a
+checker exemption. Its own first step is a **kill-gate pilot** measuring whether the model agrees
+with itself on the disputed clitics at all. Expected value is stated up front as **≈90–100 of the
+3551** — it does not reach zero, and the rest of the residual (subject resolution across
+enjambment and pro-drop) is untouched by it. The paired proposal, a **verb lexicon** for the
+complement-vs-adjunct distinction, stays **rejected**: it would import an external authority,
+which the *Neutrality audit* invariant below forbids. (A case pass does not — that invariant
+constrains the build prompt's *inputs*, and an LLM reading case from the Italian alone meets it
+on the same terms `pos` and `deprel` already do.)
 
 ## Why this lives in the corpus
 
@@ -89,8 +102,8 @@ duplicated reading.
 
 ## The layers
 
-Five layers, each a function of the source text. Layers 1–4 are implemented; layer 5 is the
-remaining work. Examples use *Inferno* I.1–6.
+Five layers, each a function of the source text. All five are implemented and built for all 100
+cantos. Examples use *Inferno* I.1–6.
 
 ```
 1  Nel mezzo del cammin di nostra vita
@@ -126,6 +139,12 @@ recoverable.
 The mechanics — columns, generation rules, the token-alignment algorithm, validation tiers, and
 usage — live in [`morph/README.md`](morph/README.md). It is served via `Canto.morph()` and
 `dante-corpus text morph`.
+
+**Proposed annex (not started)**: pronominal **case**, the one morphological feature this layer
+omits and the instrument Layer 5's parked clitic verdicts named. Planned as the sibling directory
+`case/` rather than a new `morph/*.tsv` column, so no existing artifact hash moves and the
+experiment stays revertible; merging into Layer 2 is the natural end state if it proves out. See
+[`case/PLAN.md`](case/PLAN.md).
 
 ### Layer 3 — Noun-phrase enumeration *(implemented — see [`np/README.md`](np/README.md))*
 
@@ -193,6 +212,12 @@ them fixes the boundary:
 - **Frame** — literal / simile / prophecy / reported. (Interpretive.)
 - **Reference equivalents and truth-conditions** — any alignment to an English (or other) reference
   translation. (Translation-layer concern; brings external canon and must not enter the corpus.)
+- **An imported verb-valency lexicon** — the instrument that would settle Layer 5's remaining
+  complement-vs-adjunct disagreements (`essere`/`stare`/`parere` as copulas, and the ~37 lemmas
+  behind the residual `advcl` cases). Rejected on the same grounds: it is an external authority,
+  not something the Italian line determines. Note the contrast with the proposed case annex
+  ([`case/PLAN.md`](case/PLAN.md)), which asks a model to *read* the source rather than importing
+  a dictionary, and so satisfies the *Neutrality audit* invariant below.
 
 ## Build & serve model
 
@@ -260,6 +285,11 @@ discipline already used for normalization and quotes.
    (`--check`: 0 hard / 3551 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 
+5. **Pronoun case annex** — *proposed, not started* ([`case/PLAN.md`](case/PLAN.md)). Not a sixth
+   layer: a Layer-2 morphological feature held in its own directory, gated on a kill-gate pilot,
+   worth ≈90–100 of Layer 5's 3551 soft violations and useful to consumers on its own terms.
+
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
 Layers 1–5 are implemented, built for all 100 cantos, and merged to `main`; the grammatical
-stack this plan describes is complete.
+stack this plan describes is complete. The only written-up follow-on is the case annex above,
+which is deliberately unstarted.
