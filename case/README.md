@@ -22,10 +22,17 @@ state. Merging into Layer 2 later is the natural end state if the column proves 
 ## Status
 
 Step 3 of [PLAN.md](PLAN.md) is under way. The vocabulary and scope are **frozen**, and the
-driver, the shared module, the serve surface and the tests exist. **Inferno 1 is built** — it was
+driver, the shared module, the serve surface and the tests exist. **Inferno 1 was built first** as
 the smoke test, and it caught two things `--check` structurally cannot see (a wrong worked example
 in the prompt, and the reflexive clitic having no home in the vocabulary); both are fixed and the
-canto was rebuilt. The remaining 99 cantos are LLM-scale generation the user runs.
+canto was rebuilt.
+
+The **first full corpus pass ran on 2026-07-31** and left **1236 hard violations across 23
+cantos**, all of them `missing lines`. They were one driver bug, not a model failure: a chunk the
+model could not get past aborted the whole remaining canto, so ~23 genuine failures cost 192 of
+the 1340 chunks. The driver now skips the failed chunk instead and keeps going; pass `--log` to
+keep the responses that failed. The **re-run of those 192 chunks is outstanding** — LLM-scale
+generation the user runs. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass*.
 
 ## Scope — every pronoun-POS token
 
@@ -173,7 +180,10 @@ on the model's self-consistency, which the kill-gate pilot measured before any o
 **81% unanimity across three presentation variants on the disputed positions, zero three-way
 splits, against 95% on a control** ([CORRECTIONS.md](CORRECTIONS.md)).
 
-`--clean` drops every chunk holding a violation so the next build re-requests exactly those.
+`--clean` drops every chunk holding a violation so the next build re-requests exactly those. A
+position a truncated table never reached is left empty rather than guessed, so it shows up here as
+`missing lines`; a chunk whose retries are all exhausted is **skipped, not fatal** — the build
+carries on through the rest of the canto and the next run re-requests only the skipped chunks.
 
 ## Adjudication — `--stats`, and only after freezing
 
@@ -223,6 +233,7 @@ make -C case stats                     # census + the post-freeze dep adjudicati
 make -C case clean                     # drop chunks with violations
 
 uv run case/case.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [-n]
+uv run case/case.py inferno -m MODEL --log case.inferno.log   # parallel shells: own log each
 ```
 
 Consumers read it deterministically via `Canto.case()` (line-number → `CaseRow` tuples, sparse) or

@@ -226,33 +226,44 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
         case.write_case(canticle, number,
                         [(no, committed[no]) for no in sorted(committed)])
 
+    # A chunk the model cannot get past is skipped, not fatal: it leaves its lines empty,
+    # `--check` reports them, and the next run re-requests exactly those. Aborting the canto
+    # instead makes one bad chunk cost every chunk after it — measured on the first corpus
+    # pass as 192 pending chunks from ~23 genuine failures (case/CORRECTIONS.md, *Step 3*).
+    failed: list[list[int]] = []
+
     with ui.progress(len(lines), start=pending[0][0], label=label) as prog:
         for chunk in pending:
             prog.update(chunk[0])
             short = f"{canticle} {number}"
+            covered = list(chunk)
             grouped = _try_chunk(chunk, texts, morph_rows, model, ui, short, log_path)
             if grouped is None and len(chunk) > 1:
                 ui.stream.error(f"  {short}: chunk failed, retrying unit by unit")
-                grouped = {}
+                grouped, covered = {}, []
                 for unit in [u for u in units if u[0] in chunk]:
                     result = _try_chunk(unit, texts, morph_rows, model, ui, short, log_path)
                     if result is None:
-                        ui.stream.error(f"  {short}: giving up at line {unit[0]}; "
-                                        f"earlier lines saved for resume")
-                        flush()
-                        return False
+                        ui.stream.error(f"  {short}: skipping lines {unit[0]}-{unit[-1]}; "
+                                        f"left empty for the next run")
+                        failed.append(unit)
+                        continue
+                    covered.extend(unit)
                     grouped.update(result)
             elif grouped is None:
-                ui.stream.error(f"  {short}: giving up at line {chunk[0]}; "
-                                f"earlier lines saved for resume")
-                flush()
-                return False
-            for no in chunk:
+                ui.stream.error(f"  {short}: skipping lines {chunk[0]}-{chunk[-1]}; "
+                                f"left empty for the next run")
+                failed.append(chunk)
+                continue
+            for no in covered:
                 committed.pop(no, None)
             committed.update({no: rows for no, rows in grouped.items() if rows})
             flush()
+    if failed:
+        spans = ", ".join(f"{u[0]}-{u[-1]}" for u in failed)
+        ui.stream.error(f"  {canticle} {number}: {len(failed)} chunk(s) unresolved: {spans}")
     ui.log(f"Wrote: case/{canticle}/{number:02d}.tsv")
-    return True
+    return not failed
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, dry_run: bool,
@@ -260,13 +271,18 @@ def build(canticles: list[str], model: str, size: int, force: bool, dry_run: boo
     if log_path:
         log_path.write_text("", encoding="utf-8")
     ui = StatusLine()
+    incomplete: list[str] = []
     for canticle in canticles:
         all_numbers = list(api.cantos(canticle))
         n_cantos = len(all_numbers)
         numbers = [only] if only else all_numbers
         for number in numbers:
-            _build_canto(canticle, number, n_cantos, model, size, force, dry_run, ui,
-                         log_path)
+            if not _build_canto(canticle, number, n_cantos, model, size, force, dry_run,
+                                ui, log_path):
+                incomplete.append(f"{canticle} {number}")
+    if incomplete and not dry_run:
+        ui.log(f"[red]Incomplete ({len(incomplete)}): {', '.join(incomplete)}[/red]")
+        ui.log("Re-run to retry only those chunks; --check lists the empty lines.")
     return 0
 
 

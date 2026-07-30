@@ -4,6 +4,8 @@ CANTICLES = inferno purgatorio paradiso
 
 all: case
 
+# --log keeps the failed responses: a chunk the model cannot get past is skipped, not fatal,
+# so the log is the only record of why. Parallel shells must each pass their own file.
 case:
 	uv run case.py $(CANTICLES) -m $(MODEL)
 

@@ -63,7 +63,7 @@ on the user's machine.** Concretely, on the branch `case-pilot`:
 |---|---|---|---|
 | 1 | kill-gate pilot — self-consistency on the disputed clitics vs a control | user ran the calls | **done, passed** (2026-07-30) |
 | 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13113 over 8542 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
-| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user runs the calls | **running now** — Inferno 1 smoke-tested and rebuilt 2026-07-30 (it caught two prompt/vocabulary bugs, both fixed), the remaining 99 cantos are in flight |
+| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user runs the calls | **first pass done 2026-07-31, re-run pending** — all 100 cantos written, but `--check` shows 1236 hard (`missing lines`) over 23 cantos, traced to a driver bug (an unrecoverable chunk aborted the rest of its canto) that is now fixed; **192 of 1340 chunks need re-running** |
 | 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started |
 | 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail (`genitive`) from `--stats` before any `morph/` merge | assistant | not started |
 
@@ -101,9 +101,16 @@ Committed in step 2 — new: `dante_corpus/case.py`, `case/case.py`, `case/READM
 [`case/PLAN.md`](case/PLAN.md) and [`case/CORRECTIONS.md`](case/CORRECTIONS.md).
 
 **What the user is running.** `make -C case` — the blind corpus pass, resumable from its own
-output, three canticles runnable in three parallel shells. Inferno 1 is already built and needs
-no rebuild. **Do not run it, and do not touch `case/*/*.tsv` while it runs**: LLM-scale
-generation is the user's job by the convention Phase 5 settled (cf. `make -C skel fix`).
+output, three canticles runnable in three parallel shells. **Do not run it, and do not touch
+`case/*/*.tsv` while it runs**: LLM-scale generation is the user's job by the convention Phase 5
+settled (cf. `make -C skel fix`).
+
+The first full pass finished on 2026-07-31 and left **1236 hard violations over 23 cantos**, all
+`missing lines`. They were a driver bug, not a model failure — an unrecoverable chunk aborted
+every remaining chunk of its canto, so ~23 genuine failures cost 192 of the 1340. The driver now
+skips the chunk and carries on; `--log` keeps the responses that failed. **The re-run of those
+192 chunks is what is outstanding**; see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 3
+corpus pass*.
 
 **What the assistant does when the pass finishes** — in this order, because the order is the
 annex's whole value:

@@ -448,3 +448,45 @@ hand-verification — not this report's call.
 row is `tuo` — a form disjoint from `ablative`'s, so the fold question stays open exactly as
 *The oblique tail* framed it. Far too small a sample to decide on; the verdict waits for the
 corpus pass.
+
+## Step 3 corpus pass — first run, 2026-07-31
+
+The user's corpus pass ran to completion. `make -C case check` reported **1236 hard
+violations**, all of one kind — `missing lines`, an in-scope position with no row — across
+**23 of the 100 cantos**.
+
+### The violations are one driver bug, not a model failure
+
+None of them are structural. Every in-scope position was confirmed satisfiable with no model
+call: over all 100 cantos, Layer 2's row count matches Layer 1's alpha-token count on every
+line, and every target's `word` is the verbatim token at its index (0 mismatches). So no chunk
+was failing because it could not be aligned.
+
+The pattern gives the cause away. In each affected canto the missing lines are a **contiguous
+tail from one point onward** — *Inferno* 8 misses 82-130, *Inferno* 10 misses 1-136 (the whole
+canto), *Paradiso* 28 misses only line 138 — and each of those points is exactly a chunk
+boundary. `_build_canto` treated a chunk the model could not get past as fatal: after the
+retries and the unit-by-unit fallback it flushed and `return False`, **abandoning every
+remaining chunk of that canto**. One bad chunk therefore cost every chunk after it.
+
+Measured amplification: **192 of the 1340 chunks (14%) are still pending, from roughly 23
+genuine failures** — about eight chunks of collateral for every one the model actually missed.
+Resuming would have converged eventually, but at one genuine failure per canto per run.
+
+### Fix — skip the chunk, not the canto
+
+A chunk that exhausts its retries is now **skipped**: its lines are left empty, `--check`
+reports them, and the next run re-requests exactly those. Lines already committed by
+successful units of the same chunk are kept (the pop-then-update window narrowed from the
+whole chunk to the positions actually covered). `_build_canto` still returns False so `build`
+can print a closing `Incomplete (n): ...` list. With skipping in place `--log` is the only record
+of *why* a chunk failed, so a re-run should pass it — the first pass kept none.
+
+This is the driver's own bug and the same abort-on-failure shape exists in `skel/skel.py`; it
+was never as costly there because that layer's chunks fail far more rarely. Left alone.
+
+### State
+
+The re-run is the user's (LLM-scale generation, the convention Phase 5 settled): 192 chunks,
+about 14% of the original pass. The artifact stays **untracked** until `--check` is 0 hard —
+step 3's commit order is unchanged.
