@@ -227,6 +227,10 @@ automatic edit, and never a checker exemption that silences a Layer-5 violation.
 count falls because `dep` got more correct, which is the mechanism every audit round in Phase 5
 used.
 
+The candidate lists are truncated to the first 40 contradictions and 20 impossible pairings so
+the report stays readable; **`--stats --full` lists every one** (510 as of the freeze), which is
+what a correction round works from.
+
 The order is load-bearing and is the reason `--stats` is a separate mode: **generate, validate,
 commit, *then* join against `dep`.** Looking at `dep` first, or narrowing the pass to the flagged
 positions, would manufacture the artifact to close violations — the failure mode

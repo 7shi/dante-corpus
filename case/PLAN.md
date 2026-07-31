@@ -105,12 +105,16 @@ and is now historical. Everything between them is rationale.
 
 ```bash
 make -C case stats     # census, oblique tail, dep agreement, contradictions, impossible pairings
+cd case && uv run case.py inferno purgatorio paradiso --stats --full   # all 510 candidates
 ```
+
+`make -C case stats` truncates the candidate lists to the first 40 / 20 so the report stays
+readable; `--full` is what the round actually works from.
 
 ### State to confirm before assuming anything
 
 ```bash
-git log --oneline -1        # the artifact freeze, 0027494, on the branch case-pilot
+git log --oneline -1        # 816c1b0, on the branch case-pilot (the freeze is 0027494)
 git status --short          # expect clean (or only doc edits in flight)
 uv run pytest -q            # expect 138 passed
 make -C morph check         # expect 0 hard, 0 soft
@@ -145,6 +149,31 @@ looked at, and an edit made now is indistinguishable from one made to close a vi
 Verify against the terzina one position at a time. `make -C dep check` must stay 0/0 throughout,
 and the yield expectation is unchanged from before any of it was measured: **≈90–100 of Layer 5's
 3550**, not zero.
+
+**Judge from the rows, never from the summary.** This annex has been wrong four times and every
+one was the same shape — a verdict reached from an aggregate without looking at what the rows
+were doing. Three corpus runs blamed the model when Layer 2 was at fault; the oblique-tail
+reading blamed the vocabulary when the analysis was at fault (see [`CORRECTIONS.md`](CORRECTIONS.md)'s
+*The subset argument was wrong*). 461 contradictions is an aggregate. Open the terzina.
+
+### How to inspect a position
+
+There is no checked-in harness; each round uses a throwaway script. The serve API's shapes, which
+cost four failed attempts to rediscover last time:
+
+```python
+from dante_corpus import canto
+c = canto("inferno", 1)
+c.lines()          # tuple[Line];  Line.no (not .number), Line.text, Line.tokens
+c.dep()            # dict[int, tuple[DepRow]] keyed by line — NOT a flat sequence
+                   #   DepRow(line, token, word, deprel, head_line, head_token)
+c.case()           # dict[int, tuple[CaseRow]] keyed by line
+                   #   CaseRow(line, token, word, case); .cases() splits a fused token
+```
+
+`token` is **1-based over the alpha-only tokens** of a line, the same convention Layers 2–5 use
+(`[t for t in tokenize(text) if has_alpha(t)]`). Indexing raw `tokenize` output misaligns every
+word you print — it has bitten previous rounds in `skel/` too.
 
 ### Then step 5
 

@@ -386,7 +386,7 @@ _IMPOSSIBLE = frozenset({("obl", "nominative")})
 _OBLIQUE = ("ablative", "genitive", "locative")
 
 
-def stats(canticles: list[str], only: int | None) -> int:
+def stats(canticles: list[str], only: int | None, full: bool = False) -> int:
     census = Counter()
     by_word = Counter()
     pos_census = Counter()
@@ -465,16 +465,16 @@ def stats(canticles: list[str], only: int | None) -> int:
         print(f"  dep={deprel:<5} ({want}): {ok} agree, {no} contradict ({rate})")
     print(f"\ncontradictions: {len(contradictions)} "
           f"— candidates for a hand-verified Layer-4 round, not automatic edits")
-    for item in contradictions[:40]:
+    for item in (contradictions if full else contradictions[:40]):
         print(f"  {item}")
-    if len(contradictions) > 40:
+    if not full and len(contradictions) > 40:
         print(f"  ... and {len(contradictions) - 40} more")
 
     print(f"\nimpossible pairings: {len(impossible)} "
           f"— combinations neither layer can be right about together")
-    for item in impossible[:20]:
+    for item in (impossible if full else impossible[:20]):
         print(f"  {item}")
-    if len(impossible) > 20:
+    if not full and len(impossible) > 20:
         print(f"  ... and {len(impossible) - 20} more")
     return 0
 
@@ -492,6 +492,8 @@ def main() -> int:
                         help="remove chunks with violations, then exit")
     parser.add_argument("--stats", action="store_true",
                         help="census + the post-freeze dep adjudication, no model call")
+    parser.add_argument("--full", action="store_true",
+                        help="with --stats, list every candidate instead of the first 40/20")
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending chunks without calling the LLM")
     parser.add_argument("--log", nargs="?", const="case.log", metavar="FILE",
@@ -501,7 +503,7 @@ def main() -> int:
     if args.check:
         return check(args.canticles, args.canto)
     if args.stats:
-        return stats(args.canticles, args.canto)
+        return stats(args.canticles, args.canto, args.full)
     if args.clean:
         return clean(args.canticles, args.chunk, args.canto)
     if args.dry_run:
