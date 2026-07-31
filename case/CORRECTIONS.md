@@ -534,3 +534,46 @@ violation instead of absorbing. Unlike the first failure this one is self-recove
 `make -C case clean` dropped the chunks holding the now-invalid one-case rows (132 lines).
 **30 chunks are pending** — 2% of the original 1340, down from 192 after the first pass. The
 artifact stays untracked until `--check` is 0 hard.
+
+## Step 3 corpus pass — third run, 2026-07-31
+
+`--check` went **70 → 13 hard**, over three cantos. No log was captured this run (the Makefile
+recipe carries no `--log`), but none was needed: the residue was determinate from Layer 2 alone,
+and it was the **same defect as the second run in a shape the first correction round did not
+cover**.
+
+That round keyed on `pos` naming fewer pronouns than a two-part `lemma`. It therefore missed
+every token where the lemma undercounts as well — *Paradiso* 11:5 `sen giva` and 11:85 `Indi sen
+va` carry the lemma `si`, not `si+ne`, so they were never candidates and kept rejecting the
+model's correct two-value answer. Two further shapes came with them: *Purgatorio* 19:139
+`Vattene` (`andare+ti+ne` under a two-part `pos`) and *Purgatorio* 31:99 `nol`, which is
+`non lo` — one pronoun — but was tagged `ne+lo` / `pronoun+pronoun` and so demanded two.
+
+**Fixed by auditing the whole family rather than the symptom**: 14 tokens, each verified against
+the terzina, in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s *Fused-token component
+counts, round 2*. The remaining `pos`/`lemma` disagreements in the pronoun population are all
+single-pronoun tokens whose count is right (`meco`/`teco`/`seco`, `ne`, `voialtri`), so they
+block nothing and are parked.
+
+**The audit also closed a Layer-5 violation.** *Paradiso* 17:92 `nol` was tagged
+`adverb+article`, putting it outside the pronoun scope entirely — and that same mistag was why
+`skel --check` reported `argument (92, 4) for role obj heads no NP/pronoun/predicate`. Correcting
+it took Layer 5 from **3551 to 3550 soft** with no change to `skel/`. This is the annex auditing
+Layer 2 the way Layer 5 audits Layer 4, and it happened before the `dep` join has been looked at
+at all: reading `pos` as a **count** exercises Layer 2 in a way no earlier consumer did.
+
+### State
+
+Scope: **13112 tokens over 8540 lines**, 13176 case values. `make -C case clean` dropped the
+chunks holding rows the corrections invalidated (77 lines). **12 chunks are pending**, under 1%
+of the original 1340. `morph --check` 0/0, `dep --check` 0/0, `skel --check` 0 hard / 3550 soft.
+
+### Lesson
+
+Three runs, three residues, and **not one of them was the model getting the Italian wrong** — the
+first was a driver abort, the second and third were Layer 2 disagreeing with itself about how
+many pronouns a fused token holds. The smoke test's lesson (`--check` passing is not evidence the
+artifact is right) has a converse worth recording: **`--check` failing is not evidence the model
+is wrong.** A formal check compares the answer against the frozen layers, so it fails whenever
+*either* side is at fault, and on this layer the frozen side was at fault three times running.
+Read the log before re-running.

@@ -486,7 +486,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 65	io	io	pronoun		sg.	1			
 65	maestro	maestro	noun	m.	sg.				
 65	assai	assai	adverb						
-65	ten	te	pronoun		sg.	2			archaic
+65	ten	te+ne	pronoun+pronoun		sg.	2			archaic
 65	priego	pregare	verb		sg.	1	present	indicative	archaic
 66	e	e	conjunction						
 66	ripriego	ripregare	verb		sg.	1	present	indicative	

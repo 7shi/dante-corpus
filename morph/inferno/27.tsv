@@ -150,7 +150,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 20	lombardo	lombardo	adjective	m.	sg.				
 21	dicendo	dire	verb				gerund		
 21	Istra	questa	pronoun	f.	sg.				archaic
-21	ten	tu	pronoun		sg.	2			archaic
+21	ten	te+ne	pronoun+pronoun		sg.	2			archaic
 21	va	andare	verb		sg.	2	present	indicative	
 21	più	più	adverb						
 21	non	non	adverb						

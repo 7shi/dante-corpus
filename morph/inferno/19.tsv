@@ -959,7 +959,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 127	sé	sé	pronoun		sg.	3			
 127	distretto	distrarre	verb	m.	sg.		past participle		
 128	sì	sì	adverb						
-128	men	me	pronoun		sg.	1			archaic
+128	men	me+ne	pronoun+pronoun		sg.	1			archaic
 128	portò	portare	verb		sg.	3	remote past	indicative	
 128	sovra	sopra	preposition						archaic
 128	'l	il	article	m.	sg.				elision

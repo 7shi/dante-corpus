@@ -643,7 +643,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 92	di	di	preposition						
 92	lui	lui	pronoun	m.	sg.				
 92	e	e	conjunction						
-92	nol	non+il	adverb+article	m.	sg.				contraction
+92	nol	non+lo	adverb+pronoun	m.	sg.				contraction
 92	dirai	dire	verb		sg.	2	future	indicative	
 92	e	e	conjunction						
 92	disse	dire	verb		sg.	3	remote past	indicative	

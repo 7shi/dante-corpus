@@ -986,7 +986,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 138	io	io	pronoun		sg.	1			
 138	così	così	adverb						
 138	ragiono	ragionare	verb		sg.	1	present	indicative	
-139	Vattene	andare+ti+ne	verb+pronoun		sg.	2	present	imperative	contraction
+139	Vattene	andare+ti+ne	verb+pronoun+pronoun		sg.	2	present	imperative	contraction
 139	omai	omai	adverb						
 139	non	non	adverb						
 139	vo'	volere	verb		sg.	1	present	indicative	apocope

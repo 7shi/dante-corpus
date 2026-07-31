@@ -1,5 +1,27 @@
 # skel — Layer 5 correction history
 
+## Layer-2 `nol` mistag closes one soft violation (2026-07-31)
+
+**3551 → 3550.** Not a Layer-5 change: a Layer-2 correction round driven by the
+[`case/`](../case/README.md) annex happened to close one of Layer 5's soft residue, and the
+delta is recorded here because Layer 5's count is the thing that moved.
+
+*Paradiso* 17:92, "e nol dirai" ("and you will not say it"). Layer 2 read `nol` as
+`non+il` / `adverb+article`, treating the clitic `lo` as an article. Layer 5's membership check
+consequently reported `argument (92, 4) for role obj heads no NP/pronoun/predicate` — the `obj`
+was correct, but the token it cited was tagged as neither a noun phrase nor a pronoun. Correcting
+`nol` to `non+lo` / `adverb+pronoun`, which is how the corpus reads the other 37 occurrences of
+the form, resolves it with no change to `skel/`.
+
+The mistag was found by [`case/`](../case/README.md)'s scope audit rather than by Layer 5's own
+triage, which is the annex behaving as PLAN.md's *Layer 5 doubles as an audit of Layer 4* claim
+predicted, one layer further down: a column that reads `pos` as a **count** exercises Layer 2 in
+a way no previous consumer did. See [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s
+*Fused-token component counts, round 2*.
+
+`skel --check` is now **0 hard, 3550 soft**; `morph --check` and `dep --check` stay 0/0. Figures
+quoted as 3551 elsewhere in this repo describe the Phase-5 end state and are left as they were.
+
 ## Phase 5q: the final `--fix` regeneration pass, and the `ioj` typo (2026-07-29)
 
 Baseline: **0 hard, 3702 soft** (the Phase 5p state), **1702 flagged parse units**. One full

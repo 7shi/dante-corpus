@@ -1022,11 +1022,11 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 139	altro	altro	adjective	m.	sg.				
 139	sopranome	sopranome	noun	m.	sg.				
 139	io	io	pronoun		sg.	1			
-139	nol	ne+lo	pronoun+pronoun	m.	sg.				contraction
+139	nol	non+lo	adverb+pronoun	m.	sg.				contraction
 139	conosco	conoscere	verb		sg.	1	present	indicative	
 140	s'	se	conjunction						elision
 140	io	io	pronoun		sg.	1			
-140	nol	ne+lo	pronoun+pronoun	m.	sg.				contraction
+140	nol	non+lo	adverb+pronoun	m.	sg.				contraction
 140	togliessi	togliere	verb		sg.	1	imperfect	subjunctive	
 140	da	da	preposition						
 140	sua	suo	adjective	f.	sg.				

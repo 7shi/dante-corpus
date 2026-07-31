@@ -27,16 +27,21 @@ the smoke test, and it caught two things `--check` structurally cannot see (a wr
 in the prompt, and the reflexive clitic having no home in the vocabulary); both are fixed and the
 canto was rebuilt.
 
-The corpus pass has taken two runs so far, both on 2026-07-31, and neither residue was a model
+The corpus pass has taken three runs so far, all on 2026-07-31, and no residue was ever a model
 failure:
 
 | run | `--check` | cause | fix |
 |---|---|---|---|
 | 1 | 1236 hard over 23 cantos | a chunk the model could not get past aborted the whole remaining canto, so ~23 genuine failures cost 192 of the 1340 chunks | the driver skips the failed chunk and carries on; pass `--log` to keep the responses |
 | 2 | 70 hard over 19 cantos | Layer 2's `pos` undercounted its own `lemma` on 24 fused clitic clusters (`sen` = `si+ne`), so a right answer was rejected forever; and the model sometimes writes the `Word` cell as the clitic (`mi`) rather than the fused token (`parlami`) | corrected in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md); `_match` now also accepts the clitic a fused token ends in |
+| 3 | 13 hard over 3 cantos | the same defect in shapes round 2 did not cover — the *lemma* undercounting too (`sen` with the lemma `si`), a three-part lemma under a two-part `pos` (`Vattene`), and `nol` = `non lo` demanding two cases for one pronoun | 14 more tokens, audited as a family; one of them also closed a Layer-5 soft violation (3551 → 3550) |
 
-**30 chunks are pending** — 2% of the original 1340 — and re-running them is LLM-scale generation
-the user does. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass* entries.
+**12 chunks are pending** — under 1% of the original 1340 — and re-running them is LLM-scale
+generation the user does. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass* entries.
+
+Worth carrying forward: **`--check` failing is not evidence the model is wrong.** A formal check
+compares the answer against the frozen layers, so it fails whenever *either* side is at fault,
+and on this layer the frozen side was at fault three runs running.
 
 ## Scope — every pronoun-POS token
 
@@ -50,7 +55,7 @@ Measured on the frozen `morph/*.tsv`:
 | population | tokens | lines |
 |---|---|---|
 | Layer-2 tokens | 101601 | 14233 |
-| **pronoun-POS tokens (in scope)** | **13112** | **8541** |
+| **pronoun-POS tokens (in scope)** | **13112** | **8540** |
 | of which the clitic forms `mi ti si ci vi ne lo la li le gli` + elisions | 3710 | 3481 |
 
 The clitic subset is what the Layer-5 adjudication needs, but the scope is the whole pronoun

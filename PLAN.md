@@ -3,7 +3,7 @@
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5q and its soft residue is at **3551** — every route the
+checker was refined through Phases 0-5q and its soft residue is at **3550** — every route the
 Phase 5 plan opened now has a measured verdict and none is open (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
 [`skel/README.md`](skel/README.md) for the design and current status. One follow-on is **in
@@ -35,7 +35,7 @@ driver the same day, and **step 3's corpus pass is running now** (the user's job
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3551 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3550 soft** (down from 17438 at the first full-corpus
   measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round) — see
   [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history. Phase 5 (see
@@ -62,8 +62,8 @@ on the user's machine.** Concretely, on the branch `case-pilot`:
 | step | what | who | state |
 |---|---|---|---|
 | 1 | kill-gate pilot — self-consistency on the disputed clitics vs a control | user ran the calls | **done, passed** (2026-07-30) |
-| 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8541 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
-| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user runs the calls | **two runs done 2026-07-31, a third pending** — `--check` went 1236 → 70 hard; neither residue was a model failure (a driver abort, then Layer 2's `pos` undercounting its own `lemma` on 24 fused clitics). Both fixed; **30 of 1340 chunks left** |
+| 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8540 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
+| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user runs the calls | **three runs done 2026-07-31, a fourth pending** — `--check` went 1236 → 70 → 13 hard, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. All fixed; **12 of 1340 chunks left** |
 | 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started |
 | 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail (`genitive`) from `--stats` before any `morph/` merge | assistant | not started |
 
@@ -90,7 +90,7 @@ before assuming it:
 git status --short          # expect only case/<canticle>/ untracked (the running build)
 uv run pytest -q            # expect 138 passed (125 before the annex)
 make -C dep check           # expect 0 hard, 0 soft   (untouched by the annex)
-make -C skel check          # expect 0 hard, 3551 soft (untouched by the annex)
+make -C skel check          # expect 0 hard, 3550 soft (3551 before the annex's morph rounds)
 ls case/*/*.tsv 2>/dev/null | wc -l    # build progress, out of 100 cantos
 ```
 
@@ -105,16 +105,26 @@ output, three canticles runnable in three parallel shells. **Do not run it, and 
 `case/*/*.tsv` while it runs**: LLM-scale generation is the user's job by the convention Phase 5
 settled (cf. `make -C skel fix`).
 
-Two runs have happened, both on 2026-07-31, taking `--check` from **1236 hard to 70 and then to
-30 pending chunks**. Neither residue was a model failure. The first was a driver bug — an
-unrecoverable chunk aborted every remaining chunk of its canto, so ~23 genuine failures cost 192
-of the 1340; the driver now skips the chunk and carries on, and `--log` keeps the responses. The
-second was **Layer 2's `pos` undercounting its own `lemma`** on 24 fused clitic clusters (`sen` =
-`si+ne`, tagged `pronoun` here and `pronoun+pronoun` 15 times elsewhere), which rejected a
-correct answer forever; corrected in [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md) with
-`morph`/`dep`/`skel` re-measured at 0/0, 0/0 and 0/3551. **The re-run of the last 30 chunks is
-what is outstanding**; see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 3 corpus pass*
-entries.
+Three runs have happened, all on 2026-07-31, taking `--check` from **1236 hard to 70 to 13**, and
+**not one residue was the model getting the Italian wrong**:
+
+1. A driver bug — an unrecoverable chunk aborted every remaining chunk of its canto, so ~23
+   genuine failures cost 192 of the 1340. The driver now skips the chunk and carries on, and
+   `--log` keeps the responses that failed.
+2. **Layer 2's `pos` undercounting its own `lemma`** on 24 fused clitic clusters (`sen` = `si+ne`,
+   tagged `pronoun` here and `pronoun+pronoun` 15 times elsewhere), rejecting a correct answer
+   forever.
+3. The same defect in shapes round 2 did not cover — the lemma undercounting too (`sen` with the
+   lemma `si`), a three-part lemma under a two-part `pos` (`Vattene`), and `nol` = `non lo`
+   demanding two cases for one pronoun. 14 more tokens, audited as a family rather than as
+   symptoms.
+
+Both correction rounds are in [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md), with
+`morph`/`dep`/`skel` re-measured at 0/0, 0/0 and **0/3550** — the last one moved because a `nol`
+mistagged `adverb+article` was also the cause of a Layer-5 membership violation, so the annex has
+now audited Layer 2 before its `dep` join has even been looked at. **The re-run of the last 12
+chunks is what is outstanding**; see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 3
+corpus pass* entries.
 
 **What the assistant does when the pass finishes** — in this order, because the order is the
 annex's whole value:

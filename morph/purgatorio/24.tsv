@@ -546,7 +546,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 74	e	e	conjunction						
 74	dietro	dietro	preposition						
 74	meco	me+con	pronoun+preposition						contraction
-74	sen	si	pronoun		sg.	3			archaic
+74	sen	si+ne	pronoun+pronoun		sg.	3			archaic
 74	veniva	venire	verb		sg.	3	imperfect	indicative	
 75	dicendo	dire	verb						gerund
 75	Quando	quando	adverb						

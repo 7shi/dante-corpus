@@ -25,7 +25,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 4	chi	chi	pronoun		sg.				
 4	ad	a	preposition						
 4	amforismi	amforismo	noun	m.	pl.				
-5	sen	si	pronoun		sg.	3			archaic
+5	sen	si+ne	pronoun+pronoun		sg.	3			archaic
 5	giva	dare	verb		sg.	3	imperfect	indicative	archaic
 5	e	e	conjunction						
 5	chi	chi	pronoun		sg.				
@@ -577,7 +577,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 84	sposa	sposa	noun	f.	sg.				
 84	piace	piacere	verb		sg.	3	present	indicative	
 85	Indi	indi	adverb						
-85	sen	si	pronoun		sg.	3			archaic
+85	sen	si+ne	pronoun+pronoun		sg.	3			archaic
 85	va	andare	verb		sg.	3	present	indicative	
 85	quel	quello	adjective	m.	sg.				
 85	padre	padre	noun	m.	sg.				

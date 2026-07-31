@@ -247,3 +247,49 @@ here — the subject is `il mal futuro e 'l fatto`.
 verdict moved. 22 canto artifacts change, so their `morph` content hashes move. The pronoun scope
 `case/` derives from this column goes from 13113 tokens over 8542 lines to **13112 over 8541**,
 and the case-value count (one per pronoun component) to **13171**.
+
+## Fused-token component counts, round 2 (2026-07-31)
+
+The [previous round](#fused-clitic-clusters--pos-undercounting-its-own-lemma-2026-07-31) keyed on
+`pos` naming fewer pronouns than a **two-part lemma**. That missed every token where the *lemma*
+undercounts too, so `case/`'s next pass hit the same wall on a different set. This round audits
+the whole family instead of one symptom of it — 14 tokens, each verified against the terzina.
+
+**Cluster forms whose lemma names only one component** (7). `sen` = `se ne`, `men` = `me ne`,
+`ten` = `te ne`, all preverbal clitic pairs. `pos` → `pronoun+pronoun`, lemma → the pair:
+
+| | line | lemma was |
+|---|---|---|
+| `sen` | *Purg* 24:74, *Purg* 32:89, *Par* 11:5, *Par* 11:85 | `si` |
+| `men` | *Inf* 19:128 "sì men portò sovra 'l colmo de l'arco" | `me` |
+| `ten` | *Inf* 26:65 "assai ten priego", *Inf* 27:21 "Istra ten va" | `te`, `tu` |
+
+**Enclitics carrying two clitics** (2). *Purg* 19:139 `Vattene` (`andare+ti+ne`) was
+`verb+pronoun` — the lemma already named three components — and becomes `verb+pronoun+pronoun`.
+*Inf* 30:11 `percosselo` is the mirror error: "e rotollo e percosselo ad un sasso" is
+`percosse` + `lo`, one clitic, so the lemma's `percuotere+si+lo` loses its spurious `si`. Its
+`pos` was already right, so the case scope does not move.
+
+**`nol` = `non lo`, one pronoun and not two** (4). 37 of the corpus's 41 `nol` tokens read
+`non+lo` / `adverb+pronoun`; the outliers do not survive their context — *Purg* 16:139 "io nol
+conosco", 16:140 "s'io nol togliessi", *Purg* 31:99 "che nol so rimembrar" were
+`ne+lo` / `pronoun+pronoun`, and *Par* 17:92 "e nol dirai" was `non+il` / `adverb+article`,
+reading the clitic `lo` as an article. All four corrected to the majority form.
+
+**One more `men` that is the adverb** (1), the same finding as the previous round's *Purg* 20:85.
+*Purg* 30:46, "‘Men che dramma / di sangue m'è rimaso che non tremi'" — "less than a dram of
+blood is left in me": `Men` is apocopated `meno`, and the lemma `quale` it carried is not a
+reading of anything. Corrected to `adverb` / `meno` / `apocope`, which takes it out of the
+pronoun scope.
+
+**Left alone, and why.** The comitatives `meco` / `teco` / `seco` are still tagged four ways and
+`ne` at *Par* 14:55 still has the lemma `in+esso`, but all of them are single-pronoun tokens
+whose `pos` gives the right count, so no consumer is blocked and correcting them is a `morph/`
+question of its own. `voialtri` (*Par* 2:10, `voi+altro`) is not a defect: one compound pronoun,
+one case.
+
+**Effect.** `morph --check` stays **0 hard / 0 soft** and `dep --check` **0/0**;
+`skel --check` goes **3551 → 3550**, the `nol` at *Par* 17:92 having also been the cause of one
+Layer-5 membership violation (see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). 12 canto
+artifacts change. The pronoun scope stays at **13112 tokens**, over **8540** lines, and the
+case-value count goes to **13176**.

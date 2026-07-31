@@ -611,7 +611,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 89	dopo	dopo	preposition						
 89	'l	il	article	m.	sg.				elision
 89	grifon	grifone	noun	m.	sg.				apocope
-89	sen	si	pronoun		pl.	3			archaic
+89	sen	si+ne	pronoun+pronoun		pl.	3			archaic
 89	vanno	andare	verb		pl.	3	present	indicative	
 89	suso	su	adverb						archaic
 90	con	con	preposition						

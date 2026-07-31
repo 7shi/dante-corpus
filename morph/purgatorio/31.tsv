@@ -684,7 +684,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 98	dolcemente	dolcemente	adverb						
 98	udissi	udire	verb		sg.	1	remote past	indicative	
 99	che	che	conjunction						
-99	nol	ne+lo	pronoun+pronoun	m.	sg.				contraction
+99	nol	non+lo	adverb+pronoun	m.	sg.				contraction
 99	so	sapere	verb		sg.	1	present	indicative	
 99	rimembrar	rimembrare	verb						apocope
 99	non	non	adverb						
