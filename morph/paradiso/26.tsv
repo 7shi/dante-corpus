@@ -963,7 +963,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 138	in	in	preposition						
 138	ramo	ramo	noun	m.	sg.				
 138	che	che	pronoun		sg.	3			relative
-138	sen	si+ne	pronoun		sg.	3			contraction
+138	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 138	va	andare	verb		sg.	3	present	indicative	
 138	e	e	conjunction						
 138	altra	altro	adjective	f.	sg.				

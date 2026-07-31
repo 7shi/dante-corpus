@@ -418,7 +418,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 59	dì	dì	noun	m.	sg.				
 59	fu	essere	verb		sg.	3	remote past	indicative	
 59	chiaro	chiaro	adjective	m.	sg.				
-60	sen	si+ne	pronoun		sg.	3			contraction
+60	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 60	venne	venire	verb		sg.	3	remote past	indicative	
 60	suso	suso	adverb						
 60	e	e	conjunction						

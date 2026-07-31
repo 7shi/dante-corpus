@@ -27,12 +27,16 @@ the smoke test, and it caught two things `--check` structurally cannot see (a wr
 in the prompt, and the reflexive clitic having no home in the vocabulary); both are fixed and the
 canto was rebuilt.
 
-The **first full corpus pass ran on 2026-07-31** and left **1236 hard violations across 23
-cantos**, all of them `missing lines`. They were one driver bug, not a model failure: a chunk the
-model could not get past aborted the whole remaining canto, so ~23 genuine failures cost 192 of
-the 1340 chunks. The driver now skips the failed chunk instead and keeps going; pass `--log` to
-keep the responses that failed. The **re-run of those 192 chunks is outstanding** — LLM-scale
-generation the user runs. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass*.
+The corpus pass has taken two runs so far, both on 2026-07-31, and neither residue was a model
+failure:
+
+| run | `--check` | cause | fix |
+|---|---|---|---|
+| 1 | 1236 hard over 23 cantos | a chunk the model could not get past aborted the whole remaining canto, so ~23 genuine failures cost 192 of the 1340 chunks | the driver skips the failed chunk and carries on; pass `--log` to keep the responses |
+| 2 | 70 hard over 19 cantos | Layer 2's `pos` undercounted its own `lemma` on 24 fused clitic clusters (`sen` = `si+ne`), so a right answer was rejected forever; and the model sometimes writes the `Word` cell as the clitic (`mi`) rather than the fused token (`parlami`) | corrected in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md); `_match` now also accepts the clitic a fused token ends in |
+
+**30 chunks are pending** — 2% of the original 1340 — and re-running them is LLM-scale generation
+the user does. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass* entries.
 
 ## Scope — every pronoun-POS token
 
@@ -46,7 +50,7 @@ Measured on the frozen `morph/*.tsv`:
 | population | tokens | lines |
 |---|---|---|
 | Layer-2 tokens | 101601 | 14233 |
-| **pronoun-POS tokens (in scope)** | **13113** | **8542** |
+| **pronoun-POS tokens (in scope)** | **13112** | **8541** |
 | of which the clitic forms `mi ti si ci vi ne lo la li le gli` + elisions | 3710 | 3481 |
 
 The clitic subset is what the Layer-5 adjudication needs, but the scope is the whole pronoun
@@ -79,7 +83,7 @@ which is exactly what the pilot's clitic-argument population could not contain; 
 | `reflexive` | — | a clitic referring back to the subject, or belonging to the verb — `mi volsi`, `si mosse`, impersonal `si` |
 
 `reflexive` is the second value the census does not contain, added for the same structural
-reason and on the evidence of the inferno-1 smoke test — 1411 of the 13113 in-scope tokens
+reason and on the evidence of the inferno-1 smoke test — 1411 of the 13112 in-scope tokens
 (10.8%) are the reflexive / impersonal clitic Layer 4 tags `expl`, which fills no argument slot,
 and with no home in the vocabulary the model split them `accusative` 6 / `nominative` 2. The name
 is the corpus's own: Layer 2's `note` column already reads `reflexive` on 1271 pronoun tokens

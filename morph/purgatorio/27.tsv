@@ -35,7 +35,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 5	onde	onde	conjunction						
 5	'l	il	article	m.	sg.				elision
 5	giorno	giorno	noun	m.	sg.				
-5	sen	si+ne	pronoun						contraction
+5	sen	si+ne	pronoun+pronoun						contraction
 5	giva	gire	verb		sg.	3	imperfect	indicative	archaic
 6	come	come	conjunction						
 6	l'	lo	article	m.	sg.				elision
@@ -427,7 +427,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 60	potei	potere	verb		sg.	1	remote past	indicative	
 61	Lo	lo	article	m.	sg.				
 61	sol	sole	noun	m.	sg.				apocope
-61	sen	si+ne	pronoun		sg.	3			contraction
+61	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 61	va	andare	verb		sg.	3	present	indicative	
 61	soggiunse	soggiungere	verb		sg.	3	remote past	indicative	
 61	e	e	conjunction						

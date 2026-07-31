@@ -21,7 +21,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 3	al	a+il	preposition+article	m.	sg.				contraction
 3	mezzo	mezzo	noun	m.	sg.				
 3	dì	dì	noun	m.	sg.				archaic
-3	sen	se+ne	pronoun						contraction
+3	sen	se+ne	pronoun+pronoun						contraction
 3	vanno	andare	verb		pl.	3	present	indicative	
 4	quando	quando	conjunction						
 4	la	il	article	f.	sg.				

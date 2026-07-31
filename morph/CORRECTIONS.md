@@ -211,3 +211,39 @@ distinct flag `CONT_NEXT` ("continues on next line") was added to the same comma
 convention — `dia`'s note becomes `split word, CONT_NEXT`. `_needs_np` now exempts a noun from
 coverage if either `NO_NP` or `CONT_NEXT` is among its note's flags. Layer 3's `--check` count is
 now **41** soft (down from 42); `morph --check` remained 0 hard / 0 soft.
+
+## Fused clitic clusters — `pos` undercounting its own `lemma` (2026-07-31)
+
+Surfaced by the [`case/`](../case/README.md) annex's corpus pass, which is the first consumer to
+read `pos` as a **count** of a fused token's components rather than as a label.
+
+On 24 tokens Layer 2's `pos` disagreed with Layer 2's own `lemma`. The lemma named two clitics —
+`si+ne`, `me+ne`, `ci+ne`, `gli+lo`, `gli+ne` — while the `pos` named one pronoun:
+
+| form | lemma | wrong `pos` | n |
+|---|---|---|---|
+| `sen` | `si+ne` / `se+ne` | `pronoun` (14), `pronoun+adverb` (1), `pronoun+particle` (1) | 16 |
+| `men` | `me+ne` | `pronoun` | 2 |
+| `gliel` | `gli+lo` | `pronoun` | 2 |
+| `cen` | `ci+ne` | `pronoun` | 1 |
+| `gliene` | `gli+ne` | `pronoun` | 1 |
+
+The corpus already held the right answer: the identical form `sen` with the identical lemma
+`si+ne` is tagged `pronoun+pronoun` **15 times elsewhere**, so this is Layer 2 made consistent
+with its own majority reading, not a new judgment imported from outside. All 24 were verified one
+at a time against the terzina — every one is a preverbal clitic pair on a verb of motion or
+giving (`sen va`, `cen porta`, `men duol`, `gliene diè`, `gliel discoperse`). Only the `pos`
+column was changed; the feature columns are a separate question and were left alone.
+
+**One token in the same family was not a cluster at all.** *Purgatorio* 20:85, "Perché men paia
+il mal futuro e 'l fatto" — Layer 2 read `men` as `me+ne`, but the sense is "so that the evil,
+future and past, may seem **less**": `men` is apocopated `meno`, the comparative adverb, which
+the corpus tags `adverb` / `meno` / `apocope` on 55 other tokens. Corrected to match, which also
+takes it out of the pronoun scope entirely. `parere` with a `me ne` clitic pair does not read
+here — the subject is `il mal futuro e 'l fatto`.
+
+**Effect.** `morph --check` stays **0 hard / 0 soft**; `dep --check` stays **0/0** and
+`skel --check` stays **0 hard / 3551 soft**, both re-measured after the edit — no other layer's
+verdict moved. 22 canto artifacts change, so their `morph` content hashes move. The pronoun scope
+`case/` derives from this column goes from 13113 tokens over 8542 lines to **13112 over 8541**,
+and the case-value count (one per pronoun component) to **13171**.

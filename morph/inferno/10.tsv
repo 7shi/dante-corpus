@@ -1,6 +1,6 @@
 line	word	lemma	pos	gender	number	person	tense	mood	note
 1	Ora	ora	adverb						
-1	sen	si+ne	pronoun						contraction
+1	sen	si+ne	pronoun+pronoun						contraction
 1	va	andare	verb		sg.	3	present	indicative	
 1	per	per	preposition						
 1	un	uno	article	m.	sg.				indefinite

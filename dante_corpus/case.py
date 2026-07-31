@@ -186,12 +186,22 @@ def canon_header(header: str) -> str | None:
 
 def _match(word: str, token: str) -> bool:
     """Whether an LLM `Word` cell names the same token, tolerating the emphasis and the
-    trailing punctuation the model copies along with it."""
+    trailing punctuation the model copies along with it.
+
+    A fused token is also matched by the **clitic it ends in**: asked for the case of the
+    pronoun in `parlami` or `vedervi`, the model often answers with a `Word` of `mi` / `vi`,
+    which is the part the question is actually about. Reading that as the position it names
+    is safe because alignment is a forward walk — a row consumed by the wrong position
+    leaves a later one empty, which `validate_line` reports rather than absorbs.
+    """
     left = word.strip().strip("*").strip()
     if left == token:
         return True
     right = token.strip()
-    return left.rstrip(".,;:!?»«\"").lower() == right.rstrip(".,;:!?»«\"").lower()
+    left, right = left.rstrip(".,;:!?»«\"").lower(), right.rstrip(".,;:!?»«\"").lower()
+    if left == right:
+        return True
+    return len(left) < len(right) and right.endswith(left) and len(left) >= 2
 
 
 def align_unit(expected: list[Target], table_text: str) -> list[CaseRow]:

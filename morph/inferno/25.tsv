@@ -234,7 +234,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 32	Ercule	Ercole	noun	m.	sg.				
 32	che	che	pronoun						
 32	forse	forse	adverb						
-33	gliene	gli+ne	pronoun						contraction
+33	gliene	gli+ne	pronoun+pronoun						contraction
 33	diè	dare	verb		sg.	3	remote past	indicative	archaic
 33	cento	cento	numeral		sg.				
 33	e	e	conjunction						

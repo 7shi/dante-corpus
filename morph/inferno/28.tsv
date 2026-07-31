@@ -223,7 +223,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 32	Dinanzi	dinanzi	adverb						
 32	a	a	preposition						
 32	me	me	pronoun		sg.	1			
-32	sen	si+ne	pronoun						contraction
+32	sen	si+ne	pronoun+pronoun						contraction
 32	va	andare	verb		sg.	3	present	indicative	
 32	piangendo	piangere	verb				gerund		
 32	Alì	Alì	noun	m.	sg.				

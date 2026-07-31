@@ -490,3 +490,47 @@ was never as costly there because that layer's chunks fail far more rarely. Left
 The re-run is the user's (LLM-scale generation, the convention Phase 5 settled): 192 chunks,
 about 14% of the original pass. The artifact stays **untracked** until `--check` is 0 hard —
 step 3's commit order is unchanged.
+
+## Step 3 corpus pass — second run, 2026-07-31
+
+With the skip fix in place the re-run took `--check` from **1236 hard to 70**, over 19 cantos.
+The `--log` the first pass lacked was collected for *Inferno*, and it made the residue legible:
+the failures are **not** the model's, and both have a determinate cause.
+
+### The dominant failure — Layer 2's `pos` undercounting its own `lemma`
+
+`sen` accounts for most of it. On `Ora sen va per un secreto calle` the model answered
+`reflexive+ablative` on all three attempts, and on the unit-by-unit retry, and in every canto it
+appears in — the correct reading of `se ne`, two clitics. `scope_slots` reads the component count
+off `pos` alone, Layer 2 tagged that token `pronoun` (one slot), and so a right answer was
+rejected forever: three attempts, then the unit retry, then the chunk skipped.
+
+24 tokens were affected (`sen`, `men`, `cen`, `gliel`, `gliene`), and Layer 2 already contradicted
+itself on them — the identical `sen` / `si+ne` is `pronoun+pronoun` 15 times elsewhere. **Fixed in
+`morph/`, not worked around here**: see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s
+*Fused clitic clusters*. Working around it in `case/` was rejected because no rule over `pos` and
+`lemma` separates `sen` (`si+ne`, two clitics) from `voialtri` (`voi+altro`, one compound
+pronoun) — only a frozen list of word forms does, and *Scope* exists precisely so this layer
+holds none. The round also corrected one token in the same family that is not a cluster at all
+(*Purgatorio* 20:85 `men` = `meno`, the adverb), which drops the scope to **13112 tokens over
+8541 lines**, 13171 case values.
+
+`morph --check` stays 0/0, `dep --check` 0/0, `skel --check` 0 hard / 3551 soft — re-measured, no
+other layer's verdict moved.
+
+### The second failure — the model answers with the clitic, not the fused token
+
+Asked for the case of the pronoun in `parlami`, `sodisfammi`, `tacerci`, `vedervi`, the model
+sometimes writes the `Word` cell as `mi` / `ci` / `vi` — the part the question is actually about.
+`_match` required the whole token, so the row was dropped, the position aligned empty, and the
+chunk failed. `_match` now also accepts a `Word` that is the **clitic the fused token ends in**
+(two characters or more). This is safe rather than lax because alignment is a forward walk: a row
+consumed by the wrong position leaves a later one empty, which `validate_line` reports as a hard
+violation instead of absorbing. Unlike the first failure this one is self-recovering — `inferno`
+10's lines 4-6 passed on a later attempt — so it inflated the retry count more than the residue.
+
+### State
+
+`make -C case clean` dropped the chunks holding the now-invalid one-case rows (132 lines).
+**30 chunks are pending** — 2% of the original 1340, down from 192 after the first pass. The
+artifact stays untracked until `--check` is 0 hard.

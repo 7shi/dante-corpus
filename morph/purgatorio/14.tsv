@@ -865,7 +865,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 118	'l	lo	article	m.	sg.				elision
 118	demonio	demonio	noun	m.	sg.				
 119	lor	loro	pronoun		pl.				apocope
-119	sen	si+ne	pronoun		sg.	3			contraction
+119	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 119	girà	girare	verb		sg.	3	future	indicative	archaic
 119	ma	ma	conjunction						
 119	non	non	adverb						

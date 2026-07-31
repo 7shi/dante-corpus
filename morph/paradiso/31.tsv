@@ -708,7 +708,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 105	antica	antico	adjective	f.	sg.				
 105	fame	fame	noun	f.	sg.				
 105	non	non	adverb						
-105	sen	si+ne	pronoun		sg.	3			contraction
+105	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 105	sazia	saziare	verb		sg.	3	present	indicative	
 106	ma	ma	conjunction						
 106	dice	dire	verb		sg.	3	present	indicative	

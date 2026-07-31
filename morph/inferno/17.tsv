@@ -837,7 +837,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 114	la	la	article	f.	sg.				
 114	fera	fera	noun	f.	sg.				
 115	Ella	ella	pronoun	f.	sg.	3			
-115	sen	si+ne	pronoun		sg.				contraction
+115	sen	si+ne	pronoun+pronoun		sg.				contraction
 115	va	andare	verb		sg.	3	present	indicative	
 115	notando	notare	verb		sg.		present	gerund	
 115	lenta	lento	adjective	f.	sg.				

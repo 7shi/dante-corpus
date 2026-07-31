@@ -1,6 +1,6 @@
 line	word	lemma	pos	gender	number	person	tense	mood	note
 1	Ora	ora	adverb						
-1	cen	ci+ne	pronoun						contraction
+1	cen	ci+ne	pronoun+pronoun						contraction
 1	porta	portare	verb		sg.	3	present	indicative	
 1	l'	il	article	m.	sg.				elision
 1	un	uno	numeral	m.	sg.				
@@ -787,7 +787,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 108	mondo	mondo	noun	m.	sg.				
 108	lerci	lercio	adjective	m.	pl.				
 109	Priscian	Prisciano	noun	m.	sg.				proper noun
-109	sen	si+ne	pronoun						archaic
+109	sen	si+ne	pronoun+pronoun						archaic
 109	va	andare	verb		sg.	3	present	indicative	
 109	con	con	preposition						
 109	quella	quello	adjective	f.	sg.				

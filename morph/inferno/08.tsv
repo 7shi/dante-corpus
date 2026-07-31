@@ -643,7 +643,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 89	solo	solo	adjective	m.	sg.				
 89	e	e	conjunction						
 89	quei	quello	pronoun	m.	sg.				
-89	sen	si+ne	pronoun+adverb						contraction
+89	sen	si+ne	pronoun+pronoun						contraction
 89	vada	andare	verb		sg.	3	present	subjunctive	
 90	che	che	pronoun		sg.				relative
 90	sì	sì	adverb						

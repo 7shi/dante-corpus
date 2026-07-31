@@ -288,7 +288,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 42	altro	altro	pronoun	m.	sg.				
 42	che	che	pronoun						
 42	là	là	adverb						
-42	sen	si+ne	pronoun						contraction
+42	sen	si+ne	pronoun+pronoun						contraction
 42	va	andare	verb		sg.	3	present	indicative	
 42	sostenne	sostenere	verb		sg.	3	remote past	indicative	
 43	per	per	preposition						

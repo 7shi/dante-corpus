@@ -591,7 +591,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 84	propria	proprio	adjective	f.	sg.				
 84	carne	carne	noun	f.	sg.				
 85	Perché	perché	conjunction						
-85	men	me+ne	pronoun		sg.	1			contraction
+85	men	meno	adverb						apocope
 85	paia	parere	verb		sg.	3	present	subjunctive	
 85	il	il	article	m.	sg.				
 85	mal	male	noun	m.	sg.				apocope

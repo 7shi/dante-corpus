@@ -75,7 +75,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 12	qui	qui	adverb						
 12	ma	ma	conjunction						
 12	non	non	adverb						
-12	sen	si+ne	pronoun		sg.				contraction
+12	sen	si+ne	pronoun+pronoun		sg.				contraction
 12	vien	venire	verb		sg.	3	present	indicative	apocope
 12	satollo	satollo	adjective	m.	sg.				
 13	metter	mettere	verb		sg.		present	infinitive	apocope

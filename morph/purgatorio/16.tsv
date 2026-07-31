@@ -268,7 +268,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	la	lo	article	f.	sg.				
 38	morte	morte	noun	f.	sg.				
 38	dissolve	dissolvere	verb		sg.	3	present	indicative	
-38	men	me+ne	pronoun		sg.	1			contraction
+38	men	me+ne	pronoun+pronoun		sg.	1			contraction
 38	vo	vadere	verb		sg.	1	present	indicative	archaic
 38	suso	suso	adverb						
 39	e	e	conjunction						

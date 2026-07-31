@@ -79,7 +79,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 11	fiamme	fiamma	noun	f.	pl.				
 11	incese	incesare	adjective	f.	pl.				participle
 12	Ancor	ancora	adverb						apocope
-12	men	me+ne	pronoun		sg.	1			contraction
+12	men	me+ne	pronoun+pronoun		sg.	1			contraction
 12	duol	dolere	verb		sg.	3	present	indicative	apocope
 12	pur	pure	adverb						apocope
 12	ch'	che	conjunction						elision

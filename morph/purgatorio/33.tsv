@@ -847,7 +847,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 123	di	di	preposition						
 123	Letè	Letè	noun	m.	sg.				
 123	non	non	adverb						
-123	gliel	gli+lo	pronoun	m.	sg.	3			contraction
+123	gliel	gli+lo	pronoun+pronoun	m.	sg.	3			contraction
 123	nascose	nascondere	verb		sg.	3	remote past	indicative	
 124	E	e	conjunction						
 124	Bëatrice	Beatrice	noun	f.	sg.				

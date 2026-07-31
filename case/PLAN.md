@@ -37,7 +37,7 @@ anyway because folding one into `ablative` afterwards is a mechanical rewrite wh
 now and being wrong costs a corpus pass — see [`CORRECTIONS.md`](CORRECTIONS.md)'s
 *The oblique tail*.
 
-Scope frozen at **every pronoun-POS token** (13113 tokens over 8542 lines), read off Layer 2's
+Scope frozen at **every pronoun-POS token** (13112 tokens over 8541 lines), read off Layer 2's
 own `pos` column rather than a hand-frozen list of word forms, at a measured **1340 calls**; the
 clitic-only alternative was 3710 tokens for ~446 calls but needed a curated form list and left
 the *mirror* bucket's tonic forms (`cui`, `me`, `lui`, `altrui`, `lor`) unanswered. Driver,

@@ -111,7 +111,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 15	star	stare	verb				infinitive		apocope
 15	dimesso	dimesso	adjective	m.	sg.				
 16	Parte	partire	verb		sg.	3	remote past	indicative	archaic
-16	sen	si+ne	pronoun						contraction
+16	sen	si+ne	pronoun+pronoun						contraction
 16	giva	andare	verb		sg.	3	imperfect	indicative	archaic
 16	e	e	conjunction						
 16	io	io	pronoun		sg.	1			

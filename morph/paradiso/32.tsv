@@ -654,7 +654,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 99	ch'	che	conjunction						elision
 99	ogne	ogni	adjective		sg.				archaic
 99	vista	vista	noun	f.	sg.				
-99	sen	si+ne	pronoun+particle		sg.	3			contraction
+99	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 99	fé	fare	verb		sg.	3	remote past	indicative	archaic
 99	più	più	adverb						
 99	serena	sereno	adjective	f.	sg.				

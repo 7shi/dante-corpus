@@ -748,7 +748,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 104	però	però	adverb						
 104	ch'	che	conjunction						elision
 104	alcuna	alcuno	pronoun	f.	sg.				
-104	sen	si+ne	pronoun		sg.	3			contraction
+104	sen	si+ne	pronoun+pronoun		sg.	3			contraction
 104	rivesta	rivestire	verb		sg.	3	present	subjunctive	
 105	ché	che	conjunction						contraction
 105	non	non	adverb						
@@ -923,7 +923,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 128	a	a	preposition						
 128	brano	brano	noun	m.	sg.				
 129	poi	poi	adverb						
-129	sen	si+ne	pronoun						contraction
+129	sen	si+ne	pronoun+pronoun						contraction
 129	portar	portare	verb		pl.	3	remote past	indicative	apocope
 129	quelle	quello	adjective	f.	pl.				
 129	membra	membro	noun	f.	pl.				

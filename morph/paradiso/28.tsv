@@ -956,7 +956,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 138	vide	vedere	verb		sg.	3	remote past	indicative	
 138	qua	qua	adverb						
 138	sù	su	adverb						
-138	gliel	gli+lo	pronoun	m.	sg.				contraction
+138	gliel	gli+lo	pronoun+pronoun	m.	sg.				contraction
 138	discoperse	discoprire	verb		sg.	3	remote past	indicative	
 139	con	con	preposition						
 139	altro	altro	adjective	m.	sg.				
