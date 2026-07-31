@@ -377,11 +377,12 @@ _IMPOSSIBLE = frozenset({("obl", "nominative")})
 
 
 # The oblique tail is the vocabulary's open question, deferred to after the corpus pass by
-# an explicit decision (case/CORRECTIONS.md, *The oblique tail*). `ablative` is a residual
-# class, and whether `genitive` earns a separate value is decided from these counts — by word
-# form, because the whole question is whether one clitic (`ne`) is being split on meaning
-# alone. Folding a value into `ablative` afterwards is a mechanical rewrite of the frozen
-# TSVs, not a regeneration, so measuring first costs nothing.
+# an explicit decision (case/CORRECTIONS.md, *The oblique tail*). A value earns its place if
+# it changes the *slot* the pronoun fills, not what the oblique means — so the deciding
+# evidence is the `dep` deprel distribution below, not the word forms. Word forms were tried
+# first and gave the wrong answer: the same form under two values is exactly what a case
+# column exists to record (`lor danno` vs `di lor suona`), so form overlap says nothing about
+# slot identity. See case/CORRECTIONS.md, *The subset argument was wrong*.
 _OBLIQUE = ("ablative", "genitive", "locative")
 
 
@@ -390,6 +391,7 @@ def stats(canticles: list[str], only: int | None) -> int:
     by_word = Counter()
     pos_census = Counter()
     oblique_by_word = Counter()
+    oblique_by_deprel = Counter()
     covered = 0
     agree = Counter()
     contradictions: list[str] = []
@@ -419,6 +421,9 @@ def stats(canticles: list[str], only: int | None) -> int:
                     if dep_row is None:
                         continue
                     for value in row.cases():
+                        if value in _OBLIQUE:
+                            oblique_by_deprel[(value, dep_row.deprel)] += 1
+                    for value in row.cases():
                         if (dep_row.deprel, value) in _IMPOSSIBLE:
                             impossible.append(
                                 f"{canticle} {number}:{row.line}.{row.token} {row.word!r} "
@@ -446,9 +451,12 @@ def stats(canticles: list[str], only: int | None) -> int:
     for value in _OBLIQUE:
         forms = [(w, n) for (v, w), n in oblique_by_word.items() if v == value]
         forms.sort(key=lambda item: -item[1])
-        print(f"  {value:<10} {census[value]:>5}  {forms[:8]}")
-    print("  -> a value whose forms are a subset of another's is a *meaning* split of it,")
-    print("     not a slot it fills, and folds into `ablative` by a mechanical rewrite.")
+        rels = [(r, n) for (v, r), n in oblique_by_deprel.items() if v == value]
+        rels.sort(key=lambda item: -item[1])
+        print(f"  {value:<10} {census[value]:>5}  {forms[:6]}")
+        print(f"  {'':<10} {'':>5}  dep: {rels[:5]}")
+    print("  -> the deprels decide it: a value holding a slot the others do not earns its")
+    print("     place. Word forms do not — the same form under two values is the point.")
     print("\nagreement with dep (post-freeze adjudication input, not a check):")
     for deprel, want in _DEP_EXPECTS.items():
         ok, no = agree[deprel], agree[f"{deprel}!"]

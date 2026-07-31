@@ -119,15 +119,31 @@ be a *semantic* reading with no formal support in the Italian, which
 `vocative`, a syntactic distinction the line carries. `canon_case` maps `instrumental`,
 `comitative`, `oblique` and `partitive` onto `ablative` to absorb drift.
 
-**`ablative` is a residual class, and the tail is an open question.** 93% of the pilot's answers
-were `accusative` or `dative` — the question the annex exists to answer — and the whole oblique
-tail was 6%, which is also exactly where the pilot found the model unstable. A value earns its
-place in this vocabulary if it changes the **slot** the pronoun fills, not what the oblique
-*means*; by that criterion `genitive` (a `ne` meaning "of it" rather than "from there") is weak,
-and it is frozen anyway only because folding it into `ablative` later is a mechanical rewrite of
-the TSVs while dropping it now and being wrong would cost a corpus pass. `--stats` prints the
-tail's share and the word forms carrying each value, so the verdict after step 3 is numeric. See
-[CORRECTIONS.md](CORRECTIONS.md)'s *The oblique tail*.
+**`ablative` is a residual class, and the tail was the vocabulary's open question.** 93% of the
+pilot's answers were `accusative` or `dative` — the question the annex exists to answer — and the
+whole oblique tail was 6%, which is also exactly where the pilot found the model unstable. A
+value earns its place in this vocabulary if it changes the **slot** the pronoun fills, not what
+the oblique *means*.
+
+Step 3 measured it, and the answer is **fold nothing**. The deciding evidence is the `dep` deprel
+distribution, which `--stats` now prints alongside the word forms:
+
+| deprel | `ablative` 1805 | `genitive` 267 | `locative` 81 |
+|---|---|---|---|
+| `obl` | 1481 | 59 | 45 |
+| `nmod` | 94 | 139 | — |
+| `det:poss` | 0 | 50 | — |
+
+`genitive` is **earned** — 71% of it is adnominal, and `det:poss` is a slot `ablative` fills zero
+times (`lor danno`, `il senso lor`, `le gambe loro` are possessive determiners, not obliques).
+`locative` **stays open**: it is `obl`-dominant exactly as `ablative` is, so whether "place" is a
+distinct slot or a distinct meaning of one is undecided, and it is settled at the `morph/` merge.
+
+An earlier reading of the same tail recommended folding `genitive` into `ablative`, on the
+grounds that its word forms are a subset of `ablative`'s. That was wrong — the same form under
+two values is precisely what a case column records — and the argument, its refutation and the
+lesson are kept in [CORRECTIONS.md](CORRECTIONS.md)'s *The subset argument was wrong*. **Word
+forms do not decide this question; deprels do.**
 
 `ablative` is the **model's own** word for the partitive/locative oblique class; [PLAN.md](PLAN.md)
 anticipated `oblique`, and the census overruled it. The pilot's one real instability was where the

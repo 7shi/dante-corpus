@@ -68,7 +68,7 @@ branch `case-pilot`:
 | 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8540 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
 | 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user ran the calls | **done 2026-07-31**, four runs — `--check` went 1236 → 70 → 13 → **0 hard**, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. 13112 tokens frozen at `0027494`, before `--stats` was run |
 | 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started — input measured: **461 contradictions, 49 impossible pairings** |
-| 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail (`genitive`) from `--stats` before any `morph/` merge | assistant | not started — the tail is now measured and the verdict is *fold `genitive`, keep `locative`*, to be applied at the `morph/` merge |
+| 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail from `--stats` before any `morph/` merge | assistant | not started — the tail is measured and the verdict is **fold nothing**: `ablative` and `genitive` are earned by their deprels, `locative` stays open. An earlier reading recommended folding `genitive` and was wrong |
 
 The scope in step 2 went to the whole pronoun population rather than the clitic subset the
 adjudication strictly needs: it is read off Layer 2's own `pos` column, so it draws no line of its
@@ -143,12 +143,16 @@ was built to adjudicate, which is the pilot's finding reproduced at corpus scale
 **The three parked questions are now answered**, with their measurements in
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md):
 
-- **The oblique tail resolves.** `ablative` (1805) and `locative` (81) stand — the clitic
-  locatives `vi`/`ci` fill a slot the tonic obliques do not. **`genitive` (267) does not**: every
-  form carrying it also carries `ablative`, and a value whose forms are a subset of another's is
-  a *meaning* split rather than a distinct slot. Fold it **at the `morph/` merge and not
-  before** — 267 rows, no violation depends on it. `vocative` (30) is frozen-but-unearned;
-  `reflexive` (1961) is vindicated, and mistagging it was what the Inferno 1 smoke test caught.
+- **The oblique tail: fold nothing.** The deciding evidence is the `dep` deprel distribution,
+  not the word forms. `ablative` (1805) is `obl` at 82%. **`genitive` (267) is earned** — 71% of
+  it is adnominal (`nmod` 139, `det:poss` 50) and `det:poss` is a slot `ablative` fills zero
+  times: `lor danno`, `il senso lor`, `le gambe loro` are possessive determiners, not obliques.
+  **`locative` (81) stays open** — by deprel it is `obl`-dominant exactly as `ablative` is, so
+  whether "place" is a distinct slot or a distinct meaning of one is undecided; settle it at the
+  `morph/` merge. `vocative` (30) is frozen-but-unearned; `reflexive` (1961) is vindicated, and
+  mistagging it was what the Inferno 1 smoke test caught. **An earlier reading of this tail
+  recommended folding `genitive` and was wrong** — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s
+  *The subset argument was wrong*. No rows were rewritten.
 - **The third adjudication class is real** — relative pronouns that are the subject of their
   clause, read `nominative` by `case` and `obl` by Layer 4, **49 corpus-wide**. It is step 4's
   first and highest-yield slice, because the pairing is one neither layer can be right about

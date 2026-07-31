@@ -155,14 +155,19 @@ Re-measure Layer 5 and record the delta in
 
 Measurements in [`CORRECTIONS.md`](CORRECTIONS.md)'s *fourth run and the freeze*.
 
-- **The oblique tail** resolves. `ablative` (1805) and `locative` (81) stand — the clitic
-  locatives `vi`/`ci` are a slot the tonic obliques do not fill. **`genitive` (267) does not**:
-  every form carrying it also carries `ablative`, and a value whose forms are a subset of
-  another's is a *meaning* split rather than a distinct slot. Fold it into `ablative` **at the
-  `morph/` merge and not before** — 267 rows, no violation depends on it. `vocative` (30) is
-  frozen-but-unearned: correct, harmless, and argued from the poem's rhetoric rather than a
+- **The oblique tail: fold nothing.** The deciding evidence is the `dep` deprel distribution,
+  not the word forms. **`ablative` (1805)** is `obl` at 82% — the prepositional oblique.
+  **`genitive` (267) is earned**: 189 of it (71%) is adnominal (`nmod` 139, `det:poss` 50), and
+  `det:poss` is a slot `ablative` fills **zero** times — `lor danno`, `il senso lor`, `le gambe
+  loro` are possessive determiners, not obliques. **`locative` (81) stays open**: by deprel it
+  is `obl`-dominant exactly as `ablative` is, so whether "place" is a distinct slot or a distinct
+  meaning of the same slot is undecided; settle it at the `morph/` merge. `vocative` (30) is
+  frozen-but-unearned — correct and harmless, but argued from the poem's rhetoric rather than a
   count. `reflexive`, the other value added rather than measured, is vindicated at 1961 — 15% of
   the column, and mistagging it was what the Inferno 1 smoke test caught.
+  **An earlier reading of this tail recommended folding `genitive` and was wrong**; the argument,
+  the refutation and the lesson are in [`CORRECTIONS.md`](CORRECTIONS.md)'s *The subset argument
+  was wrong*. No rows were rewritten.
 - **The third adjudication class is real**, at 49 corpus-wide. It is step 4's first slice.
 - **Layer-2 mistags this annex surfaced and did not act on**, all single-pronoun tokens whose
   `pos` gives the right count, so nothing is blocked: the comitatives `meco`/`teco`/`seco` are

@@ -620,25 +620,72 @@ from the clitic subset to every pronoun-POS token, and tonic subject pronouns do
 extension. The clitic population the adjudication actually needs is the `accusative`/`dative`/
 `reflexive` block, 5373 tokens.
 
-### The oblique tail — measured, and the verdict is now decidable
+### The oblique tail — and how the first verdict on it was wrong
 
-16.3% of the column, and `--stats` prints the forms carrying each value:
+16.3% of the column. **The first reading of these numbers was wrong in both directions and is
+recorded here in full**, because the mistake is more instructive than the answer.
 
-- **`ablative` (1805)** stands. Its forms are the tonic obliques (`me`, `sé`, `lui`, `noi`,
-  `te`) and they are governed by prepositions — a slot no other value fills.
-- **`genitive` (267)** does **not** stand under the criterion the `instrumental` rejection
-  implies. Every form carrying it (`lor`, `cui`, `loro`, `sé`, `colui`, `lui`, `lei`) also
-  carries `ablative`, and a value whose forms are a subset of another's is a *meaning* split of
-  it, not a distinct slot. Step 2 froze it anyway on the stated grounds that folding it into
-  `ablative` afterwards is a mechanical rewrite; that rewrite is now the recommendation, to be
-  taken **at the `morph/` merge and not before** — it moves 267 rows and no violation depends
-  on it.
-- **`locative` (81)** is the same shape but the opposite verdict. Its forms (`vi`, `v'`, `ci`,
-  `c'`, and the fused `andovvi`/`venirvi`/`stavvi`/`usciteci`) are the clitic locatives, which
-  the `ablative` set does not contain. It is small but it is a genuine slot, and it survives.
+#### The subset argument was wrong
 
-So the tail resolves as: keep `ablative` and `locative`, fold `genitive`, and treat `vocative` as
-frozen-but-unearned. All three questions step 2 parked now have numbers behind them.
+`--stats` originally reported the tail *by word form*, and concluded: every form carrying
+`genitive` (`lor`, `cui`, `loro`, `sé`, `colui`, `lui`, `lei`) also carries `ablative`, so
+`genitive` is a **meaning** split of `ablative` rather than a distinct slot, and folds into it by
+a mechanical rewrite. That was recommended as the verdict.
+
+**It does not follow.** The same word form appearing under two values is exactly what a case
+column exists to record — `lor` is one form in `lor danno` ("their harm") and in `di lor suona`
+("resounds of them"), and if those two are the same value then the column has no purpose. Form
+overlap was used as a refutation when it is the phenomenon being measured. The inference also
+failed on its own terms: 11 forms / 12 tokens carry `genitive` and **never** `ablative`, and they
+are `tuo`, `mia`, `mio`, `tuoi`, `tue`, `suoi` — possessives, the same class as `loro`, differing
+only in person and number — plus `ambedue`/`amendue`, `alcuno`, and the Latin `horum`/`quorum`.
+So it was not even a subset.
+
+#### What the deprels say
+
+The criterion is *a value earns its place if it changes the slot the pronoun fills, not what the
+oblique means* — so the deciding evidence is the `dep` deprel distribution, and `--stats` now
+prints it:
+
+| deprel | `ablative` 1805 | `genitive` 267 | `locative` 81 |
+|---|---|---|---|
+| `obl` | **1481** (82%) | 59 | **45** (56%) |
+| `nmod` | 94 | **139** | — |
+| `det:poss` | **0** | **50** | — |
+| other | 230 | 19 | 36 |
+
+- **`ablative` stands**, uncontroversially: a prepositional oblique governed by a predicate.
+- **`genitive` stands.** 189 of its 267 (71%) are **adnominal** — they modify a noun rather than
+  filling an argument slot — and `det:poss` is a slot `ablative` occupies **zero** times. The
+  terzine confirm it at sight: `da le fatiche loro`, `far lor pro`, `il senso lor`, `a' lor
+  piedi`, `le gambe loro`, `i legni lor`. These are possessive determiners, not obliques. Under
+  the stated criterion this is the clearest earn in the whole tail, and it was the value the
+  first reading proposed deleting.
+- **`locative` is genuinely open**, and the first reading acquitted it too cheaply. It was passed
+  on the grounds that its forms (`vi`, `v'`, `ci`, `c'`) are absent from `ablative`'s form set —
+  which is true (they carry `locative`/`accusative`/`dative`/`reflexive`/`nominative` and never
+  `ablative`) but is **the same kind of form argument**, used as an acquittal where the identical
+  argument was used against `genitive` as a conviction. By deprel it does *not* separate: it is
+  `obl`-dominant exactly as `ablative` is. Whether "place" is a distinct slot or a distinct
+  *meaning* of the same slot is unresolved, and it stays open, to be decided at the `morph/`
+  merge. 81 rows; nothing depends on it.
+
+#### The tail's actual state
+
+**Fold nothing.** `ablative` and `genitive` are earned; `locative` is open; `vocative` (30) is
+frozen-but-unearned — correct and harmless, but argued from the poem's rhetoric rather than from
+a count. `reflexive` (1961), the other value added rather than measured, is vindicated at 15% of
+the column. `case/*/*.tsv` is untouched: the rewrite was recommended but never executed.
+
+#### The lesson
+
+This annex has now been wrong in the same shape three times, each time on the *frozen* side
+rather than the model's: three corpus runs blamed the model when Layer 2 was at fault, and this
+round blamed the vocabulary when the analysis was at fault. The common failure is **reaching a
+verdict from a summary statistic without looking at what the rows are doing.** The subset line
+was printed by `case.py` itself, which made it read like a measurement rather than an inference —
+so the fix is not only to the documents but to the report: `--stats` now prints deprels and says
+in as many words that word forms do not decide this.
 
 ### The join to `dep` — step 4's input
 
