@@ -3,7 +3,8 @@
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5q and its soft residue is at **3550** — every route the
+checker was refined through Phases 0-5q and its soft residue is at **3555** (3550 until the case
+annex's step-4 slice 1 raised it by 5, deliberately) — every route the
 Phase 5 plan opened now has a measured verdict and none is open (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
 [`skel/README.md`](skel/README.md) for the design and current status. One follow-on is **in
@@ -37,7 +38,9 @@ the next action.
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3550 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3555 soft** (3550 at the end of Phase 5; the case annex's
+  step-4 slice 1 added 5, for the reason recorded in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md))
+  (down from 17438 at the first full-corpus
   measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round) — see
   [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history. Phase 5 (see
@@ -67,7 +70,7 @@ branch `case-pilot`:
 | 1 | kill-gate pilot — self-consistency on the disputed clitics vs a control | user ran the calls | **done, passed** (2026-07-30) |
 | 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8540 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
 | 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user ran the calls | **done 2026-07-31**, four runs — `--check` went 1236 → 70 → 13 → **0 hard**, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. 13112 tokens frozen at `0027494`, before `--stats` was run |
-| 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started — input measured: **461 contradictions, 49 impossible pairings** |
+| 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | **slice 1 done 2026-07-31** — the 49 impossible pairings worked exhaustively: **10 positions / 11 rows** edited in `dep/`, `dep --check` still 0/0, **Layer 5 3550 → 3555 (up)**. They were not the highest-yield slice, and why not is the round's main finding. Slices 2–3 (the `obj` 317, the `iobj` 46, the `nsubj` 98) outstanding, to be selected by the corrected criterion |
 | 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail from `--stats` before any `morph/` merge | assistant | not started — the tail is measured and the verdict is **fold nothing**: `ablative` and `genitive` are earned by their deprels, `locative` stays open. An earlier reading recommended folding `genitive` and was wrong |
 
 The scope in step 2 went to the whole pronoun population rather than the clitic subset the
@@ -81,6 +84,16 @@ The order in step 3 is load-bearing: generating blind and freezing *before* look
 what keeps the column a third independent read rather than an artifact manufactured to close
 violations. Expected return is ≈90–100 of the 3551, not zero — see the follow-on paragraph below.
 
+**Step 4's slice 1 corrected how that return should be chased.** Layer 5's soft count measures
+divergence between two independent reads, not correctness, so it falls only where a Layer-4 fix
+moves `dep` toward what the Layer-5 LLM already said. The impossible pairings are the opposite
+configuration — `dep` and `skel` agree and only `case` dissents — so correcting `dep` there
+*raises* the count, as it did (3550 → 3555). The ≈90–100 figure was always drawn from the Phase
+5h/5i population, where `skel` **already dissents from** `dep`; that intersection, not the
+contradiction list as a whole, is what slices 2–3 should be selected on. See
+[`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 4, slice 1* and
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
+
 ### Resuming cold — the case annex, as of 2026-07-31
 
 **Step 2's code is committed (`637d417`) and step 3's artifact is committed separately
@@ -92,7 +105,7 @@ literal: the artifact was held untracked until `--check` reached 0 hard, and com
 git status --short          # expect clean
 uv run pytest -q            # expect 138 passed (125 before the annex)
 make -C dep check           # expect 0 hard, 0 soft   (untouched by the annex so far)
-make -C skel check          # expect 0 hard, 3550 soft (3551 before the annex's morph rounds)
+make -C skel check          # expect 0 hard, 3555 soft (3550 before step 4's slice 1)
 make -C case check          # expect 0 hard
 ```
 
@@ -413,7 +426,8 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5q
-   (`--check`: 0 hard / 3550 soft, 3551 until the case annex's `morph/` rounds). Phase 5 closed
+   (`--check`: 0 hard / 3555 soft — 3551 until the case annex's `morph/` rounds, 3550 until its
+   step-4 slice 1). Phase 5 closed
    with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 

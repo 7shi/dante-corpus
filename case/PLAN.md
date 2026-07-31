@@ -2,12 +2,16 @@
 
 ## Status
 
-**Steps 1–3 are done. The artifact is built, checked at 0 hard, and committed (`0027494`); the
-next action is step 4, the hand-verified Layer-4 correction round.** All 100 cantos, 13112
-pronoun tokens, 13176 case values. The join to `dep` has been run and is step 4's input: **461
-contradictions** and **49 impossible pairings**, with agreement at 84% on `obj`, 94% on `iobj`
-and 98% on `nsubj` — the disagreement concentrates exactly on the accusative-vs-dative class the
-annex was built to adjudicate. See [*Step 4 — the next action*](#step-4--the-next-action).
+**Steps 1–3 are done. Step 4 is under way: its first slice — the 49 impossible pairings — closed
+on 2026-07-31 with 10 positions edited in `dep/`, and corrected the criterion by which the
+remaining slices should be selected.** All 100 cantos, 13112 pronoun tokens, 13176 case values.
+The join to `dep` gave **461 contradictions** and **49 impossible pairings**, with agreement at
+84% on `obj`, 94% on `iobj` and 98% on `nsubj` — the disagreement concentrates exactly on the
+accusative-vs-dative class the annex was built to adjudicate. Slice 1 also measured the column's
+one weak construction (the standard of comparison, unstable rather than systematically wrong) and
+**declined to unfreeze the artifact over it**. See
+[*Step 4 — the next action*](#step-4--the-next-action) and
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 1*.
 
 The vocabulary and scope are frozen and the code exists — [`case.py`](case.py) (build driver,
 `--check`/`--stats`/`--clean`), [`README.md`](README.md), [`Makefile`](Makefile),
@@ -15,7 +19,8 @@ The vocabulary and scope are frozen and the code exists — [`case.py`](case.py)
 `hashes.LAYERS`, and `tests/test_case.py`. Everything lives on the branch `case-pilot` so the
 whole annex can be dropped in one move. Written 2026-07-29, immediately after Layer 5's
 Phase 5 closed at **0 hard, 3551 soft** (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where
-Phase 5 ended*); Layer 5 now stands at **3550**, for the reason recorded under *Step 3 result*.
+Phase 5 ended*); Layer 5 stood at **3550** after step 3's `morph/` rounds (see *Step 3 result*)
+and at **3555** after step 4's slice 1 (see *Step 4*).
 
 **Pilot result (2026-07-30, 570 calls, `google:gemma-4-31b-it`).** The state check below was
 re-run and matched; the disputed population rebuilt at exactly **67 + 28**, with a **95**-position
@@ -114,14 +119,16 @@ readable; `--full` is what the round actually works from.
 ### State to confirm before assuming anything
 
 ```bash
-git log --oneline -1        # 816c1b0, on the branch case-pilot (the freeze is 0027494)
 git status --short          # expect clean (or only doc edits in flight)
 uv run pytest -q            # expect 138 passed
 make -C morph check         # expect 0 hard, 0 soft
 make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3550 soft
+make -C skel check          # expect 0 hard, 3555 soft   (3550 before step 4's slice 1)
 make -C case check          # expect 0 hard
 ```
+
+`skel` at **3555, not 3550**, is the post-slice-1 state and is correct — slice 1 raised it by 5
+on purpose. If it reads 3550, slice 1's `dep/` edits are not in the tree.
 
 The artifact is **frozen and committed**, and step 4 must not touch it. Every edit this round
 produces belongs in `dep/`; if a position looks like a `case` error, the answer is to record it,
@@ -136,19 +143,38 @@ looked at, and an edit made now is indistinguishable from one made to close a vi
 | `iobj` | `dative` | 669 | 46 | 94% |
 | `nsubj` | `nominative` | 5076 | 98 | 98% |
 
-**461 contradictions, 49 impossible pairings.** Work them in this order:
+**461 contradictions, 49 impossible pairings.**
 
-1. **The 49 impossible pairings** (`obl` × `nominative`) — highest yield, because the combination
-   is one neither layer can be right about together, and it is the third adjudication class the
-   clitic-only pilot structurally could not sample (relative pronouns that are the subject of
-   their clause). Small enough to verify exhaustively.
-2. **The `obj` column's 317** — the disputed accusative-vs-dative population the annex was built
-   for. `obj` at 84% against `nsubj` at 98% is the pilot's finding reproduced at corpus scale.
-3. **The `iobj` 46 and the `nsubj` 98** — the mirror direction and the residue.
+**Slice 1 is done (2026-07-31) and it corrected the ordering criterion below.** The 49 impossible
+pairings were worked exhaustively: **10 positions edited, 11 rows**, `dep --check` still 0/0, and
+**Layer 5 rose 3550 → 3555**. They were *not* the highest-yield slice — they yielded 20%, and
+raising the soft count is the expected behaviour of that population rather than a defect. See
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 1* and
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
-Verify against the terzina one position at a time. `make -C dep check` must stay 0/0 throughout,
-and the yield expectation is unchanged from before any of it was measured: **≈90–100 of Layer 5's
-3550**, not zero.
+**The corrected selector, for slices 2 and 3.** Rank candidates not by whether `case` and `dep`
+contradict, but by **whether `skel` already diverges from `dep` at that position**:
+
+- Where `dep` and `skel` **agree** and only `case` dissents — which is what the impossible
+  pairings are, by construction — a correct Layer-4 fix *breaks* an agreement and **raises**
+  Layer 5's count.
+- Where `skel` **already dissents from** `dep`, a third read that sides with `skel` breaks a 2-1
+  tie and **closes** the violation. This is the Phase 5h/5i configuration, and it is the only
+  population the **≈90–100** estimate was ever derived from.
+
+So measure that intersection first:
+
+1. **The `obj` column's 317, intersected with the positions `skel` already flags** — the disputed
+   accusative-vs-dative population the annex was built for, restricted to where a third read can
+   actually settle something. `obj` at 84% against `nsubj` at 98% is the pilot's finding
+   reproduced at corpus scale.
+2. **The rest of the 317**, then **the `iobj` 46 and the `nsubj` 98** — the mirror direction and
+   the residue. Correct Layer 4 here too; just do not expect the count to fall.
+
+Verify against the terzina one position at a time; `make -C dep check` must stay 0/0 throughout.
+**Layer 5's soft count is a diagnostic, not the objective** — it measures divergence between two
+independent reads, not correctness, and a round that optimizes it is a round editing artifacts to
+move a number.
 
 **Judge from the rows, never from the summary.** This annex has been wrong four times and every
 one was the same shape — a verdict reached from an aggregate without looking at what the rows
@@ -197,12 +223,20 @@ Measurements in [`CORRECTIONS.md`](CORRECTIONS.md)'s *fourth run and the freeze*
   **An earlier reading of this tail recommended folding `genitive` and was wrong**; the argument,
   the refutation and the lesson are in [`CORRECTIONS.md`](CORRECTIONS.md)'s *The subset argument
   was wrong*. No rows were rewritten.
-- **The third adjudication class is real**, at 49 corpus-wide. It is step 4's first slice.
+- **The third adjudication class is real**, at 49 corpus-wide — and step 4's slice 1 has now
+  worked all 49. It is smaller than it looks: only 10 were Layer-4 errors. 21 are the standard of
+  comparison (*come quei che…*), where `obl` is the UD convention and `case` is unstable rather
+  than wrong; 12 are genuine `case` errors on a real prepositional oblique; 6 are blocked or
+  entangled. See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 1*.
 - **Layer-2 mistags this annex surfaced and did not act on**, all single-pronoun tokens whose
   `pos` gives the right count, so nothing is blocked: the comitatives `meco`/`teco`/`seco` are
   tagged four different ways (and `vosco` twice as `adjective`, once with the lemma `boscoso`),
   `ne` at *Paradiso* 14:55 carries the lemma `in+esso`, and `me'` (apocopated *meglio*) is tagged
-  `pronoun` at Inferno 1:112. These belong to a `morph/` round of their own.
+  `pronoun` at Inferno 1:112. Step 4's slice 1 added two more, both of which **blocked a Layer-4
+  edit**: *Purgatorio* 31:25 `fossi` (the noun "ditches", tagged `verb`, so Layer 4's `aux`
+  follows Layer 2) and *Purgatorio* 23:126 `torti` (tagged `noun`, where the *drizza*/*torti*
+  antithesis argues for the predicative adjective Layer 2 uses at *Paradiso* 13:129). These
+  belong to a `morph/` round of their own.
 
 ## Why this exists
 
@@ -356,7 +390,7 @@ step 1 without reconstructing context from the Phase 5 history.
 ### Confirm the state first
 
 ```bash
-make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3550)
+make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3555)
 make -C dep check      # expect: 0 hard, 0 soft
 uv run pytest -q       # was: 125 passed          (now 138, with the annex's tests)
 make -C skel stats     # by-kind + the role_mismatch pair table
@@ -478,8 +512,11 @@ verdict is to kill the annex.
    style of Phases 5i/5n. `make -C dep check` must stay 0/0 throughout. *Not started* — the input
    exists: **461 contradictions, 49 impossible pairings**; see *Step 4* above.
 5. **Re-measure Layer 5** and record the delta in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
-   *Not started* — but note Layer 5 has already moved 3551 → 3550 from step 3's `morph/`
-   corrections, recorded there.
+   *Not started* — but note Layer 5 has already moved twice for reasons that are not step 5's:
+   3551 → 3550 from step 3's `morph/` corrections, and 3550 → **3555** from step 4's slice 1,
+   which raised it deliberately. Read
+   [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry on why a correct Layer-4 round can
+   raise the count before interpreting any delta this step measures.
 
 ## Expected value — stated honestly before starting
 

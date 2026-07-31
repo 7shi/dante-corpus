@@ -1,5 +1,56 @@
 # skel — Layer 5 correction history
 
+## The `case` annex's first Layer-4 round — 3550 → 3555, upward (2026-07-31)
+
+**The soft count went up by 5, and the round was still correct.** Recorded here because Layer 5's
+count is the thing that moved, and because the reason invalidates the ordering
+[`../case/PLAN.md`](../case/PLAN.md) gave step 4.
+
+The round is in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md): 11 rows over 10 positions,
+drawn from the 49 `obl` × `nominative` impossible pairings, each verified against its terzina and
+each justified by a parallel the corpus itself already contains. `dep --check` stayed 0/0.
+
+Per position, from a before/after diff of the violation list:
+
+| position | delta | what happened |
+|---|---|---|
+| inferno 1:80, purgatorio 25:8 | **−2** | the Layer-5 LLM had already read these the way the edit does |
+| inferno 14:80, 16:94, 27:54, purgatorio 5:14 | **+5** | the LLM shares Layer 4's **original** reading |
+| purgatorio 4:38 | **+2** | derivation artifact: `elli`:`nsubj` propagates a subject to the `conj` predicate on the next line |
+| the three `Ed elli a me:` positions | **0** | the violation changed shape (`missing_arg obl` → `missing_arg subj`); the LLM proposes the pronoun as an argument under neither reading |
+
+### Why a correct round can raise the count
+
+The soft count measures **divergence between two independent reads**, not correctness. It falls
+when a Layer-4 fix moves `dep` toward what the Layer-5 LLM already said, and rises when it moves
+`dep` away from a reading the LLM happened to share. Both are possible, and which one happens is
+a property of **the population the candidates were drawn from**, not of whether the edits were
+right.
+
+The impossible pairings are, by construction, positions where `dep` and `skel` **agree** and only
+`case` dissents — `case` is the third read precisely because it was authored blind. Correcting
+`dep` there breaks an existing agreement, so the count goes up whenever `case` is right and the
+other two shared an error. That is the annex doing exactly what
+[`../case/PLAN.md`](../case/PLAN.md)'s *Independence* section built it to do.
+
+### What this changes about the remaining slices
+
+[`../case/PLAN.md`](../case/PLAN.md) ordered step 4 by "the combination neither layer can be right
+about together", predicting the 49 would be the **highest-yield** slice. **That criterion was
+wrong**, and this is its measurement: 49 candidates produced 10 edits and *cost* 5 soft
+violations.
+
+The **≈90–100** figure in that plan was never derived from impossible pairings. It came from the
+Phase 5h/5i population — positions where the Layer-5 LLM **already dissents from** Layer 4, so a
+third read that sides with the LLM breaks a 2-1 tie and closes the violation. The correct
+selector for slices 2 and 3 is therefore not "do `case` and `dep` contradict" but **"does `skel`
+already diverge from `dep` here"**, with `case` used to adjudicate. Measure that intersection
+before working the `obj` column's 317.
+
+None of this is an argument for reverting the 11 rows. Layer 4 is more correct than it was, which
+is the thing the round is for; the count is a diagnostic, and treating it as the objective is how
+a round starts editing artifacts to move a number.
+
 ## Layer-2 `nol` mistag closes one soft violation (2026-07-31)
 
 **3551 → 3550.** Not a Layer-5 change: a Layer-2 correction round driven by the

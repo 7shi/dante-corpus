@@ -714,3 +714,108 @@ those numbers matter for step 4:
    `make -C dep check` stays 0/0 throughout. The expected yield remains what
    [`PLAN.md`](PLAN.md) stated before any of this was measured: **≈90–100 of Layer 5's 3550**,
    not zero.
+
+## Step 4, slice 1 — the 49 impossible pairings, 2026-07-31
+
+All 49 opened against their terzine, one position at a time. The edits are in
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md); what belongs here is the triage, the two
+things it measured, and the fact that the slice did not do what this plan predicted.
+
+### State check
+
+| check | before | after |
+|---|---|---|
+| `uv run pytest -q` | 138 passed | 138 passed |
+| `make -C morph check` | 0 hard, 0 soft | 0 hard, 0 soft |
+| `make -C dep check` | 0 hard, 0 soft | **0 hard, 0 soft** |
+| `make -C skel check` | 0 hard, 3550 soft | **0 hard, 3555 soft** |
+| `make -C case check` | 0 hard | 0 hard (artifact untouched) |
+| impossible pairings | 49 | **39** |
+
+### The triage — 49 positions, six families
+
+| family | n | verdict |
+|---|---|---|
+| **A.** simile / comparative standard — *come quei che…*, *più ch'altro*, *che quel di pria* | 21 | no edit; see below |
+| **B.** genuine prepositional oblique — *a chi la 'ntende*, *con l'altro*, *'n chi la vede*, *ne l'altro*, *in che… acquista*, *innanzi altro* | 9 | no edit — **`case` is wrong**, a preposition governs the pronoun |
+| **C.** relative adverbial of time or cause — *nel tempo che*, *ne l'ora che*, *la cagion che* | 3 | no edit — **`case` is wrong** |
+| **D.** single-row Layer-4 errors | 9 | **edited** |
+| **E.** two-row Layer-4 errors | 1 (2 rows) | **edited** (purgatorio 5:14–15) |
+| **F.** entangled or Layer-2-blocked | 6 | recorded, not acted on |
+
+Family **F**, for whoever picks these up: purgatorio 31:25 (`quai fossi attraversati` — Layer 2
+tags `fossi` `verb`), purgatorio 23:126 (`torti` tagged `noun`; an edit was made here and
+**reverted** — see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)), inferno 10:136 (the
+causative reading of *facea spiacer suo lezzo*), purgatorio 7:107 (the proleptic `ccomp` of
+*L'altro vedete c'ha fatto*), purgatorio 24:13 (a loose connective relative), paradiso 23:68 (the
+head choice in *non è pareggio … quel che*). The first two are `morph/` questions; the rest are
+three-or-more-row re-parses that no single position justifies.
+
+One position outside the 49 was verified in passing and is a real Layer-4 error: **purgatorio
+28:51**, *nel tempo che perdette / la madre lei* — `madre`:`obj` and `lei`:`nsubj` are swapped
+(Ceres lost Proserpina, not the reverse). It belongs to the contradictions list, so it is left
+for slice 2 rather than folded in here.
+
+### `case` on the comparative standard — instability, not bias
+
+Family A is a third of the slice, so it was measured rather than characterized. Population:
+pronoun-POS tokens that Layer 4 attaches `obl` and that carry a `come`/`com'`/`che`/`ch'`/`quanto`
+child tagged `case` or `mark` — the standard-of-comparison frame, **26 corpus-wide**.
+
+`case` answers **`nominative` 17, `ablative` 5, `accusative` 3, `dative` 1**, and the split has no
+principle behind it:
+
+```
+inferno    5:126  dirò come colui che piange e dice.       -> ablative
+paradiso  22:25   Io stava come quei che 'n sé repreme     -> nominative
+purgatorio 22:67  Facesti come quei che va di notte,       -> ablative
+paradiso  23:49   Io era come quei che si risente          -> nominative
+```
+
+**This is not a systematic error, and calling it one was the first reading of this slice.** It is
+the model answering unstably on one construction — the pilot's measured **81%** self-agreement
+showing up at corpus scale, on a frame the clitic-only pilot could not sample. Family A therefore
+indicts neither layer: Layer 4's `obl` is the UD convention for a comparative standard, and the
+model itself gives a non-nominative answer 35% of the time in the same frame.
+
+The unambiguous `case`-side errors are families B and C: **12 positions of 13176 values, 0.09%.**
+
+### The column was not unfrozen, and should not be
+
+Asked directly whether a measured weakness justifies lifting the freeze, the answer is no, on
+three grounds:
+
+1. **It would destroy the only thing the annex has.** Rewriting `nominative` after seeing `dep`
+   is an edit toward `dep`, and PLAN.md's *Independence* section forbids exactly that — an edit
+   made now is indistinguishable from one made to close a violation. Both PLAN.md files record
+   that the order *generate blind → freeze → join* "is the only part of it that cannot be
+   recovered after the fact".
+2. **Step 4 already decided it**: *if a position looks like a `case` error, the answer is to
+   record it, not to rewrite the column.*
+3. **49 positions is not a basis for rewriting a 13176-value column** — the frame in question is
+   26 rows and `nominative` is 5620. Deciding a column-wide rewrite from this sample would be the
+   fifth instance of this annex's one recurring failure.
+
+The legitimate route is the `morph/` merge: **regenerate the whole column blind under a revised
+prompt**, which is a fresh independent read rather than a patch. What this round contributes to
+that revision is concrete — the prompt has no rule for the standard of comparison, and it should
+be told to give the case of the pronoun in its own clause.
+
+`case.py`'s `_IMPOSSIBLE` rule was **left alone** for the same reason. Excluding family A would
+shrink the reported number without changing a single edit — the 21 rows produced none, and so did
+the 12 in B and C. Narrowing a checker after the fact to reduce a count it just produced is the
+move this file exists to catch.
+
+### The slice did not do what this plan predicted
+
+*The join to `dep` — step 4's input* above called the 49 "the highest-yield slice of step 4,
+because `obl` × `nominative` is a combination neither layer can be right about together."
+**Measured: 49 candidates, 10 edited positions (20%), and Layer 5 rose 3550 → 3555.**
+
+The pairing being contradictory says nothing about yield. What predicts yield is *which two of
+the three reads already agree*, and the impossible pairings are precisely the population where
+`dep` and `skel` agree and only `case` dissents — so correcting `dep` there breaks an agreement
+and raises the count. The **≈90–100** estimate was always drawn from the opposite configuration,
+the Phase 5h/5i population where `skel` **already dissents from** `dep` and a third read breaks a
+2-1 tie. Full reasoning in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of this
+date; the consequence for slices 2 and 3 is in [`PLAN.md`](PLAN.md)'s *Step 4*.
