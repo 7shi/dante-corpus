@@ -102,13 +102,13 @@ line	token	word	deprel	head_line	head_token
 14	2	come	case	14	3
 14	3	torre	obl	14	1
 14	4	ferma	amod	14	3
-14	5	che	obl	14	7
+14	5	che	nsubj	14	7
 14	6	non	advmod	14	7
 14	7	crolla	acl:relcl	14	3
 15	1	già	advmod	14	7
 15	2	mai	advmod	14	7
 15	3	la	det	15	4
-15	4	cima	nsubj	14	7
+15	4	cima	obj	14	7
 15	5	per	case	15	6
 15	6	soffiar	obl	14	7
 15	7	di	case	15	8

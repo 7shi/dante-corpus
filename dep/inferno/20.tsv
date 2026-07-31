@@ -93,7 +93,7 @@ line	token	word	deprel	head_line	head_token
 14	2	in	case	14	3
 14	3	dietro	obl	14	4
 14	4	venir	nsubj	14	6
-14	5	li	obl	14	6
+14	5	li	iobj	14	6
 14	6	convenia	conj	11	2
 15	1	perché	mark	15	7
 15	2	'l	det	15	3

@@ -248,3 +248,63 @@ soft** (−10; Round A −7, Round B −3). The one violation these rounds could
 not Layer 4's: purgatorio 8:114 `quant'` still reports `argument (114, 1) for role subj heads no
 NP/pronoun/predicate`, because that check reads the morphology POS, which calls the word a
 conjunction. The 7 cantos' content hashes change, as expected for an artifact correction.
+
+## The `obl` × `nominative` impossible pairings, from the `case` annex (2026-07-31)
+
+The first slice of [`../case/PLAN.md`](../case/PLAN.md)'s step 4 — the hand-verified Layer-4
+round the pronoun case annex was built to feed. Input: the **49** positions where `case` reads a
+pronoun `nominative` and Layer 4 attaches it `obl`, reported separately by `case.py --stats`
+because a pronoun attached as an oblique cannot bear the subject case. Every one was opened
+against its terzina; nothing was applied from the aggregate.
+
+**10 positions, 11 rows.** `dep --check` stays **0 hard, 0 soft**; `pytest` stays 138.
+
+| position | word | change | why |
+|---|---|---|---|
+| inferno 1:80.1 | `che` | `obl` → `nsubj` | *quel Virgilio … **che** spandi*: `spandi` has only `fiume`:`obj`, no subject |
+| inferno 14:80.1 | `che` | `obl` → `obj` | *ruscello **che** parton … le peccatrici*: `peccatrici` is the subject; `che` (= the stream) is what is divided |
+| inferno 16:94.4 | `c'` | `obl` → `nsubj` | *quel fiume **c'**ha proprio cammino*: `ha` has no subject |
+| inferno 20:14.5 | `li` | `obl` → `iobj` | *venir **li** convenia* — the **same canto**'s 20:43 *ribatter **li** convenne* is `nsubj`+`iobj`; corpus-wide `li`/`gli` with the *convenire* class is `iobj` 6 / `obl` 2 |
+| inferno 27:52.2 | `quella` | `obl` → `nsubj` | *E **quella** … tra tirannia si vive*: `vive` has `si`:`expl` and `tirannia`:`obl`, no subject |
+| purgatorio 4:37.2 | `elli` | `obl` → `nsubj` | *Ed **elli** a me:* — see below |
+| purgatorio 4:61.2 | `elli` | `obl` → `nsubj` | *Ond' **elli** a me:* — same frame |
+| purgatorio 25:8.1 | `uno` | `obl` → `nsubj` | ***uno** innanzi altro* — purgatorio 26:1 has the identical phrase as `uno`:`nsubj` + `altro`:`obl`, with the same Layer-2 POS on both tokens |
+| paradiso 3:42.2 | `ella` | `obl` → `nsubj` | *Ond' **ella**, pronta …:* — same elided-speech-verb frame |
+| purgatorio 5:14.5 | `che` | `obl` → `nsubj` | *torre ferma, **che** non crolla già mai la cima* — see below |
+| purgatorio 5:15.4 | `cima` | `nsubj` → `obj` | … so the top is what is shaken, not what shakes |
+
+**The elided speech verb (4 of the 11).** *Ed elli a me: «…»* — "And he [said] to me" — has no
+overt verb, so Layer 4 attaches its subject to a verb inside the quotation. The corpus does this
+**40+ times** and reads the pronoun `nsubj` (or `root`, once `dislocated`) every single time;
+`obl` occurs only at purgatorio 4:37, 4:61 and paradiso 3:42, all three of which are in this
+list. Two `nsubj` children on the quoted verb is the shape the convention already produces
+(inferno 6:49, purgatorio 2:94), so the retag introduces nothing new. This is
+`dep/CORRECTIONS.md`'s own rule applied literally: **pick the deprel the corpus uses for that
+word.**
+
+**`crollare` is transitive here (purgatorio 5:14–15).** Layer 5's independent skeleton reads
+`cima` as the subject, i.e. "whose top never shakes". Every non-reflexive use of the verb in the
+corpus is transitive with a thing or body part as object — *crollando 'l capo* (inferno 22:107),
+*crollò la fronte* (purgatorio 27:43), *crollonne* (purgatorio 32:27) — the only intransitive is
+the reflexive *crollarsi* (inferno 26:86). So the tower shakes its top, and the two rows move
+together because retagging `che` alone would give `crolla` two subjects.
+
+### One edit was made and reverted — purgatorio 23:126
+
+*voi **che** 'l mondo fece **torti*** was read as "you **whom the world made crooked**", giving
+`che` `obl` → `obj` and `torti` `obj` → `xcomp` (predicative complement, since one predicate
+takes at most one `obj`). **Reverted.** Layer 2 tags `torti` **`noun`**, lemma `torto` — the
+"wrong, injury" noun it uses at inferno 19:36, inferno 27:114 and paradiso 18:6 — and it tags the
+predicative-adjective use differently where that is what the line has (*render **torti** li
+diritti volti*, paradiso 13:129, `adjective`). The reading may be the better one, but it requires
+Layer 2 to be wrong, which makes it a `morph/` question and not a Layer-4 edit. It is recorded
+with the other Layer-2-blocked positions in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+The same criterion excluded purgatorio 31:25 *quai fossi attraversati* before any edit was made:
+the second half-line's *quai catene* is `det`+`obj`, the first should be parallel, but Layer 2
+tags `fossi` `verb` (the auxiliary, not the noun "ditches"), so Layer 4's `aux` follows Layer 2
+rather than misreading the line.
+
+**Effect on Layer 5: 3550 → 3555 soft, i.e. it went up.** That is the round working, not
+failing; the reason is in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of the same
+date and it changes how the remaining slices should be selected.

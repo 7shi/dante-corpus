@@ -576,7 +576,7 @@ line	token	word	deprel	head_line	head_token
 79	6	e	cc	79	8
 79	7	quella	det	79	8
 79	8	fonte	conj	79	5
-80	1	che	obl	80	2
+80	1	che	nsubj	80	2
 80	2	spandi	acl:relcl	79	8
 80	3	di	case	80	4
 80	4	parlar	nmod	80	7

@@ -373,7 +373,7 @@ line	token	word	deprel	head_line	head_token
 51	7	al	case	51	8
 51	8	verno	obl	51	2
 52	1	E	cc	54	4
-52	2	quella	obl	54	4
+52	2	quella	nsubj	54	4
 52	3	cu'	obl	52	6
 52	4	il	det	52	5
 52	5	Savio	nsubj	52	6

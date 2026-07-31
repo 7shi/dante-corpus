@@ -672,7 +672,7 @@ line	token	word	deprel	head_line	head_token
 94	1	Come	advmod	100	1
 94	2	quel	det	94	3
 94	3	fiume	nsubj	100	1
-94	4	c'	obl	94	5
+94	4	c'	nsubj	94	5
 94	5	ha	acl:relcl	94	3
 94	6	proprio	amod	94	7
 94	7	cammino	obj	94	5

@@ -553,7 +553,7 @@ line	token	word	deprel	head_line	head_token
 79	3	Bulicame	obl	79	4
 79	4	esce	advcl	81	7
 79	5	ruscello	nsubj	79	4
-80	1	che	obl	80	2
+80	1	che	obj	80	2
 80	2	parton	acl:relcl	79	5
 80	3	poi	advmod	80	2
 80	4	tra	case	80	5

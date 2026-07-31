@@ -293,7 +293,7 @@ line	token	word	deprel	head_line	head_token
 41	7	vostra	amod	41	8
 41	8	sorte	conj	41	2
 42	1	Ond'	advmod	43	5
-42	2	ella	obl	43	5
+42	2	ella	nsubj	43	5
 42	3	pronta	acl	42	2
 42	4	e	cc	42	6
 42	5	con	case	42	6

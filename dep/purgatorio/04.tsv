@@ -270,7 +270,7 @@ line	token	word	deprel	head_line	head_token
 36	6	via	obj	36	7
 36	7	faremo	ccomp	36	3
 37	1	Ed	cc	37	8
-37	2	elli	obl	37	8
+37	2	elli	nsubj	37	8
 37	3	a	case	37	4
 37	4	me	obl	37	8
 37	5	Nessun	det	37	7
@@ -434,7 +434,7 @@ line	token	word	deprel	head_line	head_token
 60	5	Aquilone	conj	60	3
 60	6	intrava	acl:relcl	59	4
 61	1	Ond'	advmod	64	2
-61	2	elli	obl	64	2
+61	2	elli	nsubj	64	2
 61	3	a	case	61	4
 61	4	me	obl	64	2
 61	5	Se	mark	62	1

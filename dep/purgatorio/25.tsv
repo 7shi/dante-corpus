@@ -56,7 +56,7 @@ line	token	word	deprel	head_line	head_token
 7	4	per	case	7	6
 7	5	la	det	7	6
 7	6	callaia	obl	7	2
-8	1	uno	obl	8	4
+8	1	uno	nsubj	8	4
 8	2	innanzi	case	8	3
 8	3	altro	obl	8	4
 8	4	prendendo	advcl	7	2
