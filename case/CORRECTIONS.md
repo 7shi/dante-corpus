@@ -577,3 +577,93 @@ artifact is right) has a converse worth recording: **`--check` failing is not ev
 is wrong.** A formal check compares the answer against the frozen layers, so it fails whenever
 *either* side is at fault, and on this layer the frozen side was at fault three times running.
 Read the log before re-running.
+
+## Step 3 corpus pass — fourth run and the freeze, 2026-07-31
+
+The last 12 chunks were re-requested and all validated. `--check` is **0 hard**, the dry run
+reports nothing pending, and the artifact is **100 files / 13112 rows** — exactly the frozen
+scope. `morph --check` 0/0, `dep --check` 0/0, `skel --check` 0 hard / 3550 soft, `pytest` 138
+passed.
+
+**The artifact was committed before `--stats` was run** (`0027494`). This is the order
+[`PLAN.md`](PLAN.md)'s *Independence* section exists to enforce, and it is the only part of the
+annex's design that cannot be recovered after the fact: once the join to `dep` has been read, any
+subsequent edit to the column is indistinguishable from manufacturing it to close violations. The
+commit is the evidence that it was not.
+
+### The census, over the whole population
+
+| value | count | share |
+|---|---|---|
+| `nominative` | 5620 | 42.7% |
+| `accusative` | 2003 | 15.2% |
+| `reflexive` | 1961 | 14.9% |
+| `ablative` | 1805 | 13.7% |
+| `dative` | 1409 | 10.7% |
+| `genitive` | 267 | 2.0% |
+| `locative` | 81 | 0.6% |
+| `vocative` | 30 | 0.2% |
+
+13176 values over 13112 tokens (the excess is the fused clitic clusters, which carry two).
+
+Two values added rather than measured have now been measured. **`reflexive` was worth adding**:
+at 1961 it is the third-largest class, and the smoke test's finding — that the seven-value
+vocabulary had no home for the reflexive/impersonal clitic — would have mistagged 15% of the
+column had it not been caught in one canto. **`vocative` was not**: 30 tokens, 0.2%. It is
+harmless and it is *correct* — direct address is pervasive in the poem but overwhelmingly nominal
+(`maestro`, `figliuol`), not pronominal — but it is on the wrong side of the criterion the
+oblique tail is judged by, and the honest record is that it was frozen on an argument from the
+poem's rhetoric rather than from a count.
+
+The distribution is the scope decision made visible: `nominative` is 43% because step 2 widened
+from the clitic subset to every pronoun-POS token, and tonic subject pronouns dominate that
+extension. The clitic population the adjudication actually needs is the `accusative`/`dative`/
+`reflexive` block, 5373 tokens.
+
+### The oblique tail — measured, and the verdict is now decidable
+
+16.3% of the column, and `--stats` prints the forms carrying each value:
+
+- **`ablative` (1805)** stands. Its forms are the tonic obliques (`me`, `sé`, `lui`, `noi`,
+  `te`) and they are governed by prepositions — a slot no other value fills.
+- **`genitive` (267)** does **not** stand under the criterion the `instrumental` rejection
+  implies. Every form carrying it (`lor`, `cui`, `loro`, `sé`, `colui`, `lui`, `lei`) also
+  carries `ablative`, and a value whose forms are a subset of another's is a *meaning* split of
+  it, not a distinct slot. Step 2 froze it anyway on the stated grounds that folding it into
+  `ablative` afterwards is a mechanical rewrite; that rewrite is now the recommendation, to be
+  taken **at the `morph/` merge and not before** — it moves 267 rows and no violation depends
+  on it.
+- **`locative` (81)** is the same shape but the opposite verdict. Its forms (`vi`, `v'`, `ci`,
+  `c'`, and the fused `andovvi`/`venirvi`/`stavvi`/`usciteci`) are the clitic locatives, which
+  the `ablative` set does not contain. It is small but it is a genuine slot, and it survives.
+
+So the tail resolves as: keep `ablative` and `locative`, fold `genitive`, and treat `vocative` as
+frozen-but-unearned. All three questions step 2 parked now have numbers behind them.
+
+### The join to `dep` — step 4's input
+
+Agreement, on the three deprels the column can be compared against at all:
+
+| `dep` | reads as | agree | contradict | rate |
+|---|---|---|---|---|
+| `obj` | `accusative` | 1631 | 317 | 84% |
+| `iobj` | `dative` | 669 | 46 | 94% |
+| `nsubj` | `nominative` | 5076 | 98 | 98% |
+
+**461 contradictions** and **49 impossible pairings** (`obl` × `nominative`). Three things in
+those numbers matter for step 4:
+
+1. **The disputed class is exactly where the disagreement is.** `obj` is the weak column at 84%
+   while `nsubj` runs at 98% — the annex was built to adjudicate accusative-vs-dative on clitics,
+   and that is the one place the two reads come apart. This is the pilot's finding reproduced at
+   corpus scale, and it is the annex working as designed rather than a defect.
+2. **The third class the pilot could not sample is real.** The 49 impossible pairings are the
+   relative-pronoun-as-clause-subject class the Inferno 1 rebuild surfaced (3 in that canto
+   alone). At 49 corpus-wide it is small but coherent — `che` / `chi` / `quei` / `colui` read
+   `nominative` by `case` and `obl` by Layer 4 — and it is the highest-yield slice of step 4,
+   because `obl` × `nominative` is a combination neither layer can be right about together.
+3. **461 is a candidate list, not an edit list.** Nothing here is applied mechanically. Step 4
+   verifies against the terzina one position at a time, in the style of Phases 5i/5n, and
+   `make -C dep check` stays 0/0 throughout. The expected yield remains what
+   [`PLAN.md`](PLAN.md) stated before any of this was measured: **≈90–100 of Layer 5's 3550**,
+   not zero.

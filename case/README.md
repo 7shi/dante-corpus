@@ -21,14 +21,19 @@ state. Merging into Layer 2 later is the natural end state if the column proves 
 
 ## Status
 
-Step 3 of [PLAN.md](PLAN.md) is under way. The vocabulary and scope are **frozen**, and the
+Step 3 of [PLAN.md](PLAN.md) is **done**: the artifact is built for all 100 cantos, `--check` is
+**0 hard**, and it is committed (`0027494`) — frozen *before* `--stats` joined it to `dep`, which
+is the order [PLAN.md](PLAN.md)'s *Independence* section exists to enforce. **13112 pronoun
+tokens, 13176 case values.** Step 4, the hand-verified Layer-4 correction round over the **461
+contradictions and 49 impossible pairings**, is the open work.
+
+The vocabulary and scope are **frozen**, and the
 driver, the shared module, the serve surface and the tests exist. **Inferno 1 was built first** as
 the smoke test, and it caught two things `--check` structurally cannot see (a wrong worked example
 in the prompt, and the reflexive clitic having no home in the vocabulary); both are fixed and the
 canto was rebuilt.
 
-The corpus pass has taken three runs so far, all on 2026-07-31, and no residue was ever a model
-failure:
+The corpus pass took four runs, all on 2026-07-31, and no residue was ever a model failure:
 
 | run | `--check` | cause | fix |
 |---|---|---|---|
@@ -36,8 +41,8 @@ failure:
 | 2 | 70 hard over 19 cantos | Layer 2's `pos` undercounted its own `lemma` on 24 fused clitic clusters (`sen` = `si+ne`), so a right answer was rejected forever; and the model sometimes writes the `Word` cell as the clitic (`mi`) rather than the fused token (`parlami`) | corrected in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md); `_match` now also accepts the clitic a fused token ends in |
 | 3 | 13 hard over 3 cantos | the same defect in shapes round 2 did not cover — the *lemma* undercounting too (`sen` with the lemma `si`), a three-part lemma under a two-part `pos` (`Vattene`), and `nol` = `non lo` demanding two cases for one pronoun | 14 more tokens, audited as a family; one of them also closed a Layer-5 soft violation (3551 → 3550) |
 
-**12 chunks are pending** — under 1% of the original 1340 — and re-running them is LLM-scale
-generation the user does. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass* entries.
+Run 4 re-requested the last 12 chunks — under 1% of the original 1340 — and all of them
+validated. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 3 corpus pass* entries.
 
 Worth carrying forward: **`--check` failing is not evidence the model is wrong.** A formal check
 compares the answer against the frozen layers, so it fails whenever *either* side is at fault,

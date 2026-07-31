@@ -10,8 +10,10 @@ Phase 5 plan opened now has a measured verdict and none is open (see
 progress on the branch `case-pilot`**: the pronoun case annex, [`case/PLAN.md`](case/PLAN.md) —
 its kill-gate pilot ran on 2026-07-30 and passed (81% self-agreement on the disputed clitics vs
 95% on a control, zero three-way splits), step 2 froze the vocabulary and scope and wrote the
-driver the same day, and **step 3's corpus pass is running now** (the user's job). See
-*Resuming cold* below.
+driver the same day, and **step 3's corpus pass finished on 2026-07-31** — all 100 cantos at 0
+hard, frozen and committed before the join to `dep` was looked at. The open work is steps 4–5,
+the assistant's. See *Resuming cold* below, and [`case/PLAN.md`](case/PLAN.md)'s *Step 4* for
+the next action.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -55,17 +57,18 @@ artifacts now live on `main`.
 
 **Next work**
 
-**The five-layer stack has nothing outstanding. The one open item is the case annex, and step 3
-— the blind corpus pass, `make -C case`, 1340 calls at the default `--chunk 12` — is running now
-on the user's machine.** Concretely, on the branch `case-pilot`:
+**The five-layer stack has nothing outstanding. The one open item is the case annex, whose step 3
+— the blind corpus pass, `make -C case`, 1340 calls at the default `--chunk 12` — completed on
+2026-07-31 and is frozen. Steps 4 and 5 are the assistant's and are open.** Concretely, on the
+branch `case-pilot`:
 
 | step | what | who | state |
 |---|---|---|---|
 | 1 | kill-gate pilot — self-consistency on the disputed clitics vs a control | user ran the calls | **done, passed** (2026-07-30) |
 | 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8540 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
-| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user runs the calls | **three runs done 2026-07-31, a fourth pending** — `--check` went 1236 → 70 → 13 hard, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. All fixed; **12 of 1340 chunks left** |
-| 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started |
-| 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail (`genitive`) from `--stats` before any `morph/` merge | assistant | not started |
+| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user ran the calls | **done 2026-07-31**, four runs — `--check` went 1236 → 70 → 13 → **0 hard**, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. 13112 tokens frozen at `0027494`, before `--stats` was run |
+| 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | not started — input measured: **461 contradictions, 49 impossible pairings** |
+| 5 | re-measure Layer 5, record the delta in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md); settle the oblique tail (`genitive`) from `--stats` before any `morph/` merge | assistant | not started — the tail is now measured and the verdict is *fold `genitive`, keep `locative`*, to be applied at the `morph/` merge |
 
 The scope in step 2 went to the whole pronoun population rather than the clitic subset the
 adjudication strictly needs: it is read off Layer 2's own `pos` column, so it draws no line of its
@@ -78,20 +81,19 @@ The order in step 3 is load-bearing: generating blind and freezing *before* look
 what keeps the column a third independent read rather than an artifact manufactured to close
 violations. Expected return is ≈90–100 of the 3551, not zero — see the follow-on paragraph below.
 
-### Resuming cold — the case annex, as of 2026-07-30
+### Resuming cold — the case annex, as of 2026-07-31
 
-**Step 2's code and documentation are committed; the artifact is not.** The branch is
-`case-pilot`, on top of `9c72cbf`. The split is deliberate and is the step-3 order made
-literal: the corpus pass was still running when the code was committed, so `case/*/*.tsv` is
-**deliberately untracked** and lands in its own commit once `--check` passes. Confirm the state
-before assuming it:
+**Step 2's code is committed (`637d417`) and step 3's artifact is committed separately
+(`0027494`).** The branch is `case-pilot`. The split was deliberate and is the step-3 order made
+literal: the artifact was held untracked until `--check` reached 0 hard, and committed **before**
+`--stats` joined it to `dep`. Confirm the state before assuming it:
 
 ```bash
-git status --short          # expect only case/<canticle>/ untracked (the running build)
+git status --short          # expect clean
 uv run pytest -q            # expect 138 passed (125 before the annex)
-make -C dep check           # expect 0 hard, 0 soft   (untouched by the annex)
+make -C dep check           # expect 0 hard, 0 soft   (untouched by the annex so far)
 make -C skel check          # expect 0 hard, 3550 soft (3551 before the annex's morph rounds)
-ls case/*/*.tsv 2>/dev/null | wc -l    # build progress, out of 100 cantos
+make -C case check          # expect 0 hard
 ```
 
 Committed in step 2 — new: `dante_corpus/case.py`, `case/case.py`, `case/README.md`,
@@ -100,13 +102,11 @@ Committed in step 2 — new: `dante_corpus/case.py`, `case/case.py`, `case/READM
 (`text case`), `tests/test_hashes.py` (isolate `CASE_DIR`), plus this file,
 [`case/PLAN.md`](case/PLAN.md) and [`case/CORRECTIONS.md`](case/CORRECTIONS.md).
 
-**What the user is running.** `make -C case` — the blind corpus pass, resumable from its own
-output, three canticles runnable in three parallel shells. **Do not run it, and do not touch
-`case/*/*.tsv` while it runs**: LLM-scale generation is the user's job by the convention Phase 5
-settled (cf. `make -C skel fix`).
-
-Three runs have happened, all on 2026-07-31, taking `--check` from **1236 hard to 70 to 13**, and
-**not one residue was the model getting the Italian wrong**:
+**What the user ran.** `make -C case` — the blind corpus pass, resumable from its own output,
+three canticles runnable in three parallel shells. LLM-scale generation is the user's job by the
+convention Phase 5 settled (cf. `make -C skel fix`), and it took **four runs**, all on
+2026-07-31, taking `--check` from **1236 hard to 70 to 13 to 0**. **Not one residue was the model
+getting the Italian wrong**:
 
 1. A driver bug — an unrecoverable chunk aborted every remaining chunk of its canto, so ~23
    genuine failures cost 192 of the 1340. The driver now skips the chunk and carries on, and
@@ -121,39 +121,38 @@ Three runs have happened, all on 2026-07-31, taking `--check` from **1236 hard t
 
 Both correction rounds are in [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md), with
 `morph`/`dep`/`skel` re-measured at 0/0, 0/0 and **0/3550** — the last one moved because a `nol`
-mistagged `adverb+article` was also the cause of a Layer-5 membership violation, so the annex has
-now audited Layer 2 before its `dep` join has even been looked at. **The re-run of the last 12
-chunks is what is outstanding**; see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 3
-corpus pass* entries.
+mistagged `adverb+article` was also the cause of a Layer-5 membership violation, so the annex had
+audited Layer 2 before its `dep` join was looked at at all. Run 4 re-requested the last 12 chunks
+and all validated; see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 3 corpus pass*
+entries.
 
-**What the assistant does when the pass finishes** — in this order, because the order is the
-annex's whole value:
+**The finish sequence was executed in this order**, because the order is the annex's whole value:
+`--check` at 0 hard → **commit the artifact** (`0027494`) → *then* `--stats`. Freezing precedes
+the join to `dep`; doing it the other way round manufactures the column to close violations,
+which is the failure mode [`case/PLAN.md`](case/PLAN.md)'s *Independence* section forbids. What
+remains is **step 4**: the hand-verified Layer-4 correction round over the contradictions,
+verified against the terzine one at a time, with `make -C dep check` staying 0/0.
 
-1. `make -C case check` → must be **0 hard**. If not, `make -C case clean` drops the offending
-   chunks and the user re-runs the build for those.
-2. `make -C case stats` → the vocabulary census, the oblique-tail breakdown, the `dep`
-   agreement rates, the contradiction list and the impossible-pairing list.
-3. **Commit the artifact before adjudicating** — this is the commit step 2's code commit
-   deliberately left open. Freezing precedes the join to `dep`; doing it the other way round
-   manufactures the column to close violations, which is the failure mode
-   [`case/PLAN.md`](case/PLAN.md)'s *Independence* section forbids.
-4. Then step 4: the hand-verified Layer-4 correction round over the contradictions, verified
-   against the terzine one at a time, with `make -C dep check` staying 0/0.
+**The census, over 13112 tokens / 13176 values**: `nominative` 5620 (42.7%), `accusative` 2003,
+`reflexive` 1961, `ablative` 1805, `dative` 1409, `genitive` 267, `locative` 81, `vocative` 30.
+**The join to `dep`**: `obj`→`accusative` 84% (1631/317), `iobj`→`dative` 94% (669/46),
+`nsubj`→`nominative` 98% (5076/98) — **461 contradictions and 49 impossible pairings**, step 4's
+input. The disagreement concentrates exactly on `obj`, the accusative-vs-dative class the annex
+was built to adjudicate, which is the pilot's finding reproduced at corpus scale.
 
-**Three questions parked for after the pass**, all recorded with their measurements in
+**The three parked questions are now answered**, with their measurements in
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md):
 
-- **The oblique tail.** `genitive` is weak under the criterion the `instrumental` rejection
-  implies (*a value earns its place if it changes the slot the pronoun fills, not what the
-  oblique means*). It was frozen anyway because folding it into `ablative` afterwards is a
-  mechanical rewrite of the TSVs, while dropping it now and being wrong would cost a corpus
-  pass. `--stats` prints the tail's share and the word forms carrying each value; decide from
-  those numbers before any `morph/` merge. The same test applies to `vocative` and `locative`.
-- **A third adjudication class the pilot never sampled.** Relative pronouns that are the
-  subject of their clause, read `nominative` by `case` and `obj`/`obl` by Layer 4 — 3 of them
-  in Inferno 1 alone. `--stats` gained `nsubj` → `nominative` and an *impossible pairings*
-  report (`obl` × `nominative`) so they reach the candidate list. Whether the class is real at
-  corpus scale is a step-4 question.
+- **The oblique tail resolves.** `ablative` (1805) and `locative` (81) stand — the clitic
+  locatives `vi`/`ci` fill a slot the tonic obliques do not. **`genitive` (267) does not**: every
+  form carrying it also carries `ablative`, and a value whose forms are a subset of another's is
+  a *meaning* split rather than a distinct slot. Fold it **at the `morph/` merge and not
+  before** — 267 rows, no violation depends on it. `vocative` (30) is frozen-but-unearned;
+  `reflexive` (1961) is vindicated, and mistagging it was what the Inferno 1 smoke test caught.
+- **The third adjudication class is real** — relative pronouns that are the subject of their
+  clause, read `nominative` by `case` and `obl` by Layer 4, **49 corpus-wide**. It is step 4's
+  first and highest-yield slice, because the pairing is one neither layer can be right about
+  together.
 - **Layer-2 mistags this annex surfaced**, belonging to `morph/` and deliberately not acted on
   during the pass: the comitatives `meco`/`teco`/`seco` are tagged four different ways and
   `vosco` twice as `adjective` (once with the lemma `boscoso`), so 11 of those 43 tokens fall
@@ -190,7 +189,7 @@ than restating either existing read. Step 2 then froze the vocabulary at the cen
 values plus `vocative` (which the clitic-only pilot population structurally could not produce)
 and `reflexive`, and the scope at every pronoun-POS token, and wrote the driver, the shared
 module (`dante_corpus/case.py`), `Canto.case()` / `dante-corpus text case`, and the tests;
-step 3's corpus pass is running now. Measurement in
+step 3's corpus pass completed on 2026-07-31 at 0 hard and is frozen. Measurement in
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md), design in [`case/README.md`](case/README.md). Expected value is stated up front as
 **≈90–100 of the 3551** — it does not reach zero, and the rest of the residual (subject
 resolution across enjambment and pro-drop) is untouched by it. The paired proposal, a **verb lexicon** for the
@@ -265,7 +264,7 @@ The mechanics — columns, generation rules, the token-alignment algorithm, vali
 usage — live in [`morph/README.md`](morph/README.md). It is served via `Canto.morph()` and
 `dante-corpus text morph`.
 
-**Annex in progress (pilot passed, driver written, corpus pass running)**: pronominal **case**,
+**Annex built (pilot passed, driver written, corpus pass complete and frozen)**: pronominal **case**,
 the one morphological feature this layer omits and the instrument Layer 5's parked clitic
 verdicts named. Built as the sibling directory `case/` rather than a new `morph/*.tsv` column, so no
 existing artifact hash moves and the experiment stays revertible; merging into Layer 2 is the
@@ -410,20 +409,24 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5q
-   (`--check`: 0 hard / 3551 soft). Phase 5 closed with every route measured; see
+   (`--check`: 0 hard / 3550 soft, 3551 until the case annex's `morph/` rounds). Phase 5 closed
+   with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 
-5. **Pronoun case annex** — *pilot passed, driver written, corpus pass running*
+5. **Pronoun case annex** — *pilot passed, driver written, corpus pass complete and frozen*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),
    [`case/PLAN.md`](case/PLAN.md), branch `case-pilot`). Not a sixth layer: a Layer-2
    morphological feature held in its own directory, worth ≈90–100 of Layer 5's 3551 soft
    violations and useful to consumers on its own terms. The kill-gate pilot ran over the rebuilt
    population (67 + 28 disputed, 95 control) and passed; step 2 froze the vocabulary and scope
-   and built the driver and serve surface; step 3's corpus pass is running (Inferno 1 done);
-   steps 4–5 — Layer-4 correction round, re-measure — are outstanding. The code is committed
-   and **the artifact deliberately is not, until `--check` passes** — see *Resuming cold* above.
+   and built the driver and serve surface; step 3's corpus pass built all 100 cantos at **0
+   hard**, 13112 pronoun tokens, and froze them; steps 4–5 — Layer-4 correction round,
+   re-measure — are outstanding, with **461 contradictions and 49 impossible pairings** measured
+   as step 4's input. The code and the artifact are committed **in that order, deliberately** —
+   see *Resuming cold* above.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
 Layers 1–5 are implemented, built for all 100 cantos, and merged to `main`; the grammatical
-stack this plan describes is complete. The only follow-on is the case annex above, in progress
-on the branch `case-pilot` with its kill gate passed and its corpus pass running.
+stack this plan describes is complete. The only follow-on is the case annex above, on the branch
+`case-pilot` with its kill gate passed, its corpus pass complete and frozen, and its Layer-4
+adjudication round outstanding.

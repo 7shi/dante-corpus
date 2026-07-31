@@ -2,15 +2,20 @@
 
 ## Status
 
-**Steps 1 (pilot) and 2 (freeze + driver) are done; step 3 is next.** The vocabulary and scope
-are frozen and the code exists — [`case.py`](case.py) (build driver, `--check`/`--stats`/
-`--clean`), [`README.md`](README.md), [`Makefile`](Makefile), `dante_corpus/case.py`,
-`Canto.case()`, `dante-corpus text case`, `"case"` appended to `hashes.LAYERS`, and
-`tests/test_case.py`. **No artifact is built yet**: step 3 is the blind corpus pass, which is
-LLM-scale generation the user runs. Everything still lives on the branch `case-pilot` so the
+**Steps 1–3 are done. The artifact is built, checked at 0 hard, and committed (`0027494`); the
+next action is step 4, the hand-verified Layer-4 correction round.** All 100 cantos, 13112
+pronoun tokens, 13176 case values. The join to `dep` has been run and is step 4's input: **461
+contradictions** and **49 impossible pairings**, with agreement at 84% on `obj`, 94% on `iobj`
+and 98% on `nsubj` — the disagreement concentrates exactly on the accusative-vs-dative class the
+annex was built to adjudicate. See [*Step 4 — the next action*](#step-4--the-next-action).
+
+The vocabulary and scope are frozen and the code exists — [`case.py`](case.py) (build driver,
+`--check`/`--stats`/`--clean`), [`README.md`](README.md), [`Makefile`](Makefile),
+`dante_corpus/case.py`, `Canto.case()`, `dante-corpus text case`, `"case"` appended to
+`hashes.LAYERS`, and `tests/test_case.py`. Everything lives on the branch `case-pilot` so the
 whole annex can be dropped in one move. Written 2026-07-29, immediately after Layer 5's
 Phase 5 closed at **0 hard, 3551 soft** (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where
-Phase 5 ended*).
+Phase 5 ended*); Layer 5 now stands at **3550**, for the reason recorded under *Step 3 result*.
 
 **Pilot result (2026-07-30, 570 calls, `google:gemma-4-31b-it`).** The state check below was
 re-run and matched; the disputed population rebuilt at exactly **67 + 28**, with a **95**-position
@@ -59,12 +64,111 @@ pilot could not have sampled — relative pronouns that are the subject of their
 and an *impossible pairings* report (`obl` × `nominative`). Report-side only; generation is
 unchanged.
 
-**Next: step 3** — the rest of the corpus pass (`make -C case`), which the user runs. Inferno 1
-is done and needs no rebuild.
+**Step 3 result (2026-07-31, four runs).** All 100 cantos are built and `--check` is **0 hard**.
+Across the first three runs it went **1236 → 70 → 13 hard**, and **no residue was ever the model
+getting the Italian wrong** — every one was a defect on the frozen side:
 
-**Resuming cold? Read [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)** —
-it carries the state check, how to rebuild the disputed population, which model to use, who runs
-what, and where the measurements are recorded. Everything above it is rationale.
+| run | `--check` | what it actually was |
+|---|---|---|
+| 1 | 1236 over 23 cantos | driver bug: a chunk the model could not get past aborted the *whole remaining canto*, so ~23 genuine failures cost 192 of the 1340 chunks. Fixed — a failed chunk is now skipped, not fatal (`3157f86`). |
+| 2 | 70 over 19 cantos | Layer 2's `pos` undercounting its own `lemma` on 24 fused clitic clusters (`sen` = `si+ne`, tagged `pronoun` here and `pronoun+pronoun` 15 times elsewhere), rejecting a correct two-value answer forever. Corrected in `morph/` (`880fc2e`). Also: the model writes the `Word` cell as the clitic (`mi`) rather than the fused token (`parlami`), so `_match` now accepts the clitic a fused token ends in. |
+| 3 | 13 over 3 cantos | the same defect in shapes round 2 did not cover — the *lemma* undercounting too (`sen` with the lemma `si`), a three-part lemma under a two-part `pos` (`Vattene`), `nol` = `non lo` demanding two cases for one pronoun. 14 more tokens, audited as a family rather than as symptoms (`a97b80e`). |
+
+Round 3's corrections changed how many cases 15 frozen positions need, so rows that had validated
+became wrong and `make -C case clean` dropped the chunks holding them — `--check` briefly read
+**89**, higher than the 13 that caused it, because the fix widened what had to be regenerated
+rather than because anything regressed. **Run 4 re-requested those 12 chunks and all of them
+validated**, taking `--check` to 0 hard. The artifact is committed at `0027494`.
+
+Round 3 also took **Layer 5 from 3551 to 3550 soft**: *Paradiso* 17:92's `nol`, tagged
+`adverb+article`, was why `skel --check` reported `argument (92, 4) for role obj heads no
+NP/pronoun/predicate`. The annex has therefore already audited Layer 2 — before its `dep` join
+has been looked at at all — because a column that reads `pos` as a **count** exercises Layer 2 in
+a way no earlier consumer did.
+
+**The lesson the pass leaves behind.** The smoke test established that `--check` passing is not
+evidence the artifact is right. The three failing runs established the converse: **`--check`
+failing is not evidence the model is wrong.** A formal check compares the answer against the
+frozen layers, so it fails whenever *either* side is at fault, and here the frozen side was at
+fault three times running. If a future chunk fails identically on all three attempts *and* on the
+unit-by-unit retry, suspect Layer 2 first, and pass `--log`.
+
+**Resuming? Read [*Step 4*](#step-4--the-next-action)** for the next action.
+[*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)
+carries the step-1 context (how the disputed population was rebuilt, which model, who runs what)
+and is now historical. Everything between them is rationale.
+
+## Step 4 — the next action
+
+**A hand-verified Layer-4 correction round over the contradiction list, in the style of Phases
+5i/5n.** `make -C case stats` regenerates the input; nothing in it is applied mechanically.
+
+```bash
+make -C case stats     # census, oblique tail, dep agreement, contradictions, impossible pairings
+```
+
+### State to confirm before assuming anything
+
+```bash
+git log --oneline -1        # the artifact freeze, 0027494, on the branch case-pilot
+git status --short          # expect clean (or only doc edits in flight)
+uv run pytest -q            # expect 138 passed
+make -C morph check         # expect 0 hard, 0 soft
+make -C dep check           # expect 0 hard, 0 soft
+make -C skel check          # expect 0 hard, 3550 soft
+make -C case check          # expect 0 hard
+```
+
+The artifact is **frozen and committed**, and step 4 must not touch it. Every edit this round
+produces belongs in `dep/`; if a position looks like a `case` error, the answer is to record it,
+not to rewrite the column — the column's value is that it was authored before any of this was
+looked at, and an edit made now is indistinguishable from one made to close a violation.
+
+### What the join found
+
+| `dep` | reads as | agree | contradict | rate |
+|---|---|---|---|---|
+| `obj` | `accusative` | 1631 | 317 | 84% |
+| `iobj` | `dative` | 669 | 46 | 94% |
+| `nsubj` | `nominative` | 5076 | 98 | 98% |
+
+**461 contradictions, 49 impossible pairings.** Work them in this order:
+
+1. **The 49 impossible pairings** (`obl` × `nominative`) — highest yield, because the combination
+   is one neither layer can be right about together, and it is the third adjudication class the
+   clitic-only pilot structurally could not sample (relative pronouns that are the subject of
+   their clause). Small enough to verify exhaustively.
+2. **The `obj` column's 317** — the disputed accusative-vs-dative population the annex was built
+   for. `obj` at 84% against `nsubj` at 98% is the pilot's finding reproduced at corpus scale.
+3. **The `iobj` 46 and the `nsubj` 98** — the mirror direction and the residue.
+
+Verify against the terzina one position at a time. `make -C dep check` must stay 0/0 throughout,
+and the yield expectation is unchanged from before any of it was measured: **≈90–100 of Layer 5's
+3550**, not zero.
+
+### Then step 5
+
+Re-measure Layer 5 and record the delta in
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+
+### The three parked questions — now answered
+
+Measurements in [`CORRECTIONS.md`](CORRECTIONS.md)'s *fourth run and the freeze*.
+
+- **The oblique tail** resolves. `ablative` (1805) and `locative` (81) stand — the clitic
+  locatives `vi`/`ci` are a slot the tonic obliques do not fill. **`genitive` (267) does not**:
+  every form carrying it also carries `ablative`, and a value whose forms are a subset of
+  another's is a *meaning* split rather than a distinct slot. Fold it into `ablative` **at the
+  `morph/` merge and not before** — 267 rows, no violation depends on it. `vocative` (30) is
+  frozen-but-unearned: correct, harmless, and argued from the poem's rhetoric rather than a
+  count. `reflexive`, the other value added rather than measured, is vindicated at 1961 — 15% of
+  the column, and mistagging it was what the Inferno 1 smoke test caught.
+- **The third adjudication class is real**, at 49 corpus-wide. It is step 4's first slice.
+- **Layer-2 mistags this annex surfaced and did not act on**, all single-pronoun tokens whose
+  `pos` gives the right count, so nothing is blocked: the comitatives `meco`/`teco`/`seco` are
+  tagged four different ways (and `vosco` twice as `adjective`, once with the lemma `boscoso`),
+  `ne` at *Paradiso* 14:55 carries the lemma `in+esso`, and `me'` (apocopated *meglio*) is tagged
+  `pronoun` at Inferno 1:112. These belong to a `morph/` round of their own.
 
 ## Why this exists
 
@@ -206,16 +310,21 @@ dante_corpus/case.py   dataclass, TSV I/O, serve-time index
 
 ## Starting from a cold session — everything the pilot needs
 
-Read this section before running anything. It exists so a session that has only read
-[`../PLAN.md`](../PLAN.md) and this file can execute step 1 without reconstructing context from
-the Phase 5 history.
+**Historical as of 2026-07-31 — step 1 is done and its numbers came in.** This section is kept
+because it is the record of what the pilot was executed against, and because *Which model* and
+*Who runs it* still govern step 3. For the current state and the next action, read
+[*Step 4*](#step-4--the-next-action) instead; the figures below describe the
+corpus as it was on 2026-07-29, before the annex's two `morph/` correction rounds.
+
+It exists so a session that has only read [`../PLAN.md`](../PLAN.md) and this file can execute
+step 1 without reconstructing context from the Phase 5 history.
 
 ### Confirm the state first
 
 ```bash
-make -C skel check     # expect: 0 hard, 3551 soft   (the state this plan was written at)
+make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3550)
 make -C dep check      # expect: 0 hard, 0 soft
-uv run pytest -q       # expect: 125 passed
+uv run pytest -q       # was: 125 passed          (now 138, with the annex's tests)
 make -C skel stats     # by-kind + the role_mismatch pair table
 ```
 
@@ -327,10 +436,16 @@ verdict is to kill the annex.
    can carry more lines per call (6–10) and lands at roughly **300–500 calls** — well under a
    quarter of Phase 5q's `--fix` pass (1702 calls, ≈28 h, 3-way parallel).
 3. **Blind corpus pass, freeze, then adjudicate.** Generate, validate, commit, *then* join
-   against `dep`. Never the other way round.
+   against `dep`. Never the other way round. ✅ **done 2026-07-31** — four runs, 1340 chunks, all
+   100 cantos at **0 hard**, 13112 tokens / 13176 values, frozen at `0027494` **before** `--stats`
+   was run. The order was kept literally, which is the only part of it that cannot be recovered
+   after the fact.
 4. **Layer-4 correction round** over the contradictions, hand-verified against the terzine, in the
-   style of Phases 5i/5n. `make -C dep check` must stay 0/0 throughout.
+   style of Phases 5i/5n. `make -C dep check` must stay 0/0 throughout. *Not started* — the input
+   exists: **461 contradictions, 49 impossible pairings**; see *Step 4* above.
 5. **Re-measure Layer 5** and record the delta in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+   *Not started* — but note Layer 5 has already moved 3551 → 3550 from step 3's `morph/`
+   corrections, recorded there.
 
 ## Expected value — stated honestly before starting
 
