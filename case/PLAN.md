@@ -98,10 +98,107 @@ frozen layers, so it fails whenever *either* side is at fault, and here the froz
 fault three times running. If a future chunk fails identically on all three attempts *and* on the
 unit-by-unit retry, suspect Layer 2 first, and pass `--log`.
 
-**Resuming? Read [*Step 4*](#step-4--the-next-action)** for the next action.
+**Resuming? Read [*Resuming cold — step 4, slice 2*](#resuming-cold--step-4-slice-2) first**, then
+[*Step 4*](#step-4--the-next-action) for the detail.
 [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)
 carries the step-1 context (how the disputed population was rebuilt, which model, who runs what)
 and is now historical. Everything between them is rationale.
+
+## Resuming cold — step 4, slice 2
+
+**Written 2026-07-31 at the end of slice 1, so a session with no memory of it can carry on from
+this section alone.** Branch `case-pilot`.
+
+### Where things stand
+
+| commit | what |
+|---|---|
+| `0027494` | the frozen `case/` artifact — 100 cantos, 0 hard. **Do not touch it** |
+| `419120b` | slice 1's Layer-4 edits: 10 positions / 11 rows in `dep/`, plus `dep/CORRECTIONS.md` |
+| `40c8a11` | slice 1's measurements (`case/`, `skel/` CORRECTIONS) and the step-4 selector change |
+
+```bash
+git status --short          # expect clean
+uv run pytest -q            # expect 138 passed
+make -C morph check         # expect 0 hard, 0 soft
+make -C dep check           # expect 0 hard, 0 soft
+make -C skel check          # expect 0 hard, 3555 soft
+make -C case check          # expect 0 hard
+cd case && uv run case.py inferno purgatorio paradiso --stats --full
+                            # expect 463 contradictions, 39 impossible pairings
+```
+
+**3555 is correct, not a regression** — slice 1 raised it by 5 on purpose. If `skel` reads 3550
+and `case --stats` reads 461/49, `419120b` is not in the tree and you are looking at the
+pre-slice-1 corpus.
+
+### What slice 1 settled, so it is not re-litigated
+
+1. **The 49 impossible pairings are done.** All 49 opened one at a time; 10 edited. The remaining
+   39 are `case`-side errors (12), the standard of comparison where neither layer is wrong (21),
+   and 6 blocked or entangled. They are **not** work in progress — see
+   [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 1* before reopening any of them.
+2. **The artifact stays frozen.** This was asked directly and answered: a measured weakness in
+   `case` is recorded, never patched. Rewriting a value after seeing `dep` is an edit toward
+   `dep`, which destroys the third-independent-read property the whole annex rests on.
+3. **`case.py`'s `_IMPOSSIBLE` rule stays as it is.** Excluding the comparative frame would shrink
+   the reported number and change no edit.
+4. **Layer 5's soft count is a diagnostic, not the objective.** It can rise from a correct round.
+   Do not treat a rise as a reason to revert.
+
+### The next action
+
+**Slice 2: the `obj` column's 317 contradictions, worked in the order the corrected selector
+gives.** The selector is the one thing slice 1 changed, and it is the reason to build one
+measurement before opening any terzina:
+
+> Rank by **whether `skel` already diverges from `dep` at that position**, not by whether `case`
+> and `dep` contradict.
+
+Where `skel` already dissents from `dep`, `case` breaks a 2-1 tie and the violation **closes** —
+this is the Phase 5h/5i configuration and the only population the **≈90–100** estimate came from.
+Where `dep` and `skel` agree and only `case` dissents, a correct fix **raises** the count, as
+slice 1 measured. Both are worth correcting; only the first pays out in Layer 5.
+
+So the first task is the **intersection**, and it does not exist yet:
+
+1. Get the 317 from `cd case && uv run case.py inferno purgatorio paradiso --stats --full`
+   (the `dep=obj` contradictions).
+2. Get the positions `skel` flags, using [`../skel/PLAN.md`](../skel/PLAN.md)'s
+   *How to measure a candidate rule* skeleton verbatim — the `_classify_divergence`
+   monkeypatch, run **from `skel/`**. That section's two Layer-4-round additions are load-bearing
+   here: print the **whole dep sub-tree** of the unit (it is what shows whether a retag would give
+   the predicate a second core argument), and measure the **corpus-wide convention** for the word
+   forms before choosing a target deprel.
+3. Report the intersection size and work it first. Report the non-intersecting remainder too —
+   if it is large, that is itself the finding about where the annex's value actually lies.
+
+There is **no checked-in harness and slice 1's scripts were throwaway and are gone.** Rebuild from
+the API shapes in [*How to inspect a position*](#how-to-inspect-a-position) below, which are
+current and were verified this round.
+
+### The traps slice 1 hit, in the order it hit them
+
+- **Layer 2 can block a Layer-4 edit, and that outranks the reading.** Two edits were stopped by
+  it — purgatorio 31:25 `fossi` (before editing) and purgatorio 23:126 `torti` (applied, then
+  reverted). Before proposing a retag, **check `morph`'s `pos` for the tokens involved**. If the
+  edit needs Layer 2 to be wrong, it is a `morph/` item, not a `dep/` one.
+- **Layer 5's LLM is a third read too, and it can be right when you are not.** It sided against
+  both of slice 1's two-row edits; on one (purgatorio 23:126) it was right. When it disagrees,
+  look again before keeping the edit — and settle it with a corpus-internal convention sweep, not
+  with the reading you like.
+- **Corpus-internal parallels are what make an edit defensible.** Every kept edit has one. An edit
+  justified only by "this reads better" is the failure mode `../dep/CORRECTIONS.md` names.
+- **Judge from the rows, never from the summary.** 463 contradictions is an aggregate. This annex
+  has now been wrong five times in that exact shape, the fifth being slice 1's own first reading,
+  which called the comparative frame a systematic error before measuring it at 17/5/3/1.
+
+### One position already verified and deliberately deferred
+
+**purgatorio 28:51**, *nel tempo che perdette / la madre lei* — `madre`:`obj` and `lei`:`nsubj`
+are swapped (Ceres lost Proserpina, not the reverse). Found in passing during slice 1, verified,
+and left for slice 2 because it belongs to the contradictions list rather than the pairings.
+Take it with slice 2 rather than re-deriving it.
 
 ## Step 4 — the next action
 

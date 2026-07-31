@@ -96,6 +96,11 @@ contradiction list as a whole, is what slices 2–3 should be selected on. See
 
 ### Resuming cold — the case annex, as of 2026-07-31
 
+**For step 4's next action specifically, read [`case/PLAN.md`](case/PLAN.md)'s *Resuming cold —
+step 4, slice 2* first.** It is self-contained: the three commits that matter, the state check
+with its expected figures, what slice 1 settled so it is not re-litigated, the corrected selector
+for slice 2, and the traps that round hit. This section below carries the step-1-to-3 history.
+
 **Step 2's code is committed (`637d417`) and step 3's artifact is committed separately
 (`0027494`).** The branch is `case-pilot`. The split was deliberate and is the step-3 order made
 literal: the artifact was held untracked until `--check` reached 0 hard, and committed **before**
