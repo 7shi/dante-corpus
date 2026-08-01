@@ -757,7 +757,7 @@ line	token	word	deprel	head_line	head_token
 103	7	coda	nsubj	103	8
 103	8	rivolse	conj	103	3
 104	1	e	cc	104	6
-104	2	quella	nsubj	104	6
+104	2	quella	obj	104	6
 104	3	tesa	amod	104	2
 104	4	come	mark	104	5
 104	5	anguilla	obl	104	6

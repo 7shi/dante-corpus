@@ -257,7 +257,7 @@ line	token	word	deprel	head_line	head_token
 34	7	ristoro	obl	34	5
 35	1	di	case	35	2
 35	2	quel	nmod	34	7
-35	3	che	nsubj	35	9
+35	3	che	obj	35	9
 35	4	'l	det	35	5
 35	5	ciel	nsubj	35	9
 35	6	de	case	35	8

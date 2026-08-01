@@ -278,7 +278,7 @@ line	token	word	deprel	head_line	head_token
 40	7	da	case	40	9
 40	8	la	det	40	9
 40	9	faccia	obl	41	2
-41	1	mi	obj	41	2
+41	1	mi	iobj	41	2
 41	2	fuggì	advcl	40	3
 41	3	'l	det	41	4
 41	4	sonno	nsubj	41	2

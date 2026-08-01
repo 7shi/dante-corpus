@@ -930,13 +930,13 @@ line	token	word	deprel	head_line	head_token
 131	4	ed	cc	131	6
 131	5	Elice	obj	131	6
 131	6	caccionne	conj	131	2
-132	1	che	obj	132	5
+132	1	che	nsubj	132	5
 132	2	di	case	132	3
 132	3	Venere	obl	132	5
 132	4	avea	aux	132	5
 132	5	sentito	acl:relcl	131	5
 132	6	il	det	132	7
-132	7	tòsco	nsubj	132	5
+132	7	tòsco	obj	132	5
 133	1	Indi	advmod	133	4
 133	2	al	case	133	3
 133	3	cantar	obl	133	4

@@ -227,7 +227,7 @@ line	token	word	deprel	head_line	head_token
 31	6	morte	nsubj	34	1
 32	1	che	nsubj	32	4
 32	2	non	advmod	32	5
-32	3	li	obj	32	5
+32	3	li	iobj	32	5
 32	4	è	aux	32	5
 32	5	vendicata	acl:relcl	31	6
 32	6	ancor	advmod	32	5
@@ -409,7 +409,7 @@ line	token	word	deprel	head_line	head_token
 57	1	punisce	acl:relcl	55	4
 57	2	i	det	57	3
 57	3	falsador	obj	57	1
-57	4	che	nsubj	57	6
+57	4	che	obj	57	6
 57	5	qui	advmod	57	6
 57	6	registra	acl:relcl	57	3
 58	1	Non	advmod	58	2

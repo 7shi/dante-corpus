@@ -623,7 +623,7 @@ line	token	word	deprel	head_line	head_token
 89	7	allora	advmod	89	8
 89	8	femmi	advcl	90	1
 90	1	salsi	conj	88	6
-90	2	colei	obj	90	1
+90	2	colei	nsubj	90	1
 90	3	che	nsubj	90	7
 90	4	la	det	90	5
 90	5	cagion	obj	90	7

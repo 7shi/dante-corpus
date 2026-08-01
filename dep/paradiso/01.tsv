@@ -504,7 +504,7 @@ line	token	word	deprel	head_line	head_token
 73	5	di	case	73	6
 73	6	me	nmod	73	7
 73	7	quel	ccomp	75	3
-73	8	che	nsubj	73	9
+73	8	che	obj	73	9
 73	9	creasti	acl:relcl	73	7
 74	1	novellamente	advmod	73	9
 74	2	amor	vocative	75	3
@@ -718,9 +718,9 @@ line	token	word	deprel	head_line	head_token
 104	6	questo	nsubj	104	7
 104	7	è	conj	104	1
 104	8	forma	attr	104	7
-105	1	che	obj	105	6
+105	1	che	nsubj	105	6
 105	2	l'	det	105	3
-105	3	universo	nsubj	105	6
+105	3	universo	obj	105	6
 105	4	a	case	105	5
 105	5	Dio	obl	105	6
 105	6	fa	acl:relcl	104	8

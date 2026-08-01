@@ -928,7 +928,7 @@ line	token	word	deprel	head_line	head_token
 132	4	dolce	amod	132	5
 132	5	ostello	conj	132	1
 133	1	Maria	nsubj	133	3
-133	2	mi	obj	133	3
+133	2	mi	iobj	133	3
 133	3	diè	root	0	0
 133	4	chiamata	acl	133	1
 133	5	in	case	133	7

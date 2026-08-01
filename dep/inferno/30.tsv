@@ -878,7 +878,7 @@ line	token	word	deprel	head_line	head_token
 121	5	la	det	121	6
 121	6	sete	nsubj	121	4
 121	7	onde	nsubj	121	9
-121	8	ti	obj	121	9
+121	8	ti	iobj	121	9
 121	9	crepa	acl:relcl	121	6
 122	1	disse	root	0	0
 122	2	'l	det	122	3

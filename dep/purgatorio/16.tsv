@@ -242,7 +242,7 @@ line	token	word	deprel	head_line	head_token
 34	2	ti	obj	34	3
 34	3	seguiterò	ccomp	35	1
 34	4	quanto	mark	34	6
-34	5	mi	obj	34	6
+34	5	mi	iobj	34	6
 34	6	lece	advcl	34	3
 35	1	rispuose	root	0	0
 35	2	e	cc	36	4

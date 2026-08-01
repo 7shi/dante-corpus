@@ -271,7 +271,7 @@ line	token	word	deprel	head_line	head_token
 38	4	la	det	38	5
 38	5	dolcezza	obj	38	6
 38	6	senti	acl:relcl	37	4
-39	1	che	obj	39	6
+39	1	che	nsubj	39	6
 39	2	non	advmod	39	3
 39	3	gustata	advcl	39	6
 39	4	non	advmod	39	6
@@ -335,8 +335,8 @@ line	token	word	deprel	head_line	head_token
 47	7	sé	obj	47	8
 47	8	riguarda	advcl	48	4
 48	1	non	advmod	48	4
-48	2	mi	obj	48	4
-48	3	ti	iobj	48	4
+48	2	mi	iobj	48	4
+48	3	ti	obj	48	4
 48	4	celerà	conj	46	2
 48	5	l'	det	48	6
 48	6	esser	nsubj	48	4
@@ -429,7 +429,7 @@ line	token	word	deprel	head_line	head_token
 61	6	festino	obj	61	5
 62	1	ma	cc	62	4
 62	2	or	advmod	62	4
-62	3	m'	iobj	62	4
+62	3	m'	obj	62	4
 62	4	aiuta	conj	61	3
 62	5	ciò	nsubj	62	4
 62	6	che	nsubj	62	9
@@ -498,7 +498,7 @@ line	token	word	deprel	head_line	head_token
 71	6	volerne	xcomp	71	5
 72	1	sol	det	72	2
 72	2	quel	obj	71	6
-72	3	ch'	nsubj	72	4
+72	3	ch'	obj	72	4
 72	4	avemo	acl:relcl	72	2
 72	5	e	cc	72	10
 72	6	d'	case	72	7
@@ -893,9 +893,9 @@ line	token	word	deprel	head_line	head_token
 124	1	La	det	124	2
 124	2	vista	nsubj	126	1
 124	3	mia	amod	124	2
-124	4	che	obj	124	7
+124	4	che	nsubj	124	7
 124	5	tanto	advmod	124	7
-124	6	lei	nsubj	124	7
+124	6	lei	obj	124	7
 124	7	seguio	acl:relcl	124	2
 125	1	quanto	advmod	125	2
 125	2	possibil	advcl	124	7

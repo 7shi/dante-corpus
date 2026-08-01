@@ -70,8 +70,8 @@ line	token	word	deprel	head_line	head_token
 10	5	per	case	11	1
 10	6	questa	det	11	1
 10	7	dia	amod	11	1
-11	1	regïon	obj	11	3
-11	2	ti	iobj	11	3
+11	1	regïon	obl	11	3
+11	2	ti	obj	11	3
 11	3	conduce	acl:relcl	10	3
 11	4	ha	advcl	7	1
 11	5	ne	case	11	7
@@ -664,7 +664,7 @@ line	token	word	deprel	head_line	head_token
 94	5	te	obl	94	6
 94	6	supplìco	ccomp	91	2
 95	1	perché	mark	95	3
-95	2	mi	obj	95	3
+95	2	mi	iobj	95	3
 95	3	parli	advcl	94	6
 95	4	tu	nsubj	95	5
 95	5	vedi	conj	94	6

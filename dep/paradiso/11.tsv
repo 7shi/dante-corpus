@@ -424,7 +424,7 @@ line	token	word	deprel	head_line	head_token
 62	1	et	cc	62	6
 62	2	coram	case	62	3
 62	3	patre	obl	62	6
-62	4	le	obj	62	6
+62	4	le	iobj	62	6
 62	5	si	expl	62	6
 62	6	fece	conj	59	3
 62	7	unito	xcomp	62	6

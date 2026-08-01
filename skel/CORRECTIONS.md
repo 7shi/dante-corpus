@@ -1,5 +1,57 @@
 # skel — Layer 5 correction history
 
+## The `case` annex's second Layer-4 round — 3555 → 3469, −86 (2026-07-31)
+
+**The corrected selector paid out.** Slice 1 spent 49 candidates and the count rose by 5; slice 2
+spent 102 and it fell by **86**. The difference is not effort or care — both rounds were
+hand-verified against the terzine to the same standard — it is entirely *which two of the three
+reads already agreed*, which is what the previous entry predicted and this one measures.
+
+### How the population was selected
+
+Of `case.py --stats`'s 462 contradictions, **138** fall on a position Layer 5 already flags, and
+**102** of those are positions where the role the Layer-5 LLM *asserted* sides with `case`
+against `dep`. That last set is tier A — the 2-1 configuration, and the only population the
+annex's **≈90–100** estimate ever described. It is worth stating how close the estimate landed:
+predicted ≈90–100, spent 102 candidates, measured **−86**.
+
+The remaining 36 of the 138 are positions where `skel` flags something else at that token
+(`missing_arg` only, or a role pointing away from `case`), and the other 324 contradictions are
+positions `skel` does not flag at all. **Those 324 are the slice-1 configuration**: correcting
+`dep` there is still correct, and it will not lower this count.
+
+### The delta, by group
+
+| group | candidates | edited | Layer 5 |
+|---|---|---|---|
+| `dep`=`obj`, `case`=`dative`, `skel`=`obl:a` | 46 | 39 (40 rows) | 3555 → 3518, **−37** |
+| `dep`=`obj`, `case`=`nominative`, `skel`=`subj` | 18 | 12 (19 rows) | 3518 → 3499, **−19** |
+| `dep`=`nsubj`, `case`=`accusative`, `skel`=`obj` | 25 | 19 (22 rows) | 3499 → 3479, **−20** |
+| `dep`=`iobj`/`nsubj` mirror direction | 13 | 11 (11 rows) | 3479 → 3469, **−10** |
+| **total** | **102** | **81 positions / 92 rows** | **−86** |
+
+The yield rate is the other measured difference from slice 1: **79%** of tier-A candidates were
+Layer-4 errors, against slice 1's 20%. A contradiction where the third read breaks a tie is a
+much better predictor of a defect than a contradiction that is merely structurally impossible.
+
+Roughly one violation closes per edited position (86 / 81). That is the expected ratio when the
+LLM's dissent and the correction are the same judgment: the divergence that was being reported
+simply stops existing. It is not one-to-one because a few edits close two violations (a swap
+fixes both halves) and a few convert one violation into another instead of closing it — most
+visibly the two edits that side with neither `case` nor `skel` (purgatorio 10:90.3 `obj` → `attr`,
+paradiso 10:22.2 `nsubj` → `expl`), which are correct Layer-4 fixes that leave a divergence
+standing.
+
+### What this does not license
+
+The count fell because `dep` got more correct at positions where an independent read already said
+so — the Phase 5i mechanism, not a new one. **It remains a diagnostic, not the objective.** The
+21 tier-A candidates left alone are the guard: in eleven of them `case` is the read that is wrong
+(*m'avea 'mmonito* is the annex's own worked example of an accusative, read `dative` by the
+column), and editing `dep` toward `case` there would have lowered this number by making Layer 4
+worse. The rows are in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md); the point is that a
+selector good enough to be worth 86 is still not good enough to apply without opening the terzina.
+
 ## The `case` annex's first Layer-4 round — 3550 → 3555, upward (2026-07-31)
 
 **The soft count went up by 5, and the round was still correct.** Recorded here because Layer 5's

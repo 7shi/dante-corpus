@@ -979,7 +979,7 @@ line	token	word	deprel	head_line	head_token
 137	4	che	mark	137	8
 137	5	di	case	137	6
 137	6	te	obl	137	8
-137	7	mi	obj	137	8
+137	7	mi	iobj	137	8
 137	8	giova	ccomp	137	3
 138	1	un	det	138	2
 138	2	corollario	nsubj	138	6

@@ -819,3 +819,88 @@ and raises the count. The **≈90–100** estimate was always drawn from the opp
 the Phase 5h/5i population where `skel` **already dissents from** `dep` and a third read breaks a
 2-1 tie. Full reasoning in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of this
 date; the consequence for slices 2 and 3 is in [`PLAN.md`](PLAN.md)'s *Step 4*.
+
+## Step 4, slice 2 — the `skel`-flagged contradictions, 2026-07-31
+
+The first round run under the selector slice 1 corrected. **102 candidates, 81 positions edited
+(79%), 92 rows in `dep/`, and Layer 5 fell 3555 → 3469 (−86).** Rows and readings are in
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md); the delta analysis is in
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md). `dep --check` stayed 0/0 throughout and the
+`case/` artifact was not touched.
+
+### Building the intersection
+
+The measurement slice 2 needed did not exist, and it is two joins:
+
+1. `case.py --stats --full` gives the 462 contradictions as `<canticle> <canto>:<line>.<token>`.
+2. `skel.py --check`'s stderr gives every soft violation with the argument positions it cites, in
+   `(line, token)` form — so the violation list can be keyed by position without a monkeypatch.
+   The detail formats carry the direction: `role_mismatch: L.T arg (l, t) 'GIVEN' vs 'DERIVED'`
+   with **given = the LLM** and **derived = `dep`**, `extra_arg: L.T GIVEN (l, t)`,
+   `missing_arg: L.T DERIVED (l, t)`.
+
+| tier | positions | what it is |
+|---|---|---|
+| A — `skel`'s *given* role sides with `case` | **102** | the 2-1 tie; the ≈90–100 estimate's actual population |
+| B — `skel` flags, asserting something else | 15 | a third reading, no tie to break |
+| C — `skel` flags `missing_arg`/membership only | 21 | the LLM asserted no role here |
+| — no `skel` flag at all | 324 | the slice-1 configuration; correct these too, expect no fall |
+
+**Tier A is 22% of the contradiction list and produced 100% of the fall.** That ratio is the
+practical form of slice 1's finding: the annex's value in Layer 5's count lives entirely in the
+intersection, and its value *outside* the intersection is a more correct `dep`, which is real but
+does not show up in this number.
+
+### The census the round produced
+
+`--stats` after the round, against the pre-round figures:
+
+| `dep` | reads as | agree | contradict | rate | was |
+|---|---|---|---|---|---|
+| `obj` | `accusative` | 1660 | 267 | **86%** | 84% |
+| `iobj` | `dative` | 708 | 38 | **95%** | 93% |
+| `nsubj` | `nominative` | 5095 | 77 | **99%** | 98% |
+
+462 contradictions → **382**. The impossible pairings stay at 39, as they must: slice 1 closed
+that list and nothing this round touched an `obl` × `nominative` position.
+
+### The column was wrong eleven times, and that is the useful number
+
+Slice 1 measured 12 `case`-side errors in 49; slice 2 measured **11 in 102**. Both are worth
+recording because the annex's whole claim is to be a *third* read, not a better one — a column
+that never dissents wrongly would be suspect, and a column whose dissents are always right would
+not need hand verification. The eleven split into two shapes:
+
+- **A genuine accusative read as dative** — inferno 17:77.6 *m'avea 'mmonito*, which is the
+  worked example [`README.md`](README.md) uses to *teach* the accusative; inferno 19:44.5, 26:110.5,
+  30:126.8; purgatorio 13:108.5; paradiso 15:96.2 (a real dative, read accusative — the mirror
+  slip).
+- **The relative and the postposed subject inverted** — paradiso 19:59.3, 21:12.3, 23:92.2;
+  purgatorio 7:99.1; inferno 31:116.1. In each the model made the relative pronoun nominative
+  where the line puts its subject after the verb. This is the same weakness the standard of
+  comparison showed in slice 1: **`case` reads a pronoun's case well and word order poorly**, and
+  that is a coherent, prompt-fixable finding for the `morph/` merge rather than a scatter of
+  one-offs.
+
+A third shape is not an error at all: **the accusative-and-infinitive** (inferno 22:32.1 *uno
+aspettar*, paradiso 30:57.1 *me sormontar*), where `case` reads `accusative` and is
+morphologically correct, while `dep` writes `nsubj` because the corpus writes the notional subject
+of a perception verb's infinitive `nsubj` 141 times against `obj` 100. Two vocabularies, both
+right. It is the clearest illustration in either slice of why the contradiction list is an
+adjudication input and never an edit list.
+
+### Layer-2 items this slice surfaced
+
+Neither blocked an edit, unlike slice 1's two:
+
+- **inferno 8:4.5** `i` (for *ivi*, "there") is tagged `pronoun`, which is what put it in the case
+  scope at all. `dep`'s `nsubj` on it is impossible (*vedemmo* is 1pl with a pro-drop subject),
+  but `che` already holds the `obj` slot, so there is no clean Layer-4 target while Layer 2 calls
+  it a pronoun. A `morph/` item.
+- **purgatorio 31:90.1** *salsi* carries the lemma `salutare`; the line needs *sapere* (*sallosi*).
+
+### Slice 1's deferred position is still deferred
+
+**Purgatorio 28:51**, *nel tempo che perdette / la madre lei* — the `madre`/`lei` swap slice 1
+verified and left. It is **not** in tier A (`skel` does not flag it), so it was not taken here
+either; it belongs with the 324 and is called out again so slice 3 does not re-derive it.

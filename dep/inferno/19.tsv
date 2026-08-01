@@ -635,9 +635,9 @@ line	token	word	deprel	head_line	head_token
 84	2	che	mark	84	3
 84	3	convien	acl:relcl	83	5
 84	4	che	mark	84	8
-84	5	lui	nsubj	84	8
+84	5	lui	obj	84	8
 84	6	e	cc	84	7
-84	7	me	nsubj	84	8
+84	7	me	obj	84	8
 84	8	ricuopra	ccomp	84	3
 85	1	Nuovo	amod	85	2
 85	2	Iasón	nsubj	85	3
@@ -731,7 +731,7 @@ line	token	word	deprel	head_line	head_token
 96	6	anima	obj	96	4
 96	7	ria	amod	96	6
 97	1	Però	advmod	97	3
-97	2	ti	obj	97	3
+97	2	ti	iobj	97	3
 97	3	sta	root	0	0
 97	4	ché	mark	97	8
 97	5	tu	nsubj	97	6

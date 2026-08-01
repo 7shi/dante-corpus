@@ -1001,7 +1001,7 @@ line	token	word	deprel	head_line	head_token
 138	5	di	case	138	6
 138	6	là	nmod	138	4
 138	7	giù	advmod	138	6
-138	8	mi	obj	138	9
+138	8	mi	iobj	138	9
 138	9	pesa	advcl	136	1
 139	1	Ed	cc	139	2
 139	2	ella	root	0	0

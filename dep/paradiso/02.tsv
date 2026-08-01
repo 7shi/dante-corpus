@@ -696,10 +696,10 @@ line	token	word	deprel	head_line	head_token
 101	2	stea	ccomp	100	4
 101	3	un	det	101	4
 101	4	lume	nsubj	101	2
-101	5	che	obj	101	9
+101	5	che	nsubj	101	9
 101	6	i	det	101	8
 101	7	tre	nummod	101	8
-101	8	specchi	nsubj	101	9
+101	8	specchi	obj	101	9
 101	9	accenda	acl:relcl	101	4
 102	1	e	cc	102	2
 102	2	torni	conj	101	2

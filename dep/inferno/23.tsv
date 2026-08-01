@@ -822,7 +822,7 @@ line	token	word	deprel	head_line	head_token
 110	6	a	case	110	8
 110	7	l'	det	110	8
 110	8	occhio	obl	110	10
-110	9	mi	obj	110	10
+110	9	mi	iobj	110	10
 110	10	corse	advcl	110	4
 111	1	un	det	111	2
 111	2	crucifisso	nsubj	110	10

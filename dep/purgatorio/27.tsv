@@ -302,7 +302,7 @@ line	token	word	deprel	head_line	head_token
 42	3	la	det	42	4
 42	4	mente	obl	42	7
 42	5	sempre	advmod	42	7
-42	6	mi	obj	42	7
+42	6	mi	iobj	42	7
 42	7	rampolla	acl:relcl	41	8
 43	1	Ond'	mark	43	3
 43	2	ei	nsubj	43	3
@@ -333,7 +333,7 @@ line	token	word	deprel	head_line	head_token
 46	3	al	case	46	4
 46	4	foco	obl	46	8
 46	5	innanzi	advmod	46	8
-46	6	mi	obj	46	8
+46	6	mi	iobj	46	8
 46	7	si	expl	46	8
 46	8	mise	root	0	0
 47	1	pregando	advcl	46	8

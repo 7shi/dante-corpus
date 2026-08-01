@@ -935,7 +935,7 @@ line	token	word	deprel	head_line	head_token
 128	7	credi	conj	128	1
 129	1	quelle	det	129	2
 129	2	parole	obj	128	7
-129	3	che	nsubj	129	6
+129	3	che	obj	129	6
 129	4	di	case	129	5
 129	5	lui	obl	129	6
 129	6	dicesti	acl:relcl	129	2
@@ -951,7 +951,7 @@ line	token	word	deprel	head_line	head_token
 131	3	dottor	obl	130	3
 131	4	ma	cc	131	7
 131	5	el	nsubj	131	7
-131	6	li	obj	131	7
+131	6	li	iobj	131	7
 131	7	disse	conj	130	3
 131	8	Frate	vocative	131	7
 132	1	non	advmod	132	2

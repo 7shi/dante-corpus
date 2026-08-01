@@ -353,7 +353,7 @@ line	token	word	deprel	head_line	head_token
 48	7	queta	parataxis	48	1
 49	1	Guarda	root	0	0
 49	2	s'	mark	49	7
-49	3	alcun	nsubj	49	7
+49	3	alcun	obj	49	7
 49	4	di	case	49	5
 49	5	noi	nmod	49	3
 49	6	unqua	advmod	49	7
@@ -445,7 +445,7 @@ line	token	word	deprel	head_line	head_token
 61	6	per	case	61	8
 61	7	quella	det	61	8
 61	8	pace	obl	61	5
-62	1	che	nsubj	63	8
+62	1	che	obj	63	5
 62	2	dietro	case	62	4
 62	3	a'	case	62	4
 62	4	piedi	obl	63	8
@@ -458,7 +458,7 @@ line	token	word	deprel	head_line	head_token
 63	3	in	case	63	4
 63	4	mondo	obl	63	8
 63	5	cercar	xcomp	63	8
-63	6	mi	obj	63	5
+63	6	mi	iobj	63	8
 63	7	si	expl	63	8
 63	8	face	acl:relcl	61	8
 64	1	E	cc	64	3

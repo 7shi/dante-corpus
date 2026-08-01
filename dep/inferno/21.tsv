@@ -174,7 +174,7 @@ line	token	word	deprel	head_line	head_token
 26	2	veder	xcomp	25	8
 26	3	quel	obj	26	2
 26	4	che	obj	26	7
-26	5	li	obj	26	6
+26	5	li	iobj	26	6
 26	6	convien	acl:relcl	26	3
 26	7	fuggire	xcomp	26	6
 27	1	e	cc	27	5

@@ -973,7 +973,7 @@ line	token	word	deprel	head_line	head_token
 136	2	più	amod	136	3
 136	3	letizia	obl	136	7
 136	4	sì	advmod	136	7
-136	5	mi	obj	136	7
+136	5	mi	iobj	136	7
 136	6	si	expl	136	7
 136	7	nascose	root	0	0
 137	1	dentro	case	137	4
@@ -987,7 +987,7 @@ line	token	word	deprel	head_line	head_token
 138	2	così	advmod	138	6
 138	3	chiusa	advcl	138	6
 138	4	chiusa	conj	138	3
-138	5	mi	obj	138	6
+138	5	mi	iobj	138	6
 138	6	rispuose	conj	136	7
 139	1	nel	case	139	2
 139	2	modo	obl	138	6

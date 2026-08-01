@@ -1054,7 +1054,7 @@ line	token	word	deprel	head_line	head_token
 149	3	una	det	149	4
 149	4	puttana	nsubj	150	2
 149	5	sciolta	amod	149	4
-150	1	m'	obj	150	2
+150	1	m'	iobj	150	2
 150	2	apparve	root	0	0
 150	3	con	case	150	5
 150	4	le	det	150	5

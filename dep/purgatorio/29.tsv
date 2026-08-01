@@ -26,10 +26,10 @@ line	token	word	deprel	head_line	head_token
 5	3	salvatiche	amod	5	4
 5	4	ombre	obl	4	6
 5	5	disïando	advcl	4	6
-6	1	qual	obj	6	3
+6	1	qual	nsubj	6	3
 6	2	di	mark	6	3
 6	3	veder	xcomp	5	5
-6	4	qual	obj	6	6
+6	4	qual	nsubj	6	6
 6	5	di	mark	6	6
 6	6	fuggir	conj	6	3
 6	7	lo	det	6	8
@@ -256,7 +256,7 @@ line	token	word	deprel	head_line	head_token
 38	6	voi	obl	38	7
 38	7	soffersi	advcl	39	3
 39	1	cagion	nsubj	39	3
-39	2	mi	iobj	39	3
+39	2	mi	obj	39	3
 39	3	sprona	root	0	0
 39	4	ch'	mark	39	8
 39	5	io	nsubj	39	8
@@ -381,7 +381,7 @@ line	token	word	deprel	head_line	head_token
 56	3	Virgilio	obl	55	3
 56	4	ed	cc	56	7
 56	5	esso	nsubj	56	7
-56	6	mi	obj	56	7
+56	6	mi	iobj	56	7
 56	7	rispuose	conj	55	3
 57	1	con	case	57	2
 57	2	vista	obl	56	7

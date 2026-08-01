@@ -58,7 +58,7 @@ line	token	word	deprel	head_line	head_token
 8	5	che	mark	9	2
 8	6	i	det	8	7
 8	7	pensieri	nsubj	9	2
-9	1	mi	obj	9	2
+9	1	mi	iobj	9	2
 9	2	rimanessero	ccomp	8	4
 9	3	e	cc	9	4
 9	4	chinati	xcomp	9	2
@@ -923,9 +923,9 @@ line	token	word	deprel	head_line	head_token
 134	3	sei	nummod	134	5
 134	4	le	det	134	5
 134	5	lettere	obj	134	1
-134	6	che	nsubj	134	7
+134	6	che	obj	134	7
 134	7	'ncise	acl:relcl	134	5
-135	1	quel	obj	134	7
+135	1	quel	nsubj	134	7
 135	2	da	case	135	4
 135	3	le	det	135	4
 135	4	chiavi	obl	134	7

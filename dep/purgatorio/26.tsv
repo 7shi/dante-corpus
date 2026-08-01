@@ -355,7 +355,7 @@ line	token	word	deprel	head_line	head_token
 50	1	essi	nsubj	49	2
 50	2	medesmi	amod	50	1
 50	3	che	nsubj	50	6
-50	4	m'	iobj	50	6
+50	4	m'	obj	50	6
 50	5	avean	aux	50	6
 50	6	pregato	acl:relcl	50	1
 51	1	attenti	acl	50	1

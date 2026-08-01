@@ -1036,6 +1036,6 @@ line	token	word	deprel	head_line	head_token
 145	3	sola	amod	145	2
 145	4	di	case	145	5
 145	5	là	obl	145	8
-145	6	m'	obj	145	8
+145	6	m'	iobj	145	8
 145	7	è	aux	145	8
 145	8	rimasa	conj	142	2

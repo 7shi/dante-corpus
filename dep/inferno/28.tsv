@@ -363,7 +363,7 @@ line	token	word	deprel	head_line	head_token
 51	5	così	advmod	51	4
 51	6	com'	mark	51	9
 51	7	io	nsubj	51	9
-51	8	ti	obj	51	9
+51	8	ti	iobj	51	9
 51	9	parlo	advcl	51	4
 52	1	Più	advmod	52	2
 52	2	fuor	advmod	52	4

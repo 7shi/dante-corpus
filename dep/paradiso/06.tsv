@@ -583,12 +583,12 @@ line	token	word	deprel	head_line	head_token
 81	8	delubro	nsubj	81	3
 82	1	Ma	advmod	85	1
 82	2	ciò	nsubj	85	1
-82	3	che	nsubj	83	1
+82	3	che	obj	83	1
 82	4	'l	det	82	5
-82	5	segno	obj	83	1
+82	5	segno	nsubj	83	1
 82	6	che	nsubj	82	9
 82	7	parlar	obj	82	9
-82	8	mi	iobj	82	9
+82	8	mi	obj	82	9
 82	9	face	acl:relcl	82	5
 83	1	fatto	acl:relcl	82	2
 83	2	avea	aux	83	1

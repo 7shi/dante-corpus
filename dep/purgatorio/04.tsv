@@ -507,12 +507,12 @@ line	token	word	deprel	head_line	head_token
 71	4	onde	advmod	73	1
 71	5	la	det	71	6
 71	6	strada	nsubj	73	7
-72	1	che	nsubj	72	5
+72	1	che	obj	72	5
 72	2	mal	advmod	72	5
 72	3	non	advmod	72	5
 72	4	seppe	aux	72	5
 72	5	carreggiar	acl:relcl	71	6
-72	6	Fetòn	nsubj	72	4
+72	6	Fetòn	nsubj	72	5
 73	1	vedrai	conj	68	3
 73	2	come	mark	73	5
 73	3	a	case	73	4

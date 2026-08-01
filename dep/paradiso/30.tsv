@@ -630,7 +630,7 @@ line	token	word	deprel	head_line	head_token
 89	3	palpebre	nmod	88	8
 89	4	mie	det:poss	89	3
 89	5	così	advmod	89	7
-89	6	mi	obj	89	7
+89	6	mi	iobj	89	7
 89	7	parve	conj	82	2
 90	1	di	case	90	3
 90	2	sua	det:poss	90	3

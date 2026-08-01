@@ -631,7 +631,7 @@ line	token	word	deprel	head_line	head_token
 87	7	si	expl	87	8
 87	8	scerna	ccomp	87	1
 88	1	Ciò	obj	88	7
-88	2	che	nsubj	88	3
+88	2	che	obj	88	3
 88	3	narrate	acl:relcl	88	1
 88	4	di	case	88	6
 88	5	mio	det:poss	88	6

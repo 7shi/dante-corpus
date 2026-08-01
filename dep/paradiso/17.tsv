@@ -616,7 +616,7 @@ line	token	word	deprel	head_line	head_token
 87	7	mute	amod	87	6
 88	1	A	case	88	2
 88	2	lui	obl	88	4
-88	3	t'	nsubj	88	4
+88	3	t'	obj	88	4
 88	4	aspetta	root	0	0
 88	5	e	cc	88	8
 88	6	a'	case	88	8

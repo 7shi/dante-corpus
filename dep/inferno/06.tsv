@@ -418,7 +418,7 @@ line	token	word	deprel	head_line	head_token
 58	5	il	det	58	7
 58	6	tuo	det:poss	58	7
 58	7	affanno	nsubj	59	2
-59	1	mi	obj	59	2
+59	1	mi	iobj	59	2
 59	2	pesa	ccomp	58	3
 59	3	sì	advmod	59	2
 59	4	ch'	mark	59	8

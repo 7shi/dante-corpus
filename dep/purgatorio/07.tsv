@@ -340,7 +340,7 @@ line	token	word	deprel	head_line	head_token
 46	5	qua	advmod	46	4
 46	6	remote	xcomp	46	2
 47	1	se	mark	47	3
-47	2	mi	obj	47	3
+47	2	mi	iobj	47	3
 47	3	consenti	advcl	47	6
 47	4	io	nsubj	47	6
 47	5	ti	obj	47	6
@@ -663,7 +663,7 @@ line	token	word	deprel	head_line	head_token
 92	2	aver	aux	92	3
 92	3	negletto	obl	91	8
 92	4	ciò	obj	92	3
-92	5	che	nsubj	92	7
+92	5	che	obj	92	7
 92	6	far	xcomp	92	7
 92	7	dovea	acl:relcl	92	4
 93	1	e	cc	93	4

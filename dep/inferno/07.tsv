@@ -21,7 +21,7 @@ line	token	word	deprel	head_line	head_token
 4	2	per	case	4	3
 4	3	confortarmi	advcl	4	1
 4	4	Non	advmod	4	6
-4	5	ti	obj	4	6
+4	5	ti	iobj	4	6
 4	6	noccia	ccomp	4	1
 5	1	la	det	5	3
 5	2	tua	det:poss	5	3
@@ -396,7 +396,7 @@ line	token	word	deprel	head_line	head_token
 58	8	pulcro	amod	58	7
 59	1	ha	aux	59	2
 59	2	tolto	root	0	0
-59	3	loro	obj	59	2
+59	3	loro	iobj	59	2
 59	4	e	cc	59	5
 59	5	posti	conj	59	2
 59	6	a	case	59	8

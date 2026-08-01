@@ -120,7 +120,7 @@ line	token	word	deprel	head_line	head_token
 19	5	Vien	ccomp	20	2
 19	6	più	advmod	19	7
 19	7	tosto	advmod	19	5
-20	1	mi	obj	20	2
+20	1	mi	iobj	20	2
 20	2	disse	root	0	0
 20	3	tanto	advmod	21	6
 20	4	che	mark	21	6
