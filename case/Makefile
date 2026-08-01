@@ -9,6 +9,15 @@ all: case
 case:
 	uv run case.py $(CANTICLES) -m $(MODEL)
 
+# A prompt change invalidates every frozen chunk, and nothing in the artifact is *invalid*, so
+# `clean` (which drops only chunks holding a violation) removes nothing and `case` skips
+# everything. The regeneration therefore drops the artifacts first and then builds normally —
+# `--force` would restart from scratch on every resumed run, and this job is 1340 chunks. The
+# frozen column is committed, so `git checkout case/` restores it.
+regen:
+	rm -f $(foreach c,$(CANTICLES),$(c)/*.tsv)
+	uv run case.py $(CANTICLES) -m $(MODEL)
+
 check:
 	uv run case.py $(CANTICLES) --check
 
@@ -18,4 +27,4 @@ stats:
 clean:
 	uv run case.py $(CANTICLES) --clean
 
-.PHONY: all case check stats clean
+.PHONY: all case regen check stats clean

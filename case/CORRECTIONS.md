@@ -1284,3 +1284,78 @@ Layer-4 slice.
 **Every figure in this annex is now measured against a valid artifact again.** Step 5's two
 analysis sub-items — the oblique tail and the `locative` question — are closed, and what remains
 is the `morph/` merge.
+
+## Step 5 — the corrected build prompt, for the merge's blind regeneration *(2026-08-02)*
+
+**Assistant-side work only: the prompt is rewritten, no artifact was touched, and nothing has
+been regenerated yet.** `make -C case check` is still 0 hard over the frozen 13125 tokens /
+13189 values, and the 258 contradictions are the same 258. The regeneration itself is LLM-scale
+and therefore the user's, by the convention Phase 5 settled.
+
+### What it fixes, and nothing else
+
+The two shapes slice 3 counted, and only those. Both are word order, not case — the column reads
+a pronoun's *case* well and the *order of the clause* poorly:
+
+| shape | count | what the column did | the rule now added |
+|---|---|---|---|
+| the postposed subject | **78** | made a relative pronoun `nominative` whenever its clause put a noun after the verb | a relative pronoun is nominative **only** where its clause has no other subject; a noun postposed after the verb is that subject, and the relative pronoun is then the object. Plus the agreement check: a singular verb cannot take a plural relative as its subject |
+| the dative of possession | **24** | read the clitic `accusative` where the verb already carried an explicit object | a verb takes at most one direct object, so a clitic beside an object noun is dative — the ordinary dative of possession or of the person affected |
+
+A third rule was added for the same weakness seen from the other side (*ed el gridò*, *tal parve
+quelli* — a pronoun in a plainly nominative slot read `accusative`): a personal pronoun **after**
+its verb is still nominative when nothing else is the subject.
+
+A **second worked example** was added to the prompt, because the existing one teaches exactly the
+ambiguous shape and teaches only its nominative half — *che nel pensier rinova la paura*, where
+`che` is the subject and the postposed noun is the object. The new example is the other half.
+
+### Every illustration is a position the frozen column and `dep` already agree on
+
+This is the part that needed care. The obvious illustrations are the errors themselves — *le
+fredde membra che la notte aggrava*, *mi batté l'ali per la fronte* — and quoting those with the
+`dep`-side answer would pre-answer a **disputed** position inside the prompt. That is the
+manufacturing the blindness rule forbids ([PLAN.md](PLAN.md), *Independence*), one level up: the
+regeneration is supposed to be a measurement of whether a general rule moves the shape, and a
+prompt that names four of the contradictions makes those four agree trivially.
+
+So the illustrations were selected the other way round — from positions where the frozen `case`
+value and `dep`'s deprel **already agree**, found by sweeping the corpus for each shape:
+
+- postposed subject, `case` `accusative` × `dep` `obj`: **51 positions**; used *nel nome che sonò
+  la voce sola* (inferno 4:92), *che mena il vento, e che batte la pioggia* (inferno 11:71),
+  *l'anime di color cui vinse l'ira* (inferno 7:116).
+- postposed subject pronoun, `case` `nominative` × `dep` `nsubj`: **755 positions**; used *Non odi
+  tu la pieta del suo pianto* (inferno 2:106), *e poi comincia' io* (inferno 2:75).
+- dative of possession, `case` `dative` × `dep` `iobj` with a noun in the same line: **226
+  positions**; used *Li occhi mi sciolse* (inferno 9:73), *ch'ella mi fa tremar le vene e i polsi*
+  (inferno 1:90), *questa mi porse tanto di gravezza* (inferno 1:52).
+
+The second worked example is inferno 4:91–93, quoted with the frozen column's own six answers
+(`ciascun` nominative, `meco` ablative, `si` reflexive, `che` **accusative**, `fannomi` dative,
+`ciò` ablative) — one passage that carries the postposed subject, the fused verb+pronoun and the
+comitative at once, and every value in it is what the blind pass itself already produced.
+
+**The prompt therefore encodes no answer the column did not already give.** What it adds is the
+generalization the column failed to make on its own.
+
+### `make -C case regen`, and why `clean` is the wrong instrument here
+
+`--clean` drops only chunks holding a **violation**, and after a prompt change nothing in the
+artifact is invalid — so `make -C case clean && make -C case` would remove nothing and skip
+everything, which is not what step 3's rounds needed it for. The new `regen` target drops the
+artifacts and then builds normally; `--force` is deliberately not used, because it restarts from
+scratch on every resumed run and this job is 1340 chunks. The frozen column is committed, so
+`git checkout case/` is the undo.
+
+### What to measure afterwards, and what not to conclude
+
+The question the round answers is **whether the two shapes move**, not whether the contradiction
+total falls. Re-run `make -C case stats` against the current baseline — 258 contradictions / 40
+impossible pairings, `obj` 90% / `iobj` 97% / `nsubj` 99% — and count the two shapes directly, not
+the headline. A regenerated column that fixes 78 postposed subjects and introduces 30 new
+disagreements elsewhere is a better column and a worse number, exactly as slice 3 was.
+
+**Nothing licenses editing `dep/` from the new column without the same hand verification.** Step
+4's rate stands: outside the population where `skel` already dissents from `dep`, the `case`
+column was the wrong read 53% of the time.

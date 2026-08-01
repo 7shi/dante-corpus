@@ -39,7 +39,9 @@ What remains after that is the
 `morph/` merge itself — and the annex's own verdict is that a **blind regeneration of `case` under
 a corrected prompt** is the next instrument, not another Layer-4 slice. The column's two measured
 weaknesses are both prompt-fixable and both were recorded rather than patched: **194 `case`-side
-errors across the three slices, none rewritten.**
+errors across the three slices, none rewritten.** **The corrected prompt was written on
+2026-08-02** and the artifact was not touched; the regeneration it is for is the user's next
+run (`make -C case regen`). See *The next action* below.
 
 The vocabulary and scope are frozen and the code exists — [`case.py`](case.py) (build driver,
 `--check`/`--stats`/`--clean`), [`README.md`](README.md), [`Makefile`](Makefile),
@@ -157,6 +159,13 @@ make -C skel check          # expect 0 hard, 3635 soft
 make -C case check          # expect 0 hard  -- regenerated 2026-08-02
 ```
 
+**As of the close of 2026-08-02 the corrected build prompt is in `case/case.py` and *nothing has
+been regenerated with it*.** The artifact in the tree is still the one frozen at `0027494` and
+patched by that day's chunk regeneration, so every figure in this file describes the **old**
+column. The next session's first question is therefore whether the regeneration has been run: if
+`case/case.py` carries the word-order rules and the second worked example but `--stats` still
+reads 258 / 40, it has not.
+
 `case --stats` reads **258 contradictions / 40 impossible pairings** over 13125 tokens / 13189
 values (260 / 40 over 13112 / 13176 at step 4's close).
 
@@ -195,8 +204,44 @@ purgatorio 20:83 and took `skel` to **3635**. Full description in
   pronoun's case well and word order poorly, in two shapes now counted at corpus scale: it makes
   a relative pronoun nominative whenever the clause postposes a noun (78 instances), and it reads
   the dative of possession as accusative whenever the verb already carries an object (24). Both
-  are prompt problems. Regeneration is **LLM-scale work and therefore the user's**, by the
-  convention Phase 5 settled.
+  are prompt problems. **The corrected prompt is written (2026-08-02)** — three rules and a
+  second worked example, every illustration drawn from a position where the frozen column and
+  `dep` *already agree*, so the prompt pre-answers no disputed position; see
+  [`CORRECTIONS.md`](CORRECTIONS.md)'s *the corrected build prompt*. **The regeneration itself is
+  the user's**, by the convention Phase 5 settled:
+
+  ```bash
+  make -C case regen CANTICLES=inferno    # one shell per canticle, 3-way parallel
+  make -C case check                      # -> 0 hard
+  make -C case stats                      # against 258 contradictions / 40 impossible
+  ```
+
+  `regen` drops the artifacts and rebuilds; `clean` is the wrong instrument after a prompt change
+  (nothing in the artifact is *invalid*, so it would remove nothing). The question the round
+  answers is whether the **two shapes** move, not whether the total falls.
+
+  **It is the whole column, all 100 cantos, 1340 chunks — the same size as step 3's corpus pass,
+  and that is deliberate.** The two weaknesses were counted *from the join to `dep`*, so
+  regenerating only the chunks that match those shapes would select the generated population by a
+  `dep`-derived criterion, which is the manufacturing *Independence* forbids. It is also the only
+  way the before/after `--stats` are comparable. Nothing is lost by redoing it: the frozen column
+  is committed at `0027494`, so `git checkout case/` restores it and `git show HEAD:case/…` gives
+  the old rows for the diff.
+
+  **Smoke-test one canto first**, as step 3 did with Inferno 1 — that test is what caught the
+  missing `reflexive` value before 1340 calls were spent:
+
+  ```bash
+  cd case && rm -f inferno/04.tsv && uv run case.py inferno -c 4 -m google:gemma-4-31b-it
+  ```
+
+  Inferno 4 is the natural choice: it contains the new worked example's own passage (91–93) and
+  several postposed-subject relatives. Diff it against `git show HEAD:case/inferno/04.tsv` and
+  check that the changes are the two targeted shapes and not collateral drift.
+
+  **Resuming:** run `regen` **once** per canticle; if a run is interrupted, resume with the plain
+  build target (`make -C case CANTICLES=inferno`), which skips completed chunks. Re-running
+  `regen` would delete the progress.
 - **The `locative` question is now settled (2026-08-02): it is earned and stays**, so the
   regeneration keeps all eight values and the vocabulary does not move. By deprel it opens no slot
   — the containment test that acquitted `genitive` fails it outright — but that is the wrong test

@@ -184,6 +184,16 @@ blindness is the design constraint the annex's whole value rests on ([PLAN.md](P
 *Independence*): it is what makes this a genuine **third independent read** that can indict Layer 4,
 rather than an artifact manufactured to close Layer-5 violations.
 
+**The rules carry two word-order corrections** added for the `morph/` merge's blind regeneration,
+against the only two error shapes step 4 counted at corpus scale
+([CORRECTIONS.md](CORRECTIONS.md), *Step 4, slice 3*): a relative pronoun is nominative **only**
+when its clause has no other subject, so a noun postposed after the verb makes it accusative
+(78 instances read the other way); and a verb takes at most one direct object, so a clitic beside
+an explicit object noun is the dative of possession, not accusative (24 instances). Both are
+illustrated from corpus lines **where the frozen column and `dep` already agree**, never from a
+contradiction — pre-answering a disputed position in the prompt is the same manufacturing the
+blindness rule forbids, one level up.
+
 Alignment is a forward walk (`case.align_unit`): the expected sequence of positions is already
 known exactly from Layer 2, so each expected position consumes the next table row naming it, and
 rows naming nothing expected are dropped. A position no row reaches is left empty, which
@@ -278,6 +288,7 @@ make -C case MODEL=google:gemma-4-31b-it
 make -C case check                     # validate artifacts, no model call
 make -C case stats                     # census + the post-freeze dep adjudication
 make -C case clean                     # drop chunks with violations
+make -C case regen CANTICLES=inferno   # prompt change: drop the artifacts, then rebuild
 
 uv run case/case.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [-n]
 uv run case/case.py inferno -m MODEL --log case.inferno.log   # parallel shells: own log each

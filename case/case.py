@@ -61,6 +61,22 @@ Rules:
 * Use vocative for a pronoun addressing the hearer directly, not filling a slot of the verb
   (e.g. "O **tu** che ..."). A pronoun that is the subject of the verb is nominative even
   when the sentence is addressed to someone.
+* Word order does not decide case, and this poem inverts it constantly. Decide from the
+  verb's agreement and from which participants are already accounted for, never from what
+  comes first.
+  - A relative pronoun is nominative only when its clause has no other subject. If a noun
+    or pronoun after the verb is that subject, the relative pronoun is the object instead:
+    "nel nome che sonò la voce sola" (che = accusative, la voce sola is the subject),
+    "che mena il vento, e che batte la pioggia" (both che = accusative), "l'anime di color
+    cui vinse l'ira" (cui = accusative). Check agreement too: a singular verb cannot have a
+    plural relative pronoun as its subject.
+  - Conversely a personal pronoun that follows its verb is still nominative when nothing
+    else is the subject: "Non odi tu la pieta del suo pianto", "e poi comincia' io".
+* A verb takes at most one direct object. Where the clause already has a noun phrase as its
+  direct object, a clitic beside it is dative, not accusative — the ordinary dative of
+  possession or of the person affected: "Li occhi mi sciolse", "ch'ella mi fa tremar le vene
+  e i polsi", "questa mi porse tanto di gravezza". The object is usually a body part or a
+  belonging, and usually sits in the same line as the clitic.
 * A word may fuse two pronouns (e.g. gliel'). Give one case per pronoun, in reading order,
   joined with + (e.g. dative+accusative).
 * A word may fuse a verb and a pronoun (e.g. andarmi, dissemi). Give the case of the
@@ -80,6 +96,27 @@ Example output:
 |---|---|---|
 | 2 | mi | reflexive |
 | 6 | che | nominative |
+
+Here the clause of "che" (line 6) has no other subject — "la paura" is what it renews — so
+"che" is nominative. Compare a clause that does have one:
+
+Example input:
+91 Però che **ciascun** **meco** **si** convene
+92 nel nome **che** sonò la voce sola,
+93 **fannomi** onore, e di **ciò** fanno bene».
+
+Example output:
+| Line | Word | Case |
+|---|---|---|
+| 91 | ciascun | nominative |
+| 91 | meco | ablative |
+| 91 | si | reflexive |
+| 92 | che | accusative |
+| 93 | fannomi | dative |
+| 93 | ciò | ablative |
+
+"la voce sola" is the subject of "sonò", so "che" is its object; "fannomi onore" already has
+"onore" as its object, so the fused "mi" is dative.
 """
 
 RETRIES = 2

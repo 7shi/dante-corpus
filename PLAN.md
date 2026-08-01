@@ -22,7 +22,9 @@ comitative family, 41 canto artifacts, `skel` 3634 → 3633 — and the chunk re
 `case/` **has since been run, taking `case --check` back to 0 hard** over 13125 tokens / 13189
 values. Step 5's `locative` question is settled (it is earned and stays), and **Layer 3's stale
 clitic mentions closed the same day** (5 hard / 96 soft → **0/0**, `skel` 3633 → 3635), so the one
-open item is **the `morph/` merge**. **A session picking this up should read *Handing off* below
+open item is **the `morph/` merge**, whose **corrected build prompt was written on 2026-08-02**
+and whose next action is the user's blind regeneration (`make -C case regen`).
+**A session picking this up should read *Handing off* below
 first** — it carries the state check, what is closed, the one open item and what must not be done;
 then [`case/PLAN.md`](case/PLAN.md).
 
@@ -101,7 +103,7 @@ layers and the tests were re-measured and only `case` changed — deltas in
 |---|---|---|---|
 | 1 | ~~**Layer 3's stale clitic mentions**~~ | assistant | **done 2026-08-02 — `np --check` 5 hard / 96 soft → 0/0.** `--fix-clitics` is now symmetric (94 mentions added, 6 dropped, 43 cantos), the hard check admits only a fused host's *pronoun* lemma components, and the 2 non-clitic soft were fixed by hand. `skel` 3633 → **3635**, both at purgatorio 20:83. Described immediately below |
 | 2 | ~~**Settle `locative`**~~ | assistant | **done 2026-08-02 — it is earned and stays.** No artifact moved and the vocabulary does not change. By deprel it opens no slot, but that is the wrong test: Layer 2's `lemma` collapses `locative`/`accusative`/`dative`/`reflexive` onto one `ci`/`vi` form, so this column is the only record of which reading a given `vi` has. The round recommended folding it first and was wrong — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the `locative` question* |
-| 3 | **The `morph/` merge itself** | mostly user | its first item is a **blind regeneration of `case` under a corrected prompt**, fixing the two weaknesses slice 3 counted (the postposed subject, 78; the dative of possession alongside an explicit object, 24). The assistant can write the prompt; the calls are the user's. See [`case/PLAN.md`](case/PLAN.md)'s *The next action* |
+| 3 | **The `morph/` merge itself** | user next | its first item is a **blind regeneration of `case` under a corrected prompt**, fixing the two weaknesses slice 3 counted (the postposed subject, 78; the dative of possession alongside an explicit object, 24). **The prompt was written 2026-08-02**; the calls are the user's — `make -C case regen`. See [`case/PLAN.md`](case/PLAN.md)'s *The next action* |
 
 The case annex's steps 1–4 are all complete — the blind corpus pass finished 2026-07-31 and is
 frozen, the Layer-4 adjudication round closed 2026-08-01 with a verdict on every candidate, and
@@ -220,6 +222,12 @@ If `case` reads 25 hard the regeneration is not in the tree; if `np` reads 5 har
 clitic reconciliation is not; if `skel` reads 3633 that same reconciliation is not, 3634 means the
 2026-08-02 `morph/` round is missing too, and 3469 means slice 3 is.
 
+**The corrected `case` build prompt is in the tree and has not been run.** `case/case.py`'s
+`SYSTEM_PROMPT` carries the three word-order rules and the second worked example added on
+2026-08-02; the artifact under `case/` is still the pre-prompt column, so the figures above
+describe it and not what the regeneration will produce. If `--stats` still reads 258 / 40, the
+regeneration has not happened — it is the open item, and it is the user's to run.
+
 ### What closed on 2026-08-02, and is not to be re-opened
 
 1. **The `morph/` correction round** — 10 hand-verified singletons plus the 58-token comitative
@@ -254,17 +262,35 @@ work is splitting one form into several readings.
 
 | # | item | who | the first concrete action |
 |---|---|---|---|
-| 1 | **The case annex's `morph/` merge** | mostly user | write the corrected build prompt, then the user runs a **blind regeneration of `case`**. Two measured weaknesses to fix, both word-order rather than case: the postposed subject (**78**) and the dative of possession alongside an explicit object (**24**). The merge must also settle the **fused-token mismatch** — `case` annotates a pronoun and `dep` a token, and five contradictions are nothing but that (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*) |
+| 1 | **The case annex's `morph/` merge** | user next | **the corrected build prompt is written (2026-08-02)**; the next action is the user's **blind regeneration of `case`** — `make -C case regen`. The two measured weaknesses it targets are word-order rather than case: the postposed subject (**78**) and the dative of possession alongside an explicit object (**24**). The merge must also settle the **fused-token mismatch** — `case` annotates a pronoun and `dep` a token, and five contradictions are nothing but that (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*) |
 
 This is the annex's own next step, and nothing else is outstanding. Concretely, in order:
 
-1. **Assistant — write the corrected build prompt** in `case/case.py`, against the two counted
-   weaknesses (both word order, not case): the postposed subject and the dative of possession
-   alongside an explicit object. Do not touch the vocabulary: all eight values stay, `locative`
-   included.
-2. **User — the blind regeneration**: `make -C case clean && make -C case`, then
-   `make -C case check` to 0 hard. LLM-scale, 3-way parallel, the same convention as
-   `make -C skel fix`.
+1. ~~**Assistant — write the corrected build prompt**~~ *(done 2026-08-02)* — `case/case.py`'s
+   `SYSTEM_PROMPT` gained three word-order rules (the postposed subject as a relative pronoun's
+   subject; the postposed *pronoun* subject, the same weakness from the other side; one direct
+   object per verb, so a clitic beside an object noun is the dative of possession) and a **second
+   worked example**, because the existing one teaches only the nominative half of the ambiguous
+   shape. The vocabulary did not move: all eight values stay, `locative` included. **Every
+   illustration is a corpus position where the frozen column and `dep` already agree** — quoting
+   the errors themselves would pre-answer a disputed position inside the prompt, which is the
+   manufacturing the blindness rule forbids. See
+   [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the corrected build prompt*.
+2. **User — the blind regeneration**: `make -C case regen CANTICLES=inferno` (one shell per
+   canticle, 3-way parallel), then `make -C case check` to 0 hard. LLM-scale, the same convention
+   as `make -C skel fix`. `regen` is a **new target**: it drops the artifacts and rebuilds, where
+   `clean` would remove nothing — after a prompt change no chunk holds a *violation*. Three things
+   a session picking this up must know:
+   - **It is the whole column, 1340 chunks, the size of step 3's corpus pass.** Regenerating only
+     the chunks matching the two shapes would select the generated population by a `dep`-derived
+     criterion — the manufacturing *Independence* forbids — and would make the before/after
+     `--stats` incomparable. The frozen column is committed, so `git checkout case/` is the undo
+     and `git show HEAD:case/…` gives the old rows for the diff.
+   - **Smoke-test one canto first** (`cd case && rm -f inferno/04.tsv && uv run case.py inferno
+     -c 4 -m google:gemma-4-31b-it`), as step 3 did with Inferno 1 — that test is what caught the
+     missing `reflexive` value before the corpus pass was spent.
+   - **Resume with the plain build target, not `regen`.** `regen` deletes; re-running it after an
+     interruption throws the run away.
 3. **Assistant — re-measure and diff.** `make -C case stats` against the current 258/40 baseline;
    the question the round answers is whether the two prompt fixes move those two shapes, not
    whether the total falls.
@@ -283,6 +309,11 @@ above before touching them.
   through 194 recorded `case`-side errors across step 4's three slices, and the corrected column
   comes from the open item's blind regeneration, never from a hand edit. The 258 remaining contradictions
   are measured residue with a verdict, not unfinished work.
+- **Do not narrow the regeneration to the chunks that show the two weaknesses**, and do not quote
+  a disputed position with its `dep`-side answer in the build prompt. Both select the generated
+  column by a `dep`-derived criterion, which is the failure mode *Independence* exists to
+  prevent. The prompt written on 2026-08-02 draws every illustration from positions where `case`
+  and `dep` **already agree**, for exactly this reason.
 - **Do not run another Layer-4 slice over them.** All 510 original candidates have a verdict, and
   the two slices that sampled this configuration found `case` was the wrong read 24% and 53% of
   the time. The next instrument is the regeneration.
