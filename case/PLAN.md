@@ -3,7 +3,8 @@
 ## Status
 
 **Step 4 is complete. All three slices are done and every one of the 510 adjudication candidates
-has a verdict.** All 100 cantos, 13112 pronoun tokens, 13176 case values, frozen since `0027494`.
+has a verdict.** All 100 cantos, frozen since `0027494` — 13112 pronoun tokens / 13176 case values
+then, **13125 / 13189** after the 2026-08-02 `morph/` round and its chunk regeneration.
 Across the three slices the round edited **215 positions / 270 rows** in `dep/`, with
 `dep --check` at 0/0 throughout and the `case/` artifact never touched.
 
@@ -21,13 +22,20 @@ candidates as well. See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 3* a
 [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
 
 Agreement with `dep` is now **90%** on `obj`, **96%** on `iobj`, **99%** on `nsubj`, and the
-contradiction list is **260** (was 462 before step 4).
+contradiction list is **258** (was 462 before step 4; 260 at step 4's close, and the
+regeneration below re-answered two positions in agreement with `dep`).
 
 **Step 5's owed `morph/` correction round landed on 2026-08-02** — 10 hand-verified singletons and
 the 58-token comitative family, in
 [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md). It moved the pronoun scope to **13125 tokens
-/ 13189 values**, which leaves `case --check` at **25 hard over 20 lines**, all of them `[count]`
-mismatches awaiting a user-run regeneration of those chunks. What remains after that is the
+/ 13189 values**, which left `case --check` at 25 hard over 20 lines, all of them `[count]`
+mismatches. **That regeneration has been run and `--check` is back to 0 hard** — the deltas are in
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *the chunk regeneration the `morph/` round owed*; the gain is
+almost all `ablative` (1805 → 1819), the newly in-scope comitatives, and `genitive`/`locative` did
+not move at all. **Step 5's other open sub-item, the
+`locative` question, was settled the same day: it is earned and stays** — analysis only, no
+artifact moved and no vocabulary change for the merge to carry.
+What remains after that is the
 `morph/` merge itself — and the annex's own verdict is that a **blind regeneration of `case` under
 a corrected prompt** is the next instrument, not another Layer-4 slice. The column's two measured
 weaknesses are both prompt-fixable and both were recorded rather than patched: **194 `case`-side
@@ -146,11 +154,11 @@ make -C morph check         # expect 0 hard, 0 soft
 make -C np check            # expect 5 hard, 96 soft -- see below, NOT a new break
 make -C dep check           # expect 0 hard, 0 soft
 make -C skel check          # expect 0 hard, 3633 soft
-make -C case check          # expect 25 hard -- the 2026-08-02 morph round, see below
+make -C case check          # expect 0 hard  -- regenerated 2026-08-02
 ```
 
-`case --stats` needs a valid artifact, so it does not run until those 25 are regenerated; before
-the morph round it read 260 contradictions / 40 impossible pairings.
+`case --stats` reads **258 contradictions / 40 impossible pairings** over 13125 tokens / 13189
+values (260 / 40 over 13112 / 13176 at step 4's close).
 
 If `skel` reads 3469, slice 3 is not in the tree; if it reads 3634 and `case` reads 0 hard, the
 `morph/` round is not.
@@ -166,7 +174,7 @@ counts and the reason the choice of instrument is left open are in
 
 ### What step 4 settled, so none of it is re-litigated
 
-1. **All 510 candidates have a verdict.** The 260 contradictions that remain are not unfinished
+1. **All 510 candidates have a verdict.** The 258 contradictions that remain are not unfinished
    work; they are the measured residue, and 53% of the sample taken from them was the `case`
    column being wrong, not Layer 4.
 2. **The artifact stays frozen.** Asked and answered in slice 1, and held through 194 recorded
@@ -187,9 +195,13 @@ counts and the reason the choice of instrument is left open are in
   the dative of possession as accusative whenever the verb already carries an object (24). Both
   are prompt problems. Regeneration is **LLM-scale work and therefore the user's**, by the
   convention Phase 5 settled.
-- **The `locative` question**, left open on purpose: by deprel it is `obl`-dominant exactly as
-  `ablative` is, so whether "place" is a distinct slot or a distinct meaning of one is undecided.
-  `genitive` is earned and `ablative` is earned; see *The three parked questions* below.
+- **The `locative` question is now settled (2026-08-02): it is earned and stays**, so the
+  regeneration keeps all eight values and the vocabulary does not move. By deprel it opens no slot
+  — the containment test that acquitted `genitive` fails it outright — but that is the wrong test
+  here: **Layer 2's `lemma` collapses `locative`/`accusative`/`dative`/`reflexive` onto the same
+  `ci`/`vi` form**, so this column is the only record of whether a given `vi` means *there* or *to
+  you*. The round reached the opposite verdict first; the refutation and the guard against
+  repeating it are in [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the `locative` question*.
 - **The fused-token problem**, which a merge into `morph/*.tsv` would finally force: `case`
   annotates a pronoun and `dep` a token, and five contradictions are nothing but that mismatch
   (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*;
@@ -206,7 +218,7 @@ it was reported as. The comitatives turned out to be **58 tokens under 34 distin
 the "four different ways" the report said, and are normalized to `<pronoun>+con` /
 `pronoun+preposition`.
 
-**It leaves `case/` at 25 hard and that is the expected handoff, not a break.** The scope this
+**It left `case/` at 25 hard — the expected handoff, not a break, and now closed.** The scope this
 column derives from `morph` moved — **13112 → 13125 tokens, 13176 → 13189 values** — so 20 lines
 now need a different number of case values. Every one of the 25 is a `[count]` mismatch; none is
 the model getting the Italian wrong. Closing them is `make -C case clean` then `make -C case`,
@@ -310,9 +322,15 @@ Measurements in [`CORRECTIONS.md`](CORRECTIONS.md)'s *fourth run and the freeze*
   not the word forms. **`ablative` (1805)** is `obl` at 82% — the prepositional oblique.
   **`genitive` (267) is earned**: 189 of it (71%) is adnominal (`nmod` 139, `det:poss` 50), and
   `det:poss` is a slot `ablative` fills **zero** times — `lor danno`, `il senso lor`, `le gambe
-  loro` are possessive determiners, not obliques. **`locative` (81) stays open**: by deprel it
-  is `obl`-dominant exactly as `ablative` is, so whether "place" is a distinct slot or a distinct
-  meaning of the same slot is undecided; settle it at the `morph/` merge. `vocative` (30) is
+  loro` are possessive determiners, not obliques. **`locative` (81) is earned** (settled
+  2026-08-02) — **but on different grounds, and the deprel test gets it wrong.** By deprel it
+  opens no slot: there is no relation `locative` fills that `ablative` does not, and its 2%
+  adposition rate against `ablative`'s 74% is a clitic-vs-tonic confound that vanishes against
+  `ablative`'s own bare clitic `ne`. What earns it is that **Layer 2's `lemma` collapses the
+  readings of its forms**: lemma `vi` spans `locative` 44 / `accusative` 21 / `dative` 15 /
+  `reflexive` 4, lemma `ci` spans five values, and `ci`/`vi` carry `ablative` zero times — so
+  whether a given `vi` is *there* or *to you* is recorded nowhere else in the stack. The round
+  recommended folding it first and was wrong. `vocative` (30) is
   frozen-but-unearned — correct and harmless, but argued from the poem's rhetoric rather than a
   count. `reflexive`, the other value added rather than measured, is vindicated at 1961 — 15% of
   the column, and mistagging it was what the Inferno 1 smoke test caught.

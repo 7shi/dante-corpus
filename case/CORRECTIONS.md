@@ -1039,3 +1039,248 @@ list is 260 positions, and the annex's own reading of them is that they are domi
 sampled this configuration `case` was the wrong read 24% and 53% of the time against 11% inside
 the `skel`-flagged intersection. Re-opening them is not the next instrument; a blind regeneration
 of `case` under a corrected prompt, at the `morph/` merge, is.
+
+## Step 5 — the `locative` question, 2026-08-02
+
+The last of the three parked questions, and the one the tail analysis left open on purpose:
+**is `locative` (81) a distinct slot, or a distinct meaning of `ablative` (1805)?** The verdict
+is **`locative` is earned and stays** — but the round reached the opposite verdict first, on a
+containment test and a minimal pair that turned out to be an artifact, and the reversal is the
+useful part. Both are recorded below in the order they happened.
+
+### How it was measured, and against which tree
+
+Measured on 2026-08-02 **while a user-run `make -C case clean && make -C case` regeneration was in
+flight** — the 25 hard the step-5 `morph/` round left. A working-tree census would have
+undercounted, so every figure below is read from `git show HEAD:case/<canticle>/NN.tsv`, i.e. the
+frozen artifact at `0027494`, joined to the working tree's `dep/` and `morph/`. The census
+reproduces exactly: **13176 values over 13112 tokens, `ablative` 1805, `genitive` 267,
+`locative` 81**. Nothing here needs re-measuring after the regeneration; what the regeneration
+moves is the *scope* (13112 → 13125 tokens), which can shift these counts by a few rows and
+cannot change a containment result of this shape. Scripts were throwaway, as every round's are.
+
+**No artifact was touched.** As with the rest of the tail: no rows were rewritten.
+
+### The criterion, and the trap it has to avoid
+
+The criterion is the one the `instrumental` rejection established: *a value earns its place when
+it changes the **slot** the pronoun fills, not what the oblique **means***. The trap is recorded
+above in *The subset argument was wrong* — that round argued from **word forms** (every form
+carrying `genitive` also carries `ablative`, so fold it) and was wrong, because form overlap is
+the phenomenon a case column exists to record. `locative` was **acquitted by the mirror image of
+that same bad argument**: its forms (`vi`, `v'`, `ci`, `c'`) never carry `ablative`. Both the
+conviction and the acquittal were form arguments. This round uses deprels and rows only.
+
+### First measurement, and why it does not decide
+
+The tail table already showed `locative` is `obl`-dominant exactly as `ablative` is. One column
+does separate them sharply — whether the pronoun governs an adposition (a `case` child in `dep`):
+
+| | `ablative` 1805 | `genitive` 267 | `locative` 81 |
+|---|---|---|---|
+| has a `case` child | **74%** | 58% | **2%** |
+
+That looks decisive and is not. It is a **clitic-vs-tonic confound**: `ablative`'s mass is tonic
+(`me` 183, `sé` 120, `lui` 115, `noi` 110, `te` 88) and a tonic oblique needs a preposition to
+appear at all, while `locative` is 79/81 the bare clitic `ci`/`vi`. The comparison has to be made
+against `ablative`'s **own bare clitic**, which is `ne` — Italian's other adverbial clitic, and
+the corpus tags it `ablative` 283 times.
+
+### The controlled comparison — the profiles converge
+
+| deprel | `ablative` +adp (1328) | `ablative` bare `ne` (283) | `locative` (81) |
+|---|---|---|---|
+| `obl` | 90.1% | 51.9% | **55.6%** |
+| `obj` | 1.8% | 18.4% | 6.2% |
+| `expl` | 0% | 8.1% | **9.9%** |
+| `iobj` | 0.4% | 2.1% | 8.6% |
+| `advmod` | 0.1% | 1.8% | 8.6% |
+| `root` | 0% | 2.8% | 6.2% |
+| `nmod` | 6.6% | 0.7% | **0%** |
+
+Split `ablative` on the confound and the adposition gap disappears (bare `ne` is 0%, as
+`locative` is 2%), and `locative`'s profile lands on the bare-`ne` column, not the `+adp` one —
+`obl`-led with a real `expl` tail, which is what a clitic filling an oblique slot looks like.
+
+### The containment test — the same test `genitive` passed
+
+The question `genitive` was acquitted by was: **is there a slot this value fills that `ablative`
+fills zero times?** For `genitive` the answer was `det:poss` — 50 rows, 18.7% of it, and
+`ablative` fills it 0 times out of 1805. That is why `genitive` stands.
+
+Run the identical test on `locative`:
+
+```
+locative deprels:              advmod, conj, expl, iobj, mark, obj, obl, root, xcomp
+in locative but NOT ablative:  (none)
+in genitive  but NOT ablative:  attr
+```
+
+**Every one of `locative`'s nine slots is a slot `ablative` also fills** — `expl` 26, `advmod` 7,
+`iobj` 12, `obj` 91, `root` 8, `conj` 21, `xcomp` 10, `mark` 8, `obl` 1481. The containment is
+total, and it is not a small-sample artifact: `locative`'s three most *distinctive* deprels by
+share (`expl` 9.9%, `advmod` 8.6%, `iobj` 8.6%) are all ones bare `ne` occupies too. There is no
+`det:poss` here. `locative` opens no slot.
+
+
+### The first verdict was *fold*, and it was wrong
+
+**That is where this round's first analysis stopped, and it recommended folding `locative` into
+`ablative`.** The user's objection is what broke it: *for a form like `vi`, whether it is locative
+changes the reading of the token itself.* It does, and the containment test above cannot see it.
+
+Two things were wrong.
+
+**1. The "minimal pair" was an artifact of collapsing a fused cell.** The claim was that *Ora
+**cen** porta l'un de' duri margini* (inf 15:1) is `ablative` while ***cen** porta la virtù di
+quella corda* (par 1:125) is `locative` — same form, same verb, same deprel — so the boundary
+could not be structural. The raw cells say otherwise:
+
+```
+inf 15:1     cen    accusative+ablative
+par  1:125   cen    locative+ablative
+```
+
+`cen` is `ci`+`ne`, and the measuring script kept a token if *any* component was locative. **The
+`ne` component is `ablative` in both.** The component that differs is `ci`, and it differs because
+the reading of `ci` differs — "carries **us**" against "carries [us] **there**". The row was
+evidence *for* the value, printed as evidence against it. Re-run over single-value cells only, 26
+triples survive covering 36 of the 81 rows, and **not one of them is the same word form**: they
+are `locative` on `ci`/`vi` beside `ablative` on `ne`/`me`/`lui`. They show the two values share
+syntactic slots, which the containment test had already said.
+
+**2. Containment was the wrong test for this value.** The criterion — *a value earns its place
+when it changes the slot the pronoun fills, not what the oblique means* — was written to reject
+`instrumental`, where the two labels name **one reading of one token**. `locative` is not that
+shape. Cross-tabulate the bare `ci`/`vi` tokens in scope against Layer 2's `lemma`:
+
+| | `vi`/`v'`/`ve` (101) | `ci`/`c'`/`ce` (129) |
+|---|---|---|
+| `locative` | 46 — lemma `vi` 44, **`voi` 2** | 22 — lemma `ci` 21, `che` 1 |
+| `accusative` | 26 — lemma `vi` 21, `voi` 5 | 33 — lemma `ci` 29, `che` 4 |
+| `dative` | 25 — lemma `vi` 15, `voi` 10 | 24 — lemma `ci` 24 |
+| `reflexive` | 4 — lemma `vi` 4 | 15 — lemma `ci` 15 |
+| `nominative` | — | 35 — lemma `che` 30, `ci` 5 |
+| `ablative` | **0** | **0** |
+
+**Layer 2's lemma does not carry the distinction.** The lemma `vi` spans `locative` 44,
+`accusative` 21, `dative` 15 and `reflexive` 4; the lemma `ci` spans `locative` 21, `accusative`
+29, `dative` 24, `reflexive` 15, `nominative` 5. Lemmatization returns the form, not the reading.
+So the `case` column's `locative` is **the only place in the whole stack** that records whether a
+given `vi` means *there* or *to you* — a place or the addressee. That is not "what the oblique
+means"; it is which referent class the pronoun belongs to, and it is the same shape of question as
+the accusative-vs-dative clitic this entire annex was built to answer.
+
+The sharpest rows are the two where `case` says `locative` and Layer 2's lemma says `voi`:
+
+```
+par 22:40   vi   obl   e quel son io che sù vi portai prima
+par 32:67   vi   obl   E ciò espresso e chiaro vi si nota
+```
+
+Those are the annex working as designed — a third read dissenting from Layer 2 about what the
+token *is*. Folding `locative` deletes the dissent along with the value.
+
+**The recoverability argument does not save the fold either.** One could answer that nothing is
+lost, because `ci`/`vi` carry `ablative` **zero** times, so an `ablative` on a `ci`/`vi` would
+still uniquely mark the place reading. That is a **word-form argument** — precisely the class of
+argument *The subset argument was wrong* rules inadmissible for this question. Folding a value and
+then invoking form distribution to claim the information survives is the same error twice in one
+paragraph.
+
+### Verdict — `locative` is earned, and stays
+
+**Fold nothing.** All three of the tail's values stand, for three different reasons:
+
+| | why it stands |
+|---|---|
+| `ablative` 1805 | the prepositional oblique; `obl` at 82%, 74% governing an adposition |
+| `genitive` 267 | opens a **slot** `ablative` never fills — `det:poss`, 50 rows |
+| `locative` 81 | opens no slot, but is the **only** record of which reading a `ci`/`vi` token has; Layer 2's lemma collapses `locative`/`accusative`/`dative`/`reflexive` onto one form |
+
+`vocative` (30) remains frozen-but-unearned, argued from the poem's rhetoric rather than a count —
+it is now the only value in that position. `reflexive` (1961) is vindicated. **No rows were
+rewritten**, and none should be: the `morph/` merge's blind regeneration keeps all eight values,
+and `locative` is not to be dropped from `CASES` or aliased onto `ablative`.
+
+### The lesson — the fourth time, and the same shape
+
+*The subset argument was wrong* recorded this annex reaching a verdict from a summary statistic
+without looking at what the rows do. This round did look at rows — and still repeated the error,
+because **it looked at the wrong rows**. The comparison was `locative` against `ablative`,
+which is the question as posed; the question that decides it is `locative` against **the other
+values on its own word forms**, which is where the ambiguity `vi` actually carries lives. A
+containment test over deprels can only ever answer "does this value open a slot", and for a value
+whose work is disambiguating *one form into several readings*, that is not the question.
+
+The concrete guard, for the next value that comes up for review: before folding value *V*, print
+the cross-tab of **V's word forms against every value they carry**, not only V against its
+proposed parent. If the forms are shared across several values and no other layer separates them,
+V is doing disambiguation work and folding it destroys information, whatever its deprels look
+like.
+
+## Step 5 — the chunk regeneration the `morph/` round owed, 2026-08-02
+
+The 25 hard the 2026-08-02 `morph/` round left were closed by a user-run
+`make -C case clean && make -C case`. **`--check` is back to 0 hard**, `--stats` runs again, and
+this section records the deltas the blocking item owed.
+
+### The five layers, and the tests
+
+| check | before the regeneration | after |
+|---|---|---|
+| `uv run pytest -q` | 138 passed | **138 passed** |
+| `make -C morph check` | 0 hard, 0 soft | **0 hard, 0 soft** |
+| `make -C np check` | 5 hard, 96 soft | **5 hard, 96 soft** (the open defect, unmoved) |
+| `make -C dep check` | 0 hard, 0 soft | **0 hard, 0 soft** |
+| `make -C skel check` | 0 hard, 3633 soft | **0 hard, 3633 soft** |
+| `make -C case check` | **25 hard** | **0 hard** |
+
+Nothing moved outside `case/`, which is what a `[count]`-mismatch regeneration should look like:
+the 20 lines needed a different *number* of case values, not different readings, so no other
+layer's input changed.
+
+### The census, before and after
+
+| value | frozen (`0027494`) | after | Δ |
+|---|---|---|---|
+| `nominative` | 5620 | 5621 | +1 |
+| `accusative` | 2003 | 1999 | −4 |
+| `reflexive` | 1961 | 1962 | +1 |
+| `ablative` | 1805 | **1819** | **+14** |
+| `dative` | 1409 | 1410 | +1 |
+| `genitive` | 267 | 267 | — |
+| `locative` | 81 | 81 | — |
+| `vocative` | 30 | 30 | — |
+| **tokens / values** | 13112 / 13176 | **13125 / 13189** | +13 |
+
+The scope moved exactly as predicted. **`ablative` takes almost all of the gain**, and it is the
+comitative family: the `morph/` round normalized `meco`/`teco`/`seco`/`nosco`/`vosco` to
+`<pronoun>+con` / `pronoun+preposition`, which `--stats` now reports as 58 tokens under that `pos`,
+and a comitative is an ablative — the reading `_CASE_ALIASES` already anticipated by mapping
+`comitative` onto `ablative`. The new column agrees with the alias table it never saw.
+
+**`genitive` and `locative` did not move at all**, so the tail analysis in the section above —
+measured from `git show HEAD:` while this regeneration was in flight — needs no revision. Both
+were re-run against the regenerated artifact and reproduce: `locative`'s deprels are still
+`obl` 45 / `expl` 8 / `advmod` 7 / `iobj` 7 / `root` 5, and the `ci`/`vi` cross-tab against Layer
+2's `lemma` is unchanged but for one `ci` `nominative` row (35 → 34). The verdict stands.
+
+### The join to `dep`
+
+| `dep` | reads as | agree | contradict | rate | at step 4's close |
+|---|---|---|---|---|---|
+| `obj` | `accusative` | 1683 | 178 | 90% | 1685 / 178, 90% |
+| `iobj` | `dative` | 756 | 27 | **97%** | 755 / 28, 96% |
+| `nsubj` | `nominative` | 5131 | 53 | 99% | 5130 / 54, 99% |
+
+**258 contradictions, 40 impossible pairings** (from 260 / 40). The two that left the list are
+regeneration effects, not new adjudication: the corrected chunks happened to re-answer two
+positions in agreement with `dep`. This is the residue step 4 measured, unchanged in substance —
+and step 4's verdict on it stands: it is dominated by the `case` column's word-order weakness, and
+the next instrument is the merge's blind regeneration under a corrected prompt, not another
+Layer-4 slice.
+
+**Every figure in this annex is now measured against a valid artifact again.** Step 5's two
+analysis sub-items — the oblique tail and the `locative` question — are closed, and what remains
+is the `morph/` merge.

@@ -69,13 +69,15 @@ line	token	word	case
 56	7	'l	accusative
 57	3	farlo	accusative
 58	1	Io	nominative
+60	10	vosco	ablative
 62	5	mi	accusative
 65	2	io	nominative
 65	3	ne	ablative
 66	2	sallo	accusative
 67	1	Io	nominative
-67	8	me	dative
+67	8	me	ablative
 69	2	ella	nominative
+69	4	seco	ablative
 70	5	io	nominative
 71	2	lei	ablative
 71	7	si	reflexive
@@ -141,6 +143,7 @@ line	token	word	case
 132	5	lui	dative
 135	4	s'	reflexive
 137	1	ch'	nominative
+137	2	e'	accusative
 138	1	si	reflexive
 141	4	tu	nominative
 141	6	chiosarlo	accusative

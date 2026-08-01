@@ -128,7 +128,8 @@ whole oblique tail was 6%, which is also exactly where the pilot found the model
 value earns its place in this vocabulary if it changes the **slot** the pronoun fills, not what
 the oblique *means*.
 
-Step 3 measured it, and the answer is **fold nothing**. The deciding evidence is the `dep` deprel
+Step 3 measured it and Step 5 closed it, and the answer is **fold nothing**. The deciding
+evidence is the `dep` deprel
 distribution, which `--stats` now prints alongside the word forms:
 
 | deprel | `ablative` 1805 | `genitive` 267 | `locative` 81 |
@@ -139,8 +140,17 @@ distribution, which `--stats` now prints alongside the word forms:
 
 `genitive` is **earned** — 71% of it is adnominal, and `det:poss` is a slot `ablative` fills zero
 times (`lor danno`, `il senso lor`, `le gambe loro` are possessive determiners, not obliques).
-`locative` **stays open**: it is `obl`-dominant exactly as `ablative` is, so whether "place" is a
-distinct slot or a distinct meaning of one is undecided, and it is settled at the `morph/` merge.
+`locative` is **earned too** (settled 2026-08-02), but not by the deprel test — by that test it
+opens no slot at all: **there is no deprel `locative` fills that `ablative` does not**, and its 2%
+adposition rate against `ablative`'s 74% is only a clitic-vs-tonic confound (against `ablative`'s
+own bare clitic `ne` the profiles converge). What earns it is that **Layer 2's `lemma` collapses
+the readings of its word forms and nothing else in the stack separates them**: the lemma `vi`
+spans `locative` 44 / `accusative` 21 / `dative` 15 / `reflexive` 4, and the lemma `ci` spans
+`locative` 21 / `accusative` 29 / `dative` 24 / `reflexive` 15 / `nominative` 5. Whether a given
+`vi` means *there* or *to you* is recorded **only** in this column. The deprel test answers "does
+this value open a slot"; for a value whose work is splitting one form into several readings, that
+is the wrong question. See [CORRECTIONS.md](CORRECTIONS.md)'s *Step 5 — the `locative` question*,
+which records the fold verdict this round reached first and why it was wrong.
 
 An earlier reading of the same tail recommended folding `genitive` into `ablative`, on the
 grounds that its word forms are a subset of `ablative`'s. That was wrong — the same form under

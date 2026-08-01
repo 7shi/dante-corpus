@@ -159,6 +159,7 @@ line	token	word	case
 140	2	io	nominative
 140	3	nol	accusative
 141	4	voi	ablative
+141	9	vosco	ablative
 142	4	che	nominative
 143	4	me	dative
 143	6	partirmi	reflexive

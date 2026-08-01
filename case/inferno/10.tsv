@@ -60,6 +60,7 @@ line	token	word	case
 55	2	mi	accusative
 56	5	altri	nominative
 56	7	meco	ablative
+60	9	teco	ablative
 61	2	io	nominative
 61	4	lui	dative
 61	6	me	ablative
@@ -98,7 +99,8 @@ line	token	word	case
 96	1	che	nominative
 97	1	El	nominative
 97	4	voi	nominative
-98	3	che	accusative
+98	3	che	nominative
+98	6	seco	ablative
 100	1	Noi	nominative
 100	4	quei	nominative
 100	5	c'	nominative

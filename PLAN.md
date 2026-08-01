@@ -17,9 +17,12 @@ hard, frozen and committed before the join to `dep` was looked at — and **step
 2026-08-01**: all 510 adjudication candidates have a verdict, across three slices totalling
 **215 positions / 270 rows** of hand-verified `dep/` corrections. **Step 5's owed `morph/`
 correction round then landed on 2026-08-02** — 10 hand-verified singletons plus the 58-token
-comitative family, 41 canto artifacts, `skel` 3634 → 3633 — leaving `case --check` at 25 hard over
-20 lines for a user-run chunk regeneration. The one open item is **step 5's `morph/` merge**. See
-*Resuming cold* below and [`case/PLAN.md`](case/PLAN.md).
+comitative family, 41 canto artifacts, `skel` 3634 → 3633 — and the chunk regeneration it owed
+`case/` **has since been run, taking `case --check` back to 0 hard** over 13125 tokens / 13189
+values. Step 5's `locative` question is settled (it is earned and stays), so the one open item is
+**the `morph/` merge**. **A session picking this up should read *Handing off* below first** — it
+carries the state check, what is closed, the two open items and what must not be done; then
+[`case/PLAN.md`](case/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -70,34 +73,31 @@ artifacts now live on `main`.
 
 **Next work**
 
-**One action is blocking, and everything else is independent of everything else.** The blocking
-one is not a decision — it is the regeneration the 2026-08-02 `morph/` round owes `case/`, and it
-is the user's because it is LLM work.
+**Nothing is blocking any more**, and the two remaining items are independent of each other.
 
-#### 0. Blocking — regenerate the 25 `case/` chunks *(user)*
+#### 0. ~~Blocking — regenerate the 25 `case/` chunks~~ *(user — done 2026-08-02)*
 
 ```bash
-make -C case clean && make -C case      # then: make -C case check   -> expect 0 hard
+make -C case clean && make -C case      # then: make -C case check   -> 0 hard
 ```
 
-The `morph/` round moved the pronoun scope (13112 → **13125** tokens, 13176 → **13189** values),
-so **20 lines** now need a different number of case values and `case --check` reports **25 hard**.
-Every one is a `[count]` mismatch; **none is the model getting the Italian wrong** — the same
-situation, and the same fix, as step 3's rounds 2 and 3. It is small: `clean` drops only the
-chunks holding those 20 lines, on the order of 20 calls against step 3's 1340.
+The `morph/` round had moved the pronoun scope (13112 → **13125** tokens, 13176 → **13189**
+values), so 20 lines needed a different number of case values and `case --check` read 25 hard.
+Every one was a `[count]` mismatch and **none was the model getting the Italian wrong** — the same
+situation, and the same fix, as step 3's rounds 2 and 3.
 
-Until this is done `case --stats` will not run, so the contradiction and impossible-pairing counts
-(260 / 40 before the round) cannot be re-measured and every downstream `case` figure in these
-plans is provisional. **Do this before starting anything below**, or the state stays muddy.
+**Run, and `--check` is back to 0 hard.** `--stats` runs again and reads **258 contradictions / 40
+impossible pairings** (260 / 40 at step 4's close); the census gain is almost all `ablative`
+(1805 → **1819**), the newly in-scope comitatives, and `genitive`/`locative` did not move. All five
+layers and the tests were re-measured and only `case` changed — deltas in
+[`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the chunk regeneration the `morph/` round owed*.
 
-Afterwards the assistant re-measures `--stats` and all five layers and records the deltas.
-
-#### Then, in any order — three items, none blocking another
+#### Then, in any order — two items left, neither blocking the other
 
 | # | item | who | note |
 |---|---|---|---|
 | 1 | **Layer 3's stale clitic mentions** (5 hard / 96 soft) | assistant | the stack's one open defect, described immediately below. A deterministic regeneration of the derived `+X` spans is the obvious instrument, but it moves the `np` content hash of every canto it touches, so the choice is **deliberately left to whoever picks it up** |
-| 2 | **Settle `locative`** | assistant | step 5's other open sub-item and the smallest of the three: measure whether `locative` (81) is a distinct slot or a distinct meaning of `ablative` by its `dep` deprel distribution. Analysis only — **no artifact moves**. It is a precondition for the merge, so it is the natural thing to do while item 0 runs |
+| 2 | ~~**Settle `locative`**~~ | assistant | **done 2026-08-02 — it is earned and stays.** No artifact moved and the vocabulary does not change. By deprel it opens no slot, but that is the wrong test: Layer 2's `lemma` collapses `locative`/`accusative`/`dative`/`reflexive` onto one `ci`/`vi` form, so this column is the only record of which reading a given `vi` has. The round recommended folding it first and was wrong — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the `locative` question* |
 | 3 | **The `morph/` merge itself** | mostly user | its first item is a **blind regeneration of `case` under a corrected prompt**, fixing the two weaknesses slice 3 counted (the postposed subject, 78; the dative of possession alongside an explicit object, 24). The assistant can write the prompt; the calls are the user's. See [`case/PLAN.md`](case/PLAN.md)'s *The next action* |
 
 The case annex's steps 1–4 are all complete — the blind corpus pass finished 2026-07-31 and is
@@ -145,7 +145,7 @@ The case annex's remaining work, on the branch `case-pilot`:
 | 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8540 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
 | 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user ran the calls | **done 2026-07-31**, four runs — `--check` went 1236 → 70 → 13 → **0 hard**, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. 13112 tokens frozen at `0027494`, before `--stats` was run |
 | 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | **done, all three slices** — 215 positions / 270 rows, `dep --check` 0/0 throughout. Slice 1 (49 impossible pairings): 10 positions, **3550 → 3555, up** — why it went up is its main finding. Slice 2 (the **102** contradictions `skel` already flags): 81 positions, **3555 → 3469, −86**, against a predicted ≈90–100. Slice 3 (the **325** `skel` does not flag, 2026-08-01): 124 positions, **3469 → 3634, +165**, the predicted direction |
-| 5 | re-measure Layer 5 per slice (done); settle the oblique tail (done); the owed `morph/` correction round (done 2026-08-02); the `morph/` merge | assistant | **partly done** — the tail's verdict is **fold nothing** (`ablative` and `genitive` earned by their deprels, `locative` open). The `morph/` round spent all 10 parked mistags plus the 58-token comitative family, moving the pronoun scope to 13125/13189 and leaving `case --check` at **25 hard over 20 lines** for a user-run chunk regeneration. What remains is the merge into `morph/`, whose first item is a **blind regeneration of `case`** under a prompt fixed for the two weaknesses slice 3 counted |
+| 5 | re-measure Layer 5 per slice (done); settle the oblique tail incl. `locative` (done 2026-08-02); the owed `morph/` correction round and its regeneration (done 2026-08-02); the `morph/` merge | assistant | **partly done** — the tail's verdict is **fold nothing** (`ablative` and `genitive` earned by their deprels; `locative` settled 2026-08-02 on different grounds — it opens no slot, but it is the only record of which reading a `ci`/`vi` token has). The `morph/` round spent all 10 parked mistags plus the 58-token comitative family, moving the pronoun scope to 13125/13189 and leaving `case --check` at 25 hard over 20 lines — **since regenerated back to 0 hard**, 258 contradictions / 40 impossible pairings. What remains is the merge into `morph/`, whose first item is a **blind regeneration of `case`** under a prompt fixed for the two weaknesses slice 3 counted |
 
 The scope in step 2 went to the whole pronoun population rather than the clitic subset the
 adjudication strictly needs: it is read off Layer 2's own `pos` column, so it draws no line of its
@@ -173,6 +173,73 @@ worse number and a better corpus than 3469.** See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 4, slice 3* and
 [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
 
+## Handing off — the state at the close of 2026-08-02
+
+**Everything below is on the branch `case-pilot`.** This section is the entry point for a session
+with no memory of the annex; it says what is true now, what to do next, and what not to re-open.
+The deeper history is in *Resuming cold* below and in
+[`case/PLAN.md`](case/PLAN.md)'s *Resuming cold — after step 4*.
+
+### Confirm the state first — every figure here is a current measurement
+
+```bash
+git status --short          # expect clean
+uv run pytest -q            # expect 138 passed
+make -C morph check         # expect 0 hard, 0 soft
+make -C np check            # expect 5 hard, 96 soft  -- the open defect, NOT a new break
+make -C dep check           # expect 0 hard, 0 soft
+make -C skel check          # expect 0 hard, 3633 soft
+make -C case check          # expect 0 hard
+make -C case stats          # 13125 tokens / 13189 values; 258 contradictions / 40 impossible
+```
+
+If `case` reads 25 hard the regeneration is not in the tree; if `skel` reads 3634 the
+2026-08-02 `morph/` round is not; if it reads 3469 slice 3 is not.
+
+### What closed on 2026-08-02, and is not to be re-opened
+
+1. **The `morph/` correction round** — 10 hand-verified singletons plus the 58-token comitative
+   family, 41 canto artifacts. `skel` 3634 → 3633.
+2. **The `case/` chunk regeneration it owed** — 25 hard → **0 hard**. Scope 13112 → 13125 tokens,
+   13176 → 13189 values; the census gain is almost all `ablative` (1805 → **1819**), the newly
+   in-scope comitatives, which the new column tagged in agreement with an alias table it never saw.
+3. **The oblique tail: fold nothing.** `ablative` earned (prepositional oblique, `obl` 82%),
+   `genitive` earned (`det:poss`, a slot `ablative` fills zero times), **`locative` earned** —
+   *not* by the deprel test, which it fails, but because Layer 2's `lemma` collapses
+   `locative`/`accusative`/`dative`/`reflexive` onto one `ci`/`vi` form. `vocative` is the one
+   remaining frozen-but-unearned value. **No rows were rewritten and the vocabulary does not
+   change**, so the merge has nothing to carry from this.
+
+**Two verdicts in this annex were reached and then reversed, both recorded in full** in
+[`case/CORRECTIONS.md`](case/CORRECTIONS.md) — *The subset argument was wrong* (fold `genitive`)
+and *Step 5 — the `locative` question* (fold `locative`). Read the second before proposing any
+vocabulary change: its guard is that **before folding a value V, print the cross-tab of V's word
+forms against every value they carry**, not V against its proposed parent. A deprel containment
+test only answers "does this value open a slot", which is the wrong question for a value whose
+work is splitting one form into several readings.
+
+### The two open items
+
+| # | item | who | the first concrete action |
+|---|---|---|---|
+| 1 | **Layer 3's stale clitic mentions** — `np --check` 5 hard / 96 soft | assistant | decide the instrument. The mentions are *derived* from Layer 2's lemma parts, so a deterministic regeneration of the `+X` spans is the obvious move, but it moves the `np` content hash of every canto it touches. That trade is **deliberately left open**; see *Open item* below for the token counts and why Layer 3 was not mis-built |
+| 2 | **The case annex's `morph/` merge** | mostly user | write the corrected build prompt, then the user runs a **blind regeneration of `case`**. Two measured weaknesses to fix, both word-order rather than case: the postposed subject (**78**) and the dative of possession alongside an explicit object (**24**). The merge must also settle the **fused-token mismatch** — `case` annotates a pronoun and `dep` a token, and five contradictions are nothing but that (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*) |
+
+Neither blocks the other. Item 2 is the annex's own next step and item 1 is a Layer-3 decision
+that happens to have been caused by it.
+
+### What must not be done
+
+- **Do not edit `case/*.tsv` to close a contradiction.** The artifact stays frozen; it was held
+  through 194 recorded `case`-side errors across step 4's three slices, and the corrected column
+  comes from item 2's blind regeneration, never from a hand edit. The 258 remaining contradictions
+  are measured residue with a verdict, not unfinished work.
+- **Do not run another Layer-4 slice over them.** All 510 original candidates have a verdict, and
+  the two slices that sampled this configuration found `case` was the wrong read 24% and 53% of
+  the time. The next instrument is the regeneration.
+- **Do not treat Layer 5's soft count as the objective.** It rose 5, fell 86 and rose 165 across
+  three correct rounds. None of those numbers decided whether an edit was right.
+
 ### Resuming cold — the case annex, as of 2026-08-01
 
 **For the next action specifically, read [`case/PLAN.md`](case/PLAN.md)'s *Resuming cold — after
@@ -192,7 +259,7 @@ make -C morph check         # expect 0 hard, 0 soft
 make -C np check            # expect 5 hard, 96 soft  -- the open item above, NOT a new break
 make -C dep check           # expect 0 hard, 0 soft
 make -C skel check          # expect 0 hard, 3633 soft (3634 before the 2026-08-02 morph round)
-make -C case check          # expect 25 hard -- awaiting a user-run chunk regeneration
+make -C case check          # expect 0 hard  -- regenerated 2026-08-02
 ```
 
 Committed in step 2 — new: `dante_corpus/case.py`, `case/case.py`, `case/README.md`,
@@ -237,7 +304,8 @@ the terzine one at a time with `make -C dep check` staying 0/0 — then ran to c
 `reflexive` 1961, `ablative` 1805, `dative` 1409, `genitive` 267, `locative` 81, `vocative` 30.
 **The join to `dep`**: `obj`→`accusative` 84% (1631/317), `iobj`→`dative` 94% (669/46),
 `nsubj`→`nominative` 98% (5076/98) — **461 contradictions and 49 impossible pairings**, step 4's
-input. After all three slices those rates are **90% / 96% / 99%** and the list is **260 / 40**.
+input. After all three slices those rates are **90% / 96% / 99%** and the list is **260 / 40**;
+after the 2026-08-02 chunk regeneration they read **90% / 97% / 99%** and **258 / 40**.
 The disagreement concentrates exactly on `obj`, the accusative-vs-dative class the annex
 was built to adjudicate, which is the pilot's finding reproduced at corpus scale.
 
@@ -248,9 +316,13 @@ was built to adjudicate, which is the pilot's finding reproduced at corpus scale
   not the word forms. `ablative` (1805) is `obl` at 82%. **`genitive` (267) is earned** — 71% of
   it is adnominal (`nmod` 139, `det:poss` 50) and `det:poss` is a slot `ablative` fills zero
   times: `lor danno`, `il senso lor`, `le gambe loro` are possessive determiners, not obliques.
-  **`locative` (81) stays open** — by deprel it is `obl`-dominant exactly as `ablative` is, so
-  whether "place" is a distinct slot or a distinct meaning of one is undecided; settle it at the
-  `morph/` merge. `vocative` (30) is frozen-but-unearned; `reflexive` (1961) is vindicated, and
+  **`locative` (81) is earned** — settled 2026-08-02, but **not** by the deprel test, which it
+  fails: there is no relation `locative` fills that `ablative` does not. What earns it is that
+  Layer 2's `lemma` collapses the readings of `ci`/`vi` (lemma `vi` spans `locative` 44 /
+  `accusative` 21 / `dative` 15 / `reflexive` 4), so whether a given `vi` is *there* or *to you* is
+  recorded nowhere else in the stack. A containment test can only answer "does this value open a
+  slot"; for a value that splits one form into several readings, that is the wrong question, and
+  the round recommended folding `locative` before seeing it. `vocative` (30) is frozen-but-unearned; `reflexive` (1961) is vindicated, and
   mistagging it was what the Inferno 1 smoke test caught. **An earlier reading of this tail
   recommended folding `genitive` and was wrong** — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s
   *The subset argument was wrong*. No rows were rewritten.
@@ -535,15 +607,15 @@ discipline already used for normalization and quotes.
    hard**, 13112 pronoun tokens, and froze them; step 4 spent all **510** candidates across three
    slices on **215 hand-verified positions / 270 rows** in `dep/`, taking Layer 5 to **3634**; step
    5's owed `morph/` correction round then landed on 2026-08-02, taking it to **3633** and leaving
-   `case --check` at 25 hard for a user-run chunk regeneration, and the one open item is step 5's
-   `morph/` merge. The code and the artifact are committed **in that
+   `case --check` at 25 hard, since regenerated back to **0 hard**; with `locative` settled, the
+   one open item is step 5's `morph/` merge. The code and the artifact are committed **in that
    order, deliberately** — see *Resuming cold* above.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
 Layers 1–5 are implemented, built for all 100 cantos, and merged to `main`; the grammatical
-stack this plan describes is complete. What remains is all on the branch `case-pilot`, and
-*Next work* above gives it in execution order: one **blocking** user-run regeneration of the 25
-`case/` chunks the 2026-08-02 `morph/` round left, then three independent items — Layer 3's stale
-clitic mentions (5 hard / 96 soft — see *Open item* above, untouched), the `locative` question,
-and the case annex's `morph/` merge, its kill gate passed, its corpus pass complete and frozen,
-its Layer-4 adjudication round complete and its owed `morph/` correction round closed.
+stack this plan describes is complete. What remains is all on the branch `case-pilot`: **nothing
+is blocking**, and the two open items are Layer 3's stale clitic mentions (5 hard / 96 soft — see
+*Open item* above, untouched) and the case annex's `morph/` merge. The annex's kill gate passed,
+its corpus pass is complete and frozen, its Layer-4 adjudication round is complete, its owed
+`morph/` correction round is closed and regenerated, and both of step 5's analysis sub-items —
+the oblique tail and `locative` — are settled. See *Handing off* immediately below.

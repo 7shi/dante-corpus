@@ -78,10 +78,11 @@ line	token	word	case
 79	8	tu	nominative
 80	4	si	reflexive
 83	8	meco	ablative
-84	2	tardavali	accusative
+84	2	tardavali	dative
 86	1	mi	accusative
 87	2	si	reflexive
 87	5	sé	ablative
+87	8	seco	ablative
 88	1	Costui	nominative
 89	3	e'	nominative
 91	3	me	dative

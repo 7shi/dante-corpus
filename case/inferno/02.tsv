@@ -27,7 +27,7 @@ line	token	word	case
 22	2	quale	nominative
 22	5	quale	nominative
 25	4	onde	ablative
-25	5	li	accusative
+25	5	li	dative
 25	7	tu	nominative
 26	3	che	nominative
 28	1	Andovvi	locative
@@ -46,7 +46,6 @@ line	token	word	case
 33	9	'l	accusative
 34	6	io	nominative
 34	7	m'	reflexive
-36	4	me'	accusative
 36	6	i'	nominative
 37	2	qual	nominative
 37	4	quei	nominative
