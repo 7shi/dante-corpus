@@ -87,6 +87,8 @@ line	start	end	head	text
 30	5	5	5	io
 31	5	5	5	Mäometto
 32	3	3	3	me
+32	4	4	4	+si
+32	4	4	4	+ne
 32	7	7	7	Alì
 33	3	7	3	volto dal mento al ciuffetto
 33	3	3	3	volto
@@ -226,6 +228,7 @@ line	start	end	head	text
 88	2	2	2	+li
 88	4	5	4	parlamento seco
 88	4	4	4	parlamento
+88	5	5	5	+sé
 89	6	8	6	vento di Focara
 89	8	8	8	Focara
 90	3	7	4	lor mestier voto né preco

@@ -11,6 +11,8 @@ line	start	end	head	text
 4	4	4	4	iura
 4	6	6	6	chi
 4	8	8	8	amforismi
+5	1	1	1	+si
+5	1	1	1	+ne
 5	4	4	4	chi
 5	6	6	6	sacerdozio
 6	2	2	2	chi
@@ -219,6 +221,8 @@ line	start	end	head	text
 83	4	4	4	Silvestro
 84	3	4	4	lo sposo
 84	6	7	7	la sposa
+85	2	2	2	+si
+85	2	2	2	+ne
 85	4	8	5	quel padre e quel maestro
 85	4	5	5	quel padre
 85	7	8	8	quel maestro

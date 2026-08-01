@@ -59,6 +59,8 @@ line	start	end	head	text
 24	4	4	4	qual
 24	8	8	8	che
 25	1	1	1	quai
+25	1	2	2	quai fossi
+25	2	2	2	fossi
 25	5	6	6	quai catene
 25	6	6	6	catene
 26	5	6	5	passare innanzi
@@ -224,6 +226,7 @@ line	start	end	head	text
 89	2	2	2	io
 89	6	6	6	quale
 89	8	8	8	+mi
+90	1	1	1	+si
 90	2	7	2	colei che la cagion mi porse
 90	2	2	2	colei
 90	4	5	5	la cagion
@@ -250,7 +253,6 @@ line	start	end	head	text
 97	5	7	7	la beata riva
 98	1	2	1	Asperges me
 98	2	2	2	me
-99	2	2	2	+ne
 99	2	2	2	+lo
 99	7	7	7	io
 99	8	8	8	lo
@@ -291,6 +293,7 @@ line	start	end	head	text
 113	2	4	2	petto del grifon
 113	4	4	4	grifon
 113	5	5	5	seco
+113	5	5	5	+sé
 113	6	6	6	+mi
 114	2	2	2	Beatrice
 114	6	6	6	noi

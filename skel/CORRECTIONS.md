@@ -1,5 +1,29 @@
 # skel — Layer 5 correction history
 
+## Layer 3's clitic reconciliation — 3633 → 3635, both at one position (2026-08-02)
+
+Closing Layer 3's stale clitic mentions (see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)) moved
+this count by **+2**, and both of them are the same position: **purgatorio 20:83**, *poscia c'ha'
+il mio sangue a te sì tratto*.
+
+The 94 backfilled `+lemma` mentions and the 6 dropped ones moved nothing — a clitic mention is not
+an argument citation, so Layer 5's derivation never reads one. What moved the count was the
+**non-clitic** half of the same round: the 2026-08-02 Layer-2 correction had retagged `c'` from
+the pronoun `ci` to the conjunction *che* of *poscia che*, and once Layer 3 dropped its `c'` span
+and Layer 4 took `c'` `obj` → `mark` (`poscia` `mark` → `advmod`, matching the **27** other
+*poscia che* pairs in `dep/`, against the one that reads `mark` + `mark`), the frozen `skel/` row asserting `83.10 tratto obj (83, 2)`
+had nothing left to cite:
+
+- `argument (83, 2) for role obj heads no NP/pronoun/predicate` — the membership check.
+- `extra_arg: 83.10 obj (83, 2)` — the derivation now yields one `obj` (`sangue`), the artifact two.
+
+**Both flags are correct and neither was closed.** Layer 5's read of this line — `subj` = *sangue*,
+`obj` = `c'` — *is* the pre-correction pronoun reading: the subject is the pro-drop *tu* of `ha'`
+and `il mio sangue` is the object. Editing the `skel/` row to agree would manufacture the
+agreement this layer exists to measure; it is `--fix` work, which is the user's to run. This is the
+count moving up because the corpus got better, the same shape as the case annex's first and third
+Layer-4 rounds below.
+
 ## The `case` annex's Layer-2 round — 3634 → 3633, and Layer 5 confirming two readings (2026-08-02)
 
 The case annex's step 5 finally spent the `morph/` corrections its three earlier steps had

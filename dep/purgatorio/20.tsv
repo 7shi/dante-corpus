@@ -572,8 +572,8 @@ line	token	word	deprel	head_line	head_token
 82	5	tu	nsubj	82	4
 82	6	più	advmod	82	7
 82	7	farne	xcomp	82	4
-83	1	poscia	mark	83	10
-83	2	c'	obj	83	10
+83	1	poscia	advmod	83	10
+83	2	c'	mark	83	10
 83	3	ha'	aux	83	10
 83	4	il	det	83	6
 83	5	mio	det:poss	83	6

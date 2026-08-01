@@ -8,6 +8,8 @@ line	start	end	head	text
 3	3	4	4	le notti
 3	6	7	6	mezzo dì
 3	7	7	7	dì
+3	8	8	8	+se
+3	8	8	8	+ne
 4	2	3	3	la brina
 4	6	7	7	la terra
 5	1	6	2	l'imagine di sua sorella bianca
@@ -52,7 +54,7 @@ line	start	end	head	text
 22	5	6	6	alcun consiglio
 22	6	6	6	consiglio
 23	2	2	2	seco
-23	2	2	2	+se
+23	2	2	2	+sé
 24	2	3	3	la ruina
 24	3	3	3	ruina
 24	5	5	5	+mi

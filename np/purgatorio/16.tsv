@@ -89,6 +89,8 @@ line	start	end	head	text
 37	4	5	5	quella fascia
 38	2	3	3	la morte
 38	5	5	5	men
+38	5	5	5	+me
+38	5	5	5	+ne
 39	5	7	7	l'infernale ambascia
 40	3	3	3	Dio
 40	7	8	8	sua grazia
@@ -165,6 +167,7 @@ line	start	end	head	text
 68	3	4	4	al cielo
 68	4	4	4	cielo
 68	8	8	8	tutto
+69	2	2	2	+sé
 69	3	4	4	di necessitate
 69	4	4	4	necessitate
 70	5	5	5	voi
@@ -357,10 +360,8 @@ line	start	end	head	text
 138	6	6	6	nulla
 139	2	3	3	altro sopranome
 139	4	4	4	io
-139	5	5	5	+ne
 139	5	5	5	+lo
 140	2	2	2	io
-140	3	3	3	+ne
 140	3	3	3	+lo
 140	6	8	7	sua figlia Gaia
 140	6	7	7	sua figlia
@@ -368,6 +369,7 @@ line	start	end	head	text
 140	8	8	8	Gaia
 141	1	1	1	Dio
 141	4	4	4	voi
+141	9	9	9	+voi
 142	2	8	3	l'albor che per lo fummo raia
 142	2	3	3	l'albor
 142	6	7	7	lo fummo

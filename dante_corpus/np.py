@@ -296,6 +296,24 @@ def _parse_int(value: str | None) -> int | None:
 # --- Clitic mentions (derived deterministically from Layer 2) ----------------------
 
 
+def _mention_lemmas(row: MorphRow) -> tuple[list[str], str]:
+    """The lemmas a `"+xxx"` mention on this token may name, and a label for the error message.
+
+    On a genuine fusion (compound POS, arity >= 2, agreeing with the lemma's own arity) only the
+    *pronoun* components qualify: `meco` = `pronoun+preposition` / `me+con` bounds one pronoun,
+    `me`, and a mention naming `con` names the preposition instead. On any other token the whole
+    lemma split is allowed — arity-1 hosts predate `clitic_mentions()` (see `fix_clitics`) and an
+    arity disagreement is a Layer-2 slip this layer does not adjudicate.
+    """
+    pos_parts = row.pos.split("+")
+    lemma_parts = row.lemma.split("+")
+    if len(pos_parts) >= 2 and len(pos_parts) == len(lemma_parts):
+        pronouns = [l for p, l in zip(pos_parts, lemma_parts) if p.strip().lower() == "pronoun"]
+        if pronouns:
+            return pronouns, "pronoun lemma parts"
+    return lemma_parts, "lemma parts"
+
+
 def clitic_mentions(line_no: int, tokens: list[str], morph_rows: list[MorphRow]) -> list[NPSpan]:
     """Bound-pronoun mentions for tokens Layer 2 tagged with a compound `x+pronoun[+...]` POS
     (e.g. `udirmi` -> lemma `udire+me`, pos `verb+pronoun` — an enclitic fused to a verb with no
@@ -385,8 +403,9 @@ def validate_line(
     within the range; `text` is the verbatim source substring of that range. A span whose `text`
     starts with `"+"` is a clitic mention (see `clitic_mentions`) rather than an ordinary NP: it
     must be single-token, and — when `morph_rows` is supplied — its suffix must be one of the
-    host token's Layer-2 lemma components, in place of the verbatim-substring check (by
-    construction, `"+xxx"` is never itself a source substring). Soft checks (only when
+    lemmas `_mention_lemmas` admits for the host token (on a genuine fusion, only its *pronoun*
+    components), in place of the verbatim-substring check (by construction, `"+xxx"` is never
+    itself a source substring). Soft checks (only when
     `morph_rows` — the Layer-2 row per token — is supplied, under the frozen policy above):
     the head token is a content POS (`_can_head_np`), every noun/proper-noun token is the head
     of at least one NP (coverage, `_needs_np`), and every clitic mention Layer 2's compound POS
@@ -415,10 +434,10 @@ def validate_line(
                     Violation(line_no, "word", f"clitic mention {span.text!r} spans more than one token")
                 )
             elif morph_rows is not None and len(morph_rows) == n:
-                lemma_parts = morph_rows[span.head - 1].lemma.split("+")
-                if span.text[1:] not in lemma_parts:
+                allowed, kind = _mention_lemmas(morph_rows[span.head - 1])
+                if span.text[1:] not in allowed:
                     violations.append(
-                        Violation(line_no, "word", f"{span.text!r} not in lemma parts {lemma_parts!r}")
+                        Violation(line_no, "word", f"{span.text!r} not in {kind} {allowed!r}")
                     )
             continue
         expected = source_text[tspans[span.start - 1][1] : tspans[span.end - 1][2]]

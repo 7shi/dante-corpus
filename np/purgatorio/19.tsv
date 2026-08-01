@@ -56,6 +56,7 @@ line	start	end	head	text
 22	5	7	6	suo cammin vago
 23	2	3	2	canto mio
 23	5	5	5	qual
+23	6	6	6	+me
 24	2	2	2	sen
 24	2	2	2	+si
 24	2	2	2	+ne
@@ -353,6 +354,8 @@ line	start	end	head	text
 137	1	1	1	che
 137	3	4	4	Neque nubent
 138	5	5	5	io
+139	1	1	1	+ti
+139	1	1	1	+ne
 139	7	7	7	t'
 140	2	4	4	la tua stanza
 140	5	6	6	mio pianger

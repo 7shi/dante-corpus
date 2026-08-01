@@ -17,7 +17,7 @@ skipped and only the remaining chunks are requested.
     uv run np.py inferno --check                  # code-only, no model
     uv run np.py inferno -n                       # dry run: show pending chunks, no LLM
     uv run np.py inferno --clean                  # remove chunks with hard violations
-    uv run np.py inferno --fix-clitics            # backfill clitic mentions, no model
+    uv run np.py inferno --fix-clitics            # reconcile clitic mentions w/ Layer 2, no model
     uv run np.py inferno --fix-repeats            # reassign duplicate repeat spans, no model
     uv run np.py inferno --fix -m ollama:gpt-oss  # regenerate lines with soft violations
 
@@ -353,12 +353,22 @@ def check(canticles: list[str], only: int | None) -> int:
 
 
 def fix_clitics(canticles: list[str], only: int | None) -> int:
-    """Backfill missing clitic mentions into frozen artifacts — deterministic, no model call.
+    """Reconcile clitic mentions with Layer 2 in frozen artifacts — deterministic, no model call.
 
-    Artifacts built before `clitic_mentions()` existed lack the synthetic `+lemma` spans that
-    Layer 2's compound POS implies. Those spans are a pure function of the frozen Layer-2
-    artifact, so they can be added in place without rebuilding."""
-    added = 0
+    The `+lemma` spans a fused enclitic implies are a pure function of the frozen Layer-2
+    artifact, so they can be brought back in line in place without rebuilding. Two directions,
+    both against `clitic_mentions()`:
+
+    - **Add** what Layer 2 now implies and the artifact lacks — artifacts built before
+      `clitic_mentions()` existed had none at all, and a later Layer-2 correction that splits a
+      fused token further (`sen` -> `si+ne`) leaves the frozen artifact short by the same measure.
+    - **Drop** a mention on a fused host that Layer 2 no longer implies — the mirror case, left by
+      a correction that *re-reads* the fusion (`nol` from `non+ne` to `non+lo`, `seco` from
+      `con+se` to `sé+con`). Only hosts with a compound POS are reconciled this way: Inferno 18
+      and 23 carry a canto-local `+lemma` on ordinary single-token pronouns too, which no Layer-2
+      row implies and which this pass is not the instrument to decide about (see CORRECTIONS.md).
+    """
+    added = removed = 0
     for canticle in canticles:
         numbers = [only] if only else list(api.cantos(canticle))
         for number in numbers:
@@ -367,7 +377,7 @@ def fix_clitics(canticles: list[str], only: int | None) -> int:
             data = np.load_np(canticle, number)
             morph_rows = _morph_rows(canticle, number)
             out: list[tuple[int, list[np.NPSpan]]] = []
-            n_added = 0
+            n_added = n_removed = 0
             for line in api.canto(canticle, number).lines():
                 if line.no not in data:
                     continue
@@ -375,17 +385,28 @@ def fix_clitics(canticles: list[str], only: int | None) -> int:
                 rows = morph_rows.get(line.no)
                 if rows:
                     tokens = [tok for tok, _, _ in np.token_spans(line.text)]
-                    have = {(s.head, s.text) for s in spans if s.text.startswith("+")}
-                    missing = [m for m in np.clitic_mentions(line.no, tokens, rows)
-                               if (m.head, m.text) not in have]
-                    spans.extend(missing)
+                    expected = np.clitic_mentions(line.no, tokens, rows)
+                    want = {(m.head, m.text) for m in expected}
+                    kept = []
+                    for s in spans:
+                        fused = (s.text.startswith("+") and 1 <= s.head <= len(rows)
+                                 and len(rows[s.head - 1].pos.split("+")) >= 2)
+                        if fused and (s.head, s.text) not in want:
+                            n_removed += 1
+                            continue
+                        kept.append(s)
+                    have = {(s.head, s.text) for s in kept if s.text.startswith("+")}
+                    missing = [m for m in expected if (m.head, m.text) not in have]
+                    spans = kept + missing
                     n_added += len(missing)
                 out.append((line.no, spans))
-            if n_added:
+            if n_added or n_removed:
                 np.write_np(canticle, number, out)
-                print(f"Fixed np/{canticle}/{number:02d}.tsv — added {n_added} clitic mention(s)")
+                print(f"Fixed np/{canticle}/{number:02d}.tsv — "
+                      f"added {n_added}, removed {n_removed} clitic mention(s)")
                 added += n_added
-    print(f"fix-clitics complete: {added} mention(s) added")
+                removed += n_removed
+    print(f"fix-clitics complete: {added} mention(s) added, {removed} removed")
     return 0
 
 
@@ -551,7 +572,7 @@ def main() -> int:
     parser.add_argument("--clean", action="store_true",
                         help="remove chunks with hard violations, then exit")
     parser.add_argument("--fix-clitics", action="store_true",
-                        help="backfill missing clitic mentions from Layer 2, no model call")
+                        help="reconcile clitic mentions with Layer 2, no model call")
     parser.add_argument("--fix-repeats", action="store_true",
                         help="reassign duplicate repeated-word spans to distinct occurrences, no model call")
     parser.add_argument("--fix", action="store_true",

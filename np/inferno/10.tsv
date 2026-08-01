@@ -1,4 +1,6 @@
 line	start	end	head	text
+1	2	2	2	+si
+1	2	2	2	+ne
 1	5	7	7	un secreto calle
 1	7	7	7	calle
 2	2	9	3	'l muro de la terra e li martìri
@@ -164,6 +166,7 @@ line	start	end	head	text
 55	5	5	5	talento
 56	5	5	5	altri
 56	7	7	7	meco
+56	7	7	7	+me
 57	4	5	5	'l sospecciar
 57	5	5	5	sospecciar
 58	5	6	6	questo cieco
@@ -171,6 +174,7 @@ line	start	end	head	text
 59	4	6	4	altezza d'ingegno
 59	6	6	6	ingegno
 60	1	2	2	mio figlio
+60	9	9	9	+te
 61	2	2	2	io
 61	4	4	4	lui
 61	6	7	6	me stesso
@@ -264,6 +268,7 @@ line	start	end	head	text
 97	4	4	4	voi
 98	2	7	2	quel che 'l tempo seco adduce
 98	4	5	5	'l tempo
+98	6	6	6	+sé
 99	3	3	3	presente
 99	5	6	6	altro modo
 100	1	1	1	Noi

@@ -99,9 +99,12 @@ call** (`validate_line`):
     carries a machine-readable flag in its Layer-2 `note` (`NO_NP`, `CONT_NEXT`) that `_needs_np`
     checks instead of requiring coverage.
   - **Clitic coverage** — every fused-enclitic mention that Layer 2's compound POS implies must
-    actually be present among the artifact's spans. Artifacts built before `clitic_mentions()`
-    existed lacked them; `--fix-clitics` backfills them deterministically (done for all 100
-    cantos), so any new flag here is a regression.
+    actually be present among the artifact's spans, and (a hard check) no `+lemma` mention on a
+    fused host may name anything but one of that host's **pronoun** lemma components. Both
+    directions are a pure function of the frozen Layer 2, so `--fix-clitics` reconciles them
+    deterministically — adding what Layer 2 implies and dropping what it no longer does (done for
+    all 100 cantos). A flag here means Layer 2 moved under a frozen artifact, which is what
+    happened after the `case` annex's correction rounds; see [`CORRECTIONS.md`](CORRECTIONS.md).
 
   `--fix` (`make -C np fix`) regenerates just the flagged lines and keeps the new spans only when
   they carry strictly fewer tag violations than before, with no new hard ones — a flagged line can

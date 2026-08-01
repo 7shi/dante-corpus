@@ -146,6 +146,7 @@ line	start	end	head	text
 60	4	6	5	'l nome suo
 60	5	6	5	nome suo
 60	5	5	5	nome
+60	10	10	10	+voi
 61	1	7	3	L'antico sangue e l'opere leggiadre
 61	1	3	3	L'antico sangue
 61	5	7	6	l'opere leggiadre
@@ -166,6 +167,7 @@ line	start	end	head	text
 68	4	6	6	tutti miei consorti
 68	5	6	6	miei consorti
 69	2	2	2	ella
+69	4	4	4	+sé
 69	6	6	6	malanno
 70	5	5	5	io
 70	6	7	7	questo peso

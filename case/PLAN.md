@@ -149,28 +149,30 @@ this section alone.** Branch `case-pilot`.
 
 ```bash
 git status --short          # expect clean
-uv run pytest -q            # expect 138 passed
+uv run pytest -q            # expect 142 passed
 make -C morph check         # expect 0 hard, 0 soft
-make -C np check            # expect 5 hard, 96 soft -- see below, NOT a new break
+make -C np check            # expect 0 hard, 0 soft -- see below
 make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3633 soft
+make -C skel check          # expect 0 hard, 3635 soft
 make -C case check          # expect 0 hard  -- regenerated 2026-08-02
 ```
 
 `case --stats` reads **258 contradictions / 40 impossible pairings** over 13125 tokens / 13189
 values (260 / 40 over 13112 / 13176 at step 4's close).
 
-If `skel` reads 3469, slice 3 is not in the tree; if it reads 3634 and `case` reads 0 hard, the
-`morph/` round is not.
+If `skel` reads 3469, slice 3 is not in the tree; if it reads 3633, Layer 3's clitic
+reconciliation is not; if it reads 3634 and `case` reads 0 hard, the `morph/` round is not either.
 
-**`np`'s 5 hard / 96 soft belong to this annex and are the stack's one open defect.** Step 3's
-Layer-2 correction rounds (`880fc2e`, `a97b80e`) moved the lemma parts of fused clitic tokens to
-unblock the case pass, and the 2026-08-02 `morph/` round moved more of them; `np`'s checker derives
-its expected `+X` clitic mentions from exactly those lemma parts, so the frozen Layer-3 artifacts
-went stale. `morph`, `dep` and `skel` were re-measured at the time and `np` was not. Nothing has
-been done about it — the full description, the token
-counts and the reason the choice of instrument is left open are in
-[`../PLAN.md`](../PLAN.md)'s *Open item*.
+**`np` read 5 hard / 96 soft and that belonged to this annex; it was closed on 2026-08-02.**
+Step 3's Layer-2 correction rounds (`880fc2e`, `a97b80e`) moved the lemma parts of fused clitic
+tokens to unblock the case pass, and the 2026-08-02 `morph/` round moved more of them; `np`'s
+checker derives its expected `+X` clitic mentions from exactly those lemma parts, so the frozen
+Layer-3 artifacts went stale. `morph`, `dep` and `skel` were re-measured at the time and `np` was
+not. It is now back to **0/0** — `--fix-clitics` was made symmetric (94 mentions added, 6 dropped)
+and two non-clitic soft were fixed by hand, one of which unblocked the Layer-4 deferral at
+purgatorio 20:83 and took `skel` to **3635**. Full description in
+[`../PLAN.md`](../PLAN.md)'s *The clitic reconciliation* and
+[`../np/CORRECTIONS.md`](../np/CORRECTIONS.md).
 
 ### What step 4 settled, so none of it is re-litigated
 
@@ -225,7 +227,8 @@ the model getting the Italian wrong. Closing them is `make -C case clean` then `
 LLM-scale work and so the user's, exactly as step 3's two rounds went. `skel` went 3634 → **3633**,
 and two of the three moves are Layer 5 independently confirming this round's readings (purgatorio
 11:137 `e'` and 16:141 `vosco` each closed a membership violation). `np` went 3 hard / 64 soft →
-**5 / 96**, widening the open defect below rather than adding a new one.
+**5 / 96**, widening what was then the open defect rather than adding a new one; it has since
+been reconciled back to 0/0 (see the state check above).
 
 ### The traps, in the order the three slices hit them
 
@@ -510,7 +513,7 @@ step 1 without reconstructing context from the Phase 5 history.
 ### Confirm the state first
 
 ```bash
-make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3633)
+make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3635)
 make -C dep check      # expect: 0 hard, 0 soft
 uv run pytest -q       # was: 125 passed          (now 138, with the annex's tests)
 make -C skel stats     # by-kind + the role_mismatch pair table

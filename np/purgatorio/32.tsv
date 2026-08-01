@@ -226,6 +226,8 @@ line	start	end	head	text
 88	2	3	3	la compagnia
 89	1	2	2	li altri
 89	4	5	5	'l grifon
+89	6	6	6	+si
+89	6	6	6	+ne
 90	2	7	4	più dolce canzone e più profonda
 90	2	4	4	più dolce canzone
 90	4	4	4	canzone

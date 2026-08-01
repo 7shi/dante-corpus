@@ -581,3 +581,25 @@ the conjunction of *poscia che* and wants `mark`, but Layer 2 tags it `pronoun`,
 put it in the case scope at all. Its partner row was taken anyway (`sangue` `nsubj` → `obj`).
 One further Layer-2 observation: **purgatorio 11:137.2** *ch'e' sostenea* has `e'` (= *ei*) tagged
 as an auxiliary.
+
+## The Layer-2 block, unblocked — purgatorio 20:83 (2026-08-02)
+
+**One position, two rows.** The deferral recorded just above as *the Layer-2 block* is closed:
+Layer 2's step-5 round retagged `c'` in *poscia c'ha' il mio sangue a te sì tratto* from the
+pronoun `ci` to the conjunction *che*, which is what the reading wanted all along. With the tag
+corrected, the row it blocked was taken:
+
+| line.tok | word | was | now |
+|---|---|---|---|
+| 83.1 | `poscia` | `mark` | `advmod` |
+| 83.2 | `c'` | `obj` | `mark` |
+
+Both keep their head (83.10 `tratto`). The pair follows the corpus's own dominant convention for
+*poscia che* / *però che*: `advmod` + `mark`, **27** times for *poscia* against one `mark` + `mark`.
+It also removes a double `obj` on `tratto` — `sangue` had already been corrected to `obj` in the
+slice above, so the conjunction was the second one.
+
+Surfaced by Layer 3's clitic reconciliation (see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)),
+which had to drop the same token's NP span for the same reason. `dep --check` stays **0 hard, 0
+soft**; Layer 5 moved 3633 → 3635 because its own frozen row still holds the pronoun reading, which
+is left standing as measured divergence.

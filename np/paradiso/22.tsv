@@ -144,6 +144,7 @@ line	start	end	head	text
 52	5	8	6	L'affetto che dimostri
 52	5	6	6	L'affetto
 52	7	7	7	che
+53	1	1	1	+me
 53	4	6	6	la buona sembianza
 54	1	1	1	ch'
 54	2	2	2	io
@@ -299,6 +300,7 @@ line	start	end	head	text
 114	7	8	8	mio ingegno
 114	8	8	8	ingegno
 115	2	2	2	voi
+115	7	7	7	+voi
 116	1	8	1	quelli ch'è padre d'ogne mortal vita
 116	1	1	1	quelli
 116	4	8	4	padre d'ogne mortal vita

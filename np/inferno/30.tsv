@@ -26,6 +26,7 @@ line	start	end	head	text
 10	2	3	3	l'un
 10	6	7	6	nome Learco
 10	7	7	7	Learco
+11	4	4	4	+lo
 11	6	7	7	un sasso
 12	2	2	2	quella
 12	6	8	8	l'altro carco
@@ -100,6 +101,8 @@ line	start	end	head	text
 41	4	5	5	altrui forma
 42	2	7	3	l'altro che là sen va
 42	2	3	3	l'altro
+42	6	6	6	+si
+42	6	6	6	+ne
 43	3	7	4	la donna de la torma
 43	3	4	4	la donna
 43	6	7	7	la torma

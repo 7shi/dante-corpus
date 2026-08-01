@@ -86,6 +86,8 @@ line	start	end	head	text
 31	3	6	5	le sue opere biece
 32	2	5	3	la mazza d'Ercule
 32	5	5	5	Ercule
+33	1	1	1	+gli
+33	1	1	1	+ne
 33	3	3	3	cento
 33	7	8	8	le diece
 34	6	6	6	el
@@ -265,6 +267,7 @@ line	start	end	head	text
 106	1	2	2	Le gambe
 106	4	7	5	le cosce seco stesse
 106	4	5	5	le cosce
+106	6	6	6	+sé
 107	5	6	6	'n poco
 107	7	8	8	la giuntura
 108	3	7	3	segno alcun che si paresse

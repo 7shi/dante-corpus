@@ -9,6 +9,52 @@ traceable back to what actually changed and why. Layer-2 mistags found along the
 in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
 side: code/policy changes, span fixes, and classification of what's left.
 
+## The case annex's Layer-2 fallout: 5 hard / 96 soft back to 0/0 (2026-08-02)
+
+Layer 3 had been at 0 hard / 0 soft since the eclipsed-head pass below, and it was **not**
+re-measured while the `case` annex corrected Layer 2 three times (`880fc2e` and `a97b80e` in its
+step 3, and the 2026-08-02 round in its step 5). It read **5 hard / 96 soft** when the whole stack
+was finally checked. Nothing here is a Layer-3 build error: every violation is this layer's
+artifacts being correct against the Layer 2 they were built on and stale against the Layer 2 that
+now exists.
+
+**94 of the 96 soft, and all 5 hard, are clitic mentions** — the `+lemma` spans `clitic_mentions()`
+derives from Layer 2's compound POS. They move whenever a fused token is re-split (`sen` → `si+ne`,
+`meco` → `me+con`) or re-read (`nol` from `non+ne` to `non+lo`, `seco` from `con+se` to `sé+con`).
+The instrument was already here, in one direction only: `--fix-clitics` backfilled what Layer 2
+implies and had no way to drop what it no longer implies, which is exactly what the 5 hard were.
+It is now **symmetric** — it adds missing mentions and drops stale ones — and the hard check it
+answers to was tightened at the same time:
+
+- **The old hard check accepted any lemma component**, so `meco` carrying `+con` (`pronoun+
+  preposition` / `me+con`) passed while naming the *preposition*. `_mention_lemmas()` now admits
+  only the **pronoun** components of a genuine fusion, which turned that one silent case into a
+  sixth hard violation before the fix ran. Result: **94 added, 6 removed, 43 cantos**.
+
+**A deliberate limit: the drop side only touches hosts with a compound POS.** A full reconcile
+would also have deleted **160** `+lemma` spans on ordinary single-token pronouns, and those turn
+out to exist in exactly two cantos — **Inferno 18 (63) and 23 (97)**, and nowhere else in the
+corpus. They are a canto-local build convention, not annex fallout: those two cantos give a bare
+`che`/`io`/`si` a `+lemma` mention *as well as* an ordinary NP 101 times over. They pass every
+check, they predate all of this, and deciding whether the corpus wants them is a Layer-3 question
+this pass is not the instrument for. **They were left untouched and are recorded here as a
+finding.**
+
+**The remaining 2 soft were the same fallout, non-clitic**, both from the step-5 round and both
+fixed by hand against the terzina:
+
+- **purgatorio 20:83** *poscia c'ha' il mio sangue a te sì tratto* — `c'` was retagged from the
+  pronoun `ci` to the conjunction *che* of *poscia che*, so its frozen single-token NP was headed
+  by a conjunction. **Span removed**: it is not a noun phrase. (This also unblocked a Layer-4
+  deferral recorded in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) as *the Layer-2 block*, and
+  moved Layer 5 — see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).)
+- **purgatorio 31:25** *quai fossi attraversati o quai catene* — `fossi` was retagged from the verb
+  `essere` to the noun `fosso` (*ditches*), so it needed to head an NP and headed none. **Added
+  `quai fossi` and `fossi`**, mirroring the `quai catene` / `catene` pair already on the same line.
+
+`np --check`: **0 hard, 0 soft**. `morph`, `dep` and `case` re-measured unchanged; `skel` moved
+3633 → 3635, for the reason recorded on its own side.
+
 ## Initial freeze and repeat-word alignment bug (2026-07-03)
 
 The soft-check policy was measured once over all 100 cantos and frozen: **418** soft violations,

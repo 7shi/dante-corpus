@@ -187,6 +187,7 @@ line	start	end	head	text
 71	1	3	3	l'altro universo
 71	3	3	3	universo
 71	4	4	4	seco
+71	4	4	4	+sé
 72	1	9	2	al cerchio che più ama e che più sape
 72	2	9	2	cerchio che più ama e che più sape
 72	2	2	2	cerchio
@@ -348,6 +349,8 @@ line	start	end	head	text
 138	2	6	2	chi 'l vide qua sù
 138	3	3	3	'l
 138	7	7	7	gliel
+138	7	7	7	+gli
+138	7	7	7	+lo
 139	2	8	2	altro assai del ver di questi giri
 139	2	3	2	altro assai
 139	5	8	5	ver di questi giri

@@ -10,6 +10,8 @@ line	start	end	head	text
 4	7	7	7	nona
 5	3	4	4	il sole
 5	6	7	7	'l giorno
+5	8	8	8	+si
+5	8	8	8	+ne
 6	2	6	3	l'angel di Dio lieto
 6	2	5	3	l'angel di Dio
 6	2	3	3	l'angel
@@ -121,6 +123,8 @@ line	start	end	head	text
 60	7	7	7	nol
 60	7	7	7	+lo
 61	1	2	2	Lo sol
+61	3	3	3	+si
+61	3	3	3	+ne
 61	8	9	9	la sera
 62	6	7	7	il passo
 63	3	4	4	l'occidente
