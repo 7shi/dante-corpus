@@ -372,7 +372,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 52	affetto	affetto	noun	m.	sg.				
 52	che	che	pronoun						
 52	dimostri	dimostrare	verb		sg.	2	present	indicative	archaic
-53	meco	me+co	pronoun		sg.	1			contraction
+53	meco	me+con	pronoun+preposition		sg.	1			archaic
 53	parlando	parlare	verb					gerund	
 53	e	e	conjunction						
 53	la	la	article	f.	sg.				
@@ -824,7 +824,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 115	e	e	conjunction						
 115	s'	si	pronoun		sg.	3			elision
 115	ascondeva	ascondere	verb		sg.	3	imperfect	indicative	archaic
-115	vosco	boscoso	adjective	m.	sg.				archaic
+115	vosco	voi+con	pronoun+preposition		pl.	2			archaic
 116	quelli	quello	pronoun	m.	sg.				
 116	ch'	che	pronoun		sg.	3			elision
 116	è	essere	verb		sg.	3	present	indicative	

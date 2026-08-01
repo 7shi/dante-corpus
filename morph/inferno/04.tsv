@@ -620,7 +620,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 91	Però	però	conjunction						
 91	che	che	conjunction						
 91	ciascun	ciascuno	pronoun	m.	sg.				apocope
-91	meco	me+con	pronoun+preposition						archaic
+91	meco	me+con	pronoun+preposition		sg.	1			archaic
 91	si	si	pronoun		sg.	3			reflexive
 91	convene	convenire	verb		sg.	3	present	indicative	
 92	nel	in+il	preposition+article	m.	sg.				contraction

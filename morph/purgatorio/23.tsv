@@ -911,7 +911,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 126	'l	lo	article	m.	sg.				elision
 126	mondo	mondo	noun	m.	sg.				
 126	fece	fare	verb		sg.	3	remote past	indicative	
-126	torti	torto	noun	m.	pl.				
+126	torti	torto	adjective	m.	pl.				
 127	Tanto	tanto	adverb						
 127	dice	dire	verb		sg.	3	present	indicative	
 127	di	di	preposition						

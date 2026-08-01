@@ -163,7 +163,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 23	mio	mio	adjective	m.	sg.				
 23	e	e	conjunction						
 23	qual	quale	pronoun	m.	sg.				apocope
-23	meco	me+co	pronoun		sg.				archaic
+23	meco	me+con	pronoun+preposition		sg.	1			archaic
 23	s'	si	pronoun		sg.				elision
 23	ausa	ausare	verb		sg.	3	present	indicative	archaic
 24	rado	rado	adjective	m.	sg.				
@@ -960,7 +960,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 134	errar	errare	verb					infinitive	apocope
 134	conservo	conservo	noun	m.	sg.				
 134	sono	essere	verb		sg.	1	present	indicative	
-135	teco	con+te	preposition+pronoun		sg.	2			archaic
+135	teco	te+con	pronoun+preposition		sg.	2			archaic
 135	e	e	conjunction						
 135	con	con	preposition						
 135	li	lo	article	m.	pl.				

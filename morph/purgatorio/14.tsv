@@ -769,7 +769,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 105	Azzo	Azzo	proper noun	m.	sg.				
 105	che	che	pronoun		sg.				relative
 105	vivette	vivere	verb		sg.	3	remote past	indicative	
-105	nosco	nosco	adjective	m.	sg.				archaic
+105	nosco	noi+con	pronoun+preposition		pl.	1			archaic
 106	Federigo	Federigo	proper noun	m.	sg.				
 106	Tignoso	Tignoso	proper noun	m.	sg.				
 106	e	e	conjunction						

@@ -261,7 +261,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 36	Se'	essere	verb		sg.	2	present	indicative	apocope
 36	savio	savio	adjective	m.	sg.				
 36	intendi	intendere	verb		sg.	2	present	imperative	
-36	me'	me	pronoun		sg.	1			archaic
+36	me'	meglio	adverb						apocope
 36	ch'	che	conjunction						elision
 36	i'	io	pronoun		sg.	1			elision
 36	non	non	adverb						

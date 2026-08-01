@@ -508,7 +508,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 71	l'	lo	article	m.	sg.				elision
 71	altro	altro	adjective	m.	sg.				
 71	universo	universo	noun	m.	sg.				
-71	seco	seco	adverb						archaic
+71	seco	sé+con	pronoun+preposition		sg.	3			archaic
 71	corrisponde	corrispondere	verb		sg.	3	present	indicative	
 72	al	a+il	preposition+article	m.	sg.				contraction
 72	cerchio	cerchio	noun	m.	sg.				

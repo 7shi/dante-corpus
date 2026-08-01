@@ -583,7 +583,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	virtute	virtù	noun	f.	sg.				archaic
 81	ne	ne	pronoun		sg.				
 81	porta	portare	verb		sg.	3	present	indicative	
-81	seco	seco	adverb						archaic
+81	seco	sé+con	pronoun+preposition		sg.	3			archaic
 81	e	e	conjunction						
 81	l'	lo	article	m.	sg.				elision
 81	umano	umano	noun	m.	sg.				

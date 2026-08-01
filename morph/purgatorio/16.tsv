@@ -507,7 +507,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 68	se	se	conjunction						
 68	tutto	tutto	pronoun	m.	sg.				
 69	movesse	muovere	verb		sg.	3	imperfect	subjunctive	
-69	seco	con+se	pronoun		sg.	3			archaic
+69	seco	sé+con	pronoun+preposition		sg.	3			archaic
 69	di	di	preposition						
 69	necessitate	necessità	noun	f.	sg.				archaic
 70	Se	se	conjunction						
@@ -1040,7 +1040,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 141	più	più	adverb						
 141	non	non	adverb						
 141	vegno	venire	verb		sg.	1	present	indicative	
-141	vosco	vosco	adjective		sg.				archaic
+141	vosco	voi+con	pronoun+preposition		pl.	2			archaic
 142	Vedi	vedere	verb		sg.	2	present	indicative	
 142	l'	lo	article	m.	sg.				elision
 142	albor	albore	noun	m.	sg.				apocope

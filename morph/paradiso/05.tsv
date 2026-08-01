@@ -592,7 +592,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 83	semplice	semplice	adjective	m.	sg.				
 83	e	e	conjunction						
 83	lascivo	lascivo	adjective	m.	sg.				
-84	seco	con+se	preposition+pronoun		sg.	3			contraction
+84	seco	sé+con	pronoun+preposition		sg.	3			archaic
 84	medesmo	medesimo	adjective	m.	sg.				archaic
 84	a	a	preposition						
 84	suo	suo	adjective	m.	sg.				

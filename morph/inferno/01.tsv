@@ -811,7 +811,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 112	per	per	preposition						
 112	lo	lo	article	m.	sg.				
 112	tuo	tuo	pronoun	m.	sg.				
-112	me'	me	pronoun		sg.	1			
+112	me'	meglio	noun	m.	sg.				apocope
 112	penso	pensare	verb		sg.	1	present	indicative	
 112	e	e	conjunction						
 112	discerno	discernere	verb		sg.	1	present	indicative	

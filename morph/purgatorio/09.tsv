@@ -66,7 +66,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 10	quand'	quando	conjunction						elision
 10	io	io	pronoun		sg.	1			
 10	che	che	pronoun						relative
-10	meco	me+con	pronoun+preposition						archaic
+10	meco	me+con	pronoun+preposition		sg.	1			archaic
 10	avea	avere	verb		sg.	1	imperfect	indicative	apocope
 10	di	di	preposition						
 10	quel	quello	pronoun	m.	sg.				

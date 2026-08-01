@@ -723,7 +723,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 104	penne	penna	noun	f.	pl.				
 105	Giovanni	Giovanni	proper noun	m.	sg.				
 105	è	essere	verb		sg.	3	present	indicative	
-105	meco	me+co	pronoun		sg.	1			archaic
+105	meco	me+con	pronoun+preposition		sg.	1			archaic
 105	e	e	conjunction						
 105	da	da	preposition						
 105	lui	lui	pronoun	m.	sg.				

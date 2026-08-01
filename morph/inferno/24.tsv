@@ -167,7 +167,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	alcun	alcuno	adjective	m.	sg.				apocope
 22	consiglio	consiglio	noun	m.	sg.				
 23	eletto	eleggere	verb	m.	sg.				
-23	seco	con+se	preposition+pronoun		sg.	3			archaic
+23	seco	sé+con	pronoun+preposition		sg.	3			archaic
 23	riguardando	riguardare	verb		sg.		present	gerund	
 23	prima	prima	adverb						
 24	ben	bene	adverb						apocope

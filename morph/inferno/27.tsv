@@ -169,7 +169,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 23	restare	restare	verb					infinitive	
 23	a	a	preposition						
 23	parlar	parlare	verb					infinitive	apocope
-23	meco	me+con	pronoun+preposition						archaic
+23	meco	me+con	pronoun+preposition		sg.	1			archaic
 24	vedi	vedere	verb		sg.	2	present	indicative	
 24	che	che	conjunction						
 24	non	non	adverb						

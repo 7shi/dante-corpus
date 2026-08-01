@@ -1002,7 +1002,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 134	fé	fare	verb		sg.	3	remote past	indicative	archaic
 134	disfecemi	disfare+mi	verb+pronoun		sg.	3	remote past	indicative	enclitic
 134	Maremma	Maremma	noun	f.	sg.				
-135	salsi	salire+si	verb+pronoun		sg.	3	remote past	indicative	enclitic
+135	salsi	sapere+si	verb+pronoun		sg.	3	present	indicative	enclitic
 135	colui	colui	pronoun	m.	sg.				
 135	che	che	pronoun		sg.				relative
 135	'nnanellata	annellanare	adjective	f.	sg.				elision

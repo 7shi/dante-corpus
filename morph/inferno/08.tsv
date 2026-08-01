@@ -27,7 +27,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 4	due	due	numeral		pl.				
 4	fiammette	fiammetta	noun	f.	pl.				
 4	che	che	pronoun						
-4	i	lo	pronoun	m.	pl.				archaic
+4	i	ivi	adverb						apocope
 4	vedemmo	vedere	verb		pl.	1	remote past	indicative	
 4	porre	porre	verb		sg.			infinitive	
 5	e	e	conjunction						

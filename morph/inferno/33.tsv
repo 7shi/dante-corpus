@@ -276,7 +276,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 39	ch'	che	pronoun						elision
 39	eran	essere	verb		pl.	3	imperfect	indicative	apocope
 39	con	con	preposition						
-39	meco	me	pronoun		sg.	1			archaic
+39	meco	me+con	pronoun+preposition		sg.	1			archaic
 39	e	e	conjunction						
 39	dimandar	dimandare	verb					infinitive	apocope
 39	del	di+il	preposition+article	m.	sg.				contraction

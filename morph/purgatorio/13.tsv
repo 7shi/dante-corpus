@@ -1025,7 +1025,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 141	Costui	costui	pronoun	m.	sg.				
 141	ch'	che	pronoun						elision
 141	è	essere	verb		sg.	3	present	indicative	
-141	meco	me+con	preposition+pronoun		sg.	1			archaic
+141	meco	me+con	pronoun+preposition		sg.	1			archaic
 141	e	e	conjunction						
 141	non	non	adverb						
 141	fa	fare	verb		sg.	3	present	indicative	

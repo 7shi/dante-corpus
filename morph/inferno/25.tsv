@@ -769,7 +769,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 106	con	con	preposition						
 106	le	il	article	f.	pl.				
 106	cosce	coscia	noun	f.	pl.				
-106	seco	con+sé	preposition						archaic
+106	seco	sé+con	pronoun+preposition		sg.	3			archaic
 106	stesse	stesso	adjective	f.	pl.				
 107	s'	si	pronoun		sg.	3			elision
 107	appiccar	appiccare	verb					infinitive	apocope

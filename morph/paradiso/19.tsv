@@ -570,7 +570,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 82	a	a	preposition						
 82	colui	colui	pronoun	m.	sg.				
 82	che	che	pronoun						
-82	meco	me+con	adverb						archaic
+82	meco	me+con	pronoun+preposition		sg.	1			archaic
 82	s'	si	pronoun		sg.	3			elision
 82	assottiglia	assottigliare	verb		sg.	3	present	indicative	
 83	se	se	conjunction						

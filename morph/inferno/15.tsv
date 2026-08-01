@@ -254,7 +254,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 36	costui	costui	pronoun	m.	sg.				
 36	che	che	conjunction						
 36	vo	andare	verb		sg.	1	present	indicative	archaic
-36	seco	seco	adverb						archaic
+36	seco	sé+con	pronoun+preposition		sg.	3			archaic
 37	O	o	interjection						
 37	figliuol	figlio	noun	m.	sg.				apocope
 37	disse	dire	verb		sg.	3	remote past	indicative	

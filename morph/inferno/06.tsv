@@ -362,7 +362,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 50	trabocca	traboccare	verb		sg.	3	present	indicative	
 50	il	il	article	m.	sg.				
 50	sacco	sacco	noun	m.	sg.				
-51	seco	seco	pronoun		sg.	3			archaic
+51	seco	sé+con	pronoun+preposition		sg.	3			archaic
 51	mi	mi	pronoun		sg.	1			
 51	tenne	tenere	verb		sg.	3	remote past	indicative	
 51	in	in	preposition						

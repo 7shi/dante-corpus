@@ -964,7 +964,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 132	per	per	preposition						
 132	poco	poco	noun	m.	sg.				
 132	che	che	conjunction						
-132	teco	con+te	preposition+pronoun		sg.	2			archaic
+132	teco	te+con	pronoun+preposition		sg.	2			archaic
 132	non	non	adverb						
 132	mi	mi	pronoun		sg.	1			reflexive
 132	risso	rissare	verb		sg.	1	present	subjunctive	

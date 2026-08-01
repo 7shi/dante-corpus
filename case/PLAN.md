@@ -21,9 +21,15 @@ candidates as well. See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 3* a
 [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
 
 Agreement with `dep` is now **90%** on `obj`, **96%** on `iobj`, **99%** on `nsubj`, and the
-contradiction list is **260** (was 462 before step 4). What remains is **step 5's** one open item,
-the `morph/` merge — and the annex's own verdict is that a **blind regeneration of `case` under a
-corrected prompt** is the next instrument, not another Layer-4 slice. The column's two measured
+contradiction list is **260** (was 462 before step 4).
+
+**Step 5's owed `morph/` correction round landed on 2026-08-02** — 10 hand-verified singletons and
+the 58-token comitative family, in
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md). It moved the pronoun scope to **13125 tokens
+/ 13189 values**, which leaves `case --check` at **25 hard over 20 lines**, all of them `[count]`
+mismatches awaiting a user-run regeneration of those chunks. What remains after that is the
+`morph/` merge itself — and the annex's own verdict is that a **blind regeneration of `case` under
+a corrected prompt** is the next instrument, not another Layer-4 slice. The column's two measured
 weaknesses are both prompt-fixable and both were recorded rather than patched: **194 `case`-side
 errors across the three slices, none rewritten.**
 
@@ -130,27 +136,31 @@ this section alone.** Branch `case-pilot`.
 | `419120b` | slice 1's Layer-4 edits: 10 positions / 11 rows |
 | `40c8a11` | slice 1's measurements and the step-4 selector change |
 | `439f6af` | slice 2's Layer-4 edits: 81 positions / 92 rows |
-| *slice 3* | 124 positions / 167 rows, plus the `case`/`dep`/`skel` CORRECTIONS entries |
+| `bedfd97` | slice 3's Layer-4 edits: 124 positions / 167 rows |
+| *the `morph/` round* | 2026-08-02, 41 canto artifacts — 10 singletons + 58 comitatives |
 
 ```bash
 git status --short          # expect clean
 uv run pytest -q            # expect 138 passed
 make -C morph check         # expect 0 hard, 0 soft
-make -C np check            # expect 3 hard, 64 soft -- see below, NOT a new break
+make -C np check            # expect 5 hard, 96 soft -- see below, NOT a new break
 make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3634 soft
-make -C case check          # expect 0 hard
-cd case && uv run case.py inferno purgatorio paradiso --stats --full
-                            # expect 260 contradictions, 40 impossible pairings
+make -C skel check          # expect 0 hard, 3633 soft
+make -C case check          # expect 25 hard -- the 2026-08-02 morph round, see below
 ```
 
-If `skel` reads 3469 and `case --stats` reads 382/39, slice 3 is not in the tree.
+`case --stats` needs a valid artifact, so it does not run until those 25 are regenerated; before
+the morph round it read 260 contradictions / 40 impossible pairings.
 
-**`np`'s 3 hard / 64 soft belong to this annex and are the stack's one open defect.** Step 3's
+If `skel` reads 3469, slice 3 is not in the tree; if it reads 3634 and `case` reads 0 hard, the
+`morph/` round is not.
+
+**`np`'s 5 hard / 96 soft belong to this annex and are the stack's one open defect.** Step 3's
 Layer-2 correction rounds (`880fc2e`, `a97b80e`) moved the lemma parts of fused clitic tokens to
-unblock the case pass; `np`'s checker derives its expected `+X` clitic mentions from exactly those
-lemma parts, so the frozen Layer-3 artifacts went stale. `morph`, `dep` and `skel` were re-measured
-at the time and `np` was not. Nothing has been done about it — the full description, the token
+unblock the case pass, and the 2026-08-02 `morph/` round moved more of them; `np`'s checker derives
+its expected `+X` clitic mentions from exactly those lemma parts, so the frozen Layer-3 artifacts
+went stale. `morph`, `dep` and `skel` were re-measured at the time and `np` was not. Nothing has
+been done about it — the full description, the token
 counts and the reason the choice of instrument is left open are in
 [`../PLAN.md`](../PLAN.md)'s *Open item*.
 
@@ -185,10 +195,25 @@ counts and the reason the choice of instrument is left open are in
   (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*;
   paradiso 29:92.1 *seminarla*).
 
-**A `morph/` correction round is also owed**, holding six positions this annex surfaced and did
-not act on: slice 1's purgatorio 31:25 `fossi` and 23:126 `torti`; slice 2's inferno 8:4.5 `i`
-(for *ivi*) and purgatorio 31:90.1 *salsi*; slice 3's purgatorio 20:83.2 `c'` (the conjunction of
-*poscia che*, tagged `pronoun`) and 11:137.2 `e'`. Two of these blocked a Layer-4 edit.
+**The `morph/` correction round is done (2026-08-02)** — see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s *The mistags the case annex surfaced and
+parked*. It spent all six positions step 4 left (purgatorio 31:25 `fossi`, 23:126 `torti`,
+inferno 8:4.5 `i`, purgatorio 31:90.1 `salsi`, 20:83.2 `c'`, 11:137.2 `e'`), plus the four step 3
+had parked (`me'`, `ne` at paradiso 14:55, and the comitatives), and **sweeping each reported word
+form corpus-wide doubled two of them**: both corpus `me'` tokens are *meglio* and both `salsi`
+tokens are the *salsi colui/colei che…* idiom, so each is a family of two rather than the singleton
+it was reported as. The comitatives turned out to be **58 tokens under 34 distinct taggings**, not
+the "four different ways" the report said, and are normalized to `<pronoun>+con` /
+`pronoun+preposition`.
+
+**It leaves `case/` at 25 hard and that is the expected handoff, not a break.** The scope this
+column derives from `morph` moved — **13112 → 13125 tokens, 13176 → 13189 values** — so 20 lines
+now need a different number of case values. Every one of the 25 is a `[count]` mismatch; none is
+the model getting the Italian wrong. Closing them is `make -C case clean` then `make -C case`,
+LLM-scale work and so the user's, exactly as step 3's two rounds went. `skel` went 3634 → **3633**,
+and two of the three moves are Layer 5 independently confirming this round's readings (purgatorio
+11:137 `e'` and 16:141 `vosco` each closed a membership violation). `np` went 3 hard / 64 soft →
+**5 / 96**, widening the open defect below rather than adding a new one.
 
 ### The traps, in the order the three slices hit them
 
@@ -305,15 +330,15 @@ Measurements in [`CORRECTIONS.md`](CORRECTIONS.md)'s *fourth run and the freeze*
   pairings were a smaller, differently-shaped list that happened to be found first. The **325**
   contradictions `skel` does not flag were worked by slice 3, 124 of them Layer-4 errors and 171
   of them `case`-side errors.
-- **Layer-2 mistags this annex surfaced and did not act on**, all single-pronoun tokens whose
-  `pos` gives the right count, so nothing is blocked: the comitatives `meco`/`teco`/`seco` are
-  tagged four different ways (and `vosco` twice as `adjective`, once with the lemma `boscoso`),
-  `ne` at *Paradiso* 14:55 carries the lemma `in+esso`, and `me'` (apocopated *meglio*) is tagged
-  `pronoun` at Inferno 1:112. Step 4's slice 1 added two more, both of which **blocked a Layer-4
-  edit**: *Purgatorio* 31:25 `fossi` (the noun "ditches", tagged `verb`, so Layer 4's `aux`
-  follows Layer 2) and *Purgatorio* 23:126 `torti` (tagged `noun`, where the *drizza*/*torti*
-  antithesis argues for the predicative adjective Layer 2 uses at *Paradiso* 13:129). These
-  belong to a `morph/` round of their own.
+- **The Layer-2 mistags this annex surfaced are now corrected** (2026-08-02), in the `morph/`
+  round of their own that this bullet asked for. They were: the comitatives
+  `meco`/`teco`/`seco`/`nosco`/`vosco`; `ne` at *Paradiso* 14:55 with the lemma `in+esso`; `me'`
+  (apocopated *meglio*) tagged `pronoun`; slice 1's *Purgatorio* 31:25 `fossi` (the noun
+  "ditches", tagged `verb`, so Layer 4's `aux` followed Layer 2) and 23:126 `torti` (tagged
+  `noun`, where the *drizza*/*torti* antithesis argues for the predicative adjective Layer 2 uses
+  at *Paradiso* 13:129), **both of which had blocked a Layer-4 edit**; and slices 2–3's `i`,
+  `salsi`, `c'` and `e'`. Full record and the corpus-internal precedent behind each tag in
+  [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
 
 ## Why this exists
 
@@ -467,7 +492,7 @@ step 1 without reconstructing context from the Phase 5 history.
 ### Confirm the state first
 
 ```bash
-make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3634)
+make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3633)
 make -C dep check      # expect: 0 hard, 0 soft
 uv run pytest -q       # was: 125 passed          (now 138, with the annex's tests)
 make -C skel stats     # by-kind + the role_mismatch pair table

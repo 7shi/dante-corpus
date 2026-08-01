@@ -396,7 +396,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 56	s'	se	conjunction						elision
 56	altri	altro	pronoun	m.	pl.				
 56	era	essere	verb		sg.	3	imperfect	indicative	
-56	meco	con+me	pronoun		sg.	1			archaic
+56	meco	me+con	pronoun+preposition		sg.	1			archaic
 57	e	e	conjunction						
 57	poi	poi	adverb						
 57	che	che	conjunction						
@@ -425,7 +425,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 60	perché	perché	conjunction						
 60	non	non	adverb						
 60	è	essere	verb		sg.	3	present	indicative	
-60	teco	teco	adverb						archaic
+60	teco	te+con	pronoun+preposition		sg.	2			archaic
 61	E	e	conjunction						
 61	io	io	pronoun		sg.	1			
 61	a	a	preposition						
@@ -696,7 +696,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 98	che	che	pronoun						
 98	'l	il	article	m.	sg.				elision
 98	tempo	tempo	noun	m.	sg.				
-98	seco	seco	adverb						archaic
+98	seco	sé+con	pronoun+preposition		sg.	3			archaic
 98	adduce	adducere	verb		sg.	3	present	indicative	
 99	e	e	conjunction						
 99	nel	in+il	preposition+article	m.	sg.				contraction

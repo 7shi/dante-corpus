@@ -622,7 +622,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 88	venirli	venire+li	verb+pronoun		sg.		infinitive		clitic
 88	a	a	preposition						
 88	parlamento	parlamento	noun	m.	sg.				
-88	seco	se	pronoun		sg.				archaic
+88	seco	sé+con	pronoun+preposition		sg.	3			archaic
 89	poi	poi	adverb						
 89	farà	fare	verb		sg.	3	future	indicative	
 89	sì	sì	adverb						

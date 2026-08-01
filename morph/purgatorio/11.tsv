@@ -438,7 +438,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 60	già	già	adverb						
 60	mai	mai	adverb						
 60	fu	essere	verb		sg.	3	remote past	indicative	
-60	vosco	vosco	adjective	m.	sg.				archaic
+60	vosco	voi+con	pronoun+preposition		pl.	2			archaic
 61	L'	lo	article	m.	sg.				elision
 61	antico	antico	adjective	m.	sg.				
 61	sangue	sangue	noun	m.	sg.				
@@ -500,7 +500,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 69	ha	avere	verb		sg.	3	present	indicative	
 69	ella	ella	pronoun	f.	sg.	3			
 69	tratti	trare	verb	m.	pl.		past participle		
-69	seco	seco	adverb						archaic
+69	seco	sé+con	pronoun+preposition		sg.	3			archaic
 69	nel	in+il	preposition+article	m.	sg.				contraction
 69	malanno	malanno	noun	m.	sg.				
 70	E	e	conjunction						
@@ -1006,7 +1006,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 136	di	di	preposition						
 136	pena	pena	noun	f.	sg.				
 137	ch'	che	pronoun						elision
-137	e'	essere	verb		sg.	3	present	indicative	
+137	e'	egli	pronoun	m.	sg.	3			archaic
 137	sostenea	sostenere	verb		sg.	3	imperfect	indicative	
 137	ne	in	preposition						archaic
 137	la	la	article	f.	sg.				

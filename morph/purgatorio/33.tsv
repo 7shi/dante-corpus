@@ -127,7 +127,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 20	s'	se	conjunction						elision
 20	io	io	pronoun		sg.	1			
 20	parlo	parlare	verb		sg.	1	present	indicative	
-20	teco	te+co	pronoun		sg.	2			archaic
+20	teco	te+con	pronoun+preposition		sg.	2			archaic
 21	ad	a	preposition						euphonic d
 21	ascoltarmi	ascoltare+mi	verb+pronoun					infinitive	contraction
 21	tu	tu	pronoun		sg.	2			
@@ -141,7 +141,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	com'	come	conjunction						elision
 22	io	io	pronoun		sg.	1			
 22	dovëa	dovere	verb		sg.	1	imperfect	indicative	archaic
-22	seco	con+sé	preposition+pronoun		sg.	3			archaic
+22	seco	sé+con	pronoun+preposition		sg.	3			archaic
 23	dissemi	dire+mi	verb+pronoun		sg.	3	remote past	indicative	enclitic
 23	Frate	frate	noun	m.	sg.				
 23	perché	perché	adverb						
@@ -152,7 +152,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 24	domandarmi	domandare+mi	verb+pronoun		sg.	1			enclitic
 24	omai	omai	adverb						
 24	venendo	venire	verb				gerund		
-24	meco	con+me	preposition+pronoun		sg.	1			archaic
+24	meco	me+con	pronoun+preposition		sg.	1			archaic
 25	Come	come	conjunction						
 25	a	a	preposition						
 25	color	coloro	pronoun	m.	pl.				archaic

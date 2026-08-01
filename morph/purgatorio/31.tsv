@@ -175,7 +175,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 24	s'	si	pronoun		sg.	3			elision
 24	aspiri	aspirare	verb		sg.	3	present	subjunctive	
 25	quai	quale	pronoun		pl.				archaic
-25	fossi	essere	verb		sg.	2	imperfect	subjunctive	
+25	fossi	fosso	noun	m.	pl.				
 25	attraversati	attraversare	participle	m.	pl.				
 25	o	o	conjunction						
 25	quai	quale	pronoun		pl.				archaic
@@ -622,7 +622,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 89	quale	quale	adjective	m.	sg.				
 89	allora	allora	adverb						
 89	femmi	fare+mi	verb+pronoun		sg.	1	remote past	indicative	enclitic
-90	salsi	salutare	verb		sg.	1	remote past	indicative	archaic
+90	salsi	sapere+si	verb+pronoun		sg.	3	present	indicative	enclitic
 90	colei	colui	pronoun	f.	sg.				
 90	che	che	pronoun		sg.				relative
 90	la	la	article	f.	sg.				
@@ -787,7 +787,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 113	petto	petto	noun	m.	sg.				
 113	del	di+il	preposition+article	m.	sg.				contraction
 113	grifon	grifone	noun	m.	sg.				apocope
-113	seco	seco	pronoun						archaic
+113	seco	sé+con	pronoun+preposition		sg.	3			archaic
 113	menarmi	menare+mi	verb+pronoun		sg.	1	present	infinitive	enclitic, apocope
 114	ove	ove	adverb						archaic
 114	Beatrice	Beatrice	noun	f.	sg.				

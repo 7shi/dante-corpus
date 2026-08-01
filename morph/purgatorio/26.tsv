@@ -398,7 +398,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 56	ma	ma	conjunction						
 56	son	essere	verb		pl.	3	present	indicative	apocope
 56	qui	qui	adverb						
-56	meco	me+con	pronoun+preposition						archaic
+56	meco	me+con	pronoun+preposition		sg.	1			archaic
 57	col	con+il	preposition+article	m.	sg.				contraction
 57	sangue	sangue	noun	m.	sg.				
 57	suo	suo	adjective	m.	sg.				

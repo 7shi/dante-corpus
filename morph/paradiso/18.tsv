@@ -580,7 +580,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 83	longevi	longevo	adjective	m.	pl.				
 84	ed	e	conjunction						euphonic
 84	essi	esso	pronoun	m.	pl.				
-84	teco	con+te	preposition+pronoun						archaic
+84	teco	te+con	pronoun+preposition		sg.	2			archaic
 84	le	lo	article	f.	pl.				
 84	cittadi	città	noun	f.	pl.				archaic
 84	e	e	conjunction						

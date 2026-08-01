@@ -300,7 +300,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 40	vaga	vago	adjective	f.	sg.				
 41	di	di	preposition						
 41	parlar	parlare	verb						apocope
-41	meco	con+me	preposition+pronoun		sg.	1			archaic
+41	meco	me+con	pronoun+preposition		sg.	1			archaic
 41	fa	fare	verb		sg.	2	present	imperative	
 41	sì	sì	adverb						
 41	ch'	che	conjunction						elision
@@ -545,7 +545,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 74	Forese	Forese	proper noun	m.	sg.				
 74	e	e	conjunction						
 74	dietro	dietro	preposition						
-74	meco	me+con	pronoun+preposition						contraction
+74	meco	me+con	pronoun+preposition		sg.	1			archaic
 74	sen	si+ne	pronoun+pronoun		sg.	3			archaic
 74	veniva	venire	verb		sg.	3	imperfect	indicative	
 75	dicendo	dire	verb						gerund

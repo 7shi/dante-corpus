@@ -1,5 +1,39 @@
 # skel — Layer 5 correction history
 
+## The `case` annex's Layer-2 round — 3634 → 3633, and Layer 5 confirming two readings (2026-08-02)
+
+The case annex's step 5 finally spent the `morph/` corrections its three earlier steps had
+surfaced and parked — 10 hand-verified singletons plus the 58-token comitative family, recorded
+in full in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md). **No `skel/` artifact and no
+`dep/` row was touched**; the whole delta is Layer 5's deterministic derivation reading a changed
+Layer 2.
+
+The net is −1, but the interesting part is that it is **−2 +1**, and both of the closures are
+Layer 5's LLM having been right about a position where Layer 2 was wrong:
+
+| | position | violation | why it moved |
+|---|---|---|---|
+| **closed** | *Purg* 11:137 | `argument (137, 2) for role subj heads no NP/pronoun/predicate` | the LLM read `e'` as the subject of `sostenea`. Layer 2 had it as a form of `essere`, so the argument headed no pronoun. Retagged `egli`/`pronoun`, the violation dissolves |
+| **closed** | *Purg* 16:141 | `argument (141, 9) for role obl heads no NP/pronoun/predicate` | the same shape for `vosco`, which Layer 2 had as an `adjective`. Retagged `voi+con`/`pronoun+preposition` |
+| **opened** | *Inf* 23:87 | `extra_arg: 87.7 obl (87, 8)` | `seco` is now a pronoun, so `derive_unit` produces an `obl` argument the LLM's skeleton does not carry |
+
+**This is the audit running in the direction it was designed to run.** Layer 5's whole rationale
+is that the LLM's skeleton is an independent read, so a divergence can indict a lower layer rather
+than the model — Phases 5i, 5n and 5p spent that against Layer 4, and here it lands on Layer 2
+instead. Neither `e'` nor `vosco` was found *by* Layer 5; both came off the `case` annex's parked
+list. But Layer 5 had already flagged both, which is exactly the corroboration a third read is
+for, and it is worth more than the −1.
+
+The single opened violation is the behaviour recorded at length in the three step-4 entries below:
+**the soft count measures divergence between two independent reads, not correctness**, so a
+correct round can move it either way. 3633 is not a better number than 3634 by one; it is a
+different corpus, marginally more correct, whose two reads happen to line up once more often.
+
+**Other layers**: `morph --check` and `dep --check` stay 0/0, `pytest` stays at 138 passed.
+`case --check` goes 0 → **25 hard** and `np --check` 3/64 → **5/96**, both of them the mechanical
+consequence of a moved Layer 2 and both described in
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
+
 ## The `case` annex's third Layer-4 round — 3469 → 3634, upward by 165 (2026-08-01)
 
 **The count rose, the round was correct, and the rise was predicted before it was run.** Slice 3

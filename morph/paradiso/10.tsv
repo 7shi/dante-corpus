@@ -49,7 +49,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 7	l'	le	article	f.	pl.				elision
 7	alte	alto	adjective	f.	pl.				
 7	rote	rota	noun	f.	pl.				
-8	meco	me+con	pronoun+preposition						archaic
+8	meco	me+con	pronoun+preposition		sg.	1			archaic
 8	la	la	article	f.	sg.				
 8	vista	vista	noun	f.	sg.				
 8	dritto	dritto	adjective	m.	sg.				

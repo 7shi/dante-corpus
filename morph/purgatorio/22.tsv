@@ -391,7 +391,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 58	quello	quello	pronoun	m.	sg.				
 58	che	che	conjunction						
 58	Clïò	Clio	proper noun	f.	sg.				
-58	teco	con+te	preposition+pronoun		sg.	2			archaic
+58	teco	te+con	pronoun+preposition		sg.	2			archaic
 58	lì	lì	adverb						
 58	tasta	tastare	verb		sg.	3	present	indicative	
 59	non	non	adverb						
@@ -711,11 +711,11 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 105	le	le	article	f.	pl.				
 105	nutrice	nutrice	noun	f.	pl.				archaic plural
 105	nostre	nostro	adjective	f.	pl.				
-105	seco	seco	adverb						archaic
+105	seco	sé+con	pronoun+preposition		sg.	3			archaic
 106	Euripide	Euripide	noun	m.	sg.				
 106	v'	vi	adverb						elision
 106	è	essere	verb		sg.	3	present	indicative	
-106	nosco	nosco	adjective	m.	sg.				
+106	nosco	noi+con	pronoun+preposition		pl.	1			archaic
 106	e	e	conjunction						
 106	Antifonte	Antifonte	noun	m.	sg.				
 107	Simonide	Simonide	noun	m.	sg.				

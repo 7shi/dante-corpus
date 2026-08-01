@@ -435,7 +435,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	frate	frate	noun	m.	sg.				
 63	che	che	pronoun		sg.				
 63	mise	mettere	verb		sg.	3	remote past	indicative	
-63	teco	te+co	pronoun+preposition		sg.	2			archaic
+63	teco	te+con	pronoun+preposition		sg.	2			archaic
 63	Roma	Roma	noun	f.	sg.				
 63	nel	in+il	preposition+article	m.	sg.				contraction
 63	buon	buono	adjective	m.	sg.				apocope

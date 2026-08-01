@@ -293,3 +293,100 @@ one case.
 Layer-5 membership violation (see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). 12 canto
 artifacts change. The pronoun scope stays at **13112 tokens**, over **8540** lines, and the
 case-value count goes to **13176**.
+
+## The mistags the case annex surfaced and parked (2026-08-02)
+
+The [`case/`](../case/README.md) annex ran three steps over this column without touching it, and
+each one left behind Layer-2 positions it had no mandate to fix: step 3's corpus pass found single
+tokens whose `pos` was wrong but whose *count* was right (so nothing was blocked), and step 4's
+three adjudication slices found six more, **two of which blocked a Layer-4 edit outright**
+([`../case/PLAN.md`](../case/PLAN.md)'s *Resuming cold*). This round is the one those entries owe.
+It is 10 hand-verified singletons plus one family sweep, every one checked against its terzina and
+against what the corpus already does with the same word elsewhere.
+
+### The ten singletons
+
+Each row names the reading and the corpus-internal precedent that makes the tag defensible; the
+precedent is what decided the exact lemma and features, not a grammar book.
+
+| position | word | was | now | why |
+|---|---|---|---|---|
+| *Purg* 31:25.2 | `fossi` | `essere`/`verb` | `fosso`/`noun`/m./pl. | "quai fossi attraversati o quai catene / trovasti" — the noun *ditches*, coordinated with `catene`. Precedent *Inf* 18:17.7, the corpus's only other plural `fossi` |
+| *Purg* 23:126.8 | `torti` | `torto`/`noun` | `torto`/`adjective`/m./pl. | "che drizza voi che 'l mondo fece torti" — *made you crooked*, a predicative adjective. Precedent *Par* 13:129.3, and `torto` is `adjective` 14× against `noun` 5× |
+| *Inf* 8:4.5 | `i` | `lo`/`pronoun`/m./pl. | `ivi`/`adverb`/apocope | "per due fiammette che i vedemmo porre" — `i` is *ivi*, "there". `che` is already the object and `vedemmo` is 1pl, so the clitic reading has no slot to fill. Precedent *Purg* 10:41.2 `iv'` |
+| *Purg* 31:90.1 | `salsi` | `salutare`/`verb` | `sapere+si`/`verb+pronoun`/enclitic | "salsi colei che la cagion mi porse" — *she knows it*. Precedent `sallo` = `sapere+lo`/`verb+pronoun` |
+| *Purg* 5:135.1 | `salsi` | `salire+si`/`verb+pronoun` | `sapere+si`/`verb+pronoun`/enclitic | "salsi colui che 'nnanellata pria" — the identical formula, La Pia's. Found by sweeping the first one |
+| *Purg* 20:83.2 | `c'` | `ci`/`pronoun` | `che`/`conjunction`/elision | "poscia c'ha' il mio sangue a te sì tratto" — the `che` of *poscia che*. Follows `ch'`/`che`/`conjunction`/elision, 660× |
+| *Purg* 11:137.2 | `e'` | `essere`/`verb` | `egli`/`pronoun`/m./sg./3 | "ch'e' sostenea ne la prigion di Carlo" — *which **he** endured*. Precedent `e'`/`egli`/`pronoun`, 11× |
+| *Par* 14:55.6 | `ne` | `in+esso`/`pronoun` | `noi`/`pronoun`/pl./1 | "questo folgór che già ne cerchia" — *encircles **us***. Precedent `ne`/`noi`/`pronoun`/archaic, 5× |
+| *Inf* 1:112.6 | `me'` | `me`/`pronoun` | `meglio`/`noun`/m./sg./apocope | "per lo tuo me'" — *for your **better***, nominal under `lo`/`tuo`. Precedent *Par* 10:38.4 |
+| *Inf* 2:36.4 | `me'` | `me`/`pronoun` | `meglio`/`adverb`/apocope | "intendi me' ch'i' non ragiono" — *you understand **better***. Precedent `meglio`/`adverb`, 14× |
+
+**Two of these were found by sweeping a reported one, not by being reported.** Only *Purg* 31:90's
+`salsi` and *Inf* 1:112's `me'` were on the annex's list; sweeping each word form corpus-wide
+turned up *Purg* 5:135 (the same *salsi colui/colei che…* idiom, mistagged a different way) and
+*Inf* 2:36 (the other `me'`, and also *meglio*). **Neither `me'` in the corpus is the pronoun
+`me`, and neither `salsi` is `salire`** — each is a family of two, which is why they are recorded
+as families rather than as the singletons they were reported as.
+
+### The comitatives — one family, 58 tokens, 34 distinct taggings
+
+`meco` / `teco` / `seco` / `nosco` / `vosco` are the fused *pronoun + con* forms (Latin *mecum*).
+The annex reported them as "tagged four different ways"; the actual count is **34 distinct
+`lemma`/`pos`/feature combinations over 58 tokens**, including `seco` as an `adverb` (7×), `nosco`
+and `vosco` as an `adjective` (5×, one of them with the lemma `boscoso`), and `seco` as a bare
+`preposition`.
+
+All 58 are normalized to a single shape — **`<pronoun>+con` / `pronoun+preposition` / `archaic`**,
+with number and person from the pronoun:
+
+| form | lemma | number | person |
+|---|---|---|---|
+| `meco` (26) | `me+con` | sg. | 1 |
+| `teco` (12) | `te+con` | sg. | 2 |
+| `seco` (15) | `sé+con` | sg. | 3 |
+| `nosco` (2) | `noi+con` | pl. | 1 |
+| `vosco` (3) | `voi+con` | pl. | 2 |
+
+**The order is not a preference.** [`README.md`](README.md)'s decomposition rule records the
+components in the order the surface word holds them — `Nel → in+il`, `del → di+il` — and *meco* is
+*me* followed by *co(n)*. That rule and the plurality tag already in the file agree: `me+con` /
+`pronoun+preposition` was already on 17 of the 27 `meco` tokens. `sé` is the corpus's tonic-`se`
+lemma at 210 occurrences against 6, which is what settles `sé+con` over `se+con`. 46 of the 58 rows
+changed; the other 12 already had this shape.
+
+### Effect
+
+`morph --check` stays **0 hard / 0 soft** and `dep --check` stays **0/0**. 41 canto artifacts
+change, so their `morph` content hashes move. `uv run pytest -q` stays at 138 passed.
+
+**`skel --check` goes 3634 → 3633**, and the composition of that −1 is the useful part, because
+Layer 5's LLM is an independent read and it had already flagged two of these positions:
+
+- **closed** — *Purg* 11:137 `argument (137, 2) for role subj heads no NP/pronoun/predicate`. The
+  Layer-5 read called `e'` the subject of `sostenea`; Layer 2 called it a verb, so the argument
+  headed nothing. The `egli` correction closes it. **Independent confirmation of the reading.**
+- **closed** — *Purg* 16:141 `argument (141, 9) for role obl heads no NP/pronoun/predicate`, the
+  same shape for `vosco`, which was tagged `adjective`.
+- **opened** — *Inf* 23:87 `extra_arg: 87.7 obl (87, 8)`. `seco` is now a pronoun, so the
+  deterministic derivation produces an `obl` argument the LLM's skeleton does not carry. This is
+  the divergence-measure behaviour [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) describes: a
+  correct Layer-2 round can move the count either way, and the count is a diagnostic, not the
+  objective.
+
+**The pronoun scope this column hands to `case/` moves**, which is the consequential part:
+**13112 → 13125 tokens**, **13176 → 13189 values**, over **8540 → 8545 lines**. 14 comitatives that
+were `adverb` / `adjective` / `preposition` enter the scope, `salsi` and `e'` add one each, and
+`i`, `c'` and the two `me'` leave it. **`case --check` therefore goes 0 hard → 25 hard over 20
+lines** — every one a `[count]` mismatch, none of them a wrong answer by the model. Closing them is
+a regeneration of exactly those chunks (`make -C case clean` then `make -C case`), which is
+LLM-scale work and so the user's, by the convention Phase 5 settled. This is the same sequence
+step 3's two rounds went through.
+
+**`np --check` goes 3 hard / 64 soft → 5 hard / 96 soft**, widening the stack's one open defect
+rather than adding a new kind. `np` derives its expected `+X` clitic mentions from this column's
+lemma parts, so giving `meco` the parts `me`/`con` makes `np` owe a `+me` mention it was never
+built with — correct behaviour on `np`'s part, and it resolves with the same deterministic
+regeneration of the derived spans that the existing 3 hard / 64 soft is already waiting on. The 2
+new hard are *Inf* 24:23 and *Par* 5:84, where the frozen span reads `+se` and the lemma now reads
+`sé`. See [`../PLAN.md`](../PLAN.md)'s *Open item*.

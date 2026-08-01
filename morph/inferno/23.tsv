@@ -618,7 +618,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 83	viso	viso	noun	m.	sg.				
 83	d'	di	preposition						elision
 83	esser	essere	verb				infinitive		apocope
-83	meco	me+con	pronoun+preposition						archaic
+83	meco	me+con	pronoun+preposition		sg.	1			archaic
 84	ma	ma	conjunction						
 84	tardavali	tardare+lo	verb+pronoun		sg.	3	imperfect	indicative	enclitic pronoun
 84	'l	lo	article	m.	sg.				elision
@@ -647,7 +647,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 87	sé	sé	pronoun		sg.	3			
 87	e	e	conjunction						
 87	dicean	dire	verb		pl.	3	imperfect	indicative	apocope
-87	seco	seco	adverb						archaic
+87	seco	sé+con	pronoun+preposition		sg.	3			archaic
 88	Costui	costui	pronoun	m.	sg.				
 88	par	parere	verb		sg.	3	present	indicative	
 88	vivo	vivo	adjective	m.	sg.				

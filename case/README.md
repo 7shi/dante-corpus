@@ -55,12 +55,15 @@ Which tokens carry a case is decided mechanically from Layer 2's own `pos` colum
 authority. In scope: `pronoun`, `relative pronoun`, and every fused token whose `pos` names a
 pronoun among its parts (`verb+pronoun` for an enclitic, `pronoun+pronoun` for a clitic cluster).
 
-Measured on the frozen `morph/*.tsv`:
+Measured on the frozen `morph/*.tsv`. The scope was **13112 tokens over 8540 lines** when the
+artifact was built and frozen at `0027494`; the 2026-08-02 Layer-2 correction round moved it to
+the figures below, which is why `--check` currently reports 25 hard `[count]` mismatches awaiting
+a regeneration of those 20 lines' chunks (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)):
 
 | population | tokens | lines |
 |---|---|---|
 | Layer-2 tokens | 101601 | 14233 |
-| **pronoun-POS tokens (in scope)** | **13112** | **8540** |
+| **pronoun-POS tokens (in scope)** | **13125** | **8545** |
 | of which the clitic forms `mi ti si ci vi ne lo la li le gli` + elisions | 3710 | 3481 |
 
 The clitic subset is what the Layer-5 adjudication needs, but the scope is the whole pronoun

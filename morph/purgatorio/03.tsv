@@ -158,7 +158,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 24	credi	credere	verb		sg.	2	present	indicative	
 24	tu	tu	pronoun		sg.	2			
 24	me	me	pronoun		sg.	1			
-24	teco	teco	preposition+pronoun		sg.	2			archaic
+24	teco	te+con	pronoun+preposition		sg.	2			archaic
 24	e	e	conjunction						
 24	ch'	che	conjunction						elision
 24	io	io	pronoun		sg.	1			
