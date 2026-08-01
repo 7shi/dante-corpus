@@ -769,13 +769,13 @@ line	token	word	deprel	head_line	head_token
 111	9	ch'	obj	111	11
 111	10	ei	nsubj	111	11
 111	11	piove	acl:relcl	111	8
-112	1	Luce	obj	112	8
+112	1	Luce	nsubj	112	8
 112	2	e	cc	112	1
 112	3	amor	conj	112	1
 112	4	d'	case	112	6
 112	5	un	det	112	6
 112	6	cerchio	nmod	112	3
-112	7	lui	nsubj	112	8
+112	7	lui	obj	112	8
 112	8	comprende	root	0	0
 113	1	sì	advmod	113	2
 113	2	come	advcl	112	8

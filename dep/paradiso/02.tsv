@@ -907,8 +907,8 @@ line	token	word	deprel	head_line	head_token
 131	2	la	det	131	3
 131	3	mente	nmod	132	3
 131	4	profonda	amod	131	3
-131	5	che	obj	131	7
-131	6	lui	nsubj	131	7
+131	5	che	nsubj	131	7
+131	6	lui	obj	131	7
 131	7	volve	acl:relcl	131	3
 132	1	prende	conj	129	4
 132	2	l'	det	132	3

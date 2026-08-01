@@ -2,15 +2,30 @@
 
 ## Status
 
-**Steps 1–3 are done. Step 4 is under way: slice 1 (the 49 impossible pairings) and slice 2 (the
-102 contradictions `skel` already flags) both closed on 2026-07-31.** All 100 cantos, 13112
-pronoun tokens, 13176 case values. Slice 2 edited **81 positions / 92 rows** in `dep/` and took
-Layer 5 from **3555 to 3469 (−86)** — against slice 1's +5 from 49 candidates, which is the
-corrected selector paying out. Agreement with `dep` is now 86% on `obj`, 95% on `iobj`, 99% on
-`nsubj`, and the contradiction list is **382** (was 462). What remains of step 4 is
-[*slice 3*](#step-4--the-next-action): the 324 contradictions `skel` does **not** flag, where a
-correct fix will not lower Layer 5's count. See [`CORRECTIONS.md`](CORRECTIONS.md)'s
-*Step 4, slice 2*.
+**Step 4 is complete. All three slices are done and every one of the 510 adjudication candidates
+has a verdict.** All 100 cantos, 13112 pronoun tokens, 13176 case values, frozen since `0027494`.
+Across the three slices the round edited **215 positions / 270 rows** in `dep/`, with
+`dep --check` at 0/0 throughout and the `case/` artifact never touched.
+
+| slice | population | candidates | edited | yield | Layer 5 |
+|---|---|---|---|---|---|
+| 1 ✅ | `obl` × `nominative` impossible pairings | 49 | 10 | 20% | 3550 → **3555**, +5 |
+| 2 ✅ | contradictions where `skel`'s given role sides with `case` | 102 | 81 | 79% | 3555 → **3469**, −86 |
+| 3 ✅ | the contradictions `skel` does **not** flag | 325 | 124 | 38% | 3469 → **3634**, +165 |
+
+**Slice 3 was run rather than skipped**, and its rise was predicted before it started: it is the
+slice-1 configuration, where `dep` and `skel` agree and only `case` dissents, so a correct fix
+breaks an agreement. **3634 is a worse number and a better corpus than 3469.** The selector this
+plan established decided the sign three times out of three and now predicts yield over 476
+candidates as well. See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 3* and
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+
+Agreement with `dep` is now **90%** on `obj`, **96%** on `iobj`, **99%** on `nsubj`, and the
+contradiction list is **260** (was 462 before step 4). What remains is **step 5's** one open item,
+the `morph/` merge — and the annex's own verdict is that a **blind regeneration of `case` under a
+corrected prompt** is the next instrument, not another Layer-4 slice. The column's two measured
+weaknesses are both prompt-fixable and both were recorded rather than patched: **194 `case`-side
+errors across the three slices, none rewritten.**
 
 The vocabulary and scope are frozen and the code exists — [`case.py`](case.py) (build driver,
 `--check`/`--stats`/`--clean`), [`README.md`](README.md), [`Makefile`](Makefile),
@@ -18,8 +33,7 @@ The vocabulary and scope are frozen and the code exists — [`case.py`](case.py)
 `hashes.LAYERS`, and `tests/test_case.py`. Everything lives on the branch `case-pilot` so the
 whole annex can be dropped in one move. Written 2026-07-29, immediately after Layer 5's
 Phase 5 closed at **0 hard, 3551 soft** (see [`../skel/PLAN.md`](../skel/PLAN.md)'s *Where
-Phase 5 ended*); Layer 5 stood at **3550** after step 3's `morph/` rounds (see *Step 3 result*)
-at **3555** after slice 1 and at **3469** after slice 2 (see *Step 4*).
+Phase 5 ended*).
 
 **Pilot result (2026-07-30, 570 calls, `google:gemma-4-31b-it`).** The state check below was
 re-run and matched; the disputed population rebuilt at exactly **67 + 28**, with a **95**-position
@@ -97,15 +111,15 @@ frozen layers, so it fails whenever *either* side is at fault, and here the froz
 fault three times running. If a future chunk fails identically on all three attempts *and* on the
 unit-by-unit retry, suspect Layer 2 first, and pass `--log`.
 
-**Resuming? Read [*Resuming cold — step 4, slice 3*](#resuming-cold--step-4-slice-3) first**, then
-[*Step 4*](#step-4--the-next-action) for the detail.
+**Resuming? Read [*Resuming cold — after step 4*](#resuming-cold--after-step-4) first**, then
+[*Step 4*](#step-4--complete) for the detail.
 [*Starting from a cold session*](#starting-from-a-cold-session--everything-the-pilot-needs)
 carries the step-1 context (how the disputed population was rebuilt, which model, who runs what)
 and is now historical. Everything between them is rationale.
 
-## Resuming cold — step 4, slice 3
+## Resuming cold — after step 4
 
-**Written 2026-07-31 at the end of slice 2, so a session with no memory of it can carry on from
+**Written 2026-08-01 at the close of step 4, so a session with no memory of it can carry on from
 this section alone.** Branch `case-pilot`.
 
 ### Where things stand
@@ -113,175 +127,133 @@ this section alone.** Branch `case-pilot`.
 | commit | what |
 |---|---|
 | `0027494` | the frozen `case/` artifact — 100 cantos, 0 hard. **Do not touch it** |
-| `419120b` | slice 1's Layer-4 edits: 10 positions / 11 rows in `dep/` |
+| `419120b` | slice 1's Layer-4 edits: 10 positions / 11 rows |
 | `40c8a11` | slice 1's measurements and the step-4 selector change |
-| `596bdae` | the cold-start handoff slice 2 was executed from |
-| *slice 2* | 81 positions / 92 rows in `dep/`, plus the `case`/`dep`/`skel` CORRECTIONS entries |
+| `439f6af` | slice 2's Layer-4 edits: 81 positions / 92 rows |
+| *slice 3* | 124 positions / 167 rows, plus the `case`/`dep`/`skel` CORRECTIONS entries |
 
 ```bash
 git status --short          # expect clean
 uv run pytest -q            # expect 138 passed
 make -C morph check         # expect 0 hard, 0 soft
+make -C np check            # expect 3 hard, 64 soft -- see below, NOT a new break
 make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3469 soft
+make -C skel check          # expect 0 hard, 3634 soft
 make -C case check          # expect 0 hard
 cd case && uv run case.py inferno purgatorio paradiso --stats --full
-                            # expect 382 contradictions, 39 impossible pairings
+                            # expect 260 contradictions, 40 impossible pairings
 ```
 
-If `skel` reads 3555 and `case --stats` reads 462/39, slice 2 is not in the tree.
+If `skel` reads 3469 and `case --stats` reads 382/39, slice 3 is not in the tree.
 
-### What slices 1 and 2 settled, so none of it is re-litigated
+**`np`'s 3 hard / 64 soft belong to this annex and are the stack's one open defect.** Step 3's
+Layer-2 correction rounds (`880fc2e`, `a97b80e`) moved the lemma parts of fused clitic tokens to
+unblock the case pass; `np`'s checker derives its expected `+X` clitic mentions from exactly those
+lemma parts, so the frozen Layer-3 artifacts went stale. `morph`, `dep` and `skel` were re-measured
+at the time and `np` was not. Nothing has been done about it — the full description, the token
+counts and the reason the choice of instrument is left open are in
+[`../PLAN.md`](../PLAN.md)'s *Open item*.
 
-1. **The 49 impossible pairings are done** (slice 1) and **the 102 tier-A contradictions are
-   done** (slice 2). Neither list is work in progress.
-2. **The artifact stays frozen.** Asked and answered in slice 1: a measured weakness in `case` is
-   recorded, never patched. Slice 2 measured eleven more `case`-side errors and patched none.
+### What step 4 settled, so none of it is re-litigated
+
+1. **All 510 candidates have a verdict.** The 260 contradictions that remain are not unfinished
+   work; they are the measured residue, and 53% of the sample taken from them was the `case`
+   column being wrong, not Layer 4.
+2. **The artifact stays frozen.** Asked and answered in slice 1, and held through 194 recorded
+   `case`-side errors.
 3. **`case.py`'s `_IMPOSSIBLE` rule stays as it is.**
-4. **Layer 5's soft count is a diagnostic, not the objective.** Slice 1 raised it correctly;
-   slice 2 lowered it by 86. Neither number decided whether an edit was right.
-5. **The selector works and its limits are measured.** Tier A yielded 79%; the impossible
-   pairings yielded 20%. But tier A still contained eleven positions where `case` was the wrong
-   read, so **the terzina is still opened one at a time**.
+4. **Layer 5's soft count is a diagnostic, not the objective.** It rose 5, fell 86 and rose 165
+   across three correct rounds. None of those numbers decided whether an edit was right.
+5. **The selector is measured, not argued** — direction three times out of three, yield 79%
+   inside the intersection against 38% and 20% outside.
 
 ### The next action
 
-**Slice 3: the 324 contradictions `skel` does not flag** — everything in
-`case.py --stats --full`'s list that is not in slice 2's tier A, B or C. Rebuild the partition
-with the two-join recipe in [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 2* (it is five
-lines of parsing, not a monkeypatch: `--stats --full` for the contradictions, `skel.py --check`'s
-stderr for the flagged positions, keyed on the `(line, token)` pairs in each violation's detail).
+**Step 5's remaining item: the `morph/` merge**, and the two things it must carry.
 
-**Expect Layer 5's count not to move, and do not treat that as failure.** This is the slice-1
-configuration — `dep` and `skel` agree, only `case` dissents — so a correct fix breaks an
-agreement and may raise the count. The deliverable here is a more correct Layer 4, not a smaller
-number. If that trade is not worth the hours, **stopping after slice 2 is a defensible end to
-step 4**; say so explicitly rather than leaving the list looking unfinished.
+- **A blind regeneration of the `case` column under a corrected prompt.** The column reads a
+  pronoun's case well and word order poorly, in two shapes now counted at corpus scale: it makes
+  a relative pronoun nominative whenever the clause postposes a noun (78 instances), and it reads
+  the dative of possession as accusative whenever the verb already carries an object (24). Both
+  are prompt problems. Regeneration is **LLM-scale work and therefore the user's**, by the
+  convention Phase 5 settled.
+- **The `locative` question**, left open on purpose: by deprel it is `obl`-dominant exactly as
+  `ablative` is, so whether "place" is a distinct slot or a distinct meaning of one is undecided.
+  `genitive` is earned and `ablative` is earned; see *The three parked questions* below.
+- **The fused-token problem**, which a merge into `morph/*.tsv` would finally force: `case`
+  annotates a pronoun and `dep` a token, and five contradictions are nothing but that mismatch
+  (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*;
+  paradiso 29:92.1 *seminarla*).
 
-Two things to carry in:
+**A `morph/` correction round is also owed**, holding six positions this annex surfaced and did
+not act on: slice 1's purgatorio 31:25 `fossi` and 23:126 `torti`; slice 2's inferno 8:4.5 `i`
+(for *ivi*) and purgatorio 31:90.1 *salsi*; slice 3's purgatorio 20:83.2 `c'` (the conjunction of
+*poscia che*, tagged `pronoun`) and 11:137.2 `e'`. Two of these blocked a Layer-4 edit.
 
-- **Purgatorio 28:51**, *nel tempo che perdette / la madre lei* — `madre`:`obj` and `lei`:`nsubj`
-  are swapped (Ceres lost Proserpina, not the reverse). Verified in slice 1, not in tier A, so
-  still untaken. Take it with slice 3 rather than re-deriving it.
-- **The two `morph/` items slice 2 surfaced** — inferno 8:4.5 `i` (for *ivi*) tagged `pronoun`,
-  and purgatorio 31:90.1 *salsi* lemmatized `salutare`. Both belong to a `morph/` round, with
-  slice 1's `fossi` and `torti`.
-
-### The traps, in the order the two slices hit them
+### The traps, in the order the three slices hit them
 
 - **Layer 2 can block a Layer-4 edit, and that outranks the reading.** Slice 1 lost two edits to
-  it. Before proposing a retag, check `morph`'s `pos` for the tokens involved; if the edit needs
-  Layer 2 to be wrong, it is a `morph/` item.
+  it, slice 3 one. Check `morph`'s `pos` before proposing a retag.
 - **The corpus-internal convention sweep is what makes an edit defensible**, and it decided more
-  of slice 2 than the reading did: bare clitic under these verbs is `iobj` 181 / `obj` 42;
-  predicative `che` under a copula is `attr` 26 / `obj` 17; the notional subject of a perception
-  verb's infinitive is `nsubj` 141 / `obj` 100 — that last one *stopped* two edits. Measure the
-  convention before choosing a target deprel, every time.
-- **Layer 5's LLM is a third read too, and it can be right when you are not.** It sided against
-  both of slice 1's two-row edits and was right on one.
-- **Judge from the rows, never from the summary.** This annex has now been wrong five times in
-  that exact shape.
+  of every slice than the reading did. Slice 3's own table of measured conventions is in
+  [`CORRECTIONS.md`](CORRECTIONS.md); the sharpest is `gravare`, where the same lemma took an
+  edit in one construction and stopped one in the other.
+- **Layer 5's LLM is a third read too, and it can be right when you are not.**
+- **Judge from the rows, never from the summary.** This annex has been wrong five times in that
+  exact shape.
 
 ### The `case` column's measured weakness, for the `morph/` merge
 
-Across both slices the column's errors are not scattered. It reads a pronoun's **case** well and
-its **word order** poorly: it makes a relative pronoun nominative when the clause's subject is
-postposed (five instances in slice 2), and it has no rule for the standard of comparison (slice
-1's 21). Both are prompt-fixable, and the fix belongs to a **blind regeneration at the `morph/`
-merge**, never to an edit of the frozen artifact.
+Across the three slices the column's errors are not scattered, and slice 3 put counts on them:
+**the postposed subject (78)** and **the dative of possession alongside an explicit object (24)**.
+It reads a pronoun's *case* well and its *word order* poorly. Both fixes belong to a blind
+regeneration at the `morph/` merge, never to an edit of the frozen artifact.
 
-## Step 4 — the next action
+## Step 4 — complete
 
 **A hand-verified Layer-4 correction round over the contradiction list, in the style of Phases
-5i/5n.** `make -C case stats` regenerates the input; nothing in it is applied mechanically.
+5i/5n, run in three slices and closed on 2026-08-01.** `make -C case stats` regenerates the
+input; nothing in it was ever applied mechanically.
 
 ```bash
 make -C case stats     # census, oblique tail, dep agreement, contradictions, impossible pairings
-cd case && uv run case.py inferno purgatorio paradiso --stats --full   # all 421 candidates
+cd case && uv run case.py inferno purgatorio paradiso --stats --full
 ```
 
-`make -C case stats` truncates the candidate lists to the first 40 / 20 so the report stays
-readable; `--full` is what the round actually works from.
+`make -C case stats` truncates the candidate lists so the report stays readable; `--full` is what
+each round worked from.
 
-### State to confirm before assuming anything
-
-```bash
-git status --short          # expect clean (or only doc edits in flight)
-uv run pytest -q            # expect 138 passed
-make -C morph check         # expect 0 hard, 0 soft
-make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3469 soft   (3555 before slice 2, 3550 before slice 1)
-make -C case check          # expect 0 hard
-```
-
-The artifact is **frozen and committed**, and step 4 must not touch it. Every edit this round
-produces belongs in `dep/`; if a position looks like a `case` error, the answer is to record it,
-not to rewrite the column — the column's value is that it was authored before any of this was
-looked at, and an edit made now is indistinguishable from one made to close a violation. Slices 1
-and 2 together recorded **23 `case`-side errors** and rewrote none.
-
-### What the join found, and what the two slices spent
+### What the join found, and what the three slices spent
 
 | `dep` | reads as | agree | contradict | rate | before step 4 |
 |---|---|---|---|---|---|
-| `obj` | `accusative` | 1660 | 267 | 86% | 1631 / 317, 84% |
-| `iobj` | `dative` | 708 | 38 | 95% | 669 / 46, 94% |
-| `nsubj` | `nominative` | 5095 | 77 | 99% | 5076 / 98, 98% |
+| `obj` | `accusative` | 1685 | 178 | 90% | 1631 / 317, 84% |
+| `iobj` | `dative` | 755 | 28 | 96% | 669 / 46, 94% |
+| `nsubj` | `nominative` | 5130 | 54 | 99% | 5076 / 98, 98% |
 
-**382 contradictions, 39 impossible pairings** (from 461 and 49).
+**260 contradictions, 40 impossible pairings** (from 461 and 49). The impossible pairings went
+*up* by one, deliberately: purgatorio 17:45.4's standard of comparison moved `obj` → `obl` and
+thereby joined the list slice 1 had already settled.
 
-| slice | population | candidates | edited | Layer 5 |
-|---|---|---|---|---|
-| 1 ✅ | the `obl` × `nominative` impossible pairings | 49 | 10 (20%) | 3550 → **3555** |
-| 2 ✅ | contradictions where `skel`'s given role sides with `case` (tier A) | 102 | 81 (79%) | 3555 → **3469** |
-| 3 | the 324 contradictions `skel` does **not** flag | 324 | — | expect ~0 |
-
-**The selector, established by slice 1 and confirmed by slice 2.** Rank candidates not by whether
+**The selector, established by slice 1 and confirmed twice.** Rank candidates not by whether
 `case` and `dep` contradict, but by **whether `skel` already diverges from `dep` at that
 position**:
 
 - Where `dep` and `skel` **agree** and only `case` dissents, a correct Layer-4 fix *breaks* an
-  agreement and **raises** Layer 5's count. Slice 1 is that configuration by construction.
+  agreement and **raises** Layer 5's count. Slices 1 and 3 are that configuration; they moved it
+  +5 and +165.
 - Where `skel` **already dissents from** `dep`, a third read that sides with `skel` breaks a 2-1
-  tie and **closes** the violation. This is the Phase 5h/5i configuration and the only population
-  the **≈90–100** estimate was ever derived from. Slice 2 is that configuration, and it measured
-  −86 from 102 candidates — the estimate was accurate.
+  tie and **closes** the violation. Slice 2 is that configuration: 102 candidates, −86, against a
+  prediction of ≈90–100.
 
-Slice 2's other measured result is that the selector predicts **yield**, not just direction: 79%
-of tier A were Layer-4 errors against 20% of the impossible pairings. It does not replace
-verification — eleven tier-A positions were `case` errors and were left alone.
-
-### Slice 3, and whether to run it
-
-The remaining 324 are the slice-1 configuration. Correcting Layer 4 there is still correct work,
-and it is the honest completion of the round, but **Layer 5's count will not fall and may rise**.
-Two defensible outcomes:
-
-- **Run it**, for a more correct `dep`, reporting the count movement as expected rather than as
-  regression.
-- **Stop after slice 2** and record step 4 as complete at 91 positions, with the 324 documented as
-  a known, measured, deliberately-unspent population.
-
-Either way, say which was chosen. What is *not* defensible is leaving the list looking like
-unfinished work with no verdict — that is the shape [`../skel/PLAN.md`](../skel/PLAN.md)'s Phase 5
-was careful to avoid for every route it opened.
-
-Verify against the terzina one position at a time; `make -C dep check` must stay 0/0 throughout.
-**Layer 5's soft count is a diagnostic, not the objective** — it measures divergence between two
-independent reads, not correctness, and a round that optimizes it is a round editing artifacts to
-move a number.
-
-**Judge from the rows, never from the summary.** This annex has been wrong five times and every
-one was the same shape — a verdict reached from an aggregate without looking at what the rows
-were doing. Three corpus runs blamed the model when Layer 2 was at fault; the oblique-tail reading
-blamed the vocabulary when the analysis was at fault; slice 1's first reading called the
-comparative frame a systematic error before measuring it. 382 contradictions is an aggregate.
-Open the terzina.
+It predicts **yield** as well as direction: 79% of tier A were Layer-4 errors, against 38% of the
+unflagged 325 and 20% of the impossible pairings. It never replaced verification — 194 positions
+across the three slices were `case`-side errors and were left alone.
 
 ### How to inspect a position
 
 There is no checked-in harness; each round uses a throwaway script. The serve API's shapes, which
-cost four failed attempts to rediscover last time:
+cost four failed attempts to rediscover the first time:
 
 ```python
 from dante_corpus import canto
@@ -291,6 +263,8 @@ c.dep()            # dict[int, tuple[DepRow]] keyed by line — NOT a flat seque
                    #   DepRow(line, token, word, deprel, head_line, head_token)
 c.case()           # dict[int, tuple[CaseRow]] keyed by line
                    #   CaseRow(line, token, word, case); .cases() splits a fused token
+c.morph()          # dict[int, tuple[MorphRow]] — the pos/lemma a retag must not contradict
+c.skel()           # tuple[SkelTuple]; SkelTuple.args carry role/line/token
 ```
 
 `token` is **1-based over the alpha-only tokens** of a line, the same convention Layers 2–5 use
@@ -299,8 +273,9 @@ word you print — it has bitten previous rounds in `skel/` too.
 
 ### Then step 5
 
-Re-measure Layer 5 and record the delta in
-[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+Layer 5 was re-measured after each slice and the deltas recorded in
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) as they landed. What is left of step 5 is the
+`morph/` merge — see *Resuming cold* above.
 
 ### The three parked questions — now answered
 
@@ -319,15 +294,17 @@ Measurements in [`CORRECTIONS.md`](CORRECTIONS.md)'s *fourth run and the freeze*
   **An earlier reading of this tail recommended folding `genitive` and was wrong**; the argument,
   the refutation and the lesson are in [`CORRECTIONS.md`](CORRECTIONS.md)'s *The subset argument
   was wrong*. No rows were rewritten.
-- **The third adjudication class is real**, at 49 corpus-wide — and step 4's slice 1 has now
-  worked all 49. It is smaller than it looks: only 10 were Layer-4 errors. 21 are the standard of
+- **The third adjudication class is real**, at 49 corpus-wide — and step 4's slice 1 worked all
+  49. It is smaller than it looks: only 10 were Layer-4 errors. 21 are the standard of
   comparison (*come quei che…*), where `obl` is the UD convention and `case` is unstable rather
   than wrong; 12 are genuine `case` errors on a real prepositional oblique; 6 are blocked or
   entangled. See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 4, slice 1*.
 - **A fourth adjudication class, and the largest**: the contradictions where `skel` already
   dissents from `dep`, **102 corpus-wide** — worked exhaustively by slice 2, 81 of them Layer-4
   errors. This is the population the annex's expected value was always about; the impossible
-  pairings were a smaller, differently-shaped list that happened to be found first.
+  pairings were a smaller, differently-shaped list that happened to be found first. The **325**
+  contradictions `skel` does not flag were worked by slice 3, 124 of them Layer-4 errors and 171
+  of them `case`-side errors.
 - **Layer-2 mistags this annex surfaced and did not act on**, all single-pronoun tokens whose
   `pos` gives the right count, so nothing is blocked: the comitatives `meco`/`teco`/`seco` are
   tagged four different ways (and `vosco` twice as `adjective`, once with the lemma `boscoso`),
@@ -490,7 +467,7 @@ step 1 without reconstructing context from the Phase 5 history.
 ### Confirm the state first
 
 ```bash
-make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3469)
+make -C skel check     # was: 0 hard, 3551 soft   (the state this plan was written at; now 3634)
 make -C dep check      # expect: 0 hard, 0 soft
 uv run pytest -q       # was: 125 passed          (now 138, with the annex's tests)
 make -C skel stats     # by-kind + the role_mismatch pair table
@@ -609,14 +586,15 @@ verdict is to kill the annex.
    was run. The order was kept literally, which is the only part of it that cannot be recovered
    after the fact.
 4. **Layer-4 correction round** over the contradictions, hand-verified against the terzine, in the
-   style of Phases 5i/5n. `make -C dep check` must stay 0/0 throughout. *Under way* — the input
-   was: **461 contradictions, 49 impossible pairings**. Slices 1 and 2 are done — 91
-   positions, 103 rows — and slice 3 is the open question; see *Step 4* above.
+   style of Phases 5i/5n. `make -C dep check` stayed 0/0 throughout. ✅ **done 2026-08-01** — the
+   input was **461 contradictions, 49 impossible pairings**, and all three slices are closed at
+   **215 positions / 270 rows**; see *Step 4* above.
 5. **Re-measure Layer 5** and record the delta in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
    *Done for each slice as it landed*, which is the only way the per-slice deltas are
    attributable — but note Layer 5 has already moved twice for reasons that are not step 5's:
-   3551 → 3550 from step 3's `morph/` corrections, 3550 → 3555 from step 4's slice 1 (which
-   raised it deliberately) and 3555 → **3469** from slice 2. Read
+   3551 → 3550 from step 3's `morph/` corrections, 3550 → 3555 from step 4's slice 1, 3555 →
+   3469 from slice 2, and 3469 → **3634** from slice 3 (slices 1 and 3 raised it, correctly and
+   by design). Read
    [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry on why a correct Layer-4 round can
    raise the count before interpreting any delta this step measures.
 

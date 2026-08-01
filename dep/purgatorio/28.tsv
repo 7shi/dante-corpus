@@ -341,8 +341,8 @@ line	token	word	deprel	head_line	head_token
 50	4	che	obl	50	5
 50	5	perdette	acl:relcl	50	3
 51	1	la	det	51	2
-51	2	madre	obj	50	5
-51	3	lei	nsubj	50	5
+51	2	madre	nsubj	50	5
+51	3	lei	obj	50	5
 51	4	ed	cc	51	5
 51	5	ella	nsubj	49	8
 51	6	primavera	obj	49	8
@@ -476,11 +476,11 @@ line	token	word	deprel	head_line	head_token
 69	7	gitta	acl:relcl	68	3
 70	1	Tre	det	70	2
 70	2	passi	obj	70	4
-70	3	ci	iobj	70	4
+70	3	ci	obj	70	4
 70	4	facea	conj	73	6
 70	5	il	det	70	6
 70	6	fiume	nsubj	70	4
-70	7	lontani	obj	70	4
+70	7	lontani	xcomp	70	4
 71	1	ma	cc	73	6
 71	2	Elesponto	nsubj	73	6
 71	3	là	obl	71	5
@@ -610,7 +610,7 @@ line	token	word	deprel	head_line	head_token
 89	4	ciò	nsubj	88	6
 89	5	ch'	obj	89	6
 89	6	ammirar	xcomp	89	8
-89	7	ti	obj	89	8
+89	7	ti	iobj	89	8
 89	8	face	acl:relcl	89	4
 90	1	e	cc	90	2
 90	2	purgherò	conj	88	4

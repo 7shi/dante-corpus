@@ -269,7 +269,7 @@ line	token	word	deprel	head_line	head_token
 37	2	non	advmod	37	4
 37	3	quando	mark	37	4
 37	4	gridar	advcl	36	10
-37	5	Chi	obj	37	6
+37	5	Chi	attr	37	6
 37	6	siete	ccomp	37	4
 37	7	voi	nsubj	37	6
 38	1	per	mark	38	6

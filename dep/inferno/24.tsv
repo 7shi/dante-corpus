@@ -1109,5 +1109,5 @@ line	token	word	deprel	head_line	head_token
 151	4	ho	aux	151	2
 151	5	perché	mark	151	8
 151	6	doler	xcomp	151	8
-151	7	ti	obj	151	6
+151	7	ti	iobj	151	6
 151	8	debbia	advcl	151	2

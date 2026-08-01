@@ -324,7 +324,7 @@ line	token	word	deprel	head_line	head_token
 45	8	conforte	advcl	40	5
 46	1	di'	root	0	0
 46	2	quel	obj	46	1
-46	3	ch'	obj	46	5
+46	3	ch'	attr	46	5
 46	4	ell'	nsubj	46	5
 46	5	è	acl:relcl	46	2
 46	6	di'	conj	46	1
@@ -434,7 +434,7 @@ line	token	word	deprel	head_line	head_token
 61	4	io	nsubj	61	3
 61	5	ché	mark	61	9
 61	6	non	advmod	61	9
-61	7	li	nsubj	61	9
+61	7	li	iobj	61	9
 61	8	saran	cop	61	9
 61	9	forti	advcl	61	3
 62	1	né	cc	62	3

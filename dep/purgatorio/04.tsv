@@ -344,12 +344,12 @@ line	token	word	deprel	head_line	head_token
 47	4	poco	advmod	47	6
 47	5	in	case	47	6
 47	6	sùe	nmod	47	3
-48	1	che	obj	48	8
+48	1	che	nsubj	48	8
 48	2	da	case	48	4
 48	3	quel	det	48	4
 48	4	lato	obl	48	8
 48	5	il	det	48	6
-48	6	poggio	nsubj	48	8
+48	6	poggio	obj	48	8
 48	7	tutto	amod	48	6
 48	8	gira	acl:relcl	47	3
 49	1	Sì	advmod	49	3

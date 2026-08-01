@@ -128,7 +128,7 @@ line	token	word	deprel	head_line	head_token
 18	7	sembiante	obj	18	4
 19	1	d'	case	19	2
 19	2	innanzi	obl	19	5
-19	3	mi	obj	19	5
+19	3	mi	iobj	19	5
 19	4	si	obj	19	5
 19	5	tolse	root	0	0
 19	6	e	cc	19	7
@@ -862,10 +862,10 @@ line	token	word	deprel	head_line	head_token
 116	6	su	case	116	8
 116	7	picciola	amod	116	8
 116	8	spera	obl	116	2
-117	1	che	obj	117	5
+117	1	che	nsubj	117	5
 117	2	l'	det	117	4
 117	3	altra	amod	117	4
-117	4	faccia	nsubj	117	5
+117	4	faccia	obj	117	5
 117	5	fa	acl:relcl	116	8
 117	6	de	case	117	8
 117	7	la	det	117	8

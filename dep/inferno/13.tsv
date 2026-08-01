@@ -337,7 +337,7 @@ line	token	word	deprel	head_line	head_token
 47	5	anima	vocative	47	1
 47	6	lesa	amod	47	5
 48	1	ciò	obj	46	5
-48	2	c'	nsubj	48	4
+48	2	c'	obj	48	4
 48	3	ha	aux	48	4
 48	4	veduto	acl:relcl	48	1
 48	5	pur	advmod	48	4
@@ -874,7 +874,7 @@ line	token	word	deprel	head_line	head_token
 122	2	poi	advmod	122	6
 122	3	che	mark	122	6
 122	4	forse	advmod	122	6
-122	5	li	obj	122	6
+122	5	li	iobj	122	6
 122	6	fallia	advcl	123	7
 122	7	la	det	122	8
 122	8	lena	nsubj	122	6

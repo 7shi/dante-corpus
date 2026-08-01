@@ -740,7 +740,7 @@ line	token	word	deprel	head_line	head_token
 103	4	che	nsubj	103	8
 103	5	per	case	103	6
 103	6	salir	obl	103	8
-103	7	ti	iobj	103	8
+103	7	ti	obj	103	8
 103	8	dome	acl:relcl	103	1
 104	1	se	mark	104	4
 104	2	tu	nsubj	104	3

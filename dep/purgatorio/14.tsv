@@ -39,7 +39,7 @@ line	token	word	deprel	head_line	head_token
 5	2	tu	nsubj	5	1
 5	3	che	mark	5	7
 5	4	più	advmod	5	7
-5	5	li	obj	5	7
+5	5	li	iobj	5	7
 5	6	t'	obl	5	7
 5	7	avvicini	advcl	5	1
 6	1	e	cc	6	6
@@ -864,7 +864,7 @@ line	token	word	deprel	head_line	head_token
 118	6	che	mark	119	3
 118	7	'l	det	118	8
 118	8	demonio	nsubj	119	3
-119	1	lor	obj	119	3
+119	1	lor	iobj	119	3
 119	2	sen	expl	119	3
 119	3	girà	advcl	118	2
 119	4	ma	cc	120	3

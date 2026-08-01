@@ -168,7 +168,7 @@ line	token	word	deprel	head_line	head_token
 25	4	come	mark	25	6
 25	5	l'	det	25	6
 25	6	uom	obl	25	3
-25	7	cui	nsubj	25	8
+25	7	cui	iobj	25	8
 25	8	tarda	acl:relcl	25	6
 26	1	di	case	26	2
 26	2	veder	xcomp	25	8

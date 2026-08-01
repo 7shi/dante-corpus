@@ -508,7 +508,7 @@ line	token	word	deprel	head_line	head_token
 76	7	vista	nsubj	74	6
 77	1	ma	cc	77	4
 77	2	nulla	nsubj	77	4
-77	3	mi	obj	77	4
+77	3	mi	iobj	77	4
 77	4	facea	conj	74	6
 77	5	ché	mark	78	2
 77	6	süa	det:poss	77	7

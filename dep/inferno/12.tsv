@@ -27,7 +27,7 @@ line	token	word	deprel	head_line	head_token
 4	2	è	root	0	0
 4	3	quella	det	4	4
 4	4	ruina	nsubj	4	2
-4	5	che	obj	5	7
+4	5	che	nsubj	5	7
 4	6	nel	case	4	7
 4	7	fianco	obl	5	7
 5	1	di	case	5	2
@@ -35,7 +35,7 @@ line	token	word	deprel	head_line	head_token
 5	3	da	case	5	4
 5	4	Trento	nmod	5	2
 5	5	l'	det	5	6
-5	6	Adice	nsubj	5	7
+5	6	Adice	obj	5	7
 5	7	percosse	acl:relcl	4	4
 6	1	o	cc	6	3
 6	2	per	case	6	3

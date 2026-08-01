@@ -194,12 +194,12 @@ line	token	word	deprel	head_line	head_token
 26	6	rimirar	xcomp	26	2
 26	7	lo	det	26	8
 26	8	passo	obj	26	6
-27	1	che	obj	27	3
+27	1	che	nsubj	27	3
 27	2	non	advmod	27	3
 27	3	lasciò	acl:relcl	26	8
 27	4	già	advmod	27	3
 27	5	mai	advmod	27	3
-27	6	persona	nsubj	27	3
+27	6	persona	obj	27	3
 27	7	viva	amod	27	6
 28	1	Poi	advmod	29	1
 28	2	ch'	mark	28	4
@@ -653,7 +653,7 @@ line	token	word	deprel	head_line	head_token
 89	5	saggio	vocative	89	1
 90	1	ch'	mark	90	4
 90	2	ella	nsubj	90	4
-90	3	mi	obj	90	4
+90	3	mi	iobj	90	4
 90	4	fa	advcl	89	1
 90	5	tremar	xcomp	90	4
 90	6	le	det	90	7

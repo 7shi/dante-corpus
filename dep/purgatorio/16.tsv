@@ -54,7 +54,7 @@ line	token	word	deprel	head_line	head_token
 8	5	saputa	amod	8	3
 8	6	e	cc	8	7
 8	7	fida	amod	8	3
-9	1	mi	obj	9	3
+9	1	mi	iobj	9	3
 9	2	s'	expl	9	3
 9	3	accostò	advcl	4	2
 9	4	e	cc	9	8
@@ -762,9 +762,9 @@ line	token	word	deprel	head_line	head_token
 104	1	è	cop	104	3
 104	2	la	det	104	3
 104	3	cagion	ccomp	103	3
-104	4	che	obj	104	8
+104	4	che	nsubj	104	8
 104	5	'l	det	104	6
-104	6	mondo	nsubj	104	8
+104	6	mondo	obj	104	8
 104	7	ha	aux	104	8
 104	8	fatto	acl:relcl	104	3
 104	9	reo	xcomp	104	8

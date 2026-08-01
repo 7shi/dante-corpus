@@ -341,7 +341,7 @@ line	token	word	deprel	head_line	head_token
 49	6	asciutta	amod	49	7
 49	7	scabbia	obl	49	3
 50	1	che	nsubj	50	3
-50	2	mi	obj	50	3
+50	2	mi	iobj	50	3
 50	3	scolora	acl:relcl	49	7
 50	4	pregava	root	0	0
 50	5	la	det	50	6

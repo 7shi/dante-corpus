@@ -3,10 +3,10 @@ line	token	word	deprel	head_line	head_token
 1	2	già	advmod	1	1
 1	3	l'	det	1	4
 1	4	ora	nsubj	1	1
-1	5	che	obj	1	6
+1	5	che	nsubj	1	6
 1	6	volge	acl:relcl	1	4
 1	7	il	det	1	8
-1	8	disio	nsubj	1	6
+1	8	disio	obj	1	6
 2	1	ai	case	2	2
 2	2	navicanti	obl	1	6
 2	3	e	cc	2	4
@@ -898,10 +898,10 @@ line	token	word	deprel	head_line	head_token
 123	8	palesi	advcl	122	8
 124	1	La	det	124	2
 124	2	fama	obj	125	1
-124	3	che	obj	124	7
+124	3	che	nsubj	124	7
 124	4	la	det	124	6
 124	5	vostra	det:poss	124	6
-124	6	casa	nsubj	124	7
+124	6	casa	obj	124	7
 124	7	onora	acl:relcl	124	2
 125	1	grida	root	0	0
 125	2	i	det	125	3

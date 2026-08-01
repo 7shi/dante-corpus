@@ -429,3 +429,155 @@ holds `obj` and Layer 2's `pronoun` tag on `i` (for *ivi*) is what blocks a clea
 
 **Layer 2 blocked nothing this round**, unlike slice 1. One Layer-2 observation was collected in
 passing: purgatorio 31:90.1 *salsi* carries the lemma `salutare` where the line needs *sapere*.
+
+## The contradictions `skel` does not flag, from the `case` annex (2026-08-01)
+
+Step 4's **slice 3**, and the honest completion of the round: the **325** `case` × `dep`
+contradictions that Layer 5 does *not* flag — everything outside slice 2's tiers A/B/C. This is
+slice 1's configuration by construction: `dep` and `skel` agree and only `case` dissents, so a
+correct fix here breaks an agreement and **raises** Layer 5's soft count. It was run anyway,
+because the deliverable is a more correct Layer 4 and the alternative was leaving 325 measured
+positions with no verdict.
+
+**124 positions, 167 rows.** `dep --check` stays **0 hard, 0 soft**; `morph --check` 0/0;
+`pytest` stays 138. **Layer 5: 3469 → 3634 soft, +165** — see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+
+Every position was opened against its terzina one at a time. The partition and the per-position
+readings are in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)'s *Step 4, slice 3*.
+
+### 34 + 31 rows — the relative pronoun and the postposed noun, inverted
+
+The largest family and the round's clearest finding. `dep`=`obj`, `case`=`nominative` on a
+relative pronoun whose clause has a postverbal noun: the question every time is whether that noun
+is the postposed **subject** (`dep` right) or the semantic **patient** (`case` right). It was the
+patient 34 times, and in 31 of those the two rows hold each other's roles and move together:
+
+inferno 1:27 (`che`↔`persona` — *lo passo che non lasciò già mai persona viva*), 2:97
+(`Questa`↔`Lucia`), 4:24 (`che`↔`abisso`), 7:69 (`che`↔`ben`), 9:114 (`ch'`↔`Italia`), 12:4-5
+(`che`↔`Adice`), 30:123 (`che`↔`ventre`), 31:75 (`che`↔`petto`), 33:108 (`che`↔`fiato`), 33:113
+(`che`↔`cor`), 34:117 (`che`↔`faccia`); purgatorio 3:11 (`che`↔`onestade`), 4:48 (`che`↔`poggio`),
+6:39 (`chi`↔`che`), 8:1 (`che`↔`disio`), 8:124 (`che`↔`casa`), 9:142-143 (`ciò`↔`imagine`),
+16:104 (`che`↔`mondo`), 20:44 (`che`↔`terra`), 22:112 (`che`↔`Langia`), 24:56 (`che`↔`Notaro`),
+24:122-123 (`che`↔`Tesëo`), 33:125 (`che`↔`memoria`); paradiso 6:77-78 (`che`↔`morte`), 9:84
+(`che`↔`terra`), 18:120 (`che`↔`raggio`), 19:118-120 (`quel`↔`che`), 21:25 (`che`↔`vocabol`),
+24:100 (`che`↔`ver`), 33:96 (`che`↔`Nettuno`).
+
+Three move alone because the clause has no competing subject: **purgatorio 3:120.4** *a quei che
+volontier perdona* (intransitive `perdonare`), **inferno 15:99.5** *Bene ascolta chi la nota*
+(the free relative is `ascolta`'s subject, not its object), **paradiso 21:135.3** *oh pazïenza
+che tanto sostieni* (`sostieni` is 2sg and can only agree with `pazïenza`).
+
+Two re-attach as well as retag:
+
+| position | change | why |
+|---|---|---|
+| purgatorio 12:65.7 | `ch'` `obj` → `nsubj`, head `mirar` → `farieno` | *l'ombre e ' tratti ch'ivi mirar **farieno** uno ingegno sottile*: `farieno` is 3pl and only the plural antecedent can be its subject |
+| paradiso 11:41.4 | `un` `nsubj` → `obj`, head `dice` → `pregiando` | *d'amendue si dice **l'un pregiando*** — the one praised is the gerund's object |
+
+**Paradiso 33:96** takes its partner to `iobj`, not `obj`: *la 'mpresa che fé **Nettuno** ammirar
+l'ombra d'Argo* is a causative `fare` whose infinitive carries its own object, which the corpus
+writes with a dative causee (see below).
+
+### 40 rows — the clitic dative, again, where `skel` sides with `dep`
+
+`dep`=`obj`, `case`=`dative`, and this time Layer 5 agrees with `dep`. It is the same class slice
+2 spent 40 rows on, and the same convention decided it: the head is intransitive, impersonal or
+already carries an object, so `obj` was structurally impossible.
+
+Retagged `obj` → `iobj`: inferno 1:90.3, 2:51.7, 2:141.2, 3:110.1, 5:96.7, 6:58.2, 7:6.2,
+8:111.7, 10:113.2, 11:93.7, 13:122.5, 16:110.5, 17:117.9, 22:46.4, 22:114.3, 22:127.3, 23:19.2,
+24:151.7, 26:12.3, 29:135.7, 29:138.2, 30:145.6, 34:19.3; purgatorio 14:5.5, 14:119.1, 16:9.1,
+19:90.6, 22:68.7, 22:86.2, 23:50.2, 24:53.2, 25:5.9, 26:140.2, 28:89.7; paradiso 5:1.3, 6:114.5,
+20:127.4, 26:101.1, 29:66.5, 31:77.3.
+
+Two sub-conventions were measured before the target deprel was chosen, and both are worth keeping:
+
+- **The causative `fare`.** With a *bare* infinitive the causee is accusative — the corpus writes
+  it `obj` **38** times against `iobj` 3 — and with an infinitive that carries its own object it
+  is dative, `iobj` **7** times (purgatorio 5:63, 29:24; paradiso 11:3, 12:30, 19:24, 24:18,
+  26:42) against an `obj` residue that is largely this mistag class. Slice 2 opened this
+  distinction at paradiso 6:82; slice 3 applies it in both directions, and it is why inferno
+  9:26.3 *mi fece intrar*, purgatorio 21:116.3 *mi fa tacer* and paradiso 20:101.1 *ti fa
+  maravigliar* were **left alone** while inferno 1:90.3 *mi fa tremar le vene* and purgatorio
+  19:90.6 *notar mi fenno* were changed.
+- **Two `obj` children under one head.** inferno 22:46 *li s'accostò*, 34:19 *d'innanzi mi si
+  tolse* had the reflexive and the dative both tagged `obj`; the dative moved.
+
+**Paradiso 9:110.1** *ten porti* went `iobj` → **`expl`**: a fused `te`+`ne` under *portarsene*,
+which the corpus tags `expl` 20 times (and `obl` 14, `obj` 6) on `sen` and never `iobj`.
+
+### 11 rows — the predicative pronoun under a copula
+
+`obj` → **`attr`**, extending the single instance slice 2 made at purgatorio 10:90: a pronoun
+predicated of a copular *essere* is `attr` **48** times in the corpus against `obj` 20, and
+Layer 5's LLM reads every one of these as `attr` already. `obj` under a copula was wrong on any
+reading, so these side with neither layer's case claim.
+
+inferno 2:37.2 *E qual è quei*, 3:32.3 *che è quel ch'i' odo*, 7:60.1 *qual ella sia*, 25:37.5
+*Chi siete voi*, 30:136.1 *Qual è colui*; purgatorio 12:18.4 *quel ch'elli eran pria*, 15:25.1
+*Che è quel*, 26:65.1 and 26:65.5 *chi siete voi, e chi è quella turba*; paradiso 16:44.1 *chi ei
+si fosser*, 25:46.3 *di' quel ch'ell' è*.
+
+### 9 rows — the mirror direction, where `case` was right
+
+`dep`=`iobj`, `case`=`accusative`, retagged `iobj` → `obj`: purgatorio 13:103.7 *che per salir ti
+dome* (a true reflexive of a transitive verb), 20:98.7 *che ti fece verso me volger* (the bare
+causative), 28:70.3 *ci facea il fiume lontani* (`lontani` agrees with `ci`; its own row went
+`obj` → `xcomp`), 31:94.2 *Tratto m'avea nel fiume infin la gola* (with `gola` `obj` → `obl`),
+33:55.7 *quando tu le scrivi*; paradiso 5:38.6 *'l cibo rigido c'hai preso*, 18:18.1 *mi
+contentava*, 24:103.5 *chi t'assicura*, 30:49.2 *mi circunfulse luce viva* (the Vulgate's
+*circumfulsit eum*).
+
+### 8 rows — the dative read as a subject
+
+`dep`=`nsubj`, `case`=`dative`, retagged `nsubj` → `iobj`, all of them impersonal or
+dative-governing predicates where the grammatical subject is elsewhere: inferno 21:25.7 *l'uom
+cui tarda*, 26:141.8 and purgatorio 1:133.6 *com' altrui piacque* (the corpus writes `piacere`'s
+dative `iobj` 21 times and `obl` 12; these two were its only `nsubj` clitics), inferno 33:150.4
+*cortesia fu lui esser villano*; paradiso 5:113.1 *m'era in disio*, 7:73.2 *Più l'è conforme*,
+25:61.7 *non li saran forti*.
+
+### The five edits that side with neither layer
+
+Worth listing because they are the round's evidence that the contradiction list is an
+adjudication input and not an edit list: the 11 `attr` rows above, plus
+
+| position | change | why |
+|---|---|---|
+| purgatorio 17:45.4 | `quel` `obj` → `obl` | standard of comparison — the deprel slice 1 measured as the corpus's own, and the one edit that *created* an impossible pairing (39 → 40) |
+| purgatorio 31:24.8 | `che` `obj` → `obl` | *a che s'aspiri*: `a` at 24.7 is already tagged `case` → 24.8, so `obj` was internally inconsistent |
+| paradiso 16:146.5 | `che` `obj` → `mark` | *conveniesi … che Fiorenza fesse vittima* — the conjunction; `vittima` already holds `obj` |
+| paradiso 18:119.6 | `che` `obj` → `mark` | *prego la mente … che rimiri* — the subjunctive prayer clause |
+| paradiso 14:48.3 | `a` `case` → `mark`, head 48.4 → 48.5 | *a lui veder*: `a` marks the infinitive, not `lui` |
+
+### 201 positions were left alone, and why
+
+**`case` is the dissenting read in 171 of them** — 53% of the slice. That number is the slice's
+most useful measurement and it is exactly what the selector predicts: inside the `skel`-flagged
+intersection `case` was wrong 11 times in 102 (11%); outside it, 171 in 325. Recorded per
+position in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md), with the two coherent shapes the
+errors take.
+
+The other 30 are structural: **19 conventions** the corpus applies consistently (free relatives,
+where the pronoun is an argument of the matrix and the subject of its own clause; the
+accusative-and-infinitive under a perception verb, `nsubj` 141 / `obj` 100; `si` passivante;
+presentative *ecco*; `credere` + person, which the corpus writes `obj` four times and `iobj`
+never), **5 fused tokens** where `case` annotates a clitic and `dep` the whole word
+(inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*;
+paradiso 29:92.1 *seminarla*), **3 deferrals**, **2 Latin quotations** (purgatorio 8:13.1 *Te
+lucis ante*, paradiso 32:12.5 *Miserere mei* — a Latin genitive no value in the vocabulary
+covers), and **1 Layer-2 block**.
+
+The three deferrals are recorded rather than forced, because each needs a restructure the reading
+does not by itself settle: **inferno 1:117.1** *ch'a la seconda morte ciascun grida* (`obj` under
+an intransitive is wrong, but the fix turns `ciascun` into an appositive), **paradiso 22:55.2**
+*m'ha dilatata mia fidanza* (the commentary reading needs four rows and `dep`'s parse is
+internally coherent), **paradiso 11:118.3** *Pensa oramai qual fu colui* (an indirect question
+attached straight to `Pensa`).
+
+The Layer-2 block is **purgatorio 20:83.2** *poscia c'ha' il mio sangue a te sì tratto*: `c'` is
+the conjunction of *poscia che* and wants `mark`, but Layer 2 tags it `pronoun`, which is what
+put it in the case scope at all. Its partner row was taken anyway (`sangue` `nsubj` → `obj`).
+One further Layer-2 observation: **purgatorio 11:137.2** *ch'e' sostenea* has `e'` (= *ei*) tagged
+as an auxiliary.

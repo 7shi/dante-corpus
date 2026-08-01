@@ -646,7 +646,7 @@ line	token	word	deprel	head_line	head_token
 90	3	parole	obj	90	5
 90	4	pria	advmod	90	5
 90	5	notar	xcomp	90	7
-90	6	mi	obj	90	7
+90	6	mi	iobj	90	7
 90	7	fenno	acl:relcl	89	4
 91	1	dicendo	advcl	89	1
 91	2	Spirto	vocative	93	1

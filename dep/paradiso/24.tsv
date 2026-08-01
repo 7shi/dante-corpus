@@ -691,9 +691,9 @@ line	token	word	deprel	head_line	head_token
 100	2	io	discourse	101	1
 100	3	La	det	100	4
 100	4	prova	nsubj	101	1
-100	5	che	obj	100	9
+100	5	che	nsubj	100	9
 100	6	'l	det	100	7
-100	7	ver	nsubj	100	9
+100	7	ver	obj	100	9
 100	8	mi	iobj	100	9
 100	9	dischiude	acl:relcl	100	4
 101	1	son	root	0	0
@@ -714,7 +714,7 @@ line	token	word	deprel	head_line	head_token
 103	2	fummi	aux	103	1
 103	3	Dì	ccomp	103	1
 103	4	chi	nsubj	103	6
-103	5	t'	iobj	103	6
+103	5	t'	obj	103	6
 103	6	assicura	ccomp	103	3
 104	1	che	mark	104	4
 104	2	quell'	det	104	3

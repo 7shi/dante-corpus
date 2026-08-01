@@ -524,7 +524,7 @@ line	token	word	deprel	head_line	head_token
 72	5	tuba	obj	72	2
 73	1	Di	case	73	2
 73	2	quel	obl	74	7
-73	3	che	nsubj	73	4
+73	3	che	obj	73	4
 73	4	fé	acl:relcl	73	2
 73	5	col	case	73	6
 73	6	baiulo	obl	73	4
@@ -547,13 +547,13 @@ line	token	word	deprel	head_line	head_token
 76	3	la	det	76	5
 76	4	trista	amod	76	5
 76	5	Cleopatra	nsubj	76	1
-77	1	che	obj	78	3
+77	1	che	nsubj	78	3
 77	2	fuggendoli	advcl	78	3
 77	3	innanzi	advmod	77	2
 77	4	dal	case	77	5
 77	5	colubro	obl	78	3
 78	1	la	det	78	2
-78	2	morte	nsubj	78	3
+78	2	morte	obj	78	3
 78	3	prese	acl:relcl	76	5
 78	4	subitana	amod	78	2
 78	5	e	cc	78	6
@@ -822,7 +822,7 @@ line	token	word	deprel	head_line	head_token
 114	2	onore	nsubj	114	6
 114	3	e	cc	114	4
 114	4	fama	conj	114	2
-114	5	li	obj	114	6
+114	5	li	iobj	114	6
 114	6	succeda	advcl	113	8
 115	1	e	cc	116	4
 115	2	quando	mark	115	5

@@ -780,7 +780,7 @@ line	token	word	deprel	head_line	head_token
 110	2	come	mark	110	7
 110	3	'l	det	110	4
 110	4	duca	nsubj	110	7
-110	5	m'	obj	110	7
+110	5	m'	iobj	110	7
 110	6	avea	aux	110	7
 110	7	comandato	advcl	111	1
 111	1	porsila	root	0	0

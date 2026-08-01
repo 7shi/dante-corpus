@@ -35,7 +35,7 @@ line	token	word	deprel	head_line	head_token
 6	3	miei	det:poss	6	4
 6	4	occhi	obl	6	5
 6	5	rifrangesse	advcl	5	4
-6	6	lui	nsubj	6	5
+6	6	lui	obj	6	5
 7	1	E	cc	8	2
 7	2	quel	nsubj	8	2
 7	3	che	nsubj	7	5
@@ -824,14 +824,14 @@ line	token	word	deprel	head_line	head_token
 118	3	vedrà	root	0	0
 118	4	il	det	118	5
 118	5	duol	nsubj	118	3
-118	6	che	nsubj	119	1
+118	6	che	obj	119	1
 118	7	sovra	case	118	8
 118	8	Senna	obl	119	1
 119	1	induce	acl:relcl	118	5
 119	2	falseggiando	advcl	119	1
 119	3	la	det	119	4
 119	4	moneta	obj	119	2
-120	1	quel	obj	119	1
+120	1	quel	nsubj	119	1
 120	2	che	nsubj	120	3
 120	3	morrà	acl:relcl	120	1
 120	4	di	case	120	5

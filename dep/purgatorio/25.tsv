@@ -42,7 +42,7 @@ line	token	word	deprel	head_line	head_token
 5	6	sua	amod	5	5
 5	7	che	mark	5	10
 5	8	che	nsubj	5	10
-5	9	li	obj	5	10
+5	9	li	iobj	5	10
 5	10	appaia	advcl	5	2
 6	1	se	mark	6	6
 6	2	di	case	6	3

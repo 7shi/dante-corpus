@@ -861,8 +861,8 @@ line	token	word	deprel	head_line	head_token
 123	4	mi	expl	123	5
 123	5	son	obj	123	2
 123	6	quel	attr	123	5
-123	7	ch'	nsubj	123	9
-123	8	i'	expl	123	9
+123	7	ch'	obj	123	9
+123	8	i'	nsubj	123	9
 123	9	soglio	acl:relcl	123	6
 124	1	ma	cc	124	3
 124	2	non	advmod	124	3

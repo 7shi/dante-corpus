@@ -343,7 +343,7 @@ line	token	word	deprel	head_line	head_token
 48	8	forti	amod	48	9
 48	9	obietti	obl	47	6
 49	1	così	advmod	49	3
-49	2	mi	iobj	49	3
+49	2	mi	obj	49	3
 49	3	circunfulse	root	0	0
 49	4	luce	nsubj	49	3
 49	5	viva	amod	49	4

@@ -717,7 +717,7 @@ line	token	word	deprel	head_line	head_token
 99	2	disse	conj	98	3
 99	3	Bene	advmod	99	4
 99	4	ascolta	ccomp	99	2
-99	5	chi	obj	99	4
+99	5	chi	nsubj	99	4
 99	6	la	obj	99	7
 99	7	nota	acl:relcl	99	5
 100	1	Né	cc	100	7

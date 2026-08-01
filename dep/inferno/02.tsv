@@ -267,7 +267,7 @@ line	token	word	deprel	head_line	head_token
 36	7	non	advmod	36	8
 36	8	ragiono	ccomp	36	3
 37	1	E	cc	37	3
-37	2	qual	obj	37	3
+37	2	qual	attr	37	3
 37	3	è	parataxis	40	3
 37	4	quei	nsubj	37	3
 37	5	che	nsubj	37	6
@@ -370,7 +370,7 @@ line	token	word	deprel	head_line	head_token
 51	4	che	nsubj	51	8
 51	5	di	case	51	6
 51	6	te	obl	51	8
-51	7	mi	obj	51	8
+51	7	mi	iobj	51	8
 51	8	dolve	acl:relcl	51	3
 52	1	Io	nsubj	52	2
 52	2	era	root	0	0
@@ -702,9 +702,9 @@ line	token	word	deprel	head_line	head_token
 96	5	là	advmod	96	7
 96	6	sù	advmod	96	5
 96	7	frange	advcl	94	8
-97	1	Questa	obj	97	2
+97	1	Questa	nsubj	97	2
 97	2	chiese	root	0	0
-97	3	Lucia	nsubj	97	2
+97	3	Lucia	obj	97	2
 97	4	in	case	97	6
 97	5	suo	det:poss	97	6
 97	6	dimando	obl	97	2
@@ -1019,7 +1019,7 @@ line	token	word	deprel	head_line	head_token
 140	6	tu	nsubj	140	7
 140	7	maestro	conj	140	4
 141	1	Così	advmod	141	3
-141	2	li	obj	141	3
+141	2	li	iobj	141	3
 141	3	dissi	root	0	0
 141	4	e	cc	142	1
 141	5	poi	advmod	141	7

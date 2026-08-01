@@ -319,7 +319,7 @@ line	token	word	deprel	head_line	head_token
 45	1	maggior	amod	43	3
 45	2	assai	advmod	45	1
 45	3	che	mark	45	4
-45	4	quel	obj	45	1
+45	4	quel	obl	45	1
 45	5	ch'	nsubj	45	6
 45	6	è	acl:relcl	45	4
 45	7	in	case	45	9

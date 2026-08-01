@@ -884,7 +884,7 @@ line	token	word	deprel	head_line	head_token
 127	1	Quelle	det	127	3
 127	2	tre	nummod	127	3
 127	3	donne	nsubj	127	5
-127	4	li	obj	127	5
+127	4	li	iobj	127	5
 127	5	fur	root	0	0
 127	6	per	case	127	7
 127	7	battesmo	obl	127	5

@@ -650,9 +650,9 @@ line	token	word	deprel	head_line	head_token
 95	4	a	case	95	6
 95	5	la	det	95	6
 95	6	'mpresa	nmod	95	3
-96	1	che	obj	96	2
+96	1	che	nsubj	96	2
 96	2	fé	acl:relcl	95	6
-96	3	Nettuno	nsubj	96	2
+96	3	Nettuno	iobj	96	2
 96	4	ammirar	xcomp	96	2
 96	5	l'	det	96	6
 96	6	ombra	obj	96	4

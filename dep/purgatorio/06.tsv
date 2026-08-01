@@ -284,10 +284,10 @@ line	token	word	deprel	head_line	head_token
 38	7	un	det	38	8
 38	8	punto	obl	38	5
 39	1	ciò	obj	38	5
-39	2	che	nsubj	39	4
+39	2	che	obj	39	4
 39	3	de'	aux	39	4
 39	4	sodisfar	acl:relcl	39	1
-39	5	chi	obj	39	4
+39	5	chi	nsubj	39	4
 39	6	qui	advmod	39	8
 39	7	s'	obj	39	8
 39	8	astalla	acl:relcl	39	5

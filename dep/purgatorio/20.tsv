@@ -296,9 +296,9 @@ line	token	word	deprel	head_line	head_token
 43	5	la	det	43	7
 43	6	mala	amod	43	7
 43	7	pianta	nmod	43	3
-44	1	che	obj	44	6
+44	1	che	nsubj	44	6
 44	2	la	det	44	3
-44	3	terra	nsubj	44	6
+44	3	terra	obj	44	6
 44	4	cristiana	amod	44	3
 44	5	tutta	amod	44	3
 44	6	aduggia	acl:relcl	43	7
@@ -577,7 +577,7 @@ line	token	word	deprel	head_line	head_token
 83	3	ha'	aux	83	10
 83	4	il	det	83	6
 83	5	mio	det:poss	83	6
-83	6	sangue	nsubj	83	10
+83	6	sangue	obj	83	10
 83	7	a	case	83	8
 83	8	te	obl	83	10
 83	9	sì	advmod	83	10
@@ -685,7 +685,7 @@ line	token	word	deprel	head_line	head_token
 98	4	Santo	amod	98	3
 98	5	e	cc	98	8
 98	6	che	nsubj	98	8
-98	7	ti	iobj	98	8
+98	7	ti	obj	98	8
 98	8	fece	conj	97	4
 99	1	verso	case	99	2
 99	2	me	obl	99	3
@@ -807,7 +807,7 @@ line	token	word	deprel	head_line	head_token
 116	5	Crasso	vocative	116	4
 117	1	dilci	ccomp	116	4
 117	2	che	mark	117	4
-117	3	'l	nsubj	117	4
+117	3	'l	obj	117	4
 117	4	sai	advcl	117	1
 117	5	di	case	117	7
 117	6	che	amod	117	7

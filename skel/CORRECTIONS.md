@@ -1,5 +1,62 @@
 # skel — Layer 5 correction history
 
+## The `case` annex's third Layer-4 round — 3469 → 3634, upward by 165 (2026-08-01)
+
+**The count rose, the round was correct, and the rise was predicted before it was run.** Slice 3
+is the population `case.py --stats` lists and `skel --check` does *not* flag: 325 positions where
+`dep` and Layer 5 already **agree** and only the `case` column dissents. Correcting `dep` there
+necessarily breaks an agreement, so every correct fix creates a divergence rather than closing
+one. The previous two entries said so; this one is the measurement.
+
+**124 positions, 167 rows, +165 soft.** `dep --check` stayed 0/0 throughout. Rows and readings in
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md); the partition and the per-position verdicts in
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+### The three slices, side by side
+
+| slice | population | candidates | edited | yield | Layer 5 |
+|---|---|---|---|---|---|
+| 1 | `obl` × `nominative` impossible pairings | 49 | 10 | 20% | 3550 → **3555**, +5 |
+| 2 | contradictions where `skel` sides with `case` | 102 | 81 | 79% | 3555 → **3469**, −86 |
+| 3 | contradictions `skel` does not flag | 325 | 124 | 38% | 3469 → **3634**, +165 |
+
+The selector holds on both axes it was built to predict. **Direction**: it is the only thing that
+decided the sign, and it decided it three times out of three. **Yield**: 79% inside the
+intersection, 38% and 20% outside — a contradiction that breaks a 2-1 tie really is a better
+predictor of a Layer-4 defect than one that is merely a disagreement, and this is now measured
+over 476 candidates rather than argued.
+
+### Where the 165 went
+
+| kind | added | note |
+|---|---|---|
+| `role_mismatch` | 133 | the direct consequence: `dep`'s role moved away from the one the LLM asserted |
+| `missing_arg` | 16 | mostly the `obj` → `attr` and `obj` → `mark` rows, which remove an argument the derivation used to produce |
+| `extra_arg` | 15 | the swaps, where the newly-`nsubj` relative is an argument the LLM did not list |
+| `missing_tuple` | 2 | two predicates the derivation no longer reaches |
+| `extra_arg` | −1 | one closed |
+
+Almost exactly one new divergence per edited row (165 / 167). That ratio is the mirror image of
+slice 2's (86 closed / 92 rows) and it is what the configuration guarantees: in slice 2 the
+correction and the LLM's dissent were the same judgment, so the report stopped existing; here the
+correction and the LLM's *agreement* were opposed, so a report starts.
+
+### Why this is not a regression, and how to tell the difference
+
+Layer 5's soft count measures divergence between two independent reads. It falls when `dep` moves
+toward the LLM and rises when it moves away, and **neither movement is evidence about
+correctness** — that comes from the terzina. The guard this round offers is its own control: of
+the 325 candidates, **171 were `case`-side errors and were left alone**. Had the round been
+optimizing the number in either direction, that is the population it would have touched.
+
+The practical reading for anyone interpreting this number later: **3634 is a worse number and a
+better corpus than 3469**, and after slice 3 the divergence that remains at these 124 positions is
+a documented disagreement between a corrected Layer 4 and an uncorrected Layer-5 reading — the
+same category as the 2832 `extra_arg`/`missing_arg` residue Phase 5 closed its books on, not a
+new defect. A future `--fix` pass over the affected units is the only instrument that would move
+it, and Phase 5q's measured verdict on `--fix` yield (~0.09-0.11 violations per call) applies
+unchanged.
+
 ## The `case` annex's second Layer-4 round — 3555 → 3469, −86 (2026-07-31)
 
 **The corrected selector paid out.** Slice 1 spent 49 candidates and the count rose by 5; slice 2

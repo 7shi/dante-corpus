@@ -64,9 +64,9 @@ line	token	word	deprel	head_line	head_token
 10	5	lasciar	advcl	13	3
 10	6	la	det	10	7
 10	7	fretta	nsubj	10	5
-11	1	che	obj	11	7
+11	1	che	nsubj	11	7
 11	2	l'	det	11	3
-11	3	onestade	nsubj	11	7
+11	3	onestade	obj	11	7
 11	4	ad	case	11	6
 11	5	ogn'	det	11	6
 11	6	atto	obl	11	7
@@ -844,7 +844,7 @@ line	token	word	deprel	head_line	head_token
 120	1	piangendo	advcl	119	7
 120	2	a	case	120	3
 120	3	quei	obl	119	7
-120	4	che	obj	120	6
+120	4	che	nsubj	120	6
 120	5	volontier	advmod	120	6
 120	6	perdona	acl:relcl	120	3
 121	1	Orribil	root	0	0

@@ -171,7 +171,7 @@ line	token	word	deprel	head_line	head_token
 24	5	non	advmod	24	6
 24	6	è	acl:relcl	23	7
 24	7	a	case	24	8
-24	8	che	obj	24	10
+24	8	che	obl	24	10
 24	9	s'	expl	24	10
 24	10	aspiri	ccomp	24	6
 25	1	quai	obl	25	3
@@ -652,13 +652,13 @@ line	token	word	deprel	head_line	head_token
 93	6	Tiemmi	ccomp	93	5
 93	7	tiemmi	conj	93	6
 94	1	Tratto	root	0	0
-94	2	m'	iobj	94	1
+94	2	m'	obj	94	1
 94	3	avea	aux	94	1
 94	4	nel	case	94	5
 94	5	fiume	obl	94	1
 94	6	infin	advmod	94	1
 94	7	la	det	94	8
-94	8	gola	obj	94	1
+94	8	gola	obl	94	1
 95	1	e	cc	95	6
 95	2	tirandosi	advcl	95	6
 95	3	me	obj	95	2

@@ -597,9 +597,9 @@ line	token	word	deprel	head_line	head_token
 84	2	di	case	84	4
 84	3	quel	det	84	4
 84	4	mar	obl	86	3
-84	5	che	obj	84	8
+84	5	che	nsubj	84	8
 84	6	la	det	84	7
-84	7	terra	nsubj	84	8
+84	7	terra	obj	84	8
 84	8	inghirlanda	acl:relcl	84	4
 85	1	tra	case	85	3
 85	2	discordanti	amod	85	3
@@ -782,7 +782,7 @@ line	token	word	deprel	head_line	head_token
 109	5	tue	det:poss	109	6
 109	6	voglie	obj	110	2
 109	7	piene	amod	109	6
-110	1	ten	iobj	110	2
+110	1	ten	expl	110	2
 110	2	porti	advcl	111	5
 110	3	che	nsubj	110	5
 110	4	son	aux	110	5

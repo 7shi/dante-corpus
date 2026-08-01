@@ -177,7 +177,7 @@ line	token	word	deprel	head_line	head_token
 24	7	vista	nsubj	24	8
 24	8	fu	cop	24	9
 24	9	ratta	advcl	22	3
-25	1	Che	obj	25	2
+25	1	Che	attr	25	2
 25	2	è	ccomp	27	1
 25	3	quel	nsubj	25	2
 25	4	dolce	amod	25	5

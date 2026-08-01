@@ -784,9 +784,9 @@ line	token	word	deprel	head_line	head_token
 108	1	veggendo	advcl	106	6
 108	2	la	det	108	3
 108	3	cagion	obj	108	1
-108	4	che	obj	108	7
+108	4	che	nsubj	108	7
 108	5	'l	det	108	6
-108	6	fiato	nsubj	108	7
+108	6	fiato	obj	108	7
 108	7	piove	acl:relcl	108	3
 109	1	E	conj	110	1
 109	2	un	nsubj	110	1
@@ -822,9 +822,9 @@ line	token	word	deprel	head_line	head_token
 113	4	sfoghi	advcl	112	1
 113	5	'l	det	113	6
 113	6	duol	obj	113	4
-113	7	che	obj	113	11
+113	7	che	nsubj	113	11
 113	8	'l	det	113	9
-113	9	cor	nsubj	113	11
+113	9	cor	obj	113	11
 113	10	m'	iobj	113	11
 113	11	impregna	acl:relcl	113	6
 114	1	un	det	114	2
@@ -1100,7 +1100,7 @@ line	token	word	deprel	head_line	head_token
 150	1	e	cc	150	2
 150	2	cortesia	conj	149	8
 150	3	fu	cop	150	2
-150	4	lui	nsubj	150	6
+150	4	lui	iobj	150	6
 150	5	esser	cop	150	6
 150	6	villano	nsubj	150	2
 151	1	Ahi	discourse	153	7

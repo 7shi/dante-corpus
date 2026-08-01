@@ -1027,12 +1027,12 @@ line	token	word	deprel	head_line	head_token
 141	6	dolce	amod	141	7
 141	7	suono	obl	141	4
 142	1	Tale	amod	142	2
-142	2	imagine	nsubj	142	6
+142	2	imagine	obj	142	6
 142	3	a	case	142	4
 142	4	punto	obl	142	6
 142	5	mi	iobj	142	6
 142	6	rendea	root	0	0
-143	1	ciò	obj	142	6
+143	1	ciò	nsubj	142	6
 143	2	ch'	obj	143	4
 143	3	io	nsubj	143	4
 143	4	udiva	acl:relcl	143	1

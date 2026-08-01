@@ -799,7 +799,7 @@ line	token	word	deprel	head_line	head_token
 112	8	risposta	obl	112	9
 112	9	muto	advcl	113	1
 113	1	fate	conj	110	3
-113	2	i	obj	113	1
+113	2	i	iobj	113	1
 113	3	saper	xcomp	113	1
 113	4	che	mark	113	6
 113	5	'l	obj	113	6

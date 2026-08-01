@@ -29,7 +29,7 @@ line	token	word	deprel	head_line	head_token
 5	1	de	case	5	3
 5	2	la	det	5	3
 5	3	vista	obl	4	6
-5	4	che	nsubj	5	8
+5	4	che	obj	5	8
 5	5	haï	aux	5	8
 5	6	in	case	5	7
 5	7	me	obl	5	8
@@ -704,7 +704,7 @@ line	token	word	deprel	head_line	head_token
 100	3	l'	det	100	4
 100	4	anima	nsubj	101	2
 100	5	primaia	amod	100	4
-101	1	mi	obj	101	2
+101	1	mi	iobj	101	2
 101	2	facea	conj	97	5
 101	3	trasparer	xcomp	101	2
 101	4	per	case	101	6
@@ -753,9 +753,9 @@ line	token	word	deprel	head_line	head_token
 107	8	altre	amod	107	9
 107	9	cose	obl	107	2
 108	1	e	cc	108	3
-108	2	nulla	obj	108	3
+108	2	nulla	nsubj	108	3
 108	3	face	conj	107	2
-108	4	lui	nsubj	108	3
+108	4	lui	obj	108	3
 108	5	di	case	108	6
 108	6	sé	obl	108	3
 108	7	pareglio	obj	108	3

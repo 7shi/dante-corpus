@@ -32,7 +32,7 @@ line	token	word	deprel	head_line	head_token
 5	7	elli	nsubj	5	8
 5	8	abbia	advcl	6	3
 6	1	non	advmod	6	3
-6	2	ci	obj	6	3
+6	2	ci	iobj	6	3
 6	3	torrà	advcl	4	6
 6	4	lo	det	6	5
 6	5	scender	nsubj	6	3
@@ -402,7 +402,7 @@ line	token	word	deprel	head_line	head_token
 59	6	a	case	59	8
 59	7	questa	det	59	8
 59	8	zuffa	obl	59	5
-60	1	qual	obj	60	3
+60	1	qual	attr	60	3
 60	2	ella	nsubj	60	3
 60	3	sia	advcl	60	7
 60	4	parole	obj	60	7
@@ -471,9 +471,9 @@ line	token	word	deprel	head_line	head_token
 68	7	tocche	acl:relcl	68	2
 69	1	che	attr	69	2
 69	2	è	ccomp	67	7
-69	3	che	obj	69	8
+69	3	che	nsubj	69	8
 69	4	i	det	69	5
-69	5	ben	nsubj	69	8
+69	5	ben	obj	69	8
 69	6	del	case	69	7
 69	7	mondo	nmod	69	5
 69	8	ha	conj	69	2

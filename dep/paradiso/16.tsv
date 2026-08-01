@@ -305,7 +305,7 @@ line	token	word	deprel	head_line	head_token
 43	5	maggiori	obl	43	6
 43	6	udirne	nsubj	43	1
 43	7	questo	obj	43	6
-44	1	chi	obj	44	4
+44	1	chi	attr	44	4
 44	2	ei	nsubj	44	4
 44	3	si	expl	44	4
 44	4	fosser	appos	43	7
@@ -1018,7 +1018,7 @@ line	token	word	deprel	head_line	head_token
 146	2	guarda	acl:relcl	145	5
 146	3	'l	det	146	4
 146	4	ponte	obj	146	2
-146	5	che	obj	146	7
+146	5	che	mark	146	7
 146	6	Fiorenza	nsubj	146	7
 146	7	fesse	acl:relcl	146	4
 147	1	vittima	obj	146	7

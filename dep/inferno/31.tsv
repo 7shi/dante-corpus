@@ -529,10 +529,10 @@ line	token	word	deprel	head_line	head_token
 75	1	e	cc	75	2
 75	2	vedi	conj	73	1
 75	3	lui	obj	75	2
-75	4	che	obj	75	9
+75	4	che	nsubj	75	9
 75	5	'l	det	75	7
 75	6	gran	amod	75	7
-75	7	petto	nsubj	75	9
+75	7	petto	obj	75	9
 75	8	ti	iobj	75	9
 75	9	doga	acl:relcl	75	3
 76	1	Poi	advmod	76	2

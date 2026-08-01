@@ -276,7 +276,7 @@ line	token	word	deprel	head_line	head_token
 41	1	si	expl	41	2
 41	2	dice	advcl	40	4
 41	3	l'	det	41	4
-41	4	un	nsubj	41	2
+41	4	un	obj	41	5
 41	5	pregiando	advmod	41	2
 41	6	qual	obj	41	9
 41	7	ch'	mark	41	9

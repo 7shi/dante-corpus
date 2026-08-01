@@ -904,3 +904,138 @@ Neither blocked an edit, unlike slice 1's two:
 **Purgatorio 28:51**, *nel tempo che perdette / la madre lei* — the `madre`/`lei` swap slice 1
 verified and left. It is **not** in tier A (`skel` does not flag it), so it was not taken here
 either; it belongs with the 324 and is called out again so slice 3 does not re-derive it.
+
+## Step 4, slice 3 — the contradictions `skel` does not flag, 2026-08-01
+
+The round's honest completion, and the one whose result was known in advance: **325 candidates,
+124 positions edited (38%), 167 rows in `dep/`, and Layer 5 rose 3469 → 3634 (+165).** The
+`case/` artifact was not touched. `dep --check` stayed 0/0, `morph --check` 0/0, `pytest` 138.
+
+[`PLAN.md`](PLAN.md) offered two defensible outcomes here — run it, or stop after slice 2 and
+record the 325 as deliberately unspent. **Slice 3 was run**, because the deliverable is a more
+correct Layer 4 and because leaving a measured population with no verdict is the one shape
+[`../skel/PLAN.md`](../skel/PLAN.md)'s Phase 5 avoided for every route it opened. The count
+movement is reported as expected, not as regression; the analysis is in
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+
+### Rebuilding the partition
+
+The two-join recipe from *Step 4, slice 2* reproduces it exactly. After slice 2 the list stood at
+**382 contradictions**, of which **57** fall on a position `skel --check` cites and **325** do
+not. (The plan's figure was 324; the extra one is *paradiso* 9:110.1 `ten`, a fused token whose
+`case` value is `accusative+ablative` and which the slice-2 parser's regex dropped.)
+
+### The four shapes, and how each paid
+
+| family | `dep` vs `case` | n | edited | yield |
+|---|---|---|---|---|
+| A | `obj` vs `nominative` | 142 | 50 | 35% |
+| B | `obj` vs `dative` | 88 | 41 | 47% |
+| C | `iobj` vs `accusative` | 35 | 10 | 29% |
+| D/E | `nsubj` vs `accusative`/`dative` | 60 | 23 | 38% |
+
+Family B — the accusative-vs-dative clitic class the annex was built to adjudicate — is the
+highest-yielding even out here, which is the annex's own case restated: it is the question the
+existing layers structurally cannot answer, so it is where `dep` is least reliable. Family A is
+the largest and the one where `case`'s measured weakness bites hardest.
+
+### The column was wrong 171 times, and that is the slice's most useful number
+
+Slice 1 measured 12 `case`-side errors in 49 (24%); slice 2, **11 in 102 (11%)**; slice 3,
+**171 in 325 (53%)**. Read together these are one measurement of the selector: *inside* the
+population where Layer 5 already dissents from `dep`, the `case` column is right roughly nine
+times in ten; *outside* it, where `dep` and `skel` agree, it is a coin flip. That is exactly what
+a genuine third read should look like — it is not a better read, it is an independent one, and
+its dissent is informative only in proportion to how much of the rest of the corpus already
+doubts the position.
+
+The 171 fall into the two shapes the earlier slices named, now with a corpus-scale count behind
+them:
+
+- **Word order — the postposed subject, 78 instances (all of family A).** `case` makes a relative
+  pronoun `nominative` whenever its clause puts a noun after the verb, without deciding whether
+  that noun is the subject or the patient. It is right 50 times and wrong 78. Slice 2 saw five of
+  these; slice 3 shows it is the column's dominant failure mode. Examples where `dep` is right and
+  `case` is not: *l'angoscia che tu hai*, *le fredde membra che la notte aggrava*, *la turba che
+  Tagliamento e Adice richiude*, *l'alta letizia che 'l tuo parlar m'infonde*.
+- **The dative of possession alongside an explicit object, 24 instances (all of family C).** A
+  new shape, and a clean one: where the verb already carries a direct object, `case` reads the
+  clitic as `accusative` when Italian requires the dative — *li percosse **l'epa** croia*, *mi
+  batté **l'ali** per la fronte*, *li metti **li unghioni** a dosso*, *mi sentiva **la possa** de
+  le gambe*, *t'ascondeva **la giustizia** viva*. Every one of the 24 has the object sitting in
+  the same line.
+
+A third of the remainder is the pronoun in a plainly nominative slot read as accusative — *ed el
+gridò*, *tal parve quelli*, *crescerann' ei* — which is the same word-order weakness seen from
+the other side.
+
+**Both are prompt-fixable and neither was patched.** The fix belongs to a blind regeneration at
+the `morph/` merge, never to an edit of the frozen artifact. Across all three slices the annex has
+now recorded **194 `case`-side errors and rewritten none.**
+
+### Five positions no vocabulary can adjudicate
+
+`case` annotates a *pronoun*; `dep` annotates a *token*. Where a fused token's pronoun component
+has a different role from the token as a whole, the two columns are answering different
+questions and the contradiction is an artifact: inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*;
+purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*. In each the whole
+token is the subject of an impersonal predicate while its clitic is a dative or accusative. Worth
+recording for the `morph/` merge, where the two would finally have to share a row.
+
+Two more are Latin: purgatorio 8:13.1 *'Te lucis ante'* (a hymn incipit quoted as a title, so the
+citation is the subject) and paradiso 32:12.5 *'Miserere **mei**'* — a Latin genitive governed by
+*misereri*, which the eight-value vocabulary has no home for and which `case` read `dative`.
+
+### Conventions that decided a position against both layers
+
+Measured before any target deprel was chosen, per [`PLAN.md`](PLAN.md)'s standing trap:
+
+| convention | measurement | effect |
+|---|---|---|
+| predicative pronoun under a copula | `attr` 48 / `obj` 20 | 11 rows to `attr`, siding with neither case claim |
+| causative `fare`, bare infinitive | `obj` 38 / `iobj` 3 | **stopped** 3 edits (inferno 9:26.3, purgatorio 21:116.3, paradiso 20:101.1) |
+| causative `fare`, infinitive with its own object | `iobj` 7 / `obj` residue | made 6 edits, and set paradiso 33:96.3 to `iobj` rather than `obj` |
+| notional subject of a perception verb's infinitive | `nsubj` 141 / `obj` 100 | stopped 4 edits |
+| `credere` + person | `obj` 4 / `iobj` 0 | stopped 1 edit (purgatorio 16:113.3), and names a 4-position family for its own round |
+| `gravare` | pushed-down patient `obj`, burdened experiencer `iobj` | made 1 edit and stopped 1 — the same lemma, two constructions |
+| fused `sen`/`ten` under a *-sene* verb | `expl` 20 / `obl` 14 / `obj` 6 / `iobj` 0 | 1 row to `expl` |
+
+The `gravare` pair is the sharpest illustration: *ché più **mi** graverà* (inferno 26:12) took
+`iobj` and *Non **ti** dovea gravar le penne in giuso* (purgatorio 31:58) was left at `obj`,
+because the corpus writes the patient pushed downward `obj` at inferno 6:86 *diverse colpe giù
+**li** grava al fondo*. The reading alone would have taken both.
+
+### Layer-2 items this slice surfaced
+
+- **purgatorio 20:83.2** `c'` — the conjunction of *poscia che*, tagged `pronoun`, which is what
+  put it in the case scope. Its `dep` row wants `mark`; the retag is blocked until Layer 2 moves.
+  This is the slice's one blocked edit.
+- **purgatorio 11:137.2** `e'` (= *ei*, "he") carries a `dep` deprel of `aux`, which suggests
+  Layer 2 read it as a form of *essere*.
+
+Both join the `morph/` round already holding slice 1's `fossi`/`torti` and slice 2's inferno
+8:4.5 `i` and purgatorio 31:90.1 *salsi*.
+
+### The census after the round
+
+| `dep` | reads as | agree | contradict | rate | before slice 3 |
+|---|---|---|---|---|---|
+| `obj` | `accusative` | 1685 | 178 | **90%** | 1660 / 267, 86% |
+| `iobj` | `dative` | 755 | 28 | **96%** | 708 / 38, 95% |
+| `nsubj` | `nominative` | 5130 | 54 | **99%** | 5095 / 77, 99% |
+
+**382 contradictions → 260; impossible pairings 39 → 40.** The extra impossible pairing is
+purgatorio 17:45.4, where the standard of comparison went `obj` → `obl` and thereby joined the
+`obl` × `nominative` list slice 1 measured and settled. It is the round's one deliberate increase
+and it is recorded so a later reader does not take the list as having grown on its own.
+
+### Step 4 is complete
+
+All 510 candidates from the original join — 49 impossible pairings, 102 tier-A contradictions, 36
+tier-B/C, 325 unflagged — have a verdict. **215 positions edited across three slices, 270 rows in
+`dep/`** (slice 1: 10/11, slice 2: 81/92, slice 3: 124/167). What remains in the contradiction
+list is 260 positions, and the annex's own reading of them is that they are dominated by the
+`case` column's word-order weakness rather than by Layer-4 defects: in the two slices that
+sampled this configuration `case` was the wrong read 24% and 53% of the time against 11% inside
+the `skel`-flagged intersection. Re-opening them is not the next instrument; a blind regeneration
+of `case` under a corrected prompt, at the `morph/` merge, is.

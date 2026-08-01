@@ -981,7 +981,7 @@ line	token	word	deprel	head_line	head_token
 135	4	faccia	nsubj	135	8
 135	5	mia	det:poss	135	4
 135	6	ben	advmod	135	8
-135	7	ti	obj	135	8
+135	7	ti	iobj	135	8
 135	8	risponda	advcl	134	4
 136	1	sì	advmod	136	2
 136	2	vedrai	conj	134	4
@@ -1000,7 +1000,7 @@ line	token	word	deprel	head_line	head_token
 137	6	l'	det	137	7
 137	7	alchìmia	obl	137	2
 138	1	e	cc	138	3
-138	2	te	obj	138	4
+138	2	te	iobj	138	4
 138	3	dee	aux	138	4
 138	4	ricordar	conj	136	2
 138	5	se	mark	138	8

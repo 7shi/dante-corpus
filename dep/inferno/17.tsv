@@ -858,7 +858,7 @@ line	token	word	deprel	head_line	head_token
 117	6	e	cc	117	8
 117	7	di	case	117	8
 117	8	sotto	obl	117	10
-117	9	mi	obj	117	10
+117	9	mi	iobj	117	10
 117	10	venta	advcl	116	8
 118	1	Io	nsubj	118	2
 118	2	sentia	root	0	0

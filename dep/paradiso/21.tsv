@@ -171,9 +171,9 @@ line	token	word	deprel	head_line	head_token
 25	1	Dentro	advmod	25	2
 25	2	al	case	25	3
 25	3	cristallo	obl	29	1
-25	4	che	obj	25	7
+25	4	che	nsubj	25	7
 25	5	'l	det	25	6
-25	6	vocabol	nsubj	25	7
+25	6	vocabol	obj	25	7
 25	7	porta	acl:relcl	25	3
 26	1	cerchiando	acl	25	3
 26	2	il	det	26	3
@@ -959,7 +959,7 @@ line	token	word	deprel	head_line	head_token
 134	8	pelle	obl	134	5
 135	1	oh	discourse	135	2
 135	2	pazïenza	vocative	133	1
-135	3	che	obj	135	5
+135	3	che	nsubj	135	5
 135	4	tanto	advmod	135	5
 135	5	sostieni	acl:relcl	135	2
 136	1	A	case	136	3

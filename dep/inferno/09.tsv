@@ -819,8 +819,8 @@ line	token	word	deprel	head_line	head_token
 113	5	presso	case	113	7
 113	6	del	case	113	7
 113	7	Carnaro	nmod	113	4
-114	1	ch'	obj	114	3
-114	2	Italia	nsubj	114	3
+114	1	ch'	nsubj	114	3
+114	2	Italia	obj	114	3
 114	3	chiude	acl:relcl	113	7
 114	4	e	cc	114	7
 114	5	suoi	det:poss	114	6

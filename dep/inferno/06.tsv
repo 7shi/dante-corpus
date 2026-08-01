@@ -412,7 +412,7 @@ line	token	word	deprel	head_line	head_token
 57	7	fé	conj	55	7
 57	8	parola	obj	57	7
 58	1	Io	nsubj	58	3
-58	2	li	obj	58	3
+58	2	li	iobj	58	3
 58	3	rispuosi	root	0	0
 58	4	Ciacco	vocative	58	3
 58	5	il	det	58	7

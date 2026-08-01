@@ -86,7 +86,7 @@ line	token	word	deprel	head_line	head_token
 11	8	dee	advcl	11	2
 12	1	ché	mark	12	4
 12	2	più	advmod	12	4
-12	3	mi	obj	12	4
+12	3	mi	iobj	12	4
 12	4	graverà	root	0	0
 12	5	com'	mark	12	8
 12	6	più	advmod	12	8
@@ -1035,7 +1035,7 @@ line	token	word	deprel	head_line	head_token
 141	5	in	case	141	6
 141	6	giù	obl	141	4
 141	7	com'	mark	141	9
-141	8	altrui	nsubj	141	9
+141	8	altrui	iobj	141	9
 141	9	piacque	advcl	141	4
 142	1	infin	advmod	142	8
 142	2	che	mark	142	8

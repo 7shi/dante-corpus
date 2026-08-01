@@ -221,7 +221,7 @@ line	token	word	deprel	head_line	head_token
 31	9	cinta	amod	31	8
 32	1	dissi	root	0	0
 32	2	Maestro	vocative	32	1
-32	3	che	obj	32	4
+32	3	che	attr	32	4
 32	4	è	ccomp	32	1
 32	5	quel	nsubj	32	4
 32	6	ch'	obj	32	8
@@ -769,7 +769,7 @@ line	token	word	deprel	head_line	head_token
 109	4	occhi	obl	110	2
 109	5	di	case	109	6
 109	6	bragia	nmod	109	4
-110	1	loro	obj	110	2
+110	1	loro	iobj	110	2
 110	2	accennando	advcl	110	5
 110	3	tutte	det	110	4
 110	4	le	obj	110	5

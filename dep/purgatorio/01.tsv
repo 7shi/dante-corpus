@@ -958,7 +958,7 @@ line	token	word	deprel	head_line	head_token
 133	3	cinse	root	0	0
 133	4	sì	advmod	133	3
 133	5	com'	mark	133	7
-133	6	altrui	nsubj	133	7
+133	6	altrui	iobj	133	7
 133	7	piacque	advcl	133	3
 134	1	oh	vocative	134	2
 134	2	maraviglia	parataxis	133	3

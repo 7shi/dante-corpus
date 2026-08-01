@@ -162,9 +162,9 @@ line	token	word	deprel	head_line	head_token
 24	1	nel	case	24	3
 24	2	primo	amod	24	3
 24	3	cerchio	obl	23	8
-24	4	che	obj	24	7
+24	4	che	nsubj	24	7
 24	5	l'	det	24	6
-24	6	abisso	nsubj	24	7
+24	6	abisso	obj	24	7
 24	7	cigne	acl:relcl	24	3
 25	1	Quivi	advmod	26	2
 25	2	secondo	mark	26	2

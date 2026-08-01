@@ -803,7 +803,7 @@ line	token	word	deprel	head_line	head_token
 111	4	no	conj	111	2
 111	5	nel	case	111	6
 111	6	capo	obl	111	8
-111	7	mi	obj	111	8
+111	7	mi	iobj	111	8
 111	8	tenciona	advcl	110	6
 112	1	Udir	xcomp	112	3
 112	2	non	advmod	112	3
