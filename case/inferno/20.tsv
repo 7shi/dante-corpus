@@ -4,7 +4,7 @@ line	token	word	case
 4	1	Io	nominative
 6	1	che	nominative
 6	2	si	reflexive
-9	1	che	nominative
+9	1	che	accusative
 10	4	mi	dative
 10	7	lor	genitive
 12	1	ciascun	nominative

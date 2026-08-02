@@ -205,7 +205,7 @@ line	token	word	deprel	head_line	head_token
 30	4	sotto	case	30	6
 30	5	i	det	30	6
 30	6	bollori	obl	30	3
-31	1	I'	obj	31	2
+31	1	I'	nsubj	31	2
 31	2	vidi	root	0	0
 31	3	e	cc	31	9
 31	4	anco	advmod	31	9

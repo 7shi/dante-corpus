@@ -38,7 +38,7 @@ line	token	word	case
 35	1	quello	nominative
 35	2	ch'	accusative
 35	3	io	nominative
-36	1	che	nominative
+36	1	che	accusative
 37	1	Io	nominative
 38	5	el	nominative
 38	6	si	reflexive
@@ -64,7 +64,7 @@ line	token	word	case
 81	3	s'	reflexive
 82	4	che	nominative
 83	4	rendili	accusative
-84	2	essi	nominative
+84	2	essi	accusative
 84	3	teco	ablative
 85	1	illustrami	accusative
 85	3	te	ablative

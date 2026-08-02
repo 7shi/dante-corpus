@@ -368,7 +368,7 @@ line	token	word	deprel	head_line	head_token
 51	8	pesa	acl:relcl	51	3
 52	1	Ma	conj	52	2
 52	2	dilli	root	0	0
-52	3	chi	obj	52	5
+52	3	chi	attr	52	5
 52	4	tu	nsubj	52	5
 52	5	fosti	ccomp	52	2
 52	6	sì	advmod	53	6

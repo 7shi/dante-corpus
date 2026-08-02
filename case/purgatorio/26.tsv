@@ -1,6 +1,6 @@
 line	token	word	case
 1	7	uno	nominative
-1	9	altro	nominative
+1	9	altro	ablative
 2	1	ce	locative
 2	2	n'	ablative
 3	1	diceami	dative
@@ -36,7 +36,7 @@ line	token	word	case
 29	7	questa	ablative
 30	2	qual	nominative
 30	3	mi	accusative
-32	5	una	nominative
+32	5	una	ablative
 32	7	una	ablative
 35	1	s'	reflexive
 39	2	ciascuna	nominative

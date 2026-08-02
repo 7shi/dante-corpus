@@ -80,7 +80,7 @@ line	token	word	case
 84	7	m'	dative
 85	6	ti	dative
 86	2	ciò	accusative
-86	3	che	nominative
+86	3	che	accusative
 87	4	ti	dative
 88	2	dirne	ablative
 88	6	si	reflexive
@@ -102,7 +102,7 @@ line	token	word	case
 106	2	le	accusative
 108	1	ciascuno	nominative
 109	1	Noi	nominative
-110	3	altro	nominative
+110	3	altro	accusative
 110	4	ne	ablative
 111	2	noi	nominative
 112	3	colui	ablative

@@ -31,7 +31,7 @@ line	token	word	case
 41	4	io	nominative
 43	3	mi	reflexive
 43	5	lui	dative
-44	1	Che	nominative
+44	1	Che	accusative
 46	3	elli	nominative
 46	5	me	dative
 47	7	s'	reflexive
@@ -125,7 +125,7 @@ line	token	word	case
 130	2	che	accusative
 132	1	che	nominative
 133	3	Che	accusative
-133	7	che	nominative
+133	7	che	accusative
 134	1	chi	nominative
 134	7	che	nominative
 136	4	darti	dative

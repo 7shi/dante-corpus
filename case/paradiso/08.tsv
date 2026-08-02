@@ -78,7 +78,7 @@ line	token	word	case
 81	6	si	reflexive
 82	4	che	nominative
 85	3	i'	nominative
-86	1	che	nominative
+86	1	che	accusative
 86	5	m'	dative
 87	5	si	reflexive
 87	8	s'	reflexive
@@ -100,7 +100,7 @@ line	token	word	case
 94	10	io	nominative
 95	1	mostrarti	dative
 95	5	quel	dative
-95	6	che	nominative
+95	6	che	accusative
 95	7	tu	nominative
 97	3	che	nominative
 97	7	che	accusative

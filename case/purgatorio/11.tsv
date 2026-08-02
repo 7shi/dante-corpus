@@ -51,7 +51,7 @@ line	token	word	case
 43	5	meco	ablative
 44	6	onde	ablative
 44	7	si	reflexive
-46	4	che	nominative
+46	4	che	accusative
 46	7	queste	dative
 47	1	che	accusative
 47	4	colui	nominative
@@ -142,7 +142,7 @@ line	token	word	case
 130	4	lui	dative
 132	5	lui	dative
 135	4	s'	reflexive
-137	1	ch'	nominative
+137	1	ch'	accusative
 137	2	e'	accusative
 138	1	si	reflexive
 141	4	tu	nominative

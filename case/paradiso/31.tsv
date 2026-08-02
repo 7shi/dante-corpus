@@ -1,7 +1,7 @@
 line	token	word	case
 2	1	mi	dative
 2	2	si	reflexive
-3	1	che	nominative
+3	1	che	accusative
 4	4	che	nominative
 5	4	colui	genitive
 5	5	che	nominative
@@ -45,7 +45,7 @@ line	token	word	case
 66	3	me	accusative
 68	4	tu	nominative
 68	5	la	accusative
-69	3	che	nominative
+69	3	che	accusative
 69	6	le	dative
 71	3	lei	accusative
 71	4	che	nominative

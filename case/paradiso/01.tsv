@@ -61,7 +61,7 @@ line	token	word	case
 76	5	tu	nominative
 77	3	sé	ablative
 77	4	mi	accusative
-78	4	che	nominative
+78	4	che	accusative
 79	1	parvemi	dative
 81	4	alcun	accusative
 83	2	lor	genitive
@@ -86,7 +86,7 @@ line	token	word	case
 99	2	io	nominative
 100	2	ella	nominative
 101	5	me	ablative
-102	1	che	nominative
+102	1	che	accusative
 104	4	loro	ablative
 104	6	questo	nominative
 105	1	che	nominative
@@ -105,7 +105,7 @@ line	token	word	case
 117	1	questi	nominative
 117	5	sé	ablative
 118	5	che	nominative
-120	2	quelle	nominative
+120	2	quelle	accusative
 120	3	c'	nominative
 121	3	che	nominative
 123	2	qual	ablative
@@ -115,7 +115,7 @@ line	token	word	case
 125	1	cen	locative+ablative
 126	1	che	nominative
 126	2	ciò	accusative
-126	3	che	nominative
+126	3	che	accusative
 127	7	s'	reflexive
 130	5	si	reflexive
 131	4	c'	nominative

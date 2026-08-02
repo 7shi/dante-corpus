@@ -104,7 +104,7 @@ line	token	word	case
 81	3	t'	dative
 81	7	aprirmi	dative
 82	2	dimmi	dative
-82	5	che	nominative
+82	5	che	ablative
 82	7	ti	reflexive
 84	7	tu	nominative
 85	3	tu	nominative
@@ -168,7 +168,7 @@ line	token	word	case
 133	5	mi	accusative
 134	2	te	vocative
 134	4	ch'	nominative
-135	5	che	nominative
+135	5	che	accusative
 135	6	ti	dative
 136	1	Tu	nominative
 136	2	m'	dative

@@ -230,7 +230,7 @@ line	token	word	deprel	head_line	head_token
 31	7	pieghi	ccomp	30	1
 32	1	a	case	32	2
 32	2	dirne	xcomp	31	7
-32	3	chi	obj	32	5
+32	3	chi	attr	32	5
 32	4	tu	nsubj	32	5
 32	5	se'	ccomp	32	2
 32	6	che	nsubj	33	6

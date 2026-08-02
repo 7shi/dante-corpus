@@ -400,7 +400,7 @@ line	token	word	deprel	head_line	head_token
 55	1	Se	mark	55	2
 55	2	vuoi	advcl	57	8
 55	3	saper	xcomp	55	2
-55	4	chi	obj	55	3
+55	4	chi	attr	55	3
 55	5	son	acl:relcl	55	4
 55	6	cotesti	det	55	7
 55	7	due	nsubj	55	5

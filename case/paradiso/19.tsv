@@ -48,7 +48,7 @@ line	token	word	case
 57	5	quel	ablative
 57	6	che	nominative
 57	7	l'	dative
-59	3	che	nominative
+59	3	che	accusative
 60	7	s'	reflexive
 62	3	nol	accusative
 63	1	èli	nominative
@@ -111,7 +111,7 @@ line	token	word	case
 116	1	quella	nominative
 116	2	che	nominative
 118	2	si	reflexive
-118	6	che	nominative
+118	6	che	accusative
 120	1	quel	nominative
 120	2	che	nominative
 121	2	si	reflexive

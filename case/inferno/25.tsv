@@ -19,7 +19,7 @@ line	token	word	case
 20	3	elli	nominative
 23	5	li	accusative
 24	2	quello	nominative
-24	4	qualunque	nominative
+24	4	qualunque	accusative
 24	5	s'	reflexive
 25	5	Questi	nominative
 26	1	che	nominative
@@ -67,7 +67,7 @@ line	token	word	case
 62	5	lor	genitive
 63	3	un	nominative
 63	6	altro	nominative
-63	9	quel	nominative
+63	9	quel	accusative
 63	10	ch'	nominative
 66	1	che	nominative
 67	4	'l	accusative
@@ -115,7 +115,7 @@ line	token	word	case
 121	7	altro	nominative
 123	3	quai	ablative
 123	4	ciascun	nominative
-124	1	Quel	nominative
+124	1	Quel	accusative
 124	2	ch'	nominative
 124	5	il	accusative
 125	5	ch'	nominative

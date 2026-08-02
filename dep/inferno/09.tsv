@@ -69,7 +69,7 @@ line	token	word	deprel	head_line	head_token
 9	7	altri	nsubj	9	9
 9	8	qui	advmod	9	9
 9	9	giunga	csubj	9	3
-10	1	I'	obj	10	2
+10	1	I'	nsubj	10	2
 10	2	vidi	root	0	0
 10	3	ben	advmod	10	2
 10	4	sì	advmod	10	7

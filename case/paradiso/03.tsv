@@ -91,7 +91,7 @@ line	token	word	case
 86	7	tutto	nominative
 86	8	si	reflexive
 87	1	ciò	accusative
-87	2	ch'	nominative
+87	2	ch'	accusative
 87	3	ella	nominative
 87	6	che	accusative
 88	2	mi	dative
@@ -109,7 +109,7 @@ line	token	word	case
 99	5	si	reflexive
 100	5	si	reflexive
 101	4	ch'	nominative
-102	1	che	nominative
+102	1	che	accusative
 103	4	seguirla	accusative
 104	2	mi	reflexive
 104	7	mi	reflexive
@@ -121,7 +121,7 @@ line	token	word	case
 110	7	che	nominative
 110	8	s'	reflexive
 112	1	ciò	accusative
-112	2	ch'	nominative
+112	2	ch'	accusative
 112	3	io	nominative
 112	6	me	ablative
 112	8	sé	ablative

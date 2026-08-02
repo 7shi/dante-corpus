@@ -92,7 +92,7 @@ line	token	word	case
 118	8	altro	nominative
 119	4	ch'	nominative
 119	7	ci	accusative
-121	4	che	nominative
+121	4	che	accusative
 121	7	ci	locative
 121	8	si	reflexive
 122	4	io	nominative

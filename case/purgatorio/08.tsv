@@ -15,7 +15,7 @@ line	token	word	case
 15	5	me	ablative
 17	2	lei	accusative
 22	1	Io	nominative
-29	4	che	nominative
+29	4	che	accusative
 31	5	noi	ablative
 31	8	si	reflexive
 33	7	si	reflexive
@@ -39,7 +39,7 @@ line	token	word	case
 48	5	mi	accusative
 49	7	s'	reflexive
 51	3	ciò	accusative
-51	4	che	nominative
+51	4	che	accusative
 52	2	me	ablative
 52	3	si	reflexive
 52	6	io	nominative

@@ -1757,3 +1757,101 @@ untouched, and the two named weaknesses from Step 5's rejected regenerations are
 not re-litigated. A further pass over the remaining ~150+ documented-but-uncorrected `case`-is-wrong
 positions from Step 4 slices 2 and 3 (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)'s
 *tier-A candidates were left alone* and *slice 3*) is open but not started.
+
+## Step 7 — the first hand-verified pass over slice 2/3's named-but-uncorrected residue (2026-08-03)
+
+Step 6 closed the bare-clitic population and left the larger, previously-named residue open: the
+"21 tier-A candidates" and the slice-3 "201 positions left alone" sections of
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) had already identified `case` as the dissenting,
+wrong read at ~180 named positions, but — under the freeze policy in force when those sections were
+written — only ever edited `dep`, never `case/*.tsv` itself. Per the standing rule this file's
+opening states (a decided error gets fixed where it's found, not filed), this round went back to
+those positions, opened each against its terzina, and corrected the column.
+
+**Method.** `case --stats --full` was rerun to get the current position list (post Step 6), which
+matches the doc's named residue closely but not exactly (some of Step 6's 50 overlapped). For the
+`nominative`-vs-`obj` shape (the largest class, matching slice 3's "word order — postposed subject"
+family), each position was checked mechanically first: does another explicit token attach to the
+same head verb as its subject (`nsubj`/`expl`)? Where yes, the flagged pronoun cannot also be that
+verb's subject, so it is genuinely the postposed object and `nominative` is wrong. Where no such
+sibling existed, each position was read individually against its terzina rather than assumed either
+way. Two known-and-named exceptions were preserved without touching `case`: **free relatives**
+(`chi`/`che` simultaneously the matrix argument and the subject of their own clause — inferno
+5:107.3, 11:51.2, 32:55.4's sibling patterns, purgatorio 2:99.1, 3:62.4, 11:126.3, 14:123.1,
+17:50.3), the **standard of comparison** (paradiso 13:131.5, 16:18.10), and the three positions
+already on record as genuine restructuring deferrals (inferno 1:117.1, paradiso 11:118.3, 22:55.2 —
+untouched, still needing a re-parse the reading alone doesn't settle) and the **entangled/
+Layer-2-blocked** set from Step 4 slice 1's family F (paradiso 2:119.3 among them).
+
+**12 impossible pairings — the prepositional oblique and relative-adverbial families (family B/C
+from Step 4 slice 1's original triage).** These were characterized back in slice 1 as "`case` is
+wrong, a preposition governs the pronoun" / "`case` is wrong" but left un-edited only because the
+column was frozen at the time — the reading itself was never in doubt. Retagged `nominative` →
+`ablative` (the corpus's own residual class for the prepositional-oblique/partitive read, per
+[`README.md`](README.md)'s *oblique tail*): inferno 2:82.5 (*la cagion che*), 11:97.5 (*a chi la
+'ntende*), 23:8.6 (*l'un con l'altro*); purgatorio 10:134.3 (*'n chi la vede*), 26:1.9 (*innanzi
+altro*), 26:32.5 (*con una*), 28:50.4 (*nel tempo che*); paradiso 10:140.4 (*ne l'ora che*), 13:16.6
+(*ne l'altro*), 16:116.3 and 17:50.6 (*a chi*), 20:144.2 (*in che... acquista*). `case --check`
+stays 0 hard throughout.
+
+**99 contradictions — the word-order family, corpus-wide.** `nominative` → `accusative` on a bound
+relative or demonstrative pronoun (`che`/`ch'`/`chi`/`quel`/`quello`/`quelle`/`ciò`/`tutto`/`un`/
+`lui`/`lei`/`questo`/`qualunque`/`essi`) genuinely functioning as the postposed object of its clause,
+its antecedent or a separate noun/pronoun holding the subject slot (explicit or pro-drop):
+
+inferno 2:135.5, 3:96.2 (see below — the one `nominative` fix in this batch), 6:43.7, 8:112.5,
+9:97.1, 10:98.3, 10:131.7, 12:81.7, 13:86.3, 13:110.3, 14:80.1, 17:77.1, 18:98.2, 19:19.2, 19:117.1,
+20:9.1, 21:38.2, 24:136.6, 25:24.4, 25:63.9, 25:124.1, 26:9.3, 26:74.2, 26:105.4, 29:101.6, 30:51.5,
+32:112.6, 33:41.3, 34:113.6, 34:138.1; purgatorio 1:129.3, 5:135.2, 6:7.6, 6:39.2, 7:99.1, 7:122.5,
+8:29.4, 8:51.4, 10:2.1, 11:46.4, 11:137.1, 13:97.1, 15:44.1, 15:133.7, 16:64.3, 19:11.4, 20:121.4,
+22:4.2, 24:82.6, 24:90.2, 28:69.1, 28:75.2, 32:51.2; paradiso 1:78.4, 1:102.1, 1:120.2, 1:126.3,
+2:59.3, 3:87.2, 3:102.1, 3:112.2, 4:102.5, 5:21.5, 6:19.5, 6:43.3, 6:58.2, 6:104.7, 8:86.1, 8:95.6,
+9:44.1, 9:108.7, 10:95.1, 11:87.1, 11:108.1, 11:135.2, 12:71.6, 12:75.5, 13:54.1, 14:46.6, 18:36.1,
+18:84.2, 19:59.3, 19:118.6, 20:80.7, 21:12.3, 21:45.6, 21:102.1, 23:68.2, 23:134.1, 25:87.2, 26:59.3,
+27:28.4, 27:97.4, 28:117.1, 31:3.1, 31:69.3, 32:19.5, 33:35.2.
+
+Four of these — **paradiso 19:59.3, 21:12.3; purgatorio 7:99.1**, and one more from this list —
+are the same positions dep/CORRECTIONS.md's *21 tier-A candidates* section already named ("the
+postposed noun really is the subject and `che` really is the object; `case` inverted them"); the
+rest are slice 3's unflagged population getting the same reading applied for the first time.
+
+**1 `accusative` → `nominative` — a si-passive, not a word-order case.** **Inferno 3:96.2** *ciò che
+si vuole* (the porter's "what is willed there is willed, and ask no further" — canto III's most
+quoted line): `che` refers to `ciò` and is the grammatical subject of the passive `si vuole` ("that
+which is willed"), not its object; the parallel construction with `si puote` in the line before
+confirms the passive reading. `dep` already had this right (`nsubj`); `case` read the semantic
+patient role instead of the promoted-subject syntax.
+
+**9 `dep` retags surfaced while verifying the above — two small, well-precedented families.**
+Reading each terzina individually rather than trusting the corpus's stored parse turned up two
+already-established `dep` conventions applied inconsistently:
+
+- **Predicative pronoun under a copula, `obj` → `attr`** (the same convention that took 11 rows in
+  an earlier round): inferno 13:52.3 *chi tu fosti*, 16:32.3 *chi tu se'*, 32:55.4 *chi son cotesti
+  due*; paradiso 21:105.4 *chi fue* — all "tell me who you were/are" indirect questions with `chi`
+  predicated of *essere*, missed by the earlier sweep. `case`'s `nominative` read was already
+  correct for these and was left untouched, exactly as the original 11 sided with neither layer's
+  case claim.
+- **A subject plainly mistagged object, `obj` → `nsubj`**: inferno 9:10.1 *I' vidi ben sì...* and
+  22:31.1 *I' vidi, e anco il cor...* (`I'` = apocopated *io*, unambiguously the subject of *vidi*),
+  inferno 12:23.1 *c'ha ricevuto già 'l colpo mortale* (the relative pronoun already has an explicit
+  object, *'l colpo mortale* — it cannot also be one), purgatorio 26:105.4 *l'affermar che fa
+  credere altrui* and paradiso 9:106.7 *l'arte ch'addorna* (same test: the head verb's object slot
+  was already filled by a separate token, so the flagged pronoun had to be the subject). `case` was
+  already correct (`nominative`) at all five and was left untouched.
+
+**State check.** `case --check`: 0 hard. `dep --check`: 0 hard, 0 soft. `pytest`: 142 passed.
+`skel --check`: 3634 → **3631** soft (the 9 `dep` retags' effect; none of the 111 pure-`case` edits
+touch Layer 5, which does not consume `case`). The adjudication join (`--stats`) drops from **208
+contradictions / 40 impossible pairings** to **100 contradictions / 28 impossible pairings** — 111
+`case` corrections total (12 impossible-pairing + 99 contradiction), all recorded above.
+
+**What's still open.** The remaining 100 contradictions are the `accusative`-vs-`nsubj` (the
+accusative-and-infinitive convention and its genuine exceptions), `dative`-vs-`obj` (the
+transitivity test that decided the earlier 40-row "clitic dative" family), `accusative`-vs-`iobj`,
+and `dative`-vs-`nsubj` shapes — none of the word-order family this round mechanized. The 28
+remaining impossible pairings are family A (the comparative standard, measured unstable — 65/35 —
+and correctly left alone) and family F (entangled/Layer-2-blocked, also correctly left alone). A
+follow-up batch should apply the same per-position terzina check to those shapes; the transitivity
+test used for slice 2's original 40-row dative family (does the head verb already carry an
+explicit object?) is the natural starting heuristic for the `dative`-vs-`obj` shape.

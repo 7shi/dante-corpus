@@ -92,7 +92,7 @@ line	token	word	case
 93	4	ch'	nominative
 93	7	t'	accusative
 94	1	Io	nominative
-95	1	che	nominative
+95	1	che	accusative
 96	3	s'	reflexive
 96	7	si	reflexive
 97	1	Questi	nominative
@@ -127,7 +127,7 @@ line	token	word	case
 136	1	essa	nominative
 137	1	che	nominative
 139	4	che	nominative
-140	4	che	nominative
+140	4	che	ablative
 141	6	l'	accusative
 145	3	ïo	nominative
 148	6	s'	reflexive

@@ -99,7 +99,7 @@ line	token	word	case
 96	1	che	nominative
 97	1	El	nominative
 97	4	voi	nominative
-98	3	che	nominative
+98	3	che	accusative
 98	6	seco	ablative
 100	1	Noi	nominative
 100	4	quei	nominative
@@ -140,7 +140,7 @@ line	token	word	case
 128	4	mi	dative
 131	2	quella	genitive
 131	4	cui	genitive
-131	7	tutto	nominative
+131	7	tutto	accusative
 132	2	lei	ablative
 135	4	ch'	nominative
 136	1	che	nominative

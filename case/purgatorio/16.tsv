@@ -79,7 +79,7 @@ line	token	word	case
 63	4	uno	nominative
 63	6	un	nominative
 63	9	la	accusative
-64	3	che	nominative
+64	3	che	accusative
 66	6	tu	nominative
 66	10	lui	ablative
 67	1	Voi	nominative

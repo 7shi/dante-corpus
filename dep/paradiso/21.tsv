@@ -754,7 +754,7 @@ line	token	word	deprel	head_line	head_token
 105	1	a	mark	105	2
 105	2	dimandarla	xcomp	104	8
 105	3	umilmente	advmod	105	2
-105	4	chi	obj	105	2
+105	4	chi	attr	105	2
 105	5	fue	acl:relcl	105	4
 106	1	Tra	case	106	3
 106	2	due	nummod	106	3

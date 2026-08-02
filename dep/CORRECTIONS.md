@@ -619,3 +619,28 @@ here — two other plausible `dep` fixes from the same pass (the `gravare` popul
 purgatorio 31:58, inferno 6:86, purgatorio 18:6; and the *mi lasciai Sibilia* / *m'avea lasciata
 Setta* reflexive reading at inferno 26:110-111) were tried and **reverted** after re-running
 `skel --check` showed them moving the soft count against the change, or not moving it at all.
+
+## Nine mistags surfaced while correcting `case`'s word-order errors (2026-08-03)
+
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)'s *Step 7* opened ~180 named `case`-side
+errors from the slice-2/3 residue against their terzine and corrected `case/*.tsv`. Reading each
+position individually (rather than trusting the stored parse) turned up nine `dep` rows that were
+themselves wrong, in two small families already established elsewhere in this file:
+
+**Predicative pronoun under a copula, `obj` → `attr`** — the same convention an earlier round
+spent 11 rows on (*the predicative pronoun under a copula* section above), missed at four more
+positions, all "tell me who you were/are" indirect questions with `chi` predicated of *essere*:
+inferno 13:52.3 *chi tu fosti*, 16:32.3 *chi tu se'*, 32:55.4 *chi son cotesti due*; paradiso
+21:105.4 *chi fue*.
+
+**A subject plainly mistagged object, `obj` → `nsubj`** — five positions where the flagged token
+could not be its head verb's object, either because it is unambiguously a subject pronoun (`I'` =
+apocopated *io*) or because the head verb's object slot was already filled by a separate, explicit
+token: inferno 9:10.1 *I' vidi ben sì...*, 22:31.1 *I' vidi, e anco il cor...*, 12:23.1 *c'ha
+ricevuto già 'l colpo mortale* (*'l colpo mortale* is already the object), purgatorio 26:105.4
+*l'affermar che fa credere altrui* (*credere* already has its own subject-complement, and the
+head being `fa` leaves no second object slot), paradiso 9:106.7 *l'arte ch'addorna* (*cotanto
+affetto* two lines down is already `addorna`'s object).
+
+`dep --check` stays **0 hard, 0 soft**; `pytest` stays 142; **Layer 5: 3634 → 3631, −3**. `case`
+was already correct (`nominative`) at all nine and was left untouched.

@@ -89,7 +89,7 @@ line	token	word	case
 97	2	altro	nominative
 97	3	che	nominative
 97	7	lui	accusative
-99	1	che	nominative
+99	1	che	accusative
 99	9	ne	ablative
 102	2	cui	dative
 103	4	che	nominative
@@ -109,7 +109,7 @@ line	token	word	case
 116	6	lui	ablative
 118	3	si	reflexive
 120	4	nessun	nominative
-122	5	questo	nominative
+122	5	questo	accusative
 123	1	quei	nominative
 123	2	che	nominative
 123	3	la	accusative

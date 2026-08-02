@@ -13,7 +13,7 @@ line	token	word	case
 6	5	si	reflexive
 7	1	el	nominative
 7	3	s'	reflexive
-7	6	questo	nominative
+7	6	questo	accusative
 7	8	quello	nominative
 8	2	cui	dative
 9	6	si	reflexive
@@ -44,7 +44,7 @@ line	token	word	case
 36	3	si	reflexive
 37	6	s'	reflexive
 39	1	ciò	accusative
-39	2	che	nominative
+39	2	che	accusative
 39	5	chi	nominative
 39	7	s'	reflexive
 40	4	io	nominative

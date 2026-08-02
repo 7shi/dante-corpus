@@ -11,7 +11,7 @@ line	token	word	case
 18	1	mi	accusative
 19	1	Io	nominative
 19	2	li	accusative
-19	5	ciò	nominative
+19	5	ciò	accusative
 19	6	che	nominative
 20	2	io	nominative
 20	7	tu	nominative
@@ -39,7 +39,7 @@ line	token	word	case
 39	8	lui	ablative
 40	4	el	nominative
 43	2	quel	accusative
-43	3	ch'	nominative
+43	3	ch'	accusative
 43	4	el	accusative
 46	5	che	nominative
 48	4	che	accusative
@@ -51,7 +51,7 @@ line	token	word	case
 54	4	tu	nominative
 55	5	che	accusative
 57	6	il	accusative
-58	2	quel	nominative
+58	2	quel	accusative
 58	3	che	nominative
 60	4	onde	ablative
 61	1	Quel	nominative
@@ -93,7 +93,7 @@ line	token	word	case
 101	6	quello	accusative
 102	7	chi	accusative
 102	9	si	reflexive
-104	7	quello	nominative
+104	7	quello	accusative
 105	2	chi	nominative
 105	6	lui	accusative
 106	3	l'	accusative

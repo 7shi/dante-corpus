@@ -739,7 +739,7 @@ line	token	word	deprel	head_line	head_token
 105	1	con	case	105	3
 105	2	l'	det	105	3
 105	3	affermar	obl	104	3
-105	4	che	obj	105	5
+105	4	che	nsubj	105	5
 105	5	fa	acl:relcl	105	3
 105	6	credere	xcomp	105	5
 105	7	altrui	nsubj	105	6

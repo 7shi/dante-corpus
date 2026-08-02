@@ -20,7 +20,7 @@ line	token	word	case
 23	7	che	nominative
 27	1	che	nominative
 27	8	si	reflexive
-28	4	che	nominative
+28	4	che	accusative
 30	2	ïo	nominative
 31	5	che	nominative
 32	2	sé	ablative
@@ -67,7 +67,7 @@ line	token	word	case
 95	5	che	nominative
 95	6	mi	dative
 96	2	mi	reflexive
-97	4	che	nominative
+97	4	che	accusative
 97	7	m'	accusative
 98	6	mi	accusative
 99	5	m'	accusative

@@ -121,7 +121,7 @@ line	token	word	case
 134	6	mi	accusative
 136	1	Io	nominative
 136	5	quel	accusative
-136	6	che	nominative
+136	6	che	accusative
 136	7	tu	nominative
 137	7	io	nominative
 139	6	altrui	dative

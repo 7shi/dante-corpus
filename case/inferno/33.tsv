@@ -47,7 +47,7 @@ line	token	word	case
 40	5	tu	nominative
 40	8	ti	reflexive
 41	2	ciò	accusative
-41	3	che	nominative
+41	3	che	accusative
 41	7	s'	reflexive
 42	6	che	ablative
 43	7	s'	reflexive

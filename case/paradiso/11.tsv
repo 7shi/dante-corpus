@@ -65,7 +65,7 @@ line	token	word	case
 80	1	si	reflexive
 81	4	li	dative
 85	2	sen	reflexive+ablative
-87	1	che	nominative
+87	1	che	accusative
 88	2	li	dative
 92	6	lui	ablative
 95	3	costui	ablative
@@ -73,7 +73,7 @@ line	token	word	case
 96	6	si	reflexive
 102	6	che	nominative
 102	7	'l	accusative
-108	1	che	nominative
+108	1	che	accusative
 109	3	colui	dative
 109	4	ch'	nominative
 109	8	sortillo	accusative
@@ -95,7 +95,7 @@ line	token	word	case
 130	4	quelle	ablative
 130	5	che	nominative
 131	2	stringonsi	reflexive
-135	2	ciò	nominative
+135	2	ciò	accusative
 135	3	ch'	nominative
 137	5	onde	ablative
 137	6	si	reflexive

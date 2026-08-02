@@ -144,7 +144,7 @@ line	token	word	case
 110	5	io	nominative
 111	7	mi	dative
 112	4	quello	accusative
-112	5	ch'	nominative
+112	5	ch'	accusative
 112	7	lor	ablative
 113	2	ei	nominative
 113	7	essi	ablative

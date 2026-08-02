@@ -36,7 +36,7 @@ line	token	word	case
 48	7	tu	nominative
 49	1	Tu	nominative
 49	2	mi	dative
-50	4	che	nominative
+50	4	che	ablative
 51	3	lei	accusative
 51	5	ella	nominative
 52	2	si	reflexive
@@ -49,9 +49,9 @@ line	token	word	case
 63	6	mi	dative
 67	1	Ella	nominative
 68	3	color	accusative
-69	1	che	nominative
+69	1	che	accusative
 70	3	ci	accusative
-75	2	quel	nominative
+75	2	quel	accusative
 75	4	me	ablative
 75	8	s'	reflexive
 76	1	Voi	nominative

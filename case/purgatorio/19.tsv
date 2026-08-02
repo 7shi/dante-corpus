@@ -5,7 +5,7 @@ line	token	word	case
 7	1	mi	dative
 10	1	Io	nominative
 10	2	la	accusative
-11	4	che	nominative
+11	4	che	accusative
 12	5	le	dative
 13	6	la	accusative
 15	5	le	dative

@@ -37,7 +37,7 @@ line	token	word	case
 40	5	s'	reflexive
 41	4	si	reflexive
 43	2	ciò	accusative
-44	1	che	nominative
+44	1	che	accusative
 45	6	si	reflexive
 47	4	che	accusative
 49	6	s'	reflexive
@@ -101,7 +101,7 @@ line	token	word	case
 105	4	ch'	accusative
 106	2	si	reflexive
 106	7	ch'	nominative
-108	7	quel	nominative
+108	7	quel	accusative
 110	1	ten	accusative+ablative
 111	4	mi	dative
 112	1	Tu	nominative

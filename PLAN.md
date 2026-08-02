@@ -2,51 +2,58 @@
 
 ## Handoff (2026-08-03) — resume here
 
-**Uncommitted in the working tree right now** (46 files, not yet committed — confirm with `git
-status` before doing anything else): `PLAN.md`, `case/README.md`, `case/CORRECTIONS.md`,
-`dep/CORRECTIONS.md`, `skel/README.md`, one row in `dep/purgatorio/11.tsv`, and 49 rows across 39
-files under `case/*/`. All checks pass as of this state: `dep --check` 0/0, `case --check` 0 hard,
-`skel --check` 0 hard/3634 soft, `np --check` 0/0, `pytest` 142 passed. Ask the user whether to
-commit this batch before starting new work — it was left uncommitted only because the session
-that made it ran long, not because it's provisional.
+**This batch is committed.** All checks passed at commit time: `dep --check` 0 hard/0 soft,
+`case --check` 0 hard, `skel --check` 0 hard/**3631** soft, `np --check` 0/0, `pytest` 142 passed.
+If `git status` shows anything uncommitted when this session resumes, that's new work from
+*after* this handoff was written, not part of it — check `git log` for the latest commit on this
+before assuming otherwise.
 
-**What this batch did.** The user's standing goal is Layer 5's soft residue at **0**
+**What the last two batches did.** The user's standing goal is Layer 5's soft residue at **0**
 ([[project_skel_soft_violations_goal]] — soft checks are rule mismatches to fix, not a baseline to
-tolerate). Investigating the "clitic-case question" `skel/PLAN.md` section 1 had parked (needing a
-Layer-2 case feature, which `case/` now is) turned up something the case annex's own Step 4
-(2026-07-31) had already found and never acted on: **positions where `case/*.tsv` itself is
-wrong**, sitting undocumented as fixed even though `dep/CORRECTIONS.md` names them explicitly
-("`case` is the dissenting read... `dep` is right"). This session hand-verified and fixed the
-**50 bare-clitic** (`mi ti ci vi si li` + elisions) contradictions: 1 was a genuine `dep/` mistag
-(retagged, closing a Layer-5 divergence, 3635→3634), the other 49 were `case/*.tsv` errors
-(corrected, no Layer-5 effect since `skel` doesn't consume `case`). Full method, per-row table,
-and two rejected `dep` hypotheses (measured and reverted) are in `case/CORRECTIONS.md`'s *Step 6*
-and `dep/CORRECTIONS.md`'s matching entry.
+tolerate). Investigating the "clitic-case question" turned up that the case annex's own Step 4
+(2026-07-31) had already found, and never acted on, many positions where **`case/*.tsv` itself is
+wrong** — named in `dep/CORRECTIONS.md` ("`case` is the dissenting read... `dep` is right") but
+never corrected because the column was frozen at the time. Two sessions have now worked through
+this residue:
 
-**What's open — the next concrete task.** The same Step 4 rounds documented **far more** than 50
-positions where `case` is wrong, but only ever edited `dep/`, never `case/*.tsv`. These are named,
-not measured-and-abandoned — i.e. they are exactly the kind of "clear problem" the user says must
-be fixed, not filed. Two sections of `dep/CORRECTIONS.md` are the source list:
+- **Step 6** (previous session): the 50 bare-clitic (`mi ti ci vi si li` + elisions) contradictions
+  — 1 genuine `dep/` mistag, 49 `case/*.tsv` errors. See `case/CORRECTIONS.md` Step 6.
+- **Step 7** (this session): the 40 "impossible pairings" (`obl`×`nominative`) and the remaining 208
+  named contradictions. **12** impossible pairings and **99** contradictions were `case/*.tsv`
+  errors (nominative misread on a genuinely postposed object, plus one si-passive read as
+  accusative instead of nominative) — corrected. **9** more turned out to be `dep/` mistags
+  (predicative pronoun under a copula, or a subject plainly tagged object) surfaced while verifying
+  the `case` reading — retagged. Method, full position lists, and the two established conventions
+  applied (predicative-under-copula, subject-mistagged-object) are in `case/CORRECTIONS.md`'s
+  *Step 7* and `dep/CORRECTIONS.md`'s matching entry. Contradictions: 208→100; impossible pairings:
+  40→28.
 
-- *"21 tier-A candidates were left alone, and why"* (in the `## The skel-flagged contradictions...`
-  section) — names 11 positions where `case` was checked and found wrong (`inferno 17:77.6`,
-  `19:44.5`, `26:110.5`, `30:126.8`, `purgatorio 13:108.5`, `paradiso 15:96.2`, and others) but
-  `case/*.tsv` was never touched. **Some of these overlap with Step 6's 50** (already fixed this
-  session — cross-check before re-editing) but not all; read the actual current `case/*.tsv` value
-  at each position first.
-- *"The contradictions `skel` does not flag, from the `case` annex (2026-08-01)"* section (slice
-  3) — the **larger** population, ~124 positions / 167 `dep` rows, where the write-up says "`case`
-  is the dissenting read in 171 of them" (53% of that slice). This is the bulk of the remaining
-  work: read each position's terzina, decide the correct case value the same way Step 6 did
-  (verb valency, corpus-internal convention checks, and — where a `dep` change is tempting instead
-  — a trial-and-revert against `skel --check` before committing to it, exactly as Step 6's `gravare`
-  and `mi lasciai Sibilia` trials were rejected).
+**What's open — the next concrete task.** Step 7 only mechanized the `nominative`-vs-`obj` shape
+(word order / postposed subject) plus the 12 prepositional-oblique/relative-adverbial impossible
+pairings. Three shapes are untouched, all in the current `case --stats` contradiction list (100
+positions) plus 28 remaining impossible pairings (family A comparative-standard + family F
+entangled — both correctly left alone, do not re-litigate):
 
-Work through these in batches (a session doesn't need to clear all ~150+ at once), each batch
+- `accusative`-vs-`nsubj` (44 candidates before Step 7, now fewer) — mostly the
+  accusative-and-infinitive convention (a genuine framework choice, leave alone) and si-passive
+  reads (check each — inferno 3:96.2 this session showed the convention can decide it), plus a
+  residue of plain subject pronouns (`el`/`ei`/`elli`/`tu`/`io`/`noi`) misread as accusative that
+  should just become `nominative`.
+- `dative`-vs-`obj` (25 candidates) — apply the same transitivity test slice 2's original 40-row
+  "clitic dative" family used: does the head verb already carry an explicit object? If yes, the
+  flagged clitic is genuinely dative-of-possession and `case` is right (a `dep` retag is due
+  instead, `obj`→`iobj`); if no, `obj` is structurally possible and `case`'s `dative` read is
+  simply wrong.
+- `accusative`-vs-`iobj` (12) and `dative`-vs-`nsubj` (8) — smaller, read each individually.
+
+Work through these in batches (a session doesn't need to clear all ~140 at once), each batch
 ending in: `case --check` still 0 hard, `dep --check` still 0/0, `pytest` still passing, and a new
-dated section in `case/CORRECTIONS.md` (+ `dep/CORRECTIONS.md` for any `dep` retag) in the Step 6
-style — table of position/word/was/now/why, plus the before/after contradiction count from
-`case --stats`.
+dated section in `case/CORRECTIONS.md` (+ `dep/CORRECTIONS.md` for any `dep` retag) recording what
+was fixed, what was verified-and-left-alone and why, and the before/after count from
+`case --stats`. **Also watch for CRLF line endings**: writing TSVs with Python's `csv` module and
+`newline=''` still defaults to `\r\n` — the originals are `\n`-only, so `sed -i 's/\r$//'` (or an
+explicit `lineterminator='\n'`) is needed on any touched file before diffing/committing, or `git
+diff` will show the whole file changed.
 
 **How `CORRECTIONS.md` is used — this is the point the user asked to be explicit about.**
 `*/CORRECTIONS.md` records **corrections that were actually applied**, not a place to log "found a
@@ -66,10 +73,11 @@ text alone.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5q and its soft residue is **3634** (down from 17438 at the
-first full-corpus measurement) — every route the Phase 5 plan opened has a measured verdict and
-none is open (see [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below
-and [`skel/README.md`](skel/README.md) for the design and current status.
+checker was refined through Phases 0-5q and its soft residue is **3631** (down from 17438 at the
+first full-corpus measurement, and still moving as the `case`/`dep` correction rounds above find
+and fix cross-layer errors) — every route the Phase 5 plan opened has a measured verdict and none
+is open (see [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
+[`skel/README.md`](skel/README.md) for the design and current status.
 
 **The pronoun case annex is complete and closed (2026-08-02).** It is a permanent Layer-2 sibling
 extension, `case/`, on the same footing as `np/`, `dep/` and `skel/` relative to `morph/` — not a
@@ -105,7 +113,7 @@ cantos, every route any of their plans opened has a measured verdict, and everyt
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3634 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3631 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -326,7 +334,7 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5q
-   (`--check`: 0 hard / 3634 soft). Phase 5 closed with every route measured; see
+   (`--check`: 0 hard / 3631 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

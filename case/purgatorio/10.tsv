@@ -1,5 +1,5 @@
 line	token	word	case
-2	1	che	nominative
+2	1	che	accusative
 4	2	la	accusative
 5	3	io	nominative
 5	9	essa	ablative
@@ -119,7 +119,7 @@ line	token	word	case
 129	5	cui	ablative
 132	1	si	reflexive
 133	2	qual	nominative
-134	3	chi	nominative
+134	3	chi	ablative
 134	4	la	accusative
 135	2	io	nominative
 135	3	color	accusative
