@@ -191,15 +191,15 @@ blindness is the design constraint the annex's whole value rests on ([PLAN.md](P
 *Independence*): it is what makes this a genuine **third independent read** that can indict Layer 4,
 rather than an artifact manufactured to close Layer-5 violations.
 
-**The rules carry two word-order corrections** added for the `morph/` merge's blind regeneration,
-against the only two error shapes step 4 counted at corpus scale
-([CORRECTIONS.md](CORRECTIONS.md), *Step 4, slice 3*): a relative pronoun is nominative **only**
-when its clause has no other subject, so a noun postposed after the verb makes it accusative
-(78 instances read the other way); and a verb takes at most one direct object, so a clitic beside
-an explicit object noun is the dative of possession, not accusative (24 instances). Both are
-illustrated from corpus lines **where the frozen column and `dep` already agree**, never from a
-contradiction — pre-answering a disputed position in the prompt is the same manufacturing the
-blindness rule forbids, one level up.
+**The prompt matches the frozen artifact.** Two word-order rules — a relative pronoun is
+nominative only when its clause has no other subject; a verb takes at most one direct object, so a
+clitic beside an explicit object noun is the dative of possession — were tried for the `morph/`
+merge's blind regeneration, against the two error shapes step 4 counted at corpus scale
+([CORRECTIONS.md](CORRECTIONS.md), *Step 4, slice 3*). Both rounds were rejected against a verdict
+rule fixed in advance, and the prompt was reverted to the version the frozen artifact was actually
+built under — see [CORRECTIONS.md](CORRECTIONS.md)'s *Step 5 — the merge decision* and *the prompt
+was reverted too*. The rule text and its rationale are kept in git history (`038d1ec`, `ffc8180`),
+not in the live prompt.
 
 Alignment is a forward walk (`case.align_unit`): the expected sequence of positions is already
 known exactly from Layer 2, so each expected position consumes the next table row naming it, and

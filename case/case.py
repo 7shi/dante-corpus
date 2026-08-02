@@ -61,32 +61,6 @@ Rules:
 * Use vocative for a pronoun addressing the hearer directly, not filling a slot of the verb
   (e.g. "O **tu** che ..."). A pronoun that is the subject of the verb is nominative even
   when the sentence is addressed to someone.
-* Word order does not decide case, and this poem inverts it constantly. Decide from the
-  verb's agreement and from which participants are already accounted for, never from what
-  comes first.
-  - A relative pronoun is the subject of its clause unless you can name the word that is
-    the subject instead. A noun standing after the verb is not that word by itself: far more
-    often it is the object, and the relative pronoun stays nominative — "che non lasciò già
-    mai persona viva", "che fece per viltade il gran rifiuto", "ch'attende ciascun uom".
-    Make the relative pronoun the object only when the postposed noun is the one the verb
-    agrees with and the one that can perform the action: "nel nome che sonò la voce sola"
-    (la voce sola sounds, so che = accusative), "che mena il vento, e che batte la pioggia"
-    (both che = accusative), "l'anime di color cui vinse l'ira" (l'ira conquers, so cui =
-    accusative). Agreement often settles it outright, in both directions: a singular verb
-    cannot have a plural relative pronoun as its subject, and "che spandi di parlar sì largo
-    fiume" has a second-person verb, so its subject is the person addressed and not the
-    postposed fiume.
-  - Conversely a personal pronoun that follows its verb is still nominative when nothing
-    else is the subject: "Non odi tu la pieta del suo pianto", "e poi comincia' io".
-* A verb takes at most one direct object. Where the clause already has a noun phrase as its
-  direct object, a clitic beside it is dative, not accusative — the ordinary dative of
-  possession or of the person affected: "Li occhi mi sciolse", "ch'ella mi fa tremar le vene
-  e i polsi", "questa mi porse tanto di gravezza". The object is usually a body part or a
-  belonging, and usually sits in the same line as the clitic. A dative clitic does not need
-  a second object to license it, either: verbs governing "a" — rispondere, insegnare,
-  piacere, parere, nuocere, ricordare, fallire — take a dative clitic on their own, with no
-  other object anywhere in the clause: "Io li rispuosi", "'l gir mi piace", "Non ti noccia",
-  "se ben vi ricorda", "li fallia la lena".
 * A word may fuse two pronouns (e.g. gliel'). Give one case per pronoun, in reading order,
   joined with + (e.g. dative+accusative).
 * A word may fuse a verb and a pronoun (e.g. andarmi, dissemi). Give the case of the
@@ -106,45 +80,6 @@ Example output:
 |---|---|---|
 | 2 | mi | reflexive |
 | 6 | che | nominative |
-
-Here the clause of "che" (line 6) has no other subject — "la paura" is what it renews — so
-"che" is nominative. Compare a clause that does have one:
-
-Example input:
-91 Però che **ciascun** **meco** **si** convene
-92 nel nome **che** sonò la voce sola,
-93 **fannomi** onore, e di **ciò** fanno bene».
-
-Example output:
-| Line | Word | Case |
-|---|---|---|
-| 91 | ciascun | nominative |
-| 91 | meco | ablative |
-| 91 | si | reflexive |
-| 92 | che | accusative |
-| 93 | fannomi | dative |
-| 93 | ciò | ablative |
-
-"la voce sola" is the subject of "sonò", so "che" is its object; "fannomi onore" already has
-"onore" as its object, so the fused "mi" is dative.
-
-A noun after the verb is not on its own a reason to move the relative pronoun off the subject
-slot. Both relatives below have one, and both stay nominative:
-
-Example input:
-106 Poi **si** ritrasser tutte quante insieme,
-107 forte piangendo, a la riva malvagia
-108 **ch'**attende ciascun uom **che** Dio non teme.
-
-Example output:
-| Line | Word | Case |
-|---|---|---|
-| 106 | si | reflexive |
-| 108 | ch' | nominative |
-| 108 | che | nominative |
-
-The bank awaits the man, and the man is the one who fears not God — so "ciascun uom" and "Dio"
-are the objects of their verbs, and each relative pronoun is the subject of its own clause.
 """
 
 RETRIES = 2

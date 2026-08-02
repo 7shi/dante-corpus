@@ -26,8 +26,8 @@ budgeted blind-regeneration rounds run and rejected against a verdict rule fixed
 (round 1 measured and rejected, the prompt rebalanced, round 2 measured against the same four
 populations and also rejected — the named target rows held or rose, but the relative-pronoun-
 subject population and the global `nominative`→`accusative` census drift both recurred, smaller
-but in the same direction; the frozen column, restored via `git stash`, not discarded, is what
-stands); and finally **the merge decision itself: no physical merge into `morph/*.tsv`**. `case/`
+but in the same direction; the frozen column is what stands, and the build prompt was reverted to
+match it); and finally **the merge decision itself: no physical merge into `morph/*.tsv`**. `case/`
 is promoted from experimental annex to a **permanent** Layer-2 sibling extension, on the same
 footing as `np/`, `dep/` and `skel/` relative to `morph/` — the hash-blast-radius and provenance
 reasons for a sibling directory hold regardless of the column's measured quality, and every other
@@ -236,13 +236,12 @@ clitic reconciliation is not; if `skel` reads 3633 that same reconciliation is n
 2026-08-02 `morph/` round is missing too, and 3469 means slice 3 is.
 
 **Both regeneration rounds have now run, been measured, and been rejected; the tree is clean and
-holds the original frozen column.** Round 2's artifact was never committed — it was measured
-against the frozen baseline with `git show HEAD:case/…`, found to repeat round 1's failure mode
-(smaller but the same shape), and set aside with `git stash` (message *"case round2 regen output
-(measured, to be rejected)"*) rather than a plain discard, so it is recoverable but not in the
-tree. `git status --short` should read clean; if it instead shows 100 modified `case/*.tsv`, that
-stash was popped and needs re-stashing or a decision to keep it — it does not meet the verdict
-rule and was not adopted.
+holds the original frozen column.** Neither regenerated column was preserved: round 1 was measured
+and the frozen artifact restored with `git checkout`; round 2 was measured against the frozen
+baseline with `git show HEAD:case/…`, found to repeat round 1's failure mode (smaller but the same
+shape), and was similarly not kept. `git status --short` should read clean; if it instead shows
+100 modified `case/*.tsv`, an uncommitted regeneration is sitting in the tree and does not meet the
+verdict rule.
 
 **The `case` build prompt has been run twice and rebalanced once; the artifact under `case/` is
 the original frozen column, and both rounds are done.** Round 1: both new rules hit their named
@@ -260,7 +259,9 @@ per *What must not be done* below, **a third round is not run**: two was the sta
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md), *the blind regeneration, measured*, *the rebalanced
 build prompt*, and *the second regeneration, measured and rejected*. **The merge decision itself
 then closed the annex: no physical merge, both weaknesses recorded rather than chased further —
-see below.**
+see below.** The build prompt in `case/case.py` was subsequently reverted to the version that
+actually built the frozen column, so the code and the artifact in the tree tell the same story —
+see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the prompt was reverted too*.
 
 ### What closed on 2026-08-02, and is not to be re-opened
 
@@ -307,11 +308,13 @@ work is splitting one form into several readings.
    **also not adopted** — the guard held the two easy populations this time, and the named target
    (relative `obj`) rose again, but the population the rebalance specifically targeted (relative
    `nsubj`) fell again (−56, smaller than round 1's −76 but the same direction) and the census
-   drift persisted (−110/+117 against round 1's −129/+156). The frozen artifact was set aside with
-   `git stash`, not committed. **Two rounds was the budget and both are spent — a third is not
-   run**: tuning the prompt and re-scoring against `dep` erodes the independence the column exists
-   for, and round 2 already re-confirmed the rule's own verdict criterion once. See
-   [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the second regeneration, measured and rejected*.
+   drift persisted (−110/+117 against round 1's −129/+156). Round 2's column was never committed
+   and, once measured, was not kept. **Two rounds was the budget and both are spent — a third is
+   not run**: tuning the prompt and re-scoring against `dep` erodes the independence the column
+   exists for, and round 2 already re-confirmed the rule's own verdict criterion once. The build
+   prompt in `case/case.py` was afterwards reverted to the version that produced the frozen
+   artifact — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the second regeneration, measured
+   and rejected* and *the prompt was reverted too*.
 
 1. **The merge decision itself: no physical merge into `morph/*.tsv`.** `PLAN.md`'s *Why its own
    directory* gave two reasons that never depended on the column's measured quality — the
@@ -372,14 +375,15 @@ restore the frozen column and take the merge with the weakness recorded, per ite
 **This is exactly what happened.** Round 2 rose the named target (relative `obj`, 77%→88%) and
 held the two easy populations, but the population the rebalance was built to recover — relative
 `nsubj` — fell again (−56) and the census kept drifting `nominative`→`accusative` (−110/+117,
-against round 1's −129/+156). The rule's own criterion says reject, so round 2's artifact was set
-aside with `git stash` (message *"case round2 regen output (measured, to be rejected)"*, recoverable
-but not in the tree) rather than `git checkout`, since a stash keeps the option to inspect it later
-without re-running the LLM pass. **No third round follows** — see *the second regeneration,
-measured and rejected* in [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full numbers.
+against round 1's −129/+156). The rule's own criterion says reject, so round 2's column was left
+uncommitted and, once measured, discarded rather than adopted. **No third round follows** — see
+*the second regeneration, measured and rejected* in [`case/CORRECTIONS.md`](case/CORRECTIONS.md)
+for the full numbers.
 
-**Round 1's regenerated column was not preserved** — only its measurements, in that file. Round
-2's *is* preserved, in the stash noted above, should its exact rows ever be wanted for inspection.
+**Neither regenerated column was preserved** — round 1's and round 2's numbers are recorded in
+[`case/CORRECTIONS.md`](case/CORRECTIONS.md); neither round's rows were kept, and the build prompt
+that produced them was reverted afterwards, so reproducing either would mean re-running the LLM
+pass under the historical prompt in git (`038d1ec`, `ffc8180`).
 
 There is one **deliberately open Layer-3 question** left over from 2026-08-02, and it blocks
 nothing: the **160 `+lemma` spans on ordinary single-token pronouns in Inferno 18 and 23**, a

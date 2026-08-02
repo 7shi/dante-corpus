@@ -1536,11 +1536,12 @@ comparison the rule itself set up against round 1's −129/+156.
 
 ### Verdict — reject, and this is the last round
 
-**The rebalanced column was measured and not adopted.** `git stash` holds the round-2 artifact
-(message *"case round2 regen output (measured, to be rejected)"*) rather than discarding it
-outright, but it is not part of the tree and the frozen column (`case --stats`: 258 contradictions
-/ 40 impossible pairings) is what `main` and any future session sees. Per *What must not be
-done* in `PLAN.md`: **do not tune the prompt a third time.** Two rounds were the stated budget,
+**The rebalanced column was measured and not adopted.** It was held in `git stash` for a day while
+the measurement above was written up, then dropped once the verdict was final (2026-08-03) — the
+frozen column (`case --stats`: 258 contradictions / 40 impossible pairings) is what `main` and any
+future session sees, and this file's numbers are what a third attempt would have to reproduce from
+scratch rather than diff against. Per *What must not be done* in `PLAN.md`: **do not tune the
+prompt a third time.** Two rounds were the stated budget,
 for the reason given there — choosing prompt wording by re-scoring against `dep` is exactly the
 fitting-to-Layer-4 that would make `case`'s independence worthless, and a third round would be
 that regardless of outcome.
@@ -1605,6 +1606,23 @@ judgment against a component-level one at exactly the positions where a verb and
 share a token. They are recorded here as **structural residue of the `dep` join**, not scheduled
 for any correction round — the same status the two prompt-side weaknesses have.
 
+### The prompt was reverted too, so the code matches the artifact it stands for
+
+The verdict rejects both regeneration rounds, but `case/case.py`'s `SYSTEM_PROMPT` still carried
+round 2's rebalanced rules — the corrected-then-rebalanced prompt was never reverted when its
+output was rejected, unlike the artifact itself (round 1 was restored with `git checkout`, round 2
+held in `git stash` and, once measured, dropped). Left as it stood, this was a live inconsistency: the prompt in the
+tree could no longer regenerate the artifact in the tree, and if any future partial regeneration
+ever ran again (as happened once already, when the `morph/` scope shift forced a 20-line chunk
+regen), it would silently apply round 2's rejected rules to a handful of chunks while the other
+1339 stayed on the original prompt — a non-uniform artifact with no record of why. **The prompt
+was reverted to the pre-round-1 version** (`git show 2e3cdba:case/case.py`, the state the frozen
+column was actually built under), leaving only the Makefile's `regen` target (a generic
+drop-and-rebuild utility, not tied to the rejected rules) and this written record as what remains
+of the two rounds. `case --check` stays 0 hard and the 138 tests stay unaffected — the prompt has
+no effect on either. The round-1 and round-2 rule text is preserved in git history
+(`038d1ec`, `ffc8180`) and described above, not in the live file.
+
 ### What this closes
 
 The annex's remaining open item — *the case annex's `morph/` merge* — is **closed**. `case/`
@@ -1612,7 +1630,8 @@ stays exactly where it is: a permanent, separately-hashed, separately-provenance
 extension, frozen at 100 cantos / 0 hard / 13125 tokens / 13189 values, with 258 contradictions
 and 40 impossible pairings against `dep` recorded as measured residue and two named weaknesses
 (the postposed relative-pronoun subject; the `nominative`→`accusative` census pull) recorded
-rather than chased past their two-round budget. Nothing in `morph/*.tsv` changes, no hash moves,
-and no further regeneration is scheduled. See `PLAN.md`'s *Why its own directory* for the
-reasoning this decision confirms rather than revisits, and [`README.md`](README.md) for the
-serve-time API this leaves unchanged.
+rather than chased past their two-round budget. **The build prompt matches the frozen artifact
+again**, so the code in the tree and the data in the tree tell the same story. Nothing in
+`morph/*.tsv` changes, no hash moves, and no further regeneration is scheduled. See `PLAN.md`'s
+*Why its own directory* for the reasoning this decision confirms rather than revisits, and
+[`README.md`](README.md) for the serve-time API this leaves unchanged.
