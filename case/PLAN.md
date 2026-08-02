@@ -1,12 +1,17 @@
-# case — a pronoun case annex to Layer 2
+# case — a pronoun case extension to Layer 2
 
 ## Status
 
-**Step 4 is complete. All three slices are done and every one of the 510 adjudication candidates
-has a verdict.** All 100 cantos, frozen since `0027494` — 13112 pronoun tokens / 13176 case values
-then, **13125 / 13189** after the 2026-08-02 `morph/` round and its chunk regeneration.
-Across the three slices the round edited **215 positions / 270 rows** in `dep/`, with
-`dep --check` at 0/0 throughout and the `case/` artifact never touched.
+**The annex is complete and closed (2026-08-02).** All 100 cantos, frozen since `0027494` —
+13112 pronoun tokens / 13176 case values then, **13125 / 13189** after the 2026-08-02 `morph/`
+round and its chunk regeneration. Step 4 spent all **510** adjudication candidates across three
+slices, editing **215 positions / 270 rows** in `dep/` (`dep --check` at 0/0 throughout, the
+`case/` artifact never touched). Step 5 then settled the oblique tail (fold nothing), closed the
+`morph/`-owed chunk regeneration, ran and rejected two budgeted blind-regeneration rounds against
+a verdict rule fixed in advance, and closed **the merge decision**: no physical merge into
+`morph/*.tsv`; `case/` is promoted from experimental annex to a **permanent** Layer-2 sibling
+extension. Nothing further is scheduled. See *The merge decision* below and
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the merge decision* for the full reasoning.
 
 | slice | population | candidates | edited | yield | Layer 5 |
 |---|---|---|---|---|---|
@@ -35,13 +40,15 @@ almost all `ablative` (1805 → 1819), the newly in-scope comitatives, and `geni
 not move at all. **Step 5's other open sub-item, the
 `locative` question, was settled the same day: it is earned and stays** — analysis only, no
 artifact moved and no vocabulary change for the merge to carry.
-What remains after that is the
-`morph/` merge itself — and the annex's own verdict is that a **blind regeneration of `case` under
-a corrected prompt** is the next instrument, not another Layer-4 slice. The column's two measured
-weaknesses are both prompt-fixable and both were recorded rather than patched: **194 `case`-side
-errors across the three slices, none rewritten.** **The corrected prompt was written on
-2026-08-02** and the artifact was not touched; the regeneration it is for is the user's next
-run (`make -C case regen`). See *The next action* below.
+**The annex is now complete and closed (2026-08-02).** The `morph/` merge's blind regeneration ran
+twice under a corrected, then rebalanced, prompt and was rejected both times against a verdict
+rule fixed in advance — see *the second regeneration, measured and rejected* in
+[`CORRECTIONS.md`](CORRECTIONS.md). The merge decision itself then resolved to **no physical merge
+into `morph/*.tsv`**: `case/` is promoted from experimental annex to a permanent Layer-2 sibling
+extension, on the same footing as `np/`, `dep/` and `skel/` relative to `morph/` — the
+hash-blast-radius and provenance reasons in *Why its own directory* below hold regardless of the
+column's measured quality, and nothing in the annex weakened either of them. See
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the merge decision*.
 
 The vocabulary and scope are frozen and the code exists — [`case.py`](case.py) (build driver,
 `--check`/`--stats`/`--clean`), [`README.md`](README.md), [`Makefile`](Makefile),
@@ -159,12 +166,12 @@ make -C skel check          # expect 0 hard, 3635 soft
 make -C case check          # expect 0 hard  -- regenerated 2026-08-02
 ```
 
-**As of the close of 2026-08-02 the corrected build prompt is in `case/case.py` and *nothing has
-been regenerated with it*.** The artifact in the tree is still the one frozen at `0027494` and
-patched by that day's chunk regeneration, so every figure in this file describes the **old**
-column. The next session's first question is therefore whether the regeneration has been run: if
-`case/case.py` carries the word-order rules and the second worked example but `--stats` still
-reads 258 / 40, it has not.
+**As of the close of 2026-08-02, both budgeted regeneration rounds have run and both were
+rejected**; the artifact in the tree is the one frozen at `0027494` and patched by that day's
+chunk regeneration, and it is what stays — the merge decision (below, and in
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the merge decision*) closed the annex without a
+third round. Every figure in this file describes this frozen column, and no further regeneration
+is scheduled.
 
 `case --stats` reads **258 contradictions / 40 impossible pairings** over 13125 tokens / 13189
 values (260 / 40 over 13112 / 13176 at step 4's close).
@@ -196,63 +203,33 @@ purgatorio 20:83 and took `skel` to **3635**. Full description in
 5. **The selector is measured, not argued** — direction three times out of three, yield 79%
    inside the intersection against 38% and 20% outside.
 
-### The next action
+### The merge decision — the annex is closed, and nothing further is scheduled
 
-**Step 5's remaining item: the `morph/` merge**, and the two things it must carry.
+**Step 5's remaining item, the `morph/` merge, is done.** Its two carried items both resolved
+without touching the frozen artifact:
 
-- **A blind regeneration of the `case` column under a corrected prompt.** The column reads a
-  pronoun's case well and word order poorly, in two shapes now counted at corpus scale: it makes
-  a relative pronoun nominative whenever the clause postposes a noun (78 instances), and it reads
-  the dative of possession as accusative whenever the verb already carries an object (24). Both
-  are prompt problems. **The corrected prompt is written (2026-08-02)** — three rules and a
-  second worked example, every illustration drawn from a position where the frozen column and
-  `dep` *already agree*, so the prompt pre-answers no disputed position; see
-  [`CORRECTIONS.md`](CORRECTIONS.md)'s *the corrected build prompt*. **The regeneration itself is
-  the user's**, by the convention Phase 5 settled:
+- **The blind regeneration ran its full two-round budget and was rejected both times.** Round 1
+  (corrected prompt, 2026-08-02): the two named shapes moved but the column drifted globally
+  toward `accusative`. The prompt was rebalanced; round 2 (2026-08-02) held the two easy
+  populations but its own named target (relative-pronoun `nsubj`) fell again and the census kept
+  drifting, smaller but the same shape. Per the verdict rule fixed in advance, both were rejected;
+  full numbers in [`CORRECTIONS.md`](CORRECTIONS.md)'s *the blind regeneration, measured* and *the
+  second regeneration, measured and rejected*. The frozen column (`0027494`, patched by the
+  2026-08-02 chunk regeneration) is what stands, with both weaknesses — the postposed
+  relative-pronoun subject and the diffuse `nominative`→`accusative` pull — recorded rather than
+  chased past the budget.
+- **The fused-token problem resolved without a schema change.** The merge decision (below) means
+  no format ever had to reconcile `case`'s per-component rows against `dep`'s per-token `deprel`;
+  the five positions where that mismatch produces a contradiction (inferno 2:81.7 *aprirmi*,
+  23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*)
+  are recorded as structural residue of the `dep` join, not scheduled work.
 
-  ```bash
-  make -C case regen CANTICLES=inferno    # one shell per canticle, 3-way parallel
-  make -C case check                      # -> 0 hard
-  make -C case stats                      # against 258 contradictions / 40 impossible
-  ```
-
-  `regen` drops the artifacts and rebuilds; `clean` is the wrong instrument after a prompt change
-  (nothing in the artifact is *invalid*, so it would remove nothing). The question the round
-  answers is whether the **two shapes** move, not whether the total falls.
-
-  **It is the whole column, all 100 cantos, 1340 chunks — the same size as step 3's corpus pass,
-  and that is deliberate.** The two weaknesses were counted *from the join to `dep`*, so
-  regenerating only the chunks that match those shapes would select the generated population by a
-  `dep`-derived criterion, which is the manufacturing *Independence* forbids. It is also the only
-  way the before/after `--stats` are comparable. Nothing is lost by redoing it: the frozen column
-  is committed at `0027494`, so `git checkout case/` restores it and `git show HEAD:case/…` gives
-  the old rows for the diff.
-
-  **Smoke-test one canto first**, as step 3 did with Inferno 1 — that test is what caught the
-  missing `reflexive` value before 1340 calls were spent:
-
-  ```bash
-  cd case && rm -f inferno/04.tsv && uv run case.py inferno -c 4 -m google:gemma-4-31b-it
-  ```
-
-  Inferno 4 is the natural choice: it contains the new worked example's own passage (91–93) and
-  several postposed-subject relatives. Diff it against `git show HEAD:case/inferno/04.tsv` and
-  check that the changes are the two targeted shapes and not collateral drift.
-
-  **Resuming:** run `regen` **once** per canticle; if a run is interrupted, resume with the plain
-  build target (`make -C case CANTICLES=inferno`), which skips completed chunks. Re-running
-  `regen` would delete the progress.
-- **The `locative` question is now settled (2026-08-02): it is earned and stays**, so the
-  regeneration keeps all eight values and the vocabulary does not move. By deprel it opens no slot
-  — the containment test that acquitted `genitive` fails it outright — but that is the wrong test
-  here: **Layer 2's `lemma` collapses `locative`/`accusative`/`dative`/`reflexive` onto the same
-  `ci`/`vi` form**, so this column is the only record of whether a given `vi` means *there* or *to
-  you*. The round reached the opposite verdict first; the refutation and the guard against
-  repeating it are in [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the `locative` question*.
-- **The fused-token problem**, which a merge into `morph/*.tsv` would finally force: `case`
-  annotates a pronoun and `dep` a token, and five contradictions are nothing but that mismatch
-  (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*;
-  paradiso 29:92.1 *seminarla*).
+**The merge decision itself (2026-08-02): no physical merge into `morph/*.tsv`.** `case/` is
+promoted from experimental annex to a permanent Layer-2 sibling extension, on the same footing as
+`np/`, `dep/` and `skel/` relative to `morph/` — see *Why its own directory* below and
+[`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the merge decision* for the full reasoning. The
+`locative` question was settled the same way it always was — earned and stays, no vocabulary
+change — so nothing about this decision moves any value out of the closed eight.
 
 **The `morph/` correction round is done (2026-08-02)** — see
 [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)'s *The mistags the case annex surfaced and
@@ -508,9 +485,12 @@ even though case is conceptually a Layer-2 morphological feature.
 3. **Revertibility.** This is an experiment that the pilot may kill. `rm -rf case/` must return
    the repo to an untouched state.
 
-**Merging into `morph/` later stays open** and is the natural end state if the column proves out.
-The reverse — extracting a column from `morph/` after consumers have recorded its hash — is much
-worse, so the order is: build separately, prove, then consider merging.
+**Merging into `morph/` was considered at the annex's close and rejected (2026-08-02).** Reasons 1
+and 2 above hold regardless of the column's measured quality — nothing the annex did (the 90% /
+96% / 99% `dep` agreement, the two rejected regeneration rounds) touches either — and every other
+layer in this corpus already lives in its own directory too, so a sibling directory was never a
+placeholder for `case/` specifically; it is the corpus's normal shape. `case/` stays permanent.
+See [`CORRECTIONS.md`](CORRECTIONS.md)'s *Step 5 — the merge decision* for the full reasoning.
 
 ## Design sketch
 

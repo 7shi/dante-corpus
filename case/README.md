@@ -14,18 +14,25 @@ The two are identical in form. Neither the token stream (Layer 1), the morpholog
 (Layer 2 has gender/number/person/tense/mood but no case), nor the dependency tree (Layer 4 — the
 tree shape is the same and the deprel *is* the disputed judgment) distinguishes them.
 
-**Not a sixth layer**, and **not a new `morph/*.tsv` column**: a sibling directory, so no existing
-artifact hash moves, provenance stays visible, and `rm -rf case/` returns the repo to an untouched
-state. Merging into Layer 2 later is the natural end state if the column proves out; see
-[PLAN.md](PLAN.md)'s *Why its own directory*.
+**Not a sixth layer**, and **not a new `morph/*.tsv` column**: a permanent sibling directory, on
+the same footing as `np/`, `dep/` and `skel/` relative to `morph/`. No existing artifact hash
+moves, provenance stays visible, and `rm -rf case/` would return the repo to an untouched state.
+A physical merge into `morph/*.tsv` was considered and **rejected** (2026-08-02) — the hash-blast-
+radius and provenance arguments for a sibling directory hold regardless of the column's measured
+quality, and every other layer already lives apart from `morph/` too; see [PLAN.md](PLAN.md)'s
+*Why its own directory* and [CORRECTIONS.md](CORRECTIONS.md)'s *Step 5 — the merge decision*.
 
 ## Status
 
-Step 3 of [PLAN.md](PLAN.md) is **done**: the artifact is built for all 100 cantos, `--check` is
-**0 hard**, and it is committed (`0027494`) — frozen *before* `--stats` joined it to `dep`, which
-is the order [PLAN.md](PLAN.md)'s *Independence* section exists to enforce. **13112 pronoun
-tokens, 13176 case values.** Step 4, the hand-verified Layer-4 correction round over the **461
-contradictions and 49 impossible pairings**, is the open work.
+**The annex is complete and closed (2026-08-02).** All 100 cantos, `--check` **0 hard**, **13125
+pronoun tokens, 13189 case values**. Step 4's hand-verified Layer-4 correction round spent all 510
+adjudication candidates across three slices (215 positions / 270 rows in `dep/`); step 5 settled
+the oblique tail (fold nothing), ran the owed `morph/`-driven chunk regeneration, tried and
+rejected two blind regenerations under a corrected prompt (two named weaknesses recorded rather
+than chased past their budget), and closed the merge decision above — no schema change, `case/`
+stays a permanent sibling directory. `--stats` reports **258 contradictions / 40 impossible
+pairings** against `dep`, recorded as measured residue. See [PLAN.md](PLAN.md) and
+[CORRECTIONS.md](CORRECTIONS.md) for the full history.
 
 The vocabulary and scope are **frozen**, and the
 driver, the shared module, the serve surface and the tests exist. **Inferno 1 was built first** as

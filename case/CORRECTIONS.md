@@ -1551,3 +1551,68 @@ correctly on `dep=obj` overshoots onto `dep=nsubj` every time it's tried) and, m
 persistent pull of the whole column toward `accusative`. Both are now **recorded, not chased
 further**; the merge proceeds from the frozen artifact with the weakness noted, per item 0 in
 *The one open item* in `PLAN.md`.
+
+## Step 5 — the merge decision, 2026-08-02
+
+**Verdict: no physical merge into `morph/*.tsv`. `case/` is promoted from experimental annex to a
+permanent Layer-2 sibling extension, on the same footing as `np/`, `dep/` and `skel/` already are
+relative to `morph/`.** This is the "merge" the plan's open item names — not a schema change, a
+status change.
+
+### What was weighed
+
+`PLAN.md`'s *Why its own directory* gave three reasons for the sibling-directory design, written
+before step 3's corpus pass existed:
+
+1. **Hash blast radius.** A column non-empty on ~13% of tokens (13125 of 101601) would move all
+   100 `morph/*.tsv` content hashes for a column empty on the other 87%, invalidating every
+   downstream consumer's cached parse (`dante-analyze`, `dante-dravidian`) for a gain concentrated
+   in a sixth of the rows.
+2. **Provenance stays visible.** `morph/*.tsv` is one pass, one model, one moment; `case/` is a
+   later pass, over a narrower scope, and — as of this annex's own two rejected regeneration
+   rounds — a pass with two *named and measured* weaknesses (the postposed relative-pronoun
+   subject; a diffuse `nominative`→`accusative` pull). Folding it into Layer 2's single artifact
+   would blend a column with known residue into one that has none, and erase the visibility that
+   lets a future reader tell them apart.
+3. **Revertibility.** Cheaper to have kept than to need, and nothing accrued against it.
+
+None of the three depends on the column's measured quality, and nothing the annex did — the 90%
+/ 96% / 99% agreement with `dep`, the two rejected regeneration rounds, the settled vocabulary —
+touches any of them. Reason 2 is, if anything, stronger at the close than at the start: a column
+that ends with recorded weaknesses is a *better* argument for keeping its provenance separately
+legible, not a worse one.
+
+**The architectural precedent points the same way.** Every layer in this corpus already lives in
+its own directory — `np/`, `dep/` and `skel/` are not merged into `morph/` either, despite each
+being "conceptually" downstream of it. `case/` living apart from `morph/` is not a compromise
+state left over from an experiment; it is the corpus's normal shape. A literal TSV-column merge
+would have been the outlier.
+
+### The fused-token mismatch, resolved without a schema change
+
+`PLAN.md`'s open item worried that "a merge into `morph/*.tsv` forces one row per token, and
+`case` annotates a pronoun." Under this decision that concern does not arise: `case/*.tsv` is
+already one row per **in-scope token**, exactly `morph`'s own convention (`--check`'s `count`
+rule), with one case value per pronoun *component* joined by `+` for a fused token — the identical
+convention `morph` already uses for a fused token's lemma parts. No schema exists that a merge
+would have had to reconcile.
+
+The five contradictions this mismatch produces against `dep` (inferno 2:81.7 `aprirmi`, 23:128.7
+`dirci`; purgatorio 8:45.4 `vedervi`, 14:20.1 `dirvi`; paradiso 29:92.1 `seminarla`) are not a
+`case`-side error and not a design defect: `dep` assigns one `deprel` to the whole fused token,
+while `case` assigns a value per pronoun component within it, so the join compares a token-level
+judgment against a component-level one at exactly the positions where a verb and its enclitic
+share a token. They are recorded here as **structural residue of the `dep` join**, not scheduled
+for any correction round — the same status the two prompt-side weaknesses have.
+
+### What this closes
+
+The annex's remaining open item — *the case annex's `morph/` merge* — is **closed**. `case/`
+stays exactly where it is: a permanent, separately-hashed, separately-provenanced Layer-2
+extension, frozen at 100 cantos / 0 hard / 13125 tokens / 13189 values, with 258 contradictions
+and 40 impossible pairings against `dep` recorded as measured residue and two named weaknesses
+(the postposed relative-pronoun subject; the `nominative`→`accusative` census pull) recorded
+rather than chased past their two-round budget. Nothing in `morph/*.tsv` changes, no hash moves,
+and no further regeneration is scheduled. See `PLAN.md`'s *Why its own directory* for the
+reasoning this decision confirms rather than revisits, and [`README.md`](README.md) for the
+serve-time API this leaves unchanged.
