@@ -17,9 +17,8 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 the merge decision*.
 
 **Nothing is open.** All five layers plus the case extension are implemented, built for all 100
-cantos, and every route any of their plans opened has a measured verdict. Everything lives on the
-branch `case-pilot`, not yet merged to `main` — that is a separate action for the user to take
-when ready.
+cantos, every route any of their plans opened has a measured verdict, and everything is merged to
+`main`.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -268,7 +267,7 @@ discipline already used for normalization and quotes.
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),
-   [`case/CORRECTIONS.md`](case/CORRECTIONS.md), branch `case-pilot`). Not a sixth layer: a
+   [`case/CORRECTIONS.md`](case/CORRECTIONS.md)). Not a sixth layer: a
    Layer-2 morphological feature held in its own **permanent** directory, useful to consumers on
    its own terms independently of Layer 5's violation count. See [`case/README.md`](case/README.md)
    for the full status.
@@ -276,4 +275,4 @@ discipline already used for normalization and quotes.
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
 Layers 1–5 are implemented, built for all 100 cantos, and merged to `main`; the grammatical
 stack this plan describes is complete. **The pronoun case extension is also complete and closed**,
-all on the branch `case-pilot`, not yet merged to `main`.
+merged to `main`.
