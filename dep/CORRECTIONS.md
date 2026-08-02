@@ -603,3 +603,19 @@ Surfaced by Layer 3's clitic reconciliation (see [`../np/CORRECTIONS.md`](../np/
 which had to drop the same token's NP span for the same reason. `dep --check` stays **0 hard, 0
 soft**; Layer 5 moved 3633 → 3635 because its own frozen row still holds the pronoun reading, which
 is left standing as measured divergence.
+
+## One `vi` mistag, from the `case` annex's clitic residue (2026-08-03)
+
+**Purgatorio 11:39.6** *che secondo il disio vostro **vi** lievi* had `vi` tagged `nsubj` — a
+hapax: `vi` carries `nsubj` nowhere else in the corpus, against 906 instances of `si` tagged
+`expl` for the identical reflexive *levarsi* construction with a pro-dropped subject. Retagged
+`nsubj` → `expl`. `dep --check` stays **0 hard, 0 soft**; `pytest` stays 142; **Layer 5: 3635 →
+3634, −1**.
+
+Surfaced while hand-verifying the 50 bare-clitic `case`×`dep` contradictions (`mi ti ci vi si li` +
+elisions) left over from the annex's Step 4/5 rounds; the other 49 turned out to be `case`-side
+errors, corrected in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)'s *Step 6* rather than
+here — two other plausible `dep` fixes from the same pass (the `gravare` population at
+purgatorio 31:58, inferno 6:86, purgatorio 18:6; and the *mi lasciai Sibilia* / *m'avea lasciata
+Setta* reflexive reading at inferno 26:110-111) were tried and **reverted** after re-running
+`skel --check` showed them moving the soft count against the change, or not moving it at all.

@@ -51,7 +51,7 @@ line	token	word	case
 70	6	lui	ablative
 71	6	quel	ablative
 71	7	ti	reflexive
-72	6	ti	dative
+72	6	ti	accusative
 74	1	che	nominative
 74	2	'l	accusative
 75	3	lui	accusative
@@ -104,7 +104,7 @@ line	token	word	case
 125	6	che	nominative
 125	8	si	reflexive
 126	2	ti	reflexive
-127	2	ti	accusative
+127	2	ti	dative
 128	2	el	nominative
 129	6	sé	ablative
 129	7	nol	accusative

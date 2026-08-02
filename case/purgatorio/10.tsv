@@ -41,7 +41,7 @@ line	token	word	case
 51	5	che	nominative
 51	6	mi	accusative
 53	3	io	nominative
-53	8	mi	dative
+53	8	mi	accusative
 57	3	si	reflexive
 62	1	che	nominative
 62	2	v'	locative

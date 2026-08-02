@@ -93,7 +93,7 @@ line	token	word	case
 100	5	lor	genitive
 100	6	che	nominative
 100	7	si	reflexive
-102	3	li	accusative
+102	3	li	dative
 103	1	Quella	nominative
 104	4	li	dative
 105	4	che	nominative
@@ -121,7 +121,7 @@ line	token	word	case
 123	9	t'	dative
 124	5	si	reflexive
 126	3	i'	nominative
-126	8	mi	dative
+126	8	mi	accusative
 127	1	tu	nominative
 127	8	che	nominative
 127	9	ti	dative

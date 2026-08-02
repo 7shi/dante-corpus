@@ -279,7 +279,7 @@ line	token	word	deprel	head_line	head_token
 39	3	il	det	39	4
 39	4	disio	obl	39	7
 39	5	vostro	amod	39	4
-39	6	vi	nsubj	39	7
+39	6	vi	expl	39	7
 39	7	lievi	advcl	37	7
 40	1	mostrate	root	0	0
 40	2	da	case	40	4

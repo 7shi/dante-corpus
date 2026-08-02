@@ -11,12 +11,16 @@ canon-neutral.
 **Status: built for all 100 cantos, checker refined through Phase 5q, two full `--fix` rounds
 run (Phases 5e and 5q), and four Layer-4 correction rounds (Phases 5i, 5n and 5p's two) fed back
 into `dep/`.**
-`make -C skel check`: **0 hard, 3551 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 3634 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
 3876 after Phase 5k, 3808 after Phase 5l, 3746 after Phase 5m, 3725 after Phase 5n, 3712 after
-Phase 5o, 3702 after Phase 5p).
+Phase 5o, 3702 after Phase 5p, 3551 after Phase 5q and its `ioj` typo fix, 3635 after the `case`
+annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)), and 3634 after the one `dep` fix in the
+`case` annex's Step 6 clitic round). See [`../PLAN.md`](../PLAN.md) for the current authoritative
+count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of

@@ -27,7 +27,7 @@ line	token	word	case
 16	8	quella	ablative
 18	1	che	nominative
 19	3	tu	nominative
-21	3	ci	dative
+21	3	ci	accusative
 22	1	Qual	nominative
 22	3	colui	nominative
 22	4	che	nominative
@@ -91,7 +91,7 @@ line	token	word	case
 63	4	si	reflexive
 64	2	il	accusative
 64	7	ne	ablative
-65	5	mi	dative
+65	5	mi	accusative
 66	3	io	nominative
 68	1	s'	reflexive
 68	5	c'	nominative
@@ -133,7 +133,7 @@ line	token	word	case
 103	4	che	nominative
 103	6	m'	accusative
 104	1	mi	dative
-105	2	ci	accusative
+105	2	ci	dative
 105	5	alcun	nominative
 105	8	n'	ablative
 106	3	m'	accusative

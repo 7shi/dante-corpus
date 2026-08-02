@@ -1634,3 +1634,126 @@ again**, so the code in the tree and the data in the tree tell the same story. N
 `morph/*.tsv` changes, no hash moves, and no further regeneration is scheduled. See
 [`README.md`](README.md)'s *Why its own directory* for the reasoning this decision confirms
 rather than revisits, and for the serve-time API this leaves unchanged.
+
+## Step 6 — the clitic accusative/dative residue, hand-corrected (2026-08-03)
+
+**"Frozen" never meant "unfixable."** Step 5 closed the annex's *regeneration* and *merge*
+questions, and its 258 contradictions / 40 impossible pairings were recorded as measured residue
+rather than chased. That was right for the classes with no single verdict (the postposed
+relative-pronoun subject, the free-relative and accusative-and-infinitive populations `dep`'s
+[Step 4 slices](#step-4-slice-2--the-skel-flagged-contradictions-2026-07-31) already settled
+structurally) — but a position where the Italian's own valency gives one clear answer is a plain
+error, and this project's standing rule is to correct those, not to let a "closed" label stand in
+for one. [[project_skel_soft_violations_goal]]
+
+**Scope: the 50 bare-clitic contradictions** (`mi ti ci vi si li` + elisions) out of the 258 — the
+population [`../skel/PLAN.md`](../skel/PLAN.md) section 1 calls "the clitic-case question" and
+Step 4 slice 2's "21 tier-A candidates were left alone" section already named eleven of by hand
+(*m'avea 'mmonito*, *mi giunse al rotto*, *mi lasciai Sibilia*, *omor mi rinfarcia*, *che sé ne
+presti*, *tu li raccorci* among them) without ever writing the fix into `case/*.tsv` — that round
+only ever edited `dep/`, so a position where `dep` was right and `case` was wrong was left
+dissenting rather than corrected. This step is that missing half, extended to the full 50.
+
+**Method.** Each terzina was read against the governing verb's actual valency: plain transitives
+take an accusative object (*percuotere*, *toccare*, *pregare*, *torcere*, *prendere*, *vincere*,
+*affinare*, *rimordere*, *dilettare*, *annoiare*...); the *fare* + accusative-clitic +
+predicate-adjective/infinitive causative (*fa sicuro*, *fa manifesto*, *fé mettere*, *fece
+ardere*) takes an accusative causee when the embedded predicate is intransitive; the
+dative-of-the-affected-person construction (*mi batté l'ali*, *tu li raccorci* [*con l'opere
+tue*], *mi fa certo*) takes a dative once a separate accusative argument (a body part, "la lunga
+fatica," the predicative complement) is already present; and the causative with a *transitive*
+infinitive (*mi fai rimembrar*, where *rimembrare* keeps its own object) takes a dative causee —
+the textbook complement to the intransitive-infinitive rule above. Three positions were checked
+against the corpus's own convention for that verb rather than judged in isolation (`credere`,
+`gravare`, reflexive `vi`), and one (**purgatorio 16:56** *mi fa certo*) was checked by trial:
+flipping `dep` to match `case`'s dative reading and re-running `skel --check` **regressed** the
+soft count (3634 → 3635), showing the position's *given* `skel` reading sides with `dep`'s
+original tag, so `case` was the outlier and was corrected instead of `dep`. The same
+trial-and-revert method also tried, and rejected, a `dep` fix for the `gravare`
+population (**purgatorio 31:58**, **inferno 6:86**, **purgatorio 18:6**) and for the *mi
+lasciai Sibilia* / *m'avea lasciata Setta* pair (**inferno 26:110-111**): each looked like a
+plausible reflexive or dative-of-possession reading in isolation, but re-running `skel --check`
+after the `dep` edit moved the soft count against it (or, for 26:110, left it unchanged at a
+predicate the LLM's own independent reading does not resolve under any tagging), so none of those
+`dep` rows were touched — only the one `dep` fix below survived the same test.
+
+**One `dep/` row, confirmed by measurement.** `purgatorio 11:39.6` *che secondo il disio vostro
+**vi** lievi* had `vi` tagged `nsubj` — a **hapax**: `vi` carries `nsubj` nowhere else in the
+corpus, against 906 instances of `si` tagged `expl` for the identical reflexive *levarsi*
+construction with a pro-dropped subject. Retagged `nsubj` → `expl`. `dep --check` stays **0 hard,
+0 soft**; `pytest` stays 142; **`skel`: 3635 → 3634, −1** — the one row in this round that both
+closes a Layer-5 divergence and is independently justified by the corpus's own convention for the
+word.
+
+**49 rows in `case/*.tsv`**, one canto-file each, plus the `vi` position's own value corrected
+alongside its `dep` fix (`accusative` → `reflexive`, matching the retag):
+
+| position | word | was | now | why |
+|---|---|---|---|---|
+| inferno 8:21.3 | ci | dative | accusative | *avere* — plain transitive |
+| inferno 8:65.5 | mi | dative | accusative | *percuotere* — plain transitive |
+| inferno 8:105.2 | ci | accusative | dative | *tòrre ... a* — deny/deprive someone of something |
+| inferno 9:26.3 | mi | dative | accusative | *fare* + intransitive infinitive (*intrar*) |
+| inferno 9:30.6 | ti | dative | accusative | *fare* + predicate adjective (*sicuro*) |
+| inferno 10:25.4 | ti | dative | accusative | *fare* + predicate adjective (*manifesto*) |
+| inferno 14:78.5 | mi | dative | accusative | *raccapricciare* — transitive |
+| inferno 19:44.5 | mi | dative | accusative | *giungere qualcuno a un luogo* — transitive |
+| inferno 20:14.5 | li | nominative | dative | *convenire* — dative-experiencer verb; `li` cannot be nominative at all |
+| inferno 22:40.6 | li | accusative | dative | *mettere ... a dosso a qualcuno* |
+| inferno 25:52.5 | li | accusative | dative | *avvincere ... a qualcuno* |
+| inferno 26:110.5 | mi | dative | accusative | *lasciare* — the corpus tags every instance `obj` (see Step 4 tier-A) |
+| inferno 27:111.1 | ti | dative | accusative | *fare* + intransitive infinitive (*trïunfar*) |
+| inferno 29:110.4 | mi | dative | accusative | *fare* + *mettere* (causee = the embedded verb's own object) |
+| inferno 29:116.6 | mi | dative | accusative | *fare* + intransitive infinitive (*ardere*) |
+| inferno 30:102.3 | li | accusative | dative | dative-of-possession — *l'epa* is the accusative object |
+| inferno 30:126.8 | mi | dative | accusative | *rinfarciare* — transitive |
+| inferno 31:72.6 | ti | dative | accusative | *toccare* — plain transitive |
+| inferno 31:127.2 | ti | accusative | dative | *rendere ... a qualcuno* |
+| purgatorio 1:79.8 | ti | dative | accusative | *pregare* — plain transitive |
+| purgatorio 1:128.2 | mi | accusative | dative | *fare ... discoverto* + separate accusative *color* |
+| purgatorio 6:116.7 | ti | dative | accusative | *muovere* — plain transitive |
+| purgatorio 10:53.8 | mi | dative | accusative | *fare* + predicate adverb (*presso*) |
+| purgatorio 11:39.6 | vi | accusative | reflexive | *levarsi* — matches the `dep` retag above |
+| purgatorio 12:98.2 | mi | accusative | dative | dative-of-possession — *l'ali* is the accusative object |
+| purgatorio 13:142.6 | mi | accusative | dative | *richiedere a qualcuno* |
+| purgatorio 14:124.8 | mi | dative | accusative | *dilettare* — accusative-experiencer class, not `piacere`-class |
+| purgatorio 16:56.6 | mi | accusative | dative | confirmed by trial: flipping `dep` to `obj` regressed `skel` |
+| purgatorio 16:113.3 | mi | dative | accusative | *credere* — corpus convention is `obj` (2/2 instances) |
+| purgatorio 17:74.6 | mi | accusative | dative | dative-of-possession — *la possa de le gambe* is the object |
+| purgatorio 18:13.2 | ti | dative | accusative | *pregare* — plain transitive |
+| purgatorio 19:130.7 | ti | dative | accusative | *torcere* — plain transitive |
+| purgatorio 19:132.4 | mi | dative | accusative | *rimordere* — plain transitive |
+| purgatorio 20:128.5 | mi | dative | accusative | *prendere* — plain transitive |
+| purgatorio 21:116.3 | mi | dative | accusative | *fare* + intransitive infinitive (*tacer*) |
+| purgatorio 24:25.3 | mi | accusative | dative | *nominare qualcosa a qualcuno* |
+| purgatorio 26:148.7 | li | dative | accusative | *affinare* — plain transitive |
+| purgatorio 27:92.1 | mi | dative | accusative | *prendere* — plain transitive |
+| purgatorio 28:49.2 | mi | accusative | dative | *fare* + transitive infinitive (*rimembrar*) |
+| purgatorio 31:58.2 | ti | dative | accusative | *gravare* with no separate accusative object; confirmed by trial |
+| purgatorio 32:12.6 | mi | dative | accusative | *fare* + *essere* (copular causee) |
+| paradiso 3:48.3 | ti | dative | accusative | *celare qualcuno a qualcuno* — `dep` already tags `mi`/`ti` consistently (dative/accusative) here |
+| paradiso 9:35.8 | mi | dative | accusative | *noiare* — accusative-experiencer class |
+| paradiso 15:96.2 | li | accusative | dative | *raccorciare qualcosa a qualcuno* |
+| paradiso 17:26.5 | mi | accusative | dative | *appressarsi a qualcuno* |
+| paradiso 17:114.7 | mi | dative | accusative | *levare* — plain transitive |
+| paradiso 20:101.1 | ti | dative | accusative | *fare* + intransitive infinitive (*maravigliar*) |
+| paradiso 21:142.6 | mi | dative | accusative | *vincere* — plain transitive |
+| paradiso 22:100.7 | mi | dative | accusative | *pingere/spingere* — plain transitive |
+| paradiso 26:89.4 | mi | dative | accusative | *fare* + predicate adjective (*sicuro*) |
+
+`case --check` stays **0 hard**. The adjudication join against `dep` (`--stats`) drops from **258
+to 208 contradictions** — exactly the 50 rows corrected, none of them reopening as a different
+mismatch. `dep --check` stays **0 hard, 0 soft**; `pytest`: **142 passed**; `skel --check`: **0
+hard, 3634 soft** (the one point of overlap with a Layer-5 divergence, `purgatorio 11:39`, closed
+via the `dep` fix above — the other 49 are `case`-only corrections with no Layer-5 effect, since
+`skel`'s checker does not consume `case`).
+
+**What this does not do.** It does not reopen Step 5's "frozen" verdict on regeneration or the
+`morph/` merge — both stand. It is not a blanket sweep of the 258 (or the 462 `dep`/`case`/`skel`
+three-way population Step 4 measured): only the bare-clitic accusative/dative subset, where a
+single textbook valency rule decides the answer. The wider residue Step 4 already classified as
+structural (free relatives, the accusative-and-infinitive, the standard of comparison) is
+untouched, and the two named weaknesses from Step 5's rejected regenerations are still recorded,
+not re-litigated. A further pass over the remaining ~150+ documented-but-uncorrected `case`-is-wrong
+positions from Step 4 slices 2 and 3 (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)'s
+*tier-A candidates were left alone* and *slice 3*) is open but not started.

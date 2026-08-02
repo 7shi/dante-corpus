@@ -73,7 +73,7 @@ line	token	word	case
 77	2	questi	nominative
 77	6	me	accusative
 79	4	che	nominative
-79	8	ti	dative
+79	8	ti	accusative
 80	4	che	nominative
 80	7	la	accusative
 81	7	noi	ablative
@@ -120,7 +120,7 @@ line	token	word	case
 126	2	io	nominative
 126	3	che	nominative
 127	3	lui	ablative
-128	2	mi	accusative
+128	2	mi	dative
 129	3	che	nominative
 129	6	mi	dative
 131	1	che	nominative

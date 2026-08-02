@@ -20,7 +20,7 @@ line	token	word	case
 22	2	mi	dative
 23	5	io	nominative
 23	6	mi	reflexive
-26	5	mi	accusative
+26	5	mi	dative
 26	6	s'	reflexive
 28	3	io	nominative
 29	1	che	nominative
@@ -107,7 +107,7 @@ line	token	word	case
 110	5	m'	dative
 111	1	io	nominative
 113	6	cui	genitive
-114	7	mi	dative
+114	7	mi	accusative
 116	2	io	nominative
 116	4	quel	accusative
 116	7	io	nominative

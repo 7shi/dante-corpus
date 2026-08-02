@@ -34,15 +34,20 @@ external canon); a model reading case from the Italian alone meets it on the sam
 
 ## Status
 
-**The annex is complete and closed (2026-08-02).** All 100 cantos, `--check` **0 hard**, **13125
-pronoun tokens, 13189 case values**. Step 4's hand-verified Layer-4 correction round spent all 510
-adjudication candidates across three slices (215 positions / 270 rows in `dep/`); step 5 settled
-the oblique tail (fold nothing), ran the owed `morph/`-driven chunk regeneration, tried and
-rejected two blind regenerations under a corrected prompt (two named weaknesses recorded rather
-than chased past their budget), and closed the merge decision above — no schema change, `case/`
-stays a permanent sibling directory. `--stats` reports **258 contradictions / 40 impossible
-pairings** against `dep`, recorded as measured residue. See
-[CORRECTIONS.md](CORRECTIONS.md) for the full history.
+**The annex is complete and closed (2026-08-02), and still gets hand corrections when a position
+is a plain error.** All 100 cantos, `--check` **0 hard**, **13125 pronoun tokens, 13189 case
+values**. Step 4's hand-verified Layer-4 correction round spent all 510 adjudication candidates
+across three slices (215 positions / 270 rows in `dep/`); step 5 settled the oblique tail (fold
+nothing), ran the owed `morph/`-driven chunk regeneration, tried and rejected two blind
+regenerations under a corrected prompt (two named weaknesses recorded rather than chased past
+their budget), and closed the merge decision above — no schema change, `case/` stays a permanent
+sibling directory. Step 6 (2026-08-03) then hand-corrected the 50 bare-clitic
+accusative/dative contradictions Step 4 had already identified but never written into
+`case/*.tsv` (that round only ever edited `dep/`); **"frozen" means no wholesale regeneration**,
+not that a demonstrable per-position error stands uncorrected. `--stats` now reports **208
+contradictions / 40 impossible pairings** against `dep`, recorded as measured residue — a further
+pass over the rest is open but not started. See [CORRECTIONS.md](CORRECTIONS.md) for the full
+history.
 
 The vocabulary and scope are **frozen**, and the
 driver, the shared module, the serve surface and the tests exist. **Inferno 1 was built first** as

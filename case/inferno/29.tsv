@@ -113,7 +113,7 @@ line	token	word	case
 108	6	vi	accusative
 109	1	Io	nominative
 110	3	un	nominative
-110	4	mi	dative
+110	4	mi	accusative
 111	2	quel	nominative
 111	5	io	nominative
 111	9	mi	accusative
@@ -127,7 +127,7 @@ line	token	word	case
 115	4	li	dative
 116	2	io	nominative
 116	3	nol	accusative
-116	6	mi	dative
+116	6	mi	accusative
 117	5	l'	accusative
 119	1	me	accusative
 119	5	che	accusative

@@ -42,7 +42,7 @@ line	token	word	case
 39	7	che	nominative
 39	8	si	reflexive
 44	2	mi	accusative
-44	5	mi	dative
+44	5	mi	accusative
 45	2	quel	ablative
 45	3	che	nominative
 45	4	si	reflexive

@@ -84,7 +84,7 @@ line	token	word	case
 93	7	la	accusative
 96	1	che	nominative
 98	3	lei	accusative
-101	1	ti	dative
+101	1	ti	accusative
 101	5	ne	ablative
 106	3	una	nominative
 106	9	si	reflexive

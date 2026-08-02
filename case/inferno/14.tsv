@@ -59,7 +59,7 @@ line	token	word	case
 71	5	lui	dative
 73	2	mi	dative
 78	2	cui	genitive
-78	5	mi	dative
+78	5	mi	accusative
 80	1	che	nominative
 80	5	lor	ablative
 81	6	sen	reflexive+ablative
