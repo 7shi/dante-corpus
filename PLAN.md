@@ -3,53 +3,32 @@
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5q and its soft residue is at **3635** (3550 at the end of
-Phase 5's own work; the case annex's step-4 slices then moved it 3555, 3469, 3634 — two of the
-three raised it, correctly and by design — its step-5 `morph/` round took it to 3633, and Layer
-3's clitic reconciliation to 3635) — every route the
-Phase 5 plan opened now has a measured verdict and none is open (see
-[`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
-[`skel/README.md`](skel/README.md) for the design and current status.
+checker was refined through Phases 0-5q and its soft residue is **3635** (down from 17438 at the
+first full-corpus measurement) — every route the Phase 5 plan opened has a measured verdict and
+none is open (see [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below
+and [`skel/README.md`](skel/README.md) for the design and current status.
 
-**The pronoun case annex, [`case/PLAN.md`](case/PLAN.md), is complete and closed (2026-08-02).**
-Its kill-gate pilot ran on 2026-07-30 and passed (81% self-agreement on the disputed clitics vs
-95% on a control, zero three-way splits); step 2 froze the vocabulary and scope and wrote the
-driver the same day; step 3's corpus pass finished on 2026-07-31 — all 100 cantos at 0 hard,
-frozen and committed before the join to `dep` was looked at; step 4 closed on 2026-08-01 with all
-510 adjudication candidates carrying a verdict, across three slices totalling **215 positions /
-270 rows** of hand-verified `dep/` corrections; and **step 5 closed on 2026-08-02** — the owed
-`morph/` correction round (10 hand-verified singletons plus the 58-token comitative family, 41
-canto artifacts, `skel` 3634 → 3633) and the chunk regeneration it owed `case/` (back to 0 hard
-over 13125 tokens / 13189 values); the `locative` question settled (earned, stays); Layer 3's
-stale clitic mentions closed the same day (5 hard / 96 soft → **0/0**, `skel` 3633 → 3635); two
-budgeted blind-regeneration rounds run and rejected against a verdict rule fixed in advance
-(round 1 measured and rejected, the prompt rebalanced, round 2 measured against the same four
-populations and also rejected — the named target rows held or rose, but the relative-pronoun-
-subject population and the global `nominative`→`accusative` census drift both recurred, smaller
-but in the same direction; the frozen column is what stands, and the build prompt was reverted to
-match it); and finally **the merge decision itself: no physical merge into `morph/*.tsv`**. `case/`
-is promoted from experimental annex to a **permanent** Layer-2 sibling extension, on the same
-footing as `np/`, `dep/` and `skel/` relative to `morph/` — the hash-blast-radius and provenance
-reasons for a sibling directory hold regardless of the column's measured quality, and every other
-layer in this corpus already lives apart from `morph/` too. See
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the merge decision* for the full
-reasoning, and *What closed on 2026-08-02* below for the whole day's work.
+**The pronoun case annex is complete and closed (2026-08-02).** It is a permanent Layer-2 sibling
+extension, `case/`, on the same footing as `np/`, `dep/` and `skel/` relative to `morph/` — not a
+new `morph/*.tsv` column, decided at the annex's close after two budgeted blind-regeneration
+rounds were measured and rejected against a verdict rule fixed in advance. See
+[`case/README.md`](case/README.md) for the design and current status and
+[`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
+the merge decision*.
 
 **Nothing is open.** All five layers plus the case extension are implemented, built for all 100
-cantos, and every route any of their plans opened has a measured verdict. Everything above lives
-on the branch `case-pilot`, not yet merged to `main` — that is a separate action for the user to
-take when ready, distinct from the (now-closed) `case`/`morph` merge decision above.
+cantos, and every route any of their plans opened has a measured verdict. Everything lives on the
+branch `case-pilot`, not yet merged to `main` — that is a separate action for the user to take
+when ready.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
-  Artifacts are built for all 100 cantos.
+  Artifacts are built for all 100 cantos. Its pronoun-case feature is served separately, as the
+  permanent Layer-2 sibling extension `case/` — see [`case/README.md`](case/README.md).
 - **Layer 3 — Noun phrases**: implemented; see [`np/README.md`](np/README.md). Build
   driver `np/np.py`, served via `Canto.np()` and `dante-corpus text np`. Artifacts generated for
   all 100 cantos. `--check` reports **0 hard / 0 soft** — see
   [`np/README.md`](np/README.md)'s *Check* section and [`np/CORRECTIONS.md`](np/CORRECTIONS.md).
-  It briefly read 5 hard / 96 soft, not from anything Layer 3 did but as fallout from the case
-  annex's `morph/` rounds; that was **closed on 2026-08-02** by making `--fix-clitics` symmetric
-  (see *The clitic reconciliation* below).
 - **Layer 4 — Dependency / grammatical role**: implemented and complete; see
   [`dep/README.md`](dep/README.md). Build driver `dep/dep.py`, served via `Canto.dep()` and
   `dante-corpus text dep` (with `text np` gaining a derived `role=` per noun phrase). Artifacts
@@ -64,499 +43,18 @@ take when ready, distinct from the (now-closed) `case`/`morph` merge decision ab
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3635 soft** (3550 at the end of Phase 5; the case annex's
-  step-4 slices added 5, removed 86 and added 165, its step-5 `morph/` round removed 1, and Layer
-  3's clitic reconciliation added 2, for
-  the reasons recorded in
-  [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) — the count measures divergence between two
-  independent reads, so a correct Layer-4 round can move it either way)
-  (down from 17438 at the first full-corpus
-  measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round) — see
-  [`skel/README.md`](skel/README.md)'s *Check* section and
-  [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history. Phase 5 (see
-  [`skel/PLAN.md`](skel/PLAN.md)) is **complete**: its measured finding is that `--fix` yields a
-  flat ~0.09-0.11 violations per LLM call regardless of how the flagged set is composed, so the
-  residual was closed by deterministic checker rules and cross-layer corrections instead. Phases
-  5a-5q landed (rules C/D/L/M/N/O/P/Q/R/S/T, two re-triage rounds, **two** full `--fix` passes,
-  and the four
-  Layer-4 correction rounds Layer 5's audit role produced — the clitic datives of Phase 5i, the
-  `mark` mistags of Phase 5n, and Phase 5p's clausal complements and multi-edge deferrals; see
-  [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md)). `--fix` rounds are **LLM-regeneration work the
-  user runs themselves** (`make -C skel fix`, run 3-way parallel); checker-side and audit work
-  is the assistant's.
+  three canticles reports **0 hard, 3635 soft** (down from 17438 at the first full-corpus
+  measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
+  [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
+  case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
+  **complete**: its measured finding is that `--fix` yields a flat ~0.09-0.11 violations per LLM
+  call regardless of how the flagged set is composed, so the residual was closed by deterministic
+  checker rules and cross-layer corrections instead. `--fix` rounds are **LLM-regeneration work
+  the user runs themselves** (`make -C skel fix`, run 3-way parallel); checker-side and audit
+  work is the assistant's.
 
 `grammar-stack-plan` was merged into `main` (fast-forward) and pushed; Layers 1–4 and their
 artifacts now live on `main`.
-
-**Next work**
-
-**Nothing remains.** The case annex, including its `morph/` merge decision, closed on 2026-08-02.
-The sections below are kept as the historical record of how it got there.
-
-#### 0. ~~Blocking — regenerate the 25 `case/` chunks~~ *(user — done 2026-08-02)*
-
-```bash
-make -C case clean && make -C case      # then: make -C case check   -> 0 hard
-```
-
-The `morph/` round had moved the pronoun scope (13112 → **13125** tokens, 13176 → **13189**
-values), so 20 lines needed a different number of case values and `case --check` read 25 hard.
-Every one was a `[count]` mismatch and **none was the model getting the Italian wrong** — the same
-situation, and the same fix, as step 3's rounds 2 and 3.
-
-**Run, and `--check` is back to 0 hard.** `--stats` runs again and reads **258 contradictions / 40
-impossible pairings** (260 / 40 at step 4's close); the census gain is almost all `ablative`
-(1805 → **1819**), the newly in-scope comitatives, and `genitive`/`locative` did not move. All five
-layers and the tests were re-measured and only `case` changed — deltas in
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the chunk regeneration the `morph/` round owed*.
-
-#### Then — all closed
-
-| # | item | who | note |
-|---|---|---|---|
-| 1 | ~~**Layer 3's stale clitic mentions**~~ | assistant | **done 2026-08-02 — `np --check` 5 hard / 96 soft → 0/0.** `--fix-clitics` is now symmetric (94 mentions added, 6 dropped, 43 cantos), the hard check admits only a fused host's *pronoun* lemma components, and the 2 non-clitic soft were fixed by hand. `skel` 3633 → **3635**, both at purgatorio 20:83. Described immediately below |
-| 2 | ~~**Settle `locative`**~~ | assistant | **done 2026-08-02 — it is earned and stays.** No artifact moved and the vocabulary does not change. By deprel it opens no slot, but that is the wrong test: Layer 2's `lemma` collapses `locative`/`accusative`/`dative`/`reflexive` onto one `ci`/`vi` form, so this column is the only record of which reading a given `vi` has. The round recommended folding it first and was wrong — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the `locative` question* |
-| 3 | ~~**The `morph/` merge itself**~~ | assistant | **done 2026-08-02 — no physical merge.** Its first item, a blind regeneration of `case` under a corrected prompt aimed at the two weaknesses slice 3 counted (the postposed subject, 78; the dative of possession alongside an explicit object, 24), ran twice and neither round was adopted — round 1 broke the easy populations, round 2's rebalance held them but the target population it was meant to fix (relative-pronoun subject) and the global `nominative`→`accusative` drift both recurred, smaller. Two rounds was the budget; the frozen column stands, weakness recorded. **The merge decision itself then resolved to keeping `case/` a permanent Layer-2 sibling directory** — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the merge decision* |
-
-The case annex's steps 1–5 are all complete — the blind corpus pass finished 2026-07-31 and is
-frozen, the Layer-4 adjudication round closed 2026-08-01 with a verdict on every candidate, the
-owed `morph/` correction round closed 2026-08-02, and the merge decision closed the same day.
-
-### The clitic reconciliation — Layer 3 back to 0/0 *(closed 2026-08-02)*
-
-**`make -C np check` read 5 hard / 96 soft. It was not a regression from any `np/` work and not
-caused by step 4's `dep/` edits** (`np.py` imports `api`, `morph` and `np` only; the
-figure is unchanged with the `dep/` changes stashed). It is fallout from the case annex's Layer-2
-correction rounds — `880fc2e` and `a97b80e` in step 3, which retagged fused clitic clusters so the
-case pass could validate, and the 2026-08-02 round in step 5, which took it from 3 hard / 64 soft
-to its present figure by giving the 58 comitatives the lemma parts `me`/`con`. At the time
-`morph`, `dep` and `skel` were all re-measured; **`np` was not**, and nobody noticed until the
-whole stack was checked at the end of slice 3.
-
-`np`'s checker derives the *expected* clitic mentions from Layer 2's lemma parts
-(`clitic_mentions()` in `dante_corpus/np.py`, compared against the frozen `+X` spans), so moving
-a lemma moves what `np` is required to carry:
-
-- **94 of the 96 soft — `token N 'W' missing clitic mention '+X'`.** The rounds *added* components to fused
-  tokens (`sen` → `si+ne`, `cen` → `ci+ne`, `Vattene` → three parts, `meco` → `me+con`), so the
-  frozen `np` artifacts are now missing mentions they were never asked for when they were built.
-  By token: `sen` 42, `seco` 14, `meco` 7, `men` 6, `ten` 4, `gliel` 4, `vosco` 3, `teco` 3,
-  `nosco` 2, `gliene` 2, `cen` 2, `Vattene` 2, `salsi` 1, `percosselo` 1, `nol` 1.
-- **5 hard — a frozen `+X` span with no lemma component to justify it.** The mirror case. `nol`
-  was relemmatized to `non+lo`, so `'+ne' not in lemma parts ['non', 'lo']` at *Purgatorio*
-  16:139, 16:140 and 31:99 — all three *nol*, all three the same correction that closed a Layer-5
-  membership violation during the annex's step 3. The 2026-08-02 round added two more of the same
-  shape, `'+se' not in lemma parts ['sé', 'con']` at *Inferno* 24:23 and *Paradiso* 5:84, where
-  `seco`'s lemma moved from `con+se` to the corpus's dominant tonic `sé`.
-- **The other 2 soft were the same fallout, non-clitic** — purgatorio 20:83 `c'` (retagged pronoun
-  `ci` → conjunction *che*, so its NP was headed by a conjunction) and purgatorio 31:25 `fossi`
-  (retagged verb `essere` → noun `fosso`, so it needed to head an NP and headed none).
-
-**The instrument was already here, in one direction only.** `--fix-clitics` backfilled what
-Layer 2 implies and could not drop what it no longer implies — which is exactly what the 5 hard
-were. It is now **symmetric**, and the hard check it answers to was tightened to admit only a
-fused host's **pronoun** lemma components (which turned a silent sixth case, `meco` carrying
-`+con`, into a flagged one first). Result: **94 added, 6 dropped, 43 cantos**, plus the two
-hand fixes above. `np --check` **0 hard / 0 soft**; `morph`, `dep`, `case` and the 138 tests
-unchanged; `skel` 3633 → **3635**.
-
-**The drop side deliberately touches only fused hosts.** A full reconcile would also delete
-**160** `+lemma` spans sitting on ordinary single-token pronouns, and they exist in exactly two
-cantos — **Inferno 18 (63) and 23 (97)**, nowhere else. That is a canto-local build convention
-predating all of this (those cantos give a bare `che`/`io`/`si` a `+lemma` mention *as well as* an
-ordinary NP 101 times), not annex fallout; it passes every check and **was left untouched**, a
-Layer-3 question for another day. What a new session should *not* conclude is that Layer 3 was
-mis-built: it was correct against the Layer 2 it was built on.
-
-The two Layer-5 violations at purgatorio 20:83 are the frozen `skel/` row still asserting the
-pronoun reading (`obj` = `c'`, `subj` = *sangue*, where the subject is the pro-drop *tu* of `ha'`).
-They were **left standing as measured divergence** — closing them by hand is the manufacturing
-Layer 5 exists to prevent, and `--fix` is the user's to run. Layer 4 took the same position's
-deferral off the books (`poscia` `mark` → `advmod`, `c'` `obj` → `mark`), recorded in
-[`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) as *The Layer-2 block, unblocked*.
-
-The case annex's work, on the branch `case-pilot`, closed 2026-08-02:
-
-| step | what | who | state |
-|---|---|---|---|
-| 1 | kill-gate pilot — self-consistency on the disputed clitics vs a control | user ran the calls | **done, passed** (2026-07-30) |
-| 2 | freeze vocabulary (`accusative`/`dative`/`ablative`/`nominative`/`genitive`/`locative` from the pilot census, plus `vocative` and `reflexive`) and scope (**all pronoun-POS tokens**, 13112 over 8540 lines); write the driver, `README.md`, `Makefile`, `dante_corpus/case.py` | assistant | **done** (2026-07-30) |
-| 3 | blind corpus pass over the pronoun-bearing parse units (1340 calls), validate, **commit**, *then* join to `dep` via `--stats` | user ran the calls | **done 2026-07-31**, four runs — `--check` went 1236 → 70 → 13 → **0 hard**, and **no residue was ever the model getting the Italian wrong**: a driver abort, then two rounds of Layer 2 disagreeing with itself on how many pronouns a fused token holds. 13112 tokens frozen at `0027494`, before `--stats` was run |
-| 4 | hand-verified Layer-4 correction round over the contradictions, `make -C dep check` staying 0/0 | assistant | **done, all three slices** — 215 positions / 270 rows, `dep --check` 0/0 throughout. Slice 1 (49 impossible pairings): 10 positions, **3550 → 3555, up** — why it went up is its main finding. Slice 2 (the **102** contradictions `skel` already flags): 81 positions, **3555 → 3469, −86**, against a predicted ≈90–100. Slice 3 (the **325** `skel` does not flag, 2026-08-01): 124 positions, **3469 → 3634, +165**, the predicted direction |
-| 5 | re-measure Layer 5 per slice; settle the oblique tail incl. `locative`; the owed `morph/` correction round and its regeneration; the `morph/` merge decision | assistant | **done 2026-08-02** — the tail's verdict is **fold nothing** (`ablative` and `genitive` earned by their deprels; `locative` settled on different grounds — it opens no slot, but it is the only record of which reading a `ci`/`vi` token has). The `morph/` round spent all 10 parked mistags plus the 58-token comitative family, moving the pronoun scope to 13125/13189 and leaving `case --check` at 25 hard over 20 lines — regenerated back to 0 hard, 258 contradictions / 40 impossible pairings. Two budgeted blind-regeneration rounds under a corrected/rebalanced prompt both ran and were rejected against a verdict rule fixed in advance. **The merge decision: no physical merge into `morph/*.tsv`** — `case/` is a permanent Layer-2 sibling extension |
-
-The scope in step 2 went to the whole pronoun population rather than the clitic subset the
-adjudication strictly needs: it is read off Layer 2's own `pos` column, so it draws no line of its
-own, it covers the tonic forms (`cui`, `me`, `lui`, `altrui`, `lor`) the disputed *mirror* bucket
-contains, and it makes the case of every pronominal mention queryable. That cost 1340 calls
-instead of ~446 — still under Phase 5q's `--fix` pass (1702). See
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 2*.
-
-The order in step 3 is load-bearing: generating blind and freezing *before* looking at `dep` is
-what keeps the column a third independent read rather than an artifact manufactured to close
-violations. Expected return is ≈90–100 of the 3551, not zero — see the follow-on paragraph below.
-
-**Step 4's slice 1 corrected how that return should be chased, slice 2 collected it, and slice 3
-spent the rest knowing it would not.** Layer 5's soft count measures divergence between two
-independent reads, not correctness, so it falls only where a Layer-4 fix moves `dep` toward what
-the Layer-5 LLM already said. The impossible pairings are the opposite configuration — `dep` and
-`skel` agree and only `case` dissents — so correcting `dep` there *raises* the count, as it did
-(3550 → 3555). The ≈90–100 figure was always drawn from the Phase 5h/5i population, where `skel`
-**already dissents from** `dep`. **Slice 2 built that intersection and spent it**: 102 candidates,
-81 Layer-4 errors (79%), **−86** — the estimate was accurate. **Slice 3 then worked the 325
-contradictions `skel` does not flag**, the slice-1 configuration: 124 Layer-4 errors (38%) and
-**+165**, in the predicted direction. The selector decided the sign three times out of three and
-predicts yield as well — 79% inside the intersection against 38% and 20% outside. **3634 is a
-worse number and a better corpus than 3469.** See
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 4, slice 3* and
-[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
-
-## Handing off — the state at the close of 2026-08-02
-
-**Everything below is on the branch `case-pilot`.** This section is the entry point for a session
-with no memory of the annex; it says what is true now, what to do next, and what not to re-open.
-The deeper history is in *Resuming cold* below and in
-[`case/PLAN.md`](case/PLAN.md)'s *Resuming cold — after step 4*.
-
-### Confirm the state first — every figure here is a current measurement
-
-```bash
-git status --short          # expect clean
-uv run pytest -q            # expect 142 passed
-make -C morph check         # expect 0 hard, 0 soft
-make -C np check            # expect 0 hard, 0 soft
-make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3635 soft
-make -C case check          # expect 0 hard
-make -C case stats          # 13125 tokens / 13189 values; 258 contradictions / 40 impossible
-```
-
-If `case` reads 25 hard the regeneration is not in the tree; if `np` reads 5 hard / 96 soft the
-clitic reconciliation is not; if `skel` reads 3633 that same reconciliation is not, 3634 means the
-2026-08-02 `morph/` round is missing too, and 3469 means slice 3 is.
-
-**Both regeneration rounds have now run, been measured, and been rejected; the tree is clean and
-holds the original frozen column.** Neither regenerated column was preserved: round 1 was measured
-and the frozen artifact restored with `git checkout`; round 2 was measured against the frozen
-baseline with `git show HEAD:case/…`, found to repeat round 1's failure mode (smaller but the same
-shape), and was similarly not kept. `git status --short` should read clean; if it instead shows
-100 modified `case/*.tsv`, an uncommitted regeneration is sitting in the tree and does not meet the
-verdict rule.
-
-**The `case` build prompt has been run twice and rebalanced once; the artifact under `case/` is
-the original frozen column, and both rounds are done.** Round 1: both new rules hit their named
-shapes (relative `obj` 75% → 87%, and 19 of the 27 dative-of-possession positions flipped) but the
-column as a whole drifted toward `accusative` (+156) and lost 76 relative-pronoun subjects and 40
-dative clitics that no rule mentions. The prompt was rebalanced (relative pronoun starts in the
-subject slot; agreement decides both directions; a dative-clitic guard for verbs governing `a`; a
-third worked example). Round 2: the guard held the two easy populations this time (dative clitics
-no longer leaked to `accusative`) and the named target (relative `obj`) rose again (77% → 88%),
-but the population the rebalance was specifically aimed at recovering — relative-pronoun
-`nsubj` — fell again (2062/2073 → 2006/2070, −56 against round 1's −76), and the census still
-drifted `nominative` −110 / `accusative` +117 (round 1: −129/+156) — smaller, same shape. Per the
-verdict rule fixed in advance, this fails (**the target row must rise, and it fell again**), and
-per *What must not be done* below, **a third round is not run**: two was the stated budget. See
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md), *the blind regeneration, measured*, *the rebalanced
-build prompt*, and *the second regeneration, measured and rejected*. **The merge decision itself
-then closed the annex: no physical merge, both weaknesses recorded rather than chased further —
-see below.** The build prompt in `case/case.py` was subsequently reverted to the version that
-actually built the frozen column, so the code and the artifact in the tree tell the same story —
-see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the prompt was reverted too*.
-
-### What closed on 2026-08-02, and is not to be re-opened
-
-1. **The `morph/` correction round** — 10 hand-verified singletons plus the 58-token comitative
-   family, 41 canto artifacts. `skel` 3634 → 3633.
-2. **The `case/` chunk regeneration it owed** — 25 hard → **0 hard**. Scope 13112 → 13125 tokens,
-   13176 → 13189 values; the census gain is almost all `ablative` (1805 → **1819**), the newly
-   in-scope comitatives, which the new column tagged in agreement with an alias table it never saw.
-3. **The oblique tail: fold nothing.** `ablative` earned (prepositional oblique, `obl` 82%),
-   `genitive` earned (`det:poss`, a slot `ablative` fills zero times), **`locative` earned** —
-   *not* by the deprel test, which it fails, but because Layer 2's `lemma` collapses
-   `locative`/`accusative`/`dative`/`reflexive` onto one `ci`/`vi` form. `vocative` is the one
-   remaining frozen-but-unearned value. **No rows were rewritten and the vocabulary does not
-   change**, so the merge has nothing to carry from this.
-4. **Layer 3's stale clitic mentions** — 5 hard / 96 soft → **0/0**. `--fix-clitics` is now
-   symmetric (94 added, 6 dropped, 43 cantos) and the hard check admits only a fused host's
-   *pronoun* lemma components; 2 non-clitic soft were fixed by hand, and purgatorio 20:83 took a
-   2-row Layer-4 correction that closed a deferral `dep/CORRECTIONS.md` had recorded as blocked on
-   Layer 2. `skel` 3633 → **3635**, both new flags at that one position and both left standing.
-   **The 160 `+lemma` spans on ordinary pronouns in Inferno 18 and 23 were deliberately not
-   touched** — a pre-existing canto-local convention, not annex fallout. See *The clitic
-   reconciliation* above.
-
-**Two verdicts in this annex were reached and then reversed, both recorded in full** in
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md) — *The subset argument was wrong* (fold `genitive`)
-and *Step 5 — the `locative` question* (fold `locative`). Read the second before proposing any
-vocabulary change: its guard is that **before folding a value V, print the cross-tab of V's word
-forms against every value they carry**, not V against its proposed parent. A deprel containment
-test only answers "does this value open a slot", which is the wrong question for a value whose
-work is splitting one form into several readings.
-
-### The one item — closed 2026-08-02
-
-| # | item | who | outcome |
-|---|---|---|---|
-| 1 | ~~**The case annex's `morph/` merge**~~ | assistant | **done — no physical merge.** Both regeneration rounds ran, were measured, and were rejected against a verdict rule fixed in advance; the frozen column stands with both weaknesses recorded. The merge decision itself resolved to keeping `case/` a **permanent** Layer-2 sibling directory, never a `morph/*.tsv` column — see below |
-
-0. **Both regeneration rounds ran, and their verdicts.** The prompt was written, the user
-   regenerated all 1340 chunks, and the diff was measured — twice. Round 1's column was **not
-   adopted** — one global `accusative` drift cost more than the two rules gained — the frozen
-   artifact was restored with `git checkout -- case/inferno case/purgatorio case/paradiso`, and the
-   prompt was rebalanced (a subject-first framing for relative pronouns, agreement as a two-way
-   decider, a guard for verbs governing `a`, and a third worked example). Round 2's column was
-   **also not adopted** — the guard held the two easy populations this time, and the named target
-   (relative `obj`) rose again, but the population the rebalance specifically targeted (relative
-   `nsubj`) fell again (−56, smaller than round 1's −76 but the same direction) and the census
-   drift persisted (−110/+117 against round 1's −129/+156). Round 2's column was never committed
-   and, once measured, was not kept. **Two rounds was the budget and both are spent — a third is
-   not run**: tuning the prompt and re-scoring against `dep` erodes the independence the column
-   exists for, and round 2 already re-confirmed the rule's own verdict criterion once. The build
-   prompt in `case/case.py` was afterwards reverted to the version that produced the frozen
-   artifact — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the second regeneration, measured
-   and rejected* and *the prompt was reverted too*.
-
-1. **The merge decision itself: no physical merge into `morph/*.tsv`.** `PLAN.md`'s *Why its own
-   directory* gave two reasons that never depended on the column's measured quality — the
-   hash-blast-radius (a column empty on ~87% of `morph` tokens would move all 100 `morph/*.tsv`
-   hashes) and provenance (folding a later, differently-imperfect pass into Layer 2's single
-   artifact erases exactly the visibility that lets a future reader tell them apart) — and nothing
-   the annex did weakened either. Every other layer in this corpus already lives in its own
-   directory too, so `case/` living apart from `morph/` was never a placeholder state; it is the
-   corpus's normal shape. **`case/` is promoted from experimental annex to a permanent Layer-2
-   sibling extension.** This also resolves the **fused-token mismatch** without a schema change:
-   `case/*.tsv` is already one row per in-scope token (`morph`'s own convention), with one value
-   per pronoun component for a fused token, exactly mirroring how `morph` already joins a fused
-   token's lemma parts — no format ever needed reconciling. The five contradictions this produces
-   against `dep`'s per-token `deprel` (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4
-   *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*) are recorded as structural residue of
-   the `dep` join, not scheduled work. See [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 —
-   the merge decision* for the full reasoning.
-
-### How round 2 was measured — the exact comparison, now historical
-
-Both regeneration rounds are done and the annex is closed; this section is kept as the record of
-the method, not as a next step. Round 1's analysis scripts were scratch and were not kept; this is
-the recipe, and the baselines
-are the numbers to reproduce against. **The frozen column is in git, not on disk, once the
-regeneration has run** — read it with `git show HEAD:case/<canticle>/NN.tsv` (or, if the prompt
-commit was taken after the run, the commit before it). The TSV is
-`line \t token \t word \t case`, one row per pronoun, and multi-value cells join with
-`dante_corpus.case.SLOT_SEP`.
-
-Join each position `(canticle, canto, line, token)` across three sources — the frozen column, the
-regenerated column, and `dep` (`dante_corpus.dep.load_dep`, `deprel` per token) — and report four
-populations. The first two are the shapes the rules name; **the last two are the ones round 1
-broke, and they are the reason the round is judged on four numbers rather than two.**
-
-| population | filter | frozen |
-|---|---|---|
-| relative pronoun, subject | `word ∈ {che, ch', cui, chi, qual}`, `dep=nsubj` | 2062 / 2075 agree (**99%**) |
-| relative pronoun, object | same words, `dep=obj` | 325 / 433 agree (**75%**) |
-| clitic, dative | `word ∈ {mi, ti, ci, vi, li, le, gli, ne, me, lui}`, `dep=iobj` | 549 / 588 agree (**93%**) |
-| clitic, accusative | same words, `dep=obj` | 447 / 726 agree (**62%**) |
-
-"Agree" means the expected value for the deprel (`nsubj`→`nominative`, `obj`→`accusative`,
-`iobj`→`dative`) appears among the cell's values. Round 1 scored **1986 (−76) / 377 (+52) / 534
-(−15) / 454 (+7)** — the two gains it was aimed at, and two losses on populations no rule mentions.
-
-Also print the **census** (`make -C case stats`, the `vocabulary:` line) against the frozen
-5621 `nominative` / 1999 `accusative` / 1410 `dative` / 267 `genitive`. Round 1's failure showed up
-here first and most clearly, as a single global drift (`accusative` +156 drawn out of `nominative`
-−129 and `dative` −43); a round that moves only its named shapes will leave this line nearly still.
-
-**The verdict rule, fixed in advance so the numbers cannot be read to taste**: adopt only if the
-two target populations rise **and** the two others hold within a few positions of the frozen
-figures. If the round trades one against the other again, **do not tune the prompt a third time** —
-restore the frozen column and take the merge with the weakness recorded, per item 0 above. Round
-1's own numbers and the reasoning behind this rule are in [`case/CORRECTIONS.md`](case/CORRECTIONS.md),
-*the blind regeneration, measured* and *the rebalanced build prompt*.
-
-**This is exactly what happened.** Round 2 rose the named target (relative `obj`, 77%→88%) and
-held the two easy populations, but the population the rebalance was built to recover — relative
-`nsubj` — fell again (−56) and the census kept drifting `nominative`→`accusative` (−110/+117,
-against round 1's −129/+156). The rule's own criterion says reject, so round 2's column was left
-uncommitted and, once measured, discarded rather than adopted. **No third round follows** — see
-*the second regeneration, measured and rejected* in [`case/CORRECTIONS.md`](case/CORRECTIONS.md)
-for the full numbers.
-
-**Neither regenerated column was preserved** — round 1's and round 2's numbers are recorded in
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md); neither round's rows were kept, and the build prompt
-that produced them was reverted afterwards, so reproducing either would mean re-running the LLM
-pass under the historical prompt in git (`038d1ec`, `ffc8180`).
-
-There is one **deliberately open Layer-3 question** left over from 2026-08-02, and it blocks
-nothing: the **160 `+lemma` spans on ordinary single-token pronouns in Inferno 18 and 23**, a
-canto-local build convention found nowhere else in the corpus. They pass every check. Sweeping
-them is a Layer-3 decision with a hash consequence for two cantos; see *The clitic reconciliation*
-above before touching them.
-
-### What must not be done — the annex is closed; these are guardrails against re-opening it
-
-- **Do not edit `case/*.tsv` to close a contradiction.** The artifact stays frozen; it was held
-  through 194 recorded `case`-side errors across step 4's three slices. The 258 remaining
-  contradictions are measured residue with a verdict, not unfinished work.
-- **Do not run a third regeneration round.** Two rounds was the budget, both are spent and both
-  were rejected against the verdict rule fixed in advance — choosing prompt wording by re-scoring
-  against `dep` turns `case` into a column fitted to Layer 4, which is precisely the independence
-  that makes its dissent worth anything. The two weaknesses (the postposed relative-pronoun
-  subject; the diffuse `nominative`→`accusative` pull) are recorded, not chased further.
-- **Do not physically merge `case/` into `morph/*.tsv`.** That question is decided — see *The
-  merge decision itself* above and [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the
-  merge decision*. `case/` is a permanent sibling directory; reopening the question would need a
-  reason neither of the two settled arguments (hash blast radius, provenance) has lost.
-- **Do not run another Layer-4 slice over the case/dep contradictions.** All 510 original
-  candidates have a verdict, and the two slices that sampled this configuration found `case` was
-  the wrong read 24% and 53% of the time. No further instrument is scheduled against them.
-- **Do not treat Layer 5's soft count as the objective.** It rose 5, fell 86, rose 165, fell 1 and
-  rose 2 across five correct rounds. None of those numbers decided whether an edit was right.
-- **Do not close purgatorio 20:83's two `skel` flags by editing `skel/purgatorio/20.tsv`.** They
-  are the frozen Layer-5 row holding a superseded reading of `c'`, which is exactly the divergence
-  this layer exists to measure; it is `--fix` work and `--fix` is the user's to run.
-- **Re-measure every layer after touching any one of them.** The 2026-08-02 fallout existed for
-  three correction rounds because `np` was the one checker nobody re-ran. The state check at the
-  top of this section is the whole list.
-
-### Resuming cold — the case annex, historical as of 2026-08-01
-
-The annex is closed (see *The one item — closed 2026-08-02* above); this section and
-[`case/PLAN.md`](case/PLAN.md)'s *Resuming cold — after step 4* are kept as the record of how it
-got there — the commits that matter, the state checks with their expected figures, what step 4
-settled, the selector and its measured limits, and the traps the three slices hit. This section
-below carries the step-1-to-3 history.
-
-**Step 2's code is committed (`637d417`) and step 3's artifact is committed separately
-(`0027494`).** The branch is `case-pilot`. The split was deliberate and is the step-3 order made
-literal: the artifact was held untracked until `--check` reached 0 hard, and committed **before**
-`--stats` joined it to `dep`. Confirm the state before assuming it:
-
-```bash
-git status --short          # expect clean
-uv run pytest -q            # expect 142 passed (125 before the annex)
-make -C morph check         # expect 0 hard, 0 soft
-make -C np check            # expect 0 hard, 0 soft  (5 hard / 96 soft until 2026-08-02)
-make -C dep check           # expect 0 hard, 0 soft
-make -C skel check          # expect 0 hard, 3635 soft (3634 before the 2026-08-02 morph round)
-make -C case check          # expect 0 hard  -- regenerated 2026-08-02
-```
-
-Committed in step 2 — new: `dante_corpus/case.py`, `case/case.py`, `case/README.md`,
-`case/Makefile`, `tests/test_case.py`; modified: `dante_corpus/_paths.py` (`CASE_DIR`),
-`hashes.py` (`"case"` **appended** to `LAYERS`), `api.py` (`Canto.case()`), `cli.py`
-(`text case`), `tests/test_hashes.py` (isolate `CASE_DIR`), plus this file,
-[`case/PLAN.md`](case/PLAN.md) and [`case/CORRECTIONS.md`](case/CORRECTIONS.md).
-
-**What the user ran.** `make -C case` — the blind corpus pass, resumable from its own output,
-three canticles runnable in three parallel shells. LLM-scale generation is the user's job by the
-convention Phase 5 settled (cf. `make -C skel fix`), and it took **four runs**, all on
-2026-07-31, taking `--check` from **1236 hard to 70 to 13 to 0**. **Not one residue was the model
-getting the Italian wrong**:
-
-1. A driver bug — an unrecoverable chunk aborted every remaining chunk of its canto, so ~23
-   genuine failures cost 192 of the 1340. The driver now skips the chunk and carries on, and
-   `--log` keeps the responses that failed.
-2. **Layer 2's `pos` undercounting its own `lemma`** on 24 fused clitic clusters (`sen` = `si+ne`,
-   tagged `pronoun` here and `pronoun+pronoun` 15 times elsewhere), rejecting a correct answer
-   forever.
-3. The same defect in shapes round 2 did not cover — the lemma undercounting too (`sen` with the
-   lemma `si`), a three-part lemma under a two-part `pos` (`Vattene`), and `nol` = `non lo`
-   demanding two cases for one pronoun. 14 more tokens, audited as a family rather than as
-   symptoms.
-
-Both correction rounds are in [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md), with
-`morph`/`dep`/`skel` re-measured at 0/0, 0/0 and **0/3550** — the last one moved because a `nol`
-mistagged `adverb+article` was also the cause of a Layer-5 membership violation, so the annex had
-audited Layer 2 before its `dep` join was looked at at all. Run 4 re-requested the last 12 chunks
-and all validated; see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 3 corpus pass*
-entries.
-
-**The finish sequence was executed in this order**, because the order is the annex's whole value:
-`--check` at 0 hard → **commit the artifact** (`0027494`) → *then* `--stats`. Freezing precedes
-the join to `dep`; doing it the other way round manufactures the column to close violations,
-which is the failure mode [`case/PLAN.md`](case/PLAN.md)'s *Independence* section forbids.
-**Step 4** — the hand-verified Layer-4 correction round over the contradictions, verified against
-the terzine one at a time with `make -C dep check` staying 0/0 — then ran to completion over
-2026-07-31 and 2026-08-01.
-
-**The census, over 13112 tokens / 13176 values**: `nominative` 5620 (42.7%), `accusative` 2003,
-`reflexive` 1961, `ablative` 1805, `dative` 1409, `genitive` 267, `locative` 81, `vocative` 30.
-**The join to `dep`**: `obj`→`accusative` 84% (1631/317), `iobj`→`dative` 94% (669/46),
-`nsubj`→`nominative` 98% (5076/98) — **461 contradictions and 49 impossible pairings**, step 4's
-input. After all three slices those rates are **90% / 96% / 99%** and the list is **260 / 40**;
-after the 2026-08-02 chunk regeneration they read **90% / 97% / 99%** and **258 / 40**.
-The disagreement concentrates exactly on `obj`, the accusative-vs-dative class the annex
-was built to adjudicate, which is the pilot's finding reproduced at corpus scale.
-
-**The three parked questions are now answered**, with their measurements in
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md):
-
-- **The oblique tail: fold nothing.** The deciding evidence is the `dep` deprel distribution,
-  not the word forms. `ablative` (1805) is `obl` at 82%. **`genitive` (267) is earned** — 71% of
-  it is adnominal (`nmod` 139, `det:poss` 50) and `det:poss` is a slot `ablative` fills zero
-  times: `lor danno`, `il senso lor`, `le gambe loro` are possessive determiners, not obliques.
-  **`locative` (81) is earned** — settled 2026-08-02, but **not** by the deprel test, which it
-  fails: there is no relation `locative` fills that `ablative` does not. What earns it is that
-  Layer 2's `lemma` collapses the readings of `ci`/`vi` (lemma `vi` spans `locative` 44 /
-  `accusative` 21 / `dative` 15 / `reflexive` 4), so whether a given `vi` is *there* or *to you* is
-  recorded nowhere else in the stack. A containment test can only answer "does this value open a
-  slot"; for a value that splits one form into several readings, that is the wrong question, and
-  the round recommended folding `locative` before seeing it. `vocative` (30) is frozen-but-unearned; `reflexive` (1961) is vindicated, and
-  mistagging it was what the Inferno 1 smoke test caught. **An earlier reading of this tail
-  recommended folding `genitive` and was wrong** — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s
-  *The subset argument was wrong*. No rows were rewritten.
-- **The third adjudication class is real** — relative pronouns that are the subject of their
-  clause, read `nominative` by `case` and `obl` by Layer 4, **49 corpus-wide**. It is step 4's
-  first and highest-yield slice, because the pairing is one neither layer can be right about
-  together.
-- **Layer-2 mistags this annex surfaced**, belonging to `morph/` and deliberately not acted on
-  during the pass: the comitatives `meco`/`teco`/`seco`, tagged four different ways with `vosco`
-  twice as `adjective` (once with the lemma `boscoso`), and `me'` (apocopated *meglio*) tagged
-  `pronoun` at Inferno 1:112. **All of these were corrected on 2026-08-02**, together with the six
-  more step 4 added — and sweeping each reported form corpus-wide found the reports had
-  undercounted twice over: **both** corpus `me'` tokens are *meglio* and **both** `salsi` tokens
-  are the same *sapere* idiom, and the comitatives are **58 tokens under 34 distinct taggings**,
-  not 43 under four. See [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md)'s *The mistags the case
-  annex surfaced and parked*.
-
-**Why Inferno 1 was built alone first.** It was the plumbing smoke test, and it earned its
-keep: `--check` passed at 0 hard while the artifact was wrong in two ways the checker
-structurally cannot see — the prompt's own worked example taught `accusative` for the reflexive
-`mi ritrovai`, and the reflexive/impersonal clitic (1411 tokens, **10.8%** of the scope) had no
-home in the seven-value vocabulary. Both were fixed (`reflexive` is now an eighth value) and the
-canto rebuilt. The lesson generalizes: for this layer, **`--check` passing is not evidence the
-artifact is right** — cross-tabulate against `dep` before trusting a batch.
-
-Layer 5 Phase 5 closed at **0 hard, 3551 soft** (see
-[`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*): Phase 5o closed the last open row of the
-`extra_arg` direct-child triage (`advcl`), Phase 5p ran the two hand-verified `dep/` correction
-rounds its verdicts left over (−10), and Phase 5q spent the one remaining item — the user-run
-`--fix` pass (−147, ≈28 h 3-way parallel) — plus a mechanical `ioj` → `iobj` typo fix (−4) that
-took `unknown_role` to 0. What remains is documented reading disagreement between two independent
-parses: `extra_arg` (1639) and `missing_arg` (1193) are 80% of it, and both regeneration and
-deterministic rules now have a measured stop verdict against them.
-
-**One follow-on is open, past its kill gate**: [`case/PLAN.md`](case/PLAN.md), a
-**pronoun case annex to Layer 2** — the instrument Phase 5i/5h's parked verdicts named. It is the
-sibling directory `case/`, not a new column in `morph/*.tsv`, so no existing artifact hash moves;
-it is authored blind to the disputed positions so it stays a genuine **third independent read**;
-and its contradictions with `dep` feed a hand-verified Layer-4 correction round rather than a
-checker exemption. Its first step was a **kill-gate pilot** measuring whether the model agrees
-with itself on the disputed clitics at all, and that pilot **ran on 2026-07-30 and passed**
-(570 calls, `google:gemma-4-31b-it`, on the branch `case-pilot`): **81%** unanimity across three
-presentation variants on the disputed positions with **zero** three-way splits, against **95%**
-on a control group of undisputed clitics, and answers that split both ways against `dep` rather
-than restating either existing read. Step 2 then froze the vocabulary at the census's own six
-values plus `vocative` (which the clitic-only pilot population structurally could not produce)
-and `reflexive`, and the scope at every pronoun-POS token, and wrote the driver, the shared
-module (`dante_corpus/case.py`), `Canto.case()` / `dante-corpus text case`, and the tests;
-step 3's corpus pass completed on 2026-07-31 at 0 hard and is frozen. Measurement in
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md), design in [`case/README.md`](case/README.md). Expected value is stated up front as
-**≈90–100 of the 3551** — it does not reach zero, and the rest of the residual (subject
-resolution across enjambment and pro-drop) is untouched by it. The paired proposal, a **verb lexicon** for the
-complement-vs-adjunct distinction, stays **rejected**: it would import an external authority,
-which the *Neutrality audit* invariant below forbids. (A case pass does not — that invariant
-constrains the build prompt's *inputs*, and an LLM reading case from the Italian alone meets it
-on the same terms `pos` and `deprel` already do.)
 
 ## Why this lives in the corpus
 
@@ -624,14 +122,11 @@ The mechanics — columns, generation rules, the token-alignment algorithm, vali
 usage — live in [`morph/README.md`](morph/README.md). It is served via `Canto.morph()` and
 `dante-corpus text morph`.
 
-**Annex built (pilot passed, driver written, corpus pass complete and frozen)**: pronominal **case**,
-the one morphological feature this layer omits and the instrument Layer 5's parked clitic
-verdicts named. Built as the sibling directory `case/` rather than a new `morph/*.tsv` column, so no
-existing artifact hash moves and the experiment stays revertible; merging into Layer 2 is the
-natural end state if it proves out. Scope is every pronoun-POS token, decided from this layer's
-own `pos` column; the vocabulary is the six values of the pilot's answer census plus `vocative`
-and `reflexive`, the two that name a pronoun filling no argument slot. See
-[`case/README.md`](case/README.md) and [`case/PLAN.md`](case/PLAN.md).
+**Pronoun case** is served as a Layer-2 morphological feature — the one this layer's own columns
+omit — but held in its own permanent sibling directory rather than a `morph/*.tsv` column, so no
+existing artifact hash moves. See [`case/README.md`](case/README.md) for the design, scope, and
+vocabulary, and [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for why a sibling directory over a
+merged column.
 
 ### Layer 3 — Noun-phrase enumeration *(implemented — see [`np/README.md`](np/README.md))*
 
@@ -702,9 +197,9 @@ them fixes the boundary:
 - **An imported verb-valency lexicon** — the instrument that would settle Layer 5's remaining
   complement-vs-adjunct disagreements (`essere`/`stare`/`parere` as copulas, and the ~37 lemmas
   behind the residual `advcl` cases). Rejected on the same grounds: it is an external authority,
-  not something the Italian line determines. Note the contrast with the proposed case annex
-  ([`case/PLAN.md`](case/PLAN.md)), which asks a model to *read* the source rather than importing
-  a dictionary, and so satisfies the *Neutrality audit* invariant below.
+  not something the Italian line determines. Note the contrast with the case extension
+  ([`case/README.md`](case/README.md)), which asks a model to *read* the source rather than
+  importing a dictionary, and so satisfies the *Neutrality audit* invariant below.
 
 ## Build & serve model
 
@@ -769,43 +264,16 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5q
-   (`--check`: 0 hard / 3635 soft — 3551 until the case annex's `morph/` rounds, then 3550,
-   3555, 3469 and 3634 across step 4's three slices, 3633 after step 5's `morph/` round, and 3635
-   after Layer 3's clitic reconciliation).
-   Phase 5 closed
-   with every route measured; see
+   (`--check`: 0 hard / 3635 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
-
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),
-   [`case/PLAN.md`](case/PLAN.md), branch `case-pilot`). Not a sixth layer: a Layer-2
-   morphological feature held in its own **permanent** directory, worth ≈90–100 of Layer 5's 3551
-   soft violations and useful to consumers on its own terms. The kill-gate pilot ran over the
-   rebuilt population (67 + 28 disputed, 95 control) and passed; step 2 froze the vocabulary and
-   scope and built the driver and serve surface; step 3's corpus pass built all 100 cantos at **0
-   hard**, 13112 pronoun tokens, and froze them; step 4 spent all **510** candidates across three
-   slices on **215 hand-verified positions / 270 rows** in `dep/`, taking Layer 5 to **3634**; step
-   5's owed `morph/` correction round then landed on 2026-08-02, taking it to **3633** and leaving
-   `case --check` at 25 hard, since regenerated back to **0 hard**; with `locative` settled and
-   Layer 3's clitic mentions reconciled (which took Layer 5 to **3635**), step 5's last item was
-   the `morph/` merge. Its blind regeneration under a corrected prompt **ran twice, both on
-   2026-08-02, and both rounds were rejected** — round 1's new rules hit their named shapes but the
-   column drifted globally toward `accusative`, so the prompt was rebalanced; round 2 held the two
-   easy populations but its own named target (the relative-pronoun subject) fell again and the
-   census kept drifting, smaller but the same shape. Two rounds was the budget and both are spent,
-   so the frozen column stands with both weaknesses recorded. **The merge decision itself then
-   resolved to keeping `case/` a permanent Layer-2 sibling directory — no physical merge into
-   `morph/*.tsv`.** The code and the artifact are committed **in that order, deliberately** — see
-   *Resuming cold* above.
+   [`case/CORRECTIONS.md`](case/CORRECTIONS.md), branch `case-pilot`). Not a sixth layer: a
+   Layer-2 morphological feature held in its own **permanent** directory, useful to consumers on
+   its own terms independently of Layer 5's violation count. See [`case/README.md`](case/README.md)
+   for the full status.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
 Layers 1–5 are implemented, built for all 100 cantos, and merged to `main`; the grammatical
 stack this plan describes is complete. **The pronoun case extension is also complete and closed**,
-all on the branch `case-pilot`, not yet merged to `main`. The annex's kill gate passed, its corpus
-pass is complete and frozen, its Layer-4 adjudication round is complete, its owed `morph/`
-correction round is closed and regenerated, both of step 5's analysis sub-items — the oblique tail
-and `locative` — are settled, Layer 3's stale clitic mentions are back to 0/0, both budgeted
-blind-regeneration rounds ran and were rejected against the verdict rule fixed in advance, and the
-merge decision itself resolved to no physical merge — `case/` stays a permanent sibling of
-`morph/`, exactly as `np/`/`dep/`/`skel/` already are. See *Handing off* immediately below for
-the full closing record.
+all on the branch `case-pilot`, not yet merged to `main`.

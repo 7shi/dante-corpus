@@ -251,7 +251,7 @@ conjunction. The 7 cantos' content hashes change, as expected for an artifact co
 
 ## The `obl` × `nominative` impossible pairings, from the `case` annex (2026-07-31)
 
-The first slice of [`../case/PLAN.md`](../case/PLAN.md)'s step 4 — the hand-verified Layer-4
+The first slice of [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)'s step 4 — the hand-verified Layer-4
 round the pronoun case annex was built to feed. Input: the **49** positions where `case` reads a
 pronoun `nominative` and Layer 4 attaches it `obl`, reported separately by `case.py --stats`
 because a pronoun attached as an oblique cannot bear the subject case. Every one was opened
@@ -404,8 +404,8 @@ nor `skel` (`obl:a`).
 Not every 2-1 tie goes against `dep`. **`case` is the dissenting read in eleven of them**, and
 saying so is the round's own control:
 
-- **inferno 17:77.6** *m'avea 'mmonito* — the accusative that [`../case/PLAN.md`](../case/PLAN.md)
-  uses as its worked example of an accusative. `case` reads it dative; `dep` is right.
+- **inferno 17:77.6** *m'avea 'mmonito* — the accusative that [`../case/README.md`](../case/README.md)
+  used as its worked example of an accusative. `case` reads it dative; `dep` is right.
 - **inferno 19:44.5** *sì mi giunse al rotto*, **26:110.5** *mi lasciai Sibilia* (the corpus tags
   every *lasciare* clitic `obj`, 12 of them), **30:126.8** *omor mi rinfarcia*,
   **purgatorio 13:108.5** *che sé ne presti*, **paradiso 15:96.2** *tu **li** raccorci* (dative,

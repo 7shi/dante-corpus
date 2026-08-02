@@ -1,14 +1,14 @@
 # case — measurement history
 
 Every measurement this annex makes is recorded here, including the ones that kill it. See
-[`PLAN.md`](PLAN.md) for what the annex is and why the pilot is a kill gate rather than a
+the plan for what the annex is and why the pilot is a kill gate rather than a
 formality.
 
 ## Pilot (step 1) — setup, 2026-07-29
 
 ### State check
 
-Re-confirmed before rebuilding anything, per [`PLAN.md`](PLAN.md)'s *Confirm the state first*.
+Re-confirmed before rebuilding anything, per the plan's *Confirm the state first*.
 All four match the state the plan was written at, so its counts still describe this corpus:
 
 | check | result |
@@ -24,7 +24,7 @@ Rebuilt with `case/population.py` (see *Harness* below) following
 [`../skel/PLAN.md`](../skel/PLAN.md)'s *How to measure a candidate rule* — the `stats()` loop
 with `dante_corpus.skel._classify_divergence` monkeypatched, run from `skel/`, positions read
 1-based over alpha-only tokens. The two disputed buckets come out at exactly the sizes
-[`PLAN.md`](PLAN.md) predicted:
+the plan predicted:
 
 | bucket | selector | count |
 |---|---|---|
@@ -52,7 +52,7 @@ Three variants rather than three identical repeats: identical prompts measure sa
 temperature, not whether the reading is stable. The prompt carries the terzina and the marked
 pronoun and **nothing else** — no `dep/` row, no `skel/` row, no hint that a position is
 disputed. That blindness is the design constraint the annex's whole value rests on
-([`PLAN.md`](PLAN.md), *Independence*).
+([`README.md`](README.md), *Independence*).
 
 The answer vocabulary is **not** constrained by the prompt: the model is asked for one English
 word, and whatever it produces is the census that step 2 would freeze — measure-then-freeze, the
@@ -63,12 +63,12 @@ same order every other layer used.
 `population.py` (bucket extraction; run from `skel/`, writes `population.json`), `pilot.py`
 (one run per variant, resumable, appends `results.<RUN>.jsonl`), `report.py` (aggregation).
 
-[`PLAN.md`](PLAN.md) called for these to be uncommitted throwaways in the session scratchpad.
+the plan called for these to be uncommitted throwaways in the session scratchpad.
 They live here instead, on the branch `case-pilot`: the run is a multi-hour job the user
 drives, so a session-scoped scratchpad is the wrong place for it, and a harness in the repo
 makes the measurement reproducible rather than merely reported. The branch is the revert path
 if the pilot kills the annex — `case/` then disappears with it, exactly as *Revertibility* in
-[`PLAN.md`](PLAN.md) requires.
+the plan requires.
 
 Model: **`google:gemma-4-31b-it`** (Gemini API), the artifact's author, i.e. the second line of
 [`../model.mk`](../model.mk) — *not* the `ollama:` default, which is the quantized local debug
@@ -85,13 +85,13 @@ backend. 190 positions × 3 runs = **570 calls**. Plumbing was smoke-tested on t
 
 **Disputed unanimity 77/95 (81%) vs control 90/95 (95%).**
 
-**How the stop rule was read.** As literally worded in [`PLAN.md`](PLAN.md) — disputed
+**How the stop rule was read.** As literally worded in the plan — disputed
 agreement must be *clearly higher* than control agreement — the gate is unpassable by
 construction: the control is the ceiling, being the positions two independent reads already
 agree on. The intent, and what the control was built to supply, is a **yardstick for noise**:
 the question is whether the disputed positions are answered stably at all, or whether the model
 waffles on exactly the cases the column would be built for. The wording has been corrected in
-[`PLAN.md`](PLAN.md); the substantive bar was not moved after seeing the numbers, and the
+the plan; the substantive bar was not moved after seeing the numbers, and the
 measurement is recorded here in full so the reading can be re-judged.
 
 Against that bar the answer is unambiguous. Three-way splits on the disputed set: **zero** —
@@ -114,16 +114,16 @@ either existing read: on the parked bucket it goes with the Layer-5 LLM 45 / Lay
 mirror bucket with the Layer-5 LLM 16 / Layer 4 12. So `case` behaves as a genuine third
 independent read rather than a restatement of either, and it contradicts `dep` at **61**
 positions (45 + 16) — the candidate volume a Phase-5i-style hand-verified Layer-4 round needs,
-and consistent with [`PLAN.md`](PLAN.md)'s stated expected value of ≈90–100 soft violations.
+and consistent with the plan's stated expected value of ≈90–100 soft violations.
 
 **These 61 are not usable as corrections.** They were produced by asking about the disputed
-positions, which is exactly the manufacturing failure mode [`PLAN.md`](PLAN.md)'s *Independence*
+positions, which is exactly the manufacturing failure mode [`README.md`](README.md)'s *Independence*
 section forbids. They are evidence that the instrument discriminates, nothing more; the
 corrections must come from the blind corpus pass of step 3, frozen before it is joined to `dep`.
 
 **Answer vocabulary census** (570 answers, no unmapped values): accusative 276, dative 252,
 ablative 28, nominative 7, genitive 5, locative 2. The model's own word for the partitive /
-locative class is **`ablative`**, not the `oblique` [`PLAN.md`](PLAN.md) anticipated, and it
+locative class is **`ablative`**, not the `oblique` the plan anticipated, and it
 distinguishes `genitive` and `locative` from it. Step 2 freezes the vocabulary from this census,
 not from the plan's guess — and the `ne`/`vi` instability above is a labeling boundary to settle
 in the prompt, not a reading disagreement.
@@ -143,7 +143,7 @@ No model calls. Two things were frozen from measurement, and the code was writte
 
 The six values of the pilot's own answer census become the closed vocabulary, with no removals:
 `accusative` 276, `dative` 252, `ablative` 28, `nominative` 7, `genitive` 5, `locative` 2. Two
-consequences worth stating, because both overrule [`PLAN.md`](PLAN.md)'s guess:
+consequences worth stating, because both overrule the plan's guess:
 
 - The partitive/locative class is called **`ablative`**, not `oblique`. The plan predicted
   "nominative / accusative / dative / oblique, with the last covering partitive `ne` and locative
@@ -265,7 +265,7 @@ Measured over the frozen `morph/*.tsv`, with the call counts taken from the driv
 | **all pronoun-POS tokens (chosen)** | **13113** | **8542** | **1340** |
 
 The clitic subset is what the Layer-5 adjudication strictly needs and is what
-[`PLAN.md`](PLAN.md)'s step-3 sizing (300–500 calls) assumed. It was **not** chosen, for three
+the plan's step-3 sizing (300–500 calls) assumed. It was **not** chosen, for three
 reasons:
 
 1. **The scope becomes a judgment.** A clitic-only pass needs a hand-frozen list of word forms,
@@ -353,7 +353,7 @@ reproduces it: line 2's `mi` came back `accusative`, against Layer 4's `expl`.
 
 Caught only because the smoke test was cross-tabulated against `dep` rather than merely checked.
 `--check` cannot see this — there is no deterministic ground truth for case, which is the
-condition [`PLAN.md`](PLAN.md) states up front. The example now reads `reflexive`.
+condition the plan states up front. The example now reads `reflexive`.
 
 ### Failure 2 — the reflexive clitic had no home in the vocabulary, and it is 10.8% of the scope
 
@@ -375,7 +375,7 @@ and `nominative` on a reflexive particle is plainly wrong.
 tail was left open because folding a value afterwards is a mechanical rewrite. Here the only
 post-hoc fix would be to relabel every `expl` position from `dep` — letting Layer 4 decide 10.8%
 of the column and destroying on that subset the independence the whole annex rests on
-([`PLAN.md`](PLAN.md), *Independence*). It had to be settled before the corpus pass, not after.
+([`README.md`](README.md), *Independence*). It had to be settled before the corpus pass, not after.
 
 **Decision: `reflexive` is added as an eighth value** (the user's call). It satisfies the
 criterion recorded in *The oblique tail* above — a value earns its place if it changes the
@@ -586,7 +586,7 @@ scope. `morph --check` 0/0, `dep --check` 0/0, `skel --check` 0 hard / 3550 soft
 passed.
 
 **The artifact was committed before `--stats` was run** (`0027494`). This is the order
-[`PLAN.md`](PLAN.md)'s *Independence* section exists to enforce, and it is the only part of the
+[`README.md`](README.md)'s *Independence* section exists to enforce, and it is the only part of the
 annex's design that cannot be recovered after the fact: once the join to `dep` has been read, any
 subsequent edit to the column is indistinguishable from manufacturing it to close violations. The
 commit is the evidence that it was not.
@@ -712,7 +712,7 @@ those numbers matter for step 4:
 3. **461 is a candidate list, not an edit list.** Nothing here is applied mechanically. Step 4
    verifies against the terzina one position at a time, in the style of Phases 5i/5n, and
    `make -C dep check` stays 0/0 throughout. The expected yield remains what
-   [`PLAN.md`](PLAN.md) stated before any of this was measured: **≈90–100 of Layer 5's 3550**,
+   the plan stated before any of this was measured: **≈90–100 of Layer 5's 3550**,
    not zero.
 
 ## Step 4, slice 1 — the 49 impossible pairings, 2026-07-31
@@ -786,10 +786,10 @@ Asked directly whether a measured weakness justifies lifting the freeze, the ans
 three grounds:
 
 1. **It would destroy the only thing the annex has.** Rewriting `nominative` after seeing `dep`
-   is an edit toward `dep`, and PLAN.md's *Independence* section forbids exactly that — an edit
-   made now is indistinguishable from one made to close a violation. Both PLAN.md files record
-   that the order *generate blind → freeze → join* "is the only part of it that cannot be
-   recovered after the fact".
+   is an edit toward `dep`, and README.md's *Independence* section forbids exactly that — an edit
+   made now is indistinguishable from one made to close a violation. Both this file and root
+   [`../PLAN.md`](../PLAN.md) record that the order *generate blind → freeze → join* "is the only
+   part of it that cannot be recovered after the fact".
 2. **Step 4 already decided it**: *if a position looks like a `case` error, the answer is to
    record it, not to rewrite the column.*
 3. **49 positions is not a basis for rewriting a 13176-value column** — the frame in question is
@@ -818,7 +818,7 @@ the three reads already agree*, and the impossible pairings are precisely the po
 and raises the count. The **≈90–100** estimate was always drawn from the opposite configuration,
 the Phase 5h/5i population where `skel` **already dissents from** `dep` and a third read breaks a
 2-1 tie. Full reasoning in [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of this
-date; the consequence for slices 2 and 3 is in [`PLAN.md`](PLAN.md)'s *Step 4*.
+date; the consequence for slices 2 and 3 is in the plan's *Step 4*.
 
 ## Step 4, slice 2 — the `skel`-flagged contradictions, 2026-07-31
 
@@ -911,7 +911,7 @@ The round's honest completion, and the one whose result was known in advance: **
 124 positions edited (38%), 167 rows in `dep/`, and Layer 5 rose 3469 → 3634 (+165).** The
 `case/` artifact was not touched. `dep --check` stayed 0/0, `morph --check` 0/0, `pytest` 138.
 
-[`PLAN.md`](PLAN.md) offered two defensible outcomes here — run it, or stop after slice 2 and
+the plan offered two defensible outcomes here — run it, or stop after slice 2 and
 record the 325 as deliberately unspent. **Slice 3 was run**, because the deliverable is a more
 correct Layer 4 and because leaving a measured population with no verdict is the one shape
 [`../skel/PLAN.md`](../skel/PLAN.md)'s Phase 5 avoided for every route it opened. The count
@@ -988,7 +988,7 @@ citation is the subject) and paradiso 32:12.5 *'Miserere **mei**'* — a Latin g
 
 ### Conventions that decided a position against both layers
 
-Measured before any target deprel was chosen, per [`PLAN.md`](PLAN.md)'s standing trap:
+Measured before any target deprel was chosen, per the plan's standing trap:
 
 | convention | measurement | effect |
 |---|---|---|
@@ -1315,7 +1315,7 @@ ambiguous shape and teaches only its nominative half — *che nel pensier rinova
 This is the part that needed care. The obvious illustrations are the errors themselves — *le
 fredde membra che la notte aggrava*, *mi batté l'ali per la fronte* — and quoting those with the
 `dep`-side answer would pre-answer a **disputed** position inside the prompt. That is the
-manufacturing the blindness rule forbids ([PLAN.md](PLAN.md), *Independence*), one level up: the
+manufacturing the blindness rule forbids ([README.md](README.md), *Independence*), one level up: the
 regeneration is supposed to be a measurement of whether a general rule moves the shape, and a
 prompt that names four of the contradictions makes those four agree trivially.
 
@@ -1488,8 +1488,8 @@ budgeted — and, per the verdict rule fixed in advance, it is also the last one
 
 ### The four populations, against the same frozen baseline
 
-Scratch analysis (not kept, per round 1's own precedent — the recipe is in *How to measure round
-2* in `PLAN.md`), joining `case` (frozen = `git show HEAD:case/…`, before this round; regenerated
+Scratch analysis (not kept, per round 1's own precedent — the recipe is *How round 2 was
+measured* above), joining `case` (frozen = `git show HEAD:case/…`, before this round; regenerated
 = the round-2 output), `dep`, restricted to positions where the case value carries a
 `nominative`/`accusative`/`dative` reading (the same `_CORE` filter `case.py --stats` itself
 applies, so a purely `reflexive`/oblique-tagged position is dropped from the count rather than
@@ -1540,8 +1540,8 @@ comparison the rule itself set up against round 1's −129/+156.
 the measurement above was written up, then dropped once the verdict was final (2026-08-03) — the
 frozen column (`case --stats`: 258 contradictions / 40 impossible pairings) is what `main` and any
 future session sees, and this file's numbers are what a third attempt would have to reproduce from
-scratch rather than diff against. Per *What must not be done* in `PLAN.md`: **do not tune the
-prompt a third time.** Two rounds were the stated budget,
+scratch rather than diff against. Per the guardrail against a third round (root
+[`../PLAN.md`](../PLAN.md)'s *What must not be done*): **do not tune the prompt a third time.** Two rounds were the stated budget,
 for the reason given there — choosing prompt wording by re-scoring against `dep` is exactly the
 fitting-to-Layer-4 that would make `case`'s independence worthless, and a third round would be
 that regardless of outcome.
@@ -1550,8 +1550,7 @@ that regardless of outcome.
 by two regeneration attempts — the postposed relative-pronoun subject (the rule that fires
 correctly on `dep=obj` overshoots onto `dep=nsubj` every time it's tried) and, more diffusely, a
 persistent pull of the whole column toward `accusative`. Both are now **recorded, not chased
-further**; the merge proceeds from the frozen artifact with the weakness noted, per item 0 in
-*The one open item* in `PLAN.md`.
+further**; the merge proceeds from the frozen artifact with the weakness noted.
 
 ## Step 5 — the merge decision, 2026-08-02
 
@@ -1562,7 +1561,7 @@ status change.
 
 ### What was weighed
 
-`PLAN.md`'s *Why its own directory* gave three reasons for the sibling-directory design, written
+[`README.md`](README.md)'s *Why its own directory* gave three reasons for the sibling-directory design, written
 before step 3's corpus pass existed:
 
 1. **Hash blast radius.** A column non-empty on ~13% of tokens (13125 of 101601) would move all
@@ -1591,7 +1590,7 @@ would have been the outlier.
 
 ### The fused-token mismatch, resolved without a schema change
 
-`PLAN.md`'s open item worried that "a merge into `morph/*.tsv` forces one row per token, and
+The plan's open item worried that "a merge into `morph/*.tsv` forces one row per token, and
 `case` annotates a pronoun." Under this decision that concern does not arise: `case/*.tsv` is
 already one row per **in-scope token**, exactly `morph`'s own convention (`--check`'s `count`
 rule), with one case value per pronoun *component* joined by `+` for a fused token — the identical
@@ -1632,6 +1631,6 @@ and 40 impossible pairings against `dep` recorded as measured residue and two na
 (the postposed relative-pronoun subject; the `nominative`→`accusative` census pull) recorded
 rather than chased past their two-round budget. **The build prompt matches the frozen artifact
 again**, so the code in the tree and the data in the tree tell the same story. Nothing in
-`morph/*.tsv` changes, no hash moves, and no further regeneration is scheduled. See `PLAN.md`'s
-*Why its own directory* for the reasoning this decision confirms rather than revisits, and
-[`README.md`](README.md) for the serve-time API this leaves unchanged.
+`morph/*.tsv` changes, no hash moves, and no further regeneration is scheduled. See
+[`README.md`](README.md)'s *Why its own directory* for the reasoning this decision confirms
+rather than revisits, and for the serve-time API this leaves unchanged.

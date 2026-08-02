@@ -300,7 +300,8 @@ The [`case/`](../case/README.md) annex ran three steps over this column without 
 each one left behind Layer-2 positions it had no mandate to fix: step 3's corpus pass found single
 tokens whose `pos` was wrong but whose *count* was right (so nothing was blocked), and step 4's
 three adjudication slices found six more, **two of which blocked a Layer-4 edit outright**
-([`../case/PLAN.md`](../case/PLAN.md)'s *Resuming cold*). This round is the one those entries owe.
+(see [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)'s *Layer-2 items this slice surfaced*
+entries). This round is the one those entries owe.
 It is 10 hand-verified singletons plus one family sweep, every one checked against its terzina and
 against what the corpus already does with the same word elsewhere.
 

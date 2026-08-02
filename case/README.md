@@ -2,7 +2,7 @@
 
 The **grammatical case of every pronoun** in the *Commedia* — the one morphological feature
 [`morph/`](../morph/README.md) omits, and the instrument Layer 5's parked clitic verdicts named
-([PLAN.md](PLAN.md)). It annotates only what the Italian's own grammar determines; like every
+(see [CORRECTIONS.md](CORRECTIONS.md)'s *Pilot*). It annotates only what the Italian's own grammar determines; like every
 other layer it makes no interpretive judgment and reads no external canon.
 
 ```
@@ -19,8 +19,18 @@ the same footing as `np/`, `dep/` and `skel/` relative to `morph/`. No existing 
 moves, provenance stays visible, and `rm -rf case/` would return the repo to an untouched state.
 A physical merge into `morph/*.tsv` was considered and **rejected** (2026-08-02) — the hash-blast-
 radius and provenance arguments for a sibling directory hold regardless of the column's measured
-quality, and every other layer already lives apart from `morph/` too; see [PLAN.md](PLAN.md)'s
-*Why its own directory* and [CORRECTIONS.md](CORRECTIONS.md)'s *Step 5 — the merge decision*.
+quality, and every other layer already lives apart from `morph/` too; see
+[CORRECTIONS.md](CORRECTIONS.md)'s *Step 5 — the merge decision* for the full reasoning.
+
+**Not a lexicon.** The rejected alternative was importing a valency dictionary that says `pesare`
+takes a dative and `ammonire` an accusative — that would bring an external authority into a
+corpus whose whole premise is that every layer is a function of the Italian source alone. This
+layer does not do that: it is one more Layer-2-style morphological column, authored the same way
+every other Layer-2 column was — an LLM reading the Italian source and nothing else, frozen as
+TSV, round-trip checked, content-hashed. The [`../PLAN.md`](../PLAN.md) *Neutrality audit*
+invariant constrains the build prompt's *inputs* (no reference translation, no entity list, no
+external canon); a model reading case from the Italian alone meets it on the same terms `pos` and
+`deprel` already do.
 
 ## Status
 
@@ -31,7 +41,7 @@ the oblique tail (fold nothing), ran the owed `morph/`-driven chunk regeneration
 rejected two blind regenerations under a corrected prompt (two named weaknesses recorded rather
 than chased past their budget), and closed the merge decision above — no schema change, `case/`
 stays a permanent sibling directory. `--stats` reports **258 contradictions / 40 impossible
-pairings** against `dep`, recorded as measured residue. See [PLAN.md](PLAN.md) and
+pairings** against `dep`, recorded as measured residue. See
 [CORRECTIONS.md](CORRECTIONS.md) for the full history.
 
 The vocabulary and scope are **frozen**, and the
@@ -165,7 +175,7 @@ two values is precisely what a case column records — and the argument, its ref
 lesson are kept in [CORRECTIONS.md](CORRECTIONS.md)'s *The subset argument was wrong*. **Word
 forms do not decide this question; deprels do.**
 
-`ablative` is the **model's own** word for the partitive/locative oblique class; [PLAN.md](PLAN.md)
+`ablative` is the **model's own** word for the partitive/locative oblique class; the design
 anticipated `oblique`, and the census overruled it. The pilot's one real instability was where the
 boundary between `ablative`, `genitive` and `locative` falls on `ne`/`vi` — a *labeling* boundary,
 not a reading disagreement (the model was stably reading a third thing and varying in what to call
@@ -187,9 +197,27 @@ call and a unit is never split. A chunk with no pronoun is never sent.
 
 The prompt shows the passage line-numbered with every in-scope pronoun wrapped in `**…**` and
 **nothing else** — no `dep/` row, no `skel/` row, no hint that a position is disputed. That
-blindness is the design constraint the annex's whole value rests on ([PLAN.md](PLAN.md),
-*Independence*): it is what makes this a genuine **third independent read** that can indict Layer 4,
-rather than an artifact manufactured to close Layer-5 violations.
+blindness is the design constraint the annex's whole value rests on (*Independence*, below): it is
+what makes this a genuine **third independent read** that can indict Layer 4, rather than an
+artifact manufactured to close Layer-5 violations.
+
+### Independence — the design constraint that matters most
+
+Layer 5 is valuable **because the LLM's skeleton is an independent read of the same text**: a
+divergence can therefore indict Layer 4, not just the model. A case column can either strengthen
+that or destroy it, depending entirely on how it is generated.
+
+- **Wrong**: measure the disputed positions, then ask the model about *those positions*. That
+  manufactures an artifact to close violations — the failure mode
+  [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) already names (*pick the deprel the corpus uses
+  for that word, not the one that closes the violation*), applied one level up.
+- **Right**: generate case for **every pronoun in the corpus, blind** to which positions are
+  disputed, in a pass that is shown neither `dep/` nor `skel/`. The result is then a genuine third
+  independent read, and `dep` / `skel` / `case` can be adjudicated 2-of-3.
+
+This is what the build actually did (see *Status* above), and it is why a contradiction with `dep`
+is a candidate for a hand-verified Layer-4 correction round — never an automatic edit to
+`case/*.tsv`, and never a checker exemption that silences a Layer-5 violation.
 
 **The prompt matches the frozen artifact.** Two word-order rules — a relative pronoun is
 nominative only when its clause has no other subject; a verb takes at most one direct object, so a
@@ -230,8 +258,7 @@ check is **formal**, and all of them are hard:
 - `slot` — one case value per pronoun component of the Layer-2 `pos`;
 - `tag` — every value is in the closed vocabulary above, and non-empty.
 
-**There is no deterministic checker for case** and this layer does not pretend otherwise
-([PLAN.md](PLAN.md), *There is no deterministic checker for case*). Every other layer has a
+**There is no deterministic checker for case** and this layer does not pretend otherwise. Every other layer has a
 mechanical ground truth — Layer 3's spans must reproduce verbatim source substrings, Layer 4 is a
 well-formedness-checkable tree, Layer 5 has `derive_unit`. Case has none. The only cross-check that
 exists is `dep`'s `obj`/`iobj`, which is **the very judgment under adjudication**, so it is

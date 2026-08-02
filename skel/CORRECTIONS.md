@@ -171,7 +171,7 @@ selector good enough to be worth 86 is still not good enough to apply without op
 
 **The soft count went up by 5, and the round was still correct.** Recorded here because Layer 5's
 count is the thing that moved, and because the reason invalidates the ordering
-[`../case/PLAN.md`](../case/PLAN.md) gave step 4.
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md) gave step 4.
 
 The round is in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md): 11 rows over 10 positions,
 drawn from the 49 `obl` × `nominative` impossible pairings, each verified against its terzina and
@@ -198,11 +198,11 @@ The impossible pairings are, by construction, positions where `dep` and `skel` *
 `case` dissents — `case` is the third read precisely because it was authored blind. Correcting
 `dep` there breaks an existing agreement, so the count goes up whenever `case` is right and the
 other two shared an error. That is the annex doing exactly what
-[`../case/PLAN.md`](../case/PLAN.md)'s *Independence* section built it to do.
+[`../case/README.md`](../case/README.md)'s *Independence* section built it to do.
 
 ### What this changes about the remaining slices
 
-[`../case/PLAN.md`](../case/PLAN.md) ordered step 4 by "the combination neither layer can be right
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md) ordered step 4 by "the combination neither layer can be right
 about together", predicting the 49 would be the **highest-yield** slice. **That criterion was
 wrong**, and this is its measurement: 49 candidates produced 10 edits and *cost* 5 soft
 violations.
