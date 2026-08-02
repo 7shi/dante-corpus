@@ -23,9 +23,14 @@ comitative family, 41 canto artifacts, `skel` 3634 → 3633 — and the chunk re
 values. Step 5's `locative` question is settled (it is earned and stays), and **Layer 3's stale
 clitic mentions closed the same day** (5 hard / 96 soft → **0/0**, `skel` 3633 → 3635), so the one
 open item is **the `morph/` merge**. Its first item is a blind regeneration of `case` under a
-corrected prompt; **that regeneration has now run once, on 2026-08-02, and its column was measured
-and not adopted** — the frozen column was restored, the prompt was rebalanced, and the **second**
-regeneration is what the user is running next (`make -C case regen`).
+corrected prompt; **that regeneration ran twice, both on 2026-08-02, and neither column was
+adopted** — round 1 was measured and rejected, the prompt was rebalanced, round 2 was measured
+against the same four populations and also rejected (the named target rows held or rose, but the
+relative-pronoun-subject population and the global `nominative`→`accusative` census drift both
+recurred, smaller but in the same direction). Two rounds was the stated budget and the rebalance's
+own write-up forbids a third, so the frozen column (restored via `git stash`, not discarded) is
+what the merge proceeds from, **with the weakness recorded rather than chased further**. **The one
+remaining action is the merge decision itself.**
 **A session picking this up should read *Handing off* below
 first** — it carries the state check, what is closed, the one open item and what must not be done;
 then [`case/PLAN.md`](case/PLAN.md).
@@ -105,7 +110,7 @@ layers and the tests were re-measured and only `case` changed — deltas in
 |---|---|---|---|
 | 1 | ~~**Layer 3's stale clitic mentions**~~ | assistant | **done 2026-08-02 — `np --check` 5 hard / 96 soft → 0/0.** `--fix-clitics` is now symmetric (94 mentions added, 6 dropped, 43 cantos), the hard check admits only a fused host's *pronoun* lemma components, and the 2 non-clitic soft were fixed by hand. `skel` 3633 → **3635**, both at purgatorio 20:83. Described immediately below |
 | 2 | ~~**Settle `locative`**~~ | assistant | **done 2026-08-02 — it is earned and stays.** No artifact moved and the vocabulary does not change. By deprel it opens no slot, but that is the wrong test: Layer 2's `lemma` collapses `locative`/`accusative`/`dative`/`reflexive` onto one `ci`/`vi` form, so this column is the only record of which reading a given `vi` has. The round recommended folding it first and was wrong — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the `locative` question* |
-| 3 | **The `morph/` merge itself** | user next | its first item is a **blind regeneration of `case` under a corrected prompt**, fixing the two weaknesses slice 3 counted (the postposed subject, 78; the dative of possession alongside an explicit object, 24). **Round 1 ran 2026-08-02 and was not adopted; the prompt is rebalanced and round 2 is the user's** — `make -C case regen`. See *Round 2* below and [`case/PLAN.md`](case/PLAN.md)'s *The next action* |
+| 3 | **The `morph/` merge itself** | assistant next | its first item was a **blind regeneration of `case` under a corrected prompt**, aimed at the two weaknesses slice 3 counted (the postposed subject, 78; the dative of possession alongside an explicit object, 24). **Both rounds ran 2026-08-02 and neither was adopted** — round 1 broke the easy populations, round 2's rebalance held them but the target population it was meant to fix (relative-pronoun subject) and the global `nominative`→`accusative` drift both recurred, smaller. Two rounds was the budget; the frozen column stands, weakness recorded, and **the merge decision itself is what's left** — see [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *Step 5 — the second regeneration, measured and rejected* and [`case/PLAN.md`](case/PLAN.md)'s *The next action* |
 
 The case annex's steps 1–4 are all complete — the blind corpus pass finished 2026-07-31 and is
 frozen, the Layer-4 adjudication round closed 2026-08-01 with a verdict on every candidate, and
@@ -210,7 +215,7 @@ The deeper history is in *Resuming cold* below and in
 ### Confirm the state first — every figure here is a current measurement
 
 ```bash
-git status --short          # expect clean, or 100 modified case/*.tsv after round 2's run
+git status --short          # expect clean
 uv run pytest -q            # expect 142 passed
 make -C morph check         # expect 0 hard, 0 soft
 make -C np check            # expect 0 hard, 0 soft
@@ -224,23 +229,31 @@ If `case` reads 25 hard the regeneration is not in the tree; if `np` reads 5 har
 clitic reconciliation is not; if `skel` reads 3633 that same reconciliation is not, 3634 means the
 2026-08-02 `morph/` round is missing too, and 3469 means slice 3 is.
 
-Round 2's prompt and this write-up are committed; the artifact is not part of that commit, so a
-session resuming **after** the regeneration sees exactly the 100 modified `case/*.tsv` and nothing
-else. That is round 2's output, and it is the code-then-artifact order this annex has kept
-throughout.
+**Both regeneration rounds have now run, been measured, and been rejected; the tree is clean and
+holds the original frozen column.** Round 2's artifact was never committed — it was measured
+against the frozen baseline with `git show HEAD:case/…`, found to repeat round 1's failure mode
+(smaller but the same shape), and set aside with `git stash` (message *"case round2 regen output
+(measured, to be rejected)"*) rather than a plain discard, so it is recoverable but not in the
+tree. `git status --short` should read clean; if it instead shows 100 modified `case/*.tsv`, that
+stash was popped and needs re-stashing or a decision to keep it — it does not meet the verdict
+rule and was not adopted.
 
-**`case --stats` reading 258 / 40 means the frozen column, not round 2.** Round 2's numbers cannot
-be predicted from here; round 1's were 295 / 32.
-
-**The `case` build prompt has been run once, measured, and rebalanced; the artifact under `case/`
-is the original frozen column.** The 2026-08-02 regeneration is done and its result was *not*
-adopted: both new rules hit their named shapes (relative `obj` 75% → 87%, and 19 of the 27 dative-
-of-possession positions flipped) but the column as a whole drifted toward `accusative` (+156) and
-lost 76 relative-pronoun subjects and 40 dative clitics that no rule mentions. The frozen column
-was restored, `SYSTEM_PROMPT` was rebalanced, and the figures above describe the frozen column. See
-[`case/CORRECTIONS.md`](case/CORRECTIONS.md), *the blind regeneration, measured* and *the
-rebalanced build prompt*. If `--stats` reads 258 / 40 the tree is in the expected state; the open
-item is the **second** regeneration, and it is the user's to run.
+**The `case` build prompt has been run twice and rebalanced once; the artifact under `case/` is
+the original frozen column, and both rounds are done.** Round 1: both new rules hit their named
+shapes (relative `obj` 75% → 87%, and 19 of the 27 dative-of-possession positions flipped) but the
+column as a whole drifted toward `accusative` (+156) and lost 76 relative-pronoun subjects and 40
+dative clitics that no rule mentions. The prompt was rebalanced (relative pronoun starts in the
+subject slot; agreement decides both directions; a dative-clitic guard for verbs governing `a`; a
+third worked example). Round 2: the guard held the two easy populations this time (dative clitics
+no longer leaked to `accusative`) and the named target (relative `obj`) rose again (77% → 88%),
+but the population the rebalance was specifically aimed at recovering — relative-pronoun
+`nsubj` — fell again (2062/2073 → 2006/2070, −56 against round 1's −76), and the census still
+drifted `nominative` −110 / `accusative` +117 (round 1: −129/+156) — smaller, same shape. Per the
+verdict rule fixed in advance, this fails (**the target row must rise, and it fell again**), and
+per *What must not be done* below, **a third round is not run**: two was the stated budget. See
+[`case/CORRECTIONS.md`](case/CORRECTIONS.md), *the blind regeneration, measured*, *the rebalanced
+build prompt*, and *the second regeneration, measured and rejected*. **The open item is now the
+merge decision itself, with both weaknesses recorded rather than chased further.**
 
 ### What closed on 2026-08-02, and is not to be re-opened
 
@@ -276,20 +289,26 @@ work is splitting one form into several readings.
 
 | # | item | who | the first concrete action |
 |---|---|---|---|
-| 1 | **The case annex's `morph/` merge** | user next | **the first regeneration ran, was measured and was not adopted; the prompt is rebalanced (2026-08-02)**; the next action is the user's **second blind regeneration of `case`** — `make -C case regen`. The two measured weaknesses it targets are word-order rather than case: the postposed subject (**78**) and the dative of possession alongside an explicit object (**24**). The merge must also settle the **fused-token mismatch** — `case` annotates a pronoun and `dep` a token, and five contradictions are nothing but that (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*) |
+| 1 | **The case annex's `morph/` merge** | assistant next | **both regenerations have run, been measured, and been rejected (2026-08-02)**; the frozen column stands with the weakness recorded, per the verdict rule below. The two measured weaknesses were word-order rather than case: the postposed subject (**78**) and the dative of possession alongside an explicit object (**24**) — round 2's rebalance fixed the second (the easy populations held) but not the first (relative-pronoun `nsubj` still fell, −56). The merge must also settle the **fused-token mismatch** — `case` annotates a pronoun and `dep` a token, and five contradictions are nothing but that (inferno 2:81.7 *aprirmi*, 23:128.7 *dirci*; purgatorio 8:45.4 *vedervi*, 14:20.1 *dirvi*; paradiso 29:92.1 *seminarla*) |
 
 This is the annex's own next step, and nothing else is outstanding. Concretely, in order:
 
-0. **The round already run, and its verdict.** Steps 1–3 below were executed once on 2026-08-02:
-   the prompt was written, the user regenerated all 1340 chunks, and the diff was measured. The
-   column was **not adopted** — one global `accusative` drift cost more than the two rules gained —
-   the frozen artifact was restored with `git checkout -- case/inferno case/purgatorio
-   case/paradiso`, and the prompt was rebalanced (a subject-first framing for relative pronouns,
-   agreement as a two-way decider, a guard for verbs governing `a`, and a third worked example).
-   **This is one more pass of the same loop, not a new instrument.** It is also the last one that
-   can be justified: tuning the prompt and re-scoring against `dep` erodes the independence the
-   column exists for, so if the rebalanced round does not hold both populations at once, the
-   answer is to merge with the weakness recorded, not to tune again.
+0. **Both rounds already run, and their verdicts.** Steps 1–3 below were executed twice, both on
+   2026-08-02: the prompt was written, the user regenerated all 1340 chunks, and the diff was
+   measured — twice. Round 1's column was **not adopted** — one global `accusative` drift cost
+   more than the two rules gained — the frozen artifact was restored with `git checkout --
+   case/inferno case/purgatorio case/paradiso`, and the prompt was rebalanced (a subject-first
+   framing for relative pronouns, agreement as a two-way decider, a guard for verbs governing `a`,
+   and a third worked example). Round 2's column was **also not adopted** — the guard held the two
+   easy populations this time, and the named target (relative `obj`) rose again, but the
+   population the rebalance specifically targeted (relative `nsubj`) fell again (−56, smaller than
+   round 1's −76 but the same direction) and the census drift persisted (−110/+117 against round
+   1's −129/+156). The frozen artifact was set aside with `git stash`, not committed. **Two rounds
+   was the budget and both are spent — a third is not run**: tuning the prompt and re-scoring
+   against `dep` erodes the independence the column exists for, and round 2 already re-confirmed
+   the rule's own verdict criterion once. The merge proceeds from the frozen column with both
+   weaknesses recorded. See [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the second
+   regeneration, measured and rejected*.
 
 1. ~~**Assistant — write the corrected build prompt**~~ *(done 2026-08-02, rebalanced the same day)* — `case/case.py`'s
    `SYSTEM_PROMPT` gained three word-order rules (the postposed subject as a relative pronoun's
@@ -308,28 +327,18 @@ This is the annex's own next step, and nothing else is outstanding. Concretely, 
    example (inferno 3:106–108) carries two relative pronouns that both keep the subject slot with a
    noun after their verb. See [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the corrected build
    prompt* and *the rebalanced build prompt*.
-2. **User — the blind regeneration** *(round 1 done 2026-08-02 and rejected; this is round 2)*:
-   `make -C case regen CANTICLES=inferno` (one shell per
-   canticle, 3-way parallel), then `make -C case check` to 0 hard. LLM-scale, the same convention
-   as `make -C skel fix`. `regen` is a **new target**: it drops the artifacts and rebuilds, where
-   `clean` would remove nothing — after a prompt change no chunk holds a *violation*. Three things
-   a session picking this up must know:
-   - **It is the whole column, 1340 chunks, the size of step 3's corpus pass.** Regenerating only
-     the chunks matching the two shapes would select the generated population by a `dep`-derived
-     criterion — the manufacturing *Independence* forbids — and would make the before/after
-     `--stats` incomparable. The frozen column is committed, so `git checkout case/` is the undo
-     and `git show HEAD:case/…` gives the old rows for the diff.
-   - **Smoke-test one canto first** (`cd case && rm -f inferno/04.tsv && uv run case.py inferno
-     -c 4 -m google:gemma-4-31b-it`), as step 3 did with Inferno 1 — that test is what caught the
-     missing `reflexive` value before the corpus pass was spent.
-   - **Resume with the plain build target, not `regen`.** `regen` deletes; re-running it after an
-     interruption throws the run away.
-3. **Assistant — re-measure and diff.** The question the round answers is whether the two prompt
-   fixes move those two shapes **without moving anything else**, not whether the total falls. The
-   headline (`make -C case stats`) is not the answer; round 1 proved that by improving both named
-   shapes while getting worse overall. Do the measurement in *How to measure round 2* below.
-4. **Then the merge decision itself**, which must settle the **fused-token mismatch** — a merge
-   into `morph/*.tsv` forces one row per token, and `case` annotates a pronoun.
+2. ~~**User — the blind regeneration**~~ *(round 1 done 2026-08-02 and rejected; round 2 done
+   2026-08-02 and also rejected)* — both ran the whole column, 1340 chunks, never narrowed to the
+   two named shapes (which would select the generated population by a `dep`-derived criterion,
+   the manufacturing *Independence* forbids). Round 2's artifact is in `git stash`, not the tree.
+3. ~~**Assistant — re-measure and diff**~~ *(done 2026-08-02, both rounds)* — round 2's four
+   populations and census are in [`case/CORRECTIONS.md`](case/CORRECTIONS.md)'s *the second
+   regeneration, measured and rejected*, using the recipe in *How to measure round 2* below.
+4. **Then the merge decision itself — the next and only remaining action.** It must settle the
+   **fused-token mismatch** — a merge into `morph/*.tsv` forces one row per token, and `case`
+   annotates a pronoun — and carry forward the two recorded weaknesses (the postposed
+   relative-pronoun subject; the diffuse `nominative`→`accusative` pull) as known residue rather
+   than something a third regeneration round would chase.
 
 ### How to measure round 2 — the exact comparison
 
@@ -364,13 +373,21 @@ here first and most clearly, as a single global drift (`accusative` +156 drawn o
 **The verdict rule, fixed in advance so the numbers cannot be read to taste**: adopt only if the
 two target populations rise **and** the two others hold within a few positions of the frozen
 figures. If the round trades one against the other again, **do not tune the prompt a third time** —
-restore the frozen column (`git checkout -- case/inferno case/purgatorio case/paradiso`) and take
-the merge with the weakness recorded, per item 0 above. Round 1's own numbers and the reasoning
-behind this rule are in [`case/CORRECTIONS.md`](case/CORRECTIONS.md), *the blind regeneration,
-measured* and *the rebalanced build prompt*.
+restore the frozen column and take the merge with the weakness recorded, per item 0 above. Round
+1's own numbers and the reasoning behind this rule are in [`case/CORRECTIONS.md`](case/CORRECTIONS.md),
+*the blind regeneration, measured* and *the rebalanced build prompt*.
 
-**Round 1's regenerated column was not preserved** — only its measurements, in that file. If round
-2 is also rejected, there is nothing to compare it against but those figures.
+**This is exactly what happened.** Round 2 rose the named target (relative `obj`, 77%→88%) and
+held the two easy populations, but the population the rebalance was built to recover — relative
+`nsubj` — fell again (−56) and the census kept drifting `nominative`→`accusative` (−110/+117,
+against round 1's −129/+156). The rule's own criterion says reject, so round 2's artifact was set
+aside with `git stash` (message *"case round2 regen output (measured, to be rejected)"*, recoverable
+but not in the tree) rather than `git checkout`, since a stash keeps the option to inspect it later
+without re-running the LLM pass. **No third round follows** — see *the second regeneration,
+measured and rejected* in [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full numbers.
+
+**Round 1's regenerated column was not preserved** — only its measurements, in that file. Round
+2's *is* preserved, in the stash noted above, should its exact rows ever be wanted for inspection.
 
 There is one **deliberately open Layer-3 question** left over from 2026-08-02, and it blocks
 nothing: the **160 `+lemma` spans on ordinary single-token pronouns in Inferno 18 and 23**, a
@@ -392,10 +409,12 @@ above before touching them.
   recorded rather than argued away: the rebalance's dative-verb guard was prompted by noticing
   *which* positions round 1 broke, which is a `dep`-derived observation about the prompt even
   though the lexical class it names is a fact of Italian.
-- **Do not tune the prompt a third time.** Two rounds is the budget, and the reason is not
-  patience: choosing prompt wording by re-scoring against `dep` turns `case` into a column fitted
-  to Layer 4, which is precisely the independence that makes its dissent worth anything. If round 2
-  does not hold all four populations at once, the answer is the merge with the weakness recorded.
+- **Do not tune the prompt a third time — both rounds are spent and round 2 also failed the
+  verdict rule.** Two rounds was the budget, and the reason is not patience: choosing prompt
+  wording by re-scoring against `dep` turns `case` into a column fitted to Layer 4, which is
+  precisely the independence that makes its dissent worth anything. Round 2 held the two easy
+  populations but its own named target (relative `nsubj`) fell again and the census kept drifting;
+  the answer is the merge with both weaknesses recorded, not a third attempt.
 - **Do not run another Layer-4 slice over them.** All 510 original candidates have a verdict, and
   the two slices that sampled this configuration found `case` was the wrong read 24% and 53% of
   the time. The next instrument is the regeneration.
@@ -779,9 +798,12 @@ discipline already used for normalization and quotes.
    `case --check` at 25 hard, since regenerated back to **0 hard**; with `locative` settled and
    Layer 3's clitic mentions reconciled (which took Layer 5 to **3635**), the
    one open item is step 5's `morph/` merge. Its first item, the blind regeneration under a
-   corrected prompt, **ran on 2026-08-02 and was rejected** — both new rules hit their named shapes
-   but the column drifted globally toward `accusative`, so the frozen column was restored and the
-   prompt rebalanced; **round 2 is the user's to run, and is the last one budgeted**. The code and
+   corrected prompt, **ran twice, both on 2026-08-02, and both rounds were rejected** — round 1's
+   new rules hit their named shapes but the column drifted globally toward `accusative`, so the
+   prompt was rebalanced; round 2 held the two easy populations but its own named target (the
+   relative-pronoun subject) fell again and the census kept drifting, smaller but the same shape.
+   Two rounds was the budget and both are spent, so **the frozen column stands, both weaknesses
+   recorded, and the merge decision itself is the one remaining action**. The code and
    the artifact are committed **in that order, deliberately** — see *Resuming cold* above.
 
 Build alongside the existing assets, gate each layer on its checks, then expose through the API.
@@ -791,6 +813,8 @@ is blocking**, and the one open item is the case annex's `morph/` merge. The ann
 passed, its corpus pass is complete and frozen, its Layer-4 adjudication round is complete, its
 owed `morph/` correction round is closed and regenerated, both of step 5's analysis sub-items —
 the oblique tail and `locative` — are settled, and Layer 3's stale clitic mentions are back to
-0/0. The merge's first item — the blind regeneration — is one round in, rejected, and rebalanced
-for a second and final round. See *Handing off* immediately below, and *How to measure round 2*
+0/0. The merge's first item — the blind regeneration — ran both of its budgeted rounds and both
+were rejected against the verdict rule fixed in advance; the frozen column stands with the
+weakness recorded, and what is left is the merge decision itself. See *Handing off* immediately
+below, and *How to measure round 2*
 within it for what a session resuming after that run should do first.

@@ -1478,3 +1478,76 @@ touched. `case --check` is 0 hard over the frozen column and `pytest` is 142 pas
 action is again the user's — `make -C case regen`, one shell per canticle, with the same
 smoke-test-one-canto-first advice as before; the regenerated column measured here is not in the
 tree and does not need to be restored.
+
+## Step 5 — the second regeneration, measured and rejected *(2026-08-02)*
+
+The user ran `make -C case regen` a second time, over all 1340 chunks under the rebalanced
+`SYSTEM_PROMPT`. The new column was `0 hard` over the same 13125 tokens / 13189 values. This is
+the re-measurement the rebalance owed — round 2 of the two the merge's *Handing off* section
+budgeted — and, per the verdict rule fixed in advance, it is also the last one.
+
+### The four populations, against the same frozen baseline
+
+Scratch analysis (not kept, per round 1's own precedent — the recipe is in *How to measure round
+2* in `PLAN.md`), joining `case` (frozen = `git show HEAD:case/…`, before this round; regenerated
+= the round-2 output), `dep`, restricted to positions where the case value carries a
+`nominative`/`accusative`/`dative` reading (the same `_CORE` filter `case.py --stats` itself
+applies, so a purely `reflexive`/oblique-tagged position is dropped from the count rather than
+scored as a miss):
+
+| population | frozen | round 2 |
+|---|---|---|
+| relative pronoun, `dep=nsubj` (want `nominative`) | 2062/2073 (99%) | **2006/2070 (97%) −56** |
+| relative pronoun, `dep=obj` (want `accusative`) | 320/414 (77%) | **366/417 (88%) +46** |
+| clitic, `dep=iobj` (want `dative`) | 581/598 (97%) | 585/605 (97%) +4 |
+| clitic, `dep=obj` (want `accusative`) | 517/555 (93%) | 523/560 (93%) +6 |
+
+The two easy populations (rows 3–4, the ones round 1 broke) **held** this time — the guard added
+in the rebalance (a dative clitic no longer needs a second object to license it) worked, and
+round 1's 40-position `dative → accusative` leak on verbs governing `a` did not reappear. The named
+target, relative-pronoun `obj`, **rose again**, by almost exactly round 1's margin (+46 against
++52). But the population the rule is framed to protect — relative-pronoun `nsubj`, the "starts in
+the subject slot" reading the rebalance was written to restore — **fell again**, by −56 against
+round 1's −76. Less than round 1, but the same direction, on the same population, after the
+rebalance was specifically aimed at reversing it.
+
+### The census — the drift shrank, it did not stop
+
+| | frozen | round 2 |
+|---|---|---|
+| `nominative` | 5621 | 5511 (−110) |
+| `accusative` | 1999 | 2116 (+117) |
+| `dative` | 1410 | 1436 (+26) |
+| `genitive` | 267 | 248 (−19) |
+| `ablative` | 1819 | 1826 (+7) |
+| `locative` | 81 | 76 (−5) |
+| `vocative` | 30 | 28 (−2) |
+| `reflexive` | 1962 | 1948 (−14) |
+
+Round 1's global shift was `nominative` −129 / `accusative` +156. Round 2's is −110 / +117 — the
+rebalance cut the drift by roughly a sixth, but did not close it, and the *shape* of the failure
+is identical: value pulled out of `nominative` and into `accusative` across the whole column, not
+confined to the two rules' named positions. The verdict rule this session inherited was written
+for exactly this outcome: **"adopt only if the two target populations rise and the two others
+hold within a few positions of the frozen figures."** Row 3–4 hold. Row 2 (the named target) rose.
+Row 1 — the *other* target the rebalance's first change was aimed at (the relative pronoun
+"starts in the subject slot") — fell, and a −110/+117 census line is not "nearly still" by the
+comparison the rule itself set up against round 1's −129/+156.
+
+### Verdict — reject, and this is the last round
+
+**The rebalanced column was measured and not adopted.** `git stash` holds the round-2 artifact
+(message *"case round2 regen output (measured, to be rejected)"*) rather than discarding it
+outright, but it is not part of the tree and the frozen column (`case --stats`: 258 contradictions
+/ 40 impossible pairings) is what `main` and any future session sees. Per *What must not be
+done* in `PLAN.md`: **do not tune the prompt a third time.** Two rounds were the stated budget,
+for the reason given there — choosing prompt wording by re-scoring against `dep` is exactly the
+fitting-to-Layer-4 that would make `case`'s independence worthless, and a third round would be
+that regardless of outcome.
+
+**What this settles for the merge**: the frozen column carries two measured weaknesses, unchanged
+by two regeneration attempts — the postposed relative-pronoun subject (the rule that fires
+correctly on `dep=obj` overshoots onto `dep=nsubj` every time it's tried) and, more diffusely, a
+persistent pull of the whole column toward `accusative`. Both are now **recorded, not chased
+further**; the merge proceeds from the frozen artifact with the weakness noted, per item 0 in
+*The one open item* in `PLAN.md`.
