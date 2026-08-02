@@ -1359,3 +1359,122 @@ disagreements elsewhere is a better column and a worse number, exactly as slice 
 **Nothing licenses editing `dep/` from the new column without the same hand verification.** Step
 4's rate stands: outside the population where `skel` already dissents from `dep`, the `case`
 column was the wrong read 53% of the time.
+
+## Step 5 — the blind regeneration, measured *(2026-08-02)*
+
+The user ran `make -C case regen` over all 1340 chunks with the corrected `SYSTEM_PROMPT`. The new
+column is `0 hard` over the same 13125 tokens / 13189 values, and **791 values changed**. This
+section is step 3 of the open item — the re-measurement — and it is a measurement only: no row was
+edited by hand, and the merge decision it feeds is still open.
+
+### The headline, which is not the answer
+
+| | frozen | regenerated |
+|---|---|---|
+| contradictions | 258 | **295** (+37) |
+| impossible pairings | 40 | **32** (−8) |
+| `dep=obj` (accusative) | 90% | 93% |
+| `dep=iobj` (dative) | 97% | 93% |
+| `dep=nsubj` (nominative) | 99% | 98% |
+
+### The two shapes, counted directly
+
+The rule was supposed to teach a *discrimination*, so the test is both populations at once — the
+one the rule was meant to move and the one it was meant to leave alone.
+
+| population | n | frozen | regenerated |
+|---|---|---|---|
+| relative pronoun, `dep=obj` (want `accusative`) | 433 | 325 (75%) | **377 (87%)** +52 |
+| relative pronoun, `dep=nsubj` (want `nominative`) | 2075 | 2062 (99%) | **1986 (96%)** −76 |
+| clitic, `dep=iobj` (want `dative`) | 588 | 549 (93%) | 534 (91%) −15 |
+| clitic, `dep=obj` (want `accusative`) | 726 | 447 (62%) | 454 (63%) +7 |
+
+1. **The postposed subject moved, and overshot.** The hard population gained 52 of 433 — the rule
+   fires and it fires on the right shape. But the easy population lost 76 of 2075, and 70 of the 85
+   newly introduced `accusative × nsubj` contradictions are `che`. The rule did not stay a
+   discrimination; on a relative pronoun it shifted the default. Four of the losses were read
+   against the text and all four are `case`-side errors, not `dep`-side ones: inferno 3:108
+   *ch'attende ciascun uom* (the bank awaits the man), 3:134 *che balenò una luce vermiglia*,
+   2:46 *la qual molte fïate l'omo ingombra*, 5:24 *ciò che si vuole*. Every one is the shape the
+   rule names — a noun after the verb — with the relative still the subject.
+2. **The dative of possession fired, and the net still fell.** On the population the rule names —
+   the frozen column's `accusative × dep=iobj`, 27 positions — **19 flipped to `dative`**, including
+   every one slice 3 quoted by name (*li percosse l'epa croia*, *mi batté l'ali per la fronte*,
+   *t'ascondeva la giustizia viva*). The rule works. But 40 *other* `iobj` clitics went `dative` →
+   `accusative`, and those are not ambiguous: *li rispuosi*, *mi 'nsegni*, *se ben vi ricorda*, *li
+   fallia la lena*, *mi comandò* — verbs that govern `a`. Nothing in the new rules asks for that
+   move.
+
+### The mechanism is one global shift, not two mis-scoped rules
+
+The census says it plainly:
+
+| | frozen | regenerated |
+|---|---|---|
+| `nominative` | 5621 | 5492 (−129) |
+| `accusative` | 1999 | **2155 (+156)** |
+| `dative` | 1410 | 1367 (−43) |
+| `genitive` | 267 | 242 (−25) |
+
+Both new rules hit their named shapes (relative `obj` +52, dative of possession 19 of 27). What
+sank the round is a **prior shifted toward `accusative`** across the whole column, drawn out of
+`nominative` and `dative` — and every loss above is that shift, not a rule firing where it should
+not. The likely cause is the shape of the addition rather than its content: three rules and a
+second worked example that all argue *against* a nominative reading, with the example's most
+salient answer being `che` = `accusative`. The prompt now spends most of its word-order text
+making the case for one value.
+
+The `−8` on impossible pairings is real and is the round's other gain: `nominative` on a `dep=obl`
+pronoun is the one pairing no reading reconciles.
+
+### What this licenses
+
+**The frozen column was restored** (`git checkout -- case/inferno case/purgatorio case/paradiso`);
+`case --stats` reads 258 / 40 again, and the regenerated column survives only as this measurement.
+Adopting it was not on the table once the mechanism was clear: it buys 52 + 19 correct moves on two
+named shapes and pays 76 + 40 for them on populations the rules never mention.
+
+What the round settles is that **both rules are right and the prompt around them is unbalanced**.
+That is a repairable fault and it is repaired in the prompt, not in the artifact — see *The
+rebalanced build prompt* below.
+
+### The rebalanced build prompt *(2026-08-02)*
+
+The diagnosis above says the two rules are sound and the prompt around them leans. So the revision
+changes the *framing* and adds one guard; it does not withdraw either rule.
+
+1. **The relative pronoun now starts in the subject slot and has to be argued out of it.** The
+   previous wording — "nominative only when its clause has no other subject" — makes nominative
+   the exception and hands the model a trigger (a noun after the verb) that is far commoner than
+   the reading it licenses. The corpus settles the direction: a relative pronoun whose clause puts
+   an object noun after it is **nominative in 738 positions and accusative in 51** where `case` and
+   `dep` agree. The postposed noun is therefore evidence *for* the subject reading, and the rule
+   now says so. Moving the relative to the object requires naming the postposed noun as the thing
+   the verb agrees with **and** as something that can perform the action.
+2. **Agreement is promoted from an afterthought to a decider, in both directions.** It was there
+   only as "a singular verb cannot have a plural relative as its subject". Added: a
+   second-person verb (*che spandi di parlar sì largo fiume*) fixes the subject as the addressee
+   whatever noun follows.
+3. **A dative clitic no longer needs a second object to license it.** This is the guard for the 40
+   spilled positions. The one-direct-object rule is stated as a sufficient condition for `dative`
+   and the column read it as a necessary one, so clitics of verbs governing `a` — with no other
+   object anywhere — fell to `accusative`. The rule now names the class: *rispondere, insegnare,
+   piacere, parere, nuocere, ricordare, fallire*.
+4. **A third worked example**, inferno 3:106–108, carrying two relative pronouns that both keep
+   the subject slot with a noun after their verb (*ch'attende ciascun uom che Dio non teme*). The
+   two existing examples split 1–1 between the readings but the rule text argued in one direction
+   only; this is the counterweight, and it is one line rather than a passage.
+
+**The selection discipline holds, with one dependency named.** Every illustration is a position
+where the frozen column and `dep` already agree — the subject-side ones were swept out of the 738,
+the dative ones out of `dative × iobj` with no object in the line. What *is* new is that the
+lexical class in (3) was noticed because the regenerated column got those positions wrong, which
+is a `dep`-derived observation one level up. The class itself is a fact of Italian and not of any
+layer, and no disputed position is quoted or pre-answered; the dependency is recorded here rather
+than argued away.
+
+**Nothing else moved**: the vocabulary is unchanged, all eight values stay, and no artifact row was
+touched. `case --check` is 0 hard over the frozen column and `pytest` is 142 passed. The next
+action is again the user's — `make -C case regen`, one shell per canticle, with the same
+smoke-test-one-canto-first advice as before; the regenerated column measured here is not in the
+tree and does not need to be restored.
