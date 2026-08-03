@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-03: `make -C skel check` reports **0 hard, 3465 soft** violations across
+Status as of 2026-08-03: `make -C skel check` reports **0 hard, 3545 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -63,7 +63,7 @@ the `--fix` round are the most recent `skel:`/`dep:` entries in `git log`, and n
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3465 soft
+make -C skel check      # expect: 0 hard, 3545 soft
 make -C dep check       # expect: 0 hard, 0 soft  (Phases 5i, 5n, 5p and 5r edited dep artifacts)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
 uv run pytest -q        # expect: 149 passed
@@ -159,13 +159,15 @@ accusatives) both need a Layer-2 case feature or a clitic lexicon. The project h
 preferred a structural check to a lexicon (the control-subject authority model, Phase 2), so
 neither is opened here.
 
-**A wider Layer-4 finding, not acted on**: corpus-wide, **231** predicates carry two or more
-`obj` children — 84 with a clitic, 147 without. The non-clitic majority splits into flattened
-coordinations (`Ali hanno late, e colli e visi umani`) and object complements (`mi chiamaste
-Ciacco`, `li chiama orbi`), the latter being exactly what skel's rule M already accepts
-checker-side. A dep `--check` rule for "at most one `obj` per predicate" would put Layer 4 at
-231 soft; opening it is its own round, and it would need the coordination half re-attached
-(`conj`) rather than exempted.
+**A wider Layer-4 finding — acted on 2026-08-03, closed**: corpus-wide this measurement found
+**231** predicates carrying two or more `obj` children (84 with a clitic, 147 without), split
+into flattened coordinations (`Ali hanno late, e colli e visi umani`) and object complements
+(`mi chiamaste Ciacco`, `li chiama orbi`). The `case` annex's Steps 6-9 then closed 28 of them
+incidentally, and the round that opened the rule found **203**. All 203 are corrected; the rule
+is now part of `dep --check` and Layer 4 is back at 0 soft. See
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)'s *The "at most one `obj` per predicate" rule*.
+Note the label the round settled on for object complements: **`attr`**, not `xcomp` — `xcomp` is
+a `CLAUSE_HEAD_DEPRELS` member and would make `derive_unit` invent a predicate for an adjective.
 
 **How to regenerate any of these populations** (the measurement scripts were throwaways; see
 *How to measure a candidate rule* below): keep the violations whose detail starts with

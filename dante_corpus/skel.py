@@ -134,6 +134,16 @@ class SkelTuple:
 
 # --- Predicate / argument derivation (deterministic; the checker, not the author) --------
 
+
+def is_verb_pos(pos: str) -> bool:
+    """True when a Layer-2 `pos` names `verb` as one of its components.
+
+    A plain substring test would match **`adverb`**: Layer 2's `pos` is a `+`-joined list of
+    components (`verb`, `adverb`, `verb+pronoun`, `conjunction+pronoun+verb`), so the test has to
+    be on component boundaries."""
+    return "verb" in re.split(r"[^a-z]+", pos.lower())
+
+
 # A token is a predicate if it is a clause head (rule 1) or a non-auxiliary verb that itself
 # takes an argument-bearing dependent (rule 2) — see the module docstring and PLAN.md. Both
 # rules are UD-deprel-driven so they cover the corpus's two frozen copular styles alike: a
@@ -282,7 +292,7 @@ def derive_unit(
         if pos in predicate_positions:
             continue
         morph = morph_at(row.line, row.token)
-        if morph is None or "verb" not in morph.pos.lower() or row.deprel in _AUX_DEPRELS:
+        if morph is None or not is_verb_pos(morph.pos) or row.deprel in _AUX_DEPRELS:
             continue
         if any(c.deprel in ARG_DEPRELS for c in children.get(pos, ())):
             predicate_positions.add(pos)
@@ -738,7 +748,7 @@ def _clausal_object(
     the tree carried an explicit `ccomp` deprel and the LLM flattened it, which stays flagged."""
     if not (grole == "ccomp" and drole in ("obj", "subj")):
         return False
-    return "verb" in (morph_pos_by_position or {}).get(arg, "").lower()
+    return is_verb_pos((morph_pos_by_position or {}).get(arg, ""))
 
 
 def _predicative_complement(grole: str, drole: str) -> bool:
@@ -864,7 +874,7 @@ def _classify_divergence(
         if dep_row is None or dep_row.deprel not in _ELIDED_COPULA_DEPRELS:
             return False
         pos_tag = morph_pos_by_position.get(pos, "")
-        return "verb" not in pos_tag.lower()
+        return not is_verb_pos(pos_tag)
 
     def _aux_of_derived_predicate(pos: tuple[int, int]) -> bool:
         # The LLM names the auxiliary/modal/copula as the predicate ("Molti *son* li animali",

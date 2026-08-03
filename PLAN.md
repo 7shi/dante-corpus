@@ -2,15 +2,55 @@
 
 ## Handoff (2026-08-03) — resume here
 
-**Everything is committed** (Phase 5r is the newest commit; Step 9 = `0dca943` before it). Checks
-at commit time: `dep --check` 0 hard/0 soft, `case --check` 0 hard, `skel --check` 0
-hard/**3465** soft, `np --check` 0/0, `pytest` 149 passed. If `git status` shows anything
-uncommitted when this session resumes, that is new work from *after* this handoff was written —
-check `git log` before assuming otherwise.
+**Everything is committed** (the Layer-4 multiple-`obj` round is the newest work; Phase 5r =
+`b7b51b8` before it). Checks at commit time: `dep --check` 0 hard/0 soft, `case --check` 0 hard,
+`skel --check` 0 hard/**3545** soft, `np --check` 0/0, `pytest` 154 passed. If `git status` shows
+anything uncommitted when this session resumes, that is new work from *after* this handoff was
+written — check `git log` before assuming otherwise.
 
-**Nothing is open.** The `case`/`dep` contradiction rounds (Steps 6-9, below) and the
-`case`-driven `skel` checker rule they enabled (Phase 5r, below) are all spent. Every route any
-of the five layers' plans opened has a measured verdict.
+**Nothing is open.** The last route either plan named — the `dep` "at most one `obj` per predicate"
+rule — was opened and closed in this session (below). Every route any of the five layers' plans
+opened now has a measured verdict.
+
+### What the multiple-`obj` round did (2026-08-03, this session)
+
+The one remaining named task in *If a next task is wanted* below. Full write-ups in
+[`dep/CORRECTIONS.md`](dep/CORRECTIONS.md), [`case/CORRECTIONS.md`](case/CORRECTIONS.md) and
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
+
+- **A new `dep` soft check**: a predicate carrying more than one `obj` child. It flagged **203**
+  predicates (not the 231 the earlier note estimated — the `case` annex's Steps 6-9 had already
+  closed 28 of them). All 203 were read against their terzine and corrected: **316 row edits**,
+  nothing left alone. `dep --check` 203 → **0 soft**.
+  - The recurring families: later conjuncts re-attached with `conj` (88), secondary predicates over
+    an object relabelled **`attr`** (63 — *not* `xcomp`, which is a `CLAUSE_HEAD_DEPRELS` member and
+    would make Layer 5 derive a predicate for an adjective), reflexive clitics → `expl` (22),
+    partitive/locative `ne`/`vi` → `obl` (27), clitic datives → `iobj` (9), and UD's
+    promoted-conjunct + `orphan` treatment for gapping (14).
+- **Eleven `case` rows corrected** — ten of them positions the retags moved into fresh contradiction
+  with the annex, where the annex was the wrong side every time. `--stats` contradictions 32 →
+  **31**, impossible pairings **26** unchanged.
+- **A latent Layer-5 bug**: `"verb" in pos.lower()` also matches **`adverb`**, so `derive_unit`'s
+  rule 2 had been promoting adverbs to predicates (plus two smaller sites). Fixed with a shared
+  `is_verb_pos`.
+
+**Layer 5's soft count went up, 3465 → 3509 → 3545**, and both moves are the checker becoming more
+honest rather than a regression — see the *A note on Layer 5's count* paragraph below before
+treating it as something to undo.
+
+### A note on Layer 5's count
+
+The standing goal is Layer 5's soft residue at **0**
+([[project_skel_soft_violations_goal]]). This session's work moved it the other way, on purpose,
+and the reasoning should not be re-litigated from the number alone:
+
+- `derive_unit` reads Layer 4. Where the LLM had agreed with a **wrong** `obj`, correcting Layer 4
+  turns a spurious agreement into a real disagreement (+44). `missing_arg` actually **fell** 50.
+- The `adverb` bug had been inventing derived predicates that happened to match 72 LLM tuples.
+  Removing it surfaces them as `extra_tuple` (+36 net).
+
+Both populations are now **`--fix` material** — LLM-authored artifact rows that no deterministic
+rule can settle — and `--fix` is **user-run** work. Do not "fix" either by reverting the checker.
 
 ### What Phase 5r did (2026-08-03, this session)
 
@@ -97,22 +137,24 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-Nothing is open, and neither route below is recommended over leaving the corpus where it is.
+Nothing is open. The `dep` "at most one `obj` per predicate" rule this section used to name was
+opened and closed on 2026-08-03 (see the handoff). One route remains, and it is not the
+assistant's to run:
 
-- **A `dep` `--check` rule for "at most one `obj` per predicate"**: corpus-wide 231 predicates
-  violate it (84 with a clitic, 147 without); it is its own round and needs the coordination half
-  re-attached as `conj` rather than exempted — see [`skel/PLAN.md`](skel/PLAN.md) section 1's
-  *A wider Layer-4 finding*.
 - **Another `--fix` regeneration pass**: measured at 0.086 violations per call in Phase 5q, so
   ~1600 calls for ~130, and it is **user-run** work (`make -C skel fix`, run 3-way parallel);
-  checker-side and audit work is the assistant's.
+  checker-side and audit work is the assistant's. It is also the only instrument left for the two
+  populations the 2026-08-03 round added to Layer 5's count (see *A note on Layer 5's count*):
+  both are LLM-authored artifact rows, not rule material.
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and its soft residue is **3465** (down from 17438 at the
-first full-corpus measurement; Phase 5r's rule U and its hand round took the last 168) — every
-route the Phase 5 plan opened has a measured verdict and none is open (see
+checker was refined through Phases 0-5r and its soft residue is **3545** (down from 17438 at the
+first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, and Layer 4's
+multiple-`obj` round plus the `adverb` bug fix moved it back up to 3545 — see the handoff's *A note
+on Layer 5's count*) — every route the Phase 5 plan opened has a measured verdict and none is open
+(see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
 [`skel/README.md`](skel/README.md) for the design and current status.
 
@@ -151,7 +193,7 @@ cantos, every route any of their plans opened has a measured verdict, and everyt
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3465 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3545 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -372,7 +414,7 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r
-   (`--check`: 0 hard / 3465 soft). Phase 5 closed with every route measured; see
+   (`--check`: 0 hard / 3545 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

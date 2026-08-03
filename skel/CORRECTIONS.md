@@ -1,5 +1,43 @@
 # skel — Layer 5 correction history
 
+## The `"verb" in pos` bug: `adverb` matched too — 3509 → 3545, +36 (2026-08-03)
+
+Found while wiring Layer 4's new *at most one `obj` per predicate* rule
+([`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md), same date). Layer 2's `pos` is a `+`-joined
+list of components (`verb`, `verb+pronoun`, `adverb`, `conjunction+pronoun+verb`), and three
+places in `skel.py` tested it with a plain substring — **`"verb" in "adverb"` is `True`**, so every
+adverb in the corpus was being read as a verb:
+
+- `derive_unit`'s **rule 2** ("a non-auxiliary *verb* that itself takes an argument-bearing
+  dependent") was promoting adverbs to predicates. The comment above `CLAUSE_HEAD_DEPRELS` says
+  *verb*; the code did not.
+- `_ccomp_over_a_verbal_argument` (rule for a given `ccomp` against a derived `obj`/`subj`) was
+  accepting an adverbial argument as verbal.
+- The elided-copula whitelist's "predicate is not a verb" gate was excluding adverbs from a
+  whitelist meant to cover exactly the non-verbal predicates.
+
+Fixed by a shared `is_verb_pos(pos)` that splits on non-letters and tests for a `verb`
+**component**; two tests pin it (`adverb` and `preposition+adverb` are not verbs, `adverb+verb` and
+`conjunction+pronoun+verb` are).
+
+**The count goes up, and every component of the move is an improvement.** By kind: `extra_arg`
+1709 → **1687** (−22), `missing_arg` 1156 → **1151** (−5), `role_mismatch` 362 → **360** (−2),
+`missing_tuple` 45 → **38** (−7), `argument` **92** unchanged — and `extra_tuple` 145 → **217**
+(+72). The +72 are positions where the LLM proposes a comparative or exceptive **adverb** as a
+predicate and the derivation, no longer buggy, does not: *non men che saver* (inferno 11:93),
+*similemente a colui* (13:112), *fuor che ' demon duri* (14:44), *più di me degna* (1:122), *qui si
+nuota altrimenti che nel Serchio* (21:49). Each is an adverb carrying its own comparative standard
+as an `obl` child. An adverb is not a predicate in a UD-derived role vocabulary, so all 72 are real
+LLM divergences the bug had been silently absorbing by inventing a matching derived tuple. They are
+`--fix` material (LLM-authored artifact), not rule material.
+
+Left alone deliberately: the corpus is **not** re-checked for whether those `obl` standards should
+attach to the adverb or to the clause head. Both are attested; the rule does not care; and moving
+them would be a separate round.
+
+`skel --check`: 0 hard, **3545** soft. `dep --check` 0/0, `case --check` 0 hard, `np --check` 0/0,
+`pytest` 154 passed.
+
 ## Phase 5r: rule U — the `case` annex as a third read — 3633 → 3465, −168 (2026-08-03)
 
 Phase 5's closing position parked its largest remaining reading-disagreement population with an
