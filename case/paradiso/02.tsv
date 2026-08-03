@@ -116,7 +116,7 @@ line	token	word	case
 122	2	tu	nominative
 124	6	io	nominative
 125	6	che	accusative
-130	4	cui	dative
+130	4	cui	accusative
 131	5	che	nominative
 131	6	lui	accusative
 132	5	fassene	ablative

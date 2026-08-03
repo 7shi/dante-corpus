@@ -1855,3 +1855,107 @@ and correctly left alone) and family F (entangled/Layer-2-blocked, also correctl
 follow-up batch should apply the same per-position terzina check to those shapes; the transitivity
 test used for slice 2's original 40-row dative family (does the head verb already carry an
 explicit object?) is the natural starting heuristic for the `dative`-vs-`obj` shape.
+
+## Step 8 — `dative`-vs-`nsubj`, `accusative`-vs-`iobj`, `dative`-vs-`obj` (2026-08-03)
+
+Continuing Step 7's per-shape sweep of the named residue: the three smaller contradiction shapes
+(`dative`-vs-`nsubj`, `accusative`-vs-`iobj`, `dative`-vs-`obj` — 8 + 12 + 24 = 44 candidates) were
+each opened against their terzina, read individually, and a plain transitivity test applied where
+the verb's argument structure decided it: **does the head verb already have an explicit object
+filled?** If yes, the flagged pronoun is genuinely the second (dative/indirect) argument and
+`case`'s reading is right — a `dep` retag is due instead. If no, the flagged pronoun is the verb's
+sole complement and takes the verb's basic (accusative/direct-object) valency, so `case`'s dative
+read was simply wrong. `accusative`-vs-`iobj` mirrors the same test in the other direction: a
+flagged pronoun tagged `iobj` by `dep` next to an already-filled object is genuinely dative, not
+accusative.
+
+**33 `case` corrections — dative read simply wrong, fixed to the verb's basic valency:**
+
+- **19 → `accusative`** (verb's sole complement, ordinary transitive object): inferno 9:102.3
+  *cui... stringa e morda*, 13:84.7 *m'accora*, 17:77.6 *m'avea 'mmonito*, 20:97.2 *t'assenno*,
+  29:36.4 *m'ha... fatto*; purgatorio 7:102.2 *cui... pasce*, 10:47.6 *che m'avea*, 13:93.8
+  *s'i' l'apparo*, 18:4.3 *cui... frugava*, 18:96.1 *cui... cavalca*, 27:108.5 *me... appaga*;
+  paradiso 2:130.4 *cui... fanno bello*, 14:48.4 *a lui veder* (the fronted infinitive-marker `a`
+  governs `veder`, not `lui` — `lui` is `veder`'s direct object), 19:90.4 *lui cagiona*, 20:62.3
+  *cui... plora*, 21:57.7 *t'ha posta*, 22:55.2 *m'ha dilatata*, 28:48.2 *m'avrebbe... sazio*
+  (factitive *avere*+adjective, same shape as *fare*+adjective), 30:140.3 *v'ha... fatti simili*.
+- **2 → `reflexive`** (an inherently pronominal verb, not a true dative/accusative argument):
+  inferno 26:12.7 *m'attempo* (*attemparsi*, "to age" — obligatory reflexive, no independent
+  referent), purgatorio 13:108.5 *che sé... presti* (*prestarsi a*, "to lend oneself" — same
+  subject as the antecedent *colui*).
+
+**11 more `case` corrections from `accusative`-vs-`iobj`, same test, opposite direction — the
+verb's own object was already filled, so the flagged clitic is the second (dative) argument, fixed
+`accusative` → `dative`:** inferno 29:15.2 *m'avresti... lo star dimesso* (object `lo star`
+filled); purgatorio 1:64.3 *Mostrata ho lui... la gente* (object `gente` filled), 4:117.2 *non
+m'impedì l'andare* (object `l'andare` filled), 11:118.8 *dir m'incora bona umiltà* (object `umiltà`
+filled), 11:119.6 *tumor m'appiani* (object `tumor` filled), 19:95.10 *ch'io t'impetri / cosa*
+(object `cosa` filled), 22:95.2 *m'ascondeva quanto bene* (object clause filled), 23:57.3
+*rispuos' io lui* (*rispondere* inherently governs dative, "answer *to* someone", no direct
+object exists to compete for); paradiso 19:68.2 *t'ascondeva la giustizia* (object `giustizia`
+filled), 21:45.8 *tu m'accenne* (object `che`/*l'amor* filled), 27:97.7 *lo sguardo m'indulse*
+(object `che`/*virtù* filled).
+
+**2 `dative`-vs-`nsubj` corrections — plain subject pronouns misread as an oblique case, fixed to
+`nominative`:** inferno 6:104.2 *crescerann' ei* ("will they grow" — `ei` = *essi*, subject of
+*crescerann'*), purgatorio 7:13.3 *tal parve quelli* ("he seemed such" — `quelli` = *egli*,
+subject of *parve*).
+
+**3 `dep` retags — `case` was already right, `dep` had mistagged the deprel:**
+
+- **`iobj` → `obj`**: inferno 26:9.8 *Prato... t'agogna* (*agognare* is a plain transitive verb,
+  "to long for someone" — accusative direct object, no dative sense; `case`'s `accusative` was
+  already correct).
+- **`obj` → `iobj`** (×2): inferno 10:114.6 *l'error che m'avete soluto* (*sciogliere un dubbio a
+  qualcuno*, "to resolve a doubt for someone" — the doubt itself, `che`, is the direct object even
+  though tagged `obl` for its relative-clause fronting; `m'` is the dative beneficiary), paradiso
+  4:32.6 *questi spirti che... t'appariro* (*apparire* is inherently intransitive/unaccusative —
+  "to appear *to* someone" — it cannot take a direct object at all, so `t'` must be dative).
+
+**11 positions left alone, each for a stated structural reason — not decided by the reading
+alone:**
+
+- **Fused infinitive+clitic, `dep` tags the whole unit's clause-level role, `case` tags the
+  embedded clitic's own case — not a disagreement, a scope mismatch** (matches the existing *fused
+  tokens `dep` can't align component-wise* convention): inferno 2:81.7 *ch'aprirmi il tuo talento*
+  (`aprirmi` = *aprire*+*mi*, `mi` genuinely dative — "to open to me" — while `dep`'s `nsubj` tags
+  the whole infinitive clause, correctly, as the impersonal `è`'s subject), inferno 23:128.7
+  *dirci* (same shape, `ci` dative within a fused infinitive tagged `nsubj` of *dispiaccia*),
+  purgatorio 14:20.1 *dirvi ch'i' sia* (same shape again, `vi` dative within a fused infinitive
+  tagged `nsubj` of *parlare*).
+- **Free relative — `chi` is simultaneously its own clause's subject (`dep`'s read) and the whole
+  clause's semantic role in the matrix clause (`case`'s read)**, the same structural ambiguity
+  already on record for the `nominative`-vs-`obj` shape: paradiso 33:17.2 *a chi domanda* (`chi` is
+  `nsubj` of *domanda* within its own clause, but the free relative *a chi domanda* as a whole
+  fills a dative argument slot of *soccorre*).
+- **Causative-construction ambiguity, genuinely undecided by the text alone**: purgatorio 26:105.7
+  *che fa credere altrui* (*altrui*, the invariant oblique form, as the causee of *fare* + the
+  otherwise-intransitive *credere* — Italian causative rules mark an intransitive infinitive's
+  causee as accusative, but *credere* itself inherently governs dative ["credere a qualcuno"],
+  and the two rules conflict here).
+- **Impersonal dative-experiencer/passive ambiguity**: paradiso 11:11.3 *con Bëatrice m'era...
+  accolto* (mirrors this very README's own opening example, "mi pesa" = "it weighs on me" —
+  `dep`'s `nsubj` treats the impersonal passive as if `m'` were its subject, but the construction
+  is at least as naturally read as a dative experiencer of a null-subject impersonal, matching
+  `case`'s `dative`).
+- **Latin quotation**: paradiso 32:12.5 *'Miserere mei'* (a direct Psalm 51 quotation; Latin
+  *miserere* governs the genitive, which does not map onto this vocabulary's Italian-grammar
+  case values — the existing *Latin quotations* exception from the slice-3 residue).
+- The 4 remaining `accusative`-vs-`nsubj`-adjacent items visible in this batch's fetch but not
+  part of these three shapes were left untouched — they belong to the still-open
+  `accusative`-vs-`nsubj` shape below.
+
+**State check.** `case --check`: 0 hard. `dep --check`: 0 hard, 0 soft. `pytest`: 142 passed.
+`skel --check`: 3631 → **3633** soft (the 3 `dep` retags' net effect — two moved a divergence in,
+one moved one out; none of the pure-`case` edits touch Layer 5). `--stats` contradictions: 100 →
+**63** (37 resolved: 33 `case` corrections + 3 `dep` retags = 36 positions decided out of 44
+candidates, plus one already-decided position from Step 7's tally overlapped the count by one).
+
+**What's still open.** The `accusative`-vs-`nsubj` shape (~44 candidates, unchanged by this batch)
+is the only shape left from the plan's original four. Per the handoff that opened this batch, it is
+mostly the accusative-and-infinitive convention (leave alone) and si-passive reads (check each),
+plus a residue of plain subject pronouns (`el`/`ei`/`elli`/`tu`/`io`/`noi`/`che`/`ciò`/`quel`-family
+demonstratives) misread as accusative that should become `nominative` — the same word-order logic
+Step 7 already mechanized for the `nominative`-vs-`obj` shape, just with the disagreeing values
+swapped. The 28 impossible pairings (family A comparative-standard + family F entangled) remain
+correctly left alone, as in Step 7.

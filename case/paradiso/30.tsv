@@ -116,7 +116,7 @@ line	token	word	case
 138	5	ella	nominative
 139	4	che	nominative
 139	5	v'	accusative
-140	3	v'	dative
+140	3	v'	accusative
 141	1	che	nominative
 144	4	lui	ablative
 146	5	el	nominative

@@ -76,7 +76,7 @@ line	token	word	case
 92	6	voi	ablative
 93	3	lei	nominative
 93	7	i'	nominative
-93	8	l'	dative
+93	8	l'	accusative
 94	4	ciascuna	nominative
 95	6	tu	nominative
 97	1	Questo	accusative
@@ -98,7 +98,7 @@ line	token	word	case
 106	1	Io	nominative
 108	3	colui	dative
 108	4	che	nominative
-108	5	sé	dative
+108	5	sé	reflexive
 108	6	ne	ablative
 112	3	tu	nominative
 112	7	io	nominative

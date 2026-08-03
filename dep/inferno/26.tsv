@@ -66,7 +66,7 @@ line	token	word	deprel	head_line	head_token
 9	5	non	advmod	9	9
 9	6	ch'	mark	9	9
 9	7	altri	conj	9	4
-9	8	t'	iobj	9	9
+9	8	t'	obj	9	9
 9	9	agogna	acl:relcl	9	2
 10	1	E	cc	10	6
 10	2	se	mark	10	4

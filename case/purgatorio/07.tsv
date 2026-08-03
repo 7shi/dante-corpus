@@ -10,7 +10,7 @@ line	token	word	case
 11	4	e'	nominative
 11	5	si	reflexive
 12	6	Ella	nominative
-13	3	quelli	dative
+13	3	quelli	nominative
 14	5	lui	ablative
 15	2	abbracciòl	accusative
 15	7	s'	reflexive
@@ -91,7 +91,7 @@ line	token	word	case
 97	7	lui	accusative
 99	1	che	accusative
 99	9	ne	ablative
-102	2	cui	dative
+102	2	cui	accusative
 103	4	che	nominative
 104	3	colui	ablative
 104	4	c'	nominative

@@ -42,7 +42,7 @@ line	token	word	case
 45	1	Io	nominative
 45	6	che	accusative
 45	7	tu	nominative
-45	8	m'	accusative
+45	8	m'	dative
 46	2	quella	nominative
 46	4	io	nominative
 47	6	si	reflexive
@@ -63,7 +63,7 @@ line	token	word	case
 56	6	fammi	dative
 57	3	che	nominative
 57	6	mi	ablative
-57	7	t'	dative
+57	7	t'	accusative
 58	4	si	reflexive
 60	1	che	nominative
 61	1	Tu	nominative

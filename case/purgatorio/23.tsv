@@ -58,7 +58,7 @@ line	token	word	case
 55	5	io	nominative
 56	1	mi	dative
 57	2	io	nominative
-57	3	lui	accusative
+57	3	lui	dative
 57	4	veggendola	accusative
 58	2	mi	dative
 58	8	vi	accusative

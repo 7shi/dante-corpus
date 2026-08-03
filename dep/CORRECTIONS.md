@@ -644,3 +644,28 @@ affetto* two lines down is already `addorna`'s object).
 
 `dep --check` stays **0 hard, 0 soft**; `pytest` stays 142; **Layer 5: 3634 → 3631, −3**. `case`
 was already correct (`nominative`) at all nine and was left untouched.
+
+## Three retags surfaced correcting `case`'s dative/accusative confusions (2026-08-03)
+
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)'s *Step 8* worked through the `dative`-vs-`obj`
+and `accusative`-vs-`iobj` shapes, applying a transitivity test at each position (does the head
+verb already have an explicit object filled?). Two positions came out the other way — `case` was
+already right and the deprel was wrong:
+
+- **`obj` → `iobj`** (×2): inferno 10:114.6 *l'error che m'avete soluto* (*sciogliere un dubbio a
+  qualcuno* — the doubt, `che`, is `soluto`'s real direct object even though tagged `obl` for its
+  relative-clause fronting, leaving `m'` as the dative beneficiary, not a second direct object),
+  paradiso 4:32.6 *questi spirti che... t'appariro* (*apparire*, "to appear", is inherently
+  intransitive/unaccusative in Italian — it has no direct-object valency at all, so a clitic next
+  to it can only be the dative "to whom it appears").
+
+One position came out the reverse direction, surfaced by the mirrored `accusative`-vs-`iobj` test:
+
+- **`iobj` → `obj`**: inferno 26:9.8 *Prato... t'agogna* (*agognare*, "to long for", is a plain
+  transitive verb taking a direct object — no dative sense — so the `iobj` tag was simply wrong;
+  `case`'s `accusative` had it right).
+
+`dep --check` stays **0 hard, 0 soft**; `pytest` stays 142; **Layer 5: 3631 → 3633, +2** (two of
+the three retags moved a divergence in against Layer 5's own frozen reading; the third moved one
+out — net effect recorded as measured, not chased further this round, per the same standing that
+governs every other retag in this file).

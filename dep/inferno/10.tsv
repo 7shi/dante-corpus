@@ -811,7 +811,7 @@ line	token	word	deprel	head_line	head_token
 114	3	l'	det	114	4
 114	4	error	obl	113	8
 114	5	che	obl	114	8
-114	6	m'	obj	114	8
+114	6	m'	iobj	114	8
 114	7	avete	aux	114	8
 114	8	soluto	acl:relcl	114	4
 115	1	E	cc	115	7

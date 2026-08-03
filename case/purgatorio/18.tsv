@@ -1,7 +1,7 @@
 line	token	word	case
 3	6	io	nominative
 4	2	io	nominative
-4	3	cui	dative
+4	3	cui	accusative
 6	5	io	nominative
 6	7	li	accusative
 7	5	che	nominative
@@ -84,7 +84,7 @@ line	token	word	case
 92	3	sè	ablative
 95	3	ch'	accusative
 95	4	io	nominative
-96	1	cui	dative
+96	1	cui	accusative
 97	5	noi	ablative
 98	1	si	reflexive
 103	7	si	reflexive

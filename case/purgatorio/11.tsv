@@ -129,8 +129,8 @@ line	token	word	case
 117	3	ella	nominative
 118	2	io	nominative
 118	4	lui	dative
-118	8	m'	accusative
-119	6	m'	accusative
+118	8	m'	dative
+119	6	m'	dative
 120	2	chi	nominative
 120	4	quei	nominative
 120	6	cui	genitive

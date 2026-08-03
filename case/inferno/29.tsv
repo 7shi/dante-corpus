@@ -10,7 +10,7 @@ line	token	word	case
 13	2	tu	nominative
 13	5	io	nominative
 14	7	io	nominative
-15	2	m'	accusative
+15	2	m'	dative
 16	2	sen	reflexive+ablative
 16	5	io	nominative
 16	7	li	accusative
@@ -37,7 +37,7 @@ line	token	word	case
 35	2	parlarmi	dative
 35	5	ïo	nominative
 36	3	ciò	ablative
-36	4	m'	dative
+36	4	m'	accusative
 36	6	el	accusative
 36	9	sé	ablative
 40	2	noi	nominative
