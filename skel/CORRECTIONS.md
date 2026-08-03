@@ -1,5 +1,86 @@
 # skel — Layer 5 correction history
 
+## Phase 5r: rule U — the `case` annex as a third read — 3633 → 3465, −168 (2026-08-03)
+
+Phase 5's closing position parked its largest remaining reading-disagreement population with an
+explicit reason: deciding it "needs a Layer-2 case feature or a clitic lexicon", and the project
+had twice declined to open one. **That feature exists now** — `case/` was built after that verdict
+was written and hand-audited against `dep` through the annex's Steps 6-9 — but until this phase
+`dante_corpus/skel.py` never imported it. This phase wires it into the checker.
+
+### The measurement (on the post-Step-9 tree, 3633 soft)
+
+Of the **516** `role_mismatch` violations, **210** sit on an argument position the annex holds a
+value for. Classifying each by whether that value corroborates the derived (`dep`-side) or the
+given (LLM-side) role, under the obvious mapping between the two frozen vocabularies —
+`nominative`↔`subj`, `accusative`↔`obj`, `dative`↔`iobj`/`obl:a`, `ablative`/`locative`↔`obl*`,
+with `obl:a` deliberately compatible with *both* `dative` and the locative values because Italian
+`a` marks both:
+
+| | count |
+|---|---|
+| `case` corroborates the **derived** side → rule-U candidate | **161** |
+| `case` corroborates the **given** side → `dep`-correction candidate | **17** |
+| value has no role mapping (`reflexive`/`vocative`/`genitive`/fused `a+b`) | 23 |
+| decides neither (both or neither side match) | 9 |
+
+The four biggest buckets are all in the first row: given `obj` / derived `obl:a` with `dative`
+(55), given `obj` / derived `subj` with `nominative` (43), given `subj` / derived `obj` with
+`accusative` (21), given `obl:a` / derived `obj` with `accusative` (20).
+
+### Rule U (`_case_corroborated_role`), −160
+
+A one-directional acceptance in `_classify_divergence`'s `elif grole != drole:` branch, in the
+same shape as rules L/M/N/O: accept the divergence when the annex's value for that argument
+position corroborates the **derived** role and *not* the given one. Corroborating both or neither
+accepts nothing, and the mirror direction is never an automatic accept — it is the hand round
+below. This is the same asymmetry Phase 5j enforced when it rejected rule O's two-directional
+variant. `case` data is threaded into the checker the way `dep_index_by_pos`/
+`morph_pos_by_position` already are (`validate_unit(..., case_rows=...)`, fed by `skel.py`'s new
+`_case_rows`).
+
+**One scope gate, `_bare_pronoun_position`, costs the rule exactly 1 of its 161:** the annex is in
+scope for every token whose Layer-2 `pos` *names* a pronoun, fused ones included (601 of the 13113
+in-scope positions are `verb+pronoun` and friends), and there `venendomi`'s value is the
+enclitic's case while a Layer-5 argument citing that position cites the **verb**. The one instance
+this removed is a given `xcomp` / derived `obl` with `ablative` — an infinitive+`ne`, exactly the
+scope mismatch the annex's own Steps 8 and 9 left alone by hand. Yield: **3633 → 3473, −160**.
+
+Tests: `tests/test_skel.py`'s `test_case_supports_role_mapping` plus six
+`test_classify_divergence_case_*` cases covering the accept, the mirror direction, both-sides,
+neither-side, the fused-token gate, and an absent position.
+
+### The 17 `dep`-correction candidates, hand-verified — a further −8
+
+Every position where the annex sides with the LLM against `dep`, read against its terzina. **Ten
+`dep` retags** (recorded in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)) and **four `case`
+corrections** (in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)) came out of it; the other
+**8** are left alone for stated structural reasons, in four families:
+
+- **A copular predicate nominal is nominative too** (5): inferno 7:69.1 *che è*, 24:112.2 *qual è
+  quel che cade*, purgatorio 2:120.4 *Che è ciò*, 10:90.3 *L'altrui bene a te che fia*, 23:13.6
+  *che è quel ch'i' odo*. `dep` tags the pronoun `attr` (canonicalized to `xcomp`), the LLM calls
+  it `subj`, and the annex says `nominative` — but Italian predicate nominals **are** nominative,
+  so the value corroborates both readings and adjudicates neither. The mapping cannot separate a
+  subject from a copular predicative, and the measurement's "corroborates given" column overstates
+  itself by exactly this family. Rule U is unaffected: it is one-directional and never fires here.
+- **The tree's preposition is explicit** (1): inferno 12:16.5 *Lo savio mio inver' lui gridò*.
+  `lui` carries an `inver'` `case` child, so derived `obl:in` (`_PREP_LEMMA_NORM` folds `inver'`
+  into `in`) is what the tree says; the annex reading `lui` as the `dative` addressee of *gridò*
+  is a semantic-role read, not a contradiction of the parse. No `dep` error.
+- **Fused infinitive+clitic scope mismatch** (1): inferno 21:79.5 *Credi tu... vedermi esser
+  venuto*. The annex's `accusative` is `mi`'s; the disputed role is the whole infinitive's. The
+  same exception rule U's own gate encodes, and the one Steps 8/9 already established.
+- **Comparative standard** (1): paradiso 13:131.5 *sì come quei che stima*. `dep`'s convention
+  makes *come* the `advcl` head and *quei* its `obj`; the annex's `nominative` reflects the form,
+  not the attachment. Already on record as a left-alone shape in `../case/CORRECTIONS.md`.
+
+**State check.** `skel --check`: **0 hard, 3465 soft** (3633 → 3473 by rule U → 3465 by the
+corrections). By kind: `role_mismatch` 516 → **347**, `missing_tuple` 25 → **26** (one retag made
+the derivation propose a predicate the artifact does not), `extra_arg` 1649, `missing_arg` 1206,
+`extra_tuple` 145 and `membership` 92 all unchanged. `dep --check`: 0 hard, 0 soft. `case --check`: 0 hard. `np --check`: 0/0. `pytest`:
+149 passed.
+
 ## Layer 3's clitic reconciliation — 3633 → 3635, both at one position (2026-08-02)
 
 Closing Layer 3's stale clitic mentions (see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)) moved

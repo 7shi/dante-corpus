@@ -2034,3 +2034,30 @@ dative-experiencers, Latin quotations) plus the 14 `dep=obj`-side positions — 
 impossible pairings (family A comparative-standard + family F entangled) remain correctly left
 alone. No shape-driven pass is open; a future round would have to re-litigate structural
 conventions the corpus has deliberately fixed, which is out of scope.
+
+## Step 10 — four corrections from Layer 5's rule-U round, 2026-08-03
+
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Phase 5r* made this annex a third read in
+Layer 5's divergence checker (rule U: accept a `role_mismatch` when the frozen case value
+corroborates the `dep`-derived role and not the LLM's). Reading its 17 mirror-direction candidates
+by hand turned up four positions where **this column** was the wrong one — the same standing rule
+Steps 6-9 followed: a clear, decidable error gets fixed in the session that finds it.
+
+- **purgatorio 14:12.3 `ne` `ablative` → `accusative`**, **14:12.6 `ne` `ablative` → `dative`**,
+  **14:13.8 `ne` `ablative` → `accusative`**. *per carità ne consola e ne ditta / onde vieni e chi
+  se'; ché tu ne fai tanto maravigliar*: all three `ne` are the Tuscan *ne* = *ci* ("us"), not the
+  partitive the model read. *consolarci* takes it accusative; *dittarci onde vieni* has its
+  content clause as the object, leaving `ne` the dative addressee (Step 8's transitivity test);
+  *far maravigliare* takes it as an accusative causee. `dep` was retagged to match at both
+  12.6 (`obj` → `iobj`) and 13.8 (`obl` → `obj`), see
+  [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)).
+- **paradiso 1:48.4 `li` `accusative` → `dative`**. *aguglia sì non li s'affisse unquanco*:
+  *affissarsi* is reflexive and takes its target obliquely (*a/in esso*), so an accusative direct
+  object is impossible here; `li` is the archaic dative. `dep`'s `obl` was already right and was
+  left untouched.
+
+**State check.** `case --check`: 0 hard. `dep --check`: 0 hard, 0 soft. `pytest`: 149 passed.
+`skel --check`: **3465** soft. `--stats` contradictions: **32**, unchanged (12:12.6's new
+`dative` would have contradicted `dep=obj`, so that deprel was retagged `iobj` in the same round);
+impossible pairings: 28 → **26** (both closed by the `dep` retags at
+inferno 10:136.1 and paradiso 23:68.1); `dep=nsubj` agreement 5170/18 → 5172/18.

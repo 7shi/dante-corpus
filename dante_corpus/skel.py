@@ -33,6 +33,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from ._paths import SKEL_DIR
+from .case import SLOT_SEP, CaseRow
 from .dep import DepRow, index as dep_index
 from .morph import MorphRow, Violation, read_table, strip_word_punct
 from .np import NPSpan
@@ -754,10 +755,75 @@ def _predicative_complement(grole: str, drole: str) -> bool:
     return grole == "xcomp" and drole in ("obj", "subj")
 
 
+def _case_supports_role(case_value: str, role: str) -> bool:
+    """Whether the `case/` annex's value for an argument position is compatible with a Layer-5
+    role label. The mapping between the two frozen vocabularies is the obvious one and nothing
+    external enters it — both were authored by a model reading the Italian alone (see PLAN.md's
+    *Neutrality check*).
+
+    `obl:a` is deliberately compatible with `dative` **and** with the locative/ablative values:
+    Italian `a` marks both the indirect object and a place ("a Roma"), so the annex cannot
+    adjudicate between two oblique flavors there. A fused value (`a+b`, `SLOT_SEP`-joined for a
+    fused token like `gliel'`) matches nothing, so a fused position decides nothing."""
+    if role == "subj":
+        return case_value == "nominative"
+    if role == "obj":
+        return case_value == "accusative"
+    if role == "iobj":
+        return case_value == "dative"
+    if role == "obl:a":
+        return case_value in ("dative", "ablative", "locative")
+    if role == "obl" or role.startswith("obl:"):
+        return case_value in ("ablative", "locative")
+    return False
+
+
+def _bare_pronoun_position(
+    pos: tuple[int, int], morph_pos_by_position: dict[tuple[int, int], str] | None
+) -> bool:
+    """Whether a token is a pronoun and *nothing else* — rule U's scope gate.
+
+    The `case` annex is in scope for every token whose Layer-2 `pos` names a pronoun among its
+    parts, fused tokens included (`case.scope_slots`): `venendomi` (`verb+pronoun`) carries the
+    enclitic's case. But a Layer-5 argument citing that position cites the **verb** — there is no
+    separate token for the clitic — so the annex's value describes something other than the role
+    under dispute. 601 of the 13113 in-scope positions are fused like this; rule U skips them all.
+    """
+    value = (morph_pos_by_position or {}).get(pos)
+    if value is None:
+        return False
+    return SLOT_SEP not in value and value.strip().lower().endswith("pronoun")
+
+
+def _case_corroborated_role(
+    grole: str, drole: str, arg: tuple[int, int],
+    case_by_position: dict[tuple[int, int], str] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule U: a role_mismatch whose argument is a pronoun the Layer-2 `case` annex holds a value
+    for, and that value corroborates the **derived** (dep-side) role while contradicting the given
+    (LLM-side) one. Phase 5's closing position parked its largest reading-disagreement population
+    because deciding it "needs a Layer-2 case feature"; `case/` is that feature, built afterwards
+    and hand-audited against `dep` through the annex's Steps 6-9, so a third independent read is
+    now available exactly where the clitic disputes live ("mi pesa" dative vs "m'avea 'mmonito"
+    accusative are identical in form, and the tree shape does not separate them).
+
+    Gated tightly, in the same one-directional shape as rules L/M/N/O: corroborating *both* sides
+    (`obl:a` under `dative`, say) or *neither* accepts nothing, and the mirror direction — the
+    annex siding with the LLM against `dep` — is never an automatic accept but a `dep`-correction
+    candidate for hand review, the same asymmetry Phase 5j enforced when it rejected rule O's
+    two-directional variant."""
+    value = (case_by_position or {}).get(arg)
+    if value is None or not _bare_pronoun_position(arg, morph_pos_by_position):
+        return False
+    return _case_supports_role(value, drole) and not _case_supports_role(value, grole)
+
+
 def _classify_divergence(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
     morph_pos_by_position: dict[tuple[int, int], str] | None = None,
+    case_by_position: dict[tuple[int, int], str] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
     # Rules L and N: the preposition lemmas each position's `case` dep children name (empty set
@@ -864,7 +930,9 @@ def _classify_divergence(
                         or _case_marked_object(grole, drole, arg, case_lemmas)
                         or _co_present_preposition(grole, drole, arg, case_lemmas)
                         or _clausal_complement_flavor(grole, drole)
-                        or _clausal_object(grole, drole, arg, morph_pos_by_position)):
+                        or _clausal_object(grole, drole, arg, morph_pos_by_position)
+                        or _case_corroborated_role(grole, drole, arg, case_by_position,
+                                                   morph_pos_by_position)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
@@ -956,6 +1024,7 @@ def validate_unit(
     morph_rows: dict[int, list[MorphRow]] | None = None,
     np_rows: dict[int, list[NPSpan]] | None = None,
     dep_rows: dict[int, list[DepRow]] | None = None,
+    case_rows: dict[int, list[CaseRow]] | None = None,
 ) -> list[Violation]:
     """Check `rows_by_line` for one parse unit.
 
@@ -976,7 +1045,9 @@ def validate_unit(
     `np_rows` are supplied); and — the core of this layer's design — every divergence from
     `derive_unit`
     (only when `dep_rows`/`morph_rows` supplied): `missing_tuple`, `extra_tuple`, `missing_arg`,
-    `extra_arg`, `role_mismatch`. See module docstring and PLAN.md.
+    `extra_arg`, `role_mismatch`. `case_rows` (the Layer-2 `case` annex, optional) feeds rule U,
+    which accepts a `role_mismatch` whose argument's frozen case value corroborates the derived
+    role alone. See module docstring and PLAN.md.
     """
     violations: list[Violation] = []
     token_lists = {no: _alpha_tokens(t) for no, t in zip(nos, texts)}
@@ -1063,8 +1134,12 @@ def validate_unit(
         morph_pos_by_position = {
             (no, i + 1): row.pos for no, rows in morph_rows.items() for i, row in enumerate(rows)
         }
+        case_by_position = (
+            {(row.line, row.token): row.case for rows in case_rows.values() for row in rows}
+            if case_rows is not None else None
+        )
         violations.extend(_classify_divergence(
-            rows_by_line, derived, dep_index(dep_rows), morph_pos_by_position,
+            rows_by_line, derived, dep_index(dep_rows), morph_pos_by_position, case_by_position,
         ))
 
     return violations

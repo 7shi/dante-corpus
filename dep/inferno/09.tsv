@@ -765,7 +765,7 @@ line	token	word	deprel	head_line	head_token
 105	4	parole	obl	105	1
 105	5	sante	amod	105	4
 106	1	Dentro	advmod	106	3
-106	2	li	obj	106	3
+106	2	li	obl	106	3
 106	3	'ntrammo	root	0	0
 106	4	sanz'	case	106	6
 106	5	alcuna	det	106	6

@@ -15,11 +15,11 @@ line	token	word	case
 9	6	dirmi	dative
 10	4	uno	nominative
 10	7	che	nominative
-12	3	ne	ablative
-12	6	ne	ablative
+12	3	ne	accusative
+12	6	ne	dative
 13	4	chi	nominative
 13	7	tu	nominative
-13	8	ne	ablative
+13	8	ne	accusative
 15	4	che	nominative
 16	2	io	nominative
 16	6	si	reflexive

@@ -669,3 +669,44 @@ One position came out the reverse direction, surfaced by the mirrored `accusativ
 the three retags moved a divergence in against Layer 5's own frozen reading; the third moved one
 out — net effect recorded as measured, not chased further this round, per the same standing that
 governs every other retag in this file).
+
+## Ten retags from Layer 5's rule-U round (2026-08-03)
+
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Phase 5r* wired the `case` annex into Layer
+5's divergence checker and, as the rule's by-product, produced **17 positions where `case` sides
+with the LLM against `dep`** — the same `dep`-mistag shape Steps 7 and 8 of the case annex worked.
+Each was read against its terzina. Ten rows were genuinely wrong, in four families already
+established in this file:
+
+**A locative/partitive clitic tagged `obj`** (4) — `obj` → `obl`, the majority convention for this
+class in the corpus (`ne`/`n'` locative-partitive: 136 `obl` against 44 `obj`): inferno 4:53.2
+*quando **ci** vidi venire un possente* (*ci* = "here", and the perception's content is *un
+possente* under the `xcomp`), 9:106.2 *Dentro **li** 'ntrammo* (*intrare* is intransitive; *li* is
+the complement of *Dentro*), 17:116.7 *non me **n'**accorgo* (*accorgersi **di** ciò*), purgatorio
+3:139.4 *per ognun tempo **ch'**elli è stato* (a temporal relative under *essere*, which has no
+object valency at all).
+
+**A causative `fare` misassembled** (4) — the corpus's own convention for causative *fare* +
+infinitive is agent `nsubj`, causee `obj`, infinitive `xcomp` (inferno 1:102 *che **la** farà
+morir*, 2:72 *che **mi** fa parlare*). Two positions did not follow it: inferno 10:136 *che 'nfin
+là sù facea spiacer suo lezzo* — `che` `obl` → `nsubj`, `spiacer` `obj` → `xcomp`, `lezzo` `nsubj`
+→ `obj` (the valley makes its stench offensive, so the relative is the agent and the stench the
+causee); purgatorio 14:13.8 *ché tu **ne** fai tanto maravigliar* — `ne` `obl` → `obj`, the causee
+of *far maravigliare*, here the Tuscan *ne* = *ci* ("us"), not the partitive.
+
+**A clitic dative tagged `obj`** (1) — purgatorio 14:12.6 *ne ditta / onde vieni e chi se'*:
+*dittare* already has its object in the `ccomp` content clause, so the clitic is the dative
+addressee (Step 8's transitivity test, applied in `../case/CORRECTIONS.md`). `obj` → `iobj`.
+
+**A subject plainly tagged something else** (1) — paradiso 23:68.1 *non è pareggio da picciola
+barca **quel** che fendendo va l'ardita prora*: `quel` is the subject of *è*, and `obl` with no
+preposition in the tree cannot be right. `obl` → `nsubj`. The predicate nominal *pareggio* keeps
+its `nsubj` per the copular convention (`skel`'s rule M), leaving two `nsubj` on one head — 152
+predicates in the corpus already have that shape, so it is not a new one.
+
+The other eight of the 17 were left alone with stated structural reasons — five of them because a
+copular predicate nominal is nominative just as a subject is, so the annex adjudicates nothing
+there; see `../skel/CORRECTIONS.md`'s *Phase 5r* for all four families.
+
+`dep --check` stays **0 hard, 0 soft**; `pytest` 149 passed; **Layer 5: 3473 → 3465, −8** (with
+the four `case` corrections recorded in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)).

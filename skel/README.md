@@ -8,10 +8,10 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5q, two full `--fix` rounds
-run (Phases 5e and 5q), and four Layer-4 correction rounds (Phases 5i, 5n and 5p's two) fed back
-into `dep/`.**
-`make -C skel check`: **0 hard, 3634 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5r, two full `--fix` rounds
+run (Phases 5e and 5q), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r) fed
+back into `dep/`.**
+`make -C skel check`: **0 hard, 3465 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -19,8 +19,9 @@ Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 af
 Phase 5o, 3702 after Phase 5p, 3551 after Phase 5q and its `ioj` typo fix, 3635 after the `case`
 annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)), and 3634 after the one `dep` fix in the
-`case` annex's Step 6 clitic round). See [`../PLAN.md`](../PLAN.md) for the current authoritative
-count.
+`case` annex's Step 6 clitic round, 3633 at the close of that annex's Steps 7-9, 3473 after Phase
+5r's rule U, and 3465 after that phase's hand-verified `dep`/`case` round). See
+[`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
@@ -181,6 +182,18 @@ successive phases, each measured before/after (`--stats` aggregates violations b
     `ARG_DEPRELS`. The adjective gate is load-bearing: the same shape with an adverb argument,
     and any non-`xcomp` role, stay flagged.
 
+12. **Phase 5r — the `case` annex as a third read** (`_case_corroborated_role`): a
+    `role_mismatch` is accepted when the Layer-2 [`case/`](../case/README.md) annex's frozen value
+    for the argument corroborates the **derived** role and *not* the given one — `nominative`↔
+    `subj`, `accusative`↔`obj`, `dative`↔`iobj`/`obl:a`, `ablative`/`locative`↔`obl*`. This is the
+    2-of-3 adjudication the annex was built for: `case` and `dep` agreeing against the LLM's
+    reading, on exactly the clitic positions where the tree shape cannot decide (*mi pesa* dative
+    vs *m'avea 'mmonito* accusative). Corroborating **both** sides (`obl:a` under `dative`, since
+    Italian *a* marks place as well as recipient) or neither accepts nothing, the mirror direction
+    is a hand-verified `dep` round rather than an automatic accept, and *fused* argument positions
+    (`venendomi` = `verb+pronoun`, where the annex's value is the enclitic's while the citation is
+    the verb's) are excluded by `_bare_pronoun_position`.
+
 **Measured over the full 100-canto corpus** (`--check`, 2026-07-20 Phase 4a checkpoint): **0
 hard, 7776 soft** — by kind, `extra_arg` 3719, `missing_arg` 1780, `role_mismatch` 1466,
 `extra_tuple` 600, `missing_tuple` 117, `membership` 94. See [CORRECTIONS.md](CORRECTIONS.md)
@@ -312,6 +325,19 @@ canticles, 1702 flagged parse units, ≈28 hours wall time run 3-way parallel, 6
 no unit regressed: **−147**, i.e. 0.086 violations per LLM call. The two `unknown_role` rows
 (`purgatorio 13:103`, `13:104`) held the role `ioj`, a misspelling of `iobj` that Layer 4's tree
 confirms; fixing it took 3555 → **3551**.
+
+After Phase 5r (2026-08-03, rule U — the `case` annex as a third read — plus its hand-verified
+mirror round): **0 hard, 3465 soft** — `role_mismatch` 516 → **347**, `missing_tuple` 25 →
+**26** (one `dep` retag made the derivation propose a predicate the artifact does not), every
+other class unchanged. Rule U accepts a
+`role_mismatch` when the Layer-2 `case` annex's frozen value for the argument corroborates the
+`dep`-derived role and *not* the LLM's (−160, one-directional, and gated off fused
+`verb+pronoun` positions where the annex's value is the enclitic's, not the cited token's). The
+17 positions where the annex sides the other way were read by hand: ten `dep` retags, four
+`case` corrections, eight left alone — chiefly because a copular predicate nominal is nominative
+just as a subject is, so the annex cannot separate `subj` from `attr`. See
+[CORRECTIONS.md](CORRECTIONS.md), [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
 
 ## Next steps
 

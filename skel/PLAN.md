@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-07-29: `make -C skel check` reports **0 hard, 3551 soft** violations across
+Status as of 2026-08-03: `make -C skel check` reports **0 hard, 3465 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -9,7 +9,9 @@ correction → 3924 after Phase 5j's rule O and lemma normalization → 3876 aft
 P and Q → 3808 after Phase 5l's rule R → 3746 after Phase 5m's rule S → 3725 after Phase 5n's
 Layer-4 `mark` correction → 3712 after Phase 5o's rule T → 3702 after Phase 5p's two Layer-4
 correction rounds → 3555 after Phase 5q's user-run `--fix` pass → 3551 after its `ioj` typo fix,
-which took `unknown_role` to **0**). The project goal is
+which took `unknown_role` to **0** → 3633 after the `case` annex's own Layer-2/Layer-4 rounds
+moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-verified `dep`/`case`
+round). The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
@@ -56,14 +58,15 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5q is **committed** — the rule commits, the four Layer-4 corrections and
+Everything through Phase 5r is **committed** — the rule commits, the four Layer-4 corrections and
 the `--fix` round are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3551 soft
-make -C dep check       # expect: 0 hard, 0 soft  (Phases 5i, 5n and 5p edited dep artifacts)
-uv run pytest -q        # expect: 125 passed
+make -C skel check      # expect: 0 hard, 3465 soft
+make -C dep check       # expect: 0 hard, 0 soft  (Phases 5i, 5n, 5p and 5r edited dep artifacts)
+make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
+uv run pytest -q        # expect: 149 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
 
@@ -72,16 +75,18 @@ trusting any count in this file.
 
 ## What is left, and why nothing here is open
 
-> **Superseded in one respect (2026-08-03).** This section's verdict was "closing the residue
-> further needs a *new* instrument — the Layer-2 case feature the clitic question asked for is the
-> one candidate this project has repeatedly declined on principle". **That feature was
-> subsequently built and hand-audited**: it is the `case/` annex (`../case/README.md`), and Steps
-> 6-9 of `../PLAN.md` corrected 164 of its positions against `dep`. The checker has never used it.
-> A measured, scoped task to wire it in — **−161 of the 516 `role_mismatch` violations, plus 17
-> `dep`-mistag candidates it surfaces** — is written up in [`../PLAN.md`](../PLAN.md)'s *The next
-> task — a `case`-driven `skel` checker rule*. **Start there, not here.** Everything else in this
-> section still holds: regeneration is exhausted by this plan's stop rule, and no *further* rule
-> is available against the populations measured below. Update this section when that task lands.
+> **Superseded in one respect, and now spent (2026-08-03).** This section's verdict was "closing
+> the residue further needs a *new* instrument — the Layer-2 case feature the clitic question asked
+> for is the one candidate this project has repeatedly declined on principle". **That feature was
+> subsequently built, hand-audited, and has now been wired in**: it is the `case/` annex
+> (`../case/README.md`), Steps 6-9 of `../PLAN.md` corrected 164 of its positions against `dep`,
+> and **Phase 5r** (see [`CORRECTIONS.md`](CORRECTIONS.md)) made it a third read in this checker —
+> **rule U, −160**, plus **−8** from the ten `dep` retags and four `case` corrections its 17
+> mirror-direction candidates produced. **3633 → 3465.** With that, the instrument this section
+> named as missing is present *and* spent: the population it could decide is decided, and the
+> mirror direction is hand-review work, not a rule. Everything else in this section still holds —
+> regeneration is exhausted by this plan's stop rule, and no further rule is available against the
+> populations measured below.
 
 Every item this plan listed has been spent. **Phase 5o closed the last structural row** (with
 `advcl` decided, every deprel in section 2a has a verdict), **Phase 5p ran the two hand-verified

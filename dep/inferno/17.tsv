@@ -848,7 +848,7 @@ line	token	word	deprel	head_line	head_token
 116	4	ma	cc	116	8
 116	5	non	advmod	116	8
 116	6	me	expl	116	8
-116	7	n'	obj	116	8
+116	7	n'	obl	116	8
 116	8	accorgo	conj	115	4
 117	1	se	mark	117	10
 117	2	non	advmod	117	10

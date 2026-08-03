@@ -39,7 +39,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from dante_corpus import api, dep, morph, np, skel
+from dante_corpus import api, case, dep, morph, np, skel
 from dante_corpus.tokenizer import has_alpha, tokenize
 from llm7shi.statusline import StatusLine
 
@@ -156,6 +156,14 @@ def _dep_rows(canticle: str, number: int) -> dict[int, list]:
     if not dep.has_dep(canticle, number):
         return {}
     return {no: list(rows) for no, rows in dep.load_dep(canticle, number).items()}
+
+
+def _case_rows(canticle: str, number: int) -> dict[int, list]:
+    """Layer-2 `case`-annex rows per line, or {} when absent — the third read rule U consumes
+    (see `skel._case_corroborated_role`). Sparse: a line with no pronoun has no key."""
+    if not case.has_case(canticle, number):
+        return {}
+    return {no: list(rows) for no, rows in case.load_case(canticle, number).items()}
 
 
 def _merge_tables(text: str) -> str:
@@ -373,11 +381,11 @@ def _try_parse(
 def _classify_violations(
     nos: list[int], texts: list[str], rows_by_line: dict[int, list[skel.SkelRow]],
     morph_rows: dict[int, list] | None, np_rows: dict[int, list] | None,
-    dep_rows: dict[int, list] | None,
+    dep_rows: dict[int, list] | None, case_rows: dict[int, list] | None = None,
 ) -> tuple[list[morph.Violation], list[morph.Violation]]:
     """Split validate_unit results into (hard, soft). tag -> soft; rest -> hard."""
     hard, soft = [], []
-    for v in skel.validate_unit(nos, texts, rows_by_line, morph_rows, np_rows, dep_rows):
+    for v in skel.validate_unit(nos, texts, rows_by_line, morph_rows, np_rows, dep_rows, case_rows):
         (soft if v.kind == "tag" else hard).append(v)
     return hard, soft
 
@@ -463,6 +471,7 @@ def check(canticles: list[str], only: int | None) -> int:
             morph_rows = _morph_rows(canticle, number)
             np_rows = _np_rows(canticle, number)
             dep_rows = _dep_rows(canticle, number)
+            case_rows = _case_rows(canticle, number)
             lines = api.canto(canticle, number).lines()
             text_by_no = {line.no: line.text for line in lines}
             nos_all = [line.no for line in lines]
@@ -475,7 +484,7 @@ def check(canticles: list[str], only: int | None) -> int:
                 unit_texts = [text_by_no[no] for no in unit]
                 rows_by_line = {no: list(data[no]) for no in unit}
                 hard_vs, soft_vs = _classify_violations(
-                    unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows,
+                    unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows, case_rows,
                 )
                 for v in hard_vs:
                     print(f"{canticle} {number}:{v.line} [{v.kind}] {v.detail}", file=sys.stderr)
@@ -550,6 +559,7 @@ def stats(canticles: list[str], only: int | None) -> int:
             morph_rows = _morph_rows(canticle, number)
             np_rows = _np_rows(canticle, number)
             dep_rows = _dep_rows(canticle, number)
+            case_rows = _case_rows(canticle, number)
             lines = api.canto(canticle, number).lines()
             text_by_no = {line.no: line.text for line in lines}
             nos_all = [line.no for line in lines]
@@ -562,7 +572,7 @@ def stats(canticles: list[str], only: int | None) -> int:
                 unit_texts = [text_by_no[no] for no in unit]
                 rows_by_line = {no: list(data[no]) for no in unit}
                 hard_vs, soft_vs = _classify_violations(
-                    unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows,
+                    unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows, case_rows,
                 )
                 hard += len(hard_vs)
                 all_soft.extend(soft_vs)
@@ -607,10 +617,12 @@ def clean(canticles: list[str], size: int, only: int | None) -> int:
 def _repair_unit(
     unit: list[int], unit_texts: list[str], rows_by_line: dict[int, list[skel.SkelRow]],
     morph_rows: dict[int, list], np_rows: dict[int, list], dep_rows: dict[int, list],
+    case_rows: dict[int, list] | None = None,
 ) -> list[skel.Repair]:
     derived = skel.derive_unit(unit, dep_rows, morph_rows)
     violations = [
-        v for v in skel.validate_unit(unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows)
+        v for v in skel.validate_unit(unit, unit_texts, rows_by_line, morph_rows, np_rows,
+                                      dep_rows, case_rows)
         if v.kind == "tag"
     ]
     return skel._find_repairs(rows_by_line, derived, violations)
@@ -631,6 +643,7 @@ def repair(canticles: list[str], only: int | None) -> int:
             morph_rows = _morph_rows(canticle, number)
             np_rows = _np_rows(canticle, number)
             dep_rows = _dep_rows(canticle, number)
+            case_rows = _case_rows(canticle, number)
             lines = api.canto(canticle, number).lines()
             text_by_no = {line.no: line.text for line in lines}
             nos_all = [line.no for line in lines]
@@ -643,7 +656,8 @@ def repair(canticles: list[str], only: int | None) -> int:
                     continue
                 unit_texts = [text_by_no[no] for no in unit]
                 rows_by_line = {no: list(out[no]) for no in unit}
-                for r in _repair_unit(unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows):
+                for r in _repair_unit(unit, unit_texts, rows_by_line, morph_rows, np_rows,
+                                      dep_rows, case_rows):
                     rows = out[r.before.line]
                     rows[rows.index(r.before)] = r.after
                     if r.kind == "null_subject":
@@ -695,6 +709,7 @@ def _fix_canto(
     morph_rows = _morph_rows(canticle, number)
     np_rows = _np_rows(canticle, number)
     dep_rows = _dep_rows(canticle, number)
+    case_rows = _case_rows(canticle, number)
     lines = api.canto(canticle, number).lines()
     text_by_no = {line.no: line.text for line in lines}
     nos_all = [line.no for line in lines]
@@ -713,7 +728,7 @@ def _fix_canto(
             unit_texts = [text_by_no[no] for no in unit]
             rows_by_line = {no: list(out[no]) for no in unit}
             _, soft_before = _classify_violations(
-                unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows,
+                unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows, case_rows,
             )
             if not soft_before:
                 continue
@@ -725,7 +740,7 @@ def _fix_canto(
             if new_rows is None:
                 continue
             _, soft_after = _classify_violations(
-                unit, unit_texts, new_rows, morph_rows, np_rows, dep_rows,
+                unit, unit_texts, new_rows, morph_rows, np_rows, dep_rows, case_rows,
             )
             if _is_improvement(soft_before, soft_after):
                 for no in unit:

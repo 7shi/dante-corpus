@@ -985,7 +985,7 @@ line	token	word	deprel	head_line	head_token
 139	1	per	case	139	3
 139	2	ognun	det	139	3
 139	3	tempo	obl	138	1
-139	4	ch'	obj	139	7
+139	4	ch'	obl	139	7
 139	5	elli	nsubj	139	7
 139	6	è	aux	139	7
 139	7	stato	acl:relcl	139	3

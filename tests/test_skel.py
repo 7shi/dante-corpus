@@ -1004,6 +1004,90 @@ def test_classify_divergence_explicit_ccomp_flattened_still_flagged():
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
+# --- _classify_divergence: Phase 5r rule U (the `case` annex as a third read) -----------
+
+
+def test_case_supports_role_mapping():
+    assert skel._case_supports_role("nominative", "subj")
+    assert skel._case_supports_role("accusative", "obj")
+    assert skel._case_supports_role("dative", "iobj")
+    assert skel._case_supports_role("dative", "obl:a")
+    assert skel._case_supports_role("ablative", "obl")
+    assert skel._case_supports_role("locative", "obl:in")
+    # `a` marks both the indirect object and a place, so `obl:a` stays compatible with both.
+    assert skel._case_supports_role("locative", "obl:a")
+    # No role mapping: these decide nothing either way.
+    assert not skel._case_supports_role("reflexive", "obj")
+    assert not skel._case_supports_role("genitive", "obl:di")
+    assert not skel._case_supports_role("vocative", "subj")
+    # A fused token's `SLOT_SEP`-joined value matches no single role.
+    assert not skel._case_supports_role("dative+accusative", "iobj")
+
+
+def test_classify_divergence_case_corroborates_derived_accepted():
+    # "mi pesa": the same fixture as the rule-N test above, which stays flagged without the
+    # annex — `case` says dative, which corroborates the derived `obl:a` and not the given `obj`.
+    derived = {1: [skel.SkelRow(1, 2, "pesa", "obl:a", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "pesa", "obj", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="mi", deprel="obl", head_line=1, head_token=2),
+    }
+    case_by_position = {(1, 1): "dative"}
+    assert skel._classify_divergence(
+        given, derived, dep_index_by_pos, {(1, 1): "pronoun"}, case_by_position) == []
+
+
+def test_classify_divergence_case_corroborates_given_still_flagged():
+    # The mirror direction — the annex siding with the LLM against `dep` — is never an automatic
+    # accept; it is a `dep`-correction candidate for hand review.
+    derived = {1: [skel.SkelRow(1, 2, "pesa", "obl:a", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "pesa", "obj", 1, 1)]}
+    case_by_position = {(1, 1): "accusative"}
+    violations = skel._classify_divergence(
+        given, derived, {}, {(1, 1): "pronoun"}, case_by_position)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 1) for v in violations)
+
+
+def test_classify_divergence_case_corroborating_both_sides_still_flagged():
+    # `ablative` supports every oblique label, so it cannot choose between two of them. (The
+    # `iobj`/`obl:a` pair can't reach here at all — Phase 1 canonicalizes `iobj` to `obl:a`.)
+    derived = {1: [skel.SkelRow(1, 2, "disse", "obl:a", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "disse", "obl:con", 1, 1)]}
+    case_by_position = {(1, 1): "ablative"}
+    violations = skel._classify_divergence(
+        given, derived, {}, {(1, 1): "pronoun"}, case_by_position)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 1) for v in violations)
+
+
+def test_classify_divergence_case_deciding_neither_side_still_flagged():
+    # `reflexive` maps onto no role at all.
+    derived = {1: [skel.SkelRow(1, 2, "volsi", "obj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "volsi", "subj", 1, 1)]}
+    case_by_position = {(1, 1): "reflexive"}
+    violations = skel._classify_divergence(
+        given, derived, {}, {(1, 1): "pronoun"}, case_by_position)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 1) for v in violations)
+
+
+def test_classify_divergence_case_on_fused_token_still_flagged():
+    # `recarne` (`verb+pronoun`): the annex's `ablative` is the enclitic `ne`'s case, but the
+    # argument cited here is the infinitive itself, so it decides nothing about that role.
+    derived = {1: [skel.SkelRow(1, 1, "vo", "obl", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "vo", "xcomp", 1, 2)]}
+    morph_pos = {(1, 2): "verb+pronoun"}
+    violations = skel._classify_divergence(given, derived, {}, morph_pos, {(1, 2): "ablative"})
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 2) for v in violations)
+
+
+def test_classify_divergence_case_absent_position_unchanged():
+    # A non-pronoun argument has no row in the sparse annex, so the rule never fires.
+    derived = {1: [skel.SkelRow(1, 2, "vide", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 2, "vide", "subj", 1, 3)]}
+    violations = skel._classify_divergence(
+        given, derived, {}, {(1, 1): "pronoun"}, {(1, 1): "accusative"})
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
+
+
 # --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
 
 

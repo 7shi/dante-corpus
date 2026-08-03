@@ -363,7 +363,7 @@ line	token	word	deprel	head_line	head_token
 52	6	questo	det	52	7
 52	7	stato	obl	52	4
 53	1	quando	mark	53	3
-53	2	ci	obj	53	3
+53	2	ci	obl	53	3
 53	3	vidi	advcl	52	4
 53	4	venire	xcomp	53	3
 53	5	un	det	53	6

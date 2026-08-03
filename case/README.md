@@ -46,7 +46,10 @@ accusative/dative contradictions Step 4 had already identified but never written
 `case/*.tsv` (that round only ever edited `dep/`); **"frozen" means no wholesale regeneration**,
 not that a demonstrable per-position error stands uncorrected. Steps 7-9 then worked through the
 remaining named residue shape by shape, closing the last one (`accusative`-vs-`nsubj`) on
-2026-08-03. `--stats` now reports **32 contradictions / 28 impossible pairings** against `dep`,
+2026-08-03; Step 10 the same day spent four more corrections that Layer 5's rule-U round surfaced
+(see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Phase 5r*, which also made this column
+a third read in Layer 5's checker). `--stats` now reports **32 contradictions / 26 impossible
+pairings** against `dep`,
 recorded as measured residue: every one of them is a position read individually and left standing
 for a stated structural reason (accusative-and-infinitive, fused infinitive+clitic, free relatives,
 causative causees, impersonal dative-experiencers, Latin quotations), not an uninspected remainder.
@@ -226,6 +229,13 @@ that or destroy it, depending entirely on how it is generated.
 This is what the build actually did (see *Status* above), and it is why a contradiction with `dep`
 is a candidate for a hand-verified Layer-4 correction round — never an automatic edit to
 `case/*.tsv`, and never a checker exemption that silences a Layer-5 violation.
+
+**Where this column *may* silence a Layer-5 violation is the opposite configuration**, and it is
+the 2-of-3 adjudication the bullets above authorize: `case` and `dep` **agreeing** against the
+LLM's skeleton. That is Layer 5's rule U (`skel._case_corroborated_role`, 2026-08-03) — it accepts
+a `role_mismatch` only when this column corroborates the `dep`-derived role *and not* the LLM's,
+and it is one-directional by construction, so a position where `case` dissents from `dep` is never
+silenced by it; those go to a hand-verified round exactly as the paragraph above requires.
 
 **The prompt matches the frozen artifact.** Two word-order rules — a relative pronoun is
 nominative only when its clause has no other subject; a verb takes at most one direct object, so a

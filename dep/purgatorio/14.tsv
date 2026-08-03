@@ -93,7 +93,7 @@ line	token	word	deprel	head_line	head_token
 12	3	ne	obj	12	4
 12	4	consola	ccomp	10	2
 12	5	e	cc	12	7
-12	6	ne	obj	12	7
+12	6	ne	iobj	12	7
 12	7	ditta	conj	12	4
 13	1	onde	advmod	13	2
 13	2	vieni	ccomp	12	7
@@ -102,7 +102,7 @@ line	token	word	deprel	head_line	head_token
 13	5	se'	conj	13	2
 13	6	ché	mark	13	9
 13	7	tu	nsubj	13	9
-13	8	ne	obl	13	9
+13	8	ne	obj	13	9
 13	9	fai	advcl	12	4
 14	1	tanto	advmod	14	2
 14	2	maravigliar	xcomp	13	9
