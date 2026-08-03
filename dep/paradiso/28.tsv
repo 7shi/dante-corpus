@@ -502,8 +502,8 @@ line	token	word	deprel	head_line	head_token
 70	1	Dunque	advmod	71	5
 70	2	costui	nsubj	71	5
 70	3	che	nsubj	70	6
-70	4	tutto	det	70	5
-70	5	quanto	obj	70	6
+70	4	tutto	det	71	3
+70	5	quanto	fixed	70	4
 70	6	rape	acl:relcl	70	2
 71	1	l'	det	71	3
 71	2	altro	amod	71	3
@@ -751,9 +751,9 @@ line	token	word	deprel	head_line	head_token
 106	1	e	cc	106	2
 106	2	dei	case	106	3
 106	3	saper	obl	104	2
-106	4	che	obj	106	6
+106	4	che	mark	106	6
 106	5	tutti	nsubj	106	6
-106	6	hanno	acl:relcl	106	3
+106	6	hanno	ccomp	106	3
 106	7	diletto	obj	106	6
 107	1	quanto	advmod	107	6
 107	2	la	det	107	4

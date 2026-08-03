@@ -3,7 +3,7 @@ line	token	word	deprel	head_line	head_token
 1	2	cen	obj	1	3
 1	3	porta	root	0	0
 1	4	l'	det	1	5
-1	5	un	obj	1	3
+1	5	un	nsubj	1	3
 1	6	de'	case	1	8
 1	7	duri	amod	1	8
 1	8	margini	nmod	1	5
@@ -478,7 +478,7 @@ line	token	word	deprel	head_line	head_token
 67	4	mondo	obl	67	6
 67	5	li	obj	67	6
 67	6	chiama	root	0	0
-67	7	orbi	obj	67	6
+67	7	orbi	attr	67	6
 68	1	gent'	nsubj	68	3
 68	2	è	cop	68	3
 68	3	avara	conj	67	6
@@ -692,12 +692,12 @@ line	token	word	deprel	head_line	head_token
 96	1	come	mark	96	3
 96	2	le	iobj	96	3
 96	3	piace	advcl	95	2
-96	4	e	cc	95	2
+96	4	e	cc	96	6
 96	5	'l	det	96	6
-96	6	villan	nsubj	95	2
+96	6	villan	conj	95	2
 96	7	la	det	96	9
 96	8	sua	det:poss	96	9
-96	9	marra	obj	95	2
+96	9	marra	orphan	96	6
 97	1	Lo	det	97	3
 97	2	mio	det:poss	97	3
 97	3	maestro	nsubj	98	3

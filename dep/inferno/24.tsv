@@ -677,7 +677,7 @@ line	token	word	deprel	head_line	head_token
 93	2	sperar	advcl	92	1
 93	3	pertugio	obj	93	2
 93	4	o	cc	93	5
-93	5	elitropia	obj	93	2
+93	5	elitropia	conj	93	3
 94	1	con	case	94	2
 94	2	serpi	obl	94	7
 94	3	le	det	94	4
@@ -694,7 +694,7 @@ line	token	word	deprel	head_line	head_token
 95	7	coda	obj	95	2
 96	1	e	cc	96	3
 96	2	'l	det	96	3
-96	3	capo	obj	95	2
+96	3	capo	conj	95	7
 96	4	ed	cc	96	7
 96	5	eran	cop	96	7
 96	6	dinanzi	advmod	96	7
@@ -935,7 +935,7 @@ line	token	word	deprel	head_line	head_token
 128	1	e	cc	128	2
 128	2	domanda	conj	127	5
 128	3	che	det	128	4
-128	4	colpa	obj	128	8
+128	4	colpa	nsubj	128	8
 128	5	qua	advmod	128	8
 128	6	giù	advmod	128	8
 128	7	'l	obj	128	8
@@ -944,7 +944,7 @@ line	token	word	deprel	head_line	head_token
 129	2	io	nsubj	129	4
 129	3	'l	obj	129	4
 129	4	vidi	advcl	128	2
-129	5	uomo	obj	129	4
+129	5	uomo	attr	129	4
 129	6	di	case	129	7
 129	7	sangue	nmod	129	5
 129	8	e	cc	129	10

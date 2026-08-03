@@ -74,8 +74,8 @@ line	token	word	deprel	head_line	head_token
 11	8	duri	acl:relcl	11	5
 12	1	etternalmente	advmod	11	8
 12	2	quello	det	12	3
-12	3	amor	obj	12	5
-12	4	si	obj	12	5
+12	3	amor	nsubj	12	5
+12	4	si	expl	12	5
 12	5	spoglia	acl:relcl	11	1
 13	1	Quale	advmod	14	1
 13	2	per	case	13	4
@@ -421,7 +421,7 @@ line	token	word	deprel	head_line	head_token
 59	7	domandi	conj	55	2
 60	1	che	mark	60	3
 60	2	alcun	det	60	3
-60	3	altro	obj	59	7
+60	3	altro	obl	59	2
 60	4	in	case	60	6
 60	5	questa	det	60	6
 60	6	turba	nmod	60	3
@@ -816,7 +816,7 @@ line	token	word	deprel	head_line	head_token
 115	5	i	det	115	6
 115	6	Nerli	nmod	115	3
 115	7	e	cc	115	8
-115	8	quel	obj	115	2
+115	8	quel	conj	115	3
 115	9	del	case	115	10
 115	10	Vecchio	nmod	115	8
 116	1	esser	xcomp	115	2
@@ -828,7 +828,7 @@ line	token	word	deprel	head_line	head_token
 117	1	e	cc	117	4
 117	2	le	det	117	4
 117	3	sue	det:poss	117	4
-117	4	donne	obj	115	2
+117	4	donne	conj	115	3
 117	5	al	case	117	6
 117	6	fuso	obl	115	2
 117	7	e	cc	117	8

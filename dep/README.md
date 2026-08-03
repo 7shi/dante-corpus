@@ -99,13 +99,19 @@ call** (`validate_unit`):
   - **Non-nominal `acl:relcl` head** — only checked when Layer-2 morphology is present; flags a
     relative clause whose antecedent's POS is not nominal and does not carry the `RELCL_HEAD` note
     flag (a likely mis-attachment; see [CORRECTIONS.md](CORRECTIONS.md)).
+  - **More than one `obj` per predicate** — UD does not allow it: coordinated objects attach the
+    later conjuncts to the first with `conj`, and a secondary predicate over an object is `attr`
+    (the corpus's frozen label; see *Design decisions*). A flattened pair is therefore a mis-parse,
+    not a second house style — the corpus already uses the UD shape everywhere else. Opened and
+    closed in one round (203 predicates → 0); see [CORRECTIONS.md](CORRECTIONS.md).
 
 **Measured over the full 100-canto build** (`--check`): **0 hard, 0 soft**. See
 [CORRECTIONS.md](CORRECTIONS.md) for the full path from the initial pilot measurement (636 soft)
 down to this: the `attr` vocabulary freeze, `--fix-labels`' deterministic respelling cleanup, the
 LLM `--fix` regeneration pass, the `RELCL_HEAD` substantivization flag, and one hand-corrected
 mis-attachment (inferno 19:73-74, an `acl:relcl`/`nsubj` chain that had attached to a passive
-participle instead of its more plausible nominal antecedent).
+participle instead of its more plausible nominal antecedent), and the 203 multiple-`obj` predicates
+the newest rule opened and closed.
 
 The build retries a parse unit (max 2) before giving up on the canto; there is **no per-line
 fallback** — a lone line cannot host cross-line heads, so the parse unit is the smallest thing

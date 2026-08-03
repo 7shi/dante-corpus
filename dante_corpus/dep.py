@@ -260,7 +260,11 @@ def validate_unit(
     for `;`/`:`-sub-split long sentences, see `sentence_groups`); `deprel` outside the frozen
     `DEPRELS` vocabulary; an `acl:relcl` relation whose head token is not a nominal Layer-2 POS
     (only checked when `morph_rows` is supplied, the Layer 2-aware policy PLAN.md calls for
-    resolving relative-pronoun antecedents structurally rather than storing them).
+    resolving relative-pronoun antecedents structurally rather than storing them); a predicate
+    carrying more than one `obj` child, which UD does not allow — coordinated objects attach the
+    later conjuncts to the first with `conj`, and an object complement is `xcomp`, so a flattened
+    pair is a mis-parse rather than a convention difference (the corpus already uses the UD shape
+    everywhere else: 304 `conj` children of an `obj`).
     """
     violations: list[Violation] = []
     token_lists = {no: _alpha_tokens(t) for no, t in zip(nos, texts)}
@@ -333,6 +337,20 @@ def validate_unit(
                                   f"acl:relcl head {row.head_line}.{row.head_token} "
                                   f"is {head_row.pos!r}, not nominal")
                     )
+
+    obj_children: dict[tuple[int, int], list[DepRow]] = {}
+    for row in all_rows:
+        if row.deprel == "obj":
+            obj_children.setdefault((row.head_line, row.head_token), []).append(row)
+    for (head_line, head_token), objs in sorted(obj_children.items()):
+        if len(objs) < 2:
+            continue
+        cited = ", ".join(f"{o.line}.{o.token} {o.word!r}"
+                          for o in sorted(objs, key=lambda r: (r.line, r.token)))
+        violations.append(
+            Violation(head_line, "tag",
+                      f"predicate {head_line}.{head_token} has {len(objs)} obj children: {cited}")
+        )
 
     return violations
 

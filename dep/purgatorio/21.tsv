@@ -142,15 +142,15 @@ line	token	word	deprel	head_line	head_token
 20	7	sù	advmod	20	9
 20	8	non	advmod	20	9
 20	9	degni	acl:relcl	20	4
-21	1	chi	nsubj	21	3
-21	2	v'	obj	21	3
-21	3	ha	ccomp	19	2
+21	1	chi	nsubj	21	9
+21	2	v'	obj	21	9
+21	3	ha	aux	21	9
 21	4	per	case	21	7
 21	5	la	det	21	7
 21	6	sua	det:poss	21	7
-21	7	scala	obl	21	3
-21	8	tanto	amod	21	9
-21	9	scorte	obj	21	3
+21	7	scala	obl	21	9
+21	8	tanto	advmod	21	9
+21	9	scorte	ccomp	19	2
 22	1	E	cc	24	2
 22	2	'l	det	22	3
 22	3	dottor	nsubj	24	2
@@ -508,7 +508,7 @@ line	token	word	deprel	head_line	head_token
 70	5	e	cc	71	1
 70	6	li	det	71	1
 70	7	pii	amod	71	1
-71	1	spiriti	obj	70	2
+71	1	spiriti	conj	70	4
 71	2	per	case	71	4
 71	3	lo	det	71	4
 71	4	monte	obl	71	5
@@ -572,7 +572,7 @@ line	token	word	deprel	head_line	head_token
 78	7	congaudete	ccomp	76	6
 79	1	Ora	advmod	79	4
 79	2	chi	nsubj	79	3
-79	3	fosti	obj	79	7
+79	3	fosti	ccomp	79	7
 79	4	piacciati	root	0	0
 79	5	ch'	mark	79	7
 79	6	io	nsubj	79	7
@@ -581,7 +581,7 @@ line	token	word	deprel	head_line	head_token
 80	2	perché	mark	80	5
 80	3	tanti	amod	80	4
 80	4	secoli	obl	80	5
-80	5	giaciuto	obj	79	7
+80	5	giaciuto	conj	79	3
 81	1	qui	advmod	80	5
 81	2	se'	aux	80	5
 81	3	ne	case	81	5
@@ -654,7 +654,7 @@ line	token	word	deprel	head_line	head_token
 90	5	ornar	xcomp	90	2
 90	6	di	case	90	7
 90	7	mirto	obl	90	5
-91	1	Stazio	obj	91	8
+91	1	Stazio	attr	91	8
 91	2	la	det	91	3
 91	3	gente	nsubj	91	8
 91	4	ancor	advmod	91	8
@@ -889,7 +889,7 @@ line	token	word	deprel	head_line	head_token
 123	1	ma	cc	123	5
 123	2	più	advmod	123	8
 123	3	d'	case	123	4
-123	4	ammirazion	obj	123	8
+123	4	ammirazion	nsubj	123	8
 123	5	vo'	conj	121	7
 123	6	che	mark	123	8
 123	7	ti	obj	123	8

@@ -288,8 +288,8 @@ line	token	word	deprel	head_line	head_token
 39	5	tutto	nsubj	39	7
 39	6	si	expl	39	7
 39	7	tolle	advcl	38	5
-40	1	tal	obj	40	3
-40	2	mi	obj	40	3
+40	1	tal	attr	40	3
+40	2	mi	expl	40	3
 40	3	fec'	root	0	0
 40	4	ïo	nsubj	40	3
 40	5	'n	case	40	8

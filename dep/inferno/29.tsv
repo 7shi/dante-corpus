@@ -599,7 +599,7 @@ line	token	word	deprel	head_line	head_token
 84	4	pesce	obl	84	9
 84	5	che	nsubj	84	9
 84	6	più	advmod	84	7
-84	7	larghe	obj	84	9
+84	7	larghe	attr	84	9
 84	8	l'	obj	84	9
 84	9	abbia	conj	83	4
 85	1	O	mark	85	2
@@ -911,7 +911,7 @@ line	token	word	deprel	head_line	head_token
 125	3	detto	obl	125	1
 125	4	mio	det:poss	125	3
 125	5	Tra'	ccomp	125	1
-125	6	mene	obj	125	5
+125	6	mene	obl	125	5
 125	7	Stricca	obj	125	5
 126	1	che	nsubj	126	2
 126	2	seppe	acl:relcl	125	7

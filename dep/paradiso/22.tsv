@@ -144,13 +144,13 @@ line	token	word	deprel	head_line	head_token
 20	3	illustri	amod	20	4
 20	4	spiriti	obj	20	5
 20	5	vedrai	advcl	19	2
-21	1	se	mark	20	5
+21	1	se	mark	21	7
 21	2	com'	mark	21	4
 21	3	io	nsubj	21	4
-21	4	dico	advcl	20	5
+21	4	dico	advcl	21	7
 21	5	l'	det	21	6
-21	6	aspetto	obj	20	5
-21	7	redui	amod	21	6
+21	6	aspetto	obj	21	7
+21	7	redui	advcl	20	5
 22	1	Come	mark	22	4
 22	2	a	case	22	3
 22	3	lei	obl	22	4
@@ -810,7 +810,7 @@ line	token	word	deprel	head_line	head_token
 113	5	quale	obl	113	7
 113	6	io	nsubj	113	7
 113	7	riconosco	acl:relcl	112	5
-114	1	tutto	obj	113	7
+114	1	tutto	det	114	8
 114	2	qual	nsubj	114	5
 114	3	che	mark	114	5
 114	4	si	expl	114	5

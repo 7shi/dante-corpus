@@ -287,3 +287,44 @@ def test_write_load_round_trip(tmp_path, monkeypatch):
     assert dep.has_dep("inferno", 1)
     loaded = dep.load_dep("inferno", 1)
     assert loaded[1] == tuple(rows)
+
+
+def test_validate_unit_flags_two_obj_children_as_soft():
+    nos, texts = [1], ["vide Isara ed Era"]
+    rows = [
+        dep.DepRow(1, 1, "vide", "root", 0, 0),
+        dep.DepRow(1, 2, "Isara", "obj", 1, 1),
+        dep.DepRow(1, 3, "ed", "cc", 1, 4),
+        dep.DepRow(1, 4, "Era", "obj", 1, 1),  # flattened coordination: two obj on one predicate
+    ]
+    violations = dep.validate_unit(nos, texts, _unit(rows))
+    tags = [v for v in violations if v.kind == "tag" and "obj children" in v.detail]
+    assert len(tags) == 1
+    assert "1.2 'Isara'" in tags[0].detail and "1.4 'Era'" in tags[0].detail
+    assert not any(v.kind in ("count", "word", "head", "cycle", "root") for v in violations)
+
+
+def test_validate_unit_accepts_coordinated_obj_as_conj():
+    nos, texts = [1], ["vide Isara ed Era"]
+    rows = [
+        dep.DepRow(1, 1, "vide", "root", 0, 0),
+        dep.DepRow(1, 2, "Isara", "obj", 1, 1),
+        dep.DepRow(1, 3, "ed", "cc", 1, 4),
+        dep.DepRow(1, 4, "Era", "conj", 1, 2),  # UD shape: later conjunct hangs off the first
+    ]
+    violations = dep.validate_unit(nos, texts, _unit(rows))
+    assert not any("obj children" in v.detail for v in violations)
+
+
+def test_validate_unit_counts_obj_children_per_predicate():
+    nos, texts = [1], ["vide Isara ed Era vide Senna"]
+    rows = [
+        dep.DepRow(1, 1, "vide", "root", 0, 0),
+        dep.DepRow(1, 2, "Isara", "obj", 1, 1),
+        dep.DepRow(1, 3, "ed", "cc", 1, 4),
+        dep.DepRow(1, 4, "Era", "conj", 1, 2),
+        dep.DepRow(1, 5, "vide", "conj", 1, 1),
+        dep.DepRow(1, 6, "Senna", "obj", 1, 5),  # a second predicate's own single obj is fine
+    ]
+    violations = dep.validate_unit(nos, texts, _unit(rows))
+    assert not any("obj children" in v.detail for v in violations)

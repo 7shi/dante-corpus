@@ -435,9 +435,9 @@ line	token	word	deprel	head_line	head_token
 61	4	udir	obj	61	2
 61	5	mortal	amod	61	4
 61	6	sì	advmod	61	7
-61	7	come	advmod	61	2
+61	7	come	mark	61	9
 61	8	il	det	61	9
-61	9	viso	obj	61	2
+61	9	viso	advcl	61	2
 62	1	rispuose	root	0	0
 62	2	a	case	62	3
 62	3	me	obl	62	1
@@ -573,7 +573,7 @@ line	token	word	deprel	head_line	head_token
 80	5	fece	acl:relcl	79	7
 80	6	il	det	80	7
 80	7	lume	obj	80	5
-80	8	centro	obj	80	5
+80	8	centro	attr	80	5
 81	1	girando	advcl	80	5
 81	2	sé	obj	81	1
 81	3	come	case	81	5

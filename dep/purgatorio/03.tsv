@@ -1020,8 +1020,8 @@ line	token	word	deprel	head_line	head_token
 144	1	come	mark	144	4
 144	2	m'	obj	144	4
 144	3	hai	aux	144	4
-144	4	visto	obj	143	1
-144	5	e	conj	144	8
+144	4	visto	ccomp	143	1
+144	5	e	cc	144	8
 144	6	anco	advmod	144	8
 144	7	esto	det	144	8
 144	8	divieto	obj	143	1

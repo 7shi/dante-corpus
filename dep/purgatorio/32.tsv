@@ -557,7 +557,7 @@ line	token	word	deprel	head_line	head_token
 81	3	maestro	obl	81	6
 81	4	suo	det:poss	81	3
 81	5	cangiata	amod	81	6
-81	6	stola	obj	79	2
+81	6	stola	conj	79	5
 82	1	tal	advmod	82	2
 82	2	torna'	conj	77	3
 82	3	io	nsubj	82	2
@@ -669,7 +669,7 @@ line	token	word	deprel	head_line	head_token
 96	7	fera	obl	96	2
 97	1	In	case	97	2
 97	2	cerchio	obl	97	4
-97	3	le	obj	97	4
+97	3	le	iobj	97	4
 97	4	facevan	root	0	0
 97	5	di	case	97	6
 97	6	sé	obl	97	4

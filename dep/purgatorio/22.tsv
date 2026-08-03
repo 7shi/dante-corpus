@@ -31,7 +31,7 @@ line	token	word	deprel	head_line	head_token
 4	7	lor	det:poss	4	8
 4	8	disiro	obj	4	4
 5	1	detto	conj	1	8
-5	2	n'	obj	5	1
+5	2	n'	obl	5	1
 5	3	avea	aux	5	1
 5	4	beati	xcomp	5	1
 5	5	e	cc	6	6
@@ -266,7 +266,7 @@ line	token	word	deprel	head_line	head_token
 39	5	umana	amod	39	6
 39	6	natura	obl	39	1
 40	1	Per	case	40	2
-40	2	che	obj	40	4
+40	2	che	obl	40	4
 40	3	non	advmod	40	4
 40	4	reggi	ccomp	38	3
 40	5	tu	nsubj	40	4
@@ -502,7 +502,7 @@ line	token	word	deprel	head_line	head_token
 74	1	ma	cc	75	3
 74	2	perché	mark	74	3
 74	3	veggi	advcl	75	3
-74	4	mei	obj	74	3
+74	4	mei	advmod	74	3
 74	5	ciò	obj	74	3
 74	6	ch'	obj	74	8
 74	7	io	nsubj	74	8
@@ -692,7 +692,7 @@ line	token	word	deprel	head_line	head_token
 102	4	lattar	acl:relcl	101	8
 102	5	più	advmod	102	4
 102	6	ch'	mark	102	7
-102	7	altri	obj	102	4
+102	7	altri	obl	102	4
 102	8	mai	advmod	102	4
 103	1	nel	case	103	3
 103	2	primo	amod	103	3

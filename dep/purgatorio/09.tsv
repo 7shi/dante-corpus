@@ -546,7 +546,7 @@ line	token	word	deprel	head_line	head_token
 76	3	porta	obj	76	1
 76	4	e	cc	76	6
 76	5	tre	nummod	76	6
-76	6	gradi	obj	76	1
+76	6	gradi	conj	76	3
 76	7	di	case	76	8
 76	8	sotto	nmod	76	6
 77	1	per	case	77	2
@@ -558,7 +558,7 @@ line	token	word	deprel	head_line	head_token
 77	7	diversi	amod	77	6
 78	1	e	cc	78	3
 78	2	un	det	78	3
-78	3	portier	obj	76	1
+78	3	portier	conj	76	3
 78	4	ch'	nsubj	78	7
 78	5	ancor	advmod	78	7
 78	6	non	advmod	78	7
@@ -1015,7 +1015,7 @@ line	token	word	deprel	head_line	head_token
 139	7	tuono	obl	139	3
 140	1	e	cc	140	6
 140	2	Te	obj	140	4
-140	3	Deum	obj	140	4
+140	3	Deum	appos	140	2
 140	4	laudamus	obj	141	1
 140	5	mi	obl	140	6
 140	6	parea	conj	139	3

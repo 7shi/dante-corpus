@@ -2061,3 +2061,38 @@ Steps 6-9 followed: a clear, decidable error gets fixed in the session that find
 `dative` would have contradicted `dep=obj`, so that deprel was retagged `iobj` in the same round);
 impossible pairings: 28 → **26** (both closed by the `dep` retags at
 inferno 10:136.1 and paradiso 23:68.1); `dep=nsubj` agreement 5170/18 → 5172/18.
+
+## Eleven corrections from Layer 4's multiple-`obj` round (2026-08-03)
+
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)'s *"at most one `obj` per predicate" rule* read
+203 predicates against their terzine and retagged 316 rows. Ten of those retags moved a pronoun
+position into fresh contradiction with this annex, and **in all ten the annex was the wrong side** —
+the same two shapes Steps 6-8 worked, found by a different instrument. Fixed here, in the session
+that found them, per this file's standing rule.
+
+**Seven clitic datives read as accusative** (`accusative` → `dative`): inferno 8:93.2 *che **li**
+ha' iscorta sì buia contrada*, 12:86.2 *mostrar **li** mi convien la valle buia*, 25:54.2 *poi
+**li** addentò e l'una e l'altra guancia* (dative of possession), 26:9.8 *che Prato ... **t'**agogna*,
+26:67.3 *che non **mi** facci de l'attender niego*, purgatorio 19:86.3 *ond' elli **m'**assentì ...
+ciò che chiedea*, paradiso 2:63.5 *l'argomentar ch'io **li** farò avverso*. In each the head verb's
+object is filled by something else in the same clause — Step 8's transitivity test, reached this
+time from Layer 4's side.
+
+**Two subjects read as accusative** (`accusative` → `nominative`): inferno 8:93.1 *ché tu qui
+rimarrai, **che** li ha' iscorta sì buia contrada* (the relative resumes *tu*), paradiso 14:5.1 *ne
+la mia mente fé sùbito caso **questo** ch'io dico* (*far caso* is the idiom; *questo* is what makes
+it).
+
+**One subject read where the object stands** (`nominative` → `accusative`): purgatorio 19:144.3
+*pur che la nostra casa non faccia **lei** per essempro malvagia* — *casa* is the subject and *lei*
+what it would make wicked; `dep` had the two inverted and was corrected in the same round.
+
+**Plus one fused-token value** (`accusative+ablative` → `dative+ablative`): inferno 29:125.6
+*«Tra'**mene** Stricca* — *me* is a dativus ethicus, not an object; *ne* keeps its ablative. This is
+the fused-token scope Phase 5r's rule U had to gate on, so the row is also the annex's own answer
+to what that gate excludes.
+
+**State check.** `case --check`: 0 hard. `dep --check`: 0 hard, 0 soft. `pytest`: 154 passed.
+`--stats` contradictions: 32 → **31**; impossible pairings: **26**, unchanged;
+`skel --check`: 3465 → **3509** soft, for the reason
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) states.

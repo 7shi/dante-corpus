@@ -197,7 +197,7 @@ line	token	word	deprel	head_line	head_token
 29	3	giustizia	nsubj	29	4
 29	4	fa	advcl	30	6
 29	5	suo	det:poss	29	6
-29	6	specchio	obj	29	4
+29	6	specchio	attr	29	4
 30	1	che	mark	30	6
 30	2	'l	det	30	3
 30	3	vostro	nsubj	30	6
@@ -711,7 +711,7 @@ line	token	word	deprel	head_line	head_token
 102	4	Romani	obj	102	2
 102	5	al	case	102	6
 102	6	mondo	obl	102	2
-102	7	reverendi	obj	102	2
+102	7	reverendi	attr	102	2
 103	1	esso	nsubj	103	2
 103	2	ricominciò	root	0	0
 103	3	A	case	103	5
@@ -865,9 +865,9 @@ line	token	word	deprel	head_line	head_token
 124	1	Vedrassi	root	0	0
 124	2	la	det	124	3
 124	3	lussuria	obj	124	1
-124	4	e	conj	124	6
+124	4	e	cc	124	6
 124	5	'l	det	124	6
-124	6	viver	obj	124	1
+124	6	viver	conj	124	3
 124	7	molle	amod	124	6
 125	1	di	case	125	2
 125	2	quel	nmod	124	6
@@ -964,7 +964,7 @@ line	token	word	deprel	head_line	head_token
 138	4	corone	conj	138	1
 138	5	han	aux	138	6
 138	6	fatte	acl:relcl	137	5
-138	7	bozze	obj	138	6
+138	7	bozze	attr	138	6
 139	1	E	cc	140	3
 139	2	quel	nsubj	140	3
 139	3	di	case	139	4

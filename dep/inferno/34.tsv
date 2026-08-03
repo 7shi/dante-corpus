@@ -722,7 +722,7 @@ line	token	word	deprel	head_line	head_token
 99	5	e	cc	99	8
 99	6	di	case	99	7
 99	7	lume	nmod	99	8
-99	8	disagio	obj	99	2
+99	8	disagio	conj	99	4
 100	1	Prima	advmod	100	8
 100	2	ch'	mark	100	8
 100	3	io	nsubj	100	8
@@ -1007,7 +1007,7 @@ line	token	word	deprel	head_line	head_token
 135	4	aver	advcl	136	1
 135	5	d'	case	135	7
 135	6	alcun	det	135	7
-135	7	riposo	obj	135	4
+135	7	riposo	nmod	135	3
 136	1	salimmo	conj	134	1
 136	2	sù	advmod	136	1
 136	3	el	det	136	4

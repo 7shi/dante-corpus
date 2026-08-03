@@ -478,13 +478,13 @@ line	token	word	deprel	head_line	head_token
 68	2	l'	det	68	3
 68	3	imagine	nsubj	68	8
 68	4	lor	det:poss	68	3
-68	5	vie	conj	68	8
+68	5	vie	advmod	68	6
 68	6	più	advmod	68	8
 68	7	m'	obj	68	8
 68	8	asciuga	advcl	67	3
-69	1	che	mark	69	9
+69	1	che	mark	69	3
 69	2	'l	det	69	3
-69	3	male	obj	68	8
+69	3	male	obl	68	8
 69	4	ond'	obl	69	9
 69	5	io	nsubj	69	9
 69	6	nel	case	69	7
@@ -1011,8 +1011,8 @@ line	token	word	deprel	head_line	head_token
 138	7	non	advmod	138	8
 138	8	fosse	advcl	138	9
 138	9	agogna	advcl	137	3
-139	1	tal	obj	139	3
-139	2	mi	obj	139	3
+139	1	tal	attr	139	3
+139	2	mi	expl	139	3
 139	3	fec'	root	0	0
 139	4	io	nsubj	139	3
 139	5	non	advmod	139	6

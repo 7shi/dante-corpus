@@ -579,10 +579,10 @@ line	token	word	deprel	head_line	head_token
 83	4	rendili	conj	83	1
 83	5	longevi	xcomp	83	4
 84	1	ed	cc	83	4
-84	2	essi	obj	83	4
-84	3	teco	obl	83	4
+84	2	essi	conj	83	4
+84	3	teco	orphan	84	2
 84	4	le	det	84	5
-84	5	cittadi	obj	83	4
+84	5	cittadi	orphan	84	2
 84	6	e	cc	84	7
 84	7	regni	conj	84	5
 85	1	illustrami	root	0	0

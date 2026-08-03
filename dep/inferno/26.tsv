@@ -66,7 +66,7 @@ line	token	word	deprel	head_line	head_token
 9	5	non	advmod	9	9
 9	6	ch'	mark	9	9
 9	7	altri	conj	9	4
-9	8	t'	obj	9	9
+9	8	t'	iobj	9	9
 9	9	agogna	acl:relcl	9	2
 10	1	E	cc	10	6
 10	2	se	mark	10	4
@@ -104,7 +104,7 @@ line	token	word	deprel	head_line	head_token
 14	2	n'	obl	14	4
 14	3	avea	aux	14	4
 14	4	fatto	acl:relcl	13	8
-14	5	iborni	obj	14	4
+14	5	iborni	attr	14	4
 14	6	a	case	14	7
 14	7	scender	xcomp	14	4
 14	8	pria	advmod	14	7
@@ -290,7 +290,7 @@ line	token	word	deprel	head_line	head_token
 38	4	altro	obj	38	3
 38	5	che	mark	38	7
 38	6	la	det	38	7
-38	7	fiamma	obj	38	3
+38	7	fiamma	obl	38	3
 38	8	sola	amod	38	7
 39	1	sì	advmod	39	6
 39	2	come	mark	39	6
@@ -497,7 +497,7 @@ line	token	word	deprel	head_line	head_token
 66	7	mille	obj	66	6
 67	1	che	mark	67	4
 67	2	non	advmod	67	4
-67	3	mi	obj	67	4
+67	3	mi	iobj	67	4
 67	4	facci	ccomp	65	7
 67	5	de	case	67	7
 67	6	l'	det	67	7

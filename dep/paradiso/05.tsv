@@ -479,7 +479,7 @@ line	token	word	deprel	head_line	head_token
 68	4	peggio	advmod	68	3
 68	5	e	cc	69	2
 68	6	così	advmod	68	7
-68	7	stolto	obj	69	1
+68	7	stolto	attr	69	1
 69	1	ritrovar	xcomp	69	2
 69	2	puoi	conj	67	4
 69	3	il	det	69	5
@@ -689,8 +689,8 @@ line	token	word	deprel	head_line	head_token
 97	6	cambiò	advcl	98	3
 97	7	e	cc	97	8
 97	8	rise	conj	97	6
-98	1	qual	obj	98	3
-98	2	mi	obj	98	3
+98	1	qual	attr	98	3
+98	2	mi	expl	98	3
 98	3	fec'	root	0	0
 98	4	io	nsubj	98	3
 98	5	che	mark	99	2
@@ -726,7 +726,7 @@ line	token	word	deprel	head_line	head_token
 102	4	lo	obj	102	5
 102	5	stimin	acl:relcl	102	2
 102	6	lor	det:poss	102	7
-102	7	pastura	obj	102	5
+102	7	pastura	attr	102	5
 103	1	sì	advmod	103	2
 103	2	vid'	root	0	0
 103	3	io	nsubj	103	2

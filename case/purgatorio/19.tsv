@@ -90,7 +90,7 @@ line	token	word	case
 83	9	io	nominative
 84	5	altro	accusative
 86	2	elli	nominative
-86	3	m'	accusative
+86	3	m'	dative
 87	1	ciò	accusative
 87	2	che	accusative
 88	3	io	nominative
@@ -145,5 +145,5 @@ line	token	word	case
 142	3	io	nominative
 142	6	c'	nominative
 143	3	sé	ablative
-144	3	lei	nominative
+144	3	lei	accusative
 145	6	m'	dative

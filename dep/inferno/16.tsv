@@ -24,7 +24,7 @@ line	token	word	deprel	head_line	head_token
 3	5	l'	det	3	6
 3	6	arnie	nsubj	3	7
 3	7	fanno	acl:relcl	3	3
-3	8	rombo	obj	3	7
+3	8	rombo	attr	3	7
 4	1	quando	mark	4	6
 4	2	tre	nummod	4	3
 4	3	ombre	nsubj	4	6
@@ -170,7 +170,7 @@ line	token	word	deprel	head_line	head_token
 23	3	presa	obj	23	1
 23	4	e	cc	23	6
 23	5	lor	det:poss	23	6
-23	6	vantaggio	obj	23	1
+23	6	vantaggio	conj	23	3
 24	1	prima	advmod	24	6
 24	2	che	mark	24	6
 24	3	sien	aux	24	6

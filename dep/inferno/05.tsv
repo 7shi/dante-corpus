@@ -275,7 +275,7 @@ line	token	word	deprel	head_line	head_token
 42	2	quel	det	42	3
 42	3	fiato	nsubj	43	10
 42	4	li	det	42	5
-42	5	spiriti	obj	43	10
+42	5	spiriti	dislocated	43	10
 42	6	mali	amod	42	5
 43	1	di	case	43	2
 43	2	qua	obl	43	10

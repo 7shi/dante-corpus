@@ -254,7 +254,7 @@ line	token	word	deprel	head_line	head_token
 34	9	sante	amod	35	1
 35	1	virtù	obj	35	4
 35	2	non	advmod	35	4
-35	3	si	obj	35	4
+35	3	si	expl	35	4
 35	4	vestiro	acl:relcl	34	5
 35	5	e	cc	36	1
 35	6	sanza	case	35	7
@@ -686,7 +686,7 @@ line	token	word	deprel	head_line	head_token
 95	4	c'	nsubj	95	5
 95	5	hanno	acl:relcl	95	3
 95	6	Italia	obj	95	5
-95	7	morta	obj	95	5
+95	7	morta	attr	95	5
 96	1	sì	advmod	96	7
 96	2	che	mark	96	7
 96	3	tardi	advmod	96	7

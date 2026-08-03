@@ -7,11 +7,11 @@ line	token	word	deprel	head_line	head_token
 1	6	poema	nsubj	4	1
 1	7	sacro	amod	1	6
 2	1	al	case	2	2
-2	2	quale	obj	2	4
+2	2	quale	obl	2	4
 2	3	ha	aux	2	4
 2	4	posto	acl:relcl	1	6
 2	5	mano	obj	2	4
-2	6	e	cc	2	9
+2	6	e	cc	2	7
 2	7	cielo	nsubj	2	4
 2	8	e	cc	2	9
 2	9	terra	conj	2	7
@@ -71,7 +71,7 @@ line	token	word	deprel	head_line	head_token
 10	5	fede	obl	11	6
 10	6	che	nsubj	10	7
 10	7	fa	acl:relcl	10	5
-10	8	conte	obj	10	7
+10	8	conte	attr	10	7
 11	1	l'	det	11	2
 11	2	anime	obj	10	7
 11	3	a	case	11	4
@@ -283,7 +283,7 @@ line	token	word	deprel	head_line	head_token
 40	5	vuol	advcl	46	1
 40	6	che	mark	40	9
 40	7	tu	nsubj	40	9
-40	8	t'	obj	40	9
+40	8	t'	expl	40	9
 40	9	affronti	ccomp	40	5
 41	1	lo	det	41	3
 41	2	nostro	amod	41	3
@@ -597,8 +597,8 @@ line	token	word	deprel	head_line	head_token
 83	7	seguette	acl:relcl	83	4
 84	1	infin	advmod	83	7
 84	2	la	det	84	3
-84	3	palma	obj	83	7
-84	4	e	conj	84	7
+84	3	palma	obl	83	7
+84	4	e	cc	84	7
 84	5	a	case	84	7
 84	6	l'	det	84	7
 84	7	uscir	obl	83	7
@@ -869,8 +869,8 @@ line	token	word	deprel	head_line	head_token
 120	4	non	advmod	120	6
 120	5	vedente	xcomp	120	6
 120	6	diventa	acl:relcl	118	3
-121	1	tal	obj	121	3
-121	2	mi	obj	121	3
+121	1	tal	attr	121	3
+121	2	mi	expl	121	3
 121	3	fec'	root	0	0
 121	4	ïo	nsubj	121	3
 121	5	a	case	121	8

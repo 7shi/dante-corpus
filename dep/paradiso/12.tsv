@@ -659,7 +659,7 @@ line	token	word	deprel	head_line	head_token
 94	4	al	case	94	5
 94	5	mondo	obl	95	3
 94	6	errante	amod	94	5
-95	1	licenza	obj	94	1
+95	1	licenza	conj	91	2
 95	2	di	case	95	3
 95	3	combatter	xcomp	95	1
 95	4	per	case	95	6

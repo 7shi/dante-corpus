@@ -424,7 +424,7 @@ line	token	word	deprel	head_line	head_token
 57	7	e	cc	57	9
 57	8	s'	expl	57	9
 57	9	attrista	acl:relcl	55	4
-58	1	tal	obj	58	3
+58	1	tal	attr	58	3
 58	2	mi	obj	58	3
 58	3	fece	root	0	0
 58	4	la	det	58	5

@@ -1268,3 +1268,33 @@ def test_pro_drop_features():
     ritrovai = skel.SkelTuple(line=2, token=2, word="ritrovai", skel_id="2.1")
     feats = skel.pro_drop_features(ritrovai, morph_idx, children_idx)
     assert feats  # has person info directly on the finite verb
+
+
+def test_is_verb_pos_does_not_match_adverb():
+    assert skel.is_verb_pos("verb")
+    assert skel.is_verb_pos("verb+pronoun")
+    assert skel.is_verb_pos("conjunction+pronoun+verb")
+    assert skel.is_verb_pos("adverb+verb")
+    assert not skel.is_verb_pos("adverb")
+    assert not skel.is_verb_pos("preposition+adverb")
+    assert not skel.is_verb_pos("noun")
+
+
+def test_derive_unit_does_not_promote_an_adverb_with_an_oblique():
+    """Rule 2 promotes an argument-bearing *verb*; `altrimenti` is an adverb, not a predicate."""
+    from dante_corpus.dep import DepRow
+    from dante_corpus.morph import MorphRow
+
+    nos = [1]
+    dep_rows = {1: [
+        DepRow(1, 1, "nuota", "root", 0, 0),
+        DepRow(1, 2, "altrimenti", "advmod", 1, 1),
+        DepRow(1, 3, "Serchio", "obl", 1, 2),
+    ]}
+    morph_rows = {1: [
+        MorphRow(word="nuota", pos="verb"),
+        MorphRow(word="altrimenti", pos="adverb"),
+        MorphRow(word="Serchio", pos="proper noun"),
+    ]}
+    derived = skel.derive_unit(nos, dep_rows, morph_rows)
+    assert {(r.line, r.token) for r in derived[1]} == {(1, 1)}

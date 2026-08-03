@@ -454,9 +454,9 @@ line	token	word	deprel	head_line	head_token
 63	2	di	case	63	3
 63	3	vita	obl	63	8
 63	4	e	cc	63	5
-63	5	sé	obj	63	8
+63	5	sé	conj	63	8
 63	6	di	case	63	7
-63	7	pregio	obl	63	8
+63	7	pregio	orphan	63	5
 63	8	priva	conj	61	1
 64	1	Sanguinoso	advmod	64	2
 64	2	esce	root	0	0

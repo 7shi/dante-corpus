@@ -220,12 +220,12 @@ line	token	word	deprel	head_line	head_token
 32	5	diserto	obj	33	1
 32	6	e	cc	32	8
 32	7	'l	det	32	8
-32	8	martiro	obj	33	1
+32	8	martiro	conj	32	5
 33	1	sofferse	acl:relcl	31	7
 33	2	e	cc	33	5
 33	3	poi	advmod	33	1
 33	4	l'	det	33	5
-33	5	inferno	obj	33	1
+33	5	inferno	conj	32	5
 33	6	da	case	33	8
 33	7	due	nummod	33	8
 33	8	anni	obl	33	1

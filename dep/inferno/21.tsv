@@ -96,7 +96,7 @@ line	token	word	deprel	head_line	head_token
 15	1	chi	nsubj	15	5
 15	2	terzeruolo	obj	15	5
 15	3	e	cc	15	4
-15	4	artimon	obj	15	5
+15	4	artimon	conj	15	2
 15	5	rintoppa	conj	14	6
 16	1	tal	advmod	17	1
 16	2	non	advmod	16	3

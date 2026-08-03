@@ -761,7 +761,7 @@ line	token	word	deprel	head_line	head_token
 108	5	e	cc	108	6
 108	6	Arrigucci	conj	108	4
 109	1	Oh	discourse	109	4
-109	2	quali	obj	109	4
+109	2	quali	attr	109	4
 109	3	io	nsubj	109	4
 109	4	vidi	root	0	0
 109	5	quei	obj	109	4
@@ -849,7 +849,7 @@ line	token	word	deprel	head_line	head_token
 120	5	il	obj	120	6
 120	6	fé	csubj	119	4
 120	7	lor	det:poss	120	8
-120	8	parente	obj	120	6
+120	8	parente	attr	120	6
 121	1	Già	advmod	122	1
 121	2	era	aux	122	1
 121	3	'l	det	121	4
@@ -1053,9 +1053,9 @@ line	token	word	deprel	head_line	head_token
 151	3	genti	obl	151	4
 151	4	vid'	root	0	0
 151	5	io	nsubj	151	4
-151	6	glorïoso	obj	151	4
+151	6	glorïoso	attr	151	4
 152	1	e	cc	152	2
-152	2	giusto	obj	151	4
+152	2	giusto	conj	151	6
 152	3	il	det	152	4
 152	4	popol	obj	151	4
 152	5	suo	det:poss	152	4

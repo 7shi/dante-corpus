@@ -900,7 +900,7 @@ line	token	word	deprel	head_line	head_token
 126	6	suo	det	126	7
 126	7	dimando	obl	126	4
 127	1	La	det	127	2
-127	2	mente	obj	127	4
+127	2	mente	nsubj	127	4
 127	3	tua	amod	127	2
 127	4	conservi	ccomp	128	5
 127	5	quel	obj	127	4

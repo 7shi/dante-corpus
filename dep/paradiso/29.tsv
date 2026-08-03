@@ -964,7 +964,7 @@ line	token	word	deprel	head_line	head_token
 142	4	omai	advmod	142	1
 142	5	e	cc	142	7
 142	6	la	det	142	7
-142	7	larghezza	obj	142	1
+142	7	larghezza	conj	142	3
 143	1	de	case	143	4
 143	2	l'	det	143	4
 143	3	etterno	amod	143	4

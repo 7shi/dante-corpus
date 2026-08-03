@@ -21,7 +21,7 @@ line	token	word	deprel	head_line	head_token
 3	6	padri	obj	3	4
 3	7	ai	case	3	8
 3	8	figli	obl	3	4
-3	9	scarsi	obj	3	4
+3	9	scarsi	attr	3	4
 4	1	tal	attr	4	2
 4	2	era	root	0	0
 4	3	io	nsubj	4	2
@@ -593,10 +593,10 @@ line	token	word	deprel	head_line	head_token
 84	2	non	advmod	84	3
 84	3	curar	obl	83	1
 84	4	d'	case	84	5
-84	5	argento	obj	84	3
+84	5	argento	obl	84	3
 84	6	né	cc	84	8
 84	7	d'	case	84	8
-84	8	affanni	obj	84	3
+84	8	affanni	conj	84	5
 85	1	Le	det	85	3
 85	2	sue	det:poss	85	3
 85	3	magnificenze	nsubj	86	1
@@ -635,8 +635,8 @@ line	token	word	deprel	head_line	head_token
 90	5	mendici	conj	90	3
 91	1	e	cc	91	2
 91	2	portera'	conj	89	4
-91	3	ne	obj	91	2
-91	4	scritto	obj	91	2
+91	3	ne	obl	91	2
+91	4	scritto	attr	91	2
 91	5	ne	case	91	7
 91	6	la	det	91	7
 91	7	mente	obl	91	2
@@ -855,7 +855,7 @@ line	token	word	deprel	head_line	head_token
 120	2	questo	det	120	3
 120	3	tempo	obj	120	4
 120	4	chiameranno	acl:relcl	119	6
-120	5	antico	obj	120	4
+120	5	antico	attr	120	4
 121	1	La	det	121	2
 121	2	luce	nsubj	122	6
 121	3	in	case	121	4

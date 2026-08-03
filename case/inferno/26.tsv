@@ -9,7 +9,7 @@ line	token	word	case
 9	3	che	accusative
 9	6	ch'	nominative
 9	7	altri	nominative
-9	8	t'	accusative
+9	8	t'	dative
 11	3	ei	nominative
 12	3	mi	dative
 12	7	m'	reflexive
@@ -70,7 +70,7 @@ line	token	word	case
 64	2	ei	nominative
 65	3	io	nominative
 65	6	ten	accusative+ablative
-67	3	mi	accusative
+67	3	mi	dative
 69	6	lei	ablative
 69	7	mi	reflexive
 70	2	elli	nominative

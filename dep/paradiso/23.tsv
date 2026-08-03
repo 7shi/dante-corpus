@@ -402,7 +402,7 @@ line	token	word	deprel	head_line	head_token
 60	3	il	det	60	5
 60	4	santo	amod	60	5
 60	5	aspetto	nsubj	60	6
-60	6	facea	obj	59	4
+60	6	facea	ccomp	59	4
 60	7	mero	xcomp	60	6
 61	1	e	cc	62	1
 61	2	così	advmod	62	1

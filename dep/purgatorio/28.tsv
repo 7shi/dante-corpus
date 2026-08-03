@@ -331,9 +331,9 @@ line	token	word	deprel	head_line	head_token
 49	2	mi	iobj	49	3
 49	3	fai	root	0	0
 49	4	rimembrar	xcomp	49	3
-49	5	dove	obj	49	8
+49	5	dove	advmod	49	8
 49	6	e	cc	49	7
-49	7	qual	obj	49	8
+49	7	qual	attr	49	8
 49	8	era	ccomp	49	4
 50	1	Proserpina	nsubj	49	8
 50	2	nel	case	50	3
@@ -344,8 +344,8 @@ line	token	word	deprel	head_line	head_token
 51	2	madre	nsubj	50	5
 51	3	lei	obj	50	5
 51	4	ed	cc	51	5
-51	5	ella	nsubj	49	8
-51	6	primavera	obj	49	8
+51	5	ella	conj	49	8
+51	6	primavera	orphan	51	5
 52	1	Come	mark	52	3
 52	2	si	obj	52	3
 52	3	volge	advcl	55	1
@@ -475,7 +475,7 @@ line	token	word	deprel	head_line	head_token
 69	6	seme	nmod	69	4
 69	7	gitta	acl:relcl	68	3
 70	1	Tre	det	70	2
-70	2	passi	obj	70	4
+70	2	passi	obl	70	4
 70	3	ci	obj	70	4
 70	4	facea	conj	73	6
 70	5	il	det	70	6
@@ -505,10 +505,10 @@ line	token	word	deprel	head_line	head_token
 74	4	Sesto	obl	74	2
 74	5	e	cc	74	6
 74	6	Abido	conj	74	4
-75	1	che	mark	73	6
-75	2	quel	obj	73	6
+75	1	che	mark	75	2
+75	2	quel	advcl	73	6
 75	3	da	case	75	4
-75	4	me	obl	73	6
+75	4	me	orphan	75	2
 75	5	perch'	mark	75	9
 75	6	allor	advmod	75	9
 75	7	non	advmod	75	9

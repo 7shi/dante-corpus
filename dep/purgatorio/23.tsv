@@ -385,7 +385,7 @@ line	token	word	deprel	head_line	head_token
 55	5	io	nsubj	55	6
 55	6	lagrimai	acl:relcl	55	2
 55	7	già	advmod	55	8
-55	8	morta	obj	55	6
+55	8	morta	attr	55	6
 56	1	mi	iobj	56	2
 56	2	dà	obj	57	1
 56	3	di	case	56	4
@@ -833,13 +833,13 @@ line	token	word	deprel	head_line	head_token
 115	9	a	case	115	10
 115	10	mente	obl	115	8
 116	1	qual	advmod	116	2
-116	2	fosti	obj	115	8
+116	2	fosti	ccomp	115	8
 116	3	meco	obl	116	2
 116	4	e	cc	116	8
 116	5	qual	advmod	116	8
 116	6	io	nsubj	116	8
 116	7	teco	obl	116	8
-116	8	fui	obj	115	8
+116	8	fui	conj	116	2
 117	1	ancor	advmod	117	3
 117	2	fia	cop	117	3
 117	3	grave	root	0	0

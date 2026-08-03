@@ -669,9 +669,9 @@ line	token	word	deprel	head_line	head_token
 95	2	elli	nsubj	95	1
 95	3	allora	advmod	95	1
 95	4	che	nsubj	95	6
-95	5	s'	obj	95	6
+95	5	s'	expl	95	6
 95	6	appella	acl:relcl	94	6
-95	7	Creta	obj	95	6
+95	7	Creta	attr	95	6
 96	1	sotto	case	96	4
 96	2	'l	det	96	4
 96	3	cui	nmod	96	4

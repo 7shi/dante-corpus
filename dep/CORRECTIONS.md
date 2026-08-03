@@ -710,3 +710,78 @@ there; see `../skel/CORRECTIONS.md`'s *Phase 5r* for all four families.
 
 `dep --check` stays **0 hard, 0 soft**; `pytest` 149 passed; **Layer 5: 3473 → 3465, −8** (with
 the four `case` corrections recorded in [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)).
+
+## The "at most one `obj` per predicate" rule, and the 203 predicates it flagged (2026-08-03)
+
+[`../skel/PLAN.md`](../skel/PLAN.md) section 1 had recorded, without acting on it, that
+corpus-wide a number of predicates carry two or more `obj` children — a shape UD does not allow.
+This round opened it: a new **soft check** in `validate_unit` reports any predicate with more than
+one `obj` child, and every position it flagged was read against its terzina and corrected.
+
+**Why a mis-parse and not a convention difference.** The corpus already uses the UD shape
+everywhere else — measured before opening the round, `conj` attaches to a first conjunct tagged
+`obj` in 304 places, and `cc` attaches to its conjunct in 3471. A flattened `V → obj, obj` pair is
+the model failing to build the coordination, not a second house style. First-conjunct attachment
+(UD's own rule) is what the corrections use; the corpus's existing 740 *chained* `conj → conj`
+coordinations are left alone, since neither the rule nor anything else checks that choice.
+
+**Population: 203 predicates** (188 with two `obj`, 15 with three or more), in three shapes:
+
+| shape | count | what it was |
+|---|---|---|
+| flattened coordination | 68 | a coordinator stands between the two `obj` |
+| object complement etc. | 70 | no coordinator; dominated by predicative complements |
+| clitic | 65 | one of the two `obj` is a clitic pronoun |
+
+**316 row edits across the 203 predicates.** The recurring families:
+
+- **Later conjuncts re-attached (88 `conj`, 11 `cc` head fixes)** — *Bestemmiavano Dio e lor
+  parenti, l'umana spezie e 'l loco e 'l tempo e 'l seme* (inferno 3:103) had six `obj` on one
+  verb; five become `conj` on the first. Four `e`/`ed` tokens tagged `conj` become `cc`.
+- **Object complements → `attr` (63)** — *mi chiamaste Ciacco*, *li chiama orbi*, *fa la valle
+  inferna nera*, *fé i Romani reverendi*. UD has no relation for a secondary predicate over an
+  object; `attr` is the corpus's own frozen label for a predicative nominal/adjective, and Layer 5
+  canonicalizes it to `xcomp` for role comparison anyway (`_ROLE_CANON`). **`xcomp` is wrong here**:
+  it is a `CLAUSE_HEAD_DEPRELS` member, so an adjective tagged `xcomp` makes `derive_unit` invent a
+  predicate tuple for it — measured at +62 `missing_tuple` before the labels were corrected to
+  `attr`. Only three genuinely *verbal* complements keep `xcomp`.
+- **Reflexive/middle clitics → `expl` (22)** — chiefly `farsi` = "become" (*tal mi fec' io*,
+  *cotai si fecer quelle facce*, *si fa vino*), where the clitic is not an argument and the
+  predicative is the `attr`.
+- **Clitic datives → `iobj` (9)** and **partitive/locative `ne`/`vi` → `obl` (27)** — the same two
+  families this file's *Double-`obj` clitic datives* (2026-07-28) and the `case`-annex rounds
+  worked; the new rule finds the residue they did not reach.
+- **Gapping, given UD's treatment (14 `orphan`)** — *giri Fortuna la sua rota ..., e 'l villan la
+  sua marra*; *La sua chiarezza séguita l'ardore; l'ardor la visïone*; *fa l'arco il Sole e Delia
+  il cinto*. The first remnant of the elided clause is promoted to `conj` of the full clause's
+  verb and the other remnants attach to it with `orphan`.
+- **A subject or oblique read as an object (18 `nsubj`, and the `obl` rows above)** — *Ora cen
+  porta l'un de' duri margini*, *poscia la luce ... Ruppe il silenzio*, *quello amor si spoglia*.
+- **Indirect questions and quoted clauses → `ccomp` (10)** — *pensa chi era*, *sappia chi fosti*,
+  *«Usciteci», gridò*.
+- **Four compound-tense mis-assemblies** where the finite `avere` had been made the head and the
+  participle its `obj`: inferno 19:27 *che spezzate averien ritorte*, purgatorio 21:21 *chi v'ha
+  ... tanto scorte*, paradiso 30:140 *simili fatti v'ha al fantolino*, plus paradiso 22:21 *se
+  com' io dico l'aspetto redui*, where a finite verb had been tagged `amod`. In each the
+  participle becomes the clause head and `avere` its `aux`.
+- Singletons: two left dislocations (`dislocated`), one vocative that had been tagged `obj`
+  (inferno 19:46 *«O qual che se'…»*), one Latin quotation (*Te **Deum** laudamus* → `appos`),
+  one `tutto quanto` (`fixed`), and one misassembled NP (paradiso 13:129 *li diritti volti*).
+
+**Nothing was left alone.** Every one of the 203 had a decidable reading.
+
+`dep --check` reports **0 hard, 0 soft** with the new rule in place (203 → 0); `pytest` 154 passed
+(three new tests for the rule). **Eleven `case` rows were corrected alongside** — the retags moved
+ten positions into contradiction with the annex and every one of the ten was the annex's error, not
+the retag's; plus inferno 29:125.6 *Tra'**mene** Stricca*, `accusative+ablative` →
+`dative+ablative`. See [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md); `case --stats`
+contradictions 32 → **31**, impossible pairings **26** unchanged.
+
+**Layer 5's soft count rose, 3465 → 3509 (+44)**, and that is the honest reading of the round, not
+a regression: `derive_unit` reads Layer 4, so where the LLM had agreed with a *wrong* `obj` the two
+now genuinely disagree. By kind: `missing_arg` 1206 → 1156 (−50, arguments the derivation now
+supplies), against `extra_arg` 1649 → 1709 (+60, mostly the 22 clitics that are no longer arguments
+at all), `role_mismatch` 347 → 362 (+15) and `missing_tuple` 26 → 45 (+19, the gapping promotions
+of the paragraph above, which `derive_unit` deliberately treats as elided predicates);
+`extra_tuple` 145 and `argument` 92 unchanged. See
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of the same date.

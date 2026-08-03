@@ -143,7 +143,7 @@ line	token	word	deprel	head_line	head_token
 21	4	tener	xcomp	21	3
 21	5	lo	det	21	6
 21	6	viso	obj	21	4
-21	7	asciutto	obj	21	4
+21	7	asciutto	attr	21	4
 22	1	quando	mark	23	1
 22	2	la	det	22	4
 22	3	nostra	det:poss	22	4
@@ -152,7 +152,7 @@ line	token	word	deprel	head_line	head_token
 22	6	presso	obl	23	1
 23	1	vidi	advcl	21	3
 23	2	sì	advmod	23	3
-23	3	torta	obj	23	1
+23	3	torta	attr	23	1
 23	4	che	mark	24	3
 23	5	'l	det	23	6
 23	6	pianto	nsubj	24	3
@@ -645,7 +645,7 @@ line	token	word	deprel	head_line	head_token
 92	6	loco	obj	92	8
 92	7	prima	advmod	92	8
 92	8	elesse	acl:relcl	92	3
-93	1	Mantüa	obj	93	3
+93	1	Mantüa	attr	93	3
 93	2	l'	obj	93	3
 93	3	appellar	conj	91	1
 93	4	sanz'	case	93	6

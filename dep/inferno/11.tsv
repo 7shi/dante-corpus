@@ -247,7 +247,7 @@ line	token	word	deprel	head_line	head_token
 34	2	per	case	34	3
 34	3	forza	nmod	34	1
 34	4	e	cc	34	5
-34	5	ferute	conj	34	3
+34	5	ferute	conj	34	1
 34	6	dogliose	amod	34	5
 35	1	nel	case	35	2
 35	2	prossimo	obl	35	4
@@ -257,7 +257,7 @@ line	token	word	deprel	head_line	head_token
 35	6	nel	case	35	8
 35	7	suo	det:poss	35	8
 35	8	avere	obl	35	4
-36	1	ruine	obj	35	4
+36	1	ruine	conj	34	1
 36	2	incendi	conj	36	1
 36	3	e	cc	36	4
 36	4	tollette	conj	36	1
@@ -269,7 +269,7 @@ line	token	word	deprel	head_line	head_token
 37	5	che	nsubj	37	7
 37	6	mal	advmod	37	7
 37	7	fiere	acl:relcl	37	4
-38	1	guastatori	obj	38	5
+38	1	guastatori	conj	37	2
 38	2	e	cc	38	3
 38	3	predon	conj	38	1
 38	4	tutti	appos	37	2
@@ -353,7 +353,7 @@ line	token	word	deprel	head_line	head_token
 50	6	e	cc	50	7
 50	7	Caorsa	conj	50	5
 51	1	e	cc	51	2
-51	2	chi	obj	49	6
+51	2	chi	conj	50	5
 51	3	spregiando	advcl	51	7
 51	4	Dio	obj	51	3
 51	5	col	case	51	6
@@ -775,7 +775,7 @@ line	token	word	deprel	head_line	head_token
 110	5	per	case	110	8
 110	6	la	det	110	8
 110	7	sua	det:poss	110	8
-110	8	seguace	obj	111	1
+110	8	seguace	conj	110	3
 111	1	dispregia	conj	107	5
 111	2	poi	advmod	111	6
 111	3	ch'	mark	111	6

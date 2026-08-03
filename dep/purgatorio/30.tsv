@@ -782,7 +782,7 @@ line	token	word	deprel	head_line	head_token
 113	5	hanno	acl:relcl	112	5
 113	6	a	case	113	7
 113	7	lor	nmod	113	8
-113	8	piova	obj	113	5
+113	8	piova	obl	113	5
 114	1	che	mark	114	6
 114	2	nostre	det:poss	114	3
 114	3	viste	nsubj	114	6
@@ -918,7 +918,7 @@ line	token	word	deprel	head_line	head_token
 132	2	nulla	det	132	3
 132	3	promession	obj	132	4
 132	4	rendono	acl:relcl	131	1
-132	5	intera	obj	132	4
+132	5	intera	attr	132	4
 133	1	Né	cc	133	6
 133	2	l'	det	133	3
 133	3	impetrare	nsubj	133	6

@@ -375,7 +375,7 @@ line	token	word	deprel	head_line	head_token
 54	7	panni	obl	54	5
 54	8	bigi	amod	54	7
 55	1	trova'	advcl	52	2
-55	2	mi	obj	55	1
+55	2	mi	expl	55	1
 55	3	stretto	xcomp	55	1
 55	4	ne	case	55	6
 55	5	le	det	55	6
@@ -388,7 +388,7 @@ line	token	word	deprel	head_line	head_token
 56	4	regno	nmod	56	2
 56	5	e	cc	56	7
 56	6	tanta	det	56	7
-56	7	possa	obj	55	1
+56	7	possa	conj	55	8
 57	1	di	case	57	3
 57	2	nuovo	amod	57	3
 57	3	acquisto	nmod	56	7

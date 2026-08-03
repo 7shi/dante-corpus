@@ -771,13 +771,13 @@ line	token	word	deprel	head_line	head_token
 107	6	con	case	107	8
 107	7	le	det	107	8
 107	8	mani	obl	107	5
-108	1	lei	obj	108	8
+108	1	lei	conj	108	8
 108	2	lo	obj	108	3
-108	3	vedere	nsubj	108	8
+108	3	vedere	orphan	108	1
 108	4	e	cc	108	7
 108	5	me	obj	108	8
 108	6	l'	obj	108	7
-108	7	ovrare	conj	108	3
+108	7	ovrare	nsubj	108	8
 108	8	appaga	conj	106	2
 109	1	E	cc	112	3
 109	2	già	advmod	112	3

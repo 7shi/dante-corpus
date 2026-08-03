@@ -4,7 +4,7 @@ line	token	word	deprel	head_line	head_token
 1	3	bene	advmod	1	4
 1	4	intender	xcomp	1	5
 1	5	cupe	acl:relcl	1	2
-2	1	quel	obj	1	1
+2	1	quel	obj	1	4
 2	2	ch'	obj	2	5
 2	3	i'	nsubj	2	5
 2	4	or	advmod	2	5
@@ -228,7 +228,7 @@ line	token	word	deprel	head_line	head_token
 31	6	numi	obl	31	1
 32	1	poscia	advmod	31	1
 32	2	la	det	32	3
-32	3	luce	obj	31	1
+32	3	luce	nsubj	31	1
 32	4	in	case	32	5
 32	5	che	obl	33	5
 32	6	mirabil	amod	32	7
@@ -654,7 +654,7 @@ line	token	word	deprel	head_line	head_token
 91	8	pare	acl:relcl	91	5
 92	1	pensa	root	0	0
 92	2	chi	nsubj	92	3
-92	3	era	obj	92	1
+92	3	era	ccomp	92	1
 92	4	e	cc	92	6
 92	5	la	det	92	6
 92	6	cagion	obj	92	1
@@ -739,7 +739,7 @@ line	token	word	deprel	head_line	head_token
 103	5	io	nsubj	103	6
 103	6	dissi	acl:relcl	103	3
 103	7	e	cc	103	8
-103	8	questo	obj	103	9
+103	8	questo	conj	103	3
 103	9	note	advcl	104	3
 104	1	regal	amod	104	2
 104	2	prudenza	attr	104	3
@@ -931,10 +931,10 @@ line	token	word	deprel	head_line	head_token
 128	7	Scritture	nmod	128	4
 129	1	in	case	129	2
 129	2	render	obl	128	2
-129	3	torti	obj	129	2
-129	4	li	det	129	5
-129	5	diritti	obj	129	2
-129	6	volti	amod	129	5
+129	3	torti	attr	129	2
+129	4	li	det	129	6
+129	5	diritti	amod	129	6
+129	6	volti	obj	129	2
 130	1	Non	advmod	130	2
 130	2	sien	root	0	0
 130	3	le	det	130	4

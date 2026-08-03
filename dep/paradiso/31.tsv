@@ -17,7 +17,7 @@ line	token	word	deprel	head_line	head_token
 3	4	sangue	obl	3	6
 3	5	Cristo	nsubj	3	6
 3	6	fece	acl:relcl	2	5
-3	7	sposa	obj	3	6
+3	7	sposa	attr	3	6
 4	1	ma	cc	10	4
 4	2	l'	det	4	3
 4	3	altra	nsubj	10	4
@@ -39,7 +39,7 @@ line	token	word	deprel	head_line	head_token
 6	4	che	nsubj	6	6
 6	5	la	obj	6	6
 6	6	fece	acl:relcl	6	3
-6	7	cotanta	obj	6	6
+6	7	cotanta	attr	6	6
 7	1	sì	advmod	10	4
 7	2	come	case	7	3
 7	3	schiera	obl	10	4
@@ -179,7 +179,7 @@ line	token	word	deprel	head_line	head_token
 26	7	novella	obl	26	1
 27	1	viso	obj	27	4
 27	2	e	cc	27	3
-27	3	amore	obj	27	4
+27	3	amore	conj	27	1
 27	4	avea	root	0	0
 27	5	tutto	advmod	27	4
 27	6	ad	case	27	8
@@ -234,7 +234,7 @@ line	token	word	deprel	head_line	head_token
 34	4	l'	det	34	7
 34	5	ardüa	amod	34	7
 34	6	sua	det:poss	34	7
-34	7	opra	obj	34	1
+34	7	opra	conj	34	2
 35	1	stupefaciensi	advcl	40	6
 35	2	quando	mark	36	5
 35	3	Laterano	nsubj	36	5
@@ -340,7 +340,7 @@ line	token	word	deprel	head_line	head_token
 50	7	suo	det:poss	50	8
 50	8	riso	obl	50	4
 51	1	e	cc	51	2
-51	2	atti	obj	49	1
+51	2	atti	conj	49	2
 51	3	ornati	amod	51	2
 51	4	di	case	51	6
 51	5	tutte	det	51	6
@@ -470,7 +470,7 @@ line	token	word	deprel	head_line	head_token
 71	2	vidi	conj	70	6
 71	3	lei	obj	71	2
 71	4	che	nsubj	71	6
-71	5	si	obj	71	6
+71	5	si	expl	71	6
 71	6	facea	acl:relcl	71	3
 71	7	corona	obj	71	6
 72	1	reflettendo	advcl	71	6

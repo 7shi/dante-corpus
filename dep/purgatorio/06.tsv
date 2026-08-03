@@ -140,7 +140,7 @@ line	token	word	deprel	head_line	head_token
 19	3	Orso	obj	19	1
 19	4	e	cc	19	6
 19	5	l'	det	19	6
-19	6	anima	obj	19	1
+19	6	anima	conj	19	3
 19	7	divisa	amod	19	6
 20	1	dal	case	20	2
 20	2	corpo	obl	19	7
@@ -269,11 +269,11 @@ line	token	word	deprel	head_line	head_token
 36	7	mente	obl	36	4
 36	8	sana	amod	36	7
 37	1	ché	mark	37	7
-37	2	cima	obj	37	7
+37	2	cima	nsubj	37	7
 37	3	di	case	37	4
 37	4	giudicio	nmod	37	2
 37	5	non	advmod	37	7
-37	6	s'	obj	37	7
+37	6	s'	expl	37	7
 37	7	avvalla	advcl	35	7
 38	1	perché	mark	38	5
 38	2	foco	nsubj	38	5

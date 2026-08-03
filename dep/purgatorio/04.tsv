@@ -792,7 +792,7 @@ line	token	word	deprel	head_line	head_token
 110	3	mostra	acl:relcl	110	1
 110	4	sé	obj	110	3
 110	5	più	advmod	110	6
-110	6	negligente	obj	110	3
+110	6	negligente	attr	110	3
 111	1	che	mark	111	4
 111	2	se	mark	111	4
 111	3	pigrizia	nsubj	111	4

@@ -135,7 +135,7 @@ line	token	word	case
 121	2	io	nominative
 124	5	che	nominative
 124	6	m'	accusative
-125	6	mene	accusative+ablative
+125	6	mene	dative+ablative
 126	1	che	nominative
 127	3	che	nominative
 129	7	s'	reflexive

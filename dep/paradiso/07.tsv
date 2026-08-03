@@ -110,7 +110,7 @@ line	token	word	deprel	head_line	head_token
 18	5	faria	acl:relcl	17	6
 18	6	l'	det	18	7
 18	7	uom	obj	18	5
-18	8	felice	obj	18	5
+18	8	felice	attr	18	5
 19	1	Secondo	case	19	4
 19	2	mio	det:poss	19	4
 19	3	infallibile	amod	19	4

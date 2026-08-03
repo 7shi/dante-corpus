@@ -659,9 +659,9 @@ line	token	word	deprel	head_line	head_token
 90	6	Soldano	nmod	90	4
 91	1	né	cc	91	3
 91	2	sommo	amod	91	3
-91	3	officio	obj	92	1
+91	3	officio	conj	90	2
 91	4	né	cc	91	5
-91	5	ordini	conj	91	3
+91	5	ordini	conj	90	2
 91	6	sacri	amod	91	5
 92	1	guardò	root	0	0
 92	2	in	case	92	3
@@ -670,7 +670,7 @@ line	token	word	deprel	head_line	head_token
 92	5	in	case	92	6
 92	6	me	obl	92	1
 92	7	quel	det	92	8
-92	8	capestro	obj	92	1
+92	8	capestro	conj	90	2
 93	1	che	nsubj	93	3
 93	2	solea	aux	93	3
 93	3	fare	acl:relcl	92	8
@@ -678,7 +678,7 @@ line	token	word	deprel	head_line	head_token
 93	5	suoi	det:poss	93	6
 93	6	cinti	obj	93	3
 93	7	più	advmod	93	8
-93	8	macri	obj	93	3
+93	8	macri	attr	93	3
 94	1	Ma	advmod	96	3
 94	2	come	mark	94	4
 94	3	Costantin	obj	94	4

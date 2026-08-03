@@ -160,7 +160,7 @@ line	token	word	deprel	head_line	head_token
 22	4	che	mark	22	5
 22	5	fai	ccomp	22	3
 22	6	di	case	22	7
-22	7	te	obj	22	5
+22	7	te	obl	22	5
 22	8	parete	obj	22	5
 23	1	al	case	23	2
 23	2	sol	obl	22	5
@@ -262,7 +262,7 @@ line	token	word	deprel	head_line	head_token
 36	5	via	obj	36	3
 36	6	e	cc	36	8
 36	7	lor	det:poss	36	8
-36	8	fortuna	obj	36	3
+36	8	fortuna	conj	36	5
 37	1	Tosto	advmod	37	3
 37	2	che	mark	37	3
 37	3	parton	advcl	39	4
@@ -833,7 +833,7 @@ line	token	word	deprel	head_line	head_token
 117	4	del	case	117	5
 117	5	parlar	nmod	117	3
 117	6	materno	amod	117	5
-118	1	Versi	obj	119	1
+118	1	Versi	obl	119	1
 118	2	d'	case	118	3
 118	3	amore	nmod	118	1
 118	4	e	cc	118	5

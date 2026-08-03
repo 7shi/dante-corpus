@@ -48,7 +48,7 @@ line	token	word	deprel	head_line	head_token
 7	3	incominciai	advcl	1	1
 7	4	a	mark	7	5
 7	5	render	xcomp	7	3
-7	6	vano	obj	7	5
+7	6	vano	attr	7	5
 8	1	l'	det	8	2
 8	2	udire	obj	7	5
 8	3	e	cc	8	5
@@ -110,12 +110,12 @@ line	token	word	deprel	head_line	head_token
 15	8	mente	obl	15	6
 16	1	e	cc	17	1
 16	2	l'	det	16	3
-16	3	altre	obj	15	2
+16	3	altre	nsubj	17	1
 16	4	poi	advmod	17	1
 16	5	dolcemente	advmod	17	1
 16	6	e	cc	16	7
 16	7	devote	advmod	17	1
-17	1	seguitar	xcomp	15	2
+17	1	seguitar	conj	14	2
 17	2	lei	obj	17	1
 17	3	per	case	17	6
 17	4	tutto	det	17	6

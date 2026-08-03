@@ -66,9 +66,9 @@ line	token	word	deprel	head_line	head_token
 11	2	vidi	conj	5	4
 11	3	muover	xcomp	11	2
 11	4	né	cc	11	5
-11	5	pedoni	obj	11	2
+11	5	pedoni	conj	11	1
 12	1	né	cc	12	2
-12	2	nave	obj	11	2
+12	2	nave	conj	11	1
 12	3	a	case	12	4
 12	4	segno	nmod	12	2
 12	5	di	case	12	6
@@ -516,7 +516,7 @@ line	token	word	deprel	head_line	head_token
 73	4	volle	root	0	0
 73	5	dar	xcomp	73	4
 73	6	di	case	73	7
-73	7	piglio	obj	73	5
+73	7	piglio	obl	73	5
 74	1	giuso	advmod	73	5
 74	2	a	case	74	4
 74	3	le	det	74	4
@@ -1025,8 +1025,8 @@ line	token	word	deprel	head_line	head_token
 145	4	altri	obl	146	3
 145	5	suoi	det:poss	145	4
 145	6	dolente	amod	145	4
-146	1	quattro	obj	146	4
-146	2	ne	obj	146	4
+146	1	quattro	obj	146	3
+146	2	ne	nmod	146	1
 146	3	fé	root	0	0
 146	4	volar	xcomp	146	3
 146	5	da	case	146	8

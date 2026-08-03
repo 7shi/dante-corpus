@@ -26,7 +26,7 @@ line	token	word	deprel	head_line	head_token
 4	3	e	cc	4	5
 4	4	novi	amod	4	5
 4	5	tormentati	conj	4	2
-5	1	mi	obj	5	2
+5	1	mi	expl	5	2
 5	2	veggio	root	0	0
 5	3	intorno	advmod	5	2
 5	4	come	mark	5	8
@@ -105,7 +105,7 @@ line	token	word	deprel	head_line	head_token
 16	3	ha	root	0	0
 16	4	vermigli	amod	16	2
 16	5	la	det	16	6
-16	6	barba	obj	16	3
+16	6	barba	conj	16	2
 16	7	unta	amod	16	6
 16	8	e	cc	16	9
 16	9	atra	conj	16	7
@@ -211,11 +211,11 @@ line	token	word	deprel	head_line	head_token
 30	5	intende	advcl	29	3
 30	6	e	cc	30	7
 30	7	pugna	conj	30	5
-31	1	cotai	nsubj	31	3
-31	2	si	obj	31	3
+31	1	cotai	attr	31	3
+31	2	si	expl	31	3
 31	3	fecer	root	0	0
 31	4	quelle	det	31	5
-31	5	facce	obj	31	3
+31	5	facce	nsubj	31	3
 31	6	lorde	amod	31	5
 32	1	de	case	32	3
 32	2	lo	det	32	3
@@ -373,7 +373,7 @@ line	token	word	deprel	head_line	head_token
 52	2	cittadini	appos	52	1
 52	3	mi	obj	52	4
 52	4	chiamaste	root	0	0
-52	5	Ciacco	obj	52	4
+52	5	Ciacco	attr	52	4
 53	1	per	case	53	4
 53	2	la	det	53	4
 53	3	dannosa	amod	53	4

@@ -435,7 +435,7 @@ line	token	word	deprel	head_line	head_token
 62	2	mezzo	obl	62	6
 62	3	in	case	62	4
 62	4	giù	obl	62	2
-62	5	ne	obj	62	6
+62	5	ne	obl	62	6
 62	6	mostrava	advcl	60	5
 62	7	ben	advmod	62	8
 62	8	tanto	obj	62	6
@@ -457,7 +457,7 @@ line	token	word	deprel	head_line	head_token
 65	1	però	mark	65	5
 65	2	ch'	mark	65	5
 65	3	i'	nsubj	65	5
-65	4	ne	obj	65	5
+65	4	ne	obl	65	5
 65	5	vedea	advcl	62	6
 65	6	trenta	nummod	65	8
 65	7	gran	amod	65	8

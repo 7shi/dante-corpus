@@ -355,7 +355,7 @@ line	token	word	deprel	head_line	head_token
 49	8	ebbe	ccomp	49	4
 50	1	giù	advmod	49	8
 50	2	poco	amod	50	3
-50	3	tempo	obj	49	8
+50	3	tempo	obl	49	8
 50	4	e	cc	51	2
 50	5	se	mark	50	8
 50	6	più	advmod	50	8
@@ -793,7 +793,7 @@ line	token	word	deprel	head_line	head_token
 111	6	non	advmod	111	8
 111	7	li	obj	111	8
 111	8	ha	acl:relcl	111	4
-111	9	perfetti	obj	111	8
+111	9	perfetti	attr	111	8
 112	1	Vuo'	root	0	0
 112	2	tu	nsubj	112	1
 112	3	che	mark	112	9

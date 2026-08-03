@@ -193,10 +193,10 @@ line	token	word	deprel	head_line	head_token
 26	5	guizzavan	advcl	25	6
 26	6	le	det	26	7
 26	7	giunte	nsubj	26	5
-27	1	che	mark	27	3
-27	2	spezzate	obj	27	3
-27	3	averien	advcl	26	5
-27	4	ritorte	obj	27	3
+27	1	che	mark	27	2
+27	2	spezzate	advcl	26	5
+27	3	averien	aux	27	2
+27	4	ritorte	obj	27	2
 27	5	e	cc	27	6
 27	6	strambe	conj	27	4
 28	1	Qual	mark	29	1
@@ -346,7 +346,7 @@ line	token	word	deprel	head_line	head_token
 45	7	la	det	45	8
 45	8	zanca	obl	45	5
 46	1	O	vocative	46	2
-46	2	qual	obj	48	4
+46	2	qual	vocative	48	4
 46	3	che	nsubj	46	4
 46	4	se'	acl:relcl	46	2
 46	5	che	nsubj	46	9
@@ -367,7 +367,7 @@ line	token	word	deprel	head_line	head_token
 48	4	dir	xcomp	48	1
 48	5	se	mark	48	6
 48	6	puoi	advcl	48	7
-48	7	fa	obj	48	4
+48	7	fa	ccomp	48	4
 48	8	motto	obj	48	7
 49	1	Io	nsubj	49	2
 49	2	stava	root	0	0
@@ -436,8 +436,8 @@ line	token	word	deprel	head_line	head_token
 57	6	di	mark	57	7
 57	7	farne	xcomp	56	5
 57	8	strazio	obj	57	7
-58	1	Tal	obj	58	3
-58	2	mi	obj	58	3
+58	1	Tal	attr	58	3
+58	2	mi	expl	58	3
 58	3	fec'	root	0	0
 58	4	io	nsubj	58	3
 58	5	quai	attr	58	6
@@ -637,7 +637,7 @@ line	token	word	deprel	head_line	head_token
 84	4	che	mark	84	8
 84	5	lui	obj	84	8
 84	6	e	cc	84	7
-84	7	me	obj	84	8
+84	7	me	conj	84	5
 84	8	ricuopra	ccomp	84	3
 85	1	Nuovo	amod	85	2
 85	2	Iasón	nsubj	85	3
@@ -857,8 +857,8 @@ line	token	word	deprel	head_line	head_token
 114	1	se	mark	114	9
 114	2	non	advmod	114	9
 114	3	ch'	mark	114	9
-114	4	elli	nsubj	114	9
-114	5	uno	obj	114	9
+114	4	elli	conj	114	9
+114	5	uno	orphan	114	4
 114	6	e	cc	114	9
 114	7	voi	nsubj	114	9
 114	8	ne	obl	114	9
@@ -940,7 +940,7 @@ line	token	word	deprel	head_line	head_token
 125	4	tutto	advmod	125	8
 125	5	su	advmod	125	8
 125	6	mi	obj	125	8
-125	7	s'	obj	125	8
+125	7	s'	expl	125	8
 125	8	ebbe	advcl	126	1
 125	9	al	case	125	10
 125	10	petto	obl	125	8

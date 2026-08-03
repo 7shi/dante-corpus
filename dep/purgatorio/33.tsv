@@ -84,10 +84,10 @@ line	token	word	deprel	head_line	head_token
 15	1	me	obj	14	6
 15	2	e	cc	15	4
 15	3	la	det	15	4
-15	4	donna	obj	14	6
+15	4	donna	conj	15	1
 15	5	e	cc	15	7
 15	6	'l	det	15	7
-15	7	savio	obj	14	6
+15	7	savio	conj	15	1
 15	8	che	nsubj	15	9
 15	9	ristette	acl:relcl	15	7
 16	1	Così	advmod	16	3
@@ -187,7 +187,7 @@ line	token	word	deprel	head_line	head_token
 30	1	voi	nsubj	30	2
 30	2	conoscete	ccomp	29	1
 30	3	e	cc	30	4
-30	4	ciò	obj	30	2
+30	4	ciò	conj	29	4
 30	5	ch'	nsubj	30	9
 30	6	ad	case	30	7
 30	7	essa	obl	30	9
@@ -231,7 +231,7 @@ line	token	word	deprel	head_line	head_token
 35	4	è	conj	35	1
 35	5	ma	cc	35	10
 35	6	chi	nsubj	35	10
-35	7	n'	obj	35	8
+35	7	n'	obl	35	8
 35	8	ha	acl:relcl	35	6
 35	9	colpa	obj	35	8
 35	10	creda	conj	34	1

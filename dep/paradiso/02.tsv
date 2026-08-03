@@ -427,7 +427,7 @@ line	token	word	deprel	head_line	head_token
 63	2	argomentar	obj	62	8
 63	3	ch'	obj	63	6
 63	4	io	nsubj	63	6
-63	5	li	obj	63	6
+63	5	li	iobj	63	6
 63	6	farò	acl:relcl	63	2
 63	7	avverso	xcomp	63	6
 64	1	La	det	64	2
@@ -902,7 +902,7 @@ line	token	word	deprel	head_line	head_token
 130	5	tanti	det	130	6
 130	6	lumi	nsubj	130	7
 130	7	fanno	acl:relcl	130	3
-130	8	bello	obj	130	7
+130	8	bello	attr	130	7
 131	1	de	case	131	3
 131	2	la	det	131	3
 131	3	mente	nmod	132	3

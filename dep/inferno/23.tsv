@@ -775,10 +775,10 @@ line	token	word	deprel	head_line	head_token
 103	4	e	cc	103	5
 103	5	bolognesi	conj	103	1
 104	1	io	nsubj	105	1
-104	2	Catalano	obj	105	1
+104	2	Catalano	appos	104	1
 104	3	e	cc	104	4
 104	4	questi	nsubj	105	1
-104	5	Loderingo	obj	105	1
+104	5	Loderingo	appos	104	4
 105	1	nomati	conj	103	3
 105	2	e	cc	105	7
 105	3	da	case	105	5
@@ -887,10 +887,10 @@ line	token	word	deprel	head_line	head_token
 119	7	ch'	mark	119	9
 119	8	el	nsubj	119	9
 119	9	senta	ccomp	119	5
-120	1	qualunque	nsubj	120	2
-120	2	passa	obj	119	9
+120	1	qualunque	nsubj	120	4
+120	2	passa	acl:relcl	120	1
 120	3	come	mark	120	4
-120	4	pesa	obj	119	9
+120	4	pesa	ccomp	119	9
 120	5	pria	advmod	119	9
 121	1	E	cc	121	8
 121	2	a	case	121	4

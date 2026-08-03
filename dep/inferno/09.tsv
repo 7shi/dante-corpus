@@ -287,8 +287,8 @@ line	token	word	deprel	head_line	head_token
 39	2	membra	obj	39	4
 39	3	feminine	amod	39	2
 39	4	avieno	acl:relcl	38	2
-39	5	e	conj	39	6
-39	6	atto	obj	39	4
+39	5	e	cc	39	6
+39	6	atto	conj	39	2
 40	1	e	conj	40	6
 40	2	con	case	40	3
 40	3	idre	obl	40	6

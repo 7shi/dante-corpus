@@ -238,7 +238,7 @@ line	token	word	deprel	head_line	head_token
 33	1	e	cc	33	5
 33	2	chi	nsubj	33	5
 33	3	'l	obj	33	5
-33	4	s'	obj	33	5
+33	4	s'	expl	33	5
 33	5	appropria	conj	32	2
 33	6	e	cc	33	11
 33	7	chi	nsubj	33	11
@@ -431,13 +431,13 @@ line	token	word	deprel	head_line	head_token
 59	1	Isara	nsubj	59	2
 59	2	vide	root	0	0
 59	3	ed	cc	59	4
-59	4	Era	obj	59	2
+59	4	Era	conj	59	1
 59	5	e	cc	59	6
 59	6	vide	conj	59	2
 59	7	Senna	obj	59	6
 60	1	e	cc	60	3
 60	2	ogne	det	60	3
-60	3	valle	obj	59	6
+60	3	valle	conj	59	7
 60	4	onde	obl	60	7
 60	5	Rodano	nsubj	60	7
 60	6	è	cop	60	7
@@ -587,7 +587,7 @@ line	token	word	deprel	head_line	head_token
 82	4	'l	det	82	5
 82	5	segno	nsubj	83	1
 82	6	che	nsubj	82	9
-82	7	parlar	obj	82	9
+82	7	parlar	xcomp	82	9
 82	8	mi	obj	82	9
 82	9	face	acl:relcl	82	5
 83	1	fatto	acl:relcl	82	2

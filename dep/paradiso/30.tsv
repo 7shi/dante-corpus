@@ -311,7 +311,7 @@ line	token	word	deprel	head_line	head_token
 44	2	paradiso	nmod	43	8
 44	3	e	cc	44	5
 44	4	l'	det	44	5
-44	5	una	obj	43	2
+44	5	una	conj	43	8
 44	6	in	case	44	8
 44	7	quelli	det	44	8
 44	8	aspetti	obl	43	2
@@ -984,12 +984,12 @@ line	token	word	deprel	head_line	head_token
 139	4	che	nsubj	139	6
 139	5	v'	obj	139	6
 139	6	ammalia	acl:relcl	139	3
-140	1	simili	amod	140	2
-140	2	fatti	obj	140	4
-140	3	v'	obj	140	4
-140	4	ha	root	0	0
+140	1	simili	attr	140	2
+140	2	fatti	root	0	0
+140	3	v'	obj	140	2
+140	4	ha	aux	140	2
 140	5	al	case	140	6
-140	6	fantolino	obl	140	4
+140	6	fantolino	obl	140	1
 141	1	che	nsubj	141	2
 141	2	muor	acl:relcl	140	6
 141	3	per	case	141	4

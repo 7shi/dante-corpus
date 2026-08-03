@@ -828,7 +828,7 @@ line	token	word	deprel	head_line	head_token
 113	6	parte	nmod	113	3
 113	7	e	cc	113	8
 113	8	vidi	conj	112	6
-113	9	spenta	obj	113	8
+113	9	spenta	attr	113	8
 114	1	ogne	det	114	2
 114	2	veduta	obj	113	8
 114	3	fuor	advmod	113	8

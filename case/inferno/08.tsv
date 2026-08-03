@@ -118,8 +118,8 @@ line	token	word	case
 90	1	che	nominative
 91	2	si	reflexive
 92	5	tu	nominative
-93	1	che	accusative
-93	2	li	accusative
+93	1	che	nominative
+93	2	li	dative
 94	4	io	nominative
 94	5	mi	reflexive
 96	4	ritornarci	locative

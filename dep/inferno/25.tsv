@@ -350,7 +350,7 @@ line	token	word	deprel	head_line	head_token
 48	6	a	case	48	7
 48	7	pena	obl	48	10
 48	8	il	obj	48	10
-48	9	mi	obj	48	10
+48	9	mi	iobj	48	10
 48	10	consento	advcl	47	6
 49	1	Com'	mark	49	3
 49	2	io	nsubj	49	3
@@ -394,7 +394,7 @@ line	token	word	deprel	head_line	head_token
 53	6	braccia	obj	53	7
 53	7	prese	conj	52	6
 54	1	poi	advmod	54	3
-54	2	li	obj	54	3
+54	2	li	iobj	54	3
 54	3	addentò	conj	53	7
 54	4	e	cc	54	10
 54	5	l'	det	54	6
@@ -402,7 +402,7 @@ line	token	word	deprel	head_line	head_token
 54	7	e	cc	54	10
 54	8	l'	det	54	9
 54	9	altra	amod	54	10
-54	10	guancia	obj	54	3
+54	10	guancia	conj	54	6
 55	1	li	obj	55	2
 55	2	diretani	conj	54	3
 55	3	a	case	55	5
@@ -653,9 +653,9 @@ line	token	word	deprel	head_line	head_token
 90	5	febbre	conj	90	3
 90	6	l'	obj	90	7
 90	7	assalisse	advcl	89	5
-91	1	Elli	nsubj	91	7
+91	1	Elli	conj	91	7
 91	2	'l	det	91	3
-91	3	serpente	obj	91	7
+91	3	serpente	orphan	91	1
 91	4	e	cc	91	5
 91	5	quei	nsubj	91	7
 91	6	lui	obj	91	7
@@ -903,7 +903,7 @@ line	token	word	deprel	head_line	head_token
 123	4	ciascun	nsubj	123	5
 123	5	cambiava	acl:relcl	122	5
 123	6	muso	obj	123	5
-124	1	Quel	obj	124	6
+124	1	Quel	dislocated	124	6
 124	2	ch'	nsubj	124	4
 124	3	era	cop	124	4
 124	4	dritto	acl:relcl	124	1

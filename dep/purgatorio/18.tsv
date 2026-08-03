@@ -258,7 +258,7 @@ line	token	word	deprel	head_line	head_token
 36	3	in	case	36	4
 36	4	sé	obl	35	7
 36	5	laudabil	amod	36	6
-36	6	cosa	obj	35	7
+36	6	cosa	attr	35	7
 37	1	però	mark	37	4
 37	2	che	mark	37	4
 37	3	forse	advmod	37	4
@@ -839,7 +839,7 @@ line	token	word	deprel	head_line	head_token
 116	5	però	cc	116	6
 116	6	perdona	root	0	0
 117	1	se	mark	117	5
-117	2	villania	obj	117	5
+117	2	villania	attr	117	5
 117	3	nostra	det:poss	117	2
 117	4	giustizia	obj	117	5
 117	5	tieni	advcl	116	6

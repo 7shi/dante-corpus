@@ -252,10 +252,10 @@ line	token	word	deprel	head_line	head_token
 34	9	apprezza	conj	34	5
 35	1	più	advmod	34	9
 35	2	d'	case	35	3
-35	3	un	obj	34	9
+35	3	un	obl	34	9
 35	4	che	cc	35	6
 35	5	d'	case	35	6
-35	6	altro	obj	34	9
+35	6	altro	conj	35	3
 35	7	fei	root	0	0
 35	8	a	case	35	9
 35	9	quel	obl	35	7
@@ -928,7 +928,7 @@ line	token	word	deprel	head_line	head_token
 125	4	i	obj	125	5
 125	5	volle	advcl	124	9
 125	6	Gedeon	nsubj	125	5
-125	7	compagni	obj	125	5
+125	7	compagni	attr	125	5
 126	1	quando	mark	126	4
 126	2	inver'	case	126	3
 126	3	Madïan	obl	126	4
