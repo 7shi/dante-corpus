@@ -2,10 +2,14 @@
 
 ## Handoff (2026-08-03) — resume here
 
-**This batch is uncommitted — commit it before starting new work.** Checks after this batch:
-`dep --check` 0 hard/0 soft, `case --check` 0 hard, `skel --check` 0 hard/**3633** soft,
-`np --check` 0/0, `pytest` 142 passed. If `git status` shows more than this batch when the session
-resumes, check `git log` for the latest commit before assuming what's new.
+**Everything is committed** (Step 9 = `0dca943`). Checks at commit time: `dep --check` 0 hard/0
+soft, `case --check` 0 hard, `skel --check` 0 hard/**3633** soft, `np --check` 0/0, `pytest` 142
+passed. If `git status` shows anything uncommitted when this session resumes, that's new work from
+*after* this handoff was written — check `git log` for the latest commit before assuming otherwise.
+
+**Start here: [*The next task — a `case`-driven `skel` checker rule*](#the-next-task--a-case-driven-skel-checker-rule)
+below.** It is measured, scoped, and assistant-side (no model calls). Everything between here and
+it is the record of how the `case`/`dep` correction rounds ended.
 
 **What the last four batches did.** The user's standing goal is Layer 5's soft residue at **0**
 ([[project_skel_soft_violations_goal]] — soft checks are rule mismatches to fix, not a baseline to
@@ -41,7 +45,7 @@ this residue, and it is finished — all four named contradiction shapes are clo
   the *non so che* idiom (2), causative causee (1), Latin quotation (1). See `case/CORRECTIONS.md`'s
   *Step 9*. Contradictions: 63→**32**.
 
-**What's open — nothing shape-driven.** All four named contradiction shapes are closed. The 32
+**The `case`/`dep` contradiction work itself is finished — nothing shape-driven is open.** The 32
 remaining contradictions and 28 impossible pairings are the accumulated *verified-and-left-alone*
 residue: every one has been read against its terzina and left standing for a stated structural
 reason (accusative-and-infinitive, fused infinitive+clitic, free relatives, causative causees,
@@ -75,6 +79,78 @@ own framing above), not that a per-position error is untouchable. If a future se
 clear `case/`, `dep/`, or `skel` error while working something else, the same rule applies: fix it
 there, record it there, don't defer it to a separate pass unless it's genuinely undecidable from the
 text alone.
+
+## The next task — a `case`-driven `skel` checker rule
+
+**Why this is open now when [`skel/PLAN.md`](skel/PLAN.md) says nothing is.** Phase 5's closing
+position (*Where Phase 5 ended*, and its section 1, *The clitic-case question — half closed as
+Phase 5i, half parked*) parked its largest remaining reading-disagreement population with an
+explicit reason: it "needs a Layer-2 case feature or a clitic lexicon", and the project had twice
+declined to open one. **That feature now exists** — `case/` was built after that verdict was
+written, and Steps 6-9 above have just hand-corrected 164 of its positions against `dep`. So the
+instrument Phase 5 named as missing is present, freshly audited, and **not yet wired into the
+Layer-5 checker at all**: `dante_corpus/skel.py` never imports `dante_corpus.case`. That is the
+one genuinely new route, and it is checker-side work (the assistant's), not `--fix` regeneration
+(the user's). Update `skel/PLAN.md`'s closing section when this lands — its "every route is
+closed" statement is what this task reopens.
+
+**The measurement (2026-08-03, on the post-Step-9 tree).** Of the **516** `role_mismatch`
+violations, **210** sit on an argument position the `case` annex holds a value for. Classifying
+each by whether that value corroborates the derived (`dep`-side) or the given (LLM-side) role,
+under the obvious mapping between two frozen vocabularies — `nominative`↔`subj`,
+`accusative`↔`obj`, `dative`↔`obl:a`/`iobj`, `ablative`/`locative`↔`obl*`:
+
+| | count |
+|---|---|
+| `case` corroborates the **derived** side → checker-rule candidate | **161** |
+| `case` corroborates the **given** side → `dep`-correction candidate | **17** |
+| value has no role mapping (`reflexive`/`vocative`/`genitive`/fused `a+b`) | 23 |
+| decides neither (both or neither side match) | 9 |
+
+The four biggest buckets, all in the first row: given `obj` / derived `obl:a` with `case=dative`
+(55), given `obj` / derived `subj` with `nominative` (43), given `subj` / derived `obj` with
+`accusative` (21), given `obl:a` / derived `obj` with `accusative` (20).
+
+**How to reproduce the measurement.** Parse `uv run skel/skel.py <canticle> --check` output with
+`^(\w+) (\d+):(\d+) \[tag\] role_mismatch: [\d.]+ arg \((\d+), (\d+)\) '([^']+)' vs '([^']+)'`
+(given role first, derived second), and join each `(line, token)` against
+`case.case_index(case.load_case(canticle, canto))`. **Gotcha: `--check` writes its violation lines
+to stderr**, only the `check complete:` summary goes to stdout — capture `stderr`, not `stdout`,
+or the join silently measures nothing.
+
+**The task, in two parts, both in one batch:**
+
+1. **The rule** (expected −161). A new one-directional acceptance in `_classify_divergence`'s
+   `elif grole != drole:` branch, in the same shape as rules L/M/N/O: accept the divergence when
+   the `case` annex's value for that argument position corroborates the **derived** role and not
+   the given one. Gate it exactly that tightly — corroborating *both* or *neither* accepts
+   nothing, and the mirror direction is part 2's hand-verified round, never an automatic accept
+   (the same asymmetry Phase 5j measured and enforced when it rejected rule O's two-directional
+   variant). `skel.py` will need `case` data threaded into the checker the way
+   `dep_index_by_pos`/`morph_pos_by_position` already are. Tests in `tests/test_skel.py` alongside
+   the existing rule tests.
+2. **The 17 `dep`-correction candidates** (the rule's by-product). Positions where `case` sides
+   with the LLM against `dep` — i.e. `dep` mistag candidates, the same shape Steps 7 and 8 worked.
+   Read each against its terzina, retag the genuine ones in `dep/`, and leave the rest with a
+   stated structural reason. **Do not skip this half**: leaving it would be exactly the "found a
+   problem, leaving it" the section above forbids.
+
+**Neutrality check before starting.** This stays inside the *Neutrality audit* invariant: it maps
+one frozen corpus vocabulary onto another, both authored by a model reading the Italian alone. It
+is **not** the imported verb-valency lexicon *Out of scope* rejects — nothing external enters.
+
+**Batch ends in**: `skel --check` 0 hard and a lower soft count, `dep --check` still 0/0,
+`case --check` still 0 hard, `pytest` passing with the new tests, a dated section in
+`skel/CORRECTIONS.md` (+ `dep/CORRECTIONS.md` for the retags) recording the rule, its measured
+yield and the hand-verified round, and the counts in this file, `skel/README.md` and
+`skel/PLAN.md` updated to match.
+
+**Other routes, for reference — not recommended over the above.** (a) A `dep` `--check` rule for
+"at most one `obj` per predicate": corpus-wide 231 predicates violate it (84 with a clitic, 147
+without); it is its own round and needs the coordination half re-attached as `conj` rather than
+exempted — see `skel/PLAN.md` section 1's *A wider Layer-4 finding*. (b) Another `--fix`
+regeneration pass: measured at 0.086 violations per call in Phase 5q, so ~1600 calls for ~130, and
+it is user-run work.
 
 ## Status
 

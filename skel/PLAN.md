@@ -72,6 +72,17 @@ trusting any count in this file.
 
 ## What is left, and why nothing here is open
 
+> **Superseded in one respect (2026-08-03).** This section's verdict was "closing the residue
+> further needs a *new* instrument — the Layer-2 case feature the clitic question asked for is the
+> one candidate this project has repeatedly declined on principle". **That feature was
+> subsequently built and hand-audited**: it is the `case/` annex (`../case/README.md`), and Steps
+> 6-9 of `../PLAN.md` corrected 164 of its positions against `dep`. The checker has never used it.
+> A measured, scoped task to wire it in — **−161 of the 516 `role_mismatch` violations, plus 17
+> `dep`-mistag candidates it surfaces** — is written up in [`../PLAN.md`](../PLAN.md)'s *The next
+> task — a `case`-driven `skel` checker rule*. **Start there, not here.** Everything else in this
+> section still holds: regeneration is exhausted by this plan's stop rule, and no *further* rule
+> is available against the populations measured below. Update this section when that task lands.
+
 Every item this plan listed has been spent. **Phase 5o closed the last structural row** (with
 `advcl` decided, every deprel in section 2a has a verdict), **Phase 5p ran the two hand-verified
 `dep/` rounds those verdicts left over** (−10), and **Phase 5q ran the user's `--fix` pass**
