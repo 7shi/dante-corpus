@@ -14,7 +14,7 @@ line	token	word	case
 15	5	questa	nominative
 16	1	Noi	nominative
 17	2	io	nominative
-17	8	i'	accusative
+17	8	i'	nominative
 20	3	noi	ablative
 21	4	che	nominative
 23	3	si	reflexive
@@ -67,7 +67,7 @@ line	token	word	case
 92	3	nol	accusative
 94	6	io	nominative
 95	5	che	nominative
-97	1	Ciò	accusative
+97	1	Ciò	nominative
 97	2	ch'	accusative
 97	3	io	nominative
 98	7	ti	accusative

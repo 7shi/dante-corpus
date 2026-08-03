@@ -74,7 +74,7 @@ line	token	word	case
 81	7	nol	accusative
 86	2	noi	dative
 89	1	che	nominative
-90	1	noi	accusative
+90	1	noi	nominative
 90	2	che	nominative
 92	1	noi	nominative
 92	3	lui	accusative

@@ -4,16 +4,16 @@
 
 **This batch is uncommitted — commit it before starting new work.** Checks after this batch:
 `dep --check` 0 hard/0 soft, `case --check` 0 hard, `skel --check` 0 hard/**3633** soft,
-`np --check` 0/0, `pytest` 142 passed. If `git status` shows more uncommitted changes than this
-batch when the session resumes, check `git log` before assuming what's new.
+`np --check` 0/0, `pytest` 142 passed. If `git status` shows more than this batch when the session
+resumes, check `git log` for the latest commit before assuming what's new.
 
-**What the last three batches did.** The user's standing goal is Layer 5's soft residue at **0**
+**What the last four batches did.** The user's standing goal is Layer 5's soft residue at **0**
 ([[project_skel_soft_violations_goal]] — soft checks are rule mismatches to fix, not a baseline to
 tolerate). Investigating the "clitic-case question" turned up that the case annex's own Step 4
 (2026-07-31) had already found, and never acted on, many positions where **`case/*.tsv` itself is
 wrong** — named in `dep/CORRECTIONS.md` ("`case` is the dissenting read... `dep` is right") but
-never corrected because the column was frozen at the time. Three sessions have now worked through
-this residue:
+never corrected because the column was frozen at the time. Four sessions have now worked through
+this residue, and it is finished — all four named contradiction shapes are closed:
 
 - **Step 6**: the 50 bare-clitic (`mi ti ci vi si li` + elisions) contradictions — 1 genuine
   `dep/` mistag, 49 `case/*.tsv` errors. See `case/CORRECTIONS.md` Step 6.
@@ -23,7 +23,7 @@ this residue:
   be `dep/` mistags (predicative pronoun under a copula, or a subject plainly tagged object)
   surfaced while verifying the `case` reading — retagged. See `case/CORRECTIONS.md`'s *Step 7* and
   `dep/CORRECTIONS.md`'s matching entry. Contradictions: 208→100; impossible pairings: 40→28.
-- **Step 8** (this session): the `dative`-vs-`nsubj` (8), `accusative`-vs-`iobj` (12), and
+- **Step 8** (previous session): the `dative`-vs-`nsubj` (8), `accusative`-vs-`iobj` (12), and
   `dative`-vs-`obj` (24) shapes — 44 candidates. Applied a transitivity test (does the head verb
   already have an explicit object filled? if yes the flagged clitic is genuinely the dative/second
   argument; if no it takes the verb's basic valency) at each position read individually against its
@@ -33,27 +33,33 @@ this residue:
   infinitive+clitic scope mismatch, free relative, causative-construction ambiguity, impersonal
   dative-experiencer/passive ambiguity, one Latin quotation). See `case/CORRECTIONS.md`'s *Step 8*
   and `dep/CORRECTIONS.md`'s matching entry. Contradictions: 100→63.
+- **Step 9** (this session): **`accusative`-vs-`nsubj`**, the last shape — all 43 candidates read
+  individually. **31** `case/*.tsv` corrections to `nominative` (relative/demonstrative subjects
+  whose clause already had its object filled, plain subject pronouns, and three si-passives decided
+  by Step 7's inferno 3:96.2 verdict), **0** `dep` retags. **12** left alone under exceptions
+  already on record: accusative-and-infinitive (6), fused infinitive+clitic (2), free relative /
+  the *non so che* idiom (2), causative causee (1), Latin quotation (1). See `case/CORRECTIONS.md`'s
+  *Step 9*. Contradictions: 63→**32**.
 
-**What's open — the next concrete task.** Only one shape from the plan's original four remains
-untouched: **`accusative`-vs-`nsubj`** (~44 candidates, visible in the current `case --stats
---full` contradiction list, ~63 positions total including Step 7/8's already-decided leftovers).
-Per the pattern Step 7 established for the mirror-image `nominative`-vs-`obj` shape, expect this to
-be mostly the accusative-and-infinitive convention (a genuine framework choice, leave alone) and
-si-passive reads (check each — inferno 3:96.2 in Step 7 showed the convention can decide it), plus
-a residue of plain subject pronouns (`el`/`ei`/`elli`/`tu`/`io`/`noi`/`che`/`ciò`/demonstratives)
-misread as accusative that should just become `nominative`. The 28 remaining impossible pairings
-(family A comparative-standard + family F entangled — both correctly left alone) should not be
-re-litigated.
+**What's open — nothing shape-driven.** All four named contradiction shapes are closed. The 32
+remaining contradictions and 28 impossible pairings are the accumulated *verified-and-left-alone*
+residue: every one has been read against its terzina and left standing for a stated structural
+reason (accusative-and-infinitive, fused infinitive+clitic, free relatives, causative causees,
+impersonal dative-experiencers, Latin quotations, comparative standards, family F entangled). A
+further pass would have to re-litigate framework conventions the corpus deliberately fixed — don't.
+If a *new* `case`/`dep`/`skel` error surfaces while working something else, the standing rule below
+applies: fix it there, record it there.
 
-Work through these in batches (a session doesn't need to clear all ~63 at once), each batch ending
-in: `case --check` still 0 hard, `dep --check` still 0/0, `pytest` still passing, and a new dated
-section in `case/CORRECTIONS.md` (+ `dep/CORRECTIONS.md` for any `dep` retag) recording what was
-fixed, what was verified-and-left-alone and why, and the before/after count from `case --stats`.
+Should another batch of per-position work come up, each batch still ends in: `case --check` still
+0 hard, `dep --check` still 0/0, `pytest` still passing, and a new dated section in
+`case/CORRECTIONS.md` (+ `dep/CORRECTIONS.md` for any `dep` retag) recording what was fixed, what
+was verified-and-left-alone and why, and the before/after count from `case --stats`.
 **Also watch for CRLF line endings**: writing TSVs with Python's `csv` module and `newline=''`
 still defaults to `\r\n` — the originals are `\n`-only, so `sed -i 's/\r$//'` (or an explicit
 `lineterminator='\n'`) is needed on any touched file before diffing/committing, or `git diff` will
-show the whole file changed. (In-place `sed -i 's/pattern/replacement/'` edits, used for this
-session's fixes, don't have this problem — they preserve the original line endings.)
+show the whole file changed. (In-place `sed -i 's/pattern/replacement/'` edits, and a Python script
+that splits/joins on `\n` and writes back with `Path.write_text` — Step 9's method — don't have
+this problem; they preserve the original line endings.)
 
 **How `CORRECTIONS.md` is used — this is the point the user asked to be explicit about.**
 `*/CORRECTIONS.md` records **corrections that were actually applied**, not a place to log "found a

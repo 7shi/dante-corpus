@@ -90,14 +90,14 @@ line	token	word	case
 86	6	qual	dative
 86	7	tutto	nominative
 86	8	si	reflexive
-87	1	ciò	accusative
+87	1	ciò	nominative
 87	2	ch'	accusative
 87	3	ella	nominative
 87	6	che	accusative
 88	2	mi	dative
 90	8	vi	locative
 91	4	elli	nominative
-93	2	quel	accusative
+93	2	quel	nominative
 93	3	si	reflexive
 93	7	quel	ablative
 93	8	si	reflexive

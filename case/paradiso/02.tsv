@@ -70,7 +70,7 @@ line	token	word	case
 63	4	io	nominative
 63	5	li	accusative
 64	4	vi	locative
-65	3	quali	accusative
+65	3	quali	nominative
 65	6	quale	ablative
 65	9	quanto	ablative
 66	2	si	reflexive

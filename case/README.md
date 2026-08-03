@@ -44,11 +44,13 @@ their budget), and closed the merge decision above — no schema change, `case/`
 sibling directory. Step 6 (2026-08-03) then hand-corrected the 50 bare-clitic
 accusative/dative contradictions Step 4 had already identified but never written into
 `case/*.tsv` (that round only ever edited `dep/`); **"frozen" means no wholesale regeneration**,
-not that a demonstrable per-position error stands uncorrected. Steps 7-8 then worked through most
-of the remaining named residue shape by shape. `--stats` now reports **63 contradictions / 28
-impossible pairings** against `dep`, recorded as measured residue — only the `accusative`-vs-`nsubj`
-shape is still open. See [CORRECTIONS.md](CORRECTIONS.md) for the full
-history.
+not that a demonstrable per-position error stands uncorrected. Steps 7-9 then worked through the
+remaining named residue shape by shape, closing the last one (`accusative`-vs-`nsubj`) on
+2026-08-03. `--stats` now reports **32 contradictions / 28 impossible pairings** against `dep`,
+recorded as measured residue: every one of them is a position read individually and left standing
+for a stated structural reason (accusative-and-infinitive, fused infinitive+clitic, free relatives,
+causative causees, impersonal dative-experiencers, Latin quotations), not an uninspected remainder.
+See [CORRECTIONS.md](CORRECTIONS.md) for the full history.
 
 The vocabulary and scope are **frozen**, and the
 driver, the shared module, the serve surface and the tests exist. **Inferno 1 was built first** as

@@ -4,7 +4,7 @@ line	token	word	case
 3	4	elli	nominative
 4	3	Tu	nominative
 4	6	io	nominative
-5	3	che	accusative
+5	3	che	nominative
 5	6	mi	dative
 6	6	io	nominative
 6	7	ne	ablative

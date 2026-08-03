@@ -28,7 +28,7 @@ line	token	word	case
 30	5	elli	nominative
 32	6	che	nominative
 33	1	gliene	dative+ablative
-34	6	el	accusative
+34	6	el	nominative
 35	6	noi	ablative
 36	2	quai	ablative
 36	4	io	nominative

@@ -1959,3 +1959,78 @@ demonstratives) misread as accusative that should become `nominative` — the sa
 Step 7 already mechanized for the `nominative`-vs-`obj` shape, just with the disagreeing values
 swapped. The 28 impossible pairings (family A comparative-standard + family F entangled) remain
 correctly left alone, as in Step 7.
+
+## Step 9 — `accusative`-vs-`nsubj`, the last named shape (2026-08-03)
+
+The final shape from the plan's original four: all **43** `accusative`-vs-`nsubj` contradictions,
+each opened against its terzina and read individually. The shape split exactly as Step 8's closing
+note predicted — a large residue of plain subject pronouns misread as accusative, plus a smaller
+set of positions where the two layers are not disagreeing at all but describing different scopes.
+
+**31 `case` corrections, `accusative` → `nominative`.** The flagged pronoun holds the subject slot
+of its own clause; `dep`'s `nsubj` was right and `case` read the pronoun's semantic patient role,
+or its antecedent's role, instead of its syntax. Three families:
+
+- **Relative/demonstrative subject with the object slot already filled by a separate token** — the
+  mirror image of the word-order test Step 7 mechanized for `nominative`-vs-`obj`: inferno 13:83.3
+  *quel che... a me satisfaccia*, 31:116.1 *la valle che fece Scipïon... reda* (object *Scipïon*),
+  33:5.3 *dolor che 'l cor mi preme* (object *'l cor*); purgatorio 20:97.1 *Ciò ch'io dicea...
+  tanto è risposto*, 28:89.4 *ciò ch'ammirar ti face* (subject of *procede*); paradiso 3:87.1 *ciò
+  che... si squaderna* (subject of *s'interna*), 12:26.5 *li occhi ch'... conviene chiudere e
+  levarsi* (the eyes do the closing; `accusative` is untenable on any reading of the impersonal
+  *conviene*), 21:95.5 *quel che chiedi* (subject of *s'innoltra*), 23:92.2 *il quale e il quanto
+  de la viva stella* (the star's quality is what paints the eyes — object *ambo le luci* is
+  filled), 28:5.2 *vede colui che se n'alluma* (object *fiamma* filled), 28:110.7 *l'atto che
+  vede*, 28:111.4 *quel ch'ama*, 28:111.6 *che poscia seconda*, 33:90.2 *ciò ch'i' dico è un
+  semplice lume*.
+- **Plain subject pronouns** (`el`/`elli`/`noi`/`i'`/`nessun`/`quale`): inferno 5:90.1 *noi che
+  tignemmo... pregheremmo*, 12:81.8 *ciò ch'el tocca*, 19:52.2 *Ed el gridò*, 23:64.7 *sì ch'elli
+  abbaglia*, 25:34.6 *ed el trascorse*, 29:36.6 *m'ha el fatto... più pio*; purgatorio 2:72.4 *di
+  calcar nessun si mostra schivo*, 13:54.6 *quel ch'i' vidi poi*, 20:17.8 *ch'i' sentia*; paradiso
+  6:43.4 *quel ch'el fé portato*, 19:12.6 *quand' era nel concetto e 'noi' e 'nostro'* (the quoted
+  word is the copula's predicate nominal), 20:80.8 *lo color ch'el veste*, 26:59.4 *la morte ch'el
+  sostenne*.
+- **Si-passives — the promoted subject, not the semantic patient**, applying Step 7's inferno
+  3:96.2 verdict (*ciò che si vuole*) to the remaining three: purgatorio 11:27.4 *quel che talvolta
+  si sogna*; paradiso 2:65.3 *li quali... notar si posson* (the plural *posson* agreeing with
+  *lumi* settles it), 3:93.2 *che quel si chere*.
+
+**12 positions left alone, each for a stated structural reason** — all four exceptions already on
+record, none a new one:
+
+- **Accusative-and-infinitive** (a perception/causative verb's object doubling as the infinitive's
+  subject — the framework choice `case` and `dep` describe from opposite ends, deliberately not
+  reconciled): inferno 22:32.1 *I' vidi... uno aspettar*; purgatorio 19:74.3 *sentia dir lor*,
+  30:95.1 *'ntesi... lor compatire a me*; paradiso 8:46.7 *vid' io lei far piùe*, 27:21.4 *vedrai
+  trascolorar tutti costoro*, 30:57.1 *compresi me sormontar*.
+- **Fused infinitive+clitic — a scope mismatch, not a disagreement** (`dep` tags the whole unit's
+  clause-level role, `case` the embedded clitic's own case; same convention as Step 8's *aprirmi*
+  family): purgatorio 8:45.4 *grazïoso fia lor vedervi* (`vi` accusative inside an infinitive
+  clause tagged `nsubj` of *grazïoso*), paradiso 29:92.1 *quanto sangue costa seminarla* (`la`
+  accusative inside an infinitive tagged `nsubj` of *costa*).
+- **Free relative** — the pronoun is simultaneously its own clause's argument and the whole
+  clause's role in the matrix clause: paradiso 32:56.1 *è stabilito quantunque vedi* (object of
+  *vedi*, subject of *è stabilito*), plus paradiso 3:59.5 *non so che divino* — the fossilized
+  *non so che* idiom, where `che` is at once the object of *so* and the head of the phrase that
+  serves as subject of *risplende*.
+- **Causative causee**: paradiso 2:51.5 *fan di Cain favoleggiare altrui* (`altrui` is the
+  invariant oblique form and cannot be nominative; Italian causative rules mark the causee of an
+  intransitive infinitive accusative, while `dep` gives the standard UD `nsubj` of the infinitive
+  — the same construction Step 8 left alone at purgatorio 26:105.7).
+- **Latin quotation**: purgatorio 8:13.1 *'Te lucis ante'* (the hymn's own Latin accusative, quoted
+  whole; `dep` tags the citation's role in the Italian sentence, which the Latin form does not
+  answer to — the existing *Latin quotations* exception).
+
+**State check.** `case --check`: 0 hard. `dep --check`: 0 hard, 0 soft (untouched — this batch made
+no `dep` retags; every position resolved was a `case` error or a stated exception). `pytest`: 142
+passed. `skel --check`: **3633** soft, unchanged (pure-`case` edits do not touch Layer 5).
+`--stats` contradictions: 63 → **32**; `dep=nsubj` agreement 5139/49 → 5170/18.
+
+**What's left.** All four named shapes from the plan are now worked through. The 32 remaining
+contradictions are the accumulated *verified-and-left-alone* residue of Steps 7-9 (accusative-and-
+infinitive, fused infinitive+clitic, free relatives, causative causees, impersonal
+dative-experiencers, Latin quotations) plus the 14 `dep=obj`-side positions — mostly free-relative
+`chi` — that the `nominative`-vs-`obj` sweep also left standing for the same reasons. The 28
+impossible pairings (family A comparative-standard + family F entangled) remain correctly left
+alone. No shape-driven pass is open; a future round would have to re-litigate structural
+conventions the corpus has deliberately fixed, which is out of scope.

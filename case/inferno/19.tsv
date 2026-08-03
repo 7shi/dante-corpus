@@ -54,7 +54,7 @@ line	token	word	case
 50	4	che	nominative
 50	6	ch'	nominative
 51	2	lui	accusative
-52	2	el	accusative
+52	2	el	nominative
 52	5	tu	nominative
 53	2	tu	nominative
 54	4	mi	dative
