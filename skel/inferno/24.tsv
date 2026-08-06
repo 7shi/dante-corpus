@@ -79,9 +79,9 @@ line	token	word	role	arg_line	arg_token
 27	2	levando	obl:ver	27	7
 28	4	avvisava	subj	0	0
 28	4	avvisava	obj	28	7
-28	4	avvisava	obl:di	28	3
 29	1	dicendo	subj	0	0
 29	1	dicendo	ccomp	29	6
+29	1	dicendo	ccomp	30	2
 29	6	aggrappa	subj	0	0
 29	6	aggrappa	obj	29	5
 29	6	aggrappa	obl:sovra	29	3
@@ -351,9 +351,11 @@ line	token	word	role	arg_line	arg_token
 120	6	croscia	subj	120	3
 120	6	croscia	obl:per	120	5
 121	4	domandò	subj	121	2
-121	4	domandò	obj	121	3
-121	4	domandò	obj	121	6
+121	4	domandò	iobj	121	3
+121	4	domandò	ccomp	121	6
 121	6	chi	subj	121	7
+121	8	era	subj	121	7
+121	8	era	attr	121	6
 122	4	rispuose	subj	122	3
 122	4	rispuose	ccomp	122	6
 122	6	piovvi	subj	122	5

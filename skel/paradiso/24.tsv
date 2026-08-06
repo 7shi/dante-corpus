@@ -76,7 +76,7 @@ line	token	word	role	arg_line	arg_token
 30	6	disleghe	obl:in	28	8
 30	6	disleghe	obl:per	29	6
 30	6	disleghe	obl:da	30	4
-31	2	fermato	subj	31	4
+31	2	fermato	subj	0	0
 32	5	dirizzò	subj	31	4
 32	5	dirizzò	obj	32	7
 32	5	dirizzò	obl:a	32	4
@@ -105,14 +105,13 @@ line	token	word	role	arg_line	arg_token
 41	8	hai	subj	0	0
 41	8	hai	obj	41	7
 42	6	vede	subj	42	3
-43	6	fatto	subj	0	0
-43	6	fatto	obj	43	4
-43	6	fatto	attr	43	7
+43	6	fatto	subj	43	4
+43	6	fatto	obj	43	7
+43	6	fatto	xcomp	44	6
 43	6	fatto	obl:per	44	4
 44	6	glorïarla	subj	0	0
 45	3	parlare	subj	0	0
 45	3	parlare	obl:di	45	2
-45	4	è	subj	45	3
 45	5	ben	subj	45	3
 45	9	arrivi	subj	45	3
 45	9	arrivi	obl:a	45	8
@@ -229,6 +228,8 @@ line	token	word	role	arg_line	arg_token
 85	6	hai	obj	85	5
 85	6	hai	obl:in	85	10
 86	4	ho	subj	86	2
+86	4	ho	attr	86	6
+86	4	ho	attr	86	9
 87	8	inforsa	subj	87	5
 87	8	inforsa	obj	87	7
 87	8	inforsa	iobj	87	6

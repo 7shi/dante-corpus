@@ -211,7 +211,7 @@ line	token	word	role	arg_line	arg_token
 84	10	vergogna	subj	84	4
 85	3	andate	subj	85	1
 85	3	andate	obl:per	85	7
-86	1	filosofando	subj	85	1
+86	1	filosofando		0	0
 86	4	trasporta	subj	87	2
 86	4	trasporta	subj	87	9
 86	4	trasporta	obj	86	3
@@ -248,12 +248,10 @@ line	token	word	role	arg_line	arg_token
 100	7	nascose	subj	100	5
 100	7	nascose	obl:da	101	2
 101	0			0	0
-102	1	come	subj	0	0
-102	1	come	obl:a	102	3
 102	6	rispuose	subj	102	5
-102	6	rispuose	obl:a	101	6
-102	6	rispuose	obl:a	101	10
-102	6	rispuose	obl:a	102	3
+102	6	rispuose	iobj	101	6
+102	6	rispuose	iobj	101	10
+102	6	rispuose	iobj	102	3
 103	2	ha	subj	103	3
 103	2	ha	obj	103	5
 104	0			0	0

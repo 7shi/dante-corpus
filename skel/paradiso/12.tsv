@@ -314,14 +314,13 @@ line	token	word	role	arg_line	arg_token
 115	6	mosse	obl:con	116	2
 115	6	mosse	obl:a	116	6
 116	9	volta	subj	115	3
-117	3	dinanzi	obl:a	117	5
 117	8	gitta	subj	117	2
-117	8	gitta	obl:a	117	5
 117	8	gitta	obl:di	117	7
-118	4	vedrà	subj	118	7
-118	4	vedrà	obl:di	119	4
+118	4	vedrà	subj	0	0
+118	4	vedrà	obl:di	118	7
 119	0			0	0
 120	2	lagnerà	subj	119	7
+120	2	lagnerà	ccomp	120	8
 120	8	tolta	subj	120	5
 120	8	tolta	iobj	120	6
 121	2	dico	subj	0	0
@@ -365,7 +364,6 @@ line	token	word	role	arg_line	arg_token
 133	5	è	subj	134	2
 133	5	è	subj	134	5
 133	5	è	subj	136	1
-133	5	è	subj	136	5
 133	5	è	subj	137	1
 133	5	è	subj	137	3
 133	5	è	subj	137	6

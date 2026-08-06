@@ -185,8 +185,9 @@ line	token	word	role	arg_line	arg_token
 71	6	soggiace	subj	0	0
 71	6	soggiace	obl:a	72	3
 72	0			0	0
-73	4	conforme	subj	73	2
-73	9	piace	subj	73	2
+73	4	conforme	subj	0	0
+73	4	conforme	obl:a	73	2
+73	9	piace	subj	0	0
 73	9	piace	iobj	73	8
 74	8	raggia	subj	74	5
 74	8	raggia	obj	74	7
@@ -291,9 +292,6 @@ line	token	word	role	arg_line	arg_token
 114	9	fu	obl:per	114	4
 114	9	fu	obl:per	114	8
 114	11	fie	subj	113	6
-114	11	fie	obl:tra	112	5
-114	11	fie	obl:per	114	4
-114	11	fie	obl:per	114	8
 115	3	largo	subj	115	5
 115	3	largo	xcomp	115	7
 115	7	dar	subj	0	0
@@ -353,8 +351,6 @@ line	token	word	role	arg_line	arg_token
 130	0			0	0
 131	4	se'	subj	131	3
 131	4	se'	obl:in	131	2
-131	5	dir	subj	130	2
-131	5	dir	subj	130	6
 131	5	dir	attr	131	8
 131	7	posson	subj	130	2
 131	7	posson	subj	130	6

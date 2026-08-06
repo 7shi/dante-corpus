@@ -26,22 +26,23 @@ line	token	word	role	arg_line	arg_token
 9	7	trasse	obl:in	9	5
 10	4	era	subj	10	2
 10	4	era	attr	10	5
-10	5	faccia	subj	10	2
 11	2	benigna	subj	11	7
-11	2	benigna	obl:di	11	5
 11	3	avea	subj	11	7
+11	3	avea	subj	12	8
 11	3	avea	attr	11	2
-12	4	serpente	subj	12	8
-13	3	avea	subj	10	2
+11	3	avea	obl:di	11	5
+11	3	avea	obl:di	12	4
+12	0			0	0
+13	3	avea	subj	0	0
 13	3	avea	obj	13	2
-13	3	avea	attr	13	4
 13	3	avea	obl:insin	13	7
 14	0			0	0
 15	1	dipinti	subj	14	2
 15	1	dipinti	obl:di	15	4
 15	1	dipinti	obl:di	15	7
-15	2	avea	subj	14	2
-15	2	avea	attr	15	1
+15	2	avea	subj	0	0
+15	2	avea	obj	14	2
+15	2	avea	xcomp	15	1
 16	0			0	0
 17	2	fer	subj	0	0
 17	2	fer	obj	17	4
@@ -166,10 +167,9 @@ line	token	word	role	arg_line	arg_token
 61	2	procedendo	obl:di	61	5
 62	1	vidine	subj	0	0
 62	1	vidine	obj	62	3
-63	1	mostrando	subj	62	3
+62	6	rossa	subj	62	3
+63	1	mostrando	subj	0	0
 63	1	mostrando	obj	63	3
-63	5	più	subj	63	3
-63	5	più	obl:che	63	7
 64	0			0	0
 65	1	segnato	subj	64	3
 65	1	segnato	obj	65	5
@@ -219,13 +219,14 @@ line	token	word	role	arg_line	arg_token
 78	1	torna'	subj	76	2
 78	1	torna'	obl:in	78	4
 78	1	torna'	obl:da	78	7
-79	1	Trova'	subj	79	3
+79	1	Trova'	subj	0	0
+79	1	Trova'	obj	79	3
 79	7	salito	subj	79	5
 79	7	salito	obl:su	80	4
 80	0			0	0
 81	2	disse	subj	0	0
+81	2	disse	iobj	81	4
 81	2	disse	ccomp	81	7
-81	2	disse	obl:a	81	4
 81	7	forte	subj	0	0
 81	9	ardito	subj	0	0
 82	3	scende	subj	0	0
@@ -298,12 +299,13 @@ line	token	word	role	arg_line	arg_token
 102	7	sentì	obl:a	102	5
 102	7	sentì	obl:a	102	9
 103	3	era	subj	103	5
+103	3	era	obl	103	2
 103	8	rivolse	subj	0	0
 103	8	rivolse	obj	103	7
 104	6	mosse	subj	0	0
 104	6	mosse	obj	104	2
 104	6	mosse	obl:come	104	5
-105	9	raccolse	subj	104	2
+105	9	raccolse	subj	0	0
 105	9	raccolse	obj	105	6
 105	9	raccolse	obl:con	105	4
 105	9	raccolse	obl:a	105	8
@@ -332,9 +334,8 @@ line	token	word	role	arg_line	arg_token
 112	9	era	obl:in	113	3
 113	8	vidi	subj	0	0
 113	8	vidi	obj	114	2
-113	8	vidi	attr	113	9
+113	8	vidi	obl:di	114	7
 113	9	spenta	subj	114	2
-113	9	spenta	obl:di	114	7
 114	0			0	0
 115	3	va	subj	115	1
 115	3	va	obl:from	115	2

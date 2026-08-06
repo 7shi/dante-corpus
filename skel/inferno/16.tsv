@@ -3,11 +3,15 @@ line	token	word	role	arg_line	arg_token
 1	2	era	attr	3	1
 1	2	era	obl:in	1	4
 1	7	udia	subj	1	9
+1	7	udia	obl	1	5
 2	5	cadea	subj	2	4
 2	5	cadea	obl:in	2	9
+3	1	simile	obl:a	3	3
 3	7	fanno	subj	3	6
 3	7	fanno	obj	3	4
+3	7	fanno	attr	3	8
 4	6	partiro	subj	4	3
+5	1	correndo	subj	4	3
 5	1	correndo	obl:di	5	4
 5	6	passava	subj	5	5
 5	6	passava	obl:sotto	6	3
@@ -58,23 +62,27 @@ line	token	word	role	arg_line	arg_token
 20	9	giunti	obl:a	20	7
 21	1	fenno	subj	21	8
 21	1	fenno	obj	21	3
+22	2	sogliono	subj	22	4
+22	2	sogliono	xcomp	22	5
 22	5	far	subj	22	4
-22	5	far	obj	22	1
 22	5	far	attr	22	6
 22	5	far	attr	22	8
-22	6	nudi	subj	22	1
-22	8	unti	subj	22	1
+22	6	nudi	subj	22	4
+22	8	unti	subj	22	4
+23	1	avvisando	subj	0	0
 23	1	avvisando	obj	23	3
 24	6	battuti	subj	0	0
 24	6	battuti	obl:tra	24	5
 24	8	punti	subj	0	0
-25	2	rotando		0	0
+24	8	punti	obl:tra	24	5
+25	2	rotando	subj	25	3
 26	1	drizzava	subj	25	3
 26	1	drizzava	obj	25	5
 26	1	drizzava	obl:a	26	3
 27	1	faceva	subj	26	9
 27	1	faceva	obj	27	5
 27	1	faceva	obl:in	26	7
+27	1	faceva	obl:a	27	3
 28	0			0	0
 29	1	rende	subj	28	3
 29	1	rende	obj	29	4
@@ -265,15 +273,14 @@ line	token	word	role	arg_line	arg_token
 93	7	uditi	obl:per	93	3
 94	5	ha	subj	94	3
 94	5	ha	obj	94	7
-94	5	ha	iobj	94	4
 95	0			0	0
 96	0			0	0
 97	3	chiama	subj	97	1
 97	3	chiama	attr	97	4
 98	3	divalli	subj	98	1
 98	3	divalli	obl:in	98	7
-99	8	vacante	subj	94	3
-99	8	vacante	obl:a	99	3
+99	8	vacante	subj	0	0
+99	8	vacante	obl:in	99	3
 99	8	vacante	obl:di	99	6
 100	1	rimbomba	subj	94	3
 100	1	rimbomba	obl:sovra	100	5
@@ -281,17 +288,18 @@ line	token	word	role	arg_line	arg_token
 101	5	cadere	subj	0	0
 101	5	cadere	obl:a	101	8
 102	2	dovea	subj	0	0
-102	2	dovea	xcomp	102	5
-102	5	esser	subj	0	0
-102	5	esser	attr	102	6
-102	5	esser	obl:per	102	4
+102	2	dovea	xcomp	102	6
 102	6	recetto	subj	0	0
+102	6	recetto	obl:per	102	4
 103	0			0	0
 104	1	trovammo	subj	0	0
-104	1	trovammo	obj	104	2
+104	1	trovammo	ccomp	104	2
+104	1	trovammo	obl:di	103	5
 104	2	risonar	subj	104	4
 105	6	avria	subj	0	0
 105	6	avria	obj	105	8
+105	6	avria	attr	105	9
+105	6	avria	obl:in	105	4
 105	9	offesa	subj	105	8
 106	2	avea	subj	106	1
 106	2	avea	obj	106	4

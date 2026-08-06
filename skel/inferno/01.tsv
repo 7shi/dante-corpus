@@ -157,9 +157,8 @@ line	token	word	role	arg_line	arg_token
 55	3	è	attr	55	2
 55	7	acquista	subj	55	5
 56	2	giugne	subj	56	4
-56	6	perder	subj	56	7
+56	6	perder	obj	56	7
 56	8	face	subj	56	5
-56	8	face	obj	56	7
 56	8	face	xcomp	56	6
 57	6	piange	subj	57	1
 57	6	piange	obl:in	57	5
@@ -168,9 +167,9 @@ line	token	word	role	arg_line	arg_token
 58	3	fece	obj	58	2
 58	3	fece	attr	58	1
 59	2	venendomi	subj	0	0
-59	2	venendomi	obl	59	3
 60	2	ripigneva	subj	0	0
 60	2	ripigneva	obj	60	1
+60	2	ripigneva	obl:a	59	5
 60	2	ripigneva	obl	60	3
 60	7	tace	subj	60	6
 61	4	rovinava	subj	61	3
@@ -381,6 +380,7 @@ line	token	word	role	arg_line	arg_token
 129	6	elegge	obj	129	4
 130	8	richeggio	subj	130	6
 130	8	richeggio	obj	130	7
+130	8	richeggio	obl:a	130	4
 130	8	richeggio	obl:per	131	3
 131	7	conoscesti	subj	131	5
 131	7	conoscesti	obj	131	4

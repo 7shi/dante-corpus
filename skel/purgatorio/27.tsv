@@ -42,7 +42,7 @@ line	token	word	role	arg_line	arg_token
 15	1	qual	subj	15	3
 15	9	messo	subj	15	4
 15	9	messo	obl:in	15	7
-16	5	commesse	subj	16	4
+16	5	commesse		0	0
 16	7	protesi	subj	0	0
 16	7	protesi	obj	16	6
 16	7	protesi	obl:su	16	4
@@ -50,8 +50,8 @@ line	token	word	role	arg_line	arg_token
 17	1	guardando	obj	17	3
 17	5	imaginando	subj	0	0
 17	5	imaginando	obj	18	2
-18	4	veduti	subj	18	2
-18	5	accesi	subj	18	2
+18	4	veduti		0	0
+18	5	accesi		0	0
 19	1	Volsersi	subj	19	6
 19	1	Volsersi	obl:verso	19	3
 20	4	disse	subj	20	2
@@ -203,14 +203,12 @@ line	token	word	role	arg_line	arg_token
 65	6	toglieva	obj	65	8
 65	6	toglieva	obl:a	66	3
 66	9	basso	subj	66	6
-67	1	E		0	0
 67	5	levammo	subj	0	0
 67	5	levammo	obj	67	7
 67	5	levammo	obl:di	67	4
-68	1	che		0	0
 68	4	corcar	subj	68	3
+68	4	corcar	obl:per	68	7
 68	10	spense	subj	68	8
-69	1	sentimmo	subj	69	4
 69	1	sentimmo	subj	69	8
 69	1	sentimmo	obj	68	4
 69	1	sentimmo	obl	69	2
@@ -228,11 +226,13 @@ line	token	word	role	arg_line	arg_token
 74	7	affranse	obj	75	8
 74	7	affranse	iobj	74	6
 75	0			0	0
+76	3	stanno	subj	77	2
+76	3	stanno	xcomp	76	4
 76	4	ruminando	subj	77	2
-76	4	ruminando	obl:a	79	4
 77	3	state	subj	77	2
-77	3	state	attr	77	4
-77	3	state	attr	77	6
+77	3	state	obl:sovra	78	3
+78	6	sien	subj	78	5
+78	6	sien	attr	78	7
 78	7	pranse	subj	78	5
 79	9	ferve	subj	79	8
 80	1	guardate	subj	77	2
@@ -240,8 +240,7 @@ line	token	word	role	arg_line	arg_token
 81	1	poggiato	subj	80	4
 81	1	poggiato	obl:su	80	8
 81	3	è	subj	80	4
-81	3	è	attr	81	1
-81	3	è	obl:in	80	8
+81	3	è	xcomp	81	1
 81	8	serve	subj	80	4
 81	8	serve	obj	81	5
 81	8	serve	obl:di	81	7
@@ -250,13 +249,11 @@ line	token	word	role	arg_line	arg_token
 83	6	pernotta	subj	82	4
 83	6	pernotta	obl:lungo	83	3
 84	1	guardando	subj	82	4
-84	1	guardando	ccomp	84	6
 84	6	sperga	subj	84	3
 84	6	sperga	obj	84	5
 85	1	tali	subj	85	5
 85	2	eravamo	subj	85	5
 85	2	eravamo	attr	85	1
-85	2	eravamo	obl:a	85	6
 86	0			0	0
 87	0			0	0
 88	2	parer	obl:di	88	6

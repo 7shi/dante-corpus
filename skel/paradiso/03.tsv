@@ -8,25 +8,19 @@ line	token	word	role	arg_line	arg_token
 2	6	scoverto	iobj	2	4
 2	6	scoverto	obl:di	2	3
 3	1	provando	subj	0	0
-3	1	provando	obj	3	6
 3	3	riprovando	subj	0	0
-3	3	riprovando	obj	3	6
-4	4	confessar	subj	4	2
+4	4	confessar	subj	0	0
 4	4	confessar	obj	5	1
-4	4	confessar	attr	4	5
-4	4	confessar	attr	4	7
 4	5	corretto	subj	5	1
 4	7	certo	subj	5	1
 5	6	convenne	subj	5	5
 6	1	leva'	subj	4	2
 6	1	leva'	obj	6	3
 6	5	proferer	subj	0	0
-6	5	proferer	attr	6	7
-6	7	erto	subj	4	2
+6	7	erto	subj	6	3
 7	3	apparve	subj	7	2
 7	5	ritenne	subj	7	4
 7	5	ritenne	obj	8	3
-7	5	ritenne	attr	8	5
 7	5	ritenne	obl:a	8	2
 8	5	stretto	subj	8	3
 8	7	vedersi	subj	0	0
@@ -108,12 +102,12 @@ line	token	word	role	arg_line	arg_token
 34	7	parea	subj	34	6
 34	7	parea	attr	34	9
 34	9	vaga	subj	34	6
-35	2	ragionar	subj	0	0
+34	9	vaga	obl:di	35	2
 35	3	drizza'	subj	34	2
 35	3	drizza'	obj	35	4
-35	3	drizza'	xcomp	35	2
 35	3	drizza'	obl:a	34	5
 35	6	cominciai	subj	0	0
+35	6	cominciai	obl:a	34	5
 36	7	smaga	subj	36	6
 36	7	smaga	obj	36	4
 37	0			0	0
@@ -370,12 +364,9 @@ line	token	word	role	arg_line	arg_token
 120	1	generò	obl:di	119	4
 121	2	parlommi	subj	0	0
 121	5	cominciò	subj	0	0
-121	5	cominciò	xcomp	122	2
 122	2	cantando	subj	0	0
 122	2	cantando	obj	121	6
 122	4	cantando	subj	0	0
-122	5	vanio	subj	123	5
-122	5	vanio	obl:per	123	3
 123	0			0	0
 124	7	seguio	subj	124	4
 124	7	seguio	obj	124	6
@@ -391,7 +382,7 @@ line	token	word	role	arg_line	arg_token
 129	8	sofferse	subj	129	6
 129	8	sofferse	obl:da	129	4
 130	4	fece	subj	130	2
-130	4	fece	obj	130	3
+130	4	fece	iobj	130	3
 130	4	fece	xcomp	130	6
-130	6	dimandar	subj	130	3
-130	8	tardo	subj	130	3
+130	6	dimandar	subj	0	0
+130	6	dimandar	attr	130	8

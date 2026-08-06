@@ -54,14 +54,15 @@ line	token	word	role	arg_line	arg_token
 23	7	vedute	subj	22	3
 23	7	vedute	obj	24	2
 23	7	vedute	obl:da	22	7
-23	7	vedute	obl:a	23	5
 23	7	vedute	obl:ad	24	5
+23	7	vedute	obl:ad	24	7
 24	0			0	0
 25	1	supplica	subj	22	2
 25	1	supplica	iobj	25	3
-25	1	supplica	ccomp	26	7
 25	1	supplica	obl:per	25	5
 25	1	supplica	obl:di	25	7
+26	3	possa	subj	0	0
+26	3	possa	xcomp	26	7
 26	7	levarsi	subj	0	0
 26	7	levarsi	attr	27	2
 26	7	levarsi	obl:con	26	6
@@ -86,15 +87,15 @@ line	token	word	role	arg_line	arg_token
 33	8	dispieghi	subj	33	5
 33	8	dispieghi	iobj	33	6
 34	3	priego	subj	0	0
-34	3	priego	iobj	34	2
+34	3	priego	obj	34	2
+34	3	priego	ccomp	34	6
 34	3	priego	ccomp	35	6
-34	6	puoi	subj	34	5
+34	6	puoi	subj	34	2
 34	6	puoi	obj	35	1
 35	4	vuoli	subj	35	3
 35	4	vuoli	obj	35	2
-35	6	conservi	subj	0	0
+35	6	conservi	subj	34	2
 35	6	conservi	obj	36	5
-35	6	conservi	attr	35	7
 35	6	conservi	obl:dopo	36	3
 36	0			0	0
 37	1	Vinca	subj	37	3
@@ -273,9 +274,9 @@ line	token	word	role	arg_line	arg_token
 101	2	volgersi	subj	0	0
 101	2	volgersi	obl:da	101	4
 101	2	volgersi	obl:per	101	7
-102	2	impossibil	subj	102	6
-102	6	consenta	subj	0	0
-102	6	consenta	obj	101	2
+102	2	impossibil	subj	101	2
+102	2	impossibil	ccomp	102	6
+102	6	consenta	subj	102	5
 103	6	è	subj	103	5
 103	6	è	attr	103	9
 103	9	obietto	subj	103	5
@@ -286,6 +287,7 @@ line	token	word	role	arg_line	arg_token
 105	2	defettivo	obl:di	104	9
 105	5	è	subj	105	4
 105	5	è	attr	105	7
+105	5	è	obl	105	6
 105	7	perfetto	subj	105	4
 106	4	corta	subj	106	6
 106	4	corta	obl:a	107	3

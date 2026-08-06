@@ -381,16 +381,13 @@ line	token	word	role	arg_line	arg_token
 129	3	apporterai	obl:in	129	5
 130	0			0	0
 131	2	quïetò	subj	130	6
-131	2	quïetò	subj	131	7
 131	2	quïetò	obl:a	130	3
 131	2	quïetò	obl:con	131	4
 132	3	facea	subj	132	1
 132	3	facea	obl:in	132	5
 133	4	cessar	subj	0	0
 133	4	cessar	obj	133	5
-133	4	cessar	obj	133	7
 134	7	ripercossi	subj	0	0
-134	7	ripercossi	obj	134	2
 134	7	ripercossi	obl:in	134	6
 135	3	posano	subj	134	2
 135	3	posano	obl:a	135	5

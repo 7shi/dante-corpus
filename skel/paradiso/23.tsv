@@ -51,14 +51,16 @@ line	token	word	role	arg_line	arg_token
 15	6	appaga	obj	15	5
 16	3	fu	subj	16	2
 16	3	fu	obl:tra	16	7
+16	3	fu	obl:di	17	3
+16	3	fu	obl:di	17	7
 17	4	dico	subj	0	0
+17	4	dico	ccomp	16	3
 18	3	venir	subj	18	2
 18	3	venir	xcomp	18	7
 18	7	rischiarando	subj	18	2
 19	3	disse	subj	19	2
-19	3	disse	obj	19	4
-19	4	Ecco	subj	19	6
-19	4	Ecco	subj	20	8
+19	3	disse	obj	19	6
+19	3	disse	obj	20	8
 20	0			0	0
 21	0			0	0
 22	1	Pariemi	subj	0	0
@@ -175,9 +177,11 @@ line	token	word	role	arg_line	arg_token
 63	3	trova	obj	63	5
 64	3	pensasse	subj	64	2
 64	3	pensasse	obj	64	6
+64	3	pensasse	obj	65	3
 65	8	carca	subj	65	5
+65	8	carca	obj	65	6
+65	8	carca	obl:di	65	7
 66	2	biasmerebbe	subj	64	2
-66	2	biasmerebbe	subj	65	3
 66	2	biasmerebbe	obj	66	1
 66	6	trema	subj	0	0
 66	6	trema	obl:sotto	66	5
@@ -185,9 +189,7 @@ line	token	word	role	arg_line	arg_token
 67	2	è	attr	67	3
 67	3	pareggio	subj	68	1
 67	3	pareggio	obl:da	67	6
-67	3	pareggio	obl:da	69	3
 68	3	fendendo	subj	68	7
-68	3	fendendo	obj	68	2
 68	4	va	subj	68	7
 69	8	parca	subj	69	4
 69	8	parca	obl:a	69	6
@@ -234,8 +236,9 @@ line	token	word	role	arg_line	arg_token
 86	3	essaltasti	obj	86	2
 86	5	largirmi	subj	0	0
 86	5	largirmi	obj	86	6
+86	5	largirmi	obl:a	87	3
 87	9	possenti	subj	87	5
-87	9	possenti	obl	87	7
+87	9	possenti	iobj	87	7
 88	9	invoco	subj	88	7
 88	9	invoco	obj	88	6
 89	7	ristrinse	subj	88	2

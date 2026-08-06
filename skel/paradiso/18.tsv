@@ -109,10 +109,12 @@ line	token	word	role	arg_line	arg_token
 39	10	fatto	subj	0	0
 40	0			0	0
 41	1	vidi	subj	0	0
+41	1	vidi	xcomp	41	2
 41	1	vidi	obl:a	40	3
 41	2	moversi	subj	41	4
-41	5	roteando	subj	41	4
+41	5	roteando	subj	0	0
 42	4	ferza	subj	42	2
+42	4	ferza	obl:di	42	6
 43	0			0	0
 44	3	seguì	subj	44	7
 44	3	seguì	obj	44	1
@@ -208,13 +210,11 @@ line	token	word	role	arg_line	arg_token
 82	0			0	0
 83	1	fai	subj	82	4
 83	1	fai	obj	82	6
+83	1	fai	attr	83	2
 83	2	glorïosi	subj	82	6
 83	4	rendili	subj	82	4
-83	4	rendili	obj	84	5
-83	4	rendili	obj	84	7
-83	4	rendili	obl	84	2
-83	4	rendili	obl	84	3
-83	5	longevi		0	0
+83	4	rendili	attr	83	5
+83	5	longevi	subj	83	4
 84	0			0	0
 85	1	illustrami	subj	0	0
 85	1	illustrami	obl:di	85	3
@@ -311,17 +311,18 @@ line	token	word	role	arg_line	arg_token
 118	4	prego	obj	118	6
 118	10	inizia	subj	119	2
 118	10	inizia	obl:in	118	8
-119	7	rimiri	subj	0	0
-119	7	rimiri	obj	119	6
+119	7	rimiri	subj	119	6
+119	7	rimiri	ccomp	120	2
 120	2	esce	subj	120	4
+120	2	esce	obl	120	1
 120	9	vizia	subj	120	8
 120	9	vizia	obj	120	5
 121	8	adiri	subj	121	5
 121	8	adiri	obl:di	122	2
 122	2	comperare	subj	0	0
-122	2	comperare	obl:in	122	7
+122	2	comperare	obl:dentro	122	7
 122	4	vender	subj	0	0
-122	4	vender	obl:in	122	7
+122	4	vender	obl:dentro	122	7
 123	3	murò	subj	123	1
 123	3	murò	obl:di	123	5
 123	3	murò	obl:di	123	8

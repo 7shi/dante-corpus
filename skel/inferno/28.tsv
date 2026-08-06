@@ -405,8 +405,6 @@ line	token	word	role	arg_line	arg_token
 135	2	diedi	iobj	135	4
 136	2	feci	subj	136	1
 136	2	feci	obj	136	7
-136	2	feci	xcomp	136	10
-136	10	ribelli	subj	136	7
 136	10	ribelli	obl:in	136	9
 137	3	fé	subj	137	1
 137	3	fé	obl:di	137	6

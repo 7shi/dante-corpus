@@ -11,7 +11,11 @@ line	token	word	role	arg_line	arg_token
 3	7	ristrinse	subj	1	2
 3	7	ristrinse	obl:dentro	3	6
 4	3	fermò	subj	0	0
+4	3	fermò	attr	4	1
+4	3	fermò	obl:come	4	5
 4	7	ascolta	subj	4	6
+5	5	potea	subj	5	3
+5	5	potea	xcomp	5	6
 5	6	menare	subj	5	3
 5	6	menare	obj	5	4
 5	6	menare	obl:a	5	8

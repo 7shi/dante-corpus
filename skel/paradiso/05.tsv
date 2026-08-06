@@ -335,19 +335,18 @@ line	token	word	role	arg_line	arg_token
 114	7	fur	attr	114	8
 114	7	fur	obl:a	114	5
 114	8	manifesti	subj	0	0
-115	6	veder	subj	0	0
 115	6	veder	obj	115	8
-116	4	concede	subj	116	5
-116	4	concede	obj	115	6
+116	4	concede	subj	115	6
+116	4	concede	obj	116	5
 116	4	concede	iobj	115	5
 117	6	abbandoni	subj	117	4
 118	9	spazia	subj	118	3
 118	9	spazia	obl:per	118	7
 119	3	accesi	subj	119	1
-119	3	accesi	obl:di	118	2
-120	3	chiarirti	subj	120	2
+120	3	chiarirti	subj	0	0
+120	3	chiarirti	obl:di	120	2
 120	8	sazia	subj	119	7
-120	8	sazia	obj	120	7
+120	8	sazia	iobj	120	7
 120	8	sazia	obl:a	120	6
 121	0			0	0
 122	1	detto	subj	0	0

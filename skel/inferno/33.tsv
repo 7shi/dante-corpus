@@ -108,17 +108,18 @@ line	token	word	role	arg_line	arg_token
 33	3	messi	obl:da	33	7
 34	5	parieno	subj	35	4
 34	5	parieno	iobj	34	4
+34	5	parieno	attr	34	6
 34	5	parieno	obl:in	34	3
 34	6	stanchi	subj	35	4
 35	0			0	0
 36	2	parea	subj	36	4
 36	2	parea	iobj	36	1
+36	2	parea	obl:con	35	9
 36	4	veder	subj	0	0
 36	4	veder	obj	36	3
 36	4	veder	xcomp	36	5
 36	5	fender	subj	36	3
 36	5	fender	obj	36	7
-36	5	fender	obl:con	35	9
 37	3	desto	subj	0	0
 37	3	desto	obl:innanzi	37	6
 38	1	pianger	subj	38	8
@@ -151,9 +152,8 @@ line	token	word	role	arg_line	arg_token
 45	6	dubitava	subj	45	5
 45	6	dubitava	obl:per	45	4
 46	3	senti'	subj	46	2
-46	3	senti'	xcomp	46	4
+46	3	senti'	ccomp	46	4
 46	4	chiavar	subj	46	6
-46	8	sotto	obl:a	47	4
 47	7	guardai	subj	47	6
 47	7	guardai	obl:in	48	2
 48	7	far	subj	0	0
@@ -316,14 +316,16 @@ line	token	word	role	arg_line	arg_token
 104	8	move	obj	104	6
 105	2	è	subj	105	6
 106	5	Avaccio	subj	0	0
+106	6	sarai	subj	0	0
+106	6	sarai	attr	106	5
 107	4	farà	subj	107	6
 107	4	farà	obj	107	8
 107	4	farà	iobj	107	3
 107	4	farà	obl:di	107	2
 108	1	veggendo	subj	0	0
 108	1	veggendo	obj	108	3
-108	7	piove	subj	108	6
-108	7	piove	obj	108	4
+108	7	piove	subj	108	4
+108	7	piove	obj	108	6
 109	0			0	0
 110	1	gridò	subj	109	2
 110	1	gridò	iobj	110	3
@@ -435,7 +437,8 @@ line	token	word	role	arg_line	arg_token
 149	8	apersi	obj	149	7
 149	8	apersi	iobj	149	7
 150	2	cortesia	subj	150	5
-150	6	villano	subj	150	4
+150	5	esser	subj	150	4
+150	5	esser	attr	150	6
 151	0			0	0
 152	0			0	0
 153	7	spersi	subj	153	4

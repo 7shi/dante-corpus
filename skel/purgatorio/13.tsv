@@ -58,6 +58,7 @@ line	token	word	role	arg_line	arg_token
 21	1	esser	obl:in	21	2
 21	7	duci	subj	21	6
 22	8	conta	subj	22	1
+22	8	conta	obl:di	22	3
 22	8	conta	obl:per	22	6
 23	7	iti	subj	23	5
 23	7	iti	obl:di	23	1
@@ -68,11 +69,10 @@ line	token	word	role	arg_line	arg_token
 25	4	volar	obl:verso	25	3
 25	6	sentiti	subj	26	4
 25	6	sentiti	xcomp	25	4
-25	6	sentiti	obl:verso	25	3
 26	3	visti	subj	26	4
 26	5	parlando	subj	26	4
+26	5	parlando	obl:a	27	3
 27	7	inviti	subj	26	4
-27	7	inviti	obl:a	27	3
 28	5	passò	subj	28	4
 28	6	volando	subj	28	4
 29	3	habent	subj	0	0
@@ -304,8 +304,8 @@ line	token	word	role	arg_line	arg_token
 102	9	levava	obl:in	102	8
 103	2	diss'	subj	103	3
 103	8	dome	subj	103	4
-103	8	dome	obl:per	103	6
 103	8	dome	iobj	103	7
+103	8	dome	obl:per	103	6
 104	4	quelli	subj	104	2
 104	7	rispondesti	subj	104	5
 104	7	rispondesti	iobj	104	6

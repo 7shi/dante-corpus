@@ -65,16 +65,21 @@ line	token	word	role	arg_line	arg_token
 20	1	tolta	obj	19	5
 20	1	tolta	iobj	20	2
 20	1	tolta	obl:di	20	6
+20	3	avea	subj	19	4
+20	3	avea	obj	19	5
+20	3	avea	iobj	20	2
+20	3	avea	obl:di	20	6
 21	5	mise	subj	19	3
-21	5	mise	obj	21	4
+21	5	mise	iobj	21	4
 21	5	mise	obl:di	21	2
 21	5	mise	obl:in	21	7
 22	2	disse	subj	19	3
+22	2	disse	ccomp	23	2
 23	2	conviene	subj	23	3
 23	2	conviene	iobj	23	1
 23	2	conviene	obl:a	22	7
 23	3	schiarar		0	0
-23	4	dicer	obj	24	1
+23	4	dicer	ccomp	24	2
 23	5	convienti	subj	0	0
 23	5	convienti	xcomp	23	4
 24	2	drizzò	subj	24	1

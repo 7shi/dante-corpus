@@ -102,12 +102,12 @@ line	token	word	role	arg_line	arg_token
 35	4	è	subj	34	4
 35	8	ha	subj	35	6
 35	8	ha	obj	35	9
+35	8	ha	obl:di	35	7
 35	10	creda	subj	35	6
 35	10	creda	ccomp	36	6
 36	6	teme	subj	36	7
 36	6	teme	obj	36	2
-36	7	suppe		0	0
-36	7	suppe	subj	0	0
+36	7	suppe	subj	35	6
 37	2	sarà	subj	38	2
 37	2	sarà	attr	37	4
 38	4	lasciò	subj	38	3
@@ -174,11 +174,11 @@ line	token	word	role	arg_line	arg_token
 60	8	creò	attr	60	9
 60	8	creò	obl:a	60	5
 60	9	santa	subj	60	7
+61	2	morder	subj	0	0
 61	2	morder	obj	61	3
 62	0			0	0
 63	1	bramò	subj	63	2
 63	1	bramò	obj	62	6
-63	1	bramò	obl	61	2
 63	1	bramò	obl:in	61	5
 63	1	bramò	obl:in	61	8
 63	1	bramò	obl	62	2
@@ -250,12 +250,11 @@ line	token	word	role	arg_line	arg_token
 86	3	seguitata	obj	86	1
 86	5	veggi	subj	0	0
 86	5	veggi	obj	86	7
-86	5	veggi	ccomp	87	3
-87	3	seguitar	subj	86	7
+87	2	può	subj	0	0
+87	2	può	xcomp	87	3
+87	3	seguitar	subj	0	0
 87	3	seguitar	obj	87	6
 88	2	veggi	subj	0	0
-88	2	veggi	obj	88	4
-88	2	veggi	xcomp	89	1
 89	1	distar	subj	88	4
 89	1	distar	obl:da	88	7
 89	5	discorda	subj	90	4

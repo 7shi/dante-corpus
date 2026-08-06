@@ -160,23 +160,22 @@ line	token	word	role	arg_line	arg_token
 51	7	constare	obl:per	51	5
 52	2	fatta	subj	52	4
 52	2	fatta	attr	52	1
-53	7	differente	subj	0	0
-53	7	differente	obl:di	53	4
+52	2	fatta	obl:quale	53	4
+53	0			0	0
 54	3	è	subj	54	2
 54	3	è	obl:in	54	5
 54	8	è	subj	54	7
 54	8	è	obl:a	54	11
-55	2	ovra	subj	52	1
+55	2	ovra	subj	0	0
+55	2	ovra	obl:come	56	2
 55	7	move	subj	0	0
-55	7	move	obj	55	6
 55	9	sente	subj	0	0
-55	9	sente	obj	55	6
-56	6	imprende	subj	52	1
+56	6	imprende	subj	0	0
 56	6	imprende	xcomp	57	2
 57	2	organar	subj	0	0
 57	2	organar	obj	57	4
-57	6	è	subj	57	7
-57	6	è	obl:in	57	5
+57	6	è	subj	57	5
+57	6	è	attr	57	7
 58	3	spiega	subj	59	2
 58	7	distende	subj	59	2
 59	4	è	subj	59	3
@@ -233,7 +232,6 @@ line	token	word	role	arg_line	arg_token
 77	1	guarda	subj	0	0
 77	1	guarda	obj	77	3
 77	8	fa	subj	77	6
-77	8	fa	obj	77	7
 77	8	fa	attr	77	9
 78	1	giunto	subj	77	3
 78	1	giunto	obl:a	78	4
@@ -290,8 +288,7 @@ line	token	word	role	arg_line	arg_token
 100	4	ha	obj	100	7
 101	2	chiamata	subj	0	0
 101	2	chiamata	attr	101	3
-101	6	organa	subj	0	0
-101	6	organa	obj	102	2
+101	6	organa	subj	102	2
 101	6	organa	obl:a	102	6
 102	0			0	0
 103	2	parliamo	subj	0	0

@@ -8,10 +8,10 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5r, two full `--fix` rounds
-run (Phases 5e and 5q), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r) fed
+**Status: built for all 100 cantos, checker refined through Phase 5r, three full `--fix` rounds
+run (Phases 5e, 5q and 5s), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r) fed
 back into `dep/`.**
-`make -C skel check`: **0 hard, 3545 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 3215 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -21,15 +21,20 @@ annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)), and 3634 after the one `dep` fix in the
 `case` annex's Step 6 clitic round, 3633 at the close of that annex's Steps 7-9, 3473 after Phase
 5r's rule U, 3465 after that phase's hand-verified `dep`/`case` round, 3509 after Layer 4's
-multiple-`obj` round moved it *up* again, and 3545 after the `"verb" in pos` bug fix). See
+multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix, and 3215 after
+Phase 5s's user-run `--fix` pass). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
 correction history. `--fix` regeneration improves **8.7%** of the units it attempts (178 of
 2037 in the Phase 5e round, ~0.11 violations per LLM call) and that rate did not improve once
 the deterministic phases had cleared the unfixable units out of the flagged set — Phase 5q
-measured 0.086 per call on a residue nine rules further along, the same flat figure. So the
-remaining gap is not closed by more model calls (see [PLAN.md](PLAN.md) and *Next steps*).
+measured 0.086 per call on a residue nine rules further along, the same flat figure. So more
+model calls do not close a *static* residue. **Phase 5s qualified that**: run after Layer 4's
+multiple-`obj` round and the `"verb" in pos` bug fix had changed what the flagged set contains,
+the same instrument yielded **0.199 per call** (−330, 0 units worse, 0 newly flagged). A
+regeneration pass pays off when a cross-layer correction has moved the ground under the flagged
+set, not otherwise (see [PLAN.md](PLAN.md) and *Next steps*).
 
 ## What it does
 

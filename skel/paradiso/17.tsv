@@ -204,20 +204,18 @@ line	token	word	role	arg_line	arg_token
 77	1	nascendo	subj	0	0
 78	2	notabili	subj	78	5
 79	8	accorte	subj	79	6
-79	8	accorte	obl:di	79	3
 79	8	accorte	obl:per	80	4
 80	0			0	0
-81	4	intorno	subj	81	3
-81	4	intorno	obl:di	81	6
 81	7	torte	subj	81	3
 81	7	torte	obl	80	8
 81	7	torte	obl:di	81	6
 82	9	inganni	subj	82	5
 82	9	inganni	obj	82	8
 83	1	parran	subj	83	2
+83	1	parran	obl:in	84	3
 84	3	curar	subj	0	0
-84	3	curar	obj	84	5
-84	3	curar	obj	84	8
+84	3	curar	obl:di	84	5
+84	3	curar	obl:di	84	8
 85	0			0	0
 86	1	saranno	subj	85	3
 87	3	potran	subj	86	6
@@ -255,9 +253,8 @@ line	token	word	role	arg_line	arg_token
 97	8	invidie	obl:a	97	7
 98	4	infutura	subj	98	7
 98	4	infutura	obl	99	3
-99	3	là	subj	0	0
-99	3	là	obl	99	6
-99	6	punir	obj	99	9
+99	6	punir	subj	0	0
+99	6	punir	obl:di	99	9
 100	3	tacendo	subj	0	0
 100	5	mostrò	subj	101	2
 100	6	spedita	subj	101	2
@@ -337,13 +334,12 @@ line	token	word	role	arg_line	arg_token
 127	3	rimossa	subj	127	5
 128	4	fa	subj	0	0
 128	4	fa	obj	128	3
-128	4	fa	xcomp	128	5
 128	5	manifesta	subj	128	3
 129	2	lascia	subj	0	0
 129	2	lascia	xcomp	129	4
-129	4	grattar	subj	0	0
-129	4	grattar	obl	129	6
+129	4	grattar		0	0
 129	6	è	subj	129	8
+129	6	è	obl	129	5
 130	7	molesta	subj	130	4
 130	7	molesta	obl:in	131	3
 131	0			0	0

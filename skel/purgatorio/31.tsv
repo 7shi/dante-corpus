@@ -45,8 +45,6 @@ line	token	word	role	arg_line	arg_token
 14	2	pinsero	obl:de	14	9
 15	3	intender	subj	15	7
 15	3	intender	obl:a	15	2
-15	5	mestier	subj	15	7
-15	5	mestier	xcomp	15	3
 16	3	frange	subj	16	2
 16	3	frange	obj	17	6
 16	3	frange	obj	17	9

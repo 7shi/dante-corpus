@@ -210,14 +210,12 @@ line	token	word	role	arg_line	arg_token
 66	7	vanno	subj	64	3
 66	7	vanno	obl:in	66	9
 67	7	era	subj	67	5
-68	1	volgendo	subj	67	4
 68	1	volgendo	obj	68	3
 68	4	raffrettò	subj	67	4
 68	4	raffrettò	obj	68	6
 68	4	raffrettò	obl:per	69	3
 68	4	raffrettò	obl:per	69	6
-69	6	voler	subj	0	0
-69	6	voler	attr	69	7
+69	6	voler	xcomp	69	7
 69	7	leggera	subj	67	4
 70	9	lasso	subj	70	5
 70	9	lasso	obl:di	70	7
@@ -375,10 +373,9 @@ line	token	word	role	arg_line	arg_token
 120	2	andavam	obl:da	120	4
 120	7	leva	subj	120	5
 121	1	Ricordivi	subj	0	0
-121	1	Ricordivi	obj	121	5
-121	1	Ricordivi	obj	124	4
+121	1	Ricordivi	obl:di	121	5
+121	1	Ricordivi	obl:di	124	4
 121	2	dicea	subj	0	0
-121	2	dicea	ccomp	121	1
 122	0			0	0
 123	2	combatter	subj	123	1
 123	2	combatter	obj	122	4
@@ -389,7 +386,7 @@ line	token	word	role	arg_line	arg_token
 124	10	molli	subj	124	5
 125	5	volle	subj	125	6
 125	5	volle	obj	125	4
-125	5	volle	obl:per	125	7
+125	5	volle	attr	125	7
 126	4	discese	subj	0	0
 126	4	discese	obj	126	6
 126	4	discese	obl:in	126	3
@@ -454,12 +451,12 @@ line	token	word	role	arg_line	arg_token
 147	2	impregnata	obl:da	147	8
 148	3	senti'	subj	0	0
 148	3	senti'	iobj	148	2
-148	3	senti'	xcomp	148	6
+148	3	senti'	ccomp	148	6
 148	6	dar	subj	148	5
 148	6	dar	obl:per	149	2
 149	5	senti'	subj	0	0
-149	5	senti'	xcomp	149	6
-149	6	mover	subj	148	5
+149	5	senti'	ccomp	149	6
+149	6	mover	subj	0	0
 149	6	mover	obj	149	8
 150	2	fé	subj	150	1
 150	2	fé	xcomp	150	3

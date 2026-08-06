@@ -331,12 +331,12 @@ line	token	word	role	arg_line	arg_token
 119	8	inonda	subj	119	6
 119	8	inonda	obj	119	7
 120	2	scalda	subj	119	6
-120	2	scalda	obj	119	7
 120	9	avviva	subj	119	6
 120	9	avviva	obj	120	8
+121	2	è	subj	121	4
+121	2	è	attr	121	7
 121	7	profonda	subj	121	4
-122	2	basti	subj	121	4
-122	2	basti	xcomp	122	4
+122	2	basti	subj	0	0
 122	4	render	subj	0	0
 122	4	render	obj	122	6
 122	4	render	iobj	122	5

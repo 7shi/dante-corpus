@@ -1,5 +1,68 @@
 # skel — Layer 5 correction history
 
+## Phase 5s: the `--fix` round the 2026-08-03 work opened up — 3545 → 3215, −330 (2026-08-07)
+
+Baseline: **0 hard, 3545 soft**, **1659 flagged parse units** — the state left by the multiple-`obj`
+round and the `adverb` bug fix (both 2026-08-03, below). One full `--fix` pass over all three
+canticles, run by the user as `make -C skel fix` 3-way parallel. This is the route PLAN.md's *If a
+next task is wanted* had reserved for the user, and the reason to run a third pass after Phase 5q's
+stop rule was specific: the 2026-08-03 round had **added two populations that are `--fix` material
+by construction** (LLM-authored artifact rows against a now-corrected Layer 4, and the 72
+adverb-as-predicate `extra_tuple`s the bug had been absorbing), not the regeneration-resistant
+residue 5q measured.
+
+| metric | measured |
+|---|---|
+| units flagged before | 1659 |
+| units flagged after | 1549 (**−110 cleared outright**) |
+| soft violations removed | **330** (3545 → **3215**, −9.3%) |
+| violations removed per LLM call | **≈0.199** |
+| units that got *worse* | **0** (Phase 5c's criterion held) |
+| units newly flagged | **0** |
+| cantos touched | 91 — inferno 30, purgatorio 30, paradiso 31 |
+
+Per class:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| extra_arg | 1687 | 1558 | −129 (−7.6%) |
+| missing_arg | 1151 | 1053 | −98 (−8.5%) |
+| role_mismatch | 360 | 309 | −51 (−14.2%) |
+| extra_tuple | 217 | 174 | −43 (−19.8%) |
+| argument | 92 | 86 | −6 (−6.5%) |
+| missing_tuple | 38 | 35 | −3 (−7.9%) |
+
+**The prediction held, and this does not reopen Phase 5q's stop rule.** The yield came in at
+**0.199 violations per call against 5q's 0.086 and 5e's 0.11** — the first pass to beat that flat
+rate, by better than double. The stop rule 5q wrote said *what is left does not respond to
+regeneration*; it was measured on a residue that had not yet had a wrong Layer 4 corrected under it.
+Every class moved further than in 5q (7.6%/8.5%/14.2% against 4.4%/3.6%/3.4%), and `extra_tuple`
+moved most of all (−19.8%) — which is where the adverb bug's +72 had landed. Three of the five
+adverb-predicate positions the bug write-up names by hand are now cleared (inferno 11:93 *non men
+che saver*, 13:112 *similemente a colui*, 14:44 *fuor che ' demon duri*); 1:122 *più di me degna*
+and 21:49 *altrimenti che nel Serchio* still stand. The correct reading is that a regeneration pass
+is worth running **after a cross-layer correction round moves the ground under the flagged set**,
+not on a static residue.
+
+**Zero units got worse and zero were newly flagged** — the cleanest round on record on both counts
+(5q also held the no-worse criterion, but is not recorded against newly-flagged). Line-level counts
+do show 49 lines rising, entirely from violations relocating to a neighbouring line inside the same
+parse unit; measured at the parse-unit level, which is the unit `--fix` actually regenerates, the
+delta is one-directional: **238 units improved, 0 degraded.**
+
+Sample of what changed (inferno 1–2): 1:56 `perder` `subj` → `obj` with `face`'s duplicate `obj`
+dropped — the LLM converging on the Layer-4 tree the multiple-`obj` round had just corrected;
+1:59–60 the `obl` under fused `venendomi` re-attached as `ripigneva`'s `obl:a`; 2:110/113 the
+missing implicit-subject rows (`subj 0 0`) supplied on infinitives and a gerund.
+
+As in 5q, the per-unit acceptance count is not recoverable — `skel/skel.log` was again left empty by
+the parallel invocation — so the table reports the flagged-unit delta (−110), a lower bound on
+accepted units.
+
+**Current state**: `skel --check` **0 hard, 3215 soft** (down from 17438 at the first full-corpus
+measurement, overall Δ14223, 81.6%). `dep --check` 0 hard / 0 soft, `case --check` 0 hard,
+`np --check` 0 hard / 0 soft, `pytest` 154 passed.
+
 ## The `"verb" in pos` bug: `adverb` matched too — 3509 → 3545, +36 (2026-08-03)
 
 Found while wiring Layer 4's new *at most one `obj` per predicate* rule

@@ -266,7 +266,7 @@ line	token	word	role	arg_line	arg_token
 96	0			0	0
 97	8	diretto	subj	97	3
 97	8	diretto	obl:in	97	7
-98	6	misura	subj	0	0
+98	6	misura	subj	97	3
 98	6	misura	obj	98	4
 98	6	misura	obl:in	98	3
 99	1	esser	subj	99	4
@@ -278,7 +278,8 @@ line	token	word	role	arg_line	arg_token
 100	6	torce	obl:con	101	3
 100	6	torce	obl:contra	102	3
 100	6	torce	obl:adovra	102	6
-101	6	dee	subj	101	4
+101	6	dee	subj	0	0
+101	6	dee	xcomp	101	7
 101	7	corre	subj	0	0
 101	7	corre	obl:in	101	9
 102	0			0	0

@@ -218,8 +218,8 @@ line	token	word	role	arg_line	arg_token
 71	3	volse	obl:in	71	6
 72	2	sentia	subj	0	0
 72	2	sentia	obj	72	5
-73	4	fé	subj	73	3
-73	4	fé	obj	73	2
+73	4	fé	subj	0	0
+73	4	fé	obj	73	3
 73	4	fé	obl:con	73	6
 74	7	latra	subj	74	1
 74	7	latra	obl:di	73	2
@@ -246,9 +246,7 @@ line	token	word	role	arg_line	arg_token
 82	9	face	xcomp	82	7
 83	1	fatto	subj	82	5
 83	1	fatto	obj	82	3
-83	2	avea	subj	82	3
-83	2	avea	obj	82	5
-83	7	fatturo	subj	82	3
+83	7	fatturo	subj	82	5
 83	7	fatturo	obl:per	84	3
 84	8	soggiace	subj	84	5
 84	8	soggiace	obl:a	84	7
@@ -256,17 +254,18 @@ line	token	word	role	arg_line	arg_token
 85	1	diventa	attr	85	4
 85	1	diventa	attr	85	6
 85	1	diventa	obl:in	85	3
-86	8	mira	subj	0	0
+86	8	mira	subj	82	2
 86	8	mira	obl:in	86	3
 86	8	mira	obl:con	87	2
 86	8	mira	obl:con	87	6
 87	0			0	0
 88	7	spira	subj	88	5
-88	7	spira	obj	88	6
+88	7	spira	iobj	88	6
 89	2	concedette	subj	88	4
 89	2	concedette	obj	90	1
 89	2	concedette	iobj	89	1
 89	2	concedette	obl:in	89	4
+89	2	concedette	obl:a	89	6
 89	9	dico	subj	89	8
 89	9	dico	obj	89	7
 90	3	far	subj	0	0

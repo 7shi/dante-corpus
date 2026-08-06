@@ -207,9 +207,12 @@ line	token	word	role	arg_line	arg_token
 75	2	fuor		0	0
 76	3	sfavillar	subj	0	0
 77	3	fece	subj	77	2
+77	3	fece	attr	77	4
 77	3	fece	attr	77	6
 77	3	fece	obl:a	78	3
-77	6	candente	subj	77	2
+77	4	sùbito	subj	77	2
+77	6	candente	subj	0	0
+77	6	candente	obl:a	78	3
 78	6	vinti	subj	78	5
 78	8	soffriro	subj	78	5
 78	8	soffriro	obj	78	7

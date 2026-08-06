@@ -155,17 +155,18 @@ line	token	word	role	arg_line	arg_token
 52	5	esser	subj	53	2
 52	5	esser	attr	52	6
 52	6	vicine	subj	53	2
-52	6	vicine	obl:a	53	8
-52	6	vicine	obl:a	54	3
 53	5	dico	subj	53	4
 53	5	dico	obj	53	3
-54	4	aver	subj	0	0
+54	4	aver	subj	53	2
 54	4	aver	obj	54	6
-55	2	averle	subj	0	0
-55	5	sostener	subj	0	0
+54	4	aver	obl:a	53	8
+54	4	aver	obl:a	54	3
+55	2	averle	subj	53	2
+55	2	averle	obl	55	3
+55	5	sostener	subj	53	2
 55	5	sostener	obj	55	7
 56	0			0	0
-57	4	barattare		0	0
+57	4	barattare	subj	57	1
 57	5	ha	subj	57	1
 57	5	ha	obj	57	7
 58	8	traligna	subj	58	4
@@ -197,11 +198,11 @@ line	token	word	role	arg_line	arg_token
 68	2	fu	subj	67	3
 68	2	fu	attr	68	1
 69	5	cibo	subj	0	0
+69	5	cibo	obl:di	69	3
 69	8	appone	subj	69	6
-69	8	appone	obj	69	7
 70	6	cade	subj	70	3
-70	6	cade	subj	71	3
 71	7	taglia	subj	72	4
+71	7	taglia	obl	71	6
 72	0			0	0
 73	3	riguardi	subj	73	2
 73	3	riguardi	obj	73	4
@@ -267,17 +268,17 @@ line	token	word	role	arg_line	arg_token
 92	0			0	0
 93	0			0	0
 94	8	carca	subj	94	4
-94	8	carca	obl:a	94	6
 94	8	carca	obl:di	95	3
 95	0			0	0
-96	4	iattura	subj	96	1
+96	4	iattura	subj	0	0
+96	4	iattura	obl:di	96	7
 97	1	erano	subj	97	3
 97	1	erano	obl:sovra	94	3
 97	6	disceso	subj	98	2
-97	6	disceso	subj	98	5
 97	6	disceso	obl	97	4
 98	0			0	0
 99	7	preso	subj	98	5
+99	7	preso	obj	98	7
 100	5	sapeva	subj	100	1
 100	5	sapeva	ccomp	101	3
 101	1	regger		0	0
@@ -299,8 +300,8 @@ line	token	word	role	arg_line	arg_token
 107	7	tratti	obl:a	108	3
 108	0			0	0
 109	4	vidi	subj	109	3
-109	4	vidi	obj	109	2
 109	4	vidi	obj	109	5
+109	4	vidi	attr	109	2
 109	8	disfatti	subj	109	6
 109	8	disfatti	obl:per	110	3
 110	0			0	0

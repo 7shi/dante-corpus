@@ -171,7 +171,6 @@ line	token	word	role	arg_line	arg_token
 53	1	esser	subj	53	2
 54	6	son	subj	54	5
 54	6	son	attr	54	7
-54	6	son	obl:di	54	2
 54	7	ripiene	subj	54	5
 54	7	ripiene	obl:di	54	2
 55	2	pò	subj	52	3
@@ -182,12 +181,12 @@ line	token	word	role	arg_line	arg_token
 55	7	possente	subj	52	3
 56	5	discerna	subj	0	0
 56	5	discerna	obj	56	4
-56	5	discerna	obl:da	57	5
-57	3	là	obl:da	57	5
+56	5	discerna	obl:di	57	3
 57	8	è	subj	57	6
 57	8	è	attr	57	9
+57	8	è	obl:a	57	7
 57	9	parvente	subj	57	6
-57	9	parvente	obl	57	7
+57	9	parvente	obl:a	57	7
 58	0			0	0
 59	4	riceve	subj	59	3
 59	4	riceve	obj	59	7
@@ -282,7 +281,7 @@ line	token	word	role	arg_line	arg_token
 89	7	tira	subj	89	3
 89	7	tira	obj	89	6
 89	7	tira	obl:a	89	5
-90	3	radïando	subj	90	2
+90	3	radïando		0	0
 90	5	cagiona	subj	90	2
 90	5	cagiona	obj	90	4
 91	6	rigira	subj	91	1
@@ -420,14 +419,11 @@ line	token	word	role	arg_line	arg_token
 144	8	fascia	subj	144	6
 144	8	fascia	obj	144	7
 145	2	creder	subj	0	0
-145	2	creder	ccomp	147	6
 145	2	creder	obl:di	145	4
 146	0			0	0
 147	6	lamenti	subj	146	3
 147	6	lamenti	obl:per	145	8
 147	6	lamenti	obl:per	147	4
 147	8	garra	subj	146	3
-147	8	garra	obl:per	145	8
-147	8	garra	obl:per	147	4
 148	9	scosta	subj	148	1
 148	9	scosta	obl:da	148	3

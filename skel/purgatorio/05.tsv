@@ -143,7 +143,6 @@ line	token	word	role	arg_line	arg_token
 44	4	pregar	subj	43	2
 44	5	disse	subj	44	7
 45	3	va	subj	0	0
-45	6	andando	subj	0	0
 45	7	ascolta	subj	0	0
 45	7	ascolta	obl:in	45	6
 46	4	vai	subj	46	3
@@ -272,9 +271,10 @@ line	token	word	role	arg_line	arg_token
 83	2	impigliar	obj	83	1
 83	6	caddi	subj	83	5
 83	9	vid'	subj	83	10
-83	9	vid'	xcomp	84	5
+83	9	vid'	ccomp	84	5
+83	9	vid'	obl	83	8
 84	5	farsi	subj	0	0
-84	5	farsi	obj	84	8
+84	5	farsi	attr	84	8
 84	5	farsi	obl:di	84	4
 84	5	farsi	obl:in	84	7
 85	2	disse	subj	85	4

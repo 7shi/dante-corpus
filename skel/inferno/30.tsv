@@ -203,12 +203,11 @@ line	token	word	role	arg_line	arg_token
 66	1	faccendo	obj	66	4
 67	3	stanno	subj	64	2
 67	3	stanno	iobj	67	2
-68	5	vie	subj	68	3
 68	8	asciuga	subj	68	3
 68	8	asciuga	obj	68	7
+68	8	asciuga	obl	69	3
 69	9	discarno	subj	69	5
 69	9	discarno	obj	69	8
-69	9	discarno	obl:di	69	4
 69	9	discarno	obl:in	69	7
 70	6	fruga	subj	70	4
 70	6	fruga	obj	70	5
@@ -413,24 +412,26 @@ line	token	word	role	arg_line	arg_token
 137	2	sognando	subj	137	1
 137	3	desidera	subj	137	1
 137	3	desidera	xcomp	137	4
-137	4	sognare		0	0
+137	4	sognare	subj	0	0
 138	5	è	subj	138	4
 138	8	fosse	subj	0	0
-138	9	agogna	subj	138	3
+138	9	agogna	subj	0	0
+138	9	agogna	obj	138	3
 139	3	fec'	subj	139	4
 139	3	fec'	obj	139	2
 139	3	fec'	attr	139	1
 139	6	possendo	subj	0	0
 139	6	possendo	xcomp	139	7
-139	7	parlare		0	0
+139	7	parlare	subj	0	0
 140	2	disïava	subj	0	0
 140	2	disïava	xcomp	140	3
-140	3	scusarmi		0	0
+140	3	scusarmi	subj	0	0
 140	5	scusava	subj	0	0
 140	5	scusava	obj	141	1
 141	6	credea	subj	0	0
 141	6	credea	iobj	141	5
 141	6	credea	xcomp	141	7
+141	7	fare	subj	0	0
 141	7	fare	obj	141	4
 142	5	lava	subj	142	2
 142	5	lava	obj	142	4

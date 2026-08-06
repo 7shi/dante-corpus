@@ -380,18 +380,18 @@ line	token	word	role	arg_line	arg_token
 127	7	udito	obl:contra	128	3
 128	5	comandò	subj	128	7
 128	5	comandò	iobj	128	4
-128	5	comandò	ccomp	127	4
-129	3	attendi		0	0
 129	3	attendi	subj	0	0
-129	6	drizzò	subj	0	0
+129	3	attendi	obl	129	4
+129	6	drizzò	subj	128	7
 129	6	drizzò	obj	129	8
 130	2	sarai	subj	0	0
-130	2	sarai	obl:dinanzi	130	6
+130	2	sarai	obl:a	130	6
 131	8	vede	subj	131	6
 131	8	vede	obj	131	7
 132	3	saprai	subj	0	0
 132	3	saprai	obj	132	8
 132	3	saprai	obl:da	132	2
+132	3	saprai	obl:di	132	6
 133	2	mosse	subj	0	0
 133	2	mosse	obj	133	7
 133	2	mosse	obl:a	133	4
@@ -404,4 +404,5 @@ line	token	word	role	arg_line	arg_token
 135	8	fiede	obl:a	135	7
 136	5	facea	subj	136	1
 136	5	facea	obj	136	8
-136	5	facea	attr	136	6
+136	5	facea	xcomp	136	6
+136	6	spiacer	subj	136	8

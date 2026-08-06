@@ -317,28 +317,30 @@ line	token	word	role	arg_line	arg_token
 102	9	serra	subj	102	8
 103	0			0	0
 104	4	volge	subj	104	2
+104	4	volge	obj	104	3
 104	4	volge	obl:in	103	4
 104	4	volge	obl:con	104	8
 105	5	rotto	subj	105	7
 105	5	rotto	iobj	105	3
 106	7	disciolta	subj	106	4
-106	7	disciolta	obl:ne	107	3
+106	7	disciolta	obl:in	107	3
 107	7	percuote	subj	107	6
+107	7	percuote	obl:in	106	3
 108	2	fa	subj	107	6
 108	2	fa	xcomp	108	3
 108	3	sonar	subj	108	5
 108	8	folta	subj	0	0
 109	6	puote	subj	109	4
-109	6	puote	ccomp	110	8
-110	8	impregna	subj	110	7
-110	8	impregna	obl:de	110	5
-111	4	girando	subj	111	2
+110	8	impregna	subj	0	0
+110	8	impregna	obj	110	7
+110	8	impregna	obl:di	110	5
+111	4	girando		0	0
 111	6	scuote	subj	111	2
+111	6	scuote	obl	111	5
 112	8	degna	subj	112	6
 112	8	degna	obl:per	113	2
 112	8	degna	obl:per	113	6
 113	7	concepe	subj	112	4
-113	7	concepe	obj	114	5
 113	9	figlia	subj	112	4
 113	9	figlia	obj	114	5
 113	9	figlia	obl:di	114	3

@@ -5,8 +5,7 @@ line	token	word	role	arg_line	arg_token
 3	3	trasse	subj	3	1
 3	5	disse	subj	3	1
 3	5	disse	ccomp	3	8
-3	8	siete	subj	3	6
-3	8	siete	attr	3	7
+3	8	siete	subj	3	7
 4	7	volte	subj	5	2
 4	7	volte	obl:a	4	5
 5	5	salire	subj	0	0

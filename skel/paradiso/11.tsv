@@ -108,6 +108,8 @@ line	token	word	role	arg_line	arg_token
 40	4	dirò	obl:di	40	3
 41	2	dice	subj	41	4
 41	2	dice	obl:di	40	8
+41	5	pregiando	subj	0	0
+41	5	pregiando	obj	41	4
 41	9	prende	subj	41	8
 41	9	prende	obj	41	6
 42	5	fur	subj	42	7

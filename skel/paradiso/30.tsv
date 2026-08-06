@@ -61,7 +61,8 @@ line	token	word	role	arg_line	arg_token
 20	10	credo	ccomp	21	8
 21	8	goda	subj	21	5
 21	8	goda	obj	21	7
-22	4	vinto	subj	22	3
+22	4	vinto	subj	0	0
+22	4	vinto	obl:da	22	3
 22	6	concedo	subj	0	0
 22	6	concedo	obj	22	5
 23	0			0	0
@@ -74,7 +75,8 @@ line	token	word	role	arg_line	arg_token
 27	7	scema	obl:da	27	5
 28	6	vidi	subj	28	5
 28	6	vidi	obj	28	9
-28	6	vidi	obl	28	4
+28	6	vidi	obl:in	28	4
+28	6	vidi	obl:in	29	3
 29	0			0	0
 30	9	preciso	subj	30	5
 30	9	preciso	iobj	30	2
@@ -83,7 +85,6 @@ line	token	word	role	arg_line	arg_token
 31	3	convien	ccomp	31	7
 31	7	desista	subj	31	6
 31	7	desista	obl:a	32	5
-32	2	dietro	obl:a	32	5
 32	6	poetando	subj	0	0
 33	0			0	0
 34	4	lascio	subj	34	3
@@ -138,24 +139,23 @@ line	token	word	role	arg_line	arg_token
 54	2	far	xcomp	54	3
 54	3	disposto	subj	54	8
 54	3	disposto	obl:a	54	6
-55	5	dentro	obl:a	55	7
 55	8	venute	subj	56	2
-55	8	venute	obl:a	55	7
+55	8	venute	obl:dentro	55	7
 56	6	compresi	subj	56	5
-56	6	compresi	obj	57	1
+56	6	compresi	xcomp	57	2
 57	2	sormontar	subj	57	1
-57	2	sormontar	obl:a	57	7
-58	6	raccesi	subj	56	2
+57	2	sormontar	obl:di	57	7
+58	6	raccesi	subj	0	0
+58	6	raccesi	obj	58	5
 58	6	raccesi	obl:di	58	4
 59	7	mera	subj	59	4
 60	8	difesi	subj	60	3
-61	2	vidi	subj	56	2
+61	2	vidi	subj	0	0
 61	2	vidi	obj	61	3
-62	1	fulvido	subj	61	3
-62	1	fulvido	obl:di	62	3
-62	1	fulvido	obl:intra	62	6
-63	1	dipinte	subj	62	6
-63	1	dipinte	obl:di	63	4
+61	2	vidi	obl:in	61	5
+61	2	vidi	obl:intra	62	6
+62	0			0	0
+63	0			0	0
 64	4	uscian	subj	64	5
 64	4	uscian	obl:di	64	3
 65	6	mettien	subj	64	5

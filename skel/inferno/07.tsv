@@ -171,11 +171,12 @@ line	token	word	role	arg_line	arg_token
 67	7	dì	subj	0	0
 67	7	dì	iobj	67	6
 68	7	tocche	subj	68	5
-68	7	tocche	obj	68	4
-68	7	tocche	iobj	68	6
-69	2	è	subj	69	1
-69	8	ha	subj	69	5
-69	8	ha	obj	69	3
+68	7	tocche	obj	68	6
+68	7	tocche	obl:di	68	4
+69	2	è	subj	68	2
+69	2	è	attr	69	1
+69	8	ha	subj	69	3
+69	8	ha	obj	69	5
 69	8	ha	obl:tra	69	11
 70	1	E		0	0
 70	2	quelli	subj	0	0
@@ -227,7 +228,7 @@ line	token	word	role	arg_line	arg_token
 86	3	giudica	subj	86	1
 86	5	persegue	subj	86	1
 86	5	persegue	obj	87	2
-87	8	dèi	subj	87	5
+87	8	dèi	obj	87	5
 88	5	hanno	subj	88	3
 88	5	hanno	obj	88	6
 89	3	fa	subj	89	1
@@ -350,6 +351,7 @@ line	token	word	role	arg_line	arg_token
 125	4	gorgoglian	obj	125	2
 125	4	gorgoglian	obl:in	125	7
 126	2	dir	subj	0	0
+126	2	dir	obj	126	3
 126	2	dir	obl:con	126	6
 126	4	posson	subj	0	0
 126	4	posson	xcomp	126	2

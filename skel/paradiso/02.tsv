@@ -72,18 +72,19 @@ line	token	word	role	arg_line	arg_token
 25	1	giunto	subj	0	0
 25	3	vidi	subj	0	0
 25	3	vidi	obj	25	2
-25	3	vidi	obl	25	4
 26	2	torse	subj	25	6
 26	2	torse	obj	26	4
 26	2	torse	iobj	26	1
 26	2	torse	obl:a	26	6
+27	3	potea	subj	27	5
+27	3	potea	xcomp	27	6
 27	6	essere	subj	27	5
 27	6	essere	attr	27	7
 27	6	essere	obl	27	1
 27	7	ascosa	subj	27	5
 27	7	ascosa	obl	27	1
 28	1	volta	subj	26	9
-28	1	volta	obl:ver	28	3
+28	1	volta	obl:verso	28	3
 28	5	lieta	subj	26	9
 28	7	bella	subj	26	9
 29	1	Drizza	subj	0	0
@@ -91,8 +92,7 @@ line	token	word	role	arg_line	arg_token
 29	1	Drizza	obl:in	29	5
 29	8	disse	subj	26	9
 29	8	disse	iobj	29	7
-29	8	disse	ccomp	29	1
-30	4	congiunti	subj	30	1
+30	4	congiunti	subj	0	0
 30	4	congiunti	obj	30	2
 30	4	congiunti	obl:con	30	8
 31	1	Parev'	subj	0	0
@@ -273,10 +273,12 @@ line	token	word	role	arg_line	arg_token
 91	7	dimostra	subj	91	5
 91	7	dimostra	attr	91	8
 91	8	tetro	subj	91	5
+91	8	tetro	obl:in	92	8
 92	0			0	0
 93	2	esser	subj	0	0
 93	2	esser	attr	93	4
 93	4	refratto	subj	0	0
+93	4	refratto	obl:a	93	7
 94	5	deliberarti	subj	95	1
 94	5	deliberarti	obl:da	94	3
 95	6	provi	subj	0	0
@@ -373,7 +375,8 @@ line	token	word	role	arg_line	arg_token
 129	4	convien	subj	0	0
 129	4	convien	ccomp	129	6
 129	6	spiri	subj	127	2
-129	6	spiri	subj	127	5
+129	6	spiri	subj	128	5
+129	6	spiri	obl:da	128	3
 129	6	spiri	obl:da	129	3
 130	7	fanno	subj	130	6
 130	7	fanno	obj	130	4
@@ -382,9 +385,9 @@ line	token	word	role	arg_line	arg_token
 131	7	volve	obj	131	5
 132	1	prende	subj	130	3
 132	1	prende	obj	132	3
-132	1	prende	obl:de	131	3
+132	1	prende	obl:di	131	3
 132	5	fassene	subj	130	3
-132	5	fassene	attr	132	6
+132	5	fassene	obj	132	6
 133	0			0	0
 134	5	conformate	subj	133	4
 134	5	conformate	obl:a	135	3

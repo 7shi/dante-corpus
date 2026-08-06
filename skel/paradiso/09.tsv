@@ -230,9 +230,12 @@ line	token	word	role	arg_line	arg_token
 84	8	inghirlanda	obj	84	5
 85	0			0	0
 86	3	va	subj	82	3
-86	3	va	obl	86	2
-86	5	fa	subj	0	0
+86	3	va	obl:fuor	84	4
+86	3	va	obl:tra	85	3
+86	3	va	obl:contra	85	6
+86	5	fa	subj	82	3
 86	5	fa	obj	86	6
+87	6	far		0	0
 87	6	far	subj	87	4
 87	7	suole	subj	87	4
 87	7	suole	xcomp	87	6
@@ -296,9 +299,9 @@ line	token	word	role	arg_line	arg_token
 110	2	porti	subj	0	0
 110	2	porti	obj	109	6
 110	2	porti	iobj	110	1
+110	2	porti	obl:di	110	1
 110	5	nate	subj	110	3
 110	5	nate	obl:in	110	8
-111	1	proceder	subj	0	0
 111	5	convene	subj	111	1
 111	5	convene	iobj	111	4
 112	2	vuo'	subj	112	1

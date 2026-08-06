@@ -366,6 +366,7 @@ line	token	word	role	arg_line	arg_token
 125	3	dirò	obj	125	6
 125	3	dirò	iobj	125	2
 125	4	diss'	subj	125	5
+125	4	diss'	ccomp	125	3
 125	9	apparve	subj	125	7
 125	9	apparve	iobj	125	8
 126	7	tolte	subj	126	3
@@ -398,9 +399,8 @@ line	token	word	role	arg_line	arg_token
 134	2	guarda	obl:con	134	6
 134	9	vede	subj	134	7
 135	5	giace	subj	135	4
-135	5	giace	attr	135	2
 136	2	dimandai	subj	0	0
-136	2	dimandai	ccomp	136	4
+136	2	dimandai	obl:per	136	4
 136	4	darti	subj	0	0
 136	4	darti	obj	136	5
 136	4	darti	obl:a	136	7
@@ -419,7 +419,6 @@ line	token	word	role	arg_line	arg_token
 141	0			0	0
 142	2	ecco	obj	142	8
 142	9	farsi	subj	142	8
-142	9	farsi	attr	143	7
 142	9	farsi	obl:verso	143	3
 143	0			0	0
 144	4	era	subj	144	5

@@ -89,8 +89,7 @@ line	token	word	role	arg_line	arg_token
 30	2	far	obl:di	30	4
 30	8	contenta	subj	30	7
 31	5	udi'	subj	0	0
-31	5	udi'	ccomp	31	8
-31	5	udi'	obl:a	31	4
+31	5	udi'	obl:dentro	31	4
 31	8	vedessi	subj	31	7
 31	8	vedessi	obj	32	4
 32	8	arde	subj	32	5

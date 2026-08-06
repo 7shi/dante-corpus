@@ -140,7 +140,7 @@ line	token	word	role	arg_line	arg_token
 50	4	pregava	subj	0	0
 50	4	pregava	ccomp	49	3
 51	8	abbia	subj	51	7
-51	8	abbia	obj	51	5
+51	8	abbia	obj	51	6
 52	2	dimmi	subj	0	0
 52	2	dimmi	obj	52	4
 52	7	dì	subj	0	0

@@ -174,7 +174,6 @@ line	token	word	role	arg_line	arg_token
 67	7	lungo	subj	0	0
 67	7	lungo	xcomp	67	9
 67	9	dirti	subj	0	0
-67	9	dirti	obj	67	5
 68	4	scende	subj	68	5
 68	4	scende	obl:di	68	3
 68	8	aiuta	subj	68	6
@@ -257,7 +256,6 @@ line	token	word	role	arg_line	arg_token
 91	7	move	subj	91	3
 91	7	move	obj	91	6
 91	9	regge	subj	91	3
-91	9	regge	obj	91	6
 92	3	di'	subj	92	2
 92	6	è	subj	92	7
 93	1	bastisi	subj	93	7

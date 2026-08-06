@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-03: `make -C skel check` reports **0 hard, 3545 soft** violations across
+Status as of 2026-08-07: `make -C skel check` reports **0 hard, 3215 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -11,12 +11,13 @@ Layer-4 `mark` correction → 3712 after Phase 5o's rule T → 3702 after Phase 
 correction rounds → 3555 after Phase 5q's user-run `--fix` pass → 3551 after its `ioj` typo fix,
 which took `unknown_role` to **0** → 3633 after the `case` annex's own Layer-2/Layer-4 rounds
 moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-verified `dep`/`case`
-round). The project goal is
+round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug fix moved it *up*
+again → 3215 after Phase 5s's user-run `--fix` pass). The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
 
-**Phases 5a-5q have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+**Phases 5a-5s have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
 about 0.11 violations per LLM call and that rate does not depend on how the flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
@@ -58,15 +59,15 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5r is **committed** — the rule commits, the four Layer-4 corrections and
-the `--fix` round are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
+Everything through Phase 5s is **committed** — the rule commits, the Layer-4 corrections and the
+`--fix` rounds are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3545 soft
+make -C skel check      # expect: 0 hard, 3215 soft
 make -C dep check       # expect: 0 hard, 0 soft  (Phases 5i, 5n, 5p and 5r edited dep artifacts)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
-uv run pytest -q        # expect: 149 passed
+uv run pytest -q        # expect: 154 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
 
@@ -97,13 +98,20 @@ typo fix (−4, `unknown_role` now **0**). Both remaining routes therefore have 
 - **Regeneration is exhausted by this plan's own stop rule.** 5q yielded 0.086 violations per
   call — 5e's flat rate reproduced on a completely differently composed flagged set — and moved
   no class more than 6.5%. A third pass would cost another ~1600 calls for a predictable ~130.
+  - **Qualified by Phase 5s (2026-08-07).** The third pass ran, and returned **0.199 per call**
+    (3545 → **3215**, −330; 0 units worse, 0 newly flagged) — double the predicted rate. The stop
+    rule holds for a *static* residue, which is what 5q measured; it does not hold once a
+    cross-layer round (here Layer 4's multiple-`obj` corrections and the `"verb" in pos` bug fix)
+    has put genuinely LLM-authored error back into the flagged set. See
+    [`CORRECTIONS.md`](CORRECTIONS.md)'s *Phase 5s*.
 - **Deterministic rules are exhausted against every population this document measured.** A new
   rule would need a class that has not yet been triaged; sections 1, 2 and 2a between them
   account for the residual, and each names why its remainder is a reading disagreement (subject
   resolution under enjambment and pro-drop; the clitic case question, which needs a Layer-2 case
   feature or a lexicon; the complement-vs-adjunct distinction, which needs a verb lexicon).
 
-So `0 hard, 3551 soft` is where the measure-then-freeze discipline leaves Layer 5, and the
+So `0 hard, 3215 soft` (`3551` when this section was written) is where the measure-then-freeze
+discipline leaves Layer 5, and the
 **soft residue is documented reading disagreement between two independent parses, not unfinished
 work with a known instrument**. Closing it further needs a *new* instrument — the Layer-2 case
 feature the clitic question asked for is the one candidate this project has repeatedly declined
@@ -427,6 +435,8 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5o** | Rule T (`obl:<lemma>` over a marker-matching `advcl` child) + the `advcl` verdict | 3725 → **3712** |
 | **5p** | Layer-4 corrections: 6 clausal complements retagged off `advcl` (+2 supporting rows) and 5n's 2 multi-edge deferrals | 3712 → **3702** |
 | **5q** | user-run full-corpus `--fix` pass (1702 flagged units, ≈28 h 3-way parallel) + the `ioj` → `iobj` typo fix | 3702 → **3551** |
+| **5r** | Rule U (the `case` annex as a third read on a disputed role) + its hand-verified `dep`/`case` round | 3633 → **3465** |
+| **5s** | user-run full-corpus `--fix` pass (1659 flagged units), run *after* Layer 4's multiple-`obj` round and the `"verb" in pos` fix had moved the flagged set | 3545 → **3215** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).

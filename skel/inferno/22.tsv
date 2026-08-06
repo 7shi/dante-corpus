@@ -375,6 +375,7 @@ line	token	word	role	arg_line	arg_token
 118	5	udirai	subj	118	2
 118	5	udirai	obj	118	7
 119	8	volse	subj	119	1
+119	8	volse	subj	120	1
 119	8	volse	obj	119	7
 119	8	volse	obl:da	119	5
 120	6	fare	subj	0	0

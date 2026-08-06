@@ -23,8 +23,9 @@ line	token	word	role	arg_line	arg_token
 10	0			0	0
 11	1	stavano	subj	10	8
 11	1	stavano	attr	11	2
+11	1	stavano	obl:dinanzi	10	4
 11	2	accese	subj	10	8
-11	2	accese	obl:a	10	4
+11	2	accese	obl:dinanzi	10	4
 11	7	venne	subj	11	5
 12	1	incominciò	subj	11	4
 12	1	incominciò	xcomp	12	3
@@ -32,10 +33,10 @@ line	token	word	role	arg_line	arg_token
 12	3	farsi	attr	12	5
 12	5	vivace	subj	0	0
 13	2	tal	subj	11	4
-13	2	tal	obl:in	13	5
+13	2	tal	obl:ne	13	5
 13	7	divenne	subj	11	4
 13	7	divenne	attr	13	2
-13	7	divenne	obl:in	13	5
+13	7	divenne	obl:ne	13	5
 14	1	qual	subj	14	3
 14	2	diverrebbe	subj	14	3
 14	2	diverrebbe	attr	14	1
@@ -291,10 +292,13 @@ line	token	word	role	arg_line	arg_token
 106	6	quïeta	obj	107	2
 107	8	move	subj	106	5
 107	8	move	obj	107	6
+107	8	move	obl	107	7
 108	2	comincia	subj	106	2
+108	2	comincia	obl	108	1
 108	2	comincia	obl:da	108	6
 109	5	ha	subj	109	3
 109	5	ha	obj	109	7
+109	5	ha	obl	110	3
 110	8	accende	subj	111	2
 110	8	accende	obl:in	110	6
 111	5	volge	subj	111	3

@@ -419,7 +419,6 @@ line	token	word	role	arg_line	arg_token
 145	2	avvegna	ccomp	146	1
 145	7	confusi	subj	145	5
 146	1	fossero	subj	145	5
-146	1	fossero	subj	146	5
 146	6	smagato	subj	146	5
 147	2	poter	subj	147	3
 147	2	poter	xcomp	147	4
@@ -427,10 +426,10 @@ line	token	word	role	arg_line	arg_token
 147	6	chiusi	subj	147	3
 148	4	scorgessi	subj	148	2
 148	4	scorgessi	obj	148	6
-149	2	era	subj	0	0
-149	2	era	attr	149	3
+149	2	era	subj	149	3
+149	2	era	attr	149	4
 150	2	venner	subj	150	1
-150	6	mutato	subj	150	1
+150	6	mutato	subj	149	4
 150	6	mutato	obl:di	149	8
 151	3	era	subj	151	2
 151	3	era	attr	151	4

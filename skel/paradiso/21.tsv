@@ -5,6 +5,7 @@ line	token	word	role	arg_line	arg_token
 1	6	rifissi	obl:con	2	9
 2	0			0	0
 3	8	tolto	subj	2	7
+3	8	tolto	obj	3	6
 3	8	tolto	obl:da	3	5
 4	4	ridea	subj	4	2
 4	8	ridessi	subj	4	7
@@ -51,12 +52,16 @@ line	token	word	role	arg_line	arg_token
 19	2	savesse	obj	19	3
 19	4	era	subj	19	6
 19	4	era	attr	19	3
+19	4	era	obl:di	20	2
+19	4	era	obl:in	20	6
 20	0			0	0
 21	4	trasmutai	subj	21	2
+21	4	trasmutai	obj	21	3
 21	4	trasmutai	obl:a	21	7
-22	1	conoscerebbe	subj	0	0
+22	1	conoscerebbe	subj	19	1
 22	1	conoscerebbe	obj	22	2
 22	4	era	subj	23	1
+22	4	era	iobj	22	3
 22	4	era	attr	22	6
 23	1	ubidire	subj	0	0
 23	1	ubidire	obl:a	23	6
@@ -380,13 +385,11 @@ line	token	word	role	arg_line	arg_token
 132	9	alzi	subj	132	5
 132	9	alzi	obj	132	8
 132	9	alzi	obl:di	132	7
-133	1	Cuopron	subj	0	0
-133	1	Cuopron	obj	133	7
+133	1	Cuopron	subj	133	7
 133	1	Cuopron	obl:di	133	4
 134	5	van	subj	134	4
 134	5	van	obl:sotto	134	8
-135	5	sostieni	subj	0	0
-135	5	sostieni	obj	135	3
+135	5	sostieni	subj	135	3
 136	4	vid'	subj	136	5
 136	4	vid'	obj	136	7
 136	4	vid'	xcomp	137	5

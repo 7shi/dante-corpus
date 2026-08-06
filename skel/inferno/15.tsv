@@ -138,6 +138,7 @@ line	token	word	role	arg_line	arg_token
 49	0			0	0
 50	1	rispuos'	subj	50	2
 50	1	rispuos'	iobj	50	3
+50	1	rispuos'	ccomp	50	5
 50	5	smarri'	subj	0	0
 50	5	smarri'	obl:di	49	4
 50	5	smarri'	obl:in	49	7
