@@ -349,13 +349,14 @@ just as a subject is, so the annex cannot separate `subj` from `attr`. See
 
 What remains past the mechanical phases above is **reading disagreement between two independent
 parses**, not a class with a known instrument: subject resolution across enjambment and pro-drop
-(`extra_arg subj` 865), the direct-child `missing_arg` mass, the clitic dative/accusative
+(`extra_arg subj` 824), the direct-child `missing_arg` mass, the clitic dative/accusative
 question (needs a Layer-2 case feature), and the complement-vs-adjunct distinction (needs a verb
 lexicon). Both routes are now measured out — regeneration at a flat ~0.09-0.11 violations per
-call over two full passes, and deterministic rules against every population
-[PLAN.md](PLAN.md) triaged. The goal remains **0 soft violations**, but reaching it needs an
-instrument this project has declined on principle, so it is a new plan rather than more of this
-one.
+call over two full passes on a static residue (Phase 5s's third pass returned 0.199, but only
+because a cross-layer round had just put fresh LLM-authored error into the flagged set), and
+deterministic rules against every population [PLAN.md](PLAN.md) triaged. The goal remains **0 soft
+violations**, but reaching it needs an instrument this project has declined on principle, so it is
+a new plan rather than more of this one.
 
 `--fix` (`skel/skel.py`) regenerates a flagged parse unit and keeps the result only if its soft
 violation count strictly drops **and** no violation class appears that wasn't already there

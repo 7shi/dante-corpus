@@ -83,7 +83,7 @@ rule can settle — and `--fix` is **user-run** work. Do not "fix" either by rev
 double the per-call yield of the two prior `--fix` rounds, with `extra_tuple` — the `adverb` bug's
 population — moving furthest.
 
-### What Phase 5r did (2026-08-03, this session)
+### What Phase 5r did (2026-08-03)
 
 The task the previous handoff wrote up — wiring the `case` annex into Layer 5's checker — landed
 in full, both halves in one batch. See [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *Phase 5r*
@@ -232,8 +232,10 @@ cantos, every route any of their plans opened has a measured verdict, and everyt
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
   **complete**: its measured finding is that `--fix` yields a flat ~0.09-0.11 violations per LLM
-  call regardless of how the flagged set is composed, so the residual was closed by deterministic
-  checker rules and cross-layer corrections instead. `--fix` rounds are **LLM-regeneration work
+  call on a *static* residue however that residue is composed, so the bulk of the reduction came
+  from deterministic checker rules and cross-layer corrections instead. **Phase 5s (2026-08-07)
+  qualified that**: the same instrument returned 0.199 per call when run right after a cross-layer
+  round had changed what the flagged set contains. `--fix` rounds are **LLM-regeneration work
   the user runs themselves** (`make -C skel fix`, run 3-way parallel); checker-side and audit
   work is the assistant's.
 

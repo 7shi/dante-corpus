@@ -19,12 +19,15 @@ tolerate.
 
 **Phases 5a-5s have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
-about 0.11 violations per LLM call and that rate does not depend on how the flagged set is
+about 0.11 violations per LLM call and that rate does not depend on how a *static* flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
 calls) did *not* raise the success rate. What remains is closed by measuring classes and
 normalizing, not by more model calls. **Phase 5q confirmed this a second time**: a full pass on
 a residue nine rules and four Layer-4 rounds further along yielded 0.086 per call and moved no
-class more than 6.5%.
+class more than 6.5%. **Phase 5s marks the one exception**: run immediately after a cross-layer
+round (Layer 4's multiple-`obj` corrections plus the `"verb" in pos` bug fix) had put fresh
+LLM-authored error into the flagged set, the same pass returned **0.199 per call**, −330. The
+finding is about a residue that has stopped moving, not about the instrument.
 
 **How to read this file.** *Where Phase 5 ended* states the closing position and why no route is
 open; everything from *Phase 5e* onward is the historical record that produced it, and **its
@@ -37,13 +40,14 @@ Rules L, M, N, O, P, Q, R, S and T landed as Phases 5f/5g/5h/5j/5k/5l/5m/5o (−
 instead of the checker**: Phase 5i closed the decidable half of the **clitic-case question** (−26),
 Phase 5n the `mark` bucket (−21), and Phase 5p the plausible clausal complements of the `advcl`
 bucket plus 5n's two multi-edge deferrals (−10) — all hand-verified, zero model calls, no checker
-change. `role_mismatch` is at **459** — the `obl:<lemma>` pairs are exhausted and so is
+change. `role_mismatch` is at **309** (459 before Phase 5r's rule U and Phase 5s) — the
+`obl:<lemma>` pairs are exhausted and so is
 the mechanical half of the clausal cluster — and Phases 5l/5m/5n/5o/5p took 173 out of
 `extra_arg` by working the **direct-child** bucket deprel by deprel, **which Phase 5o's `advcl`
 verdict exhausted and Phase 5p's correction round finished: every row of section 2a is closed,
 and so is the audit work each verdict left behind.** Phase 5q then spent the one remaining work
 item — the user-run `--fix` pass (−147) — plus the `ioj` typo fix (−4).
-What is left is the rest of the two big classes, `extra_arg` (1639) and `missing_arg` (1193),
+What is left is the rest of the two big classes, `extra_arg` (1558) and `missing_arg` (1053),
 together 80% of what remains — and section 2's triage says both residues are *reading*
 disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms.
 **Every route this plan opened is now closed; see [*Where Phase 5 ended*](#where-phase-5-ended)
