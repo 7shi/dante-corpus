@@ -67,7 +67,7 @@ uncommitted for a next session to discover. Confirm before starting:
 make -C skel check      # expect: 0 hard, 3215 soft
 make -C dep check       # expect: 0 hard, 0 soft  (Phases 5i, 5n, 5p and 5r edited dep artifacts)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
-uv run pytest -q        # expect: 154 passed
+uv run pytest -q        # expect: 159 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
 

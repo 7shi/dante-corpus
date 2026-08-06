@@ -149,7 +149,19 @@ def canticles() -> tuple[str, ...]:
 
 
 def cantos(canticle: str) -> tuple[int, ...]:
-    paths = sorted(_it_canticle_dir(canticle).glob("[0-9][0-9].txt"))
+    """Canto numbers present in `src/<canticle>/`.
+
+    Raises `FileNotFoundError` when the canticle has no source cantos at all — an unbuilt `src/`
+    tree is a missing prerequisite, not an empty corpus. Every caller is a build or `--check`
+    driver that iterates the result, so returning `()` here would make them report success without
+    having examined anything. Use `canticles()` to probe which canticles are present.
+    """
+    directory = _it_canticle_dir(canticle)
+    paths = sorted(directory.glob("[0-9][0-9].txt"))
+    if not paths:
+        raise FileNotFoundError(
+            f"no source cantos under {directory} — run `make -C src` to build the source tree"
+        )
     return tuple(int(path.stem) for path in paths)
 
 

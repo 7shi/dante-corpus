@@ -4,7 +4,7 @@
 
 **Everything is committed** (Phase 5s, the user's third `--fix` round, is the newest work). Checks
 at commit time: `dep --check` 0 hard/0 soft, `case --check` 0 hard, `skel --check`
-0 hard/**3215** soft, `np --check` 0/0, `pytest` 154 passed. If `git status` shows
+0 hard/**3215** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` 159 passed. If `git status` shows
 anything uncommitted when this session resumes, that is new work from *after* this handoff was
 written — check `git log` before assuming otherwise.
 
@@ -28,6 +28,16 @@ pass, `make -C skel fix` 3-way parallel, over the 1659 units flagged at 3545. Fu
 - **The refinement to Phase 5q's stop rule**: regeneration is exhausted against a *static* residue,
   which is what 5q measured. It is **not** exhausted after a cross-layer correction round moves the
   ground under the flagged set. `skel/PLAN.md`'s *Where Phase 5 ended* carries this qualification.
+
+### A silent `--check` pass, closed (2026-08-07)
+
+Found while re-measuring Phase 5s from a `git worktree` (where `src/` is unbuilt, because the
+per-canticle source directories are generated, not tracked). `api.cantos()` globbed
+`src/<canticle>/[0-9][0-9].txt` and returned `()` when the directory was absent, so every build and
+`--check` driver — `skel`, `dep`, `np`, `case`, `morph` all share the call — iterated nothing and
+printed **`0 hard, 0 soft`**, exit 0. A check that examines no cantos must not report success.
+`cantos()` now raises `FileNotFoundError` naming the directory; `canticles()` is unchanged and
+remains the probe for *which* canticles exist. `tests/test_api.py` pins both behaviours (5 tests).
 
 ### What the multiple-`obj` round did (2026-08-03)
 
