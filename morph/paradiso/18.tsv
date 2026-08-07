@@ -84,7 +84,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 12	sé	sé	pronoun		sg.	3			
 12	tanto	tanto	adverb						
 12	s'	se	conjunction						elision
-12	altri	altro	pronoun	m.	pl.				
+12	altri	altro	pronoun	m.	sg.
 12	non	non	adverb						
 12	la	la	pronoun	f.	sg.				
 12	guidi	guidare	verb		sg.	3	present	subjunctive	
@@ -742,7 +742,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 108	quel	quello	adjective	m.	sg.				
 108	distinto	distinto	adjective	m.	sg.				
 108	foco	fuoco	noun	m.	sg.				archaic
-109	Quei	quello	pronoun	m.	pl.				
+109	Quei	quello	pronoun	m.	sg.
 109	che	che	pronoun						
 109	dipinge	dipingere	verb		sg.	3	present	indicative	
 109	lì	lì	adverb						

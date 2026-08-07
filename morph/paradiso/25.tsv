@@ -441,7 +441,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	di	di	preposition						
 62	iattanza	iattanza	noun	f.	sg.				
 62	ed	e	conjunction						euphonic
-62	elli	ello	pronoun	m.	pl.	3			archaic
+62	elli	ello	pronoun	m.	sg.	3			archaic
 62	a	a	preposition						
 62	ciò	ciò	pronoun		sg.				
 62	risponda	rispondere	verb		sg.	3	present	subjunctive	
@@ -475,7 +475,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 66	si	si	pronoun		sg.	3			reflexive
 66	disasconda	disascondere	verb		sg.	3	present	subjunctive	
 67	Spene	pena	noun	f.	sg.				archaic
-67	diss'	dire	verb		sg.	3	remote past	indicative	elision
+67	diss'	dire	verb		sg.	1	remote past	indicative	elision
 67	io	io	pronoun		sg.	1			
 67	è	essere	verb		sg.	3	present	indicative	
 67	uno	uno	article	m.	sg.				indefinite
@@ -871,7 +871,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 120	diventa	diventare	verb		sg.	3	present	indicative	
 121	tal	tale	adjective	m.	sg.				
 121	mi	mi	pronoun		sg.	1			reflexive
-121	fec'	fare	verb		sg.	3	remote past	indicative	elision
+121	fec'	fare	verb		sg.	1	remote past	indicative	elision
 121	ïo	io	pronoun		sg.	1			
 121	a	a	preposition						
 121	quell'	quello	adjective	m.	sg.				elision

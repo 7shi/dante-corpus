@@ -272,12 +272,12 @@ line	token	word	deprel	head_line	head_token
 36	7	de'	case	36	9
 36	8	suoi	det:poss	36	9
 36	9	torti	conj	36	5
-37	1	E	conj	37	6
-37	2	io	nsubj	37	6
+37	1	E	conj	37	2
+37	2	io	root	0	0
 37	3	Tanto	advmod	37	6
 37	4	m'	iobj	37	6
 37	5	è	cop	37	6
-37	6	bel	root	0	0
+37	6	bel	ccomp	37	2
 37	7	quanto	advmod	37	10
 37	8	a	case	37	9
 37	9	te	obl	37	10
@@ -598,7 +598,7 @@ line	token	word	deprel	head_line	head_token
 79	6	già	advmod	79	3
 79	7	che	mark	79	11
 79	8	i	det	79	9
-79	9	piè	nsubj	79	11
+79	9	piè	obj	79	11
 79	10	mi	iobj	79	11
 79	11	cossi	ccomp	79	3
 80	1	e	cc	80	5

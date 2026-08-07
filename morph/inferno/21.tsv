@@ -86,11 +86,11 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 13	chi	chi	pronoun		sg.	3			
 13	da	da	preposition						
 13	poppa	poppa	noun	f.	sg.				
-14	altri	altro	pronoun	m.	pl.				
+14	altri	altro	pronoun	m.	sg.
 14	fa	fare	verb		sg.	3	present	indicative	
 14	remi	remo	noun	m.	pl.				
 14	e	e	conjunction						
-14	altri	altro	pronoun	m.	pl.				
+14	altri	altro	pronoun	m.	sg.
 14	volge	volgere	verb		sg.	3	present	indicative	
 14	sarte	sarta	noun	f.	pl.				
 15	chi	chi	pronoun		sg.	3			
@@ -935,7 +935,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 131	vedi	vedere	verb		sg.	2	present	indicative	
 131	tu	tu	pronoun		sg.	2			
 131	ch'	che	conjunction						elision
-131	e'	egli	pronoun	m.	sg.	3			archaic
+131	e'	egli	pronoun	m.	pl.	3			archaic
 131	digrignan	digrignare	verb		pl.	3	present	indicative	apocope
 131	li	il	article	m.	pl.				archaic
 131	denti	dente	noun	m.	pl.				

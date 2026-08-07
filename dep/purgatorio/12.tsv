@@ -799,10 +799,10 @@ line	token	word	deprel	head_line	head_token
 117	6	mi	iobj	117	7
 117	7	parea	advcl	116	7
 117	8	davanti	advmod	117	7
-118	1	Ond'	advmod	118	4
-118	2	io	nsubj	118	4
+118	1	Ond'	advmod	118	2
+118	2	io	root	0	0
 118	3	Maestro	vocative	118	4
-118	4	dì	root	0	0
+118	4	dì	ccomp	118	2
 118	5	qual	det	118	6
 118	6	cosa	obj	118	4
 118	7	greve	amod	118	6

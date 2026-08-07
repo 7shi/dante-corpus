@@ -399,7 +399,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 55	di	di	preposition						
 55	dir	dire	verb						apocope
 55	perch'	perché	conjunction						elision
-55	altri	altro	pronoun	m.	pl.				
+55	altri	altro	pronoun	m.	sg.
 55	m'	mi	pronoun		sg.	1			elision
 55	oda	udire	verb		sg.	3	present	subjunctive	
 56	e	e	conjunction						

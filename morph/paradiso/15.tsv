@@ -343,7 +343,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 50	del	di+il	preposition+article	m.	sg.				contraction
 50	magno	magno	adjective	m.	sg.				archaic
 50	volume	volume	noun	m.	sg.				
-51	du'	due	numeral		pl.				apocope
+51	du'	dove	adverb						apocope
 51	non	non	adverb						
 51	si	si	pronoun		sg.	3			reflexive
 51	muta	mutare	verb		sg.	3	present	indicative	
@@ -381,8 +381,8 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 55	a	a	preposition						
 55	me	me	pronoun		sg.	1			
 55	tuo	tuo	adjective	m.	sg.				
-55	pensier	pensiero	noun	m.	pl.				apocope
-55	mei	mio	adjective	m.	pl.				
+55	pensier	pensiero	noun	m.	sg.				apocope
+55	mei	meare	verb		sg.	3	present	subjunctive
 56	da	da	preposition						
 56	quel	quello	adjective	m.	sg.				RELCL_HEAD
 56	ch'	che	pronoun						elision

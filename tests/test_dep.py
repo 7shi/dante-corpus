@@ -328,3 +328,182 @@ def test_validate_unit_counts_obj_children_per_predicate():
     ]
     violations = dep.validate_unit(nos, texts, _unit(rows))
     assert not any("obj children" in v.detail for v in violations)
+
+
+# --- subject agreement (Layer 2-aware soft check) ------------------------------------
+
+
+def _agreement(nos, texts, rows, morph_rows):
+    violations = dep.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows)
+    return [v for v in violations if "disagrees with head" in v.detail]
+
+
+def test_validate_unit_flags_subject_person_disagreement():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["rui Anfïarao"]
+    rows = [
+        dep.DepRow(1, 1, "rui", "root", 0, 0),
+        dep.DepRow(1, 2, "Anfïarao", "nsubj", 1, 1),  # a vocative, not the 2sg verb's subject
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="rui", lemma="ruere", pos="verb", number="sg.", person="2",
+                     tense="present", mood="indicative"),
+            MorphRow(word="Anfïarao", lemma="Anfiarao", pos="proper noun", number="sg."),
+        ]
+    }
+    flagged = _agreement(nos, texts, rows, morph_rows)
+    assert len(flagged) == 1
+    assert "person 3 vs 2" in flagged[0].detail
+
+
+def test_validate_unit_flags_subject_number_disagreement():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["altri guidi"]
+    rows = [
+        dep.DepRow(1, 1, "altri", "nsubj", 1, 2),
+        dep.DepRow(1, 2, "guidi", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="altri", lemma="altri", pos="pronoun", number="pl."),
+            MorphRow(word="guidi", lemma="guidare", pos="verb", number="sg.", person="3"),
+        ]
+    }
+    flagged = _agreement(nos, texts, rows, morph_rows)
+    assert len(flagged) == 1
+    assert "number pl. vs sg." in flagged[0].detail
+
+
+def test_validate_unit_accepts_agreeing_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["via corre"]
+    rows = [
+        dep.DepRow(1, 1, "via", "nsubj", 1, 2),
+        dep.DepRow(1, 2, "corre", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="via", lemma="via", pos="noun", number="sg."),
+            MorphRow(word="corre", lemma="correre", pos="verb", number="sg.", person="3"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_relative_pronoun_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["tu che onori"]
+    rows = [
+        dep.DepRow(1, 1, "tu", "root", 0, 0),
+        dep.DepRow(1, 2, "che", "nsubj", 1, 3),  # person comes from the antecedent "tu"
+        dep.DepRow(1, 3, "onori", "acl:relcl", 1, 1),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="tu", lemma="tu", pos="pronoun", number="sg.", person="2"),
+            MorphRow(word="che", lemma="che", pos="relative pronoun", number="sg."),
+            MorphRow(word="onori", lemma="onorare", pos="verb", number="sg.", person="2"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_coordinated_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["superbia e invidia sono"]
+    rows = [
+        dep.DepRow(1, 1, "superbia", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 3),
+        dep.DepRow(1, 3, "invidia", "conj", 1, 1),  # coordination agrees as a whole
+        dep.DepRow(1, 4, "sono", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="superbia", lemma="superbia", pos="noun", number="sg."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="invidia", lemma="invidia", pos="noun", number="sg."),
+            MorphRow(word="sono", lemma="essere", pos="verb", number="pl.", person="3"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_fused_non_finite_token():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["è aprirmi"]
+    rows = [
+        dep.DepRow(1, 1, "è", "root", 0, 0),
+        dep.DepRow(1, 2, "aprirmi", "nsubj", 1, 1),  # 1sg is the enclitic *mi*, not the verb
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="è", lemma="essere", pos="verb", number="sg.", person="3",
+                     tense="present", mood="indicative"),
+            MorphRow(word="aprirmi", lemma="aprire+mi", pos="verb+pronoun", number="sg.",
+                     person="1"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_inclusive_plural_head():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["amendue mostravam"]
+    rows = [
+        dep.DepRow(1, 1, "amendue", "nsubj", 1, 2),  # "both of us": one member names the group
+        dep.DepRow(1, 2, "mostravam", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="amendue", lemma="amendue", pos="pronoun", number="pl."),
+            MorphRow(word="mostravam", lemma="mostrare", pos="verb", number="pl.", person="1",
+                     tense="imperfect", mood="indicative"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_non_verb_head():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["nome fu vosco"]
+    rows = [
+        dep.DepRow(1, 1, "nome", "nsubj", 1, 3),  # copular clause: the predicate heads it
+        dep.DepRow(1, 2, "fu", "cop", 1, 3),
+        dep.DepRow(1, 3, "vosco", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="nome", lemma="nome", pos="noun", number="sg."),
+            MorphRow(word="fu", lemma="essere", pos="verb", number="sg.", person="3",
+                     tense="remote past", mood="indicative"),
+            MorphRow(word="vosco", lemma="voi+con", pos="pronoun+preposition", number="pl.",
+                     person="2"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_non_finite_head():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["altri andare"]
+    rows = [
+        dep.DepRow(1, 1, "altri", "nsubj", 1, 2),
+        dep.DepRow(1, 2, "andare", "root", 0, 0),  # infinitive asserts no person/number
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="altri", lemma="altri", pos="pronoun", number="pl."),
+            MorphRow(word="andare", lemma="andare", pos="verb", mood="infinitive"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []

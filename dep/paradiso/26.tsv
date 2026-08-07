@@ -171,7 +171,7 @@ line	token	word	deprel	head_line	head_token
 24	7	tal	det	24	8
 24	8	berzaglio	obl	24	2
 25	1	E	cc	25	2
-25	2	io	nsubj	27	3
+25	2	io	root	0	0
 25	3	Per	case	25	5
 25	4	filosofici	amod	25	5
 25	5	argomenti	obl	27	3
@@ -183,7 +183,7 @@ line	token	word	deprel	head_line	head_token
 26	6	scende	acl:relcl	26	3
 27	1	cotale	amod	27	2
 27	2	amor	nsubj	27	8
-27	3	convien	root	0	0
+27	3	convien	ccomp	25	2
 27	4	che	mark	27	8
 27	5	in	case	27	6
 27	6	me	obl	27	8

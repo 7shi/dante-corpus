@@ -392,8 +392,8 @@ line	token	word	deprel	head_line	head_token
 58	7	te	obl	58	9
 58	8	ne	obl	58	9
 58	9	pensi	acl:relcl	58	3
-59	1	E	cc	60	1
-59	2	io	nsubj	60	1
+59	1	E	cc	59	2
+59	2	io	root	0	0
 59	3	Ciò	obj	60	3
 59	4	che	nsubj	59	6
 59	5	n'	obl	59	6
@@ -401,7 +401,7 @@ line	token	word	deprel	head_line	head_token
 59	7	qua	advmod	59	6
 59	8	sù	advmod	59	6
 59	9	diverso	xcomp	59	6
-60	1	credo	root	0	0
+60	1	credo	ccomp	59	2
 60	2	che	mark	60	3
 60	3	fanno	ccomp	60	1
 60	4	i	det	60	5
@@ -409,11 +409,11 @@ line	token	word	deprel	head_line	head_token
 60	6	rari	amod	60	5
 60	7	e	cc	60	8
 60	8	densi	conj	60	6
-61	1	Ed	cc	61	5
-61	2	ella	nsubj	61	5
+61	1	Ed	cc	61	2
+61	2	ella	root	0	0
 61	3	Certo	advmod	61	5
 61	4	assai	advmod	61	3
-61	5	vedrai	root	0	0
+61	5	vedrai	ccomp	61	2
 61	6	sommerso	xcomp	61	5
 62	1	nel	case	62	2
 62	2	falso	obl	61	6
@@ -452,10 +452,10 @@ line	token	word	deprel	head_line	head_token
 66	5	diversi	amod	66	6
 66	6	volti	obl	66	1
 67	1	Se	mark	67	6
-67	2	raro	obj	67	6
+67	2	raro	nsubj	67	6
 67	3	e	cc	67	4
 67	4	denso	conj	67	2
-67	5	ciò	nsubj	67	6
+67	5	ciò	obj	67	6
 67	6	facesser	advcl	68	4
 67	7	tanto	advmod	67	6
 68	1	una	det	68	3

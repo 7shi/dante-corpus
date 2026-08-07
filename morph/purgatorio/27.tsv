@@ -133,7 +133,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 18	già	già	adverb						
 18	veduti	vedere	verb	m.	pl.				past participle
 18	accesi	accendere	verb	m.	pl.				past participle
-19	Volsersi	volgersi	verb		sg.	3	remote past	indicative	reflexive
+19	Volsersi	volgersi	verb		pl.	3	remote past	indicative	reflexive
 19	verso	verso	preposition						
 19	me	me	pronoun		sg.	1			
 19	le	le	article	f.	pl.				
@@ -385,7 +385,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 54	suoi	suo	adjective	m.	pl.				
 54	già	già	adverb						
 54	veder	vedere	verb						apocope
-54	parmi	parere+mi	verb+pronoun		sg.	1	present	indicative	contraction
+54	parmi	parere+mi	verb+pronoun		sg.	3	present	indicative	contraction
 55	Guidavaci	guidare+ci	verb+pronoun		sg.	3	imperfect	indicative	enclitic
 55	una	uno	article	f.	sg.				indefinite
 55	voce	voce	noun	f.	sg.				

@@ -936,7 +936,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 129	mi	mi	pronoun		sg.	1			reflexive
 129	piacque	piacere	verb		sg.	3	remote past	indicative	
 130	E	e	conjunction						
-130	quei	quello	pronoun	m.	pl.				
+130	quei	quello	pronoun	m.	sg.
 130	che	che	pronoun						
 130	m'	mi	pronoun		sg.	1			elision
 130	era	essere	verb		sg.	3	imperfect	indicative	

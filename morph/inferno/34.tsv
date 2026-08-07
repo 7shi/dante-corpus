@@ -288,7 +288,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 39	era	essere	verb		sg.	3	imperfect	indicative	
 39	vermiglia	vermiglio	adjective	f.	sg.				
 40	l'	lo	article	m.	sg.				elision
-40	altr'	altro	adjective	m.	sg.				apocope
+40	altr'	altro	adjective	m.	pl.				apocope
 40	eran	essere	verb		pl.	3	imperfect	indicative	apocope
 40	due	due	numeral		pl.				RELCL_HEAD
 40	che	che	relative pronoun		pl.				
@@ -730,7 +730,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 100	l'	lo	article	m.	sg.				elision
 100	abisso	abisso	noun	m.	sg.				
 100	mi	mi	pronoun		sg.	1			reflexive
-100	divella	divellare	verb		sg.	3	present	subjunctive	
+100	divella	divellare	verb		sg.	1	present	subjunctive
 101	maestro	maestro	noun	m.	sg.				
 101	mio	mio	adjective	m.	sg.				
 101	diss'	dire	verb		sg.	1	remote past	indicative	elision

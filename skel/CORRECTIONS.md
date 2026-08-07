@@ -1,5 +1,35 @@
 # skel — Layer 5 correction history
 
+## Layer 4's subject-agreement round — 3215 → 3270, +55 (2026-08-07)
+
+No Layer-5 change: a new `dep` soft check (an `nsubj` whose person or number contradicts its finite
+head's) flagged 173 positions, 155 of which were corrected in Layers 2/4 — see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md). `derive_unit` reads those layers, so the
+count moved underneath Layer 5, and, as in the multiple-`obj` round, **it moved up**:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 1558 | 1580 | +22 |
+| `missing_arg` | 1053 | 985 | −68 |
+| `role_mismatch` | 309 | 305 | −4 |
+| `extra_tuple` | 174 | 175 | +1 |
+| `missing_tuple` | 35 | 140 | +105 |
+| `membership` | 86 | 85 | −1 |
+| **total** | **3215** | **3270** | **+55** |
+
+`missing_arg` fell by 68 — the derivation now supplies arguments it had been attaching elsewhere —
+and the whole of the rise is `missing_tuple`: the 99 **promoted speech frames** ("Ed elli a me:
+«…»", where the elided verb of speech makes the subject the clause head) each give `derive_unit` a
+predicate the LLM never proposed, exactly as the gapping promotions of the multiple-`obj` round
+did. The audit reading of PLAN.md's *A note on Layer 5's count* applies unchanged: this is
+`--fix` material — LLM-authored rows against a now-corrected Layer 4 — and `--fix` is user-run
+work. Do not "fix" it by reverting the Layer-4 corrections.
+
+The round also started here: it was `skel`'s own 133 `extra_arg subj (0,0)` violations that
+exposed the agreement problem. 43 of those had a derived subject that could not agree with its
+predicate, which is what made the generalized test worth running over all ~6 000 `nsubj` edges.
+
 ## Phase 5s: the `--fix` round the 2026-08-03 work opened up — 3545 → 3215, −330 (2026-08-07)
 
 Baseline: **0 hard, 3545 soft**, **1659 flagged parse units** — the state left by the multiple-`obj`

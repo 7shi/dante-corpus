@@ -628,15 +628,15 @@ line	token	word	deprel	head_line	head_token
 87	4	speranza	nsubj	87	6
 87	5	ti	iobj	87	6
 87	6	'mpromette	acl:relcl	87	1
-88	1	E	cc	89	1
-88	2	io	nsubj	89	1
+88	1	E	cc	88	2
+88	2	io	root	0	0
 88	3	Le	det	88	4
 88	4	nove	nsubj	89	1
 88	5	e	cc	88	4
 88	6	le	det	88	7
 88	7	scritture	conj	88	4
 88	8	antiche	amod	88	7
-89	1	pongon	root	0	0
+89	1	pongon	ccomp	88	2
 89	2	lo	det	89	3
 89	3	segno	obj	89	1
 89	4	ed	cc	89	8
@@ -837,7 +837,7 @@ line	token	word	deprel	head_line	head_token
 115	7	piùe	advmod	116	1
 116	1	mosser	root	0	0
 116	2	la	det	116	3
-116	3	vista	nsubj	116	1
+116	3	vista	obj	116	1
 116	4	sua	det:poss	116	3
 116	5	di	case	116	6
 116	6	stare	obl	116	1

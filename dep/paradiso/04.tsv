@@ -194,7 +194,7 @@ line	token	word	deprel	head_line	head_token
 28	6	più	advmod	28	8
 28	7	s'	obj	28	8
 28	8	india	acl:relcl	28	4
-29	1	Moïsè	appos	28	4
+29	1	Moïsè	conj	28	4
 29	2	Samuel	conj	29	1
 29	3	e	cc	29	5
 29	4	quel	det	29	5
@@ -773,10 +773,10 @@ line	token	word	deprel	head_line	head_token
 113	4	assoluta	amod	113	3
 113	5	intende	advcl	114	7
 113	6	e	cc	113	5
-113	7	io	nsubj	113	5
+113	7	io	conj	113	5
 114	1	de	case	114	3
 114	2	l'	det	114	3
-114	3	altra	obl	113	5
+114	3	altra	orphan	113	7
 114	4	sì	advmod	114	7
 114	5	che	mark	114	7
 114	6	ver	obj	114	7

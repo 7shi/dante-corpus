@@ -348,7 +348,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 50	fosse	essere	verb		sg.	3	imperfect	subjunctive	
 50	beato	beato	adjective	m.	sg.				
 51	E	e	conjunction						
-51	quei	quello	pronoun	m.	pl.				
+51	quei	quello	pronoun	m.	sg.
 51	che	che	pronoun						
 51	'ntese	intendere	verb		sg.	3	remote past	indicative	elision
 51	il	il	article	m.	sg.				

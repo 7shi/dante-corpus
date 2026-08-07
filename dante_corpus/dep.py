@@ -85,6 +85,16 @@ def _is_nominal(pos: str, note: str = "") -> bool:
     return "RELCL_HEAD" in flags
 
 
+# Subject relations the agreement check applies to (`csubj` is excluded: a clausal subject has no
+# person/number of its own).
+_NSUBJ_DEPRELS = frozenset({"nsubj", "nsubj:pass"})
+
+# Relative and interrogative pronouns take their person from the antecedent, not from their own
+# Layer-2 row (which tags them 3rd by default), so their agreement with a finite head is not
+# decidable from the two rows alone — see the agreement check in `validate_unit`.
+_ANTECEDENT_PERSON_LEMMAS = frozenset({"che", "chi", "cui", "quale"})
+
+
 # --- DepRow --------------------------------------------------------------------------
 
 
@@ -264,7 +274,9 @@ def validate_unit(
     carrying more than one `obj` child, which UD does not allow — coordinated objects attach the
     later conjuncts to the first with `conj`, and an object complement is `xcomp`, so a flattened
     pair is a mis-parse rather than a convention difference (the corpus already uses the UD shape
-    everywhere else: 304 `conj` children of an `obj`).
+    everywhere else: 304 `conj` children of an `obj`); and an `nsubj`/`nsubj:pass` whose Layer-2
+    person or number contradicts its finite head's (also Layer 2-aware — see
+    `_subject_agreement_violations`).
     """
     violations: list[Violation] = []
     token_lists = {no: _alpha_tokens(t) for no, t in zip(nos, texts)}
@@ -352,6 +364,100 @@ def validate_unit(
                       f"predicate {head_line}.{head_token} has {len(objs)} obj children: {cited}")
         )
 
+    violations.extend(_subject_agreement_violations(all_rows, morph_rows))
+
+    return violations
+
+
+def _morph_at(
+    morph_rows: dict[int, list[MorphRow]], line: int, token: int
+) -> MorphRow | None:
+    rows = morph_rows.get(line)
+    if not rows or not 1 <= token <= len(rows):
+        return None
+    return rows[token - 1]
+
+
+def _is_fused_non_finite(row: MorphRow) -> bool:
+    """Whether a `person` on this row is the enclitic's rather than a verb's own: a fused token
+    (`verb+pronoun`, `adverb+pronoun`, ...) whose verb part carries neither tense nor mood."""
+    return "+" in row.pos and not row.tense and not row.mood
+
+
+def _subject_agreement_violations(
+    all_rows: list[DepRow], morph_rows: dict[int, list[MorphRow]] | None
+) -> list[Violation]:
+    """Soft check: an `nsubj`/`nsubj:pass` whose Layer-2 person or number contradicts the person
+    or number of its **finite** head.
+
+    Italian agreement is obligatory, so the two frozen layers cannot both be right here: either
+    the attachment is a mis-parse (the token is a predicate nominal, a vocative, a dislocated
+    topic or the subject of a *different* clause) or one of the two Layer-2 rows carries the wrong
+    feature (Dante's `quei`/`altri` are singular despite the plural-looking ending). Which side
+    is wrong is not mechanically decidable, so this reports the position rather than repairing it.
+
+    Six exclusions, all cases where the two rows genuinely do not have to match:
+
+    - the head is not a finite verb — no Layer-2 `person`, or not a verb at all (the corpus makes
+      the *predicate* the head of a copular clause, so a subject can hang off a noun, an adjective
+      or a fused `vosco` = "con voi", none of which conjugates);
+    - either side is a **fused** token whose verb part is non-finite (`pos` containing `+`, with no
+      tense or mood): there the `person` cell is the enclitic's, not a subject-agreement feature —
+      `aprirmi` = *aprire* + *mi* is tagged 1sg for the clitic. A finite fused token
+      (`parvemi`, `Presemi`) carries the verb's own person and stays in scope;
+    - the subject is a relative/interrogative pronoun (`_ANTECEDENT_PERSON_LEMMAS`), whose person
+      comes from its antecedent — "tu che *onori* scïenza e arte" is 2nd person on a `che` Layer 2
+      tags 3rd;
+    - the subject is coordinated (it carries a `conj` child, or its head carries more than one
+      subject child), where agreement is with the whole coordination:
+      "superbia, invidia e avarizia **sono**";
+    - the head is 1st or 2nd person **plural**, where a singular or 3rd-person nominal regularly
+      names one member of the group the verb agrees with — comitative "e io con lui / **volgemmo**
+      i passi", inclusive "e amendue / **mostravam**", "uno innanzi altro **andavamo**". Only the
+      plural allows this, so a singular head stays in scope.
+    """
+    if morph_rows is None:
+        return []
+
+    children: dict[tuple[int, int], list[DepRow]] = {}
+    for row in all_rows:
+        children.setdefault((row.head_line, row.head_token), []).append(row)
+
+    violations: list[Violation] = []
+    for row in all_rows:
+        if row.deprel not in _NSUBJ_DEPRELS:
+            continue
+        head = (row.head_line, row.head_token)
+        head_morph = _morph_at(morph_rows, *head)
+        if head_morph is None or not head_morph.person or "verb" not in head_morph.pos:
+            continue
+        subj_morph = _morph_at(morph_rows, row.line, row.token)
+        if subj_morph is None:
+            continue
+        if _is_fused_non_finite(head_morph) or _is_fused_non_finite(subj_morph):
+            continue
+        if subj_morph.lemma in _ANTECEDENT_PERSON_LEMMAS:
+            continue
+        if head_morph.person in ("1", "2") and head_morph.number == "pl.":
+            continue
+        if any(c.deprel == "conj" for c in children.get((row.line, row.token), ())):
+            continue
+        if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
+            continue
+        # A nominal with no `person` of its own is 3rd person by default.
+        subj_person = subj_morph.person or "3"
+        if subj_person != head_morph.person:
+            feature = f"person {subj_person} vs {head_morph.person}"
+        elif (subj_morph.number and head_morph.number
+                and subj_morph.number != head_morph.number):
+            feature = f"number {subj_morph.number} vs {head_morph.number}"
+        else:
+            continue
+        violations.append(
+            Violation(row.line, "tag",
+                      f"{row.deprel} {row.line}.{row.token} {row.word!r} disagrees with head "
+                      f"{head[0]}.{head[1]} {head_morph.word!r}: {feature}")
+        )
     return violations
 
 

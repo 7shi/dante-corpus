@@ -704,7 +704,7 @@ line	token	word	deprel	head_line	head_token
 96	1	sì	advmod	96	6
 96	2	ch'	mark	96	6
 96	3	ogne	det	96	4
-96	4	sucidume	nsubj	96	6
+96	4	sucidume	obj	96	6
 96	5	quindi	advmod	96	6
 96	6	stinghe	advcl	95	8
 97	1	ché	mark	97	4

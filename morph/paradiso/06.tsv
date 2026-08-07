@@ -965,7 +965,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 135	peregrina	peregrino	adjective	f.	sg.				
 136	E	e	conjunction						
 136	poi	poi	adverb						
-136	il	il	article	m.	sg.				
+136	il	lo	pronoun	m.	sg.	3
 136	mosser	muovere	verb		pl.	3	remote past	indicative	apocope
 136	le	le	article	f.	pl.				
 136	parole	parola	noun	f.	pl.				

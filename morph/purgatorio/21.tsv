@@ -893,7 +893,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 123	vo'	volere	verb		sg.	1	present	indicative	apocope
 123	che	che	conjunction						
 123	ti	ti	pronoun		sg.	2			
-123	pigli	pigliare	verb		sg.	2	present	subjunctive	
+123	pigli	pigliare	verb		sg.	3	present	subjunctive
 124	Questi	questo	pronoun	m.	sg.				
 124	che	che	pronoun						relative
 124	guida	guidare	verb		sg.	3	present	indicative	

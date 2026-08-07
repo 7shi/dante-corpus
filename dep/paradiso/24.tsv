@@ -588,10 +588,10 @@ line	token	word	deprel	head_line	head_token
 85	8	la	det	85	10
 85	9	tua	det:poss	85	10
 85	10	borsa	obl	85	6
-86	1	Ond'	advmod	86	4
-86	2	io	nsubj	86	4
+86	1	Ond'	advmod	86	2
+86	2	io	root	0	0
 86	3	Sì	advmod	86	4
-86	4	ho	root	0	0
+86	4	ho	ccomp	86	2
 86	5	sì	advmod	86	6
 86	6	lucida	obj	86	4
 86	7	e	cc	86	9

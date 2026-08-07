@@ -275,7 +275,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 36	al	a+il	preposition+article	m.	sg.				contraction
 36	cielo	cielo	noun	m.	sg.				
 36	erti	erigere	verb	m.	pl.		past participle		
-36	levorsi	levarsi	verb		sg.	3	remote past	indicative	contraction
+36	levorsi	levarsi	verb		pl.	3	remote past	indicative	contraction
 37	che	che	conjunction						
 37	nol	non+lo	adverb+pronoun	m.	sg.	3			contraction
 37	potea	potere	verb		sg.	3	imperfect	indicative	

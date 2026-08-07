@@ -178,9 +178,9 @@ line	token	word	deprel	head_line	head_token
 26	5	che	mark	26	2
 26	6	di	case	26	7
 26	7	sospiri	obl	26	2
-27	1	che	obj	27	5
+27	1	che	nsubj	27	5
 27	2	l'	det	27	3
-27	3	aura	nsubj	27	5
+27	3	aura	obj	27	5
 27	4	etterna	amod	27	3
 27	5	facevan	acl:relcl	26	7
 27	6	tremare	xcomp	27	5
@@ -514,10 +514,10 @@ line	token	word	deprel	head_line	head_token
 75	6	altri	nmod	75	3
 75	7	li	obj	75	8
 75	8	diparte	advcl	74	5
-76	1	E	cc	78	2
-76	2	quelli	nsubj	78	2
+76	1	E	cc	76	2
+76	2	quelli	root	0	0
 76	3	a	case	76	4
-76	4	me	obl	78	2
+76	4	me	obl	76	2
 76	5	L'	det	76	7
 76	6	onrata	amod	76	7
 76	7	nominanza	nsubj	78	2
@@ -531,7 +531,7 @@ line	token	word	deprel	head_line	head_token
 77	8	tua	amod	77	9
 77	9	vita	obl	77	4
 78	1	grazïa	obj	78	2
-78	2	acquista	root	0	0
+78	2	acquista	ccomp	76	2
 78	3	in	case	78	4
 78	4	ciel	obl	78	2
 78	5	che	nsubj	78	8

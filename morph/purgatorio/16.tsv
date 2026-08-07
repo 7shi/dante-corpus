@@ -88,7 +88,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 12	forse	forse	adverb						
 12	ancida	ancidere	verb		sg.	3	present	subjunctive	
 13	m'	mi	pronoun		sg.	1			elision
-13	andava	andare	verb		sg.	3	imperfect	indicative	
+13	andava	andare	verb		sg.	1	imperfect	indicative
 13	io	io	pronoun		sg.	1			
 13	per	per	preposition						
 13	l'	lo	article	m.	sg.				elision
@@ -160,7 +160,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	ch'	che	relative pronoun						elision
 22	i'	io	pronoun		sg.	1			elision
 22	odo	udire	verb		sg.	1	present	indicative	
-23	diss'	dire	verb		sg.	3	remote past	indicative	apocope
+23	diss'	dire	verb		sg.	1	remote past	indicative	apocope
 23	io	io	pronoun		sg.	1			
 23	Ed	e	conjunction						euphonic
 23	elli	egli	pronoun	m.	sg.				archaic
@@ -248,7 +248,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 35	e	e	conjunction						
 35	se	se	conjunction						
 35	veder	vedere	verb						apocope
-35	fummo	essere	verb		pl.	1	present	subjunctive	archaic
+35	fummo	fumo	noun		sg.		present	subjunctive	archaic
 35	non	non	adverb						
 35	lascia	lasciare	verb		sg.	3	present	indicative	
 36	l'	lo	article	m.	sg.				elision

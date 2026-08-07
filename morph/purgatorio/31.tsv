@@ -545,7 +545,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 79	ancor	ancora	adverb						apocope
 79	poco	poco	adverb						
 79	sicure	sicuro	adjective	f.	pl.				
-80	vider	vedere	verb		sg.	1	remote past	indicative	archaic
+80	vider	vedere	verb		pl.	3	remote past	indicative	archaic
 80	Beatrice	Beatrice	noun	f.	sg.				
 80	volta	volgere	adjective	f.	sg.				
 80	in	in	preposition						
@@ -823,7 +823,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 118	che	che	conjunction						
 118	fiamma	fiamma	noun	f.	sg.				
 118	caldi	caldo	adjective	m.	pl.				
-119	strinsermi	stringere+mi	verb+pronoun		sg.	1			contraction
+119	strinsermi	stringere+mi	verb+pronoun		pl.	3			contraction
 119	li	lo	article	m.	pl.				archaic
 119	occhi	occhio	noun	m.	pl.				
 119	a	a	preposition						

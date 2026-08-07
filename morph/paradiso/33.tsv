@@ -939,7 +939,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 135	elli	egli	pronoun	m.	sg.	3			archaic
 135	indige	indigere	verb		sg.	3	present	indicative	archaic
 136	tal	tale	adjective		sg.				
-136	era	essere	verb		sg.	3	imperfect	indicative	
+136	era	essere	verb		sg.	1	imperfect	indicative
 136	io	io	pronoun		sg.	1			
 136	a	a	preposition						
 136	quella	quello	adjective	f.	sg.				demonstrative

@@ -2096,3 +2096,11 @@ to what that gate excludes.
 `--stats` contradictions: 32 → **31**; impossible pairings: **26**, unchanged;
 `skel --check`: 3465 → **3509** soft, for the reason
 [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) states.
+
+## One row from Layer 4's subject-agreement round (2026-08-07)
+
+Layer 4's new subject-agreement check (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md))
+established that paradiso 6:136 *il* in "E poi il mosser le parole biece" is the clitic object
+**lo**, not an article — Layer 2 was retagged `pronoun`. That brought the position into the annex's
+scope, and `case --check` reported it as a missing row. Added: `136 3 il accusative`. The annex is
+back to **0 hard**, and `--stats` is unchanged (31 contradictions, 26 impossible pairings).

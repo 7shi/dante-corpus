@@ -962,7 +962,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 137	io	io	pronoun		sg.	1			
 137	da'	da+i	preposition+article	m.	pl.				contraction
 137	vicin	vicino	noun	m.	pl.				apocope
-137	compresi	comprendere	verb		pl.	1	remote past	indicative	
+137	compresi	comprendere	verb		sg.	1	remote past	indicative
 138	onde	onde	conjunction						
 138	intender	intendere	verb						apocope
 138	lo	lo	article	m.	sg.				

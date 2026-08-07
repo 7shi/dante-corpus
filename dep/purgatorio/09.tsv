@@ -493,12 +493,12 @@ line	token	word	deprel	head_line	head_token
 69	1	si	expl	69	2
 69	2	mosse	conj	67	2
 69	3	e	cc	69	4
-69	4	io	nsubj	69	2
+69	4	io	conj	69	2
 69	5	di	case	69	6
-69	6	rietro	obl	69	2
+69	6	rietro	orphan	69	4
 69	7	inver'	case	69	9
 69	8	l'	det	69	9
-69	9	altura	obl	69	2
+69	9	altura	orphan	69	4
 70	1	Lettor	vocative	70	3
 70	2	tu	nsubj	70	3
 70	3	vedi	root	0	0

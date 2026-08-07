@@ -235,7 +235,7 @@ line	token	word	deprel	head_line	head_token
 33	5	tutti	advmod	33	4
 33	6	Dove	advmod	33	7
 33	7	rui	ccomp	33	4
-34	1	Anfïarao	nsubj	33	7
+34	1	Anfïarao	vocative	33	7
 34	2	perché	mark	34	3
 34	3	lasci	conj	33	7
 34	4	la	det	34	5

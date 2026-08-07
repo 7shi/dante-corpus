@@ -785,3 +785,107 @@ at all), `role_mismatch` 347 → 362 (+15) and `missing_tuple` 26 → 45 (+19, t
 of the paragraph above, which `derive_unit` deliberately treats as elided predicates);
 `extra_tuple` 145 and `argument` 92 unchanged. See
 [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of the same date.
+
+## The subject/head agreement rule, and the 173 positions it flagged (2026-08-07)
+
+A new Layer-2-aware soft check (`_subject_agreement_violations` in `dante_corpus/dep.py`): an
+`nsubj`/`nsubj:pass` whose Layer-2 **person or number contradicts its finite head's**. Italian
+agreement is obligatory, so the two frozen layers cannot both be right at such a position — either
+the attachment is a mis-parse or one of the two Layer-2 rows carries the wrong feature. Which side
+is wrong is not mechanically decidable, so the rule reports the position and never repairs it.
+
+It opened at **173** positions (106 person, 67 number) and every one was read against its terzina.
+**155 were corrected** (77 Layer-2 rows, 424 Layer-4 rows across 66 cantos, 2 Layer-3 spans and 1
+`case` row); **18 were verified and left alone**, listed at the end.
+
+The rule came out of a Layer-5 audit: of `skel`'s 133 `extra_arg subj (0,0)` violations — the LLM
+writing a pro-drop ∅ subject where the derivation had found an overt one — 43 had a derived subject
+that could not agree with its own predicate, which made the *generalized* test worth running over
+all 6 000 `nsubj` edges rather than only those 133.
+
+### What was corrected, by family
+
+- **The elided verb of speech (99 frames, ~300 rows).** "Ed elli a me: «…»" is a clause whose verb
+  of speech is elided; UD promotes a dependent to head it, and the corpus already did that in 42
+  places. In 99 others the frame's subject had instead been attached as `nsubj` **inside the
+  quotation**, where it can be neither the quoted verb's subject nor its dependent. Normalized
+  mechanically and corpus-wide, not only where agreement exposed it: the subject takes over the
+  quoted head's external attachment, the quoted head becomes its `ccomp`, and the frame's own
+  dependents (`cc`, `a me`, …) re-point to the subject. Three frames matching the same surface
+  shape were **excluded after reading**, because their speech verb is real and merely displaced:
+  purgatorio 3:22 ("a dir mi *cominciò*", after the quote), purgatorio 33:121 ("E qui *rispuose*
+  … la bella donna", before it) and paradiso 31:94 (*«…», disse, «…»*, parenthetical).
+- **An object read as a subject (24 positions).** "che l'aura etterna *facevan* tremare" (the sighs
+  are the subject), "fanno *Cocito*", "mi lasciai *Sibilia*", "e *quelle* svolazzava", "Fa che le
+  *ginocchia* cali", "quando i primi *raggi* vibra". Retagged `obj`; where the retag then left two
+  objects on one predicate, the other object was the mis-parse and was corrected too (subjects at
+  purgatorio 8:80/22:25 and paradiso 2:67, an `xcomp` causative at paradiso 16:2, a reflexive
+  clitic `expl` at inferno 26:110).
+- **Other functions read as a subject (10).** A vocative (inferno 20:34 *Anfïarao*), a clausal
+  subject (`csubj`, inferno 21:59), two predicate nominals (`attr`: *son Vanni Fucci*, *ben son
+  Beatrice*), a depictive (`attr`, purgatorio 11:103), an oblique (purgatorio 15:55), a reflexive
+  clitic (`expl`, purgatorio 17:73), the adverbs `i` = *ivi* and `du'` = *dove*, and a raised
+  subject (paradiso 14:73, *parvemi … sussistenze cominciare a vedere*).
+- **Gapping (2).** "si mosse, e io [mi mossi] di rietro" and "…intende, e io [intendo] de l'altra"
+  got UD's promoted-conjunct + `orphan` treatment, the shape the multiple-`obj` round already
+  established.
+- **Misassembled phrases (6).** inferno 28:52 (*Più fuor di cento che…*: `fuor` = *furono*, as it
+  is already tagged at inferno 7:40, so the relative clause hangs off `cento`), purgatorio 8:124
+  (subject and objects inverted), purgatorio 13:32 (a quoted cry parsed as the head of its own
+  subject NP), paradiso 4:29 (`appos` → `conj` in the list *colui, Moïsè, Samuel, e quel
+  Giovanni*), paradiso 5:119 and paradiso 15:55 (both a Layer-2 mistag, below, plus the clause
+  structure that followed from it).
+
+The Layer-2 half of the round — archaic 1sg forms tagged 3rd person, `altri`/`quei` tagged plural,
+apocopated 3pl forms tagged singular, and six words read as the wrong part of speech — is recorded
+in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md). Two Layer-3 spans and one `case` row
+followed from the POS changes; see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md) and
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+### Three exclusions added to the rule while working the list
+
+Each is a case where the two rows genuinely need not match, and each has corpus-wide precedent
+rather than being fitted to a single position:
+
+- **The head must be a verb.** The corpus makes the *predicate* the head of a copular clause, so a
+  subject can hang off a noun, an adjective, or a fused `vosco` = *con voi* (purgatorio 11:60) —
+  none of which conjugates.
+- **A fused token whose verb part is non-finite** (`pos` containing `+`, no tense, no mood) carries
+  the **enclitic's** person: `aprirmi` = *aprire* + *mi* is tagged 1sg for the clitic. Measured
+  corpus-wide: 70 such tokens, consistently annotated that way. A *finite* fused token (`parvemi`,
+  `Presemi`) carries the verb's own person and stays in scope.
+- **A 1st/2nd person plural head**, where a singular or 3rd-person nominal regularly names one
+  member of the group the verb agrees with: comitative "e io con lui / **volgemmo** i passi",
+  inclusive "e amendue / **mostravam**", "uno innanzi altro **andavamo**". Only the plural allows
+  this, so a singular head stays in scope.
+
+### The 18 verified and left alone
+
+All read against their terzine; each disagreement is a property of the text, not of the parse:
+
+- **Constructio ad sensum — a collective singular with a plural verb** (5): inferno 3:115 *il mal
+  seme d'Adamo gittansi*, purgatorio 26:76 *La gente … si parton*, purgatorio 32:62 *quella gente
+  allor cantaro*, paradiso 14:62 *l'uno e l'altro coro … parver*, paradiso 13:98 *necesse con
+  contingente … fenno* (a comitative pair taking a plural verb).
+- **A plural or measure subject with a singular verb** (5): inferno 6:86 *diverse colpe … grava*,
+  inferno 19:19 *non è molt' anni* (impersonal time idiom), inferno 21:114 *mille dugento con
+  sessanta sei / anni compié*, inferno 31:69 *non si convenia più dolci salmi*, purgatorio 14:18
+  *cento miglia di corso nol sazia*.
+- **Distributive `ciascuna` resuming a plural subject** (2): inferno 5:14, paradiso 1:113.
+- **The copula agreeing with its plural predicate nominal** (1): paradiso 24:100 *La prova … son
+  l'opere seguite*.
+- **An anacoluthon Dante writes himself** (1): purgatorio 10:112 *quel ch'io veggio … non mi
+  sembian persone*.
+- **Non-Italian text** (4): the Provençal of purgatorio 26:142/147 (*que plor*, *sovenha vos*), the
+  Latin quotation *‘Sperent in te’* (paradiso 25:98) and Nimrod's *Raphèl maì amècche zabì almi*
+  (inferno 31:67). Layer 2 tags these as best it can; no Italian agreement rule applies.
+
+`dep --check` reports **0 hard, 18 soft** (173 → 18, all remaining ones the list above);
+`morph --check` 0/0, `np --check` 0/0, `case --check` 0 hard, `pytest` 168 passed (nine new tests
+for the rule and its exclusions).
+
+**Layer 5's soft count rose, 3215 → 3270 (+55)**, the same honest reading as the multiple-`obj`
+round: `derive_unit` reads Layer 4, so correcting an attachment turns a spurious agreement with the
+LLM into a real disagreement. `missing_arg` fell 1053 → 985 (−68) while `missing_tuple` rose
+35 → 140 (+105, the 99 promoted speech frames, which the derivation treats as elided predicates).
+See [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of the same date.

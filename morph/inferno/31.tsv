@@ -270,10 +270,10 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	ver'	verso	preposition						apocope
 38	la	la	article	f.	sg.				
 38	sponda	sponda	noun	f.	sg.				
-39	fuggiemi	fuggire+mi	verb+pronoun		sg.	2	present	imperative	enclitic
+39	fuggiemi	fuggire+mi	verb+pronoun		sg.	3	imperfect	indicative	enclitic
 39	errore	errore	noun	m.	sg.				
 39	e	e	conjunction						
-39	cresciemi	crescere+mi	verb+pronoun		sg.	2	present	imperative	enclitic
+39	cresciemi	crescere+mi	verb+pronoun		sg.	3	imperfect	indicative	enclitic
 39	paura	paura	noun	f.	sg.				
 40	però	perché	conjunction						
 40	che	che	conjunction						

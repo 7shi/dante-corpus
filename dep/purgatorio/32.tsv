@@ -586,9 +586,9 @@ line	token	word	deprel	head_line	head_token
 85	6	Ov'	advmod	85	7
 85	7	è	ccomp	85	5
 85	8	Beatrice	nsubj	85	7
-86	1	Ond'	advmod	86	3
-86	2	ella	nsubj	86	3
-86	3	Vedi	root	0	0
+86	1	Ond'	advmod	86	2
+86	2	ella	root	0	0
+86	3	Vedi	ccomp	86	2
 86	4	lei	obj	86	3
 86	5	sotto	case	86	7
 86	6	la	det	86	7

@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-07: `make -C skel check` reports **0 hard, 3215 soft** violations across
+Status as of 2026-08-07: `make -C skel check` reports **0 hard, 3270 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -12,7 +12,8 @@ correction rounds → 3555 after Phase 5q's user-run `--fix` pass → 3551 after
 which took `unknown_role` to **0** → 3633 after the `case` annex's own Layer-2/Layer-4 rounds
 moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-verified `dep`/`case`
 round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug fix moved it *up*
-again → 3215 after Phase 5s's user-run `--fix` pass). The project goal is
+again → 3215 after Phase 5s's user-run `--fix` pass → 3270 after Layer 4's
+subject-agreement round moved it *up* once more). The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
@@ -68,8 +69,8 @@ Everything through Phase 5s is **committed** — the rule commits, the Layer-4 c
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3215 soft
-make -C dep check       # expect: 0 hard, 0 soft  (Phases 5i, 5n, 5p and 5r edited dep artifacts)
+make -C skel check      # expect: 0 hard, 3270 soft
+make -C dep check       # expect: 0 hard, 18 soft (the subject-agreement rule's verified residue)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
 uv run pytest -q        # expect: 159 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite

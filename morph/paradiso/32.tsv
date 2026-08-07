@@ -848,7 +848,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 126	fior	fiore	noun	m.	sg.				apocope
 126	venusto	venusto	adjective	m.	sg.				
 127	E	e	conjunction						
-127	quei	quello	adjective	m.	pl.				RELCL_HEAD
+127	quei	quello	adjective	m.	sg.				RELCL_HEAD
 127	che	che	pronoun						relative
 127	vide	vedere	verb		sg.	3	remote past	indicative	
 127	tutti	tutto	adjective	m.	pl.				

@@ -343,7 +343,7 @@ line	token	word	deprel	head_line	head_token
 50	3	del	case	50	5
 50	4	magno	amod	50	5
 50	5	volume	obl	50	2
-51	1	du'	nsubj	51	4
+51	1	du'	advmod	51	4
 51	2	non	advmod	51	4
 51	3	si	expl	51	4
 51	4	muta	ccomp	50	2
@@ -377,12 +377,12 @@ line	token	word	deprel	head_line	head_token
 54	9	piume	obj	54	7
 55	1	Tu	nsubj	55	2
 55	2	credi	root	0	0
-55	3	che	mark	56	8
+55	3	che	mark	55	8
 55	4	a	case	55	5
-55	5	me	obl	56	8
+55	5	me	obl	55	8
 55	6	tuo	det:poss	55	7
-55	7	pensier	nsubj	56	8
-55	8	mei	det:poss	55	7
+55	7	pensier	nsubj	55	8
+55	8	mei	ccomp	55	2
 56	1	da	case	56	2
 56	2	quel	obl	56	8
 56	3	ch'	nsubj	56	4
@@ -390,7 +390,7 @@ line	token	word	deprel	head_line	head_token
 56	5	primo	acl:relcl	56	2
 56	6	così	advmod	56	7
 56	7	come	mark	56	8
-56	8	raia	ccomp	55	2
+56	8	raia	advcl	55	8
 57	1	da	case	57	3
 57	2	l'	det	57	3
 57	3	un	obl	56	8

@@ -264,7 +264,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 35	piaggia	piaggia	noun	f.	sg.				
 36	Maestro	maestro	noun	m.	sg.				
 36	mio	mio	adjective	m.	sg.				
-36	diss'	dire	verb		sg.	3	remote past	indicative	apocope
+36	diss'	dire	verb		sg.	1	remote past	indicative	apocope
 36	io	io	pronoun		sg.	1			
 36	che	che	adjective		sg.				interrogative
 36	via	via	noun	f.	sg.				

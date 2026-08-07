@@ -11,7 +11,7 @@ canon-neutral.
 **Status: built for all 100 cantos, checker refined through Phase 5r, three full `--fix` rounds
 run (Phases 5e, 5q and 5s), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r) fed
 back into `dep/`.**
-`make -C skel check`: **0 hard, 3215 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 3270 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -21,8 +21,9 @@ annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)), and 3634 after the one `dep` fix in the
 `case` annex's Step 6 clitic round, 3633 at the close of that annex's Steps 7-9, 3473 after Phase
 5r's rule U, 3465 after that phase's hand-verified `dep`/`case` round, 3509 after Layer 4's
-multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix, and 3215 after
-Phase 5s's user-run `--fix` pass). See
+multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix, 3215 after
+Phase 5s's user-run `--fix` pass, and 3270 after Layer 4's subject-agreement round moved it *up*
+once more). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full

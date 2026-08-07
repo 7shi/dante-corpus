@@ -366,9 +366,9 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 51	ti	te	pronoun		sg.	2			
 51	parlo	parlare	verb		sg.	1	present	indicative	
 52	Più	più	adverb						
-52	fuor	fuori	adverb						apocope
+52	fuor	essere	verb		pl.	3	remote past	indicative	apocope
 52	di	di	preposition						
-52	cento	cento	numeral		sg.				
+52	cento	cento	numeral		pl.				RELCL_HEAD
 52	che	che	pronoun						relative
 52	quando	quando	conjunction						
 52	l'	lo	pronoun	m.	sg.				elision

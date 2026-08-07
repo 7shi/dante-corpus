@@ -66,7 +66,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 9	a	a	preposition						
 9	me	me	pronoun		sg.	1			
 9	ch'	che	conjunction						elision
-9	altri	altro	pronoun	m.	pl.				
+9	altri	altro	pronoun	m.	sg.
 9	qui	qui	adverb						
 9	giunga	giungere	verb		sg.	3	present	subjunctive	
 10	I'	io	pronoun		sg.	1			elision
@@ -308,7 +308,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 42	erano	essere	verb		pl.	3	imperfect	indicative	
 42	avvinte	avvingere	verb	f.	pl.				past participle
 43	E	e	conjunction						
-43	quei	quello	pronoun	m.	pl.				demonstrative
+43	quei	quello	pronoun	m.	sg.				demonstrative
 43	che	che	pronoun		sg.				relative
 43	ben	bene	adverb						apocope
 43	conobbe	conoscere	verb		sg.	3	remote past	indicative	
@@ -419,7 +419,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 58	'l	lo	article	m.	sg.				elision
 58	maestro	maestro	noun	m.	sg.				
 58	ed	e	conjunction						euphonic
-58	elli	elli	pronoun	m.	pl.				
+58	elli	elli	pronoun	m.	sg.
 58	stessi	stesso	adjective	m.	pl.				
 59	mi	me	pronoun		sg.	1			clitic
 59	volse	volgere	verb		sg.	3	remote past	indicative	

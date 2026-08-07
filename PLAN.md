@@ -2,15 +2,43 @@
 
 ## Handoff (2026-08-07) — resume here
 
-**Everything is committed** (Phase 5s, the user's third `--fix` round, is the newest work). Checks
-at commit time: `dep --check` 0 hard/0 soft, `case --check` 0 hard, `skel --check`
-0 hard/**3215** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` 159 passed. If `git status` shows
+**Everything is committed** (Layer 4's subject-agreement round is the newest work). Checks
+at commit time: `dep --check` 0 hard/**18** soft (the new rule's verified-and-left-alone residue),
+`case --check` 0 hard, `skel --check` 0 hard/**3270** soft, `np --check` 0/0, `morph --check` 0/0,
+`pytest` 168 passed. If `git status` shows
 anything uncommitted when this session resumes, that is new work from *after* this handoff was
 written — check `git log` before assuming otherwise.
 
-**Nothing is open.** Every route any of the five layers' plans opened has a measured verdict,
-including the one this section used to reserve for the user (another `--fix` pass — now run, see
-directly below).
+**One route is open**: a `--fix` pass, which this round has just made worth running again — see
+*If a next task is wanted* below.
+
+### What the subject-agreement round did (2026-08-07)
+
+A new `dep` soft check — an `nsubj`/`nsubj:pass` whose Layer-2 person or number contradicts its
+**finite** head's — opened at **173** positions and closed at **18** in one round. Full write-ups
+in [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) and [`morph/CORRECTIONS.md`](morph/CORRECTIONS.md).
+
+- It came out of a Layer-5 audit: of `skel`'s 133 `extra_arg subj (0,0)` violations, 43 had a
+  derived subject that could not agree with its own predicate, which made the generalized test
+  worth running over all ~6 000 `nsubj` edges. **Don't re-measure that population**: it stands at
+  125 now, and what is left of it is a head-to-head reading disagreement (the LLM says the subject
+  is dropped, a now-corrected Layer 4 says it is overt), i.e. `--fix` material, not a checker
+  question. `--repair`'s `null_subject` rule would rewrite those rows to the derived position; do
+  **not** run it blind, since it asserts Layer 4 is right at exactly the positions this round found
+  Layer 4 could be wrong.
+- **155 corrections**: 77 Layer-2 rows (archaic 1sg forms tagged 3rd person, `altri`/`quei` tagged
+  plural, apocopated 3pl forms tagged singular, six words read as the wrong POS), 424 Layer-4 rows
+  across 66 cantos, 2 Layer-3 spans and 1 `case` row.
+- The largest family was the **elided verb of speech**: "Ed elli a me: «…»" attaches its subject
+  *inside* the quotation. Normalized corpus-wide to UD's ellipsis promotion — **99 frames**, not
+  only the ones agreement exposed — matching the 42 the corpus already had in that shape.
+- **18 verified and left alone**, each enumerated with its reason: *constructio ad sensum*,
+  plural/measure subjects with a singular verb, distributive `ciascuna`, a copula agreeing with its
+  plural predicate nominal, one anacoluthon, and four lines of non-Italian text. This is the first
+  standing soft residue `dep` has carried; it is a property of the text, not of the parse.
+- **Layer 5's soft count rose, 3215 → 3270 (+55)** — `missing_arg` −68 against `missing_tuple`
+  +105 (the promoted speech frames are predicates the LLM never proposed). Same honest reading as
+  the multiple-`obj` round; see *A note on Layer 5's count* below.
 
 ### What Phase 5s did (2026-08-07, user-run)
 
@@ -168,25 +196,26 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-Nothing is open. Both routes this section has named are now spent: the `dep` "at most one `obj` per
-predicate" rule (opened and closed 2026-08-03) and the `--fix` regeneration pass (run by the user
-2026-08-07 as Phase 5s, −330). What is left of Layer 5's 3215 is the residue that has survived
-three regeneration rounds and every deterministic rule Phase 5 measured.
+**A `--fix` pass, and the conditions for it are the ones Phase 5s measured.** That phase's finding
+was that regeneration pays right after a cross-layer correction round has changed what the flagged
+set contains (0.199 violations per call, against 0.086 on a static residue) and not otherwise. The
+subject-agreement round of 2026-08-07 is exactly such a round — 424 Layer-4 rows and 77 Layer-2
+rows moved, and Layer 5's count rose 3215 → 3270 with the whole rise in `missing_tuple` — so the
+next `--fix` pass is worth running now. It remains **user-run** work (`make -C skel fix`, 3-way
+parallel); checker-side and audit work is the assistant's.
 
-The one thing Phase 5s changes about *when* to come back here: a `--fix` pass is worth running
-again **after** a cross-layer correction round (a `dep`, `case` or checker change that moves what
-the flagged set contains), because that is when it pays — 0.199 violations per call against 0.086
-on a static residue. On its own, with nothing upstream having moved, it is still not worth ~1600
-calls. And it remains **user-run** work (`make -C skel fix`, 3-way parallel); checker-side and
-audit work is the assistant's.
+The two named checker routes this section used to hold are spent: the `dep` "at most one `obj` per
+predicate" rule (opened and closed 2026-08-03) and Phase 5s's own regeneration pass (2026-08-07,
+−330).
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and its soft residue is **3215** (down from 17438 at the
+checker was refined through Phases 0-5r and its soft residue is **3270** (down from 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
 multiple-`obj` round plus the `adverb` bug fix moved it back up to 3545 — see the handoff's *A note
-on Layer 5's count* — and Phase 5s's user-run `--fix` pass took it to 3215) — every route the Phase
+on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, and the subject-agreement
+round moved it to 3270) — every route the Phase
 5 plan opened has a measured verdict and none is open
 (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
@@ -200,9 +229,10 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**Nothing is open.** All five layers plus the case extension are implemented, built for all 100
+**One route is open.** All five layers plus the case extension are implemented, built for all 100
 cantos, every route any of their plans opened has a measured verdict, and everything is merged to
-`main`.
+`main`; the open item is the user-run `--fix` pass that Layer 4's subject-agreement round has just
+made worth running again (see *If a next task is wanted*).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -215,7 +245,8 @@ cantos, every route any of their plans opened has a measured verdict, and everyt
 - **Layer 4 — Dependency / grammatical role**: implemented and complete; see
   [`dep/README.md`](dep/README.md). Build driver `dep/dep.py`, served via `Canto.dep()` and
   `dante-corpus text dep` (with `text np` gaining a derived `role=` per noun phrase). Artifacts
-  built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — see
+  built for all 100 cantos; `--check` reports **0 hard / 18 soft** violations, the
+  subject-agreement rule's verified-and-left-alone residue — see
   [`dep/README.md`](dep/README.md)'s *Check* section and
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
 - **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through Phases 0-5r
@@ -227,7 +258,7 @@ cantos, every route any of their plans opened has a measured verdict, and everyt
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3215 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3270 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -450,7 +481,7 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r
-   (`--check`: 0 hard / 3215 soft). Phase 5 closed with every route measured; see
+   (`--check`: 0 hard / 3270 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

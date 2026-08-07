@@ -965,10 +965,10 @@ line	token	word	deprel	head_line	head_token
 135	5	peregrina	amod	135	2
 136	1	E	cc	136	4
 136	2	poi	advmod	136	4
-136	3	il	nsubj	136	4
+136	3	il	obj	136	4
 136	4	mosser	root	0	0
 136	5	le	det	136	6
-136	6	parole	obj	136	4
+136	6	parole	nsubj	136	4
 136	7	biece	amod	136	6
 137	1	a	case	137	2
 137	2	dimandar	xcomp	136	4

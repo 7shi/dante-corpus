@@ -327,7 +327,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 48	riso	riso	noun	m.	sg.				
 48	mio	mio	adjective	m.	sg.				
 49	Io	io	pronoun		sg.	1			
-49	era	essere	verb		sg.	3	imperfect	indicative	
+49	era	essere	verb		sg.	1	imperfect	indicative
 49	come	come	conjunction						
 49	quei	quello	pronoun	m.	pl.				
 49	che	che	pronoun						
@@ -543,7 +543,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	prato	prato	noun	m.	sg.				
 80	di	di	preposition						
 80	fiori	fiore	noun	m.	pl.				
-81	vider	vedere	verb		sg.	1	remote past	indicative	apocope
+81	vider	vedere	verb		pl.	3	remote past	indicative	apocope
 81	coverti	coperto	adjective	m.	pl.				archaic
 81	d'	di	preposition						elision
 81	ombra	ombra	noun	f.	sg.				

@@ -328,10 +328,10 @@ line	token	word	deprel	head_line	head_token
 45	6	elli	nsubj	45	8
 45	7	è	aux	45	8
 45	8	punto	acl:relcl	45	4
-46	1	E	cc	48	3
-46	2	io	nsubj	48	3
+46	1	E	cc	46	2
+46	2	io	root	0	0
 46	3	a	case	46	4
-46	4	lei	obl	48	3
+46	4	lei	obl	46	2
 46	5	Se	mark	46	9
 46	6	'l	det	46	7
 46	7	mondo	nsubj	46	9
@@ -348,7 +348,7 @@ line	token	word	deprel	head_line	head_token
 47	9	rote	obl	47	6
 48	1	sazio	xcomp	48	3
 48	2	m'	obj	48	3
-48	3	avrebbe	root	0	0
+48	3	avrebbe	ccomp	46	2
 48	4	ciò	nsubj	48	3
 48	5	che	nsubj	48	8
 48	6	m'	iobj	48	8

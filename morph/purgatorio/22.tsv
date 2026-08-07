@@ -791,7 +791,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 118	eran	essere	verb		pl.	3	imperfect	indicative	apocope
 118	del	di+il	preposition+article	m.	sg.				contraction
 118	giorno	giorno	noun	m.	sg.				
-119	rimase	rimanere	verb		sg.	3	remote past	indicative	
+119	rimase	rimanere	verb		pl.	3	remote past	indicative
 119	a	a	preposition						
 119	dietro	dietro	adverb						
 119	e	e	conjunction						

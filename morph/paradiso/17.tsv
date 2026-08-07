@@ -23,7 +23,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 3	figli	figlio	noun	m.	pl.				
 3	scarsi	scarso	adjective	m.	pl.				
 4	tal	tale	adjective		sg.				
-4	era	essere	verb		sg.	3	imperfect	indicative	
+4	era	essere	verb		sg.	1	imperfect	indicative
 4	io	io	pronoun		sg.	1			
 4	e	e	conjunction						
 4	tal	tale	adjective		sg.				

@@ -691,7 +691,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	rise	ridere	verb		sg.	3	remote past	indicative	
 98	qual	quale	pronoun		sg.				apocope
 98	mi	mi	pronoun		sg.	1			reflexive
-98	fec'	fare	verb		sg.	3	remote past	indicative	apocope
+98	fec'	fare	verb		sg.	1	remote past	indicative	apocope
 98	io	io	pronoun		sg.	1			
 98	che	che	conjunction						
 98	pur	pure	adverb						apocope
@@ -844,7 +844,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 119	e	e	conjunction						
 119	però	però	adverb						
 119	se	se	conjunction						
-119	disii	desiderio	noun	m.	pl.				archaic
+119	disii	desiderare	verb	m.	sg.	2	present	indicative	archaic
 120	di	di	preposition						
 120	noi	noi	pronoun		pl.	1			
 120	chiarirti	chiarire+ti	verb+pronoun		sg.	2	infinitive		contraction
@@ -852,7 +852,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 120	tuo	tuo	adjective	m.	sg.				
 120	piacer	piacere	noun	m.	sg.				apocope
 120	ti	ti	pronoun		sg.	2			
-120	sazia	saziare	verb		sg.	3	present	indicative	
+120	sazia	saziare	verb		sg.	2	present	imperative
 121	Così	così	adverb						
 121	da	da	preposition						
 121	un	uno	pronoun	m.	sg.				

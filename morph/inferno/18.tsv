@@ -373,7 +373,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 52	lo	lo	pronoun	m.	sg.				
 52	dico	dire	verb		sg.	1	present	indicative	
 53	ma	ma	conjunction						
-53	sforzami	sforzare+mi	verb+pronoun		sg.	2	present	imperative	enclitic
+53	sforzami	sforzare+mi	verb+pronoun		sg.	3	present	indicative	enclitic
 53	la	la	article	f.	sg.				
 53	tua	tuo	adjective	f.	sg.				
 53	chiara	chiaro	adjective	f.	sg.				

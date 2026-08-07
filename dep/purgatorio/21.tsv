@@ -151,9 +151,9 @@ line	token	word	deprel	head_line	head_token
 21	7	scala	obl	21	9
 21	8	tanto	advmod	21	9
 21	9	scorte	ccomp	19	2
-22	1	E	cc	24	2
+22	1	E	cc	22	3
 22	2	'l	det	22	3
-22	3	dottor	nsubj	24	2
+22	3	dottor	root	0	0
 22	4	mio	amod	22	3
 22	5	Se	mark	22	7
 22	6	tu	nsubj	22	7
@@ -169,7 +169,7 @@ line	token	word	deprel	head_line	head_token
 23	7	angel	nsubj	23	8
 23	8	profila	acl:relcl	22	9
 24	1	ben	advmod	24	2
-24	2	vedrai	root	0	0
+24	2	vedrai	ccomp	22	3
 24	3	che	mark	24	6
 24	4	coi	case	24	5
 24	5	buon	obl	24	6
@@ -547,12 +547,12 @@ line	token	word	deprel	head_line	head_token
 75	6	mi	obj	75	7
 75	7	fece	ccomp	75	3
 75	8	prode	xcomp	75	7
-76	1	E	conj	76	6
+76	1	E	conj	76	4
 76	2	'l	det	76	4
 76	3	savio	amod	76	4
-76	4	duca	nsubj	76	6
+76	4	duca	root	0	0
 76	5	Omai	advmod	76	6
-76	6	veggio	root	0	0
+76	6	veggio	ccomp	76	4
 76	7	la	det	76	8
 76	8	rete	obj	76	6
 77	1	che	nsubj	77	4
@@ -808,7 +808,7 @@ line	token	word	deprel	head_line	head_token
 112	1	e	cc	113	1
 112	2	Se	mark	112	7
 112	3	tanto	amod	112	4
-112	4	labore	nsubj	112	7
+112	4	labore	obj	112	7
 112	5	in	case	112	6
 112	6	bene	obl	112	7
 112	7	assommi	advcl	114	5

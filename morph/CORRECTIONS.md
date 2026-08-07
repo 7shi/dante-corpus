@@ -391,3 +391,46 @@ built with — correct behaviour on `np`'s part, and it resolves with the same d
 regeneration of the derived spans that the existing 3 hard / 64 soft is already waiting on. The 2
 new hard are *Inf* 24:23 and *Par* 5:84, where the frozen span reads `+se` and the lemma now reads
 `sé`. See [`../PLAN.md`](../PLAN.md)'s *Open item*.
+
+## What Layer 4's subject-agreement rule surfaced (2026-08-07)
+
+A new `dep` soft check — an `nsubj` whose person or number contradicts its finite head's (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)) — flagged 173 positions, and at 77 of them the
+Layer-2 row was the wrong side rather than the attachment. All were corrected directly in the
+committed TSVs, no model call; `morph --check` 0 hard / 0 soft after each batch.
+
+- **An archaic 1sg form tagged 3rd person (17).** Dante's 1sg imperfect ends in `-a` (*io era*,
+  *m'apparecchiava*, *m'andava io*) and his 1sg remote past is elided or apocopated (*diss' io*,
+  *mi fec' io*, *puosi*, *porsi*); the present subjunctive is syncretic across 1/2/3sg and the
+  explicit pronoun is what resolves it (*prima ch'io … mi divella*). One of these also carried the
+  wrong lemma: purgatorio 1:127 *porsi* is 1sg of **porgere**, not `porre` + clitic.
+- **`altri` and `quei` tagged plural (15).** `altri` is Dante's singular indefinite ("someone",
+  always with a singular verb) and `quei` is the nominative singular of `quello` (= *colui*; the
+  plural nominative is `quelli`/`ei`).
+- **An apocopated 3pl form tagged singular (10).** *levorsi* = *si levaro*, *Volsersi* = *si
+  volsero*, *vider*, *strinsermi*, *fensi* = *si fenno*, *sortiro*, and the plural participle
+  *rimase*; plus the apocopated plural nouns *splendor* (= *splendori*) and *parlar* (=
+  *parlari*), the plural `cento` (three positions) and `l'altr'` = *le altre*.
+- **A 3sg verb tagged 2sg, or the reverse (10).** The subject decides: *La mente tua conservi*,
+  *se la lucerna … truovi*, *più d'ammirazion … che ti pigli*, *accender ne dovria il disio*,
+  *perché non ti facci maraviglia* are all 3sg; *se tu … circonde*, *a tuo piacer ti sazia*
+  (imperative) and inferno 10:82 *se tu mai nel dolce mondo regge* = *riedi* (of **redire**, so the
+  lemma moved too) are 2nd person.
+- **A fused verb+enclitic given the enclitic's person although the verb is finite (7).**
+  *Presemi*, *sforzami*, *fuggiemi*, *cresciemi*, *conducemi*, *pareami*, *parmi* — the enclitic is
+  the object, so the verb is 3rd person, and none of them is an imperative. This fixes the
+  convention rather than inventing one: a **non**-finite fused token (*aprirmi*, *dirci*, 70 of
+  them corpus-wide) does carry the enclitic's person, because its verb has none.
+- **Six words read as the wrong part of speech.** purgatorio 16:35 *fummo* is the noun **fumo**
+  (smoke), not 1pl of *essere*; paradiso 5:119 *disii* is 2sg of **desiderare**, not the plural
+  noun; paradiso 6:136 *il* is the clitic object **lo**, not an article; paradiso 14:23 *cerchi* is
+  the noun (with *santi* its adjective and *mostrar* the 3pl remote past), not 3sg of *cercare*;
+  paradiso 15:51 *du'* is **dove**, not *due*; paradiso 15:55 *mei* is 3sg present subjunctive of
+  **meare**, not the possessive. inferno 28:52 *fuor* is *furono* (as it is already tagged at
+  inferno 7:40) and, standing for "a hundred [of them]", took the `RELCL_HEAD` flag.
+- **One lemma/person pair on a relative pronoun**: inferno 2:68 *c'* is `che`, not the clitic `ci`.
+
+Four of these changed a token's POS, which had consequences one layer up and one layer sideways:
+two Layer-3 spans (`fummo`, *li santi cerchi*) and one `case` row (paradiso 6:136 *il*,
+accusative). See [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md) and
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).

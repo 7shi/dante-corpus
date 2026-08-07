@@ -952,7 +952,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 139	perché	perché	conjunction						
 139	non	non	adverb						
 139	ti	te	pronoun		sg.	2			
-139	facci	fare	verb		sg.	1	present	subjunctive	
+139	facci	fare	verb		sg.	3	present	subjunctive
 139	maraviglia	maraviglia	noun	f.	sg.				
 140	pensa	pensare	verb		sg.	2	present	imperative	
 140	che	che	conjunction						

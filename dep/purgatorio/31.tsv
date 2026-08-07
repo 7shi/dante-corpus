@@ -148,10 +148,10 @@ line	token	word	deprel	head_line	head_token
 21	6	lo	det	21	8
 21	7	suo	det:poss	21	8
 21	8	varco	obl	21	4
-22	1	Ond'	mark	26	1
-22	2	ella	nsubj	26	1
+22	1	Ond'	mark	22	2
+22	2	ella	root	0	0
 22	3	a	case	22	4
-22	4	me	obl	26	1
+22	4	me	obl	22	2
 22	5	Per	case	22	6
 22	6	entro	case	22	9
 22	7	i	det	22	9
@@ -180,7 +180,7 @@ line	token	word	deprel	head_line	head_token
 25	4	o	cc	26	1
 25	5	quai	det	25	6
 25	6	catene	obj	26	1
-26	1	trovasti	root	0	0
+26	1	trovasti	ccomp	22	2
 26	2	per	case	26	3
 26	3	che	mark	27	1
 26	4	del	case	26	5
@@ -799,7 +799,7 @@ line	token	word	deprel	head_line	head_token
 115	2	Fa	ccomp	115	1
 115	3	che	mark	115	7
 115	4	le	det	115	5
-115	5	viste	nsubj	115	7
+115	5	viste	obj	115	7
 115	6	non	advmod	115	7
 115	7	risparmi	xcomp	115	2
 116	1	posto	conj	115	2

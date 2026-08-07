@@ -531,7 +531,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 74	che	che	conjunction						
 74	là	là	adverb						
 74	dove	dove	adverb						
-74	pareami	parere+mi	verb+pronoun		sg.	1	imperfect	indicative	enclitic
+74	pareami	parere+mi	verb+pronoun		sg.	3	imperfect	indicative	enclitic
 74	prima	prima	adverb						
 74	rotto	rotto	adjective	m.	sg.				
 75	pur	pure	adverb						apocope

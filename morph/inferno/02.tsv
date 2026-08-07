@@ -24,7 +24,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 3	sol	solo	adjective	m.	sg.				apocope
 3	uno	uno	numeral	m.	sg.				
 4	m'	mi	pronoun		sg.	1			elision
-4	apparecchiava	apparecchiare	verb		sg.	3	imperfect	indicative	
+4	apparecchiava	apparecchiare	verb		sg.	1	imperfect	indicative
 4	a	a	preposition						
 4	sostener	sostenere	verb						apocope
 4	la	il	article	f.	sg.				
@@ -491,7 +491,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 68	e	e	conjunction						
 68	con	con	preposition						
 68	ciò	ciò	pronoun		sg.				
-68	c'	ci	pronoun		sg.	1			elision
+68	c'	che	pronoun		sg.				elision
 68	ha	avere	verb		sg.	3	present	indicative	
 68	mestieri	mestiere	noun	m.	pl.				
 68	al	a+il	preposition+article	m.	sg.				contraction

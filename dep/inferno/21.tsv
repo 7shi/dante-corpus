@@ -417,7 +417,7 @@ line	token	word	deprel	head_line	head_token
 59	1	che	mark	59	4
 59	2	tu	nsubj	59	4
 59	3	ci	advmod	59	4
-59	4	sia	nsubj	58	8
+59	4	sia	csubj	58	8
 59	5	mi	iobj	59	6
 59	6	disse	root	0	0
 59	7	giù	advmod	59	9
@@ -946,12 +946,12 @@ line	token	word	deprel	head_line	head_token
 132	5	ne	obl	132	6
 132	6	minaccian	conj	131	6
 132	7	duoli	obj	132	6
-133	1	Ed	cc	133	6
-133	2	elli	nsubj	133	6
+133	1	Ed	cc	133	2
+133	2	elli	root	0	0
 133	3	a	case	133	4
-133	4	me	obl	133	6
+133	4	me	obl	133	2
 133	5	Non	advmod	133	6
-133	6	vo'	root	0	0
+133	6	vo'	ccomp	133	2
 133	7	che	mark	133	9
 133	8	tu	nsubj	133	9
 133	9	paventi	ccomp	133	6

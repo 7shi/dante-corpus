@@ -490,7 +490,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 69	nel	in+il	preposition+article	m.	sg.				contraction
 69	volto	volto	noun	m.	sg.				
 69	mi	mi	pronoun		sg.	1			reflexive
-69	discarno	discarnare	verb		pl.	3	present	indicative	
+69	discarno	discarnare	verb		sg.	1	present	indicative
 70	La	la	article	f.	sg.				
 70	rigida	rigido	adjective	f.	sg.				
 70	giustizia	giustizia	noun	f.	sg.				

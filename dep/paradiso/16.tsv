@@ -6,11 +6,11 @@ line	token	word	deprel	head_line	head_token
 1	5	di	case	1	6
 1	6	sangue	nmod	1	4
 2	1	se	mark	2	7
-2	2	glorïar	obj	2	7
+2	2	glorïar	xcomp	2	7
 2	3	di	case	2	4
 2	4	te	obl	2	2
 2	5	la	det	2	6
-2	6	gente	nsubj	2	7
+2	6	gente	obj	2	7
 2	7	fai	advcl	4	5
 3	1	qua	advmod	3	3
 3	2	giù	advmod	3	3

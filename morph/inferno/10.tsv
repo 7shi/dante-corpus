@@ -394,7 +394,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 56	di	di	preposition						
 56	veder	vedere	verb					infinitive	apocope
 56	s'	se	conjunction						elision
-56	altri	altro	pronoun	m.	pl.				
+56	altri	altro	pronoun	m.	sg.
 56	era	essere	verb		sg.	3	imperfect	indicative	
 56	meco	me+con	pronoun+preposition		sg.	1			archaic
 57	e	e	conjunction						
@@ -582,7 +582,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 82	nel	in+il	preposition+article	m.	sg.				contraction
 82	dolce	dolce	adjective	m.	sg.				
 82	mondo	mondo	noun	m.	sg.				
-82	regge	reggere	verb		sg.	3	present	indicative	
+82	regge	redire	verb		sg.	2	present	indicative
 83	dimmi	dire+mi	verb+pronoun		sg.	2	present	imperative	clitic
 83	perché	perché	conjunction						
 83	quel	quello	adjective	m.	sg.				demonstrative
@@ -738,7 +738,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 104	intelletto	intelletto	noun	m.	sg.				
 104	e	e	conjunction						
 104	s'	se	conjunction						elision
-104	altri	altro	pronoun	m.	pl.				
+104	altri	altro	pronoun	m.	sg.
 104	non	non	adverb						
 104	ci	ci	pronoun		pl.	1			
 104	apporta	apportare	verb		sg.	3	present	indicative	
@@ -902,7 +902,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 127	La	il	article	f.	sg.				
 127	mente	mente	noun	f.	sg.				
 127	tua	tuo	adjective	f.	sg.				
-127	conservi	conservare	verb		sg.	2	present	subjunctive	
+127	conservi	conservare	verb		sg.	3	present	subjunctive
 127	quel	quello	pronoun	m.	sg.				
 127	ch'	che	pronoun						elision
 127	udito	udire	verb	m.	sg.		past participle		

@@ -488,7 +488,7 @@ line	token	word	deprel	head_line	head_token
 73	4	son	ccomp	71	5
 73	5	ben	advmod	73	6
 73	6	son	conj	73	4
-73	7	Beatrice	nsubj	73	4
+73	7	Beatrice	attr	73	4
 74	1	Come	advmod	74	2
 74	2	degnasti	root	0	0
 74	3	d'	mark	74	4

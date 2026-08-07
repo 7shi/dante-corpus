@@ -9,6 +9,20 @@ traceable back to what actually changed and why. Layer-2 mistags found along the
 in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
 side: code/policy changes, span fixes, and classification of what's left.
 
+## Two spans from Layer 4's subject-agreement round (2026-08-07)
+
+Layer 4's new subject-agreement check (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md))
+retagged two tokens as nouns in Layer 2, and `np --check` immediately flagged both as heading no
+NP — correctly, because each is one:
+
+- purgatorio 16:35 *fummo* (= *fumo*, smoke; had been read as 1pl of *essere*) — new span
+  `35 5 5 5`.
+- paradiso 14:23 *cerchi* (the noun, with *santi* now its adjective; had been read as a verb) —
+  the span `li santi` (head *santi*) became `li santi cerchi` (head *cerchi*), and `santi` became
+  `cerchi`.
+
+`np --check` back to **0 hard / 0 soft**.
+
 ## The case annex's Layer-2 fallout: 5 hard / 96 soft back to 0/0 (2026-08-02)
 
 Layer 3 had been at 0 hard / 0 soft since the eclipsed-head pass below, and it was **not**

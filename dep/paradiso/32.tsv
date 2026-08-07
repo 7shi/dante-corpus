@@ -719,9 +719,9 @@ line	token	word	deprel	head_line	head_token
 108	4	stella	appos	107	6
 108	5	mattutina	amod	108	4
 109	1	Ed	cc	109	2
-109	2	elli	nsubj	111	2
+109	2	elli	root	0	0
 109	3	a	case	109	4
-109	4	me	obl	111	2
+109	4	me	obl	109	2
 109	5	Baldezza	nsubj	111	2
 109	6	e	cc	109	7
 109	7	leggiadria	conj	109	5
@@ -734,7 +734,7 @@ line	token	word	deprel	head_line	head_token
 110	7	in	case	110	8
 110	8	alma	conj	110	5
 111	1	tutta	advmod	111	2
-111	2	è	root	0	0
+111	2	è	ccomp	109	2
 111	3	in	case	111	4
 111	4	lui	obl	111	2
 111	5	e	cc	111	7
@@ -1012,7 +1012,7 @@ line	token	word	deprel	head_line	head_token
 150	4	dicer	obl	150	9
 150	5	mio	det:poss	150	4
 150	6	lo	det	150	7
-150	7	cor	nsubj	150	9
+150	7	cor	obj	150	9
 150	8	non	advmod	150	9
 150	9	parti	advcl	149	4
 151	1	E	cc	151	2

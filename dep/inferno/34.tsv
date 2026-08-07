@@ -363,7 +363,7 @@ line	token	word	deprel	head_line	head_token
 50	2	lor	det:poss	50	3
 50	3	modo	nsubj	50	1
 50	4	e	cc	50	6
-50	5	quelle	nsubj	50	6
+50	5	quelle	obj	50	6
 50	6	svolazzava	conj	50	1
 51	1	sì	advmod	50	6
 51	2	che	mark	51	6

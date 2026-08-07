@@ -646,12 +646,12 @@ line	token	word	deprel	head_line	head_token
 88	6	parole	obl	88	2
 88	7	porte	acl	88	6
 89	1	ma	cc	89	4
-89	2	vergogna	obj	89	4
+89	2	vergogna	nsubj	89	4
 89	3	mi	iobj	89	4
 89	4	fé	conj	88	2
 89	5	le	det	89	7
 89	6	sue	det:poss	89	7
-89	7	minacce	nsubj	89	4
+89	7	minacce	obj	89	4
 90	1	che	nsubj	90	6
 90	2	innanzi	advmod	90	6
 90	3	a	case	90	5

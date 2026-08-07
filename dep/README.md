@@ -104,14 +104,32 @@ call** (`validate_unit`):
     (the corpus's frozen label; see *Design decisions*). A flattened pair is therefore a mis-parse,
     not a second house style — the corpus already uses the UD shape everywhere else. Opened and
     closed in one round (203 predicates → 0); see [CORRECTIONS.md](CORRECTIONS.md).
+  - **Subject/head agreement** — only checked when Layer-2 morphology is present: an
+    `nsubj`/`nsubj:pass` whose person or number contradicts its **finite** head's. Italian
+    agreement is obligatory, so the two frozen layers cannot both be right: either the attachment
+    is a mis-parse (a predicate nominal, a vocative, a dislocated topic, or the subject of a
+    *different* clause) or one of the two Layer-2 rows carries the wrong feature. Which side is
+    wrong is not mechanically decidable, so the position is reported, never repaired. Three
+    exclusions, all cases where the two rows genuinely need not match: a non-finite head (it
+    asserts nothing), a relative/interrogative pronoun subject (`che`/`chi`/`cui`/`quale` take
+    their person from the antecedent), a coordinated subject (agreement is with the whole
+    coordination), a fused token whose verb part is non-finite (its `person` is the enclitic's),
+    and a 1st/2nd person **plural** head (a singular nominal may name one member of the group:
+    "e io con lui / volgemmo"). Opened 2026-08-07 at **173** positions (106 person, 67 number),
+    worked down to **18** in one round; see [CORRECTIONS.md](CORRECTIONS.md).
 
-**Measured over the full 100-canto build** (`--check`): **0 hard, 0 soft**. See
+**Measured over the full 100-canto build** (`--check`): **0 hard, 18 soft** — every class at 0
+except the agreement rule's verified-and-left-alone residue: *constructio ad sensum* (a collective
+singular with a plural verb), plural/measure subjects with a singular verb, distributive
+`ciascuna`, a copula agreeing with its plural predicate nominal, one anacoluthon of Dante's own,
+and four lines of non-Italian text (Provençal, Latin, Nimrod's gibberish). All 18 are enumerated in
+[CORRECTIONS.md](CORRECTIONS.md). See
 [CORRECTIONS.md](CORRECTIONS.md) for the full path from the initial pilot measurement (636 soft)
 down to this: the `attr` vocabulary freeze, `--fix-labels`' deterministic respelling cleanup, the
 LLM `--fix` regeneration pass, the `RELCL_HEAD` substantivization flag, and one hand-corrected
 mis-attachment (inferno 19:73-74, an `acl:relcl`/`nsubj` chain that had attached to a passive
 participle instead of its more plausible nominal antecedent), and the 203 multiple-`obj` predicates
-the newest rule opened and closed.
+that rule opened and closed.
 
 The build retries a parse unit (max 2) before giving up on the canto; there is **no per-line
 fallback** — a lone line cannot host cross-line heads, so the parse unit is the smallest thing

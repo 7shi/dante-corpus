@@ -152,9 +152,9 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	e	e	conjunction						
 22	divota	devoto	adjective	f.	sg.				archaic
 23	li	lo	article	m.	pl.				
-23	santi	santo	noun	m.	pl.				
-23	cerchi	cercare	verb		sg.	3	present	subjunctive	
-23	mostrar	mostrare	verb						apocope
+23	santi	santo	adjective	m.	pl.
+23	cerchi	cerchio	noun		pl.
+23	mostrar	mostrare	verb		pl.	3	remote past	indicative	apocope
 23	nova	nuovo	adjective	f.	sg.				archaic
 23	gioia	gioia	noun	f.	sg.				
 24	nel	in+il	preposition+article	m.	sg.				contraction
@@ -651,7 +651,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 94	robbi	robore	noun	m.	sg.				apocope
 95	m'	mi	pronoun		sg.	1			elision
 95	apparvero	apparire	verb		pl.	3	remote past	indicative	
-95	splendor	splendore	noun	m.	sg.				apocope
+95	splendor	splendore	noun	m.	pl.				apocope
 95	dentro	dentro	adverb						
 95	a	a	preposition						
 95	due	due	numeral		pl.				

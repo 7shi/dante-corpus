@@ -319,7 +319,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 44	stesse	stare	verb		sg.	3	imperfect	subjunctive	
 44	attento	attento	adjective	m.	sg.				
 45	mi	mi	pronoun		sg.	1			
-45	puosi	porre	verb		sg.	3	remote past	indicative	archaic
+45	puosi	porre	verb		sg.	1	remote past	indicative	archaic
 45	'l	il	article	m.	sg.				elision
 45	dito	dito	noun	m.	sg.				
 45	su	su	adverb						

@@ -4,7 +4,7 @@ line	token	word	deprel	head_line	head_token
 1	3	quando	mark	1	7
 1	4	i	det	1	6
 1	5	primi	amod	1	6
-1	6	raggi	nsubj	1	7
+1	6	raggi	obj	1	7
 1	7	vibra	advcl	5	2
 2	1	là	advmod	2	8
 2	2	dove	mark	2	8

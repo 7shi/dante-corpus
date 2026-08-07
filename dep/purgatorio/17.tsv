@@ -528,7 +528,7 @@ line	token	word	deprel	head_line	head_token
 73	3	mia	amod	73	2
 73	4	perché	advmod	73	7
 73	5	sì	advmod	73	7
-73	6	ti	nsubj	73	7
+73	6	ti	expl	73	7
 73	7	dilegue	ccomp	74	4
 74	1	fra	case	74	2
 74	2	me	obl	74	4
@@ -608,10 +608,10 @@ line	token	word	deprel	head_line	head_token
 84	7	stea	root	0	0
 84	8	tuo	det:poss	84	9
 84	9	sermone	nsubj	84	7
-85	1	Ed	cc	86	6
-85	2	elli	nsubj	86	6
+85	1	Ed	cc	85	2
+85	2	elli	root	0	0
 85	3	a	case	85	4
-85	4	me	obl	86	6
+85	4	me	obl	85	2
 85	5	L'	det	85	6
 85	6	amor	nsubj	86	6
 85	7	del	case	85	8
@@ -622,7 +622,7 @@ line	token	word	deprel	head_line	head_token
 86	3	dover	nmod	85	9
 86	4	quiritta	amod	85	6
 86	5	si	obj	86	6
-86	6	ristora	root	0	0
+86	6	ristora	ccomp	85	2
 87	1	qui	advmod	87	3
 87	2	si	expl	87	3
 87	3	ribatte	conj	86	6

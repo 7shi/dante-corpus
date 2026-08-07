@@ -47,7 +47,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 8	Minerva	Minerva	noun	f.	sg.				proper noun
 8	spira	spirare	verb		sg.	3	present	indicative	
 8	e	e	conjunction						
-8	conducemi	condurre+mi	verb+pronoun		sg.	2	present	imperative	enclitic
+8	conducemi	condurre+mi	verb+pronoun		sg.	3	present	indicative	enclitic
 8	Appollo	Apollo	noun	m.	sg.				archaic
 9	e	e	conjunction						
 9	nove	nove	numeral	f.	pl.				
@@ -258,7 +258,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 39	repe	recapere	verb		sg.	3	present	indicative	archaic
 40	accender	accendere	verb		sg.			infinitive	apocope
 40	ne	ne	pronoun		sg.				
-40	dovria	dovere	verb		sg.	1	present	conditional	
+40	dovria	dovere	verb		sg.	3	present	conditional
 40	più	più	adverb						
 40	il	il	article	m.	sg.				
 40	disio	desiderio	noun	m.	sg.				apocope
