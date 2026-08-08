@@ -183,7 +183,10 @@ line	token	word	role	arg_line	arg_token
 71	7	nuovi	obl:di	72	2
 71	7	nuovi	obl:a	72	5
 72	0			0	0
-73	7	Fa	subj	73	3
+73	3	io	subj	0	0
+73	3	io	iobj	73	5
+73	3	io	ccomp	73	7
+73	7	Fa	subj	0	0
 73	7	Fa	ccomp	73	10
 73	10	trovi	subj	73	9
 73	10	trovi	obj	74	1
@@ -191,9 +194,8 @@ line	token	word	role	arg_line	arg_token
 74	9	conosca	obl:a	74	4
 74	9	conosca	obl:a	74	7
 75	5	andando	subj	0	0
-75	7	movi	subj	73	3
+75	7	movi	subj	0	0
 75	7	movi	obj	75	3
-75	7	movi	obl	75	6
 76	4	'ntese	subj	76	3
 76	4	'ntese	obj	76	6
 77	5	gridò	subj	76	2

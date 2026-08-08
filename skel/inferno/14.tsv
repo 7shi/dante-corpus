@@ -340,13 +340,14 @@ line	token	word	role	arg_line	arg_token
 129	3	addur	subj	0	0
 129	3	addur	obj	129	4
 129	3	addur	obl:a	129	7
+130	2	io	ccomp	130	7
 130	7	trova	subj	131	1
 131	8	taci	subj	0	0
 131	8	taci	obl:di	131	7
 132	4	di'	subj	0	0
 132	4	di'	obj	132	3
 132	4	di'	ccomp	132	7
-132	7	fa	subj	132	5
+132	7	fa	subj	0	0
 132	7	fa	obl:di	132	10
 133	7	piaci	subj	0	0
 133	7	piaci	iobj	133	6

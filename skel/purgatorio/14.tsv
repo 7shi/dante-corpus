@@ -67,10 +67,12 @@ line	token	word	role	arg_line	arg_token
 20	4	sia	subj	20	3
 20	6	parlare	subj	20	1
 21	8	suona	subj	21	3
-22	6	accarno	subj	22	4
+22	6	accarno	subj	0	0
+22	6	accarno	obj	22	4
 22	6	accarno	obl:con	23	3
 23	6	rispuose	subj	24	1
 23	6	rispuose	iobj	23	5
+23	6	rispuose	ccomp	24	6
 24	3	diceva	subj	24	2
 24	6	parli	subj	24	5
 24	6	parli	obl:di	24	8

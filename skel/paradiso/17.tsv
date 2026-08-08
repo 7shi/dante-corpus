@@ -204,6 +204,7 @@ line	token	word	role	arg_line	arg_token
 77	1	nascendo	subj	0	0
 78	2	notabili	subj	78	5
 79	8	accorte	subj	79	6
+79	8	accorte	obl	79	3
 79	8	accorte	obl:per	80	4
 80	0			0	0
 81	7	torte	subj	81	3

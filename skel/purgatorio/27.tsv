@@ -9,6 +9,7 @@ line	token	word	role	arg_line	arg_token
 4	8	rïarse	obl:da	4	7
 5	2	stava	subj	5	4
 5	9	giva	subj	5	7
+5	9	giva	obl:da	5	8
 6	8	apparse	subj	6	3
 6	8	apparse	iobj	6	7
 7	5	stava	subj	0	0

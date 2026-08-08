@@ -130,6 +130,7 @@ line	token	word	role	arg_line	arg_token
 43	5	serra	subj	43	3
 43	5	serra	obj	43	6
 43	5	serra	obl:a	44	3
+43	5	serra	obl:come	44	7
 44	0			0	0
 45	2	vuol	subj	45	1
 45	2	vuol	obj	45	8

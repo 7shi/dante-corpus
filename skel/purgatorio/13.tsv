@@ -12,9 +12,9 @@ line	token	word	role	arg_line	arg_token
 6	9	piega	subj	6	5
 7	4	è	subj	7	1
 7	4	è	subj	7	6
+7	4	è	obl	7	3
 7	9	paia	subj	7	7
 8	1	parsi	subj	8	3
-8	1	parsi	obl:con	9	3
 8	5	parsi	subj	8	7
 8	5	parsi	obl:con	9	3
 9	0			0	0
@@ -98,6 +98,7 @@ line	token	word	role	arg_line	arg_token
 36	2	Amate	obl:da	36	4
 36	6	aveste	subj	36	4
 36	6	aveste	obj	36	5
+37	4	maestro	subj	0	0
 37	7	sferza	subj	37	6
 37	7	sferza	obj	38	2
 38	0			0	0

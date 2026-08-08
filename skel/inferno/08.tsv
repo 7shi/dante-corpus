@@ -33,10 +33,12 @@ line	token	word	role	arg_line	arg_token
 9	6	son	attr	9	5
 9	10	fenno	subj	9	8
 9	10	fenno	obj	9	9
-10	0			0	0
+10	2	elli	subj	0	0
+10	2	elli	iobj	10	4
+10	2	elli	ccomp	11	3
 11	2	scorgere	obj	11	4
 11	2	scorgere	obl:per	10	9
-11	3	puoi	subj	10	2
+11	3	puoi	subj	0	0
 11	3	puoi	xcomp	11	2
 11	7	aspetta	subj	11	5
 12	8	nasconde	subj	12	3

@@ -226,9 +226,7 @@ line	token	word	role	arg_line	arg_token
 82	9	affanna	subj	0	0
 82	9	affanna	obl:per	82	6
 82	9	affanna	obl:di	83	2
-83	2	retro	subj	0	0
-83	2	retro	obl:a	83	4
-83	2	retro	obl:a	83	7
+83	0			0	0
 84	0			0	0
 85	7	feo	subj	0	0
 85	7	feo	attr	85	5

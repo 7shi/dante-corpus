@@ -21,8 +21,8 @@ line	token	word	role	arg_line	arg_token
 8	5	levati	subj	9	3
 9	7	face	subj	9	5
 9	7	face	obj	9	6
-10	1	E	subj	10	2
-10	1	E	obl:a	10	4
+10	2	quelli	ccomp	10	7
+10	2	quelli	obl:a	10	4
 10	7	serrati	subj	10	5
 11	5	torneranno	subj	0	0
 11	5	torneranno	obl:di	11	3

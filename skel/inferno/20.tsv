@@ -370,12 +370,14 @@ line	token	word	role	arg_line	arg_token
 124	2	vienne	subj	0	0
 124	6	tiene	subj	126	3
 124	6	tiene	obj	124	8
-124	6	tiene	obl:di	125	4
 125	6	tocca	subj	126	3
 125	6	tocca	obj	125	8
 125	6	tocca	obl:sotto	126	2
 126	0			0	0
+127	4	fu	subj	127	6
+127	4	fu	attr	127	7
 127	7	tonda	subj	127	6
+127	7	tonda	obl	127	3
 128	2	ten	subj	0	0
 128	2	ten	xcomp	128	4
 128	4	ricordar	subj	0	0

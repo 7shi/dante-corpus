@@ -37,7 +37,6 @@ line	token	word	role	arg_line	arg_token
 18	4	contristati	subj	18	1
 18	4	contristati	obj	18	6
 18	4	contristati	iobj	18	2
-19	6	amar	subj	0	0
 19	7	conforta	subj	19	4
 19	7	conforta	obl:di	19	6
 20	1	faceva	subj	19	3

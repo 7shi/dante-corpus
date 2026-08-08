@@ -343,12 +343,12 @@ line	token	word	role	arg_line	arg_token
 124	8	sidi	obl:in	124	7
 125	3	intendi	subj	124	4
 125	3	intendi	obj	125	2
-125	7	intelletta	subj	124	4
 125	7	intelletta	obl:da	125	6
-126	2	intendente	subj	124	4
+126	2	intendente		0	0
 126	4	ami	subj	124	4
 126	4	ami	obj	126	3
 126	6	arridi	subj	124	4
+126	6	arridi	obj	126	3
 127	5	concetta	subj	127	3
 128	1	pareva	subj	127	3
 128	1	pareva	obl:in	128	3

@@ -4,21 +4,20 @@ line	token	word	role	arg_line	arg_token
 2	2	facevan	obj	2	1
 2	2	facevan	obl:in	2	7
 3	1	venimmo	subj	0	0
-3	1	venimmo	obl:in	1	4
+3	1	venimmo	obl:su	1	4
 3	1	venimmo	obl:sopra	3	5
 4	0			0	0
 5	7	gitta	subj	5	6
 5	7	gitta	obj	5	3
 6	2	raccostammo	subj	0	0
-6	2	raccostammo	obj	6	1
 6	2	raccostammo	obl:per	4	6
 6	2	raccostammo	obl:in	6	4
-6	2	raccostammo	obl:a	6	7
+6	2	raccostammo	obl:ad	6	7
 7	7	vidi	subj	7	6
 7	7	vidi	obj	7	9
 8	2	dicea	subj	8	1
 8	2	dicea	ccomp	8	5
-8	5	guardo	subj	8	4
+8	5	guardo	subj	0	0
 9	3	trasse	subj	9	2
 9	3	trasse	obj	9	4
 9	3	trasse	obl:di	9	7
@@ -124,8 +123,7 @@ line	token	word	role	arg_line	arg_token
 40	3	avere	obl:in	40	5
 40	3	avere	obl:in	41	4
 41	0			0	0
-42	2	convien	subj	0	0
-42	2	convien	ccomp	42	7
+42	2	convien	subj	42	7
 42	2	convien	obl:in	42	1
 42	7	penta	subj	43	1
 42	7	penta	obl:sanza	42	5
@@ -138,7 +136,7 @@ line	token	word	role	arg_line	arg_token
 44	3	fonde	obj	44	6
 45	2	piange	subj	43	1
 45	5	esser	subj	0	0
-45	5	esser	attr	45	7
+45	5	esser	obl:di	45	7
 46	2	far	subj	0	0
 46	2	far	obj	46	3
 46	2	far	obl:in	46	6

@@ -36,8 +36,9 @@ line	token	word	role	arg_line	arg_token
 15	3	va	obl:sanza	14	3
 15	3	va	obl:per	14	7
 15	3	va	obl:a	15	2
-15	7	gir		0	0
+15	7	gir	subj	0	0
 15	9	affanna	subj	15	4
+15	9	affanna	obj	15	8
 15	9	affanna	xcomp	15	7
 16	8	sofferto	subj	16	3
 16	8	sofferto	obj	16	6
@@ -295,7 +296,7 @@ line	token	word	role	arg_line	arg_token
 102	5	muta	obj	102	6
 103	3	avrai	subj	103	4
 103	3	avrai	obj	103	2
-103	8	scindi	subj	103	7
+103	8	scindi	subj	0	0
 103	8	scindi	obj	104	4
 103	8	scindi	obl:da	104	2
 104	8	morto	subj	0	0

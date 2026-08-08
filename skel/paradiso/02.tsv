@@ -182,7 +182,9 @@ line	token	word	role	arg_line	arg_token
 58	9	pensi	obj	58	4
 58	9	pensi	obl:da	58	7
 58	9	pensi	obl:di	58	8
+59	2	io	ccomp	60	1
 59	6	appar	subj	59	4
+59	6	appar	attr	59	9
 59	6	appar	obl:di	59	5
 59	9	diverso	subj	59	4
 60	1	credo	subj	59	2
@@ -211,8 +213,8 @@ line	token	word	role	arg_line	arg_token
 66	3	posson	obl:in	65	6
 66	3	posson	obl:in	65	9
 66	3	posson	obl:di	66	6
-67	6	facesser	subj	67	5
-67	6	facesser	attr	67	2
+67	6	facesser	subj	67	2
+67	6	facesser	obj	67	5
 68	4	sarebbe	subj	68	3
 68	4	sarebbe	obl:in	68	6
 69	4	distributa	subj	68	3

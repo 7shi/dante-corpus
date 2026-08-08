@@ -54,9 +54,9 @@ line	token	word	role	arg_line	arg_token
 18	8	nòi	subj	0	0
 18	8	nòi	obj	18	7
 18	8	nòi	obl:a	18	5
-19	5	pinti	subj	0	0
+19	5	pinti	subj	20	4
 19	5	pinti	obl:da	19	4
-19	7	tratti	subj	0	0
+19	7	tratti	subj	20	4
 19	7	tratti	obl:da	19	4
 20	6	vanno	subj	20	5
 20	6	vanno	obl:a	20	8
@@ -65,13 +65,10 @@ line	token	word	role	arg_line	arg_token
 21	1	levan	obl:a	20	3
 21	5	rallegrano	subj	20	4
 21	5	rallegrano	obj	21	7
-21	5	rallegrano	obl:a	20	3
 22	0			0	0
-23	3	cerchi	subj	23	2
-23	3	cerchi	xcomp	23	4
-23	3	cerchi	obl:a	22	4
-23	4	mostrar	subj	23	2
+23	4	mostrar	subj	23	3
 23	4	mostrar	obj	23	6
+23	4	mostrar	obl:a	22	4
 23	4	mostrar	obl:in	24	2
 23	4	mostrar	obl:in	24	6
 24	0			0	0
@@ -190,21 +187,21 @@ line	token	word	role	arg_line	arg_token
 69	6	rischiari	subj	69	5
 70	0			0	0
 71	1	comincian	subj	71	6
-71	1	comincian	obl:a	70	5
 71	1	comincian	obl:per	71	4
 72	5	pare	subj	72	4
 72	8	par	subj	72	4
 72	8	par	attr	72	9
 72	9	vera	subj	72	4
-73	1	parvemi	subj	74	1
-74	1	cominciare	subj	0	0
+73	1	parvemi	subj	73	4
+73	1	parvemi	xcomp	74	1
+74	1	cominciare	subj	73	4
 74	1	cominciare	xcomp	74	3
-74	3	vedere	subj	0	0
-74	3	vedere	obj	73	4
-74	5	fare	subj	0	0
+74	1	cominciare	xcomp	74	5
+74	3	vedere	subj	73	4
+74	5	fare	subj	73	4
 74	5	fare	obj	74	7
 74	5	fare	obl:da	75	7
-75	2	fuor		0	0
+75	0			0	0
 76	3	sfavillar	subj	0	0
 77	3	fece	subj	77	2
 77	3	fece	attr	77	4

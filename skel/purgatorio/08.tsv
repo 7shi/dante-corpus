@@ -112,13 +112,14 @@ line	token	word	role	arg_line	arg_token
 41	7	accostai	subj	40	2
 41	7	accostai	obl:a	42	6
 42	0			0	0
-43	5	avvalliamo	subj	43	2
+43	2	Sordello	subj	0	0
+43	2	Sordello	ccomp	43	5
+43	5	avvalliamo	subj	0	0
 43	5	avvalliamo	obl:tra	44	4
-44	6	parleremo	subj	43	2
-44	6	parleremo	obl:a	44	8
+44	6	parleremo	subj	0	0
+44	6	parleremo	obl:ad	44	8
 45	1	grazïoso	subj	45	4
 45	1	grazïoso	iobj	45	3
-45	4	vedervi	subj	0	0
 46	4	credo	subj	0	0
 46	4	credo	ccomp	46	7
 46	7	scendesse	subj	46	6
@@ -385,7 +386,9 @@ line	token	word	role	arg_line	arg_token
 132	2	va	attr	132	3
 132	8	dispregia	subj	0	0
 132	8	dispregia	obj	132	7
-133	4	va	subj	133	2
+133	2	elli	subj	0	0
+133	2	elli	ccomp	133	4
+133	4	va	subj	0	0
 133	10	ricorca	subj	133	7
 133	10	ricorca	obl	134	2
 133	10	ricorca	obl:in	134	4
@@ -398,6 +401,7 @@ line	token	word	role	arg_line	arg_token
 135	9	inforca	obl:con	135	6
 136	0			0	0
 137	3	chiavata	subj	136	4
+137	3	chiavata	iobj	137	1
 137	3	chiavata	obl:in	137	5
 137	3	chiavata	obl:con	138	3
 138	0			0	0

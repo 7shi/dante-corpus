@@ -1,5 +1,74 @@
 # skel — Layer 5 correction history
 
+## Phase 5t: the `--fix` round after the subject-agreement corrections — 3270 → 3136, −134 (2026-08-09)
+
+Baseline: **0 hard, 3270 soft**, **1575 flagged parse units** — the state left by Layer 4's
+subject-agreement round (2026-08-07, below). One full `--fix` pass over all three canticles, run by
+the user as `make -C skel fix` 3-way parallel. It was run on Phase 5s's recommendation: a
+cross-layer correction round had just moved 424 Layer-4 and 77 Layer-2 rows under the flagged set,
+which is the condition 5s measured as the one that makes regeneration pay.
+
+Measured from a `git worktree` at the pre-`--fix` commit (with the generated `src/` canticle
+directories symlinked in), diffed against the working tree at the **parse-unit** level
+(`dep.sentence_groups`, which is what `--fix` regenerates):
+
+| metric | measured |
+|---|---|
+| units flagged before | 1575 |
+| units flagged after | 1527 (**−48 cleared outright**) |
+| units improved | 96 |
+| soft violations removed | **134** (3270 → **3136**, −4.1%) |
+| violations removed per LLM call | **≈0.085** |
+| units that got *worse* | **0** (Phase 5c's criterion held) |
+| units newly flagged | **0** |
+| cantos touched | 61 — inferno 22, purgatorio 19, paradiso 20 |
+
+Per class:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 1580 | 1544 | −36 (−2.3%) |
+| `missing_arg` | 985 | 953 | −32 (−3.2%) |
+| `role_mismatch` | 305 | 292 | −13 (−4.3%) |
+| `extra_tuple` | 175 | 156 | −19 (−10.9%) |
+| `missing_tuple` | 140 | 109 | **−31 (−22.1%)** |
+| `membership` | 85 | 82 | −3 (−3.5%) |
+
+**Phase 5s's prediction held only for the population that round created, not for the pass as a
+whole.** The overall yield came in at **0.085 per call** — indistinguishable from 5q's 0.086 and
+5e's 0.11, the flat rate on a *static* residue, and less than half of 5s's 0.199. But the class
+breakdown is not flat: `missing_tuple` fell **22.1%**, five times the pass average and the largest
+single-class move of any `--fix` round on record, while the two big classes moved 2-3%, i.e. at
+their usual regeneration-resistant rate. `missing_tuple` is exactly where the subject-agreement
+round's +105 had landed (the 99 promoted speech frames), so the same pattern as 5s — where
+`extra_tuple`, the `adverb` bug's population, moved furthest — repeated in miniature.
+
+**The corrected reading of 5s's rule**, which supersedes the version `PLAN.md`'s *Where Phase 5
+ended* carried: a cross-layer correction round does **not** raise the yield of the next `--fix`
+pass as such. It creates a *sub-population* that regeneration settles at a high rate, and the
+pass-level yield is that rate diluted by however much of the flagged set the new population
+occupies. In 5s the two 2026-08-03 populations were large against 1659 units, so the pass looked
+like a break from the stop rule; here +105 against 1575 units was too small, and the pass reverted
+to the flat rate. **Phase 5q's stop rule stands** — with the qualification that it is about the
+*old* residue, and says nothing about freshly created LLM-authored error, which is worth
+regenerating whatever its size.
+
+What changed, concretely: **33 of the 99 promoted speech frames were taken up by the LLM** and 2
+newly appeared (inferno 30:37-38), a net −31. E.g. inferno 3:34 *«Ed elli a me: "Questo misero
+modo…"»* went from an empty row to `34.2 elli` carrying `subj (0,0)`, `ccomp 35.1` and
+`obl:a 34.4` — the UD ellipsis promotion the subject-agreement round normalized corpus-wide, now
+proposed independently by the LLM. The same canto shows the other kind of move: `obl:senza` →
+`obl:sanza` at 36:2, the preposition lemma taken from the form the line actually uses.
+
+**Zero units got worse and zero were newly flagged** — the third consecutive round to hold both
+(5q, 5s, 5t). As in 5q and 5s, the per-unit acceptance count is not recoverable: `skel/skel.log`
+was again left empty by the parallel invocation, so the table reports the flagged-unit delta (−48),
+a lower bound on accepted units.
+
+Checks after the round: `skel --check` 0 hard / **3136** soft, `dep --check` 0 hard / 18 soft,
+`case --check` 0 hard, `np` and `morph --check` 0/0, `pytest` 168 passed. No code changed; the
+round is 61 `skel/*.tsv` files, 303 insertions / 242 deletions.
+
 ## Layer 4's subject-agreement round — 3215 → 3270, +55 (2026-08-07)
 
 No Layer-5 change: a new `dep` soft check (an `nsubj` whose person or number contradicts its finite

@@ -284,11 +284,10 @@ line	token	word	role	arg_line	arg_token
 100	8	vuo'	xcomp	100	7
 100	9	certo	subj	0	0
 100	9	certo	obl:di	100	6
-101	2	retro	obl:a	101	5
 101	6	ten	subj	0	0
+101	6	ten	xcomp	101	7
 101	7	vien	subj	0	0
 101	7	vien	obl:di	101	2
-101	7	vien	obl:a	101	5
 101	7	vien	obl:con	101	9
 102	1	girando	subj	0	0
 102	1	girando	obl:per	102	6

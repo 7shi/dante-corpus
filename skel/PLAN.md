@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-07: `make -C skel check` reports **0 hard, 3270 soft** violations across
+Status as of 2026-08-09: `make -C skel check` reports **0 hard, 3136 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -13,22 +13,28 @@ which took `unknown_role` to **0** → 3633 after the `case` annex's own Layer-2
 moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-verified `dep`/`case`
 round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug fix moved it *up*
 again → 3215 after Phase 5s's user-run `--fix` pass → 3270 after Layer 4's
-subject-agreement round moved it *up* once more). The project goal is
+subject-agreement round moved it *up* once more → 3136 after Phase 5t's user-run `--fix` pass).
+The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
 
-**Phases 5a-5s have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+**Phases 5a-5t have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
 about 0.11 violations per LLM call and that rate does not depend on how a *static* flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
 calls) did *not* raise the success rate. What remains is closed by measuring classes and
 normalizing, not by more model calls. **Phase 5q confirmed this a second time**: a full pass on
 a residue nine rules and four Layer-4 rounds further along yielded 0.086 per call and moved no
-class more than 6.5%. **Phase 5s marks the one exception**: run immediately after a cross-layer
+class more than 6.5%. **Phase 5s looked like an exception** — run immediately after a cross-layer
 round (Layer 4's multiple-`obj` corrections plus the `"verb" in pos` bug fix) had put fresh
-LLM-authored error into the flagged set, the same pass returned **0.199 per call**, −330. The
-finding is about a residue that has stopped moving, not about the instrument.
+LLM-authored error into the flagged set, the same pass returned **0.199 per call**, −330 — but
+**Phase 5t corrected that reading**: the same experiment after Layer 4's subject-agreement round
+returned **0.085 per call**, −134, right back at the flat rate. What a cross-layer round buys is a
+*sub-population* regeneration settles fast (5t's `missing_tuple` fell 22.1% against a 4.1% pass
+average), diluted by the rest of the flagged set; 5s only looked like a break from the rule because
+its new populations were large. The finding is about a residue that has stopped moving, not about
+the instrument.
 
 **How to read this file.** *Where Phase 5 ended* states the closing position and why no route is
 open; everything from *Phase 5e* onward is the historical record that produced it, and **its
@@ -41,16 +47,18 @@ Rules L, M, N, O, P, Q, R, S and T landed as Phases 5f/5g/5h/5j/5k/5l/5m/5o (−
 instead of the checker**: Phase 5i closed the decidable half of the **clitic-case question** (−26),
 Phase 5n the `mark` bucket (−21), and Phase 5p the plausible clausal complements of the `advcl`
 bucket plus 5n's two multi-edge deferrals (−10) — all hand-verified, zero model calls, no checker
-change. `role_mismatch` is at **309** (459 before Phase 5r's rule U and Phase 5s) — the
+change. `role_mismatch` is at **292** (459 before Phase 5r's rule U and Phases 5s/5t) — the
 `obl:<lemma>` pairs are exhausted and so is
 the mechanical half of the clausal cluster — and Phases 5l/5m/5n/5o/5p took 173 out of
 `extra_arg` by working the **direct-child** bucket deprel by deprel, **which Phase 5o's `advcl`
 verdict exhausted and Phase 5p's correction round finished: every row of section 2a is closed,
 and so is the audit work each verdict left behind.** Phase 5q then spent the one remaining work
 item — the user-run `--fix` pass (−147) — plus the `ioj` typo fix (−4).
-What is left is the rest of the two big classes, `extra_arg` (1558) and `missing_arg` (1053),
+What is left is the rest of the two big classes, `extra_arg` (1544) and `missing_arg` (953),
 together 80% of what remains — and section 2's triage says both residues are *reading*
-disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms.
+disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms, and
+which Phases 5s/5t confirm again (both moved them 2-8% while the freshly created classes moved
+20%+).
 **Every route this plan opened is now closed; see [*Where Phase 5 ended*](#where-phase-5-ended)
 for what that leaves.**
 
@@ -64,15 +72,15 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5s is **committed** — the rule commits, the Layer-4 corrections and the
+Everything through Phase 5t is **committed** — the rule commits, the Layer-4 corrections and the
 `--fix` rounds are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3270 soft
+make -C skel check      # expect: 0 hard, 3136 soft
 make -C dep check       # expect: 0 hard, 18 soft (the subject-agreement rule's verified residue)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
-uv run pytest -q        # expect: 159 passed
+uv run pytest -q        # expect: 168 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
 
@@ -103,12 +111,18 @@ typo fix (−4, `unknown_role` now **0**). Both remaining routes therefore have 
 - **Regeneration is exhausted by this plan's own stop rule.** 5q yielded 0.086 violations per
   call — 5e's flat rate reproduced on a completely differently composed flagged set — and moved
   no class more than 6.5%. A third pass would cost another ~1600 calls for a predictable ~130.
-  - **Qualified by Phase 5s (2026-08-07).** The third pass ran, and returned **0.199 per call**
-    (3545 → **3215**, −330; 0 units worse, 0 newly flagged) — double the predicted rate. The stop
-    rule holds for a *static* residue, which is what 5q measured; it does not hold once a
-    cross-layer round (here Layer 4's multiple-`obj` corrections and the `"verb" in pos` bug fix)
-    has put genuinely LLM-authored error back into the flagged set. See
-    [`CORRECTIONS.md`](CORRECTIONS.md)'s *Phase 5s*.
+  - **Qualified by Phase 5s (2026-08-07), and the qualification narrowed by Phase 5t
+    (2026-08-09).** 5s's third pass returned **0.199 per call** (3545 → **3215**, −330; 0 units
+    worse, 0 newly flagged) — double the predicted rate — right after a cross-layer round had put
+    genuinely LLM-authored error back into the flagged set. 5t repeated the experiment after
+    Layer 4's subject-agreement round and returned **0.085 per call** (3270 → **3136**, −134),
+    the flat rate again. So the qualification is not "a cross-layer round makes the next pass
+    pay": it is that such a round creates a **sub-population** regeneration settles at a high rate
+    — 5t's `missing_tuple`, where the subject-agreement round's +105 had landed, fell 22.1%
+    against a 4.1% pass average — and the pass-level yield is that rate diluted by the rest of the
+    flagged set. **Before running a pass on this ground, ask how large the new population is
+    relative to the flagged set**; below a few percent, expect the flat rate. See
+    [`CORRECTIONS.md`](CORRECTIONS.md)'s *Phase 5s* and *Phase 5t*.
 - **Deterministic rules are exhausted against every population this document measured.** A new
   rule would need a class that has not yet been triaged; sections 1, 2 and 2a between them
   account for the residual, and each names why its remainder is a reading disagreement (subject
@@ -442,6 +456,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5q** | user-run full-corpus `--fix` pass (1702 flagged units, ≈28 h 3-way parallel) + the `ioj` → `iobj` typo fix | 3702 → **3551** |
 | **5r** | Rule U (the `case` annex as a third read on a disputed role) + its hand-verified `dep`/`case` round | 3633 → **3465** |
 | **5s** | user-run full-corpus `--fix` pass (1659 flagged units), run *after* Layer 4's multiple-`obj` round and the `"verb" in pos` fix had moved the flagged set | 3545 → **3215** |
+| **5t** | user-run full-corpus `--fix` pass (1575 flagged units), run *after* Layer 4's subject-agreement round; back at the flat rate (0.085/call) | 3270 → **3136** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).

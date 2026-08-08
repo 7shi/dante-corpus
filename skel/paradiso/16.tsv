@@ -151,22 +151,24 @@ line	token	word	role	arg_line	arg_token
 51	2	vediesi	subj	49	3
 51	2	vediesi	attr	51	1
 51	2	vediesi	obl:in	51	6
+52	3	fora	subj	52	5
+52	3	fora	attr	52	4
 52	4	meglio	subj	52	5
 52	5	esser	subj	53	2
 52	5	esser	attr	52	6
 52	6	vicine	subj	53	2
+52	6	vicine	obl:a	53	8
+52	6	vicine	obl:a	54	3
 53	5	dico	subj	53	4
 53	5	dico	obj	53	3
 54	4	aver	subj	53	2
 54	4	aver	obj	54	6
-54	4	aver	obl:a	53	8
-54	4	aver	obl:a	54	3
-55	2	averle	subj	53	2
+55	2	averle	subj	0	0
 55	2	averle	obl	55	3
-55	5	sostener	subj	53	2
+55	5	sostener	subj	0	0
 55	5	sostener	obj	55	7
 56	0			0	0
-57	4	barattare	subj	57	1
+57	4	barattare	subj	0	0
 57	5	ha	subj	57	1
 57	5	ha	obj	57	7
 58	8	traligna	subj	58	4
@@ -247,19 +249,18 @@ line	token	word	role	arg_line	arg_token
 87	7	nascosa	obl:in	87	6
 88	2	vidi	subj	88	1
 88	2	vidi	obj	88	4
+88	2	vidi	obl:in	90	3
 88	6	vidi	subj	88	1
 88	6	vidi	obj	88	8
 88	6	vidi	obj	89	1
 88	6	vidi	obj	89	2
 88	6	vidi	obj	89	3
 88	6	vidi	obj	89	5
-88	6	vidi	obj	90	5
-88	6	vidi	obl:in	90	3
 89	0			0	0
 90	0			0	0
 91	2	vidi	subj	88	1
-91	2	vidi	obj	91	4
-91	2	vidi	obj	91	6
+91	2	vidi	attr	91	4
+91	2	vidi	attr	91	6
 91	2	vidi	obl:con	92	2
 91	2	vidi	obl:con	92	6
 91	2	vidi	obl:con	93	2

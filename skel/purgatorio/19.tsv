@@ -169,8 +169,7 @@ line	token	word	role	arg_line	arg_token
 53	6	dirmi	ccomp	52	2
 54	6	sormontati	subj	54	2
 54	6	sormontati	obl:da	54	5
-55	1	E	subj	55	2
-55	1	E	ccomp	55	6
+55	2	io	ccomp	55	6
 55	6	fa	subj	56	2
 55	6	fa	xcomp	55	7
 55	6	fa	obl:con	55	5
@@ -178,7 +177,8 @@ line	token	word	role	arg_line	arg_token
 56	7	piega	subj	56	3
 56	7	piega	obj	56	6
 56	7	piega	obl:a	56	5
-57	8	partirmi	subj	57	3
+57	5	posso	subj	57	3
+57	5	posso	xcomp	57	8
 57	8	partirmi	obl:da	57	7
 58	1	Vedesti	subj	0	0
 58	1	Vedesti	obj	58	5

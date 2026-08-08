@@ -33,18 +33,16 @@ line	token	word	role	arg_line	arg_token
 14	9	pon	subj	14	8
 14	9	pon	obj	14	10
 15	1	quïeto	subj	14	6
-15	1	quïeto	obl:a	14	8
 15	2	pare	subj	14	6
-15	2	pare	attr	15	1
 15	2	pare	obl:a	14	8
 15	7	voli	subj	15	6
 16	0			0	0
 17	2	danzando	subj	16	3
 18	2	facieno	subj	16	3
-18	2	facieno	iobj	18	1
+18	2	facieno	obj	18	1
 18	2	facieno	xcomp	18	3
 18	3	stimar	subj	18	1
-18	3	stimar	obl:de	17	6
+18	3	stimar	obl:di	17	6
 19	5	notai	subj	19	4
 19	5	notai	obj	19	3
 19	5	notai	obl:di	19	8
@@ -244,7 +242,6 @@ line	token	word	role	arg_line	arg_token
 91	3	venne	obl	91	1
 91	5	io		0	0
 92	7	diffusa	subj	92	5
-92	7	diffusa	obl:in	93	4
 92	7	diffusa	obl:in	93	10
 93	0			0	0
 94	1	è	subj	91	8
@@ -257,9 +254,7 @@ line	token	word	role	arg_line	arg_token
 96	4	pare	subj	96	2
 96	4	pare	iobj	96	3
 96	4	pare	attr	96	5
-96	5	ottusa	subj	96	2
-96	5	ottusa	iobj	96	3
-96	5	ottusa	obl:'nverso	95	6
+96	4	pare	obl:'nverso	95	4
 97	2	udi'	subj	97	1
 98	5	conchiude	subj	98	2
 98	5	conchiude	obj	98	4

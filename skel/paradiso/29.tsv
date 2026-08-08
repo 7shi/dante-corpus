@@ -243,15 +243,12 @@ line	token	word	role	arg_line	arg_token
 97	7	ritorse	obl:in	98	3
 98	8	interpuose	subj	97	5
 99	10	porse	subj	99	4
-100	2	mente	subj	0	0
-100	2	mente	ccomp	100	7
 100	7	nascose	subj	100	5
 100	7	nascose	obl:da	101	2
 101	0			0	0
 102	6	rispuose	subj	102	5
-102	6	rispuose	iobj	101	6
-102	6	rispuose	iobj	101	10
-102	6	rispuose	iobj	102	3
+102	6	rispuose	obl:a	101	6
+102	6	rispuose	obl:a	101	10
 103	2	ha	subj	103	3
 103	2	ha	obj	103	5
 104	0			0	0
@@ -345,15 +342,12 @@ line	token	word	role	arg_line	arg_token
 138	2	son	attr	138	1
 138	8	appaia	subj	0	0
 138	8	appaia	obl:a	138	6
-139	8	concepe	subj	0	0
-139	8	concepe	obj	139	7
+139	8	concepe	subj	139	7
 140	1	segue	subj	140	3
 140	1	segue	obl:a	139	6
-140	5	amar	subj	0	0
-140	5	amar	obj	140	7
-141	4	ferve	subj	140	3
+141	4	ferve	subj	140	7
 141	4	ferve	obl:in	141	3
-141	6	tepe	subj	140	3
+141	6	tepe	subj	140	7
 141	6	tepe	obl:in	141	3
 142	1	Vedi	subj	0	0
 142	1	Vedi	obj	142	3

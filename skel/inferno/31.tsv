@@ -248,27 +248,27 @@ line	token	word	role	arg_line	arg_token
 84	1	trovammo	obl:a	83	6
 85	2	cigner	subj	0	0
 85	2	cigner	obj	85	3
+85	2	cigner	obl	85	4
 85	6	fosse	subj	85	8
+85	6	fosse	attr	85	4
 86	2	so	subj	86	3
 86	2	so	xcomp	86	4
 86	4	dir	subj	0	0
-86	4	dir	ccomp	85	2
+86	4	dir	obj	85	2
 86	7	tenea	subj	86	6
 86	7	tenea	attr	86	8
 86	7	tenea	obl:dinanzi	87	3
 86	7	tenea	obl:dietro	87	7
 86	7	tenea	obl:di	88	3
 86	8	soccinto	subj	0	0
-87	1	dinanzi	obl	87	3
-87	5	dietro	obl	87	7
+87	0			0	0
 88	6	tenea	subj	88	4
 88	6	tenea	obj	88	5
 88	6	tenea	attr	88	7
 88	6	tenea	obl:da	89	2
 88	7	avvinto	subj	88	5
-89	8	su	obl	89	10
-90	2	ravvolgëa	subj	0	0
-90	2	ravvolgëa	obj	90	1
+89	0			0	0
+90	2	ravvolgëa	subj	88	4
 90	2	ravvolgëa	obl:in	89	10
 90	2	ravvolgëa	obl:a	90	5
 91	3	volle	subj	91	2

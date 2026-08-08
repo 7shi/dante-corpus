@@ -111,7 +111,6 @@ line	token	word	role	arg_line	arg_token
 34	6	lece	iobj	34	5
 35	1	rispuose	subj	0	0
 35	4	veder	subj	35	5
-35	5	fummo	subj	0	0
 35	7	lascia	subj	35	4
 35	7	lascia	obj	35	5
 36	4	terrà	subj	36	2

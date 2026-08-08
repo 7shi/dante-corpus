@@ -204,7 +204,9 @@ line	token	word	role	arg_line	arg_token
 75	8	diparte	subj	74	7
 75	8	diparte	obj	75	7
 75	8	diparte	obl:da	75	3
-76	0			0	0
+76	2	quelli	subj	0	0
+76	2	quelli	iobj	76	4
+76	2	quelli	ccomp	78	2
 77	4	suona	subj	77	1
 77	4	suona	obl:di	77	3
 77	4	suona	obl:in	77	9

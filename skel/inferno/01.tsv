@@ -378,9 +378,9 @@ line	token	word	role	arg_line	arg_token
 129	2	felice	subj	129	3
 129	6	elegge	subj	0	0
 129	6	elegge	obj	129	4
+130	2	io	obl:a	130	4
 130	8	richeggio	subj	130	6
 130	8	richeggio	obj	130	7
-130	8	richeggio	obl:a	130	4
 130	8	richeggio	obl:per	131	3
 131	7	conoscesti	subj	131	5
 131	7	conoscesti	obj	131	4

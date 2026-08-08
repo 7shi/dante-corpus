@@ -72,6 +72,7 @@ line	token	word	role	arg_line	arg_token
 26	1	montasi	obl:in	26	4
 26	1	montasi	obl:in	26	7
 26	1	montasi	obl:con	27	4
+27	7	convien	subj	0	0
 27	7	convien	ccomp	27	10
 27	10	voli	subj	27	9
 27	10	voli	obl:con	28	4
@@ -84,7 +85,6 @@ line	token	word	role	arg_line	arg_token
 30	4	dava	iobj	30	3
 30	6	facea	subj	30	1
 30	6	facea	obj	30	7
-30	6	facea	iobj	30	3
 31	2	salavam	subj	31	1
 31	2	salavam	obl:entro	31	6
 32	6	stringea	subj	32	8
@@ -241,13 +241,15 @@ line	token	word	role	arg_line	arg_token
 87	3	salir	subj	87	7
 87	5	posson	subj	87	7
 87	5	posson	xcomp	87	3
+88	2	elli	subj	0	0
+88	2	elli	iobj	88	4
 88	7	è	subj	88	6
 88	7	è	attr	88	8
-88	7	è	obl:a	88	4
 88	8	tale	subj	88	6
-89	8	grave	subj	0	0
+89	8	grave	subj	89	1
 89	8	grave	obl:a	89	4
 90	5	va	subj	90	3
+90	5	va	obl	90	6
 90	9	fa	subj	0	0
 90	9	fa	obj	90	10
 91	5	parrà	subj	91	3
@@ -400,8 +402,8 @@ line	token	word	role	arg_line	arg_token
 135	10	udita	subj	135	2
 135	10	udita	obl:in	135	7
 136	7	saliva	subj	136	4
-136	7	saliva	obl	136	6
-137	2	dicea	subj	0	0
+136	7	saliva	iobj	136	6
+137	2	dicea	subj	136	4
 137	2	dicea	ccomp	137	3
 137	3	Vienne	subj	0	0
 137	5	vedi	subj	0	0
@@ -409,9 +411,9 @@ line	token	word	role	arg_line	arg_token
 137	7	è	subj	0	0
 137	7	è	attr	137	8
 137	8	tocco	subj	0	0
-137	8	tocco	obl:dal	138	3
+137	8	tocco	attr	138	1
 138	0			0	0
 139	1	cuopre	subj	139	3
 139	1	cuopre	obj	139	7
 139	1	cuopre	obl:a	138	7
-139	1	cuopre	obl:col	139	6
+139	1	cuopre	obl:con	139	6

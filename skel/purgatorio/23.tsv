@@ -23,7 +23,8 @@ line	token	word	role	arg_line	arg_token
 7	2	volsi	obj	7	7
 7	2	volsi	obl:appresso	8	3
 8	5	parlavan	subj	8	4
-9	5	facean	subj	9	3
+9	5	facean	subj	8	4
+9	5	facean	obj	9	3
 9	5	facean	iobj	9	4
 9	5	facean	obl:di	9	8
 10	5	cantar	subj	0	0
@@ -208,9 +209,10 @@ line	token	word	role	arg_line	arg_token
 70	0			0	0
 71	1	girando	subj	70	7
 71	3	rinfresca	subj	71	5
+71	3	rinfresca	obl	70	5
 72	2	dico	subj	72	1
 72	2	dico	obj	72	3
-72	5	dovria	subj	0	0
+72	5	dovria	subj	72	1
 72	5	dovria	xcomp	72	6
 72	6	dir	subj	72	1
 72	6	dir	obj	72	7
@@ -222,7 +224,7 @@ line	token	word	role	arg_line	arg_token
 74	2	menò	xcomp	74	6
 74	6	dire	subj	74	3
 74	6	dire	obj	74	7
-75	3	liberò	subj	0	0
+75	3	liberò	subj	74	1
 75	3	liberò	obj	75	2
 75	3	liberò	obl:con	75	7
 76	2	io	subj	0	0
@@ -336,12 +338,16 @@ line	token	word	role	arg_line	arg_token
 114	2	rimira	subj	113	8
 114	2	rimira	obl	114	3
 114	7	veli	subj	114	6
+115	3	io	subj	0	0
+115	3	io	obl:a	115	5
 115	8	riduci	subj	115	7
 115	8	riduci	obj	116	1
 115	8	riduci	obl:a	115	10
-116	2	fosti	subj	116	1
+116	2	fosti	subj	0	0
+116	2	fosti	attr	116	1
 116	2	fosti	obl:con	116	3
 116	8	fui	subj	116	6
+116	8	fui	attr	116	5
 116	8	fui	obl:con	116	7
 117	3	grave	subj	117	5
 118	5	volse	subj	118	6

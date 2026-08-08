@@ -1,16 +1,39 @@
 # Plan: a shared grammatical-analysis stack in the corpus
 
-## Handoff (2026-08-07) — resume here
+## Handoff (2026-08-09) — resume here
 
-**Everything is committed** (Layer 4's subject-agreement round is the newest work). Checks
-at commit time: `dep --check` 0 hard/**18** soft (the new rule's verified-and-left-alone residue),
-`case --check` 0 hard, `skel --check` 0 hard/**3270** soft, `np --check` 0/0, `morph --check` 0/0,
+**Everything is committed** (Phase 5t's user-run `--fix` pass is the newest work). Checks
+at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
+verified-and-left-alone residue),
+`case --check` 0 hard, `skel --check` 0 hard/**3136** soft, `np --check` 0/0, `morph --check` 0/0,
 `pytest` 168 passed. If `git status` shows
 anything uncommitted when this session resumes, that is new work from *after* this handoff was
 written — check `git log` before assuming otherwise.
 
-**One route is open**: a `--fix` pass, which this round has just made worth running again — see
-*If a next task is wanted* below.
+**No route is open.** Phase 5t spent the one that was, and its measurement says the next `--fix`
+pass is not worth running until a *large* cross-layer correction round has moved the flagged set —
+see *If a next task is wanted* below.
+
+### What Phase 5t did (2026-08-09, user-run)
+
+The `--fix` pass the previous handoff reserved for the user, run as `make -C skel fix` 3-way
+parallel over the 1575 units flagged at 3270. Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *Phase 5t*.
+
+- **3270 → 3136 soft, −134 (−4.1%)**, 61 cantos touched. **0 units got worse and 0 were newly
+  flagged** — the third consecutive round to hold both. 96 units improved, 48 cleared outright.
+- **Yield 0.085 violations per LLM call** — the flat rate of 5q (0.086) and 5e (0.11), *not* the
+  0.199 Phase 5s measured and this plan predicted.
+- **The prediction was wrong at the pass level and right at the class level.** `missing_tuple` —
+  where the subject-agreement round's +105 promoted speech frames had landed — fell **22.1%**, five
+  times the pass average and the largest single-class move of any `--fix` round; 33 of the 99
+  promoted frames were taken up by the LLM independently. The two big classes moved 2-3%, their
+  usual regeneration-resistant rate.
+- **The corrected rule, which supersedes what 5s wrote**: a cross-layer round does not raise the
+  yield of the next pass as such. It creates a sub-population regeneration settles fast, and the
+  pass-level yield is that rate **diluted by the rest of the flagged set**. 5s only looked like a
+  break from Phase 5q's stop rule because its two new populations were large against 1659 units;
+  +105 against 1575 was not. Phase 5q's stop rule stands.
 
 ### What the subject-agreement round did (2026-08-07)
 
@@ -38,7 +61,8 @@ in [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) and [`morph/CORRECTIONS.md`](morph
   standing soft residue `dep` has carried; it is a property of the text, not of the parse.
 - **Layer 5's soft count rose, 3215 → 3270 (+55)** — `missing_arg` −68 against `missing_tuple`
   +105 (the promoted speech frames are predicates the LLM never proposed). Same honest reading as
-  the multiple-`obj` round; see *A note on Layer 5's count* below.
+  the multiple-`obj` round; see *A note on Layer 5's count* below. **Phase 5t then settled a third
+  of that `missing_tuple` population by regeneration** (−31), which is what that reading predicted.
 
 ### What Phase 5s did (2026-08-07, user-run)
 
@@ -109,7 +133,11 @@ rule can settle — and `--fix` is **user-run** work. Do not "fix" either by rev
 
 **This was borne out (2026-08-07).** Phase 5s ran exactly that pass and took 3545 → **3215**, at
 double the per-call yield of the two prior `--fix` rounds, with `extra_tuple` — the `adverb` bug's
-population — moving furthest.
+population — moving furthest. **Borne out again, in miniature, by Phase 5t (2026-08-09)**: the
+subject-agreement round's `missing_tuple` population fell 22.1% under regeneration while the pass
+as a whole returned the flat rate. The claim to carry forward is about the *population*, not the
+pass: freshly created LLM-authored error is `--fix` material and settles fast; the old residue does
+not move.
 
 ### What Phase 5r did (2026-08-03)
 
@@ -196,26 +224,33 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-**A `--fix` pass, and the conditions for it are the ones Phase 5s measured.** That phase's finding
-was that regeneration pays right after a cross-layer correction round has changed what the flagged
-set contains (0.199 violations per call, against 0.086 on a static residue) and not otherwise. The
-subject-agreement round of 2026-08-07 is exactly such a round — 424 Layer-4 rows and 77 Layer-2
-rows moved, and Layer 5's count rose 3215 → 3270 with the whole rise in `missing_tuple` — so the
-next `--fix` pass is worth running now. It remains **user-run** work (`make -C skel fix`, 3-way
-parallel); checker-side and audit work is the assistant's.
+**Nothing is open, and that is a measured verdict rather than an absence of ideas.** Every named
+route this section has held is spent: the `dep` "at most one `obj` per predicate" rule (opened and
+closed 2026-08-03), Phase 5s's regeneration pass (2026-08-07, −330), and Phase 5t's
+(2026-08-09, −134).
 
-The two named checker routes this section used to hold are spent: the `dep` "at most one `obj` per
-predicate" rule (opened and closed 2026-08-03) and Phase 5s's own regeneration pass (2026-08-07,
-−330).
+**Before proposing another `--fix` pass, apply Phase 5t's rule.** Regeneration settles freshly
+created LLM-authored error fast and does not touch the old residue, so the pass-level yield is
+just the new population's share of the flagged set. 5s's two populations were large enough
+(0.199/call); 5t's +105 against 1575 units was not (0.085/call). **A pass is worth running when a
+cross-layer round has moved a population on the order of several hundred violations, not tens.**
+It remains **user-run** work (`make -C skel fix`, 3-way parallel); checker-side and audit work is
+the assistant's.
+
+That leaves the standing goal of 0 soft violations needing a *new instrument* against the two big
+reading-disagreement classes — and the candidates this project has identified there (an imported
+verb-valency lexicon) are declined on neutrality grounds; see *Out of scope*. So a next task here
+is a new plan, not a next step in this one.
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and its soft residue is **3270** (down from 17438 at the
+checker was refined through Phases 0-5r and its soft residue is **3136** (down from 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
 multiple-`obj` round plus the `adverb` bug fix moved it back up to 3545 — see the handoff's *A note
-on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, and the subject-agreement
-round moved it to 3270) — every route the Phase
+on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, the subject-agreement
+round moved it to 3270, and Phase 5t's user-run `--fix` pass took it to 3136) — every route the
+Phase
 5 plan opened has a measured verdict and none is open
 (see
 [`skel/PLAN.md`](skel/PLAN.md)'s *Where Phase 5 ended*). See *The layers* below and
@@ -229,10 +264,10 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**One route is open.** All five layers plus the case extension are implemented, built for all 100
+**No route is open.** All five layers plus the case extension are implemented, built for all 100
 cantos, every route any of their plans opened has a measured verdict, and everything is merged to
-`main`; the open item is the user-run `--fix` pass that Layer 4's subject-agreement round has just
-made worth running again (see *If a next task is wanted*).
+`main`. Phase 5t (2026-08-09) spent the last open item — the user-run `--fix` pass — and measured
+the condition under which another would be worth running (see *If a next task is wanted*).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -258,7 +293,7 @@ made worth running again (see *If a next task is wanted*).
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 3270 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 3136 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -266,7 +301,10 @@ made worth running again (see *If a next task is wanted*).
   call on a *static* residue however that residue is composed, so the bulk of the reduction came
   from deterministic checker rules and cross-layer corrections instead. **Phase 5s (2026-08-07)
   qualified that**: the same instrument returned 0.199 per call when run right after a cross-layer
-  round had changed what the flagged set contains. `--fix` rounds are **LLM-regeneration work
+  round had changed what the flagged set contains. **Phase 5t (2026-08-09) narrowed the
+  qualification**: after a *smaller* such round it returned 0.085 — the flat rate — because the
+  high yield belongs to the newly created population, not to the pass, and dilutes with that
+  population's share of the flagged set. `--fix` rounds are **LLM-regeneration work
   the user runs themselves** (`make -C skel fix`, run 3-way parallel); checker-side and audit
   work is the assistant's.
 
@@ -481,7 +519,7 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r
-   (`--check`: 0 hard / 3270 soft). Phase 5 closed with every route measured; see
+   (`--check`: 0 hard / 3136 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

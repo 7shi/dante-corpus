@@ -75,16 +75,18 @@ line	token	word	role	arg_line	arg_token
 29	2	chinando	obl:a	29	8
 30	1	rispuosi	subj	25	2
 30	2	Siete	subj	30	3
+31	2	quelli	subj	0	0
 31	2	quelli	ccomp	31	8
 31	8	dispiaccia	subj	33	1
 31	8	dispiaccia	iobj	31	7
 32	0			0	0
 33	1	ritorna	subj	32	3
-33	1	ritorna	obl:con	32	6
+33	1	ritorna	obl:cum	32	6
 33	1	ritorna	obl:in	33	3
-33	5	lascia	subj	0	0
+33	5	lascia	subj	32	3
 33	5	lascia	xcomp	33	6
-33	6	andar	subj	33	8
+33	6	andar	subj	0	0
+33	6	andar	obj	33	8
 34	2	dissi	subj	34	1
 34	2	dissi	iobj	34	3
 34	5	posso	subj	0	0

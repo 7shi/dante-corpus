@@ -122,13 +122,16 @@ line	token	word	role	arg_line	arg_token
 50	4	riconoscere	obl:tra	49	6
 51	3	immondi	subj	51	1
 51	3	immondi	obl:di	51	6
-52	7	aduni	subj	52	2
+52	2	elli	obl:a	52	4
+52	7	aduni	subj	0	0
 52	7	aduni	obj	52	6
 53	6	fé	subj	53	4
 53	6	fé	obj	53	5
+53	6	fé	attr	53	7
 53	7	sozzi	subj	53	5
 54	6	fa	subj	53	3
 54	6	fa	obj	54	5
+54	6	fa	attr	54	7
 54	6	fa	obl:a	54	3
 54	7	bruni	subj	54	5
 55	3	verranno	subj	0	0
@@ -203,9 +206,8 @@ line	token	word	role	arg_line	arg_token
 77	0			0	0
 78	1	ordinò	subj	0	0
 78	1	ordinò	obj	78	3
-78	1	ordinò	ccomp	79	2
 78	1	ordinò	obl:a	77	4
-79	2	permutasse	subj	0	0
+79	2	permutasse	subj	79	1
 79	2	permutasse	obj	79	6
 79	2	permutasse	obl:a	79	4
 79	2	permutasse	obl:di	80	2
@@ -220,7 +222,8 @@ line	token	word	role	arg_line	arg_token
 83	1	seguendo	subj	0	0
 83	1	seguendo	obj	83	3
 84	3	occulto	subj	84	1
-84	6	erba	subj	84	8
+84	8	angue	subj	0	0
+84	8	angue	obl:in	84	6
 85	4	ha	subj	85	2
 85	4	ha	obj	85	5
 85	4	ha	obl:a	85	7

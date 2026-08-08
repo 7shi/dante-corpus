@@ -8,10 +8,10 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5r, three full `--fix` rounds
-run (Phases 5e, 5q and 5s), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r) fed
-back into `dep/`.**
-`make -C skel check`: **0 hard, 3270 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5r, four full `--fix` rounds
+run (Phases 5e, 5q, 5s and 5t), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
+fed back into `dep/`.**
+`make -C skel check`: **0 hard, 3136 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -22,8 +22,8 @@ annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
 `case` annex's Step 6 clitic round, 3633 at the close of that annex's Steps 7-9, 3473 after Phase
 5r's rule U, 3465 after that phase's hand-verified `dep`/`case` round, 3509 after Layer 4's
 multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix, 3215 after
-Phase 5s's user-run `--fix` pass, and 3270 after Layer 4's subject-agreement round moved it *up*
-once more). See
+Phase 5s's user-run `--fix` pass, 3270 after Layer 4's subject-agreement round moved it *up*
+once more, and 3136 after Phase 5t's user-run `--fix` pass). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
@@ -33,9 +33,13 @@ the deterministic phases had cleared the unfixable units out of the flagged set 
 measured 0.086 per call on a residue nine rules further along, the same flat figure. So more
 model calls do not close a *static* residue. **Phase 5s qualified that**: run after Layer 4's
 multiple-`obj` round and the `"verb" in pos` bug fix had changed what the flagged set contains,
-the same instrument yielded **0.199 per call** (−330, 0 units worse, 0 newly flagged). A
-regeneration pass pays off when a cross-layer correction has moved the ground under the flagged
-set, not otherwise (see [PLAN.md](PLAN.md) and *Next steps*).
+the same instrument yielded **0.199 per call** (−330, 0 units worse, 0 newly flagged).
+**Phase 5t narrowed the qualification**: the same experiment after Layer 4's subject-agreement
+round returned **0.085 per call** (−134), back at the flat rate — because what a cross-layer round
+buys is a *sub-population* regeneration settles fast (5t's `missing_tuple` fell 22.1% against a
+4.1% pass average), and the pass-level yield is that rate diluted by the rest of the flagged set.
+Judge a pass by how large the newly created population is relative to the flagged set (see
+[PLAN.md](PLAN.md) and *Next steps*).
 
 ## What it does
 
@@ -350,11 +354,12 @@ just as a subject is, so the annex cannot separate `subj` from `attr`. See
 
 What remains past the mechanical phases above is **reading disagreement between two independent
 parses**, not a class with a known instrument: subject resolution across enjambment and pro-drop
-(`extra_arg subj` 824), the direct-child `missing_arg` mass, the clitic dative/accusative
+(`extra_arg subj` 805), the direct-child `missing_arg` mass, the clitic dative/accusative
 question (needs a Layer-2 case feature), and the complement-vs-adjunct distinction (needs a verb
 lexicon). Both routes are now measured out — regeneration at a flat ~0.09-0.11 violations per
 call over two full passes on a static residue (Phase 5s's third pass returned 0.199, but only
-because a cross-layer round had just put fresh LLM-authored error into the flagged set), and
+because a cross-layer round had just put a *large* population of fresh LLM-authored error into the
+flagged set; Phase 5t's fourth pass, after a smaller such round, was back at 0.085), and
 deterministic rules against every population [PLAN.md](PLAN.md) triaged. The goal remains **0 soft
 violations**, but reaching it needs an instrument this project has declined on principle, so it is
 a new plan rather than more of this one.

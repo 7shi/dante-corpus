@@ -212,7 +212,7 @@ line	token	word	role	arg_line	arg_token
 68	4	gittò	iobj	68	2
 68	4	gittò	obl:a	68	7
 68	5	disteso	subj	68	1
-69	1	dicendo	subj	68	1
+69	1	dicendo	subj	0	0
 69	1	dicendo	ccomp	69	7
 69	7	aiuti	subj	0	0
 69	7	aiuti	obj	69	6
@@ -362,9 +362,11 @@ line	token	word	role	arg_line	arg_token
 121	2	diss'	iobj	121	4
 121	2	diss'	ccomp	121	9
 121	9	morto	subj	121	7
+122	2	elli	ccomp	123	6
+122	2	elli	obl:a	122	4
 122	9	stea	subj	122	8
 122	9	stea	obl:in	123	2
-123	6	porto	subj	122	2
+123	6	porto	subj	0	0
 123	6	porto	obj	123	5
 124	3	ha	subj	124	5
 124	3	ha	obj	124	2

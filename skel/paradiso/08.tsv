@@ -348,7 +348,9 @@ line	token	word	role	arg_line	arg_token
 114	8	uopo	subj	114	6
 114	9	stanchi	subj	114	3
 114	9	stanchi	obl:in	114	5
-115	5	dì	subj	115	2
+115	2	elli	subj	0	0
+115	2	elli	ccomp	115	5
+115	5	dì	subj	0	0
 115	5	dì	ccomp	115	6
 115	6	sarebbe	subj	0	0
 115	6	sarebbe	attr	115	8

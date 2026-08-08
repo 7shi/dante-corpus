@@ -157,7 +157,6 @@ line	token	word	role	arg_line	arg_token
 62	0			0	0
 63	4	vien	subj	63	3
 63	4	vien	obl:di	63	6
-63	6	retro	obl:a	63	8
 63	10	guardi	subj	0	0
 63	10	guardi	obj	63	2
 64	2	vid'	subj	64	3
@@ -252,7 +251,6 @@ line	token	word	role	arg_line	arg_token
 97	2	descriver	obj	97	4
 97	7	spargo	subj	0	0
 97	7	spargo	obj	98	1
-97	7	spargo	obl:a	97	2
 98	7	strigne	subj	98	5
 98	7	strigne	obj	98	6
 99	6	posso	subj	0	0
@@ -263,11 +261,10 @@ line	token	word	role	arg_line	arg_token
 100	2	leggi	obj	100	3
 100	6	dipigne	subj	100	4
 100	6	dipigne	obj	100	5
-101	3	vide	subj	0	0
+101	3	vide	subj	100	4
 101	3	vide	obj	101	2
-101	3	vide	xcomp	102	1
-101	3	vide	obl:da	101	7
 102	1	venir	subj	101	2
+102	1	venir	obl:da	101	7
 102	1	venir	obl:con	102	3
 102	1	venir	obl:con	102	6
 102	1	venir	obl:con	102	9
@@ -276,9 +273,12 @@ line	token	word	role	arg_line	arg_token
 103	4	troverai	attr	103	2
 103	4	troverai	obl:in	103	8
 104	1	tali	subj	0	0
+104	2	eran	subj	0	0
+104	2	eran	attr	104	1
 105	2	è	subj	105	1
+105	2	è	obl:a	104	8
 105	2	è	obl:con	105	3
-105	8	diparte	subj	105	1
+105	8	diparte	subj	0	0
 105	8	diparte	obl:da	105	6
 106	7	contenne	subj	106	2
 106	7	contenne	obj	107	2

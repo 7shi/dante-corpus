@@ -14,7 +14,8 @@ line	token	word	role	arg_line	arg_token
 5	4	ardesse	attr	5	6
 5	4	ardesse	obl:in	4	5
 5	6	acceso	subj	5	1
-6	5	rifrangesse	subj	6	6
+6	5	rifrangesse	subj	0	0
+6	5	rifrangesse	obj	6	6
 6	5	rifrangesse	obl:in	6	4
 7	5	convien	subj	7	3
 7	5	convien	iobj	7	4

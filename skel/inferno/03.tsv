@@ -91,12 +91,14 @@ line	token	word	role	arg_line	arg_token
 33	6	par	subj	33	5
 33	6	par	obl:in	33	8
 33	10	vinta	subj	33	5
-34	0			0	0
+34	2	elli	subj	0	0
+34	2	elli	ccomp	35	1
+34	2	elli	obl:a	34	4
 35	1	tegnon	subj	35	3
 35	1	tegnon	obj	34	7
 36	2	visser	subj	36	1
-36	2	visser	obl:senza	36	4
-36	2	visser	obl:senza	36	7
+36	2	visser	obl:sanza	36	4
+36	2	visser	obl:sanza	36	7
 37	1	Mischiate	subj	0	0
 37	1	Mischiate	obl:a	37	6
 37	2	sono	subj	0	0
@@ -119,6 +121,8 @@ line	token	word	role	arg_line	arg_token
 42	6	avrebber	subj	42	5
 42	6	avrebber	obj	42	3
 42	6	avrebber	obl:di	42	8
+43	2	io	subj	0	0
+43	2	io	ccomp	43	7
 43	7	greve	subj	43	4
 43	7	greve	obl:a	44	2
 44	4	lamentar	subj	44	5

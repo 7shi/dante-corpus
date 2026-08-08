@@ -160,14 +160,15 @@ line	token	word	role	arg_line	arg_token
 64	3	è	subj	64	4
 64	6	diss'	subj	64	7
 64	6	diss'	ccomp	64	3
-65	4	terminar	subj	0	0
+65	2	elli	ccomp	66	1
 65	4	terminar	obj	65	7
 66	1	mosse	subj	66	2
 66	1	mosse	obj	66	3
 66	1	mosse	obl:a	65	4
 66	1	mosse	obl:di	66	5
-67	3	riguardi	subj	0	0
+67	3	riguardi	subj	68	4
 67	3	riguardi	obl:in	67	7
+67	3	riguardi	obl:di	68	3
 68	6	rivedrai	subj	68	4
 68	6	rivedrai	obj	68	5
 68	6	rivedrai	obl:in	69	2

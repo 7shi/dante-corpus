@@ -107,15 +107,10 @@ line	token	word	role	arg_line	arg_token
 36	10	spicchi	subj	0	0
 36	10	spicchi	obj	36	9
 36	10	spicchi	obl:di	36	8
-37	6	è	subj	37	2
-37	6	è	subj	37	5
-37	6	è	attr	37	8
-37	6	è	obl:a	37	4
+37	2	elli	subj	0	0
+37	2	elli	iobj	37	4
 37	8	anima	subj	37	5
-38	5	divenne	subj	38	4
-38	5	divenne	xcomp	39	7
-38	5	divenne	obl:a	39	2
-38	5	divenne	obl:fuor	39	6
+38	0			0	0
 39	7	amica	subj	38	4
 39	7	amica	obl:a	39	2
 39	7	amica	obl:di	39	6
@@ -235,14 +230,15 @@ line	token	word	role	arg_line	arg_token
 78	5	darei	obj	78	7
 78	5	darei	obl:per	78	2
 79	3	è	subj	79	5
+79	3	è	obl	79	1
 80	3	vanno	subj	80	2
+80	3	vanno	obl	80	4
 80	5	dicon	subj	80	1
 80	5	dicon	obj	80	6
 81	4	val	subj	81	2
 81	4	val	iobj	81	3
 81	6	ho	subj	0	0
 81	6	ho	obj	81	8
-81	9	legate	subj	81	8
 82	8	leggero	subj	82	2
 82	8	leggero	obl:di	82	6
 83	3	potessi	subj	83	2
@@ -331,8 +327,11 @@ line	token	word	role	arg_line	arg_token
 111	6	avei	subj	110	6
 111	6	avei	obj	111	5
 111	8	coniavi	subj	0	0
+112	3	idropico	subj	0	0
 112	5	di'	subj	112	4
 112	5	di'	obj	112	6
+113	4	fosti	subj	113	2
+113	4	fosti	attr	113	7
 113	7	testimonio	subj	113	2
 114	8	richesto	subj	0	0
 114	8	richesto	obl:di	114	4

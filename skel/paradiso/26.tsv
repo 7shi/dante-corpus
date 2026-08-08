@@ -85,20 +85,18 @@ line	token	word	role	arg_line	arg_token
 24	2	drizzò	subj	24	1
 24	2	drizzò	obj	24	4
 24	2	drizzò	obl:a	24	8
-25	0			0	0
+25	2	io	subj	0	0
+25	2	io	ccomp	27	3
 26	6	scende	subj	26	4
-27	3	convien	subj	25	2
-27	3	convien	ccomp	27	8
+26	6	scende	obl	26	5
+27	3	convien	subj	27	4
 27	3	convien	obl:per	25	5
 27	3	convien	obl:per	26	3
 27	8	'mprenti	subj	27	2
 27	8	'mprenti	obl:in	27	6
-28	9	intende	subj	0	0
-28	9	intende	obj	28	8
+28	9	intende	subj	28	6
 29	2	accende	subj	28	3
 29	2	accende	obj	29	3
-29	2	accende	obl:in	28	6
-29	6	maggio	subj	28	3
 30	7	comprende	subj	28	3
 30	7	comprende	obj	30	4
 30	7	comprende	obl:in	30	6
