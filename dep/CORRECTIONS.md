@@ -889,3 +889,31 @@ round: `derive_unit` reads Layer 4, so correcting an attachment turns a spurious
 LLM into a real disagreement. `missing_arg` fell 1053 → 985 (−68) while `missing_tuple` rose
 35 → 140 (+105, the 99 promoted speech frames, which the derivation treats as elided predicates).
 See [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s entry of the same date.
+
+## Eight retags from Layer 5's membership and Inferno-1 audits (2026-08-09)
+
+Two audits ran against Layer 5's soft classes (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)): a per-position read of Inferno 1's twelve
+violations, and a corpus-wide classification of the 82 `membership` violations. Most of what they
+found was Layer 2's or the checker's, but eight `dep` rows were wrong and are corrected here.
+
+- **inferno 1:112, "Ond' io per lo tuo me' penso e discerno" (4 rows)** — *me'* (= *meglio*, a
+  noun) was tagged `expl` with *tuo* carrying the oblique instead, so `per lo tuo me'` had no head.
+  Now `per` `case` → *me'*, `lo` `det` → *me'*, `tuo` `det:poss` → *me'*, `me'` `obl` → *penso*,
+  which is also what Layer 3's `[lo tuo me']` span (head *me'*) says. Closed the position's
+  `missing_arg`/`extra_arg obl:per` pair.
+- **inferno 13:97, "Cade in la selva, e non l'è parte scelta"** — *l'* was `det` of *parte*; an
+  article cannot precede *è*. It is the dative clitic (*le*, "for it"): now `iobj` → *parte*, the
+  copular predicate's head. Layer 2 retagged with it.
+- **inferno 20:80, "ne la qual si distende e la 'mpaluda"** — *la* was `nsubj` of *'mpaluda*; it is
+  the object clitic (the *lama* the Mincio turns to marsh). Now `obj`.
+- **inferno 30:121, "la sete onde ti crepa"** — *onde* was `nsubj` of *crepa*. It is "from which",
+  an oblique; the clause's subject is pro-drop. Now `obl`.
+- **paradiso 21:54, "ma per colei che 'l chieder mi concede"** — *'l* was `obj` of *chieder*. Here
+  *'l* really is an article, of the nominalized infinitive *'l chieder*, which is itself the object
+  of *concede*: now `det` → *chieder*. (The one position in the audit where the article reading was
+  the right one.)
+
+`dep --check` stays 0 hard / 18 soft (the subject-agreement rule's verified-and-left-alone
+residue). Layer 5's soft count fell 2625 → 2623 on the inferno 1:112 rows; the other four are
+inside the `membership` movement recorded in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).

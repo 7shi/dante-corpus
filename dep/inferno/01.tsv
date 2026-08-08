@@ -808,10 +808,10 @@ line	token	word	deprel	head_line	head_token
 111	5	dipartilla	acl:relcl	110	8
 112	1	Ond'	mark	112	7
 112	2	io	nsubj	112	7
-112	3	per	case	112	5
-112	4	lo	det	112	5
-112	5	tuo	obl	112	7
-112	6	me'	expl	112	7
+112	3	per	case	112	6
+112	4	lo	det	112	6
+112	5	tuo	det:poss	112	6
+112	6	me'	obl	112	7
 112	7	penso	root	0	0
 112	8	e	cc	112	9
 112	9	discerno	conj	112	7

@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-09: `make -C skel check` reports **0 hard, 3136 soft** violations across
+Status as of 2026-08-09: `make -C skel check` reports **0 hard, 2623 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -13,7 +13,8 @@ which took `unknown_role` to **0** → 3633 after the `case` annex's own Layer-2
 moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-verified `dep`/`case`
 round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug fix moved it *up*
 again → 3215 after Phase 5s's user-run `--fix` pass → 3270 after Layer 4's
-subject-agreement round moved it *up* once more → 3136 after Phase 5t's user-run `--fix` pass).
+subject-agreement round moved it *up* once more → 3136 after Phase 5t's user-run `--fix` pass →
+2623 after rule V and the membership audit's cross-layer corrections).
 The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
@@ -47,20 +48,21 @@ Rules L, M, N, O, P, Q, R, S and T landed as Phases 5f/5g/5h/5j/5k/5l/5m/5o (−
 instead of the checker**: Phase 5i closed the decidable half of the **clitic-case question** (−26),
 Phase 5n the `mark` bucket (−21), and Phase 5p the plausible clausal complements of the `advcl`
 bucket plus 5n's two multi-edge deferrals (−10) — all hand-verified, zero model calls, no checker
-change. `role_mismatch` is at **292** (459 before Phase 5r's rule U and Phases 5s/5t) — the
+change. `role_mismatch` is at **288** (459 before Phase 5r's rule U and Phases 5s/5t) — the
 `obl:<lemma>` pairs are exhausted and so is
 the mechanical half of the clausal cluster — and Phases 5l/5m/5n/5o/5p took 173 out of
 `extra_arg` by working the **direct-child** bucket deprel by deprel, **which Phase 5o's `advcl`
 verdict exhausted and Phase 5p's correction round finished: every row of section 2a is closed,
 and so is the audit work each verdict left behind.** Phase 5q then spent the one remaining work
 item — the user-run `--fix` pass (−147) — plus the `ioj` typo fix (−4).
-What is left is the rest of the two big classes, `extra_arg` (1544) and `missing_arg` (953),
-together 80% of what remains — and section 2's triage says both residues are *reading*
+What is left is the rest of the two big classes, `extra_arg` (**1065** after rule V took 479 out of
+it, 2026-08-09) and `missing_arg` (957), together 77% of what remains — and section 2's triage says both residues are *reading*
 disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms, and
 which Phases 5s/5t confirm again (both moved them 2-8% while the freshly created classes moved
 20%+).
-**Every route this plan opened is now closed; see [*Where Phase 5 ended*](#where-phase-5-ended)
-for what that leaves.**
+**Every route this plan opened is closed. What is open is a user-run `--fix` pass, which rule V's
+cross-layer round (2026-08-09, −513) makes worth running by Phase 5t's own stop rule; see
+[*Where Phase 5 ended*](#where-phase-5-ended) and [`../PLAN.md`](../PLAN.md).**
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
@@ -77,10 +79,10 @@ Everything through Phase 5t is **committed** — the rule commits, the Layer-4 c
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 3136 soft
+make -C skel check      # expect: 0 hard, 2623 soft
 make -C dep check       # expect: 0 hard, 18 soft (the subject-agreement rule's verified residue)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
-uv run pytest -q        # expect: 168 passed
+uv run pytest -q        # expect: 173 passed
 make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
 ```
 
@@ -88,6 +90,18 @@ If those numbers differ, the sections below are describing a different state —
 trusting any count in this file.
 
 ## What is left, and why nothing here is open
+
+> **The "deterministic rules are exhausted" verdict below was wrong, and rule V (2026-08-09,
+> −513) is the counter-example.** It was reached by triaging the classes *this document*
+> enumerated, and the population rule V found was invisible to that triage: `extra_arg subj` was
+> read as "subject resolution under enjambment and pro-drop", i.e. a reading disagreement, when
+> 467 of its 805 rows were `derive_unit` being **silent** — a non-finite predicate whose subject
+> it never derives at all, so any subject the LLM resolves is reported as an extra argument. The
+> lesson for a future triage: a class is not exhausted until each violation in it has been
+> checked against *what the derivation actually asserted at that position*, which is not the same
+> question as what the class is named after. A per-position read of one canto (Inferno 1) surfaced
+> it in an afternoon after four rounds of aggregate analysis had missed it. See
+> [`CORRECTIONS.md`](CORRECTIONS.md)'s 2026-08-09 entry.
 
 > **Superseded in one respect, and now spent (2026-08-03).** This section's verdict was "closing
 > the residue further needs a *new* instrument — the Layer-2 case feature the clitic question asked
@@ -457,6 +471,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5r** | Rule U (the `case` annex as a third read on a disputed role) + its hand-verified `dep`/`case` round | 3633 → **3465** |
 | **5s** | user-run full-corpus `--fix` pass (1659 flagged units), run *after* Layer 4's multiple-`obj` round and the `"verb" in pos` fix had moved the flagged set | 3545 → **3215** |
 | **5t** | user-run full-corpus `--fix` pass (1575 flagged units), run *after* Layer 4's subject-agreement round; back at the flat rate (0.085/call) | 3270 → **3136** |
+| **V** | Rule V (the control/participial subject of a non-finite predicate) + the membership audit's 37 Layer-2, 8 Layer-4, 32 `case` and 4 Layer-3 corrections | 3136 → **2623** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).

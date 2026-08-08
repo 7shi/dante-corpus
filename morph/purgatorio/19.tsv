@@ -171,7 +171,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 24	parte	partire	verb		sg.	3	present	indicative	
 24	sì	sì	adverb						
 24	tutto	tutto	adjective	m.	sg.				
-24	l'	lo	article	m.	sg.				elision
+24	l'	lo	pronoun	m.	sg.	3			elision
 24	appago	appagare	verb		sg.	1	present	indicative	
 25	Ancor	ancora	adverb						apocope
 25	non	non	adverb						

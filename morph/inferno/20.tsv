@@ -559,7 +559,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 80	si	si	pronoun		sg.	3			reflexive
 80	distende	distendere	verb		sg.	3	present	indicative	
 80	e	e	conjunction						
-80	la	lo	article	f.	sg.				
+80	la	la	pronoun	f.	sg.	3			
 80	'mpaluda	impaludare	verb		sg.	3	present	indicative	apheresis
 81	e	e	conjunction						
 81	suol	solere	verb		sg.	3	present	indicative	apocope

@@ -705,7 +705,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 98	in	in	preposition						
 98	te	tu	pronoun		sg.	2			
 98	di	di	preposition						
-98	sopr'	sopra	preposition						apocope
+98	sopr'	sopra	adverb						apocope
 98	a	a	preposition						
 98	noi	noi	pronoun		pl.	1			
 98	s'	si	pronoun		sg.	3			elision

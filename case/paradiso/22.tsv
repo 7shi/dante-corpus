@@ -5,6 +5,7 @@ line	token	word	case
 4	2	quella	nominative
 4	5	che	nominative
 6	5	che	nominative
+6	6	'l	accusative
 7	1	mi	dative
 7	5	tu	nominative
 7	7	tu	nominative
@@ -88,6 +89,7 @@ line	token	word	case
 76	3	che	nominative
 79	6	si	reflexive
 81	1	che	nominative
+82	2	quantunque	accusative
 82	6	tutto	nominative
 83	5	che	nominative
 89	2	io	nominative

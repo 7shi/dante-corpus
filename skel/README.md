@@ -11,7 +11,7 @@ canon-neutral.
 **Status: built for all 100 cantos, checker refined through Phase 5r, four full `--fix` rounds
 run (Phases 5e, 5q, 5s and 5t), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
 fed back into `dep/`.**
-`make -C skel check`: **0 hard, 3136 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 2623 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -23,7 +23,8 @@ annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
 5r's rule U, 3465 after that phase's hand-verified `dep`/`case` round, 3509 after Layer 4's
 multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix, 3215 after
 Phase 5s's user-run `--fix` pass, 3270 after Layer 4's subject-agreement round moved it *up*
-once more, and 3136 after Phase 5t's user-run `--fix` pass). See
+once more, 3136 after Phase 5t's user-run `--fix` pass, and 2623 after rule V's
+control/participial subject chain and the membership audit's cross-layer corrections). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
@@ -110,10 +111,16 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    (validated against a candidate set, not exact-matched) in exactly three mechanically
    underdetermined cases — pro-drop antecedents (`derive_unit` says ∅, any concrete subject the
    LLM cites is accepted), non-finite ∅ (LLM marks ∅ on an infinitive/gerund `derive_unit`'s
-   pro-drop rule doesn't cover), and xcomp/ccomp control subjects (an LLM-proposed subject is
-   accepted iff it equals the matrix predicate's derived `subj` or `obj` — replaces a
-   verb-specific control lexicon with a structural check). Every other role, and `subj` where
-   `derive_unit` resolves a real subject, stay exact-match.
+   pro-drop rule doesn't cover), and the control/participial subject of a non-finite predicate
+   (**rule V**, `_control_subject_candidates`, 2026-08-09). `derive_unit` reads a predicate's own
+   dep children, so a non-finite predicate with no `nsubj` child gets no `subj` row at all — it is
+   silent, not asserting the predicate has no subject. Rule V walks the dep head chain and accepts
+   an LLM-proposed subject that is the `subj`/`obj`/`iobj` of any ancestor up to the first one that
+   has a subject of its own (control and raising through a chain of subjectless links, including
+   the causative's dative causee), or the nominal an `acl` participle modifies. If the walk reaches
+   a matrix whose own subject is pro-drop ∅, the controller is unresolved and any resolution is
+   accepted, as in the first case. Every other role, and `subj` where `derive_unit` resolves a real
+   subject, stay exact-match.
 3. **`--repair`** (`Repair`/`_find_repairs`/`_safe_role_repair`): for the subset of divergences
    the dep tree fully determines, mechanically rewrites the committed TSV — no model call — two
    conservative rules, both sourced from the checker's own violation list (so the authority model
@@ -354,7 +361,8 @@ just as a subject is, so the annex cannot separate `subj` from `attr`. See
 
 What remains past the mechanical phases above is **reading disagreement between two independent
 parses**, not a class with a known instrument: subject resolution across enjambment and pro-drop
-(`extra_arg subj` 805), the direct-child `missing_arg` mass, the clitic dative/accusative
+(`extra_arg subj` 327 after rule V took it from 805, of which 127 are the LLM asserting ∅ against a
+derived subject), the direct-child `missing_arg` mass, the clitic dative/accusative
 question (needs a Layer-2 case feature), and the complement-vs-adjunct distinction (needs a verb
 lexicon). Both routes are now measured out — regeneration at a flat ~0.09-0.11 violations per
 call over two full passes on a static residue (Phase 5s's third pass returned 0.199, but only

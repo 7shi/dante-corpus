@@ -699,7 +699,7 @@ line	token	word	deprel	head_line	head_token
 97	4	selva	obl	97	1
 97	5	e	cc	97	9
 97	6	non	advmod	97	8
-97	7	l'	det	97	9
+97	7	l'	iobj	97	9
 97	8	è	cop	97	9
 97	9	parte	conj	97	1
 97	10	scelta	amod	97	9

@@ -35,7 +35,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 6	sua	suo	adjective	f.	sg.				
 6	voce	voce	noun	f.	sg.				
 6	che	che	pronoun		sg.				
-6	'l	il	article	m.	sg.				elision
+6	'l	lo	pronoun	m.	sg.	3			elision
 6	suol	solere	verb		sg.	3	present	indicative	apocope
 6	ben	bene	adverb						apocope
 6	disporre	disporre	verb				infinitive		
@@ -576,7 +576,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 81	sì	sì	adverb						
 81	folle	folle	adjective	m.	sg.				
 82	ché	ché	conjunction						
-82	quantunque	quantunque	conjunction						
+82	quantunque	quantunque	pronoun						
 82	la	lo	article	f.	sg.				
 82	Chiesa	chiesa	noun	f.	sg.				
 82	guarda	guardare	verb		sg.	3	present	indicative	

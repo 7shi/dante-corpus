@@ -559,7 +559,7 @@ line	token	word	deprel	head_line	head_token
 80	4	si	obj	80	5
 80	5	distende	acl:relcl	79	9
 80	6	e	cc	80	8
-80	7	la	nsubj	80	8
+80	7	la	obj	80	8
 80	8	'mpaluda	conj	80	5
 81	1	e	cc	81	7
 81	2	suol	aux	81	7

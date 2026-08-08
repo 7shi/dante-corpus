@@ -261,7 +261,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	altre	altro	adjective	f.	pl.				
 38	rivolgon	rivolgere	verb		pl.	3	present	indicative	apocope
 38	sé	sé	pronoun		sg.	3			
-38	onde	onde	conjunction						
+38	onde	onde	pronoun						
 38	son	essere	verb		pl.	3	present	indicative	apocope
 38	mosse	muovere	verb	f.	pl.		past participle		
 39	e	e	conjunction						
@@ -316,7 +316,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 45	accenne	accennare	verb		sg.	2	remote past	indicative	
 46	Ma	ma	conjunction						
 46	quella	quello	pronoun	f.	sg.				
-46	ond'	onde	conjunction						elision
+46	ond'	onde	pronoun						elision
 46	io	io	pronoun		sg.	1			
 46	aspetto	aspettare	verb		sg.	1	present	indicative	
 46	il	il	article	m.	sg.				

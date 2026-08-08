@@ -165,7 +165,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 24	'l	lo	article	m.	sg.				elision
 24	vapor	vapore	noun	m.	sg.				apocope
 24	che	che	pronoun		sg.				relative
-24	'l	lo	article	m.	sg.				elision
+24	'l	lo	pronoun	m.	sg.	3			elision
 24	porta	portare	verb		sg.	3	present	indicative	
 24	più	più	adverb						
 24	è	essere	verb		sg.	3	present	indicative	

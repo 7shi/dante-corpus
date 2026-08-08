@@ -446,7 +446,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	pianta	pianta	noun	f.	sg.				
 63	rimasa	rimanere	verb	f.	sg.		past participle		
 63	dietro	dietro	adverb						
-63	ond'	onde	conjunction						elision
+63	ond'	onde	pronoun						elision
 63	io	io	pronoun		sg.	1			
 63	sì	sì	adverb						
 63	m'	mi	pronoun		sg.	1			elision

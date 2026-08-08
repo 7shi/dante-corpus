@@ -699,7 +699,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	selva	selva	noun	f.	sg.				
 97	e	e	conjunction						
 97	non	non	adverb						
-97	l'	lo	article	f.	sg.				elision
+97	l'	le	pronoun	f.	sg.	3			elision
 97	è	essere	verb		sg.	3	present	indicative	
 97	parte	parte	noun	f.	sg.				
 97	scelta	scegliere	adjective	f.	sg.				

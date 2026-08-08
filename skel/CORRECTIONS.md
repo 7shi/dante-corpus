@@ -1,5 +1,110 @@
 # skel — Layer 5 correction history
 
+## Rule V, the control/participial subject chain — 3136 → 2623, −513 (2026-08-09)
+
+This started as a per-position read of **Inferno 1's twelve** soft violations, asked for as a check
+on what the residue actually consists of. Four of the twelve were one thing: `derive_unit` has no
+rule for the subject of a **non-finite** predicate. Classifying all 805 `extra_arg subj` violations
+corpus-wide — the largest single class, 26% of the residue — showed the same four shapes account
+for most of it, and that they are the checker's silence rather than a reading disagreement.
+
+### What derive_unit was doing
+
+`derive_unit` reads a predicate's own dep children. A predicate with no `nsubj` child and no finite
+morphology therefore gets **no `subj` row at all** — not "∅", which rule 4 reserves for finite
+pro-drop, but nothing. `_apply_subj_authority` already accepted an LLM subject at such a position,
+but only from a candidate set built from the **immediate** head, and only when the predicate's own
+deprel was `xcomp`/`ccomp`, and only from that head's `subj`/`obj`. Everything else the LLM
+resolved was reported as `extra_arg subj`. The classification (all 805, by whether the derivation
+also proposed a competing subject):
+
+| shape | n | why the candidate set missed it |
+|---|---|---|
+| control subject reachable up the chain | 289 | the walk stopped at the immediate head |
+| `acl` participle, subject = modified noun | 155 | `acl` was not a control deprel at all |
+| LLM says ∅ where derivation has a subject | 127 | genuine disagreement, left flagged |
+| head-to-head (derivation has a *different* subject) | 189 | genuine disagreement, left flagged |
+| causative: the matrix `iobj` is the causee | 13 | `iobj` was not a candidate role |
+| other | 32 | left flagged |
+
+### Rule V
+
+`_control_subject_candidates` walks the predicate's dep head chain (limit 8) and collects, at each
+link, the `subj`/`obj`/`iobj` of that ancestor's **derived** rows, plus the modified nominal itself
+when the link is `acl`/`acl:relcl`. It stops at the first ancestor that has a subject of its own —
+that clause supplies the controller, and a subject taken from beyond it stays flagged. Two readings
+of Italian are what the walk encodes:
+
+- **Control / raising through a chain of subjectless non-finite links.** "e molte genti **fé** già
+  *viver* *grame*": `grame` is an xcomp of `viver`, itself an xcomp of `fé`, and the controller
+  `genti` is `fé`'s object, two links up. Which argument controls is lexical — subject control
+  (*vuole partire*), object control (*fé … viver*), the causative's **dative** causee ("ella **mi**
+  fa *tremar* le vene") — so all three roles are candidates.
+- **The adnominal participle.** "le sue spalle *vestite* de' raggi", "io, *vinto* dal sonno",
+  "prieghi *fatti* a Dio": an `acl` participle's subject is the nominal it modifies. 155 positions,
+  and the shape is unambiguous — 154 of them `acl`, 1 `acl:relcl`.
+
+A second pass added the case Inferno 1:63 exposed: when the walk reaches a matrix whose own subject
+`derive_unit` could only give as pro-drop **∅** ("chi per lungo silenzio *parea* fioco"), the
+controller is a referent the derivation never resolved, so it cannot adjudicate the LLM's
+resolution of it either. That is exactly what `_apply_subj_authority`'s pro-drop branch already
+concludes one level down, and the walk now returns it as an `unresolved` flag (−50 further).
+
+Membership in the candidate set is an **acceptance, never an assertion**: the derivation still says
+nothing at these positions, and a subject from outside the set is still reported. Five new tests in
+`tests/test_skel.py` pin the participle, the two-link chain, the causative dative, the pro-drop
+matrix, and the walk's stop condition (a subject taken past a subject-bearing ancestor still
+flags).
+
+### The cross-layer corrections the same audit produced
+
+Classifying the 82 `membership` violations by the Layer-2 POS of the cited token found five shapes
+where Layer 2 was wrong about the word, not Layer 5 about the argument: `onde` as a conjunction
+where it is a relative pro-form (16), `quantunque` (2), proclitic pronouns tagged as articles (8),
+`e'` read as a form of `essere` (2), fused clitic clusters and adverbs tagged as prepositions (7),
+plus 2 tags corrected in the other direction. All 37 are in
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md), with the 32 case rows and 4 Layer-3 clitic
+mentions they pulled in ([`../case/CORRECTIONS.md`](../case/CORRECTIONS.md),
+[`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)) and eight Layer-4 retags
+([`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)).
+
+### Measured
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 1544 | 1065 | **−479** (−31%) |
+| `membership` | 82 | 47 | **−35** (−43%) |
+| `role_mismatch` | 292 | 288 | −4 |
+| `missing_arg` | 953 | 957 | +4 |
+| `extra_tuple` | 156 | 157 | +1 |
+| `missing_tuple` | 109 | 109 | 0 |
+| **total** | **3136** | **2623** | **−513 (−16.4%)** |
+
+By step: rule V in its first form −427, the cross-layer corrections −34, the pro-drop extension
+−50, inferno 1:112's Layer-4 rows −2. `extra_arg subj` itself went **805 → 327**, of which 127 are
+the LLM asserting ∅ against a derived subject. Inferno 1 went **12 → 5**.
+
+`skel --check` 0 hard / **2623** soft; `dep --check` 0 hard / 18 soft; `case --check` 0 hard;
+`np --check` 0/0; `morph --check` 0/0; `pytest` 173 passed.
+
+### What Inferno 1's five survivors say about the rest
+
+Two are LLM slips that only regeneration settles (27.3 reads *persona viva* as the subject of "lo
+passo che non lasciò già mai persona viva"; 122.5 promotes the comparative adverb *più* to a
+predicate). One is an attachment-level disagreement (`nel foco` cited on the predicate adjective
+*contenti* rather than on its copula). **Two are one open question**: "fui **per** *ritornar* più
+volte vòlto" has Layer 4 treating `per` + infinitive as `obl` + `case`, where UD would have
+`advcl` + `mark`, so the LLM's predicate reading of the infinitive is reported as both an
+`extra_tuple` and a `missing_arg obl:per`. `missing_arg obl:per` stands at 44 corpus-wide; whether
+that convention should change is a Layer-4 question, not a checker one, and it is the next named
+route — see [`../PLAN.md`](../PLAN.md).
+
+The `membership` remainder (47) is deliberately untouched: substantivized adjectives (23 before the
+round), quoted mention words as the object of a verb of saying ("faceva dir l'un ‘No’"), and
+adverbs cited as objects ("non sa **como**"). None of those is a data error — they are all
+questions about what the check should admit as an argument, and they need a decision on the check
+rather than an edit to an artifact.
+
 ## Phase 5t: the `--fix` round after the subject-agreement corrections — 3270 → 3136, −134 (2026-08-09)
 
 Baseline: **0 hard, 3270 soft**, **1575 flagged parse units** — the state left by Layer 4's

@@ -449,6 +449,116 @@ def test_classify_divergence_xcomp_control_subject_rejects_unrelated_arg():
     assert any(v.detail.startswith("extra_arg") and v.arg == (2, 5) for v in violations)
 
 
+# --- _classify_divergence: rule V, the control/participial subject chain --------------
+
+
+def test_classify_divergence_adnominal_participle_subject_is_modified_noun():
+    # "vidi le sue spalle / vestite già de' raggi": `vestite` is an `acl` on `spalle` (16.8),
+    # which is its subject. derive_unit reads only the participle's own children, so it is
+    # silent about the subject.
+    derived = {17: [skel.SkelRow(17, 1, "vestite", "obl:di", 17, 4)]}
+    given = {17: [
+        skel.SkelRow(17, 1, "vestite", "subj", 16, 8),
+        skel.SkelRow(17, 1, "vestite", "obl:di", 17, 4),
+    ]}
+    dep_index_by_pos = {
+        (17, 1): dep.DepRow(line=17, token=1, word="vestite", deprel="acl", head_line=16, head_token=8),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_control_subject_two_links_up():
+    # "e molte genti fé già viver grame": `grame` is an xcomp of `viver`, itself an xcomp of
+    # `fé`, whose object `genti` (51.3) is the subject of both. Neither non-finite link has a
+    # subject of its own, so the walk has to cross `viver` to reach it.
+    derived = {51: [
+        skel.SkelRow(51, 4, "fé", "obj", 51, 3),
+        skel.SkelRow(51, 4, "fé", "xcomp", 51, 6),
+        skel.SkelRow(51, 6, "viver", "xcomp", 51, 7),
+        skel.SkelRow(51, 7, "grame", "", 0, 0),
+    ]}
+    given = {51: [
+        skel.SkelRow(51, 4, "fé", "obj", 51, 3),
+        skel.SkelRow(51, 4, "fé", "xcomp", 51, 6),
+        skel.SkelRow(51, 6, "viver", "subj", 51, 3),
+        skel.SkelRow(51, 7, "grame", "subj", 51, 3),
+    ]}
+    dep_index_by_pos = {
+        (51, 6): dep.DepRow(line=51, token=6, word="viver", deprel="xcomp", head_line=51, head_token=4),
+        (51, 7): dep.DepRow(line=51, token=7, word="grame", deprel="xcomp", head_line=51, head_token=6),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert [v.detail for v in violations if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_causative_dative_causee_is_control_subject():
+    # "ch'ella mi fa tremar le vene": the causee `mi` (90.3) is an `iobj` of `fa` and the
+    # subject of `tremar` — object control through the dative, not the accusative.
+    derived = {90: [
+        skel.SkelRow(90, 4, "fa", "subj", 90, 2),
+        skel.SkelRow(90, 4, "fa", "iobj", 90, 3),
+        skel.SkelRow(90, 4, "fa", "xcomp", 90, 5),
+        skel.SkelRow(90, 5, "tremar", "obj", 90, 7),
+    ]}
+    given = {90: [
+        skel.SkelRow(90, 4, "fa", "subj", 90, 2),
+        skel.SkelRow(90, 4, "fa", "iobj", 90, 3),
+        skel.SkelRow(90, 4, "fa", "xcomp", 90, 5),
+        skel.SkelRow(90, 5, "tremar", "subj", 90, 3),
+        skel.SkelRow(90, 5, "tremar", "obj", 90, 7),
+    ]}
+    dep_index_by_pos = {
+        (90, 5): dep.DepRow(line=90, token=5, word="tremar", deprel="xcomp", head_line=90, head_token=4),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_control_subject_of_pro_drop_matrix_is_llm_authoritative():
+    # "chi per lungo silenzio parea fioco": `fioco` is an xcomp of `parea`, whose own subject
+    # derive_unit can only give as pro-drop ∅. The controller is a referent the derivation never
+    # resolved, so it cannot adjudicate the LLM's resolution of it either.
+    derived = {63: [
+        skel.SkelRow(63, 5, "parea", "subj", 0, 0),
+        skel.SkelRow(63, 5, "parea", "xcomp", 63, 6),
+        skel.SkelRow(63, 6, "fioco", "", 0, 0),
+    ]}
+    given = {63: [
+        skel.SkelRow(63, 5, "parea", "subj", 63, 1),
+        skel.SkelRow(63, 5, "parea", "xcomp", 63, 6),
+        skel.SkelRow(63, 6, "fioco", "subj", 63, 1),
+    ]}
+    dep_index_by_pos = {
+        (63, 6): dep.DepRow(line=63, token=6, word="fioco", deprel="xcomp", head_line=63, head_token=5),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_control_walk_stops_at_subject_bearing_ancestor():
+    # The walk climbs only through subjectless links. Once an ancestor has a subject of its
+    # own, that clause supplies the controller; a subject taken from beyond it is a genuine
+    # reading disagreement, not derive_unit's silence.
+    derived = {3: [
+        skel.SkelRow(3, 1, "disse", "subj", 3, 2),
+        skel.SkelRow(3, 1, "disse", "ccomp", 3, 3),
+        skel.SkelRow(3, 3, "vuole", "subj", 3, 4),
+        skel.SkelRow(3, 3, "vuole", "xcomp", 3, 5),
+        skel.SkelRow(3, 5, "partire", "", 0, 0),
+    ]}
+    given = {3: [
+        skel.SkelRow(3, 1, "disse", "subj", 3, 2),
+        skel.SkelRow(3, 1, "disse", "ccomp", 3, 3),
+        skel.SkelRow(3, 3, "vuole", "subj", 3, 4),
+        skel.SkelRow(3, 3, "vuole", "xcomp", 3, 5),
+        skel.SkelRow(3, 5, "partire", "subj", 3, 2),  # the *matrix* subject, past `vuole`
+    ]}
+    dep_index_by_pos = {
+        (3, 3): dep.DepRow(line=3, token=3, word="vuole", deprel="ccomp", head_line=3, head_token=1),
+        (3, 5): dep.DepRow(line=3, token=5, word="partire", deprel="xcomp", head_line=3, head_token=3),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (3, 2) for v in violations)
+
+
 # --- _classify_divergence: coordination / nmod normalization (Phase 5, PLAN.md) -------
 
 

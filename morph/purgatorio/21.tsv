@@ -867,7 +867,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 119	digli	dire+gli	verb+pronoun		sg.	2	present	imperative	contraction
 120	quel	quello	pronoun	m.	sg.				
 120	ch'	che	pronoun						elision
-120	e'	essere	verb		sg.	3	present	indicative	
+120	e'	egli	pronoun	m.	sg.	3	present	indicative	
 120	dimanda	domandare	verb		sg.	3	present	indicative	
 120	con	con	preposition						
 120	cotanta	cotanto	adjective	f.	sg.				

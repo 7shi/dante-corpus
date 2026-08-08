@@ -2104,3 +2104,30 @@ established that paradiso 6:136 *il* in "E poi il mosser le parole biece" is the
 **lo**, not an article — Layer 2 was retagged `pronoun`. That brought the position into the annex's
 scope, and `case --check` reported it as a missing row. Added: `136 3 il accusative`. The annex is
 back to **0 hard**, and `--stats` is unchanged (31 contradictions, 26 impossible pairings).
+
+## Thirty-two rows from Layer 5's membership audit (2026-08-09)
+
+Layer 2's membership round (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)) retagged 32
+tokens as pronouns — 16 `onde`, 2 `quantunque`, 8 proclitics that had been articles, 2 `e'`, and
+4 clitics that had been prepositions — which brings each of them into the annex's scope
+(`case.scope_slots` reads Layer 2's `pos` column), and `case --check` reported them as missing
+rows: 32 hard, 12 of them whole lines the annex had never had a row for. Same shape as the single
+paradiso 6:136 row the subject-agreement round added, at larger scale.
+
+Each value was read off the position's own clause, not inferred from `dep`:
+
+- **`ablative` (17)** — every `onde`/`ond'` ("da cui"), plus paradiso 30:69 *n'* ("un'altra
+  **n'**uscia fori").
+- **`accusative` (9)** — the 2 `quantunque` (objects of *guarda*/*vorrai*) and 7 of the 8
+  proclitics.
+- **`dative` (2)** — inferno 13:97 *l'* ("non **l'**è parte scelta") and paradiso 10:111 *ne*
+  ("là giù **ne** gola", the Tuscan *ne* = *ci*).
+- **`nominative` (3)** — purgatorio 32:116 *el*, and the two `e'` subjects.
+- **Fused (2)** — inferno 29:34 *sen* = `reflexive+ablative`, the annex's existing value for that
+  cluster; purgatorio 12:48 *nel* = *ne lo* = `ablative+accusative`, one case per component in
+  reading order.
+
+`case --check` is back to **0 hard**. `--stats` is unchanged by the round: **34** contradictions
+and **26** impossible pairings before and after (34 is also what HEAD measures — the 31 this file
+last recorded predates Layer 4's subject-agreement round, which evidently added three and did not
+re-measure). None of the 32 new rows is among them.

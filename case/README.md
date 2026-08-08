@@ -35,7 +35,7 @@ external canon); a model reading case from the Italian alone meets it on the sam
 ## Status
 
 **The annex is complete and closed (2026-08-02), and still gets hand corrections when a position
-is a plain error.** All 100 cantos, `--check` **0 hard**, **13125 pronoun tokens, 13189 case
+is a plain error.** All 100 cantos, `--check` **0 hard**, **13158 pronoun tokens, 13224 case
 values**. Step 4's hand-verified Layer-4 correction round spent all 510 adjudication candidates
 across three slices (215 positions / 270 rows in `dep/`); step 5 settled the oblique tail (fold
 nothing), ran the owed `morph/`-driven chunk regeneration, tried and rejected two blind
@@ -84,14 +84,16 @@ authority. In scope: `pronoun`, `relative pronoun`, and every fused token whose 
 pronoun among its parts (`verb+pronoun` for an enclitic, `pronoun+pronoun` for a clitic cluster).
 
 Measured on the frozen `morph/*.tsv`. The scope was **13112 tokens over 8540 lines** when the
-artifact was built and frozen at `0027494`; the 2026-08-02 Layer-2 correction round moved it to
-the figures below, which is why `--check` currently reports 25 hard `[count]` mismatches awaiting
-a regeneration of those 20 lines' chunks (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)):
+artifact was built and frozen at `0027494`; two Layer-2 correction rounds have moved it since —
+2026-08-02's, and 2026-08-09's membership round, which added 32 rows over 12 new lines (see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) and
+[`CORRECTIONS.md`](CORRECTIONS.md)). The scope is what `--check` counts against, so a Layer-2
+retag into or out of a pronoun POS shows up there as a `[count]` mismatch until the row is written:
 
 | population | tokens | lines |
 |---|---|---|
 | Layer-2 tokens | 101601 | 14233 |
-| **pronoun-POS tokens (in scope)** | **13125** | **8545** |
+| **pronoun-POS tokens (in scope)** | **13158** | **8558** |
 | of which the clitic forms `mi ti si ci vi ne lo la li le gli` + elisions | 3710 | 3481 |
 
 The clitic subset is what the Layer-5 adjudication needs, but the scope is the whole pronoun

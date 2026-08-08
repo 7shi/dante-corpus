@@ -952,7 +952,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 131	'l	il	article	m.	sg.				elision
 131	duca	duca	noun	m.	sg.				
 131	mio	mio	adjective	m.	sg.				
-132	ond'	onde	conjunction						elision
+132	ond'	onde	pronoun						elision
 132	Ercule	Ercole	proper noun	m.	sg.				
 132	sentì	sentire	verb		sg.	3	remote past	indicative	
 132	già	già	adverb						

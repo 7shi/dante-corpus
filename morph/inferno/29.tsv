@@ -246,7 +246,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 34	disdegnoso	disdegnoso	adjective	m.	sg.				
 34	ond'	onde	conjunction						elision
 34	el	egli	pronoun	m.	sg.	3			
-34	sen	senza	preposition						archaic
+34	sen	se+ne	pronoun+pronoun						contraction
 34	gio	gioia	noun	f.	sg.				apocope
 35	sanza	senza	preposition						archaic
 35	parlarmi	parlare+mi	verb+pronoun		sg.	1			clitic

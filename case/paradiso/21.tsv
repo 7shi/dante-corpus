@@ -30,6 +30,7 @@ line	token	word	case
 33	1	che	nominative
 36	1	si	reflexive
 38	3	sé	accusative
+38	4	onde	ablative
 40	4	me	dative
 41	4	che	nominative
 42	6	si	reflexive
@@ -44,6 +45,7 @@ line	token	word	case
 45	7	tu	nominative
 45	8	m'	dative
 46	2	quella	nominative
+46	3	ond'	ablative
 46	4	io	nominative
 47	6	si	reflexive
 47	9	io	nominative

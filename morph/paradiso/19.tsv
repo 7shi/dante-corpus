@@ -511,7 +511,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 73	atti	atto	noun	m.	pl.				
 73	buoni	buono	adjective	m.	pl.				
 74	sono	essere	verb		pl.	3	present	indicative	
-74	quanto	quanto	conjunction						
+74	quanto	quanto	adverb						
 74	ragione	ragione	noun	f.	sg.				
 74	umana	umano	adjective	f.	sg.				
 74	vede	vedere	verb		sg.	3	present	indicative	

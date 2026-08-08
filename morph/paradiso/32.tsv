@@ -146,7 +146,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	Da	da	preposition						
 22	questa	questo	adjective	f.	sg.				
 22	parte	parte	noun	f.	sg.				
-22	onde	onde	conjunction						archaic
+22	onde	onde	pronoun						archaic
 22	'l	lo	article	m.	sg.				elision
 22	fiore	fiore	noun	m.	sg.				
 22	è	essere	verb		sg.	3	present	indicative	
@@ -168,7 +168,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 25	l'	la	article	f.	sg.				elision
 25	altra	altro	adjective	f.	sg.				
 25	parte	parte	noun	f.	sg.				
-25	onde	onde	conjunction						
+25	onde	onde	pronoun						
 25	sono	essere	verb		pl.	3	present	indicative	
 25	intercisi	intercidere	adjective	m.	pl.				
 26	di	di	preposition						

@@ -812,7 +812,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 115	sua	suo	adjective	f.	sg.				
 115	forza	forza	noun	f.	sg.				
 116	ond'	onde	conjunction						elision
-116	el	il	article	m.	sg.				archaic
+116	el	egli	pronoun	m.	sg.	3			archaic
 116	piegò	piegare	verb		sg.	3	remote past	indicative	
 116	come	come	conjunction						
 116	nave	nave	noun	f.	sg.				

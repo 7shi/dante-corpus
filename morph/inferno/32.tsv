@@ -610,7 +610,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 84	poi	poi	adverb						
 84	mi	mi	pronoun		sg.	1			
 84	farai	fare	verb		sg.	2	future	indicative	
-84	quantunque	quantunque	conjunction						
+84	quantunque	quantunque	pronoun						
 84	vorrai	volere	verb		sg.	2	future	indicative	
 84	fretta	fretta	noun	f.	sg.				
 85	Lo	lo	article	m.	sg.				

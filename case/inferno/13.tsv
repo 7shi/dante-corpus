@@ -94,6 +94,7 @@ line	token	word	case
 95	4	ella	nominative
 95	6	s'	reflexive
 96	2	la	accusative
+97	7	l'	dative
 104	5	alcuna	nominative
 104	6	sen	reflexive+ablative
 105	6	ciò	accusative

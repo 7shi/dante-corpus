@@ -255,7 +255,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 36	allevïò	alleviare	verb		sg.	3	remote past	indicative	
 36	di	di	preposition						
 36	me	me	pronoun		sg.	1			
-36	ond'	onde	conjunction						elision
+36	ond'	onde	pronoun						elision
 36	era	essere	verb		sg.	3	imperfect	indicative	
 36	grave	grave	adjective	f.	sg.				
 37	al	a+il	preposition+article	m.	sg.				contraction
@@ -1046,7 +1046,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 150	non	non	adverb						
 150	avea	avere	verb		sg.	3	imperfect	indicative	archaic
 150	cagione	cagione	noun	f.	sg.				
-150	onde	onde	conjunction						
+150	onde	onde	pronoun						
 150	piangesse	piangere	verb		sg.	3	imperfect	subjunctive	
 151	Con	con	preposition						
 151	queste	questo	adjective	f.	pl.				

@@ -434,3 +434,46 @@ Four of these changed a token's POS, which had consequences one layer up and one
 two Layer-3 spans (`fummo`, *li santi cerchi*) and one `case` row (paradiso 6:136 *il*,
 accusative). See [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md) and
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+## The 37 mistags Layer 5's membership check surfaced (2026-08-09)
+
+Layer 5's `membership` soft check — *an argument position that heads no NP, is no pronoun and is
+no predicate* — stood at **82**. Classifying all 82 by the Layer-2 POS of the cited token turned
+the class into a small number of shapes, and five of them are Layer 2 being wrong about the token
+rather than Layer 5 being wrong about the argument. All 37 were read against their line before
+being retagged; the interpretive remainder (substantivized adjectives, quoted mention words,
+adverbs cited as objects) is *not* touched here — see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) for why those are a checker question.
+
+- **`onde`/`ond'` read as a conjunction where it is a relative pro-form (16)** — inferno 23:130,
+  24:42, 30:121, 31:132; purgatorio 1:30, 4:53, 10:51, 15:99, 23:63; paradiso 16:36, 16:150,
+  18:102, 21:38, 21:46, 32:22, 32:25. In every one of them `onde` = *da cui / per cui* and heads
+  an oblique of its own clause ("la sete **onde** ti crepa", "parte **onde** 'l fiore è maturo"),
+  which a conjunction cannot do. Retagged `pronoun`, lemma `onde` — the corpus's own majority
+  tagging for this use (32 rows against 7 `relative pronoun` and 23 `adverb`). The sentence-initial
+  connective is a different word: paradiso 9:22 *Onde* = "wherefore" was tagged `preposition`,
+  which is wrong in the other direction, and is now `conjunction`.
+- **`quantunque` = "as much as / whatever" (2)** — inferno 32:84, paradiso 22:82. It is the object
+  of its own clause ("**quantunque** la Chiesa guarda"), so `pronoun`, not `conjunction`. Paradiso
+  32:56 already carried that reading.
+- **Proclitic pronouns tagged as articles (8)** — inferno 1:110 *l'* ("fin che **l'**avrà
+  rimessa"), 13:97 *l'* ("non **l'**è parte scelta", the dative *le*), 20:80 *la* ("e **la**
+  'mpaluda"); purgatorio 19:24 *l'* ("sì tutto **l'**appago"), 32:116 *el* ("ond' **el** piegò");
+  paradiso 22:6 *'l*, 28:24 *'l*, 29:136 *la*. An article cannot stand before a finite verb with
+  no noun of its own. Same shape as the paradiso 6:136 *il* the subject-agreement round found.
+- **`e'` = *ei/egli* read as a form of `essere` (2)** — purgatorio 21:120 and paradiso 5:21, both
+  "quel ch'**e'** …", where `e'` is the subject of the relative clause and the corpus already has
+  23 `pronoun` rows for that form.
+- **Fused clitic clusters read as prepositions (4)** — inferno 29:34 *sen* (`se+ne`, lemma had been
+  `senza`) and purgatorio 12:48 *nel* ("pien di spavento **nel** porta un carro" = *ne lo porta*,
+  lemma had been `in+il`) are `pronoun+pronoun`; paradiso 10:111 *ne* ("là giù **ne** gola", the
+  dative *ci*) and 30:69 *n'* ("un'altra **n'**uscia fori") are bare `pronoun`.
+- **Adverbs tagged as prepositions (3)** — purgatorio 2:45 *entro* ("più di cento spirti **entro**
+  sediero"), 30:30 *dentro*, paradiso 25:98 *sopr'* ("di **sopr'** a noi"). No nominal is governed
+  at any of the three. Also paradiso 19:74 *quanto* ("**quanto** ragione umana vede"), an adverbial
+  relative tagged `conjunction`, now `adverb`.
+
+`morph --check` 0 hard / 0 soft throughout. The retags moved 32 tokens into the case annex's scope
+and 2 fused tokens into Layer 3's clitic-mention rule; both are recorded in
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md) and [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md).
+Layer 5's `membership` class went **82 → 47**.

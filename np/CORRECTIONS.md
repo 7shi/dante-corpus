@@ -9,6 +9,16 @@ traceable back to what actually changed and why. Layer-2 mistags found along the
 in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
 side: code/policy changes, span fixes, and classification of what's left.
 
+## Four clitic mentions from Layer 5's membership audit (2026-08-09)
+
+Layer 2's membership round (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)) retagged two
+tokens as fused clitic clusters — inferno 29:34 *sen* (`se+ne`, previously the preposition *senza*)
+and purgatorio 12:48 *nel* (`ne+lo`, previously the contraction *in+il*). `clitic_mentions` derives
+one synthetic `+lemma` span per pronoun component of a fused token straight from Layer 2, so both
+tokens immediately owed two spans each and `np --check` reported 4 soft violations. Added
+`34 6 6 6 +se` / `34 6 6 6 +ne` and `48 1 1 1 +ne` / `48 1 1 1 +lo`; no model call, and no other
+span on either line was touched. Back to **0 hard / 0 soft**.
+
 ## Two spans from Layer 4's subject-agreement round (2026-08-07)
 
 Layer 4's new subject-agreement check (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md))

@@ -382,7 +382,7 @@ line	token	word	deprel	head_line	head_token
 54	2	per	case	54	3
 54	3	colei	obl	56	6
 54	4	che	nsubj	54	8
-54	5	'l	obj	54	6
+54	5	'l	det	54	6
 54	6	chieder	obj	54	8
 54	7	mi	iobj	54	8
 54	8	concede	acl:relcl	54	3

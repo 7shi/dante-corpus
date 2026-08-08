@@ -477,7 +477,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 69	intrava	intrare	verb		sg.	3	imperfect	indicative	
 69	un'	uno	article	f.	sg.				elision
 69	altra	altro	adjective	f.	sg.				
-69	n'	in	preposition						elision
+69	n'	ne	pronoun						elision
 69	uscia	uscire	verb		sg.	3	imperfect	indicative	
 69	fori	fuori	adverb						apocope
 70	L'	lo	article	m.	sg.				elision

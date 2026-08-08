@@ -452,6 +452,64 @@ def _subj_arg(by_arg_map: dict[tuple[int, int], str]) -> tuple[int, int] | None:
     return next((arg for arg, role in by_arg_map.items() if role == "subj"), None)
 
 
+_CONTROL_CHAIN_LIMIT = 8
+
+
+def _control_subject_candidates(
+    pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+) -> tuple[set[tuple[int, int]], bool]:
+    """Rule V: the subjects a **non-finite** predicate can inherit, walking its dep head chain.
+
+    `derive_unit` only ever reads a predicate's own children, so a predicate with no `nsubj` of
+    its own and no finite morphology gets no `subj` row at all — it is silent, not asserting
+    that the predicate has no subject. Every such predicate does have one, and Italian fixes it
+    structurally in exactly two ways this collects:
+
+    - **Control / raising**: an `xcomp`/`ccomp`/`advcl`/`conj` chain of non-finite predicates
+      takes its subject from an argument of the matrix predicate. Which argument is lexical
+      (subject control "vuole partire", object control "fé molte genti viver grame", the
+      causative's dative causee "ella mi fa tremar"), so all of `subj`/`obj`/`iobj` are
+      candidates, at every link up to the first ancestor that has a subject of its own.
+    - **Adnominal participle** (`acl`): the subject is the nominal the participle modifies —
+      "le sue spalle *vestite* de' raggi", "io, *vinto* dal sonno", "prieghi *fatti* a Dio".
+
+    Membership in this set is an acceptance, never an assertion: the derivation still says
+    nothing, and a subject from outside the set stays flagged as a genuine disagreement.
+
+    Returns `(candidates, unresolved)`. `unresolved` is true when the walk reaches a matrix
+    predicate whose own subject derive_unit could only give as pro-drop ∅ ("chi ... *parea*
+    fioco"): the controller is then a referent the derivation never resolved, so it cannot
+    adjudicate the LLM's resolution of it either — exactly the case the pro-drop branch of
+    `_apply_subj_authority` already treats as LLM-authoritative.
+    """
+    candidates: set[tuple[int, int]] = set()
+    cur = dep_index_by_pos.get(pos)
+    seen = {pos}
+    for _ in range(_CONTROL_CHAIN_LIMIT):
+        if cur is None:
+            break
+        head_pos = (cur.head_line, cur.head_token)
+        if head_pos == (0, 0) or head_pos in seen:
+            break
+        seen.add(head_pos)
+        if cur.deprel in ("acl", "acl:relcl"):
+            candidates.add(head_pos)
+        head_rows = derived_by_pred.get(head_pos, ())
+        candidates.update(
+            (row.arg_line, row.arg_token)
+            for row in head_rows
+            if row.role in ("subj", "obj", "iobj") and (row.arg_line, row.arg_token) != (0, 0)
+        )
+        head_subj = [row for row in head_rows if row.role == "subj"]
+        if any((row.arg_line, row.arg_token) == (0, 0) for row in head_subj):
+            return candidates, True
+        if head_subj:
+            break
+        cur = dep_index_by_pos.get(head_pos)
+    return candidates, False
+
+
 def _apply_subj_authority(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
@@ -470,18 +528,17 @@ def _apply_subj_authority(
             g.pop(g_subj, None)
         d.pop((0, 0), None)
     elif d_subj is None:
-        # derive_unit asserted no subject at all: non-finite ∅, or an xcomp/ccomp control subject
-        # inherited from the matrix predicate's subj/obj.
+        # derive_unit asserted no subject at all: the predicate is non-finite, so ∅ is accepted
+        # and so is any subject rule V's head-chain walk can reach (control/raising matrix
+        # argument, or the nominal an adnominal participle modifies).
         g_subj = _subj_arg(g)
         if g_subj is None:
             return
-        candidates = {(0, 0)}
-        dep_row = dep_index_by_pos.get(pos)
-        if dep_row is not None and dep_row.deprel in ("xcomp", "ccomp"):
-            matrix_pos = (dep_row.head_line, dep_row.head_token)
-            for row in derived_by_pred.get(matrix_pos, ()):
-                if row.role in ("subj", "obj"):
-                    candidates.add((row.arg_line, row.arg_token))
+        reachable, unresolved = _control_subject_candidates(pos, derived_by_pred, dep_index_by_pos)
+        if unresolved:
+            g.pop(g_subj, None)
+            return
+        candidates = {(0, 0)} | reachable
         if g_subj in candidates:
             g.pop(g_subj, None)
 

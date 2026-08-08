@@ -40,6 +40,7 @@ line	token	word	case
 35	7	ch'	nominative
 36	1	s'	reflexive
 36	4	me	ablative
+36	5	ond'	ablative
 40	5	io	nominative
 41	2	si	reflexive
 42	2	quei	ablative
@@ -121,4 +122,5 @@ line	token	word	case
 146	5	che	nominative
 148	8	esse	ablative
 149	2	io	nominative
+150	5	onde	ablative
 151	5	io	nominative

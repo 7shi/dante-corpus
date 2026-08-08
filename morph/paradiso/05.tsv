@@ -143,7 +143,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 21	e	e	conjunction						
 21	quel	quello	pronoun	m.	sg.				
 21	ch'	che	pronoun		sg.				elision
-21	e'	essere	verb		sg.	3	present	indicative	
+21	e'	egli	pronoun	m.	sg.	3	present	indicative	
 21	più	più	adverb						
 21	apprezza	apprezzare	verb		sg.	3	present	indicative	
 22	fu	essere	verb		sg.	3	remote past	indicative	

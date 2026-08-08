@@ -322,7 +322,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 47	pien	pieno	adjective	m.	sg.				apocope
 47	di	di	preposition						
 47	spavento	spavento	noun	m.	sg.				
-48	nel	in+il	preposition+article	m.	sg.				contraction
+48	nel	ne+lo	pronoun+pronoun	m.	sg.				contraction
 48	porta	portare	verb		sg.	3	present	indicative	
 48	un	uno	article	m.	sg.				indefinite
 48	carro	carro	noun	m.	sg.				
