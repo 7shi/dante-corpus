@@ -60,6 +60,21 @@ Rules:
   word, copied verbatim, so the citation can be checked.
 * A pro-drop (missing) subject of a finite verb is still reported as its own row: Role subj,
   Arg Line 0, Arg Token 0, Arg Word ∅.
+* A NON-finite predicate (infinitive, participle, gerund) usually has no subject of its own: cite
+  the token that controls it — the subject or object of the verb it depends on ("i' cominciai a
+  dir" → subj of dir is i'; "vidi lui venire" → subj of venire is lui; the causee of fare/lasciare
+  + infinitive; the noun a participle modifies). Use the ∅ row only when nothing in the sentence
+  supplies a subject; do not write ∅ for a subject that is expressed elsewhere in the sentence.
+* An ADVERB is never a predicate — not a comparative (più, meno, sì), not a locative (dentro,
+  dinanzi, dietro, fuor). Cite it as an argument, or leave it out; never open a row for it as Pred.
+* attr is the role for a secondary predicate over an argument — an adjective or noun predicated of
+  the verb's object or subject without its own copula ("faceva dir l'un ‘No’", "vidi lui contento").
+  Give it as attr on the matrix verb; do not make it a predicate of its own.
+* An ELIDED VERB OF SPEECH ("Ed elli a me: «…»", "E io a lui:", where the verb of saying is left
+  out) is reported with the SUBJECT token itself as the predicate: Pred = elli / io / the speaker's
+  noun, with Role subj Arg 0 0 ∅ (the verb is missing, so its own subject slot is empty), the
+  quotation's main verb as ccomp, and the addressee as obl:a. Do not skip these frames — they are
+  predicates even though no verb is written.
 * A predicate with no arguments at all gets exactly one row: Role -, Arg Line 0, Arg Token 0,
   Arg Word -.
 * A relative pronoun (che, cui, qual, ...) that is a clause's subject/object/oblique is cited
@@ -112,6 +127,36 @@ Example output:
 | 2 | 2 | ritrovai | obl:in | 1 | 2 | mezzo |
 | 2 | 2 | ritrovai | obl:per | 2 | 5 | selva |
 | 3 | 6 | smarrita | subj | 3 | 4 | via |
+
+Second example input (an elided verb of speech):
+Give the predicate-argument skeleton for this sentence:
+
+34 Ed elli a me: «Questo misero modo
+35 tegnon l'anime triste di coloro
+
+Tokens (Line.Token Word (POS)):
+34.1 Ed (conjunction)
+34.2 elli (pronoun)
+34.3 a (preposition)
+34.4 me (pronoun)
+34.5 Questo (adjective)
+34.6 misero (adjective)
+34.7 modo (noun)
+35.1 tegnon (verb)
+35.2 l' (article)
+35.3 anime (noun)
+35.4 triste (adjective)
+35.5 di (preposition)
+35.6 coloro (pronoun)
+
+Second example output:
+| Pred Line | Pred Token | Pred Word | Role | Arg Line | Arg Token | Arg Word |
+|---|---|---|---|---|---|---|
+| 34 | 2 | elli | subj | 0 | 0 | ∅ |
+| 34 | 2 | elli | ccomp | 35 | 1 | tegnon |
+| 34 | 2 | elli | obl:a | 34 | 4 | me |
+| 35 | 1 | tegnon | subj | 35 | 3 | anime |
+| 35 | 1 | tegnon | obj | 34 | 7 | modo |
 """
 
 RETRIES = 2
@@ -238,6 +283,13 @@ def _prompt(
 _HINT_PHRASING = {
     "missing_tuple": "may be missing a predicate near '{word}' ({line}.{token}) — check whether "
                       "it heads its own clause",
+    # The promoted head of an elided verb of speech is a pronoun/noun, so the generic phrasing
+    # above ("check whether it heads its own clause") asks the wrong question: the token is a
+    # subject, and what is missing is the frame around it. 63 of the 94 surviving `missing_tuple`
+    # violations cite a pronoun (io, elli) and 16 a noun — see CORRECTIONS.md's Phase 5v.
+    "missing_tuple_nominal": "'{word}' ({line}.{token}) may be the subject of an ELIDED verb of "
+                             "speech — if so it is itself the predicate row (subj ∅, the quotation "
+                             "as ccomp, the addressee as obl:a)",
     "extra_tuple": "the predicate '{word}' ({line}.{token}) you proposed may not be warranted — "
                    "reconsider whether it is really an independent predicate",
     "missing_arg": "the predicate '{word}' ({line}.{token}) may be missing a '{role}' argument — "
@@ -251,6 +303,7 @@ _HINT_PHRASING = {
 
 def _fix_hint(
     nos: list[int], texts: list[str], violations: list[morph.Violation],
+    morph_rows: dict[int, list] | None = None,
 ) -> str | None:
     """Summarize a prior attempt's divergence violations into a re-read hint: which predicates
     and role slots to re-examine, without citing the derivation's actual argument positions —
@@ -262,12 +315,19 @@ def _fix_hint(
         tokens = token_lists.get(line)
         return tokens[token - 1] if tokens and 1 <= token <= len(tokens) else "?"
 
+    def pos_at(pos: tuple[int, int]) -> str:
+        line, token = pos
+        rows = (morph_rows or {}).get(line) or []
+        return rows[token - 1].pos if 1 <= token <= len(rows) else ""
+
     lines: list[str] = []
     seen: set[tuple[str, tuple[int, int], str | None]] = set()
     for v in violations:
         if v.predicate is None:
             continue
         kind = _violation_class(v)
+        if kind == "missing_tuple" and not skel.is_verb_pos(pos_at(v.predicate)):
+            kind = "missing_tuple_nominal"
         phrasing = _HINT_PHRASING.get(kind)
         if phrasing is None:
             continue
@@ -733,7 +793,7 @@ def _fix_canto(
             if not soft_before:
                 continue
             attempted += 1
-            hint = _fix_hint(unit, unit_texts, soft_before)
+            hint = _fix_hint(unit, unit_texts, soft_before, morph_rows)
             new_rows = _try_parse(
                 unit, unit_texts, model, ui, label, log_path, morph_rows, np_rows, dep_rows, hint,
             )

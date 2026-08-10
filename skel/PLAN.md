@@ -61,11 +61,15 @@ it, 2026-08-09; 1031 after Phase 5u) and `missing_arg` (933), together 77% of wh
 disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms, and
 which Phases 5s/5t confirm again (both moved them 2-8% while the freshly created classes moved
 20%+) and Phase 5u a third time (2-3%).
-**Every route this plan opened is closed, and so is the `--fix` pass rule V's cross-layer round
-appeared to open: Phase 5u (2026-08-10) ran it and returned 0.068 violations per call, the lowest
-on record, because rule V was a checker *acceptance* and created no LLM-authored rows for
-regeneration to settle. Provenance, not magnitude, is what makes a `--fix` pass pay; see
-[*Where Phase 5 ended*](#where-phase-5-ended) and [`../PLAN.md`](../PLAN.md).**
+**Every route this plan opened is closed. The `--fix` pass rule V's cross-layer round appeared to
+open was run as Phase 5u (2026-08-10) and returned 0.068 violations per call, the lowest on record,
+because rule V was a checker *acceptance* and created no LLM-authored rows for regeneration to
+settle — provenance, not magnitude, is what makes a pass pay. **Phase 5v then found the deeper
+reason** and acted on it: `--fix` re-asks the *same* prompt, so a class that exists because
+`SYSTEM_PROMPT` never states a convention (the elided verb of speech, the non-finite predicate's
+subject, adverbs as predicates, `attr`) cannot be regenerated away at any yield. Four rules and a
+second worked example were added, covering ~240 violations; the next user-run pass measures them.
+See [*Where Phase 5 ended*](#where-phase-5-ended) and [`../PLAN.md`](../PLAN.md).**
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
 landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
@@ -77,7 +81,7 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5u is **committed** — the rule commits, the Layer-4 corrections and the
+Everything through Phase 5v is **committed** — the rule commits, the Layer-4 corrections and the
 `--fix` rounds are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
 uncommitted for a next session to discover. Confirm before starting:
 
@@ -90,7 +94,10 @@ make -C skel stats      # by-kind + the role_mismatch pair table the sections be
 ```
 
 If those numbers differ, the sections below are describing a different state — re-measure before
-trusting any count in this file.
+trusting any count in this file. **One expected exception**: the user was running
+`make -C skel fix` on Phase 5v's rewritten prompt when 5v was committed, so a resumed session may
+find modified `skel/*.tsv` and a lower soft count. That is Phase 5w; measure and write it up first
+([`../PLAN.md`](../PLAN.md)'s *If a next task is wanted* carries the recipe).
 
 ## What is left, and why nothing here is open
 
@@ -476,6 +483,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5t** | user-run full-corpus `--fix` pass (1575 flagged units), run *after* Layer 4's subject-agreement round; back at the flat rate (0.085/call) | 3270 → **3136** |
 | **V** | Rule V (the control/participial subject of a non-finite predicate) + the membership audit's 37 Layer-2, 8 Layer-4, 32 `case` and 4 Layer-3 corrections | 3136 → **2623** |
 | **5u** | user-run full-corpus `--fix` pass (1347 flagged units), run *after* rule V; the lowest yield on record (0.068/call), because rule V created no LLM-authored rows | 2623 → **2531** |
+| **5v** | build-prompt alignment: four conventions the corrections had fixed but `SYSTEM_PROMPT` never stated (~240 violations addressed), plus the non-verb `missing_tuple` hint | 2531 → *(next `--fix` measures it)* |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).

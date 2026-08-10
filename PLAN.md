@@ -2,17 +2,46 @@
 
 ## Handoff (2026-08-10) — resume here
 
-**Everything is committed** (Phase 5u, the user-run `--fix` round after rule V, is the newest
-work). Checks at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
-verified-and-left-alone residue),
+**Everything is committed**: Phase 5u (the user-run `--fix` round after rule V) and Phase 5v (the
+build-prompt alignment) are the newest work, in that order in `git log`. Checks at commit time:
+`dep --check` 0 hard/**18** soft (the subject-agreement rule's verified-and-left-alone residue),
 `case --check` 0 hard, `skel --check` 0 hard/**2531** soft, `np --check` 0/0, `morph --check` 0/0,
-`pytest` 173 passed. If `git status` shows
-anything uncommitted when this session resumes, that is new work from *after* this handoff was
-written — check `git log` before assuming otherwise.
+`pytest` 173 passed.
 
-**No `--fix` pass is warranted right now**, and Phase 5u is why (below). The open routes are both
-assistant-side: the `per` + infinitive Layer-4 convention question and the `membership` remainder —
-see *If a next task is wanted*.
+**The user is running `make -C skel fix` themselves after this commit.** So when this session
+resumes, expect `git status` to show modified `skel/<canticle>/NN.tsv` files and *nothing else* —
+that is Phase 5w, the first regeneration pass on the rewritten prompt, and measuring and writing it
+up is the first task (recipe below). Anything else uncommitted is work from after this handoff;
+check `git log` before assuming otherwise.
+
+**Why that pass matters more than the last one: the build prompt changed.** Phase 5u showed
+regeneration cannot move a class the prompt never states a convention for — `--fix` re-asks the
+same question and gets the same answer. Phase 5v (below) aligned `SYSTEM_PROMPT` with the
+conventions five correction rounds had fixed, covering **~240 violations (~9.5%)** of the residue.
+That pass is the measurement of whether the prompt was the binding constraint, and it is
+**user-run** (`make -C skel fix`, 3-way parallel).
+
+### What Phase 5v did (2026-08-10)
+
+A prompt-vs-residue audit, prompted by the user's point that yield cannot change unless the prompt
+is adjusted to the corrections. Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *Phase 5v*. No artifact changed; count still 2531.
+
+- **The gap, measured by the POS of the token each violation cites**: 79 of 94 `missing_tuple` are
+  the elided verb of speech promoted to its subject token (`io` 30, `elli` 22, 16 nouns) — a
+  convention Layer 4 normalized corpus-wide in 2026-08-07 and the prompt never mentioned; 126 of
+  321 `extra_arg subj` are the model writing ∅ where rule V would accept a controller's subject,
+  because the prompt describes the ∅ row only for *finite* verbs; 35 of 146 `extra_tuple` are
+  adverbs, which the derivation stopped promoting when the `adverb` bug was fixed; `attr` sits in
+  the role list with no gloss although the multiple-`obj` round chose it over `xcomp` deliberately.
+- **Four rules added** plus a second worked example (inferno 3:34-35, the promoted frame as a
+  table), and the `--fix` hint for a non-verb `missing_tuple` rewritten — it had been asking
+  *"check whether it heads its own clause"* about a pronoun, which is the wrong question.
+- **Two classes turned out not to be prompt-side** and are recorded as routes instead: 47
+  `extra_tuple` adjectives where Layer 4 attaches a copular clause head with a nominal deprel so
+  `derive_unit` stays silent (rule V's shape again — the strongest assistant-side route), and 14
+  stacked-preposition mismatches where Layer 4 itself is inconsistent (`in su` chained vs
+  `dentro al` flat).
 
 ### What Phase 5u did (2026-08-10, user-run)
 
@@ -274,12 +303,43 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-**No `--fix` pass is warranted.** Phase 5u ran the one the previous handoff called for and returned
-the lowest yield on record (0.068 per call); its finding is that regeneration pays only after a
-round that *created* LLM-authored rows in the flagged set, which nothing currently has. Both open
-routes are assistant-side, and a `--fix` pass is worth proposing again only if one of them ends in
-artifact rows the model authored.
+**The open item is measuring and writing up Phase 5w — the user's `--fix` pass on Phase 5v's
+rewritten prompt**, which is running outside this repo's history as of the 5v commit. Phase 5u
+established that regeneration cannot move a class the prompt is silent about, and 5v closed four
+such silences (~240 violations, ~9.5% of the residue).
 
+**How to measure it** (the method Phases 5t/5u used; the whole round arrives as modified
+`skel/*.tsv` in the working tree):
+
+1. `git worktree add <scratch>/base HEAD`, then symlink each `src/<canticle>` into the worktree —
+   the per-canticle source dirs are **generated, not tracked**, and `api.cantos()` now raises
+   `FileNotFoundError` rather than silently checking nothing.
+2. Run `uv run skel.py inferno purgatorio paradiso --check` in both trees, saving the output.
+3. Diff at the **parse-unit** level (`dep.sentence_groups`, which is what `--fix` regenerates), by
+   mapping each `<canticle> <canto>:<line>` violation to its unit's first line: units flagged
+   before/after, improved, cleared, **got worse**, **newly flagged**. Zero on the last two has held
+   for four consecutive rounds and is Phase 5c's acceptance criterion.
+4. Per-call yield = violations removed ÷ units flagged before (`skel.log` is left empty by the
+   parallel invocation, so the flagged-unit delta is the only available lower bound on accepted
+   units — don't look for a per-unit count).
+5. Classify the residue by the Layer-2 POS of the token each violation cites — that is what made
+   both the membership audit and 5v's gap analysis possible.
+
+**Read the per-class table before the pass-level number.** The populations 5v's four rules address
+are `missing_tuple` (94, of which 79 are the elided speech frame), `extra_arg subj (0,0)` (126 of
+321), and the adverb share of `extra_tuple` (35 of 146). If those move sharply while the pass
+average stays near 0.07-0.09, the prompt was the constraint for exactly those classes — the same
+population-not-pass reading 5s/5t/5u converged on. **A flat result across all three is itself the
+answer**: the residue is reading disagreement all the way down, the prompt was never the binding
+constraint, and the remaining routes are the assistant-side ones below.
+
+Three routes are open behind it, all assistant-side:
+
+- **Copular clause heads under a nominal deprel (47 `extra_tuple` adjectives).** Layer 4 attaches
+  *"fu compunto"*, *"son presto"*, *"è … congiunto"* to their matrix with `obl`/`obj`/`nsubj`, none
+  of them in `CLAUSE_HEAD_DEPRELS`, so `derive_unit` never promotes a token carrying `cop`/`aux`
+  and `nsubj` children. Rule V's shape exactly — checker silence, not disagreement. Either a
+  derivation rule or a Layer-4 round; the strongest remaining route.
 - **`per` + infinitive in Layer 4.** "ch'i' fui **per** *ritornar* più volte vòlto" (inferno 1:36)
   has `per` as a `case` child of an `obl` infinitive, where UD would have `mark` + `advcl`. The
   derivation therefore refuses the infinitive predicate status, and the position costs an
@@ -290,6 +350,10 @@ artifact rows the model authored.
   object of a verb of saying, adverbs cited as objects. Not data errors: a decision about what the
   check admits as an argument, and the corpus has material for it (the quote layer already knows
   which tokens sit inside a quotation).
+- **Stacked prepositions in Layer 4 (14 `role_mismatch`).** *"in su la favola"* is chained
+  (`in` → `su` → argument) while *"dentro al tuo seno"* is flat (both `case` children of the
+  argument), so the derived `obl:<lemma>` names a different preposition in each. A normalization
+  round in `dep/` settles it; no prompt rule can be stated until it does.
 
 Past those, the standing goal of 0 soft violations needs a *new instrument* against the two big
 reading-disagreement classes — and the candidate this project has identified there (an imported
@@ -320,11 +384,12 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**Two routes are open, both assistant-side** — the `per` + infinitive Layer-4 convention question
-and the `membership` remainder. All five layers plus the case extension are implemented, built for
-all 100 cantos and merged to `main`. No `--fix` pass is warranted: Phase 5u ran the one rule V's
-513-violation round appeared to justify and returned the lowest yield on record (see *If a next
-task is wanted*).
+**One route is open: measuring the user's `--fix` pass on the prompt Phase 5v rewrote** (Phase 5w,
+running as of the 5v commit). All five layers plus the case extension are implemented, built for
+all 100 cantos and merged to `main`. Phase 5u showed regeneration cannot move a class the build
+prompt never states a convention for; 5v closed four such silences, covering ~9.5% of the residue,
+and that pass is the measurement (see *If a next task is wanted* for the recipe, which also lists
+three assistant-side routes behind it).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).

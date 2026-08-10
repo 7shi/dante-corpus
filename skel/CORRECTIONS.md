@@ -1,5 +1,74 @@
 # skel — Layer 5 correction history
 
+## Phase 5v: aligning the build prompt with the conventions the corrections fixed (2026-08-10)
+
+**The point Phase 5u's finding leaves standing**: `--fix` re-runs the *same* prompt over the same
+sentences, so a violation class that exists because the prompt never states a convention cannot be
+regenerated away — the model re-derives the same reading, correctly, from instructions that do not
+mention the rule. Yield stays flat no matter how many rounds are run. Five rounds of Layer-4 and
+checker corrections (the `adverb` bug fix, the multiple-`obj` round's `attr`, the subject-agreement
+round's ellipsis promotion, rule V's control chain) changed what the corpus *means* by a predicate
+and a subject; `SYSTEM_PROMPT` still says what it said before any of them.
+
+Classifying the surviving 2531 by the Layer-2 POS of the token each violation cites — the same
+instrument the membership audit used — shows how much of the residue that accounts for:
+
+| class | population | prompt was silent about |
+|---|---|---|
+| `missing_tuple` | **79 of 94** — 63 pronoun (`io` 30, `elli` 22), 16 noun | the elided verb of speech: the frame is promoted to its **subject** token, which the prompt never mentions, so the model reports no predicate at all |
+| `extra_arg subj (0,0)` | **126 of 321** `extra_arg subj` | the ∅ row is described only for a *finite* verb; nothing tells the model that a non-finite predicate takes its controller's subject, which is exactly what rule V now accepts |
+| `extra_tuple` (adverb) | **35 of 146** | that an adverb is never a predicate — the rule `is_verb_pos` enforces on the derivation side since the `adverb` bug fix |
+| `attr` | small, but the role is in the vocabulary list with **no gloss** | the multiple-`obj` round chose `attr` over `xcomp` for a secondary predicate over an object; the prompt lists the label and never says what it is for |
+
+**~240 violations, ~9.5% of the residue, are positions where the model is being asked the wrong
+question.** For comparison, the whole of Phase 5u moved 92.
+
+### What changed in `skel/skel.py`
+
+Four rules added to `SYSTEM_PROMPT`, each stating a convention the corpus had already fixed
+elsewhere, plus a **second worked example** (inferno 3:34-35, *«Ed elli a me: "Questo misero
+modo…"»*) showing the promoted frame as a table, since it is the one shape no amount of prose
+makes obvious:
+
+- non-finite predicates cite their controller's subject; ∅ only when nothing supplies one;
+- an adverb is never a predicate (comparative `più`/`sì`, locative `dentro`/`dinanzi`/`fuor`);
+- `attr` is the secondary predicate over an argument, and is *not* its own predicate;
+- the elided verb of speech is reported with the subject token as the predicate (`subj` ∅,
+  quotation as `ccomp`, addressee as `obl:a`).
+
+And one fix to the `--fix` hints: `_HINT_PHRASING["missing_tuple"]` said *"check whether it heads
+its own clause"*, which is the **wrong question** for a promoted frame — the token is a pronoun and
+does not head a clause in the ordinary sense. `_fix_hint` now takes `morph_rows` and switches to a
+`missing_tuple_nominal` phrasing when the un-proposed predicate is not a verb, i.e. for 79 of the
+94. Verified on inferno 3:76 (*«Ed elli a me: "Le cose ti fier conte"»*), where the hint now reads
+*"'elli' (76.2) may be the subject of an ELIDED verb of speech…"*.
+
+No artifact changed and no count moved: `skel --check` is still 0 hard / **2531** soft, `pytest`
+173 passed. **The measurement is the next `--fix` pass** (user-run), and it is the first one with a
+reason to beat the flat rate that is not "a previous round created LLM-authored rows": this time
+the instrument itself changed. If the yield does not move, the honest conclusion is that the
+residue is reading disagreement all the way down and the prompt was never the binding constraint.
+
+### Two classes that turned out **not** to be prompt-side
+
+Both found by the same pass, both recorded here so the next session does not re-derive them:
+
+- **47 `extra_tuple` on adjectives** — *"Di che ciascun di colpa fu compunto"*, *"ch'a la Fortuna
+  … son presto"*, *"'l suo nato è co' vivi ancor congiunto"*. The LLM is right and the prompt is
+  right: these are copular predicates. Layer 4 attaches the clause head with a **nominal** deprel
+  (`obl`, `obj`, `nsubj`) to its matrix, and those are not in `CLAUSE_HEAD_DEPRELS`, so
+  `derive_unit` never promotes a token that carries `cop`/`aux` and `nsubj` children of its own.
+  This is rule V's shape exactly — checker silence, not disagreement — and it is either a
+  derivation rule (a token with a `cop` child is a clause head whatever its own deprel) or a
+  Layer-4 correction round (a clause attached as `obj`/`nsubj` should be `ccomp`/`csubj`). It is
+  the strongest remaining assistant-side route.
+- **14 stacked-preposition `role_mismatch`es** (`obl:in` vs `obl:su` 7, `obl:in` vs `obl:dentro`
+  7). Layer 4 is not internally consistent here: in *"Vòlt' era in su la favola"* the two
+  prepositions are **chained** (`in` → `su` → `favola`, so the derivation names `su`), while in
+  *"trovar dentro al tuo seno"* they are **flat** (`dentro` and `al` both → `seno`, so it names
+  `dentro`). No prompt rule can be stated until Layer 4 picks one shape; a normalization round
+  there settles the class.
+
 ## Phase 5u: the `--fix` round after rule V — 2623 → 2531, −92 (2026-08-10)
 
 Baseline: **0 hard, 2623 soft**, **1347 flagged parse units** — the state left by rule V and the
