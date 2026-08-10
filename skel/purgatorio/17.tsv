@@ -5,7 +5,7 @@ line	token	word	role	arg_line	arg_token
 2	2	colse	obj	2	1
 2	2	colse	obl:in	1	7
 2	7	vedessi	subj	0	0
-2	7	vedessi	obj	2	6
+2	7	vedessi	obl:per	2	6
 2	7	vedessi	obl:per	3	6
 3	0			0	0
 4	0			0	0
@@ -17,12 +17,13 @@ line	token	word	role	arg_line	arg_token
 7	2	fia	subj	7	5
 7	2	fia	attr	7	6
 7	2	fia	obl:in	8	2
-8	2	giugnere	subj	0	0
+8	2	giugnere	subj	7	5
 8	2	giugnere	xcomp	8	4
-8	4	veder	subj	0	0
+8	4	veder	subj	7	5
 8	4	veder	ccomp	8	7
 8	7	rividi	subj	8	6
 8	7	rividi	obj	9	2
+8	7	rividi	obl:in	9	4
 9	9	era	subj	9	5
 9	9	era	obl:in	9	8
 10	2	pareggiando	subj	0	0

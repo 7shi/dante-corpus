@@ -52,13 +52,13 @@ line	token	word	role	arg_line	arg_token
 15	3	uscir	obl	15	4
 15	7	arsi	subj	0	0
 16	4	vai	subj	16	3
+16	4	vai	obl:a	17	6
 16	7	esser	subj	0	0
 16	7	esser	attr	16	9
 16	9	tardo	subj	0	0
 17	3	reverente	subj	0	0
-17	3	reverente	obl:a	17	6
 18	1	rispondi	subj	16	2
-18	1	rispondi	obl:a	18	3
+18	1	rispondi	iobj	18	3
 18	10	ardo	subj	18	4
 18	10	ardo	obl:in	18	6
 18	10	ardo	obl:in	18	9

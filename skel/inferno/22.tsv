@@ -1,7 +1,6 @@
 line	token	word	role	arg_line	arg_token
 1	2	vidi	subj	1	1
 1	2	vidi	obj	1	4
-1	2	vidi	xcomp	1	5
 1	5	muover	subj	1	4
 1	5	muover	obj	1	6
 2	2	cominciare	subj	1	4
@@ -14,9 +13,7 @@ line	token	word	role	arg_line	arg_token
 4	2	vidi	obj	4	1
 4	2	vidi	obl:per	4	5
 5	4	vidi	subj	0	0
-5	4	vidi	xcomp	5	5
-5	4	vidi	xcomp	6	1
-5	4	vidi	xcomp	6	4
+5	4	vidi	obj	5	6
 5	4	vidi	obl:con	7	3
 5	4	vidi	obl:con	7	7
 5	4	vidi	obl:con	8	2
@@ -24,9 +21,9 @@ line	token	word	role	arg_line	arg_token
 5	4	vidi	obl:con	9	3
 5	4	vidi	obl:con	9	7
 5	5	gir	subj	5	6
-6	1	fedir	subj	0	0
+6	1	fedir	subj	5	6
 6	1	fedir	obj	6	2
-6	4	correr	subj	0	0
+6	4	correr	subj	5	6
 6	4	correr	obj	6	5
 7	0			0	0
 8	0			0	0
@@ -36,11 +33,10 @@ line	token	word	role	arg_line	arg_token
 11	2	vidi	obj	11	1
 11	2	vidi	obj	11	5
 11	2	vidi	obj	12	2
-11	2	vidi	xcomp	11	3
 11	2	vidi	obl:con	10	6
-11	2	vidi	obl:a	12	4
 11	3	muover	subj	11	1
 11	3	muover	subj	11	5
+11	3	muover	subj	12	2
 12	0			0	0
 13	2	andavam	subj	13	1
 13	2	andavam	obl:con	13	6
@@ -338,7 +334,7 @@ line	token	word	role	arg_line	arg_token
 106	5	levò	subj	106	1
 106	5	levò	obj	106	7
 106	5	levò	obl:a	106	4
-107	1	crollando	subj	0	0
+107	1	crollando	subj	106	1
 107	1	crollando	obj	107	3
 107	5	disse	subj	106	1
 107	5	disse	ccomp	107	6
@@ -346,8 +342,8 @@ line	token	word	role	arg_line	arg_token
 107	6	Odi	obj	107	7
 108	4	pensata	subj	108	2
 108	4	pensata	obj	108	1
-108	4	pensata	xcomp	108	6
-108	6	gittarsi	subj	0	0
+108	4	pensata	obl:per	108	6
+108	6	gittarsi	subj	108	2
 109	4	avea	subj	109	3
 109	4	avea	obj	109	5
 109	4	avea	obl:a	109	8
@@ -406,20 +402,22 @@ line	token	word	role	arg_line	arg_token
 126	5	gridò	ccomp	126	8
 126	8	giunto	subj	126	6
 127	4	valse	subj	0	0
-127	4	valse	obj	127	3
+127	4	valse	iobj	127	3
+128	2	potero	subj	127	7
+128	2	potero	xcomp	128	3
 128	3	avanzar	subj	127	7
 128	3	avanzar	obl:a	127	9
 128	5	andò	subj	128	4
 129	3	drizzò	subj	129	2
 129	3	drizzò	obj	129	7
-129	4	volando		0	0
+129	4	volando	subj	129	2
 130	0			0	0
 131	5	appressa	subj	131	3
 131	8	attuffa	subj	130	4
 131	8	attuffa	obl:di	130	6
 132	3	ritorna	subj	132	2
-132	5	crucciato	subj	132	2
-132	7	rotto	subj	132	2
+132	3	ritorna	attr	132	5
+132	3	ritorna	attr	132	7
 133	0			0	0
 134	1	volando	subj	133	2
 134	4	tenne	subj	133	2

@@ -65,6 +65,7 @@ line	token	word	role	arg_line	arg_token
 22	2	impedir	subj	0	0
 22	2	impedir	obj	22	6
 23	1	vuolsi	subj	0	0
+23	1	vuolsi	obl	23	3
 23	6	puote	subj	0	0
 23	6	puote	obj	24	1
 24	4	vuole	subj	24	2

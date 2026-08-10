@@ -272,7 +272,6 @@ line	token	word	role	arg_line	arg_token
 99	8	uscì	obl:di	99	7
 99	8	uscì	obl:di	99	10
 100	3	ferma	subj	100	1
-100	3	ferma	obl:in	100	8
 101	3	stando	subj	100	1
 101	3	stando	obl:in	100	8
 102	1	volse	subj	100	1

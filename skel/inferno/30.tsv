@@ -344,7 +344,6 @@ line	token	word	role	arg_line	arg_token
 116	4	son	subj	0	0
 116	4	son	obl:per	116	8
 117	2	tu	obl:per	117	4
-117	4	più	obl	117	8
 118	1	Ricorditi	subj	0	0
 118	1	Ricorditi	obj	118	4
 119	1	rispuose	subj	119	2
@@ -355,14 +354,14 @@ line	token	word	role	arg_line	arg_token
 120	3	reo	subj	0	0
 120	8	sallo	subj	120	7
 121	4	rea	subj	121	6
-121	4	rea	subj	122	8
 121	4	rea	iobj	121	2
-121	9	crepa	subj	121	7
-121	9	crepa	obj	122	5
+121	9	crepa	subj	122	5
 121	9	crepa	iobj	121	8
+121	9	crepa	obl	121	7
 122	1	disse	subj	122	3
-123	10	assiepa	subj	123	3
-123	10	assiepa	obj	123	1
+122	1	disse	ccomp	121	4
+123	10	assiepa	subj	123	1
+123	10	assiepa	obj	123	3
 123	10	assiepa	iobj	123	9
 123	10	assiepa	obl:a	123	7
 124	6	squarcia	subj	125	2

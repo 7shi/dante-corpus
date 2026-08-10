@@ -287,7 +287,6 @@ line	token	word	role	arg_line	arg_token
 105	2	defettivo	obl:di	104	9
 105	5	è	subj	105	4
 105	5	è	attr	105	7
-105	5	è	obl	105	6
 105	7	perfetto	subj	105	4
 106	4	corta	subj	106	6
 106	4	corta	obl:a	107	3

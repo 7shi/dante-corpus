@@ -249,9 +249,11 @@ line	token	word	role	arg_line	arg_token
 81	6	disteso	subj	81	4
 82	0			0	0
 83	5	accesero	subj	82	2
+83	5	accesero	subj	82	8
 83	5	accesero	obj	83	7
 83	5	accesero	iobj	83	4
-84	3	sentito	subj	0	0
+84	3	sentito	subj	83	7
+84	3	sentito	obl:di	84	6
 85	4	vedea	subj	85	3
 85	4	vedea	obj	85	5
 86	2	quïetarmi	subj	85	2

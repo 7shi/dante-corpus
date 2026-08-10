@@ -363,12 +363,12 @@ line	token	word	role	arg_line	arg_token
 117	10	dice	subj	117	8
 118	5	rotta	subj	118	3
 118	5	rotta	obj	118	7
+118	5	rotta	obl:di	119	3
 119	7	rendei	subj	119	5
 119	7	rendei	obj	119	6
 119	7	rendei	obl:a	120	3
-120	1	piangendo		0	0
-120	6	perdona	subj	0	0
-120	6	perdona	obj	120	4
+120	1	piangendo	subj	0	0
+120	6	perdona	subj	120	4
 121	1	Orribil	subj	121	4
 122	5	ha	subj	122	3
 122	5	ha	obj	122	8

@@ -141,23 +141,24 @@ line	token	word	role	arg_line	arg_token
 51	7	vene	obl:da	51	6
 52	7	rende	subj	52	5
 52	7	rende	obj	52	6
-53	1	e		0	0
-53	6	soverchia	subj	0	0
-53	6	soverchia	obj	53	5
+53	6	soverchia	subj	53	5
 53	6	soverchia	obl:per	53	4
 54	7	difende	subj	54	5
 55	7	cerchia	subj	55	4
-55	7	cerchia	obl:di	55	6
+55	7	cerchia	obj	55	6
 56	2	vinto	subj	55	3
 56	2	vinto	obl:in	56	4
 56	2	vinto	obl:da	56	7
 57	6	ricoperchia	subj	57	1
 57	6	ricoperchia	obj	57	5
 57	6	ricoperchia	obl	57	3
-58	1	né		0	0
+58	2	potrà	subj	58	4
+58	2	potrà	xcomp	58	5
 58	5	affaticarne	subj	58	4
 59	7	forti	subj	59	3
 59	7	forti	obl:a	60	3
+60	5	potrà	subj	60	4
+60	5	potrà	xcomp	60	6
 60	6	dilettarne	subj	60	4
 61	3	parver	subj	62	7
 61	3	parver	iobj	61	2

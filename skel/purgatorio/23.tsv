@@ -181,9 +181,10 @@ line	token	word	role	arg_line	arg_token
 60	4	dir	subj	60	5
 60	7	pien	subj	60	5
 60	7	pien	obl:di	60	10
-61	0			0	0
+61	2	elli	ccomp	62	1
+61	2	elli	obl:a	61	4
 62	1	cade	subj	62	2
-62	1	cade	obl:di	61	8
+62	1	cade	obl:de	61	8
 62	1	cade	obl:in	62	5
 62	1	cade	obl:in	62	9
 63	1	rimasa	subj	62	9

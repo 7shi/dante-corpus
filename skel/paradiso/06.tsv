@@ -347,8 +347,7 @@ line	token	word	role	arg_line	arg_token
 117	6	poggin	subj	116	7
 117	6	poggin	obl:in	117	5
 117	8	vivi	subj	116	7
-118	3	commensurar	obj	118	7
-118	3	commensurar	obl:con	119	2
+118	0			0	0
 119	4	parte	subj	118	3
 120	4	vedem	subj	0	0
 120	4	vedem	obj	120	3

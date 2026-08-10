@@ -101,12 +101,11 @@ line	token	word	role	arg_line	arg_token
 37	4	pareva	attr	37	6
 37	4	pareva	obl:a	37	3
 37	6	verace	subj	34	2
-37	6	verace	obl:a	37	3
-38	2	intagliato	subj	0	0
+38	2	intagliato	subj	34	2
 38	2	intagliato	obl:in	38	5
-39	3	sembiava	subj	0	0
+39	3	sembiava	subj	39	1
 39	3	sembiava	attr	39	4
-39	4	imagine	subj	0	0
+39	4	imagine	subj	39	1
 39	6	tace	subj	39	5
 40	1	Giurato	subj	0	0
 40	1	Giurato	ccomp	40	6

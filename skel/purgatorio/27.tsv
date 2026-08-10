@@ -165,10 +165,11 @@ line	token	word	role	arg_line	arg_token
 50	5	rinfrescarmi	subj	0	0
 51	2	era	subj	51	5
 51	2	era	obl	51	3
-52	6	confortarmi		0	0
+52	6	confortarmi	subj	52	3
+53	4	ragionando	subj	52	3
 53	4	ragionando	obl:di	53	3
 53	5	andava	subj	52	3
-53	5	andava	xcomp	53	4
+54	1	dicendo	subj	52	3
 54	1	dicendo	ccomp	54	7
 54	6	veder	subj	0	0
 54	6	veder	obj	54	3

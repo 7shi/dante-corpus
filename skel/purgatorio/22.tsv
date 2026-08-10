@@ -99,15 +99,17 @@ line	token	word	role	arg_line	arg_token
 35	0			0	0
 36	5	punita	subj	35	6
 36	5	punita	obj	36	1
-37	4	fosse		0	0
+37	4	fosse	subj	37	7
 37	7	drizzai	subj	37	6
 37	7	drizzai	obj	37	9
 38	3	intesi	subj	38	2
+38	3	intesi	ccomp	38	7
 38	7	chiame	subj	38	6
-39	1	crucciato	subj	0	0
+39	1	crucciato	subj	38	2
 39	1	crucciato	obl:a	39	6
 40	4	reggi	subj	40	5
 40	4	reggi	obj	41	5
+40	4	reggi	obl:per	40	2
 41	0			0	0
 42	1	voltando	subj	0	0
 42	2	sentirei	subj	0	0

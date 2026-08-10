@@ -231,8 +231,7 @@ line	token	word	role	arg_line	arg_token
 77	1	disse	obl:a	76	4
 77	8	sòle	subj	77	7
 78	7	mira	subj	78	4
-79	3	rimembra	subj	0	0
-79	3	rimembra	iobj	79	2
+79	3	rimembra	subj	79	2
 79	3	rimembra	obl:di	79	6
 80	7	pertratta	subj	80	6
 80	7	pertratta	obj	81	3

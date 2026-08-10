@@ -303,8 +303,8 @@ line	token	word	role	arg_line	arg_token
 103	3	tenëa	subj	104	2
 103	3	tenëa	obj	103	6
 103	3	tenëa	obl:sovra	103	2
-104	5	sedendo	subj	0	0
-104	5	sedendo	obl:in	104	9
+104	5	sedendo	subj	104	2
+104	5	sedendo	obl:su	104	9
 105	3	sembiava	subj	105	1
 105	3	sembiava	iobj	105	2
 105	3	sembiava	attr	105	4

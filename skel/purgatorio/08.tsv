@@ -183,8 +183,8 @@ line	token	word	role	arg_line	arg_token
 64	11	volse	obl:a	64	4
 64	11	volse	obl:a	64	9
 65	2	sedea	subj	65	1
-65	4	gridando	subj	0	0
-65	5	Sù	subj	65	6
+65	4	gridando	subj	65	1
+65	5	Sù		0	0
 66	1	vieni	subj	0	0
 66	1	vieni	xcomp	66	3
 66	3	veder	subj	0	0
@@ -386,10 +386,10 @@ line	token	word	role	arg_line	arg_token
 132	2	va	attr	132	3
 132	8	dispregia	subj	0	0
 132	8	dispregia	obj	132	7
-133	2	elli	subj	0	0
-133	2	elli	ccomp	133	4
+133	2	elli		0	0
 133	4	va	subj	0	0
 133	10	ricorca	subj	133	7
+133	10	ricorca	obj	133	9
 133	10	ricorca	obl	134	2
 133	10	ricorca	obl:in	134	4
 134	0			0	0
@@ -397,8 +397,6 @@ line	token	word	role	arg_line	arg_token
 135	7	cuopre	obj	134	5
 135	7	cuopre	obl:con	135	6
 135	9	inforca	subj	134	7
-135	9	inforca	obj	134	5
-135	9	inforca	obl:con	135	6
 136	0			0	0
 137	3	chiavata	subj	136	4
 137	3	chiavata	iobj	137	1

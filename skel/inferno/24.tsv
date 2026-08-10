@@ -271,11 +271,8 @@ line	token	word	role	arg_line	arg_token
 89	1	mostrò	obj	88	6
 89	1	mostrò	obl:con	89	7
 89	1	mostrò	obl:con	90	3
-90	6	sopra	subj	90	4
-90	6	sopra	obl:a	90	8
 90	10	èe	subj	90	4
 90	10	èe	obl:di	90	6
-90	10	èe	obl:a	90	8
 91	0			0	0
 92	1	corrëan	subj	92	2
 92	1	corrëan	obl:tra	91	6

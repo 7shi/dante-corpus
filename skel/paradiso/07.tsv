@@ -262,6 +262,7 @@ line	token	word	role	arg_line	arg_token
 102	3	sodisfar	subj	0	0
 102	3	sodisfar	obl:per	102	5
 102	6	dischiuso	subj	101	9
+102	6	dischiuso	obl:per	101	7
 102	6	dischiuso	obl:da	102	2
 103	4	convenia	subj	104	1
 103	4	convenia	obl:a	103	3

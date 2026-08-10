@@ -4,7 +4,6 @@ line	token	word	role	arg_line	arg_token
 1	8	pinse	iobj	1	7
 1	8	pinse	obl:di	1	6
 2	1	veggendo	subj	0	0
-2	1	veggendo	obj	2	3
 2	1	veggendo	xcomp	2	5
 2	5	tornare	subj	2	3
 2	5	tornare	obl:in	2	7

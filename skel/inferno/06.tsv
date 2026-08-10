@@ -183,8 +183,9 @@ line	token	word	role	arg_line	arg_token
 63	7	assalita	subj	63	6
 63	7	assalita	obj	63	3
 63	7	assalita	obl:per	63	2
-64	0			0	0
-65	1	verranno	subj	64	2
+64	2	quelli	subj	0	0
+64	2	quelli	obl:a	64	4
+65	1	verranno	subj	0	0
 65	1	verranno	obl:dopo	64	7
 65	1	verranno	obl:a	65	3
 66	1	caccerà	subj	65	6
@@ -229,16 +230,18 @@ line	token	word	role	arg_line	arg_token
 76	2	puose	subj	0	0
 76	2	puose	obj	76	3
 76	2	puose	obl:a	76	6
-77	6	vo'	subj	77	2
+77	2	io	subj	0	0
+77	2	io	obl:a	77	4
+77	6	vo'	subj	0	0
 77	6	vo'	ccomp	77	9
-77	6	vo'	ccomp	78	7
-77	6	vo'	obl:a	77	4
 77	9	'nsegni	subj	0	0
 77	9	'nsegni	iobj	77	8
-78	5	parlar		0	0
+78	5	parlar	subj	0	0
+78	5	parlar	obl:di	78	4
 78	7	facci	subj	0	0
 78	7	facci	obj	78	8
 78	7	facci	iobj	78	6
+78	7	facci	obl:di	78	5
 79	8	degni	subj	79	5
 80	0			0	0
 81	7	far	subj	81	4

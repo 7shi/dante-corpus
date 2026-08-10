@@ -63,11 +63,12 @@ line	token	word	role	arg_line	arg_token
 21	6	terra	subj	21	8
 21	7	è	subj	21	8
 21	7	è	attr	21	6
+22	2	elli	obl:a	22	4
 22	8	trascorri	subj	22	7
 22	8	trascorri	obl:per	23	3
 22	8	trascorri	obl:da	23	7
 23	0			0	0
-24	1	avvien	ccomp	24	6
+24	1	avvien	subj	24	6
 24	6	abborri	subj	0	0
 24	6	abborri	obl:in	24	5
 25	2	vedrai	subj	25	1

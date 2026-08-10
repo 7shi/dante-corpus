@@ -335,8 +335,8 @@ line	token	word	role	arg_line	arg_token
 112	1	levatemi	obl:da	112	3
 113	4	sfoghi	subj	113	3
 113	4	sfoghi	obj	113	6
-113	11	impregna	subj	113	9
-113	11	impregna	obj	113	7
+113	11	impregna	subj	113	7
+113	11	impregna	obj	113	9
 113	11	impregna	iobj	113	10
 114	8	raggeli	subj	114	6
 115	7	vuo'	subj	0	0

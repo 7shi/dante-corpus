@@ -58,9 +58,10 @@ line	token	word	role	arg_line	arg_token
 22	8	appario	iobj	22	7
 22	8	appario	obl:di	22	4
 22	8	appario	obl:a	22	6
-23	3	sapeva	subj	23	1
+23	3	sapeva	subj	0	0
 23	3	sapeva	obj	23	4
 24	9	uscìo	subj	24	6
+24	9	uscìo	obl:di	23	8
 24	9	uscìo	obl:a	24	8
 25	6	facea	subj	25	3
 25	6	facea	obj	25	7
@@ -343,11 +344,12 @@ line	token	word	role	arg_line	arg_token
 121	2	negligenza	subj	121	6
 121	4	stare	subj	121	6
 122	1	Correte	subj	0	0
-122	1	Correte	xcomp	122	5
 122	1	Correte	obl:a	122	3
+122	1	Correte	obl:a	122	5
 122	5	spogliarvi	subj	0	0
 122	5	spogliarvi	obj	122	7
 123	4	lascia	subj	123	7
+123	4	lascia	obj	123	1
 123	4	lascia	iobj	123	6
 123	4	lascia	xcomp	123	8
 123	8	manifesto	subj	123	1

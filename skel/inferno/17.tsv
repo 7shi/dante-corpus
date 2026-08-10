@@ -167,7 +167,6 @@ line	token	word	role	arg_line	arg_token
 61	2	procedendo	obl:di	61	5
 62	1	vidine	subj	0	0
 62	1	vidine	obj	62	3
-62	6	rossa	subj	62	3
 63	1	mostrando	subj	0	0
 63	1	mostrando	obj	63	3
 64	0			0	0

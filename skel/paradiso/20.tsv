@@ -140,7 +140,6 @@ line	token	word	role	arg_line	arg_token
 50	3	ragiono	subj	0	0
 50	3	ragiono	obl:di	50	2
 51	2	indugiò	subj	51	1
-51	2	indugiò	obj	49	2
 51	2	indugiò	obl:per	51	5
 52	2	conosce	subj	49	2
 52	2	conosce	ccomp	53	3

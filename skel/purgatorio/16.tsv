@@ -134,12 +134,12 @@ line	token	word	role	arg_line	arg_token
 41	6	veggia	subj	41	5
 41	6	veggia	obj	41	9
 41	6	veggia	obl:per	42	2
-42	4	fuor	subj	42	2
-42	4	fuor	obl:di	42	7
+42	0			0	0
 43	3	celar	subj	0	0
-43	3	celar	obj	43	4
 43	3	celar	iobj	43	2
+43	3	celar	ccomp	43	5
 43	5	fosti	subj	43	4
+43	5	fosti	obl:anzi	43	8
 44	2	dilmi	subj	0	0
 44	4	dimmi	subj	0	0
 44	4	dimmi	ccomp	44	7
@@ -291,17 +291,19 @@ line	token	word	role	arg_line	arg_token
 84	8	spia	obl:di	84	4
 85	1	Esce	subj	88	2
 85	1	Esce	obl:di	85	3
+85	1	Esce	obl:a	85	5
 85	8	vagheggia	subj	85	6
 85	8	vagheggia	obj	85	7
-86	3	sia	subj	88	2
-86	3	sia	attr	86	5
-87	2	piangendo		0	0
-87	4	ridendo		0	0
+86	3	sia	subj	0	0
+86	3	sia	obl:a	86	5
+87	2	piangendo	subj	87	1
+87	4	ridendo	subj	87	1
 87	5	pargoleggia	subj	87	1
 88	5	sa	subj	88	4
 88	5	sa	obj	88	6
+89	3	mossa	subj	88	2
 89	3	mossa	obl:da	89	6
-90	2	torna	subj	88	2
+90	2	torna	subj	0	0
 90	2	torna	obl:a	90	4
 90	7	trastulla	subj	90	5
 90	7	trastulla	obj	90	6

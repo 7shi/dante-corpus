@@ -222,6 +222,7 @@ line	token	word	role	arg_line	arg_token
 90	7	torta	subj	90	3
 91	4	pensa	subj	0	0
 91	4	pensa	ccomp	91	7
+91	4	pensa	ccomp	92	6
 91	4	pensa	obl:in	91	2
 91	7	costa	subj	92	1
 91	7	costa	obj	91	6
@@ -229,6 +230,7 @@ line	token	word	role	arg_line	arg_token
 92	1	seminarla	obl:in	92	3
 92	6	piace	subj	93	1
 93	6	accosta	subj	93	1
+93	6	accosta	obj	93	5
 93	6	accosta	obl:con	93	4
 94	2	apparer	subj	0	0
 94	5	ingegna	subj	94	3

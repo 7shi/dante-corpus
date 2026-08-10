@@ -298,6 +298,7 @@ line	token	word	role	arg_line	arg_token
 103	3	avrai	obj	103	2
 103	8	scindi	subj	0	0
 103	8	scindi	obj	104	4
+103	8	scindi	attr	103	7
 103	8	scindi	obl:da	104	2
 104	8	morto	subj	0	0
 105	4	lasciassi	subj	105	3
@@ -305,7 +306,7 @@ line	token	word	role	arg_line	arg_token
 106	3	passin	subj	106	5
 106	9	corto	subj	107	1
 106	9	corto	obl:a	107	4
-106	9	corto	obl	107	7
+106	9	corto	obl:che	107	7
 107	0			0	0
 108	9	torto	subj	108	3
 108	9	torto	obl:in	108	7

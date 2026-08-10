@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-09: `make -C skel check` reports **0 hard, 2623 soft** violations across
+Status as of 2026-08-10: `make -C skel check` reports **0 hard, 2531 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -14,7 +14,8 @@ moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-
 round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug fix moved it *up*
 again → 3215 after Phase 5s's user-run `--fix` pass → 3270 after Layer 4's
 subject-agreement round moved it *up* once more → 3136 after Phase 5t's user-run `--fix` pass →
-2623 after rule V and the membership audit's cross-layer corrections).
+2623 after rule V and the membership audit's cross-layer corrections → 2531 after Phase 5u's
+user-run `--fix` pass).
 The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
@@ -56,12 +57,14 @@ verdict exhausted and Phase 5p's correction round finished: every row of section
 and so is the audit work each verdict left behind.** Phase 5q then spent the one remaining work
 item — the user-run `--fix` pass (−147) — plus the `ioj` typo fix (−4).
 What is left is the rest of the two big classes, `extra_arg` (**1065** after rule V took 479 out of
-it, 2026-08-09) and `missing_arg` (957), together 77% of what remains — and section 2's triage says both residues are *reading*
+it, 2026-08-09; 1031 after Phase 5u) and `missing_arg` (933), together 77% of what remains — and section 2's triage says both residues are *reading*
 disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms, and
 which Phases 5s/5t confirm again (both moved them 2-8% while the freshly created classes moved
-20%+).
-**Every route this plan opened is closed. What is open is a user-run `--fix` pass, which rule V's
-cross-layer round (2026-08-09, −513) makes worth running by Phase 5t's own stop rule; see
+20%+) and Phase 5u a third time (2-3%).
+**Every route this plan opened is closed, and so is the `--fix` pass rule V's cross-layer round
+appeared to open: Phase 5u (2026-08-10) ran it and returned 0.068 violations per call, the lowest
+on record, because rule V was a checker *acceptance* and created no LLM-authored rows for
+regeneration to settle. Provenance, not magnitude, is what makes a `--fix` pass pay; see
 [*Where Phase 5 ended*](#where-phase-5-ended) and [`../PLAN.md`](../PLAN.md).**
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
@@ -74,12 +77,12 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5t is **committed** — the rule commits, the Layer-4 corrections and the
+Everything through Phase 5u is **committed** — the rule commits, the Layer-4 corrections and the
 `--fix` rounds are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 2623 soft
+make -C skel check      # expect: 0 hard, 2531 soft
 make -C dep check       # expect: 0 hard, 18 soft (the subject-agreement rule's verified residue)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
 uv run pytest -q        # expect: 173 passed
@@ -472,6 +475,7 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5s** | user-run full-corpus `--fix` pass (1659 flagged units), run *after* Layer 4's multiple-`obj` round and the `"verb" in pos` fix had moved the flagged set | 3545 → **3215** |
 | **5t** | user-run full-corpus `--fix` pass (1575 flagged units), run *after* Layer 4's subject-agreement round; back at the flat rate (0.085/call) | 3270 → **3136** |
 | **V** | Rule V (the control/participial subject of a non-finite predicate) + the membership audit's 37 Layer-2, 8 Layer-4, 32 `case` and 4 Layer-3 corrections | 3136 → **2623** |
+| **5u** | user-run full-corpus `--fix` pass (1347 flagged units), run *after* rule V; the lowest yield on record (0.068/call), because rule V created no LLM-authored rows | 2623 → **2531** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).

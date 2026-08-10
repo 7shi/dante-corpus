@@ -222,7 +222,8 @@ line	token	word	role	arg_line	arg_token
 85	5	dissi	ccomp	85	7
 85	5	dissi	obl:in	85	4
 85	7	è	subj	85	8
-86	3	Vedi	subj	86	2
+86	2	ella	ccomp	86	3
+86	3	Vedi	subj	0	0
 86	3	Vedi	obj	86	4
 86	3	Vedi	xcomp	87	2
 87	2	sedere	subj	86	4

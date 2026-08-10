@@ -8,10 +8,10 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5r, four full `--fix` rounds
-run (Phases 5e, 5q, 5s and 5t), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
+**Status: built for all 100 cantos, checker refined through Phase 5r, five full `--fix` rounds
+run (Phases 5e, 5q, 5s, 5t and 5u), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
 fed back into `dep/`.**
-`make -C skel check`: **0 hard, 2623 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 2531 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -23,8 +23,9 @@ annex's own Layer-4 corrections (see [`CORRECTIONS.md`](CORRECTIONS.md) and
 5r's rule U, 3465 after that phase's hand-verified `dep`/`case` round, 3509 after Layer 4's
 multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix, 3215 after
 Phase 5s's user-run `--fix` pass, 3270 after Layer 4's subject-agreement round moved it *up*
-once more, 3136 after Phase 5t's user-run `--fix` pass, and 2623 after rule V's
-control/participial subject chain and the membership audit's cross-layer corrections). See
+once more, 3136 after Phase 5t's user-run `--fix` pass, 2623 after rule V's
+control/participial subject chain and the membership audit's cross-layer corrections, and 2531
+after Phase 5u's user-run `--fix` pass). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full

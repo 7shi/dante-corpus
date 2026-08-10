@@ -1,5 +1,80 @@
 # skel — Layer 5 correction history
 
+## Phase 5u: the `--fix` round after rule V — 2623 → 2531, −92 (2026-08-10)
+
+Baseline: **0 hard, 2623 soft**, **1347 flagged parse units** — the state left by rule V and the
+membership audit (2026-08-09, below). One full `--fix` pass over all three canticles, run by the
+user as `make -C skel fix` 3-way parallel. It was run on the condition `PLAN.md` carried forward
+from Phase 5t: a cross-layer round had just moved 513 violations and rewritten 81 rows across four
+layers. **That condition turned out to be the wrong predictor, and this round is what corrects it**
+— see *What this says about the stop rule* below.
+
+Measured the same way as Phase 5t: a `git worktree` at the pre-`--fix` commit with the generated
+`src/` canticle directories symlinked in, diffed against the working tree at the **parse-unit**
+level (`dep.sentence_groups`, which is what `--fix` regenerates).
+
+| metric | measured |
+|---|---|
+| units flagged before | 1347 |
+| units flagged after | 1290 (**−57 cleared outright**) |
+| units improved | 79 |
+| soft violations removed | **92** (2623 → **2531**, −3.5%) |
+| violations removed per LLM call | **≈0.068** |
+| units that got *worse* | **0** (Phase 5c's criterion held) |
+| units newly flagged | **0** |
+| cantos touched | 54 — inferno 19, purgatorio 23, paradiso 12 |
+
+Per class:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 1065 | 1031 | −34 (−3.2%) |
+| `missing_arg` | 957 | 933 | −24 (−2.5%) |
+| `role_mismatch` | 288 | 280 | −8 (−2.8%) |
+| `extra_tuple` | 157 | 146 | −11 (−7.0%) |
+| `missing_tuple` | 109 | 94 | **−15 (−13.8%)** |
+| `membership` | 47 | 47 | **0** |
+
+### What this says about the stop rule
+
+**The yield, 0.068 per call, is the lowest any `--fix` round has returned** — below 5t's 0.085,
+5q's 0.086 and 5e's 0.11, and a third of 5s's 0.199. The prediction `PLAN.md` carried (a
+cross-layer round on the order of several hundred violations makes regeneration pay) did not hold,
+and the reason is visible in what the 513 were made of:
+
+- 5s and 5t were preceded by rounds that **created LLM-authored error** — the `adverb` bug's
+  surfaced `extra_tuple`s, the subject-agreement round's 99 promoted speech frames. Those are rows
+  the model itself can settle, and each time the class carrying them moved several times the pass
+  average.
+- **Rule V created nothing.** It is a checker *acceptance*: it removed 479 `extra_arg` reports
+  without touching a single artifact row. The 34 cross-layer corrections behind it are real but
+  tiny against 1347 units. So the flagged set that went into this pass was not a mix of fresh error
+  and old residue — it was the old residue with a large, model-settleable slice of it deleted, i.e.
+  **more** selected for regeneration-resistance than the set 5t faced, not less.
+
+**The corrected rule**: what makes a `--fix` pass pay is a preceding round that *added* LLM-authored
+rows to the flagged set, not the size of the violation move. A checker rule that removes violations
+by accepting them lowers the next pass's yield, because it removes exactly the positions
+regeneration had a chance at. Phase 5q's stop rule stands, in the form 5t left it, with this
+addition: measure the *provenance* of a cross-layer round's delta, not its magnitude, before
+predicting the next pass.
+
+`missing_tuple` was again the fastest-moving class (−13.8%), the residual tail of the promoted
+speech frames 5t settled a third of; `membership` did not move at all, which is the expected result
+and confirms the read below that its 47 are a question about the check, not artifact error.
+
+Concretely, the round is the usual mix of arguments the LLM had omitted and predicates it had
+over-proposed: inferno 5:23 *«Vuolsi così colà dove si puote»* gained `obl 23.3` (*colà*) on
+`vuolsi`, a locative the derivation had and the LLM had not.
+
+As in 5q, 5s and 5t, the per-unit acceptance count is not recoverable — `skel/skel.log` was again
+left empty by the parallel invocation — so the table reports the flagged-unit delta (−57) as a
+lower bound on accepted units.
+
+Checks after the round: `skel --check` 0 hard / **2531** soft, `dep --check` 0 hard / 18 soft,
+`case --check` 0 hard, `np` and `morph --check` 0/0, `pytest` 173 passed. No code changed; the
+round is 54 `skel/*.tsv` files, 208 insertions / 174 deletions, line endings unchanged.
+
 ## Rule V, the control/participial subject chain — 3136 → 2623, −513 (2026-08-09)
 
 This started as a per-position read of **Inferno 1's twelve** soft violations, asked for as a check

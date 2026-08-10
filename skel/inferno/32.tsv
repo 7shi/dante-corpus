@@ -247,11 +247,12 @@ line	token	word	role	arg_line	arg_token
 80	6	crescer	obj	80	8
 81	5	moleste	subj	0	0
 81	5	moleste	obj	81	4
-82	8	aspetta	subj	82	2
+82	2	io		0	0
+82	8	aspetta	subj	0	0
 82	8	aspetta	obj	82	7
 83	4	esca	subj	83	3
 83	4	esca	obl:di	83	7
-84	3	farai	subj	82	2
+84	3	farai	subj	0	0
 84	3	farai	obj	84	6
 84	3	farai	iobj	84	2
 84	5	vorrai	subj	0	0

@@ -155,7 +155,6 @@ line	token	word	role	arg_line	arg_token
 56	5	levar	obj	55	2
 56	5	levar	obl:per	55	7
 56	5	levar	obl:di	57	2
-57	2	retro	obl:a	57	4
 57	9	tale	subj	57	5
 58	4	gravar	subj	58	6
 58	4	gravar	obj	58	2

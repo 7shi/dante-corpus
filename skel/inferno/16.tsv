@@ -184,8 +184,6 @@ line	token	word	role	arg_line	arg_token
 60	3	ritrassi	obj	59	2
 60	3	ritrassi	obl:con	60	2
 60	5	ascoltai	subj	0	0
-60	5	ascoltai	obj	59	2
-60	5	ascoltai	obl:con	60	2
 61	1	Lascio	subj	0	0
 61	1	Lascio	obj	61	3
 61	5	vo	subj	0	0
