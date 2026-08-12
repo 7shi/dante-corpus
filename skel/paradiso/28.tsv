@@ -273,12 +273,12 @@ line	token	word	role	arg_line	arg_token
 99	3	mostrato	obj	99	4
 99	3	mostrato	iobj	99	1
 100	3	seguono	subj	100	6
-101	2	somigliarsi	subj	0	0
+101	2	somigliarsi	subj	100	6
 101	2	somigliarsi	obl:a	101	4
-101	6	ponno	subj	0	0
+101	6	ponno	subj	100	6
 102	2	posson	subj	100	6
-102	5	veder	subj	0	0
-102	7	soblimi	subj	0	0
+102	7	soblimi	subj	100	6
+102	7	soblimi	obl:a	102	5
 103	7	vonno	subj	103	4
 103	7	vonno	obj	103	6
 104	2	chiaman	subj	103	3

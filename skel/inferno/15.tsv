@@ -214,10 +214,8 @@ line	token	word	role	arg_line	arg_token
 70	7	serba	iobj	70	6
 71	8	avranno	subj	71	4
 71	8	avranno	obj	71	9
-72	4	lungi	subj	72	9
-72	4	lungi	obl:da	72	7
 72	5	fia	subj	72	9
-72	5	fia	attr	72	4
+72	5	fia	obl	72	4
 72	5	fia	obl:da	72	7
 73	1	Faccian	subj	73	3
 73	1	Faccian	obj	73	5

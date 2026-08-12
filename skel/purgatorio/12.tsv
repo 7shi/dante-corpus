@@ -79,12 +79,12 @@ line	token	word	role	arg_line	arg_token
 27	2	scender	obl:da	27	6
 28	1	Vedëa	subj	0	0
 28	1	Vedëa	obj	28	2
-28	1	Vedëa	attr	28	3
 28	1	Vedëa	xcomp	29	2
+28	3	fitto	subj	28	2
 28	3	fitto	obl:da	28	5
 29	2	giacer	subj	28	2
+29	2	giacer	attr	30	1
 29	2	giacer	obl:da	29	6
-29	2	giacer	obl:a	30	4
 29	2	giacer	obl:per	30	8
 30	0			0	0
 31	1	Vedea	subj	0	0

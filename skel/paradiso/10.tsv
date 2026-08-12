@@ -1,5 +1,5 @@
 line	token	word	role	arg_line	arg_token
-1	1	Guardando	subj	0	0
+1	1	Guardando	subj	3	5
 1	1	Guardando	obl:in	1	4
 1	1	Guardando	obl:con	1	7
 2	8	spira	subj	2	1
@@ -8,8 +8,8 @@ line	token	word	role	arg_line	arg_token
 4	8	gira	subj	3	5
 4	8	gira	obl:per	4	3
 4	8	gira	obl:per	4	6
-5	4	fé	subj	0	0
-5	4	fé	obj	3	5
+5	4	fé	subj	3	5
+5	4	fé	obj	4	8
 5	4	fé	obl:con	5	3
 5	6	esser	subj	6	5
 5	8	puote	subj	6	5
@@ -300,8 +300,8 @@ line	token	word	role	arg_line	arg_token
 105	4	piace	obl:in	105	6
 106	5	addorna	subj	106	3
 106	5	addorna	obj	106	8
-107	3	fu	subj	107	2
-107	3	fu	attr	107	4
+107	3	fu	subj	106	2
+107	3	fu	attr	107	2
 108	1	offerse	subj	107	4
 108	1	offerse	obj	108	6
 108	1	offerse	obl:con	107	7

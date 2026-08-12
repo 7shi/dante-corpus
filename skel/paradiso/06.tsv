@@ -227,9 +227,9 @@ line	token	word	role	arg_line	arg_token
 74	7	latra	obl:in	74	6
 75	6	dolente	subj	75	2
 76	1	Piangene	subj	76	5
-77	2	fuggendoli	subj	0	0
-78	3	prese	subj	78	2
-78	3	prese	obj	77	1
+77	2	fuggendoli	subj	77	1
+78	3	prese	subj	77	1
+78	3	prese	obj	78	2
 78	3	prese	obl:da	77	5
 79	3	corse	subj	0	0
 79	3	corse	obl:con	79	2

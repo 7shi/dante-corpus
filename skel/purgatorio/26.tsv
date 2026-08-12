@@ -371,14 +371,15 @@ line	token	word	role	arg_line	arg_token
 116	4	additò	obj	116	6
 117	3	fabbro	subj	115	4
 118	0			0	0
-119	1	soverchiò	subj	118	1
-119	1	soverchiò	subj	118	5
+119	1	soverchiò	subj	0	0
 119	1	soverchiò	obj	119	2
+119	1	soverchiò	obl	118	1
+119	1	soverchiò	obl	118	5
 119	4	lascia	subj	0	0
 119	4	lascia	xcomp	119	5
 119	5	dir	subj	119	7
 119	5	dir	ccomp	120	5
-120	5	credon	subj	0	0
+120	5	credon	subj	119	7
 120	5	credon	ccomp	120	7
 120	7	avanzi	subj	120	2
 121	7	drizzan	subj	121	9

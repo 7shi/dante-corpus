@@ -1,5 +1,101 @@
 # skel — Layer 5 correction history
 
+## Phase 5w: the `--fix` round on the rewritten prompt — 2531 → 2408, −123 (2026-08-12)
+
+Baseline: **0 hard, 2531 soft**, **1290 flagged parse units** — the state left by Phase 5v, which
+changed the *instrument* rather than the data: four conventions added to `SYSTEM_PROMPT`, a second
+worked example, and a corrected `--fix` hint for a non-verb `missing_tuple`. One full `--fix` pass
+over all three canticles, run by the user as `make -C skel fix` 3-way parallel. This is the first
+round whose reason to beat the flat rate was not "a previous round created LLM-authored rows".
+
+Measured the same way as Phases 5t/5u: a `git worktree` at the pre-`--fix` commit with the
+generated `src/` canticle directories symlinked in, diffed against the working tree at the
+**parse-unit** level (`dep.sentence_groups`, which is what `--fix` regenerates).
+
+| metric | measured |
+|---|---|
+| units flagged before | 1290 |
+| units flagged after | 1239 (**−51 cleared outright**) |
+| units improved | 90 |
+| soft violations removed | **123** (2531 → **2408**, −4.9%) |
+| violations removed per LLM call | **≈0.095** |
+| units that got *worse* | **0** (Phase 5c's criterion held) |
+| units newly flagged | **0** |
+| cantos touched | 57 — inferno 22, purgatorio 18, paradiso 17 |
+| artifact rows | +348 / −253 |
+
+Per class:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 1031 | 995 | −36 (−3.5%) |
+| `missing_arg` | 933 | 896 | −37 (−4.0%) |
+| `role_mismatch` | 280 | 258 | −22 (−7.9%) |
+| `extra_tuple` | 146 | 137 | −9 (−6.2%) |
+| `missing_tuple` | 94 | 75 | **−19 (−20.2%)** |
+| `membership` | 47 | 47 | **0** (fourth round unmoved) |
+
+### The four prompt rules, scored one by one
+
+This is the measurement Phase 5v set up, and it does not come out uniform. Each rule addressed a
+population identified by the Layer-2 POS of the token its violations cite; the same instrument
+re-run after the pass gives the verdict:
+
+| 5v rule | population | before | after | Δ |
+|---|---|---|---|---|
+| the elided verb of speech, promoted to its subject | `missing_tuple` on a **pronoun** | 63 | 45 | **−18 (−28.6%)** |
+| — same rule, nominal subject | `missing_tuple` on a **noun** | 16 | 15 | −1 (−6.2%) |
+| a non-finite predicate takes its controller's subject | `extra_arg subj (0,0)` | 126 | 123 | −3 (−2.4%) |
+| an adverb is never a predicate | `extra_tuple` on an **adverb** | 35 | 33 | −2 (−5.7%) |
+| `attr` is not its own predicate | — | \* | \* | not measurable |
+
+\* `attr` never appears in `--check` output at all: it is neither a derived role the checker names
+nor a role any surviving `extra_arg`/`role_mismatch` cites. The gloss was worth adding — the label
+sat in the vocabulary list unexplained — but this round cannot score it, and no future round can
+either without a check that reports it. Recorded so it is not re-measured.
+
+**One rule of the four took, and it took hard.** The promoted speech frame moved 28.6%, six times
+the pass average, and its 18 violations are **15% of the entire pass's −123** from a class that is
+2.5% of the residue. The other three moved at or below the pass average, i.e. at the rate the
+residue moves anyway.
+
+**What separates them is not the subject matter but the form of the instruction.** The speech-frame
+rule was the one 5v gave *three* instruments: the prose rule, a **worked example as a table**
+(inferno 3:34-35), and a **rewritten `--fix` hint** — `_fix_hint` now recognizes that the
+un-proposed predicate is not a verb and stops asking whether a pronoun "heads its own clause". The
+other three rules were prose only, added to a system prompt that already ran to several screens.
+The finding to carry forward: **a prose rule in a long prompt does not change the reading; a worked
+example plus a corrected per-violation hint does.** The hint is the likelier of the two to be doing
+the work, since it is the only part of the instrument that reaches the model *at the position that
+is wrong*, and it is far cheaper to write than a worked example.
+
+### What this says about the stop rule
+
+**Yield 0.095 per call** — back inside the flat 0.085-0.11 band (5e 0.11, 5q 0.086, 5t 0.085), well
+above 5u's 0.068 floor and nowhere near 5s's 0.199. So at the *pass* level the prompt rewrite
+returned an ordinary round. At the *population* level it produced the second-largest single-class
+move any `--fix` round has recorded (−28.6%, behind only 5t's −22.1% on the same class by a
+different route — that class has now moved sharply twice).
+
+This is the same population-not-pass reading 5s/5t/5u converged on, arrived at from a third
+direction. The rule that survives all four rounds:
+
+> A `--fix` pass moves a violation class when *something about that class changed* since the last
+> pass — new LLM-authored rows in it (5s, 5t), or a new instruction aimed at it that reaches the
+> model where the violation is (5w). The pass-level yield is that move diluted by everything that
+> did not change, and lands near 0.09 no matter what. Never read the pass number as the verdict on
+> the intervention.
+
+And the corollary Phase 5v asked for explicitly: the residue is **not** reading disagreement all
+the way down — one prompt silence, correctly closed, was worth 18 violations. But it is also not
+prompt-side in bulk: 2408 remain and three of four rules bought nothing. Further prompt rules are
+worth writing only with a `--fix` hint attached, and the assistant-side routes (`PLAN.md`'s
+copular clause heads under a nominal deprel, `per` + infinitive, the `membership` remainder,
+stacked prepositions) are still where the volume is.
+
+Other layers unchanged by this round: `dep --check` 0 hard / 18 soft, `case --check` 0 hard,
+`np` and `morph --check` 0/0, `pytest` 173 passed.
+
 ## Phase 5v: aligning the build prompt with the conventions the corrections fixed (2026-08-10)
 
 **The point Phase 5u's finding leaves standing**: `--fix` re-runs the *same* prompt over the same

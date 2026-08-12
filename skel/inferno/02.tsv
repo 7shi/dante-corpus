@@ -1,7 +1,6 @@
 line	token	word	role	arg_line	arg_token
 1	5	andava	subj	1	2
-1	5	andava	obj	1	3
-1	5	andava	obl	1	4
+1	5	andava	obl:di	1	4
 2	1	toglieva	subj	1	8
 2	1	toglieva	obj	2	3
 2	1	toglieva	obl:da	3	3
@@ -11,7 +10,7 @@ line	token	word	role	arg_line	arg_token
 4	2	apparecchiava	subj	3	6
 4	2	apparecchiava	obj	4	1
 4	2	apparecchiava	xcomp	4	4
-4	4	sostener	subj	0	0
+4	4	sostener	subj	3	6
 4	4	sostener	obj	4	6
 5	0			0	0
 6	2	ritrarrà	subj	6	4

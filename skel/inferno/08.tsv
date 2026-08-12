@@ -254,6 +254,7 @@ line	token	word	role	arg_line	arg_token
 79	4	far	subj	0	0
 79	4	far	obj	79	6
 80	1	venimmo	subj	0	0
+80	1	venimmo	obl:sanza	79	4
 80	1	venimmo	obl:in	80	3
 81	1	Usciteci	subj	0	0
 81	2	gridò	subj	80	6

@@ -234,10 +234,8 @@ line	token	word	role	arg_line	arg_token
 81	6	esser	subj	79	5
 81	6	esser	attr	81	7
 81	7	tardo	subj	79	5
-82	2	ignota	subj	82	3
-82	3	ricchezza		0	0
-82	5	ben		0	0
-82	6	ferace	subj	82	5
+82	3	ricchezza	subj	0	0
+82	5	ben	subj	0	0
 83	1	Scalzasi	subj	83	2
 83	1	Scalzasi	obl:dietro	84	4
 83	3	scalzasi	subj	83	4

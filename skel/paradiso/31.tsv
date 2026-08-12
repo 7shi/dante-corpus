@@ -105,20 +105,19 @@ line	token	word	role	arg_line	arg_token
 42	5	starmi	subj	0	0
 42	6	muto	subj	0	0
 43	6	ricrea	subj	43	4
-43	6	ricrea	obj	43	5
 43	6	ricrea	obl:in	44	2
-44	6	riguardando	subj	0	0
+44	6	riguardando	subj	43	4
 45	2	spera	subj	43	4
 45	2	spera	xcomp	45	4
-45	4	ridir	subj	0	0
+45	4	ridir	subj	43	4
 45	4	ridir	ccomp	45	7
 45	7	stea	subj	45	6
-46	6	passeggiando	subj	0	0
+46	6	passeggiando	subj	47	2
 46	6	passeggiando	obl:per	46	5
 47	1	menava	subj	47	2
 47	1	menava	obj	47	4
 47	1	menava	obl:per	47	7
-48	7	recirculando	subj	0	0
+48	0			0	0
 49	1	Vedëa	subj	0	0
 49	1	Vedëa	obj	49	2
 49	1	Vedëa	obj	51	2
@@ -312,18 +311,17 @@ line	token	word	role	arg_line	arg_token
 119	0			0	0
 120	1	soverchia	subj	119	2
 120	1	soverchia	obj	120	2
-120	1	soverchia	obl:da	118	8
 120	6	declina	subj	120	5
-121	5	andando	subj	0	0
+120	6	declina	obl	120	3
+121	5	andando	subj	118	1
 121	5	andando	obl:di	121	4
 121	5	andando	obl:a	121	7
 122	4	vidi	subj	118	1
-122	4	vidi	obj	122	5
 122	4	vidi	xcomp	123	1
 122	4	vidi	obl:con	122	3
 123	1	vincer	subj	122	5
 123	1	vincer	obj	123	7
-123	1	vincer	obl:ne	122	8
+123	1	vincer	obl:in	122	8
 123	1	vincer	obl:di	123	3
 124	6	aspetta	subj	124	8
 125	3	guidò	subj	125	1

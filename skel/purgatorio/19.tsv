@@ -306,13 +306,16 @@ line	token	word	role	arg_line	arg_token
 96	6	vivendo	subj	0	0
 96	7	mossi	subj	96	5
 96	7	mossi	obl	96	4
-97	0			0	0
+97	2	elli	subj	0	0
+97	2	elli	ccomp	98	6
+97	2	elli	ccomp	99	1
+97	2	elli	obl:a	97	4
 98	1	rivolga	subj	98	3
 98	1	rivolga	obj	97	8
 98	1	rivolga	obl:a	98	5
-98	6	saprai	subj	97	2
+98	6	saprai	subj	0	0
 98	6	saprai	ccomp	98	1
-99	1	scias	subj	97	2
+99	1	scias	subj	0	0
 99	1	scias	ccomp	99	5
 99	5	successor	subj	99	3
 100	6	adima	subj	101	2

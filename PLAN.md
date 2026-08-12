@@ -1,25 +1,43 @@
 # Plan: a shared grammatical-analysis stack in the corpus
 
-## Handoff (2026-08-10) — resume here
+## Handoff (2026-08-12) — resume here
 
-**Everything is committed**: Phase 5u (the user-run `--fix` round after rule V) and Phase 5v (the
-build-prompt alignment) are the newest work, in that order in `git log`. Checks at commit time:
-`dep --check` 0 hard/**18** soft (the subject-agreement rule's verified-and-left-alone residue),
-`case --check` 0 hard, `skel --check` 0 hard/**2531** soft, `np --check` 0/0, `morph --check` 0/0,
-`pytest` 173 passed.
+**Everything is committed**: Phase 5w (the user-run `--fix` round on the prompt Phase 5v rewrote,
+measured and written up) is the newest work. Checks at commit time: `dep --check` 0 hard/**18**
+soft (the subject-agreement rule's verified-and-left-alone residue), `case --check` 0 hard,
+`skel --check` 0 hard/**2408** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` 173 passed.
 
-**The user is running `make -C skel fix` themselves after this commit.** So when this session
-resumes, expect `git status` to show modified `skel/<canticle>/NN.tsv` files and *nothing else* —
-that is Phase 5w, the first regeneration pass on the rewritten prompt, and measuring and writing it
-up is the first task (recipe below). Anything else uncommitted is work from after this handoff;
-check `git log` before assuming otherwise.
+**No `--fix` pass is running.** The open routes are all assistant-side; see *If a next task is
+wanted*.
 
-**Why that pass matters more than the last one: the build prompt changed.** Phase 5u showed
-regeneration cannot move a class the prompt never states a convention for — `--fix` re-asks the
-same question and gets the same answer. Phase 5v (below) aligned `SYSTEM_PROMPT` with the
-conventions five correction rounds had fixed, covering **~240 violations (~9.5%)** of the residue.
-That pass is the measurement of whether the prompt was the binding constraint, and it is
-**user-run** (`make -C skel fix`, 3-way parallel).
+### What Phase 5w did (2026-08-12, user-run)
+
+The pass Phase 5v set up: `make -C skel fix` 3-way parallel over the 1290 units flagged at 2531,
+run against a `SYSTEM_PROMPT` that had just gained four convention rules, a second worked example
+and a corrected `--fix` hint. Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *Phase 5w*.
+
+- **2531 → 2408 soft, −123 (−4.9%)**, 57 cantos touched. **0 units got worse and 0 were newly
+  flagged** — the fifth consecutive round to hold both. 90 units improved, 51 cleared outright.
+- **Yield 0.095 violations per LLM call**: back inside the flat 0.085-0.11 band, above 5u's 0.068
+  floor, nowhere near 5s's 0.199. At the pass level the prompt rewrite bought an ordinary round.
+- **The four rules did not score alike, and that is the finding.** The elided speech frame
+  (`missing_tuple` on a pronoun) fell **63 → 45, −28.6%** — six times the pass average, and 15% of
+  the whole pass's −123 out of a class that is 2.5% of the residue. The other three moved at or
+  below the pass average: `extra_arg subj (0,0)` 126 → 123 (−2.4%), adverb `extra_tuple` 35 → 33
+  (−5.7%), and `attr` turned out **unmeasurable** — the label never appears in `--check` output at
+  all, so no round can score it without a check that reports it.
+- **What separates them is the form of the instruction, not the subject.** The speech-frame rule
+  was the only one 5v gave three instruments: prose, a **worked example as a table**, and a
+  **rewritten `--fix` hint** (`_fix_hint` stopped asking whether a pronoun "heads its own clause").
+  The others were prose in an already long prompt. **A prose rule buried in a long prompt does not
+  change the reading; an instruction that reaches the model at the flagged position does** — and
+  the per-violation hint is both the likelier half to be doing the work and much the cheaper to
+  write.
+- **The corollary 5v asked for**: the residue is *not* reading disagreement all the way down — one
+  correctly closed silence was worth 18 violations — but it is not prompt-side in bulk either.
+  Write further prompt rules only with a `--fix` hint attached; the volume is in the
+  assistant-side routes below.
 
 ### What Phase 5v did (2026-08-10)
 
@@ -303,13 +321,11 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-**The open item is measuring and writing up Phase 5w — the user's `--fix` pass on Phase 5v's
-rewritten prompt**, which is running outside this repo's history as of the 5v commit. Phase 5u
-established that regeneration cannot move a class the prompt is silent about, and 5v closed four
-such silences (~240 violations, ~9.5% of the residue).
+**No `--fix` pass is pending and no route is blocked on the user.** The four open routes below are
+all assistant-side; the first is the strongest.
 
-**How to measure it** (the method Phases 5t/5u used; the whole round arrives as modified
-`skel/*.tsv` in the working tree):
+**How to measure a future `--fix` round** (the method Phases 5t/5u/5w used; the whole round arrives
+as modified `skel/*.tsv` in the working tree):
 
 1. `git worktree add <scratch>/base HEAD`, then symlink each `src/<canticle>` into the worktree —
    the per-canticle source dirs are **generated, not tracked**, and `api.cantos()` now raises
@@ -318,24 +334,20 @@ such silences (~240 violations, ~9.5% of the residue).
 3. Diff at the **parse-unit** level (`dep.sentence_groups`, which is what `--fix` regenerates), by
    mapping each `<canticle> <canto>:<line>` violation to its unit's first line: units flagged
    before/after, improved, cleared, **got worse**, **newly flagged**. Zero on the last two has held
-   for four consecutive rounds and is Phase 5c's acceptance criterion.
+   for five consecutive rounds and is Phase 5c's acceptance criterion.
 4. Per-call yield = violations removed ÷ units flagged before (`skel.log` is left empty by the
    parallel invocation, so the flagged-unit delta is the only available lower bound on accepted
    units — don't look for a per-unit count).
 5. Classify the residue by the Layer-2 POS of the token each violation cites — that is what made
    both the membership audit and 5v's gap analysis possible.
 
-**Read the per-class table before the pass-level number.** The populations 5v's four rules address
-are `missing_tuple` (94, of which 79 are the elided speech frame), `extra_arg subj (0,0)` (126 of
-321), and the adverb share of `extra_tuple` (35 of 146). If those move sharply while the pass
-average stays near 0.07-0.09, the prompt was the constraint for exactly those classes — the same
-population-not-pass reading 5s/5t/5u converged on. **A flat result across all three is itself the
-answer**: the residue is reading disagreement all the way down, the prompt was never the binding
-constraint, and the remaining routes are the assistant-side ones below.
+**Read the per-class table before the pass-level number** — Phase 5w is the case in point: a flat
+0.095 pass average concealed a −28.6% move in the one class whose instruction had changed. Score
+each intervention against *its* population, never against the pass.
 
-Three routes are open behind it, all assistant-side:
+The four open routes, all assistant-side:
 
-- **Copular clause heads under a nominal deprel (47 `extra_tuple` adjectives).** Layer 4 attaches
+- **Copular clause heads under a nominal deprel (43 `extra_tuple` adjectives after 5w).** Layer 4 attaches
   *"fu compunto"*, *"son presto"*, *"è … congiunto"* to their matrix with `obl`/`obj`/`nsubj`, none
   of them in `CLAUSE_HEAD_DEPRELS`, so `derive_unit` never promotes a token carrying `cop`/`aux`
   and `nsubj` children. Rule V's shape exactly — checker silence, not disagreement. Either a
@@ -343,7 +355,8 @@ Three routes are open behind it, all assistant-side:
 - **`per` + infinitive in Layer 4.** "ch'i' fui **per** *ritornar* più volte vòlto" (inferno 1:36)
   has `per` as a `case` child of an `obl` infinitive, where UD would have `mark` + `advcl`. The
   derivation therefore refuses the infinitive predicate status, and the position costs an
-  `extra_tuple` plus a `missing_arg obl:per`; `missing_arg obl:per` stands at 44 corpus-wide.
+  `extra_tuple` plus a `missing_arg obl:per`; `missing_arg obl:per` stands at **39** corpus-wide
+  after 5w.
   A Layer-4 convention question — measure the population first, since `case` vs `mark` is exactly
   what decides whether Layer 5 derives the infinitive as a predicate at all.
 - **The `membership` remainder (47).** Substantivized adjectives, quoted mention words as the
@@ -362,13 +375,14 @@ verb-valency lexicon) is declined on neutrality grounds; see *Out of scope*.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and rule V, and its soft residue is **2531** (down from
+checker was refined through Phases 0-5r and rule V, and its soft residue is **2408** (down from
 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
 multiple-`obj` round plus the `adverb` bug fix moved it back up to 3545 — see the handoff's *A note
 on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, the subject-agreement
 round moved it to 3270, Phase 5t's user-run `--fix` pass took it to 3136, rule V plus the
-membership audit took it to 2623, and Phase 5u's user-run `--fix` pass took it to 2531) — every
+membership audit took it to 2623, Phase 5u's user-run `--fix` pass took it to 2531, and Phase 5w's
+user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408) — every
 route the
 Phase
 5 plan opened has a measured verdict
@@ -384,12 +398,13 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**One route is open: measuring the user's `--fix` pass on the prompt Phase 5v rewrote** (Phase 5w,
-running as of the 5v commit). All five layers plus the case extension are implemented, built for
-all 100 cantos and merged to `main`. Phase 5u showed regeneration cannot move a class the build
-prompt never states a convention for; 5v closed four such silences, covering ~9.5% of the residue,
-and that pass is the measurement (see *If a next task is wanted* for the recipe, which also lists
-three assistant-side routes behind it).
+**No route is blocked on the user; the four that remain are assistant-side** (see *If a next task
+is wanted*). All five layers plus the case extension are implemented, built for all 100 cantos and
+merged to `main`. Phase 5w closed the prompt question 5u and 5v opened: a prompt rule moves its
+class only when it reaches the model at the flagged position — the one 5v rule carrying a worked
+example and a `--fix` hint took its class −28.6%, the three prose-only rules moved nothing above
+the pass average. Further prompt work is worth doing only with a hint attached; the volume is in
+the four routes listed there.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -416,7 +431,7 @@ three assistant-side routes behind it).
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 2531 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 2408 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -431,6 +446,11 @@ three assistant-side routes behind it).
   after rule V — a cross-layer round of 513, but one that *created* nothing, being a checker
   acceptance — it returned 0.068, the lowest on record. What raises the yield is a preceding round
   that added LLM-authored rows to the flagged set, not the size of the violation move.
+  **Phase 5w (2026-08-12) generalized it past provenance**: run on a *rewritten prompt* rather than
+  a changed flagged set, it returned 0.095 — the flat rate again — while the single class whose
+  instruction had been rewritten with a worked example and a per-violation `--fix` hint fell 28.6%.
+  A pass moves a class when something about *that class* changed since the last pass; the pass
+  average is that move diluted by everything that did not.
   `--fix` rounds are **LLM-regeneration work
   the user runs themselves** (`make -C skel fix`, run 3-way parallel); checker-side and audit
   work is the assistant's.
@@ -646,7 +666,7 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r
-   (`--check`: 0 hard / 2531 soft). Phase 5 closed with every route measured; see
+   (`--check`: 0 hard / 2408 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

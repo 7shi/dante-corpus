@@ -346,10 +346,11 @@ line	token	word	role	arg_line	arg_token
 118	2	solea	xcomp	118	1
 119	5	fatto	subj	118	4
 119	5	fatto	attr	119	6
-119	6	vano	subj	0	0
+119	6	vano	subj	118	4
 120	4	convien	subj	0	0
 120	4	convien	ccomp	120	7
 120	7	riveli	subj	120	6
+120	7	riveli	obj	120	6
 121	4	fu'	subj	121	5
 121	4	fu'	obl:in	121	3
 122	4	fu'	subj	122	2

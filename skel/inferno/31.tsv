@@ -200,10 +200,12 @@ line	token	word	role	arg_line	arg_token
 68	3	gridar	ccomp	67	4
 69	4	convenia	subj	69	7
 69	4	convenia	iobj	69	1
-70	0			0	0
-71	1	tienti	subj	70	3
+70	3	duca	subj	0	0
+70	3	duca	ccomp	71	1
+70	3	duca	obl:verso	70	6
+71	1	tienti	subj	0	0
 71	1	tienti	obl:con	71	3
-71	8	disfoga	subj	70	3
+71	8	disfoga	subj	0	0
 71	8	disfoga	obj	71	7
 71	8	disfoga	obl:con	71	6
 72	7	tocca	subj	72	2

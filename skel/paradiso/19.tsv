@@ -371,12 +371,10 @@ line	token	word	role	arg_line	arg_token
 123	5	soffrir	obl:a	123	9
 124	1	Vedrassi	subj	0	0
 124	1	Vedrassi	obj	124	3
-124	1	Vedrassi	obj	124	6
 125	0			0	0
 126	5	conobbe	subj	126	1
 126	5	conobbe	obj	126	3
 126	7	volle	subj	126	1
-126	7	volle	obj	126	3
 127	1	Vedrassi	subj	0	0
 127	1	Vedrassi	obj	128	7
 127	1	Vedrassi	obl:a	127	3

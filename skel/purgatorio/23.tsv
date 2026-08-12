@@ -252,10 +252,13 @@ line	token	word	role	arg_line	arg_token
 83	4	trovar	obj	83	2
 84	6	ristora	subj	0	0
 84	6	ristora	obl	84	2
+85	2	elli	subj	0	0
+85	2	elli	ccomp	85	9
+85	2	elli	obl:a	85	4
 85	9	condotto	subj	87	2
 85	9	condotto	obj	85	7
 85	9	condotto	xcomp	86	2
-86	2	ber	subj	0	0
+86	2	ber	subj	85	7
 86	2	ber	obj	86	5
 87	7	dirotto	subj	87	6
 88	0			0	0

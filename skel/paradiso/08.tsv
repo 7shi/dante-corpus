@@ -162,7 +162,7 @@ line	token	word	role	arg_line	arg_token
 57	0			0	0
 58	6	lava	subj	58	4
 58	6	lava	obl:di	59	2
-59	6	misto	subj	0	0
+59	6	misto	subj	59	4
 59	6	misto	obl:con	59	8
 60	7	aspettava	subj	58	3
 60	7	aspettava	subj	61	3
@@ -176,6 +176,7 @@ line	token	word	role	arg_line	arg_token
 62	0			0	0
 63	8	sgorga	subj	63	3
 63	8	sgorga	subj	63	5
+63	8	sgorga	obl:da	63	2
 63	8	sgorga	obl:in	63	7
 64	1	Fulgeami	subj	64	6
 64	1	Fulgeami	obl:in	64	4

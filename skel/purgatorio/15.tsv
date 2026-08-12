@@ -131,11 +131,14 @@ line	token	word	role	arg_line	arg_token
 45	5	menzionando	subj	44	5
 45	5	menzionando	obj	45	2
 45	5	menzionando	obj	45	4
-46	0			0	0
-47	1	conosce	subj	46	3
+46	3	elli	subj	0	0
+46	3	elli	ccomp	47	1
+46	3	elli	obl:a	46	5
+47	1	conosce	subj	0	0
 47	1	conosce	obj	47	3
-47	1	conosce	obl:a	46	5
+47	1	conosce	obl:di	46	9
 47	8	ammiri	subj	0	0
+47	8	ammiri	ccomp	48	3
 48	3	riprende	subj	0	0
 48	3	riprende	obl:di	48	2
 48	7	piagna	subj	0	0

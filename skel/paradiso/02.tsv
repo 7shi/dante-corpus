@@ -412,6 +412,7 @@ line	token	word	role	arg_line	arg_token
 141	4	come	subj	141	5
 141	4	come	obl:in	141	7
 141	9	lega	subj	139	1
+141	9	lega	obj	141	8
 141	9	lega	obl:in	141	2
 142	6	deriva	subj	143	2
 142	6	deriva	obl:da	142	5

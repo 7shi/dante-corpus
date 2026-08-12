@@ -118,10 +118,10 @@ line	token	word	role	arg_line	arg_token
 39	4	giugne	obl:con	39	7
 40	0			0	0
 41	1	esce	subj	38	2
+41	1	esce	attr	41	2
 41	1	esce	obl:da	38	7
 41	1	esce	obl:con	40	3
 41	1	esce	obl:con	40	7
-41	2	congiunta	subj	38	2
 42	5	tempera	subj	38	2
 42	5	tempera	obj	41	6
 42	5	tempera	obl:a	42	4

@@ -175,12 +175,16 @@ line	token	word	role	arg_line	arg_token
 62	6	drizzasti	obl:di	63	3
 62	6	drizzasti	obl:a	63	5
 63	0			0	0
+64	2	elli	subj	0	0
+64	2	elli	ccomp	64	8
+64	2	elli	obl:a	64	4
 64	8	invïasti	subj	64	5
 64	8	invïasti	obj	64	7
 64	8	invïasti	xcomp	65	4
 64	8	invïasti	obl:verso	65	2
+65	4	ber	subj	64	7
 65	4	ber	obl:in	65	8
-66	6	alluminasti	subj	64	2
+66	6	alluminasti	subj	64	5
 66	6	alluminasti	obj	66	5
 66	6	alluminasti	obl:appresso	66	4
 67	1	Facesti	subj	0	0

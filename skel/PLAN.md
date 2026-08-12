@@ -1,6 +1,6 @@
 # skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
 
-Status as of 2026-08-10: `make -C skel check` reports **0 hard, 2531 soft** violations across
+Status as of 2026-08-12: `make -C skel check` reports **0 hard, 2408 soft** violations across
 all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
 refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
 4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
@@ -15,13 +15,14 @@ round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug 
 again → 3215 after Phase 5s's user-run `--fix` pass → 3270 after Layer 4's
 subject-agreement round moved it *up* once more → 3136 after Phase 5t's user-run `--fix` pass →
 2623 after rule V and the membership audit's cross-layer corrections → 2531 after Phase 5u's
-user-run `--fix` pass).
+user-run `--fix` pass → 2408 after Phase 5w's user-run `--fix` pass on the prompt Phase 5v
+rewrote).
 The project goal is
 unchanged:
 **0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
 tolerate.
 
-**Phases 5a-5t have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
+**Phases 5a-5w have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
 measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
 about 0.11 violations per LLM call and that rate does not depend on how a *static* flagged set is
 composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
@@ -57,7 +58,7 @@ verdict exhausted and Phase 5p's correction round finished: every row of section
 and so is the audit work each verdict left behind.** Phase 5q then spent the one remaining work
 item — the user-run `--fix` pass (−147) — plus the `ioj` typo fix (−4).
 What is left is the rest of the two big classes, `extra_arg` (**1065** after rule V took 479 out of
-it, 2026-08-09; 1031 after Phase 5u) and `missing_arg` (933), together 77% of what remains — and section 2's triage says both residues are *reading*
+it, 2026-08-09; 1031 after Phase 5u, 995 after 5w) and `missing_arg` (896), together 78% of what remains — and section 2's triage says both residues are *reading*
 disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms, and
 which Phases 5s/5t confirm again (both moved them 2-8% while the freshly created classes moved
 20%+) and Phase 5u a third time (2-3%).
@@ -68,7 +69,11 @@ settle — provenance, not magnitude, is what makes a pass pay. **Phase 5v then 
 reason** and acted on it: `--fix` re-asks the *same* prompt, so a class that exists because
 `SYSTEM_PROMPT` never states a convention (the elided verb of speech, the non-finite predicate's
 subject, adverbs as predicates, `attr`) cannot be regenerated away at any yield. Four rules and a
-second worked example were added, covering ~240 violations; the next user-run pass measures them.
+second worked example were added, covering ~240 violations. **Phase 5w (2026-08-12) measured
+them**: the pass returned the flat rate (0.095/call, −123), but the *one* rule that came with a
+worked example **and** a rewritten `--fix` hint moved its class −28.6% while the three prose-only
+rules moved at the pass average. A prose rule buried in a long prompt does not change the reading;
+an instruction that reaches the model at the flagged position does.
 See [*Where Phase 5 ended*](#where-phase-5-ended) and [`../PLAN.md`](../PLAN.md).**
 
 This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
@@ -81,12 +86,12 @@ measurement explained *why* in a way that changed what was done next.
 
 ## Where the tree is
 
-Everything through Phase 5v is **committed** — the rule commits, the Layer-4 corrections and the
+Everything through Phase 5w is **committed** — the rule commits, the Layer-4 corrections and the
 `--fix` rounds are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
 uncommitted for a next session to discover. Confirm before starting:
 
 ```bash
-make -C skel check      # expect: 0 hard, 2531 soft
+make -C skel check      # expect: 0 hard, 2408 soft
 make -C dep check       # expect: 0 hard, 18 soft (the subject-agreement rule's verified residue)
 make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
 uv run pytest -q        # expect: 173 passed
@@ -94,10 +99,7 @@ make -C skel stats      # by-kind + the role_mismatch pair table the sections be
 ```
 
 If those numbers differ, the sections below are describing a different state — re-measure before
-trusting any count in this file. **One expected exception**: the user was running
-`make -C skel fix` on Phase 5v's rewritten prompt when 5v was committed, so a resumed session may
-find modified `skel/*.tsv` and a lower soft count. That is Phase 5w; measure and write it up first
-([`../PLAN.md`](../PLAN.md)'s *If a next task is wanted* carries the recipe).
+trusting any count in this file.
 
 ## What is left, and why nothing here is open
 
@@ -483,7 +485,8 @@ The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay 
 | **5t** | user-run full-corpus `--fix` pass (1575 flagged units), run *after* Layer 4's subject-agreement round; back at the flat rate (0.085/call) | 3270 → **3136** |
 | **V** | Rule V (the control/participial subject of a non-finite predicate) + the membership audit's 37 Layer-2, 8 Layer-4, 32 `case` and 4 Layer-3 corrections | 3136 → **2623** |
 | **5u** | user-run full-corpus `--fix` pass (1347 flagged units), run *after* rule V; the lowest yield on record (0.068/call), because rule V created no LLM-authored rows | 2623 → **2531** |
-| **5v** | build-prompt alignment: four conventions the corrections had fixed but `SYSTEM_PROMPT` never stated (~240 violations addressed), plus the non-verb `missing_tuple` hint | 2531 → *(next `--fix` measures it)* |
+| **5v** | build-prompt alignment: four conventions the corrections had fixed but `SYSTEM_PROMPT` never stated (~240 violations addressed), plus the non-verb `missing_tuple` hint | 2531 → *(5w measures it)* |
+| **5w** | user-run full-corpus `--fix` pass (1290 flagged units), run *on* 5v's rewritten prompt; flat pass yield (0.095/call) but the one rule that carried a worked example **and** a `--fix` hint moved its class −28.6% | 2531 → **2408** |
 
 Details, per-rule negative tests and the rejected variants are in
 [`CORRECTIONS.md`](CORRECTIONS.md).

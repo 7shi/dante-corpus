@@ -77,10 +77,15 @@ line	token	word	role	arg_line	arg_token
 26	0			0	0
 27	0			0	0
 28	1	Verdi	subj	0	0
+28	1	Verdi	obl:come	28	3
 28	6	nate	subj	28	3
-29	0			0	0
+29	1	erano	subj	0	0
+29	1	erano	obl:in	29	3
+30	1	percosse	subj	29	4
 30	1	percosse	obl:da	29	7
-30	2	traean	subj	29	4
+30	2	traean	subj	0	0
+30	2	traean	obj	29	4
+30	5	ventilate	subj	29	4
 31	7	star	subj	0	0
 31	9	venne	subj	31	2
 31	9	venne	obj	31	8
@@ -296,16 +301,17 @@ line	token	word	role	arg_line	arg_token
 102	6	liscia	subj	102	4
 102	6	liscia	obj	102	5
 103	3	vidi	subj	103	1
-103	6	dicer	subj	0	0
-103	6	dicer	ccomp	104	2
+103	3	vidi	ccomp	104	2
+103	6	dicer	subj	103	1
 103	8	posso	subj	103	1
 103	8	posso	xcomp	103	6
 104	2	mosser	subj	104	4
 105	2	vidi	subj	103	1
 105	2	vidi	obj	105	6
 105	2	vidi	obj	105	9
-105	10	mosso	attr	105	6
-105	10	mosso	attr	105	9
+105	2	vidi	attr	105	10
+105	10	mosso	subj	105	6
+105	10	mosso	subj	105	9
 106	1	Sentendo	subj	0	0
 106	1	Sentendo	ccomp	106	2
 106	2	fender	subj	0	0
@@ -361,17 +367,18 @@ line	token	word	role	arg_line	arg_token
 122	8	dimora	obl	122	6
 122	8	dimora	obl:per	123	3
 123	8	palesi	subj	123	5
-124	7	onora	subj	124	6
-124	7	onora	obj	124	3
-125	1	grida	subj	125	3
-125	1	grida	obj	124	2
-125	5	grida	subj	125	7
+124	7	onora	subj	124	3
+124	7	onora	obj	124	6
+125	1	grida	subj	124	2
+125	1	grida	obj	125	3
+125	5	grida	subj	124	2
+125	5	grida	obj	125	7
 126	4	sa	subj	126	5
 126	4	sa	obj	126	3
 126	8	fu	subj	126	5
-126	8	fu	obl	126	7
 127	4	giuro	subj	127	2
 127	4	giuro	iobj	127	3
+127	4	giuro	ccomp	128	7
 127	9	vada	subj	127	6
 127	9	vada	obl:di	127	8
 128	7	sfregia	subj	128	3

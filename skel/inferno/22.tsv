@@ -50,19 +50,21 @@ line	token	word	role	arg_line	arg_token
 18	9	incesa	obl	18	7
 19	5	fanno	subj	19	3
 19	5	fanno	obj	19	6
+19	5	fanno	ccomp	21	3
 19	5	fanno	obl:a	20	2
 19	5	fanno	obl:con	20	5
 20	0			0	0
-21	3	argomentin	subj	0	0
-21	3	argomentin	obj	21	2
+21	3	argomentin	subj	21	1
 21	3	argomentin	xcomp	21	5
-21	5	campar	subj	0	0
+21	5	campar	subj	21	1
 21	5	campar	obj	21	7
-22	4	alleggiar	subj	0	0
+22	4	alleggiar	subj	23	2
 22	4	alleggiar	obj	22	6
 23	1	mostrav'	subj	23	2
 23	1	mostrav'	obj	23	6
+23	1	mostrav'	obl:come	19	3
 24	2	nascondea	subj	23	2
+24	2	nascondea	obj	23	6
 24	2	nascondea	obl:in	24	4
 24	7	balena	subj	24	5
 25	0			0	0
@@ -442,9 +444,9 @@ line	token	word	role	arg_line	arg_token
 141	1	cadder	subj	140	6
 141	1	cadder	obl:in	141	3
 142	5	fue	subj	142	3
-143	4	levarsi	subj	0	0
+143	4	levarsi	subj	142	3
 143	6	neente	subj	142	3
-143	6	neente	obl:di	143	4
+143	6	neente	xcomp	143	4
 144	3	inviscate	subj	144	5
 145	0			0	0
 146	3	fé	subj	145	1

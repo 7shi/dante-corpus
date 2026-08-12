@@ -227,6 +227,13 @@ line	token	word	role	arg_line	arg_token
 75	8	fiacca	subj	75	6
 76	0			0	0
 77	1	posti	subj	73	1
+77	1	posti	subj	73	3
+77	1	posti	subj	73	5
+77	1	posti	subj	73	7
+77	1	posti	subj	74	1
+77	1	posti	subj	74	2
+77	1	posti	subj	75	2
+77	1	posti	obl:in	75	5
 77	1	posti	obl:da	76	3
 77	1	posti	obl:da	76	7
 77	1	posti	obl:a	76	11
@@ -311,8 +318,7 @@ line	token	word	role	arg_line	arg_token
 101	1	fu	subj	100	1
 101	1	fu	attr	101	2
 101	1	fu	obl:in	100	7
-101	2	meglio	subj	100	1
-101	2	meglio	obl:in	100	7
+101	1	fu	obl:che	101	5
 102	6	pasce	subj	102	3
 102	6	pasce	obj	102	2
 103	5	stretto	subj	103	4

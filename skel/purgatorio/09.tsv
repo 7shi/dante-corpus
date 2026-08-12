@@ -11,13 +11,12 @@ line	token	word	role	arg_line	arg_token
 6	5	percuote	subj	6	1
 6	5	percuote	obj	6	7
 6	5	percuote	obl:con	6	4
-7	8	sale	subj	7	7
+7	8	sale	subj	7	3
 7	8	sale	obl:con	7	7
 8	1	fatti	subj	7	3
 8	1	fatti	obj	8	3
 8	1	fatti	obl:in	8	5
 8	7	eravamo	subj	0	0
-8	7	eravamo	obl:in	8	5
 9	5	chinava	subj	9	3
 9	5	chinava	obj	9	9
 9	5	chinava	obl:in	9	7
@@ -27,7 +26,7 @@ line	token	word	role	arg_line	arg_token
 11	1	vinto	subj	10	2
 11	1	vinto	obl:da	11	3
 11	8	inchinai	subj	10	2
-11	8	inchinai	obl:in	11	7
+11	8	inchinai	obl:su	11	7
 12	7	sedavamo	subj	12	4
 12	7	sedavamo	obl	12	1
 13	5	comincia	subj	14	2
@@ -341,7 +340,7 @@ line	token	word	role	arg_line	arg_token
 113	9	lavi	subj	0	0
 113	9	lavi	obj	114	5
 114	2	se'	subj	0	0
-114	2	se'	attr	114	3
+114	2	se'	obl	114	3
 114	6	disse	subj	0	0
 114	6	disse	ccomp	113	7
 115	7	cavi	subj	115	4

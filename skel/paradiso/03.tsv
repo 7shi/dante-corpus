@@ -169,7 +169,9 @@ line	token	word	role	arg_line	arg_token
 56	7	negletti	subj	57	5
 56	7	negletti	obl:in	57	8
 57	0			0	0
-58	0			0	0
+58	2	io	subj	0	0
+58	2	io	ccomp	59	2
+58	2	io	obl:a	58	4
 59	2	risplende	subj	59	6
 59	2	risplende	obl:in	58	7
 59	4	so	subj	0	0
@@ -177,7 +179,7 @@ line	token	word	role	arg_line	arg_token
 60	3	trasmuta	subj	60	1
 60	3	trasmuta	obj	60	2
 60	3	trasmuta	obl:da	60	6
-61	3	fui	subj	58	2
+61	3	fui	subj	0	0
 61	3	fui	xcomp	61	5
 61	5	rimembrar	subj	0	0
 61	5	rimembrar	obj	61	6
@@ -187,7 +189,7 @@ line	token	word	role	arg_line	arg_token
 62	9	dici	obj	62	6
 62	9	dici	iobj	62	8
 63	7	latino	subj	63	3
-63	7	latino	iobj	63	4
+63	7	latino	obl:a	63	4
 64	2	dimmi	subj	0	0
 64	2	dimmi	ccomp	65	1
 64	7	felici	subj	64	4

@@ -109,15 +109,17 @@ line	token	word	role	arg_line	arg_token
 40	0			0	0
 41	6	dimostraro	subj	40	2
 41	6	dimostraro	ccomp	42	7
-41	6	dimostraro	obl:di	41	5
+41	6	dimostraro	obl	41	5
 42	7	grati	subj	42	4
-42	7	grati	iobj	42	5
-43	7	addrizzaro	subj	0	0
+42	7	grati	obl:a	42	5
+43	7	addrizzaro	subj	40	2
 43	7	addrizzaro	obl:a	43	5
-44	6	creder	subj	44	4
+44	5	dee	subj	0	0
+44	5	dee	xcomp	44	6
+44	5	dee	obl:in	44	2
+44	6	creder	subj	0	0
 44	6	creder	ccomp	44	9
 44	9	invii	subj	45	4
-44	9	invii	obl:in	44	2
 44	9	invii	obl:per	45	2
 45	0			0	0
 46	0			0	0
@@ -337,17 +339,17 @@ line	token	word	role	arg_line	arg_token
 123	5	basta	xcomp	123	7
 123	7	dicer	subj	0	0
 123	7	dicer	obj	123	8
-124	2	luce	subj	0	0
+124	2	luce		0	0
 124	8	sidi	subj	124	4
 124	8	sidi	obl:in	124	7
 125	3	intendi	subj	124	4
 125	3	intendi	obj	125	2
+125	7	intelletta	subj	124	4
 125	7	intelletta	obl:da	125	6
-126	2	intendente		0	0
+126	2	intendente	subj	124	4
 126	4	ami	subj	124	4
 126	4	ami	obj	126	3
 126	6	arridi	subj	124	4
-126	6	arridi	obj	126	3
 127	5	concetta	subj	127	3
 128	1	pareva	subj	127	3
 128	1	pareva	obl:in	128	3

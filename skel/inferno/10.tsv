@@ -172,12 +172,13 @@ line	token	word	role	arg_line	arg_token
 60	4	è	subj	60	2
 60	8	è	subj	60	2
 60	8	è	obl	60	9
-61	1	E	subj	61	2
-61	1	E	iobj	61	4
+61	2	io	subj	0	0
+61	2	io	ccomp	61	9
+61	2	io	obl:a	61	4
 61	9	vegno	subj	61	2
-61	9	vegno	obl:a	61	4
 61	9	vegno	obl:da	61	6
 62	3	attende	subj	62	2
+62	3	attende	obl	62	4
 62	8	mena	subj	62	1
 62	8	mena	obj	62	7
 62	8	mena	obl:per	62	6
@@ -190,8 +191,9 @@ line	token	word	role	arg_line	arg_token
 65	6	letto	iobj	65	1
 66	6	piena	subj	66	4
 67	4	gridò	subj	0	0
-67	4	gridò	obj	67	5
-67	5	Come		0	0
+67	4	gridò	attr	67	3
+67	4	gridò	ccomp	67	5
+67	5	Come	subj	0	0
 68	1	dicesti	subj	0	0
 68	1	dicesti	ccomp	68	3
 68	3	ebbe	subj	68	2
@@ -364,8 +366,7 @@ line	token	word	role	arg_line	arg_token
 123	7	nemico	subj	123	4
 123	7	nemico	iobj	123	5
 124	3	mosse	subj	124	1
-124	3	mosse	obj	124	2
-124	7	andando		0	0
+124	7	andando	subj	124	1
 125	2	disse	subj	124	1
 125	2	disse	iobj	125	1
 125	2	disse	ccomp	125	7

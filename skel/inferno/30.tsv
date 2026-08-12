@@ -240,7 +240,6 @@ line	token	word	role	arg_line	arg_token
 81	6	ho	subj	0	0
 81	6	ho	obj	81	8
 82	8	leggero	subj	82	2
-82	8	leggero	obl:di	82	6
 83	3	potessi	subj	83	2
 83	3	potessi	xcomp	83	7
 83	7	andare	subj	83	2
@@ -248,7 +247,7 @@ line	token	word	role	arg_line	arg_token
 83	7	andare	obl:in	83	6
 84	3	messo	subj	84	1
 84	3	messo	obl:per	84	7
-85	1	cercando	subj	0	0
+85	1	cercando	subj	84	1
 85	1	cercando	obj	85	2
 85	1	cercando	obl:tra	85	5
 86	5	volge	subj	86	4
