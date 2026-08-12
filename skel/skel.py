@@ -75,6 +75,13 @@ Rules:
   noun, with Role subj Arg 0 0 ∅ (the verb is missing, so its own subject slot is empty), the
   quotation's main verb as ccomp, and the addressee as obl:a. Do not skip these frames — they are
   predicates even though no verb is written.
+* The same holds for any other VERBLESS clause: an exclamation or apposition predicated with no
+  copula written ("e te cortese ch'ubidisti tosto", "mantoani per patrïa ambedui") has its noun or
+  pronoun as the Pred token, with Role subj Arg 0 0 ∅.
+* An ATTRIBUTIVE ADJECTIVE is not a predicate: "una lonza leggera", "l'antica Rachele", "persone
+  ratte" open no Pred row of their own. An adjective is a predicate only where a copula links it
+  ("anima fia degna", "e pronti sono"); a secondary predicate over an argument is the matrix
+  verb's attr, per the rule above.
 * A predicate with no arguments at all gets exactly one row: Role -, Arg Line 0, Arg Token 0,
   Arg Word -.
 * A relative pronoun (che, cui, qual, ...) that is a clause's subject/object/oblique is cited
@@ -287,11 +294,23 @@ _HINT_PHRASING = {
     # above ("check whether it heads its own clause") asks the wrong question: the token is a
     # subject, and what is missing is the frame around it. 63 of the 94 surviving `missing_tuple`
     # violations cite a pronoun (io, elli) and 16 a noun — see CORRECTIONS.md's Phase 5v.
-    "missing_tuple_nominal": "'{word}' ({line}.{token}) may be the subject of an ELIDED verb of "
-                             "speech — if so it is itself the predicate row (subj ∅, the quotation "
-                             "as ccomp, the addressee as obl:a)",
+    "missing_tuple_nominal": "'{word}' ({line}.{token}) may head a VERBLESS clause — most often "
+                             "the subject of an elided verb of speech (then: subj ∅, the quotation "
+                             "as ccomp, the addressee as obl:a), otherwise a noun or pronoun "
+                             "predicated with no copula written ('e te cortese', 'mantoani per "
+                             "patrïa ambedui'). Either way it is itself the predicate row",
     "extra_tuple": "the predicate '{word}' ({line}.{token}) you proposed may not be warranted — "
                    "reconsider whether it is really an independent predicate",
+    # Two POS-keyed variants. Phase 5w measured that a prose rule already in the prompt does not
+    # move its class unless an instruction also reaches the model at the flagged position: the
+    # adverb rule was in the prompt throughout and 33 adverb `extra_tuple`s survived it.
+    "extra_tuple_adverb": "'{word}' ({line}.{token}) is an ADVERB, so it is never a predicate — "
+                          "cite it as an argument of the verb it modifies, or leave it out, but "
+                          "do not open a Pred row for it",
+    "extra_tuple_adjective": "'{word}' ({line}.{token}) is an adjective, and an adjective is a "
+                             "predicate only when a copula links it ('è degna', 'son presto') — an "
+                             "attributive one modifying a noun is not. If it is predicated of "
+                             "something, give it as attr/xcomp on that verb rather than a Pred row",
     "missing_arg": "the predicate '{word}' ({line}.{token}) may be missing a '{role}' argument — "
                    "check for one",
     "extra_arg": "the predicate '{word}' ({line}.{token})'s '{role}' argument may not belong — "
@@ -328,6 +347,14 @@ def _fix_hint(
         kind = _violation_class(v)
         if kind == "missing_tuple" and not skel.is_verb_pos(pos_at(v.predicate)):
             kind = "missing_tuple_nominal"
+        elif kind == "extra_tuple":
+            # The two POS-keyed variants above: 33 of the 91 surviving `extra_tuple` violations
+            # cite an adverb and 37 an adjective (see CORRECTIONS.md's rules Y-AF).
+            tag = pos_at(v.predicate).lower()
+            if "adverb" in tag:
+                kind = "extra_tuple_adverb"
+            elif "adjective" in tag:
+                kind = "extra_tuple_adjective"
         phrasing = _HINT_PHRASING.get(kind)
         if phrasing is None:
             continue

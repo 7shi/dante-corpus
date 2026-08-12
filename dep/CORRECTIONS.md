@@ -917,3 +917,32 @@ found was Layer 2's or the checker's, but eight `dep` rows were wrong and are co
 `dep --check` stays 0 hard / 18 soft (the subject-agreement rule's verified-and-left-alone
 residue). Layer 5's soft count fell 2625 → 2623 on the inferno 1:112 rows; the other four are
 inside the `membership` movement recorded in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
+
+## Eleven retags from Layer 5's Inferno 1-3 read (2026-08-12)
+
+The per-position read of all 26 Layer-5 soft violations standing in Inferno 1-3 (full write-up in
+[`skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Rules Y-AF*). Eight of the 26 turned out to be
+checker silence and produced rules; these are the ones where **Layer 4 was wrong**. `dep --check`
+stays 0 hard / 18 soft — the subject-agreement rule's verified-and-left-alone residue, unchanged.
+(The 3:76 retag below opened a nineteenth agreement violation on the way through: making `cose`
+the subject of `fier` exposed that Layer 2 had read `fier` as 1sg of `fare`. Correcting Layer 2
+closed it again, which is the agreement rule doing exactly the job it was built for.)
+
+| position | was | now | why |
+|---|---|---|---|
+| inferno 2:59.2 `cui` | `nmod` → 58.2 `anima` | `nmod` → 59.4 `fama` | *"di cui la fama ... dura"*: `cui` is the genitive of `fama`, the noun standing next to it, not of the vocative two lines up. Layer 5's rule D accepts an oblique hanging off a derived argument, and this attachment put it out of reach of that rule for no reason. |
+| inferno 2:71.5 `tornar` | `nsubj` → 71.6 | `xcomp` → 71.6 | *"ove tornar disio"*: with `disio` corrected to the 1sg verb (Layer 2, same session), the infinitive is its complement, not the subject of a noun. |
+| inferno 2:102.1 `che` | `obl` → 102.3 | `nsubj` → 102.3 | *"che mi sedea con l'antica Rachele"*: the relative pronoun is the subject of `sedea`. Layer 2 had it tagged a conjunction, which is the mistag family that hid it. |
+| inferno 3:13.1 `Ed` | `cc` → 14.3 | `cc` → 13.2 | The elided verb of speech, **still un-normalized**: *"Ed elli a me, come persona accorta: «Qui si convien …»"* attached its whole frame to the verb *inside* the quotation. The 2026-08-07 round converted 99 such frames and missed this one. Now identical in shape to 3:34 and 3:76. |
+| inferno 3:13.2 `elli` | `nsubj` → 14.3 | `root` | |
+| inferno 3:13.4 `me` | `obl` → 14.3 | `obl` → 13.2 | |
+| inferno 3:13.6 `persona` | `obl` → 14.3 | `obl` → 13.2 | |
+| inferno 3:14.3 `convien` | `root` | `ccomp` → 13.2 | |
+| inferno 3:76.6 `cose` | `nmod` → 76.9 | `nsubj` → 76.8 | *"Le cose ti fier conte"*: `fier` is 3pl of `essere` (Layer 2 had read it as `fare`, 1sg), `cose` its subject and `conte` the f. pl. predicate adjective. The old parse made the subject a modifier of the complement and left the clause with a pro-drop subject it does not have. |
+| inferno 3:76.9 `conte` | `obj` → 76.8 | `attr` → 76.8 | |
+| inferno 3:126.5 `si` | `obl` → 126.6 | `expl` → 126.6 | *"la tema si volve in disio"*: the reflexive clitic, which the multiple-`obj` round wrote as `expl` corpus-wide. |
+
+Layer 5's count rose by four across the last two of these — at 3:13 the promoted frame is a
+predicate the LLM never proposed, and at 3:76 the corrected parse no longer matches the LLM's
+(wrong) reading of the line. Both are `--fix` material, the same reading recorded in PLAN.md's
+*A note on Layer 5's count*; neither is a reason to revert a correct parse.

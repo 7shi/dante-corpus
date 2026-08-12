@@ -306,7 +306,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 42	nel	in+il	preposition+article	m.	sg.				contraction
 42	cominciar	cominciare	noun	m.	sg.				apocope
 42	cotanto	cotanto	adverb						
-42	tosta	tosto	adverb						
+42	tosta	tosto	adjective	f.	sg.				
 43	S'	se	conjunction						elision
 43	i'	io	pronoun		sg.	1			apocope
 43	ho	avere	verb		sg.	1	present	indicative	
@@ -517,7 +517,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 71	loco	luogo	noun	m.	sg.				archaic
 71	ove	ove	adverb						
 71	tornar	tornare	verb				present	infinitive	apocope
-71	disio	desiderio	noun	m.	sg.				apocope
+71	disio	disiare	verb		sg.	1	present	indicative	
 72	amor	amore	noun	m.	sg.				apocope
 72	mi	mi	pronoun		sg.	1			
 72	mosse	muovere	verb		sg.	3	remote past	indicative	
@@ -738,7 +738,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 101	dov'	dove	adverb						elision
 101	i'	io	pronoun		sg.	1			apocope
 101	era	essere	verb		sg.	1	imperfect	indicative	
-102	che	che	conjunction						
+102	che	che	pronoun						
 102	mi	mi	pronoun		sg.	1			
 102	sedea	sedere	verb		sg.	1	imperfect	indicative	archaic
 102	con	con	preposition						

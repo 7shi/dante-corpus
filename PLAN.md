@@ -2,14 +2,53 @@
 
 ## Handoff (2026-08-12) — resume here
 
-**Everything is committed**: rules W and X — two checker acceptances found by re-reading Inferno
-1's five remaining violations — are the newest work. Checks at commit time: `dep --check` 0
-hard/**18** soft (the subject-agreement rule's verified-and-left-alone residue), `case --check` 0
-hard, `skel --check` 0 hard/**2330** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` **181**
-passed.
+**Everything is committed**: rules Y-AF — eight checker acceptances, seven cross-layer
+corrections and two `--fix` hints, all from a per-position read of Inferno 1-3 — are the newest
+work. Checks at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
+verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**2084** soft,
+`np --check` 0/0, `morph --check` 0/0, `pytest` **196** passed.
 
 **No `--fix` pass is running.** The open routes are all assistant-side; see *If a next task is
 wanted*.
+
+### What rules Y-AF did (2026-08-12)
+
+A per-position read of **all 26** Layer-5 soft violations standing in **Inferno 1-3** — the third
+time this exercise has been run (rule V from Inferno 1's twelve, W and X from its five) and the
+first over more than one canto. Full write-up in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md);
+the cross-layer halves are in [`dep/`](dep/CORRECTIONS.md), [`morph/`](morph/CORRECTIONS.md) and
+[`case/`](case/CORRECTIONS.md).
+
+- **2330 → 2084 soft, −246 (−10.6%)**, 89 cantos touched. `membership` 47 → **8**, `extra_tuple`
+  137 → **91**, `extra_arg` 954 → **848**, `missing_arg` 883 → **827**; Inferno 1-3 itself 26 →
+  **11**. No model call; no artifact row was changed by a rule.
+- **The finding: `role_mismatch` did not move at all — 234 before and after.** Every one of the
+  eight rules landed on a class where **one side is silent**, and that is structural, not a gating
+  accident: a `role_mismatch` is the one class where both layers speak, so it is a real
+  disagreement and only a third read (rule U's `case` annex) has ever settled one. What the
+  checker still had to give was silence being reported as denial.
+- **The two biggest rules were not on the route list either.** Rule AB (−63) accepts the reflexive
+  clitic Layer 4 writes as `expl`, which puts it outside `ARG_DEPRELS` entirely; rule Z (−77 over
+  two legs) accepts a **verb form** Layer 4 put in an argument slot, which generalizes the
+  `per`+infinitive route the plan had ranked *last* at 27 violations. Rule Y closed the route
+  ranked **first** and was worth only −8 — rules X and `double_listed` had already absorbed most
+  of that class. **The classification by count mispredicted both ends of the list.**
+- **The `membership` class is closed as a question** (rule AF, 47 → 8): a token Layer 4 fills an
+  argument slot with is admissible as a Layer-5 argument whatever its POS. Five consecutive
+  `--fix` rounds had left it at exactly 47, which is what a checker question looks like from
+  outside.
+- **Seven cross-layer corrections**, fixed in the same session per the standing rule: 4 Layer-2
+  rows (`tosta` read as an adverb, `disio` as a noun, `che` as a conjunction, `fier`/`conte` as
+  `fare` + a noun), 11 Layer-4 rows (including **an elided speech frame at inferno 3:13 the
+  2026-08-07 round missed** while normalizing 99 others), and 1 `case` row the Layer-2 retag
+  brought into scope. Two of them **raise** Layer 5's count by four, because a corrected parse no
+  longer matches a wrong LLM reading — the honest-checker case again.
+- **Two `--fix` hints, not prose alone.** 33 of the 91 surviving `extra_tuple` cite an adverb
+  although the prompt has forbidden adverb predicates throughout, and 37 cite an adjective; both
+  now have POS-keyed `_fix_hint` phrasings plus matching prompt prose, per Phase 5w's rule that an
+  instruction must reach the model at the flagged position. `missing_tuple_nominal` was widened
+  past the elided verb of speech to any verbless clause (32 of 76 cite a pronoun at a verbless
+  root). **Unmeasured** until a `--fix` round runs.
 
 ### What rules W and X did (2026-08-12)
 
@@ -379,42 +418,34 @@ as modified `skel/*.tsv` in the working tree):
 0.095 pass average concealed a −28.6% move in the one class whose instruction had changed. Score
 each intervention against *its* population, never against the pass.
 
-The four open routes, all assistant-side:
+The open routes, all assistant-side. **Three of the four routes the previous handoff listed are
+closed** — rule Y took the copular-clause-head route (−8, not the 43 its class count promised),
+rule Z absorbed the `per`+infinitive route by generalizing past the preposition (−77), and rule AF
+answered the `membership` question (47 → 8). What is left:
 
-- **Copular clause heads under a nominal deprel (43 `extra_tuple` adjectives).** Layer 4 attaches
-  *"fu compunto"*, *"son presto"*, *"è … congiunto"* to their matrix with `obl`/`obj`/`nsubj`, none
-  of them in `CLAUSE_HEAD_DEPRELS`, so `derive_unit` never promotes a token carrying `cop`/`aux`
-  and `nsubj` children. Rule V's shape exactly — checker silence, not disagreement. Either a
-  derivation rule or a Layer-4 round; the strongest remaining route. **Note that rule X is its
-  neighbour, not its solution**: rule X accepts the *argument* placement when both readings already
-  agree the copula and its complement form one predication, whereas this route is about a
-  predication `derive_unit` never proposes at all.
-- **The `membership` remainder (47).** Substantivized adjectives, quoted mention words as the
-  object of a verb of saying, adverbs cited as objects. Not data errors: a decision about what the
-  check admits as an argument, and the corpus has material for it (the quote layer already knows
-  which tokens sit inside a quotation). Unmoved by five consecutive `--fix` rounds, which is the
-  evidence that it is a question about the check.
+- **Attributive vs predicative adjectives (31 `extra_tuple`).** *"non fur mai persone **ratte** / a
+  far lor pro"* (inferno 2:109): Layer 4 attaches the adjective `amod` inside the subject NP, the
+  LLM promotes it to a predicate of its own. Unlike rule Y's population there is **no `cop` edge**
+  — nothing in the tree asserts a predication — so this is a genuine reading disagreement, not
+  checker silence, and it is now addressed **prompt-side**: the 2026-08-12 read added an
+  attributive-adjective rule to `SYSTEM_PROMPT` plus an `extra_tuple_adjective` `--fix` hint. The
+  next `--fix` round scores it. Do not write a checker rule here without first seeing that number.
+- **Adverbs promoted to predicates (33 `extra_tuple`).** Same status: an `extra_tuple_adverb` hint
+  now exists beside a prompt rule that had been prose-only throughout. Also awaiting a round.
 - **Stacked prepositions in Layer 4 (14 `role_mismatch`).** *"in su la favola"* is chained
   (`in` → `su` → argument) while *"dentro al tuo seno"* is flat (both `case` children of the
   argument), so the derived `obl:<lemma>` names a different preposition in each. A normalization
-  round in `dep/` settles it; no prompt rule can be stated until it does.
-- **`per` + infinitive in Layer 4 — measured, and smaller than it looked (27 violations).**
-  "ch'i' fui **per** *ritornar* più volte vòlto" (inferno 1:36) has `per` as a `case` child of an
-  `obl` infinitive, where UD would have `mark` + `advcl`, so the derivation refuses the infinitive
-  predicate status. The 2026-08-12 read measured the population the plan asked for. The raw
-  case-vs-mark split before a non-finite verb is large and genuinely inconsistent (`per` 130 case /
-  72 mark, `a` 144/150, `di` 101/74) but mostly **inert**: nearly all of it lands on an
-  `advcl`/`xcomp` head, a clause head under either label, so the derivation is indifferent. It
-  bites only where the head deprel is `obl`/`nmod`/`conj`/`nsubj` — **98 positions**, 22 of them
-  also proposed by the LLM, **27 violations total** (19 `extra_tuple`, 4 `missing_arg`, 4
-  `role_mismatch`), ~1% of the residue. Worth doing for tidiness; not a volume route. Ranked last
-  for that reason.
+  round in `dep/` settles it; no prompt rule can be stated until it does. Unchanged, and now the
+  only *checker/Layer-4* route on the list.
+- **The `missing_arg obl` bucket (213).** The single largest sub-class after the two subject
+  buckets, and never classified. A per-position read of a sample is the cheap first move.
 
-**Neither of the two shapes rules W and X closed had been on this list** — both came out of the
-per-position re-read of Inferno 1, not from the classification of the residue by count. That is the
-argument for repeating the exercise on another canto's survivors before writing the next rule: the
-classification tells you where the volume is, and a per-position read tells you which rule declined
-to fire, which is a different question and the one that has twice produced a rule.
+**A per-position read has now produced a rule three times running, and the residue classification
+has mispredicted it every time.** Rules W and X were absent from the route list; rules Y-AF
+inverted it — the route ranked first was worth 8 and the route ranked last, generalized, was worth
+77, while the two biggest rules (AB, Z) described shapes no classification had named. The
+classification tells you where the volume is; a per-position read tells you *which rule declined to
+fire*. Run the read on **Inferno 4-6** next, not another statistics pass.
 
 Past those, the standing goal of 0 soft violations needs a *new instrument* against the two big
 reading-disagreement classes — and the candidate this project has identified there (an imported
@@ -423,7 +454,7 @@ verb-valency lexicon) is declined on neutrality grounds; see *Out of scope*.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and rules V, W and X, and its soft residue is **2330**
+checker was refined through Phases 0-5r and rules V through AF, and its soft residue is **2084**
 (down from
 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
@@ -431,8 +462,8 @@ multiple-`obj` round plus the `adverb` bug fix moved it back up to 3545 — see 
 on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, the subject-agreement
 round moved it to 3270, Phase 5t's user-run `--fix` pass took it to 3136, rule V plus the
 membership audit took it to 2623, Phase 5u's user-run `--fix` pass took it to 2531, and Phase 5w's
-user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408, and rules W and X took it to
-2330) — every
+user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408, rules W and X took it to
+2330, and rules Y-AF plus the Inferno 1-3 cross-layer corrections took it to 2084) — every
 route the
 Phase
 5 plan opened has a measured verdict
@@ -474,14 +505,15 @@ the four routes listed there.
 - **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through Phases 0-5r
   — the four mechanical phases (normalization, authority model, `--repair`,
   double-listing/elided-copula whitelist) plus Phase 5's rule series, 5r's rule U, which reads the
-  `case` annex as a third opinion on a disputed argument role, and rule V, which supplies the
-  control/participial subject of a non-finite predicate; see
+  `case` annex as a third opinion on a disputed argument role, rule V, which supplies the
+  control/participial subject of a non-finite predicate, and the Y-AF series, which closes eight
+  further shapes where the derivation was silent rather than disagreeing; see
   [`skel/README.md`](skel/README.md). `dante_corpus/skel.py` (dataclasses, role
   vocabulary, deterministic derivation, table parsing, validation, TSV I/O, serve-time joins),
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 2330 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 2084 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -715,8 +747,8 @@ discipline already used for normalization and quotes.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
-   `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W
-   and X (`--check`: 0 hard / 2330 soft). Phase 5 closed with every route measured; see
+   `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W,
+   X and the Y-AF series (`--check`: 0 hard / 2084 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

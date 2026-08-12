@@ -11,7 +11,7 @@ canon-neutral.
 **Status: built for all 100 cantos, checker refined through Phase 5r, six full `--fix` rounds
 run (Phases 5e, 5q, 5s, 5t, 5u and 5w), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
 fed back into `dep/`.**
-`make -C skel check`: **0 hard, 2330 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 2084 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -26,7 +26,8 @@ Phase 5s's user-run `--fix` pass, 3270 after Layer 4's subject-agreement round m
 once more, 3136 after Phase 5t's user-run `--fix` pass, 2623 after rule V's
 control/participial subject chain and the membership audit's cross-layer corrections, 2531
 after Phase 5u's user-run `--fix` pass, 2408 after Phase 5w's user-run `--fix` pass on the
-prompt Phase 5v rewrote, and 2330 after rules W and X). See
+prompt Phase 5v rewrote, 2330 after rules W and X, and 2084 after rules Y-AF and the
+cross-layer corrections from the Inferno 1-3 read). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
@@ -358,6 +359,48 @@ other class unchanged. Rule U accepts a
 just as a subject is, so the annex cannot separate `subj` from `attr`. See
 [CORRECTIONS.md](CORRECTIONS.md), [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+After **rules Y-AF** (2026-08-12, from a per-position read of all 26 violations standing in
+Inferno 1-3 — the same exercise as rules V and W/X, widened from one canto to three): **0 hard,
+2084 soft** — `membership` 47 → **8**, `extra_tuple` 137 → **91**, `extra_arg` 954 → **848**,
+`missing_arg` 883 → **827**, `role_mismatch` **unchanged at 234**. All eight are acceptances; no
+artifact row was changed by a rule.
+
+- **Rule Y** (`_copular_predication`, −8): a copular clause head Layer 4 hung under a nominal
+  deprel ("per non esser men **belli**", inferno 3:40). The tree's own `cop` edge asserts the
+  predication `derive_unit` declines to propose; `_elided_copula_nominal` is the same acceptance
+  for the case with no copula token at all.
+- **Rule Z** (`_verb_in_argument_slot`, −77 over its two legs): a **verb form** Layer 4 put in an
+  argument or adjunct slot ("fui **per ritornar** più volte vòlto", inferno 1:36; "ove **tornar**
+  disio"). No reading disputes that a verb heads a predication, so the derivation's silence is
+  about where the token sits in the tree. The host leg accepts the same split from the other end,
+  where the derivation reports that infinitive as its own oblique or subject.
+- **Rule AA** (`_secondary_predicate_over_argument`, −3): a perception/depictive small clause
+  Layer 4 attached as an `acl` of the object ("Queste parole ... vid' ïo **scritte**", inferno
+  3:11) — rule D's shape with a clause in place of a nominal.
+- **Rule AB** (`_reflexive_clitic_argument`, −63): the reflexive clitic, written `expl` corpus-wide
+  and therefore outside `ARG_DEPRELS`, read by the LLM as the verb's object or dative ("tal **mi**
+  fec' ïo", inferno 2:40). Gated to `obj`/`iobj`/`obl:a` on a Layer-2 pronoun; the variant
+  accepting any oblique label was measured at −67 and rejected.
+- **Rule AC** (the `_inherited_subject` echo, −26): `derive_unit`'s conj propagation copies the
+  coordination head's subject onto a conjunct, and so does the LLM, so a disagreement there is the
+  head's restated once per conjunct ("Questa chiese Lucia ... e **disse**", inferno 2:98).
+- **Rule AD** (`_copular_adverb_complement`, −14): rule R's shape with an **adverb**, gated on the
+  predicate being `essere` — which needs a complement to predicate anything ("m'è **tardi**",
+  inferno 2:80). Rule R's own docstring named this line as the case it left undecided.
+- **Rule AE** (`_free_relative_head`, −12): a free relative cited from its two ends — Layer 4 puts
+  the clause's verb in the matrix role, the LLM the pronoun heading it ("Galeotto fu 'l libro e
+  **chi** lo scrisse", inferno 5:137).
+- **Rule AF** (the membership check, −39): a token Layer 4 fills an argument slot with is
+  admissible as a Layer-5 argument whatever its POS, so the check no longer needs Layer 3 to have
+  drawn an NP around it ("ch'io v'ebbi **alcun** riconosciuto", inferno 3:58). This closes the
+  47-strong class PLAN.md had recorded as *a question about the check*; the 8 that remain are
+  citations nothing corroborates.
+
+The same read produced **seven cross-layer corrections** (4 Layer-2 rows, 11 Layer-4 rows, 1
+`case` row) and two POS-keyed `--fix` hints; see [CORRECTIONS.md](CORRECTIONS.md),
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md), [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)
+and [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
 
 After **rules W and X** (2026-08-12, from a per-position re-read of Inferno 1's five remaining
 violations, the same exercise that produced rule V): **0 hard, 2330 soft** — `role_mismatch` 258 →

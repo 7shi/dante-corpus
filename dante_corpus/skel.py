@@ -510,10 +510,25 @@ def _control_subject_candidates(
     return candidates, False
 
 
+def _inherited_subject(
+    pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
+) -> bool:
+    """Whether `derive_unit` could only have given `pos` a subject by conj propagation (step 3):
+    the predicate is a `conj` and has no subject child of its own."""
+    row = dep_index_by_pos.get(pos)
+    if row is None or row.deprel != "conj":
+        return False
+    return not any(
+        r.deprel in _SUBJ_DEPRELS and (r.head_line, r.head_token) == pos
+        for r in dep_index_by_pos.values()
+    )
+
+
 def _apply_subj_authority(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow],
+    given_by_pred: "dict[tuple[int, int], list[SkelRow]] | None" = None,
 ) -> None:
     """Mutate `g`/`d` in place: drop the subj arg where PLAN.md's authority model makes the slot
     LLM-authoritative (validated against a candidate set) rather than derive-authoritative (exact
@@ -541,9 +556,36 @@ def _apply_subj_authority(
         candidates = {(0, 0)} | reachable
         if g_subj in candidates:
             g.pop(g_subj, None)
+    elif given_by_pred is not None and _inherited_subject(pos, dep_index_by_pos):
+        # Rule AC: an inherited subject is not an independent assertion about *this* predicate.
+        # `derive_unit`'s step 3 copies the coordination head's subject onto a conjunct that has
+        # none of its own, and the LLM copies its own reading of the head the same way, so a
+        # disagreement here is the head's disagreement restated once per conjunct — "Questa
+        # chiese Lucia ... e disse" (inferno 2:97-98), where rules U and W already settled the
+        # subj/obj inversion at `chiese` and `disse` reported it a second time. Gated on the
+        # given subject being *literally* the one the LLM gave the head: a conjunct where the
+        # LLM resolved a different subject is making its own claim and stays flagged.
+        g_subj = _subj_arg(g)
+        if g_subj is None or g_subj == d_subj:
+            return
+        head = _coordination_head(pos, dep_index_by_pos)
+        head_given = next(
+            ((r.arg_line, r.arg_token) for r in given_by_pred.get(head, ()) if r.role == "subj"),
+            None,
+        )
+        if head_given == g_subj:
+            g.pop(g_subj, None)
+            d.pop(d_subj, None)
 
 
 _ELIDED_COPULA_DEPRELS = frozenset({"conj", "appos", "attr"})
+
+# Rule Z: the deprels that put a token in an argument or adjunct *slot* rather than at a clause
+# head. A verb form sitting in one of these is a predicate no reading disputes — the derivation
+# is silent about it only because `derive_unit`'s rule 1 keys on `CLAUSE_HEAD_DEPRELS` and its
+# rule 2 needs the verb to carry an argument child of its own.
+_NOMINAL_SLOT_DEPRELS = frozenset({"obl", "obl:agent", "nmod", "nsubj", "nsubj:pass", "obj",
+                                   "iobj", "advmod"})
 
 # --- Divergence-check normalization (Phase 5, PLAN.md) --------------------------------
 #
@@ -928,6 +970,7 @@ def _classify_divergence(
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
     morph_pos_by_position: dict[tuple[int, int], str] | None = None,
     case_by_position: dict[tuple[int, int], str] | None = None,
+    morph_lemma_by_position: dict[tuple[int, int], str] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
     # Rules L and N: the preposition lemmas each position's `case` dep children name (empty set
@@ -943,6 +986,13 @@ def _classify_divergence(
             if row.deprel == "case":
                 case_lemmas.setdefault((row.head_line, row.head_token), set()).add(lemma)
     case_children = set(case_lemmas)
+    # Rule Y: the positions Layer 4 attaches a `cop`/`aux`/`aux:pass` token to — the tree's own
+    # assertion that a predication is headed there, whatever deprel the head itself carries.
+    copula_hosts: set[tuple[int, int]] = {
+        (row.head_line, row.head_token)
+        for row in (dep_index_by_pos or {}).values()
+        if row.deprel in _AUX_DEPRELS
+    }
     given_preds = _predicate_positions_in(given)
     derived_preds = _predicate_positions_in(derived)
 
@@ -1033,6 +1083,88 @@ def _classify_divergence(
                     return True
         return False
 
+    def _free_relative_head(
+        pos: tuple[int, int], arg: tuple[int, int], role: str,
+        derived_roles: dict[tuple[int, int], str],
+    ) -> bool:
+        # Rule AE: a free relative, cited from its two ends. Layer 4 attaches the *clause's verb*
+        # in the matrix role ("Galeotto fu 'l libro e **chi lo scrisse**": `scrisse` is `fu`'s
+        # second `nsubj`), and the LLM cites the pronoun that heads it — which is also what the
+        # prompt's relative-pronoun rule tells it to do. Both name the same constituent, in the
+        # same role, so this is a citation convention, not a disagreement about the parse.
+        # Gated on the pronoun being that very clause's subject and on the roles matching:
+        # citing a pronoun from an *unrelated* clause, or in another role, stays flagged.
+        if dep_index_by_pos is None:
+            return False
+        if "pronoun" not in (morph_pos_by_position or {}).get(arg, "").lower():
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel not in _SUBJ_DEPRELS:
+            return False
+        clause = (row.head_line, row.head_token)
+        return clause != pos and derived_roles.get(clause) == role
+
+    def _copular_adverb_complement(
+        pos: tuple[int, int], arg: tuple[int, int], role: str
+    ) -> bool:
+        # Rule AD: rule R's shape with an **adverb** complement. Rule R deliberately stopped at
+        # adjectives because an adverb attached `advmod` leaves the reading undecided in general
+        # — but not under `essere`, which needs a complement to predicate anything at all: "che
+        # l'ubidir, se già fosse, **m'è tardi**" (inferno 2:80), "m'è **uopo**". The copula lemma
+        # is the whole gate; the same adverb under a lexical verb ("va **superbo**" is rule R's
+        # job, "corre **tosto**" is a genuine adjunct) is untouched.
+        if dep_index_by_pos is None or role != "xcomp":
+            return False
+        if (morph_lemma_by_position or {}).get(pos, "").lower() != "essere":
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+            return False
+        return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+    def _reflexive_clitic_argument(
+        pos: tuple[int, int], arg: tuple[int, int], role: str
+    ) -> bool:
+        # Rule AB: the reflexive clitic. The multiple-`obj` round (2026-08-03) normalized every
+        # reflexive `mi`/`ti`/`si`/`ci`/`vi` onto UD's `expl`, which is outside `ARG_DEPRELS`, so
+        # `derive_unit` says nothing at all about the clitic — while the LLM reads the very same
+        # token as the verb's object or dative ("tal **mi** fec' ïo", inferno 2:40). UD's `expl`
+        # is a labeling convention for a clitic that is still the verb's argument in the reading
+        # sense, so the derivation's silence is not a denial.
+        #
+        # Two gates keep it narrow: the role must be one a bare clitic can carry (`obj`, `iobj`,
+        # `obl:a` — the accusative/dative pair the `case` annex's own vocabulary allows it), so
+        # naming a preposition the tree does not carry (`obl:di`, `obl:in`) stays flagged; and
+        # the cited token must be a Layer-2 pronoun.
+        if dep_index_by_pos is None or role not in ("obj", "iobj", "obl:a"):
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel != "expl":
+            return False
+        if (row.head_line, row.head_token) != pos:
+            return False
+        return "pronoun" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+    def _secondary_predicate_over_argument(
+        pos: tuple[int, int], arg: tuple[int, int], role: str,
+        derived_args: set[tuple[int, int]],
+    ) -> bool:
+        # Rule AA: the perception/depictive small clause. "Queste parole ... vid' ïo **scritte**"
+        # (inferno 3:11) — Layer 4 attaches the participle as an `acl` of the object noun, which
+        # is outside `ARG_DEPRELS`, so `derive_unit` cannot report it as an argument of the
+        # matrix verb at all; the LLM reads the same edge as the verb's clausal complement. Rule
+        # D accepts exactly this shape one relation over (an `nmod` off a derived argument, read
+        # as an oblique); this is its clausal counterpart.
+        #
+        # Gated on the `acl`'s host being one of *this* predicate's own derived arguments, so a
+        # participle modifying some unrelated nominal is not swept in with it.
+        if dep_index_by_pos is None or role not in ("xcomp", "ccomp"):
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel not in ("acl", "acl:relcl"):
+            return False
+        return (row.head_line, row.head_token) in derived_args
+
     def _copular_hosts(pos: tuple[int, int]) -> set[tuple[int, int]]:
         # Rule X's other leg, looking the other way: the predicates `pos` is the complement of.
         # Same both-readings gate as `_predicate_complements`.
@@ -1047,9 +1179,39 @@ def _classify_divergence(
     for line, token in sorted(derived_preds - given_preds):
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
                                      predicate=(line, token)))
+    def _copular_predication(pos: tuple[int, int]) -> bool:
+        # Rule Y: a copular clause head Layer 4 hung under a nominal deprel. "Caccianli i ciel
+        # per non esser men **belli**" (inferno 3:40) — the tree gives `belli` a `cop` child
+        # (`esser`) and a `case` child (`per`) and then attaches the whole thing as `obl`, which
+        # is not in `CLAUSE_HEAD_DEPRELS`, so `derive_unit` never proposes the predication even
+        # though Layer 4's own `cop` edge asserts one. `_elided_copula_nominal` is the same
+        # acceptance for the case where there is **no** copula token at all; this is the case
+        # where there is one, and the copula edge itself is the evidence, so no deprel gate on
+        # the host is needed.
+        return pos in copula_hosts
+
+    def _verb_in_argument_slot(pos: tuple[int, int]) -> bool:
+        # Rule Z: a verb form Layer 4 put in an argument or adjunct slot. "ch'i' fui **per
+        # ritornar** più volte vòlto" (inferno 1:36) — `ritornar` is an `obl` with `per` as its
+        # `case` child, where UD would write `mark` + `advcl`; "ove **tornar** disio" has the
+        # infinitive as an `nsubj`. Either way Layer 2 calls the token a verb and both readings
+        # agree it heads a predication: the derivation is silent because of where the token sits
+        # in the tree, not because it denies the predicate. The mirror leg, at the `missing_arg`
+        # branch below, accepts the same split from the host's side — the derivation reports the
+        # infinitive as its oblique/subject while the LLM gives it a tuple of its own, one
+        # decision that was being reported twice.
+        if dep_index_by_pos is None or morph_pos_by_position is None:
+            return False
+        row = dep_index_by_pos.get(pos)
+        if row is None or row.deprel not in _NOMINAL_SLOT_DEPRELS:
+            return False
+        return is_verb_pos(morph_pos_by_position.get(pos, ""))
+
     for line, token in sorted(given_preds - derived_preds):
         pos = (line, token)
-        if pos in double_listed or _elided_copula_nominal(pos) or _aux_of_derived_predicate(pos):
+        if (pos in double_listed or _elided_copula_nominal(pos)
+                or _aux_of_derived_predicate(pos) or _copular_predication(pos)
+                or _verb_in_argument_slot(pos)):
             continue
         violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
                                      predicate=(line, token)))
@@ -1077,7 +1239,7 @@ def _classify_divergence(
         g = by_arg(given_by_pred.get(pos, []))
         d = by_arg(derived_by_pred.get(pos, []))
         if dep_index_by_pos is not None:
-            _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos)
+            _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos, given_by_pred)
             derived_args = set(d)
             g = _collapse_coordination(g, pos, dep_index_by_pos)
             d = _collapse_coordination(d, pos, dep_index_by_pos)
@@ -1088,6 +1250,11 @@ def _classify_divergence(
                 if drole in ("ccomp", "xcomp") and arg in given_preds:
                     # Clausal-complement double-listing: the LLM lists the clause as its own
                     # tuple instead of also citing it as this predicate's argument.
+                    continue
+                if arg in given_preds and _verb_in_argument_slot(arg):
+                    # Rule Z, host leg: the derivation reports the infinitive as this
+                    # predicate's argument, the LLM gives it a tuple of its own — the same
+                    # double-listing the ccomp/xcomp skip above already accepts.
                     continue
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred):
                     continue  # rule X: the LLM hung it on this predicate's own complement
@@ -1119,6 +1286,10 @@ def _classify_divergence(
                                                      case_lemmas)
                     or _marked_adverbial_clause(pos, arg, grole, dep_index_by_pos,
                                                 marker_lemmas)
+                    or _secondary_predicate_over_argument(pos, arg, grole, derived_args)
+                    or _reflexive_clitic_argument(pos, arg, grole)
+                    or _copular_adverb_complement(pos, arg, grole)
+                    or _free_relative_head(pos, arg, grole, d)
                     # rule X, mirror leg: derive_unit hung it on the copula this predicate
                     # is the complement of
                     or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
@@ -1216,8 +1387,9 @@ def validate_unit(
     regardless of the frozen Layer-2 POS tag — `morph/CORRECTIONS.md` documents that "che" is
     tagged inconsistently between `pronoun` and `conjunction` even in its relative use), is not
     an adverb heading an `obl`/`obl:*` argument (an adverbial oblique like `quivi`/`là`/`sù` has
-    no NP to cite), and is not itself an in-unit predicate (only when *both* `morph_rows` and
-    `np_rows` are supplied); and — the core of this layer's design — every divergence from
+    no NP to cite), is not itself an in-unit predicate, and — rule AF, when `dep_rows` is also
+    supplied — is not a position Layer 4 itself fills an argument slot with (only when *both*
+    `morph_rows` and `np_rows` are supplied); and — the core of this layer's design — every divergence from
     `derive_unit`
     (only when `dep_rows`/`morph_rows` supplied): `missing_tuple`, `extra_tuple`, `missing_arg`,
     `extra_arg`, `role_mismatch`. `case_rows` (the Layer-2 `case` annex, optional) feeds rule U,
@@ -1290,6 +1462,19 @@ def validate_unit(
             if "adverb" in r.pos.lower()
         }
         np_head_positions = {(no, s.head) for no, spans in np_rows.items() for s in spans}
+        # Rule AF: positions Layer 4 itself attaches with an argument deprel. The membership
+        # check asks whether a cited argument is a *nominal* — it tests Layer 3's NP heads and
+        # Layer 2's pronouns, and its 47-strong residue was substantivized adjectives ("ch'io
+        # v'ebbi **alcun** riconosciuto", inferno 3:58), quoted mention words, and adverbs cited
+        # as objects. Layer 4 attaching that same token as an `nsubj`/`obj`/`iobj`/`obl` is the
+        # corpus's own answer: a token the dependency parse fills an argument slot with is
+        # admissible as a Layer-5 argument whatever its POS, so the check no longer needs Layer 3
+        # to have drawn an NP around it. A citation *nothing* corroborates still fails.
+        dep_argument_positions = {
+            (r.line, r.token)
+            for rows in (dep_rows or {}).values() for r in rows
+            if r.deprel in ARG_DEPRELS
+        }
         for row in all_rows:
             if row.token == 0 or row.role in ("", "attr", "xcomp", "ccomp"):
                 continue
@@ -1299,6 +1484,8 @@ def validate_unit(
             if arg in np_head_positions or arg in pronoun_positions or arg in predicate_positions:
                 continue
             if (row.role == "obl" or row.role.startswith("obl:")) and arg in adverb_obl_positions:
+                continue
+            if arg in dep_argument_positions:
                 continue
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")
@@ -1313,8 +1500,12 @@ def validate_unit(
             {(row.line, row.token): row.case for rows in case_rows.values() for row in rows}
             if case_rows is not None else None
         )
+        morph_lemma_by_position = {
+            (no, i + 1): row.lemma for no, rows in morph_rows.items() for i, row in enumerate(rows)
+        }
         violations.extend(_classify_divergence(
             rows_by_line, derived, dep_index(dep_rows), morph_pos_by_position, case_by_position,
+            morph_lemma_by_position,
         ))
 
     return violations

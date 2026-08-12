@@ -477,3 +477,18 @@ adverbs cited as objects) is *not* touched here — see
 and 2 fused tokens into Layer 3's clitic-mention rule; both are recorded in
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md) and [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md).
 Layer 5's `membership` class went **82 → 47**.
+
+## Five mistags from Layer 5's Inferno 1-3 read (2026-08-12)
+
+Surfaced by the per-position read of all 26 Layer-5 soft violations standing in Inferno 1-3 (see
+[`skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Rules Y-AF*). Each was verified against its
+terzina and corrected in place; `morph --check` stays 0 hard / 0 soft, and the accompanying
+Layer-4 retags are in [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+| position | was | now | why |
+|---|---|---|---|
+| inferno 2:42 `tosta` | `adverb` | `adjective`, f. sg. | *"la 'mpresa che fu nel cominciar cotanto tosta"* — it agrees with `'mpresa` as the copula's predicate adjective. Layer 5's rule R deliberately declines to accept a predicative **adverb**, so this mistag was the whole violation; its docstring cites this very line as the case it leaves undecided. |
+| inferno 2:71 `disio` | `desiderio`, `noun` | `disiare`, `verb`, 1sg present indicative | *"ove tornar disio"* = "where I long to return". Read as a noun, the infinitive next to it became its `nsubj`, which is not a possible parse of the line. |
+| inferno 2:102 `che` | `conjunction` | `pronoun` | *"che mi sedea con l'antica Rachele"*: the relative subject of `sedea`. Same family as the `che` retags this file already records — and the retag pulls the position into the `case` annex's scope (one new row, `nominative`; see [`case/CORRECTIONS.md`](../case/CORRECTIONS.md)). |
+| inferno 3:76 `fier` | `fare`, 1sg future | `essere`, 3pl future | *"Le cose ti fier conte"* = "the things will be made known to you". `fier` is the archaic 3pl of `essere` (beside `fia`, `fieno`), agreeing with `cose`. |
+| inferno 3:76 `conte` | `conto`, `noun` m. sg., apocope | `conto`, `adjective`, f. pl. | The predicate adjective ("known"), agreeing with `cose` — not a masculine noun. |

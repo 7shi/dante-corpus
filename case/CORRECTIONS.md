@@ -2131,3 +2131,12 @@ Each value was read off the position's own clause, not inferred from `dep`:
 and **26** impossible pairings before and after (34 is also what HEAD measures — the 31 this file
 last recorded predates Layer 4's subject-agreement round, which evidently added three and did not
 re-measure). None of the 32 new rows is among them.
+
+## One row from Layer 5's Inferno 1-3 read (2026-08-12)
+
+`inferno 2:102.1 che` — `nominative`. The token was tagged a conjunction by Layer 2 and so was
+out of the annex's scope; the per-position read of Inferno 1-3's Layer-5 violations (see
+[`skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Rules Y-AF*) found it is the relative subject
+of `sedea` in *"che mi sedea con l'antica Rachele"*, and the Layer-2 retag brought the position
+into scope — `case --check` reported the missing row as a hard `count` violation, which is the
+check working as designed. Back to **0 hard**.

@@ -419,7 +419,7 @@ line	token	word	deprel	head_line	head_token
 58	3	cortese	amod	58	2
 58	4	mantoana	amod	58	2
 59	1	di	case	59	2
-59	2	cui	nmod	58	2
+59	2	cui	nmod	59	4
 59	3	la	det	59	4
 59	4	fama	nsubj	59	8
 59	5	ancor	advmod	59	8
@@ -516,7 +516,7 @@ line	token	word	deprel	head_line	head_token
 71	2	del	case	71	3
 71	3	loco	obl	71	1
 71	4	ove	advmod	71	6
-71	5	tornar	nsubj	71	6
+71	5	tornar	xcomp	71	6
 71	6	disio	acl:relcl	71	3
 72	1	amor	nsubj	72	3
 72	2	mi	obj	72	3
@@ -738,7 +738,7 @@ line	token	word	deprel	head_line	head_token
 101	7	dov'	case	101	9
 101	8	i'	nsubj	101	9
 101	9	era	acl:relcl	101	6
-102	1	che	obl	102	3
+102	1	che	nsubj	102	3
 102	2	mi	expl	102	3
 102	3	sedea	acl:relcl	101	6
 102	4	con	case	102	7

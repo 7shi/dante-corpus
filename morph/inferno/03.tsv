@@ -535,8 +535,8 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 76	Le	lo	article	f.	pl.				
 76	cose	cosa	noun	f.	pl.				
 76	ti	te	pronoun		sg.	2			
-76	fier	fare	verb		sg.	1	future	indicative	archaic
-76	conte	conto	noun	m.	sg.				apocope
+76	fier	essere	verb		pl.	3	future	indicative	archaic
+76	conte	conto	adjective	f.	pl.				
 77	quando	quando	conjunction						
 77	noi	noi	pronoun		pl.	1			
 77	fermerem	fermare	verb		pl.	1	future	subjunctive	archaic

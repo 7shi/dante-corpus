@@ -1,5 +1,145 @@
 # skel — Layer 5 correction history
 
+## Rules Y-AF, from re-reading Inferno 1-3 — 2330 → 2084, −246 (2026-08-12)
+
+The third per-position read of this kind — rule V came out of Inferno 1's twelve, rules W and X
+out of its remaining five, and this one out of **all 26 violations standing in Inferno 1-3**. It
+produced eight checker rules, seven Layer-2/Layer-4 corrections, and two `--fix` hints. Every rule
+is an *acceptance*: no artifact row was rewritten by a rule and no model was called.
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 954 | 848 | **−106 (−11.1%)** |
+| `missing_arg` | 883 | 827 | −56 (−6.3%) |
+| `role_mismatch` | 234 | 234 | **0** |
+| `extra_tuple` | 137 | 91 | **−46 (−33.6%)** |
+| `missing_tuple` | 75 | 76 | +1 |
+| `membership` | 47 | 8 | **−39 (−83.0%)** |
+| **total** | **2330** | **2084** | **−246 (−10.6%)** |
+
+89 cantos touched. Inferno 1-3 itself 26 → **11**. `pytest` 196 passed (15 new); `dep --check`
+0 hard/18 soft, `morph`/`np --check` 0/0, `case --check` 0 hard — all unchanged from before,
+though four of those artifacts *were* corrected (see below). Four violations appear in the
+after-run that were absent from the before-run, all four at the two positions where a Layer-4
+correction made the parse right and left the LLM's reading wrong; they are `--fix` material.
+
+### The finding: `role_mismatch` did not move at all
+
+Every one of the eight rules landed on `extra_arg`, `missing_arg`, `extra_tuple` or `membership`,
+and the whole `role_mismatch` class is untouched. That is not an accident of gating. A
+`role_mismatch` is the one class where **both layers speak** — Layer 4 attached the argument and
+the LLM labelled it — so a divergence there is a real disagreement about the parse, and only a
+third read (rule U's `case` annex) has ever settled one. Everything the checker still had to
+give was in the classes where **one side is silent**: the derivation says nothing because of
+where a token sits in the tree, and silence was being reported as denial.
+
+That also predicts where the remaining residue is, and it is the reverse of the historical
+pattern: the two big classes are now `extra_arg` 848 / `missing_arg` 827 with only 234
+`role_mismatch`, so the next instrument has to be something other than another silence rule.
+
+### The eight rules, each with its measured move
+
+Measured one at a time, cumulatively, over all 100 cantos:
+
+| rule | function | shape | Δ |
+|---|---|---|---|
+| **Y** | `_copular_predication` | copular clause head under a nominal deprel | −8 |
+| **Z** (tuple leg) | `_verb_in_argument_slot` | a verb form Layer 4 put in an argument slot | −38 |
+| **Z** (host leg) | same, at `missing_arg` | the host's citation of that same infinitive | −39 |
+| **AA** | `_secondary_predicate_over_argument` | perception/depictive `acl` small clause | −3 |
+| **AB** | `_reflexive_clitic_argument` | the reflexive clitic Layer 4 writes `expl` | −63 |
+| **AC** | `_inherited_subject` echo | a conj-inherited subject restating the head's | −26 |
+| **AD** | `_copular_adverb_complement` | rule R's shape with an adverb, under `essere` | −14 |
+| **AE** | `_free_relative_head` | a free relative cited from its two ends | −12 |
+| **AF** | dep-corroborated membership | the `membership` residue, closed as a question | −39 |
+
+- **Rule Y** — *"Caccianli i ciel per non esser men **belli**"* (inferno 3:40). The tree gives
+  `belli` a `cop` child and then attaches the whole predication as `obl`, which is not in
+  `CLAUSE_HEAD_DEPRELS`, so `derive_unit` never proposes it although Layer 4's own `cop` edge
+  asserts it. `_elided_copula_nominal` was already the same acceptance for the case with **no**
+  copula token; this is the case where there is one, and the copula edge is the whole gate. This
+  is the *If a next task is wanted* route the plan ranked first, and it turned out to be worth 8,
+  not the 43 the class count suggested — most of that population had already been absorbed by
+  rules X and `double_listed`.
+- **Rule Z** — *"ch'i' fui **per ritornar** più volte vòlto"* (inferno 1:36), the plan's
+  `per`-infinitive route, generalized past the preposition. Layer 2 says the token is a verb and
+  Layer 4 put it in an argument slot (`obl`/`nmod`/`nsubj`/`obj`/`advmod`); no reading disputes
+  that a verb form heads a predication, so the derivation's silence is about *where the token
+  sits*, not about the predicate. Both legs matter: the host leg accepts the derivation's citation
+  of the same infinitive as its oblique or subject, which is the identical double-listing the
+  `ccomp`/`xcomp` skip has always accepted. Together they are the largest single move here (−77).
+- **Rule AB** — *"tal **mi** fec' ïo"* (inferno 2:40). The multiple-`obj` round normalized every
+  reflexive clitic onto UD's `expl`, which is outside `ARG_DEPRELS`, so the derivation says
+  nothing about a token the LLM reads as the verb's object or dative. Gated to the roles a bare
+  clitic can carry (`obj`/`iobj`/`obl:a` — the annex's own accusative/dative pair) and to a
+  Layer-2 pronoun: the loose variant, accepting any oblique label, was measured at −67 and
+  **rejected**, because the extra 4 name a preposition the tree does not carry.
+- **Rule AC** — *"Questa chiese Lucia ... e disse"* (inferno 2:97-98). `derive_unit`'s step 3
+  copies the coordination head's subject onto a conjunct with none of its own, and the LLM copies
+  its own reading the same way, so a disagreement is the head's disagreement restated once per
+  conjunct — here, the subj/obj inversion rules U and W had *already* accepted at `chiese`. This
+  is the same "one decision reported twice" shape as rule W, one relation further out.
+- **Rule AD** — *"che l'ubidir, se già fosse, **m'è tardi**"* (inferno 2:80). Rule R's own
+  docstring cites this line as the case it deliberately leaves undecided, because Layer 2 calls
+  `tardi` an adverb. That caution is right under a lexical verb and wrong under `essere`, which
+  needs a complement to predicate anything at all. The copula lemma is the whole gate.
+- **Rule AE** — *"Galeotto fu 'l libro e **chi lo scrisse**"* (inferno 5:137). Layer 4 puts the
+  free relative's *verb* in the matrix role; the LLM cites the *pronoun* heading it, which is what
+  the prompt's own relative-pronoun rule tells it to do. Same constituent, same role, two
+  citation conventions.
+- **Rule AF** — the `membership` class, 47 → **8**. The plan called it "a question about the
+  check, not a data error", and the answer was already in the corpus: a token Layer 4 fills an
+  argument slot with (`nsubj`/`obj`/`iobj`/`obl`) is admissible as a Layer-5 argument whatever
+  its POS, so the check no longer needs Layer 3 to have drawn an NP around it. *"ch'io v'ebbi
+  **alcun** riconosciuto"* (inferno 3:58) — a substantivized adjective — is the type. The 8 that
+  remain are citations **nothing** corroborates. Five consecutive `--fix` rounds left this class
+  at exactly 47, which is what a checker question looks like from the outside.
+
+### Seven cross-layer corrections the same read turned up
+
+Fixed in the same session, per the standing rule; recorded in full in
+[`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md), [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)
+and [`case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+- **Layer 2** (4 rows): `tosta` (inferno 2:42) read as an adverb where it agrees with `'mpresa`
+  as a predicate adjective; `disio` (2:71) read as the noun `desiderio` where *"ove tornar
+  disio"* is the 1sg verb; `che` (2:102) tagged a conjunction where it is the relative subject of
+  `sedea` — the family `morph/CORRECTIONS.md` already records; `fier`/`conte` (3:76) read as
+  `fare` 1sg + a masculine noun where *"Le cose ti fier conte"* is 3pl of `essere` with a f. pl.
+  predicate adjective.
+- **Layer 4** (11 rows): `di cui` (2:59) attached to `anima` instead of to `fama`, the noun it is
+  the genitive of; `tornar` (2:71) as `nsubj` of a noun, now the `xcomp` of the verb; `che`
+  (2:102) as `obl`, now `nsubj`; **the elided speech frame at 3:13** — *"Ed elli a me, come
+  persona accorta: «…»"* — still in the un-normalized shape the 2026-08-07 round converted 99
+  frames out of, now matching 3:34 and 3:76 exactly; `cose`/`conte` (3:76) rebuilt around the
+  corrected Layer 2; `si` (3:126) as `obl`, now the `expl` the corpus writes everywhere else.
+- **`case`** (1 row): 2:102's `che`, in scope for the annex for the first time now that Layer 2
+  calls it a pronoun, entered as `nominative`.
+
+**Two of these corrections raise Layer 5's count, and that is the honest reading again.** The
+speech-frame normalization at 3:13 replaced four violations with one `missing_tuple` (the LLM
+never proposed the promoted frame), and the corrected 3:76 turned one violation into three,
+because the LLM's reading of that line is simply wrong and the derivation had been wrong in a way
+that partly matched it. Both are `--fix` material. See PLAN.md's *A note on Layer 5's count*.
+
+### Two `--fix` hints, and why prose was not enough
+
+Phase 5w measured that a prompt rule moves its class only when an instruction also reaches the
+model *at the flagged position*. The `extra_tuple` residue is the case in point: 33 of its 91
+violations cite an **adverb**, and the prompt has said "An ADVERB is never a predicate — not a
+comparative (più, meno, sì)" throughout. *"più di me degna"* (inferno 1:122) survived it anyway.
+So both new instructions ship as POS-keyed `_fix_hint` phrasings with matching prompt prose:
+
+- `extra_tuple_adverb` for the 33, and `extra_tuple_adjective` for the 37 adjectives (31 of them
+  attached `amod` inside a noun phrase — *"non fur mai persone **ratte**"*, inferno 2:109), paired
+  with a new attributive-adjective rule in `SYSTEM_PROMPT`.
+- `missing_tuple_nominal` widened past the elided verb of speech to any **verbless clause**: 32
+  of the 76 surviving `missing_tuple` cite a pronoun at the *root* of a verbless sentence, and
+  *"e te cortese ch'ubidisti tosto"* (inferno 2:134) is not a speech frame at all. The prompt
+  gains the general rule next to the speech-frame one.
+
+Neither hint has been measured yet — that needs a `--fix` round, which is user-run work.
+
 ## Rules W and X, from re-reading Inferno 1 — 2408 → 2330, −78 (2026-08-12)
 
 Rule V came out of a per-position read of Inferno 1's twelve soft violations. This is the same
