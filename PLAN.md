@@ -2,13 +2,47 @@
 
 ## Handoff (2026-08-12) — resume here
 
-**Everything is committed**: Phase 5w (the user-run `--fix` round on the prompt Phase 5v rewrote,
-measured and written up) is the newest work. Checks at commit time: `dep --check` 0 hard/**18**
-soft (the subject-agreement rule's verified-and-left-alone residue), `case --check` 0 hard,
-`skel --check` 0 hard/**2408** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` 173 passed.
+**Everything is committed**: rules W and X — two checker acceptances found by re-reading Inferno
+1's five remaining violations — are the newest work. Checks at commit time: `dep --check` 0
+hard/**18** soft (the subject-agreement rule's verified-and-left-alone residue), `case --check` 0
+hard, `skel --check` 0 hard/**2330** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` **181**
+passed.
 
 **No `--fix` pass is running.** The open routes are all assistant-side; see *If a next task is
 wanted*.
+
+### What rules W and X did (2026-08-12)
+
+A per-position read of **Inferno 1's five** remaining soft violations — the same exercise that
+produced rule V from its twelve. Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md). No artifact regenerated, no model call.
+
+- **2408 → 2330 soft, −78 (−3.2%)**, 44 cantos touched. `extra_arg` 995 → **954**,
+  `role_mismatch` 258 → **234**, `missing_arg` 896 → **883**; Inferno 1 itself 5 → **3**. Nothing
+  in the after-run was absent from the before-run.
+- **Rule W** (`_case_corroborated_swap`, −24): rule U is scoped to the pronoun position the `case`
+  annex holds a value for, but a `subj`/`obj` disagreement inverts **both** legs of a transitive
+  clause and typically only one leg is a pronoun. "lo passo **che** non lasciò già mai **persona
+  viva**" (inferno 1:27) — the annex reads `che` as `nominative`, rule U accepted that leg, and
+  `persona`, a noun, stayed flagged although it is the same decision reported twice. Gated on the
+  exact exchange of the two roles, not on co-presence under the predicate; one-directional.
+- **Rule X** (`_complement_hosted_argument`, −54): the argument side of the copula convention. The
+  frozen style makes the copula the clause head and the predicate nominal its `attr`/`xcomp`, so
+  Layer 4 hangs obliques on the copula while the LLM follows UD and hangs them on the complement.
+  `double_listed` and `_aux_of_derived_predicate` already accepted this on the *tuple* side;
+  nothing did on the argument side, where it cost a `missing_arg` on the copula **plus** an
+  `extra_arg` on the complement when both are derived. Gated on both readings agreeing the pair
+  forms one predication, and on the role matching.
+- **The finding is procedural.** Rule V's write-up had read these same five positions and called
+  two of them *"an LLM slip"* and *"an attachment-level disagreement"*. Both were checker silence.
+  A per-position read has to ask **which rule declined to fire**, not only what the line means:
+  reading the line settles what is true, but it does not reveal that the checker already knew.
+- **A first gate that was wrong, kept on record**: rule X initially required the complement *not*
+  be a derived predicate, and rejected 12 of 17 candidates (−28 only). Backwards — when both are
+  derived the convention costs *two* violations, so those are the cases most worth accepting.
+- **Prediction for the next `--fix` round**: both rules create no LLM-authored rows, so by Phase
+  5u's rule they remove exactly the positions regeneration had a chance at. Expect a yield at or
+  below 5u's 0.068 floor. That is confirmation, not failure.
 
 ### What Phase 5w did (2026-08-12, user-run)
 
@@ -347,26 +381,40 @@ each intervention against *its* population, never against the pass.
 
 The four open routes, all assistant-side:
 
-- **Copular clause heads under a nominal deprel (43 `extra_tuple` adjectives after 5w).** Layer 4 attaches
+- **Copular clause heads under a nominal deprel (43 `extra_tuple` adjectives).** Layer 4 attaches
   *"fu compunto"*, *"son presto"*, *"è … congiunto"* to their matrix with `obl`/`obj`/`nsubj`, none
   of them in `CLAUSE_HEAD_DEPRELS`, so `derive_unit` never promotes a token carrying `cop`/`aux`
   and `nsubj` children. Rule V's shape exactly — checker silence, not disagreement. Either a
-  derivation rule or a Layer-4 round; the strongest remaining route.
-- **`per` + infinitive in Layer 4.** "ch'i' fui **per** *ritornar* più volte vòlto" (inferno 1:36)
-  has `per` as a `case` child of an `obl` infinitive, where UD would have `mark` + `advcl`. The
-  derivation therefore refuses the infinitive predicate status, and the position costs an
-  `extra_tuple` plus a `missing_arg obl:per`; `missing_arg obl:per` stands at **39** corpus-wide
-  after 5w.
-  A Layer-4 convention question — measure the population first, since `case` vs `mark` is exactly
-  what decides whether Layer 5 derives the infinitive as a predicate at all.
+  derivation rule or a Layer-4 round; the strongest remaining route. **Note that rule X is its
+  neighbour, not its solution**: rule X accepts the *argument* placement when both readings already
+  agree the copula and its complement form one predication, whereas this route is about a
+  predication `derive_unit` never proposes at all.
 - **The `membership` remainder (47).** Substantivized adjectives, quoted mention words as the
   object of a verb of saying, adverbs cited as objects. Not data errors: a decision about what the
   check admits as an argument, and the corpus has material for it (the quote layer already knows
-  which tokens sit inside a quotation).
+  which tokens sit inside a quotation). Unmoved by five consecutive `--fix` rounds, which is the
+  evidence that it is a question about the check.
 - **Stacked prepositions in Layer 4 (14 `role_mismatch`).** *"in su la favola"* is chained
   (`in` → `su` → argument) while *"dentro al tuo seno"* is flat (both `case` children of the
   argument), so the derived `obl:<lemma>` names a different preposition in each. A normalization
   round in `dep/` settles it; no prompt rule can be stated until it does.
+- **`per` + infinitive in Layer 4 — measured, and smaller than it looked (27 violations).**
+  "ch'i' fui **per** *ritornar* più volte vòlto" (inferno 1:36) has `per` as a `case` child of an
+  `obl` infinitive, where UD would have `mark` + `advcl`, so the derivation refuses the infinitive
+  predicate status. The 2026-08-12 read measured the population the plan asked for. The raw
+  case-vs-mark split before a non-finite verb is large and genuinely inconsistent (`per` 130 case /
+  72 mark, `a` 144/150, `di` 101/74) but mostly **inert**: nearly all of it lands on an
+  `advcl`/`xcomp` head, a clause head under either label, so the derivation is indifferent. It
+  bites only where the head deprel is `obl`/`nmod`/`conj`/`nsubj` — **98 positions**, 22 of them
+  also proposed by the LLM, **27 violations total** (19 `extra_tuple`, 4 `missing_arg`, 4
+  `role_mismatch`), ~1% of the residue. Worth doing for tidiness; not a volume route. Ranked last
+  for that reason.
+
+**Neither of the two shapes rules W and X closed had been on this list** — both came out of the
+per-position re-read of Inferno 1, not from the classification of the residue by count. That is the
+argument for repeating the exercise on another canto's survivors before writing the next rule: the
+classification tells you where the volume is, and a per-position read tells you which rule declined
+to fire, which is a different question and the one that has twice produced a rule.
 
 Past those, the standing goal of 0 soft violations needs a *new instrument* against the two big
 reading-disagreement classes — and the candidate this project has identified there (an imported
@@ -375,14 +423,16 @@ verb-valency lexicon) is declined on neutrality grounds; see *Out of scope*.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and rule V, and its soft residue is **2408** (down from
+checker was refined through Phases 0-5r and rules V, W and X, and its soft residue is **2330**
+(down from
 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
 multiple-`obj` round plus the `adverb` bug fix moved it back up to 3545 — see the handoff's *A note
 on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, the subject-agreement
 round moved it to 3270, Phase 5t's user-run `--fix` pass took it to 3136, rule V plus the
 membership audit took it to 2623, Phase 5u's user-run `--fix` pass took it to 2531, and Phase 5w's
-user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408) — every
+user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408, and rules W and X took it to
+2330) — every
 route the
 Phase
 5 plan opened has a measured verdict
@@ -431,7 +481,7 @@ the four routes listed there.
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 2408 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 2330 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -665,8 +715,8 @@ discipline already used for normalization and quotes.
 3. **Layer 4 (dependency)** — *implemented* (`dante_corpus/dep.py` + `dep/dep.py`). The syntactic
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
-   `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r
-   (`--check`: 0 hard / 2408 soft). Phase 5 closed with every route measured; see
+   `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W
+   and X (`--check`: 0 hard / 2330 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

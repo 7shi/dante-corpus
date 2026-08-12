@@ -1408,3 +1408,120 @@ def test_derive_unit_does_not_promote_an_adverb_with_an_oblique():
     ]}
     derived = skel.derive_unit(nos, dep_rows, morph_rows)
     assert {(r.line, r.token) for r in derived[1]} == {(1, 1)}
+
+
+# --- _classify_divergence: rule W (the swap partner of a rule-U accept) -----------------
+
+
+def test_classify_divergence_case_corroborated_swap_partner_accepted():
+    # "lo passo che non lasciò già mai persona viva" (inferno 1:27). Layer 4 reads `che` as the
+    # subject and `persona` as the object; the LLM inverted both. The annex reads `che` as
+    # `nominative`, so rule U accepts that leg — and `persona`, a noun and so out of the annex's
+    # scope, is the same decision reported a second time.
+    derived = {1: [skel.SkelRow(1, 3, "lasciò", "subj", 1, 1),
+                   skel.SkelRow(1, 3, "lasciò", "obj", 1, 6)]}
+    given = {1: [skel.SkelRow(1, 3, "lasciò", "obj", 1, 1),
+                 skel.SkelRow(1, 3, "lasciò", "subj", 1, 6)]}
+    morph_pos = {(1, 1): "pronoun", (1, 6): "noun"}
+    assert skel._classify_divergence(
+        given, derived, {}, morph_pos, {(1, 1): "nominative"}) == []
+
+
+def test_classify_divergence_swap_partner_without_the_annex_still_flagged():
+    # The same inversion with no annex value for either leg decides nothing: both stay flagged.
+    derived = {1: [skel.SkelRow(1, 3, "lasciò", "subj", 1, 1),
+                   skel.SkelRow(1, 3, "lasciò", "obj", 1, 6)]}
+    given = {1: [skel.SkelRow(1, 3, "lasciò", "obj", 1, 1),
+                 skel.SkelRow(1, 3, "lasciò", "subj", 1, 6)]}
+    morph_pos = {(1, 1): "pronoun", (1, 6): "noun"}
+    violations = skel._classify_divergence(given, derived, {}, morph_pos, {})
+    assert {v.arg for v in violations if v.detail.startswith("role_mismatch")} == {(1, 1), (1, 6)}
+
+
+def test_classify_divergence_swap_partner_not_an_inversion_still_flagged():
+    # The partner disagreement is `obl:a` vs `obj`, not this argument's two roles exchanged, so
+    # the annex never adjudicated the subject question: the gate is the exchange, not
+    # co-presence under one predicate.
+    derived = {1: [skel.SkelRow(1, 3, "disse", "obl:a", 1, 1),
+                   skel.SkelRow(1, 3, "disse", "obj", 1, 6)]}
+    given = {1: [skel.SkelRow(1, 3, "disse", "obj", 1, 1),
+                 skel.SkelRow(1, 3, "disse", "subj", 1, 6)]}
+    morph_pos = {(1, 1): "pronoun", (1, 6): "noun"}
+    violations = skel._classify_divergence(
+        given, derived, {}, morph_pos, {(1, 1): "dative"})
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 6) for v in violations)
+
+
+def test_classify_divergence_swap_partner_mirror_direction_still_flagged():
+    # One-directional like rule U: the annex siding with the LLM accepts nothing, on either leg.
+    derived = {1: [skel.SkelRow(1, 3, "lasciò", "subj", 1, 1),
+                   skel.SkelRow(1, 3, "lasciò", "obj", 1, 6)]}
+    given = {1: [skel.SkelRow(1, 3, "lasciò", "obj", 1, 1),
+                 skel.SkelRow(1, 3, "lasciò", "subj", 1, 6)]}
+    morph_pos = {(1, 1): "pronoun", (1, 6): "noun"}
+    violations = skel._classify_divergence(
+        given, derived, {}, morph_pos, {(1, 1): "accusative"})
+    assert {v.arg for v in violations if v.detail.startswith("role_mismatch")} == {(1, 1), (1, 6)}
+
+
+# --- _classify_divergence: rule X (the argument side of the copula convention) ----------
+
+
+def _copular_dep(head_token: int, complement_token: int, arg_token: int):
+    from dante_corpus.dep import DepRow
+    return {
+        (1, complement_token): DepRow(line=1, token=complement_token, word="contenti",
+                                      deprel="attr", head_line=1, head_token=head_token),
+        (1, arg_token): DepRow(line=1, token=arg_token, word="foco", deprel="obl",
+                               head_line=1, head_token=head_token),
+    }
+
+
+def test_classify_divergence_argument_on_the_complement_accepted():
+    # "color che son contenti / nel foco" (inferno 1:118). Layer 4 hangs the oblique on the
+    # copula `son`; the LLM hangs it on `contenti`, which it also lists as `son`'s `attr`.
+    derived = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                   skel.SkelRow(1, 5, "son", "obl:in", 1, 9)]}
+    given = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                 skel.SkelRow(1, 6, "contenti", "obl:in", 1, 9)]}
+    assert skel._classify_divergence(given, derived, _copular_dep(5, 6, 9), {}) == []
+
+
+def test_classify_divergence_argument_on_the_complement_mirror_leg_accepted():
+    # "a costor si vuole esser cortese" (inferno 16:15): derive_unit promotes the complement
+    # too, so the same convention was costing a `missing_arg` on the copula *and* an
+    # `extra_arg` on the complement. Both legs are closed.
+    derived = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                   skel.SkelRow(1, 5, "son", "obl:in", 1, 9),
+                   skel.SkelRow(1, 6, "contenti", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                 skel.SkelRow(1, 6, "contenti", "subj", 1, 1),
+                 skel.SkelRow(1, 6, "contenti", "obl:in", 1, 9)]}
+    violations = skel._classify_divergence(given, derived, _copular_dep(5, 6, 9), {})
+    assert [v.detail for v in violations] == []
+
+
+def test_classify_divergence_argument_on_the_complement_relabelled_still_flagged():
+    # Relocating the argument is the convention; relabelling it is a second claim, and only the
+    # relocation is accepted.
+    derived = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                   skel.SkelRow(1, 5, "son", "obl:in", 1, 9)]}
+    given = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                 skel.SkelRow(1, 6, "contenti", "obl:su", 1, 9)]}
+    violations = skel._classify_divergence(given, derived, _copular_dep(5, 6, 9), {})
+    assert any(v.detail.startswith("missing_arg") and v.arg == (1, 9) for v in violations)
+
+
+def test_classify_divergence_argument_on_a_non_complement_still_flagged():
+    # Layer 4 does not attach the second predicate to the first as `attr`/`xcomp`, so the two
+    # layers never agreed the pair forms one predication: this is a real relocation.
+    from dante_corpus.dep import DepRow
+    derived = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                   skel.SkelRow(1, 5, "son", "obl:in", 1, 9)]}
+    given = {1: [skel.SkelRow(1, 5, "son", "attr", 1, 6),
+                 skel.SkelRow(1, 6, "contenti", "obl:in", 1, 9)]}
+    dep_index = dict(_copular_dep(5, 6, 9))
+    dep_index[(1, 6)] = DepRow(line=1, token=6, word="contenti", deprel="conj",
+                               head_line=1, head_token=5)
+    violations = skel._classify_divergence(given, derived, dep_index, {})
+    assert any(v.detail.startswith("missing_arg") and v.arg == (1, 9) for v in violations)

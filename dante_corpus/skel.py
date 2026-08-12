@@ -886,6 +886,43 @@ def _case_corroborated_role(
     return _case_supports_role(value, drole) and not _case_supports_role(value, grole)
 
 
+def _case_corroborated_swap(
+    grole: str, drole: str, arg: tuple[int, int],
+    given_roles: dict[tuple[int, int], str], derived_roles: dict[tuple[int, int], str],
+    case_by_position: dict[tuple[int, int], str] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule W: the swap partner of a rule-U accept.
+
+    Rule U is scoped to the pronoun position the annex holds a value for. But a `subj`/`obj`
+    disagreement is rarely about one argument: the LLM inverts *both* legs of a transitive
+    clause at once, and only one leg is usually a pronoun. "lo passo **che** non lasciò già mai
+    **persona viva**" (inferno 1:27) is the type — the annex reads `che` as `nominative`, rule U
+    accepts that leg, and `persona`, a noun and so out of the annex's scope, stays flagged
+    although it is the *same* decision reported a second time: if `che` is the subject, the
+    argument the LLM also called subject cannot be one.
+
+    Gated on a genuine two-argument inversion under one predicate — the partner's given and
+    derived roles must be exactly this argument's, exchanged — and on rule U itself accepting
+    that partner. Anything looser (any annex-contradicted argument anywhere under the predicate)
+    would accept disagreements the annex never adjudicated, so the gate is the exchange, not
+    mere co-presence. One-directional like rule U: the annex siding with the LLM accepts
+    nothing."""
+    if {grole, drole} != {"subj", "obj"}:
+        return False
+    for other, other_given in given_roles.items():
+        if other == arg:
+            continue
+        other_derived = derived_roles.get(other)
+        # the exact inversion: the partner carries this argument's two roles, exchanged
+        if other_given != drole or other_derived != grole:
+            continue
+        if _case_corroborated_role(other_given, other_derived, other, case_by_position,
+                                   morph_pos_by_position):
+            return True
+    return False
+
+
 def _classify_divergence(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None = None,
@@ -918,6 +955,14 @@ def _classify_divergence(
         for r in rows
         if r.role in ("attr", "xcomp") and (r.arg_line, r.arg_token) != (r.line, r.token)
     }
+    # The same relation, kept directional — which predicate(s) each double-listed complement
+    # was listed under. Rule X below needs the host, not just the fact of double-listing.
+    complement_hosts: dict[tuple[int, int], set[tuple[int, int]]] = {}
+    for rows in given.values():
+        for r in rows:
+            arg_pos = (r.arg_line, r.arg_token)
+            if r.role in ("attr", "xcomp") and arg_pos != (r.line, r.token):
+                complement_hosts.setdefault(arg_pos, set()).add((r.line, r.token))
 
     def _elided_copula_nominal(pos: tuple[int, int]) -> bool:
         # A predicate nominal coordinate/apposed to a real clause with no copula token at all
@@ -943,6 +988,61 @@ def _classify_divergence(
             return False
         head = _aux_head(pos, dep_index_by_pos)
         return head != pos and head in derived_preds
+
+    def _predicate_complements(pos: tuple[int, int]) -> set[tuple[int, int]]:
+        # Rule X's scope gate: the tokens that are `pos`'s predicate complement on **both**
+        # readings — the LLM lists them as its `attr`/`xcomp`, and Layer 4 attaches them to it
+        # with an `attr`/`xcomp` deprel. Requiring both sides is what keeps the rule from
+        # accepting an arbitrary relocation of an argument between two predicates: the two
+        # layers must already agree that these two tokens form one predication.
+        if dep_index_by_pos is None:
+            return set()
+        out = set()
+        for complement, hosts in complement_hosts.items():
+            if pos not in hosts:
+                continue
+            dep_row = dep_index_by_pos.get(complement)
+            if dep_row is None or dep_row.deprel not in ("attr", "xcomp"):
+                continue
+            if (dep_row.head_line, dep_row.head_token) == pos:
+                out.add(complement)
+        return out
+
+    def _complement_hosted_argument(
+        pos: tuple[int, int], arg: tuple[int, int], role: str,
+        rows_by_pred: dict[tuple[int, int], list[SkelRow]],
+        hosts: "set[tuple[int, int]] | None" = None,
+    ) -> bool:
+        # Rule X: the argument side of the copula convention the two rules above already accept
+        # on the tuple side. The corpus's frozen style makes the **copula** the clause head and
+        # the predicate nominal/adjective its `attr`/`xcomp`, so Layer 4 hangs the clause's
+        # obliques on the copula: "color che **son** contenti / **nel foco**" (inferno 1:118),
+        # "a costor si vuole **esser** cortese" (inferno 16:15). The LLM follows UD and hangs
+        # them on the complement instead. `double_listed` and `_aux_of_derived_predicate`
+        # already accept exactly this split on the tuple side; the argument side was still
+        # being reported — and, where derive_unit promotes the complement too, reported
+        # **twice**, as a `missing_arg` on the copula plus an `extra_arg` on the complement.
+        # Both legs call this, so one convention costs nothing instead of two violations.
+        #
+        # The role must match. The LLM relocating the argument *and* relabelling it is two
+        # claims and only the relocation is a convention, so `obl:su` against `obl:in`, or
+        # `subj` against `obl`, stays flagged.
+        for complement in (hosts if hosts is not None else _predicate_complements(pos)):
+            for row in rows_by_pred.get(complement, ()):
+                if (row.arg_line, row.arg_token) == arg and _canonicalize_role(row.role) == role:
+                    return True
+        return False
+
+    def _copular_hosts(pos: tuple[int, int]) -> set[tuple[int, int]]:
+        # Rule X's other leg, looking the other way: the predicates `pos` is the complement of.
+        # Same both-readings gate as `_predicate_complements`.
+        if dep_index_by_pos is None:
+            return set()
+        dep_row = dep_index_by_pos.get(pos)
+        if dep_row is None or dep_row.deprel not in ("attr", "xcomp"):
+            return set()
+        head = (dep_row.head_line, dep_row.head_token)
+        return {head} if head in complement_hosts.get(pos, ()) else set()
 
     for line, token in sorted(derived_preds - given_preds):
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
@@ -989,6 +1089,8 @@ def _classify_divergence(
                     # Clausal-complement double-listing: the LLM lists the clause as its own
                     # tuple instead of also citing it as this predicate's argument.
                     continue
+                if _complement_hosted_argument(pos, arg, drole, given_by_pred):
+                    continue  # rule X: the LLM hung it on this predicate's own complement
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
@@ -999,6 +1101,8 @@ def _classify_divergence(
                         or _clausal_complement_flavor(grole, drole)
                         or _clausal_object(grole, drole, arg, morph_pos_by_position)
                         or _case_corroborated_role(grole, drole, arg, case_by_position,
+                                                   morph_pos_by_position)
+                        or _case_corroborated_swap(grole, drole, arg, g, d, case_by_position,
                                                    morph_pos_by_position)):
                     continue
                 violations.append(
@@ -1015,6 +1119,10 @@ def _classify_divergence(
                                                      case_lemmas)
                     or _marked_adverbial_clause(pos, arg, grole, dep_index_by_pos,
                                                 marker_lemmas)
+                    # rule X, mirror leg: derive_unit hung it on the copula this predicate
+                    # is the complement of
+                    or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
+                                                   hosts=_copular_hosts(pos))
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

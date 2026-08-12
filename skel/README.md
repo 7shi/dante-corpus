@@ -11,7 +11,7 @@ canon-neutral.
 **Status: built for all 100 cantos, checker refined through Phase 5r, six full `--fix` rounds
 run (Phases 5e, 5q, 5s, 5t, 5u and 5w), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
 fed back into `dep/`.**
-`make -C skel check`: **0 hard, 2408 soft** violations (down from 17438 at the first
+`make -C skel check`: **0 hard, 2330 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -25,8 +25,8 @@ multiple-`obj` round moved it *up* again, 3545 after the `"verb" in pos` bug fix
 Phase 5s's user-run `--fix` pass, 3270 after Layer 4's subject-agreement round moved it *up*
 once more, 3136 after Phase 5t's user-run `--fix` pass, 2623 after rule V's
 control/participial subject chain and the membership audit's cross-layer corrections, 2531
-after Phase 5u's user-run `--fix` pass, and 2408 after Phase 5w's user-run `--fix` pass on the
-prompt Phase 5v rewrote). See
+after Phase 5u's user-run `--fix` pass, 2408 after Phase 5w's user-run `--fix` pass on the
+prompt Phase 5v rewrote, and 2330 after rules W and X). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
@@ -358,6 +358,26 @@ other class unchanged. Rule U accepts a
 just as a subject is, so the annex cannot separate `subj` from `attr`. See
 [CORRECTIONS.md](CORRECTIONS.md), [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
 [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+After **rules W and X** (2026-08-12, from a per-position re-read of Inferno 1's five remaining
+violations, the same exercise that produced rule V): **0 hard, 2330 soft** — `role_mismatch` 258 →
+**234**, `extra_arg` 995 → **954**, `missing_arg` 896 → **883**, every other class unchanged. Both
+are acceptances; no artifact row changed.
+
+- **Rule W** (`_case_corroborated_swap`, −24) closes the swap partner of a rule-U accept. A
+  `subj`/`obj` disagreement usually inverts *both* legs of a transitive clause and only one leg is
+  a pronoun, so rule U — scoped to the position the annex holds a value for — settled one half and
+  left the other reported ("lo passo **che** non lasciò già mai **persona viva**", inferno 1:27).
+  Gated on the exact exchange of the two roles, not on mere co-presence under the predicate, and
+  one-directional like rule U.
+- **Rule X** (`_complement_hosted_argument`, −54) is the argument side of the copula convention.
+  The corpus's frozen style makes the copula the clause head and the predicate nominal its
+  `attr`/`xcomp`, so Layer 4 hangs the clause's obliques on the copula while the LLM follows UD and
+  hangs them on the complement. `double_listed` and `_aux_of_derived_predicate` already accepted
+  this split on the *tuple* side; nothing did on the argument side, where it cost a `missing_arg`
+  on the copula plus — when `derive_unit` promotes the complement too — an `extra_arg` on the
+  complement. Both legs are closed, gated on the LLM *and* Layer 4 agreeing the pair forms one
+  predication, and on the role matching.
 
 ## Next steps
 

@@ -1,5 +1,126 @@
 # skel — Layer 5 correction history
 
+## Rules W and X, from re-reading Inferno 1 — 2408 → 2330, −78 (2026-08-12)
+
+Rule V came out of a per-position read of Inferno 1's twelve soft violations. This is the same
+exercise repeated on the **five** that read left standing, and it produced the same result twice
+over: two of the five were not what that read called them. No artifact was regenerated, no model
+was called, and no artifact row changed — both rules are checker *acceptances*.
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 995 | 954 | **−41 (−4.1%)** |
+| `missing_arg` | 896 | 883 | −13 (−1.5%) |
+| `role_mismatch` | 258 | 234 | **−24 (−9.3%)** |
+| `extra_tuple` | 137 | 137 | 0 |
+| `missing_tuple` | 75 | 75 | 0 |
+| `membership` | 47 | 47 | 0 (fifth round unmoved) |
+| **total** | **2408** | **2330** | **−78 (−3.2%)** |
+
+44 cantos touched — inferno 24, purgatorio 30, paradiso 24. Inferno 1 itself 5 → **3**. `pytest`
+181 passed (8 new); `dep --check` 0 hard/18 soft, `case --check` 0 hard, `np`/`morph --check` 0/0,
+all unchanged. **No violation appears in the after-run that was absent from the before-run.**
+
+### What the previous read got wrong
+
+Rule V's write-up classified Inferno 1's survivors as *"two LLM slips that only regeneration
+settles, one attachment-level disagreement, and two halves of one Layer-4 question."* Re-read
+against the checker rather than against the text, the first two of those three are **checker
+silence, not disagreement** — the same shape rule V itself exploited. The lesson is procedural: a
+per-position read has to ask *which rule declined to fire*, not only *what does the line mean*.
+Reading the line settles what is true; it does not reveal that the checker already knew.
+
+### Rule W (`_case_corroborated_swap`): the swap partner of a rule-U accept
+
+> `lo passo / che non lasciò già mai persona viva` (inferno 1:27)
+
+Layer 4 reads `che` as the subject and `persona viva` as the object — the pass that never let
+anyone through alive. The LLM inverted **both**. The `case` annex holds a value for this very
+clause: `che` is `nominative`, which corroborates the derived role and contradicts the LLM's, so
+rule U accepted that leg and it was never reported. But rule U is scoped to the pronoun position
+the annex has a value for, and `persona` is a noun — out of the annex's scope — so the other half
+stayed flagged, although it is the *same decision reported twice*: if `che` is the subject, the
+argument the LLM also called subject cannot be one.
+
+This is the general case, not a quirk of one line. A `subj`/`obj` disagreement is rarely about one
+argument; the LLM inverts both legs of a transitive clause at once, and typically only one leg is a
+pronoun. Rule W accepts the second leg when the first was accepted by rule U.
+
+**Gated on the exchange, not on co-presence.** The partner's given and derived roles must be
+exactly this argument's, swapped — an annex-contradicted argument that merely happens to sit under
+the same predicate adjudicates nothing about the subject question, and an earlier draft that
+accepted on co-presence alone would have taken one `dative` position it had no business taking.
+One-directional like rule U: the annex siding with the LLM accepts nothing on either leg.
+
+**−24** of the 82 `subj`↔`obj` `role_mismatch`es: 15 `'subj' vs 'obj'`, 9 `'obj' vs 'subj'`.
+
+### Rule X (`_complement_hosted_argument`): the argument side of the copula convention
+
+> `color che **son** contenti / **nel foco**` (inferno 1:118)
+> `a costor si vuole **esser** cortese` (inferno 16:15)
+
+The corpus's frozen copular style makes the **copula** the clause head and the predicate
+nominal/adjective its `attr`/`xcomp`, so Layer 4 hangs the clause's obliques on the copula. The LLM
+follows UD and hangs them on the complement.
+
+The checker already accepted exactly this split **on the tuple side**, twice: `double_listed` (the
+complement listed both as the copula's `attr` and as its own tuple) and `_aux_of_derived_predicate`
+(the LLM naming the copula where derive_unit names the lexical head). Nothing did the same on the
+argument side — and where `derive_unit` promotes the complement too, one convention was costing
+**two** violations, a `missing_arg` on the copula plus an `extra_arg` on the complement:
+
+```
+inferno 16:15  «a costor si vuole esser cortese»
+  missing_arg: 15.6 obl:a (15, 3)   ← dep: costor = obl of the copula esser
+  extra_arg:   15.7 obl:a (15, 3)   ← LLM: obl:a on cortese, esser's xcomp
+```
+
+Rule X closes both legs. **Gated on both readings agreeing that the pair forms one predication**:
+the LLM must list the complement as the host's `attr`/`xcomp` *and* Layer 4 must attach it to the
+host with an `attr`/`xcomp` deprel. That is what keeps the rule from accepting an arbitrary
+relocation of an argument between two predicates. The role must match as well — relocating the
+argument is the convention, relabelling it is a second claim, so `obl:su` against `obl:in`, or
+`subj` against `obl`, stays flagged.
+
+**−54**: `extra_arg` −41 (34 oblique, 5 `subj`, 2 `obj`), `missing_arg` −13 (11 oblique, 1 `subj`,
+1 `obj`). The `extra_arg` leg is much the larger because a `missing_arg` is only reported for a
+predicate both readings propose: where the LLM never proposed the copula as a predicate at all,
+only the complement-side leg fires.
+
+**A first gate that was wrong, and why it is worth recording.** Rule X was first written to require
+that the complement *not* be a derived predicate, reasoning that if `derive_unit` promotes it too
+then the argument had a derived home of its own. That gate rejected 12 of the 17 candidates and
+took the count to only 2380. It was backwards: when both are derived, the convention costs *two*
+violations rather than one, so those are the cases most worth accepting. The relation between the
+two predicates — not the derivation's opinion about one of them — is what makes the split a
+notational variant.
+
+### What is left in Inferno 1, and what it costs corpus-wide
+
+Three, and they are the two routes already named:
+
+- **`1:36`, two violations** — `ch'i' fui **per** *ritornar* più volte vòlto`. `per` is a `case`
+  child of an `obl` infinitive where UD would have `mark` + `advcl`, so `derive_unit` refuses the
+  infinitive predicate status. **Now measured, and the route is small.** The raw case-vs-mark split
+  before a non-finite verb is large and genuinely inconsistent (`per` 130 case / 72 mark, `a`
+  144/150, `di` 101/74), but nearly all of it lands on an `advcl`/`xcomp` head, which is a clause
+  head either way — the derivation is indifferent. Only where the head deprel is
+  `obl`/`nmod`/`conj`/`nsubj` does it bite: **98 positions**, of which 22 the LLM also proposes as
+  a predicate, for a **total cost of 27 violations** (19 `extra_tuple`, 4 `missing_arg`, 4
+  `role_mismatch`) — about 1% of the residue, not the volume route the framing suggested.
+- **`1:122`** — `anima fia a ciò più di me degna`. The LLM promoted the comparative adverb `più` to
+  a predicate carrying `obl:di [me]`, instead of attaching the standard to `degna`, which it
+  otherwise parsed correctly. A plain LLM error in the adverb `extra_tuple` class (33 corpus-wide,
+  12 in this `advmod` shape) — the class Phase 5v gave a prose-only prompt rule and 5w measured at
+  −5.7%, i.e. no better than the pass average. `--fix` material with a hint attached, per 5w.
+
+### What this predicts about the next `--fix` round
+
+Both rules are acceptances that create **no** LLM-authored rows, so by Phase 5u's rule they remove
+precisely the positions regeneration had a chance at and leave a *more* resistant flagged set. The
+next `--fix` pass should return a yield at or below 5u's 0.068 floor, not above it. Read that as
+confirmation, not as failure.
+
 ## Phase 5w: the `--fix` round on the rewritten prompt — 2531 → 2408, −123 (2026-08-12)
 
 Baseline: **0 hard, 2531 soft**, **1290 flagged parse units** — the state left by Phase 5v, which
