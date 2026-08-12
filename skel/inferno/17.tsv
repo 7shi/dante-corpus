@@ -33,14 +33,14 @@ line	token	word	role	arg_line	arg_token
 11	3	avea	obl:di	11	5
 11	3	avea	obl:di	12	4
 12	0			0	0
-13	3	avea	subj	0	0
+13	3	avea	subj	10	2
 13	3	avea	obj	13	2
 13	3	avea	obl:insin	13	7
 14	0			0	0
 15	1	dipinti	subj	14	2
 15	1	dipinti	obl:di	15	4
 15	1	dipinti	obl:di	15	7
-15	2	avea	subj	0	0
+15	2	avea	subj	10	2
 15	2	avea	obj	14	2
 15	2	avea	xcomp	15	1
 16	0			0	0

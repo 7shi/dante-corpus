@@ -348,7 +348,7 @@ line	token	word	role	arg_line	arg_token
 118	6	eran	subj	118	5
 118	6	eran	attr	118	8
 119	1	rimase	subj	118	5
-119	1	rimase	obl	119	3
+119	1	rimase	obl:a	119	3
 119	7	era	subj	119	6
 119	7	era	obl:al	119	9
 120	1	drizzando	subj	119	6

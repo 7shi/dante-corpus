@@ -231,7 +231,7 @@ line	token	word	role	arg_line	arg_token
 76	3	fummo	obl	76	4
 77	2	volge	subj	76	7
 77	2	volge	obl:a	77	4
-77	2	volge	obl:in	77	7
+77	2	volge	obl:su	77	7
 78	0			0	0
 79	1	volse	subj	78	2
 79	1	volse	obj	79	3

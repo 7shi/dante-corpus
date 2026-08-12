@@ -271,7 +271,7 @@ line	token	word	role	arg_line	arg_token
 87	4	'nduce	subj	87	1
 87	4	'nduce	subj	87	7
 87	4	'nduce	obj	87	2
-87	4	'nduce	obl	87	3
+87	4	'nduce	obl:a	87	3
 88	3	partì	subj	88	1
 88	3	partì	obl:da	88	5
 88	5	cantare	subj	0	0

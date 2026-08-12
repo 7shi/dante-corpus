@@ -17,7 +17,7 @@ line	token	word	role	arg_line	arg_token
 7	7	vidi	obj	7	9
 8	2	dicea	subj	8	1
 8	2	dicea	ccomp	8	5
-8	5	guardo	subj	0	0
+8	5	guardo	subj	8	3
 9	3	trasse	subj	9	2
 9	3	trasse	obj	9	4
 9	3	trasse	obl:di	9	7

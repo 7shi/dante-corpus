@@ -9,10 +9,10 @@ line	token	word	role	arg_line	arg_token
 2	5	far	obj	2	7
 3	3	partir	subj	1	4
 3	3	partir	obl:per	3	6
-4	2	vidi	subj	0	0
+4	2	vidi	subj	1	1
 4	2	vidi	obj	4	1
 4	2	vidi	obl:per	4	5
-5	4	vidi	subj	0	0
+5	4	vidi	subj	1	1
 5	4	vidi	obj	5	6
 5	4	vidi	obl:con	7	3
 5	4	vidi	obl:con	7	7
@@ -29,7 +29,7 @@ line	token	word	role	arg_line	arg_token
 8	0			0	0
 9	0			0	0
 10	0			0	0
-11	2	vidi	subj	0	0
+11	2	vidi	subj	1	1
 11	2	vidi	obj	11	1
 11	2	vidi	obj	11	5
 11	2	vidi	obj	12	2

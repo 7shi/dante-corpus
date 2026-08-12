@@ -1198,14 +1198,32 @@ def test_classify_divergence_case_absent_position_unchanged():
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
-# --- _find_repairs (Phase 3, PLAN.md) --------------------------------------------------
+# --- _find_repairs (Phase 3, PLAN.md; tier-A/tier-B division) --------------------------
+
+# The `null_subject` rule is tier B — it asserts a reading, so it fires only where Layer 2's
+# person/number corroborates the derived subject independently of Layer 4 (`dep.
+# subject_agreement`). These fixtures supply that corroboration; the ones below withhold it.
+_NULL_SUBJ_DERIVED = {2: [skel.SkelRow(2, 2, "vede", "subj", 3, 4)]}
+_NULL_SUBJ_GIVEN = {2: [skel.SkelRow(2, 2, "vede", "subj", 0, 0)]}
+
+
+def _agreeing_morph(head_person="3", head_number="sg.", subj_number="sg."):
+    """Layer-2 rows for the `null_subject` fixture: a finite 3sg verb at 2.2 and a noun at 3.4."""
+    return {
+        2: [morph.MorphRow(word="ei", pos="pronoun"),
+            morph.MorphRow(word="vede", lemma="vedere", pos="verb", person=head_person,
+                           number=head_number, tense="present", mood="indicative")],
+        3: [morph.MorphRow(word="a", pos="preposition"),
+            morph.MorphRow(word="la", pos="article"),
+            morph.MorphRow(word="bella", pos="adjective"),
+            morph.MorphRow(word="donna", lemma="donna", pos="noun", number=subj_number)],
+    }
 
 
 def test_find_repairs_null_subject_pairs_missing_and_extra():
-    derived = {2: [skel.SkelRow(2, 2, "vede", "subj", 3, 4)]}
-    given = {2: [skel.SkelRow(2, 2, "vede", "subj", 0, 0)]}
-    violations = skel._classify_divergence(given, derived)
-    repairs = skel._find_repairs(given, derived, violations)
+    violations = skel._classify_divergence(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED)
+    repairs = skel._find_repairs(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED, violations,
+                                 _agreeing_morph())
     assert len(repairs) == 1
     r = repairs[0]
     assert r.kind == "null_subject"
@@ -1215,12 +1233,35 @@ def test_find_repairs_null_subject_pairs_missing_and_extra():
 
 
 def test_find_repairs_null_subject_then_reclassify_is_clean():
-    derived = {2: [skel.SkelRow(2, 2, "vede", "subj", 3, 4)]}
-    given = {2: [skel.SkelRow(2, 2, "vede", "subj", 0, 0)]}
-    violations = skel._classify_divergence(given, derived)
-    repairs = skel._find_repairs(given, derived, violations)
+    violations = skel._classify_divergence(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED)
+    repairs = skel._find_repairs(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED, violations,
+                                 _agreeing_morph())
     repaired = {2: [repairs[0].after]}
-    assert skel._classify_divergence(repaired, derived) == []
+    assert skel._classify_divergence(repaired, _NULL_SUBJ_DERIVED) == []
+
+
+def test_find_repairs_null_subject_refused_without_morph_corroboration():
+    # Tier B's gate. The shape is exactly the one the rule targets, but with no Layer-2 rows
+    # `dep.subject_agreement` returns "undecidable" — and undecidable is not a weak yes.
+    violations = skel._classify_divergence(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED)
+    assert skel._find_repairs(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED, violations) == []
+
+
+def test_find_repairs_null_subject_refused_when_layers_disagree():
+    # A plural subject under a singular verb: the two frozen layers contradict each other, so
+    # the derived subject is as likely to be the wrong side. PLAN.md's warning about running
+    # this rule blind is exactly this position.
+    violations = skel._classify_divergence(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED)
+    morph_rows = _agreeing_morph(subj_number="pl.")
+    assert skel._find_repairs(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED, violations, morph_rows) == []
+
+
+def test_find_repairs_null_subject_refused_for_relative_pronoun_subject():
+    # `che` takes its person from its antecedent, so Layer 2's own row corroborates nothing.
+    morph_rows = _agreeing_morph()
+    morph_rows[3][3] = morph.MorphRow(word="che", lemma="che", pos="pronoun", person="3")
+    violations = skel._classify_divergence(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED)
+    assert skel._find_repairs(_NULL_SUBJ_GIVEN, _NULL_SUBJ_DERIVED, violations, morph_rows) == []
 
 
 def test_find_repairs_null_subject_not_produced_when_pro_drop_authoritative():
@@ -1300,6 +1341,58 @@ def test_find_repairs_role_label_rejects_different_obl_lemma():
     given = {2: [skel.SkelRow(2, 2, "pred", "obl:con", 1, 3)]}
     violations = skel._classify_divergence(given, derived)
     assert any(v.detail.startswith("role_mismatch") for v in violations)
+    assert skel._find_repairs(given, derived, violations) == []
+
+
+def test_find_repairs_prep_stack_accepts_chained_preposition():
+    # "in su la cima": Layer 4 chains `in` -> `su` -> `cima`, so the derivation names the
+    # preposition adjacent to the nominal and the LLM the one that opens the phrase. Tier A —
+    # one PP spelled two ways, no reading asserted.
+    derived = {2: [skel.SkelRow(2, 2, "fui", "obl:su", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "fui", "obl:in", 1, 3)]}
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="in", deprel="case", head_line=1, head_token=2),
+        dep.DepRow(line=1, token=2, word="su", deprel="case", head_line=1, head_token=3),
+    ]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations, None, dep_rows)
+    assert len(repairs) == 1
+    assert repairs[0].kind == "prep_stack"
+    assert repairs[0].before.role == "obl:in" and repairs[0].after.role == "obl:su"
+    assert skel._classify_divergence({2: [repairs[0].after]}, derived) == []
+
+
+def test_find_repairs_prep_stack_rejects_preposition_absent_from_the_tree():
+    # Same role pair, but Layer 4 attached only `su` and never `in` — the tree and the reading
+    # differ about what is attached, which is a dep-normalization question, not a relabeling.
+    derived = {2: [skel.SkelRow(2, 2, "fui", "obl:su", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "fui", "obl:in", 1, 3)]}
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=2, word="su", deprel="case", head_line=1, head_token=3),
+    ]}
+    violations = skel._classify_divergence(given, derived)
+    assert skel._find_repairs(given, derived, violations, None, dep_rows) == []
+
+
+def test_find_repairs_prep_stack_rejects_flat_sibling_prepositions():
+    # Both prepositions are `case` children of the nominal itself, not stacked one on the other.
+    # `_stacked_prep_lemmas` walks *from* the argument, so both are reachable and the rule fires;
+    # this pins that the walk starts at the argument rather than requiring a chain of depth 2.
+    derived = {2: [skel.SkelRow(2, 2, "sta", "obl:a", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "sta", "obl:dentro", 1, 3)]}
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="dentro", deprel="case", head_line=1, head_token=3),
+        dep.DepRow(line=1, token=2, word="al", deprel="case", head_line=1, head_token=3),
+    ]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations, None, dep_rows)
+    assert [r.kind for r in repairs] == ["prep_stack"]
+
+
+def test_find_repairs_prep_stack_needs_dep_rows():
+    derived = {2: [skel.SkelRow(2, 2, "fui", "obl:su", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "fui", "obl:in", 1, 3)]}
+    violations = skel._classify_divergence(given, derived)
     assert skel._find_repairs(given, derived, violations) == []
 
 

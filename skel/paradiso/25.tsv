@@ -29,7 +29,7 @@ line	token	word	role	arg_line	arg_token
 8	2	poeta	subj	0	0
 9	4	prenderò	subj	0	0
 9	4	prenderò	obj	9	6
-9	4	prenderò	obl:in	8	6
+9	4	prenderò	obl:su	8	6
 10	7	fa	subj	10	6
 10	7	fa	obj	11	2
 10	7	fa	attr	10	8

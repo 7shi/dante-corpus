@@ -625,6 +625,18 @@ widening the authority model is not the lever. Those are genuine subject disagre
 | **Phase 5p, two Layer-4 rounds (hand-verified)** | **10** | **0 LLM calls, 14 dep rows** |
 | `--fix`, full corpus pass (Phase 5q, **actually measured**) | **147** | **1702 LLM calls, ≈28 h** |
 | **Phase 5q, the `ioj` typo fix (mechanical)** | **4** | **0 LLM calls, 2 skel rows** |
+| `--fix`, full corpus pass (Phase 5w, **actually measured**) | **123** | **1290 LLM calls** |
+| **Phase 6, `--fix`'s new deterministic stage 1** | **73** | **0 LLM calls, minutes** |
+
+**Phase 6 restructured `--fix` itself** rather than adding another rule to the checker: it now
+runs deterministically first (the row above), then asks **one narrow question per violation
+class** with a prompt of its own, and only then falls back to the whole-unit regeneration every
+`--fix` row above measures. The reason is in this very table — a regeneration pass has returned
+between 0.068 and 0.199 violations per call for six rounds running, while every deterministic
+row cost nothing, and Phase 5w established *why*: a pass moves a class only when something about
+that class changed, so one prompt asked to fix everything at once moves nothing in particular.
+The per-class yield of stage 2 is unmeasured until a user-run round; the summary `--fix` prints
+is now per class precisely so that round can answer it.
 
 The deterministic phases delivered roughly **4.6× the `--fix` pass that followed them, instantly**
 — and the extrapolation above turned out to be optimistic by 2×, because the 8.7% success rate

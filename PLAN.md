@@ -2,14 +2,61 @@
 
 ## Handoff (2026-08-12) — resume here
 
-**Everything is committed**: rules Y-AF — eight checker acceptances, seven cross-layer
-corrections and two `--fix` hints, all from a per-position read of Inferno 1-3 — are the newest
-work. Checks at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
-verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**2084** soft,
-`np --check` 0/0, `morph --check` 0/0, `pytest` **196** passed.
+**Everything is committed. Newest work: Phase 6, a restructuring of `--fix` itself.**
+Checks at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
+verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**2011** soft,
+`np --check` 0/0, `morph --check` 0/0, `pytest` **243** passed.
 
-**No `--fix` pass is running.** The open routes are all assistant-side; see *If a next task is
-wanted*.
+**A `--fix` round is now worth running and is user-run work.** It is the first round against the
+restructured pass, and its per-class table is the measurement Phase 5w asked for. See *What
+Phase 6 did* below.
+
+### What Phase 6 did (2026-08-12)
+
+`--fix` was the project's most expensive instrument and its least efficient: Phase 5w's pass
+spent **1290 LLM calls to remove 123 violations**. Two properties explain that, and both are
+gone. It regenerated a *whole* parse unit and accepted the result only if the *whole* unit
+improved, so settling one of five violations counted for nothing; and it used **one monolithic
+prompt for every violation class**, which Phase 5w had already shown does not move a class. Full
+write-up in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *Phase 6*.
+
+`--fix` now runs three stages per flagged unit, cheapest first, each under the same acceptance
+gate (0 hard, `_is_improvement`) so the no-worse-off guarantee holds stage by stage:
+
+- **Stage 1, deterministic — measured at 2084 → 2011, −73, with zero model calls.** The
+  `_find_repairs` catalogue grew from two rules to four and is now split into two explicit tiers.
+  **Tier A asserts no reading** (`role_label` 7, and the new `prep_stack` 4 — one preposition of
+  a chained stack named instead of another). **Tier B does assert a reading and may only do so
+  where a signal independent of Layer 4 corroborates it**: `null_subject` (31) now fires only
+  when Layer 2's person/number agrees with the predicate. That gate is the substance, not
+  paperwork — of the corpus's **67** ∅-subject pairs Layer 2 corroborates 37 and **actively
+  contradicts 20**, so the ungated rule this plan warned against would have rewritten 30 rows on
+  the derivation's say-so exactly where the two frozen layers disagree. `dep.subject_agreement`
+  is the same test `dep --check` runs, extracted so the two cannot drift; its third answer,
+  "undecidable", is treated as a refusal, not a weak yes. Stage 1 also verifies itself (6 of the
+  37 corroborated candidates were rolled back) and is idempotent. `--repair` is now this stage
+  run alone.
+- **Stage 2, one narrow question per violation class.** Each class gets its own short system
+  prompt — only the conventions bearing on it, lifted verbatim from `SYSTEM_PROMPT`, each under
+  half its length — its own question, and its own small answer, spliced in at row level and
+  accepted per class. So an instruction reaches the model at the flagged position *by
+  construction* rather than by prompt-writing discipline, and a unit keeps the classes that were
+  settled. `membership` (8) and `unknown_role` (0) have no prompt on purpose.
+- **Stage 3, the old whole-unit regeneration**, unchanged, for units the first two left
+  untouched; `--no-whole` turns it off so a round can be measured with and without it.
+
+**The independence rule is preserved and now tested.** A question may name the predicate, the
+argument the LLM itself cited, and the role slot in dispute — what `_fix_hint` already disclosed
+— but never `derive_unit`'s own argument position.
+
+**Two rules were measured and deliberately not shipped**, so the counts are not re-derived: a
+`case`-annex-corroborated relabel would rewrite **106** rows for **zero** violations (rule U
+already suppresses every one — artifact hygiene, not fix efficiency), and a `role_alias` rule has
+a population of **0**.
+
+**What the next round should report**: calls *and* violations removed **per class**, against
+Phase 5w's 1290 / 123 / 0.095. Do not expect fewer calls — grouping by (unit × class) yields a
+similar count. Expect a higher per-call yield, and read the per-class table, not the average.
 
 ### What rules Y-AF did (2026-08-12)
 
@@ -394,8 +441,10 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-**No `--fix` pass is pending and no route is blocked on the user.** The four open routes below are
-all assistant-side; the first is the strongest.
+**A `--fix` round against Phase 6's restructured pass is the one pending user-run task**, and it
+is the first thing worth doing: it is the only way to score stage 2's per-class prompts, and the
+two prompt-side routes below are waiting on exactly that number. The remaining routes are
+assistant-side.
 
 **How to measure a future `--fix` round** (the method Phases 5t/5u/5w used; the whole round arrives
 as modified `skel/*.tsv` in the working tree):
@@ -427,16 +476,20 @@ answered the `membership` question (47 → 8). What is left:
   far lor pro"* (inferno 2:109): Layer 4 attaches the adjective `amod` inside the subject NP, the
   LLM promotes it to a predicate of its own. Unlike rule Y's population there is **no `cop` edge**
   — nothing in the tree asserts a predication — so this is a genuine reading disagreement, not
-  checker silence, and it is now addressed **prompt-side**: the 2026-08-12 read added an
-  attributive-adjective rule to `SYSTEM_PROMPT` plus an `extra_tuple_adjective` `--fix` hint. The
-  next `--fix` round scores it. Do not write a checker rule here without first seeing that number.
-- **Adverbs promoted to predicates (33 `extra_tuple`).** Same status: an `extra_tuple_adverb` hint
-  now exists beside a prompt rule that had been prose-only throughout. Also awaiting a round.
-- **Stacked prepositions in Layer 4 (14 `role_mismatch`).** *"in su la favola"* is chained
-  (`in` → `su` → argument) while *"dentro al tuo seno"* is flat (both `case` children of the
-  argument), so the derived `obl:<lemma>` names a different preposition in each. A normalization
-  round in `dep/` settles it; no prompt rule can be stated until it does. Unchanged, and now the
-  only *checker/Layer-4* route on the list.
+  checker silence, and it is addressed **prompt-side**: Phase 6 gave it its own stage-2 class
+  (`extra_tuple_adjective`) with a system prompt carrying the attributive-adjective rule and
+  nothing else. The next `--fix` round scores it directly, as its own line in the per-class
+  table. Do not write a checker rule here without first seeing that number.
+- **Adverbs promoted to predicates (33 `extra_tuple`).** Same status, same treatment
+  (`extra_tuple_adverb`). Also awaiting a round. These two are the reason the round is worth
+  running: they are the first classes whose instrument was built for them alone.
+- **Stacked prepositions in Layer 4 (14 `role_mismatch`).** Phase 6 measured this class and
+  **took the decidable 4 of it**: where Layer 4 chains *"in su"* (`in` → `su` → argument), both
+  lemmas sit in the argument's `case` chain and the `prep_stack` rule normalizes onto the derived
+  side. What remains is **18 positions where the LLM names a preposition the tree does not carry
+  at all** — Layer 4 writes *"in su"* flat in some places and chained in others, so the two sides
+  differ about what is *attached*, not about what to call it. That is still a `dep/`
+  normalization round, and it is still the only *checker/Layer-4* route on the list.
 - **The `missing_arg obl` bucket (213).** The single largest sub-class after the two subject
   buckets, and never classified. A per-position read of a sample is the cheap first move.
 
@@ -454,7 +507,7 @@ verb-valency lexicon) is declined on neutrality grounds; see *Out of scope*.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and rules V through AF, and its soft residue is **2084**
+checker was refined through Phases 0-5r and rules V through AF, and its soft residue is **2011**
 (down from
 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
@@ -463,7 +516,8 @@ on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, the su
 round moved it to 3270, Phase 5t's user-run `--fix` pass took it to 3136, rule V plus the
 membership audit took it to 2623, Phase 5u's user-run `--fix` pass took it to 2531, and Phase 5w's
 user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408, rules W and X took it to
-2330, and rules Y-AF plus the Inferno 1-3 cross-layer corrections took it to 2084) — every
+2330, and rules Y-AF plus the Inferno 1-3 cross-layer corrections took it to 2084, and Phase 6's
+deterministic `--fix` stage took it to 2011) — every
 route the
 Phase
 5 plan opened has a measured verdict
@@ -513,7 +567,7 @@ the four routes listed there.
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 2084 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 2011 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -748,7 +802,7 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W,
-   X and the Y-AF series (`--check`: 0 hard / 2084 soft). Phase 5 closed with every route measured; see
+   X and the Y-AF series, with `--fix` restructured in Phase 6 (`--check`: 0 hard / 2011 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

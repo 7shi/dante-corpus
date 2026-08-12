@@ -1,5 +1,156 @@
 # skel — Layer 5 correction history
 
+## Phase 6 — `--fix` restructured: deterministic first, then one question per class (2026-08-12)
+
+`--fix` was rebuilt because it was the most expensive instrument in the project and the least
+efficient. Phase 5w's pass is the reference point: **1290 LLM calls removed 123 violations**, so
+roughly 93% of the calls produced nothing. Two properties of the old design account for that, and
+both are now gone.
+
+- **It regenerated a whole parse unit and accepted the result only if the whole unit improved.**
+  A unit with five violations where the model settled one was discarded entirely.
+- **It used one monolithic `SYSTEM_PROMPT` for every violation class.** Phase 5w had already
+  measured what that costs — the one class whose instruction was rewritten with a worked example
+  and a per-violation hint fell 28.6%, while three prose-only rules in the same prompt moved
+  nothing above the pass average. Its finding, *a pass moves a class only when something about
+  that class changed*, is an argument against ever asking one prompt to fix everything at once.
+
+`--fix` now runs three stages per flagged unit, cheapest first, each with the same acceptance
+gate (zero hard violations and `_is_improvement`), so the no-worse-off guarantee holds stage by
+stage rather than only for the pass.
+
+### Stage 1 — deterministic, measured: 2084 → **2011**, −73, **0 LLM calls**
+
+`_find_repairs` grew from two rules to four, and — this is the part that needed deciding —
+they are now explicitly split into two tiers.
+
+**Tier A asserts no reading**: it rewrites a label the two sides spell differently while meaning
+the same thing. Safe wherever it fires.
+
+| rule | rewrites | fired |
+|---|---|---|
+| `role_label` (existing) | bare `obl` → `obl:<lemma>` when a `case` child names the preposition | **7** |
+| `prep_stack` (new) | one preposition of a stack named instead of another | **4** |
+
+**Tier B asserts a reading**, and may do so only where a signal *independent of Layer 4*
+corroborates it. This is the constraint PLAN.md had already stated as a warning — "`--repair`'s
+`null_subject` rule would rewrite those rows to the derived position; do **not** run it blind,
+since it asserts Layer 4 is right at exactly the positions this round found Layer 4 could be
+wrong." The rule is now gated rather than avoided.
+
+| rule | corroborating signal | fired |
+|---|---|---|
+| `null_subject` (narrowed) | Layer 2's person/number on the derived subject agrees with the predicate (`dep.subject_agreement`) | **31** |
+
+The gate is what makes the rule usable, and the numbers show it is not cosmetic. Of the **67**
+∅-subject pairs in the corpus, Layer 2 corroborates only **37**; of the rest, **20 actively
+disagree** (a plural subject under a singular verb, a 3rd-person nominal under a 2nd-person
+verb), 8 have a non-finite head and 2 a relative-pronoun subject whose person comes from its
+antecedent. Running the rule ungated would have rewritten 30 rows on the derivation's say-so at
+precisely the positions where the two frozen layers contradict each other.
+
+`dep.subject_agreement` is the *same* test `dep --check`'s subject-agreement rule runs, extracted
+from it so the two cannot drift: the checker asks the negative question and this rule the
+positive one, and both get "undecidable" as a distinct third answer. **Undecidable is not a weak
+yes** — the rule repairs only on "agree".
+
+Stage 1 also verifies itself. `_apply_unit_repairs` applies one rewrite at a time and
+re-validates, rolling back anything that does not clear violations cleanly; 6 of the 37
+corroborated `null_subject` candidates were rejected that way. The pass is idempotent — a second
+run proposes nothing — and `dep`/`np`/`morph`/`case --check` are all unmoved.
+
+`--repair` is now exactly this stage run on its own, sharing one implementation with `--fix`.
+
+### Stage 2 — one narrow question per violation class
+
+The remaining violations in a unit are grouped by class (`_violation_subclass`, the same key
+`_HINT_PHRASING` uses, POS refinements included) and each group gets **its own system prompt, its
+own question, and its own small answer**, spliced back in at row level and accepted on its own.
+
+| class | asked | answer |
+|---|---|---|
+| `role_mismatch` | predicate P, argument A — which role does A fill? | one role, or `none` |
+| `extra_arg` | is A really P's argument in that role? | `keep` / `<role>` / `drop` |
+| `missing_arg` | which token fills P's *R* slot? | `Line.Token`, `0.0`, or `none` |
+| `extra_tuple` ×3 | does W head a clause of its own? | `yes` / `no <host> <role>` / `no -` |
+| `missing_tuple` ×2 | give the rows for the clause W heads | a small table |
+
+`membership` (8) and `unknown_role` (0) have no prompt on purpose: `_fix_hint` never produced one
+for them either, rule AF closed the membership question, and there is nothing left for a prompt
+to move.
+
+Three things follow from the shape rather than from any one prompt's wording:
+
+- **An instruction reaches the model at the flagged position by construction.** Each class prompt
+  carries only the conventions bearing on it — the adverb rule for an adverb `extra_tuple`, the
+  attributive-adjective rule for an adjective one, the elided-speech-frame rule for a nominal
+  `missing_tuple`. They are lifted verbatim from `SYSTEM_PROMPT`, which stays unchanged for
+  `build`; each is under half its length.
+- **Partial credit exists.** Settling one class is committed even when the others fail.
+- **The tuple-level classes are asked first** (`_CLASS_ORDER`), because adding or withdrawing a
+  predicate changes which arguments there are to dispute.
+
+The independence rule still binds and is now pinned by a test. A question may name the predicate,
+the argument the LLM itself cited, and the role slot in dispute — exactly what `_fix_hint`
+already disclosed — but **never the derivation's own argument position**, which would reduce the
+model to confirming Layer 4 rather than reading the line.
+
+### Stage 3 — whole-unit regeneration, unchanged, as a fallback
+
+The original instrument still runs, but only for units stages 1 and 2 left untouched, and
+`--no-whole` disables it so a round can be measured with and without it.
+
+### What is reported
+
+`--fix` now prints **calls and violations-removed per class**, with the ratio. That is the
+measurement Phase 5w's finding demands: a pass average conceals which instrument worked, and the
+per-class ratio is the only number that says whether a given prompt is earning its call.
+
+### Two things deliberately not done, both measured first
+
+- **`case_corroborated_relabel`** — rewriting the **106** `role_mismatch` rows where the `case`
+  annex corroborates the derived role and contradicts the given one (rule U's gate, applied as a
+  rewrite instead of an acceptance). It would remove **zero** violations, because rule U already
+  suppresses every one of them; what it would fix is artifact hygiene — a wrong label sitting in
+  the TSV behind an acceptance. That is a real task, but it is not a `--fix` efficiency task, and
+  106 rewrites for no measured effect is not something to slip into a pass. Recorded here so the
+  count is not re-derived.
+- **`role_alias`** — canonicalizing a role outside the frozen vocabulary. Population is **0**
+  (`unknown_role` has stood at 0 since Phase 4b), so the rule would be dead code.
+
+### The `obl:X` vs `obl:Y` class, classified
+
+The 24 remaining preposition-lemma mismatches were classified before `prep_stack` was written,
+which is why the rule is gated the way it is:
+
+- **4 are a genuine stack** — Layer 4 chains `in` → `su` → nominal, so the derivation names the
+  preposition adjacent to the nominal and the LLM the one opening the phrase. Both are in the
+  same `case`-child chain; this is what `prep_stack` rewrites.
+- **18 name a preposition the tree does not carry at all** (`obl:in` where only `su` is attached).
+  Layer 4 is inconsistent about writing `in su` flat vs chained, so the tree and the reading
+  differ about *what is attached* — the `dep/` normalization round PLAN.md reserves, not a
+  relabeling. Left flagged.
+- 2 are neither.
+
+A first version of the rule accepted the flat-sibling case as well as the chain, on the theory
+that both spellings name one PP. It is kept (both prepositions being `case` children of the
+nominal is still one stack), but the "LLM names an absent preposition" case is refused — the
+distinction is whether the tree contains both lemmas anywhere in the argument's `case` chain, not
+whether the two readings *sound* like the same phrase.
+
+### Prediction for the first stage-2 round
+
+Unmeasured until the user runs one. Two things to check against Phase 5w's 1290 calls / 123
+removed / 0.095 per call, and neither is "fewer calls" — grouping by (unit × class) will produce
+a similar or slightly higher call count:
+
+1. **Per-call yield should rise**, from partial credit and from the truncation retries
+   (`_continue_if_missing`) largely disappearing when the answer is three lines rather than a
+   whole table.
+2. **The per-class table is the result, not the pass average.** A class whose prompt is wrong
+   will show it directly instead of being diluted, which is what the last four rounds could not
+   see.
+
 ## Rules Y-AF, from re-reading Inferno 1-3 — 2330 → 2084, −246 (2026-08-12)
 
 The third per-position read of this kind — rule V came out of Inferno 1's twelve, rules W and X

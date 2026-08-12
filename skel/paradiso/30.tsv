@@ -181,7 +181,7 @@ line	token	word	role	arg_line	arg_token
 72	3	piace	subj	70	3
 72	3	piace	iobj	72	2
 72	7	turge	subj	0	0
-73	5	convien	subj	0	0
+73	5	convien	subj	70	3
 73	5	convien	ccomp	73	8
 73	8	bei	subj	73	7
 73	8	bei	obl:di	73	4
@@ -260,7 +260,7 @@ line	token	word	role	arg_line	arg_token
 102	5	vedere	obj	102	4
 102	6	ha	subj	102	1
 102	6	ha	obj	102	9
-102	6	ha	obl	102	5
+102	6	ha	obl:in	102	5
 103	3	distende	subj	0	0
 103	3	distende	obl:in	103	6
 104	0			0	0

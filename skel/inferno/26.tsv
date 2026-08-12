@@ -321,7 +321,7 @@ line	token	word	role	arg_line	arg_token
 108	3	segnò	obl	108	1
 109	9	metta	subj	109	4
 109	9	metta	obl	109	6
-110	6	lasciai	subj	0	0
+110	6	lasciai	subj	106	1
 110	6	lasciai	obj	110	7
 110	6	lasciai	iobj	110	5
 110	6	lasciai	obl:da	110	3

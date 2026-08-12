@@ -170,7 +170,7 @@ line	token	word	role	arg_line	arg_token
 53	8	balli	subj	53	7
 54	7	mette	subj	0	0
 54	7	mette	obj	54	2
-54	7	mette	obl	54	4
+54	7	mette	obl:innanzi	54	4
 54	7	mette	obl:a	54	6
 55	1	volsesi	subj	0	0
 55	1	volsesi	obl:in	56	1

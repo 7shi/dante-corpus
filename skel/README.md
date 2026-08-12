@@ -9,9 +9,10 @@ LLM's roles and the derivation's roles are directly comparable and the corpus st
 canon-neutral.
 
 **Status: built for all 100 cantos, checker refined through Phase 5r, six full `--fix` rounds
-run (Phases 5e, 5q, 5s, 5t, 5u and 5w), and five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r)
-fed back into `dep/`.**
-`make -C skel check`: **0 hard, 2084 soft** violations (down from 17438 at the first
+run (Phases 5e, 5q, 5s, 5t, 5u and 5w), five Layer-4 correction rounds (Phases 5i, 5n, 5p's two
+and 5r) fed back into `dep/`, and `--fix` itself restructured in Phase 6 into a
+deterministic-first, class-targeted pass.**
+`make -C skel check`: **0 hard, 2011 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -26,8 +27,9 @@ Phase 5s's user-run `--fix` pass, 3270 after Layer 4's subject-agreement round m
 once more, 3136 after Phase 5t's user-run `--fix` pass, 2623 after rule V's
 control/participial subject chain and the membership audit's cross-layer corrections, 2531
 after Phase 5u's user-run `--fix` pass, 2408 after Phase 5w's user-run `--fix` pass on the
-prompt Phase 5v rewrote, 2330 after rules W and X, and 2084 after rules Y-AF and the
-cross-layer corrections from the Inferno 1-3 read). See
+prompt Phase 5v rewrote, 2330 after rules W and X, 2084 after rules Y-AF and the
+cross-layer corrections from the Inferno 1-3 read, and 2011 after Phase 6's deterministic
+`--fix` stage). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full
@@ -124,17 +126,32 @@ successive phases, each measured before/after (`--stats` aggregates violations b
    a matrix whose own subject is pro-drop ∅, the controller is unresolved and any resolution is
    accepted, as in the first case. Every other role, and `subj` where `derive_unit` resolves a real
    subject, stay exact-match.
-3. **`--repair`** (`Repair`/`_find_repairs`/`_safe_role_repair`): for the subset of divergences
-   the dep tree fully determines, mechanically rewrites the committed TSV — no model call — two
-   conservative rules, both sourced from the checker's own violation list (so the authority model
-   above automatically gates what's eligible):
-   - **null_subject**: a `missing_arg subj` (derived a real subject from an explicit `nsubj`
-     edge) paired with an `extra_arg subj (0,0)` (the LLM wrote pro-drop ∅) for the same
-     predicate — the ∅ citation is replaced with the derived one.
-   - **role_label**: a `role_mismatch` where the given role is bare `obl` and the derived role is
-     `obl:<lemma>` (the dep tree's `case`-child detection) — the role cell is rewritten.
+3. **`--repair`** (`Repair`/`_find_repairs`/`_safe_role_repair`), which is also `--fix`'s
+   stage 1: for the subset of divergences that need no *reading*, mechanically rewrites the
+   committed TSV — no model call — from the checker's own violation list (so the authority model
+   above automatically gates what's eligible). Each rewrite is applied singly and re-validated,
+   and rolled back if it does not clear violations cleanly. The rules split into two tiers, and
+   the split is the design:
+   - **Tier A asserts no reading** — the two sides spell one thing two ways.
+     **role_label**: given bare `obl` against a derived `obl:<lemma>` (the dep tree's
+     `case`-child detection) — the role cell is rewritten.
+     **prep_stack**: given `obl:X` against derived `obl:Y` where **both** lemmas sit in the same
+     `case`-child chain off the argument ("in su la cima" is chained `in` → `su` → nominal, so
+     the derivation names the inner preposition and the LLM the outer one). The corpus already
+     normalizes this family onto the derived side (`_PREP_LEMMA_NORM`). When the LLM names a
+     preposition the tree does not carry *at all*, the two sides differ about what is attached
+     and nothing is rewritten.
+   - **Tier B does assert a reading**, so it fires only where a signal **independent of Layer 4**
+     corroborates it — a Layer-5 divergence is evidence that Layer 4 may be the wrong side, so
+     "the derivation says so" is not by itself a reason to rewrite.
+     **null_subject**: a `missing_arg subj` paired with an `extra_arg subj (0,0)` (the LLM wrote
+     pro-drop ∅) for the same predicate, rewritten to the derived subject **only when Layer 2's
+     person/number agrees with the predicate** (`dep.subject_agreement`, the same test
+     `dep --check`'s subject-agreement rule runs, extracted so the two cannot drift). Its third
+     answer, "undecidable", is not a weak yes: the rule repairs only on "agree". Of the corpus's
+     67 candidate pairs Layer 2 corroborates 37 and *contradicts* 20.
    - Genuine disagreements (`subj`/`obj` reversals, `iobj`/`obj` reversals, cross-lemma `obl`
-     pairs) are deliberately excluded from both rules and left for hand/LLM triage.
+     pairs the tree does not stack) are excluded and left for `--fix`'s stage 2.
 4. **Phase 4a — double-listing + elided-copula whitelist** (`_classify_divergence`, gating the
    `extra_tuple` set): a predicate nominal/adjective double-listed as both another predicate's
    `attr`/`xcomp` argument *and* its own redundant predicate tuple is suppressed (extends Phase
@@ -437,19 +454,55 @@ deterministic rules against every population [PLAN.md](PLAN.md) triaged. The goa
 violations**, but reaching it needs an instrument this project has declined on principle, so it is
 a new plan rather than more of this one.
 
-`--fix` (`skel/skel.py`) regenerates a flagged parse unit and keeps the result only if its soft
-violation count strictly drops **and** no violation class appears that wasn't already there
-(`_is_improvement`, Phase 5c — the plain count test let the Phase 4b round trade a net drop for
-`unknown_role` 0 → 2, a role outside the frozen vocabulary). As of Phase 4b's `_fix_hint`, a regeneration attempt gets a
-per-predicate pointer built from the unit's prior soft violations — which predicate looks
-unwarranted or missing, which role slot looks missing/extra/mislabeled — appended to the prompt
-`build`'s initial parse never receives. The hint deliberately withholds `derive_unit`'s actual
-argument citations and its correct role label (a `role_mismatch` hint names the LLM's *own*
-prior label, not the derived one), so the retry still reads the sentence independently rather
-than parroting back a guess; without it, a systematic misreading (e.g. resolving an `xcomp`
-control subject from the wrong constituent) tends to reproduce itself verbatim across attempts.
+`--fix` (`skel/skel.py`) keeps a change only if the unit's soft violation count strictly drops
+**and** no violation class appears that wasn't already there (`_is_improvement`, Phase 5c — the
+plain count test let the Phase 4b round trade a net drop for `unknown_role` 0 → 2, a role outside
+the frozen vocabulary). That gate now applies **per stage**, so the no-worse-off guarantee holds
+at each step rather than only across the pass.
 
-## `--fix` hint (Phase 4b)
+## `--fix`'s three stages (Phase 6)
+
+Phase 5w measured the old design's cost: 1290 LLM calls removed 123 violations, because a flagged
+unit was regenerated *whole* from one monolithic prompt and accepted only if the *whole* unit
+improved. `--fix` now works cheapest-first, and a unit drops out as soon as it is clean.
+
+1. **Deterministic** — `_apply_unit_repairs`, the `--repair` rules above, no model call. Measured
+   at **2084 → 2011, −73** over the corpus. A unit this clears never reaches the model.
+2. **Class-targeted** — the remaining violations are grouped by `_violation_subclass` and each
+   group gets **its own system prompt, its own narrow question, and its own small answer**,
+   spliced in at row level and accepted independently (`_CLASS_PROMPTS`, `_ask_class`). Tuple-level
+   classes are asked before argument-level ones (`_CLASS_ORDER`), because adding or withdrawing a
+   predicate changes which arguments there are to dispute.
+3. **Whole-unit regeneration** — the original instrument, now a fallback for units the first two
+   stages left untouched; `--no-whole` disables it so a round can be measured with and without it.
+
+The summary is printed **per class, with calls beside violations removed**. That is what Phase
+5w's finding demands: a pass average conceals which instrument worked.
+
+### Why per-class prompts
+
+Phase 5w's result was that a prose rule buried in a long prompt does not change the reading,
+while an instruction that reaches the model *at the flagged position* does. Splitting the prompt
+by class makes that structural rather than a matter of prompt-writing discipline: each class
+prompt carries only the conventions bearing on it — the adverb rule for an adverb `extra_tuple`,
+the attributive-adjective rule for an adjective one, the elided-speech-frame rule for a nominal
+`missing_tuple` — all lifted verbatim from `SYSTEM_PROMPT`, which is unchanged and still used by
+`build`. Each is under half its length. The other gain is partial credit: settling one class is
+committed even when the others fail.
+
+`membership` and `unknown_role` have no prompt on purpose — `_fix_hint` never produced one for
+them (they carry no predicate), rule AF closed the membership question at 8, and `unknown_role`
+stands at 0.
+
+### The independence rule, in stage 2
+
+A question may name the predicate, the argument **the LLM itself cited**, and the role slot in
+dispute — exactly what `_fix_hint` already disclosed. It may **never** cite `derive_unit`'s own
+argument position, which would reduce the model to confirming Layer 4 instead of reading the
+line; `tests/test_skel_fix.py` pins this for both the position and, for `role_mismatch`, the
+derived role.
+
+## `--fix` hint (Phase 4b; now stage 3 only)
 
 `skel/skel.py`:
 
@@ -475,12 +528,13 @@ make -C skel                          # build all three canticles (model from mo
 make -C skel MODEL=ollama:gpt-oss     # override the model
 make -C skel check                    # validate artifacts, no model call
 make -C skel stats                    # validate artifacts, no model call; soft counts by class
-make -C skel repair                   # rewrite derive-authoritative errors, no model call
-make -C skel fix                      # regenerate parse units carrying soft violations
+make -C skel repair                   # --fix's deterministic stage on its own, no model call
+make -C skel fix                      # reduce soft violations (three stages)
 
 uv run skel/skel.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [--stats]
-uv run skel/skel.py inferno purgatorio paradiso --repair   # no model call
-uv run skel/skel.py inferno -m ollama:gpt-oss --fix        # regenerate flagged units
+uv run skel/skel.py inferno purgatorio paradiso --repair    # no model call
+uv run skel/skel.py inferno -m ollama:gpt-oss --fix         # all three stages
+uv run skel/skel.py inferno -m ... --fix --no-whole         # without the regeneration fallback
 ```
 
 Consumers read it deterministically via `Canto.skel()` (frozen, grouped, identified

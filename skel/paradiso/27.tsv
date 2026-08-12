@@ -85,7 +85,7 @@ line	token	word	role	arg_line	arg_token
 32	3	sicura	subj	31	5
 32	3	sicura	obl:di	32	2
 33	2	ascoltando	subj	0	0
-33	5	fane	subj	0	0
+33	5	fane	subj	31	3
 33	5	fane	attr	33	3
 34	3	trasmutò	subj	34	2
 34	3	trasmutò	obj	34	4

@@ -391,7 +391,7 @@ line	token	word	role	arg_line	arg_token
 140	6	udir	subj	140	4
 140	6	udir	obj	140	8
 141	5	cessò	subj	141	4
-141	8	compiési	subj	0	0
+141	8	compiési	subj	141	4
 141	8	compiési	obj	141	7
 142	2	ripigliammo	subj	0	0
 142	2	ripigliammo	obj	142	4

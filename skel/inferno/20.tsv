@@ -165,7 +165,7 @@ line	token	word	role	arg_line	arg_token
 55	2	fu	attr	55	1
 55	4	cercò	subj	55	3
 55	4	cercò	obl:per	55	6
-56	3	puose	subj	0	0
+56	3	puose	subj	52	2
 56	3	puose	obl	56	4
 56	6	nacqu'	subj	56	7
 57	5	piace	iobj	57	4

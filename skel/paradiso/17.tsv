@@ -312,7 +312,7 @@ line	token	word	role	arg_line	arg_token
 118	6	son	attr	118	8
 118	6	son	obl:a	118	5
 118	8	amico	subj	118	3
-119	1	temo	subj	0	0
+119	1	temo	subj	116	2
 119	1	temo	xcomp	119	3
 119	3	perder	subj	0	0
 119	3	perder	obj	119	4

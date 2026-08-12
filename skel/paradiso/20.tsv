@@ -227,7 +227,7 @@ line	token	word	role	arg_line	arg_token
 81	2	aspettar	subj	0	0
 81	2	aspettar	obj	81	1
 81	3	tacendo	subj	0	0
-81	5	patio	subj	0	0
+81	5	patio	subj	79	4
 81	5	patio	xcomp	81	2
 82	6	cose	subj	82	8
 82	7	son	subj	82	8

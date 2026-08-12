@@ -204,7 +204,7 @@ line	token	word	role	arg_line	arg_token
 74	5	poggia	obl:a	74	3
 74	5	poggia	obl:a	74	8
 75	0			0	0
-76	3	vidi	subj	0	0
+76	3	vidi	subj	73	1
 76	3	vidi	obj	76	6
 76	6	menare	subj	76	7
 76	6	menare	obl:a	77	2
@@ -334,7 +334,7 @@ line	token	word	role	arg_line	arg_token
 116	4	feci	subj	116	2
 116	4	feci	obj	116	3
 116	4	feci	attr	116	5
-116	7	fece	subj	0	0
+116	7	fece	subj	114	2
 116	7	fece	obj	116	6
 116	7	fece	xcomp	117	1
 117	1	ardere	subj	116	6

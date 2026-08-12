@@ -205,7 +205,7 @@ line	token	word	role	arg_line	arg_token
 64	2	passò	subj	66	1
 64	2	passò	obl:da	64	6
 65	4	giunse	subj	65	3
-65	4	giunse	obl:in	65	8
+65	4	giunse	obl:su	65	8
 66	3	fu	subj	66	5
 66	3	fu	iobj	66	2
 66	3	fu	attr	66	1

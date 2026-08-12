@@ -384,6 +384,50 @@ def _is_fused_non_finite(row: MorphRow) -> bool:
     return "+" in row.pos and not row.tense and not row.mood
 
 
+def subject_agreement(
+    subj: tuple[int, int], head: tuple[int, int],
+    morph_rows: dict[int, list[MorphRow]] | None,
+    children: dict[tuple[int, int], list[DepRow]],
+) -> tuple[str, str]:
+    """Whether Layer 2 says a subject token agrees with a (finite) predicate token.
+
+    Returns `("agree", "")`, `("disagree", <feature>)`, or `("undecidable", <reason>)`. The
+    exclusions that yield "undecidable" are the six enumerated in
+    `_subject_agreement_violations`, which is the check this function was extracted from — it is
+    the *only* implementation of the test, so a caller asking the positive question (does this
+    pair agree?) and the checker asking the negative one cannot drift apart.
+
+    "undecidable" is not a weak "disagree": it means the two frozen rows genuinely do not have to
+    match, so nothing may be concluded either way. `skel._find_repairs` relies on that
+    distinction — it repairs only on "agree".
+    """
+    if morph_rows is None:
+        return ("undecidable", "no morph")
+    head_morph = _morph_at(morph_rows, *head)
+    if head_morph is None or not head_morph.person or "verb" not in head_morph.pos:
+        return ("undecidable", "head is not a finite verb")
+    subj_morph = _morph_at(morph_rows, *subj)
+    if subj_morph is None:
+        return ("undecidable", "no morph row for the subject")
+    if _is_fused_non_finite(head_morph) or _is_fused_non_finite(subj_morph):
+        return ("undecidable", "fused non-finite token")
+    if subj_morph.lemma in _ANTECEDENT_PERSON_LEMMAS:
+        return ("undecidable", "person comes from the antecedent")
+    if head_morph.person in ("1", "2") and head_morph.number == "pl.":
+        return ("undecidable", "1/2 plural head admits a singular member")
+    if any(c.deprel == "conj" for c in children.get(subj, ())):
+        return ("undecidable", "coordinated subject")
+    if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
+        return ("undecidable", "head carries more than one subject")
+    # A nominal with no `person` of its own is 3rd person by default.
+    subj_person = subj_morph.person or "3"
+    if subj_person != head_morph.person:
+        return ("disagree", f"person {subj_person} vs {head_morph.person}")
+    if subj_morph.number and head_morph.number and subj_morph.number != head_morph.number:
+        return ("disagree", f"number {subj_morph.number} vs {head_morph.number}")
+    return ("agree", "")
+
+
 def _subject_agreement_violations(
     all_rows: list[DepRow], morph_rows: dict[int, list[MorphRow]] | None
 ) -> list[Violation]:
@@ -428,31 +472,11 @@ def _subject_agreement_violations(
         if row.deprel not in _NSUBJ_DEPRELS:
             continue
         head = (row.head_line, row.head_token)
+        verdict, feature = subject_agreement(
+            (row.line, row.token), head, morph_rows, children)
+        if verdict != "disagree":
+            continue
         head_morph = _morph_at(morph_rows, *head)
-        if head_morph is None or not head_morph.person or "verb" not in head_morph.pos:
-            continue
-        subj_morph = _morph_at(morph_rows, row.line, row.token)
-        if subj_morph is None:
-            continue
-        if _is_fused_non_finite(head_morph) or _is_fused_non_finite(subj_morph):
-            continue
-        if subj_morph.lemma in _ANTECEDENT_PERSON_LEMMAS:
-            continue
-        if head_morph.person in ("1", "2") and head_morph.number == "pl.":
-            continue
-        if any(c.deprel == "conj" for c in children.get((row.line, row.token), ())):
-            continue
-        if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
-            continue
-        # A nominal with no `person` of its own is 3rd person by default.
-        subj_person = subj_morph.person or "3"
-        if subj_person != head_morph.person:
-            feature = f"person {subj_person} vs {head_morph.person}"
-        elif (subj_morph.number and head_morph.number
-                and subj_morph.number != head_morph.number):
-            feature = f"number {subj_morph.number} vs {head_morph.number}"
-        else:
-            continue
         violations.append(
             Violation(row.line, "tag",
                       f"{row.deprel} {row.line}.{row.token} {row.word!r} disagrees with head "

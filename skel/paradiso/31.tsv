@@ -25,7 +25,7 @@ line	token	word	role	arg_line	arg_token
 8	6	ritorna	obl	8	4
 9	6	insapora	subj	9	4
 10	4	discendeva	subj	4	3
-10	4	discendeva	obl	7	3
+10	4	discendeva	obl:come	7	3
 10	4	discendeva	obl:in	10	3
 10	7	addorna	subj	10	5
 10	7	addorna	obl:di	11	3

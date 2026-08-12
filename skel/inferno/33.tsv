@@ -231,7 +231,7 @@ line	token	word	role	arg_line	arg_token
 73	2	cieco	subj	72	9
 73	4	brancolar	subj	72	9
 73	4	brancolar	obl:sovra	73	6
-74	5	chiamai	subj	0	0
+74	5	chiamai	subj	72	9
 74	5	chiamai	obj	74	4
 74	5	chiamai	obl	74	3
 74	8	fur	subj	74	4

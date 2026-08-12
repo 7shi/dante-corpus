@@ -40,7 +40,7 @@ line	token	word	role	arg_line	arg_token
 15	4	fatto	obj	15	2
 15	4	fatto	attr	15	6
 15	6	fello	subj	15	2
-16	2	disse	subj	0	0
+16	2	disse	subj	13	3
 16	2	disse	ccomp	16	4
 16	4	veggio	subj	16	3
 16	4	veggio	obj	16	8

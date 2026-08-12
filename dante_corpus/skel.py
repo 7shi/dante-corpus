@@ -34,7 +34,7 @@ from pathlib import Path
 
 from ._paths import SKEL_DIR
 from .case import SLOT_SEP, CaseRow
-from .dep import DepRow, index as dep_index
+from .dep import DepRow, index as dep_index, subject_agreement
 from .morph import MorphRow, Violation, read_table, strip_word_punct
 from .np import NPSpan
 from .tokenizer import has_alpha, tokenize
@@ -1303,8 +1303,11 @@ def _classify_divergence(
 
 @dataclass(frozen=True)
 class Repair:
-    """One Phase 3 (PLAN.md) mechanical rewrite: `before` (the committed row) replaced by
-    `after`. `kind` is "null_subject" (rule 1) or "role_label" (rule 2)."""
+    """One mechanical rewrite: `before` (the committed row) replaced by `after`.
+
+    `kind` names the rule that produced it — see `_find_repairs` for the catalogue and for what
+    each rule is allowed to assume.
+    """
 
     kind: str
     predicate: tuple[int, int]
@@ -1320,21 +1323,111 @@ def _safe_role_repair(given_role: str, derived_role: str) -> bool:
     return given_role == "obl" and bool(OBL_RE.fullmatch(derived_role))
 
 
+def _case_child_lemmas(
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+) -> dict[tuple[int, int], set[tuple[tuple[int, int], str]]]:
+    """`case` children per head, as (position, normalized lemma) — the input both preposition
+    rules read. Keyed by *any* head, not only argument positions, because a stacked preposition
+    hangs off the inner preposition rather than off the nominal."""
+    out: dict[tuple[int, int], set[tuple[tuple[int, int], str]]] = {}
+    for row in (dep_index_by_pos or {}).values():
+        if row.deprel == "case":
+            out.setdefault((row.head_line, row.head_token), set()).add(
+                ((row.line, row.token), _normalize_prep_lemma(row.word.lower())))
+    return out
+
+
+def _stacked_prep_lemmas(
+    arg: tuple[int, int],
+    case_kids: dict[tuple[int, int], set[tuple[tuple[int, int], str]]],
+) -> set[str]:
+    """Every preposition lemma reachable from `arg` by walking `case` children transitively.
+
+    "in su la favola" is chained in Layer 4 — `in` is a `case` child of `su`, and only `su` is a
+    `case` child of the nominal — so the flat lemma set names one preposition of the stack and
+    this walk names them all. See `_prep_stack_label`.
+    """
+    out: set[str] = set()
+    seen: set[tuple[int, int]] = set()
+    frontier = list(case_kids.get(arg, ()))
+    while frontier:
+        token, lemma = frontier.pop()
+        if token in seen:
+            continue
+        seen.add(token)
+        out.add(lemma)
+        frontier.extend(case_kids.get(token, ()))
+    return out
+
+
+def _prep_stack_label(
+    given_role: str, derived_role: str, arg: tuple[int, int],
+    case_kids: dict[tuple[int, int], set[tuple[tuple[int, int], str]]],
+) -> bool:
+    """Whether an `obl:X` vs `obl:Y` mismatch is the two readings naming *different prepositions
+    of one stack* rather than disagreeing about the relation.
+
+    "ch'i' fui **in su** la cima" (inferno 21:65): Layer 4 chains `in` -> `su` -> `cima`, so
+    `derive_unit` reports the preposition adjacent to the nominal (`obl:su`) while the LLM names
+    the one that opens the phrase (`obl:in`). Both describe the same PP, so this is a notation
+    convention with no reading asserted — and the convention the corpus already fixed is the
+    derived side's (`_PREP_LEMMA_NORM`'s docstring normalizes the `inver'` family onto the
+    derivation's `in` for exactly this reason).
+
+    Gated on **both** lemmas being in the same stack. When the LLM names a preposition the tree
+    does not carry at all (18 positions, mostly `in su` written flat by Layer 4), the tree and
+    the reading genuinely differ about what is attached, and that is the `dep/` normalization
+    round PLAN.md reserves — not something to rewrite here.
+    """
+    if not (given_role.startswith("obl:") and derived_role.startswith("obl:")):
+        return False
+    stack = _stacked_prep_lemmas(arg, case_kids)
+    return (given_role.split(":", 1)[1] in stack
+            and derived_role.split(":", 1)[1] in stack)
+
+
 def _find_repairs(
     given: dict[int, list[SkelRow]], derived: dict[int, list[SkelRow]],
     violations: list[Violation],
+    morph_rows: dict[int, list[MorphRow]] | None = None,
+    dep_rows: dict[int, "list[DepRow] | tuple[DepRow, ...]"] | None = None,
 ) -> list[Repair]:
-    """Phase 3 repair candidates, sourced purely from `_classify_divergence`'s own violation
+    """Mechanical rewrite candidates, sourced purely from `_classify_divergence`'s own violation
     list (already passed through Phase 2's `_apply_subj_authority` when `dep_index_by_pos` was
-    given) — does not recompute the given/derived diff independently."""
+    given) — does not recompute the given/derived diff independently.
+
+    The rules divide into two tiers, and the division is the point. **Tier A asserts no
+    reading**: it rewrites a label the two sides spell differently while meaning the same thing,
+    so it is safe wherever it fires. **Tier B does assert a reading**, and may only do so where a
+    signal *independent of Layer 4* corroborates it — because a Layer-5 divergence is evidence
+    that Layer 4 might be the wrong side (see the module docstring), so "the derivation says so"
+    is not on its own a reason to rewrite the artifact. PLAN.md records the concrete
+    counter-example: the ungated `null_subject` rule asserted Layer 4 was right at exactly the
+    positions the subject-agreement round later found Layer 4 could be wrong.
+
+    Tier A — `role_label` (bare `obl` -> `obl:<lemma>`), `prep_stack` (one preposition of a
+    stack named instead of another).
+
+    Tier B — `null_subject` (the LLM's pro-drop ∅ resolved to the derived subject), corroborated
+    by Layer 2 person/number agreement via `dep.subject_agreement`.
+    """
     by_pred: dict[tuple[int, int], list[Violation]] = {}
     for v in violations:
         if v.predicate is not None:
             by_pred.setdefault(v.predicate, []).append(v)
 
+    dep_index_by_pos = dep_index(dep_rows) if dep_rows is not None else None
+    case_kids = _case_child_lemmas(dep_index_by_pos)
+    dep_children: dict[tuple[int, int], list[DepRow]] = {}
+    for row in (dep_index_by_pos or {}).values():
+        dep_children.setdefault((row.head_line, row.head_token), []).append(row)
+
     def find_row(pos: tuple[int, int], role: str, arg: tuple[int, int]) -> SkelRow | None:
+        # Compare canonicalized: `_classify_divergence` reports the *canonical* role, while the
+        # committed row may hold any spelling that canonicalizes onto it (`obl:nel` -> `obl:in`).
         for row in given.get(pos[0], ()):
-            if (row.line, row.token) == pos and row.role == role and (row.arg_line, row.arg_token) == arg:
+            if ((row.line, row.token) == pos and _canonicalize_role(row.role) == role
+                    and (row.arg_line, row.arg_token) == arg):
                 return row
         return None
 
@@ -1346,20 +1439,30 @@ def _find_repairs(
             if v.detail.startswith("extra_arg") and v.role == "subj" and v.arg == (0, 0)
         ]
         if len(missing_subj) == 1 and len(extra_null_subj) == 1:
-            before = find_row(pos, "subj", (0, 0))
-            if before is not None:
-                arg_line, arg_token = missing_subj[0].arg
-                after = dataclasses.replace(before, arg_line=arg_line, arg_token=arg_token)
-                repairs.append(Repair("null_subject", pos, before, after))
+            subj = missing_subj[0].arg
+            verdict, _ = subject_agreement(subj, pos, morph_rows, dep_children)
+            # Tier B: only an *agreeing* pair is repaired. "disagree" means the two frozen layers
+            # contradict each other and the derived subject is as likely to be the wrong side;
+            # "undecidable" means nothing may be concluded. Both stay flagged for the LLM.
+            if verdict == "agree":
+                before = find_row(pos, "subj", (0, 0))
+                if before is not None:
+                    after = dataclasses.replace(before, arg_line=subj[0], arg_token=subj[1])
+                    repairs.append(Repair("null_subject", pos, before, after))
 
         for v in vs:
-            if (v.detail.startswith("role_mismatch") and v.given_role is not None
-                    and v.role is not None and v.arg is not None
-                    and _safe_role_repair(v.given_role, v.role)):
-                before = find_row(pos, v.given_role, v.arg)
-                if before is not None:
-                    after = dataclasses.replace(before, role=v.role)
-                    repairs.append(Repair("role_label", pos, before, after))
+            if not (v.detail.startswith("role_mismatch") and v.given_role is not None
+                    and v.role is not None and v.arg is not None):
+                continue
+            if _safe_role_repair(v.given_role, v.role):
+                kind = "role_label"
+            elif _prep_stack_label(v.given_role, v.role, v.arg, case_kids):
+                kind = "prep_stack"
+            else:
+                continue
+            before = find_row(pos, v.given_role, v.arg)
+            if before is not None:
+                repairs.append(Repair(kind, pos, before, dataclasses.replace(before, role=v.role)))
     return repairs
 
 
