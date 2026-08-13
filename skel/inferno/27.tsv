@@ -109,7 +109,6 @@ line	token	word	role	arg_line	arg_token
 35	5	incominciai	xcomp	35	4
 35	5	incominciai	obl:sanza	35	2
 36	7	nascosta	subj	36	3
-37	2	tua	subj	37	1
 37	4	è	subj	37	1
 37	4	è	obl:sanza	38	2
 37	7	fu	subj	37	1
@@ -232,6 +231,7 @@ line	token	word	role	arg_line	arg_token
 80	6	dovrebbe	subj	80	5
 80	6	dovrebbe	xcomp	81	1
 80	6	dovrebbe	xcomp	81	5
+80	6	dovrebbe	obl	80	4
 81	1	calar	subj	80	5
 81	1	calar	obj	81	3
 81	5	raccoglier	subj	80	5
@@ -347,7 +347,6 @@ line	token	word	role	arg_line	arg_token
 115	1	Venir	obl:tra	115	8
 115	4	dee	subj	0	0
 115	4	dee	xcomp	115	1
-115	4	dee	obl:tra	115	8
 116	2	diede	subj	0	0
 116	2	diede	obj	116	4
 117	5	stato	subj	117	6
@@ -384,7 +383,6 @@ line	token	word	role	arg_line	arg_token
 127	1	disse	subj	124	6
 127	3	è	subj	127	2
 127	3	è	obl:di	127	6
-127	6	rei	subj	127	2
 127	9	furo	subj	127	6
 127	9	furo	obl:di	127	8
 128	6	vedi	subj	0	0

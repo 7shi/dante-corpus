@@ -125,7 +125,9 @@ line	token	word	role	arg_line	arg_token
 36	4	son	subj	0	0
 36	4	son	attr	36	5
 36	7	piango	subj	36	6
-37	0			0	0
+37	2	io	subj	0	0
+37	2	io	ccomp	38	4
+37	2	io	obl:a	37	4
 38	4	rimani	subj	37	2
 38	4	rimani	obj	38	3
 38	4	rimani	obl:con	37	6
@@ -184,7 +186,7 @@ line	token	word	role	arg_line	arg_token
 56	3	lasci	iobj	56	1
 56	3	lasci	xcomp	56	4
 56	4	veder	subj	0	0
-56	4	veder	obj	55	8
+56	4	veder	subj	55	8
 56	7	sazio	subj	56	5
 57	4	convien	subj	56	5
 57	4	convien	ccomp	57	7
@@ -193,6 +195,7 @@ line	token	word	role	arg_line	arg_token
 58	4	vid'	subj	58	5
 58	4	vid'	obj	58	7
 58	4	vid'	xcomp	59	1
+58	4	vid'	obl:dopo	58	2
 59	1	far	obl:di	59	3
 59	1	far	obl:a	59	7
 60	5	lodo	subj	0	0

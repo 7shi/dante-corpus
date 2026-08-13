@@ -3,6 +3,7 @@ line	token	word	role	arg_line	arg_token
 1	4	fiammeggio	obj	1	3
 1	4	fiammeggio	obl:in	1	6
 1	4	fiammeggio	obl:di	1	8
+1	4	fiammeggio	obl:di	2	2
 1	4	fiammeggio	obl:da	2	4
 2	9	vede	subj	2	5
 2	9	vede	obl:in	2	7
@@ -135,13 +136,12 @@ line	token	word	role	arg_line	arg_token
 47	3	servata	subj	46	2
 48	6	favella	subj	46	2
 48	6	favella	obl:di	48	4
-49	2	necessitato	subj	49	6
 49	2	necessitato	xcomp	50	3
-50	3	offerere	subj	49	6
 50	3	offerere	obj	50	2
+50	3	offerere	iobj	49	6
 51	2	permutasse	subj	50	7
 51	4	saver	subj	51	5
-51	4	saver	obj	51	2
+51	4	saver	ccomp	51	2
 51	5	dei	subj	0	0
 51	5	dei	xcomp	51	4
 52	8	aperta	subj	52	3
@@ -155,6 +155,7 @@ line	token	word	role	arg_line	arg_token
 54	6	converta	obl:con	54	4
 55	3	trasmuti	subj	0	0
 55	3	trasmuti	obj	55	4
+55	3	trasmuti	obl:a	55	8
 55	3	trasmuti	obl:per	56	3
 55	3	trasmuti	obl:sanza	56	7
 56	0			0	0
@@ -281,8 +282,8 @@ line	token	word	role	arg_line	arg_token
 97	6	cambiò	subj	97	4
 97	6	cambiò	obj	97	5
 97	8	rise	subj	97	4
-98	3	fec'	subj	98	1
 98	3	fec'	obj	98	2
+98	3	fec'	attr	98	1
 98	3	fec'	attr	98	4
 99	1	trasmutabile	subj	98	4
 99	1	trasmutabile	obl:da	98	9
@@ -307,10 +308,8 @@ line	token	word	role	arg_line	arg_token
 103	2	vid'	xcomp	104	1
 104	1	trarsi	subj	103	8
 104	1	trarsi	obl:ver	104	3
-104	8	udia	subj	0	0
 104	8	udia	obj	105	1
 104	8	udia	obl:in	104	6
-105	1	Ecco	subj	105	2
 105	3	crescerà	subj	105	2
 105	3	crescerà	obj	105	6
 106	7	venìa	subj	106	4
@@ -328,7 +327,9 @@ line	token	word	role	arg_line	arg_token
 111	0			0	0
 112	4	vederai	subj	0	0
 112	4	vederai	obj	113	2
+112	4	vederai	obl:per	112	3
 113	2	era	subj	113	1
+113	2	era	obl:da	112	7
 113	2	era	obl:in	113	4
 113	6	udir	subj	0	0
 113	6	udir	obj	113	8
@@ -350,7 +351,6 @@ line	token	word	role	arg_line	arg_token
 119	7	disii	xcomp	120	3
 120	3	chiarirti	subj	0	0
 120	3	chiarirti	obl:di	120	2
-120	8	sazia	subj	0	0
 120	8	sazia	obl:a	120	6
 121	0			0	0
 122	1	detto	subj	0	0
@@ -406,7 +406,7 @@ line	token	word	role	arg_line	arg_token
 136	7	nascose	subj	137	6
 136	7	nascose	iobj	136	5
 136	7	nascose	obl:per	136	3
-136	7	nascose	obl:in	137	4
+136	7	nascose	obl:a	137	4
 137	0			0	0
 138	3	chiusa	subj	0	0
 138	4	chiusa	subj	0	0

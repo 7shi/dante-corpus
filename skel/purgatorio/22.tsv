@@ -13,6 +13,7 @@ line	token	word	role	arg_line	arg_token
 5	1	detto	subj	1	4
 5	1	detto	obj	4	2
 5	1	detto	xcomp	5	4
+5	1	detto	obl	5	2
 5	4	beati	subj	5	2
 6	6	forniro	subj	5	8
 6	6	forniro	obj	6	5
@@ -40,6 +41,7 @@ line	token	word	role	arg_line	arg_token
 15	6	fé	attr	15	7
 16	5	fu	subj	16	2
 16	5	fu	attr	16	6
+16	5	fu	obl:da	13	4
 16	5	fu	obl:inverso	16	4
 17	2	strinse	subj	16	6
 17	2	strinse	obl:di	17	7
@@ -58,7 +60,7 @@ line	token	word	role	arg_line	arg_token
 21	6	ragiona	obl:cum	21	5
 22	3	trovar	subj	23	2
 22	3	trovar	obj	23	1
-22	3	trovar	obl:in	22	7
+22	3	trovar	obl:a	22	7
 22	3	trovar	obl:tra	23	5
 23	0			0	0
 24	7	pieno	subj	24	2
@@ -76,7 +78,7 @@ line	token	word	role	arg_line	arg_token
 28	4	appaion	obl	28	3
 29	2	danno	subj	29	1
 29	2	danno	obj	29	6
-29	2	danno	xcomp	29	4
+29	2	danno	obl:a	29	4
 29	2	danno	obl:per	30	4
 29	4	dubitar	subj	0	0
 29	4	dubitar	obj	29	6
@@ -160,6 +162,7 @@ line	token	word	role	arg_line	arg_token
 58	7	tasta	obj	58	3
 58	7	tasta	obl:con	58	5
 59	2	par	subj	59	3
+59	2	par	obl:per	58	2
 59	5	facesse	subj	60	2
 59	5	facesse	obj	59	4
 59	5	facesse	attr	59	7
@@ -238,7 +241,7 @@ line	token	word	role	arg_line	arg_token
 81	5	presi	attr	81	6
 81	5	presi	xcomp	81	4
 81	6	usata	subj	81	2
-81	6	usata	obl:a	81	4
+81	6	usata	xcomp	81	4
 82	1	Vennermi	subj	0	0
 82	3	parendo	subj	0	0
 82	3	parendo	attr	82	5
@@ -248,6 +251,7 @@ line	token	word	role	arg_line	arg_token
 84	5	fur	subj	84	7
 84	5	fur	obl:sanza	84	3
 85	9	stette	subj	0	0
+85	9	stette	obl:di	85	5
 85	9	stette	obl:per	85	7
 86	3	sovvenni	subj	86	1
 86	3	sovvenni	obj	86	2
@@ -282,6 +286,7 @@ line	token	word	role	arg_line	arg_token
 94	4	levato	obj	94	7
 95	3	ascondeva	subj	95	1
 95	3	ascondeva	obj	95	5
+95	3	ascondeva	obl:a	95	2
 95	7	dico	subj	95	6
 95	7	dico	obj	95	5
 96	5	avem	subj	0	0
@@ -346,7 +351,7 @@ line	token	word	role	arg_line	arg_token
 117	1	liberi	obl:da	117	3
 117	1	liberi	obl:da	117	6
 118	6	eran	subj	118	5
-118	6	eran	attr	118	8
+118	6	eran	obl:di	118	8
 119	1	rimase	subj	118	5
 119	1	rimase	obl:a	119	3
 119	7	era	subj	119	6
@@ -354,6 +359,8 @@ line	token	word	role	arg_line	arg_token
 120	1	drizzando	subj	119	6
 120	1	drizzando	obj	120	7
 120	1	drizzando	obl:in	120	4
+121	4	duca	subj	0	0
+121	4	duca	ccomp	121	6
 121	6	credo	subj	121	5
 121	6	credo	ccomp	122	6
 122	4	volger	subj	0	0
@@ -397,6 +404,7 @@ line	token	word	role	arg_line	arg_token
 135	1	cred'	subj	135	2
 135	7	vada	subj	135	4
 136	8	chiuso	subj	136	5
+136	8	chiuso	obl	136	3
 137	1	cadea	subj	137	7
 137	1	cadea	obl:da	136	2
 137	1	cadea	obl:de	137	5

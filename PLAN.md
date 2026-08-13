@@ -1,15 +1,18 @@
 # Plan: a shared grammatical-analysis stack in the corpus
 
-## Handoff (2026-08-12) — resume here
+## Handoff (2026-08-13) — resume here
 
-**Everything is committed. Newest work: Phase 6, a restructuring of `--fix` itself.**
+**Everything is committed. Newest work: the first `--fix` round against Phase 6's restructured
+pass, user-run.**
 Checks at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
-verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**2011** soft,
+verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**1452** soft,
 `np --check` 0/0, `morph --check` 0/0, `pytest` **243** passed.
 
-**A `--fix` round is now worth running and is user-run work.** It is the first round against the
-restructured pass, and its per-class table is the measurement Phase 5w asked for. See *What
-Phase 6 did* below.
+**The round scored 2011 → 1452, −559 (−27.8%), five times Phase 5w's per-unit rate.** Both of
+Phase 6's predictions held: the per-class table shows the two classes given their own POS-keyed
+prompt (`extra_tuple_adverb`/`extra_tuple_adjective`) moved furthest, and partial credit kept
+work stage 3's whole-unit gate used to discard. See *What the Phase 6 `--fix` round did* below;
+full write-up in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
 
 ### What Phase 6 did (2026-08-12)
 
@@ -57,6 +60,38 @@ a population of **0**.
 **What the next round should report**: calls *and* violations removed **per class**, against
 Phase 5w's 1290 / 123 / 0.095. Do not expect fewer calls — grouping by (unit × class) yields a
 similar count. Expect a higher per-call yield, and read the per-class table, not the average.
+
+### What the Phase 6 `--fix` round did (2026-08-13, user-run)
+
+The round Phase 6 called for: `make -C skel fix` 3-way parallel over the 1106 units flagged at
+2011, the first pass against the restructured stage 2/3 driver. Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *The round, measured*.
+
+- **2011 → 1452 soft, −559 (−27.8%)**, 98 cantos touched, 259 units cleared outright, 197
+  improved. **0 units got worse and 0 were newly flagged** — the guarantee held stage by stage,
+  as designed. `skel/skel.log` was again left empty by the parallel invocation, so the exact call
+  count is unrecoverable; against the 1106-unit lower bound the yield is **0.505 per unit**, five
+  times Phase 5w's 0.095 and two and a half times 5s's 0.199 prior ceiling. The true per-call
+  figure is lower (stage 2 asks one question per class per unit, so calls exceed units), but the
+  margin is too large to be call-count inflation alone.
+- **Both Phase 6 predictions held, sharply, at the POS-keyed subclass level `--fix` actually
+  works in.** `extra_tuple_adverb` — its own narrow prompt, carrying only the adverb rule —
+  **37 → 7, −78.8%, the largest single-class move of any `--fix` round on record**.
+  `extra_tuple_adjective` moved 37 → 17, −54.1%, a real disagreement (no `cop` edge either way)
+  so it moves less than its sibling but still far above the pass average. The three classes with
+  no stage-2 prompt (`extra_tuple`, `missing_tuple`, `membership`) moved at or near zero — the
+  control confirming the gain is the targeted prompts, not stage 3 alone. `role_mismatch`
+  (−40.8%) and `missing_tuple_nominal` (−40.3%) also moved well above average; `missing_arg`
+  (−28.9%) and `extra_arg` (−19.1%) moved at their usual regeneration-resistant rate, though even
+  that beats any prior round's pass average.
+- **The two open routes from the previous handoff are answered by this number**: attributive
+  adjectives (17 left) and promoted adverbs (7 left) were exactly the populations these two new
+  prompts moved, and the adverb route is now nearly closed. Do not write a checker rule for
+  either without re-reading what's left first — see *If a next task is wanted* below.
+- **Three `tests/test_skel_fix.py` fixtures needed updating, not the driver.** They pinned
+  Inferno 1 as "the smallest real case" (one `extra_tuple` violation); this round cleared it
+  outright, so no canto now has a single-unit `extra_tuple_adverb` case. Repointed to Purgatorio
+  1 (one `missing_arg`), mechanics unchanged. `pytest` 243 passed after the update.
 
 ### What rules Y-AF did (2026-08-12)
 
@@ -441,13 +476,14 @@ don't defer it to a separate pass unless it's genuinely undecidable from the tex
 
 ## If a next task is wanted
 
-**A `--fix` round against Phase 6's restructured pass is the one pending user-run task**, and it
-is the first thing worth doing: it is the only way to score stage 2's per-class prompts, and the
-two prompt-side routes below are waiting on exactly that number. The remaining routes are
-assistant-side.
+**The `--fix` round against Phase 6's restructured pass is done and both stage-2 predictions
+held** (see *What the Phase 6 `--fix` round did* above): `extra_tuple_adverb` −78.8%,
+`extra_tuple_adjective` −54.1%, both far above the pass average, against a control of ~0% for the
+three classes with no dedicated prompt. The remaining routes are assistant-side, plus a second
+`--fix` round is itself now a candidate (below).
 
-**How to measure a future `--fix` round** (the method Phases 5t/5u/5w used; the whole round arrives
-as modified `skel/*.tsv` in the working tree):
+**How to measure a future `--fix` round** (the method Phases 5t/5u/5w/this round used; the whole
+round arrives as modified `skel/*.tsv` in the working tree):
 
 1. `git worktree add <scratch>/base HEAD`, then symlink each `src/<canticle>` into the worktree —
    the per-canticle source dirs are **generated, not tracked**, and `api.cantos()` now raises
@@ -456,33 +492,41 @@ as modified `skel/*.tsv` in the working tree):
 3. Diff at the **parse-unit** level (`dep.sentence_groups`, which is what `--fix` regenerates), by
    mapping each `<canticle> <canto>:<line>` violation to its unit's first line: units flagged
    before/after, improved, cleared, **got worse**, **newly flagged**. Zero on the last two has held
-   for five consecutive rounds and is Phase 5c's acceptance criterion.
+   for six consecutive rounds and is Phase 5c's acceptance criterion.
 4. Per-call yield = violations removed ÷ units flagged before (`skel.log` is left empty by the
    parallel invocation, so the flagged-unit delta is the only available lower bound on accepted
    units — don't look for a per-unit count).
-5. Classify the residue by the Layer-2 POS of the token each violation cites — that is what made
-   both the membership audit and 5v's gap analysis possible.
+5. **Classify at `_violation_subclass` granularity, not `--check`'s coarse kind** — the
+   POS-keyed split (`extra_tuple_adverb`/`extra_tuple_adjective`/`missing_tuple_nominal`) is what
+   `_CLASS_PROMPTS` is actually keyed by, and this round's finding only showed up at that level;
+   the coarse `extra_tuple` number would have hidden the 78.8%-vs-54.1% split entirely.
 
-**Read the per-class table before the pass-level number** — Phase 5w is the case in point: a flat
-0.095 pass average concealed a −28.6% move in the one class whose instruction had changed. Score
-each intervention against *its* population, never against the pass.
+**Read the per-class (subclass) table before the pass-level number** — this round is the sharpest
+case yet: a −27.8% pass average concealed a −78.8% move in the class with a dedicated prompt and
+~0% in the three with none. Score each intervention against *its* population, never against the
+pass.
+
+**A fresh `--fix` round is now itself a live option**, since 259 units cleared and 197 more
+improved — a materially different flagged set than any prior round measured against. Prior
+practice (Phase 5s/5t) found that a changed flagged set can raise the *next* pass's yield when it
+contains freshly-created LLM-authored rows; whether that applies here (this round's residue is
+mostly *un*-touched, not newly authored) is unmeasured. Run one and read the subclass table if so.
 
 The open routes, all assistant-side. **Three of the four routes the previous handoff listed are
 closed** — rule Y took the copular-clause-head route (−8, not the 43 its class count promised),
 rule Z absorbed the `per`+infinitive route by generalizing past the preposition (−77), and rule AF
 answered the `membership` question (47 → 8). What is left:
 
-- **Attributive vs predicative adjectives (31 `extra_tuple`).** *"non fur mai persone **ratte** / a
-  far lor pro"* (inferno 2:109): Layer 4 attaches the adjective `amod` inside the subject NP, the
-  LLM promotes it to a predicate of its own. Unlike rule Y's population there is **no `cop` edge**
-  — nothing in the tree asserts a predication — so this is a genuine reading disagreement, not
-  checker silence, and it is addressed **prompt-side**: Phase 6 gave it its own stage-2 class
-  (`extra_tuple_adjective`) with a system prompt carrying the attributive-adjective rule and
-  nothing else. The next `--fix` round scores it directly, as its own line in the per-class
-  table. Do not write a checker rule here without first seeing that number.
-- **Adverbs promoted to predicates (33 `extra_tuple`).** Same status, same treatment
-  (`extra_tuple_adverb`). Also awaiting a round. These two are the reason the round is worth
-  running: they are the first classes whose instrument was built for them alone.
+- **Attributive vs predicative adjectives (17 `extra_tuple_adjective`, down from 37).** *"non fur
+  mai persone **ratte** / a far lor pro"* (inferno 2:109): Layer 4 attaches the adjective `amod`
+  inside the subject NP, the LLM promotes it to a predicate of its own. Unlike rule Y's
+  population there is **no `cop` edge** — nothing in the tree asserts a predication — so this is
+  a genuine reading disagreement, not checker silence. The dedicated prompt moved it −54.1% in
+  one round; whether the residue is a checker question (like `membership`) or keeps yielding to
+  regeneration is worth a per-position read of the 17 before writing a checker rule.
+- **Adverbs promoted to predicates (7 `extra_tuple_adverb`, down from 33).** Nearly closed by the
+  dedicated prompt (−78.8%); a per-position read of the last 7 is now cheap and would settle
+  whether any residue is genuine or a further prompt tweak would clear it.
 - **Stacked prepositions in Layer 4 (14 `role_mismatch`).** Phase 6 measured this class and
   **took the decidable 4 of it**: where Layer 4 chains *"in su"* (`in` → `su` → argument), both
   lemmas sit in the argument's `case` chain and the `prep_stack` rule normalizes onto the derived
@@ -490,7 +534,7 @@ answered the `membership` question (47 → 8). What is left:
   at all** — Layer 4 writes *"in su"* flat in some places and chained in others, so the two sides
   differ about what is *attached*, not about what to call it. That is still a `dep/`
   normalization round, and it is still the only *checker/Layer-4* route on the list.
-- **The `missing_arg obl` bucket (213).** The single largest sub-class after the two subject
+- **The `missing_arg obl` bucket.** Still the single largest sub-class after the two subject
   buckets, and never classified. A per-position read of a sample is the cheap first move.
 
 **A per-position read has now produced a rule three times running, and the residue classification
@@ -507,7 +551,7 @@ verb-valency lexicon) is declined on neutrality grounds; see *Out of scope*.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and rules V through AF, and its soft residue is **2011**
+checker was refined through Phases 0-5r and rules V through AF, and its soft residue is **1452**
 (down from
 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
@@ -516,8 +560,9 @@ on Layer 5's count* — Phase 5s's user-run `--fix` pass took it to 3215, the su
 round moved it to 3270, Phase 5t's user-run `--fix` pass took it to 3136, rule V plus the
 membership audit took it to 2623, Phase 5u's user-run `--fix` pass took it to 2531, and Phase 5w's
 user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408, rules W and X took it to
-2330, and rules Y-AF plus the Inferno 1-3 cross-layer corrections took it to 2084, and Phase 6's
-deterministic `--fix` stage took it to 2011) — every
+2330, and rules Y-AF plus the Inferno 1-3 cross-layer corrections took it to 2084, Phase 6's
+deterministic `--fix` stage took it to 2011, and the first user-run `--fix` round against Phase
+6's restructured stage 2/3 driver took it to 1452) — every
 route the
 Phase
 5 plan opened has a measured verdict
@@ -533,13 +578,14 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**No route is blocked on the user; the four that remain are assistant-side** (see *If a next task
-is wanted*). All five layers plus the case extension are implemented, built for all 100 cantos and
-merged to `main`. Phase 5w closed the prompt question 5u and 5v opened: a prompt rule moves its
-class only when it reaches the model at the flagged position — the one 5v rule carrying a worked
-example and a `--fix` hint took its class −28.6%, the three prose-only rules moved nothing above
-the pass average. Further prompt work is worth doing only with a hint attached; the volume is in
-the four routes listed there.
+**No route is blocked on the user; the routes that remain are assistant-side** (see *If a next
+task is wanted*). All five layers plus the case extension are implemented, built for all 100
+cantos and merged to `main`. The first `--fix` round against Phase 6's restructured driver
+generalized Phase 5w's finding again, more sharply: a prompt rule moves its class only when it
+reaches the model at the flagged position — the two POS-keyed prompts built for this round moved
+their classes −78.8% and −54.1%, the three classes with no dedicated prompt moved near zero.
+Further prompt work is worth doing only with a hint attached; the volume is in the routes listed
+there.
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
 - **Layer 2 — Morphology + lemma**: implemented; see [`morph/README.md`](morph/README.md).
@@ -567,7 +613,7 @@ the four routes listed there.
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 2011 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 1452 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -587,6 +633,11 @@ the four routes listed there.
   instruction had been rewritten with a worked example and a per-violation `--fix` hint fell 28.6%.
   A pass moves a class when something about *that class* changed since the last pass; the pass
   average is that move diluted by everything that did not.
+  **Phase 6 (2026-08-12) restructured `--fix` itself** — deterministic repairs first, then one
+  narrow question per violation *class* instead of one monolithic prompt per whole unit, with
+  partial credit kept class by class — and its first user-run round (2026-08-13) confirmed the
+  rule at the sharpest resolution yet: the two POS-keyed classes built for it moved −78.8% and
+  −54.1%, the classes with no dedicated prompt moved near zero, in the same pass.
   `--fix` rounds are **LLM-regeneration work
   the user runs themselves** (`make -C skel fix`, run 3-way parallel); checker-side and audit
   work is the assistant's.
@@ -802,7 +853,8 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W,
-   X and the Y-AF series, with `--fix` restructured in Phase 6 (`--check`: 0 hard / 2011 soft). Phase 5 closed with every route measured; see
+   X and the Y-AF series, with `--fix` restructured in Phase 6 and its first round run
+   (`--check`: 0 hard / 1452 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

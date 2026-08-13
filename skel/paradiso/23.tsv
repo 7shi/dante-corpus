@@ -50,12 +50,11 @@ line	token	word	role	arg_line	arg_token
 15	2	vorria	obj	15	1
 15	4	sperando	subj	0	0
 15	6	appaga	subj	14	5
+15	6	appaga	obj	15	5
 16	3	fu	subj	16	2
 16	3	fu	obl:tra	16	7
-16	3	fu	obl:di	17	3
 16	3	fu	obl:di	17	7
 17	4	dico	subj	0	0
-17	4	dico	ccomp	16	3
 18	3	venir	subj	18	2
 18	3	venir	xcomp	18	7
 18	7	rischiarando	subj	18	2
@@ -196,6 +195,7 @@ line	token	word	role	arg_line	arg_token
 68	3	fendendo	subj	68	7
 68	3	fendendo	obj	68	2
 68	4	va	subj	68	7
+68	4	va	obj	68	2
 69	8	parca	subj	69	4
 69	8	parca	obl:a	69	6
 70	7	innamora	subj	70	3
@@ -221,7 +221,6 @@ line	token	word	role	arg_line	arg_token
 79	7	puro	subj	79	6
 80	0			0	0
 81	1	vider	subj	81	6
-81	1	vider	obj	79	6
 81	1	vider	obj	80	5
 81	1	vider	obl:a	79	3
 81	1	vider	obl:per	80	3
@@ -255,10 +254,10 @@ line	token	word	role	arg_line	arg_token
 90	4	avvisar	subj	90	2
 90	4	avvisar	obj	90	7
 91	7	dipinse	subj	88	2
+91	7	dipinse	obj	91	5
 91	7	dipinse	obj	92	2
 91	7	dipinse	obj	92	5
 91	7	dipinse	iobj	91	6
-91	7	dipinse	obl:in	91	5
 92	0			0	0
 93	4	vince	subj	93	1
 93	8	vinse	subj	0	0
@@ -363,6 +362,7 @@ line	token	word	role	arg_line	arg_token
 133	5	gode	subj	0	0
 133	5	gode	obl:di	133	7
 134	3	acquistò	subj	134	1
+134	3	acquistò	obj	134	1
 134	3	acquistò	obl:in	134	7
 134	4	piangendo	subj	0	0
 135	5	lasciò	subj	135	7

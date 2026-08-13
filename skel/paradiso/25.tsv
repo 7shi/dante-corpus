@@ -178,7 +178,7 @@ line	token	word	role	arg_line	arg_token
 59	2	dimandati	obl:per	58	8
 60	5	è	subj	60	3
 60	5	è	iobj	60	4
-60	5	è	attr	60	7
+60	5	è	obl:in	60	7
 61	3	lasc'	subj	61	4
 61	3	lasc'	obj	58	4
 61	3	lasc'	iobj	61	2
@@ -237,7 +237,7 @@ line	token	word	role	arg_line	arg_token
 82	7	avvampo	obl:di	82	5
 83	7	seguette	subj	83	5
 83	7	seguette	obj	83	6
-83	7	seguette	obj	84	3
+83	7	seguette	obl:infin	84	3
 83	7	seguette	obl:a	84	7
 84	0			0	0
 85	1	vuol	subj	82	4
@@ -245,7 +245,7 @@ line	token	word	role	arg_line	arg_token
 85	4	respiri	subj	85	3
 85	4	respiri	obl:a	85	6
 85	9	dilette	subj	85	7
-85	9	dilette	iobj	85	8
+85	9	dilette	obj	85	8
 85	9	dilette	obl:di	86	2
 86	4	emmi	subj	82	4
 86	4	emmi	attr	86	6
@@ -342,7 +342,7 @@ line	token	word	role	arg_line	arg_token
 118	8	argomenta	subj	118	4
 118	8	argomenta	ccomp	119	2
 119	2	vedere	subj	118	4
-119	2	vedere	obj	119	3
+119	2	vedere	xcomp	119	3
 119	3	eclissar	subj	0	0
 119	3	eclissar	obj	119	5
 120	3	veder	subj	120	1

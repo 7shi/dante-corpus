@@ -18,6 +18,7 @@ line	token	word	role	arg_line	arg_token
 6	9	accenda	obl:sovr	6	5
 6	9	accenda	obl:in	6	7
 7	5	ode	subj	7	6
+7	5	ode	obj	7	6
 7	8	vede	subj	7	6
 8	2	tegna	subj	8	1
 8	2	tegna	obj	8	7
@@ -48,9 +49,9 @@ line	token	word	role	arg_line	arg_token
 18	1	gridaro	obl:a	18	3
 18	5	è	subj	18	7
 18	5	è	obl	18	4
-18	7	dimando	subj	0	0
 19	5	impruna	subj	21	2
 19	5	impruna	obj	19	1
+19	5	impruna	obj	21	2
 19	5	impruna	obl	19	4
 19	5	impruna	obl:con	20	3
 20	0			0	0
@@ -100,6 +101,9 @@ line	token	word	role	arg_line	arg_token
 36	3	diss'	ccomp	36	7
 36	7	faremo	subj	0	0
 36	7	faremo	obj	36	6
+37	2	elli	subj	0	0
+37	2	elli	ccomp	37	8
+37	2	elli	obl:a	37	4
 37	8	caggia	subj	37	7
 38	8	acquista	subj	37	7
 38	8	acquista	obl:a	38	4
@@ -172,7 +176,9 @@ line	token	word	role	arg_line	arg_token
 59	1	stupido	subj	58	7
 60	6	intrava	subj	59	4
 60	6	intrava	obl:tra	60	3
-61	0			0	0
+61	2	elli	subj	0	0
+61	2	elli	ccomp	64	2
+61	2	elli	obl:a	61	4
 62	1	fossero	subj	61	6
 62	1	fossero	obl:in	62	3
 63	8	conduce	subj	63	1
@@ -201,6 +207,7 @@ line	token	word	role	arg_line	arg_token
 71	0			0	0
 72	4	seppe	subj	72	6
 72	4	seppe	xcomp	72	5
+72	5	carreggiar	subj	72	6
 72	5	carreggiar	obj	72	1
 73	1	vedrai	subj	0	0
 73	1	vedrai	ccomp	73	5
@@ -410,8 +417,6 @@ line	token	word	role	arg_line	arg_token
 137	2	dicea	ccomp	137	3
 137	3	Vienne	subj	0	0
 137	5	vedi	subj	0	0
-137	5	vedi	ccomp	137	8
-137	7	è	subj	0	0
 137	7	è	attr	137	8
 137	8	tocco	subj	0	0
 137	8	tocco	obl:di	138	3

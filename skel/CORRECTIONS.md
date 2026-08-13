@@ -151,6 +151,87 @@ a similar or slightly higher call count:
    will show it directly instead of being diluted, which is what the last four rounds could not
    see.
 
+### The round, measured: 2011 → **1452**, −559 (2026-08-13, user-run)
+
+`make -C skel fix` 3-way parallel over the 1106 units flagged at 2011 — the first pass against
+the restructured stage 2/3 driver. Measured the same way as every prior round, from a `git
+worktree` at the pre-`--fix` commit (`src/` symlinked in, since the per-canticle source
+directories are generated, not tracked), diffed against the working tree at the parse-unit level
+(`dep.sentence_groups`).
+
+| metric | measured |
+|---|---|
+| units flagged before | 1106 |
+| units flagged after | 847 (**−259 cleared outright**) |
+| units improved | 197 |
+| units unchanged | 650 |
+| units that got *worse* | **0** |
+| units newly flagged | **0** |
+| soft violations removed | **559** (2011 → **1452**, −27.8%) |
+| cantos touched | 98 |
+
+Per class, at the coarse `--check` granularity:
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `missing_arg` | 796 | 566 | −230 (−28.9%) |
+| `extra_arg` | 817 | 661 | −156 (−19.1%) |
+| `role_mismatch` | 223 | 132 | −91 (−40.8%) |
+| `extra_tuple` | 91 | 38 | **−53 (−58.2%)** |
+| `missing_tuple` | 76 | 47 | −29 (−38.2%) |
+| `membership` (`argument`) | 8 | 8 | 0 — no prompt, as designed |
+
+But `--fix`'s own unit of work is the finer `_violation_subclass` split `_CLASS_PROMPTS` is keyed
+by — the POS-keyed refinement Phase 6 introduced — and that is where the two predictions actually
+resolve:
+
+| subclass | before | after | Δ |
+|---|---|---|---|
+| `missing_arg` | 796 | 566 | −230 (−28.9%) |
+| `extra_arg` | 817 | 661 | −156 (−19.1%) |
+| `role_mismatch` | 223 | 132 | −91 (−40.8%) |
+| `missing_tuple_nominal` | 67 | 40 | −27 (−40.3%) |
+| `extra_tuple_adjective` | 37 | 17 | −20 (−54.1%) |
+| `extra_tuple_adverb` | 33 | 7 | **−26 (−78.8%)** |
+| `extra_tuple` (no prompt) | 21 | 14 | −7 (−33.3%) |
+| `missing_tuple` (no prompt) | 9 | 7 | −2 (−22.2%) |
+| `membership` (no prompt) | 8 | 8 | 0 — as designed |
+
+**Both predictions held, and by a wide margin.** `skel/skel.log` was again left empty by the
+parallel invocation, so the exact call count is not recoverable and the flagged-unit count (1106)
+remains only a lower bound on calls — stage 2 asks one question *per class per unit*, so the true
+call count is higher, same as every prior round's caveat. Even against that lower bound, **0.505
+violations removed per unit flagged** is five times Phase 5w's 0.095 and two and a half times
+5s's 0.199 ceiling, the previous high. The true per-call figure is lower than 0.505 (more calls
+went into the denominator than 1106), but the gap is too large to be call-count inflation alone —
+partial credit is doing real work: a unit with five violations across three classes now keeps
+whatever subset of classes the model got right, instead of the whole unit being discarded because
+one class failed.
+
+**`extra_tuple_adverb` moved furthest — −78.8%, the largest single-class move of any `--fix`
+round on record** — the class Phase 5v/5w had already flagged as prompt-side and Phase 6 finally
+gave its own narrow prompt, carrying only the adverb rule and nothing competing for the model's
+attention. `extra_tuple_adjective` moved −54.1%, also well clear of the pass average, though less
+than half its sibling's rate — the adjective reading is a genuine disagreement (no `cop` edge
+asserts a predication either way), so the ceiling on how much a prompt alone can settle is lower
+than a rule the tree itself contradicts. The three classes with **no** stage-2 prompt
+(`extra_tuple`, `missing_tuple`, `membership`) moved at or near zero, which is the control: the
+restructuring's gain is coming from the targeted prompts, not from stage 3's regeneration alone.
+`role_mismatch` (−40.8%, mostly the stacked-preposition `prep_stack` gate and `case`-corroborated
+swaps reaching further under partial credit) and `missing_tuple_nominal` (−40.3%) also moved well
+above the pass average; the two large classes `missing_arg` (−28.9%) and `extra_arg` (−19.1%)
+moved at roughly their usual regeneration-resistant rate, though even `missing_arg`'s rate beats
+any prior round's pass average. `membership` held at 8, exactly as designed — it has no stage-2
+prompt because rule AF already closed it to a checker question, not a data error.
+
+Checks after the round: `skel --check` 0 hard / **1452** soft, `dep --check` 0 hard / 18 soft,
+`case --check` 0 hard, `np`/`morph --check` 0/0. **Three `tests/test_skel_fix.py` fixtures needed
+updating**, not the driver: they pinned Inferno 1 as "the smallest real case" (one `extra_tuple`
+violation), and this round cleared it outright. No canto now has a single flagged unit whose only
+violation class is `extra_tuple_adverb`; the smallest surviving single-unit case is Purgatorio 1
+(one `missing_arg`), so the three tests were repointed there with matching answer strings —
+mechanics unchanged, only the fixture canto and reply text. `pytest` 243 passed after the update.
+
 ## Rules Y-AF, from re-reading Inferno 1-3 — 2330 → 2084, −246 (2026-08-12)
 
 The third per-position read of this kind — rule V came out of Inferno 1's twelve, rules W and X

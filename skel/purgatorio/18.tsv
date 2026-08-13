@@ -3,7 +3,6 @@ line	token	word	role	arg_line	arg_token
 1	1	Posto	obj	1	3
 1	1	Posto	obl:a	1	6
 2	6	guardava	subj	2	3
-2	6	guardava	ccomp	3	8
 2	6	guardava	obl:in	3	4
 3	7	parea	subj	3	6
 3	7	parea	attr	3	8
@@ -175,7 +174,6 @@ line	token	word	role	arg_line	arg_token
 56	7	sape	obl:di	57	4
 57	0			0	0
 58	2	sono	subj	58	1
-58	2	sono	attr	58	7
 58	2	sono	obl:in	58	4
 59	2	far	subj	0	0
 59	2	far	obj	59	4
@@ -292,8 +290,6 @@ line	token	word	role	arg_line	arg_token
 96	7	cavalca	obj	96	1
 97	2	fur	subj	0	0
 97	2	fur	obl	97	3
-97	3	sovr'	subj	0	0
-97	3	sovr'	obl:a	97	5
 97	7	correndo		0	0
 98	2	movea	subj	98	5
 99	4	gridavan	subj	99	2

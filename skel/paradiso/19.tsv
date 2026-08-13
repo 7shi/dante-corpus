@@ -114,6 +114,7 @@ line	token	word	role	arg_line	arg_token
 35	1	move	subj	34	3
 35	1	move	obj	35	3
 35	9	plaude	subj	34	3
+35	9	plaude	obj	35	8
 35	9	plaude	obl:con	35	7
 36	2	mostrando	subj	0	0
 36	2	mostrando	obj	36	1
@@ -122,15 +123,18 @@ line	token	word	role	arg_line	arg_token
 36	5	bello	subj	0	0
 37	1	vid'	subj	37	2
 37	1	vid'	xcomp	37	3
+37	1	vid'	obl	34	2
 37	1	vid'	obl:con	39	2
 37	3	farsi	subj	0	0
 37	3	farsi	obj	37	5
 38	6	contesto	subj	37	6
 38	6	contesto	obl:di	37	8
 38	6	contesto	obl:di	38	4
+38	6	contesto	obl:con	39	2
 39	5	sa	subj	0	0
 39	5	sa	obj	39	6
 39	9	gaude	subj	39	6
+39	9	gaude	obl	39	7
 40	2	cominciò	subj	0	0
 40	5	volse	subj	40	4
 40	5	volse	obj	40	7
@@ -198,8 +202,8 @@ line	token	word	role	arg_line	arg_token
 61	7	veggia	obj	61	9
 61	7	veggia	obl:da	61	6
 62	4	vede	subj	63	1
+62	4	vede	obj	62	3
 62	4	vede	obl:in	62	2
-63	3	cela	subj	63	1
 63	3	cela	obj	63	6
 63	3	cela	iobj	63	4
 63	6	esser	subj	0	0
@@ -300,7 +304,6 @@ line	token	word	role	arg_line	arg_token
 95	0			0	0
 96	1	movea	subj	95	4
 96	1	movea	obj	95	6
-96	1	movea	obl:da	96	5
 97	1	Roteando	subj	0	0
 97	2	cantava	subj	0	0
 97	4	dicea	subj	0	0

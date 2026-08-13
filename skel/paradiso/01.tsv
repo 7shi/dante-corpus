@@ -152,9 +152,7 @@ line	token	word	role	arg_line	arg_token
 51	5	tornar		0	0
 51	6	vuole	subj	51	4
 51	6	vuole	xcomp	51	5
-52	9	infuso	subj	52	4
-52	9	infuso	obl:per	52	8
-52	9	infuso	obl:in	53	3
+52	0			0	0
 53	8	fece	subj	53	6
 53	8	fece	obl:di	52	4
 54	2	fissi	subj	53	6
@@ -215,8 +213,8 @@ line	token	word	role	arg_line	arg_token
 71	7	basti	subj	71	6
 71	7	basti	obl:a	72	2
 72	5	serba	subj	72	2
+72	5	serba	subj	72	3
 72	5	serba	obj	72	4
-72	5	serba	obl	72	3
 73	7	quel	subj	73	2
 73	9	creasti	subj	0	0
 73	9	creasti	obj	73	8
@@ -241,8 +239,6 @@ line	token	word	role	arg_line	arg_token
 78	7	discerni	subj	0	0
 78	7	discerni	obj	78	4
 79	1	parvemi	subj	79	5
-79	6	acceso	subj	79	5
-79	6	acceso	obl:di	80	3
 80	0			0	0
 81	3	fece	subj	81	4
 81	3	fece	xcomp	81	6
@@ -355,9 +351,7 @@ line	token	word	role	arg_line	arg_token
 117	8	aduna	subj	117	1
 117	8	aduna	obj	117	3
 118	6	son	subj	118	5
-118	6	son	obl:di	119	2
-118	7	fore	subj	118	5
-118	7	fore	obl:di	119	2
+118	6	son	obl	118	7
 119	5	saetta	subj	119	4
 119	5	saetta	obj	118	4
 119	5	saetta	obj	120	2
@@ -374,6 +368,7 @@ line	token	word	role	arg_line	arg_token
 123	7	ha	obj	123	9
 124	0			0	0
 125	2	porta	subj	125	4
+125	2	porta	obj	125	1
 125	2	porta	obl:a	124	7
 126	4	scocca	subj	0	0
 126	4	scocca	obj	126	3
@@ -415,10 +410,9 @@ line	token	word	role	arg_line	arg_token
 139	2	sarebbe	obl:in	139	4
 139	6	privo	subj	0	0
 139	6	privo	obl:di	140	2
+140	5	fossi	attr	141	4
 140	6	assiso	subj	140	4
-141	4	quïete	subj	0	0
-141	4	quïete	obl:a	141	3
-141	4	quïete	obl:in	141	6
+141	0			0	0
 142	2	rivolse	subj	0	0
 142	2	rivolse	obj	142	7
 142	2	rivolse	obl:in	142	5

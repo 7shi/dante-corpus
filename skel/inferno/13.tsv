@@ -11,8 +11,6 @@ line	token	word	role	arg_line	arg_token
 6	4	eran	subj	5	2
 6	4	eran	subj	6	2
 6	4	eran	subj	6	6
-6	4	eran	attr	5	5
-6	4	eran	attr	5	7
 6	4	eran	obl:di	4	6
 7	2	han	subj	8	2
 7	2	han	obj	7	5
@@ -266,11 +264,13 @@ line	token	word	role	arg_line	arg_token
 88	2	dirne	subj	0	0
 88	2	dirne	ccomp	88	7
 88	7	lega	subj	88	5
+88	7	lega	obj	88	6
 88	7	lega	obl:in	89	3
 89	5	dinne	subj	88	2
 89	5	dinne	ccomp	90	8
 89	8	puoi	subj	89	7
 90	8	spiega	subj	90	2
+90	8	spiega	obj	90	7
 91	2	soffiò	subj	91	4
 92	2	convertì	subj	92	4
 92	2	convertì	obl:in	92	7
@@ -401,6 +401,9 @@ line	token	word	role	arg_line	arg_token
 138	1	soffi	obj	138	5
 138	1	soffi	obl:per	137	7
 138	1	soffi	obl:con	138	3
+139	2	elli	subj	0	0
+139	2	elli	ccomp	142	1
+139	2	elli	obl:a	139	4
 139	8	giunte	subj	139	7
 140	3	veder	subj	139	7
 140	3	veder	obj	140	5

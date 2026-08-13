@@ -162,6 +162,7 @@ line	token	word	role	arg_line	arg_token
 55	7	uscia	obl:a	55	4
 55	7	uscia	obl:di	55	6
 55	7	uscia	obl:di	56	3
+55	7	uscia	obl:a	56	8
 56	0			0	0
 57	2	fé	subj	55	2
 57	2	fé	obj	57	1
@@ -193,6 +194,8 @@ line	token	word	role	arg_line	arg_token
 63	1	saper	obl:da	63	3
 63	8	disfaccia	subj	63	6
 63	8	disfaccia	obj	63	7
+64	2	duca	subj	0	0
+64	2	duca	ccomp	64	5
 64	5	dì	subj	64	2
 64	5	dì	ccomp	65	1
 65	1	conosci	subj	65	2
@@ -246,8 +249,8 @@ line	token	word	role	arg_line	arg_token
 80	1	di'	ccomp	79	2
 80	3	facesti	subj	0	0
 80	3	facesti	obj	79	7
-80	3	facesti	xcomp	80	5
 80	3	facesti	obl:da	79	5
+80	3	facesti	obl:per	80	5
 80	5	venire	subj	0	0
 80	5	venire	obl:a	80	7
 81	3	rispuose	subj	81	2
@@ -323,7 +326,6 @@ line	token	word	role	arg_line	arg_token
 102	3	seggendo	subj	102	2
 102	3	seggendo	obl:in	102	6
 103	5	son	subj	103	4
-103	5	son	attr	103	2
 103	7	farò	subj	102	2
 103	7	farò	obj	103	6
 103	7	farò	xcomp	103	8
@@ -392,14 +394,14 @@ line	token	word	role	arg_line	arg_token
 123	7	sciolse	subj	121	2
 123	7	sciolse	obl:da	123	4
 124	7	compunto	subj	124	3
-124	7	compunto	subj	125	2
 124	7	compunto	obl:di	124	5
+125	2	quei	subj	0	0
 125	5	cagion	subj	125	4
 125	5	cagion	obl:di	125	8
 125	6	fu	subj	125	4
 125	6	fu	attr	125	5
-125	6	fu	obl:di	125	8
 126	3	mosse	subj	0	0
+126	3	mosse	obl:di	124	7
 126	5	gridò	subj	0	0
 126	5	gridò	ccomp	126	8
 126	8	giunto	subj	126	6
@@ -454,7 +456,6 @@ line	token	word	role	arg_line	arg_token
 146	3	fé	xcomp	146	4
 146	3	fé	obl:con	145	4
 146	4	volar	subj	146	1
-146	4	volar	obj	146	2
 146	4	volar	obl:da	146	8
 146	4	volar	obl:con	147	4
 147	0			0	0

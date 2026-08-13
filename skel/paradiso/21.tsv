@@ -78,7 +78,7 @@ line	token	word	role	arg_line	arg_token
 28	8	traluce	obl:in	28	7
 29	1	vid'	subj	29	2
 29	1	vid'	obj	29	4
-29	1	vid'	obl:dentro	25	3
+29	1	vid'	obl:a	25	3
 30	4	seguiva	subj	30	7
 30	4	seguiva	obj	30	3
 31	1	Vidi	subj	0	0
@@ -117,10 +117,12 @@ line	token	word	role	arg_line	arg_token
 42	7	percosse	obl:in	42	5
 43	8	ritenne	subj	43	3
 43	8	ritenne	obj	43	6
+43	8	ritenne	obl:presso	43	4
 44	2	fé	subj	43	2
 44	2	fé	attr	44	4
 44	4	chiaro	subj	43	2
 44	7	dicea	subj	44	6
+44	7	dicea	ccomp	45	2
 44	8	pensando	subj	44	6
 45	2	veggio	subj	45	1
 45	2	veggio	obj	45	5
@@ -179,7 +181,7 @@ line	token	word	role	arg_line	arg_token
 60	8	divota	subj	60	1
 61	2	hai	subj	61	1
 61	2	hai	obj	61	4
-61	2	hai	obj	61	9
+61	9	viso	subj	0	0
 62	1	rispuose	subj	0	0
 62	1	rispuose	iobj	62	3
 62	8	canta	subj	0	0
@@ -252,6 +254,8 @@ line	token	word	role	arg_line	arg_token
 84	1	penetrando	subj	0	0
 84	1	penetrando	obl:per	84	3
 84	8	inventro	subj	84	6
+84	8	inventro	obj	84	7
+84	8	inventro	obl:in	84	5
 85	0			0	0
 86	2	leva	subj	85	3
 86	2	leva	obj	86	1
@@ -259,6 +263,7 @@ line	token	word	role	arg_line	arg_token
 86	8	veggio	subj	86	7
 86	8	veggio	obj	87	3
 87	8	munta	subj	87	6
+87	8	munta	obl:di	87	6
 88	2	vien	subj	88	4
 88	7	fiammeggio	subj	88	6
 88	7	fiammeggio	obl:da	88	5

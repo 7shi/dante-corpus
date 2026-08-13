@@ -79,6 +79,7 @@ line	token	word	role	arg_line	arg_token
 27	0			0	0
 28	3	avviva	subj	29	1
 28	3	avviva	obl:a	28	6
+28	3	avviva	obl:in	29	3
 29	5	vid'	subj	29	6
 29	5	vid'	obj	30	1
 29	5	vid'	xcomp	30	2
@@ -99,6 +100,7 @@ line	token	word	role	arg_line	arg_token
 34	7	detto	obl:a	35	2
 35	10	santa	subj	35	6
 36	2	allevïò	subj	35	6
+36	2	allevïò	obl:in	35	4
 36	2	allevïò	obl:di	36	4
 36	6	era	subj	0	0
 36	6	era	attr	36	7
@@ -107,6 +109,7 @@ line	token	word	role	arg_line	arg_token
 37	0			0	0
 38	4	venne	subj	38	6
 38	4	venne	xcomp	39	2
+38	4	venne	obl:da	34	4
 38	4	venne	obl:a	37	3
 38	4	venne	obl	38	3
 39	2	rinfiammarsi	subj	38	6
@@ -212,7 +215,7 @@ line	token	word	role	arg_line	arg_token
 74	8	vanno	subj	75	5
 74	8	vanno	obl:di	74	7
 74	8	vanno	obl:di	75	2
-75	2	retro	obl:ad	75	4
+75	0			0	0
 76	1	udir	subj	0	0
 76	1	udir	ccomp	76	6
 76	6	disfanno	subj	76	4
@@ -279,7 +282,7 @@ line	token	word	role	arg_line	arg_token
 97	6	disceso	obl	97	4
 98	0			0	0
 99	7	preso	subj	98	5
-99	7	preso	obj	98	7
+99	7	preso	obl:di	98	7
 100	5	sapeva	subj	100	1
 100	5	sapeva	ccomp	101	3
 101	1	regger		0	0
@@ -324,10 +327,11 @@ line	token	word	role	arg_line	arg_token
 116	4	fugge	subj	116	3
 116	8	mostra	subj	116	7
 116	8	mostra	obj	116	10
-117	8	placa	subj	117	6
+117	8	placa	subj	115	4
+117	8	placa	obl:come	117	6
 118	2	venìa	subj	115	3
 118	2	venìa	obl:di	118	7
-119	4	piacque	subj	120	1
+119	4	piacque	subj	120	6
 119	4	piacque	iobj	119	6
 120	6	fé	subj	120	4
 120	6	fé	obj	120	5

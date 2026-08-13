@@ -9,7 +9,6 @@ line	token	word	role	arg_line	arg_token
 4	8	gira	obl:per	4	3
 4	8	gira	obl:per	4	6
 5	4	fé	subj	3	5
-5	4	fé	obj	4	8
 5	4	fé	obl:con	5	3
 5	6	esser	subj	6	5
 5	8	puote	subj	6	5
@@ -230,7 +229,7 @@ line	token	word	role	arg_line	arg_token
 81	7	ricolte	subj	0	0
 81	7	ricolte	obj	81	5
 82	6	senti'	subj	0	0
-82	6	senti'	obj	82	7
+82	6	senti'	xcomp	82	7
 82	6	senti'	obl:in	82	5
 82	7	cominciar	subj	0	0
 83	8	accende	subj	84	2
@@ -248,7 +247,7 @@ line	token	word	role	arg_line	arg_token
 88	3	negasse	iobj	88	2
 88	3	negasse	obl:per	89	4
 89	8	fora	subj	0	0
-89	8	fora	attr	89	6
+89	8	fora	obl:in	89	6
 89	8	fora	obl:come	90	4
 90	10	cala	subj	90	5
 90	10	cala	obl:a	90	7
@@ -285,7 +284,6 @@ line	token	word	role	arg_line	arg_token
 100	9	certo	subj	0	0
 100	9	certo	obl:di	100	6
 101	6	ten	subj	0	0
-101	6	ten	xcomp	101	7
 101	7	vien	subj	0	0
 101	7	vien	obl:di	101	2
 101	7	vien	obl:con	101	9
@@ -395,7 +393,6 @@ line	token	word	role	arg_line	arg_token
 138	1	silogizzò	subj	137	1
 138	1	silogizzò	obj	138	3
 139	6	chiami	subj	139	4
-139	6	chiami	obj	141	4
 139	6	chiami	obl:ne	140	3
 140	9	surge	subj	140	6
 140	9	surge	obl	140	4

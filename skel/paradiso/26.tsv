@@ -18,6 +18,8 @@ line	token	word	role	arg_line	arg_token
 5	5	haï	attr	5	8
 5	5	haï	obl:in	5	7
 5	8	consunta	subj	5	4
+5	8	consunta	obj	5	4
+5	8	consunta	obl:in	5	7
 6	2	è	subj	6	6
 6	4	ragionando		0	0
 6	6	compense	subj	0	0
@@ -28,7 +30,6 @@ line	token	word	role	arg_line	arg_token
 7	7	appunta	subj	8	2
 8	5	fa	subj	0	0
 8	5	fa	obj	8	6
-8	5	fa	ccomp	9	5
 9	5	smarrita	subj	9	2
 9	5	smarrita	obl:in	9	4
 9	8	defunta	subj	9	2
@@ -168,7 +169,7 @@ line	token	word	role	arg_line	arg_token
 55	2	ricominciai	subj	0	0
 56	2	posson	subj	56	1
 56	2	posson	xcomp	56	3
-56	3	far	obj	56	6
+56	3	far	xcomp	56	6
 56	6	volgere	subj	56	5
 56	6	volgere	obl:a	56	8
 57	6	concorsi	subj	55	5
@@ -251,6 +252,7 @@ line	token	word	role	arg_line	arg_token
 88	1	fec'	subj	88	2
 88	1	fec'	attr	89	1
 88	1	fec'	obl:come	85	3
+88	1	fec'	obl:in	88	4
 88	8	diceva	subj	88	7
 89	1	stupendo	subj	88	2
 89	5	rifece	subj	90	2
@@ -303,6 +305,7 @@ line	token	word	role	arg_line	arg_token
 104	6	discerno	obj	104	4
 105	8	certa	subj	105	4
 105	8	certa	obl:a	105	2
+105	8	certa	obl	105	5
 106	4	veggio	subj	106	2
 106	4	veggio	obj	106	3
 106	4	veggio	obl:in	106	7
@@ -338,7 +341,6 @@ line	token	word	role	arg_line	arg_token
 113	0			0	0
 114	5	usai	subj	0	0
 114	5	usai	obj	114	4
-114	6	e		0	0
 114	8	fei	subj	0	0
 114	8	fei	obj	114	7
 115	0			0	0
@@ -364,7 +366,6 @@ line	token	word	role	arg_line	arg_token
 121	4	tornare	obl	123	1
 122	0			0	0
 123	7	fu'	subj	123	4
-123	7	fu'	attr	123	8
 123	7	fu'	obl:in	123	6
 124	5	parlai	subj	124	4
 124	5	parlai	obj	124	3

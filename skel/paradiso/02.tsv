@@ -125,7 +125,6 @@ line	token	word	role	arg_line	arg_token
 40	1	accender	subj	0	0
 40	3	dovria	subj	40	6
 40	3	dovria	xcomp	40	1
-40	3	dovria	obl:di	40	2
 41	2	veder	subj	0	0
 41	2	veder	obj	41	4
 41	8	vede	subj	0	0
@@ -191,6 +190,8 @@ line	token	word	role	arg_line	arg_token
 60	1	credo	ccomp	60	3
 60	3	fanno	subj	60	5
 60	3	fanno	obj	59	3
+61	2	ella	subj	0	0
+61	2	ella	ccomp	61	5
 61	5	vedrai	subj	61	2
 61	5	vedrai	obj	62	4
 61	5	vedrai	xcomp	61	6
@@ -199,20 +200,20 @@ line	token	word	role	arg_line	arg_token
 62	8	ascolti	subj	0	0
 62	8	ascolti	obj	63	2
 63	6	farò	subj	63	4
+63	6	farò	obj	63	3
 63	6	farò	obj	63	5
 63	6	farò	xcomp	63	7
-63	6	farò	obl	63	3
 63	7	avverso	subj	63	5
 64	5	dimostra	subj	64	2
 64	5	dimostra	obj	65	1
 64	5	dimostra	iobj	64	4
 65	0			0	0
 66	1	notar	subj	65	3
+66	1	notar	obl:di	66	6
 66	3	posson	subj	65	3
 66	3	posson	xcomp	66	1
 66	3	posson	obl:in	65	6
 66	3	posson	obl:in	65	9
-66	3	posson	obl:di	66	6
 67	6	facesser	subj	67	2
 67	6	facesser	obj	67	5
 68	4	sarebbe	subj	68	3

@@ -126,6 +126,7 @@ line	token	word	role	arg_line	arg_token
 40	6	cinte	subj	39	1
 40	6	cinte	obl:con	40	3
 41	4	avien	subj	39	1
+41	4	avien	subj	41	1
 41	4	avien	obj	41	1
 41	4	avien	obl:per	41	6
 42	6	avvinte	subj	42	4

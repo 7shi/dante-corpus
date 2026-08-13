@@ -176,10 +176,10 @@ line	token	word	role	arg_line	arg_token
 60	0			0	0
 61	1	Vedeva	subj	0	0
 61	1	Vedeva	obj	61	2
-61	1	Vedeva	obj	62	4
 61	1	Vedeva	obl:in	61	4
 61	1	Vedeva	obl:in	61	7
 62	5	basso	subj	0	0
+62	5	basso	obl:come	62	4
 62	7	vile		0	0
 63	1	mostrava	subj	63	3
 63	7	discerne	subj	63	4
@@ -358,8 +358,7 @@ line	token	word	role	arg_line	arg_token
 127	2	fec'	obl:come	127	5
 127	7	vanno	subj	127	6
 127	7	vanno	obl:con	128	2
-128	8	saputa	subj	128	2
-128	8	saputa	obl:da	128	7
+128	0			0	0
 129	6	sospecciar	subj	129	5
 129	6	sospecciar	obj	129	4
 129	7	fanno	subj	127	6
@@ -387,3 +386,4 @@ line	token	word	role	arg_line	arg_token
 136	3	guardando	subj	136	6
 136	3	guardando	obl:a	136	2
 136	7	sorrise	subj	136	6
+136	7	sorrise	obl:a	136	2

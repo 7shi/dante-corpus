@@ -78,9 +78,10 @@ line	token	word	role	arg_line	arg_token
 29	1	sonava	subj	29	2
 29	1	sonava	obl:dentro	28	4
 30	4	fui	subj	0	0
-30	4	fui	attr	30	6
+30	4	fui	obl:sanza	30	6
 31	3	fece	subj	31	5
 31	3	fece	obj	31	2
+31	3	fece	obl	31	7
 31	3	fece	obl:a	31	9
 32	3	incominciò	subj	31	5
 32	6	presti	subj	32	4
@@ -89,6 +90,7 @@ line	token	word	role	arg_line	arg_token
 33	8	gioi	obj	33	7
 33	8	gioi	obl:di	33	6
 34	3	volgiam	subj	34	1
+34	3	volgiam	obj	34	2
 34	3	volgiam	obl:con	34	5
 34	3	volgiam	obl:di	35	3
 34	3	volgiam	obl:di	35	7
@@ -339,6 +341,8 @@ line	token	word	role	arg_line	arg_token
 112	9	imbianchi	subj	112	5
 112	9	imbianchi	obj	112	8
 112	9	imbianchi	iobj	112	7
+113	2	io	subj	0	0
+113	2	io	ccomp	113	7
 113	6	impossibil	subj	114	9
 113	7	veggio	subj	113	2
 113	7	veggio	attr	113	6
@@ -352,7 +356,6 @@ line	token	word	role	arg_line	arg_token
 115	2	elli	ccomp	115	5
 115	5	dì	subj	0	0
 115	5	dì	ccomp	115	6
-115	6	sarebbe	subj	0	0
 115	6	sarebbe	attr	115	8
 115	6	sarebbe	obl:per	116	3
 116	8	fosse	subj	0	0

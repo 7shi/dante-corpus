@@ -122,6 +122,7 @@ line	token	word	role	arg_line	arg_token
 44	3	diede	attr	44	1
 44	3	diede	obl:da	43	4
 44	3	diede	obl:a	44	7
+45	10	tura	subj	45	1
 45	10	tura	subj	45	3
 45	10	tura	obl:a	45	9
 46	2	corse	subj	46	6

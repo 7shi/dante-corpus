@@ -103,6 +103,8 @@ line	token	word	role	arg_line	arg_token
 38	5	compiér	obj	38	7
 39	7	vola	subj	39	4
 39	7	vola	obl:a	39	6
+40	2	elli	subj	0	0
+40	2	elli	ccomp	40	5
 40	5	dirò	subj	40	3
 40	5	dirò	iobj	40	4
 40	5	dirò	obl:per	40	8
@@ -233,7 +235,6 @@ line	token	word	role	arg_line	arg_token
 87	7	catto	obl:in	87	3
 88	1	Veggiolo	subj	0	0
 88	1	Veggiolo	xcomp	88	6
-88	1	Veggiolo	xcomp	89	2
 88	1	Veggiolo	xcomp	90	6
 88	1	Veggiolo	obl	88	4
 88	6	deriso	subj	0	0
@@ -313,8 +314,9 @@ line	token	word	role	arg_line	arg_token
 116	4	grida	iobj	116	2
 117	1	dilci	subj	0	0
 117	4	sai	subj	117	3
+117	4	sai	obj	117	3
 117	8	è	subj	117	10
-117	8	è	attr	117	7
+117	8	è	obl:di	117	7
 118	2	parla	subj	118	4
 118	2	parla	subj	118	8
 118	2	parla	obl:secondo	119	3
@@ -337,6 +339,7 @@ line	token	word	role	arg_line	arg_token
 124	3	partiti	subj	124	1
 124	3	partiti	obl:da	124	6
 125	2	brigavam	subj	0	0
+125	2	brigavam	subj	124	1
 125	2	brigavam	xcomp	125	4
 125	4	soverchiar	subj	0	0
 125	4	soverchiar	obj	125	6
@@ -423,7 +426,7 @@ line	token	word	role	arg_line	arg_token
 150	5	potea	xcomp	150	7
 150	5	potea	obl:per	150	3
 150	7	vedere	obj	150	6
-151	3	andava	subj	151	2
+151	3	andava	iobj	151	2
 151	3	andava	attr	151	4
 151	3	andava	attr	151	6
 151	4	timido	subj	151	2

@@ -72,7 +72,7 @@ line	token	word	role	arg_line	arg_token
 31	4	cinta	obl:di	31	6
 32	3	apparve	subj	32	1
 32	3	apparve	iobj	32	2
-32	3	apparve	obl:in	28	4
+32	3	apparve	obl:dentro	28	4
 32	3	apparve	obl:sovra	31	3
 32	3	apparve	obl:sotto	32	6
 33	1	vestita	subj	32	1
@@ -112,7 +112,7 @@ line	token	word	role	arg_line	arg_token
 46	2	dicere	ccomp	47	5
 46	2	dicere	obl:a	46	4
 47	5	rimaso	subj	46	7
-47	5	rimaso	obj	47	3
+47	5	rimaso	iobj	47	3
 47	5	rimaso	obl:di	47	2
 47	8	tremi	subj	0	0
 48	1	conosco	subj	46	7
@@ -229,6 +229,7 @@ line	token	word	role	arg_line	arg_token
 84	6	passaro	obl:oltre	84	3
 85	0			0	0
 86	7	congela	subj	85	3
+86	7	congela	obl:tra	85	7
 86	7	congela	obl:per	86	3
 87	1	soffiata	subj	85	3
 87	1	soffiata	obl:da	87	6
@@ -255,7 +256,6 @@ line	token	word	role	arg_line	arg_token
 95	2	compatire	subj	95	1
 95	2	compatire	iobj	95	4
 95	5	par	subj	0	0
-95	5	par	ccomp	95	8
 95	8	detto	subj	0	0
 95	8	detto	ccomp	96	6
 96	6	stempre	subj	0	0

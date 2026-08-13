@@ -2,7 +2,6 @@ line	token	word	role	arg_line	arg_token
 1	0			0	0
 2	6	morria	subj	0	0
 2	6	morria	obl:intra	1	3
-2	6	morria	obl:di	2	3
 2	6	morria	obl:di	2	8
 3	6	recasse	subj	3	3
 3	6	recasse	obj	3	5
@@ -22,9 +21,6 @@ line	token	word	role	arg_line	arg_token
 9	4	necessario	subj	0	0
 9	6	commendo	subj	0	0
 10	3	tacea	subj	10	1
-10	8	dipinto	subj	10	7
-10	8	dipinto	obl:a	11	1
-10	8	dipinto	obl:in	11	4
 11	2	era	subj	10	7
 11	2	era	obl:a	11	1
 11	2	era	obl:in	11	4
@@ -75,7 +71,6 @@ line	token	word	role	arg_line	arg_token
 27	5	ha	subj	27	3
 27	5	ha	obl:di	27	7
 28	8	india	subj	28	5
-28	8	india	obl:di	28	3
 29	0			0	0
 30	2	prender	subj	0	0
 30	2	prender	obj	30	1
@@ -97,6 +92,7 @@ line	token	word	role	arg_line	arg_token
 36	2	sentir	subj	0	0
 36	2	sentir	obj	36	8
 37	3	mostraro	subj	0	0
+37	3	mostraro	obj	37	2
 37	6	sortita	subj	38	3
 38	7	far	subj	38	3
 38	7	far	obj	38	8
@@ -123,6 +119,7 @@ line	token	word	role	arg_line	arg_token
 47	5	rappresenta	subj	46	3
 47	5	rappresenta	obj	47	1
 47	5	rappresenta	obl:con	46	5
+47	5	rappresenta	obl	47	4
 48	6	rifece	subj	48	5
 48	6	rifece	obj	48	4
 48	6	rifece	attr	48	7

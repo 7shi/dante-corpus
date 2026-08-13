@@ -195,7 +195,6 @@ line	token	word	role	arg_line	arg_token
 78	6	prefazi	subj	76	7
 78	6	prefazi	subj	77	7
 79	8	acerbe	subj	79	7
-79	8	acerbe	obl:da	79	4
 80	3	difetto	subj	0	0
 80	3	difetto	obl:da	80	6
 81	4	viste	subj	81	1
@@ -326,6 +325,7 @@ line	token	word	role	arg_line	arg_token
 127	8	vole	subj	127	4
 127	8	vole	xcomp	127	7
 128	2	trasse	subj	128	3
+128	2	trasse	obj	128	1
 128	2	trasse	obl:in	124	2
 128	5	disse	subj	128	3
 128	5	disse	ccomp	128	6

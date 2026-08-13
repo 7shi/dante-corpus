@@ -166,6 +166,7 @@ line	token	word	role	arg_line	arg_token
 51	7	hai	subj	0	0
 51	7	hai	obj	51	6
 52	3	lagrimai	subj	52	6
+52	3	lagrimai	obl	53	3
 52	5	rispuos'	subj	52	6
 53	0			0	0
 54	8	uscìo	subj	54	5
@@ -220,7 +221,6 @@ line	token	word	role	arg_line	arg_token
 70	7	vedi	subj	70	5
 70	7	vedi	obj	70	6
 71	1	vid'	subj	71	2
-71	1	vid'	obj	71	5
 71	1	vid'	xcomp	71	3
 71	1	vid'	obl:tra	72	4
 71	3	cascar	subj	71	5
@@ -259,7 +259,7 @@ line	token	word	role	arg_line	arg_token
 83	2	faccian	subj	82	3
 83	2	faccian	obj	83	3
 83	2	faccian	obl:a	83	5
-83	2	faccian	obl:in	83	9
+83	2	faccian	obl:su	83	9
 84	4	annieghi	subj	84	3
 84	4	annieghi	obj	84	8
 84	4	annieghi	obl:in	84	6
@@ -294,7 +294,7 @@ line	token	word	role	arg_line	arg_token
 96	2	volge	xcomp	96	6
 96	2	volge	obl:in	96	4
 96	6	far	xcomp	96	7
-96	7	crescer	subj	96	9
+96	7	crescer	obj	96	9
 97	5	fanno	subj	97	3
 97	5	fanno	obj	97	6
 98	0			0	0
@@ -339,6 +339,9 @@ line	token	word	role	arg_line	arg_token
 113	11	impregna	obj	113	9
 113	11	impregna	iobj	113	10
 114	8	raggeli	subj	114	6
+115	3	io	subj	0	0
+115	3	io	ccomp	116	1
+115	3	io	obl:a	115	5
 115	7	vuo'	subj	0	0
 115	7	vuo'	ccomp	115	11
 115	11	sovvegna	subj	115	9

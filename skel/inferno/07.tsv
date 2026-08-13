@@ -1,7 +1,7 @@
 line	token	word	role	arg_line	arg_token
 1	0			0	0
 2	1	cominciò	subj	2	2
-2	1	cominciò	obj	1	2
+2	1	cominciò	obj	1	1
 2	1	cominciò	obl:con	2	5
 3	7	seppe	subj	3	5
 3	7	seppe	obj	3	6
@@ -27,6 +27,7 @@ line	token	word	role	arg_line	arg_token
 11	1	vuolsi	obl:in	11	4
 12	1	fé	subj	11	7
 12	1	fé	obj	12	3
+12	1	fé	obl	11	6
 12	1	fé	obl:di	12	6
 13	0			0	0
 14	1	caggiono	subj	13	6
@@ -197,6 +198,7 @@ line	token	word	role	arg_line	arg_token
 72	8	'mbocche	obj	72	6
 72	8	'mbocche	obl	72	7
 73	6	trascende	subj	73	4
+73	6	trascende	obj	73	5
 74	1	fece	subj	73	1
 74	1	fece	obj	74	3
 74	5	diè	subj	73	1
@@ -303,6 +305,7 @@ line	token	word	role	arg_line	arg_token
 110	1	vidi	subj	109	2
 110	1	vidi	obj	110	2
 110	1	vidi	obl:in	110	6
+110	1	vidi	obl:con	111	4
 111	0			0	0
 112	3	percotean	subj	112	1
 112	3	percotean	obj	112	2
@@ -325,6 +328,7 @@ line	token	word	role	arg_line	arg_token
 117	3	vo'	ccomp	117	8
 117	8	credi	subj	117	5
 117	8	credi	ccomp	118	5
+117	8	credi	obl:per	117	7
 118	5	è	subj	118	6
 118	5	è	obl:sotto	118	4
 118	8	sospira	subj	118	7

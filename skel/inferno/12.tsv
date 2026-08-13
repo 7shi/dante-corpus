@@ -122,7 +122,6 @@ line	token	word	role	arg_line	arg_token
 36	6	cascata	subj	36	2
 36	6	cascata	obl	34	8
 37	7	discerno	subj	0	0
-37	7	discerno	ccomp	38	2
 38	2	venisse	subj	38	3
 39	1	levò	subj	38	4
 39	1	levò	obj	38	7
@@ -173,7 +172,6 @@ line	token	word	role	arg_line	arg_token
 53	7	abbraccia	subj	53	3
 53	7	abbraccia	obj	53	6
 54	4	detto	subj	54	7
-54	4	detto	obj	54	2
 55	0			0	0
 56	1	corrien	subj	56	2
 56	1	corrien	obl:tra	55	4
@@ -413,7 +411,6 @@ line	token	word	role	arg_line	arg_token
 130	10	prema	obl:da	130	4
 130	10	prema	obl:a	130	9
 131	8	raggiunge	subj	131	6
-131	8	raggiunge	obl	132	4
 132	4	convien	subj	132	6
 132	6	gema	subj	132	3
 133	6	punge	subj	133	3

@@ -69,7 +69,6 @@ line	token	word	role	arg_line	arg_token
 26	4	dissi	subj	0	0
 26	4	dissi	ccomp	26	6
 26	6	nacque	subj	26	8
-27	3	è	subj	0	0
 27	3	è	attr	27	4
 27	4	uopo	subj	27	8
 27	8	distingua	subj	0	0
@@ -177,6 +176,8 @@ line	token	word	role	arg_line	arg_token
 62	7	unito	subj	0	0
 63	7	amò	subj	0	0
 63	7	amò	obj	63	6
+63	7	amò	obl:di	63	3
+63	7	amò	obl:in	63	5
 64	2	privata	subj	64	1
 64	2	privata	obl:di	64	5
 65	0			0	0
@@ -225,6 +226,7 @@ line	token	word	role	arg_line	arg_token
 78	3	cagion	obl:di	78	5
 79	0			0	0
 80	2	scalzò	subj	79	5
+80	2	scalzò	obj	80	1
 81	1	corse	subj	79	5
 81	1	corse	obl:dietro	80	8
 81	3	correndo	subj	79	5
@@ -255,6 +257,7 @@ line	token	word	role	arg_line	arg_token
 89	3	fi'	obl:di	89	6
 90	3	parer	subj	0	0
 90	3	parer	attr	90	4
+90	3	parer	obl:a	90	6
 91	0			0	0
 92	3	aperse	subj	0	0
 92	3	aperse	obj	91	5
@@ -318,6 +321,7 @@ line	token	word	role	arg_line	arg_token
 114	5	amassero	obl:a	114	7
 115	0			0	0
 116	1	mover	subj	115	6
+116	1	mover	obj	116	2
 116	1	mover	obl:di	115	4
 116	3	volle	subj	115	6
 116	3	volle	xcomp	116	1

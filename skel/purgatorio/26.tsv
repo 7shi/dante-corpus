@@ -2,6 +2,7 @@ line	token	word	role	arg_line	arg_token
 1	0			0	0
 2	3	andavamo	subj	1	7
 2	3	andavamo	obl:per	1	6
+2	3	andavamo	obl:innanzi	1	9
 2	3	andavamo	obl	2	2
 3	1	diceami	subj	2	8
 3	1	diceami	ccomp	3	2
@@ -19,6 +20,7 @@ line	token	word	role	arg_line	arg_token
 7	3	facea	xcomp	8	1
 7	3	facea	obl:con	7	6
 8	1	parer	subj	8	3
+8	1	parer	obl:con	7	6
 9	1	vidi	subj	2	8
 9	1	vidi	obj	9	3
 9	1	vidi	xcomp	9	5
@@ -31,7 +33,7 @@ line	token	word	role	arg_line	arg_token
 10	6	diede	subj	10	5
 10	6	diede	obj	10	7
 10	6	diede	iobj	11	1
-10	6	diede	xcomp	11	3
+10	6	diede	obl:a	11	3
 11	3	parlar	subj	11	1
 11	3	parlar	obl:di	11	5
 11	7	cominciarsi	subj	10	5
@@ -151,7 +153,8 @@ line	token	word	role	arg_line	arg_token
 51	3	ascoltar	subj	0	0
 51	3	ascoltar	obl:in	51	6
 52	6	visto	subj	52	2
-52	6	visto	obj	52	8
+52	6	visto	obj	52	7
+52	6	visto	attr	52	8
 52	6	visto	obl	52	4
 52	8	grato	subj	52	7
 53	1	incominciai	subj	52	1
@@ -244,7 +247,6 @@ line	token	word	role	arg_line	arg_token
 80	1	rimproverando	subj	0	0
 80	1	rimproverando	obl:a	80	3
 80	6	udito	subj	0	0
-80	6	udito	obj	80	1
 81	2	aiutan	subj	76	2
 81	2	aiutan	obj	81	4
 81	5	vergognando	subj	0	0
@@ -271,7 +273,6 @@ line	token	word	role	arg_line	arg_token
 89	5	vuo'	subj	0	0
 89	5	vuo'	xcomp	89	6
 89	6	saper	subj	0	0
-89	6	saper	obj	89	7
 89	6	saper	obl:a	89	4
 89	8	semo	subj	0	0
 89	8	semo	attr	89	7
@@ -315,6 +316,7 @@ line	token	word	role	arg_line	arg_token
 100	7	andai	obl	101	2
 101	3	rimirando	subj	0	0
 101	3	rimirando	obj	101	4
+101	3	rimirando	obl	101	2
 102	9	appressai	subj	96	4
 102	9	appressai	obj	102	8
 102	9	appressai	obl:per	102	4
@@ -330,6 +332,9 @@ line	token	word	role	arg_line	arg_token
 105	5	fa	obj	105	7
 105	5	fa	xcomp	105	6
 105	6	credere	subj	105	7
+106	2	elli	subj	0	0
+106	2	elli	ccomp	106	6
+106	2	elli	obl:a	106	4
 106	6	lasci	subj	106	5
 106	6	lasci	obj	106	8
 106	6	lasci	obl:per	107	2
@@ -348,8 +353,8 @@ line	token	word	role	arg_line	arg_token
 110	3	è	subj	110	4
 110	3	è	attr	110	2
 110	7	dimostri	subj	0	0
-110	7	dimostri	obj	110	6
 110	7	dimostri	ccomp	111	7
+110	7	dimostri	obl:per	110	6
 110	7	dimostri	obl:in	111	2
 110	7	dimostri	obl:in	111	5
 111	7	avermi	subj	0	0

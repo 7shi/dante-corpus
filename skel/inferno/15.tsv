@@ -33,6 +33,7 @@ line	token	word	role	arg_line	arg_token
 14	6	visto	subj	14	3
 14	6	visto	ccomp	14	8
 14	8	era	subj	0	0
+14	8	era	obl	14	7
 15	5	rivolto	subj	15	2
 15	5	rivolto	obl:in	15	4
 16	2	incontrammo	subj	0	0
@@ -192,7 +193,6 @@ line	token	word	role	arg_line	arg_token
 64	3	farà	obl:per	64	7
 65	2	è	subj	0	0
 65	2	è	attr	65	3
-65	2	è	ccomp	66	2
 65	3	ragion	subj	0	0
 66	2	disconvien	subj	66	3
 66	2	disconvien	obl:tra	65	8
@@ -206,9 +206,9 @@ line	token	word	role	arg_line	arg_token
 68	6	superba	subj	68	1
 69	4	fa	subj	67	2
 69	4	fa	ccomp	69	8
-69	4	fa	obl:da	69	3
 69	8	forbi	subj	69	6
 69	8	forbi	obj	69	7
+69	8	forbi	obl:da	69	3
 70	7	serba	subj	70	3
 70	7	serba	obj	70	5
 70	7	serba	iobj	70	6

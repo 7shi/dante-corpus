@@ -206,7 +206,7 @@ line	token	word	role	arg_line	arg_token
 75	0			0	0
 76	3	vidi	subj	73	1
 76	3	vidi	obj	76	6
-76	6	menare	subj	76	7
+76	6	menare	obj	76	7
 76	6	menare	obl:a	77	2
 76	6	menare	obl:a	78	3
 77	0			0	0

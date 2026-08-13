@@ -114,6 +114,7 @@ line	token	word	role	arg_line	arg_token
 41	4	fu	subj	0	0
 41	4	fu	attr	41	3
 41	4	fu	obl:di	41	7
+41	4	fu	obl:per	42	3
 42	5	è	subj	42	4
 42	5	è	attr	42	6
 43	5	fan	subj	43	3
@@ -160,7 +161,6 @@ line	token	word	role	arg_line	arg_token
 58	2	conosce	subj	55	2
 58	2	conosce	ccomp	59	8
 59	8	nocivo	subj	58	5
-59	8	nocivo	obl:da	59	4
 59	8	nocivo	obl:a	59	6
 60	1	avvegna	subj	0	0
 60	1	avvegna	ccomp	60	7
@@ -181,7 +181,6 @@ line	token	word	role	arg_line	arg_token
 64	5	innamora	obl:di	65	5
 65	0			0	0
 66	5	fa	subj	61	2
-66	5	fa	obj	66	4
 66	5	fa	xcomp	66	6
 66	6	vedere	subj	66	4
 66	6	vedere	obl:a	65	8
@@ -193,6 +192,8 @@ line	token	word	role	arg_line	arg_token
 69	3	quinta	obl:in	68	6
 70	2	conosce	subj	0	0
 70	2	conosce	obj	70	3
+70	2	conosce	obl:di	70	5
+71	1	veder	subj	70	8
 71	1	veder	obj	70	6
 71	1	veder	obl:di	71	7
 71	3	può	subj	70	8
@@ -208,6 +209,7 @@ line	token	word	role	arg_line	arg_token
 75	7	sazia	subj	75	5
 75	7	sazia	obj	75	6
 76	1	tal	subj	76	5
+76	3	sembiò	subj	76	5
 76	3	sembiò	iobj	76	2
 77	0			0	0
 78	5	è	subj	78	4
@@ -417,8 +419,8 @@ line	token	word	role	arg_line	arg_token
 143	2	seguitar	subj	143	4
 143	2	seguitar	obl:a	142	5
 144	8	acquista	subj	144	7
-144	8	acquista	obj	144	5
 144	8	acquista	obl:in	144	2
+144	8	acquista	obl:di	144	5
 145	5	parlò	subj	145	4
 145	8	ricorda	subj	0	0
 145	8	ricorda	iobj	145	7

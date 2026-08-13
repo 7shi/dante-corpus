@@ -29,6 +29,7 @@ line	token	word	role	arg_line	arg_token
 9	3	potea	xcomp	9	6
 9	3	potea	obl:con	9	5
 9	6	dare	obj	9	8
+9	6	dare	obl:con	9	5
 10	6	stanzi	subj	0	0
 10	6	stanzi	xcomp	11	2
 11	2	incenerarti	subj	0	0
@@ -121,8 +122,8 @@ line	token	word	role	arg_line	arg_token
 41	2	suol	xcomp	41	3
 41	3	seguitar	subj	0	0
 41	3	seguitar	obl:per	41	6
-42	4	nomar	subj	42	6
-42	4	nomar	obj	42	3
+42	4	nomar	subj	42	3
+42	4	nomar	obj	42	6
 42	7	convenette	subj	42	4
 43	1	dicendo	subj	0	0
 43	5	rimaso	subj	43	2
@@ -141,13 +142,13 @@ line	token	word	role	arg_line	arg_token
 46	8	lento	xcomp	46	7
 47	4	dirò	subj	47	3
 47	4	dirò	obj	47	2
-47	6	sarà	subj	47	1
 47	6	sarà	attr	47	7
 47	7	maraviglia	subj	47	1
 48	5	vidi	subj	48	3
 48	5	vidi	obj	48	4
 48	10	consento	subj	48	2
-48	10	consento	obj	48	9
+48	10	consento	obj	48	8
+48	10	consento	iobj	48	9
 48	10	consento	obl:a	48	7
 49	3	tenea	subj	49	2
 49	3	tenea	obj	49	8
@@ -393,11 +394,10 @@ line	token	word	role	arg_line	arg_token
 137	3	fugge	subj	136	2
 137	3	fugge	obj	137	2
 137	3	fugge	obl:per	137	6
-138	4	dietro	subj	138	3
-138	4	dietro	obl:a	138	6
 138	7	parlando	subj	138	3
 138	8	sputa	subj	138	3
 138	8	sputa	obl	138	4
+138	8	sputa	obl:a	138	4
 139	3	volse	subj	0	0
 139	3	volse	obj	139	6
 139	3	volse	iobj	139	2
@@ -429,7 +429,6 @@ line	token	word	role	arg_line	arg_token
 148	4	scorgessi	subj	148	2
 148	4	scorgessi	obj	148	6
 149	2	era	subj	149	3
-149	2	era	attr	149	4
 150	2	venner	subj	150	1
 150	6	mutato	subj	149	4
 150	6	mutato	obl:di	149	8

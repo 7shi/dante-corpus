@@ -3,6 +3,7 @@ line	token	word	role	arg_line	arg_token
 1	1	Ruppemi	obj	1	4
 1	1	Ruppemi	obl:in	1	7
 2	8	riscossi	subj	2	6
+2	8	riscossi	obl:come	3	2
 3	7	desta	subj	3	3
 3	7	desta	obl:per	3	6
 4	6	mossi	subj	2	3
@@ -171,8 +172,7 @@ line	token	word	role	arg_line	arg_token
 62	2	vo'	ccomp	62	4
 62	4	sappi	subj	0	0
 62	4	sappi	ccomp	63	5
-62	6	dinanzi	subj	63	1
-62	6	dinanzi	obl:a	62	8
+63	4	eran	obl	62	6
 63	5	salvati	subj	63	1
 63	5	salvati	obl	62	6
 64	2	lasciavam	subj	0	0
@@ -365,9 +365,9 @@ line	token	word	role	arg_line	arg_token
 133	7	fanno	iobj	133	6
 134	2	vid'	subj	134	3
 134	2	vid'	obj	134	4
-135	2	'nnanzi	subj	135	1
-135	2	'nnanzi	obl:a	135	5
+134	2	vid'	obl	134	1
 135	9	stanno	subj	135	1
+135	9	stanno	obl	135	2
 135	9	stanno	obl:a	135	5
 135	9	stanno	obl:presso	135	8
 136	7	pone	subj	136	2

@@ -5,6 +5,7 @@ line	token	word	role	arg_line	arg_token
 2	9	tempra	obl:sotto	2	8
 3	9	vanno	subj	3	4
 3	9	vanno	obl:a	3	6
+3	9	vanno	obl	3	8
 4	8	assempra	subj	4	3
 4	8	assempra	obj	5	2
 4	8	assempra	obl:in	4	7
@@ -172,7 +173,6 @@ line	token	word	role	arg_line	arg_token
 57	4	'ntendi	obj	57	3
 57	6	fa	subj	0	0
 57	6	fa	obj	57	7
-57	7	sì	ccomp	57	10
 57	10	vaglia	subj	0	0
 57	10	vaglia	iobj	57	9
 58	1	Leva'	subj	0	0
@@ -309,6 +309,7 @@ line	token	word	role	arg_line	arg_token
 102	4	divenisse	attr	101	8
 103	4	fu	subj	0	0
 103	4	fu	attr	103	8
+103	4	fu	obl:a	103	6
 103	8	distrutto	subj	0	0
 103	8	distrutto	obl:a	103	6
 104	4	raccolse	subj	104	2
@@ -409,6 +410,7 @@ line	token	word	role	arg_line	arg_token
 133	10	colto	obl:in	134	3
 134	7	vedi	subj	134	5
 134	7	vedi	obj	134	6
+134	7	vedi	obl	134	4
 135	8	tolto	subj	133	7
 135	8	tolto	obl:di	135	7
 136	3	posso	subj	136	1
@@ -425,8 +427,6 @@ line	token	word	role	arg_line	arg_token
 140	8	godi	obl:di	140	5
 141	3	sarai	subj	0	0
 141	3	sarai	obl:di	141	5
-141	5	fuor	subj	0	0
-141	5	fuor	obl:da	141	7
 142	1	apri	subj	0	0
 142	1	apri	obj	142	3
 142	1	apri	obl:a	142	6

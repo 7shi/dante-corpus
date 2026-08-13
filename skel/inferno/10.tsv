@@ -44,6 +44,7 @@ line	token	word	role	arg_line	arg_token
 16	7	faci	iobj	16	6
 17	3	satisfatto	subj	0	0
 17	3	satisfatto	obl:a	16	4
+17	3	satisfatto	obl	17	2
 17	3	satisfatto	obl:a	18	3
 18	8	taci	subj	18	6
 18	8	taci	iobj	18	7
@@ -123,18 +124,20 @@ line	token	word	role	arg_line	arg_token
 44	3	celai	obj	44	2
 44	3	celai	iobj	44	2
 44	7	apersi	subj	43	1
+44	7	apersi	obj	44	5
 44	7	apersi	obj	44	6
 44	7	apersi	iobj	44	6
 45	3	levò	subj	45	2
 45	3	levò	obj	45	5
 45	3	levò	obl:in	45	9
 46	2	disse	subj	45	2
+46	2	disse	ccomp	46	5
 46	5	avversi	subj	0	0
 46	5	avversi	obl:a	47	2
 46	5	avversi	obl:a	47	6
 46	5	avversi	obl:a	47	10
 47	0			0	0
-48	7	dispersi	subj	0	0
+48	7	dispersi	subj	43	1
 48	7	dispersi	obj	48	6
 48	7	dispersi	obl:per	48	5
 49	4	cacciati	subj	49	2
@@ -147,7 +150,6 @@ line	token	word	role	arg_line	arg_token
 51	5	appreser	obj	51	8
 52	2	surse	subj	53	2
 52	2	surse	obl:a	52	5
-52	2	surse	obl:lungo	53	4
 52	2	surse	obl:a	53	7
 53	0			0	0
 54	1	credo	subj	53	2
@@ -243,7 +245,9 @@ line	token	word	role	arg_line	arg_token
 83	7	empio	obl:incontr	84	3
 83	7	empio	obl:in	84	7
 84	0			0	0
-85	0			0	0
+85	2	io	subj	0	0
+85	2	io	ccomp	87	3
+85	2	io	obl:a	85	4
 86	2	fece	subj	86	1
 86	2	fece	obj	86	4
 86	2	fece	attr	86	5
@@ -347,12 +351,17 @@ line	token	word	role	arg_line	arg_token
 117	7	istava	subj	117	4
 117	7	istava	obl:con	117	6
 118	1	Dissemi	subj	0	0
+118	1	Dissemi	ccomp	118	7
+118	1	Dissemi	ccomp	119	3
+118	1	Dissemi	ccomp	120	9
 118	7	giaccio	subj	0	0
+118	7	giaccio	obl	118	2
 118	7	giaccio	obl:con	118	4
 119	3	è	subj	119	6
 119	3	è	subj	120	3
-120	9	taccio	subj	119	6
-120	9	taccio	obj	120	8
+119	3	è	obl	119	2
+120	9	taccio	subj	0	0
+120	9	taccio	iobj	120	8
 120	9	taccio	obl:di	120	7
 121	3	ascose	subj	0	0
 121	3	ascose	obj	121	2
@@ -364,7 +373,6 @@ line	token	word	role	arg_line	arg_token
 123	6	parea	iobj	123	5
 123	6	parea	attr	123	7
 123	7	nemico	subj	123	4
-123	7	nemico	iobj	123	5
 124	3	mosse	subj	124	1
 124	7	andando	subj	124	1
 125	2	disse	subj	124	1

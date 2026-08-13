@@ -59,7 +59,6 @@ line	token	word	role	arg_line	arg_token
 22	0			0	0
 23	2	vider	subj	22	5
 23	2	vider	subj	22	7
-23	2	vider	obl:in	23	5
 24	2	punger	subj	0	0
 24	2	punger	obj	24	3
 24	2	punger	obj	24	5
@@ -85,8 +84,8 @@ line	token	word	role	arg_line	arg_token
 31	6	tremando		0	0
 32	2	disse	subj	31	3
 32	2	disse	iobj	32	1
+32	5	è	attr	32	7
 32	6	Gianni	subj	32	4
-32	7	Schicchi	subj	32	4
 33	6	conciando	subj	32	4
 33	6	conciando	obj	33	4
 33	6	conciando	obl	33	3
@@ -173,8 +172,7 @@ line	token	word	role	arg_line	arg_token
 58	7	siete	subj	58	3
 58	7	siete	obl:sanz	58	6
 59	3	so	subj	59	4
-59	3	so	obj	59	5
-59	3	so	obl:in	59	7
+59	3	so	ccomp	59	5
 59	5	perché	subj	0	0
 60	1	diss'	subj	60	2
 60	1	diss'	iobj	60	4
@@ -203,6 +201,7 @@ line	token	word	role	arg_line	arg_token
 68	8	asciuga	obl	69	3
 69	9	discarno	subj	69	5
 69	9	discarno	obj	69	8
+69	9	discarno	obl	69	4
 69	9	discarno	obl:in	69	7
 70	6	fruga	subj	70	4
 70	6	fruga	obj	70	5
@@ -265,6 +264,9 @@ line	token	word	role	arg_line	arg_token
 89	5	batter	obj	89	7
 90	2	avevan	subj	90	1
 90	2	avevan	obj	90	4
+91	2	io	subj	0	0
+91	2	io	ccomp	91	6
+91	2	io	obl:a	91	4
 91	6	son	subj	91	9
 91	6	son	attr	91	5
 92	2	fumman	subj	92	1
@@ -363,6 +365,8 @@ line	token	word	role	arg_line	arg_token
 123	10	assiepa	obj	123	3
 123	10	assiepa	iobj	123	9
 123	10	assiepa	obl:a	123	7
+124	3	monetier	subj	0	0
+124	3	monetier	ccomp	124	6
 124	6	squarcia	subj	125	2
 124	6	squarcia	obl:per	125	6
 125	8	suole	subj	0	0
@@ -389,6 +393,7 @@ line	token	word	role	arg_line	arg_token
 131	8	mira	subj	0	0
 132	8	risso	subj	0	0
 132	8	risso	obj	132	7
+132	8	risso	obl:per	132	3
 132	8	risso	obl:con	132	5
 133	4	senti'	subj	133	2
 133	4	senti'	obj	133	3

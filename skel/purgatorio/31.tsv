@@ -15,7 +15,6 @@ line	token	word	role	arg_line	arg_token
 4	2	seguendo	subj	0	0
 4	2	seguendo	obl:sanza	4	4
 5	1	dì	subj	0	0
-5	1	dì	ccomp	5	6
 5	2	dì	subj	0	0
 5	2	dì	ccomp	5	6
 5	6	vero	subj	5	4
@@ -60,7 +59,9 @@ line	token	word	role	arg_line	arg_token
 20	2	sgorgando	obj	20	3
 21	4	allentò	subj	21	3
 21	4	allentò	obl:per	21	8
-22	0			0	0
+22	2	ella	subj	0	0
+22	2	ella	ccomp	26	1
+22	2	ella	obl:a	22	4
 23	3	menavano	subj	23	1
 23	3	menavano	obj	23	2
 23	3	menavano	xcomp	23	5
@@ -334,7 +335,7 @@ line	token	word	role	arg_line	arg_token
 116	1	posto	subj	0	0
 116	1	posto	obj	116	2
 116	1	posto	obl	116	4
-116	4	dinanzi	obl:a	116	7
+116	3	avem	obl	116	4
 117	5	trasse	subj	117	2
 117	5	trasse	obj	117	8
 117	5	trasse	iobj	117	4
@@ -347,9 +348,9 @@ line	token	word	role	arg_line	arg_token
 120	6	stavan	obl:sopra	120	5
 120	7	saldi	subj	120	1
 121	0			0	0
+122	6	raggiava	subj	121	6
 122	6	raggiava	subj	122	3
 122	6	raggiava	obl:in	121	4
-122	6	raggiava	obl:come	121	6
 122	6	raggiava	obl:con	123	3
 122	6	raggiava	obl:con	123	7
 123	0			0	0

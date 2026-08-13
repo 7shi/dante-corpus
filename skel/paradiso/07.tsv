@@ -68,6 +68,7 @@ line	token	word	role	arg_line	arg_token
 24	5	faran	iobj	24	4
 24	5	faran	attr	24	6
 25	3	soffrire	subj	0	0
+25	3	soffrire	obj	26	1
 25	3	soffrire	obl:a	25	6
 25	8	vole	subj	25	7
 25	8	vole	obj	26	1
@@ -87,7 +88,7 @@ line	token	word	role	arg_line	arg_token
 32	3	allungata	subj	31	4
 32	3	allungata	obl:da	31	7
 32	4	unì	subj	0	0
-32	4	unì	obj	31	3
+32	4	unì	subj	31	3
 32	4	unì	obl:a	32	6
 32	4	unì	obl:in	32	8
 32	4	unì	obl:con	33	3

@@ -27,7 +27,9 @@ line	token	word	role	arg_line	arg_token
 10	2	era	subj	12	2
 10	2	era	attr	10	3
 10	3	men	subj	0	0
+10	3	men	obl	10	5
 10	7	men	subj	0	0
+10	7	men	obl	10	9
 11	6	andava	subj	11	4
 11	6	andava	iobj	11	5
 12	3	senti'	subj	12	2
@@ -49,7 +51,6 @@ line	token	word	role	arg_line	arg_token
 18	2	sonò	subj	18	5
 18	2	sonò	obl:dopo	16	4
 19	2	portäi	subj	0	0
-19	2	portäi	obj	19	7
 19	2	portäi	xcomp	19	5
 19	2	portäi	obl:in	19	4
 19	5	volta	subj	0	0
@@ -84,20 +85,19 @@ line	token	word	role	arg_line	arg_token
 28	4	prese	obj	28	3
 28	4	prese	obl:per	28	6
 29	2	disse	subj	0	0
+29	2	disse	ccomp	31	1
 29	6	siam	subj	29	5
 29	6	siam	attr	29	8
-29	8	avanti	subj	29	5
 30	7	paia	subj	30	4
 30	7	paia	iobj	30	6
 30	7	paia	attr	30	8
 30	8	strano	subj	30	4
 30	8	strano	iobj	30	6
 31	1	sappi	subj	0	0
-31	4	son	subj	0	0
+31	1	sappi	ccomp	31	4
+31	4	son	subj	31	7
 31	4	son	attr	31	5
 31	4	son	attr	31	7
-31	5	torri	subj	0	0
-31	7	giganti	subj	0	0
 32	2	son	subj	33	6
 32	2	son	obl:in	32	4
 32	2	son	obl:da	32	8
@@ -251,7 +251,6 @@ line	token	word	role	arg_line	arg_token
 84	1	trovammo	obl:a	83	6
 85	2	cigner	subj	0	0
 85	2	cigner	obj	85	3
-85	2	cigner	obl	85	4
 85	6	fosse	subj	85	8
 85	6	fosse	attr	85	4
 86	2	so	subj	86	3
@@ -296,6 +295,9 @@ line	token	word	role	arg_line	arg_token
 96	9	move	obj	96	2
 97	1	E	subj	97	2
 97	1	E	obl:a	97	4
+97	2	io	subj	0	0
+97	2	io	ccomp	97	9
+97	2	io	obl:a	97	4
 97	6	esser		0	0
 97	7	puote	subj	97	6
 97	9	vorrei	subj	97	8
@@ -439,7 +441,6 @@ line	token	word	role	arg_line	arg_token
 140	2	vederlo	subj	139	6
 140	3	chinare	subj	0	0
 140	5	fu	subj	140	7
-140	5	fu	attr	140	6
 141	4	voluto	subj	141	2
 141	4	voluto	xcomp	141	5
 141	5	ir	subj	141	2

@@ -285,8 +285,8 @@ line	token	word	role	arg_line	arg_token
 97	8	odi	subj	97	6
 97	8	odi	xcomp	98	1
 98	1	originar	subj	98	4
-99	5	frodi	subj	99	4
-99	5	frodi	obj	99	2
+99	5	frodi	subj	99	2
+99	5	frodi	obj	99	4
 100	2	io		0	0
 101	2	son	subj	100	6
 101	2	son	iobj	101	1

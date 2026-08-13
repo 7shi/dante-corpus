@@ -132,7 +132,7 @@ line	token	word	role	arg_line	arg_token
 48	7	condiziona	obj	48	6
 48	7	condiziona	xcomp	48	5
 49	4	crescer	subj	49	3
-49	5	convene	subj	49	4
+49	5	convene	xcomp	49	4
 50	1	crescer	subj	50	3
 50	8	accende	subj	50	4
 50	8	accende	obl:di	50	6
@@ -267,9 +267,10 @@ line	token	word	role	arg_line	arg_token
 94	0			0	0
 95	2	apparvero	subj	95	3
 95	2	apparvero	iobj	95	1
-95	2	apparvero	obl:in	95	7
+95	2	apparvero	obl:con	94	4
+95	2	apparvero	obl:a	95	7
 96	3	dissi	subj	96	2
-96	3	dissi	obj	96	9
+96	3	dissi	ccomp	96	9
 96	9	addobbi	subj	96	6
 96	9	addobbi	obj	96	8
 97	2	distinta	subj	99	1
@@ -303,6 +304,7 @@ line	token	word	role	arg_line	arg_token
 107	3	scuserà	obj	107	2
 107	3	scuserà	obl:di	107	5
 107	8	lasso	subj	107	7
+107	8	lasso	obj	107	6
 108	1	vedendo	subj	0	0
 108	1	vedendo	xcomp	108	5
 108	5	balenar	subj	108	6
@@ -386,6 +388,7 @@ line	token	word	role	arg_line	arg_token
 136	2	puommi	xcomp	136	1
 136	8	accuso	subj	136	6
 136	8	accuso	obj	136	5
+136	8	accuso	obj	136	7
 137	2	escusarmi	subj	0	0
 137	4	vedermi	subj	0	0
 137	4	vedermi	xcomp	137	5

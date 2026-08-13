@@ -45,7 +45,7 @@ line	token	word	role	arg_line	arg_token
 15	1	potesse	xcomp	15	3
 15	2	risplendendo	subj	0	0
 15	3	dir	subj	0	0
-15	3	dir	obj	15	4
+15	3	dir	ccomp	15	4
 15	3	dir	obl:in	16	3
 15	4	Subsisto	subj	0	0
 16	0			0	0
@@ -54,6 +54,7 @@ line	token	word	role	arg_line	arg_token
 17	8	piacque	subj	0	0
 17	8	piacque	obl:a	17	7
 18	2	aperse	subj	18	8
+18	2	aperse	obj	18	1
 18	2	aperse	obl:in	18	5
 19	6	giacque	subj	0	0
 19	6	giacque	attr	19	4
@@ -72,7 +73,9 @@ line	token	word	role	arg_line	arg_token
 24	0			0	0
 25	0			0	0
 26	2	resplende	subj	26	1
+26	2	resplende	obl:in	25	4
 27	6	è	subj	27	7
+27	6	è	obl:da	26	6
 28	0			0	0
 29	5	raggiò	subj	28	4
 29	5	raggiò	obj	29	7
@@ -155,6 +158,7 @@ line	token	word	role	arg_line	arg_token
 62	0			0	0
 63	3	hanno	subj	58	1
 63	3	hanno	obj	63	7
+63	3	hanno	obl	63	2
 64	3	voglio	subj	58	1
 64	3	voglio	ccomp	64	5
 64	5	dubbi	subj	0	0
@@ -194,8 +198,6 @@ line	token	word	role	arg_line	arg_token
 78	7	nasconde	obl:da	78	4
 79	3	hanno	subj	76	2
 79	3	hanno	obj	79	4
-79	5	interciso	subj	79	4
-79	5	interciso	obl:da	80	3
 80	7	bisogna	xcomp	81	1
 81	1	rememorar	subj	0	0
 81	1	rememorar	obl:per	81	3
@@ -255,6 +257,7 @@ line	token	word	role	arg_line	arg_token
 103	2	ha	obj	103	5
 104	0			0	0
 105	4	gridan	subj	104	4
+105	4	gridan	obl:per	104	6
 105	4	gridan	obl:in	105	2
 106	7	sanno	subj	106	5
 107	1	tornan	subj	106	4
@@ -345,6 +348,7 @@ line	token	word	role	arg_line	arg_token
 138	8	appaia	subj	0	0
 138	8	appaia	obl:a	138	6
 139	8	concepe	subj	139	7
+139	8	concepe	obj	139	7
 140	1	segue	subj	140	3
 140	1	segue	obl:a	139	6
 141	4	ferve	subj	140	7

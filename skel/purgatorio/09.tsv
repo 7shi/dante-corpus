@@ -41,6 +41,7 @@ line	token	word	role	arg_line	arg_token
 19	4	parea	subj	0	0
 19	4	parea	iobj	19	3
 19	4	parea	xcomp	19	5
+19	4	parea	obl:in	19	2
 19	5	veder	subj	0	0
 19	5	veder	obj	20	2
 20	0			0	0
@@ -144,6 +145,7 @@ line	token	word	role	arg_line	arg_token
 53	6	dormia	subj	53	3
 54	5	è	subj	54	4
 54	5	è	attr	54	8
+54	5	è	obl	54	4
 54	8	addorno	subj	54	4
 55	1	venne	subj	55	3
 55	1	venne	obl:in	52	4
@@ -214,7 +216,7 @@ line	token	word	role	arg_line	arg_token
 73	5	eravamo	subj	73	1
 73	5	eravamo	obl:in	73	7
 74	4	pareami	subj	74	6
-74	6	rotto	subj	0	0
+74	4	pareami	attr	74	6
 75	7	diparte	subj	75	5
 75	7	diparte	obj	75	6
 76	1	vidi	subj	0	0
@@ -230,7 +232,6 @@ line	token	word	role	arg_line	arg_token
 79	9	apersi	obl:in	79	8
 80	1	vidil	subj	0	0
 80	1	vidil	xcomp	80	2
-80	1	vidil	obl:in	81	4
 80	2	seder	obl:sovra	80	5
 81	9	soffersi	subj	81	6
 81	9	soffersi	obj	81	8

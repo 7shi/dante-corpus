@@ -109,7 +109,6 @@ line	token	word	role	arg_line	arg_token
 41	4	aiuti	xcomp	42	4
 41	4	aiuti	obl:con	41	7
 42	4	pensar	subj	0	0
-42	4	pensar	xcomp	42	5
 42	5	mettere	subj	0	0
 42	5	mettere	obj	42	2
 42	5	mettere	obl:in	42	7
@@ -149,6 +148,7 @@ line	token	word	role	arg_line	arg_token
 58	2	rendei	obj	58	4
 58	2	rendei	obl:a	58	8
 59	3	movieno	subj	59	1
+59	3	movieno	obl	59	4
 59	3	movieno	obl:a	59	6
 60	3	vinte	subj	0	0
 60	3	vinte	obl:da	60	6
@@ -226,16 +226,14 @@ line	token	word	role	arg_line	arg_token
 85	3	Benedicta	subj	85	4
 85	3	Benedicta	obl:in	86	3
 86	7	benedette	subj	87	5
-86	7	benedette	obl:in	87	3
 87	0			0	0
 88	0			0	0
 89	0			0	0
 90	1	libere	subj	88	4
 90	1	libere	obl:a	89	2
 90	1	libere	obl:da	89	8
+90	1	libere	obl	90	2
 90	1	libere	obl:da	90	5
-90	2	fuor	subj	0	0
-90	2	fuor	obl:da	90	5
 91	7	seconda	subj	91	3
 91	7	seconda	obj	91	4
 91	7	seconda	obl:in	91	6
@@ -323,6 +321,7 @@ line	token	word	role	arg_line	arg_token
 122	6	rossa	subj	122	4
 123	8	nota	subj	122	4
 123	8	nota	obl:a	123	3
+123	8	nota	obl	123	5
 123	8	nota	obl:in	123	7
 124	3	era	subj	124	2
 124	3	era	ccomp	125	5

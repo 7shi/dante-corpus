@@ -18,7 +18,6 @@ line	token	word	role	arg_line	arg_token
 7	4	aunasse	subj	7	8
 8	0			0	0
 9	7	dolente	subj	8	1
-9	7	dolente	obl:in	8	7
 9	7	dolente	obl:di	9	6
 9	7	dolente	obl:per	10	3
 9	7	dolente	obl:per	10	8
@@ -140,6 +139,7 @@ line	token	word	role	arg_line	arg_token
 52	8	udiro	subj	52	5
 52	8	udiro	obj	52	7
 53	2	arrestaron	subj	52	5
+53	2	arrestaron	obj	53	1
 53	2	arrestaron	xcomp	53	6
 53	2	arrestaron	obl:in	53	4
 53	6	riguardarmi	subj	52	5
@@ -177,6 +177,7 @@ line	token	word	role	arg_line	arg_token
 64	4	forata	subj	64	3
 64	4	forata	obj	64	7
 65	2	tronco	subj	65	4
+65	2	tronco	obl:sotto	65	8
 66	3	avea	subj	64	3
 66	3	avea	obj	66	7
 67	1	ristato	subj	64	2
@@ -258,7 +259,6 @@ line	token	word	role	arg_line	arg_token
 91	2	io	ccomp	91	7
 91	2	io	obl:a	91	4
 91	5	Dimostrami	subj	0	0
-91	5	Dimostrami	ccomp	93	3
 91	7	dichiara	subj	0	0
 91	7	dichiara	ccomp	93	3
 92	2	vuo'	subj	0	0

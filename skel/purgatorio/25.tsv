@@ -15,6 +15,7 @@ line	token	word	role	arg_line	arg_token
 5	2	vassi	subj	4	6
 5	2	vassi	obl:a	5	5
 5	10	appaia	subj	5	7
+5	10	appaia	subj	5	8
 5	10	appaia	obj	5	9
 6	6	trafigge	subj	6	4
 6	6	trafigge	obj	6	5
@@ -167,6 +168,7 @@ line	token	word	role	arg_line	arg_token
 54	8	è	subj	54	7
 54	8	è	obl:a	54	11
 55	2	ovra	subj	0	0
+55	2	ovra	subj	52	1
 55	2	ovra	obl:come	56	2
 55	7	move	subj	0	0
 55	9	sente	subj	0	0
@@ -192,8 +194,8 @@ line	token	word	role	arg_line	arg_token
 63	3	savio	subj	0	0
 63	3	savio	obl:di	63	5
 63	6	fé	subj	63	1
-63	6	fé	obj	63	8
 63	6	fé	attr	63	3
+63	6	fé	attr	63	8
 63	8	errante	subj	0	0
 64	6	fé	subj	64	2
 64	6	fé	obj	65	6
@@ -210,9 +212,11 @@ line	token	word	role	arg_line	arg_token
 67	6	viene	subj	67	8
 68	2	sappi	subj	0	0
 69	6	perfetto	subj	69	2
+69	6	perfetto	obl:a	68	8
 70	7	volge	subj	70	2
 70	7	volge	attr	70	8
 70	7	volge	obl:a	70	5
+70	7	volge	obl:sopra	71	3
 71	7	spira	subj	70	2
 71	7	spira	obj	72	1
 72	0			0	0

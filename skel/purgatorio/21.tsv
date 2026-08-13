@@ -60,6 +60,8 @@ line	token	word	role	arg_line	arg_token
 21	3	ha	obj	21	9
 21	3	ha	iobj	21	2
 21	3	ha	obl:per	21	7
+22	3	dottor	subj	0	0
+22	3	dottor	ccomp	24	2
 22	7	riguardi	subj	22	6
 22	7	riguardi	obl:a	22	9
 23	3	porta	subj	23	2
@@ -72,6 +74,7 @@ line	token	word	role	arg_line	arg_token
 24	6	convien	obl:con	24	5
 24	9	regni	subj	24	8
 25	8	fila	subj	25	4
+25	8	fila	obl	25	5
 26	4	tratta	subj	26	7
 26	4	tratta	obj	26	2
 27	3	impone	subj	27	2
@@ -231,7 +234,6 @@ line	token	word	role	arg_line	arg_token
 79	3	fosti	subj	79	2
 79	4	piacciati	subj	0	0
 79	7	sappia	subj	79	6
-79	7	sappia	obj	79	2
 80	5	giaciuto	subj	0	0
 80	5	giaciuto	obl	80	4
 80	5	giaciuto	obl	81	1
@@ -253,6 +255,7 @@ line	token	word	role	arg_line	arg_token
 86	1	era	obl:di	86	4
 86	5	rispuose	subj	86	7
 87	1	famoso	subj	86	2
+87	1	famoso	obl:con	87	6
 88	3	dolce	subj	88	6
 89	6	trasse	subj	89	7
 89	6	trasse	obj	89	5
@@ -271,14 +274,10 @@ line	token	word	role	arg_line	arg_token
 93	2	caddi	subj	91	3
 93	2	caddi	obl:in	93	4
 93	2	caddi	obl:con	93	8
-94	4	fuor	subj	94	7
-94	4	fuor	attr	94	5
-94	4	fuor	obl:a	94	3
 94	5	seme	subj	94	7
 94	5	seme	obl:a	94	3
 95	3	scaldar	subj	95	1
 95	3	scaldar	obj	95	2
-95	3	scaldar	obl:di	95	7
 96	3	allumati	subj	96	6
 96	3	allumati	obl	96	1
 97	4	dico	subj	94	7

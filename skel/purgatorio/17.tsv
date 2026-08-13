@@ -162,6 +162,7 @@ line	token	word	role	arg_line	arg_token
 58	2	fa	subj	0	0
 58	2	fa	obl:con	58	4
 58	9	fa	subj	58	7
+58	9	fa	obj	58	8
 58	9	fa	obl	58	10
 59	3	aspetta	subj	59	2
 59	3	aspetta	obj	59	4
@@ -219,7 +220,7 @@ line	token	word	role	arg_line	arg_token
 78	8	arriva	subj	78	4
 78	8	arriva	obl:a	78	7
 79	3	attesi	subj	79	2
-79	3	attesi	obj	79	5
+79	3	attesi	obl	79	5
 79	8	udissi	subj	79	7
 79	8	udissi	obj	80	2
 79	8	udissi	obl:in	80	5
@@ -230,7 +231,6 @@ line	token	word	role	arg_line	arg_token
 81	8	dissi	subj	79	2
 81	8	dissi	ccomp	82	4
 82	4	dì	subj	0	0
-82	4	dì	iobj	82	3
 82	4	dì	ccomp	83	2
 83	2	purga	subj	82	6
 83	2	purga	obl:in	83	5
@@ -238,7 +238,9 @@ line	token	word	role	arg_line	arg_token
 83	7	semo	obl	83	6
 84	5	stanno	subj	84	3
 84	7	stea	subj	84	9
-85	0			0	0
+85	2	elli	subj	0	0
+85	2	elli	ccomp	86	6
+85	2	elli	obl:a	85	4
 86	6	ristora	subj	85	6
 86	6	ristora	obj	86	5
 87	3	ribatte	subj	87	7
@@ -332,14 +334,15 @@ line	token	word	role	arg_line	arg_token
 116	1	spera	subj	115	2
 116	1	spera	obj	116	2
 116	7	brama	subj	115	2
-116	7	brama	ccomp	117	9
+116	7	brama	obl:per	116	6
 117	3	sia	subj	117	2
 117	9	messo	subj	117	2
 117	9	messo	obl:di	117	6
 117	9	messo	obl:in	117	8
 118	1	è	subj	118	2
 119	1	teme	subj	118	2
-119	1	teme	obj	119	3
+119	1	teme	obj	118	7
+119	1	teme	xcomp	119	3
 119	3	perder	subj	0	0
 119	3	perder	obj	118	7
 119	6	sormonti	subj	119	5
@@ -404,6 +407,7 @@ line	token	word	role	arg_line	arg_token
 136	8	abbandona	obj	136	7
 136	8	abbandona	obl:a	136	5
 137	6	piange	subj	136	2
+137	6	piange	obl:di	137	2
 137	6	piange	obl:a	137	4
 137	6	piange	obl:per	137	9
 138	5	ragiona	subj	136	2

@@ -8,11 +8,11 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 LLM's roles and the derivation's roles are directly comparable and the corpus stays
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5r, six full `--fix` rounds
-run (Phases 5e, 5q, 5s, 5t, 5u and 5w), five Layer-4 correction rounds (Phases 5i, 5n, 5p's two
-and 5r) fed back into `dep/`, and `--fix` itself restructured in Phase 6 into a
-deterministic-first, class-targeted pass.**
-`make -C skel check`: **0 hard, 2011 soft** violations (down from 17438 at the first
+**Status: built for all 100 cantos, checker refined through Phase 5r, seven full `--fix` rounds
+run (Phases 5e, 5q, 5s, 5t, 5u, 5w and the first round against Phase 6's restructured driver),
+five Layer-4 correction rounds (Phases 5i, 5n, 5p's two and 5r) fed back into `dep/`, and `--fix`
+itself restructured in Phase 6 into a deterministic-first, class-targeted pass.**
+`make -C skel check`: **0 hard, 1452 soft** violations (down from 17438 at the first
 full-corpus measurement, 7776 at the Phase 4a checkpoint, 5919 after the Phase 4b `--fix` round,
 5105 after Phase 5a, 4846 after Phase 5b, 4615 after the Phase 5e `--fix` round, 4327 after
 Phase 5f, 4097 after Phase 5g, 4068 after Phase 5h, 4042 after Phase 5i, 3924 after Phase 5j,
@@ -28,8 +28,9 @@ once more, 3136 after Phase 5t's user-run `--fix` pass, 2623 after rule V's
 control/participial subject chain and the membership audit's cross-layer corrections, 2531
 after Phase 5u's user-run `--fix` pass, 2408 after Phase 5w's user-run `--fix` pass on the
 prompt Phase 5v rewrote, 2330 after rules W and X, 2084 after rules Y-AF and the
-cross-layer corrections from the Inferno 1-3 read, and 2011 after Phase 6's deterministic
-`--fix` stage). See
+cross-layer corrections from the Inferno 1-3 read, 2011 after Phase 6's deterministic
+`--fix` stage, and 1452 after the first user-run `--fix` round against Phase 6's restructured
+stage 2/3 driver). See
 [`../PLAN.md`](../PLAN.md) for the current authoritative count.
 See
 [skel/CORRECTIONS.md](CORRECTIONS.md) for the full

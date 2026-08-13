@@ -60,7 +60,7 @@ line	token	word	role	arg_line	arg_token
 20	4	restammo	obl:in	20	8
 21	0			0	0
 22	6	confina	subj	22	8
-22	6	confina	obl	22	4
+22	6	confina	obl	22	5
 23	9	sale	subj	23	7
 24	1	misurrebbe	subj	27	2
 24	1	misurrebbe	obj	24	6
@@ -85,8 +85,8 @@ line	token	word	role	arg_line	arg_token
 30	5	aveva	subj	30	1
 30	5	aveva	obj	30	6
 31	1	esser	subj	29	5
-31	1	esser	attr	31	3
 31	1	esser	attr	31	6
+31	1	esser	obl:di	31	3
 32	0			0	0
 33	5	avrebbe	subj	32	7
 33	5	avrebbe	subj	33	3
@@ -200,8 +200,10 @@ line	token	word	role	arg_line	arg_token
 70	9	stava	subj	70	8
 71	2	avvisar	subj	0	0
 71	2	avvisar	obj	71	7
+71	2	avvisar	obl:da	71	4
 72	7	biancheggiava	subj	72	1
 72	7	biancheggiava	iobj	72	6
+72	7	biancheggiava	obl:di	72	3
 72	7	biancheggiava	obl:a	72	5
 73	3	storïata	subj	73	6
 73	3	storïata	obl	73	1
@@ -237,6 +239,7 @@ line	token	word	role	arg_line	arg_token
 83	4	fammi	obl:di	84	3
 84	6	morto	subj	84	4
 84	10	accoro	subj	84	8
+84	10	accoro	obj	84	9
 85	5	rispondere	subj	85	2
 85	5	rispondere	obl:a	85	4
 85	7	aspetta	subj	0	0
@@ -250,6 +253,7 @@ line	token	word	role	arg_line	arg_token
 88	8	fia	subj	88	7
 88	8	fia	obl	88	9
 89	3	farà	subj	0	0
+89	3	farà	subj	88	7
 89	3	farà	obj	89	1
 89	3	farà	iobj	89	2
 89	5	ella	subj	0	0

@@ -69,6 +69,7 @@ line	token	word	role	arg_line	arg_token
 27	5	avea	obj	27	7
 27	5	avea	obl:a	27	4
 27	8	sciolta	subj	27	7
+27	8	sciolta	obl:a	27	4
 28	0			0	0
 29	1	piovean	subj	29	5
 29	1	piovean	obl:sovra	28	4
@@ -106,6 +107,7 @@ line	token	word	role	arg_line	arg_token
 43	2	cominciai	subj	43	1
 43	6	vinci	subj	43	5
 43	6	vinci	obj	44	3
+43	6	vinci	obl	44	4
 43	6	vinci	obl:fuor	44	6
 44	0			0	0
 45	9	uscinci	subj	45	1
@@ -135,6 +137,7 @@ line	token	word	role	arg_line	arg_token
 52	3	stanchi	obj	52	6
 53	2	prese	subj	52	8
 53	2	prese	obj	53	4
+53	2	prese	obl:da	52	8
 54	5	percosso	subj	0	0
 54	5	percosso	obl	54	4
 55	4	stanchi	subj	55	3
@@ -307,7 +310,7 @@ line	token	word	role	arg_line	arg_token
 115	7	diroccia	subj	115	2
 115	7	diroccia	obl:in	115	5
 116	1	fanno	subj	0	0
-116	1	fanno	obj	116	2
+116	1	fanno	subj	116	2
 117	3	van	subj	116	2
 117	3	van	obl:di	117	2
 117	3	van	obl:per	117	8
@@ -319,7 +322,9 @@ line	token	word	role	arg_line	arg_token
 120	3	vedrai	subj	120	1
 120	3	vedrai	obj	120	2
 120	8	conta	subj	120	1
-121	0			0	0
+121	2	io	subj	0	0
+121	2	io	ccomp	123	3
+121	2	io	obl:a	121	4
 122	2	diriva	subj	121	8
 122	2	diriva	obj	122	1
 122	2	diriva	obl:da	122	6
@@ -369,7 +374,6 @@ line	token	word	role	arg_line	arg_token
 137	7	lavarsi	subj	137	5
 138	6	rimossa	subj	138	3
 139	2	disse	subj	0	0
-139	4	è	subj	0	0
 139	4	è	attr	139	5
 139	5	tempo	subj	0	0
 139	7	scostarsi	subj	0	0

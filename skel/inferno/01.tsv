@@ -355,7 +355,7 @@ line	token	word	role	arg_line	arg_token
 121	7	vorrai	xcomp	121	8
 121	8	salire	subj	121	6
 121	8	salire	obl:a	121	3
-122	5	più	obl:di	122	7
+122	2	fia	obl	122	5
 122	8	degna	subj	122	1
 122	8	degna	obl:a	122	4
 123	4	lascerò	subj	0	0

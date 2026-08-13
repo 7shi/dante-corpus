@@ -11,7 +11,7 @@ line	token	word	role	arg_line	arg_token
 5	7	ritenne	subj	4	8
 5	7	ritenne	obl	4	4
 5	7	ritenne	obl:in	5	3
-5	7	ritenne	obl:vicino	6	3
+5	7	ritenne	obl:a	6	3
 6	7	uscìo	subj	0	0
 6	7	uscìo	obl:di	6	5
 7	0			0	0
@@ -187,13 +187,13 @@ line	token	word	role	arg_line	arg_token
 62	2	saltò	subj	61	6
 62	2	saltò	obj	62	3
 62	4	fu	subj	61	1
-62	4	fu	attr	62	7
+62	4	fu	obl:di	62	7
 63	3	seguiteria	subj	63	4
 63	3	seguiteria	subj	63	6
 63	3	seguiteria	obj	63	2
 64	4	rivolse	subj	0	0
 64	4	rivolse	obj	64	6
-64	4	rivolse	obl:verso	64	3
+64	4	rivolse	obl:inver	64	3
 64	4	rivolse	obl:verso	65	3
 65	6	percosse	subj	0	0
 65	6	percosse	obj	65	5
@@ -215,6 +215,7 @@ line	token	word	role	arg_line	arg_token
 70	4	folgorando	subj	0	0
 71	3	volse	subj	0	0
 71	3	volse	obj	71	2
+71	3	volse	obl:da	71	1
 71	3	volse	obl:in	71	6
 72	2	sentia	subj	0	0
 72	2	sentia	obj	72	5

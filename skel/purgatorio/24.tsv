@@ -59,8 +59,8 @@ line	token	word	role	arg_line	arg_token
 20	0			0	0
 21	9	trapunta	subj	20	6
 21	9	trapunta	obj	21	8
-22	1	ebbe	subj	20	6
-22	1	ebbe	obj	22	4
+22	1	ebbe	subj	22	4
+22	1	ebbe	obj	20	6
 22	1	ebbe	obl:in	22	8
 23	3	fu	subj	22	4
 23	3	fu	obl:da	23	2
@@ -243,8 +243,8 @@ line	token	word	role	arg_line	arg_token
 78	4	sia	obl:a	78	10
 79	8	viver	subj	0	0
 79	9	posto	subj	0	0
-79	9	posto	xcomp	79	8
 79	9	posto	obl:u'	79	5
+79	9	posto	obl:a	79	8
 80	9	spolpa	subj	79	4
 80	9	spolpa	obl:di	80	2
 80	9	spolpa	obl:in	80	4
@@ -268,6 +268,7 @@ line	token	word	role	arg_line	arg_token
 85	6	va	subj	85	2
 85	6	va	obl:a	85	5
 86	1	crescendo	subj	0	0
+86	1	crescendo	obl	86	3
 86	7	percuote	subj	86	5
 86	7	percuote	obj	86	6
 87	2	lascia	subj	85	2
@@ -308,6 +309,7 @@ line	token	word	role	arg_line	arg_token
 98	3	rimasi	obl:in	98	5
 98	3	rimasi	obl:con	98	7
 99	7	marescalchi	subj	99	1
+99	7	marescalchi	obl	99	2
 99	7	marescalchi	obl:fuor	99	4
 100	6	intrato	subj	0	0
 100	6	intrato	obl:a	100	5
@@ -394,7 +396,6 @@ line	token	word	role	arg_line	arg_token
 126	4	discese	obl:in	126	3
 127	0			0	0
 128	1	passammo	subj	0	0
-128	1	passammo	obl:a	127	5
 128	2	udendo	subj	0	0
 128	2	udendo	obj	128	3
 129	0			0	0
@@ -415,7 +416,6 @@ line	token	word	role	arg_line	arg_token
 136	1	Drizzai	subj	0	0
 136	1	Drizzai	obj	136	3
 136	5	veder	subj	0	0
-136	5	veder	obj	136	6
 136	7	fossi	subj	136	6
 137	6	videro	subj	138	1
 137	6	videro	obl:in	137	8

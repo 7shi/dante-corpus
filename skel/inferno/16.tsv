@@ -111,7 +111,7 @@ line	token	word	role	arg_line	arg_token
 35	6	vada	attr	35	3
 35	6	vada	attr	35	5
 36	1	fu	subj	34	1
-36	1	fu	attr	36	3
+36	1	fu	obl:di	36	3
 36	8	credi	subj	36	6
 36	8	credi	ccomp	36	1
 37	1	nepote	subj	34	1
@@ -120,7 +120,6 @@ line	token	word	role	arg_line	arg_token
 37	2	fu	obl:di	37	6
 38	3	ebbe	subj	38	2
 38	3	ebbe	obj	38	4
-39	1	fece	subj	38	2
 39	1	fece	obl:in	38	8
 39	1	fece	obl:con	39	3
 39	1	fece	obl:con	39	8
@@ -208,6 +207,7 @@ line	token	word	role	arg_line	arg_token
 69	8	gita	obl:di	69	6
 70	7	duole	subj	70	5
 70	7	duole	obl:con	71	2
+70	7	duole	obl:per	71	4
 71	6	va	subj	70	5
 71	6	va	obl:con	71	9
 72	3	cruccia	subj	70	3
@@ -368,6 +368,7 @@ line	token	word	role	arg_line	arg_token
 126	5	fa	obl:sanza	126	4
 127	3	tacer	subj	0	0
 127	5	posso	subj	0	0
+127	5	posso	obj	127	4
 127	5	posso	xcomp	127	3
 128	6	giuro	subj	0	0
 128	6	giuro	iobj	128	5

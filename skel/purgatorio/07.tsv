@@ -37,6 +37,7 @@ line	token	word	role	arg_line	arg_token
 14	3	ritornò	subj	13	3
 14	3	ritornò	obl:ver	14	5
 15	2	abbracciòl	subj	13	3
+15	2	abbracciòl	obl	15	3
 15	8	appiglia	subj	15	6
 16	5	disse	subj	0	0
 17	1	mostrò	subj	0	0
@@ -170,6 +171,7 @@ line	token	word	role	arg_line	arg_token
 54	6	partito	subj	54	5
 55	6	desse	subj	55	5
 55	6	desse	obj	55	7
+55	6	desse	obl:che	56	4
 56	6	ir		0	0
 57	6	intriga	subj	57	1
 57	6	intriga	obj	57	5
@@ -201,15 +203,17 @@ line	token	word	role	arg_line	arg_token
 63	4	può	xcomp	63	2
 63	6	dimorando		0	0
 64	2	allungati	subj	0	0
+64	2	allungati	obj	64	3
 64	2	allungati	obl:di	64	6
 65	4	accorsi	subj	65	2
+65	4	accorsi	obj	65	3
 65	4	accorsi	ccomp	65	9
 65	9	scemo	subj	65	7
-65	9	scemo	obl:a	66	2
 66	7	sceman	subj	66	5
 66	7	sceman	obj	66	6
 67	2	disse	subj	67	4
 67	6	anderemo	subj	0	0
+67	6	anderemo	obl	67	5
 68	4	face	subj	68	3
 68	4	face	obj	68	7
 68	4	face	obl:di	68	6
@@ -245,7 +249,7 @@ line	token	word	role	arg_line	arg_token
 79	6	dipinto	obl	79	5
 80	0			0	0
 81	2	facea	subj	0	0
-81	2	facea	obj	81	4
+81	2	facea	subj	81	4
 81	2	facea	obl:di	80	3
 81	2	facea	obl	81	1
 82	0			0	0
@@ -384,8 +388,7 @@ line	token	word	role	arg_line	arg_token
 123	9	chiami	obl:da	123	7
 124	4	vanno	subj	124	6
 124	4	vanno	obl:a	124	3
-125	2	men	subj	124	6
-125	2	men	obl:a	125	6
+124	4	vanno	obl	125	2
 125	11	canta	subj	125	8
 125	11	canta	obl:con	125	10
 126	7	dole	subj	126	2

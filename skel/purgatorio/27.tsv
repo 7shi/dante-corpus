@@ -1,5 +1,6 @@
 line	token	word	role	arg_line	arg_token
 1	7	vibra	subj	1	6
+1	7	vibra	obj	1	6
 2	8	sparse	subj	2	5
 2	8	sparse	obj	2	7
 3	1	cadendo	subj	3	2
@@ -20,8 +21,7 @@ line	token	word	role	arg_line	arg_token
 8	2	cantava	obl:in	9	2
 8	3	Beati	subj	0	0
 8	3	Beati	obl	8	5
-9	4	più	subj	0	0
-9	4	più	obl	9	8
+9	0			0	0
 10	5	va	subj	0	0
 10	9	morde	subj	11	4
 10	9	morde	obj	11	1
@@ -99,7 +99,6 @@ line	token	word	role	arg_line	arg_token
 32	6	entra	subj	0	0
 32	6	entra	attr	32	7
 33	4	fermo	subj	33	2
-33	4	fermo	obl:contra	33	7
 33	7	coscïenza	subj	33	2
 34	3	vide	subj	0	0
 34	3	vide	obj	34	2
@@ -118,7 +117,7 @@ line	token	word	role	arg_line	arg_token
 37	6	aperse	subj	38	1
 37	6	aperse	obj	37	8
 37	6	aperse	obl:a	37	3
-37	6	aperse	obl:in	38	5
+37	6	aperse	obl:su	38	5
 38	7	riguardolla	subj	38	1
 39	5	diventò	subj	39	4
 39	5	diventò	attr	39	6
@@ -149,7 +148,7 @@ line	token	word	role	arg_line	arg_token
 45	8	vinto	obl:a	45	10
 46	8	mise	subj	0	0
 46	8	mise	iobj	46	6
-46	8	mise	obl:dentro	46	4
+46	8	mise	obl:a	46	4
 47	1	pregando	subj	0	0
 47	1	pregando	obj	47	2
 47	1	pregando	ccomp	47	4
@@ -192,9 +191,11 @@ line	token	word	role	arg_line	arg_token
 60	8	potei	subj	0	0
 60	8	potei	xcomp	60	6
 61	4	va	subj	61	2
+61	4	va	obl	61	3
 61	5	soggiunse	subj	0	0
 61	7	vien	subj	61	9
 62	3	arrestate	subj	61	9
+62	3	arrestate	obl	62	2
 62	5	studiate	subj	61	9
 62	5	studiate	obj	62	7
 63	7	annera	subj	63	4
@@ -243,6 +244,7 @@ line	token	word	role	arg_line	arg_token
 81	1	poggiato	obl:su	80	8
 81	3	è	subj	80	4
 81	3	è	xcomp	81	1
+81	3	è	obl:in	80	8
 81	8	serve	subj	80	4
 81	8	serve	obj	81	5
 81	8	serve	obl:di	81	7
@@ -256,6 +258,7 @@ line	token	word	role	arg_line	arg_token
 85	1	tali	subj	85	5
 85	2	eravamo	subj	85	5
 85	2	eravamo	attr	85	1
+85	2	eravamo	obl	85	6
 86	0			0	0
 87	0			0	0
 88	2	parer	obl:di	88	6
@@ -284,10 +287,7 @@ line	token	word	role	arg_line	arg_token
 96	6	par	obl:di	96	3
 96	8	ardente	subj	96	1
 96	8	ardente	obl:di	96	3
-97	7	parea	subj	98	1
 97	7	parea	iobj	97	6
-97	7	parea	attr	97	1
-97	7	parea	attr	97	3
 97	7	parea	obl:in	97	5
 98	2	vedere	subj	0	0
 98	2	vedere	obj	98	1
@@ -312,6 +312,7 @@ line	token	word	role	arg_line	arg_token
 103	2	piacermi	subj	0	0
 103	2	piacermi	obl:a	103	5
 103	8	addorno	subj	0	0
+103	8	addorno	obj	103	7
 104	8	smaga	subj	104	4
 104	8	smaga	obl:da	105	3
 105	5	siede	subj	104	4

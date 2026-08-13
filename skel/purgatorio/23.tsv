@@ -34,8 +34,8 @@ line	token	word	role	arg_line	arg_token
 11	0			0	0
 12	6	parturìe	subj	12	2
 12	6	parturìe	obj	12	3
-13	5	è	subj	13	6
 13	5	è	attr	13	4
+13	5	è	attr	13	6
 13	9	odo	subj	13	8
 13	9	odo	obj	13	7
 14	1	comincia'	subj	14	2
@@ -198,6 +198,7 @@ line	token	word	role	arg_line	arg_token
 66	8	rifà	subj	64	3
 66	8	rifà	obj	66	7
 66	8	rifà	attr	66	9
+66	8	rifà	obl:in	66	2
 66	9	santa	subj	64	3
 67	7	accende	subj	68	2
 67	7	accende	obj	67	8
@@ -286,7 +287,6 @@ line	token	word	role	arg_line	arg_token
 95	7	pudica	obl:che	96	3
 96	7	lasciai	subj	96	5
 96	7	lasciai	obj	96	6
-96	7	lasciai	obl	96	3
 97	5	vuo'	subj	97	6
 97	5	vuo'	ccomp	97	9
 97	9	dica	subj	97	8

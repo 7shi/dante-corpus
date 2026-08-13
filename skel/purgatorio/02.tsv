@@ -168,7 +168,6 @@ line	token	word	role	arg_line	arg_token
 63	4	peregrin	subj	63	2
 63	7	siete	subj	63	6
 64	2	venimmo	subj	0	0
-64	2	venimmo	obl	64	7
 64	2	venimmo	obl:per	65	3
 65	7	aspra	subj	65	4
 65	9	forte	subj	65	4
@@ -219,14 +218,12 @@ line	token	word	role	arg_line	arg_token
 78	5	far	subj	0	0
 78	5	far	obj	78	7
 79	2	ombre		0	0
-79	4	fuor	subj	0	0
-79	4	fuor	obl:in	79	8
 80	8	avvinsi	subj	0	0
 80	8	avvinsi	obj	80	7
 80	8	avvinsi	obl	80	2
 80	8	avvinsi	obl:dietro	80	5
 81	4	tornai	subj	0	0
-81	4	tornai	obj	81	3
+81	4	tornai	iobj	81	3
 81	4	tornai	obl:con	81	6
 81	4	tornai	obl:a	81	8
 82	3	credo	subj	0	0
@@ -244,7 +241,6 @@ line	token	word	role	arg_line	arg_token
 85	2	disse	ccomp	85	5
 85	5	posasse	subj	85	4
 86	2	conobbi	subj	0	0
-86	2	conobbi	obj	86	3
 86	4	era	subj	86	3
 86	6	pregai	subj	0	0
 86	6	pregai	ccomp	87	7
@@ -365,6 +361,7 @@ line	token	word	role	arg_line	arg_token
 127	3	appare	subj	127	2
 127	6	abbian	subj	127	5
 127	6	abbian	obj	127	7
+127	6	abbian	obl	127	4
 128	2	lasciano	subj	125	2
 128	2	lasciano	xcomp	128	3
 128	2	lasciano	obl:senza	126	3

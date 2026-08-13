@@ -76,6 +76,7 @@ line	token	word	role	arg_line	arg_token
 26	2	farmisi	xcomp	26	3
 26	3	sentire	subj	0	0
 26	6	venuto	subj	25	5
+26	6	venuto	obl	27	1
 27	6	percuote	subj	27	4
 27	6	percuote	obj	27	5
 28	2	venni	subj	28	1
@@ -114,7 +115,7 @@ line	token	word	role	arg_line	arg_token
 41	0			0	0
 42	0			0	0
 43	10	mena	subj	42	3
-43	10	mena	obj	42	5
+43	10	mena	obj	43	9
 43	10	mena	obl:di	43	2
 43	10	mena	obl:di	43	4
 43	10	mena	obl:di	43	6
@@ -199,6 +200,7 @@ line	token	word	role	arg_line	arg_token
 68	2	mostrommi	obl:a	68	6
 68	4	nominommi	subj	0	0
 69	6	dipartille	subj	69	2
+69	6	dipartille	obj	69	1
 69	6	dipartille	obl:di	69	5
 70	8	udito	subj	70	3
 70	8	udito	obj	70	7
@@ -222,7 +224,6 @@ line	token	word	role	arg_line	arg_token
 76	2	elli	iobj	76	4
 76	2	elli	ccomp	76	5
 76	5	Vedrai	subj	0	0
-76	5	Vedrai	obl:quando	77	2
 76	7	saranno	subj	0	0
 76	7	saranno	attr	77	2
 77	2	presso	subj	0	0

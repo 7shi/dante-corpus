@@ -157,7 +157,7 @@ line	token	word	role	arg_line	arg_token
 52	4	chiamaste	obl:per	53	4
 53	0			0	0
 54	3	vedi	subj	54	2
-54	8	fiacco	subj	54	7
+54	8	fiacco	iobj	54	7
 54	8	fiacco	obl:a	54	6
 55	7	sola	subj	55	2
 56	7	stanno	subj	56	3
@@ -244,7 +244,6 @@ line	token	word	role	arg_line	arg_token
 78	7	facci	subj	0	0
 78	7	facci	obj	78	8
 78	7	facci	iobj	78	6
-78	7	facci	obl:di	78	5
 79	8	degni	subj	79	5
 80	0			0	0
 81	7	far	subj	81	4
@@ -270,6 +269,8 @@ line	token	word	role	arg_line	arg_token
 84	5	addolcia	obj	84	4
 84	10	attosca	subj	84	8
 84	10	attosca	obj	84	9
+85	2	quelli	subj	0	0
+85	2	quelli	ccomp	85	4
 85	4	son	subj	85	3
 85	4	son	obl:tra	85	7
 86	5	grava	subj	86	2
@@ -323,6 +324,7 @@ line	token	word	role	arg_line	arg_token
 102	1	toccando	obj	102	5
 103	4	dissi	subj	103	3
 104	1	crescerann'	subj	103	7
+104	1	crescerann'	subj	104	2
 104	1	crescerann'	obl:dopo	104	6
 105	2	fier	subj	103	7
 105	2	fier	attr	105	3
@@ -356,5 +358,6 @@ line	token	word	role	arg_line	arg_token
 114	1	venimmo	subj	112	1
 114	1	venimmo	obl:a	114	3
 114	6	digrada	subj	0	0
+114	6	digrada	obl	114	4
 115	2	trovammo	subj	112	1
 115	2	trovammo	obj	115	3

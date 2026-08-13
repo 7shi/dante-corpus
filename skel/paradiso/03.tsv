@@ -44,7 +44,7 @@ line	token	word	role	arg_line	arg_token
 16	2	vid'	attr	16	1
 16	7	parlar		0	0
 17	9	corsi	subj	17	3
-17	9	corsi	obl:in	17	7
+17	9	corsi	obl:a	17	7
 17	9	corsi	obl:a	18	2
 18	4	accese	subj	18	3
 18	4	accese	obj	18	5
@@ -107,7 +107,6 @@ line	token	word	role	arg_line	arg_token
 35	3	drizza'	obj	35	4
 35	3	drizza'	obl:a	34	5
 35	6	cominciai	subj	0	0
-35	6	cominciai	obl:a	34	5
 36	7	smaga	subj	36	6
 36	7	smaga	obj	36	4
 37	0			0	0
@@ -199,7 +198,6 @@ line	token	word	role	arg_line	arg_token
 66	7	farvi	attr	66	8
 67	6	sorrise	subj	0	0
 67	6	sorrise	obl:con	67	4
-67	6	sorrise	obl	67	8
 68	4	rispuose	subj	0	0
 68	4	rispuose	iobj	68	3
 68	4	rispuose	obl:da	68	2
@@ -244,13 +242,14 @@ line	token	word	role	arg_line	arg_token
 80	1	tenersi	subj	79	7
 80	1	tenersi	obl:a	80	6
 81	4	fansi	subj	81	6
-81	4	fansi	attr	81	3
+81	4	fansi	obj	81	3
 82	5	sem	subj	82	4
 82	5	sem	obl:di	82	7
 82	5	sem	obl:in	82	9
 82	5	sem	obl:per	83	3
-83	8	piace	subj	0	0
-83	8	piace	iobj	83	7
+83	8	piace	subj	82	5
+83	8	piace	obl:a	83	7
+83	8	piace	obl:a	84	4
 84	10	'nvoglia	subj	84	5
 84	10	'nvoglia	obj	84	9
 84	10	'nvoglia	obl:in	84	8

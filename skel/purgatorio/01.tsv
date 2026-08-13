@@ -10,6 +10,8 @@ line	token	word	role	arg_line	arg_token
 4	2	canterò	subj	2	3
 4	2	canterò	obl:di	4	6
 5	6	purga	subj	5	4
+5	6	purga	obj	5	5
+5	6	purga	obl	5	1
 6	3	salire	subj	0	0
 6	3	salire	obl:a	6	5
 6	6	diventa	subj	5	4
@@ -270,6 +272,7 @@ line	token	word	role	arg_line	arg_token
 95	8	lavi	obj	95	10
 95	8	lavi	iobj	95	7
 96	6	stinghe	subj	96	4
+96	6	stinghe	obj	96	4
 97	4	converria	subj	98	4
 97	4	converria	obl	97	6
 98	4	andar	obl:a	99	1
@@ -334,6 +337,7 @@ line	token	word	role	arg_line	arg_token
 120	7	ire	obl:a	120	4
 120	7	ire	obl:in	120	9
 121	3	fummo	subj	121	2
+121	3	fummo	obl	121	4
 122	1	pugna	subj	121	7
 122	1	pugna	obl:con	122	3
 122	5	essere	subj	0	0
@@ -353,6 +357,7 @@ line	token	word	role	arg_line	arg_token
 128	3	fece	obj	129	2
 128	3	fece	iobj	128	2
 128	3	fece	xcomp	128	5
+128	3	fece	obl	128	1
 128	5	discoverto	subj	129	2
 129	7	nascose	subj	129	5
 129	7	nascose	obj	129	3
@@ -368,9 +373,12 @@ line	token	word	role	arg_line	arg_token
 133	3	cinse	subj	0	0
 133	3	cinse	obj	133	2
 133	7	piacque	subj	133	6
+133	7	piacque	obl:a	133	6
 134	2	maraviglia	subj	0	0
 134	6	scelse	subj	134	5
 134	6	scelse	obj	135	3
 135	6	rinacque	subj	135	4
+135	6	rinacque	obl	136	2
 136	5	avelse	subj	0	0
 136	5	avelse	obj	136	4
+136	5	avelse	obl	136	3

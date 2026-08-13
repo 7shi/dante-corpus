@@ -95,7 +95,6 @@ line	token	word	role	arg_line	arg_token
 30	9	pèra	obl:di	30	8
 31	6	è	subj	32	3
 31	6	è	attr	31	8
-31	6	è	obl:da	31	3
 31	6	è	obl	31	5
 31	8	pregno	subj	32	3
 31	8	pregno	obl:da	31	3
@@ -289,12 +288,15 @@ line	token	word	role	arg_line	arg_token
 87	3	è	subj	87	7
 87	3	è	attr	87	4
 87	4	mestier	subj	87	7
+88	2	è	subj	88	1
+88	2	è	attr	88	3
 88	3	Rinier	subj	88	1
+88	5	è	subj	88	4
+88	5	è	attr	88	7
 88	7	pregio	subj	88	4
-88	7	pregio	obl:di	89	3
 88	10	onore	subj	88	4
-88	10	onore	obl:di	89	3
 89	0			0	0
+90	1	fatto	subj	89	7
 90	4	reda	subj	89	7
 90	4	reda	obl:di	90	8
 91	8	fatto	subj	91	6
@@ -306,7 +308,7 @@ line	token	word	role	arg_line	arg_token
 91	8	fatto	obl:di	93	2
 91	9	brullo	subj	91	6
 92	0			0	0
-93	3	richesto	obj	93	2
+93	3	richesto	subj	93	2
 93	3	richesto	obl:a	93	5
 93	3	richesto	obl:a	93	8
 94	7	ripieno	subj	0	0

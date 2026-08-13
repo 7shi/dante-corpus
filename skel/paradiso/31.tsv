@@ -99,8 +99,8 @@ line	token	word	role	arg_line	arg_token
 41	8	facea	subj	0	0
 41	8	facea	obj	42	1
 41	8	facea	iobj	41	7
+41	8	facea	attr	42	1
 41	8	facea	obl:tra	41	3
-42	1	libito	subj	42	3
 42	3	udire	subj	0	0
 42	5	starmi	subj	0	0
 42	6	muto	subj	0	0
@@ -191,6 +191,7 @@ line	token	word	role	arg_line	arg_token
 74	6	dista	obl:da	73	3
 74	6	dista	obl:da	76	4
 75	7	abbandona	subj	75	1
+75	7	abbandona	obj	75	6
 75	7	abbandona	obl:in	75	3
 76	0			0	0
 77	4	facea	subj	77	2
@@ -238,7 +239,6 @@ line	token	word	role	arg_line	arg_token
 90	7	disnodi	obl:da	90	5
 91	6	lontana	subj	91	4
 92	2	parea	subj	91	4
-92	2	parea	attr	91	6
 92	3	sorrise	subj	91	4
 92	5	riguardommi	subj	91	4
 93	3	tornò	subj	91	4
@@ -274,7 +274,7 @@ line	token	word	role	arg_line	arg_token
 104	1	viene	obl:di	103	7
 104	3	veder	obj	104	5
 105	8	sazia	subj	105	1
-105	8	sazia	iobj	105	7
+105	8	sazia	obj	105	7
 105	8	sazia	obl:per	105	5
 106	2	dice	subj	105	1
 106	2	dice	obl:in	106	4
@@ -311,6 +311,7 @@ line	token	word	role	arg_line	arg_token
 119	0			0	0
 120	1	soverchia	subj	119	2
 120	1	soverchia	obj	120	2
+120	1	soverchia	obl:da	118	8
 120	6	declina	subj	120	5
 120	6	declina	obl	120	3
 121	5	andando	subj	118	1
@@ -324,6 +325,7 @@ line	token	word	role	arg_line	arg_token
 123	1	vincer	obl:in	122	8
 123	1	vincer	obl:di	123	3
 124	6	aspetta	subj	124	8
+124	6	aspetta	obj	124	8
 125	3	guidò	subj	125	1
 125	3	guidò	obj	125	4
 125	7	infiamma	subj	0	0

@@ -24,6 +24,8 @@ line	token	word	role	arg_line	arg_token
 9	8	concorde	subj	8	3
 9	8	concorde	obl:a	9	6
 10	1	Bene	subj	10	3
+10	2	è	subj	10	3
+10	2	è	attr	10	1
 10	7	doglia	subj	11	1
 10	7	doglia	obj	10	6
 10	7	doglia	obl:sanza	10	5
@@ -130,7 +132,7 @@ line	token	word	role	arg_line	arg_token
 51	4	muta	attr	51	6
 51	4	muta	attr	51	8
 52	1	solvuto	subj	0	0
-52	1	solvuto	obl:in	52	7
+52	1	solvuto	obl:dentro	52	7
 52	1	solvuto	obl	53	6
 53	5	parlo	subj	53	3
 53	5	parlo	iobj	53	4
@@ -140,6 +142,9 @@ line	token	word	role	arg_line	arg_token
 54	7	vestì	obl:a	54	5
 55	2	credi	subj	55	1
 55	2	credi	ccomp	56	8
+55	8	mei	subj	55	7
+55	8	mei	obl:a	55	5
+55	8	mei	obl:da	56	2
 56	5	primo	subj	56	3
 56	8	raia	subj	55	7
 56	8	raia	obl:a	55	5
@@ -150,12 +155,10 @@ line	token	word	role	arg_line	arg_token
 58	6	sia	attr	59	2
 58	10	paia	subj	58	9
 58	10	paia	attr	59	2
-59	2	gaudïoso	subj	58	4
 59	2	gaudïoso	subj	58	9
 59	2	gaudïoso	obl:a	59	4
 59	7	domandi	subj	55	1
 59	7	domandi	iobj	59	6
-59	7	domandi	obl:in	60	6
 60	0			0	0
 61	2	credi	subj	61	1
 61	2	credi	obj	61	4
@@ -189,9 +192,11 @@ line	token	word	role	arg_line	arg_token
 72	3	crescer	obl:a	72	7
 73	2	cominciai	subj	0	0
 74	6	apparse	subj	74	4
+74	6	apparse	obl	74	5
 75	9	fenno	subj	73	5
 75	9	fenno	attr	75	3
 76	7	allumò	subj	76	5
+76	7	allumò	obj	76	6
 76	9	arse	subj	76	5
 77	7	è	subj	76	4
 77	7	è	attr	77	9
@@ -250,6 +255,7 @@ line	token	word	role	arg_line	arg_token
 95	3	convien	subj	91	4
 95	3	convien	ccomp	96	3
 96	3	raccorci	subj	96	1
+96	3	raccorci	obj	95	7
 96	3	raccorci	obj	96	2
 96	3	raccorci	obl:con	96	6
 97	0			0	0
@@ -258,9 +264,9 @@ line	token	word	role	arg_line	arg_token
 98	3	toglie	obj	98	8
 98	3	toglie	obl:da	98	1
 99	2	stava	subj	97	1
-99	2	stava	obl:in	97	5
+99	2	stava	attr	99	5
+99	2	stava	obl:da	97	5
 99	2	stava	obl:in	99	4
-99	5	sobria	subj	97	1
 99	7	pudica	subj	97	1
 100	2	avea	subj	0	0
 100	2	avea	obj	100	3

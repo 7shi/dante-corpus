@@ -380,31 +380,31 @@ def _stub_model(monkeypatch, reply):
     return written
 
 
-# Inferno 1 carries exactly one soft violation — an `extra_tuple` at 122.5 — which makes it the
+# Purgatorio 1 carries exactly one soft violation — a `missing_arg` at 102.1 — which makes it the
 # smallest real case for driving the whole stage-2 loop.
 def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monkeypatch):
-    written = _stub_model(monkeypatch, "Q1: yes")
-    stats = drv._fix_canto("inferno", 1, 34, "fake", _FakeUI(), None, whole=False)
+    written = _stub_model(monkeypatch, "Q1: none")
+    stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
     assert stats["units:flagged"] == 1
     assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 1
-    assert stats["calls:extra_tuple_adverb"] == 1  # and no question about any other class
+    assert stats["calls:missing_arg"] == 1  # and no question about any other class
     assert sum(n for k, n in stats.items() if k.startswith("removed:")) == 0
-    assert written == []                          # "yes" changes nothing, so nothing is written
+    assert written == []                          # "none" changes nothing, so nothing is written
 
 
 def test_fix_canto_accepts_a_class_answer_and_commits_it(monkeypatch):
-    written = _stub_model(monkeypatch, "Q1: no -")
-    stats = drv._fix_canto("inferno", 1, 34, "fake", _FakeUI(), None, whole=False)
-    assert stats["removed:extra_tuple_adverb"] == 1
+    written = _stub_model(monkeypatch, "Q1: 100.3")
+    stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
+    assert stats["removed:missing_arg"] == 1
     assert stats["units:cleared"] == 1
     assert written, "an accepted splice must be written back"
 
 
 def test_fix_canto_sends_the_class_specific_system_prompt(monkeypatch):
-    _stub_model(monkeypatch, "Q1: yes")
-    drv._fix_canto("inferno", 1, 34, "fake", _FakeUI(), None, whole=False)
+    _stub_model(monkeypatch, "Q1: none")
+    drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
     system, question = _FakeClient.seen[0]
-    assert system == drv._CLASS_PROMPTS["extra_tuple_adverb"].system
+    assert system == drv._CLASS_PROMPTS["missing_arg"].system
     # The narrow prompt is a fraction of the monolithic build prompt it replaces — which is the
     # point of splitting it: the conventions that do not bear on this class are not competing
     # for the model's attention.

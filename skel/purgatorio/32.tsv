@@ -38,6 +38,7 @@ line	token	word	role	arg_line	arg_token
 14	2	dico	obj	14	4
 14	2	dico	obl:per	14	6
 15	6	rimossi	subj	0	0
+15	6	rimossi	obj	15	5
 15	6	rimossi	obl	15	2
 15	6	rimossi	obl:a	15	4
 16	1	vidi	subj	0	0
@@ -274,6 +275,7 @@ line	token	word	role	arg_line	arg_token
 101	2	sarai	obl:con	101	3
 102	6	è	subj	102	5
 102	6	è	attr	102	7
+102	6	è	obl	102	4
 102	7	romano	subj	102	5
 102	7	romano	obl:da	102	4
 103	8	vive	subj	103	6
@@ -303,7 +305,6 @@ line	token	word	role	arg_line	arg_token
 111	6	va	subj	111	4
 111	7	remoto	subj	111	4
 112	3	vidi	subj	112	2
-112	3	vidi	obj	112	6
 112	3	vidi	xcomp	112	4
 112	4	calar	subj	112	6
 112	4	calar	obl:per	113	3
@@ -347,8 +348,9 @@ line	token	word	role	arg_line	arg_token
 128	3	uscì	subj	128	2
 128	3	uscì	obl:di	128	5
 128	8	disse	subj	128	2
-128	8	disse	iobj	128	7
+128	8	disse	obj	128	7
 129	7	carca	subj	129	2
+129	7	carca	obj	129	6
 130	2	parve	subj	130	5
 130	2	parve	obl:a	130	4
 130	9	aprisse	subj	130	7
@@ -371,7 +373,6 @@ line	token	word	role	arg_line	arg_token
 135	5	gissen	attr	135	6
 136	3	rimase	subj	136	2
 137	6	offerta	subj	137	5
-137	6	offerta	obl:da	137	2
 137	6	offerta	obl:con	138	3
 138	0			0	0
 139	2	ricoperse	subj	136	1

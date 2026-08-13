@@ -13,6 +13,7 @@ line	token	word	role	arg_line	arg_token
 5	1	punge	obj	4	5
 5	3	ode	subj	0	0
 5	3	ode	obj	5	4
+5	3	ode	obl:di	5	6
 6	2	paia	subj	6	4
 6	2	paia	xcomp	6	5
 6	5	pianger	subj	0	0
@@ -235,8 +236,8 @@ line	token	word	role	arg_line	arg_token
 79	3	farà	subj	80	2
 79	3	farà	obj	79	6
 79	3	farà	iobj	79	2
-80	5	accampa	subj	80	4
-80	5	accampa	obj	80	3
+80	5	accampa	subj	80	3
+80	5	accampa	obl	80	4
 81	3	fatto	subj	81	5
 82	2	dicea	subj	0	0
 82	3	segnato	subj	0	0
@@ -265,7 +266,6 @@ line	token	word	role	arg_line	arg_token
 92	2	vedevi	subj	0	0
 92	2	vedevi	obj	92	1
 92	7	basse	subj	91	8
-92	7	basse	obl:a	91	4
 92	7	basse	obl:di	92	6
 93	4	salite	subj	93	2
 93	6	eran	subj	93	7
@@ -284,6 +284,7 @@ line	token	word	role	arg_line	arg_token
 96	8	guardasse	obl:in	96	7
 97	6	ha	subj	98	3
 97	6	ha	obj	97	7
+97	6	ha	obl	97	4
 98	4	era	subj	98	6
 98	4	era	obl:da	97	3
 99	3	diede	subj	99	2
@@ -329,7 +330,6 @@ line	token	word	role	arg_line	arg_token
 110	2	chiamò	obl:per	110	6
 111	6	guardare	subj	111	5
 111	7	sciolta	subj	109	2
-111	7	sciolta	xcomp	111	6
 112	6	mena	subj	112	4
 112	6	mena	obj	112	5
 112	6	mena	obl:in	112	8
@@ -376,6 +376,7 @@ line	token	word	role	arg_line	arg_token
 126	4	sa	subj	126	5
 126	4	sa	obj	126	3
 126	8	fu	subj	126	5
+126	8	fu	obl	126	7
 127	4	giuro	subj	127	2
 127	4	giuro	iobj	127	3
 127	4	giuro	ccomp	128	7
