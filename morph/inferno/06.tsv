@@ -388,7 +388,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 54	la	lo	article	f.	sg.				
 54	pioggia	pioggia	noun	f.	sg.				
 54	mi	mi	pronoun		sg.	1			reflexive
-54	fiacco	fiacco	adjective	m.	sg.				
+54	fiacco	fiaccare	verb		sg.	1	present	indicative	
 55	E	e	conjunction						
 55	io	io	pronoun		sg.	1			
 55	anima	anima	noun	f.	sg.				

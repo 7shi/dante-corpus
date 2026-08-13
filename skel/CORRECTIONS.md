@@ -1,5 +1,121 @@
 # skel — Layer 5 correction history
 
+## Rule AG, from re-reading Inferno 4-6 — 1452 → 1409, −43 (2026-08-13)
+
+The fourth per-position read of this kind (after rule V's twelve, rules W/X's five, rules
+Y-AF's twenty-six), over **all 19 remaining soft violations in Inferno 4-6** (two of the
+original 21 — 6:54, 6:87 — turned out to be the same bug, see below, and are not part of the
+19). One checker rule, one cross-layer correction; no model call.
+
+| kind | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 661 | 662 | +1 |
+| `missing_arg` | 566 | 522 | **−44** |
+| `role_mismatch` | 132 | 132 | 0 |
+| `missing_tuple` | 47 | 47 | 0 |
+| `extra_tuple` | 38 | 38 | 0 |
+| **total** | **1452** | **1409** | **−43** |
+
+`dep`/`np`/`morph`/`case --check` all unchanged (`dep` still 0 hard/18 soft, the standing
+subject-agreement residue). `pytest` 243 passed (one fixture's expected flagged-unit count moved
+by this rule and was repointed, mechanics unchanged).
+
+### Rule AG (`_apply_subj_authority`'s new branch, −43): gate conj-subject-propagation on Layer-2 agreement
+
+`derive_unit`'s step 3 (conj shared-subject propagation) walks a `conj` chain up to the nearest
+ancestor with a subject of its own and inherits it — unconditionally, with no check that the
+inherited subject's person/number actually fits the predicate it's being assigned to. "come tu
+vedi, a la pioggia mi fiacco" (inferno 6:54, *after* the cross-layer fix below): `fiacco` (1sg) is
+attached `conj` to `chiamaste` (2pl, three lines up, a different speaker's address entirely) with
+no subject of its own, and step 3 blindly inherited "Voi" — asserting a `missing_arg subj (52,1)`
+no reading supports.
+
+Measured over the whole corpus with `dante_corpus.dep.subject_agreement` — the same person/number
+test Phase 6's `null_subject` gate uses, extended here with a new `_finite_head_of` helper so a
+periphrastic predicate (`potrai vedere`) is checked against the token that actually carries person
+(the `aux`, not the non-finite `vedere` itself — inferno 6:87 needed this: `vedere`'s own morph row
+has no person, so the naive check called it "undecidable" and rule AG didn't fire until the aux was
+consulted): of **1370** conj-inherited-subject candidates, **682 agree**, **461 are undecidable**
+(no verdict either way — same as Tier B's discipline, left untouched) and **227 actively
+disagree**. An inherited subject in the last group is not a candidate to require, so
+`_apply_subj_authority` now drops it from the derived side — but only when doing so doesn't erase
+an existing match (`_subj_arg(g) != d_subj` is checked first; an initial ungated version that
+skipped this guard *raised* the count from 1452 to 1586 by turning cases where the LLM
+independently agreed with the inherited subject into fresh `extra_arg` reports, and was rejected
+before landing).
+
+### One cross-layer correction: `fiacco` at inferno 6:54 was tagged an adjective
+
+Layer 2 had `fiacco` (inferno 6:54, "a la pioggia mi fiacco") as the adjective *fiacco* ("weak"),
+which cannot explain the reflexive clitic `mi` sitting right next to it — adjectives don't take
+clitics. It's 1sg present indicative of *fiaccarsi* ("to wear oneself down"): "in the rain I wear
+myself down". Retagged `verb`/`fiaccare`/1sg/present/indicative in `morph/inferno/06.tsv`. This is
+what let rule AG's agreement check see `fiacco` as a finite verb at all (an adjective has no
+person to disagree with anything) — without the retag the position would have stayed
+"undecidable" and unflagged for the wrong reason.
+
+### The other 19: read individually, staying flagged for stated reasons
+
+Every other position in Inferno 4-6 was read against its terzina and is a genuine reading
+disagreement or an outright LLM omission, not checker silence — consistent with the Y-AF finding
+that `role_mismatch` (both layers speaking) doesn't move, extended here: most of `extra_arg`/
+`missing_arg` residue in this sample is the same shape.
+
+- **4:27** (`role_mismatch` ×2): "che l'aura etterna facevan tremare" — `facevan` is plural,
+  agreeing with `sospiri` (the antecedent of `che`), not the singular `l'aura etterna`; the LLM
+  read the causative construction backwards (subject/object swapped). Real LLM error.
+- **6:9, 6:20**: compound subjects/obliques ("regola e qualità", "de l'un... a l'altro") where the
+  LLM cited only one of two coordinated arguments. Real omissions.
+- **4:37, 6:37**: an adverb-headed oblique ("dinanzi al cristianesmo", "fuor d'una...") where Layer
+  4 attaches the adverb itself as the predicate's `obl` and nests a further `nmod` on it; the LLM
+  cites only the nested noun, never the adverb. Same shape both times — a plausible future rule,
+  but only two instances in this sample; not generalized without a larger read.
+- **4:112**: "Genti v'eran" — `v'` (locative "there") is tagged `advmod`, not `obl`, so
+  `derive_unit` is silent; the LLM's `obl:in` citation is defensible but uncorroborated by the
+  tree. Same shape as rule AB's clitic acceptance, but for a locative adverb-pronoun rather than a
+  reflexive; one instance here, not generalized.
+- **5:92**: "noi... noi pregheremmo" — a left-dislocated subject echoed by a resumptive `noi`
+  Layer 4 tags `expl`; `derive_unit` correctly cites the first `noi`, the LLM cites the second.
+  Rule AG doesn't reach this (the predicate's deprel is `root`, not `conj` — this isn't
+  conj-propagation, it's a direct `nsubj` at a distance). Same *family* as rule AG but a different
+  mechanism; one instance here.
+- **6:70**: "Alte terrà... le fronti" — `Alte` is Layer-4 `amod` inside the object NP, the LLM
+  reads it as a depictive secondary predicate (`xcomp`) of `terrà`. No `cop`/small-clause marker
+  either way — the same attributive-vs-predicative shape as the open `extra_tuple_adjective` route,
+  manifesting here as `extra_arg` instead of a whole tuple.
+- **4:39, 4:71, 4:135, 4:149, 5:13, 5:48, 5:76, 5:95**: each read individually; all either a real
+  role disagreement (both layers assert something, and disagree) or an LLM omission of a second
+  argument on a multi-argument predicate. None is checker silence.
+
+**The finding, again**: a per-position read keeps finding one real rule per pass, never the
+population the coarse-class count would predict, and the majority of any small sample is genuine
+disagreement or omission — `--fix` material, not checker material.
+
+### A third POS-keyed `--fix` class: `extra_arg_adjective`, from the 6:70 shape
+
+6:70's shape — an attributive adjective Layer 4 hangs `amod` inside an argument's own NP, which
+the LLM reads as a depictive secondary predicate (`xcomp`/`attr`) of the verb that argument
+belongs to — is the same misreading `extra_tuple_adjective` (rules Y-AF) already has a dedicated
+`--fix` question and prompt for, one level down: the adjective isn't promoted to its own `Pred`
+row here, just wrongly attached as an *argument* of one. Checked against the corpus before
+generalizing from one instance: **65 of the 107 `extra_arg xcomp`/`attr` violations cite an
+adjective as the argument** — a population the size of `extra_tuple_adjective`'s original 37, so
+this is worth the same treatment Phase 6 gave that class.
+
+`skel/skel.py` gained a third POS-keyed `--violation_subclass`/`_CLASS_PROMPTS` entry,
+`extra_arg_adjective`, keyed on the **argument's** POS rather than the predicate's (the other two
+POS splits key on the predicate itself): `extra_arg`/`role in (xcomp, attr)`/argument tagged
+adjective. Its system prompt is `extra_arg`'s own (`_CONV_ROLES`/`_CONV_PRODROP`/`_CONV_RELPRON`)
+with `_CONV_ADJECTIVE` fronted, reusing `_ask_extra_arg`/`_apply_extra_arg` unchanged — same
+mechanics (`keep`/`<role>`/`drop`), only the system prompt's convention selection differs. The
+`_fix_hint` fallback phrasing got the matching third entry. `_CLASS_ORDER` places it before the
+generic `extra_arg` so the more specific question is asked where it applies.
+
+**Unmeasured until a `--fix` round runs** — same status Y-AF's two hints shipped with. `pytest`
+243 passed (`test_every_ordered_class_has_a_prompt_and_vice_versa` pins `_CLASS_ORDER`/
+`_CLASS_PROMPTS` staying in sync); `skel --check` unaffected (0 hard, 1409 soft) since this only
+changes which `--fix` question a violation is asked, not the derivation.
+
 ## Phase 6 — `--fix` restructured: deterministic first, then one question per class (2026-08-12)
 
 `--fix` was rebuilt because it was the most expensive instrument in the project and the least

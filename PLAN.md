@@ -2,17 +2,41 @@
 
 ## Handoff (2026-08-13) — resume here
 
-**Everything is committed. Newest work: the first `--fix` round against Phase 6's restructured
-pass, user-run.**
+**Everything is committed. Newest work: rule AG (from re-reading Inferno 4-6's residue) plus a
+third POS-keyed `--fix` class, `extra_arg_adjective`, generalizing one of that read's shapes.**
 Checks at commit time: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
-verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**1452** soft,
+verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**1409** soft,
 `np --check` 0/0, `morph --check` 0/0, `pytest` **243** passed.
 
-**The round scored 2011 → 1452, −559 (−27.8%), five times Phase 5w's per-unit rate.** Both of
-Phase 6's predictions held: the per-class table shows the two classes given their own POS-keyed
-prompt (`extra_tuple_adverb`/`extra_tuple_adjective`) moved furthest, and partial credit kept
-work stage 3's whole-unit gate used to discard. See *What the Phase 6 `--fix` round did* below;
-full write-up in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
+**Rule AG scored 1452 → 1409, −43, no model call.** `derive_unit`'s conj-subject-propagation
+(step 3) inherited a coordination head's subject unconditionally, with no check that the
+inherited subject's Layer-2 person/number actually fits the predicate receiving it. Gated on
+`dep.subject_agreement` (extended with a new `_finite_head_of` helper so a periphrastic predicate
+checks its `aux`, not its own non-finite morph row): of 1370 conj-inherited-subject candidates,
+682 agree, 461 are undecidable (left untouched, same discipline as the `null_subject` gate), and
+**227 actively disagree** — those are no longer required. One cross-layer fix rode along
+(`fiacco`, inferno 6:54, was tagged an adjective; it's 1sg of *fiaccarsi*). Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *Rule AG*; the other 17 of Inferno 4-6's 19
+remaining positions were read individually and are genuine LLM disagreement/omission, not
+checker silence — recorded there with the reason for each.
+
+**`extra_arg_adjective`**: one of those 17 (6:70, "Alte terrà... le fronti") is the same
+attributive-vs-depictive-adjective misreading `extra_tuple_adjective` (rules Y-AF) already has a
+dedicated `--fix` question and prompt for, one level down — the adjective is wrongly attached as
+an argument of a predicate rather than promoted to a predicate of its own. Checked against the
+corpus before generalizing from one instance: **65 of 107** `extra_arg xcomp`/`attr` violations
+cite an adjective as the argument, a population the size of `extra_tuple_adjective`'s original
+37. `skel/skel.py` gained the matching `--fix` machinery — `_violation_subclass`/`_CLASS_PROMPTS`
+entry keyed on the *argument's* POS this time, `_fix_hint` phrasing, `_CLASS_ORDER` placement —
+reusing `extra_arg`'s own ask/apply functions with `_CONV_ADJECTIVE` fronted in its system prompt.
+Full write-up in [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md)'s *A third POS-keyed `--fix`
+class*. **Unmeasured until a `--fix` round runs** — `skel --check` is unaffected by this change
+(it only changes which question a violation is asked).
+
+**A `--fix` round against this state is queued, user-run next.** It carries `extra_arg_adjective`
+into a live pass for the first time; per *How to measure a future `--fix` round* below, read the
+subclass table for that class specifically against its 65-position population, not just the pass
+average.
 
 ### What Phase 6 did (2026-08-12)
 
@@ -60,6 +84,37 @@ a population of **0**.
 **What the next round should report**: calls *and* violations removed **per class**, against
 Phase 5w's 1290 / 123 / 0.095. Do not expect fewer calls — grouping by (unit × class) yields a
 similar count. Expect a higher per-call yield, and read the per-class table, not the average.
+
+### What rule AG did (2026-08-13)
+
+A per-position read of **all 19 remaining soft violations in Inferno 4-6** — the fourth read of
+this kind (after rule V's twelve, rules W/X's five, rules Y-AF's twenty-six). Full write-up in
+[`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
+
+- **1452 → 1409 soft, −43**, no model call. `missing_arg` 566 → **522**; `extra_arg` 661 → 662
+  (+1, a corner case where clearing one position's derived subject converted a matched row
+  elsewhere into a fresh mismatch — net still a large improvement).
+- **Rule AG** (`_apply_subj_authority`'s new branch): `derive_unit`'s conj-subject-propagation
+  inherited a coordination head's subject with no check that its Layer-2 person/number actually
+  fits the predicate receiving it. Gated on `dep.subject_agreement`, the same test the
+  `null_subject` gate uses, extended with a new `_finite_head_of` helper so a periphrastic
+  predicate ("**potrai** vedere") is checked against the token that carries person, not the
+  non-finite verb itself. Of 1370 conj-inherited-subject candidates, 682 agree, 461 are
+  undecidable (untouched), **227 actively disagree** and are no longer required.
+- **One cross-layer fix**: `fiacco` (inferno 6:54) was tagged an adjective, impossible next to the
+  reflexive clitic `mi`; it's 1sg present of *fiaccarsi*. This is what let rule AG's agreement
+  check see it as a finite verb at all.
+- **A gate that was wrong, kept on record**: an initial version dropped the inherited subject
+  unconditionally on disagreement, without checking whether the LLM's own reading already matched
+  it — that *raised* the count to 1586 (turning agreeing cases into fresh `extra_arg` reports) and
+  was rejected before landing, the same shape of near-miss Stage 1's `null_subject` gate warned
+  about.
+- **The other 17 read individually stay flagged for stated reasons** — real LLM omissions
+  (compound subjects/obliques with only one conjunct cited), real reading disagreements (a
+  causative construction read backwards, an attributive adjective read as a depictive predicate),
+  and two further silence shapes (an adverb-headed oblique with a nested `nmod`; a locative clitic
+  tagged `advmod`) seen only once each in this sample — not generalized without a larger read. See
+  [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the position-by-position record.
 
 ### What the Phase 6 `--fix` round did (2026-08-13, user-run)
 
@@ -537,12 +592,18 @@ answered the `membership` question (47 → 8). What is left:
 - **The `missing_arg obl` bucket.** Still the single largest sub-class after the two subject
   buckets, and never classified. A per-position read of a sample is the cheap first move.
 
-**A per-position read has now produced a rule three times running, and the residue classification
+**A per-position read has now produced a rule four times running, and the residue classification
 has mispredicted it every time.** Rules W and X were absent from the route list; rules Y-AF
 inverted it — the route ranked first was worth 8 and the route ranked last, generalized, was worth
-77, while the two biggest rules (AB, Z) described shapes no classification had named. The
+77, while the two biggest rules (AB, Z) described shapes no classification had named; rule AG
+(Inferno 4-6, −43) was also off the list — the `missing_arg obl` bucket above had been ranked as
+the cheap next move, and the rule that actually fired was a `subj`-side agreement gate. The
 classification tells you where the volume is; a per-position read tells you *which rule declined to
-fire*. Run the read on **Inferno 4-6** next, not another statistics pass.
+fire*. **Two shapes rule AG's write-up flagged but did not generalize** (only one instance each in
+the Inferno 4-6 sample) are candidates for the next read: an adverb-headed oblique with a nested
+`nmod` (*"dinanzi al cristianesmo"*) where Layer 4 attaches the adverb itself and the LLM cites
+only the nested noun, and a locative clitic (`v'`/`ci`) tagged `advmod` rather than `obl`. Run the
+read on **Inferno 7-9** next, not another statistics pass.
 
 Past those, the standing goal of 0 soft violations needs a *new instrument* against the two big
 reading-disagreement classes — and the candidate this project has identified there (an imported
@@ -551,7 +612,7 @@ verb-valency lexicon) is declined on neutrality grounds; see *Out of scope*.
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r and rules V through AF, and its soft residue is **1452**
+checker was refined through Phases 0-5r and rules V through AG, and its soft residue is **1409**
 (down from
 17438 at the
 first full-corpus measurement; Phase 5r's rule U and its hand round took it to 3465, Layer 4's
@@ -561,8 +622,9 @@ round moved it to 3270, Phase 5t's user-run `--fix` pass took it to 3136, rule V
 membership audit took it to 2623, Phase 5u's user-run `--fix` pass took it to 2531, and Phase 5w's
 user-run `--fix` pass on the prompt Phase 5v rewrote took it to 2408, rules W and X took it to
 2330, and rules Y-AF plus the Inferno 1-3 cross-layer corrections took it to 2084, Phase 6's
-deterministic `--fix` stage took it to 2011, and the first user-run `--fix` round against Phase
-6's restructured stage 2/3 driver took it to 1452) — every
+deterministic `--fix` stage took it to 2011, the first user-run `--fix` round against Phase
+6's restructured stage 2/3 driver took it to 1452, and rule AG plus the Inferno 4-6 cross-layer
+correction took it to 1409) — every
 route the
 Phase
 5 plan opened has a measured verdict
@@ -613,7 +675,7 @@ there.
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 1452 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 1409 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PLAN.md`](skel/PLAN.md)) is
@@ -853,8 +915,8 @@ discipline already used for normalization and quotes.
    spine that rejoins enjambed NPs and makes pronoun mentions enumerable.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W,
-   X and the Y-AF series, with `--fix` restructured in Phase 6 and its first round run
-   (`--check`: 0 hard / 1452 soft). Phase 5 closed with every route measured; see
+   X and the Y-AF series and AG, with `--fix` restructured in Phase 6 and its first round run
+   (`--check`: 0 hard / 1409 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

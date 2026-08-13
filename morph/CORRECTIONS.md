@@ -22,6 +22,15 @@ the same flagged lines; those are only summarized here for context — see
 [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md) for the Layer-3 side and the
 running soft-violation counts.
 
+## `fiacco` mistag correction (2026-08-13)
+
+Found during a Layer-5 per-position read of Inferno 4-6 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Rule AG*), not the NP-head route. Inferno
+6:54, "a la pioggia mi fiacco", had `fiacco` tagged the adjective *fiacco* ("weak") — impossible
+next to the reflexive clitic `mi`, which adjectives don't take. Retagged `verb`/`fiaccare`/
+1sg/present/indicative (*fiaccarsi*, "to wear oneself down": "in the rain I wear myself down").
+`morph --check` 0 hard/0 soft, unchanged.
+
 ## `che`/`ch'` mistag correction (2026-07-03)
 
 All 36 lines flagged `head 'che'/"ch'" is 'conjunction'` were reviewed by hand against their

@@ -524,11 +524,37 @@ def _inherited_subject(
     )
 
 
+def _finite_head_of(
+    pos: tuple[int, int], children_by_pos: "dict[tuple[int, int], list[DepRow]]",
+    morph_rows: dict[int, list[MorphRow]],
+) -> tuple[int, int]:
+    """The token that actually carries `pos`'s person/number: itself, or — for a non-finite
+    predicate like `vedere` in "là i **potrai** vedere" — its `aux`/`cop` child. Mirrors the
+    finiteness test `derive_unit`'s step 4 (pro-drop) already runs, so subject-agreement checks
+    on a periphrastic predicate look at the token Layer 2 actually marked person/tense on."""
+    own_morph = None
+    line_rows = morph_rows.get(pos[0])
+    if line_rows and 1 <= pos[1] <= len(line_rows):
+        own_morph = line_rows[pos[1] - 1]
+    if own_morph and own_morph.person:
+        return pos
+    for child in children_by_pos.get(pos, ()):
+        if child.deprel in _AUX_DEPRELS:
+            child_line_rows = morph_rows.get(child.line)
+            if child_line_rows and 1 <= child.token <= len(child_line_rows):
+                child_morph = child_line_rows[child.token - 1]
+                if child_morph and child_morph.person:
+                    return (child.line, child.token)
+    return pos
+
+
 def _apply_subj_authority(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow],
     given_by_pred: "dict[tuple[int, int], list[SkelRow]] | None" = None,
+    morph_rows: dict[int, list[MorphRow]] | None = None,
+    children_by_pos: "dict[tuple[int, int], list[DepRow]] | None" = None,
 ) -> None:
     """Mutate `g`/`d` in place: drop the subj arg where PLAN.md's authority model makes the slot
     LLM-authoritative (validated against a candidate set) rather than derive-authoritative (exact
@@ -556,6 +582,21 @@ def _apply_subj_authority(
         candidates = {(0, 0)} | reachable
         if g_subj in candidates:
             g.pop(g_subj, None)
+    elif (morph_rows is not None and children_by_pos is not None
+          and _inherited_subject(pos, dep_index_by_pos)
+          and _subj_arg(g) != d_subj
+          and subject_agreement(d_subj, _finite_head_of(pos, children_by_pos, morph_rows),
+                                morph_rows, children_by_pos)[0] == "disagree"):
+        # Rule AG: derive_unit's conj-subject-propagation (step 3) walks the conj chain
+        # unconditionally, with no agreement gate — so it can inherit a subject whose Layer-2
+        # person/number actively contradicts this predicate's own. "come tu vedi, a la pioggia
+        # mi fiacco" (inferno 6:54): `fiacco` (1sg) is attached `conj` to `chiamaste` (2pl, three
+        # lines up) with no subject of its own, and step 3 blindly inherits "Voi". Measured over
+        # the whole corpus: of 1370 conj-inherited-subject candidates, 682 agree and 461 are
+        # undecidable (left untouched, same as Stage 1's `null_subject` gate treats them) but
+        # **227 actively disagree** — an inherited subject in that set is not a candidate to
+        # require, so it is dropped rather than asserted.
+        d.pop(d_subj, None)
     elif given_by_pred is not None and _inherited_subject(pos, dep_index_by_pos):
         # Rule AC: an inherited subject is not an independent assertion about *this* predicate.
         # `derive_unit`'s step 3 copies the coordination head's subject onto a conjunct that has
@@ -971,8 +1012,13 @@ def _classify_divergence(
     morph_pos_by_position: dict[tuple[int, int], str] | None = None,
     case_by_position: dict[tuple[int, int], str] | None = None,
     morph_lemma_by_position: dict[tuple[int, int], str] | None = None,
+    morph_rows: dict[int, list[MorphRow]] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
+    children_by_pos: dict[tuple[int, int], list[DepRow]] = {}
+    for row in (dep_index_by_pos or {}).values():
+        if not (row.head_line == 0 and row.head_token == 0):
+            children_by_pos.setdefault((row.head_line, row.head_token), []).append(row)
     # Rules L and N: the preposition lemmas each position's `case` dep children name (empty set
     # = no explicit preposition, which is what rule L turns on).
     case_lemmas: dict[tuple[int, int], set[str]] = {}
@@ -1239,7 +1285,8 @@ def _classify_divergence(
         g = by_arg(given_by_pred.get(pos, []))
         d = by_arg(derived_by_pred.get(pos, []))
         if dep_index_by_pos is not None:
-            _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos, given_by_pred)
+            _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos, given_by_pred,
+                                  morph_rows, children_by_pos)
             derived_args = set(d)
             g = _collapse_coordination(g, pos, dep_index_by_pos)
             d = _collapse_coordination(d, pos, dep_index_by_pos)
@@ -1608,7 +1655,7 @@ def validate_unit(
         }
         violations.extend(_classify_divergence(
             rows_by_line, derived, dep_index(dep_rows), morph_pos_by_position, case_by_position,
-            morph_lemma_by_position,
+            morph_lemma_by_position, morph_rows,
         ))
 
     return violations

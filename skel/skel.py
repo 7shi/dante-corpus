@@ -329,6 +329,17 @@ _HINT_PHRASING = {
                    "check for one",
     "extra_arg": "the predicate '{word}' ({line}.{token})'s '{role}' argument may not belong — "
                 "recheck it",
+    # A third POS-keyed variant, on the argument's POS rather than the predicate's — rule AG's
+    # write-up (CORRECTIONS.md) found this shape at inferno 6:70 ("Alte terrà... le fronti"):
+    # Layer 4 attaches the adjective `amod` inside the object NP, the LLM reads it as a depictive
+    # secondary predicate (`xcomp`/`attr`) of the verb. Same misreading as `extra_tuple_adjective`,
+    # one level down — the adjective isn't promoted to its own Pred row, just wrongly attached as
+    # an argument of one. 65 of the corpus's 107 `extra_arg xcomp`/`attr` violations cite an
+    # adjective as the argument.
+    "extra_arg_adjective": "'{word}' ({line}.{token})'s argument at the '{role}' slot may be an "
+                           "ATTRIBUTIVE adjective, not a secondary predicate of it — an "
+                           "attributive adjective modifying a noun inside that argument's own "
+                           "phrase is not a separate predication",
     "role_mismatch": "the predicate '{word}' ({line}.{token})'s argument currently labeled "
                      "'{given_role}' may need a different role — recheck it",
 }
@@ -369,6 +380,9 @@ def _fix_hint(
                 kind = "extra_tuple_adverb"
             elif "adjective" in tag:
                 kind = "extra_tuple_adjective"
+        elif (kind == "extra_arg" and v.role in ("xcomp", "attr") and v.arg is not None
+              and "adjective" in pos_at(v.arg).lower()):
+            kind = "extra_arg_adjective"
         phrasing = _HINT_PHRASING.get(kind)
         if phrasing is None:
             continue
@@ -752,6 +766,9 @@ _CLASS_PROMPTS: dict[str, _ClassPrompt] = {
     "extra_arg": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_PRODROP}\n\n{_CONV_RELPRON}",
         ask=_ask_extra_arg, apply=_apply_extra_arg),
+    "extra_arg_adjective": _ClassPrompt(
+        system=f"{_ASK_HEADER}\n{_CONV_ADJECTIVE}\n\n{_CONV_ROLES}\n\n{_CONV_PRODROP}",
+        ask=_ask_extra_arg, apply=_apply_extra_arg),
     "missing_arg": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_PRODROP}\n\n{_CONV_RELPRON}",
         ask=_ask_missing_arg, apply=_apply_missing_arg),
@@ -791,6 +808,9 @@ def _violation_subclass(v: morph.Violation, ctx: _UnitContext) -> str:
             return "extra_tuple_adverb"
         if "adjective" in tag:
             return "extra_tuple_adjective"
+    if (kind == "extra_arg" and v.role in ("xcomp", "attr") and v.arg is not None
+            and "adjective" in ctx.pos_tag(v.arg).lower()):
+        return "extra_arg_adjective"
     return kind
 
 
@@ -1262,7 +1282,7 @@ def _is_improvement(
 _CLASS_ORDER = (
     "missing_tuple", "missing_tuple_nominal",
     "extra_tuple_adverb", "extra_tuple_adjective", "extra_tuple",
-    "role_mismatch", "extra_arg", "missing_arg",
+    "role_mismatch", "extra_arg_adjective", "extra_arg", "missing_arg",
 )
 
 
