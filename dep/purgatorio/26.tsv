@@ -1045,12 +1045,12 @@ line	token	word	deprel	head_line	head_token
 146	7	l'	det	146	8
 146	8	escalina	nmod	146	5
 147	1	sovenha	ccomp	145	3
-147	2	vos	nsubj	147	1
+147	2	vos	iobj	147	1
 147	3	a	case	147	4
 147	4	temps	obl	147	1
 147	5	de	case	147	7
 147	6	ma	det:poss	147	7
-147	7	dolor	nmod	147	4
+147	7	dolor	obl	147	1
 148	1	Poi	advmod	148	3
 148	2	s'	obj	148	3
 148	3	ascose	root	0	0

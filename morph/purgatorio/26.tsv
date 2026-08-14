@@ -538,7 +538,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 75	esperïenza	esperienza	noun	f.	sg.				
 75	imbarche	imbarcare	verb		sg.	3	present	subjunctive	
 76	La	lo	article	f.	sg.				
-76	gente	gente	noun	f.	sg.				
+76	gente	gente	noun	f.	sg.				AD_SENSUM
 76	che	che	pronoun		sg.				
 76	non	non	adverb						
 76	vien	venire	verb		sg.	3	present	indicative	apocope
@@ -993,64 +993,64 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 139	liberamente	liberamente	adverb						
 139	a	a	preposition						
 139	dire	dire	verb				infinitive		
-140	Tan	tan	adverb						Provençal
-140	m'	me	pronoun		sg.	1			elision
-140	abellis	abellir	verb		pl.	3	present	indicative	Provençal
-140	vostre	vostro	adjective	f.	pl.				Provençal
-140	cortes	cortès	adjective	f.	pl.				Provençal
-140	deman	deman	noun	f.	pl.				Provençal
-141	qu'	que	conjunction						elision
-141	ieu	ieu	pronoun		sg.	1			Provençal
-141	no	no	adverb						Provençal
-141	me	me	pronoun		sg.	1			reflexive
-141	puesc	poder	verb		sg.	1	present	indicative	Provençal
-141	ni	ni	conjunction						Provençal
-141	voill	voller	verb		sg.	1	present	indicative	Provençal
-141	a	a	preposition						Provençal
-141	vos	vos	pronoun		pl.	2			Provençal
-141	cobrire	cobrire	verb				infinitive		Provençal
-142	Ieu	ieu	pronoun		sg.	1			
-142	sui	esser	verb		sg.	1	present	indicative	
-142	Arnaut	Arnaut	proper noun	m.	sg.				
-142	que	que	pronoun		sg.				relative
-142	plor	plorar	verb		sg.	1	present	indicative	
-142	e	e	conjunction						
-142	vau	vaer	verb		sg.	1	present	indicative	
-142	cantan	cantar	verb		sg.				participle
-143	consiros	consiros	adjective	m.	sg.				
-143	vei	veire	verb		sg.	1	present	indicative	
-143	la	la	article	f.	sg.				
-143	passada	passar	adjective	f.	sg.				
-143	folor	folor	noun	f.	sg.				
-144	e	e	conjunction						
-144	vei	veire	verb		sg.	1	present	indicative	
-144	jausen	jauisir	verb		sg.				participle
-144	lo	lo	article	m.	sg.				
-144	joi	joi	noun	m.	sg.				
-144	qu'	que	pronoun		sg.				elision
-144	esper	esperar	verb		sg.	1	present	indicative	apocope
-144	denan	denan	adverb						
-145	Ara	ora	adverb						archaic
-145	vos	voi	pronoun		pl.	2			
-145	prec	precare	verb		sg.	1	present	indicative	apocope
-145	per	per	preposition						
-145	aquella	quello	adjective	f.	sg.				
-145	valor	valore	noun	f.	sg.				archaic
-146	que	che	pronoun		sg.				
-146	vos	voi	pronoun		pl.	2			
-146	guida	guidare	verb		sg.	3	present	indicative	
-146	al	a+il	preposition+article	m.	sg.				contraction
-146	som	sommo	noun	m.	sg.				apocope
-146	de	di	preposition						
-146	l'	lo	article	f.	sg.				elision
-146	escalina	escalina	noun	f.	sg.				
-147	sovenha	sovenire	verb		sg.	3	present	subjunctive	archaic
-147	vos	voi	pronoun		pl.	2			
-147	a	a	preposition						
-147	temps	tempo	noun	m.	sg.				archaic
-147	de	di	preposition						
-147	ma	mio	adjective	f.	sg.				
-147	dolor	dolore	noun	f.	sg.				archaic
+140	Tan	tan	adverb						Provençal, FOREIGN
+140	m'	me	pronoun		sg.	1			elision, FOREIGN
+140	abellis	abellir	verb		pl.	3	present	indicative	Provençal, FOREIGN
+140	vostre	vostro	adjective	f.	pl.				Provençal, FOREIGN
+140	cortes	cortès	adjective	f.	pl.				Provençal, FOREIGN
+140	deman	deman	noun	f.	pl.				Provençal, FOREIGN
+141	qu'	que	conjunction						elision, FOREIGN
+141	ieu	ieu	pronoun		sg.	1			Provençal, FOREIGN
+141	no	no	adverb						Provençal, FOREIGN
+141	me	me	pronoun		sg.	1			reflexive, FOREIGN
+141	puesc	poder	verb		sg.	1	present	indicative	Provençal, FOREIGN
+141	ni	ni	conjunction						Provençal, FOREIGN
+141	voill	voller	verb		sg.	1	present	indicative	Provençal, FOREIGN
+141	a	a	preposition						Provençal, FOREIGN
+141	vos	vos	pronoun		pl.	2			Provençal, FOREIGN
+141	cobrire	cobrire	verb				infinitive		Provençal, FOREIGN
+142	Ieu	ieu	pronoun		sg.	1			FOREIGN
+142	sui	esser	verb		sg.	1	present	indicative	FOREIGN
+142	Arnaut	Arnaut	proper noun	m.	sg.				FOREIGN
+142	que	que	pronoun		sg.				relative, FOREIGN
+142	plor	plorar	verb		sg.	1	present	indicative	FOREIGN
+142	e	e	conjunction						FOREIGN
+142	vau	vaer	verb		sg.	1	present	indicative	FOREIGN
+142	cantan	cantar	verb		sg.				participle, FOREIGN
+143	consiros	consiros	adjective	m.	sg.				FOREIGN
+143	vei	veire	verb		sg.	1	present	indicative	FOREIGN
+143	la	la	article	f.	sg.				FOREIGN
+143	passada	passar	adjective	f.	sg.				FOREIGN
+143	folor	folor	noun	f.	sg.				FOREIGN
+144	e	e	conjunction						FOREIGN
+144	vei	veire	verb		sg.	1	present	indicative	FOREIGN
+144	jausen	jauisir	verb		sg.				participle, FOREIGN
+144	lo	lo	article	m.	sg.				FOREIGN
+144	joi	joi	noun	m.	sg.				FOREIGN
+144	qu'	que	pronoun		sg.				elision, FOREIGN
+144	esper	esperar	verb		sg.	1	present	indicative	apocope, FOREIGN
+144	denan	denan	adverb						FOREIGN
+145	Ara	ora	adverb						archaic, FOREIGN
+145	vos	voi	pronoun		pl.	2			FOREIGN
+145	prec	precare	verb		sg.	1	present	indicative	apocope, FOREIGN
+145	per	per	preposition						FOREIGN
+145	aquella	quello	adjective	f.	sg.				FOREIGN
+145	valor	valore	noun	f.	sg.				archaic, FOREIGN
+146	que	che	pronoun		sg.				FOREIGN
+146	vos	voi	pronoun		pl.	2			FOREIGN
+146	guida	guidare	verb		sg.	3	present	indicative	FOREIGN
+146	al	a+il	preposition+article	m.	sg.				contraction, FOREIGN
+146	som	sommo	noun	m.	sg.				apocope, FOREIGN
+146	de	di	preposition						FOREIGN
+146	l'	lo	article	f.	sg.				elision, FOREIGN
+146	escalina	escalina	noun	f.	sg.				FOREIGN
+147	sovenha	sovenire	verb		sg.	3	present	subjunctive	archaic, FOREIGN
+147	vos	voi	pronoun		pl.	2			FOREIGN
+147	a	a	preposition						FOREIGN
+147	temps	tempo	noun	m.	sg.				archaic, FOREIGN
+147	de	di	preposition						FOREIGN
+147	ma	mio	adjective	f.	sg.				FOREIGN
+147	dolor	dolore	noun	f.	sg.				archaic, FOREIGN
 148	Poi	poi	adverb						
 148	s'	si	pronoun		sg.	3			elision
 148	ascose	ascondere	verb		sg.	3	remote past	indicative	archaic

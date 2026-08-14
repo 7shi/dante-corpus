@@ -471,11 +471,11 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 66	affibbia	affibbiare	verb		sg.	3	present	indicative	
 66	'l	il	article	m.	sg.				elision
 66	manto	manto	noun	m.	sg.				
-67	Raphèl	Raphèl	noun	m.	sg.				proper noun
-67	maì	mai	adverb						
-67	amècche	amico	adjective	f.	pl.				distortion
-67	zabì	sapere	verb		sg.	2	present	indicative	distortion
-67	almi	almo	adjective	m.	pl.				
+67	Raphèl	Raphèl	noun	m.	sg.				proper noun, FOREIGN
+67	maì	mai	adverb						FOREIGN
+67	amècche	amico	adjective	f.	pl.				distortion, FOREIGN
+67	zabì	sapere	verb		sg.	2	present	indicative	distortion, FOREIGN
+67	almi	almo	adjective	m.	pl.				FOREIGN
 68	cominciò	cominciare	verb		sg.	3	remote past	indicative	
 68	a	a	preposition						
 68	gridar	gridare	verb				infinitive		apocope

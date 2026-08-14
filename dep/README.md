@@ -10,7 +10,8 @@ text's own syntactic structure.
 **0 hard, 0 soft** violations (see *Check* below for the breakdown, and
 [dep/CORRECTIONS.md](CORRECTIONS.md) for the correction history — frozen-vocabulary adjustment,
 deterministic respelling cleanup, LLM `--fix` regeneration, the `RELCL_HEAD` substantivization
-flag, and one hand-corrected mis-attachment).
+flag, one hand-corrected mis-attachment, the subject/head agreement rule, and the six exclusions
+plus two `note` flags that closed its residue).
 
 ## What it does
 
@@ -109,21 +110,33 @@ call** (`validate_unit`):
     agreement is obligatory, so the two frozen layers cannot both be right: either the attachment
     is a mis-parse (a predicate nominal, a vocative, a dislocated topic, or the subject of a
     *different* clause) or one of the two Layer-2 rows carries the wrong feature. Which side is
-    wrong is not mechanically decidable, so the position is reported, never repaired. Three
-    exclusions, all cases where the two rows genuinely need not match: a non-finite head (it
-    asserts nothing), a relative/interrogative pronoun subject (`che`/`chi`/`cui`/`quale` take
-    their person from the antecedent), a coordinated subject (agreement is with the whole
-    coordination), a fused token whose verb part is non-finite (its `person` is the enclitic's),
-    and a 1st/2nd person **plural** head (a singular nominal may name one member of the group:
-    "e io con lui / volgemmo"). Opened 2026-08-07 at **173** positions (106 person, 67 number),
-    worked down to **18** in one round; see [CORRECTIONS.md](CORRECTIONS.md).
+    wrong is not mechanically decidable, so the position is reported, never repaired. **Twelve
+    exclusions**, all cases where the two rows genuinely need not match. Six were established when
+    the rule opened: a non-finite head (it asserts nothing), a relative/interrogative pronoun
+    subject (`che`/`chi`/`cui`/`quale` take their person from the antecedent), a coordinated
+    subject (agreement is with the whole coordination), a head carrying more than one subject, a
+    fused token whose verb part is non-finite (its `person` is the enclitic's), and a 1st/2nd
+    person **plural** head (a singular nominal may name one member of the group: "e io con lui /
+    volgemmo"). Six more closed the residue in 2026-08-14: a hand-verified `AD_SENSUM`/`FOREIGN`
+    flag on either Layer-2 row, a distributive subject (`ciascuna`) under a plural head,
+    coordination *inside* the subject phrase ("l'uno e l'altro coro"), a comitative `con`-phrase
+    on a plural head, a plural subject quantified into one measure ("cento miglia … sazia"), an
+    `attr` predicate nominal the copula agrees with instead ("La prova … son l'opere"), and an
+    impersonal `si` with a postposed plural subject ("non si convenia più dolci salmi"). Each of
+    the six was measured corpus-wide before it was written and touches **no** pair the rule calls
+    "agree", so Layer 5's Tier-B repairs keep every position they had. Opened 2026-08-07 at
+    **173** positions (106 person, 67 number), worked to **18** in one round and to **0** in a
+    second; see [CORRECTIONS.md](CORRECTIONS.md).
 
-**Measured over the full 100-canto build** (`--check`): **0 hard, 18 soft** — every class at 0
-except the agreement rule's verified-and-left-alone residue: *constructio ad sensum* (a collective
-singular with a plural verb), plural/measure subjects with a singular verb, distributive
-`ciascuna`, a copula agreeing with its plural predicate nominal, one anacoluthon of Dante's own,
-and four lines of non-Italian text (Provençal, Latin, Nimrod's gibberish). All 18 are enumerated in
-[CORRECTIONS.md](CORRECTIONS.md). See
+**Measured over the full 100-canto build** (`--check`): **0 hard, 0 soft** — every class at 0,
+including the agreement rule, whose 18-position residue was closed on 2026-08-14: one real
+mis-attachment corrected (purgatorio 26:147, Occitan `sovenha vos`, where `vos` is the experiencer
+and not the subject), ten positions taken by the six new exclusions above, and seven positions
+closed by `AD_SENSUM`/`FOREIGN` flags on **70** Layer-2 rows — the two classes (notional agreement
+with a collective, and non-Italian text) no structural rule can state without importing a lexicon
+or a language identifier, so they were read against their terzine and flagged by hand, exactly as
+`NO_NP`/`CONT_NEXT` were in Layer 3. `FOREIGN` marks every token of a non-Italian passage, not
+only the tokens a violation happened to name: it is a property of the token, not of the check. See
 [CORRECTIONS.md](CORRECTIONS.md) for the full path from the initial pilot measurement (636 soft)
 down to this: the `attr` vocabulary freeze, `--fix-labels`' deterministic respelling cleanup, the
 LLM `--fix` regeneration pass, the `RELCL_HEAD` substantivization flag, and one hand-corrected

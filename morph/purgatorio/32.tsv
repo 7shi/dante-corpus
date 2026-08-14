@@ -428,7 +428,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	inno	inno	noun	m.	sg.				
 62	che	che	pronoun		sg.				
 62	quella	quello	adjective	f.	sg.				
-62	gente	gente	noun	f.	sg.				
+62	gente	gente	noun	f.	sg.				AD_SENSUM
 62	allor	allora	adverb						apocope
 62	cantaro	cantare	verb		pl.	3	remote past	indicative	archaic
 63	né	né	conjunction						

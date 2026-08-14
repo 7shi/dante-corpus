@@ -2621,3 +2621,23 @@ such a cluster encodes.
 
 `missing_arg_adverb` stands at 82 unchanged, as it must: the route is prompt-side and moves only
 when a `--fix` round is run. That round is the user's, and it is now worth running.
+
+## Layer 4's agreement residue closes; Layer 5 rises 1091 → 1094 (2026-08-14)
+
+`dep --check` went **18 soft → 0** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)): one real
+Layer-4 re-attachment, six measured exclusions added to `dep.subject_agreement`, and two
+hand-verified Layer-2 `note` flags. Layer 5 was measured before and after, and the three new
+violations are individually attributable — no unit regressed anywhere else:
+
+| position | class | why |
+|---|---|---|
+| inferno 6:87 | `missing_arg subj (86,2)` | **Rule AG** drops a `conj`-inherited subject only on `subject_agreement(...) == "disagree"`. *diverse colpe … grava* is now `AD_SENSUM`-exempt, so the verdict there is *undecidable* and AG no longer fires. AG had been leaning on a disagreement the text itself licenses. |
+| purgatorio 26:147 ×2 | `missing_arg obl:a`, `missing_arg obl:di` | The Occitan `sovenha vos a temps de ma dolor` was re-parsed: `vos` is the experiencer (`iobj`), and `de ma dolor` is an oblique of `sovenha` rather than a modifier of `temps`. The derivation now reads two obliques the LLM's own reading of the Occitan does not list. |
+
+This is the same trade `dep/CORRECTIONS.md` records for the multiple-`obj` and agreement rounds:
+`derive_unit` reads Layer 4, so making Layer 4 more correct can turn a spurious agreement with the
+LLM into a real disagreement. The direction of the count is not the measure; the correctness of
+the parse is.
+
+None of the six new exclusions touches a pair the rule calls `"agree"` — that was the gate they
+were measured against — so `_find_repairs`' Tier-B null-subject repair keeps every position it had.

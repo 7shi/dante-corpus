@@ -536,3 +536,29 @@ a build round, not an edit. Until then the checker's existing workaround stands 
 accepts the word forms `che`/`ch'`/`cui`/`qual`/`quale`/`chi` regardless of the frozen POS tag).
 The 3 outliers were not Layer-2 defects at all and were fixed in Layer 4 instead; see
 [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+## Two agreement flags for Layer 4: `AD_SENSUM` and `FOREIGN` (2026-08-14)
+
+Layer 4's subject/head agreement rule closed its last 18 soft violations (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). Ten were taken by structural exclusions and one
+by a Layer-4 re-attachment; the remaining seven are positions where **no Layer-2 row is wrong** and
+no rule can state the exemption without importing something the corpus does not admit — a
+collective-noun lexicon, or a language identifier. They take the `NO_NP`/`CONT_NEXT` treatment
+instead: a machine-readable flag in the `note` column, comma-separated alongside any existing note,
+each row read against its terzina first.
+
+- **`AD_SENSUM`** — 4 rows, where agreement is notional rather than grammatical: `seme`
+  (inferno 3:115, *il mal seme d'Adamo gittansi*), `gente` (purgatorio 26:76 and 32:62, both a
+  collective singular under a plural verb), and the converse `colpe` (inferno 6:86, *diverse colpe
+  … grava*, a plural aggregate under a singular verb). The flag is on the row, not the word: the
+  other `gente` rows in those cantos are untouched, and a test pins that the same row without the
+  flag is still flagged.
+- **`FOREIGN`** — 66 rows: every token of Arnaut's Occitan (purgatorio 26:140-147), the Latin
+  incipit *‘Sperent in te’* (paradiso 25:98, tokens 1-3) and Nimrod's line (inferno 31:67). Layer 2
+  tags these as best it can — several already carried the free-text note `Provençal` or
+  `distortion` — but those notes are prose, not a flag, and stop at line 141. `FOREIGN` states the
+  fact uniformly and machine-readably, for the whole passage rather than the tokens one check
+  happened to name.
+
+`morph --check` stays **0 hard, 0 soft**; the `morph` content hash moves for the six cantos
+touched (inferno 3, 6, 31; purgatorio 26, 32; paradiso 25) and for nothing else.

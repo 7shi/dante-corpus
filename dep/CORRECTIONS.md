@@ -984,3 +984,81 @@ The `perché` correction **raised** Layer 5's count by two (an `extra_tuple` and
 inferno 30:59): the old `ccomp` was licensing an LLM reading that opened a predicate on an adverb,
 which the corpus's own rule forbids. The two new violations are correct flags of a real LLM error
 the mistag had been masking — the same trade this file records at inferno 3:13 and 3:76.
+
+## The agreement rule's last 18 positions, closed (2026-08-14)
+
+The subject/head agreement rule had stood at **18 soft violations** since it opened
+(*The subject/head agreement rule*, above). Each was read against its terzina then and left alone
+as "a property of the text, not of the parse" — but that verdict lived only as prose here, so the
+count still carried a residue nothing in the code explained. All 18 were re-read; the result is
+**0 hard, 0 soft** for `dep --check`, reached three different ways.
+
+### One real mis-attachment (purgatorio 26:147)
+
+*sovenha vos a temps de ma dolor!* — Arnaut's Occitan. `sovenir` is impersonal here: `vos` is the
+experiencer and `de ma dolor` the complement, so the clause has no nominal subject at all. Two
+rows changed: `vos` `nsubj` → `iobj`, and `dolor` `nmod` → `obl` on `sovenha` (it was hanging off
+`temps`, making *a temps de ma dolor* one phrase, which it is not). This is the one position where
+the parse, not the text, was wrong, and it closes on its own merits.
+
+### Six exclusions, each measured corpus-wide before it was written (10 positions)
+
+The discipline is the one the rule's first round set: an exclusion must be defensible corpus-wide,
+not fitted to a position. Every candidate was run over all 6 000 `nsubj` edges first, and the
+counts below are `disagree → undecidable` / `agree → undecidable`. **The second number is 0 for
+all six**, which is what makes them safe for Layer 5: `skel._find_repairs` repairs only on
+`"agree"`, so no repair anywhere in the corpus was taken away.
+
+| exclusion | what it recognizes | positions | agree touched |
+|---|---|---|---|
+| distributive subject | `ciascuno`/`ognuno` under a plural head, resuming it one member at a time — *vanno a vicenda **ciascuna** al giudizio* | inferno 5:14, paradiso 1:113 | 0 |
+| coordination inside the subject phrase | a `cc` child alongside an `nmod`/`conj`/`appos` child — *e l'uno e l'altro **coro*** is two choirs on one noun | paradiso 14:62 | 0 |
+| comitative phrase on a plural head | a `con`-phrase on the head — *necesse con contingente … **fenno***. The 3rd-person case of the existing 1/2-plural exclusion | paradiso 13:98 | 0 |
+| quantified measure subject | a plural subject with a `nummod` child or a `molto` determiner, under a singular head — *cento miglia … **sazia***, *non **è** molt' anni* | inferno 19:19, 21:114, purgatorio 14:18 | 0 |
+| copula agreeing with its predicate nominal | an `attr` child agreeing with the head while the subject does not — *La prova … **son** l'opere seguite* | purgatorio 10:112, paradiso 24:100 | 0 |
+| impersonal `si` with a postposed subject | an `expl:impers`, or an `expl` Layer 2 notes `impersonal`, with a plural subject after it — *non si **convenia** più dolci salmi* | inferno 31:69 | 0 |
+
+Two candidates were **narrowed** by the measurement rather than accepted as first drafted: the
+`attr` rule matched 5 agreeing pairs (`dir`, `discriver`, `esser`, `peccar` — infinitive subjects
+with no `number` at all) until it was gated on both numbers being present, and the impersonal-`si`
+rule matched **41** agreeing pairs until it was gated on the plural-subject/singular-head shape.
+Without those gates each would have silently cost Layer 5 real repairs. This is the whole reason
+the population is measured before the rule is written.
+
+### Two `note` flags for what no rule can state (7 positions, 70 rows)
+
+The rest are the two classes whose criterion is a lexicon or a language identifier, both of which
+PLAN.md's *Neutrality audit* keeps out of the corpus. They take the `NO_NP`/`CONT_NEXT` treatment
+instead — a machine-readable flag in the Layer-2 `note`, one hand-verified row at a time (see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)):
+
+- **`AD_SENSUM`** (4 rows) — agreement is notional rather than grammatical, in either direction:
+  the collective singulars *il mal seme d'Adamo **gittansi*** (inferno 3:115), *La gente … **si
+  parton*** (purgatorio 26:76), *quella gente allor **cantaro*** (purgatorio 32:62), and the
+  converse aggregate *diverse colpe … **grava*** (inferno 6:86).
+- **`FOREIGN`** (66 rows) — the token is not Italian, so no Italian agreement rule applies:
+  Arnaut's Occitan (purgatorio 26:140-147, all 58 tokens), the Latin incipit *‘Sperent in te’*
+  (paradiso 25:98.1-3) and Nimrod's *Raphèl maì amècche zabì almi* (inferno 31:67). The flag marks
+  every token of the passage, not only the two a violation named: foreignness is a property of the
+  token, and half-flagging a line would be the arbitrary thing to explain later.
+
+Three of the four positions the original round listed as "non-Italian text" close this way; the
+fourth was purgatorio 26:147, corrected above.
+
+The two positions the round's own list called irreducible — the anacoluthon *quel ch'io veggio …
+non mi **sembian** persone* (purgatorio 10:112) and the copular attraction at paradiso 24:100 —
+turned out to be the same construction and needed no flag: both are the `attr` exclusion.
+
+**Layer 5's soft count rose 1091 → 1094 (+3)**, and every one is accounted for:
+
+- `inferno 6:87 missing_arg subj (86,2)` — rule AG (`skel`, gated on this rule's `"disagree"`) no
+  longer drops the `conj`-inherited `colpe` subject there, because `colpe`/`grava` is now
+  `AD_SENSUM`-exempt and therefore *undecidable*. The honest reading: AG was leaning on a
+  disagreement the text licenses.
+- `purgatorio 26:147 missing_arg obl:a` and `obl:di` — the two obliques the re-attachment above
+  gives `sovenha`, which the LLM's own reading of the Occitan does not list.
+
+`dep --check` **0 hard, 0 soft**; `morph --check` 0/0, `np --check` 0/0, `case --check` 0 hard,
+`skel --check` 0 hard / 1094 soft, `pytest` **265** passed (eight new tests, one per exclusion
+plus a flagged/unflagged pair proving `AD_SENSUM` is a per-row exemption and not a rule about the
+word `gente`).

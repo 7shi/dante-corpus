@@ -77,12 +77,17 @@ DEPRELS = frozenset({
 })
 
 
+def _note_flags(note: str) -> set[str]:
+    """The machine-readable flags in a Layer-2 `note` cell (comma-separated, alongside free-text
+    notes like `apocope`) — the convention `np.py`'s `NO_NP`/`CONT_NEXT` established."""
+    return {f.strip() for f in note.split(",")}
+
+
 def _is_nominal(pos: str, note: str = "") -> bool:
     p = pos.lower()
     if "noun" in p or "pronoun" in p:
         return True
-    flags = {f.strip() for f in note.split(",")}
-    return "RELCL_HEAD" in flags
+    return "RELCL_HEAD" in _note_flags(note)
 
 
 # Subject relations the agreement check applies to (`csubj` is excluded: a clausal subject has no
@@ -93,6 +98,25 @@ _NSUBJ_DEPRELS = frozenset({"nsubj", "nsubj:pass"})
 # Layer-2 row (which tags them 3rd by default), so their agreement with a finite head is not
 # decidable from the two rows alone — see the agreement check in `validate_unit`.
 _ANTECEDENT_PERSON_LEMMAS = frozenset({"che", "chi", "cui", "quale"})
+
+# Distributive pronouns: they resume a plural subject one member at a time, so a singular one
+# under a plural verb is the construction working, not a disagreement — "vanno a vicenda
+# ciascuna al giudizio" (inferno 5:14). A closed function-word list, like the set above.
+_DISTRIBUTIVE_LEMMAS = frozenset({"ciascuno", "ognuno", "catuno"})
+
+# Quantity determiners that make a plural noun a single measure — "non è molt' anni"
+# (inferno 19:19). Numerals are recognized structurally instead, by their `nummod` edge.
+_QUANTITY_LEMMAS = frozenset({"molto"})
+
+# Layer-2 `note` flags this layer reads, hand-verified per row (see dep/CORRECTIONS.md and
+# morph/CORRECTIONS.md), following `np.py`'s `NO_NP`/`CONT_NEXT` convention:
+#   AD_SENSUM — agreement is notional rather than grammatical at this token, in either direction
+#               (a collective singular under a plural verb, a plural aggregate under a singular
+#               one). Stating it as a rule would need a collective-noun lexicon, which PLAN.md's
+#               *Neutrality audit* rules out, so each row is read and flagged individually.
+#   FOREIGN   — the token is not Italian (Arnaut's Occitan, a Latin quotation, Nimrod's
+#               gibberish), so no Italian agreement rule applies to it.
+_AGREEMENT_EXEMPT_FLAGS = frozenset({"AD_SENSUM", "FOREIGN"})
 
 
 # --- DepRow --------------------------------------------------------------------------
@@ -384,6 +408,19 @@ def _is_fused_non_finite(row: MorphRow) -> bool:
     return "+" in row.pos and not row.tense and not row.mood
 
 
+def _case_lemma(
+    row: DepRow, children: dict[tuple[int, int], list[DepRow]],
+    morph_rows: dict[int, list[MorphRow]],
+) -> str:
+    """The lemma of the preposition introducing an oblique/nominal token — its `case` child."""
+    for child in children.get((row.line, row.token), ()):
+        if child.deprel == "case":
+            child_morph = _morph_at(morph_rows, child.line, child.token)
+            if child_morph is not None:
+                return child_morph.lemma
+    return ""
+
+
 def subject_agreement(
     subj: tuple[int, int], head: tuple[int, int],
     morph_rows: dict[int, list[MorphRow]] | None,
@@ -392,7 +429,7 @@ def subject_agreement(
     """Whether Layer 2 says a subject token agrees with a (finite) predicate token.
 
     Returns `("agree", "")`, `("disagree", <feature>)`, or `("undecidable", <reason>)`. The
-    exclusions that yield "undecidable" are the six enumerated in
+    exclusions that yield "undecidable" are the twelve enumerated in
     `_subject_agreement_violations`, which is the check this function was extracted from — it is
     the *only* implementation of the test, so a caller asking the positive question (does this
     pair agree?) and the checker asking the negative one cannot drift apart.
@@ -419,6 +456,45 @@ def subject_agreement(
         return ("undecidable", "coordinated subject")
     if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
         return ("undecidable", "head carries more than one subject")
+    if _AGREEMENT_EXEMPT_FLAGS & (_note_flags(subj_morph.note) | _note_flags(head_morph.note)):
+        return ("undecidable", "hand-verified Layer-2 exemption flag")
+
+    subj_children = children.get(subj, ())
+    head_children = children.get(head, ())
+    sg_subj_pl_head = subj_morph.number == "sg." and head_morph.number == "pl."
+    pl_subj_sg_head = subj_morph.number == "pl." and head_morph.number == "sg."
+
+    if subj_morph.lemma in _DISTRIBUTIVE_LEMMAS and head_morph.number == "pl.":
+        return ("undecidable", "distributive subject resuming a plural")
+    if sg_subj_pl_head and any(c.deprel == "cc" for c in subj_children) and any(
+            c.deprel in ("nmod", "conj", "appos") for c in subj_children):
+        return ("undecidable", "coordination inside the subject phrase")
+    if sg_subj_pl_head and any(
+            c.deprel in ("obl", "nmod") and _case_lemma(c, children, morph_rows) == "con"
+            for c in head_children):
+        return ("undecidable", "comitative phrase on a plural head")
+    if pl_subj_sg_head and (
+            any(c.deprel == "nummod" for c in subj_children)
+            or any(c.deprel in ("det", "amod")
+                   and (m := _morph_at(morph_rows, c.line, c.token)) is not None
+                   and m.lemma in _QUANTITY_LEMMAS
+                   for c in subj_children)):
+        return ("undecidable", "quantified subject read as one measure")
+    if (subj_morph.number and head_morph.number
+            and subj_morph.number != head_morph.number
+            and any(c.deprel == "attr"
+                    and (m := _morph_at(morph_rows, c.line, c.token)) is not None
+                    and m.number == head_morph.number
+                    for c in head_children)):
+        return ("undecidable", "copula agreeing with its predicate nominal")
+    if pl_subj_sg_head and any(
+            c.deprel == "expl:impers"
+            or (c.deprel == "expl"
+                and (m := _morph_at(morph_rows, c.line, c.token)) is not None
+                and "impersonal" in _note_flags(m.note))
+            for c in head_children):
+        return ("undecidable", "impersonal `si` with a postposed notional subject")
+
     # A nominal with no `person` of its own is 3rd person by default.
     subj_person = subj_morph.person or "3"
     if subj_person != head_morph.person:
@@ -440,7 +516,10 @@ def _subject_agreement_violations(
     feature (Dante's `quei`/`altri` are singular despite the plural-looking ending). Which side
     is wrong is not mechanically decidable, so this reports the position rather than repairing it.
 
-    Six exclusions, all cases where the two rows genuinely do not have to match:
+    Twelve exclusions, all cases where the two rows genuinely do not have to match. The first six
+    were established when the rule opened (2026-08-07); the rest closed its 18-position residue
+    (2026-08-14), each measured corpus-wide before it was written — none of them touches a pair
+    the rule currently calls "agree", so `skel`'s Tier-B repairs keep every position they had.
 
     - the head is not a finite verb — no Layer-2 `person`, or not a verb at all (the corpus makes
       the *predicate* the head of a copular clause, so a subject can hang off a noun, an adjective
@@ -458,7 +537,23 @@ def _subject_agreement_violations(
     - the head is 1st or 2nd person **plural**, where a singular or 3rd-person nominal regularly
       names one member of the group the verb agrees with — comitative "e io con lui / **volgemmo**
       i passi", inclusive "e amendue / **mostravam**", "uno innanzi altro **andavamo**". Only the
-      plural allows this, so a singular head stays in scope.
+      plural allows this, so a singular head stays in scope;
+    - either row carries a hand-verified `_AGREEMENT_EXEMPT_FLAGS` flag in its Layer-2 `note`
+      (`AD_SENSUM`, `FOREIGN`) — the two classes no structural rule can state without importing a
+      lexicon or a language identifier;
+    - the subject is a **distributive** pronoun (`_DISTRIBUTIVE_LEMMAS`) under a plural head, which
+      resumes the plural one member at a time: "vanno a vicenda **ciascuna** al giudizio";
+    - the subject phrase **coordinates internally** — a `cc` child alongside an `nmod`/`conj`/
+      `appos` child — under a plural head: "e l'uno e l'altro **coro**" is two choirs on one noun;
+    - the plural head carries a **comitative** `con`-phrase and the subject is singular: "necesse
+      con contingente … **fenno**". The third-person case of the 1/2-plural exclusion above;
+    - the plural subject is **quantified** into a single measure — a `nummod` child, or a
+      `_QUANTITY_LEMMAS` determiner — under a singular head: "cento miglia di corso nol **sazia**",
+      "mille dugento con sessanta sei / anni **compié**", "non **è** molt' anni";
+    - the head carries an `attr` **predicate nominal** agreeing with it while the subject does not,
+      the attraction of a copula to its complement: "La prova … **son** l'opere seguite";
+    - the head carries an **impersonal `si`** (`expl:impers`, or an `expl` Layer 2 notes as
+      `impersonal`) with a plural subject postposed after it: "non si **convenia** più dolci salmi".
     """
     if morph_rows is None:
         return []

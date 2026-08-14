@@ -2,8 +2,8 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 1091 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement).
-- **Other Layers**: `dep --check` 0 hard / 18 soft (verified standing residue), `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 257 passed.
+- **Current State**: `make -C skel check` reports **0 hard, 1094 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). **The in-flight `--fix` round was launched against 1091**; the +3 came from Layer 4 afterwards (below), so measure that round against **1091**, not against this number.
+- **Other Layers**: `dep --check` **0 hard / 0 soft** — the subject-agreement rule's 18-position residue was closed 2026-08-14, which is what moved Layer 5 **1091 → 1094 (+3)**: rule AG at inferno 6:87 no longer fires on a disagreement now flagged `AD_SENSUM`, and the purgatorio 26:147 Occitan re-parse gives `sovenha` two obliques the LLM does not list. See [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and [`CORRECTIONS.md`](CORRECTIONS.md). `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 265 passed.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Two user-run rounds so far: **2011 → 1452 (−27.8%)**, then **1409 → 1247 (−11.5%)**.
 - **Latest Work**:

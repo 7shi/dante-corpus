@@ -808,7 +808,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 115	similemente	similemente	adverb						
 115	il	il	article	m.	sg.				
 115	mal	male	adjective	m.	sg.				apocope
-115	seme	seme	noun	m.	sg.				
+115	seme	seme	noun	m.	sg.				AD_SENSUM
 115	d'	di	preposition						elision
 115	Adamo	Adamo	noun	m.	sg.				
 116	gittansi	gettare+si	verb		pl.	3	present	indicative	contraction

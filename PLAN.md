@@ -16,10 +16,21 @@
 > 4. **0 regressed / 0 newly flagged** is the standing bar; report per-unit yield against the two
 >    previous rounds (0.66, then 0.193).
 
-**Layer 5 is operating under Phase 6 with 0 hard / 1091 soft violations.**
-Checks: `dep --check` 0 hard/**18** soft (the subject-agreement rule's
-verified-and-left-alone residue), `case --check` 0 hard, `skel --check` 0 hard/**1091** soft,
-`np --check` 0/0, `morph --check` 0/0, `pytest` **257** passed.
+**Layer 5 is operating under Phase 6 with 0 hard / 1094 soft violations.**
+Checks: `dep --check` **0 hard / 0 soft** (the subject-agreement rule's 18-position residue closed
+2026-08-14), `case --check` 0 hard, `skel --check` 0 hard/**1094** soft,
+`np --check` 0/0, `morph --check` 0/0, `pytest` **265** passed.
+
+**Layer 4's agreement residue is closed (2026-08-14).** All 18 were re-read: one was a real
+mis-attachment (purgatorio 26:147, Occitan `sovenha vos`), ten were taken by six new exclusions in
+`dep.subject_agreement` — each measured corpus-wide first, and none of them touching a pair the
+rule calls `"agree"`, so Layer 5's Tier-B repairs are untouched — and seven by hand-verified
+`AD_SENSUM`/`FOREIGN` flags in the Layer-2 `note` column, the `NO_NP`/`CONT_NEXT` mechanism. Layer
+5 rose **1091 → 1094 (+3)**, all three individually attributable (rule AG at inferno 6:87, and the
+two obliques the purgatorio 26:147 re-parse gives `sovenha`) — the same honest trade earlier
+Layer-4 rounds recorded. **The in-flight `--fix` round's baseline is still 1091**: the +3 landed
+after it was launched, so measure that round against 1091 and count these three separately. See
+[`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Current State & Architecture Summary
 
@@ -79,8 +90,8 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
 - **Layer 4 — Dependency / grammatical role**: implemented and complete; see
   [`dep/README.md`](dep/README.md). Build driver `dep/dep.py`, served via `Canto.dep()` and
   `dante-corpus text dep` (with `text np` gaining a derived `role=` per noun phrase). Artifacts
-  built for all 100 cantos; `--check` reports **0 hard / 18 soft** violations, the
-  subject-agreement rule's verified-and-left-alone residue — see
+  built for all 100 cantos; `--check` reports **0 hard / 0 soft** violations — every class at 0,
+  including the subject-agreement rule, whose 18-position residue was closed 2026-08-14 — see
   [`dep/README.md`](dep/README.md)'s *Check* section and
   [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) for the full correction history.
 - **Layer 5 — skeleton**: implemented, all 100 cantos built, checker refined through Phases 0-5r

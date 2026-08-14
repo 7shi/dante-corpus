@@ -623,7 +623,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 85	più	più	adverb						
 85	nere	nero	adjective	f.	pl.				
 86	diverse	diverso	adjective	f.	pl.				
-86	colpe	colpa	noun	f.	pl.				
+86	colpe	colpa	noun	f.	pl.				AD_SENSUM
 86	giù	giù	adverb						
 86	li	lo	pronoun	m.	pl.	3			
 86	grava	gravare	verb		sg.	3	present	indicative	

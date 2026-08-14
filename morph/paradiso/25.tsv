@@ -701,9 +701,9 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 97	d'	di	preposition						elision
 97	este	questo	adjective	f.	pl.				archaic
 97	parole	parola	noun	f.	pl.				
-98	Sperent	sperare	verb		pl.	3	present	indicative	archaic
-98	in	in	preposition						
-98	te	tu	pronoun		sg.	2			
+98	Sperent	sperare	verb		pl.	3	present	indicative	archaic, FOREIGN
+98	in	in	preposition						FOREIGN
+98	te	tu	pronoun		sg.	2			FOREIGN
 98	di	di	preposition						
 98	sopr'	sopra	adverb						apocope
 98	a	a	preposition						

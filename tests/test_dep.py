@@ -507,3 +507,187 @@ def test_validate_unit_skips_non_finite_head():
         ]
     }
     assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+# --- the exclusions that closed the rule's 18-position residue (2026-08-14) ------------
+
+
+def test_validate_unit_skips_flagged_ad_sensum_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["la gente si parton"]
+    rows = [
+        dep.DepRow(1, 1, "la", "det", 1, 2),
+        dep.DepRow(1, 2, "gente", "nsubj", 1, 4),
+        dep.DepRow(1, 3, "si", "expl", 1, 4),
+        dep.DepRow(1, 4, "parton", "root", 0, 0),
+    ]
+
+    def morph(note: str) -> dict:
+        return {
+            1: [
+                MorphRow(word="la", lemma="lo", pos="article", number="sg."),
+                MorphRow(word="gente", lemma="gente", pos="noun", number="sg.", note=note),
+                MorphRow(word="si", lemma="si", pos="pronoun", number="pl."),
+                MorphRow(word="parton", lemma="partire", pos="verb", number="pl.", person="3",
+                         tense="present", mood="indicative"),
+            ]
+        }
+
+    # The flag is a hand-verified per-row exemption, not a blanket rule for the word.
+    assert _agreement(nos, texts, rows, morph("AD_SENSUM")) == []
+    assert len(_agreement(nos, texts, rows, morph(""))) == 1
+
+
+def test_validate_unit_skips_foreign_flagged_token():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["Raphel zabi"]
+    rows = [
+        dep.DepRow(1, 1, "Raphel", "nsubj", 1, 2),
+        dep.DepRow(1, 2, "zabi", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="Raphel", lemma="Raphel", pos="noun", number="sg.",
+                     note="proper noun, FOREIGN"),
+            MorphRow(word="zabi", lemma="sapere", pos="verb", number="sg.", person="2",
+                     tense="present", mood="indicative", note="distortion, FOREIGN"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_distributive_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["vanno ciascuna"]
+    rows = [
+        dep.DepRow(1, 1, "vanno", "root", 0, 0),
+        dep.DepRow(1, 2, "ciascuna", "nsubj", 1, 1),  # resumes the plural one member at a time
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="vanno", lemma="andare", pos="verb", number="pl.", person="3",
+                     tense="present", mood="indicative"),
+            MorphRow(word="ciascuna", lemma="ciascuno", pos="pronoun", number="sg."),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_phrase_internal_coordination():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["uno e altro coro parver"]
+    rows = [
+        dep.DepRow(1, 1, "uno", "nmod", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 4),
+        dep.DepRow(1, 3, "altro", "nmod", 1, 4),
+        dep.DepRow(1, 4, "coro", "nsubj", 1, 5),  # one noun, two coordinated choirs
+        dep.DepRow(1, 5, "parver", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="uno", lemma="uno", pos="numeral", number="sg."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="altro", lemma="altro", pos="adjective", number="sg."),
+            MorphRow(word="coro", lemma="coro", pos="noun", number="sg."),
+            MorphRow(word="parver", lemma="parere", pos="verb", number="pl.", person="3",
+                     tense="remote past", mood="indicative"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_comitative_plural_head():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["necesse con contingente fenno"]
+    rows = [
+        dep.DepRow(1, 1, "necesse", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "con", "case", 1, 3),
+        dep.DepRow(1, 3, "contingente", "obl", 1, 4),
+        dep.DepRow(1, 4, "fenno", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="necesse", lemma="necessario", pos="noun", number="sg."),
+            MorphRow(word="con", lemma="con", pos="preposition"),
+            MorphRow(word="contingente", lemma="contingente", pos="noun", number="sg."),
+            MorphRow(word="fenno", lemma="fare", pos="verb", number="pl.", person="3",
+                     tense="remote past", mood="indicative"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+    # Without the comitative phrase the same pair stays in scope.
+    bare = [dep.DepRow(1, 1, "necesse", "nsubj", 1, 2),
+            dep.DepRow(1, 2, "fenno", "root", 0, 0)]
+    bare_morph = {1: [morph_rows[1][0], morph_rows[1][3]]}
+    assert len(_agreement([1], ["necesse fenno"], bare, bare_morph)) == 1
+
+
+def test_validate_unit_skips_quantified_measure_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["cento miglia sazia"]
+    rows = [
+        dep.DepRow(1, 1, "cento", "nummod", 1, 2),
+        dep.DepRow(1, 2, "miglia", "nsubj", 1, 3),  # a hundred miles, read as one measure
+        dep.DepRow(1, 3, "sazia", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="cento", lemma="cento", pos="numeral"),
+            MorphRow(word="miglia", lemma="miglio", pos="noun", number="pl."),
+            MorphRow(word="sazia", lemma="saziare", pos="verb", number="sg.", person="3",
+                     tense="present", mood="indicative"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_copula_agreeing_with_predicate_nominal():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["la prova son le opere"]
+    rows = [
+        dep.DepRow(1, 1, "la", "det", 1, 2),
+        dep.DepRow(1, 2, "prova", "nsubj", 1, 3),
+        dep.DepRow(1, 3, "son", "root", 0, 0),
+        dep.DepRow(1, 4, "le", "det", 1, 5),
+        dep.DepRow(1, 5, "opere", "attr", 1, 3),  # the verb agrees with its complement
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="la", lemma="lo", pos="article", number="sg."),
+            MorphRow(word="prova", lemma="prova", pos="noun", number="sg."),
+            MorphRow(word="son", lemma="essere", pos="verb", number="pl.", person="3",
+                     tense="present", mood="indicative"),
+            MorphRow(word="le", lemma="lo", pos="article", number="pl."),
+            MorphRow(word="opere", lemma="opera", pos="noun", number="pl."),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_skips_impersonal_si_with_postposed_subject():
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["non si convenia salmi"]
+    rows = [
+        dep.DepRow(1, 1, "non", "advmod", 1, 3),
+        dep.DepRow(1, 2, "si", "expl", 1, 3),
+        dep.DepRow(1, 3, "convenia", "root", 0, 0),
+        dep.DepRow(1, 4, "salmi", "nsubj", 1, 3),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="non", lemma="non", pos="adverb"),
+            MorphRow(word="si", lemma="si", pos="pronoun", number="sg.", note="impersonal"),
+            MorphRow(word="convenia", lemma="convenire", pos="verb", number="sg.", person="3",
+                     tense="imperfect", mood="indicative"),
+            MorphRow(word="salmi", lemma="salmo", pos="noun", number="pl."),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
