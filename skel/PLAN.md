@@ -1,670 +1,118 @@
-# skel — Layer 5 Phase 5 plan: deterministic elimination of the residual soft violations
+# skel — Layer 5 Plan: Deterministic Derivation & Targeted Micro-Fixes
 
-Status as of 2026-08-12: `make -C skel check` reports **0 hard, 2408 soft** violations across
-all 100 cantos (17438 at the first full-corpus measurement → 7776 after the Phase 4a checker
-refinements → 5919 after one round of Phase 4b `--fix` LLM regeneration → 5105 after Phase 5a →
-4846 after Phase 5b → 4615 after the Phase 5e `--fix` round → 4327 after Phase 5f's rule L →
-4097 after Phase 5g's rule M → 4068 after Phase 5h's rule N → 4042 after Phase 5i's Layer-4
-correction → 3924 after Phase 5j's rule O and lemma normalization → 3876 after Phase 5k's rules
-P and Q → 3808 after Phase 5l's rule R → 3746 after Phase 5m's rule S → 3725 after Phase 5n's
-Layer-4 `mark` correction → 3712 after Phase 5o's rule T → 3702 after Phase 5p's two Layer-4
-correction rounds → 3555 after Phase 5q's user-run `--fix` pass → 3551 after its `ioj` typo fix,
-which took `unknown_role` to **0** → 3633 after the `case` annex's own Layer-2/Layer-4 rounds
-moved it *up* → 3473 after Phase 5r's rule U → 3465 after that phase's hand-verified `dep`/`case`
-round → 3545 after Layer 4's multiple-`obj` round and the `"verb" in pos` bug fix moved it *up*
-again → 3215 after Phase 5s's user-run `--fix` pass → 3270 after Layer 4's
-subject-agreement round moved it *up* once more → 3136 after Phase 5t's user-run `--fix` pass →
-2623 after rule V and the membership audit's cross-layer corrections → 2531 after Phase 5u's
-user-run `--fix` pass → 2408 after Phase 5w's user-run `--fix` pass on the prompt Phase 5v
-rewrote).
-The project goal is
-unchanged:
-**0 soft violations** — soft divergences are rule mismatches to eliminate, not a baseline to
-tolerate.
+## Status
 
-**Phases 5a-5w have run** (see [`CORRECTIONS.md`](CORRECTIONS.md) for each round's rules,
-measurements and rejected candidates). The central finding, stated up front: **`--fix` yields
-about 0.11 violations per LLM call and that rate does not depend on how a *static* flagged set is
-composed** — clearing the structurally unfixable units out of it (Phases 5a/5b, Δ1073 for zero
-calls) did *not* raise the success rate. What remains is closed by measuring classes and
-normalizing, not by more model calls. **Phase 5q confirmed this a second time**: a full pass on
-a residue nine rules and four Layer-4 rounds further along yielded 0.086 per call and moved no
-class more than 6.5%. **Phase 5s looked like an exception** — run immediately after a cross-layer
-round (Layer 4's multiple-`obj` corrections plus the `"verb" in pos` bug fix) had put fresh
-LLM-authored error into the flagged set, the same pass returned **0.199 per call**, −330 — but
-**Phase 5t corrected that reading**: the same experiment after Layer 4's subject-agreement round
-returned **0.085 per call**, −134, right back at the flat rate. What a cross-layer round buys is a
-*sub-population* regeneration settles fast (5t's `missing_tuple` fell 22.1% against a 4.1% pass
-average), diluted by the rest of the flagged set; 5s only looked like a break from the rule because
-its new populations were large. The finding is about a residue that has stopped moving, not about
-the instrument.
-
-**How to read this file.** *Where Phase 5 ended* states the closing position and why no route is
-open; everything from *Phase 5e* onward is the historical record that produced it, and **its
-violation counts are stale by construction** — each section states the state it was written at.
-The authoritative current numbers are the status line above and `--stats`.
-
-**Resuming work? Go to [*Where Phase 5 ended*](#where-phase-5-ended) directly below.**
-Rules L, M, N, O, P, Q, R, S and T landed as Phases 5f/5g/5h/5j/5k/5l/5m/5o (−288, −230, −29,
-−118, −48, −68, −62, −13; all checker-side, zero model calls), and **four rounds corrected Layer 4
-instead of the checker**: Phase 5i closed the decidable half of the **clitic-case question** (−26),
-Phase 5n the `mark` bucket (−21), and Phase 5p the plausible clausal complements of the `advcl`
-bucket plus 5n's two multi-edge deferrals (−10) — all hand-verified, zero model calls, no checker
-change. `role_mismatch` is at **288** (459 before Phase 5r's rule U and Phases 5s/5t) — the
-`obl:<lemma>` pairs are exhausted and so is
-the mechanical half of the clausal cluster — and Phases 5l/5m/5n/5o/5p took 173 out of
-`extra_arg` by working the **direct-child** bucket deprel by deprel, **which Phase 5o's `advcl`
-verdict exhausted and Phase 5p's correction round finished: every row of section 2a is closed,
-and so is the audit work each verdict left behind.** Phase 5q then spent the one remaining work
-item — the user-run `--fix` pass (−147) — plus the `ioj` typo fix (−4).
-What is left is the rest of the two big classes, `extra_arg` (**1065** after rule V took 479 out of
-it, 2026-08-09; 1031 after Phase 5u, 995 after 5w) and `missing_arg` (896), together 78% of what remains — and section 2's triage says both residues are *reading*
-disagreements, not structure, which Phase 5q's low yield on exactly those classes confirms, and
-which Phases 5s/5t confirm again (both moved them 2-8% while the freshly created classes moved
-20%+) and Phase 5u a third time (2-3%).
-**Every route this plan opened is closed. The `--fix` pass rule V's cross-layer round appeared to
-open was run as Phase 5u (2026-08-10) and returned 0.068 violations per call, the lowest on record,
-because rule V was a checker *acceptance* and created no LLM-authored rows for regeneration to
-settle — provenance, not magnitude, is what makes a pass pay. **Phase 5v then found the deeper
-reason** and acted on it: `--fix` re-asks the *same* prompt, so a class that exists because
-`SYSTEM_PROMPT` never states a convention (the elided verb of speech, the non-finite predicate's
-subject, adverbs as predicates, `attr`) cannot be regenerated away at any yield. Four rules and a
-second worked example were added, covering ~240 violations. **Phase 5w (2026-08-12) measured
-them**: the pass returned the flat rate (0.095/call, −123), but the *one* rule that came with a
-worked example **and** a rewritten `--fix` hint moved its class −28.6% while the three prose-only
-rules moved at the pass average. A prose rule buried in a long prompt does not change the reading;
-an instruction that reaches the model at the flagged position does.
-See [*Where Phase 5 ended*](#where-phase-5-ended) and [`../PLAN.md`](../PLAN.md).**
-
-This plan supersedes the Phase 0–3 plan (same filename, removed in `16f1c55` once those phases
-landed). It exists because Phase 4b's LLM-regeneration approach had measurably stalled, and the
-measurement explained *why* in a way that changed what was done next.
+- **Current State**: `make -C skel check` reports **0 hard, 1409 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement).
+- **Other Layers**: `dep --check` 0 hard / 18 soft (verified standing residue), `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 243 passed.
+- **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
+- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Its first user-run round achieved **2011 → 1452 soft (−27.8%)**, highlighted by `extra_tuple_adverb` (−78.8%) and `extra_tuple_adjective` (−54.1%).
+- **Latest Work**:
+  - **Rule AG (Inferno 4–6 Read)**: Gated `conj` subject propagation on Layer-2 person/number agreement (`dep.subject_agreement` + `_finite_head_of`), scoring **1452 → 1409 soft (−43)** with zero model calls.
+  - **`extra_arg_adjective`**: Added a third POS-keyed Stage 2 class in `skel/skel.py` (`_violation_subclass`, `_CLASS_PROMPTS`, `_fix_hint`) targeting the ~65 instances where attributive adjectives are misattached as depictive arguments (`xcomp`/`attr`). Queued for the next user-run pass.
 
 ---
 
-# Where Phase 5 ended
+## Phase 6 Operating Principles & Architecture
 
-## Where the tree is
+Building on Phase 5's hard-won lessons, Phase 6 eliminates brute-force whole-unit regeneration in favor of targeted, cost-effective interventions:
 
-Everything through Phase 5w is **committed** — the rule commits, the Layer-4 corrections and the
-`--fix` rounds are the most recent `skel:`/`dep:` entries in `git log`, and nothing is left
-uncommitted for a next session to discover. Confirm before starting:
+### 1. Three-Stage `--fix` Hierarchy
+Every flagged parse unit passes through three stages, cheapest first, under the same acceptance gate (0 hard violations, `_is_improvement`):
+- **Stage 1 (Deterministic Auto-Repair)**: Runs before any model call.
+  - **Tier A (No Reading Asserted)**: Label canonicalizations (`role_label` 7, `prep_stack` 4).
+  - **Tier B (Corroborated Reading)**: Independent signal required (e.g., `null_subject` 31 gated on `dep.subject_agreement`). Verified and idempotent.
+  - `--repair` is this stage executed in isolation.
+- **Stage 2 (Class-Specific POS-Keyed Micro-Prompts)**:
+  - Bypasses monolithic `SYSTEM_PROMPT`.
+  - Sends a concise 20–30 line prompt specific to the violation class (`extra_tuple_adverb`, `extra_tuple_adjective`, `extra_arg_adjective`, `role_mismatch`, `missing_arg`, `missing_tuple_nominal`).
+  - Solves one question at a time and splices answers row-by-row, eliminating the all-or-nothing unit rejection penalty.
+- **Stage 3 (Fallback Whole-Unit Regeneration)**:
+  - Opt-in fallback for complex multi-violation interactions. Can be disabled with `--no-whole` for benchmarking.
 
-```bash
-make -C skel check      # expect: 0 hard, 2408 soft
-make -C dep check       # expect: 0 hard, 18 soft (the subject-agreement rule's verified residue)
-make -C case check      # expect: 0 hard        (Phase 5r edited case artifacts too)
-uv run pytest -q        # expect: 173 passed
-make -C skel stats      # by-kind + the role_mismatch pair table the sections below cite
-```
+### 2. Independence Rule
+A question may name the predicate, the argument the LLM itself cited, and the role slot in dispute (what `_fix_hint` already disclosed), but **never** `derive_unit`'s own derived argument position.
 
-If those numbers differ, the sections below are describing a different state — re-measure before
-trusting any count in this file.
+### 3. Evaluation at Subclass Granularity
+- Never evaluate passes or rules by overall pass averages alone.
+- Measure changes at `_violation_subclass` granularity against their specific target population.
 
-## What is left, and why nothing here is open
+### 4. Per-Position Manual Reads as Primary Discovery Engine
+- Aggregate statistics frequently misdiagnose checker silence as LLM error.
+- Exhaustive position-by-position reads of small canto batches (Inferno 1, 1–3, 4–6, and next 7–9) uncover genuine checker silence (e.g., Rules V, W, X, Y–AF, AG) and upstream layer errors.
 
-> **The "deterministic rules are exhausted" verdict below was wrong, and rule V (2026-08-09,
-> −513) is the counter-example.** It was reached by triaging the classes *this document*
-> enumerated, and the population rule V found was invisible to that triage: `extra_arg subj` was
-> read as "subject resolution under enjambment and pro-drop", i.e. a reading disagreement, when
-> 467 of its 805 rows were `derive_unit` being **silent** — a non-finite predicate whose subject
-> it never derives at all, so any subject the LLM resolves is reported as an extra argument. The
-> lesson for a future triage: a class is not exhausted until each violation in it has been
-> checked against *what the derivation actually asserted at that position*, which is not the same
-> question as what the class is named after. A per-position read of one canto (Inferno 1) surfaced
-> it in an afternoon after four rounds of aggregate analysis had missed it. See
-> [`CORRECTIONS.md`](CORRECTIONS.md)'s 2026-08-09 entry.
+### 5. Immediate Cross-Layer Remediation
+- Upstream defects in Layer 2 (`morph/`), Layer 4 (`dep/`), or the pronoun case annex (`case/`) discovered during audits must be corrected in the same session, re-validated, and documented in `*/CORRECTIONS.md`.
 
-> **Superseded in one respect, and now spent (2026-08-03).** This section's verdict was "closing
-> the residue further needs a *new* instrument — the Layer-2 case feature the clitic question asked
-> for is the one candidate this project has repeatedly declined on principle". **That feature was
-> subsequently built, hand-audited, and has now been wired in**: it is the `case/` annex
-> (`../case/README.md`), Steps 6-9 of `../PLAN.md` corrected 164 of its positions against `dep`,
-> and **Phase 5r** (see [`CORRECTIONS.md`](CORRECTIONS.md)) made it a third read in this checker —
-> **rule U, −160**, plus **−8** from the ten `dep` retags and four `case` corrections its 17
-> mirror-direction candidates produced. **3633 → 3465.** With that, the instrument this section
-> named as missing is present *and* spent: the population it could decide is decided, and the
-> mirror direction is hand-review work, not a rule. Everything else in this section still holds —
-> regeneration is exhausted by this plan's stop rule, and no further rule is available against the
-> populations measured below.
-
-Every item this plan listed has been spent. **Phase 5o closed the last structural row** (with
-`advcl` decided, every deprel in section 2a has a verdict), **Phase 5p ran the two hand-verified
-`dep/` rounds those verdicts left over** (−10), and **Phase 5q ran the user's `--fix` pass**
-(−147, ≈28 h wall time 3-way parallel, 1702 flagged units) plus the mechanical `ioj` → `iobj`
-typo fix (−4, `unknown_role` now **0**). Both remaining routes therefore have a measured verdict:
-
-- **Regeneration is exhausted by this plan's own stop rule.** 5q yielded 0.086 violations per
-  call — 5e's flat rate reproduced on a completely differently composed flagged set — and moved
-  no class more than 6.5%. A third pass would cost another ~1600 calls for a predictable ~130.
-  - **Qualified by Phase 5s (2026-08-07), and the qualification narrowed by Phase 5t
-    (2026-08-09).** 5s's third pass returned **0.199 per call** (3545 → **3215**, −330; 0 units
-    worse, 0 newly flagged) — double the predicted rate — right after a cross-layer round had put
-    genuinely LLM-authored error back into the flagged set. 5t repeated the experiment after
-    Layer 4's subject-agreement round and returned **0.085 per call** (3270 → **3136**, −134),
-    the flat rate again. So the qualification is not "a cross-layer round makes the next pass
-    pay": it is that such a round creates a **sub-population** regeneration settles at a high rate
-    — 5t's `missing_tuple`, where the subject-agreement round's +105 had landed, fell 22.1%
-    against a 4.1% pass average — and the pass-level yield is that rate diluted by the rest of the
-    flagged set. **Before running a pass on this ground, ask how large the new population is
-    relative to the flagged set**; below a few percent, expect the flat rate. See
-    [`CORRECTIONS.md`](CORRECTIONS.md)'s *Phase 5s* and *Phase 5t*.
-- **Deterministic rules are exhausted against every population this document measured.** A new
-  rule would need a class that has not yet been triaged; sections 1, 2 and 2a between them
-  account for the residual, and each names why its remainder is a reading disagreement (subject
-  resolution under enjambment and pro-drop; the clitic case question, which needs a Layer-2 case
-  feature or a lexicon; the complement-vs-adjunct distinction, which needs a verb lexicon).
-
-So `0 hard, 3215 soft` (`3551` when this section was written) is where the measure-then-freeze
-discipline leaves Layer 5, and the
-**soft residue is documented reading disagreement between two independent parses, not unfinished
-work with a known instrument**. Closing it further needs a *new* instrument — the Layer-2 case
-feature the clitic question asked for is the one candidate this project has repeatedly declined
-on principle, and opening it would be its own plan, not a Phase 5 continuation.
-
-The one non-Phase-5 item this plan tracked, the `dante_corpus/README.md` Layer-5 update, landed
-alongside Phase 5q.
-
-## 0. Rules L, M and N landed — Phases 5f/5g/5h, 4615 → 4068 (2026-07-28)
-
-Three checker-side acceptances in the `elif grole != drole:` branch of `_classify_divergence`,
-all one-directional, all zero model calls and zero artifacts touched:
-
-- `_oblique_lemma_refinement` (rule L, −288): given `obl:<lemma>` vs derived bare `obl`.
-- `_predicative_complement` (rule M, −230): given `xcomp` vs derived `obj`/`subj`. **Shipped
-  ungated** — the secondary-predicate gate this plan proposed was measured and abandoned; see
-  `CORRECTIONS.md`'s Phase 5g section for the 230/227/163 measurement and why the gate separates
-  the wrong thing (object complements from copular predicate nominals, both correct readings).
-- `_case_marked_object` (rule N, −29): given `obl:<lemma>` vs derived `obj`/`subj` **when the
-  argument carries a `case` child naming that same preposition**.
-
-`case_lemmas` (position → normalized `case`-child lemmas, built once at the top of
-`_classify_divergence`) serves L and N both. Nine tests in `tests/test_skel.py`, 106 passing.
-`role_mismatch` 1214 → **667**.
-
-Phase 5j then finished the `obl:<lemma>` pairs off (−118, `role_mismatch` 641 → **523**): rule O
-(`_co_present_preposition`, −61) accepts a given lemma that is *another* `case` child of the same
-argument ("**in su** le porte", "dietro **a** noi" — the tree carries both markers,
-`derive_unit` reports one), and `_PREP_LEMMA_NORM` was rebuilt from every `case`-child word form
-in `dep/` (−57), so contractions (`nel` → `in`, `dal` → `da`) and archaic spellings stop reading
-as disagreements. `case_lemmas` now serves L, N and O. The two-directional variant of rule O was
-measured at a further −30 and **rejected**: in the mirror direction the given preposition sits
-elsewhere in the unit (17), is an `advmod`/`obl` token (7), or is absent from the unit
-altogether (5), and one gate cannot separate the Layer-4 inconsistency from the LLM invention.
-
-## 1. The clitic-case question — half closed as Phase 5i, half parked
-
-**Done (−26).** Reading the 97 answered the question this section used to ask: the population is
-**mixed**, not uniformly dative — `mi pesa`, `ti noccia`, `li convien fuggire` are Layer-4
-mistags, but `m'avea 'mmonito` and `ti priego` are plain accusatives where the LLM is wrong. So
-neither a checker rule nor a blanket reroute was available. What *is* available is a structural
-subset needing no case feature: in **30** of the 97 the predicate carries a **second** `obj`
-child, and UD allows at most one `obj` per predicate — the tree contradicts itself regardless of
-the LLM, and the non-clitic object is the direct one. 26 survived hand-verification against
-their terzine and were retagged in `dep/` (22 → `iobj`, 4 → `obl` for partitive `ne`); the other
-4 were rejected. Each closed its Layer-5 divergence, `dep --check` stayed 0/0, and no checker
-code or skel artifact changed. Full list in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
-
-**Parked, with a measured reason.** The other **67** (no second `obj`, nothing structural to go
-on) and the **30** mirror-direction cases (Layer 4 `iobj`, LLM `obj` — `mi bagna`, `mi
-tormenta`, `ti conforta`, `lui non aita`; several look like Layer-4 datives over real
-accusatives) both need a Layer-2 case feature or a clitic lexicon. The project has twice
-preferred a structural check to a lexicon (the control-subject authority model, Phase 2), so
-neither is opened here.
-
-**A wider Layer-4 finding — acted on 2026-08-03, closed**: corpus-wide this measurement found
-**231** predicates carrying two or more `obj` children (84 with a clitic, 147 without), split
-into flattened coordinations (`Ali hanno late, e colli e visi umani`) and object complements
-(`mi chiamaste Ciacco`, `li chiama orbi`). The `case` annex's Steps 6-9 then closed 28 of them
-incidentally, and the round that opened the rule found **203**. All 203 are corrected; the rule
-is now part of `dep --check` and Layer 4 is back at 0 soft. See
-[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)'s *The "at most one `obj` per predicate" rule*.
-Note the label the round settled on for object complements: **`attr`**, not `xcomp` — `xcomp` is
-a `CLAUSE_HEAD_DEPRELS` member and would make `derive_unit` invent a predicate for an adjective.
-
-**How to regenerate any of these populations** (the measurement scripts were throwaways; see
-*How to measure a candidate rule* below): keep the violations whose detail starts with
-`role_mismatch` where one side is `obl:<lemma>` and the other is `obj`/`subj`, and bucket by
-(a) whether `dep_index_by_pos` holds a `case` child of the argument and with which normalized
-lemma, (b) the argument's Layer-2 POS, and (c) whether the predicate has another `obj` child.
-The 67 are `given obl:* / derived obj|subj` + no `case` child + pronoun POS + no second `obj`;
-the 30 mirror cases are `given obj|subj / derived obl:*` with dep deprel `iobj`.
-
-## 2. Next: the rest of `extra_arg` and `missing_arg`
-
-`extra_arg` **1714** and `missing_arg` **1238** (pre-5q; **1639** and **1193** after it) are 80%
-of what is left. Phase 5l did the
-re-triage this section used to ask for and took the first 68; Phase 5m took 62 more, Phase 5n 21,
-Phase 5o 13 and Phase 5p 9 (section 2a). **Its structural buckets are now exhausted** — read the four
-findings below as the reason the residual goes to `--fix`, not as an open work list (full tables
-in [`CORRECTIONS.md`](CORRECTIONS.md)'s Phase 5l):
-
-| `extra_arg` (pre-5l, 1887) | count | | `missing_arg` (1239) | count |
-|---|---|---|---|---|
-| unrelated | 659 | | direct child | 1116 |
-| descendant, depth 2 | 398 | | unrelated | 123 |
-| direct child | 392 | | | |
-| predicate is a descendant of the argument | 268 | | | |
-| pro-drop ∅ | 131 | | | |
-
-Four findings to start from, not to re-derive:
-
-- **`missing_arg` is 90% direct-child** — the LLM omitting an argument on the very edge
-  `derive_unit` reads. No structural rule can absorb that; it is LLM incompleteness, and the
-  honest routes are a `--fix` pass or accepting it as the layer's recall limit. Measure the
-  latter before spending calls: check whether the omissions concentrate in long units.
-- **Only 70 `extra_arg`/`missing_arg` pairs** on the same predicate cite two tokens of one NP
-  span or two adjacent tokens ("Pape/Satàn", "Anastasio/papa", "Caron/dimonio"). Citation-token
-  drift is *not* what these classes are made of — a rule there is worth at most −70 and needs an
-  `appos`/`flat` gate rather than adjacency.
-- **The `extra_arg` residue is dominated by subject disagreement**: `unrelated nsubj/subj` 293,
-  `pro-drop ∅ subj` 131, `predicate is a descendant … subj` 96. Rule E (widening the
-  control-subject authority) was already measured at −22 and rejected, so this is enjambment and
-  pro-drop resolution — reading disagreement, i.e. `--fix` material, not rule material.
-- The most promising remaining structural bucket was `extra_arg` **direct child** (392 pre-5l,
-  324 after rule R, 262 after rule S, 240 after Phase 5n, 227 after rule T, **220 after Phase 5p**) — arguments on a deprel
-  `derive_unit`'s map omits. Section 2a maps it deprel by deprel; **every row now has a verdict**,
-  `advcl` having been the last (Phase 5o).
-
-### 2a. The `extra_arg` direct-child bucket, deprel by deprel (227 after Phase 5o)
-
-Measured at the 3808 state (324 instances, before rule S removed the `nmod` row). **Every row now
-has a verdict and none is open** — Phase 5o's `advcl` verdict was the last.
-
-| deprel | count | verdict |
-|---|---|---|
-| `expl` | 87 | **closed** — Phase 5d audited this class: Layer 4 is right and these are plain LLM misreadings (59 of them are `obj` over a clitic `si`/`ti`/`se`, i.e. the section-1 clitic question again). |
-| `nmod` | 62 | **taken by rule S** (Phase 5m). |
-| `advcl` | 51 | **closed by Phase 5o, audited by Phase 5p.** Two populations: 13 prepositional infinitive clauses ("per venir", "a descriver", "sanza giurarlo") **taken by rule T**, plus 3 oblique cases whose marker is not the cited preposition, which the rejected loose variant would have swallowed. The other 35 give a complement role (`ccomp` 18, `xcomp` 14, `subj` 2, `obj` 1) over an adverbial clause — the complement-vs-adjunct distinction, needing the verb lexicon Phase 5k refused: excluding the copular/aspectual matrix verbs leaves 43 instances over **37 lemmas**, 33 of them singletons, i.e. no coherent population. Of the 35, **6 turned out to be Layer-4 mistags and were retagged in Phase 5p** (−7 with its supporting rows); the other 29 are Layer 4's and are classified by shape in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md). |
-| `advmod` | 50 | **closed by design** — rule R took the adjectives; what is left is adverb-POS predicatives (17, undecidable per rule R's own gate) and non-`xcomp` roles over quantifier adverbs (33, Phase 5b's verdict). |
-| `mark` | 35 | **closed by Phase 5n** — a Layer-4 audit, not a checker rule: 22 retagged in `dep/` (−21), 11 left because Layer 4 is right, 2 deferred as multi-edge. See below and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md). |
-| `cop` | 9 | too small to rule on. |
-| `conj` | 8 | too small; rule C already normalizes the coordination cases it can see. |
-| `vocative` | 7 | too small. |
-| tail (`case`, `aux`, `expl:pass`, `nummod`, `acl`, `amod`, `det`) | 15 | one-offs. |
-
-**The `mark` bucket, read in Phase 5m and acted on in Phase 5n (2026-07-28).** All 35 have a verb predicate and a
-relative/interrogative word tagged `mark`: given role `obj` 15, `xcomp` 7, bare `obl` 7, `subj`
-6. Checked against the terzine, it is **mixed the way section 1's clitic population was**, so no
-single gate separates it:
-
-- **Layer 4 is wrong in the majority** — the word fills an argument slot and `mark` is a mistag:
-  "poi mi farai, **quantunque** vorrai, fretta", "ché **quantunque** la Chiesa guarda", "per la
-  ragion **che** di'", "dal punto **che** 'l cenìt inlibra" (relative objects); "che
-  **qual** voi siete, tal gente venisse", "**qual** diverrebbe Iove" (predicative `qual`);
-  "domandollo **ond'** ei fosse" (oblique of an indirect question).
-- **Layer 4 is right in a real minority** — "secondo **ch'**avea detto la mia scorta" is a
-  complex subordinator, and the LLM citing `ch'` as an object is a plain misreading; the same
-  goes for the comparative and consecutive `che` ("più speso **che** non stimava l'animo"). The
-  idiomatic concessives ("**qual che** si sia", "**che che** li appaia") and "**che** vedrai non
-  capere in questi giri" (where the editorial reading `ché` vs. relative `che` is itself
-  disputed) are undecidable.
-
-So the honest route was the Phase 5i one, and **Phase 5n took it**: 22 hand-verified retags in
-`dep/` (8 → `obl`, 7 → `obj`, 7 → `attr`), the 11 subordinator/comparative/idiomatic cases left
-flagged, 2 deferred as multi-edge. `dep --check` stayed 0/0; −21 rather than −22 because one
-case converts to a `role_mismatch` instead of closing. Layer 2's POS was confirmed *not* usable
-as a gate — it calls most of these words "conjunction" including the ones that are plainly
-relative pronouns.
-
-Post-5k pair table (`role_mismatch` 475 — the `obl:<lemma>` pairs and the mechanical half of the
-clausal cluster are gone):
-
-```
-'obj' vs 'subj'  81    'subj' vs 'obj'  67    'obl:a' vs 'obj'  61
-'obj' vs 'obl:a' 30    'xcomp' vs 'obl' 25    'subj' vs 'xcomp' 22
-'obj' vs 'obl'   15    'obj' vs 'xcomp' 15    'xcomp' vs 'obl:di' 13
-```
-
-Everything in it has a recorded verdict, so read them as *closed*, not as candidates:
-
-- `obl:a` vs `obj` (61) and its mirror (30) are the clitic-case population section 1 parked.
-- `xcomp` vs `obl`/`obl:<lemma>` (≈55, spread across several rows) is the predicative-PP half of
-  the clausal cluster Phase 5k deliberately left flagged: separating the copular readings needs
-  a verb lexicon (`essere`/`stare`/`parere`), which this project refuses on principle.
-- `subj` vs `xcomp` (22) and `obj` vs `xcomp` (15) are the mirror directions rules M and Q keep
-  flagged on purpose — there the dep tree is explicit and the LLM contradicts it.
-- The `subj`/`obj` reversals (148) are genuine reading disagreements and the one class that is
-  real `--fix` material. They stay **last**: that route removes them at 0.11 violations per
-  call, so they are worth one user-run regeneration pass only once the deterministic work is
-  exhausted.
-
-### How to measure a candidate rule
-
-There is no checked-in harness for this; every rule in this document was measured with a
-throwaway script (scratchpad, not committed) that mirrors `skel/skel.py`'s `stats()` loop and
-monkeypatches `dante_corpus.skel._classify_divergence`. Run it **from `skel/`** (`uv run
-<script>.py`) so the driver module imports. The skeleton, which every Phase 5 measurement used:
-
-```python
-import sys; sys.path.insert(0, ".")
-import skel as driver
-from dante_corpus import api, dep, skel
-
-orig = skel._classify_divergence
-
-def wrapper(given, derived, dep_index_by_pos=None, morph_pos_by_position=None):
-    vs = orig(given, derived, dep_index_by_pos, morph_pos_by_position)
-    ...  # classify/filter vs; `dep_index_by_pos` is the whole dep tree of the unit,
-         # `morph_pos_by_position` the Layer-2 POS, both keyed by (line, token)
-    return vs
-
-skel._classify_divergence = wrapper
-driver.skel._classify_divergence = wrapper   # both bindings, or the driver keeps the original
-
-for canticle in api.canticles():
-    for number in api.cantos(canticle):
-        data = skel.load_skel(canticle, number)
-        morph_rows, np_rows = driver._morph_rows(canticle, number), driver._np_rows(canticle, number)
-        dep_rows = driver._dep_rows(canticle, number)
-        lines = api.canto(canticle, number).lines()
-        text_by_no = {ln.no: ln.text for ln in lines}
-        nos, texts = [ln.no for ln in lines], [ln.text for ln in lines]
-        for unit in dep.sentence_groups(nos, texts, dep.MAX_UNIT_LINES):
-            if any(no not in data for no in unit):
-                continue
-            driver._classify_violations(
-                unit, [text_by_no[no] for no in unit],
-                {no: list(data[no]) for no in unit}, morph_rows, np_rows, dep_rows)
-```
-
-Token positions are 1-based over the **alpha-only** tokens of a line
-(`[t for t in tokenize(text) if has_alpha(t)]`, `dante_corpus.tokenizer`) — indexing raw
-`tokenize` output instead silently misaligns every word you print.
-
-**For a Layer-4 correction round** (Phases 5i, 5n) the same skeleton serves, with two additions
-that turned out to be load-bearing in 5n and are worth repeating:
-
-- Print the **whole dep sub-tree** of each unit alongside the terzina, not just the flagged
-  edge. It is what shows whether a proposed retag would give the predicate a *second* core
-  argument (`nsubj`/`obj`) — the gate that separated 5n's 22 sound single-row retags from its 2
-  multi-edge deferrals.
-- Before choosing a target deprel, measure the **corpus-wide convention** for the word forms
-  involved: sweep every `dep/` row and count deprels per lowercased word. 5n's sweep is what
-  established that `onde`/`ove`/`dove` are conventionally `obl` here and that `attr` is a live
-  tag for predicative `qual` — picking a deprel to close a violation, rather than one the corpus
-  already uses for that word, is the failure mode this avoids.
-
-Report the full-corpus by-kind counter, and always measure the **negative** variant of a rule
-too (the narrower gate). Three times in Phase 5 that mattered: rule L's two variants were
-identical (which was the evidence), rule M's gate turned out to separate the wrong thing, and
-rule N's "narrow" bucket was the only sound part of its class.
+### 6. Strict Division of Labor
+- **Assistant**: Conduct per-position audits, implement deterministic checker/derivation rules, develop Stage 2 micro-prompts/hints, and maintain upstream layer data.
+- **User**: Execute parallel `--fix` regeneration passes (`make -C skel fix`) and commit updated TSVs.
 
 ---
 
-## Phase 5e — `--fix` on what actually remains — **done (2026-07-28), 4846 → 4615**
+## Phase 6 Implementation & Results
 
-One full pass, all three canticles, 2037 flagged units attempted:
+### 1. The Restructuring (2026-08-12)
+- Rebuilt `skel/skel.py` driver to replace monolithic prompt regeneration with Stage 1 auto-repairs and Stage 2 micro-prompts.
+- Stage 1 deterministic pass measured at **2084 → 2011 (−73)** with zero LLM calls.
+- Two candidate rules measured and deliberately dropped: a case-annex relabel (106 rewrites for 0 violations eliminated) and a `role_alias` rule (population 0).
 
-| metric | measured |
-|---|---|
-| units accepted | **178 (8.7%)** |
-| units that regressed | **0** (Phase 5c's criterion held; `unknown_role` stayed 2) |
-| violations removed | **231**, i.e. ~0.11 per LLM call |
-| per class | extra_arg −104 (−5.2%), missing_arg −66 (−5.1%), role_mismatch −36 (−2.9%), extra_tuple −21 (−11.9%), membership −2, missing_tuple −2 |
+### 2. First User-Run `--fix` Round (2026-08-13)
+- **2011 → 1452 soft, −559 (−27.8%)**, 98 cantos touched, 259 units cleared outright, 197 improved. 0 units regressed, 0 newly flagged.
+- **Subclass Results**:
+  - `extra_tuple_adverb`: **37 → 7 (−78.8%)** (largest single-class drop on record).
+  - `extra_tuple_adjective`: **37 → 17 (−54.1%)**.
+  - `role_mismatch`: −40.8%.
+  - `missing_tuple_nominal`: −40.3%.
+  - Classes without dedicated stage-2 prompts (`extra_tuple`, `missing_tuple`, `membership`): ~0% (confirming gains stemmed from targeted prompts).
 
-**The predicted rise in success rate did not happen.** This plan expected the rate to exceed the
-pre-Phase-5 10.5%, because 5a/5b had removed the structurally unfixable units from the
-denominator; it came in at 8.7%. The two figures are statistically indistinguishable (the
-earlier one was 2 of 19 units), and the conclusion is stronger than "regeneration is expensive":
-**the yield per call is flat**, so composing a better flagged set does not make `--fix` a
-different tool. It stays useful as a finishing pass, not as the instrument that reaches zero.
+### 3. Rule AG & Inferno 4–6 Read (2026-08-13)
+- Position-by-position audit of all 19 remaining soft violations in Inferno 4–6.
+- **Rule AG (−43, 1452 → 1409)**: Gated `conj` shared-subject propagation on Layer-2 person/number agreement (`dep.subject_agreement` + `_finite_head_of` for periphrastic verbs). Out of 1370 candidates, 682 agreed, 461 were undecidable (untouched), and **227 actively disagreed** and were dropped.
+- **Cross-Layer Correction**: Retagged `fiacco` (Inferno 6:54) from adjective to 1sg verb in `morph/inferno/06.tsv`.
+- Remaining 17 positions verified as real LLM omissions or genuine reading disagreements.
 
-**The stop rule applies: no second pass.** No class moved more than 11.9%, and the three large
-ones moved 2.9-5.2% — by this plan's own criterion, a class that barely moves after a full pass
-is checker-side, not an LLM error awaiting another attempt.
+### 4. Third POS-Keyed Class: `extra_arg_adjective`
+- From Inferno 6:70 ("Alte terrà... le fronti"), identified that 65 of 107 `extra_arg xcomp`/`attr` violations cite an adjective argument.
+- Implemented `extra_arg_adjective` class in `skel/skel.py` (`_violation_subclass`, `_CLASS_PROMPTS` with `_CONV_ADJECTIVE` fronted, `_fix_hint`).
 
-## Next round — normalize the systematic `role_mismatch` pairs — **historical, written at 4615**
+---
 
-*(Both items below have since landed, as Phases 5f and 5g. Kept for the measurements and the
-rejected variants; the pair counts are pre-5f.)*
+## Active & Open Routes
 
-`role_mismatch` (1214) moved least of all while sitting **99.9% on edges both sides see**, and
-its pair distribution is far from a scatter of one-off disagreements:
+### 1. Queued User-Run `--fix` Round
+A fresh `--fix` round against the current 1409-violation baseline:
+- Carries the new `extra_arg_adjective` micro-prompt into a live pass for the first time.
+- Measures yield specifically across its 65-instance population.
 
-```
-'xcomp'  vs 'obj'   170    'obl:a'  vs 'obl'   94    'obl:a' vs 'obj'  92
-'obl:di' vs 'obl'    84    'obj'    vs 'subj'  81    'subj'  vs 'obj'  67
-'xcomp'  vs 'subj'   60    'obl:di' vs 'obj'   38    'obl:da' vs 'obl' 36
-```
+### 2. Open Assistant-Side Routes
+- **Attributive vs. Predicative Adjectives (17 `extra_tuple_adjective` remaining, down from 37)**:
+  - True reading disagreements with no `cop` edge (e.g., Inferno 2:109 *"non fur mai persone ratte / a far lor pro"*).
+  - Target: Conduct a per-position read of the remaining 17 before writing any checker rule.
+- **Adverbs Promoted to Predicates (7 `extra_tuple_adverb` remaining, down from 33)**:
+  - Nearly closed by the Stage 2 micro-prompt (−78.8%). Read the final 7 positions to decide whether any residue warrants prompt tweaks or checker acceptance.
+- **Stacked Prepositions in Layer 4 (14 `role_mismatch` / 18 unattached)**:
+  - Where Layer 4 inconsistently writes stacked prepositions (flat vs. chained, e.g., *"in su"*). Requires a `dep/` normalization pass.
+- **Per-Position Read of Inferno 7–9**:
+  - Continue the per-position audit discipline to uncover new checker rules and upstream mistags (specifically checking adverb-headed obliques with nested `nmod` and locative clitics tagged `advmod`).
+- **`missing_arg obl` Sample Audit**:
+  - Sample the largest remaining unexplained bucket to classify whether omissions are structural or LLM recall limits.
 
-Both large pairs were measured the same way every rule in this document was (monkeypatch +
-full-corpus re-count), immediately after the 5e round:
+---
 
-1. **Rule L — `obl:<lemma>` given vs bare `obl` derived: −288, measured — landed as Phase 5f.**
-   `derive_unit` emits a
-   bare `obl` in exactly one situation: the argument has no `case` child naming the preposition.
-   In **all 288** instances that is the case (the strict and loose variants of the rule return
-   the identical set), and the missing preposition is typically fused into the token itself — a
-   clitic dative (`che nel lago del cor **m'**era durata`: derive_unit `obl`, LLM `obl:a`) or a
-   preposition+article contraction. The LLM naming it is therefore **strictly more informative,
-   not a disagreement** — the same argument the Phase 2 authority model already makes for
-   pro-drop subjects, and the mirror of `--repair`'s `role_label` rule, which rewrites the
-   *opposite* direction (given bare `obl`, derived `obl:<lemma>`) because the dep tree makes it
-   explicit. It landed as Phase 5f and removed **more than the entire 5e `--fix` pass, at zero
-   calls.**
-2. **`xcomp` vs `obj` (170) / `xcomp` vs `subj` (60) — the nominalized-infinitive hypothesis is
-   wrong.** Gating on the argument being an infinitive removes 8; on its being any verb form,
-   15. The actual population is **predicative complements**: the arguments are nouns (100),
-   adjectives (73) and pronouns (31) — "mi chiamaste **Ciacco**", "**tal** mi fece la bestia",
-   "si tegnon gran **regi**", "le mura mi parean che **ferro** fosse". The dep tree attaches an
-   object complement as plain `obj`/`nsubj` (there is no copula to hang it from), while the LLM
-   labels it a complement predicated of that argument — which Phase 1 already canonicalizes
-   `attr` → `xcomp` for. The configurational gate proposed here (the predicate already carrying
-   another `obj`/`subj` argument) **was measured and abandoned** — it admits 227 of 230 on the
-   given side and separates the wrong thing on the derived side. Landed ungated as Phase 5g's
-   rule M, −230; see `CORRECTIONS.md`.
+## How to Measure a `--fix` Round
 
-The `subj`/`obj` reversals (81 + 67) are genuine reading disagreements and stay `--fix` material
-— but as measured above, that route removes them at 0.11 per call, so they are last, not first.
-(Still true post-5h; Phase 5q spent that pass — see *Where Phase 5 ended*, and section 2.)
-
-## Landed phases
-
-| phase | what landed | measured |
-|---|---|---|
-| **5a** | Rule C (coordination normalization) + Rule D (`nmod` oblique of a derived argument) | 5919 → **5105** |
-| **5b** | no conjunction promoted to predicate; copula/modal double-listing suppressed; adverbial obliques accepted | 5105 → **4846** |
-| **5c** | `--fix` acceptance requires no new violation *kind* (`_is_improvement`) | — |
-| **5d** | audit of the `expl` class: Layer 4 is right, nothing to route back | — |
-| **5e** | one full-corpus `--fix` pass, 178/2037 units accepted, none regressed | 4846 → **4615** |
-| **5f** | Rule L (`obl:<lemma>` given vs bare `obl` derived), checker-side, 0 calls | 4615 → **4327** |
-| **5g** | Rule M (given `xcomp` vs derived `obj`/`subj` — secondary predication), 0 calls | 4327 → **4097** |
-| **5h** | Rule N (given `obl:<lemma>` vs derived `obj`/`subj` with a matching `case` child) | 4097 → **4068** |
-| **5i** | Layer-4 correction: 26 double-`obj` clitics retagged `iobj`/`obl` in `dep/` | 4068 → **4042** |
-| **5j** | Rule O (co-present prepositions) + `_PREP_LEMMA_NORM` rebuilt from the corpus | 4042 → **3924** |
-| **5k** | Rule P (`ccomp`≡`xcomp`) + rule Q (clause attached as `obj`/`subj`) | 3924 → **3876** |
-| **5l** | Rule R (predicative adjective attached as `advmod`) — first cut into `extra_arg` | 3876 → **3808** |
-| **5m** | Rule S (`nmod` complement of the predicate itself — rule D's shape one edge in) | 3808 → **3746** |
-| **5n** | Layer-4 correction: 22 relative/interrogative words retagged off `mark` in `dep/` | 3746 → **3725** |
-| **5o** | Rule T (`obl:<lemma>` over a marker-matching `advcl` child) + the `advcl` verdict | 3725 → **3712** |
-| **5p** | Layer-4 corrections: 6 clausal complements retagged off `advcl` (+2 supporting rows) and 5n's 2 multi-edge deferrals | 3712 → **3702** |
-| **5q** | user-run full-corpus `--fix` pass (1702 flagged units, ≈28 h 3-way parallel) + the `ioj` → `iobj` typo fix | 3702 → **3551** |
-| **5r** | Rule U (the `case` annex as a third read on a disputed role) + its hand-verified `dep`/`case` round | 3633 → **3465** |
-| **5s** | user-run full-corpus `--fix` pass (1659 flagged units), run *after* Layer 4's multiple-`obj` round and the `"verb" in pos` fix had moved the flagged set | 3545 → **3215** |
-| **5t** | user-run full-corpus `--fix` pass (1575 flagged units), run *after* Layer 4's subject-agreement round; back at the flat rate (0.085/call) | 3270 → **3136** |
-| **V** | Rule V (the control/participial subject of a non-finite predicate) + the membership audit's 37 Layer-2, 8 Layer-4, 32 `case` and 4 Layer-3 corrections | 3136 → **2623** |
-| **5u** | user-run full-corpus `--fix` pass (1347 flagged units), run *after* rule V; the lowest yield on record (0.068/call), because rule V created no LLM-authored rows | 2623 → **2531** |
-| **5v** | build-prompt alignment: four conventions the corrections had fixed but `SYSTEM_PROMPT` never stated (~240 violations addressed), plus the non-verb `missing_tuple` hint | 2531 → *(5w measures it)* |
-| **5w** | user-run full-corpus `--fix` pass (1290 flagged units), run *on* 5v's rewritten prompt; flat pass yield (0.095/call) but the one rule that carried a worked example **and** a `--fix` hint moved its class −28.6% | 2531 → **2408** |
-
-Details, per-rule negative tests and the rejected variants are in
-[`CORRECTIONS.md`](CORRECTIONS.md).
-
-## Why Phase 4b (`--fix`) stalled
-
-### Measured cost
-
-One canto run serially against the local debug model (`ollama:gemma4:31b-it-qat`, inferno 1,
-136 lines, 19 flagged units):
-
-| metric | measured |
-|---|---|
-| wall time | **3 hours** |
-| units attempted | 19 |
-| units improved | **2 (10.5%)** |
-| soft violations removed | **4** (37 → 33) |
-
-Extrapolated to the corpus: 2235 flagged units × 1 LLM call each, yielding on the order of
-**450 violations removed per full pass**. The production runs use the Gemini API rather than
-the local model, so the wall time differs — but the **10.5% unit success rate is a property of
-the method, not of the backend**, and it is the term that dominates.
-
-### Measured cause
-
-The success rate is low because **a large share of flagged units cannot be fixed by
-regeneration at all** — the LLM's reading is already correct and the divergence is on the
-checker's side. Classifying every `extra_arg` (2848 = 48% of all soft violations) by how the
-cited argument token attaches to the predicate in the frozen dep tree:
-
-| relation of cited token to predicate | count | share |
-|---|---|---|
-| indirect descendant, depth 2 | 1097 | 38.5% |
-| unrelated | 902 | 31.7% |
-| direct child (deprel outside `derive_unit`'s map) | 495 | 17.4% |
-| pro-drop ∅ | 129 | 4.5% |
-| child of a `conj`-relative of the predicate | 122 | 4.3% |
-| indirect descendant, depth ≥ 3 | 103 | 3.6% |
-
-The dominant depth-2 bucket is overwhelmingly **coordination**:
-
-```
-inferno 1:103  ciberà -[obj]->   terra  -[conj]-> sapïenza   (LLM: obj)
-inferno 1:128  è      -[nsubj]-> città  -[conj]-> seggio     (LLM: subj)
-inferno 1:114  onora  -[obj]->   te     -[conj]-> quei       (LLM: obj)
-```
-
-"si ciberà di terra e di sapïenza" — both conjuncts are objects, and the LLM is right.
-`derive_unit` propagates a subject across coordinated *predicates* (its rule 3) but has no rule
-propagating a coordinated *argument*, and it only ever reads a predicate's **direct** dep
-children. So the second conjunct can never appear on the derived side.
-
-**These units are structurally unfixable by `--fix`.** A regeneration reproduces the same
-correct reading, the violation survives, `_fix_canto` rejects the attempt as "not improved",
-and the LLM call is spent for nothing. This is the mechanism behind the 10.5%. Phase 5a's Rule
-C is what removed this class.
-
-## Measured violation anatomy — **historical, measured 2026-07-26 at 5919 (pre-5a)**
-
-By kind:
-
-| kind | count |
-|---|---|
-| extra_arg | 2848 |
-| missing_arg | 1353 |
-| role_mismatch | 1245 |
-| extra_tuple | 275 |
-| missing_tuple | 100 |
-| membership | 96 |
-| unknown_role | 2 |
-
-Where the *other* two large kinds attach — both are almost entirely on edges `derive_unit`
-already sees, i.e. genuine label/citation disagreements rather than derivation blind spots:
-
-| kind | direct child | conj-relative |
-|---|---|---|
-| missing_arg | 89.8% | 10.2% |
-| role_mismatch | 99.9% | 0.1% |
-
-Per parse unit (the `--fix` regeneration granularity): **2235 of 3477 units (64.3%) carry at
-least one violation**; 788 carry exactly one, and the tail reaches 15.
-
-`extra_arg` direct-child cases by the dep deprel that `derive_unit`'s map omits: `advmod` 190,
-`expl` 105, `nmod` 66, `advcl` 54, `mark` 36, then a thin tail.
-
-## Candidate rules — all measured before proposing — **historical, measured at 5919 (pre-5a)**
-
-Each rule was implemented as a monkeypatch over `derive_unit` / `_classify_divergence` /
-`_apply_subj_authority` and re-measured across all 100 cantos. C and D landed as Phase 5a.
-
-| rule | what it does | measured |
-|---|---|---|
-| **C — coordination normalization** | collapse every argument citation onto its coordination head (walk `conj` up) on **both** sides before comparing | **−665** (5919 → 5254) |
-| **D — `nmod` oblique of an argument** | accept a given `obl:<prep>` whose arg is an `nmod` dependent of one of that predicate's own derived arguments ("ha *bisogno* **di te**") | **−155** (5919 → 5764) |
-| **C + D** | | **−820 → 5099 (−13.9%)** |
-| A — enumerate conjuncts in `derive_unit` | emit a derived row for each `conj` dependent of a derived argument | −2 ❌ |
-| B — share non-subject args across `conj` predicates | | **+2326** ❌ |
-| E — widen the control-subject authority | let the xcomp/ccomp candidate set apply when `derive_unit` did resolve a subject | −22 (on top of C+D) ❌ |
-
-**Rule A's failure is the key result.** Enumerating conjuncts on the derived side moved
-`extra_arg` −554 but drove `missing_arg` +529, for a net −2: the LLM itself enumerates
-coordinations inconsistently, listing every conjunct in some units and only the first in
-others. So the divergence is a **notation-convention mismatch, not a parse disagreement**, and
-the correct instrument is normalization before comparison — exactly what Phase 1 already does
-for preposition-lemma variants and the `attr`≡`xcomp` labeling split — not adding rows.
-
-Rule C is the same shape as those Phase 1 equivalences and inherits their justification. Note
-that under Rule C `role_mismatch` rises slightly (1245 → 1261): collapsing a coordination
-exposes role disagreements previously split across an `extra_arg`/`missing_arg` pair. That is
-the rule classifying more precisely, not suppressing — a useful sign it is not simply
-swallowing violations.
-
-Rule E is reported because it disproves a plausible hypothesis: the residual
-`extra_arg subj` mass (1105, the single largest role bucket) is **not** control-licensed, so
-widening the authority model is not the lever. Those are genuine subject disagreements
-(enjambment, pro-drop resolution) and belong to hand/LLM triage — i.e. to Phase 5e.
-
-## Cost comparison
-
-| approach | violations removed | cost |
-|---|---|---|
-| `--fix`, measured (inferno 1, serial, local) | 4 | 3 h, 19 LLM calls |
-| `--fix`, full corpus pass (extrapolated from that rate) | ~450 | **2235 LLM calls** |
-| `--fix`, full corpus pass (Phase 5e, **actually measured**) | **231** | **2037 LLM calls** |
-| **Phases 5a + 5b (deterministic)** | **1073** | **0 LLM calls, minutes** |
-| **Phase 5f, one rule (deterministic)** | **288** | **0 LLM calls, minutes** |
-| **Phase 5g, one rule (deterministic)** | **230** | **0 LLM calls, minutes** |
-| **Phase 5h, one rule (deterministic)** | **29** | **0 LLM calls, minutes** |
-| **Phase 5i, Layer-4 correction (hand-verified)** | **26** | **0 LLM calls, 26 dep rows** |
-| **Phase 5j, one rule + normalization (deterministic)** | **118** | **0 LLM calls, minutes** |
-| **Phase 5k, two rules (deterministic)** | **48** | **0 LLM calls, minutes** |
-| **Phase 5l, one rule (deterministic)** | **68** | **0 LLM calls, minutes** |
-| **Phase 5m, one rule (deterministic)** | **62** | **0 LLM calls, minutes** |
-| **Phase 5n, Layer-4 correction (hand-verified)** | **21** | **0 LLM calls, 22 dep rows** |
-| **Phase 5o, one rule (deterministic)** | **13** | **0 LLM calls, minutes** |
-| **Phase 5p, two Layer-4 rounds (hand-verified)** | **10** | **0 LLM calls, 14 dep rows** |
-| `--fix`, full corpus pass (Phase 5q, **actually measured**) | **147** | **1702 LLM calls, ≈28 h** |
-| **Phase 5q, the `ioj` typo fix (mechanical)** | **4** | **0 LLM calls, 2 skel rows** |
-| `--fix`, full corpus pass (Phase 5w, **actually measured**) | **123** | **1290 LLM calls** |
-| **Phase 6, `--fix`'s new deterministic stage 1** | **73** | **0 LLM calls, minutes** |
-
-**Phase 6 restructured `--fix` itself** rather than adding another rule to the checker: it now
-runs deterministically first (the row above), then asks **one narrow question per violation
-class** with a prompt of its own, and only then falls back to the whole-unit regeneration every
-`--fix` row above measures. The reason is in this very table — a regeneration pass has returned
-between 0.068 and 0.199 violations per call for six rounds running, while every deterministic
-row cost nothing, and Phase 5w established *why*: a pass moves a class only when something about
-that class changed, so one prompt asked to fix everything at once moves nothing in particular.
-The per-class yield of stage 2 is unmeasured until a user-run round; the summary `--fix` prints
-is now per class precisely so that round can answer it.
-
-The deterministic phases delivered roughly **4.6× the `--fix` pass that followed them, instantly**
-— and the extrapolation above turned out to be optimistic by 2×, because the 8.7% success rate
-came with fewer violations fixed per accepted unit than inferno 1 had suggested. They also cut
-the `--fix` workload from 2235 to 2037 flagged units, removing precisely the units regeneration
-could never have fixed; that did **not** raise the success rate (10.5% → 8.7%), which is the
-Phase 5e result.
-
-## What is deliberately not proposed
-
-- **Enumerating conjuncts on the derived side** (Rule A) — measured net-zero, for the reason
-  above.
-- **Sharing non-subject arguments across coordinated predicates** (Rule B) — measured +2326.
-- **Widening the control-subject authority model** (Rule E) — measured −22; the hypothesis that
-  the large `extra_arg subj` bucket is control-licensed is disproved.
-- **A blanket rule over the `advmod`/`expl`/`mark` direct-child deprels** — these are a mix of
-  genuine LLM over-promotion and probable Layer-4 mistags; a blanket exemption would swallow
-  both. Phase 5b/5d triaged them instead, and the outcome vindicates the caution: of the
-  `advmod` mass only the *adverbial oblique* half (adverb POS, `obl` role — 67) was accepted,
-  the `xcomp`-over-`advmod` half (91) stays flagged; the `expl` cases turned out to be neither
-  exemptible nor Layer-4 errors but plain LLM misreadings; `mark` was left untouched until Phase
-  5m read it, and its verdict was the same shape — no gate, so it went back to Layer 4 as Phase
-  5n's hand-verified correction round (22 of 35 retagged, −21).
-- **A loose variant of rule T** — accepting a bare given `obl` over any marked `advcl` — measured
-  at a further −2 and rejected: the markers involved (`ove`, `quando`) are not prepositions, so
-  nothing in the tree confirms the oblique reading. Same narrowing as rules N/O/S.
-- **A rule over the `ccomp`/`xcomp` half of the `advcl` bucket** — the complement-vs-adjunct
-  distinction, which needs a verb lexicon (see section 2a); the sound minority went back to
-  Layer 4 by hand instead, as Phase 5p (6 of 35 retagged).
-- **Remapping a given `aux`/`cop` predicate onto its lexical head** (as opposed to suppressing
-  the redundant tuple) — measured −6, and −2 in its narrower variant; see 5b.
+1. Create a clean worktree at base HEAD:
+   ```bash
+   git worktree add <scratch>/base HEAD
+   # Symlink generated src/ directories into worktree if needed
+   ```
+2. Run validation across all cantos in both trees:
+   ```bash
+   uv run skel.py inferno purgatorio paradiso --check
+   ```
+3. Diff at the **parse-unit** level (`dep.sentence_groups`):
+   - Units flagged before / after.
+   - Units improved / cleared.
+   - Units that regressed or were newly flagged (must remain **0**).
+4. Compute per-unit yield (violations removed ÷ units flagged before).
+5. Output results broken down by `_violation_subclass`.
