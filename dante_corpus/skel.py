@@ -597,6 +597,16 @@ def _apply_subj_authority(
         # **227 actively disagree** — an inherited subject in that set is not a candidate to
         # require, so it is dropped rather than asserted.
         d.pop(d_subj, None)
+        # Rule AH, AG's second leg: dropping the inherited subject makes the derivation *silent*
+        # about this predicate's subject, which is exactly the state branch 2 above already treats
+        # as LLM-authoritative for ∅. Leaving the LLM's ∅ standing turned one divergence into an
+        # `extra_arg` the derivation had just disclaimed any opinion on — "e ora attendi qui"
+        # (inferno 10:129), a 2sg imperative conj-attached to `conservi`, whose 3sg subject "La
+        # mente tua" AG drops; the LLM's ∅ was then reported as a spurious extra argument. Only ∅
+        # is dropped: a conjunct where the LLM resolved a *concrete* subject is making its own
+        # claim about a slot the derivation no longer fills, and stays flagged.
+        if _subj_arg(g) == (0, 0):
+            g.pop((0, 0), None)
     elif given_by_pred is not None and _inherited_subject(pos, dep_index_by_pos):
         # Rule AC: an inherited subject is not an independent assertion about *this* predicate.
         # `derive_unit`'s step 3 copies the coordination head's subject onto a conjunct that has
@@ -677,6 +687,96 @@ def _collapse_coordination(
         if prev is None or (_role_rank(role), role) < (_role_rank(prev), prev):
             out[key] = role
     return out
+
+
+def _conj_shared_argument(
+    pos: tuple[int, int], arg: tuple[int, int], grole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    derived_by_pred: dict[tuple[int, int], list[SkelRow]],
+    d: dict[tuple[int, int], str],
+) -> bool:
+    """Rule AJ: an argument gapped from the coordination head onto this conjunct.
+
+    `derive_unit`'s step 3 propagates a shared **subject** across a coordination and nothing else,
+    but Italian gaps objects and datives just as freely — "li rami *schianta*, *abbatte* e *porta*
+    fori" (inferno 9:70), "m'hai sicurtà *renduta* e *tratto* d'alto periglio" (8:98), "lo spirito
+    lasso *conforta* e *ciba*" (8:107). The LLM restates the shared argument under each conjunct,
+    which is the correct reading; the derivation, reading only each predicate's own children,
+    sees it once and reports the restatements as extra arguments.
+
+    Accepted whatever role the conjunct assigns it: gapping genuinely changes the role, as in
+    "ha *tolto* loro, e *posti* a questa zuffa" (7:59), where `loro` is the head's `iobj` and the
+    conjunct's `obj`. The gate that keeps this from absorbing real disagreements is on the *slot*,
+    not the role — the conjunct must have no derived filler of that role of its own. `subj` is
+    excluded throughout: step 3 and the authority model (rules AC, AG, AH) already own it.
+    """
+    if grole == "subj" or arg == (0, 0) or grole in d.values():
+        return False
+    # Every conjunct up the chain, not just its head: "schianta, abbatte e porta" chains
+    # `porta` -> `abbatte` -> `schianta`, and `li rami` is `schianta`'s object, while
+    # `_coordination_head` would walk past it to `fier` at the top of the coordination.
+    cur = pos
+    for _ in range(_CONJ_WALK_LIMIT):
+        row = dep_index_by_pos.get(cur)
+        if row is None or row.deprel != "conj":
+            return False
+        cur = (row.head_line, row.head_token)
+        if cur == pos or cur not in dep_index_by_pos:
+            return False
+        if any((r.arg_line, r.arg_token) == arg and r.role not in ("", "subj")
+               for r in derived_by_pred.get(cur, ())):
+            return True
+    return False
+
+
+def _np_head_equivalent(
+    a: tuple[int, int], b: tuple[int, int], np_spans_by_line: dict[int, list[NPSpan]]
+) -> bool:
+    """Rule AI: whether two argument citations are the same Layer-3 noun phrase named twice.
+
+    Layer 3's `head` and Layer 4's attachment point are computed independently and do not always
+    land on the same token of one NP. `SYSTEM_PROMPT` tells the model to "prefer a noun phrase's
+    head token", so the LLM cites Layer 3's head and `derive_unit` cites whatever Layer 4 hung the
+    argument edge on — "Qui con **più di mille** giaccio" (inferno 10:118), where the NP
+    `[più di mille]` has `head=più` and Layer 4 attaches `mille`. One argument then costs two
+    violations, a `missing_arg` and an `extra_arg`, without either side having read the line
+    differently.
+
+    True only when both positions lie inside a single NP span **and** one of them is that span's
+    head: two tokens that merely share a line, or two nominals inside one span neither of which is
+    its head, are not each other's alternative name.
+    """
+    if a == (0, 0) or b == (0, 0) or a == b or a[0] != b[0]:
+        return False
+    for span in np_spans_by_line.get(a[0], ()):
+        if span.start <= a[1] <= span.end and span.start <= b[1] <= span.end:
+            if span.head in (a[1], b[1]):
+                return True
+    return False
+
+
+def _merge_np_head_citations(
+    g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+    np_spans_by_line: dict[int, list[NPSpan]],
+) -> None:
+    """Rule AI: re-key a given citation onto the derived one when `_np_head_equivalent` says the
+    two name one NP in the same role. Mutates `g` in place.
+
+    Only unmatched positions on both sides pair up, and each is consumed once, so this can never
+    silence a role disagreement or absorb a second, genuinely different argument.
+    """
+    roles = {role for arg, role in d.items() if arg not in g}
+    for role in sorted(roles):
+        unmatched_d = sorted(a for a, r in d.items() if r == role and a not in g)
+        unmatched_g = sorted(a for a, r in g.items() if r == role and a not in d)
+        for a_d in unmatched_d:
+            match = next((a for a in unmatched_g if _np_head_equivalent(a, a_d, np_spans_by_line)),
+                         None)
+            if match is None:
+                continue
+            unmatched_g.remove(match)
+            del g[match]
+            g[a_d] = role
 
 
 def _aux_head(
@@ -945,6 +1045,53 @@ def _bare_pronoun_position(
     return SLOT_SEP not in value and value.strip().lower().endswith("pronoun")
 
 
+def _comparative_come_complement(
+    grole: str, drole: str, arg: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule AK: a comparative `come` phrase read as a predicative complement.
+
+    "che qui staranno *come porci* in brago" (inferno 8:50). Layer 2 tags `come` a **conjunction**
+    — which is what it is, the marker of a comparative clause — while Layer 4 attaches it as a
+    `case` child, so `derive_unit`'s oblique refinement mints the preposition-shaped role
+    `obl:come` out of a token no layer calls a preposition. The LLM reads the phrase as the
+    predicative complement it is. Gated on Layer 2's own POS, so a `come` that some other position
+    genuinely tags as a preposition keeps its oblique reading.
+    """
+    if drole != "obl:come" or grole != "xcomp":
+        return False
+    if dep_index_by_pos is None or morph_pos_by_position is None:
+        return False
+    return any(
+        row.deprel == "case" and (row.head_line, row.head_token) == arg
+        and _normalize_prep_lemma(row.word.lower()) == "come"
+        and "conjunction" in morph_pos_by_position.get((row.line, row.token), "").lower()
+        for row in dep_index_by_pos.values()
+    )
+
+
+def _fused_clitic_dual_role(
+    grole: str, drole: str, arg: tuple[int, int],
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule AL: a fused clitic cluster that genuinely fills two roles at once.
+
+    "non *gliel* celai" (inferno 10:44) is `gli` + `lo` in one Layer-1 token — the dative and the
+    accusative of one verb. The LLM lists both rows, as it should; Layer 4 has one deprel per
+    token, so whichever row the derivation did not pick becomes a role_mismatch on a token that
+    is not in dispute at all. The `double_listed` whitelist already accepts the `extra_arg` leg of
+    this shape; this is the same acceptance for the role_mismatch leg.
+
+    Gated on Layer 2 having tagged the token as two fused pronouns, and on the two roles being
+    exactly the pair such a cluster encodes.
+    """
+    if {grole, drole} != {"obj", "obl:a"} or morph_pos_by_position is None:
+        return False
+    tag = morph_pos_by_position.get(arg, "").lower()
+    return tag.count("pronoun") >= 2
+
+
 def _case_corroborated_role(
     grole: str, drole: str, arg: tuple[int, int],
     case_by_position: dict[tuple[int, int], str] | None,
@@ -1013,6 +1160,7 @@ def _classify_divergence(
     case_by_position: dict[tuple[int, int], str] | None = None,
     morph_lemma_by_position: dict[tuple[int, int], str] | None = None,
     morph_rows: dict[int, list[MorphRow]] | None = None,
+    np_rows: dict[int, list[NPSpan]] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
     children_by_pos: dict[tuple[int, int], list[DepRow]] = {}
@@ -1291,6 +1439,8 @@ def _classify_divergence(
             g = _collapse_coordination(g, pos, dep_index_by_pos)
             d = _collapse_coordination(d, pos, dep_index_by_pos)
             _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
+            if np_rows is not None:
+                _merge_np_head_citations(g, d, np_rows)
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)
             if grole is None:
@@ -1317,7 +1467,10 @@ def _classify_divergence(
                         or _case_corroborated_role(grole, drole, arg, case_by_position,
                                                    morph_pos_by_position)
                         or _case_corroborated_swap(grole, drole, arg, g, d, case_by_position,
-                                                   morph_pos_by_position)):
+                                                   morph_pos_by_position)
+                        or _comparative_come_complement(grole, drole, arg, dep_index_by_pos,
+                                                        morph_pos_by_position)
+                        or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
@@ -1337,6 +1490,8 @@ def _classify_divergence(
                     or _reflexive_clitic_argument(pos, arg, grole)
                     or _copular_adverb_complement(pos, arg, grole)
                     or _free_relative_head(pos, arg, grole, d)
+                    or _conj_shared_argument(pos, arg, grole, dep_index_by_pos,
+                                             derived_by_pred, d)
                     # rule X, mirror leg: derive_unit hung it on the copula this predicate
                     # is the complement of
                     or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
@@ -1544,7 +1699,9 @@ def validate_unit(
     (only when `dep_rows`/`morph_rows` supplied): `missing_tuple`, `extra_tuple`, `missing_arg`,
     `extra_arg`, `role_mismatch`. `case_rows` (the Layer-2 `case` annex, optional) feeds rule U,
     which accepts a `role_mismatch` whose argument's frozen case value corroborates the derived
-    role alone. See module docstring and PLAN.md.
+    role alone; `np_rows` additionally feeds rule AI, which pairs a `missing_arg` and an
+    `extra_arg` naming one Layer-3 NP by its head and by Layer 4's attachment point. See module
+    docstring and PLAN.md.
     """
     violations: list[Violation] = []
     token_lists = {no: _alpha_tokens(t) for no, t in zip(nos, texts)}
@@ -1655,7 +1812,7 @@ def validate_unit(
         }
         violations.extend(_classify_divergence(
             rows_by_line, derived, dep_index(dep_rows), morph_pos_by_position, case_by_position,
-            morph_lemma_by_position, morph_rows,
+            morph_lemma_by_position, morph_rows, np_rows,
         ))
 
     return violations

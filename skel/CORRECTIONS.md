@@ -2516,3 +2516,108 @@ canto 1; the actual largest class is different and still open (see below).
 1 --check`). Item 1 (xcomp control) is the dominant remaining class and is an open design
 question, not a bug to silently fix; items 2 and 4 are structural/POS-ambiguity limits expected
 to recur at low, tolerable rates across the corpus. No canto-2+ build has been run yet.
+
+## Rules AH-AL and the Inferno 7-10 read (2026-08-14)
+
+Per-position read of all **37** soft violations standing in Inferno 7-10, on Phase 6's principle
+that aggregate statistics misdiagnose checker silence as LLM error. Each position was read against
+its terzina with `morph`/`np`/`dep` open; the read produced five deterministic checker rules, five
+upstream mistags, eight Layer-4 retags, three prompt defects, and two candidate rules measured and
+dropped. **1247 → 1091 soft (−156, −12.5%)**, 0 hard throughout, with **zero model calls**.
+
+Inferno 7-10 itself went **37 → 17**.
+
+### The five rules
+
+Every population below was measured over all 100 cantos before the rule was written.
+
+| rule | shape | population | moved |
+|---|---|---:|---:|
+| **AH** | `extra_arg subj ∅` left standing after rule AG dropped the inherited subject | 69 | −14 |
+| **AI** | Layer-3 NP head vs Layer-4 attachment naming one argument twice | 92 slots / 184 | −71 |
+| **AJ** | an object or dative gapped from the coordination head onto a conjunct | — | −59 |
+| **AK** | comparative `come` minted into `obl:come` from a Layer-2 conjunction | 7 | −6 |
+| **AL** | a fused clitic cluster (`gliel` = `gli`+`lo`) genuinely filling two roles | 4 | −4 |
+
+**Rule AH — AG's second leg.** *"e ora attendi qui"* (10:129) is a 2sg imperative attached `conj`
+to `conservi`, whose 3sg subject *La mente tua* step 3 propagates onto it. Rule AG correctly
+detects the person disagreement and drops the derived subject — and then the LLM's `∅` was
+reported as an `extra_arg`, an argument the derivation had just disclaimed any opinion about. AG
+was fixing one leg of a divergence and manufacturing the other. The fix is the authority model's
+own logic: branch 2 already accepts `∅` wherever the derivation is silent, and after AG fires it
+*is* silent. Only `∅` is dropped — a conjunct where the LLM resolved a concrete subject is making
+its own claim and stays flagged. **14 of the 69** ∅-subject positions turned out to be AG-dropped;
+the other 55 (e.g. 9:20, where `alcun` at 21.4 is a genuine long-distance overt subject the LLM
+missed) are unaffected, which is the point of measuring the split rather than assuming it.
+
+**Rule AI — NP head vs dep attachment.** *"Qui con più di mille giaccio"* (10:118): Layer 3 gives
+the NP `[più di mille]` `head=più`, Layer 4 hangs `mille`. `SYSTEM_PROMPT` tells the model to
+"prefer a noun phrase's head token", so the LLM cites Layer 3's head and the derivation cites
+Layer 4's — one argument, two violations, neither side having read the line differently. 7:39
+(`[questi chercuti]` `head=chercuti`, dep `nsubj=questi`) is the same shape. The rule pairs an
+unmatched `missing_arg` and `extra_arg` **in the same role** when both positions lie in one NP span
+and one of them is that span's head; each is consumed once, so it can never silence a role
+disagreement or absorb a second argument. Chosen over editing `np/`'s heads so no Layer-3 artifact
+hash moves. **35 of the 92 candidate slots** matched the gate.
+
+**Rule AJ — coordination gapping.** The densest single pattern of the read, six positions in four
+cantos: 7:59 `posti`, 8:98 `tratto`, 8:107 `ciba`, 9:70 `abbatte`/`porta`, 9:102 `morda`. Step 3
+propagates a shared **subject** across a coordination and nothing else, but Italian gaps objects
+and datives just as freely — *"li rami schianta, abbatte e porta fori"*. Accepted whatever role the
+conjunct assigns, because gapping genuinely changes it (7:59: `loro` is the head's `iobj` and the
+conjunct's `obj`); the gate is on the *slot* being empty on the conjunct side, not on the role
+matching. One implementation note worth keeping: the walk must visit **every** conjunct up the
+chain, not `_coordination_head`'s topmost one — `porta` chains to `abbatte` to `schianta`, and the
+gapped object belongs to `schianta` while the coordination head is `fier`, two lines up. Walking to
+the head alone fired on 3 of the 6 positions; walking the chain fires on all 6.
+
+**Rule AK — comparative `come`.** *"che qui staranno come porci in brago"* (8:50). Layer 2 tags
+`come` a conjunction — which is what it is, a comparative marker — while Layer 4 attaches it as a
+`case` child, so the oblique refinement mints `obl:come` out of a token no layer calls a
+preposition. Gated on Layer 2's own POS, so a `come` genuinely tagged a preposition keeps its
+oblique reading. 6 of 7; the seventh has Layer 2 calling it a preposition.
+
+**Rule AL — dual-role fused clitic.** *"non gliel celai"* (10:44) is `gli` + `lo` in one Layer-1
+token, the dative and the accusative of one verb. The Phase-4 `double_listed` whitelist already
+accepted the `extra_arg` leg of this; AL is the same acceptance for the `role_mismatch` leg, gated
+on Layer 2 having tagged the token as two fused pronouns and on the roles being exactly the pair
+such a cluster encodes.
+
+### Two candidates measured and dropped
+
+- **A Stage-1 repair retargeting a conjunction-anchored predicate.** At 8:52 the LLM opened the
+  elided-speech frame on `E` rather than on `io`. A deterministic repair moving the Pred to the
+  `conj` head asserts no new reading and looked worth having — but the corpus carries **exactly one**
+  `extra_tuple` whose predicate POS is `conjunction`, and it is a different shape (`perché`, inferno
+  30:59). Population effectively 0. The frame is addressed on the prompt side instead (below).
+- **Retagging relative `che`/`ch'`/`onde` from `conjunction` to `pronoun`** (247 tokens). Implemented,
+  measured, reverted: it demands 243 new `case`-annex rows, and filling those from Layer 4 would make
+  rule U's adjudication circular. See [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
+
+### Three prompt defects (no count movement until the next `--fix` round)
+
+1. **`_CONV_ADVERB`'s "or it is left out"** — the single largest finding. The shared conventions
+   text and `SYSTEM_PROMPT` both gave the model blanket licence to omit an adverb argument. The
+   derivation has no such licence: wherever Layer 4 attaches an adverb with deprel `obl`, an
+   oblique is emitted. Measured cost: **82 `missing_arg` positions whose argument is an adverb** —
+   the largest unbranched bucket in the residue — and the sample is strikingly homogeneous
+   (`fuor` 8, `là` 6, `dentro` 6, `dove`/`ove`/`u'`/`v'` 7, `dinanzi` 4, `dietro` 3, plus `qua`,
+   `qui`, `suso`, `giù`, `intorno`, `oltre`, `innanzi`). Resolved prompt-side, since Layer 4's
+   `obl`-vs-`advmod` split is a real judgment Layer 5 must respect: the licence now covers only
+   manner/degree/negation adverbs, and a new `_CONV_ADVERB_ARG` block states that a locative or
+   directional adverb answering *where/whither* is an argument. New Stage-2 class
+   **`missing_arg_adverb`** carries it, keyed on the *argument's* POS like `extra_arg_adjective`.
+   Note the class cannot name the adverb in its question — that is the derivation's own argument
+   position, which the independence rule forbids disclosing — so the convention block, not the
+   question, is what points the model at it.
+2. **The elided verb of speech without an addressee.** 7:49, 8:52, 8:70 and 10:19 are all `E io:
+   «…»` with no a-phrase; 10:85 `Ond' io a lui: «…»` — the same frame *with* an addressee — the LLM
+   gets right. Every example in `SYSTEM_PROMPT`, `_CONV_VERBLESS` and the `missing_tuple_nominal`
+   hint carried an addressee and prescribed `obl:a`, so the model was treating it as criterial.
+   All three now state that the addressee is optional, and that the Pred token is never the
+   conjunction in front of the speaker's pronoun (the 8:52 error).
+3. **Appositive adjective phrases.** 9:111 *"grande campagna, piena di duolo e di tormento rio"* —
+   `_CONV_ADJECTIVE` ruled out only the *attributive* case. The appositive one is now named too.
+
+`missing_arg_adverb` stands at 82 unchanged, as it must: the route is prompt-side and moves only
+when a `--fix` round is run. That round is the user's, and it is now worth running.

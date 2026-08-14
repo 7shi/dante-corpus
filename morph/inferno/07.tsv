@@ -259,10 +259,10 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 38	e	e	conjunction						
 38	se	se	conjunction						
 38	tutti	tutto	adjective	m.	pl.				
-38	fuor	fuori	adverb						apocope
-38	cherci	cerchio	noun	m.	pl.				archaic
+38	fuor	essere	verb		pl.	3	remote past	indicative	apocope
+38	cherci	cherico	noun	m.	pl.				archaic
 39	questi	questo	pronoun	m.	pl.				
-39	chercuti	cercare	adjective	m.	pl.				past participle
+39	chercuti	chercuto	adjective	m.	pl.				archaic
 39	a	a	preposition						
 39	la	la	article	f.	sg.				
 39	sinistra	sinistra	noun	f.	sg.				

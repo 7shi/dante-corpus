@@ -295,9 +295,9 @@ line	token	word	deprel	head_line	head_token
 40	4	verdissime	amod	40	3
 40	5	eran	aux	40	6
 40	6	cinte	acl:relcl	38	2
-41	1	serpentelli	nsubj	41	4
-41	2	e	conj	41	3
-41	3	ceraste	nsubj	41	4
+41	1	serpentelli	obj	41	4
+41	2	e	cc	41	3
+41	3	ceraste	conj	41	1
 41	4	avien	acl:relcl	38	2
 41	5	per	case	41	6
 41	6	crine	obl	41	4
@@ -516,7 +516,7 @@ line	token	word	deprel	head_line	head_token
 72	2	fa	conj	71	3
 72	3	fuggir	xcomp	72	2
 72	4	le	det	72	5
-72	5	fiere	obj	72	3
+72	5	fiere	nsubj	72	3
 72	6	e	cc	72	8
 72	7	li	det	72	8
 72	8	pastori	conj	72	5
@@ -744,7 +744,7 @@ line	token	word	deprel	head_line	head_token
 102	7	e	cc	102	8
 102	8	morda	conj	102	6
 103	1	che	case	103	2
-103	2	quella	obl	102	6
+103	2	quella	nmod	102	5
 103	3	di	case	103	4
 103	4	colui	nmod	103	2
 103	5	che	nsubj	103	7

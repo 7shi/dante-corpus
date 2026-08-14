@@ -501,3 +501,38 @@ Layer-4 retags are in [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 | inferno 2:102 `che` | `conjunction` | `pronoun` | *"che mi sedea con l'antica Rachele"*: the relative subject of `sedea`. Same family as the `che` retags this file already records — and the retag pulls the position into the `case` annex's scope (one new row, `nominative`; see [`case/CORRECTIONS.md`](../case/CORRECTIONS.md)). |
 | inferno 3:76 `fier` | `fare`, 1sg future | `essere`, 3pl future | *"Le cose ti fier conte"* = "the things will be made known to you". `fier` is the archaic 3pl of `essere` (beside `fia`, `fieno`), agreeing with `cose`. |
 | inferno 3:76 `conte` | `conto`, `noun` m. sg., apocope | `conto`, `adjective`, f. pl. | The predicate adjective ("known"), agreeing with `cose` — not a masculine noun. |
+
+## Three mistags from Layer 5's Inferno 7-10 read (2026-08-14)
+
+Surfaced by the per-position read of all 37 Layer-5 soft violations standing in Inferno 7-10 (see
+[`skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Rules AH-AL*). Each was verified against its
+terzina and corrected in place; `morph --check` stays 0 hard / 0 soft, and the accompanying
+Layer-3/4/annex rows for `ten` are in [`np/CORRECTIONS.md`](../np/CORRECTIONS.md),
+[`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and [`case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+| position | was | now | why |
+|---|---|---|---|
+| inferno 7:38 `fuor` | `fuori`, `adverb`, apocope | `essere`, `verb`, 3pl remote past indicative | *"e se tutti fuor cherci"* = "and whether they were all clerics". `fuor` is the apocopated *furono*. The corpus already tags the identical `fuor` **two lines later** (7:40, *"Tutti quanti fuor guerci"*) as `essere`, and Layer 4 makes that one a `cop` — the two adjacent instances of one word were simply tagged differently. |
+| inferno 7:38 `cherci` | lemma `cerchio` | lemma `cherico` | The clerics of the line, not circles: *"se tutti fuor cherci / questi chercuti"*. |
+| inferno 7:39 `chercuti` | lemma `cercare`, note `past participle` | lemma `chercuto`, note `archaic` | "the tonsured ones" (from *chierica*, the tonsure) — not a participle of *cercare*, which the line's sense does not admit. |
+| inferno 8:71 `entro` | `preposition` | `adverb` | *"là entro certe ne la valle cerno"*: `là entro` is adverbial ("in there"), and `certe` modifies `meschite`, not `entro`. Layer 4 already said `advmod`; the mistag is what let Layer 5 mint a spurious `obl:entro`. |
+| inferno 10:23 `ten` | `tenere`, `verb`, 2sg present indicative | `te+ne`, `pronoun+pronoun`, contraction | *"vivo ten vai"* = *te ne vai*, "you go (from here) alive" — a clitic cluster, not a form of *tenere*. Tagged exactly like `sen` (`si+ne`) at 10:1 of the same canto. |
+
+### A retag measured and **not** applied: relative `che`/`ch'`/`onde` tagged `conjunction`
+
+The read also confirmed at scale the `che`/`ch'` mistag family this file already records: **250
+tokens** across the corpus carry Layer-2 POS `conjunction` while Layer 4 fills an argument slot
+(`nsubj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl`) with them — 139 `che`, 92 `ch'`, 16
+`onde`/`ond'`, and 3 outliers. Retagging the 247 relative ones was implemented and measured, then
+**reverted**, for a reason worth freezing:
+
+> The `case` annex requires one row per Layer-2 pronoun token, so the retag turned `case --check`
+> into **243 hard violations**. Those values may not be filled in from Layer 4's deprels: rule U
+> uses the annex precisely as a *third, independent* opinion when Layer 4 and the LLM disagree
+> about a role, and deriving it from Layer 4 would make that adjudication circular.
+
+The retag is therefore gated on an independent model read of the annex over those 243 positions —
+a build round, not an edit. Until then the checker's existing workaround stands (`validate_unit`
+accepts the word forms `che`/`ch'`/`cui`/`qual`/`quale`/`chi` regardless of the frozen POS tag).
+The 3 outliers were not Layer-2 defects at all and were fixed in Layer 4 instead; see
+[`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).

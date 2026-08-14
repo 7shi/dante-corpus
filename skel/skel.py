@@ -80,7 +80,12 @@ Rules:
   + infinitive; the noun a participle modifies). Use the ∅ row only when nothing in the sentence
   supplies a subject; do not write ∅ for a subject that is expressed elsewhere in the sentence.
 * An ADVERB is never a predicate — not a comparative (più, meno, sì), not a locative (dentro,
-  dinanzi, dietro, fuor). Cite it as an argument, or leave it out; never open a row for it as Pred.
+  dinanzi, dietro, fuor); never open a row for it as Pred. But a LOCATIVE OR DIRECTIONAL adverb
+  that answers *where* or *whither* for the verb IS one of its arguments and gets its own row:
+  là, qui, qua, dentro, fuor, dinanzi, dietro, suso, giù, oltre, intorno, and the relative
+  dove/ove/u'/v'. Give it as obl:<preposition> if a preposition is written, and as bare obl if
+  none is ("Così girammo... **dentro**"). Only a manner, degree or negation adverb (più, non,
+  ben, così, sì) is left out.
 * attr is the role for a secondary predicate over an argument — an adjective or noun predicated of
   the verb's object or subject without its own copula ("faceva dir l'un ‘No’", "vidi lui contento").
   Give it as attr on the matrix verb; do not make it a predicate of its own.
@@ -88,13 +93,18 @@ Rules:
   out) is reported with the SUBJECT token itself as the predicate: Pred = elli / io / the speaker's
   noun, with Role subj Arg 0 0 ∅ (the verb is missing, so its own subject slot is empty), the
   quotation's main verb as ccomp, and the addressee as obl:a. Do not skip these frames — they are
-  predicates even though no verb is written.
+  predicates even though no verb is written. The ADDRESSEE IS OPTIONAL: "E io: «Maestro, …»",
+  "e quei: «Di rado …»" are the same frame with no a-phrase written, so they get the same Pred row
+  and the same ccomp, just no obl:a. Never anchor the frame on the conjunction ("E", "Ed", "Ma") —
+  the Pred token is the pronoun or noun that names the speaker.
 * The same holds for any other VERBLESS clause: an exclamation or apposition predicated with no
   copula written ("e te cortese ch'ubidisti tosto", "mantoani per patrïa ambedui") has its noun or
   pronoun as the Pred token, with Role subj Arg 0 0 ∅.
 * An ATTRIBUTIVE ADJECTIVE is not a predicate: "una lonza leggera", "l'antica Rachele", "persone
-  ratte" open no Pred row of their own. An adjective is a predicate only where a copula links it
-  ("anima fia degna", "e pronti sono"); a secondary predicate over an argument is the matrix
+  ratte" open no Pred row of their own. Neither is an APPOSITIVE one — an adjective phrase set off
+  by a comma from the noun it modifies ("grande campagna, piena di duolo e di tormento rio") is
+  still that noun's modifier, not a clause. An adjective is a predicate only where a copula links
+  it ("anima fia degna", "e pronti sono"); a secondary predicate over an argument is the matrix
   verb's attr, per the rule above.
 * A predicate with no arguments at all gets exactly one row: Role -, Arg Line 0, Arg Token 0,
   Arg Word -.
@@ -327,6 +337,15 @@ _HINT_PHRASING = {
                              "something, give it as attr/xcomp on that verb rather than a Pred row",
     "missing_arg": "the predicate '{word}' ({line}.{token}) may be missing a '{role}' argument — "
                    "check for one",
+    # A fourth POS-keyed variant, again on the argument's POS. `_CONV_ADVERB`'s old closing clause
+    # ("or it is left out") gave blanket licence to omit an adverb argument; Layer 4 has no such
+    # licence, and the Inferno 7-10 read measured 82 `missing_arg` positions whose argument is an
+    # adverb — almost all locatives. The phrasing must not name the position (independence rule),
+    # so it names the *kind* of word to look for.
+    "missing_arg_adverb": "the predicate '{word}' ({line}.{token}) may be missing a '{role}' "
+                          "argument — a locative or directional adverb (là, fuor, dentro, dinanzi, "
+                          "suso, dove, ...) answering where/whither for it counts as one, and is "
+                          "not to be skipped as a mere modifier",
     "extra_arg": "the predicate '{word}' ({line}.{token})'s '{role}' argument may not belong — "
                 "recheck it",
     # A third POS-keyed variant, on the argument's POS rather than the predicate's — rule AG's
@@ -544,21 +563,41 @@ the argument itself — never resolved to its antecedent. A verb token with a fu
 
 _CONV_ADVERB = """\
 An ADVERB is never a predicate — not a comparative (più, meno, sì), not a locative (dentro, \
-dinanzi, dietro, fuor). It is an argument of the verb it modifies, or it is left out.\
+dinanzi, dietro, fuor). It is an argument of the verb it modifies, or, if it is a manner or \
+degree adverb, it is left out.\
+"""
+
+# The argument-side half of the adverb convention. `_CONV_ADVERB` bans adverb *predicates*, and
+# its old closing clause ("or it is left out") also handed the model blanket licence to omit an
+# adverb argument — which Layer 4 does not have: wherever it attaches an adverb with deprel `obl`,
+# the derivation emits an oblique. That licence was measured as 82 `missing_arg` positions across
+# the corpus, almost all of them locatives (là, fuor, dentro, dinanzi, dove, suso, …), the largest
+# unbranched bucket in the residue at the Inferno 7-10 read.
+_CONV_ADVERB_ARG = """\
+A LOCATIVE OR DIRECTIONAL adverb — là, qui, qua, dentro, fuor, dinanzi, dietro, suso, giù, oltre, \
+intorno, and the relative dove/ove/u'/v' — that answers *where* or *whither* for the verb IS one \
+of its arguments, not a modifier to be skipped: cite it as `obl:<preposition>` if a preposition is \
+written and as bare `obl` if none is. Only a manner, degree or negation adverb (più, non, ben, \
+così, sì) is left out.\
 """
 
 _CONV_ADJECTIVE = """\
 An ATTRIBUTIVE ADJECTIVE is not a predicate: "una lonza leggera", "l'antica Rachele", "persone \
-ratte" head no clause. An adjective is a predicate only where a copula links it ("anima fia \
-degna", "e pronti sono"). An adjective predicated of another verb's argument is that verb's \
-`attr`, not a predicate of its own.\
+ratte" head no clause. Neither is an APPOSITIVE one — an adjective phrase set off by a comma from \
+the noun it modifies ("grande campagna, piena di duolo e di tormento rio") is still that noun's \
+modifier. An adjective is a predicate only where a copula links it ("anima fia degna", "e pronti \
+sono"). An adjective predicated of another verb's argument is that verb's `attr`, not a predicate \
+of its own.\
 """
 
 _CONV_VERBLESS = """\
 An ELIDED VERB OF SPEECH ("Ed elli a me: «…»", "E io a lui:", where the verb of saying is left \
 out) IS a clause, and the corpus makes the SUBJECT token its predicate: Pred = elli / io / the \
 speaker's noun, with `subj` 0.0 (the verb is missing, so its subject slot is empty), the \
-quotation's main verb as `ccomp`, and the addressee as `obl:a`. The same holds for any other \
+quotation's main verb as `ccomp`, and the addressee as `obl:a`. The ADDRESSEE IS OPTIONAL: "E io: \
+«Maestro, …»", "e quei: «Di rado …»" are the same frame with no a-phrase written — same Pred row, \
+same `ccomp`, just no `obl:a`. The Pred token is always the pronoun or noun naming the speaker, \
+never the conjunction in front of it ("E", "Ed", "Ma"). The same holds for any other \
 verbless clause predicated with no copula written ("e te cortese ch'ubidisti tosto", "mantoani \
 per patrïa ambedui"): the noun or pronoun is the Pred token, with `subj` 0.0.\
 """
@@ -772,6 +811,13 @@ _CLASS_PROMPTS: dict[str, _ClassPrompt] = {
     "missing_arg": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_PRODROP}\n\n{_CONV_RELPRON}",
         ask=_ask_missing_arg, apply=_apply_missing_arg),
+    # The class is keyed on the *argument's* POS, which the question may not name (the
+    # independence rule) — so the convention block, not the question, is what points the model at
+    # the adverb. It reads the sentence and supplies the position itself, exactly as for the
+    # generic `missing_arg`.
+    "missing_arg_adverb": _ClassPrompt(
+        system=f"{_ASK_HEADER}\n{_CONV_ADVERB_ARG}\n\n{_CONV_ROLES}",
+        ask=_ask_missing_arg, apply=_apply_missing_arg),
     "extra_tuple": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}",
         ask=_ask_extra_tuple, apply=_apply_extra_tuple),
@@ -811,6 +857,9 @@ def _violation_subclass(v: morph.Violation, ctx: _UnitContext) -> str:
     if (kind == "extra_arg" and v.role in ("xcomp", "attr") and v.arg is not None
             and "adjective" in ctx.pos_tag(v.arg).lower()):
         return "extra_arg_adjective"
+    if (kind == "missing_arg" and v.arg is not None
+            and "adverb" in ctx.pos_tag(v.arg).lower()):
+        return "missing_arg_adverb"
     return kind
 
 
@@ -1282,7 +1331,8 @@ def _is_improvement(
 _CLASS_ORDER = (
     "missing_tuple", "missing_tuple_nominal",
     "extra_tuple_adverb", "extra_tuple_adjective", "extra_tuple",
-    "role_mismatch", "extra_arg_adjective", "extra_arg", "missing_arg",
+    "role_mismatch", "extra_arg_adjective", "extra_arg",
+    "missing_arg_adverb", "missing_arg",
 )
 
 

@@ -7,9 +7,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 (`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic, so the
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rule AG: 1,409 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
+**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–AL: 1,091 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
 
-`make -C skel check`: **0 hard, 1247 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+`make -C skel check`: **0 hard, 1091 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## What it does
 
@@ -66,7 +66,7 @@ line	token	word	role	arg_line	arg_token
   the central check, every divergence from `derive_unit`:
   `missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`.
 
-Eleven refinements make that divergence check meaningful rather than noisy — landed as
+Thirteen refinements make that divergence check meaningful rather than noisy — landed as
 successive phases, each measured before/after (`--stats` aggregates violations by kind, by
 `(kind, role, ∅-or-real)`, and by `role_mismatch` pair):
 
@@ -196,15 +196,41 @@ successive phases, each measured before/after (`--stats` aggregates violations b
     (`venendomi` = `verb+pronoun`, where the annex's value is the enclitic's while the citation is
     the verb's) are excluded by `_bare_pronoun_position`.
 
+13. **Phase 6 — rules AH-AL, from the Inferno 7-10 read** (2026-08-14). Five acceptances, each
+    measured over all 100 cantos before being written; together **1247 → 1091 soft**, no model
+    calls. Full evidence in [`CORRECTIONS.md`](CORRECTIONS.md).
+    - **AH** (`_apply_subj_authority`, rule AG's branch): when rule AG drops a conj-inherited
+      subject whose Layer-2 person/number contradicts the predicate, the LLM's `∅` is dropped with
+      it. AG was disclaiming the derived subject and then reporting the LLM's ∅ as an `extra_arg`
+      about a slot the derivation no longer filled. Only `∅` — a concrete subject stays flagged.
+    - **AI** (`_np_head_equivalent` / `_merge_np_head_citations`): Layer 3's NP `head` and Layer
+      4's attachment point are computed independently and do not always land on the same token
+      (`[più di mille]` has `head=più`; Layer 4 attaches `mille`). Since `SYSTEM_PROMPT` tells the
+      model to prefer the NP head, one argument became a `missing_arg` **and** an `extra_arg`.
+      Paired and dropped when both positions lie in one NP span, one of them is its head, and the
+      role is the same. Two tokens sharing only a line, or a role disagreement, stay flagged.
+    - **AJ** (`_conj_shared_argument`): `derive_unit`'s step 3 propagates a shared **subject**
+      across a coordination and nothing else, but Italian gaps objects and datives just as freely
+      ("li rami *schianta*, *abbatte* e *porta* fori"). An `extra_arg` on a `conj` predicate is
+      accepted when the cited argument is an argument of some conjunct **up its chain** and the
+      conjunct has no derived filler of that role. The role may differ — gapping changes it — but
+      the slot must be empty, and `subj` is excluded (rules AC/AG/AH own it).
+    - **AK** (`_comparative_come_complement`): a given `xcomp` against a derived `obl:come`, when
+      Layer 2 tags `come` a **conjunction** and only Layer 4's `case` edge makes it a preposition
+      ("staranno *come porci* in brago").
+    - **AL** (`_fused_clitic_dual_role`): a `role_mismatch` between `obj` and `obl:a`/`iobj` on an
+      argument Layer 2 tags as two fused pronouns (`gliel` = `gli` + `lo`), which genuinely fills
+      both slots. The Phase-4 `double_listed` whitelist already accepted the `extra_arg` leg.
+
 **Measured Progression Across Phases**:
 - **Phase 4a Checkpoint (2026-07-20)**: `0 hard, 7776 soft` (down from 17,438 initial).
 - **Phase 4b `--fix` Pass (2026-07-25)**: `0 hard, 5919 soft` across all 100 cantos.
 - **Phase 5 Deterministic Series & Upstream Audits (Phases 5a–5w, Rules C–AF)**: Reduced soft violations from **5,919 → 2,084**. For the complete chronological record, per-phase measurement tables, Layer-4 corrections, and empirical findings on regeneration yield, see [`PHASE5.md`](PHASE5.md).
-- **Phase 6 Restructured `--fix` & Rule AG**: Reduced soft violations from **2,084 → 1,247** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+- **Phase 6 Restructured `--fix`, Rules AG–AL**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## Next steps
 
-For active Phase 6 open routes (assistant-side manual audits of the `extra_arg subj` null-position bucket, Inferno 7–9, attributive adjectives, promoted adverbs, stacked prepositions, and `missing_arg obl` sampling), see the active plan in [`PLAN.md`](PLAN.md).
+For active Phase 6 open routes (a queued `--fix` round, plus assistant-side manual audits of the `extra_arg subj` null-position residue, quoted speech under `parataxis`, Inferno 11–13, attributive adjectives, promoted adverbs, and stacked prepositions), see the active plan in [`PLAN.md`](PLAN.md).
 
 `--fix` (`skel/skel.py`) keeps a change only if the unit's soft violation count strictly drops
 **and** no violation class appears that wasn't already there (`_is_improvement`, Phase 5c — the

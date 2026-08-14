@@ -210,3 +210,10 @@ for every noun/proper-noun token flagged by `_needs_np` and not already a span's
 `NPSpan(line, i, i, i, tokens[i - 1])` and rewrote the artifact via `write_np`. This resolved all
 37 in one pass, matching the classification exactly (paradiso 13:139 needed two). Soft count:
 **0**.
+
+## One clitic-cluster enumeration from Layer 5's Inferno 7-10 read (2026-08-14)
+
+`morph/inferno/10.tsv` retagged 10:23 `ten` from a form of *tenere* to the clitic cluster `te+ne`
+(see [`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)), which brings the token under this layer's
+clitic-mention rule. Added `[+te]` and `[+ne]` alongside the existing `[ten]` span, exactly as
+`gliel` (10:44) and `sen` (10:1) are already enumerated. `np --check` stays 0 hard / 0 soft.

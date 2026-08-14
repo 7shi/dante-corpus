@@ -567,7 +567,7 @@ line	token	word	deprel	head_line	head_token
 78	3	mi	iobj	78	4
 78	4	parean	conj	76	3
 78	5	che	mark	78	7
-78	6	ferro	nsubj	78	7
+78	6	ferro	attr	78	7
 78	7	fosse	ccomp	78	4
 79	1	Non	advmod	79	2
 79	2	sanza	case	79	4

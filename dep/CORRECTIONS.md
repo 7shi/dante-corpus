@@ -946,3 +946,41 @@ Layer 5's count rose by four across the last two of these — at 3:13 the promot
 predicate the LLM never proposed, and at 3:76 the corrected parse no longer matches the LLM's
 (wrong) reading of the line. Both are `--fix` material, the same reading recorded in PLAN.md's
 *A note on Layer 5's count*; neither is a reason to revert a correct parse.
+
+## Nine retags from Layer 5's Inferno 7-10 read (2026-08-14)
+
+Surfaced by the per-position read of all 37 Layer-5 soft violations standing in Inferno 7-10 (see
+[`skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)'s *Rules AH-AL*). `dep --check` stays 0 hard / 18
+soft (the subject-agreement rule's verified standing residue); the accompanying Layer-2 retags are
+in [`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
+
+| position | was | now | why |
+|---|---|---|---|
+| inferno 8:78.6 `ferro` | `nsubj` → 78.7 | `attr` → 78.7 | *"le mura mi parean che ferro fosse"*: `ferro` is what the walls *seemed to be*, the predicate nominal — the subject of `fosse` is the elided *le mura*. Read as the subject, the clause lost its predication and gained a subject the line does not have. |
+| inferno 9:41.1 `serpentelli` | `nsubj` → 41.4 | `obj` → 41.4 | *"serpentelli e ceraste avien per crine"* — the Furies **have** snakes for hair. Line 39 two lines earlier already has the correct shape for the same verb (*"che membra feminine avieno"*: `che` nsubj, `membra` obj); 41 was inconsistent with it, and the inversion made the snakes the subject of *avere*. |
+| inferno 9:41.2 `e` | `conj` → 41.3 | `cc` → 41.3 | Follows from the above — the coordination is between the two objects, exactly as `e`/`atto` are coordinated at 39. |
+| inferno 9:41.3 `ceraste` | `nsubj` → 41.4 | `conj` → 41.1 | |
+| inferno 9:72.5 `fiere` | `obj` → 72.3 | `nsubj` → 72.3 | *"e fa fuggir le fiere e li pastori"*: the causee of *fare* + infinitive is the infinitive's **subject** — a rule `skel/skel.py`'s own `SYSTEM_PROMPT` states, and which Layer 4 was contradicting here. |
+| inferno 9:103.2 `quella` | `obl` → 102.6 | `nmod` → 102.5 | *"altra cura ... che quella di colui"*: `quella` is the standard of a comparison modifying `cura`, not an oblique argument of `stringa`. As an `obl` under a `case` child `che`, it made the derivation mint the preposition-shaped role `obl:che` out of a comparative conjunction. |
+| inferno 10:85.6 `strazio` | `obj` → 87.4 | `nsubj` → 87.3 | *"Lo strazio e 'l grande scempio ... tal orazion fa far nel nostro tempio"* = "the slaughter … causes such prayer to be made in our temple". Subject and object of the causative pair were exchanged. |
+| inferno 10:87.2 `orazion` | `nsubj` → 87.3 | `obj` → 87.4 | |
+| inferno 10:23.2 `ten` | `advcl` → 23.3 | `expl` → 23.3 | Follows the Layer-2 retag of `ten` to the clitic cluster `te+ne`; tagged exactly like `sen` at 10:1 of the same canto. |
+
+### Three `come`/`perché` structures, from the conjunction-in-argument-slot census
+
+The same read enumerated every token Layer 4 fills an argument slot with while Layer 2 calls it a
+`conjunction` (250 corpus-wide). 247 are the relative `che`/`ch'`/`onde` mistag family, which is a
+**Layer-2** defect deliberately left standing — see
+[`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) for why the retag is gated on a `case`-annex
+build round. The remaining 3 were Layer-4 structure errors and are fixed here:
+
+| position | was | now | why |
+|---|---|---|---|
+| inferno 30:59.5 `perché` | `ccomp` → 59.3 | `advmod` → 59.3 | *"e non so io perché"*: a bare interrogative adverb standing for an elided indirect question. It heads no clause, so `ccomp` asserted a clausal complement that is not written. |
+| paradiso 3:36.2 `com'` | `obl` → 35.6, with `uom` as its `obj` | `case` → 36.3 | *"quasi com' uom cui troppa voglia smaga"*: the comparative marker was made the head of the phrase and given an object. `com'` is the marker; `uom` is the oblique. |
+| paradiso 32:54.3 `come` | `obl` → 53.4, with `tristizia` as its `obj` | `case` → 54.4 | *"se non come tristizia o sete o fame"* — same shape, same fix. |
+
+The `perché` correction **raised** Layer 5's count by two (an `extra_tuple` and an `extra_arg` at
+inferno 30:59): the old `ccomp` was licensing an LLM reading that opened a predicate on an adverb,
+which the corpus's own rule forbids. The two new violations are correct flags of a real LLM error
+the mistag had been masking — the same trade this file records at inferno 3:13 and 3:76.

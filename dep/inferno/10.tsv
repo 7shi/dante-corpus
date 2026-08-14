@@ -155,7 +155,7 @@ line	token	word	deprel	head_line	head_token
 22	7	del	case	22	8
 22	8	foco	nmod	22	6
 23	1	vivo	advmod	23	3
-23	2	ten	advcl	23	3
+23	2	ten	expl	23	3
 23	3	vai	acl:relcl	22	2
 23	4	così	advmod	23	5
 23	5	parlando	xcomp	23	3
@@ -602,7 +602,7 @@ line	token	word	deprel	head_line	head_token
 85	3	a	case	85	4
 85	4	lui	obl	85	2
 85	5	Lo	det	85	6
-85	6	strazio	obj	87	4
+85	6	strazio	nsubj	87	3
 85	7	e	cc	85	10
 85	8	'l	det	85	10
 85	9	grande	amod	85	10
@@ -615,7 +615,7 @@ line	token	word	deprel	head_line	head_token
 86	6	in	case	86	7
 86	7	rosso	obl	86	5
 87	1	tal	det	87	2
-87	2	orazion	nsubj	87	3
+87	2	orazion	obj	87	4
 87	3	fa	ccomp	85	2
 87	4	far	xcomp	87	3
 87	5	nel	case	87	7

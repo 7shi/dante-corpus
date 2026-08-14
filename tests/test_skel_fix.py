@@ -381,13 +381,15 @@ def _stub_model(monkeypatch, reply):
 
 
 # Purgatorio 1 carries exactly one soft violation — a `missing_arg` at 102.1 — which makes it the
-# smallest real case for driving the whole stage-2 loop.
+# smallest real case for driving the whole stage-2 loop. Its argument is `intorno` (100.3), an
+# adverb, so it routes to the `missing_arg_adverb` subclass: the position is itself one of the 82
+# locative-adverb omissions that class was written for.
 def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monkeypatch):
     written = _stub_model(monkeypatch, "Q1: none")
     stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
     assert stats["units:flagged"] == 1
     assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 1
-    assert stats["calls:missing_arg"] == 1  # and no question about any other class
+    assert stats["calls:missing_arg_adverb"] == 1  # and no question about any other class
     assert sum(n for k, n in stats.items() if k.startswith("removed:")) == 0
     assert written == []                          # "none" changes nothing, so nothing is written
 
@@ -395,7 +397,7 @@ def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monk
 def test_fix_canto_accepts_a_class_answer_and_commits_it(monkeypatch):
     written = _stub_model(monkeypatch, "Q1: 100.3")
     stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
-    assert stats["removed:missing_arg"] == 1
+    assert stats["removed:missing_arg_adverb"] == 1
     assert stats["units:cleared"] == 1
     assert written, "an accepted splice must be written back"
 
@@ -404,7 +406,7 @@ def test_fix_canto_sends_the_class_specific_system_prompt(monkeypatch):
     _stub_model(monkeypatch, "Q1: none")
     drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
     system, question = _FakeClient.seen[0]
-    assert system == drv._CLASS_PROMPTS["missing_arg"].system
+    assert system == drv._CLASS_PROMPTS["missing_arg_adverb"].system
     # The narrow prompt is a fraction of the monolithic build prompt it replaces — which is the
     # point of splitting it: the conventions that do not bear on this class are not competing
     # for the model's attention.

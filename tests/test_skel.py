@@ -1813,3 +1813,221 @@ def test_validate_unit_membership_accepts_a_dep_corroborated_argument():
     assert any("heads no NP" in v.detail for v in violations)
     violations = skel.validate_unit(nos, texts, rows, morph_rows, np_rows, dep_rows)
     assert not any("heads no NP" in v.detail for v in violations)
+
+
+# --- Phase 6: rule AH (Rule AG's second leg) -------------------------------------------
+
+
+def _ag_fixture(subj_person, subj_number):
+    """"La mente tua conservi ... e ora attendi qui" (inferno 10:127-129): `attendi` is a 2sg
+    imperative attached `conj` to `conservi`, whose subject `mente` step 3 propagates onto it."""
+    derived = {2: [skel.SkelRow(2, 1, "attendi", "subj", 1, 2)]}
+    given = {2: [skel.SkelRow(2, 1, "attendi", "subj", 0, 0)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="mente", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="conservi", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 1): dep.DepRow(line=2, token=1, word="attendi", deprel="conj",
+                           head_line=1, head_token=3),
+    }
+    morph_rows = {
+        1: [morph.MorphRow(word="La", pos="article"),
+            morph.MorphRow(word="mente", pos="noun", number=subj_number, person=subj_person),
+            morph.MorphRow(word="conservi", pos="verb", number="sg.", person="3")],
+        2: [morph.MorphRow(word="attendi", pos="verb", number="sg.", person="2")],
+    }
+    return given, derived, dep_index_by_pos, morph_rows
+
+
+def test_classify_divergence_rule_ah_drops_null_subj_when_ag_drops_the_inherited_one():
+    # `mente` is 3rd person, `attendi` 2nd: rule AG drops the derived subject, and rule AH drops
+    # the ∅ with it — the derivation now says nothing about this predicate's subject.
+    given, derived, dep_index_by_pos, morph_rows = _ag_fixture("", "sg.")
+    assert skel._classify_divergence(
+        given, derived, dep_index_by_pos, None, None, None, morph_rows) == []
+
+
+def test_classify_divergence_rule_ah_leaves_an_agreeing_inherited_subject_flagged():
+    # Same shape with an agreeing subject: rule AG does not fire, so nothing is disclaimed and
+    # the LLM's ∅ is a real disagreement about a subject the derivation does assert.
+    given, derived, dep_index_by_pos, morph_rows = _ag_fixture("2", "sg.")
+    violations = skel._classify_divergence(
+        given, derived, dep_index_by_pos, None, None, None, morph_rows)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (0, 0) for v in violations)
+
+
+def test_classify_divergence_rule_ah_keeps_a_concrete_subject_flagged():
+    # Rule AH drops only ∅. A conjunct where the LLM resolved a *different* concrete subject is
+    # making its own claim about a slot the derivation no longer fills, and stays flagged.
+    given, derived, dep_index_by_pos, morph_rows = _ag_fixture("", "sg.")
+    given = {2: [skel.SkelRow(2, 1, "attendi", "subj", 1, 1)]}
+    violations = skel._classify_divergence(
+        given, derived, dep_index_by_pos, None, None, None, morph_rows)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 1) for v in violations)
+
+
+# --- Phase 6: rule AI (NP-head / dep-attachment equivalence) ---------------------------
+
+
+def _np_head_fixture(np_head):
+    """"Qui con più di mille giaccio" (inferno 10:118): Layer 3's NP head and Layer 4's oblique
+    attachment land on different tokens of `[più di mille]`, so one argument costs two
+    violations — a `missing_arg` for the derived token and an `extra_arg` for the cited one."""
+    from dante_corpus.np import NPSpan
+    derived = {1: [skel.SkelRow(1, 1, "giaccio", "obl:con", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 1, "giaccio", "obl:con", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="con", deprel="case", head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="mille", deprel="obl", head_line=1, head_token=1),
+    }
+    np_rows = {1: [NPSpan(line=1, start=3, end=5, head=np_head, text="più di mille")]}
+    return given, derived, dep_index_by_pos, np_rows
+
+
+def test_classify_divergence_rule_ai_merges_two_names_for_one_np():
+    given, derived, dep_index_by_pos, np_rows = _np_head_fixture(np_head=3)
+    assert skel._classify_divergence(
+        given, derived, dep_index_by_pos, None, None, None, None, np_rows) == []
+
+
+def test_classify_divergence_rule_ai_requires_one_side_to_be_the_np_head():
+    # Both tokens inside one span but neither of them its head: they are not each other's
+    # alternative name, and the pair stays flagged.
+    given, derived, dep_index_by_pos, np_rows = _np_head_fixture(np_head=4)
+    violations = skel._classify_divergence(
+        given, derived, dep_index_by_pos, None, None, None, None, np_rows)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def test_classify_divergence_rule_ai_requires_the_same_role():
+    # A role disagreement is a reading disagreement, whatever NP the two tokens share.
+    given, derived, dep_index_by_pos, np_rows = _np_head_fixture(np_head=3)
+    given = {1: [skel.SkelRow(1, 1, "giaccio", "obj", 1, 3)]}
+    violations = skel._classify_divergence(
+        given, derived, dep_index_by_pos, None, None, None, None, np_rows)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+# --- Phase 6: rule AJ (conj-shared non-subject argument) -------------------------------
+
+
+def _gapping_fixture(conj_has_own_obj=False):
+    """"li rami schianta, abbatte e porta fori" (inferno 9:70): `li rami` is the coordination
+    head's object, gapped onto each conjunct, which the LLM restates and derive_unit sees once."""
+    derived = {1: [skel.SkelRow(1, 3, "schianta", "obj", 1, 2)],
+               2: [skel.SkelRow(2, 1, "abbatte", "subj", 1, 1)]}
+    if conj_has_own_obj:
+        derived[2].append(skel.SkelRow(2, 1, "abbatte", "obj", 2, 2))
+    given = {1: [skel.SkelRow(1, 3, "schianta", "obj", 1, 2)],
+             2: [skel.SkelRow(2, 1, "abbatte", "subj", 1, 1),
+                 skel.SkelRow(2, 1, "abbatte", "obj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="rami", deprel="obj", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="schianta", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 1): dep.DepRow(line=2, token=1, word="abbatte", deprel="conj",
+                           head_line=1, head_token=3),
+    }
+    return given, derived, dep_index_by_pos
+
+
+def test_classify_divergence_rule_aj_accepts_a_gapped_object():
+    given, derived, dep_index_by_pos = _gapping_fixture()
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_rule_aj_requires_the_slot_to_be_empty():
+    # The conjunct has an object of its own, so a second one is a real extra argument.
+    given, derived, dep_index_by_pos = _gapping_fixture(conj_has_own_obj=True)
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
+
+
+def test_classify_divergence_rule_aj_never_touches_the_subject():
+    # `subj` belongs to step 3 and the authority model (rules AC/AG/AH); rule AJ leaves it alone.
+    derived = {1: [skel.SkelRow(1, 3, "schianta", "subj", 1, 2)],
+               2: [skel.SkelRow(2, 1, "abbatte", "subj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 3, "schianta", "subj", 1, 2)],
+             2: [skel.SkelRow(2, 1, "abbatte", "subj", 1, 4),
+                 skel.SkelRow(2, 1, "abbatte", "obj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="rami", deprel="nsubj", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="schianta", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 1): dep.DepRow(line=2, token=1, word="abbatte", deprel="conj",
+                           head_line=1, head_token=3),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("extra_arg") and v.arg == (1, 2) for v in violations)
+
+
+def test_classify_divergence_rule_aj_walks_past_intermediate_conjuncts():
+    # "schianta, abbatte e porta": `porta` chains to `abbatte` and only then to `schianta`, whose
+    # object it gaps — walking straight to the coordination *head* would miss it entirely when
+    # the head is further up (`fier` in the real line).
+    derived = {1: [skel.SkelRow(1, 3, "schianta", "obj", 1, 2)],
+               2: [skel.SkelRow(2, 1, "abbatte", "subj", 1, 1)],
+               3: [skel.SkelRow(3, 1, "porta", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 3, "schianta", "obj", 1, 2)],
+             2: [skel.SkelRow(2, 1, "abbatte", "subj", 1, 1)],
+             3: [skel.SkelRow(3, 1, "porta", "subj", 1, 1),
+                 skel.SkelRow(3, 1, "porta", "obj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="rami", deprel="obj", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="schianta", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 1): dep.DepRow(line=2, token=1, word="abbatte", deprel="conj",
+                           head_line=1, head_token=3),
+        (3, 1): dep.DepRow(line=3, token=1, word="porta", deprel="conj",
+                           head_line=2, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+# --- Phase 6: rules AK and AL ----------------------------------------------------------
+
+
+def _come_fixture(come_pos):
+    """"che qui staranno come porci in brago" (inferno 8:50): Layer 4 attaches the comparative
+    `come` as a `case` child, minting `obl:come` out of a token Layer 2 calls a conjunction."""
+    derived = {1: [skel.SkelRow(1, 1, "staranno", "obl:come", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "staranno", "xcomp", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="come", deprel="case", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="porci", deprel="obl", head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): come_pos, (1, 3): "noun"}
+
+
+def test_classify_divergence_rule_ak_accepts_a_comparative_come_complement():
+    given, derived, dep_index_by_pos, morph_pos = _come_fixture("conjunction")
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_rule_ak_requires_layer_2_to_call_come_a_conjunction():
+    # Where Layer 2 does call it a preposition, the oblique reading is corroborated and stands.
+    given, derived, dep_index_by_pos, morph_pos = _come_fixture("preposition")
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _fused_clitic_fixture(arg_pos):
+    """"non gliel celai" (inferno 10:44): `gliel` is `gli` + `lo` in one token, so it genuinely
+    fills both the dative and the accusative slot; Layer 4 has only one deprel to give it."""
+    derived = {1: [skel.SkelRow(1, 3, "celai", "obj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "celai", "iobj", 1, 2)]}
+    return given, derived, {}, {(1, 2): arg_pos}
+
+
+def test_classify_divergence_rule_al_accepts_a_dual_role_fused_clitic():
+    given, derived, dep_index_by_pos, morph_pos = _fused_clitic_fixture("pronoun+pronoun")
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_rule_al_requires_two_fused_pronouns():
+    # A plain pronoun encodes one role, so obj-vs-iobj on it is a real disagreement.
+    given, derived, dep_index_by_pos, morph_pos = _fused_clitic_fixture("pronoun")
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)

@@ -251,9 +251,9 @@ line	token	word	deprel	head_line	head_token
 35	4	mi	obj	35	3
 35	5	e	cc	35	6
 35	6	cominciai	root	0	0
-36	1	quasi	advmod	36	2
-36	2	com'	obl	35	6
-36	3	uom	obj	36	2
+36	1	quasi	advmod	36	3
+36	2	com'	case	36	3
+36	3	uom	obl	35	6
 36	4	cui	obj	36	7
 36	5	troppa	amod	36	6
 36	6	voglia	nsubj	36	7

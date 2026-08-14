@@ -413,7 +413,7 @@ line	token	word	deprel	head_line	head_token
 59	2	non	advmod	59	3
 59	3	so	conj	58	7
 59	4	io	nsubj	59	3
-59	5	perché	ccomp	59	3
+59	5	perché	advmod	59	3
 59	6	nel	case	59	7
 59	7	mondo	obl	58	7
 59	8	gramo	amod	59	7

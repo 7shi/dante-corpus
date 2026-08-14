@@ -2140,3 +2140,19 @@ out of the annex's scope; the per-position read of Inferno 1-3's Layer-5 violati
 of `sedea` in *"che mi sedea con l'antica Rachele"*, and the Layer-2 retag brought the position
 into scope — `case --check` reported the missing row as a hard `count` violation, which is the
 check working as designed. Back to **0 hard**.
+
+## One row from Layer 5's Inferno 7-10 read (2026-08-14)
+
+`morph/inferno/10.tsv` retagged 10:23 `ten` to the clitic cluster `te+ne` (see
+[`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)), which brings it into this annex's scope. Added
+`10:23.2 ten reflexive+ablative` — the value `sen` (`si+ne`) already carries at 10:1 of the same
+canto: `te` is the reflexive of *andarsene* and `ne` the ablative "from here". `case --check`
+stays 0 hard.
+
+**A retag this annex blocked.** The same read found 250 corpus positions where Layer 2 says
+`conjunction` but Layer 4 fills an argument slot (relative `che`/`ch'`/`onde`). Retagging them to
+`pronoun` was implemented, measured, and reverted: it would have required **243 new rows here**,
+and filling those from Layer 4's deprels would destroy the independence rule U depends on — the
+annex is consulted precisely when Layer 4 and the LLM disagree about a role. The retag is gated on
+an independent model read over those 243 positions. See
+[`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).

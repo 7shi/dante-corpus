@@ -363,10 +363,10 @@ line	token	word	deprel	head_line	head_token
 53	4	puote	root	0	0
 53	5	aver	xcomp	53	4
 53	6	sito	xcomp	53	5
-54	1	se	mark	54	3
-54	2	non	advmod	54	3
-54	3	come	obl	53	4
-54	4	tristizia	obj	54	3
+54	1	se	mark	54	4
+54	2	non	advmod	54	4
+54	3	come	case	54	4
+54	4	tristizia	obl	53	4
 54	5	o	cc	54	4
 54	6	sete	conj	54	4
 54	7	o	cc	54	4

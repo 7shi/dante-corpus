@@ -155,7 +155,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 22	del	di+il	preposition+article	m.	sg.				contraction
 22	foco	fuoco	noun	m.	sg.				archaic
 23	vivo	vivo	adjective	m.	sg.				
-23	ten	tenere	verb		sg.	2	present	indicative	apocope
+23	ten	te+ne	pronoun+pronoun						contraction
 23	vai	andare	verb		sg.	2	present	indicative	
 23	così	così	adverb						
 23	parlando	parlare	verb					gerund	
