@@ -914,5 +914,5 @@ line	token	word	deprel	head_line	head_token
 130	5	una	det	130	6
 130	6	torre	nmod	130	3
 130	7	al	case	130	9
-130	8	da	case	130	9
+130	8	da	fixed	130	7
 130	9	sezzo	obl	130	6

@@ -162,7 +162,7 @@ line	token	word	deprel	head_line	head_token
 22	2	le	det	22	3
 22	3	spalle	obl	23	6
 22	4	dietro	case	22	7
-22	5	da	case	22	7
+22	5	da	fixed	22	4
 22	6	la	det	22	7
 22	7	coppa	obl	23	6
 23	1	con	case	23	3

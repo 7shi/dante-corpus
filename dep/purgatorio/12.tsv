@@ -267,7 +267,7 @@ line	token	word	deprel	head_line	head_token
 40	2	Saùl	vocative	41	2
 40	3	come	advmod	41	2
 40	4	in	case	40	8
-40	5	su	case	40	8
+40	5	su	fixed	40	4
 40	6	la	det	40	8
 40	7	propria	amod	40	8
 40	8	spada	obl	41	2

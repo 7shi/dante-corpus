@@ -55,7 +55,7 @@ line	token	word	deprel	head_line	head_token
 8	1	che	nsubj	9	3
 8	2	già	advmod	9	3
 8	3	in	case	8	7
-8	4	su	case	8	7
+8	4	su	fixed	8	3
 8	5	la	det	8	7
 8	6	fortunata	amod	8	7
 8	7	terra	obl	9	3
@@ -299,7 +299,7 @@ line	token	word	deprel	head_line	head_token
 43	4	se'	root	0	0
 43	5	che	nsubj	43	10
 43	6	'n	case	43	9
-43	7	su	case	43	9
+43	7	su	fixed	43	6
 43	8	lo	det	43	9
 43	9	scoglio	obl	43	10
 43	10	muse	acl:relcl	43	2
@@ -315,7 +315,7 @@ line	token	word	deprel	head_line	head_token
 45	2	è	aux	45	3
 45	3	giudicata	acl:relcl	44	8
 45	4	in	case	45	8
-45	5	su	case	45	8
+45	5	su	fixed	45	4
 45	6	le	det	45	8
 45	7	tue	det:poss	45	8
 45	8	accuse	obl	45	3
@@ -566,7 +566,7 @@ line	token	word	deprel	head_line	head_token
 80	1	e	cc	80	2
 80	2	mazzerati	conj	79	1
 80	3	presso	case	80	6
-80	4	a	case	80	6
+80	4	a	fixed	80	3
 80	5	la	det	80	6
 80	6	Cattolica	obl	80	2
 81	1	per	case	81	2

@@ -586,7 +586,7 @@ line	token	word	deprel	head_line	head_token
 83	1	vidimi	root	0	0
 83	2	giunto	xcomp	83	1
 83	3	in	case	83	7
-83	4	su	case	83	7
+83	4	su	fixed	83	3
 83	5	l'	det	83	7
 83	6	altro	amod	83	7
 83	7	girone	obl	83	2
@@ -620,7 +620,7 @@ line	token	word	deprel	head_line	head_token
 88	2	una	det	88	3
 88	3	donna	nsubj	89	4
 88	4	in	case	88	7
-88	5	su	case	88	7
+88	5	su	fixed	88	4
 88	6	l'	det	88	7
 88	7	entrar	obl	89	4
 88	8	con	case	88	9
@@ -1012,7 +1012,7 @@ line	token	word	deprel	head_line	head_token
 142	8	fummo	obj	142	2
 142	9	farsi	xcomp	142	2
 143	1	verso	case	143	3
-143	2	di	case	143	3
+143	2	di	fixed	143	1
 143	3	noi	obl	142	9
 143	4	come	case	143	6
 143	5	la	det	143	6

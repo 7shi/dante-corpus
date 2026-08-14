@@ -663,7 +663,7 @@ line	token	word	deprel	head_line	head_token
 92	1	cominciò	root	0	0
 92	2	elli	nsubj	92	1
 92	3	in	case	92	7
-92	4	su	case	92	7
+92	4	su	fixed	92	3
 92	5	l'	det	92	7
 92	6	orribil	amod	92	7
 92	7	soglia	obl	92	1
@@ -817,7 +817,7 @@ line	token	word	deprel	head_line	head_token
 113	3	a	case	113	4
 113	4	Pola	obl	115	1
 113	5	presso	case	113	7
-113	6	del	case	113	7
+113	6	del	fixed	113	5
 113	7	Carnaro	nmod	113	4
 114	1	ch'	nsubj	114	3
 114	2	Italia	obj	114	3

@@ -152,8 +152,8 @@ line	token	word	deprel	head_line	head_token
 22	2	ella	root	0	0
 22	3	a	case	22	4
 22	4	me	obl	22	2
-22	5	Per	case	22	6
-22	6	entro	case	22	9
+22	5	Per	case	22	9
+22	6	entro	fixed	22	5
 22	7	i	det	22	9
 22	8	mie'	det:poss	22	9
 22	9	disiri	obl	26	1
@@ -674,7 +674,7 @@ line	token	word	deprel	head_line	head_token
 97	1	Quando	mark	97	2
 97	2	fui	advcl	98	5
 97	3	presso	case	97	7
-97	4	a	case	97	7
+97	4	a	fixed	97	3
 97	5	la	det	97	7
 97	6	beata	amod	97	7
 97	7	riva	obl	97	2

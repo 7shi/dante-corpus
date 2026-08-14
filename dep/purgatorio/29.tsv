@@ -312,7 +312,7 @@ line	token	word	deprel	head_line	head_token
 46	4	fui	aux	46	9
 46	5	sì	advmod	46	6
 46	6	presso	case	46	8
-46	7	di	case	46	8
+46	7	di	fixed	46	6
 46	8	lor	obl	46	9
 46	9	fatto	advcl	50	6
 47	1	che	mark	48	2
@@ -739,7 +739,7 @@ line	token	word	deprel	head_line	head_token
 107	1	un	det	107	2
 107	2	carro	obj	106	7
 107	3	in	case	107	6
-107	4	su	case	107	6
+107	4	su	fixed	107	3
 107	5	due	nummod	107	6
 107	6	rote	nmod	107	2
 107	7	trïunfale	amod	107	2
@@ -915,7 +915,7 @@ line	token	word	deprel	head_line	head_token
 131	2	porpore	obl	131	3
 131	3	vestite	acl	130	4
 131	4	dietro	case	131	6
-131	5	al	case	131	6
+131	5	al	fixed	131	4
 131	6	modo	obl	131	3
 132	1	d'	case	132	2
 132	2	una	nmod	131	6

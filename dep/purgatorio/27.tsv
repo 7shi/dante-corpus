@@ -51,7 +51,7 @@ line	token	word	deprel	head_line	head_token
 7	4	fiamma	nmod	7	1
 7	5	stava	root	0	0
 7	6	in	case	7	9
-7	7	su	case	7	9
+7	7	su	fixed	7	6
 7	8	la	det	7	9
 7	9	riva	obl	7	5
 8	1	e	cc	8	2
@@ -115,8 +115,8 @@ line	token	word	deprel	head_line	head_token
 15	7	fossa	obl	15	9
 15	8	è	aux	15	9
 15	9	messo	acl:relcl	15	3
-16	1	In	case	16	2
-16	2	su	case	16	4
+16	1	In	case	16	4
+16	2	su	fixed	16	1
 16	3	le	det	16	4
 16	4	man	obl	16	7
 16	5	commesse	acl	16	4
@@ -452,8 +452,8 @@ line	token	word	deprel	head_line	head_token
 64	2	salia	root	0	0
 64	3	la	det	64	4
 64	4	via	nsubj	64	2
-64	5	per	case	64	6
-64	6	entro	case	64	8
+64	5	per	case	64	8
+64	6	entro	fixed	64	5
 64	7	'l	det	64	8
 64	8	sasso	obl	64	2
 65	1	verso	case	65	3
@@ -574,7 +574,7 @@ line	token	word	deprel	head_line	head_token
 80	3	pastor	obl	80	1
 80	4	che	nsubj	81	3
 80	5	'n	case	80	8
-80	6	su	case	80	8
+80	6	su	fixed	80	5
 80	7	la	det	80	8
 80	8	verga	obl	81	3
 81	1	poggiato	amod	80	4
@@ -891,7 +891,7 @@ line	token	word	deprel	head_line	head_token
 125	3	e	cc	125	4
 125	4	fummo	conj	125	2
 125	5	in	case	125	8
-125	6	su	case	125	8
+125	6	su	fixed	125	5
 125	7	'l	det	125	8
 125	8	grado	obl	125	4
 125	9	superno	amod	125	8

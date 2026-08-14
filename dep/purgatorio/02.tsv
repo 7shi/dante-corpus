@@ -349,8 +349,8 @@ line	token	word	deprel	head_line	head_token
 50	3	si	expl	50	4
 50	4	gittar	advcl	49	2
 50	5	tutti	amod	50	2
-50	6	in	case	50	7
-50	7	su	case	50	9
+50	6	in	case	50	9
+50	7	su	fixed	50	6
 50	8	la	det	50	9
 50	9	piaggia	obl	50	4
 51	1	ed	cc	51	6

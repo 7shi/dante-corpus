@@ -130,8 +130,8 @@ line	token	word	deprel	head_line	head_token
 20	1	per	case	20	3
 20	2	la	det	20	3
 20	3	pineta	obl	19	8
-20	4	in	case	20	5
-20	5	su	case	20	7
+20	4	in	case	20	7
+20	5	su	fixed	20	4
 20	6	'l	det	20	7
 20	7	lito	nmod	20	3
 20	8	di	case	20	9
@@ -202,7 +202,7 @@ line	token	word	deprel	head_line	head_token
 29	5	mistura	obj	29	2
 29	6	alcuna	det	29	5
 30	1	verso	case	30	3
-30	2	di	case	30	3
+30	2	di	fixed	30	1
 30	3	quella	obl	29	2
 30	4	che	nsubj	30	6
 30	5	nulla	obj	30	6

@@ -76,7 +76,7 @@ line	token	word	deprel	head_line	head_token
 10	7	scesa	nsubj	10	5
 11	1	e	cc	12	5
 11	2	'n	case	11	5
-11	3	su	case	11	5
+11	3	su	fixed	11	2
 11	4	la	det	11	5
 11	5	punta	obl	12	5
 11	6	de	case	11	9
@@ -700,7 +700,7 @@ line	token	word	deprel	head_line	head_token
 95	3	porti	conj	93	1
 95	4	costui	obj	95	3
 95	5	in	case	95	8
-95	6	su	case	95	8
+95	6	su	fixed	95	5
 95	7	la	det	95	8
 95	8	groppa	obl	95	3
 96	1	ché	mark	96	3
@@ -716,7 +716,7 @@ line	token	word	deprel	head_line	head_token
 97	2	si	expl	97	3
 97	3	volse	root	0	0
 97	4	in	case	97	8
-97	5	su	case	97	8
+97	5	su	fixed	97	4
 97	6	la	det	97	8
 97	7	destra	amod	97	8
 97	8	poppa	obl	97	3
@@ -887,7 +887,7 @@ line	token	word	deprel	head_line	head_token
 120	2	cor	obj	119	3
 120	3	che	nsubj	120	9
 120	4	'n	case	120	6
-120	5	su	case	120	6
+120	5	su	fixed	120	4
 120	6	Tamisi	obl	120	9
 120	7	ancor	advmod	120	9
 120	8	si	expl	120	9

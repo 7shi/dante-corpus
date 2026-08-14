@@ -715,7 +715,7 @@ line	token	word	deprel	head_line	head_token
 99	8	vela	conj	99	6
 100	1	perché	mark	100	6
 100	2	fino	case	100	4
-100	3	al	case	100	4
+100	3	al	fixed	100	2
 100	4	morir	obl	100	6
 100	5	si	expl	100	6
 100	6	vegghi	advcl	99	6

@@ -403,7 +403,7 @@ line	token	word	deprel	head_line	head_token
 60	9	l'	det	60	10
 60	10	incora	obj	60	8
 61	1	in	case	61	4
-61	2	su	case	61	4
+61	2	su	fixed	61	1
 61	3	la	det	61	4
 61	4	sponda	obl	64	1
 61	5	del	case	61	6
@@ -684,7 +684,7 @@ line	token	word	deprel	head_line	head_token
 100	2	pur	advmod	100	3
 100	3	ferma	xcomp	101	3
 100	4	in	case	100	8
-100	5	su	case	100	8
+100	5	su	fixed	100	4
 100	6	la	det	100	8
 100	7	detta	amod	100	8
 100	8	coscia	obl	101	3
@@ -858,7 +858,7 @@ line	token	word	deprel	head_line	head_token
 124	2	tosto	advmod	124	8
 124	3	come	mark	124	8
 124	4	in	case	124	7
-124	5	su	case	124	7
+124	5	su	fixed	124	4
 124	6	la	det	124	7
 124	7	soglia	obl	124	8
 124	8	fui	advcl	126	3

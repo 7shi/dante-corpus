@@ -2641,3 +2641,32 @@ the parse is.
 
 None of the six new exclusions touches a pair the rule calls `"agree"` — that was the gate they
 were measured against — so `_find_repairs`' Tier-B null-subject repair keeps every position it had.
+
+## Layer 4's multiword-preposition normalization lands with zero Layer-5 movement (2026-08-14)
+
+Layer 4's stacked-preposition shapes were normalized in the same session
+([`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)'s round: 161 clusters, 196 rows, flat and chained
+alike rewritten to the opening word `case`→ nominal, later members `fixed`→ opening word). What
+moved on this side:
+
+- **`_classify_divergence`'s lemma collection and `_case_child_lemmas`** now aggregate a `fixed`
+  child of a `case` row as a co-present preposition of the same nominal, so rules O/L/N and the
+  `prep_stack` repair read the normalized tree exactly as they read the flat one (three new
+  tests: fixed member accepted, absent preposition still flagged, stack walk reaches the fixed
+  member).
+- **Derived labels flip at the 34 chained clusters only** (inner → opening preposition), matching
+  what the flat majority already named. Measured per the standing recipe (violation dump before /
+  after, parse-unit keyed): **1094 → 1094 soft, net zero** — 696 units flagged before and after,
+  **0 cleared, 0 newly flagged, 0 regressed**. The single violation-level change is
+  purgatorio 31:26 (*"Per entro i mie' disiri"*): a `missing_arg obl:entro` that becomes
+  `missing_arg obl:per` because the derivation now names the opening preposition — the argument
+  was already missing on both sides and stays missing.
+- The *In Flight* note's "14 stacked-preposition `role_mismatch`es / 18 unattached" was a
+  Phase-5j-era count: rules O and `prep_stack` had since absorbed every one of the 14, and the
+  standing obl-vs-obl residue is 3 genuine preposition disagreements (*inferno 14:103
+  `obl:dentro` vs `obl:di`*, *purgatorio 32:156* and *paradiso 32:57 `obl:a` vs `obl:da`*) that
+  no stack shape explains. The normalization's Layer-5 yield is zero **by design** — it removes
+  the shape lottery so future rounds stop paying it, it does not chase the count.
+
+`skel --check` stays **0 hard / 1094 soft**; `dep --check` 0/0, `np --check` 0/0, `case --check`
+0 hard, `morph --check` 0/0, `pytest` **268** passed.

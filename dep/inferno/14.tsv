@@ -790,12 +790,12 @@ line	token	word	deprel	head_line	head_token
 111	1	e	cc	111	12
 111	2	sta	cop	111	12
 111	3	'n	case	111	5
-111	4	su	case	111	5
+111	4	su	fixed	111	3
 111	5	quel	obl	111	12
 111	6	più	advmod	111	12
 111	7	che	mark	111	12
 111	8	'n	case	111	11
-111	9	su	case	111	11
+111	9	su	fixed	111	8
 111	10	l'	det	111	11
 111	11	altro	obl	111	12
 111	12	eretto	conj	109	7

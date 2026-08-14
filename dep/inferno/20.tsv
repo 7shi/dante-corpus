@@ -744,7 +744,7 @@ line	token	word	deprel	head_line	head_token
 107	2	la	det	107	3
 107	3	barba	obj	107	1
 107	4	in	case	107	7
-107	5	su	case	107	7
+107	5	su	fixed	107	4
 107	6	le	det	107	7
 107	7	spalle	obl	107	1
 107	8	brune	amod	107	7

@@ -215,7 +215,7 @@ line	token	word	deprel	head_line	head_token
 30	8	contenta	xcomp	30	2
 31	1	Poi	advmod	31	5
 31	2	dentro	case	31	4
-31	3	a	case	31	4
+31	3	a	fixed	31	2
 31	4	lei	obl	31	5
 31	5	udi'	root	0	0
 31	6	Se	mark	31	8
@@ -269,7 +269,7 @@ line	token	word	deprel	head_line	head_token
 38	2	frequentato	root	0	0
 38	3	già	advmod	38	2
 38	4	in	case	38	7
-38	5	su	case	38	7
+38	5	su	fixed	38	4
 38	6	la	det	38	7
 38	7	cima	obl	38	2
 39	1	da	case	39	3
@@ -439,8 +439,8 @@ line	token	word	deprel	head_line	head_token
 61	7	disio	nsubj	62	2
 62	1	s'	expl	62	2
 62	2	adempierà	ccomp	61	2
-62	3	in	case	62	4
-62	4	su	case	62	7
+62	3	in	case	62	7
+62	4	su	fixed	62	3
 62	5	l'	det	62	7
 62	6	ultima	amod	62	7
 62	7	spera	obl	62	2
@@ -706,7 +706,7 @@ line	token	word	deprel	head_line	head_token
 100	2	dolce	amod	100	3
 100	3	donna	nsubj	100	8
 100	4	dietro	case	100	6
-100	5	a	case	100	6
+100	5	a	fixed	100	4
 100	6	lor	obl	100	8
 100	7	mi	obj	100	8
 100	8	pinse	root	0	0
@@ -715,7 +715,7 @@ line	token	word	deprel	head_line	head_token
 101	3	sol	amod	101	4
 101	4	cenno	obl	100	8
 101	5	su	case	101	8
-101	6	per	case	101	8
+101	6	per	fixed	101	5
 101	7	quella	det	101	8
 101	8	scala	obl	100	8
 102	1	sì	advmod	102	7

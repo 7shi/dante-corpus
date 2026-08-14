@@ -409,8 +409,8 @@ line	token	word	deprel	head_line	head_token
 58	2	diss'	root	0	0
 58	3	io	nsubj	58	2
 58	4	lui	iobj	58	2
-58	5	per	case	58	6
-58	6	entro	case	58	8
+58	5	per	case	58	8
+58	6	entro	fixed	58	5
 58	7	i	det	58	8
 58	8	luoghi	obl	59	1
 58	9	tristi	amod	58	8
@@ -623,7 +623,7 @@ line	token	word	deprel	head_line	head_token
 87	3	rota	obl	85	5
 87	4	più	advmod	87	5
 87	5	presso	case	87	8
-87	6	a	case	87	8
+87	6	a	fixed	87	5
 87	7	lo	det	87	8
 87	8	stelo	nmod	87	3
 88	1	E	cc	88	3

@@ -45,7 +45,7 @@ line	token	word	deprel	head_line	head_token
 7	2	il	det	7	3
 7	3	tempo	obj	7	1
 7	4	in	case	7	7
-7	5	su	case	7	7
+7	5	su	fixed	7	4
 7	6	aperta	amod	7	7
 7	7	frasca	obl	7	1
 8	1	e	cc	8	7
@@ -638,7 +638,7 @@ line	token	word	deprel	head_line	head_token
 93	7	giù	advmod	93	8
 93	8	vinse	advcl	93	4
 94	1	per	case	94	4
-94	2	entro	case	94	4
+94	2	entro	fixed	94	1
 94	3	il	det	94	4
 94	4	cielo	obl	94	5
 94	5	scese	conj	89	7
@@ -779,7 +779,7 @@ line	token	word	deprel	head_line	head_token
 114	8	costumi	conj	114	3
 115	1	avea	root	0	0
 115	2	sopra	case	115	4
-115	3	di	case	115	4
+115	3	di	fixed	115	2
 115	4	noi	obl	115	1
 115	5	l'	det	115	7
 115	6	interna	amod	115	7

@@ -208,7 +208,7 @@ line	token	word	deprel	head_line	head_token
 30	6	fanno	advcl	34	6
 31	1	così	advmod	34	6
 31	2	di	case	31	4
-31	3	contra	case	31	4
+31	3	contra	fixed	31	2
 31	4	quel	obl	34	6
 31	5	del	case	31	7
 31	6	gran	amod	31	7
@@ -351,7 +351,7 @@ line	token	word	deprel	head_line	head_token
 51	6	pensier	nsubj	51	4
 51	7	sottili	amod	51	6
 52	1	Dentro	case	52	4
-52	2	a	case	52	4
+52	2	a	fixed	52	1
 52	3	l'	det	52	4
 52	4	ampiezza	obl	53	4
 52	5	di	case	52	7
@@ -893,8 +893,8 @@ line	token	word	deprel	head_line	head_token
 132	5	e	cc	132	6
 132	6	retrosa	amod	132	2
 133	1	Di	case	133	4
-133	2	contr'	case	133	4
-133	3	a	case	133	4
+133	2	contr'	fixed	133	1
+133	3	a	fixed	133	1
 133	4	Pietro	obl	133	6
 133	5	vedi	root	0	0
 133	6	sedere	xcomp	133	5
@@ -914,7 +914,7 @@ line	token	word	deprel	head_line	head_token
 135	7	osanna	obj	135	6
 136	1	e	cc	137	1
 136	2	contro	case	136	5
-136	3	al	case	136	5
+136	3	al	fixed	136	2
 136	4	maggior	amod	136	5
 136	5	padre	obl	137	1
 136	6	di	case	136	7

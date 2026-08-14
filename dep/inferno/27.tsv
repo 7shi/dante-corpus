@@ -629,7 +629,7 @@ line	token	word	deprel	head_line	head_token
 86	1	avendo	advcl	92	1
 86	2	guerra	obj	86	1
 86	3	presso	case	86	5
-86	4	a	case	86	5
+86	4	a	fixed	86	3
 86	5	Laterano	obl	86	1
 87	1	e	cc	87	4
 87	2	non	advmod	87	4
@@ -684,8 +684,8 @@ line	token	word	deprel	head_line	head_token
 94	3	Costantin	obj	94	4
 94	4	chiese	advcl	96	3
 94	5	Silvestro	nsubj	94	4
-95	1	d'	case	95	2
-95	2	entro	case	95	3
+95	1	d'	case	95	3
+95	2	entro	fixed	95	1
 95	3	Siratti	obl	94	4
 95	4	a	case	95	5
 95	5	guerir	xcomp	94	4

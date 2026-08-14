@@ -1004,8 +1004,8 @@ line	token	word	deprel	head_line	head_token
 143	7	terra	obl	143	5
 144	1	tornate	acl	143	3
 144	2	già	advmod	144	1
-144	3	in	case	144	4
-144	4	su	case	144	7
+144	3	in	case	144	7
+144	4	su	fixed	144	3
 144	5	l'	det	144	7
 144	6	usato	amod	144	7
 144	7	pianto	obl	144	1

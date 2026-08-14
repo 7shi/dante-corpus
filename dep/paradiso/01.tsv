@@ -309,7 +309,7 @@ line	token	word	deprel	head_line	head_token
 46	1	quando	mark	47	1
 46	2	Beatrice	obj	47	1
 46	3	in	case	46	6
-46	4	sul	case	46	6
+46	4	sul	fixed	46	3
 46	5	sinistro	amod	46	6
 46	6	fianco	obl	47	2
 47	1	vidi	advcl	43	1
@@ -686,7 +686,7 @@ line	token	word	deprel	head_line	head_token
 100	1	Ond'	mark	101	3
 100	2	ella	nsubj	101	3
 100	3	appresso	case	100	7
-100	4	d'	case	100	7
+100	4	d'	fixed	100	3
 100	5	un	det	100	7
 100	6	pïo	amod	100	7
 100	7	sospiro	obl	101	3

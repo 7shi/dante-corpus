@@ -27,7 +27,7 @@ line	token	word	deprel	head_line	head_token
 4	2	la	det	4	3
 4	3	brina	nsubj	4	8
 4	4	in	case	4	7
-4	5	su	case	4	7
+4	5	su	fixed	4	4
 4	6	la	det	4	7
 4	7	terra	obl	4	8
 4	8	assempra	advcl	8	2
@@ -302,7 +302,7 @@ line	token	word	deprel	head_line	head_token
 41	4	al	case	41	5
 41	5	fine	obl	41	3
 41	6	in	case	41	9
-41	7	su	case	41	9
+41	7	su	fixed	41	6
 41	8	la	det	41	9
 41	9	punta	obl	41	3
 42	1	onde	obl	42	6

@@ -223,7 +223,7 @@ line	token	word	deprel	head_line	head_token
 33	6	fui	conj	32	2
 34	1	ché	mark	34	7
 34	2	dentro	case	34	5
-34	3	a	case	34	5
+34	3	a	fixed	34	2
 34	4	li	det	34	5
 34	5	occhi	obl	34	7
 34	6	suoi	det:poss	34	5
@@ -355,7 +355,7 @@ line	token	word	deprel	head_line	head_token
 52	2	hai	aux	52	1
 52	3	figlio	vocative	52	1
 52	4	dentro	case	52	7
-52	5	a	case	52	7
+52	5	a	fixed	52	4
 52	6	questo	det	52	7
 52	7	lume	obl	52	1
 53	1	in	case	53	5

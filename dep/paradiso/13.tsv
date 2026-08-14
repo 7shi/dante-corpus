@@ -976,7 +976,7 @@ line	token	word	deprel	head_line	head_token
 135	3	la	det	135	4
 135	4	rosa	obj	135	2
 135	5	in	case	135	8
-135	6	su	case	135	8
+135	6	su	fixed	135	5
 135	7	la	det	135	8
 135	8	cima	obl	135	2
 136	1	e	cc	136	3

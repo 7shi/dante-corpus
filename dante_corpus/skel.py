@@ -1179,6 +1179,20 @@ def _classify_divergence(
             marker_lemmas.setdefault((row.head_line, row.head_token), set()).add(lemma)
             if row.deprel == "case":
                 case_lemmas.setdefault((row.head_line, row.head_token), set()).add(lemma)
+    # A `fixed` token glued to a `case` row is a later member of a multiword preposition — the
+    # dep/ normalization writes "in su la cima" as `in` case-> `cima` with `su` fixed-> `in` —
+    # so it names a preposition of the same nominal the `case` row marks, exactly as it did
+    # when Layer 4 still attached both members flat, and rules L/N/O keep reading it either way.
+    for row in (dep_index_by_pos or {}).values():
+        if row.deprel != "fixed":
+            continue
+        head = dep_index_by_pos.get((row.head_line, row.head_token))
+        while head is not None and head.deprel == "fixed":
+            head = dep_index_by_pos.get((head.head_line, head.head_token))
+        if head is not None and head.deprel == "case":
+            lemma = _normalize_prep_lemma(row.word.lower())
+            marker_lemmas.setdefault((head.head_line, head.head_token), set()).add(lemma)
+            case_lemmas.setdefault((head.head_line, head.head_token), set()).add(lemma)
     case_children = set(case_lemmas)
     # Rule Y: the positions Layer 4 attaches a `cop`/`aux`/`aux:pass` token to — the tree's own
     # assertion that a predication is headed there, whatever deprel the head itself carries.
@@ -1530,12 +1544,20 @@ def _case_child_lemmas(
 ) -> dict[tuple[int, int], set[tuple[tuple[int, int], str]]]:
     """`case` children per head, as (position, normalized lemma) — the input both preposition
     rules read. Keyed by *any* head, not only argument positions, because a stacked preposition
-    hangs off the inner preposition rather than off the nominal."""
+    hangs off the inner preposition rather than off the nominal. A `fixed` child of a `case`
+    row — the dep/ normalization's later member of a multiword preposition, "in su la cima"
+    as `in` case-> `cima` with `su` fixed-> `in` — is collected under its `case` row, so the
+    transitive walk in `_stacked_prep_lemmas` still reaches every member of the stack."""
     out: dict[tuple[int, int], set[tuple[tuple[int, int], str]]] = {}
     for row in (dep_index_by_pos or {}).values():
         if row.deprel == "case":
             out.setdefault((row.head_line, row.head_token), set()).add(
                 ((row.line, row.token), _normalize_prep_lemma(row.word.lower())))
+        elif row.deprel == "fixed":
+            head = dep_index_by_pos.get((row.head_line, row.head_token))
+            if head is not None and head.deprel == "case":
+                out.setdefault((head.line, head.token), set()).add(
+                    ((row.line, row.token), _normalize_prep_lemma(row.word.lower())))
     return out
 
 

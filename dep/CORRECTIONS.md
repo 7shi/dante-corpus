@@ -1062,3 +1062,39 @@ turned out to be the same construction and needed no flag: both are the `attr` e
 `skel --check` 0 hard / 1094 soft, `pytest` **265** passed (eight new tests, one per exclusion
 plus a flagged/unflagged pair proving `AD_SENSUM` is a per-row exemption and not a rule about the
 word `gente`).
+
+## The multiword-preposition normalization, 161 clusters rewritten (2026-08-14)
+
+Layer 4 wrote stacked prepositions two ways: **flat** (both members `case` children of the
+nominal — *"trovar dentro al tuo seno"*) and **chained** (outer member a `case` child of the
+inner — *"Vòlt' era in su la favola"*: `in` → `su` → `favola`). The shape decided which
+preposition a downstream derivation named, so the same phrase produced different labels by
+accident of tree shape. This round picks one shape — UD's multiword-expression convention, the
+opening word the head:
+
+> In a stacked preposition only the opening word takes `case` on the nominal; each later word
+> takes `fixed` on the opening word (*"in su la cima"* → `in` `case`→ `cima`, `su` `fixed`→
+> `in`).
+
+**161 clusters, 196 rows, 74 files**, rewritten by a gated script (idempotent; a second run
+plans 0 edits). The gates keep the rewrite a pure shape change — Layer 4 already asserted every
+member is a preposition of the nominal — and exclude:
+
+- **Adverb-preps Layer 2 tags `adverb`** (`dentro a`, `dinanzi a`, `dietro a`, `intorno a`,
+  `fuor di`, `infino al`, `sotto al`, `dintorno al`, `innanzi a` — 40 clusters): a Layer-2/4
+  tension this round does not decide. They stay flat, and derivation + rule O keep accepting
+  either member, exactly as before.
+- **Genuine coordinations and ranges** (`dal quarto al quinto`, `a maggiore e … a minor passo`,
+  *"in su le vecchie e 'n su le nuove cuoia"*, `di…di`, `a…a`, `dal…dal`, `de…de`, cross-line
+  *"fioretti"*): non-contiguous case children of one nominal, never a stack.
+- **One mis-attachment read** (purgatorio 5:53 *"qual d'una pianta"*: `qual` tagged `case` under
+  a pronoun POS) — a reading question, left standing.
+
+The rewrite preserves which preposition each derivation names everywhere except the 34 chained
+clusters, where the named lemma deliberately flips inner → opening to match the flat majority
+(see [`skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) for the measured Layer-5 effect: net zero).
+`derive_unit`'s `case`-child rule and rules O/`prep_stack` now read the normalized shape via a
+`fixed`-under-`case` lemma aggregation in `dante_corpus/skel.py` (three new tests). The build
+prompt (`dep/dep.py`) and this README now state the convention for future regenerations.
+
+`dep --check` after the round: **0 hard, 0 soft**.

@@ -447,7 +447,7 @@ line	token	word	deprel	head_line	head_token
 61	8	pace	obl	61	5
 62	1	che	obj	63	5
 62	2	dietro	case	62	4
-62	3	a'	case	62	4
+62	3	a'	fixed	62	2
 62	4	piedi	obl	63	8
 62	5	di	case	62	8
 62	6	sì	advmod	62	7
@@ -540,7 +540,7 @@ line	token	word	deprel	head_line	head_token
 74	3	'l	det	74	4
 74	4	sangue	nsubj	74	2
 74	5	in	case	74	7
-74	6	sul	case	74	7
+74	6	sul	fixed	74	5
 74	7	quale	obl	74	9
 74	8	io	nsubj	74	9
 74	9	sedea	acl:relcl	74	4
@@ -925,7 +925,7 @@ line	token	word	deprel	head_line	head_token
 124	3	mio	det:poss	124	2
 124	4	gelato	amod	124	2
 124	5	in	case	124	8
-124	6	su	case	124	8
+124	6	su	fixed	124	5
 124	7	la	det	124	8
 124	8	foce	obl	125	1
 125	1	trovò	root	0	0

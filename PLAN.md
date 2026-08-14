@@ -2,15 +2,14 @@
 
 ## Handoff (2026-08-14) — resume here
 
-> **A `--fix` round is running on the user's side.** Everything below was committed *before* it
-> (`skel: rules AH-AL + prompt work from the Inferno 7-10 read, 1247 -> 1091 soft`). The next
-> session most likely opens on its result. **Do not re-derive the baseline** — it is
-> **1091 soft**, and the measurement recipe is *How to Measure a `--fix` Round* in
-> [`skel/PLAN.md`](skel/PLAN.md). What to look for, in order:
-> 1. `missing_arg_adverb` (population **82** before the round) — this round's headline class, and
->    the first one whose cause was traced to a defect in the shared prompt rather than to the
->    model. If it does not move, the `_CONV_ADVERB` rewrite is the thing to re-examine, not the
->    class.
+> **The third `--fix` round was aborted before landing (user-side); nothing it touched was
+> committed.** The prompt-side work it was to test is all still in place and unmeasured —
+> the next round runs against base **1094 soft** (the 1091 + 3 from the Layer-4 agreement
+> close, plus this session's Layer-4 prep-stack normalization which moved Layer 5 by zero).
+> Do not re-derive the baseline. What to look for when that round runs, in order:
+> 1. `missing_arg_adverb` (population **82**) — the first class whose cause was traced to a
+>    defect in the shared prompt rather than to the model. If it does not move, the
+>    `_CONV_ADVERB` rewrite is the thing to re-examine, not the class.
 > 2. `missing_tuple_nominal` (**39**) — tests the addressee-less elided-speech frame.
 > 3. `extra_tuple_adjective` (**13**) — tests the appositive-adjective clause.
 > 4. **0 regressed / 0 newly flagged** is the standing bar; report per-unit yield against the two
@@ -19,7 +18,16 @@
 **Layer 5 is operating under Phase 6 with 0 hard / 1094 soft violations.**
 Checks: `dep --check` **0 hard / 0 soft** (the subject-agreement rule's 18-position residue closed
 2026-08-14), `case --check` 0 hard, `skel --check` 0 hard/**1094** soft,
-`np --check` 0/0, `morph --check` 0/0, `pytest` **265** passed.
+`np --check` 0/0, `morph --check` 0/0, `pytest` **268** passed.
+
+**Layer 4's stacked prepositions are normalized (2026-08-14).** 161 multiword-preposition
+clusters (196 rows, 74 files) rewritten to the UD convention — opening word `case`→ nominal,
+later members `fixed`→ opening word — closing the flat/chained shape lottery. Layer 5 measured
+**1094 → 1094, net zero** (0 units cleared / newly flagged; one derived lemma flip at
+purgatorio 31:26 by design); rules O/`prep_stack` read the normalized shape via a
+`fixed`-under-`case` lemma aggregation in `dante_corpus/skel.py`. The old "14 role_mismatch /
+18 unattached" note was a Phase-5j-era count already absorbed by those rules. See
+[`dep/CORRECTIONS.md`](dep/CORRECTIONS.md) and [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
 
 **Layer 4's agreement residue is closed (2026-08-14).** All 18 were re-read: one was a real
 mis-attachment (purgatorio 26:147, Occitan `sovenha vos`), ten were taken by six new exclusions in
@@ -28,15 +36,14 @@ rule calls `"agree"`, so Layer 5's Tier-B repairs are untouched — and seven by
 `AD_SENSUM`/`FOREIGN` flags in the Layer-2 `note` column, the `NO_NP`/`CONT_NEXT` mechanism. Layer
 5 rose **1091 → 1094 (+3)**, all three individually attributable (rule AG at inferno 6:87, and the
 two obliques the purgatorio 26:147 re-parse gives `sovenha`) — the same honest trade earlier
-Layer-4 rounds recorded. **The in-flight `--fix` round's baseline is still 1091**: the +3 landed
-after it was launched, so measure that round against 1091 and count these three separately. See
-[`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
+Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Current State & Architecture Summary
 
 - **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (class-specific POS-keyed micro-prompts), and Stage 3 (fallback whole-unit regeneration). Two user-run rounds so far: **2011 → 1452 (−559)** and **1409 → 1247 (−162)**.
   - **Detailed Phase 6 Plan**: For Phase 6 operating principles, architectural details, active routes, and measurement procedures, see [`skel/PLAN.md`](skel/PLAN.md).
 - **Latest Improvements**:
+  - **Layer-4 stacked-preposition normalization (2026-08-14)**: 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), closing the flat/chained lottery. Layer 5: **1094 → 1094, net zero** by design; `skel.py`'s lemma aggregation reads the new shape (rules O/`prep_stack` unchanged in behaviour). See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md), [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
   - **Rules AH–AL (Inferno 7–10 read, 2026-08-14)**: Per-position read of all 37 soft violations in Inferno 7–10 produced five deterministic checker rules — AH (rule AG's second leg), AI (Layer-3 NP head vs Layer-4 attachment), AJ (coordination gapping of objects and datives), AK (comparative `come`), AL (dual-role fused clitics) — plus 5 Layer-2 mistags and 17 Layer-4 rows retagged. **1247 → 1091 (−156, −12.5%)** with zero model calls; Inferno 7–10 itself 37 → 17. Two candidates were measured and dropped, including a 247-token relative-`che` retag the `case` annex blocks. See [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md).
   - **Prompt work in the same read**: `_CONV_ADVERB`'s "or it is left out" clause was found responsible for **82 `missing_arg` positions whose argument is a locative adverb** — the largest unbranched bucket in the residue. Fixed prompt-side, with a new Stage-2 class `missing_arg_adverb`; also the addressee-less elided-speech frame (`E io: «…»`, 4 of the 37) and appositive adjectives. **None of this moves the count until a `--fix` round is run.**
   - **Rule AG (Inferno 4–6 read)**: Gated `conj` subject propagation on Layer-2 person/number agreement (`dep.subject_agreement` + `_finite_head_of`), reducing soft violations **1452 → 1409 (−43)** with zero model calls.
@@ -51,20 +58,19 @@ after it was launched, so measure that round against 1091 and count these three 
 
 ### Next Steps & Open Routes
 
-- **The third `--fix` round is in flight, user-side** (`make -C skel fix`, run 3-way parallel), against base 1091 soft. Both previous rounds repeated the previous round's pattern at a lower rate; this is the first round since Phase 6 opened where new checker rules, a sharpened prompt and a new Stage-2 class (`missing_arg_adverb`, population 82) all precede it. Measurement checklist in the *Handoff* box above; full table in [`skel/PLAN.md`](skel/PLAN.md)'s *In Flight*.
+- **The next `--fix` round awaits the user** (`make -C skel fix`, run 3-way parallel), against base **1094 soft** — the third round was aborted before landing, so the prompt-side work below is still untested by any round. This is the first round since Phase 6 opened where new checker rules, a sharpened prompt and a new Stage-2 class (`missing_arg_adverb`, population 82) all precede it. Measurement checklist in the *Handoff* box above; full table in [`skel/PLAN.md`](skel/PLAN.md)'s *In Flight*.
 - **Assistant-Side Tasks** (all independent of the round, so any of them can start before it lands):
   - Measure the population of a `parataxis`→`ccomp` acceptance rule for quoted speech under verbs of speech (Inferno 8:81) before writing it.
   - Sample the residue of the `extra_arg subj` `∅ (0,0)` bucket (54 standing, down from 69 after rule AH).
   - Per-position read of **Inferno 11–13**.
   - Audit remaining `extra_arg_adjective` (52), `extra_tuple_adjective` (13) and `extra_tuple_adverb` (4) positions.
-  - Normalize stacked prepositions in Layer 4 (`dep/`).
   - Re-measure `missing_arg obl` after the next `--fix` round (82 of its 128 were the adverb bucket now branched).
 - See [`skel/PLAN.md`](skel/PLAN.md) for full descriptions of each route and testing workflows.
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through AL, and Phase 6's restructuring, bringing its soft residue to **1091**
+checker was refined through Phases 0-5r, rules V through AL, and Phase 6's restructuring, bringing its soft residue to **1094**
 (down from 17438 at the first full-corpus measurement). See [`skel/PHASE5.md`](skel/PHASE5.md) for the full Phase 5
 history, [`skel/PLAN.md`](skel/PLAN.md) for the closing positions, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
@@ -76,7 +82,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**One route is in flight on the user's side — the third `--fix` round** (`make -C skel fix`); the rest are assistant-side and none of them block on it (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)). All five layers plus the case extension are implemented, built for all 100
+**The next route is the user-run `--fix` round** (`make -C skel fix`, not yet launched; the third round was aborted before landing); the rest are assistant-side and none of them block on it (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)). All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
@@ -106,7 +112,7 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
   `dante_corpus/hashes.py` (content-hash versioning, all layers), `Canto.skel()`/`Canto.hashes()`
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes). `--check` across all
-  three canticles reports **0 hard, 1091 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 1094 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PHASE5.md`](skel/PHASE5.md)) is
@@ -329,7 +335,7 @@ discipline already used for normalization and quotes.
 4. **Layer 5 (skeleton)** — *implemented* (`dante_corpus/skel.py` + `dante_corpus/hashes.py` +
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W,
    X, the Y-AF series, AG and the AH-AL series, with `--fix` restructured in Phase 6 and two
-   rounds run (`--check`: 0 hard / 1091 soft). Phase 5 closed with every route measured; see
+   rounds run (`--check`: 0 hard / 1094 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

@@ -174,7 +174,7 @@ line	token	word	deprel	head_line	head_token
 26	1	lo	det	26	2
 26	2	corpo	nsubj	25	7
 26	3	dentro	case	26	5
-26	4	al	case	26	5
+26	4	al	fixed	26	3
 26	5	quale	obl	26	7
 26	6	io	nsubj	26	7
 26	7	facea	acl:relcl	26	2
@@ -345,7 +345,7 @@ line	token	word	deprel	head_line	head_token
 50	6	una	det	50	7
 50	7	scala	attr	50	5
 51	1	verso	case	51	3
-51	2	di	case	51	3
+51	2	di	fixed	51	1
 51	3	quella	obl	50	7
 51	4	agevole	amod	50	7
 51	5	e	cc	51	6
@@ -903,7 +903,7 @@ line	token	word	deprel	head_line	head_token
 128	3	del	case	128	4
 128	4	ponte	nmod	128	2
 128	5	presso	case	128	7
-128	6	a	case	128	7
+128	6	a	fixed	128	5
 128	7	Benevento	nmod	128	4
 129	1	sotto	case	129	3
 129	2	la	det	129	3

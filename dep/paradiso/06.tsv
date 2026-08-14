@@ -6,7 +6,7 @@ line	token	word	deprel	head_line	head_token
 1	5	aquila	obj	1	6
 1	6	volse	advcl	5	7
 2	1	contr'	case	2	3
-2	2	al	case	2	3
+2	2	al	fixed	2	1
 2	3	corso	obl	1	6
 2	4	del	case	2	5
 2	5	ciel	nmod	2	3
@@ -14,7 +14,7 @@ line	token	word	deprel	head_line	head_token
 2	7	ella	nsubj	2	8
 2	8	seguio	acl:relcl	2	3
 3	1	dietro	case	3	4
-3	2	a	case	3	4
+3	2	a	fixed	3	1
 3	3	l'	det	3	4
 3	4	antico	obl	2	8
 3	5	che	obj	3	7
@@ -64,7 +64,7 @@ line	token	word	deprel	head_line	head_token
 9	2	sì	advmod	9	3
 9	3	cangiando	advcl	9	8
 9	4	in	case	9	7
-9	5	su	case	9	7
+9	5	su	fixed	9	4
 9	6	la	det	9	7
 9	7	mia	obl	9	8
 9	8	pervenne	conj	5	7
@@ -82,8 +82,8 @@ line	token	word	deprel	head_line	head_token
 11	7	ch'	obj	11	9
 11	8	i'	nsubj	11	9
 11	9	sento	acl:relcl	11	6
-12	1	d'	case	12	2
-12	2	entro	case	12	4
+12	1	d'	case	12	4
+12	2	entro	fixed	12	1
 12	3	le	det	12	4
 12	4	leggi	obl	12	5
 12	5	trassi	acl:relcl	10	5
@@ -232,7 +232,7 @@ line	token	word	deprel	head_line	head_token
 32	1	si	expl	32	2
 32	2	move	ccomp	31	3
 32	3	contr'	case	32	6
-32	4	al	case	32	6
+32	4	al	fixed	32	3
 32	5	sacrosanto	amod	32	6
 32	6	segno	obl	32	2
 33	1	e	cc	33	5
@@ -398,7 +398,7 @@ line	token	word	deprel	head_line	head_token
 54	7	amaro	xcomp	54	6
 55	1	Poi	advmod	57	7
 55	2	presso	case	55	4
-55	3	al	case	55	4
+55	3	al	fixed	55	2
 55	4	tempo	obl	57	7
 55	5	che	obl	55	9
 55	6	tutto	amod	55	8
@@ -905,7 +905,7 @@ line	token	word	deprel	head_line	head_token
 126	6	rote	nmod	126	3
 127	1	E	conj	128	1
 127	2	dentro	case	127	6
-127	3	a	case	127	6
+127	3	a	fixed	127	2
 127	4	la	det	127	6
 127	5	presente	amod	127	6
 127	6	margarita	obl	128	1

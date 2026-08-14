@@ -829,7 +829,7 @@ line	token	word	deprel	head_line	head_token
 115	3	cittadin	nsubj	116	3
 115	4	miei	amod	115	3
 115	5	presso	case	115	7
-115	6	a	case	115	7
+115	6	a	fixed	115	5
 115	7	Colle	obl	116	3
 116	1	in	case	116	2
 116	2	campo	obl	116	3
@@ -896,7 +896,7 @@ line	token	word	deprel	head_line	head_token
 124	3	con	case	124	4
 124	4	Dio	obl	124	2
 124	5	in	case	124	8
-124	6	su	case	124	8
+124	6	su	fixed	124	5
 124	7	lo	det	124	8
 124	8	stremo	obl	124	2
 125	1	de	case	125	4

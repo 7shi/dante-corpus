@@ -138,8 +138,8 @@ line	token	word	deprel	head_line	head_token
 18	5	corso	nmod	18	3
 18	6	nol	obj	18	7
 18	7	sazia	conj	16	7
-19	1	Di	case	19	2
-19	2	sovr'	case	19	3
+19	1	Di	case	19	3
+19	2	sovr'	fixed	19	1
 19	3	esso	obl	19	4
 19	4	rech'	root	0	0
 19	5	io	nsubj	19	4

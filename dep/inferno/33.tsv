@@ -693,8 +693,8 @@ line	token	word	deprel	head_line	head_token
 95	3	duol	nsubj	96	2
 95	4	che	nsubj	95	5
 95	5	truova	acl:relcl	95	3
-95	6	in	case	95	7
-95	7	su	case	95	9
+95	6	in	case	95	9
+95	7	su	fixed	95	6
 95	8	li	det	95	9
 95	9	occhi	obl	95	5
 95	10	rintoppo	obj	95	5

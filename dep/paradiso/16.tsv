@@ -811,7 +811,7 @@ line	token	word	deprel	head_line	head_token
 115	5	s'	expl	115	6
 115	6	indraca	acl:relcl	115	3
 116	1	dietro	case	116	3
-116	2	a	case	116	3
+116	2	a	fixed	116	1
 116	3	chi	obl	115	6
 116	4	fugge	acl:relcl	116	3
 116	5	e	cc	116	7

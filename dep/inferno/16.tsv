@@ -840,7 +840,7 @@ line	token	word	deprel	head_line	head_token
 118	6	esser	xcomp	118	7
 118	7	dienno	root	0	0
 119	1	presso	case	119	3
-119	2	a	case	119	3
+119	2	a	fixed	119	1
 119	3	color	obl	118	7
 119	4	che	nsubj	119	6
 119	5	non	advmod	119	6
@@ -849,8 +849,8 @@ line	token	word	deprel	head_line	head_token
 119	8	l'	det	119	9
 119	9	ovra	obj	119	6
 120	1	ma	cc	120	6
-120	2	per	case	120	3
-120	3	entro	case	120	5
+120	2	per	case	120	5
+120	3	entro	fixed	120	2
 120	4	i	det	120	5
 120	5	pensier	obl	120	6
 120	6	miran	conj	119	6

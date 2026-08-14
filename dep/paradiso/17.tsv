@@ -137,7 +137,7 @@ line	token	word	deprel	head_line	head_token
 19	6	Virgilio	obl	19	7
 19	7	congiunto	advcl	22	1
 20	1	su	case	20	4
-20	2	per	case	20	4
+20	2	per	fixed	20	1
 20	3	lo	det	20	4
 20	4	monte	obl	19	7
 20	5	che	nsubj	20	8
@@ -449,7 +449,7 @@ line	token	word	deprel	head_line	head_token
 65	1	si	expl	65	2
 65	2	farà	acl:relcl	62	3
 65	3	contr'	case	65	5
-65	4	a	case	65	5
+65	4	a	fixed	65	3
 65	5	te	obl	65	2
 65	6	ma	cc	66	5
 65	7	poco	advmod	65	8
@@ -499,7 +499,7 @@ line	token	word	deprel	head_line	head_token
 71	6	Lombardo	nmod	71	3
 72	1	che	nsubj	72	6
 72	2	'n	case	72	5
-72	3	su	case	72	5
+72	3	su	fixed	72	2
 72	4	la	det	72	5
 72	5	scala	obl	72	6
 72	6	porta	acl:relcl	71	6
@@ -672,7 +672,7 @@ line	token	word	deprel	head_line	head_token
 95	9	'nsidie	obj	95	7
 96	1	che	nsubj	96	7
 96	2	dietro	case	96	5
-96	3	a	case	96	5
+96	3	a	fixed	96	2
 96	4	pochi	amod	96	5
 96	5	giri	obl	96	7
 96	6	son	aux	96	7

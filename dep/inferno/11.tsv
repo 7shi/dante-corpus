@@ -1,6 +1,6 @@
 line	token	word	deprel	head_line	head_token
-1	1	In	case	1	2
-1	2	su	case	1	4
+1	1	In	case	1	4
+1	2	su	fixed	1	1
 1	3	l'	det	1	4
 1	4	estremità	obl	3	1
 1	5	d'	case	1	8
@@ -112,7 +112,7 @@ line	token	word	deprel	head_line	head_token
 16	1	Figliuol	vocative	17	4
 16	2	mio	amod	16	1
 16	3	dentro	case	16	6
-16	4	da	case	16	6
+16	4	da	fixed	16	3
 16	5	cotesti	det	16	6
 16	6	sassi	obl	17	5
 17	1	cominciò	root	0	0

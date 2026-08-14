@@ -467,8 +467,8 @@ line	token	word	deprel	head_line	head_token
 65	2	com'	mark	65	4
 65	3	el	nsubj	65	4
 65	4	giunse	advcl	66	3
-65	5	in	case	65	6
-65	6	su	case	65	8
+65	5	in	case	65	8
+65	6	su	fixed	65	5
 65	7	la	det	65	8
 65	8	ripa	obl	65	4
 65	9	sesta	amod	65	8
@@ -733,7 +733,7 @@ line	token	word	deprel	head_line	head_token
 101	5	l'	det	101	6
 101	6	altro	obl	101	1
 101	7	in	case	101	9
-101	8	sul	case	101	9
+101	8	sul	fixed	101	7
 101	9	groppone	obl	100	9
 102	1	E	cc	102	2
 102	2	rispondien	root	0	0

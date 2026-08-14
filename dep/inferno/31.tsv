@@ -723,7 +723,7 @@ line	token	word	deprel	head_line	head_token
 100	5	vedrai	ccomp	100	3
 100	6	Anteo	obj	100	5
 101	1	presso	case	101	3
-101	2	di	case	101	3
+101	2	di	fixed	101	1
 101	3	qui	obl	100	5
 101	4	che	nsubj	101	5
 101	5	parla	acl:relcl	100	6

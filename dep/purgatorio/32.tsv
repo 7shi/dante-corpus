@@ -110,7 +110,7 @@ line	token	word	deprel	head_line	head_token
 15	6	rimossi	acl:relcl	14	8
 16	1	vidi	root	0	0
 16	2	'n	case	16	4
-16	3	sul	case	16	4
+16	3	sul	fixed	16	2
 16	4	braccio	obl	16	6
 16	5	destro	amod	16	4
 16	6	esser	xcomp	16	1
@@ -368,7 +368,7 @@ line	token	word	deprel	head_line	head_token
 54	1	che	nsubj	54	2
 54	2	raggia	acl:relcl	53	7
 54	3	dietro	case	54	7
-54	4	a	case	54	7
+54	4	a	fixed	54	3
 54	5	la	det	54	7
 54	6	celeste	amod	54	7
 54	7	lasca	obl	54	2
@@ -595,8 +595,8 @@ line	token	word	deprel	head_line	head_token
 86	7	fronda	obl	87	2
 87	1	nova	amod	86	7
 87	2	sedere	xcomp	86	3
-87	3	in	case	87	4
-87	4	su	case	87	7
+87	3	in	case	87	7
+87	4	su	fixed	87	3
 87	5	la	det	87	7
 87	6	sua	det:poss	87	7
 87	7	radice	obl	87	2
@@ -649,8 +649,8 @@ line	token	word	deprel	head_line	head_token
 93	8	chiuso	acl:relcl	93	1
 94	1	Sola	advmod	94	2
 94	2	sedeasi	root	0	0
-94	3	in	case	94	4
-94	4	su	case	94	6
+94	3	in	case	94	6
+94	4	su	fixed	94	3
 94	5	la	det	94	6
 94	6	terra	obl	94	2
 94	7	vera	amod	94	6

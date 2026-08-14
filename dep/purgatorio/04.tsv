@@ -223,8 +223,8 @@ line	token	word	deprel	head_line	head_token
 30	7	lume	obj	30	6
 31	1	Noi	nsubj	31	2
 31	2	salavam	root	0	0
-31	3	per	case	31	4
-31	4	entro	case	31	6
+31	3	per	case	31	6
+31	4	entro	fixed	31	3
 31	5	'l	det	31	6
 31	6	sasso	obl	31	2
 31	7	rotto	amod	31	6
@@ -249,8 +249,8 @@ line	token	word	deprel	head_line	head_token
 34	2	che	mark	34	4
 34	3	noi	nsubj	34	4
 34	4	fummo	advcl	36	3
-34	5	in	case	34	6
-34	6	su	case	34	8
+34	5	in	case	34	8
+34	6	su	fixed	34	5
 34	7	l'	det	34	8
 34	8	orlo	obl	34	4
 34	9	suppremo	amod	34	8
@@ -282,7 +282,7 @@ line	token	word	deprel	head_line	head_token
 38	3	al	case	38	4
 38	4	monte	obl	38	8
 38	5	dietro	case	38	7
-38	6	a	case	38	7
+38	6	a	fixed	38	5
 38	7	me	obl	38	8
 38	8	acquista	conj	37	8
 39	1	fin	mark	39	4
@@ -490,7 +490,7 @@ line	token	word	deprel	head_line	head_token
 69	2	questo	det	69	3
 69	3	monte	obl	69	8
 69	4	in	case	69	7
-69	5	su	case	69	7
+69	5	su	fixed	69	4
 69	6	la	det	69	7
 69	7	terra	obl	69	8
 69	8	stare	xcomp	68	3

@@ -127,7 +127,7 @@ line	token	word	deprel	head_line	head_token
 18	1	e	cc	18	2
 18	2	soggiugnendo	conj	17	4
 18	3	Dentro	case	18	6
-18	4	a	case	18	6
+18	4	a	fixed	18	3
 18	5	quella	det	18	6
 18	6	cava	obl	20	8
 19	1	dov'	obl	19	3
@@ -372,8 +372,8 @@ line	token	word	deprel	head_line	head_token
 51	7	membre	obl	51	3
 52	1	Noi	nsubj	52	2
 52	2	discendemmo	root	0	0
-52	3	in	case	52	4
-52	4	su	case	52	7
+52	3	in	case	52	7
+52	4	su	fixed	52	3
 52	5	l'	det	52	7
 52	6	ultima	amod	52	7
 52	7	riva	obl	52	2

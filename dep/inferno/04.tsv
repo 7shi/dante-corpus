@@ -42,8 +42,8 @@ line	token	word	deprel	head_line	head_token
 7	1	Vero	attr	7	2
 7	2	è	root	0	0
 7	3	che	mark	7	9
-7	4	'n	case	7	5
-7	5	su	case	7	7
+7	4	'n	case	7	7
+7	5	su	fixed	7	4
 7	6	la	det	7	7
 7	7	proda	obl	7	9
 7	8	mi	obj	7	9

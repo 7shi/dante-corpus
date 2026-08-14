@@ -902,7 +902,7 @@ line	token	word	deprel	head_line	head_token
 122	3	in	case	122	4
 122	4	luce	conj	122	2
 122	5	dietro	case	122	9
-122	6	a	case	122	9
+122	6	a	fixed	122	5
 122	7	le	det	122	9
 122	8	mie	det:poss	122	9
 122	9	lode	obl	121	9

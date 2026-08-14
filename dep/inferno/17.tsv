@@ -235,7 +235,7 @@ line	token	word	deprel	head_line	head_token
 32	3	passi	obj	32	4
 32	4	femmo	conj	31	2
 32	5	in	case	32	8
-32	6	su	case	32	8
+32	6	su	fixed	32	5
 32	7	lo	det	32	8
 32	8	stremo	obl	32	4
 33	1	per	mark	33	3
@@ -663,8 +663,8 @@ line	token	word	deprel	head_line	head_token
 91	1	I'	nsubj	91	3
 91	2	m'	expl	91	3
 91	3	assettai	root	0	0
-91	4	in	case	91	5
-91	5	su	case	91	7
+91	4	in	case	91	7
+91	5	su	fixed	91	4
 91	6	quelle	det	91	7
 91	7	spallacce	obl	91	3
 92	1	sì	advmod	92	2

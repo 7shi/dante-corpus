@@ -560,7 +560,7 @@ line	token	word	deprel	head_line	head_token
 83	2	tenne	advcl	85	4
 83	3	Lorenzo	obj	83	2
 83	4	in	case	83	7
-83	5	su	case	83	7
+83	5	su	fixed	83	4
 83	6	la	det	83	7
 83	7	grada	obl	83	2
 84	1	e	cc	84	2

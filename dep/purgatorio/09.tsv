@@ -75,8 +75,8 @@ line	token	word	deprel	head_line	head_token
 11	1	vinto	acl	10	2
 11	2	dal	case	11	3
 11	3	sonno	obl	11	1
-11	4	in	case	11	5
-11	5	su	case	11	7
+11	4	in	case	11	7
+11	5	su	fixed	11	4
 11	6	l'	det	11	7
 11	7	erba	obl	11	8
 11	8	inchinai	advcl	8	1
@@ -98,7 +98,7 @@ line	token	word	deprel	head_line	head_token
 14	1	la	det	14	2
 14	2	rondinella	nsubj	13	5
 14	3	presso	case	14	6
-14	4	a	case	14	6
+14	4	a	fixed	14	3
 14	5	la	det	14	6
 14	6	mattina	obl	13	5
 15	1	forse	advmod	13	5

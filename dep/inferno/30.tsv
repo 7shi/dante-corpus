@@ -113,7 +113,7 @@ line	token	word	deprel	head_line	head_token
 18	3	suo	det:poss	18	4
 18	4	Polidoro	obl	19	7
 18	5	in	case	18	8
-18	6	su	case	18	8
+18	6	su	fixed	18	5
 18	7	la	det	18	8
 18	8	riva	obl	19	7
 19	1	del	case	19	2
@@ -186,7 +186,7 @@ line	token	word	deprel	head_line	head_token
 28	5	Capocchio	obl	28	3
 28	6	e	cc	29	4
 28	7	in	case	28	9
-28	8	sul	case	28	9
+28	8	sul	fixed	28	7
 28	9	nodo	obl	29	4
 29	1	del	case	29	2
 29	2	collo	nmod	28	9

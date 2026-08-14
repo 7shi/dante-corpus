@@ -15,7 +15,7 @@ line	token	word	deprel	head_line	head_token
 2	6	suole	advcl	2	1
 3	1	chi	nsubj	2	6
 3	2	dietro	case	3	5
-3	3	a	case	3	5
+3	3	a	fixed	3	2
 3	4	li	det	3	5
 3	5	uccellin	obl	3	8
 3	6	sua	det:poss	3	7

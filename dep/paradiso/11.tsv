@@ -19,7 +19,7 @@ line	token	word	deprel	head_line	head_token
 3	9	ali	obj	3	7
 4	1	Chi	nsubj	5	2
 4	2	dietro	case	4	4
-4	3	a	case	4	4
+4	3	a	fixed	4	2
 4	4	iura	obl	5	2
 4	5	e	cc	4	6
 4	6	chi	nsubj	5	2
@@ -548,7 +548,7 @@ line	token	word	deprel	head_line	head_token
 80	3	prima	advmod	80	2
 80	4	e	cc	81	1
 80	5	dietro	case	80	8
-80	6	a	case	80	8
+80	6	a	fixed	80	5
 80	7	tanta	det	80	8
 80	8	pace	obl	81	1
 81	1	corse	conj	80	2
@@ -642,7 +642,7 @@ line	token	word	deprel	head_line	head_token
 94	5	poverella	amod	94	4
 94	6	crebbe	advcl	97	4
 95	1	dietro	case	95	3
-95	2	a	case	95	3
+95	2	a	fixed	95	1
 95	3	costui	obl	94	6
 95	4	la	det	95	7
 95	5	cui	nmod	95	7

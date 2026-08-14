@@ -81,6 +81,11 @@ line	token	word	deprel	head_line	head_token
 Line 3 token 6 (`smarrita`) heads back to line 2 token 2 (`ritrovai`) — a cross-line attachment,
 exactly the enjambment case PLAN.md calls out.
 
+A **stacked preposition** ("in su", "per entro", "dietro a", "presso a") writes only its
+opening word as `case` on the nominal; each later word of the stack takes `fixed` on the
+opening word (`in` `case`→ `cima`, `su` `fixed`→ `in`) — normalized 2026-08-14, see
+[`CORRECTIONS.md`](CORRECTIONS.md).
+
 ## Check
 
 `--check` validates every committed artifact against the deterministic tokens, with **no model

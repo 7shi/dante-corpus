@@ -46,7 +46,7 @@ line	token	word	deprel	head_line	head_token
 7	1	Ma	cc	8	2
 7	2	se	mark	7	9
 7	3	presso	case	7	5
-7	4	al	case	7	5
+7	4	al	fixed	7	3
 7	5	mattin	obl	7	9
 7	6	del	case	7	7
 7	7	ver	nmod	7	5
@@ -687,7 +687,7 @@ line	token	word	deprel	head_line	head_token
 92	5	anno	obl	91	6
 92	6	là	advmod	91	6
 92	7	presso	case	92	9
-92	8	a	case	92	9
+92	8	a	fixed	92	7
 92	9	Gaeta	obl	91	6
 93	1	prima	advmod	93	6
 93	2	che	mark	93	6

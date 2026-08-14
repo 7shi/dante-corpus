@@ -2,14 +2,15 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 1094 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). **The in-flight `--fix` round was launched against 1091**; the +3 came from Layer 4 afterwards (below), so measure that round against **1091**, not against this number.
-- **Other Layers**: `dep --check` **0 hard / 0 soft** — the subject-agreement rule's 18-position residue was closed 2026-08-14, which is what moved Layer 5 **1091 → 1094 (+3)**: rule AG at inferno 6:87 no longer fires on a disagreement now flagged `AD_SENSUM`, and the purgatorio 26:147 Occitan re-parse gives `sovenha` two obliques the LLM does not list. See [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and [`CORRECTIONS.md`](CORRECTIONS.md). `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 265 passed.
+- **Current State**: `make -C skel check` reports **0 hard, 1094 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). **The third `--fix` round was aborted before landing** (nothing it touched was committed), so the next round runs against base **1094** — 1091 plus the Layer-4 agreement close's +3 plus the Layer-4 prep-stack normalization's net zero.
+- **Other Layers**: `dep --check` **0 hard / 0 soft**. The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 268 passed.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Two user-run rounds so far: **2011 → 1452 (−27.8%)**, then **1409 → 1247 (−11.5%)**.
 - **Latest Work**:
+  - **Layer-4 prep-stack normalization (2026-08-14)**: closed the stacked-preposition route — 161 clusters, 196 rows, Layer 5 **1094 → 1094 net zero** by design; `dante_corpus/skel.py` gained a `fixed`-under-`case` lemma aggregation so rules O/`prep_stack` read the normalized shape (3 new tests). The route's old "14 role_mismatch / 18 unattached" count was Phase-5j-era and already absorbed.
   - **Rule AG (Inferno 4–6 Read)**: Gated `conj` subject propagation on Layer-2 person/number agreement (`dep.subject_agreement` + `_finite_head_of`), scoring **1452 → 1409 soft (−43)** with zero model calls.
   - **Second `--fix` round (2026-08-14)**: First live pass of the `extra_arg_adjective` micro-prompt; **1409 → 1247 (−162)**, 0 regressed / 0 newly flagged. See *Second User-Run `--fix` Round* below.
-  - **Rules AH–AL + Inferno 7–10 read (2026-08-14)**: Five deterministic rules, five Layer-2 mistags and eight Layer-4 retags, scoring **1247 → 1091 (−156, −12.5%)** with zero model calls. Plus three prompt defects fixed and one new Stage-2 class (`missing_arg_adverb`, population 82), which move nothing until the next `--fix` round. See *Rules AH–AL and the Inferno 7–10 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
+  - **Rules AH–AL + Inferno 7–10 read (2026-08-14)**: Five deterministic rules, five Layer-2 mistags and eight Layer-4 retags, scoring **1247 → 1091 (−156, −12.5%)** with zero model calls. Plus three prompt defects fixed and one new Stage-2 class (`missing_arg_adverb`), which move nothing until the next `--fix` round. See *Rules AH–AL and the Inferno 7–10 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ---
 
@@ -127,19 +128,20 @@ adjectives.
 
 ## Active & Open Routes
 
-**The third `--fix` round is in flight.** Both previous rounds repeated the previous round's
-pattern at a lower rate; this is the first time since Phase 6 opened that new checker rules *and* a
-sharpened prompt *and* a new Stage-2 class all precede the round rather than follow it.
+**The next `--fix` round awaits the user.** The third round was aborted before landing, so the
+prompt-side work below is still untested by any round. Both previous rounds repeated the previous
+round's pattern at a lower rate; the next one is the first since Phase 6 opened where new checker
+rules *and* a sharpened prompt *and* a new Stage-2 class all precede it rather than follow it.
 
-### In Flight — the third `--fix` round (started 2026-08-14, user-side)
+### In Flight — the next `--fix` round (base 1094, not yet launched)
 
-`make -C skel fix`, 3-way parallel, against base **1091 soft** (commit `skel: rules AH-AL +
-prompt work from the Inferno 7-10 read`). What is new since the second round:
+`make -C skel fix`, 3-way parallel, against base **1094 soft**. What is new since the second
+round (populations re-measured at base):
 
 | change | target class | population at base |
 | --- | --- | ---: |
-| new Stage-2 class `missing_arg_adverb` + `_CONV_ADVERB_ARG` | `missing_arg_adverb` | **82** |
-| `_CONV_ADVERB` / `SYSTEM_PROMPT` omission-licence rewrite | same, and `missing_arg` generally | 429 total |
+| new Stage-2 class `missing_arg_adverb` + `_CONV_ADVERB_ARG` | `missing_arg_adverb` | **83** |
+| `_CONV_ADVERB` / `SYSTEM_PROMPT` omission-licence rewrite | same, and `missing_arg` generally | 432 total |
 | addressee-less elided-speech frame (`_CONV_VERBLESS`, `SYSTEM_PROMPT`, hint) | `missing_tuple_nominal` | 39 |
 | appositive-adjective clause (`_CONV_ADJECTIVE`, `SYSTEM_PROMPT`) | `extra_tuple_adjective` | 13 |
 
@@ -148,7 +150,8 @@ subclass table here, as for rounds 1 and 2. Two things this round is specificall
 
 - **`missing_arg_adverb` is the first class whose population was traced to a defect in the
   corpus's own prompt** rather than to the model — `_CONV_ADVERB` ended with "or it is left out",
-  licensing exactly the 82 omissions the checker was flagging. A large drop confirms the
+  licensing exactly the adverb omissions the checker was flagging (82 at discovery, 83 at base
+  after the Layer-4 agreement close). A large drop confirms the
   diagnosis; a flat result means the rewrite did not reach the model at the flagged position, and
   Phase 5w's finding applies (a prose rule already in the prompt does not move its class unless an
   instruction also reaches the model *at* the position) — re-read `_HINT_PHRASING` and the class
@@ -182,12 +185,19 @@ subclass table here, as for rounds 1 and 2. Two things this round is specificall
 - **Attributive vs. Predicative Adjectives (13 `extra_tuple_adjective` remaining, down from 37)**:
   - True reading disagreements with no `cop` edge (e.g., Inferno 2:109 *"non fur mai persone ratte / a far lor pro"*).
   - Target: Conduct a per-position read of the remaining 13 before writing any checker rule.
-- **`extra_arg_adjective` residue (52)**: per-position read to separate prompt weakness from genuine
+- **`extra_arg_adjective` residue (51)**: per-position read to separate prompt weakness from genuine
   reading disagreement — see the reading of its −20.0% above.
 - **Adverbs Promoted to Predicates (4 `extra_tuple_adverb` remaining, down from 33)**:
   - Effectively closed by the Stage 2 micro-prompt. Read the final 4 positions to decide whether any residue warrants prompt tweaks or checker acceptance.
-- **Stacked Prepositions in Layer 4 (14 `role_mismatch` / 18 unattached)**:
-  - Where Layer 4 inconsistently writes stacked prepositions (flat vs. chained, e.g., *"in su"*). Requires a `dep/` normalization pass.
+- **Stacked Prepositions in Layer 4 — CLOSED (2026-08-14)**: 161 multiword-preposition clusters
+  normalized to the UD shape (opening word `case`→ nominal, later members `fixed`→ opening word),
+  Layer 5 1094 → 1094 net zero; the old 14-role_mismatch count was Phase-5j-era and already
+  absorbed by rules O/`prep_stack`. The standing obl-vs-obl residue is 3 genuine disagreements
+  (inferno 14:103, purgatorio 32:156, paradiso 32:57). See
+  [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+  One deliberate leftover: the 40 adverb-prep clusters (`dentro a`, `dinanzi a`, `dietro a`,
+  `intorno a`, `fuor di`, `infino al` …) Layer 2 tags `adverb` were excluded from the rewrite —
+  a Layer-2/4 tension to decide separately if it ever matters.
 - **Per-Position Read of Inferno 11–13**: continue the audit discipline. Inferno 1, 1–3, 4–6 and
   7–10 have each produced rules no aggregate statistic suggested.
 - **`missing_arg obl` Sample Audit**:

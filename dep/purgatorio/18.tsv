@@ -173,7 +173,7 @@ line	token	word	deprel	head_line	head_token
 25	2	se	mark	25	8
 25	3	rivolto	advcl	25	8
 25	4	inver'	case	25	6
-25	5	di	case	25	6
+25	5	di	fixed	25	4
 25	6	lei	obl	25	8
 25	7	si	expl	25	8
 25	8	piega	advcl	26	3
@@ -661,7 +661,7 @@ line	token	word	deprel	head_line	head_token
 91	6	e	cc	91	7
 91	7	Asopo	conj	91	3
 92	1	lungo	case	92	3
-92	2	di	case	92	3
+92	2	di	fixed	92	1
 92	3	sè	obl	91	5
 92	4	di	case	92	5
 92	5	notte	obl	91	5

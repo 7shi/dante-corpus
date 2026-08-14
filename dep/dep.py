@@ -58,6 +58,8 @@ Rules:
 * Heads may be on a different line than the token — enjambment is common in this text.
 * A contracted preposition+article token (Nel, del, ...) acts as the preposition: case. A verb
   with a fused enclitic pronoun keeps the verb's own relation.
+* In a stacked preposition ("in su", "per entro", "dietro a", "presso a") only the opening
+  word takes case on the nominal; each later word of the stack takes fixed on the opening word.
 * A relative clause's verb attaches to its antecedent noun with acl:relcl; the relative pronoun
   (che, cui, qual, ...) takes its own role inside the clause (nsubj, obj, obl, ...).
 * Output only the table, with no commentary before or after it.

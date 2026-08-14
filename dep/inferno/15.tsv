@@ -702,8 +702,8 @@ line	token	word	deprel	head_line	head_token
 97	2	mio	det:poss	97	3
 97	3	maestro	nsubj	98	3
 97	4	allora	advmod	98	3
-97	5	in	case	97	6
-97	6	su	case	97	8
+97	5	in	case	97	8
+97	6	su	fixed	97	5
 97	7	la	det	97	8
 97	8	gota	obl	98	3
 98	1	destra	amod	97	8

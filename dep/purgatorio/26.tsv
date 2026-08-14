@@ -27,7 +27,7 @@ line	token	word	deprel	head_line	head_token
 4	2	il	det	4	3
 4	3	sole	nsubj	4	1
 4	4	in	case	4	7
-4	5	su	case	4	7
+4	5	su	fixed	4	4
 4	6	l'	det	4	7
 4	7	omero	obl	4	1
 4	8	destro	amod	4	7

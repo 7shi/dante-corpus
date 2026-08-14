@@ -218,8 +218,8 @@ line	token	word	deprel	head_line	head_token
 33	4	lo	det	33	5
 33	5	sol	obj	33	6
 33	6	ferisse	acl:relcl	33	2
-34	1	Per	case	34	2
-34	2	entro	case	34	3
+34	1	Per	case	34	3
+34	2	entro	fixed	34	1
 34	3	sé	obl	35	2
 34	4	l'	det	34	6
 34	5	etterna	amod	34	6
@@ -373,7 +373,7 @@ line	token	word	deprel	head_line	head_token
 56	3	omai	advmod	55	5
 56	4	poi	advmod	57	1
 56	5	dietro	case	56	7
-56	6	ai	case	56	7
+56	6	ai	fixed	56	5
 56	7	sensi	obl	57	1
 57	1	vedi	advcl	55	5
 57	2	che	mark	57	5
@@ -921,7 +921,7 @@ line	token	word	deprel	head_line	head_token
 133	3	l'	det	133	4
 133	4	alma	nsubj	135	5
 133	5	dentro	case	133	8
-133	6	a	case	133	8
+133	6	a	fixed	133	5
 133	7	vostra	det:poss	133	8
 133	8	polve	obl	135	5
 134	1	per	case	134	3

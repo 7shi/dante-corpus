@@ -143,7 +143,7 @@ line	token	word	deprel	head_line	head_token
 20	3	via	obl	19	5
 20	4	restammo	conj	13	3
 20	5	in	case	20	8
-20	6	su	case	20	8
+20	6	su	fixed	20	5
 20	7	un	det	20	8
 20	8	piano	obl	20	4
 21	1	solingo	amod	20	8

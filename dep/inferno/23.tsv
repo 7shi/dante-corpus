@@ -20,8 +20,8 @@ line	token	word	deprel	head_line	head_token
 3	6	via	obl	3	4
 4	1	Vòlt'	root	0	0
 4	2	era	cop	4	1
-4	3	in	case	4	4
-4	4	su	case	4	6
+4	3	in	case	4	6
+4	4	su	fixed	4	3
 4	5	la	det	4	6
 4	6	favola	obl	4	1
 4	7	d'	case	4	8
@@ -289,7 +289,7 @@ line	token	word	deprel	head_line	head_token
 39	1	e	cc	39	2
 39	2	vede	conj	38	8
 39	3	presso	case	39	5
-39	4	a	case	39	5
+39	4	a	fixed	39	3
 39	5	sé	obl	39	2
 39	6	le	det	39	7
 39	7	fiamme	obj	39	2
@@ -398,8 +398,8 @@ line	token	word	deprel	head_line	head_token
 53	4	ch'	mark	53	6
 53	5	e'	nsubj	53	6
 53	6	furon	root	0	0
-53	7	in	case	53	8
-53	8	sul	case	53	9
+53	7	in	case	53	9
+53	8	sul	fixed	53	7
 53	9	colle	obl	53	6
 54	1	sovresso	case	54	2
 54	2	noi	nmod	53	9
@@ -1087,7 +1087,7 @@ line	token	word	deprel	head_line	head_token
 147	6	mi	expl	147	7
 147	7	parti'	advcl	145	8
 148	1	dietro	case	148	4
-148	2	a	case	148	4
+148	2	a	fixed	148	1
 148	3	le	det	148	4
 148	4	poste	obl	147	7
 148	5	de	case	148	8

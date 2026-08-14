@@ -874,7 +874,7 @@ line	token	word	deprel	head_line	head_token
 123	2	Nostra	det:poss	123	3
 123	3	Donna	nmod	122	7
 123	4	in	case	123	6
-123	5	sul	case	123	6
+123	5	sul	fixed	123	4
 123	6	lito	nmod	122	7
 123	7	adriano	amod	123	6
 124	1	Poca	amod	124	2

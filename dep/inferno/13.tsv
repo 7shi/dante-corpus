@@ -1048,7 +1048,7 @@ line	token	word	deprel	head_line	head_token
 146	4	fosse	advcl	150	2
 146	5	che	mark	147	1
 146	6	'n	case	146	8
-146	7	sul	case	146	8
+146	7	sul	fixed	146	6
 146	8	passo	obl	147	1
 146	9	d'	case	146	10
 146	10	Arno	nmod	146	8

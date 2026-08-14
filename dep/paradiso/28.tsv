@@ -2,7 +2,7 @@ line	token	word	deprel	head_line	head_token
 1	1	Poscia	advmod	10	6
 1	2	che	mark	2	5
 1	3	'ncontro	case	1	6
-1	4	a	case	1	6
+1	4	a	fixed	1	3
 1	5	la	det	1	6
 1	6	vita	obl	2	5
 1	7	presente	amod	1	6

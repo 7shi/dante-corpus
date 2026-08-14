@@ -303,8 +303,8 @@ line	token	word	deprel	head_line	head_token
 39	9	tace	acl:relcl	39	6
 40	1	Allor	advmod	40	2
 40	2	venimmo	root	0	0
-40	3	in	case	40	4
-40	4	su	case	40	6
+40	3	in	case	40	6
+40	4	su	fixed	40	3
 40	5	l'	det	40	6
 40	6	argine	obl	40	2
 40	7	quarto	amod	40	6

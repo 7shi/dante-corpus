@@ -743,7 +743,7 @@ line	token	word	deprel	head_line	head_token
 102	2	mille	nummod	102	3
 102	3	fiate	obl	102	8
 102	4	in	case	102	6
-102	5	sul	case	102	6
+102	5	sul	fixed	102	4
 102	6	capo	obl	102	8
 102	7	mi	obj	102	8
 102	8	tomi	advcl	101	8

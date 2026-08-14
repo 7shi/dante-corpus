@@ -346,8 +346,8 @@ line	token	word	deprel	head_line	head_token
 47	3	vedrai	conj	46	6
 47	4	di	case	47	5
 47	5	sopra	obl	47	3
-47	6	in	case	47	7
-47	7	su	case	47	9
+47	6	in	case	47	9
+47	7	su	fixed	47	6
 47	8	la	det	47	9
 47	9	vetta	obl	47	3
 48	1	di	case	48	3
@@ -1021,7 +1021,7 @@ line	token	word	deprel	head_line	head_token
 141	6	picciol	amod	141	7
 141	7	cenno	obj	141	1
 142	1	verso	case	142	3
-142	2	di	case	142	3
+142	2	di	fixed	142	1
 142	3	te	obl	141	1
 142	4	che	nsubj	142	5
 142	5	fai	acl:relcl	142	3
@@ -1076,8 +1076,8 @@ line	token	word	deprel	head_line	head_token
 150	3	può	aux	150	4
 150	4	trovar	acl:relcl	149	5
 150	5	posa	obj	150	4
-150	6	in	case	150	7
-150	7	su	case	150	9
+150	6	in	case	150	9
+150	7	su	fixed	150	6
 150	8	le	det	150	9
 150	9	piume	obl	150	4
 151	1	ma	cc	151	7

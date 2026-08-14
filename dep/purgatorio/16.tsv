@@ -855,7 +855,7 @@ line	token	word	deprel	head_line	head_token
 114	7	lo	det	114	8
 114	8	seme	obl	114	5
 115	1	In	case	115	3
-115	2	sul	case	115	3
+115	2	sul	fixed	115	1
 115	3	paese	obl	116	5
 115	4	ch'	obj	115	8
 115	5	Adice	nsubj	115	8

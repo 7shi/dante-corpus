@@ -206,7 +206,7 @@ line	token	word	deprel	head_line	head_token
 30	7	sparito	acl:relcl	29	8
 31	1	vidi	root	0	0
 31	2	presso	case	31	4
-31	3	di	case	31	4
+31	3	di	fixed	31	2
 31	4	me	obl	31	1
 31	5	un	det	31	6
 31	6	veglio	obj	31	1
@@ -273,7 +273,7 @@ line	token	word	deprel	head_line	head_token
 40	3	voi	nsubj	40	2
 40	4	che	nsubj	41	1
 40	5	contro	case	40	8
-40	6	al	case	40	8
+40	6	al	fixed	40	5
 40	7	cieco	amod	40	8
 40	8	fiume	obl	41	1
 41	1	fuggita	acl:relcl	40	3
@@ -898,7 +898,7 @@ line	token	word	deprel	head_line	head_token
 124	2	le	det	124	3
 124	3	mani	obj	125	5
 124	4	in	case	124	7
-124	5	su	case	124	7
+124	5	su	fixed	124	4
 124	6	l'	det	124	7
 124	7	erbetta	obl	125	5
 124	8	sparte	amod	124	3
@@ -936,7 +936,7 @@ line	token	word	deprel	head_line	head_token
 130	1	Venimmo	root	0	0
 130	2	poi	advmod	130	1
 130	3	in	case	130	5
-130	4	sul	case	130	5
+130	4	sul	fixed	130	3
 130	5	lito	obl	130	1
 130	6	diserto	amod	130	5
 131	1	che	nsubj	131	4

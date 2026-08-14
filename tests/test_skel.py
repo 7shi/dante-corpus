@@ -893,6 +893,35 @@ def test_classify_divergence_co_present_preposition_requires_both_sides_oblique(
     assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 3) for v in violations)
 
 
+def test_classify_divergence_co_present_preposition_fixed_member_accepted():
+    # "in su le porte" after the dep/ multiword-preposition normalization: `in` is the nominal's
+    # `case` child and `su` hangs off `in` as `fixed`. The fixed member still names a
+    # preposition of the same PP, so rule O accepts it exactly as it did when Layer 4 attached
+    # both members flat.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obl:in", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obl:su", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="in", deprel="case", head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="su", deprel="fixed", head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="porte", deprel="obl", head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_classify_divergence_co_present_preposition_fixed_absent_still_flagged():
+    # Mirror: the normalized tree carries `in` (case) and `su` (fixed) but the LLM names `di`,
+    # which no member of the stack spells — a genuine disagreement about what is attached.
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obl:in", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obl:di", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="in", deprel="case", head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="su", deprel="fixed", head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="porte", deprel="obl", head_line=1, head_token=1),
+    }
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos)
+    assert any(v.detail.startswith("role_mismatch") and v.arg == (1, 4) for v in violations)
+
+
 # --- Phase 5l: rule R ------------------------------------------------------------------
 
 
@@ -1387,6 +1416,24 @@ def test_find_repairs_prep_stack_rejects_flat_sibling_prepositions():
     violations = skel._classify_divergence(given, derived)
     repairs = skel._find_repairs(given, derived, violations, None, dep_rows)
     assert [r.kind for r in repairs] == ["prep_stack"]
+
+
+def test_find_repairs_prep_stack_reaches_fixed_member():
+    # "in su la cima" after the dep/ multiword-preposition normalization: `in` is the nominal's
+    # `case` child, `su` its `fixed` child. The stack walk must reach the fixed member, so the
+    # two readings naming different members of one stack still repair to one label.
+    derived = {2: [skel.SkelRow(2, 2, "fui", "obl:in", 1, 3)]}
+    given = {2: [skel.SkelRow(2, 2, "fui", "obl:su", 1, 3)]}
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="in", deprel="case", head_line=1, head_token=3),
+        dep.DepRow(line=1, token=2, word="su", deprel="fixed", head_line=1, head_token=1),
+    ]}
+    violations = skel._classify_divergence(given, derived)
+    repairs = skel._find_repairs(given, derived, violations, None, dep_rows)
+    assert len(repairs) == 1
+    assert repairs[0].kind == "prep_stack"
+    assert repairs[0].before.role == "obl:su" and repairs[0].after.role == "obl:in"
+    assert skel._classify_divergence({2: [repairs[0].after]}, derived) == []
 
 
 def test_find_repairs_prep_stack_needs_dep_rows():
