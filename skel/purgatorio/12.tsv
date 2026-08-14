@@ -219,7 +219,6 @@ line	token	word	role	arg_line	arg_token
 74	8	speso	obl:di	73	7
 74	8	speso	obl:di	74	3
 75	3	stimava	subj	75	5
-75	3	stimava	obj	75	1
 76	0			0	0
 77	1	andava	subj	76	3
 77	2	cominciò	subj	76	2
@@ -260,7 +259,7 @@ line	token	word	role	arg_line	arg_token
 88	3	venìa	subj	88	5
 88	3	venìa	obl:a	88	2
 89	0			0	0
-90	1	par	subj	89	6
+90	1	par	attr	89	6
 90	1	par	attr	90	4
 91	3	aperse	subj	0	0
 91	3	aperse	obj	91	2

@@ -321,6 +321,7 @@ line	token	word	role	arg_line	arg_token
 111	2	segue	subj	111	1
 111	2	segue	obj	111	4
 111	6	fui	subj	110	7
+111	6	fui	obl	111	7
 111	6	fui	obl:da	111	9
 112	0			0	0
 113	7	riconosco	subj	113	6
@@ -421,7 +422,6 @@ line	token	word	role	arg_line	arg_token
 143	4	vidi	subj	0	0
 143	4	vidi	ccomp	143	7
 143	7	move	subj	144	6
-143	7	move	obl:a	144	5
 144	0			0	0
 145	3	apparve	subj	145	5
 145	3	apparve	iobj	145	2

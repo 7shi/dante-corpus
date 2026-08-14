@@ -329,6 +329,7 @@ line	token	word	role	arg_line	arg_token
 121	9	ragiona	subj	0	0
 121	9	ragiona	obj	121	4
 121	9	ragiona	obl	121	6
+121	9	ragiona	obl:a	121	7
 122	3	era	subj	122	4
 122	3	era	attr	122	5
 122	3	era	obl:a	121	3
@@ -336,6 +337,7 @@ line	token	word	role	arg_line	arg_token
 122	5	sol	obl:a	121	3
 123	2	alzava	subj	123	6
 123	2	alzava	obj	123	4
+123	2	alzava	obl:da	122	9
 124	3	partiti	subj	124	1
 124	3	partiti	obl:da	124	6
 125	2	brigavam	subj	0	0

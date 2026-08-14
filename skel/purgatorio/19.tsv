@@ -279,8 +279,8 @@ line	token	word	role	arg_line	arg_token
 90	7	fenno	obj	90	6
 90	7	fenno	xcomp	90	5
 91	1	dicendo	subj	0	0
-91	6	matura	subj	91	5
 91	6	matura	subj	92	1
+91	6	matura	obj	91	5
 91	6	matura	obl:in	91	4
 92	7	tornar	subj	0	0
 92	7	tornar	obl:a	92	6
@@ -348,11 +348,10 @@ line	token	word	role	arg_line	arg_token
 111	8	accese	subj	111	9
 111	8	accese	obl:di	111	4
 111	8	accese	obl:in	111	6
-112	5	misera	subj	113	3
-112	5	misera	obl:a	112	4
 112	7	partita	subj	113	3
 112	7	partita	obl:da	113	2
 113	3	anima	subj	0	0
+113	4	fui	attr	112	5
 113	7	avara	subj	113	3
 113	7	avara	obl:di	113	6
 114	3	vedi	subj	0	0

@@ -46,6 +46,7 @@ line	token	word	role	arg_line	arg_token
 17	9	spezza	obj	17	7
 18	1	continüò	subj	16	3
 18	1	continüò	obj	18	4
+18	1	continüò	obl	17	4
 19	0			0	0
 20	1	fesse	subj	19	5
 20	1	fesse	obj	19	4
@@ -105,13 +106,13 @@ line	token	word	role	arg_line	arg_token
 36	10	scoverto	subj	36	7
 36	10	scoverto	obj	36	6
 36	10	scoverto	iobj	36	8
+37	1	convienti	subj	34	1
 37	1	convienti	subj	37	3
 37	3	sedere	subj	0	0
 37	3	sedere	obl	37	5
 37	3	sedere	obl:a	37	7
 38	8	preso	subj	38	4
 38	8	preso	iobj	38	6
-39	1	richiede	subj	38	4
 39	1	richiede	obj	39	3
 39	1	richiede	obl:a	39	6
 40	1	Apri	subj	0	0
@@ -189,6 +190,7 @@ line	token	word	role	arg_line	arg_token
 65	8	bieci	xcomp	65	6
 66	0			0	0
 67	4	convenia	subj	67	5
+67	4	convenia	subj	68	3
 67	4	convenia	iobj	67	1
 67	5	dicer	subj	0	0
 67	5	dicer	ccomp	67	7
@@ -196,8 +198,6 @@ line	token	word	role	arg_line	arg_token
 67	7	feci	subj	0	0
 68	2	servando		0	0
 68	2	servando	subj	0	0
-68	3	far	subj	0	0
-68	3	far	obj	68	4
 69	1	ritrovar	subj	0	0
 69	1	ritrovar	obj	69	5
 69	1	ritrovar	attr	68	7
@@ -205,6 +205,7 @@ line	token	word	role	arg_line	arg_token
 69	2	puoi	xcomp	69	1
 70	2	pianse	subj	70	3
 70	2	pianse	obj	70	7
+70	2	pianse	obl	70	1
 71	2	fé	subj	70	3
 71	2	fé	obj	71	7
 71	2	fé	xcomp	71	3
@@ -351,6 +352,7 @@ line	token	word	role	arg_line	arg_token
 119	7	disii	xcomp	120	3
 120	3	chiarirti	subj	0	0
 120	3	chiarirti	obl:di	120	2
+120	8	sazia	obj	120	7
 120	8	sazia	obl:a	120	6
 121	0			0	0
 122	1	detto	subj	0	0

@@ -1,6 +1,7 @@
 line	token	word	role	arg_line	arg_token
 1	1	Imagini	subj	1	2
 1	1	Imagini	obj	2	1
+1	1	Imagini	obj	4	2
 1	4	intender	subj	1	2
 1	4	intender	obj	2	1
 1	5	cupe	subj	1	2
@@ -22,7 +23,10 @@ line	token	word	role	arg_line	arg_token
 7	1	imagini	subj	1	2
 7	1	imagini	obj	7	3
 8	1	basta	subj	7	7
+8	1	basta	obl:a	7	5
 8	1	basta	obl:di	8	4
+8	1	basta	obl	8	6
+8	1	basta	obl	8	8
 9	8	vien	subj	7	7
 9	8	vien	obl:a	9	4
 10	1	imagini	subj	0	0
@@ -225,13 +229,8 @@ line	token	word	role	arg_line	arg_token
 81	6	acquista	subj	81	3
 81	6	acquista	obl	81	4
 82	3	fatta	subj	82	6
-82	3	fatta	attr	82	7
-82	7	degna	subj	82	6
-82	7	degna	obl:di	83	5
 83	0			0	0
 84	3	fatta	subj	84	5
-84	3	fatta	attr	84	6
-84	6	pregna	subj	84	5
 85	4	commendo	subj	85	3
 85	4	commendo	obj	85	6
 86	7	fue	subj	86	4

@@ -159,6 +159,7 @@ line	token	word	role	arg_line	arg_token
 57	9	tale	subj	57	5
 58	4	gravar	subj	58	6
 58	4	gravar	obj	58	2
+58	4	gravar	obl:in	58	8
 59	2	aspettar	subj	0	0
 59	2	aspettar	obj	59	4
 59	2	aspettar	obj	59	6

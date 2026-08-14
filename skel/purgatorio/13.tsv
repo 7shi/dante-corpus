@@ -201,8 +201,7 @@ line	token	word	role	arg_line	arg_token
 70	10	fóra	obj	70	9
 70	10	fóra	obl:a	70	3
 71	2	cusce	subj	70	5
-71	2	cusce	obj	70	9
-72	2	fa	subj	72	1
+72	2	fa	subj	0	0
 72	2	fa	ccomp	72	7
 72	2	fa	obl:a	71	6
 72	7	dimora	subj	71	6

@@ -49,8 +49,8 @@ line	token	word	role	arg_line	arg_token
 18	1	gridaro	obl:a	18	3
 18	5	è	subj	18	7
 18	5	è	obl	18	4
+19	5	impruna	subj	19	1
 19	5	impruna	subj	21	2
-19	5	impruna	obj	19	1
 19	5	impruna	obj	21	2
 19	5	impruna	obl	19	4
 19	5	impruna	obl:con	20	3
@@ -215,6 +215,7 @@ line	token	word	role	arg_line	arg_token
 73	5	convien	obl:a	73	4
 73	7	vada	subj	71	6
 73	7	vada	obl:da	74	3
+73	7	vada	obl:a	74	6
 74	0			0	0
 75	7	bada	subj	75	3
 76	4	diss'	subj	76	5

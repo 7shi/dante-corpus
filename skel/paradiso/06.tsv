@@ -75,20 +75,24 @@ line	token	word	role	arg_line	arg_token
 27	3	fu	attr	27	2
 27	7	posarmi	subj	27	5
 28	8	appunta	subj	29	3
+28	8	appunta	obj	28	7
 28	8	appunta	obl:a	28	5
 29	0			0	0
 30	2	stringe	subj	29	6
 30	2	stringe	obj	30	1
 30	2	stringe	xcomp	30	4
+30	4	seguitare	subj	30	1
 30	4	seguitare	obj	30	6
 31	3	veggi	subj	31	2
 31	3	veggi	ccomp	32	2
-32	2	move	subj	0	0
+32	2	move	subj	29	3
 32	2	move	obl:con	31	6
-32	2	move	obl:contr	32	6
+32	2	move	obl:a	32	6
 33	5	appropria	subj	33	2
 33	5	appropria	obj	33	3
+33	5	appropria	obj	33	4
 33	11	oppone	subj	33	7
+33	11	oppone	obj	33	10
 33	11	oppone	obl:a	33	9
 34	1	Vedi	subj	0	0
 34	1	Vedi	ccomp	34	6
@@ -394,6 +398,7 @@ line	token	word	role	arg_line	arg_token
 138	3	assegnò	subj	138	1
 138	3	assegnò	obj	138	4
 138	3	assegnò	iobj	138	2
+138	3	assegnò	obl:per	138	8
 139	2	partissi	subj	0	0
 139	2	partissi	attr	139	3
 139	2	partissi	attr	139	5
@@ -404,7 +409,5 @@ line	token	word	role	arg_line	arg_token
 141	1	mendicando	obj	141	3
 141	1	mendicando	obl:a	141	5
 141	1	mendicando	obl:a	141	7
-142	3	loda	subj	136	3
 142	3	loda	obj	142	2
-142	7	loderebbe	subj	136	3
 142	7	loderebbe	obj	142	6

@@ -296,10 +296,9 @@ line	token	word	role	arg_line	arg_token
 97	6	dar	subj	0	0
 97	6	dar	obl:di	97	8
 98	6	ricorda	subj	98	1
-98	6	ricorda	iobj	98	5
+98	6	ricorda	obj	98	5
 99	2	porta	subj	98	1
 99	2	porta	obj	99	6
-99	2	porta	attr	99	4
 99	2	porta	obl:di	99	1
 100	3	rivolse	subj	0	0
 100	3	rivolse	obl:per	100	6
@@ -382,7 +381,8 @@ line	token	word	role	arg_line	arg_token
 126	2	fan	subj	125	1
 126	2	fan	obj	126	1
 126	2	fan	xcomp	126	3
-126	3	sentir	subj	126	1
+126	3	sentir	subj	125	1
+126	3	sentir	obj	126	1
 126	3	sentir	obl:con	126	5
 127	2	quelli	subj	0	0
 127	2	quelli	iobj	127	4

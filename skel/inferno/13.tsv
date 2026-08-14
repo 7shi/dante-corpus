@@ -24,7 +24,6 @@ line	token	word	role	arg_line	arg_token
 11	2	cacciar	subj	11	1
 11	2	cacciar	obj	11	7
 11	2	cacciar	obl:de	11	5
-11	2	cacciar	obl:con	12	3
 12	6	danno	subj	11	1
 12	6	danno	obj	11	2
 12	6	danno	obl:con	12	3

@@ -48,8 +48,8 @@ line	token	word	role	arg_line	arg_token
 17	2	conchiuso	obl:in	17	6
 18	1	poca	subj	0	0
 18	1	poca	obl:a	18	4
-18	2	sarebbe	subj	18	4
 18	2	sarebbe	attr	18	1
+18	2	sarebbe	xcomp	18	4
 18	4	fornir	subj	0	0
 18	4	fornir	obj	18	6
 19	5	vidi	subj	19	4
@@ -368,11 +368,12 @@ line	token	word	role	arg_line	arg_token
 141	6	caccia	subj	141	1
 141	6	caccia	obj	141	9
 142	2	fia	subj	143	2
-142	2	fia	attr	142	3
+142	2	fia	xcomp	142	3
 142	2	fia	obl:in	142	5
-142	3	prefetto	subj	143	2
+142	3	prefetto	subj	0	0
 142	3	prefetto	obl:in	142	5
-143	0			0	0
+143	2	tal	subj	0	0
+143	2	tal	ccomp	144	2
 144	2	anderà	subj	143	3
 144	2	anderà	attr	143	4
 144	2	anderà	attr	143	6

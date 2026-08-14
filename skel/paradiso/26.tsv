@@ -104,7 +104,7 @@ line	token	word	role	arg_line	arg_token
 31	6	è	subj	31	8
 32	9	trova	subj	32	4
 32	9	trova	obl:di	32	7
-33	3	è	subj	33	1
+33	3	è	attr	33	1
 33	3	è	attr	33	6
 34	5	convien	ccomp	34	8
 34	8	mova	subj	35	2
@@ -180,6 +180,7 @@ line	token	word	role	arg_line	arg_token
 59	8	viva	subj	59	7
 60	4	spera	subj	60	6
 60	4	spera	obj	60	3
+60	4	spera	obl	60	8
 61	0			0	0
 62	1	tratto	subj	58	3
 62	1	tratto	subj	58	8

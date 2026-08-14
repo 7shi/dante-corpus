@@ -32,7 +32,6 @@ line	token	word	role	arg_line	arg_token
 10	3	vidi	obj	10	9
 10	3	vidi	xcomp	10	7
 10	6	udi'	subj	10	2
-10	6	udi'	obj	10	9
 10	6	udi'	xcomp	10	7
 10	7	parlar	subj	10	9
 11	2	sonar	subj	10	9

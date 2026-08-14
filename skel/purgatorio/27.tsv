@@ -268,8 +268,6 @@ line	token	word	role	arg_line	arg_token
 89	5	vedea	obj	89	8
 89	5	vedea	obl:per	89	4
 90	3	solere	subj	90	2
-90	3	solere	attr	90	6
-90	3	solere	attr	90	8
 91	2	ruminando	subj	0	0
 91	5	mirando	subj	0	0
 91	5	mirando	obl:in	91	7

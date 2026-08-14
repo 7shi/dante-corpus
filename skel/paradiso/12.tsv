@@ -140,7 +140,6 @@ line	token	word	role	arg_line	arg_token
 52	1	siede	subj	52	4
 52	1	siede	obl:in	46	3
 52	1	siede	obl	49	3
-52	1	siede	obl:a	49	5
 52	1	siede	obl:sotto	53	3
 53	0			0	0
 54	3	soggiace	subj	54	5
@@ -250,17 +249,17 @@ line	token	word	role	arg_line	arg_token
 91	2	dispensare	obj	91	6
 91	2	dispensare	obj	92	3
 91	2	dispensare	obj	93	2
-91	2	dispensare	obl:a	88	4
 91	2	dispensare	obl:a	89	4
 91	2	dispensare	obl:per	89	7
 91	2	dispensare	obl:per	90	3
 91	2	dispensare	obl:per	91	8
 92	0			0	0
 93	4	sunt	subj	93	3
-93	4	sunt	attr	93	5
+93	4	sunt	obl:di	93	5
 94	1	addimandò	subj	0	0
 94	1	addimandò	obj	95	1
 94	1	addimandò	xcomp	91	2
+94	1	addimandò	obl:a	88	4
 95	3	combatter	subj	0	0
 95	3	combatter	obl:contro	94	5
 95	3	combatter	obl:per	95	6
@@ -312,13 +311,14 @@ line	token	word	role	arg_line	arg_token
 114	7	era	subj	114	9
 114	7	era	obl	114	6
 115	6	mosse	subj	115	4
+115	6	mosse	attr	115	7
 115	6	mosse	obl:con	116	2
 115	6	mosse	obl:a	116	6
 116	9	volta	subj	115	3
 117	8	gitta	subj	117	2
 117	8	gitta	obl:di	117	7
-118	4	vedrà	subj	0	0
-118	4	vedrà	obl:di	118	7
+118	4	vedrà	subj	118	7
+118	4	vedrà	obl:di	119	4
 119	0			0	0
 120	2	lagnerà	subj	119	7
 120	2	lagnerà	ccomp	120	8

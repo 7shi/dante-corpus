@@ -447,7 +447,6 @@ line	token	word	role	arg_line	arg_token
 141	5	ir	obl:per	141	8
 142	6	divora	subj	142	5
 142	6	divora	obj	143	1
-142	6	divora	obl:con	143	3
 143	5	sposò	subj	143	1
 143	5	sposò	obj	143	4
 143	5	sposò	obl:a	142	4

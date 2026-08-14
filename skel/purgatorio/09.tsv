@@ -199,8 +199,6 @@ line	token	word	role	arg_line	arg_token
 69	2	mosse	subj	68	4
 69	2	mosse	subj	69	4
 69	2	mosse	obl:per	68	9
-69	2	mosse	obl:di	69	6
-69	2	mosse	obl:inver	69	9
 70	3	vedi	subj	70	2
 70	3	vedi	ccomp	70	7
 70	7	innalzo	subj	70	6
@@ -298,6 +296,7 @@ line	token	word	role	arg_line	arg_token
 101	3	parea	attr	101	1
 101	3	parea	attr	101	5
 101	5	fiammeggiante	subj	100	2
+101	5	fiammeggiante	obl:come	102	2
 102	7	spiccia	subj	102	3
 102	7	spiccia	obl	102	4
 103	3	tenëa	subj	104	2

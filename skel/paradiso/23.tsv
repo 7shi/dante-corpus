@@ -142,7 +142,7 @@ line	token	word	role	arg_line	arg_token
 48	4	sostener	subj	0	0
 48	4	sostener	obj	48	6
 49	2	era	subj	49	1
-49	2	era	attr	49	4
+49	2	era	obl:come	49	4
 49	7	risente	subj	49	5
 49	7	risente	obl:di	50	2
 50	7	ingegna	subj	50	5
@@ -253,7 +253,6 @@ line	token	word	role	arg_line	arg_token
 89	7	ristrinse	obl	89	4
 90	4	avvisar	subj	90	2
 90	4	avvisar	obj	90	7
-91	7	dipinse	subj	88	2
 91	7	dipinse	obj	91	5
 91	7	dipinse	obj	92	2
 91	7	dipinse	obj	92	5

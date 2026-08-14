@@ -48,7 +48,6 @@ line	token	word	role	arg_line	arg_token
 22	3	parve	subj	0	0
 22	3	parve	iobj	22	2
 22	3	parve	ccomp	23	6
-22	3	parve	obl:a	23	4
 23	6	percosso	subj	17	3
 23	6	percosso	obl:da	22	5
 24	4	fuggir	subj	24	7
@@ -134,13 +133,13 @@ line	token	word	role	arg_line	arg_token
 46	3	elli	subj	0	0
 46	3	elli	ccomp	47	1
 46	3	elli	obl:a	46	5
-47	1	conosce	subj	0	0
+47	1	conosce	subj	46	3
 47	1	conosce	obj	47	3
 47	1	conosce	obl:di	46	9
 47	8	ammiri	subj	0	0
-47	8	ammiri	ccomp	48	3
 48	3	riprende	subj	0	0
-48	3	riprende	obl:di	48	2
+48	3	riprende	obj	48	2
+48	7	piagna		0	0
 48	7	piagna	subj	0	0
 49	3	appuntano	subj	49	6
 50	6	scema	subj	50	4
@@ -300,7 +299,7 @@ line	token	word	role	arg_line	arg_token
 104	2	farem	obl:a	104	5
 104	8	disira	subj	104	5
 104	8	disira	obj	104	6
-104	8	disira	obl:di	104	7
+104	8	disira	obj	104	7
 105	5	ama	subj	105	3
 105	5	ama	obj	105	4
 105	9	condannato	subj	105	2
@@ -329,6 +328,7 @@ line	token	word	role	arg_line	arg_token
 112	1	orando	subj	0	0
 112	1	orando	obl:a	112	5
 112	1	orando	obl:in	112	8
+112	1	orando	obl:con	114	3
 113	2	perdonasse	subj	0	0
 113	2	perdonasse	obl:a	113	5
 114	6	diserra	subj	114	4

@@ -362,7 +362,6 @@ line	token	word	role	arg_line	arg_token
 131	2	parve	iobj	131	1
 131	2	parve	xcomp	131	3
 131	3	pinta	subj	127	2
-131	3	pinta	obl:da	130	3
 131	3	pinta	obl:di	130	6
 131	3	pinta	obl:de	131	7
 132	10	messo	subj	132	5

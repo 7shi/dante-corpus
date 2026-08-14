@@ -10,6 +10,7 @@ line	token	word	role	arg_line	arg_token
 4	4	pungeami	subj	4	6
 4	4	pungeami	obl:per	5	4
 5	0			0	0
+6	2	condoleami	subj	1	2
 6	2	condoleami	subj	4	6
 6	2	condoleami	obl:a	6	6
 7	6	scrive	subj	7	7
@@ -357,6 +358,7 @@ line	token	word	role	arg_line	arg_token
 121	2	io	subj	0	0
 121	2	io	ccomp	121	7
 121	7	maravigli	subj	121	5
+121	7	maravigli	obj	121	6
 121	7	maravigli	obl:di	122	4
 122	7	fei	subj	122	6
 122	7	fei	obj	122	5

@@ -160,6 +160,7 @@ line	token	word	role	arg_line	arg_token
 49	8	era	obl:in	50	3
 50	5	perdette	subj	51	3
 50	5	perdette	obj	51	2
+50	5	perdette	obl	50	4
 51	0			0	0
 52	3	volge	subj	53	6
 52	3	volge	obj	52	2

@@ -41,6 +41,7 @@ line	token	word	role	arg_line	arg_token
 13	2	andavam	subj	13	1
 13	2	andavam	obl:con	13	6
 14	3	compagnia	subj	0	0
+14	3	compagnia	obl:in	14	7
 15	0			0	0
 16	5	era	subj	16	8
 16	5	era	obl:a	16	4
@@ -439,9 +440,8 @@ line	token	word	role	arg_line	arg_token
 138	8	ghermito	obl:con	138	4
 138	8	ghermito	obl:sopra	138	7
 139	6	sparvier	subj	139	3
-139	6	sparvier	attr	139	7
 139	6	sparvier	xcomp	140	2
-140	2	artigliar	subj	0	0
+140	2	artigliar	subj	139	3
 140	2	artigliar	obj	140	4
 141	1	cadder	subj	140	6
 141	1	cadder	obl:in	141	3

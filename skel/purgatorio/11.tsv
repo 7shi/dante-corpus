@@ -379,8 +379,9 @@ line	token	word	role	arg_line	arg_token
 130	6	aita	obj	130	4
 131	3	passi	subj	131	4
 131	6	visse	subj	127	5
+131	6	visse	obj	131	5
 132	6	largita	subj	132	4
-132	6	largita	obl:a	132	5
+132	6	largita	iobj	132	5
 133	2	vivea	subj	0	0
 133	2	vivea	attr	133	4
 133	5	disse	subj	0	0

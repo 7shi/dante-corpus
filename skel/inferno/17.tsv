@@ -151,7 +151,6 @@ line	token	word	role	arg_line	arg_token
 56	2	avea	subj	56	1
 56	2	avea	obj	56	4
 56	2	avea	obj	56	7
-57	3	par	subj	0	0
 57	3	par	ccomp	57	9
 57	9	pasca	subj	57	7
 57	9	pasca	obj	57	8
@@ -291,6 +290,7 @@ line	token	word	role	arg_line	arg_token
 99	7	hai	obj	99	5
 100	4	esce	subj	100	3
 100	4	esce	obl:di	100	6
+100	4	esce	obl:in	101	2
 101	8	tolse	subj	0	0
 101	8	tolse	obj	101	7
 102	7	sentì	subj	0	0

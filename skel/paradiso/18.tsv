@@ -228,8 +228,8 @@ line	token	word	role	arg_line	arg_token
 86	8	concette	obj	86	6
 87	1	paia	subj	87	3
 87	1	paia	obl:in	87	6
-88	1	Mostrarsi	attr	89	1
 88	1	Mostrarsi	obl:in	88	5
+88	1	Mostrarsi	obl:in	89	1
 89	6	notai	subj	89	5
 89	6	notai	obj	90	2
 90	6	parver	subj	0	0
@@ -360,7 +360,6 @@ line	token	word	role	arg_line	arg_token
 133	4	dire	ccomp	133	6
 133	6	ho	subj	133	5
 133	6	ho	obj	133	9
-133	6	ho	attr	133	7
 133	6	ho	obl:a	134	3
 134	5	volle	subj	134	4
 134	5	volle	xcomp	134	6

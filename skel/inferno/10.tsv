@@ -79,7 +79,6 @@ line	token	word	role	arg_line	arg_token
 28	4	uscìo	obl:di	29	2
 29	8	accostai	subj	28	3
 29	8	accostai	obj	29	7
-29	8	accostai	obl	30	3
 29	8	accostai	obl:a	30	6
 30	1	temendo	subj	0	0
 31	4	disse	subj	31	2

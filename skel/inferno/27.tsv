@@ -260,9 +260,10 @@ line	token	word	role	arg_line	arg_token
 89	4	stato	subj	89	2
 89	6	vincer	subj	89	2
 89	6	vincer	obj	89	7
-90	2	mercatante	subj	89	2
+90	0			0	0
 91	0			0	0
 92	1	guardò	subj	85	2
+92	1	guardò	obj	90	2
 92	1	guardò	obj	91	3
 92	1	guardò	obj	91	5
 92	1	guardò	obj	92	8

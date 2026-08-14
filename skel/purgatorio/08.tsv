@@ -14,6 +14,7 @@ line	token	word	role	arg_line	arg_token
 5	3	ode	subj	0	0
 5	3	ode	obj	5	4
 5	3	ode	obl:di	5	6
+6	2	paia	subj	6	1
 6	2	paia	subj	6	4
 6	2	paia	xcomp	6	5
 6	5	pianger	subj	0	0

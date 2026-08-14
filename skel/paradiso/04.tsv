@@ -27,7 +27,6 @@ line	token	word	role	arg_line	arg_token
 12	2	caldo	subj	11	7
 12	2	caldo	obl:per	12	6
 13	1	Fé	subj	13	3
-13	1	Fé	obj	13	4
 13	5	fé	subj	13	6
 13	5	fé	obj	14	1
 14	2	levando	subj	0	0
@@ -241,6 +240,7 @@ line	token	word	role	arg_line	arg_token
 90	4	fatto	obl	90	8
 91	5	attraversa	subj	91	8
 91	5	attraversa	obl:a	91	3
+91	5	attraversa	obl	92	1
 92	0			0	0
 93	2	usciresti	subj	0	0
 93	2	usciresti	obl:per	92	8

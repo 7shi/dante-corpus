@@ -64,7 +64,7 @@ line	token	word	role	arg_line	arg_token
 25	4	aspettare	subj	0	0
 25	4	aspettare	obj	25	5
 26	6	salissi	subj	0	0
-26	6	salissi	obl	26	2
+26	6	salissi	attr	26	2
 26	6	salissi	obl:per	27	4
 27	6	fosse	subj	0	0
 27	6	fosse	attr	27	7
@@ -191,11 +191,10 @@ line	token	word	role	arg_line	arg_token
 69	3	quinta	subj	68	2
 69	3	quinta	obl:in	68	6
 70	2	conosce	subj	0	0
-70	2	conosce	obj	70	3
 70	2	conosce	obl:di	70	5
 71	1	veder	subj	70	8
 71	1	veder	obj	70	6
-71	1	veder	obl:di	71	7
+71	1	veder	obl:de	71	7
 71	3	può	subj	70	8
 71	3	può	xcomp	71	1
 72	6	discerna	subj	72	4
@@ -374,12 +373,11 @@ line	token	word	role	arg_line	arg_token
 127	5	fur	subj	127	3
 127	5	fur	attr	127	4
 127	5	fur	obl:per	127	7
+127	5	fur	obl	129	1
 128	3	vedesti	subj	128	2
 128	3	vedesti	obj	128	1
 128	3	vedesti	obl:da	128	7
-129	1	dinanzi	subj	0	0
-129	1	dinanzi	obl:a	129	3
-129	1	dinanzi	obl:di	129	7
+129	0			0	0
 130	4	remota	subj	131	3
 130	4	remota	obl:da	131	7
 131	0			0	0
@@ -416,7 +414,7 @@ line	token	word	role	arg_line	arg_token
 143	1	fa	subj	142	7
 143	1	fa	obj	143	4
 143	1	fa	xcomp	143	2
-143	2	seguitar	subj	143	4
+143	2	seguitar	obj	143	4
 143	2	seguitar	obl:a	142	5
 144	8	acquista	subj	144	7
 144	8	acquista	obl:in	144	2

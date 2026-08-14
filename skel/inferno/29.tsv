@@ -171,6 +171,7 @@ line	token	word	role	arg_line	arg_token
 60	6	pien	obl:di	60	8
 61	0			0	0
 62	1	cascaron	subj	61	3
+62	1	cascaron	obl:a	61	7
 63	5	hanno	subj	63	4
 63	5	hanno	ccomp	64	2
 63	5	hanno	obl:per	63	7

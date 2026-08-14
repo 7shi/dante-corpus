@@ -11,6 +11,7 @@ line	token	word	role	arg_line	arg_token
 3	6	narrar	subj	1	1
 3	6	narrar	obl	3	8
 4	5	verria	subj	4	2
+4	5	verria	obl:per	5	4
 5	0			0	0
 6	2	hanno	subj	6	1
 6	2	hanno	obj	6	7
@@ -84,6 +85,7 @@ line	token	word	role	arg_line	arg_token
 32	6	piangendo	subj	32	7
 33	1	fesso	subj	32	7
 33	1	fesso	obl:in	33	3
+33	1	fesso	obl:da	33	5
 34	7	vedi	subj	34	6
 34	7	vedi	obj	34	5
 35	1	seminator	subj	34	4

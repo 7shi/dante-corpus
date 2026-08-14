@@ -1,5 +1,61 @@
 # skel — Layer 5 correction history
 
+## The second Phase 6 `--fix` round — 1409 → 1247, −162 (2026-08-14, user-run)
+
+`make -C skel fix` over the 841 units flagged at 1409 — the first pass carrying the
+`extra_arg_adjective` micro-prompt. Measured exactly as the previous round: from a `git worktree`
+at the pre-`--fix` commit (`src/` symlinked in, since the per-canticle source directories are
+generated, not tracked), diffed against the working tree at the parse-unit level
+(`dep.sentence_groups`).
+
+| metric | measured |
+|---|---|
+| units flagged before | 841 |
+| units flagged after | 765 (**−76 cleared outright**) |
+| units improved | 62 |
+| units unchanged | 703 |
+| units that got *worse* | **0** |
+| units newly flagged | **0** |
+| soft violations removed | **162** (1409 → **1247**, −11.5%) |
+| files touched | 76 (161 insertions / 158 deletions) |
+
+Per `_violation_subclass`, which is what `_CLASS_PROMPTS` is actually keyed by:
+
+| subclass | before | after | Δ |
+|---|---|---|---|
+| `extra_arg` | 597 | 535 | −62 (−10.4%) |
+| `missing_arg` | 522 | 465 | −57 (−10.9%) |
+| `role_mismatch` | 132 | 115 | −17 (−12.9%) |
+| `extra_arg_adjective` | 65 | 52 | −13 (−20.0%) |
+| `missing_tuple_nominal` | 40 | 39 | −1 (−2.5%) |
+| `extra_tuple_adjective` | 17 | 13 | −4 (−23.5%) |
+| `extra_tuple` | 14 | 12 | −2 (−14.3%) |
+| `membership` | 8 | 7 | −1 (−12.5%) |
+| `extra_tuple_adverb` | 7 | 4 | −3 (−42.9%) |
+| `missing_tuple` | 7 | 5 | −2 (−28.6%) |
+
+Two readings of this table:
+
+1. **Per-unit yield halved** — 0.193 violations removed per unit flagged before, against the first
+   round's 0.505. This is the provenance law of yield restated: the first round consumed the easy
+   population of every class it had just been given a prompt for, and this round faced its residue.
+   A third round run now would repeat the same pattern at a lower rate again, so none is queued;
+   the next pass should follow new checker rules or a sharpened prompt rather than precede them.
+2. **`extra_arg_adjective`'s −20.0% is not a verdict on the prompt.** Its sibling
+   `extra_tuple_adjective` scored −54.1% on *its* debut, but against an untouched population; this
+   class's 65 instances were already the residue of a class the first round had worked over.
+   Whether the remaining 52 are prompt weakness or genuine reading disagreements is a question for
+   a per-position read, not for another pass.
+
+Two representative repairs from the diff, one of each shape the round produced: Inferno 3:13
+replaced an empty placeholder row (`13 0 …`) with a four-tuple predicate on `elli`, closing a
+`missing_tuple`; Inferno 6:70 dropped a spurious `attr` on `terrà` (`extra_arg`) while 6:72
+specialized a bare `obl` to `obl:di` (`role_mismatch`).
+
+Checks after the round: `skel --check` 0 hard / **1247** soft, `dep --check` 0 hard / 18 soft,
+`case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 243 passed. No CRLF in any
+rewritten TSV.
+
 ## Rule AG, from re-reading Inferno 4-6 — 1452 → 1409, −43 (2026-08-13)
 
 The fourth per-position read of this kind (after rule V's twelve, rules W/X's five, rules

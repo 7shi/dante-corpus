@@ -329,7 +329,6 @@ line	token	word	role	arg_line	arg_token
 101	5	fini'	obl:in	101	2
 102	1	caddi	subj	0	0
 102	3	rimase	subj	102	6
-102	3	rimase	attr	102	7
 103	2	dirò	subj	103	1
 103	2	dirò	obj	103	3
 103	7	ridì	subj	103	5
@@ -368,6 +367,7 @@ line	token	word	role	arg_line	arg_token
 113	5	mosse	subj	112	4
 113	5	mosse	obj	113	7
 113	5	mosse	obj	113	10
+113	5	mosse	obl:per	114	3
 114	7	diede	subj	114	6
 114	7	diede	obj	114	4
 115	8	spento	subj	115	6

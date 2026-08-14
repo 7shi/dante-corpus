@@ -160,7 +160,6 @@ line	token	word	role	arg_line	arg_token
 51	7	constare	subj	51	2
 51	7	constare	obl:per	51	5
 52	2	fatta	subj	52	4
-52	2	fatta	attr	52	1
 52	2	fatta	obl:quale	53	4
 53	0			0	0
 54	3	è	subj	54	2

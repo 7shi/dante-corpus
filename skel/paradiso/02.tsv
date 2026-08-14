@@ -1,9 +1,7 @@
 line	token	word	role	arg_line	arg_token
 1	4	siete	subj	1	3
 1	4	siete	obl:in	1	7
-2	1	desiderosi	subj	1	3
 2	1	desiderosi	obl:di	2	3
-2	4	seguiti	subj	1	3
 2	4	seguiti	obl:a	3	4
 3	7	varca	subj	3	5
 4	1	tornate	subj	1	2
@@ -324,16 +322,19 @@ line	token	word	role	arg_line	arg_token
 107	4	riman	attr	107	5
 107	4	riman	obl:a	106	4
 107	5	nudo	subj	107	7
-108	7	primai	subj	0	0
+107	5	nudo	obl:a	106	4
+108	7	primai	subj	107	7
 108	7	primai	obl:da	108	3
 108	7	primai	obl:da	108	6
-109	2	rimaso	subj	0	0
+109	2	rimaso	subj	109	3
 109	2	rimaso	obl:in	109	6
+110	1	voglio	subj	0	0
+110	1	voglio	xcomp	110	2
 110	2	informar	subj	0	0
 110	2	informar	obj	109	3
 110	2	informar	obl:di	110	4
 111	3	tremolerà	subj	111	1
-111	3	tremolerà	iobj	111	2
+111	3	tremolerà	obl:a	111	2
 111	3	tremolerà	obl:in	111	6
 112	0			0	0
 113	2	gira	subj	113	4

@@ -153,6 +153,7 @@ line	token	word	role	arg_line	arg_token
 52	2	è	obl:in	52	5
 52	7	vien	subj	52	6
 52	7	vien	attr	52	9
+52	7	vien	obl:di	53	2
 52	9	diviso	subj	52	6
 53	4	par	subj	53	3
 53	4	par	xcomp	53	5

@@ -440,7 +440,6 @@ line	token	word	role	arg_line	arg_token
 149	1	aprimi	obj	149	3
 149	8	apersi	subj	149	5
 149	8	apersi	obj	149	7
-149	8	apersi	iobj	149	7
 150	2	cortesia	subj	150	5
 150	5	esser	subj	150	4
 150	5	esser	attr	150	6

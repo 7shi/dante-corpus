@@ -204,7 +204,6 @@ line	token	word	role	arg_line	arg_token
 69	8	piaggia	subj	69	6
 70	2	terrà	subj	0	0
 70	2	terrà	obj	70	6
-70	2	terrà	attr	70	1
 70	2	terrà	obl	70	4
 71	1	tenendo	subj	0	0
 71	1	tenendo	obj	71	3
@@ -212,7 +211,7 @@ line	token	word	role	arg_line	arg_token
 72	5	pianga	subj	0	0
 72	5	pianga	obl:di	72	4
 72	9	aonti	subj	0	0
-72	9	aonti	obl	72	8
+72	9	aonti	obl:di	72	8
 73	2	son	subj	73	1
 73	2	son	attr	73	3
 73	3	due	subj	73	1

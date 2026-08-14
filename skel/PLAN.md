@@ -2,13 +2,13 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 1409 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement).
+- **Current State**: `make -C skel check` reports **0 hard, 1247 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement).
 - **Other Layers**: `dep --check` 0 hard / 18 soft (verified standing residue), `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 243 passed.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
-- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Its first user-run round achieved **2011 → 1452 soft (−27.8%)**, highlighted by `extra_tuple_adverb` (−78.8%) and `extra_tuple_adjective` (−54.1%).
+- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Two user-run rounds so far: **2011 → 1452 (−27.8%)**, then **1409 → 1247 (−11.5%)**.
 - **Latest Work**:
   - **Rule AG (Inferno 4–6 Read)**: Gated `conj` subject propagation on Layer-2 person/number agreement (`dep.subject_agreement` + `_finite_head_of`), scoring **1452 → 1409 soft (−43)** with zero model calls.
-  - **`extra_arg_adjective`**: Added a third POS-keyed Stage 2 class in `skel/skel.py` (`_violation_subclass`, `_CLASS_PROMPTS`, `_fix_hint`) targeting the ~65 instances where attributive adjectives are misattached as depictive arguments (`xcomp`/`attr`). Queued for the next user-run pass.
+  - **Second `--fix` round (2026-08-14)**: First live pass of the `extra_arg_adjective` micro-prompt; **1409 → 1247 (−162)**, 0 regressed / 0 newly flagged. See *Second User-Run `--fix` Round* below.
 
 ---
 
@@ -75,21 +75,51 @@ A question may name the predicate, the argument the LLM itself cited, and the ro
 - From Inferno 6:70 ("Alte terrà... le fronti"), identified that 65 of 107 `extra_arg xcomp`/`attr` violations cite an adjective argument.
 - Implemented `extra_arg_adjective` class in `skel/skel.py` (`_violation_subclass`, `_CLASS_PROMPTS` with `_CONV_ADJECTIVE` fronted, `_fix_hint`).
 
+### 5. Second User-Run `--fix` Round (2026-08-14)
+- **1409 → 1247 soft, −162 (−11.5%)**, 76 files touched (161 insertions / 158 deletions).
+- Unit-level: **841 → 765 flagged**; 76 cleared outright, 62 improved, 703 unchanged, **0 regressed, 0 newly flagged**.
+- Per-unit yield **0.193 violations removed per unit flagged before** — less than half the first round's rate, as expected: the first round consumed the easy population of the classes that had just been given prompts, and what remains is progressively harder residue.
+- **Subclass results** (before → after):
+
+  | subclass | before | after | delta |
+  | --- | ---: | ---: | ---: |
+  | `extra_arg` | 597 | 535 | −62 (−10.4%) |
+  | `missing_arg` | 522 | 465 | −57 (−10.9%) |
+  | `role_mismatch` | 132 | 115 | −17 (−12.9%) |
+  | `extra_arg_adjective` | 65 | 52 | −13 (−20.0%) |
+  | `missing_tuple_nominal` | 40 | 39 | −1 (−2.5%) |
+  | `extra_tuple_adjective` | 17 | 13 | −4 (−23.5%) |
+  | `extra_tuple` | 14 | 12 | −2 (−14.3%) |
+  | `membership` | 8 | 7 | −1 (−12.5%) |
+  | `extra_tuple_adverb` | 7 | 4 | −3 (−42.9%) |
+  | `missing_tuple` | 7 | 5 | −2 (−28.6%) |
+
+- **Reading of `extra_arg_adjective` (−20.0%)**: the new prompt works but is far from the −54% its sibling `extra_tuple_adjective` scored on its debut round. Its population was already the *residue* of a class the first round had worked over, so −20% on a pre-filtered population is not evidence the prompt is weak. Deciding between "prompt needs sharpening" and "the remaining 52 are genuine reading disagreements" requires a per-position read, not another pass.
+- Two structurally identical repairs seen in the diff, illustrating both halves of the round: Inferno 3:13 replaced an empty placeholder row with a four-tuple predicate on `elli` (`missing_tuple`), and Inferno 6:70 dropped a spurious `attr` on `terrà` while 6:72 specialized a bare `obl` to `obl:di`.
+
 ---
 
 ## Active & Open Routes
 
-### 1. Queued User-Run `--fix` Round
-A fresh `--fix` round against the current 1409-violation baseline:
-- Carries the new `extra_arg_adjective` micro-prompt into a live pass for the first time.
-- Measures yield specifically across its 65-instance population.
+No `--fix` round is queued. Both rounds so far have shown that a pass repeats the previous round's
+pattern at a lower rate; the next one should follow new checker rules or a sharpened prompt, not
+precede them.
 
-### 2. Open Assistant-Side Routes
-- **Attributive vs. Predicative Adjectives (17 `extra_tuple_adjective` remaining, down from 37)**:
+### Open Assistant-Side Routes
+- **`extra_arg subj` with `∅ (0,0)` (69 of 215 `extra_arg subj`)**: the largest single homogeneous
+  bucket left. These are pro-drop subjects the LLM wrote as the null position while the derivation
+  found an overt one (or vice versa). Read a sample to decide whether this is a checker rule
+  (accept `∅` where Layer 4 has no overt `nsubj`) or a real divergence.
+- **`role_mismatch` `xcomp` vs `obl` (21) and `obj` ↔ `subj` (36 across both directions)**: the two
+  dominant mismatch shapes. The `obj`/`subj` swap is a symmetric pair, which suggests one
+  systematic cause rather than scattered slips.
+- **Attributive vs. Predicative Adjectives (13 `extra_tuple_adjective` remaining, down from 37)**:
   - True reading disagreements with no `cop` edge (e.g., Inferno 2:109 *"non fur mai persone ratte / a far lor pro"*).
-  - Target: Conduct a per-position read of the remaining 17 before writing any checker rule.
-- **Adverbs Promoted to Predicates (7 `extra_tuple_adverb` remaining, down from 33)**:
-  - Nearly closed by the Stage 2 micro-prompt (−78.8%). Read the final 7 positions to decide whether any residue warrants prompt tweaks or checker acceptance.
+  - Target: Conduct a per-position read of the remaining 13 before writing any checker rule.
+- **`extra_arg_adjective` residue (52)**: per-position read to separate prompt weakness from genuine
+  reading disagreement — see the reading of its −20.0% above.
+- **Adverbs Promoted to Predicates (4 `extra_tuple_adverb` remaining, down from 33)**:
+  - Effectively closed by the Stage 2 micro-prompt. Read the final 4 positions to decide whether any residue warrants prompt tweaks or checker acceptance.
 - **Stacked Prepositions in Layer 4 (14 `role_mismatch` / 18 unattached)**:
   - Where Layer 4 inconsistently writes stacked prepositions (flat vs. chained, e.g., *"in su"*). Requires a `dep/` normalization pass.
 - **Per-Position Read of Inferno 7–9**:

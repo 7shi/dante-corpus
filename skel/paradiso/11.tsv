@@ -182,6 +182,7 @@ line	token	word	role	arg_line	arg_token
 64	2	privata	obl:di	64	5
 65	0			0	0
 66	5	stette	subj	64	1
+66	5	stette	obl	65	2
 66	5	stette	obl:a	66	3
 66	5	stette	obl:sanza	66	7
 67	2	valse	subj	67	3
@@ -359,15 +360,16 @@ line	token	word	role	arg_line	arg_token
 125	2	fatto	subj	124	4
 125	2	fatto	attr	125	3
 125	3	ghiotto	subj	124	4
-125	6	esser	subj	126	1
+125	6	esser	subj	0	0
+125	6	esser	ccomp	126	7
 125	8	puote	subj	0	0
 125	8	puote	xcomp	125	6
-126	7	spanda	subj	0	0
+126	7	spanda	subj	124	4
 126	7	spanda	obl:per	126	4
 127	0			0	0
 128	6	vanno	subj	127	5
 128	6	vanno	obl:da	128	5
-129	2	tornano	subj	124	4
+129	2	tornano	subj	127	5
 129	2	tornano	obl:a	129	5
 130	2	son	subj	0	0
 130	2	son	obl:di	130	4

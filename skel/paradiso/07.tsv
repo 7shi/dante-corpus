@@ -55,7 +55,6 @@ line	token	word	role	arg_line	arg_token
 19	0			0	0
 20	0			0	0
 21	1	punita	subj	20	3
-21	7	miso	subj	20	3
 21	7	miso	obj	21	3
 21	7	miso	ccomp	21	1
 21	7	miso	obl:secondo	19	4
@@ -87,7 +86,6 @@ line	token	word	role	arg_line	arg_token
 31	0			0	0
 32	3	allungata	subj	31	4
 32	3	allungata	obl:da	31	7
-32	4	unì	subj	0	0
 32	4	unì	subj	31	3
 32	4	unì	obl:a	32	6
 32	4	unì	obl:in	32	8

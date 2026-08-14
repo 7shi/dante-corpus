@@ -64,7 +64,7 @@ line	token	word	role	arg_line	arg_token
 23	4	cominciò	xcomp	23	2
 24	2	credi	subj	24	3
 24	2	credi	obj	24	4
-24	2	credi	attr	24	5
+24	2	credi	obl:con	24	5
 24	10	guidi	subj	24	8
 24	10	guidi	obj	24	9
 25	2	è	subj	25	1
@@ -415,6 +415,7 @@ line	token	word	role	arg_line	arg_token
 138	1	star	subj	138	2
 138	1	star	obl:da	138	6
 138	1	star	obl:in	138	8
+138	1	star	obl:per	139	3
 138	3	convien	subj	138	1
 138	3	convien	iobj	138	2
 139	7	stato	subj	139	5

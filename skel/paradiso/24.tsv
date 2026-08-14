@@ -265,8 +265,8 @@ line	token	word	role	arg_line	arg_token
 100	9	dischiude	subj	100	7
 100	9	dischiude	obj	100	5
 100	9	dischiude	iobj	100	8
-101	1	son	subj	101	3
 101	1	son	attr	100	4
+101	1	son	attr	101	3
 101	3	opere	subj	100	4
 102	2	scalda	subj	101	7
 102	2	scalda	obj	102	3
@@ -326,6 +326,7 @@ line	token	word	role	arg_line	arg_token
 119	8	aperse	subj	118	3
 119	8	aperse	obj	119	6
 119	8	aperse	iobj	119	7
+119	8	aperse	obl:a	120	3
 120	5	aprir		0	0
 120	7	dovea	subj	120	6
 120	7	dovea	xcomp	120	5

@@ -25,6 +25,7 @@ line	token	word	role	arg_line	arg_token
 11	2	vede	obj	10	5
 11	2	vede	obl:innanzi	10	7
 11	6	maraviglia	subj	11	4
+11	6	maraviglia	obj	11	5
 12	2	crede	subj	12	1
 12	4	non	subj	12	1
 12	5	dicendo	subj	12	1
@@ -39,6 +40,7 @@ line	token	word	role	arg_line	arg_token
 15	2	abbracciòl	subj	13	3
 15	2	abbracciòl	obl	15	3
 15	8	appiglia	subj	15	6
+15	8	appiglia	obj	15	7
 16	5	disse	subj	0	0
 17	1	mostrò	subj	0	0
 17	1	mostrò	obj	17	2
@@ -209,6 +211,7 @@ line	token	word	role	arg_line	arg_token
 65	4	accorsi	obj	65	3
 65	4	accorsi	ccomp	65	9
 65	9	scemo	subj	65	7
+65	9	scemo	obl:a	66	2
 66	7	sceman	subj	66	5
 66	7	sceman	obj	66	6
 67	2	disse	subj	67	4
@@ -248,7 +251,6 @@ line	token	word	role	arg_line	arg_token
 79	6	dipinto	subj	79	4
 79	6	dipinto	obl	79	5
 80	0			0	0
-81	2	facea	subj	0	0
 81	2	facea	subj	81	4
 81	2	facea	obl:di	80	3
 81	2	facea	obl	81	1

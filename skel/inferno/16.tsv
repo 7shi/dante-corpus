@@ -113,7 +113,6 @@ line	token	word	role	arg_line	arg_token
 36	1	fu	subj	34	1
 36	1	fu	obl:di	36	3
 36	8	credi	subj	36	6
-36	8	credi	ccomp	36	1
 37	1	nepote	subj	34	1
 37	2	fu	subj	34	1
 37	2	fu	attr	37	1
@@ -142,7 +141,7 @@ line	token	word	role	arg_line	arg_token
 45	8	nuoce	obl	45	6
 46	7	coperto	subj	46	2
 46	7	coperto	obl:da	46	6
-47	1	gittato	subj	47	2
+47	1	gittato	obj	47	2
 47	1	gittato	obl:tra	47	5
 47	1	gittato	obl:di	47	7
 48	2	credo	subj	0	0

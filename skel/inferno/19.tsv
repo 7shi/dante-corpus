@@ -133,7 +133,6 @@ line	token	word	role	arg_line	arg_token
 45	5	piangeva	subj	45	3
 45	5	piangeva	obl:con	45	8
 46	4	se'	subj	46	3
-46	4	se'	attr	47	1
 46	9	tien	subj	46	5
 46	9	tien	obj	46	8
 46	9	tien	obl:di	46	11
@@ -222,8 +221,6 @@ line	token	word	role	arg_line	arg_token
 72	8	misi	obj	72	7
 72	8	misi	obl:su	72	4
 72	8	misi	obl:in	72	10
-73	2	sotto	subj	73	8
-73	2	sotto	obl:a	73	4
 73	6	son	subj	73	9
 73	6	son	obl:di	73	2
 73	9	tratti	subj	73	8

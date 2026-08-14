@@ -265,8 +265,8 @@ line	token	word	role	arg_line	arg_token
 87	8	face	obj	87	6
 88	1	Chiaro	subj	89	3
 88	1	Chiaro	iobj	88	2
-89	3	è	subj	88	7
 89	3	è	attr	89	4
+89	3	è	obl	88	7
 89	3	è	obl:in	89	2
 89	4	paradiso	subj	88	7
 89	4	paradiso	obl:in	89	2

@@ -111,6 +111,7 @@ line	token	word	role	arg_line	arg_token
 34	6	lece	iobj	34	5
 35	1	rispuose	subj	0	0
 35	4	veder	subj	35	5
+35	4	veder	obj	35	5
 35	7	lascia	subj	35	4
 36	4	terrà	subj	36	2
 36	4	terrà	obj	36	3
@@ -266,6 +267,7 @@ line	token	word	role	arg_line	arg_token
 77	7	dura	subj	76	6
 77	7	dura	obl:in	77	4
 77	7	dura	obl:con	77	6
+78	2	vince	subj	76	4
 78	2	vince	subj	76	6
 78	2	vince	obj	78	3
 78	7	notrica	subj	76	6
@@ -336,6 +338,7 @@ line	token	word	role	arg_line	arg_token
 99	1	rugumar	subj	98	5
 99	2	può	subj	98	5
 99	2	può	xcomp	99	1
+99	5	ha	subj	98	1
 99	5	ha	subj	98	5
 99	5	ha	obj	99	7
 100	8	vede	subj	100	5

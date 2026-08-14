@@ -303,7 +303,6 @@ line	token	word	role	arg_line	arg_token
 100	7	vommi	obl:per	100	3
 100	7	vommi	obl:con	101	3
 101	5	dimando	subj	0	0
-101	5	dimando	obj	101	6
 101	7	sono	subj	102	3
 101	7	sono	attr	101	6
 102	0			0	0

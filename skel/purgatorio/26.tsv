@@ -329,7 +329,6 @@ line	token	word	role	arg_line	arg_token
 104	3	offersi	obl:a	104	7
 104	3	offersi	obl:con	105	3
 105	5	fa	subj	105	4
-105	5	fa	obj	105	7
 105	5	fa	xcomp	105	6
 105	6	credere	subj	105	7
 106	2	elli	subj	0	0

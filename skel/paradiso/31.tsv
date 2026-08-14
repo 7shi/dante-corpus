@@ -32,9 +32,11 @@ line	token	word	role	arg_line	arg_token
 11	6	risaliva	subj	4	3
 12	7	soggiorna	subj	12	5
 13	4	avean	subj	13	2
-13	4	avean	obj	14	3
 13	4	avean	obl:di	13	6
-14	10	bianco	subj	14	8
+14	3	ali	subj	0	0
+14	3	ali	obl:di	14	5
+14	8	altro	subj	0	0
+14	8	altro	attr	14	10
 15	7	arriva	subj	15	3
 15	7	arriva	obl:a	15	6
 16	2	scendean	subj	0	0
@@ -288,7 +290,7 @@ line	token	word	role	arg_line	arg_token
 111	2	gustò	subj	110	4
 111	2	gustò	obj	111	5
 111	2	gustò	obl:in	110	7
-112	6	giocondo	subj	112	4
+112	5	esser	attr	112	6
 113	1	cominciò	subj	113	2
 113	1	cominciò	ccomp	113	6
 113	6	noto	subj	112	5

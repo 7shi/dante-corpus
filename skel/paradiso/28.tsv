@@ -219,6 +219,7 @@ line	token	word	role	arg_line	arg_token
 76	2	vederai	subj	76	1
 76	2	vederai	obj	76	4
 76	2	vederai	obl:in	78	3
+76	2	vederai	obl:a	78	6
 77	0			0	0
 78	0			0	0
 79	2	rimane	subj	80	2
