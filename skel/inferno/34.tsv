@@ -78,8 +78,8 @@ line	token	word	role	arg_line	arg_token
 25	6	rimasi	subj	25	1
 25	6	rimasi	attr	25	7
 25	7	vivo	subj	25	1
-26	1	pensa	subj	25	1
-26	1	pensa	ccomp	27	3
+26	1	pensa	subj	0	0
+26	1	pensa	obl	26	2
 26	1	pensa	obl:per	26	4
 26	6	hai	subj	0	0
 26	6	hai	obj	26	7
@@ -87,19 +87,20 @@ line	token	word	role	arg_line	arg_token
 27	3	divenni	attr	27	1
 27	9	privo	subj	27	2
 27	9	privo	obl:di	27	5
+27	9	privo	obl:di	27	8
 28	0			0	0
 29	5	uscia	subj	28	2
 29	5	uscia	obl:da	29	2
+29	5	uscia	obl	29	6
 29	5	uscia	obl:de	29	9
 30	8	convegno	subj	30	6
-30	8	convegno	obj	30	7
 30	8	convegno	obl:con	30	5
 31	5	fan	subj	31	3
 31	5	fan	obl:con	31	9
-32	1	vedi	subj	28	2
+32	1	vedi	subj	0	0
 32	1	vedi	ccomp	32	5
+32	1	vedi	obl	32	2
 32	4	esser	subj	32	7
-32	4	esser	attr	32	3
 32	5	dee	subj	32	7
 32	5	dee	xcomp	32	4
 33	7	confaccia	subj	33	1

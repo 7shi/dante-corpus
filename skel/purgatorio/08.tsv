@@ -152,10 +152,10 @@ line	token	word	role	arg_line	arg_token
 51	6	serrava	subj	0	0
 51	6	serrava	obj	51	4
 52	4	fece	subj	0	0
-52	4	fece	obl:verso	52	2
+52	4	fece	obl:ver	52	2
 52	10	fei	subj	52	6
-52	10	fei	obl:verso	52	8
-53	6	piacque	subj	54	3
+52	10	fei	obl:ver	52	8
+53	6	piacque	subj	0	0
 53	6	piacque	iobj	53	5
 54	3	vidi	subj	0	0
 54	3	vidi	obj	54	2

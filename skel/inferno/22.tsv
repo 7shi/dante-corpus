@@ -330,6 +330,7 @@ line	token	word	role	arg_line	arg_token
 103	7	farò	subj	102	2
 103	7	farò	obj	103	6
 103	7	farò	xcomp	103	8
+103	7	farò	obl:per	103	2
 103	8	venir	subj	103	9
 104	3	suffolerò	subj	104	2
 104	5	è	subj	104	7

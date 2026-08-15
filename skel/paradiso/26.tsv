@@ -90,7 +90,6 @@ line	token	word	role	arg_line	arg_token
 25	2	io	ccomp	27	3
 26	6	scende	subj	26	4
 26	6	scende	obl	26	5
-27	3	convien	subj	27	4
 27	3	convien	obl:per	25	5
 27	3	convien	obl:per	26	3
 27	8	'mprenti	subj	27	2
@@ -103,7 +102,9 @@ line	token	word	role	arg_line	arg_token
 30	7	comprende	obl:in	30	6
 31	6	è	subj	31	8
 32	9	trova	subj	32	4
+32	9	trova	obl	32	5
 32	9	trova	obl:di	32	7
+33	3	è	subj	32	3
 33	3	è	attr	33	1
 33	3	è	attr	33	6
 34	5	convien	ccomp	34	8
@@ -161,6 +162,7 @@ line	token	word	role	arg_line	arg_token
 51	7	morde	obj	51	6
 52	3	latente	subj	52	6
 53	8	accorsi	subj	52	6
+53	8	accorsi	obj	53	7
 53	8	accorsi	ccomp	54	2
 54	2	volea	subj	54	5
 54	2	volea	xcomp	54	3

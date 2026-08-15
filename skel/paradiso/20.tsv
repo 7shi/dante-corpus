@@ -280,6 +280,7 @@ line	token	word	role	arg_line	arg_token
 95	0			0	0
 96	2	vince	subj	96	1
 96	2	vince	obj	96	5
+96	2	vince	obl:a	97	3
 97	10	sobranza	subj	97	6
 97	10	sobranza	obl:a	97	9
 98	2	vince	subj	96	1

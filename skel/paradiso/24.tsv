@@ -57,16 +57,19 @@ line	token	word	role	arg_line	arg_token
 22	0			0	0
 23	2	volse	subj	20	2
 23	2	volse	obl	22	3
+23	2	volse	obl	22	4
 23	2	volse	obl:di	22	6
 23	2	volse	obl:con	23	5
 24	7	ridice	subj	24	4
 24	7	ridice	obj	24	5
 24	7	ridice	iobj	24	6
 25	2	salta	subj	25	4
-25	8	scrivo	subj	25	4
+25	8	scrivo	subj	0	0
 25	8	scrivo	obj	25	7
 26	0			0	0
+27	4	parlare	subj	0	0
 27	7	color	subj	26	3
+27	7	color	obl:a	26	7
 28	0			0	0
 29	0			0	0
 30	6	disleghe	subj	28	5
@@ -193,6 +196,7 @@ line	token	word	role	arg_line	arg_token
 72	9	ascose	subj	70	6
 72	9	ascose	obl:a	72	3
 73	6	è	subj	73	3
+73	6	è	obl	73	5
 73	6	è	obl:in	73	9
 74	5	fonda	subj	74	8
 74	5	fonda	obl:sopra	74	3

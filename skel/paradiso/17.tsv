@@ -52,6 +52,7 @@ line	token	word	role	arg_line	arg_token
 18	7	presenti	obl:a	18	2
 19	7	congiunto	subj	19	3
 19	7	congiunto	obl:a	19	6
+19	7	congiunto	obl:su	20	4
 20	8	cura	subj	20	5
 20	8	cura	obj	20	7
 21	2	discendendo	subj	0	0
@@ -59,6 +60,7 @@ line	token	word	role	arg_line	arg_token
 22	1	dette	subj	0	0
 22	1	dette	obj	23	1
 22	1	dette	iobj	22	2
+22	1	dette	obl	22	3
 22	1	dette	obl:di	22	6
 23	7	senta	subj	23	5
 23	7	senta	obj	23	6
@@ -210,6 +212,7 @@ line	token	word	role	arg_line	arg_token
 80	0			0	0
 81	7	torte	subj	81	3
 81	7	torte	obl	80	8
+81	7	torte	obl	81	4
 81	7	torte	obl:di	81	6
 82	9	inganni	subj	82	5
 82	9	inganni	obj	82	8

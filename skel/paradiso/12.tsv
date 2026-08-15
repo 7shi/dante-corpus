@@ -158,11 +158,9 @@ line	token	word	role	arg_line	arg_token
 60	6	fece	obl:in	60	4
 61	6	compiute	subj	61	4
 61	6	compiute	obl:a	62	3
-61	6	compiute	obl:intra	62	5
-61	6	compiute	obl:intra	62	8
 62	0			0	0
-63	3	dotar	subj	0	0
-63	3	dotar	obl:in	63	1
+63	3	dotar	subj	61	4
+63	3	dotar	obl	63	1
 63	3	dotar	obl:di	63	6
 64	8	diede	subj	64	3
 64	8	diede	obj	64	7
@@ -175,13 +173,14 @@ line	token	word	role	arg_line	arg_token
 66	2	uscir	obl:di	66	9
 66	3	dovea	subj	66	1
 66	3	dovea	xcomp	66	2
-67	3	fosse	subj	0	0
+67	3	fosse	subj	65	6
 67	3	fosse	attr	67	4
 67	5	era	subj	67	4
 67	5	era	obl:in	67	7
 68	3	mosse	subj	68	4
 68	3	mosse	xcomp	68	6
-68	6	nomarlo	subj	0	0
+68	3	mosse	obl	68	1
+68	6	nomarlo	subj	68	4
 68	6	nomarlo	obl:di	69	2
 69	5	era	subj	69	4
 69	5	era	attr	69	6

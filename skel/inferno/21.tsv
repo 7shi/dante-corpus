@@ -79,6 +79,7 @@ line	token	word	role	arg_line	arg_token
 24	9	stava	obl	24	7
 25	3	volsi	subj	0	0
 25	3	volsi	obj	25	2
+25	3	volsi	obl	25	6
 25	8	tarda	subj	0	0
 25	8	tarda	iobj	25	7
 25	8	tarda	xcomp	26	2
@@ -224,6 +225,7 @@ line	token	word	role	arg_line	arg_token
 70	1	usciron	subj	70	2
 70	1	usciron	obl:con	67	3
 70	1	usciron	obl:con	67	7
+70	1	usciron	obl:di	70	4
 70	1	usciron	obl:di	70	6
 71	2	volser	subj	71	7
 71	2	volser	obl:contra	71	4
@@ -300,7 +302,6 @@ line	token	word	role	arg_line	arg_token
 94	2	vid'	xcomp	94	5
 94	5	temer	subj	94	7
 95	2	uscivan	subj	95	1
-95	2	uscivan	obl:di	95	5
 96	1	veggendo	subj	0	0
 96	1	veggendo	obj	96	2
 96	1	veggendo	obl:tra	96	4

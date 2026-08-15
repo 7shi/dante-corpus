@@ -101,7 +101,6 @@ line	token	word	role	arg_line	arg_token
 30	6	rimirar	subj	30	3
 30	7	sospeso	subj	30	3
 31	2	veggio	subj	0	0
-31	2	veggio	obj	32	2
 31	6	farsi	subj	32	2
 31	6	farsi	attr	31	7
 31	6	farsi	obl:di	31	5
@@ -147,6 +146,7 @@ line	token	word	role	arg_line	arg_token
 48	8	convene	iobj	48	6
 49	2	raccostansi	subj	50	1
 49	2	raccostansi	obl:a	49	4
+49	2	raccostansi	obl:come	49	6
 50	6	pregato	subj	50	3
 50	6	pregato	obj	50	4
 51	1	attenti	subj	50	1
@@ -474,8 +474,10 @@ line	token	word	role	arg_line	arg_token
 146	3	guida	subj	146	1
 146	3	guida	obj	146	2
 146	3	guida	obl:a	146	5
-147	1	sovenha	subj	147	2
+147	1	sovenha	subj	0	0
+147	1	sovenha	iobj	147	2
 147	1	sovenha	obl:a	147	4
+147	1	sovenha	obl:di	147	7
 148	3	ascose	subj	0	0
 148	3	ascose	obj	148	2
 148	3	ascose	obl:in	148	5

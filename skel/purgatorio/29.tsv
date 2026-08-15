@@ -118,6 +118,7 @@ line	token	word	role	arg_line	arg_token
 43	0			0	0
 44	1	falsava	subj	44	6
 44	1	falsava	obj	43	5
+44	1	falsava	obl	43	3
 44	1	falsava	obl:in	44	3
 45	4	era	subj	45	3
 45	4	era	obl:tra	45	7

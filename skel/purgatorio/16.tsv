@@ -93,6 +93,8 @@ line	token	word	role	arg_line	arg_token
 30	2	domanda	subj	0	0
 30	2	domanda	ccomp	30	6
 30	6	va	subj	30	5
+31	2	io	subj	0	0
+31	2	io	ccomp	33	2
 31	7	mondi	subj	31	5
 31	7	mondi	obj	31	6
 32	2	tornar	subj	0	0

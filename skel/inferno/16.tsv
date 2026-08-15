@@ -119,6 +119,7 @@ line	token	word	role	arg_line	arg_token
 37	2	fu	obl:di	37	6
 38	3	ebbe	subj	38	2
 38	3	ebbe	obj	38	4
+39	1	fece	subj	38	2
 39	1	fece	obl:in	38	8
 39	1	fece	obl:con	39	3
 39	1	fece	obl:con	39	8
@@ -321,6 +322,7 @@ line	token	word	role	arg_line	arg_token
 113	0			0	0
 114	2	gittò	subj	112	2
 114	2	gittò	obj	114	1
+114	2	gittò	obl:di	113	2
 114	2	gittò	obl:da	113	7
 114	2	gittò	obl:in	114	7
 115	3	convien	subj	115	6

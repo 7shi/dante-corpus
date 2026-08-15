@@ -36,7 +36,6 @@ line	token	word	role	arg_line	arg_token
 15	0			0	0
 16	3	apparve	subj	17	2
 16	3	apparve	iobj	16	2
-16	3	apparve	attr	16	1
 16	8	veggia	subj	16	5
 16	8	veggia	obj	16	7
 17	6	venir	obl:per	17	5
@@ -132,6 +131,7 @@ line	token	word	role	arg_line	arg_token
 48	8	scripto	subj	48	2
 49	2	fece	subj	0	0
 49	2	fece	obj	49	4
+49	2	fece	obl:a	49	5
 50	4	gittar	subj	50	2
 50	4	gittar	obl:su	50	9
 51	6	venne	subj	51	3
@@ -168,6 +168,7 @@ line	token	word	role	arg_line	arg_token
 63	4	peregrin	subj	63	2
 63	7	siete	subj	63	6
 64	2	venimmo	subj	0	0
+64	2	venimmo	obl	64	3
 64	2	venimmo	obl:per	65	3
 65	7	aspra	subj	65	4
 65	9	forte	subj	65	4
@@ -176,6 +177,7 @@ line	token	word	role	arg_line	arg_token
 66	6	parrà	obl:di	66	5
 66	7	gioco	subj	66	3
 67	8	accorte	subj	67	3
+67	8	accorte	obl	67	5
 67	8	accorte	obl:di	67	7
 68	8	vivo	subj	68	5
 68	8	vivo	obl	68	4

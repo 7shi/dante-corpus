@@ -154,7 +154,9 @@ line	token	word	role	arg_line	arg_token
 60	3	avea	obj	60	5
 61	4	'ntesi	subj	61	1
 61	4	'ntesi	obj	61	3
-61	9	canta	subj	62	2
+61	9	canta	subj	0	0
+61	9	canta	obj	62	2
+61	9	canta	obl	61	6
 62	7	cantaro	subj	62	5
 62	7	cantaro	obj	62	3
 63	4	soffersi	subj	61	1

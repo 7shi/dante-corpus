@@ -70,6 +70,7 @@ line	token	word	role	arg_line	arg_token
 27	5	ha	subj	27	3
 27	5	ha	obl:di	27	7
 28	8	india	subj	28	5
+28	8	india	obj	28	7
 29	0			0	0
 30	2	prender	subj	0	0
 30	2	prender	obj	30	1
@@ -79,7 +80,9 @@ line	token	word	role	arg_line	arg_token
 31	2	hanno	subj	29	5
 31	2	hanno	obj	31	8
 31	2	hanno	obl:in	31	5
+31	2	hanno	obl:che	32	1
 32	7	appariro	subj	32	4
+32	7	appariro	obl:a	32	6
 33	2	hanno	subj	28	4
 33	2	hanno	obj	33	10
 33	2	hanno	obl:a	33	5

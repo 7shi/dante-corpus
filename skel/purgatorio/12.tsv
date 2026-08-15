@@ -329,6 +329,8 @@ line	token	word	role	arg_line	arg_token
 117	7	parea	subj	0	0
 117	7	parea	iobj	117	6
 117	7	parea	obl:per	117	4
+118	2	io	subj	0	0
+118	2	io	ccomp	118	4
 118	4	dì	subj	118	2
 118	4	dì	obj	118	6
 119	1	levata	subj	118	6
@@ -379,6 +381,7 @@ line	token	word	role	arg_line	arg_token
 134	1	trovai	obl:con	133	4
 134	7	'ncise	subj	135	1
 134	7	'ncise	obj	134	6
+134	7	'ncise	obl:da	135	4
 134	7	'ncise	obl:a	135	6
 134	7	'ncise	obl:sovra	135	9
 135	0			0	0

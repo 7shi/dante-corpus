@@ -169,7 +169,6 @@ line	token	word	role	arg_line	arg_token
 59	7	fedele	subj	59	4
 60	8	basta	subj	60	6
 60	8	basta	obl:sanza	60	4
-61	2	così	subj	0	0
 61	3	è	subj	61	2
 62	2	stenebraron	subj	61	5
 62	2	stenebraron	obj	62	1

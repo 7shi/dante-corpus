@@ -29,7 +29,6 @@ line	token	word	role	arg_line	arg_token
 9	7	compreso	subj	7	2
 9	7	compreso	obl:per	9	4
 10	3	vidi	subj	10	2
-10	3	vidi	obj	10	9
 10	3	vidi	xcomp	10	7
 10	6	udi'	subj	10	2
 10	6	udi'	xcomp	10	7

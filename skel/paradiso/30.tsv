@@ -83,6 +83,7 @@ line	token	word	role	arg_line	arg_token
 30	9	preciso	obl:a	29	7
 31	3	convien	ccomp	31	7
 31	7	desista	subj	31	6
+31	7	desista	obl	32	2
 31	7	desista	obl:a	32	5
 32	6	poetando	subj	0	0
 33	0			0	0
@@ -124,6 +125,7 @@ line	token	word	role	arg_line	arg_token
 48	0			0	0
 49	3	circunfulse	subj	49	4
 49	3	circunfulse	iobj	49	2
+49	3	circunfulse	obl:come	46	3
 50	2	lasciommi	subj	49	4
 50	2	lasciommi	attr	50	3
 50	3	fasciato	obl:di	50	6
@@ -139,10 +141,12 @@ line	token	word	role	arg_line	arg_token
 54	3	disposto	subj	54	8
 54	3	disposto	obl:a	54	6
 55	8	venute	subj	56	2
+55	8	venute	obl	55	5
 55	8	venute	obl:dentro	55	7
 56	6	compresi	subj	56	5
 56	6	compresi	xcomp	57	2
 57	2	sormontar	subj	57	1
+57	2	sormontar	obl:di	57	4
 57	2	sormontar	obl:di	57	7
 58	6	raccesi	subj	0	0
 58	6	raccesi	obj	58	5

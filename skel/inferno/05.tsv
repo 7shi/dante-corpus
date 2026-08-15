@@ -33,6 +33,7 @@ line	token	word	role	arg_line	arg_token
 12	7	messa	subj	0	0
 12	7	messa	obl	12	5
 13	6	stanno	subj	13	7
+13	6	stanno	obl	13	2
 13	6	stanno	obl:a	13	4
 13	6	stanno	obl	13	5
 14	1	vanno	subj	14	4

@@ -350,11 +350,11 @@ line	token	word	role	arg_line	arg_token
 132	2	distinto	obl:di	132	4
 132	2	distinto	obl:di	132	7
 133	1	Vidi	subj	0	0
-133	1	Vidi	obj	134	3
 133	1	Vidi	xcomp	134	1
-133	1	Vidi	obl:a	133	4
-133	1	Vidi	obl:a	133	9
+133	1	Vidi	obl	133	5
 134	1	ridere	subj	134	3
+134	1	ridere	obl:a	133	4
+134	1	ridere	obl:a	133	9
 135	1	era	subj	134	4
 135	1	era	attr	134	5
 135	1	era	obl:in	135	4
@@ -362,9 +362,12 @@ line	token	word	role	arg_line	arg_token
 136	4	avessi	subj	136	3
 136	4	avessi	obj	136	8
 136	4	avessi	obl:in	136	6
+136	6	dir	subj	136	3
+137	3	imaginar	subj	136	3
 137	5	ardirei	subj	0	0
 137	5	ardirei	obj	138	3
-138	0			0	0
+138	3	tentar	subj	136	3
+138	3	tentar	obl:di	138	6
 139	3	vide	subj	139	1
 139	3	vide	obj	139	5
 139	3	vide	obl:in	140	4

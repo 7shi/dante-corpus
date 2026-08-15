@@ -212,6 +212,7 @@ line	token	word	role	arg_line	arg_token
 71	1	fatti	obl:per	71	3
 71	6	vien	subj	71	7
 71	6	vien	iobj	71	5
+71	6	vien	obl	71	4
 72	2	verrà	subj	71	7
 72	2	verrà	obl:di	72	6
 73	4	andavamo	subj	0	0

@@ -376,6 +376,7 @@ line	token	word	role	arg_line	arg_token
 123	5	crescer	obl:a	123	2
 124	0			0	0
 125	2	corsa	subj	124	3
+125	2	corsa	obl:sotto	124	6
 125	4	fummo	subj	124	3
 125	4	fummo	obl:in	125	8
 126	3	ficcò	subj	126	4

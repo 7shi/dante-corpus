@@ -59,6 +59,7 @@ line	token	word	role	arg_line	arg_token
 21	5	apparve	obl:di	19	3
 21	5	apparve	obl:in	21	3
 22	8	ristretta	subj	22	6
+22	8	ristretta	obl	23	1
 22	8	ristretta	obl:da	23	3
 23	8	venìa	subj	24	1
 23	8	venìa	obl:di	23	6

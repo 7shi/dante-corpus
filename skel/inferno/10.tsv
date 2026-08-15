@@ -58,9 +58,8 @@ line	token	word	role	arg_line	arg_token
 21	10	disposto	obj	21	3
 21	10	disposto	obl:a	21	9
 22	0			0	0
-23	2	ten	subj	22	3
-23	2	ten	attr	23	1
 23	3	vai	subj	22	3
+23	3	vai	obj	23	2
 23	3	vai	obl:per	22	6
 23	5	parlando	subj	22	3
 24	1	piacciati	subj	0	0

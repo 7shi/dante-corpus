@@ -41,6 +41,7 @@ line	token	word	role	arg_line	arg_token
 14	2	pinsero	subj	13	1
 14	2	pinsero	obj	14	5
 14	2	pinsero	iobj	14	1
+14	2	pinsero	obl	14	6
 14	2	pinsero	obl:de	14	9
 15	3	intender	subj	15	7
 15	3	intender	obl:a	15	2
@@ -68,6 +69,7 @@ line	token	word	role	arg_line	arg_token
 23	5	amar	subj	0	0
 23	5	amar	obj	23	7
 24	6	è	subj	0	0
+24	6	è	obl:di	24	2
 24	10	aspiri	subj	24	9
 24	10	aspiri	obj	24	8
 25	3	attraversati	subj	22	2
@@ -136,6 +138,7 @@ line	token	word	role	arg_line	arg_token
 49	4	appresentò	subj	49	5
 49	4	appresentò	obj	50	1
 49	4	appresentò	iobj	49	3
+49	4	appresentò	obl	50	5
 50	0			0	0
 51	1	rinchiusa	subj	50	8
 51	1	rinchiusa	obl:in	50	7

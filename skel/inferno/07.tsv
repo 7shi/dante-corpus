@@ -369,6 +369,7 @@ line	token	word	role	arg_line	arg_token
 127	2	girammo	subj	0	0
 127	2	girammo	obl:di	127	6
 127	2	girammo	obl	128	2
+127	2	girammo	obl:con	129	3
 128	0			0	0
 129	9	ingozza	subj	129	6
 129	9	ingozza	obj	129	8

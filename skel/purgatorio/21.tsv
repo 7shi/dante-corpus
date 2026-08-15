@@ -205,6 +205,7 @@ line	token	word	role	arg_line	arg_token
 70	2	sentisti	xcomp	71	5
 71	5	render	subj	71	1
 71	5	render	obj	71	6
+71	5	render	obl:per	71	4
 71	5	render	obl:a	72	3
 72	8	'nvii	subj	72	4
 72	8	'nvii	obj	72	7
@@ -269,10 +270,11 @@ line	token	word	role	arg_line	arg_token
 91	8	noma	subj	91	3
 91	8	noma	obj	91	7
 91	8	noma	attr	91	1
-92	1	cantai	subj	91	3
+91	8	noma	obl:di	91	6
+92	1	cantai	subj	0	0
 92	1	cantai	obl:di	92	3
 92	1	cantai	obl:di	92	8
-93	2	caddi	subj	91	3
+93	2	caddi	subj	0	0
 93	2	caddi	obl:in	93	4
 93	2	caddi	obl:con	93	8
 94	5	seme	subj	94	7

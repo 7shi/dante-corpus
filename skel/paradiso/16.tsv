@@ -189,6 +189,7 @@ line	token	word	role	arg_line	arg_token
 62	4	vòlto	subj	0	0
 62	4	vòlto	obl:a	62	6
 63	3	andava	subj	63	5
+63	3	andava	obl	63	2
 63	3	andava	obl:a	63	8
 64	1	sariesi	subj	64	2
 64	1	sariesi	obl:di	64	5

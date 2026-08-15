@@ -252,8 +252,9 @@ line	token	word	role	arg_line	arg_token
 90	6	sfavillaro	subj	90	5
 91	4	seguiva	subj	91	2
 91	4	seguiva	obj	91	6
-92	3	tante	subj	91	2
+92	3	tante	subj	0	0
 93	9	inmilla	subj	92	6
+93	9	inmilla	obl:che	93	4
 94	2	sentiva	subj	94	1
 94	2	sentiva	xcomp	94	3
 94	3	osannar	subj	0	0

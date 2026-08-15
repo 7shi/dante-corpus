@@ -287,6 +287,7 @@ line	token	word	role	arg_line	arg_token
 104	3	accoglie	subj	103	4
 104	3	accoglie	obl:in	104	5
 105	2	defettivo	subj	105	3
+105	2	defettivo	obl	104	7
 105	2	defettivo	obl:di	104	9
 105	5	è	subj	105	4
 105	5	è	attr	105	7
@@ -396,9 +397,9 @@ line	token	word	role	arg_line	arg_token
 141	8	venne	obl:in	141	5
 142	6	mancò	subj	142	7
 142	6	mancò	obl:a	142	4
-143	3	volgeva	subj	145	2
-143	3	volgeva	obj	143	6
+143	3	volgeva	subj	143	6
 143	3	volgeva	obj	143	9
+143	3	volgeva	obj	145	2
 143	3	volgeva	obl:come	144	3
 144	7	mossa	subj	144	4
 145	4	move	subj	145	3

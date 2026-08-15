@@ -139,6 +139,7 @@ line	token	word	role	arg_line	arg_token
 52	9	porsi	subj	0	0
 52	9	porsi	obj	52	8
 52	9	porsi	obl:in	52	4
+52	9	porsi	obl:a	52	6
 53	6	casca	subj	53	5
 53	6	casca	obl:in	53	2
 54	3	conobbi	subj	0	0
@@ -148,12 +149,13 @@ line	token	word	role	arg_line	arg_token
 54	8	accorsi	ccomp	55	6
 55	6	pendea	subj	55	8
 55	6	pendea	obl:da	55	3
+55	6	pendea	obl:a	55	5
 56	2	avea	subj	56	1
 56	2	avea	obj	56	4
 56	2	avea	obj	56	7
+57	3	par	subj	0	0
 57	3	par	ccomp	57	9
 57	9	pasca	subj	57	7
-57	9	pasca	obj	57	8
 58	4	riguardando	obl:tra	58	6
 58	7	vegno	subj	58	3
 59	5	vidi	subj	0	0

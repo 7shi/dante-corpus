@@ -291,7 +291,6 @@ line	token	word	role	arg_line	arg_token
 99	7	veder	subj	0	0
 99	7	veder	attr	99	8
 99	7	veder	obl:per	99	4
-100	1	Ecco	obj	101	5
 100	1	Ecco	obl:di	100	3
 100	5	fanno	subj	101	5
 100	5	fanno	obj	100	7

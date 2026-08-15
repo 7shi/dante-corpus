@@ -243,9 +243,9 @@ line	token	word	role	arg_line	arg_token
 84	5	fer	subj	84	7
 84	5	fer	obj	84	4
 84	5	fer	xcomp	84	3
-85	3	parve	subj	86	5
 85	3	parve	subj	87	2
 85	3	parve	iobj	85	2
+85	3	parve	xcomp	86	5
 86	5	tratto	subj	0	0
 86	5	tratto	obl:in	85	6
 87	2	vedere	subj	0	0

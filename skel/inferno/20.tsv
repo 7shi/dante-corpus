@@ -161,6 +161,7 @@ line	token	word	role	arg_line	arg_token
 53	4	vedi	obj	53	1
 54	2	ha	subj	52	3
 54	2	ha	obj	54	7
+54	2	ha	obl:di	54	4
 55	2	fu	subj	52	2
 55	2	fu	attr	55	1
 55	4	cercò	subj	55	3

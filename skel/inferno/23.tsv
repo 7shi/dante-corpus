@@ -8,11 +8,13 @@ line	token	word	role	arg_line	arg_token
 3	4	vanno	subj	3	2
 3	4	vanno	obl:per	3	6
 4	1	Vòlt'	subj	5	3
-4	1	Vòlt'	obl:su	4	6
+4	1	Vòlt'	obl:in	4	6
+4	1	Vòlt'	obl:per	5	7
 5	0			0	0
 6	3	parlò	subj	6	2
 6	3	parlò	obl	6	1
 6	3	parlò	obl:di	6	6
+6	3	parlò	obl:di	6	9
 7	5	pareggia	subj	7	6
 8	7	fa	subj	8	3
 8	7	fa	obl:con	8	6

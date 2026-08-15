@@ -26,6 +26,7 @@ line	token	word	role	arg_line	arg_token
 8	8	vidi	obl:in	9	3
 9	8	abbandono	subj	9	6
 9	8	abbandono	obj	9	7
+9	8	abbandono	obl:per	11	4
 10	8	diffidi	subj	10	3
 10	8	diffidi	obl:di	10	7
 11	7	può	subj	11	5

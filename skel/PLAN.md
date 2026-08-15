@@ -2,11 +2,12 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 1094 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). **The third `--fix` round was aborted before landing** (nothing it touched was committed), so the next round runs against base **1094** — 1091 plus the Layer-4 agreement close's +3 plus the Layer-4 prep-stack normalization's net zero.
+- **Current State**: `make -C skel check` reports **0 hard, 963 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after the **third `--fix` round landed 2026-08-15** (1094 → 963, −131, −12.0%; 0 regressed / 0 newly flagged). See *Third User-Run `--fix` Round* below.
 - **Other Layers**: `dep --check` **0 hard / 0 soft**. The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0, `pytest` 268 passed.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
-- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Two user-run rounds so far: **2011 → 1452 (−27.8%)**, then **1409 → 1247 (−11.5%)**.
+- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Three user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**.
 - **Latest Work**:
+  - **Third `--fix` round (2026-08-15)**: **1094 → 963 (−131)**, the first round preceded by new checker rules, a sharpened prompt and a new Stage-2 class. `missing_arg_adverb` **83 → 28 (−66.3%)** confirms the `_CONV_ADVERB` prompt-defect diagnosis; the elided-speech and appositive-adjective clauses moved ~nothing. See *Third User-Run `--fix` Round* below.
   - **Layer-4 prep-stack normalization (2026-08-14)**: closed the stacked-preposition route — 161 clusters, 196 rows, Layer 5 **1094 → 1094 net zero** by design; `dante_corpus/skel.py` gained a `fixed`-under-`case` lemma aggregation so rules O/`prep_stack` read the normalized shape (3 new tests). The route's old "14 role_mismatch / 18 unattached" count was Phase-5j-era and already absorbed.
   - **Rule AG (Inferno 4–6 Read)**: Gated `conj` subject propagation on Layer-2 person/number agreement (`dep.subject_agreement` + `_finite_head_of`), scoring **1452 → 1409 soft (−43)** with zero model calls.
   - **Second `--fix` round (2026-08-14)**: First live pass of the `extra_arg_adjective` micro-prompt; **1409 → 1247 (−162)**, 0 regressed / 0 newly flagged. See *Second User-Run `--fix` Round* below.
@@ -40,7 +41,7 @@ A question may name the predicate, the argument the LLM itself cited, and the ro
 
 ### 4. Per-Position Manual Reads as Primary Discovery Engine
 - Aggregate statistics frequently misdiagnose checker silence as LLM error.
-- Exhaustive position-by-position reads of small canto batches (Inferno 1, 1–3, 4–6, 7–10, and next 11–13) uncover genuine checker silence (e.g., Rules V, W, X, Y–AF, AG, AH–AL) and upstream layer errors. The Inferno 7–10 read also found the reverse case: a defect in the *prompt* (`_CONV_ADVERB`'s omission licence) responsible for the single largest bucket in the residue, which no aggregate statistic had attributed to anything.
+- Exhaustive position-by-position reads of small canto batches (Inferno 1, 1–3, 4–6, 7–10, and next 11–15) uncover genuine checker silence (e.g., Rules V, W, X, Y–AF, AG, AH–AL) and upstream layer errors. The Inferno 7–10 read also found the reverse case: a defect in the *prompt* (`_CONV_ADVERB`'s omission licence) responsible for the single largest bucket in the residue, which no aggregate statistic had attributed to anything.
 
 ### 5. Immediate Cross-Layer Remediation
 - Upstream defects in Layer 2 (`morph/`), Layer 4 (`dep/`), or the pronoun case annex (`case/`) discovered during audits must be corrected in the same session, re-validated, and documented in `*/CORRECTIONS.md`.
@@ -120,54 +121,89 @@ conjunction-in-argument-slot census. Two candidate rules were measured and **dro
 conjunction-anchored-predicate repair (population 0) and a 247-token relative-`che` retag (blocked
 by the `case` annex — filling those rows from Layer 4 would make rule U circular).
 
-Prompt side, moving nothing until the next `--fix` round: the `_CONV_ADVERB` omission licence
-(82 positions), the addressee-less elided-speech frame (4 of the 37 read), and appositive
-adjectives.
+Prompt side, unmeasured until the third round: the `_CONV_ADVERB` omission licence (82 positions),
+the addressee-less elided-speech frame (4 of the 37 read), and appositive adjectives. Round 3
+settled all three — the licence was the real defect, the other two moved nothing (see below).
+
+---
+
+### 7. Third User-Run `--fix` Round (2026-08-15)
+
+- **1094 → 963 soft, −131 (−12.0%)**, 72 files touched (181 insertions / 76 deletions), 0 hard,
+  `pytest` 268 passed.
+- Unit-level: **696 → 618 flagged**; 78 cleared outright, 42 improved, 576 unchanged,
+  **0 regressed, 0 newly flagged**.
+- Per-unit yield **0.188**, against 0.66 (round 1) and 0.193 (round 2) — flat rather than
+  declining, even though the base was already stripped of the 156 positions rules AH–AL had taken.
+- Per canticle: inferno 303 → 264, purgatorio 410 → 360, paradiso 381 → 339.
+- **Subclass results** (before → after):
+
+  | subclass | before | after | delta |
+  | --- | ---: | ---: | ---: |
+  | `extra_arg` | 424 | 406 | −18 (−4.2%) |
+  | `missing_arg` | 349 | 306 | −43 (−12.3%) |
+  | `role_mismatch` | 105 | 100 | −5 (−4.8%) |
+  | `missing_arg_adverb` | 83 | 28 | **−55 (−66.3%)** |
+  | `extra_arg_adjective` | 51 | 49 | −2 (−3.9%) |
+  | `missing_tuple_nominal` | 39 | 36 | −3 (−7.7%) |
+  | `extra_tuple` | 14 | 12 | −2 (−14.3%) |
+  | `extra_tuple_adjective` | 13 | 13 | ±0 |
+  | `membership` | 7 | 7 | ±0 |
+  | `missing_tuple` | 5 | 3 | −2 (−40.0%) |
+  | `extra_tuple_adverb` | 4 | 3 | −1 (−25.0%) |
+
+**What the round was a test of, and what it decided:**
+
+- **`missing_arg_adverb` (−66.3%) — the prompt-defect diagnosis is confirmed.** This was the first
+  class whose population was traced to a defect in the corpus's own prompt (`_CONV_ADVERB`'s "or it
+  is left out" licence) rather than to the model, and removing the licence took 56 of its 83
+  positions in one round — the second-largest single-class drop on record after
+  `extra_tuple_adverb`'s debut. It is also the first confirmation that **an aggregate class can be
+  caused by our own instructions**, which makes a prompt read a standing move alongside per-position
+  checker reads. The 27 that survived are the same positions as before plus one new one; they are
+  now a residue to read, not a licence to withdraw.
+- **Per-unit yield held at 0.188 vs 0.193**, on a base the AH–AL rules had already stripped of its
+  easy positions. Two rounds of decline (0.66 → 0.193) did not continue, which is the first evidence
+  that the fall is a function of *what precedes a round* rather than of residue depth alone. One
+  caveat against over-reading it: 55 of the 131 removed (42%) came from one class, so this is
+  evidence for prompt repair specifically, not for pre-round work in general.
+- **The elided-speech frame moved almost nothing** (`missing_tuple_nominal` −3, and all 36
+  survivors are the same positions as before). **The appositive-adjective clause moved exactly
+  nothing** (`extra_tuple_adjective` 13 → 13, position-identical). Both were prose added to a
+  convention block with no instruction reaching the model *at* the flagged position — precisely the
+  shape Phase 5w said does not move a class. Before touching either convention text again, they
+  need `_HINT_PHRASING`/class-question work or a per-position read; a fourth round will not move
+  them as they stand.
 
 ---
 
 ## Active & Open Routes
 
-**The next `--fix` round awaits the user.** The third round was aborted before landing, so the
-prompt-side work below is still untested by any round. Both previous rounds repeated the previous
-round's pattern at a lower rate; the next one is the first since Phase 6 opened where new checker
-rules *and* a sharpened prompt *and* a new Stage-2 class all precede it rather than follow it.
+**Next up: the per-position read of Inferno 11–15** (37 soft at base 963; see the route below for
+the per-canto and per-class breakdown). Everything in this section is measured at base 963.
 
-### In Flight — the next `--fix` round (base 1094, not yet launched)
-
-`make -C skel fix`, 3-way parallel, against base **1094 soft**. What is new since the second
-round (populations re-measured at base):
-
-| change | target class | population at base |
-| --- | --- | ---: |
-| new Stage-2 class `missing_arg_adverb` + `_CONV_ADVERB_ARG` | `missing_arg_adverb` | **83** |
-| `_CONV_ADVERB` / `SYSTEM_PROMPT` omission-licence rewrite | same, and `missing_arg` generally | 432 total |
-| addressee-less elided-speech frame (`_CONV_VERBLESS`, `SYSTEM_PROMPT`, hint) | `missing_tuple_nominal` | 39 |
-| appositive-adjective clause (`_CONV_ADJECTIVE`, `SYSTEM_PROMPT`) | `extra_tuple_adjective` | 13 |
-
-**When the round lands**, measure per *How to Measure a `--fix` Round* below and record the
-subclass table here, as for rounds 1 and 2. Two things this round is specifically a test of:
-
-- **`missing_arg_adverb` is the first class whose population was traced to a defect in the
-  corpus's own prompt** rather than to the model — `_CONV_ADVERB` ended with "or it is left out",
-  licensing exactly the adverb omissions the checker was flagging (82 at discovery, 83 at base
-  after the Layer-4 agreement close). A large drop confirms the
-  diagnosis; a flat result means the rewrite did not reach the model at the flagged position, and
-  Phase 5w's finding applies (a prose rule already in the prompt does not move its class unless an
-  instruction also reaches the model *at* the position) — re-read `_HINT_PHRASING` and the class
-  question before touching the convention text again.
-- **Per-unit yield against 0.66 (round 1) and 0.193 (round 2).** Both previous rounds repeated the
-  previous round's pattern at a lower rate. This is the first round preceded by new checker rules
-  *and* a sharpened prompt *and* a new class, so a yield at or above round 2's would be the first
-  evidence that the decline is a function of what precedes a round rather than of residue depth.
+**A fourth `--fix` round is not the next move.** Nothing new precedes it: the prompt work is now
+measured, and what it left standing (below) is read-work, not prompt-work. A round launched today
+would repeat round 3's classes at a lower rate.
 
 ### Open Assistant-Side Routes
-- **`extra_arg subj` with `∅ (0,0)` — 54 standing, down from 69**: rule AH took the 14 that were
-  AG-dropped inherited subjects (55 remained), and one more fell to the upstream corrections. The
-  residue is a different shape — the derivation found a genuine overt subject, often long-distance
+
+*(populations re-measured at base 963 after the third round)*
+
+- **`missing_arg_adverb` residue (28)**: the 27 survivors of the `_CONV_ADVERB` repair plus one new
+  position. The licence that caused the class is gone, so this is now a per-position read — the
+  first thing to establish is whether these are locative adverbs the model still omits or a
+  different shape the branch is over-collecting.
+- **`missing_tuple_nominal` (36) and `extra_tuple_adjective` (13)**: both untouched by round 3's
+  prompt clauses and both position-identical to their pre-round sets. Do not re-write convention
+  prose for either; read the positions, or move the instruction into `_HINT_PHRASING`/the class
+  question where Phase 5w says it has to be to move a class.
+- **`extra_arg subj` with `∅ (0,0)` — 52 standing, down from 69**: rule AH took the 14 that were
+  AG-dropped inherited subjects (55 remained), and the rest fell to upstream corrections and round
+  3. The residue is a different shape — the derivation found a genuine overt subject, often long-distance
   (e.g. Inferno 9:20, where `alcun` at 21.4 is the subject of `incontra`). Read a sample before
   writing anything; this is no longer one homogeneous bucket.
-- **`role_mismatch` `xcomp` vs `obl` (21) and `obj` ↔ `subj` (36 across both directions)**: the two
+- **`role_mismatch` `xcomp` vs `obl` (21) and `obj` ↔ `subj` (31 across both directions)**: the two
   dominant mismatch shapes. The `obj`/`subj` swap is a symmetric pair, which suggests one
   systematic cause rather than scattered slips. Inferno 9:41 and 9:72, both fixed in `dep/` this
   session, were instances — worth checking whether the rest are too.
@@ -184,11 +220,13 @@ subclass table here, as for rounds 1 and 2. Two things this round is specificall
   build round, not an edit — see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
 - **Attributive vs. Predicative Adjectives (13 `extra_tuple_adjective` remaining, down from 37)**:
   - True reading disagreements with no `cop` edge (e.g., Inferno 2:109 *"non fur mai persone ratte / a far lor pro"*).
-  - Target: Conduct a per-position read of the remaining 13 before writing any checker rule.
-- **`extra_arg_adjective` residue (51)**: per-position read to separate prompt weakness from genuine
-  reading disagreement — see the reading of its −20.0% above.
-- **Adverbs Promoted to Predicates (4 `extra_tuple_adverb` remaining, down from 33)**:
-  - Effectively closed by the Stage 2 micro-prompt. Read the final 4 positions to decide whether any residue warrants prompt tweaks or checker acceptance.
+  - Round 3's appositive clause moved none of them — see above. Conduct a per-position read of the
+    remaining 13 before writing any checker rule.
+- **`extra_arg_adjective` residue (49)**: two rounds have now each taken a couple of positions
+  (−20.0%, then −3.9%), which is itself evidence that the residue is genuine reading disagreement
+  rather than prompt weakness. Per-position read to settle it.
+- **Adverbs Promoted to Predicates (3 `extra_tuple_adverb` remaining, down from 33)**:
+  - Effectively closed by the Stage 2 micro-prompt. Read the final 3 positions to decide whether any residue warrants prompt tweaks or checker acceptance.
 - **Stacked Prepositions in Layer 4 — CLOSED (2026-08-14)**: 161 multiword-preposition clusters
   normalized to the UD shape (opening word `case`→ nominal, later members `fixed`→ opening word),
   Layer 5 1094 → 1094 net zero; the old 14-role_mismatch count was Phase-5j-era and already
@@ -198,11 +236,22 @@ subclass table here, as for rounds 1 and 2. Two things this round is specificall
   One deliberate leftover: the 40 adverb-prep clusters (`dentro a`, `dinanzi a`, `dietro a`,
   `intorno a`, `fuor di`, `infino al` …) Layer 2 tags `adverb` were excluded from the rewrite —
   a Layer-2/4 tension to decide separately if it ever matters.
-- **Per-Position Read of Inferno 11–13**: continue the audit discipline. Inferno 1, 1–3, 4–6 and
-  7–10 have each produced rules no aggregate statistic suggested.
-- **`missing_arg obl` Sample Audit**:
-  - 82 of the 128 bare-`obl` omissions were the adverb bucket now branched as `missing_arg_adverb`.
-    Re-measure the remainder after the next `--fix` round rather than branching twice.
+- **Per-Position Read of Inferno 11–15 — the next session's task**: continue the audit discipline.
+  Inferno 1, 1–3, 4–6 and 7–10 have each produced rules no aggregate statistic suggested. The batch
+  holds **37 soft violations** at base 963 — coincidentally the same size as the 7–10 read:
+
+  | canto | 11 | 12 | 13 | 14 | 15 |
+  |---|---:|---:|---:|---:|---:|
+  | soft | 8 | 5 | 4 | 13 | 7 |
+
+  By class: `extra_arg` 17, `missing_arg` 11, `missing_tuple_nominal` 3, `extra_arg_adjective` 2,
+  `role_mismatch` 2, `extra_tuple_adjective` 1, `missing_arg_adverb` 1. Note that four of the
+  standing routes above (`missing_tuple_nominal`, `extra_tuple_adjective`, `extra_arg_adjective`,
+  `missing_arg_adverb`) have positions inside this batch, so the read doubles as a sample of each.
+  List them with `uv run skel.py inferno --check -c <n>` per canto.
+- **`missing_arg obl` Sample Audit (77 standing, down from 128)**: the adverb bucket that dominated
+  it is branched and largely repaired, so this is now measurable on its own terms. Sample the 77
+  before writing anything.
 
 ---
 

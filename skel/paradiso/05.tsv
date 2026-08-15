@@ -136,6 +136,7 @@ line	token	word	role	arg_line	arg_token
 46	7	cancella	subj	46	2
 47	3	servata	subj	46	2
 48	6	favella	subj	46	2
+48	6	favella	obl	47	5
 48	6	favella	obl:di	48	4
 49	2	necessitato	xcomp	50	3
 50	3	offerere	obj	50	2
@@ -207,7 +208,6 @@ line	token	word	role	arg_line	arg_token
 70	2	pianse	obj	70	7
 70	2	pianse	obl	70	1
 71	2	fé	subj	70	3
-71	2	fé	obj	71	7
 71	2	fé	xcomp	71	3
 71	3	pianger	subj	71	7
 71	3	pianger	obl:di	71	5
@@ -331,6 +331,7 @@ line	token	word	role	arg_line	arg_token
 112	4	vederai	obl:per	112	3
 113	2	era	subj	113	1
 113	2	era	obl:da	112	7
+113	2	era	obl:a	113	1
 113	2	era	obl:in	113	4
 113	6	udir	subj	0	0
 113	6	udir	obj	113	8

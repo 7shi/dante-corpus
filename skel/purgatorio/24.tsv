@@ -148,11 +148,12 @@ line	token	word	role	arg_line	arg_token
 45	8	riprenda	subj	45	6
 45	8	riprenda	obj	45	7
 46	4	andrai	subj	46	1
+46	4	andrai	obl	46	3
 46	4	andrai	obl:con	46	7
 47	5	prendesti	subj	0	0
 47	5	prendesti	obj	47	6
 47	5	prendesti	obl:in	47	4
-48	1	dichiareranti	subj	46	1
+48	1	dichiareranti	subj	0	0
 48	1	dichiareranti	obj	48	4
 49	2	dì	subj	0	0
 49	2	dì	ccomp	49	5

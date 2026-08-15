@@ -305,6 +305,7 @@ line	token	word	role	arg_line	arg_token
 104	3	stavano	subj	104	1
 104	3	stavano	obj	104	2
 104	3	stavano	obl:a	104	6
+104	3	stavano	obl	104	7
 104	3	stavano	obl:a	104	9
 105	7	star		0	0
 105	9	pone	subj	105	3

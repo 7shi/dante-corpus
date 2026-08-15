@@ -254,6 +254,7 @@ line	token	word	role	arg_line	arg_token
 79	2	discendemmo	obj	79	4
 79	2	discendemmo	obl:da	79	7
 80	3	aggiugne	subj	80	2
+80	3	aggiugne	obl	80	1
 80	3	aggiugne	obl:con	80	7
 81	7	manifesta	subj	81	6
 81	7	manifesta	iobj	81	3
@@ -372,7 +373,7 @@ line	token	word	role	arg_line	arg_token
 124	4	piacque	iobj	124	3
 125	7	fui	subj	125	6
 125	7	fui	obl:a	125	4
-125	8	son	subj	125	9
+125	8	son	attr	125	9
 125	8	son	attr	125	10
 125	8	son	attr	126	1
 126	5	fu	subj	126	3

@@ -315,6 +315,7 @@ line	token	word	role	arg_line	arg_token
 116	1	fanno	subj	116	2
 117	3	van	subj	116	2
 117	3	van	obl:di	117	2
+117	3	van	obl	117	4
 117	3	van	obl:per	117	8
 118	7	dismonta	subj	0	0
 119	1	fanno	subj	0	0
@@ -324,6 +325,7 @@ line	token	word	role	arg_line	arg_token
 120	3	vedrai	subj	120	1
 120	3	vedrai	obj	120	2
 120	8	conta	subj	120	1
+120	8	conta	obl	120	5
 121	2	io	subj	0	0
 121	2	io	ccomp	123	3
 121	2	io	obl:a	121	4

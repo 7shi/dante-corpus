@@ -129,7 +129,8 @@ line	token	word	role	arg_line	arg_token
 48	4	cheggio	obj	48	3
 48	4	cheggio	obl:a	48	6
 48	9	giuggia	subj	48	7
-49	1	Chiamato	subj	49	6
+49	1	Chiamato	subj	0	0
+49	1	Chiamato	obj	49	6
 49	1	Chiamato	obl:di	49	4
 50	4	nati	subj	50	6
 50	4	nati	obl:di	50	2
@@ -139,6 +140,7 @@ line	token	word	role	arg_line	arg_token
 52	2	fu'	attr	52	1
 52	2	fu'	obl:di	52	6
 53	5	venner	subj	53	3
+53	5	venner	obl:fuori	54	5
 54	0			0	0
 55	1	trova'	subj	54	5
 55	1	trova'	obj	55	8
@@ -184,6 +186,7 @@ line	token	word	role	arg_line	arg_token
 70	2	vegg'	obj	70	1
 71	2	tragge	subj	71	1
 71	2	tragge	obj	71	5
+71	2	tragge	obl	71	6
 71	2	tragge	obl:di	71	8
 72	2	far	subj	0	0
 72	2	far	xcomp	72	3
@@ -247,6 +250,7 @@ line	token	word	role	arg_line	arg_token
 91	1	Veggio	subj	0	0
 91	1	Veggio	obj	91	4
 92	4	sazia	subj	92	2
+92	4	sazia	obj	92	3
 93	1	portar	obj	93	6
 93	1	portar	obl:senza	92	7
 93	1	portar	obl:in	93	3

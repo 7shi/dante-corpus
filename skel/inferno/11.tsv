@@ -274,8 +274,11 @@ line	token	word	role	arg_line	arg_token
 94	7	rivolvi	obl	94	5
 95	1	diss'	subj	95	2
 95	1	diss'	ccomp	94	7
+95	1	diss'	ccomp	95	5
+95	1	diss'	ccomp	96	7
 95	5	di'	subj	0	0
 95	5	di'	ccomp	95	8
+95	5	di'	obl	95	3
 95	8	offende	subj	95	7
 95	8	offende	obj	96	3
 95	8	offende	obl	95	4
@@ -313,6 +316,7 @@ line	token	word	role	arg_line	arg_token
 106	7	rechi	obj	107	2
 106	7	rechi	obl:da	106	3
 106	7	rechi	obl:a	106	9
+106	7	rechi	obl:da	107	4
 107	5	convene	xcomp	108	1
 107	5	convene	xcomp	108	5
 108	1	prender	subj	0	0

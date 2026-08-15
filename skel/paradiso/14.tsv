@@ -56,8 +56,6 @@ line	token	word	role	arg_line	arg_token
 18	8	nòi	obl:a	18	5
 19	5	pinti	subj	20	4
 19	5	pinti	obl:da	19	4
-19	7	tratti	subj	20	4
-19	7	tratti	obl:da	19	4
 20	6	vanno	subj	20	5
 20	6	vanno	obl:a	20	8
 21	1	levan	subj	20	4
@@ -65,6 +63,7 @@ line	token	word	role	arg_line	arg_token
 21	1	levan	obl:a	20	3
 21	5	rallegrano	subj	20	4
 21	5	rallegrano	obj	21	7
+21	5	rallegrano	obl:a	20	3
 22	0			0	0
 23	4	mostrar	subj	23	3
 23	4	mostrar	obj	23	6

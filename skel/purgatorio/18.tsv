@@ -67,6 +67,7 @@ line	token	word	role	arg_line	arg_token
 23	1	tragge	obj	23	2
 23	8	spiega	subj	22	2
 23	8	spiega	obj	23	7
+23	8	spiega	obl	23	4
 23	8	spiega	obl:a	23	6
 24	7	volger	subj	24	4
 24	7	volger	obl:a	24	6
@@ -91,6 +92,7 @@ line	token	word	role	arg_line	arg_token
 29	7	nata	xcomp	29	9
 29	9	salire	subj	0	0
 30	7	dura	subj	0	0
+30	7	dura	obl	30	2
 30	7	dura	obl:in	30	6
 31	5	entra	subj	31	3
 31	5	entra	obl:in	31	7
@@ -372,6 +374,7 @@ line	token	word	role	arg_line	arg_token
 127	3	so	ccomp	127	11
 127	6	disse	subj	0	0
 127	11	tacque	subj	127	9
+127	11	tacque	obl	127	10
 128	8	trascorso	subj	0	0
 128	8	trascorso	obl:di	128	5
 128	8	trascorso	obl:da	128	7
@@ -410,11 +413,14 @@ line	token	word	role	arg_line	arg_token
 138	7	offerse	obj	138	1
 138	7	offerse	obl:a	138	4
 139	7	divise	subj	140	2
+139	7	divise	obj	140	2
+139	7	divise	obl	139	3
 139	7	divise	obl:da	139	5
 140	4	veder	subj	140	3
 140	7	potiersi	subj	140	3
 140	7	potiersi	xcomp	140	4
 141	7	mise	subj	141	2
+141	7	mise	obl	141	3
 141	7	mise	obl:a	141	5
 142	5	nacquero	subj	142	4
 142	5	nacquero	subj	142	7

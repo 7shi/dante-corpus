@@ -317,6 +317,7 @@ line	token	word	role	arg_line	arg_token
 111	7	porta	obl:sovra	111	4
 112	0			0	0
 113	1	veder	subj	0	0
+113	1	veder	obj	112	6
 113	1	veder	xcomp	113	4
 113	1	veder	xcomp	114	4
 113	3	parve	subj	113	1

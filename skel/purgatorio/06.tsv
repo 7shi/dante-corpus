@@ -464,6 +464,7 @@ line	token	word	role	arg_line	arg_token
 149	1	vedrai	subj	0	0
 149	1	vedrai	obj	149	2
 149	3	somigliante	subj	149	2
+149	3	somigliante	obl:a	149	6
 150	4	trovar	subj	150	1
 150	4	trovar	obj	150	5
 150	4	trovar	obl:su	150	9

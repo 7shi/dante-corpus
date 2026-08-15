@@ -257,9 +257,10 @@ line	token	word	role	arg_line	arg_token
 89	5	sbadigliava	obl:con	89	3
 90	7	assalisse	subj	90	3
 90	7	assalisse	obj	90	6
-91	7	riguardava	subj	91	1
-91	7	riguardava	subj	91	5
-91	7	riguardava	obj	91	3
+91	1	Elli	subj	0	0
+91	1	Elli	attr	91	3
+91	7	riguardava	subj	0	0
+91	7	riguardava	obj	91	5
 91	7	riguardava	obj	91	6
 92	0			0	0
 93	1	fummavan	subj	92	2

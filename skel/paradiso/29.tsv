@@ -39,7 +39,6 @@ line	token	word	role	arg_line	arg_token
 13	3	aver	obj	13	8
 13	3	aver	obl:a	13	5
 14	2	esser	subj	0	0
-14	4	può	subj	0	0
 14	4	può	xcomp	14	2
 15	1	potesse	subj	14	8
 15	1	potesse	xcomp	15	3

@@ -85,6 +85,7 @@ line	token	word	role	arg_line	arg_token
 28	6	tristo	obl:di	29	3
 29	0			0	0
 30	2	suonan	subj	29	7
+30	2	suonan	obl	29	5
 30	2	suonan	obl:come	30	4
 30	7	sospiri	subj	29	7
 31	2	sto	subj	31	3
@@ -228,6 +229,7 @@ line	token	word	role	arg_line	arg_token
 71	3	condusse	obj	71	2
 71	3	condusse	obl:in	71	5
 72	7	muore	subj	72	9
+72	7	muore	obl	72	2
 72	7	muore	obl:a	72	6
 73	0			0	0
 74	0			0	0

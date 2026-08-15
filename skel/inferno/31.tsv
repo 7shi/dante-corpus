@@ -167,6 +167,7 @@ line	token	word	role	arg_line	arg_token
 58	5	parea	iobj	58	4
 58	5	parea	attr	58	6
 58	5	parea	attr	58	8
+58	5	parea	obl:come	59	3
 58	6	lunga	subj	58	2
 58	8	grossa	subj	58	2
 59	0			0	0
@@ -192,6 +193,7 @@ line	token	word	role	arg_line	arg_token
 65	5	vedea	obl:da	66	2
 66	7	affibbia	subj	66	6
 66	7	affibbia	obj	66	9
+66	7	affibbia	obl	66	5
 67	4	zabì	subj	67	1
 67	4	zabì	obj	67	5
 68	1	cominciò	subj	68	6
@@ -450,6 +452,7 @@ line	token	word	role	arg_line	arg_token
 143	5	sposò	subj	143	1
 143	5	sposò	obj	143	4
 143	5	sposò	obl:a	142	4
+143	5	sposò	obl:con	143	3
 144	3	chinato	subj	0	0
 144	5	fece	subj	143	1
 144	5	fece	obj	144	6

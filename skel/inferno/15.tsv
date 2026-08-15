@@ -191,7 +191,6 @@ line	token	word	role	arg_line	arg_token
 64	3	farà	iobj	64	1
 64	3	farà	attr	64	8
 64	3	farà	obl:per	64	7
-65	2	è	subj	0	0
 65	2	è	attr	65	3
 65	3	ragion	subj	0	0
 66	2	disconvien	subj	66	3

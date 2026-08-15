@@ -313,6 +313,7 @@ line	token	word	role	arg_line	arg_token
 110	1	dinanzi	subj	109	1
 110	1	dinanzi	obl:a	110	3
 110	5	sonò	subj	109	1
+110	5	sonò	obl	110	1
 110	5	sonò	obl	110	4
 111	8	pispiglia	subj	109	1
 111	8	pispiglia	obl:in	111	6

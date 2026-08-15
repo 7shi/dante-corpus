@@ -238,6 +238,7 @@ line	token	word	role	arg_line	arg_token
 78	1	fece	subj	77	1
 78	1	fece	obj	78	3
 78	1	fece	obl:con	77	8
+78	1	fece	obl:in	78	5
 78	1	fece	obl:a	78	8
 79	4	scoperta	subj	79	7
 80	1	disse	subj	0	0
