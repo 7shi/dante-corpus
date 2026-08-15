@@ -1011,7 +1011,7 @@ line	token	word	deprel	head_line	head_token
 141	6	sì	advmod	141	9
 141	7	da	case	141	8
 141	8	me	obl	141	9
-141	9	disgiunte	amod	141	5
+141	9	disgiunte	xcomp	141	2
 142	1	raccoglietele	ccomp	139	2
 142	2	al	case	142	3
 142	3	piè	obl	142	1

@@ -1098,3 +1098,27 @@ clusters, where the named lemma deliberately flips inner → opening to match th
 prompt (`dep/dep.py`) and this README now state the convention for future regenerations.
 
 `dep --check` after the round: **0 hard, 0 soft**.
+
+## Sixteen rows from the Layer-5 Inferno 11–15 read (2026-08-15)
+
+Found position by position while auditing Layer 5's soft violations in Inferno 11–15 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). Each was decided from the line itself, applied
+by a gated script that checks the word at every index before rewriting it, and re-validated:
+`dep --check` **0 hard / 0 soft**, `morph`/`np`/`case` unchanged at 0.
+
+| position | before | after | why |
+|---|---|---|---|
+| inferno 12:2.2 `alpestro`, 12:3.1 `tal` | `amod`→ 1.3 `loco` | `attr`→ 1.1 `Era` | *«Era lo loco … alpestro e … tal ch'ogne vista ne sarebbe schiva»* — both are predicative complements of `Era`, not attributes of `loco`. |
+| inferno 12:22.1 `Qual`, 12:22.4 `toro` | `nsubj` / `attr` | `attr` / `nsubj` | *«Qual è quel toro»* — `quel toro` is the subject and `Qual` the predicate nominal, which is exactly how 12:4 (*«Qual è quella ruina»*) is already tagged. The two rows were inconsistent with each other. |
+| inferno 12:90.5 `io`, 12:90.6 `anima`, 12:90.7 `fuia` | `nsubj`→90.7, `appos`→90.5, `conj`→90.2 | `nsubj`→90.6, `conj`→90.3, `amod`→90.6 | *«non è ladron, né io anima fuia»* — with `fuia` retagged an adjective in Layer 2, `anima fuia` is a predicate nominal coordinated with `ladron`, and `io` its subject. |
+| inferno 13:141.9 `disgiunte` | `amod`→ 141.5 | `xcomp`→ 141.2 | *«c'ha le mie fronde sì da me disgiunte»* — an object complement of `ha`, the resultative reading the `sì …` degree adverb requires. |
+| inferno 14:44.4 `fuor`, 44.5 `che`, 44.6 `demon` | `obl`→43.6, `case`→44.6, `obj`→44.4 | `case`→44.6, `fixed`→44.4, `obl`→43.6 | *«fuor che ' demon duri»* — a multiword preposition in the shape the 2026-08-14 normalization froze. It was excluded from that round because Layer 2 tags `fuor` an adverb; the excluded set stands, but this cluster had `demon` as the *object of an adverb*, which no reading supports. |
+| inferno 14:103.1 `Dentro`, 103.2 `dal` | `advmod`→103.4, `case`→103.3 | `case`→103.3, `fixed`→103.1 | *«Dentro dal monte»* — same shape, and the source of one of the three obl-vs-obl residues that round recorded as "genuine disagreements". It was a stack shape after all. |
+| inferno 14:116.2 `Acheronte` | `nsubj`→116.1 | `obj`→116.1 | *«Lor corso in questa valle si diroccia; fanno Acheronte, Stige e Flegetonta»* — the rivers are what the waters *make*. 14:119 (*«fanno Cocito»*) already had `obj`; the two coordinated clauses disagreed. |
+| inferno 11:70.3 `quei` | `nsubj`→74.3 | `dislocated`→74.3 | *«quei de la palude pingue … perché … sono ei puniti?»* — a left-dislocated topic resumed by `ei`, which is the clause's own subject. The row made `puniti` carry two subjects. |
+| inferno 19:106.3 `pastor` | `appos`→106.7 `Vangelista` | `appos`→106.2 `voi` | *«Di voi pastor s'accorse il Vangelista»* — Layer 3's own NP span `[voi pastor]` says which noun it is appositive to. Surfaced by Layer 5's new rule AP, which collapses an apposition onto its host and so made the mis-attachment visible as a `missing_arg`. |
+
+Layer 5 measured the whole set at **895 → 888 (−7)**. Two positions trade rather than clear: at
+14:116 the corrected `obj` turns an `extra_arg` into a `role_mismatch` because the reading has the
+river as subject, and at 14:43 the normalized cluster leaves the reading citing the preposition
+itself. Both are now disagreements with a correct tree rather than with a wrong one.

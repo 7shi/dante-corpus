@@ -2078,3 +2078,207 @@ def test_classify_divergence_rule_al_requires_two_fused_pronouns():
     given, derived, dep_index_by_pos, morph_pos = _fused_clitic_fixture("pronoun")
     violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
     assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+# --- Phase 6: rules AM-AT (the Inferno 11-15 read) --------------------------------------
+
+
+def _cop_stranded_fixture(on_cop=True):
+    """"'n la mente m'è fitta" (inferno 15:82): Layer 4 hangs the oblique and the dative on the
+    copula `è`, leaving the adjective predicate `fitta` with nothing but its subject."""
+    host = (1, 4) if on_cop else (1, 5)
+    dep_rows = [
+        dep.DepRow(line=1, token=2, word="mente", deprel="obl",
+                   head_line=host[0], head_token=host[1]),
+        dep.DepRow(line=1, token=3, word="m'", deprel="iobj",
+                   head_line=host[0], head_token=host[1]),
+        dep.DepRow(line=1, token=4, word="è", deprel="cop", head_line=1, head_token=5),
+        dep.DepRow(line=1, token=5, word="fitta", deprel="root", head_line=0, head_token=0),
+        dep.DepRow(line=1, token=6, word="imagine", deprel="nsubj", head_line=1, head_token=5),
+    ]
+    morph_rows = {1: [
+        morph.MorphRow(word="'n", pos="preposition"),
+        morph.MorphRow(word="mente", pos="noun"),
+        morph.MorphRow(word="m'", pos="pronoun"),
+        morph.MorphRow(word="è", pos="verb", person="3"),
+        morph.MorphRow(word="fitta", pos="adjective"),
+        morph.MorphRow(word="imagine", pos="noun"),
+    ]}
+    return {1: dep_rows}, morph_rows
+
+
+def test_derive_unit_rule_am_lifts_arguments_off_a_copula():
+    dep_rows, morph_rows = _cop_stranded_fixture()
+    derived = skel.derive_unit([1], dep_rows, morph_rows)
+    roles = {(r.role, r.arg_line, r.arg_token) for r in derived[1] if r.token == 5}
+    assert ("obl", 1, 2) in roles and ("iobj", 1, 3) in roles
+
+
+def test_derive_unit_rule_am_leaves_a_predicates_own_children_alone():
+    # Same tree with the arguments already on the lexical predicate: one row each, not two.
+    dep_rows, morph_rows = _cop_stranded_fixture(on_cop=False)
+    derived = skel.derive_unit([1], dep_rows, morph_rows)
+    obliques = [r for r in derived[1] if r.token == 5 and r.role == "obl"]
+    assert len(obliques) == 1
+
+
+def _orphan_fixture():
+    """"però giri Fortuna la sua rota …, e 'l villan la sua marra" (inferno 15:95-96): UD promotes
+    `villan` to `conj` and hangs `marra` on it as `orphan`, because the verb is elided."""
+    dep_rows = [
+        dep.DepRow(line=1, token=1, word="giri", deprel="root", head_line=0, head_token=0),
+        dep.DepRow(line=1, token=2, word="Fortuna", deprel="nsubj", head_line=1, head_token=1),
+        dep.DepRow(line=1, token=3, word="rota", deprel="obj", head_line=1, head_token=1),
+        dep.DepRow(line=2, token=1, word="villan", deprel="conj", head_line=1, head_token=1),
+        dep.DepRow(line=2, token=2, word="marra", deprel="orphan", head_line=2, head_token=1),
+    ]
+    morph_rows = {
+        1: [morph.MorphRow(word="giri", pos="verb", person="3"),
+            morph.MorphRow(word="Fortuna", pos="noun"), morph.MorphRow(word="rota", pos="noun")],
+        2: [morph.MorphRow(word="villan", pos="noun"), morph.MorphRow(word="marra", pos="noun")],
+    }
+    return {1: [r for r in dep_rows if r.line == 1], 2: [r for r in dep_rows if r.line == 2]}, morph_rows
+
+
+def test_derive_unit_rule_an_reads_a_gapped_conjunct_as_the_heads_slots():
+    dep_rows, morph_rows = _orphan_fixture()
+    derived = skel.derive_unit([1, 2], dep_rows, morph_rows)
+    rows = {(r.role, r.arg_line, r.arg_token) for r in derived[1]}
+    assert ("subj", 2, 1) in rows and ("obj", 2, 2) in rows
+
+
+def test_derive_unit_rule_an_does_not_mint_the_gapped_conjunct_as_a_predicate():
+    dep_rows, morph_rows = _orphan_fixture()
+    derived = skel.derive_unit([1, 2], dep_rows, morph_rows)
+    assert not derived[2]
+
+
+def test_classify_divergence_rule_aj_accepts_an_object_gapped_from_a_sibling():
+    # "biscazza e fonde la sua facultade" (inferno 11:44): the object hangs on the *second*
+    # conjunct and is shared back to the first — neither is the other's ancestor.
+    derived = {1: [skel.SkelRow(1, 1, "biscazza", "subj", 1, 9),
+                   skel.SkelRow(1, 3, "fonde", "obj", 1, 6)]}
+    given = {1: [skel.SkelRow(1, 1, "biscazza", "subj", 1, 9),
+                 skel.SkelRow(1, 1, "biscazza", "obj", 1, 6),
+                 skel.SkelRow(1, 3, "fonde", "obj", 1, 6)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="biscazza", deprel="conj",
+                           head_line=1, head_token=9),
+        (1, 3): dep.DepRow(line=1, token=3, word="fonde", deprel="conj",
+                           head_line=1, head_token=9),
+        (1, 6): dep.DepRow(line=1, token=6, word="facultade", deprel="obj",
+                           head_line=1, head_token=3),
+        (1, 9): dep.DepRow(line=1, token=9, word="priva", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def test_coordination_head_rule_ap_collapses_an_apposition_onto_its_host():
+    # "guastatori e predon, tutti tormenta" (inferno 11:38): `tutti` sums up the objects it is
+    # appositive to, and is not a second object of the verb.
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="omicide", deprel="obj",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="tutti", deprel="appos",
+                           head_line=1, head_token=1),
+    }
+    assert skel._coordination_head((1, 2), dep_index_by_pos) == (1, 1)
+
+
+def test_classify_divergence_rule_aq_merges_a_citation_on_an_auxiliary():
+    # "ch'altro ne volesse dire" (inferno 13:110): the LLM cites the finite auxiliary, the
+    # derivation the lexical verb Layer 4 made the clause head.
+    derived = {1: [skel.SkelRow(1, 1, "credendo", "ccomp", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "credendo", "ccomp", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="volesse", deprel="aux",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="dire", deprel="ccomp",
+                           head_line=1, head_token=1),
+    }
+    assert skel._classify_divergence(given, derived, dep_index_by_pos) == []
+
+
+def _comparative_adjunct_fixture(come_pos="conjunction"):
+    """"son tre cerchietti … come que' che lassi" (inferno 11:17): the comparison has no verb, so
+    Layer 4 can only hang the compared nominal on the main predicate."""
+    derived = {1: [skel.SkelRow(1, 1, "son", "obl", 1, 4)]}
+    given: dict[int, list[skel.SkelRow]] = {1: [skel.SkelRow(1, 1, "son", "subj", 1, 2)]}
+    derived[1].append(skel.SkelRow(1, 1, "son", "subj", 1, 2))
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="son", deprel="root", head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="cerchietti", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="come", deprel="mark", head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="que'", deprel="obl", head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 3): come_pos, (1, 4): "adjective"}
+
+
+def test_classify_divergence_rule_ar_accepts_a_verbless_comparative_oblique():
+    given, derived, dep_index_by_pos, morph_pos = _comparative_adjunct_fixture()
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_rule_ar_requires_layer_2_to_call_come_a_conjunction():
+    given, derived, dep_index_by_pos, morph_pos = _comparative_adjunct_fixture("preposition")
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _fused_expl_fixture(case_value):
+    """"poi sen van giù" (inferno 14:117): `sen` is `si` + `ne`, and Layer 4's one deprel per
+    token can only record the reflexive half."""
+    derived = {1: [skel.SkelRow(1, 1, "van", "subj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "van", "subj", 1, 4),
+                 skel.SkelRow(1, 1, "van", "obl:di", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="van", deprel="root", head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="sen", deprel="expl", head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): "pronoun+pronoun"}, {(1, 2): case_value}
+
+
+def test_classify_divergence_rule_as_accepts_a_fused_clitics_second_case():
+    given, derived, idx, morph_pos, case_by = _fused_expl_fixture("reflexive+ablative")
+    assert skel._classify_divergence(given, derived, idx, morph_pos, case_by) == []
+
+
+def test_classify_divergence_rule_as_requires_a_second_case_slot():
+    # A plain reflexive carries no ablative, so an oblique role on it is a real extra argument.
+    given, derived, idx, morph_pos, case_by = _fused_expl_fixture("reflexive")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos, case_by)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _elided_speech_fixture(pred_pos="pronoun"):
+    """"e io «…», dissi lui … Ed elli: «Vedi …»" (inferno 11:13-15): `elli` is a `conj` of the
+    verb of speech and is the speaker of the elided second one, not a subject of the first."""
+    dep_rows = {
+        1: [dep.DepRow(line=1, token=1, word="dissi", deprel="root", head_line=0, head_token=0),
+            dep.DepRow(line=1, token=2, word="io", deprel="nsubj", head_line=1, head_token=1)],
+        2: [dep.DepRow(line=2, token=1, word="elli", deprel="conj", head_line=1, head_token=1),
+            dep.DepRow(line=2, token=2, word="Vedi", deprel="ccomp", head_line=2, head_token=1)],
+    }
+    morph_rows = {
+        1: [morph.MorphRow(word="dissi", pos="verb", person="1"),
+            morph.MorphRow(word="io", pos="pronoun")],
+        2: [morph.MorphRow(word="elli", pos=pred_pos),
+            morph.MorphRow(word="Vedi", pos="verb", person="2")],
+    }
+    return dep_rows, morph_rows
+
+
+def test_derive_unit_rule_at_a_nominal_conjunct_does_not_inherit_a_subject():
+    dep_rows, morph_rows = _elided_speech_fixture()
+    derived = skel.derive_unit([1, 2], dep_rows, morph_rows)
+    subjects = {(r.arg_line, r.arg_token) for r in derived[2] if r.role == "subj"}
+    assert (1, 2) not in subjects
+
+
+def test_derive_unit_rule_at_a_verb_conjunct_still_inherits():
+    dep_rows, morph_rows = _elided_speech_fixture(pred_pos="verb")
+    derived = skel.derive_unit([1, 2], dep_rows, morph_rows)
+    subjects = {(r.arg_line, r.arg_token) for r in derived[2] if r.role == "subj"}
+    assert (1, 2) in subjects

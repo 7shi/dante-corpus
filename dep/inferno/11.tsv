@@ -487,7 +487,7 @@ line	token	word	deprel	head_line	head_token
 69	8	possiede	acl:relcl	69	5
 70	1	Ma	advmod	70	2
 70	2	dimmi	root	0	0
-70	3	quei	nsubj	74	3
+70	3	quei	dislocated	74	3
 70	4	de	case	70	6
 70	5	la	det	70	6
 70	6	palude	nmod	70	3

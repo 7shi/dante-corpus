@@ -8,7 +8,7 @@ line	token	word	deprel	head_line	head_token
 1	7	la	det	1	8
 1	8	riva	obj	1	6
 2	1	venimmo	acl:relcl	1	3
-2	2	alpestro	amod	1	3
+2	2	alpestro	attr	1	1
 2	3	e	cc	3	1
 2	4	per	case	2	5
 2	5	quel	obl	1	1
@@ -16,7 +16,7 @@ line	token	word	deprel	head_line	head_token
 2	7	v'	obl	2	8
 2	8	er'	acl:relcl	2	5
 2	9	anco	advmod	2	8
-3	1	tal	amod	1	3
+3	1	tal	attr	1	1
 3	2	ch'	mark	3	7
 3	3	ogne	det	3	4
 3	4	vista	nsubj	3	7
@@ -153,10 +153,10 @@ line	token	word	deprel	head_line	head_token
 21	5	le	det	21	7
 21	6	vostre	det:poss	21	7
 21	7	pene	obj	21	4
-22	1	Qual	nsubj	22	2
+22	1	Qual	attr	22	2
 22	2	è	appos	25	6
 22	3	quel	det	22	4
-22	4	toro	attr	22	2
+22	4	toro	nsubj	22	2
 22	5	che	nsubj	22	7
 22	6	si	obj	22	7
 22	7	slaccia	acl:relcl	22	4
@@ -659,9 +659,9 @@ line	token	word	deprel	head_line	head_token
 90	2	è	conj	88	3
 90	3	ladron	attr	90	2
 90	4	né	cc	90	7
-90	5	io	nsubj	90	7
-90	6	anima	appos	90	5
-90	7	fuia	conj	90	2
+90	5	io	nsubj	90	6
+90	6	anima	conj	90	3
+90	7	fuia	amod	90	6
 91	1	Ma	cc	93	1
 91	2	per	case	91	4
 91	3	quella	det	91	4

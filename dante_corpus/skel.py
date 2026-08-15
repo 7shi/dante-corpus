@@ -274,6 +274,18 @@ def derive_unit(
             return conj_resolves(head, seen)
         return False
 
+    # Rule AN: a conjunct carrying an `orphan` child heads a *gapped* clause, not a predicate.
+    # "però giri Fortuna la sua rota …, e 'l villan la sua marra" (inferno 15:96): UD promotes
+    # `villan` to `conj` and hangs `marra` on it as `orphan`, precisely because the verb that
+    # would govern them is elided. Promoting `villan` to a predicate invents one and then hands
+    # it the coordination head's subject; the remnants are instead a second set of fillers for
+    # the head's own slots, which is what the LLM lists.
+    gapped_conjuncts = {
+        (row.head_line, row.head_token)
+        for row in all_rows
+        if row.deprel == "orphan" and (row.head_line, row.head_token) in index
+    }
+
     for row in all_rows:
         pos = (row.line, row.token)
         if row.deprel == "conj" and pos not in predicate_positions and conj_resolves(row, set()):
@@ -283,6 +295,8 @@ def derive_unit(
             # promote. Gapped/elided predicates of other POS stay promoted — those are real.
             conj_morph = morph_at(row.line, row.token)
             if conj_morph is not None and "conjunction" in conj_morph.pos.lower():
+                continue
+            if pos in gapped_conjuncts:
                 continue
             predicate_positions.add(pos)
 
@@ -297,12 +311,47 @@ def derive_unit(
         if any(c.deprel in ARG_DEPRELS for c in children.get(pos, ())):
             predicate_positions.add(pos)
 
+    def argument_children(pos: tuple[int, int]) -> list[DepRow]:
+        """Rule AM: a predicate's own argument children, plus any stranded on its `cop`/`aux`.
+
+        UD attaches a clause's arguments to its lexical predicate, not to the copula or auxiliary
+        that carries the tense — but Layer 4 does not do so consistently: "'n la mente m'è fitta"
+        (inferno 15:82) hangs both `la mente` and the dative `m'` on the copula `è`, leaving the
+        adjective `fitta` with a bare subject. Reading only the predicate's own children then
+        loses arguments the tree does record, and the LLM (which reads the line, not the tree) is
+        flagged for naming them. Rule I already walks the same edge in the other direction, from
+        an auxiliary up to its lexical head; this is that walk applied to the argument slots.
+        """
+        own = list(children.get(pos, ()))
+        taken = {c.deprel for c in own}
+        for aux in children.get(pos, ()):
+            if aux.deprel not in _AUX_DEPRELS:
+                continue
+            for stranded in children.get((aux.line, aux.token), ()):
+                if (stranded.deprel in ARG_DEPRELS and stranded.deprel not in _SUBJ_DEPRELS
+                        and stranded.deprel not in taken):
+                    own.append(stranded)
+        return own
+
+    def _oblique_role_of(child: DepRow) -> str:
+        """`obl:<preposition lemma>` for a token carrying a `case` child, else plain `obl`."""
+        case_children = sorted(
+            (c for c in children.get((child.line, child.token), ()) if c.deprel == "case"),
+            key=lambda c: c.token,
+        )
+        if case_children:
+            prep_morph = morph_at(case_children[0].line, case_children[0].token)
+            lemma = _prep_lemma(prep_morph) if prep_morph else ""
+            if lemma:
+                return f"obl:{_normalize_prep_lemma(lemma)}"
+        return "obl"
+
     result: dict[int, list[SkelRow]] = {no: [] for no in nos}
     for line, token in predicate_positions:
         pred_row = index[(line, token)]
         pred_args: list[SkelRow] = []
         has_subj = False
-        for child in children.get((line, token), ()):
+        for child in argument_children((line, token)):
             if child.deprel in _SUBJ_DEPRELS:
                 pred_args.append(SkelRow(line, token, pred_row.word, "subj", child.line, child.token))
                 has_subj = True
@@ -310,20 +359,18 @@ def derive_unit(
                 role = _DIRECT_ROLE_MAP[child.deprel]
                 pred_args.append(SkelRow(line, token, pred_row.word, role, child.line, child.token))
             elif child.deprel in ("obl", "obl:agent"):
-                case_children = sorted(
-                    (c for c in children.get((child.line, child.token), ()) if c.deprel == "case"),
-                    key=lambda c: c.token,
-                )
-                role = "obl"
-                if case_children:
-                    prep_morph = morph_at(case_children[0].line, case_children[0].token)
-                    lemma = _prep_lemma(prep_morph) if prep_morph else ""
-                    if lemma:
-                        role = f"obl:{_normalize_prep_lemma(lemma)}"
+                role = _oblique_role_of(child)
                 pred_args.append(SkelRow(line, token, pred_row.word, role, child.line, child.token))
 
         # 3. conj shared-subject propagation: inherit the nearest conj-ancestor's subject.
-        if not has_subj and pred_row.deprel == "conj":
+        # Rule AT: only a verb inherits. A *nominal* promoted to predicate is an elided clause of
+        # its own — "Così 'l maestro; e io «Alcun compenso», dissi lui … Ed **elli**: «Vedi …»"
+        # (inferno 11:13–15), where `elli` is `conj` of `dissi` and is the speaker of the elided
+        # second verb of speech, not a second subject of `dissi`'s own. Handing it the head's
+        # subject asserts that Dante said what Virgil says; leaving it pro-drop is what the
+        # root-position twin of the same frame ("E io: «Maestro, …»", 11:67) already derives.
+        own_is_verb = is_verb_pos((morph_at(line, token) or MorphRow("")).pos)
+        if not has_subj and pred_row.deprel == "conj" and own_is_verb:
             seen = {(line, token)}
             cur = index.get((pred_row.head_line, pred_row.head_token))
             while cur is not None and (cur.line, cur.token) not in seen:
@@ -355,6 +402,48 @@ def derive_unit(
                             break
             if finite:
                 pred_args.append(SkelRow(line, token, pred_row.word, "subj", 0, 0))
+
+        # 5. rule AN: the remnants of a gapped conjunct fill this predicate's slots a second
+        # time. A remnant carrying its own preposition claims the matching oblique slot ("'l
+        # sole avëa il cerchio … lasciato al Tauro e la notte *a lo Scorpio*", purgatorio 25:3);
+        # the rest take the remaining slots in the order the predicate's own arguments stand in
+        # the line ("lei lo vedere, e me l'ovrare appaga", purgatorio 27:108, where the object
+        # precedes the subject in both halves). Run after the subject steps so a gapped clause
+        # whose head takes its subject by propagation still has a `subj` slot to fill.
+        for conjunct in sorted(
+            (c for c in children.get((line, token), ())
+             if c.deprel == "conj" and (c.line, c.token) in gapped_conjuncts),
+            key=lambda c: (c.line, c.token),
+        ):
+            slots: list[str] = []
+            for row_ in sorted(pred_args, key=_row_sort_key):
+                if row_.role and row_.role not in slots:
+                    slots.append(row_.role)
+            remnants = [conjunct] + sorted(
+                (c for c in children.get((conjunct.line, conjunct.token), ())
+                 if c.deprel == "orphan"),
+                key=lambda c: (c.line, c.token),
+            )
+            # A promoted conjunct that carries its own preposition is an oblique, so the subject
+            # is shared with the head clause rather than gapped: "come il tempo tegna in cotal
+            # testo le sue radici e *ne li altri* le fronde" (paradiso 27:118).
+            if any(c.deprel == "case" for c in children.get((conjunct.line, conjunct.token), ())):
+                slots = [s for s in slots if s != "subj"]
+            assigned: list[tuple[str, DepRow]] = []
+            for remnant in list(remnants):
+                if not any(c.deprel == "case"
+                           for c in children.get((remnant.line, remnant.token), ())):
+                    continue
+                label = _oblique_role_of(remnant)
+                if label in slots:
+                    slots.remove(label)
+                    remnants.remove(remnant)
+                    assigned.append((label, remnant))
+            assigned.extend(zip(slots, remnants))
+            for role, remnant in assigned:
+                pred_args.append(
+                    SkelRow(line, token, pred_row.word, role, remnant.line, remnant.token)
+                )
 
         if not pred_args:
             pred_args.append(SkelRow(line, token, pred_row.word, "", 0, 0))
@@ -649,12 +738,22 @@ _CONJ_WALK_LIMIT = 8
 def _coordination_head(
     pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
 ) -> tuple[int, int]:
-    """Rule C: the head of `pos`'s coordination, walking `conj` edges up (bounded)."""
+    """Rule C: the head of `pos`'s coordination, walking `conj` edges up (bounded).
+
+    Rule AP walks `appos` with them. An apposition is the same argument named a second time —
+    "onde omicide e ciascun che mal fiere, guastatori e predon, **tutti** tormenta lo giron
+    primo" (inferno 11:38), where `tutti` sums up the coordination it is appositive to. Layer 4
+    records the second naming as `appos` off the first, exactly as it records a conjunct as
+    `conj`, and neither is a second argument of the verb; the LLM cites whichever of the two
+    reads as the argument. Collapsing them together is the same notation normalization rule C
+    already makes for coordination, and it preserves roles, so a genuine role disagreement on
+    the merged position still surfaces.
+    """
     seen = {pos}
     cur = pos
     for _ in range(_CONJ_WALK_LIMIT):
         row = dep_index_by_pos.get(cur)
-        if row is None or row.deprel != "conj":
+        if row is None or row.deprel not in ("conj", "appos"):
             break
         head = (row.head_line, row.head_token)
         if head in seen or head not in dep_index_by_pos:
@@ -712,21 +811,33 @@ def _conj_shared_argument(
     """
     if grole == "subj" or arg == (0, 0) or grole in d.values():
         return False
-    # Every conjunct up the chain, not just its head: "schianta, abbatte e porta" chains
-    # `porta` -> `abbatte` -> `schianta`, and `li rami` is `schianta`'s object, while
-    # `_coordination_head` would walk past it to `fier` at the top of the coordination.
-    cur = pos
-    for _ in range(_CONJ_WALK_LIMIT):
+    # The whole coordination cluster, not only the chain above this conjunct. Italian gaps in
+    # both directions: "biscazza e *fonde* la sua facultade" (inferno 11:44) hangs the object on
+    # the *second* conjunct and shares it back to the first, and "col cor *negando* e
+    # bestemmiando quella" (11:47) hangs it on the conjunct and shares it up to the head. Both
+    # are siblings or ancestors of `pos` in the same `conj` tree, so the cluster is the set of
+    # positions reachable from `pos` by `conj` edges in either direction.
+    cluster: set[tuple[int, int]] = set()
+    frontier = [pos]
+    while frontier and len(cluster) < _CONJ_WALK_LIMIT * 2:
+        cur = frontier.pop()
+        if cur in cluster:
+            continue
+        cluster.add(cur)
         row = dep_index_by_pos.get(cur)
-        if row is None or row.deprel != "conj":
-            return False
-        cur = (row.head_line, row.head_token)
-        if cur == pos or cur not in dep_index_by_pos:
-            return False
-        if any((r.arg_line, r.arg_token) == arg and r.role not in ("", "subj")
-               for r in derived_by_pred.get(cur, ())):
-            return True
-    return False
+        if row is not None and row.deprel == "conj":
+            head = (row.head_line, row.head_token)
+            if head in dep_index_by_pos:
+                frontier.append(head)
+        for other in dep_index_by_pos.values():
+            if other.deprel == "conj" and (other.head_line, other.head_token) == cur:
+                frontier.append((other.line, other.token))
+    cluster.discard(pos)
+    return any(
+        (r.arg_line, r.arg_token) == arg and r.role not in ("", "subj")
+        for member in cluster
+        for r in derived_by_pred.get(member, ())
+    )
 
 
 def _np_head_equivalent(
@@ -753,6 +864,34 @@ def _np_head_equivalent(
             if span.head in (a[1], b[1]):
                 return True
     return False
+
+
+def _merge_auxiliary_citations(
+    by_arg: dict[tuple[int, int], str], pos: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+) -> dict[tuple[int, int], str]:
+    """Rule AQ: map an argument citation landing on an `aux`/`cop` onto its lexical head.
+
+    "credendo ch'altro ne **volesse** dire" (inferno 13:110): the complement clause is headed by
+    `dire`, and `volesse` is its `aux`; the LLM cites the finite word it can see carrying the
+    tense, the derivation cites the lexical verb Layer 4 made the head. The two name one clause.
+    Rule I already treats the same edge as identity when the *predicate* of a tuple lands on an
+    auxiliary; this is that identity applied to the argument slot, and roles are preserved so a
+    genuine role disagreement on the merged position still surfaces.
+    """
+    out: dict[tuple[int, int], str] = {}
+    for arg, role in by_arg.items():
+        key = arg
+        if arg != (0, 0):
+            row = dep_index_by_pos.get(arg)
+            if row is not None and row.deprel in _AUX_DEPRELS:
+                head = _aux_head(arg, dep_index_by_pos)
+                if head != pos and head != arg:
+                    key = head
+        prev = out.get(key)
+        if prev is None or (_role_rank(role), role) < (_role_rank(prev), prev):
+            out[key] = role
+    return out
 
 
 def _merge_np_head_citations(
@@ -1071,6 +1210,54 @@ def _comparative_come_complement(
     )
 
 
+def _comparative_come_adjunct(
+    pos: tuple[int, int], arg: tuple[int, int], drole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    children_by_pos: dict[tuple[int, int], list[DepRow]] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule AR: an oblique the derivation reads off a verbless comparative clause.
+
+    Rule AK covers the `role_mismatch` leg of comparative `come`; this is the `missing_arg` leg,
+    and it is about the *clause*, not the label. A comparison with no verb of its own — "son tre
+    cerchietti … **come que' che lassi**" (inferno 11:17), "**Come d'un stizzo verde** ch'arso
+    sia … sì de la scheggia rotta usciva" (13:43) — leaves Layer 4 no head to hang the compared
+    nominal on but the main predicate, so `derive_unit` reports it as that predicate's argument.
+    It is an adjunct of comparison in both readings, and the LLM (correctly) does not list it.
+
+    Gated on a Layer-2 conjunction `come` marking the phrase: either as the compared nominal's
+    own `mark` (11:17), or as the predicate's, in which case a correlative `sì`/`così` on the
+    same predicate must separate the two halves and the argument must stand on the comparison's
+    side of it (13:43). Without the correlative, a `come`-marked predicate is an ordinary
+    comparative *clause* with its own verb, whose obliques are its own.
+    """
+    if drole != "obl" and not drole.startswith("obl:"):
+        return False
+    if dep_index_by_pos is None or children_by_pos is None or morph_pos_by_position is None:
+        return False
+
+    def come_mark(host: tuple[int, int]) -> DepRow | None:
+        for c in children_by_pos.get(host, ()):
+            if (c.deprel == "mark" and c.word.lower().rstrip("'") in ("come", "com")
+                    and "conjunction" in morph_pos_by_position.get((c.line, c.token), "").lower()):
+                return c
+        return None
+
+    if come_mark(arg) is not None:
+        return True
+    marker = come_mark(pos)
+    if marker is None:
+        return False
+    correlative = next(
+        (c for c in children_by_pos.get(pos, ())
+         if c.deprel == "advmod" and c.word.lower().rstrip("'") in ("sì", "si", "così", "cosi")),
+        None,
+    )
+    if correlative is None:
+        return False
+    return (marker.line, marker.token) <= arg < (correlative.line, correlative.token)
+
+
 def _fused_clitic_dual_role(
     grole: str, drole: str, arg: tuple[int, int],
     morph_pos_by_position: dict[tuple[int, int], str] | None,
@@ -1344,14 +1531,26 @@ def _classify_divergence(
         # `obl:a` — the accusative/dative pair the `case` annex's own vocabulary allows it), so
         # naming a preposition the tree does not carry (`obl:di`, `obl:in`) stays flagged; and
         # the cited token must be a Layer-2 pronoun.
-        if dep_index_by_pos is None or role not in ("obj", "iobj", "obl:a"):
+        #
+        # Rule AS widens the role gate for a **fused** clitic only. "poi **sen** van giù per
+        # questa stretta doccia" (inferno 14:117) is `si` + `ne` in one Layer-1 token, and Layer
+        # 4 can only give the token one deprel, so `expl` covers the reflexive half and the
+        # ablative `ne` disappears. The `case` annex records both halves (`reflexive+ablative`),
+        # and that second slot is the independent signal that licenses the oblique role — the
+        # same evidence rule AL uses for the `role_mismatch` leg of a fused cluster.
+        if dep_index_by_pos is None:
             return False
         row = dep_index_by_pos.get(arg)
         if row is None or row.deprel != "expl":
             return False
         if (row.head_line, row.head_token) != pos:
             return False
-        return "pronoun" in (morph_pos_by_position or {}).get(arg, "").lower()
+        if "pronoun" not in (morph_pos_by_position or {}).get(arg, "").lower():
+            return False
+        if role in ("obj", "iobj", "obl:a"):
+            return True
+        slots = [s for s in (case_by_position or {}).get(arg, "").split(SLOT_SEP) if s]
+        return len(slots) > 1 and any(_case_supports_role(s, role) for s in slots)
 
     def _secondary_predicate_over_argument(
         pos: tuple[int, int], arg: tuple[int, int], role: str,
@@ -1450,6 +1649,7 @@ def _classify_divergence(
             _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos, given_by_pred,
                                   morph_rows, children_by_pos)
             derived_args = set(d)
+            g = _merge_auxiliary_citations(g, pos, dep_index_by_pos)
             g = _collapse_coordination(g, pos, dep_index_by_pos)
             d = _collapse_coordination(d, pos, dep_index_by_pos)
             _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
@@ -1469,6 +1669,9 @@ def _classify_divergence(
                     continue
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred):
                     continue  # rule X: the LLM hung it on this predicate's own complement
+                if _comparative_come_adjunct(pos, arg, drole, dep_index_by_pos, children_by_pos,
+                                             morph_pos_by_position):
+                    continue  # rule AR: a verbless comparative clause's nominal
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:

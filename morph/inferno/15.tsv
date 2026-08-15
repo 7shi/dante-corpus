@@ -716,7 +716,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 99	poi	poi	adverb						
 99	disse	dire	verb		sg.	3	remote past	indicative	
 99	Bene	bene	adverb						
-99	ascolta	ascoltare	verb		sg.	2	present	imperative	
+99	ascolta	ascoltare	verb		sg.	3	present	indicative	
 99	chi	chi	pronoun						
 99	la	lo	pronoun	f.	sg.				
 99	nota	notare	verb		sg.	3	present	indicative	

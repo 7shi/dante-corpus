@@ -2670,3 +2670,83 @@ moved on this side:
 
 `skel --check` stays **0 hard / 1094 soft**; `dep --check` 0/0, `np --check` 0/0, `case --check`
 0 hard, `morph --check` 0/0, `pytest` **268** passed.
+
+## Rules AM–AT and the Inferno 11–15 read (2026-08-15)
+
+Per-position read of all **37** soft violations in Inferno 11–15 (11:8, 12:5, 13:4, 14:13, 15:7),
+the fifth batch in the audit series. **963 → 888 (−75, −7.8%)**, zero model calls; Inferno 11–15
+itself went **37 → 17**. Eight deterministic rules, sixteen Layer-4 rows and two Layer-2 rows.
+`pytest` **281** passed (20 new tests, each mutation-checked against the rule it pins).
+
+Four of the eight rules are in `derive_unit` itself rather than the divergence check — the read
+found the derivation *wrong*, not merely silent, which no earlier batch had produced at this
+rate:
+
+| rule | shape | evidence line | moved |
+|---|---|---|---:|
+| **AM** | arguments Layer 4 stranded on a `cop`/`aux` never reach the lexical predicate | 15:82 *«'n la mente m'è fitta»* | +7 |
+| **AN** | a conjunct with an `orphan` child is a *gapped clause*, not a predicate | 15:95–96 *«…e 'l villan la sua marra»* | −9 |
+| **AJ′** | rule AJ's other two directions: an argument gapped from a *sibling* conjunct or from a conjunct up onto its head | 11:44 *«biscazza e fonde la sua facultade»*, 11:47 *«col cor negando e bestemmiando quella»* | −8 |
+| **AP** | an apposition is the same argument named twice, and collapses like a conjunct | 11:38 *«guastatori e predon, tutti tormenta»* | −15 |
+| **AQ** | an argument citation landing on an `aux`/`cop` names its lexical head | 13:110 *«ch'altro ne volesse dire»* | −11 |
+| **AR** | an oblique read off a *verbless* comparative clause is an adjunct (rule AK's `missing_arg` leg) | 11:17 *«come que' che lassi»*, 13:43 *«Come d'un stizzo verde … sì»* | −8 |
+| **AS** | a fused clitic's second `case` slot licenses the oblique role Layer 4's single `expl` cannot record | 14:117 *«poi sen van giù»* | −2 |
+| **AT** | only a **verb** inherits a subject across `conj`; a nominal promoted to predicate is an elided clause of its own | 11:15 *«Ed elli: «Vedi …»»* | −22 |
+
+**Rule AM is an honest trade, recorded as such.** Lifting the 39 stranded arguments onto their
+lexical predicate cleared 15 spurious `extra_arg`s and raised 22 `missing_arg`s the derivation had
+simply never asked about — e.g. purgatorio 11:45 (*«al montar sù, contra sua voglia, è parco»*),
+where all three of `parco`'s obliques hang on the copula. The derivation is now right and the
+reading is wrong, which is a better state than both being silent; the count is not the measure.
+The subject leg was measured separately and **dropped** — lifting `nsubj` off a `cop`/`aux` (87
+positions) fought the authority model and scored +11 on its own.
+
+**Rule AT is the largest single mover and the read did not predict it.** The evidence line is one
+elided verb of speech whose speaker was handed Dante's subject instead of being left pro-drop; the
+same defect turned out to run through every nominal `conj` in the corpus (purgatorio 10:86–91,
+paradiso 25:55, …). One position cost: paradiso 1:45 (*«e l'altra parte nera»*), where the elided
+copula's subject is a `conj` sibling the derivation still cannot see.
+
+**Rule AN's slot assignment was measured across four variants** (rank order 957, text order 961,
+case-matched 961/962). The one kept assigns a case-marked remnant to the matching oblique slot
+first, then the rest in canonical role order, and drops `subj` from the slots when the promoted
+conjunct is itself case-marked (paradiso 27:118 — a preposition on the conjunct means the subject
+is *shared*, not gapped). Two clusters stay wrong under every variant (purgatorio 25:3, 27:108):
+they are 2-slot ambiguities that only word order settles, and Italian inverts word order freely.
+
+### Upstream corrections in the same read
+
+**Layer 4 — 16 rows** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)): predicative
+adjectives tagged `amod` (12:1–3, 13:141), a `Qual è quel toro` subject/predicate swap inconsistent
+with 12:4's own tagging, two multiword-preposition clusters the 2026-08-14 normalization had
+excluded (`fuor che` 14:44, `Dentro dal` 14:103), a left-dislocated topic (11:70), an object tagged
+`nsubj` (14:116), an apposition attached to the wrong host (19:106, found *by* rule AP), and the
+`né io anima fuia` clause. **Layer 2 — 2 rows**: `fuia` (12:90) is the adjective, not `fuggire`;
+`ascolta` (15:99) is third-person indicative with `chi la nota` as its subject, not an imperative.
+
+### Prompt side, unmeasured until the next `--fix` round
+
+The residue the rules leave in Inferno 11–15 is 17 positions, and it is almost all reading error,
+so the fix side got the four changes the read's diagnoses name:
+
+- **Two new Stage-2 classes, `missing_arg_subject` and `extra_arg_subject`**, on the *role* rather
+  than a POS. These are the two largest buckets in the whole residue — **153 `extra_arg subj`** (45
+  of them asserting pro-drop over a subject the sentence writes) and **103 `missing_arg subj`**,
+  29% of the corpus total — and nothing in the prompt had ever addressed the subject slot beyond
+  `_CONV_PRODROP`. The new `_CONV_SUBJECT` states the three causes the read found: postverbal
+  subjects (11:12 *«no i fia riguardo»*, 15:99 *«Bene ascolta chi la nota»*), the proclitic that
+  cannot be a subject (14:70 *«poco par che 'l pregi»*), and the coordination whose subject is
+  written once at its first conjunct (14:69).
+- **`missing_tuple_nominal` gets its own question.** The class had the right convention
+  (`_CONV_VERBLESS`) and the right hint since round 3 and moved 39 → 36 anyway, position-identical
+  — because the *question* asked whether the token "heads a clause of its own", which a bare
+  `io`/`elli` visibly does not. `_ask_missing_tuple_nominal` states the frame instead of asking
+  about it. This is Phase 5w's law applied to a question rather than a convention.
+- **`_CONV_REPEATED`** for the `missing_arg` classes: one predicate may fill the same slot twice
+  (14:126, *«pur a sinistra, giù calando al fondo»* — two `obl:a`).
+- **A `_fix_hint` bug fixed**: it never branched to `missing_arg_adverb`, so Stage 3's hint used the
+  generic phrasing for a class that has had its own since round 3. `_violation_subclass` and
+  `_fix_hint` now agree.
+
+Nothing on the prompt side moves anything until a `--fix` round is run, and that round is now
+worth running.

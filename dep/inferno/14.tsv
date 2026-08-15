@@ -288,9 +288,9 @@ line	token	word	deprel	head_line	head_token
 44	1	tutte	det	44	3
 44	2	le	det	44	3
 44	3	cose	obj	43	6
-44	4	fuor	obl	43	6
-44	5	che	case	44	6
-44	6	demon	obj	44	4
+44	4	fuor	case	44	6
+44	5	che	fixed	44	4
+44	6	demon	obl	43	6
 44	7	duri	amod	44	6
 45	1	ch'	nsubj	45	9
 45	2	a	case	45	4
@@ -725,8 +725,8 @@ line	token	word	deprel	head_line	head_token
 102	5	far	xcomp	102	4
 102	6	le	det	102	7
 102	7	grida	obj	102	5
-103	1	Dentro	advmod	103	4
-103	2	dal	case	103	3
+103	1	Dentro	case	103	3
+103	2	dal	fixed	103	1
 103	3	monte	obl	103	4
 103	4	sta	root	0	0
 103	5	dritto	advmod	103	4
@@ -827,7 +827,7 @@ line	token	word	deprel	head_line	head_token
 115	6	si	expl	115	7
 115	7	diroccia	root	0	0
 116	1	fanno	conj	115	7
-116	2	Acheronte	nsubj	116	1
+116	2	Acheronte	obj	116	1
 116	3	Stige	conj	116	2
 116	4	e	cc	116	5
 116	5	Flegetonta	conj	116	3

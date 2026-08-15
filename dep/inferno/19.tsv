@@ -796,7 +796,7 @@ line	token	word	deprel	head_line	head_token
 105	7	pravi	obj	105	5
 106	1	Di	case	106	2
 106	2	voi	obl	106	5
-106	3	pastor	appos	106	7
+106	3	pastor	appos	106	2
 106	4	s'	expl	106	5
 106	5	accorse	root	0	0
 106	6	il	det	106	7

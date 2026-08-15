@@ -661,7 +661,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 90	né	né	conjunction						
 90	io	io	pronoun		sg.	1			
 90	anima	anima	noun	f.	sg.				
-90	fuia	fuggire	verb		sg.	1	present	subjunctive	archaic
+90	fuia	fuio	adjective	f.	sg.				archaic
 91	Ma	ma	conjunction						
 91	per	per	preposition						
 91	quella	quello	adjective	f.	sg.				

@@ -562,3 +562,24 @@ each row read against its terzina first.
 
 `morph --check` stays **0 hard, 0 soft**; the `morph` content hash moves for the six cantos
 touched (inferno 3, 6, 31; purgatorio 26, 32; paradiso 25) and for nothing else.
+
+## Two rows from the Layer-5 Inferno 11–15 read (2026-08-15)
+
+Both found position by position while auditing Layer 5 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)); `morph --check` stays **0 hard, 0 soft**.
+
+- **inferno 12:90 `fuia`** — tagged `verb`, lemma `fuggire`, sg. 3 present subjunctive. In *«questi
+  non è ladron, né io anima fuia»* it is the adjective *fuio* "thievish" agreeing with `anima`:
+  lemma `fuio`, `adjective`, f. sg., no person/tense/mood. The verb reading made Layer 5 derive a
+  clause where the line has a predicate nominal.
+- **inferno 15:99 `ascolta`** — tagged sg. 2 present **imperative**. *«Bene ascolta chi la nota»* is
+  third-person indicative with the free relative `chi la nota` as its subject, not an imperative
+  addressed to the reader; the imperative reading leaves the subject slot empty and the relative
+  clause unattached.
+
+One consistency question the read raised and deliberately **left standing**: `onde` is tagged five
+ways across the corpus — `conjunction` 56, `pronoun` 43, `adverb` 23, `noun` 11 (the plural of
+*onda*, correctly), `relative pronoun` 7. The noun rows are right and the rest are not obviously
+wrong one by one (*whence* / *whereby* / *wherefore* really are different words), but 129 relative
+tokens split three ways by nothing visible is a vocabulary question, not a per-line decision. It
+needs its own measured pass, like the relative-`che` retag `case/` blocks.

@@ -346,6 +346,15 @@ _HINT_PHRASING = {
                           "argument — a locative or directional adverb (là, fuor, dentro, dinanzi, "
                           "suso, dove, ...) answering where/whither for it counts as one, and is "
                           "not to be skipped as a mere modifier",
+    # The subject branches (see `_CONV_SUBJECT`). Neither may name the derivation's own position,
+    # so each names what to re-read for instead: where a written subject may stand, and which
+    # tokens cannot be one.
+    "missing_arg_subject": "the predicate '{word}' ({line}.{token}) may be missing its SUBJECT — "
+                           "look after the verb as well as before it, and remember a verb joined "
+                           "by e/né/ma to an earlier one shares that one's written subject",
+    "extra_arg_subject": "the SUBJECT currently given for '{word}' ({line}.{token}) may be wrong — "
+                         "check whether the sentence writes one after the verb, and that what is "
+                         "cited is not an unstressed clitic (lo, la, 'l, mi, si, ne)",
     "extra_arg": "the predicate '{word}' ({line}.{token})'s '{role}' argument may not belong — "
                 "recheck it",
     # A third POS-keyed variant, on the argument's POS rather than the predicate's — rule AG's
@@ -402,6 +411,10 @@ def _fix_hint(
         elif (kind == "extra_arg" and v.role in ("xcomp", "attr") and v.arg is not None
               and "adjective" in pos_at(v.arg).lower()):
             kind = "extra_arg_adjective"
+        elif kind == "missing_arg" and v.arg is not None and "adverb" in pos_at(v.arg).lower():
+            kind = "missing_arg_adverb"
+        if kind in ("missing_arg", "extra_arg") and (v.role or v.given_role) == "subj":
+            kind = f"{kind}_subject"
         phrasing = _HINT_PHRASING.get(kind)
         if phrasing is None:
             continue
@@ -579,6 +592,34 @@ intorno, and the relative dove/ove/u'/v' — that answers *where* or *whither* f
 of its arguments, not a modifier to be skipped: cite it as `obl:<preposition>` if a preposition is \
 written and as bare `obl` if none is. Only a manner, degree or negation adverb (più, non, ben, \
 così, sì) is left out.\
+"""
+
+# The subject slot's own convention. `_CONV_PRODROP` tells the model a pro-drop subject is a real
+# slot, and nothing tells it where a *written* subject may stand — so the two largest buckets in
+# the residue are both subjects: 153 `extra_arg subj` (45 of them asserting pro-drop over a
+# subject the sentence writes) and 103 `missing_arg subj`. The Inferno 11-15 read found three
+# recurring causes, one per sentence below: postverbal subjects read as predicate nominals
+# ("no i fia riguardo" 11:12, "Bene ascolta chi la nota" 15:99), a proclitic object read as the
+# subject ("poco par che 'l pregi" 14:70), and a coordination whose subject is written once at
+# its head ("Quei fu l'un d'i sette regi; ed ebbe e par ch'elli abbia…" 14:69).
+_CONV_SUBJECT = """\
+Italian writes the subject AFTER its verb freely, and a postverbal subject is still the subject, \
+not a predicate nominal or an object: "no i fia riguardo", "Bene ascolta chi la nota", "fannomi \
+onore", "sono ei puniti". Before answering that a subject is unwritten (0.0), look for one \
+standing after the verb. An unstressed proclitic pronoun (lo, la, li, le, 'l, mi, ti, ci, vi, ne, \
+si) is NEVER the subject — it is the object or dative; a written subject is a full noun phrase or \
+a nominative pronoun (io, tu, elli, ei, quei, chi). And in a coordination the subject is normally \
+written once, at the FIRST conjunct: every later verb joined by e/né/ma to it takes that same \
+subject, cited at its own token position, not 0.0.\
+"""
+
+# One predicate may fill the same slot twice, and the model tends to answer only once. "pur a
+# sinistra, giù calando al fondo" (inferno 14:126) gives `calando` two `obl:a` phrases and the
+# reading lists one; the same shape accounts for part of the 76 standing `missing_arg obl`.
+_CONV_REPEATED = """\
+A predicate may carry the SAME role twice, and each occurrence needs its own row: two obliques \
+with the same preposition ("pur a sinistra, giù calando al fondo"), two objects, two places. \
+Having already listed one filler of a slot is not a reason to leave a second one out.\
 """
 
 _CONV_ADJECTIVE = """\
@@ -780,6 +821,30 @@ def _ask_missing_tuple(ctx: _UnitContext, vs: list[morph.Violation]) -> str:
     )
 
 
+def _ask_missing_tuple_nominal(ctx: _UnitContext, vs: list[morph.Violation]) -> str:
+    """The nominal branch's own question. The generic one asks whether the token "heads a clause
+    of its own", which a bare `io`/`elli` visibly does not — so the model answers no and
+    `_CONV_VERBLESS` never gets applied at the flagged position, which is exactly the failure
+    Phase 5w describes and which round 3 measured (`missing_tuple_nominal` 39 -> 36, the
+    survivors position-identical). This question states the frame instead of asking about it.
+    """
+    targets = "\n".join(f"- {ctx.cite(v.predicate)}"
+                        + (f" ({ctx.pos_tag(v.predicate)})" if ctx.pos_tag(v.predicate) else "")
+                        for v in vs)
+    return (
+        f"{ctx.source_block()}\n\n"
+        "Each token below is a noun or pronoun that the current analysis gives no rows at all. "
+        "In this corpus such a token IS the Pred of a verbless clause whenever a verb is elided "
+        "around it — above all a verb of speech ('Ed elli: «…»', 'E io: «Maestro, …»', with or "
+        "without an addressee), and otherwise a predication with no copula written. Write its "
+        "rows in that frame: the token as Pred, `subj` 0.0, the quotation's main verb as `ccomp`, "
+        "and the addressee, if one is written, as `obl:a`. Output nothing only if the token is "
+        "genuinely an argument of some other predicate already listed. Output rows for these "
+        "tokens only — do not restate the rest of the sentence.\n\n"
+        f"{targets}"
+    )
+
+
 def _apply_missing_tuple(ctx, vs, rows_by_line, text: str) -> bool:
     try:
         parsed, _ = skel.resolve_chunk(ctx.nos, ctx.texts, _merge_tables(text))
@@ -809,15 +874,25 @@ _CLASS_PROMPTS: dict[str, _ClassPrompt] = {
         system=f"{_ASK_HEADER}\n{_CONV_ADJECTIVE}\n\n{_CONV_ROLES}\n\n{_CONV_PRODROP}",
         ask=_ask_extra_arg, apply=_apply_extra_arg),
     "missing_arg": _ClassPrompt(
-        system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_PRODROP}\n\n{_CONV_RELPRON}",
+        system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_PRODROP}\n\n{_CONV_RELPRON}\n\n"
+               f"{_CONV_REPEATED}",
         ask=_ask_missing_arg, apply=_apply_missing_arg),
     # The class is keyed on the *argument's* POS, which the question may not name (the
     # independence rule) — so the convention block, not the question, is what points the model at
     # the adverb. It reads the sentence and supplies the position itself, exactly as for the
     # generic `missing_arg`.
     "missing_arg_adverb": _ClassPrompt(
-        system=f"{_ASK_HEADER}\n{_CONV_ADVERB_ARG}\n\n{_CONV_ROLES}",
+        system=f"{_ASK_HEADER}\n{_CONV_ADVERB_ARG}\n\n{_CONV_ROLES}\n\n{_CONV_REPEATED}",
         ask=_ask_missing_arg, apply=_apply_missing_arg),
+    # The two subject branches. Same instruments as their generic parents — only the convention
+    # block and the hint change, which is the shape `missing_arg_adverb` was built in and the
+    # third round measured at -66.3%.
+    "missing_arg_subject": _ClassPrompt(
+        system=f"{_ASK_HEADER}\n{_CONV_SUBJECT}\n\n{_CONV_PRODROP}\n\n{_CONV_ROLES}",
+        ask=_ask_missing_arg, apply=_apply_missing_arg),
+    "extra_arg_subject": _ClassPrompt(
+        system=f"{_ASK_HEADER}\n{_CONV_SUBJECT}\n\n{_CONV_PRODROP}\n\n{_CONV_ROLES}",
+        ask=_ask_extra_arg, apply=_apply_extra_arg),
     "extra_tuple": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}",
         ask=_ask_extra_tuple, apply=_apply_extra_tuple),
@@ -832,7 +907,7 @@ _CLASS_PROMPTS: dict[str, _ClassPrompt] = {
         ask=_ask_missing_tuple, apply=_apply_missing_tuple),
     "missing_tuple_nominal": _ClassPrompt(
         system=f"{_TABLE_HEADER}\n{_CONV_VERBLESS}\n\n{_CONV_ROLES}",
-        ask=_ask_missing_tuple, apply=_apply_missing_tuple),
+        ask=_ask_missing_tuple_nominal, apply=_apply_missing_tuple),
     # `membership` and `unknown_role` have no entry on purpose. `_fix_hint` has always skipped
     # them (they carry no predicate), rule AF closed the membership question down to 8 positions,
     # and `unknown_role` stands at 0 — there is nothing for a prompt to move.
@@ -860,6 +935,9 @@ def _violation_subclass(v: morph.Violation, ctx: _UnitContext) -> str:
     if (kind == "missing_arg" and v.arg is not None
             and "adverb" in ctx.pos_tag(v.arg).lower()):
         return "missing_arg_adverb"
+    # The subject slot's own branch, on the *role* rather than a POS — see `_CONV_SUBJECT`.
+    if kind in ("missing_arg", "extra_arg") and (v.role or v.given_role) == "subj":
+        return f"{kind}_subject"
     return kind
 
 
@@ -1331,8 +1409,8 @@ def _is_improvement(
 _CLASS_ORDER = (
     "missing_tuple", "missing_tuple_nominal",
     "extra_tuple_adverb", "extra_tuple_adjective", "extra_tuple",
-    "role_mismatch", "extra_arg_adjective", "extra_arg",
-    "missing_arg_adverb", "missing_arg",
+    "role_mismatch", "extra_arg_subject", "extra_arg_adjective", "extra_arg",
+    "missing_arg_subject", "missing_arg_adverb", "missing_arg",
 )
 
 

@@ -7,9 +7,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 (`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic, so the
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–AL plus three `--fix` rounds: 963 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
+**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–AT plus three `--fix` rounds: 888 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
 
-`make -C skel check`: **0 hard, 963 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+`make -C skel check`: **0 hard, 888 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## What it does
 
@@ -225,11 +225,46 @@ successive phases, each measured before/after (`--stats` aggregates violations b
       argument Layer 2 tags as two fused pronouns (`gliel` = `gli` + `lo`), which genuinely fills
       both slots. The Phase-4 `double_listed` whitelist already accepted the `extra_arg` leg.
 
+14. **Phase 6 — rules AM-AT, from the Inferno 11-15 read** (2026-08-15). Eight rules, each
+    measured over all 100 cantos before being kept; together **963 → 888 soft**, no model calls.
+    Four of them correct `derive_unit` itself rather than accepting a divergence — the first batch
+    to find the derivation *wrong* rather than silent. Full evidence, including the variants
+    measured and dropped, in [`CORRECTIONS.md`](CORRECTIONS.md).
+    - **AM** (`argument_children`, in `derive_unit`): UD attaches a clause's arguments to its
+      lexical predicate, but Layer 4 sometimes leaves them on the `cop`/`aux` ("'n la mente m'è
+      fitta"), where the derivation never saw them. Non-subject slots only — the subject leg was
+      measured separately and dropped, since the authority model owns that slot.
+    - **AN** (`gapped_conjuncts`, in `derive_unit`): a conjunct carrying an `orphan` child heads a
+      *gapped* clause, not a predicate ("e 'l villan la sua marra"). Its remnants fill the
+      coordination head's own slots again: a case-marked remnant takes the matching oblique, the
+      rest take the remaining slots in canonical role order.
+    - **AJ′** (`_conj_shared_argument`, widened): gapping runs in every direction inside a
+      coordination cluster, not only up the `conj` chain — from a sibling conjunct ("biscazza e
+      *fonde* la sua facultade") and from a conjunct up onto its head ("col cor *negando* e
+      bestemmiando quella").
+    - **AP** (`_coordination_head`, widened to `appos`): an apposition is the same argument named
+      a second time ("guastatori e predon, *tutti* tormenta"), and collapses exactly as a
+      conjunct does. Roles are preserved, so a genuine role disagreement still surfaces.
+    - **AQ** (`_merge_auxiliary_citations`): an argument citation landing on an `aux`/`cop` names
+      its lexical head ("ch'altro ne *volesse* dire") — rule I's identity applied to the argument
+      slot rather than the predicate slot.
+    - **AR** (`_comparative_come_adjunct`): rule AK's `missing_arg` leg. A comparison with no verb
+      of its own leaves Layer 4 nothing but the main predicate to hang the compared nominal on
+      ("come que' che lassi", "Come d'un stizzo verde … sì"). Gated on a Layer-2 conjunction
+      `come` marking the phrase, and — where the marker is on the predicate — on a correlative
+      `sì`/`così` separating the two halves.
+    - **AS** (`_reflexive_clitic_argument`, widened): a fused clitic's *second* `case`-annex slot
+      licenses the oblique role Layer 4's single `expl` deprel cannot record ("poi *sen* van giù"
+      = `si` + `ne`, `reflexive+ablative`). Fused values only; a plain reflexive decides nothing.
+    - **AT** (`derive_unit` step 3): only a **verb** inherits a subject across `conj`. A nominal
+      promoted to predicate is an elided clause of its own — the speaker of an elided verb of
+      speech ("Ed *elli*: «Vedi …»"), not a second subject of the coordination head's verb.
+
 **Measured Progression Across Phases**:
 - **Phase 4a Checkpoint (2026-07-20)**: `0 hard, 7776 soft` (down from 17,438 initial).
 - **Phase 4b `--fix` Pass (2026-07-25)**: `0 hard, 5919 soft` across all 100 cantos.
 - **Phase 5 Deterministic Series & Upstream Audits (Phases 5a–5w, Rules C–AF)**: Reduced soft violations from **5,919 → 2,084**. For the complete chronological record, per-phase measurement tables, Layer-4 corrections, and empirical findings on regeneration yield, see [`PHASE5.md`](PHASE5.md).
-- **Phase 6 Restructured `--fix`, Rules AG–AL**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+- **Phase 6 Restructured `--fix`, Rules AG–AT**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## Next steps
 
@@ -316,7 +351,15 @@ uv run skel/skel.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [
 uv run skel/skel.py inferno purgatorio paradiso --repair    # no model call
 uv run skel/skel.py inferno -m ollama:gpt-oss --fix         # all three stages
 uv run skel/skel.py inferno -m ... --fix --no-whole         # without the regeneration fallback
+
+uv run skel/read.py inferno 16 43                           # read one position, all five layers
+uv run skel/read.py inferno 16 43 48                        # ... over a line range
 ```
+
+`read.py` is the audit series' tool (see [`PLAN.md`](PLAN.md)'s *How to Read a Batch*): `--check`
+names a position, `read.py` prints its whole parse unit with Layer-2 morphology and the `case`
+annex, Layer-4 deprels, Layer-3 NP spans, and **both** Layer-5 readings — the frozen artifact rows
+and `derive_unit`'s derived rows, which is exactly the pair the soft checks diff.
 
 Consumers read it deterministically via `Canto.skel()` (frozen, grouped, identified
 `SkelTuple`s) or the CLI `dante-corpus text skel inferno 1:1-3` (`--format json` for tuple
