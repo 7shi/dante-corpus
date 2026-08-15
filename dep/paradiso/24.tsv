@@ -856,7 +856,7 @@ line	token	word	deprel	head_line	head_token
 123	4	la	det	123	5
 123	5	credenza	obl	123	8
 123	6	tua	det:poss	123	5
-123	7	s'	nsubj	123	8
+123	7	s'	expl	123	8
 123	8	offerse	conj	122	4
 124	1	O	mark	124	3
 124	2	santo	amod	124	3

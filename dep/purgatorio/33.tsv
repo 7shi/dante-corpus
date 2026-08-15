@@ -667,7 +667,7 @@ line	token	word	deprel	head_line	head_token
 97	3	dal	case	97	5
 97	4	fummo	amod	97	5
 97	5	foco	obl	97	7
-97	6	s'	nsubj	97	7
+97	6	s'	expl	97	7
 97	7	argomenta	advcl	98	4
 98	1	cotesta	det	98	2
 98	2	oblivïon	nsubj	98	4

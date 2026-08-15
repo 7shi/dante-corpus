@@ -716,7 +716,7 @@ line	token	word	deprel	head_line	head_token
 106	4	pensier	obl	106	2
 106	5	fin	mark	106	8
 106	6	che	mark	106	8
-106	7	si	nsubj	106	8
+106	7	si	expl	106	8
 106	8	mostra	advcl	106	2
 107	1	Segnor	vocative	108	4
 107	2	mio	amod	107	1

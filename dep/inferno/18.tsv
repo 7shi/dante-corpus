@@ -868,7 +868,7 @@ line	token	word	deprel	head_line	head_token
 122	3	Alessio	conj	121	4
 122	4	Interminei	appos	122	3
 122	5	da	case	122	6
-122	6	Lucca	obl	122	2
+122	6	Lucca	nmod	122	3
 123	1	però	cc	123	3
 123	2	t'	obj	123	3
 123	3	adocchio	conj	121	4

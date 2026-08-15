@@ -2750,3 +2750,80 @@ so the fix side got the four changes the read's diagnoses name:
 
 Nothing on the prompt side moves anything until a `--fix` round is run, and that round is now
 worth running.
+
+## Rules AU–AY and the Inferno 16–20 read (2026-08-15)
+
+Per-position read of all **47** soft violations in Inferno 16–20 (16:15, 17:15, 18:6, 19:5, 20:6),
+following the eight-step procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. **888 → 834
+(−54, −6.1%)**, zero model calls, 0 hard; Inferno 16–20 itself **47 → 31**. `pytest` 293 passed.
+
+Five deterministic rules, each censused corpus-wide before it was written, measured on its own by
+full-corpus violation **diff**, and pinned by a mutation-checked test. **No rule newly flagged a
+single position.**
+
+| rule | shape | census | moved |
+|---|---|---:|---:|
+| **AU** (`_secondary_predicate_over_argument`, `amod` leg) | an adjective Layer 4 hangs `amod` on one of *this* predicate's own derived arguments is the predication's secondary predicate | 19 | **−17** |
+| **AV** (`_named_by_its_auxiliary`) | the LLM names only the `aux`/`cop`; Layer 4's lexical head is then reported "not proposed" | 4 | **−4** |
+| **AW** (`_pronominal_verb_clitic`) | rule AB's mirror: a reflexive clitic Layer 4 left as `obj`/`iobj` rather than `expl` | 9 | **−9** |
+| **AX** (`_control_partners`) | an argument shared across an `xcomp` control edge, same role, either direction | 11 | **−5** |
+| **AY** (`_complemented_adjective_phrase`) | an `amod` adjective that governs an argument of its own is a reduced relative, and predicates | 5 | **−5** |
+
+### What the batch found, and what it declined to write
+
+- **Rule AU is the batch's largest mover and the third leg of a construction the checker already
+  knew.** Rule R accepts a predicative complement Layer 4 hung on the *predicate* as `advmod`;
+  rule AA accepts a participle hung on one of its *arguments* as `acl`. The `amod` leg — "che
+  innanzi a buon segnor fa **servo forte**" (inferno 17:90), "ch'i' ho **le cose conte**" (21:62),
+  "e fia **la tua imagine leggera**" (purgatorio 17:7), "**innata** v'è la virtù" (18:62) — was
+  still being reported, and it is 37 of the residue's `extra_arg` positions by deprel, the third
+  largest bucket after `obl` and `nsubj`. The three gates (adjective POS, `xcomp` role, host is a
+  derived argument of *this* predicate) are what keep an ordinary attributive out; the 19 the
+  census found are all object or subject complements.
+- **Rules AV and AW are both mirror legs of accepted rules, and both were found by reading a
+  single position.** `_aux_of_derived_predicate` already accepted the LLM naming an `aux`/`cop` as
+  the predicate *when it also names the lexical head*; when it names only the auxiliary ("che
+  spezzate **averien** ritorte e strambe", 19:27) the very same convention was reported as a
+  `missing_tuple`. Likewise rule AB accepts the LLM naming a reflexive clitic the derivation is
+  silent about (`expl`), while the 371 reflexive clitics Layer 4 still calls `obj` produced the
+  opposite complaint ("si partiro" 16:4, "s'atterga" 20:46, "si puose" 20:56) — the split between
+  the two deprels follows nothing visible, so both directions now get the same treatment.
+- **A censused rule was dropped: gapped-clause remnants.** "se non ch'**elli uno**, e voi ne orate
+  cento" (19:114) reports two `missing_arg`s because rule AN hands a gapped conjunct's remnants to
+  the coordination head's slots and the LLM lists only its own. The census found 12 such positions
+  — but rule AN's assignment is *right*: `elli`/`uno` are the second clause's subject and object,
+  and the head's slots are where they belong. The divergence is the LLM omitting them, which is
+  reading error, not checker silence. Left flagged.
+- **A one-instance shape was fixed upstream instead of by rule**: at 18:122 the derived argument
+  lay inside the Layer-3 NP headed by the predicate itself (`[Alessio Interminei da Lucca]`). The
+  census over the whole residue found exactly **one** such position, so this is a Layer-4 row, not
+  a rule.
+
+### Standing shapes the batch recorded but did not settle
+
+- **Subject vs. predicate nominal under a copula** (19:85 *«Nuovo Iasón sarà»*, 20:77 *«ma Mencio
+  si chiama»*): Layer 4 calls the single nominal `nsubj`, the LLM calls it the complement of an
+  elided pro-drop subject, and the line does not decide. Part of the `extra_arg subj ∅ (0,0)`
+  bucket.
+- **A relative pronoun's subject named by its antecedent** (16:94 *«quel fiume c'ha proprio
+  cammino»*): the derivation cites `c'`, the LLM cites `fiume`. An acceptance rule keyed on
+  `skel.antecedent` is plausible; not censused this batch.
+- **Accusative-and-infinitive** (16:104 *«trovammo risonar quell' acqua tinta»*): the LLM reads
+  `acqua` as the matrix object, the derivation as the infinitive's subject. Rule AX deliberately
+  does not cover it — that would be relabelling, not relocating.
+- **`vicino a` as a multiword preposition** (17:5): Layer 2 tags `vicino` an adjective, so the
+  2026-08-14 prep-stack normalization did not reach it, the same tension the 40 adverb-tagged
+  clusters were left in.
+
+### Upstream corrections in the same read
+
+**Layer 4 — 25 rows** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)): the reflexive clitic
+tagged `nsubj` in 15 places, an object tagged `nsubj` (17:103), a case-marked noun tagged `advcl`
+(17:48, 3 rows), a toponym inside a name tagged as the copula's oblique (18:122), a correlative
+`Qual` tagged `advmod` (17:85), and four rows at 16:95–96 that hung the river's course on a verb
+twelve lines away. **Layer 2 — 1 row**: `c'` in *«quel fiume c'ha proprio cammino»* (16:94) is
+elided `che`, not `ci` — the identical `c'ha` at 17:86 already reads it that way.
+
+The 16:95–96 reattachment is **count-neutral by construction** (three `missing_arg`s move from
+`rimbomba` to `ha`) and was kept anyway: the count is not the measure, the correctness of the
+parse is — the same trade rule AM recorded.

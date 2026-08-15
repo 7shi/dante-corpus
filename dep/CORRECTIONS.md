@@ -1122,3 +1122,23 @@ Layer 5 measured the whole set at **895 → 888 (−7)**. Two positions trade ra
 14:116 the corrected `obj` turns an `extra_arg` into a `role_mismatch` because the reading has the
 river as subject, and at 14:43 the normalized cluster leaves the reading citing the preposition
 itself. Both are now disagreements with a correct tree rather than with a wrong one.
+
+## Twenty-five rows from the Layer-5 Inferno 16–20 read (2026-08-15)
+
+Found position by position while auditing Layer 5's soft violations in Inferno 16–20 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). Applied by a gated script that asserts the
+word, the deprel and the head at every index before rewriting the row, then re-validated:
+`dep --check` **0 hard / 0 soft**, `morph`/`np`/`case` unchanged at 0.
+
+| position | before | after | why |
+|---|---|---|---|
+| the reflexive clitic in 15 places — inferno 17:102.6, purgatorio 9:36.6, 11:128.3, 21:59.7, 24:84.7, 28:75.8, 28:102.8, 28:138.5, 33:97.6, paradiso 11:14.7, 13:122.7, 14:77.2, 15:17.9, 24:123.7, 31:106.7 | `nsubj` | `expl` | *«si sentì a gioco»*, *«dove si fosse»*, *«non si scolpa»* — `si`/`s'` is never the clause's subject. The 2026-08-03 round normalized the reflexive clitic onto UD's `expl` corpus-wide; these 15 rows were left behind, and each one filled a subject slot the sentence leaves pro-drop, several of them propagating on across `conj`. |
+| inferno 17:103.7 `coda` | `nsubj`→103.8 | `obj`→103.8 | *«là 'v' era 'l petto, la coda rivolse»* — the tail is what Geryon turns, not what turns; the subject is the elided beast. The mis-tagged subject was inherited by three further conjuncts (104.6, 105.9). |
+| inferno 17:48.3 `vapori`, 48.1 / 48.5 `quando` | `advcl`→47.5, `mark` | `obl`→47.5, `advmod` | *«quando a' vapori, e quando al caldo suolo»* — a noun carrying its own `case` child is an oblique of the gapped `soccorrien`, not a clause head. The `advcl` made `derive_unit` mint two predicates out of two prepositional phrases. |
+| inferno 18:122.6 `Lucca` | `obl`→122.2 `se'` | `nmod`→122.3 `Alessio` | *«e se' Alessio Interminei da Lucca»* — the toponym is part of the name, which is what Layer 3's own NP span `[Alessio Interminei da Lucca]` already says; as an oblique of the copula it became an argument of the predication. |
+| inferno 17:85.1 `Qual` | `advmod`→85.2 | `attr`→85.2 | *«Qual è colui che … tal divenn' io»* — the correlative is the copula's predicative complement. Inferno 12:22 was corrected the same way in the previous batch. |
+| inferno 16:95.1 `prima`, 95.3 `Monte`, 95.6 `levante`, 96.4 `costa` | →100.1 `rimbomba` | →94.5 `ha` | *«Come quel fiume c'ha proprio cammino / prima dal Monte Viso 'nver' levante, / da la sinistra costa d'Apennino, … rimbomba là sovra San Benedetto»* — the adverb and the three obliques say where the Montone's *course* runs, inside the relative clause five lines earlier. Hung on `rimbomba` they assert the resounding happens at Monviso. |
+
+Layer 5 measured the whole set at **−14** (853 → 839, on top of that session's checker rules). The
+16:95–96 reattachment is deliberately **count-neutral** — the three `missing_arg`s move from
+`rimbomba` to `ha` — and was kept because the tree is now right; the same trade rule AM recorded.

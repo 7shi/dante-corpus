@@ -631,7 +631,7 @@ line	token	word	deprel	head_line	head_token
 84	4	ove	obl	84	8
 84	5	mai	advmod	84	8
 84	6	non	advmod	84	8
-84	7	si	nsubj	84	8
+84	7	si	expl	84	8
 84	8	scolpa	acl:relcl	84	3
 85	1	La	det	85	2
 85	2	bestia	nsubj	85	6

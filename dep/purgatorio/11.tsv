@@ -948,7 +948,7 @@ line	token	word	deprel	head_line	head_token
 127	7	attende	acl:relcl	127	5
 128	1	pria	advmod	128	4
 128	2	che	mark	128	4
-128	3	si	nsubj	128	4
+128	3	si	expl	128	4
 128	4	penta	advcl	127	7
 128	5	l'	det	128	6
 128	6	orlo	obj	127	7

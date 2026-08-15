@@ -720,6 +720,12 @@ def _apply_subj_authority(
 
 _ELIDED_COPULA_DEPRELS = frozenset({"conj", "appos", "attr"})
 
+# Rule AY: the children that make an `amod` adjective an adjective *phrase* — one governing an
+# argument of its own — rather than a bare attributive.
+_ADJECTIVE_COMPLEMENT_DEPRELS = frozenset(
+    {"obl", "obl:agent", "nmod", "obj", "iobj", "ccomp", "xcomp", "advcl", "nsubj"}
+)
+
 # Rule Z: the deprels that put a token in an argument or adjunct *slot* rather than at a clause
 # head. A verb form sitting in one of these is a predicate no reading disputes — the derivation
 # is silent about it only because `derive_unit`'s rule 1 keys on `CLAUSE_HEAD_DEPRELS` and its
@@ -1423,6 +1429,26 @@ def _classify_divergence(
         pos_tag = morph_pos_by_position.get(pos, "")
         return not is_verb_pos(pos_tag)
 
+    def _complemented_adjective_phrase(pos: tuple[int, int]) -> bool:
+        # Rule AY: `_elided_copula_nominal`'s adjective-phrase sibling. That rule gates on the
+        # deprel because most non-verb `extra_tuple` predicates are NP-internal modifiers the
+        # LLM wrongly promoted; an `amod` adjective is exactly the shape it excludes. But an
+        # adjective that governs an argument of its own is not a bare attributive — it is a
+        # reduced relative, and it predicates: "una figura … **maravigliosa ad ogne cor sicuro**"
+        # (inferno 16:132), "**piena di duolo** e di tormento rio" (9:111), "**sì fatta, che le
+        # genti lì malvage** …" (paradiso 19:17). The complement child is the structural evidence
+        # rule R and rule S both read off the same construction from the argument side; without
+        # it ("le tre donne benedette") the promotion stays flagged.
+        if dep_index_by_pos is None or morph_pos_by_position is None:
+            return False
+        dep_row = dep_index_by_pos.get(pos)
+        if dep_row is None or dep_row.deprel != "amod":
+            return False
+        if "adjective" not in morph_pos_by_position.get(pos, "").lower():
+            return False
+        return any(c.deprel in _ADJECTIVE_COMPLEMENT_DEPRELS
+                   for c in children_by_pos.get(pos, ()))
+
     def _aux_of_derived_predicate(pos: tuple[int, int]) -> bool:
         # The LLM names the auxiliary/modal/copula as the predicate ("Molti *son* li animali",
         # "se tu *vorrai* salire") where derive_unit, following UD, names the lexical head it
@@ -1477,6 +1503,28 @@ def _classify_divergence(
                 if (row.arg_line, row.arg_token) == arg and _canonicalize_role(row.role) == role:
                     return True
         return False
+
+    def _control_partners(pos: tuple[int, int]) -> set[tuple[int, int]]:
+        # Rule AX: the predicates joined to `pos` by an `xcomp` edge, either direction. A
+        # control/modal periphrasis is one predication spread over two tokens — "come i Roman
+        # **per l'essercito molto** … **hanno a passar** la gente" (inferno 18:30), where Layer 4
+        # hangs the oblique on the finite `hanno` and the LLM on the infinitive `passar` — so
+        # which of the two carries a shared adjunct is a placement convention, not a reading.
+        # This is rule X's mechanism (`_complement_hosted_argument`) pointed at the `xcomp` edge
+        # instead of the copula's `attr`/`xcomp` complement edge, with the same role-must-match
+        # gate: relocating the argument is the convention, relabelling it is a second claim.
+        # `ccomp` is deliberately excluded — a finite complement clause has its own arguments,
+        # and sharing them across that edge would accept genuine mis-attachments.
+        if dep_index_by_pos is None:
+            return set()
+        partners: set[tuple[int, int]] = set()
+        row = dep_index_by_pos.get(pos)
+        if row is not None and row.deprel == "xcomp":
+            partners.add((row.head_line, row.head_token))
+        for child in children_by_pos.get(pos, ()):
+            if child.deprel == "xcomp":
+                partners.add((child.line, child.token))
+        return partners - {pos}
 
     def _free_relative_head(
         pos: tuple[int, int], arg: tuple[int, int], role: str,
@@ -1552,6 +1600,33 @@ def _classify_divergence(
         slots = [s for s in (case_by_position or {}).get(arg, "").split(SLOT_SEP) if s]
         return len(slots) > 1 and any(_case_supports_role(s, role) for s in slots)
 
+    def _pronominal_verb_clitic(
+        pos: tuple[int, int], arg: tuple[int, int], role: str
+    ) -> bool:
+        # Rule AW: rule AB's mirror leg. Layer 4 does not label the reflexive clitic
+        # consistently — the 2026-08-03 round normalized most of them onto UD's `expl`, but 371
+        # tokens carrying the `case` annex's `reflexive` still stand as `obj`/`iobj`, and the
+        # split between the two follows nothing visible. Where the tree happens to say `obj`,
+        # `derive_unit` asserts an object the LLM (reading "si partiro", "s'atterga", "si puose"
+        # as the pronominal verbs they are) does not list; where it says `expl`, rule AB already
+        # accepts the opposite silence. Both directions are the same labeling convention, so
+        # they get the same treatment.
+        #
+        # Gated exactly as rule AB: the annex must call the token reflexive, Layer 2 must call
+        # it a pronoun, it must be this predicate's own child, and the disputed role must be one
+        # a bare clitic can carry — naming a preposition the tree does not carry stays flagged.
+        if dep_index_by_pos is None or role not in ("obj", "iobj", "obl:a"):
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel not in ("obj", "iobj"):
+            return False
+        if (row.head_line, row.head_token) != pos:
+            return False
+        if "pronoun" not in (morph_pos_by_position or {}).get(arg, "").lower():
+            return False
+        slots = [s for s in (case_by_position or {}).get(arg, "").split(SLOT_SEP) if s]
+        return "reflexive" in slots
+
     def _secondary_predicate_over_argument(
         pos: tuple[int, int], arg: tuple[int, int], role: str,
         derived_args: set[tuple[int, int]],
@@ -1565,10 +1640,31 @@ def _classify_divergence(
         #
         # Gated on the `acl`'s host being one of *this* predicate's own derived arguments, so a
         # participle modifying some unrelated nominal is not swept in with it.
-        if dep_index_by_pos is None or role not in ("xcomp", "ccomp"):
+        #
+        # Rule AU is the same shape one POS over: an **adjective** Layer 4 attached `amod` to one
+        # of this predicate's own derived arguments, read as the predication's secondary
+        # predicate — "che innanzi a buon segnor fa **servo forte**" (inferno 17:90), "ch'i' ho
+        # **le cose conte**" (21:62), "e fia **la tua imagine leggera**" (purgatorio 17:7). UD's
+        # `amod` is outside `ARG_DEPRELS`, so `derive_unit` is silent about the adjective
+        # altogether; the LLM reads the object/subject complement the line actually asserts.
+        # Rule R accepts the same complement when Layer 4 hangs it on the *predicate* as
+        # `advmod`; this is the leg where it hangs on the argument instead. The three gates —
+        # adjective POS, `xcomp` role, host is a derived argument of this same predicate — are
+        # what keep an ordinary attributive adjective inside some other phrase out.
+        if dep_index_by_pos is None:
             return False
         row = dep_index_by_pos.get(arg)
-        if row is None or row.deprel not in ("acl", "acl:relcl"):
+        if row is None:
+            return False
+        if row.deprel == "amod":
+            if role != "xcomp":  # `attr` is canonicalized to `xcomp` before comparison
+                return False
+            if "adjective" not in (morph_pos_by_position or {}).get(arg, "").lower():
+                return False
+            return (row.head_line, row.head_token) in derived_args
+        if role not in ("xcomp", "ccomp"):
+            return False
+        if row.deprel not in ("acl", "acl:relcl"):
             return False
         return (row.head_line, row.head_token) in derived_args
 
@@ -1583,7 +1679,27 @@ def _classify_divergence(
         head = (dep_row.head_line, dep_row.head_token)
         return {head} if head in complement_hosts.get(pos, ()) else set()
 
+    def _named_by_its_auxiliary(pos: tuple[int, int]) -> bool:
+        # Rule AV: `_aux_of_derived_predicate`'s missing leg. That rule accepts the LLM naming an
+        # `aux`/`cop` as the predicate *when it also names the lexical head* — the double-listing
+        # case. When it names only the auxiliary ("che spezzate **averien** ritorte e strambe",
+        # inferno 19:27, where the LLM's tuple sits on `averien` and Layer 4's lexical head is
+        # the participle `spezzate`), the same labeling-convention split is reported twice: once
+        # as an unaccepted `extra_tuple` — no, that leg is already accepted — and once here, as a
+        # derived predicate "not proposed", although the LLM proposed exactly this predication
+        # under the other convention. Rule AQ makes the identical move for an *argument*
+        # citation landing on an `aux`/`cop`; this is its predicate-position twin.
+        if dep_index_by_pos is None:
+            return False
+        return any(
+            _aux_head(g, dep_index_by_pos) == pos
+            for g in given_preds
+            if (dep_index_by_pos.get(g) or DepRow(0, 0, "", "", 0, 0)).deprel in _AUX_DEPRELS
+        )
+
     for line, token in sorted(derived_preds - given_preds):
+        if _named_by_its_auxiliary((line, token)):
+            continue
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
                                      predicate=(line, token)))
     def _copular_predication(pos: tuple[int, int]) -> bool:
@@ -1618,7 +1734,7 @@ def _classify_divergence(
         pos = (line, token)
         if (pos in double_listed or _elided_copula_nominal(pos)
                 or _aux_of_derived_predicate(pos) or _copular_predication(pos)
-                or _verb_in_argument_slot(pos)):
+                or _verb_in_argument_slot(pos) or _complemented_adjective_phrase(pos)):
             continue
         violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
                                      predicate=(line, token)))
@@ -1672,6 +1788,11 @@ def _classify_divergence(
                 if _comparative_come_adjunct(pos, arg, drole, dep_index_by_pos, children_by_pos,
                                              morph_pos_by_position):
                     continue  # rule AR: a verbless comparative clause's nominal
+                if _pronominal_verb_clitic(pos, arg, drole):
+                    continue  # rule AW: rule AB's mirror leg
+                if _complement_hosted_argument(pos, arg, drole, given_by_pred,
+                                               hosts=_control_partners(pos)):
+                    continue  # rule AX: the LLM hung it on the other end of an `xcomp` edge
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
@@ -1713,6 +1834,9 @@ def _classify_divergence(
                     # is the complement of
                     or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
                                                    hosts=_copular_hosts(pos))
+                    # rule AX, mirror leg: derive_unit hung it on the other end of an `xcomp`
+                    or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
+                                                   hosts=_control_partners(pos))
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

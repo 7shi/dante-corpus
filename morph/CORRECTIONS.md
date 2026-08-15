@@ -583,3 +583,11 @@ ways across the corpus — `conjunction` 56, `pronoun` 43, `adverb` 23, `noun` 1
 wrong one by one (*whence* / *whereby* / *wherefore* really are different words), but 129 relative
 tokens split three ways by nothing visible is a vocabulary question, not a per-line decision. It
 needs its own measured pass, like the relative-`che` retag `case/` blocks.
+
+## One row from the Layer-5 Inferno 16–20 read (2026-08-15)
+
+- **inferno 16:94 `c'`** — tagged lemma `ci`, `pronoun`, sg. In *«Come quel fiume c'ha proprio
+  cammino»* it is elided `che`, the relative pronoun the `case` annex already calls `nominative`,
+  and the identical `c'ha` at 17:86 is already tagged that way. Retagged lemma `che` with the
+  number cleared (the `sg.` came from the `ci` reading; a relative `che` is invariable). The two
+  rows were inconsistent with each other.

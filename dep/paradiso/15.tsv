@@ -111,7 +111,7 @@ line	token	word	deprel	head_line	head_token
 17	6	parte	obl	18	3
 17	7	ond'	obl	17	10
 17	8	e'	aux	17	10
-17	9	s'	nsubj	17	10
+17	9	s'	expl	17	10
 17	10	accende	acl:relcl	17	6
 18	1	nulla	nsubj	18	3
 18	2	sen	obj	18	3

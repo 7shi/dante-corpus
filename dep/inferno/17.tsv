@@ -340,11 +340,11 @@ line	token	word	deprel	head_line	head_token
 47	6	con	case	47	8
 47	7	le	det	47	8
 47	8	mani	obl	47	5
-48	1	quando	mark	48	3
+48	1	quando	advmod	48	3
 48	2	a'	case	48	3
-48	3	vapori	advcl	47	5
+48	3	vapori	obl	47	5
 48	4	e	cc	48	8
-48	5	quando	mark	48	8
+48	5	quando	advmod	48	8
 48	6	al	case	48	8
 48	7	caldo	amod	48	8
 48	8	suolo	conj	48	3
@@ -613,7 +613,7 @@ line	token	word	deprel	head_line	head_token
 84	6	possa	advcl	83	5
 84	7	far	xcomp	84	6
 84	8	male	obj	84	7
-85	1	Qual	advmod	85	2
+85	1	Qual	attr	85	2
 85	2	è	advcl	88	2
 85	3	colui	nsubj	85	2
 85	4	che	nsubj	85	7
@@ -744,7 +744,7 @@ line	token	word	deprel	head_line	head_token
 102	3	ch'	mark	102	7
 102	4	al	case	102	5
 102	5	tutto	obl	102	7
-102	6	si	nsubj	102	7
+102	6	si	expl	102	7
 102	7	sentì	advcl	103	8
 102	8	a	case	102	9
 102	9	gioco	obl	102	7
@@ -754,7 +754,7 @@ line	token	word	deprel	head_line	head_token
 103	4	'l	det	103	5
 103	5	petto	nsubj	103	3
 103	6	la	det	103	7
-103	7	coda	nsubj	103	8
+103	7	coda	obj	103	8
 103	8	rivolse	conj	103	3
 104	1	e	cc	104	6
 104	2	quella	obj	104	6

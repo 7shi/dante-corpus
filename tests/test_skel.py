@@ -2282,3 +2282,166 @@ def test_derive_unit_rule_at_a_verb_conjunct_still_inherits():
     derived = skel.derive_unit([1, 2], dep_rows, morph_rows)
     subjects = {(r.arg_line, r.arg_token) for r in derived[2] if r.role == "subj"}
     assert (1, 2) in subjects
+
+
+# --- Phase 6: rules AU-AX (the Inferno 16-20 read) --------------------------------------
+
+
+def _amod_secondary_predicate_fixture(arg_pos="adjective"):
+    """"che innanzi a buon segnor fa servo forte" (inferno 17:90): `forte` is the object
+    complement, and Layer 4 hangs it on the object noun as `amod`."""
+    derived = {1: [skel.SkelRow(1, 1, "fa", "obj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "fa", "obj", 1, 2),
+                 skel.SkelRow(1, 1, "fa", "attr", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="fa", deprel="root", head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="servo", deprel="obj", head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="forte", deprel="amod", head_line=1, head_token=2),
+    }
+    return given, derived, dep_index_by_pos, {(1, 3): arg_pos}
+
+
+def test_classify_divergence_rule_au_accepts_an_amod_secondary_predicate():
+    given, derived, idx, morph_pos = _amod_secondary_predicate_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_au_requires_an_adjective():
+    # Layer 2 calling the token something else leaves the reading undecided, as for rule R.
+    given, derived, idx, morph_pos = _amod_secondary_predicate_fixture(arg_pos="noun")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def test_classify_divergence_rule_au_requires_the_host_to_be_this_predicates_argument():
+    # `forte` modifies a noun that is not this predicate's argument, so the reading is a real
+    # disagreement rather than a placement convention.
+    given, derived, idx, morph_pos = _amod_secondary_predicate_fixture()
+    idx[(1, 3)] = dep.DepRow(line=1, token=3, word="forte", deprel="amod",
+                             head_line=1, head_token=4)
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _aux_only_predicate_fixture(aux_deprel="aux"):
+    """"che spezzate averien ritorte e strambe" (inferno 19:27): the LLM's tuple sits on the
+    auxiliary, Layer 4's lexical head is the participle."""
+    derived = {1: [skel.SkelRow(1, 1, "spezzate", "obj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 2, "averien", "obj", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="spezzate", deprel="advcl",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="averien", deprel=aux_deprel,
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="ritorte", deprel="obj",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos
+
+
+def test_classify_divergence_rule_av_accepts_a_predicate_named_by_its_auxiliary():
+    given, derived, idx = _aux_only_predicate_fixture()
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx)]
+    assert not any(d.startswith("missing_tuple") for d in details)
+
+
+def test_classify_divergence_rule_av_requires_an_auxiliary_edge():
+    given, derived, idx = _aux_only_predicate_fixture(aux_deprel="conj")
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx)]
+    assert any(d.startswith("missing_tuple") for d in details)
+
+
+def _pronominal_clitic_fixture(case_value="reflexive", deprel="obj"):
+    """"poscia si puose là dove nacqu' io" (inferno 20:56): Layer 4 left this reflexive clitic
+    as `obj` rather than `expl`, so the derivation asserts an object the LLM does not read."""
+    derived = {1: [skel.SkelRow(1, 1, "puose", "obj", 1, 2)]}
+    given: dict[int, list[skel.SkelRow]] = {1: [skel.SkelRow(1, 1, "puose", "subj", 0, 0)]}
+    derived[1].append(skel.SkelRow(1, 1, "puose", "subj", 0, 0))
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="puose", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="si", deprel=deprel,
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): "pronoun"}, {(1, 2): case_value}
+
+
+def test_classify_divergence_rule_aw_accepts_an_unlisted_reflexive_clitic():
+    given, derived, idx, morph_pos, case_by = _pronominal_clitic_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos, case_by) == []
+
+
+def test_classify_divergence_rule_aw_requires_the_annex_to_call_it_reflexive():
+    # A plain accusative clitic is a real object, and its omission is a real divergence.
+    given, derived, idx, morph_pos, case_by = _pronominal_clitic_fixture("accusative")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos, case_by)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _control_shared_argument_fixture(link="xcomp", given_role="obl:per"):
+    """"come i Roman per l'essercito molto … hanno a passar la gente" (inferno 18:30): Layer 4
+    hangs the oblique on the finite verb, the LLM on the infinitive it controls."""
+    derived = {1: [skel.SkelRow(1, 1, "hanno", "obl:per", 1, 3),
+                   skel.SkelRow(1, 2, "passar", "obj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "hanno", "subj", 0, 0),
+                 skel.SkelRow(1, 2, "passar", given_role, 1, 3),
+                 skel.SkelRow(1, 2, "passar", "obj", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="hanno", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="passar", deprel=link,
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="essercito", deprel="obl",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="gente", deprel="obj",
+                           head_line=1, head_token=2),
+    }
+    return given, derived, dep_index_by_pos
+
+
+def test_classify_divergence_rule_ax_accepts_an_argument_shared_across_an_xcomp():
+    given, derived, idx = _control_shared_argument_fixture()
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx)]
+    assert not any(d.startswith(("extra_arg", "missing_arg")) for d in details)
+
+
+def test_classify_divergence_rule_ax_excludes_a_ccomp_edge():
+    given, derived, idx = _control_shared_argument_fixture(link="ccomp")
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx)]
+    assert any(d.startswith(("extra_arg", "missing_arg")) for d in details)
+
+
+def test_classify_divergence_rule_ax_requires_the_role_to_match():
+    given, derived, idx = _control_shared_argument_fixture(given_role="obl:in")
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx)]
+    assert any(d.startswith(("extra_arg", "missing_arg")) for d in details)
+
+
+def _adjective_phrase_fixture(child_deprel="obl"):
+    """"venir notando una figura in suso, / maravigliosa ad ogne cor sicuro" (inferno 16:132):
+    the adjective governs its own complement, so it is a reduced relative, not an attributive."""
+    derived: dict[int, list[skel.SkelRow]] = {1: []}
+    given = {1: [skel.SkelRow(1, 2, "maravigliosa", "obl:a", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="figura", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="maravigliosa", deprel="amod",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="cor", deprel=child_deprel,
+                           head_line=1, head_token=2),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): "adjective", (1, 3): "noun"}
+
+
+def test_classify_divergence_rule_ay_accepts_a_complemented_adjective_phrase():
+    given, derived, idx, morph_pos = _adjective_phrase_fixture()
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx, morph_pos)]
+    assert not any(d.startswith("extra_tuple") for d in details)
+
+
+def test_classify_divergence_rule_ay_requires_a_complement_child():
+    # A bare attributive adjective promoted to predicate is the genuine error rule
+    # `_elided_copula_nominal` deliberately leaves flagged.
+    given, derived, idx, morph_pos = _adjective_phrase_fixture(child_deprel="advmod")
+    details = [v.detail for v in skel._classify_divergence(given, derived, idx, morph_pos)]
+    assert any(d.startswith("extra_tuple") for d in details)

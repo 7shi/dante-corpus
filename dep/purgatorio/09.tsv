@@ -246,7 +246,7 @@ line	token	word	deprel	head_line	head_token
 36	3	sappiendo	advcl	34	5
 36	4	là	advmod	36	5
 36	5	dove	mark	36	7
-36	6	si	nsubj	36	7
+36	6	si	expl	36	7
 36	7	fosse	ccomp	36	3
 37	1	quando	mark	38	1
 37	2	la	det	37	3

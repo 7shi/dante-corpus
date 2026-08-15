@@ -512,7 +512,7 @@ line	token	word	deprel	head_line	head_token
 75	5	perch'	mark	75	9
 75	6	allor	advmod	75	9
 75	7	non	advmod	75	9
-75	8	s'	nsubj	75	9
+75	8	s'	expl	75	9
 75	9	aperse	advcl	73	6
 76	1	Voi	nsubj	76	3
 76	2	siete	cop	76	3
@@ -711,7 +711,7 @@ line	token	word	deprel	head_line	head_token
 102	5	d'	case	102	6
 102	6	indi	obl	102	2
 102	7	ove	mark	102	9
-102	8	si	nsubj	102	9
+102	8	si	expl	102	9
 102	9	serra	advcl	102	2
 103	1	Or	advmod	107	7
 103	2	perché	mark	104	4
@@ -972,7 +972,7 @@ line	token	word	deprel	head_line	head_token
 138	2	oltre	case	138	3
 138	3	promession	obl	138	6
 138	4	teco	obl	138	6
-138	5	si	nsubj	138	6
+138	5	si	expl	138	6
 138	6	spazia	advcl	137	10
 139	1	Quelli	nsubj	141	6
 139	2	ch'	nsubj	139	4

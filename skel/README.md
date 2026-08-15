@@ -7,9 +7,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 (`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic, so the
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–AT plus three `--fix` rounds: 888 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
+**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–AY plus three `--fix` rounds: 834 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
 
-`make -C skel check`: **0 hard, 888 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+`make -C skel check`: **0 hard, 834 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## What it does
 
@@ -260,11 +260,39 @@ successive phases, each measured before/after (`--stats` aggregates violations b
       promoted to predicate is an elided clause of its own — the speaker of an elided verb of
       speech ("Ed *elli*: «Vedi …»"), not a second subject of the coordination head's verb.
 
+15. **Phase 6 — rules AU-AY, from the Inferno 16-20 read** (2026-08-15). Five rules, each
+    censused corpus-wide, measured alone by violation diff and mutation-checked; together
+    **888 → 834 soft**, no model calls, and none of them newly flagged a position. Three are
+    *mirror legs* of rules the checker already had. Full evidence in
+    [`CORRECTIONS.md`](CORRECTIONS.md).
+    - **AU** (`_secondary_predicate_over_argument`, `amod` leg): an **adjective** Layer 4 hangs
+      `amod` on one of *this* predicate's own derived arguments is the predication's secondary
+      predicate ("fa **servo forte**", "ho **le cose conte**", "fia **la tua imagine leggera**").
+      Rule R takes the same complement when Layer 4 hangs it on the predicate as `advmod`; rule
+      AA takes the participial version off an argument as `acl`. Largest mover of the batch (−17).
+    - **AV** (`_named_by_its_auxiliary`): `_aux_of_derived_predicate`'s missing leg. When the LLM
+      names *only* the `aux`/`cop` as the predicate ("che spezzate **averien** ritorte"), Layer
+      4's lexical head was reported "not proposed" although the same predication was proposed
+      under the other convention. Rule AQ's predicate-position twin.
+    - **AW** (`_pronominal_verb_clitic`): rule AB's mirror. Layer 4 still calls 371 reflexive
+      clitics `obj`/`iobj` rather than `expl`, on no visible principle, and there the derivation
+      asserts an object the LLM does not read in a pronominal verb ("si partiro", "s'atterga",
+      "si puose"). Same gates as AB: annex-reflexive, Layer-2 pronoun, own child, clitic-carriable
+      role.
+    - **AX** (`_control_partners`): rule X's mechanism pointed at the `xcomp` edge. A control or
+      modal periphrasis is one predication over two tokens, so which end carries a shared argument
+      is a placement convention ("hanno a passar" — `per l'essercito` on the finite verb in Layer
+      4, on the infinitive in the reading). Role must match; `ccomp` is excluded.
+    - **AY** (`_complemented_adjective_phrase`): `_elided_copula_nominal`'s adjective-phrase
+      sibling. An `amod` adjective that governs an argument of its own is a reduced relative and
+      predicates ("maravigliosa ad ogne cor sicuro", "piena di duolo"); the complement child is
+      the evidence, and a bare attributive stays flagged.
+
 **Measured Progression Across Phases**:
 - **Phase 4a Checkpoint (2026-07-20)**: `0 hard, 7776 soft` (down from 17,438 initial).
 - **Phase 4b `--fix` Pass (2026-07-25)**: `0 hard, 5919 soft` across all 100 cantos.
 - **Phase 5 Deterministic Series & Upstream Audits (Phases 5a–5w, Rules C–AF)**: Reduced soft violations from **5,919 → 2,084**. For the complete chronological record, per-phase measurement tables, Layer-4 corrections, and empirical findings on regeneration yield, see [`PHASE5.md`](PHASE5.md).
-- **Phase 6 Restructured `--fix`, Rules AG–AT**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+- **Phase 6 Restructured `--fix`, Rules AG–AY**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows), then **834** with rules AU–AY and the Inferno 16–20 read (888 → 834, 2026-08-15 — five rules, three of them mirror legs of existing ones, plus 25 Layer-4 and 1 Layer-2 rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## Next steps
 

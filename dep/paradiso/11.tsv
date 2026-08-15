@@ -91,7 +91,7 @@ line	token	word	deprel	head_line	head_token
 14	4	in	case	14	5
 14	5	che	obl	14	8
 14	6	avanti	advmod	14	8
-14	7	s'	nsubj	14	8
+14	7	s'	expl	14	8
 14	8	era	acl:relcl	14	1
 15	1	fermossi	root	0	0
 15	2	come	mark	15	5
