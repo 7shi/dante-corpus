@@ -516,7 +516,7 @@ line	token	word	deprel	head_line	head_token
 69	4	disio	obl	69	8
 69	5	ver'	case	69	6
 69	6	lei	obl	69	8
-69	7	mi	nsubj	69	8
+69	7	mi	expl	69	8
 69	8	piego	ccomp	69	1
 70	1	Ed	cc	70	2
 70	2	elli	root	0	0

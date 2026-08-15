@@ -1,5 +1,37 @@
 # dep — Layer 4 correction history
 
+## 10 rows from the Layer-5 Inferno 26-30 read (2026-08-15)
+
+The per-position read of Inferno 26-30's 23 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 10 Layer-4 rows wrong, in two groups.
+Applied with a gated script that asserts the expected word *and* deprel *and* head at each
+`(line, token)` before rewriting; `morph`, `np`, `dep` and `case --check` all stay 0 afterwards,
+`pytest` 326.
+
+**Reflexive clitics parked in the subject slot** — `piegarsi`, `rissarsi`, `assidersi` are
+pronominal verbs, so the clitic is the `expl` the lemma carries and the subject is pro-drop,
+which is how every other reflexive in the corpus is recorded. Found by censusing `nsubj` rows
+whose Layer-2 note says `reflexive`: 9 hits, of which these 3 are bare clitics and the rest are
+infinitives with an enclitic, correctly `nsubj` of an impersonal verb.
+
+| position | word | before | after | why |
+|---|---|---|---|---|
+| inferno 26:69.7 | `mi` | `nsubj<-69.8` | `expl<-69.8` | "del disio ver' lei **mi** piego" — the reflexive of `piegarsi` |
+| inferno 30:132.7 | `mi` | `nsubj<-132.8` | `expl<-132.8` | "per poco che teco non **mi** risso" — the reflexive of `rissarsi`; the subject slot it occupied produced both of that position's violations |
+| paradiso 1:140.4 | `ti` | `nsubj<-140.6` | `expl<-140.6` | "giù **ti** fossi assiso" — the reflexive of `assidersi` |
+
+**The accusative-and-infinitive at inferno 29:73**, and the `scardova` re-parse:
+
+| position | word | before | after | why |
+|---|---|---|---|---|
+| inferno 29:73.3 | `due` | `nummod<-73.4` | `nsubj<-73.4` | "Io vidi **due** sedere" — the shared nominal is the infinitive's subject, not a numeral modifying it; this is the shape rule BI reads |
+| inferno 29:83.1 | `come` | `mark<-83.4` | `mark<-83.2` | the comparison's marker follows its new head |
+| inferno 29:83.2 | `coltel` | `nsubj<-83.4` | `advcl<-82.3` | "come coltel [fa] le scaglie" is a *gapped* clause: `coltel` is the promoted remnant that heads it |
+| inferno 29:83.4 | `scardova` | `advcl<-82.3` | `nmod<-83.2` | the fish, not a verb (Layer 2 retagged with it) — and `di scardova` modifies `coltel`, which is what Layer 3's NP span already says |
+| inferno 29:83.6 | `scaglie` | `obj<-83.4` | `orphan<-83.2` | UD's own marking for a gapped clause's second remnant |
+| inferno 29:84.1, 84.4 | `o`, `pesce` | `cc<-84.9`, `obl<-84.9` | `cc<-84.4`, `conj<-83.4` | "di scardova **o d'altro pesce**" coordinates the two genitives, not the relative clause |
+| inferno 29:84.9 | `abbia` | `conj<-83.4` | `acl:relcl<-84.4` | "che più larghe l'abbia" is the relative clause of `pesce` |
+
 ## 20 rows from the Layer-5 Inferno 21-25 read (2026-08-15)
 
 The per-position read of Inferno 21-25's 44 Layer-5 soft violations (see

@@ -1,5 +1,20 @@
 # Manual Layer-2 corrections
 
+## 1 row from the Layer-5 Inferno 26-30 read (2026-08-15)
+
+Found by the per-position read of Inferno 26-30's Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)); applied with a gated script and re-validated
+against every layer's `--check` (all 0) and `pytest` (326).
+
+| position | word | before | after | why |
+|---|---|---|---|---|
+| inferno 29:83.4 | `scardova` | `scardovare` verb, sg. 3 present indicative | `scardova` noun, f. sg. | "come coltel di **scardova** le scaglie / o d'altro **pesce** che più larghe l'abbia" — the freshwater fish, which the next line's "o d'altro pesce" names outright. There is no Italian verb *scardovare*; the comparison is verbless, and Layer 4 had built the whole clause around the invented one (retagged with it). |
+
+The correction cost one Layer-5 position and removed one: the artifact's rows for that unit were
+written against the mistagged verb, so `scardova` is now correctly reported as a predicate the
+derivation does not have. See the batch's third finding in
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+
 ## 5 rows from the Layer-5 Inferno 21-25 read (2026-08-15)
 
 Found by the per-position read of Inferno 21-25's Layer-5 soft violations (see

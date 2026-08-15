@@ -966,7 +966,7 @@ line	token	word	deprel	head_line	head_token
 132	4	che	mark	132	8
 132	5	teco	obl	132	8
 132	6	non	advmod	132	8
-132	7	mi	nsubj	132	8
+132	7	mi	expl	132	8
 132	8	risso	ccomp	131	8
 133	1	Quand'	mark	133	4
 133	2	io	nsubj	133	4

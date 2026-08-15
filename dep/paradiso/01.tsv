@@ -970,7 +970,7 @@ line	token	word	deprel	head_line	head_token
 140	1	d'	case	140	2
 140	2	impedimento	nmod	139	6
 140	3	giù	advmod	140	6
-140	4	ti	nsubj	140	6
+140	4	ti	expl	140	6
 140	5	fossi	aux	140	6
 140	6	assiso	advcl	139	2
 141	1	com'	advmod	141	4

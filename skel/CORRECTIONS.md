@@ -1,5 +1,145 @@
 # skel — Layer 5 correction history
 
+## Rules BJ-BN, from re-reading Inferno 26-30 — 691 → 650, −41 (2026-08-15)
+
+Per-position read of all **23** soft violations in Inferno 26-30, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Inferno 26-30 itself
+went **23 → 11**; the corpus went **691 → 650 (−41, −5.9%)**. Five deterministic rules, two legs
+added to rules already in the checker, one applied where a rule had not been reaching, plus 4
+Layer-4 rows and 1 Layer-2 row. `pytest` **326**, all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **BJ** | the adverb-preposition cluster ("fuor **del** dritto amore") names one oblique, from either word | 147 | −21 |
+| **BK** | rule AR's other marker: `che` opens the second term of a comparison, and it is an adjunct | 51 | −4 |
+| **BL** | rule AR's other order: `sì come` is one word, so the comparison is what the marker opens | 107 | −1 |
+| **BM** | an oblique whose filler Layer 2 calls a **conjunction** is the clause's connective | 37 | −11 |
+| **BN** | a conjunction in a clause-head deprel with no arguments is a connective, not an elided predicate | 14 | ±0 |
+| **BI**′ | rule BI's third host deprel: the perception verb's infinitive written as a plain `obj` | 7 | −1 |
+| **AN**′ | rule AN's clause-head leg: a gapped comparison promoted to `advcl` heads no predicate | — | ±0 |
+| **AQ**′ | rule AQ applied to the *membership* check, which runs before the merge | 2 | −2 |
+
+Plus 4 Layer-4 rows and 1 Layer-2 row (**−3 / +2** together).
+
+### The batch's three findings
+
+**1. A rule can be right and simply never reach the check that reports the position.** Rule AQ
+maps an argument citation landing on a `cop`/`aux` onto its lexical head, and has done since the
+Inferno 11-15 batch — but only inside `_classify_divergence`. The *membership* check ("argument
+(87, 4) for role obj heads no NP/pronoun/predicate") runs earlier, on the raw row, and was
+reporting the un-normalized position at inferno 28:87 and paradiso 1:61. This is the Inferno
+21-25 batch's ordering finding in a new form: there it was two rules in the wrong order inside
+one pass, here it is one rule present in one pass and absent from another. **Ask of every rule
+not only what it does with a plural or a normalized citation, but which checks run before it.**
+
+**2. The largest mover was a shape a previous route had deliberately deferred.** The Layer-4
+prep-stack normalization of 2026-08-14 rewrote 161 multiword-preposition clusters to one UD shape
+and explicitly excluded the ~40 whose opening word Layer 2 calls an *adverb* (`dentro a`,
+`dinanzi a`, `fuor di`, `di là da`), recording it as "a Layer-2/4 tension to decide separately if
+it ever matters". It mattered: censused at 147 clusters, they were producing violations in both
+directions — the derivation naming the adverb where the LLM names the nominal (inferno 30:38),
+and the derivation naming nothing at all where the adverb sits in an `advmod` slot (28:68). Rule
+BJ settles it at Layer 5 without touching Layer 4, by merging the citation onto the cluster head
+exactly as rule AQ merges an auxiliary citation, and by feeding the cluster's inner preposition
+into rule O's lemma set so `di là **da**` reads as the one complex preposition it is. **A
+deliberately deferred upstream tension is a Layer-5 population; census it rather than waiting for
+the upstream decision.**
+
+**3. Two of the five rules make the derivation more correct at no gain in the count, and one
+upstream fix costs a position.** Rule BN stops `derive_unit` minting a predicate at a bare
+connective (`Onde` as `advcl`, inferno 29:124) — −2 `missing_tuple`, +2 `extra_tuple`, because at
+purgatorio 33:91 and paradiso 25:19 the LLM had proposed exactly the tuple the derivation was
+inventing. Rule AN's clause-head leg does the same for a gapped comparison promoted to `advcl`.
+And correcting `scardova` (inferno 29:83, below) removed one violation and added one, because the
+LLM's rows for that unit were written against the mistagged verb. All three are the honest trade
+rule AM recorded: **the count is not the measure, the correctness of the parse is.**
+
+### Rule BJ — the adverb-preposition cluster
+
+`_merge_adverb_cluster_citations` + `_adverb_cluster_head` in `dante_corpus/skel.py`. Italian
+builds complex prepositions out of an adverb plus a simple preposition. Layer 4 hangs the adverb
+on the predicate and the phrase's nominal under the adverb, so the two words are two citations of
+one adjunct:
+
+- "che divenne / al padre, **fuor del dritto amore**, amica" (inferno 30:38-39) — derived
+  `obl=(39,3)` on `fuor`, given `obl:di=(39,6)` on `amore`;
+- "**innanzi a li altri** aprì la canna" (28:68) — the adverb is `advmod`, so the derivation
+  produced nothing and the LLM's `obl:a` on `altri` was an extra argument;
+- "da **qui innanzi**" (29:22-23) — both members are adverbs, and the two readings picked
+  different ones, producing a `missing_arg` and an `extra_arg` at the same position.
+
+The merge is onto the cluster head with the role carried across unchanged, so a genuine role
+disagreement still surfaces; rule J then accepts the `advmod` half, and rule L or rule O settles
+the label. `case_children` is taken *before* the cluster lemmas are aggregated, so rule L's gate
+("the derivation could not have emitted a lemma here") still means what it says — measured: with
+the aggregation before that line the rule scored −21/**+6**, after it −21/**0**.
+
+### Rules BK and BL — rule AR's other marker and other order
+
+Rule AR reads an oblique off a *verbless* comparative clause as the adjunct it is. Two of its
+legs were missing:
+
+- **BK**: the marker can be `che`. "vedesse altro **che la fiamma sola**" (inferno 26:38),
+  "guizzando più **che li altri suoi consorti**" (19:32), "ogn' uom v'è barattier, fuor **che
+  Bonturo**" (21:41). Censused at 51 corpus-wide — every one a comparative or exceptive second
+  term. Only the *argument* leg takes `che`: a `che`-marked clause on the predicate is an
+  ordinary complement clause, so the correlative branch stays `come`-only.
+- **BL**: the correlative can stand *before* the marker. Rule AR's `come … sì` branch places the
+  compared nominal between the two, which is the order at inferno 13:43; `sì come` (censused at
+  107) is one word, and the comparison is simply what the marker opens. Gated to the marker's
+  next token but for its determiners, so the predicate's other obliques stay its own ("sì come
+  nuvoletta, **in sù** salire", 26:39). Worth −1 today: the shape is common, the divergence is
+  not.
+
+### Rule BM — a connective in the oblique slot
+
+`_conjunction_oblique`. "Nel tempo **che** Iunone era crucciata" (inferno 30:1), "**onde**
+Cleopatràs lussurïosa" (14:54), "**per che** no i volle Gedeon compagni" (purgatorio 24:125): the
+relative adverb is the clause's link, and Layer 2 tags it a conjunction for that reason, but
+Layer 4 parks it in an `obl` slot. Restricted to the oblique — the same census finds 147 `nsubj`
+and 61 `obj` conjunction-tagged tokens, and those are relative pronouns doing real argument work
+that both readings name. This is the tail of the known Layer-2 route (relative `che`/`onde`
+tagged `conjunction`, 247 tokens), which needs a model read of the `case` annex to settle
+properly; until then an adjunct slot filled by a conjunction is not something the derivation can
+assert. −11.
+
+### Rule BN and rule AN's clause-head leg — what is not a predicate
+
+Both in `derive_unit`'s step 1. A token Layer 2 calls a **conjunction**, in a clause-head deprel,
+with no arguments of its own is a connective ("**Onde** l'altro lebbroso … rispuose", inferno
+29:124): the derivation minted a predicate there and then reported the LLM for not proposing a
+tuple with nothing in it. The `conj` branch already refused to promote a coordinating conjunction
+for exactly this reason. Rule AN's leg is the same refusal for a *gapped* clause whose head is
+not a conjunct: "come coltel [fa] le scaglie di scardova" (29:83) is `advcl` with an `orphan`
+remnant, and unlike the `conj` case there is no coordination head whose slots the remnants could
+fill a second time.
+
+### Rule BI's `obj` branch
+
+"Io vidi **due** sedere a sé poggiati" (inferno 29:73). Rule BI takes the accusative-and-
+infinitive's shared nominal when Layer 4 writes the infinitive as an `xcomp`/`ccomp`; Layer 4
+also writes it as a plain `obj`. Gated on Layer 2 calling the host an **infinitive**: the census
+finds 35 `nsubj` tokens under an `obj`-attached verb, of which 28 are finite clauses whose
+subject is the embedded clause's own and nobody's matrix object. −1, after the Layer-4 retag
+below made the position reachable at all.
+
+### Rules censused and dropped, and shapes left standing
+
+- **An `iobj` ↔ `obl:a` equivalence** (inferno 28:76, "fa saper **a' due miglior** da Fano" —
+  the LLM cites the NP head `miglior`, the derivation the Layer-4 head `due`, and the roles
+  differ too). Both halves would be needed: extending rule AI to pair citations in *different*
+  roles, and extending rule N to a derived `iobj`. The role pair `iobj`/`obl:a` occurs **0** times
+  as a role_mismatch corpus-wide, so the second half has no population and the first is the open
+  NP-head route, which asks for a census before AI is widened. Left standing.
+- **The elided speech verb** (inferno 26:70, "Ed elli a me: «…»") — censused at 164 in the
+  Inferno 21-25 batch and dropped there; the four omissions are reading error. Still true here.
+- **Quoted-clause and parenthetical `ccomp`** (inferno 27:101 "fa **sì come** … getti",
+  29:63 "**secondo che** i poeti hanno per fermo", 30:59 "non so io **perché**"): three different
+  shapes in which the LLM promotes an `advcl`, a parenthetical, or a bare interrogative to a
+  complement of the matrix verb. Genuine reading disagreements; Layer 4's `advcl` is right.
+- **The `là` obliques** (inferno 27:46, 28:15): locative adverbs the LLM omits — the
+  `missing_arg_adverb` residue, prompt-side, and unmeasured until the fourth round.
+
 ## Rules AZ-BI, from re-reading Inferno 21-25 — 834 → 691, −143 (2026-08-15)
 
 Per-position read of all **44** soft violations in Inferno 21-25, following the eight-step

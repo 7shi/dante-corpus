@@ -7,9 +7,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 (`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic, so the
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–BI plus three `--fix` rounds: 691 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
+**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–BN plus three `--fix` rounds: 650 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
 
-`make -C skel check`: **0 hard, 691 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+`make -C skel check`: **0 hard, 650 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## What it does
 
@@ -326,12 +326,44 @@ successive phases, each measured before/after (`--stats` aggregates violations b
       is the matrix object *and* the infinitive's subject ("vidi … **uno** aspettar", "trovammo
       risonar **quell' acqua tinta**"). Layer 4 records the second, the LLM names the first, and
       the tree asserts both edges. Censused at 10; took all 10.
+17. **Phase 6 — rules BJ-BN, from the Inferno 26-30 read** (2026-08-15). Five rules plus three
+    legs added to rules already in the checker, each censused corpus-wide, measured alone by
+    violation diff and mutation-checked; together with 10 Layer-4 and 1 Layer-2 rows **691 → 650
+    soft**, no model calls. Full evidence in [`CORRECTIONS.md`](CORRECTIONS.md).
+    - **BJ** (`_merge_adverb_cluster_citations`): the adverb-preposition cluster ("**fuor** del
+      dritto amore", "**innanzi** a li altri", "da **qui innanzi**") is one complex preposition
+      and one adjunct, named by either of its two words. Layer 4's 2026-08-14 prep-stack
+      normalization deliberately left these 40 clusters alone because Layer 2 calls the opening
+      word an adverb; the citation is merged onto the cluster head as rule AQ merges an auxiliary
+      citation, and the cluster's inner preposition joins rule O's lemma set. Censused at 147;
+      largest mover of the batch (−21).
+    - **BK** (`_comparative_come_adjunct`, `che` leg): the second term of a comparison is marked
+      by `che` as often as by `come` ("vedesse altro **che la fiamma sola**", "fuor **che
+      Bonturo**"). Argument leg only — a `che`-marked *clause* on the predicate is a complement.
+      Censused at 51.
+    - **BL** (same rule, `sì come` order): when the correlative stands immediately *before* the
+      marker the two are one word, so the comparison is what the marker opens rather than what
+      lies between the two ("**sì come nuvoletta**, in sù salire"). Censused at 107; worth −1.
+    - **BM** (`_conjunction_oblique`): an oblique whose filler Layer 2 calls a **conjunction** is
+      the clause's connective ("Nel tempo **che** Iunone era crucciata", "**onde**", "**per
+      che**"). Oblique slot only: the same census finds 147 `nsubj` and 61 `obj` conjunction-
+      tagged tokens, which are relative pronouns doing real argument work. Censused at 37 (−11).
+    - **BN** (`derive_unit` step 1): a conjunction in a clause-head deprel with no arguments of
+      its own is a connective, not an elided predicate ("**Onde** l'altro lebbroso … rispuose").
+      Rule AN's clause-head leg says the same of a gapped comparison promoted to `advcl` with an
+      `orphan` remnant. Both are net zero and both make the derivation right.
+    - **BI**′ (`_accusative_and_infinitive`, `obj` host): Layer 4 also writes the perception
+      verb's infinitive as a plain `obj` ("Io vidi **due** sedere"). Gated on Layer 2 calling the
+      host an infinitive — 28 of the 35 candidates are finite clauses whose `nsubj` is their own.
+    - **AQ**′ (membership check): rule AQ's `cop`/`aux` merge applied where the citation is still
+      raw. The membership check runs before `_merge_auxiliary_citations` and was reporting the
+      un-normalized position ("vorrebbe di vedere **esser** digiuno"). 2 positions.
 
 **Measured Progression Across Phases**:
 - **Phase 4a Checkpoint (2026-07-20)**: `0 hard, 7776 soft` (down from 17,438 initial).
 - **Phase 4b `--fix` Pass (2026-07-25)**: `0 hard, 5919 soft` across all 100 cantos.
 - **Phase 5 Deterministic Series & Upstream Audits (Phases 5a–5w, Rules C–AF)**: Reduced soft violations from **5,919 → 2,084**. For the complete chronological record, per-phase measurement tables, Layer-4 corrections, and empirical findings on regeneration yield, see [`PHASE5.md`](PHASE5.md).
-- **Phase 6 Restructured `--fix`, Rules AG–BI**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows), then **834** with rules AU–AY and the Inferno 16–20 read (888 → 834, 2026-08-15 — five rules, three of them mirror legs of existing ones, plus 25 Layer-4 and 1 Layer-2 rows), then **691** with rules AZ–BI and the Inferno 21–25 read (834 → 691, 2026-08-15 — nine rules, plus 20 Layer-4 and 5 Layer-2 rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+- **Phase 6 Restructured `--fix`, Rules AG–BN**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows), then **834** with rules AU–AY and the Inferno 16–20 read (888 → 834, 2026-08-15 — five rules, three of them mirror legs of existing ones, plus 25 Layer-4 and 1 Layer-2 rows), then **691** with rules AZ–BI and the Inferno 21–25 read (834 → 691, 2026-08-15 — nine rules, plus 20 Layer-4 and 5 Layer-2 rows), then **650** with rules BJ–BN and the Inferno 26–30 read (691 → 650, 2026-08-15 — five rules plus three legs added to existing ones, and 10 Layer-4 and 1 Layer-2 rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## Next steps
 

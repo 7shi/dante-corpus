@@ -259,9 +259,38 @@ def derive_unit(
         return None
 
     # 1. clause-head predicates, plus conj chains that resolve to one.
-    predicate_positions: set[tuple[int, int]] = {
-        (row.line, row.token) for row in all_rows if row.deprel in CLAUSE_HEAD_DEPRELS
+    #
+    # Rule BN: a token Layer 2 calls a **conjunction** that Layer 4 put in a clause-head deprel
+    # with no arguments of its own is a connective, not an elided predicate. "**Onde** l'altro
+    # lebbroso … rispuose" (inferno 29:124) is `advcl` on `rispuose`, so the derivation minted a
+    # predicate at the connective and reported the LLM for not proposing it — a tuple with no
+    # arguments in it, which no reading of the line can supply. The `conj` branch below already
+    # refuses to promote a coordinating conjunction for the same reason; this is that refusal
+    # applied to the clause-head deprels, and the argument test keeps a genuinely gapped clause
+    # (a `come` with the compared phrase hanging on it) promoted.
+    #
+    # Rule AN's clause-head leg: the same reasoning applies to a *non*-conjunct head. "come
+    # coltel [fa] le scaglie di scardova" (inferno 29:83) is a gapped comparison hanging on the
+    # main clause as `advcl`, with `coltel` promoted and `le scaglie` its `orphan` remnant; there
+    # is no elided verb to mint a tuple for, and unlike the `conj` case there is no coordination
+    # head whose slots the remnants could fill a second time.
+    orphan_heads = {
+        (row.head_line, row.head_token)
+        for row in all_rows
+        if row.deprel == "orphan" and (row.head_line, row.head_token) in index
     }
+    predicate_positions: set[tuple[int, int]] = set()
+    for row in all_rows:
+        if row.deprel not in CLAUSE_HEAD_DEPRELS:
+            continue
+        pos = (row.line, row.token)
+        morph = morph_at(row.line, row.token)
+        if (morph is not None and "conjunction" in morph.pos.lower()
+                and not any(c.deprel in ARG_DEPRELS for c in children.get(pos, ()))):
+            continue
+        if pos in orphan_heads and (morph is None or not is_verb_pos(morph.pos)):
+            continue
+        predicate_positions.add(pos)
 
     def conj_resolves(row: DepRow, seen: set[tuple[int, int]]) -> bool:
         seen.add((row.line, row.token))
@@ -938,6 +967,85 @@ def _merge_np_head_citations(
             g[a_d] = role
 
 
+def _adverb_cluster_head(
+    arg: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    children_by_pos: dict[tuple[int, int], list[DepRow]] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> tuple[int, int] | None:
+    """The head of the adverb-preposition cluster `arg` belongs to, or None — see rule BJ.
+
+    The cluster is an adverb Layer 4 put in an adjunct slot (`obl`/`obl:<lemma>`/`advmod`) with
+    the phrase's nominal hanging under it by its own preposition ("fuor **del dritto amore**",
+    "innanzi **a li altri**"), or a second adverb inside the same complex form ("da **qui**
+    innanzi"). Local to the cluster: the caller decides what the head has to attach to.
+    """
+    if dep_index_by_pos is None or children_by_pos is None or morph_pos_by_position is None:
+        return None
+    row = dep_index_by_pos.get(arg)
+    if row is None:
+        return None
+    head = (row.head_line, row.head_token)
+    host = dep_index_by_pos.get(head)
+    if host is None:
+        return None
+    if host.deprel not in ("advmod", "obl") and not OBL_RE.fullmatch(host.deprel):
+        return None
+    if "adverb" not in morph_pos_by_position.get(head, "").lower():
+        return None
+    if row.deprel in ("nmod", "obl") or OBL_RE.fullmatch(row.deprel):
+        if any(k.deprel == "case" for k in children_by_pos.get(arg, ())):
+            return head
+    if row.deprel == "advmod" and "adverb" in morph_pos_by_position.get(arg, "").lower():
+        return head
+    return None
+
+
+def _merge_adverb_cluster_citations(
+    g: dict[tuple[int, int], str], pos: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    children_by_pos: dict[tuple[int, int], list[DepRow]] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> dict[tuple[int, int], str]:
+    """Rule BJ: the adverb-preposition cluster names one oblique, from either of its two words.
+
+    "**fuor** del dritto amore" (inferno 30:39), "**innanzi** a li altri" (28:68), "da **qui
+    innanzi**" (29:23): Italian builds complex prepositions out of an adverb plus a simple
+    preposition, and the Layer-4 prep-stack normalization of 2026-08-14 deliberately left the 40
+    clusters whose opening word Layer 2 calls an *adverb* alone, because that is a Layer-2/4
+    tension and not a Layer-4 shape lottery. Layer 4 therefore hangs the adverb on the predicate
+    and the nominal under the adverb, so `derive_unit` reports the **adverb** as the oblique
+    (30:38) — or, when the adverb sits in an `advmod` slot, reports nothing at all (28:68) —
+    while the LLM names the nominal, which is what carries the meaning.
+
+    Both citations name one adjunct, so the merge is onto the cluster head, exactly as rule AQ
+    merges an auxiliary citation onto its lexical head: the role is carried across unchanged, so
+    a genuine role disagreement on the merged position still surfaces, and rule J then accepts
+    the `advmod` half. Gated on Layer 2 calling the head an adverb and on the moved token being
+    the adverb's own `nmod`/`obl` child with a preposition of its own, or a further adverb inside
+    the same cluster ("da qui innanzi"). Censused at 147 clusters corpus-wide.
+    """
+    if children_by_pos is None or morph_pos_by_position is None:
+        return g
+
+    def cluster_head(arg: tuple[int, int]) -> tuple[int, int]:
+        head = _adverb_cluster_head(arg, dep_index_by_pos, children_by_pos, morph_pos_by_position)
+        if head is None or head == pos:
+            return arg
+        host = dep_index_by_pos[head]
+        return head if (host.head_line, host.head_token) == pos else arg
+
+    out: dict[tuple[int, int], str] = {}
+    for arg, role in g.items():
+        key = arg
+        if arg != (0, 0) and (role == "obl" or OBL_RE.fullmatch(role)):
+            key = cluster_head(arg)
+        prev = out.get(key)
+        if prev is None or (_role_rank(role), role) < (_role_rank(prev), prev):
+            out[key] = role
+    return out
+
+
 def _aux_head(
     pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
 ) -> tuple[int, int]:
@@ -1009,6 +1117,7 @@ def _predicative_advmod(
 def _accusative_and_infinitive(
     pos: tuple[int, int], arg: tuple[int, int], role: str,
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_features_by_position: dict[tuple[int, int], str] | None = None,
 ) -> bool:
     """Rule BI: the accusative-and-infinitive's shared nominal, named from the matrix side.
 
@@ -1028,9 +1137,18 @@ def _accusative_and_infinitive(
     row = dep_index_by_pos.get(arg)
     if row is None or row.deprel not in ("nsubj", "nsubj:pass"):
         return False
-    host = dep_index_by_pos.get((row.head_line, row.head_token))
-    if host is None or host.deprel not in ("xcomp", "ccomp"):
+    host_pos = (row.head_line, row.head_token)
+    host = dep_index_by_pos.get(host_pos)
+    if host is None:
         return False
+    if host.deprel not in ("xcomp", "ccomp"):
+        # Layer 4 also writes the perception verb's complement as a plain `obj` ("Io vidi **due
+        # sedere**", inferno 29:73; "vidi … **languir li spirti**", 29:66). Restricted to a host
+        # Layer 2 calls an **infinitive**: the same census finds 28 finite clauses in the `obj`
+        # slot, whose `nsubj` is the embedded clause's own subject and nobody's matrix object.
+        if host.deprel != "obj" or "infinitive" not in (
+                morph_features_by_position or {}).get(host_pos, "").lower():
+            return False
     return (host.head_line, host.head_token) == pos
 
 
@@ -1407,14 +1525,20 @@ def _comparative_come_adjunct(
     if dep_index_by_pos is None or children_by_pos is None or morph_pos_by_position is None:
         return False
 
-    def come_mark(host: tuple[int, int]) -> DepRow | None:
+    def come_mark(host: tuple[int, int], words: tuple[str, ...] = ("come", "com")) -> DepRow | None:
         for c in children_by_pos.get(host, ()):
-            if (c.deprel == "mark" and c.word.lower().rstrip("'") in ("come", "com")
+            if (c.deprel == "mark" and c.word.lower().rstrip("'") in words
                     and "conjunction" in morph_pos_by_position.get((c.line, c.token), "").lower()):
                 return c
         return None
 
-    if come_mark(arg) is not None:
+    # Rule BK: `che` is the other marker of a verbless comparison, and the *second term* of a
+    # comparison is the shape it marks — "vedesse altro **che la fiamma sola**" (inferno 26:38),
+    # "guizzando più **che li altri suoi consorti**" (19:32), "ogn' uom v'è barattier, fuor
+    # **che Bonturo**" (21:41). Censused at 51 corpus-wide, every one a comparative or exceptive
+    # second term. Only the *argument* leg takes `che`: a `che`-marked clause hanging on the
+    # predicate is an ordinary complement clause, so the correlative branch below stays `come`.
+    if come_mark(arg, ("come", "com", "che", "ch")) is not None:
         return True
     marker = come_mark(pos)
     if marker is None:
@@ -1426,7 +1550,42 @@ def _comparative_come_adjunct(
     )
     if correlative is None:
         return False
+    if (correlative.line, correlative.token + 1) == (marker.line, marker.token):
+        # Rule BL: "**sì come** nuvoletta, in sù salire" (inferno 26:39). When the correlative
+        # stands immediately *before* the marker the two are one word — `sì come` = "just as" —
+        # so there is no `sì … come` span to place the compared nominal inside, and the
+        # comparison is simply what follows the marker. Kept to the phrase `come` opens: the
+        # argument must be the marker's next token but for its own determiners, so the
+        # predicate's other obliques ("in sù") stay its own. Censused at 107 `sì come` clusters.
+        own = {(c.line, c.token) for c in children_by_pos.get(arg, ())
+               if c.deprel in ("det", "det:poss", "amod", "nummod", "case", "cc")}
+        between = {(marker.line, t) for t in range(marker.token + 1, arg[1])} if marker.line == arg[0] else None
+        return between is not None and arg > (marker.line, marker.token) and between <= own
     return (marker.line, marker.token) <= arg < (correlative.line, correlative.token)
+
+
+def _conjunction_oblique(
+    arg: tuple[int, int], drole: str,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule BM: an oblique whose filler is a token Layer 2 calls a **conjunction**.
+
+    "Nel tempo **che** Iunone era crucciata" (inferno 30:1), "**onde** Cleopatràs lussurïosa"
+    (14:54): the relative adverb — "at which", "whence" — is the clause's link, and Layer 2 tags
+    it a conjunction for exactly that reason. Layer 4 nonetheless parks it in an `obl` slot, so
+    `derive_unit` reports it as an argument of the relative clause's verb, while the LLM lists
+    the clause's own arguments and leaves the connective out.
+
+    Restricted to the oblique slot, which is where the connective reading and the argument
+    reading coincide: the same census finds 147 `nsubj` and 61 `obj` conjunction-tagged tokens,
+    and those are relative pronouns doing real argument work that both readings name. This is
+    the tail of the known Layer-2 route (relative `che`/`onde` tagged `conjunction`, 247 tokens),
+    which can only be settled by a model read of the `case` annex; until then, an adjunct slot
+    filled by a conjunction is not something the derivation can assert.
+    """
+    if not (drole == "obl" or OBL_RE.fullmatch(drole)):
+        return False
+    return "conjunction" in (morph_pos_by_position or {}).get(arg, "").lower()
 
 
 def _fused_clitic_dual_role(
@@ -1521,6 +1680,11 @@ def _classify_divergence(
     np_rows: dict[int, list[NPSpan]] | None = None,
 ) -> list[Violation]:
     violations: list[Violation] = []
+    # Rule BI's `obj` branch: Layer 2's tense column, which is where "infinitive" is recorded.
+    morph_tense_by_position: dict[tuple[int, int], str] = {
+        (no, i + 1): row.tense
+        for no, rows in (morph_rows or {}).items() for i, row in enumerate(rows)
+    }
     children_by_pos: dict[tuple[int, int], list[DepRow]] = {}
     for row in (dep_index_by_pos or {}).values():
         if not (row.head_line == 0 and row.head_token == 0):
@@ -1551,7 +1715,20 @@ def _classify_divergence(
             lemma = _normalize_prep_lemma(row.word.lower())
             marker_lemmas.setdefault((head.head_line, head.head_token), set()).add(lemma)
             case_lemmas.setdefault((head.head_line, head.head_token), set()).add(lemma)
+    # `case_children` is rule L's gate — the positions for which `derive_unit` *could* have
+    # emitted a lemma-qualified oblique — so it is taken before the cluster aggregation below,
+    # which adds lemmas the derivation never reads.
     case_children = set(case_lemmas)
+    # Rule BJ: an adverb-preposition cluster ("di là **da**", "fuor **di**", "innanzi **a**") is
+    # one complex preposition, so the preposition marking the cluster's nominal marks the cluster
+    # head too — the same aggregation the `fixed` loop above does for the multiword prepositions
+    # Layer 4's normalization could reshape, applied to the 40 clusters it deliberately left
+    # alone because Layer 2 calls their opening word an adverb. Rule O then reads either half of
+    # the complex preposition as naming the one oblique.
+    for arg in list(case_lemmas):
+        head = _adverb_cluster_head(arg, dep_index_by_pos, children_by_pos, morph_pos_by_position)
+        if head is not None:
+            case_lemmas.setdefault(head, set()).update(case_lemmas[arg])
     # Rule Y: the positions Layer 4 attaches a `cop`/`aux`/`aux:pass` token to — the tree's own
     # assertion that a predication is headed there, whatever deprel the head itself carries.
     copula_hosts: set[tuple[int, int]] = {
@@ -1938,6 +2115,8 @@ def _classify_divergence(
                                   morph_rows, children_by_pos)
             derived_args = set(d)
             g = _merge_auxiliary_citations(g, pos, dep_index_by_pos)
+            g = _merge_adverb_cluster_citations(g, pos, dep_index_by_pos, children_by_pos,
+                                                morph_pos_by_position)
             g = _collapse_coordination(g, pos, dep_index_by_pos)
             d = _collapse_coordination(d, pos, dep_index_by_pos)
             _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
@@ -1960,6 +2139,8 @@ def _classify_divergence(
                 if _comparative_come_adjunct(pos, arg, drole, dep_index_by_pos, children_by_pos,
                                              morph_pos_by_position):
                     continue  # rule AR: a verbless comparative clause's nominal
+                if _conjunction_oblique(arg, drole, morph_pos_by_position):
+                    continue  # rule BM: a connective Layer 4 parked in an adjunct slot
                 if _pronominal_verb_clitic(pos, arg, drole):
                     continue  # rule AW: rule AB's mirror leg
                 if _undecided_subject_slot(drole, arg, g, d):
@@ -2006,7 +2187,8 @@ def _classify_divergence(
                                                 marker_lemmas)
                     or _secondary_predicate_over_argument(pos, arg, grole, derived_args)
                     or _displaced_subject_pro_drop(grole, arg, g, d)
-                    or _accusative_and_infinitive(pos, arg, grole, dep_index_by_pos)
+                    or _accusative_and_infinitive(pos, arg, grole, dep_index_by_pos,
+                                                  morph_tense_by_position)
                     or _inverted_copula_complement(pos, arg, grole, dep_index_by_pos,
                                                    morph_pos_by_position)
                     or _reflexive_clitic_argument(pos, arg, grole)
@@ -2326,6 +2508,16 @@ def validate_unit(
             if (row.role == "obl" or row.role.startswith("obl:")) and arg in adverb_obl_positions:
                 continue
             if arg in dep_argument_positions:
+                continue
+            # Rule AQ, applied where the citation is still raw: an argument named by the
+            # `cop`/`aux` carrying its tense names the lexical head Layer 4 hung it on
+            # ("vorrebbe di vedere **esser** digiuno", inferno 28:87). The divergence check
+            # merges exactly this edge with `_merge_auxiliary_citations`; the membership check
+            # runs before that merge and was reporting the un-normalized position.
+            aux_head = _aux_head(arg, dep_index(dep_rows) if dep_rows else {})
+            if aux_head != arg and (aux_head in np_head_positions or aux_head in pronoun_positions
+                                    or aux_head in predicate_positions
+                                    or aux_head in dep_argument_positions):
                 continue
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")
