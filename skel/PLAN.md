@@ -2,11 +2,12 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 834 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after the **Inferno 16–20 read landed rules AU–AY 2026-08-15** (888 → 834, −54, −6.1%, zero model calls) on top of rules AM–AT (963 → 888) and the third `--fix` round (1094 → 963). See *Rules AU–AY and the Inferno 16–20 Read* below.
-- **Other Layers**: `dep --check` **0 hard / 0 soft** (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read the same day). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0 (3 rows corrected 2026-08-15), `pytest` **293** passed.
+- **Current State**: `make -C skel check` reports **0 hard, 691 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after the **Inferno 21–25 read landed rules AZ–BI 2026-08-15** (834 → 691, −143, −17.1%, zero model calls) on top of rules AU–AY (888 → 834), AM–AT (963 → 888) and the third `--fix` round (1094 → 963). See *Rules AZ–BI and the Inferno 21–25 Read* below.
+- **Other Layers**: `dep --check` **0 hard / 0 soft** (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read and 20 more by the Inferno 21–25 read the same day). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard, `np --check` 0/0, `morph --check` 0/0 (3 rows corrected 2026-08-15 by the 11–15/16–20 reads, 5 more by the 21–25 read), `pytest` **311** passed.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Three user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**.
 - **Latest Work**:
+  - **Rules AZ–BI + Inferno 21–25 read (2026-08-15)**: nine deterministic rules, 20 Layer-4 rows and 5 Layer-2 rows, scoring **834 → 691 (−143, −17.1%)** with zero model calls; Inferno 21–25 itself 44 → 16 — the largest batch of the series so far. Three of the nine are again mirror legs (AZ of rule R, BD of AW, BH of rule M), but the batch's new finding is **rule BB**: rule V was not missing a direction, it was written to pop *one* citation out of a map where a coordinate subject supplies three, and rule C then collapsed the survivors back onto the position it had just accepted. Two censused rules were dropped (the elided speech verb's `missing_tuple`, and result-clause `ccomp` at population 2), and a `dep.subject_agreement` refinement was measured at 12 new Layer-4 soft violations and deferred. See *Rules AZ–BI and the Inferno 21–25 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
   - **Rules AU–AY + Inferno 16–20 read (2026-08-15)**: five deterministic rules, 25 Layer-4 rows and 1 Layer-2 row, scoring **888 → 834 (−54, −6.1%)** with zero model calls and **zero newly-flagged positions**; Inferno 16–20 itself 47 → 31. Three of the five are *mirror legs* of rules the checker already had (AV of `_aux_of_derived_predicate`, AW of AB, AY of `_elided_copula_nominal`), which is the batch's finding: a checker rule written for one direction of a labeling convention leaves the other direction reported. One censused rule was measured and **dropped** (gapped-clause remnants, population 12 — rule AN's assignment is right and the LLM's omission is reading error). See *Rules AU–AY and the Inferno 16–20 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
   - **Rules AM–AT + Inferno 11–15 read (2026-08-15)**: eight deterministic rules, 16 Layer-4 rows and 2 Layer-2 rows, scoring **963 → 888 (−75, −7.8%)** with zero model calls; Inferno 11–15 itself 37 → 17. Four of the eight are in `derive_unit` itself — the first batch where the read found the derivation *wrong* rather than silent. Plus the fix side's first subject-slot branches (`missing_arg_subject`, `extra_arg_subject`, together 29% of the residue), a rewritten `missing_tuple_nominal` question, and a `_fix_hint` bug. See *Rules AM–AT and the Inferno 11–15 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
   - **Third `--fix` round (2026-08-15)**: **1094 → 963 (−131)**, the first round preceded by new checker rules, a sharpened prompt and a new Stage-2 class. `missing_arg_adverb` **83 → 28 (−66.3%)** confirms the `_CONV_ADVERB` prompt-defect diagnosis; the elided-speech and appositive-adjective clauses moved ~nothing. See *Third User-Run `--fix` Round* below.
@@ -252,17 +253,68 @@ checker-side or upstream.
 
 ---
 
+### 10. Rules AZ–BI and the Inferno 21–25 Read (2026-08-15)
+
+Per-position read of all **44** soft violations in Inferno 21–25. **834 → 691 (−143, −17.1%)**,
+zero model calls; Inferno 21–25 itself 44 → 16. The largest batch of the series. Full write-up,
+with the evidence line for each rule, the two rules censused and dropped, and the honest trades
+the upstream retags make, in [`CORRECTIONS.md`](CORRECTIONS.md).
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **AZ** | rule R's mirror leg: a depictive adjective on the predicate as a **bare `obl`** | 43 | −13 |
+| **BA** | a predicate with **two** derived `subj` rows — the derivation has not decided | 99 | −41 |
+| **BB** | rule V's coordination leg: *every* conjunct of a controlled infinitive's subject | — | −26 |
+| **BC** | an `advmod` whose filler Layer 2 calls a **noun or pronoun** is an oblique | 117 | −14 |
+| **BD** | rule AW's third deprel: a reflexive clitic Layer 4 left as `obl` | 35 | −10 |
+| **BE** | `flat` collapses onto its head like `conj`/`appos` | 31 | (in BB) |
+| **BF** | a `cop` edge pointed the wrong way: the non-verb in the `cop` slot is the `attr` | 11 | −8 |
+| **BH** | rule M's mirror leg: the pro-drop ∅ subject rule M's relabelling leaves behind | — | −14 |
+| **BI** | the accusative-and-infinitive's shared nominal, named from the matrix side | 10 | −10 |
+
+Plus 20 Layer-4 rows and 5 Layer-2 rows (**−11 / +4** together), and `pytest` 311.
+
+Three findings worth carrying forward:
+
+- **When you write a rule, check the *plural* as well as the mirror.** Rules AZ, BD and BH are
+  more mirror legs (37 positions), which the previous batch already taught. Rule BB is new in
+  kind: rule V was correct in direction and simply **applied once to a shape that supplies
+  several citations** — `_subj_arg` returns the first `subj` in the map, and a coordinate subject
+  has three. Any rule that pops a single entry out of `g`/`d` should be asked what it does when
+  the shape produces two.
+- **Rule ordering is a defect surface, and only the diff shows it.** Rule BE alone measured
+  −7/**+2**: `_apply_subj_authority` runs *before* `_collapse_coordination`, so the collapse
+  rewrote citations rule V had refused onto the very position it accepts (paradiso 15:112).
+  Testing rule V's candidate set through `_coordination_head` too took the pair to −23/0. A rule
+  that tests a **raw** citation for membership must test the normalized one as well.
+- **Two rules were censused and dropped, and one upstream refinement was measured and deferred.**
+  The elided speech verb's `missing_tuple` (inferno 24:72) has a census of 164 and the LLM
+  proposes nearly all of them, so the four omissions are reading error, not checker silence; the
+  result-clause `ccomp` (22:84) has a census of 2. Restricting `dep.subject_agreement`'s
+  *coordinated subject* exclusion to the number test — a coordination of nominals is third person
+  however many members it has — was implemented and measured at **12 new `dep --check` soft
+  violations**, all real Layer-4 questions, and reverted rather than landed against the standing
+  0-soft invariant.
+
+Prompt side, unmeasured until the next round: nothing new — every diagnosis was checker-side or
+upstream.
+
+---
+
 ## The Read Series — read the whole corpus first, then fix (decided 2026-08-15)
 
 **The fourth `--fix` round is deferred until per-position reads have covered all 100 cantos in
-5-canto batches.** Inferno 1–15 is done (batches 1, 1–3, 4–6, 7–10, 11–15); **Inferno 16–20 is the
-next batch**, and the series then runs to Paradiso 33 before any round is launched.
+5-canto batches.** Inferno 1–25 is done (batches 1, 1–3, 4–6, 7–10, 11–15, 16–20, 21–25);
+**Inferno 26–30 is the next batch**, and the series then runs to Paradiso 33 before any round is
+launched.
 
 **Why read first.** Every batch so far has produced deterministic rules that remove violations at
-**zero model cost** (AG: −43; AH–AL: −156; AM–AT: −75; AU–AY: −54), the 11–15 batch showed the reads also
-find `derive_unit` itself to be wrong rather than merely silent, and the 16–20 batch showed they
-find existing rules to be **half-written** — three of its five rules are the mirror leg of a rule
-already in the checker. A `--fix` round run before those rules
+**zero model cost** (AG: −43; AH–AL: −156; AM–AT: −75; AU–AY: −54; AZ–BI: −143), the 11–15 batch
+showed the reads also find `derive_unit` itself to be wrong rather than merely silent, the 16–20
+batch showed they find existing rules to be **half-written** — three of its five rules are the
+mirror leg of a rule already in the checker — and the 21–25 batch found a rule that was neither
+silent nor half-written but *singular where the shape is plural*, plus an ordering defect between
+two rules that were each correct alone. A `--fix` round run before those rules
 exist pays a model for positions a later rule would have taken for free, and worse: a round rewrites
 the artifact, so a rule written afterwards is measured against a base the round already moved, and
 the two effects can no longer be told apart. Reading the whole corpus first means the round runs
@@ -274,27 +326,29 @@ The cost of deferring is that the prompt-side work already queued (the subject b
 those changes cannot regress anything while no round runs, and the reads will very likely add more
 of them.
 
-### Schedule — 19 batches, 750 positions at base 834
+### Schedule — 16 batches, 602 positions at base 691
 
-Inferno 1–20 (53 + 31 = 84 remaining positions) has been read and is **not** re-read; its residue
+Inferno 1–25 (73 + 16 = 89 remaining positions) has been read and is **not** re-read; its residue
 is reading error, and it is the fourth round's most direct sample afterwards.
 
 | batch | soft | | batch | soft | | batch | soft |
 |---|---:|---|---|---:|---|---|---:|
-| **inferno 21–25** | **44** | | purgatorio 1–5 | 29 | | paradiso 1–5 | 57 |
-| inferno 26–30 | 34 | | purgatorio 6–10 | 54 | | paradiso 6–10 | 30 |
-| inferno 31–34 | 47 | | purgatorio 11–15 | 46 | | paradiso 11–15 | 61 |
-| | | | purgatorio 16–20 | 44 | | paradiso 16–20 | 39 |
-| | | | purgatorio 21–25 | 58 | | paradiso 21–25 | 40 |
-| | | | purgatorio 26–30 | 50 | | paradiso 26–30 | 50 |
-| | | | purgatorio 31–33 | 36 | | paradiso 31–33 | 31 |
+| **inferno 26–30** | **23** | | purgatorio 1–5 | 26 | | paradiso 1–5 | 46 |
+| inferno 31–34 | 44 | | purgatorio 6–10 | 45 | | paradiso 6–10 | 25 |
+| | | | purgatorio 11–15 | 41 | | paradiso 11–15 | 51 |
+| | | | purgatorio 16–20 | 34 | | paradiso 16–20 | 36 |
+| | | | purgatorio 21–25 | 50 | | paradiso 21–25 | 35 |
+| | | | purgatorio 26–30 | 45 | | paradiso 26–30 | 45 |
+| | | | purgatorio 31–33 | 30 | | paradiso 31–33 | 26 |
 
 Per canto, get the current numbers with `uv run skel.py <canticle> --check -c <n>` from `skel/`;
-the table is a base-834 snapshot and every landed rule shrinks the batches after it.
+the table is a base-691 snapshot and every landed rule shrinks the batches after it. The AZ–BI
+rules cut every remaining batch by roughly a fifth, which is why re-measuring before a batch is
+part of step 1.
 
 ### How to Read a Batch
 
-The procedure below is what produced rules AG through AT. Steps 4–7 are the part that must not be
+The procedure below is what produced rules AG through BI. Steps 4–7 are the part that must not be
 skipped: a rule that is not censused, measured, tested and written up is not a rule.
 
 1. **List the batch.** `uv run skel.py <canticle> --check -c <n>` for each canto, from `skel/`.
@@ -367,21 +421,25 @@ user's job) and measure per *How to Measure a `--fix` Round* below.
 
 ## Active & Open Routes
 
-Everything in this section is measured at base 834. These are shapes the reads have already named
+Everything in this section is measured at base 691. These are shapes the reads have already named
 but not settled; a batch that runs into one of them should fold it in rather than open a new route.
 
 ### Open Assistant-Side Routes
 
-*(populations re-measured at base 834 after the Inferno 16–20 read)*
+*(populations re-measured at base 691 after the Inferno 21–25 read)*
 
-- **The 84 positions Inferno 1–20 still holds** are the read batches' own residue and are almost
+- **The 89 positions Inferno 1–25 still holds** are the read batches' own residue and are almost
   all reading error, which is what the prompt branches were built from. Do **not** re-read them
   during the series: they are the fourth round's most direct sample, and reading them again before
   it runs would only re-derive what the batches already recorded.
-- **Check the mirror leg of every rule you write** (2026-08-15, from the Inferno 16–20 batch).
-  Three of that batch's five rules were the other direction of a convention the checker already
-  accepted one way round, worth 18 positions between them. When a rule accepts "the LLM names X
+- **Check the mirror leg of every rule you write** (2026-08-15, from the Inferno 16–20 batch;
+  three more legs in the 21–25 batch, worth 37 positions). When a rule accepts "the LLM names X
   where the derivation names Y", ask what happens when the derivation names X and the LLM names Y.
+- **Check the *plural* too, and the rule's place in the pipeline** (2026-08-15, from the Inferno
+  21–25 batch). Rule V popped one `subj` out of a map a coordinate subject fills three times, and
+  the collapse that runs after it put the survivors back on the accepted position. Two questions
+  for every rule: what does it do when the shape supplies **several** citations, and does it test
+  a raw citation that a later normalization step will rewrite?
 - **Subject vs. predicate nominal under a copula** (inferno 19:85 *«Nuovo Iasón sarà»*, 20:77
   *«ma Mencio si chiama»*): Layer 4 calls the single nominal `nsubj`, the LLM calls it the
   complement of an elided pro-drop subject, and the line does not decide. Feeds the
@@ -389,9 +447,9 @@ but not settled; a batch that runs into one of them should fold it in rather tha
 - **A relative pronoun's subject named by its antecedent** (inferno 16:94 *«quel fiume c'ha
   proprio cammino»*): the derivation cites the relative `c'`, the LLM cites `fiume`. An acceptance
   rule keyed on `skel.antecedent` is plausible — **census it before writing it**.
-- **Accusative-and-infinitive** (inferno 16:104 *«trovammo risonar quell' acqua tinta»*): the LLM
-  reads the nominal as the matrix object, the derivation as the infinitive's subject. Rule AX
-  deliberately does not reach it — that is relabelling, not relocating.
+- **Accusative-and-infinitive — CLOSED by rule BI (2026-08-15)**: censused at 10 (inferno 5:48,
+  16:104, 22:31, 23:119, 26:78; purgatorio 18:24; paradiso 15:112, 19:39 …) and all 10 taken. The
+  tree asserts both edges, so neither reading is wrong.
 - **An argument named by its Layer-3 NP head against a clause the derivation cites by its clause
   head** (inferno 13:52, *«Ma dilli chi tu fosti»*): rule AI merges these only when the *role*
   matches, and here the LLM's `obj` on `chi` faces the derivation's `ccomp` on `fosti`. Measure how
@@ -404,24 +462,24 @@ but not settled; a batch that runs into one of them should fold it in rather tha
 - **Rule AN's two unresolved gapping clusters** (purgatorio 25:3, 27:108): 2-slot ambiguities that
   only word order settles, and Italian inverts word order freely. Left standing deliberately.
 
-- **`missing_arg_adverb` residue (32)**: the survivors of the `_CONV_ADVERB` repair. The licence
+- **`missing_arg_adverb` residue**: the survivors of the `_CONV_ADVERB` repair. The licence
   that caused the class is gone, so this is now a per-position read — the first thing to establish
   is whether these are locative adverbs the model still omits or a different shape the branch is
   over-collecting. The class now also carries `_CONV_REPEATED`, so read it after the fourth round.
-- **`missing_tuple_nominal` (20) and `extra_tuple_adjective` (8, down from 13 — rule AY took the
-  complemented half)**: both untouched by round 3's
+- **`missing_tuple_nominal` and `extra_tuple_adjective`** (`missing_tuple` 23 / `extra_tuple` 22
+  at base 691): both untouched by round 3's
   prompt clauses and both position-identical to their pre-round sets. `missing_tuple_nominal` has
   now had its *question* rewritten (round 3 had only given it convention prose and a hint), which
   is the fourth round's cleanest test of Phase 5w's law; `extra_tuple_adjective` has had no such
-  change, so read those 13 positions rather than writing more prose.
-- **`extra_arg subj` (147, of which `∅ (0,0)` 42) and `missing_arg subj` (100)**: the two largest
+  change, so read those positions rather than writing more prose.
+- **`extra_arg subj` (111, of which `∅ (0,0)` 28 — rule BH took the half rule M had created) and `missing_arg subj` (60)**: the two largest
   buckets in the residue, now branched as `extra_arg_subject`/`missing_arg_subject` with
   `_CONV_SUBJECT` behind them. The Inferno 11–15 read supplied three diagnoses (postverbal
   subjects, proclitics read as subjects, coordination-shared subjects) but read only a handful of
   positions; the fourth round measures whether those three cover the buckets. What survives it is
   read-work — start with the `∅ (0,0)` half, where the derivation found a genuine overt subject,
   often long-distance (e.g. Inferno 9:20, where `alcun` at 21.4 is the subject of `incontra`).
-- **`role_mismatch` `xcomp` vs `obl` (21) and `obj` ↔ `subj` (33 across both directions)**: the two
+- **`role_mismatch` `xcomp` vs `obl` (8, down from 21 after rule AZ) and `obj` ↔ `subj` (31 across both directions)**: the two
   dominant mismatch shapes. The `obj`/`subj` swap is a symmetric pair, which suggests one
   systematic cause rather than scattered slips. Inferno 9:41 and 9:72, both fixed in `dep/` this
   session, were instances — worth checking whether the rest are too.
@@ -429,18 +487,25 @@ but not settled; a batch that runs into one of them should fold it in rather tha
   hangs the quotation as `parataxis`, which is a clause-head deprel but not an argument deprel, so
   the derivation never makes it the verb's `ccomp` while the LLM (rightly) does. A
   `parataxis`→`ccomp` acceptance rule for verbs of speech is plausibly large; **measure the
-  population before writing it.**
-- **Depictive adjectives under bare `obl` (Inferno 10:72 `supin ricadde`)**: candidate derivation
-  rule "bare `obl` child with adjective POS and no `case` child → derive `attr`". Interacts with
-  rule R and with the 48 `missing_arg` positions whose argument is an adjective; measure separately.
+  population before writing it.** Its neighbour, the *result* clause read as `ccomp`
+  (`sì … che`, inferno 22:84), was censused at **2** and dropped.
+- **`dep.subject_agreement`'s *coordinated subject* exclusion (12 positions)**: restricting it to
+  the number test — a coordination of nominals is third person however many members it has — was
+  implemented and measured, and takes `dep --check` from 0 to 12 soft. Each is a real Layer-4
+  question (inferno 2:33, 8:28, 21:121, 25:36; purgatorio 4:102, 5:82, 10:62, 23:113, 29:37;
+  paradiso 14:125, 19:12, 31:96); reverted rather than landed against the 0-soft invariant. It is
+  what keeps rule AG from dropping the wrong inherited subject at inferno 24:125.
+- **Depictive adjectives under bare `obl` — CLOSED by rule AZ (2026-08-15)**: censused at 43 and
+  worth −13 as a role-mismatch acceptance rather than a derivation change (inferno 10:72
+  `supin ricadde`, 21:46, 23:17, 24:115).
 - **Relative `che`/`ch'`/`onde` tagged `conjunction` (247 tokens)**: unblocked only by an
   independent model read of the `case` annex over the 243 positions the retag would add. That is a
   build round, not an edit — see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
-- **Attributive vs. Predicative Adjectives (13 `extra_tuple_adjective` remaining, down from 37)**:
+- **Attributive vs. Predicative Adjectives** (`extra_tuple` is 22 at base 691, down from 37 for the adjective subclass alone):
   - True reading disagreements with no `cop` edge (e.g., Inferno 2:109 *"non fur mai persone ratte / a far lor pro"*).
   - Round 3's appositive clause moved none of them — see above. Conduct a per-position read of the
-    remaining 13 before writing any checker rule.
-- **`extra_arg_adjective` residue (28, down from 45 — rule AU took the object/subject complements)**: two rounds have now each taken a couple of positions
+    remainder before writing any checker rule.
+- **`extra_arg_adjective` residue** (`extra_arg xcomp` is 38 at base 691; rule AU took the object/subject complements and rule BF the inverted copulas): two rounds have now each taken a couple of positions
   (−20.0%, then −3.9%), which is itself evidence that the residue is genuine reading disagreement
   rather than prompt weakness. Per-position read to settle it.
 - **Adverbs Promoted to Predicates (2 `extra_tuple_adverb` remaining, down from 33)**:
@@ -454,7 +519,7 @@ but not settled; a batch that runs into one of them should fold it in rather tha
   One deliberate leftover: the 40 adverb-prep clusters (`dentro a`, `dinanzi a`, `dietro a`,
   `intorno a`, `fuor di`, `infino al` …) Layer 2 tags `adverb` were excluded from the rewrite —
   a Layer-2/4 tension to decide separately if it ever matters.
-- **`missing_arg obl` Sample Audit (77 standing, down from 128)**: the adverb bucket that dominated
+- **`missing_arg obl` Sample Audit (68 standing, down from 128)**: the adverb bucket that dominated
   it is branched and largely repaired, and `_CONV_REPEATED` now addresses the duplicate-slot half
   of it. The read series will walk these positions in batch order anyway, so this is no longer a
   separate route — fold what it finds into the batch that covers it.

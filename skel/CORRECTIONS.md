@@ -1,5 +1,83 @@
 # skel — Layer 5 correction history
 
+## Rules AZ-BI, from re-reading Inferno 21-25 — 834 → 691, −143 (2026-08-15)
+
+Per-position read of all **44** soft violations in Inferno 21-25, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Inferno 21-25 itself
+went **44 → 16**; the corpus went **834 → 691 (−143, −17.1%)**, the largest batch on record.
+Nine deterministic rules, 20 Layer-4 rows and 5 Layer-2 rows; `pytest` 311, all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **AZ** | rule R's mirror leg: a depictive adjective Layer 4 hung on the predicate as a **bare `obl`** | 43 | −13 |
+| **BA** | `derive_unit` gave one predicate **two** subjects and the LLM named one of them | 99 | −41 |
+| **BB** | rule V's coordination leg: every conjunct of a controlled infinitive's subject, read through rule C | — | −26 |
+| **BC** | an `advmod` whose filler Layer 2 calls a **noun or pronoun** is an oblique | 117 | −14 |
+| **BD** | rule AW's third deprel: a reflexive clitic Layer 4 left as `obl` | 35 | −10 |
+| **BE** | `flat` collapses onto its head like `conj`/`appos` — a multiword name is one nominal | 31 | (in BB) |
+| **BF** | a `cop` edge Layer 4 pointed the wrong way: the non-verb in the `cop` slot is the `attr` | 11 | −8 |
+| **BH** | rule M's mirror leg: the pro-drop ∅ subject rule M's relabelling leaves behind | — | −14 |
+| **BI** | the accusative-and-infinitive's shared nominal, named from the matrix side | 10 | −10 |
+
+Rules BB and BE were measured together: BE alone scored −7/+2, the +2 being two subjects rule V
+should have accepted but did not, because `_apply_subj_authority` runs *before*
+`_collapse_coordination` and the collapse then rewrote an unaccepted citation onto the very
+position rule V does accept ("Bellincion **Berti** vid' io andar", paradiso 15:112). Testing rule
+V's candidate set through `_coordination_head` as well closed both directions: −23, 0 newly
+flagged.
+
+### The batch's three findings
+
+- **Two more mirror legs, and a third kind of half-written rule.** AZ is rule R looking at the
+  other deprel Layer 4 uses for the same construction, BD is rule AW's third deprel, BH is rule M's
+  own leftover — 37 positions between them. But BB is new in kind: rule V was not *missing* a
+  direction, it was **applied once where the shape supplies several citations**
+  (`_subj_arg` returns the first `subj` it finds, and a coordinate subject has three). The
+  Inferno 16-20 batch's "check the mirror leg" now has a companion: **check the plural** — when a
+  rule pops one citation out of a map, ask what happens when the shape produces two.
+
+- **Rule ordering is itself a defect surface.** The BE/BB interaction was invisible from the
+  count (−7 looked like a clean win) and only the violation *diff* named it. Normalization
+  (`_collapse_coordination`, `_merge_np_head_citations`) runs after `_apply_subj_authority`, so
+  any rule that tests a raw citation for membership must test the normalized one too.
+
+- **Two censused rules were dropped.** A `missing_tuple` acceptance for the elided verb of speech
+  ("per ch'io: «Maestro, fa che …»", inferno 24:72, where `derive_unit` mints a predicate out of
+  the bare pronoun): the census found 164 pronoun clause heads with a `ccomp`, and the LLM
+  proposes a tuple for nearly all of them, so the corpus's own convention is to propose them and
+  the four omissions are reading error. And a `parataxis`/result-clause `ccomp` acceptance
+  ("e fé sì lor, **che** ciascun se ne loda", 22:84): population **2**.
+
+### The upstream retags, and the honest trades
+
+20 Layer-4 rows and 5 Layer-2 rows were corrected in the same session (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)). Measured together: **−11 / +4**. Three of
+the four new positions are the retags doing their job — a more correct parse that the artifact
+now visibly disagrees with, which is the trade rule AM already put on the record:
+
+- inferno 22:32 `'ncontra` was Layer-2 tagged a *preposition*; it is the impersonal verb
+  `incontra`. Correcting it makes `derive_unit` propose a predicate the LLM (reading a
+  preposition) never proposed — a `missing_tuple` that is now correctly attributed.
+- inferno 24:22 `aperse` was tagged an *adjective*; "Le braccia aperse" is "he opened his arms",
+  so `braccia` is its object, and the LLM's participial reading is now the divergence.
+- inferno 25:68 `ti` in "come ti muti" stood as `nsubj`; a reflexive clitic is not a subject, and
+  with it corrected the LLM's `attr` on the clitic is the divergence rather than the derivation's.
+- inferno 24:125: retagging the gapped `non umana` onto `Vita` moved a violation from `piacque`
+  to `son` without changing the count. `son` (1sg) inherits `Vita` across `conj` and rule AG does
+  not drop it, because `dep.subject_agreement` calls a **coordinated subject** undecidable — see
+  the deferred route below.
+
+### A measured `dep.subject_agreement` refinement, deferred
+
+The "coordinated subject" exclusion suspends the whole agreement test, but a coordination of
+nominals admits a plural *number* over a singular first conjunct — it says nothing about
+**person**. Restricting the exclusion to number only was implemented and measured: `dep --check`
+0 → **12** soft violations, every one a real Layer-4 question (inferno 2:33, 8:28, 21:121, 25:36;
+purgatorio 4:102, 5:82, 10:62, 23:113, 29:37; paradiso 14:125, 19:12, 31:96). Reverted: the
+standing invariant is `dep --check` 0, and clearing those 12 is a read of its own. Recorded here
+so the next session does not re-derive the measurement.
+
 ## The second Phase 6 `--fix` round — 1409 → 1247, −162 (2026-08-14, user-run)
 
 `make -C skel fix` over the 841 units flagged at 1409 — the first pass carrying the

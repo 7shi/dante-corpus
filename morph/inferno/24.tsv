@@ -162,7 +162,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 21	monte	monte	noun	m.	sg.				
 22	Le	il	article	f.	pl.				
 22	braccia	braccio	noun	f.	pl.				
-22	aperse	aperto	adjective	f.	pl.				
+22	aperse	aprire	verb		sg.	3	remote past	indicative	
 22	dopo	dopo	preposition						
 22	alcun	alcuno	adjective	m.	sg.				apocope
 22	consiglio	consiglio	noun	m.	sg.				

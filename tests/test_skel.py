@@ -2445,3 +2445,248 @@ def test_classify_divergence_rule_ay_requires_a_complement_child():
     given, derived, idx, morph_pos = _adjective_phrase_fixture(child_deprel="advmod")
     details = [v.detail for v in skel._classify_divergence(given, derived, idx, morph_pos)]
     assert any(d.startswith("extra_tuple") for d in details)
+
+
+# --- The Inferno 21-25 read: rules AZ, BA, BB, BC, BD, BE, BF, BH, BI ------------------
+
+
+def _depictive_oblique_fixture(arg_pos="adjective", extra=()):
+    """"tornò sù convolto" (inferno 21:46): the depictive adjective hangs on the predicate as a
+    bare `obl`, so the derivation reports an adjunct where the LLM reads the complement."""
+    derived = {1: [skel.SkelRow(1, 1, "tornò", "obl", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "tornò", "attr", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="tornò", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="convolto", deprel="obl",
+                           head_line=1, head_token=1),
+    }
+    for row in extra:
+        dep_index_by_pos[(row.line, row.token)] = row
+    return given, derived, dep_index_by_pos, {(1, 2): arg_pos}
+
+
+def test_classify_divergence_rule_az_accepts_a_depictive_bare_oblique():
+    given, derived, idx, morph_pos = _depictive_oblique_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_az_requires_an_adjective():
+    # An adverb in the same slot leaves the reading undecided, exactly as for rule R.
+    given, derived, idx, morph_pos = _depictive_oblique_fixture(arg_pos="adverb")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def test_classify_divergence_rule_az_requires_no_case_child():
+    # A preposition in the tree makes the phrase a genuine adjunct.
+    case_child = dep.DepRow(line=1, token=3, word="per", deprel="case",
+                            head_line=1, head_token=2)
+    given, derived, idx, morph_pos = _depictive_oblique_fixture(extra=(case_child,))
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _two_subject_fixture(named=(1, 3)):
+    """"E quelli: «I' mi partii»" (inferno 22:66): the elided verb of speech leaves `quelli`
+    attached to the quoted verb next to its real subject, so the derivation has two."""
+    derived = {1: [skel.SkelRow(1, 1, "partii", "subj", 1, 2),
+                   skel.SkelRow(1, 1, "partii", "subj", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "partii", "subj", *named)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="partii", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="quelli", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="I'", deprel="nsubj",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {}
+
+
+def test_classify_divergence_rule_ba_accepts_one_of_two_derived_subjects():
+    given, derived, idx, morph_pos = _two_subject_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_ba_requires_the_llm_to_name_one_of_them():
+    # A subject from outside the pair is the LLM's own claim and stays flagged.
+    given, derived, idx, morph_pos = _two_subject_fixture(named=(1, 9))
+    idx[(1, 9)] = dep.DepRow(line=1, token=9, word="altri", deprel="nsubj",
+                             head_line=1, head_token=8)
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _coordinate_control_subject_fixture():
+    """"vidi cavalier muover ... né pedoni ... né nave" (inferno 22:11): the LLM gives the
+    controlled infinitive every conjunct of its subject; rule V accepted only the first."""
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 2),
+                   skel.SkelRow(1, 1, "vidi", "xcomp", 1, 4),
+                   skel.SkelRow(1, 4, "muover", "", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 2),
+                 skel.SkelRow(1, 4, "muover", "subj", 1, 2),
+                 skel.SkelRow(1, 4, "muover", "subj", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="vidi", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="cavalier", deprel="obj",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="pedoni", deprel="conj",
+                           head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="muover", deprel="xcomp",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {}
+
+
+def test_classify_divergence_rule_bb_accepts_every_conjunct_of_a_control_subject():
+    given, derived, idx, morph_pos = _coordinate_control_subject_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bb_still_flags_a_subject_outside_the_chain():
+    given, derived, idx, morph_pos = _coordinate_control_subject_fixture()
+    given[1][2] = skel.SkelRow(1, 4, "muover", "subj", 1, 9)
+    idx[(1, 9)] = dep.DepRow(line=1, token=9, word="altri", deprel="nsubj",
+                             head_line=1, head_token=8)
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _nominal_advmod_fixture(arg_pos="noun"):
+    """"stieno i Malebranche un poco in cesso" (inferno 22:100): Layer 4 parks the adverbial
+    nominal on `advmod`, which `derive_unit` cannot read as an argument at all."""
+    derived: dict[int, list[skel.SkelRow]] = {1: [skel.SkelRow(1, 1, "stieno", "subj", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "stieno", "subj", 0, 0),
+                 skel.SkelRow(1, 1, "stieno", "obl", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="stieno", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="poco", deprel="advmod",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): arg_pos}
+
+
+def test_classify_divergence_rule_bc_accepts_a_nominal_advmod_as_an_oblique():
+    given, derived, idx, morph_pos = _nominal_advmod_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bc_leaves_an_adjective_advmod_flagged():
+    # Rule R's caution: an adjective there is a predicative complement, not an oblique.
+    given, derived, idx, morph_pos = _nominal_advmod_fixture(arg_pos="adjective")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def test_classify_divergence_rule_bd_accepts_a_reflexive_clitic_left_as_obl():
+    # "Se l'ira sovra 'l mal voler s'aggueffa" (inferno 23:16).
+    given, derived, idx, morph_pos, case_by = _pronominal_clitic_fixture(deprel="obl")
+    derived[1][0] = skel.SkelRow(1, 1, "puose", "obl", 1, 2)
+    assert skel._classify_divergence(given, derived, idx, morph_pos, case_by) == []
+
+
+def test_classify_divergence_rule_bd_requires_the_annex_to_call_it_reflexive():
+    given, derived, idx, morph_pos, case_by = _pronominal_clitic_fixture(
+        case_value="ablative", deprel="obl")
+    derived[1][0] = skel.SkelRow(1, 1, "puose", "obl", 1, 2)
+    violations = skel._classify_divergence(given, derived, idx, morph_pos, case_by)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def test_coordination_head_rule_be_collapses_a_flat_name_onto_its_head():
+    # "son Vanni Fucci" (inferno 24:125): `Fucci` is not a modifier of `Vanni`, it is the name.
+    index = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Vanni", deprel="attr",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="Fucci", deprel="flat",
+                           head_line=1, head_token=1),
+    }
+    assert skel._coordination_head((1, 2), index) == (1, 1)
+
+
+def _inverted_copula_fixture(arg_pos="adjective"):
+    """"poi che fu a terra sì distrutto" (inferno 24:103): Layer 4 points the `cop` edge from the
+    adjective down to the copula, so the derivation never sees the complement."""
+    derived: dict[int, list[skel.SkelRow]] = {1: [skel.SkelRow(1, 1, "fu", "subj", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "fu", "subj", 0, 0),
+                 skel.SkelRow(1, 1, "fu", "attr", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="fu", deprel="advcl",
+                           head_line=2, head_token=1),
+        (1, 2): dep.DepRow(line=1, token=2, word="distrutto", deprel="cop",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): arg_pos}
+
+
+def test_classify_divergence_rule_bf_accepts_an_inverted_copula_complement():
+    given, derived, idx, morph_pos = _inverted_copula_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bf_requires_a_non_verb_in_the_cop_slot():
+    # An ordinary `cop` edge (a verb) is the normal shape and asserts nothing about a complement.
+    given, derived, idx, morph_pos = _inverted_copula_fixture(arg_pos="verb")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _displaced_subject_fixture(complement_role="attr"):
+    """"che mi parve una lontra" (inferno 22:36): rule M concedes the derived `subj` to the LLM's
+    predicative complement, which leaves the LLM's pro-drop subject with no counterpart."""
+    derived = {1: [skel.SkelRow(1, 1, "parve", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "parve", "subj", 0, 0),
+                 skel.SkelRow(1, 1, "parve", complement_role, 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="parve", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="lontra", deprel="nsubj",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): "noun"}
+
+
+def test_classify_divergence_rule_bh_accepts_the_pro_drop_rule_m_leaves_behind():
+    given, derived, idx, morph_pos = _displaced_subject_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bh_requires_rule_m_to_have_fired():
+    # Without the complement relabelling, a ∅ subject against a concrete one is a real
+    # disagreement — the `extra_arg subj ∅` bucket.
+    given, derived, idx, morph_pos = _displaced_subject_fixture(complement_role="obj")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _accusative_infinitive_fixture(link="xcomp"):
+    """"I' vidi ... uno aspettar così" (inferno 22:31): the nominal is the matrix object and the
+    infinitive's subject at once, and Layer 4 records only the second."""
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "xcomp", 1, 3),
+                   skel.SkelRow(1, 3, "aspettar", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 2),
+                 skel.SkelRow(1, 1, "vidi", "xcomp", 1, 3),
+                 skel.SkelRow(1, 3, "aspettar", "subj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="vidi", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="uno", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="aspettar", deprel=link,
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 2): "pronoun"}
+
+
+def test_classify_divergence_rule_bi_accepts_the_accusative_and_infinitive():
+    given, derived, idx, morph_pos = _accusative_infinitive_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bi_requires_the_infinitive_to_be_this_predicates_complement():
+    given, derived, idx, morph_pos = _accusative_infinitive_fixture(link="advcl")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)

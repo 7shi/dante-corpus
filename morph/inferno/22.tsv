@@ -218,8 +218,8 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 32	aspettar	aspettare	verb				infinitive		apocope
 32	così	così	adverb						
 32	com'	come	conjunction						elision
-32	elli	elli	pronoun	m.	pl.	3			
-32	'ncontra	in+contra	preposition						elision
+32	elli	elli	pronoun	m.	sg.	3			
+32	'ncontra	incontrare	verb		sg.	3	present	indicative	elision
 33	ch'	che	conjunction						elision
 33	una	uno	article	f.	sg.				indefinite
 33	rana	rana	noun	f.	sg.				

@@ -661,16 +661,24 @@ def _apply_subj_authority(
         # derive_unit asserted no subject at all: the predicate is non-finite, so ∅ is accepted
         # and so is any subject rule V's head-chain walk can reach (control/raising matrix
         # argument, or the nominal an adnominal participle modifies).
-        g_subj = _subj_arg(g)
-        if g_subj is None:
+        # Rule BB, rule V's coordination leg: the LLM lists **every** conjunct of a coordinate
+        # subject ("vidi cavalier muover ... né pedoni ... né nave", inferno 22:11 — three `subj`
+        # rows on the one infinitive), and taking only the first one out left the rest to be
+        # collapsed by rule C back onto the very citation just accepted, and reported there. A
+        # slot rule V accepts it accepts for all of the citations that fill it.
+        g_subjs = [a for a, role in g.items() if role == "subj"]
+        if not g_subjs:
             return
         reachable, unresolved = _control_subject_candidates(pos, derived_by_pred, dep_index_by_pos)
-        if unresolved:
-            g.pop(g_subj, None)
-            return
-        candidates = {(0, 0)} | reachable
-        if g_subj in candidates:
-            g.pop(g_subj, None)
+        candidates = None if unresolved else {(0, 0)} | reachable
+        for g_subj in g_subjs:
+            # …and the citation is tested through rule C's normalization too, since the collapse
+            # runs after this and would otherwise rewrite an unaccepted conjunct/`flat` member
+            # onto the very position rule V does accept ("Bellincion **Berti** vid' io andar",
+            # paradiso 15:112, where the matrix object is cited by the name's second word).
+            if (candidates is None or g_subj in candidates
+                    or _coordination_head(g_subj, dep_index_by_pos) in candidates):
+                g.pop(g_subj, None)
     elif (morph_rows is not None and children_by_pos is not None
           and _inherited_subject(pos, dep_index_by_pos)
           and _subj_arg(g) != d_subj
@@ -754,12 +762,18 @@ def _coordination_head(
     reads as the argument. Collapsing them together is the same notation normalization rule C
     already makes for coordination, and it preserves roles, so a genuine role disagreement on
     the merged position still surfaces.
+
+    Rule BE walks `flat` with them, on the same reasoning one relation further in: a multiword
+    name is one nominal spread over several tokens ("son Vanni Fucci", inferno 24:125, where the
+    LLM gives the predicate an `attr` on each half and the tree only ever attaches the first).
+    `flat` is UD's *headless* multiword relation, so its members are not modifiers of the opening
+    word — they are the same nominal, and citing any of them cites it.
     """
     seen = {pos}
     cur = pos
     for _ in range(_CONJ_WALK_LIMIT):
         row = dep_index_by_pos.get(cur)
-        if row is None or row.deprel not in ("conj", "appos"):
+        if row is None or row.deprel not in ("conj", "appos", "flat"):
             break
         head = (row.head_line, row.head_token)
         if head in seen or head not in dep_index_by_pos:
@@ -950,13 +964,23 @@ def _adverbial_oblique(
     """Rule J: a given `obl`/`obl:<prep>` whose argument is an adverb attached to that same
     predicate as `advmod` ("quivi", "là", "dinanzi") — an adverbial oblique. `derive_unit` only
     reads `obl` deprel children, so it can't produce one; the membership soft check already
-    accepts exactly these tokens as `obl` arguments for the same reason."""
+    accepts exactly these tokens as `obl` arguments for the same reason.
+
+    **Rule BC** widens the POS gate from `adverb` to any *nominal or pronominal* token. Layer 4
+    uses `advmod` for adjuncts whose filler Layer 2 calls something else entirely — a bare
+    adverbial nominal ("stieno i Malebranche **un poco** in cesso", inferno 22:100), a fused
+    pronoun+preposition ("e dicean **seco**", 23:87, where the preposition is inside the word so
+    no `case` child can carry it), a clitic pronoun ("**li** giacea un draco", 25:23). Layer 2
+    saying the token is a noun or a pronoun is the whole gate: a nominal in an adjunct slot is an
+    oblique whatever deprel the tree gave it, whereas rule R's caution still applies to the
+    adjective and verb cases, which stay flagged as genuinely undecided."""
     if not (role == "obl" or OBL_RE.fullmatch(role)):
         return False
     row = dep_index_by_pos.get(arg)
     if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
         return False
-    return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
+    arg_pos = (morph_pos_by_position or {}).get(arg, "").lower()
+    return any(tag in arg_pos for tag in ("adverb", "noun", "pronoun"))
 
 
 def _predicative_advmod(
@@ -978,6 +1002,147 @@ def _predicative_advmod(
         return False
     row = dep_index_by_pos.get(arg)
     if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+        return False
+    return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+
+def _accusative_and_infinitive(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+) -> bool:
+    """Rule BI: the accusative-and-infinitive's shared nominal, named from the matrix side.
+
+    "I' vidi ... **uno** aspettar così" (inferno 22:31), "trovammo risonar **quell' acqua tinta**"
+    (16:104), "senta **qualunque** passa" (23:119): after a verb of perception or causation the
+    nominal is the matrix verb's object *and* the infinitive's subject, and no reading has to
+    choose. Layer 4 records it as the infinitive's `nsubj`, so `derive_unit` puts it on the
+    infinitive only; the LLM names the same token as the matrix object, which is UD's own
+    convention for the construction (object raising, `xcomp` + `obj`).
+
+    Censused at 10 positions corpus-wide. Gated tightly on the two edges being present — the
+    argument is the `nsubj` of a predicate that is *this* predicate's own `xcomp`/`ccomp` — so it
+    reaches only the shape where the tree itself asserts both relations. Directional: the LLM
+    naming a matrix object stays accepted; the derivation is not made to assert one."""
+    if role != "obj" or dep_index_by_pos is None:
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel not in ("nsubj", "nsubj:pass"):
+        return False
+    host = dep_index_by_pos.get((row.head_line, row.head_token))
+    if host is None or host.deprel not in ("xcomp", "ccomp"):
+        return False
+    return (host.head_line, host.head_token) == pos
+
+
+def _displaced_subject_pro_drop(
+    grole: str, arg: tuple[int, int],
+    g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+) -> bool:
+    """Rule BH: rule M's mirror leg — the ∅ subject rule M's relabelling leaves behind.
+
+    Rule M accepts the LLM calling a derived `subj` the predicative complement it is: "che mi
+    parve una **lontra**" (inferno 22:36), "**Frati godenti** fummo" (23:103), "n'andavam **l'un**
+    dinanzi e **l'altro** dopo" (23:2). But a clause whose only nominal has just been read as the
+    complement has no overt subject left, so the LLM fills the slot with pro-drop ∅ — and that ∅
+    was then reported as an extra argument, because the derivation put its one `subj` on the
+    token rule M has already conceded.
+
+    The two halves are one reading, so accepting one and reporting the other is the labeling
+    split counted twice. Gated on rule M having actually fired for this predicate: some argument
+    the derivation calls `subj` that the LLM calls `xcomp`. Without that, a bare ∅ subject the
+    derivation contradicts with a concrete one stays flagged, which is the `extra_arg subj ∅`
+    bucket the fourth `--fix` round is meant to measure."""
+    if grole != "subj" or arg != (0, 0):
+        return False
+    return any(role == "subj" and g.get(a) == "xcomp" for a, role in d.items())
+
+
+def _inverted_copula_complement(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule BF: a `cop` edge Layer 4 wrote the wrong way round.
+
+    UD's `cop` points from the copula *verb* up to the nominal or adjectival predicate. In 11
+    places the tree points it the other way — "poi che fu a terra sì **distrutto**" (inferno
+    24:103) hangs the adjective `distrutto` as a `cop` child of `fu` — so `derive_unit`, which
+    reads `cop` only to find the predicate a nominal heads, is silent about the complement
+    altogether. The LLM reads `essere` as the predicate and the adjective as its `attr`, which is
+    the corpus's own convention for a copular clause with an overt copula.
+
+    The gate is the POS: a `cop` child Layer 2 calls an adjective or a noun cannot be a copula,
+    so the edge is inverted on the tree's own evidence, and the token in it is the complement.
+    A `cop` child that *is* a verb is the ordinary shape and stays untouched."""
+    if role != "xcomp":  # `attr` is canonicalized to `xcomp` before comparison
+        return False
+    row = (dep_index_by_pos or {}).get(arg)
+    if row is None or row.deprel != "cop" or (row.head_line, row.head_token) != pos:
+        return False
+    arg_pos = (morph_pos_by_position or {}).get(arg, "").lower()
+    return "verb" not in arg_pos and any(t in arg_pos for t in ("adjective", "noun"))
+
+
+def _undecided_subject_slot(
+    drole: str, arg: tuple[int, int],
+    g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+) -> bool:
+    """Rule BA: `derive_unit` gave one predicate **two** subjects, and the LLM named one of them.
+
+    A clause has one subject slot. When two survive coordination collapse the derivation has not
+    decided between them, and requiring both is asserting more than the tree supports:
+
+    - "E quelli: «**I'** mi partii»" (inferno 22:66) — the elided verb of speech leaves `quelli`
+      with nowhere to attach, so Layer 4 hangs it on the quoted verb next to its real subject;
+    - "com' elli 'ncontra ch'**una rana** rimane" (22:33) — the impersonal subject of the matrix
+      verb lands on the subordinate one;
+    - "come la madre ... **che** prende il figlio" (23:40) — the relative pronoun and its own
+      antecedent, one referent named twice;
+    - "li occhi miei ... e **l'animo** smagato" (25:146) — a gapped coordination Layer 4 wrote as
+      two flat `nsubj` edges rather than a `conj`.
+
+    Naming either one is a reading of the same slot, so this accepts *the derivation's* unnamed
+    subject rather than the LLM's citation — the mirror of `_collapse_coordination`, which
+    normalizes the case where the two are explicitly conjoined. Gated on the LLM having named one
+    of them: an LLM that names a subject from outside the pair, or none at all, still diverges."""
+    if drole != "subj" or arg == (0, 0):
+        return False
+    derived_subjects = [a for a, role in d.items() if role == "subj"]
+    if len(derived_subjects) < 2:
+        return False
+    return any(g.get(a) == "subj" for a in derived_subjects)
+
+
+def _depictive_bare_oblique(
+    grole: str, drole: str, pos: tuple[int, int], arg: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+    case_children: set[tuple[int, int]],
+) -> bool:
+    """Rule AZ: rule R's mirror leg — the depictive adjective Layer 4 hung on the predicate as a
+    bare `obl` instead of as `advmod`.
+
+    "tornò sù **convolto**" (inferno 21:46), "ei ne verranno dietro **più crudeli**" (23:17),
+    "si mira tutto **smarrito**" (24:115), "**supin** si diede a la pendente roccia" (10:72, the
+    open route this closes). The construction is the same secondary predication rules R, AA and
+    AU already accept from the other three attachment points — `advmod` on the predicate, `acl`
+    and `amod` on one of its arguments — and Layer 4 records it here with the one deprel
+    `derive_unit` *can* read, so the divergence surfaces as a role mismatch rather than as
+    checker silence: the derivation says `obl`, the LLM says the complement it is.
+
+    The three gates are what keep an ordinary oblique out. **No `case` child**: a preposition in
+    the tree makes the phrase a genuine adjunct ("è **per me** giocondo"), and only a bare `obl`
+    is a candidate. **Adjective POS**, exactly as in rule R — the same shape with an adverb
+    argument leaves the reading undecided and stays flagged. **The predicate's own child**, so an
+    adjective obl'd onto some other clause is not swept in. Directional like rules L/M: a given
+    `obl` against a derived `xcomp` means the tree carried the complement explicitly and the LLM
+    contradicted it, which stays flagged."""
+    if grole != "xcomp" or drole != "obl":  # `attr` is canonicalized to `xcomp` beforehand
+        return False
+    if arg in case_children:
+        return False
+    row = (dep_index_by_pos or {}).get(arg)
+    if row is None or row.deprel != "obl" or (row.head_line, row.head_token) != pos:
         return False
     return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
 
@@ -1615,10 +1780,17 @@ def _classify_divergence(
         # Gated exactly as rule AB: the annex must call the token reflexive, Layer 2 must call
         # it a pronoun, it must be this predicate's own child, and the disputed role must be one
         # a bare clitic can carry — naming a preposition the tree does not carry stays flagged.
-        if dep_index_by_pos is None or role not in ("obj", "iobj", "obl:a"):
+        #
+        # **Rule BD** adds the third deprel the same split uses: 35 reflexive clitics stand as
+        # `obl` ("Se l'ira sovra 'l mal voler **s'**aggueffa", inferno 23:16; "El **si** fuggì",
+        # 25:16), where `derive_unit` asserts an oblique the pronominal reading has no room for.
+        # `obl` joins the accepted roles on both sides for the same reason `obj` and `iobj` are
+        # there — the clitic is part of the verb, and which slot the tree parked it in is
+        # notation, not a claim.
+        if dep_index_by_pos is None or role not in ("obj", "iobj", "obl", "obl:a"):
             return False
         row = dep_index_by_pos.get(arg)
-        if row is None or row.deprel not in ("obj", "iobj"):
+        if row is None or row.deprel not in ("obj", "iobj", "obl"):
             return False
         if (row.head_line, row.head_token) != pos:
             return False
@@ -1790,6 +1962,8 @@ def _classify_divergence(
                     continue  # rule AR: a verbless comparative clause's nominal
                 if _pronominal_verb_clitic(pos, arg, drole):
                     continue  # rule AW: rule AB's mirror leg
+                if _undecided_subject_slot(drole, arg, g, d):
+                    continue  # rule BA: the derivation offered two subjects and named neither
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
                                                hosts=_control_partners(pos)):
                     continue  # rule AX: the LLM hung it on the other end of an `xcomp` edge
@@ -1808,7 +1982,13 @@ def _classify_divergence(
                                                    morph_pos_by_position)
                         or _comparative_come_complement(grole, drole, arg, dep_index_by_pos,
                                                         morph_pos_by_position)
-                        or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position)):
+                        or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position)
+                        or _depictive_bare_oblique(grole, drole, pos, arg, dep_index_by_pos,
+                                                   morph_pos_by_position, case_children)
+                        # rule BD's mismatch leg: both readings park the same reflexive clitic in
+                        # a slot a bare clitic can carry, and disagree only about which
+                        or (_pronominal_verb_clitic(pos, arg, grole)
+                            and _pronominal_verb_clitic(pos, arg, drole))):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
@@ -1825,6 +2005,10 @@ def _classify_divergence(
                     or _marked_adverbial_clause(pos, arg, grole, dep_index_by_pos,
                                                 marker_lemmas)
                     or _secondary_predicate_over_argument(pos, arg, grole, derived_args)
+                    or _displaced_subject_pro_drop(grole, arg, g, d)
+                    or _accusative_and_infinitive(pos, arg, grole, dep_index_by_pos)
+                    or _inverted_copula_complement(pos, arg, grole, dep_index_by_pos,
+                                                   morph_pos_by_position)
                     or _reflexive_clitic_argument(pos, arg, grole)
                     or _copular_adverb_complement(pos, arg, grole)
                     or _free_relative_head(pos, arg, grole, d)

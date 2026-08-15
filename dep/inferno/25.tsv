@@ -499,7 +499,7 @@ line	token	word	deprel	head_line	head_token
 68	2	Omè	discourse	68	1
 68	3	Agnel	vocative	68	1
 68	4	come	advmod	68	6
-68	5	ti	nsubj	68	6
+68	5	ti	expl	68	6
 68	6	muti	ccomp	68	1
 69	1	Vedi	root	0	0
 69	2	che	mark	69	7

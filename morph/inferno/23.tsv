@@ -1018,7 +1018,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 138	e	e	conjunction						
 138	nel	in+il	preposition+article	m.	sg.				contraction
 138	fondo	fondo	noun	m.	sg.				
-138	soperchia	soperchio	adjective	f.	sg.				
+138	soperchia	soperchiare	verb		sg.	3	present	indicative	
 139	Lo	lo	article	m.	sg.				
 139	duca	duca	noun	m.	sg.				
 139	stette	stare	verb		sg.	3	remote past	indicative	

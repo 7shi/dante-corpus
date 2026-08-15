@@ -161,8 +161,8 @@ line	token	word	deprel	head_line	head_token
 21	8	del	case	21	9
 21	9	monte	nmod	21	7
 22	1	Le	det	22	2
-22	2	braccia	obl	24	5
-22	3	aperse	acl	22	2
+22	2	braccia	obj	22	3
+22	3	aperse	conj	24	5
 22	4	dopo	case	22	6
 22	5	alcun	det	22	6
 22	6	consiglio	obl	24	5
@@ -178,7 +178,7 @@ line	token	word	deprel	head_line	head_token
 24	6	di	case	24	7
 24	7	piglio	obj	24	5
 25	1	E	cc	28	4
-25	2	come	advmod	28	4
+25	2	come	mark	25	3
 25	3	quei	obl	28	4
 25	4	ch'	nsubj	25	5
 25	5	adopera	acl:relcl	25	3
@@ -273,9 +273,9 @@ line	token	word	deprel	head_line	head_token
 37	1	Ma	cc	41	3
 37	2	perché	mark	38	5
 37	3	Malebolge	nsubj	38	5
-37	4	inver'	advmod	38	5
+37	4	inver'	case	37	6
 37	5	la	det	37	6
-37	6	porta	obj	38	5
+37	6	porta	obl	38	5
 38	1	del	case	38	3
 38	2	bassissimo	amod	38	3
 38	3	pozzo	nmod	37	6
@@ -906,7 +906,7 @@ line	token	word	deprel	head_line	head_token
 124	4	piacque	root	0	0
 124	5	e	cc	124	7
 124	6	non	advmod	124	7
-124	7	umana	conj	124	2
+124	7	umana	conj	124	1
 125	1	sì	advmod	125	2
 125	2	come	mark	125	7
 125	3	a	case	125	4

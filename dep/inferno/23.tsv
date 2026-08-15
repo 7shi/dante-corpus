@@ -1018,7 +1018,7 @@ line	token	word	deprel	head_line	head_token
 138	5	e	cc	138	6
 138	6	nel	case	138	7
 138	7	fondo	obl	138	2
-138	8	soperchia	amod	137	6
+138	8	soperchia	conj	138	2
 139	1	Lo	det	139	2
 139	2	duca	nsubj	139	3
 139	3	stette	root	0	0
@@ -1038,7 +1038,7 @@ line	token	word	deprel	head_line	head_token
 141	3	i	det	141	4
 141	4	peccator	obj	141	7
 141	5	di	case	141	6
-141	6	qua	obl	141	7
+141	6	qua	nmod	141	4
 141	7	uncina	acl:relcl	141	1
 142	1	E	cc	142	3
 142	2	'l	det	142	3

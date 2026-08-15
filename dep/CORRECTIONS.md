@@ -1,5 +1,38 @@
 # dep — Layer 4 correction history
 
+## 20 rows from the Layer-5 Inferno 21-25 read (2026-08-15)
+
+The per-position read of Inferno 21-25's 44 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 20 Layer-4 rows wrong. Applied with a
+gated script that asserts the expected word at each `(line, token)` before rewriting; `morph`,
+`np`, `dep` and `case --check` all stay 0 afterwards, `pytest` 311.
+
+| position | word | before | after | why |
+|---|---|---|---|---|
+| inferno 21:53.2 | `Coverto` | `vocative<-53.1` | `obl<-53.6` | "Coverto convien che qui balli" — a depictive on the subject of `balli`, not an address |
+| inferno 22:27.7-9 | `l'altro grosso` | `grosso amod<-altro` | `grosso conj<-piedi`, `altro amod<-grosso` | Layer 3 already reads `grosso` as the phrase head; `altro` modifies it |
+| inferno 22:32.4-6, 33.4 | `com' elli 'ncontra ch'…` | `'ncontra advmod<-rimane` | `'ncontra advcl<-aspettar`, `elli nsubj<-'ncontra`, `rimane ccomp<-'ncontra` | `'ncontra` is the impersonal verb (Layer 2 retagged with it), so it heads its own clause |
+| inferno 22:99.1 | `Toschi` | `obj<-venire` | `nsubj<-venire` | causative `far venire`: the causee is the infinitive's subject |
+| inferno 22:103.9 | `sette` | `obj<-venir` | `nsubj<-venir` | the same construction, four lines on |
+| inferno 23:138.8 | `soperchia` | `amod<-ruina` | `conj<-giace` | the verb `soperchia`, not the adjective `soperchio` (Layer 2 retagged with it) |
+| inferno 23:141.6 | `qua` | `obl<-uncina` | `nmod<-peccator` | "i peccator **di qua**" modifies the noun, not the verb |
+| inferno 24:22.2-3 | `Le braccia aperse` | `aperse acl<-braccia`, `braccia obl<-diedemi` | `aperse conj<-diedemi`, `braccia obj<-aperse` | "he opened his arms": `aperse` is the verb (Layer 2 retagged with it) |
+| inferno 24:25.2 | `come` | `advmod<-avvisava` | `mark<-quei` | comparative `come` marks its own nominal, as at 24:11 — and Layer 2 calls it a conjunction, which is what rules AK/AR read |
+| inferno 24:37.4, 37.6 | `inver' la porta` | `inver' advmod<-pende`, `porta obj<-pende` | `inver' case<-porta`, `porta obl<-pende` | `pendere` takes no object; `inver'` is the phrase's preposition |
+| inferno 24:124.7 | `umana` | `conj<-bestial` | `conj<-Vita` | "e non umana" is gapped `[vita] umana`, a conjunct of the noun, not of its adjective |
+| inferno 25:68.5 | `ti` | `nsubj<-muti` | `expl<-muti` | a reflexive clitic is never a subject ("come ti muti") |
+
+Layer 5 measured the whole set together at **−11 / +4** — three of the four new positions are the
+retags exposing a divergence the wrong parse had hidden, written up in
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
+
+**Left standing, measured**: restricting `subject_agreement`'s *coordinated subject* exclusion to
+the number test only (a coordination of nominals is third person however many members it has)
+takes `dep --check` from 0 to **12** soft violations. Each is a real question about a Layer-4
+subject attachment, and clearing them is a read of its own; the refinement was reverted rather
+than landed with a non-zero check. Positions: inferno 2:33, 8:28, 21:121, 25:36; purgatorio
+4:102, 5:82, 10:62, 23:113, 29:37; paradiso 14:125, 19:12, 31:96.
+
 ## `RELCL_HEAD` substantivization flag (2026-07-12)
 
 After the LLM-based `--fix` pass (unit regeneration, `make -C dep fix`) resolved every

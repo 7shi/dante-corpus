@@ -1,5 +1,19 @@
 # Manual Layer-2 corrections
 
+## 5 rows from the Layer-5 Inferno 21-25 read (2026-08-15)
+
+Found by the per-position read of Inferno 21-25's Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)); applied with a gated script and re-validated
+against every layer's `--check` (all 0) and `pytest` (311).
+
+| position | word | before | after | why |
+|---|---|---|---|---|
+| inferno 21:62.9 | `conte` | `contare` verb, f. pl. past participle | `conto` adjective, f. pl. | "ch'i' ho **le cose conte**" — the adjective `conto` ("known"), which is how the same word is tagged at inferno 3:76, 10:39 and 33:31. The lone verb reading also kept rule AU (which cites this very line) from firing. |
+| inferno 22:32.5 | `elli` | m. **pl.** 3 | m. **sg.** 3 | the impersonal subject of `'ncontra`; `dep --check`'s agreement rule caught it as soon as the verb below was retagged |
+| inferno 22:32.6 | `'ncontra` | `in+contra` preposition | `incontrare` verb, sg. 3 present indicative | "com' elli 'ncontra" = "as it happens" — a finite verb, not a fused preposition |
+| inferno 23:138.8 | `soperchia` | `soperchio` adjective, f. sg. | `soperchiare` verb, sg. 3 present indicative | "che giace in costa e nel fondo **soperchia**" — the second conjunct's verb |
+| inferno 24:22.3 | `aperse` | `aperto` adjective, f. pl. | `aprire` verb, sg. 3 remote past indicative | "**Le braccia aperse**" = "he opened his arms" |
+
 Layer 2 (`morph/`) is build-time output — an LLM pass per chunk, frozen to `morph/<canticle>/NN.tsv`
 and never touched at runtime (see [`README.md`](README.md)). Its own `--check` only enforces
 structural/closed-tag correctness (one row per token, closed vocabularies for gender/number/person);

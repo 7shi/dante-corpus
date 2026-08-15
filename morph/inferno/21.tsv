@@ -447,7 +447,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 62	ho	avere	verb		sg.	1	present	indicative	
 62	le	il	article	f.	pl.				
 62	cose	cosa	noun	f.	pl.				
-62	conte	contare	verb	f.	pl.		past participle		
+62	conte	conto	adjective	f.	pl.				
 63	perch'	perché	conjunction						elision
 63	altra	altro	adjective	f.	sg.				
 63	volta	volta	noun	f.	sg.				

@@ -374,7 +374,7 @@ line	token	word	deprel	head_line	head_token
 52	7	cento	nummod	52	8
 52	8	raffi	obl	52	3
 53	1	disser	root	0	0
-53	2	Coverto	vocative	53	1
+53	2	Coverto	obl	53	6
 53	3	convien	ccomp	53	1
 53	4	che	mark	53	6
 53	5	qui	advmod	53	6
