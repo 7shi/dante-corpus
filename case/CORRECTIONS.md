@@ -1,5 +1,14 @@
 # case — measurement history
 
+## 1 row from the Layer-5 Purgatorio 1-5 read (2026-08-16)
+
+purgatorio 5:135, `colui` — "**salsi colui** che 'nnanellata pria / disposando m'avea". The
+Layer-5 read re-parsed the line as "lo sa colui": `colui` is the postposed **subject** of `salsi`,
+not its object, so the annex row moved **accusative → nominative** together with the Layer-4
+deprel (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). Applied with the same gated script, which
+asserts the word and the current value before rewriting; `case --check` 0 hard afterwards.
+
 Every measurement this annex makes is recorded here, including the ones that kill it. See
 the plan for what the annex is and why the pilot is a kill gate rather than a
 formality.

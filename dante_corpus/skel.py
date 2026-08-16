@@ -315,9 +315,13 @@ def derive_unit(
         if row.deprel == "orphan" and (row.head_line, row.head_token) in index
     }
 
-    for row in all_rows:
-        pos = (row.line, row.token)
-        if row.deprel == "conj" and pos not in predicate_positions and conj_resolves(row, set()):
+    def promote_conjuncts(verbs_only: bool) -> None:
+        for row in all_rows:
+            pos = (row.line, row.token)
+            if row.deprel != "conj" or pos in predicate_positions:
+                continue
+            if not conj_resolves(row, set()):
+                continue
             # A coordinating conjunction is a function word, never a predicate: Layer 4 routinely
             # attaches a line-initial "E"/"Ed"/"Ma" to the previous clause head with deprel `conj`
             # ("E 'l mio buon duca, che già li er' al petto"), which this rule would otherwise
@@ -325,9 +329,14 @@ def derive_unit(
             conj_morph = morph_at(row.line, row.token)
             if conj_morph is not None and "conjunction" in conj_morph.pos.lower():
                 continue
+            if verbs_only and (conj_morph is None or not is_verb_pos(conj_morph.pos)
+                               or not conj_morph.person):
+                continue
             if pos in gapped_conjuncts:
                 continue
             predicate_positions.add(pos)
+
+    promote_conjuncts(verbs_only=False)
 
     # 2. argument-bearing non-auxiliary verbs.
     for row in all_rows:
@@ -339,6 +348,28 @@ def derive_unit(
             continue
         if any(c.deprel in ARG_DEPRELS for c in children.get(pos, ())):
             predicate_positions.add(pos)
+
+    # Rule BZ: the `conj` chain resolves against the predicate census, so it has to be walked
+    # again once pass 2 has added to it. A conjunct is promoted when the chain it hangs on
+    # resolves to a predicate, and a predicate reached only by pass 2 — a verb Layer 4 attached
+    # with an argument deprel of its own, "com' io rimango sol, **se non restai**" (purgatorio
+    # 4:45), where `rimango` is the `obj` of `rimira` and `restai` its `conj` — was not in
+    # `predicate_positions` when the chain was first walked. The conjunct was therefore dropped,
+    # and a finite verb whose only argument is a pro-drop subject (the one shape pass 2 cannot
+    # rescue either, since it has no argument child to be found by) went underived while the LLM
+    # proposed it. The 21-25 and 31-34 batches' ordering finding once more, between two passes of
+    # the derivation's own predicate census rather than between two acceptance rules.
+    #
+    # This second walk is restricted to **finite verbs**, and the restriction is rule BN's own
+    # test — would the promoted position carry a tuple at all? The first walk promotes a conjunct
+    # of any POS, because a nominal conjoined to a clause head is a gapped clause of its own; but
+    # a nominal conjoined to something pass 2 promoted is an ordinary coordinate *argument* of
+    # that predicate ("addimandò **licenza** di combatter", paradiso 12:95, where `licenza` is the
+    # object), and a non-finite conjunct with no argument child of its own ("del comperare e
+    # **vender** dentro al templo", paradiso 18:122) yields an empty tuple no reading can fill —
+    # the two shapes rules AN and BN stop elsewhere. A *finite* conjunct always has a subject,
+    # overt or pro-drop, so its tuple is never empty.
+    promote_conjuncts(verbs_only=True)
 
     def argument_children(pos: tuple[int, int]) -> list[DepRow]:
         """Rule AM: a predicate's own argument children, plus any stranded on its `cop`/`aux`.
@@ -1706,6 +1737,69 @@ def _conjunction_oblique(
     return "conjunction" in (morph_pos_by_position or {}).get(arg, "").lower()
 
 
+def _marker_slot_argument(
+    pos: tuple[int, int], arg: tuple[int, int], grole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule BW: rule BM's mirror leg — an argument Layer 4 parked in this predicate's `mark` slot.
+
+    "un non sapeva **che** bianco" (purgatorio 2:23), "vedrai … **qual** io fossi" (paradiso
+    1:68), "sappiendo … **quanto** costa" (paradiso 19:74). The interrogative or relative word
+    opens the clause *and* fills one of its argument slots, which is a thing one token can do and
+    a UD tree cannot say twice: Layer 4 records the connective function with `mark`, `mark` is
+    outside `ARG_DEPRELS`, and so `derive_unit` cannot assert the argument function at all. The
+    LLM, reading the line rather than the tree, names it.
+
+    Rule BM is the same tension seen from the other side — an oblique slot Layer 4 filled with a
+    token Layer 2 calls a *conjunction*, where the connective reading is the right one and the
+    LLM's omission is accepted. Both are the tail of the known Layer-2 route (relative
+    `che`/`onde` tagged `conjunction`, 247 tokens), and the POS gate is what separates them: a
+    `mark` Layer 2 calls a conjunction **is** a subordinator and stays flagged, while a `mark`
+    Layer 2 calls a pronoun, an adjective or an adverb is an interrogative/relative word the tree
+    could only label once. Gated on the marker hanging on this very predicate (through `aux`/`cop`,
+    rule BP), so a marker belonging to some other clause is not swept in.
+    """
+    if dep_index_by_pos is None or morph_pos_by_position is None or arg == (0, 0):
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "mark" or not _hosts_child(pos, row, dep_index_by_pos):
+        return False
+    tag = morph_pos_by_position.get(arg, "").lower()
+    if not tag or "conjunction" in tag:
+        return False
+    return "pronoun" in tag or "adjective" in tag or "adverb" in tag
+
+
+def _depictive_bare_oblique_omitted(
+    pos: tuple[int, int], arg: tuple[int, int], drole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+    case_children: set[tuple[int, int]],
+) -> bool:
+    """Rule BX: rule AZ's `missing_arg` leg — the depictive the LLM leaves out entirely.
+
+    "mi cominciò **tutto rivolto**" (purgatorio 3:23), "**pien** di sonno" (inferno 1:11),
+    "**disïante** … di lui" (paradiso 5:86). Rule AZ accepts the same bare `obl` when the LLM
+    names it as the secondary predicate it is; this is the case where the LLM lists it not at all,
+    which is equally faithful to the line: a depictive adjective is an adjunct of the predication,
+    not one of its arguments, and Layer 4's `obl` is the one deprel the tree has for it (rule AZ's
+    own reasoning). The same acceptance rule AR makes for a comparison the tree could only hang on
+    the main predicate.
+
+    The three gates are rule AZ's, unchanged: **no `case` child**, so a real prepositional adjunct
+    is not swept in; **adjective POS**, so an adverb or a nominal in the same slot stays flagged;
+    **the predicate's own child** (through `aux`/`cop`, rule BP). Censused at 44 bare adjectival
+    obliques corpus-wide, 11 of them standing `missing_arg` positions.
+    """
+    if drole != "obl" or arg in case_children:
+        return False
+    row = (dep_index_by_pos or {}).get(arg)
+    if row is None or row.deprel != "obl" or not _hosts_child(pos, row, dep_index_by_pos):
+        return False
+    return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+
 def _fused_clitic_dual_role(
     grole: str, drole: str, arg: tuple[int, int],
     morph_pos_by_position: dict[tuple[int, int], str] | None,
@@ -2191,6 +2285,26 @@ def _classify_divergence(
         head = (dep_row.head_line, dep_row.head_token)
         return {head} if head in complement_hosts.get(pos, ()) else set()
 
+    def _auxiliary_hosts(pos: tuple[int, int]) -> set[tuple[int, int]]:
+        # Rule BY: the `aux`/`cop` words of this predicate's own periphrasis. "quel da Esti **il
+        # fé far**" (purgatorio 5:77): Layer 4 heads the causative on `far` and makes the finite
+        # `fé` its `aux`, and the LLM — seeing a finite verb and an infinitive — writes *two*
+        # tuples, putting the subject on the finite word and the object on the infinitive.
+        # `derive_unit` puts both on `far` (rule AM collects what the auxiliary strands), so the
+        # subject is reported missing from a tuple the LLM did supply, one row further up.
+        #
+        # Rule AQ merges an argument *citation* that lands on an auxiliary onto its lexical head,
+        # and rules AV/BS accept the *predicate* citation when the LLM names only the auxiliary.
+        # This is the third combination — the LLM names both and splits the arguments between
+        # them — routed through rule X's mechanism, so it inherits that rule's role-must-match
+        # gate: relocating an argument onto the finite word of one periphrasis is a convention,
+        # relabelling it is a second claim and stays flagged. The auxiliary's own tuple is
+        # already accepted as a double-listing by `_aux_of_derived_predicate`.
+        if dep_index_by_pos is None:
+            return set()
+        return {(c.line, c.token) for c in children_by_pos.get(pos, ())
+                if c.deprel in _AUX_DEPRELS} - {pos}
+
     def _named_by_its_auxiliary(pos: tuple[int, int]) -> bool:
         # Rule AV: `_aux_of_derived_predicate`'s missing leg. That rule accepts the LLM naming an
         # `aux`/`cop` as the predicate *when it also names the lexical head* — the double-listing
@@ -2332,11 +2446,17 @@ def _classify_divergence(
                     continue  # rule AW: rule AB's mirror leg
                 if _nested_in_named_phrase(arg, g, d, np_rows):
                     continue  # rule BR: the LLM named the phrase once, by its Layer-3 head
+                if _depictive_bare_oblique_omitted(pos, arg, drole, dep_index_by_pos,
+                                                   morph_pos_by_position, case_children):
+                    continue  # rule BX: rule AZ's missing_arg leg
                 if _undecided_subject_slot(drole, arg, g, d):
                     continue  # rule BA: the derivation offered two subjects and named neither
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
                                                hosts=_control_partners(pos)):
                     continue  # rule AX: the LLM hung it on the other end of an `xcomp` edge
+                if _complement_hosted_argument(pos, arg, drole, given_by_pred,
+                                               hosts=_auxiliary_hosts(pos)):
+                    continue  # rule BY: the LLM hung it on this predicate's own `aux`/`cop`
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
@@ -2384,6 +2504,8 @@ def _classify_divergence(
                     or _copular_adverb_complement(pos, arg, grole)
                     or _free_relative_head(pos, arg, grole, d)
                     or _free_relative_matrix_head(pos, arg)  # rule BT: rule AE's embedded side
+                    or _marker_slot_argument(pos, arg, grole, dep_index_by_pos,
+                                             morph_pos_by_position)  # rule BW: rule BM's mirror
                     or _conj_shared_argument(pos, arg, grole, dep_index_by_pos,
                                              derived_by_pred, d)
                     # rule X, mirror leg: derive_unit hung it on the copula this predicate

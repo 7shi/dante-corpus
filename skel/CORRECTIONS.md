@@ -1,5 +1,129 @@
 # skel — Layer 5 correction history
 
+## Rules BW-BZ, from reading Purgatorio 1-5 — 506 → 481, −25 (2026-08-16)
+
+Per-position read of all **14** soft violations in Purgatorio 1-5, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Purgatorio 1-5 itself
+went **14 → 10** (1: 1 → 1, 2: 4 → 3, 3: 1 → 0, 4: 2 → 3, 5: 6 → 3); the corpus went **506 → 481
+(−25, −4.9%)**. Four deterministic rules plus 2 Layer-4 rows and 1 case-annex row. `pytest`
+**351**, all other layers 0/0.
+
+The smallest batch of the series by base count, and the first outside Inferno. Three of its four
+rules are mirror or ordering legs of rules already in the checker, which is the series' standing
+pattern; the fourth is a defect in `derive_unit`'s own predicate census.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **BW** | rule BM's mirror leg: an argument Layer 4 parked in the predicate's `mark` slot | 63 / 19 | −9 |
+| **BX** | rule AZ's `missing_arg` leg: the bare adjectival oblique the LLM omits entirely | 44 / 11 | −11 |
+| **BY** | the LLM splits one periphrasis's arguments across the lexical verb and its `aux` | 5 | −3 |
+| **BZ** | the `conj` chain is walked **before** the pass that would resolve it | 372 | ±0 |
+
+Plus 2 Layer-4 rows and 1 case-annex row (**−2** together).
+
+### The batch's two findings
+
+**1. Rule ordering, for the third time, and now inside the derivation.** The 21-25 batch found two
+acceptance rules in the wrong order, the 26-30 batch a rule present in one check and absent from
+another, the 31-34 batch a rule's own gate reading the wrong edge. Rule BZ is the same defect in
+`derive_unit`'s predicate census: that census has three passes — clause-head deprels, `conj`
+chains that resolve to one of those, then argument-bearing verbs — and the `conj` walk asks
+"does the chain I hang on end in a predicate?" *before* the third pass has added any. So a verb
+Layer 4 attached with an argument deprel of its own ("com' io **rimango** sol, se non **restai**",
+purgatorio 4:45, where `rimango` is the `obj` of `rimira`) got its own tuple but its conjunct did
+not. **A pass that reads a set another pass writes has to run after it, or again.**
+
+**2. A census of 1 is a census.** Two of the batch's positions produced candidate rules that a
+one-line script killed before either was written: the verbless comparison whose head Layer 4 makes
+the *marker* itself ("com' om che va", purgatorio 2:130, where `com'` is the `obl` and `om` its
+`nmod` — rule AR expects the marker as a `mark` child of the compared nominal) occurs **once**
+corpus-wide, and the copular subject/complement exchange ("**Che** è **ciò**?", 2:120, where the
+tree and the LLM disagree about which of two nominals is the subject of `è`) is likewise the only
+pure `subj`↔`attr` swap in the residue. Both are real reading questions and both stay flagged. The
+same script found the `obj`↔`subj` swap at 8 positions across 4 predicates, which is the known
+open route — measured here, not opened again.
+
+### The four rules
+
+- **Rule BW — `_marker_slot_argument`.** An interrogative or relative word opens its clause *and*
+  fills one of its argument slots, which is a thing one token does and a UD tree cannot say twice.
+  Layer 4 records the connective function with `mark`, `mark` is outside `ARG_DEPRELS`, so
+  `derive_unit` cannot assert the argument function at all and the LLM's citation is reported as
+  an `extra_arg` ("un non sapeva **che** bianco", purgatorio 2:23; "**qual** io fossi", paradiso
+  1:68; "sappiendo **quanto** costa", 19:74). Rule BM is the same tension from the other side — an
+  *oblique* slot filled with a token Layer 2 calls a conjunction, where the connective reading
+  wins — and the Layer-2 POS is what separates the two: a `mark` Layer 2 calls a conjunction is a
+  subordinator and stays flagged, a `mark` it calls a pronoun, adjective or adverb is a relative
+  or interrogative word. Censused at 63 pronoun-tagged `mark` tokens; 19 standing `extra_arg`
+  positions cite a `mark`, 14 of them non-conjunction. Gated on the marker hanging on this very
+  predicate, through rule BP's `_hosts_child`.
+- **Rule BX — `_depictive_bare_oblique_omitted`.** Rule AZ accepts a depictive adjective Layer 4
+  hung on the predicate as a bare `obl` when the LLM names it as the secondary predicate it is;
+  this is the leg where the LLM lists it not at all ("mi cominciò **tutto rivolto**", purgatorio
+  3:23; "**pien** di sonno", inferno 17:6; "**disïante**", paradiso 5:86). A depictive is an
+  adjunct of the predication, not one of its arguments, so the omission is as faithful to the line
+  as the naming — the acceptance rule AR already makes for a comparison the tree could only hang
+  on the main predicate. Rule AZ's three gates unchanged: no `case` child, adjective POS, the
+  predicate's own child. Censused at 44 bare adjectival obliques, 11 of them standing
+  `missing_arg` positions, all 11 taken.
+- **Rule BY — `_auxiliary_hosts`.** "quel da Esti **il fé far**" (purgatorio 5:77): Layer 4 heads
+  the causative on `far` and makes the finite `fé` its `aux`; the LLM writes *two* tuples and puts
+  the subject on the finite word, the object on the infinitive. Rule AQ merges an argument
+  *citation* landing on an auxiliary onto its lexical head, rules AV/BS accept the *predicate*
+  citation when the LLM names only the auxiliary — this is the third combination, the LLM naming
+  both and splitting the arguments. Routed through rule X's `_complement_hosted_argument`, so it
+  inherits that rule's **role-must-match** gate: relocating an argument onto the finite word of
+  one periphrasis is a convention, relabelling it is a second claim. That gate is why purgatorio
+  2:66 ("ne parrà gioco", `obl:di` against a derived bare `obl`) is not taken. Population 5, 3
+  fired.
+- **Rule BZ — the second `conj` walk.** See finding 1. Restricted to **finite** verbs, and the
+  restriction is rule BN's own test — would the promoted position carry a tuple at all? A nominal
+  conjoined to something the third pass promoted is an ordinary coordinate argument of it
+  ("addimandò **licenza** di combatter", paradiso 12:95), and a non-finite conjunct with no
+  argument child yields an empty tuple no reading can fill ("del comperare e **vender** dentro al
+  templo", paradiso 18:122); ungated, the walk minted predicates at both. A finite conjunct always
+  has a subject, overt or pro-drop. Measured **−2 / +2**: it clears the `extra_tuple` at
+  purgatorio 21:119 and 4:45, and at 4:45 the tuple it now derives inherits `io` across the `conj`
+  while the LLM read a pro-drop ∅, so one reported divergence becomes two. Kept at net zero for
+  the same reason as rules BN and AN′ — the derivation is now right about what a predicate is, and
+  the disagreement is reported where it belongs. (`restai` is 1sg by Layer 2 and 2sg by sense;
+  the form itself does not decide, so Layer 2 was left alone.)
+
+### Two upstream rows, and one annex row
+
+- **purgatorio 5:77, `Esti`** — "**quel da Esti** il fé far": `da Esti` is the epithet's own
+  modifier, not an oblique of `far`. `obl<-77.6` → `nmod<-77.1`. −1.
+- **purgatorio 5:135, `colui`** — "**salsi colui** che 'nnanellata pria / disposando m'avea":
+  `sa`+`si` with a postposed subject, "lo sa colui" — `colui` is the subject, not the object.
+  `obj<-135.1` → `nsubj<-135.1`, and the `case` annex row accusative → nominative. −1.
+
+### The ten positions left standing
+
+Genuine reading disagreements, recorded so a later batch can recognise a population:
+
+- **purgatorio 1:102, 2:130, 4:73** — adjuncts the LLM omits: the adverb-preposition cluster
+  `intorno ad imo`, the comparison `com' om che va`, and the *second* `obl:da` of an elliptical
+  pair ("da l'un, quando a colui **da l'altro fianco**") — the repeated-slot shape `_CONV_REPEATED`
+  addresses from the prompt side.
+- **purgatorio 2:66** — `ne parrà gioco`: the clitic `ne` read as `obl:di` on the copula against a
+  bare `obl` on the nominal predicate. Rule BY relocates, rule L specializes, and neither does
+  both.
+- **purgatorio 2:120** — "Che è ciò?", the copular swap censused at 1 above.
+- **purgatorio 4:45** ×2 — the subject of `restai`, see rule BZ.
+- **purgatorio 5:14** ×2 — "che non crolla già mai **la cima**": `crollare` is transitive here and
+  Layer 4 is right; the LLM read `la cima` as the subject of an intransitive.
+- **purgatorio 5:48** — "venian **gridando**": a gerund of manner Layer 4 calls `advcl` and the
+  LLM calls `xcomp`. Censused at 3 with its two siblings (paradiso 1:97, purgatorio 25:122) and
+  dropped as too small; it belongs to the standing *`advcl` the LLM reads as a complement* route.
+
+### One test fixture changed
+
+`_comparative_adjunct_fixture` in `tests/test_skel.py` gave its compared nominal an *adjective*
+POS, which rule BX now accepts on its own — the near-miss half of rule AR's test stopped failing.
+The fixture's nominal is a noun now, so the test pins rule AR's marker gate and nothing else. The
+overlap is real in the corpus too and harmless there: both rules accept the same shape, and rule
+BX was measured at +0.
+
 ## Rules BO-BV, from re-reading Inferno 31-34 — 541 → 506, −35 (2026-08-16)
 
 Per-position read of all **37** soft violations in Inferno 31-34, following the eight-step

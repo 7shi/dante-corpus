@@ -2,11 +2,12 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 506 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after **rules BO–BV and the Inferno 31–34 read** (541 → 506, −35, 2026-08-16) on top of the fourth `--fix` round (650 → 541), rules BJ–BN (691 → 650), AZ–BI (834 → 691), AU–AY (888 → 834), AM–AT (963 → 888) and the third round (1094 → 963). See *Rules BO–BV and the Inferno 31–34 Read* below.
-- **Other Layers**: `dep --check` **0 hard / 0 soft** (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read, 20 more by the Inferno 21–25 read, 10 more by the Inferno 26–30 read the same day, and 15 more 2026-08-16 by the Inferno 31–34 read, 9 of them the `con esso` normalization). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard (1 stale row dropped 2026-08-16), `np --check` 0/0 (1 span split 2026-08-16), `morph --check` 0/0 (3 rows corrected 2026-08-15 by the 11–15/16–20 reads, 5 more by the 21–25 read, 1 by the 26–30 read and 2 by the 31–34 read), `pytest` **342** passed. The fourth `--fix` round (2026-08-16) touched `skel/*.tsv` only, so no other layer moved.
+- **Current State**: `make -C skel check` reports **0 hard, 481 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after **rules BW–BZ and the Purgatorio 1–5 read** (506 → 481, −25, 2026-08-16), which followed rules BO–BV and the Inferno 31–34 read (541 → 506, −35) on top of the fourth `--fix` round (650 → 541), rules BJ–BN (691 → 650), AZ–BI (834 → 691), AU–AY (888 → 834), AM–AT (963 → 888) and the third round (1094 → 963). See *Rules BW–BZ and the Purgatorio 1–5 Read* below.
+- **Other Layers**: `dep --check` **0 hard / 0 soft** (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read, 20 more by the Inferno 21–25 read, 10 more by the Inferno 26–30 read the same day, 15 more 2026-08-16 by the Inferno 31–34 read, 9 of them the `con esso` normalization, and 2 by the Purgatorio 1–5 read). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard (1 stale row dropped and 1 row re-read 2026-08-16), `np --check` 0/0 (1 span split 2026-08-16), `morph --check` 0/0 (3 rows corrected 2026-08-15 by the 11–15/16–20 reads, 5 more by the 21–25 read, 1 by the 26–30 read and 2 by the 31–34 read), `pytest` **351** passed. The fourth `--fix` round (2026-08-16) touched `skel/*.tsv` only, so no other layer moved.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Four user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**, **650 → 541 (−16.8%)**.
 - **Latest Work**:
+  - **Rules BW–BZ + Purgatorio 1–5 read (2026-08-16)**: four deterministic rules, 2 Layer-4 rows and 1 case-annex row, scoring **506 → 481 (−25, −4.9%)** with zero model calls; Purgatorio 1–5 itself 14 → 10, and `pytest` **351**. The first batch outside Inferno and the smallest of the series. Its finding is **rule ordering for the third batch running, and this time inside `derive_unit`**: the predicate census walks `conj` chains *before* the pass that adds argument-bearing verbs, so a conjunct of a verb reached only by that pass was never promoted (rule BZ, purgatorio 4:45). Two candidate rules were censused at **1** each and dropped — the comparison headed by its own marker, and the copular subject/complement exchange — which is the batch's second lesson: a census of one is still a census. See *Rules BW–BZ and the Purgatorio 1–5 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
   - **Rules BO–BV + Inferno 31–34 read (2026-08-16)**: eight deterministic rules, 15 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 1 case-annex row, scoring **541 → 506 (−35, −6.5%)** with zero model calls; Inferno 31–34 itself 37 → 16, and `pytest` 342. The batch's finding is that the *aux*-normalization the derivation has done since rule AM was missing from nine acceptance rules' own gates — 53 arguments corpus-wide hang on an auxiliary rather than on the verb carrying the tuple — plus a rule-ordering loss (rule D was silencing rule AI's other half) and the series' first **declined mirror leg**, measured at −6/+0 and dropped because its only evidence is a Layer-3 span and Layer 3 is over-inclusive by design. Two candidates censused and dropped. See *Rules BO–BV and the Inferno 31–34 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
   - **Fourth `--fix` round (2026-08-16)**: run by the user **ahead of the read series**, which the series' plan had deferred it behind. **650 → 541 (−109, −16.8%)**, 0 hard, `pytest` 326; units **443 → 388** (55 cleared, 38 improved, **0 regressed, 0 newly flagged**); per-unit yield **0.246**, the first rise of the series. It decided the two prompt questions it was queued to test, and **decided both against the prompt**: the subject branches moved at the round average (`extra_arg_subject` −12.7%, `missing_arg_subject` −10.0%), not the large drop `_CONV_SUBJECT`'s three diagnoses predicted, and `missing_tuple_nominal`'s rewritten *question* moved 18 → 16 — Phase 5w's law survives a question rewrite, not just convention prose. Both buckets are now read-work. `missing_arg` (−28.3%) carried the round, `extra_tuple_adjective` went **7 → 0**. See *Fourth User-Run `--fix` Round* below.
   - **Rules BJ–BN + Inferno 26–30 read (2026-08-15)**: five deterministic rules, three legs added to rules already in the checker, 10 Layer-4 rows and 1 Layer-2 row, scoring **691 → 650 (−41, −5.9%)** with zero model calls; Inferno 26–30 itself 23 → 11. The batch's finding is that **a rule can be right and simply never reach the check that reports the position** — rule AQ has merged `cop`/`aux` citations since the 11–15 batch, but only inside `_classify_divergence`, while the membership check runs before it on the raw row. Its largest mover, rule BJ (−21), is the adverb-preposition cluster the Layer-4 prep-stack normalization deliberately deferred in 2026-08-14 as "a Layer-2/4 tension to decide separately if it ever matters": censused at 147 and settled at Layer 5 without touching Layer 4. Two rules are net zero on purpose (BN and rule AN's clause-head leg), and one Layer-2 correction costs a position. See *Rules BJ–BN and the Inferno 26–30 Read* below and [`CORRECTIONS.md`](CORRECTIONS.md).
@@ -487,13 +488,59 @@ Two candidates were censused and **dropped**: the `da` + infinitive gerundive (i
 them, and rule BR's mirror leg above. Prompt side: nothing new — every diagnosis was checker-side
 or upstream.
 
+### 14. Rules BW-BZ and the Purgatorio 1-5 Read (2026-08-16)
+
+Per-position read of all **14** soft violations in Purgatorio 1-5. **506 → 481 (−25, −4.9%)**,
+zero model calls; Purgatorio 1-5 itself 14 → 10 (1: 1 → 1, 2: 4 → 3, 3: 1 → 0, 4: 2 → 3,
+5: 6 → 3). The first batch outside Inferno, and the smallest of the series by base count. Full
+write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **BW** | rule BM's mirror leg: an argument Layer 4 parked in the predicate's `mark` slot | 63 / 19 | −9 |
+| **BX** | rule AZ's `missing_arg` leg: the bare adjectival oblique the LLM omits entirely | 44 / 11 | −11 |
+| **BY** | the LLM splits one periphrasis's arguments across the lexical verb and its `aux` | 5 | −3 |
+| **BZ** | the `conj` chain is walked **before** the pass that would resolve it | 372 | ±0 |
+
+Plus 2 Layer-4 rows and 1 case-annex row (**−2**), and `pytest` **351**.
+
+Two findings worth carrying forward:
+
+- **Rule ordering, for the third batch running — and now inside the derivation.** The 21-25 batch
+  found two acceptance rules in the wrong order; the 26-30 batch a rule present in one check and
+  absent from the one that runs first; the 31-34 batch a rule's own gate reading the un-normalized
+  edge. Rule BZ is the same defect in `derive_unit`'s **predicate census**, which has three passes
+  — clause-head deprels, `conj` chains resolving to one of those, then argument-bearing verbs —
+  and asks "does my chain end in a predicate?" before the third pass has added any. "com' io
+  **rimango** sol, se non **restai**" (purgatorio 4:45): `rimango` is the `obj` of `rimira` and
+  becomes a predicate only in pass 3, so its conjunct was dropped. **A pass that reads a set
+  another pass writes must run after it, or again.** The second walk is restricted to *finite*
+  verbs by rule BN's own test — would the promoted position carry a tuple at all — because a
+  nominal or a bare infinitive conjunct yields an empty one.
+- **A census of 1 is a census.** Two positions produced candidate rules that a one-line script
+  killed before either was written: the verbless comparison Layer 4 heads on the *marker* itself
+  ("com' om che va", 2:130) occurs once corpus-wide, and the copular subject/complement exchange
+  ("Che è ciò?", 2:120) is the only pure `subj`↔`attr` swap in the residue. The same script
+  measured the known `obj`↔`subj` swap at 8 positions across 4 predicates — the open route, sized
+  rather than reopened.
+
+Rule BY is worth noting for what it does **not** take: routed through rule X's
+`_complement_hosted_argument`, it inherits that rule's role-must-match gate, so purgatorio 2:66
+("ne parrà gioco", a given `obl:di` on the copula against a derived bare `obl` on the nominal
+predicate) stays flagged — relocating an argument is a convention, relabelling it is a second
+claim, and no single rule in the checker does both.
+
+Prompt side: nothing new — every diagnosis was checker-side or upstream. Of the ten survivors,
+three are adjunct omissions (one of them the repeated-slot shape `_CONV_REPEATED` addresses) and
+one is `advcl`-read-as-complement residue.
+
 ---
 
 ## The Read Series — read the whole corpus (decided 2026-08-15; the fix-last clause lapsed 2026-08-16)
 
 **Per-position reads cover all 100 cantos in 5-canto batches.** Inferno is done (batches 1, 1–3,
-4–6, 7–10, 11–15, 16–20, 21–25, 26–30, 31–34); **Purgatorio 1–5 is the next batch**, and the series
-then runs to Paradiso 33.
+4–6, 7–10, 11–15, 16–20, 21–25, 26–30, 31–34) and so is **Purgatorio 1–5**; **Purgatorio 6–10 is
+the next batch**, and the series then runs to Paradiso 33.
 
 The series was originally declared to run *before* any further `--fix` round. **The fourth round
 was run on 2026-08-16, ahead of it** (see §12), so that clause no longer holds and its cost has
@@ -502,7 +549,8 @@ reasoning below is kept because it still governs the *fifth* round — which sho
 series to finish — and because it names what was traded away.
 
 **Why read first.** Every batch so far has produced deterministic rules that remove violations at
-**zero model cost** (AG: −43; AH–AL: −156; AM–AT: −75; AU–AY: −54; AZ–BI: −143; BJ–BN: −41; BO–BV: −35), the 11–15 batch
+**zero model cost** (AG: −43; AH–AL: −156; AM–AT: −75; AU–AY: −54; AZ–BI: −143; BJ–BN: −41; BO–BV: −35;
+BW–BZ: −25), the 11–15 batch
 showed the reads also find `derive_unit` itself to be wrong rather than merely silent, the 16–20
 batch showed they find existing rules to be **half-written** — three of its five rules are the
 mirror leg of a rule already in the checker — and the 21–25 batch found a rule that was neither
@@ -522,32 +570,38 @@ The standing form of the rule is therefore weaker than "read everything first" a
 keeping: **do not run a round while checker rules are being written against the base it would
 move.**
 
-### Schedule — 14 batches at base 506
+### Schedule — 13 batches at base 481
 
-Inferno (70 remaining positions) has been read and is **not** re-read; its residue is reading
-error, and it is the most direct sample of what a `--fix` round leaves behind.
+Inferno and Purgatorio 1–5 have been read and are **not** re-read; their residue is reading error,
+and it is the most direct sample there is of what a `--fix` round leaves behind.
+
+The table is **measured at base 481**, after the BW–BZ rules. (The base-506 table it replaces gave
+Inferno 70 and totalled 436 for the unread batches; the measured Inferno figure at that base was
+86, so the earlier arithmetic was off by 16 and the per-batch numbers were the reliable half of
+it.)
 
 | batch | soft | | batch | soft |
 |---|---:|---|---|---:|
-| **purgatorio 1–5** | **14** | | paradiso 1–5 | 38 |
-| purgatorio 6–10 | 36 | | paradiso 6–10 | 22 |
-| purgatorio 11–15 | 34 | | paradiso 11–15 | 39 |
-| purgatorio 16–20 | 30 | | paradiso 16–20 | 29 |
-| purgatorio 21–25 | 39 | | paradiso 21–25 | 30 |
-| purgatorio 26–30 | 34 | | paradiso 26–30 | 35 |
+| ~~purgatorio 1–5~~ | ~~14~~ → **10** | | paradiso 1–5 | 35 |
+| **purgatorio 6–10** | **35** | | paradiso 6–10 | 22 |
+| purgatorio 11–15 | 32 | | paradiso 11–15 | 39 |
+| purgatorio 16–20 | 30 | | paradiso 16–20 | 24 |
+| purgatorio 21–25 | 35 | | paradiso 21–25 | 30 |
+| purgatorio 26–30 | 33 | | paradiso 26–30 | 33 |
 | purgatorio 31–33 | 20 | | paradiso 31–33 | 20 |
 
-436 positions in the fourteen unread batches, plus Inferno's 70, is the 506.
+388 positions in the thirteen unread batches, plus Inferno's 83 and Purgatorio 1–5's 10, is the
+481.
 
 Per canto, get the current numbers with `uv run skel.py <canticle> --check -c <n>` from `skel/`;
-the table is a base-506 snapshot and every landed rule shrinks the batches after it. The AZ–BI
-rules cut every remaining batch by roughly a fifth, the BJ–BN rules took a further ~6%, the fourth
-round another ~17% and the BO–BV rules another ~6%, which is why re-measuring before a batch is
+every landed rule shrinks the batches after it. The AZ–BI rules cut every remaining batch by
+roughly a fifth, the BJ–BN rules took a further ~6%, the fourth round another ~17%, the BO–BV
+rules another ~6% and the BW–BZ rules another ~5%, which is why re-measuring before a batch is
 part of step 1.
 
 ### How to Read a Batch
 
-The procedure below is what produced rules AG through BV. Steps 4–7 are the part that must not be
+The procedure below is what produced rules AG through BZ. Steps 4–7 are the part that must not be
 skipped: a rule that is not censused, measured, tested and written up is not a rule.
 
 1. **List the batch.** `uv run skel.py <canticle> --check -c <n>` for each canto, from `skel/`.
@@ -630,8 +684,8 @@ and per-class *call* counts are not available after the fact by design.
 ## Active & Open Routes
 
 Populations are quoted at **base 541** (after the fourth `--fix` round) where they have been
-re-measured, and marked with their older base otherwise; the BO–BV rules have since moved the base
-to 506, so a route's number is a starting point for a re-measure, not a current count. These are shapes the reads have
+re-measured, and marked with their older base otherwise; the BO–BV and BW–BZ rules have since moved
+the base to 481, so a route's number is a starting point for a re-measure, not a current count. These are shapes the reads have
 already named but not settled; a batch that runs into one of them should fold it in rather than
 open a new route.
 

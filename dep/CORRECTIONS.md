@@ -1,5 +1,25 @@
 # dep — Layer 4 correction history
 
+## 2 rows from the Layer-5 Purgatorio 1-5 read (2026-08-16)
+
+The per-position read of Purgatorio 1-5's 14 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 2 Layer-4 rows wrong. Applied with a
+gated script that asserts the expected word *and* deprel *and* head at each `(line, token)` before
+rewriting; `morph`, `np`, `dep` and `case --check` all stay 0 afterwards, `pytest` 351.
+
+**An epithet's modifier read as the verb's oblique** — purgatorio 5:77, "**quel da Esti** il fé
+far": `da Esti` says *which* `quel`, it is not an oblique of the causative. `Esti` moved from
+`obl<-77.6` (`far`) to `nmod<-77.1` (`quel`); its `case` child `da` already pointed at it. Layer 3
+reads the same span as one noun phrase, `[quel da Esti]` headed on `quel`.
+
+**A postposed subject read as the object** — purgatorio 5:135, "**salsi colui** che 'nnanellata
+pria / disposando m'avea con la sua gemma": `salsi` is `sa` + the pronominal `si`, and the line
+means "lo sa colui" — the one who first wedded me *knows* it. `colui` moved from `obj<-135.1` to
+`nsubj<-135.1`, and the `case` annex row moved accusative → nominative with it (see
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)).
+
+Layer 5 fell by 2 with the pair.
+
 ## 15 rows from the Layer-5 Inferno 31-34 read (2026-08-16)
 
 The per-position read of Inferno 31-34's 37 Layer-5 soft violations (see

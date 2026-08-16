@@ -2229,7 +2229,10 @@ def _comparative_adjunct_fixture(come_pos="conjunction"):
         (1, 3): dep.DepRow(line=1, token=3, word="come", deprel="mark", head_line=1, head_token=4),
         (1, 4): dep.DepRow(line=1, token=4, word="que'", deprel="obl", head_line=1, head_token=1),
     }
-    return given, derived, dep_index_by_pos, {(1, 3): come_pos, (1, 4): "adjective"}
+    # The compared nominal is given a *noun* POS so this fixture isolates rule AR's own gate:
+    # an adjective in a bare `obl` slot is rule AZ/BX's depictive shape and would be accepted
+    # whatever Layer 2 calls the marker.
+    return given, derived, dep_index_by_pos, {(1, 3): come_pos, (1, 4): "noun"}
 
 
 def test_classify_divergence_rule_ar_accepts_a_verbless_comparative_oblique():
@@ -3195,3 +3198,129 @@ def test_classify_divergence_rule_bv_leaves_a_real_dependent_flagged():
     given, derived, idx = _prep_stack_citation_fixture(member_deprel="appos")
     violations = skel._classify_divergence(given, derived, idx, {})
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _marker_slot_fixture(marker_pos="pronoun"):
+    """"un non **sapeva che** bianco" (purgatorio 2:23): the interrogative `che` opens the clause
+    and fills its object slot, and Layer 4 can only record the first of the two."""
+    derived = {1: [skel.SkelRow(1, 2, "sapeva", "obj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 2, "sapeva", "obj", 1, 3),
+                 skel.SkelRow(1, 2, "sapeva", "attr", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="un", deprel="nsubj", head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="sapeva", deprel="acl",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="che", deprel="mark", head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="bianco", deprel="obj",
+                           head_line=1, head_token=2),
+    }
+    return given, derived, dep_index_by_pos, {(1, 3): marker_pos, (1, 4): "adjective"}
+
+
+def test_classify_divergence_rule_bw_accepts_an_argument_in_a_mark_slot():
+    given, derived, idx, morph_pos = _marker_slot_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bw_leaves_a_conjunction_marker_flagged():
+    # A `mark` Layer 2 calls a conjunction is a subordinator, which is rule BM's reading.
+    given, derived, idx, morph_pos = _marker_slot_fixture(marker_pos="conjunction")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _omitted_depictive_fixture(arg_pos="adjective", case_child=False):
+    """"mi cominciò **tutto rivolto**" (purgatorio 3:23): the depictive is an adjunct of the
+    predication, and the LLM leaves it out entirely."""
+    derived = {1: [skel.SkelRow(1, 1, "cominciò", "subj", 1, 2),
+                   skel.SkelRow(1, 1, "cominciò", "obl", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "cominciò", "subj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="cominciò", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="conforto", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="rivolto", deprel="obl",
+                           head_line=1, head_token=1),
+    }
+    if case_child:
+        dep_index_by_pos[(1, 4)] = dep.DepRow(line=1, token=4, word="per", deprel="case",
+                                              head_line=1, head_token=3)
+    return given, derived, dep_index_by_pos, {(1, 3): arg_pos}
+
+
+def test_classify_divergence_rule_bx_accepts_an_omitted_bare_adjectival_oblique():
+    given, derived, idx, morph_pos = _omitted_depictive_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_bx_leaves_a_nominal_oblique_flagged():
+    given, derived, idx, morph_pos = _omitted_depictive_fixture(arg_pos="noun")
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def test_classify_divergence_rule_bx_leaves_a_prepositional_adjunct_flagged():
+    given, derived, idx, morph_pos = _omitted_depictive_fixture(case_child=True)
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _auxiliary_split_fixture(finite_deprel="aux"):
+    """"quel da Esti **il fé far**" (purgatorio 5:77): the LLM puts the subject on the finite
+    `fé` and the object on the infinitive Layer 4 made the head."""
+    derived = {1: [skel.SkelRow(1, 3, "far", "subj", 1, 1),
+                   skel.SkelRow(1, 3, "far", "obj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 4, "fé", "subj", 1, 1),
+                 skel.SkelRow(1, 3, "far", "obj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="quel", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="il", deprel="obj", head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="far", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 4): dep.DepRow(line=1, token=4, word="fé", deprel=finite_deprel,
+                           head_line=1, head_token=3),
+    }
+    return given, derived, dep_index_by_pos
+
+
+def test_classify_divergence_rule_by_accepts_an_argument_on_the_auxiliary():
+    given, derived, idx = _auxiliary_split_fixture()
+    assert skel._classify_divergence(given, derived, idx, {}) == []
+
+
+def test_classify_divergence_rule_by_leaves_a_separate_clause_flagged():
+    # A `conj` verb is a predicate of its own, not this predicate's periphrasis.
+    given, derived, idx = _auxiliary_split_fixture(finite_deprel="conj")
+    violations = skel._classify_divergence(given, derived, idx, {})
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _conjunct_of_an_argument_verb(person="1", pos_tag="verb"):
+    """"com' io rimango sol, **se non restai**" (purgatorio 4:45): `rimango` is the `obj` of
+    `rimira`, so it becomes a predicate only in the derivation's second pass, and its `conj`
+    has to be walked again afterwards."""
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="rimira", deprel="root", head_line=0, head_token=0),
+        dep.DepRow(line=1, token=2, word="rimango", deprel="obj", head_line=1, head_token=1),
+        dep.DepRow(line=1, token=3, word="io", deprel="nsubj", head_line=1, head_token=2),
+        dep.DepRow(line=1, token=4, word="restai", deprel="conj", head_line=1, head_token=2),
+    ]}
+    morph_rows = {1: [
+        morph.MorphRow(word="rimira", pos="verb", person="2"),
+        morph.MorphRow(word="rimango", pos="verb", person="1"),
+        morph.MorphRow(word="io", pos="pronoun", person="1"),
+        morph.MorphRow(word="restai", pos=pos_tag, person=person),
+    ]}
+    derived = skel.derive_unit([1], dep_rows, morph_rows)
+    return {(r.line, r.token) for rows in derived.values() for r in rows}
+
+
+def test_derive_unit_rule_bz_promotes_a_conjunct_of_a_second_pass_predicate():
+    assert (1, 4) in _conjunct_of_an_argument_verb()
+
+
+def test_derive_unit_rule_bz_leaves_a_non_finite_conjunct_alone():
+    # An infinitive with no argument child of its own would carry an empty tuple.
+    assert (1, 4) not in _conjunct_of_an_argument_verb(person="")
