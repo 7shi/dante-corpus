@@ -77,7 +77,7 @@ line	token	word	deprel	head_line	head_token
 11	3	parlare	obl	10	5
 11	4	ma	cc	11	7
 11	5	perché	mark	11	7
-11	6	t'	nsubj	11	7
+11	6	t'	expl	11	7
 11	7	ausi	advcl	8	9
 12	1	a	mark	12	2
 12	2	dir	xcomp	11	7

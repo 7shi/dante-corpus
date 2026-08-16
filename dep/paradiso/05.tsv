@@ -943,7 +943,7 @@ line	token	word	deprel	head_line	head_token
 132	3	assai	advmod	132	2
 132	4	di	case	132	5
 132	5	quel	obl	132	1
-132	6	ch'	obj	132	8
+132	6	ch'	attr	132	8
 132	7	ell'	nsubj	132	8
 132	8	era	acl:relcl	132	5
 133	1	Sì	advmod	136	7

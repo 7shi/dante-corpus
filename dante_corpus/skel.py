@@ -815,6 +815,18 @@ def _apply_subj_authority(
     match, the default `by_arg` diff already handles).
     """
     d_subj = _subj_arg(d)
+    # Rule CU: the LLM filled the subject slot **twice**, once with pro-drop ∅ and once with the
+    # very token the derivation supplies — "e perché tanti secoli **giaciuto** / qui se'"
+    # (purgatorio 21:80, ∅ beside the `chi` of the previous line), "tanto **ovra** poi"
+    # (25:55, ∅ beside `Anima`), "**muovono** … li ordini" (paradiso 1:112). Two subjects for one
+    # predicate is not two claims about the slot: it is the reading not deciding, which is rule
+    # BA's principle read from the LLM's end — there the *derivation* offered two and was made to
+    # require neither. Only the ∅ half is dropped, and only when the other half is exactly the
+    # derived subject: a concrete subject the derivation contradicts is a claim, and stays
+    # flagged. Censused at 6 predicates corpus-wide that list a ∅ beside another subject, 4 of
+    # them beside the derived one.
+    if d_subj not in (None, (0, 0)) and g.get((0, 0)) == "subj" and g.get(d_subj) == "subj":
+        g.pop((0, 0), None)
     if d_subj == (0, 0):
         # Pro-drop antecedent: derive_unit only knows ∅; any concrete subject the LLM resolves is
         # strictly more informative, not wrong.
@@ -1510,6 +1522,36 @@ def _undecided_subject_slot(
     return any(g.get(a) == "subj" for a in derived_subjects)
 
 
+def _gapped_second_term_argument(
+    arg: tuple[int, int], d: dict[tuple[int, int], str],
+) -> bool:
+    """Rule CW: rule BA's oblique leg — the rest of the elided clause the second subject opens.
+
+    "e come abete in alto si **digrada** / di ramo in ramo, così **quello in giuso**"
+    (purgatorio 22:134), "che li occhi miei si **fero** a lui seguaci, / come **la mente a le
+    parole sue**" (24:102), "si mosse, e **io di rietro inver' l'altura**" (9:69), "La sua
+    chiarezza séguita l'ardore; / **l'ardor la visïone**" (paradiso 14:41), "ed **essi teco le
+    cittadi e ' regni**" (18:84), "**ed ella primavera**" (purgatorio 28:51).
+
+    Two subjects on one predicate is rule BA's evidence that Layer 4 has collapsed **two clauses**
+    onto one head — a gapped coordination or the second term of a comparison, whose own verb the
+    line does not repeat and which the tree therefore has nowhere else to put. Rule BA drew the
+    conclusion for the subject slot only, and left the rest of the elided clause — its obliques,
+    its object, its predicate complement — asserted as arguments of a predicate that never had
+    them. The remnant is identified positionally, the one thing the tree does say about it: an
+    argument standing **after** the second subject is on the second term's side of the gap, and
+    the LLM, reading one clause per predicate, does not list it.
+
+    Censused corpus-wide at 85 arguments standing after a second derived subject, 13 of which the
+    LLM does not cite; every one of those 13 is a gapped second conjunct or comparison term.
+    Directional, like rule BA: this accepts the derivation's uncited argument, and an argument the
+    LLM cites from outside the tree stays flagged."""
+    if arg == (0, 0):
+        return False
+    subjects = sorted(a for a, role in d.items() if role == "subj" and a != (0, 0))
+    return len(subjects) >= 2 and arg > subjects[-1]
+
+
 def _depictive_bare_oblique(
     grole: str, drole: str, pos: tuple[int, int], arg: tuple[int, int],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
@@ -2062,6 +2104,71 @@ def _marker_of_derived_clause(
             and _clause_named_by_marker(pos, clause, grole, dep_index_by_pos, {arg: grole}))
 
 
+_COMPLEMENT_ROLES = frozenset({"obj", "ccomp", "xcomp"})
+
+
+def _wh_word_of_derived_clause(
+    pos: tuple[int, int], arg: tuple[int, int], grole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+    children_by_pos: dict[tuple[int, int], list[DepRow]] | None,
+    derived: dict[tuple[int, int], str],
+) -> bool:
+    """Rule CX: rule CK widened from the complementizer to the **interrogative word**.
+
+    "Se tu riduci a mente **qual** fosti meco" (purgatorio 23:115): the complement of `riduci` is
+    the indirect question "qual fosti meco", which `derive_unit` cites by its verb and the LLM
+    cites by the `qual` that opens it. Rule CK is the same convention for a clause opened by a
+    `che`, and it is written for a `mark` and for one role on both sides. Neither gate reaches
+    here: an interrogative word is a constituent *inside* its clause (Layer 4 makes `qual` the
+    `advmod` of `fosti`, the predicate complement it also is — rule BW's tension), and the
+    complement of a verb of remembering is `obj` to one reading and `ccomp` to the other, which
+    is a difference of notation about the same slot, not two claims.
+
+    Three gates keep it to the shape. The word must be one Layer 2 calls a pronoun, adjective or
+    adverb rather than a conjunction — rule BW's own POS test, which separates an interrogative
+    word from a subordinator. It must **open** the clause: the leftmost token of the whole
+    subtree, so a word from the middle of it is not swept in. And both roles must be complement
+    roles, so a clause the derivation puts in the subject slot stays flagged."""
+    if dep_index_by_pos is None or arg == (0, 0) or grole not in _COMPLEMENT_ROLES:
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel in _SUBJ_DEPRELS:
+        # The embedded clause's own **subject** is the one constituent whose citation on the
+        # matrix is a claim about a different slot rather than a way of naming the clause: that
+        # is rule BI's accusative-and-infinitive ("I' vidi uno aspettar così"), which has its own
+        # gate. The six positions this rule takes are markers and predicate complements
+        # (`attr`, `mark`, `advmod`, `xcomp`, `obj`), never a subject.
+        return False
+    clause = (row.head_line, row.head_token)
+    if clause == arg or derived.get(clause) not in _COMPLEMENT_ROLES:
+        return False
+    clause_row = dep_index_by_pos.get(clause)
+    if clause_row is None or (clause_row.head_line, clause_row.head_token) != pos:
+        return False  # rule CK's first gate: the clause hangs on this very predicate
+    tag = (morph_pos_by_position or {}).get(arg, "").lower()
+    if not tag or "conjunction" in tag:
+        return False
+    if not ("pronoun" in tag or "adjective" in tag or "adverb" in tag):
+        return False
+    return arg == min(_subtree(clause, children_by_pos) | {clause})
+
+
+def _subtree(
+    pos: tuple[int, int], children_by_pos: dict[tuple[int, int], list[DepRow]] | None
+) -> set[tuple[int, int]]:
+    """Every position below `pos` in the Layer-4 tree (rule CX's "opens the clause" test)."""
+    seen: set[tuple[int, int]] = set()
+    frontier = [pos]
+    while frontier and len(seen) < 64:
+        for child in (children_by_pos or {}).get(frontier.pop(), ()):
+            node = (child.line, child.token)
+            if node not in seen:
+                seen.add(node)
+                frontier.append(node)
+    return seen
+
+
 def _marker_slot_argument(
     pos: tuple[int, int], arg: tuple[int, int], grole: str,
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
@@ -2372,6 +2479,14 @@ def _classify_divergence(
             return False
         head = _aux_head(pos, dep_index_by_pos)
         return head != pos and head in derived_preds
+
+    def _aux_named_predicate(arg: tuple[int, int]) -> bool:
+        # Rule CY: `_aux_of_derived_predicate` read from the derivation's end — one of the LLM's
+        # own predicates is an `aux`/`cop` of `arg`, so the clause headed at `arg` is listed
+        # after all, under the auxiliary. See the clausal-complement double-listing skip.
+        if dep_index_by_pos is None:
+            return False
+        return any(p != arg and _aux_head(p, dep_index_by_pos) == arg for p in given_preds)
 
     def _predicate_complements(pos: tuple[int, int]) -> set[tuple[int, int]]:
         # Rule X's scope gate: the tokens that are `pos`'s predicate complement on **both**
@@ -2874,9 +2989,22 @@ def _classify_divergence(
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)
             if grole is None:
-                if drole in ("ccomp", "xcomp") and arg in given_preds:
+                if drole in ("ccomp", "xcomp") and (arg in given_preds
+                                                    or _aux_named_predicate(arg)):
                     # Clausal-complement double-listing: the LLM lists the clause as its own
                     # tuple instead of also citing it as this predicate's argument.
+                    #
+                    # **Rule CY** decides which *edge* that test reads. "«Come!», diss' elli …
+                    # chi v'**ha** per la sua scala tanto **scorte**?" (purgatorio 21:21): Layer 4
+                    # heads the quoted question on `scorte` with `ha` as its `aux`, and the LLM
+                    # gives the clause a tuple headed by `ha` — so the clause *is* double-listed,
+                    # under the auxiliary. `_aux_of_derived_predicate` already reads this very
+                    # convention in the other direction, and rules AQ and BP already normalize
+                    # `aux`/`cop` to the lexical word for the citation gates; this test was the
+                    # one left comparing raw positions. Censused at 1 position corpus-wide — the
+                    # double-listing skip above already takes 655 of the 656 uncited clausal
+                    # complements — so it is kept for consistency between the two directions of
+                    # one gate rather than for its count.
                     continue
                 if arg in given_preds and _verb_in_argument_slot(arg):
                     # Rule Z, host leg: the derivation reports the infinitive as this
@@ -2899,6 +3027,8 @@ def _classify_divergence(
                     continue  # rule BX: rule AZ's missing_arg leg
                 if _undecided_subject_slot(drole, arg, g, d):
                     continue  # rule BA: the derivation offered two subjects and named neither
+                if _gapped_second_term_argument(arg, d):
+                    continue  # rule CW: rule BA's oblique leg — the elided clause's own argument
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
                                                hosts=_control_partners(pos)):
                     continue  # rule AX: the LLM hung it on the other end of an `xcomp` edge
@@ -2982,6 +3112,9 @@ def _classify_divergence(
                                                          derived_preds, case_lemmas)
                     # rule CK: this is the `mark` of a clause the derivation gives the same slot
                     or _marker_of_derived_clause(pos, arg, grole, dep_index_by_pos, d)
+                    # rule CX: rule CK widened — the interrogative word that opens the clause
+                    or _wh_word_of_derived_clause(pos, arg, grole, dep_index_by_pos,
+                                                  morph_pos_by_position, children_by_pos, d)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

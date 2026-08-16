@@ -801,3 +801,127 @@ def test_validate_unit_accepts_a_quantifier_resuming_a_first_plural_subject():
         ]
     }
     assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+# --- Purgatorio 21-25 read: rule CV -----------------------------------------------------
+
+
+def test_validate_unit_reports_a_third_person_coordination_under_a_first_plural_head():
+    """Rule CV: the 1/2-plural exclusion delegated the coordinate case to the conjunct branch's
+    person test, but *returned* before that branch could run. "Né 'l dir l'andar, né l'andar lui
+    più lento / facea, ma ragionando **andavam** forte" (purgatorio 24:2): no member of the
+    coordination is a "we"."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["'l dir l'andar andavam"]
+    rows = [
+        dep.DepRow(1, 1, "dir", "conj", 1, 2),
+        dep.DepRow(1, 2, "andar", "nsubj", 1, 3),
+        dep.DepRow(1, 3, "andavam", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="dir", lemma="dire", pos="noun", number="sg."),
+            MorphRow(word="andar", lemma="andare", pos="noun", number="sg."),
+            MorphRow(word="andavam", lemma="andare", pos="verb", number="pl.", person="1"),
+        ]
+    }
+    assert [v.detail for v in _agreement(nos, texts, rows, morph_rows)] == [
+        "nsubj 1.2 'andar' disagrees with head 1.3 'andavam': person 3 vs 1"
+    ]
+
+
+def test_validate_unit_accepts_a_coordination_whose_nested_conjunct_carries_the_person():
+    """Rule CV's other half: a coordination is a **chain**. "La bella donna … e Stazio e io
+    seguitavam" (purgatorio 32:28) hangs `io` under `Stazio` under `donna`, so the member that
+    carries the person is only reachable by walking `conj` transitively."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["donna Stazio io seguitavam"]
+    rows = [
+        dep.DepRow(1, 1, "donna", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "Stazio", "conj", 1, 1),
+        dep.DepRow(1, 3, "io", "conj", 1, 2),
+        dep.DepRow(1, 4, "seguitavam", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="donna", lemma="donna", pos="noun", number="sg."),
+            MorphRow(word="Stazio", lemma="Stazio", pos="noun", number="sg."),
+            MorphRow(word="io", lemma="io", pos="pronoun", number="sg.", person="1"),
+            MorphRow(word="seguitavam", lemma="seguire", pos="verb", number="pl.", person="1"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_reports_a_person_clash_a_number_exclusion_used_to_swallow():
+    """Rule CV: the number-only exclusions ran *before* the person test and took it down with
+    them. Here "coordination inside the subject phrase" licenses the singular-under-plural, and
+    the 3-vs-1 person clash is asked anyway."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["coro e altro andavam"]
+    rows = [
+        dep.DepRow(1, 1, "coro", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 1),
+        dep.DepRow(1, 3, "altro", "nmod", 1, 1),
+        dep.DepRow(1, 4, "andavam", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="coro", lemma="coro", pos="noun", number="sg."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="altro", lemma="altro", pos="pronoun", number="sg."),
+            MorphRow(word="andavam", lemma="andare", pos="verb", number="pl.", person="1"),
+        ]
+    }
+    assert [v.detail for v in _agreement(nos, texts, rows, morph_rows)] == [
+        "nsubj 1.1 'coro' disagrees with head 1.4 'andavam': person 3 vs 1"
+    ]
+
+
+def test_validate_unit_still_accepts_the_number_licence_when_the_person_agrees():
+    """The same shape with a third-person head: the number exclusion still applies, and the pair
+    comes out undecidable exactly as before rule CV."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["coro e altro andavano"]
+    rows = [
+        dep.DepRow(1, 1, "coro", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 1),
+        dep.DepRow(1, 3, "altro", "nmod", 1, 1),
+        dep.DepRow(1, 4, "andavano", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="coro", lemma="coro", pos="noun", number="sg."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="altro", lemma="altro", pos="pronoun", number="sg."),
+            MorphRow(word="andavano", lemma="andare", pos="verb", number="pl.", person="3"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_accepts_tutti_e_cinque_under_a_first_plural_head():
+    """Rule CV: `tutto` joins `_DISTRIBUTIVE_LEMMAS`. "là 've già **tutti e cinque sedavamo**"
+    (purgatorio 9:12) names the whole of the "we" the verb carries."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["tutti e cinque sedavamo"]
+    rows = [
+        dep.DepRow(1, 1, "tutti", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 3),
+        dep.DepRow(1, 3, "cinque", "conj", 1, 1),
+        dep.DepRow(1, 4, "sedavamo", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="tutti", lemma="tutto", pos="adjective", number="pl."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="cinque", lemma="cinque", pos="numeral"),
+            MorphRow(word="sedavamo", lemma="sedere", pos="verb", number="pl.", person="1"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []

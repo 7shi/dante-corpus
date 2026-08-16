@@ -1,5 +1,111 @@
 # dep — Layer 4 correction history
 
+## 27 rows from the Layer-5 Purgatorio 21-25 read, and rule CV (2026-08-16)
+
+The per-position read of Purgatorio 21-25's 33 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 27 Layer-4 rows wrong — the largest
+upstream count of the series, because two of its censuses swept shapes the read itself had only
+one instance of. Applied with gated scripts that assert the word and the current cell value at
+each `(line, token)` before rewriting; `morph`/`np`/`dep`/`case --check` all re-run at 0 and
+`pytest` at 427.
+
+### Eleven predicate nominals of `essere` (10 `obj`, 1 `nsubj`)
+
+Rule CV (below) newly reported **inferno 23:103**, "**Frati godenti** fummo, e bolognesi" — where
+`Frati` was the `nsubj` of a 1st-plural verb, and is in fact the predicate nominal of a pro-drop
+"noi", the very mis-parse the subject-agreement check exists to find. Censusing the same shape
+from the other side — a token in a *core* role under a finite `essere` — found 15 more, ten of
+them predicate nominals recorded as `obj`, against **346** already recorded as `attr`, which is
+this corpus's convention for the complement of a copula-as-head:
+
+| line | row | line text |
+|---|---|---|
+| inferno 14:119 | `qual` | "e **qual sia** quello stagno" |
+| inferno 23:93 | `chi` | "dir **chi tu se'** non avere in dispregio" |
+| inferno 23:103 | `Frati` | "**Frati godenti fummo**, e bolognesi" (`nsubj` → `attr`) |
+| inferno 23:107 | `tali` | "e **fummo tali**" |
+| inferno 34:93 | `qual` | "**qual è** quel punto ch'io avea passato" |
+| purgatorio 4:111 | `serocchia` | "che se pigrizia **fosse sua serocchia**" |
+| purgatorio 17:36 | `nulla` | "perché per ira hai voluto **esser nulla**?" |
+| purgatorio 20:22 | `Povera` | "**Povera fosti** tanto" |
+| purgatorio 28:45 | `testimon` | "che soglion **esser testimon** del core" |
+| paradiso 3:108 | `qual` | "Iddio si sa **qual** poi mia vita **fusi**" |
+| paradiso 5:132 | `ch'` | "lucente più assai di quel **ch'ell' era**" |
+
+The census's other five rows are **not** predicate nominals — a dative clitic ("che già **li** er'
+al petto", inferno 12:83), a subject ("Quell' **altro** … fu Michele Scotto", 20:115), a reflexive
+("e io **mi** fora", purgatorio 26:25) and two relative obliques (inferno 4:104, paradiso 3:21) —
+each a different question, and none of them decided here. Layer 5 moved **±0**.
+
+### Six reflexive clitics recorded as the clause's `nsubj`
+
+The Purgatorio 21:12 position ("né **ci** addemmo di lei") is one of ten tokens the `case` annex
+calls reflexive while Layer 4 gives them `nsubj`. Three of the ten are fused infinitives that
+really are clausal subjects ("al maestro parve **di partirsi**", inferno 16:90; purgatorio 16:143;
+paradiso 3:80) and one is a Layer-2 question left standing (inferno 32:66, where `se tosco **se'**`
+is read as the pronoun *sé* twice over). The other six are the clitic of a pronominal verb, which
+cannot be its own clause's subject, and become `expl`:
+
+| line | row | line text |
+|---|---|---|
+| inferno 34:21 | `t'` | "ove convien che di fortezza **t'armi**" |
+| purgatorio 21:12 | `ci` | "né **ci addemmo** di lei" |
+| purgatorio 22:90 | `mi` | "ma per paura chiuso cristian **fu'mi**" |
+| purgatorio 27:138 | `ti` | "**seder ti puoi** e puoi andar tra elli" |
+| paradiso 1:22 | `ti` | "se mi **ti presti**" |
+| paradiso 17:11 | `t'` | "ma perché **t'ausi**" |
+
+Rules AB/AW/BD deliberately leave the 371 reflexive clitics Layer 4 parks in `obj`/`iobj`/`obl` as
+notation rather than retagging them — which slot a clitic sits in is not a claim. `nsubj` is
+different in kind: it asserts that the clause's subject is the clitic, which competes with the
+pro-drop reading the verb's own person carries. Layer 5 moved **−2 / +4**; the four are at 22:90,
+where the wrong `nsubj` had been hiding the LLM's own reading of `mi` as the subject of a
+first-person verb.
+
+### Nine rows from the read itself
+
+| line | rows | what was wrong |
+|---|---|---|
+| 22:17 | `persona` | "quale / più strinse mai **di non vista persona**" was the `nsubj` of `strinse` while carrying its own `di` `case` child; it is the oblique the goodwill is felt toward |
+| 22:26 | `poco`, `a`, `riso`, `pria`, `rispuose` | "Queste parole Stazio mover fenno / un poco **a riso** pria" — `a` was an `aux` and `riso` a past participle coordinated with `fenno`; with Layer 2's retag of `riso` to the noun, it is the prepositional goal of `mover`, and `rispuose` coordinates with `fenno` rather than with it |
+| 24:71, 24:73 | `compagni`, `greggia` | "**lascia andar li compagni**", "sì lasciò **trapassar la santa greggia**" — the nominal was the `obj` of an intransitive infinitive; it is the infinitive's subject (and the matrix verb's object, which rule BI reads) |
+| 25:67 | `che`, `petto` | "Apri a la verità **che** viene **il petto**" — the two were swapped: `il petto` is the object of the imperative and `che` the subject of `viene` |
+
+The `fare`/`lasciare` + infinitive census this last row opened found **32** infinitives with an
+`obj` child under a causative head, and the population is genuinely mixed — "vi facea **far le
+grida**" is a real object, "lascia **muover li anni**" is not. It is a per-position reading job,
+not a sweep, and only the two positions this batch read are retagged.
+
+### Rule CV — the number exclusions ran before the person test
+
+Rule CR (2026-08-16) narrowed the "1/2 plural head admits a singular member" exclusion to the
+*number* test and delegated the coordinate case to "the conjunct branch below", which tests person
+member by member. Returning from the exclusion is what stops that branch from running, so a
+coordinated subject reached it and left with no person test at all: "Né 'l dir l'andar, né l'andar
+lui più lento / facea, ma ragionando **andavam** forte" (purgatorio 24:2), where `derive_unit`
+inherits two third-person nouns onto a first-plural verb.
+
+The same defect was in **five more** exclusions, every one of them a *number* licence —
+*coordination inside the subject phrase*, *comitative phrase on a plural head*, *quantified subject
+read as one measure*, *copula agreeing with its predicate nominal*, *impersonal `si` with a
+postposed notional subject*. Each returned "undecidable" for both features. They now record that
+the number half is undecidable and let the person test run first; a pair that clears the person
+test and holds one of these licences comes out undecidable from exactly the reason it did before.
+
+Two further halves of the same rule, both found by measuring:
+
+- **a coordination is a chain, not a fan** — Layer 4 writes "La bella donna … e Stazio e io"
+  (purgatorio 32:28) as `donna` ← `Stazio` ← `io`, so the members are reached by walking `conj`
+  transitively. The direct-children walk lost the `io` that carries the coordination's person and
+  reported the pair.
+- **`tutto` joins `_DISTRIBUTIVE_LEMMAS`** — "là 've già **tutti e cinque sedavamo**" (9:12), "e
+  **tutti eravamo** già vòlti" (27:85). "Tutti e cinque" names the whole of the "we" the verb
+  carries, so its third person is the quantifier's, exactly as `ambedue`'s is; neither member of
+  the coordination is a first-person word the person test could find.
+
+With those two in place the refinement leaves **one** new position, inferno 23:103, corrected
+above, and the check returns to **0 hard / 0 soft**. Layer 5 moved **−3**.
+
 ## 17 rows from the Layer-5 Purgatorio 16-20 read, and rule CR (2026-08-16)
 
 The per-position read of Purgatorio 16-20's 26 Layer-5 soft violations (see

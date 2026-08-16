@@ -1,5 +1,18 @@
 # Manual Layer-2 corrections
 
+## 1 row from the Layer-5 Purgatorio 21-25 read (2026-08-16)
+
+Found by the per-position read of Purgatorio 21-25's Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)); applied with the same gated script as the
+Layer-4 rows and re-validated with every layer's `--check` (all 0) and `pytest` (427).
+
+- **purgatorio 22:26, `riso`** — read as the past participle of *ridere* (m. sg.). In "Queste
+  parole Stazio mover fenno / un poco **a riso** pria" it is the noun *riso*, the goal `mover`
+  moves Statius toward; Layer 3 had already spanned it as a noun phrase. Reading it as a verb had
+  made Layer 4 write the preposition `a` as an `aux` and the word itself as a conjunct of `fenno`,
+  which invented a predicate and gave it a subject to argue about. The third batch in four whose
+  Layer-2 POS error was the whole of a Layer-5 divergence.
+
 ## 2 rows from the Layer-5 Purgatorio 16-20 read (2026-08-16)
 
 Found by the per-position read of Purgatorio 16-20's Layer-5 soft violations (see

@@ -146,7 +146,7 @@ line	token	word	deprel	head_line	head_token
 21	3	che	mark	21	7
 21	4	di	case	21	5
 21	5	fortezza	obl	21	7
-21	6	t'	nsubj	21	7
+21	6	t'	expl	21	7
 21	7	armi	ccomp	21	2
 22	1	Com'	advmod	22	3
 22	2	io	nsubj	22	3
@@ -672,7 +672,7 @@ line	token	word	deprel	head_line	head_token
 92	6	che	mark	92	8
 92	7	non	advmod	92	8
 92	8	vede	acl:relcl	92	2
-93	1	qual	obj	93	2
+93	1	qual	attr	93	2
 93	2	è	ccomp	92	8
 93	3	quel	det	93	4
 93	4	punto	nsubj	93	2

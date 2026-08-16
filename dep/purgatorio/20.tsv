@@ -155,7 +155,7 @@ line	token	word	deprel	head_line	head_token
 21	7	sia	acl:relcl	21	3
 22	1	e	cc	22	2
 22	2	seguitar	xcomp	19	4
-22	3	Povera	obj	22	4
+22	3	Povera	attr	22	4
 22	4	fosti	ccomp	22	2
 22	5	tanto	advmod	22	4
 23	1	quanto	mark	23	4

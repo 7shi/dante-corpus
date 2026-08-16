@@ -3944,3 +3944,119 @@ def test_classify_divergence_rule_ct_leaves_a_lexical_verb_flagged():
     # predication of it.
     violations = _copula_under_complement_fixture(lemma="parlare")
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+# --- Purgatorio 21-25 read: rules CU, CW, CX, CY ----------------------------------------
+
+
+def _double_filled_subject_fixture(second=(1, 5)):
+    """"e perché tanti secoli **giaciuto** / qui se'" (purgatorio 21:80): the LLM fills the
+    subject slot twice, once with pro-drop ∅ and once with the derived subject."""
+    derived = {1: [skel.SkelRow(1, 3, "giaciuto", "subj", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 3, "giaciuto", "subj", 0, 0),
+                 skel.SkelRow(1, 3, "giaciuto", "subj", *second)]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="giaciuto", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 5): dep.DepRow(line=1, token=5, word="chi", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 7): dep.DepRow(line=1, token=7, word="spirto", deprel="nsubj",
+                           head_line=1, head_token=3),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_cu_accepts_a_null_beside_the_derived_subject():
+    assert _double_filled_subject_fixture() == []
+
+
+def test_classify_divergence_rule_cu_still_reports_a_second_concrete_subject():
+    # Only the ∅ half is dropped: a concrete subject the derivation contradicts is a claim.
+    violations = _double_filled_subject_fixture(second=(1, 7))
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _gapped_second_term_fixture(oblique=(2, 4)):
+    """"e come abete in alto si **digrada** / di ramo in ramo, così **quello in giuso**"
+    (purgatorio 22:134): two subjects on one predicate is two clauses collapsed onto one head,
+    and the arguments after the second belong to the elided one."""
+    derived = {1: [skel.SkelRow(1, 1, "digrada", "subj", 1, 2),
+                   skel.SkelRow(1, 1, "digrada", "subj", 2, 2),
+                   skel.SkelRow(1, 1, "digrada", "obl:in", *oblique)]}
+    given = {1: [skel.SkelRow(1, 1, "digrada", "subj", 1, 2)]}
+    return skel._classify_divergence(given, derived, None, {})
+
+
+def test_classify_divergence_rule_cw_accepts_the_elided_clauses_own_argument():
+    assert _gapped_second_term_fixture() == []
+
+
+def test_classify_divergence_rule_cw_still_reports_an_argument_before_the_second_subject():
+    # An argument on the *first* term's side of the gap is the predicate's own.
+    violations = _gapped_second_term_fixture(oblique=(1, 4))
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _wh_opened_clause_fixture(cited=(2, 1)):
+    """"Se tu riduci a mente **qual** fosti meco" (purgatorio 23:115): the LLM names the indirect
+    question by the interrogative word that opens it, in the object slot the derivation gives the
+    clause as a `ccomp`."""
+    derived = {1: [skel.SkelRow(1, 1, "riduci", "ccomp", 2, 2)],
+               2: [skel.SkelRow(2, 2, "fosti", "subj", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "riduci", "obj", *cited)],
+             2: [skel.SkelRow(2, 2, "fosti", "subj", 0, 0)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="riduci", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 1): dep.DepRow(line=2, token=1, word="qual", deprel="advmod",
+                           head_line=2, head_token=2),
+        (2, 2): dep.DepRow(line=2, token=2, word="fosti", deprel="ccomp",
+                           head_line=1, head_token=1),
+        (2, 3): dep.DepRow(line=2, token=3, word="meco", deprel="obl",
+                           head_line=2, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(2, 1): "adjective", (2, 3): "pronoun"})
+
+
+def test_classify_divergence_rule_cx_accepts_the_wh_word_that_opens_the_clause():
+    assert _wh_opened_clause_fixture() == []
+
+
+def test_classify_divergence_rule_cx_requires_the_word_to_open_the_clause():
+    # A word from the middle of the clause does not name it; only the token the whole subtree
+    # begins with does.
+    violations = _wh_opened_clause_fixture(cited=(2, 3))
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _aux_named_clause_fixture(deprel="aux"):
+    """"«Come!», diss' elli … chi v'**ha** per la sua scala tanto **scorte**?" (purgatorio
+    21:21): the quoted clause is listed as its own tuple, headed by its auxiliary."""
+    derived = {1: [skel.SkelRow(1, 1, "diss'", "subj", 1, 2),
+                   skel.SkelRow(1, 1, "diss'", "ccomp", 2, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "diss'", "subj", 1, 2)],
+             2: [skel.SkelRow(2, 1, "ha", "subj", 2, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="diss'", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="elli", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (2, 1): dep.DepRow(line=2, token=1, word="ha", deprel=deprel,
+                           head_line=2, head_token=3),
+        (2, 2): dep.DepRow(line=2, token=2, word="chi", deprel="nsubj",
+                           head_line=2, head_token=3),
+        (2, 3): dep.DepRow(line=2, token=3, word="scorte", deprel="ccomp",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_cy_reads_the_double_listing_through_the_auxiliary():
+    assert [v for v in _aux_named_clause_fixture() if v.detail.startswith("missing_arg")] == []
+
+
+def test_classify_divergence_rule_cy_requires_an_aux_edge():
+    # A tuple that merely sits inside the clause does not list it: the edge is the gate.
+    violations = _aux_named_clause_fixture(deprel="advmod")
+    assert any(v.detail.startswith("missing_arg") for v in violations)

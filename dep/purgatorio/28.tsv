@@ -303,7 +303,7 @@ line	token	word	deprel	head_line	head_token
 45	1	che	nsubj	45	2
 45	2	soglion	acl:relcl	44	8
 45	3	esser	xcomp	45	2
-45	4	testimon	obj	45	3
+45	4	testimon	attr	45	3
 45	5	del	case	45	6
 45	6	core	nmod	45	4
 46	1	vegnati	ccomp	47	1

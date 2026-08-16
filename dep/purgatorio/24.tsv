@@ -524,7 +524,7 @@ line	token	word	deprel	head_line	head_token
 71	1	lascia	advcl	73	2
 71	2	andar	xcomp	71	1
 71	3	li	det	71	4
-71	4	compagni	obj	71	2
+71	4	compagni	nsubj	71	2
 71	5	e	cc	71	7
 71	6	sì	advmod	71	7
 71	7	passeggia	conj	71	1
@@ -541,7 +541,7 @@ line	token	word	deprel	head_line	head_token
 73	3	trapassar	xcomp	73	2
 73	4	la	det	73	6
 73	5	santa	amod	73	6
-73	6	greggia	obj	73	3
+73	6	greggia	nsubj	73	3
 74	1	Forese	nsubj	73	2
 74	2	e	cc	74	6
 74	3	dietro	case	74	4

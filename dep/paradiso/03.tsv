@@ -774,7 +774,7 @@ line	token	word	deprel	head_line	head_token
 108	1	Iddio	nsubj	108	3
 108	2	si	expl	108	3
 108	3	sa	conj	107	3
-108	4	qual	obj	108	8
+108	4	qual	attr	108	8
 108	5	poi	advmod	108	8
 108	6	mia	det:poss	108	7
 108	7	vita	obl	108	8

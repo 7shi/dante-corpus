@@ -255,7 +255,7 @@ line	token	word	deprel	head_line	head_token
 36	4	hai	aux	36	5
 36	5	voluto	ccomp	35	4
 36	6	esser	xcomp	36	5
-36	7	nulla	obj	36	6
+36	7	nulla	attr	36	6
 37	1	Ancisa	root	0	0
 37	2	t'	iobj	37	1
 37	3	hai	aux	37	1

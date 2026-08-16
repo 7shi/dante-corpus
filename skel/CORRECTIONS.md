@@ -1,5 +1,163 @@
 # skel — Layer 5 correction history
 
+## Rules CU-CY, from reading Purgatorio 21-25 — 409 → 388, −21 (2026-08-16)
+
+Per-position read of all **33** soft violations in Purgatorio 21-25, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Purgatorio 21-25
+itself went **33 → 24** (21: 9 → 5, 22: 6 → 6, 23: 2 → 1, 24: 7 → 1, 25: 9 → 11); the corpus went
+**409 → 388 (−21, −5.1%)**. Four deterministic Layer-5 rules, one `dep.subject_agreement`
+refinement (rule CV), 27 Layer-4 rows and 1 Layer-2 row. `pytest` **427 collected**, all other
+layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **CW** | rule BA's oblique leg: the rest of the elided clause the second derived subject opens | 85 / 13 | −7 |
+| **CX** | rule CK widened from the complementizer to the **interrogative word** that opens the clause | 6 | −6 |
+| **CU** | a ∅ subject the LLM lists **beside** the derived one is the slot not decided, not a second claim | 6 / 4 | −3 |
+| **CV** | `dep.subject_agreement`: the number-only exclusions ran *before* the person test and took it with them | — | −3 |
+| **CY** | the clausal-complement double-listing test, read through the `aux` edge | 1 | −1 |
+
+Plus the upstream rows (**−8 / +7** together, counted below).
+
+Two of the batch's own shapes carried it. The first is **the second subject as a marker of
+collapse**: rule BA already reads two derived subjects as one predicate holding two clauses, and
+rule CW simply follows that reading past the subject slot to the rest of the elided clause — seven
+positions in one line of gating. The second is that **an upstream correction can raise the count
+and still be right**: four of this batch's six new positions are the LLM's own misreadings, which
+the Layer-4 errors had been hiding.
+
+### Rule CU — a ∅ beside the derived subject
+
+"e perché tanti secoli **giaciuto** / qui se'" (purgatorio 21:80), "tanto **ovra** poi" (25:55),
+"li ordini … li spiriti **muovono**" (paradiso 1:112). The LLM filled the subject slot twice, once
+with pro-drop ∅ and once with the very token the derivation supplies. Two subjects for one
+predicate is not two claims about the slot; it is the reading not deciding, which is **rule BA's
+principle read from the LLM's end** — there the *derivation* offered two and was made to require
+neither.
+
+Censused at **6** predicates corpus-wide that list a ∅ beside another subject, **4** of them beside
+the derived one; the rule takes the 3 that were flagged. Only the ∅ half is dropped, and only when
+the other half is exactly the derived subject: a concrete subject the derivation contradicts is a
+claim and stays flagged, which is what keeps 21:123 ("ma più d'ammirazion vo' **che ti pigli**",
+where the LLM's ∅ stands against the derivation's `ammirazion`) reported.
+
+**A variant was censused and dropped.** At 21:6 the LLM gives `condoleami` two *concrete* subjects,
+the coordination head's and the nearest conjunct's own — rule BU's evidence for the alternative,
+listed alongside the derived one. The census found **1** such predicate in the corpus. One instance
+is not a population.
+
+### Rule CV — the number exclusions swallowed the person test
+
+Rule CR, one batch earlier, found that the 1/2-plural exclusion in `dep.subject_agreement` was
+right about *number* and wrong about *person*, and narrowed it to the number half. It delegated the
+coordinate case to "the conjunct branch below", which tests person member by member — but
+**returning is what stops that branch from running**. "Né 'l dir l'andar, né l'andar lui più lento
+/ facea, ma ragionando **andavam** forte" (purgatorio 24:2) left through the exclusion with its
+3-vs-1 person clash never asked, and `derive_unit`'s step 3 inherited two third-person nouns onto a
+first-plural verb.
+
+The same defect turned out to be in **five more** exclusions, all of them number licences —
+*coordination inside the subject phrase*, *comitative phrase on a plural head*, *quantified subject
+read as one measure*, *copula agreeing with its predicate nominal*, *impersonal `si`* — each of
+which returned "undecidable" for both features. They now record that the *number* half is
+undecidable and let the person test run first; a pair that clears the person test and holds one of
+these licences comes out undecidable from exactly the reason it did before. Two further halves of
+the same rule:
+
+- **a coordination is a chain, not a fan.** Layer 4 writes "La bella donna … e Stazio e io"
+  (purgatorio 32:28) as `donna` ← `Stazio` ← `io`, so the members are only reached by walking
+  `conj` transitively; the direct-children walk lost the `io` that carries the person.
+- **`tutto` joins `_DISTRIBUTIVE_LEMMAS`.** "là 've già **tutti e cinque sedavamo**" (9:12), "e
+  **tutti eravamo** già vòlti" (27:85): "tutti e cinque" names the whole of the "we" the verb
+  carries, exactly as `ambedue` does.
+
+`dep --check` stays **0 hard / 0 soft** — the refinement surfaced one new position, inferno 23:103,
+which is a real Layer-4 mis-parse and was corrected (below). Layer 5: **−3** (purgatorio 24:2 twice,
+paradiso 32:111).
+
+### Rule CW — rule BA's oblique leg
+
+"e come abete in alto si **digrada** / di ramo in ramo, così **quello in giuso**" (purgatorio
+22:134), "che li occhi miei si **fero** a lui seguaci, / come **la mente a le parole sue**"
+(24:102), "si mosse, e **io di rietro inver' l'altura**" (9:69), "La sua chiarezza séguita
+l'ardore; / **l'ardor la visïone**" (paradiso 14:41), "ed **essi teco le cittadi e ' regni**"
+(18:84), "**ed ella primavera**" (purgatorio 28:51), "e **là da Tagliacozzo**" (inferno 28:17),
+"come **nota con suo metro**" (paradiso 28:9).
+
+Two subjects on one predicate is rule BA's own evidence that Layer 4 has collapsed **two clauses**
+onto one head — a gapped coordination, or the second term of a comparison, whose verb the line does
+not repeat and which the tree therefore has nowhere else to put. Rule BA drew the conclusion for
+the subject slot only, and left the rest of the elided clause — its obliques, its object, its
+predicate complement — asserted as arguments of a predicate that never had them. The remnant is
+identified positionally, the one thing the tree does say about it: an argument standing **after**
+the second subject is on the second term's side of the gap.
+
+**Censused at 85** arguments standing after a second derived subject, **13** of which the LLM does
+not cite; every one of the 13 is a gapped conjunct or comparison term, and the rule takes the **7**
+that were flagged. The eighth, purgatorio 9:69, it does not: rule AG had already dropped one of the
+two subjects there as disagreeing, so by the time this gate reads `d` the collapse is no longer
+visible in it. Reading the *normalized* `d` is deliberate — it is what rule BA reads, and the two
+legs of one reading must not diverge — but it is also this batch's third ordering finding, and it
+costs one position.
+
+### Rule CX — rule CK widened to the interrogative word
+
+"Se tu riduci a mente **qual** fosti meco" (purgatorio 23:115), "Ma dilli **chi** tu fosti"
+(inferno 13:52), "a dirne **chi** tu se'" (16:32), "e perché fosse **qual** era in costrutto"
+(paradiso 12:67), "tentando a render te **qual** tu paresti" (purgatorio 31:143), "di non celar
+**qual** hai vista la pianta" (33:56).
+
+The complement is an indirect question, which `derive_unit` cites by its verb and the LLM cites by
+the word that opens it. Rule CK is the same convention for a clause opened by a `che`, and neither
+of its gates reaches here: an interrogative word is a constituent *inside* its clause (Layer 4
+makes `qual` the `advmod`, `attr` or `obj` of its own verb — rule BW's tension), and the complement
+of a verb of remembering is `obj` to one reading and `ccomp` to the other, a difference of notation
+about one slot rather than two claims.
+
+Three gates keep it to the shape: rule BW's POS test (a pronoun, adjective or adverb, never a
+conjunction — a subordinator is rule CK's), both roles complement roles, and the word must be the
+**leftmost token of the whole clause subtree**. A fourth is explicit: the clause's own `nsubj` is
+refused, because a subject named on the matrix is rule BI's accusative-and-infinitive, a claim
+about a different slot and not a way of naming the clause. The rule takes all **6** positions the
+census found.
+
+### Rule CY — the double-listing test read through the `aux`
+
+"«Come!», diss' elli … chi v'**ha** per la sua scala tanto **scorte**?" (purgatorio 21:21). The
+clausal-complement double-listing skip accepts the LLM listing a clause as its own tuple instead of
+citing it as an argument, and it compares raw positions: Layer 4 heads this quoted question on
+`scorte` with `ha` as its `aux`, and the LLM's tuple is headed by `ha`, so the clause *is*
+double-listed — one edge away. `_aux_of_derived_predicate` already reads this very convention from
+the other direction, and rules AQ and BP already normalize `aux`/`cop` to the lexical word for the
+citation gates; this test was the one left comparing raw positions. The Inferno 31-34 batch's
+finding — *ask which edge a gate reads* — in a fourth place.
+
+**Censused at 1** position corpus-wide: the double-listing skip already takes **655** of the 656
+uncited clausal complements. Kept for consistency between the two directions of one gate rather
+than for its count.
+
+### Upstream corrections in the same read
+
+**Layer 4 — 27 rows** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)): eleven predicate
+nominals of `essere` recorded as `obj` or `nsubj` (a census the rule-CV finding opened, including
+inferno 23:103, the one position rule CV newly reported), six reflexive clitics recorded as the
+clause's `nsubj`, the `a riso` cluster at purgatorio 22:26 (5 rows), the two causative
+`lasciare` + infinitive nominals at 24:71/73, the `che`/`petto` swap at 25:67, and the
+case-marked `persona` at 22:17. **Layer 2 — 1 row**: `riso` in "un poco **a riso** pria" (22:26) is
+the noun *riso*, not a past participle of *ridere*.
+
+Two of these raise the count and were kept anyway — the trade rule AM recorded, and the reason the
+batch's own residue went from 33 to 24 rather than to 18:
+
+- **purgatorio 25:67** (+2). "Apri a la verità che viene **il petto**": Layer 4 had `il petto` as
+  the subject of `viene` and the relative `che` as its object, and the LLM read the line the same
+  way. With the parse corrected, three of the LLM's own citations diverge from it. The derivation
+  is now right; the reading is now visibly wrong, which is what a soft violation is for.
+- **purgatorio 22:90** (+4 / −2). "chiuso cristian **fu'mi**": the reflexive `mi` was recorded as
+  the clause's `nsubj`, which hid the LLM reading it as the subject of a first-person verb. Once it
+  is `expl` the derivation inherits the real `io` from the coordination head and the LLM's reading
+  is reported on all three predicates it touches.
+
 ## Rules CP-CT, from reading Purgatorio 16-20 — 427 → 409, −18 (2026-08-16)
 
 Per-position read of all **26** soft violations in Purgatorio 16-20, following the eight-step

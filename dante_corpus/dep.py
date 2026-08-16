@@ -109,11 +109,22 @@ _ANTECEDENT_PERSON_LEMMAS = frozenset({"che", "chi", "cui", "quale"})
 # (purgatorio 4:52), "e **amendue** già **mostravam**" (12:11), "**uno** innanzi altro, ce
 # n'**andavamo**" (26:1) — so their 3rd person is the quantifier's, not the subject's, exactly
 # the notional reading this set already names for `ciascuno`.
-_DISTRIBUTIVE_LEMMAS = frozenset({"ciascuno", "ognuno", "catuno", "ambedue", "amendue", "uno"})
+#
+# `tutto` joins them with rule CV (2026-08-16), the first time the person test reaches a
+# *coordinated* quantifier: "là 've già **tutti e cinque sedavamo**" (purgatorio 9:12), "e **tutti
+# eravamo** già vòlti" (27:85). "Tutti e cinque" names the whole of the "we" the verb carries, so
+# its 3rd person is the quantifier's exactly as `ambedue`'s is, and neither member of the
+# coordination is a 1st-person word the person test could find.
+_DISTRIBUTIVE_LEMMAS = frozenset(
+    {"ciascuno", "ognuno", "catuno", "ambedue", "amendue", "uno", "tutto"}
+)
 
 # Quantity determiners that make a plural noun a single measure — "non è molt' anni"
 # (inferno 19:19). Numerals are recognized structurally instead, by their `nummod` edge.
 _QUANTITY_LEMMAS = frozenset({"molto"})
+
+# Rule CV: the walk limit for collecting a coordination's members (see `subject_agreement`).
+_CONJ_MEMBER_LIMIT = 16
 
 # Layer-2 `note` flags this layer reads, hand-verified per row (see dep/CORRECTIONS.md and
 # morph/CORRECTIONS.md), following `np.py`'s `NO_NP`/`CONT_NEXT` convention:
@@ -457,7 +468,17 @@ def subject_agreement(
         return ("undecidable", "fused non-finite token")
     if subj_morph.lemma in _ANTECEDENT_PERSON_LEMMAS:
         return ("undecidable", "person comes from the antecedent")
-    conjuncts = [c for c in children.get(subj, ()) if c.deprel == "conj"]
+    # Rule CV: a coordination is a **chain**, not a fan. Layer 4 writes "La bella donna … e
+    # Stazio e io" (purgatorio 32:28) as `donna` <- `Stazio` <- `io`, so the members are reached
+    # by walking `conj` transitively; taking only the direct children would lose the `io` that
+    # carries the coordination's person.
+    conjuncts: list[DepRow] = []
+    frontier = [subj]
+    while frontier and len(conjuncts) < _CONJ_MEMBER_LIMIT:
+        for c in children.get(frontier.pop(), ()):
+            if c.deprel == "conj":
+                conjuncts.append(c)
+                frontier.append((c.line, c.token))
     if head_morph.person in ("1", "2") and head_morph.number == "pl.":
         # A 1st/2nd person plural verb may be written with only one member of its subject in the
         # tree — "io e tu" reduced to "io" — so *number* is undecidable here. **Person** is not,
@@ -469,7 +490,17 @@ def subject_agreement(
         # (purgatorio 20:102), where `Ciò` is the subject of the *first* conjunct and the second
         # is the pilgrims' own "we". Rule CR; before it, this exclusion swallowed the person
         # test along with the number test.
-        if conjuncts or (subj_morph.person or "3") in ("1", "2"):
+        #
+        # **Rule CV** is the ordering half of the same reading. Rule CR delegated the coordinate
+        # case to "the conjunct branch below", which tests person member by member — but
+        # returning here is what *stops* that branch from running, so a coordination reached this
+        # exclusion and left with no person test at all. "**Né 'l dir l'andar**, né l'andar lui
+        # più lento / facea, ma ragionando **andavam** forte" (purgatorio 24:2): step 3 of
+        # `derive_unit` inherits the two third-person nouns onto the 1st-plural `andavam`, and
+        # the person test the conjunct branch would have run says no member of that coordination
+        # is a "we". So only the lone-member case returns here; a coordinated subject falls
+        # through to the branch this comment already named as its judge.
+        if (subj_morph.person or "3") in ("1", "2") and not conjuncts:
             return ("undecidable", "1/2 plural head admits a singular member")
     if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
         return ("undecidable", "head carries more than one subject")
@@ -483,34 +514,45 @@ def subject_agreement(
 
     if subj_morph.lemma in _DISTRIBUTIVE_LEMMAS and head_morph.number == "pl.":
         return ("undecidable", "distributive subject resuming a plural")
+
+    # **Rule CV**: the five exclusions below are about *number* only — each names a construction
+    # in which a singular and a plural may legitimately stand together — and returning from them
+    # took the **person** test down with them, the very confusion rule CR found in the 1/2-plural
+    # exclusion one batch earlier. "Né 'l dir l'andar, né l'andar lui più lento / facea, ma
+    # ragionando **andavam** forte" (purgatorio 24:2) left through *coordination inside the
+    # subject phrase*, a number exclusion, with its 3-vs-1 person clash never asked. So they now
+    # record that the number half is undecidable and let the person test run first; a pair that
+    # clears the person test and holds one of these number licences comes out "undecidable" from
+    # exactly the reason it did before.
+    number_undecidable = ""
     if sg_subj_pl_head and any(c.deprel == "cc" for c in subj_children) and any(
             c.deprel in ("nmod", "conj", "appos") for c in subj_children):
-        return ("undecidable", "coordination inside the subject phrase")
-    if sg_subj_pl_head and any(
+        number_undecidable = "coordination inside the subject phrase"
+    elif sg_subj_pl_head and any(
             c.deprel in ("obl", "nmod") and _case_lemma(c, children, morph_rows) == "con"
             for c in head_children):
-        return ("undecidable", "comitative phrase on a plural head")
-    if pl_subj_sg_head and (
+        number_undecidable = "comitative phrase on a plural head"
+    elif pl_subj_sg_head and (
             any(c.deprel == "nummod" for c in subj_children)
             or any(c.deprel in ("det", "amod")
                    and (m := _morph_at(morph_rows, c.line, c.token)) is not None
                    and m.lemma in _QUANTITY_LEMMAS
                    for c in subj_children)):
-        return ("undecidable", "quantified subject read as one measure")
-    if (subj_morph.number and head_morph.number
+        number_undecidable = "quantified subject read as one measure"
+    elif (subj_morph.number and head_morph.number
             and subj_morph.number != head_morph.number
             and any(c.deprel == "attr"
                     and (m := _morph_at(morph_rows, c.line, c.token)) is not None
                     and m.number == head_morph.number
                     for c in head_children)):
-        return ("undecidable", "copula agreeing with its predicate nominal")
-    if pl_subj_sg_head and any(
+        number_undecidable = "copula agreeing with its predicate nominal"
+    elif pl_subj_sg_head and any(
             c.deprel == "expl:impers"
             or (c.deprel == "expl"
                 and (m := _morph_at(morph_rows, c.line, c.token)) is not None
                 and "impersonal" in _note_flags(m.note))
             for c in head_children):
-        return ("undecidable", "impersonal `si` with a postposed notional subject")
+        number_undecidable = "impersonal `si` with a postposed notional subject"
 
     # A nominal with no `person` of its own is 3rd person by default.
     subj_person = subj_morph.person or "3"
@@ -533,6 +575,8 @@ def subject_agreement(
         return ("undecidable", "coordinated subject")
     if subj_person != head_morph.person:
         return ("disagree", f"person {subj_person} vs {head_morph.person}")
+    if number_undecidable:
+        return ("undecidable", number_undecidable)
     if subj_morph.number and head_morph.number and subj_morph.number != head_morph.number:
         return ("disagree", f"number {subj_morph.number} vs {head_morph.number}")
     return ("agree", "")

@@ -992,7 +992,7 @@ line	token	word	deprel	head_line	head_token
 137	6	mi	obj	137	7
 137	7	fenno	acl:relcl	136	6
 138	1	seder	xcomp	138	3
-138	2	ti	nsubj	138	3
+138	2	ti	expl	138	3
 138	3	puoi	root	0	0
 138	4	e	cc	138	5
 138	5	puoi	conj	138	3

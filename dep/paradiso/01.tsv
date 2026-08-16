@@ -149,7 +149,7 @@ line	token	word	deprel	head_line	head_token
 22	3	virtù	vocative	25	1
 22	4	se	mark	22	7
 22	5	mi	iobj	22	7
-22	6	ti	nsubj	22	7
+22	6	ti	expl	22	7
 22	7	presti	advcl	25	1
 23	1	tanto	advmod	22	7
 23	2	che	mark	24	6

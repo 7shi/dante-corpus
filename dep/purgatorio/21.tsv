@@ -78,7 +78,7 @@ line	token	word	deprel	head_line	head_token
 11	6	che	nsubj	11	7
 11	7	giace	acl:relcl	11	5
 12	1	né	cc	12	3
-12	2	ci	nsubj	12	3
+12	2	ci	expl	12	3
 12	3	addemmo	conj	10	2
 12	4	di	case	12	5
 12	5	lei	obl	12	3

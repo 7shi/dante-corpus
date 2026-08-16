@@ -481,10 +481,10 @@ line	token	word	deprel	head_line	head_token
 67	2	a	case	67	4
 67	3	la	det	67	4
 67	4	verità	obl	67	1
-67	5	che	obj	67	6
+67	5	che	nsubj	67	6
 67	6	viene	acl:relcl	67	4
 67	7	il	det	67	8
-67	8	petto	nsubj	67	6
+67	8	petto	obj	67	1
 68	1	e	cc	68	2
 68	2	sappi	conj	67	1
 68	3	che	mark	70	7

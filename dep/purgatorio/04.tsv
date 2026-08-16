@@ -798,7 +798,7 @@ line	token	word	deprel	head_line	head_token
 111	3	pigrizia	nsubj	111	4
 111	4	fosse	advcl	110	6
 111	5	sua	det:poss	111	6
-111	6	serocchia	obj	111	4
+111	6	serocchia	attr	111	4
 112	1	Allor	advmod	112	3
 112	2	si	obl	112	3
 112	3	volse	root	0	0

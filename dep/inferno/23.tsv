@@ -686,7 +686,7 @@ line	token	word	deprel	head_line	head_token
 92	5	se'	aux	92	6
 92	6	venuto	acl:relcl	91	5
 93	1	dir	obj	93	6
-93	2	chi	obj	93	4
+93	2	chi	attr	93	4
 93	3	tu	nsubj	93	4
 93	4	se'	ccomp	93	1
 93	5	non	advmod	93	6
@@ -769,7 +769,7 @@ line	token	word	deprel	head_line	head_token
 102	4	le	det	102	6
 102	5	lor	det:poss	102	6
 102	6	bilance	nsubj	102	3
-103	1	Frati	nsubj	103	3
+103	1	Frati	attr	103	3
 103	2	godenti	amod	103	1
 103	3	fummo	root	0	0
 103	4	e	cc	103	5
@@ -799,7 +799,7 @@ line	token	word	deprel	head_line	head_token
 107	4	pace	obj	107	2
 107	5	e	cc	107	6
 107	6	fummo	conj	103	3
-107	7	tali	obj	107	6
+107	7	tali	attr	107	6
 108	1	ch'	mark	108	4
 108	2	ancor	advmod	108	4
 108	3	si	expl	108	4
