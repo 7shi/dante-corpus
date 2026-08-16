@@ -16,6 +16,7 @@ soon as they validate, so an interrupted run continues where it stopped.
 
     uv run dep.py inferno -m ollama:gpt-oss        # all of Inferno (resumes)
     uv run dep.py inferno -c 1 -m ollama:gpt-oss   # just canto 1
+    uv run dep.py inferno -c 12- -m ollama:gpt-oss # canto 12 on (also 11-20, 1,5,7)
     uv run dep.py inferno --force -m ...           # rebuild from scratch
     uv run dep.py inferno --check                  # code-only, no model
     uv run dep.py inferno -n                       # dry run: show pending units, no LLM
@@ -336,24 +337,23 @@ def _build_canto(
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, dry_run: bool,
-          only: int | None, log_path: Path | None = None) -> int:
+          spec: str | None, log_path: Path | None = None) -> int:
     if log_path:
         log_path.write_text("", encoding="utf-8")
     ui = StatusLine()
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
+        n_cantos = len(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             _build_canto(canticle, number, n_cantos, model, size, force, dry_run, ui, log_path)
     return 0
 
 
-def check(canticles: list[str], only: int | None) -> int:
+def check(canticles: list[str], spec: str | None) -> int:
     hard = 0
     soft = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not dep.has_dep(canticle, number):
                 print(f"Missing: dep/{canticle}/{number:02d}.tsv", file=sys.stderr)
@@ -385,10 +385,10 @@ def check(canticles: list[str], only: int | None) -> int:
     return 1 if hard else 0
 
 
-def clean(canticles: list[str], size: int, only: int | None) -> int:
+def clean(canticles: list[str], size: int, spec: str | None) -> int:
     removed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not dep.has_dep(canticle, number):
                 continue
@@ -442,14 +442,14 @@ LABEL_ALIASES = {
 }
 
 
-def fix_labels(canticles: list[str], only: int | None) -> int:
+def fix_labels(canticles: list[str], spec: str | None) -> int:
     """Rewrite off-vocabulary deprels that are pure respellings of a frozen label in place.
 
     Deterministic, no model call: `LABEL_ALIASES` maps each label to the `dep.DEPRELS` member it
     stands in for (e.g. `nsubjpass` -> `nsubj:pass`, `refl`/`reflex`/`pron` -> `expl:pass`)."""
     changed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not dep.has_dep(canticle, number):
                 continue
@@ -527,7 +527,7 @@ def _fix_canto(
     return fixed, attempted
 
 
-def fix(canticles: list[str], model: str, only: int | None, log_path: Path | None = None) -> int:
+def fix(canticles: list[str], model: str, spec: str | None, log_path: Path | None = None) -> int:
     """Re-run the model on parse units carrying soft ("tag") violations, keeping only real improvements.
 
     Unlike Layer 3's per-line `--fix` (whose spans never cross lines), a dependency parse unit's
@@ -544,9 +544,8 @@ def fix(canticles: list[str], model: str, only: int | None, log_path: Path | Non
     fixed = 0
     attempted = 0
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
+        n_cantos = len(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not dep.has_dep(canticle, number):
                 continue
@@ -563,7 +562,7 @@ def main() -> int:
     parser.add_argument("-m", "--model", help="LLM, e.g. ollama:gpt-oss (required unless --check)")
     parser.add_argument("--chunk", type=int, default=dep.MAX_UNIT_LINES,
                         help=f"max lines per parse unit (default {dep.MAX_UNIT_LINES})")
-    parser.add_argument("-c", "--canto", type=int, help="limit to a single canto number")
+    parser.add_argument("-c", "--canto", metavar="SPEC", help=api.CANTO_SPEC_HELP)
     parser.add_argument("--force", action="store_true", help="rebuild even if artifact exists")
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
     parser.add_argument("--clean", action="store_true",
@@ -577,6 +576,9 @@ def main() -> int:
     parser.add_argument("--log", nargs="?", const="dep.log", metavar="FILE",
                         help="append failed LLM responses to FILE (default: dep.log)")
     args = parser.parse_args()
+
+    if err := api.check_canto_spec(args.canticles, args.canto):
+        parser.error(err)
 
     if args.check:
         return check(args.canticles, args.canto)

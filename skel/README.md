@@ -571,7 +571,7 @@ make -C skel stats                    # validate artifacts, no model call; soft 
 make -C skel repair                   # --fix's deterministic stage on its own, no model call
 make -C skel fix                      # reduce soft violations (three stages)
 
-uv run skel/skel.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [--stats]
+uv run skel/skel.py inferno [-c SPEC] [-m MODEL] [--chunk 12] [--force] [--check] [--stats]
 uv run skel/skel.py inferno purgatorio paradiso --repair    # no model call
 uv run skel/skel.py inferno -m ollama:gpt-oss --fix         # all three stages
 uv run skel/skel.py inferno -m ... --fix --no-whole         # without the regeneration fallback
@@ -579,6 +579,10 @@ uv run skel/skel.py inferno -m ... --fix --no-whole         # without the regene
 uv run skel/read.py inferno 16 43                           # read one position, all five layers
 uv run skel/read.py inferno 16 43 48                        # ... over a line range
 ```
+
+`-c`/`--canto` selects which cantos to process: `1`, `11-20`, `12-` (from 12 on), `-20` (up to
+20), or a comma-separated mix such as `1,3-5,11-`. It is the same selection syntax in every build
+driver, and a spec matching no canto is a command-line error rather than a silent no-op.
 
 `read.py` is the audit series' tool (see [`PLAN.md`](PLAN.md)'s *How to Read a Batch*): `--check`
 names a position, `read.py` prints its whole parse unit with Layer-2 morphology and the `case`

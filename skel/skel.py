@@ -21,6 +21,8 @@ soon as they validate (zero hard violations), so an interrupted run continues wh
 
     uv run skel.py inferno -m ollama:gpt-oss        # all of Inferno (resumes)
     uv run skel.py inferno -c 1 -m ollama:gpt-oss   # just canto 1
+    uv run skel.py inferno -c 12- -m ollama:gpt-oss # canto 12 on (resume after a failure)
+    uv run skel.py inferno -c 11-15 --stats         # a canto range, inclusive
     uv run skel.py inferno --force -m ...           # rebuild from scratch
     uv run skel.py inferno --check                  # code-only, no model
     uv run skel.py inferno --stats                  # code-only; soft violations by class
@@ -1124,25 +1126,22 @@ def _build_canto(
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, dry_run: bool,
-          only: int | None, log_path: Path | None = None) -> int:
+          spec: str | None, log_path: Path | None = None) -> int:
     if log_path:
         log_path.write_text("", encoding="utf-8")
     ui = StatusLine()
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
-        for number in numbers:
+        n_cantos = len(api.cantos(canticle))
+        for number in api.select_cantos(canticle, spec):
             _build_canto(canticle, number, n_cantos, model, size, force, dry_run, ui, log_path)
     return 0
 
 
-def check(canticles: list[str], only: int | None) -> int:
+def check(canticles: list[str], spec: str | None) -> int:
     hard = 0
     soft = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
-        for number in numbers:
+        for number in api.select_cantos(canticle, spec):
             if not skel.has_skel(canticle, number):
                 print(f"Missing: skel/{canticle}/{number:02d}.tsv", file=sys.stderr)
                 hard += 1
@@ -1226,12 +1225,11 @@ def _print_stats(violations: list[morph.Violation]) -> None:
             print(f"  {grole!r:14s} vs {drole!r:14s} {count:6d}", file=sys.stderr)
 
 
-def stats(canticles: list[str], only: int | None) -> int:
+def stats(canticles: list[str], spec: str | None) -> int:
     hard = 0
     all_soft: list[morph.Violation] = []
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
-        for number in numbers:
+        for number in api.select_cantos(canticle, spec):
             if not skel.has_skel(canticle, number):
                 hard += 1
                 continue
@@ -1261,11 +1259,10 @@ def stats(canticles: list[str], only: int | None) -> int:
     return 1 if hard else 0
 
 
-def clean(canticles: list[str], size: int, only: int | None) -> int:
+def clean(canticles: list[str], size: int, spec: str | None) -> int:
     removed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
-        for number in numbers:
+        for number in api.select_cantos(canticle, spec):
             if not skel.has_skel(canticle, number):
                 continue
             data = skel.load_skel(canticle, number)
@@ -1348,15 +1345,14 @@ def _apply_unit_repairs(
             rejected.add((r.kind, r.before))
 
 
-def repair(canticles: list[str], only: int | None) -> int:
+def repair(canticles: list[str], spec: str | None) -> int:
     """Mechanically rewrite committed TSVs for divergences that need no reading — no model call,
     one deterministic pass. This is exactly `--fix`'s stage 1, run on its own; see
     `skel._find_repairs` for the rule catalogue and its tier-A/tier-B division."""
     totals: Counter[str] = Counter()
     cantos_touched = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
-        for number in numbers:
+        for number in api.select_cantos(canticle, spec):
             if not skel.has_skel(canticle, number):
                 continue
             data = skel.load_skel(canticle, number)
@@ -1568,7 +1564,7 @@ def _log_rejection(log_path, label, unit, cls, soft_before, soft_after, hard_aft
         f.write("\n")
 
 
-def fix(canticles: list[str], model: str, only: int | None, log_path: Path | None = None,
+def fix(canticles: list[str], model: str, spec: str | None, log_path: Path | None = None,
         whole: bool = True) -> int:
     """Reduce the soft residue of already-built parse units, deterministically first and with a
     class-targeted question second — see `_fix_canto` for the three stages.
@@ -1582,10 +1578,8 @@ def fix(canticles: list[str], model: str, only: int | None, log_path: Path | Non
     ui = StatusLine()
     totals: Counter[str] = Counter()
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
-        for number in numbers:
+        n_cantos = len(api.cantos(canticle))
+        for number in api.select_cantos(canticle, spec):
             if not skel.has_skel(canticle, number):
                 continue
             totals += _fix_canto(canticle, number, n_cantos, model, ui, log_path, whole)
@@ -1624,7 +1618,7 @@ def main() -> int:
     parser.add_argument("-m", "--model", help="LLM, e.g. ollama:gpt-oss (required unless --check)")
     parser.add_argument("--chunk", type=int, default=dep.MAX_UNIT_LINES,
                         help=f"max lines per parse unit (default {dep.MAX_UNIT_LINES})")
-    parser.add_argument("-c", "--canto", type=int, help="limit to a single canto number")
+    parser.add_argument("-c", "--canto", metavar="SPEC", help=api.CANTO_SPEC_HELP)
     parser.add_argument("--force", action="store_true", help="rebuild even if artifact exists")
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
     parser.add_argument("--stats", action="store_true",
@@ -1645,6 +1639,9 @@ def main() -> int:
     parser.add_argument("--log", nargs="?", const="skel.log", metavar="FILE",
                         help="append failed LLM responses to FILE (default: skel.log)")
     args = parser.parse_args()
+
+    if err := api.check_canto_spec(args.canticles, args.canto):
+        parser.error(err)
 
     if args.check:
         return check(args.canticles, args.canto)

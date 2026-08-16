@@ -1,5 +1,6 @@
 import re
 import xml.etree.ElementTree as ET
+from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cached_property
 
@@ -163,6 +164,80 @@ def cantos(canticle: str) -> tuple[int, ...]:
             f"no source cantos under {directory} — run `make -C src` to build the source tree"
         )
     return tuple(int(path.stem) for path in paths)
+
+
+# The one `-c` help string every build driver shows, so the selection syntax is documented
+# identically in `morph.py --help` and `skel.py --help`.
+CANTO_SPEC_HELP = ("limit to these cantos: N, N-M, N- (from N on), -M (up to M), "
+                   "or a comma-separated mix, e.g. 12- / -20 / 11-20 / 1,5,7 / 1,3-5,11-")
+
+
+def parse_canto_spec(spec: str) -> tuple[tuple[int | None, int | None], ...]:
+    """Parse a build driver's `-c` selection into inclusive `(start, end)` bounds.
+
+    The grammar is one comma-separated list of `N`, `N-M`, `N-` (open end) and `-M` (open start):
+    `12-`, `-20`, `11-20`, `1,5,7`, `1,3-5,11-`. `None` on either side means unbounded, so the
+    bound is resolved against whichever cantos the canticle actually has — a spec is a filter,
+    never an assertion that a numbered canto exists.
+
+    Raises `ValueError` with a message naming the offending item; callers that are argparse-driven
+    pass it to `parser.error` (see `check_canto_spec`).
+    """
+    ranges: list[tuple[int | None, int | None]] = []
+    for item in spec.split(","):
+        item = item.strip()
+        if not item:
+            raise ValueError(f"empty canto range in {spec!r}")
+        head, dash, tail = item.partition("-")
+        head, tail = head.strip(), tail.strip()
+        if not dash:
+            if not head.isdigit():
+                raise ValueError(f"not a canto number: {item!r}")
+            ranges.append((int(head), int(head)))
+            continue
+        if not head and not tail:
+            raise ValueError(f"canto range with no bound: {item!r}")
+        if (head and not head.isdigit()) or (tail and not tail.isdigit()):
+            raise ValueError(f"not a canto range: {item!r}")
+        start = int(head) if head else None
+        end = int(tail) if tail else None
+        if start is not None and end is not None and start > end:
+            raise ValueError(f"canto range runs backwards: {item!r}")
+        ranges.append((start, end))
+    return tuple(ranges)
+
+
+def select_cantos(canticle: str, spec: str | None) -> tuple[int, ...]:
+    """The cantos of `canticle` a `-c` spec selects, in canto order; all of them when `spec` is
+    `None`. Raises `ValueError` for an unparsable spec, or for one that matches no canto at all —
+    a selection that would silently do nothing is a typo, not a no-op run."""
+    available = cantos(canticle)
+    if spec is None:
+        return available
+    ranges = parse_canto_spec(spec)
+    selected = tuple(
+        n for n in available
+        if any((start is None or n >= start) and (end is None or n <= end)
+               for start, end in ranges)
+    )
+    if not selected:
+        raise ValueError(f"no canto of {canticle} matches {spec!r} "
+                         f"(it has {available[0]}-{available[-1]})")
+    return selected
+
+
+def check_canto_spec(canticles: Iterable[str], spec: str | None) -> str | None:
+    """Validate a `-c` spec against every canticle a run names, up front: the message to hand to
+    `parser.error`, or `None` when the spec is good. Build drivers call this before doing any
+    work, so a typo fails at the command line instead of part-way through a canticle."""
+    if spec is None:
+        return None
+    for canticle in canticles:
+        try:
+            select_cantos(canticle, spec)
+        except ValueError as exc:
+            return str(exc)
+    return None
 
 
 def _load_lines(canticle: str, number: int) -> tuple[Line, ...]:

@@ -216,10 +216,14 @@ make -C dep check                    # validate artifacts, no model call
 make -C dep fix-labels                # relabel off-vocabulary respellings, no model call
 make -C dep fix                      # regenerate parse units carrying soft violations
 
-uv run dep/dep.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [--clean] [-n]
+uv run dep/dep.py inferno [-c SPEC] [-m MODEL] [--chunk 12] [--force] [--check] [--clean] [-n]
 uv run dep/dep.py inferno purgatorio paradiso --fix-labels   # relabel respellings, no model call
 uv run dep/dep.py inferno -m ollama:gpt-oss --fix            # regenerate flagged units
 ```
+
+`-c`/`--canto` selects which cantos to process: `1`, `11-20`, `12-` (from 12 on), `-20` (up to
+20), or a comma-separated mix such as `1,3-5,11-`. It is the same selection syntax in every build
+driver, and a spec matching no canto is a command-line error rather than a silent no-op.
 
 Consumers read it deterministically via `Canto.dep()` (line-number -> `DepRow` tuples) or the CLI
 `dante-corpus text dep inferno 1:1-3` (`--format json` for the row dicts, `head_word` included for

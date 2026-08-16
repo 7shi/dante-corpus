@@ -191,8 +191,12 @@ make -C np MODEL=ollama:gpt-oss     # override the model
 make -C np check                    # validate artifacts, no model call
 make -C np fix                      # regenerate lines with soft violations (model from model.mk)
 
-uv run np/np.py inferno [-c 1] [-m MODEL] [--force] [--check] [--fix-clitics] [--fix-repeats] [--fix]
+uv run np/np.py inferno [-c SPEC] [-m MODEL] [--force] [--check] [--fix-clitics] [--fix-repeats] [--fix]
 ```
+
+`-c`/`--canto` selects which cantos to process: `1`, `11-20`, `12-` (from 12 on), `-20` (up to
+20), or a comma-separated mix such as `1,3-5,11-`. It is the same selection syntax in every build
+driver, and a spec matching no canto is a command-line error rather than a silent no-op.
 
 Consumers read it deterministically via `Canto.np()` (a nested `NPSpan` forest, ordered by line)
 or the CLI `dante-corpus text np inferno 1:1-3` (`--format json` for the nested rows).

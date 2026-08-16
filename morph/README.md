@@ -92,8 +92,12 @@ make -C morph                          # build all three canticles (model from m
 make -C morph MODEL=ollama:gpt-oss     # override the model
 make -C morph check                    # validate artifacts, no model call
 
-uv run morph/morph.py inferno [-c 1] [-m MODEL] [--force] [--check]
+uv run morph/morph.py inferno [-c SPEC] [-m MODEL] [--force] [--check]
 ```
+
+`-c`/`--canto` selects which cantos to process: `1`, `11-20`, `12-` (from 12 on), `-20` (up to
+20), or a comma-separated mix such as `1,3-5,11-`. It is the same selection syntax in every build
+driver, and a spec matching no canto is a command-line error rather than a silent no-op.
 
 Consumers read it deterministically via `Canto.morph()` (line-number → `MorphRow` tuples) or the
 CLI `dante-corpus text morph inferno 1:1-3` (`--format json` for the raw rows).

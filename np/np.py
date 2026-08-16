@@ -13,6 +13,7 @@ skipped and only the remaining chunks are requested.
 
     uv run np.py inferno -m ollama:gpt-oss        # all of Inferno (resumes)
     uv run np.py inferno -c 1 -m ollama:gpt-oss   # just canto 1
+    uv run np.py inferno -c 12- -m ollama:gpt-oss # canto 12 on (also 11-20, 1,5,7)
     uv run np.py inferno --force -m ...           # rebuild from scratch
     uv run np.py inferno --check                  # code-only, no model
     uv run np.py inferno -n                       # dry run: show pending chunks, no LLM
@@ -305,24 +306,23 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, dry_run: bool,
-          only: int | None, log_path: Path | None = None) -> int:
+          spec: str | None, log_path: Path | None = None) -> int:
     if log_path:
         log_path.write_text("", encoding="utf-8")
     ui = StatusLine()
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
+        n_cantos = len(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             _build_canto(canticle, number, n_cantos, model, size, force, dry_run, ui, log_path)
     return 0
 
 
-def check(canticles: list[str], only: int | None) -> int:
+def check(canticles: list[str], spec: str | None) -> int:
     hard = 0
     soft = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not np.has_np(canticle, number):
                 print(f"Missing: np/{canticle}/{number:02d}.tsv", file=sys.stderr)
@@ -352,7 +352,7 @@ def check(canticles: list[str], only: int | None) -> int:
     return 1 if hard else 0
 
 
-def fix_clitics(canticles: list[str], only: int | None) -> int:
+def fix_clitics(canticles: list[str], spec: str | None) -> int:
     """Reconcile clitic mentions with Layer 2 in frozen artifacts — deterministic, no model call.
 
     The `+lemma` spans a fused enclitic implies are a pure function of the frozen Layer-2
@@ -370,7 +370,7 @@ def fix_clitics(canticles: list[str], only: int | None) -> int:
     """
     added = removed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not np.has_np(canticle, number):
                 continue
@@ -410,7 +410,7 @@ def fix_clitics(canticles: list[str], only: int | None) -> int:
     return 0
 
 
-def fix_repeats(canticles: list[str], only: int | None) -> int:
+def fix_repeats(canticles: list[str], spec: str | None) -> int:
     """Backfill repeated-word/phrase spans onto distinct occurrences — deterministic, no model call.
 
     Artifacts built before `align_chunk` tracked claimed occurrences collapsed every proposal for
@@ -419,7 +419,7 @@ def fix_repeats(canticles: list[str], only: int | None) -> int:
     of the same run when one exists."""
     changed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not np.has_np(canticle, number):
                 continue
@@ -499,7 +499,7 @@ def _fix_canto(canticle: str, number: int, n_cantos: int, model: str, ui: Status
     return fixed, attempted
 
 
-def fix(canticles: list[str], model: str, only: int | None, log_path: Path | None = None) -> int:
+def fix(canticles: list[str], model: str, spec: str | None, log_path: Path | None = None) -> int:
     """Re-run the model on lines carrying soft ("tag") violations, keeping only real improvements.
 
     A soft violation can reflect either a genuine Layer 3 omission/over-inclusion or a legitimate
@@ -516,9 +516,8 @@ def fix(canticles: list[str], model: str, only: int | None, log_path: Path | Non
     fixed = 0
     attempted = 0
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
+        n_cantos = len(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not np.has_np(canticle, number):
                 continue
@@ -529,10 +528,10 @@ def fix(canticles: list[str], model: str, only: int | None, log_path: Path | Non
     return 0
 
 
-def clean(canticles: list[str], size: int, only: int | None) -> int:
+def clean(canticles: list[str], size: int, spec: str | None) -> int:
     removed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not np.has_np(canticle, number):
                 continue
@@ -566,7 +565,7 @@ def main() -> int:
     parser.add_argument("canticles", nargs="+", help="canticle names, e.g. inferno")
     parser.add_argument("-m", "--model", help="LLM, e.g. ollama:gpt-oss (required unless --check)")
     parser.add_argument("--chunk", type=int, default=3, help="lines per LLM call (default 3)")
-    parser.add_argument("-c", "--canto", type=int, help="limit to a single canto number")
+    parser.add_argument("-c", "--canto", metavar="SPEC", help=api.CANTO_SPEC_HELP)
     parser.add_argument("--force", action="store_true", help="rebuild even if artifact exists")
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
     parser.add_argument("--clean", action="store_true",
@@ -582,6 +581,9 @@ def main() -> int:
     parser.add_argument("--log", nargs="?", const="np.log", metavar="FILE",
                         help="append failed LLM responses to FILE (default: np.log)")
     args = parser.parse_args()
+
+    if err := api.check_canto_spec(args.canticles, args.canto):
+        parser.error(err)
 
     if args.check:
         return check(args.canticles, args.canto)

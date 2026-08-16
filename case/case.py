@@ -13,6 +13,7 @@ nothing and produces no rows.
 
     uv run case.py inferno -m google:gemma-4-31b-it     # all of Inferno (resumes)
     uv run case.py inferno -c 1 -m ...                  # just canto 1
+    uv run case.py inferno -c 12- -m ...                # canto 12 on (also 11-20, 1,5,7)
     uv run case.py inferno --force -m ...               # rebuild from scratch
     uv run case.py inferno --check                      # code-only, no model
     uv run case.py inferno -n                           # dry run: pending chunks, no LLM
@@ -267,15 +268,14 @@ def _build_canto(canticle: str, number: int, n_cantos: int, model: str, size: in
 
 
 def build(canticles: list[str], model: str, size: int, force: bool, dry_run: bool,
-          only: int | None, log_path: Path | None = None) -> int:
+          spec: str | None, log_path: Path | None = None) -> int:
     if log_path:
         log_path.write_text("", encoding="utf-8")
     ui = StatusLine()
     incomplete: list[str] = []
     for canticle in canticles:
-        all_numbers = list(api.cantos(canticle))
-        n_cantos = len(all_numbers)
-        numbers = [only] if only else all_numbers
+        n_cantos = len(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not _build_canto(canticle, number, n_cantos, model, size, force, dry_run,
                                 ui, log_path):
@@ -286,13 +286,13 @@ def build(canticles: list[str], model: str, size: int, force: bool, dry_run: boo
     return 0
 
 
-def check(canticles: list[str], only: int | None) -> int:
+def check(canticles: list[str], spec: str | None) -> int:
     """Formal checks only — there is no deterministic ground truth for case, and the one
     cross-check that exists (`dep`'s obj/iobj) is the very judgment under adjudication, so
     it belongs in `--stats`, never here (see case/PLAN.md)."""
     hard = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not case.has_case(canticle, number):
                 print(f"Missing: case/{canticle}/{number:02d}.tsv", file=sys.stderr)
@@ -319,11 +319,11 @@ def check(canticles: list[str], only: int | None) -> int:
     return 1 if hard else 0
 
 
-def clean(canticles: list[str], size: int, only: int | None) -> int:
+def clean(canticles: list[str], size: int, spec: str | None) -> int:
     """Drop every chunk holding a violation, so the next build re-requests exactly those."""
     removed = 0
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not case.has_case(canticle, number):
                 continue
@@ -386,7 +386,7 @@ _IMPOSSIBLE = frozenset({("obl", "nominative")})
 _OBLIQUE = ("ablative", "genitive", "locative")
 
 
-def stats(canticles: list[str], only: int | None, full: bool = False) -> int:
+def stats(canticles: list[str], spec: str | None, full: bool = False) -> int:
     census = Counter()
     by_word = Counter()
     pos_census = Counter()
@@ -398,7 +398,7 @@ def stats(canticles: list[str], only: int | None, full: bool = False) -> int:
     impossible: list[str] = []
 
     for canticle in canticles:
-        numbers = [only] if only else list(api.cantos(canticle))
+        numbers = api.select_cantos(canticle, spec)
         for number in numbers:
             if not case.has_case(canticle, number):
                 continue
@@ -485,7 +485,7 @@ def main() -> int:
     parser.add_argument("-m", "--model", help="LLM, e.g. google:gemma-4-31b-it")
     parser.add_argument("--chunk", type=int, default=12,
                         help="max lines per LLM call; parse units are never split (default 12)")
-    parser.add_argument("-c", "--canto", type=int, help="limit to a single canto number")
+    parser.add_argument("-c", "--canto", metavar="SPEC", help=api.CANTO_SPEC_HELP)
     parser.add_argument("--force", action="store_true", help="rebuild even if artifact exists")
     parser.add_argument("--check", action="store_true", help="validate artifacts, no model call")
     parser.add_argument("--clean", action="store_true",
@@ -499,6 +499,9 @@ def main() -> int:
     parser.add_argument("--log", nargs="?", const="case.log", metavar="FILE",
                         help="append failed LLM responses to FILE (default: case.log)")
     args = parser.parse_args()
+
+    if err := api.check_canto_spec(args.canticles, args.canto):
+        parser.error(err)
 
     if args.check:
         return check(args.canticles, args.canto)

@@ -344,9 +344,13 @@ make -C case stats                     # census + the post-freeze dep adjudicati
 make -C case clean                     # drop chunks with violations
 make -C case regen CANTICLES=inferno   # prompt change: drop the artifacts, then rebuild
 
-uv run case/case.py inferno [-c 1] [-m MODEL] [--chunk 12] [--force] [--check] [-n]
+uv run case/case.py inferno [-c SPEC] [-m MODEL] [--chunk 12] [--force] [--check] [-n]
 uv run case/case.py inferno -m MODEL --log case.inferno.log   # parallel shells: own log each
 ```
+
+`-c`/`--canto` selects which cantos to process: `1`, `11-20`, `12-` (from 12 on), `-20` (up to
+20), or a comma-separated mix such as `1,3-5,11-`. It is the same selection syntax in every build
+driver, and a spec matching no canto is a command-line error rather than a silent no-op.
 
 Consumers read it deterministically via `Canto.case()` (line-number → `CaseRow` tuples, sparse) or
 the CLI `dante-corpus text case inferno 1:1-12` (`--format json` for the raw rows). The artifact is
