@@ -178,7 +178,6 @@ line	token	word	role	arg_line	arg_token
 68	5	addormentai	subj	68	3
 69	3	vuol	subj	0	0
 69	3	vuol	ccomp	69	4
-69	4	sia	subj	0	0
 69	4	sia	ccomp	69	9
 69	9	finga	subj	69	7
 70	2	trascorro	subj	0	0
@@ -207,7 +206,7 @@ line	token	word	role	arg_line	arg_token
 77	3	ritornaro	obl:a	77	6
 78	7	rotti	subj	78	6
 78	7	rotti	obl:da	78	3
-79	2	videro	subj	0	0
+79	2	videro	subj	76	1
 79	2	videro	obj	79	5
 79	2	videro	obj	81	6
 80	0			0	0
@@ -404,10 +403,11 @@ line	token	word	role	arg_line	arg_token
 146	7	avean	obj	146	6
 146	7	avean	obl:per	146	9
 147	3	visto	subj	147	2
-148	1	Sicura	subj	149	4
+148	0			0	0
 149	1	seder	subj	149	4
 150	2	apparve	subj	149	4
 150	2	apparve	iobj	150	1
+150	2	apparve	attr	148	1
 150	2	apparve	obl:con	150	5
 151	7	tolta	subj	0	0
 151	7	tolta	iobj	151	5

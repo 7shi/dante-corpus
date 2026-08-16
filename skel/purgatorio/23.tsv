@@ -261,7 +261,9 @@ line	token	word	role	arg_line	arg_token
 85	9	condotto	xcomp	86	2
 86	2	ber	subj	85	7
 86	2	ber	obj	86	5
-87	7	dirotto	subj	87	6
+87	7	dirotto	subj	87	2
+87	7	dirotto	obj	85	7
+87	7	dirotto	obl:con	87	6
 88	0			0	0
 89	1	tratto	subj	0	0
 89	1	tratto	obj	89	2
@@ -321,8 +323,8 @@ line	token	word	role	arg_line	arg_token
 108	3	urlare	subj	0	0
 108	4	avrian	subj	0	0
 108	4	avrian	obj	108	6
+108	4	avrian	attr	108	7
 108	4	avrian	obl:per	108	3
-108	7	aperte	subj	108	6
 109	8	inganna	subj	109	4
 109	8	inganna	obj	109	7
 110	3	triste	subj	111	1

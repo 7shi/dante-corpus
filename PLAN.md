@@ -1,41 +1,41 @@
 # Plan: a shared grammatical-analysis stack in the corpus
 
-## Handoff (2026-08-15) — resume here
+## Handoff (2026-08-16) — resume here
 
-> **The Inferno 26–30 per-position read landed: 691 → 650 soft (−41, −5.9%), 0 hard, zero model
-> calls.** Five deterministic rules (BJ–BN) plus three legs added to rules already in the checker
-> (BI′, AN′, AQ′), 10 Layer-4 rows, 1 Layer-2 row, 15 new tests; Inferno 26–30 itself 23 → 11.
-> Its three findings:
-> 1. **A rule can be right and simply never reach the check that reports the position.** Rule AQ
->    has merged `cop`/`aux` argument citations onto their lexical head since the 11–15 batch — but
->    only inside `_classify_divergence`. The *membership* check runs earlier, on the raw row, and
->    was reporting the un-normalized position. This is the 21–25 batch's ordering lesson in a new
->    form. **Ask which checks run *before* a rule, not only what runs after it.**
-> 2. **A deliberately deferred upstream tension is a Layer-5 population.** Rule BJ (−21, the
->    batch's largest mover) settles the ~40 adverb-preposition clusters (`fuor di`, `innanzi a`,
->    `di là da`) that the 2026-08-14 prep-stack normalization excluded and filed as "a Layer-2/4
->    tension to decide separately if it ever matters". Censused at 147; settled at Layer 5 with no
->    Layer-4 rewrite. **Census a deferred route rather than waiting for the upstream decision.**
-> 3. **Three changes are net zero or worse on the count and were kept anyway** — rule BN, rule
->    AN's clause-head leg, and the `scardova` Layer-2 correction all stop the derivation inventing
->    a predicate, and the LLM had proposed exactly the tuples it was inventing, so a
->    `missing_tuple` becomes an `extra_tuple` and the reading error is reported where it belongs.
->    The honest trade rule AM recorded: the count is not the measure.
+> **The fourth `--fix` round was run by the user ahead of the read series: 650 → 541 soft (−109,
+> −16.8%), 0 hard, `pytest` 326.** Units 443 → 388 (55 cleared, 38 improved, **0 regressed, 0
+> newly flagged**); per-unit yield **0.246**, the first rise of the series (0.66 → 0.193 → 0.188 →
+> 0.246). It emptied the queued prompt work and decided it, mostly negative:
+> 1. **The subject branches are not a prompt problem.** `extra_arg_subject` −12.7% and
+>    `missing_arg_subject` −10.0% is the round average, not the large drop `_CONV_SUBJECT`'s three
+>    diagnoses predicted. By the test's own stated branch, the residue's two largest buckets — 96
+>    `extra_arg subj` (22 of them ∅ (0,0)) and 54 `missing_arg subj` — **become read-work**.
+> 2. **Neither is `missing_tuple_nominal`.** Its rewritten *question* moved it 18 → 16, after a
+>    convention and a hint had each moved it by single digits. Phase 5w's law is not specific to
+>    convention prose: a class of genuine reading disagreements moves for no prompt surface.
+> 3. **`_CONV_REPEATED` worked.** `missing_arg` −28.3% carried −49 of the round's −109, while its
+>    branched adverb sibling fell only 12.5% — the attribution is the repeated-slot convention.
+> 4. **`extra_tuple_adjective` 7 → 0**, unqueued. Rules AU/AY/AZ took it 13 → 7 and the round took
+>    the rest; a route that was waiting for a read closes without one.
 >
-> **The next session's task is the per-position read of Inferno 31–34 — 44 soft violations at base
-> 691.** Start a fresh session, list them with `uv run skel.py inferno --check -c <n>` from
-> `skel/`, and read each one with `uv run read.py inferno <canto> <line>` (it prints all five
-> layers plus both Layer-5 readings for the position's whole parse unit). **Re-measure the batch
-> first** — the BJ–BN rules cut every remaining batch, so the schedule table is a snapshot.
+> **The cost of running it early is real and not recoverable**: a round rewrites the artifact, so
+> every rule the fifteen unread batches produce is now measured against a base this round moved,
+> and the rule's effect and the round's cannot be separated. What was bought is that the prompt
+> queue is answered now, and two of three answers convert prompt work into read work. See
+> [`skel/PLAN.md`](skel/PLAN.md) §12.
 >
-> **The fourth `--fix` round is deliberately deferred until the reads have covered all 100 cantos**,
-> five at a time, through Paradiso 33 — a decision taken 2026-08-15. Fifteen batches remain; the
-> schedule table and the reasoning are in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series*. In
-> short: every batch so far removed violations at **zero model cost** (AG −43, AH–AL −156, AM–AT
-> −75, AU–AY −54, AZ–BI −143, BJ–BN −41), and a round run before those rules exist both pays a
-> model for positions a later rule takes for free and rewrites the artifact underneath any rule
-> written afterwards, so the two effects can no longer be separated. Reading first lets the round
-> run **once**, against a finished checker, with its per-class numbers measuring the prompt alone.
+> **The next session's task is unchanged: the per-position read of Inferno 31–34 — 37 soft
+> violations at base 541.** Start a fresh session, list them with
+> `uv run skel.py inferno --check -c <n>` from `skel/`, and read each one with
+> `uv run read.py inferno <canto> <line>` (it prints all five layers plus both Layer-5 readings for
+> the position's whole parse unit). The read series then runs to Paradiso 33 — fifteen batches,
+> 469 positions, schedule rebased to 541 in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series*.
+> **Re-measure the batch first**; every landed rule shrinks the batches after it.
+>
+> **A fifth `--fix` round has nothing to test yet.** The prompt queue is empty, and checker rules
+> are measured by violation diff at zero model cost. Wait until the series finishes *and* has
+> produced new prompt-side diagnoses — the standing form of the rule is: **do not run a round while
+> checker rules are being written against the base it would move.**
 >
 > **The per-batch procedure is written down** — eight steps, in [`skel/PLAN.md`](skel/PLAN.md)'s
 > *How to Read a Batch*. Follow it rather than improvising: every position gets one of five
@@ -43,16 +43,13 @@
 > disagreement), each of which sends the fix somewhere different; no rule is written before its
 > shape is censused corpus-wide; each rule is measured alone by full-corpus violation **diff**
 > (not by the total), pinned by a mutation-checked test, and written up in the same session.
->
-> Queued prompt work stays unmeasured until that round: the two subject-slot classes
-> (`extra_arg subj`, `missing_arg subj`), `missing_tuple_nominal`'s rewritten *question*, and
-> `_CONV_REPEATED`. Nothing on the prompt side can regress anything while no round runs.
 
-**Layer 5 is operating under Phase 6 with 0 hard / 650 soft violations.**
+**Layer 5 is operating under Phase 6 with 0 hard / 541 soft violations.**
 Checks: `dep --check` **0 hard / 0 soft** (the subject-agreement rule's 18-position residue closed
 2026-08-14; 16 + 25 + 20 + 10 further rows corrected 2026-08-15), `case --check` 0 hard,
-`skel --check` 0 hard/**650** soft, `np --check` 0/0, `morph --check` 0/0 (3 + 5 + 1 rows
-corrected 2026-08-15), `pytest` **326** passed.
+`skel --check` 0 hard/**541** soft, `np --check` 0/0, `morph --check` 0/0 (3 + 5 + 1 rows
+corrected 2026-08-15), `pytest` **326** passed. The fourth `--fix` round (2026-08-16) touched
+`skel/*.tsv` only; no other layer moved.
 
 **Layer 4's stacked prepositions are normalized (2026-08-14).** 161 multiword-preposition
 clusters (196 rows, 74 files) rewritten to the UD convention — opening word `case`→ nominal,
@@ -74,9 +71,18 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Current State & Architecture Summary
 
-- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (twelve class-specific micro-prompts, keyed by POS, by role, or by class alone), and Stage 3 (fallback whole-unit regeneration). Three user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)** and **1094 → 963 (−131)**.
+- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (twelve class-specific micro-prompts, keyed by POS, by role, or by class alone), and Stage 3 (fallback whole-unit regeneration). Four user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)** and **650 → 541 (−109)**.
   - **Detailed Phase 6 Plan**: For Phase 6 operating principles, architectural details, active routes, and measurement procedures, see [`skel/PLAN.md`](skel/PLAN.md).
 - **Latest Improvements**:
+  - **Fourth `--fix` round (2026-08-16)**: **650 → 541 (−109, −16.8%)**; 443 → 388 flagged parse
+    units (55 cleared, 38 improved, **0 regressed, 0 newly flagged**); per-unit yield **0.246**,
+    the first rise of the series. Run by the user ahead of the read series it had been deferred
+    behind. It decided all three queued prompt questions: the subject branches (−12.7% / −10.0%)
+    and `missing_tuple_nominal`'s rewritten question (18 → 16) both **negative**, which turns the
+    residue's two largest buckets into read-work, and `_CONV_REPEATED` **positive**
+    (`missing_arg` −28.3%, −49 of the round). `extra_tuple_adjective` reached **0**. The cost of
+    running early: the fifteen unread batches' rules are now measured against a base a round has
+    moved. Full subclass table in [`skel/PLAN.md`](skel/PLAN.md) §12.
   - **Rules BJ–BN (Inferno 26–30 read, 2026-08-15)**: Per-position read of all 23 soft violations in
     Inferno 26–30 produced five deterministic rules — BJ (the adverb-preposition cluster names one
     oblique from either of its two words, −21), BK (rule AR's other marker: `che` opens the second
@@ -139,7 +145,8 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 ### Standing Disciplines
 
 - **A silent `--check` pass, closed (2026-08-07)**: Found while re-measuring from a `git worktree` (where `src/` is unbuilt because per-canticle source directories are generated, not tracked). `api.cantos()` now raises `FileNotFoundError` if the directory is missing, preventing checks from silently returning `0 hard, 0 soft`. `tests/test_api.py` pins this behaviour.
-- **How `CORRECTIONS.md` is used**: `*/CORRECTIONS.md` records **corrections that were actually applied**, not a place to log "found a problem, leaving it." If a review turns up a clear, decidable error, **fix it in the same session** and record what was fixed and why. The only legitimate "left alone" write-ups are ones with a genuine structural reason the text itself doesn't decide (e.g., free relatives, accusative-and-infinitive, Latin quotations, etc.).
+- **How `CORRECTIONS.md` is used**: `*/CORRECTIONS.md` records **hand-applied corrections**, not a place to log "found a problem, leaving it." If a review turns up a clear, decidable error, **fix it in the same session** and record what was fixed and why. The only legitimate "left alone" write-ups are ones with a genuine structural reason the text itself doesn't decide (e.g., free relatives, accusative-and-infinitive, Latin quotations, etc.).
+  - **A `--fix` round is not a correction and is never written there** (2026-08-16). It is LLM regeneration of the artifact, decided by the acceptance gate rather than by a person reading a line. Round measurements belong in [`skel/PLAN.md`](skel/PLAN.md)'s *Phase 6 Implementation & Results* and in this file's *Latest Improvements*. What does go in `CORRECTIONS.md` is what a human decided: upstream retags, gated-script rewrites, checker and derivation rules, and the shapes deliberately left standing.
 - **CRLF hygiene**: Writing TSVs with Python's `csv` module and `newline=''` defaults to `\r\n`. Ensure `\n`-only line endings (`sed -i 's/\r$//'` or `Path.write_text` splitting/joining on `\n`) before diffing or committing.
 - **Measure a checker rule by violation diff, never by the total** (2026-08-15): keep the sorted `--check` output before and after and diff it, so what a rule *newly flags* is visible next to what it removes. Two rules this session looked neutral or positive on the total and were only decidable from the diff — rule AM (−15/+22, kept: the derivation is now right) and its subject leg (dropped). A rule may be kept when it raises the count, if it makes the parse provably more correct; record that trade explicitly.
 - **Census a shape before writing a rule for it** (2026-08-15): count the structural pattern over all 100 cantos first. One evidence line is not a population, and several candidate rules have been dropped at census — with a population of 0, and once (gapped-clause remnants, Inferno 16–20 batch) with a population of 12 that the census itself showed was reading error rather than checker silence.
@@ -149,27 +156,27 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Next Steps & Open Routes
 
-- **The read series is the standing task**: per-position reads of all 100 cantos in 5-canto batches, **Inferno 31–34 next** (44 soft at base 691), running to Paradiso 33 before any `--fix` round. Fifteen batches; schedule, reasoning and the eight-step per-batch procedure in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series* / *How to Read a Batch*. Tool: `skel/read.py`.
-- **A fourth `--fix` round is deferred until the series finishes** (`make -C skel fix`, run 3-way parallel) — the user's to run. It will then measure the queued prompt work in one pass, against a checker that is done: two subject-slot classes covering 29% of the residue, `missing_tuple_nominal`'s rewritten question, a repeated-slot convention, plus whatever the remaining batches add. See [`skel/PLAN.md`](skel/PLAN.md)'s *A Fourth `--fix` Round — Deferred, and What It Will Test*.
-- **Do not re-read Inferno 1–30** (100 standing positions): already read, residue is reading error, and it is the fourth round's most direct sample.
-- **Other Assistant-Side Tasks** (populations at base 691, before the BJ–BN rules took a further 41; folded into the batch that covers them):
+- **The read series is the standing task**: per-position reads of all 100 cantos in 5-canto batches, **Inferno 31–34 next** (37 soft at base 541), running to Paradiso 33. Fifteen batches, 469 positions; schedule, reasoning and the eight-step per-batch procedure in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series* / *How to Read a Batch*. Tool: `skel/read.py`.
+- **A fifth `--fix` round has nothing queued to test** (`make -C skel fix`, run 3-way parallel — the user's to run). The fourth round emptied the prompt queue on 2026-08-16, and checker rules are measured by violation diff at zero model cost, so a round now would measure nothing the diff does not. Wait until the series finishes *and* has produced new prompt-side diagnoses. See [`skel/PLAN.md`](skel/PLAN.md)'s *A Fifth `--fix` Round*.
+- **Inferno 1–30's 72 standing positions** are the read batches' residue with a `--fix` round now over them — the most direct sample of what a round leaves behind. Not urgent: the fifteen unread batches come first.
+- **Other Assistant-Side Tasks** (populations at base 541; folded into the batch that covers them):
   - **Check the mirror leg of every new rule** — the Inferno 16–20 batch's finding, worth 18 positions there and 37 more in the 21–25 batch.
   - **Check the *plural*, and the rule's place in the pipeline** — the Inferno 21–25 batch's finding: rule V was written to pop one citation where a coordinate subject supplies three, and the collapse that runs after it put the survivors back on the accepted position.
-  - Per-position read of the `missing_arg_adverb` residue — what the `_CONV_ADVERB` repair left standing.
-  - Read `extra_tuple_adjective` (**22 `extra_tuple` total**), position-identical after round 3's prompt clause failed to move it. Do not re-write that convention prose first. Its sibling `missing_tuple_nominal` (**23 `missing_tuple` total**) has had its *question* rewritten and should be read only after the fourth round measures that.
+  - Per-position read of the `missing_arg_adverb` residue (**21**) — what the `_CONV_ADVERB` and `_CONV_REPEATED` repairs left standing.
+  - Read `missing_tuple_nominal` (**16**; `missing_tuple` **18** total): a convention, a hint and a rewritten question have each moved it by single digits, so it is genuine reading disagreement until a read says otherwise. Its old sibling `extra_tuple_adjective` is **closed at 0**.
   - Measure the population of a `parataxis`→`ccomp` acceptance rule for quoted speech under verbs of speech (Inferno 8:81) before writing it. Its neighbour, the `sì … che` result clause read as `ccomp`, was censused at **2** and dropped.
   - Census a relative-pronoun ↔ antecedent argument-identity rule (Inferno 16:94) before writing it.
   - Ask which checks run *before* every acceptance rule — the Inferno 26–30 batch's finding: rule AQ was complete inside `_classify_divergence` and absent from the membership check that runs first.
-  - Sample what the fourth round leaves of `extra_arg subj` (**111**, of which ∅ (0,0) **28** — rule BH took the half rule M had created) and `missing_arg subj` (**60**) — the two buckets the new `_CONV_SUBJECT` branches target.
-  - Audit remaining `extra_arg_adjective` positions (`extra_arg xcomp` is **38** at base 691).
-  - Sample `missing_arg obl` (**68**, down from 128 now that the adverb bucket is branched and repaired).
+  - **Read `extra_arg subj` (**96**, of which ∅ (0,0) **22**) and `missing_arg subj` (**54**)** — the residue's two largest buckets. Round 4 measured `_CONV_SUBJECT`'s three diagnoses at the round average, which by the test's own branch makes these read-work rather than prompt-work. Start with the ∅ (0,0) half.
+  - Audit remaining `extra_arg_adjective` positions (**19**; `extra_arg xcomp` is **35**) — three rounds have each taken only a couple, which is itself evidence of genuine disagreement.
+  - Sample `missing_arg obl` (**40**, down from 128; `_CONV_REPEATED` took the duplicate-slot half in round 4).
   - Clear the 12 Layer-4 positions that block the measured `dep.subject_agreement` *coordinated subject* refinement — see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 - See [`skel/PLAN.md`](skel/PLAN.md) for full descriptions of each route and testing workflows.
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through BN, and Phase 6's restructuring plus three `--fix` rounds, bringing its soft residue to **650**
+checker was refined through Phases 0-5r, rules V through BN, and Phase 6's restructuring plus four `--fix` rounds, bringing its soft residue to **541**
 (down from 17438 at the first full-corpus measurement). See [`skel/PHASE5.md`](skel/PHASE5.md) for the full Phase 5
 history, [`skel/PLAN.md`](skel/PLAN.md) for the closing positions, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
@@ -212,7 +219,7 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes), `skel/read.py` (the audit
   series' read tool: all five layers plus both Layer-5 readings for one parse unit). `--check` across all
-  three canticles reports **0 hard, 650 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 541 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PHASE5.md`](skel/PHASE5.md)) is
@@ -436,7 +443,7 @@ discipline already used for normalization and quotes.
    `skel/skel.py`), all 100 cantos built, checker refined through Phases 0-5r plus rules V, W,
    X, the Y-AF series, AG, the AH-AL series, the AM-AT series, the AU-AY series, the AZ-BI
    series and the BJ-BN series, with `--fix`
-   restructured in Phase 6 and three rounds run (`--check`: 0 hard / 650 soft). Phase 5 closed with every route measured; see
+   restructured in Phase 6 and four rounds run (`--check`: 0 hard / 541 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

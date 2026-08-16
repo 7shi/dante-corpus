@@ -107,6 +107,7 @@ line	token	word	role	arg_line	arg_token
 35	3	drizza'	obj	35	4
 35	3	drizza'	obl:a	34	5
 35	6	cominciai	subj	0	0
+35	6	cominciai	obl:come	36	3
 36	7	smaga	subj	36	6
 36	7	smaga	obj	36	4
 37	0			0	0
@@ -346,7 +347,9 @@ line	token	word	role	arg_line	arg_token
 112	9	intende	subj	109	4
 112	9	intende	obj	112	1
 112	9	intende	obl:di	112	8
-113	1	sorella	subj	0	0
+113	1	sorella	subj	109	4
+113	2	fu	subj	109	4
+113	2	fu	attr	113	1
 113	7	tolta	subj	114	4
 113	7	tolta	iobj	113	5
 113	7	tolta	obl:di	114	2

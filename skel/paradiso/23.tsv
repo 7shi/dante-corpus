@@ -142,16 +142,18 @@ line	token	word	role	arg_line	arg_token
 48	4	sostener	subj	0	0
 48	4	sostener	obj	48	6
 49	2	era	subj	49	1
-49	2	era	obl:come	49	4
+49	2	era	attr	49	4
 49	7	risente	subj	49	5
 49	7	risente	obl:di	50	2
 50	7	ingegna	subj	50	5
 50	7	ingegna	xcomp	51	3
-51	3	ridurlasi	subj	0	0
+51	3	ridurlasi	subj	50	5
 51	3	ridurlasi	obl:a	51	6
 52	3	udi'	subj	52	2
 52	3	udi'	obj	52	5
+52	3	udi'	attr	52	6
 53	8	stingue	subj	53	4
+53	8	stingue	obl:di	54	2
 54	6	rassegna	subj	54	5
 54	6	rassegna	obj	54	3
 55	3	sonasser	subj	55	6
@@ -193,7 +195,6 @@ line	token	word	role	arg_line	arg_token
 67	3	pareggio	obl:da	67	6
 67	3	pareggio	obl:da	69	3
 68	3	fendendo	subj	68	7
-68	3	fendendo	obj	68	2
 68	4	va	subj	68	7
 68	4	va	obj	68	2
 69	8	parca	subj	69	4
@@ -298,6 +299,7 @@ line	token	word	role	arg_line	arg_token
 107	6	farai	subj	0	0
 107	6	farai	xcomp	107	7
 107	7	dia	subj	108	3
+107	7	dia	obj	108	3
 108	7	entre	subj	0	0
 109	0			0	0
 110	2	sigillava	subj	109	4

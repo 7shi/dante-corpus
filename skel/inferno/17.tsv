@@ -190,6 +190,7 @@ line	token	word	role	arg_line	arg_token
 69	1	sederà	subj	68	6
 69	1	sederà	obl:da	69	6
 70	5	padoano	subj	0	0
+70	5	padoano	obl:con	70	3
 71	4	'ntronan	subj	0	0
 71	4	'ntronan	obj	71	6
 71	4	'ntronan	iobj	71	3

@@ -80,7 +80,7 @@ line	token	word	role	arg_line	arg_token
 31	2	hanno	subj	29	5
 31	2	hanno	obj	31	8
 31	2	hanno	obl:in	31	5
-31	2	hanno	obl:che	32	1
+31	2	hanno	obl:che	32	3
 32	7	appariro	subj	32	4
 32	7	appariro	obl:a	32	6
 33	2	hanno	subj	28	4

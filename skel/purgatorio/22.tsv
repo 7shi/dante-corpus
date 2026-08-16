@@ -66,12 +66,13 @@ line	token	word	role	arg_line	arg_token
 24	7	pieno	subj	24	2
 24	7	pieno	obl:per	24	5
 25	4	mover	subj	25	3
-25	4	mover	obl:a	26	4
+25	4	mover	xcomp	26	4
 25	5	fenno	subj	25	2
 25	5	fenno	obj	25	3
 25	5	fenno	xcomp	25	4
 26	4	riso	subj	25	3
-26	7	rispuose	subj	25	3
+26	7	rispuose	subj	0	0
+26	7	rispuose	ccomp	27	9
 27	9	cenno	subj	27	3
 27	9	cenno	iobj	27	6
 28	4	appaion	subj	28	5
@@ -218,8 +219,8 @@ line	token	word	role	arg_line	arg_token
 73	7	cristiano	subj	0	0
 73	7	cristiano	obl:per	73	6
 74	3	veggi	subj	0	0
-74	3	veggi	obj	74	4
 74	3	veggi	obj	74	5
+74	3	veggi	obl	74	4
 74	8	disegno	subj	74	7
 74	8	disegno	obj	74	6
 75	2	colorare		0	0

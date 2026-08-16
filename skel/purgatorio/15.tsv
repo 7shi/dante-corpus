@@ -114,7 +114,7 @@ line	token	word	role	arg_line	arg_token
 40	0			0	0
 41	2	andavamo	subj	40	3
 41	5	pensai	subj	41	4
-41	5	pensai	ccomp	42	1
+41	5	pensai	attr	42	1
 41	6	andando	subj	0	0
 42	1	prode	subj	42	2
 42	2	acquistar	subj	0	0

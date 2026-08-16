@@ -336,6 +336,7 @@ line	token	word	role	arg_line	arg_token
 106	2	elli	obl:a	106	4
 106	6	lasci	subj	106	5
 106	6	lasci	obj	106	8
+106	6	lasci	attr	107	10
 106	6	lasci	obl:per	107	2
 106	6	lasci	obl:in	107	7
 107	5	odo	subj	107	4
@@ -343,8 +344,9 @@ line	token	word	role	arg_line	arg_token
 108	4	può	subj	108	2
 108	4	può	xcomp	108	5
 108	4	può	xcomp	108	7
+108	5	tòrre	subj	108	2
 108	5	tòrre	obj	108	3
-108	7	far	obj	108	3
+108	7	far	subj	108	2
 108	7	far	attr	108	8
 109	8	giuraro	subj	109	5
 110	1	dimmi	subj	0	0

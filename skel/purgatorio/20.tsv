@@ -344,7 +344,6 @@ line	token	word	role	arg_line	arg_token
 123	2	alzava	obl:da	122	9
 124	3	partiti	subj	124	1
 124	3	partiti	obl:da	124	6
-125	2	brigavam	subj	0	0
 125	2	brigavam	subj	124	1
 125	2	brigavam	xcomp	125	4
 125	4	soverchiar	subj	0	0

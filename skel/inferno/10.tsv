@@ -206,7 +206,9 @@ line	token	word	role	arg_line	arg_token
 71	3	facëa	obj	71	1
 71	3	facëa	obl:a	71	7
 72	2	ricadde	subj	0	0
+72	2	ricadde	attr	72	1
 72	6	parve	subj	0	0
+72	6	parve	obl	72	7
 73	0			0	0
 74	1	restato	subj	0	0
 74	1	restato	obl:a	73	6
@@ -250,7 +252,6 @@ line	token	word	role	arg_line	arg_token
 86	2	fece	obj	86	4
 86	2	fece	attr	86	5
 86	5	colorata	obl:in	86	7
-87	3	fa	subj	87	2
 87	3	fa	xcomp	87	4
 87	4	far	subj	0	0
 87	4	far	obj	87	2

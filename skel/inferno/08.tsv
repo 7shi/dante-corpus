@@ -231,7 +231,6 @@ line	token	word	role	arg_line	arg_token
 70	0			0	0
 71	7	cerno	subj	70	2
 71	7	cerno	obj	70	7
-71	7	cerno	obl:entro	71	3
 71	7	cerno	obl:ne	71	6
 72	6	uscite	subj	70	7
 72	6	uscite	obl:di	72	5

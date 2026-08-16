@@ -128,6 +128,9 @@ line	token	word	role	arg_line	arg_token
 44	8	veste	obl:da	44	6
 45	7	è	obl:a	45	2
 45	8	parco	subj	43	2
+45	8	parco	obl:per	43	8
+45	8	parco	obl:a	45	2
+45	8	parco	obl:contro	45	6
 46	5	rendero	subj	0	0
 46	5	rendero	obj	46	4
 46	5	rendero	obl:a	46	7
@@ -406,7 +409,6 @@ line	token	word	role	arg_line	arg_token
 140	4	andrà	subj	140	3
 141	1	faranno	subj	140	7
 141	1	faranno	obj	141	2
-141	2	sì	ccomp	141	5
 141	5	potrai	subj	141	4
 141	5	potrai	xcomp	141	6
 141	6	chiosarlo	subj	141	4

@@ -78,6 +78,7 @@ line	token	word	role	arg_line	arg_token
 31	4	venendo	obl:da	31	7
 32	7	cuopra	subj	32	1
 32	7	cuopra	obl	32	3
+32	7	cuopra	obl:di	32	5
 33	1	rotante	subj	32	1
 33	1	rotante	obl:col	33	4
 33	7	è	subj	33	6
@@ -96,6 +97,7 @@ line	token	word	role	arg_line	arg_token
 38	7	venuto	obl:a	38	3
 38	7	venuto	obl:da	38	5
 39	3	Fiorenza	subj	37	1
+39	3	Fiorenza	obl:in	39	5
 40	6	compiuto	subj	37	1
 40	6	compiuto	obl:di	40	3
 41	8	facea	subj	0	0
@@ -128,14 +130,13 @@ line	token	word	role	arg_line	arg_token
 52	0			0	0
 53	6	compresa	subj	53	4
 53	6	compresa	obj	52	2
-54	5	fermato	subj	0	0
+54	5	fermato	subj	53	4
 54	5	fermato	obl:in	54	3
-54	6	fiso	subj	0	0
-54	6	fiso	obl:in	54	3
-55	2	volgeami	subj	53	4
+54	6	fiso	subj	53	4
+55	2	volgeami	subj	0	0
 55	2	volgeami	obl:con	55	4
 56	2	domandar	subj	0	0
-56	2	domandar	obj	56	5
+56	2	domandar	iobj	56	5
 56	2	domandar	obl:di	56	7
 57	7	sospesa	subj	57	4
 57	7	sospesa	obl:di	57	2

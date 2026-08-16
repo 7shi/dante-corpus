@@ -38,6 +38,7 @@ line	token	word	role	arg_line	arg_token
 16	0			0	0
 17	0			0	0
 18	7	divina	subj	16	4
+18	7	divina	obl:a	18	4
 19	4	parea	subj	0	0
 19	4	parea	iobj	19	3
 19	4	parea	xcomp	19	5

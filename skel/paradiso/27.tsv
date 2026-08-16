@@ -238,6 +238,8 @@ line	token	word	role	arg_line	arg_token
 91	6	fé	subj	91	3
 91	6	fé	subj	91	5
 91	6	fé	obj	91	7
+91	6	fé	obl:in	93	2
+91	6	fé	obl:in	93	8
 92	2	pigliare	subj	91	7
 92	2	pigliare	obj	92	3
 92	5	aver	subj	91	7
@@ -367,14 +369,15 @@ line	token	word	role	arg_line	arg_token
 138	7	lascia	subj	138	3
 138	7	lascia	obj	138	8
 139	5	facci	subj	0	0
-139	5	facci	obj	139	6
 139	5	facci	iobj	139	4
+139	5	facci	attr	139	6
 140	1	pensa	subj	139	1
 140	1	pensa	ccomp	140	6
 140	6	è	subj	140	7
 140	6	è	obl:in	140	4
 140	8	governi	subj	140	7
 141	3	svïa	subj	141	6
+141	3	svïa	obl	141	1
 142	7	sverni	subj	142	4
 142	7	sverni	obl:per	143	3
 143	8	negletta	subj	143	4

@@ -24,7 +24,6 @@ line	token	word	role	arg_line	arg_token
 8	8	vidi	subj	8	6
 8	8	vidi	obj	8	5
 8	8	vidi	obl:in	9	3
-9	8	abbandono	subj	9	6
 9	8	abbandono	obj	9	7
 9	8	abbandono	obl:per	11	4
 10	8	diffidi	subj	10	3
@@ -149,8 +148,9 @@ line	token	word	role	arg_line	arg_token
 54	6	atto	subj	0	0
 55	2	vidi	subj	52	1
 55	2	vidi	obj	55	5
+55	2	vidi	attr	56	2
 55	7	mere	attr	55	5
-56	2	gioconde	attr	55	5
+56	0			0	0
 57	1	vinceva	subj	56	6
 57	1	vinceva	obj	57	3
 57	1	vinceva	obj	57	7

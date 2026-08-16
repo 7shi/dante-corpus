@@ -46,6 +46,7 @@ line	token	word	role	arg_line	arg_token
 16	5	tramuti	subj	16	4
 16	5	tramuti	obj	16	6
 17	10	accende	subj	17	7
+17	10	accende	obl	17	7
 18	3	perde	subj	18	1
 18	3	perde	obj	18	2
 18	3	perde	obl:da	17	6

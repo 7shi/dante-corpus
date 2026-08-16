@@ -14,8 +14,8 @@ line	token	word	role	arg_line	arg_token
 6	6	cambiò	obl:a	6	4
 7	7	dier	subj	7	6
 7	7	dier	obj	7	8
+7	7	dier	xcomp	8	4
 7	7	dier	obl:a	8	2
-7	7	dier	obl:di	8	4
 8	4	dir	subj	0	0
 8	5	levata	subj	0	0
 8	5	levata	obl:in	8	8
@@ -68,6 +68,7 @@ line	token	word	role	arg_line	arg_token
 24	4	venendo	subj	0	0
 24	4	venendo	obl:con	24	5
 25	6	reverenti	subj	25	4
+25	6	reverenti	obl	26	1
 25	6	reverenti	obl:a	26	5
 26	0			0	0
 27	3	traggon	subj	27	1
@@ -261,7 +262,6 @@ line	token	word	role	arg_line	arg_token
 89	5	discorda	subj	90	4
 89	5	discorda	obl:da	90	2
 90	8	festina	subj	90	5
-91	1	Ond'		0	0
 91	3	rispuosi	subj	91	2
 91	3	rispuosi	iobj	91	4
 91	3	rispuosi	ccomp	91	7

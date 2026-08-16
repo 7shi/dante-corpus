@@ -206,7 +206,7 @@ line	token	word	role	arg_line	arg_token
 67	5	riguardavano	obj	67	4
 68	1	gridava	subj	67	7
 68	6	muti	subj	0	0
-68	6	muti	attr	68	5
+68	6	muti	obj	68	5
 69	1	Vedi	subj	0	0
 69	7	due	subj	0	0
 69	9	uno	subj	0	0
@@ -259,7 +259,8 @@ line	token	word	role	arg_line	arg_token
 90	7	assalisse	obj	90	6
 91	1	Elli	subj	0	0
 91	1	Elli	attr	91	3
-91	7	riguardava	subj	0	0
+91	7	riguardava	subj	91	1
+91	7	riguardava	obj	91	3
 91	7	riguardava	obj	91	5
 91	7	riguardava	obj	91	6
 92	0			0	0

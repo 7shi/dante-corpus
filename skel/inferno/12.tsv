@@ -280,8 +280,6 @@ line	token	word	role	arg_line	arg_token
 89	3	commise	iobj	89	2
 90	2	è	subj	88	1
 90	2	è	attr	90	3
-90	7	fuia	subj	90	5
-90	7	fuia	attr	90	6
 91	8	movo	subj	91	7
 91	8	movo	obj	92	2
 91	8	movo	obl:per	91	6

@@ -228,7 +228,6 @@ line	token	word	role	arg_line	arg_token
 73	6	sofferse	obl:da	73	4
 74	2	mareggiare	subj	0	0
 74	2	mareggiare	obl:intra	74	4
-75	2	quel	subj	0	0
 75	9	aperse	subj	75	2
 76	3	nuovi	subj	76	1
 76	8	rido	subj	76	7

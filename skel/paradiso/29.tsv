@@ -339,7 +339,6 @@ line	token	word	role	arg_line	arg_token
 135	4	cela	obl:in	134	7
 136	7	raia	subj	136	4
 136	7	raia	obj	136	6
-137	7	recepe	subj	136	7
 137	7	recepe	obl:per	137	3
 137	7	recepe	obl:in	137	5
 138	2	son	subj	138	4

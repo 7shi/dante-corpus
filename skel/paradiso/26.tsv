@@ -215,12 +215,12 @@ line	token	word	role	arg_line	arg_token
 69	1	dicea	obl:con	69	4
 70	7	disonna	subj	0	0
 70	7	disonna	obl:a	70	4
+70	7	disonna	obl:per	71	3
 71	6	ricorre	subj	71	5
 71	6	ricorre	obl:a	72	3
 72	5	va	subj	72	4
 72	5	va	obl:di	72	7
-72	5	va	obl:in	72	9
-73	6	vede	subj	0	0
+73	6	vede	subj	73	3
 73	6	vede	obj	73	5
 73	7	aborre	subj	73	3
 73	7	aborre	obj	73	4
@@ -233,9 +233,11 @@ line	token	word	role	arg_line	arg_token
 77	1	fugò	obl:con	77	4
 78	2	rifulgea	subj	78	1
 78	2	rifulgea	obl:da	78	7
-79	5	vidi	subj	77	2
+79	5	vidi	subj	0	0
 79	5	vidi	obj	79	3
-80	4	domandai	subj	77	2
+79	5	vidi	obl	79	4
+80	4	domandai	subj	0	0
+80	4	domandai	attr	80	3
 80	4	domandai	obl:di	81	4
 81	7	vidi	subj	81	6
 81	7	vidi	obj	81	5
@@ -394,7 +396,7 @@ line	token	word	role	arg_line	arg_token
 133	4	scendessi	subj	133	3
 133	4	scendessi	obl:a	133	8
 134	3	appellava	subj	134	8
-134	3	appellava	attr	134	1
+134	3	appellava	obj	134	1
 134	3	appellava	obl:in	134	5
 135	2	vien	subj	135	4
 135	2	vien	obl:da	135	1

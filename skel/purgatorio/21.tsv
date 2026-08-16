@@ -116,13 +116,15 @@ line	token	word	role	arg_line	arg_token
 39	2	fece	obl:con	38	8
 39	7	digiuna	subj	39	5
 40	2	cominciò	subj	40	1
+40	2	cominciò	ccomp	40	5
 40	5	è	subj	40	3
+40	5	è	ccomp	41	2
+40	5	è	ccomp	42	6
 41	2	senta	subj	41	4
 41	2	senta	obl:sanza	41	1
 42	6	sia	subj	41	4
-42	6	sia	attr	42	7
-42	7	fuor	subj	41	4
-42	7	fuor	obl:di	42	9
+42	6	sia	obl	42	7
+42	6	sia	obl:di	42	9
 43	1	Libero	subj	0	0
 43	1	Libero	obl:da	43	6
 44	10	riceve	subj	44	5
@@ -237,6 +239,7 @@ line	token	word	role	arg_line	arg_token
 79	4	piacciati	subj	0	0
 79	7	sappia	subj	79	6
 80	5	giaciuto	subj	0	0
+80	5	giaciuto	subj	79	2
 80	5	giaciuto	obl	80	4
 80	5	giaciuto	obl	81	1
 81	8	cappia	subj	79	6
@@ -320,6 +323,7 @@ line	token	word	role	arg_line	arg_token
 108	3	seguon	obj	108	4
 108	3	seguon	obl:in	108	7
 109	3	sorrisi	subj	109	1
+109	3	sorrisi	obl:come	109	6
 109	8	ammicca	subj	109	7
 110	6	tacque	subj	110	4
 110	8	riguardommi	subj	110	4

@@ -258,12 +258,15 @@ line	token	word	role	arg_line	arg_token
 93	7	ingannate	subj	93	1
 93	7	ingannate	obj	93	6
 94	1	Lasciolla	subj	0	0
+94	1	Lasciolla	attr	94	3
+94	1	Lasciolla	attr	94	4
 94	1	Lasciolla	obl	94	2
 95	7	condanna	subj	95	6
 95	7	condanna	obj	95	2
 95	7	condanna	obl:a	95	5
 96	6	fa	subj	0	0
 96	6	fa	obj	96	7
+96	6	fa	obl:di	96	4
 97	4	va	subj	97	5
 97	4	va	obl:con	97	2
 97	4	va	obl	97	3

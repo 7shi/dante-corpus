@@ -281,9 +281,10 @@ line	token	word	role	arg_line	arg_token
 104	1	parlando	subj	0	0
 104	1	parlando	obj	104	2
 104	7	bello	subj	104	5
+104	7	bello	obl	104	3
 105	3	era	subj	105	5
 105	3	era	obl	105	6
-105	8	era	subj	0	0
+105	8	era	subj	105	5
 105	8	era	obl	105	7
 106	1	Venimmo	subj	0	0
 106	1	Venimmo	obl:a	106	3

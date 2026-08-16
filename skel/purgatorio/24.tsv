@@ -443,7 +443,6 @@ line	token	word	role	arg_line	arg_token
 143	5	volsi	obl:a	143	9
 143	5	volsi	obl:come	144	2
 144	4	va	subj	144	3
-144	4	va	obl:secondo	144	6
 144	8	ascolta	subj	144	7
 144	8	ascolta	obj	144	6
 145	0			0	0

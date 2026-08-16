@@ -49,6 +49,7 @@ line	token	word	role	arg_line	arg_token
 17	3	visibili	subj	0	0
 17	4	rifatti	subj	0	0
 18	1	esser	subj	18	3
+18	1	esser	subj	18	8
 18	2	porà	subj	0	0
 18	2	porà	xcomp	18	1
 18	8	nòi	subj	0	0
@@ -194,7 +195,6 @@ line	token	word	role	arg_line	arg_token
 73	1	parvemi	xcomp	74	1
 74	1	cominciare	subj	73	4
 74	1	cominciare	xcomp	74	3
-74	1	cominciare	xcomp	74	5
 74	3	vedere	subj	73	4
 74	5	fare	subj	73	4
 74	5	fare	obj	74	7

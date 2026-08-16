@@ -14,7 +14,6 @@ line	token	word	role	arg_line	arg_token
 4	10	affigge	obj	4	9
 5	2	vassi	subj	4	6
 5	2	vassi	obl:a	5	5
-5	10	appaia	subj	5	7
 5	10	appaia	subj	5	8
 5	10	appaia	obj	5	9
 6	6	trafigge	subj	6	4

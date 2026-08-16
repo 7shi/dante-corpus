@@ -106,7 +106,6 @@ line	token	word	role	arg_line	arg_token
 43	2	cominciai	subj	43	1
 43	6	vinci	subj	43	5
 43	6	vinci	obj	44	3
-43	6	vinci	obl	44	4
 43	6	vinci	obl:fuor	44	6
 44	0			0	0
 45	9	uscinci	subj	45	1
@@ -188,6 +187,7 @@ line	token	word	role	arg_line	arg_token
 69	10	abbia	obl:in	70	3
 70	6	par	ccomp	70	9
 70	9	pregi	subj	70	8
+70	9	pregi	obj	70	8
 71	4	dissi	subj	71	3
 71	4	dissi	iobj	71	5
 72	7	fregi	subj	71	8
@@ -312,7 +312,7 @@ line	token	word	role	arg_line	arg_token
 115	7	diroccia	subj	115	2
 115	7	diroccia	obl:in	115	5
 116	1	fanno	subj	0	0
-116	1	fanno	subj	116	2
+116	1	fanno	obj	116	2
 117	3	van	subj	116	2
 117	3	van	obl:di	117	2
 117	3	van	obl	117	4

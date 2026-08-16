@@ -220,8 +220,7 @@ line	token	word	role	arg_line	arg_token
 81	7	soccorso	subj	81	3
 82	3	traevan	subj	82	6
 82	3	traevan	obj	82	8
-83	4	scardova	subj	83	2
-83	4	scardova	obj	83	6
+83	0			0	0
 84	9	abbia	subj	84	5
 84	9	abbia	obj	84	8
 84	9	abbia	attr	84	7

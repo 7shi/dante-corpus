@@ -259,12 +259,13 @@ line	token	word	role	arg_line	arg_token
 93	7	godo		0	0
 93	7	godo	subj	93	6
 94	7	letargo	subj	94	2
+94	7	letargo	obl:a	94	4
 94	7	letargo	obl	95	3
 95	0			0	0
-96	2	fé	subj	96	3
-96	2	fé	obj	96	1
+96	2	fé	subj	96	1
+96	2	fé	obj	96	3
 96	2	fé	xcomp	96	4
-96	4	ammirar	subj	0	0
+96	4	ammirar	subj	96	3
 96	4	ammirar	obj	96	6
 97	6	sospesa	subj	97	3
 98	1	mirava	subj	97	3
@@ -367,8 +368,8 @@ line	token	word	role	arg_line	arg_token
 131	3	pinta	obl:de	131	7
 132	10	messo	subj	132	5
 132	10	messo	obl:in	132	7
-133	2	è	subj	133	4
 133	2	è	attr	133	1
+133	2	è	attr	133	4
 133	8	affige	subj	133	5
 134	2	misurar	subj	0	0
 134	2	misurar	obj	134	4

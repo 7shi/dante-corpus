@@ -52,6 +52,7 @@ line	token	word	role	arg_line	arg_token
 17	4	liberi	subj	0	0
 17	6	aperti	subj	0	0
 18	8	rauna	subj	18	4
+18	8	rauna	obl:in	18	6
 19	2	stancato	subj	19	1
 19	5	incerti	subj	19	4
 19	5	incerti	obl:di	20	3
@@ -254,7 +255,6 @@ line	token	word	role	arg_line	arg_token
 88	6	ei	subj	0	0
 88	8	fia	subj	88	7
 88	8	fia	obl	88	9
-89	3	farà	subj	0	0
 89	3	farà	subj	88	7
 89	3	farà	obj	89	1
 89	3	farà	iobj	89	2

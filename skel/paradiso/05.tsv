@@ -267,6 +267,7 @@ line	token	word	role	arg_line	arg_token
 92	1	percuote	obl:in	91	7
 92	7	queta	subj	92	6
 93	2	corremmo	subj	88	3
+93	2	corremmo	obl:come	91	4
 93	2	corremmo	obl:in	93	5
 94	5	vid'	subj	94	6
 94	5	vid'	obj	94	3

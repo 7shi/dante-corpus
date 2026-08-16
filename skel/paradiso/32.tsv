@@ -140,6 +140,7 @@ line	token	word	role	arg_line	arg_token
 52	0			0	0
 53	4	puote	subj	53	2
 53	4	puote	obl:dentro	52	4
+53	4	puote	obl:come	54	4
 53	5	aver	subj	53	2
 53	5	aver	xcomp	53	6
 53	6	sito	subj	53	2

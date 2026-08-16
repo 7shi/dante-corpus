@@ -58,7 +58,6 @@ line	token	word	role	arg_line	arg_token
 17	5	ecco	subj	17	7
 18	6	vicita	subj	18	7
 18	6	vicita	obl:per	18	2
-19	2	come		0	0
 19	7	pone	subj	19	5
 19	7	pone	obl:presso	20	3
 20	9	pande	subj	20	5

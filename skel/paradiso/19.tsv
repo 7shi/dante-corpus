@@ -122,7 +122,6 @@ line	token	word	role	arg_line	arg_token
 37	1	vid'	subj	37	2
 37	1	vid'	xcomp	37	3
 37	1	vid'	obl	34	2
-37	1	vid'	obl:con	39	2
 37	3	farsi	subj	0	0
 37	3	farsi	obj	37	5
 38	6	contesto	subj	37	6
@@ -132,6 +131,7 @@ line	token	word	role	arg_line	arg_token
 39	5	sa	subj	0	0
 39	5	sa	obj	39	6
 39	9	gaude	subj	39	6
+39	9	gaude	obl	39	3
 39	9	gaude	obl	39	7
 40	2	cominciò	subj	0	0
 40	5	volse	subj	40	4

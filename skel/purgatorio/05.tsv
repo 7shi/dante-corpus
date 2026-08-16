@@ -205,6 +205,7 @@ line	token	word	role	arg_line	arg_token
 63	8	face	iobj	63	6
 63	8	face	xcomp	63	5
 63	8	face	obl:dietro	62	4
+63	8	face	obl:di	63	2
 63	8	face	obl:in	63	4
 64	3	incominciò	subj	64	2
 64	3	incominciò	ccomp	64	6

@@ -244,7 +244,7 @@ line	token	word	role	arg_line	arg_token
 85	5	piace	subj	0	0
 85	5	piace	obl:a	85	4
 85	7	saprei	subj	0	0
-85	7	saprei	obj	86	1
+85	7	saprei	ccomp	86	2
 86	2	avemo	subj	0	0
 86	2	avemo	xcomp	86	4
 86	4	andar	subj	0	0
@@ -271,6 +271,7 @@ line	token	word	role	arg_line	arg_token
 92	6	fia	iobj	92	5
 92	6	fia	attr	92	7
 92	7	leggero	subj	92	4
+92	7	leggero	obl	92	5
 93	5	andar	subj	0	0
 93	5	andar	obl:a	93	3
 93	5	andar	obl:per	93	7

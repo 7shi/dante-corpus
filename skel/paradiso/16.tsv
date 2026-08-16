@@ -372,12 +372,14 @@ line	token	word	role	arg_line	arg_token
 136	5	nacque	obl:di	136	4
 137	7	ha	subj	137	5
 137	7	ha	obj	137	8
-137	7	ha	iobj	137	6
+137	7	ha	obl	137	6
 138	2	puose	subj	137	5
 138	2	puose	obj	138	3
 138	2	puose	obl:a	138	6
 139	2	onorata	subj	136	2
 139	2	onorata	subj	139	3
+139	2	onorata	subj	139	6
+139	2	onorata	obl:per	137	4
 140	5	fuggisti	subj	140	2
 140	5	fuggisti	obj	141	2
 140	5	fuggisti	obl:per	141	7
