@@ -1,5 +1,68 @@
 # dep — Layer 4 correction history
 
+## 4 rows from the Layer-5 Purgatorio 31-33 read (2026-08-17)
+
+The per-position read of Purgatorio 31-33's 14 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found four Layer-4 rows wrong, in three
+places. Applied with a gated script that asserts the word *and* the current cell value at each
+`(line, token)` before rewriting; `morph`/`np`/`dep`/`case --check` all re-run at 0 and `pytest`
+at 441.
+
+### purgatorio 31:15 — `fuor` is "furono", and the clause is copular
+
+"al quale intender **fuor mestier** le viste" — "to understand which, the eyes were needed".
+Layer 2 read `fuor` as an apocopated `fuori` (the adverb, correct one line earlier in "pinsero …
+**fuor** de la bocca") and Layer 4 built the clause around `intender` accordingly. `fuor mestier`
+is `essere` + a predicate nominal, so the clause head is `mestier` and the rest hangs off it, in
+this corpus's copula-as-`cop` convention:
+
+| token | was | now |
+|---|---|---|
+| 15.5 `mestier` | `obj` ← 15.3 | `acl:relcl` ← 14.5 |
+| 15.4 `fuor` | `advmod` ← 15.3 | `cop` ← 15.5 |
+| 15.7 `viste` | `nsubj` ← 15.3 | `nsubj` ← 15.5 |
+| 15.3 `intender` | `acl:relcl` ← 14.5 | `advcl` ← 15.5 |
+| 15.1 `al` | `case` ← 15.2 | `case` ← 15.3 |
+| 15.2 `quale` | `obl` ← 15.3 | `obj` ← 15.3 |
+
+The Layer-2 row and the case-annex row move with it (see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md),
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)). Layer 5 is unchanged in count: the position
+turns from a `missing_arg` into a `missing_tuple`, because the LLM's own reading of the line was
+built on the same mistag.
+
+### purgatorio 32:67 — the simile belongs to the apodosis
+
+"S'io potessi ritrar … **come pintor** che con essempro pinga / disegnerei com' io
+m'addormentai". The comparison is with the drawing, not with the wishing: `pintor` was `obl` ←
+64.4 `ritrar`, the protasis's verb, and is now `obl` ← 68.1 `disegnerei`. Layer 5 **−2** — the
+LLM had it on `disegnerei` all along, and the mis-attachment was costing both halves of the pair.
+
+### purgatorio 33:18 — the dative of possession
+
+"quando con li occhi **li occhi mi** percosse" — "when she struck my eyes with her eyes". `mi` was
+`det:poss` ← 18.6 `occhi`, the only clitic pronoun in a `det:poss` slot in the whole corpus (a
+census of the shape returned exactly this one row); it is the *dativus sympatheticus*, an argument
+of the verb. Now `iobj` ← 18.8 `percosse`, which is what the LLM read. Layer 5 **−1**. Because
+the population was 1, this is an upstream anomaly and not a checker rule.
+
+### purgatorio 33:109 — the seven ladies stop, they are not "made"
+
+"quando s'**affisser** … / le sette **donne** al **fin** d'un'ombra smorta". Layer 4 had both
+nominals as arguments of 105.8 `fassi`, four lines and two clauses away: `donne` as its `obj` and
+`fin` as its `obl`. They are the subject and the locative of 106.3 `s'affisser`.
+
+| token | was | now |
+|---|---|---|
+| 109.3 `donne` | `obj` ← 105.8 | `nsubj` ← 106.3 |
+| 109.5 `fin` | `obl` ← 105.8 | `obl` ← 106.3 |
+
+**This correction deliberately raises Layer 5's count**, −2 / +3. The two `missing_arg`s on
+`fassi` go away and three positions open on `affisser`, because the LLM had given that clause the
+subject `chi` from line 107 — its own misreading, which the wrong tree had been matching by
+having no opinion at all. The same honest trade the Purgatorio 21-25 and 26-30 batches recorded:
+the count is not the measure, the correctness of the parse is.
+
 ## 27 rows from the Layer-5 Purgatorio 21-25 read, and rule CV (2026-08-16)
 
 The per-position read of Purgatorio 21-25's 33 Layer-5 soft violations (see

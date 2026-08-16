@@ -102,7 +102,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 15	al	a+il	preposition+article	m.	sg.				contraction
 15	quale	quale	pronoun	m.	sg.				
 15	intender	intendere	verb				infinitive		apocope
-15	fuor	fuori	adverb						apocope
+15	fuor	essere	verb		pl.	3	remote past	indicative	apocope
 15	mestier	mestiere	noun	m.	sg.				apocope
 15	le	le	article	f.	pl.				
 15	viste	vista	noun	f.	pl.				

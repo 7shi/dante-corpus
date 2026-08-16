@@ -459,7 +459,7 @@ line	token	word	deprel	head_line	head_token
 66	8	sì	advmod	66	9
 66	9	caro	xcomp	66	7
 67	1	come	case	67	2
-67	2	pintor	obl	64	4
+67	2	pintor	obl	68	1
 67	3	che	nsubj	67	6
 67	4	con	case	67	5
 67	5	essempro	obl	67	6

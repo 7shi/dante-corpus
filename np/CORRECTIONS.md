@@ -1,5 +1,24 @@
 # Layer 3 soft-violation correction history
 
+## 2 spans from the Layer-5 Purgatorio 31-33 read (2026-08-17)
+
+Layer 3 is over-inclusive by design, and an over-wide span is normally left alone. These two are
+not over-inclusive: neither is a noun phrase at all, and Layer 5's rules AI and DF read a span's
+`head` as an argument's alternative name, so a span that is not a phrase makes two different
+nominals equivalent.
+
+- **inferno 18:30** `[la gente modo colto]`, head `gente` — "hanno a passar **la gente** **modo
+  colto**" holds two objects of two different predicates, `gente` of `passar` and `modo` of
+  `hanno`. Both correct halves were already present as their own rows; the outer span is dropped.
+  It was making rule DF accept `gente` as the subject of `passar`, which is why the position's
+  class changed under that rule and changed back under this fix.
+- **purgatorio 33:26** `[suo maggior parlando]` / `[maggior parlando]` / `[parlando]`, all headed
+  on `parlando` — a gerund verb, "dinanzi a **suo maggior** **parlando** sono", "are speaking
+  before their superior". Replaced by `[suo maggior]` / `[maggior]`, headed on `maggior`, the
+  nominal the multiword preposition `dinanzi a` governs.
+
+`np --check` stays 0/0.
+
 Layer 3 (`np/`) freezes its soft-check policy (`_can_head_np`/`_needs_np` in `dante_corpus/np.py`)
 against a corpus-wide count, then works that count down to 0 through a sequence of hand reviews,
 code fixes, and targeted `--fix` reruns (see [`README.md`](README.md)'s *Check* section for what

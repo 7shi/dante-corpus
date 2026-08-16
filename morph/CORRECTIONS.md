@@ -1,5 +1,14 @@
 # Manual Layer-2 corrections
 
+## 1 row from the Layer-5 Purgatorio 31-33 read (2026-08-17)
+
+**purgatorio 31:15 `fuor`** — "al quale intender **fuor mestier** le viste". Tagged
+`fuori` / adverb / apocope, the correct reading of the *previous* line's "pinsero … fuor de la
+bocca" and the wrong one here: `fuor mestier` is "furono mestiere", "were needed". Retagged
+`essere` / verb / pl. / 3 / remote past / indicative, note `apocope` kept. Layer 4's whole line
+moves with it (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)); Layer 5's count is
+unchanged, and `morph --check` stays 0/0.
+
 ## 1 row from the Layer-5 Purgatorio 21-25 read (2026-08-16)
 
 Found by the per-position read of Purgatorio 21-25's Layer-5 soft violations (see

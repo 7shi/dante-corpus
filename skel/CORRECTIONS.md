@@ -1,5 +1,96 @@
 # skel — Layer 5 correction history
 
+## Rules DE-DF, from reading Purgatorio 31-33 — 358 → 351, −7 (2026-08-17)
+
+Per-position read of all **14** soft violations in Purgatorio 31-33, the batch that finishes
+Purgatorio, following the eight-step procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*.
+Zero model calls. Purgatorio 31-33 itself went **14 → 11** (31: 3 → 2, 32: 7 → 4, 33: 4 → 5); the
+corpus went **358 → 351 (−7, −2.0%)**. Two deterministic Layer-5 rules, 4 Layer-4 rows, 1 Layer-2
+row, 2 Layer-3 spans and 2 case-annex rows. `pytest` **441 passed**, all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **DF** | rule V's candidate set read through rule AI's Layer-3 NP-head equivalence | — | −4 |
+| **DE** | rule C's collapse: a conjunct's role never displaces the coordination head's own | 98 | −2 |
+
+Plus the upstream rows (**−6 / +5** together, counted below).
+
+This is the smallest batch of the series, and its finding is proportionate: **the two rules are
+both one existing normalization applied at a gate that had not read it**, which is the ordering
+question the Purgatorio 1-5, 6-10, 21-25 and 26-30 batches each asked in a different form. Nothing
+here is a new reading of Italian; both are places where the checker already knew the answer and
+the gate was comparing raw positions.
+
+One candidate was censused and dropped, at **2**.
+
+### Rule DF — rule V's candidates, through rule AI
+
+"ne li atti, l'altre tre si fero avanti, / **danzando** al loro angelico caribo" (purgatorio
+31:132). `danzando` is a gerund with no subject of its own, so `derive_unit` is silent and rule V
+supplies the candidate set by walking the head chain: `fero`'s derived subject, which Layer 4
+attaches to `altre`. Layer 3 heads the span `[l'altre tre]` on `tre`, the LLM is told to cite a
+noun phrase by its Layer-3 head, and so the citation and the candidate are two names for one
+phrase — exactly the pair **rule AI** was written for.
+
+Rule AI could not reach it. It runs downstream of `_apply_subj_authority`, and it only pairs a
+`missing_arg` with an `extra_arg` of the *same role* — but for an inherited subject the derivation
+has no `subj` row at all, so there is no derived half to pair with. The fix is one clause in
+`_accept_control_subjects`: a citation that `_np_head_equivalent` says names the same noun phrase
+as a candidate **is** that candidate. The function already tested each citation through rule C's
+collapse for the same reason, and this is the second normalization it was missing.
+
+**Measured −4 / +0** (purgatorio 30:25 and 31:132, paradiso 4:81 and 5:21), with one position at
+inferno 18:30 changing class rather than count — see the Layer-3 correction below, which is why it
+changed back.
+
+### Rule DE — whose preposition survives the collapse
+
+"la flagellò **dal capo** infin **le piante**" (purgatorio 32:156). Rule C maps every argument
+citation onto its coordination head, so the LLM's `obl:a` on `piante` lands on `capo`, where the
+LLM has also written `obl:da` — and the tie-break between two roles on one key is role rank, which
+picked the conjunct's. The position the derivation reports with the head's own preposition came
+back a `role_mismatch`.
+
+Coordination in this corpus is not always of like with like. A conjunct carries its own `case`
+marker as readily as it shares the head's, and **98** `conj` nominals corpus-wide have one whose
+word differs — "dal capo infin le piante", "from head to sole", is two prepositional phrases, not
+one named twice. When that is so, the head's own citation is the one that names the head and a
+conjunct's role is only riding along on it, so a collapsed role never displaces an uncollapsed one.
+Rank still decides between two collapsed conjuncts, which is the case rule C was written for.
+
+The gate is the conjunct's own distinct `case` marker, and it is load-bearing. Without it the rule
+also fires on apposition — "che **l'uno** a l'altro raggio non ingombra" (purgatorio 3:30), where
+Layer 4 hangs `uno` on the emptier `che` as `appos`, the LLM's role for the `appos` is the right
+one, and rank is the better answer. Unrestricted the rule measured **−2 / +1**; gated, **−2 / +0**
+(purgatorio 32:156 and paradiso 32:57).
+
+### Censused and dropped — the adjunct scoping over a relative clause
+
+"che **di tutte altre cose** qual mi torse / più nel suo amor, più mi si fé nemica" (purgatorio
+31:86). The partitive belongs with `qual` inside the relative clause and with `fé` outside it; the
+LLM lists it on both, and Layer 4 hangs it on `fé` only. A rule accepting an oblique the LLM
+scopes over both a predicate and the relative clause modifying that very oblique was censused
+against the artifact: the structural shape (a relative clause on a derived oblique) occurs
+**1026** times, and the LLM names the antecedent as the clause's own oblique in **2** of them.
+Dropped, and the position is left flagged as genuine reading disagreement.
+
+### What the batch left standing (11 positions)
+
+- **purgatorio 31:15** `missing_tuple` — the Layer-2 correction below makes `mestier` a copular
+  predicate the LLM never proposed, because its own reading of `fuor` was the mistagged one. The
+  count is unchanged and the parse is right.
+- **purgatorio 31:86** — the dropped candidate above.
+- **purgatorio 32:69 ×2** — "ma qual vuol sia che l'assonnar ben finga": the LLM makes `vuol`
+  govern `sia` where Layer 4 has it the other way round, and reads `l'assonnar` as `finga`'s
+  subject where Layer 4 makes it the object. Genuine disagreement on a genuinely tangled line.
+- **purgatorio 32:139 ×2** — "Quel che rimase … da la piuma … si ricoperse": plain omissions of
+  the two obliques the tree records. `missing_arg obl*`, the residue's largest bucket, and the
+  fifth `--fix` round's one prompt candidate.
+- **purgatorio 33:25 ×2** — the LLM cites `parlando` for an oblique; with the Layer-3 span
+  corrected below that citation now heads no nominal at all, which is the honest report.
+- **purgatorio 33:106 ×3** — the Layer-4 correction below moves `le sette donne` to the predicate
+  they belong to and exposes the LLM's own misreading of the same clause; see there.
+
 ## Rules CU-CY, from reading Purgatorio 21-25 — 409 → 388, −21 (2026-08-16)
 
 Per-position read of all **33** soft violations in Purgatorio 21-25, following the eight-step

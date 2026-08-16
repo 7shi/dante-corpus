@@ -851,15 +851,15 @@ structural census is 489; its dropped sibling (the antecedent double-listed with
 pronoun, 28:97) moves 1 and its structural census is 1. Only the second number separates them.
 
 **Prompt side**: no new lead, and three more instances of the standing one. `missing_arg obl` is
-still the residue's largest single bucket at **77 of 358** (unmoved by this batch), and the Purgatorio 16-20 batch's
+still the residue's largest single bucket at **76 of 351** (moved by 1 by the DE-DF batch), and the Purgatorio 16-20 batch's
 convention clause for the prepositional adjunct of time or place remains the fifth round's one
 candidate.
 
 ## The Read Series — read the whole corpus (decided 2026-08-15; the fix-last clause lapsed 2026-08-16)
 
 **Per-position reads cover all 100 cantos in 5-canto batches.** Inferno is done (batches 1, 1–3,
-4–6, 7–10, 11–15, 16–20, 21–25, 26–30, 31–34) and so are **Purgatorio 1–5, 6–10, 11–15, 16–20,
-21–25 and 26–30**; **Purgatorio 31–33 is the next batch**, and the series then runs to
+4–6, 7–10, 11–15, 16–20, 21–25, 26–30, 31–34) and so is **all of Purgatorio** (1–5, 6–10, 11–15,
+16–20, 21–25, 26–30, 31–33); **Paradiso 1–5 is the next batch**, and the series then runs to
 Paradiso 33.
 
 The series was originally declared to run *before* any further `--fix` round. **The fourth round
@@ -870,7 +870,7 @@ series to finish — and because it names what was traded away.
 
 **Why read first.** Every batch so far has produced deterministic rules that remove violations at
 **zero model cost** (AG: −43; AH–AL: −156; AM–AT: −75; AU–AY: −54; AZ–BI: −143; BJ–BN: −41; BO–BV: −35;
-BW–BZ: −25; CA–CJ: −33; CK–CO: −21; CP–CT: −18; CU–CY: −21; CZ–DD: −30), the 11–15 batch
+BW–BZ: −25; CA–CJ: −33; CK–CO: −21; CP–CT: −18; CU–CY: −21; CZ–DD: −30; DE–DF: −7), the 11–15 batch
 showed the reads also find `derive_unit` itself to be wrong rather than merely silent, the 16–20
 batch showed they find existing rules to be **half-written** — three of its five rules are the
 mirror leg of a rule already in the checker — and the 21–25 batch found a rule that was neither
@@ -893,35 +893,74 @@ The standing form of the rule is therefore weaker than "read everything first" a
 keeping: **do not run a round while checker rules are being written against the base it would
 move.**
 
-### Schedule — 8 batches at base 358
+### 20. Rules DE-DF and the Purgatorio 31-33 Read (2026-08-17)
 
-Inferno and Purgatorio 1–26 have been read and are **not** re-read; their residue is reading error,
-and it is the most direct sample there is of what a `--fix` round leaves behind.
+Per-position read of all **14** soft violations in Purgatorio 31-33, the batch that finishes
+Purgatorio. **358 → 351 (−7, −2.0%)**, zero model calls; Purgatorio 31-33 itself went 14 → 11
+(31: 3 → 2, 32: 7 → 4, 33: 4 → 5). `pytest` **441 passed**, 0 hard, all other layers 0/0. Full
+write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
 
-The table is **measured at base 358**, after the CZ–DD rules.
+| rule | shape | census | moved |
+|---|---|---:|---:|
+| **DF** | rule V's control candidates read through rule AI's Layer-3 NP-head equivalence | — | −4 |
+| **DE** | rule C's collapse: a conjunct's role never displaces the coordination head's own | 98 | −2 |
+
+Upstream: 4 Layer-4 rows (purgatorio 31:15 — six cells of one line, 32:67, 33:18, 33:109 ×2),
+1 Layer-2 row (31:15 `fuor`), 2 Layer-3 spans (inferno 18:30, purgatorio 33:26) and 2 case-annex
+rows, **−6 / +5** between them. One candidate was censused and dropped, at **2** against a
+structural population of 1026.
+
+**The batch's finding — the two rules are the same finding twice.** Neither is a new reading of
+Italian. Rule DF is rule AI applied where rule AI cannot run, and rule DE is rule C's own
+tie-break told which of two citations is authoritative; both are gates comparing raw positions
+while the checker already held the answer one function away. That is the ordering question in a
+**fifth consecutive form** — after the Purgatorio 1-5 batch (a pass reading a set another pass
+writes), 6-10 (which normalization has already run on the citation a gate compares), 21-25 (one
+rule preempting another), 26-30 (a comment describing an intention its sort key did not
+implement) and the Inferno 31-34 batch (which *edge* a gate reads). It is now the single most
+productive question to ask of this checker.
+
+**Two smaller ones.**
+
+- **A rule's gate can be found by the position it wrongly takes, not by census.** Rule DE
+  unrestricted measured −2/+1, and the +1 (purgatorio 3:30, an apposition) named the gate exactly:
+  the conjunct must carry a `case` marker of its own. The census (98) confirmed the population
+  afterwards; it could not have found the boundary.
+- **A Layer-3 span that is not a phrase is not over-inclusion.** Layer 3 is over-inclusive by
+  design and its wide spans are normally left alone — but rules AI and DF read a span's `head` as
+  an argument's *alternative name*, so a span covering two different nominals makes them
+  equivalent. Rule DF's one wrong acceptance (inferno 18:30, `[la gente modo colto]`) was a span
+  of that kind, and the fix was upstream.
+
+**What the batch left standing (11).** Two genuine disagreements on one tangled line (32:69), two
+plain `missing_arg obl` omissions (32:139), and seven positions where a correction exposed the
+LLM's own misreading rather than the tree's — see [`CORRECTIONS.md`](CORRECTIONS.md).
+
+### Schedule — 7 batches at base 351
+
+Inferno and Purgatorio have both been read end to end and are **not** re-read; their residue is
+reading error, and it is the most direct sample there is of what a `--fix` round leaves behind.
+
+The table is **measured at base 351**, after the DE–DF rules. Every remaining batch is Paradiso.
 
 | batch | soft | | batch | soft |
 |---|---:|---|---|---:|
-| ~~purgatorio 1–5~~ | ~~14~~ → **10** | | paradiso 1–5 | 29 |
-| ~~purgatorio 6–10~~ | ~~35~~ → **19** | | paradiso 6–10 | 21 |
-| ~~purgatorio 11–15~~ | ~~30~~ → **15** | | paradiso 11–15 | 30 |
-| ~~purgatorio 16–20~~ | ~~26~~ → **14** | | paradiso 16–20 | 18 |
-| ~~purgatorio 21–25~~ | ~~33~~ → **24** | | paradiso 21–25 | 24 |
-| ~~purgatorio 26–30~~ | ~~33~~ → **22** | | paradiso 26–30 | 30 |
-| **purgatorio 31–33** | **14** | | paradiso 31–33 | 16 |
+| paradiso 1–5 | 27 | | paradiso 21–25 | 24 |
+| paradiso 6–10 | 21 | | paradiso 26–30 | 30 |
+| paradiso 11–15 | 30 | | paradiso 31–33 | 15 |
+| paradiso 16–20 | 18 | | | |
 
-182 positions in the eight unread batches, plus Inferno's 72 and Purgatorio 1–30's 104, is the
-358.
+165 positions in the seven unread batches, plus Inferno's 72 and Purgatorio's 114, is the 351.
 
 Per canto, get the current numbers with `uv run skel.py <canticle> --check -c <n>` from `skel/`;
 every landed rule shrinks the batches after it. The AZ–BI rules cut every remaining batch by
 roughly a fifth, the BJ–BN rules took a further ~6%, the fourth round another ~17%, the BO–BV
-rules another ~6%, the BW–BZ rules another ~5%, the CA–CJ rules another ~7%, the CK–CO rules another ~5%, the CP–CT rules another ~4%, the CU–CY rules another ~5% and the CZ–DD rules another ~8%, which
+rules another ~6%, the BW–BZ rules another ~5%, the CA–CJ rules another ~7%, the CK–CO rules another ~5%, the CP–CT rules another ~4%, the CU–CY rules another ~5%, the CZ–DD rules another ~8% and the DE–DF rules another ~2%, which
 is why re-measuring before a batch is part of step 1.
 
 ### How to Read a Batch
 
-The procedure below is what produced rules AG through DD. Steps 4–7 are the part that must not be
+The procedure below is what produced rules AG through DF. Steps 4–7 are the part that must not be
 skipped: a rule that is not censused, measured, tested and written up is not a rule.
 
 1. **List the batch.** `uv run skel.py <canticle> --check -c <n>` for each canto, from `skel/`.
@@ -975,11 +1014,12 @@ skipped: a rule that is not censused, measured, tested and written up is not a r
 The fourth round (§12) ran on 2026-08-16 and emptied the queue: the subject branches and
 `missing_tuple_nominal`'s question both answered negative, `_CONV_REPEATED` answered positive.
 The Purgatorio 16-20 read (§17) put **one candidate** back on it — a convention clause for the
-prepositional adjunct of time or place, against `missing_arg obl` at **77 of 388**, the residue's
+prepositional adjunct of time or place, against `missing_arg obl` at **76 of 351**, the residue's
 largest single bucket — and that is still not enough to run a round for: it is one untested
-hypothesis, and the checker rules the remaining nine batches produce are better measured by
-violation diff, one rule at a time, at zero model cost. The Purgatorio 21-25 read (§18) added
-nothing to the queue.
+hypothesis, and the checker rules the remaining seven batches produce are better measured by
+violation diff, one rule at a time, at zero model cost. The Purgatorio 21-25 (§18), 26-30 (§19)
+and 31-33 (§20) reads added nothing to the queue; the last of them added two more instances of the
+bucket itself (purgatorio 32:139 ×2).
 
 So the fifth round should wait until the series finishes *and* has produced new prompt-side
 diagnoses to test. What the reads have already sent to it, or will:

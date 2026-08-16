@@ -1,5 +1,20 @@
 # case — measurement history
 
+## 2 rows from the Layer-5 Purgatorio 31-33 read (2026-08-17)
+
+Both follow Layer-4 corrections made in the same session (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)); neither is a new reading of the annex's own
+question.
+
+- **purgatorio 31:15.2 `quale`** — ablative → **accusative**. With `fuor` retagged as "furono",
+  `al quale intender` is "a intender lo quale": `quale` is the object of the infinitive, and the
+  `a` of the contracted `al` governs `intender`, not it.
+- **purgatorio 33:18.7 `mi`** — accusative → **dative**. "li occhi **mi** percosse" is the dative
+  of possession, "struck the eyes to me"; the accusative reading came from Layer 4 having the
+  clitic as a `det:poss` on `occhi`.
+
+`case --check` stays 0 hard.
+
 ## 2 rows from the Layer-5 Purgatorio 16-20 read (2026-08-16)
 
 Both follow a Layer-4 retag from the read (see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)

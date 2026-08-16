@@ -4222,3 +4222,74 @@ def test_classify_divergence_rule_dd_is_gated_on_the_adverb_pos():
     # An ordinary preposition in a `case` slot names no adjunct of its own.
     violations = _relative_adverb_case_fixture(arg_pos="preposition")
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _distinct_conjunct_preposition_fixture(conj_case="infin"):
+    """"la flagellò dal capo infin le piante" (purgatorio 32:156): `piante` is a `conj` on
+    `capo` carrying its own `case` marker, so the two are separately-marked obliques and the
+    collapse must not let the conjunct's preposition displace the head's."""
+    derived = {1: [skel.SkelRow(1, 2, "flagellò", "obl:da", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 2, "flagellò", "obl:da", 1, 4),
+                 skel.SkelRow(1, 2, "flagellò", "obl:a", 1, 7)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="flagellò", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 3): dep.DepRow(line=1, token=3, word="dal", deprel="case",
+                           head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="capo", deprel="obl",
+                           head_line=1, head_token=2),
+        (1, 5): dep.DepRow(line=1, token=5, word=conj_case, deprel="case",
+                           head_line=1, head_token=7),
+        (1, 7): dep.DepRow(line=1, token=7, word="piante", deprel="conj",
+                           head_line=1, head_token=4),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos)
+
+
+def test_classify_divergence_rule_de_keeps_the_coordination_heads_own_role():
+    assert _distinct_conjunct_preposition_fixture() == []
+
+
+def test_classify_divergence_rule_de_is_gated_on_a_distinct_marker():
+    # Sharing the head's preposition makes the two one phrase again, and rank decides as before.
+    violations = _distinct_conjunct_preposition_fixture(conj_case="dal")
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _control_subject_np_head_fixture(span_end=3):
+    """"l'altre tre si fero avanti, danzando" (purgatorio 31:132): Layer 4 makes `altre` the
+    subject of `fero`, Layer 3 heads `[l'altre tre]` on `tre`, and the LLM cites Layer 3's head
+    for the gerund's inherited subject."""
+    from dante_corpus.np import NPSpan
+    derived = {1: [skel.SkelRow(1, 4, "fero", "subj", 1, 2),
+                   skel.SkelRow(1, 5, "danzando", "obl:a", 1, 7)]}
+    given = {1: [skel.SkelRow(1, 4, "fero", "subj", 1, 2),
+                 skel.SkelRow(1, 5, "danzando", "subj", 1, 3),
+                 skel.SkelRow(1, 5, "danzando", "obl:a", 1, 7)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="altre", deprel="nsubj",
+                           head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="tre", deprel="nummod",
+                           head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="fero", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 5): dep.DepRow(line=1, token=5, word="danzando", deprel="advcl",
+                           head_line=1, head_token=4),
+        (1, 6): dep.DepRow(line=1, token=6, word="al", deprel="case",
+                           head_line=1, head_token=7),
+        (1, 7): dep.DepRow(line=1, token=7, word="caribo", deprel="obl",
+                           head_line=1, head_token=5),
+    }
+    np_rows = {1: [NPSpan(line=1, start=2, end=span_end, head=span_end,
+                          text="altre tre")]}
+    return skel._classify_divergence(given, derived, dep_index_by_pos, np_rows=np_rows)
+
+
+def test_classify_divergence_rule_df_accepts_the_np_head_as_the_inherited_subject():
+    assert _control_subject_np_head_fixture() == []
+
+
+def test_classify_divergence_rule_df_requires_one_noun_phrase():
+    # Rule AI's own gate: outside the candidate's span the citation is a different nominal.
+    violations = _control_subject_np_head_fixture(span_end=2)
+    assert any(v.detail.startswith("extra_arg") for v in violations)

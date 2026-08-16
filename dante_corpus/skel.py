@@ -813,6 +813,7 @@ def _accept_control_subjects(
     derived_by_pred: dict[tuple[int, int], list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow],
     morph_rows: dict[int, list[MorphRow]] | None,
+    np_spans_by_line: "dict[int, list[NPSpan]] | None" = None,
 ) -> None:
     """Rule V's acceptance, applied to every `subj` citation `g` holds for `pos`.
 
@@ -833,8 +834,21 @@ def _accept_control_subjects(
         # runs after this and would otherwise rewrite an unaccepted conjunct/`flat` member
         # onto the very position rule V does accept ("Bellincion **Berti** vid' io andar",
         # paradiso 15:112, where the matrix object is cited by the name's second word).
+        # Rule DF: …and through rule AI's normalization too, for the same reason. Rule V's
+        # candidates are Layer 4's attachment points; the LLM is told to cite a noun phrase by
+        # its Layer-3 head, and the two do not always land on the same token of one phrase —
+        # "l'altre tre si fero avanti, **danzando**" (purgatorio 31:132), where Layer 4 makes
+        # `altre` the subject of `fero` and Layer 3 heads `[l'altre tre]` on `tre`. Rule AI
+        # already reads that pair as one argument named twice, but it runs downstream of this
+        # and only pairs citations of a role the derivation *has* — which for a gerund's
+        # inherited subject is exactly the role it does not. The ordering finding again, in the
+        # form the Purgatorio 6-10 batch named: ask which normalization has already run on the
+        # citation a gate compares.
         if (candidates is None or g_subj in candidates
-                or _coordination_head(g_subj, dep_index_by_pos) in candidates):
+                or _coordination_head(g_subj, dep_index_by_pos) in candidates
+                or (np_spans_by_line is not None
+                    and any(_np_head_equivalent(g_subj, c, np_spans_by_line)
+                            for c in candidates))):
             g.pop(g_subj, None)
 
 
@@ -845,6 +859,7 @@ def _apply_subj_authority(
     given_by_pred: "dict[tuple[int, int], list[SkelRow]] | None" = None,
     morph_rows: dict[int, list[MorphRow]] | None = None,
     children_by_pos: "dict[tuple[int, int], list[DepRow]] | None" = None,
+    np_spans_by_line: "dict[int, list[NPSpan]] | None" = None,
 ) -> None:
     """Mutate `g`/`d` in place: drop the subj arg where PLAN.md's authority model makes the slot
     LLM-authoritative (validated against a candidate set) rather than derive-authoritative (exact
@@ -879,7 +894,8 @@ def _apply_subj_authority(
         # rows on the one infinitive), and taking only the first one out left the rest to be
         # collapsed by rule C back onto the very citation just accepted, and reported there. A
         # slot rule V accepts it accepts for all of the citations that fill it.
-        _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows)
+        _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows,
+                                 np_spans_by_line)
     elif (morph_rows is not None and children_by_pos is not None
           and _inherited_subject(pos, dep_index_by_pos)
           and _subj_arg(g) != d_subj
@@ -913,7 +929,8 @@ def _apply_subj_authority(
             # e tutti li sgomenta" (purgatorio 14:60): AG drops the 1sg "Io" that step 3
             # inherited onto the 3sg `sgomenta`, and the LLM's own reading of the subject was
             # then reported as `extra_arg` against a slot the derivation had just disclaimed.
-            _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows)
+            _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows,
+                                 np_spans_by_line)
     elif given_by_pred is not None and _inherited_subject(pos, dep_index_by_pos):
         # Rule AC: an inherited subject is not an independent assertion about *this* predicate.
         # `derive_unit`'s step 3 copies the coordination head's subject onto a conjunct that has
@@ -1042,18 +1059,62 @@ def _collapse_coordination(
     on the derived side instead was measured net-zero (PLAN.md Rule A): the LLM's own enumeration
     is inconsistent, so the divergence is a notation mismatch and normalization is the
     instrument. Roles are preserved, so a genuine role disagreement still surfaces.
+
+    **Rule DE** decides *whose* role survives when the head is cited too. Coordination in this
+    corpus is not always of like with like: a conjunct carries its own `case` marker as readily as
+    it shares the head's, and 98 `conj` nominals corpus-wide have one whose lemma differs — "la
+    flagellò **dal capo** infin **le piante**" (purgatorio 32:156), where Layer 4 hangs `piante`
+    off `capo` as a `conj` with `infin` as its own `case`. The LLM names both, correctly, with
+    two different prepositions; the collapse then had to pick one by role rank and picked the
+    conjunct's, so the position the derivation reports with the *head's* preposition came back a
+    `role_mismatch`. The head's own citation is the one that names the head, and a conjunct's role
+    is only riding along on it — so a collapsed role never displaces an uncollapsed one. Rank
+    still decides between two collapsed conjuncts, which is the case rule C was written for.
+
+    The gate is the conjunct's **own** `case` marker, not the collapse alone: without it the rule
+    also fires on an apposition whose head is the emptier of the two words ("che **l'uno** a
+    l'altro raggio non ingombra", purgatorio 3:30, where the LLM's role for the `appos` is the
+    right one), and rank is the better answer there.
     """
     out: dict[tuple[int, int], str] = {}
+    from_head: dict[tuple[int, int], bool] = {}
     for arg, role in by_arg.items():
         key = arg
         if arg != (0, 0):
             head = _coordination_head(arg, dep_index_by_pos, morph_pos_by_position)
             if head != pos:  # never collapse an argument onto its own predicate
                 key = head
-        prev = out.get(key)
-        if prev is None or (_role_rank(role), role) < (_role_rank(prev), prev):
-            out[key] = role
+        uncollapsed = key == arg
+        if key not in out:
+            out[key], from_head[key] = role, uncollapsed
+            continue
+        separately_marked = _distinctly_marked_conjunct(arg, key, dep_index_by_pos)
+        if uncollapsed and not from_head[key] and separately_marked:
+            out[key], from_head[key] = role, True  # rule DE: the head names its own role
+        elif (uncollapsed == from_head[key] or not separately_marked) and (
+                (_role_rank(role), role) < (_role_rank(out[key]), out[key])):
+            out[key] = role  # rule C's rank tie-break, between citations of one provenance
     return out
+
+
+def _distinctly_marked_conjunct(
+    arg: tuple[int, int], head: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+) -> bool:
+    """Rule DE's gate: `arg` collapses onto `head` but carries a `case` marker of its own whose
+    word differs from the head's, so the two are separately-marked obliques rather than one
+    phrase named twice. Censused at 98 `conj` nominals corpus-wide."""
+    if arg == head or arg == (0, 0):
+        return False
+
+    def marker(p: tuple[int, int]) -> str | None:
+        for r in dep_index_by_pos.values():
+            if r.deprel == "case" and (r.head_line, r.head_token) == p:
+                return r.word.lower().rstrip("'")
+        return None
+
+    own = marker(arg)
+    return own is not None and own != marker(head)
 
 
 def _conj_shared_argument(
@@ -3069,7 +3130,7 @@ def _classify_divergence(
         d = by_arg(derived_by_pred.get(pos, []))
         if dep_index_by_pos is not None:
             _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos, given_by_pred,
-                                  morph_rows, children_by_pos)
+                                  morph_rows, children_by_pos, np_rows)
             derived_args = set(d)
             g = _merge_auxiliary_citations(g, pos, dep_index_by_pos)
             g = {
