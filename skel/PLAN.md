@@ -562,6 +562,15 @@ diagnoses to test. What the reads have already sent to it, or will:
 When the series finishes, re-measure the base, then run `make -C skel fix` 3-way parallel (the
 user's job) and measure per *How to Measure a `--fix` Round* below.
 
+**Two instrumentation changes were proposed after round 4 and declined (2026-08-16) — do not
+re-propose them.** `make -C skel fix` does not pass `--log`, so `_log_rejection` writes nothing and
+a round's rejected candidates are not kept: **that omission is deliberate**, not an oversight.
+Nor is `_print_fix_summary`'s per-class `calls / removed / per call` table persisted or summed
+across the three parallel processes; it is read from the terminal, and a round's numbers are
+reconstructed afterwards by the worktree diff in *How to Measure a `--fix` Round*, which is what
+§12's table was built from. So: a round is measured by **violation diff, not by driver telemetry**,
+and per-class *call* counts are not available after the fact by design.
+
 ---
 
 ## Active & Open Routes
@@ -642,8 +651,21 @@ open a new route.
   at 21.4 is the subject of `incontra`).
 - **`role_mismatch` `xcomp` vs `obl` (7) and `obj` ↔ `subj` (28 across both directions)**: the two
   dominant mismatch shapes. The `obj`/`subj` swap is a symmetric pair, which suggests one
-  systematic cause rather than scattered slips. Inferno 9:41 and 9:72, both fixed in `dep/` this
-  session, were instances — worth checking whether the rest are too.
+  systematic cause rather than scattered slips. Inferno 9:41 and 9:72, both fixed in `dep/` in the
+  Inferno 7–10 session, were instances — worth checking whether the rest are too.
+  - **`role_mismatch` is the only large class with no branch of its own, and the only
+    argument-level class whose prompt omits `_CONV_SUBJECT`** (noted 2026-08-16 from round 4's
+    shape). Its system block is `_ASK_HEADER` + `_CONV_ROLES` + `_CONV_RELPRON`, while **37 of its
+    73 positions involve `subj` on one side or the other** (28 of them the symmetric
+    `obj` ↔ `subj` pair) — and `_CONV_SUBJECT` states exactly the two rules that decide that pair
+    (a postverbal subject is still the subject; an unstressed proclitic is never one). The gap is
+    structural and cheap to close.
+    **Do not close it yet.** Round 4 measured `_CONV_SUBJECT` on the buckets it was written for at
+    the round average (−12.7% / −10.0%), so the same prose is unlikely to move a third class, and
+    adding a prompt that the last round's evidence says will not work is the move that round
+    argued against. **Read the 28 symmetric positions first**; their symmetry is the reason to
+    expect a single cause, and if the read finds one, it is as likely to be a checker or `derive_unit`
+    rule as a prompt branch.
 - **An `advcl` the LLM reads as a complement** (inferno 27:101 "fa **sì come** … getti", 29:63
   "**secondo che** i poeti hanno per fermo", 30:59 "non so io **perché**"): three shapes in which
   the LLM promotes an adverbial clause, a parenthetical, or a bare interrogative to the matrix
