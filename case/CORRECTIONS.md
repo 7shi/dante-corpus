@@ -1,5 +1,13 @@
 # case — measurement history
 
+## 1 row from the Layer-5 Purgatorio 11-15 read (2026-08-16)
+
+purgatorio 14:69, `che` — "da **qual che** parte il periglio l'assanni". The read established that
+`qual che` is one fixed indefinite determiner ("from whatever side"), not a determiner plus a
+relative pronoun, and Layer 2 retagged `che` from pronoun to conjunction
+([`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)). That takes the token out of the annex's
+scope, so its `nominative` row was dropped. `case --check` stays **0 hard**.
+
 ## 1 row from the Layer-5 Purgatorio 1-5 read (2026-08-16)
 
 purgatorio 5:135, `colui` — "**salsi colui** che 'nnanellata pria / disposando m'avea". The

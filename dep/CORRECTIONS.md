@@ -1,5 +1,55 @@
 # dep — Layer 4 correction history
 
+## 11 rows from the Layer-5 Purgatorio 11-15 read, and the coordinated-subject refinement (2026-08-16)
+
+The per-position read of Purgatorio 11-15's 30 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 11 Layer-4 rows wrong, ten of them in
+Purgatorio 14. Applied with a gated script that asserts the word at each `(line, token)` before
+rewriting; `morph`/`np`/`dep`/`case --check` all re-run at 0 and `pytest` at 384.
+
+| position | was | now | why |
+|---|---|---|---|
+| purgatorio 11:19.2 `virtù` | `vocative` <- 20.2 | `obj` <- 20.2 | "Nostra virtù … **non spermentar** con l'antico avversaro" — the Paternoster asks that our strength not be *put to the test*; the addressee is God, unnamed in the line |
+| purgatorio 12:26.1 `più` | `advmod` <- 27.2 | `advmod` <- 25.5 | the comparison belongs to `nobil creato`, not to the `scender` three words later |
+| purgatorio 12:26.4 `creatura` | `obj` <- 27.2 | `obl` <- 25.5 | with `più` on the infinitive, the second term of the comparison had become its object |
+| purgatorio 12:136.2 `che` | `obl` <- 136.7 | `obl` <- 136.3 | "**a che guardando**, il mio duca sorrise": the gerund governs it, not the matrix verb |
+| purgatorio 14:11.2 `corpo` | `obl` <- 11.8 | `obl` <- 10.8 | "O anima che **fitta** / **nel corpo** ancora … ten vai" — the participle takes the oblique |
+| purgatorio 14:15.3 `cosa` | `obj` <- 15.2 | `nsubj` <- 15.2 | "quanto vuol **cosa** che non fu più mai": the thing is what requires |
+| purgatorio 14:69.1-.6 (5 rows) | see below | | the `parte` re-parse |
+| purgatorio 14:89.7 `nullo` | `det` <- 90.1 | `nsubj` <- 90.1 | a pronoun is not a determiner of a participle; `nullo` is who has not become heir |
+| purgatorio 14:90.1-.5 (4 rows) | see below | | the `fatto s'è reda` re-parse |
+| purgatorio 14:131.5 `aere` | `nsubj` <- 131.6 | `obj` <- 131.6 | "quando **l'aere fende**": the lightning cleaves the air |
+| purgatorio 29:37.5 `fami` | `nsubj` <- 38.7 | `obj` <- 38.7 | "se **fami**, / freddi o vigilie mai per voi **soffersi**" — "if I ever suffered hunger for you" |
+
+**purgatorio 14:69**, "da qual che parte il periglio l'assanni". Layer 2 read `parte` as the verb
+`partire` (corrected in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)), which made "from
+whatever side" a clause: `da` marked `qual`, `qual` was the clause's oblique, `che` its `mark`,
+`parte` an `advcl`, and `il periglio` its subject — leaving `assanni` with no subject of its own
+and inheriting one across `conj`. Rewritten as one nominal: `da` `case`-> `parte`, `qual` `det`->
+`parte` with `che` `fixed`-> `qual`, `parte` `obl`-> `assanni`, and `il periglio` `nsubj`->
+`assanni`. Three Layer-5 violations cleared.
+
+**purgatorio 14:90**, "ove nullo / fatto s'è reda poi del suo valore" — "where no one has since
+made himself heir to his worth". Layer 4 headed the clause on `reda` (which Layer 2 read as a past
+participle; it is the noun *erede*) and made the participle `fatto` its subject. Rewritten with
+`fatto` as the clause head (`acl:relcl`-> `casa`), `s'`/`è`/`poi` moved onto it, `reda` its
+`xcomp`, and `nullo` its subject.
+
+**The coordinated-subject person test.** `subject_agreement` returned "undecidable" for any
+subject carrying a `conj` child, which suppressed the *person* test along with the number one. A
+coordination has no fixed number — "'l duca e io" is two singulars governing a plural verb —
+but it does have a person, and Italian lets the finite verb agree with **one member** of it, in
+either direction. The test now compares the head's person against **every conjunct** and reports
+only when none matches.
+
+The 2026-08-15 Inferno 21-25 measurement of the *number*-only restriction (12 new soft violations,
+reverted, and a standing route since) was therefore half right: the same 12 positions under the
+any-conjunct rule leave **6**, and all 6 are real upstream errors, corrected in the same session —
+five Layer-2 rows (inferno 21:121, purgatorio 5:83, 10:63, paradiso 14:125 ×2, 31:96, see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)) and one Layer-4 row (purgatorio 29:37,
+above). `dep --check` is back to **0 hard / 0 soft** with the refinement landed. Layer 5 moved
+**−3 / +1**.
+
 ## 1 row from the Layer-5 Purgatorio 6-10 read (2026-08-16)
 
 The per-position read of Purgatorio 6-10's 35 Layer-5 soft violations (see

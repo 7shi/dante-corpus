@@ -3653,3 +3653,177 @@ def test_classify_divergence_rule_cj_leaves_an_uncollected_role_flagged():
     # `ccomp` is not an argument a control chain can take its subject from.
     violations = _oblique_controller_fixture(controller_role="ccomp")
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _clause_marker_fixture(marker_deprel="mark"):
+    """"degno / ben è **che** 'l nome di tal valle **pèra**" (purgatorio 14:30): the LLM names
+    the subject clause by the `che` that opens it, the derivation by its verb."""
+    derived = {1: [skel.SkelRow(1, 2, "è", "subj", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 2, "è", "subj", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="è", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 3): dep.DepRow(line=1, token=3, word="che", deprel=marker_deprel,
+                           head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="pèra", deprel="csubj",
+                           head_line=1, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_ck_accepts_a_clause_named_by_its_marker():
+    assert _clause_marker_fixture() == []
+
+
+def test_classify_divergence_rule_ck_leaves_a_non_marker_citation_flagged():
+    # A token that is not the clause's `mark` names something else, whatever it sits next to.
+    violations = _clause_marker_fixture(marker_deprel="advmod")
+    assert {v.detail.split(":")[0] for v in violations} == {"extra_arg", "missing_arg"}
+
+
+def _fused_clitic_slot_fixture(case_value="reflexive+ablative"):
+    """"in Siena **sen** pispiglia" (purgatorio 11:111): `si` + `ne` in one token, whose two
+    annex slots back the two readings separately."""
+    derived = {1: [skel.SkelRow(1, 2, "pispiglia", "obj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "pispiglia", "obl:di", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="sen", deprel="obj",
+                           head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="pispiglia", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "pronoun+pronoun"},
+                                     {(1, 1): case_value})
+
+
+def test_classify_divergence_rule_cm_accepts_a_fused_clitic_filling_two_slots():
+    assert _fused_clitic_slot_fixture() == []
+
+
+def test_classify_divergence_rule_cm_leaves_a_single_slot_mismatch_flagged():
+    # One slot backing both sides decides nothing, so the roles stay in dispute.
+    violations = _fused_clitic_slot_fixture(case_value="ablative")
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _gapped_remnant_slot_fixture(subject_arg=(0, 0)):
+    """"molti di vita e **sé** di pregio priva" (purgatorio 14:63): the ∅ subject slot must not
+    take the first remnant ahead of the overt object."""
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="molti", deprel="obj", head_line=1, head_token=8),
+        dep.DepRow(line=1, token=2, word="di", deprel="case", head_line=1, head_token=3),
+        dep.DepRow(line=1, token=3, word="vita", deprel="obl", head_line=1, head_token=8),
+        dep.DepRow(line=1, token=4, word="e", deprel="cc", head_line=1, head_token=5),
+        dep.DepRow(line=1, token=5, word="sé", deprel="conj", head_line=1, head_token=8),
+        dep.DepRow(line=1, token=6, word="di", deprel="case", head_line=1, head_token=7),
+        dep.DepRow(line=1, token=7, word="pregio", deprel="orphan", head_line=1, head_token=5),
+        dep.DepRow(line=1, token=8, word="priva", deprel="root", head_line=0, head_token=0),
+    ]}
+    if subject_arg != (0, 0):
+        dep_rows[1].append(dep.DepRow(line=1, token=9, word="ella", deprel="nsubj",
+                                      head_line=1, head_token=8))
+    morph_rows = {1: [
+        morph.MorphRow(word="molti", pos="pronoun"),
+        morph.MorphRow(word="di", pos="preposition"),
+        morph.MorphRow(word="vita", pos="noun"),
+        morph.MorphRow(word="e", pos="conjunction"),
+        morph.MorphRow(word="sé", pos="pronoun"),
+        morph.MorphRow(word="di", pos="preposition"),
+        morph.MorphRow(word="pregio", pos="noun"),
+        morph.MorphRow(word="priva", pos="verb", person="3"),
+        morph.MorphRow(word="ella", pos="pronoun", person="3"),
+    ]}
+    derived = skel.derive_unit([1], dep_rows, morph_rows)
+    return {(r.role, r.arg_line, r.arg_token) for r in derived[1] if r.line == 1 and r.token == 8}
+
+
+def test_derive_unit_rule_cn_gives_a_gapped_remnant_the_overt_slot_first():
+    assert ("obj", 1, 5) in _gapped_remnant_slot_fixture()
+    assert ("subj", 1, 5) not in _gapped_remnant_slot_fixture()
+
+
+def test_derive_unit_rule_cn_still_offers_an_overt_subject_slot():
+    # With a real subject in the line the slot is an ordinary one and keeps its place in the
+    # order the arguments stand in.
+    slots = _gapped_remnant_slot_fixture(subject_arg=(1, 9))
+    assert ("subj", 1, 5) in slots
+
+
+def _advmod_secondary_predicate_fixture(deprel="advmod"):
+    """"Io non son … esser contento **più digiuno**" (purgatorio 15:58): a second predicative
+    adjective Layer 4 hangs on the complement rather than on the copula."""
+    derived = {1: [skel.SkelRow(1, 1, "esser", "xcomp", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "esser", "xcomp", 1, 2),
+                 skel.SkelRow(1, 1, "esser", "attr", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="esser", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="contento", deprel="xcomp",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="digiuno", deprel=deprel,
+                           head_line=1, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "adjective", (1, 3): "adjective"})
+
+
+def test_classify_divergence_rule_co_accepts_an_advmod_secondary_predicate():
+    assert _advmod_secondary_predicate_fixture() == []
+
+
+def test_classify_divergence_rule_co_leaves_an_unrelated_deprel_flagged():
+    # `nmod` is a phrase-internal relation, not a predication over the argument.
+    violations = _advmod_secondary_predicate_fixture(deprel="nmod")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _ag_reachable_fixture(cited_subj=(2, 7)):
+    """"li occhi … de la mia donna, e l'animo con essi, / e da ogne altro intento s'era tolto"
+    (paradiso 21:1-3): `tolto` is a `conj` whose inherited subject rule AG drops on person, and
+    the subject the LLM resolves is the coordination head's *other* derived subject."""
+    derived = {
+        1: [skel.SkelRow(1, 6, "rifissi", "subj", 1, 4),
+            skel.SkelRow(1, 6, "rifissi", "subj", 2, 7)],
+        3: [skel.SkelRow(3, 8, "tolto", "subj", 1, 4)],
+    }
+    given = {
+        1: [skel.SkelRow(1, 6, "rifissi", "subj", 1, 4),
+            skel.SkelRow(1, 6, "rifissi", "subj", 2, 7)],
+        3: [skel.SkelRow(3, 8, "tolto", "subj", *cited_subj)],
+    }
+    dep_index_by_pos = {
+        (1, 4): dep.DepRow(line=1, token=4, word="occhi", deprel="nsubj",
+                           head_line=1, head_token=6),
+        (1, 6): dep.DepRow(line=1, token=6, word="rifissi", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 7): dep.DepRow(line=2, token=7, word="animo", deprel="nsubj",
+                           head_line=1, head_token=6),
+        (3, 8): dep.DepRow(line=3, token=8, word="tolto", deprel="conj",
+                           head_line=1, head_token=6),
+    }
+    morph_rows = {
+        1: [morph.MorphRow(word="li"), morph.MorphRow(word="occhi", pos="noun", number="pl."),
+            morph.MorphRow(word="de"), morph.MorphRow(word="occhi", pos="noun", number="pl."),
+            morph.MorphRow(word="mia"),
+            morph.MorphRow(word="rifissi", pos="verb", number="pl.", person="1")],
+        2: [morph.MorphRow(word=w) for w in "de la mia donna e l".split()]
+            + [morph.MorphRow(word="animo", pos="noun", number="sg.")],
+        3: [morph.MorphRow(word=w) for w in "e da ogne altro intento s era".split()]
+            + [morph.MorphRow(word="tolto", pos="verb", number="sg.", person="3")],
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, None, None, None,
+                                     morph_rows)
+
+
+def test_classify_divergence_rule_cl_accepts_a_reachable_subject_after_ag_drops_one():
+    # Rule AG drops the 1pl `occhi` off the 3sg `tolto`; the derivation is then silent about the
+    # slot, so rule V's candidate test decides it, exactly as it does for a non-finite predicate.
+    assert _ag_reachable_fixture() == []
+
+
+def test_classify_divergence_rule_cl_keeps_an_unreachable_subject_flagged():
+    # A citation the control walk cannot reach at all — a token that is no argument of the
+    # coordination head — is the LLM's own claim about the slot, and stays reported.
+    violations = _ag_reachable_fixture(cited_subj=(2, 4))
+    assert any(v.detail.startswith("extra_arg") and v.arg == (2, 4) for v in violations)

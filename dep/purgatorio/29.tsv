@@ -247,7 +247,7 @@ line	token	word	deprel	head_line	head_token
 37	2	sacrosante	amod	37	3
 37	3	Vergini	vocative	39	3
 37	4	se	mark	38	7
-37	5	fami	nsubj	38	7
+37	5	fami	obj	38	7
 38	1	freddi	conj	37	5
 38	2	o	cc	38	3
 38	3	vigilie	conj	37	5

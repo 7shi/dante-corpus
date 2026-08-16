@@ -171,10 +171,10 @@ line	token	word	deprel	head_line	head_token
 25	4	fu	aux	25	6
 25	5	nobil	advmod	25	6
 25	6	creato	acl:relcl	25	2
-26	1	più	advmod	27	2
+26	1	più	advmod	25	5
 26	2	ch'	mark	26	4
 26	3	altra	amod	26	4
-26	4	creatura	obj	27	2
+26	4	creatura	obl	25	5
 26	5	giù	advmod	27	2
 26	6	dal	case	26	7
 26	7	cielo	obl	27	2
@@ -935,7 +935,7 @@ line	token	word	deprel	head_line	head_token
 135	8	le	det	135	9
 135	9	tempie	obl	134	7
 136	1	a	case	136	2
-136	2	che	obl	136	7
+136	2	che	obl	136	3
 136	3	guardando	advcl	136	7
 136	4	il	det	136	6
 136	5	mio	amod	136	6

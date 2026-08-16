@@ -183,7 +183,7 @@ line	start	end	head	text
 68	4	4	4	viso
 68	6	8	6	colui ch'ascolta
 68	6	6	6	colui
-69	2	2	2	qual
+69	2	4	4	qual che parte
 69	5	6	6	il periglio
 69	6	6	6	periglio
 70	3	3	3	io
@@ -246,6 +246,7 @@ line	start	end	head	text
 89	2	3	3	la casa
 89	5	5	5	Calboli
 89	7	7	7	nullo
+90	4	4	4	reda
 90	7	8	8	suo valore
 91	4	6	6	lo suo sangue
 92	2	3	3	'l Po

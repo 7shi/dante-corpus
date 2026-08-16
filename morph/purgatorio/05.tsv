@@ -607,7 +607,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 82	'l	il	article	m.	sg.				elision
 82	braco	braccio	noun	m.	sg.				archaic
 83	m'	mi	pronoun		sg.	1			elision
-83	impigliar	impigliare	verb		sg.	1	remote past	indicative	apocope
+83	impigliar	impigliare	verb		pl.	3	remote past	indicative	apocope
 83	sì	sì	adverb						
 83	ch'	che	conjunction						elision
 83	i'	io	pronoun		sg.	1			elision

@@ -493,10 +493,25 @@ def derive_unit(
              if c.deprel == "conj" and (c.line, c.token) in gapped_conjuncts),
             key=lambda c: (c.line, c.token),
         ):
+            # Rule CN: a slot the head clause fills with ∅ goes to the **back** of the queue.
+            # The remnants of a gapped clause pair off against the head clause's arguments by
+            # the order they stand in the line, and a pro-drop subject stands nowhere — but
+            # ∅ = (0, 0) sorts before every real position, so that empty slot was taking the
+            # *first* remnant of every gapped clause under a pro-drop predicate. "molti di vita
+            # e **sé** di pregio priva" (purgatorio 14:63) was derived with `sé` as the subject
+            # of `priva`, against two overt objects in the line and the `case` annex's
+            # accusative. A ∅ slot is still offered — "tu … intende de la voglia assoluta, e
+            # **io** de l'altra" (paradiso 4:113) is a genuine contrastive subject remnant under
+            # a pro-drop head — but only once the overt slots are spoken for.
             slots: list[str] = []
+            null_slots: list[str] = []
             for row_ in sorted(pred_args, key=_row_sort_key):
-                if row_.role and row_.role not in slots:
-                    slots.append(row_.role)
+                if not row_.role:
+                    continue
+                bucket = (null_slots if (row_.arg_line, row_.arg_token) == (0, 0) else slots)
+                if row_.role not in slots and row_.role not in null_slots:
+                    bucket.append(row_.role)
+            slots += null_slots
             remnants = [conjunct] + sorted(
                 (c for c in children.get((conjunct.line, conjunct.token), ())
                  if c.deprel == "orphan"),
@@ -757,6 +772,36 @@ def _finite_head_of(
     return pos
 
 
+def _accept_control_subjects(
+    g: dict[tuple[int, int], str], pos: tuple[int, int],
+    derived_by_pred: dict[tuple[int, int], list[SkelRow]],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    morph_rows: dict[int, list[MorphRow]] | None,
+) -> None:
+    """Rule V's acceptance, applied to every `subj` citation `g` holds for `pos`.
+
+    Used where the derivation asserts **no** subject for a predicate: either because it is
+    non-finite (rule V's own case) or because rule AG has just dropped an inherited subject that
+    contradicts it (rule CL). Each citation is validated against the control/raising candidate
+    set rather than accepted outright, and rule BB's plural: a slot rule V accepts it accepts for
+    every citation that fills it.
+    """
+    g_subjs = [a for a, role in g.items() if role == "subj"]
+    if not g_subjs:
+        return
+    reachable, unresolved = _control_subject_candidates(pos, derived_by_pred,
+                                                        dep_index_by_pos, morph_rows)
+    candidates = None if unresolved else {(0, 0)} | reachable
+    for g_subj in g_subjs:
+        # …and the citation is tested through rule C's normalization too, since the collapse
+        # runs after this and would otherwise rewrite an unaccepted conjunct/`flat` member
+        # onto the very position rule V does accept ("Bellincion **Berti** vid' io andar",
+        # paradiso 15:112, where the matrix object is cited by the name's second word).
+        if (candidates is None or g_subj in candidates
+                or _coordination_head(g_subj, dep_index_by_pos) in candidates):
+            g.pop(g_subj, None)
+
+
 def _apply_subj_authority(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
@@ -786,20 +831,7 @@ def _apply_subj_authority(
         # rows on the one infinitive), and taking only the first one out left the rest to be
         # collapsed by rule C back onto the very citation just accepted, and reported there. A
         # slot rule V accepts it accepts for all of the citations that fill it.
-        g_subjs = [a for a, role in g.items() if role == "subj"]
-        if not g_subjs:
-            return
-        reachable, unresolved = _control_subject_candidates(pos, derived_by_pred,
-                                                             dep_index_by_pos, morph_rows)
-        candidates = None if unresolved else {(0, 0)} | reachable
-        for g_subj in g_subjs:
-            # …and the citation is tested through rule C's normalization too, since the collapse
-            # runs after this and would otherwise rewrite an unaccepted conjunct/`flat` member
-            # onto the very position rule V does accept ("Bellincion **Berti** vid' io andar",
-            # paradiso 15:112, where the matrix object is cited by the name's second word).
-            if (candidates is None or g_subj in candidates
-                    or _coordination_head(g_subj, dep_index_by_pos) in candidates):
-                g.pop(g_subj, None)
+        _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows)
     elif (morph_rows is not None and children_by_pos is not None
           and _inherited_subject(pos, dep_index_by_pos)
           and _subj_arg(g) != d_subj
@@ -825,6 +857,15 @@ def _apply_subj_authority(
         # claim about a slot the derivation no longer fills, and stays flagged.
         if _subj_arg(g) == (0, 0):
             g.pop((0, 0), None)
+        else:
+            # Rule CL, AG's third leg. Dropping the inherited subject leaves the derivation in
+            # exactly the state branch 2 describes — asserting no subject at all — so the slot
+            # is LLM-authoritative on the same terms, validated against the same candidate set
+            # rather than accepted outright. "Io veggio tuo nepote che diventa / cacciator …
+            # e tutti li sgomenta" (purgatorio 14:60): AG drops the 1sg "Io" that step 3
+            # inherited onto the 3sg `sgomenta`, and the LLM's own reading of the subject was
+            # then reported as `extra_arg` against a slot the derivation had just disclaimed.
+            _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows)
     elif given_by_pred is not None and _inherited_subject(pos, dep_index_by_pos):
         # Rule AC: an inherited subject is not an independent assertion about *this* predicate.
         # `derive_unit`'s step 3 copies the coordination head's subject onto a conjunct that has
@@ -1906,6 +1947,62 @@ def _conjunction_oblique(
     return "conjunction" in (morph_pos_by_position or {}).get(arg, "").lower()
 
 
+def _clause_named_by_marker(
+    pos: tuple[int, int], clause: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    cited: dict[tuple[int, int], str],
+) -> bool:
+    """Rule CK: the LLM names a subordinate clause by the complementizer that opens it.
+
+    "degno / ben è **che** 'l nome di tal valle **pèra**" (purgatorio 14:30), "**che** tu segui
+    tuo corso" (18:34), "**che** più andasse al cielo" (paradiso 14:18). The clause fills one of
+    the predicate's slots; `derive_unit`, reading the tree, cites its **head** (the verb Layer 4
+    hangs on `pos`), and the LLM cites the `che` that introduces it. Both name the same
+    constituent in the same slot, so this is a citation convention, exactly like rule AE's free
+    relative cited from its two ends — and it is written as one gate read from both sides, the
+    shape rules CA/CC established: without the acceptance leg the marker is an `extra_arg` and
+    without the mirror the clause is a `missing_arg`, for the one disagreement.
+
+    Two gates keep it narrow. The marker must hang **on that very clause** and the clause on
+    this very predicate, so a `mark` belonging to some other clause is not swept in (rule BW
+    covers the different shape where the marker hangs on the predicate itself and fills a slot
+    of its own). And the roles must match: 15 of the 18 positions censused corpus-wide pair the
+    LLM's `subj` against a derived `ccomp` — the impersonal subject-clause question, a second
+    claim about the slot, and already accepted elsewhere where it is accepted at all.
+    """
+    if dep_index_by_pos is None or clause == (0, 0):
+        return False
+    clause_row = dep_index_by_pos.get(clause)
+    if clause_row is None or (clause_row.head_line, clause_row.head_token) != pos:
+        return False
+    for other, other_role in cited.items():
+        if other_role != role or other == clause:
+            continue
+        marker = dep_index_by_pos.get(other)
+        if marker is None or marker.deprel != "mark":
+            continue
+        if (marker.head_line, marker.head_token) == clause:
+            return True
+    return False
+
+
+def _marker_of_derived_clause(
+    pos: tuple[int, int], arg: tuple[int, int], grole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    derived: dict[tuple[int, int], str],
+) -> bool:
+    """Rule CK, read from the marker's end: the cited token is the `mark` of a clause the
+    derivation gives this predicate in the same role. See `_clause_named_by_marker`."""
+    if dep_index_by_pos is None or arg == (0, 0):
+        return False
+    marker = dep_index_by_pos.get(arg)
+    if marker is None or marker.deprel != "mark":
+        return False
+    clause = (marker.head_line, marker.head_token)
+    return (clause != arg and derived.get(clause) == grole
+            and _clause_named_by_marker(pos, clause, grole, dep_index_by_pos, {arg: grole}))
+
+
 def _marker_slot_argument(
     pos: tuple[int, int], arg: tuple[int, int], grole: str,
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
@@ -1972,6 +2069,7 @@ def _depictive_bare_oblique_omitted(
 def _fused_clitic_dual_role(
     grole: str, drole: str, arg: tuple[int, int],
     morph_pos_by_position: dict[tuple[int, int], str] | None,
+    case_by_position: "dict[tuple[int, int], str] | None" = None,
 ) -> bool:
     """Rule AL: a fused clitic cluster that genuinely fills two roles at once.
 
@@ -1983,11 +2081,39 @@ def _fused_clitic_dual_role(
 
     Gated on Layer 2 having tagged the token as two fused pronouns, and on the two roles being
     exactly the pair such a cluster encodes.
+
+    **Rule CM** replaces "exactly that pair" with the annex itself. `gliel'` is not the only
+    cluster the shape has: "in Siena **sen** pispiglia" (purgatorio 11:111) and "**sen** va"
+    (paradiso 2:20) are `si` + `ne`, whose annex value is `reflexive+ablative`, and the two
+    readings split those two slots between them — the derivation takes the reflexive half as the
+    verb's object (rule AB's own gate lets a bare clitic carry `obj`/`iobj`/`obl:a`) and the LLM
+    takes the ablative half as the oblique `ne` marks. Each side is corroborated by a *different*
+    slot, which is what makes this the same non-dispute as `gliel'` rather than a role
+    disagreement: censused at 13 fused positions with a role_mismatch, 7 of which split this way,
+    and requiring the two supporting slot sets to differ is what keeps a fused position whose
+    annex backs only one side (or the same slot on both) flagged.
     """
-    if {grole, drole} != {"obj", "obl:a"} or morph_pos_by_position is None:
+    if morph_pos_by_position is None:
         return False
     tag = morph_pos_by_position.get(arg, "").lower()
-    return tag.count("pronoun") >= 2
+    if tag.count("pronoun") < 2:
+        return False
+    if {grole, drole} == {"obj", "obl:a"}:
+        return True
+    slots = [s for s in (case_by_position or {}).get(arg, "").split(SLOT_SEP) if s]
+    if len(slots) < 2:
+        return False
+
+    def supported(role: str) -> set[str]:
+        # `reflexive` is not in `_case_supports_role`'s mapping — it names the clitic's own
+        # nature, not a slot — but rule AB already treats a reflexive clitic as able to fill the
+        # roles a bare clitic carries, and this reads the same annex the same way.
+        return {s for s in slots
+                if _case_supports_role(s, role)
+                or (s == "reflexive" and role in ("obj", "iobj", "obl:a"))}
+
+    given_slots, derived_slots = supported(grole), supported(drole)
+    return bool(given_slots) and bool(derived_slots) and given_slots != derived_slots
 
 
 def _case_corroborated_role(
@@ -2446,7 +2572,7 @@ def _classify_divergence(
         row = dep_index_by_pos.get(arg)
         if row is None:
             return False
-        if row.deprel == "amod":
+        if row.deprel in ("amod", "advmod"):
             if role != "xcomp":  # `attr` is canonicalized to `xcomp` before comparison
                 return False
             if "adjective" not in (morph_pos_by_position or {}).get(arg, "").lower():
@@ -2670,6 +2796,8 @@ def _classify_divergence(
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
                                                hosts=_auxiliary_hosts(pos)):
                     continue  # rule BY: the LLM hung it on this predicate's own `aux`/`cop`
+                if _clause_named_by_marker(pos, arg, drole, dep_index_by_pos, g):
+                    continue  # rule CK: the LLM named this clause by its complementizer
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
@@ -2685,7 +2813,8 @@ def _classify_divergence(
                                                    morph_pos_by_position)
                         or _comparative_come_complement(grole, drole, arg, dep_index_by_pos,
                                                         morph_pos_by_position)
-                        or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position)
+                        or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position,
+                                                   case_by_position)
                         or _depictive_bare_oblique(grole, drole, pos, arg, dep_index_by_pos,
                                                    morph_pos_by_position, case_children)
                         # rule BD's mismatch leg: both readings park the same reflexive clitic in
@@ -2739,6 +2868,8 @@ def _classify_divergence(
                     # derivation never promotes, so the argument has one home in each reading
                     or _stranded_on_underived_complement(pos, arg, grole, dep_index_by_pos,
                                                          derived_preds, case_lemmas)
+                    # rule CK: this is the `mark` of a clause the derivation gives the same slot
+                    or _marker_of_derived_clause(pos, arg, grole, dep_index_by_pos, d)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

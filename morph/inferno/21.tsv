@@ -865,7 +865,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 120	la	il	article	f.	sg.				
 120	decina	decina	noun	f.	sg.				
 121	Libicocco	Libicocco	noun	m.	sg.				
-121	vegn'	venire	verb		sg.	2	present	imperative	elision
+121	vegn'	venire	verb		sg.	3	present	subjunctive	elision, jussive
 121	oltre	oltre	adverb						
 121	e	e	conjunction						
 121	Draghignazzo	Draghignazzo	noun	m.	sg.				

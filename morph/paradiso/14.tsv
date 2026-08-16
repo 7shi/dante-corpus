@@ -866,9 +866,9 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 125	a	a	preposition						
 125	me	me	pronoun		sg.	1			
 125	venìa	venire	verb		sg.	3	imperfect	indicative	archaic
-125	Resurgi	resurgere	verb		sg.	2	present	imperative	Latin
+125	Resurgi	resurgere	verb		sg.	2	present	imperative	Latin, FOREIGN
 125	e	e	conjunction						
-125	Vinci	vincere	verb		sg.	2	present	imperative	
+125	Vinci	vincere	verb		sg.	2	present	imperative	Latin, FOREIGN
 126	come	come	conjunction						
 126	a	a	preposition						
 126	colui	colui	pronoun	m.	sg.				

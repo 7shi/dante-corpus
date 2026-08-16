@@ -1,5 +1,171 @@
 # skel — Layer 5 correction history
 
+## Rules CK-CO, from reading Purgatorio 11-15 — 448 → 427, −21 (2026-08-16)
+
+Per-position read of all **30** soft violations in Purgatorio 11-15, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Purgatorio 11-15
+itself went **30 → 15** (11: 5 → 4, 12: 3 → 2, 13: 1 → 1, 14: 15 → 3, 15: 6 → 5); the corpus went
+**448 → 427 (−21, −4.7%)**. Five deterministic rules, the `dep.subject_agreement` refinement the
+Inferno 21-25 batch measured and deferred, 11 Layer-4 rows, 8 Layer-2 rows, 1 Layer-3 span and 1
+case-annex row. `pytest` **384**, all other layers 0/0.
+
+The batch's own shape: **canto 14 held half the batch (15 of 30) and gave up 12 of them to
+upstream reading**, which is the highest upstream share of the series. Three of its five checker
+rules came out of positions where the tree was right and the checker silent; the other two came
+out of `derive_unit` and rule AG.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **CK** | the LLM names a subordinate clause by the complementizer that opens it | 18 / 3 | −5 |
+| **CM** | rule AL read through the `case` annex: a fused clitic whose two slots back the two roles separately | 13 / 7 | −2 |
+| **CL** | rule AG's third leg: once the inherited subject is dropped, the slot is rule V's to decide | — | −2 |
+| **CN** | rule AN's slot assignment: a ∅ slot goes to the back of the queue | — | −1 |
+| **CO** | rule AU's `advmod` leg: a second predicative adjective on the predicate's own complement | 101 / 77 | −1 |
+
+Plus the coordinated-subject refinement and the upstream rows (**−10 / +2** together).
+
+### Rule CK — the clause named by its complementizer
+
+"degno / ben è **che** 'l nome di tal valle **pèra**" (purgatorio 14:30). The clause fills the
+copula's subject slot; `derive_unit`, reading the tree, cites its head `pèra`, and the LLM cites
+the `che` that introduces it. Both name one constituent in one slot. Rule AE already accepts a
+free relative cited from its two ends; this is the same convention for an ordinary subordinate
+clause, and it is written as **one gate read from both sides** — the shape rules CA/CC
+established — because without the acceptance leg the marker is an `extra_arg` and without the
+mirror the clause is a `missing_arg`, for one disagreement. Two gates: the marker must hang on
+that very clause and the clause on this very predicate (rule BW covers the different shape, a
+`mark` that hangs on the *predicate* and fills a slot of its own), and the roles must match.
+
+**Censused at 18** given citations of a `mark` whose head is a clause on the same predicate.
+**Only 3 have matching roles** — 14:30, purgatorio 18:34, paradiso 14:18, worth 5 violations
+between them. The other **15 pair the LLM's `subj` against a derived `ccomp`**: that is the
+impersonal subject-clause question, a second claim about the slot rather than a citation
+convention, and where it is accepted at all it is accepted by other rules already (only 3 of the
+15 are flagged, all for unrelated reasons). Restricting to the matching role is what keeps the
+rule a convention.
+
+### Rule CL — rule AG's third leg
+
+Rule AG drops a `conj`-inherited subject whose Layer-2 person contradicts the predicate's own;
+rule AH then drops the LLM's ∅ with it, on the ground that the derivation is now *silent* about
+the slot. But the same argument covers a **concrete** subject: silence is branch 2's state, and
+branch 2 does not accept a citation outright either — it validates it against rule V's
+control/raising candidate set. Leaving concrete citations flagged was reporting the LLM's own
+reading against a slot the derivation had just disclaimed.
+
+"Io veggio tuo nepote che diventa / cacciator di quei lupi … **e tutti li sgomenta**" (purgatorio
+14:60) is the evidence line, and it is *not* one of the two the rule takes: `che` is the subject
+of a relative clause the control walk does not reach, so it stays flagged, which is the gate
+working. What the rule takes is inferno 14:117 ("fanno Acheronte, Stige e Flegetonta; / poi **sen
+van** giù") and paradiso 21:3 ("e l'animo con essi, / e da ogne altro intento **s'era tolto**"),
+where the citation is an argument of the coordination head and the LLM's reading is the right one.
+`_accept_control_subjects` is branch 2's body factored out, so the two legs cannot drift apart.
+
+### Rule CM — rule AL through the `case` annex
+
+Rule AL accepts a fused clitic filling two roles at once when the roles are exactly
+`{obj, obl:a}` — the pair `gliel'` encodes. "e ora a pena in Siena **sen** pispiglia"
+(purgatorio 11:111) and "**sen** va" (paradiso 2:20) are the same shape with a different cluster:
+`si` + `ne`, whose annex value is `reflexive+ablative`. The derivation takes the reflexive half as
+the verb's object — rule AB's own gate already lets a bare clitic carry `obj`/`iobj`/`obl:a` — and
+the LLM takes the ablative half as the oblique `ne` marks. Each side is corroborated by a
+*different* slot, which is what makes this a non-dispute rather than a role disagreement.
+
+**Censused at 13** fused positions carrying a role_mismatch; **7 split this way** (3 of them
+already taken by rule AL's fixed pair), and 2 were flagged. Requiring the two supporting slot sets
+to *differ* is the gate: a fused position whose annex backs only one side, or the same slot on
+both, stays flagged — which is what leaves inferno 29:34, purgatorio 2:40, 12:48, 19:24 and 27:5
+alone.
+
+### Rule CN — a ∅ slot goes to the back of the queue
+
+Rule AN hands a gapped conjunct's remnants to the coordination head's slots, pairing them off in
+the order the head's own arguments stand in the line. But ∅ = (0, 0) sorts before every real
+position, so a pro-drop subject slot was taking the **first** remnant of every gapped clause under
+a pro-drop predicate. "molti di vita e **sé** di pregio priva" (purgatorio 14:63): `pregio` claims
+`obl:di` by its own preposition, and `sé` — the second object, which the `case` annex calls
+accusative — was then derived as the *subject* of `priva`.
+
+Two variants were measured. Dropping ∅ slots from the queue outright took **2** (14:63 and
+paradiso 4:113) and was **wrong**: "tu … intende de la voglia assoluta, e **io** de l'altra"
+(4:113) is a genuine contrastive subject remnant under a pro-drop head, and the rule was silencing
+it. Moving ∅ slots to the back instead takes 14:63 and leaves 4:113 derived correctly (and still
+flagged, because there the LLM mints a predicate at `io`). A ∅ slot is still offered — only once
+the overt slots are spoken for.
+
+### Rule CO — rule AU's `advmod` leg
+
+Rule AU accepts an adjective Layer 4 attaches `amod` to one of the predicate's own derived
+arguments as the predication's secondary predicate. "Io non son … esser contento **più digiuno**"
+(purgatorio 15:58) is the same construction with `advmod`: `digiuno` hangs on `contento`, which is
+`esser`'s own derived complement, and the LLM reads it as `esser`'s second predicative. The other
+three gates are unchanged — adjective POS, `xcomp` role, host is a derived argument of this same
+predicate — and they are what keep it narrow: **101** adjectives corpus-wide stand `advmod` on a
+nominal or adjective, **77** of them on a derived argument of some predicate, and the rule moves
+**1**.
+
+### The coordinated-subject refinement — a route the batch closed
+
+`dep.subject_agreement` bailed out with "undecidable" as soon as the subject carried a `conj`
+child. The Inferno 21-25 batch measured restricting that exclusion to the **number** test and
+found 12 new `dep --check` soft violations, and reverted it rather than land a non-zero check
+([`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)); clearing those 12 has been a standing route
+since.
+
+Two positions in this batch ran into it — "e dimanda ne **fei**" (purgatorio 14:75, a 1sg conjunct
+inheriting the coordinate nominal subject `Lo dir … la vista`) and inferno 24:125 — so the route
+was folded in. Reading all 12 showed the deferred refinement was **half right**: a coordination
+does have a person, but Italian lets a finite verb agree with **one member** of it, in either
+direction ("Tosto che 'l duca e io nel legno **fui**", inferno 8:28, 1sg on the second conjunct;
+"né io né altri 'l **crede**", 2:33, 3sg on the second). Testing the head's person against *every*
+conjunct rather than against the first leaves **6**, and all 6 are real upstream errors, listed in
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md) and
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md). With those corrected, `dep --check` is back
+to 0 and Layer 5 moves **−3 / +1**.
+
+### Upstream corrections
+
+Twelve of the batch's 30 positions were the tree or the morphology, not the checker. Canto 14 held
+all but two of them. Full rows in [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md),
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md), [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)
+and [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md). The largest is **purgatorio 14:69**, "da
+qual che parte il periglio l'assanni", where Layer 2 read `parte` as the verb `partire`: that made
+"from whatever side" a clause, gave `il periglio` to it as a subject, and left `assanni` to inherit
+one across `conj` — three violations from one mistag, all cleared (and one new `extra_tuple`, the
+LLM having minted the same phantom predicate, now reported where it belongs).
+
+**Three retags are net zero and were applied anyway**, the honest trade rule AM records:
+purgatorio 11:19 (`Nostra virtù` is what the Paternoster asks not to be tested, so `obj`, not
+`vocative` — the addressee is God, unnamed), 12:136 (`a che guardando`: the gerund governs the
+oblique Layer 4 hung on the matrix `sorrise` — the LLM lists it under both, so the violation moves
+rather than clears) and purgatorio 29:37 (`fami … per voi soffersi` is "if I ever suffered hunger
+for you", so `obj`).
+
+### Censused and dropped
+
+**The Layer-3 NP-head duplicate citation.** "se c'è **più d'un varco**" (purgatorio 11:41): the LLM
+lists the subject twice, once by the Layer-3 span's head `più` and once by Layer 4's `varco`, and
+the second matches the derivation exactly. A rule accepting a given-only citation that is the head
+of a span containing an already-accepted argument of the same predicate and role censuses at
+**5** and would clear **2**. Dropped: one of the two is paradiso 10:142 ("che l'una parte e
+l'altra tira e urge"), where the real question is whether the coordinate nominal is the subject or
+the object of the two verbs, and the rule would silence it for the wrong reason — the same ground
+the Inferno 31-34 batch declined rule BR's mirror on. **Layer 3 is over-inclusive by design**, and
+a span is not evidence about a slot.
+
+### The 15 that stand
+
+Four are the LLM omitting an adjunct the tree records (13:133 `ma picciol tempo`, 14:37 `dal
+principio suo`, 15:10 `a lo splendore`, 15:121 `con le gambe avvolte`) and one a dative it drops
+(15:12). Three are the two net-zero retags above plus 12:136's moved oblique. Two are the LLM
+minting a predicate the line does not carry (11:110, at the adverb of a `dinanzi a` cluster;
+14:69, at the `parte` its own reading turned into a verb). One is rule CL's gate holding (14:60).
+One is `quanto` read as a subject where Layer 2 calls it an adverb (12:24). One is the copular
+subject/complement exchange the Purgatorio 1-5 batch censused at 1 and dropped (15:32) — now at 2.
+One is a Latin quotation as the subject of a passive Layer 4 calls an object (15:39), the
+structural class [`PLAN.md`](PLAN.md) leaves standing by design. And one is rule CK's own boundary
+(11:41, above).
+
 ## Rules CA-CJ, from reading Purgatorio 6-10 — 481 → 448, −33 (2026-08-16)
 
 Per-position read of all **35** soft violations in Purgatorio 6-10, following the eight-step

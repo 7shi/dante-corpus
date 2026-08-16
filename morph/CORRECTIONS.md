@@ -1,5 +1,38 @@
 # Manual Layer-2 corrections
 
+## 8 rows from the Layer-5 Purgatorio 11-15 read (2026-08-16)
+
+Found by the per-position read of Purgatorio 11-15's Layer-5 soft violations and by the
+coordinated-subject person test the same read landed in `dep.subject_agreement` (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) and
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)); applied with a gated script and re-validated
+(`morph`/`np`/`dep`/`case --check` 0, `pytest` 384).
+
+Five verbs whose person Layer 2 read off the wrong thing — an enclitic pronoun, an apocopated
+plural ending, or a wrong lemma — and which the person test therefore reported as disagreeing with
+a coordinated subject:
+
+| position | was | now | why |
+|---|---|---|---|
+| inferno 21:121.2 `vegn'` | sg. **2** present **imperative** | sg. **3** present **subjunctive**, `jussive` | `vegna`, the jussive line 120 spells out in full ("e Barbariccia **guidi** la decina"), so `Libicocco` is its subject, not its addressee |
+| purgatorio 5:83.2 `impigliar` | **sg. 1** remote past | **pl. 3** remote past | "le cannucce e 'l braco / **m'impigliar**" = *mi impigliarono*; the apocopated 3pl, not a 1sg |
+| purgatorio 10:63.8 `fensi` | lemma `fendere`, **sg. 1** | lemma `fare`, **pl. 3** | "e al sì e al no discordi **fensi**" = *si fecero*, from `fare` |
+| paradiso 14:125.6 `Resurgi` | note `Latin` | note `Latin, FOREIGN` | the quoted Latin imperatives are the subject of `venìa`; no Italian agreement rule applies to them |
+| paradiso 14:125.8 `Vinci` | note (empty) | note `Latin, FOREIGN` | the second member of the same quotation |
+| paradiso 31:96.7 `mandommi` | **sg. 1** present | **sg. 3** remote past | `mandò` + `mi`: the person and tense were read off the enclitic, not the verb |
+
+Plus three rows from the Purgatorio 14:69 re-parse, "da qual che parte il periglio l'assanni":
+
+| position | was | now | why |
+|---|---|---|---|
+| purgatorio 14:69.4 `parte` | verb `partire`, sg. 3 present indicative | noun `parte`, f. sg. | "from whatever **side**". Reading it as a verb turned the phrase into a clause and cost three Layer-5 violations |
+| purgatorio 14:69.3 `che` | pronoun, sg. 3 | conjunction, note `fixed with the preceding \`qual\`` | `qual che` is one indefinite determiner, so `che` is not a pronoun in its own right — which also takes it out of the `case` annex's scope |
+| purgatorio 14:69.2 `qual` | m. sg. | f. sg. | it determines the feminine `parte` |
+
+One further row, from the same read's re-parse of purgatorio 14:90 ("nullo / fatto s'è **reda**
+poi del suo valore"): `reda` was tagged as a f. sg. past participle of a verb `reddere`; it is the
+noun *erede*, m. sg. — retagged `noun`, lemma `reda`.
+
 ## 2 rows from the Layer-5 Inferno 31-34 read (2026-08-16)
 
 Found by the per-position read of Inferno 31-34's Layer-5 soft violations (see

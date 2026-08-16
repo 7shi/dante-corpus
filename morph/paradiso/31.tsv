@@ -644,7 +644,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 96	e	e	conjunction						
 96	amor	amore	noun	m.	sg.				apocope
 96	santo	santo	adjective	m.	sg.				
-96	mandommi	mandare+mi	verb+pronoun		sg.	1	present	indicative	enclitic pronoun
+96	mandommi	mandare+mi	verb+pronoun		sg.	3	remote past	indicative	enclitic pronoun
 97	vola	volare	verb		sg.	3	present	indicative	
 97	con	con	preposition						
 97	li	lo	article	m.	pl.				

@@ -691,3 +691,52 @@ def test_validate_unit_skips_impersonal_si_with_postposed_subject():
         ]
     }
     assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_accepts_coordinated_subject_agreeing_with_one_conjunct():
+    """"Tosto che 'l duca e io nel legno fui" (inferno 8:28): Italian lets a finite verb agree
+    with one member of a coordinated subject, in either direction, so the person test is
+    satisfied by any conjunct."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["'l duca e io fui"]
+    rows = [
+        dep.DepRow(1, 1, "duca", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 3),
+        dep.DepRow(1, 3, "io", "conj", 1, 1),
+        dep.DepRow(1, 4, "fui", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="duca", lemma="duca", pos="noun", number="sg."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="io", lemma="io", pos="pronoun", number="sg.", person="1"),
+            MorphRow(word="fui", lemma="essere", pos="verb", number="sg.", person="1"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_reports_a_coordination_no_conjunct_of_which_agrees():
+    """A coordination has a person even though it has no fixed number: when *no* member carries
+    the head's person, the attachment is a real question."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["'l duca e Virgilio fui"]
+    rows = [
+        dep.DepRow(1, 1, "duca", "nsubj", 1, 4),
+        dep.DepRow(1, 2, "e", "cc", 1, 3),
+        dep.DepRow(1, 3, "Virgilio", "conj", 1, 1),
+        dep.DepRow(1, 4, "fui", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="duca", lemma="duca", pos="noun", number="sg."),
+            MorphRow(word="e", lemma="e", pos="conjunction"),
+            MorphRow(word="Virgilio", lemma="Virgilio", pos="noun", number="sg."),
+            MorphRow(word="fui", lemma="essere", pos="verb", number="sg.", person="1"),
+        ]
+    }
+    assert [v.detail for v in _agreement(nos, texts, rows, morph_rows)] == [
+        "nsubj 1.1 'duca' disagrees with head 1.4 'fui': person 3 vs 1"
+    ]

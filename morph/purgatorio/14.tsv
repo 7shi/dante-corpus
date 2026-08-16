@@ -495,9 +495,9 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 68	ch'	che	pronoun		sg.	3			elision
 68	ascolta	ascoltare	verb		sg.	3	present	indicative	
 69	da	da	preposition						
-69	qual	quale	adjective	m.	sg.				apocope
-69	che	che	pronoun		sg.	3			
-69	parte	partire	verb		sg.	3	present	indicative	
+69	qual	quale	adjective	f.	sg.				apocope
+69	che	che	conjunction						fixed with the preceding `qual`
+69	parte	parte	noun	f.	sg.				
 69	il	il	article	m.	sg.				
 69	periglio	periglio	noun	m.	sg.				
 69	l'	lo	pronoun	m.	sg.	3			elision
@@ -661,7 +661,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 90	fatto	fare	verb	m.	sg.		past participle		
 90	s'	si	pronoun		sg.				elision
 90	è	essere	verb		sg.	3	present	indicative	
-90	reda	reddere	verb	f.	sg.		past participle		archaic
+90	reda	reda	noun	m.	sg.				archaic
 90	poi	poi	adverb						
 90	del	di+il	preposition+article	m.	sg.				contraction
 90	suo	suo	adjective	m.	sg.				

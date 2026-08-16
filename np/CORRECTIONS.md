@@ -9,6 +9,20 @@ traceable back to what actually changed and why. Layer-2 mistags found along the
 in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
 side: code/policy changes, span fixes, and classification of what's left.
 
+## Two spans from Layer 5's Purgatorio 11-15 read (2026-08-16)
+
+`np/purgatorio/14.tsv` 69 `[qual]` (start 2, end 2, head 2) widened to `[qual che parte]`
+(2-4, head 4). Layer 2 had read `parte` as the verb `partire`, so the phrase "da **qual che
+parte**" ("from whatever side") had no nominal head and Layer 3 spanned only the determiner; with
+`parte` retagged as a noun the span is the whole phrase (see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) and
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)).
+
+`np/purgatorio/14.tsv` 90 `[reda]` (4-4, head 4) added. "nullo / fatto s'è **reda** poi del suo
+valore": `reda` is the noun *erede*, retagged from a past participle in the same read, and a noun
+must head an NP. Found by `np --check` reporting it the moment the Layer-2 row changed.
+`np --check` stays 0 hard / 0 soft.
+
 ## One span from Layer 5's Inferno 31-34 read (2026-08-16)
 
 `np/inferno/34.tsv` 105 `[il sol tragitto]` (start 7, end 9, head 9) split into `[il sol]`

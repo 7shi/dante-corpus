@@ -452,8 +452,7 @@ def subject_agreement(
         return ("undecidable", "person comes from the antecedent")
     if head_morph.person in ("1", "2") and head_morph.number == "pl.":
         return ("undecidable", "1/2 plural head admits a singular member")
-    if any(c.deprel == "conj" for c in children.get(subj, ())):
-        return ("undecidable", "coordinated subject")
+    conjuncts = [c for c in children.get(subj, ()) if c.deprel == "conj"]
     if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
         return ("undecidable", "head carries more than one subject")
     if _AGREEMENT_EXEMPT_FLAGS & (_note_flags(subj_morph.note) | _note_flags(head_morph.note)):
@@ -497,6 +496,23 @@ def subject_agreement(
 
     # A nominal with no `person` of its own is 3rd person by default.
     subj_person = subj_morph.person or "3"
+    if conjuncts:
+        # A **coordinated** subject leaves the number test undecidable — "'l duca e io" is two
+        # singulars governing a plural verb, and Italian lets the verb take either — but not the
+        # person test: a coordination has a person, and the finite verb agrees with *one* of its
+        # members. Dante uses last/nearest-conjunct agreement freely in both directions ("Tosto
+        # che 'l duca e io nel legno **fui**", inferno 8:28, 1sg on the second conjunct; "né io né
+        # altri 'l **crede**", 2:33, 3sg on the second), so the test is satisfied by any member.
+        # It fails only when no conjunct carries the head's person at all, which is a real
+        # question about the attachment.
+        persons = {subj_person} | {
+            (m.person or "3") for c in conjuncts
+            if (m := _morph_at(morph_rows, c.line, c.token)) is not None
+        }
+        if head_morph.person not in persons:
+            return ("disagree",
+                    f"person {'/'.join(sorted(persons))} vs {head_morph.person}")
+        return ("undecidable", "coordinated subject")
     if subj_person != head_morph.person:
         return ("disagree", f"person {subj_person} vs {head_morph.person}")
     if subj_morph.number and head_morph.number and subj_morph.number != head_morph.number:
