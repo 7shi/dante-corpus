@@ -238,12 +238,18 @@ def derive_unit(
     nos: list[int],
     dep_rows_by_line: dict[int, "list[DepRow] | tuple[DepRow, ...]"],
     morph_rows_by_line: dict[int, "list[MorphRow] | tuple[MorphRow, ...]"],
+    case_rows_by_line: "dict[int, list[CaseRow] | tuple[CaseRow, ...]] | None" = None,
 ) -> dict[int, list[SkelRow]]:
     """Mechanically derive the expected skeleton for one parse unit from Layers 2 and 4.
 
     This is the *checker*, not the artifact's author (see module docstring): its output is
     compared against the LLM's rows by `validate_unit`'s divergence check, never written to
     the artifact itself.
+
+    `case_rows_by_line` is the Layer-2 `case` annex, optional and read at exactly one place —
+    rule CZ's slot claim for a gapped-clause remnant. Everywhere else the derivation stays a
+    function of Layers 2 and 4 alone, and the annex stays what rule U made it: a third opinion
+    consulted only where the other two layers leave the role genuinely undetermined.
     """
     all_rows = [row for no in nos for row in dep_rows_by_line.get(no, ())]
     index = {(row.line, row.token): row for row in all_rows}
@@ -257,6 +263,11 @@ def derive_unit(
         if rows and 1 <= token <= len(rows):
             return rows[token - 1]
         return None
+
+    case_by_pos: dict[tuple[int, int], str] = {
+        (row.line, row.token): row.case
+        for rows in (case_rows_by_line or {}).values() for row in rows
+    }
 
     # 1. clause-head predicates, plus conj chains that resolve to one.
     #
@@ -532,6 +543,31 @@ def derive_unit(
                     slots.remove(label)
                     remnants.remove(remnant)
                     assigned.append((label, remnant))
+            # Rule CZ: a remnant the `case` annex assigns a case to claims the slot that case
+            # names, before the queue below hands out what is left. What the queue does is pair
+            # remnants against slots in **role-rank** order — subject, then object, then the
+            # obliques — which reads Dante as always putting the gapped clause's remnants in the
+            # canonical order. He does not. "lei lo vedere, e me l'ovrare appaga"
+            # (purgatorio 27:108) puts the object first in both halves, and the rank queue gave
+            # `lei` the subject slot: *she* satisfies the seeing, the reverse of the line. The
+            # annex reads `lei` as `accusative`, which settles it, and settles it without
+            # assuming an order — "onde fa l'arco il Sole e Delia il cinto" (paradiso 29:78)
+            # inverts the two halves chiastically, so pairing the remnants by where they stand
+            # would get *that* line wrong, and there the annex holds no value for either proper
+            # noun and the rank queue is left to decide, correctly. This is rule U's third
+            # opinion moved to the one place in `derive_unit` that is openly guessing; unlike
+            # rule U it runs in both directions, because here the annex is not overruling a
+            # Layer-4 label — Layer 4 assigns a gapped remnant no role at all.
+            for remnant in list(remnants):
+                value = case_by_pos.get((remnant.line, remnant.token))
+                if not value or SLOT_SEP in value:
+                    continue
+                claimed = [s for s in slots if s in ("subj", "obj", "iobj")
+                           and _case_supports_role(value, s)]
+                if len(claimed) == 1:
+                    slots.remove(claimed[0])
+                    remnants.remove(remnant)
+                    assigned.append((claimed[0], remnant))
             assigned.extend(zip(slots, remnants))
             for role, remnant in assigned:
                 pred_args.append(
@@ -2663,6 +2699,58 @@ def _classify_divergence(
             return False
         return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
 
+    def _relative_adverb_oblique(
+        pos: tuple[int, int], arg: tuple[int, int], grole: str
+    ) -> bool:
+        # Rule DD: the relative locative adverb Layer 4 writes as a `case` on its own clause.
+        # "questo mondo / **dove** poter peccar non è più nostro" (purgatorio 26:132): `dove` is
+        # tagged `case` with the clause's finite verb as its head. `case` is not an argument
+        # deprel, so `derive_unit` says nothing about it at all, while the LLM reads the word
+        # for what it means — the clause's locative adjunct. This is rule BM's shape (an adjunct
+        # whose filler Layer 2 calls something other than a nominal) and rule CK's (the LLM
+        # naming a clause by the word that opens it), on the one word that is both.
+        #
+        # Censused corpus-wide: **21** `dove`/`ove`/`u'` rows carry `case`, and every one of
+        # them attaches to a verb — so this is a Layer-4 convention applied consistently, not a
+        # mis-tag to correct upstream. Gated to that: Layer 2 must call the word an adverb, the
+        # head must be this predicate, and the role must be an oblique.
+        if dep_index_by_pos is None:
+            return False
+        if grole != "obl" and not OBL_RE.fullmatch(grole):
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel != "case":
+            return False
+        if (row.head_line, row.head_token) != pos:
+            return False
+        return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+    def _prepositional_copular_complement(
+        pos: tuple[int, int], grole: str, drole: str, arg: tuple[int, int]
+    ) -> bool:
+        # Rule DB: rule AD's mismatch leg. Rule AD accepts the LLM calling a copula's adverb
+        # complement `xcomp` where Layer 4 wrote `advmod` — the derivation says nothing about an
+        # `advmod`, so its silence is not a denial. When the same adverb carries a preposition
+        # ("a tutti altri sapori **esto è di sopra**", purgatorio 28:133) Layer 4 writes `obl`
+        # instead, the derivation *does* name it, and the identical reading is reported as a
+        # role_mismatch rather than a `missing_arg`. The gate is rule AD's, plus the one thing
+        # that makes the prepositional case decidable at all: the copula must have no other
+        # complement. `essere` with a predicate complement already in hand ("è pien d'amore")
+        # takes prepositional phrases as ordinary adjuncts, and those stay flagged; `essere`
+        # with none is predicating *this* phrase or nothing.
+        if dep_index_by_pos is None or grole != "xcomp" or not drole.startswith("obl"):
+            return False
+        if (morph_lemma_by_position or {}).get(pos, "").lower() != "essere":
+            return False
+        if "adverb" not in (morph_pos_by_position or {}).get(arg, "").lower():
+            return False
+        row = dep_index_by_pos.get(arg)
+        if row is None or row.deprel != "obl" or not _hosts_child(pos, row, dep_index_by_pos):
+            return False
+        return not any(_canonicalize_role(r.role) == "xcomp"
+                       and (r.arg_line, r.arg_token) != arg
+                       for r in derived_by_pred.get(pos, []))
+
     def _reflexive_clitic_argument(
         pos: tuple[int, int], arg: tuple[int, int], role: str
     ) -> bool:
@@ -2768,10 +2856,29 @@ def _classify_divergence(
         if dep_index_by_pos is None:
             return False
 
+        # Rule DC: *which* position the host gate reads, a second time — rule CI asked it of
+        # rule C's coordination collapse, this asks it of rule CE's relative-pronoun identity.
+        # Inside a relative clause the derived argument is the pronoun `che`, and the adjective
+        # hangs on the antecedent it stands for: "come ninfe **che** si givan **sole**"
+        # (purgatorio 29:4) — `sole` is `amod` on `ninfe`, `givan`'s derived subject is `che`,
+        # and the two are one referent, so the host gate was failing on a distinction the corpus
+        # already decided elsewhere. Gated on this predicate actually heading that pronoun's
+        # relative clause, so an adjective on some other nominal is still out.
+        antecedent: tuple[int, int] | None = None
+        prow = dep_index_by_pos.get(pos)
+        if (prow is not None and prow.deprel in ("acl", "acl:relcl")
+                and any((row_ := dep_index_by_pos.get(a)) is not None
+                        and row_.deprel in _SUBJ_DEPRELS or row_.deprel == "obj"
+                        and (row_.head_line, row_.head_token) == pos
+                        and row_.word.lower().rstrip("'") in ("che", "ch", "cui", "chi")
+                        for a in derived_args)):
+            antecedent = (prow.head_line, prow.head_token)
+
         def _hosted_by_derived_argument(r: DepRow) -> bool:
             host = (r.head_line, r.head_token)
             return (host in derived_args
-                    or _coordination_head(host, dep_index_by_pos) in derived_args)
+                    or _coordination_head(host, dep_index_by_pos) in derived_args
+                    or host == antecedent)
 
         row = dep_index_by_pos.get(arg)
         if row is None:
@@ -3061,7 +3168,9 @@ def _classify_divergence(
                         # rule BD's mismatch leg: both readings park the same reflexive clitic in
                         # a slot a bare clitic can carry, and disagree only about which
                         or (_pronominal_verb_clitic(pos, arg, grole)
-                            and _pronominal_verb_clitic(pos, arg, drole))):
+                            and _pronominal_verb_clitic(pos, arg, drole))
+                        # rule DB: rule AD's mismatch leg
+                        or _prepositional_copular_complement(pos, grole, drole, arg)):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
@@ -3115,6 +3224,27 @@ def _classify_divergence(
                     # rule CX: rule CK widened — the interrogative word that opens the clause
                     or _wh_word_of_derived_clause(pos, arg, grole, dep_index_by_pos,
                                                   morph_pos_by_position, children_by_pos, d)
+                    # Rule DA: rule CS's argument leg. CS reads a role-less `=(0, 0)` derived
+                    # row as asserting nothing, so the LLM's *not* proposing that predicate is
+                    # no divergence; the same empty tuple equally cannot contradict an argument
+                    # the LLM does propose on it — "Poco parer potea lì **del di fori**"
+                    # (purgatorio 27:88), where `parer`'s own tuple is empty and the LLM gives
+                    # it the partitive its infinitive plainly governs.
+                    #
+                    # **Except in the subject slot**, which is the whole point of the boundary.
+                    # An empty tuple is not the derivation having no opinion there: rule V is a
+                    # decision procedure that walks the control chain for exactly this slot, and
+                    # rules BB, CF and CJ each widened what it may collect. When it leaves the
+                    # slot empty it has *declined*, and accepting any subject the LLM offers
+                    # would undo that decision — the five near-miss tests of the rule-V family
+                    # (`tests/test_skel.py`, rules BB/CF/CI/CJ) fail the moment this gate is
+                    # opened to `subj`, which is how the boundary was found. No comparable
+                    # procedure runs for the other roles, where an empty tuple means only that
+                    # Layer 4 gave the predicate no argument child. 17 positions, against the
+                    # 23 the unrestricted form took.
+                    or (grole != "subj" and pos in empty_derived)
+                    # rule DD: the relative locative adverb Layer 4 writes as a `case`
+                    or _relative_adverb_oblique(pos, arg, grole)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",
@@ -3436,7 +3566,7 @@ def validate_unit(
             )
 
     if dep_rows is not None and morph_rows is not None:
-        derived = derive_unit(nos, dep_rows, morph_rows)
+        derived = derive_unit(nos, dep_rows, morph_rows, case_rows)
         morph_pos_by_position = {
             (no, i + 1): row.pos for no, rows in morph_rows.items() for i, row in enumerate(rows)
         }

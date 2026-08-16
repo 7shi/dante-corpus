@@ -256,7 +256,7 @@ line	token	word	deprel	head_line	head_token
 37	7	elli	nsubj	37	8
 37	8	appare	advcl	37	4
 38	1	subitamente	advmod	37	8
-38	2	cosa	nsubj	37	4
+38	2	cosa	nsubj	37	8
 38	3	che	nsubj	38	4
 38	4	disvia	acl:relcl	38	2
 39	1	per	case	39	2
@@ -265,7 +265,7 @@ line	token	word	deprel	head_line	head_token
 39	4	altro	amod	39	5
 39	5	pensare	obj	38	4
 40	1	una	det	40	2
-40	2	donna	appos	38	2
+40	2	donna	nsubj	37	4
 40	3	soletta	amod	40	2
 40	4	che	nsubj	41	2
 40	5	si	expl	41	2
@@ -771,7 +771,7 @@ line	token	word	deprel	head_line	head_token
 110	4	sua	det:poss	110	5
 110	5	virtute	obl	110	8
 110	6	l'	det	110	7
-110	7	aura	nsubj	110	8
+110	7	aura	obj	110	8
 110	8	impregna	advcl	109	6
 111	1	e	cc	111	6
 111	2	quella	nsubj	111	6

@@ -1477,3 +1477,22 @@ word, the deprel and the head at every index before rewriting the row, then re-v
 Layer 5 measured the whole set at **−14** (853 → 839, on top of that session's checker rules). The
 16:95–96 reattachment is deliberately **count-neutral** — the three `missing_arg`s move from
 `rimbomba` to `ha` — and was kept because the tree is now right; the same trade rule AM recorded.
+
+## Twelve rows from the Layer-5 Purgatorio 26–30 read (2026-08-17)
+
+Found position by position while auditing Layer 5's soft violations in Purgatorio 26–30 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). Applied by a gated script that asserts the
+word, the deprel and the head at every index before rewriting the row, then re-validated:
+`dep --check` **0 hard / 0 soft**, `morph`/`np`/`case` unchanged at 0.
+
+| position | before | after | why |
+|---|---|---|---|
+| purgatorio 28:110.7 `aura` | `nsubj`→110.8 | `obj`→110.8 | *«che de la sua virtute l'aura impregna / e quella poi, girando, intorno scuote»* — the air is what the struck plant impregnates. The next line resumes it as `quella`, a *new* subject, which only parses if the air was the object here; `impregna`'s own subject is the pro-drop `la percossa pianta`. |
+| purgatorio 27:80.4 `che`, 80.8 `verga`, 81.1 `poggiato`, 81.2 `s'`, 81.3 `è`, 81.8 `serve` | clause head `è`, participle `amod`→80.4 | clause head `poggiato`, `è` `aux`→81.1 | *«il pastor, che 'n su la verga / poggiato s'è»* — a compound perfect of `poggiarsi` read as an adjective plus a copula. The participle is the lexical verb, so the `acl:relcl` edge, the subject, the oblique and the coordinate `serve` all belong on it. |
+| purgatorio 30:60.8 `far`, 60.9 `l'`, 60.10 `incora` | `conj`→59.7, `det`→60.10, `obj`→60.8 | `advcl`→60.10, `obj`→60.10, `conj`→59.1 | *«viene a veder la gente che ministra / per li altri legni, e a ben far l'incora»* — `incora` is a finite verb (3sg of `incorare`) that had been attached as the *object* of an infinitive, with the accusative clitic `l'` as its `det`. It is the coordinate of `viene`: the admiral comes to see the crew and encourages them to do well. A pronoun in a `det` deprel under a **verb** head is censused at 3 rows corpus-wide; the other two are demonstratives before a nominalized infinitive. |
+| purgatorio 28:38.2 `cosa`, 40.2 `donna` | `nsubj`→37.4, `appos`→38.2 | `nsubj`→37.8, `nsubj`→37.4 | *«e là m'apparve, sì com' elli appare / subitamente cosa che disvia … / una donna soletta»* — the simile's subject is `cosa` (with `elli` the expletive Dante's `com'elli appare` always carries) and the main clause's is `donna`. Layer 4 had given `cosa` to the main verb and left `donna` as an apposition of it. |
+
+Layer 5 measured the whole set at **−7 / +2**, net −5. The two new positions are at 30:59–60 and
+are the honest cost: with `incora` correctly a predicate, the LLM's own misreading — it made the
+infinitive `far` the coordinate — is no longer hidden by the wrong tree. The same trade the
+Purgatorio 21–25 batch recorded at 25:67 and 22:90.

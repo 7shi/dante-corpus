@@ -3948,3 +3948,103 @@ elided `che`, not `ci` — the identical `c'ha` at 17:86 already reads it that w
 The 16:95–96 reattachment is **count-neutral by construction** (three `missing_arg`s move from
 `rimbomba` to `ha`) and was kept anyway: the count is not the measure, the correctness of the
 parse is — the same trade rule AM recorded.
+
+## Rules CZ–DD and the Purgatorio 26–30 read (2026-08-17)
+
+Per-position read of all **33** soft violations in Purgatorio 26–30 (26:6, 27:6, 28:9, 29:4,
+30:8), following the eight-step procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*.
+**388 → 358 (−30, −7.7%)**, zero model calls, 0 hard; Purgatorio 26–30 itself **33 → 22**.
+`pytest` **437 passed**.
+
+Five deterministic rules, each censused corpus-wide before it was written, measured on its own by
+full-corpus violation **diff**, and pinned by a mutation-checked test.
+
+| rule | shape | census | moved |
+|---|---|---:|---:|
+| **DA** (`empty_derived`, argument leg) | rule CS's mirror: a derived tuple that is **empty** asserts nothing, so it contradicts no argument the LLM puts on the predicate — *except* in the subject slot | 17 | **−17** |
+| **DD** (`_relative_adverb_oblique`) | the relative locative adverb (`dove`/`ove`/`u'`) Layer 4 writes as a `case` on its own clause's verb is that clause's locative adjunct | 21 | **−3** |
+| **CZ** (`derive_unit`, rule AN's slot claim) | a gapped-clause remnant the `case` annex assigns a case to claims the slot that case names, before the role-rank queue hands out what is left | — | **−2** |
+| **DB** (`_prepositional_copular_complement`) | rule AD's mismatch leg: a copula's only complement, an adverb Layer 4 wrote as `obl` because it carries a preposition | 2 | **−2** |
+| **DC** (`_secondary_predicate_over_argument`, host gate) | rule AA/AU's host test read through rule CE's relative-pronoun identity: inside a relative clause the derived argument is `che` and the adjective hangs on the antecedent | 489 | **−1** |
+
+Plus **12 Layer-4 rows** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)), worth −7/+2.
+
+### The batch's findings
+
+**1. A rule's evidence line can be the line the rule gets wrong.** Rule AN's paragraph says its
+remnants "take the remaining slots in the order the predicate's own arguments stand in the line",
+and names purgatorio 27:108 — *«lei lo vedere, e me l'ovrare appaga»* — as the case where the
+object precedes the subject in both halves. The code did not do that: its sort key is
+`(predicate token, role rank, argument position)`, and the predicate token is identical for every
+row in the queue, so the queue was ordered by **role rank** and `lei` took the subject slot. The
+comment had been describing an intention for four batches.
+
+Sorting the queue by argument position instead is the obvious repair and it is **wrong**: it fixes
+27:108 and breaks inferno 19:114 and paradiso 29:78 (−2/+3 on the full corpus), because Dante
+inverts the two halves chiastically as readily as he parallels them — *«onde fa l'arco il Sole e
+Delia il cinto»* has the head clause object-first and the remnants subject-first. No order is the
+convention. What decides 27:108 is the `case` annex reading `lei` as `accusative`, which is rule
+U's third opinion moved to the one place in `derive_unit` that is openly guessing. It runs in both
+directions, unlike rule U, because here the annex overrules no Layer-4 label — Layer 4 assigns a
+gapped remnant no role at all. `derive_unit` gained an optional `case_rows_by_line` parameter for
+it, read at exactly this one site.
+
+**2. The near-miss tests are what found rule DA's boundary.** Rule DA started as the plain mirror
+of rule CS — an empty derived tuple asserts nothing, in either direction — and measured **−23/+0**,
+the batch's largest single move. It also broke five existing tests, all of them the "and a
+near-miss still gets flagged" half of the rule-V family (BB, CF, CI, CJ). They were right and the
+rule was wrong: for the **subject** slot an empty tuple is not silence but a decision. Rule V is a
+procedure that walks the control chain for exactly that slot and rules BB/CF/CJ each widened what
+it may collect; when it comes back empty it has *declined*, and accepting whatever subject the LLM
+offers would quietly undo four rules' worth of adjudication. No comparable procedure runs for the
+other roles, where an empty tuple means only that Layer 4 gave the predicate no argument child.
+Restricted to non-subject roles the rule takes 17 of the 23 and all 437 tests pass. **A rule that
+breaks an existing near-miss test has been told where its gate belongs, not that it is unusable.**
+
+**3. Census the *shape*, not the violation diff — they answer different questions.** Rule DC's
+violation diff is −1, which by the batch series' own habit ("one instance is not a population")
+reads as a drop. Its structural census is **489**: adjectives and participles hanging on the
+antecedent of a relative clause whose derived argument is the pronoun. The two numbers are not in
+conflict — 488 of those positions are already accepted by some other route or never diverge — and
+the one that does is not a coincidence but the gate failing on a distinction the corpus settled
+elsewhere (rule CE). Kept, on the same ground as rule CI. Contrast rule DC's rejected sibling
+below, whose *shape* census was 1.
+
+### Candidates censused and dropped
+
+- **The antecedent double-listed with its relative pronoun** (28:97, *«'l turbar che sotto da sé
+  fanno / l'essalazion…»*, the LLM giving `fanno` both `che` and the antecedent in the subject
+  slot). Written, measured at **−1/+0**, and dropped: the structural census is also 1. This is the
+  shape the Inferno 16–20 batch recorded as "an acceptance rule keyed on `skel.antecedent` is
+  plausible" and it is still not a population.
+- **Two adjacent bare `obl` adverbs as one locative cluster** (28:71, *«là 've passò Serse»*).
+  Rule BJ's shape with *sibling* attachment instead of nested, so the cluster-head walk never sees
+  it. Censused at **4** corpus-wide (`là 've` three times, `giù dentro` once), of which one is
+  flagged. Dropped as too thin, and recorded below.
+- **`dove` as a Layer-4 error.** Investigated as an upstream retag — a `case` deprel whose head is
+  a finite verb is structurally odd — and dropped: all **21** `dove`/`ove`/`u'` rows carrying
+  `case` attach to a verb, so it is a convention applied consistently, and the fix belongs in the
+  checker. That is rule DD.
+
+### Standing shapes the batch recorded but did not settle
+
+- **The prepositional adjunct of time or place, omitted** (27:97 *«Ne l'ora … mi parea»*, 28:79
+  *«in questo luogo eletto … tienvi alcun sospetto»*, 29:146 *«col primaio stuolo erano
+  abitüati»*). Three more instances of the residue's largest bucket and of the fifth `--fix`
+  round's one queued prompt candidate. Reading error, not checker silence.
+- **The simile's nominal, omitted** (26:46 *«come grue»*, 30:64 *«Quasi ammiraglio»*): the
+  derivation gives the matrix verb the comparison's noun as an oblique and the LLM names nothing
+  at all. Rules AK/AR/BK accept the *relabelling* of a comparison; this is plain omission.
+- **The quantifier and its partitive noun** (30:120 *«quant' elli ha più di buon vigor
+  terrestro»*): Layer 4 makes the adverb `più` the object with `vigor` its `nmod`, and the LLM
+  names the noun that carries the meaning. Rule BR's shape one relation over; not censused.
+- **The causative `fare` + infinitive** (28:108 *«e fa sonar la selva»*): Layer 4 attaches
+  `la selva` as `obj` of the intransitive infinitive, the LLM reads it as the infinitive's
+  subject, which is what an intransitive requires. Rule BI's neighbourhood.
+- **An adjunct scoping over a predicate and its gerund** (26:100 *«pensoso andai / lunga fïata
+  rimirando lui»*): the LLM lists `lunga fïata` on both `andai` and `rimirando`; Layer 4 attaches
+  it only to the gerund.
+- **Two adjacent bare `obl` adverbs** (28:71) — see above, censused at 4.
+- **Genuine LLM misreadings, left flagged**: 27:10 (`anime sante` is Dante's vocative, not
+  `morde`'s object), 29:38 (*«se fami, freddi o vigilie … soffersi»* — the 1sg verb's subject is
+  pro-drop and the three nouns are its objects), 29:35 (the locative clitic `ci`, omitted).

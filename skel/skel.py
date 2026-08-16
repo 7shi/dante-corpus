@@ -1016,7 +1016,7 @@ def _try_parse(
     nos: list[int], texts: list[str], model: str, ui: StatusLine, label: str,
     log_path: Path | None = None, morph_rows: dict[int, list] | None = None,
     np_rows: dict[int, list] | None = None, dep_rows: dict[int, list] | None = None,
-    hint: str | None = None,
+    hint: str | None = None, case_rows: dict[int, list] | None = None,
 ) -> dict[int, list[skel.SkelRow]] | None:
     """Call LLM and resolve; return rows-by-line on success, None after all retries fail.
 
@@ -1028,7 +1028,7 @@ def _try_parse(
     from llm7shi import Client
 
     derived = (
-        skel.derive_unit(nos, dep_rows, morph_rows) if dep_rows is not None and morph_rows is not None
+        skel.derive_unit(nos, dep_rows, morph_rows, case_rows) if dep_rows is not None and morph_rows is not None
         else {}
     )
     prompt = _prompt(nos, texts, morph_rows or {}, np_rows or {}, hint)
@@ -1083,6 +1083,7 @@ def _build_canto(
     morph_rows = _morph_rows(canticle, number)
     np_rows = _np_rows(canticle, number)
     dep_rows = _dep_rows(canticle, number)
+    case_rows = _case_rows(canticle, number)
 
     units = _units(lines, size)
     pending = [unit for unit in units if any(line.no not in done for line in unit)]
@@ -1109,6 +1110,7 @@ def _build_canto(
             label = f"{canticle} {number}"
             rows_by_line = _try_parse(
                 nos, texts, model, ui, label, log_path, morph_rows, np_rows, dep_rows,
+                case_rows=case_rows,
             )
             if rows_by_line is None:
                 # No per-line fallback: a lone line cannot host cross-line arguments, so a
@@ -1322,7 +1324,7 @@ def _apply_unit_repairs(
     while True:
         _, soft = _classify_violations(
             unit, unit_texts, rows_by_line, morph_rows, np_rows, dep_rows, case_rows)
-        derived = skel.derive_unit(unit, dep_rows, morph_rows)
+        derived = skel.derive_unit(unit, dep_rows, morph_rows, case_rows)
         candidates = [
             r for r in skel._find_repairs(rows_by_line, derived, soft, morph_rows, dep_rows)
             if (r.kind, r.before) not in rejected
@@ -1528,7 +1530,7 @@ def _fix_canto(
             stats["calls:_whole"] += 1
             hint = _fix_hint(unit, unit_texts, soft, morph_rows)
             new_rows = _try_parse(unit, unit_texts, model, ui, label, log_path, morph_rows,
-                                  np_rows, dep_rows, hint)
+                                  np_rows, dep_rows, hint, case_rows)
             if new_rows is None:
                 continue
             _, soft_after = _classify_violations(

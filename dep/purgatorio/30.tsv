@@ -399,9 +399,9 @@ line	token	word	deprel	head_line	head_token
 60	5	e	cc	60	8
 60	6	a	mark	60	8
 60	7	ben	advmod	60	8
-60	8	far	conj	59	7
-60	9	l'	det	60	10
-60	10	incora	obj	60	8
+60	8	far	advcl	60	10
+60	9	l'	obj	60	10
+60	10	incora	conj	59	1
 61	1	in	case	61	4
 61	2	su	fixed	61	1
 61	3	la	det	61	4

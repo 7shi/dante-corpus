@@ -1,6 +1,6 @@
 """Deterministic tests for Layer 5 predicate-argument skeleton (no model calls)."""
 
-from dante_corpus import api, dep, morph, skel
+from dante_corpus import api, case, dep, morph, skel
 
 # The skeleton table format: model cites predicate/argument token positions the same way
 # Layer 4 does; Pred Word/Arg Word are build-time verification anchors only.
@@ -4060,3 +4060,165 @@ def test_classify_divergence_rule_cy_requires_an_aux_edge():
     # A tuple that merely sits inside the clause does not list it: the edge is the gate.
     violations = _aux_named_clause_fixture(deprel="advmod")
     assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+# --- Phase 6: rules CZ-DD (the Purgatorio 26-30 read) ------------------------------------
+
+
+def _gapped_remnant_case_fixture(remnant_case="accusative"):
+    """"lei lo vedere, e me l'ovrare appaga" (purgatorio 27:108): the gapped conjunct's two
+    remnants, and the `case` annex reading `lei` as the object it is."""
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="lei", deprel="conj", head_line=1, head_token=5),
+        dep.DepRow(line=1, token=2, word="vedere", deprel="orphan", head_line=1, head_token=1),
+        dep.DepRow(line=1, token=3, word="me", deprel="obj", head_line=1, head_token=5),
+        dep.DepRow(line=1, token=4, word="ovrare", deprel="nsubj", head_line=1, head_token=5),
+        dep.DepRow(line=1, token=5, word="appaga", deprel="root", head_line=0, head_token=0),
+    ]}
+    morph_rows = {1: [
+        morph.MorphRow(word="lei", pos="pronoun"),
+        morph.MorphRow(word="vedere", pos="verb"),
+        morph.MorphRow(word="me", pos="pronoun"),
+        morph.MorphRow(word="ovrare", pos="verb"),
+        morph.MorphRow(word="appaga", pos="verb", person="3"),
+    ]}
+    case_rows = {1: [case.CaseRow(line=1, token=1, word="lei", case=remnant_case)]}
+    derived = skel.derive_unit([1], dep_rows, morph_rows, case_rows)
+    return {(r.arg_line, r.arg_token): r.role for r in derived[1] if r.token == 5 and r.role}
+
+
+def test_derive_unit_rule_cz_lets_the_case_annex_claim_a_remnant_slot():
+    slots = _gapped_remnant_case_fixture()
+    assert slots[(1, 1)] == "obj"      # `lei`, accusative in the annex
+    assert slots[(1, 2)] == "subj"     # `lo vedere`, what is left
+
+
+def test_derive_unit_rule_cz_falls_back_to_role_rank_without_an_annex_value():
+    # "onde fa l'arco il Sole e Delia il cinto" (paradiso 29:78) inverts the two halves, so a
+    # remnant the annex holds no value for must still take the rank queue's first slot.
+    slots = _gapped_remnant_case_fixture(remnant_case="")
+    assert slots[(1, 1)] == "subj"
+    assert slots[(1, 2)] == "obj"
+
+
+def _empty_derived_tuple_fixture(role="obl:di"):
+    """"Poco parer potea lì del di fori" (purgatorio 27:88): `parer`'s derived tuple is empty,
+    so it contradicts no argument the LLM puts on it."""
+    derived = {1: [skel.SkelRow(1, 3, "potea", "subj", 1, 1),
+                   skel.SkelRow(1, 2, "parer", "", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 3, "potea", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "parer", role, 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Poco", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="parer", deprel="xcomp",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="potea", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 4): dep.DepRow(line=1, token=4, word="di", deprel="nmod",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_da_accepts_an_argument_on_an_empty_tuple():
+    assert [v for v in _empty_derived_tuple_fixture() if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_da_still_flags_the_subject_slot():
+    # The subject slot is rule V's decision, not the derivation's silence.
+    violations = _empty_derived_tuple_fixture(role="subj")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _prepositional_copular_complement_fixture(lemma="essere"):
+    """"a tutti altri sapori esto è di sopra" (purgatorio 28:133): the copula's only complement
+    is the prepositional adverb Layer 4 wrote as an `obl`."""
+    derived = {1: [skel.SkelRow(1, 2, "è", "subj", 1, 1),
+                   skel.SkelRow(1, 2, "è", "obl:di", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 2, "è", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "è", "attr", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="esto", deprel="nsubj",
+                           head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="è", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 3): dep.DepRow(line=1, token=3, word="di", deprel="case",
+                           head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="sopra", deprel="obl",
+                           head_line=1, head_token=2),
+    }
+    return skel._classify_divergence(
+        given, derived, dep_index_by_pos,
+        {(1, 1): "pronoun", (1, 4): "adverb"}, None,
+        {(1, 2): lemma, (1, 4): "sopra"},
+    )
+
+
+def test_classify_divergence_rule_db_accepts_a_copulas_prepositional_adverb():
+    assert _prepositional_copular_complement_fixture() == []
+
+
+def test_classify_divergence_rule_db_is_gated_on_the_copula():
+    # Under a lexical verb the same phrase is an ordinary adjunct, and stays flagged.
+    violations = _prepositional_copular_complement_fixture(lemma="stare")
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _relative_clause_depictive_fixture(clause_deprel="acl:relcl"):
+    """"come ninfe che si givan sole" (purgatorio 29:4): `sole` is `amod` on the antecedent,
+    and the clause's derived subject is the relative pronoun that stands for it."""
+    derived = {1: [skel.SkelRow(1, 3, "givan", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "givan", "subj", 1, 2),
+                 skel.SkelRow(1, 3, "givan", "attr", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="ninfe", deprel="obl",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="che", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="givan", deprel=clause_deprel,
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="sole", deprel="amod",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "pronoun", (1, 4): "adjective"})
+
+
+def test_classify_divergence_rule_dc_reads_the_host_through_the_antecedent():
+    assert [v for v in _relative_clause_depictive_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dc_requires_a_relative_clause_edge():
+    # Without the `acl:relcl` edge the nominal is not this predicate's antecedent.
+    violations = _relative_clause_depictive_fixture(clause_deprel="advcl")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _relative_adverb_case_fixture(arg_pos="adverb"):
+    """"questo mondo / dove poter peccar non è più nostro" (purgatorio 26:132): `dove` is a
+    `case` on its own clause's verb, which `derive_unit` never reports."""
+    derived = {1: [skel.SkelRow(1, 3, "è", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "è", "subj", 1, 2),
+                 skel.SkelRow(1, 3, "è", "obl", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="dove", deprel="case",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="peccar", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="è", deprel="acl:relcl",
+                           head_line=0, head_token=0),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {(1, 1): arg_pos})
+
+
+def test_classify_divergence_rule_dd_accepts_the_relative_locative_adverb():
+    assert [v for v in _relative_adverb_case_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dd_is_gated_on_the_adverb_pos():
+    # An ordinary preposition in a `case` slot names no adjunct of its own.
+    violations = _relative_adverb_case_fixture(arg_pos="preposition")
+    assert any(v.detail.startswith("extra_arg") for v in violations)

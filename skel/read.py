@@ -76,7 +76,7 @@ def main() -> None:
 
     print("\n--- derived (derive_unit, the checker) ---")
     for unit in target:
-        derived = _skel.derive_unit(unit, dep, morph)
+        derived = _skel.derive_unit(unit, dep, morph, case)
         print(f"  unit lines {min(unit)}-{max(unit)}")
         for no in sorted(derived):
             for r in derived[no]:
