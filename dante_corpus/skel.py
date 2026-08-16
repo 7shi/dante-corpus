@@ -332,6 +332,24 @@ def derive_unit(
             if verbs_only and (conj_morph is None or not is_verb_pos(conj_morph.pos)
                                or not conj_morph.person):
                 continue
+            # Rule CA: rule BN's argument test, applied to the `conj` branch. A **non-verb**
+            # conjunct with no argument child of its own is not an elided clause: "Sordel rimase
+            # e **l'altre genti** forme" (purgatorio 9:58) and "sen venne suso; e **io** per le
+            # sue orme" (9:60) promote a noun and a pronoun whose remnants Layer 4 left on the
+            # coordination head, so the minted tuple is empty — or, worse, a lone pro-drop `subj`
+            # ∅ asserting that the conjunct has a subject other than itself. The reading no
+            # tuple can express is the one rules AN and BN already refuse elsewhere; a nominal
+            # conjunct that *does* carry arguments ("Ed **elli**: «Vedi …»", inferno 11:15, whose
+            # `ccomp` is the elided speech) is a real gapped clause and stays promoted.
+            #
+            # A `cop`/`aux` child is the tree's own assertion that the conjunct heads a
+            # predication ("Tant' **è amara**", inferno 1:7, an adjective conjunct whose subject
+            # is pro-drop), so the test is for arguments *or* a copula — the same both-readings
+            # evidence rule Y reads on the acceptance side.
+            if ((conj_morph is None or not is_verb_pos(conj_morph.pos))
+                    and not any(c.deprel in ARG_DEPRELS or c.deprel in _AUX_DEPRELS
+                                for c in children.get(pos, ()))):
+                continue
             if pos in gapped_conjuncts:
                 continue
             predicate_positions.add(pos)
@@ -607,6 +625,7 @@ _CONTROL_CHAIN_LIMIT = 8
 def _control_subject_candidates(
     pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
     dep_index_by_pos: dict[tuple[int, int], DepRow],
+    morph_rows: "dict[int, list[MorphRow]] | None" = None,
 ) -> tuple[set[tuple[int, int]], bool]:
     """Rule V: the subjects a **non-finite** predicate can inherit, walking its dep head chain.
 
@@ -644,11 +663,52 @@ def _control_subject_candidates(
         seen.add(head_pos)
         if cur.deprel in ("acl", "acl:relcl"):
             candidates.add(head_pos)
+            # Rule CE: the antecedent and the relative pronoun of its own relative clause are
+            # one referent, so either of them names this participle's subject. "O superbi
+            # cristian … **che**, de la vista de la mente **infermi**, fidanza avete"
+            # (purgatorio 10:122): Layer 4 hangs both `infermi` and `avete` on `cristian` as
+            # `acl:relcl`, and the LLM — reading a relative clause with a depictive inside it —
+            # gives the depictive the clause's own subject, the relative `che`. Rule V's walk
+            # reaches the antecedent and stops one edge short of the pronoun that stands for it.
+            # This is the argument-identity route the Inferno 16-25 batches named and left
+            # unopened; kept to the relative pronoun forms, so an ordinary nominal subject of
+            # the relative clause (a different referent) stays flagged.
+            candidates.update(
+                (r.line, r.token)
+                for r in dep_index_by_pos.values()
+                if r.deprel in _SUBJ_DEPRELS
+                and r.word.lower().rstrip("'") in ("che", "ch", "cui", "chi")
+                and (rel := dep_index_by_pos.get((r.head_line, r.head_token))) is not None
+                and rel.deprel == "acl:relcl"
+                and (rel.head_line, rel.head_token) == head_pos
+            )
+        # Rule CF: the controller a fused clitic hides. "anzi ad aprir ch'a **tenerla** serrata"
+        # (purgatorio 9:128): the object controlling `serrata` is the `la` inside `tenerla`, and
+        # Layer 1 gives it no position of its own — the only citation for it is the host token,
+        # which is what the LLM writes and what rules AL and AS already read as two roles on one
+        # position. Rule V collects the matrix predicate's derived `obj`, but a clitic fused into
+        # the verb never becomes one, so object control across this edge had no candidate at all.
+        # Censused at 66 `xcomp` edges under a fused verb+pronoun host.
+        if morph_rows is not None:
+            head_line_rows = morph_rows.get(head_pos[0])
+            if (head_line_rows and 1 <= head_pos[1] <= len(head_line_rows)
+                    and "+pronoun" in head_line_rows[head_pos[1] - 1].pos):
+                candidates.add(head_pos)
         head_rows = derived_by_pred.get(head_pos, ())
+        # Rule CJ: the controller Layer 4 labelled `obl`. The three core roles were the whole
+        # candidate set, but Italian's controller is often a dative or a genitive that this
+        # corpus's Layer 4 writes as an oblique: "s'avacci **lor** divenir **sante**"
+        # (purgatorio 6:27), where the possessor of the nominalized infinitive is the subject of
+        # its predicate adjective; "**detto n'**avea **beati**" (22:5), object control whose
+        # object is the `ne` clitic Layer 4 marks `obl`; "dandole biasmo" (inferno 7:93). The
+        # role name is Layer 4's notation for the edge, not a claim that an oblique cannot
+        # control — and this set is an *acceptance*, never an assertion, so widening it accepts
+        # a reading the tree leaves open rather than asserting one.
         candidates.update(
             (row.arg_line, row.arg_token)
             for row in head_rows
-            if row.role in ("subj", "obj", "iobj") and (row.arg_line, row.arg_token) != (0, 0)
+            if (row.role in ("subj", "obj", "iobj") or row.role.startswith("obl"))
+            and (row.arg_line, row.arg_token) != (0, 0)
         )
         head_subj = [row for row in head_rows if row.role == "subj"]
         if any((row.arg_line, row.arg_token) == (0, 0) for row in head_subj):
@@ -729,7 +789,8 @@ def _apply_subj_authority(
         g_subjs = [a for a, role in g.items() if role == "subj"]
         if not g_subjs:
             return
-        reachable, unresolved = _control_subject_candidates(pos, derived_by_pred, dep_index_by_pos)
+        reachable, unresolved = _control_subject_candidates(pos, derived_by_pred,
+                                                             dep_index_by_pos, morph_rows)
         candidates = None if unresolved else {(0, 0)} | reachable
         for g_subj in g_subjs:
             # …and the citation is tested through rule C's normalization too, since the collapse
@@ -832,7 +893,8 @@ _CONJ_WALK_LIMIT = 8
 
 
 def _coordination_head(
-    pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
+    pos: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow],
+    morph_pos_by_position: "dict[tuple[int, int], str] | None" = None,
 ) -> tuple[int, int]:
     """Rule C: the head of `pos`'s coordination, walking `conj` edges up (bounded).
 
@@ -850,6 +912,14 @@ def _coordination_head(
     LLM gives the predicate an `attr` on each half and the tree only ever attaches the first).
     `flat` is UD's *headless* multiword relation, so its members are not modifiers of the opening
     word — they are the same nominal, and citing any of them cites it.
+
+    **Rule CD** stops the walk where the coordination stops being one of arguments. UD promotes a
+    conjunct to the *clause* head when it reads the coordination as clausal, so a `conj` step
+    from a nominal onto a verb leaves the argument's own coordination and enters the predicates':
+    "sen venne suso; e **io** per le sue orme" (purgatorio 9:60) walks `io` → `venne` → `tolse` →
+    `rimase` and rewrites a subject citation into a citation of a predicate three lines up, which
+    no reading of the line asserts. Rule CC accepts such a conjunct in the slot the LLM gives it,
+    and can only see it if the collapse has left it alone.
     """
     seen = {pos}
     cur = pos
@@ -860,6 +930,12 @@ def _coordination_head(
         head = (row.head_line, row.head_token)
         if head in seen or head not in dep_index_by_pos:
             break
+        if row.deprel == "conj" and morph_pos_by_position is not None:
+            head_row = dep_index_by_pos[head]
+            cur_pos, head_pos = morph_pos_by_position.get(cur, ""), morph_pos_by_position.get(head, "")
+            if (cur_pos and head_pos and not is_verb_pos(cur_pos) and is_verb_pos(head_pos)
+                    and head_row.deprel not in ARG_DEPRELS):
+                break
         seen.add(head)
         cur = head
     return cur
@@ -868,6 +944,7 @@ def _coordination_head(
 def _collapse_coordination(
     by_arg: dict[tuple[int, int], str], pos: tuple[int, int],
     dep_index_by_pos: dict[tuple[int, int], DepRow],
+    morph_pos_by_position: "dict[tuple[int, int], str] | None" = None,
 ) -> dict[tuple[int, int], str]:
     """Rule C: map every argument citation onto its coordination head, de-duplicating.
 
@@ -881,7 +958,7 @@ def _collapse_coordination(
     for arg, role in by_arg.items():
         key = arg
         if arg != (0, 0):
-            head = _coordination_head(arg, dep_index_by_pos)
+            head = _coordination_head(arg, dep_index_by_pos, morph_pos_by_position)
             if head != pos:  # never collapse an argument onto its own predicate
                 key = head
         prev = out.get(key)
@@ -1471,6 +1548,98 @@ def _marked_adverbial_clause(
     if row is None or row.deprel != "advcl" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return role.split(":", 1)[1] in marker_lemmas.get(arg, set())
+
+
+def _gapped_coordinate_oblique(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    children_by_pos: dict[tuple[int, int], list[DepRow]],
+    d: dict[tuple[int, int], str],
+) -> bool:
+    """Rule CG: the coordinate oblique whose noun is elided. "or dal sinistro e or dal destro
+    fianco" (purgatorio 10:27) is two obliques — "from the left [side] and from the right side" —
+    and Layer 4 records the ellipsis by hanging *both* prepositions on the one surviving noun,
+    leaving the first phrase citable only by its adjective. The LLM names both; the derivation,
+    which reads one `obl` child, names one.
+
+    The second `case` child is the tree's own evidence for the ellipsis, so the gate is
+    structural: the citation must be an adnominal modifier of a derived argument of this same
+    predicate that carries two or more `case` children, and must take that argument's role.
+    Censused at 56 doubly-marked obliques corpus-wide."""
+    head_row = dep_index_by_pos.get(arg)
+    if head_row is None or head_row.deprel not in ("amod", "det", "det:poss", "nummod"):
+        return False
+    host = (head_row.head_line, head_row.head_token)
+    if d.get(host) != role:
+        return False
+    return sum(1 for c in children_by_pos.get(host, ()) if c.deprel == "case") >= 2
+
+
+def _promoted_conjunct_argument(
+    pos: tuple[int, int], arg: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    children_by_pos: dict[tuple[int, int], list[DepRow]],
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule CC: rule CA's argument leg — the coordinate nominal Layer 4 promoted to `conj` on the
+    predicate itself. "Sordel rimase e **l'altre genti** forme" (purgatorio 9:58), "**qual
+    merito** o **qual grazia** mi ti mostra?" (7:19): UD promotes the second conjunct to the
+    clause head whenever it reads the coordination as clausal, and rule CA has just decided that
+    a non-verb conjunct with no arguments of its own is *not* an elided clause — which leaves it
+    a coordinate member of one of the predicate's own slots, exactly where the LLM puts it, and
+    nowhere at all in the derivation.
+
+    The gate is rule CA's own test, so the two rules cover the same positions from the two sides:
+    a conjunct with arguments of its own is a real gapped clause and its citation stays flagged.
+    The role is whatever the LLM assigns, as in rule AJ — the tree records no slot for the
+    conjunct to disagree with."""
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "conj":
+        return False
+    if (row.head_line, row.head_token) != pos:
+        return False
+    pos_label = (morph_pos_by_position or {}).get(arg, "")
+    if not pos_label or is_verb_pos(pos_label) or "conjunction" in pos_label.lower():
+        return False
+    return not any(c.deprel in ARG_DEPRELS for c in children_by_pos.get(arg, ()))
+
+
+def _stranded_on_underived_complement(
+    pos: tuple[int, int], arg: tuple[int, int], role: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    derived_preds: set[tuple[int, int]],
+    case_lemmas: dict[tuple[int, int], set[str]],
+) -> bool:
+    """Rule CB: an oblique the tree hangs on a predicative complement the derivation never
+    promotes. "li occhi e 'l naso / e **al sì e al no** discordi **fensi**" (purgatorio 10:63):
+    Layer 4 attaches both obliques to `discordi`, the adjective it marks `attr` on `fensi`, and
+    `derive_unit` promotes neither adjectival complements nor their arguments — so an argument
+    the tree plainly records is dropped, and the LLM, which reads the line and hangs it on the
+    only verb there is, is reported for naming it.
+
+    Rule AM makes the same collection one edge over, from a predicate's own `cop`/`aux`; rule X
+    accepts the *reverse* relocation, where the complement **is** a derived predicate and the
+    two readings disagree about which of the two carries the argument. This is the case where
+    there is no second predicate to disagree with, so the argument has exactly one home in each
+    reading and they are the same predication.
+
+    Gated the way rules S and T are gated: the given `obl:<lemma>` must name a preposition the
+    tree itself carries on that edge, so nothing is accepted the Layer-4 `case` child does not
+    already say."""
+    if not OBL_RE.fullmatch(role):
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel not in ("obl", "obl:agent"):
+        return False
+    host = (row.head_line, row.head_token)
+    if host == pos or host in derived_preds:
+        return False
+    host_row = dep_index_by_pos.get(host)
+    if host_row is None or host_row.deprel not in ("attr", "xcomp"):
+        return False
+    if (host_row.head_line, host_row.head_token) != pos:
+        return False
+    return role.split(":", 1)[1] in case_lemmas.get(arg, set())
 
 
 def _drop_nmod_obliques(
@@ -2237,6 +2406,15 @@ def _classify_divergence(
         pos: tuple[int, int], arg: tuple[int, int], role: str,
         derived_args: set[tuple[int, int]],
     ) -> bool:
+        # **Rule CI** decides *which* position the host gate reads. "ma vidi bene e l'uno e
+        # l'altro **mosso**" (purgatorio 8:105): the participle hangs on `l'altro`, the second
+        # conjunct of the object, and `derive_unit` reads only the coordination head, so the
+        # host was not in `derived_args` and the small clause went unrecognised on a coordinate
+        # object. Rule C's collapse is the corpus's own answer to which position a coordination
+        # is cited by, and it already runs over the citations this gate compares against; rule
+        # BP's finding, that a gate must read the same edge the derivation normalized, applied
+        # to rule AA's host test.
+        #
         # Rule AA: the perception/depictive small clause. "Queste parole ... vid' ïo **scritte**"
         # (inferno 3:11) — Layer 4 attaches the participle as an `acl` of the object noun, which
         # is outside `ARG_DEPRELS`, so `derive_unit` cannot report it as an argument of the
@@ -2259,6 +2437,12 @@ def _classify_divergence(
         # what keep an ordinary attributive adjective inside some other phrase out.
         if dep_index_by_pos is None:
             return False
+
+        def _hosted_by_derived_argument(r: DepRow) -> bool:
+            host = (r.head_line, r.head_token)
+            return (host in derived_args
+                    or _coordination_head(host, dep_index_by_pos) in derived_args)
+
         row = dep_index_by_pos.get(arg)
         if row is None:
             return False
@@ -2267,12 +2451,12 @@ def _classify_divergence(
                 return False
             if "adjective" not in (morph_pos_by_position or {}).get(arg, "").lower():
                 return False
-            return (row.head_line, row.head_token) in derived_args
+            return _hosted_by_derived_argument(row)
         if role not in ("xcomp", "ccomp"):
             return False
         if row.deprel not in ("acl", "acl:relcl"):
             return False
-        return (row.head_line, row.head_token) in derived_args
+        return _hosted_by_derived_argument(row)
 
     def _copular_hosts(pos: tuple[int, int]) -> set[tuple[int, int]]:
         # Rule X's other leg, looking the other way: the predicates `pos` is the complement of.
@@ -2366,11 +2550,40 @@ def _classify_divergence(
             return False
         return is_verb_pos(morph_pos_by_position.get(pos, ""))
 
+    def _verb_in_adnominal_slot(pos: tuple[int, int]) -> bool:
+        # Rule CH: rule Z's adnominal leg. A verb Layer 4 attached as `amod`/`acl` over a nominal
+        # is a reduced relative clause — "come fogliette pur mo **nate**" (purgatorio 8:28),
+        # "l'ombra ... **volta**" (14:70) — and the derivation reads it as a predicate whenever
+        # pass 2 can find it, that is whenever it has an argument child of its own ("che da verdi
+        # penne / **percosse** traean dietro", 8:30, derived from its `obl:da`). A participle
+        # with no argument but its subject is the identical reading with nothing for pass 2 to
+        # catch it by, so the derivation is silent about the tuple, not opposed to it — rule Z's
+        # own reasoning, one deprel family over. Rule V's `acl` branch already accepts the
+        # subject such a tuple carries, so this closes the tuple side of a predication the
+        # checker was otherwise half-accepting. Conjuncts of one are the same clause coordinated
+        # ("**e ventilate**", 8:30), and rule BZ's finiteness gate deliberately leaves them
+        # underived.
+        if dep_index_by_pos is None or morph_pos_by_position is None:
+            return False
+        row = dep_index_by_pos.get(pos)
+        seen = {pos}
+        while row is not None and row.deprel == "conj":
+            head = (row.head_line, row.head_token)
+            if head in seen:
+                return False
+            seen.add(head)
+            row = dep_index_by_pos.get(head)
+        if row is None or row.deprel not in ("amod", "acl", "acl:relcl"):
+            return False
+        return (is_verb_pos(morph_pos_by_position.get(pos, ""))
+                and is_verb_pos(morph_pos_by_position.get((row.line, row.token), "")))
+
     for line, token in sorted(given_preds - derived_preds):
         pos = (line, token)
         if (pos in double_listed or _elided_copula_nominal(pos)
                 or _aux_of_derived_predicate(pos) or _copular_predication(pos)
-                or _verb_in_argument_slot(pos) or _complemented_adjective_phrase(pos)):
+                or _verb_in_argument_slot(pos) or _complemented_adjective_phrase(pos)
+                or _verb_in_adnominal_slot(pos)):
             continue
         violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
                                      predicate=(line, token)))
@@ -2408,8 +2621,8 @@ def _classify_divergence(
             }  # rule BV: a `fixed`/`case` word of a multiword preposition names its nominal
             g = _merge_adverb_cluster_citations(g, pos, dep_index_by_pos, children_by_pos,
                                                 morph_pos_by_position)
-            g = _collapse_coordination(g, pos, dep_index_by_pos)
-            d = _collapse_coordination(d, pos, dep_index_by_pos)
+            g = _collapse_coordination(g, pos, dep_index_by_pos, morph_pos_by_position)
+            d = _collapse_coordination(d, pos, dep_index_by_pos, morph_pos_by_position)
             # Rule BO: rule AI runs **before** rule D. Both fire on a given citation the
             # derivation does not carry, and rule D is the weaker answer of the two: it drops the
             # citation as an accepted `nmod` adjunct, which silences the `extra_arg` half of the
@@ -2515,6 +2728,17 @@ def _classify_divergence(
                     # rule AX, mirror leg: derive_unit hung it on the other end of an `xcomp`
                     or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
                                                    hosts=_control_partners(pos))
+                    # rule CG: an elided coordinate oblique, citable only by its modifier
+                    or _gapped_coordinate_oblique(pos, arg, grole, dep_index_by_pos,
+                                                  children_by_pos, d)
+                    # rule CC: rule CA's argument leg — a coordinate nominal UD promoted to
+                    # `conj` on this predicate, which the derivation gives no slot at all
+                    or _promoted_conjunct_argument(pos, arg, dep_index_by_pos, children_by_pos,
+                                                   morph_pos_by_position)
+                    # rule CB: the tree hangs it on a predicative complement of `pos` that the
+                    # derivation never promotes, so the argument has one home in each reading
+                    or _stranded_on_underived_complement(pos, arg, grole, dep_index_by_pos,
+                                                         derived_preds, case_lemmas)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

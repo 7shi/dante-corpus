@@ -1,5 +1,21 @@
 # dep — Layer 4 correction history
 
+## 1 row from the Layer-5 Purgatorio 6-10 read (2026-08-16)
+
+The per-position read of Purgatorio 6-10's 35 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 1 Layer-4 row wrong. Applied with a gated
+script that asserts the expected word *and* deprel *and* head at `(line, token)` before rewriting;
+`morph`, `np`, `dep` and `case --check` all stay 0 afterwards, `pytest` 372.
+
+**A participle attached to a noun it cannot agree with** — purgatorio 9:4-5, "di gemme la sua
+fronte era lucente, / **poste** in figura del freddo animale": `poste` is f. **pl.** and `fronte`
+is f. sg., so the adnominal participle cannot modify the head Layer 4 gave it; `gemme` (f. pl.) is
+the only nominal in the parse unit it agrees with, and it is the gems that are *set* in the figure
+of the cold animal. `poste` moved from `acl<-4.5` (`fronte`) to `acl<-4.2` (`gemme`). Layer 3's
+spans read the same way, and the Layer-5 artifact had already named `gemme` as its subject.
+
+Layer 5 fell by 1 with it.
+
 ## 2 rows from the Layer-5 Purgatorio 1-5 read (2026-08-16)
 
 The per-position read of Purgatorio 1-5's 14 Layer-5 soft violations (see

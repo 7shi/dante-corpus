@@ -3324,3 +3324,332 @@ def test_derive_unit_rule_bz_promotes_a_conjunct_of_a_second_pass_predicate():
 def test_derive_unit_rule_bz_leaves_a_non_finite_conjunct_alone():
     # An infinitive with no argument child of its own would carry an empty tuple.
     assert (1, 4) not in _conjunct_of_an_argument_verb(person="")
+
+
+# --- Purgatorio 6-10 read: rules CA-CJ -------------------------------------------------
+
+
+def _nominal_conjunct_of_a_clause(kids=(), pos_tag="noun"):
+    """"Sordel rimase e **l'altre genti** forme" (purgatorio 9:58): UD promotes the coordinate
+    nominal to the clause head, and it carries nothing a tuple could be built from."""
+    rows = [
+        dep.DepRow(line=1, token=1, word="Sordel", deprel="nsubj", head_line=1, head_token=2),
+        dep.DepRow(line=1, token=2, word="rimase", deprel="root", head_line=0, head_token=0),
+        dep.DepRow(line=1, token=3, word="genti", deprel="conj", head_line=1, head_token=2),
+        dep.DepRow(line=1, token=4, word="forme", deprel="amod", head_line=1, head_token=3),
+    ]
+    morph_rows = {1: [
+        morph.MorphRow(word="Sordel", pos="proper noun"),
+        morph.MorphRow(word="rimase", pos="verb", person="3"),
+        morph.MorphRow(word="genti", pos=pos_tag, person="3" if pos_tag == "verb" else ""),
+        morph.MorphRow(word="forme", pos="noun"),
+    ]}
+    for token, word, deprel in kids:
+        rows.append(dep.DepRow(line=1, token=token, word=word, deprel=deprel,
+                               head_line=1, head_token=3))
+        morph_rows[1].append(morph.MorphRow(word=word, pos="noun"))
+    derived = skel.derive_unit([1], {1: rows}, morph_rows)
+    return {(r.line, r.token) for rows_ in derived.values() for r in rows_}
+
+
+def test_derive_unit_rule_ca_drops_an_argumentless_nominal_conjunct():
+    assert (1, 3) not in _nominal_conjunct_of_a_clause()
+
+
+def test_derive_unit_rule_ca_keeps_a_conjunct_with_an_argument_of_its_own():
+    # "Ed **elli**: «Vedi …»" — the elided speech verb's `ccomp` is a real tuple.
+    assert (1, 3) in _nominal_conjunct_of_a_clause(kids=[(5, "vedi", "ccomp")])
+
+
+def test_derive_unit_rule_ca_keeps_a_copular_conjunct():
+    # "Tant' **è amara**" (inferno 1:7): the `cop` child is the tree's own predication.
+    assert (1, 3) in _nominal_conjunct_of_a_clause(kids=[(5, "è", "cop")])
+
+
+def _promoted_conjunct_citation_fixture(conjunct_pos="noun", kids=()):
+    """"qual merito o **qual grazia** mi ti mostra?" (purgatorio 7:19): the LLM reads the
+    promoted conjunct as the predicate's second subject, and the derivation has no slot for it."""
+    derived = {1: [skel.SkelRow(1, 3, "mostra", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 3, "mostra", "subj", 1, 1),
+                 skel.SkelRow(1, 3, "mostra", "subj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="merito", deprel="nsubj",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="grazia", deprel="conj",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="mostra", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    for token, word, deprel in kids:
+        dep_index_by_pos[(1, token)] = dep.DepRow(line=1, token=token, word=word, deprel=deprel,
+                                                  head_line=1, head_token=2)
+    return given, derived, dep_index_by_pos, {(1, 2): conjunct_pos}
+
+
+def test_classify_divergence_rule_cc_accepts_a_promoted_coordinate_nominal():
+    given, derived, idx, morph_pos = _promoted_conjunct_citation_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_cc_leaves_a_gapped_clause_flagged():
+    # A conjunct with an argument of its own is an elided clause, not a coordinate argument.
+    given, derived, idx, morph_pos = _promoted_conjunct_citation_fixture(
+        kids=[(4, "briga", "obj")])
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _clause_coordination_walk(head_deprel="conj"):
+    """"sen venne suso; e **io** per le sue orme" (purgatorio 9:60): the walk from a nominal
+    conjunct onto a verb leaves the arguments' coordination and enters the predicates'."""
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="venne", deprel=head_deprel,
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="io", deprel="conj", head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="rimase", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    morph_pos = {(1, 1): "verb", (1, 2): "pronoun", (1, 3): "verb"}
+    return skel._coordination_head((1, 2), dep_index_by_pos, morph_pos)
+
+
+def test_coordination_head_rule_cd_stops_at_a_clause_conjunct():
+    assert _clause_coordination_walk() == (1, 2)
+
+
+def test_coordination_head_rule_cd_walks_through_an_argument_verb():
+    # "addimandò … di dispensare … ma **licenza**" (paradiso 12:95): the head verb is itself an
+    # argument, so the nominal really is its coordinate member.
+    assert _clause_coordination_walk(head_deprel="obj") == (1, 1)
+
+
+def _underived_complement_fixture(complement_deprel="attr"):
+    """"li occhi … e **al sì** e al no **discordi fensi**" (purgatorio 10:63): the oblique hangs
+    on the predicative adjective, which the derivation never promotes to a predicate."""
+    derived = {1: [skel.SkelRow(1, 1, "fensi", "xcomp", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "fensi", "xcomp", 1, 2),
+                 skel.SkelRow(1, 1, "fensi", "obl:a", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="fensi", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="discordi", deprel=complement_deprel,
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="al", deprel="case", head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="sì", deprel="obl", head_line=1, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_cb_accepts_an_argument_on_an_underived_complement():
+    assert _underived_complement_fixture() == []
+
+
+def test_classify_divergence_rule_cb_leaves_an_adjunct_host_flagged():
+    # An `advcl` host is a clause of its own, whose obliques are its own.
+    violations = _underived_complement_fixture(complement_deprel="advcl")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _relative_antecedent_fixture(pronoun="che"):
+    """"O superbi cristian … **che** … de la mente **infermi**, fidanza avete" (purgatorio
+    10:122): the depictive's subject is the relative pronoun standing for the antecedent, and
+    the antecedent itself hangs on the matrix verb, whose own subject is somebody else."""
+    derived = {1: [skel.SkelRow(1, 4, "avete", "subj", 1, 2),
+                   skel.SkelRow(1, 6, "accorgete", "subj", 1, 7),
+                   skel.SkelRow(1, 3, "infermi", "obl:di", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 4, "avete", "subj", 1, 2),
+                 skel.SkelRow(1, 6, "accorgete", "subj", 1, 7),
+                 skel.SkelRow(1, 3, "infermi", "subj", 1, 2),
+                 skel.SkelRow(1, 3, "infermi", "obl:di", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="cristian", deprel="vocative",
+                           head_line=1, head_token=6),
+        (1, 2): dep.DepRow(line=1, token=2, word=pronoun, deprel="nsubj",
+                           head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="infermi", deprel="acl:relcl",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="avete", deprel="acl:relcl",
+                           head_line=1, head_token=1),
+        (1, 5): dep.DepRow(line=1, token=5, word="vista", deprel="obl",
+                           head_line=1, head_token=3),
+        (1, 6): dep.DepRow(line=1, token=6, word="accorgete", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 7): dep.DepRow(line=1, token=7, word="voi", deprel="nsubj",
+                           head_line=1, head_token=6),
+    }
+    morph_rows = {1: [
+        morph.MorphRow(word="cristian", pos="noun"),
+        morph.MorphRow(word=pronoun, pos="pronoun"),
+        morph.MorphRow(word="infermi", pos="adjective"),
+        morph.MorphRow(word="avete", pos="verb", person="2"),
+        morph.MorphRow(word="vista", pos="noun"),
+        morph.MorphRow(word="accorgete", pos="verb", person="2"),
+        morph.MorphRow(word="voi", pos="pronoun"),
+    ]}
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {}, None, None, morph_rows)
+
+
+def test_classify_divergence_rule_ce_accepts_the_antecedents_relative_pronoun():
+    assert _relative_antecedent_fixture() == []
+
+
+def test_classify_divergence_rule_ce_leaves_an_unrelated_clauses_subject_flagged():
+    # A nominal subject of the relative clause is a different referent from the antecedent.
+    violations = _relative_antecedent_fixture(pronoun="ella")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _fused_clitic_control_fixture(host_pos="verb+pronoun"):
+    """"a **tenerla serrata**" (purgatorio 9:128): the controller is the clitic fused into the
+    host verb, which has no position of its own to be cited by."""
+    derived = {1: [skel.SkelRow(1, 1, "tenerla", "xcomp", 1, 2),
+                   skel.SkelRow(1, 2, "serrata", "", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "tenerla", "xcomp", 1, 2),
+                 skel.SkelRow(1, 2, "serrata", "subj", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="tenerla", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="serrata", deprel="xcomp",
+                           head_line=1, head_token=1),
+    }
+    morph_rows = {1: [
+        morph.MorphRow(word="tenerla", pos=host_pos),
+        morph.MorphRow(word="serrata", pos="adjective"),
+    ]}
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {}, None, None, morph_rows)
+
+
+def test_classify_divergence_rule_cf_accepts_a_fused_clitic_controller():
+    assert _fused_clitic_control_fixture() == []
+
+
+def test_classify_divergence_rule_cf_leaves_a_plain_host_flagged():
+    # With no clitic fused into it the host verb is not an argument of its own clause.
+    violations = _fused_clitic_control_fixture(host_pos="verb")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _gapped_oblique_fixture(second_case=True):
+    """"or dal sinistro e or dal destro fianco" (purgatorio 10:27): two prepositions on one
+    surviving noun, and the elided first phrase citable only by its adjective."""
+    derived = {1: [skel.SkelRow(1, 1, "parea", "obl:da", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 1, "parea", "obl:da", 1, 5),
+                 skel.SkelRow(1, 1, "parea", "obl:da", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="parea", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="dal", deprel="case", head_line=1, head_token=5),
+        (1, 3): dep.DepRow(line=1, token=3, word="sinistro", deprel="amod",
+                           head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="fianco", deprel="obl",
+                           head_line=1, head_token=1),
+    }
+    if second_case:
+        dep_index_by_pos[(1, 4)] = dep.DepRow(line=1, token=4, word="dal", deprel="case",
+                                              head_line=1, head_token=5)
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_cg_accepts_an_elided_coordinate_oblique():
+    assert _gapped_oblique_fixture() == []
+
+
+def test_classify_divergence_rule_cg_leaves_a_plain_modifier_flagged():
+    # One preposition is one oblique: an ordinary attributive adjective is not a second phrase.
+    violations = _gapped_oblique_fixture(second_case=False)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _adnominal_participle_fixture(host_deprel="amod", pos_tag="verb"):
+    """"come fogliette pur mo **nate**" (purgatorio 8:28): a reduced relative with nothing but
+    its subject, which is exactly what the derivation's second pass cannot find it by."""
+    derived = {1: [skel.SkelRow(1, 1, "erano", "obl:come", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "erano", "obl:come", 1, 2),
+                 skel.SkelRow(1, 3, "nate", "subj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="erano", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="fogliette", deprel="obl",
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="nate", deprel=host_deprel,
+                           head_line=1, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "noun", (1, 3): pos_tag})
+
+
+def test_classify_divergence_rule_ch_accepts_an_adnominal_participle_tuple():
+    assert not any(v.detail.startswith("extra_tuple")
+                   for v in _adnominal_participle_fixture())
+
+
+def test_classify_divergence_rule_ch_leaves_a_nominal_modifier_flagged():
+    # "l'altre genti **forme**" (purgatorio 9:58): a noun in `amod` heads no clause.
+    violations = _adnominal_participle_fixture(pos_tag="noun")
+    assert any(v.detail.startswith("extra_tuple") for v in violations)
+
+
+def _coordinate_small_clause_fixture(host_deprel="conj"):
+    """"ma vidi bene e l'uno e **l'altro mosso**" (purgatorio 8:105): the participle hangs on
+    the second conjunct of the object."""
+    derived = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "vidi", "obj", 1, 2),
+                 skel.SkelRow(1, 1, "vidi", "xcomp", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="vidi", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="uno", deprel="obj", head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="altro", deprel=host_deprel,
+                           head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="mosso", deprel="acl",
+                           head_line=1, head_token=3),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 3): "adjective", (1, 4): "adjective"})
+
+
+def test_classify_divergence_rule_ci_reads_the_host_through_its_coordination():
+    assert _coordinate_small_clause_fixture() == []
+
+
+def test_classify_divergence_rule_ci_leaves_an_unrelated_host_flagged():
+    # A participle on a nominal outside this predicate's arguments is not its small clause.
+    violations = _coordinate_small_clause_fixture(host_deprel="nmod")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _oblique_controller_fixture(controller_role="obl"):
+    """"s'avacci **lor** divenir **sante**" (purgatorio 6:27): the controller is the possessor
+    Layer 4 wrote as an oblique."""
+    derived = {1: [skel.SkelRow(1, 1, "avacci", "subj", 1, 3),
+                   skel.SkelRow(1, 1, "avacci", controller_role, 1, 2),
+                   skel.SkelRow(1, 4, "sante", "", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "avacci", "subj", 1, 3),
+                 skel.SkelRow(1, 1, "avacci", controller_role, 1, 2),
+                 skel.SkelRow(1, 4, "sante", "subj", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="avacci", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="lor", deprel="obl", head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="divenir", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="sante", deprel="xcomp",
+                           head_line=1, head_token=3),
+    }
+    morph_rows = {1: [
+        morph.MorphRow(word="avacci", pos="verb", person="3"),
+        morph.MorphRow(word="lor", pos="pronoun"),
+        morph.MorphRow(word="divenir", pos="verb"),
+        morph.MorphRow(word="sante", pos="adjective"),
+    ]}
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {}, None, None, morph_rows)
+
+
+def test_classify_divergence_rule_cj_accepts_an_oblique_controller():
+    assert _oblique_controller_fixture() == []
+
+
+def test_classify_divergence_rule_cj_leaves_an_uncollected_role_flagged():
+    # `ccomp` is not an argument a control chain can take its subject from.
+    violations = _oblique_controller_fixture(controller_role="ccomp")
+    assert any(v.detail.startswith("extra_arg") for v in violations)

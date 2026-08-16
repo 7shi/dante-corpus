@@ -1,5 +1,153 @@
 # skel — Layer 5 correction history
 
+## Rules CA-CJ, from reading Purgatorio 6-10 — 481 → 448, −33 (2026-08-16)
+
+Per-position read of all **35** soft violations in Purgatorio 6-10, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Purgatorio 6-10 itself
+went **35 → 19** (6: 3 → 2, 7: 3 → 1, 8: 6 → 2, 9: 13 → 7, 10: 10 → 7); the corpus went **481 →
+448 (−33, −6.9%)**. Ten deterministic rules plus 1 Layer-4 row. `pytest` **372**, all other layers
+0/0.
+
+The batch's own shape: **eight of the ten rules are about coordination or about a predicate the
+derivation declines to mint**, and the two halves turned out to be the same question asked from
+opposite ends — *when UD promotes a conjunct to the clause head, is that an elided clause or a
+coordinate argument?* Rule CA answers it on the derivation side and rule CC on the acceptance
+side, from one test.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **CA** | rule BN's argument test applied to the `conj` branch: an argumentless nominal conjunct is not an elided clause | 209 | −10 |
+| **CB** | an oblique the tree hangs on a predicative complement the derivation never promotes | 566 / 551 | −2 |
+| **CC** | rule CA's argument leg: the promoted coordinate nominal, in the slot the LLM gives it | (CA's) | −5 |
+| **CD** | the coordination-head walk stops where argument coordination ends and clause coordination begins | — | −1 |
+| **CE** | the antecedent and the relative pronoun of its own relative clause are one referent | 2061 | −1 |
+| **CF** | the controller a fused clitic hides (`tenerla serrata`) | 66 | −3 |
+| **CG** | the coordinate oblique whose noun is elided, citable only by its adjective | 56 | −2 |
+| **CH** | rule Z's adnominal leg: a verb in `amod`/`acl` is a reduced relative clause | 5019 | −3 |
+| **CI** | rule AA's host test read through rule C's collapse | — | −1 |
+| **CJ** | rule V's oblique leg: the controller Layer 4 labelled `obl` | — | −4 |
+
+Plus 1 Layer-4 row (**−1**).
+
+### The batch's finding: an empty tuple is not a reading
+
+Rule BN (the 26-30 batch) refused to mint a predicate at a *conjunction* Layer 4 had put in a
+clause-head deprel with no arguments, on the ground that **no reading of the line can fill the
+tuple**. This batch found the same defect one branch over, in `promote_conjuncts`: "Sordel rimase
+e **l'altre genti** forme" (9:58) and "sen venne suso; e **io** per le sue orme" (9:60) promote a
+noun and a pronoun whose remnants Layer 4 left on the coordination head, so the minted tuple is
+empty — or, worse, a lone pro-drop `subj` ∅, which asserts that the conjunct has a subject other
+than itself. The same test that stops rule BN's conjunctions stops these (**−10**, and 7:19's
+phantom `grazia` predicate with them).
+
+The reach of that argument was then **measured and bounded**. Generalizing it once more — dropping
+*every* non-verb clause head with no argument children, which would have covered a comparative's
+second term as well — was measured at **+168** and rejected outright: those positions are
+overwhelmingly copular predicates whose subject is pro-drop, which the LLM proposes and the
+corpus's own convention expects. The same measurement is why rule CA carries an explicit `cop`/`aux`
+exemption ("Tant' **è amara**", inferno 1:7): a copula child is the tree's own assertion that the
+conjunct heads a predication, and dropping it made `pytest` fail while the violation count did not
+move — the count is not the measure.
+
+### The ten rules
+
+- **Rule CA — `promote_conjuncts`.** A non-verb `conj` conjunct with no argument child of its own
+  and no `cop`/`aux` is a coordinate nominal, not a gapped clause. Rules AN and BN already refuse
+  the same promotion for `orphan`-carrying conjuncts and for conjunctions; this is the general
+  test. A conjunct that *does* carry arguments ("Ed **elli**: «Vedi …»", inferno 11:15, whose
+  `ccomp` is the elided speech) stays promoted, which is what keeps the corpus's elided-speech
+  convention intact. Censused at 209 promoted non-verb conjuncts.
+- **Rule CC — `_promoted_conjunct_argument`.** The acceptance side of the same decision: having
+  denied that the conjunct is a clause, the checker owes it a slot, and the derivation gives it
+  none — Layer 4 attached it to the verb, not to the argument it coordinates with, so there is
+  nothing to disagree about. Accepted in whatever role the LLM assigns, as in rule AJ, gated on
+  rule CA's own test ("qual merito o **qual grazia** mi ti mostra?", 7:19).
+- **Rule CD — `_coordination_head`.** Rule C maps an argument citation onto its coordination head,
+  walking `conj` upwards without asking what it is walking onto. For `io` at 9:60 the chain runs
+  `io` → `venne` → `tolse` → `rimase` and rewrites a subject citation into a citation of a
+  predicate three lines up, which no reading asserts — and hides the conjunct from rule CC. The
+  walk now stops at a `conj` step from a nominal onto a **verb in a clause slot**; a verb that is
+  itself an argument is a real coordinate member ("addimandò … di **dispensare** … ma **licenza**",
+  paradiso 12:95, measured: the first variant, without that exemption, was **−3/+2** and re-flagged
+  exactly this position). Final: **−1**, plus two `role_mismatch` citations at purgatorio 14:63 and
+  27:108 that now name the nominal itself instead of a verb three lines away.
+- **Rule CB — `_stranded_on_underived_complement`.** "li occhi e 'l naso / e **al sì e al no**
+  discordi **fensi**" (10:63): Layer 4 hangs the obliques on `discordi`, the adjective it marks
+  `attr` on `fensi`, and the derivation promotes neither adjectival complements nor their
+  arguments — so an argument the tree plainly records is dropped and the LLM, hanging it on the
+  only verb there is, is reported for naming it. Rule AM makes the same collection from a
+  predicate's `cop`/`aux`; rule X accepts the *reverse* relocation, where the complement is a
+  derived predicate and the two readings disagree about which carries the argument. Gated like
+  rules S and T: the given `obl:<lemma>` must name a preposition the tree carries on that edge.
+  Censused at 566 obliques under `attr`/`xcomp` complements (551 with a `case` child).
+- **Rule CE — `_control_subject_candidates`.** The antecedent and the relative pronoun of its own
+  relative clause are one referent, so either names an adnominal predicate's subject ("O superbi
+  cristian … **che**, de la vista de la mente **infermi**, fidanza avete", 10:122). This is the
+  argument-identity route the 16-20 and 21-25 batches named and left unopened; censused at 2061
+  antecedents carrying both an adnominal predicate and a relative-pronoun subject, and kept to the
+  relative pronoun forms so that an ordinary nominal subject of the relative clause — a different
+  referent — stays flagged.
+- **Rule CF — `_control_subject_candidates`.** Object control whose object is a clitic fused into
+  the host verb ("a **tenerla serrata**", 9:128). Layer 1 gives the clitic no position, so the only
+  citation for it is the host token, which is exactly what rules AL and AS already read as two
+  roles on one position. Censused at 66 `xcomp` edges under a fused verb+pronoun host.
+- **Rule CJ — `_control_subject_candidates`.** The same function's third leg: the candidate set
+  was `subj`/`obj`/`iobj`, but this corpus's Layer 4 writes many controllers as obliques —
+  "s'avacci **lor** divenir **sante**" (6:27), the possessor of a nominalized infinitive;
+  "**detto n'**avea **beati**" (22:5), object control on a `ne` clitic marked `obl`. The set is an
+  acceptance, never an assertion, so widening it accepts a reading the tree leaves open. An `amod`
+  branch was measured alongside it and moved **nothing** (32:11 is already taken by this leg), so
+  it was not added.
+- **Rule CG — `_gapped_coordinate_oblique`.** "or dal sinistro e or dal destro fianco" (10:27) is
+  two obliques with one surviving noun, and Layer 4 records the ellipsis by hanging *both*
+  prepositions on it — so the elided phrase is citable only by its adjective. The second `case`
+  child is the tree's own evidence, and is the gate. Censused at 56 doubly-marked obliques.
+- **Rule CH — `_verb_in_adnominal_slot`.** Rule Z's adnominal leg. A verb Layer 4 attached `amod`
+  or `acl` over a nominal is a reduced relative clause, and the derivation reads it as a predicate
+  whenever pass 2 can find it — that is, whenever it has an argument child ("che da verdi penne /
+  **percosse** traean dietro", 8:30). A participle with nothing but its subject ("come fogliette
+  pur mo **nate**", 8:28) is the identical reading with nothing for pass 2 to catch it by, so the
+  derivation is silent about the tuple rather than opposed to it. Rule V's `acl` branch already
+  accepts the subject such a tuple carries; this closes the tuple side of a predication the checker
+  was half-accepting. Conjuncts of one are the same clause coordinated ("e **ventilate**", 8:30).
+- **Rule CI — rule AA's host gate.** "ma vidi bene e l'uno e **l'altro mosso**" (8:105): the small
+  clause's participle hangs on the *second conjunct* of the object, and rule AA tested the host
+  against `derived_args`, which holds only the coordination head. The host is now read through
+  rule C's collapse — the 31-34 batch's finding (a gate must read the same edge the derivation
+  normalized) applied to a third rule.
+
+### Upstream correction in the same read
+
+**Layer 4 — 1 row** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)): `poste` at 9:5 is
+f. pl. and the `fronte` Layer 4 gave it is f. sg., so the participle cannot agree with its own
+head; `gemme` is the only nominal in the unit it can modify, and Layer 3's spans agree (**−1**).
+
+### Standing shapes the batch recorded but did not settle
+
+- **The elided verb of speech, unproposed** (6:49 *«E io: "Segnore, andiamo…"»*, 8:91 *«Ond' elli a
+  me: "Le quattro chiare stelle…"»*). The census of 152 non-verb clause heads with a `ccomp` child
+  found the corpus's artifact **naming the pronoun as the predicate** in the ordinary case
+  (inferno 3:13 has four tuples on `elli`), so the derivation is following the convention and these
+  two are the LLM omitting it. A candidate rule was killed by that census before it was written;
+  round 3 had already measured the prompt-side fix at zero.
+- **`Era il secondo tinto più che perso`** (9:97), where Layer 4 makes the comparison's second
+  term the root and the predicate participle its subject, while Layer 3 and the LLM both read
+  `il secondo` as the nominal. Re-parsing it was worked out in full and **not applied**: every
+  arrangement trades the two current violations for two or three others, because the disagreement
+  is over which of `tinto` and `perso` heads the predication and the line does not decide. Left
+  flagged, in the "structural reason the text does not settle" category.
+- **A clause coordinated with `conj` read as a `ccomp`** (7:53, 8:50, 9:72 — three in this batch
+  alone). The `sì … che` half of it was censused at 2 and dropped by the 26-30 batch; the
+  `advcl`-as-complement half is the same lexical argument-structure judgment rule T deliberately
+  leaves flagged.
+- **An argument named by a modifier of the derived argument** (10:60, where the LLM's subject is
+  `quanta` of "tutta quanta" and the derivation's is `gente`). Rule AI covers the Layer-3 NP-head
+  version of this; the raw `amod`/`det` population is 16882, far too broad for the rule to be
+  written from one instance.
+- **Rule AN's remnant slots** (9:69, 10:60): the derivation assigns a gapped conjunct's remnants
+  the coordination head's *role labels*, which is rule AN's measured convention, and the LLM names
+  neither. Recorded, not reopened.
+
 ## Rules BW-BZ, from reading Purgatorio 1-5 — 506 → 481, −25 (2026-08-16)
 
 Per-position read of all **14** soft violations in Purgatorio 1-5, following the eight-step

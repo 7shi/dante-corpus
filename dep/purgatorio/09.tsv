@@ -26,7 +26,7 @@ line	token	word	deprel	head_line	head_token
 4	5	fronte	nsubj	4	7
 4	6	era	cop	4	7
 4	7	lucente	conj	2	3
-5	1	poste	acl	4	5
+5	1	poste	acl	4	2
 5	2	in	case	5	3
 5	3	figura	obl	5	1
 5	4	del	case	5	6
