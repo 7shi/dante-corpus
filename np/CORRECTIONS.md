@@ -9,6 +9,16 @@ traceable back to what actually changed and why. Layer-2 mistags found along the
 in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
 side: code/policy changes, span fixes, and classification of what's left.
 
+## One span from Layer 5's Inferno 31-34 read (2026-08-16)
+
+`np/inferno/34.tsv` 105 `[il sol tragitto]` (start 7, end 9, head 9) split into `[il sol]`
+(7-8, head 8) and `[tragitto]` (9-9, head 9). "da sera a mane ha fatto **il sol tragitto**?" is
+"has the sun made the passage", not "has [it] made the sun-passage": `il sol` is the subject of
+`ha fatto` and `tragitto` its object. Found by the per-position read of Inferno 31-34's Layer-5
+soft violations, and applied together with the matching Layer-4 rows (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `np --check` stays 0 hard / 0 soft.
+
+
 ## Four clitic mentions from Layer 5's membership audit (2026-08-09)
 
 Layer 2's membership round (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)) retagged two

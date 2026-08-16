@@ -132,7 +132,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 18	alto	alto	adjective	m.	sg.				
 18	muro	muro	noun	m.	sg.				
 19	dicere	dire	verb				infinitive		archaic
-19	udi'	udire	verb		sg.	2	present	imperative	apocope
+19	udi'	udire	verb		sg.	1	remote past	indicative	apocope
 19	mi	me	pronoun		sg.	1			
 19	Guarda	guardare	verb		sg.	2	present	imperative	
 19	come	come	adverb						

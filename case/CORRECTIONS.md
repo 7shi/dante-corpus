@@ -2156,3 +2156,11 @@ and filling those from Layer 4's deprels would destroy the independence rule U d
 annex is consulted precisely when Layer 4 and the LLM disagree about a role. The retag is gated on
 an independent model read over those 243 positions. See
 [`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md).
+
+## One row dropped by Layer 5's Inferno 31-34 read (2026-08-16)
+
+`case/inferno/31.tsv` row `136 1 Qual nominative` removed. Layer 2 retagged the correlative `Qual`
+at inferno 31:136 from pronoun to adjective (see [`morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)),
+which takes the token out of this annex's scope; `case --check` reported the stale row as a hard
+`count` violation (*"token 1 ('Qual') is not a pronoun-POS token"*), the mirror of the 2026-08-14
+case where a retag *into* scope reported the missing row. Back to **0 hard**.

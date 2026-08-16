@@ -187,8 +187,8 @@ line	token	word	deprel	head_line	head_token
 26	5	e	cc	26	7
 26	6	'n	case	26	7
 26	7	Cacume	conj	26	4
-27	1	con	case	27	2
-27	2	esso	obl	26	1
+27	1	con	case	27	4
+27	2	esso	fixed	27	1
 27	3	i	det	27	4
 27	4	piè	obl	26	1
 27	5	ma	cc	27	7

@@ -1,5 +1,46 @@
 # dep — Layer 4 correction history
 
+## 15 rows from the Layer-5 Inferno 31-34 read (2026-08-16)
+
+The per-position read of Inferno 31-34's 37 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 6 Layer-4 rows wrong and normalized 9
+more. Applied with gated scripts that assert the expected word *and* deprel *and* head at each
+`(line, token)` before rewriting; `morph`, `np`, `dep` and `case --check` all stay 0 afterwards,
+`pytest` 342.
+
+**A prepositional phrase on the wrong clause** — inferno 31:89, "d'una catena che 'l tenea avvinto
+/ **dal collo in giù**, sì che 'n su lo scoperto / si ravvolgëa": the phrase says how the chain
+bound him, not how it wound round. `collo` moved from `obl<-90.2` (`ravvolgëa`) to `obl<-88.6`
+(`tenea`), and `giù` from `obl<-90.2` onto `collo` — which is also the convention this very canto
+already uses at 31:62 ("dal mezzo in giù") and 31:66 ("dal loco in giù"), where `giù` hangs on the
+nominal.
+
+**An embedded question on the outer verb of speech** — inferno 32:44, «Ditemi, voi che sì
+strignete i petti», / diss' io, «**chi siete**?». `siete` was `ccomp<-44.1` (`diss'`), which
+already carries the whole quotation; the question is what `Ditemi` asks for, so it is
+`ccomp<-43.1`.
+
+**A subject read as a modifier inside the object phrase** — inferno 34:105, "da sera a mane ha
+fatto **il sol** tragitto?". `sol` was `amod<-105.9`, making "il sol tragitto" one noun phrase;
+the sun is the subject of `ha fatto` and `tragitto` its object. `sol` → `nsubj<-105.6`, `il` →
+`det<-105.8`. Layer 3's span was split to match (see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)).
+
+**An object read as the next clause's subject** — inferno 31:143, "al fondo che divora /
+**Lucifero con Giuda**, ci sposò". `Lucifero` was `nsubj<-143.5` (`sposò`, whose subject is the
+pro-drop Antaeus) and is the object of `divora`; `Giuda` moved with it. **Count-neutral by
+construction** (−1 / +1: the LLM had read `con Giuda` as `sposò`'s oblique, which is now correctly
+reported) and kept anyway — the count is not the measure, the correctness of the parse is.
+
+**`con esso` normalized to the prep-stack shape — 9 rows, 4 cantos, 3 canticles.** The reinforced
+preposition "con esso" ("con esso i piè", "con esso un colpo") carried four different Layer-4
+shapes in its four occurrences: `esso` as an `obl` sibling of the nominal (inferno 32:62,
+purgatorio 4:27), the nominal as `appos` under `esso` (purgatorio 24:98), and the nominal as the
+verb's `nsubj` (inferno 22:88). This is the same shape lottery the 2026-08-14 multiword-preposition
+normalization closed, so it gets the same shape: opening word `con` → `case` on the nominal, later
+member `esso` → `fixed` on `con`, and the nominal takes the role. The fifth "con esso" (paradiso
+25:131, "si quïetò con esso il dolce mischio") is genuinely pronominal — `esso` is "with it" and
+`il dolce mischio` the subject — and was left alone. Layer 5 reads the new shape through rule BV.
+
 ## 10 rows from the Layer-5 Inferno 26-30 read (2026-08-15)
 
 The per-position read of Inferno 26-30's 23 Layer-5 soft violations (see

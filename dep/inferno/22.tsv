@@ -620,9 +620,9 @@ line	token	word	deprel	head_line	head_token
 87	5	ma	cc	87	6
 87	6	sovrano	conj	87	4
 88	1	Usa	root	0	0
-88	2	con	case	88	3
-88	3	esso	obl	88	1
-88	4	donno	nsubj	88	1
+88	2	con	case	88	4
+88	3	esso	fixed	88	2
+88	4	donno	obl	88	1
 88	5	Michel	appos	88	4
 88	6	Zanche	appos	88	5
 89	1	di	case	89	2

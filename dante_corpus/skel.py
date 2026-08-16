@@ -753,6 +753,28 @@ def _apply_subj_authority(
         if head_given == g_subj:
             g.pop(g_subj, None)
             d.pop(d_subj, None)
+            return
+        # Rule BU: the subject a coordination supplies from its **last** conjunct. "per fuggir
+        # lui **lasciò** qui loco vòto / **quella ch'appar di qua**, e sù ricorse"
+        # (inferno 34:125): `lasciò` has no subject of its own, so step 3 walks the conj chain up
+        # and inherits one from three predicates away, while the overt `nsubj` Layer 4 records is
+        # on `ricorse`, the conjunct *below* it. Italian postposes a shared subject freely, and a
+        # conjunct's own `nsubj` is a stronger candidate for the coordination than anything the
+        # chain-walk finds above it — rule AT's direction reversed for the one case where the
+        # derivation has no subject of its own to defend. Gated on the derived subject being
+        # inherited (this branch's own condition), so a predicate with an `nsubj` child of its own
+        # is untouched, and on the LLM having cited exactly that conjunct's subject. Censused at
+        # 74 coordination heads whose conjunct carries the only overt subject.
+        if children_by_pos is not None and g_subj is not None:
+            for child in children_by_pos.get(pos, ()):
+                if child.deprel != "conj":
+                    continue
+                conjunct = (child.line, child.token)
+                if any(k.deprel in _SUBJ_DEPRELS and (k.line, k.token) == g_subj
+                       for k in children_by_pos.get(conjunct, ())):
+                    g.pop(g_subj, None)
+                    d.pop(d_subj, None)
+                    return
 
 
 _ELIDED_COPULA_DEPRELS = frozenset({"conj", "appos", "attr"})
@@ -943,6 +965,38 @@ def _merge_auxiliary_citations(
     return out
 
 
+def _nested_in_named_phrase(
+    arg: tuple[int, int], g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+    np_spans_by_line: "dict[int, list[NPSpan]] | None",
+) -> bool:
+    """Rule BR: a derived argument buried inside a Layer-3 noun phrase whose head is another
+    derived argument of the same predicate, and the LLM named that head.
+
+    Rule AI merges two citations of one noun phrase when the **role** matches; this is the case
+    where it does not. "**Gualandi con Sismondi e con Lanfranchi** s'avea messi dinanzi"
+    (inferno 33:33): Layer 3 reads the whole comitative chain as one subject phrase headed by
+    `Gualandi`, Layer 4 hangs `Sismondi` off the participle as a second `obl:con`, and the LLM —
+    naming the phrase once, by its head — is reported as having omitted an oblique. The same shape
+    covers a relative pronoun sitting inside its own antecedent's span (paradiso 12:27) and a
+    modifier Layer 4 gave an argument deprel of its own (purgatorio 15:15).
+
+    Two gates keep it from swallowing genuine omissions: the outer position must be a **derived**
+    argument too, so the phrase is one Layer 4 already asserts twice rather than an over-inclusive
+    Layer-3 span, and it must be one the LLM **cited**, so the phrase is on the record once. The
+    structural pattern (two sibling arguments inside one NP span, one of them the head) is
+    censused at 404; only 8 of those are positions where the LLM named exactly the head.
+    """
+    if np_spans_by_line is None or arg == (0, 0):
+        return False
+    for span in np_spans_by_line.get(arg[0], ()):
+        if not (span.start <= arg[1] <= span.end) or span.head == arg[1]:
+            continue
+        outer = (arg[0], span.head)
+        if outer in d and outer in g:
+            return True
+    return False
+
+
 def _merge_np_head_citations(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     np_spans_by_line: dict[int, list[NPSpan]],
@@ -994,7 +1048,19 @@ def _adverb_cluster_head(
     if "adverb" not in morph_pos_by_position.get(head, "").lower():
         return None
     if row.deprel in ("nmod", "obl") or OBL_RE.fullmatch(row.deprel):
-        if any(k.deprel == "case" for k in children_by_pos.get(arg, ())):
+        kids = children_by_pos.get(arg, ())
+        if any(k.deprel == "case" for k in kids):
+            return head
+        # Rule BQ, rule BJ's other two orders. The cluster does not always put the preposition on
+        # the nominal: "dinanzi **l'altro** e dietro **il braccio destro**" (inferno 31:87) has no
+        # preposition at all, and "'n su **lo scoperto**" (31:89) carries it on the *adverb*, so
+        # the nominal hangs bare and rule BJ's own-preposition gate never sees it. A nominal whose
+        # only licence is an `obl`/`nmod` edge under an adjunct adverb is part of that adverb's
+        # phrase however the preposition is distributed. Censused at 11 bare cases against rule
+        # BJ's 150; the `mark` exclusion is what keeps the second term of a comparison out, where
+        # the marker — not the adverb — is what opens the phrase ("vie più là **che 'l punir**",
+        # paradiso 17:99), and rules BK/BL own that shape.
+        if not any(k.deprel == "mark" for k in kids):
             return head
     if row.deprel == "advmod" and "adverb" in morph_pos_by_position.get(arg, "").lower():
         return head
@@ -1064,6 +1130,58 @@ def _aux_head(
     return cur
 
 
+def _prep_stack_nominal(
+    arg: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
+) -> tuple[int, int]:
+    """Rule BV: the nominal a multiword preposition's own words belong to (bounded walk).
+
+    The 2026-08-14 Layer-4 normalization writes a stacked preposition as opening word `case` ->
+    nominal, later members `fixed` -> opening word, and `dante_corpus.skel`'s lemma aggregation
+    already reads that shape when it names the oblique's preposition. What it did not cover is the
+    LLM *citing* one of those words as the argument: "Usa **con esso** donno Michel Zanche"
+    (inferno 22:88), where the reinforced `con esso` was normalized the same way and the LLM names
+    `esso`. A preposition's own words are not arguments, so the citation is the nominal they open —
+    the same merge rules AQ (auxiliary) and BJ (adverb cluster) make onto their phrase's head.
+
+    Entered only from a `fixed` member, so a plain `case` preposition standing on its own — which
+    the LLM cites for other reasons, and which rules L/N/O already read — is untouched.
+    """
+    if (dep_index_by_pos.get(arg) or DepRow(0, 0, "", "", 0, 0)).deprel != "fixed":
+        return arg
+    seen = {arg}
+    cur = arg
+    for _ in range(_CONJ_WALK_LIMIT):
+        row = dep_index_by_pos.get(cur)
+        if row is None or row.deprel not in ("fixed", "case"):
+            break
+        head = (row.head_line, row.head_token)
+        if head in seen or head not in dep_index_by_pos:
+            break
+        seen.add(head)
+        cur = head
+    return cur
+
+
+def _hosts_child(
+    pos: tuple[int, int], row: DepRow, dep_index_by_pos: dict[tuple[int, int], DepRow]
+) -> bool:
+    """Rule BP: whether `row` is a child of the predicate at `pos`, reading an `aux`/`cop` head
+    through to its lexical word.
+
+    Every acceptance rule that asks "is this the predicate's *own* dependent" compared Layer 4's
+    raw head to `pos`, and 53 arguments corpus-wide hang on an auxiliary or a copula instead of on
+    the lexical verb that carries the tuple — "tre Frison **s'**averien dato mal vanto"
+    (inferno 31:64), where the reflexive clitic is `expl` on `averien` while the predicate is
+    `dato`. `derive_unit` already reaches through that edge (rule AM collects a stranded
+    auxiliary's arguments onto the lexical head, rule AQ re-keys a citation that lands on one), so
+    the gates were the only place still reading the un-normalized edge. The Inferno 26-30 batch's
+    finding — *ask which checks run before a rule* — applied to a rule's own gate rather than to
+    the order of two rules.
+    """
+    head = (row.head_line, row.head_token)
+    return head == pos or _aux_head(head, dep_index_by_pos) == pos
+
+
 def _adverbial_oblique(
     pos: tuple[int, int], arg: tuple[int, int], role: str,
     dep_index_by_pos: dict[tuple[int, int], DepRow],
@@ -1085,7 +1203,7 @@ def _adverbial_oblique(
     if not (role == "obl" or OBL_RE.fullmatch(role)):
         return False
     row = dep_index_by_pos.get(arg)
-    if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+    if row is None or row.deprel != "advmod" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     arg_pos = (morph_pos_by_position or {}).get(arg, "").lower()
     return any(tag in arg_pos for tag in ("adverb", "noun", "pronoun"))
@@ -1109,7 +1227,7 @@ def _predicative_advmod(
     if role != "xcomp":  # `attr` is already canonicalized to `xcomp` before comparison
         return False
     row = dep_index_by_pos.get(arg)
-    if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+    if row is None or row.deprel != "advmod" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
 
@@ -1195,7 +1313,7 @@ def _inverted_copula_complement(
     if role != "xcomp":  # `attr` is canonicalized to `xcomp` before comparison
         return False
     row = (dep_index_by_pos or {}).get(arg)
-    if row is None or row.deprel != "cop" or (row.head_line, row.head_token) != pos:
+    if row is None or row.deprel != "cop" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     arg_pos = (morph_pos_by_position or {}).get(arg, "").lower()
     return "verb" not in arg_pos and any(t in arg_pos for t in ("adjective", "noun"))
@@ -1260,7 +1378,7 @@ def _depictive_bare_oblique(
     if arg in case_children:
         return False
     row = (dep_index_by_pos or {}).get(arg)
-    if row is None or row.deprel != "obl" or (row.head_line, row.head_token) != pos:
+    if row is None or row.deprel != "obl" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
 
@@ -1291,7 +1409,7 @@ def _nmod_complement_of_predicate(
     if not OBL_RE.fullmatch(role):
         return False
     row = dep_index_by_pos.get(arg)
-    if row is None or row.deprel != "nmod" or (row.head_line, row.head_token) != pos:
+    if row is None or row.deprel != "nmod" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return role.split(":", 1)[1] in case_lemmas.get(arg, set())
 
@@ -1319,7 +1437,7 @@ def _marked_adverbial_clause(
     if not OBL_RE.fullmatch(role):
         return False
     row = dep_index_by_pos.get(arg)
-    if row is None or row.deprel != "advcl" or (row.head_line, row.head_token) != pos:
+    if row is None or row.deprel != "advcl" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return role.split(":", 1)[1] in marker_lemmas.get(arg, set())
 
@@ -1685,6 +1803,11 @@ def _classify_divergence(
         (no, i + 1): row.tense
         for no, rows in (morph_rows or {}).items() for i, row in enumerate(rows)
     }
+    # Rule BT: Layer 2's `note` column, where `relative` / `interrogative` are recorded.
+    morph_note_by_position: dict[tuple[int, int], str] = {
+        (no, i + 1): row.note
+        for no, rows in (morph_rows or {}).items() for i, row in enumerate(rows)
+    }
     children_by_pos: dict[tuple[int, int], list[DepRow]] = {}
     for row in (dep_index_by_pos or {}).values():
         if not (row.head_line == 0 and row.head_token == 0):
@@ -1889,6 +2012,46 @@ def _classify_divergence(
         clause = (row.head_line, row.head_token)
         return clause != pos and derived_roles.get(clause) == role
 
+    def _free_relative_matrix_head(pos: tuple[int, int], arg: tuple[int, int]) -> bool:
+        # Rule BT: rule AE's other end. In an embedded question Layer 4 hangs the clause **under**
+        # the interrogative pronoun — "se vuoi saper **chi son cotesti due**" (inferno 32:55) has
+        # `chi` as `saper`'s `attr` and `son` as `acl:relcl` on `chi` — so the pronoun that fills
+        # the embedded clause's own predicate-complement slot is, in the tree, that clause's
+        # governor. `derive_unit` reads the edge downwards and never gives `son` an `attr`; the
+        # LLM reads the question and does. Rule AE accepts the same constituent cited from the
+        # matrix side; this is the embedded side.
+        #
+        # The gate is the free-relative census, not the deprel alone: 765 predicates corpus-wide
+        # are `acl:relcl` under a pronoun, but nearly all are ordinary correlatives ("colui **che**
+        # vede"), where the antecedent is emphatically *not* an argument of the relative clause and
+        # the relative pronoun inside it is. The discriminator is that second pronoun: when the
+        # clause holds none, the word it hangs under is the only thing that can fill the slot.
+        # Requiring the head to be a bare `chi`/`che`/`quale` with no determiner of its own, and
+        # the clause to hold no relative pronoun, leaves 92 — which covers the embedded question
+        # (32:55) and the free relative proper ("**chi** … quello amor si spoglia", paradiso
+        # 15:12) alike, and, because Layer 2 flags `relative` unevenly, a plain relative whose
+        # pronoun Layer 4 left outside the clause too (paradiso 6:6).
+        if dep_index_by_pos is None:
+            return False
+        row = dep_index_by_pos.get(pos)
+        if row is None or row.deprel != "acl:relcl":
+            return False
+        if (row.head_line, row.head_token) != arg:
+            return False
+        if "pronoun" not in (morph_pos_by_position or {}).get(arg, "").lower():
+            return False
+        if (morph_lemma_by_position or {}).get(arg, "").lower() not in ("chi", "che", "quale"):
+            return False
+        if "relative" in morph_note_by_position.get(arg, "").lower():
+            return False
+        kids = children_by_pos.get(arg, ())
+        if any(k.deprel in ("det", "amod") for k in kids):
+            return False
+        return not any(
+            "relative" in morph_note_by_position.get((k.line, k.token), "").lower()
+            for k in children_by_pos.get(pos, ())
+        )
+
     def _copular_adverb_complement(
         pos: tuple[int, int], arg: tuple[int, int], role: str
     ) -> bool:
@@ -1903,7 +2066,7 @@ def _classify_divergence(
         if (morph_lemma_by_position or {}).get(pos, "").lower() != "essere":
             return False
         row = dep_index_by_pos.get(arg)
-        if row is None or row.deprel != "advmod" or (row.head_line, row.head_token) != pos:
+        if row is None or row.deprel != "advmod" or not _hosts_child(pos, row, dep_index_by_pos):
             return False
         return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
 
@@ -1933,7 +2096,7 @@ def _classify_divergence(
         row = dep_index_by_pos.get(arg)
         if row is None or row.deprel != "expl":
             return False
-        if (row.head_line, row.head_token) != pos:
+        if not _hosts_child(pos, row, dep_index_by_pos):
             return False
         if "pronoun" not in (morph_pos_by_position or {}).get(arg, "").lower():
             return False
@@ -1969,7 +2132,7 @@ def _classify_divergence(
         row = dep_index_by_pos.get(arg)
         if row is None or row.deprel not in ("obj", "iobj", "obl"):
             return False
-        if (row.head_line, row.head_token) != pos:
+        if not _hosts_child(pos, row, dep_index_by_pos):
             return False
         if "pronoun" not in (morph_pos_by_position or {}).get(arg, "").lower():
             return False
@@ -2060,7 +2223,17 @@ def _classify_divergence(
         # acceptance for the case where there is **no** copula token at all; this is the case
         # where there is one, and the copula edge itself is the evidence, so no deprel gate on
         # the host is needed.
-        return pos in copula_hosts
+        #
+        # **Rule BS** reads the `cop` edge from the other end. "e cortesia fu lui **esser
+        # villano**" (inferno 33:150): the predication is `lui esser villano`, and the LLM names
+        # it by the copula `esser` — the same labeling convention `_aux_of_derived_predicate`
+        # accepts, except that there the head is a derived predicate and here it is exactly the
+        # nominal rule Y was written for. Testing the citation through `_aux_head` first is rule
+        # BP's normalization applied to a tuple-side gate.
+        if pos in copula_hosts:
+            return True
+        return (dep_index_by_pos is not None
+                and _aux_head(pos, dep_index_by_pos) in copula_hosts)
 
     def _verb_in_argument_slot(pos: tuple[int, int]) -> bool:
         # Rule Z: a verb form Layer 4 put in an argument or adjunct slot. "ch'i' fui **per
@@ -2115,13 +2288,27 @@ def _classify_divergence(
                                   morph_rows, children_by_pos)
             derived_args = set(d)
             g = _merge_auxiliary_citations(g, pos, dep_index_by_pos)
+            g = {
+                (_prep_stack_nominal(a, dep_index_by_pos) if a != (0, 0) else a): r
+                for a, r in g.items()
+            }  # rule BV: a `fixed`/`case` word of a multiword preposition names its nominal
             g = _merge_adverb_cluster_citations(g, pos, dep_index_by_pos, children_by_pos,
                                                 morph_pos_by_position)
             g = _collapse_coordination(g, pos, dep_index_by_pos)
             d = _collapse_coordination(d, pos, dep_index_by_pos)
-            _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
+            # Rule BO: rule AI runs **before** rule D. Both fire on a given citation the
+            # derivation does not carry, and rule D is the weaker answer of the two: it drops the
+            # citation as an accepted `nmod` adjunct, which silences the `extra_arg` half of the
+            # pair and leaves the derivation's own position reported as a `missing_arg`. When the
+            # two positions are one Layer-3 noun phrase named twice ("torreggiavan **di mezza la
+            # persona**", inferno 31:43 — Layer 4 heads the oblique on `mezza` and hangs `persona`
+            # under it as `nmod`, Layer 3 heads the span on `persona`), rule AI re-keys the
+            # citation onto the derived position and both halves go quiet. The 21-25 batch's
+            # ordering finding in a third form: two rules that are each correct alone, in the
+            # order that loses one of them.
             if np_rows is not None:
                 _merge_np_head_citations(g, d, np_rows)
+            _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)
             if grole is None:
@@ -2143,6 +2330,8 @@ def _classify_divergence(
                     continue  # rule BM: a connective Layer 4 parked in an adjunct slot
                 if _pronominal_verb_clitic(pos, arg, drole):
                     continue  # rule AW: rule AB's mirror leg
+                if _nested_in_named_phrase(arg, g, d, np_rows):
+                    continue  # rule BR: the LLM named the phrase once, by its Layer-3 head
                 if _undecided_subject_slot(drole, arg, g, d):
                     continue  # rule BA: the derivation offered two subjects and named neither
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
@@ -2194,6 +2383,7 @@ def _classify_divergence(
                     or _reflexive_clitic_argument(pos, arg, grole)
                     or _copular_adverb_complement(pos, arg, grole)
                     or _free_relative_head(pos, arg, grole, d)
+                    or _free_relative_matrix_head(pos, arg)  # rule BT: rule AE's embedded side
                     or _conj_shared_argument(pos, arg, grole, dep_index_by_pos,
                                              derived_by_pred, d)
                     # rule X, mirror leg: derive_unit hung it on the copula this predicate

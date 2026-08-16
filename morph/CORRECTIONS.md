@@ -1,5 +1,23 @@
 # Manual Layer-2 corrections
 
+## 2 rows from the Layer-5 Inferno 31-34 read (2026-08-16)
+
+Found by the per-position read of Inferno 31-34's Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)); applied with a gated script and re-validated
+against every layer's `--check` (all 0) and `pytest` (342).
+
+**inferno 31:136 `Qual` — pronoun → adjective.** "**Qual** pare a riguardar la Carisenda … **tal**
+parve Antëo": the correlative pair, whose other half `tal` (31:139) is tagged adjective. Of the 22
+`quale` tokens Layer 4 puts in an `advmod` slot, 19 are adjectives; the three pronoun rows are
+inferno 29:67's two (`Qual` … `qual` = "one … another", genuinely pronominal) and this one. The
+retag also required dropping the annex row for the token, since the case annex covers pronouns —
+see [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md).
+
+**inferno 32:19 `udi'` — 2sg present imperative → 1sg remote past indicative.** "dicere **udi'mi**"
+is `udii` + the enclitic dative `mi` ("I heard myself told"), not an imperative; Layer 4 already
+reads `mi` as `udi'`'s `iobj`. No Layer-5 violation moved — the subject is pro-drop either way —
+but the row was wrong.
+
 ## 1 row from the Layer-5 Inferno 26-30 read (2026-08-15)
 
 Found by the per-position read of Inferno 26-30's Layer-5 soft violations (see

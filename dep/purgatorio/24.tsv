@@ -737,10 +737,10 @@ line	token	word	deprel	head_line	head_token
 98	3	rimasi	conj	97	3
 98	4	in	case	98	5
 98	5	via	obl	98	3
-98	6	con	case	98	7
-98	7	esso	obl	98	3
+98	6	con	case	98	9
+98	7	esso	fixed	98	6
 98	8	i	det	98	9
-98	9	due	appos	98	7
+98	9	due	obl	98	3
 99	1	che	nsubj	99	7
 99	2	fuor	obl	99	7
 99	3	del	case	99	4

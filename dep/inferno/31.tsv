@@ -637,9 +637,9 @@ line	token	word	deprel	head_line	head_token
 88	6	tenea	acl:relcl	88	3
 88	7	avvinto	xcomp	88	6
 89	1	dal	case	89	2
-89	2	collo	obl	90	2
+89	2	collo	obl	88	6
 89	3	in	case	89	4
-89	4	giù	obl	90	2
+89	4	giù	obl	89	2
 89	5	sì	advmod	89	6
 89	6	che	mark	90	2
 89	7	'n	case	89	8
@@ -1033,9 +1033,9 @@ line	token	word	deprel	head_line	head_token
 142	4	fondo	obl	143	5
 142	5	che	nsubj	142	6
 142	6	divora	acl:relcl	142	4
-143	1	Lucifero	nsubj	143	5
+143	1	Lucifero	obj	142	6
 143	2	con	case	143	3
-143	3	Giuda	obl	143	5
+143	3	Giuda	obl	142	6
 143	4	ci	obj	143	5
 143	5	sposò	root	0	0
 144	1	né	conj	144	5

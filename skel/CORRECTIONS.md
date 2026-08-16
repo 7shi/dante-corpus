@@ -1,5 +1,157 @@
 # skel — Layer 5 correction history
 
+## Rules BO-BV, from re-reading Inferno 31-34 — 541 → 506, −35 (2026-08-16)
+
+Per-position read of all **37** soft violations in Inferno 31-34, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Inferno 31-34 itself
+went **37 → 16** (31: 20 → 8, 32: 8 → 5, 33: 4 → 2, 34: 5 → 1); the corpus went **541 → 506
+(−35, −6.5%)**. Eight deterministic rules plus 15 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and
+1 case-annex row. `pytest` **342**, all other layers 0/0.
+
+The first batch measured against a base a `--fix` round has moved (§12 of [`PLAN.md`](PLAN.md)),
+so these numbers are not comparable with the AG-BN series' — the easy positions of every class the
+round's prompts cover are gone from underneath them.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **BO** | rule AI runs **before** rule D: the weaker rule was silencing the stronger one's other half | — | −2 |
+| **BP** | "is this the predicate's own child" reads an `aux`/`cop` head through to its lexical word | 53 | −1 |
+| **BQ** | rule BJ's other two orders: the adverb cluster's nominal hangs **bare**, or the preposition is on the adverb | 11 | −6 |
+| **BR** | a derived argument buried in a Layer-3 noun phrase the LLM named by its head | 404 / 8 | −8 |
+| **BS** | rule Y read from the other end: the LLM names the copula of a nominal predication | — | −4 |
+| **BT** | rule AE's embedded side: the clause's own governor is the slot it fills | 765 → 92 | −3 |
+| **BU** | the subject a coordination supplies from its **last** conjunct | 74 | −2 |
+| **BV** | a `fixed` word of a multiword preposition names the nominal it opens | 196 rows | (below) |
+
+Plus 15 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 1 case-annex row (**−7** for the retags,
+and **−2** for the `con esso` normalization together with rule BV and the inferno 31:143 re-parse).
+
+### The batch's three findings
+
+**1. "Which checks run before a rule" has a third form: a rule's own gate.** The Inferno 26-30
+batch found rule AQ correct inside `_classify_divergence` and absent from the membership check
+that runs first. This batch found the same normalization missing *inside* a rule. Nine acceptance
+rules asked "is this argument the predicate's own dependent" by comparing Layer 4's raw
+`head_line`/`head_token` to the predicate's position — but **53 arguments corpus-wide hang on an
+auxiliary or a copula** rather than on the lexical verb that carries the tuple ("tre Frison
+**s'**averien dato mal vanto", inferno 31:64, where the reflexive clitic is `expl` on `averien`
+while the predicate is `dato`). `derive_unit` has reached through that edge since rule AM, and
+rule AQ re-keys citations that land on one; the gates were the last place still reading the
+un-normalized edge. `_hosts_child` (rule BP) fixes all nine at once. Rule BS is the same
+normalization applied to a *tuple*-side gate, and rule BV to the multiword-preposition edge.
+
+**2. Rule ordering cuts the other way too.** The Inferno 21-25 batch found rule V's citation being
+rewritten by a collapse that ran *after* it. Here the loss is upstream of that: rule D
+(`_drop_nmod_obliques`) and rule AI (`_merge_np_head_citations`) both fire on a given citation the
+derivation does not carry, and rule D ran first. Rule D is the weaker answer — it drops the
+citation as an accepted `nmod` adjunct and leaves the derivation's own position reported as a
+`missing_arg`, so one decision still costs one violation. Rule AI re-keys the citation onto the
+derived position and both halves go quiet ("torreggiavan **di mezza la persona**", inferno 31:43,
+where Layer 4 heads the oblique on `mezza` and Layer 3 heads the span on `persona`). Rule BO is
+the two lines swapped. **When two rules can fire on one citation, the order is a decision, and
+only the diff shows which one is making it.**
+
+**3. The mirror leg was measured and dropped — the first time in the series.** "Check the mirror
+leg of every rule you write" has been standing advice since the Inferno 16-20 batch and has never
+before been declined. Rule BR's mirror (the *LLM* naming a word buried in a phrase both readings
+already carry) measured **−6 / +0** and was still dropped: on the derived side both positions are
+arguments Layer 4 itself asserts, so "one phrase named twice" is Layer 4's own claim, while on the
+given side the only evidence is a Layer-3 span — and Layer 3 is **deliberately over-inclusive**
+(see the root [`../PLAN.md`](../PLAN.md), Layer 3: "over-inclusion is correct behaviour"). Two of
+the six it removed were LLM errors it silenced for the wrong reason (inferno 16:21, where `sé`
+inside `[una rota di sé tutti e trei]` was accepted as the verb's subject; paradiso 13:45, where a
+relative clause inside the span swallowed the second conjunct of an object). **A mirror leg is
+worth testing every time and is not owed acceptance.**
+
+### The eight rules
+
+- **Rule BO — rule AI before rule D.** Two lines swapped in `_classify_divergence`. Evidence:
+  inferno 31:43 and inferno 20:10.
+- **Rule BP — `_hosts_child`.** Every child-of-the-predicate gate resolves an `aux`/`cop` head to
+  its lexical word. Censused at 53 arguments hanging on an auxiliary; only inferno 31:64 was
+  producing a violation at one of the nine gates, which is the cheap half of the finding — the
+  other 52 are positions where the gate would have been wrong had anything else diverged.
+- **Rule BQ — the adverb cluster's other two orders.** Rule BJ requires the nominal to carry a
+  preposition of its own ("fuor **del** dritto amore"). Italian also writes the cluster with no
+  preposition at all ("dinanzi **l'altro** e dietro **il braccio destro**", inferno 31:87) and
+  with the preposition on the *adverb* ("'n su **lo scoperto**", 31:89), and then the nominal
+  hangs bare and rule BJ's gate never sees it. Censused at 11 bare against rule BJ's 150. The
+  `mark` exclusion keeps the second term of a comparison out ("vie più là **che 'l punir**",
+  paradiso 17:99), which rules BK/BL own.
+- **Rule BR — a phrase named once, by its head.** Rule AI merges two citations of one noun phrase
+  when the *role* matches; this is the case where it does not. "**Gualandi con Sismondi e con
+  Lanfranchi** s'avea messi dinanzi" (inferno 33:33): Layer 3 reads the comitative chain as one
+  subject phrase, Layer 4 hangs `Sismondi` off the participle as a second `obl:con`. Gated on the
+  outer position being a **derived** argument too *and* one the LLM cited. The structural pattern
+  is censused at 404; 8 are positions where the LLM named exactly the head.
+- **Rule BS — rule Y from the other end.** Rule Y accepts a nominal with a `cop` child as a
+  predication whatever deprel it carries; the LLM sometimes names that predication by the copula
+  instead ("e cortesia fu lui **esser villano**", inferno 33:150). Testing the citation through
+  `_aux_head` first.
+- **Rule BT — the free relative's embedded side.** Rule AE accepts a free relative cited from the
+  matrix side; this is the clause's own side. In an embedded question Layer 4 hangs the clause
+  **under** the interrogative pronoun ("se vuoi saper **chi son cotesti due**", inferno 32:55), so
+  the word filling the embedded predicate's complement slot is, in the tree, its governor. 765
+  predicates are `acl:relcl` under a pronoun, but nearly all are ordinary correlatives where the
+  antecedent is emphatically *not* an argument of the clause; the discriminator is the second
+  pronoun, and requiring the clause to hold none leaves **92**.
+- **Rule BU — the subject the last conjunct supplies.** "per fuggir lui **lasciò** qui loco vòto /
+  **quella ch'appar di qua**, e sù ricorse" (inferno 34:125): `lasciò` has no subject of its own,
+  so `derive_unit`'s step 3 walks the conj chain *up* and inherits one from three predicates away,
+  while the only overt `nsubj` Layer 4 records is on the conjunct *below* it. Rule AT's direction
+  reversed, for the one case where the derivation has no subject of its own to defend. Censused at
+  74 coordination heads whose conjunct carries the only overt subject.
+- **Rule BV — a multiword preposition's own words are not arguments.** `_prep_stack_nominal`
+  re-keys a citation landing on a `fixed` member onto the nominal the cluster opens, the same
+  merge rules AQ and BJ make. Entered only from a `fixed` member, so a plain `case` preposition is
+  untouched — a first, broader version that also walked from `case` re-keyed five citations onto
+  the predicate itself and was narrowed.
+
+### Two candidates measured and dropped
+
+- **The `da` + infinitive gerundive** ("ché non è impresa **da pigliare** a gabbo", inferno 32:7,
+  where `impresa` is the infinitive's notional object). Censused at **8** corpus-wide, and the
+  role the host fills is not constant across them — object at inferno 32:7 and paradiso 27:92,
+  but an oblique at purgatorio 15:144 ("loco da cansarsi") and 17:56 ("via da ir"). A rule
+  accepting any role on a population of 8 is not a rule; left flagged.
+- **Rule BR's mirror leg**, −6 / +0, dropped on the reasoning in finding 3 above.
+
+### Standing shapes the batch recorded but did not settle
+
+- **A subject inherited across an adversative coordination** (inferno 31:32, "non son torri, ma
+  giganti, / e son nel pozzo"): the second `son`'s subject is `giganti`, the *predicate nominal*
+  of the negated first clause, and neither reading finds it — the derivation propagates `torri`
+  and the LLM names the quantifier `tutti quanti` that follows two lines later.
+- **A prepositional phrase as a copula's complement** (inferno 34:43, "la destra parea **tra
+  bianca e gialla**"): Layer 4's `obl:tra` has a real preposition in it, and `parere` has no other
+  slot for it. Both readings are defensible and the line does not decide.
+- **`qual che fosse`** (inferno 31:85): Layer 4 tags `qual` as a second `mark` alongside `che`,
+  which leaves `fosse` with no complement; the LLM reads `qual` as the complement. A one-instance
+  Layer-4 question, not censused.
+- **The elided speech verb at a pronoun** (inferno 31:21, "ond' io: «Maestro, dì, …»"): the
+  derivation mints the predicate at `io`, which the Inferno 21-25 batch censused at 164 and
+  settled as reading error when the LLM omits it. This is one of the omissions.
+- **Rule BR's own trade** (inferno 6:20, "de l'un de' lati fanno **a l'altro schermo**"): Layer 3
+  reads `[l'altro schermo]` as one span, so rule BR accepts the LLM's silence about the dative.
+  The span is Layer 3 being over-inclusive as designed; recorded rather than split, because
+  splitting it is a Layer-3 judgment this batch did not census.
+
+### Upstream corrections in the same read
+
+**Layer 4 — 15 rows** (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)): a prepositional
+phrase attached to the wrong clause (inferno 31:89, 2 rows), an embedded question attached to the
+outer verb of speech rather than the inner one (32:44), a subject read as a modifier inside the
+object phrase (34:105, 2 rows), an object read as the following clause's subject (31:143, 2 rows),
+and the **`con esso` normalization** (9 rows across 4 cantos in 3 canticles). **Layer 2 — 2 rows**:
+the correlative `Qual` at 31:136, a pronoun where the 19 other `quale` tokens in the same `advmod`
+slot are adjectives, and `udi'` at 32:19, a 1sg remote past that had been read as a 2sg imperative.
+**Layer 3 — 1 span**: `[il sol tragitto]` at 34:105 split into `[il sol]` and `[tragitto]`.
+**Case annex — 1 row**: 31:136.1 `Qual` dropped, since the token is no longer a pronoun.
+
+The inferno 31:143 re-parse is the batch's honest trade: making `Lucifero con Giuda` the object of
+`divora` rather than the subject of `sposò` removes one violation and adds one, because the LLM
+had read `con Giuda` as `sposò`'s oblique. The count does not move; the parse is right.
+
 ## Rules BJ-BN, from re-reading Inferno 26-30 — 691 → 650, −41 (2026-08-15)
 
 Per-position read of all **23** soft violations in Inferno 26-30, following the eight-step
