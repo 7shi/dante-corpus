@@ -794,9 +794,9 @@ line	token	word	deprel	head_line	head_token
 110	6	esser	obj	109	3
 110	7	dal	case	110	8
 110	8	primo	obl	110	6
-111	1	da	case	111	2
-111	2	quello	obl	111	3
-111	3	odiare	xcomp	111	7
+111	1	da	case	111	3
+111	2	quello	obj	111	3
+111	3	odiare	obl	111	7
 111	4	ogne	det	111	5
 111	5	effetto	nsubj	111	7
 111	6	è	aux	111	7

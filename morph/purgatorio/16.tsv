@@ -951,7 +951,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 129	fango	fango	noun	m.	sg.				
 129	e	e	conjunction						
 129	sé	sé	pronoun		sg.				reflexive
-129	brutta	brutto	adjective	f.	sg.				
+129	brutta	bruttare	verb		sg.	3	present	indicative	
 129	e	e	conjunction						
 129	la	lo/la	article	f.	sg.				
 129	soma	soma	noun	f.	sg.				

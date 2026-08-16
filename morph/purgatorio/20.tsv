@@ -1049,7 +1049,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 150	vedere	vedere	verb				infinitive		
 151	così	così	adverb						
 151	m'	mi	pronoun		sg.	1			elision
-151	andava	andare	verb		sg.	3	imperfect	indicative	
+151	andava	andare	verb		sg.	1	imperfect	indicative	
 151	timido	timido	adjective	m.	sg.				
 151	e	e	conjunction						
 151	pensoso	pensoso	adjective	m.	sg.				

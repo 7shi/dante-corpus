@@ -3827,3 +3827,120 @@ def test_classify_divergence_rule_cl_keeps_an_unreachable_subject_flagged():
     # coordination head — is the LLM's own claim about the slot, and stays reported.
     violations = _ag_reachable_fixture(cited_subj=(2, 4))
     assert any(v.detail.startswith("extra_arg") and v.arg == (2, 4) for v in violations)
+
+
+# --- Purgatorio 16-20 read: rules CP-CT ------------------------------------------------
+
+
+def _bare_nominal_oblique_fixture(arg_pos="noun"):
+    """"come fatto fui **roman pastore**" (purgatorio 19:107): the predicative nominal Layer 4
+    hung on the predicate as a bare `obl`, rule AZ's noun leg."""
+    derived = {1: [skel.SkelRow(1, 3, "fatto", "obl", 1, 6)]}
+    given = {1: [skel.SkelRow(1, 3, "fatto", "attr", 1, 6)]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="fatto", deprel="advcl",
+                           head_line=1, head_token=8),
+        (1, 6): dep.DepRow(line=1, token=6, word="pastore", deprel="obl",
+                           head_line=1, head_token=3),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {(1, 6): arg_pos})
+
+
+def test_classify_divergence_rule_cp_accepts_a_bare_nominal_secondary_predicate():
+    assert _bare_nominal_oblique_fixture() == []
+
+
+def test_classify_divergence_rule_cp_leaves_a_pronoun_flagged():
+    # "pronoun" contains "noun": the clitic leg is rules AB/AW's question, not this one.
+    violations = _bare_nominal_oblique_fixture(arg_pos="pronoun")
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def test_classify_divergence_rule_cp_leaves_an_adverb_flagged():
+    violations = _bare_nominal_oblique_fixture(arg_pos="adverb")
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _marked_xcomp_fixture(marker_head=(1, 5)):
+    """"mi fé desideroso **di sapere**" (purgatorio 20:146): the infinitive Layer 4 attached as
+    `xcomp` while writing its preposition as a `case` child."""
+    derived = {1: [skel.SkelRow(1, 3, "desideroso", "xcomp", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 3, "desideroso", "obl:di", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="desideroso", deprel="xcomp",
+                           head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="di", deprel="case",
+                           head_line=marker_head[0], head_token=marker_head[1]),
+        (1, 5): dep.DepRow(line=1, token=5, word="sapere", deprel="xcomp",
+                           head_line=1, head_token=3),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_cq_accepts_a_marked_complement_clause():
+    assert _marked_xcomp_fixture() == []
+
+
+def test_classify_divergence_rule_cq_leaves_a_preposition_of_another_token_flagged():
+    # "pare a' lor vivagni" (paradiso 9:135): the preposition marks the dative beside it, not
+    # the complement, so nothing in the tree corroborates the oblique reading.
+    violations = _marked_xcomp_fixture(marker_head=(1, 6))
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _empty_tuple_fixture(deprel="root"):
+    """"**Nullo**, però che 'l pastor … rugumar può" (purgatorio 16:98): the elliptical answer
+    Layer 4 heads its clause with, whose verb is gapped from the previous parse unit."""
+    derived = {
+        1: [skel.SkelRow(1, 1, "Nullo", "", 0, 0)],
+        2: [skel.SkelRow(2, 2, "può", "subj", 1, 5)],
+    }
+    given = {2: [skel.SkelRow(2, 2, "può", "subj", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Nullo", deprel=deprel,
+                           head_line=0, head_token=0),
+        (1, 5): dep.DepRow(line=1, token=5, word="pastor", deprel="nsubj",
+                           head_line=2, head_token=2),
+        (2, 2): dep.DepRow(line=2, token=2, word="può", deprel="advcl",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_cs_accepts_an_empty_derived_tuple():
+    assert _empty_tuple_fixture() == []
+
+
+def test_classify_divergence_rule_cs_still_reports_a_tuple_with_an_argument():
+    # The same predicate with an argument in it is a real assertion the LLM did not propose.
+    derived = {1: [skel.SkelRow(1, 1, "Nullo", "subj", 1, 5)]}
+    given: dict[int, list[skel.SkelRow]] = {}
+    violations = skel._classify_divergence(given, derived, None, {})
+    assert any(v.detail.startswith("missing_tuple") for v in violations)
+
+
+def _copula_under_complement_fixture(lemma="essere"):
+    """"quant' **esser** può di nuvol **tenebrata**" (purgatorio 16:3): the copula Layer 4 hung
+    under the very adjective it predicates."""
+    derived = {1: [skel.SkelRow(1, 2, "esser", "subj", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 2, "esser", "subj", 0, 0),
+                 skel.SkelRow(1, 2, "esser", "attr", 1, 6)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="esser", deprel="advcl",
+                           head_line=1, head_token=6),
+        (1, 6): dep.DepRow(line=1, token=6, word="tenebrata", deprel="amod",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {(1, 6): "adjective"},
+                                     None, {(1, 2): lemma})
+
+
+def test_classify_divergence_rule_ct_accepts_a_copula_under_its_complement():
+    assert _copula_under_complement_fixture() == []
+
+
+def test_classify_divergence_rule_ct_leaves_a_lexical_verb_flagged():
+    # The copular lemma is the gate: an ordinary adverbial clause under a nominal is not a
+    # predication of it.
+    violations = _copula_under_complement_fixture(lemma="parlare")
+    assert any(v.detail.startswith("extra_arg") for v in violations)

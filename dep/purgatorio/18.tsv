@@ -366,10 +366,10 @@ line	token	word	deprel	head_line	head_token
 50	2	da	case	50	3
 50	3	matera	obl	50	1
 50	4	ed	cc	50	5
-50	5	è	conj	50	1
+50	5	è	cop	50	8
 50	6	con	case	50	7
 50	7	lei	obl	50	8
-50	8	unita	amod	50	5
+50	8	unita	conj	50	1
 51	1	specifica	amod	51	2
 51	2	vertute	obj	51	3
 51	3	ha	root	0	0
@@ -840,7 +840,7 @@ line	token	word	deprel	head_line	head_token
 116	6	perdona	root	0	0
 117	1	se	mark	117	5
 117	2	villania	attr	117	5
-117	3	nostra	det:poss	117	2
+117	3	nostra	det:poss	117	4
 117	4	giustizia	obj	117	5
 117	5	tieni	advcl	116	6
 118	1	Io	nsubj	118	3
@@ -1009,7 +1009,7 @@ line	token	word	deprel	head_line	head_token
 139	7	divise	advcl	141	7
 140	1	quell'	det	140	2
 140	2	ombre	obj	139	7
-140	3	che	obj	140	4
+140	3	che	mark	140	7
 140	4	veder	xcomp	140	7
 140	5	più	advmod	140	7
 140	6	non	advmod	140	7

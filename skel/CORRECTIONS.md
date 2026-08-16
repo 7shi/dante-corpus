@@ -1,5 +1,160 @@
 # skel — Layer 5 correction history
 
+## Rules CP-CT, from reading Purgatorio 16-20 — 427 → 409, −18 (2026-08-16)
+
+Per-position read of all **26** soft violations in Purgatorio 16-20, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Purgatorio 16-20
+itself went **26 → 14** (16: 11 → 6, 17: 1 → 0, 18: 3 → 1, 19: 6 → 4, 20: 5 → 3); the corpus went
+**427 → 409 (−18, −4.2%)**. Four deterministic Layer-5 rules, one `dep.subject_agreement`
+refinement (rule CR), 17 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 2 case-annex rows.
+`pytest` **414 collected** (396 test functions, +12 from this batch; earlier entries in this file
+counted functions), all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **CP** | rule AZ's noun leg: a bare caseless `obl` **nominal** is the predicate's secondary predicate | 245 / 44 | −5 |
+| **CS** | a derived predicate whose tuple is **empty** asserts nothing, so its absence is not a divergence | — | −2 |
+| **CQ** | rule T's `xcomp` leg: the prepositional infinitive Layer 4 marked with `case` and attached as a complement | 4 | −2 |
+| **CT** | a copula Layer 4 hung **under** its own predicate complement | 25 / 294 | −2 |
+| **CR** | `dep.subject_agreement`: the 1/2-plural exclusion covers the *number* test, not the person one | 3 | −2 |
+
+Plus the upstream rows (**−7 / +2** together, counted below).
+
+The batch's own shape: **eleven of the 26 were upstream**, nine of them in canto 16 alone — the
+second batch running where one canto carried the tree's errors. Four more are the LLM omitting an
+oblique or a dative the tree records, which is now the residue's largest single bucket
+(`missing_arg obl`, **81** of the 409) and the batch's one prompt-side lead.
+
+### Rule CP — rule AZ's noun leg
+
+"che **piuma** sembran tutte l'altre some" (purgatorio 19:105), "come fatto fui **roman pastore**"
+(19:107), "non uscir … **Gentili**, ma **Cristiani**" (paradiso 20:103), "e, quasi **amici**,
+dipartirsi pigri" (33:114). Rule AZ accepts a bare caseless `obl` as the predicate's secondary
+predicate when it is an **adjective**; Italian writes the same predication with a bare nominal as
+readily, and 33:114 has one of each in one line — `pigri` taken by rule AZ, `amici` flagged.
+
+**Censused at 245** bare nominal obliques corpus-wide against rule AZ's 44 adjectival ones. The
+larger population is the caseless `obl`'s other job, the adverbial accusative ("la **notte**
+ch'i' passai", inferno 1:21) — but the census is not the acceptance: the rule fires only where the
+LLM independently read the token as the predicate's complement, which a temporal accusative does
+not attract, and it takes **5**, exactly the five read positions. The **adverb** leg stays
+declined, as when rule AZ was written ("è **fuor** di strada", paradiso 8:148); the **pronoun**
+leg is refused explicitly, since 509 of the 1118 bare obliques are the corpus's own clitics, where
+the question is rules AB/AW's, not this one. `"pronoun"` contains `"noun"`, so that exclusion is a
+helper (`_is_nominal_pos`) rather than the module's usual substring test.
+
+### Rule CQ — rule T's `xcomp` leg
+
+"mi fé desideroso **di sapere**" (purgatorio 20:146), "Qual pare **a riguardar** la Carisenda"
+(inferno 31:136). Layer 4 hangs the infinitive on its governor as `xcomp` — a *complement* — while
+writing the preposition that introduces it as a `case` child — the deprel of a *nominal*. The tree
+is of two minds about one edge, and the readings split along that seam: `derive_unit` reads the
+deprel, the LLM reads the preposition sitting on the token. Rule T settles the identical
+convention one deprel over, for `advcl`.
+
+The gate is rule T's, unchanged: the LLM's lemma must be one the tree itself carries on that very
+token. That is what keeps paradiso 9:135 flagged — "pare a' lor **vivagni**", where the `a'` marks
+the dative beside the complement and nothing on `vivagni` corroborates the oblique reading. Of the
+four `obl:<lemma>`-against-`xcomp` positions in the corpus the rule takes **2**; purgatorio 17:111
+is a third, taken after the upstream retag below put the `da` on the infinitive it governs.
+
+### Rule CS — an empty derived tuple
+
+`derive_unit` writes a role-less `=(0, 0)` row for a position it promoted to predicate and then
+found no argument for. Such a tuple asserts nothing, so the LLM's not proposing it cannot be a
+divergence — the same reading rules AN, BN and CA already give ("a tuple with no arguments in it,
+which no reading of the line can supply"), applied at the reporting end rather than at the census.
+
+It takes the elliptical answer "**Nullo**, però che 'l pastor … rugumar può" (purgatorio 16:98),
+whose verb is gapped from the question it answers in the previous parse unit, and "**per che**,
+come fa l'uom …" (25:4), a connective Layer 4 wrote as a pronoun in `advcl` — rule BN's shape with
+a POS rule BN does not test.
+
+**The variant that refuses to mint the predicate at all was measured at +180 and rejected.**
+Extending rule BN's argument test from a conjunction to any non-verb clause head looks like the
+same rule one step earlier, and is not: a non-verb clause head with no argument child is
+overwhelmingly a copular or controlled predicate whose only subject comes from rule V, and the LLM
+proposes those correctly. Reading the derived *tuple* rather than the deprel separates the two
+exactly. The Purgatorio 11-15 batch's finding again — the measured variant is the argument.
+
+### Rule CT — the copula under its own complement
+
+"quant' **esser può** di nuvol **tenebrata**" (purgatorio 16:3): the degree clause of the
+adjective the copula predicates, which Layer 4 hangs *under* that adjective. The corpus's own
+convention makes the complement the head of a copular clause and the copula its `cop` child; where
+the copula carries a clause deprel instead, `derive_unit` reads the edge downwards and gives it
+nothing but a pro-drop subject, while the LLM reads the predication and names the adjective as its
+`attr`. This is rule BT's shape (the argument is the predicate's own governor) with the copular
+convention in place of the free relative, and rule Y's evidence from the other side.
+
+**Censused at 21** `essere` clauses under an adjective head and 4 under a noun, against **294**
+`advcl` verbs under a nominal head in all: the copular lemma is the whole gate, and without it the
+rule would accept every adverbial clause modifying a noun. It takes 16:3 and paradiso 26:109
+("Tu vuogli udir **quant' è** che Dio mi puose"), both correctly.
+
+### Rule CR — the person half of the 1/2-plural exclusion
+
+`dep.subject_agreement` treated a 1st/2nd person **plural** head as admitting any singular
+subject, because the tree may hold only one member of the "io e tu" it agrees with. That is a
+statement about *number*; it was swallowing the *person* test with it. A lone third-person subject
+cannot be a member of a "we" at all — "Ciò ch'io dicea … contrario suon **prendemo**"
+(purgatorio 20:102), where `Ciò` is the subject of the *first* conjunct and the second is the
+pilgrims' own. The exclusion now applies only to a subject that could be such a member: a 1st or
+2nd person word, or a coordination, whose person the conjunct branch tests member by member.
+
+Narrowing it surfaced **3** new `dep --check` soft violations, all one shape — `ambedui`,
+`amendue` and the distributive `uno` ("uno innanzi altro, ce n'andavamo") standing in for the whole
+of a "we" the verb already carries. All three are the notional reading `_DISTRIBUTIVE_LEMMAS`
+already names for `ciascuno`, so the three lemmas join that set and `dep --check` returns to
+**0 hard / 0 soft**. Layer 5: **−2**, both at 20:102.
+
+### Upstream: 17 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span, 2 case-annex rows
+
+Applied with a gated script that asserts the word and the current cell value at every
+`(line, token)` before rewriting it. Together **−7 / +2**.
+
+- **16:43** "non mi celar chi fosti **anzi la morte**" — `anzi` was an `advmod` on `celar` and
+  `morte` a `vocative`. It is a prepositional phrase on `fosti` (−1).
+- **16:64-65** "**Alto sospir** … mise fuor prima" — the sigh was the `nsubj` of `mise`; it is
+  what he put forth. With `mise` pro-drop, the LLM's concrete subject on the following `cominciò`
+  is accepted by the pro-drop branch (−2).
+- **16:98-99** "Nullo, **però che** 'l pastor … rugumar può, ma non ha l'unghie fesse" — `che` was
+  the `obj` of `rugumar`; it is the second word of the causal conjunction. `Nullo` is the
+  elliptical answer and heads its clause, `può` the because-clause under it, `ha` `può`'s
+  coordinate sharing `'l pastor` (−2, +1: the LLM's own hedge, two subjects on `ha`, stays).
+- **16:129** "e **sé brutta** e la soma" — Layer 2 read `brutta` as the adjective *brutto*; it is
+  the verb *bruttare*, with `sé` (now accusative in the annex) and `la soma` as its two objects.
+  The same shape as purgatorio 14:69's `parte` in the previous batch. Net 0 on the count, and the
+  parse is right (−1 / +1).
+- **17:111** "**da quello odiare** ogne effetto è deciso" — the `da` was on `quello`; it governs
+  the infinitive ("from hating that"), whose own object `quello` is (accusative in the annex).
+  With rule CQ above, −1.
+- **18:50** "ed **è** con lei **unita**" — `unita` was an `amod` hung on the verb; it is the
+  participial predicate and `è` its copula, the convention the rest of the corpus uses (−1).
+- **18:117** "se **villania nostra giustizia** tieni" — the possessive belonged to `villania`; it
+  belongs to `giustizia`, the object, and the Layer-3 span moves with it. The position stays
+  flagged: the LLM swapped the object and the predicative complement, which is its own reading
+  (±0).
+- **18:140** "tanto divise … **che** veder più non potiersi" — the consecutive `che` of "tanto …
+  che" was the `obj` of `veder`; it is the clause's marker (−1).
+- **20:151** "così **m'andava** timido e pensoso" — Layer 2 read `andava` as 3sg; it is Dante's
+  own going, 1sg, as lines 149-150 are. **This one costs a violation (+1)** and is kept: rule AG
+  had been dropping the inherited 1sg subject on the strength of the wrong person, and the LLM's
+  omission of that subject was hidden behind the drop. The honest trade earlier rounds recorded —
+  the count is not the measure, the correctness of the parse is.
+
+### Censused and dropped
+
+- **The LLM naming a marked clause by a nominal inside it** — "or può … passarsi **per qualunque
+  lasciasse**" (16:118), where the `per` sits on the free relative's verb and the LLM cites the
+  `qualunque` inside it. Censused at **243** verbs carrying both a `case` child and a nominal
+  argument: far too broad a licence for the one position it would take. Rule T's gate (the LLM
+  must cite the clause itself) is what keeps that rule narrow, and this would remove it.
+- **A non-finite conjunct with no arguments** — "di ragionar coi buoni o **d'appressarsi**"
+  (16:120), an `extra_tuple`. Rule BZ decided this shape deliberately when it restricted the
+  second `conj` walk to finite verbs, on the ground that the minted tuple would be empty; rule CS
+  now says the same thing at the other end. Left as decided.
+
 ## Rules CK-CO, from reading Purgatorio 11-15 — 448 → 427, −21 (2026-08-16)
 
 Per-position read of all **30** soft violations in Purgatorio 11-15, following the eight-step

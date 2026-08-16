@@ -1311,6 +1311,18 @@ def _prep_stack_nominal(
     return cur
 
 
+def _is_nominal_pos(pos_text: str) -> bool:
+    """Rule CP: an adjective or a noun — the two POS a secondary predicate is written with.
+
+    `"pronoun"` contains `"noun"`, so the pronoun leg has to be excluded explicitly rather than
+    by the substring test the rest of this module uses for a single POS.
+    """
+    text = pos_text.lower()
+    if "pronoun" in text:
+        return False
+    return "adjective" in text or "noun" in text
+
+
 def _hosts_child(
     pos: tuple[int, int], row: DepRow, dep_index_by_pos: dict[tuple[int, int], DepRow]
 ) -> bool:
@@ -1517,11 +1529,27 @@ def _depictive_bare_oblique(
 
     The three gates are what keep an ordinary oblique out. **No `case` child**: a preposition in
     the tree makes the phrase a genuine adjunct ("è **per me** giocondo"), and only a bare `obl`
-    is a candidate. **Adjective POS**, exactly as in rule R — the same shape with an adverb
-    argument leaves the reading undecided and stays flagged. **The predicate's own child**, so an
-    adjective obl'd onto some other clause is not swept in. Directional like rules L/M: a given
-    `obl` against a derived `xcomp` means the tree carried the complement explicitly and the LLM
-    contradicted it, which stays flagged."""
+    is a candidate. **Nominal POS** — an adjective, exactly as in rule R, or (rule CP) a noun.
+    **The predicate's own child**, so an adjective obl'd onto some other clause is not swept in.
+    Directional like rules L/M: a given `obl` against a derived `xcomp` means the tree carried
+    the complement explicitly and the LLM contradicted it, which stays flagged.
+
+    Rule CP is the noun leg of exactly that shape: Italian predicates the same secondary
+    predication with a bare nominal as readily as with an adjective, and Layer 4 reaches for the
+    same `obl` for want of anything better — "che piuma sembran tutte l'altre some" (purgatorio
+    19:105), "come fatto fui **roman pastore**" (19:107), "non uscir … **Gentili**, ma
+    **Cristiani**" (paradiso 20:103), "e, quasi **amici**, dipartirsi pigri" (33:114, whose
+    adjectival twin `pigri` in the same line rule AZ already takes). Censused at 245 bare nominal
+    obliques corpus-wide against rule AZ's 44 adjectival ones — a larger population because the
+    caseless nominal `obl` is also the corpus's adverbial accusative ("la **notte** ch'i'
+    passai", inferno 1:21) — but the acceptance is not the census: it fires only where the LLM
+    independently read the same token as the predicate's complement, which a temporal accusative
+    does not attract.
+
+    The **pronoun** and **adverb** legs stay out. The adverb one was declined when rule AZ was
+    written ("è **fuor** di strada", paradiso 8:148, leaves the reading undecided); a pronoun in
+    a bare `obl` is overwhelmingly the corpus's own clitic (509 of the 1118), where the question
+    is rules AB/AW's clitic role, not secondary predication."""
     if grole != "xcomp" or drole != "obl":  # `attr` is canonicalized to `xcomp` beforehand
         return False
     if arg in case_children:
@@ -1529,7 +1557,7 @@ def _depictive_bare_oblique(
     row = (dep_index_by_pos or {}).get(arg)
     if row is None or row.deprel != "obl" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
-    return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
+    return _is_nominal_pos((morph_pos_by_position or {}).get(arg, ""))
 
 
 def _nmod_complement_of_predicate(
@@ -1589,6 +1617,37 @@ def _marked_adverbial_clause(
     if row is None or row.deprel != "advcl" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return role.split(":", 1)[1] in marker_lemmas.get(arg, set())
+
+
+def _marked_complement_clause(
+    pos: tuple[int, int], grole: str, drole: str, arg: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    marker_lemmas: dict[tuple[int, int], set[str]],
+) -> bool:
+    """Rule CQ: rule T's `xcomp` leg — the prepositional infinitive Layer 4 attached as a
+    complement rather than as an adverbial clause.
+
+    "mi fé **desideroso di sapere**" (purgatorio 20:146) and "Qual pare **a riguardar** la
+    Carisenda" (inferno 31:136) both hang the infinitive on its governor as `xcomp` while
+    writing the preposition that introduces it as a `case` child — the deprel of a *nominal*
+    argument. The tree is therefore of two minds about the same edge, and the two readings split
+    along that seam: `derive_unit` reads the deprel and calls it `xcomp`, the LLM reads the
+    preposition sitting on the token and calls it `obl:di` / `obl:a`. Neither contradicts the
+    line; the divergence is the corpus's own `mark`-vs-`case` convention for the infinitival
+    complementizer, which rule T already settles one deprel over.
+
+    The gate is rule T's, unchanged: the LLM's lemma must be one the tree itself carries on that
+    token. That is what keeps rule AK's and rule V's questions out — "pare a' lor **vivagni**"
+    (paradiso 9:135) is an `xcomp` the LLM calls `obl:a` on the strength of a preposition
+    belonging to the *dative* beside it, and the token itself carries no marker, so it stays
+    flagged. Directional, like rule T: a given `xcomp` over a derived oblique is the
+    complement-vs-adjunct judgment, not this convention, and is left where rule T left it."""
+    if drole != "xcomp" or not OBL_RE.fullmatch(grole):
+        return False
+    row = (dep_index_by_pos or {}).get(arg)
+    if row is None or not _hosts_child(pos, row, dep_index_by_pos or {}):
+        return False
+    return grole.split(":", 1)[1] in marker_lemmas.get(arg, set())
 
 
 def _gapped_coordinate_oblique(
@@ -2441,6 +2500,36 @@ def _classify_divergence(
             for k in children_by_pos.get(pos, ())
         )
 
+    def _copula_under_its_complement(
+        pos: tuple[int, int], arg: tuple[int, int], role: str
+    ) -> bool:
+        # Rule CT: a copula Layer 4 hung **under** its own predicate complement. The corpus makes
+        # the complement the head of a copular clause and the copula its `cop` child, and where
+        # the copula carries its own clause deprel instead — "quant' **esser può** … di nuvol
+        # **tenebrata**" (purgatorio 16:3), the degree clause of the adjective it predicates —
+        # `derive_unit` reads the edge downwards and gives `esser` nothing but a pro-drop
+        # subject, while the LLM reads the predication and names the adjective as its `attr`.
+        # This is rule BT's shape (`arg` is the predicate's own governor) with the copular
+        # convention in place of the free relative, and rule Y's evidence read from the other
+        # side: there the `cop` edge says a predication is headed at the complement, here the
+        # copular *lemma* says the same of an edge Layer 4 wrote as a clause.
+        #
+        # Censused at 21 `essere` clauses under an adjective head and 4 under a noun, against 294
+        # `advcl` verbs under a nominal head in all — the lemma is what separates the predication
+        # from an ordinary adverbial clause modifying a nominal.
+        if dep_index_by_pos is None:
+            return False
+        if role != "xcomp":  # `attr` is canonicalized to `xcomp` beforehand
+            return False
+        if (morph_lemma_by_position or {}).get(pos, "").lower() != "essere":
+            return False
+        row = dep_index_by_pos.get(pos)
+        if row is None or row.deprel not in CLAUSE_HEAD_DEPRELS:
+            return False
+        if (row.head_line, row.head_token) != arg:
+            return False
+        return _is_nominal_pos((morph_pos_by_position or {}).get(arg, ""))
+
     def _copular_adverb_complement(
         pos: tuple[int, int], arg: tuple[int, int], role: str
     ) -> bool:
@@ -2633,7 +2722,27 @@ def _classify_divergence(
             if (dep_index_by_pos.get(g) or DepRow(0, 0, "", "", 0, 0)).deprel in _AUX_DEPRELS
         )
 
+    # Rule CS: a derived predicate whose tuple is **empty** asserts nothing, so the LLM's not
+    # proposing it is not a divergence. `derive_unit` writes a role-less `=(0, 0)` row for a
+    # position it promoted and then found no argument for — the elliptical answer "**Nullo**,
+    # però che 'l pastor … rugumar può" (purgatorio 16:98), whose verb is gapped from the
+    # question it answers in the previous parse unit, and where nothing left in the line can
+    # fill a slot. Rules AN, BN and CA already refuse to *mint* this shape on the `conj` and
+    # gapped-remnant branches, each on the same ground — "a tuple with no arguments in it, which
+    # no reading of the line can supply". Extending that refusal to the clause-head branch by
+    # POS was measured at **+180** and rejected: a non-verb clause head with no argument child
+    # is overwhelmingly a copular or controlled predicate whose only subject comes from rule V,
+    # and the LLM proposes those correctly. Reading the derived *tuple* instead of the deprel
+    # separates the two exactly.
+    empty_derived = {
+        (row.line, row.token)
+        for rows in derived.values()
+        for row in rows
+        if row.token > 0 and not row.role
+    }
     for line, token in sorted(derived_preds - given_preds):
+        if (line, token) in empty_derived:
+            continue
         if _named_by_its_auxiliary((line, token)):
             continue
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
@@ -2817,6 +2926,8 @@ def _classify_divergence(
                                                    case_by_position)
                         or _depictive_bare_oblique(grole, drole, pos, arg, dep_index_by_pos,
                                                    morph_pos_by_position, case_children)
+                        or _marked_complement_clause(pos, grole, drole, arg, dep_index_by_pos,
+                                                     marker_lemmas)
                         # rule BD's mismatch leg: both readings park the same reflexive clitic in
                         # a slot a bare clitic can carry, and disagree only about which
                         or (_pronominal_verb_clitic(pos, arg, grole)
@@ -2846,6 +2957,7 @@ def _classify_divergence(
                     or _copular_adverb_complement(pos, arg, grole)
                     or _free_relative_head(pos, arg, grole, d)
                     or _free_relative_matrix_head(pos, arg)  # rule BT: rule AE's embedded side
+                    or _copula_under_its_complement(pos, arg, grole)  # rule CT
                     or _marker_slot_argument(pos, arg, grole, dep_index_by_pos,
                                              morph_pos_by_position)  # rule BW: rule BM's mirror
                     or _conj_shared_argument(pos, arg, grole, dep_index_by_pos,

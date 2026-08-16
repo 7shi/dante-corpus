@@ -740,3 +740,64 @@ def test_validate_unit_reports_a_coordination_no_conjunct_of_which_agrees():
     assert [v.detail for v in _agreement(nos, texts, rows, morph_rows)] == [
         "nsubj 1.1 'duca' disagrees with head 1.4 'fui': person 3 vs 1"
     ]
+
+
+def test_validate_unit_reports_a_third_person_subject_under_a_first_plural_head():
+    """Rule CR: the "1/2 plural head admits a singular member" exclusion covers the *number*
+    test, not the person one. "Ciò ch'io dicea … contrario suon **prendemo**" (purgatorio
+    20:102): `Ciò` is the subject of the first conjunct, and no "we" has a lone third person in
+    it."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["Ciò prendemo"]
+    rows = [
+        dep.DepRow(1, 1, "Ciò", "nsubj", 1, 2),
+        dep.DepRow(1, 2, "prendemo", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="Ciò", lemma="ciò", pos="pronoun", number="sg."),
+            MorphRow(word="prendemo", lemma="prendere", pos="verb", number="pl.", person="1"),
+        ]
+    }
+    assert [v.detail for v in _agreement(nos, texts, rows, morph_rows)] == [
+        "nsubj 1.1 'Ciò' disagrees with head 1.2 'prendemo': person 3 vs 1"
+    ]
+
+
+def test_validate_unit_accepts_a_first_person_singular_under_a_first_plural_head():
+    """The exclusion still stands for a subject that *could* be one member of the plural — the
+    reduced "io [e tu] andiamo" the rule was written for."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["io andiamo"]
+    rows = [
+        dep.DepRow(1, 1, "io", "nsubj", 1, 2),
+        dep.DepRow(1, 2, "andiamo", "root", 0, 0),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="io", lemma="io", pos="pronoun", number="sg.", person="1"),
+            MorphRow(word="andiamo", lemma="andare", pos="verb", number="pl.", person="1"),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []
+
+
+def test_validate_unit_accepts_a_quantifier_resuming_a_first_plural_subject():
+    """"A seder ci **ponemmo** ivi **ambedui**" (purgatorio 4:52): `ambedue`/`amendue` and the
+    distributive `uno` stand in for the whole of a "we" the verb already carries."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["ponemmo ambedui"]
+    rows = [
+        dep.DepRow(1, 1, "ponemmo", "root", 0, 0),
+        dep.DepRow(1, 2, "ambedui", "nsubj", 1, 1),
+    ]
+    morph_rows = {
+        1: [
+            MorphRow(word="ponemmo", lemma="porre", pos="verb", number="pl.", person="1"),
+            MorphRow(word="ambedui", lemma="ambedue", pos="adjective", number="pl."),
+        ]
+    }
+    assert _agreement(nos, texts, rows, morph_rows) == []

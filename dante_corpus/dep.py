@@ -102,7 +102,14 @@ _ANTECEDENT_PERSON_LEMMAS = frozenset({"che", "chi", "cui", "quale"})
 # Distributive pronouns: they resume a plural subject one member at a time, so a singular one
 # under a plural verb is the construction working, not a disagreement — "vanno a vicenda
 # ciascuna al giudizio" (inferno 5:14). A closed function-word list, like the set above.
-_DISTRIBUTIVE_LEMMAS = frozenset({"ciascuno", "ognuno", "catuno"})
+#
+# `ambedue`/`amendue` and the distributive `uno` join them with rule CR (2026-08-16), which is
+# what first asks the *person* question of a 1st/2nd plural head: all three stand in for the
+# whole of a "we" the verb already carries — "A seder ci **ponemmo** ivi **ambedui**"
+# (purgatorio 4:52), "e **amendue** già **mostravam**" (12:11), "**uno** innanzi altro, ce
+# n'**andavamo**" (26:1) — so their 3rd person is the quantifier's, not the subject's, exactly
+# the notional reading this set already names for `ciascuno`.
+_DISTRIBUTIVE_LEMMAS = frozenset({"ciascuno", "ognuno", "catuno", "ambedue", "amendue", "uno"})
 
 # Quantity determiners that make a plural noun a single measure — "non è molt' anni"
 # (inferno 19:19). Numerals are recognized structurally instead, by their `nummod` edge.
@@ -450,9 +457,20 @@ def subject_agreement(
         return ("undecidable", "fused non-finite token")
     if subj_morph.lemma in _ANTECEDENT_PERSON_LEMMAS:
         return ("undecidable", "person comes from the antecedent")
-    if head_morph.person in ("1", "2") and head_morph.number == "pl.":
-        return ("undecidable", "1/2 plural head admits a singular member")
     conjuncts = [c for c in children.get(subj, ()) if c.deprel == "conj"]
+    if head_morph.person in ("1", "2") and head_morph.number == "pl.":
+        # A 1st/2nd person plural verb may be written with only one member of its subject in the
+        # tree — "io e tu" reduced to "io" — so *number* is undecidable here. **Person** is not,
+        # and only for a subject that could be such a member: a 1st or 2nd person word, or a
+        # coordination (whose own person the conjunct branch below tests member by member). A
+        # lone third-person subject cannot be a member of a "we"/"you" at all, and Layer 4
+        # attaching one to a 1/2 plural verb is the same real question the rest of this check
+        # asks — "Ciò ch'io dicea … tanto è risposto … ma … contrario suon **prendemo**"
+        # (purgatorio 20:102), where `Ciò` is the subject of the *first* conjunct and the second
+        # is the pilgrims' own "we". Rule CR; before it, this exclusion swallowed the person
+        # test along with the number test.
+        if conjuncts or (subj_morph.person or "3") in ("1", "2"):
+            return ("undecidable", "1/2 plural head admits a singular member")
     if len([c for c in children.get(head, ()) if c.deprel in _NSUBJ_DEPRELS]) > 1:
         return ("undecidable", "head carries more than one subject")
     if _AGREEMENT_EXEMPT_FLAGS & (_note_flags(subj_morph.note) | _note_flags(head_morph.note)):

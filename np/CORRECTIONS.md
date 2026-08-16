@@ -9,6 +9,16 @@ traceable back to what actually changed and why. Layer-2 mistags found along the
 in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
 side: code/policy changes, span fixes, and classification of what's left.
 
+## One span from Layer 5's Purgatorio 16-20 read (2026-08-16)
+
+`np/purgatorio/18.tsv` 117 `[villania nostra]` (start 2, end 3, head 2) moved to
+`[nostra giustizia]` (3-4, head 4). "perdona / se **villania nostra giustizia** tieni" is "forgive
+us if you take our justice for discourtesy": the possessive belongs to `giustizia`, the object,
+not to `villania`, the predicative complement, and the Layer-4 attachment moved with it (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `np --check` stays 0 hard / 0 soft; the Layer-5
+position stays flagged, because the LLM read the object and the complement the other way round,
+which is its own claim rather than a consequence of the span.
+
 ## Two spans from Layer 5's Purgatorio 11-15 read (2026-08-16)
 
 `np/purgatorio/14.tsv` 69 `[qual]` (start 2, end 2, head 2) widened to `[qual che parte]`

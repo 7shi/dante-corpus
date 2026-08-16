@@ -1,5 +1,22 @@
 # Manual Layer-2 corrections
 
+## 2 rows from the Layer-5 Purgatorio 16-20 read (2026-08-16)
+
+Found by the per-position read of Purgatorio 16-20's Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)); applied with the same gated script as the
+Layer-4 rows and re-validated with every layer's `--check` (all 0) and `pytest` (414).
+
+- **purgatorio 16:129, `brutta`** — read as the adjective *brutto* (f. sg.). In "la Chiesa di Roma
+  … cade nel fango, e **sé brutta** e la soma" it is the verb *bruttare* (3sg present indicative),
+  whose two objects are `sé` and `la soma`. The mistag had turned a clause into an adjectival
+  predication and handed `sé` the subject slot — the same one-word-one-clause failure as
+  purgatorio 14:69's `parte` in the previous batch, and the second time in two batches that a
+  Layer-2 POS error was the whole of a Layer-5 divergence.
+- **purgatorio 20:151, `andava`** — read as sg. 3. "così **m'andava** timido e pensoso" is Dante's
+  own going, sg. 1, as `er' oso` and `potea` are in the two lines before it. This correction
+  *costs* Layer 5 a violation and is kept: rule AG had been dropping the correctly inherited 1sg
+  subject on the strength of the wrong person, which hid the LLM's omission of it.
+
 ## 8 rows from the Layer-5 Purgatorio 11-15 read (2026-08-16)
 
 Found by the per-position read of Purgatorio 11-15's Layer-5 soft violations and by the

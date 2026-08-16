@@ -1,5 +1,42 @@
 # dep — Layer 4 correction history
 
+## 17 rows from the Layer-5 Purgatorio 16-20 read, and rule CR (2026-08-16)
+
+The per-position read of Purgatorio 16-20's 26 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found 17 Layer-4 rows wrong, ten of them
+in canto 16 — the second batch running where one canto carries the tree's errors while
+`dep --check` stands at 0. Applied with a gated script that asserts the word and the
+current cell value at each `(line, token)` before rewriting; `morph`/`np`/`dep`/`case
+--check` all re-run at 0 and `pytest` at 414.
+
+| line | rows | what was wrong |
+|---|---|---|
+| 16:43 | `anzi`, `morte` | "chi fosti **anzi la morte**" was an `advmod` plus a `vocative`; it is a prepositional phrase on `fosti` |
+| 16:64 | `sospir` | "**Alto sospir** … mise fuor prima" — the sigh was the `nsubj` of `mise`; it is its object |
+| 16:98-99 | `Nullo`, `però`, `che`, `può`, `ha` | "Nullo, **però che** 'l pastor … rugumar può, ma non ha l'unghie fesse" — `che` was the `obj` of `rugumar`; it is the second word of the causal conjunction. `Nullo` is the elliptical answer to "chi pon mano ad esse?" and heads its clause, `può` is the because-clause under it, and `ha` is `può`'s coordinate, sharing `'l pastor` |
+| 16:129 | `sé`, `soma` | with Layer 2's retag of `brutta` to the verb *bruttare*, its two objects |
+| 17:111 | `da`, `quello`, `odiare` | "**da quello odiare** ogne effetto è deciso" — the `da` was on `quello`; it governs the infinitive, whose own object `quello` is |
+| 18:50 | `è`, `unita` | "ed **è** con lei **unita**" — `unita` was an `amod` on the verb; it is the participial predicate and `è` its `cop`, the convention the rest of the corpus uses |
+| 18:117 | `nostra` | "se villania **nostra giustizia** tieni" — the possessive belongs to the object, not to the predicative complement (the Layer-3 span moved with it) |
+| 18:140 | `che` | "tanto divise … **che** veder più non potiersi" — the consecutive `che` of "tanto … che" was the `obj` of `veder`; it is the clause's `mark` |
+
+### Rule CR — `subject_agreement`'s 1/2-plural exclusion covers number, not person
+
+The exclusion "a 1st/2nd person **plural** head admits a singular member" exists because the tree
+may hold only one member of the "io e tu" the verb agrees with. That is a statement about
+*number*, and it was swallowing the *person* test with it: a lone third-person subject cannot be a
+member of a "we" at all. "Ciò ch'io dicea … contrario suon **prendemo**" (purgatorio 20:102) is
+the evidence — `Ciò` is the subject of the *first* conjunct, and Layer 5's rule AG could not drop
+it because this function called the pair undecidable. The exclusion now applies only to a subject
+that could be such a member: a 1st or 2nd person word, or a coordination, whose person the
+conjunct branch tests member by member.
+
+Narrowing it surfaced **3** new soft violations, all one shape — `ambedui` (purgatorio 4:52),
+`amendue` (12:11) and the distributive `uno` ("**uno** innanzi altro, ce n'andavamo", 26:1)
+standing in for the whole of a "we" the verb already carries. That is the notional reading
+`_DISTRIBUTIVE_LEMMAS` already names for `ciascuno`/`ognuno`/`catuno`, so the three lemmas join
+that set, read one by one, and the check returns to **0 hard / 0 soft**. Layer 5 moved **−2**.
+
 ## 11 rows from the Layer-5 Purgatorio 11-15 read, and the coordinated-subject refinement (2026-08-16)
 
 The per-position read of Purgatorio 11-15's 30 Layer-5 soft violations (see

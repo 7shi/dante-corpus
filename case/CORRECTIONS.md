@@ -1,5 +1,20 @@
 # case — measurement history
 
+## 2 rows from the Layer-5 Purgatorio 16-20 read (2026-08-16)
+
+Both follow a Layer-4 retag from the read (see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)
+and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)), and both move a pronoun from a slot the old
+attachment implied to the one its new role carries.
+
+- **purgatorio 16:129, `sé`** — `reflexive` → `accusative`. With `brutta` retagged from adjective
+  to the verb *bruttare*, `sé` is its direct object ("e **sé** brutta e la soma"), not the subject
+  of an adjectival predication.
+- **purgatorio 17:111, `quello`** — `ablative` → `accusative`. The `da` that made it ablative
+  belongs to the infinitive `odiare`, not to `quello`, which is that infinitive's object ("**da
+  quello odiare** ogne effetto è deciso").
+
+`case --check` stays at **0 hard**.
+
 ## 1 row from the Layer-5 Purgatorio 11-15 read (2026-08-16)
 
 purgatorio 14:69, `che` — "da **qual che** parte il periglio l'assanni". The read established that
