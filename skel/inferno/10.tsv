@@ -248,10 +248,12 @@ line	token	word	role	arg_line	arg_token
 85	2	io	subj	0	0
 85	2	io	ccomp	87	3
 85	2	io	obl:a	85	4
-86	2	fece	subj	86	1
-86	2	fece	obj	86	4
-86	2	fece	attr	86	5
+86	2	fece	subj	86	4
+86	2	fece	obj	86	1
+86	5	colorata	subj	86	4
 86	5	colorata	obl:in	86	7
+87	3	fa	subj	85	6
+87	3	fa	obj	87	2
 87	3	fa	xcomp	87	4
 87	4	far	subj	0	0
 87	4	far	obj	87	2

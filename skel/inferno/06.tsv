@@ -102,7 +102,9 @@ line	token	word	role	arg_line	arg_token
 36	5	par	subj	36	4
 36	5	par	attr	36	6
 37	2	giacean	subj	37	1
+37	2	giacean	attr	37	5
 37	2	giacean	obl:per	37	4
+37	2	giacean	obl:di	38	3
 38	6	seder	subj	38	4
 38	8	levò	subj	38	4
 38	8	levò	xcomp	38	6
@@ -110,6 +112,7 @@ line	token	word	role	arg_line	arg_token
 39	4	vide	obj	39	3
 39	4	vide	xcomp	39	5
 39	5	passarsi	subj	39	3
+39	5	passarsi	obl	39	6
 40	8	tratto	subj	40	3
 40	8	tratto	obl:per	40	7
 41	2	disse	subj	0	0

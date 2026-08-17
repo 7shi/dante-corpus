@@ -62,7 +62,6 @@ line	token	word	role	arg_line	arg_token
 22	4	era	subj	23	1
 22	4	era	attr	22	6
 22	4	era	obl:a	22	3
-23	1	ubidire	subj	21	2
 23	1	ubidire	obl:a	23	6
 24	1	contrapesando	subj	21	2
 24	1	contrapesando	obj	24	3

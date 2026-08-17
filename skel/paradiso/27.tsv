@@ -204,7 +204,6 @@ line	token	word	role	arg_line	arg_token
 78	4	guarda	ccomp	78	8
 78	8	vòlto	subj	78	6
 79	7	guardato	subj	79	5
-79	7	guardato	obj	79	4
 80	2	vidi	subj	80	1
 80	2	vidi	obj	80	4
 80	2	vidi	obl:da	79	3

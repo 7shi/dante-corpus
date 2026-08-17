@@ -10,7 +10,6 @@ line	token	word	role	arg_line	arg_token
 4	4	pungeami	subj	4	6
 4	4	pungeami	obl:per	5	4
 5	0			0	0
-6	2	condoleami	subj	1	2
 6	2	condoleami	subj	4	6
 6	2	condoleami	obl:a	6	6
 7	6	scrive	subj	7	7
@@ -237,12 +236,17 @@ line	token	word	role	arg_line	arg_token
 78	7	congaudete	obl:di	78	6
 79	3	fosti	subj	79	2
 79	4	piacciati	subj	0	0
+79	4	piacciati	ccomp	79	7
+79	4	piacciati	ccomp	81	8
 79	7	sappia	subj	79	6
+79	7	sappia	ccomp	79	3
+79	7	sappia	ccomp	81	2
 80	5	giaciuto	subj	0	0
-80	5	giaciuto	subj	79	2
 80	5	giaciuto	obl	80	4
 80	5	giaciuto	obl	81	1
-81	8	cappia	subj	79	6
+81	2	se'	subj	0	0
+81	2	se'	attr	80	5
+81	8	cappia	subj	0	0
 81	8	cappia	obj	81	7
 81	8	cappia	obl:in	81	5
 82	0			0	0

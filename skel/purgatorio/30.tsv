@@ -132,7 +132,6 @@ line	token	word	role	arg_line	arg_token
 52	3	perdeo	obj	52	6
 53	1	valse	subj	49	2
 53	1	valse	obl:a	53	4
-54	2	lagrimando	subj	53	4
 54	4	tornasser	subj	54	5
 55	6	vada	subj	55	3
 55	6	vada	obl	55	5
@@ -253,7 +252,7 @@ line	token	word	role	arg_line	arg_token
 92	7	notan	obl:a	93	4
 93	0			0	0
 94	4	'ntesi	subj	0	0
-94	4	'ntesi	obj	95	2
+94	4	'ntesi	ccomp	95	2
 94	4	'ntesi	obl:in	94	8
 95	2	compatire	subj	95	1
 95	2	compatire	iobj	95	4

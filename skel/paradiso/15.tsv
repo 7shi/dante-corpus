@@ -54,6 +54,7 @@ line	token	word	role	arg_line	arg_token
 19	8	stende	subj	19	4
 19	8	stende	obl:in	19	6
 20	6	corse	subj	20	8
+20	6	corse	obl:da	19	3
 20	6	corse	obl:a	20	2
 21	6	resplende	subj	21	4
 22	3	partì	subj	22	5
@@ -146,7 +147,6 @@ line	token	word	role	arg_line	arg_token
 55	8	mei	obl:da	56	2
 56	5	primo	subj	56	3
 56	8	raia	subj	55	7
-56	8	raia	obl:da	56	2
 56	8	raia	obl:da	57	3
 57	6	conosce	subj	57	5
 57	6	conosce	obj	57	8

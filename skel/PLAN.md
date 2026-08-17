@@ -2,15 +2,31 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 213 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after **rules EB–EF and the Paradiso 26–33 read** (234 → 213, −21, 2026-08-17), **which finishes the read series over all 100 cantos**, following rules DX–EA and the Paradiso 21–25 read (245 → 234, −11), and rules DS–DW and the Paradiso 11–20 read (261 → 245, −16), and rules DK–DR and the Paradiso 6–10 read (288 → 261, −27) and rules DG–DJ and the Paradiso 1–5 read (298 → 288, −10) and the **fifth `--fix` round** (351 → 298, −53, 2026-08-17) and rules DE–DF and the Purgatorio 31–33 read (358 → 351, −7), rules CZ–DD and the Purgatorio 26–30 read (388 → 358, −30), rules CU–CY and the Purgatorio 21–25 read (409 → 388, −21), rules CP–CT and the Purgatorio 16–20 read (427 → 409, −18), rules CK–CO and the Purgatorio 11–15 read (448 → 427, −21), rules CA–CJ and the Purgatorio 6–10 read (481 → 448, −33), rules BW–BZ and the Purgatorio 1–5 read (506 → 481, −25), rules BO–BV and the Inferno 31–34 read (541 → 506, −35), the fourth `--fix` round (650 → 541), rules BJ–BN (691 → 650), AZ–BI (834 → 691), AU–AY (888 → 834), AM–AT (963 → 888) and the third round (1094 → 963). Per canticle: inferno 54, purgatorio 85, paradiso 74. See *Rules EB-EF and the Paradiso 26-33 Read* below.
+- **Current State**: `make -C skel check` reports **0 hard, 174 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement), after the **sixth `--fix` round** (213 → 174, −39, −18.3%, 2026-08-18, §27), which followed **rules EB–EF and the Paradiso 26–33 read** (234 → 213, −21, 2026-08-17), **the batch that finished the read series over all 100 cantos**, and before it rules DX–EA and the Paradiso 21–25 read (245 → 234, −11), and rules DS–DW and the Paradiso 11–20 read (261 → 245, −16), and rules DK–DR and the Paradiso 6–10 read (288 → 261, −27) and rules DG–DJ and the Paradiso 1–5 read (298 → 288, −10) and the **fifth `--fix` round** (351 → 298, −53, 2026-08-17) and rules DE–DF and the Purgatorio 31–33 read (358 → 351, −7), rules CZ–DD and the Purgatorio 26–30 read (388 → 358, −30), rules CU–CY and the Purgatorio 21–25 read (409 → 388, −21), rules CP–CT and the Purgatorio 16–20 read (427 → 409, −18), rules CK–CO and the Purgatorio 11–15 read (448 → 427, −21), rules CA–CJ and the Purgatorio 6–10 read (481 → 448, −33), rules BW–BZ and the Purgatorio 1–5 read (506 → 481, −25), rules BO–BV and the Inferno 31–34 read (541 → 506, −35), the fourth `--fix` round (650 → 541), rules BJ–BN (691 → 650), AZ–BI (834 → 691), AU–AY (888 → 834), AM–AT (963 → 888) and the third round (1094 → 963). Per canticle: inferno 49, purgatorio 67, paradiso 58. See *Sixth User-Run `--fix` Round* below.
 - **Other Layers**: `dep --check` **0 hard / 0 soft** — the *coordinated subject* exclusion was
   refined to a per-conjunct **person** test on 2026-08-16 by the Purgatorio 11–15 read, which
   closed the 12-position route the Inferno 21–25 batch had deferred (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read, 20 more by the Inferno 21–25 read, 10 more by the Inferno 26–30 read the same day, 15 more 2026-08-16 by the Inferno 31–34 read, 9 of them the `con esso` normalization, 2 by the Purgatorio 1–5 read, 1 by the Purgatorio 6–10 read, 11 by the Purgatorio 11–15 read, 17 by the Purgatorio 16–20 read, 27 by the Purgatorio 21–25 read, 12 by the Purgatorio 26–30 read, 4 by the Purgatorio 31–33 read, 6 by the Paradiso 1–5 read, 10 by the Paradiso 6–10 read and 9 by the Paradiso 11–20 read, 10 by the Paradiso 21–25 read and 16 by the Paradiso 26–33 read; the 1/2-plural exclusion was narrowed to its number half by rule CR the same day, and the 3 positions that surfaced joined `_DISTRIBUTIVE_LEMMAS`; rule CV then took the *ordering* half of the same reading — the number-only exclusions had been returning before the person test — and its one new position, inferno 23:103, was corrected upstream). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard (1 stale row dropped and 1 row re-read 2026-08-16, 1 more dropped by the Purgatorio 11–15 read, 2 re-read by the Purgatorio 16–20 read, 2 by the Purgatorio 31–33 read, 1 re-read and 1 added by the Paradiso 1–5 read, 1 dropped and 1 added by the Paradiso 6–10 read, 2 dropped by the Paradiso 26–33 read), `np --check` 0/0 (1 span split 2026-08-16, 1 widened and 1 added by the Purgatorio 11–15 read, 1 moved by the Purgatorio 16–20 read, 2 by the Purgatorio 31–33 read, 1 clitic span added by the Paradiso 1–5 read, 1 dropped by the Paradiso 21–25 read, 3 dropped and 2 rewritten by the Paradiso 26–33 read), `morph --check` 0/0 (3 rows corrected 2026-08-15 by the 11–15/16–20 reads, 5 more by the 21–25 read, 1 by the 26–30 read, 2 by the 31–34 read, 8 by the Purgatorio 11–15 read, 2 by the Purgatorio 16–20 read, 1 by the Purgatorio 21–25 read, 1 by the Purgatorio 31–33 read, 1 by the Paradiso 1–5 read, 2 by the Paradiso 6–10 read, 1 by the Paradiso 11–20 read, 1 by the Paradiso 21–25 read and 6 by the Paradiso 26–33 read), `pytest` **494 passed**
-  (the Purgatorio 26–30 read added 10, the Purgatorio 31–33 read 4 more, the Paradiso 1–5 read 8 more, the Paradiso 6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more). The fourth and fifth
-  `--fix` rounds (2026-08-16 / 2026-08-17) touched `skel/*.tsv` only, so no other layer moved.
+  (the Purgatorio 26–30 read added 10, the Purgatorio 31–33 read 4 more, the Paradiso 1–5 read 8 more, the Paradiso 6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more). The fourth, fifth and sixth
+  `--fix` rounds (2026-08-16 / 2026-08-17 / 2026-08-18) touched `skel/*.tsv` only, so no other layer moved.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
-- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Five user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**, **650 → 541 (−16.8%)**, **351 → 298 (−15.1%)**.
+- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific POS-keyed micro-prompts, Stage 3 fallback). Six user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**, **650 → 541 (−16.8%)**, **351 → 298 (−15.1%)**, **213 → 174 (−18.3%)**.
 - **Latest Work**:
+  - **Sixth `--fix` round (2026-08-18)**: **213 → 174 (−39, −18.3%)**, 0 hard, `pytest` **494**;
+    units **168 → 141** (27 cleared, 5 improved, **0 regressed, 0 newly flagged**); per-unit yield
+    **0.232**. The round the read series was written to enable — checker finished, all 100 cantos
+    read, nothing written against the base it would move — so its per-class numbers measure the
+    prompt alone. **`_CONV_ADJUNCT` is positive and the subclass table hid it**: `missing_arg obl*`
+    fell only 24.0% in aggregate, but the roles the clause's prose actually names —
+    `obl:{in,da,di,con,tra,per}` — fell **19 → 9 (−52.6%)**, while the bare `obl` (a secondary
+    predicate, rules AZ/CP) went −6.7% and the marker pseudo-cases `obl:{come,onde,quale}` ±0.
+    **`_CONV_DATIVE` is negative** (`obl:a` −8.3%). With that, the two positives in six rounds are
+    the two that *withdrew or narrowed a licence the prompt granted*, and all four negatives added
+    prose about a shape the model already reads wrong. Two structural findings: **the residue is a
+    hard core** — re-checking the pre-round-5 artifact with today's checker gives 265 → 213 → 174,
+    pure subtraction, and **173 of the 174 predate round 5**; and the round's one new position
+    (paradiso 1:81) is **one token in two roles of one predicate**, a contradiction *inside the
+    artifact* that no check looks for — censused at 56, 7 licensed by rule AL, **52 of 56 on lines
+    with no violation at all**. See *Sixth User-Run `--fix` Round* and *After the Sixth Round* below.
   - **Rules EB–EF + Paradiso 26–33 read (2026-08-17)**: five deterministic rules — four
     acceptances and one in `derive_unit` — 16 Layer-4 rows, 6 Layer-2 rows, 4 Layer-3 spans and 2
     case-annex rows, scoring **234 → 213 (−21, −9.0%)** with zero model calls; Paradiso 26–33
@@ -1435,6 +1451,99 @@ from a noun to its infinitive, the LLM's having proposed neither predicate is re
 `missing_tuple`s instead of being absorbed by a wrong tree. The trade rule AM recorded, for the
 fifth batch running.
 
+### 27. Sixth User-Run `--fix` Round (2026-08-18)
+
+The round the whole read series was written to enable: the checker is finished, all 100 cantos have
+been read, nothing was written against the base the round would move, and **two prompt clauses were
+on the scale with nothing else on it** — so the per-class numbers measure the prompt alone, which no
+previous round could.
+
+- **213 → 174 soft, −39 (−18.3%)**, 26 files touched (59 insertions / 31 deletions), 0 hard,
+  `pytest` 494 passed, no CRLF. All four other layers stay 0 — the round touched `skel/*.tsv` only.
+- Unit-level: **168 → 141 flagged**; 27 cleared outright, 5 improved, 136 unchanged,
+  **0 regressed, 0 newly flagged**.
+- Per-unit yield **0.232**, against 0.66 / 0.193 / 0.188 / 0.246 / 0.201 for rounds 1–5.
+- Exactly **one** position is present after but not before — paradiso 1:81 `extra_arg obj` — inside
+  a unit that net improved. It is not an ordinary miss; see finding 3.
+- Per canticle: inferno 54 → 49, purgatorio 85 → 67, paradiso 74 → 58.
+- **Subclass results** (before → after):
+
+  | subclass | before | after | delta |
+  | --- | ---: | ---: | ---: |
+  | `missing_arg` | 54 | 42 | −12 (−22.2%) |
+  | `extra_arg_subject` | 37 | 24 | −13 (−35.1%) |
+  | `extra_arg` | 33 | 32 | −1 (−3.0%) |
+  | `role_mismatch` | 31 | 28 | −3 (−9.7%) |
+  | `missing_arg_subject` | 24 | 19 | −5 (−20.8%) |
+  | `missing_tuple_nominal` | 9 | 9 | ±0 |
+  | `missing_arg_adverb` | 9 | 8 | −1 (−11.1%) |
+  | `extra_tuple` | 5 | 4 | −1 (−20.0%) |
+  | `missing_tuple` | 4 | 2 | −2 (−50.0%) |
+  | `extra_arg_adjective` | 4 | 3 | −1 (−25.0%) |
+  | `membership` | 2 | 2 | ±0 |
+  | `extra_tuple_adverb` | 1 | 1 | ±0 |
+
+**1. `_CONV_ADJUNCT` is positive, and the class table hid it.** The clause names the *prepositional*
+adjunct of time, place, source or manner, and `missing_arg obl*` — the aggregate it was queued
+against — fell only 24.0%, a little over the round average. Decomposed by the role's own case
+marker, the result is the second-largest class effect on record after `_CONV_ADVERB`'s −66.3%:
+
+  | target | before | after | delta |
+  | --- | ---: | ---: | ---: |
+  | `obl:{in,da,di,con,tra,per}` — the clause's actual target | 19 | 9 | **−52.6%** |
+  | `obl` — bare, no case marker | 15 | 14 | −6.7% |
+  | `obl:a` — `_CONV_DATIVE`'s target | 12 | 11 | −8.3% |
+  | `obl:{come,onde,quale}` — a marker, not a preposition | 4 | 4 | ±0 |
+  | `missing_arg obl*` total | 50 | 38 | −24.0% |
+
+The two halves that did not move are the two the clause never addressed. The bare `obl` is not a
+prepositional phrase at all: rules AZ/CP settled it as the predicate's **secondary predicate**
+(a depictive nominal or adjective Layer 4 hangs caseless). And `obl:come`/`onde`/`quale` are
+comparison and relative *markers* the corpus writes in case position (rules AR, DD/DY). So the
+subclass table's `missing_arg obl*` was never one population, and **a clause must be measured
+against the shape its own prose names**, not against the aggregate the residue is bucketed by.
+
+**2. `_CONV_DATIVE` is negative.** `missing_arg obl:a` 12 → 11 (−8.3%), under half the round
+average. The non-core dative clitic was this batch-series' own prompt finding and it moved nothing
+— the fourth negative prompt verdict in a row (round 4's two subject branches and
+`missing_tuple_nominal`'s rewritten question, now this), against `_CONV_ADVERB` and `_CONV_ADJUNCT`
+as the only two positives. What separates the positives from the negatives is now visible: both
+positives **withdrew or narrowed a licence the prompt itself had granted** (`_CONV_ADVERB` deleted
+"or it is left out"; `_CONV_ADJUNCT` named a slot the conventions had left unnamed), while every
+negative *added prose about a shape the model already reads wrong*. Phase 5w's law, sharpened:
+**prose that competes with the model's reading does not move a class; removing an instruction that
+licensed the omission does.**
+
+**3. The residue is now a hard core, and this was measured, not assumed.** The pre-round-5 artifact
+was re-checked with today's checker to put all three snapshots on one gate:
+
+| artifact | soft under HEAD checker | new positions vs previous |
+|---|---:|---:|
+| before round 5 (894b050) | 265 | — |
+| before round 6 (base 213) | 213 | **0** |
+| after round 6 | 174 | **1** (paradiso 1:81) |
+
+**173 of the standing 174 were already there before round 5.** Two consecutive rounds have been
+pure subtraction from one fixed set, at a flat −19.6% then −18.3%. That is re-sampling, not
+progress on new material: a round still pays ~18%, but every position it takes is one it had
+already failed twice, and it introduces nothing to read. Extrapolated, three or four more rounds
+reach ~90 without a single new diagnosis. **The recovery is real and can be collected at any time;
+what a further round cannot buy is information.**
+
+**4. The one new position is a class of LLM error the checker cannot see** — the round's most
+valuable output, and the reason it was worth reading a single position. At paradiso 1:81 (*«lago non
+fece alcun tanto disteso»*) the round wrote `81.3 fece: obj=(81,4)` beside the `subj=(81,4)` already
+there: **one token filling two roles of one predicate**, which rule AL exists precisely to license
+as the *exception* (the fused clitic `gliel'` = `gli` + `lo`). Censused over all 100 cantos: **56
+positions, 7 of them the fused-clitic shape rule AL licenses, 49 unlicensed** (27 of those
+`subj`+`obj`), and **52 of the 56 sit on a line with no soft violation at all**. The checker reports
+only divergence from `derive_unit`, so when one of the two roles matches the derivation the other is
+unconstrained. Twenty-one read batches could not find this because a read compares the artifact with
+the derivation, and this is a contradiction **inside the artifact**. See *After the Sixth Round*
+below for what it is owed.
+
+**Not recorded in [`CORRECTIONS.md`](CORRECTIONS.md)**, for the reason §12 gives.
+
 ### Schedule — the series is complete
 
 **All 100 cantos have been read**: Inferno (batches 1, 1–3, 4–6, 7–10, 11–15, 16–20, 21–25, 26–30,
@@ -1442,18 +1551,18 @@ fifth batch running.
 11–15 + 16–20 together, 21–25, 26–33). Nothing is re-read: the standing residue is reading error,
 and it is the most direct sample there is of what a `--fix` round leaves behind.
 
-| canticle | soft at base 213 |
-|---|---:|
-| inferno | 54 |
-| purgatorio | 85 |
-| paradiso | 74 |
+| canticle | soft at base 213 | after the sixth round (174) |
+|---|---:|---:|
+| inferno | 54 | 49 |
+| purgatorio | 85 | 67 |
+| paradiso | 74 | 58 |
 
 Eighteen batches produced rules at zero model cost — AG: −43; AH–AL: −156; AM–AT: −75; AU–AY: −54;
 AZ–BI: −143; BJ–BN: −41; BO–BV: −35; BW–BZ: −25; CA–CJ: −33; CK–CO: −21; CP–CT: −18; CU–CY: −21;
 CZ–DD: −30; DE–DF: −7; DG–DJ: −10; DK–DR: −27; DS–DW: −16; DX–EA: −11; EB–EF: −21 — against two
-`--fix` rounds run inside the series (−109 and −53). **The next step is the sixth round**, and it
-is now the one the series was written to enable: the checker is finished, and the round's per-class
-numbers measure the prompt alone. See *The Sixth `--fix` Round* below.
+`--fix` rounds run inside the series (−109 and −53). **The sixth round then ran (2026-08-18, §27)**,
+the one the series was written to enable: the checker was finished, so its per-class numbers measured
+the prompt alone. See *After the Sixth Round* below for what it settled and what it left.
 
 Per canto, get the current numbers with `uv run skel.py <canticle> --check -c <n>` from `skel/`.
 
@@ -1512,48 +1621,50 @@ skipped: a rule that is not censused, measured, tested and written up is not a r
    [`README.md`](README.md), and the counts in both PLAN files. `CORRECTIONS.md` records
    corrections that were *applied* — see the root PLAN's *Standing Disciplines*.
 
-### The Sixth `--fix` Round — the plan for the rest of the work
+### After the Sixth Round — what the round settled and what it left
 
-**The fifth round ran on 2026-08-17 (§21); this section's precondition — wait for the series, and
-only with new diagnoses on the scale — was not met, and the round is written up as what it turned
-out to measure.** The sequence from here is fixed, and it is the same one the fifth round departed
-from:
+**The sequence this section used to set is spent.** It read: *read Paradiso in 5-canto batches, then
+run one `--fix` round, none in between.* The reading half closed 2026-08-17 (§26) and the round ran
+2026-08-18 (§27). Both prompt candidates are decided — `_CONV_ADJUNCT` positive at −52.6% on the
+shape its prose names, `_CONV_DATIVE` negative at −8.3% — and the prompt queue is empty again.
 
-> **Read Paradiso in 5-canto batches, 1–5 through 31–33; when the series is finished, run one
-> `--fix` round.** No round in between.
+**The residue's shape has changed, and that is what the next step follows from.** 173 of the
+standing 174 predate round 5 (§27, finding 3), so the LLM has now failed the same set twice. Three
+things are owed, in this order:
 
-**The reading half is done (2026-08-17, §26): the round is the only step left.** The reason the
-sequence was written this way is unchanged and the fifth round did not weaken it: a round rewrites the artifact, so a
-rule written afterwards is measured against a base the round already moved and the two effects can
-no longer be separated. Checker rules cost nothing to measure and are decided by violation diff
-alone; that is the currency the two remaining batches deal in.
+1. **The dual-role check (the round's own finding, §27 finding 4).** One token in two roles of one
+   predicate: censused at **56**, of which 7 are rule AL's licensed fused clitic and **49 are
+   unlicensed**, and **52 of the 56 are on lines the checker says nothing about**. This is the first
+   *artifact-internal* check the corpus would have — every rule from V to EF compares the artifact
+   with `derive_unit`, which is exactly why 21 read batches walked past it. Landing it **raises**
+   the soft count by roughly 49, the honest trade rule AM records, and turns an invisible error
+   class into one a round can be asked to repair. It also has to be enforced at the `--fix` gate:
+   `_apply_missing_arg` appends a row without removing the one it contradicts, which is how
+   paradiso 1:81 was written and accepted (the unit netted an improvement, so `_is_improvement`
+   let it through).
+2. **The same-slot question merge (prompt side).** Eight predicates carry a `missing_arg` **and** an
+   `extra_arg` on the *same* role — inferno 5:92, 24:10 (twice), 31:32, purgatorio 9:97, 10:30,
+   10:60, paradiso 1:81 — which is **one** disagreement about which token fills the slot, 16 of the
+   174 positions. `_CLASS_ORDER` asks it as two independent questions in two separate calls
+   (`extra_arg*` at position 7–9, `missing_arg*` at 10–12), and neither question tells the model the
+   other side exists: the `extra_arg` question invites `keep` and the `missing_arg` question invites
+   the token the model already wrote, so **neither single-class splice can be an improvement on its
+   own** and the pair is frozen by construction. A merged question stays inside the Independence
+   Rule, because it names only the LLM's own citation and the slot: *"predicate P currently lists Y
+   as its `subj` — is that right, or does another token fill it?"*, answered `keep` / a token
+   position / `none`. Never name the derived filler.
+3. **The subject slot, which is now 36% of everything left**: `extra_arg_subject` 24 +
+   `missing_arg_subject` 19 + the 19 `role_mismatch` rows with `subj` on one side = **62 of 174**,
+   and 13 of those mismatches are `subj` ↔ `obj` in both directions on one predicate. Round 4
+   decided `_CONV_SUBJECT` negative and converted this to read-work; the read series then read it
+   and left it standing. So it is neither prompt-work nor unread — it is the corpus's genuine
+   reading disagreement over Dante's inversion, and the honest options are the merge in step 2
+   (which covers 14 of the 62) and leaving the rest reported.
 
-What the sixth round will have on the scale:
-
-1. **`_CONV_ADJUNCT` — the `missing_arg obl` convention clause the Purgatorio 16-20 read proposed
-   (§17), written 2026-08-17 by the Paradiso 11-20 read (§24).** Its target is `missing_arg obl*`
-   at **50 of 213** (bare `obl` 15), still the residue's largest single bucket, and the one the
-   Paradiso 21–25 read (§25) added two more instances to without removing any. Written into
-   `skel/skel.py` on the generic `missing_arg` class; the round decides it, exactly as
-   `_CONV_ADVERB_ARG` was decided.
-2. **`_CONV_DATIVE` — the non-core dative clitic**, the Paradiso 11-20 read's own prompt finding
-   (§24): 3 positions in that batch alone are a dative of the person concerned that Layer 4
-   records and the reading drops as a particle, plus a fourth from the 21–25 read (paradiso 25:61,
-   where the dative is read as the subject instead). On the same class, but separable in the subclass
-   table because it surfaces as `missing_arg obl:a`.
-3. **Whatever prompt defects the two remaining Paradiso batches find.** Paradiso 1–5 (§22),
-   6–10 (§23) and 21–25 (§25) found none between them: every diagnosis was checker-side or
-   upstream, and every position they assigned to the prompt (6–10's 8:12 "or **da coppa** or **da
-   ciglio**"; 21–25's 23:7, 23:10 and 25:61) is another instance of a clause already queued, not a
-   new one. Round 3's `_CONV_ADVERB` result
-   (−66.3%) is still the only demonstrated way to collapse a class from the prompt side, and it
-   came from a read. A round with one candidate on it is a round that tests almost nothing — §21
-   is the measurement of exactly that case.
-4. **Nothing else.** The three routes rounds 3 and 4 tested are closed, two of them by a negative
-   that converts them to read-work.
-
-When the series finishes, re-measure the base, then run `make -C skel fix` 3-way parallel (the
-user's job) and measure per *How to Measure a `--fix` Round* below.
+**What is *not* owed: another round for its own sake.** A round still pays ~18% (§27), so
+`make -C skel fix` may be run whenever the recovery is wanted — but until step 1 is landed a round
+tests nothing, and it can quietly write more dual-role contradictions. **Land rule EG first, then
+run a round with the merged question on the scale.**
 
 **A round is worth running even with an unchanged prompt — but know what it buys.** §21 measured
 that: −15.1% at a base fifteen rule batches lower, 0 regressed / 0 newly flagged, which shows the
@@ -1576,7 +1687,7 @@ and per-class *call* counts are not available after the fact by design.
 
 Populations are quoted at **base 541** (after the fourth `--fix` round) where they have been
 re-measured, and marked with their older base otherwise; the BO–BV through DE–DF rules and the
-fifth `--fix` round and the DG–EA rules have since moved the base to **234**, so a route's number is a starting point
+fifth `--fix` round, the DG–EF rules and the sixth `--fix` round have since moved the base to **174**, so a route's number is a starting point
 for a re-measure, not a current count. These are shapes the reads have
 already named but not settled; a batch that runs into one of them should fold it in rather than
 open a new route.
@@ -1585,10 +1696,14 @@ open a new route.
 
 *(populations at base 541 unless noted)*
 
-- **The 75 positions Inferno still holds** are the read batches' own residue *after* the fourth
-  round has been over them, which makes them the most direct sample there is of what a round
-  leaves behind. They were not re-read while the round was pending; that reason has now lapsed, so
-  they are readable — but the nine unread batches come first, being unread.
+- **The three routes the sixth round opened come first** — the artifact-internal dual-role check
+  (census 56, 49 unlicensed), the same-slot question merge (8 predicates / 16 positions) and the
+  subject slot at 62 of 174. All three are written up in *After the Sixth Round* above, in the order
+  they should be taken.
+- **The 49 positions Inferno still holds** (75 at base 541, 54 at base 213) are the read batches'
+  own residue *after* three `--fix` rounds have been over them, which makes them the most direct
+  sample there is of what a round leaves behind. All 100 cantos are read, so these are reading
+  disagreement rather than unread material.
 - **Ask what *else* a rule's evidence covers** (2026-08-16, from the Purgatorio 21–25 batch). Rule
   BA reads two derived subjects as two collapsed clauses and concludes only about the subject
   slot; rule CW follows the same evidence to the rest of the elided clause, for seven positions.

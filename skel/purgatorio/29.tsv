@@ -393,6 +393,7 @@ line	token	word	role	arg_line	arg_token
 144	2	dormendo	subj	143	7
 145	0			0	0
 146	2	abitüati	subj	145	3
+146	2	abitüati	obl:con	145	6
 147	5	facëan	subj	145	2
 147	5	facëan	obj	147	6
 147	5	facëan	obl:di	146	5

@@ -340,7 +340,6 @@ line	token	word	role	arg_line	arg_token
 99	1	rugumar	subj	98	5
 99	2	può	subj	98	5
 99	2	può	xcomp	99	1
-99	5	ha	subj	98	1
 99	5	ha	subj	98	5
 99	5	ha	obj	99	7
 100	8	vede	subj	100	5
@@ -434,6 +433,7 @@ line	token	word	role	arg_line	arg_token
 128	2	confondere	obl:in	128	4
 129	1	cade	subj	127	5
 129	1	cade	obl:in	129	3
+129	6	brutta	subj	127	5
 129	6	brutta	subj	129	5
 129	6	brutta	subj	129	9
 129	9	soma	subj	129	5

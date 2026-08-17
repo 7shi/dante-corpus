@@ -4,6 +4,7 @@ line	token	word	role	arg_line	arg_token
 2	1	intepidar	subj	1	8
 2	1	intepidar	obj	2	4
 2	1	intepidar	obl	1	4
+3	1	vinto	subj	7	6
 3	1	vinto	obl:da	3	3
 3	1	vinto	obl:da	3	7
 4	0			0	0
@@ -18,8 +19,10 @@ line	token	word	role	arg_line	arg_token
 6	7	sta	iobj	6	6
 6	7	sta	attr	6	8
 6	8	bruna	subj	6	4
+6	8	bruna	iobj	6	6
 7	2	venne	subj	7	6
 7	2	venne	iobj	7	1
+7	2	venne	obl:in	1	3
 7	2	venne	obl:in	7	4
 8	0			0	0
 9	0			0	0
@@ -354,6 +357,7 @@ line	token	word	role	arg_line	arg_token
 112	7	partita	subj	113	3
 112	7	partita	obl:da	113	2
 113	3	anima	subj	0	0
+113	3	anima	obl:a	112	4
 113	4	fui	attr	112	5
 113	7	avara	subj	113	3
 113	7	avara	obl:di	113	6

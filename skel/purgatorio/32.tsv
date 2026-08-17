@@ -378,6 +378,8 @@ line	token	word	role	arg_line	arg_token
 137	6	offerta	obl:con	138	3
 138	0			0	0
 139	2	ricoperse	subj	136	1
+139	2	ricoperse	obl:da	137	2
+139	2	ricoperse	obl:da	137	5
 139	4	funne	subj	140	3
 139	4	funne	subj	140	7
 139	4	funne	subj	140	10

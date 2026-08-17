@@ -138,6 +138,7 @@ line	token	word	role	arg_line	arg_token
 50	7	parlato	subj	50	4
 50	7	parlato	iobj	50	5
 51	8	artista	subj	51	1
+51	8	artista	obl:tra	51	5
 52	3	rivolsi	subj	52	1
 52	3	rivolsi	obj	52	2
 52	3	rivolsi	obl:da	52	7

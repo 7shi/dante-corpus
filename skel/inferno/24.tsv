@@ -16,6 +16,7 @@ line	token	word	role	arg_line	arg_token
 7	7	manca	subj	7	6
 7	7	manca	obl:a	7	4
 8	2	leva	subj	7	2
+8	2	leva	obl:in	1	3
 8	4	guarda	subj	7	2
 8	6	vede	subj	7	2
 8	6	vede	obj	8	8

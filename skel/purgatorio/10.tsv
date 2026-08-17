@@ -18,8 +18,8 @@ line	token	word	role	arg_line	arg_token
 5	4	avesse	obj	5	6
 5	7	vòlti	subj	5	6
 5	7	vòlti	obl:a	5	9
+6	3	stata	subj	6	1
 6	3	stata	subj	6	7
-6	3	stata	attr	6	1
 6	3	stata	obl:a	6	5
 7	2	salavam	subj	7	1
 7	2	salavam	obl:per	7	5

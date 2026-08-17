@@ -51,19 +51,22 @@ line	token	word	role	arg_line	arg_token
 19	2	dimmi	subj	0	0
 19	7	perdona	subj	0	0
 19	7	perdona	obj	19	6
-19	7	perdona	obl:come	19	5
+19	7	perdona	attr	19	5
 20	5	allarga	subj	20	3
 20	5	allarga	obj	20	7
 20	5	allarga	iobj	20	4
 21	6	ragiona	subj	0	0
-21	6	ragiona	obl:come	21	3
+21	6	ragiona	attr	21	3
 21	6	ragiona	obl:cum	21	5
+22	2	poté	subj	23	2
+22	2	poté	xcomp	22	3
 22	3	trovar	subj	23	2
 22	3	trovar	obj	23	1
 22	3	trovar	obl:a	22	7
 22	3	trovar	obl:tra	23	5
 23	0			0	0
-24	7	pieno	subj	24	2
+24	7	pieno	subj	0	0
+24	7	pieno	obl:di	24	2
 24	7	pieno	obl:per	24	5
 25	4	mover	subj	25	3
 25	4	mover	obl:a	26	4

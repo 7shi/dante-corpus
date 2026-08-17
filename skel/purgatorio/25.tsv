@@ -151,11 +151,9 @@ line	token	word	role	arg_line	arg_token
 48	7	preme	subj	0	0
 48	7	preme	obl	48	5
 49	2	giunto	subj	49	3
-49	4	comincia	subj	0	0
 49	4	comincia	xcomp	49	6
 49	6	operare	subj	0	0
 50	1	coagulando	subj	0	0
-50	5	avviva	subj	0	0
 50	5	avviva	obj	51	1
 51	7	constare	subj	51	2
 51	7	constare	obl:per	51	5

@@ -382,7 +382,7 @@ line	token	word	role	arg_line	arg_token
 142	6	spira	subj	143	3
 142	6	spira	obj	142	3
 142	6	spira	obl:sanza	142	5
-143	6	innamora	subj	142	3
+143	6	innamora	subj	143	3
 143	6	innamora	obj	143	5
 143	6	innamora	obl:di	144	2
 144	8	disira	subj	0	0
