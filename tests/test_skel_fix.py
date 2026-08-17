@@ -9,6 +9,7 @@ the apply tests below.
 
 import importlib.util
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -650,3 +651,47 @@ def test_a_field_note_changes_nothing_about_the_splice(monkeypatch):
     _stub_model(monkeypatch, "Q1: 100.3\nN1: the antecedent is not obvious here.")
     noted = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
     assert plain == noted
+
+
+# --- the per-class summary, persisted (2026-08-18) ------------------------------------------
+
+
+_SUMMARY_TOTALS = Counter({
+    "units:flagged": 47, "units:cleared": 13, "units:cleared_deterministically": 0,
+    "calls:dual_role": 10, "removed:dual_role": 11,
+    "calls:_whole": 32, "removed:_whole": 0,
+    "calls:missing_arg": 7, "removed:missing_arg": 1,
+})
+
+
+def test_fix_summary_reports_calls_and_yield_per_class():
+    """The number the terminal table exists for: a class can carry a whole round while every
+    other one sits at zero, and only `removed / calls` shows it."""
+    lines = drv._fix_summary_lines(_SUMMARY_TOTALS)
+    by_class = {ln.split()[0]: ln.split()[1:] for ln in lines if ln.split()}
+    assert by_class["dual_role"] == ["10", "11", "1.100"]
+    assert by_class["_whole"] == ["32", "0", "0.000"]
+    assert by_class["TOTAL"] == ["49", "12", "0.245"]
+    assert lines[0].startswith("units flagged: 47;")
+
+
+def test_fix_summary_is_appended_to_the_log(tmp_path):
+    """A `--log` file is the round's whole record, so it carries what the asking cost as well as
+    what was asked. Appended last, under a header a census can grep for."""
+    log = tmp_path / "skel.log"
+    log.write_text("NOTE\tinferno 5\t1-2\tmissing_arg\t1.3 'vede'\tno token fits\n",
+                   encoding="utf-8")
+    drv._print_fix_summary(_SUMMARY_TOTALS, log)
+    text = log.read_text(encoding="utf-8")
+    assert text.startswith("NOTE\t"), "the summary must not displace what the round logged"
+    assert "\n=== fix summary ===\n" in text
+    assert text.rstrip().splitlines()[-1] == (
+        "fix complete: 12 soft violation(s) removed over 49 LLM call(s)")
+    assert "dual_role" in text.split("=== fix summary ===")[1]
+
+
+def test_fix_summary_without_a_log_writes_no_file(tmp_path, capsys):
+    """`--log` is opt-in, and the summary stays a terminal report when it is not passed."""
+    drv._print_fix_summary(_SUMMARY_TOTALS, None)
+    assert list(tmp_path.iterdir()) == []
+    assert "dual_role" in capsys.readouterr().out

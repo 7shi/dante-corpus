@@ -1942,33 +1942,51 @@ def fix(canticles: list[str], model: str, spec: str | None, log_path: Path | Non
             if not skel.has_skel(canticle, number):
                 continue
             totals += _fix_canto(canticle, number, n_cantos, model, ui, log_path, whole)
-    _print_fix_summary(totals)
+    _print_fix_summary(totals, log_path)
     return 0
 
 
-def _print_fix_summary(totals: Counter[str]) -> None:
+def _fix_summary_lines(totals: Counter[str]) -> list[str]:
+    """The per-class `calls / removed / per call` table, as lines.
+
+    Separated from the printing so the same text reaches the terminal and `--log`. The table is
+    the round's only record of what a call *cost*: the violation diff says which positions moved,
+    never how many questions were asked to move them, and a round's yield can be carried entirely
+    by one class while every other sits at zero.
+    """
     flagged = totals["units:flagged"]
     calls = sum(n for k, n in totals.items() if k.startswith("calls:"))
     removed = sum(n for k, n in totals.items() if k.startswith("removed:"))
     repairs = {k.split(":", 1)[1]: n for k, n in totals.items() if k.startswith("repair:")}
 
-    print(f"\nunits flagged: {flagged}; "
-          f"cleared with no model call: {totals['units:cleared_deterministically']}; "
-          f"cleared outright: {totals['units:cleared']}")
+    lines = [f"units flagged: {flagged}; "
+             f"cleared with no model call: {totals['units:cleared_deterministically']}; "
+             f"cleared outright: {totals['units:cleared']}"]
     if repairs:
-        print("stage 1 (deterministic, 0 calls): "
-              + ", ".join(f"{n} {kind}" for kind, n in sorted(repairs.items()))
-              + f" -> {totals['removed:_deterministic']} violation(s)")
-    print(f"{'class':24s} {'calls':>7s} {'removed':>8s} {'per call':>9s}")
+        lines.append("stage 1 (deterministic, 0 calls): "
+                     + ", ".join(f"{n} {kind}" for kind, n in sorted(repairs.items()))
+                     + f" -> {totals['removed:_deterministic']} violation(s)")
+    lines.append(f"{'class':24s} {'calls':>7s} {'removed':>8s} {'per call':>9s}")
     for key in sorted(k for k in totals if k.startswith("calls:")):
         cls = key.split(":", 1)[1]
         n_calls = totals[key]
         n_removed = totals[f"removed:{cls}"]
         rate = n_removed / n_calls if n_calls else 0.0
-        print(f"{cls:24s} {n_calls:7d} {n_removed:8d} {rate:9.3f}")
+        lines.append(f"{cls:24s} {n_calls:7d} {n_removed:8d} {rate:9.3f}")
     rate = removed / calls if calls else 0.0
-    print(f"{'TOTAL':24s} {calls:7d} {removed:8d} {rate:9.3f}")
-    print(f"fix complete: {removed} soft violation(s) removed over {calls} LLM call(s)")
+    lines.append(f"{'TOTAL':24s} {calls:7d} {removed:8d} {rate:9.3f}")
+    lines.append(f"fix complete: {removed} soft violation(s) removed over {calls} LLM call(s)")
+    return lines
+
+
+def _print_fix_summary(totals: Counter[str], log_path: Path | None = None) -> None:
+    lines = _fix_summary_lines(totals)
+    print("\n" + "\n".join(lines))
+    if log_path:
+        # Appended last, after every `NOTE` and rejected candidate, so a log is self-contained:
+        # what was asked, what came back, and what the asking cost.
+        with log_path.open("a", encoding="utf-8") as f:
+            f.write("=== fix summary ===\n" + "\n".join(lines) + "\n")
 
 
 def main() -> int:

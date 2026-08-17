@@ -1831,14 +1831,23 @@ rules and the LLM take largely disjoint residue. What such a round does *not* bu
 any question, and it moves the base under every rule measured afterwards. So the recovery is real
 and can be collected at any time; the ordering constraint is about *evidence*, not about yield.
 
-**Two instrumentation changes were proposed after round 4 and declined (2026-08-16) — do not
-re-propose them.** `make -C skel fix` does not pass `--log`, so `_log_rejection` writes nothing and
-a round's rejected candidates are not kept: **that omission is deliberate**, not an oversight.
-Nor is `_print_fix_summary`'s per-class `calls / removed / per call` table persisted or summed
-across the three parallel processes; it is read from the terminal, and a round's numbers are
-reconstructed afterwards by the worktree diff in *How to Measure a `--fix` Round*, which is what
-§12's table was built from. So: a round is measured by **violation diff, not by driver telemetry**,
-and per-class *call* counts are not available after the fact by design.
+**`make -C skel fix` still does not pass `--log`, and that omission is deliberate** (proposed after
+round 4 and declined, 2026-08-16): a round's rejected candidates are not kept unless the round is
+launched with `--log` by hand. A round is measured by **violation diff, not by driver telemetry** —
+the worktree diff in *How to Measure a `--fix` Round* is what §12's table was built from.
+
+**The other half of that 2026-08-16 decision is reversed (2026-08-18): `_print_fix_summary`'s
+per-class `calls / removed / per call` table is now appended to `--log`**, under a
+`=== fix summary ===` header, so a `--log` file is the round's whole record — what was asked, what
+came back, and what the asking cost. The reason it was declined was that the violation diff
+reconstructs a round's numbers afterwards; the seventh round showed what it does *not* reconstruct.
+Inferno's table read **TOTAL 84 calls / 16 removed / 0.190**, and split by class it was
+`dual_role` **10 calls / 11 removed / 1.100** against **74 calls / 5 removed / 0.068** for
+everything else, with `_whole` at **32 calls / 0 removed** — 38% of the round's call budget, and
+the most expensive call in it, for nothing. The violation diff sees the 16 positions and none of
+that. **A call count is not recoverable from the artifact, so it has to be written down while the
+round runs.** Still not summed across the three parallel processes: each writes its own file, and
+the three tables are added up by hand.
 
 ---
 
