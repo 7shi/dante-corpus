@@ -1,5 +1,22 @@
 # Manual Layer-2 corrections
 
+## 2 rows from the Layer-5 Paradiso 6-10 read (2026-08-17)
+
+Both follow Layer-4 corrections made in the same session (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)); neither is a new reading of Layer 2's own
+question. Applied by the same gated script.
+
+- **paradiso 9:135 `lor`** — `pronoun` / `m.` → `adjective` / (no gender). "sì che pare a' **lor**
+  vivagni" is the invariant possessive "their", not a dative pronoun; the corpus already writes it
+  `adjective` with an empty gender column in 72 of its 199 `lor` rows, and Layer 4 gives 114 of
+  them `det:poss`. Its `dative` case-annex row is dropped with it (see
+  [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)).
+- **paradiso 10:147 `ch'`** — `conjunction` → `pronoun`, number `sg.`. "e in dolcezza **ch'**esser
+  non pò nota": the word carries an `nsubj` deprel, which no conjunction does — it is the relative
+  pronoun, written exactly as `ch'` at 7:74 already is. A `nominative` case-annex row is added.
+
+`morph --check` stays 0/0.
+
 ## 1 row from the Layer-5 Paradiso 1-5 read (2026-08-17)
 
 **paradiso 5:37 `convienti`** — "**convienti** ancor sedere un poco a mensa", "it behooves

@@ -1081,7 +1081,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 147	e	e	conjunction						
 147	in	in	preposition						
 147	dolcezza	dolcezza	noun	f.	sg.				
-147	ch'	che	conjunction						elision
+147	ch'	che	pronoun		sg.				elision
 147	esser	essere	verb						apocope
 147	non	non	adverb						
 147	pò	potere	verb		sg.	3	present	indicative	archaic

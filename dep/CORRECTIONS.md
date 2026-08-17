@@ -1,5 +1,95 @@
 # dep — Layer 4 correction history
 
+## 10 rows from the Layer-5 Paradiso 6-10 read (2026-08-17)
+
+The per-position read of Paradiso 6-10's 18 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found ten Layer-4 rows wrong, in five places.
+Applied with a gated script that asserts the word — and the old cell value — at each
+`(line, token)` before rewriting; `morph`/`np`/`dep`/`case --check` all re-run at
+0 and `pytest` at 465.
+
+### paradiso 7:74-75 — the preposition governs the phrase that follows it
+
+"ché l'ardor santo ch'ogne cosa raggia, / **ne la più somigliante** è più vivace" — "for the holy
+ardour that irradiates everything is most alive in the most similar [creature]". Layer 4 had `ne`
+governing `ardor`, three tokens to its left and across a line break, which left the adjective
+inside the prepositional phrase as the subject of the copular clause:
+
+| token | was | now |
+|---|---|---|
+| 75.1 `ne` | `case` ← 74.3 `ardor` | `case` ← 75.4 `somigliante` |
+| 75.4 `somigliante` | `nsubj` ← 75.7 `vivace` | `obl` ← 75.7 `vivace` |
+| 74.3 `ardor` | `obl` ← 75.7 `vivace` | `nsubj` ← 75.7 `vivace` |
+
+Layer 5 **−2**: the LLM had read the line correctly and both of its `role_mismatch` positions were
+the tree's error, not its own.
+
+### paradiso 7:142-143 — the supreme beneficence is the subject of `spira`
+
+"ma **vostra vita** sanza mezzo **spira** / **la somma beninanza**, e la innamora / di sé" — the
+beneficence breathes forth your life without an intermediary, and then *enamours it* (`la` = the
+life) of itself. Layer 4 had the two nominals the other way round:
+
+| token | was | now |
+|---|---|---|
+| 142.3 `vita` | `nsubj` ← 142.6 `spira` | `obj` ← 142.6 `spira` |
+| 143.3 `beninanza` | `obj` ← 142.6 `spira` | `nsubj` ← 142.6 `spira` |
+
+Layer 5 **±0**, deliberately. The two `role_mismatch` positions at 142 go, and two new ones appear
+at 143: the LLM reads `spira` correctly but then gives the conjoined `innamora` the *life* as its
+subject, which is the same slip the old tree made — so with the tree corrected the LLM's own
+misreading surfaces where it had been hidden by agreement. The fifth batch in the series to record
+that trade.
+
+### paradiso 9:87 — `far suole` is modal plus lexical verb, not the reverse
+
+"là dove l'orizzonte pria **far suole**" — where the horizon is wont to make [midday]. Layer 4 had
+`far`, a full lexical infinitive, as the **auxiliary** of `suole`:
+
+| token | was | now |
+|---|---|---|
+| 87.6 `far` | `aux` ← 87.7 `suole` | `xcomp` ← 87.7 `suole` |
+
+Censused before applying: `solere` heads its own clause with a complement 23 times corpus-wide and
+is an `aux` 18 times, so both directions are in use and only the *inner* label is wrong here;
+`fare` is an `aux` 13 times and every one of those is the causative ("il fé far", purgatorio
+5:77), which this is not. Layer 5 **−1**.
+
+### paradiso 9:135 — `a' lor vivagni` is one prepositional phrase
+
+"sì che pare **a' lor vivagni**" — so that it shows in their margins. Layer 4 had the contraction
+`a'` governing `lor` alone, `lor` as a dative oblique of `pare`, and `vivagni` as the copular-style
+`xcomp` of a verb that has no copula. Layer 3 already read the three words as one NP
+(`[6-8] head=8`):
+
+| token | was | now |
+|---|---|---|
+| 135.6 `a'` | `case` ← 135.7 `lor` | `case` ← 135.8 `vivagni` |
+| 135.7 `lor` | `obl` ← 135.5 `pare` | `det:poss` ← 135.8 `vivagni` |
+| 135.8 `vivagni` | `xcomp` ← 135.5 `pare` | `obl` ← 135.5 `pare` |
+
+`lor` is the invariant possessive, which this corpus already writes `det:poss` in 114 of its 199
+rows; Layer 2 and the case annex move with it (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md),
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)). Layer 5 **±0**: the `role_mismatch` goes and
+an `extra_tuple` takes its place, the LLM's own row treating `vivagni` as a predicate — a reading
+only the wrong tree supported.
+
+### paradiso 10:147 — the relative clause modifies the conjunct it follows
+
+"e in tempra / e in **dolcezza ch'esser non pò nota**" — Layer 4 hung the relative clause on
+`tempra`, the coordination head, rather than on `dolcezza`, the conjunct it immediately follows and
+plainly qualifies:
+
+| token | was | now |
+|---|---|---|
+| 147.7 `pò` | `acl:relcl` ← 146.8 `tempra` | `acl:relcl` ← 147.3 `dolcezza` |
+
+`ch'` is retagged from conjunction to relative pronoun at Layer 2, with a `nominative` case-annex
+row. Layer 5 **±0** on its own — and it is the correction that shaped rule DK, because moving the
+antecedent onto a conjunct moved it *off* the position rule C's coordination collapse rewrites the
+LLM's citation to. The rule reads the antecedent through `_coordination_head` for that reason; the
+uncorrected tree would never have shown the need.
+
 ## 6 rows from the Layer-5 Paradiso 1-5 read (2026-08-17)
 
 The per-position read of Paradiso 1-5's 26 Layer-5 soft violations (see

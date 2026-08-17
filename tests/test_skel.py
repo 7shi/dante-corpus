@@ -1881,7 +1881,7 @@ def test_validate_unit_membership_accepts_a_dep_corroborated_argument():
 # --- Phase 6: rule AH (Rule AG's second leg) -------------------------------------------
 
 
-def _ag_fixture(subj_person, subj_number):
+def _ag_fixture(subj_person, subj_number, donor_person="3"):
     """"La mente tua conservi ... e ora attendi qui" (inferno 10:127-129): `attendi` is a 2sg
     imperative attached `conj` to `conservi`, whose subject `mente` step 3 propagates onto it."""
     derived = {2: [skel.SkelRow(2, 1, "attendi", "subj", 1, 2)]}
@@ -1897,7 +1897,7 @@ def _ag_fixture(subj_person, subj_number):
     morph_rows = {
         1: [morph.MorphRow(word="La", pos="article"),
             morph.MorphRow(word="mente", pos="noun", number=subj_number, person=subj_person),
-            morph.MorphRow(word="conservi", pos="verb", number="sg.", person="3")],
+            morph.MorphRow(word="conservi", pos="verb", number="sg.", person=donor_person)],
         2: [morph.MorphRow(word="attendi", pos="verb", number="sg.", person="2")],
     }
     return given, derived, dep_index_by_pos, morph_rows
@@ -1913,8 +1913,9 @@ def test_classify_divergence_rule_ah_drops_null_subj_when_ag_drops_the_inherited
 
 def test_classify_divergence_rule_ah_leaves_an_agreeing_inherited_subject_flagged():
     # Same shape with an agreeing subject: rule AG does not fire, so nothing is disclaimed and
-    # the LLM's ∅ is a real disagreement about a subject the derivation does assert.
-    given, derived, dep_index_by_pos, morph_rows = _ag_fixture("2", "sg.")
+    # the LLM's ∅ is a real disagreement about a subject the derivation does assert. The donor
+    # verb has to agree too, or rule DO drops the inheritance on its own evidence.
+    given, derived, dep_index_by_pos, morph_rows = _ag_fixture("2", "sg.", donor_person="2")
     violations = skel._classify_divergence(
         given, derived, dep_index_by_pos, None, None, None, morph_rows)
     assert any(v.detail.startswith("extra_arg") and v.arg == (0, 0) for v in violations)
@@ -4428,3 +4429,276 @@ def test_classify_divergence_rule_dj_still_reports_a_role_the_derivation_denies(
     # Outside rule CX's own pair of complement roles, a different role is a second claim.
     violations = _same_role_clause_opener_fixture(role="obl")
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+# --- Phase 6: rules DK-DR (the Paradiso 6-10 read) ----------------------------------------
+
+
+def _antecedent_for_pronoun_fixture(clause_deprel="acl:relcl"):
+    """"e in **dolcezza** **ch'** esser non pò nota" (paradiso 10:147): the derivation gives the
+    clause the relative pronoun Layer 4 gives it, the LLM gives it the noun that pronoun stands
+    for, and the two are one referent."""
+    derived = {1: [skel.SkelRow(1, 4, "pò", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 4, "pò", "subj", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="dolcezza", deprel="obl",
+                           head_line=2, head_token=1),
+        (1, 2): dep.DepRow(line=1, token=2, word="ch'", deprel="nsubj",
+                           head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="esser", deprel="xcomp",
+                           head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="pò", deprel=clause_deprel,
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "noun", (1, 2): "pronoun", (1, 4): "verb"})
+
+
+def test_classify_divergence_rule_dk_accepts_the_antecedent_for_its_own_pronoun():
+    assert [v for v in _antecedent_for_pronoun_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dk_requires_a_relative_clause_edge():
+    # An `advcl` is not predicated of the noun, so the two citations are two claims.
+    violations = _antecedent_for_pronoun_fixture(clause_deprel="advcl")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _relativizerless_clause_fixture(relativizer=None):
+    """"credo che l'alta **letizia** … per te si **veggia** come la vegg' io" (paradiso 8:88):
+    the clause has no relative pronoun at all, so the `acl:relcl` edge is Layer 4's only record
+    of the head noun's part in it."""
+    derived = {1: [skel.SkelRow(1, 3, "veggia", "obl:per", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "veggia", "obl:per", 1, 2),
+                 skel.SkelRow(1, 3, "veggia", "obj", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="letizia", deprel="nsubj",
+                           head_line=2, head_token=1),
+        (1, 2): dep.DepRow(line=1, token=2, word="te", deprel="obl",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="veggia", deprel="acl:relcl",
+                           head_line=1, head_token=1),
+    }
+    if relativizer is not None:
+        dep_index_by_pos[(1, 4)] = dep.DepRow(line=1, token=4, word=relativizer,
+                                              deprel="nsubj", head_line=1, head_token=3)
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "noun", (1, 2): "pronoun", (1, 3): "verb"})
+
+
+def test_classify_divergence_rule_dp_accepts_the_head_of_a_relativizerless_clause():
+    assert _relativizerless_clause_fixture() == []
+
+
+def test_classify_divergence_rule_dp_is_refused_by_any_relativizer():
+    # `qual` relativizes the clause, so the head noun is not silently one of its arguments.
+    violations = _relativizerless_clause_fixture(relativizer="qual")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _prepositional_copular_nominal_fixture(other_complement=False):
+    """"tal ch'**è da sermone**" (paradiso 8:147): the copula's only complement, an `obl`
+    because it carries a preposition."""
+    derived = {1: [skel.SkelRow(1, 2, "è", "obl:da", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 2, "è", "attr", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="ch'", deprel="nsubj",
+                           head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="è", deprel="acl:relcl",
+                           head_line=2, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="da", deprel="case",
+                           head_line=1, head_token=4),
+        (1, 4): dep.DepRow(line=1, token=4, word="sermone", deprel="obl",
+                           head_line=1, head_token=2),
+    }
+    if other_complement:
+        derived[1].append(skel.SkelRow(1, 2, "è", "xcomp", 1, 5))
+        given[1].append(skel.SkelRow(1, 2, "è", "xcomp", 1, 5))
+        dep_index_by_pos[(1, 5)] = dep.DepRow(line=1, token=5, word="pieno", deprel="xcomp",
+                                              head_line=1, head_token=2)
+    return skel._classify_divergence(
+        given, derived, dep_index_by_pos, {(1, 4): "noun"},
+        morph_lemma_by_position={(1, 2): "essere"})
+
+
+def test_classify_divergence_rule_dl_accepts_a_nominal_copular_complement():
+    assert _prepositional_copular_nominal_fixture() == []
+
+
+def test_classify_divergence_rule_dl_keeps_rule_dbs_sole_complement_gate():
+    # With a predicate complement already in hand, the prepositional phrase is an adjunct.
+    violations = _prepositional_copular_nominal_fixture(other_complement=True)
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _comparative_qual_fixture(particle_pos="adjective"):
+    """"mi si fece in vista **qual fin balasso**" (paradiso 9:68): `qual` is the comparative
+    particle, and no layer calls it a preposition."""
+    derived = {1: [skel.SkelRow(1, 1, "fece", "obl:quale", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "fece", "attr", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="fece", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="qual", deprel="case",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="balasso", deprel="obl",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): particle_pos, (1, 3): "noun"})
+
+
+def test_classify_divergence_rule_dm_accepts_qual_as_a_comparative_particle():
+    assert _comparative_qual_fixture() == []
+
+
+def test_classify_divergence_rule_dm_is_gated_on_the_word_not_being_a_preposition():
+    # A particle Layer 2 does call a preposition mints its oblique honestly.
+    violations = _comparative_qual_fixture(particle_pos="preposition")
+    assert any(v.detail.startswith("role_mismatch") for v in violations)
+
+
+def _quasi_comparison_fixture(marker="quasi"):
+    """"La mia letizia mi ti tien celato … **quasi animal** di sua seta fasciato"
+    (paradiso 8:52): a verbless comparison whose marker Layer 4 writes `advmod`."""
+    derived = {1: [skel.SkelRow(1, 1, "tien", "obl", 1, 3),
+                   skel.SkelRow(1, 1, "tien", "subj", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 1, "tien", "subj", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="tien", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word=marker, deprel="advmod",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="animal", deprel="obl",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="letizia", deprel="nsubj",
+                           head_line=1, head_token=1),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "adverb", (1, 3): "noun", (1, 4): "noun"})
+
+
+def test_classify_divergence_rule_dr_accepts_a_quasi_comparison():
+    assert _quasi_comparison_fixture() == []
+
+
+def test_classify_divergence_rule_dr_is_gated_on_the_marker():
+    # Any other adverb on the nominal leaves it the predicate's own oblique.
+    violations = _quasi_comparison_fixture(marker="sempre")
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _raised_infinitive_subject_fixture(complement_deprel="xcomp"):
+    """"e **ciò** **esser** non **può**" (paradiso 8:109): Layer 4 writes the periphrasis's
+    subject on the infinitive, and the modal inherits a foreign one across `conj`."""
+    derived = {1: [skel.SkelRow(1, 3, "può", "subj", 2, 1),
+                   skel.SkelRow(1, 3, "può", "xcomp", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "può", "subj", 1, 1),
+                 skel.SkelRow(1, 3, "può", "xcomp", 1, 2)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="ciò", deprel="nsubj",
+                           head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="esser", deprel=complement_deprel,
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="può", deprel="conj",
+                           head_line=2, head_token=2),
+        (2, 1): dep.DepRow(line=2, token=1, word="ciel", deprel="nsubj",
+                           head_line=2, head_token=2),
+        (2, 2): dep.DepRow(line=2, token=2, word="producerebbe", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "pronoun", (1, 2): "verb", (1, 3): "verb"})
+
+
+def test_classify_divergence_rule_dn_accepts_the_subject_written_on_the_infinitive():
+    assert [v for v in _raised_infinitive_subject_fixture()
+            if v.detail.startswith("missing_arg")] == []
+
+
+def test_classify_divergence_rule_dn_requires_the_control_edge():
+    # Outside an `xcomp` the nominal is the subordinate clause's own subject, not the matrix's.
+    violations = _raised_infinitive_subject_fixture(complement_deprel="advcl")
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _donor_disagreement_fixture(donor_person="1"):
+    """"a me medesma **indulgo** … e non mi **noia**" (paradiso 9:35): step 3 walks a chain of
+    1sg verbs onto a 3sg one, and two finite verbs sharing a subject must agree."""
+    derived = {1: [skel.SkelRow(1, 2, "indulgo", "subj", 1, 1),
+                   skel.SkelRow(1, 2, "indulgo", "obj", 1, 4),
+                   skel.SkelRow(1, 3, "noia", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "indulgo", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "indulgo", "obj", 1, 4),
+                 skel.SkelRow(1, 3, "noia", "subj", 1, 4)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Cunizza", deprel="nsubj",
+                           head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="indulgo", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 3): dep.DepRow(line=1, token=3, word="noia", deprel="conj",
+                           head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="cagion", deprel="obj",
+                           head_line=1, head_token=2),
+    }
+    morph_rows = {1: [
+        morph.MorphRow(word="Cunizza", lemma="Cunizza", pos="proper noun", gender="f.",
+                       number="sg."),
+        morph.MorphRow(word="indulgo", lemma="indulgere", pos="verb", number="sg.",
+                       person=donor_person, tense="present", mood="indicative"),
+        morph.MorphRow(word="noia", lemma="noiare", pos="verb", number="sg.", person="3",
+                       tense="present", mood="indicative"),
+        morph.MorphRow(word="cagion", lemma="cagione", pos="noun", gender="f.", number="sg."),
+    ]}
+    return skel._classify_divergence(
+        given, derived, dep_index_by_pos,
+        {(1, 1): "proper noun", (1, 2): "verb", (1, 3): "verb", (1, 4): "noun"},
+        morph_rows=morph_rows)
+
+
+def test_classify_divergence_rule_do_drops_a_subject_two_predicates_cannot_share():
+    assert _donor_disagreement_fixture() == []
+
+
+def test_classify_divergence_rule_do_leaves_agreeing_predicates_alone():
+    # With the donor 3sg too, the inheritance is a candidate and the disagreement is real.
+    violations = _donor_disagreement_fixture(donor_person="3")
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _impersonal_clausal_subject_fixture(extra_role=None):
+    """"di sua nobilità **convien che caggia**" (paradiso 7:78): what is necessary is the
+    clause, not the subject `derive_unit` walks the `conj` chain to find."""
+    derived = {1: [skel.SkelRow(1, 1, "convien", "subj", 2, 1),
+                   skel.SkelRow(1, 1, "convien", "ccomp", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "convien", "ccomp", 1, 3)]}
+    if extra_role is not None:
+        derived[1].append(skel.SkelRow(1, 1, "convien", extra_role, 1, 4))
+        given[1].append(skel.SkelRow(1, 1, "convien", extra_role, 1, 4))
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="convien", deprel="conj",
+                           head_line=2, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="che", deprel="mark",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="caggia", deprel="ccomp",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="nobilità", deprel="obl",
+                           head_line=1, head_token=1),
+        (2, 1): dep.DepRow(line=2, token=1, word="creatura", deprel="nsubj",
+                           head_line=2, head_token=2),
+        (2, 2): dep.DepRow(line=2, token=2, word="avvantaggia", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "verb", (1, 3): "verb", (1, 4): "noun"})
+
+
+def test_classify_divergence_rule_dq_accepts_the_impersonals_missing_subject():
+    assert _impersonal_clausal_subject_fixture() == []
+
+
+def test_classify_divergence_rule_dq_requires_the_clause_to_be_the_only_complement():
+    # With an oblique of its own the predicate has a clause of its own, and the subject stands.
+    violations = _impersonal_clausal_subject_fixture(extra_role="obl")
+    assert any(v.detail.startswith("missing_arg") for v in violations)

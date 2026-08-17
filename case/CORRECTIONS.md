@@ -1,5 +1,19 @@
 # case — measurement history
 
+## 2 rows from the Layer-5 Paradiso 6-10 read (2026-08-17)
+
+Both follow corrections made in the same session at the layers that decide them (see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md),
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)).
+
+- **paradiso 9:135.7 `lor`**, `dative` **dropped**. Retagged as the invariant possessive adjective
+  in "a' lor vivagni"; a `det:poss` adjective is outside the annex's scope, which is pronoun case.
+- **paradiso 10:147.4 `ch'`**, a **new** row, `nominative`. The relative pronoun the Layer-2
+  correction exposes, and the subject of its own clause — recorded exactly as `ch'` at 7:74.4
+  already is.
+
+`case --check` stays 0 hard.
+
 ## 2 rows from the Layer-5 Paradiso 1-5 read (2026-08-17)
 
 Both follow corrections made in the same session at the layer that decides them.

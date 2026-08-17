@@ -672,6 +672,22 @@ def _subj_arg(by_arg_map: dict[tuple[int, int], str]) -> tuple[int, int] | None:
 
 _CONTROL_CHAIN_LIMIT = 8
 
+# The relative-pronoun word forms rules CE, DC and DK read (apostrophe-stripped, lowercased).
+_RELATIVE_PRONOUNS = ("che", "ch", "cui", "chi")
+
+# The comparative particles rules AK/DM read in a Layer-4 `case` slot (apostrophe-stripped,
+# lowercased). No layer calls any of them a preposition; `derive_unit`'s oblique refinement
+# mints `obl:<lemma>` out of them anyway.
+_COMPARATIVE_PARTICLES = ("come", "com", "qual", "quale", "quali")
+_COMPARATIVE_LEMMAS = ("come", "quale")
+
+# Rule DP's negative gate: every word this corpus uses to relativize a clause, not only the
+# pronouns rules CE/DC/DK read. Used to *refuse* the rule, so it is deliberately wider than
+# `_RELATIVE_PRONOUNS` — a clause with any of these has a relativizer of its own, and its head
+# noun is not silently one of its arguments.
+_RELATIVIZERS = _RELATIVE_PRONOUNS + ("qual", "quale", "quali", "quanto", "quanta", "quanti",
+                                      "quante", "quantunque", "onde", "dove", "ove", "u")
+
 
 def _control_subject_candidates(
     pos: tuple[int, int], derived_by_pred: dict[tuple[int, int], list[SkelRow]],
@@ -728,7 +744,7 @@ def _control_subject_candidates(
                 (r.line, r.token)
                 for r in dep_index_by_pos.values()
                 if r.deprel in _SUBJ_DEPRELS
-                and r.word.lower().rstrip("'") in ("che", "ch", "cui", "chi")
+                and r.word.lower().rstrip("'") in _RELATIVE_PRONOUNS
                 and (rel := dep_index_by_pos.get((r.head_line, r.head_token))) is not None
                 and rel.deprel == "acl:relcl"
                 and (rel.head_line, rel.head_token) == head_pos
@@ -806,6 +822,52 @@ def _finite_head_of(
                 if child_morph and child_morph.person:
                     return (child.line, child.token)
     return pos
+
+
+def _donor_predicate_disagrees(
+    pos: tuple[int, int], d_subj: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow],
+    children_by_pos: "dict[tuple[int, int], list[DepRow]]",
+    morph_rows: "dict[int, list[MorphRow]] | None",
+) -> bool:
+    """Rule DO: rule AG's test, asked of the two *predicates* instead of the subject nominal.
+
+    Rule AG drops a `conj`-inherited subject whose Layer-2 person/number contradicts the
+    predicate it lands on. That catches nothing when the inherited nominal has no person of its
+    own to contradict with — a third-person noun agrees with every third-person verb, and 461 of
+    the 1370 candidates are undecidable for exactly this reason. But two finite verbs sharing one
+    subject must agree *with each other*, and that is decidable whenever both carry person and
+    number, whatever the nominal is: "Cunizza **fui** chiamata … a me medesma **indulgo** la
+    cagion di mia sorte, e non mi **noia**" (paradiso 9:35), where step 3 walks a chain of 1sg
+    verbs onto a 3sg one and hands `noia` the subject of "I was called". Whoever vexes is not
+    whoever forgives, and no reading of Layer 2 makes it so.
+
+    The donor is the predicate the inherited nominal is actually a child of, read through
+    `_finite_head_of` at both ends so a periphrasis is compared on the word Layer 2 marked. Both
+    ends must carry person *and* number — an unmarked form concludes nothing, exactly as
+    "undecidable" does in `subject_agreement`.
+    """
+    if morph_rows is None:
+        return False
+    donor_row = dep_index_by_pos.get(d_subj)
+    if donor_row is None:
+        return False
+    donor = (donor_row.head_line, donor_row.head_token)
+    if donor == pos or donor == (0, 0):
+        return False
+
+    def features(p: tuple[int, int]) -> tuple[str, str] | None:
+        head = _finite_head_of(p, children_by_pos, morph_rows)
+        rows = morph_rows.get(head[0])
+        if not rows or not 1 <= head[1] <= len(rows):
+            return None
+        m = rows[head[1] - 1]
+        if not (m.person and m.number and "verb" in m.pos):
+            return None
+        return (m.person, m.number)
+
+    a, b = features(donor), features(pos)
+    return a is not None and b is not None and a != b
 
 
 def _accept_control_subjects(
@@ -899,8 +961,10 @@ def _apply_subj_authority(
     elif (morph_rows is not None and children_by_pos is not None
           and _inherited_subject(pos, dep_index_by_pos)
           and _subj_arg(g) != d_subj
-          and subject_agreement(d_subj, _finite_head_of(pos, children_by_pos, morph_rows),
-                                morph_rows, children_by_pos)[0] == "disagree"):
+          and (subject_agreement(d_subj, _finite_head_of(pos, children_by_pos, morph_rows),
+                                 morph_rows, children_by_pos)[0] == "disagree"
+               or _donor_predicate_disagrees(pos, d_subj, dep_index_by_pos, children_by_pos,
+                                             morph_rows))):
         # Rule AG: derive_unit's conj-subject-propagation (step 3) walks the conj chain
         # unconditionally, with no agreement gate — so it can inherit a subject whose Layer-2
         # person/number actively contradicts this predicate's own. "come tu vedi, a la pioggia
@@ -2119,15 +2183,25 @@ def _comparative_come_complement(
     `obl:come` out of a token no layer calls a preposition. The LLM reads the phrase as the
     predicative complement it is. Gated on Layer 2's own POS, so a `come` that some other position
     genuinely tags as a preposition keeps its oblique reading.
+
+    **Rule DM** reads that gate as what the docstring above already says it is — *no layer calls
+    the word a preposition* — rather than as the one tag the evidence line happened to carry.
+    Rule AK required `conjunction`; the census of comparative particles in a `case` slot is 150
+    rows, and only 117 of them are it: `come`/`com'` is tagged **adverb** 24 times, and `qual`
+    is the other particle of the same construction, tagged **adjective** or **pronoun** 5 times
+    ("mi si fece in vista **qual fin balasso** in che lo sol percuota", paradiso 9:68). Layer 2's
+    choice between adverb and conjunction for `come` is not a claim about the phrase, and `qual`
+    is not a preposition on any tag — so the gate is the negative one, and the role must still be
+    the `obl:<lemma>` this very particle mints.
     """
-    if drole != "obl:come" or grole != "xcomp":
+    if drole.split(":", 1)[-1] not in _COMPARATIVE_LEMMAS or grole != "xcomp":
         return False
     if dep_index_by_pos is None or morph_pos_by_position is None:
         return False
     return any(
         row.deprel == "case" and (row.head_line, row.head_token) == arg
-        and _normalize_prep_lemma(row.word.lower()) == "come"
-        and "conjunction" in morph_pos_by_position.get((row.line, row.token), "").lower()
+        and row.word.lower().rstrip("'") in _COMPARATIVE_PARTICLES
+        and "preposition" not in morph_pos_by_position.get((row.line, row.token), "").lower()
         for row in dep_index_by_pos.values()
     )
 
@@ -2172,6 +2246,15 @@ def _comparative_come_adjunct(
     # second term. Only the *argument* leg takes `che`: a `che`-marked clause hanging on the
     # predicate is an ordinary complement clause, so the correlative branch below stays `come`.
     if come_mark(arg, ("come", "com", "che", "ch")) is not None:
+        return True
+    # Rule DR: `quasi` is the third marker of the same verbless comparison, and Layer 4 writes
+    # it `advmod` rather than `mark` because Layer 2 calls it an adverb — "La mia letizia mi ti
+    # tien celato … **quasi animal di sua seta fasciato**" (paradiso 8:52). Same shape, same
+    # reading, one deprel over. Censused at 52 `quasi` rows corpus-wide, every one of them
+    # `advmod`, 9 of them on an `obl`.
+    if any(c.deprel == "advmod" and c.word.lower().rstrip("'") == "quasi"
+           and "adverb" in morph_pos_by_position.get((c.line, c.token), "").lower()
+           for c in children_by_pos.get(arg, ())):
         return True
     marker = come_mark(pos)
     if marker is None:
@@ -2884,6 +2967,121 @@ def _classify_divergence(
             return False
         return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
 
+    def _antecedent_for_relative_pronoun(
+        pos: tuple[int, int], arg: tuple[int, int], grole: str
+    ) -> bool:
+        # Rule DK: the antecedent named where the derivation names the relative pronoun.
+        # "e in **dolcezza** **ch'** esser non pò nota" (paradiso 10:147): the derivation gives
+        # `pò` the subject Layer 4 gives it, the relative `ch'`, and the LLM gives it the noun
+        # that pronoun stands for. `skel.antecedent`'s own docstring fixes the corpus's policy
+        # here — "the skeleton stores the relative pronoun itself as `subj`; this resolves what
+        # it refers to at serve time" — so the two citations are one referent under two names,
+        # which is exactly the identity rule CE already reads on rule V's candidate walk. This
+        # is that identity at the argument comparison, the place a divergence is reported.
+        #
+        # Two gates. The clause must be `pos`'s own (`acl:relcl` onto the cited nominal), and
+        # the derivation's own citation must be a relative pronoun *of that clause* carrying
+        # the same role — so a relative clause whose subject is an ordinary nominal (a different
+        # referent) stays flagged, and so does a citation of some other noun in the line.
+        # The antecedent is read through rule C's coordination collapse, because the LLM's
+        # citation already has been: at 10:147 `dolcezza` is a `conj` of `tempra`, so an
+        # un-normalized comparison would miss its own evidence line.
+        if dep_index_by_pos is None:
+            return False
+        row = dep_index_by_pos.get(pos)
+        if row is None or row.deprel != "acl:relcl":
+            return False
+        antecedent = (row.head_line, row.head_token)
+        if arg != antecedent and arg != _coordination_head(
+                antecedent, dep_index_by_pos, morph_pos_by_position):
+            return False
+        if any(
+            drole == grole and (p := dep_index_by_pos.get(darg)) is not None
+            and (p.head_line, p.head_token) == pos
+            and p.word.lower().rstrip("'") in _RELATIVE_PRONOUNS
+            for darg, drole in d.items()
+        ):
+            return True
+        # Rule DP: the relative clause with **no** relative pronoun at all. "credo che l'alta
+        # letizia … per te si veggia come la vegg' io" (paradiso 8:88): Layer 4 records the
+        # clause's link to `letizia` in the `acl:relcl` edge and nowhere else, because there is
+        # no pronoun standing for it inside — so the derivation, which reads argument children
+        # only, gives the clause no citation of the noun it is predicated of, in any slot. That
+        # silence is not a denial of the slot the LLM gives it: an `acl:relcl` *is* the claim
+        # that its head is a participant of the clause. Gated to the case where the derivation
+        # has put nothing in the disputed role, so a clause whose own tree fills that slot with
+        # some other nominal still reports the disagreement — and to the clause having no
+        # relativizer of *any* kind, a wider set than the pronouns rule DK reads, because here
+        # the word list is refusing the rule rather than licensing it ("che di tutte altre cose
+        # **qual** mi torse", purgatorio 31:86, where `qual` relativizes and the partitive the
+        # LLM adds is genuinely the main clause's). Censused at 474 relativizer-less `acl:relcl`
+        # clauses of 3261. The complement roles are excluded outright: a relative clause's head
+        # standing as its *predicate complement* is the free-relative shape rules AE and BT
+        # adjudicate on their own evidence ("se vuoi saper **chi son cotesti due**", inferno
+        # 32:55), and a correlative antecedent is emphatically not one ("**colui** che …").
+        return (grole not in ("xcomp", "ccomp") and grole not in d.values()
+                and not any(
+                    r.deprel in ARG_DEPRELS and (r.head_line, r.head_token) == pos
+                    and r.word.lower().rstrip("'") in _RELATIVIZERS
+                    for r in dep_index_by_pos.values()))
+
+    def _raised_infinitive_subject(
+        pos: tuple[int, int], drole: str, g: dict[tuple[int, int], str]
+    ) -> bool:
+        # Rule DN: the subject Layer 4 wrote inside the periphrasis. "e **ciò** **esser** non
+        # **può**" (paradiso 8:109): `ciò` is the subject of the whole modal periphrasis, and
+        # Layer 4 records it where it stands, as the `nsubj` of the infinitive `esser` rather
+        # than of `può`. `derive_unit`'s step 2 reads only the predicate's own children, so the
+        # modal arrives at step 3 subjectless and inherits a subject across `conj` from a clause
+        # three lines up (`il ciel`, 8:106) — a nominal no reading of the line puts there.
+        #
+        # This is an *acceptance*, deliberately, and the difference was measured: minting the
+        # raised subject in `derive_unit` instead ran −4 / **+40**, because an overt `nsubj`
+        # under an `xcomp` is far more often the accusative-and-infinitive's own subject than a
+        # raised one, and asserting it overrode 24 pro-drop ∅ subjects the LLM reads correctly.
+        # Read as an acceptance the same evidence is decisive without deciding anything: the
+        # tree does name that nominal a subject inside this predicate's own complement, so the
+        # LLM putting it in this predicate's subject slot is not contradicted by a `conj`
+        # inheritance that never saw it.
+        #
+        # Censused at 106 overt subjects under a non-finite `xcomp`, of 1130 such complements.
+        if dep_index_by_pos is None or drole != "subj":
+            return False
+        for child in children_by_pos.get(pos, ()):
+            if child.deprel != "xcomp":
+                continue
+            for c in children_by_pos.get((child.line, child.token), ()):
+                if c.deprel in _SUBJ_DEPRELS and g.get((c.line, c.token)) == "subj":
+                    return True
+        return False
+
+    def _impersonal_clausal_subject(
+        pos: tuple[int, int], drole: str, d: dict[tuple[int, int], str]
+    ) -> bool:
+        # Rule DQ: the impersonal verb whose subject is its own `che`-clause. "e s'una manca, /
+        # di sua nobilità **convien che caggia**" (paradiso 7:78): `convien` is `conj` of
+        # `s'avvantaggia` three lines up and has no subject of its own, so `derive_unit`'s step 3
+        # hands it `l'umana creatura` — and what is necessary is not the creature but that it
+        # fall. Same shape at "**par** ch'abbia" / "**par** che pregi" (inferno 14:69, 14:70),
+        # "**avvegna** che si rauni" (paradiso 16:131), "**convien** ch'io desista" (30:31).
+        #
+        # The Paradiso 1-5 batch censused a neighbouring family — a given `subj` against a
+        # derived `xcomp` on one infinitive — and dropped it on the corpus's scope boundary,
+        # because telling `convien` from `puote` there needs a list of impersonal verbs, i.e. an
+        # imported verb-valency lexicon. This shape needs no list: the gate is structural on both
+        # sides. The derivation's subject must be *inherited* (the predicate has none of its own,
+        # so nothing in its own clause was ever a candidate), and the only other thing it derives
+        # for the predicate must be a `ccomp` — a verb with a clausal complement and no subject
+        # anywhere in its own clause has that clause as its subject on the reading every one of
+        # these lines takes. A predicate with an object, an oblique or a subject of its own is
+        # untouched, and so is one whose complement is a nominal.
+        #
+        # Censused at 217 conj-inherited subjects whose predicate derives a `ccomp` and nothing
+        # else; 5 of them are reported positions, and all 5 are impersonal.
+        return (drole == "subj" and dep_index_by_pos is not None
+                and _inherited_subject(pos, dep_index_by_pos)
+                and set(d.values()) - {"subj"} == {"ccomp"})
+
     def _prepositional_copular_complement(
         pos: tuple[int, int], grole: str, drole: str, arg: tuple[int, int]
     ) -> bool:
@@ -2897,11 +3095,19 @@ def _classify_divergence(
         # complement. `essere` with a predicate complement already in hand ("è pien d'amore")
         # takes prepositional phrases as ordinary adjuncts, and those stay flagged; `essere`
         # with none is predicating *this* phrase or nothing.
+        #
+        # **Rule DL** drops rule DB's remaining gate, the one that was never doing any work: the
+        # complement's own part of speech. Rule DB inherited "adverb" from rule AD, where it is
+        # load-bearing (an `advmod` is only a complement under a copula), but here the deciding
+        # gate is the *sole-complement* test above, and it decides the same way whatever the
+        # complement is made of — "tal ch'**è da sermone**" (paradiso 8:147), "elli **era d'alte
+        # lode**" (14:124), "**sarebbe a maraviglia**" (19:84), "l'uso d'i mortali **è come
+        # fronda**" (26:137), "quando **saranno più presso** a noi" (inferno 5:76). Censused at
+        # 492 sole-complement `obl` children of `essere`, of which 78 are the adverbs rule DB
+        # already had; the widening takes 5 positions of the 414 it opens.
         if dep_index_by_pos is None or grole != "xcomp" or not drole.startswith("obl"):
             return False
         if (morph_lemma_by_position or {}).get(pos, "").lower() != "essere":
-            return False
-        if "adverb" not in (morph_pos_by_position or {}).get(arg, "").lower():
             return False
         row = dep_index_by_pos.get(arg)
         if row is None or row.deprel != "obl" or not _hosts_child(pos, row, dep_index_by_pos):
@@ -3029,7 +3235,7 @@ def _classify_divergence(
                 and any((row_ := dep_index_by_pos.get(a)) is not None
                         and row_.deprel in _SUBJ_DEPRELS or row_.deprel == "obj"
                         and (row_.head_line, row_.head_token) == pos
-                        and row_.word.lower().rstrip("'") in ("che", "ch", "cui", "chi")
+                        and row_.word.lower().rstrip("'") in _RELATIVE_PRONOUNS
                         for a in derived_args)):
             antecedent = (prow.head_line, prow.head_token)
 
@@ -3308,6 +3514,10 @@ def _classify_divergence(
                     continue  # rule BY: the LLM hung it on this predicate's own `aux`/`cop`
                 if _clause_named_by_marker(pos, arg, drole, dep_index_by_pos, g):
                     continue  # rule CK: the LLM named this clause by its complementizer
+                if _raised_infinitive_subject(pos, drole, g):
+                    continue  # rule DN: the subject Layer 4 wrote inside the periphrasis
+                if _impersonal_clausal_subject(pos, drole, d):
+                    continue  # rule DQ: an inherited subject against a lone clausal complement
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
@@ -3409,6 +3619,8 @@ def _classify_divergence(
                     or (grole != "subj" and pos in empty_derived)
                     # rule DD: the relative locative adverb Layer 4 writes as a `case`
                     or _relative_adverb_oblique(pos, arg, grole)
+                    # rule DK: the antecedent, where the derivation names its clause's pronoun
+                    or _antecedent_for_relative_pronoun(pos, arg, grole)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

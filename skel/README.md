@@ -7,9 +7,9 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 (`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic, so the
 canon-neutral.
 
-**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–DJ plus five `--fix` rounds: 288 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
+**Status: built for all 100 cantos, checker refined through Phase 5 (5,919 → 2,084 soft) and Phase 6 (Rules AG–DR plus five `--fix` rounds: 261 soft). `--fix` operates as a three-stage driver (deterministic auto-repair, POS-keyed micro-prompts, and fallback regeneration).**
 
-`make -C skel check`: **0 hard, 288 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+`make -C skel check`: **0 hard, 261 soft** violations across all 100 cantos (down from 17,438 at the first full-corpus measurement). Full historical measurement tables, per-phase progressions, and empirical findings on regeneration yields are documented in [`PHASE5.md`](PHASE5.md). For current Phase 6 operating principles, active routes, and driver architecture, see [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## What it does
 
@@ -610,11 +610,63 @@ successive phases, each measured before/after (`--stats` aggregates violations b
       subject. Gated on which subject the LLM named, so the two legs stay disjoint. Censused at
       64 / 2; −1/+0.
 
+27. **Phase 6 — rules DK-DR, from the Paradiso 6-10 read** (2026-08-17). **Eight** Layer-5 rules,
+    each censused, measured alone by violation diff and mutation-checked; together with 10
+    Layer-4 rows, 2 Layer-2 rows and 2 case-annex rows, **288 → 261 soft**, no model calls. The
+    batch's finding is that a rule's docstring can be more correct than its code — two rules
+    (DL, DM) are one extra condition dropped, in each case a part-of-speech gate inherited from
+    the single line that motivated the rule and absent from the rule's own stated reason. Full
+    evidence in [`CORRECTIONS.md`](CORRECTIONS.md).
+    - **DO** (`_donor_predicate_disagrees`): rule AG's agreement test asked of the two
+      **predicates**. Rule AG compares the `conj`-inherited nominal with the predicate it lands
+      on, which decides nothing when the nominal is a third-person noun; two finite verbs sharing
+      one subject must agree with each other, and that is decidable whenever both carry person and
+      number ("Cunizza fui chiamata … a me medesma **indulgo** … e non mi **noia**"). Censused at
+      30 of 1151 inheritance candidates — 25 rule AG calls undecidable and 5 it calls *agree*;
+      −5/+0.
+    - **DQ** (`_impersonal_clausal_subject`): the impersonal verb whose subject is its own
+      `che`-clause ("di sua nobilità **convien che caggia**", "**par** ch'abbia", "**avvegna** che
+      si rauni"). Reaches the family the Paradiso 1-5 batch dropped as needing a verb-valency
+      lexicon, with two purely structural gates instead: the derived subject must be inherited
+      across `conj`, and a `ccomp` must be the only other thing derived for the predicate.
+      Censused at 217; −5/+0.
+    - **DL** (`_prepositional_copular_complement`): rule DB's part-of-speech gate dropped. Rule
+      DB's deciding test is that the copula has **no other complement**; the requirement that the
+      complement be an adverb came from rule AD, where it is load-bearing, and does nothing here
+      ("tal ch'**è da sermone**", "elli **era d'alte lode**", "**sarebbe a maraviglia**"). Censused
+      at 492 sole-complement `obl` children of `essere`, 78 of them the adverbs rule DB had;
+      −5/+0.
+    - **DP** (`_antecedent_for_relative_pronoun`, second leg): the relative clause with **no
+      relativizer at all**. An `acl:relcl` edge is the claim that its head is a participant of the
+      clause, and with no pronoun inside it the edge is Layer 4's only record of that ("credo che
+      l'alta **letizia** … per te si **veggia**"). Gated to a role the derivation left empty, to
+      the non-complement roles (the free-relative shape is rules AE/BT's), and to the clause
+      having no relativizer of any kind. Censused at 474 of 3261; −3/+0.
+    - **DK** (`_antecedent_for_relative_pronoun`): the antecedent, where the derivation names that
+      clause's own relative pronoun — one referent under two names, which is `skel.antecedent`'s
+      own stated policy and rule CE's identity moved to the argument comparison. Reads the
+      antecedent through rule C's coordination collapse, because the LLM's citation already has
+      been ("e in **dolcezza** **ch'** esser non pò nota"). Censused at 2574 of 3261; −2/+0.
+    - **DR** (`_comparative_come_adjunct`): `quasi` is the third marker of rule AR's verbless
+      comparison, and Layer 4 writes it `advmod` because Layer 2 calls it an adverb ("**quasi
+      animal** di sua seta fasciato", "**Quasi ammiraglio** che in poppa e in prora"). Censused at
+      52 `quasi` rows, every one `advmod`, 9 of them on an `obl`; −2/+0.
+    - **DM** (`_comparative_come_complement`): rule AK's gate read as the negative its own
+      docstring states — no layer calls the particle a preposition — rather than as the one tag
+      the evidence line carried. The census of comparative particles in a `case` slot is 150 and
+      only 117 are conjunctions: `come`/`com'` is an adverb 24 times and `qual` an adjective or
+      pronoun 5 ("mi si fece in vista **qual fin balasso**"). −1/+0.
+    - **DN** (`_raised_infinitive_subject`): the subject Layer 4 writes inside a periphrasis, on
+      the `xcomp` infinitive rather than the modal ("e **ciò** **esser** non **può**"), against a
+      `conj` inheritance that never saw it. Kept as an *acceptance*: the same rule in
+      `derive_unit` measured −4/**+40**, because an overt subject under an `xcomp` is more often
+      the accusative-and-infinitive's own. Censused at 106 of 1130; −1/+0.
+
 **Measured Progression Across Phases**:
 - **Phase 4a Checkpoint (2026-07-20)**: `0 hard, 7776 soft` (down from 17,438 initial).
 - **Phase 4b `--fix` Pass (2026-07-25)**: `0 hard, 5919 soft` across all 100 cantos.
 - **Phase 5 Deterministic Series & Upstream Audits (Phases 5a–5w, Rules C–AF)**: Reduced soft violations from **5,919 → 2,084**. For the complete chronological record, per-phase measurement tables, Layer-4 corrections, and empirical findings on regeneration yield, see [`PHASE5.md`](PHASE5.md).
-- **Phase 6 Restructured `--fix`, Rules AG–DJ**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows), then **834** with rules AU–AY and the Inferno 16–20 read (888 → 834, 2026-08-15 — five rules, three of them mirror legs of existing ones, plus 25 Layer-4 and 1 Layer-2 rows), then **691** with rules AZ–BI and the Inferno 21–25 read (834 → 691, 2026-08-15 — nine rules, plus 20 Layer-4 and 5 Layer-2 rows), then **650** with rules BJ–BN and the Inferno 26–30 read (691 → 650, 2026-08-15 — five rules plus three legs added to existing ones, and 10 Layer-4 and 1 Layer-2 rows), then **541** with the fourth user-run pass (650 → 541, 2026-08-16), then **506** with rules BO–BV and the Inferno 31–34 read (541 → 506, 2026-08-16 — eight rules, plus 15 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 1 case-annex row), then **481** with rules BW–BZ and the Purgatorio 1–5 read (506 → 481, 2026-08-16 — four rules, plus 2 Layer-4 rows and 1 case-annex row), then **448** with rules CA–CJ and the Purgatorio 6–10 read (481 → 448, 2026-08-16 — ten rules, eight of them about coordination or about a predicate the derivation declines to mint, plus 1 Layer-4 row), then **427** with rules CK–CO and the Purgatorio 11–15 read (448 → 427, 2026-08-16 — five rules, the `dep.subject_agreement` coordinated-subject refinement the Inferno 21–25 batch had deferred, plus 11 Layer-4 rows, 8 Layer-2 rows, 1 Layer-3 span and 1 case-annex row), then **409** with rules CP–CT and the Purgatorio 16–20 read (427 → 409, 2026-08-16 — four Layer-5 rules and the `dep.subject_agreement` person refinement, plus 17 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 2 case-annex rows), then **388** with rules CU–CY and the Purgatorio 21–25 read (409 → 388, 2026-08-16 — four Layer-5 rules and the `dep.subject_agreement` ordering refinement, plus 27 Layer-4 rows and 1 Layer-2 row), then **358** with rules CZ–DD and the Purgatorio 26–30 read (388 → 358, 2026-08-17 — five Layer-5 rules, one of them in `derive_unit`, plus 12 Layer-4 rows), then **351** with rules DE–DF and the Purgatorio 31–33 read (358 → 351, 2026-08-17 — two Layer-5 rules, plus 4 Layer-4 rows, 1 Layer-2 row, 2 Layer-3 spans and 2 case-annex rows), then **298** with the fifth user-run pass (351 → 298, 2026-08-17 — run with no prompt change and no model change, so it tested no hypothesis; what it measured is that the read series' rules and the LLM's repairs take largely disjoint residue), then **288** with rules DG–DJ and the Paradiso 1–5 read (298 → 288, 2026-08-17 — four Layer-5 rules, plus 6 Layer-4 rows, 1 Layer-2 row, 1 Layer-3 span and 2 case-annex rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
+- **Phase 6 Restructured `--fix`, Rules AG–DR**: Reduced soft violations from **2,084 → 1,091** (first user-run pass: 2011 → 1452; Rule AG: 1452 → 1409; second user-run pass: 1409 → 1247; Rules AH–AL and the Inferno 7–10 read: 1247 → 1091), then **1094** after the Layer-4 agreement close and prep-stack normalization (net zero by design), then **963** with the third user-run pass (1094 → 963, 2026-08-15), then **888** with rules AM–AT and the Inferno 11–15 read (963 → 888, 2026-08-15 — eight rules, four of them in `derive_unit` itself, plus 16 Layer-4 and 2 Layer-2 rows), then **834** with rules AU–AY and the Inferno 16–20 read (888 → 834, 2026-08-15 — five rules, three of them mirror legs of existing ones, plus 25 Layer-4 and 1 Layer-2 rows), then **691** with rules AZ–BI and the Inferno 21–25 read (834 → 691, 2026-08-15 — nine rules, plus 20 Layer-4 and 5 Layer-2 rows), then **650** with rules BJ–BN and the Inferno 26–30 read (691 → 650, 2026-08-15 — five rules plus three legs added to existing ones, and 10 Layer-4 and 1 Layer-2 rows), then **541** with the fourth user-run pass (650 → 541, 2026-08-16), then **506** with rules BO–BV and the Inferno 31–34 read (541 → 506, 2026-08-16 — eight rules, plus 15 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 1 case-annex row), then **481** with rules BW–BZ and the Purgatorio 1–5 read (506 → 481, 2026-08-16 — four rules, plus 2 Layer-4 rows and 1 case-annex row), then **448** with rules CA–CJ and the Purgatorio 6–10 read (481 → 448, 2026-08-16 — ten rules, eight of them about coordination or about a predicate the derivation declines to mint, plus 1 Layer-4 row), then **427** with rules CK–CO and the Purgatorio 11–15 read (448 → 427, 2026-08-16 — five rules, the `dep.subject_agreement` coordinated-subject refinement the Inferno 21–25 batch had deferred, plus 11 Layer-4 rows, 8 Layer-2 rows, 1 Layer-3 span and 1 case-annex row), then **409** with rules CP–CT and the Purgatorio 16–20 read (427 → 409, 2026-08-16 — four Layer-5 rules and the `dep.subject_agreement` person refinement, plus 17 Layer-4 rows, 2 Layer-2 rows, 1 Layer-3 span and 2 case-annex rows), then **388** with rules CU–CY and the Purgatorio 21–25 read (409 → 388, 2026-08-16 — four Layer-5 rules and the `dep.subject_agreement` ordering refinement, plus 27 Layer-4 rows and 1 Layer-2 row), then **358** with rules CZ–DD and the Purgatorio 26–30 read (388 → 358, 2026-08-17 — five Layer-5 rules, one of them in `derive_unit`, plus 12 Layer-4 rows), then **351** with rules DE–DF and the Purgatorio 31–33 read (358 → 351, 2026-08-17 — two Layer-5 rules, plus 4 Layer-4 rows, 1 Layer-2 row, 2 Layer-3 spans and 2 case-annex rows), then **298** with the fifth user-run pass (351 → 298, 2026-08-17 — run with no prompt change and no model change, so it tested no hypothesis; what it measured is that the read series' rules and the LLM's repairs take largely disjoint residue), then **288** with rules DG–DJ and the Paradiso 1–5 read (298 → 288, 2026-08-17 — four Layer-5 rules, plus 6 Layer-4 rows, 1 Layer-2 row, 1 Layer-3 span and 2 case-annex rows), then **261** with rules DK–DR and the Paradiso 6–10 read (288 → 261, 2026-08-17 — eight Layer-5 rules, plus 10 Layer-4 rows, 2 Layer-2 rows and 2 case-annex rows). See [`PLAN.md`](PLAN.md) and [`CORRECTIONS.md`](CORRECTIONS.md).
 
 ## Next steps
 

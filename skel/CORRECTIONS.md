@@ -1,5 +1,152 @@
 # skel — Layer 5 correction history
 
+## Rules DK-DR, from reading Paradiso 6-10 — 288 → 261, −27 (2026-08-17)
+
+Per-position read of all **18** soft violations in Paradiso 6-10, the second batch of the Paradiso
+series, following the eight-step procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero
+model calls. Paradiso 6-10 itself went **18 → 6** (6: 0 → 0, 7: 7 → 4, 8: 5 → 1, 9: 5 → 1,
+10: 1 → 0); the corpus went **288 → 261 (−27, −9.4%)**. Eight deterministic Layer-5 rules, 10
+Layer-4 rows, 2 Layer-2 rows and 2 case-annex rows. `pytest` **465 passed**, 0 hard, all other
+layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **DO** | rule AG's agreement test asked of the two **predicates**: two finite verbs sharing a subject must agree with each other | 30 / 1151 | −5 |
+| **DQ** | the impersonal verb whose subject is its own `che`-clause, reached without a valency lexicon | 217 | −5 |
+| **DL** | rule DB's part-of-speech gate dropped: a copula's *sole* complement is its predicate complement whatever it is made of | 414 / 492 | −5 |
+| **DP** | the relative clause with **no relativizer at all**, whose head noun the derivation therefore never cites | 474 / 3261 | −3 |
+| **DK** | the antecedent, where the derivation names that clause's own relative pronoun | 2574 / 3261 | −2 |
+| **DR** | `quasi` is the third marker of rule AR's verbless comparison, written `advmod` | 9 / 52 | −2 |
+| **DM** | rule AK's gate read as the negative its own docstring states: *no layer calls the particle a preposition* | 33 / 150 | −1 |
+| **DN** | the subject Layer 4 writes inside a periphrasis, on the `xcomp` infinitive rather than the modal | 106 / 1130 | −1 |
+
+Plus the upstream rows (**−3** between them, counted below).
+
+### The batch's finding — a rule's docstring can be more correct than its code
+
+Two of the eight rules are one defect, and it is the sharpest thing the batch has to say. Rule DB
+accepts a copula's prepositional complement as its predicate complement, and its docstring names
+the deciding gate outright: *"the copula must have no other complement … `essere` with none is
+predicating **this** phrase or nothing."* The code carried that test **and** a second one — the
+complement must be an `advmod`-turned-`obl` **adverb** — inherited unexamined from rule AD, where
+it is load-bearing, and from the single line that motivated rule DB. Nothing in the reasoning needs
+it. Dropping it (rule DL) takes five positions across four cantos and three canticles: "tal ch'**è
+da sermone**" (8:147), "elli **era d'alte lode**" (14:124), "**sarebbe a maraviglia**" (19:84),
+"l'uso d'i mortali **è come fronda** in ramo" (26:137), "quando **saranno più presso** a noi"
+(inferno 5:76).
+
+Rule AK is the identical story one rule over. Its docstring explains that Layer 4's `case` edge
+mints `obl:come` *"out of a token no layer calls a preposition"* — and then gates on Layer 2
+calling it a **conjunction**, which is only what the evidence line happened to carry. The census
+says 150 comparative particles sit in a `case` slot and just 117 are tagged that way: `come`/`com'`
+is an **adverb** 24 times, and `qual` — the other particle of the same construction — is an
+adjective or a pronoun 5 times ("mi si fece in vista **qual fin balasso**", 9:68). Rule DM makes the
+gate the negative one the docstring already describes.
+
+**So: when a rule fires, read its stated reason and ask which of its conditions that reason
+actually requires.** The Purgatorio 26-30 batch found this defect with the polarity reversed —
+rule AN's comment described an ordering its sort key did not implement — and the pair is worth
+holding together. A prose reason and a code gate that disagree is a finding either way; the
+question is only which of the two is right, and it is decided by census, not by which came first.
+
+### Three more
+
+**1. A scope refusal is about the instrument, not the shape.** The Paradiso 1-5 batch censused the
+impersonal-verb reading at 29 and dropped it on the corpus's own scope boundary: telling `convien`
+from `puote` needs a list of impersonal verbs, which is [`../PLAN.md`](../PLAN.md)'s *Out of
+scope* by another name. Rule DQ takes five positions of that same family without any list, because
+it stops trying to classify the verb. Its two gates are both structural: the derivation's subject
+must be **inherited** across `conj` (so nothing in the predicate's own clause was ever a
+candidate), and the only other thing derived for it must be a `ccomp`. A verb with a clausal
+complement and no subject anywhere in its own clause has that clause as its subject on every
+reading of "**convien** che caggia" (7:78), "**par** ch'abbia" / "**par** che pregi" (inferno
+14:69, 14:70), "**avvegna** che si rauni" (16:131), "**convien** ch'io desista" (30:31). The
+earlier refusal was correct about the instrument it was offered and says nothing about the shape.
+
+**2. Check a rule's test against *both* ends of the relation it is about.** Rule AG drops a
+`conj`-inherited subject whose Layer-2 person/number contradicts the predicate it lands on — the
+nominal against the recipient. It never compares the **donor** predicate with the recipient, and
+that comparison is decidable in cases where the first is not: a third-person noun agrees with every
+third-person verb. "Cunizza fui chiamata … a me medesma **indulgo** la cagion di mia sorte, e non
+mi **noia**" (9:35) walks a chain of 1sg verbs onto a 3sg one; whoever vexes is not whoever
+forgives. Censused: of 1151 inheritance candidates, rule AG says *disagree* for 232 and rule DO
+adds **30** — 25 where rule AG is undecidable and 5 where it actively says *agree*, which are
+exactly the cases where the inherited nominal has no person of its own to contradict with. Five
+positions, and every one of the five reads correctly (inferno 6:87, paradiso 3:61, 9:35 ×2).
+
+**3. The same reading is right as an acceptance and wrong as an assertion — again.** Rule DN began
+in `derive_unit`: if a predicate has no subject of its own and its `xcomp` infinitive carries an
+overt `nsubj`, mint that as the predicate's subject (raising). Measured **−4 / +40**. An overt
+subject under an `xcomp` is far more often the accusative-and-infinitive's own than a raised one,
+and asserting it overrode 24 pro-drop ∅ subjects the LLM reads correctly. Moved to
+`_classify_divergence` as an acceptance the same evidence is decisive without deciding anything —
+−1 / +0. This is the Purgatorio 16-20 batch's rule-CS finding (its `derive_unit` variant measured
++180) in a second instance, and it is now a standing question: **before writing a rule into the
+derivation, price it as an acceptance.**
+
+### The upstream rows
+
+Ten Layer-4 rows, 2 Layer-2 rows and 2 case-annex rows, applied by a gated script that asserts the word — and the old cell value — at every
+`(line, token)` before rewriting; see
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md), [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)
+and [`../case/CORRECTIONS.md`](../case/CORRECTIONS.md). Net **−3**, and the gross is the more
+honest number: two of the four corrections are net zero because they expose an LLM misreading the
+wrong tree had been matching.
+
+- **7:75, −2.** "ché l'ardor santo … **ne la più somigliante** è più vivace": Layer 4 hung the
+  preposition `ne` on `ardor`, three tokens to its left and across a line break, making the
+  adjective inside the prepositional phrase the subject. `ardor` is the subject and `la più
+  somigliante` the oblique, which is what the LLM read.
+- **7:142, ±0.** "ma vostra vita … **spira** / la somma beninanza": the supreme beneficence
+  breathes forth your life, not the reverse. Two `role_mismatch` positions go and two new ones
+  appear one line down, where the LLM gives `innamora` the subject it had wrongly agreed with the
+  tree about.
+- **9:135, ±0.** "sì che pare **a' lor vivagni**": one prepositional phrase, which is how Layer 3
+  already read it (`NP [6-8] head=8`). Layer 4 had `a'` governing `lor` alone, `lor` a dative
+  oblique and `vivagni` an `xcomp` of `pare`. `lor` is the possessive adjective (Layer 2 retagged,
+  and its `dative` case-annex row dropped — 114 of the corpus's `lor` rows are already
+  `det:poss`), `vivagni` the oblique. The `role_mismatch` is replaced by an `extra_tuple`: the
+  LLM's own row for `vivagni` as a predicate, which only the wrong tree supported.
+- **9:87, −1.** "là dove l'orizzonte pria **far suole**": `suole` is the modal and `far` the
+  lexical verb, so `far` is its `xcomp`, not its `aux`. Layer 4 writes `solere` as a clause head
+  with a complement 23 times and as an `aux` 18; `fare` is an `aux` only in the causative ("il fé
+  far", purgatorio 5:77), which this is not.
+- **10:147, ±0 on its own, and it is what rule DK had to be written through.** "e in **dolcezza**
+  **ch'** esser non pò nota": `ch'` is the relative pronoun (Layer 2 called it a conjunction; a
+  `nominative` case-annex row added), and the clause modifies `dolcezza`, the conjunct it follows,
+  not the coordination head `tempra`. Correcting the attachment moved the antecedent *off* the
+  position rule C's collapse rewrites the LLM's citation to — so rule DK reads the antecedent
+  through `_coordination_head` as well, which the uncorrected tree would never have shown.
+
+### Candidates measured and dropped
+
+- **Rule DN in `derive_unit`** — **−4 / +40**, see finding 3.
+- **Rule DP without the relativizer gate.** The first form asked only whether the clause had a
+  *relative pronoun* (rules CE/DC/DK's four words). It accepted "che di tutte altre cose **qual**
+  mi torse" (purgatorio 31:86) wrongly: `qual` relativizes the clause, and the partitive the LLM
+  adds to it is genuinely the main clause's. The fix is a **wider** word list used **negatively** —
+  every word this corpus relativizes with, refusing the rule rather than licensing it. Found by
+  the violation diff, not by census: the census counts the population, the diff names the boundary.
+- **Rule DP without the complement-role gate.** The second form broke two existing near-miss
+  tests (rule BT's), which were right: an `acl:relcl` head standing as its clause's *predicate
+  complement* is the free-relative shape rules AE and BT adjudicate on their own evidence, and a
+  correlative antecedent ("**colui** che …") is emphatically not one. Restricted to the non-
+  complement roles, all 465 tests pass. Second batch running in which a broken near-miss test
+  located a gate rather than condemning a rule.
+
+### What the batch left standing (6)
+
+- **7:25 ×2** — "Per non soffrire a la virtù che vole / freno a suo prode": Layer 4 hangs `a la
+  virtù` on the noun `freno` and gives `vole` no object; the LLM raises the dative to `soffrire`
+  and makes `freno` the object of `vole`. Both are readings of a genuinely tangled line and the
+  text does not decide between them.
+- **7:143 ×2** — created by the 7:142 correction above: the LLM's subject for `innamora`, which
+  the wrong tree had been agreeing with.
+- **8:12** — "che 'l sol vagheggia or **da coppa** or **da ciglio**", the LLM omitting the
+  oblique entirely. The residue's largest bucket (`missing_arg obl*`, now **57 of 261**) and the
+  sixth `--fix` round's one queued prompt candidate, still unwritten.
+- **9:135** — the `extra_tuple` the 9:135 correction exposed, above.
+
 ## Rules DG-DJ, from reading Paradiso 1-5 — 298 → 288, −10 (2026-08-17)
 
 Per-position read of all **26** soft violations in Paradiso 1-5, the first batch of the Paradiso

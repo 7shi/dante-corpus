@@ -1084,7 +1084,7 @@ line	token	word	deprel	head_line	head_token
 147	4	ch'	nsubj	147	7
 147	5	esser	xcomp	147	7
 147	6	non	advmod	147	7
-147	7	pò	acl:relcl	146	8
+147	7	pò	acl:relcl	147	3
 147	8	nota	xcomp	147	5
 148	1	se	mark	148	7
 148	2	non	advmod	148	7
