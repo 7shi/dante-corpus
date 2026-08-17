@@ -946,7 +946,7 @@ line	token	word	deprel	head_line	head_token
 131	2	giudicar	xcomp	130	7
 131	3	sì	advmod	131	4
 131	4	come	advcl	131	2
-131	5	quei	obj	131	4
+131	5	quei	nsubj	131	4
 131	6	che	nsubj	131	7
 131	7	stima	acl:relcl	131	5
 132	1	le	det	132	2

@@ -267,7 +267,7 @@ line	token	word	deprel	head_line	head_token
 37	4	Cristo	nmod	37	2
 37	5	che	nsubj	38	1
 37	6	sì	advmod	37	7
-37	7	caro	obj	38	1
+37	7	caro	advmod	38	1
 38	1	costò	acl:relcl	37	2
 38	2	a	case	38	3
 38	3	rïarmar	xcomp	38	1

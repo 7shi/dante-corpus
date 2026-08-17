@@ -624,6 +624,35 @@ with the same preposition ("pur a sinistra, giù calando al fondo"), two objects
 Having already listed one filler of a slot is not a reason to leave a second one out.\
 """
 
+# The convention clause the Purgatorio 16-20 read proposed and the Paradiso 11-20 read finally
+# wrote (2026-08-17). Its target is `missing_arg obl*`, still the residue's largest single bucket
+# (57 of 261 when the Paradiso 6-10 batch last measured it). Layer 4 attaches a prepositional
+# phrase of time, place or manner to the verb with deprel `obl`, so the derivation always emits an
+# oblique for it; the reading treats it as scene-setting and leaves it out. Evidence from the
+# Paradiso 11-20 read: "a guisa del parlar di quella vaga" (12:14), "in quel che, forato da la
+# lancia" (13:40, the second of two coordinate obliques), "tale dal corno che 'n destro si stende"
+# (15:19), "qual era tra i cantor del cielo artista" (18:51).
+_CONV_ADJUNCT = """\
+A PREPOSITIONAL PHRASE hanging on the verb is one of its arguments even when it only sets the \
+scene — a place ("tra i cantor del cielo", "in quel che forato fu"), a source ("dal corno che 'n \
+destro si stende"), a time, or a manner ("a guisa del parlar di quella vaga"). Cite it as \
+`obl:<preposition lemma>` at the head noun of the phrase. Being inessential to the sense, or \
+standing far from its verb, or already having a comparison or a relative clause of its own, is \
+not a reason to leave it out.\
+"""
+
+# The same omission one clitic over, and a finding of the Paradiso 11-20 read itself: three of
+# that batch's positions (17:102 "ch'io **le** porsi ordita", 17:110 "se loco **m'**è tolto",
+# 20:35 "l'occhio in testa **mi** scintilla") are a non-core dative clitic Layer 4 records and the
+# reading drops. It surfaces as `missing_arg obl:a`, so a round can score it apart from
+# `_CONV_ADJUNCT` above even though both hang on the generic `missing_arg` class.
+_CONV_DATIVE = """\
+An unstressed DATIVE clitic (mi, ti, ci, vi, gli, le, si, ne) is an argument row of its verb even \
+when it is the dative of the person concerned rather than a true recipient: "ch'io **le** porsi \
+ordita", "se loco **m'**è tolto", "l'occhio in testa **mi** scintilla". Cite it as `iobj` at its \
+own token position; never skip it as a mere particle.\
+"""
+
 _CONV_ADJECTIVE = """\
 An ATTRIBUTIVE ADJECTIVE is not a predicate: "una lonza leggera", "l'antica Rachele", "persone \
 ratte" head no clause. Neither is an APPOSITIVE one — an adjective phrase set off by a comma from \
@@ -877,7 +906,7 @@ _CLASS_PROMPTS: dict[str, _ClassPrompt] = {
         ask=_ask_extra_arg, apply=_apply_extra_arg),
     "missing_arg": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_PRODROP}\n\n{_CONV_RELPRON}\n\n"
-               f"{_CONV_REPEATED}",
+               f"{_CONV_REPEATED}\n\n{_CONV_ADJUNCT}\n\n{_CONV_DATIVE}",
         ask=_ask_missing_arg, apply=_apply_missing_arg),
     # The class is keyed on the *argument's* POS, which the question may not name (the
     # independence rule) — so the convention block, not the question, is what points the model at

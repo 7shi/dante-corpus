@@ -1,5 +1,136 @@
 # skel — Layer 5 correction history
 
+## Rules DS-DW, from reading Paradiso 11-20 — 261 → 245, −16 (2026-08-17)
+
+Per-position read of all **43** soft violations in Paradiso 11-20 — **two** batches of the
+Paradiso series in one session — following the eight-step procedure in [`PLAN.md`](PLAN.md)'s
+*How to Read a Batch*. Zero model calls. Paradiso 11-20 itself went **43 → 30** (11: 5 → 7,
+12: 6 → 5, 13: 4 → 2, 14: 6 → 4, 15: 7 → 5, 16: 6 → 1, 17: 4 → 3, 18: 1 → 1, 19: 3 → 1,
+20: 1 → 1); the corpus went **261 → 245 (−16, −6.1%)**. Five deterministic Layer-5 rules,
+9 Layer-4 rows, 1 Layer-2 row, and the sixth round's queued prompt clause finally written.
+`pytest` **475 passed**, 0 hard, all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **DU** (`derive_unit` step 3) | the shared-subject propagation across `conj` **stops at a conjunct Layer 4 marks with its own subordinator** — a marked clause is subordinate, not coordinate | 49 | **−8/+1** |
+| **DW** (`_depictive_attr_omitted`) | rule BX's `attr` leg: the depictive Layer 4 wrote in the complement slot rather than loose as an `obl` | 100 | −2 |
+| **DS** (membership check) | rule BW, applied where the citation is still raw: the interrogative `mark` that opens a clause and fills one of its slots | 325 | −1 |
+| **DT** (`_coordination_head`) | `compound` collapses onto its head like `flat` (rule BE) — the same nominal spread over two tokens | 2 | −1 |
+| **DV** (`_stranded_on_underived_complement`) | rule CB read through rule AU's host: the oblique stranded on an `amod` adjective over one of the predicate's own arguments | 119 | −1 |
+
+Plus the upstream rows, **−9/+5** between them (counted below).
+
+### The batch's finding — a rule can measure −3/+0 and still be wrong
+
+The candidate that did **not** land is the one worth writing down. Rule DQ (Paradiso 6-10) accepts
+an impersonal verb's inherited subject when the only other thing the derivation gives that
+predicate is a `ccomp`; paradiso 14:49 (*«onde la visïon crescer convene»*) is the identical
+reading with an `xcomp` instead, so widening DQ's gate to `{"ccomp"} | {"xcomp"}` is the obvious
+next step. It measures **−3/+0** — net negative, nothing newly flagged, exactly the profile every
+kept rule in this series has.
+
+It is wrong. Reading the three positions it removes: purgatorio 20:151 (*«così m'andava timido e
+pensoso»*, a `conj` of `potea` whose 1sg subject genuinely is the inherited one) and purgatorio
+25:49 (*«e, giunto lui, comincia ad operare»*) are **control** verbs, not impersonal ones, and
+their inherited subject is correct — the rule buys its −2 by suppressing two true reports. That is
+precisely the boundary the Paradiso 1-5 batch censused and refused on the corpus's own scope rule:
+telling `convien` from `puote` in the `xcomp` frame needs a verb-valency lexicon. A `ccomp` gate is
+structural because a `che`-clause under a subjectless verb *is* that verb's subject; an `xcomp`
+gate is lexical wearing a structural costume.
+
+So: **measure by violation diff, and then read what the diff removed.** Nine rule batches have
+banked "net negative, nothing newly flagged" as the acceptance test; this is the first position
+where that test passes on a rule that makes the parse worse. The count is not the measure.
+
+What did take paradiso 14:49 — and inferno 20:57, and four of the five 16:55 positions — is rule
+DU, which asks a structural question about the same shape: *is this conjunct subordinate?* The
+`onde` in *«onde la visïon crescer convene»*, the `che` in *«che averle dentro»*, the `onde` in
+*«onde un poco mi piace»* are all `mark` children Layer 4 wrote on a `conj`, and a clause with its
+own subordinator is not the second half of a coordination. UD's shared-subject convention is about
+coordination; nothing licenses reading it across a subordinator. Censused at 49 `conj` verbs with
+no subject of their own that carry a `mark`.
+
+### Rule DU's one new position is a correctness trade
+
+Purgatorio 21:80 (*«e perché tanti secoli giaciuto qui se'»*) rises by 1. The derivation used to
+hand `giaciuto` the subject of *«Ora chi fosti»* — `chi` — and the LLM listed **both** `chi` and ∅
+in the slot, so one of the two matched and rule CU absorbed the other. With the propagation stopped
+the derivation says ∅, which is right (`se'` is 2sg, the addressee), the LLM's ∅ matches it, and
+the LLM's `chi` is now reported. The wrong tree had been matching an LLM misreading; the count
+records that honestly.
+
+### Rules DS and DT are both "which check runs first"
+
+Rule BW's own docstring cites paradiso 19:74 (*«sappiendo … quanto costa»*) as one of its three
+evidence lines — and that position was still flagged, because the **membership** check runs before
+`_classify_divergence` and rejected `quanto` as heading no NP, pronoun or predicate. The rule
+written for the line never saw the line. This is the third time the same finding has landed (rule
+AQ′ for the `aux` merge, rule DG for rule C's collapse), and the membership check now consults rule
+BW with rule BW's own gates unchanged.
+
+Rule DT is the same question about a normalization rather than a rule: `_coordination_head` walks
+`conj`, `appos` and `flat`, and Layer 4 writes *«un Lapo Salterello»* with `compound`. Its census
+is **2** rows corpus-wide — below the bar this series has dropped candidates at — and it is kept
+anyway, on rule BZ's ground: it is rule BE's reasoning verbatim (a multiword name is one nominal,
+and citing any of its tokens cites it), it measured −1/+0, and leaving it out means the collapse
+depends on which of two interchangeable deprels Layer 4 happened to pick.
+
+### The sixth `--fix` round's queued clause is now written
+
+`_CONV_ADJUNCT` in [`skel.py`](skel.py) — the prepositional adjunct of time, place, source or
+manner, proposed by the Purgatorio 16-20 read and unwritten through two rounds. Its target,
+`missing_arg obl*`, is **56 of 245** after this batch (bare `obl` 17) and is still the residue's
+largest single bucket; four of this batch's own positions are instances (12:10 *«a guisa del parlar
+di quella vaga»*, 13:44 the second of two coordinate `in quel che` obliques, 15:20 *«dal corno che
+'n destro si stende»*, 18:51 *«tra i cantor del cielo»*).
+
+A second clause, `_CONV_DATIVE`, is this batch's own prompt finding: three positions (17:102
+*«ch'io **le** porsi ordita»*, 17:110 *«se loco **m'**è tolto»*, 20:35 *«l'occhio in testa **mi**
+scintilla»*) are a non-core dative clitic — the dative of the person concerned — that Layer 4
+records and the reading drops as a particle. Both hang on the generic `missing_arg` class, and they
+are separable in a round's subclass table because the dative surfaces as `missing_arg obl:a`.
+Neither moves anything until a round runs.
+
+### Candidates censused and dropped
+
+- **Rule DQ widened to `xcomp`** — measured **−3/+0** and dropped. See *The batch's finding* above.
+- **Binding Principle B on the `conj` subject propagation** (paradiso 16:55, *«che averle
+  dentro»*, where the fused accusative clitic `le` cannot be coreferent with the subject it would
+  inherit). Censused at **46** subjectless `conj` verbs carrying a fused non-reflexive accusative
+  clitic, of which **3** agree with the candidate subject in gender and number — and two of those
+  three (purgatorio 7:15 *«abbracciòl»*, 32:158 *«trassel»*) are *«he embraced him»*, where subject
+  and object simply share m.sg. Agreement is not coreference; the rule would have broken two
+  correct derivations to fix one. Rule DU takes 16:55 by a structural question instead.
+- **The relative pronoun Layer 4 writes as a `case` on the nominal it relativizes** (11:21,
+  *«li tuoi pensieri **onde** cagioni apprendo»*, where the derivation cites `pensieri` with role
+  `obl:onde` and the LLM cites `onde` with role `obl:di`). Censused at **7** pronoun-POS `case`
+  rows corpus-wide, of which only this one is a relative pronoun — the rest are prepositions Layer
+  2 mistagged (`lunghesso`, `ne`). Not a population.
+
+### Standing shapes the batch recorded but did not settle
+
+- **The prepositional adjunct, and the dative clitic** — now prompt candidates, above. Also 14:56
+  (*«sì come carbon che fiamma rende»*, the comparandum), 15:32 (*«Così quel lume»*, the nominal of
+  an elided verb of speech parked as a bare `obl` on the following root).
+- **The LLM listing one argument on two predicates** (12:27 `chiudere` given `li occhi` as both
+  `subj` and `obj`; 13:1 the object of the embedded `intender` also given to the matrix `Imagini`;
+  15:55 *«da quel ch'è primo»* given to both `mei` and `raia`). Four positions across the batch,
+  and no gate yet that says which of the two listings the derivation should be compared against.
+- **The quoted exclamation named by its own relative verb** (14:96, *«ch'io dissi: “O Elïòs che sì
+  li addobbi!”»*: Layer 4 makes the vocative `Elïòs` the object of `dissi`, the LLM names
+  `addobbi`, the verb inside it). Rule BR's shape with the containment reversed; the
+  `parataxis`→`ccomp` route the Inferno 8:81 note has queued since the 26-30 batch.
+- **`obj` against a derived `xcomp` on an infinitive complement** (14:92, *«ch'io conobbi esso
+  litare stato accetto»*): Layer 3 draws an NP round `esso litare`, which is what makes `obj` the
+  LLM's natural label. Not censused.
+- **The comparison's second term in a role other than `obl`** (15:102, *«più che la persona»*;
+  16:59, *«ma come madre a suo figlio benigna»*). Rule AR's role gate is the obvious widening and
+  neither line reaches it — 15:102's `che` is already `case`, and 16:59's `madre` is an `attr`.
+- **Genuine LLM misreadings, left flagged**: 11:129 (`tornano`'s subject is `le sue pecore`, not
+  the coordination head's `pecuglio`), 12:124 (`fia`'s subject is `carta`, and the LLM names none),
+  17:116 (the relative `che` given to the `advcl` inside its own clause), 19:63 (*«ma cela lui
+  l'esser profondo»* read with subject and object swapped).
+
 ## Rules DK-DR, from reading Paradiso 6-10 — 288 → 261, −27 (2026-08-17)
 
 Per-position read of all **18** soft violations in Paradiso 6-10, the second batch of the Paradiso

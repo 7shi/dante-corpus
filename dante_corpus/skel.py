@@ -459,7 +459,8 @@ def derive_unit(
         # subject asserts that Dante said what Virgil says; leaving it pro-drop is what the
         # root-position twin of the same frame ("E io: «Maestro, …»", 11:67) already derives.
         own_is_verb = is_verb_pos((morph_at(line, token) or MorphRow("")).pos)
-        if not has_subj and pred_row.deprel == "conj" and own_is_verb:
+        _subordinated = any(c.deprel == "mark" for c in children.get((line, token), ()))
+        if not has_subj and pred_row.deprel == "conj" and own_is_verb and not _subordinated:
             seen = {(line, token)}
             cur = index.get((pred_row.head_line, pred_row.head_token))
             while cur is not None and (cur.line, cur.token) not in seen:
@@ -474,7 +475,9 @@ def derive_unit(
                     )
                     has_subj = True
                     break
-                if cur.deprel != "conj":
+                if cur.deprel != "conj" or any(
+                    c.deprel == "mark" for c in children.get((cur.line, cur.token), ())
+                ):
                     break
                 cur = index.get((cur.head_line, cur.head_token))
 
@@ -1095,7 +1098,7 @@ def _coordination_head(
     cur = pos
     for _ in range(_CONJ_WALK_LIMIT):
         row = dep_index_by_pos.get(cur)
-        if row is None or row.deprel not in ("conj", "appos", "flat"):
+        if row is None or row.deprel not in ("conj", "appos", "flat", "compound"):
             break
         head = (row.head_line, row.head_token)
         if head in seen or head not in dep_index_by_pos:
@@ -2014,9 +2017,28 @@ def _stranded_on_underived_complement(
     if host == pos or host in derived_preds:
         return False
     host_row = dep_index_by_pos.get(host)
-    if host_row is None or host_row.deprel not in ("attr", "xcomp"):
+    if host_row is None:
         return False
-    if (host_row.head_line, host_row.head_token) != pos:
+    if host_row.deprel in ("attr", "xcomp"):
+        if (host_row.head_line, host_row.head_token) != pos:
+            return False
+    elif host_row.deprel == "amod":
+        # **Rule DV**: rule CB read through rule AU's host. Rule AU already says that an `amod`
+        # adjective standing over one of the predicate's own arguments is that predicate's
+        # secondary predicate — "Così fu fatta già la terra **degna** / **di tutta l'animal
+        # perfezïone**" (paradiso 13:82), where `degna` predicates of `la terra` and carries the
+        # oblique that says of what. Rule CB's reasoning applies unchanged one relation over:
+        # `derive_unit` promotes neither the adjective nor its arguments, so the oblique the tree
+        # plainly records has exactly one home in each reading and they are the same predication.
+        # The extra gate is rule AU's own: the adjective's head must be an argument of *this*
+        # predicate, so an adjective inside some other clause's nominal is not swept in.
+        # Censused at 119 obliques hanging on an `amod` over a Layer-4 argument.
+        owner_row = dep_index_by_pos.get((host_row.head_line, host_row.head_token))
+        if owner_row is None or owner_row.deprel not in ARG_DEPRELS:
+            return False
+        if (owner_row.head_line, owner_row.head_token) != pos:
+            return False
+    else:
         return False
     return role.split(":", 1)[1] in case_lemmas.get(arg, set())
 
@@ -2508,6 +2530,42 @@ def _depictive_bare_oblique_omitted(
     if row is None or row.deprel != "obl" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
     return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
+
+
+def _depictive_attr_omitted(
+    pos: tuple[int, int], arg: tuple[int, int], drole: str,
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    derived_roles: dict[tuple[int, int], str],
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+    case_children: set[tuple[int, int]],
+) -> bool:
+    """Rule DW: rule BX's `attr` leg — the depictive Layer 4 wrote in the complement slot.
+
+    "e **portera'ne scritto** ne la mente / di lui" (paradiso 17:91): `scritto` predicates of the
+    thing carried, not of the carrier, and it is an adjunct of the predication exactly as rule
+    BX's bare `obl` adjectives are. Layer 4 has two deprels for a secondary predicate and picks
+    between them by position rather than by function — `obl` when the adjective stands loose
+    (rule BX), `attr` when it stands where a complement would — so restricting the acceptance to
+    one of the two makes the reading depend on the tree's choice of notation.
+
+    The deciding gate is rule DB's, which is what keeps a *copular* predication out: the
+    predicate must derive some other non-subject argument besides this `attr`. A copula with a
+    predicate complement and nothing else is predicating exactly that complement, and its
+    omission stays flagged; a predicate that already has an object, an oblique or a complement
+    clause of its own is not predicating the adjective, it is being modified by it. Rule BX's
+    other two gates are unchanged: **no `case` child** and **adjective POS**. Censused at 100
+    adjectival `attr` rows standing beside another non-subject argument of the same predicate;
+    2 of them are standing `missing_arg` positions ("mi facieno **stimar, veloci e lente**",
+    paradiso 24:18, is the other).
+    """
+    if drole != "xcomp" or arg in case_children:
+        return False
+    row = (dep_index_by_pos or {}).get(arg)
+    if row is None or row.deprel != "attr" or not _hosts_child(pos, row, dep_index_by_pos):
+        return False
+    if "adjective" not in (morph_pos_by_position or {}).get(arg, "").lower():
+        return False
+    return bool(set(derived_roles.values()) - {"subj", "xcomp"})
 
 
 def _fused_clitic_dual_role(
@@ -3497,6 +3555,9 @@ def _classify_divergence(
                 if _depictive_bare_oblique_omitted(pos, arg, drole, dep_index_by_pos,
                                                    morph_pos_by_position, case_children):
                     continue  # rule BX: rule AZ's missing_arg leg
+                if _depictive_attr_omitted(pos, arg, drole, dep_index_by_pos, d,
+                                           morph_pos_by_position, case_children):
+                    continue  # rule DW: rule BX's `attr` leg
                 if _undecided_subject_slot(drole, arg, g, d):
                     continue  # rule BA: the derivation offered two subjects and named neither
                 if _gapped_second_term_argument(arg, d):
@@ -3902,6 +3963,9 @@ def validate_unit(
             if "adverb" in r.pos.lower()
         }
         np_head_positions = {(no, s.head) for no, spans in np_rows.items() for s in spans}
+        membership_morph_pos = {
+            (no, i + 1): r.pos for no, rows in morph_rows.items() for i, r in enumerate(rows)
+        }
         # Rule AF: positions Layer 4 itself attaches with an argument deprel. The membership
         # check asks whether a cited argument is a *nominal* — it tests Layer 3's NP heads and
         # Layer 2's pronouns, and its 47-strong residue was substantivized adjectives ("ch'io
@@ -3953,6 +4017,20 @@ def validate_unit(
                                       or coord_head in pronoun_positions
                                       or coord_head in predicate_positions
                                       or coord_head in dep_argument_positions):
+                continue
+            # **Rule DS**, the same finding a third time: rule BW, applied where the citation is
+            # still raw. Rule BW's own docstring cites "sappiendo … **quanto** costa" (paradiso
+            # 19:74) as one of its three evidence lines — the interrogative or relative word that
+            # opens a clause *and* fills one of its argument slots, which Layer 4 can only record
+            # once and records as `mark`. The divergence check accepts exactly that citation; the
+            # membership check runs first and rejected it, because a `mark` is neither an NP head,
+            # a pronoun Layer 2 tagged as one, nor a position Layer 4 filled with an argument
+            # deprel — so the position rule BW was written for never reached rule BW. Same gates:
+            # the marker hangs on this very predicate, and Layer 2 calls it a pronoun, an
+            # adjective or an adverb rather than a conjunction (rule BM's side of that line).
+            # Censused at 325 `mark` rows corpus-wide whose POS is not a conjunction.
+            if _marker_slot_argument((row.line, row.token), arg, row.role, index,
+                                     membership_morph_pos):
                 continue
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")

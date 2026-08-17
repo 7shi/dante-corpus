@@ -1,5 +1,123 @@
 # dep — Layer 4 correction history
 
+## 9 rows from the Layer-5 Paradiso 11-20 read (2026-08-17)
+
+The per-position read of Paradiso 11-20's 43 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found nine Layer-4 rows wrong, in nine places.
+Applied with a gated script that asserts the word — and the old deprel and head — at each
+`(line, token)` before rewriting; `morph`/`np`/`dep`/`case --check` all re-run at 0 and `pytest`
+at 475. Layer 5 **−9/+5**.
+
+### paradiso 11:92 — Francis disclosed his *intention* to Innocent
+
+"ma regalmente **sua dura intenzione** / ad Innocenzio **aperse**". The intention is what is
+disclosed, not what discloses; the subject is the pro-drop Francis.
+
+| token | was | now |
+|---|---|---|
+| 91.5 `intenzione` | `nsubj` ← 92.3 `aperse` | `obj` ← 92.3 `aperse` |
+
+Layer 5 **−2/+3**, deliberately, and the honest trade this series has recorded before. The
+`role_mismatch` and the `extra_arg subj (0,0)` at 92.3 both go. What appears is the derivation's
+own weakness, now unmasked: `aperse` and `ebbe` are `conj` of `gravò`, whose subject is `viltà`,
+so both inherit *«viltà di cuor»* — and the LLM's `92.7 ebbe: subj=(91,5)` is a misreading that the
+wrong tree had been matching. The object reading is not in doubt; the count is.
+
+### paradiso 12:38 — `caro` is an adverb of price, like the three in the next line
+
+"L'essercito di Cristo, che **sì caro** / **costò** a rïarmar … si movea **tardo, sospeccioso e
+raro**". Line 39 gives three adjectives in the same adverbial function and Layer 4 writes all three
+`advmod`; `caro` in line 37 was the odd one out.
+
+| token | was | now |
+|---|---|---|
+| 37.7 `caro` | `obj` ← 38.1 `costò` | `advmod` ← 38.1 `costò` |
+
+Layer 5 **−1**.
+
+### paradiso 13:131 — the comparison's second term is its subject
+
+"sì come **quei** che stima / le biade in campo pria che sien mature" — "like the one who judges
+the crops in the field before they are ripe". `quei` is the subject of the elided comparative
+clause, and Layer 4 already writes the parallel case (16:71 `agnello`) as `nsubj`.
+
+| token | was | now |
+|---|---|---|
+| 131.5 `quei` | `obj` ← 131.4 `come` | `nsubj` ← 131.4 `come` |
+
+Layer 5 **−1**.
+
+### paradiso 14:134 — `suso` is a locative adverb, not an object
+
+"che i vivi suggelli / d'ogne bellezza **più fanno più suso**".
+
+| token | was | now |
+|---|---|---|
+| 134.7 `suso` | `obj` ← 134.5 `fanno` | `advmod` ← 134.5 `fanno` |
+
+Layer 5 **−1**.
+
+### paradiso 15:12 — what the lover strips off is *that love*
+
+"Bene è che sanza termine si doglia / **chi**, per amor di cosa che non duri / etternalmente,
+**quello amor si spoglia**" — "he who, for love of a thing that does not last for ever, strips
+himself of that love". The subject of `spoglia` is the antecedent `chi`, which the `acl:relcl`
+edge already supplies.
+
+| token | was | now |
+|---|---|---|
+| 12.3 `amor` | `nsubj` ← 12.5 `spoglia` | `obj` ← 12.5 `spoglia` |
+
+Layer 5 **−1**.
+
+### paradiso 15:51 — `bianco né bruno` is what does not change
+
+"du' non **si muta** mai **bianco né bruno**". The two adjectives were an apposition to the
+relative adverb `du'`, which predicates nothing of them.
+
+| token | was | now |
+|---|---|---|
+| 51.6 `bianco` | `appos` ← 51.1 `du'` | `nsubj` ← 51.4 `muta` |
+
+Layer 5 **−1/+1**, deliberately: the `extra_arg xcomp` goes and the LLM's own subject citation
+(`du'`) becomes the divergence. The parse is right and the count is unchanged.
+
+### paradiso 15:56 — the thought flows *from Him who is first* to the speaker
+
+"Tu credi che a me tuo pensier **mei** / **da quel ch'è primo**, così come **raia** / **da l'un** …
+il cinque e 'l sei". Each verb has its own source phrase; Layer 4 had given both to `raia`.
+
+| token | was | now |
+|---|---|---|
+| 56.2 `quel` | `obl` ← 56.8 `raia` | `obl` ← 55.8 `mei` |
+
+Layer 5 **±0**: the LLM lists the phrase on *both* verbs, so exactly one of the two listings is
+reported either way. Applied for the parse.
+
+### paradiso 16:71-72 — the five blades are the comparison's subject
+
+"e molte volte **taglia** / più e meglio **una** **che le cinque spade**" — one blade cuts more and
+better than five [cut]. Layer 4 already writes 71.3 `agnello`, the same shape two lines up, as
+`nsubj` of the same verb.
+
+| token | was | now |
+|---|---|---|
+| 72.8 `spade` | `obj` ← 71.7 `taglia` | `nsubj` ← 71.7 `taglia` |
+
+Layer 5 **−1**: rule AR/BA accept a second subject that is a comparison's second term, which is
+how 71.3 was already passing.
+
+### paradiso 19:94-95 — the blessed image is the subject of `si fece`
+
+"e come quel ch'è pasto la rimira; / **cotal si fece**, e sì leväi i cigli, / **la benedetta
+imagine**" — the image did likewise; *«leväi i cigli»* is the poet's parenthetical 1sg.
+
+| token | was | now |
+|---|---|---|
+| 95.3 `imagine` | `obl` ← 94.6 `leväi` | `nsubj` ← 94.3 `fece` |
+
+Layer 5 **−1**.
+
 ## 10 rows from the Layer-5 Paradiso 6-10 read (2026-08-17)
 
 The per-position read of Paradiso 6-10's 18 Layer-5 soft violations (see

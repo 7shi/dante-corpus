@@ -509,7 +509,7 @@ line	token	word	deprel	head_line	head_token
 72	5	che	mark	71	7
 72	6	le	det	72	8
 72	7	cinque	nummod	72	8
-72	8	spade	obj	71	7
+72	8	spade	nsubj	71	7
 73	1	Se	mark	73	3
 73	2	tu	nsubj	73	3
 73	3	riguardi	advcl	77	3

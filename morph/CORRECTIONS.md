@@ -1,5 +1,17 @@
 # Manual Layer-2 corrections
 
+## 1 row from the Layer-5 Paradiso 11-20 read (2026-08-17)
+
+**paradiso 15:19 `dal`** — lemma `di+il` → `da+il`. "tale **dal corno** che 'n destro si stende /
+a piè di quella croce **corse un astro**": the star runs *from* the horn of the cross, not *of* it,
+and every other `dal` in the corpus is written `da+il`. Found in the per-position read of Paradiso
+11-20 (see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). Applied by a gated script that
+asserts the word and the old lemma before rewriting.
+
+Layer 5 **±0** — the derived oblique's label goes from `obl:di` to `obl:da` and the LLM omits the
+phrase either way (it is one of the four `missing_arg obl*` adjuncts this batch assigned to the
+prompt). Applied for the lemma, not for the count. `morph --check` stays 0/0.
+
 ## 2 rows from the Layer-5 Paradiso 6-10 read (2026-08-17)
 
 Both follow Layer-4 corrections made in the same session (see

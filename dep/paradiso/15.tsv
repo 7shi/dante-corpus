@@ -74,7 +74,7 @@ line	token	word	deprel	head_line	head_token
 11	8	duri	acl:relcl	11	5
 12	1	etternalmente	advmod	11	8
 12	2	quello	det	12	3
-12	3	amor	nsubj	12	5
+12	3	amor	obj	12	5
 12	4	si	expl	12	5
 12	5	spoglia	acl:relcl	11	1
 13	1	Quale	advmod	14	1
@@ -348,7 +348,7 @@ line	token	word	deprel	head_line	head_token
 51	3	si	expl	51	4
 51	4	muta	ccomp	50	2
 51	5	mai	advmod	51	4
-51	6	bianco	appos	51	1
+51	6	bianco	nsubj	51	4
 51	7	né	cc	51	8
 51	8	bruno	conj	51	6
 52	1	solvuto	ccomp	49	2
@@ -384,7 +384,7 @@ line	token	word	deprel	head_line	head_token
 55	7	pensier	nsubj	55	8
 55	8	mei	ccomp	55	2
 56	1	da	case	56	2
-56	2	quel	obl	56	8
+56	2	quel	obl	55	8
 56	3	ch'	nsubj	56	4
 56	4	è	cop	56	5
 56	5	primo	acl:relcl	56	2

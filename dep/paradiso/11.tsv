@@ -622,7 +622,7 @@ line	token	word	deprel	head_line	head_token
 91	2	regalmente	advmod	92	3
 91	3	sua	det:poss	91	5
 91	4	dura	amod	91	5
-91	5	intenzione	nsubj	92	3
+91	5	intenzione	obj	92	3
 92	1	ad	case	92	2
 92	2	Innocenzio	obl	92	3
 92	3	aperse	conj	88	3

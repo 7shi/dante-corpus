@@ -4702,3 +4702,157 @@ def test_classify_divergence_rule_dq_requires_the_clause_to_be_the_only_compleme
     # With an oblique of its own the predicate has a clause of its own, and the subject stands.
     violations = _impersonal_clausal_subject_fixture(extra_role="obl")
     assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+# --- Phase 6: rules DS-DW (the Paradiso 11-20 read) ----------------------------------------
+
+
+def _marker_membership_fixture(marker_pos="adverb"):
+    """Rule DS: "sappiendo … **quanto** costa" (paradiso 19:74). The interrogative word opens the
+    clause and fills one of its slots; the membership check runs before rule BW and rejected it."""
+    from dante_corpus.morph import MorphRow
+
+    nos, texts = [1], ["quanto ragione vede"]
+    rows = [skel.SkelRow(1, 3, "vede", "obj", 1, 1)]
+    morph_rows = {1: [MorphRow(word="quanto", pos=marker_pos),
+                      MorphRow(word="ragione", pos="noun"),
+                      MorphRow(word="vede", pos="verb")]}
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="quanto", deprel="mark", head_line=1, head_token=3),
+        dep.DepRow(line=1, token=2, word="ragione", deprel="nsubj", head_line=1, head_token=3),
+        dep.DepRow(line=1, token=3, word="vede", deprel="advcl", head_line=2, head_token=1),
+    ]}
+    return skel.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows, np_rows={1: []},
+                              dep_rows=dep_rows)
+
+
+def test_validate_unit_rule_ds_accepts_an_interrogative_marker_as_an_argument():
+    assert not any("heads no NP" in v.detail for v in _marker_membership_fixture())
+
+
+def test_validate_unit_rule_ds_keeps_rule_bws_conjunction_gate():
+    # A `mark` Layer 2 calls a conjunction is a subordinator, and rule BM's side of the line.
+    assert any("heads no NP" in v.detail
+               for v in _marker_membership_fixture(marker_pos="conjunction"))
+
+
+def _compound_head_fixture(deprel="compound"):
+    """Rule DT: "una Cianghella, **un Lapo Salterello**" (paradiso 15:127). Layer 3 heads the
+    second conjunct's span on `Lapo`, Layer 4 hangs `Lapo` under `Salterello`, and the `conj`
+    collapse never reaches the coordination head."""
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="Cianghella", deprel="nsubj",
+                           head_line=1, head_token=4),
+        (1, 2): dep.DepRow(line=1, token=2, word="Lapo", deprel=deprel,
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="Salterello", deprel="conj",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="tenuta", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    return skel._coordination_head((1, 2), dep_index_by_pos)
+
+
+def test_coordination_head_rule_dt_collapses_a_compound_onto_its_coordination_head():
+    assert _compound_head_fixture() == (1, 1)
+
+
+def test_coordination_head_rule_dt_leaves_a_modifier_alone():
+    # An `amod` is a modifier of the nominal, not the same nominal spread over two tokens.
+    assert _compound_head_fixture(deprel="amod") == (1, 2)
+
+
+def _subordinated_conjunct_fixture(marked=True):
+    """Rule DU: "che **averle** dentro" (paradiso 16:55). A conjunct Layer 4 marks with its own
+    subordinator is not a coordinate clause, and does not share the first conjunct's subject."""
+    dep_rows = {1: [
+        dep.DepRow(line=1, token=1, word="esser", deprel="root", head_line=0, head_token=0),
+        dep.DepRow(line=1, token=2, word="genti", deprel="nsubj", head_line=1, head_token=1),
+        dep.DepRow(line=1, token=4, word="averle", deprel="conj", head_line=1, head_token=1),
+    ]}
+    if marked:
+        dep_rows[1].insert(2, dep.DepRow(line=1, token=3, word="che", deprel="mark",
+                                         head_line=1, head_token=4))
+    morph_rows = {1: [
+        morph.MorphRow(word="esser", pos="verb"),
+        morph.MorphRow(word="genti", pos="noun", gender="f.", number="pl."),
+        morph.MorphRow(word="che", pos="conjunction"),
+        morph.MorphRow(word="averle", pos="verb+pronoun"),
+    ]}
+    derived = skel.derive_unit([1], dep_rows, morph_rows)
+    return [r for r in derived[1] if (r.line, r.token) == (1, 4) and r.role == "subj"]
+
+
+def test_derive_unit_rule_du_stops_subject_propagation_at_a_subordinated_conjunct():
+    assert [(r.arg_line, r.arg_token) for r in _subordinated_conjunct_fixture()] != [(1, 2)]
+
+
+def test_derive_unit_rule_du_still_propagates_across_a_bare_conjunct():
+    assert [(r.arg_line, r.arg_token)
+            for r in _subordinated_conjunct_fixture(marked=False)] == [(1, 2)]
+
+
+def _amod_stranded_oblique_fixture(owner_deprel="nsubj"):
+    """Rule DV: "fu fatta già la **terra degna** / **di tutta l'animal perfezïone**" (paradiso
+    13:82). The oblique hangs on an `amod` over one of the predicate's own arguments, which rule
+    AU already reads as its secondary predicate."""
+    derived = {1: [skel.SkelRow(1, 1, "fatta", "subj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "fatta", "subj", 1, 2),
+                 skel.SkelRow(1, 1, "fatta", "obl:di", 1, 5)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="fatta", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="terra", deprel=owner_deprel,
+                           head_line=1, head_token=1),
+        (1, 3): dep.DepRow(line=1, token=3, word="degna", deprel="amod",
+                           head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="di", deprel="case",
+                           head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="perfezione", deprel="obl",
+                           head_line=1, head_token=3),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "noun", (1, 3): "adjective", (1, 5): "noun"})
+
+
+def test_classify_divergence_rule_dv_accepts_an_oblique_stranded_on_an_amod():
+    assert [v for v in _amod_stranded_oblique_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dv_requires_the_amods_host_to_be_an_argument():
+    # An adjective over a `nmod` inside some other phrase is not this predicate's complement.
+    violations = _amod_stranded_oblique_fixture(owner_deprel="nmod")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _depictive_attr_fixture(other_argument=True):
+    """Rule DW: "e **portera'ne scritto** ne la mente" (paradiso 17:91). The depictive Layer 4
+    wrote in the complement slot, which the reading leaves out as it leaves out rule BX's."""
+    derived = {1: [skel.SkelRow(1, 1, "portera'", "xcomp", 1, 2),
+                   skel.SkelRow(1, 1, "portera'", "subj", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "portera'", "subj", 0, 0)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="portera'", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="scritto", deprel="attr",
+                           head_line=1, head_token=1),
+    }
+    if other_argument:
+        derived[1].append(skel.SkelRow(1, 1, "portera'", "obl:in", 1, 3))
+        given[1].append(skel.SkelRow(1, 1, "portera'", "obl:in", 1, 3))
+        dep_index_by_pos[(1, 3)] = dep.DepRow(line=1, token=3, word="mente", deprel="obl",
+                                              head_line=1, head_token=1)
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "adjective", (1, 3): "noun"})
+
+
+def test_classify_divergence_rule_dw_accepts_an_omitted_depictive_attr():
+    assert [v for v in _depictive_attr_fixture()
+            if v.detail.startswith("missing_arg")] == []
+
+
+def test_classify_divergence_rule_dw_keeps_the_sole_complement_gate():
+    # With nothing else on the predicate the `attr` is the predication itself, not a depictive.
+    violations = _depictive_attr_fixture(other_argument=False)
+    assert any(v.detail.startswith("missing_arg") for v in violations)

@@ -660,7 +660,7 @@ line	token	word	deprel	head_line	head_token
 94	8	cigli	obj	94	6
 95	1	la	det	95	3
 95	2	benedetta	amod	95	3
-95	3	imagine	obl	94	6
+95	3	imagine	nsubj	94	3
 95	4	che	nsubj	96	1
 95	5	l'	det	95	6
 95	6	ali	obj	96	1
