@@ -1,11 +1,57 @@
 ## Handoff (2026-08-18) — resume here
 
-> **The sixth `--fix` round has run, and both prompt candidates are decided.** **213 → 174 (−39,
+> **The seventh `--fix` round has run, it was the first with `--log`, and the call table is the
+> result.** **224 → 161 (−63, −28.1%)**, 0 hard, `pytest` **521**, `skel/*.tsv` only; units
+> **182 → 131** (51 cleared, 9 improved, **0 regressed, 0 newly flagged**), per-unit yield
+> **0.346** — the highest of the seven. Per canticle: inferno 44, purgatorio 59, paradiso 58
+> (152 divergence + 9 `dual_role`). Full write-up: [`skel/PLAN.md`](skel/PLAN.md) §30.
+>
+> **The records are one class, not the prompt improving.** `dual_role` (rule EG's population) went
+> **50 → 9, −82.0%** and carried **40 of the 63**; the divergence residue alone went **174 → 152
+> (−12.6%)**, weaker than rounds 4, 5 and 6. Per *call*, `dual_role` runs at **0.833** and every
+> other class at **0.081** — a **10× gap**, and the cause is not difficulty but what the question
+> needs. Rule EG's is **the only question in this project whose evidence sits entirely inside the
+> artifact**: it shows the model both of its own rows and asks which is right. Every other class
+> asks it to adjudicate against `derive_unit`'s reading, which the Independence Rule withholds.
+> **That, not the +50, is rule EG's real result, and the next checker work should look for more
+> questions of that shape.**
+>
+> **The driver has been discarding the model's verdicts, and now we know how many.** **101 of 332
+> calls (30%) end in `no actionable answer`** — a label doing two different jobs. **57 of them are
+> an explicit refusal in the answer vocabulary** (`keep` 39, `none` 14, `drop` 3, `both` 1) and 48
+> more re-assert a role or token already in the artifact. `keep` is a first-class answer meaning
+> *the checker is wrong*; when every answer in a call is `keep`, `apply` returns False and the whole
+> response is filed as unusable. **Splitting that label and counting refusals per class is the
+> cheapest instrument this project has been offered** — no extra call, no prompt change, and the
+> census is a position-by-position reading list of where the model thinks `--check` is wrong.
+> `arg_slot` is **7 calls, 0 removed, 8 answers, all `keep`** — decided, and decided against the
+> checker rather than against the model.
+>
+> **Three smaller results.** `_CONV_DATIVE` rewritten is **positive** (`missing_arg obl:a` 11 → 6,
+> −45.5%), a *third* shape of working prompt change beside withdrawing and narrowing a licence:
+> **make an instruction the class can actually carry out**. `_whole` cost **128 calls (38.6% of the
+> budget) for 6 violations** — the **eighth round runs `--no-whole`**, no file change needed. And
+> one `dual_role` refusal is a concrete checker gap: purgatorio 2:40, `sen` = `si`+`ne` written as
+> `obl:si` and `obl:ne`, which rule AL/CM should licence and `_fused_clitic_dual_role` refuses
+> because `_case_supports_role` never maps the `reflexive` slot onto an `obl:<clitic-lemma>` role.
+>
+> **The field-note instrument (§29) did not pay.** 5 notes over 332 calls; one real (paradiso 14:93,
+> where Layer 2 tags `esso` as `essere`-infinitive while Layer 3 heads an NP `[esso litare]` on it —
+> a Layer-2 mistag no check looks for), one a rewording of its own answer, two outright wrong in a
+> way that contradicts rows the same response wrote. It is kept, it costs nothing, and **no further
+> prompt work should go into widening it**: the answer vocabulary already carried the refusal.
+>
+> **The residue is not going to 0 by running rounds.** Outside `dual_role` a call is worth 0.081, and
+> 51 of the standing 152 have survived three rounds each. What closes it is checker-side work off
+> the refusal census.
+>
+> ---
+>
+> **The sixth `--fix` round, for reference.** **213 → 174 (−39,
 > −18.3%)**, 0 hard, `pytest` **494 passed**, `skel/*.tsv` only; units 168 → 141 (27 cleared, 5
-> improved, **0 regressed, 0 newly flagged**), per-unit yield **0.232**. Per canticle: inferno 49,
-> purgatorio 67, paradiso 58. This was the round the read series was written to enable — checker
-> finished, all 100 cantos read, nothing written against the base it would move — so its per-class
-> numbers measure the prompt alone.
+> improved, **0 regressed, 0 newly flagged**), per-unit yield **0.232**. This was the round the read
+> series was written to enable — checker finished, all 100 cantos read, nothing written against the
+> base it would move — so its per-class numbers measure the prompt alone.
 >
 > **`_CONV_ADJUNCT` positive, `_CONV_DATIVE` negative — and the subclass table hid the positive.**
 > `missing_arg obl*` fell only 24.0% in aggregate, but split by the role's own case marker the
@@ -45,16 +91,12 @@
 > `prompt.apply`/`resolve_chunk`, so splices, the acceptance gate and every per-class number are
 > unchanged and a seventh round stays comparable with the six before it. `pytest` **518** (7 new).
 >
-> **The next session's task is the seventh `--fix` round, and it is the user's to run**
-> (`make -C skel fix`, 3-way parallel, then measure per *How to Measure a `--fix` Round*). Base 224.
-> On its scale: the brand-new `dual_role` class with its own question and **50** positions that have
-> never been asked, the `arg_slot` merge (16), and the rewritten `_CONV_DATIVE` (11) — all three
-> separable in the subclass table. One caveat for reading the result: the splice guard may lower
-> `missing_arg`'s accepted-splice rate slightly, and that is the guard working. **Collect the field
-> notes while it runs** — they cost no extra call, but only if `--log` is passed, one file per
-> parallel process (`uv run skel.py <canticle> --fix -m $(MODEL) --log skel-<canticle>.log`; `fix`
-> truncates its log at start, so three processes must not share one). See
-> [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round* and §29.
+> **All four of that round's candidates are now settled by §30** — `dual_role` −82.0%,
+> `_CONV_DATIVE` −45.5%, `arg_slot` 0 of 7 calls, and the splice-guard caveat did not materialize.
+> The eighth round's scale is in [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh Round Has Run*, and
+> it runs **`--no-whole`**, with `--log` no longer optional in practice:
+> `uv run skel.py <canticle> --fix -m $(MODEL) --no-whole --log skel-<canticle>.log`, one file per
+> process (`fix` truncates its log at start). The summary table is now appended to the log itself.
 >
 > **What the Paradiso 26–33 batch found**, still worth carrying into any future rule work.
 >
@@ -85,7 +127,7 @@
 > deliberately raised the count by +2**, exposing LLM readings a wrong tree had absorbed — the
 > trade rule AM recorded, for the fifth batch running.
 
-**Layer 5 is operating under Phase 6 with 0 hard / 224 soft violations** (174 divergence positions after the sixth `--fix` round, plus the 50 rule EG newly *reports*).
+**Layer 5 is operating under Phase 6 with 0 hard / 161 soft violations** (152 divergence positions after the seventh `--fix` round, plus the 9 rule EG still *reports*).
 Checks: `dep --check` **0 hard / 0 soft** (the subject-agreement rule's 18-position residue closed
 2026-08-14; its *coordinated subject* exclusion refined to a per-conjunct person test 2026-08-16;
 its 1/2-plural exclusion narrowed to the number test 2026-08-16 by rule CR and the
@@ -95,8 +137,8 @@ number-only exclusions stopped from preempting the person test the same day by r
 read, 6 more the same day by the Paradiso 1–5 read, 10 more by the Paradiso 6–10 read, 9 more by the Paradiso 11–20 read, 10 more by the Paradiso 21–25 read, 16 more by the Paradiso 26–33 read),
 `case --check` 0 hard (1 stale row dropped, 1 row re-read, 1 more dropped and 2 re-read
 2026-08-16, 1 re-read and 1 added 2026-08-17 by the Paradiso 1–5 read, 1 dropped and 1 added the same day
-by the Paradiso 6–10 read), `skel --check` 0 hard/**224** soft (174 after the sixth `--fix` round —
-inferno 49, purgatorio 67, paradiso 58 — plus rule EG's 50),
+by the Paradiso 6–10 read), `skel --check` 0 hard/**161** soft (after the seventh `--fix` round —
+inferno 44, purgatorio 59, paradiso 58 — of which 9 are rule EG's `dual_role`),
 `np --check` 0/0 (1 span split, 1 widened, 1 added, 1 moved 2026-08-16, 1 clitic span added,
 1 span dropped, 3 more dropped and 2 rewritten 2026-08-17), `morph --check` 0/0
 (3 + 5 + 1 + 2 + 8 + 2 + 1 + 1 + 1 + 2 + 1 + 1 + 6 rows corrected), `pytest` **518 passed** (the Purgatorio
@@ -124,9 +166,26 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Current State & Architecture Summary
 
-- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (fourteen class-specific micro-prompts, keyed by POS, by role, by class alone, or — for `arg_slot` and `dual_role` — on a *pair* of rows), and Stage 3 (fallback whole-unit regeneration). Six user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)** and **213 → 174 (−39)**.
+- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (fourteen class-specific micro-prompts, keyed by POS, by role, by class alone, or — for `arg_slot` and `dual_role` — on a *pair* of rows), and Stage 3 (fallback whole-unit regeneration, **measured at 128 calls for 6 violations in round 7 and switched off for round 8**). Seven user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)**, **213 → 174 (−39)** and **224 → 161 (−63)**.
   - **Detailed Phase 6 Plan**: For Phase 6 operating principles, architectural details, active routes, and measurement procedures, see [`skel/PLAN.md`](skel/PLAN.md).
 - **Latest Improvements**:
+  - **Seventh `--fix` round (2026-08-18)**: **224 → 161 (−63, −28.1%)**; 182 → 131 flagged parse
+    units (51 cleared, 9 improved, **0 regressed, 0 newly flagged**); per-unit yield **0.346**, the
+    highest of the seven; `pytest` **521**; `skel/*.tsv` only, so no other layer moved. **The first
+    round run with `--log`, hence the first with per-class call counts — and that table is the
+    result.** The records belong to one class: `dual_role` **50 → 9 (−82.0%)**, 40 of the 63, while
+    the divergence residue alone went **174 → 152 (−12.6%)**, weaker than rounds 4–6. Per *call*,
+    `dual_role` is **0.833** and everything else **0.081** — a **10× gap** caused not by difficulty
+    but by what the question needs: rule EG's is the only question in this project whose evidence is
+    entirely inside the artifact, and it is the only one that pays. **30% of a round's calls (101 of
+    332) end in `no actionable answer`, and 57 of those are the model explicitly refusing** in the
+    answer vocabulary (`keep` 39, `none` 14, `drop` 3, `both` 1) — a verdict that the checker is
+    wrong, filed under a label that reads like a parse failure and discarded; the census is a
+    reading list. `arg_slot` decided at **0 of 7 calls, all `keep`**. `_CONV_DATIVE` rewritten is
+    **positive** (`obl:a` 11 → 6, −45.5%), a third shape of working prompt change: make an
+    instruction the class can carry out. `_whole` cost **128 calls (38.6%) for 6** — round 8 runs
+    `--no-whole`. Field notes (§29) **did not pay**: 5 over 332 calls, one of them real. Full
+    tables in [`skel/PLAN.md`](skel/PLAN.md) §30.
   - **Sixth `--fix` round (2026-08-18)**: **213 → 174 (−39, −18.3%)**; 168 → 141 flagged parse
     units (27 cleared, 5 improved, **0 regressed, 0 newly flagged**, exactly one position present
     after but not before); per-unit yield **0.232**; `pytest` 494; `skel/*.tsv` only, so no other
@@ -442,6 +501,25 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Standing Disciplines
 
+- **A refusal is an answer, not a parse failure** (2026-08-18, §30 finding 3): `keep`, `none`, `drop`
+  and `both` are first-class answers in the class prompts' own vocabularies, and each of them means
+  *the checker is wrong here*. When every answer in a call is one of them the splice changes nothing,
+  `apply` returns False, and the driver files the whole response under `no actionable answer` and
+  moves on — discarding 30% of a round. **Count refusals per class; the census is a
+  position-by-position reading list.** The corollary is that a "frozen" class is ambiguous until you
+  look: `arg_slot` at 0 removed over 7 calls is not a model that could not answer, it is a model that
+  answered `keep` seven times.
+- **A question's yield is a property of its evidence, not of the residue's difficulty** (2026-08-18,
+  §30 finding 1): `dual_role` runs at 0.833 violations per call and every other class at 0.081,
+  because rule EG's is the only question whose evidence sits entirely inside the artifact — it shows
+  the model both of its own rows and asks which is right. Every other class asks it to adjudicate
+  against `derive_unit`'s reading, which the Independence Rule withholds. **When a class will not
+  move, ask first whether the model has been given enough to decide it.**
+- **Measure calls, not only violations** (2026-08-18): a round's violation diff says which positions
+  moved and never how many questions were asked to move them. Run `--fix` with `--log`; the per-class
+  `calls / removed / per call` table is appended to it under `=== fix summary ===`. Round 7's whole
+  reading came from that table, and `_whole` — 38.6% of the call budget for 6 violations — is
+  invisible without it.
 - **A silent `--check` pass, closed (2026-08-07)**: Found while re-measuring from a `git worktree` (where `src/` is unbuilt because per-canticle source directories are generated, not tracked). `api.cantos()` now raises `FileNotFoundError` if the directory is missing, preventing checks from silently returning `0 hard, 0 soft`. `tests/test_api.py` pins this behaviour.
 - **How `CORRECTIONS.md` is used**: `*/CORRECTIONS.md` records **hand-applied corrections**, not a place to log "found a problem, leaving it." If a review turns up a clear, decidable error, **fix it in the same session** and record what was fixed and why. The only legitimate "left alone" write-ups are ones with a genuine structural reason the text itself doesn't decide (e.g., free relatives, accusative-and-infinitive, Latin quotations, etc.).
   - **A `--fix` round is not a correction and is never written there** (2026-08-16). It is LLM regeneration of the artifact, decided by the acceptance gate rather than by a person reading a line. Round measurements belong in [`skel/PLAN.md`](skel/PLAN.md)'s *Phase 6 Implementation & Results* and in this file's *Latest Improvements*. What does go in `CORRECTIONS.md` is what a human decided: upstream retags, gated-script rewrites, checker and derivation rules, and the shapes deliberately left standing.
@@ -457,11 +535,11 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Next Steps & Open Routes
 
-- **The plan for the rest of the work (2026-08-18)**: the read series is **complete** (Paradiso 26–33 / rules EB–EF finished it), the **sixth `--fix` round has run** (213 → 174), and the two checker-side routes it opened are **landed** the same day (`skel/PLAN.md` §28): **rule EG**, the dual-role check — one token in two roles of one predicate, censused at 56 with 7 licensed by rule AL and **52 of 56 previously invisible** — which raises the base to **224** by design, together with the `_apply_missing_arg` splice guard; and the **`arg_slot` merge** plus **`_CONV_DATIVE`'s** rewrite. **What remains is the seventh round, the user's to run** (see [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round*), and after it the standing assistant-side route: **the subject slot**, 62 of the 174 (36%).
+- **The plan for the rest of the work (2026-08-18, after round 7)**: the read series is **complete**, seven rounds have run, and the base is **161**. **The next step is checker-side, and the seventh round named where**: 30% of its calls ended in the model refusing, and that census is a position-by-position list of where it thinks `--check` is wrong (`skel/PLAN.md` §30 finding 3). Two concrete items ahead of the eighth round — **split `no actionable answer`** into an unusable response and a refusal, counted per class in the summary table; and **rule EG's fused-clitic leg** (purgatorio 2:40, `obl:si`/`obl:ne`, §30 finding 7). Then run the eighth round **`--no-whole`**. The standing assistant-side route remains the subject slot, unmoved by round 7 (`extra_arg subj` 24 → 24).
 - **The read series is CLOSED (2026-08-17)**: all 100 cantos have been read position by position, in 21 batches. Nothing is re-read — the standing residue is reading error, and it is the most direct sample there is of what a `--fix` round leaves behind. The eight-step per-batch procedure stays written down in [`skel/PLAN.md`](skel/PLAN.md)'s *How to Read a Batch* for any future audit; step 3 now carries the Paradiso 26–33 batch's caution about prompt verdicts. Tool: `skel/read.py`.
 - **The prompt queue is empty again (2026-08-18)**: the sixth round decided `_CONV_ADJUNCT` **positive** (−52.6% on the prepositional obliques its prose names, −24.0% on the aggregate bucket) and `_CONV_DATIVE` **negative** (`obl:a` 12 → 11). Six rounds in, the pattern across all six prompt verdicts is that **only a change withdrawing or narrowing a licence the prompt itself granted has ever moved a class**; every added convention paragraph about a shape the model reads wrong has measured at the round average.
-- **Inferno's 49, Purgatorio's 67 and Paradiso's 58 standing positions** are the whole corpus's read residue with three `--fix` rounds over it, and **173 of the 174 predate round 5** — the residue is a hard core two rounds have failed on the same positions, which is why the next step is a new check rather than another round.
-- **Other Assistant-Side Tasks** (populations at base 541 unless noted, so a re-measure at 174 comes first):
+- **Inferno's 44, Purgatorio's 59 and Paradiso's 58 standing positions** are the whole corpus's read residue with four `--fix` rounds over it, and 51 of the 152 divergence positions have now survived three rounds each. **The residue is not going to 0 by running rounds**: outside `dual_role` a call is worth 0.081 (§30), so a round over the standing 152 is expected to take 12–20. What closes it is checker-side work.
+- **Other Assistant-Side Tasks** (populations at base 541 unless noted, so a re-measure at 161 comes first):
   - **Check the mirror leg of every new rule** — the Inferno 16–20 batch's finding, worth 18 positions there, 37 more in the 21–25 batch and 20 more in the Purgatorio 1–5 batch (rules BW, BX). **A mirror is not owed acceptance**: the 31–34 batch measured rule BR's at −6/+0 and dropped it, because its only evidence was a Layer-3 span and Layer 3 is over-inclusive by design.
   - **Ask what fills the slot after a refusal, and how far the refusal generalizes** — the Purgatorio 6–10 batch's finding: rules CA and CC are one gate read from the derivation side and the acceptance side, and the same gate widened one step further measured **+168** and was rejected. Also **which normalization has already run on the citation a gate compares** (rules CD, CI, about rule C's coordination collapse).
   - **Ask whether a pass reads a set another pass writes** — the Purgatorio 1–5 batch's finding: `derive_unit`'s predicate census walked `conj` chains against a set its third pass had not yet filled (rule BZ). Ordering has now been the finding of four consecutive batches, in four different forms.
@@ -471,16 +549,16 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
   - Read `missing_tuple_nominal` (**16**; `missing_tuple` **18** total): a convention, a hint and a rewritten question have each moved it by single digits, so it is genuine reading disagreement until a read says otherwise. Its old sibling `extra_tuple_adjective` is **closed at 0**.
   - Measure the population of a `parataxis`→`ccomp` acceptance rule for quoted speech under verbs of speech (Inferno 8:81) before writing it. Its neighbour, the `sì … che` result clause read as `ccomp`, was censused at **2** and dropped.
     - Ask which checks run *before* every acceptance rule — the Inferno 26–30 batch's finding: rule AQ was complete inside `_classify_divergence` and absent from the membership check that runs first.
-  - **The subject slot is 62 of 174 (36%)** — `extra_arg_subject` **24** (∅ (0,0) **5**), `missing_arg_subject` **19**, and **19** `role_mismatch` rows with `subj` on one side, 13 of them `subj` ↔ `obj` in both directions on one predicate. Round 4 measured `_CONV_SUBJECT` at the round average and converted it to read-work; the read series then read it and left it standing, so this is the corpus's genuine disagreement over Dante's inversion. The one mechanical part left is the same-slot merge above (14 of the 62).
+  - **The subject slot is 40 of 152 (26%) and round 7 did not touch it** — `extra_arg subj` **24 → 24 (±0)**, `missing_arg subj` 19 → **16**, plus the `role_mismatch` rows with `subj` on one side. Round 4 measured `_CONV_SUBJECT` at the round average and converted it to read-work; the read series read it and left it standing; four rounds have now left it standing. This is the corpus's genuine disagreement over Dante's inversion, and the `arg_slot` merge — the one mechanical part — measured **0 of 7 calls, all answered `keep`** (§30 finding 2), which makes it checker-side reading rather than prompt work.
   - Audit remaining `extra_arg_adjective` positions (**19**; `extra_arg xcomp` is **35**) — three rounds have each taken only a couple, which is itself evidence of genuine disagreement.
-  - **Read what `_CONV_ADJUNCT` left of `missing_arg obl*` (38 of 174 after the sixth round).** The clause took the prepositional half (19 → 9); what stands is the bare `obl` at **14** — a secondary predicate, not an adjunct (rules AZ/CP) — the dative `obl:a` at **11**, on which `_CONV_DATIVE` measured negative, and 4 marker pseudo-cases (`obl:come`/`onde`/`quale`). Three different shapes, so read them as three.
+  - **Read what `_CONV_ADJUNCT` and `_CONV_DATIVE` left of `missing_arg obl*`.** The adjunct clause took the prepositional half in round 6 (19 → 9); the rewritten dative clause took `obl:a` in round 7 (**11 → 6, −45.5%**, §30 finding 5). What stands is the bare `obl` — a secondary predicate, not an adjunct (rules AZ/CP) — plus the marker pseudo-cases (`obl:come`/`onde`/`quale`). Two different shapes, so read them as two.
   - **CLOSED (2026-08-16, Purgatorio 11–15 read)**: the `dep.subject_agreement` *coordinated subject* refinement. The deferred form (number test only) was the wrong rule; the person test run against **every conjunct** leaves 6 positions, all upstream errors, now corrected. `dep --check` stays 0/0 and Layer 5 moved −3/+1 — see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 - See [`skel/PLAN.md`](skel/PLAN.md) for full descriptions of each route and testing workflows.
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through EG, and Phase 6's restructuring plus six `--fix` rounds, bringing its divergence residue to **174** and its total soft count to **224** (rule EG reports 50 artifact-internal contradictions no divergence check could see)
+checker was refined through Phases 0-5r, rules V through EG, and Phase 6's restructuring plus seven `--fix` rounds, bringing its divergence residue to **152** and its total soft count to **161** (rule EG's artifact-internal contradictions, 50 at its introduction, stand at 9)
 (down from 17438 at the first full-corpus measurement). See [`skel/PHASE5.md`](skel/PHASE5.md) for the full Phase 5
 history, [`skel/PLAN.md`](skel/PLAN.md) for the closing positions, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
@@ -492,7 +570,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**The open route is the seventh `--fix` round, and it is the user's**: the read series is complete — all 100 cantos read position by position — the sixth round has run (213 → 174, both prompt candidates decided), and the checker work it exposed is landed (rule EG's dual-role check, the splice guard, the `arg_slot` merge, `_CONV_DATIVE` rewritten; base now 224). The round has three separable candidates on its scale (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round*); the standing assistant-side route after it is the subject slot, 62 of the 174. All five layers plus the case extension are implemented, built for all 100
+**The open route is checker-side, off the seventh round's refusal census**: the read series is complete — all 100 cantos read position by position — and seven rounds have run, the last of them 224 → 161 with all four of its candidates decided (`skel/PLAN.md` §30). What the seventh round added is an instrument: run with `--log`, it showed that **30% of its calls end in the model refusing**, naming position by position where it thinks `--check` is wrong. Splitting that signal out of `no actionable answer`, and rule EG's fused-clitic leg, are the two items before an eighth round (run `--no-whole`). The standing assistant-side route is the subject slot, 40 of the 152 and unmoved by four rounds. All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
@@ -525,7 +603,7 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes), `skel/read.py` (the audit
   series' read tool: all five layers plus both Layer-5 readings for one parse unit). `--check` across all
-  three canticles reports **0 hard, 224 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 161 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PHASE5.md`](skel/PHASE5.md)) is
@@ -750,7 +828,7 @@ discipline already used for normalization and quotes.
    X, the Y-AF series, AG, the AH-AL series, the AM-AT series, the AU-AY series, the AZ-BI
    series, the BJ-BN series, the BO-BV series, the BW-BZ series, the CA-CJ series, the CK-CO series, the
    CP-CT series, the CU-CY series, the CZ-DD series, the DE-DF series, the DG-DJ series, the DK-DR series, the DS-DW series, the DX-EA series and the EB-EF series, with
-   `--fix` restructured in Phase 6 and six rounds run, plus rule EG (`--check`: 0 hard / 224 soft). Phase 5 closed with every route measured; see
+   `--fix` restructured in Phase 6 and seven rounds run, plus rule EG (`--check`: 0 hard / 161 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

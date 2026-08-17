@@ -144,7 +144,6 @@ line	token	word	role	arg_line	arg_token
 52	6	procede	subj	52	5
 52	6	procede	obl:a	52	8
 53	6	dormia	subj	53	3
-54	5	è	subj	54	4
 54	5	è	attr	54	8
 54	5	è	obl	54	4
 54	8	addorno	subj	54	4
@@ -197,7 +196,6 @@ line	token	word	role	arg_line	arg_token
 68	1	vide	subj	68	4
 68	1	vide	obj	68	2
 68	1	vide	obl:sanza	67	7
-69	2	mosse	subj	68	4
 69	2	mosse	subj	69	4
 69	2	mosse	obl:per	68	9
 70	3	vedi	subj	70	2
@@ -214,7 +212,6 @@ line	token	word	role	arg_line	arg_token
 73	3	appressammo	subj	73	1
 73	5	eravamo	subj	73	1
 73	5	eravamo	obl:in	73	7
-74	4	pareami	subj	74	6
 74	4	pareami	attr	74	6
 75	7	diparte	subj	75	5
 75	7	diparte	obj	75	6

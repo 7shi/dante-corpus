@@ -53,6 +53,7 @@ line	token	word	role	arg_line	arg_token
 19	1	dicere	ccomp	19	4
 19	2	udi'	subj	0	0
 19	2	udi'	xcomp	19	1
+19	2	udi'	obl:a	19	3
 19	4	Guarda	subj	0	0
 19	4	Guarda	ccomp	19	6
 19	6	passi	subj	0	0

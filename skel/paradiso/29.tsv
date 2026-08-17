@@ -346,7 +346,6 @@ line	token	word	role	arg_line	arg_token
 138	2	son	attr	138	1
 138	8	appaia	subj	0	0
 138	8	appaia	obl:a	138	6
-139	8	concepe	subj	139	7
 139	8	concepe	obj	139	7
 140	1	segue	subj	140	3
 140	1	segue	obl:a	139	6
@@ -359,7 +358,6 @@ line	token	word	role	arg_line	arg_token
 142	1	Vedi	obj	142	7
 143	0			0	0
 144	2	fatti	subj	144	1
-144	8	spezza	subj	144	6
 144	8	spezza	obl:in	144	6
 145	2	manendo	subj	145	1
 145	2	manendo	obl:in	145	4

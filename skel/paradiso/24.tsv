@@ -394,7 +394,6 @@ line	token	word	role	arg_line	arg_token
 140	1	credo	obj	139	8
 140	1	credo	attr	140	3
 140	3	essenza	subj	139	8
-141	2	soffera	subj	141	6
 141	2	soffera	obj	141	6
 141	2	soffera	attr	141	3
 142	0			0	0

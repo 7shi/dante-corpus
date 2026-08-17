@@ -133,7 +133,6 @@ line	token	word	role	arg_line	arg_token
 51	8	morto	subj	0	0
 52	3	stanchi	subj	52	2
 52	3	stanchi	obj	52	6
-53	2	prese	subj	52	8
 53	2	prese	obj	53	4
 53	2	prese	obl:da	52	8
 54	5	percosso	subj	0	0
@@ -187,7 +186,6 @@ line	token	word	role	arg_line	arg_token
 69	10	abbia	obj	70	1
 69	10	abbia	obl:in	70	3
 70	6	par	ccomp	70	9
-70	9	pregi	subj	70	8
 70	9	pregi	obj	70	8
 71	4	dissi	subj	71	3
 71	4	dissi	iobj	71	5

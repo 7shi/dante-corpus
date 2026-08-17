@@ -100,7 +100,6 @@ line	token	word	role	arg_line	arg_token
 40	6	compiuto	subj	37	1
 40	6	compiuto	obl:di	40	3
 41	8	facea	subj	0	0
-41	8	facea	obj	42	1
 41	8	facea	iobj	41	7
 41	8	facea	attr	42	1
 41	8	facea	obl:tra	41	3

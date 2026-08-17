@@ -234,7 +234,6 @@ line	token	word	role	arg_line	arg_token
 79	4	corso	subj	0	0
 79	7	trova	subj	79	6
 79	7	trova	obj	79	9
-80	5	distende	subj	80	3
 80	5	distende	obj	80	4
 80	5	distende	obl:in	80	3
 80	8	'mpaluda	subj	80	3

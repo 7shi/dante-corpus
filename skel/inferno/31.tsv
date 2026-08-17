@@ -95,7 +95,6 @@ line	token	word	role	arg_line	arg_token
 30	8	strano	iobj	30	6
 31	1	sappi	subj	0	0
 31	1	sappi	ccomp	31	4
-31	4	son	subj	31	7
 31	4	son	attr	31	5
 31	4	son	attr	31	7
 32	2	son	subj	33	6
@@ -258,7 +257,7 @@ line	token	word	role	arg_line	arg_token
 86	2	so	subj	86	3
 86	2	so	xcomp	86	4
 86	4	dir	subj	0	0
-86	4	dir	obj	85	2
+86	4	dir	obl:a	85	2
 86	7	tenea	subj	86	6
 86	7	tenea	attr	86	8
 86	7	tenea	obl:dinanzi	87	3

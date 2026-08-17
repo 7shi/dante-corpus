@@ -63,7 +63,6 @@ line	token	word	role	arg_line	arg_token
 27	1	conviene	xcomp	27	3
 27	1	conviene	xcomp	27	5
 27	3	chiudere	subj	0	0
-27	3	chiudere	subj	26	4
 27	3	chiudere	obj	26	4
 27	3	chiudere	obl:a	26	7
 27	5	levarsi	subj	26	4

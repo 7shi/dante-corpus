@@ -50,7 +50,6 @@ line	token	word	role	arg_line	arg_token
 18	5	è	subj	18	7
 18	5	è	obl	18	4
 19	5	impruna	subj	19	1
-19	5	impruna	subj	21	2
 19	5	impruna	obj	21	2
 19	5	impruna	obl	19	4
 19	5	impruna	obl:con	20	3

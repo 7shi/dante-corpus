@@ -112,6 +112,7 @@ line	token	word	role	arg_line	arg_token
 33	6	far	ccomp	33	1
 33	7	nego	subj	33	5
 33	7	nego	ccomp	33	4
+33	7	nego	obl	32	3
 34	2	cominciò	subj	0	0
 35	5	guarda	subj	35	3
 35	5	guarda	obj	34	5

@@ -79,7 +79,7 @@ So the headline for a port: **the Italian surface of a 4484-line checker is seve
 bulk of the file is about UD's conventions and about this corpus's five-layer stack, and both of
 those travel.
 
-## The three real couplings
+## The four real couplings
 
 ### 1. Rule identity lives in comments
 
@@ -101,7 +101,25 @@ the line order of the `if … continue` chains in `_classify_divergence`, with n
 pins it, and no way to detect that a newly inserted rule shadowed an older one. This is the single
 most fragile thing to carry to another corpus.
 
-### 3. Rules read the layer stack directly
+### 3. Tests are pinned to live corpus data
+
+Several driver tests in `tests/test_skel_fix.py` drive `_fix_canto` against the *real* artifact of
+a named canto and assert counts taken from it — `units:flagged == 1` for purgatorio 1, the
+same-slot pair in inferno 5, and so on. The comments name the positions, which is what makes them
+readable, but the assertions move whenever a `--fix` round touches those cantos: the seventh round
+cleared purgatorio 1's two `dual_role` units and the test's `3` became `1` (2026-08-18).
+
+That is backwards. The behaviour under test is the driver's — one question per flagged unit, keyed
+to that unit's class, a refusal changing nothing — and none of it is about which cantos happen to
+be flagged today. **After the residue reaches 0, move these to fixtures**: a handful of small
+hand-written parse units checked into the test suite, so the driver's behaviour is pinned by data
+the tests own. Keep one or two live-corpus tests deliberately, as an integration check that the
+driver still runs against real artifacts, and mark them as such.
+
+This matters twice over for a port: a new corpus has no purgatorio 1, so every data-pinned test
+is dead weight on arrival, and the fixtures are exactly the thing that *does* travel.
+
+### 4. Rules read the layer stack directly
 
 `validate_unit` already has a clean seam — it takes `morph_rows`, `np_rows`, `dep_rows`,
 `case_rows` as optional layers, and degrades when one is absent. Below it, though, individual rule
@@ -120,15 +138,20 @@ wearing this project's *encoding*. A port needs the categories, not the encoding
    **This pays for itself before any port**: it names the dead rules, it makes the implicit
    ordering measurable (does removing A change B's contribution?), and it gives a port its
    priority order.
-2. **Collect the seven language constants into one language pack,** named by what they mean rather
+2. **Separate the driver tests from live corpus data** (coupling 3). Hand-written fixture parse
+   units for the behavioural assertions; one or two live-corpus tests kept deliberately and
+   labelled as integration checks. Cheap, and it is what stops a round from turning the suite red.
+3. **Collect the seven language constants into one language pack,** named by what they mean rather
    than by which rule reads them, with the three relative-pronoun sets kept distinct and their
    differences documented at the point of definition rather than at the point of use.
-3. **Give the layer stack an interface.** Promote the derived indices into a single object the
+4. **Give the layer stack an interface.** Promote the derived indices into a single object the
    rules receive, so "what a rule needs from the corpus" is declared rather than inferred from an
    argument list. Category vocabularies (pronoun-ness, annex slots) become part of that interface.
 
-Steps 2 and 3 are cheap and low-risk once step 1 exists; without step 1 they are unverifiable
-beyond "the tests still pass."
+Steps 3 and 4 are cheap and low-risk once step 1 exists; without step 1 they are unverifiable
+beyond "the tests still pass." Step 2 is independent of all of them and could be taken at any
+time — it is placed here only because it is not urgent until a round stops being the thing that
+breaks it.
 
 ## What is explicitly *not* the problem
 

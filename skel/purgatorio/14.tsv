@@ -206,11 +206,9 @@ line	token	word	role	arg_line	arg_token
 68	2	turba	subj	68	4
 68	2	turba	obl:a	67	4
 68	8	ascolta	subj	68	7
-69	4	parte	subj	69	6
-69	4	parte	obl:da	69	2
 69	8	assanni	subj	69	6
 69	8	assanni	obj	69	7
-69	8	assanni	obl:da	69	2
+69	8	assanni	obl:da	69	4
 70	2	vid'	subj	70	3
 70	2	vid'	obj	70	6
 70	2	vid'	xcomp	71	4
@@ -223,8 +221,10 @@ line	token	word	role	arg_line	arg_token
 71	6	farsi	subj	70	6
 71	6	farsi	attr	71	7
 71	7	trista	subj	70	6
-72	8	raccolta	subj	0	0
-72	8	raccolta	obj	72	5
+72	3	ebbe	subj	0	0
+72	3	ebbe	obj	72	5
+72	3	ebbe	xcomp	72	8
+72	8	raccolta	subj	72	5
 72	8	raccolta	obl:a	72	7
 73	0			0	0
 74	2	fer	subj	73	2

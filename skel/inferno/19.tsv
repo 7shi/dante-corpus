@@ -242,7 +242,6 @@ line	token	word	role	arg_line	arg_token
 78	4	feci	obj	78	7
 79	3	è	subj	79	5
 79	3	è	attr	79	2
-79	11	cossi	subj	79	9
 79	11	cossi	obj	79	9
 79	11	cossi	iobj	79	10
 80	5	stato	subj	80	3

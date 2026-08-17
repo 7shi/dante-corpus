@@ -509,16 +509,20 @@ def _stub_model(monkeypatch, reply):
 # Purgatorio 1's `missing_arg` at 102.1 is the smallest real case for driving the whole stage-2
 # loop: one violation in its own parse unit, whose argument is `intorno` (100.3), an adverb, so it
 # routes to the `missing_arg_adverb` subclass — the position is itself one of the 82 locative-adverb
-# omissions that class was written for. The canto's other two soft violations are rule EG's
-# `dual_role` at 96.6 and 133.7, in two other units, and each gets its own class question.
+# omissions that class was written for.
+#
+# **This test reads the live artifact, so a `--fix` round moves it.** Until the seventh round it
+# also covered the canto's two `dual_role` units (96.6, 133.7, rule EG); the round cleared both,
+# and purgatorio 1 now carries this one violation alone. Pinning driver behaviour to corpus state
+# is the structural defect here, not the number — see `skel/PORTABILITY.md`, which schedules the
+# separation for after the residue reaches 0.
 def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monkeypatch):
     written = _stub_model(monkeypatch, "Q1: none")
     stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
-    assert stats["units:flagged"] == 3
-    # One question per flagged unit, each keyed to that unit's own class and nothing else.
+    assert stats["units:flagged"] == 1
+    # One question per flagged unit, keyed to that unit's own class and nothing else.
     assert stats["calls:missing_arg_adverb"] == 1
-    assert stats["calls:dual_role"] == 2
-    assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 3
+    assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 1
     assert sum(n for k, n in stats.items() if k.startswith("removed:")) == 0
     assert written == []                          # "none" changes nothing, so nothing is written
 

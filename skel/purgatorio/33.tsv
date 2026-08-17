@@ -225,7 +225,6 @@ line	token	word	role	arg_line	arg_token
 77	5	porti	obj	77	2
 77	5	porti	iobj	77	3
 77	5	porti	obl:ne	77	4
-77	5	porti	obl:in	77	6
 77	5	porti	obl	77	6
 77	5	porti	obl:per	77	10
 78	3	reca	subj	78	1
@@ -302,6 +301,7 @@ line	token	word	role	arg_line	arg_token
 104	1	teneva	obl:con	103	8
 105	8	fassi	subj	105	1
 105	8	fassi	obl:come	105	7
+106	3	affisser	subj	109	3
 106	3	affisser	obl:a	109	5
 106	7	affigge	subj	107	1
 107	2	va	subj	107	1

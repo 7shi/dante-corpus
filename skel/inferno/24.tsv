@@ -63,7 +63,6 @@ line	token	word	role	arg_line	arg_token
 21	4	vidi	subj	21	3
 21	4	vidi	obj	21	2
 21	4	vidi	obl:a	21	7
-22	3	aperse	subj	22	2
 22	3	aperse	obj	22	2
 23	1	eletto	subj	22	6
 23	1	eletto	obl:cum	23	2

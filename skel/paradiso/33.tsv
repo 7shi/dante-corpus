@@ -103,7 +103,6 @@ line	token	word	role	arg_line	arg_token
 38	1	vedi	subj	37	3
 38	1	vedi	obj	38	2
 38	1	vedi	obl:con	38	5
-39	6	chiudon	subj	39	8
 39	6	chiudon	obj	39	8
 39	6	chiudon	iobj	39	5
 39	6	chiudon	obl:per	39	4

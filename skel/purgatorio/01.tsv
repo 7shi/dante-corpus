@@ -271,7 +271,6 @@ line	token	word	role	arg_line	arg_token
 95	8	lavi	subj	94	6
 95	8	lavi	obj	95	10
 95	8	lavi	iobj	95	7
-96	6	stinghe	subj	96	4
 96	6	stinghe	obj	96	4
 97	4	converria	subj	98	4
 97	4	converria	obl	97	6
@@ -372,7 +371,6 @@ line	token	word	role	arg_line	arg_token
 132	7	esperto	obl:di	132	4
 133	3	cinse	subj	0	0
 133	3	cinse	obj	133	2
-133	7	piacque	subj	133	6
 133	7	piacque	obl:a	133	6
 134	2	maraviglia	subj	0	0
 134	6	scelse	subj	134	5

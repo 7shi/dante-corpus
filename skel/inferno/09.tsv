@@ -126,7 +126,6 @@ line	token	word	role	arg_line	arg_token
 40	6	cinte	subj	39	1
 40	6	cinte	obl:con	40	3
 41	4	avien	subj	39	1
-41	4	avien	subj	41	1
 41	4	avien	obj	41	1
 41	4	avien	obl:per	41	6
 42	6	avvinte	subj	42	4
@@ -358,10 +357,8 @@ line	token	word	role	arg_line	arg_token
 118	6	erano	obl:tra	118	4
 118	7	sparte	subj	118	5
 118	7	sparte	obl:tra	118	4
-119	4	eran	subj	119	3
 119	4	eran	attr	119	8
 119	4	eran	obl:per	119	3
-119	8	accesi	subj	119	3
 119	8	accesi	obl:per	119	3
 120	5	chiede	subj	120	7
 120	5	chiede	obj	120	2

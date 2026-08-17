@@ -132,7 +132,6 @@ line	token	word	role	arg_line	arg_token
 44	10	riceve	obl:in	44	9
 45	3	puote	subj	44	2
 45	3	puote	xcomp	45	8
-45	8	cagione	subj	44	2
 45	8	cagione	obl:di	44	2
 45	8	cagione	obl:di	45	7
 46	0			0	0

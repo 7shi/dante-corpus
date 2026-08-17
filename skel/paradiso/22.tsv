@@ -227,19 +227,18 @@ line	token	word	role	arg_line	arg_token
 78	3	piene	subj	78	1
 78	3	piene	obl:di	78	5
 79	7	tolle	subj	79	3
-79	7	tolle	obj	80	8
 79	7	tolle	obl:contra	80	3
+79	7	tolle	obl	80	8
 80	0			0	0
 81	2	fa	subj	81	1
 81	2	fa	obj	81	4
 81	2	fa	attr	81	8
-81	8	folle	subj	81	4
 82	5	guarda	subj	82	4
 82	5	guarda	obj	82	2
 83	1	è	subj	82	6
-83	1	è	obl:di	83	4
-83	1	è	obl:di	84	3
-83	1	è	obl:di	84	6
+83	1	è	attr	83	4
+83	1	è	attr	84	3
+83	1	è	attr	84	6
 83	8	dimanda	subj	83	5
 83	8	dimanda	obl:per	83	7
 84	0			0	0

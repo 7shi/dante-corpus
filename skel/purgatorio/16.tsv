@@ -402,7 +402,6 @@ line	token	word	role	arg_line	arg_token
 117	4	avesse	subj	117	3
 117	4	avesse	obj	117	5
 118	5	passarsi	subj	116	2
-118	5	passarsi	obl:per	119	2
 118	5	passarsi	obl:per	119	5
 119	3	lasciasse	subj	0	0
 119	3	lasciasse	obj	119	2

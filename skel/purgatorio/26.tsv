@@ -137,6 +137,7 @@ line	token	word	role	arg_line	arg_token
 45	7	schife	subj	45	1
 45	7	schife	subj	45	4
 46	5	va	subj	46	3
+46	5	va	obl:come	43	3
 46	9	vene	subj	46	7
 47	2	tornan	subj	46	3
 47	2	tornan	obl:a	47	6

@@ -18,7 +18,6 @@ line	token	word	role	arg_line	arg_token
 5	5	haï	attr	5	8
 5	5	haï	obl:in	5	7
 5	8	consunta	subj	5	4
-5	8	consunta	obj	5	4
 5	8	consunta	obl:in	5	7
 6	2	è	subj	6	6
 6	4	ragionando		0	0

@@ -269,6 +269,7 @@ line	token	word	role	arg_line	arg_token
 102	7	porsi	subj	102	5
 102	7	porsi	obj	102	4
 102	7	porsi	attr	102	8
+102	7	porsi	obl:a	102	6
 102	8	ordita	subj	102	4
 103	2	cominciai	subj	103	1
 103	2	cominciai	obj	104	2
@@ -281,7 +282,6 @@ line	token	word	role	arg_line	arg_token
 106	2	veggio	subj	0	0
 106	2	veggio	ccomp	106	7
 106	7	sprona	subj	107	2
-106	7	sprona	obj	107	4
 106	7	sprona	obl:verso	107	4
 107	7	darmi	subj	0	0
 107	7	darmi	obj	108	1
@@ -293,6 +293,7 @@ line	token	word	role	arg_line	arg_token
 109	6	buon	obl:di	109	4
 109	10	armi	subj	109	8
 110	7	tolto	subj	110	4
+110	7	tolto	obl:a	110	5
 111	3	perdessi	subj	111	1
 111	3	perdessi	obj	111	5
 111	3	perdessi	obl:per	111	8

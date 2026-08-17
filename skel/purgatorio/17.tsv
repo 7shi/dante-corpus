@@ -142,7 +142,6 @@ line	token	word	role	arg_line	arg_token
 50	4	era	subj	50	3
 50	6	parlava	subj	50	5
 51	4	posa	subj	51	1
-51	8	raffronta	subj	51	7
 51	8	raffronta	obj	51	7
 52	8	grava	subj	52	5
 52	8	grava	obj	52	7
@@ -190,7 +189,6 @@ line	token	word	role	arg_line	arg_token
 67	1	senti'	subj	64	7
 67	1	senti'	obj	67	6
 67	1	senti'	iobj	67	2
-67	1	senti'	obl:presso	67	6
 68	2	ventarmi	subj	64	7
 68	2	ventarmi	obl:in	68	4
 68	6	dir	subj	64	7

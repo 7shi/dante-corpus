@@ -1,6 +1,5 @@
 line	token	word	role	arg_line	arg_token
 1	1	Imagini	subj	1	2
-1	1	Imagini	obj	2	1
 1	1	Imagini	obj	4	2
 1	4	intender	subj	1	2
 1	4	intender	obj	2	1

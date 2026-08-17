@@ -317,7 +317,6 @@ line	token	word	role	arg_line	arg_token
 116	4	grida	subj	115	1
 116	4	grida	iobj	116	2
 117	1	dilci	subj	0	0
-117	4	sai	subj	117	3
 117	4	sai	obj	117	3
 117	8	è	subj	117	10
 117	8	è	obl:di	117	7
@@ -416,22 +415,25 @@ line	token	word	role	arg_line	arg_token
 146	2	fé	obl:con	145	6
 146	3	desideroso	subj	146	1
 146	3	desideroso	obl:di	146	5
-146	5	sapere		0	0
+146	5	sapere	subj	146	1
 147	8	erra	subj	147	3
 147	8	erra	obl:in	147	6
 148	2	pareami	subj	0	0
 148	2	pareami	xcomp	148	5
-148	4	pensando		0	0
+148	4	pensando	subj	0	0
+148	5	avere	subj	0	0
 148	5	avere	obj	148	1
-149	5	dimandare		0	0
+149	5	dimandare	subj	149	6
 149	7	oso	subj	149	6
 149	7	oso	xcomp	149	5
 149	7	oso	obl:per	149	4
 150	5	potea	subj	149	6
 150	5	potea	xcomp	150	7
 150	5	potea	obl:per	150	3
+150	5	potea	obl	150	4
+150	7	vedere	subj	149	6
 150	7	vedere	obj	150	6
-151	3	andava	iobj	151	2
+151	3	andava	subj	149	6
 151	3	andava	attr	151	4
 151	3	andava	attr	151	6
-151	6	pensoso	subj	151	2
+151	4	timido	subj	149	6

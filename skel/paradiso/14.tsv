@@ -199,7 +199,6 @@ line	token	word	role	arg_line	arg_token
 74	5	fare	subj	73	4
 74	5	fare	obj	74	7
 74	5	fare	obl:da	75	7
-74	5	fare	obl:di	75	7
 75	0			0	0
 76	3	sfavillar	subj	0	0
 77	3	fece	subj	77	2

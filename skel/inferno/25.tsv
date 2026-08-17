@@ -399,7 +399,6 @@ line	token	word	role	arg_line	arg_token
 138	7	parlando	subj	138	3
 138	8	sputa	subj	138	3
 138	8	sputa	obl	138	4
-138	8	sputa	obl:a	138	4
 139	3	volse	subj	0	0
 139	3	volse	obj	139	6
 139	3	volse	iobj	139	2

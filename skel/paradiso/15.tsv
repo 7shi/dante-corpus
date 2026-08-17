@@ -45,7 +45,6 @@ line	token	word	role	arg_line	arg_token
 16	2	pare	attr	16	3
 16	5	tramuti	subj	16	4
 16	5	tramuti	obj	16	6
-17	10	accende	subj	17	7
 17	10	accende	obl	17	7
 18	3	perde	subj	18	1
 18	3	perde	obj	18	2
@@ -156,7 +155,6 @@ line	token	word	role	arg_line	arg_token
 58	10	paia	attr	59	2
 59	2	gaudïoso	subj	58	9
 59	2	gaudïoso	obl:a	59	4
-59	2	gaudïoso	obl	59	4
 59	7	domandi	subj	55	1
 59	7	domandi	iobj	59	6
 60	0			0	0

@@ -202,6 +202,7 @@ line	token	word	role	arg_line	arg_token
 69	3	ha	subj	69	2
 69	3	ha	obj	69	5
 70	6	rape	subj	70	3
+70	6	rape	obj	70	4
 70	6	rape	obj	71	3
 70	6	rape	obl:cum	71	4
 71	5	corrisponde	subj	70	2
@@ -211,11 +212,13 @@ line	token	word	role	arg_line	arg_token
 73	8	circonde	subj	73	4
 73	8	circonde	obj	74	3
 73	8	circonde	obl:a	73	7
+73	8	circonde	obl:a	74	7
 74	0			0	0
 75	6	appaion	subj	75	4
 75	6	appaion	iobj	75	5
-75	6	appaion	xcomp	75	7
+75	6	appaion	attr	75	7
 75	7	tonde	subj	75	4
+75	7	tonde	iobj	75	5
 76	2	vederai	subj	76	1
 76	2	vederai	obj	76	4
 76	2	vederai	obl:in	78	3
