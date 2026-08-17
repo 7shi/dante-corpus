@@ -1,5 +1,92 @@
 # skel — Layer 5 correction history
 
+## Rule EH — the fused clitic named after its own words, 161 → 160 (2026-08-18)
+
+The seventh `--fix` round (see [`PLAN.md`](PLAN.md) §30) closed rule EG's class from 50 to 9. One of
+the 9 is not an error: **purgatorio 2:40**, and the round's own log is what says so — asked which of
+the token's two roles was right, the model answered `both`, the single refusal among 48 `dual_role`
+calls.
+
+| rule | shape | census | moved |
+|---|---|---:|---:|
+| **EH** (`_fused_clitic_dual_role`) | a fused clitic whose two roles are **obliques named after its own two words** | 1 / 7 | **−1** |
+
+`pytest` **527 passed** (6 new, each mutation-checked at both call sites), 0 hard / **160** soft, all
+other layers 0/0, no artifact row touched.
+
+### The evidence line
+
+> e quei **sen** venne a riva  (purgatorio 2:40)
+
+`sen` is `si` + `ne` in one Layer-1 token — the pronominal verb *venirsene*. Layer 2 writes it
+`lemma=si+ne`, `pos=pronoun+pronoun`; the `case` annex gives it `reflexive+ablative`; Layer 4 has one
+deprel to give it and makes it a single `obl` on `venne`. The reading writes **one oblique per
+clitic, each named for its own word**:
+
+```
+40.7 venne: subj=(40,5), obl:si=(40,6), obl:ne=(40,6), obl:a=(40,9), obl:con=(41,3)
+```
+
+Neither row is a divergence — `derive_unit`'s bare `obl` accepts either — so this is exactly the
+shape rule EG exists to see, and exactly the shape rule AL/CM exists to licence.
+
+### Why the gate refused it, which is not what it looks like
+
+The obvious diagnosis is wrong and worth recording, because it is the one the first draft of this
+rule was written against: *"`obl:si` is supported by nothing, because `_case_supports_role` maps the
+annex onto grammatical labels and has no branch for the `reflexive` slot outside `obj`/`iobj`/`obl:a`."*
+
+`obl:si` **is** supported — by `ablative`, because `_case_supports_role` accepts *every* `obl:<marker>`
+role under `ablative`/`locative` whatever the marker says. So does `obl:ne`. The two roles resolve to
+the **same** slot, and rule CM's closing condition — *the two supporting slot sets must differ*, which
+is what keeps a fused position whose annex backs only one side flagged — refuses them. The gate's
+coarseness about obliques is right when the two roles are of different kinds and wrong when both are
+obliques.
+
+### What separates them
+
+Layer 2 writes the fused lemma with the same separator and in the same order as the annex writes its
+slots — `si+ne` against `reflexive+ablative` — so component *i* is slot *i*, and a role named
+`obl:<component i>` is carried by **that** slot in particular. Adding that one mapping gives `obl:si`
+the `reflexive` slot its own word names, the two sets differ, and rule CM's condition is *satisfied*
+rather than bypassed. Nothing else about the gate changes, including the requirement that the token
+be two fused pronouns and that the annex hold two slots for it.
+
+The mapping is refused when it cannot be trusted: if the lemma's component count and the annex's slot
+count disagree, `by_slot` is empty and the rule contributes nothing. The positional alignment is the
+whole evidence, so it is not guessed at.
+
+### Census, and why a census of 1 was kept
+
+Seven positions corpus-wide carry two roles of one predicate on a fused pronoun token:
+
+| roles | annex | positions |
+|---|---|---:|
+| `iobj` + `obj` | `dative+accusative` | 3 (inferno 10:44 ×2, paradiso 28:138) |
+| `iobj` + `obl` | `dative+ablative` | 1 (inferno 29:125) |
+| `obj` + `obl` | `reflexive+ablative` | 1 (purgatorio 31:95) |
+| `obj` + `obl:di` | `accusative+ablative` | 1 (paradiso 2:20) |
+| **`obl:ne` + `obl:si`** | `reflexive+ablative` | **1 (purgatorio 2:40)** |
+
+Six were already licensed; the seventh is the only one whose two roles are both obliques, which is
+the only configuration that collides on one slot. **This is one gate refusing a case it accepts in
+every other notation, not a new reading** — the rule-CY precedent, where a leg was kept at a census of
+1 for consistency between the two directions of one gate rather than for its count. The Purgatorio
+1–5 batch's *"a census of one is still a census"* dropped two candidates at 1; the difference is that
+those proposed a reading and this repairs a notation.
+
+Measured by violation diff at **−1 / +0**: the rule takes its evidence line and nothing else.
+
+### Tests
+
+Six, all mutation-checked, and at **both** call sites — `_dual_role_violations` (where the roles are
+raw) and `_classify_divergence` (where `_canonicalize_role` has already rewritten `obl:ne` to
+`obl:in`, so the accepting half is the `obl:si` marker alone). The mutations run: drop the marker
+branch, drop the lemma/slot length guard, and drop the `morph_lemma_by_position` argument at each
+call site. The negative that the rule turns on is a fused lemma whose components are **not** the
+markers (`lo+la` against `reflexive+ablative`): both roles fall back on `ablative`, the sets are
+equal again, and the position stays flagged.
+
 ## Rule EG and the sixth round's prompt repairs — 174 → 224, +50 by design (2026-08-18)
 
 The sixth `--fix` round (see [`PLAN.md`](PLAN.md) §27) left 174 soft violations and produced one

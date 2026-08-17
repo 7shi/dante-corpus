@@ -2097,6 +2097,27 @@ def test_classify_divergence_rule_al_requires_two_fused_pronouns():
     assert any(v.detail.startswith("role_mismatch") for v in violations)
 
 
+def _fused_named_divergence(lemma="si+ne"):
+    """Rule EH at the *other* call site. "e quei **sen** venne a riva" (purgatorio 2:40): the two
+    readings name one clitic's oblique after two different words of the same fused token."""
+    derived = {1: [skel.SkelRow(1, 3, "venne", "obl:ne", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "venne", "obl:si", 1, 2)]}
+    return skel._classify_divergence(
+        given, derived, {}, {(1, 2): "pronoun+pronoun"},
+        {(1, 2): "reflexive+ablative"}, {(1, 2): lemma},
+    )
+
+
+def test_classify_divergence_rule_eh_accepts_a_clitic_named_for_its_own_word():
+    assert _fused_named_divergence() == []
+
+
+def test_classify_divergence_rule_eh_needs_the_marker_to_be_that_word():
+    # Same shape, a fused lemma whose components are not the markers: both roles fall back on the
+    # `ablative` slot alone, the supporting sets are equal, and rule CM's condition refuses it.
+    assert any(v.detail.startswith("role_mismatch") for v in _fused_named_divergence("lo+la"))
+
+
 # --- Phase 6: rules AM-AT (the Inferno 11-15 read) --------------------------------------
 
 
@@ -5164,7 +5185,7 @@ def test_classify_divergence_rule_ea_keeps_the_parataxis_gate():
 # --- rule EG: one token in two roles of one predicate -------------------------------------------
 
 
-def _dual_role_fixture(pos="noun", roles=("subj", "obj"), case=None):
+def _dual_role_fixture(pos="noun", roles=("subj", "obj"), case=None, lemma="braccio"):
     """Rule EG. "Le braccia aperse" (inferno 24:22): the reading writes `braccia` as both the
     subject and the object of `aperse`, and the subject is pro-drop. Nothing in the artifact/
     derivation comparison can see this — one of the two rows matches the derivation, and the other
@@ -5172,7 +5193,7 @@ def _dual_role_fixture(pos="noun", roles=("subj", "obj"), case=None):
     rows = [skel.SkelRow(1, 3, "aperse", roles[0], 1, 2),
             skel.SkelRow(1, 3, "aperse", roles[1], 1, 2)]
     morph_rows = {1: [morph.MorphRow(word="Le", pos="article"),
-                      morph.MorphRow(word="braccia", lemma="braccio", pos=pos),
+                      morph.MorphRow(word="braccia", lemma=lemma, pos=pos),
                       morph.MorphRow(word="aperse", lemma="aprire", pos="verb")]}
     case_rows = {1: [skel.CaseRow(line=1, token=2, word="braccia", case=case)]} if case else None
     return skel._dual_role_violations(rows, morph_rows, case_rows)
@@ -5213,3 +5234,39 @@ def test_dual_role_licenses_rule_als_fused_clitic():
 def test_dual_role_keeps_a_single_pronoun_flagged():
     # The licence is the *fused* clitic, not any pronoun: one pronoun fills one slot.
     assert len(_dual_role_fixture(pos="pronoun", roles=("obj", "obl:a"))) == 1
+
+
+# --- rule EH: the fused clitic named after its own words -----------------------------------------
+
+
+def _fused_named_fixture(roles=("obl:si", "obl:ne"), lemma="si+ne", case="reflexive+ablative"):
+    """Rule EH. "e quei **sen** venne a riva" (purgatorio 2:40): `si` + `ne` in one token, and the
+    reading writes one oblique per clitic, each named for its own word. Layer 2's fused lemma and
+    the annex's slots use the same separator in the same order, so component *i* is slot *i*."""
+    return _dual_role_fixture(pos="pronoun+pronoun", roles=roles, case=case, lemma=lemma)
+
+
+def test_dual_role_licenses_a_fused_clitic_named_after_its_own_words():
+    # `_case_supports_role` sends every `obl:<marker>` to `ablative` whatever the marker says, so
+    # before rule EH both rows resolved to the same slot and rule CM's "the sets must differ"
+    # refused them. The marker mapping gives `obl:si` the `reflexive` slot its own word names.
+    assert _fused_named_fixture() == []
+
+
+def test_dual_role_needs_the_marker_to_be_the_clitics_own_word():
+    # The mutation this rule turns on: with a fused lemma whose components are *not* the markers,
+    # both roles fall back on `ablative` alone, the sets are equal again, and the position stays
+    # flagged. Nothing here licenses an oblique pair on the strength of being fused.
+    assert len(_fused_named_fixture(lemma="lo+la")) == 1
+
+
+def test_dual_role_needs_the_lemma_and_the_annex_to_align():
+    # A fused lemma with a different number of components than the annex has slots decides
+    # nothing: the positional mapping is the whole evidence, so it is not guessed at.
+    assert len(_fused_named_fixture(lemma="si+ne+lo")) == 1
+
+
+def test_dual_role_keeps_a_role_no_slot_supports():
+    # Rule EH widens what an *oblique* marker can name and nothing else: `subj` still wants
+    # `nominative`, which this annex value does not carry.
+    assert len(_fused_named_fixture(roles=("subj", "obl:ne"))) == 1

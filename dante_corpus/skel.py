@@ -2693,6 +2693,7 @@ def _fused_clitic_dual_role(
     grole: str, drole: str, arg: tuple[int, int],
     morph_pos_by_position: dict[tuple[int, int], str] | None,
     case_by_position: "dict[tuple[int, int], str] | None" = None,
+    morph_lemma_by_position: "dict[tuple[int, int], str] | None" = None,
 ) -> bool:
     """Rule AL: a fused clitic cluster that genuinely fills two roles at once.
 
@@ -2715,6 +2716,29 @@ def _fused_clitic_dual_role(
     disagreement: censused at 13 fused positions with a role_mismatch, 7 of which split this way,
     and requiring the two supporting slot sets to differ is what keeps a fused position whose
     annex backs only one side (or the same slot on both) flagged.
+
+    **Rule EH** adds the labelling variant the seventh `--fix` round found, and it is the same
+    reading under a different name. `_case_supports_role` is deliberately coarse about obliques —
+    *every* `obl:<marker>` role is supported by `ablative` or `locative`, whatever the marker says —
+    which is right when the two roles are of different kinds and wrong when both are obliques: they
+    then resolve to the **same** slot, and rule CM's "the two supporting slot sets must differ" (the
+    condition that keeps a one-sided annex flagged) refuses them. Purgatorio 2:40 ("e quei *sen*
+    venne a riva", `si` + `ne`, annex `reflexive+ablative`) is written exactly that way — one row
+    per clitic, each named for its own word, `obl:si` and `obl:ne` — and both landed on `ablative`.
+
+    What separates them is the marker itself. Layer 2 writes the fused token's lemma with the same
+    separator and in the same order as the annex writes its slots (`si+ne` / `reflexive+ablative`),
+    so component *i* is slot *i*, and a role named `obl:<component i>` is carried by that slot in
+    particular. Adding that mapping gives `obl:si` the `reflexive` slot its own word names, the two
+    sets differ, and rule CM's condition is satisfied rather than bypassed — the gate had already
+    agreed about this position and was refusing it on a naming technicality.
+
+    Censused corpus-wide at **1**: 7 fused positions carry two roles of one predicate, 6 of them
+    already licensed. Kept at a census of one on the rule-CY precedent — this is one gate refusing a
+    case it accepts in every other notation, not a new reading — and the round's own log is the
+    evidence that it was a technicality: asked which of the two rows was right, the model answered
+    `both`, the one refusal among 48 `dual_role` calls (`skel/PLAN.md` §30 finding 7).
+
     """
     if morph_pos_by_position is None:
         return False
@@ -2727,13 +2751,19 @@ def _fused_clitic_dual_role(
     if len(slots) < 2:
         return False
 
+    # Rule EH: the fused lemma's components, positionally aligned with the annex's slots.
+    parts = [p for p in (morph_lemma_by_position or {}).get(arg, "").lower().split(SLOT_SEP) if p]
+    by_slot = dict(zip(slots, parts)) if len(parts) == len(slots) else {}
+
     def supported(role: str) -> set[str]:
         # `reflexive` is not in `_case_supports_role`'s mapping — it names the clitic's own
         # nature, not a slot — but rule AB already treats a reflexive clitic as able to fill the
         # roles a bare clitic carries, and this reads the same annex the same way.
+        marker = role.split(":", 1)[1] if role.startswith("obl:") else None
         return {s for s in slots
                 if _case_supports_role(s, role)
-                or (s == "reflexive" and role in ("obj", "iobj", "obl:a"))}
+                or (s == "reflexive" and role in ("obj", "iobj", "obl:a"))
+                or (marker is not None and by_slot.get(s) == marker)}
 
     given_slots, derived_slots = supported(grole), supported(drole)
     return bool(given_slots) and bool(derived_slots) and given_slots != derived_slots
@@ -3788,7 +3818,7 @@ def _classify_divergence(
                         or _comparative_come_complement(grole, drole, arg, dep_index_by_pos,
                                                         morph_pos_by_position)
                         or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position,
-                                                   case_by_position)
+                                                   case_by_position, morph_lemma_by_position)
                         or _depictive_bare_oblique(grole, drole, pos, arg, dep_index_by_pos,
                                                    morph_pos_by_position, case_children)
                         or _marked_complement_clause(pos, grole, drole, arg, dep_index_by_pos,
@@ -4107,6 +4137,9 @@ def _dual_role_violations(
         {(row.line, row.token): row.case for rows in case_rows.values() for row in rows}
         if case_rows is not None else None
     )
+    morph_lemma_by_position = {
+        (no, i + 1): row.lemma for no, rows in morph_rows.items() for i, row in enumerate(rows)
+    }
     roles_by_pair: dict[tuple[tuple[int, int], tuple[int, int]], list[str]] = {}
     for row in all_rows:
         if row.token == 0 or not row.role:
@@ -4122,7 +4155,8 @@ def _dual_role_violations(
     for (pos, arg), roles in sorted(roles_by_pair.items()):
         if len(roles) < 2:
             continue
-        if any(_fused_clitic_dual_role(a, b, arg, morph_pos_by_position, case_by_position)
+        if any(_fused_clitic_dual_role(a, b, arg, morph_pos_by_position, case_by_position,
+                                       morph_lemma_by_position)
                for i, a in enumerate(roles) for b in roles[i + 1:]):
             continue
         listed = " and ".join(repr(r) for r in roles)
