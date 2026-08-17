@@ -1,5 +1,120 @@
 # skel — Layer 5 correction history
 
+## Rule EG and the sixth round's prompt repairs — 174 → 224, +50 by design (2026-08-18)
+
+The sixth `--fix` round (see [`PLAN.md`](PLAN.md) §27) left 174 soft violations and produced one
+finding that no read batch could have produced: **the checker has never looked at the artifact's
+internal consistency.** Rule EG closes that, and **raises the count by 50** — the honest trade rule
+AM records, and the first rule in the series whose whole value is that it *reports* something.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **EG** (`_dual_role_violations`) | one token filling **two roles of one predicate** in the artifact, other than rule AL's fused clitic | 56 / 7 licensed | **+50** |
+
+Plus two prompt-side repairs the round's measurements pointed at (they move nothing until a round
+runs): the **`arg_slot` merge** and **`_CONV_DATIVE`'s rewritten citation instruction**.
+`pytest` **511 passed** (17 new), 0 hard, all other layers 0/0.
+
+### Rule EG — the first check that reads the artifact against itself
+
+Every rule from V to EF compares the LLM's reading with `derive_unit`. That comparison is blind to
+a contradiction *inside* the reading: when a token is written into two roles of one predicate and
+**one** of those rows matches the derivation, the other row is constrained by nothing at all, and
+the position is silent.
+
+The evidence line is the sixth round's own output. At paradiso 1:81, *«… che pioggia o fiume / lago
+non fece alcun tanto disteso»*, the round added `81.3 fece: obj=(81,4)` beside the `subj=(81,4)`
+already there — `alcun` as both the subject and the object of `fece`, when Layer 4 reads it as the
+determiner of `lago` and the subject as `pioggia` (80.7). It was accepted because `_is_improvement`
+grades the **unit**, and the same call had cleared two `missing_arg`s on 79.1.
+
+Censused over all 100 cantos: **56** such positions. **Seven** are the shape rule AL exists to
+license — a fused clitic is two pronouns in one Layer-1 token and genuinely fills two slots (*«non
+**gliel** celai»* inferno 10:44, `gli` + `lo`; *«**sen** venne a riva»* purgatorio 2:40, `si` +
+`ne`) — and the gate that grants them is `_fused_clitic_dual_role` itself, applied to each pair of
+roles the token was given, so the new check and rule AL agree by construction rather than by a
+copied condition. **52 of the 56 sit on a line the checker reports nothing about**, which is why 21
+read batches walked past them: a read compares the two readings of a position `--check` has named.
+
+The 49 that are errors fall into three sub-shapes:
+
+- **A nominal as both `subj` and `obj` of one verb (27).** *«Le braccia aperse»* (inferno 24:22) —
+  `braccia` is the object and the subject is pro-drop; *«per li miei prieghi ti chiudon le mani»*
+  (paradiso 33:39) — `mani` is the subject; *«serpentelli e ceraste avien per crine»* (inferno 9:41).
+- **An oblique or predicative role against the subject (14)**: `subj` + `obl:di` (3, paradiso 1:79,
+  21:87), `obl:per` (2, inferno 9:119, on two predicates of one line), `obl:in` (2), `obl:a` (2),
+  bare `obl` (2), `attr` (2, inferno 31:31, purgatorio 9:74), `obl:da` (1).
+- **One relation written twice at two levels of specificity (4)**: `obl` beside `obl:a`
+  (inferno 25:138 `dietro`, paradiso 15:59 `te`), `obl` beside `obl:in` (purgatorio 33:77
+  `dentro`), `obl:da` beside `obl:di` (paradiso 14:74). One relation, two rows.
+- **Four further pairs of two incompatible non-subject roles**: `obj` + `obl:verso`
+  (paradiso 17:106), `obj` + `obl:presso` (purgatorio 17:67), `obj` + `attr` (paradiso 31:41),
+  `attr` + `obl:quale` (purgatorio 19:67).
+
+**One position is a fused clitic rule AL's gate does not license, and it is left flagged**:
+purgatorio 2:40's `sen` is written `obl:si` **and** `obl:ne`, and rule CM's licence reads the annex
+through `_case_supports_role`, which maps no slot to a role named after a clitic rather than a
+preposition. Widening rule AL to `obl:si` is a change to *that* rule's gate and needs its own
+census, which this session did not take. Flagged, and recorded here as the census item.
+
+**Kept soft, not hard**, for two reasons: the population predates the check, and `--fix`'s
+acceptance gate refuses any candidate with a hard violation — which would make the 49 unrepairable
+by the instrument that should repair them. What stops a *new* one from being written is the splice
+guard below.
+
+### The splice guard — the round wrote one, so the applier must refuse one
+
+`_apply_missing_arg` answers "which token fills this slot?" by **appending** a row, and never looked
+at the rows already there. So the class that is supposed to add a missing argument could write the
+contradiction rule EG now reports, and paradiso 1:81 is that happening. The guard refuses the splice
+when the predicate already holds that token in another role, licensing the same exception through
+rule AL's own gate. Mutation-checked: removing the guard fails
+`test_apply_missing_arg_refuses_to_put_one_token_in_two_roles`.
+
+### The `arg_slot` merge — one slot, one question
+
+Eight predicates in the standing 174 carry a `missing_arg` **and** an `extra_arg` on the *same*
+role — inferno 5:92, 24:10 (two predicates), 31:32, purgatorio 9:97, 10:30, 10:60, paradiso 1:81 —
+which is **one** disagreement (*which token fills this slot*) counted as two positions, 16 of the
+174. `_CLASS_ORDER` asked it as two questions in two separate calls, and neither call was told the
+other side existed: the `extra_arg` question offers `keep` and the `missing_arg` question invites the
+token the reading already wrote, so **neither single-class splice can improve the pair**, and the
+pair had survived three rounds untouched.
+
+`_split_slot_conflicts` now routes each such pair to one new class, `arg_slot`, keeping the
+`extra_arg` half because it carries the filler the reading itself supplied — the half a question is
+allowed to quote. The merged question names the predicate, the slot, and that filler, and offers
+`keep` / a token position / `0.0` / `none`. **The independence rule is unchanged**: the derivation's
+own filler is never named, and `test_arg_slot_question_names_the_reading_own_filler_and_not_the_
+derived_one` pins it.
+
+### `_CONV_DATIVE` — the clause told the model to write a role its class cannot set
+
+The round measured `_CONV_DATIVE` at −8.3% (`missing_arg obl:a` 12 → 11), under half the round
+average, and the wording is a sufficient explanation. It ended *"Cite it as `iobj` at its own token
+position"* — but the clause hangs on the generic `missing_arg` class alone, whose question asks
+*which token* fills a slot the question itself names, and whose applier splices the role from the
+violation rather than from the answer. The slot named at every one of these positions is `obl:a`,
+because that is what the derivation emits for a bare dative clitic (rule AB). So the instruction was
+unfollowable, and the name the checker uses for the slot went unmentioned. Rewritten to name the
+slot the way the question does (`iobj` or `obl:a`) and to say nothing about setting a role.
+
+This is a fourth form of the prompt lesson six rounds have now measured: the two clauses that ever
+moved a class (`_CONV_ADVERB_ARG`, `_CONV_ADJUNCT`) each **withdrew or narrowed a licence the prompt
+itself had granted**, while every clause that added prose about a shape the model reads wrong
+measured at the round average — and this one could not even be obeyed.
+
+### Tests
+
+17 new (`pytest` 494 → **511**): six on rule EG itself (the flag, one-role-per-token, the ∅
+sentinel, rule AL's licence, a single pronoun still flagged), two on the splice guard, five on the
+`arg_slot` merge and its question, four on the `dual_role` repair question and its applier. Each
+mutation-checked — including the merge's *call site* in `_fix_canto`, which a first pass left
+unpinned (`test_fix_canto_asks_a_same_slot_pair_as_one_question`, on inferno 5, whose only flagged
+unit is a same-slot pair). Two existing tests were updated rather than weakened: purgatorio 1 now
+carries three soft violations, not one, because rule EG flags 96.6 and 133.7.
+
+
 ## Rules EB-EF, from reading Paradiso 26-33 — 234 → 213, −21 (2026-08-17)
 
 Per-position read of all **32** soft violations in Paradiso 26-33 — the **last two batches of the

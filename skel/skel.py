@@ -372,6 +372,11 @@ _HINT_PHRASING = {
                            "phrase is not a separate predication",
     "role_mismatch": "the predicate '{word}' ({line}.{token})'s argument currently labeled "
                      "'{given_role}' may need a different role — recheck it",
+    # Rule EG. Internal to the reading, so the hint may state the contradiction outright: nothing
+    # about the derivation is disclosed by saying the same token was given two roles.
+    "dual_role": "one token has been given TWO roles ('{role}' and '{given_role}') for the "
+                 "predicate '{word}' ({line}.{token}) — one token fills one role, unless it is a "
+                 "fused clitic (gliel' = gli + lo, sen = si + ne)",
 }
 
 
@@ -480,6 +485,13 @@ class _UnitContext:
 
     def cite(self, pos: tuple[int, int]) -> str:
         return f"{pos[0]}.{pos[1]} '{self.word(pos)}'"
+
+    def morph_pos_by_position(self) -> dict[tuple[int, int], str]:
+        """The whole-unit POS map in the shape `dante_corpus.skel`'s rule gates take, so a splice
+        guard can consult one of those rules (rule AL, in `_apply_missing_arg`) instead of
+        re-implementing its condition."""
+        return {(no, i + 1): r.pos
+                for no, rows in self.morph_rows.items() for i, r in enumerate(rows)}
 
     def source_block(self) -> str:
         lines = "\n".join(f"{no} {t}" for no, t in zip(self.nos, self.texts))
@@ -646,11 +658,21 @@ not a reason to leave it out.\
 # 20:35 "l'occhio in testa **mi** scintilla") are a non-core dative clitic Layer 4 records and the
 # reading drops. It surfaces as `missing_arg obl:a`, so a round can score it apart from
 # `_CONV_ADJUNCT` above even though both hang on the generic `missing_arg` class.
+#
+# **The sixth round measured the first wording at -8.3%, and the wording was the reason** (2026-08-18).
+# It ended "Cite it as `iobj` at its own token position" — an instruction the class it hangs on
+# cannot carry out. The generic `missing_arg` question asks *which token* fills a named slot
+# (`_ask_missing_arg`) and `_apply_missing_arg` splices the role from the violation, not from the
+# answer; the slot named at these positions is `obl:a`, because that is what the derivation emits
+# for a bare dative clitic (rule AB). So the clause was telling the model to write a role the
+# question never asks for, while the checker's own name for that slot went unmentioned. Rewritten to
+# name the slot the way the question does and to say nothing about a role the answer cannot set.
 _CONV_DATIVE = """\
-An unstressed DATIVE clitic (mi, ti, ci, vi, gli, le, si, ne) is an argument row of its verb even \
-when it is the dative of the person concerned rather than a true recipient: "ch'io **le** porsi \
-ordita", "se loco **m'**è tolto", "l'occhio in testa **mi** scintilla". Cite it as `iobj` at its \
-own token position; never skip it as a mere particle.\
+An unstressed DATIVE clitic (mi, ti, ci, vi, gli, le, si, ne) is an argument of its verb even when \
+it is the dative of the person concerned rather than a true recipient: "ch'io **le** porsi ordita", \
+"se loco **m'**è tolto", "l'occhio in testa **mi** scintilla". When a question asks which token \
+fills a verb's dative slot — `iobj` or `obl:a` — that clitic, at its own token position, is the \
+answer; never skip it as a mere particle.\
 """
 
 _CONV_ADJECTIVE = """\
@@ -790,8 +812,127 @@ def _apply_missing_arg(ctx, vs, rows_by_line, text: str) -> bool:
         rows = rows_by_line.setdefault(line, [])
         if new in rows:
             continue
+        # **Rule EG's splice guard.** This class appends a row and never removes the one it may
+        # contradict, so answering "which token is its subj" with a token the predicate already
+        # holds in another role writes one token into two roles of one predicate — the artifact
+        # contradicting itself, which no divergence check can see. The sixth `--fix` round did
+        # exactly that at paradiso 1:81 (`alcun` as both `subj` and `obj` of `fece`) and the
+        # per-unit acceptance gate let it through because the unit netted an improvement. The
+        # licensed exception is rule AL's fused clitic, and it is licensed by that rule's own gate
+        # rather than by a condition copied here; anything else is refused at the splice.
+        if any((r.line, r.token) == (line, token) and (r.arg_line, r.arg_token) == arg
+               and r.role != v.role
+               and not skel._fused_clitic_dual_role(r.role, v.role, arg,
+                                                    ctx.morph_pos_by_position(), None)
+               for r in rows):
+            continue
         rows.append(new)
         changed = True
+    return changed
+
+
+# --- arg_slot: the two sides of one slot, asked once -----------------------------------------
+
+def _ask_arg_slot(ctx: _UnitContext, vs: list[morph.Violation]) -> str:
+    """A predicate carrying **both** a `missing_arg` and an `extra_arg` on the *same* role is one
+    disagreement — *which token fills this slot* — and `_CLASS_ORDER` used to ask it twice, in two
+    separate calls that could not see each other: the `extra_arg` question offers `keep` and the
+    `missing_arg` question invites the token the reading already wrote, so neither answer alone can
+    remove both rows and the pair sat frozen through three rounds (16 of the 174 positions the sixth
+    round left, on 8 predicates).
+
+    One question instead, and still inside the independence rule: it names the predicate, the slot,
+    and the filler **the reading itself supplied** — never the derivation's.
+    """
+    body = _numbered([
+        f"predicate {ctx.cite(v.predicate)} — its '{v.role}' is currently "
+        + (f"{ctx.cite(v.arg)}" if v.arg != (0, 0) else "unwritten (pro-drop)")
+        for v in vs
+    ])
+    return (
+        f"{ctx.source_block()}\n\n"
+        "Each question names a predicate, one role slot, and the token currently given in that "
+        "slot. Read the sentence and decide what really fills it. Answer one of:\n"
+        "  keep       — the token already given is right\n"
+        "  <line>.<token>  — a different token fills that slot (for example 3.4)\n"
+        "  0.0        — the slot is a subject that is not written out\n"
+        "  none       — the predicate has no argument in that slot at all\n"
+        f"\n{body}"
+    )
+
+
+def _apply_arg_slot(ctx, vs, rows_by_line, text: str) -> bool:
+    answers = _parse_answers(text)
+    changed = False
+    for i, v in enumerate(vs, start=1):
+        ans = (answers.get(i) or "").strip()
+        if not ans or ans.lower() == "keep":
+            continue
+        row = _find_arg_row(rows_by_line, v.predicate, v.role, v.arg)
+        if row is None:
+            continue
+        rows = rows_by_line[row.line]
+        if ans.lower() in ("none", "drop"):
+            rows.remove(row)
+            changed = True
+            continue
+        arg = _token_ref(ans)
+        if arg is None or arg == v.arg:
+            continue
+        if arg != (0, 0) and arg == v.predicate:
+            continue
+        if arg == (0, 0) and v.role != "subj":
+            continue
+        rows[rows.index(row)] = dataclasses.replace(row, arg_line=arg[0], arg_token=arg[1])
+        changed = True
+    return changed
+
+
+# --- dual_role: the artifact contradicting itself (rule EG) ----------------------------------
+
+def _ask_dual_role(ctx: _UnitContext, vs: list[morph.Violation]) -> str:
+    """Rule EG's repair question. The violation is internal to the reading — one token written into
+    two roles of one predicate — so the question can quote both rows verbatim without telling the
+    model anything about the derivation."""
+    body = _numbered([
+        f"predicate {ctx.cite(v.predicate)} — {ctx.cite(v.arg)} is listed as BOTH "
+        f"'{v.role}' and '{v.given_role}'"
+        for v in vs
+    ])
+    return (
+        f"{ctx.source_block()}\n\n"
+        "Each question names a predicate and one token that has been given two different roles for "
+        "it. One token normally fills one role, so one of the two is wrong. Answer with the single "
+        "role that is right, or `both` if the token really does fill both at once (only a fused "
+        "clitic does: gliel' = gli + lo, sen = si + ne).\n\n"
+        f"{body}"
+    )
+
+
+def _apply_dual_role(ctx, vs, rows_by_line, text: str) -> bool:
+    answers = _parse_answers(text)
+    changed = False
+    for i, v in enumerate(vs, start=1):
+        ans = (answers.get(i) or "").strip()
+        if not ans or ans.lower() == "both":
+            continue
+        if not skel._role_valid(ans):
+            continue
+        rows = rows_by_line.get(v.predicate[0]) or []
+        clash = [r for r in rows
+                 if (r.line, r.token) == v.predicate and (r.arg_line, r.arg_token) == v.arg]
+        if len(clash) < 2:
+            continue
+        keep = next((r for r in clash if r.role == ans), None)
+        for r in clash:
+            if keep is not None and r.role == keep.role:
+                continue
+            if keep is None:
+                keep = dataclasses.replace(r, role=ans)
+                rows[rows.index(r)] = keep
+            else:
+                rows.remove(r)
+            changed = True
     return changed
 
 
@@ -924,6 +1065,16 @@ _CLASS_PROMPTS: dict[str, _ClassPrompt] = {
     "extra_arg_subject": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_SUBJECT}\n\n{_CONV_PRODROP}\n\n{_CONV_ROLES}",
         ask=_ask_extra_arg, apply=_apply_extra_arg),
+    # One slot, one question. See `_ask_arg_slot`: the two sides of a filler dispute used to be two
+    # calls that could not see each other, and neither answer alone could clear the pair.
+    "arg_slot": _ClassPrompt(
+        system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_SUBJECT}\n\n{_CONV_PRODROP}\n\n"
+               f"{_CONV_RELPRON}",
+        ask=_ask_arg_slot, apply=_apply_arg_slot),
+    # Rule EG's class: the artifact contradicting itself, so the question may quote both rows.
+    "dual_role": _ClassPrompt(
+        system=f"{_ASK_HEADER}\n{_CONV_ROLES}\n\n{_CONV_RELPRON}\n\n{_CONV_SUBJECT}",
+        ask=_ask_dual_role, apply=_apply_dual_role),
     "extra_tuple": _ClassPrompt(
         system=f"{_ASK_HEADER}\n{_CONV_ROLES}",
         ask=_ask_extra_tuple, apply=_apply_extra_tuple),
@@ -1220,6 +1371,11 @@ def _violation_class(v: morph.Violation) -> str:
     prefix = v.detail.split(":", 1)[0]
     if prefix in _DIVERGENCE_KINDS:
         return prefix
+    # Rule EG's artifact-internal check (`skel._dual_role_violations`). Not a divergence — the two
+    # rows contradict each other, with no reference to `derive_unit` — so it is named separately
+    # and keyed by the same string in `_CLASS_PROMPTS`/`_CLASS_ORDER`.
+    if prefix == "dual_role":
+        return "dual_role"
     if "heads no NP" in v.detail:
         return "membership"
     if "not in frozen vocabulary" in v.detail:
@@ -1439,9 +1595,46 @@ def _is_improvement(
 _CLASS_ORDER = (
     "missing_tuple", "missing_tuple_nominal",
     "extra_tuple_adverb", "extra_tuple_adjective", "extra_tuple",
+    # `dual_role` and `arg_slot` run before the per-side argument classes on purpose: both are one
+    # question standing in for two rows, and asking either side alone is what froze their positions.
+    "dual_role", "arg_slot",
     "role_mismatch", "extra_arg_subject", "extra_arg_adjective", "extra_arg",
     "missing_arg_subject", "missing_arg_adverb", "missing_arg",
 )
+
+_EXTRA_ARG_CLASSES = ("extra_arg", "extra_arg_subject", "extra_arg_adjective")
+_MISSING_ARG_CLASSES = ("missing_arg", "missing_arg_subject", "missing_arg_adverb")
+
+
+def _split_slot_conflicts(
+    by_class: dict[str, list[morph.Violation]],
+) -> dict[str, list[morph.Violation]]:
+    """Move each *same-slot* pair into the `arg_slot` class, and drop its `missing_arg` half.
+
+    A predicate with a `missing_arg` and an `extra_arg` on the **same** role is one disagreement
+    about which token fills that slot, and the sixth round measured what asking it as two questions
+    costs: 8 such predicates (16 of the 174 remaining positions) had survived three rounds
+    untouched. The `extra_arg` half is the one kept, because it carries the filler the reading
+    itself wrote — which is what `_ask_arg_slot` is allowed to quote. The `missing_arg` half names
+    only the slot, which the merged question already names, so re-asking it is the duplicate.
+    """
+    extra_keys = {
+        (v.predicate, v.role): (cls, v)
+        for cls in _EXTRA_ARG_CLASSES for v in by_class.get(cls, [])
+        if v.predicate is not None and v.role
+    }
+    out = {cls: list(vs) for cls, vs in by_class.items()}
+    for cls in _MISSING_ARG_CLASSES:
+        for v in list(out.get(cls, [])):
+            hit = extra_keys.get((v.predicate, v.role))
+            if hit is None:
+                continue
+            extra_cls, extra_v = hit
+            out[cls].remove(v)
+            if extra_v in out.get(extra_cls, []):
+                out[extra_cls].remove(extra_v)
+                out.setdefault("arg_slot", []).append(extra_v)
+    return {cls: vs for cls, vs in out.items() if vs}
 
 
 def _fix_canto(
@@ -1527,6 +1720,7 @@ def _fix_canto(
             by_class: dict[str, list[morph.Violation]] = {}
             for v in soft:
                 by_class.setdefault(_violation_subclass(v, ctx), []).append(v)
+            by_class = _split_slot_conflicts(by_class)
             moved = False
             for cls in _CLASS_ORDER:
                 vs = by_class.get(cls)

@@ -220,6 +220,131 @@ def test_apply_missing_arg_does_not_duplicate_an_existing_row():
     assert len(given[1]) == 2
 
 
+def test_apply_missing_arg_refuses_to_put_one_token_in_two_roles():
+    """Rule EG's splice guard. `vede` already holds 1.2 as its `subj`; answering the `obj` question
+    with the same token would write one token into two roles of one predicate — the artifact
+    contradicting itself, which the sixth `--fix` round did at paradiso 1:81 and no divergence check
+    can see. The splice must refuse it rather than let the per-unit gate absorb it."""
+    given, vs = _missing_arg_fixture()
+    assert not drv._apply_missing_arg(_ctx(), vs, given, "Q1: 1.2")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "subj", 1, 2)]
+
+
+def test_apply_missing_arg_allows_a_fused_clitic_to_fill_two_slots():
+    """The exception is rule AL's, and it is the rule's own gate that grants it: Layer 2 tags
+    "gliel" as two fused pronouns, so the dative and the accusative of one verb are one token."""
+    morph_rows = {
+        1: [morph.MorphRow(word="non", pos="adverb"),
+            morph.MorphRow(word="gliel", lemma="gliel", pos="pronoun+pronoun"),
+            morph.MorphRow(word="celai", lemma="celare", pos="verb", person="1", number="sg.")],
+    }
+    ctx = drv._UnitContext([1], ["non gliel celai"], morph_rows, {})
+    given = _rows(skel.SkelRow(1, 3, "celai", "obj", 1, 2))
+    # Built directly: the pair (obj, obl:a) on one fused clitic is what rule AL licenses, so
+    # `_classify_divergence` reports nothing for it at all — there is no violation to derive here.
+    vs = [morph.Violation(1, "tag", "missing_arg: 1.3 obl:a (1, 2)",
+                          role="obl:a", arg=(1, 2), predicate=(1, 3))]
+    assert drv._apply_missing_arg(ctx, vs, given, "Q1: 1.2")
+    assert skel.SkelRow(1, 3, "celai", "obl:a", 1, 2) in given[1]
+
+
+# --- arg_slot: the two sides of one slot, merged into one question -------------------------------
+
+
+def _slot_conflict_violations():
+    """One disagreement about `vede`'s object: the derivation says 2.2, the reading says 1.2. The
+    checker reports it as a `missing_arg` and an `extra_arg` on the same role."""
+    derived = {1: [skel.SkelRow(1, 3, "vede", "obj", 2, 2)]}
+    given = _rows(skel.SkelRow(1, 3, "vede", "obj", 1, 2))
+    return given, skel._classify_divergence(given, derived)
+
+
+def test_split_slot_conflicts_merges_the_pair_into_one_question():
+    given, violations = _slot_conflict_violations()
+    ctx = _ctx()
+    by_class: dict[str, list] = {}
+    for v in violations:
+        by_class.setdefault(drv._violation_subclass(v, ctx), []).append(v)
+    assert set(by_class) == {"missing_arg", "extra_arg"}, "fixture must open both sides"
+    merged = drv._split_slot_conflicts(by_class)
+    assert set(merged) == {"arg_slot"}
+    # The half kept is the one carrying the reading's own filler, which is what may be quoted.
+    assert merged["arg_slot"][0].arg == (1, 2)
+
+
+def test_split_slot_conflicts_leaves_unrelated_violations_alone():
+    """Two different slots of one predicate are two questions, not one — the merge is keyed on the
+    role, not on the predicate."""
+    derived = {1: [skel.SkelRow(1, 3, "vede", "subj", 2, 2)]}
+    given = _rows(skel.SkelRow(1, 3, "vede", "obj", 1, 2))
+    by_class: dict[str, list] = {}
+    for v in skel._classify_divergence(given, derived):
+        by_class.setdefault(drv._violation_subclass(v, _ctx()), []).append(v)
+    assert drv._split_slot_conflicts(by_class) == by_class
+
+
+def test_arg_slot_question_names_the_reading_own_filler_and_not_the_derived_one():
+    given, violations = _slot_conflict_violations()
+    vs = [v for v in violations if v.detail.startswith("extra_arg")]
+    asked = drv._ask_arg_slot(_ctx(), vs).split("Q1:", 1)[1]
+    assert "1.2" in asked          # the filler the reading itself wrote
+    assert "'obj'" in asked        # the slot in dispute
+    assert "2.2" not in asked      # never the derivation's answer
+
+
+def test_apply_arg_slot_moves_the_slot_to_the_answered_token():
+    given, violations = _slot_conflict_violations()
+    vs = [v for v in violations if v.detail.startswith("extra_arg")]
+    assert drv._apply_arg_slot(_ctx(), vs, given, "Q1: 2.2")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "obj", 2, 2)]
+
+
+def test_apply_arg_slot_keep_and_none():
+    given, violations = _slot_conflict_violations()
+    vs = [v for v in violations if v.detail.startswith("extra_arg")]
+    assert not drv._apply_arg_slot(_ctx(), vs, given, "Q1: keep")
+    assert len(given[1]) == 1
+    assert drv._apply_arg_slot(_ctx(), vs, given, "Q1: none")
+    assert given[1] == []
+
+
+# --- dual_role (rule EG) ------------------------------------------------------------------------
+
+
+def _dual_role_fixture():
+    given = _rows(skel.SkelRow(1, 3, "vede", "subj", 1, 2),
+                  skel.SkelRow(1, 3, "vede", "obj", 1, 2))
+    vs = skel._dual_role_violations([r for rows in given.values() for r in rows], _MORPH, None)
+    return given, vs
+
+
+def test_dual_role_question_quotes_both_roles():
+    given, vs = _dual_role_fixture()
+    assert len(vs) == 1
+    assert drv._violation_class(vs[0]) == "dual_role"
+    asked = drv._ask_dual_role(_ctx(), vs).split("Q1:", 1)[1]
+    # Internal to the reading, so both of its own rows may be named; nothing derived is disclosed.
+    assert "'subj'" in asked and "'obj'" in asked and "1.2" in asked
+
+
+def test_apply_dual_role_keeps_the_answered_role_and_drops_the_other():
+    given, vs = _dual_role_fixture()
+    assert drv._apply_dual_role(_ctx(), vs, given, "Q1: obj")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "obj", 1, 2)]
+
+
+def test_apply_dual_role_both_changes_nothing():
+    given, vs = _dual_role_fixture()
+    assert not drv._apply_dual_role(_ctx(), vs, given, "Q1: both")
+    assert len(given[1]) == 2
+
+
+def test_apply_dual_role_can_replace_both_rows_with_a_third_role():
+    given, vs = _dual_role_fixture()
+    assert drv._apply_dual_role(_ctx(), vs, given, "Q1: iobj")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "iobj", 1, 2)]
+
+
 # --- extra_tuple ------------------------------------------------------------------------------------
 
 
@@ -380,18 +505,35 @@ def _stub_model(monkeypatch, reply):
     return written
 
 
-# Purgatorio 1 carries exactly one soft violation — a `missing_arg` at 102.1 — which makes it the
-# smallest real case for driving the whole stage-2 loop. Its argument is `intorno` (100.3), an
-# adverb, so it routes to the `missing_arg_adverb` subclass: the position is itself one of the 82
-# locative-adverb omissions that class was written for.
+# Purgatorio 1's `missing_arg` at 102.1 is the smallest real case for driving the whole stage-2
+# loop: one violation in its own parse unit, whose argument is `intorno` (100.3), an adverb, so it
+# routes to the `missing_arg_adverb` subclass — the position is itself one of the 82 locative-adverb
+# omissions that class was written for. The canto's other two soft violations are rule EG's
+# `dual_role` at 96.6 and 133.7, in two other units, and each gets its own class question.
 def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monkeypatch):
     written = _stub_model(monkeypatch, "Q1: none")
     stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
-    assert stats["units:flagged"] == 1
-    assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 1
-    assert stats["calls:missing_arg_adverb"] == 1  # and no question about any other class
+    assert stats["units:flagged"] == 3
+    # One question per flagged unit, each keyed to that unit's own class and nothing else.
+    assert stats["calls:missing_arg_adverb"] == 1
+    assert stats["calls:dual_role"] == 2
+    assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 3
     assert sum(n for k, n in stats.items() if k.startswith("removed:")) == 0
     assert written == []                          # "none" changes nothing, so nothing is written
+
+
+# Inferno 5's only flagged unit is a same-slot pair: `missing_arg subj (90,1)` and
+# `extra_arg subj (92,1)` on the predicate at 92.2 — one disagreement about which token is the
+# subject, which the driver must put to the model **once**.
+def test_fix_canto_asks_a_same_slot_pair_as_one_question(monkeypatch):
+    _stub_model(monkeypatch, "Q1: keep")
+    stats = drv._fix_canto("inferno", 5, 34, "fake", _FakeUI(), None, whole=False)
+    assert stats["units:flagged"] == 1
+    assert stats["calls:arg_slot"] == 1
+    assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 1
+    system, question = _FakeClient.seen[0]
+    assert system == drv._CLASS_PROMPTS["arg_slot"].system
+    assert "90.1" not in question.split("Q1:", 1)[1]   # the derivation's filler stays hidden
 
 
 def test_fix_canto_accepts_a_class_answer_and_commits_it(monkeypatch):
@@ -405,8 +547,10 @@ def test_fix_canto_accepts_a_class_answer_and_commits_it(monkeypatch):
 def test_fix_canto_sends_the_class_specific_system_prompt(monkeypatch):
     _stub_model(monkeypatch, "Q1: none")
     drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
-    system, question = _FakeClient.seen[0]
-    assert system == drv._CLASS_PROMPTS["missing_arg_adverb"].system
+    system, question = next(
+        (s, q) for s, q in _FakeClient.seen
+        if s == drv._CLASS_PROMPTS["missing_arg_adverb"].system
+    )
     # The narrow prompt is a fraction of the monolithic build prompt it replaces — which is the
     # point of splitting it: the conventions that do not bear on this class are not competing
     # for the model's attention.

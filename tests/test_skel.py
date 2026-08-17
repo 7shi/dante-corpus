@@ -5159,3 +5159,57 @@ def test_classify_divergence_rule_ea_keeps_the_parataxis_gate():
     # 720 tuples corpus-wide are that shape, and rule CS measured opening them at +180.
     violations = _speech_act_nominal_fixture(deprel="conj")
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+# --- rule EG: one token in two roles of one predicate -------------------------------------------
+
+
+def _dual_role_fixture(pos="noun", roles=("subj", "obj"), case=None):
+    """Rule EG. "Le braccia aperse" (inferno 24:22): the reading writes `braccia` as both the
+    subject and the object of `aperse`, and the subject is pro-drop. Nothing in the artifact/
+    derivation comparison can see this — one of the two rows matches the derivation, and the other
+    is constrained by nothing — so it is checked against the artifact itself."""
+    rows = [skel.SkelRow(1, 3, "aperse", roles[0], 1, 2),
+            skel.SkelRow(1, 3, "aperse", roles[1], 1, 2)]
+    morph_rows = {1: [morph.MorphRow(word="Le", pos="article"),
+                      morph.MorphRow(word="braccia", lemma="braccio", pos=pos),
+                      morph.MorphRow(word="aperse", lemma="aprire", pos="verb")]}
+    case_rows = {1: [skel.CaseRow(line=1, token=2, word="braccia", case=case)]} if case else None
+    return skel._dual_role_violations(rows, morph_rows, case_rows)
+
+
+def test_dual_role_flags_one_token_in_two_roles():
+    violations = _dual_role_fixture()
+    assert len(violations) == 1
+    v = violations[0]
+    assert v.kind == "tag" and v.detail.startswith("dual_role")
+    assert v.predicate == (1, 3) and v.arg == (1, 2)
+
+
+def test_dual_role_accepts_one_role_per_token():
+    rows = [skel.SkelRow(1, 3, "aperse", "subj", 1, 2),
+            skel.SkelRow(1, 3, "aperse", "obj", 2, 2)]
+    morph_rows = {1: [morph.MorphRow(word="Le", pos="article"),
+                      morph.MorphRow(word="braccia", lemma="braccio", pos="noun"),
+                      morph.MorphRow(word="aperse", lemma="aprire", pos="verb")]}
+    assert skel._dual_role_violations(rows, morph_rows, None) == []
+
+
+def test_dual_role_ignores_the_pro_drop_sentinel():
+    # Two predicates may both take a ∅ subject, and one predicate's ∅ subject beside a written
+    # argument is not one token in two roles: (0, 0) is not a token.
+    rows = [skel.SkelRow(1, 3, "aperse", "subj", 0, 0),
+            skel.SkelRow(1, 3, "aperse", "obj", 0, 0)]
+    morph_rows = {1: [morph.MorphRow(word="aperse", lemma="aprire", pos="verb")]}
+    assert skel._dual_role_violations(rows, morph_rows, None) == []
+
+
+def test_dual_role_licenses_rule_als_fused_clitic():
+    # "non **gliel** celai" (inferno 10:44) is `gli` + `lo` in one Layer-1 token: the dative and
+    # the accusative of one verb, and rule AL's own gate is what says so.
+    assert _dual_role_fixture(pos="pronoun+pronoun", roles=("obj", "obl:a")) == []
+
+
+def test_dual_role_keeps_a_single_pronoun_flagged():
+    # The licence is the *fused* clitic, not any pronoun: one pronoun fills one slot.
+    assert len(_dual_role_fixture(pos="pronoun", roles=("obj", "obl:a"))) == 1

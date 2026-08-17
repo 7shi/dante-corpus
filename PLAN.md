@@ -26,11 +26,23 @@
 > because every rule from V to EF compares the artifact with `derive_unit` and this is a
 > contradiction *inside the artifact*.
 >
-> **The next session's task is checker-side and the assistant's**: land the dual-role check (it
-> *raises* the count by ~49, the honest trade rule AM records) and the same-slot question merge,
-> then a round may be run again. See [`skel/PLAN.md`](skel/PLAN.md)'s *After the Sixth Round* for
-> all three routes in order, *Sixth User-Run `--fix` Round* (§27) for the measurement and *How to
-> Measure a `--fix` Round* for the procedure.
+> **Both of those were landed the same day (2026-08-18, `skel/PLAN.md` §28), and the base is now
+> 0 hard / 224 soft.** **Rule EG** reports the dual-role contradiction — **174 → 224, +50 by
+> design**, the honest trade rule AM records — with a **splice guard** in `_apply_missing_arg` so no
+> round writes another one, both licensing rule AL's fused clitic through that rule's own gate. With
+> it: the **`arg_slot` merge**, which asks a same-slot `missing_arg`/`extra_arg` pair as one question
+> instead of two that could not see each other (8 predicates, 16 positions, frozen through three
+> rounds because **no** single-class answer could have cleared them), and **`_CONV_DATIVE`
+> rewritten** — its "cite it as `iobj`" was an instruction the class it hangs on cannot carry out.
+> `pytest` **511** (17 new, each mutation-checked), all other layers 0/0.
+>
+> **The next session's task is the seventh `--fix` round, and it is the user's to run**
+> (`make -C skel fix`, 3-way parallel, then measure per *How to Measure a `--fix` Round*). Base 224.
+> On its scale: the brand-new `dual_role` class with its own question and **50** positions that have
+> never been asked, the `arg_slot` merge (16), and the rewritten `_CONV_DATIVE` (11) — all three
+> separable in the subclass table. One caveat for reading the result: the splice guard may lower
+> `missing_arg`'s accepted-splice rate slightly, and that is the guard working. See
+> [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round*.
 >
 > **What the Paradiso 26–33 batch found**, still worth carrying into any future rule work.
 >
@@ -61,7 +73,7 @@
 > deliberately raised the count by +2**, exposing LLM readings a wrong tree had absorbed — the
 > trade rule AM recorded, for the fifth batch running.
 
-**Layer 5 is operating under Phase 6 with 0 hard / 174 soft violations.**
+**Layer 5 is operating under Phase 6 with 0 hard / 224 soft violations** (174 divergence positions after the sixth `--fix` round, plus the 50 rule EG newly *reports*).
 Checks: `dep --check` **0 hard / 0 soft** (the subject-agreement rule's 18-position residue closed
 2026-08-14; its *coordinated subject* exclusion refined to a per-conjunct person test 2026-08-16;
 its 1/2-plural exclusion narrowed to the number test 2026-08-16 by rule CR and the
@@ -71,8 +83,8 @@ number-only exclusions stopped from preempting the person test the same day by r
 read, 6 more the same day by the Paradiso 1–5 read, 10 more by the Paradiso 6–10 read, 9 more by the Paradiso 11–20 read, 10 more by the Paradiso 21–25 read, 16 more by the Paradiso 26–33 read),
 `case --check` 0 hard (1 stale row dropped, 1 row re-read, 1 more dropped and 2 re-read
 2026-08-16, 1 re-read and 1 added 2026-08-17 by the Paradiso 1–5 read, 1 dropped and 1 added the same day
-by the Paradiso 6–10 read), `skel --check` 0 hard/**174** soft (inferno 49, purgatorio 67,
-paradiso 58, after the sixth `--fix` round),
+by the Paradiso 6–10 read), `skel --check` 0 hard/**224** soft (174 after the sixth `--fix` round —
+inferno 49, purgatorio 67, paradiso 58 — plus rule EG's 50),
 `np --check` 0/0 (1 span split, 1 widened, 1 added, 1 moved 2026-08-16, 1 clitic span added,
 1 span dropped, 3 more dropped and 2 rewritten 2026-08-17), `morph --check` 0/0
 (3 + 5 + 1 + 2 + 8 + 2 + 1 + 1 + 1 + 2 + 1 + 1 + 6 rows corrected), `pytest` **494 passed** (the Purgatorio
@@ -100,7 +112,7 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Current State & Architecture Summary
 
-- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (twelve class-specific micro-prompts, keyed by POS, by role, or by class alone), and Stage 3 (fallback whole-unit regeneration). Six user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)** and **213 → 174 (−39)**.
+- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (fourteen class-specific micro-prompts, keyed by POS, by role, by class alone, or — for `arg_slot` and `dual_role` — on a *pair* of rows), and Stage 3 (fallback whole-unit regeneration). Six user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)** and **213 → 174 (−39)**.
   - **Detailed Phase 6 Plan**: For Phase 6 operating principles, architectural details, active routes, and measurement procedures, see [`skel/PLAN.md`](skel/PLAN.md).
 - **Latest Improvements**:
   - **Sixth `--fix` round (2026-08-18)**: **213 → 174 (−39, −18.3%)**; 168 → 141 flagged parse
@@ -425,12 +437,15 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 - **Measure a checker rule by violation diff, never by the total** (2026-08-15): keep the sorted `--check` output before and after and diff it, so what a rule *newly flags* is visible next to what it removes. Two rules this session looked neutral or positive on the total and were only decidable from the diff — rule AM (−15/+22, kept: the derivation is now right) and its subject leg (dropped). A rule may be kept when it raises the count, if it makes the parse provably more correct; record that trade explicitly.
 - **Census a shape before writing a rule for it** (2026-08-15): count the structural pattern over all 100 cantos first. One evidence line is not a population, and several candidate rules have been dropped at census — with a population of 0, and once (gapped-clause remnants, Inferno 16–20 batch) with a population of 12 that the census itself showed was reading error rather than checker silence.
 - **When you write a checker rule, check its mirror leg** (2026-08-15): a labeling convention has two directions, and a rule that accepts "the LLM names X where the derivation names Y" leaves the reverse reported. Three of the Inferno 16–20 batch's five rules were mirror legs of rules already in the checker (AV, AW, AY), worth 18 positions between them.
-- **Mutation-check a new rule's test**: break the rule in the source and confirm the test fails. A test that still passes with the rule removed pins nothing.
+- **Ask what the artifact asserts that no comparison tests** (2026-08-18, rule EG): every soft check from rule V to EF compared the LLM's reading with `derive_unit`, so a contradiction *inside* the reading was invisible whenever one of its two rows happened to match the derivation — one token in two roles of one predicate, 56 positions, 52 of them on lines `--check` said nothing about. A read can only ever examine a position the checker has named, which is why 21 read batches walked past this one. **A checker built entirely out of comparisons has a blind spot the shape of its own inputs.**
+- **A check that only reports lets the next round write more** (2026-08-18): rule EG's evidence line was written *by* the fifth-to-sixth round series, because `_apply_missing_arg` appends a row without looking at the rows already there and the per-unit acceptance gate absorbed the contradiction. A new soft class over LLM-authored artifacts is owed a matching **splice guard** in the applier that can create it.
+- **Before blaming a frozen class on the model, ask whether any answer to the question asked could have moved it** (2026-08-18, the `arg_slot` merge): 8 predicates carrying a `missing_arg` and an `extra_arg` on the same role survived three `--fix` rounds because the two halves were asked as two independent questions, and neither answer alone could clear the pair.
+- **Mutation-check a new rule's test**: break the rule in the source and confirm the test fails. A test that still passes with the rule removed pins nothing. **Include the call site**: the `arg_slot` merge's own function was pinned while the line calling it from `_fix_canto` was not, and only the mutation run showed it.
 - **Editing frozen TSVs**: never by hand. Use a gated script that asserts the expected word at each `(line, token)` before rewriting the row, then re-run every layer's `--check` and `pytest`.
 
 ### Next Steps & Open Routes
 
-- **The plan for the rest of the work (2026-08-18, both halves now done)**: the read series is **complete** (Paradiso 26–33 / rules EB–EF finished it) and the **sixth `--fix` round has run** (213 → 174). What remains is checker-side and the assistant's, in this order: **(1) the dual-role check** the round's own finding opened — one token in two roles of one predicate, censused at 56 with 7 licensed by rule AL, 49 unlicensed and **52 of 56 invisible to the current checker**, landing it *raises* the count by ~49; **(2) the same-slot question merge** — 8 predicates carry `missing_arg` and `extra_arg` on the same role (16 positions) and `_CLASS_ORDER` asks that one disagreement as two independent questions, so neither splice can be an improvement alone; **(3) the subject slot**, now 62 of 174 (36%). See [`skel/PLAN.md`](skel/PLAN.md)'s *After the Sixth Round*.
+- **The plan for the rest of the work (2026-08-18)**: the read series is **complete** (Paradiso 26–33 / rules EB–EF finished it), the **sixth `--fix` round has run** (213 → 174), and the two checker-side routes it opened are **landed** the same day (`skel/PLAN.md` §28): **rule EG**, the dual-role check — one token in two roles of one predicate, censused at 56 with 7 licensed by rule AL and **52 of 56 previously invisible** — which raises the base to **224** by design, together with the `_apply_missing_arg` splice guard; and the **`arg_slot` merge** plus **`_CONV_DATIVE`'s** rewrite. **What remains is the seventh round, the user's to run** (see [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round*), and after it the standing assistant-side route: **the subject slot**, 62 of the 174 (36%).
 - **The read series is CLOSED (2026-08-17)**: all 100 cantos have been read position by position, in 21 batches. Nothing is re-read — the standing residue is reading error, and it is the most direct sample there is of what a `--fix` round leaves behind. The eight-step per-batch procedure stays written down in [`skel/PLAN.md`](skel/PLAN.md)'s *How to Read a Batch* for any future audit; step 3 now carries the Paradiso 26–33 batch's caution about prompt verdicts. Tool: `skel/read.py`.
 - **The prompt queue is empty again (2026-08-18)**: the sixth round decided `_CONV_ADJUNCT` **positive** (−52.6% on the prepositional obliques its prose names, −24.0% on the aggregate bucket) and `_CONV_DATIVE` **negative** (`obl:a` 12 → 11). Six rounds in, the pattern across all six prompt verdicts is that **only a change withdrawing or narrowing a licence the prompt itself granted has ever moved a class**; every added convention paragraph about a shape the model reads wrong has measured at the round average.
 - **Inferno's 49, Purgatorio's 67 and Paradiso's 58 standing positions** are the whole corpus's read residue with three `--fix` rounds over it, and **173 of the 174 predate round 5** — the residue is a hard core two rounds have failed on the same positions, which is why the next step is a new check rather than another round.
@@ -453,7 +468,7 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through EF, and Phase 6's restructuring plus six `--fix` rounds, bringing its soft residue to **174**
+checker was refined through Phases 0-5r, rules V through EG, and Phase 6's restructuring plus six `--fix` rounds, bringing its divergence residue to **174** and its total soft count to **224** (rule EG reports 50 artifact-internal contradictions no divergence check could see)
 (down from 17438 at the first full-corpus measurement). See [`skel/PHASE5.md`](skel/PHASE5.md) for the full Phase 5
 history, [`skel/PLAN.md`](skel/PLAN.md) for the closing positions, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
@@ -465,7 +480,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**Both halves of the plan are done and the open route is checker-side again**: the read series is complete — all 100 cantos read position by position — and the sixth `--fix` round has run (213 → 174, both prompt candidates decided). What follows is the assistant's: the dual-role check the round exposed, the same-slot question merge, then the subject slot (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)'s *After the Sixth Round*). All five layers plus the case extension are implemented, built for all 100
+**The open route is the seventh `--fix` round, and it is the user's**: the read series is complete — all 100 cantos read position by position — the sixth round has run (213 → 174, both prompt candidates decided), and the checker work it exposed is landed (rule EG's dual-role check, the splice guard, the `arg_slot` merge, `_CONV_DATIVE` rewritten; base now 224). The round has three separable candidates on its scale (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round*); the standing assistant-side route after it is the subject slot, 62 of the 174. All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
@@ -498,7 +513,7 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes), `skel/read.py` (the audit
   series' read tool: all five layers plus both Layer-5 readings for one parse unit). `--check` across all
-  three canticles reports **0 hard, 174 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 224 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PHASE5.md`](skel/PHASE5.md)) is
@@ -723,7 +738,7 @@ discipline already used for normalization and quotes.
    X, the Y-AF series, AG, the AH-AL series, the AM-AT series, the AU-AY series, the AZ-BI
    series, the BJ-BN series, the BO-BV series, the BW-BZ series, the CA-CJ series, the CK-CO series, the
    CP-CT series, the CU-CY series, the CZ-DD series, the DE-DF series, the DG-DJ series, the DK-DR series, the DS-DW series, the DX-EA series and the EB-EF series, with
-   `--fix` restructured in Phase 6 and six rounds run (`--check`: 0 hard / 174 soft). Phase 5 closed with every route measured; see
+   `--fix` restructured in Phase 6 and six rounds run, plus rule EG (`--check`: 0 hard / 224 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

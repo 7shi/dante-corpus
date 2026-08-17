@@ -4064,6 +4064,75 @@ def _find_repairs(
     return repairs
 
 
+def _dual_role_violations(
+    all_rows: list[SkelRow],
+    morph_rows: dict[int, list[MorphRow]],
+    case_rows: dict[int, list[CaseRow]] | None,
+) -> list[Violation]:
+    """**Rule EG**: one token filling two roles of one predicate — the first check in this layer
+    that reads the artifact *against itself*.
+
+    Every rule from V to EF compares the artifact with `derive_unit`, so a contradiction inside the
+    artifact is invisible whenever one of the two rows happens to match the derivation: the other
+    row is then constrained by nothing. The sixth `--fix` round wrote one (paradiso 1:81, *«lago non
+    fece alcun tanto disteso»* — `alcun` as both the `subj` and the `obj` of `fece`) and it took
+    reading that single position to notice the class. Censused over all 100 cantos at **56**
+    positions, of which **52 sit on a line the checker says nothing about**.
+
+    The licensed exception is the one rule AL already names: a **fused clitic** is two pronouns in
+    one Layer-1 token and genuinely fills two slots ("non *gliel* celai" = `gli` + `lo`, inferno
+    10:44; "*sen* venne" = `si` + `ne`, purgatorio 2:40). That gate is `_fused_clitic_dual_role`
+    itself, applied here to each pair of roles the token was given, so this check and rule AL agree
+    by construction rather than by a copied condition. Seven of the 56 are licensed that way.
+
+    The 49 that remain are all errors: a nominal written as both `subj` and `obj` of one verb (27,
+    e.g. "Le braccia aperse" inferno 24:22, where the subject is pro-drop); an oblique or a
+    predicative `attr` against the subject (14); one relation written twice at two levels of
+    specificity (4, `obl` beside `obl:a` on one token); and four further pairs of incompatible
+    non-subject roles. Plus one the gate above does not license and this rule deliberately reports:
+    purgatorio 2:40's `sen` as `obl:si` + `obl:ne`, where rule CM's annex test maps no slot to a role
+    named after a clitic (widening rule AL there needs its own census). Reporting these **raises**
+    the soft count, which is the trade rule AM records: the parse is provably more correct with the
+    contradiction named.
+
+    Kept a *soft* check, not hard, for two reasons: the population predates the check, and the
+    `--fix` gate (`_is_improvement` plus zero hard violations) must be able to hand these to a
+    round rather than refuse the artifact outright. What stops a round from writing new ones is the
+    splice guard in `skel/skel.py`'s `_apply_missing_arg`.
+    """
+    morph_pos_by_position = {
+        (no, i + 1): row.pos for no, rows in morph_rows.items() for i, row in enumerate(rows)
+    }
+    case_by_position = (
+        {(row.line, row.token): row.case for rows in case_rows.values() for row in rows}
+        if case_rows is not None else None
+    )
+    roles_by_pair: dict[tuple[tuple[int, int], tuple[int, int]], list[str]] = {}
+    for row in all_rows:
+        if row.token == 0 or not row.role:
+            continue
+        pos, arg = (row.line, row.token), (row.arg_line, row.arg_token)
+        if arg == (0, 0) or arg == pos:
+            continue
+        roles = roles_by_pair.setdefault((pos, arg), [])
+        if row.role not in roles:
+            roles.append(row.role)
+
+    violations: list[Violation] = []
+    for (pos, arg), roles in sorted(roles_by_pair.items()):
+        if len(roles) < 2:
+            continue
+        if any(_fused_clitic_dual_role(a, b, arg, morph_pos_by_position, case_by_position)
+               for i, a in enumerate(roles) for b in roles[i + 1:]):
+            continue
+        listed = " and ".join(repr(r) for r in roles)
+        violations.append(Violation(
+            pos[0], "tag", f"dual_role: {pos[0]}.{pos[1]} arg {arg} listed as {listed}",
+            role=roles[0], given_role=roles[1], arg=arg, predicate=pos,
+        ))
+    return violations
+
+
 def validate_unit(
     nos: list[int],
     texts: list[str],
@@ -4083,6 +4152,9 @@ def validate_unit(
     `token == 0` sentinel row may not coexist with real predicate rows on the same line.
 
     Soft checks (kind `tag`; measure-then-freeze): a role outside the frozen vocabulary;
+    one token filling two roles of one predicate, other than rule AL's fused clitic (rule EG,
+    `_dual_role_violations` — the one check that reads the artifact against itself rather than
+    against `derive_unit`, and the only one that needs `morph_rows` alone);
     a nominal-role (`subj`/`obj`/`iobj`/`obl*`) argument that heads no Layer-3 NP, is not a
     Layer-2 pronoun or relative-pronoun word form (`che`/`ch'`/`cui`/`qual`/`quale`/`chi`,
     regardless of the frozen Layer-2 POS tag — `morph/CORRECTIONS.md` documents that "che" is
@@ -4237,6 +4309,9 @@ def validate_unit(
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")
             )
+
+    if morph_rows is not None:
+        violations.extend(_dual_role_violations(all_rows, morph_rows, case_rows))
 
     if dep_rows is not None and morph_rows is not None:
         derived = derive_unit(nos, dep_rows, morph_rows, case_rows)
