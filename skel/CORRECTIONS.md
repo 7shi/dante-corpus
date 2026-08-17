@@ -1,5 +1,122 @@
 # skel — Layer 5 correction history
 
+## Rule EI — the floating quantifier, 154 → 150, and one Layer-4 retag at net zero (2026-08-18)
+
+The first checker-side batch of Phase 7, and the first read chosen by the **refusal census** rather
+than by canto order: `arg_slot`'s 8 predicates, the only class the model refused at 100% in both the
+seventh and the eighth `--fix` round (7 calls, 7 refusals, every answer `keep`). Reading them is what
+the refusal is *for* — it names a position and has no standing on what is wrong there.
+
+| rule | shape | census | moved |
+|---|---|---:|---:|
+| **EI** (`_floating_quantifier_of`) | the reading cites a **floating quantifier** where the derivation cites the noun it modifies | 53 | **−4** |
+| — | purgatorio 9:97, `«Era il secondo tinto più che perso»` — Layer 4 made the comparative standard the root | 1 | **±0** |
+
+`pytest` 534 → **542** (8 new, every gate mutation-checked, including the call site), 0 hard /
+**150** soft, all other layers 0/0, no artifact row touched.
+
+### What the eight refusals actually were
+
+Read with `read.py`, one verdict each:
+
+| position | derivation cites | the reading cites | verdict |
+|---|---|---|---|
+| inferno 31:32 `son` subj | `torri` (31.5) | `tutti` (33.6) | **checker silent** → rule EI |
+| purgatorio 10:60 `faceva` subj | `gente` (58.3) | `quanta` (58.6) | **checker silent** → rule EI |
+| purgatorio 9:97 `perso` subj | `tinto` (97.4) | `secondo` (97.3) | **upstream wrong** → Layer-4 retag |
+| inferno 5:92 `pregheremmo` subj | `noi` (90.1, `nsubj`) | `noi` (92.1, `expl`) | censused at 2, **dropped** |
+| inferno 24:10 `ritorna` / `lagna` subj | `villanello` (7.2) | `ei` (9.4) | reading disagreement (coreference) |
+| paradiso 1:81 `fece` subj | `pioggia` (80.7) | `alcun` (81.4) | reading disagreement |
+| purgatorio 10:30 `aveva` obj | `dritto` (30.2) | `manco` (30.6) | reading disagreement |
+
+**Seven of the eight are `subj`**, which is the standing subject-slot route showing up again — and
+the two the checker was wrong about are not about the subject at all, but about *which token names a
+noun phrase*.
+
+### Rule EI — the evidence lines
+
+> Dinanzi parea gente; e **tutta quanta**, / partita in sette cori, a' due mie' sensi / **faceva**
+> dir l'un ‘No’, l'altro ‘Sì, canta’.  (purgatorio 10:58)
+
+> non son torri, ma giganti, / e **son** nel pozzo intorno da la ripa / da l'umbilico in giuso
+> **tutti quanti**.  (inferno 31:31)
+
+Layer 4 hangs the quantifier on the noun as an adnominal — `quanta` `amod`→`gente`, `tutti`
+`nmod`→`giganti` — and Layer 3, over-inclusive by design, enumerates `[tutta quanta]` and
+`[tutti quanti]` as noun phrases of their **own**, disjoint from `[gente]` and from the `torri` /
+`giganti` coordination. `SYSTEM_PROMPT` tells the model to cite a noun phrase's head, so it cites the
+quantifier; `derive_unit` cites the noun. One participant, two names, two violations — a
+`missing_arg` and an `extra_arg` on the same slot, which is exactly the pair `_split_slot_conflicts`
+merges into one `arg_slot` question, and exactly what the model was refusing.
+
+**Rule AI already accepts this convention** — it is the reason it exists — but only when both
+citations sit inside a *single* NP span, which a floating quantifier by definition never does. This
+is the case rule AI cannot reach, and the reason nineteen read batches and eight `--fix` rounds left
+both positions standing: `--check` named them, and every read of them saw two correct-looking
+citations. The standing heuristic that found it is *"which normalization has already run on the
+citation?"* — rule AI's, and it had run and declined.
+
+Three gates, and the first two are **Layer-4 evidence, not a Layer-3 span**, which is what
+distinguishes this from rule BR's dropped mirror (whose only evidence *was* a span, and Layer 3 is
+over-inclusive by design):
+
+- the cited token is an **adnominal child** (`amod`/`nmod`/`det`/`det:poss`/`nummod`) of the derived
+  one, read **through rule C's coordination collapse** — inferno 31:32's `tutti` hangs on `giganti`,
+  the `conj` of the derived subject `torri`, so without the collapse leg the rule sees nothing;
+- the lemma is one of a **closed list of quantifiers** (`tutto`, `quanto`, `ambedue`, `amendue`,
+  `entrambi`, `ciascuno`, `ognuno`);
+- Layer 2 must call the token an **adjective, numeral or pronoun** — never a noun. `_is_nominal_pos`
+  cannot make this cut: it counts a substantivized adjective as nominal, and every real instance of
+  the shape is tagged `adjective`.
+
+The merge is structured exactly like `_merge_np_head_citations`: only positions unmatched on both
+sides pair up, each is consumed once, and **the role must already agree**, so it can neither silence
+a role disagreement nor absorb a second, genuinely different argument. It runs **after** rule AI and
+**before** rule D, for rule BO's reason — rule D would otherwise drop the quantifier as an accepted
+adjunct and leave the derivation's own position reported as a `missing_arg`.
+
+**Census: 53** — quantifier adnominals whose head no single NP span shares with them, out of 337
+quantifier adnominals corpus-wide. **Measured −4 / +0.**
+
+### The Layer-4 retag at purgatorio 9:97, kept at net zero
+
+> Era il secondo **tinto** più che perso  (purgatorio 9:97)
+
+Layer 4 made `perso` the **root** and `tinto` its `nsubj`, which reads the line as *"the coloured
+one was more than perse"* and leaves `il secondo` an `amod` buried inside `tinto`. The line is a
+copular predication: `il secondo` — the second step — is the subject, `tinto` the predicate
+adjective, `più che perso` the comparative adverbial on it. Layer 3 already agrees, giving
+`[il secondo]` its own span with `secondo` as head and leaving `tinto` outside it; and **the corpus
+carries the identical construction already tagged the other way**:
+
+> L'acqua era buia assai più che persa  (inferno 7:103)
+
+where `buia` is the head, `L'acqua` its `nsubj`, and `persa` an `advmod` on `più`. The retag brings
+9:97 onto the corpus's own precedent. Applied with a gated script asserting the word *and* the
+current deprel/head at all 8 rows before rewriting; `morph`/`np`/`dep`/`case --check` all stay 0.
+See [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+**Layer 5 measured ±0**, and the trade is recorded rather than hidden: the two `subj` violations
+became an `extra_tuple`/`missing_tuple` pair, because the reading names the predicate `perso` while
+the derivation now — correctly — names `tinto`. The count is not the measure; the correctness of the
+parse is (the rule-AM precedent). The remaining disagreement is one a `--fix` round can repair.
+
+### Censused and dropped: the repeated subject pronoun
+
+> **noi** che tignemmo il mondo di sanguigno, / se fosse amico il re de l'universo, / **noi**
+> pregheremmo lui de la tua pace  (inferno 5:90)
+
+The subject `noi` is stated at 90.1, a relative clause intervenes, and it is resumed at 92.1. Layer 4
+attaches **both to the same predicate** — 90.1 `nsubj`→92.2, 92.1 `expl`→92.2 — so an acceptance rule
+would need no coreference judgment at all, only the sibling edge and a shared lemma.
+
+**Censused at 4, and 4 is not the population.** Two of the four are `tu`/`ti` pairs
+(inferno 22:113, 32:134) where the `expl` is a reflexive clitic and only Layer 2's lemmatization of
+`ti` as `tu` makes them look alike; a gate loose enough to take them would confuse a clitic with a
+subject. The genuine shape is **2** (inferno 5:92, paradiso 3:65) and only **1** of those is flagged.
+One evidence line is not a population — dropped, and recorded here so a later batch recognises it
+rather than re-deriving it.
+
 ## Rule EH — the fused clitic named after its own words, 161 → 160 (2026-08-18)
 
 The seventh `--fix` round (see [`PLAN.md`](PLAN.md) §30) closed rule EG's class from 50 to 9. One of

@@ -5270,3 +5270,105 @@ def test_dual_role_keeps_a_role_no_slot_supports():
     # Rule EH widens what an *oblique* marker can name and nothing else: `subj` still wants
     # `nominative`, which this annex value does not carry.
     assert len(_fused_named_fixture(roles=("subj", "obl:ne"))) == 1
+
+
+
+
+# --- Phase 7: rule EI (floating quantifier) --------------------------------------------
+
+
+def _floating_quantifier_fixture(lemma="quanto", pos_text="adjective", deprel="amod",
+                                 grole="obj", head=(58, 3)):
+    """The shape of "Dinanzi parea gente; e **tutta quanta** … **faceva** dir l'un 'No'"
+    (purgatorio 10:58), with the role moved off `subj` so that rule EI is the only rule that can
+    decide the fixture — `_apply_subj_authority` silences a `subj` pair on its own, and a test it
+    passes would pin nothing.
+
+    Layer 4 hangs the quantifier on the noun as an `amod`; Layer 3 enumerates `[tutta quanta]` as
+    an NP span of its own, disjoint from `[gente]`, so rule AI's single-span test cannot pair
+    them. The reading cites the quantifier, the derivation cites the noun, and one participant
+    costs two violations.
+    """
+    derived = {60: [skel.SkelRow(60, 1, "faceva", "obj", 58, 3)]}
+    given = {60: [skel.SkelRow(60, 1, "faceva", grole, 58, 6)]}
+    dep_index_by_pos = {
+        (58, 3): dep.DepRow(line=58, token=3, word="gente", deprel="obj",
+                            head_line=60, head_token=1),
+        (58, 6): dep.DepRow(line=58, token=6, word="quanta", deprel=deprel,
+                            head_line=head[0], head_token=head[1]),
+        (60, 1): dep.DepRow(line=60, token=1, word="faceva", deprel="root",
+                            head_line=0, head_token=0),
+    }
+    morph_pos = {(58, 3): "noun", (58, 6): pos_text, (60, 1): "verb"}
+    morph_lemma = {(58, 3): "gente", (58, 6): lemma, (60, 1): "fare"}
+    return skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos, None,
+                                     morph_lemma, None, None)
+
+
+def _rule_ei_pair_stands(violations):
+    return (any(v.detail.startswith("missing_arg") for v in violations)
+            and any(v.detail.startswith("extra_arg") for v in violations))
+
+
+def test_classify_divergence_rule_ei_merges_a_floating_quantifier():
+    assert _floating_quantifier_fixture() == []
+
+
+def test_rule_ei_needs_a_quantifier_lemma():
+    # The mutation the rule turns on: an ordinary `amod` on the derived argument names a property
+    # of that participant, not the participant, and keeps both halves of the pair.
+    assert _rule_ei_pair_stands(_floating_quantifier_fixture(lemma="bello"))
+
+
+def test_rule_ei_needs_an_adnominal_edge_to_the_derived_argument():
+    # A quantifier hanging somewhere else — here on the predicate — is not a second name for
+    # this argument.
+    assert _rule_ei_pair_stands(_floating_quantifier_fixture(head=(60, 1)))
+
+
+def test_rule_ei_needs_an_adnominal_deprel():
+    # An `obl` quantifier is an adjunct of the clause, not a modifier of the argument.
+    assert _rule_ei_pair_stands(_floating_quantifier_fixture(deprel="obl"))
+
+
+def test_rule_ei_refuses_a_quantifier_layer_2_calls_a_noun():
+    # "il tutto" heads a phrase of its own. `_is_nominal_pos` cannot make this cut, because it
+    # counts as nominal the substantivized adjective every real instance is tagged as — which is
+    # why the gate names the parts of speech it accepts instead.
+    assert _rule_ei_pair_stands(_floating_quantifier_fixture(pos_text="noun"))
+
+
+def test_rule_ei_requires_the_same_role():
+    # A role disagreement is a reading disagreement, whatever the quantifier modifies.
+    violations = _floating_quantifier_fixture(grole="iobj")
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _rule_ei_coordination_fixture(lemma="tutto"):
+    """"non son torri, ma giganti, / e **son** … **tutti quanti**" (inferno 31:32): the
+    quantifier hangs on `giganti`, which is a `conj` of the derived argument `torri`, so the
+    edge is only visible through rule C's coordination collapse."""
+    derived = {32: [skel.SkelRow(32, 2, "vide", "obj", 31, 5)]}
+    given = {32: [skel.SkelRow(32, 2, "vide", "obj", 33, 6)]}
+    dep_index_by_pos = {
+        (31, 5): dep.DepRow(line=31, token=5, word="torri", deprel="obj",
+                            head_line=32, head_token=2),
+        (31, 7): dep.DepRow(line=31, token=7, word="giganti", deprel="conj",
+                            head_line=31, head_token=5),
+        (32, 2): dep.DepRow(line=32, token=2, word="vide", deprel="root",
+                            head_line=0, head_token=0),
+        (33, 6): dep.DepRow(line=33, token=6, word="tutti", deprel="nmod",
+                            head_line=31, head_token=7),
+    }
+    morph_pos = {(31, 5): "noun", (31, 7): "noun", (32, 2): "verb", (33, 6): "adjective"}
+    morph_lemma = {(31, 5): "torre", (31, 7): "gigante", (32, 2): "vedere", (33, 6): lemma}
+    return skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos, None,
+                                     morph_lemma, None, None)
+
+
+def test_rule_ei_reads_through_the_coordination_collapse():
+    assert _rule_ei_coordination_fixture() == []
+
+
+def test_rule_ei_coordination_leg_still_needs_a_quantifier():
+    assert _rule_ei_pair_stands(_rule_ei_coordination_fixture(lemma="bello"))

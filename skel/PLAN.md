@@ -2,19 +2,20 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 154 soft** violations across all 100
-  cantos — **148 divergence positions + 6 `dual_role`** (rule EG's artifact-internal contradiction).
-  Per canticle: inferno 44, purgatorio 56, paradiso 54. Base as of 2026-08-18, after the eighth
-  `--fix` round (160 → 154, §P1), which followed rule EH (161 → 160) and the seventh round (224 → 161).
+- **Current State**: `make -C skel check` reports **0 hard, 150 soft** violations across all 100
+  cantos — **144 divergence positions + 6 `dual_role`** (rule EG's artifact-internal contradiction).
+  Per canticle: inferno 42, purgatorio 54, paradiso 54. Base as of 2026-08-18, after rule EI
+  (154 → 150, §P2) and the eighth `--fix` round before it (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
-  `morph --check` 0/0, `pytest` **534 passed**.
+  `morph --check` 0/0, `pytest` **542 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Complete and closed — 2,084 → 160 soft, with seven user-run `--fix` rounds (−1,157)
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
   cost). Full record, per-round tables, the read series and the routes it closed are in
   [`PHASE6.md`](PHASE6.md).
 - **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. One
-  round run so far (§P1, 160 → 154); the work is now checker-side, off the refusal census.
+  round run (§P1, 160 → 154) and one refusal-census read landed (§P2, 154 → 150, rule EI); the work
+  is checker-side from here, off that census.
 - **Section references**: a bare **§N** points to [`PHASE6.md`](PHASE6.md)'s chronological record
   (§1–§31, the seven rounds and nineteen read batches). Phase 7's own write-ups are numbered **§P1,
   §P2, …** in *Phase 7 Record* below.
@@ -33,8 +34,9 @@ rounds.** Outside `dual_role`, a model call is worth **0.081** violations (§30 
 each. A round over the standing residue is expected to take 12–20 positions and to introduce nothing
 new to read. **The eighth round confirmed this below its own floor** (§P1): 142 calls, **6**
 positions, **0.030** per call outside `dual_role`, and 43.7% of the calls refusals. At that rate the
-standing 148 divergence positions would cost on the order of 3,500 calls. Rounds are not the
-instrument any more.
+standing 144 divergence positions would cost on the order of 3,500 calls. Rounds are not the
+instrument any more. **And the instrument that replaces them paid on its first batch** (§P2): the 8
+`arg_slot` refusals read out to 3 checker- or upstream-side findings and **−4 at zero model cost**.
 
 **So the work shifts from repairing positions to diagnosing failures.** Phase 6 spent itself finding
 positions to read (nineteen batches over 100 cantos) and repairing them (seven rounds). Phase 7 asks
@@ -70,21 +72,23 @@ route** (see *Open Assistant-Side Routes*).
 
 1. ~~**The eighth `--fix` round, `--no-whole`**~~ — **run 2026-08-18, §P1**: 160 → 154. Its finding is
    that the queue's other items are the work; a ninth round is not queued.
-2. **The refusal reading list — now confirmed twice, which makes it the top of the queue.** Round 8
-   reproduced round 7's census per class almost exactly (§P1 answer 3): `arg_slot` **7 calls, 7
-   refused, 100% `keep`** (inferno 5:88, 24:1 ×2, 31:28; paradiso 1:76; purgatorio 9:97, 10:28,
-   10:58), then `extra_arg` (15 `keep`, was 16), `extra_arg_subject` (13, was 15), `missing_arg`'s 10
-   `none`, `missing_arg_adverb` (3). Read each with `read.py` and give it one of the five verdicts in
+2. **The refusal reading list — confirmed twice, and its first batch paid** (§P2: `arg_slot`'s 8
+   refusals read, 3 of them checker- or upstream-side, **−4 at zero model cost**, rule EI). **Next in
+   the list, in order**: `extra_arg`'s 15 `keep`s, `extra_arg_subject`'s 13, `missing_arg`'s 10
+   `none`, `missing_arg_adverb`'s 3. Read each with `read.py` and give it one of the five verdicts in
    *How to Read a Batch*. **A refusal chooses a position and has no standing on what is wrong there**
    — it is a hypothesis about the checker with exactly the standing a field note has about the corpus.
-   Two systematic *failure* shapes sit alongside it (§P1): `missing_tuple_nominal` failing identically
-   nine times out of nine, and `missing_arg_subject` splicing a fresh `extra_arg subj` in half its
-   calls.
-3. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
+   §P2's finding to carry in: ask of every standing pair whether an **existing** rule is one gate
+   away from taking it, because rule AI had already run on both rule-EI positions and declined.
+3. **Two systematic *failure* shapes round 8's log names** (§P1), neither of them a refusal:
+   `missing_tuple_nominal` fails identically nine times out of nine (`missing_tuple: predicate NN.2
+   not proposed` → `extra_arg: NN.2 obl:a`), and `missing_arg_subject` splices a fresh `extra_arg
+   subj` in half its calls — check its applier against rule EG's splice guard.
+4. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`. Rule EG found 56 such positions, **52 of them on lines
    `--check` was silent about**, which is why 21 read batches walked past them. Any check of this kind
    both raises the count honestly and produces questions the model can actually answer.
-4. **The standing open routes** below, which the reads named but did not settle.
+5. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
 
@@ -310,6 +314,75 @@ checker it is wrong.** Rounds are no longer the instrument. The Phase 7 queue is
 item 2 is now a list of positions confirmed twice — start with `arg_slot`'s 8 predicates (inferno
 5:88, 24:1 ×2, 31:28; paradiso 1:76; purgatorio 9:97, 10:28, 10:58).
 
+### §P2 — `arg_slot`'s eight refusals read; rule EI, 154 → 150 (−4), and one Layer-4 retag
+
+The first batch chosen by the **refusal census** instead of by canto order, and the first test of
+whether a refusal is worth reading. `arg_slot` is the class the model refused at **100% in two
+consecutive rounds** (7 calls, 7 refusals, every answer `keep`, §P1 answer 3). Its 8 predicates are
+the pairs `_split_slot_conflicts` merges — a `missing_arg` and an `extra_arg` naming the same slot.
+
+**Result: 0 hard / 150 soft** (144 divergence + 6 `dual_role`); inferno 42, purgatorio 54,
+paradiso 54. `pytest` 534 → **542**; all other layers 0/0. Rule EI measured **−4/+0** by full-corpus
+diff; the Layer-4 retag measured **±0** and is kept anyway.
+
+**The eight, one verdict each** (`read.py`, per *How to Read a Batch*):
+
+| position | derivation cites | the reading cites | verdict |
+| --- | --- | --- | --- |
+| inferno 31:32 `son` subj | `torri` (31.5) | `tutti` (33.6) | **checker silent** → rule EI |
+| purgatorio 10:60 `faceva` subj | `gente` (58.3) | `quanta` (58.6) | **checker silent** → rule EI |
+| purgatorio 9:97 `perso` subj | `tinto` (97.4) | `secondo` (97.3) | **upstream wrong** → Layer-4 retag |
+| inferno 5:92 `pregheremmo` subj | `noi` (90.1 `nsubj`) | `noi` (92.1 `expl`) | censused at 2, **dropped** |
+| inferno 24:10 `ritorna` subj | `villanello` (7.2) | `ei` (9.4) | reading disagreement |
+| inferno 24:10 `lagna` subj | `villanello` (7.2) | `ei` (9.4) | reading disagreement |
+| paradiso 1:81 `fece` subj | `pioggia` (80.7) | `alcun` (81.4) | reading disagreement |
+| purgatorio 10:30 `aveva` obj | `dritto` (30.2) | `manco` (30.6) | reading disagreement |
+
+**Rule EI — the floating quantifier.** "e **tutta quanta** … **faceva** dir" (purgatorio 10:58),
+"e **son** … **tutti quanti**" (inferno 31:32). Layer 4 hangs the quantifier on the noun as an
+adnominal; Layer 3, over-inclusive by design, enumerates `[tutta quanta]` as a noun phrase of its
+**own**; `SYSTEM_PROMPT` tells the model to cite a phrase's head. So the reading cites the quantifier
+and `derive_unit` cites the noun — one participant, two names, two violations. Gated on the Layer-4
+adnominal edge read **through rule C's coordination collapse** (inferno 31:32's `tutti` hangs on
+`giganti`, the `conj` of `torri`), on a closed quantifier lemma list, and on Layer 2 calling the
+token an adjective/numeral/pronoun rather than a noun. Censused at **53**. Full write-up in
+[`CORRECTIONS.md`](CORRECTIONS.md).
+
+**The Layer-4 retag, kept at net zero.** purgatorio 9:97 «Era il secondo tinto più che perso»: Layer
+4 made the comparative standard `perso` the **root** and the predicate adjective `tinto` its `nsubj`,
+burying the real subject `il secondo` as an `amod`. Inferno 7:103 «L'acqua era buia assai più che
+persa» is the identical construction already tagged the other way, so the retag is onto the corpus's
+own precedent. Layer 5 **±0** — the two `subj` violations became an `extra_tuple`/`missing_tuple` pair
+because the reading still names `perso` as the predicate — and the trade is recorded rather than
+hidden, on the rule-AM precedent. See [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+**Four findings worth carrying forward.**
+
+1. **A refusal is worth reading, and this measures how much.** Eight positions, three of them
+   checker- or upstream-side, at **zero model cost**. That is a 37.5% hit rate on a class eight
+   `--fix` rounds could not move — against 0.042 violations per model call in round 8. **The refusal
+   census is the productive instrument, and Phase 7's premise is confirmed on its first batch.**
+2. **The model was refusing because it was right about its own convention.** In both rule EI
+   positions the model cited exactly what `SYSTEM_PROMPT` told it to cite — a noun phrase's head —
+   and `keep` was the correct answer. A class at a 100% refusal rate is not a model that cannot
+   answer; it is a checker being told the same thing seven times.
+3. **The blind spot had a shape, and it was rule AI's own gate.** Rule AI accepts this citation
+   convention and declines here only because its test is *"both inside one NP span"*. The standing
+   heuristic that found it is **"which normalization has already run on the citation?"** — the answer
+   was "rule AI's, and it ran and said no", which is a different thing from checker silence and is
+   why nineteen read batches walked past it. Ask of any standing pair whether an existing rule is one
+   gate away.
+4. **Seven of the eight refusals are on `subj`**, and the two the checker was wrong about are not
+   about the subject at all — they are about *which token names a noun phrase*. The subject-slot
+   route (below) is unchanged by this batch: the four reading disagreements it leaves are Dante's
+   inversion and a resumptive pronoun, which is coreference and out of scope by design.
+
+**Censused and dropped: the repeated subject pronoun** (inferno 5:90/92, `noi` … `noi`, Layer 4
+attaching both to the same predicate as `nsubj` and `expl`). Censused at 4, but two are `tu`/`ti`
+pairs where the `expl` is a reflexive clitic and only Layer 2's lemmatization makes them look alike —
+a gate loose enough to take them would confuse a clitic with a subject. The genuine shape is **2**,
+only **1** of them flagged. Dropped; recorded so a later batch recognises it.
+
 ---
 
 ## How to Read a Batch
@@ -375,17 +448,19 @@ and written up is not a rule.
 ## Active & Open Routes
 
 Populations are quoted at the base they were last measured against — mostly **base 541** (after the
-fourth `--fix` round) or **base 174/213** — and the base is now **154**, so a route's number is a
+fourth `--fix` round) or **base 174/213** — and the base is now **150**, so a route's number is a
 starting point for a re-measure, not a current count. These are shapes the reads named but did not
 settle; work that runs into one of them should fold it in rather than open a new route. Routes Phase 6
 **closed** are in [`PHASE6.md`](PHASE6.md) §5 — read the entry before re-opening one.
 
 ### Standing populations
 
-- **The refusal census is route zero, and two rounds now agree on it** — `arg_slot`'s 8 predicates
-  (7-for-7 `keep` in both rounds), `extra_arg`'s 15–16 `keep`s, `extra_arg_subject`'s 13–15,
-  `missing_arg`'s 10 `none`s, `missing_arg_adverb`'s 3. See *Phase 7 Work Queue* above and §P1; every
-  other route below is a shape, while this one is a list of positions the model itself chose.
+- **The refusal census is route zero, two rounds agree on it, and its first batch is read** —
+  `arg_slot`'s 8 predicates are **done** (§P2: rule EI, one Layer-4 retag, one shape censused and
+  dropped, four reading disagreements). Still standing: `extra_arg`'s 15–16 `keep`s,
+  `extra_arg_subject`'s 13–15, `missing_arg`'s 10 `none`s, `missing_arg_adverb`'s 3. See *Phase 7
+  Work Queue* above; every other route below is a shape, while this one is a list of positions the
+  model itself chose.
 - **The subject slot, and it may simply stay reported.** `extra_arg subj` (96 at base 541, of which
   `∅ (0,0)` 22) and `missing_arg subj` (54) plus the `role_mismatch` rows with `subj` on one side were
   **62 of 174** after round 6. Round 4 measured `_CONV_SUBJECT` at the round average and converted the

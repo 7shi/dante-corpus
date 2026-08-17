@@ -1413,6 +1413,101 @@ def _merge_np_head_citations(
             g[a_d] = role
 
 
+_FLOATING_QUANTIFIERS = frozenset({
+    "tutto", "quanto", "ambedue", "amendue", "entrambi", "ciascuno", "ognuno",
+})
+_ADNOMINAL_DEPRELS = frozenset({"amod", "nmod", "det", "det:poss", "nummod"})
+_QUANTIFIER_POS = frozenset({"adjective", "numeral", "pronoun"})
+
+
+def _floating_quantifier_of(
+    arg: tuple[int, int], target: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_lemma_by_position: dict[tuple[int, int], str] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> bool:
+    """Rule EI: whether `arg` is a **floating quantifier** of the nominal at `target`.
+
+    "Dinanzi parea gente; e **tutta quanta**, / partita in sette cori, … / **faceva** dir l'un
+    'No'" (purgatorio 10:58) and "non son torri, ma giganti, / e **son** nel pozzo … / da
+    l'umbilico in giuso **tutti quanti**" (inferno 31:32). In both, Layer 4 hangs the quantifier
+    on the noun as an adnominal (`amod`, `nmod`), and Layer 3 — over-inclusive by design —
+    enumerates `[tutta quanta]` / `[tutti quanti]` as an NP span of its **own**, disjoint from the
+    noun's. `SYSTEM_PROMPT` tells the model to cite a noun phrase's head, so it cites the
+    quantifier and `derive_unit` cites the noun: one participant, two names, two violations.
+
+    Rule AI already accepts exactly this convention, but only when both citations sit inside a
+    *single* NP span, which a floating quantifier by definition does not — it is the case rule AI
+    cannot reach, and the reason nineteen read batches and eight `--fix` rounds left both
+    positions standing. Both refused as `arg_slot` questions in rounds 7 and 8: the model was
+    naming the phrase it had been told to name.
+
+    Three gates keep it to the shape, and the first two are Layer-4 evidence rather than a
+    Layer-3 span — which is what distinguishes this from rule BR's dropped mirror, whose only
+    evidence *was* a span:
+
+    - the cited token is an **adnominal child** of the derived one in Layer 4, read through rule
+      C's coordination collapse so the `nmod` on a `conj` of the derived argument counts
+      (inferno 31:32's `tutti` hangs on `giganti`, the conjunct of `torri`);
+    - its lemma is one of a **closed list of quantifiers**, so an ordinary `amod` naming a
+      different participant — or a mis-parsed `amod` that ought to be repaired upstream, as at
+      purgatorio 9:97 — is not swept in;
+    - Layer 2 must call the cited token an **adjective, numeral or pronoun** — never a noun. A
+      quantifier written as a noun ("il tutto") heads a phrase of its own and names a different
+      participant; `_is_nominal_pos` cannot make that cut, because it counts a substantivized
+      adjective as nominal and every one of these tokens is tagged `adjective`.
+
+    The structural pattern — a quantifier adnominal whose head no single NP span shares with it —
+    is censused at **53** corpus-wide.
+    """
+    if (arg == (0, 0) or target == (0, 0) or arg == target
+            or dep_index_by_pos is None or morph_lemma_by_position is None):
+        return False
+    if morph_lemma_by_position.get(arg, "").lower() not in _FLOATING_QUANTIFIERS:
+        return False
+    if morph_pos_by_position is None:
+        return False
+    if morph_pos_by_position.get(arg, "").strip().lower() not in _QUANTIFIER_POS:
+        return False
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel not in _ADNOMINAL_DEPRELS:
+        return False
+    head = (row.head_line, row.head_token)
+    if head == target:
+        return True
+    return _coordination_head(head, dep_index_by_pos, morph_pos_by_position) == target
+
+
+def _merge_floating_quantifier_citations(
+    g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_lemma_by_position: dict[tuple[int, int], str] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+) -> None:
+    """Rule EI: re-key a given citation onto the derived one when `_floating_quantifier_of` says
+    the first is a floating quantifier of the second in the same role. Mutates `g` in place.
+
+    Structured exactly like `_merge_np_head_citations` (rule AI): only positions unmatched on
+    both sides pair up, each is consumed once, and the role must already agree — so this can
+    neither silence a role disagreement nor absorb a second, genuinely different argument.
+    """
+    roles = {role for arg, role in d.items() if arg not in g}
+    for role in sorted(roles):
+        unmatched_d = sorted(a for a, r in d.items() if r == role and a not in g)
+        unmatched_g = sorted(a for a, r in g.items() if r == role and a not in d)
+        for a_d in unmatched_d:
+            match = next(
+                (a for a in unmatched_g
+                 if _floating_quantifier_of(a, a_d, dep_index_by_pos, morph_lemma_by_position,
+                                            morph_pos_by_position)),
+                None)
+            if match is None:
+                continue
+            unmatched_g.remove(match)
+            del g[match]
+            g[a_d] = role
+
+
 def _adverb_cluster_head(
     arg: tuple[int, int],
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
@@ -3738,6 +3833,12 @@ def _classify_divergence(
             # order that loses one of them.
             if np_rows is not None:
                 _merge_np_head_citations(g, d, np_rows)
+            # Rule EI runs **after** rule AI and before rule D, for rule BO's reason: it is the
+            # same citation convention on the pairs rule AI's single-span test cannot reach, and
+            # rule D would otherwise drop the quantifier as an accepted adjunct and leave the
+            # derivation's own position reported as a `missing_arg`.
+            _merge_floating_quantifier_citations(g, d, dep_index_by_pos,
+                                                 morph_lemma_by_position, morph_pos_by_position)
             _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)

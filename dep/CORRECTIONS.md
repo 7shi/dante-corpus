@@ -1,5 +1,49 @@
 # dep — Layer 4 correction history
 
+## purgatorio 9:97 — the comparative standard made the root (2026-08-18)
+
+Found in Phase 7's first checker-side batch, reading the eight `arg_slot` positions the model
+refused in both the seventh and the eighth Layer-5 `--fix` round (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md), rule EI).
+
+> Era il secondo **tinto** più che perso  (purgatorio 9:97)
+
+Layer 4 made **`perso` the root** with `tinto` as its `nsubj`, which reads the line as *"the coloured
+one was more than perse"*, buries the real subject `il secondo` as an `amod` inside `tinto`, and hangs
+the following line's `petrina` on the comparative standard. The line is an ordinary copular
+predication: `il secondo` — the second step of Purgatory's gate — is the subject, `tinto` the
+predicate adjective, and `più che perso` the comparative adverbial modifying it.
+
+Two independent things say so. Layer 3 already gives `[il secondo]` a span of its own with `secondo`
+as its head and leaves `tinto` outside it. And **the corpus carries the same construction already
+tagged the other way**:
+
+> L'acqua era buia assai più che persa  (inferno 7:103)
+
+— `buia` the head with `era` as its `cop`, `L'acqua` its `nsubj`, `più` an `advmod` on `buia`, `che`
+a `mark` on `persa`, and `persa` an `advmod` on `più`. 9:97 is now tagged on that precedent:
+
+| row | was | now |
+|---|---|---|
+| 97.1 `Era` | `cop`→97.7 | `cop`→97.4 |
+| 97.2 `il` | `det`→97.4 | `det`→97.3 |
+| 97.3 `secondo` | `amod`→97.4 | **`nsubj`→97.4** |
+| 97.4 `tinto` | `nsubj`→97.7 | **`root`** |
+| 97.5 `più` | `advmod`→97.7 | `advmod`→97.4 |
+| 97.6 `che` | `mark`→97.7 | `mark`→97.7 |
+| 97.7 `perso` | `root` | **`advmod`→97.5** |
+| 98.3 `petrina` | `obl`→97.7 | `obl`→97.4 |
+
+Applied with a gated script asserting the word **and** the current deprel **and** the current head at
+each of the 8 rows before rewriting, and checking that no row outside the plan pointed into line 97.
+`morph`/`np`/`dep`/`case --check` all re-run at **0 hard / 0 soft**; `pytest` 542.
+
+**Layer 5 measured ±0** and the trade is recorded rather than hidden: the two `subj` violations became
+an `extra_tuple`/`missing_tuple` pair, because the Layer-5 reading names the predicate `perso` while
+the derivation now — correctly — names `tinto`. The count is not the measure; the correctness of the
+parse is. This is the rule-AM precedent, and the residual disagreement is one a `--fix` round can
+repair.
+
 ## 16 rows from the Layer-5 Paradiso 26-33 read (2026-08-17)
 
 The per-position read of Paradiso 26-33's 32 Layer-5 soft violations (see
