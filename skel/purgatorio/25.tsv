@@ -28,6 +28,7 @@ line	token	word	role	arg_line	arg_token
 9	6	dispaia	obl:per	9	3
 10	6	leva	subj	10	5
 10	6	leva	obj	10	8
+10	6	leva	obl:per	11	2
 11	8	attenta	subj	10	5
 11	8	attenta	obj	11	7
 11	8	attenta	xcomp	12	2
@@ -206,7 +207,9 @@ line	token	word	role	arg_line	arg_token
 66	5	vide	obj	66	6
 66	5	vide	obl:da	66	3
 67	1	Apri	subj	0	0
+67	1	Apri	obj	67	8
 67	1	Apri	obl:a	67	4
+67	6	viene	subj	67	5
 67	6	viene	subj	67	8
 68	2	sappi	subj	0	0
 69	6	perfetto	subj	69	2

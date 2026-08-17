@@ -157,6 +157,7 @@ line	token	word	role	arg_line	arg_token
 57	2	cedere	obl:a	57	4
 57	6	fece	subj	55	2
 57	6	fece	attr	57	7
+57	6	fece	obl:sotto	56	3
 57	7	greco	subj	0	0
 58	2	conosce	subj	55	2
 58	2	conosce	ccomp	59	8

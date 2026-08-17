@@ -1,37 +1,42 @@
 ## Handoff (2026-08-17) — resume here
 
-> **Purgatorio 31–33 is read, and with it all of Purgatorio.** The batch produced **two**
-> deterministic rules plus 4 Layer-4 rows, 1 Layer-2 row, 2 Layer-3 spans and 2 case-annex rows:
-> **358 → 351 (−7, −2.0%)**, 0 hard, `pytest` **441 passed**, with zero model calls;
-> Purgatorio 31–33 itself went 14 → 11.
+> **A section closes here.** All of Inferno and all of Purgatorio have been read per-position, and
+> the **fifth `--fix` round** has been run and measured on top of that: **351 → 298 (−53, −15.1%)**,
+> 0 hard, `pytest` **441 passed**, 33 files touched, units **264 → 233** (31 cleared, 10 improved,
+> **0 regressed, 0 newly flagged**), per-unit yield **0.201**. Per canticle: inferno 60,
+> purgatorio 87, paradiso 151.
 >
-> **Its finding: the two rules are the same finding twice.** Neither is a new reading of Italian.
-> Rule DF is **rule AI applied where rule AI cannot run** — rule V's control-subject candidates are
-> Layer 4's attachment points, the LLM cites a phrase by Layer 3's head, and rule AI can only pair
-> citations of a role the derivation *has*, which for an inherited subject is exactly the role it
-> does not. Rule DE is **rule C's own tie-break told which of two citations is authoritative** — a
-> conjunct with its own `case` marker is a separate oblique, so its role must not displace the
-> coordination head's. Both are gates comparing raw positions while the checker already held the
-> answer one function away: the ordering question, in a **fifth consecutive form**.
+> **The plan for the rest of the work, decided 2026-08-17:**
 >
-> Two smaller ones: **a rule's gate can be found by the position it wrongly takes, not by census**
-> (rule DE unrestricted measured −2/+1, and the +1 named the gate; the census of 98 only confirmed
-> the population afterwards). And **a Layer-3 span that is not a phrase is not over-inclusion** —
-> Layer 3's wide spans are normally left alone, but rules AI and DF read a span's `head` as an
-> argument's alternative name, so a span covering two different nominals makes them equivalent.
+> > **Read Paradiso in 5-canto batches — 1–5, 6–10, 11–15, 16–20, 21–25, 26–30, 31–33 — and when
+> > the series is finished, run one `--fix` round.** No round in between.
 >
-> **The next session's task: the per-position read of Paradiso 1–5 — 27 soft violations at base
-> 351.** Start a fresh session, list them with `uv run skel.py paradiso --check -c <n>` from
-> `skel/`, and read each one with `uv run read.py paradiso <canto> <line>`. Every remaining batch
-> is Paradiso — seven batches, 165 positions, schedule **re-measured at base 351** in
-> [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series*. **Re-measure the batch first**; every landed
-> rule shrinks the batches after it.
+> **The next session's task: the per-position read of Paradiso 1–5 — 26 soft violations at base
+> 298.** Start a fresh session, list them with `uv run skel.py paradiso --check -c <n>` from
+> `skel/`, and read each one with `uv run read.py paradiso <canto> <line>`. Seven batches, 151
+> positions, schedule **re-measured at base 298** in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read
+> Series*. **Re-measure the batch first**; every landed rule shrinks the batches after it.
 >
-> **A fifth `--fix` round still has exactly one candidate on it** — the convention clause for the
-> prepositional adjunct of time or place, against `missing_arg obl*` at **76 of 351**, still the
-> residue's largest single bucket, which this batch moved by 1 while adding two more instances of
-> it (purgatorio 32:139 ×2). **Do not run a round while checker rules are being written against
-> the base it would move.**
+> **What the fifth round measured — it was not a hypothesis test, and that was verified in the
+> source.** The prompt has not changed since 1eb2a86 (2026-08-15), whose two additions round 4
+> already decided (both negative); the whole `skel/skel.py` diff since then is the `-c` range
+> refactor and rule CZ's `case_rows` plumbing; the one queued candidate (the prepositional adjunct
+> of time or place) is **still unwritten**, exactly as [`skel/PLAN.md`](skel/PLAN.md) says it
+> should be until someone writes it; and `model.mk` is unchanged since June. What moved instead is
+> the **checker** — `dante_corpus/skel.py` is +1158/−55 since the fourth round — which is why an
+> unchanged prompt was still asked different questions and graded by a stricter gate. **The
+> finding: the read series' rules and the LLM's repairs address largely disjoint residue.** A base
+> already stripped of 190 positions by fifteen rule batches still gave up 15.1% to the same
+> prompt, at a flat −7…−17% across every bucket with n ≥ 9 — and that flatness is the second
+> finding, since round 3's signature of a real prompt defect was one class collapsing (−66.3%)
+> against a flat background.
+>
+> **The sixth round's one candidate is unwritten and its target has shrunk**: the convention clause
+> for the prepositional adjunct of time or place, against `missing_arg obl*` now at **62 of 298**
+> (bare `obl` 20, down from 76/25 — the fifth round took 14 of them without the clause). Still the
+> residue's largest single bucket. **Write it during the series**, then let the round decide it, as
+> `_CONV_ADVERB_ARG` was decided. **Do not run a round while checker rules are being written
+> against the base it would move, and do not run one with nothing on the scale.**
 >
 > **The per-batch procedure is written down** — eight steps, in [`skel/PLAN.md`](skel/PLAN.md)'s
 > *How to Read a Batch*. Follow it rather than improvising: every position gets one of five
@@ -40,7 +45,7 @@
 > shape is censused corpus-wide; each rule is measured alone by full-corpus violation **diff**
 > (not by the total), pinned by a mutation-checked test, and written up in the same session.
 
-**Layer 5 is operating under Phase 6 with 0 hard / 351 soft violations.**
+**Layer 5 is operating under Phase 6 with 0 hard / 298 soft violations.**
 Checks: `dep --check` **0 hard / 0 soft** (the subject-agreement rule's 18-position residue closed
 2026-08-14; its *coordinated subject* exclusion refined to a per-conjunct person test 2026-08-16;
 its 1/2-plural exclusion narrowed to the number test 2026-08-16 by rule CR and the
@@ -49,10 +54,11 @@ number-only exclusions stopped from preempting the person test the same day by r
 12 more 2026-08-17 by the Purgatorio 26–30 read, 4 more the same day by the Purgatorio 31–33
 read),
 `case --check` 0 hard (1 stale row dropped, 1 row re-read, 1 more dropped and 2 re-read
-2026-08-16), `skel --check` 0 hard/**351** soft (inferno 72, purgatorio 114, paradiso 165),
+2026-08-16), `skel --check` 0 hard/**298** soft (inferno 60, purgatorio 87, paradiso 151),
 `np --check` 0/0 (1 span split, 1 widened, 1 added, 1 moved 2026-08-16), `morph --check` 0/0
-(3 + 5 + 1 + 2 + 8 + 2 + 1 rows corrected), `pytest` **437 passed** (the Purgatorio 26–30 read
-added 10).
+(3 + 5 + 1 + 2 + 8 + 2 + 1 rows corrected), `pytest` **441 passed** (the Purgatorio 26–30 read
+added 10, the Purgatorio 31–33 read 4 more). The fifth `--fix` round (2026-08-17) touched
+`skel/*.tsv` only, so no other layer moved.
 
 **Layer 4's stacked prepositions are normalized (2026-08-14).** 161 multiword-preposition
 clusters (196 rows, 74 files) rewritten to the UD convention — opening word `case`→ nominal,
@@ -74,9 +80,24 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Current State & Architecture Summary
 
-- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (twelve class-specific micro-prompts, keyed by POS, by role, or by class alone), and Stage 3 (fallback whole-unit regeneration). Four user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)** and **650 → 541 (−109)**.
+- **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (twelve class-specific micro-prompts, keyed by POS, by role, or by class alone), and Stage 3 (fallback whole-unit regeneration). Five user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)** and **351 → 298 (−53)**.
   - **Detailed Phase 6 Plan**: For Phase 6 operating principles, architectural details, active routes, and measurement procedures, see [`skel/PLAN.md`](skel/PLAN.md).
 - **Latest Improvements**:
+  - **Fifth `--fix` round (2026-08-17)**: **351 → 298 (−53, −15.1%)**; 264 → 233 flagged parse
+    units (31 cleared, 10 improved, **0 regressed, 0 newly flagged**, exactly one position present
+    after but not before); per-unit yield **0.201**; `pytest` 441; `skel/*.tsv` only, so no other
+    layer moved. Run by the user after the Purgatorio 31–33 read closed Purgatorio, and again
+    ahead of the schedule [`skel/PLAN.md`](skel/PLAN.md) had set. **It tested no prompt
+    hypothesis, and that was verified in the source rather than assumed**: the last prompt-content
+    commit is 1eb2a86 (2026-08-15), round 4 already decided its two additions, the queued
+    time-or-place clause is still unwritten, and the model is unchanged since June. What had moved
+    is the checker (`dante_corpus/skel.py` +1158/−55 since round 4), which is why the same prompt
+    was asked different questions and graded by a stricter gate. **Finding: rules and LLM repair
+    take largely disjoint residue** — a base fifteen rule batches lower still gave up 15.1%, at a
+    flat −7…−17% across every bucket with n ≥ 9, with none of the single-class collapse that
+    marked round 3's genuine prompt defect. Cost, measured: the seven Paradiso batches now sit on
+    a base two rounds have moved, and the sixth round's one candidate lost 18% of its target
+    (`missing_arg obl*` 76 → 62). Full subclass table in [`skel/PLAN.md`](skel/PLAN.md) §21.
   - **Rules DE–DF (Purgatorio 31–33 read, 2026-08-17)**: Per-position read of all 14 soft
     violations in Purgatorio 31–33, the batch that finishes **Purgatorio**, produced two
     deterministic rules — DF (rule V's control-subject candidates read through rule AI's Layer-3
@@ -270,10 +291,11 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Next Steps & Open Routes
 
-- **The read series is the standing task**: per-position reads of all 100 cantos in 5-canto batches. **Inferno and Purgatorio are complete**; **Paradiso 1–5 is next** (27 soft at base 351), running to Paradiso 33. Seven batches, 165 positions, all of them Paradiso; schedule (re-measured at base 351), reasoning and the eight-step per-batch procedure in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series* / *How to Read a Batch*. Tool: `skel/read.py`.
-- **A fifth `--fix` round has one candidate queued** (`make -C skel fix`, run 3-way parallel — the user's to run). The fourth round emptied the prompt queue on 2026-08-16; the Purgatorio 16–20 read put one thing back on it — a convention clause for the **prepositional adjunct of time or place**, against `missing_arg obl` at **76 of 351**, the residue's largest single bucket. That is an untested hypothesis, and one candidate is not a round: checker rules are measured by violation diff at zero model cost, so wait until the series finishes. See [`skel/PLAN.md`](skel/PLAN.md)'s *A Fifth `--fix` Round*.
-- **Inferno's 72 standing positions** are the read batches' residue with a `--fix` round now over them — the most direct sample of what a round leaves behind. Not urgent: the nine unread batches come first.
-- **Other Assistant-Side Tasks** (populations at base 541 unless noted, so a re-measure at 351 comes first; folded into the batch that covers them):
+- **The plan for the rest of the work (decided 2026-08-17)**: **read Paradiso in 5-canto batches — 1–5, 6–10, 11–15, 16–20, 21–25, 26–30, 31–33 — and run one `--fix` round when the series is finished.** No round in between.
+- **The read series is the standing task**: per-position reads of all 100 cantos in 5-canto batches. **Inferno and Purgatorio are complete**; **Paradiso 1–5 is next** (26 soft at base 298), running to Paradiso 33. Seven batches, 151 positions, all of them Paradiso; schedule (re-measured at base 298), reasoning and the eight-step per-batch procedure in [`skel/PLAN.md`](skel/PLAN.md)'s *The Read Series* / *How to Read a Batch*. Tool: `skel/read.py`.
+- **The sixth `--fix` round has one candidate queued, and it is unwritten** (`make -C skel fix`, run 3-way parallel — the user's to run). The fourth round emptied the prompt queue on 2026-08-16 and the fifth (2026-08-17) ran with nothing on it; the Purgatorio 16–20 read's one contribution — a convention clause for the **prepositional adjunct of time or place**, against `missing_arg obl*` now at **62 of 298**, still the residue's largest single bucket — has never been written into `skel/skel.py`. **Write it during the series**, then let the round decide it. See [`skel/PLAN.md`](skel/PLAN.md)'s *The Sixth `--fix` Round*.
+- **Inferno's 60 and Purgatorio's 87 standing positions** are the read batches' residue with two `--fix` rounds now over them — the most direct sample of what a round leaves behind. Not urgent: the seven unread batches come first.
+- **Other Assistant-Side Tasks** (populations at base 541 unless noted, so a re-measure at 298 comes first; folded into the batch that covers them):
   - **Check the mirror leg of every new rule** — the Inferno 16–20 batch's finding, worth 18 positions there, 37 more in the 21–25 batch and 20 more in the Purgatorio 1–5 batch (rules BW, BX). **A mirror is not owed acceptance**: the 31–34 batch measured rule BR's at −6/+0 and dropped it, because its only evidence was a Layer-3 span and Layer 3 is over-inclusive by design.
   - **Ask what fills the slot after a refusal, and how far the refusal generalizes** — the Purgatorio 6–10 batch's finding: rules CA and CC are one gate read from the derivation side and the acceptance side, and the same gate widened one step further measured **+168** and was rejected. Also **which normalization has already run on the citation a gate compares** (rules CD, CI, about rule C's coordination collapse).
   - **Ask whether a pass reads a set another pass writes** — the Purgatorio 1–5 batch's finding: `derive_unit`'s predicate census walked `conj` chains against a set its third pass had not yet filled (rule BZ). Ordering has now been the finding of four consecutive batches, in four different forms.
@@ -285,14 +307,14 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
     - Ask which checks run *before* every acceptance rule — the Inferno 26–30 batch's finding: rule AQ was complete inside `_classify_divergence` and absent from the membership check that runs first.
   - **Read `extra_arg subj` (**80**, of which ∅ (0,0) **23**) and `missing_arg subj` (**50**)** — the residue's two largest buckets. Round 4 measured `_CONV_SUBJECT`'s three diagnoses at the round average, which by the test's own branch makes these read-work rather than prompt-work. Start with the ∅ (0,0) half.
   - Audit remaining `extra_arg_adjective` positions (**19**; `extra_arg xcomp` is **35**) — three rounds have each taken only a couple, which is itself evidence of genuine disagreement.
-  - **Read `missing_arg obl` (re-measured at **76** of 351 — the Purgatorio 31–33 read moved it by 1 while adding two more instances; the residue's largest single bucket).** The Purgatorio 16–20 read found four of them to be plain omissions of an adjunct or a dative the tree records, which is also the fifth round's one prompt candidate.
+  - **Read `missing_arg obl*` (re-measured at **62** of 298, bare `obl` 20 — the fifth round took 14 of them; still the residue's largest single bucket).** The Purgatorio 16–20 read found four of them to be plain omissions of an adjunct or a dative the tree records, which is also the sixth round's one prompt candidate, still unwritten.
   - **CLOSED (2026-08-16, Purgatorio 11–15 read)**: the `dep.subject_agreement` *coordinated subject* refinement. The deferred form (number test only) was the wrong rule; the person test run against **every conjunct** leaves 6 positions, all upstream errors, now corrected. `dep --check` stays 0/0 and Layer 5 moved −3/+1 — see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 - See [`skel/PLAN.md`](skel/PLAN.md) for full descriptions of each route and testing workflows.
 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through DF, and Phase 6's restructuring plus four `--fix` rounds, bringing its soft residue to **351**
+checker was refined through Phases 0-5r, rules V through DF, and Phase 6's restructuring plus five `--fix` rounds, bringing its soft residue to **298**
 (down from 17438 at the first full-corpus measurement). See [`skel/PHASE5.md`](skel/PHASE5.md) for the full Phase 5
 history, [`skel/PLAN.md`](skel/PLAN.md) for the closing positions, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
@@ -304,7 +326,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**The open route is the read series**: per-position reads of all 100 cantos in 5-canto batches. Inferno and Purgatorio are complete; Paradiso 1–5 is next, running to Paradiso 33 (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)). All five layers plus the case extension are implemented, built for all 100
+**The open route is the read series, then one final `--fix` round**: per-position reads of all 100 cantos in 5-canto batches. Inferno and Purgatorio are complete; Paradiso 1–5 is next, running to Paradiso 33, and the sixth round follows the last batch (see *Next Steps & Open Routes* above and [`skel/PLAN.md`](skel/PLAN.md)). All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
@@ -336,7 +358,7 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes), `skel/read.py` (the audit
   series' read tool: all five layers plus both Layer-5 readings for one parse unit). `--check` across all
-  three canticles reports **0 hard, 351 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 298 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PHASE5.md`](skel/PHASE5.md)) is
@@ -561,7 +583,7 @@ discipline already used for normalization and quotes.
    X, the Y-AF series, AG, the AH-AL series, the AM-AT series, the AU-AY series, the AZ-BI
    series, the BJ-BN series, the BO-BV series, the BW-BZ series, the CA-CJ series, the CK-CO series, the
    CP-CT series, the CU-CY series, the CZ-DD series and the DE-DF series, with `--fix`
-   restructured in Phase 6 and four rounds run (`--check`: 0 hard / 351 soft). Phase 5 closed with every route measured; see
+   restructured in Phase 6 and five rounds run (`--check`: 0 hard / 298 soft). Phase 5 closed with every route measured; see
    [`skel/PLAN.md`](skel/PLAN.md) and [`skel/README.md`](skel/README.md).
 5. **Pronoun case extension** — *complete and closed, 2026-08-02*
    (`dante_corpus/case.py` + `case/case.py`; [`case/README.md`](case/README.md),

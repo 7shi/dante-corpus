@@ -69,7 +69,6 @@ line	token	word	role	arg_line	arg_token
 24	4	venendo	obl:con	24	5
 25	6	reverenti	subj	25	4
 25	6	reverenti	obl	26	1
-25	6	reverenti	obl:a	26	5
 26	0			0	0
 27	3	traggon	subj	27	1
 27	3	traggon	obj	27	5
@@ -304,6 +303,7 @@ line	token	word	role	arg_line	arg_token
 105	8	fassi	subj	105	1
 105	8	fassi	obl:come	105	7
 106	3	affisser	subj	107	1
+106	3	affisser	obl:a	109	5
 106	7	affigge	subj	107	1
 107	2	va	subj	107	1
 107	2	va	obl:a	107	5

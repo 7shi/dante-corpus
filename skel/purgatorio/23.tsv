@@ -10,13 +10,14 @@ line	token	word	role	arg_line	arg_token
 3	8	perde	obj	3	7
 3	8	perde	obl:dietro	3	5
 4	6	dicea	subj	4	4
-4	6	dicea	obj	4	3
 4	6	dicea	iobj	4	5
+4	6	dicea	ccomp	5	1
 5	1	vienne	subj	0	0
 5	9	imposto	subj	5	6
 5	9	imposto	obl:a	5	7
+6	3	compartir	subj	0	0
 6	3	compartir	obj	5	5
-6	5	vuole	subj	6	4
+6	5	vuole	subj	0	0
 6	5	vuole	xcomp	6	3
 7	2	volsi	subj	7	1
 7	2	volsi	obj	7	4

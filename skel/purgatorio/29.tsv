@@ -94,16 +94,17 @@ line	token	word	role	arg_line	arg_token
 36	9	inteso	subj	36	4
 36	9	inteso	obl:per	36	6
 37	0			0	0
-38	7	soffersi	subj	37	5
-38	7	soffersi	subj	38	1
-38	7	soffersi	subj	38	3
+38	7	soffersi	subj	0	0
+38	7	soffersi	obj	37	5
+38	7	soffersi	obj	38	1
+38	7	soffersi	obj	38	3
 38	7	soffersi	obl:per	38	6
 39	3	sprona	subj	39	1
 39	3	sprona	obj	39	2
 39	3	sprona	ccomp	39	8
 39	8	chiami	subj	39	5
 39	8	chiami	obj	39	6
-39	8	chiami	iobj	39	7
+39	8	chiami	obl:a	39	7
 40	2	convien	subj	0	0
 40	7	versi	subj	40	4
 40	7	versi	obl:per	40	6

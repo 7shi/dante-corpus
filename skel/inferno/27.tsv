@@ -131,14 +131,15 @@ line	token	word	role	arg_line	arg_token
 45	6	ritrova	subj	43	2
 45	6	ritrova	obl:sotto	45	3
 46	3	mastin	subj	0	0
-46	7	nuovo	subj	0	0
+46	3	mastin	obl	48	1
 47	2	fecer	subj	47	1
 47	2	fecer	obj	47	7
 47	2	fecer	obl:di	47	4
-48	3	soglion	subj	0	0
+48	3	soglion	subj	47	1
 48	3	soglion	xcomp	48	4
-48	4	fan	subj	0	0
+48	4	fan	subj	47	1
 48	4	fan	obj	48	8
+48	4	fan	obl	48	2
 48	4	fan	obl:di	48	7
 49	0			0	0
 50	1	conduce	subj	50	3

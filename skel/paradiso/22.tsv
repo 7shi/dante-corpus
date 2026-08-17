@@ -327,7 +327,6 @@ line	token	word	role	arg_line	arg_token
 113	7	riconosco	obj	114	8
 113	7	riconosco	obl:da	113	5
 114	5	sia	subj	114	2
-114	5	sia	subj	114	3
 115	3	nasceva	subj	116	1
 115	3	nasceva	obl:con	115	2
 115	6	ascondeva	subj	116	1

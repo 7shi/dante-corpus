@@ -314,8 +314,8 @@ line	token	word	role	arg_line	arg_token
 110	1	spira	subj	109	3
 110	1	spira	obl:di	110	4
 111	4	gola	subj	110	8
-111	4	gola	obj	111	6
 111	4	gola	obl:di	111	3
+111	4	gola	obl:di	111	6
 111	6	saper	obj	111	7
 112	3	è	subj	112	6
 112	3	è	obl:entro	112	2
@@ -402,8 +402,6 @@ line	token	word	role	arg_line	arg_token
 141	7	ami	subj	0	0
 141	7	ami	obj	141	6
 142	8	tira	subj	142	4
-142	8	tira	subj	142	7
-142	10	urge	subj	142	4
 142	10	urge	subj	142	7
 143	3	sonando	obl:con	143	7
 144	8	turge	subj	144	5

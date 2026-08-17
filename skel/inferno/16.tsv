@@ -59,6 +59,7 @@ line	token	word	role	arg_line	arg_token
 19	4	restammo	subj	19	3
 20	9	giunti	subj	0	0
 20	9	giunti	obl:a	20	7
+21	1	fenno	subj	19	5
 21	1	fenno	subj	21	8
 21	1	fenno	obj	21	3
 22	2	sogliono	subj	22	4
@@ -285,7 +286,7 @@ line	token	word	role	arg_line	arg_token
 99	8	vacante	subj	0	0
 99	8	vacante	obl:a	99	3
 99	8	vacante	obl:di	99	6
-100	1	rimbomba	subj	0	0
+100	1	rimbomba	subj	94	3
 100	1	rimbomba	obl	100	2
 100	1	rimbomba	obl:sovra	100	5
 101	5	cadere	subj	94	3

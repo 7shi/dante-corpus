@@ -263,13 +263,16 @@ line	token	word	role	arg_line	arg_token
 89	2	io	iobj	89	4
 90	9	arde	subj	90	4
 90	9	arde	obl:di	90	2
-91	0			0	0
+91	2	elli	subj	0	0
+91	2	elli	ccomp	92	7
+91	2	elli	obl:a	91	4
 92	2	vedevi	subj	0	0
 92	2	vedevi	obj	92	1
 92	7	basse	subj	91	8
 92	7	basse	obl:di	92	6
 93	4	salite	subj	93	2
 93	6	eran	subj	93	7
+93	6	eran	obl	93	5
 94	3	parlava	subj	94	2
 94	9	trasse	subj	94	5
 94	9	trasse	obj	94	8

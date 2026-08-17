@@ -96,7 +96,6 @@ line	token	word	role	arg_line	arg_token
 38	7	venuto	obl:da	37	7
 38	7	venuto	obl:a	38	3
 38	7	venuto	obl:da	38	5
-39	3	Fiorenza	subj	37	1
 39	3	Fiorenza	obl:in	39	5
 40	6	compiuto	subj	37	1
 40	6	compiuto	obl:di	40	3

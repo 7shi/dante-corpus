@@ -452,7 +452,6 @@ line	token	word	role	arg_line	arg_token
 143	5	sposò	subj	143	1
 143	5	sposò	obj	143	4
 143	5	sposò	obl:a	142	4
-143	5	sposò	obl:con	143	3
 144	3	chinato	subj	0	0
 144	5	fece	subj	143	1
 144	5	fece	obj	144	6

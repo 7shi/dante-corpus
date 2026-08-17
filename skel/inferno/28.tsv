@@ -138,11 +138,11 @@ line	token	word	role	arg_line	arg_token
 51	4	ver	subj	51	2
 51	9	parlo	subj	51	7
 51	9	parlo	iobj	51	8
+52	2	fuor	subj	52	4
+52	4	cento	subj	0	0
 52	8	udiro	subj	52	5
 52	8	udiro	obj	52	7
 53	2	arrestaron	subj	52	5
-53	2	arrestaron	obj	53	1
-53	2	arrestaron	xcomp	53	6
 53	2	arrestaron	obl:in	53	4
 53	6	riguardarmi	subj	52	5
 53	6	riguardarmi	obl:per	54	2

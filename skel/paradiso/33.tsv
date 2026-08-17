@@ -234,6 +234,7 @@ line	token	word	role	arg_line	arg_token
 85	4	vidi	ccomp	85	7
 85	4	vidi	obl:in	85	3
 85	7	interna	subj	87	1
+85	7	interna	obl:per	89	6
 86	1	legato	subj	87	1
 86	1	legato	obl:con	86	3
 86	1	legato	obl:in	86	6
@@ -241,8 +242,9 @@ line	token	word	role	arg_line	arg_token
 87	7	squaderna	obl:per	87	5
 88	0			0	0
 89	2	conflati	subj	88	1
+89	2	conflati	obl	89	3
 90	5	dico	subj	90	4
-90	5	dico	obj	90	3
+90	5	dico	obj	90	2
 90	6	è	subj	90	2
 90	6	è	attr	90	9
 90	9	lume	subj	90	2
@@ -359,10 +361,11 @@ line	token	word	role	arg_line	arg_token
 128	1	pareva	obl:in	128	3
 128	1	pareva	obl:come	128	5
 129	0			0	0
-130	1	dentro		0	0
+130	0			0	0
 131	2	parve	subj	127	2
 131	2	parve	iobj	131	1
 131	2	parve	xcomp	131	3
+131	2	parve	obl	130	1
 131	3	pinta	subj	127	2
 131	3	pinta	obl:di	130	6
 131	3	pinta	obl:de	131	7

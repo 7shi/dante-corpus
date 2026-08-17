@@ -405,6 +405,7 @@ line	token	word	role	arg_line	arg_token
 133	2	pietosa	subj	133	3
 133	6	soccorse	subj	133	4
 133	6	soccorse	obj	133	5
+134	2	te	subj	0	0
 134	5	ubidisti	subj	134	4
 134	5	ubidisti	obl:a	135	4
 135	7	porse	subj	0	0

@@ -256,6 +256,7 @@ line	token	word	role	arg_line	arg_token
 103	2	ha	obj	103	5
 104	0			0	0
 105	4	gridan	subj	104	4
+105	4	gridan	obj	104	4
 105	4	gridan	obl:per	104	6
 105	4	gridan	obl:in	105	2
 106	7	sanno	subj	106	5

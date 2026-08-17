@@ -220,6 +220,7 @@ line	token	word	role	arg_line	arg_token
 71	6	ricorre	obl:a	72	3
 72	5	va	subj	72	4
 72	5	va	obl:di	72	7
+72	5	va	obl:in	72	9
 73	6	vede	subj	73	3
 73	6	vede	obj	73	5
 73	7	aborre	subj	73	3

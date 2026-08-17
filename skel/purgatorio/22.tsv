@@ -66,11 +66,10 @@ line	token	word	role	arg_line	arg_token
 24	7	pieno	subj	24	2
 24	7	pieno	obl:per	24	5
 25	4	mover	subj	25	3
-25	4	mover	xcomp	26	4
+25	4	mover	obl:a	26	4
 25	5	fenno	subj	25	2
 25	5	fenno	obj	25	3
 25	5	fenno	xcomp	25	4
-26	4	riso	subj	25	3
 26	7	rispuose	subj	0	0
 26	7	rispuose	ccomp	27	9
 27	9	cenno	subj	27	3
@@ -265,10 +264,8 @@ line	token	word	role	arg_line	arg_token
 89	3	poetando	subj	0	0
 89	4	ebb'	subj	89	5
 89	4	ebb'	obj	89	6
-90	4	chiuso	subj	90	7
-90	5	cristian	subj	90	7
 90	5	cristian	obl:per	90	3
-90	6	fu'	subj	90	7
+90	6	fu'	subj	89	5
 90	6	fu'	attr	90	4
 90	6	fu'	attr	90	5
 90	6	fu'	obl:per	90	3

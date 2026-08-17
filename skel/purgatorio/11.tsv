@@ -51,7 +51,7 @@ line	token	word	role	arg_line	arg_token
 19	7	adona	subj	19	3
 19	7	adona	obj	19	6
 19	7	adona	obl:di	19	5
-20	2	spermentar	subj	19	2
+20	2	spermentar	obj	19	2
 20	2	spermentar	obl:con	20	6
 21	2	libera	subj	0	0
 21	2	libera	obl:da	21	4
