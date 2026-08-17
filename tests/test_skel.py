@@ -4856,3 +4856,123 @@ def test_classify_divergence_rule_dw_keeps_the_sole_complement_gate():
     # With nothing else on the predicate the `attr` is the predication itself, not a depictive.
     violations = _depictive_attr_fixture(other_argument=False)
     assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _predicative_advmod_noun_fixture(arg_pos="noun"):
+    """Rule DX: "ov' io **dormi' agnello**" (paradiso 25:5). The depictive is a bare nominal,
+    which Layer 4 hangs `advmod` on the predicate exactly as it does rule R's adjective."""
+    derived = {1: [skel.SkelRow(1, 2, "dormi'", "subj", 1, 1)]}
+    given = {1: [skel.SkelRow(1, 2, "dormi'", "subj", 1, 1),
+                 skel.SkelRow(1, 2, "dormi'", "attr", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="io", deprel="nsubj",
+                           head_line=1, head_token=2),
+        (1, 2): dep.DepRow(line=1, token=2, word="dormi'", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 3): dep.DepRow(line=1, token=3, word="agnello", deprel="advmod",
+                           head_line=1, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "pronoun", (1, 3): arg_pos})
+
+
+def test_classify_divergence_rule_dx_accepts_a_nominal_depictive_advmod():
+    assert [v for v in _predicative_advmod_noun_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dx_keeps_rule_rs_adverb_gate():
+    # An `advmod` Layer 2 calls an adverb leaves the reading genuinely undecided (rule R).
+    violations = _predicative_advmod_noun_fixture(arg_pos="adverb")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _locative_case_fixture(lemma="onde", arg_pos="relative pronoun"):
+    """Rule DY: "lo cibo **onde** li pasca" (paradiso 23:5). The relative locative Layer 4 writes
+    as a `case` on its own clause's verb, whichever of its four tags Layer 2 gave the row."""
+    derived = {1: [skel.SkelRow(1, 3, "pasca", "obj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 3, "pasca", "obj", 1, 2),
+                 skel.SkelRow(1, 3, "pasca", "obl:onde", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="onde", deprel="case",
+                           head_line=1, head_token=3),
+        (1, 2): dep.DepRow(line=1, token=2, word="li", deprel="obj",
+                           head_line=1, head_token=3),
+        (1, 3): dep.DepRow(line=1, token=3, word="pasca", deprel="acl:relcl",
+                           head_line=0, head_token=0),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): arg_pos, (1, 2): "pronoun"},
+                                     morph_lemma_by_position={(1, 1): lemma})
+
+
+def test_classify_divergence_rule_dy_accepts_onde_whatever_layer_2_calls_it():
+    assert [v for v in _locative_case_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dy_separates_onde_from_onda():
+    # `onda` ("wave") shares the surface form and is not a locative marker; the lemma decides.
+    violations = _locative_case_fixture(lemma="onda")
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _conjunct_phrase_head_fixture(head=1):
+    """Rule DZ: "Or voglion … chi rincalzi / li moderni pastori e **chi li meni**"
+    (paradiso 21:130). The LLM names each free relative by its phrase head; rule C has already
+    collapsed the derivation's three citations onto the coordination head."""
+    from dante_corpus.np import NPSpan
+    derived = {1: [skel.SkelRow(1, 1, "voglion", "obj", 1, 2)]}
+    given = {1: [skel.SkelRow(1, 1, "voglion", "obj", 2, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="voglion", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="rincalzi", deprel="obj",
+                           head_line=1, head_token=1),
+        (2, 1): dep.DepRow(line=2, token=1, word="chi", deprel="nsubj",
+                           head_line=2, head_token=2),
+        (2, 2): dep.DepRow(line=2, token=2, word="meni", deprel="conj",
+                           head_line=1, head_token=2),
+    }
+    np_rows = {2: [NPSpan(line=2, start=1, end=2, head=head, text="chi meni")]}
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 2): "verb", (2, 1): "pronoun", (2, 2): "verb"},
+                                     np_rows=np_rows)
+
+
+def test_classify_divergence_rule_dz_accepts_a_conjunct_named_by_its_phrase_head():
+    assert [v for v in _conjunct_phrase_head_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_dz_requires_the_citation_to_be_the_phrase_head():
+    # Rule AI's own gate: a token from inside the span is not a name for the phrase.
+    violations = _conjunct_phrase_head_fixture(head=2)
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _speech_act_nominal_fixture(deprel="parataxis"):
+    """Rule EA: "Ed **ella**: «… tenta costui …»" (paradiso 24:34). The speech verb is gapped and
+    Layer 4 hangs the speaker on the quotation, so the derived tuple is a lone ∅ subject."""
+    derived = {1: [skel.SkelRow(1, 1, "ella", "subj", 0, 0)]}
+    given = {1: [skel.SkelRow(1, 1, "ella", "ccomp", 2, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="ella", deprel=deprel,
+                           head_line=2, head_token=1),
+        (2, 1): dep.DepRow(line=2, token=1, word="tenta", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(1, 1): "pronoun", (2, 1): "verb"})
+
+
+def test_classify_divergence_rule_ea_accepts_the_elided_speech_verbs_complement():
+    assert [v for v in _speech_act_nominal_fixture()
+            if v.detail.startswith("extra_arg")] == []
+
+
+def test_classify_divergence_rule_ea_keeps_the_parataxis_gate():
+    # A lone ∅ subject on any other clause head is rule V having declined, not an ellipsis:
+    # 720 tuples corpus-wide are that shape, and rule CS measured opening them at +180.
+    violations = _speech_act_nominal_fixture(deprel="conj")
+    assert any(v.detail.startswith("extra_arg") for v in violations)

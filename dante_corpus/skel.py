@@ -1322,6 +1322,49 @@ def _nested_in_named_phrase(
     return False
 
 
+def _conjunct_named_by_phrase_head(
+    arg: tuple[int, int], grole: str, d: dict[tuple[int, int], str],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    morph_pos_by_position: dict[tuple[int, int], str] | None,
+    np_spans_by_line: "dict[int, list[NPSpan]] | None",
+) -> bool:
+    """Rule DZ: rule AI's NP-head equivalence read **through** rule C's coordination collapse.
+
+    "Or voglion quinci e quindi **chi rincalzi** / li moderni pastori e **chi li meni**, / …, e
+    **chi di rietro li alzi**" (paradiso 21:130): three free relatives fill one object slot.
+    Layer 4 heads each on its own subjunctive verb and coordinates the second and third onto the
+    first, so rule C collapses the derivation's three citations into the one it keeps — the
+    coordination head `rincalzi`. The LLM names each clause by the `chi` that opens it, which
+    Layer 3 confirms is that clause's phrase head (`[chi li meni]`, `[chi di rietro li alzi]`).
+    The first of the three is already accepted, by rule AI: `chi` and `rincalzi` share a line, so
+    the NP-head merge pairs them. The other two are the *same* citation convention one `conj` edge
+    further out, and no rule reached them because rule AI is a same-line test and the collapse has
+    already run by the time it fires.
+
+    Both normalizations are the corpus's own, and this is the composition of the two: the LLM's
+    citation names a Layer-3 phrase, some token of that phrase coordinates onto a position the
+    derivation gives this predicate, and the role is the same on both sides. The structural
+    pattern — an NP span holding a `conj` whose head lies outside it — is censused at **85**.
+
+    Two gates keep it to the shape. The cited token must be the span's **head**, which is rule
+    AI's own test and what makes it a name for the phrase rather than a token inside it; and the
+    role must match, so a genuine disagreement about the slot still surfaces.
+    """
+    if np_spans_by_line is None or arg == (0, 0):
+        return False
+    for span in np_spans_by_line.get(arg[0], ()):
+        if span.head != arg[1]:
+            continue
+        for tok in range(span.start, span.end + 1):
+            member = (arg[0], tok)
+            if member == arg:
+                continue
+            head = _coordination_head(member, dep_index_by_pos, morph_pos_by_position)
+            if head != member and d.get(head) == grole:
+                return True
+    return False
+
+
 def _merge_np_head_citations(
     g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
     np_spans_by_line: dict[int, list[NPSpan]],
@@ -1560,13 +1603,29 @@ def _predicative_advmod(
     The adjective-POS gate is what keeps this structural rather than a blanket `advmod`
     exemption: the same shape with an adverb argument ("che fu nel cominciar cotanto **tosta**",
     "m'è **tardi**") is Layer 2 calling the word an adverb, which leaves the reading genuinely
-    undecided, and stays flagged — the same caution `_adverbial_oblique` applies in reverse."""
+    undecided, and stays flagged — the same caution `_adverbial_oblique` applies in reverse.
+
+    **Rule DX** adds the **noun** leg, which is rule CP's reasoning at rule R's attachment point.
+    Italian predicates a depictive with a bare nominal as readily as with an adjective — "ov' io
+    **dormi' agnello**" (paradiso 25:5) — and Layer 4 reaches for `advmod` here for the same want
+    of anything better that made it reach for a bare `obl` there. The two sibling gates already
+    agree with this: rule BC accepts a noun in this very deprel when the given role is `obl`, and
+    rules AZ/CP accept adjective *and* noun when the deprel is a caseless `obl`; only rule R's
+    `xcomp` leg was still adjective-only, inherited from the three adjectival lines that motivated
+    it. Censused at 52 noun `advmod` rows corpus-wide, of which one is a depictive and the rest
+    are the adverbial quantifiers and accusatives (`poco`, `fin`, `pena`, `tutto`, `volta`) — the
+    same shape of census rule CP landed on, and for the same reason: the acceptance is not the
+    census, because it fires only where the LLM independently read the token as this predicate's
+    complement, which "un **poco** avante" does not attract. The adverb and verb legs stay out."""
     if role != "xcomp":  # `attr` is already canonicalized to `xcomp` before comparison
         return False
     row = dep_index_by_pos.get(arg)
     if row is None or row.deprel != "advmod" or not _hosts_child(pos, row, dep_index_by_pos):
         return False
-    return "adjective" in (morph_pos_by_position or {}).get(arg, "").lower()
+    arg_pos = (morph_pos_by_position or {}).get(arg, "").lower()
+    if "pronoun" in arg_pos:  # rule AZ's pronoun leg, declined there and declined here
+        return False
+    return "adjective" in arg_pos or "noun" in arg_pos
 
 
 def _accusative_and_infinitive(
@@ -2384,6 +2443,10 @@ def _marker_of_derived_clause(
 
 _COMPLEMENT_ROLES = frozenset({"obj", "ccomp", "xcomp"})
 
+# Rule DY: the relative locative markers, by Layer-2 *lemma*. `onde` (whence) and `onda` (wave)
+# share a surface form and are separated here; `u'` lemmatizes to `ove`.
+_LOCATIVE_RELATIVE_LEMMAS = frozenset({"dove", "ove", "onde"})
+
 
 def _wh_word_of_derived_clause(
     pos: tuple[int, int], arg: tuple[int, int], grole: str,
@@ -3014,6 +3077,17 @@ def _classify_divergence(
         # them attaches to a verb — so this is a Layer-4 convention applied consistently, not a
         # mis-tag to correct upstream. Gated to that: Layer 2 must call the word an adverb, the
         # head must be this predicate, and the role must be an oblique.
+        #
+        # **Rule DY** reads the POS gate for the reason the docstring above states rather than
+        # for the tag it happens to test. The gate is there to separate a relative locative from
+        # a real preposition; `onde` is a relative locative by any grammar, and Layer 2 tags it
+        # four different ways across the corpus — 111 conjunction, 79 pronoun, 49 adverb, 17
+        # relative pronoun — with the *same* `obl` deprel under each. Which tag a given row got
+        # is the lottery rule DT refused to let a normalization depend on. So the gate also
+        # admits the three locative lemmas themselves, whatever Layer 2 called the row: "lo cibo
+        # **onde** li pasca" (paradiso 23:5), a `case` on its own clause's verb exactly like
+        # `dove`. Lemma, not word, is what separates `onde` "whence" from `onda` "wave" (11
+        # rows). Of the 32 `case`-on-a-verb rows these lemmas hold, 28 were already adverbs.
         if dep_index_by_pos is None:
             return False
         if grole != "obl" and not OBL_RE.fullmatch(grole):
@@ -3023,6 +3097,8 @@ def _classify_divergence(
             return False
         if (row.head_line, row.head_token) != pos:
             return False
+        if (morph_lemma_by_position or {}).get(arg, "").lower() in _LOCATIVE_RELATIVE_LEMMAS:
+            return True
         return "adverb" in (morph_pos_by_position or {}).get(arg, "").lower()
 
     def _antecedent_for_relative_pronoun(
@@ -3385,6 +3461,45 @@ def _classify_divergence(
         for row in rows
         if row.token > 0 and not row.role
     }
+    # Rule EA: the elided speech verb Layer 4 records as a `parataxis` on a bare pronoun.
+    # "Ed **ella**: «O luce etterna del gran viro … tenta costui»" (paradiso 24:34), "E **io**:
+    # «…»" — the speech verb is gapped and the corpus's tree hangs the speaker on the quotation
+    # with `parataxis`, which is a clause-head deprel, so `derive_unit` promotes the pronoun to a
+    # predicate. Nothing then attaches to it: the whole tuple is the `subj=(0, 0)` rule M's
+    # pro-drop relabelling leaves behind, which asserts a dropped subject and nothing whatever
+    # about any other slot. The LLM reads the ellipsis for what it is and gives the elided verb
+    # the quotation as its `ccomp` — a reading the derivation does not contradict, because it
+    # made no claim there.
+    #
+    # This is rule DA's boundary read one step in: DA silences a *role-less* derived row outside
+    # the subject slot, and a tuple whose only row is a ∅ subject names no argument either. The
+    # gate is not widened to that shape in general — 720 tuples corpus-wide are a lone ∅ subject,
+    # and rule CS's own +180 measurement is what they are: copular and controlled predicates
+    # whose subject comes from rule V and whose complements the LLM proposes correctly. What is
+    # gated here is Layer 4's own record of the ellipsis: a **`parataxis` on a non-verb**, which
+    # is censused at exactly **4** rows corpus-wide (purgatorio 4:127, 18:10, paradiso 24:34,
+    # 24:91) and is the same four speech-act pronouns each time.
+    #
+    # Kept on the derivation's side rather than refused there. Refusing to mint the predicate —
+    # rules AN/BN/CA's move — would turn the LLM's *correct* reading into an `extra_tuple`, which
+    # is the trade rule BN records in the other direction, where the LLM was wrong.
+    speech_act_nominal = set()
+    if dep_index_by_pos is not None:
+        derived_rows_by_pos: dict[tuple[int, int], list[SkelRow]] = {}
+        for rows in derived.values():
+            for row in rows:
+                if row.token > 0:
+                    derived_rows_by_pos.setdefault((row.line, row.token), []).append(row)
+        for p, rows in derived_rows_by_pos.items():
+            if len(rows) != 1 or rows[0].role != "subj":
+                continue
+            if (rows[0].arg_line, rows[0].arg_token) != (0, 0):
+                continue
+            row = dep_index_by_pos.get(p)
+            if row is None or row.deprel != "parataxis":
+                continue
+            if not is_verb_pos((morph_pos_by_position or {}).get(p, "")):
+                speech_act_nominal.add(p)
     for line, token in sorted(derived_preds - given_preds):
         if (line, token) in empty_derived:
             continue
@@ -3682,6 +3797,11 @@ def _classify_divergence(
                     or _relative_adverb_oblique(pos, arg, grole)
                     # rule DK: the antecedent, where the derivation names its clause's pronoun
                     or _antecedent_for_relative_pronoun(pos, arg, grole)
+                    # rule DZ: rule AI's NP head read through rule C's coordination collapse
+                    or _conjunct_named_by_phrase_head(arg, grole, d, dep_index_by_pos,
+                                                      morph_pos_by_position, np_rows)
+                    # rule EA: the elided speech verb, whose derived tuple is a lone ∅ subject
+                    or (grole != "subj" and pos in speech_act_nominal)
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",

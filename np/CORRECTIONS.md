@@ -1,5 +1,17 @@
 # Layer 3 soft-violation correction history
 
+## 1 span dropped from the Layer-5 Paradiso 21-25 read (2026-08-17)
+
+`[che raggio]` (paradiso 21:28, span 6-7, head 7) was drawn while Layer 4 read `che` as a
+determiner of `raggio`. The same read corrected that — `che` is the relative pronoun `in` governs,
+antecedent `color d'oro` (see [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)) — and Layer 3's own
+scope rule keeps **bare relative pronouns out of noun phrases**, so the span is not over-inclusive
+but wrong: it joins a pronoun of the matrix clause to the subject of the relative one. Dropped;
+`[raggio]` (7-7) was already present as its own span, and rules AI/BR/DZ read span heads, so
+leaving it would have made `che` and `raggio` each other's alternative name.
+
+`np --check` stays **0/0**.
+
 ## 1 clitic-cluster enumeration from the Layer-5 Paradiso 1-5 read (2026-08-17)
 
 `convienti` (paradiso 5:37) was retagged `convenire+ti` / `verb+pronoun` at Layer 2 (see

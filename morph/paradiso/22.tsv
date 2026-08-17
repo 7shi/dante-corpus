@@ -150,7 +150,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 21	dico	dire	verb		sg.	1	present	indicative	
 21	l'	il	article	m.	sg.				elision
 21	aspetto	aspetto	noun	m.	sg.				
-21	redui	reduce	adjective	m.	sg.				archaic
+21	redui	ridurre	verb		sg.	2	present	indicative	archaic
 22	Come	come	conjunction						
 22	a	a	preposition						
 22	lei	lei	pronoun	f.	sg.	3			

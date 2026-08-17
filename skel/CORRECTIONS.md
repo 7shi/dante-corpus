@@ -1,5 +1,168 @@
 # skel — Layer 5 correction history
 
+## Rules DX-EA, from reading Paradiso 21-25 — 245 → 234, −11 (2026-08-17)
+
+Per-position read of all **21** soft violations in Paradiso 21-25, following the eight-step
+procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Paradiso 21-25 itself
+went **21 → 11** (21: 8 → 6, 22: 2 → 2, 23: 5 → 2, 24: 4 → 0, 25: 2 → 1); the corpus went
+**245 → 234 (−11, −4.5%)**. Four deterministic Layer-5 rules, 10 Layer-4 rows, 1 Layer-2 row and
+1 Layer-3 span. `pytest` **483 passed**, 0 hard, all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **DX** (`_predicative_advmod`) | rule R's **noun** leg: the depictive nominal Layer 4 hangs `advmod` on the predicate, which rule CP already reads off a bare `obl` | 52 | −1 |
+| **DY** (`_relative_adverb_oblique`) | rule DD's POS gate read as the reason it states: the relative locative is `onde` whatever of its four tags Layer 2 gave the row | 32 | −2 |
+| **DZ** (`_conjunct_named_by_phrase_head`) | rule AI's NP-head equivalence read **through** rule C's coordination collapse | 85 | −2 |
+| **EA** (`speech_act_nominal`) | the elided speech verb Layer 4 records as a `parataxis` on a bare pronoun, whose whole derived tuple is a lone ∅ subject | 4 | −1 |
+
+Plus the upstream rows, **−6/+1** between them (counted below).
+
+### The batch's finding — the same construction, twice, decides a widening against itself
+
+The candidate that did **not** land is the one worth writing down, for the second batch running.
+Paradiso 21:5 (*«tu ti faresti **quale** / fu Semelè»*) is rule CX's shape: the derivation cites
+the comparative clause by its verb (`fu`), the LLM cites the `quale` that opens it, and the only
+thing stopping rule CX is its role gate — the derivation calls the clause an `obl` and the LLM
+calls the word an `attr`. Widening `_COMPLEMENT_ROLES` to admit `obl` is the obvious next step,
+and it takes the position.
+
+It is wrong, and what shows it is the corpus's own second instance of the construction. Paradiso
+23:14 — *«fecimi **qual** è quei che disïando altro vorria»* — is the identical line: a reflexive
+`fare` with a `quale` comparative complement, and Layer 4 wrote it the same way (`qual` `xcomp` on
+`è`, `è` `obl` on `fecimi`). That position is **already accepted**, by rule DJ, because there the
+LLM also said `obl` and the two sides agreed about the slot. So Layer 4's `obl` is a convention it
+applies consistently to this construction, and the divergence at 21:5 is the LLM claiming a
+complement where the tree asserts an adjunct — a second claim about the role, which is exactly
+what rule CX's gate exists to keep out. **A candidate that a rule's role gate blocks should be
+priced against the corpus's other instances of the same construction, not against the line that
+prompted it**: here the other instance is not new evidence for the widening, it is the evidence
+against it. 21:5 stays flagged.
+
+### The four rules
+
+- **Rule DX — rule R's noun leg** (`_predicative_advmod`). *«ov' io **dormi' agnello**»* (paradiso
+  25:5): a depictive predicated of the subject, which Layer 4 hangs `advmod` on the verb. Rule R
+  has taken exactly this shape since Phase 5, for an *adjective*, and its docstring justifies the
+  POS gate against **adverbs** — "which leaves the reading genuinely undecided" — and never
+  considers a nominal. Its two siblings already do: rule BC accepts a noun in this very deprel
+  when the given role is `obl`, and rules AZ/CP accept adjective *and* noun when the deprel is a
+  caseless `obl`. Censused at **52** noun `advmod` rows, of which one is a depictive and the rest
+  are the adverbial quantifiers and accusatives (`poco` 25, `fin` 7, `pena` 5, `tutto` 4, `volta`,
+  `passo`, `giorno`). That is the shape of census rule CP landed on and for the same reason: the
+  acceptance is not the census, because it fires only where the LLM independently read the token
+  as this predicate's complement, which *«un poco avante»* does not attract. The pronoun leg stays
+  declined, as it is in rule AZ.
+- **Rule DY — a POS gate read for the reason its docstring states** (`_relative_adverb_oblique`).
+  *«lo cibo **onde** li pasca»* (paradiso 23:5): the relative locative Layer 4 writes as a `case`
+  on its own clause's verb, which rule DD settled for `dove`/`ove` at census 21. The gate DD
+  carries is "Layer 2 must call the word an adverb", and its stated purpose is to separate a
+  relative locative from a real preposition. `onde` is a relative locative by any grammar and
+  Layer 2 tags it **four** ways across the corpus — 111 conjunction, 79 pronoun, 49 adverb, 17
+  relative pronoun — with the same `obl` deprel under each; which tag a row got is the lottery
+  rule DT refused to let a normalization depend on. So the gate now also admits the three locative
+  **lemmas** themselves. Lemma, not word, is what separates `onde` "whence" from `onda` "wave"
+  (11 rows share the surface form). Of the **32** `case`-on-a-verb rows those lemmas hold, 28 were
+  already adverbs; the rule adds paradiso 23:5 and 33:135 (*«quel principio **ond'** elli
+  indige»*). The `che`/`fin`/`secondo` rows in the same structural position stay out — those are
+  complementizers and nouns, rule BW/CK's question, not this one.
+- **Rule DZ — rule AI through rule C** (`_conjunct_named_by_phrase_head`). *«Or voglion quinci e
+  quindi **chi rincalzi** / li moderni pastori e **chi li meni**, / … e **chi di rietro li alzi**»*
+  (paradiso 21:130): three free relatives in one object slot. Layer 4 heads each on its own
+  subjunctive and coordinates the second and third onto the first, so rule C collapses the
+  derivation's three citations onto the coordination head; the LLM names each clause by the `chi`
+  that opens it, which Layer 3 confirms is that clause's phrase head. **The first of the three was
+  already accepted** — by rule AI, because `chi` and `rincalzi` share a line and the NP-head merge
+  is a same-line test. The other two are the same citation convention one `conj` edge further out,
+  and nothing reached them, because by the time rule AI fires the collapse has already run. This
+  is the *«which normalization has already run on the citation»* question (rules CD, CI, DT) in
+  its composed form: two normalizations that are each the corpus's own, and the shape that needs
+  both. The structural pattern — a Layer-3 span holding a `conj` whose head lies outside it — is
+  censused at **85**. Gated on rule AI's own test, that the cited token is the span's *head*, and
+  on the role matching.
+- **Rule EA — the elided speech verb, on the derivation's side** (`speech_act_nominal`). *«Ed
+  **ella**: «O luce etterna del gran viro … tenta costui»»* (paradiso 24:34): the speech verb is
+  gapped and Layer 4 hangs the speaker on the quotation with `parataxis`, a clause-head deprel, so
+  `derive_unit` promotes the pronoun to a predicate. Nothing then attaches to it — the whole tuple
+  is the `subj=(0, 0)` rule M's pro-drop relabelling leaves behind, which asserts a dropped
+  subject and nothing whatever about any other slot. The LLM reads the ellipsis for what it is and
+  gives the elided verb the quotation as its `ccomp`, and the derivation does not contradict that,
+  because it made no claim there. This is **rule DA's boundary read one step in**: DA silences a
+  role-less derived row outside the subject slot, and a tuple whose only row is a ∅ subject names
+  no argument either. It is deliberately **not** widened to that shape in general — **720** tuples
+  corpus-wide are a lone ∅ subject, and rule CS's own +180 measurement is what they are, copular
+  and controlled predicates whose subject comes from rule V and whose complements the LLM proposes
+  correctly. What is gated is Layer 4's own record of the ellipsis, a `parataxis` on a **non-verb**,
+  censused at exactly **4** rows corpus-wide (purgatorio 4:127 *«Ed elli»*, 18:10 *«E io»*,
+  paradiso 24:34 *«Ed ella»*, 24:91 *«E io»*) — the same speech-act pronoun each time.
+  Kept as an acceptance rather than as a refusal to mint the predicate: rules AN/BN/CA's move
+  would turn the LLM's *correct* reading into an `extra_tuple`, which is the trade rule BN records
+  running the other way, where the LLM was wrong.
+
+### Upstream rows — Layer 4 ×10, Layer 2 ×1, Layer 3 ×1 (−6/+1)
+
+Applied with a gated script that asserts the word at each `(line, token)` before rewriting; all
+four upstream checks stay 0 and `pytest` passes. See [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md),
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md), [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md).
+
+- **paradiso 21:28** *«di color d'oro **in che** raggio traluce»* — `che` is the relative pronoun
+  `in` governs, antecedent `color d'oro` ("gold colour in which a ray shines through"). Layer 4
+  read it as a determiner of `raggio` ("in which ray"). Retagged `det`→`obl` on the clause's verb,
+  and the Layer-3 span `[che raggio]` dropped, Layer 3's own scope rule keeping bare relative
+  pronouns out of noun phrases (`[raggio]` was already there). **This correction costs +1**: the
+  two violations it removes are replaced by three, because with the tree right the LLM's own
+  misreading — `raggio` as the oblique and a ∅ subject — is now fully reported. The honest trade
+  the series has recorded since rule AM; the count is not the measure.
+- **paradiso 21:105** *«a dimandarla umilmente **chi** fue»* — the indirect question is
+  `dimandare`'s second object, not a predicative complement. `attr` on a non-copular verb is
+  censused at **1** row corpus-wide, this one; the other 447 sit on `essere` (351), `fare` (32),
+  `parere`, `chiamare`, `tenere`, `rendere` and the rest of the predicative verbs. `attr`→`obj`.
+- **paradiso 23:17** *«Ma poco fu tra uno e altro quando, / **del mio attender**, dico, e del
+  vedere / lo ciel venir più e più rischiarando»* — the parenthetical gloss says what the two
+  moments were, so it belongs to the interval `fu` states, not to the brightening; `dico`, which
+  marks the gloss, is already `parataxis` on `fu`. `attender` re-attached from `rischiarando` to
+  `fu`. Two violations, one at each end of the pair.
+- **paradiso 24:19** *«**Di quella** ch'io notai **di più carezza** / vid' ïo uscire un foco»* —
+  two prepositional phrases, one inside the other's relative clause. Layer 4 made `quella` a
+  determiner of `carezza` *across* the relative clause and split "di più carezza" in half. Line 21
+  has the parallel phrase (*«nullo vi lasciò **di più chiarezza**»*) parsed right, which is what
+  decides it. Six rows.
+- **paradiso 24:147** *«quest' è la favilla / che si dilata in fiamma poi vivace, / e come stella
+  in cielo in me **scintilla**»* — the second verb of the relative clause, coordinate with `dilata`
+  and sharing its subject `che`, not a conjunct of the noun `favilla`. Re-headed onto `dilata`;
+  the derivation then propagates `che` and both violations go.
+- **paradiso 22:21** (Layer 2) *«se com' io dico l'aspetto **redui**»* — `redui` is the 2sg present
+  of *reddure* ("riduci, rivolgi"), not an adjective. Layer 4 already heads a clause on it and
+  gives it `l'aspetto` as an object. Retagged, which does not move the count: the artifact is
+  frozen and the LLM's omission of the predicate stays reported until a `--fix` round re-reads it.
+
+### Candidates censused and dropped
+
+- **Rule CX's role gate widened to `obl`** — the batch's finding, above. Refuted by paradiso 23:14,
+  the corpus's other instance of the same construction.
+- **A derived tuple that is a lone ∅ subject, in general** — measured as a population rather than
+  as a rule: **720** corpus-wide, 133 of them on non-verbs, and rule CS's own +180 measurement
+  says what they are. Rule EA takes the 4 that are Layer 4's record of an ellipsis and nothing
+  else.
+
+### Standing shapes the batch recorded but did not settle
+
+- **The prepositional adjunct and the dative clitic** — the two clauses already written for the
+  sixth round, with two more instances each. 23:7 (*«previene il tempo»*, `la notte` omitted) and
+  23:10 (the *«Come l'augello …»* simile's own nominal, omitted) are `_CONV_ADJUNCT`'s target;
+  25:61 (*«ché non **li** saran forti»*, the dative of the person concerned read as the subject) is
+  `_CONV_DATIVE`'s, and is its second instance after the three the 11-20 batch found. **No new
+  prompt candidate came out of this batch**, which is now true of four of the five Paradiso
+  batches.
+- **The comparison's second term in a role other than `obl`** (22:79, *«grave usura tanto non si
+  tolle … **quanto quel frutto**»*, given `obj`). The same standing shape the 11-20 batch recorded
+  at 15:102 and 16:59; rule AR's role gate is still the obvious widening and still uncensused.
+- **The right referent named by the wrong token** (21:23, *«quanto m'era a grato / ubidire»*: the
+  infinitive's controller is the dative `m'`, and the LLM cites the `io` two lines up that means
+  the same person). Accepting it would need coreference, which *Out of scope* rejects; supplying
+  the controller in rule V would leave the position flagged anyway.
+- **Genuine LLM misreadings, left flagged**: 21:54 (the determiner of the nominalized infinitive
+  `'l chieder` cited as its object), 21:28 (above), 22:79 (above).
+
 ## Rules DS-DW, from reading Paradiso 11-20 — 261 → 245, −16 (2026-08-17)
 
 Per-position read of all **43** soft violations in Paradiso 11-20 — **two** batches of the

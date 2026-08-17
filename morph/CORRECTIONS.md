@@ -1,5 +1,19 @@
 # Manual Layer-2 corrections
 
+## 1 row from the Layer-5 Paradiso 21-25 read (2026-08-17)
+
+**paradiso 22:21 `redui`** — `reduce` / adjective / m. sg. → `ridurre` / verb / 2sg present
+indicative. "se com' io dico l'aspetto **redui**": `redui` is the second person present of the
+archaic *reddure* ("riduci, rivolgi" — turn your gaze back), the verb of the `se`-clause, not an
+adjective. Layer 4 already reads it that way — it heads a clause on the token and gives it
+`l'aspetto` as an object. Found in the per-position read of Paradiso 21-25 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). Applied by a gated script that asserts the
+word and each old field value before rewriting.
+
+Layer 5 **±0**, and applied for the tag rather than for the count: the artifact is frozen, so the
+LLM's not proposing a tuple for the predicate stays reported as a `missing_tuple` until a `--fix`
+round re-reads the line with the corrected morphology. `morph --check` stays 0/0.
+
 ## 1 row from the Layer-5 Paradiso 11-20 read (2026-08-17)
 
 **paradiso 15:19 `dal`** — lemma `di+il` → `da+il`. "tale **dal corno** che 'n destro si stende /

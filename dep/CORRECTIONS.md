@@ -1,5 +1,88 @@
 # dep — Layer 4 correction history
 
+## 10 rows from the Layer-5 Paradiso 21-25 read (2026-08-17)
+
+The per-position read of Paradiso 21-25's 21 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found ten Layer-4 rows wrong, in five places.
+Applied with a gated script that asserts the word — and that the row is not already the target
+value — at each `(line, token)` before rewriting; `morph`/`np`/`dep`/`case --check` all re-run at 0
+and `pytest` at 483. Layer 5 **−6/+1** together with the Layer-2 and Layer-3 rows.
+
+### paradiso 21:28 — `in che` is the relative pronoun, not a determiner
+
+"di color d'oro **in che** raggio traluce" — gold colour *in which* a ray shines through. `che` is
+the relative pronoun the preposition `in` governs, with `color d'oro` as its antecedent; Layer 4
+read it as a determiner of `raggio` ("in which ray"), which left the relative clause with no
+record of its own oblique.
+
+| token | was | now |
+|---|---|---|
+| 28.6 `che` | `det` ← 28.7 `raggio` | `obl` ← 28.8 `traluce` |
+
+Layer 5 **−2/+3**, deliberately. With the tree right, the derivation gives `traluce` the subject
+`raggio` and the oblique `che`, and the LLM's own misreading — `raggio` as the oblique, with a ∅
+subject — is now fully reported instead of half-matching a wrong tree. The same honest trade as
+paradiso 11:92 in the previous batch. The Layer-3 span `[che raggio]` was dropped in the same pass
+(see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)).
+
+### paradiso 21:105 — an indirect question is an object, not a predicative complement
+
+"a dimandarla umilmente **chi** fue". `attr` is the corpus's deprel for a predicate complement;
+censused corpus-wide, **448** rows carry it and 447 sit on a copular or predicative verb (`essere`
+351, `fare` 32, `parere` 15, `vedere`, `divenire`, `chiamare`, `tenere`, `rendere`, `appellare`,
+`stimare`, …). `dimandare` is the single outlier.
+
+| token | was | now |
+|---|---|---|
+| 105.4 `chi` | `attr` ← 105.2 `dimandarla` | `obj` ← 105.2 `dimandarla` |
+
+Layer 5 **−1**.
+
+### paradiso 23:17 — the parenthetical gloss belongs to the interval, not to the brightening
+
+"Ma poco fu tra uno e altro quando, / **del mio attender**, dico, e del vedere / lo ciel venir più
+e più rischiarando". The gloss says what the two moments were, so it modifies what `fu` states;
+`dico`, the word that marks it as a gloss, is already `parataxis` on `fu`.
+
+| token | was | now |
+|---|---|---|
+| 17.3 `attender` | `obl` ← 18.7 `rischiarando` | `obl` ← 16.3 `fu` |
+
+Layer 5 **−2** — one violation at each end of the pair (`extra_arg` on `fu`, `missing_arg` on
+`rischiarando`).
+
+### paradiso 24:19 — two prepositional phrases, one inside the other's relative clause
+
+"**Di quella** ch'io notai **di più carezza** / vid' ïo uscire un foco". Layer 4 made `quella` a
+determiner of `carezza` *across* the intervening relative clause and split "di più carezza" in
+half, giving `carezza` to the matrix verb and `di più` to `notai`. Line 21 carries the parallel
+phrase — "che nullo vi lasciò **di più chiarezza**", with `di` `case` on `chiarezza` and `più`
+`amod` on it — parsed correctly, which is what decides the line.
+
+| token | was | now |
+|---|---|---|
+| 19.1 `Di` | `case` ← 19.8 `carezza` | `case` ← 19.2 `quella` |
+| 19.2 `quella` | `det` ← 19.8 `carezza` | `obl` ← 20.1 `vid'` |
+| 19.5 `notai` | `acl:relcl` ← 19.8 `carezza` | `acl:relcl` ← 19.2 `quella` |
+| 19.6 `di` | `case` ← 19.7 `più` | `case` ← 19.8 `carezza` |
+| 19.7 `più` | `advmod` ← 19.5 `notai` | `amod` ← 19.8 `carezza` |
+| 19.8 `carezza` | `obl` ← 20.1 `vid'` | `obl` ← 19.5 `notai` |
+
+Layer 5 **−1**.
+
+### paradiso 24:147 — the second verb of a relative clause, not a conjunct of its antecedent
+
+"quest' è la favilla / che si dilata in fiamma poi vivace, / e come stella in cielo in me
+**scintilla**". Both verbs describe the spark, under the one relative pronoun `che`; Layer 4
+coordinated the second onto the noun `favilla` instead, so the derivation propagated `favilla`'s
+own subject (`quest'`) into it.
+
+| token | was | now |
+|---|---|---|
+| 147.8 `scintilla` | `conj` ← 145.8 `favilla` | `conj` ← 146.3 `dilata` |
+
+Layer 5 **−2** — the shared subject `che` now propagates, and both halves of the pair go.
+
 ## 9 rows from the Layer-5 Paradiso 11-20 read (2026-08-17)
 
 The per-position read of Paradiso 11-20's 43 Layer-5 soft violations (see

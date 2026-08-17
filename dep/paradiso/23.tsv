@@ -111,7 +111,7 @@ line	token	word	deprel	head_line	head_token
 16	8	quando	mark	18	7
 17	1	del	case	17	3
 17	2	mio	det:poss	17	3
-17	3	attender	obl	18	7
+17	3	attender	obl	16	3
 17	4	dico	parataxis	16	3
 17	5	e	cc	17	7
 17	6	del	case	17	7

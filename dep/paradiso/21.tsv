@@ -193,7 +193,7 @@ line	token	word	deprel	head_line	head_token
 28	3	d'	case	28	4
 28	4	oro	nmod	28	2
 28	5	in	case	28	6
-28	6	che	det	28	7
+28	6	che	obl	28	8
 28	7	raggio	nsubj	28	8
 28	8	traluce	acl:relcl	28	4
 29	1	vid'	root	0	0
@@ -754,7 +754,7 @@ line	token	word	deprel	head_line	head_token
 105	1	a	mark	105	2
 105	2	dimandarla	xcomp	104	8
 105	3	umilmente	advmod	105	2
-105	4	chi	attr	105	2
+105	4	chi	obj	105	2
 105	5	fue	acl:relcl	105	4
 106	1	Tra	case	106	3
 106	2	due	nummod	106	3
