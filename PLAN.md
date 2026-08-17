@@ -51,6 +51,50 @@
 >
 > ---
 >
+> ### What was landed after the round, and what the next session does
+>
+> **Both of the round's checker findings are in** (2026-08-18, base **0 hard / 160 soft**,
+> `pytest` **534**, all other layers 0/0):
+>
+> - **Rule EH** — the fused clitic named after its own words, 161 → 160, censused 1 of 7
+>   (`skel/CORRECTIONS.md`).
+> - **The refusal split** (`skel/PLAN.md` §31) — `no actionable answer` separated into
+>   `refused: the reading stands` and `no usable answer`, counted per class and printed as a
+>   `refused` column in the fix summary, which is itself now written into `--log`.
+>
+> **The next session's task is the eighth `--fix` round, and it is the user's to run:**
+>
+> ```
+> uv run skel.py <canticle> --fix -m $(MODEL) --no-whole --log skel-<canticle>.log
+> ```
+>
+> three ways in parallel, one log per process. `--no-whole` is the round's one deliberate change
+> (§30 finding 6: 128 calls for 6 violations). `--log` is no longer optional in practice — the
+> per-class call and refusal table only exists if it is passed, and it is the round's second product.
+> `make -C skel fix` still does **not** pass either flag; that standing decision is untouched.
+>
+> **Before reading the result, read the six-question checklist** in `skel/PLAN.md`'s *The Seventh
+> Round Has Run*. It was written before the round so the round cannot be read backwards into
+> whatever it happens to show. The short version: does `dual_role` still outrun everything else now
+> that its easy population is gone; what did `--no-whole` cost; does the refusal census reproduce
+> per class; is anything refused that was repaired last time; did `_CONV_DATIVE` hold; and are the
+> field notes still in single digits.
+>
+> **After it, the route is checker-side and the reading list already exists** — `arg_slot`'s 8
+> predicates (7-for-7 `keep` in round 7), then `extra_arg` (16), `extra_arg_subject` (15),
+> `missing_arg`'s 10 `none`. Read them with `read.py` and give each the five verdicts in *How to
+> Read a Batch*; a refusal chooses a position and has no standing on what is wrong there. Rule EH is
+> the worked example of the whole route: the model refused, the refusal was read, the checker was
+> wrong.
+>
+> **Not queued, deliberately**: any prompt change (six rounds of verdicts say only withdrawing a
+> licence, narrowing one, or making an instruction executable has ever moved a class), any widening
+> of the field-note slot (§29 is measured and did not pay), and any restructuring of
+> `dante_corpus/skel.py` — that waits for 0, which is what makes it safe. See
+> [`skel/PORTABILITY.md`](skel/PORTABILITY.md).
+>
+> ---
+>
 > **The sixth `--fix` round, for reference.** **213 → 174 (−39,
 > −18.3%)**, 0 hard, `pytest` **494 passed**, `skel/*.tsv` only; units 168 → 141 (27 cleared, 5
 > improved, **0 regressed, 0 newly flagged**), per-unit yield **0.232**. This was the round the read
@@ -173,6 +217,15 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 - **Layer 5 (Phase 6)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (fourteen class-specific micro-prompts, keyed by POS, by role, by class alone, or — for `arg_slot` and `dual_role` — on a *pair* of rows), and Stage 3 (fallback whole-unit regeneration, **measured at 128 calls for 6 violations in round 7 and switched off for round 8**). Seven user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)**, **213 → 174 (−39)** and **224 → 161 (−63)**.
   - **Detailed Phase 6 Plan**: For Phase 6 operating principles, architectural details, active routes, and measurement procedures, see [`skel/PLAN.md`](skel/PLAN.md).
 - **Latest Improvements**:
+  - **The refusal split (2026-08-18)**: `no actionable answer` was two outcomes wearing one label.
+    `_is_refusal` separates the model **standing by its reading** — every answer it gave is its
+    class's own word for *leave this as it is* (`keep`/`none`/`both`/`yes`, or for `role_mismatch`
+    the role the artifact already carries) — from a response the driver could not use. Counted as
+    `refused:<class>` / `unusable:<class>` and printed as a **`refused` column** in the fix summary,
+    which is written to `--log`. It adds no call, changes no prompt and moves no position; what it
+    produces is the census that was being discarded — 57 of round 7's 332 calls, and a class that is
+    all refusals is checker-side work rather than a prompt population. `pytest` **534** (11 new,
+    mutation-checked at three sites). See [`skel/PLAN.md`](skel/PLAN.md) §31.
   - **Rule EH (2026-08-18)**: **161 → 160**, the seventh round's one concrete checker finding, found
     by the model refusing. Purgatorio 2:40's `sen` = `si`+`ne` written as `obl:si` **and** `obl:ne`
     of `venne` is rule AL/CM's licensed fused clitic; `_case_supports_role` sends every
@@ -514,14 +567,17 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Standing Disciplines
 
-- **A refusal is an answer, not a parse failure** (2026-08-18, §30 finding 3): `keep`, `none`, `drop`
-  and `both` are first-class answers in the class prompts' own vocabularies, and each of them means
-  *the checker is wrong here*. When every answer in a call is one of them the splice changes nothing,
-  `apply` returns False, and the driver files the whole response under `no actionable answer` and
-  moves on — discarding 30% of a round. **Count refusals per class; the census is a
-  position-by-position reading list.** The corollary is that a "frozen" class is ambiguous until you
-  look: `arg_slot` at 0 removed over 7 calls is not a model that could not answer, it is a model that
-  answered `keep` seven times.
+- **A refusal is an answer, not a parse failure** (2026-08-18, §30 finding 3; **split in the driver
+  the same day**, §31): `keep`, `none`, `both` and `yes` are first-class answers in the class
+  prompts' own vocabularies, and each means *the checker is wrong here*. When every answer in a call
+  is one of them the splice changes nothing, `apply` returns False, and the driver used to file the
+  whole response under `no actionable answer` — discarding 30% of a round. It is now counted as
+  `refused:<class>` and printed in the fix summary. **The census is a position-by-position reading
+  list**, and a class that is all refusals is checker-side work rather than a prompt population. Two
+  corollaries: a "frozen" class is ambiguous until you look (`arg_slot` at 0 removed over 7 calls is
+  not a model that could not answer, it is a model that answered `keep` seven times); and a *failed
+  change* is not a refusal — `drop` the splice could not carry out is a splice failure, and counting
+  it as a verdict would poison the census.
 - **A question's yield is a property of its evidence, not of the residue's difficulty** (2026-08-18,
   §30 finding 1): `dual_role` runs at 0.833 violations per call and every other class at 0.081,
   because rule EG's is the only question whose evidence sits entirely inside the artifact — it shows
@@ -548,7 +604,7 @@ Layer-4 rounds recorded. See [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md).
 
 ### Next Steps & Open Routes
 
-- **The plan for the rest of the work (2026-08-18, after round 7)**: the read series is **complete**, seven rounds have run, and the base is **161**. **The next step is checker-side, and the seventh round named where**: 30% of its calls ended in the model refusing, and that census is a position-by-position list of where it thinks `--check` is wrong (`skel/PLAN.md` §30 finding 3). One item is **landed**: rule EG's fused-clitic leg, as **rule EH** (161 → 160, censused 1 of 7). One remains ahead of the eighth round: **split `no actionable answer`** into an unusable response and a refusal, counted per class in the summary table. Then run the eighth round **`--no-whole`**. The standing assistant-side route remains the subject slot, unmoved by round 7 (`extra_arg subj` 24 → 24).
+- **The plan for the rest of the work (2026-08-18, after round 7)**: the read series is **complete**, seven rounds have run, and the base is **161**. **The next step is checker-side, and the seventh round named where**: 30% of its calls ended in the model refusing, and that census is a position-by-position list of where it thinks `--check` is wrong (`skel/PLAN.md` §30 finding 3). Both items are **landed**: rule EG's fused-clitic leg as **rule EH** (161 → 160, censused 1 of 7), and the **refusal split** (`skel/PLAN.md` §31), which turns 30% of a round's calls from discarded output into a per-class census. **What remains is the eighth round, the user's to run, `--no-whole`** — see [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh Round Has Run* for its scale and the six-question checklist written for after it. The standing assistant-side route remains the subject slot, unmoved by round 7 (`extra_arg subj` 24 → 24).
 - **The read series is CLOSED (2026-08-17)**: all 100 cantos have been read position by position, in 21 batches. Nothing is re-read — the standing residue is reading error, and it is the most direct sample there is of what a `--fix` round leaves behind. The eight-step per-batch procedure stays written down in [`skel/PLAN.md`](skel/PLAN.md)'s *How to Read a Batch* for any future audit; step 3 now carries the Paradiso 26–33 batch's caution about prompt verdicts. Tool: `skel/read.py`.
 - **The prompt queue is empty again (2026-08-18)**: the sixth round decided `_CONV_ADJUNCT` **positive** (−52.6% on the prepositional obliques its prose names, −24.0% on the aggregate bucket) and `_CONV_DATIVE` **negative** (`obl:a` 12 → 11). Six rounds in, the pattern across all six prompt verdicts is that **only a change withdrawing or narrowing a licence the prompt itself granted has ever moved a class**; every added convention paragraph about a shape the model reads wrong has measured at the round average.
 - **Inferno's 44, Purgatorio's 59 and Paradiso's 58 standing positions** are the whole corpus's read residue with four `--fix` rounds over it, and 51 of the 152 divergence positions have now survived three rounds each. **The residue is not going to 0 by running rounds**: outside `dual_role` a call is worth 0.081 (§30), so a round over the standing 152 is expected to take 12–20. What closes it is checker-side work.
@@ -583,7 +639,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**The open route is checker-side, off the seventh round's refusal census**: the read series is complete — all 100 cantos read position by position — and seven rounds have run, the last of them 224 → 161 with all four of its candidates decided (`skel/PLAN.md` §30). What the seventh round added is an instrument: run with `--log`, it showed that **30% of its calls end in the model refusing**, naming position by position where it thinks `--check` is wrong. Rule EG's fused-clitic leg is landed (rule EH, base now 160); splitting that signal out of `no actionable answer` is the one item left before an eighth round (run `--no-whole`). The standing assistant-side route is the subject slot, 40 of the 152 and unmoved by four rounds. All five layers plus the case extension are implemented, built for all 100
+**The open route is checker-side, off the seventh round's refusal census**: the read series is complete — all 100 cantos read position by position — and seven rounds have run, the last of them 224 → 161 with all four of its candidates decided (`skel/PLAN.md` §30). What the seventh round added is an instrument: run with `--log`, it showed that **30% of its calls end in the model refusing**, naming position by position where it thinks `--check` is wrong. Both are landed — rule EH (base now 160) and the refusal split — so the next step is the eighth round itself, run `--no-whole`, and after it the reading list the refusal census produces. The standing assistant-side route is the subject slot, 40 of the 152 and unmoved by four rounds. All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).

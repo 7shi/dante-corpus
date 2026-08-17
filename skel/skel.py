@@ -611,6 +611,50 @@ def _parse_answers(text: str) -> dict[int, str]:
     return {int(n): body.strip().strip("`*") for n, body in _ANSWER_RE.findall(text)}
 
 
+# The one answer each class's own vocabulary defines as *leave the artifact as it is*. A response
+# made entirely of these is the model's verdict — "the checker is wrong here" — and not a response
+# the driver failed to parse. `role_mismatch` has no such word: standing pat there is answering the
+# role the artifact already carries, which `_is_refusal` compares against `given_role`.
+#
+# Round 7 measured what this distinction is worth: 101 of 332 calls produced no splice, and 57 of
+# them were an answer from this table (`skel/PLAN.md` §30 finding 3). Filing those as unusable threw
+# away a position-by-position list of where the model thinks `--check` is wrong.
+_STAND_PAT = {
+    "extra_arg": "keep", "extra_arg_subject": "keep", "extra_arg_adjective": "keep",
+    "arg_slot": "keep",
+    "missing_arg": "none", "missing_arg_adverb": "none", "missing_arg_subject": "none",
+    "dual_role": "both",
+    "extra_tuple": "yes", "extra_tuple_adverb": "yes", "extra_tuple_adjective": "yes",
+}
+
+
+def _is_refusal(cls: str, vs: list[morph.Violation], text: str) -> bool:
+    """Whether a response that changed nothing is the model **standing by its reading**.
+
+    Deliberately strict: it must have answered, and *every* answer it gave must be one that asserts
+    the artifact as written. Anything else — an unparseable response, or an answer that tried to
+    change something the splice could not use — is not a refusal, because the model did not decline.
+    A `drop` that failed to apply is a splice failure, not a verdict.
+
+    Question numbers are only consulted for `role_mismatch`, whose questions are one per violation.
+    `arg_slot` asks one question for a *pair*, so the count of answers is not compared to `vs`.
+    """
+    answers = _parse_answers(text)
+    if not answers:
+        return False
+    word = _STAND_PAT.get(cls)
+    given = {i: skel._canonicalize_role(v.given_role or "").lower()
+             for i, v in enumerate(vs, start=1)}
+    for i, raw in answers.items():
+        ans = raw.strip().strip("`*'\"").lower()
+        if word is not None and ans == word:
+            continue
+        if cls == "role_mismatch" and ans and skel._canonicalize_role(ans).lower() == given.get(i):
+            continue
+        return False
+    return True
+
+
 def _token_ref(answer: str) -> tuple[int, int] | None:
     """Parse a `<line>.<token>` citation; `0.0` is the ∅ sentinel and parses as (0, 0)."""
     m = _TOKEN_REF_RE.match(answer.strip().strip("'\"“”"))
@@ -1234,7 +1278,7 @@ def _violation_subclass(v: morph.Violation, ctx: _UnitContext) -> str:
 def _ask_class(
     cls: str, ctx: _UnitContext, vs: list[morph.Violation],
     rows_by_line: dict[int, list[skel.SkelRow]], model: str, ui: StatusLine, label: str,
-    log_path: Path | None = None,
+    log_path: Path | None = None, stats: Counter[str] | None = None,
 ) -> dict[int, list[skel.SkelRow]] | None:
     """Put one class's question to the model and splice the answer into a *copy* of the unit's
     rows. Returns the modified copy, or None if the model said nothing actionable.
@@ -1262,10 +1306,17 @@ def _ask_class(
     )
     trial = {no: list(rows) for no, rows in rows_by_line.items()}
     if not prompt.apply(ctx, vs, trial, answer):
+        # Two different outcomes wore one label until 2026-08-18. A **refusal** is an answer —
+        # the model asserting the artifact against the checker — and its census is a reading list;
+        # an **unusable** response is one the driver could not act on. Only the second is a failure.
+        refused = _is_refusal(cls, vs, answer)
+        if stats is not None:
+            stats[f"{'refused' if refused else 'unusable'}:{cls}"] += 1
         if log_path:
+            verdict = ("refused: the reading stands" if refused else "no usable answer")
             with log_path.open("a", encoding="utf-8") as f:
                 f.write(f"=== {label} lines {ctx.nos[0]}-{ctx.nos[-1]} [{cls}]: "
-                        f"no actionable answer ===\n{answer.strip()}\n\n")
+                        f"{verdict} ===\n{answer.strip()}\n\n")
         return None
     return trial
 
@@ -1858,7 +1909,8 @@ def _fix_canto(
                 if not vs or cls not in _CLASS_PROMPTS:
                     continue
                 stats[f"calls:{cls}"] += 1
-                trial = _ask_class(cls, ctx, vs, rows_by_line, model, ui, label, log_path)
+                trial = _ask_class(cls, ctx, vs, rows_by_line, model, ui, label, log_path,
+                                   stats)
                 if trial is None:
                     continue
                 hard_after, soft_after = _classify_violations(
@@ -1947,16 +1999,22 @@ def fix(canticles: list[str], model: str, spec: str | None, log_path: Path | Non
 
 
 def _fix_summary_lines(totals: Counter[str]) -> list[str]:
-    """The per-class `calls / removed / per call` table, as lines.
+    """The per-class `calls / removed / per call / refused` table, as lines.
 
     Separated from the printing so the same text reaches the terminal and `--log`. The table is
     the round's only record of what a call *cost*: the violation diff says which positions moved,
     never how many questions were asked to move them, and a round's yield can be carried entirely
     by one class while every other sits at zero.
+
+    The `refused` column is the round's second product (2026-08-18, `skel/PLAN.md` §30 finding 3):
+    calls where the model answered and its answer was *the artifact as written*. Those are not
+    failures — they are the model naming, position by position, where it thinks `--check` is wrong,
+    and a class that is all refusals is checker-side work rather than a prompt population.
     """
     flagged = totals["units:flagged"]
     calls = sum(n for k, n in totals.items() if k.startswith("calls:"))
     removed = sum(n for k, n in totals.items() if k.startswith("removed:"))
+    refused = sum(n for k, n in totals.items() if k.startswith("refused:"))
     repairs = {k.split(":", 1)[1]: n for k, n in totals.items() if k.startswith("repair:")}
 
     lines = [f"units flagged: {flagged}; "
@@ -1966,16 +2024,18 @@ def _fix_summary_lines(totals: Counter[str]) -> list[str]:
         lines.append("stage 1 (deterministic, 0 calls): "
                      + ", ".join(f"{n} {kind}" for kind, n in sorted(repairs.items()))
                      + f" -> {totals['removed:_deterministic']} violation(s)")
-    lines.append(f"{'class':24s} {'calls':>7s} {'removed':>8s} {'per call':>9s}")
+    lines.append(f"{'class':24s} {'calls':>7s} {'removed':>8s} {'per call':>9s} {'refused':>8s}")
     for key in sorted(k for k in totals if k.startswith("calls:")):
         cls = key.split(":", 1)[1]
         n_calls = totals[key]
         n_removed = totals[f"removed:{cls}"]
         rate = n_removed / n_calls if n_calls else 0.0
-        lines.append(f"{cls:24s} {n_calls:7d} {n_removed:8d} {rate:9.3f}")
+        lines.append(f"{cls:24s} {n_calls:7d} {n_removed:8d} {rate:9.3f} "
+                     f"{totals[f'refused:{cls}']:8d}")
     rate = removed / calls if calls else 0.0
-    lines.append(f"{'TOTAL':24s} {calls:7d} {removed:8d} {rate:9.3f}")
-    lines.append(f"fix complete: {removed} soft violation(s) removed over {calls} LLM call(s)")
+    lines.append(f"{'TOTAL':24s} {calls:7d} {removed:8d} {rate:9.3f} {refused:8d}")
+    lines.append(f"fix complete: {removed} soft violation(s) removed over {calls} LLM call(s); "
+                 f"{refused} refused (the reading stands)")
     return lines
 
 

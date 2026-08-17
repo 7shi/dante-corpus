@@ -9,8 +9,18 @@
   (the Purgatorio 26–30 read added 10, the Purgatorio 31–33 read 4 more, the Paradiso 1–5 read 8 more, the Paradiso 6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more, rule EG 17 more and the field-note instrument 7 more). The fourth, fifth and sixth
   `--fix` rounds (2026-08-16 / 2026-08-17 / 2026-08-18) touched `skel/*.tsv` only, so no other layer moved.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
-- **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific micro-prompts — now **fourteen**, keyed by POS, by role, by class, or on the two shapes that stand in for a pair of rows, Stage 3 fallback). Seven user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**, **650 → 541 (−16.8%)**, **351 → 298 (−15.1%)**, **213 → 174 (−18.3%)**, **224 → 161 (−28.1%)** — the last one measured per class *and per call*, which is what showed that its record numbers are one class (§30).
+- **Phase 6**: Rebuilt `--fix` into a three-stage driver, instrumented since round 7 with a per-class `calls / removed / per call / refused` table written to `--log` (Stage 1 deterministic, Stage 2 class-specific micro-prompts — now **fourteen**, keyed by POS, by role, by class, or on the two shapes that stand in for a pair of rows, Stage 3 fallback). Seven user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**, **650 → 541 (−16.8%)**, **351 → 298 (−15.1%)**, **213 → 174 (−18.3%)**, **224 → 161 (−28.1%)** — the last one measured per class *and per call*, which is what showed that its record numbers are one class (§30).
 - **Latest Work**:
+  - **The refusal split (2026-08-18, §31)**: `no actionable answer` was two outcomes wearing one
+    label. `_is_refusal` separates the model **standing by its reading** — every answer it gave is
+    its class's own word for *leave this as it is* (`keep`/`none`/`both`/`yes`, or for
+    `role_mismatch` the role the artifact already carries) — from a response the driver could not
+    use. Counted as `refused:<class>` / `unusable:<class>`, written to the log as
+    `refused: the reading stands`, and printed as a **`refused` column** in the fix summary. Adds no
+    call, changes no prompt, moves no position; what it produces is the **census** §30 finding 3
+    showed was being discarded — 57 of round 7's 332 calls. A class that is all refusals is
+    checker-side work rather than a prompt population, and round 7's one `dual_role` refusal became
+    rule EH the same day. `pytest` **534** (11 new, mutation-checked at three sites).
   - **Rule EH (2026-08-18)**: **161 → 160**, the seventh round's one concrete checker finding.
     Purgatorio 2:40's `sen` = `si`+`ne` is written as `obl:si` **and** `obl:ne` of `venne` — rule
     AL/CM's licensed fused clitic, refused because `_case_supports_role` sends *every* `obl:<marker>`
@@ -1833,6 +1843,48 @@ the leg.
 Four rounds have now left it standing and the read series read it; it is 40 of the 152 divergence
 positions and it is genuine disagreement over Dante's inversion, not a prompt population.
 
+### 31. The Refusal Split — `no actionable answer` was two outcomes (2026-08-18)
+
+§30 finding 3 measured that **101 of the seventh round's 332 calls produced no splice, and 57 of
+them were the model answering with its class's own word for *leave this as it is***: `keep` (39),
+`none` (14), `drop` (3, which is a failed change rather than a verdict) and `both` (1). All of them
+were written to the log under `no actionable answer` — a label that reads like a parse failure —
+and none of them was counted anywhere.
+
+`_is_refusal` splits the two. A **refusal** is a response that answered and whose *every* answer
+asserts the artifact as written; anything else is **unusable**. The driver counts them separately
+(`refused:<class>` / `unusable:<class>`), the log says which (`refused: the reading stands` versus
+`no usable answer`), and `_fix_summary_lines` prints a **`refused` column** beside
+`calls / removed / per call`. `pytest` **534** (11 new, mutation-checked at the predicate, the
+`_ask_class` call site and the summary).
+
+**1. The vocabulary is per class, and it is the prompts' own.** `_STAND_PAT` maps `extra_arg`,
+`extra_arg_subject`, `extra_arg_adjective` and `arg_slot` to `keep`; `missing_arg`,
+`missing_arg_adverb` and `missing_arg_subject` to `none`; `dual_role` to `both`; the three
+`extra_tuple` classes to `yes`. `role_mismatch` has no such word — standing pat there is answering
+the role the artifact already carries, so it is compared against `given_role`, canonicalized
+(a violation reports `iobj` as `obl:a` while the row may hold either).
+
+**2. Strict on purpose.** Every answer given must assert the artifact: a response that stands pat on
+one question and tries to change another is not a verdict about the reading. And **a failed change
+is not a refusal** — `drop` that the splice could not carry out is a splice failure, and counting it
+as the model declining would poison the census the split exists to produce. Question numbers are
+consulted only for `role_mismatch`, because `arg_slot` asks one question for a *pair* of violations
+and its answer count does not match its violation count.
+
+**3. What it buys, and what it does not.** It adds no call, changes no prompt, and moves no
+position — `--check` is identical before and after. What it produces is a **census**: a class that
+is all refusals is checker-side work rather than a prompt population, and the round's own log
+becomes a position-by-position list of where the model thinks `--check` is wrong. It does **not**
+make the model right. A refusal is a hypothesis about the checker with exactly the standing a field
+note has about the corpus (§29): it chooses a position, and *How to Read a Batch*'s five verdicts
+still decide what is wrong there.
+
+**4. The first reading list is already known**, from round 7 counted by hand: `arg_slot` 8 `keep`
+over 7 calls (every call), `extra_arg` 16, `extra_arg_subject` 15, `missing_arg` 10 `none`,
+`missing_arg_adverb` 3, `dual_role` 1 `both` — that last one became rule EH the same day, which is
+the shape of the whole route: the model refused, the refusal was read, and the checker was wrong.
+
 ### Schedule — the series is complete
 
 **All 100 cantos have been read**: Inferno (batches 1, 1–3, 4–6, 7–10, 11–15, 16–20, 21–25, 26–30,
@@ -1932,11 +1984,11 @@ three tables no longer have to be copied out of a terminal.
 
 **What is on the scale:**
 
-1. **The refusal split** (§30 finding 3), if it lands before the round: `no actionable answer`
-   separated into a genuine unusable response and the model's **verdict that the checker is wrong**,
-   counted per class in the summary table. Nothing about the model changes; what changes is that
-   30% of the round stops being discarded. The eighth round is then the first with a refusal census
-   taken by the driver rather than by `awk`.
+1. **The refusal split — landed 2026-08-18** (§31). `no actionable answer` is now two outcomes:
+   `refused: the reading stands` and `no usable answer`, counted as `refused:<class>` /
+   `unusable:<class>` and printed as a **`refused` column** beside `calls / removed / per call`.
+   Nothing about the model changes; what changes is that 30% of a round stops being discarded. The
+   eighth round is the first with a refusal census taken by the driver rather than by `awk`.
 2. **Rule EG's fused-clitic leg — landed as rule EH, 2026-08-18** (base 161 → 160). Censused at
    1 of 7 and kept on the rule-CY precedent; see [`CORRECTIONS.md`](CORRECTIONS.md). Nothing further
    is queued from it.
@@ -1952,8 +2004,33 @@ residue is not going to 0 by running rounds.** What closes it is checker-side wo
 3 says where to start: the 39 `keep` refusals and the 14 `none`s are the model naming, position by
 position, where it thinks `--check` is wrong.
 
-**After the round**: re-measure per the procedure below, then take the reading list the refusal
-census produces — starting with `arg_slot`'s 8 predicates, which are 7-for-7 `keep`.
+**After the round — the checklist.** Re-measure per the procedure below, then answer these six.
+They are written now, before the round, so the round cannot be read backwards into whatever it
+happens to show.
+
+1. **Does `dual_role` still run several times the rate of every other class?** It was 0.833 against
+   0.081 (round 7) with a population that had never been asked. Rule EH took one of its 9 survivors,
+   so the remaining 8 are positions the model failed on *with the contradiction pointed out to it*.
+   If the rate collapses toward the others, the "artifact-internal questions are the answerable
+   ones" reading is about novelty rather than about evidence, and §30 finding 1 needs weakening.
+2. **What did `--no-whole` cost?** Compare `TOTAL` calls and `per call` against round 7's 332 /
+   0.190. If removed falls by ~6 while calls fall by ~128, the switch is confirmed and permanent.
+   If it falls by much more, `_whole` was doing something the class prompts cannot and the flag
+   should come back for a subset.
+3. **Does the refusal census reproduce, and is it stable per class?** Round 7 by hand:
+   `arg_slot` 8 `keep` over 7 calls, `extra_arg_subject` 15, `extra_arg` 16, `missing_arg` 10
+   `none`. A class whose refusal rate is *stable across two rounds on the same positions* is
+   settled — that is the checker-side reading list, and it is the round's real product.
+4. **Is anything refused that was not refused last time?** A position the model repaired in round 7
+   and refuses in round 8 would mean the two rounds disagree with each other, which nothing in the
+   series has yet shown.
+5. **Did `_CONV_DATIVE`'s gain hold?** `missing_arg obl:a` was 11 → 6. A rebound would mean the
+   round-7 result was the population's easy half rather than the clause working.
+6. **Field notes**: count them (`grep -c '^NOTE'`). If a third round is again in single digits,
+   §29 is closed as measured-and-not-paying, and the note slot can be left in place unmentioned.
+
+Then take the reading list the refusal census produces — starting with `arg_slot`'s 8 predicates,
+which were 7-for-7 `keep`.
 
 ### After the Sixth Round — what the round settled, and what was landed the same day
 

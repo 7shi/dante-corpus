@@ -525,6 +525,23 @@ def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monk
     assert sum(n for k, n in stats.items() if k.startswith("calls:")) == 1
     assert sum(n for k, n in stats.items() if k.startswith("removed:")) == 0
     assert written == []                          # "none" changes nothing, so nothing is written
+    # ...and "harmless" is not the same as uninformative: `none` is this class's stand-pat answer,
+    # so the call is recorded as a refusal rather than discarded (2026-08-18).
+    assert stats["refused:missing_arg_adverb"] == 1
+    assert not [k for k in stats if k.startswith("unusable:")]
+
+
+def test_fix_canto_records_an_unusable_response_apart_from_a_refusal(monkeypatch):
+    """The other side of the same split: a response the driver cannot parse is a failure, and must
+    not be counted as the model standing by its reading."""
+    stats = _fix_canto_with(monkeypatch, "I am not sure about this sentence.")
+    assert stats["unusable:missing_arg_adverb"] == 1
+    assert not [k for k in stats if k.startswith("refused:")]
+
+
+def _fix_canto_with(monkeypatch, answer):
+    _stub_model(monkeypatch, answer)
+    return drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
 
 
 # Inferno 5's only flagged unit is a same-slot pair: `missing_arg subj (90,1)` and
@@ -657,6 +674,48 @@ def test_a_field_note_changes_nothing_about_the_splice(monkeypatch):
     assert plain == noted
 
 
+# --- a refusal is an answer, not a parse failure (2026-08-18) -----------------------------------
+
+
+def test_is_refusal_reads_each_classs_own_stand_pat_word():
+    """`keep`, `none`, `both` and `yes` are first-class answers meaning *the artifact is right*.
+    Round 7 filed 57 of them as unusable; they are the model's verdict on the checker."""
+    _, extra = _extra_arg_fixture()
+    assert drv._is_refusal("extra_arg", extra, "Q1: keep")
+    assert drv._is_refusal("arg_slot", extra, "Q1: keep")
+    assert drv._is_refusal("dual_role", extra, "Q1: both")
+    assert drv._is_refusal("missing_arg", extra, "Q1: none")
+
+
+def test_is_refusal_reads_role_mismatch_against_the_artifacts_own_role():
+    """`role_mismatch` has no stand-pat word: standing pat is answering the role already there.
+    The comparison is canonicalized, because the violation reports `iobj` as `obl:a`."""
+    _, vs = _role_mismatch_fixture(given_role="iobj", derived_role="obj")
+    assert drv._is_refusal("role_mismatch", vs, "Q1: iobj")
+    assert drv._is_refusal("role_mismatch", vs, "Q1: obl:a")
+    assert not drv._is_refusal("role_mismatch", vs, "Q1: obj")
+
+
+def test_a_failed_change_is_not_a_refusal():
+    """The distinction is the whole point: `drop` is an attempt the splice could not carry out,
+    not the model declining. Filing it as a refusal would poison the census it exists to produce."""
+    _, vs = _extra_arg_fixture()
+    assert not drv._is_refusal("extra_arg", vs, "Q1: drop")
+    assert not drv._is_refusal("missing_arg", vs, "Q1: 2.2")
+
+
+def test_an_unparseable_response_is_not_a_refusal():
+    _, vs = _extra_arg_fixture()
+    assert not drv._is_refusal("extra_arg", vs, "I could not decide.")
+
+
+def test_one_unanswered_half_is_not_a_refusal():
+    """Strict by design: every answer given must assert the artifact. A response that stands pat
+    on one question and tries to change another is not a verdict about the reading."""
+    _, vs = _extra_arg_fixture()
+    assert not drv._is_refusal("extra_arg", vs, "Q1: keep\nQ2: drop")
+
+
 # --- the per-class summary, persisted (2026-08-18) ------------------------------------------
 
 
@@ -664,7 +723,8 @@ _SUMMARY_TOTALS = Counter({
     "units:flagged": 47, "units:cleared": 13, "units:cleared_deterministically": 0,
     "calls:dual_role": 10, "removed:dual_role": 11,
     "calls:_whole": 32, "removed:_whole": 0,
-    "calls:missing_arg": 7, "removed:missing_arg": 1,
+    "calls:missing_arg": 7, "removed:missing_arg": 1, "refused:missing_arg": 4,
+    "calls:arg_slot": 3, "removed:arg_slot": 0, "refused:arg_slot": 3,
 })
 
 
@@ -673,10 +733,20 @@ def test_fix_summary_reports_calls_and_yield_per_class():
     other one sits at zero, and only `removed / calls` shows it."""
     lines = drv._fix_summary_lines(_SUMMARY_TOTALS)
     by_class = {ln.split()[0]: ln.split()[1:] for ln in lines if ln.split()}
-    assert by_class["dual_role"] == ["10", "11", "1.100"]
-    assert by_class["_whole"] == ["32", "0", "0.000"]
-    assert by_class["TOTAL"] == ["49", "12", "0.245"]
+    assert by_class["dual_role"] == ["10", "11", "1.100", "0"]
+    assert by_class["_whole"] == ["32", "0", "0.000", "0"]
+    assert by_class["TOTAL"] == ["52", "12", "0.231", "7"]
     assert lines[0].startswith("units flagged: 47;")
+
+
+def test_fix_summary_reports_refusals_beside_the_yield():
+    """A class that is all refusals is checker-side work, not a prompt population, and the table
+    is where that is visible: arg_slot at 3 calls / 0 removed / 3 refused says the model answered
+    every time and stood by the artifact every time."""
+    by_class = {ln.split()[0]: ln.split()[1:]
+                for ln in drv._fix_summary_lines(_SUMMARY_TOTALS) if ln.split()}
+    assert by_class["arg_slot"] == ["3", "0", "0.000", "3"]
+    assert by_class["missing_arg"] == ["7", "1", "0.143", "4"]
 
 
 def test_fix_summary_is_appended_to_the_log(tmp_path):
@@ -690,7 +760,8 @@ def test_fix_summary_is_appended_to_the_log(tmp_path):
     assert text.startswith("NOTE\t"), "the summary must not displace what the round logged"
     assert "\n=== fix summary ===\n" in text
     assert text.rstrip().splitlines()[-1] == (
-        "fix complete: 12 soft violation(s) removed over 49 LLM call(s)")
+        "fix complete: 12 soft violation(s) removed over 52 LLM call(s); "
+        "7 refused (the reading stands)")
     assert "dual_role" in text.split("=== fix summary ===")[1]
 
 
