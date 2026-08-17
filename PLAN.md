@@ -36,13 +36,25 @@
 > rewritten** — its "cite it as `iobj`" was an instruction the class it hangs on cannot carry out.
 > `pytest` **511** (17 new, each mutation-checked), all other layers 0/0.
 >
+> **Field notes — the model's own report, landed 2026-08-18 (`skel/PLAN.md` §29).** Eighteen read
+> batches over 100 cantos only ever saw positions the checker had already named, and rule EG measured
+> that ceiling: 52 of its 56 positions were on silent lines. So every prompt in `skel/skel.py` now
+> carries one conditional slot — a `N…` note line for a question the sentence does not support, where
+> two answers are equally defensible, or whose convention does not fit — **in addition to** the
+> answer, never instead of it. `_split_field_notes` strips the notes before the response reaches
+> `prompt.apply`/`resolve_chunk`, so splices, the acceptance gate and every per-class number are
+> unchanged and a seventh round stays comparable with the six before it. `pytest` **518** (7 new).
+>
 > **The next session's task is the seventh `--fix` round, and it is the user's to run**
 > (`make -C skel fix`, 3-way parallel, then measure per *How to Measure a `--fix` Round*). Base 224.
 > On its scale: the brand-new `dual_role` class with its own question and **50** positions that have
 > never been asked, the `arg_slot` merge (16), and the rewritten `_CONV_DATIVE` (11) — all three
 > separable in the subclass table. One caveat for reading the result: the splice guard may lower
-> `missing_arg`'s accepted-splice rate slightly, and that is the guard working. See
-> [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round*.
+> `missing_arg`'s accepted-splice rate slightly, and that is the guard working. **Collect the field
+> notes while it runs** — they cost no extra call, but only if `--log` is passed, one file per
+> parallel process (`uv run skel.py <canticle> --fix -m $(MODEL) --log skel-<canticle>.log`; `fix`
+> truncates its log at start, so three processes must not share one). See
+> [`skel/PLAN.md`](skel/PLAN.md)'s *The Seventh `--fix` Round* and §29.
 >
 > **What the Paradiso 26–33 batch found**, still worth carrying into any future rule work.
 >
@@ -87,9 +99,9 @@ by the Paradiso 6–10 read), `skel --check` 0 hard/**224** soft (174 after the 
 inferno 49, purgatorio 67, paradiso 58 — plus rule EG's 50),
 `np --check` 0/0 (1 span split, 1 widened, 1 added, 1 moved 2026-08-16, 1 clitic span added,
 1 span dropped, 3 more dropped and 2 rewritten 2026-08-17), `morph --check` 0/0
-(3 + 5 + 1 + 2 + 8 + 2 + 1 + 1 + 1 + 2 + 1 + 1 + 6 rows corrected), `pytest` **494 passed** (the Purgatorio
+(3 + 5 + 1 + 2 + 8 + 2 + 1 + 1 + 1 + 2 + 1 + 1 + 6 rows corrected), `pytest` **518 passed** (the Purgatorio
 26–30 read added 10, the Purgatorio 31–33 read 4 more, the Paradiso 1–5 read 8 more, the Paradiso
-6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more). The fifth and sixth `--fix` rounds (2026-08-17 / 2026-08-18) touched
+6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more, rule EG 17 more and the field-note instrument 7 more). The fifth and sixth `--fix` rounds (2026-08-17 / 2026-08-18) touched
 `skel/*.tsv` only, so no other layer moved.
 
 **Layer 4's stacked prepositions are normalized (2026-08-14).** 161 multiword-preposition

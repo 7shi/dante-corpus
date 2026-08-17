@@ -44,6 +44,11 @@ improvement.
 derive_unit`) and reports soft violations (role outside the frozen vocabulary, a nominal-role
 argument heading no NP/pronoun/predicate, and — the central check — every divergence from
 the derivation: `missing_tuple`/`extra_tuple`/`missing_arg`/`extra_arg`/`role_mismatch`).
+
+`--log FILE` collects two things: the responses that failed to validate, and the model's own
+`NOTE` lines — one per question it could not answer in the shape asked for (see the *field
+notes* section below). The second is a discovery instrument, not telemetry: it names positions
+worth reading without anyone having to read the canticle to find them.
 """
 
 import argparse
@@ -116,7 +121,13 @@ Rules:
   encodes that pronoun's role internally; do not add a separate row citing the pronoun or the
   predicate's own token position as its argument — there is no separate token for it.
 * Arguments may be on a different line than the predicate — enjambment is common in this text.
-* Output only the table, with no commentary before or after it.
+* Output only the table, with no commentary before or after it — with ONE exception. If some part
+  of the sentence cannot be given rows cleanly, output your best reading as rows anyway, and add
+  note lines AFTER the table (never before it, never between rows), one per problem:
+  N<line>.<token>: <what is wrong, in one sentence>
+  Write one when the sentence offers nothing of the shape these rules ask for, when two analyses
+  are equally defensible, or when the rules above do not fit what the sentence actually does — and
+  only then. A note never replaces a row and never changes one; it is read separately by a human.
 
 Example input:
 Give the predicate-argument skeleton for this sentence:
@@ -281,6 +292,86 @@ def _merge_tables(text: str) -> str:
         i += 1
 
     return "".join(out)
+
+
+# --- Field notes: the model's own report on a question it could not answer cleanly ------------
+#
+# Every instrument in this file asks for an answer of a fixed shape, and every one of them is
+# answerable in that shape whether or not the sentence supports it: asked *which token is this
+# predicate's `subj`*, a model with no way to say "none of them, and here is why" names a token.
+# The residue's own shape says this happens — the sixth round left 62 subject positions, 13 of
+# them `subj` <-> `obj` in both directions on one predicate — and six rounds of per-class numbers
+# cannot tell a wrong answer from an unanswerable question, because both look like a violation
+# that did not move.
+#
+# So every prompt now carries one extra, *conditional* slot: a note line for a question the
+# sentence does not support, one where two answers are equally defensible, or one whose convention
+# does not fit. Three properties keep it honest, and each is stated in the prompts themselves:
+#
+#   * It is not an escape hatch. The model still answers every question, so a note cannot buy its
+#     way out of the work — which is the failure mode an optional "report if you cannot" invites.
+#   * It changes nothing. Notes are stripped before the answer reaches `prompt.apply` or
+#     `skel.resolve_chunk`, so splices, the acceptance gate and a round's per-class numbers are
+#     bit-for-bit what they were without this. A round remains comparable with the six before it.
+#   * It is a hypothesis about the *question*, never evidence about the corpus. What it buys is a
+#     position to read — `uv run read.py <canticle> <canto> <line>` — chosen by something other
+#     than reading all 100 cantos to find it.
+#
+# One tab-separated line per note, so a round's log is counted without a parser:
+#
+#     grep '^NOTE' skel.log | cut -f4 | sort | uniq -c    # which class reports the most
+#     grep '^NOTE' skel.log | cut -f2,3,5                 # positions to hand to read.py
+
+_NOTE_RE = re.compile(r"^[ \t]*N(\d+)(?:[ \t]*\.[ \t]*(\d+))?[ \t]*[:.)][ \t]*(.+?)[ \t]*$",
+                      re.MULTILINE)
+
+
+@dataclass(frozen=True)
+class _FieldNote:
+    """One report. `index` is the question number it answers back to (the `_ASK_HEADER` classes,
+    which number their questions); `pos` is the token it cites (the table classes, which do not).
+    Exactly one of the two is set."""
+
+    index: int | None
+    pos: tuple[int, int] | None
+    text: str
+
+
+def _split_field_notes(text: str) -> tuple[str, list[_FieldNote]]:
+    """Take the `N…` lines out of a response and return them beside the response without them.
+
+    The removal is what makes this instrument inert. `_parse_answers` never matched an `N` line
+    anyway, but the table classes hand the whole response to `skel.resolve_chunk`, and a note left
+    in place would reach a parser that has never seen one.
+    """
+    notes: list[_FieldNote] = []
+    for m in _NOTE_RE.finditer(text):
+        body = " ".join(m.group(3).split())
+        if not body:
+            continue
+        pos = (int(m.group(1)), int(m.group(2))) if m.group(2) else None
+        notes.append(_FieldNote(None if pos else int(m.group(1)), pos, body[:300]))
+    return _NOTE_RE.sub("", text), notes
+
+
+def _log_field_notes(
+    log_path: Path | None, label: str, nos: list[int], cls: str, notes: list[_FieldNote],
+    anchors: dict[int, str] | None = None,
+    word_at: Callable[[tuple[int, int]], str] | None = None,
+) -> None:
+    """Append one line per note. Written for accepted and rejected candidates alike, and for a
+    call that validated first time, because the note is about the *question* rather than about
+    what became of the answer."""
+    if not log_path or not notes:
+        return
+    with log_path.open("a", encoding="utf-8") as f:
+        for note in notes:
+            if note.pos is not None:
+                word = word_at(note.pos) if word_at else "?"
+                anchor = f"{note.pos[0]}.{note.pos[1]} '{word}'"
+            else:
+                anchor = (anchors or {}).get(note.index, "-")
+            f.write(f"NOTE\t{label}\t{nos[0]}-{nos[-1]}\t{cls}\t{anchor}\t{note.text}\n")
 
 
 def _prompt(
@@ -549,6 +640,14 @@ Answer ONLY with one line per question, in the form
 Q1: <answer>
 Q2: <answer>
 Nothing else — no explanation, no table, no repetition of the question.
+
+One exception. If a question cannot be answered cleanly, answer it anyway with your best reading \
+AND add one extra line, after all the answers, in the form
+N1: <what is wrong with that question, in one sentence>
+numbered for the question it is about. Write one when the sentence offers nothing of the shape the \
+question asks for, when two answers are equally defensible, or when the conventions you were given \
+do not fit what the sentence actually does — and only then. A note never replaces an answer and \
+never changes it; it is read separately by a human.
 """
 
 _TABLE_HEADER = """\
@@ -561,6 +660,15 @@ Role is one of: subj, obj, iobj, attr, xcomp, ccomp, obl:<preposition lemma>. Ci
 positions from the token list; Arg Word is that token's word copied verbatim. A pro-drop \
 (missing) subject is its own row with Arg Line 0, Arg Token 0, Arg Word ∅. Output only the \
 table, with no commentary.
+
+One exception. If some part of what you were asked about cannot be given rows cleanly, output \
+your best reading as rows anyway, and add note lines AFTER the table (never before it, never \
+between rows), one per problem, in the form
+N<line>.<token>: <what is wrong, in one sentence>
+citing the token it is about. Write one when the sentence offers nothing of the shape asked for, \
+when two analyses are equally defensible, or when the conventions you were given do not fit what \
+the sentence actually does — and only then. A note never replaces a row; it is read separately \
+by a human.
 """
 
 
@@ -1142,6 +1250,16 @@ def _ask_class(
     ui.log("")
     answer = client(question).text
     ui.stream.end()
+    # The field notes come out before anything else looks at the response: `apply` must see the
+    # same text it would have seen without this instrument. The question number a note answers
+    # back to is resolved here, where `vs` still gives its predicate and role slot.
+    answer, notes = _split_field_notes(answer)
+    _log_field_notes(
+        log_path, label, ctx.nos, cls, notes,
+        {i: f"{ctx.cite(v.predicate)} {v.role or v.given_role or '-'}"
+         for i, v in enumerate(vs, start=1) if v.predicate is not None},
+        ctx.word,
+    )
     trial = {no: list(rows) for no, rows in rows_by_line.items()}
     if not prompt.apply(ctx, vs, trial, answer):
         if log_path:
@@ -1179,6 +1297,7 @@ def _continue_if_missing(
     ui.log("")
     cont_text = client(cont_prompt).text
     ui.stream.end()
+    cont_text, _ = _split_field_notes(cont_text)  # a truncation repair, not a question
     return _merge_tables(table_text + "\n" + cont_text)
 
 
@@ -1199,6 +1318,7 @@ def _try_parse(
     log_path: Path | None = None, morph_rows: dict[int, list] | None = None,
     np_rows: dict[int, list] | None = None, dep_rows: dict[int, list] | None = None,
     hint: str | None = None, case_rows: dict[int, list] | None = None,
+    note_class: str = "_build",
 ) -> dict[int, list[skel.SkelRow]] | None:
     """Call LLM and resolve; return rows-by-line on success, None after all retries fail.
 
@@ -1206,8 +1326,17 @@ def _try_parse(
     predicates/roles a prior attempt got wrong, without citing the derivation's actual argument
     positions — `build`'s initial parse never gets one, preserving the independent-reading
     design the module docstring describes.
+
+    `note_class` is the column a field note is filed under: `_build` for the initial parse,
+    `_whole` for `--fix`'s stage-3 regeneration, matching `calls:_whole` in the fix summary.
     """
     from llm7shi import Client
+
+    token_lists = {no: _alpha_tokens(t) for no, t in zip(nos, texts)}
+
+    def word_at(pos: tuple[int, int]) -> str:
+        tokens = token_lists.get(pos[0])
+        return tokens[pos[1] - 1] if tokens and 1 <= pos[1] <= len(tokens) else "?"
 
     derived = (
         skel.derive_unit(nos, dep_rows, morph_rows, case_rows) if dep_rows is not None and morph_rows is not None
@@ -1220,6 +1349,8 @@ def _try_parse(
         ui.log("")
         table_text = client(prompt).text
         ui.stream.end()
+        table_text, notes = _split_field_notes(table_text)
+        _log_field_notes(log_path, label, nos, note_class, notes, word_at=word_at)
         table_text = _merge_tables(table_text)
         table_text = _continue_if_missing(client, nos, texts, table_text, ui, derived)
         try:
@@ -1756,7 +1887,7 @@ def _fix_canto(
             stats["calls:_whole"] += 1
             hint = _fix_hint(unit, unit_texts, soft, morph_rows)
             new_rows = _try_parse(unit, unit_texts, model, ui, label, log_path, morph_rows,
-                                  np_rows, dep_rows, hint, case_rows)
+                                  np_rows, dep_rows, hint, case_rows, "_whole")
             if new_rows is None:
                 continue
             _, soft_after = _classify_violations(
@@ -1865,7 +1996,8 @@ def main() -> int:
     parser.add_argument("-n", "--dry-run", action="store_true",
                         help="show pending parse units without calling the LLM")
     parser.add_argument("--log", nargs="?", const="skel.log", metavar="FILE",
-                        help="append failed LLM responses to FILE (default: skel.log)")
+                        help="append failed LLM responses, and the model's own NOTE lines for "
+                             "questions it could not answer cleanly, to FILE (default: skel.log)")
     args = parser.parse_args()
 
     if err := api.check_canto_spec(args.canticles, args.canto):

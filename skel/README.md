@@ -870,6 +870,40 @@ derived role.
   section when present. `_fix_canto` is the only caller that supplies one, computed from each
   unit's `soft_before` right before regenerating; `build`'s call sites pass none.
 
+## Field notes (`--log`)
+
+Every instrument here asks for an answer of a fixed shape, and every one of them is answerable in
+that shape whether or not the sentence supports it: asked *which token is this predicate's `subj`*,
+a model with no way to say "none of them, and here is why" names a token. So each prompt carries
+one **conditional** extra slot — a note line for a question the sentence offers nothing of the
+shape asked for, one where two answers are equally defensible, or one whose convention does not fit
+what the sentence does. The Q-numbered classes number their notes to the question (`N1: …`); the
+table classes and `SYSTEM_PROMPT` cite a token instead (`N<line>.<token>: …`).
+
+It is **not** an escape hatch — the prompts require the answer anyway — and it is **inert**:
+`_split_field_notes` strips the notes before the response reaches `prompt.apply` or
+`skel.resolve_chunk`, so splices, the acceptance gate and every per-class number are exactly what
+they were without it (`tests/test_skel_fix.py::test_a_field_note_changes_nothing_about_the_splice`).
+A note is a hypothesis about the *question*, never evidence about the corpus; what it buys is a
+position worth handing to `read.py`, chosen by something other than reading all 100 cantos.
+
+Notes are written only when `--log FILE` is given, one tab-separated line each, for accepted and
+rejected candidates alike:
+
+```
+NOTE	purgatorio 1	100-102	missing_arg_adverb	102.1 'vidi' obl	no locative here answers 'where'.
+#     canticle canto   unit lines  violation class   position + slot   what the model reported
+```
+
+```bash
+uv run skel/skel.py inferno --fix -m ... --log skel-inferno.log   # one file per process
+grep '^NOTE' skel-*.log | cut -f4 | sort | uniq -c                # by violation class
+grep '^NOTE' skel-*.log | cut -f2,3,5                             # positions to hand to read.py
+```
+
+`--fix` truncates its log at start, so three parallel processes must not share one file. See
+[`PLAN.md`](PLAN.md) §29 for how to read a round's notes.
+
 ## Model
 
 Build-time only, set in [`../model.mk`](../model.mk), overridable with `make skel MODEL=...`.
@@ -889,6 +923,7 @@ uv run skel/skel.py inferno [-c SPEC] [-m MODEL] [--chunk 12] [--force] [--check
 uv run skel/skel.py inferno purgatorio paradiso --repair    # no model call
 uv run skel/skel.py inferno -m ollama:gpt-oss --fix         # all three stages
 uv run skel/skel.py inferno -m ... --fix --no-whole         # without the regeneration fallback
+uv run skel/skel.py inferno -m ... --fix --log skel-inferno.log   # ... collecting field notes
 
 uv run skel/read.py inferno 16 43                           # read one position, all five layers
 uv run skel/read.py inferno 16 43 48                        # ... over a line range

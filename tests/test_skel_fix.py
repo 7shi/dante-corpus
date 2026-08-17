@@ -581,3 +581,72 @@ def test_apply_unit_repairs_accepts_a_rewrite_that_clears_a_violation():
     applied = drv._apply_unit_repairs(_NOS, texts, rows_by_line, morph_rows, {}, dep_rows, None)
     assert [r.kind for r in applied] == ["prep_stack"]
     assert rows_by_line[1][0].role == "obl:su"
+
+
+# --- field notes: the model's report on a question it could not answer cleanly ------------------
+
+
+def test_split_field_notes_reads_question_numbered_notes():
+    text = "Q1: obj\nQ2: subj\nN2: the sentence writes no subject for this verb."
+    clean, notes = drv._split_field_notes(text)
+    assert drv._parse_answers(clean) == {1: "obj", 2: "subj"}
+    assert [(n.index, n.pos) for n in notes] == [(2, None)]
+    assert notes[0].text == "the sentence writes no subject for this verb."
+
+
+def test_split_field_notes_reads_position_cited_notes():
+    """The table classes number no questions, so their notes cite a token instead — and the
+    `<line>.<token>` form must not be read as a question number with a period after it."""
+    _, notes = drv._split_field_notes("| 1 | 3 | vede | subj | 1 | 2 | donna |\nN2.3: ambiguous.")
+    assert [(n.index, n.pos, n.text) for n in notes] == [(None, (2, 3), "ambiguous.")]
+
+
+def test_split_field_notes_removes_them_from_the_response():
+    """The whole no-op guarantee rests on this: what reaches `apply`/`resolve_chunk` is the text
+    that would have arrived without the instrument."""
+    table = "| Pred Line | Pred Token |\n|---|---|\n| 1 | 3 |"
+    clean, notes = drv._split_field_notes(f"{table}\nN1.3: two readings fit equally well.")
+    assert [ln for ln in clean.splitlines() if ln.strip()] == table.splitlines()
+    assert len(notes) == 1
+
+
+def test_split_field_notes_ignores_a_response_without_any():
+    text = "Q1: obj\nQ2: keep"
+    assert drv._split_field_notes(text) == (text, [])
+
+
+def test_log_field_notes_writes_one_tab_separated_line_per_note(tmp_path):
+    log = tmp_path / "skel.log"
+    notes = [drv._FieldNote(1, None, "no token fills this slot"),
+             drv._FieldNote(None, (1, 3), "two readings fit")]
+    drv._log_field_notes(log, "inferno 5", [1, 2], "missing_arg", notes,
+                         {1: "1.3 'vede' subj"}, _ctx().word)
+    rows = [ln.split("\t") for ln in log.read_text(encoding="utf-8").splitlines()]
+    assert [r[0] for r in rows] == ["NOTE", "NOTE"]
+    assert rows[0] == ["NOTE", "inferno 5", "1-2", "missing_arg", "1.3 'vede' subj",
+                       "no token fills this slot"]
+    # The position-cited note resolves its own word, so a census never needs the source open.
+    assert rows[1][4] == "1.3 'vede'"
+
+
+def test_fix_canto_logs_a_field_note_against_its_own_position(monkeypatch, tmp_path):
+    """End to end: an answer carrying a note files it under the class and predicate it came
+    from, which is what makes the log a list of positions to read."""
+    log = tmp_path / "skel.log"
+    _stub_model(monkeypatch, "Q1: none\nN1: no locative in this sentence answers 'where'.")
+    drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), log, whole=False)
+    notes = [ln.split("\t") for ln in log.read_text(encoding="utf-8").splitlines()
+             if ln.startswith("NOTE")]
+    assert notes, "the note must reach the log"
+    assert any(n[3] == "missing_arg_adverb" for n in notes)
+    assert all(n[5] == "no locative in this sentence answers 'where'." for n in notes)
+
+
+def test_a_field_note_changes_nothing_about_the_splice(monkeypatch):
+    """The instrument is inert by construction: the same answer with and without a note must
+    produce the same stats, or a round stops being comparable with the six before it."""
+    _stub_model(monkeypatch, "Q1: 100.3")
+    plain = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
+    _stub_model(monkeypatch, "Q1: 100.3\nN1: the antecedent is not obvious here.")
+    noted = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
+    assert plain == noted

@@ -5,12 +5,25 @@
 - **Current State**: `make -C skel check` reports **0 hard, 224 soft** violations across all 100 cantos, after **rule EG** (174 → 224, **+50 by design** — the artifact-internal dual-role check, 2026-08-18, §28) and the **sixth `--fix` round** before it (213 → 174, −39, −18.3%, 2026-08-18, §27), which followed **rules EB–EF and the Paradiso 26–33 read** (234 → 213, −21, 2026-08-17), **the batch that finished the read series over all 100 cantos**, and before it rules DX–EA and the Paradiso 21–25 read (245 → 234, −11), and rules DS–DW and the Paradiso 11–20 read (261 → 245, −16), and rules DK–DR and the Paradiso 6–10 read (288 → 261, −27) and rules DG–DJ and the Paradiso 1–5 read (298 → 288, −10) and the **fifth `--fix` round** (351 → 298, −53, 2026-08-17) and rules DE–DF and the Purgatorio 31–33 read (358 → 351, −7), rules CZ–DD and the Purgatorio 26–30 read (388 → 358, −30), rules CU–CY and the Purgatorio 21–25 read (409 → 388, −21), rules CP–CT and the Purgatorio 16–20 read (427 → 409, −18), rules CK–CO and the Purgatorio 11–15 read (448 → 427, −21), rules CA–CJ and the Purgatorio 6–10 read (481 → 448, −33), rules BW–BZ and the Purgatorio 1–5 read (506 → 481, −25), rules BO–BV and the Inferno 31–34 read (541 → 506, −35), the fourth `--fix` round (650 → 541), rules BJ–BN (691 → 650), AZ–BI (834 → 691), AU–AY (888 → 834), AM–AT (963 → 888) and the third round (1094 → 963). Per canticle **at 174** (before rule EG): inferno 49, purgatorio 67, paradiso 58. **The next step is the seventh `--fix` round, which is the user's to run** — see *The Seventh `--fix` Round* below for what is on its scale, and *Sixth User-Run `--fix` Round* (§27) and *Rule EG and the Sixth Round's Prompt Repairs* (§28) for how the base got here.
 - **Other Layers**: `dep --check` **0 hard / 0 soft** — the *coordinated subject* exclusion was
   refined to a per-conjunct **person** test on 2026-08-16 by the Purgatorio 11–15 read, which
-  closed the 12-position route the Inferno 21–25 batch had deferred (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read, 20 more by the Inferno 21–25 read, 10 more by the Inferno 26–30 read the same day, 15 more 2026-08-16 by the Inferno 31–34 read, 9 of them the `con esso` normalization, 2 by the Purgatorio 1–5 read, 1 by the Purgatorio 6–10 read, 11 by the Purgatorio 11–15 read, 17 by the Purgatorio 16–20 read, 27 by the Purgatorio 21–25 read, 12 by the Purgatorio 26–30 read, 4 by the Purgatorio 31–33 read, 6 by the Paradiso 1–5 read, 10 by the Paradiso 6–10 read and 9 by the Paradiso 11–20 read, 10 by the Paradiso 21–25 read and 16 by the Paradiso 26–33 read; the 1/2-plural exclusion was narrowed to its number half by rule CR the same day, and the 3 positions that surfaced joined `_DISTRIBUTIVE_LEMMAS`; rule CV then took the *ordering* half of the same reading — the number-only exclusions had been returning before the person test — and its one new position, inferno 23:103, was corrected upstream). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard (1 stale row dropped and 1 row re-read 2026-08-16, 1 more dropped by the Purgatorio 11–15 read, 2 re-read by the Purgatorio 16–20 read, 2 by the Purgatorio 31–33 read, 1 re-read and 1 added by the Paradiso 1–5 read, 1 dropped and 1 added by the Paradiso 6–10 read, 2 dropped by the Paradiso 26–33 read), `np --check` 0/0 (1 span split 2026-08-16, 1 widened and 1 added by the Purgatorio 11–15 read, 1 moved by the Purgatorio 16–20 read, 2 by the Purgatorio 31–33 read, 1 clitic span added by the Paradiso 1–5 read, 1 dropped by the Paradiso 21–25 read, 3 dropped and 2 rewritten by the Paradiso 26–33 read), `morph --check` 0/0 (3 rows corrected 2026-08-15 by the 11–15/16–20 reads, 5 more by the 21–25 read, 1 by the 26–30 read, 2 by the 31–34 read, 8 by the Purgatorio 11–15 read, 2 by the Purgatorio 16–20 read, 1 by the Purgatorio 21–25 read, 1 by the Purgatorio 31–33 read, 1 by the Paradiso 1–5 read, 2 by the Paradiso 6–10 read, 1 by the Paradiso 11–20 read, 1 by the Paradiso 21–25 read and 6 by the Paradiso 26–33 read), `pytest` **494 passed**
-  (the Purgatorio 26–30 read added 10, the Purgatorio 31–33 read 4 more, the Paradiso 1–5 read 8 more, the Paradiso 6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more). The fourth, fifth and sixth
+  closed the 12-position route the Inferno 21–25 batch had deferred (16 rows corrected 2026-08-15 by the Inferno 11–15 read, 25 more by the Inferno 16–20 read, 20 more by the Inferno 21–25 read, 10 more by the Inferno 26–30 read the same day, 15 more 2026-08-16 by the Inferno 31–34 read, 9 of them the `con esso` normalization, 2 by the Purgatorio 1–5 read, 1 by the Purgatorio 6–10 read, 11 by the Purgatorio 11–15 read, 17 by the Purgatorio 16–20 read, 27 by the Purgatorio 21–25 read, 12 by the Purgatorio 26–30 read, 4 by the Purgatorio 31–33 read, 6 by the Paradiso 1–5 read, 10 by the Paradiso 6–10 read and 9 by the Paradiso 11–20 read, 10 by the Paradiso 21–25 read and 16 by the Paradiso 26–33 read; the 1/2-plural exclusion was narrowed to its number half by rule CR the same day, and the 3 positions that surfaced joined `_DISTRIBUTIVE_LEMMAS`; rule CV then took the *ordering* half of the same reading — the number-only exclusions had been returning before the person test — and its one new position, inferno 23:103, was corrected upstream). The subject-agreement rule's 18-position residue closed 2026-08-14 (Layer 5 1091 → 1094), and **Layer 4's stacked prepositions were normalized the same day** — 161 multiword-preposition clusters rewritten to one UD shape (opening word `case`, later members `fixed`), moving Layer 5 by zero (see [`CORRECTIONS.md`](CORRECTIONS.md) and [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)). `case --check` 0 hard (1 stale row dropped and 1 row re-read 2026-08-16, 1 more dropped by the Purgatorio 11–15 read, 2 re-read by the Purgatorio 16–20 read, 2 by the Purgatorio 31–33 read, 1 re-read and 1 added by the Paradiso 1–5 read, 1 dropped and 1 added by the Paradiso 6–10 read, 2 dropped by the Paradiso 26–33 read), `np --check` 0/0 (1 span split 2026-08-16, 1 widened and 1 added by the Purgatorio 11–15 read, 1 moved by the Purgatorio 16–20 read, 2 by the Purgatorio 31–33 read, 1 clitic span added by the Paradiso 1–5 read, 1 dropped by the Paradiso 21–25 read, 3 dropped and 2 rewritten by the Paradiso 26–33 read), `morph --check` 0/0 (3 rows corrected 2026-08-15 by the 11–15/16–20 reads, 5 more by the 21–25 read, 1 by the 26–30 read, 2 by the 31–34 read, 8 by the Purgatorio 11–15 read, 2 by the Purgatorio 16–20 read, 1 by the Purgatorio 21–25 read, 1 by the Purgatorio 31–33 read, 1 by the Paradiso 1–5 read, 2 by the Paradiso 6–10 read, 1 by the Paradiso 11–20 read, 1 by the Paradiso 21–25 read and 6 by the Paradiso 26–33 read), `pytest` **518 passed**
+  (the Purgatorio 26–30 read added 10, the Purgatorio 31–33 read 4 more, the Paradiso 1–5 read 8 more, the Paradiso 6–10 read 16 more, the Paradiso 11–20 read 10 more, the Paradiso 21–25 read 8 more, the Paradiso 26–33 read 11 more, rule EG 17 more and the field-note instrument 7 more). The fourth, fifth and sixth
   `--fix` rounds (2026-08-16 / 2026-08-17 / 2026-08-18) touched `skel/*.tsv` only, so no other layer moved.
 - **Phase 5**: Complete and closed (reduced soft violations from 5,919 to 2,084). Full historical record, per-phase measurement tables, cost comparisons, and lessons learned are documented in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Rebuilt `--fix` into a three-stage driver (Stage 1 deterministic, Stage 2 class-specific micro-prompts — now **fourteen**, keyed by POS, by role, by class, or on the two shapes that stand in for a pair of rows, Stage 3 fallback). Six user-run rounds so far: **2011 → 1452 (−27.8%)**, **1409 → 1247 (−11.5%)**, **1094 → 963 (−12.0%)**, **650 → 541 (−16.8%)**, **351 → 298 (−15.1%)**, **213 → 174 (−18.3%)**.
 - **Latest Work**:
+  - **Field notes — the model's own report, into `--log` (2026-08-18, §29)**: every prompt in
+    `skel.py` now carries one **conditional** slot beside its answer — a `N…` line for a question the
+    sentence does not support, one where two answers are equally defensible, or one whose convention
+    does not fit. It is not an escape hatch (the model answers every question anyway) and it is
+    **inert** (`_split_field_notes` strips the notes before the response reaches `prompt.apply` or
+    `skel.resolve_chunk`, so splices, `_is_improvement` and every per-class number are unchanged, and
+    a seventh round stays comparable with the six before it — pinned by
+    `test_a_field_note_changes_nothing_about_the_splice`). What it buys is a **position to read**
+    chosen by something other than reading 100 cantos to find it, which is the gap rule EG measured:
+    52 of its 56 positions were on lines `--check` is silent about, so no read batch could reach
+    them. Collection is opt-in — `--log`, **one file per parallel process** — and the notes are a
+    hypothesis about the *question*, never evidence about the corpus. `pytest` **518 passed** (7 new),
+    0 hard / 224 soft, `skel/*.tsv` untouched. See §29 for how to read a round's notes.
   - **Sixth `--fix` round (2026-08-18)**: **213 → 174 (−39, −18.3%)**, 0 hard, `pytest` **494**;
     units **168 → 141** (27 cleared, 5 improved, **0 regressed, 0 newly flagged**); per-unit yield
     **0.232**. The round the read series was written to enable — checker finished, all 100 cantos
@@ -1602,6 +1615,70 @@ angles: **the only changes that ever moved a class withdrew or narrowed a licenc
 granted** (`_CONV_ADVERB_ARG` −66.3%, `_CONV_ADJUNCT` −52.6%); prose added about a shape the model
 reads wrong measures at the round average, and prose the class cannot act on measures below it.
 
+### 29. Field Notes — the model's own report, into `--log` (2026-08-18)
+
+**Discovery has cost eighteen full passes over the corpus, and every one of them read positions the
+checker had already named.** Rule EG measured the ceiling of that: 52 of its 56 positions sit on
+lines `--check` is silent about, so 21 read batches walked past them. The read series is closed and
+the residue is reading disagreement — which leaves no instrument that can point at a position
+*nobody has thought to look at*.
+
+The change is one conditional slot added to every prompt in `skel.py`, and a line format in the log.
+Asked *which token is this predicate's `subj`*, a model with no way to say "none of them, and here
+is why" names one; the answer and an honest failure are then indistinguishable downstream, because
+both look like a violation that did not move. So each prompt now asks for a note — **in addition to**
+the answer, never instead of it — when the sentence offers nothing of the shape asked for, when two
+answers are equally defensible, or when the convention given does not fit. `_ASK_HEADER`'s classes
+number their notes to the question (`N1: …`); the table classes and `SYSTEM_PROMPT` cite a token
+(`N<line>.<token>: …`), because they number no questions.
+
+`pytest` **518 passed** (7 new), 0 hard, 224 soft, `skel/*.tsv` untouched.
+
+**1. It is inert, and that is a requirement, not a nicety.** `_split_field_notes` strips the notes
+before the response reaches `prompt.apply` or `skel.resolve_chunk`, so splices, `_is_improvement`
+and every per-class number are bit-for-bit what they were. `test_a_field_note_changes_nothing_
+about_the_splice` pins it by running one canto twice, with and without a note on the same answer,
+and comparing the stats Counters. A seventh round therefore stays comparable with the six before it
+even though every prompt changed.
+
+**2. It is not an escape hatch.** The prompts state that the model answers every question anyway and
+that a note changes nothing — the two properties that stop it buying its way out of the work, which
+is what an optional *"report if you cannot"* invites. A note costs the model nothing to write, so
+its *rate* carries no information; only the population does.
+
+**3. A note is a hypothesis about the question, never evidence about the corpus.** It earns exactly
+one thing: a position to hand to `read.py`, chosen by something other than reading 100 cantos to
+find it. The verdict procedure in *How to Read a Batch* is unchanged and still applies to every
+position a note names — and the five verdicts are what the notes should be censused against, since
+a note that repeats across dozens of positions is a prompt defect and a note that appears once is
+noise.
+
+**4. Collection is opt-in and per process.** `make -C skel fix` still does not pass `--log`, and
+that standing decision is untouched (see *After the Sixth Round*): pass `--log skel-<canticle>.log`
+explicitly, **one file per process**, because a round is run three ways in parallel and `fix`
+truncates its log at start.
+
+**How to read the notes after a round.** This has not been done yet — the instrument landed with no
+round behind it, so the first pass is as much a test of the notes as of the corpus.
+
+1. **Count before reading.** `grep '^NOTE' skel-*.log | cut -f4 | sort | uniq -c` (by class),
+   `cut -f5 | sort | uniq -c` (by position — a position noted by several classes is the strongest
+   signal there is). The *rate* means nothing: a note costs the model nothing to write, so it is
+   governed by the prompt's wording, not by the corpus. Only the population is evidence.
+2. **Group by what the note claims,** not by its wording — the same complaint arrives in many
+   phrasings. A group of dozens is a candidate prompt or checker defect; a singleton is noise and is
+   dropped without reading it.
+3. **Read the group's positions with `read.py` and give each the usual five verdicts** (*How to Read
+   a Batch*, step 3). Nothing about a note shortens this step: it chose the position, and it has no
+   standing on what is wrong there. In particular a note claiming the convention does not fit is
+   **not** a prompt verdict — that verdict is the one to reach for last, and the note is written by
+   the same reading the verdict is about.
+4. **From there the batch procedure is unchanged**: census the shape corpus-wide, measure the rule
+   on its own by violation diff, pin it with a mutation-checked test, write it up.
+5. **Judge the instrument too.** If the note groups name only positions the checker already flags,
+   it has bought nothing over `--check` and should be said so plainly here. Its whole claim is
+   reaching positions `--check` is silent about — the 52-of-56 gap rule EG exposed.
+
 ### Schedule — the series is complete
 
 **All 100 cantos have been read**: Inferno (batches 1, 1–3, 4–6, 7–10, 11–15, 16–20, 21–25, 26–30,
@@ -1710,6 +1787,11 @@ the round runs**.
 `_CONV_SUBJECT` and `missing_tuple_nominal`'s question are settled negative and are read-work; the
 read series is closed. Do not add convention prose for a shape the model reads wrong — six rounds
 have measured that at the round average every time (§28 finding 4).
+
+**Collect the field notes while the round runs** (§29, landed 2026-08-18). They cost nothing extra —
+no call, no acceptance change — but only if `--log` is passed, one file per parallel process:
+`uv run skel.py <canticle> --fix -m $(MODEL) --log skel-<canticle>.log`. This is the round's second
+product, and the first one that can name a position no read batch would have reached.
 
 **After the round**: re-measure per the procedure below, then the residue to look at is the subject
 slot (62 of the 174 before rule EG) and whatever the `dual_role` class leaves — the first sample
