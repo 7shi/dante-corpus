@@ -988,6 +988,7 @@ def _ask_class(
     question = prompt.ask(ctx, vs)
     client = Client(model=model, file=ui.stream, show_params=False)
     client.set_system_prompt(prompt.system)
+    ui.log("")
     answer = client(question).text
     ui.stream.end()
     trial = {no: list(rows) for no, rows in rows_by_line.items()}
@@ -1024,6 +1025,7 @@ def _continue_if_missing(
         "The table was truncated. Please continue with rows for these predicates:\n\n"
         + "\n".join(missing)
     )
+    ui.log("")
     cont_text = client(cont_prompt).text
     ui.stream.end()
     return _merge_tables(table_text + "\n" + cont_text)
@@ -1064,6 +1066,7 @@ def _try_parse(
     for attempt in range(RETRIES + 1):
         client = Client(model=model, file=ui.stream, show_params=False)
         client.set_system_prompt(SYSTEM_PROMPT)
+        ui.log("")
         table_text = client(prompt).text
         ui.stream.end()
         table_text = _merge_tables(table_text)
