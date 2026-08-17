@@ -1,5 +1,103 @@
 # skel — Layer 5 correction history
 
+## Rules DG-DJ, from reading Paradiso 1-5 — 298 → 288, −10 (2026-08-17)
+
+Per-position read of all **26** soft violations in Paradiso 1-5, the first batch of the Paradiso
+series, following the eight-step procedure in [`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero
+model calls. Paradiso 1-5 itself went **26 → 18** (1: 11 → 10, 2: 2 → 0, 3: 5 → 4, 4: 4 → 2,
+5: 4 → 2); the corpus went **298 → 288 (−10, −3.4%)**. Four deterministic Layer-5 rules, 6
+Layer-4 rows, 1 Layer-2 row, 1 Layer-3 span and 2 case-annex rows. `pytest` **449 passed**, 0
+hard, all other layers 0/0.
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **DJ** | rule CX's complement-role gate dropped where the two sides name the **same** role | 28 | −3 |
+| **DI** | rule AN's acceptance leg: the gapped clause the LLM heads on its own remnant | 13 / 2 | −2 |
+| **DG** | the *membership* check read through rule C's coordination collapse | — | −1 |
+| **DH** | rule CW's mirror leg: the elided clause is the **first** one | 64 / 2 | −1 |
+
+Plus the upstream rows (**−4 / +1**, counted below).
+
+### The batch's finding — a gate can be right about the disagreement and wrong about the agreement
+
+Rule CX exists to license one *difference* of role notation: the complement of a verb of
+remembering is `obj` to one reading and `ccomp` to the other, which is notation rather than two
+claims. To say that, it required both roles to be complement roles — and that requirement, written
+for the case where the roles differ, silently threw out every case where they are **identical**.
+"Veramente **quant'** io del regno santo / ne la mia mente potei **far** tesoro, / sarà ora
+materia del mio canto" (1:12): both readings put the free relative in `materia`'s subject slot and
+disagree about nothing except which of its tokens names it. That is the *weakest* disagreement the
+rule can be shown, and it was the one case the gate excluded.
+
+The lesson generalizes past this rule. **A gate written to admit a specific disagreement should be
+asked what it does with no disagreement at all** — the agreeing case is strictly inside the one the
+rule already accepts, so excluding it is never the conservative choice it looks like. Rule DJ is
+one condition rewritten (`drole == grole or both are complement roles`) and it reached two shapes
+nobody had proposed a rule for: "fecimi **qual** è quei che disïando altro vorria" (23:14, a
+comparative) and "se c'è **più** d'un varco" (purgatorio 11:41, a quantified nominal whose Layer-3
+span is headed on the same `più`). All three acceptances were read individually before the rule
+was kept.
+
+### Three smaller ones
+
+- **Ordering, in the same form the last five batches found it — and this time it is the sixth.**
+  Rule DG is rule AQ′ exactly: a normalization complete inside `_classify_divergence` and absent
+  from the membership check that runs before it. "cui più si convenia dicer 'Mal feci' / **che,
+  servando, far peggio**" (5:67): the two compared infinitives are one subject between them,
+  `_collapse_coordination` merges the second onto the first before the divergence check ever runs,
+  and the membership check — reading the raw row — reported `far` as heading no NP, pronoun or
+  derived predicate. Two lines. **Ask of every check that runs early which of the late
+  normalizations it is missing**, now the most productive question this checker has.
+- **A mirror leg found by asking which of two readings the LLM took.** Rule CW drops the remnants
+  standing *after* the second of two derived subjects, because the LLM reads one clause per
+  predicate and it read the first. Nothing makes the first its only choice: at "**Beatrice in
+  suso**, e io in lei guardava" (2:22) the verb's own morphology settles it the other way
+  (`guardava` is 1sg), so the gapped term is the one before the LLM's subject and rule CW's
+  positional test looks straight past it. The gate that keeps the two legs disjoint is which
+  subject the LLM named, so neither guesses.
+- **A refusal in `derive_unit` needs an acceptance leg, and rule AN never got one.** Rule AN reads
+  Layer 4's `orphan` as "this is a gapped clause, not a predicate" and hands the remnants to the
+  coordination head's slots. The LLM reads the same gap the other way, heading it on the remnant
+  itself: "de la voglia assoluta **intende**, e **io** de l'**altra**" (4:113) gets a tuple at
+  `io` with the ∅ subject and the oblique the remnant supplies. Both readings say the line has two
+  clauses and put the same two words in the second; which token carries its tuple is the citation
+  convention rules CA/CC established. Rule DI is that leg, gated on the `orphan` itself.
+
+### One candidate censused and dropped, on the corpus's own scope boundary
+
+**A given `subj` against a derived `xcomp` on the same infinitive**, censused at **29** — a
+coherent and largely lexical class: `convien(e|ti|mi|si)`, `piacque`/`piaccia`, `parve`/`parea`,
+`conven`, `est`. For an impersonal verb the infinitive genuinely *is* the logical subject ("e di
+sùbito parve giorno a giorno / **essere aggiunto**", 1:61; "**convienti** ancor **sedere** un poco
+a mensa", 5:37), and rule M already accepts the reverse direction. But only **3** of the 29 are
+reported at all, and the 29 are not one shape: `puote cader`, `lascia veder` and `fé pianger` are
+modals and causatives, where the infinitive is not a subject on any reading. Separating them needs
+a list of impersonal verbs — **an imported verb-valency lexicon by another name**, which the root
+[`../PLAN.md`](../PLAN.md)'s *Out of scope* rejects on the ground that it is an external authority
+rather than something the Italian line determines. Left flagged as genuine reading disagreement:
+paradiso 1:61, 5:37 and purgatorio 2:120.
+
+### What the batch left standing (18)
+
+Canto 1 keeps 10 of them, and four are one line. **1:81** ("che pioggia o fiume / lago non fece
+alcun tanto disteso") went 3 → 4 because the Layer-4 correction there is the honest trade rule AM
+recorded: the old tree read `lago` as a third conjunct of the subject and `alcun` as a determiner
+of `pioggia`, which is not Italian, and the LLM's own misreading (`alcun` as the subject, `pioggia`
+omitted) had been matching it closely enough to be half-hidden. With `subj=pioggia, obj=lago`
+correct, all four divergences are the LLM's and are now visible.
+
+The rest: two plain omissions of an adjunct the tree records (1:79, 5:136 — the latter a
+comparative `obl:come` rule AR does not reach because Layer 4 writes its `come` as an `advmod` on
+the compared nominal rather than as a `case`); `non so che divino` (3:59), where the idiom's own
+`che` is the governor Layer 4 hangs `so` under; the `sì … che` result clause read as a `ccomp`
+(4:107), censused at 2 by the Inferno 21-25 batch and unchanged in kind; the accusative-and-
+infinitive whose shared nominal Layer 4 parks in a `mark` slot (3:76, rule BW's shape reached
+through rule V's candidate set — a route, not a rule, until it is censused); a depictive adjective
+Layer 4 hangs on its predicate as an `advcl` (1:97, the fourth attachment point of the
+construction rules R/AA/AU/AZ take from the other three); a subject the derivation propagates
+across `conj` onto a 1sg verb because Layer 2 marks no person on the relative pronoun it comes
+from (3:61, two positions); and three flat LLM omissions or duplications (1:72, 4:30).
+
 ## Rules DE-DF, from reading Purgatorio 31-33 — 358 → 351, −7 (2026-08-17)
 
 Per-position read of all **14** soft violations in Purgatorio 31-33, the batch that finishes

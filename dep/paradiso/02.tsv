@@ -293,7 +293,7 @@ line	token	word	deprel	head_line	head_token
 44	6	sé	obl	44	7
 44	7	noto	conj	44	2
 45	1	a	case	45	2
-45	2	guisa	obl	43	3
+45	2	guisa	obl	44	7
 45	3	del	case	45	4
 45	4	ver	nmod	45	2
 45	5	primo	amod	45	4

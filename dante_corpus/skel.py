@@ -1619,6 +1619,82 @@ def _undecided_subject_slot(
     return any(g.get(a) == "subj" for a in derived_subjects)
 
 
+def _gapped_clause_read_as_predicate(
+    pos: tuple[int, int], arg: tuple[int, int],
+    dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
+    children_by_pos: dict[tuple[int, int], list[DepRow]] | None,
+    given_preds: frozenset[tuple[int, int]] | set[tuple[int, int]],
+) -> bool:
+    """Rule DI: rule AN's acceptance leg — the gapped clause the LLM heads on its own remnant.
+
+    "de la voglia assoluta **intende**, e **io** de l'**altra**" (paradiso 4:113). Layer 4 marks
+    the gap explicitly: `altra` is an `orphan` of `io`, which is a `conj` of `intende`. Rule AN
+    reads that signal and refuses to mint a predicate at `io` — a bare pronoun heads no clause —
+    so `derive_unit` hands both remnants to the coordination head's own slots, `io` as a second
+    subject of `intende` and `l'altra` as a second `obl:di`. The LLM reads the same gap the other
+    way round, giving `io` a tuple of its own with the ∅ subject and the oblique the remnant
+    supplies.
+
+    Neither reading adds anything the other denies: both say the line contains two clauses and
+    both put the same two words in the second one. Which token *carries* the second clause's tuple
+    is a citation convention, the shape rules CA/CC established — and rule AN owns one side of it
+    already, so this is the acceptance leg it never got. The gate is Layer 4's own `orphan`, the
+    one deprel that says "this is a gapped clause", plus the LLM actually proposing a tuple at the
+    remnant's head: without that the derivation's assignment stands and a plain omission still
+    reports.
+
+    Censused corpus-wide at 13 derived arguments that are a gapped-clause head of this kind (18
+    `orphan` deprels in all), 2 of which the LLM heads as a predicate. A small population because
+    the construction is: the rule takes both, and neither is a reading the tree contradicts."""
+    if arg == (0, 0) or dep_index_by_pos is None or children_by_pos is None:
+        return False
+    for head in (arg, *(_owner for _owner in _gap_owner(arg, dep_index_by_pos))):
+        if head not in given_preds:
+            continue
+        if not any(c.deprel == "orphan" for c in children_by_pos.get(head, ())):
+            continue
+        row = dep_index_by_pos.get(head)
+        if row is not None and (row.head_line, row.head_token) == pos:
+            return True
+    return False
+
+
+def _gap_owner(
+    arg: tuple[int, int], dep_index_by_pos: dict[tuple[int, int], DepRow]
+) -> tuple[tuple[int, int], ...]:
+    """The position `arg` is an `orphan` of, if any (rule DI's second citation)."""
+    row = dep_index_by_pos.get(arg)
+    if row is None or row.deprel != "orphan":
+        return ()
+    return ((row.head_line, row.head_token),)
+
+
+def _gapped_first_term_argument(
+    arg: tuple[int, int], g: dict[tuple[int, int], str], d: dict[tuple[int, int], str],
+) -> bool:
+    """Rule DH: rule CW's mirror leg — the elided clause is the **first** one.
+
+    "**Beatrice in suso**, e io in lei guardava" (paradiso 2:22). Rule CW reads two derived
+    subjects as two clauses collapsed onto one head and drops the remnants standing *after* the
+    second subject, because the LLM, reading one clause per predicate, read the **first** one.
+    Nothing makes the first the LLM's only choice. Here the verb's own morphology settles it the
+    other way — `guardava` is 1sg and its clause is "io in lei", while "Beatrice in suso" is the
+    gapped term — so the remnant on the far side of the gap is the oblique standing *before* the
+    LLM's subject, and rule CW's positional test looks past it.
+
+    The gate is which subject the LLM took. Rule CW is written for the case where it did not take
+    the last one; this fires only when it did, so the two legs cannot both apply to one argument
+    and neither guesses. Censused corpus-wide at 64 arguments standing before the last of two or
+    more derived subjects whose last subject the LLM names, 2 of which the LLM does not cite —
+    against rule CW's own 85/13, the same construction read from its rarer end. Directional like
+    rules BA and CW: this accepts the derivation's uncited argument, and an argument the LLM cites
+    from outside the tree stays flagged."""
+    if arg == (0, 0):
+        return False
+    subjects = sorted(a for a, role in d.items() if role == "subj" and a != (0, 0))
+    return len(subjects) >= 2 and arg < subjects[-1] and g.get(subjects[-1]) == "subj"
+
+
 def _gapped_second_term_argument(
     arg: tuple[int, int], d: dict[tuple[int, int], str],
 ) -> bool:
@@ -2222,12 +2298,30 @@ def _wh_word_of_derived_clause(
     complement of a verb of remembering is `obj` to one reading and `ccomp` to the other, which
     is a difference of notation about the same slot, not two claims.
 
+    **Rule DJ** removes the complement-role gate for the one case it was never about. That gate
+    exists to license `obj` ↔ `ccomp`, a *difference* of role notation the two readings can be
+    trusted with; it also, incidentally, threw out every clause where the two sides name the same
+    role and disagree about nothing but the token. "Veramente **quant'** io del regno santo / ne
+    la mia mente potei **far** tesoro, / sarà ora materia del mio canto" (paradiso 1:12): the free
+    relative fills `materia`'s subject slot on both readings — `derive_unit` cites the clause's
+    verb, the LLM the `quant'` that opens it — and rule CK's own censused core, the free relative
+    opened by `chi`, is the same shape in the same slot.
+
+    On the *role* test this is strictly narrower than the pair of complement roles: the two sides
+    agree about the slot outright, and disagree about nothing but which token names its filler.
+    What it does widen is what may be named that way, because a role the two sides share is not
+    always a clause — "se c'è **più** d'un varco" (purgatorio 11:41) is a quantified nominal whose
+    Layer-3 span is headed on that same `più`, and "fecimi **qual** è quei che disïando altro
+    vorria" (paradiso 23:14) a comparative. That is the convention rules AI, BR and CE already
+    accept from Layer 3's side — a phrase named by a token inside it — reached here through
+    Layer 4's own tree instead, and the three gates below keep it to one phrase.
+
     Three gates keep it to the shape. The word must be one Layer 2 calls a pronoun, adjective or
     adverb rather than a conjunction — rule BW's own POS test, which separates an interrogative
     word from a subordinator. It must **open** the clause: the leftmost token of the whole
     subtree, so a word from the middle of it is not swept in. And both roles must be complement
     roles, so a clause the derivation puts in the subject slot stays flagged."""
-    if dep_index_by_pos is None or arg == (0, 0) or grole not in _COMPLEMENT_ROLES:
+    if dep_index_by_pos is None or arg == (0, 0):
         return False
     row = dep_index_by_pos.get(arg)
     if row is None or row.deprel in _SUBJ_DEPRELS:
@@ -2238,7 +2332,11 @@ def _wh_word_of_derived_clause(
         # (`attr`, `mark`, `advmod`, `xcomp`, `obj`), never a subject.
         return False
     clause = (row.head_line, row.head_token)
-    if clause == arg or derived.get(clause) not in _COMPLEMENT_ROLES:
+    drole = derived.get(clause)
+    if clause == arg or drole is None:
+        return False
+    # rule CX's own pair of complement roles, or rule DJ's identical-role case
+    if not (drole == grole or (drole in _COMPLEMENT_ROLES and grole in _COMPLEMENT_ROLES)):
         return False
     clause_row = dep_index_by_pos.get(clause)
     if clause_row is None or (clause_row.head_line, clause_row.head_token) != pos:
@@ -3197,6 +3295,11 @@ def _classify_divergence(
                     continue  # rule BA: the derivation offered two subjects and named neither
                 if _gapped_second_term_argument(arg, d):
                     continue  # rule CW: rule BA's oblique leg — the elided clause's own argument
+                if _gapped_first_term_argument(arg, g, d):
+                    continue  # rule DH: rule CW's mirror — the LLM read the *second* clause
+                if _gapped_clause_read_as_predicate(pos, arg, dep_index_by_pos, children_by_pos,
+                                                    given_preds):
+                    continue  # rule DI: rule AN's acceptance leg — the gap headed on its remnant
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
                                                hosts=_control_partners(pos)):
                     continue  # rule AX: the LLM hung it on the other end of an `xcomp` edge
@@ -3617,10 +3720,27 @@ def validate_unit(
             # ("vorrebbe di vedere **esser** digiuno", inferno 28:87). The divergence check
             # merges exactly this edge with `_merge_auxiliary_citations`; the membership check
             # runs before that merge and was reporting the un-normalized position.
-            aux_head = _aux_head(arg, dep_index(dep_rows) if dep_rows else {})
+            index = dep_index(dep_rows) if dep_rows else {}
+            aux_head = _aux_head(arg, index)
             if aux_head != arg and (aux_head in np_head_positions or aux_head in pronoun_positions
                                     or aux_head in predicate_positions
                                     or aux_head in dep_argument_positions):
+                continue
+            # **Rule DG**, the same finding one rule further on: rule C's coordination collapse,
+            # applied where the citation is still raw. "cui più si convenia dicer 'Mal feci' /
+            # **che, servando, far peggio**" (paradiso 5:67) — the two compared infinitives are
+            # one subject between them, Layer 4 writes the second as `conj` of the first, and the
+            # LLM cites both. `_collapse_coordination` merges exactly that edge before the
+            # divergence check, so the *second* citation is never a divergence; the membership
+            # check runs earlier, on the raw row, and reported `far` as heading nothing because a
+            # bare `conj` verb is neither an NP head, a pronoun, nor a predicate the derivation
+            # minted. This is rule AQ′'s lesson (ask which checks run *before* a rule) applied to
+            # the one normalization the membership check still did not read.
+            coord_head = _coordination_head(arg, index) if index else arg
+            if coord_head != arg and (coord_head in np_head_positions
+                                      or coord_head in pronoun_positions
+                                      or coord_head in predicate_positions
+                                      or coord_head in dep_argument_positions):
                 continue
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")

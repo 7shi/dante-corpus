@@ -1,5 +1,28 @@
 # Manual Layer-2 corrections
 
+## 1 row from the Layer-5 Paradiso 1-5 read (2026-08-17)
+
+**paradiso 5:37 `convienti`** — "**convienti** ancor sedere un poco a mensa", "it behooves
+**thee** to sit a while longer at table". `convienti` is impersonal `conviene` plus the enclitic
+dative `ti`, not a 2sg form of `convenire`; the corpus already writes exactly this shape one
+canticle earlier, at `parvemi` (paradiso 1:79, `parere+mi` / `verb+pronoun` / 3sg / "enclitic
+pronoun").
+
+| column | was | now |
+|---|---|---|
+| lemma | `convenire` | `convenire+ti` |
+| pos | `verb` | `verb+pronoun` |
+| person | `2` | `3` |
+| note | — | `enclitic pronoun` |
+
+The case-annex row and the Layer-3 clitic span move with it (see
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md),
+[`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)). Layer 5 is unchanged in count: paradiso 5:37's
+one divergence is the `subj`-versus-`xcomp` reading of the infinitive, which the person feature
+does not decide. What the correction fixes is invisible to `dep --check`: the derivation had been
+propagating `Tu` across `conj` onto an impersonal verb, and rule AG's agreement gate was letting
+it through as an agreeing 2sg.
+
 ## 1 row from the Layer-5 Purgatorio 31-33 read (2026-08-17)
 
 **purgatorio 31:15 `fuor`** — "al quale intender **fuor mestier** le viste". Tagged

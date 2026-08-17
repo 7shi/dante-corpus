@@ -555,10 +555,10 @@ line	token	word	deprel	head_line	head_token
 80	7	pioggia	nsubj	81	3
 80	8	o	cc	80	9
 80	9	fiume	conj	80	7
-81	1	lago	conj	80	9
+81	1	lago	obj	81	3
 81	2	non	advmod	81	3
 81	3	fece	advcl	79	1
-81	4	alcun	det	80	7
+81	4	alcun	det	81	1
 81	5	tanto	advmod	81	6
 81	6	disteso	xcomp	81	3
 82	1	La	det	82	2
@@ -618,7 +618,7 @@ line	token	word	deprel	head_line	head_token
 89	6	non	advmod	89	7
 89	7	vedi	advcl	88	6
 90	1	ciò	obj	89	7
-90	2	che	nsubj	90	3
+90	2	che	obj	90	3
 90	3	vedresti	acl:relcl	90	1
 90	4	se	mark	90	7
 90	5	l'	obj	90	7

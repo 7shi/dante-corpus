@@ -1,5 +1,65 @@
 # dep — Layer 4 correction history
 
+## 6 rows from the Layer-5 Paradiso 1-5 read (2026-08-17)
+
+The per-position read of Paradiso 1-5's 26 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) found six Layer-4 rows wrong, in five places.
+Applied with a gated script that asserts the word at each `(line, token)` before rewriting;
+`morph`/`np`/`dep`/`case --check` all re-run at 0 and `pytest` at 449.
+
+### paradiso 1:81 — `alcun lago` is the object, not a third conjunct of the subject
+
+"che pioggia o fiume / **lago** non fece **alcun** tanto disteso" — "that neither rain nor river
+ever made **any lake** so widespread". The object is the discontinuous `lago … alcun`, fronted
+across its own verb, and Layer 4 had read the two halves as belonging to the subject instead:
+
+| token | was | now |
+|---|---|---|
+| 81.1 `lago` | `conj` ← 80.9 `fiume` | `obj` ← 81.3 `fece` |
+| 81.4 `alcun` | `det` ← 80.7 `pioggia` | `det` ← 81.1 `lago` |
+
+Layer 5 **+1**, deliberately. The old tree gave `fece` a three-member subject and no object; the
+LLM read `alcun` as the subject and omitted `pioggia`, so its own misreading matched the wrong
+tree closely enough that only part of it was reported. With the tree correct the derivation says
+`subj=pioggia, obj=lago, xcomp=disteso` and all four of the LLM's divergences surface — the honest
+trade rule AM recorded. The Layer-3 span `[4-6] alcun tanto disteso` is left alone: it is the
+object's second, contiguous piece, which is exactly what Layer 3 can represent of a discontinuous
+phrase.
+
+### paradiso 1:90 — `ciò che vedresti` is a relative *object*
+
+"sì che non vedi / ciò **che** vedresti se l'avessi scosso" — "so that you do not see what you
+would see". `vedresti` is 2sg and `ciò` 3sg, so the relative pronoun cannot be its subject; it is
+the object, and the clause's subject is the pro-drop *tu*. `90.2 che` was `nsubj` ← 90.3 and is
+now `obj` ← 90.3, with the case-annex row moving `nominative` → `accusative` (see
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)). Layer 5 **−1**: the LLM had read it this way.
+
+### paradiso 2:45 — `a guisa di` modifies the predicate it stands next to
+
+"non dimostrato, ma fia per sé noto / **a guisa** del ver primo che l'uom crede" — "not
+demonstrated, but self-evident, **in the manner of** the primal truth which man believes". `45.2
+guisa` was `obl` ← 43.3 `vedrà`, two lines and one coordination away; it is now `obl` ← 44.7
+`noto`, the adjective it qualifies. Layer 5 **−1**.
+
+### paradiso 3:95 — `qual` is the indirect question's predicate complement
+
+"per apprender da lei **qual fu la tela**" — "to learn from her what the web was". `95.5 qual`
+was `det` ← 95.8 `tela`, a determiner reaching across its own copula; it is now `xcomp` ← 95.6
+`fu`, the predicate complement it is. Layer 5 **−1**.
+
+### paradiso 5:120 — `di noi` is what the enlightenment is *about*
+
+"e però, se disii / **di noi** chiarirti" — "if you desire to be enlightened **about us**".
+`chiarir-ti` already carries its object in the enclitic, so `noi` cannot be a second one; the
+case annex reads it `ablative`, which is the oblique.
+
+| token | was | now |
+|---|---|---|
+| 120.1 `di` | `case` ← 120.3 `chiarirti` | `case` ← 120.2 `noi` |
+| 120.2 `noi` | `obj` ← 120.3 | `obl` ← 120.3 |
+
+Layer 5 **−1**.
+
 ## 4 rows from the Layer-5 Purgatorio 31-33 read (2026-08-17)
 
 The per-position read of Purgatorio 31-33's 14 Layer-5 soft violations (see

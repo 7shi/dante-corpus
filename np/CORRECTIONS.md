@@ -1,5 +1,13 @@
 # Layer 3 soft-violation correction history
 
+## 1 clitic-cluster enumeration from the Layer-5 Paradiso 1-5 read (2026-08-17)
+
+`convienti` (paradiso 5:37) was retagged `convenire+ti` / `verb+pronoun` at Layer 2 (see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)), which makes the enclitic a pronoun Layer 3
+must enumerate; `np --check` said so immediately ("token 1 'convienti' missing clitic mention
+'+ti'"). Added `37 1 1 1 +ti`, the same one-token span `parvemi` (paradiso 1:79) already carries.
+`np --check` back to **0/0**.
+
 ## 2 spans from the Layer-5 Purgatorio 31-33 read (2026-08-17)
 
 Layer 3 is over-inclusive by design, and an over-wide span is normally left alone. These two are

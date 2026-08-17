@@ -4293,3 +4293,138 @@ def test_classify_divergence_rule_df_requires_one_noun_phrase():
     # Rule AI's own gate: outside the candidate's span the citation is a different nominal.
     violations = _control_subject_np_head_fixture(span_end=2)
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+# --- Phase 6: rules DG-DJ (the Paradiso 1-5 read) ----------------------------------------
+
+
+def _conjunct_membership_fixture(deprel="conj"):
+    """"cui più si convenia dicer 'Mal feci' / che, servando, **far** peggio" (paradiso 5:67):
+    the second of two compared infinitives, which the LLM cites beside the first. Layer 4 writes
+    it as a `conj` of the first, so the raw citation heads no NP, pronoun or derived predicate."""
+    from dante_corpus.morph import MorphRow
+    from dante_corpus.np import NPSpan
+
+    nos = [1, 2]
+    texts = ["cui convenia dicer", "servando far"]
+    rows = [skel.SkelRow(1, 2, "convenia", "subj", 1, 3),
+            skel.SkelRow(1, 2, "convenia", "subj", 2, 2)]
+    morph_rows = {
+        1: [MorphRow(word="cui", pos="pronoun"),
+            MorphRow(word="convenia", pos="verb"),
+            MorphRow(word="dicer", pos="verb")],
+        2: [MorphRow(word="servando", pos="verb"),
+            MorphRow(word="far", pos="verb")],
+    }
+    dep_rows = {
+        1: [dep.DepRow(line=1, token=2, word="convenia", deprel="root",
+                       head_line=0, head_token=0),
+            dep.DepRow(line=1, token=3, word="dicer", deprel="nsubj",
+                       head_line=1, head_token=2)],
+        2: [dep.DepRow(line=2, token=2, word="far", deprel=deprel,
+                       head_line=1, head_token=3)],
+    }
+    np_rows = {1: [NPSpan(line=1, start=3, end=3, head=3, text="dicer")], 2: []}
+    return skel.validate_unit(nos, texts, _unit(rows), morph_rows=morph_rows,
+                              np_rows=np_rows, dep_rows=dep_rows)
+
+
+def test_validate_rows_rule_dg_reads_membership_through_the_coordination_head():
+    assert [v for v in _conjunct_membership_fixture() if "heads no NP" in v.detail] == []
+
+
+def test_validate_rows_rule_dg_requires_a_coordination_edge():
+    # Without rule C's own edge the citation is corroborated by nothing and still fails.
+    violations = _conjunct_membership_fixture(deprel="advmod")
+    assert any("heads no NP" in v.detail for v in violations)
+
+
+def _gapped_first_term_fixture(cited_subject=(1, 5)):
+    """"**Beatrice in suso**, e io in lei guardava" (paradiso 2:22): the LLM read the *second*
+    clause, so the oblique standing before its subject is the elided first term's."""
+    derived = {1: [skel.SkelRow(1, 8, "guardava", "subj", 1, 1),
+                   skel.SkelRow(1, 8, "guardava", "subj", 1, 5),
+                   skel.SkelRow(1, 8, "guardava", "obl:in", 1, 3),
+                   skel.SkelRow(1, 8, "guardava", "obl:in", 1, 7)]}
+    given = {1: [skel.SkelRow(1, 8, "guardava", "subj", *cited_subject),
+                 skel.SkelRow(1, 8, "guardava", "obl:in", 1, 7)]}
+    return skel._classify_divergence(given, derived, None, {})
+
+
+def test_classify_divergence_rule_dh_accepts_the_first_terms_own_argument():
+    assert [v for v in _gapped_first_term_fixture()
+            if v.detail.startswith("missing_arg")] == []
+
+
+def test_classify_divergence_rule_dh_requires_the_llm_to_have_taken_the_last_subject():
+    # Rule CW's own case: the LLM read the *first* clause, so an argument before the second
+    # subject is that clause's own and stays owed.
+    violations = _gapped_first_term_fixture(cited_subject=(1, 1))
+    assert any(v.detail.startswith("missing_arg") and "(1, 3)" in v.detail for v in violations)
+
+
+def _gapped_clause_predicate_fixture(remnant_deprel="orphan"):
+    """"de la voglia assoluta **intende**, e **io** de l'**altra**" (paradiso 4:113): rule AN
+    hands the gapped clause's remnants to the coordination head; the LLM heads the gap on `io`."""
+    derived = {1: [skel.SkelRow(1, 5, "intende", "subj", 0, 0),
+                   skel.SkelRow(1, 5, "intende", "subj", 1, 7),
+                   skel.SkelRow(1, 5, "intende", "obl:di", 1, 3),
+                   skel.SkelRow(1, 5, "intende", "obl:di", 2, 3)]}
+    given = {1: [skel.SkelRow(1, 5, "intende", "subj", 1, 1),
+                 skel.SkelRow(1, 5, "intende", "obl:di", 1, 3),
+                 skel.SkelRow(1, 7, "io", "subj", 0, 0),
+                 skel.SkelRow(1, 7, "io", "obl:di", 2, 3)]}
+    dep_index_by_pos = {
+        (1, 3): dep.DepRow(line=1, token=3, word="voglia", deprel="obl",
+                           head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="intende", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 7): dep.DepRow(line=1, token=7, word="io", deprel="conj",
+                           head_line=1, head_token=5),
+        (2, 3): dep.DepRow(line=2, token=3, word="altra", deprel=remnant_deprel,
+                           head_line=1, head_token=7),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos, {})
+
+
+def test_classify_divergence_rule_di_accepts_the_gap_headed_on_its_remnant():
+    assert [v for v in _gapped_clause_predicate_fixture()
+            if v.detail.startswith("missing_arg")] == []
+
+
+def test_classify_divergence_rule_di_is_gated_on_layer_4s_orphan():
+    # Without the `orphan` Layer 4 asserts no gap, and the derivation's assignment stands.
+    violations = _gapped_clause_predicate_fixture(remnant_deprel="nmod")
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _same_role_clause_opener_fixture(role="subj"):
+    """"Veramente **quant'** io ... potei **far** tesoro, / sarà ora materia del mio canto"
+    (paradiso 1:12): both readings put the free relative in the subject slot and differ only on
+    which of its tokens names it."""
+    derived = {1: [skel.SkelRow(1, 1, "materia", "subj", 2, 2)],
+               2: [skel.SkelRow(2, 2, "far", "obj", 2, 3)]}
+    given = {1: [skel.SkelRow(1, 1, "materia", role, 2, 1)],
+             2: [skel.SkelRow(2, 2, "far", "obj", 2, 3)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="materia", deprel="root",
+                           head_line=0, head_token=0),
+        (2, 1): dep.DepRow(line=2, token=1, word="quant'", deprel="obl",
+                           head_line=2, head_token=2),
+        (2, 2): dep.DepRow(line=2, token=2, word="far", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (2, 3): dep.DepRow(line=2, token=3, word="tesoro", deprel="obj",
+                           head_line=2, head_token=2),
+    }
+    return skel._classify_divergence(given, derived, dep_index_by_pos,
+                                     {(2, 1): "pronoun", (2, 2): "verb", (2, 3): "noun"})
+
+
+def test_classify_divergence_rule_dj_accepts_the_opener_when_the_roles_agree():
+    assert _same_role_clause_opener_fixture() == []
+
+
+def test_classify_divergence_rule_dj_still_reports_a_role_the_derivation_denies():
+    # Outside rule CX's own pair of complement roles, a different role is a second claim.
+    violations = _same_role_clause_opener_fixture(role="obl")
+    assert any(v.detail.startswith("extra_arg") for v in violations)

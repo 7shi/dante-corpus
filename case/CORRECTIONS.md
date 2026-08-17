@@ -1,5 +1,19 @@
 # case — measurement history
 
+## 2 rows from the Layer-5 Paradiso 1-5 read (2026-08-17)
+
+Both follow corrections made in the same session at the layer that decides them.
+
+- **paradiso 1:90 `che`**, `nominative` → `accusative`. "ciò **che** vedresti se l'avessi
+  scosso": the verb is 2sg and `ciò` 3sg, so the relative pronoun is its clause's object, not its
+  subject. The Layer-4 row moves with it (see
+  [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md)).
+- **paradiso 5:37 `convienti`**, a **new** row, `dative`. The enclitic the Layer-2 correction
+  exposes (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)), recorded exactly as
+  `parvemi` (paradiso 1:79) already is.
+
+`case --check` stays 0 hard.
+
 ## 2 rows from the Layer-5 Purgatorio 31-33 read (2026-08-17)
 
 Both follow Layer-4 corrections made in the same session (see

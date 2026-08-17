@@ -255,7 +255,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 36	t'	ti	pronoun		sg.	2			elision
 36	ho	avere	verb		sg.	1	present	indicative	
 36	scoverto	scoprire	verb		sg.		past participle		
-37	convienti	convenire	verb		sg.	2	present	indicative	
+37	convienti	convenire+ti	verb+pronoun		sg.	3	present	indicative	enclitic pronoun
 37	ancor	ancora	adverb						apocope
 37	sedere	sedere	verb				infinite	infinite	
 37	un	uno	article		sg.				indefinite
