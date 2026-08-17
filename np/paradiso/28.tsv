@@ -30,7 +30,6 @@ line	start	end	head	text
 12	5	5	5	Amor
 12	6	7	7	la corda
 13	3	3	3	io
-13	8	8	8	tocchi
 14	1	2	2	li miei
 14	4	9	4	ciò che pare in quel volume
 14	8	9	9	quel volume
@@ -273,7 +272,6 @@ line	start	end	head	text
 105	3	5	5	'l primo ternaro
 105	4	5	5	primo ternaro
 105	5	5	5	ternaro
-106	3	7	3	saper che tutti hanno diletto
 106	3	3	3	saper
 106	5	5	5	tutti
 106	7	7	7	diletto

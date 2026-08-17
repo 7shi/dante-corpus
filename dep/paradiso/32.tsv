@@ -861,7 +861,7 @@ line	token	word	deprel	head_line	head_token
 128	4	de	case	128	7
 128	5	la	det	128	7
 128	6	bella	amod	128	7
-128	7	sposa	obl	130	8
+128	7	sposa	nmod	127	7
 129	1	che	nsubj	129	3
 129	2	s'	obj	129	3
 129	3	acquistò	acl:relcl	128	7

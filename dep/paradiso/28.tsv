@@ -93,12 +93,12 @@ line	token	word	deprel	head_line	head_token
 13	4	mi	expl	13	5
 13	5	rivolsi	advcl	16	3
 13	6	e	cc	13	7
-13	7	furon	conj	13	5
-13	8	tocchi	nsubj	13	7
+13	7	furon	aux	13	8
+13	8	tocchi	conj	13	5
 14	1	li	det	14	2
-14	2	miei	nmod	13	8
+14	2	miei	nsubj	13	8
 14	3	da	case	14	4
-14	4	ciò	obl	13	7
+14	4	ciò	obl	13	8
 14	5	che	nsubj	14	6
 14	6	pare	acl:relcl	14	4
 14	7	in	case	14	9
@@ -749,8 +749,8 @@ line	token	word	deprel	head_line	head_token
 105	5	ternaro	obj	105	6
 105	6	terminonno	advcl	104	2
 106	1	e	cc	106	2
-106	2	dei	case	106	3
-106	3	saper	obl	104	2
+106	2	dei	conj	104	2
+106	3	saper	xcomp	106	2
 106	4	che	mark	106	6
 106	5	tutti	nsubj	106	6
 106	6	hanno	ccomp	106	3

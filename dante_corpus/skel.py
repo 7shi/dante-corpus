@@ -465,6 +465,30 @@ def derive_unit(
             cur = index.get((pred_row.head_line, pred_row.head_token))
             while cur is not None and (cur.line, cur.token) not in seen:
                 seen.add((cur.line, cur.token))
+                # Rule EF: the walk stops at a **sibling** that has already supplied a subject.
+                # Rule AT decides who may inherit and rule DU where the chain is cut by a
+                # subordinator; this is about the chain head no longer being the nearest
+                # antecedent. "Concreato fu **ordine** … **pura potenza** tenne la parte ima; /
+                # nel mezzo **strinse** potenza con atto" (paradiso 29:31-35): five conjuncts
+                # hang off `Concreato`, the fourth brings its own subject, and the fifth was
+                # still being handed the first one's. Italian shares a subject forward across a
+                # coordination, and an intervening conjunct that states its own ends the sharing
+                # — "ed **ei** … di sùbito levorsi / e **disser**" (inferno 33:59-61), where the
+                # sons say it and the derivation was reaching past them to `io`.
+                #
+                # It is a **refusal, not a re-assignment**: step 4 then fills the slot with
+                # pro-drop ∅ and the authority model decides it, which is rule DA's boundary
+                # ("an empty subject slot is a decision procedure having declined"). Handing the
+                # conjunct the nearer sibling's subject instead was measured and rejected at
+                # **+8/−2** — it is right at paradiso 29:35 and wrong at six other places, where
+                # the nearer subject belongs to a clause the coordination does not continue.
+                # Censused at 23 subject-less `conj` predicates, of 3658.
+                nearer = [c for c in children.get((cur.line, cur.token), ())
+                          if c.deprel == "conj" and (c.line, c.token) < (line, token)
+                          and any(x.deprel in _SUBJ_DEPRELS
+                                  for x in children.get((c.line, c.token), ()))]
+                if nearer:
+                    break
                 inherited = next(
                     (c for c in children.get((cur.line, cur.token), ()) if c.deprel in _SUBJ_DEPRELS),
                     None,
@@ -1511,10 +1535,22 @@ def _prep_stack_nominal(
     `esso`. A preposition's own words are not arguments, so the citation is the nominal they open —
     the same merge rules AQ (auxiliary) and BJ (adverb cluster) make onto their phrase's head.
 
-    Entered only from a `fixed` member, so a plain `case` preposition standing on its own — which
-    the LLM cites for other reasons, and which rules L/N/O already read — is untouched.
+    Entered from a `fixed` member, or — rule EE — from the cluster's **opening word**, the `case`
+    row the `fixed` members hang on: "Poscia che **'ncontro a** la vita presente … aperse 'l vero"
+    (paradiso 28:1), where the LLM names `'ncontro` and the nominal it opens is `vita`. That word
+    is a preposition for the same reason its `fixed` members are — the normalization made it the
+    cluster's head — and rule BV's own reading ("a preposition's own words are not arguments")
+    covers it without a further claim. A plain `case` preposition with no `fixed` child stays
+    untouched, which is the exclusion this leg keeps: those the LLM cites for other reasons, and
+    rules L/N/O already read them. Censused at 167 `case` rows heading a multiword preposition,
+    1 of which the LLM cites.
     """
-    if (dep_index_by_pos.get(arg) or DepRow(0, 0, "", "", 0, 0)).deprel != "fixed":
+    row = dep_index_by_pos.get(arg) or DepRow(0, 0, "", "", 0, 0)
+    if row.deprel == "case":
+        if not any(r.deprel == "fixed" and (r.head_line, r.head_token) == arg
+                   for r in dep_index_by_pos.values()):
+            return arg
+    elif row.deprel != "fixed":
         return arg
     seen = {arg}
     cur = arg
@@ -2292,6 +2328,7 @@ def _comparative_come_adjunct(
     dep_index_by_pos: dict[tuple[int, int], DepRow] | None,
     children_by_pos: dict[tuple[int, int], list[DepRow]] | None,
     morph_pos_by_position: dict[tuple[int, int], str] | None,
+    d: dict[tuple[int, int], str] | None = None,
 ) -> bool:
     """Rule AR: an oblique the derivation reads off a verbless comparative clause.
 
@@ -2302,21 +2339,41 @@ def _comparative_come_adjunct(
     nominal on but the main predicate, so `derive_unit` reports it as that predicate's argument.
     It is an adjunct of comparison in both readings, and the LLM (correctly) does not list it.
 
-    Gated on a Layer-2 conjunction `come` marking the phrase: either as the compared nominal's
-    own `mark` (11:17), or as the predicate's, in which case a correlative `sì`/`così` on the
-    same predicate must separate the two halves and the argument must stand on the comparison's
-    side of it (13:43). Without the correlative, a `come`-marked predicate is an ordinary
-    comparative *clause* with its own verb, whose obliques are its own.
+    Gated on a `come` marking the phrase: either as the compared nominal's own marker (11:17), or
+    as the predicate's, in which case a correlative `sì`/`così` on the same predicate must
+    separate the two halves and the argument must stand on the comparison's side of it (13:43).
+
+    **Rule EB** decides what "marking" means, and it is rule DY's finding with a second
+    measurement attached: the gate names the *word*, not the tag or the edge. `come`/`com` is
+    written 812 times, under **eight** deprels (543 `mark`, 145 `case`, 103 `advmod`, 10 `advcl`,
+    …) and **four** Layer-2 tags; 441 rows are `mark` + conjunction, which is all this gate used
+    to admit. Nothing in the reading turns on either column — "**come** sole in viso che più
+    trema, così lo rimembrar … la mente mia … scema" (paradiso 30:25) is the correlative shape
+    with the marker written `advmod` and tagged an adverb, "**Come** l'augello, intra l'amate
+    fronde … così la donna mia stava eretta" (23:1) the same, and "com' a terra quïete in foco
+    vivo" (1:141) is the compared nominal's own marker one deprel over. Dropping both columns
+    takes 3 positions and newly flags none.
+
+    Without the correlative, a `come`-marked predicate is an ordinary comparative *clause* with
+    its own verb, whose obliques are its own — **except** when the derivation has put **two**
+    subjects on it. That is rule BA's evidence that Layer 4 has collapsed a second, verbless
+    clause onto this head, and rule CW then drops its remnants by position: everything after the
+    second subject. "ma or convien che mio seguir **desista** … **come a l'ultimo suo ciascuno
+    artista**" (paradiso 30:31) is the case rule CW cannot see, because Dante puts the elided
+    clause's subject last and its oblique before it. **Rule EC** reads the boundary off the one
+    thing the tree does state about the gap — the marker `come` opens the second term, so every
+    argument after it is the second term's. Censused at 13 predicates carrying a correlative-less
+    `come` marker and two or more subject children, against 598 with the marker alone.
     """
     if drole != "obl" and not drole.startswith("obl:"):
         return False
     if dep_index_by_pos is None or children_by_pos is None or morph_pos_by_position is None:
         return False
 
-    def come_mark(host: tuple[int, int], words: tuple[str, ...] = ("come", "com")) -> DepRow | None:
+    def come_mark(host: tuple[int, int], words: tuple[str, ...] = ("come", "com"),
+                  deprels: tuple[str, ...] = ("mark",)) -> DepRow | None:
         for c in children_by_pos.get(host, ()):
-            if (c.deprel == "mark" and c.word.lower().rstrip("'") in words
-                    and "conjunction" in morph_pos_by_position.get((c.line, c.token), "").lower()):
+            if c.deprel in deprels and c.word.lower().rstrip("'") in words:
                 return c
         return None
 
@@ -2326,7 +2383,7 @@ def _comparative_come_adjunct(
     # **che Bonturo**" (21:41). Censused at 51 corpus-wide, every one a comparative or exceptive
     # second term. Only the *argument* leg takes `che`: a `che`-marked clause hanging on the
     # predicate is an ordinary complement clause, so the correlative branch below stays `come`.
-    if come_mark(arg, ("come", "com", "che", "ch")) is not None:
+    if come_mark(arg, ("come", "com", "che", "ch"), ("mark", "advmod")) is not None:
         return True
     # Rule DR: `quasi` is the third marker of the same verbless comparison, and Layer 4 writes
     # it `advmod` rather than `mark` because Layer 2 calls it an adverb — "La mia letizia mi ti
@@ -2337,7 +2394,7 @@ def _comparative_come_adjunct(
            and "adverb" in morph_pos_by_position.get((c.line, c.token), "").lower()
            for c in children_by_pos.get(arg, ())):
         return True
-    marker = come_mark(pos)
+    marker = come_mark(pos, deprels=("mark", "advmod"))
     if marker is None:
         return False
     correlative = next(
@@ -2346,7 +2403,8 @@ def _comparative_come_adjunct(
         None,
     )
     if correlative is None:
-        return False
+        subjects = sorted(a for a, role in (d or {}).items() if role == "subj" and a != (0, 0))
+        return len(subjects) >= 2 and arg > (marker.line, marker.token)
     if (correlative.line, correlative.token + 1) == (marker.line, marker.token):
         # Rule BL: "**sì come** nuvoletta, in sù salire" (inferno 26:39). When the correlative
         # stands immediately *before* the marker the two are one word — `sì come` = "just as" —
@@ -3405,6 +3463,26 @@ def _classify_divergence(
         head = (dep_row.head_line, dep_row.head_token)
         return {head} if head in complement_hosts.get(pos, ()) else set()
 
+    def _comparison_clause_hosts(pos: tuple[int, int]) -> set[tuple[int, int]]:
+        # Rule ED: rule AR's `extra_arg` leg, from the matrix side. Rule AR reads a verbless
+        # comparison's nominal off the *matrix* predicate — Layer 4 has nowhere else to hang it —
+        # and accepts the LLM leaving it out. Layer 4 sometimes does have somewhere else: it
+        # heads the comparison on the `come` itself. "E dal settimo grado in giù, **sì come**
+        # infino ad esso, succedono Ebree" (paradiso 32:16) — `come` is an `advcl` of `succedono`
+        # and carries `ad esso` as its own oblique, so `derive_unit` mints it as a predicate and
+        # puts the oblique there, while the LLM lists the adjunct on `succedono`. One adjunct of
+        # comparison, named once in each reading at the level that reading gives it.
+        #
+        # Routed through rule X's mechanism, so it inherits the role-must-match gate: the LLM
+        # relocating the adjunct onto the matrix predicate is the convention, relabelling it is a
+        # second claim. Restricted to a host whose own word is the comparison marker, which is
+        # what makes it a marker standing in for a clause rather than a clause of its own.
+        if dep_index_by_pos is None or children_by_pos is None:
+            return set()
+        return {(c.line, c.token) for c in children_by_pos.get(pos, ())
+                if c.deprel in CLAUSE_HEAD_DEPRELS
+                and c.word.lower().rstrip("'") in ("come", "com")}
+
     def _auxiliary_hosts(pos: tuple[int, int]) -> set[tuple[int, int]]:
         # Rule BY: the `aux`/`cop` words of this predicate's own periphrasis. "quel da Esti **il
         # fé far**" (purgatorio 5:77): Layer 4 heads the causative on `far` and makes the finite
@@ -3659,7 +3737,7 @@ def _classify_divergence(
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred):
                     continue  # rule X: the LLM hung it on this predicate's own complement
                 if _comparative_come_adjunct(pos, arg, drole, dep_index_by_pos, children_by_pos,
-                                             morph_pos_by_position):
+                                             morph_pos_by_position, d):
                     continue  # rule AR: a verbless comparative clause's nominal
                 if _conjunction_oblique(arg, drole, morph_pos_by_position):
                     continue  # rule BM: a connective Layer 4 parked in an adjunct slot
@@ -3755,6 +3833,10 @@ def _classify_divergence(
                     # is the complement of
                     or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
                                                    hosts=_copular_hosts(pos))
+                    # rule ED: rule AR's `extra_arg` leg — the comparison Layer 4 headed on
+                    # `come`, whose adjunct the LLM lists on the matrix predicate
+                    or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
+                                                   hosts=_comparison_clause_hosts(pos))
                     # rule AX, mirror leg: derive_unit hung it on the other end of an `xcomp`
                     or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
                                                    hosts=_control_partners(pos))

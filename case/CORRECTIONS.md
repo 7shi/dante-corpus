@@ -1,5 +1,18 @@
 # case — measurement history
 
+## 2 rows dropped by the Layer-5 Paradiso 26-33 read (2026-08-17)
+
+Both follow the Layer-2 correction made in the same session at the layer that decides them (see
+[`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)).
+
+- **paradiso 26:79.2 `mei`**, `genitive` **dropped** — retagged as the comparative adverb *meglio*,
+  which is outside the annex's scope.
+- **paradiso 26:79.3 `che`**, `accusative` **dropped** — retagged as the conjunction opening the
+  second term of the comparison. This is the shape rule BK reads, and an accusative row on it would
+  keep offering rule U an argument reading the tree denies.
+
+`case --check` stays 0 hard.
+
 ## 2 rows from the Layer-5 Paradiso 6-10 read (2026-08-17)
 
 Both follow corrections made in the same session at the layers that decide them (see

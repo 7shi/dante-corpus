@@ -2241,9 +2241,82 @@ def test_classify_divergence_rule_ar_accepts_a_verbless_comparative_oblique():
     assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
 
 
-def test_classify_divergence_rule_ar_requires_layer_2_to_call_come_a_conjunction():
-    given, derived, dep_index_by_pos, morph_pos = _comparative_adjunct_fixture("preposition")
+def test_classify_divergence_rule_eb_ignores_the_markers_part_of_speech():
+    """Rule EB: the gate names the word, not the tag.
+
+    `come` carries four Layer-2 tags across the corpus under eight deprels — 441 rows are
+    `mark` + conjunction, 102 `mark` + adverb, 103 `advmod` — and the reading is the same in
+    all of them, so rule DY's finding applies: where the tag is a lottery, name the word."""
+    given, derived, dep_index_by_pos, morph_pos = _comparative_adjunct_fixture("adverb")
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_rule_ar_still_requires_the_marker_to_be_come():
+    given, derived, dep_index_by_pos, morph_pos = _comparative_adjunct_fixture()
+    dep_index_by_pos[(1, 3)] = dep.DepRow(line=1, token=3, word="quando", deprel="mark",
+                                          head_line=1, head_token=4)
     violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _advmod_comparative_fixture():
+    """"com' a terra quïete in foco vivo" (paradiso 1:141): Layer 2 calls this `come` an adverb
+    and Layer 4 writes it `advmod` on the compared nominal, not `mark`."""
+    given, derived, dep_index_by_pos, morph_pos = _comparative_adjunct_fixture("adverb")
+    dep_index_by_pos[(1, 3)] = dep.DepRow(line=1, token=3, word="come", deprel="advmod",
+                                          head_line=1, head_token=4)
+    return given, derived, dep_index_by_pos, morph_pos
+
+
+def test_classify_divergence_rule_eb_accepts_an_advmod_comparison_marker():
+    given, derived, dep_index_by_pos, morph_pos = _advmod_comparative_fixture()
+    assert skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos) == []
+
+
+def test_classify_divergence_rule_eb_still_requires_the_marker_on_the_phrase():
+    # The same `advmod` marker hung somewhere else is not this phrase's comparison.
+    given, derived, dep_index_by_pos, morph_pos = _advmod_comparative_fixture()
+    dep_index_by_pos[(1, 3)] = dep.DepRow(line=1, token=3, word="come", deprel="advmod",
+                                          head_line=1, head_token=2)
+    violations = skel._classify_divergence(given, derived, dep_index_by_pos, morph_pos)
+    assert any(v.detail.startswith("missing_arg") for v in violations)
+
+
+def _gapped_comparison_fixture(subjects=2):
+    """"ma or convien che mio seguir desista … come a l'ultimo suo ciascuno artista"
+    (paradiso 30:31): the comparison is verbless, its own subject stands *last*, and its
+    oblique therefore falls before the second subject where rule CW's positional test cannot
+    see it. The marker is the boundary the tree does state."""
+    derived = {1: [skel.SkelRow(1, 1, "desista", "subj", 1, 2),
+                   skel.SkelRow(1, 1, "desista", "obl:a", 1, 5)]}
+    given = {1: [skel.SkelRow(1, 1, "desista", "subj", 1, 2)]}
+    if subjects >= 2:
+        derived[1].append(skel.SkelRow(1, 1, "desista", "subj", 1, 6))
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="desista", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 2): dep.DepRow(line=1, token=2, word="seguir", deprel="nsubj",
+                           head_line=1, head_token=1),
+        (1, 4): dep.DepRow(line=1, token=4, word="come", deprel="advmod",
+                           head_line=1, head_token=1),
+        (1, 5): dep.DepRow(line=1, token=5, word="ultimo", deprel="obl",
+                           head_line=1, head_token=1),
+        (1, 6): dep.DepRow(line=1, token=6, word="artista", deprel="nsubj",
+                           head_line=1, head_token=1),
+    }
+    return given, derived, dep_index_by_pos, {(1, 4): "adverb", (1, 5): "noun", (1, 6): "noun"}
+
+
+def test_classify_divergence_rule_ec_accepts_the_gapped_comparisons_own_oblique():
+    given, derived, idx, morph_pos = _gapped_comparison_fixture()
+    assert skel._classify_divergence(given, derived, idx, morph_pos) == []
+
+
+def test_classify_divergence_rule_ec_requires_a_second_derived_subject():
+    # Without rule BA's evidence that two clauses were collapsed onto one head, a `come` with no
+    # correlative is an ordinary comparative clause whose obliques are its own.
+    given, derived, idx, morph_pos = _gapped_comparison_fixture(subjects=1)
+    violations = skel._classify_divergence(given, derived, idx, morph_pos)
     assert any(v.detail.startswith("missing_arg") for v in violations)
 
 
@@ -2770,8 +2843,10 @@ def test_classify_divergence_rule_bk_accepts_the_che_comparison():
     assert skel._classify_divergence(given, derived, idx, morph_pos) == []
 
 
-def test_classify_divergence_rule_bk_requires_layer2_to_call_the_marker_a_conjunction():
-    given, derived, idx, morph_pos = _comparative_che_fixture(marker_pos="pronoun")
+def test_classify_divergence_rule_bk_requires_the_marker_word():
+    # Rule EB drops the part-of-speech gate, so what is left deciding rule BK is the word: a
+    # marker that is neither `che` nor `come` opens no comparison.
+    given, derived, idx, morph_pos = _comparative_che_fixture(marker="perché")
     violations = skel._classify_divergence(given, derived, idx, morph_pos)
     assert any(v.detail.startswith("missing_arg") for v in violations)
 
@@ -3199,6 +3274,114 @@ def test_classify_divergence_rule_bv_leaves_a_real_dependent_flagged():
     given, derived, idx = _prep_stack_citation_fixture(member_deprel="appos")
     violations = skel._classify_divergence(given, derived, idx, {})
     assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _prep_stack_opening_word_fixture(with_fixed=True):
+    """"Poscia che **'ncontro a** la vita presente … aperse 'l vero" (paradiso 28:1): the LLM
+    names the cluster's opening word, the `case` row its `fixed` members hang on."""
+    derived = {1: [skel.SkelRow(1, 5, "aperse", "obl:in", 1, 4)]}
+    given = {1: [skel.SkelRow(1, 5, "aperse", "obl:in", 1, 1)]}
+    dep_index_by_pos = {
+        (1, 1): dep.DepRow(line=1, token=1, word="'ncontro", deprel="case",
+                           head_line=1, head_token=4),
+        (1, 2): dep.DepRow(line=1, token=2, word="a", deprel="fixed" if with_fixed else "case",
+                           head_line=1, head_token=1 if with_fixed else 4),
+        (1, 4): dep.DepRow(line=1, token=4, word="vita", deprel="obl", head_line=1, head_token=5),
+        (1, 5): dep.DepRow(line=1, token=5, word="aperse", deprel="root",
+                           head_line=0, head_token=0),
+    }
+    return given, derived, dep_index_by_pos
+
+
+def test_classify_divergence_rule_ee_merges_a_cluster_opening_word_onto_its_nominal():
+    given, derived, idx = _prep_stack_opening_word_fixture()
+    assert skel._classify_divergence(given, derived, idx, {}) == []
+
+
+def test_classify_divergence_rule_ee_leaves_a_lone_case_preposition_flagged():
+    # Rule BV's exclusion survives: a `case` word with no `fixed` child is a plain preposition,
+    # cited for other reasons, and rules L/N/O already read it.
+    given, derived, idx = _prep_stack_opening_word_fixture(with_fixed=False)
+    violations = skel._classify_divergence(given, derived, idx, {})
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _comparison_clause_host_fixture(host_deprel="advcl"):
+    """"E dal settimo grado in giù, **sì come** infino ad esso, succedono Ebree" (paradiso
+    32:16): Layer 4 heads the verbless comparison on `come` and gives it the oblique, and the
+    LLM lists the same adjunct on the matrix predicate."""
+    derived = {1: [skel.SkelRow(1, 4, "succedono", "subj", 1, 5),
+                   skel.SkelRow(1, 2, "come", "obl:a", 1, 3)]}
+    given = {1: [skel.SkelRow(1, 4, "succedono", "subj", 1, 5),
+                 skel.SkelRow(1, 4, "succedono", "obl:a", 1, 3),
+                 skel.SkelRow(1, 2, "come", "obl:a", 1, 3)]}
+    dep_index_by_pos = {
+        (1, 2): dep.DepRow(line=1, token=2, word="come", deprel=host_deprel,
+                           head_line=1, head_token=4),
+        (1, 3): dep.DepRow(line=1, token=3, word="esso", deprel="obl", head_line=1, head_token=2),
+        (1, 4): dep.DepRow(line=1, token=4, word="succedono", deprel="root",
+                           head_line=0, head_token=0),
+        (1, 5): dep.DepRow(line=1, token=5, word="Ebree", deprel="nsubj",
+                           head_line=1, head_token=4),
+    }
+    return given, derived, dep_index_by_pos
+
+
+def test_classify_divergence_rule_ed_accepts_the_comparisons_adjunct_on_the_matrix():
+    given, derived, idx = _comparison_clause_host_fixture()
+    assert skel._classify_divergence(given, derived, idx, {}) == []
+
+
+def test_classify_divergence_rule_ed_requires_the_host_to_be_the_marker():
+    # A clause of its own — not a marker standing in for one — keeps its own arguments.
+    given, derived, idx = _comparison_clause_host_fixture()
+    idx[(1, 2)] = dep.DepRow(line=1, token=2, word="parve", deprel="advcl",
+                             head_line=1, head_token=4)
+    derived[1][1] = skel.SkelRow(1, 2, "parve", "obl:a", 1, 3)
+    given[1][2] = skel.SkelRow(1, 2, "parve", "obl:a", 1, 3)
+    violations = skel._classify_divergence(given, derived, idx, {})
+    assert any(v.detail.startswith("extra_arg") for v in violations)
+
+
+def _sibling_subject_fixture(sibling_has_subject=True):
+    """"Concreato fu **ordine** … **pura potenza** tenne la parte ima; / nel mezzo **strinse**"
+    (paradiso 29:31-35): a nearer conjunct has already supplied the coordination's subject."""
+    dep_rows = {
+        1: [dep.DepRow(line=1, token=1, word="Concreato", deprel="root",
+                       head_line=0, head_token=0),
+            dep.DepRow(line=1, token=2, word="ordine", deprel="nsubj",
+                       head_line=1, head_token=1)],
+        2: [dep.DepRow(line=2, token=1, word="tenne", deprel="conj", head_line=1, head_token=1)],
+        3: [dep.DepRow(line=3, token=1, word="strinse", deprel="conj",
+                       head_line=1, head_token=1)],
+    }
+    morph_rows = {
+        1: [morph.MorphRow(word="Concreato", pos="verb", person="3", number="sg."),
+            morph.MorphRow(word="ordine", pos="noun", number="sg.", person="3")],
+        2: [morph.MorphRow(word="tenne", pos="verb", person="3", number="sg.")],
+        3: [morph.MorphRow(word="strinse", pos="verb", person="3", number="sg.")],
+    }
+    if sibling_has_subject:
+        dep_rows[2].append(dep.DepRow(line=2, token=2, word="potenza", deprel="nsubj",
+                                      head_line=2, head_token=1))
+        morph_rows[2].append(morph.MorphRow(word="potenza", pos="noun", number="sg.", person="3"))
+    return dep_rows, morph_rows
+
+
+def test_derive_unit_rule_ef_stops_at_a_sibling_that_supplied_a_subject():
+    dep_rows, morph_rows = _sibling_subject_fixture()
+    derived = skel.derive_unit([1, 2, 3], dep_rows, morph_rows)
+    subjects = {(r.arg_line, r.arg_token) for r in derived[3] if r.role == "subj"}
+    assert (1, 2) not in subjects
+    # It is a refusal, not a re-assignment: the slot goes to pro-drop for the authority model.
+    assert subjects == {(0, 0)}
+
+
+def test_derive_unit_rule_ef_still_inherits_across_a_subjectless_sibling():
+    dep_rows, morph_rows = _sibling_subject_fixture(sibling_has_subject=False)
+    derived = skel.derive_unit([1, 2, 3], dep_rows, morph_rows)
+    subjects = {(r.arg_line, r.arg_token) for r in derived[3] if r.role == "subj"}
+    assert (1, 2) in subjects
 
 
 def _marker_slot_fixture(marker_pos="pronoun"):

@@ -1,5 +1,35 @@
 # Manual Layer-2 corrections
 
+## 6 rows from the Layer-5 Paradiso 26-33 read (2026-08-17)
+
+Found in the per-position read of Paradiso 26-33 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)), the batches that finish the read series.
+Applied by a gated script that asserts the word and each old field value before rewriting.
+`morph --check` stays **0/0**.
+
+**paradiso 26:79 `mei`** — `meo` / pronoun / m. pl. → `meglio` / adverb (note `archaic`), and
+**`che`** — pronoun → conjunction. "onde **mei che** dinanzi vidi poi": `mei` is the Old Italian
+comparative adverb (= *meglio*) and `che` opens the second term of the comparison — "whence
+afterwards I saw better than before". Layer 4 already reads both that way (`advmod` on the verb,
+`mark` on `dinanzi`); Layer 2 had made `mei` a genitive pronoun and `che` an accusative one, which
+is the reading the LLM took. The two case-annex rows go with them (see
+[`../case/CORRECTIONS.md`](../case/CORRECTIONS.md)) and so does the Layer-3 span
+(see [`../np/CORRECTIONS.md`](../np/CORRECTIONS.md)).
+
+**paradiso 28:13 `tocchi`** — `tocco` / noun / m. pl. → `toccare` / verb / m. pl. past participle.
+"e **furon tocchi** / li miei da ciò che pare in quel volume": a passive periphrasis, not a copula
+with a predicate noun. The Layer-4 re-parse that follows from it is in
+[`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+**paradiso 28:106 `dei`** — `di+i` / preposition+article → `dovere` / verb / 2sg present
+indicative, and **`saper`** — `sapere` / noun / m. pl. → `sapere` / verb / infinitive (note
+`apocope`). "e **dei saper** che tutti hanno diletto": *you must know*, a modal periphrasis, not
+"of the knowing".
+
+**paradiso 32:150 `dal`** — lemma `di+il` → `da+il`. "sì che **dal** dicer mio lo cor non parti":
+the heart is not to be parted *from* the speech. The third instance of this contraction lemma slip,
+after paradiso 15:19 and the Paradiso 11-20 read's own.
+
 ## 1 row from the Layer-5 Paradiso 21-25 read (2026-08-17)
 
 **paradiso 22:21 `redui`** — `reduce` / adjective / m. sg. → `ridurre` / verb / 2sg present

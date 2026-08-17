@@ -751,7 +751,7 @@ line	token	word	deprel	head_line	head_token
 111	4	verace	amod	111	5
 111	5	fondamento	obj	111	2
 112	1	e	cc	112	4
-112	2	quel	det	112	3
+112	2	quel	nsubj	112	4
 112	3	tanto	advmod	112	4
 112	4	sonò	conj	111	2
 112	5	ne	case	112	8
@@ -929,7 +929,7 @@ line	token	word	deprel	head_line	head_token
 137	5	essa	obl	137	7
 137	6	si	aux	137	7
 137	7	recepe	root	0	0
-138	1	quanti	det	138	4
+138	1	quanti	xcomp	138	2
 138	2	son	advcl	137	3
 138	3	li	det	138	4
 138	4	splendori	nsubj	138	2

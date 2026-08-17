@@ -388,7 +388,7 @@ line	token	word	deprel	head_line	head_token
 56	2	posson	acl:relcl	55	5
 56	3	far	xcomp	56	2
 56	4	lo	det	56	5
-56	5	cor	obj	56	6
+56	5	cor	nsubj	56	6
 56	6	volgere	xcomp	56	3
 56	7	a	case	56	8
 56	8	Dio	obl	56	6

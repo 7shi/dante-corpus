@@ -1,5 +1,167 @@
 # skel — Layer 5 correction history
 
+## Rules EB-EF, from reading Paradiso 26-33 — 234 → 213, −21 (2026-08-17)
+
+Per-position read of all **32** soft violations in Paradiso 26-33 — the **last two batches of the
+read series**, taken in one session — following the eight-step procedure in
+[`PLAN.md`](PLAN.md)'s *How to Read a Batch*. Zero model calls. Paradiso 26-33 itself went
+**32 → 14** (26: 4 → 3, 27: 1 → 1, 28: 6 → 4, 29: 7 → 2, 30: 5 → 1, 31: 2 → 1, 32: 3 → 1,
+33: 4 → 1); the corpus went **234 → 213 (−21, −9.0%)**. Five deterministic rules, 16 Layer-4 rows,
+6 Layer-2 rows, 4 Layer-3 spans and 2 case-annex rows. `pytest` **494 passed**, 0 hard, all other
+layers 0/0. **The read series now covers all 100 cantos.**
+
+| rule | shape | census | net |
+|---|---|---:|---:|
+| **EB** (`_comparative_come_adjunct`) | rule AR's marker gate names the **word** `come`, not the deprel it was written with or the tag Layer 2 gave it | 812 rows / 8 deprels / 4 tags | **−3** |
+| **EC** (`_comparative_come_adjunct`) | rule AR's no-correlative branch, opened by rule BA's evidence: two derived subjects mean a collapsed clause, and the marker is the gap boundary rule CW's positional test cannot see | 13 / 598 | **−1** |
+| **ED** (`_comparison_clause_hosts`) | rule AR's `extra_arg` leg from the matrix side: the comparison Layer 4 headed on `come` itself, whose adjunct the LLM lists on the matrix predicate | 14 | **−1** |
+| **EE** (`_prep_stack_nominal`) | rule BV's opening-word leg: the `case` row a multiword preposition's `fixed` members hang on is one of the preposition's own words, so the citation is the nominal it opens | 167 | **−2** |
+| **EF** (`derive_unit`) | the `conj` shared-subject propagation stops at a **sibling** conjunct that has already supplied one | 23 / 3658 | **−3/+1** |
+
+Plus the upstream rows, **−14/+2** between them (counted below).
+
+### The batch's first finding — a POS gate, a deprel gate, and the word underneath both
+
+Rule DY (the Paradiso 21-25 batch) found that rule DD's "adverb" gate was really a claim about the
+word `onde`, because `onde` carries four Layer-2 tags under one deprel. Rule EB is the same
+finding with the *edge* column added to it, and with the largest tag census the series has taken.
+`come`/`com` is written **812** times in the corpus, under **eight** deprels — 543 `mark`, 145
+`case`, 103 `advmod`, 10 `advcl`, 4 `ccomp`, 4 `obj`, 2 `obl`, 1 `cc` — and **four** Layer-2 tags.
+Rule AR's gate admitted exactly one cell of that table, `mark` + conjunction, which is 441 rows.
+
+Nothing in the reading turns on either column:
+
+- *«ché, **come** sole in viso che più trema, **così** lo rimembrar del dolce riso … la mente mia
+  … scema»* (paradiso 30:25) is rule AR's own correlative shape, with the marker written `advmod`
+  and tagged an adverb;
+- *«**Come** l'augello, intra l'amate fronde … **così** la donna mia stava eretta»* (23:1) is the
+  same, and the Paradiso 21-25 batch had assigned this position to the **prompt**, as an instance
+  of `_CONV_ADJUNCT`;
+- *«com' a terra quïete in foco vivo»* (1:141) is the compared nominal's own marker, one deprel
+  over from the `mark` branch rule BK widened.
+
+Dropping both columns takes 3 positions and newly flags none. The transferable form: **a gate
+that names a part of speech or a deprel is a claim about a column; check what the column actually
+holds for the word before trusting it.** And its corollary, which this batch supplies for the
+first time: **a position an earlier batch assigned to the prompt can be checker silence.** 23:10
+was written up as prompt work three batches ago and cost nothing to recover, because a prompt
+verdict is the one of the five that leaves no rule behind to be measured.
+
+### The batch's second finding — a refusal beats a re-assignment, again
+
+Rule EF is the shape of paradiso 29:31-35: *«Concreato fu **ordine** e costrutto a le sustanze …
+**pura potenza** tenne la parte ima; / nel mezzo **strinse** potenza con atto»*. Five conjuncts
+hang off `Concreato`; the fourth brings its own subject; the fifth was still being handed the
+first one's, because `derive_unit`'s walk goes straight up the `conj` edge and never looks at what
+the coordination has done in between. Rule AT decides *who* may inherit and rule DU where a
+subordinator cuts the chain; this is the third question about the same walk — whether the chain
+head is still the **nearest** antecedent.
+
+The obvious repair is to hand the conjunct the nearer sibling's subject instead, and it is wrong:
+measured at **+8/−2**. It is right at 29:35 and wrong at six other places, where the nearer subject
+belongs to a clause the coordination does not continue. What is right is simply to **stop** — the
+slot then falls to step 4's pro-drop ∅ and the authority model decides it, which is rule DA's
+boundary read from the other side (*an empty subject slot is a decision procedure having
+declined*, and declining is a decision). Measured at **−3/+1**, censused at 23 subject-less `conj`
+predicates out of 3658, and correct at both positions it removes: inferno 33:61 (*«ed **ei** … di
+sùbito levorsi / e **disser**»* — the sons say it, and the derivation was reaching past them to
+`io`) and paradiso 29:35, where the two violations become one on a parse that no longer claims
+`ordine` bound potency with act.
+
+The **+1** is honest and is the trade rule AM recorded: with the false subject gone, the LLM's own
+reading of `potenza` (35, 4) — which the tree calls a bare `obl` — is now reported as the one
+disagreement it is, instead of being spread across a `missing_arg` and a `role_mismatch`.
+
+### The batch's third finding — the last cell of a normalization
+
+Rule EE is a single line of gate and it closes the 2026-08-14 multiword-preposition
+normalization's last open cell. That normalization writes a cluster as *opening word* `case` →
+nominal, *later members* `fixed` → opening word. Rule BV (Inferno 31-34) merges a cited `fixed`
+member onto the nominal, on the reading that **a preposition's own words are not arguments**, and
+explicitly declined to enter from a `case` row, because a plain `case` preposition is cited for
+other reasons and rules L/N/O already read it. But the cluster's *opening* word is not a plain
+preposition standing on its own — it is a preposition for the same reason its `fixed` members are,
+and the exclusion never meant to cover it. *«Poscia che **'ncontro a** la vita presente … aperse
+'l vero»* (paradiso 28:1): the LLM names `'ncontro`, Layer 4 opens the cluster on it, and the
+nominal is `vita`. Censused at **167** `case` rows heading a multiword preposition, 1 of which the
+LLM cites — a census of one for the divergence against a structural population of 167, kept for
+the same reason rule CY was: **the two directions of one gate should not disagree.** Worth 2
+positions, because the shape reports twice (a `missing_arg` on the nominal and an `extra_arg` on
+the preposition).
+
+### Rules EC and ED — the two halves rule AR had left
+
+Both are legs of a rule that has now been extended in four batches, and both come from the same
+observation: a verbless comparison has to hang **somewhere**, and Layer 4 has two choices.
+
+**Rule EC** is the case where it hangs on the matrix predicate. *«ma or convien che mio seguir
+**desista** / più dietro a sua bellezza, poetando, / **come a l'ultimo suo ciascuno artista**»*
+(paradiso 30:31): the comparison is verbless, so Layer 4 puts both of its remnants — the oblique
+`a l'ultimo suo` and the subject `ciascuno artista` — on `desista`. Two derived subjects is rule
+BA's evidence that two clauses have been collapsed onto one head, and rule CW then drops the
+elided clause's remnants **by position**: everything standing after the second subject. Here
+Dante puts the second term's subject *last* and its oblique before it, so rule CW's test looks
+straight past the remnant — the inversion the Purgatorio 26-30 batch already found in rule AN's
+sort key. Rule EC reads the boundary off the one thing the tree does state about the gap: the
+marker `come` opens the second term, so every argument after it belongs to it. Censused at 13
+predicates carrying a correlative-less `come` marker and two or more subject children, against
+598 with the marker alone.
+
+**Rule ED** is the case where Layer 4 hangs the comparison on the `come` itself. *«E dal settimo
+grado in giù, **sì come** infino ad esso, succedono Ebree»* (paradiso 32:16): `come` is an `advcl`
+of `succedono` and carries `ad esso` as its own oblique, so `derive_unit` mints it as a predicate
+and puts the adjunct there, while the LLM — reading the comparison as an adjunct of the matrix
+verb, which is rule AR's own reading — lists it on `succedono`. One adjunct of comparison, named
+once in each reading at the level that reading gives it. Routed through rule X's mechanism, so it
+inherits the role-must-match gate, and restricted to a host whose own word is the marker: that is
+what makes it a marker standing in for a clause rather than a clause of its own. Structural census
+14 (`come` in a clause-head deprel).
+
+### Candidates censused and dropped
+
+- **The participial adjunct's subject, named by the Layer-3 span that contains it** (paradiso
+  28:20, *«parrebbe **luna, locata con esso**»* — Layer 3 makes `luna, locata con esso` one phrase
+  headed by `luna`, so `locata` is a reduced relative on `luna` and `luna` is its subject, which is
+  rule AY's reading with Layer 3 supplying the modification edge Layer 4 wrote as `advcl`).
+  Censused at **8** `advcl` rows lying inside an NP span whose head is an argument of their own
+  governor, of which 1 diverges — and dropped on the Inferno 31-34 batch's precedent, which
+  declined rule BR's mirror leg at −6/+0 because **its only evidence was a Layer-3 span and Layer
+  3 is over-inclusive by design**. That is exactly the evidence here.
+- **The causee of a causative `fare` + infinitive, `obj` against `iobj`** (paradiso 33:96, *«che
+  fé **Nettuno** ammirar l'ombra d'Argo»*). Censused at **16** predicates with an `xcomp`
+  infinitive and an `iobj` of their own; 15 of the 16 are clitics and only this one is a full
+  nominal. Dropped on the grammar rather than the count: Italian codes the causee of a *transitive*
+  infinitive as a dative (*far ammirare qualcosa **a** qualcuno*), which is what Layer 4 wrote, so
+  the LLM's `obj` is a second claim about the role — the DX-EA batch's finding, applied to a
+  construction the corpus already has a rule for on the other side (rule BI).
+- **Handing a `conj` the nearer sibling's subject** instead of stopping — rule EF's own
+  re-assignment variant, measured at **+8/−2** and rejected. See the second finding above.
+
+### Standing shapes the batch recorded but did not settle
+
+- **The elided-verb `csubj` the LLM omits** (26:27, *«cotale amor **convien** che in me si
+  'mprenti»*): Layer 4 writes the `che`-clause as `convien`'s `csubj` and the derivation says so;
+  the LLM gives `convien` its two obliques and no subject at all. Rule DQ's family — but rule DQ
+  accepts an *inherited* subject against a lone `ccomp`, and here the subject is the tree's own
+  and the omission is the LLM's.
+- **The prepositional adjunct, omitted** (26:29 *«in quanto ben»*, 28:73 *«non a la parvenza»*,
+  30:13 *«a poco a poco»*). Three more instances of `_CONV_ADJUNCT`/`_CONV_REPEATED`, both already
+  written into `skel/skel.py` and both waiting on the sixth round. Two of the three are a *second*
+  filler of a slot the LLM did name once, which is `_CONV_REPEATED`'s target.
+- **The relative temporal `che` read as an object** (27:79, *«Da l'ora **ch'**ïo avea guardato
+  prima»*): Layer 4 gives the relative link an `obl`, the LLM calls it the participle's `obj`. Rule
+  BM's shape with the roles swapped — a second claim about the slot, not checker silence.
+- **The comparative `che` the LLM reads as an argument** (26:79, *«onde mei **che** dinanzi vidi
+  poi»*). The Layer-2 rows that made the misreading available are corrected below; the citation
+  itself is reading error and stays flagged.
+- **`missing_arg subj` residue** (29:137 *«per tanti modi in essa **si recepe**»*, the LLM reading
+  the reflexive passive as impersonal; 32:150 *«**lo cor** non parti»*, the LLM reading the object
+  as a subject).
+- **The subjective genitive of a nominalized infinitive** (31:19, *«né l'**interporsi** … **di
+  tanta moltitudine volante**»*): with the genitive re-attached to the infinitive below, the LLM's
+  reading of it as that infinitive's subject is still not something the derivation produces. Rule
+  V's neighbourhood; not censused.
+
 ## Rules DX-EA, from reading Paradiso 21-25 — 245 → 234, −11 (2026-08-17)
 
 Per-position read of all **21** soft violations in Paradiso 21-25, following the eight-step

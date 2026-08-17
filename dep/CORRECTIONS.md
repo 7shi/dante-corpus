@@ -1,5 +1,122 @@
 # dep — Layer 4 correction history
 
+## 16 rows from the Layer-5 Paradiso 26-33 read (2026-08-17)
+
+The per-position read of Paradiso 26-33's 32 Layer-5 soft violations (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)) — the batches that finish the read series —
+found sixteen Layer-4 rows wrong, in eleven places. Applied with a gated script that asserts the
+word, the current deprel and the current head at each `(line, token)` before rewriting;
+`morph`/`np`/`dep`/`case --check` all re-run at 0 and `pytest` at 494. Layer 5 **−14/+2** together
+with the Layer-2 and Layer-3 rows.
+
+### paradiso 26:56 and 31:116 — the accusative-and-infinitive's shared nominal
+
+"che posson far **lo cor** volgere a Dio" and "tanto che veggi seder **la regina**": after a verb
+of perception or causation the nominal is the matrix verb's object *and* the infinitive's subject.
+The corpus's own convention for the construction — the one rule BI is written against, censused
+there at 10 positions — is `nsubj` on the infinitive. In these two places Layer 4 wrote `obj`
+instead, on infinitives (`volgere` of a heart, `sedere`) that do not take one.
+
+| token | was | now |
+|---|---|---|
+| 26:56.5 `cor` | `obj` ← 56.6 `volgere` | `nsubj` ← 56.6 `volgere` |
+| 31:116.6 `regina` | `obj` ← 116.4 `seder` | `nsubj` ← 116.4 `seder` |
+
+### paradiso 28:13 — `furon tocchi` is a passive, not a copula with a noun
+
+"E com' io mi rivolsi e **furon tocchi** / **li miei** da ciò che pare in quel volume": `tocchi`
+is the past participle of `toccare` and `li miei` (Dante's eyes) is what was touched. Layer 2 had
+`tocchi` as the noun `tocco` (corrected in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)),
+and Layer 4 followed it — `furon` heading the clause with `tocchi` as its `nsubj` and `li miei`
+hanging under `tocchi` as an `nmod`. The periphrasis heads on the participle.
+
+| token | was | now |
+|---|---|---|
+| 13.7 `furon` | `conj` ← 13.5 `rivolsi` | `aux` ← 13.8 `tocchi` |
+| 13.8 `tocchi` | `nsubj` ← 13.7 `furon` | `conj` ← 13.5 `rivolsi` |
+| 14.2 `miei` | `nmod` ← 13.8 `tocchi` | `nsubj` ← 13.8 `tocchi` |
+| 14.4 `ciò` | `obl` ← 13.7 `furon` | `obl` ← 13.8 `tocchi` |
+
+### paradiso 28:106 — `dei saper` is a modal periphrasis, not a partitive
+
+"e **dei saper** che tutti hanno diletto": `dei` is `dovere` 2sg ("you must"), not the contraction
+`di+i`, and `saper` is its infinitive complement, not a noun. Layer 2 is corrected alongside. The
+modal heads the periphrasis, which is the shape Layer 4 already writes at 26:56 (`posson` head,
+`far` its `xcomp`).
+
+| token | was | now |
+|---|---|---|
+| 106.2 `dei` | `case` ← 106.3 `saper` | `conj` ← 104.2 `chiaman` |
+| 106.3 `saper` | `obl` ← 104.2 `chiaman` | `xcomp` ← 106.2 `dei` |
+
+This correction deliberately **raises** Layer 5 by 2: with `dei` and `saper` both predicates, the
+LLM's having proposed neither is now reported as two `missing_tuple`s, where before the wrong tree
+had absorbed the omission into a single oblique. The trade rule AM recorded.
+
+### paradiso 29:112 — `quel` is the subject and `tanto` the correlative adverb
+
+"e **quel tanto** sonò ne le sue guance, / **sì ch'**a pugnar … fero scudo e lance": `quel` is the
+pronoun standing for the "verace fondamento" of 111, and `tanto` is the adverb the `sì che` of 113
+correlates with. Layer 4 read the two as a determiner phrase headed by `tanto`, which left the
+subject slot on a token no layer calls a nominal.
+
+| token | was | now |
+|---|---|---|
+| 112.2 `quel` | `det` ← 112.3 `tanto` | `nsubj` ← 112.4 `sonò` |
+
+### paradiso 29:138, 30:127 — the correlative predicate complement
+
+"quanti son li splendori" and "**qual** è colui che tace e dicer vole": the correlative word is the
+copular clause's predicate complement, which is the shape Layer 4 itself writes eight lines earlier
+at 28:19 ("e quale stella **par** quinci più **poca**", `poca` `xcomp` ← `par`). Both had been
+written as determiners of the subject.
+
+| token | was | now |
+|---|---|---|
+| 29:138.1 `quanti` | `det` ← 138.4 `splendori` | `xcomp` ← 138.2 `son` |
+| 30:127.1 `qual` | `det` ← 127.3 `colui` | `xcomp` ← 127.2 `è` |
+
+### paradiso 30:35 — the standard of a comparison is not the verb's object
+
+"Cotal qual io lascio a **maggior bando** / **che quel** de la mia tuba": `quel` is what `maggior`
+is measured against, not something `lascio` leaves. UD attaches a phrasal comparative's standard to
+the comparative word with the marker as its `case`.
+
+| token | was | now |
+|---|---|---|
+| 35.1 `che` | `mark` ← 34.4 `lascio` | `case` ← 35.2 `quel` |
+| 35.2 `quel` | `obj` ← 34.4 `lascio` | `obl` ← 34.6 `maggior` |
+
+### paradiso 31:20 — the genitive belongs to the nominalized infinitive
+
+"Né **l'interporsi** tra 'l disopra e 'l fiore / **di tanta moltitudine volante** / impediva la
+vista": the multitude is what interposes. Layer 4 hung the genitive on `'l fiore`, the nearer of
+the two nominals the interposition stands between.
+
+| token | was | now |
+|---|---|---|
+| 20.3 `moltitudine` | `nmod` ← 19.9 `fiore` | `nmod` ← 19.3 `interporsi` |
+
+### paradiso 32:128 — a genitive two tercets from its head
+
+"E quei che vide **tutti i tempi gravi**, / pria che morisse, **de la bella sposa** / che
+s'acquistò con la lancia e coi clavi, / siede lungh' esso": the times are the bride's. Layer 4 read
+the genitive as an oblique of `posa`, the verb that closes 130.
+
+| token | was | now |
+|---|---|---|
+| 128.7 `sposa` | `obl` ← 130.8 `posa` | `nmod` ← 127.7 `tempi` |
+
+### paradiso 33:63 — `il dolce` is what distils
+
+"e ancor mi distilla / nel core **il dolce** che nacque da essa": the sweetness is the subject of
+`distilla`, not its object. With the row corrected the conjunct no longer inherits `mia visïone`
+from `cessa` either, so two Layer-5 positions close on one edge.
+
+| token | was | now |
+|---|---|---|
+| 63.4 `dolce` | `obj` ← 62.6 `distilla` | `nsubj` ← 62.6 `distilla` |
+
 ## 10 rows from the Layer-5 Paradiso 21-25 read (2026-08-17)
 
 The per-position read of Paradiso 21-25's 21 Layer-5 soft violations (see

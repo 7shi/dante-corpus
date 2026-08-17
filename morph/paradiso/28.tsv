@@ -94,7 +94,7 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 13	rivolsi	rivolgere	verb		sg.	1	remote past	indicative	
 13	e	e	conjunction						
 13	furon	essere	verb		pl.	3	remote past	indicative	apocope
-13	tocchi	tocco	noun	m.	pl.				
+13	tocchi	toccare	verb	m.	pl.		past participle		
 14	li	lo	article	m.	pl.				
 14	miei	mio	adjective	m.	pl.				
 14	da	da	preposition						
@@ -749,8 +749,8 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 105	ternaro	ternario	noun	m.	sg.				archaic
 105	terminonno	terminare	verb		pl.	3	present	indicative	archaic
 106	e	e	conjunction						
-106	dei	di+i	preposition+article	m.	pl.				contraction
-106	saper	sapere	noun	m.	pl.				apocope
+106	dei	dovere	verb		sg.	2	present	indicative	contraction
+106	saper	sapere	verb				infinitive		apocope
 106	che	che	relative pronoun	m.	pl.				
 106	tutti	tutto	pronoun	m.	pl.				
 106	hanno	avere	verb		pl.	3	present	indicative	

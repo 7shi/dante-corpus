@@ -423,7 +423,7 @@ line	token	word	deprel	head_line	head_token
 63	1	nel	case	63	2
 63	2	core	obl	62	6
 63	3	il	det	63	4
-63	4	dolce	obj	62	6
+63	4	dolce	nsubj	62	6
 63	5	che	nsubj	63	6
 63	6	nacque	acl:relcl	63	4
 63	7	da	case	63	8

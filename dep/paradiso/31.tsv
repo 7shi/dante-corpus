@@ -137,7 +137,7 @@ line	token	word	deprel	head_line	head_token
 19	9	fiore	conj	19	6
 20	1	di	case	20	3
 20	2	tanta	det	20	3
-20	3	moltitudine	nmod	19	9
+20	3	moltitudine	nmod	19	3
 20	4	volante	amod	20	3
 21	1	impediva	root	0	0
 21	2	la	det	21	3
@@ -782,7 +782,7 @@ line	token	word	deprel	head_line	head_token
 116	3	veggi	advcl	115	2
 116	4	seder	xcomp	116	3
 116	5	la	det	116	6
-116	6	regina	obj	116	4
+116	6	regina	nsubj	116	4
 117	1	cui	obl	117	5
 117	2	questo	det	117	3
 117	3	regno	nsubj	117	5

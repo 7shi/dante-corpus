@@ -1,5 +1,32 @@
 # Layer 3 soft-violation correction history
 
+## 4 spans from the Layer-5 Paradiso 26-33 read (2026-08-17)
+
+Found in the per-position read of Paradiso 26-33 (see
+[`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md)). `np --check` stays **0/0**.
+
+Two spans **dropped**, both drawn around a token Layer 2 had called a noun and the same read
+retagged a verb (see [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md)):
+
+- `[tocchi]` (paradiso 28:13, 8-8) — the past participle of `toccare`;
+- `[saper che tutti hanno diletto]` (paradiso 28:106, 3-7, head 3) — the infinitive of a modal
+  periphrasis, whose `che`-clause is a complement clause and not part of any noun phrase.
+
+One span **dropped** for the same reason at the other layer:
+
+- `[mei che dinanzi vidi poi]` (paradiso 26:79, 2-6, head 2) — `mei` is the comparative adverb
+  *meglio*, so there is no nominal head for the span to hang on.
+
+Two spans **rewritten**:
+
+- `[quel tanto]` (paradiso 29:112, 2-3, head 3) → `[quel]` (2-2, head 2). `tanto` is the
+  correlative adverb of the "sì che" in 113, not the phrase's head; `quel` is the pronoun standing
+  for the "verace fondamento" of 111.
+- `[quantunque]` (paradiso 33:21, 1-1) → `[quantunque in creatura è di bontate]` (1-6, head 1). A
+  free relative is one phrase, headed by the pronoun that opens it — the shape Layer 3 already
+  draws at paradiso 21:130, and the one rules AI/DZ read when the clause is a conjunct of a
+  coordination whose head lies outside it.
+
 ## 1 span dropped from the Layer-5 Paradiso 21-25 read (2026-08-17)
 
 `[che raggio]` (paradiso 21:28, span 6-7, head 7) was drawn while Layer 4 read `che` as a
