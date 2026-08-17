@@ -73,7 +73,23 @@
 > **3. More artifact-internal checks**, rule EG's shape — the only question shape the model answers
 > well, and the only one whose evidence the Independence Rule does not withhold.
 >
-> **Not queued, deliberately**: a ninth `--fix` round, any prompt change (eight rounds of verdicts say
+> **The user's half, in parallel: the ninth `--fix` round.** §P1 says a round is no longer the
+> productive instrument, and that stands — but a round is cheap, runs alongside the reads, and §P2
+> planted a **positive control** in this one:
+>
+> ```
+> uv run skel.py <canticle> --fix -m $(MODEL) --no-whole --log <canticle>.log
+> ```
+>
+> three ways in parallel, one log per process. `--no-whole` is permanent; `--log` is not optional.
+> **Read it against the six-question checklist in [`skel/PLAN.md`](skel/PLAN.md)'s *The Ninth
+> Round*, written before it runs** — does purgatorio 9:97 clear (the control: the only position
+> where the checker is known right and the artifact known stale); does `arg_slot` fall to ~5 calls
+> now that rule EI took two of its pairs; is the refusal rate still ~44% and stable per class; does
+> `missing_tuple_nominal` fail identically a tenth time; does `missing_arg_subject` splice
+> `extra_arg subj` again; and the standing invariant, 0 newly flagged / 0 regressed.
+>
+> **Not queued, deliberately**: any prompt change (eight rounds of verdicts say
 > only withdrawing a licence, narrowing one, or making an instruction executable has ever moved a
 > class), any widening of the field-note slot (measured over 474 calls across two rounds and did not
 > pay), and any restructuring of `dante_corpus/skel.py` — that waits for 0, which is what makes it

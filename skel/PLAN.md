@@ -71,7 +71,10 @@ route** (see *Open Assistant-Side Routes*).
 ### The Phase 7 Work Queue
 
 1. ~~**The eighth `--fix` round, `--no-whole`**~~ — **run 2026-08-18, §P1**: 160 → 154. Its finding is
-   that the queue's other items are the work; a ninth round is not queued.
+   that the queue's other items are the work. **A ninth round runs anyway** — it is cheap, it is the
+   user's to run in parallel with the assistant's reads, and §P2 planted a positive control in it
+   (purgatorio 9:97). See *The Ninth Round* below for its scale and its pre-written checklist. It is
+   not the plan; items 2–5 are.
 2. **The refusal reading list — confirmed twice, and its first batch paid** (§P2: `arg_slot`'s 8
    refusals read, 3 of them checker- or upstream-side, **−4 at zero model cost**, rule EI). **Next in
    the list, in order**: `extra_arg`'s 15 `keep`s, `extra_arg_subject`'s 13, `missing_arg`'s 10
@@ -220,6 +223,63 @@ happens to show.
    closed as measured-and-not-paying, and the note slot can be left in place unmentioned.
 
 Then take the reading list the refusal census produces — starting with `arg_slot`'s 8 predicates.
+
+---
+
+## The Ninth Round — scale, command, and the checklist to read it with
+
+**Base: 0 hard, 150 soft** (144 divergence + 6 `dual_role`), `pytest` 542, all other layers 0/0.
+Per canticle inferno 42, purgatorio 54, paradiso 54.
+
+§P1 concluded that a ninth round is *not the productive instrument* — 0.042 per call, 43.7%
+refusals — and that conclusion stands. **This round is run anyway, deliberately, because it is
+cheap, it is the user's to run in parallel with the assistant's reads, and it has one concrete
+target that the reads created.** What it must not become is the plan: the queue is still items 2–5.
+
+**Command, unchanged from round 8:**
+
+```
+uv run skel.py <canticle> --fix -m $(MODEL) --no-whole --log <canticle>.log
+```
+
+three ways in parallel, **one log per process** (`fix` truncates its log at start). `--no-whole` is
+confirmed permanent (§P1 answer 2) and `--log` is not optional — the per-class
+`calls / removed / per call / refused` table exists only if it is passed, and it is the round's real
+product.
+
+**What is on the scale:**
+
+1. **purgatorio 9:97 is a planted target.** §P2 retagged Layer 4 there and left the artifact behind:
+   the reading names `perso` as the predicate where the derivation now names `tinto`, so the position
+   stands as an `extra_tuple`/`missing_tuple` pair. It is the one position in the corpus where **the
+   checker is known to be right and the artifact known to be stale**, which makes it a
+   positive control: if the round cannot take it, `missing_tuple` cannot be moved by a round at all.
+2. **Rule EI removed 4 positions from the population** without the model being asked anything. The
+   `arg_slot` class should now be *smaller*, not merely refused: watch whether its call count drops
+   from 7 toward 5.
+3. **Nothing else.** No prompt change, no driver change, no new class.
+
+**After the round — the checklist, written before it runs so it cannot be read backwards:**
+
+1. **Did purgatorio 9:97 clear?** See target 1. A `missing_tuple` the derivation is provably right
+   about is the easiest question in the round; if it survives, that is a finding about
+   `missing_tuple`, not about the line.
+2. **Did `arg_slot`'s call count fall to ~5, and is it still 100% refused?** A third consecutive
+   7-for-7 on *the same* positions after two of them were removed would mean the class is
+   regenerating pairs, which nothing has yet suggested.
+3. **Is the refusal rate still ~44%, and stable per class?** Two rounds agree (§P1 answer 3). A third
+   makes the census a fixed asset rather than a measurement, and the remaining reading lists —
+   `extra_arg` 15, `extra_arg_subject` 13, `missing_arg` 10, `missing_arg_adverb` 3 — can be worked
+   without re-measuring.
+4. **Did `missing_tuple_nominal` fail the same way a tenth time?** §P1 found it failing identically
+   nine times out of nine (`missing_tuple: predicate NN.2 not proposed` → `extra_arg: NN.2 obl:a`).
+   If the same eight positions produce the same eight rejections, the shape is confirmed as one
+   population and is next after the refusal lists.
+5. **Did `missing_arg_subject` again splice `extra_arg subj` rows?** Four of its 8 calls did in round
+   8, three with the null citation `(0, 0)`. A repeat confirms it is the applier, not the model, and
+   sends the work to the splice guard rather than to a read.
+6. **Violation diff, always**: `0 newly flagged / 0 regressed` has held for eight rounds. It is the
+   invariant that lets a round be committed without reading its artifact.
 
 ---
 
