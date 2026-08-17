@@ -234,7 +234,6 @@ line	token	word	role	arg_line	arg_token
 78	2	rifulgea	subj	78	1
 78	2	rifulgea	obl:da	78	7
 79	5	vidi	subj	0	0
-79	5	vidi	obj	79	3
 79	5	vidi	obl	79	4
 80	4	domandai	subj	0	0
 80	4	domandai	attr	80	3

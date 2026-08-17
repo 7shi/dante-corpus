@@ -50,8 +50,8 @@ line	token	word	role	arg_line	arg_token
 18	3	acquistavan	obj	18	1
 18	4	ventilando	subj	0	0
 18	4	ventilando	obj	18	6
-19	3	interporsi	subj	20	3
 19	3	interporsi	obl:tra	19	9
+19	3	interporsi	obl:di	20	3
 20	0			0	0
 21	1	impediva	subj	19	3
 21	1	impediva	obj	21	3

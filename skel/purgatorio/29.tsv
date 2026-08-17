@@ -90,6 +90,7 @@ line	token	word	role	arg_line	arg_token
 35	3	fé	subj	35	5
 35	3	fé	obl:a	34	3
 35	3	fé	obl:quale	34	7
+35	3	fé	obl:a	35	1
 35	3	fé	obl:sotto	35	9
 36	9	inteso	subj	36	4
 36	9	inteso	obl:per	36	6

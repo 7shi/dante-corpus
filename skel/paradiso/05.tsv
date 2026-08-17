@@ -107,7 +107,7 @@ line	token	word	role	arg_line	arg_token
 36	10	scoverto	obj	36	6
 36	10	scoverto	iobj	36	8
 37	1	convienti	subj	34	1
-37	1	convienti	subj	37	3
+37	1	convienti	xcomp	37	3
 37	3	sedere	subj	0	0
 37	3	sedere	obl	37	5
 37	3	sedere	obl:a	37	7

@@ -362,7 +362,6 @@ line	token	word	role	arg_line	arg_token
 133	3	vive	subj	0	0
 133	5	gode	subj	0	0
 133	5	gode	obl:di	133	7
-134	3	acquistò	subj	134	1
 134	3	acquistò	obj	134	1
 134	3	acquistò	obl:in	134	7
 134	4	piangendo	subj	0	0

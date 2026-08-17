@@ -17,7 +17,6 @@ line	token	word	role	arg_line	arg_token
 6	9	accenda	subj	6	3
 6	9	accenda	obl:sovr	6	5
 6	9	accenda	obl:in	6	7
-7	5	ode	subj	7	6
 7	5	ode	obj	7	6
 7	8	vede	subj	7	6
 8	2	tegna	subj	8	1

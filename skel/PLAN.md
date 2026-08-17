@@ -2,10 +2,10 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 160 soft** violations across all 100
-  cantos — **152 divergence positions + 8 `dual_role`** (rule EG's artifact-internal contradiction).
-  Per canticle: inferno 44, purgatorio 58, paradiso 58. Base as of 2026-08-18, after rule EH
-  (161 → 160) and the seventh `--fix` round before it (224 → 161).
+- **Current State**: `make -C skel check` reports **0 hard, 154 soft** violations across all 100
+  cantos — **148 divergence positions + 6 `dual_role`** (rule EG's artifact-internal contradiction).
+  Per canticle: inferno 44, purgatorio 56, paradiso 54. Base as of 2026-08-18, after the eighth
+  `--fix` round (160 → 154, §P1), which followed rule EH (161 → 160) and the seventh round (224 → 161).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **534 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -13,7 +13,8 @@
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
   cost). Full record, per-round tables, the read series and the routes it closed are in
   [`PHASE6.md`](PHASE6.md).
-- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below.
+- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. One
+  round run so far (§P1, 160 → 154); the work is now checker-side, off the refusal census.
 - **Section references**: a bare **§N** points to [`PHASE6.md`](PHASE6.md)'s chronological record
   (§1–§31, the seven rounds and nineteen read batches). Phase 7's own write-ups are numbered **§P1,
   §P2, …** in *Phase 7 Record* below.
@@ -30,7 +31,10 @@ or a reading disagreement worth reporting — and each of those has a different 
 rounds.** Outside `dual_role`, a model call is worth **0.081** violations (§30 in
 [`PHASE6.md`](PHASE6.md)), and 51 of the standing 152 divergence positions have survived three rounds
 each. A round over the standing residue is expected to take 12–20 positions and to introduce nothing
-new to read.
+new to read. **The eighth round confirmed this below its own floor** (§P1): 142 calls, **6**
+positions, **0.030** per call outside `dual_role`, and 43.7% of the calls refusals. At that rate the
+standing 148 divergence positions would cost on the order of 3,500 calls. Rounds are not the
+instrument any more.
 
 **So the work shifts from repairing positions to diagnosing failures.** Phase 6 spent itself finding
 positions to read (nineteen batches over 100 cantos) and repairing them (seven rounds). Phase 7 asks
@@ -64,14 +68,18 @@ route** (see *Open Assistant-Side Routes*).
 
 ### The Phase 7 Work Queue
 
-1. **The eighth `--fix` round, `--no-whole` — the user's to run.** Scale and post-round checklist in
-   *The Eighth Round* below.
-2. **The refusal reading list, which already exists** from round 7 counted by hand: `arg_slot`'s 8
-   predicates (7-for-7 `keep`), then `extra_arg` (16 `keep`), `extra_arg_subject` (15),
-   `missing_arg`'s 10 `none`, `missing_arg_adverb` (3). Read each with `read.py` and give it one of
-   the five verdicts in *How to Read a Batch*. **A refusal chooses a position and has no standing on
-   what is wrong there** — it is a hypothesis about the checker with exactly the standing a field note
-   has about the corpus.
+1. ~~**The eighth `--fix` round, `--no-whole`**~~ — **run 2026-08-18, §P1**: 160 → 154. Its finding is
+   that the queue's other items are the work; a ninth round is not queued.
+2. **The refusal reading list — now confirmed twice, which makes it the top of the queue.** Round 8
+   reproduced round 7's census per class almost exactly (§P1 answer 3): `arg_slot` **7 calls, 7
+   refused, 100% `keep`** (inferno 5:88, 24:1 ×2, 31:28; paradiso 1:76; purgatorio 9:97, 10:28,
+   10:58), then `extra_arg` (15 `keep`, was 16), `extra_arg_subject` (13, was 15), `missing_arg`'s 10
+   `none`, `missing_arg_adverb` (3). Read each with `read.py` and give it one of the five verdicts in
+   *How to Read a Batch*. **A refusal chooses a position and has no standing on what is wrong there**
+   — it is a hypothesis about the checker with exactly the standing a field note has about the corpus.
+   Two systematic *failure* shapes sit alongside it (§P1): `missing_tuple_nominal` failing identically
+   nine times out of nine, and `missing_arg_subject` splicing a fresh `extra_arg subj` in half its
+   calls.
 3. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`. Rule EG found 56 such positions, **52 of them on lines
    `--check` was silent about**, which is why 21 read batches walked past them. Any check of this kind
@@ -144,6 +152,11 @@ A question may name the predicate, the argument the LLM itself cited, and the ro
 
 ## The Eighth Round — scale, command, and the checklist to read it with
 
+> **RUN, 2026-08-18 — result and the six answers are in §P1** (160 → 154, 142 calls, 62 refusals).
+> Everything below this line was written *before* the round and is left unedited, which is the whole
+> point of it: it is what the round was read against. `--no-whole` is confirmed permanent; the
+> command block below is the standing round command.
+
 **Base: 0 hard, 160 soft** (152 divergence + 8 `dual_role`), `pytest` 534, all other layers 0/0. The
 seventh round settled all four of its candidates — `dual_role` **−82.0%**, `_CONV_DATIVE` **−45.5%**,
 `arg_slot` **0 of 7 calls**, and the splice-guard caveat did not materialize (`missing_arg` −14.5%,
@@ -208,9 +221,94 @@ Then take the reading list the refusal census produces — starting with `arg_sl
 
 ## Phase 7 Record
 
-*Opened 2026-08-18 at base **0 hard / 160 soft**, `pytest` 534, all other layers 0/0. Nothing has
-landed yet. Every batch, round and rule gets a numbered subsection here (**§P1, §P2, …**), written in
-the same session, per step 8 of *How to Read a Batch*.*
+*Opened 2026-08-18 at base **0 hard / 160 soft**, `pytest` 534, all other layers 0/0. Every batch,
+round and rule gets a numbered subsection here (**§P1, §P2, …**), written in the same session, per
+step 8 of *How to Read a Batch*.*
+
+### §P1 — Eighth `--fix` round, 160 → 154 (−6, −3.8%), and the refusal census reproduces
+
+Run by the user 2026-08-18, three ways in parallel with `--no-whole --log`, per *The Eighth Round*
+above. **160 → 154 soft, 0 hard**; per canticle inferno 44 (±0), purgatorio 56 (−2), paradiso 54
+(−4). Divergence residue **148**, `dual_role` **8 → 6**. Violation diff against a base worktree:
+**exactly the 6 lines removed, 0 newly flagged, 0 regressed** — the eighth consecutive round with a
+clean diff. 130 units flagged, 6 cleared outright, per-unit yield **0.046**. `pytest` **534**,
+`skel/*.tsv` only (6 files).
+
+The six lines removed: paradiso 5:37 `role_mismatch`, 23:134 `dual_role`, 26:79 `extra_arg`,
+31:19 `extra_arg`; purgatorio 4:7 `dual_role`, 29:35 `missing_arg obl:a`.
+
+**Per-class table, the three logs summed** (142 calls against round 7's 332):
+
+| class | calls | removed | per call | refused |
+| --- | --- | --- | --- | --- |
+| `dual_role` | 8 | 2 | **0.250** | 0 |
+| `extra_arg` | 23 | 1 | 0.043 | 15 |
+| `role_mismatch` | 21 | 1 | 0.048 | 13 |
+| `extra_arg_subject` | 17 | 1 | 0.059 | 13 |
+| `missing_arg` | 34 | 1 | 0.029 | 10 |
+| `arg_slot` | 7 | 0 | 0.000 | **7** |
+| `missing_tuple_nominal` | 9 | 0 | 0.000 | 0 |
+| `missing_arg_subject` | 8 | 0 | 0.000 | 0 |
+| `missing_arg_adverb` | 7 | 0 | 0.000 | 3 |
+| `extra_tuple` / `missing_tuple` / `extra_arg_adjective` | 8 | 0 | 0.000 | 1 |
+| **TOTAL** | **142** | **6** | **0.042** | **62 (43.7%)** |
+
+**The six checklist questions, answered in the order they were written:**
+
+1. **`dual_role` still outruns everything else, and the ratio is what held.** 0.250 per call against
+   **0.030** for the other 134 calls — **8.3×**, against round 7's 10.3× (0.833 / 0.081). Both terms
+   fell by about a third; the *ratio* did not. So the gap is not novelty wearing off — it is what §30
+   finding 1 said it was, a property of where the evidence sits. **Phase 7 queue item 3 (look for more
+   artifact-internal checks) is confirmed rather than weakened.** Caveat kept explicitly: 8 calls is a
+   small base, and one more round at this rate will not settle it further.
+2. **`--no-whole` cost nothing identifiable and saved 57% of the budget.** Calls 332 → 142; removed
+   63 → 6. Round 7's `_whole` was 128 calls for 6 violations, and removed fell by close to that same
+   6 with the whole of `dual_role`'s fresh population also gone from the numerator. Nothing in the log
+   shows a shape the class prompts could not reach. **The switch is confirmed and permanent**; the
+   flag stays available but the round default is `--no-whole`.
+3. **The refusal census reproduces, and per class it is essentially identical.** `arg_slot` **7 calls,
+   7 refused, 100%, every answer `keep`** — round 7 was 7 calls / 0 removed. `missing_arg`'s `none`
+   **10** (round 7: 10), `missing_arg_adverb` **3** (3), `extra_arg` **15** (16), `extra_arg_subject`
+   **13** (15). A refusal rate stable across two rounds on the same positions is the definition of
+   settled: **this table is the round's real product**, and it is the checker-side reading list.
+4. **Nothing repaired in round 7 came back refused in round 8.** 0 newly flagged and 0 regressed, so
+   the two rounds do not disagree anywhere. The overall refusal rate rose 30% → 43.7%, fully explained
+   by `_whole` (which never produces a refusal) leaving the denominator and by the easy population
+   being gone.
+5. **`_CONV_DATIVE` held.** `missing_arg obl:a` 6 → 5, no rebound. The round-7 result was the clause
+   working, not the population's easy half.
+6. **Field notes: 2 over 142 calls** (inferno 10:91, purgatorio 16:34 — the second is a correct
+   reading of the position). Third round in single digits. **§29 is closed as measured-and-not-paying**;
+   the slot stays in place and is not mentioned again.
+
+**Two failure shapes the log names that the violation diff does not.** Both are Phase 7 read-work,
+and both are *systematic*, which is what distinguishes them from the residue:
+
+- **`missing_tuple_nominal` fails the same way nine times out of nine.** Every call is
+  `not accepted`, and eight of them with an identical before/after pair — `missing_tuple: predicate
+  NN.2 not proposed` → `extra_arg: NN.2 obl:a` (inferno 7:49, 8:52, 8:70, 10:19, 11:67, 24:72,
+  31:21; purgatorio 6:49). Two of them also raise a hard violation (`ccomp argument … is not a
+  predicate in this unit`). The class is written up in *Active & Open Routes* as "read it, do not
+  write for it" after three prompt surfaces failed on it — and this is the reading: **one shape, a
+  nominal predicate taking `obl:a`, missed the same way every time.** It is a better first read than
+  its 0.000 per-call rate suggests.
+- **`missing_arg_subject` makes its own `extra_arg` in half its calls.** 8 calls, 0 removed, and
+  four of them turn one violation into two by adding `extra_arg: … subj`, three times with the null
+  citation `(0, 0)` (paradiso 11:92, 12:124, 26:27, 29:137; purgatorio 20:93, 25:49). That is the
+  splice writing a subject row the unit already disputes — the shape rule EG's splice guard was
+  written for, in a different applier. **Check `_apply_missing_arg`'s subject leg against the guard
+  in `_apply_missing_arg`'s `dual_role` path before reading the positions themselves.**
+
+One malformed response is worth noting for the same reason: purgatorio 31:13 `missing_tuple_nominal`
+returned its table with a *word* in the `Arg Line` column (`| 15.5 | … | obl:a | 15.2 | quale |
+quale |`), which is the only format break in 142 calls.
+
+**What this round settles about the plan.** The pre-round prediction was 12–20 positions; the round
+took **6**, below its own floor. At 0.042 per call the remaining 148 divergence positions would cost
+roughly 3,500 calls, and the refusal census says why: **62 of 142 calls are the model telling the
+checker it is wrong.** Rounds are no longer the instrument. The Phase 7 queue is unchanged and its
+item 2 is now a list of positions confirmed twice — start with `arg_slot`'s 8 predicates (inferno
+5:88, 24:1 ×2, 31:28; paradiso 1:76; purgatorio 9:97, 10:28, 10:58).
 
 ---
 
@@ -277,21 +375,24 @@ and written up is not a rule.
 ## Active & Open Routes
 
 Populations are quoted at the base they were last measured against — mostly **base 541** (after the
-fourth `--fix` round) or **base 174/213** — and the base is now **160**, so a route's number is a
+fourth `--fix` round) or **base 174/213** — and the base is now **154**, so a route's number is a
 starting point for a re-measure, not a current count. These are shapes the reads named but did not
 settle; work that runs into one of them should fold it in rather than open a new route. Routes Phase 6
 **closed** are in [`PHASE6.md`](PHASE6.md) §5 — read the entry before re-opening one.
 
 ### Standing populations
 
-- **The refusal census is route zero** — `arg_slot`'s 8 predicates, `extra_arg`'s 16 `keep`s,
-  `extra_arg_subject`'s 15, `missing_arg`'s 10 `none`s. See *Phase 7 Work Queue* above; every other
-  route below is a shape, while this one is a list of positions the model itself chose.
+- **The refusal census is route zero, and two rounds now agree on it** — `arg_slot`'s 8 predicates
+  (7-for-7 `keep` in both rounds), `extra_arg`'s 15–16 `keep`s, `extra_arg_subject`'s 13–15,
+  `missing_arg`'s 10 `none`s, `missing_arg_adverb`'s 3. See *Phase 7 Work Queue* above and §P1; every
+  other route below is a shape, while this one is a list of positions the model itself chose.
 - **The subject slot, and it may simply stay reported.** `extra_arg subj` (96 at base 541, of which
   `∅ (0,0)` 22) and `missing_arg subj` (54) plus the `role_mismatch` rows with `subj` on one side were
   **62 of 174** after round 6. Round 4 measured `_CONV_SUBJECT` at the round average and converted the
   bucket to read-work; the read series read it and left it standing; round 7 moved `extra_arg subj`
-  24 → 24 (±0). It is neither prompt-work nor unread — it is genuine disagreement over Dante's
+  24 → 24 (±0) and round 8 24 → 23, with `missing_arg_subject` spending 8 calls to remove 0 and to
+  *add* four `extra_arg subj` rows the acceptance gate then rejected (§P1). It is neither prompt-work
+  nor unread — it is genuine disagreement over Dante's
   inversion. Start with the `∅ (0,0)` half, where the derivation found a genuine overt subject, often
   long-distance (e.g. inferno 9:20, `alcun` at 21.4 the subject of `incontra`).
   - **`role_mismatch` is the only large class with no branch of its own, and the only argument-level
@@ -303,9 +404,14 @@ settle; work that runs into one of them should fold it in rather than open a new
 - **The 44 positions Inferno still holds** are the read batches' own residue *after* the rounds have
   been over them, which makes them the most direct sample there is of what a round leaves behind. All
   100 cantos are read, so these are reading disagreement rather than unread material.
-- **`missing_tuple_nominal` (16) — read it, do not write for it.** Round 3 gave it convention prose
-  and a hint (−7.7%), round 4 a rewritten *question* (−11.1%), round 7 nine calls for **0**, and its
-  positions have been substantially the same set throughout. Every prompt surface has been tried.
+- **`missing_tuple_nominal` (16) — read it, do not write for it, and §P1 says what to read.** Round 3
+  gave it convention prose and a hint (−7.7%), round 4 a rewritten *question* (−11.1%), round 7 nine
+  calls for **0**, round 8 nine calls for **0** — and its positions have been substantially the same
+  set throughout. Every prompt surface has been tried. What round 8 added is that the *failure* is one
+  shape, not nine: eight of the nine calls turn `missing_tuple: predicate NN.2 not proposed` into
+  `extra_arg: NN.2 obl:a` (inferno 7:49, 8:52, 8:70, 10:19, 11:67, 24:72, 31:21; purgatorio 6:49),
+  two of them raising a hard `ccomp argument … is not a predicate in this unit` on the way. **A
+  nominal predicate taking `obl:a`** is the read.
 - **`missing_arg_adverb` residue (21)**: the survivors of the `_CONV_ADVERB` repair and of
   `_CONV_REPEATED`. Two prompt repairs have had their turn, so this is a per-position read — establish
   first whether these are locative adverbs the model still omits or a different shape the branch
