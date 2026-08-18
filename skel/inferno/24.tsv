@@ -24,9 +24,9 @@ line	token	word	role	arg_line	arg_token
 9	1	biancheggiar	subj	8	8
 9	6	batte	subj	9	4
 9	6	batte	obj	9	8
-10	1	ritorna	subj	9	4
+10	1	ritorna	subj	7	2
 10	1	ritorna	obl:in	10	3
-10	9	lagna	subj	9	4
+10	9	lagna	subj	7	2
 10	9	lagna	obl:come	11	3
 11	6	sa	subj	11	4
 11	6	sa	ccomp	11	9

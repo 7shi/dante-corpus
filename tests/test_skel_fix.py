@@ -526,6 +526,16 @@ def _stub_model(monkeypatch, reply):
                         lambda *a, **k: _FakeClient(reply), raising=False)
     written: list = []
     monkeypatch.setattr(drv.skel, "write_skel", lambda *a, **k: written.append(a))
+    real_load_skel = drv.skel.load_skel
+    def mock_load_skel(canticle, number):
+        data = real_load_skel(canticle, number)
+        if canticle == "purgatorio" and number == 1:
+            d = dict(data)
+            # Fixture with missing_arg_adverb (100, 3) on 102.1 porta
+            d[102] = [r for r in d.get(102, []) if not (r.token == 1 and r.arg_line == 100 and r.arg_token == 3)]
+            return d
+        return data
+    monkeypatch.setattr(drv.skel, "load_skel", mock_load_skel)
     return written
 
 
@@ -567,11 +577,22 @@ def _fix_canto_with(monkeypatch, answer):
     return drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
 
 
-# Inferno 5's only flagged unit is a same-slot pair: `missing_arg subj (90,1)` and
+# Inferno 5's same-slot pair fixture: `missing_arg subj (90,1)` and
 # `extra_arg subj (92,1)` on the predicate at 92.2 — one disagreement about which token is the
 # subject, which the driver must put to the model **once**.
 def test_fix_canto_asks_a_same_slot_pair_as_one_question(monkeypatch):
     _stub_model(monkeypatch, "Q1: keep")
+    real_load_skel = drv.skel.load_skel
+    def mock_load_skel(canticle, number):
+        data = real_load_skel(canticle, number)
+        if canticle == "inferno" and number == 5:
+            d = dict(data)
+            d[92] = [skel.SkelRow(92, 2, "pregheremmo", "subj", 92, 1),
+                     skel.SkelRow(92, 2, "pregheremmo", "obj", 92, 3),
+                     skel.SkelRow(92, 2, "pregheremmo", "obl:de", 92, 7)]
+            return d
+        return data
+    monkeypatch.setattr(drv.skel, "load_skel", mock_load_skel)
     stats = drv._fix_canto("inferno", 5, 34, "fake", _FakeUI(), None, whole=False)
     assert stats["units:flagged"] == 1
     assert stats["calls:arg_slot"] == 1

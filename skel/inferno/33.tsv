@@ -305,9 +305,9 @@ line	token	word	role	arg_line	arg_token
 100	2	avvegna	subj	0	0
 101	0			0	0
 102	1	cessato	subj	101	5
+102	1	cessato	obj	102	6
 102	1	cessato	obl:di	100	8
 102	1	cessato	obl:per	101	3
-102	1	cessato	obl:di	102	6
 103	3	parea	subj	103	4
 103	3	parea	iobj	103	2
 103	4	sentire	subj	0	0

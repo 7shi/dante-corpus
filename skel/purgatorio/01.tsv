@@ -282,6 +282,7 @@ line	token	word	role	arg_line	arg_token
 101	6	batte	obj	101	5
 102	1	porta	subj	100	2
 102	1	porta	obj	102	3
+102	1	porta	obl	100	3
 102	1	porta	obl:sovra	102	7
 103	5	facesse	subj	103	4
 103	5	facesse	obj	103	6

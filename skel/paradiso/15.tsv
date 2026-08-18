@@ -79,6 +79,7 @@ line	token	word	role	arg_line	arg_token
 31	7	attesi	obl:a	31	9
 32	2	rivolsi	subj	0	0
 32	2	rivolsi	obj	32	8
+32	2	rivolsi	obl	31	3
 32	2	rivolsi	obl:a	32	6
 33	5	stupefatto	subj	0	0
 33	6	fui	subj	0	0
@@ -273,8 +274,7 @@ line	token	word	role	arg_line	arg_token
 101	0			0	0
 102	2	fosse	subj	102	1
 102	2	fosse	xcomp	102	4
-102	4	veder	subj	0	0
-102	4	veder	obj	102	8
+102	4	veder	obl:che	102	8
 103	2	faceva	subj	104	2
 103	2	faceva	obj	103	5
 103	2	faceva	iobj	104	4

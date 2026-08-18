@@ -130,10 +130,7 @@ line	token	word	role	arg_line	arg_token
 42	3	giugnieno	obj	42	2
 42	3	giugnieno	obl:a	42	5
 43	4	parea	subj	43	3
-43	4	parea	attr	43	6
-43	4	parea	attr	43	8
-43	6	bianca	subj	43	3
-43	8	gialla	subj	43	3
+43	4	parea	obl:tra	43	6
 44	4	vedere	subj	0	0
 44	5	era	subj	44	2
 44	5	era	attr	44	6

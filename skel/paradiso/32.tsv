@@ -403,7 +403,8 @@ line	token	word	role	arg_line	arg_token
 149	4	seguirai	subj	149	2
 149	4	seguirai	obj	149	3
 149	4	seguirai	obl:con	149	7
-150	9	parti	subj	150	7
+150	9	parti	subj	0	0
+150	9	parti	obj	150	7
 150	9	parti	obl:da	150	4
 151	2	cominciò	subj	0	0
 151	2	cominciò	obj	151	5

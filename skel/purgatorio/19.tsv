@@ -214,6 +214,7 @@ line	token	word	role	arg_line	arg_token
 67	3	fec'	subj	67	4
 67	3	fec'	obj	67	2
 67	3	fec'	attr	67	1
+67	3	fec'	obl:quale	64	3
 67	9	fende	subj	68	2
 68	4	dar	subj	0	0
 68	4	dar	obj	68	5

@@ -224,8 +224,7 @@ line	token	word	role	arg_line	arg_token
 76	2	elli	subj	0	0
 76	2	elli	ccomp	76	8
 76	2	elli	obl:a	76	4
-76	8	fier	subj	0	0
-76	8	fier	obj	76	6
+76	8	fier	subj	76	6
 76	8	fier	iobj	76	7
 76	8	fier	attr	76	9
 77	3	fermerem	subj	77	2

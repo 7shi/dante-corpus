@@ -175,7 +175,8 @@ line	token	word	role	arg_line	arg_token
 59	5	sfavillar	obl:come	60	2
 60	5	esce	subj	60	3
 60	5	esce	obl:di	60	7
-61	4	parve	subj	62	1
+61	4	parve	subj	58	1
+61	4	parve	xcomp	62	2
 62	2	aggiunto	subj	0	0
 62	2	aggiunto	obl:come	62	4
 62	6	puote	subj	62	5
@@ -238,12 +239,13 @@ line	token	word	role	arg_line	arg_token
 78	5	temperi	obj	78	4
 78	7	discerni	subj	0	0
 78	7	discerni	obj	78	4
-79	1	parvemi	subj	79	5
+79	1	parvemi	subj	0	0
+79	1	parvemi	obl:di	79	5
 79	1	parvemi	obl:di	80	3
 80	0			0	0
 81	3	fece	subj	80	7
-81	3	fece	xcomp	81	6
-81	6	disteso	subj	81	4
+81	3	fece	obj	81	1
+81	3	fece	attr	81	6
 82	0			0	0
 83	5	accesero	subj	82	2
 83	5	accesero	subj	82	8
@@ -290,7 +292,6 @@ line	token	word	role	arg_line	arg_token
 97	2	dissi	ccomp	97	5
 97	4	contento	subj	0	0
 97	5	requïevi	subj	0	0
-97	5	requïevi	attr	97	4
 97	5	requïevi	obl:di	98	3
 98	6	ammiro	subj	0	0
 98	6	ammiro	ccomp	99	3

@@ -292,8 +292,7 @@ line	token	word	role	arg_line	arg_token
 98	7	riguardommi	subj	97	3
 99	2	disse	subj	97	3
 99	2	disse	ccomp	99	4
-99	4	ascolta	subj	0	0
-99	4	ascolta	obj	99	5
+99	4	ascolta	subj	99	5
 99	7	nota	subj	99	5
 99	7	nota	obj	99	6
 100	6	parlando	subj	0	0

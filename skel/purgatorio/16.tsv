@@ -246,9 +246,8 @@ line	token	word	role	arg_line	arg_token
 70	3	fosse	subj	0	0
 70	7	distrutto	subj	71	2
 70	7	distrutto	obl:in	70	5
-71	5	fora	subj	72	3
-71	5	fora	subj	72	7
-71	5	fora	attr	71	6
+71	5	fora	subj	71	6
+71	5	fora	obl:per	72	3
 72	7	aver	subj	0	0
 72	7	aver	obj	72	8
 72	7	aver	obl:per	72	6

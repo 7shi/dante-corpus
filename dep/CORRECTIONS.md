@@ -1,5 +1,19 @@
 # dep — Layer 4 correction history
 
+## purgatorio 20:93 — infinitive complement attached to consecutive clause rather than perception verb (2026-08-18)
+
+Found during the final Phase 7 census closing Layer 5 soft violations (purgatorio 20:93; see [`../skel/PLAN.md`](../skel/PLAN.md) §P15).
+
+> Veggio il novo Pilato sì crudele, / che ciò nol sazia, ma sanza decreto / **portar** nel Tempio le cupide vele.  (purgatorio 20:91-93)
+
+In *Veggio il novo Pilato … portar nel Tempio le cupide vele*, `93.1 portar` is the infinitive complement of the perception verb `91.1 Veggio` (`xcomp<-91.1`), with `91.4 Pilato` as its controller/subject. Layer 4 had attached `93.1 portar` as `conj` of the subordinate consecutive clause verb `92.4 sazia` (*che ciò nol sazia*). Because of this attachment, `derive_unit` propagated `92.2 ciò` as the subject of `portar`, generating `missing_arg: 93.1 subj (92, 2)`.
+
+Attaching `93.1 portar` as `xcomp` of `91.1 Veggio` aligned the derivation with Italian control syntax and cleared the violation.
+
+| token | was | now |
+|---|---|---|
+| 93.1 `portar` | `conj` ← 92.4 `sazia` | **`xcomp` ← 91.1 `Veggio`** |
+
 ## paradiso 7:25 — inverted prepositional argument attached to noun instead of verb (2026-08-18)
 
 Found during the audit of Layer 5 extra_arg positions (paradiso 7:25; see [`../skel/PLAN.md`](../skel/PLAN.md) §P10).

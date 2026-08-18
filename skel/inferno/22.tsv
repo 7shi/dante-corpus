@@ -327,6 +327,7 @@ line	token	word	role	arg_line	arg_token
 102	3	seggendo	subj	102	2
 102	3	seggendo	obl:in	102	6
 103	5	son	subj	103	4
+103	5	son	attr	103	3
 103	7	farò	subj	102	2
 103	7	farò	obj	103	6
 103	7	farò	xcomp	103	8

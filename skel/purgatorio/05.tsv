@@ -43,7 +43,8 @@ line	token	word	role	arg_line	arg_token
 13	7	dir	subj	13	9
 14	1	sta	subj	0	0
 14	1	sta	attr	14	3
-14	7	crolla	subj	15	4
+14	7	crolla	subj	14	5
+14	7	crolla	obj	15	4
 14	7	crolla	obl:per	15	6
 15	0			0	0
 16	8	rampolla	subj	16	7

@@ -70,8 +70,8 @@ line	token	word	role	arg_line	arg_token
 26	1	cerchiando	obj	26	3
 27	3	giacque	subj	27	5
 27	3	giacque	obl:sotto	27	2
-28	8	traluce	subj	0	0
-28	8	traluce	obl:in	28	7
+28	8	traluce	subj	28	7
+28	8	traluce	obl:in	28	6
 29	1	vid'	subj	29	2
 29	1	vid'	obj	29	4
 29	1	vid'	obl:a	25	3

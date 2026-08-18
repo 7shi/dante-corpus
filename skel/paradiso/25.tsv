@@ -181,7 +181,8 @@ line	token	word	role	arg_line	arg_token
 61	3	lasc'	subj	61	4
 61	3	lasc'	obj	58	4
 61	3	lasc'	iobj	61	2
-61	9	forti	subj	61	7
+61	9	forti	subj	0	0
+61	9	forti	iobj	61	7
 61	9	forti	obl:di	62	3
 62	3	iattanza	subj	61	7
 62	8	risponda	subj	62	5

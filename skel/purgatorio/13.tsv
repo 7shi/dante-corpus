@@ -401,6 +401,7 @@ line	token	word	role	arg_line	arg_token
 133	9	tolti	subj	133	2
 133	9	tolti	iobj	133	5
 133	9	tolti	obl	133	8
+133	9	tolti	obl	134	3
 134	5	poca	subj	134	8
 135	6	vòlti	subj	0	0
 135	6	vòlti	obl:con	135	5

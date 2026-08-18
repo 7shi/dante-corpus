@@ -328,7 +328,7 @@ line	token	word	role	arg_line	arg_token
 119	2	fa	obl:con	119	7
 119	10	cólto	subj	119	4
 120	3	ha	subj	120	2
-120	3	ha	obl:di	120	7
+120	3	ha	obj	120	4
 121	4	sostenni	subj	0	0
 121	4	sostenni	obj	121	3
 121	4	sostenni	obl	121	2

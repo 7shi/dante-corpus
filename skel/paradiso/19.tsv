@@ -202,7 +202,7 @@ line	token	word	role	arg_line	arg_token
 62	4	vede	subj	63	1
 62	4	vede	obj	62	3
 62	4	vede	obl:in	62	2
-63	3	cela	obj	63	6
+63	3	cela	subj	63	6
 63	3	cela	iobj	63	4
 63	6	esser	subj	0	0
 63	6	esser	attr	63	7

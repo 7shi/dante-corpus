@@ -5,8 +5,8 @@ line	token	word	role	arg_line	arg_token
 1	8	storpio	subj	1	5
 2	0			0	0
 3	1	lasciato	subj	2	3
+3	1	lasciato	subj	3	6
 3	1	lasciato	obj	2	6
-3	1	lasciato	obj	3	6
 3	1	lasciato	obl:a	3	3
 3	1	lasciato	obl:a	3	9
 4	4	fa	subj	4	6
@@ -152,9 +152,11 @@ line	token	word	role	arg_line	arg_token
 48	7	preme	subj	0	0
 48	7	preme	obl	48	5
 49	2	giunto	subj	49	3
+49	4	comincia	subj	46	5
 49	4	comincia	xcomp	49	6
 49	6	operare	subj	0	0
 50	1	coagulando	subj	0	0
+50	5	avviva	subj	46	5
 50	5	avviva	obj	51	1
 51	7	constare	subj	51	2
 51	7	constare	obl:per	51	5
@@ -354,7 +356,6 @@ line	token	word	role	arg_line	arg_token
 120	4	potrebbesi	obl:per	120	6
 121	0			0	0
 122	5	udi'	subj	0	0
-122	5	udi'	xcomp	122	6
 122	5	udi'	obl:in	121	5
 122	6	cantando	obj	121	2
 123	5	fé	subj	123	1

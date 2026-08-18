@@ -231,6 +231,7 @@ line	token	word	role	arg_line	arg_token
 79	8	costa	iobj	79	7
 79	8	costa	obl	79	4
 80	1	rispuoser	subj	80	2
+80	1	rispuoser	obj	81	1
 80	4	satisfare	subj	0	0
 80	4	satisfare	obj	80	5
 81	5	parli	subj	0	0

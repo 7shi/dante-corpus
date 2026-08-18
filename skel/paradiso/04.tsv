@@ -77,6 +77,7 @@ line	token	word	role	arg_line	arg_token
 30	3	vuoli	subj	0	0
 30	3	vuoli	xcomp	30	2
 30	5	dico	subj	30	4
+30	5	dico	obj	30	7
 31	2	hanno	subj	29	5
 31	2	hanno	obj	31	8
 31	2	hanno	obl:in	31	5
@@ -296,7 +297,6 @@ line	token	word	role	arg_line	arg_token
 107	7	mischia	subj	107	3
 107	7	mischia	obl:a	107	5
 107	9	fanno	subj	107	3
-107	9	fanno	ccomp	108	6
 108	3	scusar	subj	108	8
 108	6	posson	subj	108	8
 108	6	posson	xcomp	108	3

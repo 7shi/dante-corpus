@@ -270,7 +270,7 @@ line	token	word	role	arg_line	arg_token
 90	3	tignemmo	obj	90	5
 90	3	tignemmo	obl:di	90	7
 91	3	amico	subj	91	5
-92	2	pregheremmo	subj	92	1
+92	2	pregheremmo	subj	90	1
 92	2	pregheremmo	obj	92	3
 92	2	pregheremmo	obl:de	92	7
 93	3	hai	subj	0	0

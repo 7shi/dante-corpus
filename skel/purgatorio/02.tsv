@@ -342,9 +342,8 @@ line	token	word	role	arg_line	arg_token
 118	6	attenti	obl:a	119	4
 119	6	ecco	subj	119	8
 120	1	gridando	subj	0	0
-120	3	è	subj	120	4
-120	3	è	attr	120	2
-120	4	ciò	subj	120	2
+120	3	è	subj	120	2
+120	3	è	attr	120	4
 121	2	negligenza	subj	121	6
 121	4	stare	subj	121	6
 122	1	Correte	subj	0	0
@@ -377,6 +376,7 @@ line	token	word	role	arg_line	arg_token
 130	2	vid'	obj	130	5
 130	2	vid'	xcomp	131	1
 130	2	vid'	xcomp	131	5
+130	2	vid'	obl	132	1
 131	1	lasciar	subj	130	5
 131	1	lasciar	obj	131	3
 131	5	fuggir	subj	130	5

@@ -344,6 +344,7 @@ line	token	word	role	arg_line	arg_token
 124	11	tondo	subj	124	9
 125	6	venuto	subj	125	4
 126	5	calando	subj	0	0
+126	5	calando	obl:a	126	3
 126	5	calando	obl:a	126	7
 127	8	vòlto	subj	0	0
 127	8	vòlto	obl:per	127	7

@@ -116,6 +116,7 @@ line	token	word	role	arg_line	arg_token
 36	7	va	obl:con	36	9
 37	6	fuga	subj	37	1
 37	6	fuga	attr	38	4
+37	6	fuga	obl:da	31	3
 37	6	fuga	obl:per	37	4
 37	6	fuga	obl:da	38	2
 37	6	fuga	obl:per	38	7

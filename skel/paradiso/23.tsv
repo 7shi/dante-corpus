@@ -17,6 +17,7 @@ line	token	word	role	arg_line	arg_token
 6	7	aggrati	iobj	6	5
 7	1	previene	subj	4	1
 7	1	previene	obj	7	3
+7	1	previene	obl	3	2
 7	1	previene	obl:in	7	7
 8	7	aspetta	subj	4	1
 8	7	aspetta	obj	8	6

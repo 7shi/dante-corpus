@@ -264,7 +264,7 @@ line	token	word	role	arg_line	arg_token
 94	7	letargo	obl	95	3
 95	0			0	0
 96	2	fé	subj	96	1
-96	2	fé	obj	96	3
+96	2	fé	iobj	96	3
 96	2	fé	xcomp	96	4
 96	4	ammirar	subj	96	3
 96	4	ammirar	obj	96	6

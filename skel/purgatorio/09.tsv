@@ -42,6 +42,7 @@ line	token	word	role	arg_line	arg_token
 19	4	parea	subj	0	0
 19	4	parea	iobj	19	3
 19	4	parea	xcomp	19	5
+19	4	parea	obl:in	13	3
 19	4	parea	obl:in	19	2
 19	5	veder	subj	0	0
 19	5	veder	obj	20	2
@@ -197,6 +198,7 @@ line	token	word	role	arg_line	arg_token
 68	1	vide	obl:sanza	67	7
 69	2	mosse	subj	69	4
 69	2	mosse	obl:per	68	9
+69	2	mosse	obl:per	69	6
 70	3	vedi	subj	70	2
 70	3	vedi	ccomp	70	7
 70	7	innalzo	subj	70	6

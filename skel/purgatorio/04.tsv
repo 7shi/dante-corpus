@@ -214,6 +214,7 @@ line	token	word	role	arg_line	arg_token
 73	7	vada	subj	71	6
 73	7	vada	obl:da	74	3
 73	7	vada	obl:a	74	6
+73	7	vada	obl:da	74	10
 74	0			0	0
 75	7	bada	subj	75	3
 76	4	diss'	subj	76	5

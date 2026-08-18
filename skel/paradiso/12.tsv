@@ -22,6 +22,7 @@ line	token	word	role	arg_line	arg_token
 9	7	refuse	obj	9	3
 10	3	volgon	subj	11	2
 10	3	volgon	obl:per	10	6
+10	3	volgon	obl:a	14	2
 11	0			0	0
 12	6	iube	subj	12	2
 12	6	iube	iobj	12	5
@@ -62,14 +63,13 @@ line	token	word	role	arg_line	arg_token
 27	1	conviene	subj	0	0
 27	1	conviene	xcomp	27	3
 27	1	conviene	xcomp	27	5
-27	3	chiudere	subj	0	0
-27	3	chiudere	obj	26	4
+27	3	chiudere	subj	26	4
 27	3	chiudere	obl:a	26	7
 27	5	levarsi	subj	26	4
 28	0			0	0
 29	2	mosse	subj	29	3
 29	2	mosse	obl:di	28	2
-30	1	parer	subj	29	6
+30	1	parer	obj	29	6
 30	1	parer	obl:a	29	9
 30	3	fece	subj	29	4
 30	3	fece	iobj	30	2
@@ -336,6 +336,7 @@ line	token	word	role	arg_line	arg_token
 123	5	son	attr	123	6
 123	9	soglio	subj	123	8
 123	9	soglio	attr	123	7
+124	3	fia	subj	121	3
 124	3	fia	obl:da	124	5
 124	3	fia	obl:di	124	8
 125	3	vegnon	subj	125	4

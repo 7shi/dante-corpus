@@ -26,9 +26,8 @@ line	token	word	role	arg_line	arg_token
 9	7	trasse	obl:in	9	5
 10	4	era	subj	10	2
 10	4	era	attr	10	5
-11	2	benigna	subj	11	7
-11	3	avea	subj	11	7
-11	3	avea	subj	12	8
+11	3	avea	subj	10	2
+11	3	avea	obj	11	7
 11	3	avea	attr	11	2
 11	3	avea	obl:di	11	5
 12	0			0	0
@@ -252,8 +251,8 @@ line	token	word	role	arg_line	arg_token
 88	2	divenn'	attr	88	1
 88	2	divenn'	obl:a	88	6
 88	7	porte	subj	88	6
-89	4	fé	subj	89	7
-89	4	fé	obj	89	2
+89	4	fé	subj	89	2
+89	4	fé	obj	89	7
 89	4	fé	iobj	89	3
 90	6	fa	subj	90	1
 90	6	fa	obj	90	7

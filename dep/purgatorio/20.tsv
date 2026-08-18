@@ -644,7 +644,7 @@ line	token	word	deprel	head_line	head_token
 92	5	ma	cc	93	1
 92	6	sanza	case	92	7
 92	7	decreto	obl	93	1
-93	1	portar	conj	92	4
+93	1	portar	xcomp	91	1
 93	2	nel	case	93	3
 93	3	Tempio	obl	93	1
 93	4	le	det	93	6

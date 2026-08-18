@@ -272,6 +272,7 @@ line	token	word	role	arg_line	arg_token
 91	7	sofferto	obl:per	92	3
 92	0			0	0
 93	1	colui	subj	91	3
+93	1	colui	obl	91	5
 93	4	difesi	subj	93	2
 93	4	difesi	obj	93	3
 93	4	difesi	obl:a	93	6

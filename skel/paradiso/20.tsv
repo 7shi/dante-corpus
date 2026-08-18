@@ -94,6 +94,7 @@ line	token	word	role	arg_line	arg_token
 35	8	scintilla	subj	35	4
 35	8	scintilla	obl:di	35	2
 35	8	scintilla	obl:in	35	6
+35	8	scintilla	obl	35	7
 36	1	e'	subj	36	8
 36	1	e'	obl:di	36	5
 36	6	son	subj	36	8

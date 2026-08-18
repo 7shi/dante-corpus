@@ -69,8 +69,8 @@ line	token	word	role	arg_line	arg_token
 26	2	avea	subj	26	3
 26	2	avea	obl:per	25	5
 26	2	avea	obl:di	26	7
-27	5	facevan	subj	27	3
-27	5	facevan	obj	27	1
+27	5	facevan	subj	27	1
+27	5	facevan	obj	27	3
 27	5	facevan	xcomp	27	6
 27	6	tremare	subj	27	1
 28	2	avvenia	subj	28	1

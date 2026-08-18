@@ -246,8 +246,9 @@ line	token	word	role	arg_line	arg_token
 81	7	aprirmi	obj	81	10
 82	2	dimmi	subj	0	0
 82	2	dimmi	obj	82	4
-82	8	guardi	subj	82	5
+82	8	guardi	subj	0	0
 82	8	guardi	obj	82	7
+82	8	guardi	obl	82	5
 82	8	guardi	obl:di	83	3
 83	0			0	0
 84	6	tornar	subj	84	7

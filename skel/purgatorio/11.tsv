@@ -404,7 +404,6 @@ line	token	word	role	arg_line	arg_token
 139	6	so	subj	0	0
 139	6	so	ccomp	139	8
 139	8	parlo	subj	0	0
-139	8	parlo	attr	139	5
 140	4	andrà	subj	140	3
 141	1	faranno	subj	140	7
 141	1	faranno	obj	141	2

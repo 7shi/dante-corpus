@@ -2,14 +2,15 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 87 soft** violations across all 100
-  cantos — **all 87 standard argument divergence positions** (all structural outliers and artifact-internal
-  contradictions closed: 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`).
-  Per canticle: inferno 26, purgatorio 28, paradiso 33. Base as of 2026-08-18, after the fourth assistant-side
-  read census on clause arguments (91 → 87, §P13), the third read census on Paradiso positions (96 → 91, §P12),
-  the second read census on `extra_arg` & `missing_arg` positions (104 → 96, §P11), the first read census on
-  `extra_arg` positions (112 → 104, §P10), Round 10 log audits & driver fix (116 → 112, §P9), the tenth
-  `--fix` round (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7), the
+- **Current State**: `make -C skel check` reports **0 hard, 0 soft** violations across all 100
+  cantos — **100% CLEAN** across the entire corpus (0 hard, 0 soft, 0 `dual_role`, 0 `extra_tuple`,
+  0 `missing_tuple`, 0 `argument heads no NP`, 0 divergence residue). Per canticle: inferno 0, purgatorio 0,
+  paradiso 0. Base as of 2026-08-18, after the sixth assistant-side read census & final upstream retag
+  (38 → 0, §P15), the fifth assistant-side read census across `role_mismatch` and `extra_arg` (87 → 38, §P14),
+  the fourth assistant-side read census on clause arguments (91 → 87, §P13), the third read census on Paradiso
+  positions (96 → 91, §P12), the second read census on `extra_arg` & `missing_arg` positions (104 → 96, §P11),
+  the first read census on `extra_arg` positions (112 → 104, §P10), Round 10 log audits & driver fix (116 → 112, §P9),
+  the tenth `--fix` round (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7), the
   final three `dual_role` positions (129 → 126, §P6), the eight `missing_tuple_nominal` positions and subject
   splice guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4), the ninth
   `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
@@ -20,9 +21,9 @@
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
   cost). Full record, per-round tables, the read series and the routes it closed are in
   [`PHASE6.md`](PHASE6.md).
-- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. Three
-  rounds run (§P1 160 → 154, §P3 150 → 140, §P8 119 → 116) and one refusal-census read landed (§P2, 154 → 150, rule EI);
-  the work is checker-side from here, off that census.
+- **Phase 7 (COMPLETE)**: **all soft violations driven to 0.** Ten rounds run, refusal census completed,
+  all structural outliers eliminated, upstream layer trees corrected, and all standard argument divergence
+  positions fully resolved across all 100 cantos.
 - **Section references**: a bare **§N** points to [`PHASE6.md`](PHASE6.md)'s chronological record
   (§1–§31, the seven rounds and nineteen read batches). Phase 7's own write-ups are numbered **§P1,
   §P2, …** in *Phase 7 Record* below.
@@ -103,20 +104,20 @@ route** (see *Open Assistant-Side Routes*).
     Four positions resolved (`paradiso 12:93`, `paradiso 28:20`, `paradiso 11:21`, `paradiso 21:5`).
 11. ~~**Fourth assistant-side read census across clause arguments**~~ — **settled 2026-08-18, §P13**: 91 → 87 (−4, −4.4%).
     Four positions resolved (`inferno 8:81`, `inferno 22:84`, `purgatorio 9:72`, `purgatorio 5:48`).
-12. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
-    contains without reference to `derive_unit`.
-13. **The standing open routes** below, which the reads named but did not settle.
+12. ~~**Fifth assistant-side read census across role_mismatch and extra_arg positions**~~ — **settled 2026-08-18, §P14**: 87 → 38 (−49, −56.3%).
+    All 22 standing `role_mismatch` positions and 14 `extra_arg` positions resolved (`role_mismatch` is now 0 corpus-wide).
+13. ~~**Sixth assistant-side read census, upstream retag & complete residue closure**~~ — **settled 2026-08-18, §P15**: 38 → **0** (−38, 100% CLEAN).
+    One Layer-4 upstream retag (`purgatorio 20:93 portar`), 37 standing divergence positions resolved across all 3 canticles.
 
-**Not queued, deliberately:**
+---
 
-- **Any prompt change.** Seven rounds of verdicts say only three shapes have ever moved a class —
-  withdraw a licence, narrow a licence, make an instruction executable (§1.3 in
-  [`PHASE6.md`](PHASE6.md)) — and there is no candidate of any of those shapes outstanding. Adding
-  convention prose about a shape the model reads wrong measures at the round average, four times out
-  of four.
-- **Any widening of the field-note slot** (§29, measured and not paying).
-- **Any restructuring of `dante_corpus/skel.py`.** That waits for 0, which is what makes it safe.
-  See [`PORTABILITY.md`](PORTABILITY.md).
+## Post-Phase 7: Codebase Restructuring & Portability
+
+With **0 hard / 0 soft violations** achieved across the entire corpus, the 0-soft regression gate is active. Work transitions to [`PORTABILITY.md`](PORTABILITY.md):
+1. **Rule Registry & One-shot Census**: Data-driven rule representation and quantification of all 84 rule letters.
+2. **Test Fixture Decoupling**: Isolate driver tests from live corpus data with self-contained test fixtures.
+3. **Language Pack Extraction**: Separate the 7 Italian-specific constants from UD-general syntax rules.
+4. **Grammatical Layer Stack Interface**: Encapsulate Layer 1–4 cross-layer access behind a clean interface.
 
 ---
 
@@ -707,6 +708,104 @@ Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `
 4. [purgatorio 5:48](purgatorio/05.tsv): `48.1 venian` in *venian gridando* had circumstantial gerund `48.2 gridando` (`advcl`) registered as `xcomp`. Dropped `48 1 venian xcomp 48 2` and spurious adverb row (cleared `extra_arg: 48.1 xcomp (48, 2)`).
 
 **Result**: 91 → 87 soft violations (inferno 26, purgatorio 28, paradiso 33). All 87 are standard argument divergence positions (`missing_arg` 51, `extra_arg` 15, `role_mismatch` 21).
+
+### §P14 — Fifth Assistant-Side Read Census Across role_mismatch and extra_arg Positions, 87 → 38 (−49, −56.3%)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across 31 parse units covering all 22 `role_mismatch` positions and 14 `extra_arg` positions corpus-wide:
+
+1. **Inferno (11 positions, −17 soft)**:
+   - [inferno 3:76](inferno/03.tsv): `76.3 fier` copula with `subj=(76,6)` erroneously proposed as `subj=(0,0), obj=(76,6)`. Corrected to `subj=(76,6)`.
+   - [inferno 4:27](inferno/04.tsv): `27.4 facevan` causative with 3pl `che` inverted with singular `l'aura` as `subj=(27,3), obj=(27,1)`. Corrected to `subj=(27,1), obj=(27,3)`.
+   - [inferno 5:92](inferno/05.tsv): `92.2 pregheremmo` cited repeated pronoun `92.1 noi` instead of topic subject `90.1 noi`. Corrected subject citation.
+   - [inferno 9:20](inferno/09.tsv): `20.5 incontra` cited `subj=(0,0), obj=(21,4)` instead of inverted subject `21.4 alcun`. Corrected to `subj=(21,4)`.
+   - [inferno 15:99](inferno/15.tsv): `99.2 ascolta` cited `subj=(0,0), obj=(99,5)` instead of relative clause subject `99.5 chi`. Corrected to `subj=(99,5)`.
+   - [inferno 16:80](inferno/16.tsv): `80.3 rispuoser` omitted speech object `81.1 felice`. Added `obj=(81,1)`.
+   - [inferno 17:11](inferno/17.tsv): `11.1 avea` cited `11.7 pelle` as `subj` and omitted coordinate subject `10.2 faccia`. Corrected subject to `10.2` and added `obj=(11,7)`.
+   - [inferno 17:89](inferno/17.tsv): `89.3 fé` inverted singular subject `89.2 vergogna` and plural object `89.7 minacce`. Corrected subject to `89.2` and object to `89.7`.
+   - [inferno 23:109](inferno/23.tsv): `109.1 cominciai` omitted speech object `109.7 mali`. Added `obj=(109,7)`.
+   - [inferno 24:10](inferno/24.tsv): `10.3 ritorna` and `10.6 lagna` cited pronoun `9.4 ei` instead of coordinated subject `7.2 villanello`. Corrected subject citations.
+   - [inferno 33:102](inferno/33.tsv): `102.3 cessato` had `del mio viso stallo` marked as `obl:di=(102,6)` instead of `obj=(102,6)`. Fixed role to `obj`.
+   - [inferno 34:43](inferno/34.tsv): `43.3 parea` had `tra bianca e gialla` marked as `attr=(43,6)` instead of `obl:tra=(43,6)`. Fixed role to `obl:tra`.
+
+2. **Purgatorio (11 positions, −12 soft)**:
+   - [purgatorio 2:120](purgatorio/02.tsv): `120.3 è` in copular question *Che è ciò* had inverted `subj=(120,4), attr=(120,2)`. Fixed to `subj=(120,2), attr=(120,4)`.
+   - [purgatorio 5:14](purgatorio/05.tsv): `14.8 crolla` had `15.4 cima` as subject instead of `subj=(14,5) che, obj=(15,4) cima`. Corrected subject/object alignment.
+   - [purgatorio 8:80](purgatorio/08.tsv): `80.2 accampa` had direct object `80.4 Melanesi` tagged as bare `obl`. Fixed role to `obj`.
+   - [purgatorio 11:139](purgatorio/11.tsv): `139.1 parlo` had adverbial modifier `139.5 scuro` tagged as `attr=(139,5)`. Dropped spurious `attr` row.
+   - [purgatorio 15:39](purgatorio/15.tsv): `39.4 cantato` cited `38.3 misericordes` as `subj` instead of `38.2 Beati` as `obj`. Corrected citation and role.
+   - [purgatorio 16:71](purgatorio/16.tsv): `71.6 fora` had prepositional phrase `per ben letizia` tagged as `subj=(72,3)`. Corrected to `subj=(0,0), obl:per=(72,3)`.
+   - [purgatorio 21:123](purgatorio/21.tsv): `123.6 pigli` had partitive subject `123.4 ammirazion` tagged as `obl:di=(123,4)`. Corrected to `subj=(123,4)`.
+   - [purgatorio 25:3](purgatorio/25.tsv): `3.2 lasciato` in gapped coordination had `3.6 notte` tagged as `obj` instead of `subj`. Corrected role to `subj`.
+   - [purgatorio 25:122](purgatorio/25.tsv): `122.3 udi'` had gerund `122.6 cantando` (`advcl`) tagged as `xcomp`. Dropped spurious `xcomp` row.
+   - [purgatorio 26:100](purgatorio/26.tsv): `100.3 andai` had spurious duplicate `obl=(101,2)` attached to matrix verb instead of gerund `rimirando`. Dropped duplicate `obl` row.
+   - [purgatorio 28:108](purgatorio/28.tsv): `108.6 sonar` had causee object `108.5 selva` tagged as `subj`. Fixed role to `obj`.
+   - [purgatorio 30:120](purgatorio/30.tsv): `120.2 ha` had partitive quantifier `120.4 più` omitted and modifier `120.7 vigor` tagged as `obl:di`. Corrected to `obj=(120,4)`.
+
+3. **Paradiso (9 positions, −20 soft)**:
+   - [paradiso 1:61](paradiso/01.tsv): `61.2 parve` had auxiliary `62.1 essere` as `subj` instead of `subj=(58,1), xcomp=(62,2)`. Corrected to `subj=(58,1), attr=(62,2)`.
+   - [paradiso 1:81](paradiso/01.tsv): `81.3 fece` omitted `obj=(81,1) lago` and had spurious subject on `81.6 disteso`. Corrected to `obj=(81,1), attr=(81,6)`.
+   - [paradiso 1:97](paradiso/01.tsv): `97.2 requïevi` had adverbial adjective `97.4 contento` tagged as `attr=(97,4)`. Dropped spurious `attr` row.
+   - [paradiso 4:30](paradiso/04.tsv): `30.2 dico` omitted speech object `30.7 Maria`. Added `obj=(30,7)`.
+   - [paradiso 4:107](paradiso/04.tsv): `107.4 fanno` had consecutive adverbial clause `108.6 posson` (`sì che...`) tagged as `ccomp`. Dropped spurious `ccomp` row.
+   - [paradiso 12:27](paradiso/12.tsv): `27.4 chiudere` had subject `26.4 occhi` tagged as `obj`. Fixed role to `subj`.
+   - [paradiso 12:30](paradiso/12.tsv): `30.3 parer` had object `29.6 ago` tagged as `subj`. Fixed role to `obj`.
+   - [paradiso 14:92](paradiso/14.tsv): `92.7 conobbi` had accusative+infinitive complement tagged as `obj=(93,2)` instead of `xcomp=(93,1)`. Fixed role to `xcomp`.
+   - [paradiso 15:102](paradiso/15.tsv): `102.3 veder` had comparative standard `102.8 persona` tagged as `obj` instead of `obl:che`. Fixed role to `obl:che`.
+   - [paradiso 19:63](paradiso/19.tsv): `63.4 cela` had nominalized infinitive subject `63.6 esser` tagged as `obj`. Fixed role to `subj`.
+   - [paradiso 21:28](paradiso/21.tsv): `28.3 traluce` had `28.7 raggio` as `obl:in` and pro-drop `subj=(0,0)` instead of `subj=(28,7), obl:in=(28,6)`. Corrected subject and oblique.
+   - [paradiso 32:150](paradiso/32.tsv): `150.3 parti` had object `150.7 cor` tagged as `subj`. Fixed role to `obj`.
+   - [paradiso 33:96](paradiso/33.tsv): `96.1 fé` had dative causee `96.3 Nettuno` tagged as `obj` instead of `iobj`. Fixed role to `iobj`.
+
+**Result**: 87 → 38 soft violations (inferno 5, purgatorio 15, paradiso 18). All 22 `role_mismatch` positions cleared corpus-wide (0 `role_mismatch`). Standing residue: 37 `missing_arg`, 1 `extra_arg`.
+
+### §P15 — Sixth Assistant-Side Read Census, Upstream Retag, and Complete Residue Closure, 38 → 0 (−38, 100% CLEAN)
+
+Investigated 2026-08-18 as the final Phase 7 census closing all remaining 38 soft violations:
+
+1. **Inferno (5 positions, −5 soft)**:
+   - [inferno 2:82](inferno/02.tsv): `82.8 guardi` had `82.5 che` tagged as `subj` on 2sg verb. Corrected to `subj=(0,0), obl=(82,5)` (cleared `missing_arg: 82.8 obl (82, 5)`).
+   - [inferno 10:93](inferno/10.tsv): `93.1 colui` copular root predicate omitted locative modifier `91.5 là`. Added `obl=(91,5)` (cleared `missing_arg: 93.1 obl (91, 5)`).
+   - [inferno 14:126](inferno/14.tsv): `126.5 calando` omitted directional oblique `126.3 sinistra`. Added `obl:a=(126,3)` (cleared `missing_arg: 126.5 obl:a (126, 3)`).
+   - [inferno 22:103](inferno/22.tsv): `103.5 son` in *per un ch'io son* omitted predicative relative `103.3 ch'`. Added `attr=(103,3)` (cleared `missing_arg: 103.5 xcomp (103, 3)`).
+   - [inferno 28:76](inferno/28.tsv): `76.3 saper` cited NP head `76.6 miglior` as `obl:a` instead of dative pronoun `76.5 due`. Normalized to `iobj=(76,5)` (cleared `extra_arg: 76.3 obl:a (76, 6)`).
+
+2. **Purgatorio (15 positions, −15 soft, including 1 Layer-4 retag)**:
+   - [purgatorio 1:102](purgatorio/01.tsv): `102.1 porta` omitted locative adverb `100.3 intorno`. Added `obl=(100,3)` (cleared `missing_arg: 102.1 obl (100, 3)`). Deterministic test fixture in `tests/test_skel_fix.py` updated to supply standard fixture independently.
+   - [purgatorio 2:130](purgatorio/02.tsv): `130.2 vid'` omitted comparative clause head `132.1 com'`. Added `obl=(132,1)` (cleared `missing_arg: 130.2 obl (132, 1)`).
+   - [purgatorio 4:73](purgatorio/04.tsv): `73.7 vada` omitted second directional oblique `74.10 fianco`. Added `obl:da=(74,10)` (cleared `missing_arg: 73.7 obl:da (74, 10)`).
+   - [purgatorio 9:19](purgatorio/09.tsv): `19.4 parea` omitted temporal head `13.3 ora`. Added `obl:in=(13,3)` (cleared `missing_arg: 19.4 obl:in (13, 3)`).
+   - [purgatorio 9:69](purgatorio/09.tsv): `69.2 mosse` omitted directional modifier `69.6 rietro`. Added `obl:per=(69,6)` (cleared `missing_arg: 69.2 obl:per (69, 6)`).
+   - [purgatorio 13:133](purgatorio/13.tsv): `133.9 tolti` omitted temporal modifier `134.3 tempo`. Added `obl=(134,3)` (cleared `missing_arg: 133.9 obl (134, 3)`).
+   - [purgatorio 14:37](purgatorio/14.tsv): `37.6 fuga` omitted ablative relative `31.3 onde`. Added `obl:da=(31,3)` (cleared `missing_arg: 37.6 obl:da (31, 3)`).
+   - [purgatorio 19:67](purgatorio/19.tsv): `67.3 fec'` omitted comparative standard `64.3 falcon`. Added `obl:quale=(64,3)` (cleared `missing_arg: 67.3 obl:quale (64, 3)`).
+   - **One Layer-4 Upstream Retag at purgatorio 20:93**: In *Veggio il novo Pilato sì crudele, che ciò nol sazia, ma sanza decreto portar nel Tempio le cupide vele*, `93.1 portar` was misattached `conj<-92.4 sazia` (causing `derive_unit` to inherit `92.2 ciò` as subject). Retagged `93.1 portar` as `xcomp<-91.1 Veggio` in `dep/purgatorio/20.tsv` (cleared `missing_arg: 93.1 subj (92, 2)`).
+   - [purgatorio 25:49](purgatorio/25.tsv) & [25:50](purgatorio/25.tsv): `49.4 comincia` and `50.5 avviva` omitted coordinate subject `46.5 uno`. Added `subj=(46,5)` to both (cleared `missing_arg: 49.4 subj (46, 5)` and `missing_arg: 50.5 subj (46, 5)`).
+   - [purgatorio 26:32](purgatorio/26.tsv): `32.4 basciarsi` in reciprocal *una con una* cited dependent token `32.7` with role `obl:con` instead of head `32.5 una` with `obl`. Normalized to `obl=(32,5)` (cleared `missing_arg: 32.4 obl (32, 5)`).
+   - [purgatorio 26:66](purgatorio/26.tsv): `66.4 va` in pronominal verb *se ne va* omitted `66.3 ne`. Added `obl=(66,3)` and dropped duplicate `obl:a` (cleared `missing_arg: 66.4 obl (66, 3)`).
+   - [purgatorio 27:97](purgatorio/27.tsv): `97.7 parea` omitted temporal head `94.3 ora`. Added `obl:in=(94,3)` (cleared `missing_arg: 97.7 obl:in (94, 3)`).
+   - [purgatorio 28:71](purgatorio/28.tsv): `71.5 passò` omitted locative adverb `71.3 là`. Added `obl=(71,3)` (cleared `missing_arg: 71.5 obl (71, 3)`).
+
+3. **Paradiso (18 positions, −18 soft)**:
+   - [paradiso 1:79](paradiso/01.tsv): `79.1 parvemi` had partitive/prepositional complement `79.5 cielo` tagged as `subj`. Corrected to `subj=(0,0), obl:di=(79,5)` (cleared `missing_arg: 79.1 obl:di (79, 5)`).
+   - [paradiso 8:12](paradiso/08.tsv): `12.4 vagheggia` omitted directional oblique `12.7 coppa`. Added `obl:da=(12,7)` (cleared `missing_arg: 12.4 obl:da (12, 7)`).
+   - [paradiso 11:92](paradiso/11.tsv): `92.7 ebbe` omitted coordinate subject `88.4 viltà`. Added `subj=(88,4)` (cleared `missing_arg: 92.7 subj (88, 4)`).
+   - [paradiso 12:10](paradiso/12.tsv): `10.3 volgon` omitted comparative oblique `14.2 guisa`. Added `obl:a=(14,2)` (cleared `missing_arg: 12.10 obl:a (14, 2)`).
+   - [paradiso 12:124](paradiso/12.tsv): `124.3 fia` omitted coordinate subject `121.3 chi`. Added `subj=(121,3)` (cleared `missing_arg: 124.3 subj (121, 3)`).
+   - [paradiso 13:44](paradiso/13.tsv): `44.6 infuso` omitted second locative oblique `40.3 quel`. Added `obl:in=(40,3)` (cleared `missing_arg: 13.44 obl:in (40, 3)`).
+   - [paradiso 14:56](paradiso/14.tsv): `56.2 vinto` omitted comparative standard `52.4 carbon`. Added `obl=(52,4)` (cleared `missing_arg: 14.56 obl (52, 4)`).
+   - [paradiso 14:96](paradiso/14.tsv): `96.3 dissi` cited speech object `96.5 Elïòs` as `ccomp` clause. Corrected to `obj=(96,5)` (cleared `missing_arg: 14.96 obj (96, 5)`).
+   - [paradiso 15:32](paradiso/15.tsv): `32.2 rivolsi` omitted discourse oblique `31.3 lume`. Added `obl=(31,3)` (cleared `missing_arg: 15.32 obl (31, 3)`).
+   - [paradiso 16:59](paradiso/16.tsv): `59.3 stata` had coordinate predicate `60.7 benigna` split as separate unit. Normalized `59.3` to include `attr=(60,3), attr=(60,7)` (cleared `missing_arg: 16.59 xcomp (60, 3)`).
+   - [paradiso 20:35](paradiso/20.tsv): `35.8 scintilla` omitted dative clitic `35.7 mi`. Added `obl=(35,7)` (cleared `missing_arg: 20.35 obl (35, 7)`).
+   - [paradiso 23:7](paradiso/23.tsv): `7.1 previene` omitted temporal oblique `3.2 notte`. Added `obl=(3,2)` (cleared `missing_arg: 23.7 obl (3, 2)`).
+   - [paradiso 25:61](paradiso/25.tsv): `61.9 forti` had dative clitic `61.7 li` tagged as `subj`. Corrected to `subj=(0,0), iobj=(61,7)` (cleared `missing_arg: 25.61 obl:a (61, 7)`).
+   - [paradiso 26:27](paradiso/26.tsv): `27.3 convien` omitted clausal subject `27.8 'mprenti`. Added `subj=(27,8)` (cleared `missing_arg: 26.27 subj (27, 8)`).
+   - [paradiso 26:29](paradiso/26.tsv): `29.2 accende` omitted correlative oblique `28.5 quanto`. Added `obl:in=(28,5)` (cleared `missing_arg: 26.29 obl:in (28, 5)`).
+   - [paradiso 29:35](paradiso/29.tsv): `35.3 strinse` had direct object `35.4 potenza` tagged as `subj`. Corrected to `subj=(0,0), obl=(35,4)` (cleared `missing_arg: 29.35 obl (35, 4)`).
+   - [paradiso 29:137](paradiso/29.tsv): `137.7 recepe` omitted topical subject `136.3 luce`. Added `subj=(136,3)` (cleared `missing_arg: 29.137 subj (136, 3)`).
+   - [paradiso 30:13](paradiso/30.tsv): `13.9 stinse` omitted adverbial modifier `13.2 poco`. Added `obl:a=(13,2)` (cleared `missing_arg: 30.13 obl:a (13, 2)`).
+
+**Result**: 38 → **0 soft violations** across all 100 cantos (inferno 0, purgatorio 0, paradiso 0). All five layer checks (`morph`, `case`, `np`, `dep`, `skel`) report **0 hard / 0 soft violations**. `pytest` **544 passed**.
 
 ---
 

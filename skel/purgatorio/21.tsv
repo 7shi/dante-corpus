@@ -374,9 +374,8 @@ line	token	word	role	arg_line	arg_token
 122	7	fei	obj	122	5
 123	5	vo'	subj	121	5
 123	5	vo'	ccomp	123	8
-123	8	pigli	subj	0	0
+123	8	pigli	subj	123	4
 123	8	pigli	obj	123	7
-123	8	pigli	obl:di	123	4
 124	3	guida	subj	124	2
 124	3	guida	obj	124	7
 124	3	guida	obl:in	124	5

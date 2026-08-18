@@ -312,6 +312,7 @@ line	token	word	role	arg_line	arg_token
 108	4	pare	subj	108	3
 108	4	pare	obl:da	108	7
 109	2	cominciai	subj	109	1
+109	2	cominciai	obj	109	7
 110	4	dissi	subj	109	1
 110	10	corse	subj	111	2
 110	10	corse	iobj	110	9

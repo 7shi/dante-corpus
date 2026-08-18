@@ -219,6 +219,7 @@ line	token	word	role	arg_line	arg_token
 70	4	facea	obl	70	2
 70	7	lontani	subj	70	3
 71	5	passò	subj	71	6
+71	5	passò	obl	71	3
 71	5	passò	obl	71	4
 72	2	freno	subj	71	2
 72	2	freno	obl:a	72	5
@@ -326,7 +327,7 @@ line	token	word	role	arg_line	arg_token
 107	7	percuote	obl:in	106	3
 108	2	fa	subj	107	6
 108	2	fa	xcomp	108	3
-108	3	sonar	subj	108	5
+108	3	sonar	obj	108	5
 108	8	folta	subj	0	0
 109	6	puote	subj	109	4
 110	8	impregna	subj	0	0

@@ -285,6 +285,7 @@ line	token	word	role	arg_line	arg_token
 96	8	ardente	subj	96	1
 96	8	ardente	obl:di	96	3
 97	7	parea	iobj	97	6
+97	7	parea	obl:in	94	3
 97	7	parea	obl:in	97	5
 98	2	vedere	subj	0	0
 98	2	vedere	obj	98	1

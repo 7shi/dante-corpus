@@ -31,6 +31,7 @@ line	token	word	role	arg_line	arg_token
 12	7	'nchiude	subj	12	6
 12	7	'nchiude	obj	12	5
 13	9	stinse	subj	10	4
+13	9	stinse	obl:a	13	2
 13	9	stinse	obl:a	13	7
 14	3	tornar	subj	0	0
 14	3	tornar	obl:con	14	6

@@ -238,7 +238,7 @@ line	token	word	role	arg_line	arg_token
 79	3	farà	obj	79	6
 79	3	farà	iobj	79	2
 80	5	accampa	subj	80	3
-80	5	accampa	obl	80	4
+80	5	accampa	obj	80	4
 81	3	fatto	subj	81	5
 82	2	dicea	subj	0	0
 82	3	segnato	subj	0	0

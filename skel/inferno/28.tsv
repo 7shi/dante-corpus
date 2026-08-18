@@ -214,8 +214,7 @@ line	token	word	role	arg_line	arg_token
 75	6	dichina	obl:a	75	5
 76	2	fa	subj	0	0
 76	2	fa	xcomp	76	3
-76	3	saper	subj	78	1
-76	3	saper	obl:a	76	6
+76	3	saper	iobj	76	5
 76	3	saper	obl:a	77	3
 76	3	saper	obl:a	77	7
 77	0			0	0

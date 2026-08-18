@@ -29,6 +29,7 @@ line	token	word	role	arg_line	arg_token
 11	1	pigliavano	obl:da	10	3
 12	4	vagheggia	subj	12	3
 12	4	vagheggia	obj	12	1
+12	4	vagheggia	obl:da	12	7
 13	4	accorsi	subj	13	1
 13	4	accorsi	obl:di	13	6
 14	6	fé	subj	15	2

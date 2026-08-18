@@ -115,6 +115,7 @@ line	token	word	role	arg_line	arg_token
 44	1	aver	obj	44	3
 44	6	infuso	subj	44	4
 44	6	infuso	obl:in	37	5
+44	6	infuso	obl:in	40	3
 44	6	infuso	obl:da	45	3
 45	10	fece	subj	45	4
 45	10	fece	obj	45	6

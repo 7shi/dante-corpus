@@ -178,9 +178,10 @@ line	token	word	role	arg_line	arg_token
 58	8	traligna	obl:a	58	6
 59	3	stata	subj	58	3
 59	3	stata	attr	59	6
+59	3	stata	attr	60	3
+59	3	stata	attr	60	7
 59	3	stata	obl:a	59	5
-60	7	benigna	subj	0	0
-60	7	benigna	obl:a	60	6
+60	0			0	0
 61	3	è	subj	61	2
 61	3	è	attr	61	4
 61	4	fiorentino	subj	61	2

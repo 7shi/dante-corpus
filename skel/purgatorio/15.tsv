@@ -107,7 +107,7 @@ line	token	word	role	arg_line	arg_token
 37	4	partiti	subj	37	1
 37	4	partiti	obl:di	37	6
 38	0			0	0
-39	1	cantato	subj	38	3
+39	1	cantato	obj	38	2
 39	4	Godi	subj	39	5
 39	7	vinci	subj	39	6
 40	0			0	0

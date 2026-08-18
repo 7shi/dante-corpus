@@ -55,8 +55,7 @@ line	token	word	role	arg_line	arg_token
 18	5	ha	obl:per	18	4
 19	3	fec'	subj	19	4
 19	3	fec'	obj	19	2
-20	1	incontra	subj	0	0
-20	1	incontra	obj	21	4
+20	1	incontra	subj	21	4
 20	3	rispuose	subj	19	6
 20	3	rispuose	iobj	20	2
 21	1	faccia	subj	20	4
