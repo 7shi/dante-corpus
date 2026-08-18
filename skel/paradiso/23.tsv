@@ -298,7 +298,6 @@ line	token	word	role	arg_line	arg_token
 107	2	seguirai	obj	107	4
 107	6	farai	subj	0	0
 107	6	farai	xcomp	107	7
-107	7	dia	subj	108	3
 107	7	dia	obj	108	3
 108	7	entre	subj	0	0
 109	0			0	0

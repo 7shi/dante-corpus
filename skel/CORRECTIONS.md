@@ -1,5 +1,15 @@
 # skel — Layer 5 correction history
 
+## The Final Three `dual_role` Positions in Paradiso, 129 → 126 (−3, `dual_role` 3 → 0) (2026-08-18)
+
+Investigated per Phase 7 Work Queue item 4. The 3 standing artifact-internal contradictions reported by rule EG were resolved by dropping the duplicate contradictory rows:
+
+- [paradiso 23:107](paradiso/23.tsv): `107.7 dia` had both `subj` and `obj` on `(108, 3) spera`. An adjective predicate takes a subject, not an object. Dropping the duplicate `subj` row and keeping `obj` aligned with derivation cleared the position cleanly.
+- [paradiso 29:105](paradiso/29.tsv): `105.4 gridan` had both `subj` and `obj` on `(104, 4) favole` (in a passive `si` construction). Dropping the duplicate `subj` row cleared the position cleanly.
+- [paradiso 31:124](paradiso/31.tsv): `124.6 aspetta` had both `subj` and `obj` on `(124, 8) temo` (passive `si` construction). Dropping the duplicate `subj` row cleared the position cleanly.
+
+`dual_role` is now **0 across the entire corpus** (down from 56 at rule EG's introduction). Layer 5 soft violations stand at **126** (all divergence residue, 0 artifact-internal contradictions).
+
 ## The Eight `missing_tuple_nominal` Positions and Subject Splice Guard, 137 → 129 (−8) (2026-08-18)
 
 Investigated per Phase 7 Work Queue item 3: `missing_tuple_nominal` had failed identically across all `--fix` rounds on the exact same 8 positions.

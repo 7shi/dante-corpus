@@ -325,7 +325,6 @@ line	token	word	role	arg_line	arg_token
 123	1	vincer	obj	123	7
 123	1	vincer	obl:in	122	8
 123	1	vincer	obl:di	123	3
-124	6	aspetta	subj	124	8
 124	6	aspetta	obj	124	8
 125	3	guidò	subj	125	1
 125	3	guidò	obj	125	4

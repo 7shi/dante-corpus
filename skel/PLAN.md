@@ -2,12 +2,12 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 129 soft** violations across all 100
-  cantos — **126 divergence positions + 3 `dual_role`** (rule EG's artifact-internal contradiction).
-  Per canticle: inferno 33, purgatorio 44, paradiso 52. Base as of 2026-08-18, after the eight
-  `missing_tuple_nominal` positions and subject splice guard (137 → 129, §P5), refusal census reads &
-  Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2)
-  and the eighth `--fix` round (160 → 154, §P1).
+- **Current State**: `make -C skel check` reports **0 hard, 126 soft** violations across all 100
+  cantos — **all 126 divergence positions + 0 `dual_role`** (rule EG's artifact-internal contradiction is closed).
+  Per canticle: inferno 33, purgatorio 44, paradiso 49. Base as of 2026-08-18, after resolving the final
+  three `dual_role` positions in Paradiso (129 → 126, §P6), the eight `missing_tuple_nominal` positions
+  and subject splice guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4),
+  the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **543 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -80,11 +80,11 @@ route** (see *Open Assistant-Side Routes*).
 3. ~~**Two systematic *failure* shapes**~~ — **settled 2026-08-18, §P5**:
    - `missing_tuple_nominal` prompt defect resolved across all 8 positions (−8 soft, 137 → 129).
    - `missing_arg_subject` splice guard implemented in `_apply_missing_arg` (tested in `tests/test_skel_fix.py`).
-4. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
-   contains without reference to `derive_unit`. Rule EG found 56 such positions, **52 of them on lines
-   `--check` was silent about**, which is why 21 read batches walked past them. Settle the 3 standing
-   `dual_role` positions in Paradiso (paradiso 23:107, 29:105, 31:124).
-5. **The standing open routes** below, which the reads named but did not settle.
+4. ~~**Settle standing `dual_role` positions**~~ — **settled 2026-08-18, §P6**: all 3 standing
+   `dual_role` positions in Paradiso resolved (`dual_role` is now 0 corpus-wide, 129 → 126).
+5. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
+   contains without reference to `derive_unit`.
+6. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
 
@@ -541,6 +541,15 @@ All 8 positions were verbless speech introductions (`E io: «…»`, `per ch'io:
 - Added unit tests in `tests/test_skel_fix.py` (`test_apply_missing_arg_subject_splice_guard`). `pytest` **543 passed**.
 
 **Result**: 137 → 129 soft violations (inferno 33, purgatorio 44, paradiso 52). Divergence residue **126**, `dual_role` **3**.
+
+### §P6 — Final Three `dual_role` Positions in Paradiso, 129 → 126 (−3, `dual_role` 3 → 0)
+
+Investigated 2026-08-18 per Phase 7 Work Queue item 4. The 3 remaining `dual_role` positions across the entire corpus were resolved:
+- [paradiso 23:107](paradiso/23.tsv): `107.7 dia` had both `subj` and `obj` on `(108, 3) spera`. Dropped duplicate `subj` row and kept `obj` aligned with derivation.
+- [paradiso 29:105](paradiso/29.tsv): `105.4 gridan` had both `subj` and `obj` on `(104, 4) favole` (passive `si`). Dropped duplicate `subj` row.
+- [paradiso 31:124](paradiso/31.tsv): `124.6 aspetta` had both `subj` and `obj` on `(124, 8) temo` (passive `si`). Dropped duplicate `subj` row.
+
+`dual_role` is now **0 across the entire corpus** (56 → 0). Total Layer 5 soft violations stand at **126** (all divergence residue).
 
 ---
 
