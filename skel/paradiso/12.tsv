@@ -253,7 +253,6 @@ line	token	word	role	arg_line	arg_token
 91	2	dispensare	obl:per	91	8
 92	0			0	0
 93	4	sunt	subj	93	3
-93	4	sunt	obl:di	93	5
 94	1	addimandò	subj	0	0
 94	1	addimandò	obj	95	1
 94	1	addimandò	xcomp	91	2

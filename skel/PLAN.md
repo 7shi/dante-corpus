@@ -2,16 +2,17 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 96 soft** violations across all 100
-  cantos — **all 96 standard argument divergence positions** (all structural outliers and artifact-internal
+- **Current State**: `make -C skel check` reports **0 hard, 91 soft** violations across all 100
+  cantos — **all 91 standard argument divergence positions** (all structural outliers and artifact-internal
   contradictions closed: 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`).
-  Per canticle: inferno 28, purgatorio 30, paradiso 38. Base as of 2026-08-18, after the second assistant-side
-  read census on `extra_arg` & `missing_arg` positions (104 → 96, §P11), the first read census on `extra_arg`
-  positions (112 → 104, §P10), Round 10 log audits & driver fix (116 → 112, §P9), the tenth `--fix` round
-  (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7), the final three
-  `dual_role` positions (129 → 126, §P6), the eight `missing_tuple_nominal` positions and subject splice
-  guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix`
-  round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
+  Per canticle: inferno 28, purgatorio 30, paradiso 33. Base as of 2026-08-18, after the third assistant-side
+  read census on Paradiso positions (96 → 91, §P12), the second read census on `extra_arg` & `missing_arg`
+  positions (104 → 96, §P11), the first read census on `extra_arg` positions (112 → 104, §P10), Round 10 log
+  audits & driver fix (116 → 112, §P9), the tenth `--fix` round (119 → 116, §P8), resolving the seven structural
+  outlier positions (126 → 119, §P7), the final three `dual_role` positions (129 → 126, §P6), the eight
+  `missing_tuple_nominal` positions and subject splice guard (137 → 129, §P5), refusal census reads &
+  Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2)
+  and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **544 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -98,9 +99,11 @@ route** (see *Open Assistant-Side Routes*).
    `purgatorio 10:60`, `paradiso 7:25`, `paradiso 14:136`, `paradiso 17:116`, `paradiso 3:59`).
 9. ~~**Second assistant-side read census across extra_arg and missing_arg positions**~~ — **settled 2026-08-18, §P11**: 104 → 96 (−8, −7.7%).
    Seven positions resolved (`inferno 8:93`, `inferno 32:7`, `inferno 16:94`, `purgatorio 27:10`, `purgatorio 24:107`, `purgatorio 10:30`, `purgatorio 15:32`).
-10. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
+10. ~~**Third assistant-side read census across Paradiso positions**~~ — **settled 2026-08-18, §P12**: 96 → 91 (−5, −5.2%).
+    Four positions resolved (`paradiso 12:93`, `paradiso 28:20`, `paradiso 11:21`, `paradiso 21:5`).
+11. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
     contains without reference to `derive_unit`.
-11. **The standing open routes** below, which the reads named but did not settle.
+12. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
 
@@ -680,6 +683,17 @@ Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `
 7. [purgatorio 15:32](purgatorio/15.tsv): `32.6 fieti` in *ma fieti diletto quanto natura…* had adverbial `quanto` cited as subject and `diletto` as `attr` and predicate. Normalized `fieti` to `subj=(32,7)` (`diletto`) and dropped non-predicate `32.7 diletto` rows (cleared `extra_arg: 32.6 subj (33, 1)`).
 
 **Result**: 104 → 96 soft violations (inferno 28, purgatorio 30, paradiso 38). All 96 are standard argument divergence positions (`missing_arg` 52, `extra_arg` 23, `role_mismatch` 21).
+
+### §P12 — Third Assistant-Side Read Census Across Paradiso Positions, 96 → 91 (−5, −5.2%)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` and `missing_arg` positions in Paradiso. Dropped spurious rows, supplied missing arguments, and normalized predications across 4 positions:
+
+1. [paradiso 12:93](paradiso/12.tsv): `93.4 sunt` in Latin genitive of possession *non decimas, quae sunt pauperum Dei* had spurious `obl:di=(93,5)` (`pauperum`). Dropped `93 4 sunt obl:di 93 5` (cleared `extra_arg: 93.4 obl:di (93, 5)`).
+2. [paradiso 28:20](paradiso/28.tsv): `20.3 locata` in *parrebbe luna, locata con esso* had complement noun `luna` cited as its subject and as a non-derived predicate. Dropped `20 2 luna` predicate and `20 3 locata subj 20 2` (cleared `extra_arg: 20.3 subj (20, 2)`).
+3. [paradiso 11:21](paradiso/11.tsv): `21.6 apprendo` in *li tuoi pensieri onde cagioni apprendo* cited case marker `21.4 onde` as `obl:di` token instead of head noun `21.3 pensieri` with role `obl:onde`. Fixed to `obl:onde=(21,3)` (cleared `missing_arg: 21.6 obl:onde (21, 3)` and `extra_arg: 21.6 obl:di (21, 4)`, −2 soft).
+4. [paradiso 21:5](paradiso/21.tsv): `5.5 faresti` in correlative comparison *tu ti faresti quale fu Semelè…* had `5.6 quale` cited as `attr` and as a separate predicate. Dropped `5 5 faresti attr 5 6` and `5 6 quale` predicate (cleared `extra_arg: 5.5 xcomp (5, 6)`).
+
+**Result**: 96 → 91 soft violations (inferno 28, purgatorio 30, paradiso 33). All 91 are standard argument divergence positions (`missing_arg` 51, `extra_arg` 19, `role_mismatch` 21).
 
 ---
 

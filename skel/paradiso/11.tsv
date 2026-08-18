@@ -54,7 +54,7 @@ line	token	word	role	arg_line	arg_token
 20	2	riguardando	obl:in	20	5
 21	6	apprendo	subj	0	0
 21	6	apprendo	obj	21	5
-21	6	apprendo	obl:di	21	4
+21	6	apprendo	obl:onde	21	3
 22	2	dubbi	subj	22	1
 22	4	hai	subj	22	1
 22	4	hai	obj	22	5

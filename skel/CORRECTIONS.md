@@ -1,5 +1,16 @@
 # skel — Layer 5 correction history
 
+## Four Paradiso Positions Resolved via Assistant-Side Read Census, 96 → 91 (−5) (2026-08-18)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` and `missing_arg` positions in Paradiso (see [`PLAN.md`](../PLAN.md) §P12). Dropped spurious rows, supplied missing arguments, and normalized predications across 4 positions:
+
+1. [paradiso 12:93](paradiso/12.tsv): `93.4 sunt` in Latin genitive of possession *non decimas, quae sunt pauperum Dei* had spurious `obl:di=(93,5)` (`pauperum`). Dropped `93 4 sunt obl:di 93 5` (cleared `extra_arg: 93.4 obl:di (93, 5)`).
+2. [paradiso 28:20](paradiso/28.tsv): `20.3 locata` in *parrebbe luna, locata con esso* had complement noun `luna` cited as its subject and as a non-derived predicate. Dropped `20 2 luna` predicate and `20 3 locata subj 20 2` (cleared `extra_arg: 20.3 subj (20, 2)`).
+3. [paradiso 11:21](paradiso/11.tsv): `21.6 apprendo` in *li tuoi pensieri onde cagioni apprendo* cited case marker `21.4 onde` as `obl:di` token instead of head noun `21.3 pensieri` with role `obl:onde`. Fixed to `obl:onde=(21,3)` (cleared `missing_arg: 21.6 obl:onde (21, 3)` and `extra_arg: 21.6 obl:di (21, 4)`, −2 soft).
+4. [paradiso 21:5](paradiso/21.tsv): `5.5 faresti` in correlative comparison *tu ti faresti quale fu Semelè…* had `5.6 quale` cited as `attr` and as a separate predicate. Dropped `5 5 faresti attr 5 6` and `5 6 quale` predicate (cleared `extra_arg: 5.5 xcomp (5, 6)`).
+
+Layer 5 soft violations stand at **91** (inferno 28, purgatorio 30, paradiso 33).
+
 ## Seven Divergence Positions Resolved via Assistant-Side Read Census, 104 → 96 (−8) (2026-08-18)
 
 Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` and `missing_arg` positions (see [`PLAN.md`](../PLAN.md) §P11). Dropped spurious rows, supplied missing arguments, and normalized predications across 7 positions:
