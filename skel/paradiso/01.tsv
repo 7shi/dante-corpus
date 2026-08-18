@@ -241,7 +241,7 @@ line	token	word	role	arg_line	arg_token
 79	1	parvemi	subj	79	5
 79	1	parvemi	obl:di	80	3
 80	0			0	0
-81	3	fece	subj	81	4
+81	3	fece	subj	80	7
 81	3	fece	xcomp	81	6
 81	6	disteso	subj	81	4
 82	0			0	0

@@ -2,14 +2,14 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 119 soft** violations across all 100
-  cantos — **all 119 standard argument divergence positions** (all structural outliers and artifact-internal
+- **Current State**: `make -C skel check` reports **0 hard, 116 soft** violations across all 100
+  cantos — **all 116 standard argument divergence positions** (all structural outliers and artifact-internal
   contradictions closed: 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`).
-  Per canticle: inferno 32, purgatorio 39, paradiso 48. Base as of 2026-08-18, after resolving the seven
-  structural outlier positions (126 → 119, §P7), the final three `dual_role` positions (129 → 126, §P6),
-  the eight `missing_tuple_nominal` positions and subject splice guard (137 → 129, §P5), refusal census reads &
-  Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2)
-  and the eighth `--fix` round (160 → 154, §P1).
+  Per canticle: inferno 32, purgatorio 38, paradiso 46. Base as of 2026-08-18, after the tenth
+  `--fix` round (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7),
+  the final three `dual_role` positions (129 → 126, §P6), the eight `missing_tuple_nominal` positions
+  and subject splice guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4),
+  the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **543 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -17,8 +17,8 @@
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
   cost). Full record, per-round tables, the read series and the routes it closed are in
   [`PHASE6.md`](PHASE6.md).
-- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. Two
-  rounds run (§P1 160 → 154, §P3 150 → 140) and one refusal-census read landed (§P2, 154 → 150, rule EI);
+- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. Three
+  rounds run (§P1 160 → 154, §P3 150 → 140, §P8 119 → 116) and one refusal-census read landed (§P2, 154 → 150, rule EI);
   the work is checker-side from here, off that census.
 - **Section references**: a bare **§N** points to [`PHASE6.md`](PHASE6.md)'s chronological record
   (§1–§31, the seven rounds and nineteen read batches). Phase 7's own write-ups are numbered **§P1,
@@ -36,8 +36,8 @@ or a reading disagreement worth reporting — and each of those has a different 
 rounds.** Outside `dual_role`, a model call is worth **0.081** violations (§30 in
 [`PHASE6.md`](PHASE6.md)), and 51 of the standing 152 divergence positions have survived three rounds
 each. A round over the standing residue is expected to take 12–20 positions and to introduce nothing
-new to read. **The eighth and ninth rounds confirmed this below that floor** (§P1, §P3): 142 calls for 6
-positions and 135 calls for 10 positions (0.054/call combined), with ~42-44% of calls being refusals.
+new to read. **The eighth, ninth, and tenth rounds confirmed this below that floor** (§P1, §P3, §P8): 142 calls for 6
+positions, 135 calls for 10 positions, and 106 calls for 3 positions (0.049/call combined), with ~42-45% of calls being refusals.
 Rounds are not the instrument any more. **And the instrument that replaces them paid on its first batch**
 (§P2): the 8 `arg_slot` refusals read out to 3 checker- or upstream-side findings and **−4 at zero
 model cost**.
@@ -86,8 +86,8 @@ route** (see *Open Assistant-Side Routes*).
    `dual_role` positions in Paradiso resolved (`dual_role` is now 0 corpus-wide, 129 → 126).
 5. ~~**Settle seven structural outlier positions**~~ — **settled 2026-08-18, §P7**: `extra_tuple` (3),
    `missing_tuple` (2), `argument heads no NP` (2) all resolved (126 → 119).
-6. **The tenth `--fix` round, `--no-whole --log`** — user-run with `uv run skel/skel.py inferno purgatorio paradiso --fix --no-whole --log`
-   from the 119 base (all structural outliers and internal contradictions 0).
+6. ~~**The tenth `--fix` round, `--no-whole --log`**~~ — **run 2026-08-18, §P8**: 119 → 116 (−3, −2.5%,
+   106 calls, 48 refusals). Cleared `paradiso 1:81` (`arg_slot`, 2 removed) and `purgatorio 21:36` (`missing_arg`, 1 removed).
 7. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`.
 8. **The standing open routes** below, which the reads named but did not settle.
@@ -575,6 +575,52 @@ Investigated 2026-08-18 as Phase 7 outlier census. All 7 structural outlier posi
    - [paradiso 21:54](paradiso/21.tsv): Article `54.5 'l` was cited as object of nominalized infinitive `chieder`. Dropped spurious `chieder` predicate.
 
 **Result**: 126 → 119 soft violations (inferno 32, purgatorio 39, paradiso 48). All 119 are standard argument divergence positions (`missing_arg` 54, `extra_arg` 43, `role_mismatch` 22).
+
+### §P8 — Tenth `--fix` round, 119 → 116 (−3, −2.5%), refusal census stable at 45.3%
+
+Run by the user 2026-08-18, three ways in parallel with `--no-whole --log`, per Phase 7 Work Queue item 6.
+**119 → 116 soft, 0 hard**; per canticle inferno 32 (±0), purgatorio 38 (−1), paradiso 46 (−2).
+Divergence residue **116** (0 `dual_role`, 0 structural outliers). Violation diff against base:
+**exactly the 3 lines removed, 0 newly flagged, 0 regressed** — the tenth consecutive round with a
+clean diff. 96 units flagged, 3 cleared, per-unit yield **0.031**. `pytest` **543**, `skel/*.tsv` only (2 files: `paradiso/01.tsv`, `purgatorio/21.tsv`).
+
+The three lines removed:
+- [paradiso 1:81](paradiso/01.tsv) `missing_arg: 81.3 subj (80, 7)`
+- [paradiso 1:81](paradiso/01.tsv) `extra_arg: 81.3 subj (81, 4)`
+- [purgatorio 21:36](purgatorio/21.tsv) `missing_arg: 36.1 obl:a (35, 9)`
+
+**Per-class table, the three logs summed** (106 calls):
+
+| class | calls | removed | per call | refused |
+| --- | --- | --- | --- | --- |
+| `arg_slot` | 4 | 2 | **0.500** | 3 (75.0%) |
+| `missing_arg` | 33 | 1 | 0.030 | 10 (30.3%) |
+| `extra_arg` | 21 | 0 | 0.000 | 12 (57.1%) |
+| `extra_arg_subject` | 11 | 0 | 0.000 | 9 (81.8%) |
+| `role_mismatch` | 19 | 0 | 0.000 | 11 (57.9%) |
+| `missing_arg_subject` | 8 | 0 | 0.000 | 0 |
+| `missing_arg_adverb` | 7 | 0 | 0.000 | 3 (42.9%) |
+| `extra_arg_adjective` | 3 | 0 | 0.000 | 0 |
+| **TOTAL** | **106** | **3** | **0.028** | **48 (45.3%)** |
+
+**Key findings and observations:**
+
+1. **`arg_slot` cleared the subject of `fece` at paradiso 1:81**:
+   - The model identified `80.7 pioggia` as subject of `81.3 fece` (and `81.4 alcun` as subject of `disteso`),
+     clearing both `missing_arg` and `extra_arg` on that slot in a single call.
+2. **`missing_arg` cleared purgatorio 21:36**:
+   - Supplied `obl:a (35, 9)` for `36.1 parve`, aligning the addressee oblique with the derivation.
+3. **Refusal rate remains stable across three rounds**:
+   - Round 8: 43.7%, Round 9: 41.5%, Round 10: **45.3%** (48 of 106 calls). The high refusal rate confirms
+     that the standing residue represents settled reading disagreements rather than actionable prompt errors.
+4. **Subject splice guard verified in production**:
+   - All 8 `missing_arg_subject` calls were rejected as `no usable answer` (due to pro-drop `0.0` responses
+     being blocked by the splice guard) or not accepted due to violation count, preventing duplicate `(0, 0)`
+     subject insertions.
+5. **Field notes**: 1 note across 106 calls (inferno 10:91).
+
+**Result**: 119 → 116 soft violations (inferno 32, purgatorio 38, paradiso 46). All 116 are standard argument
+divergence positions (`missing_arg` 53, `extra_arg` 41, `role_mismatch` 22).
 
 ---
 

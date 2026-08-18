@@ -103,6 +103,7 @@ line	token	word	role	arg_line	arg_token
 35	1	diè	obl	35	2
 36	1	parve	subj	35	4
 36	1	parve	xcomp	36	2
+36	1	parve	obl:a	35	9
 36	1	parve	obl:a	36	6
 36	2	gridare	subj	35	4
 37	3	diè	subj	0	0
