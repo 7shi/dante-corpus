@@ -35,9 +35,21 @@
 >
 > ### What the next session does
 >
-> 1. **The standing open routes** in [`skel/PLAN.md`](skel/PLAN.md) (copula/predicative nominals, coordination/coreference).
-> 2. **Artifact-internal checks**: look for more checks of rule EG's shape.
-> 3. **The standing populations**: `missing_arg_adverb` (7 in log, 21 censused), `extra_arg_adjective` (3 in log, 19 censused).
+> 1. **Continue Assistant-Side Read Census on Standing 87 Divergence Positions (drive soft to 0)**:
+>    - **`role_mismatch` (22 positions)**:
+>      - `'obj' vs 'subj'` (6 positions): `inferno 3:76`, `inferno 4:27`, `inferno 17:89`, `purgatorio 25:3`, `paradiso 12:27`, `paradiso 19:63`
+>      - `'subj' vs 'obj'` (6 positions): `inferno 4:27`, `inferno 17:11`, `inferno 17:89`, `purgatorio 5:14`, `purgatorio 28:108`, `paradiso 12:30`
+>      - `'subj' vs 'xcomp'` (2 positions): `purgatorio 2:120`, `paradiso 1:61`
+>      - Others: `inferno 33:102` (`obl:di` vs `obj`), `inferno 34:43` (`xcomp` vs `obl:tra`), `purgatorio 8:80` (`obl` vs `obj`), `purgatorio 16:71` (`subj` vs `obl:per`), `paradiso 14:92` (`obj` vs `xcomp`), `paradiso 15:102` (`obj` vs `obl:che`), `paradiso 21:28` (`obl:in` vs `subj`), `paradiso 33:96` (`obj` vs `obl:a`)
+>    - **`extra_arg` (15 positions)**:
+>      - `subj ∅ (0,0)` (5 positions): `inferno 3:76`, `inferno 9:20`, `inferno 15:99`, `purgatorio 21:123`, `paradiso 21:28`
+>      - `subj` named (4 positions): `inferno 5:92`, `inferno 24:10` (2x), `paradiso 1:81`
+>      - `xcomp` (3 positions): `purgatorio 11:139`, `purgatorio 25:122`, `paradiso 1:97`
+>      - Others: `inferno 28:76` (`obl:a`), `purgatorio 26:100` (`obl`), `paradiso 4:107` (`ccomp`)
+>    - **`missing_arg` (50 positions)**:
+>      - `missing_arg: obl` (13 positions), `missing_arg: subj` (12 positions), `missing_arg: obj` (8 positions), `missing_arg: obl:in` (5 positions), `missing_arg: obl:a` (4 positions), `missing_arg: obl:da` (3 positions), `missing_arg: xcomp` (2 positions), `missing_arg: obl:per / obl:quale / obl:di` (3 positions)
+> 2. **Artifact-internal checks**: look for more checks of rule EG's shape (contradictions within the artifact without reference to `derive_unit`).
+> 3. **The standing open routes** in [`skel/PLAN.md`](skel/PLAN.md) (copula/predicative nominals, coordination/coreference).
 >
 > **Not queued, deliberately**: prompt changes, widening field notes, or restructuring `dante_corpus/skel.py`.
 >
