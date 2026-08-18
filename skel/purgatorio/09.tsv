@@ -280,8 +280,7 @@ line	token	word	role	arg_line	arg_token
 96	4	specchiai	obl:in	96	6
 96	9	paio	subj	96	8
 96	9	paio	attr	96	7
-97	7	perso	subj	97	3
-97	7	perso	obl:di	98	3
+97	1	Era	attr	97	7
 98	0			0	0
 99	1	crepata	subj	98	3
 99	1	crepata	obl:per	99	4

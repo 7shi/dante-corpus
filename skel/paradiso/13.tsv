@@ -107,7 +107,6 @@ line	token	word	role	arg_line	arg_token
 40	5	forato	subj	40	4
 40	5	forato	obl:da	40	8
 41	6	sodisfece	subj	40	4
-42	5	vince	subj	42	7
 42	5	vince	obj	42	7
 42	5	vince	obl:di	42	4
 43	6	lece	subj	44	1

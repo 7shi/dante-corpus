@@ -412,7 +412,6 @@ line	token	word	role	arg_line	arg_token
 138	7	offerse	subj	136	2
 138	7	offerse	obj	138	1
 138	7	offerse	obl:a	138	4
-139	7	divise	subj	140	2
 139	7	divise	obj	140	2
 139	7	divise	obl	139	3
 139	7	divise	obl:da	139	5

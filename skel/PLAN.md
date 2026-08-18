@@ -2,10 +2,11 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 150 soft** violations across all 100
-  cantos — **144 divergence positions + 6 `dual_role`** (rule EG's artifact-internal contradiction).
-  Per canticle: inferno 42, purgatorio 54, paradiso 54. Base as of 2026-08-18, after rule EI
-  (154 → 150, §P2) and the eighth `--fix` round before it (160 → 154, §P1).
+- **Current State**: `make -C skel check` reports **0 hard, 140 soft** violations across all 100
+  cantos — **137 divergence positions + 3 `dual_role`** (rule EG's artifact-internal contradiction).
+  Per canticle: inferno 42, purgatorio 46, paradiso 52. Base as of 2026-08-18, after the ninth
+  `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round before it
+  (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **542 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -13,9 +14,9 @@
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
   cost). Full record, per-round tables, the read series and the routes it closed are in
   [`PHASE6.md`](PHASE6.md).
-- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. One
-  round run (§P1, 160 → 154) and one refusal-census read landed (§P2, 154 → 150, rule EI); the work
-  is checker-side from here, off that census.
+- **Phase 7 (current)**: **drive soft to 0, and when a fix fails, find out why.** See below. Two
+  rounds run (§P1 160 → 154, §P3 150 → 140) and one refusal-census read landed (§P2, 154 → 150, rule EI);
+  the work is checker-side from here, off that census.
 - **Section references**: a bare **§N** points to [`PHASE6.md`](PHASE6.md)'s chronological record
   (§1–§31, the seven rounds and nineteen read batches). Phase 7's own write-ups are numbered **§P1,
   §P2, …** in *Phase 7 Record* below.
@@ -32,11 +33,11 @@ or a reading disagreement worth reporting — and each of those has a different 
 rounds.** Outside `dual_role`, a model call is worth **0.081** violations (§30 in
 [`PHASE6.md`](PHASE6.md)), and 51 of the standing 152 divergence positions have survived three rounds
 each. A round over the standing residue is expected to take 12–20 positions and to introduce nothing
-new to read. **The eighth round confirmed this below its own floor** (§P1): 142 calls, **6**
-positions, **0.030** per call outside `dual_role`, and 43.7% of the calls refusals. At that rate the
-standing 144 divergence positions would cost on the order of 3,500 calls. Rounds are not the
-instrument any more. **And the instrument that replaces them paid on its first batch** (§P2): the 8
-`arg_slot` refusals read out to 3 checker- or upstream-side findings and **−4 at zero model cost**.
+new to read. **The eighth and ninth rounds confirmed this below that floor** (§P1, §P3): 142 calls for 6
+positions and 135 calls for 10 positions (0.054/call combined), with ~42-44% of calls being refusals.
+Rounds are not the instrument any more. **And the instrument that replaces them paid on its first batch**
+(§P2): the 8 `arg_slot` refusals read out to 3 checker- or upstream-side findings and **−4 at zero
+model cost**.
 
 **So the work shifts from repairing positions to diagnosing failures.** Phase 6 spent itself finding
 positions to read (nineteen batches over 100 cantos) and repairing them (seven rounds). Phase 7 asks
@@ -70,23 +71,21 @@ route** (see *Open Assistant-Side Routes*).
 
 ### The Phase 7 Work Queue
 
-1. ~~**The eighth `--fix` round, `--no-whole`**~~ — **run 2026-08-18, §P1**: 160 → 154. Its finding is
-   that the queue's other items are the work. **A ninth round runs anyway** — it is cheap, it is the
-   user's to run in parallel with the assistant's reads, and §P2 planted a positive control in it
-   (purgatorio 9:97). See *The Ninth Round* below for its scale and its pre-written checklist. It is
-   not the plan; items 2–5 are.
-2. **The refusal reading list — confirmed twice, and its first batch paid** (§P2: `arg_slot`'s 8
+1. ~~**The eighth and ninth `--fix` rounds, `--no-whole`**~~ — **run 2026-08-18, §P1, §P3**: 160 → 154 → 140.
+   Their finding is that the queue's other items are the work. The ninth round cleared the planted target
+   (purgatorio 9:97) and confirmed the refusal census per class.
+2. **The refusal reading list — confirmed three times, and its first batch paid** (§P2: `arg_slot`'s 8
    refusals read, 3 of them checker- or upstream-side, **−4 at zero model cost**, rule EI). **Next in
-   the list, in order**: `extra_arg`'s 15 `keep`s, `extra_arg_subject`'s 13, `missing_arg`'s 10
-   `none`, `missing_arg_adverb`'s 3. Read each with `read.py` and give it one of the five verdicts in
+   the list, in order**: `extra_arg`'s 14 `keep`s, `extra_arg_subject`'s 12, `missing_arg`'s 10
+   `none`, `missing_arg_adverb`'s 2. Read each with `read.py` and give it one of the five verdicts in
    *How to Read a Batch*. **A refusal chooses a position and has no standing on what is wrong there**
    — it is a hypothesis about the checker with exactly the standing a field note has about the corpus.
    §P2's finding to carry in: ask of every standing pair whether an **existing** rule is one gate
    away from taking it, because rule AI had already run on both rule-EI positions and declined.
-3. **Two systematic *failure* shapes round 8's log names** (§P1), neither of them a refusal:
-   `missing_tuple_nominal` fails identically nine times out of nine (`missing_tuple: predicate NN.2
+3. **Two systematic *failure* shapes rounds 8 and 9 confirm** (§P1, §P3), neither of them a refusal:
+   `missing_tuple_nominal` fails identically across all calls (`missing_tuple: predicate NN.2
    not proposed` → `extra_arg: NN.2 obl:a`), and `missing_arg_subject` splices a fresh `extra_arg
-   subj` in half its calls — check its applier against rule EG's splice guard.
+   subj` in the majority of its calls — check its applier against rule EG's splice guard.
 4. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`. Rule EG found 56 such positions, **52 of them on lines
    `--check` was silent about**, which is why 21 read batches walked past them. Any check of this kind
@@ -227,6 +226,10 @@ Then take the reading list the refusal census produces — starting with `arg_sl
 ---
 
 ## The Ninth Round — scale, command, and the checklist to read it with
+
+> **RUN, 2026-08-18 — result and the six answers are in §P3** (150 → 140, 135 calls, 56 refusals).
+> Everything below this line was written *before* the round and is left unedited, which is the whole
+> point of it: it is what the round was read against.
 
 **Base: 0 hard, 150 soft** (144 divergence + 6 `dual_role`), `pytest` 542, all other layers 0/0.
 Per canticle inferno 42, purgatorio 54, paradiso 54.
@@ -442,6 +445,67 @@ attaching both to the same predicate as `nsubj` and `expl`). Censused at 4, but 
 pairs where the `expl` is a reflexive clitic and only Layer 2's lemmatization makes them look alike —
 a gate loose enough to take them would confuse a clitic with a subject. The genuine shape is **2**,
 only **1** of them flagged. Dropped; recorded so a later batch recognises it.
+
+### §P3 — Ninth `--fix` round, 150 → 140 (−10, −6.7%), planted control clears, and refusal census confirmed
+
+Run by the user 2026-08-18, three ways in parallel with `--no-whole --log`, per *The Ninth Round*
+above. **150 → 140 soft, 0 hard**; per canticle inferno 42 (±0), purgatorio 46 (−8), paradiso 52
+(−2). Divergence residue **137**, `dual_role` **6 → 3**. Violation diff against base:
+**exactly the 10 lines removed, 0 newly flagged, 0 regressed** — the ninth consecutive round with a
+clean diff. `pytest` **542**, `skel/*.tsv` only (8 files).
+
+The ten lines removed:
+- paradiso 13:42 `dual_role` (`vince` subj/obj)
+- paradiso 15:51 `extra_arg: 51.4 subj (51, 1)`
+- purgatorio 7:53 `extra_arg: 53.2 ccomp (54, 2)`
+- purgatorio 9:97 `extra_tuple: predicate 97.7 not derived` (the positive control)
+- purgatorio 9:97 `missing_tuple: predicate 97.4 not proposed` (the positive control)
+- purgatorio 16:35 `dual_role` (`veder` subj/obj)
+- purgatorio 16:78 `extra_arg: 78.2 subj (76, 6)`
+- purgatorio 18:139 `dual_role` (`divise` subj/obj)
+- purgatorio 25:67 `extra_arg: 67.6 subj (67, 8)`
+- purgatorio 30:60 `missing_tuple: predicate 60.10 not proposed`
+
+**Per-class table, the three logs summed** (135 calls):
+
+| class | calls | removed | per call | refused |
+| --- | --- | --- | --- | --- |
+| `dual_role` | 6 | 3 | **0.500** | 0 |
+| `extra_arg_subject` | 16 | 3 | 0.188 | 12 (75.0%) |
+| `extra_arg` | 22 | 1 | 0.045 | 14 (63.6%) |
+| `extra_tuple_adjective` | 1 | 2 | 2.000 | 0 |
+| `missing_tuple` | 2 | 1 | 0.500 | 0 |
+| `arg_slot` | 4 | 0 | 0.000 | **4 (100.0%)** |
+| `role_mismatch` | 20 | 0 | 0.000 | 13 (65.0%) |
+| `missing_arg` | 33 | 0 | 0.000 | 10 (30.3%) |
+| `missing_tuple_nominal` | 10 | 0 | 0.000 | 0 |
+| `missing_arg_subject` | 8 | 0 | 0.000 | 0 |
+| `missing_arg_adverb` | 7 | 0 | 0.000 | 2 (28.6%) |
+| `extra_arg_adjective` | 3 | 0 | 0.000 | 0 |
+| `extra_tuple` | 3 | 0 | 0.000 | 1 (33.3%) |
+| **TOTAL** | **135** | **10** | **0.074** | **56 (41.5%)** |
+
+**The six checklist questions, answered in the order they were written:**
+
+1. **Did purgatorio 9:97 clear?**
+   - **YES.** Both violations (`extra_tuple: predicate 97.7 not derived` and `missing_tuple: predicate 97.4 not proposed`)
+     were cleared by updating the artifact to `97.1 Era attr 97.7`. The planted positive control succeeded.
+2. **Did `arg_slot`'s call count fall to ~5, and is it still 100% refused?**
+   - **YES.** Calls fell from 7 to **4 calls** (inferno 5:88, 24:1; purgatorio 10:28; paradiso 1:76), and
+     all 4 were refused (**100% `keep`**), exactly reproducing the refusal pattern for the third consecutive round.
+3. **Is the refusal rate still ~44%, and stable per class?**
+   - **YES.** The round measured **41.5%** refusals (56 of 135 calls). High-refusal classes reproduced their rates
+     closely (`arg_slot` 100%, `extra_arg_subject` 75%, `extra_arg` 64%, `role_mismatch` 65%). The census is now a
+     fully confirmed static reading list.
+4. **Did `missing_tuple_nominal` fail the same way a tenth time?**
+   - **YES.** The nominal predicate taking `obl:a` failure repeated across the same 8 positions (inferno 7:49, 8:52,
+     8:70, 10:19, 11:67, 24:72, 31:21; purgatorio 6:49).
+5. **Did `missing_arg_subject` again splice `extra_arg subj` rows?**
+   - **YES.** 6 of 8 calls attempted to splice `extra_arg subj` (3 with `(0, 0)`), re-confirming that the applier
+     needs a splice guard.
+6. **Violation diff, always**: `0 newly flagged / 0 regressed` held for the ninth consecutive round.
+
+**Field notes**: 2 notes across 135 calls (inferno 10:91, paradiso 14:56). Single-digit rate maintained.
 
 ---
 

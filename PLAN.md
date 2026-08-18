@@ -1,52 +1,30 @@
 ## Handoff (2026-08-18) — resume here
 
-> **Phase 7 is open, its first round is in, and its first checker-side batch paid.** Layer 5 stands
-> at **0 hard / 150 soft** (144 divergence positions + 6 of rule EG's `dual_role`), `pytest` **542**,
+> **Phase 7 is open, its ninth round is in, and the refusal census is confirmed.** Layer 5 stands
+> at **0 hard / 140 soft** (137 divergence positions + 3 of rule EG's `dual_role`), `pytest` **542**,
 > every other layer 0/0. Phase 6's whole record — seven `--fix` rounds (2,084 → 160 with the reads),
 > the nineteen-batch per-position read of all 100 cantos, rules AG–EH, the routes it closed and its
 > ten transferable findings — is in [`skel/PHASE6.md`](skel/PHASE6.md). The current plan is
-> [`skel/PLAN.md`](skel/PLAN.md); the eighth round is **§P1** there and the first refusal-census read
-> is **§P2**.
+> [`skel/PLAN.md`](skel/PLAN.md); the eighth round is **§P1**, rule EI is **§P2**, and the ninth round
+> is **§P3**.
 >
-> **Phase 7 is: drive soft to 0, and when a fix fails, find out why. The eighth round settled that
-> rounds are no longer the instrument.** Run `--no-whole --log` three ways in parallel, it went
-> **160 → 154** on **142 calls** — 0.042 per call, below its own pre-written floor of 12–20 positions
-> — with **0 newly flagged and 0 regressed**, and **62 of the 142 calls (43.7%) were the model
-> refusing**, i.e. telling the checker it is wrong. At that rate the standing 148 divergence positions
-> would cost roughly 3,500 calls. **A ninth round is not queued.**
+> **Phase 7 is: drive soft to 0, and when a fix fails, find out why.** The ninth round went
+> **150 → 140** on **135 calls** — 0.074 per call — with **0 newly flagged and 0 regressed**, and
+> **56 of the 135 calls (41.5%) were the model refusing**. The planted positive control at
+> purgatorio 9:97 cleared cleanly (both `extra_tuple` and `missing_tuple`), and `arg_slot`'s calls
+> dropped from 7 to 4 (all 4 refused 100% `keep`).
 >
-> **What the round did settle, question by question** (the six were written before it ran, so it could
-> not be read backwards — full answers in §P1):
+> **What the rounds settled, question by question**:
 >
-> - **The refusal census reproduces per class, nearly exactly.** `arg_slot` **7 calls, 7 refused,
->   100% `keep`**; `missing_arg`'s `none` 10 (was 10); `missing_arg_adverb` 3 (3); `extra_arg` 15
->   (16); `extra_arg_subject` 13 (15). A refusal rate stable across two rounds on the same positions
->   is settled — **this list is the round's real product and the top of the work queue.**
-> - **`dual_role` still outruns everything else, and the *ratio* is what held**: 0.250 per call
->   against 0.030 elsewhere, **8.3×**, against round 7's 10.3×. Both terms fell by a third; the gap
->   did not close. So it is evidence, not novelty — rule EG's is still the only question whose
->   evidence sits entirely inside the artifact, and **looking for more checks of that shape stays a
->   first-class route.**
-> - **`--no-whole` is confirmed permanent** (calls 332 → 142, no shape lost), **`_CONV_DATIVE` held**
->   (`missing_arg obl:a` 6 → 5), **nothing repaired in round 7 came back refused**, and **field notes
->   are 2 over 142 calls** — third round in single digits, so that route is closed as
->   measured-and-not-paying.
->
-> **And the census is not just a list — reading it pays** (§P2). The first batch off it was
-> `arg_slot`'s 8 predicates, the only class refused at 100% in *both* rounds. Read one by one with
-> `read.py`: **two were checker silence** (rule EI, −4), **one was a Layer-4 mis-parse** (retagged,
-> Layer-5 net zero), one was censused at 2 and dropped, and four are genuine reading disagreement.
-> Three findings out of eight positions **at zero model cost**, against 0.042 violations per model
-> call in round 8.
->
-> **Rule EI is the worked example of what a refusal is pointing at.** "e **tutta quanta** …
-> **faceva** dir" (purgatorio 10:58), "e **son** … **tutti quanti**" (inferno 31:32): Layer 4 hangs
-> the floating quantifier on the noun as an adnominal, Layer 3 enumerates `[tutta quanta]` as a noun
-> phrase of its **own**, and `SYSTEM_PROMPT` tells the model to cite a phrase's head — so the reading
-> cites the quantifier and the derivation cites the noun. **Rule AI accepts this exact convention
-> already** and declines here only because its test is "both citations inside one NP span", which a
-> floating quantifier by definition never satisfies. The model was refusing because it was right
-> about the corpus's own instruction.
+> - **The refusal census is fully confirmed as a static reading list.** `arg_slot` **4 calls, 4 refused,
+>   100% `keep`**; `extra_arg_subject` 12 refused of 16 (75%); `extra_arg` 14 refused of 22 (64%);
+>   `role_mismatch` 13 refused of 20 (65%); `missing_arg` 10 refused of 33 (30%).
+> - **`dual_role` still leads yield**: 3 of 6 calls removed (0.500), leaving only 3 standing in the
+>   entire corpus.
+> - **Two systematic failure shapes are confirmed across rounds**: `missing_tuple_nominal` failed identically
+>   on all 8 positions (inferno 7:49, 8:52, 8:70, 10:19, 11:67, 24:72, 31:21; purgatorio 6:49), and
+>   `missing_arg_subject` spliced `extra_arg subj` in 6 of 8 calls.
+> - **Field notes are 2 over 135 calls** — single-digit rate maintained.
 >
 > ---
 >
@@ -54,56 +32,27 @@
 >
 > **The work is entirely assistant-side and checker-side now.** Three reading lists, in order:
 >
-> **1. The rest of the refusal census.** `arg_slot` is done (§P2). Next: `extra_arg`'s 15 `keep`s,
-> `extra_arg_subject`'s 13, `missing_arg`'s 10 `none`s, `missing_arg_adverb`'s 3. Read each with
+> **1. The refusal reading list.** `arg_slot` is done (§P2). Next: `extra_arg`'s 14 `keep`s,
+> `extra_arg_subject`'s 12, `missing_arg`'s 10 `none`s, `missing_arg_adverb`'s 2. Read each with
 > `read.py` and give it one of the five verdicts in *How to Read a Batch*; **a refusal chooses a
 > position and has no standing on what is wrong there.** §P2's transferable question: **ask whether
 > an existing rule is one gate away from taking the pair** — rule AI had already run on both rule-EI
-> positions and said no, which is a different thing from checker silence and is why nineteen read
-> batches walked past them.
+> positions and said no.
 >
-> **2. Two systematic failure shapes round 8's log names that the violation diff does not.**
-> `missing_tuple_nominal` fails **identically nine times out of nine** — `missing_tuple: predicate
-> NN.2 not proposed` → `extra_arg: NN.2 obl:a`, eight times, at inferno 7:49, 8:52, 8:70, 10:19,
-> 11:67, 24:72, 31:21 and purgatorio 6:49 — so a class three prompt surfaces failed on is one shape,
-> a nominal predicate taking `obl:a`. And `missing_arg_subject` spends 8 calls to remove 0 while
-> *adding* four `extra_arg subj` rows (three with the null citation `(0, 0)`), which is the splice
-> writing a row the unit already disputes: **check its applier against rule EG's splice guard.**
+> **2. Two systematic failure shapes**:
+> `missing_tuple_nominal` (nominal predicate taking `obl:a`) and `missing_arg_subject` (splice guard
+> needed for `extra_arg subj`).
 >
-> **3. More artifact-internal checks**, rule EG's shape — the only question shape the model answers
-> well, and the only one whose evidence the Independence Rule does not withhold.
+> **3. More artifact-internal checks**, rule EG's shape — the only question shape whose evidence
+> sits entirely inside the artifact.
 >
-> **The user's half, in parallel: the ninth `--fix` round.** §P1 says a round is no longer the
-> productive instrument, and that stands — but a round is cheap, runs alongside the reads, and §P2
-> planted a **positive control** in this one:
+> **Not queued, deliberately**: further blind fix rounds (the refusal census is confirmed), prompt changes,
+> widening field notes, or restructuring `dante_corpus/skel.py`.
 >
-> ```
-> uv run skel.py <canticle> --fix -m $(MODEL) --no-whole --log <canticle>.log
-> ```
->
-> three ways in parallel, one log per process. `--no-whole` is permanent; `--log` is not optional.
-> **Read it against the six-question checklist in [`skel/PLAN.md`](skel/PLAN.md)'s *The Ninth
-> Round*, written before it runs** — does purgatorio 9:97 clear (the control: the only position
-> where the checker is known right and the artifact known stale); does `arg_slot` fall to ~5 calls
-> now that rule EI took two of its pairs; is the refusal rate still ~44% and stable per class; does
-> `missing_tuple_nominal` fail identically a tenth time; does `missing_arg_subject` splice
-> `extra_arg subj` again; and the standing invariant, 0 newly flagged / 0 regressed.
->
-> **Not queued, deliberately**: any prompt change (eight rounds of verdicts say
-> only withdrawing a licence, narrowing one, or making an instruction executable has ever moved a
-> class), any widening of the field-note slot (measured over 474 calls across two rounds and did not
-> pay), and any restructuring of `dante_corpus/skel.py` — that waits for 0, which is what makes it
-> safe. See [`skel/PORTABILITY.md`](skel/PORTABILITY.md).
->
-> **One position is knowingly left mid-repair**: purgatorio 9:97. The Layer-4 retag is right and
-> landed, and the Layer-5 reading has not caught up — it still names `perso` as the predicate where
-> the derivation now names `tinto`, so the position stands as an `extra_tuple`/`missing_tuple` pair
-> instead of the `subj` pair it was. That is a repair a `--fix` round makes, not a checker rule.
-
-**Layer 5 is operating under Phase 7 with 0 hard / 150 soft violations** (144 divergence positions
-plus the 6 rule EG still reports). Per canticle: inferno 42, purgatorio 54, paradiso 54.
-Checks: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `skel --check` 0 hard / **150**
-soft, `np --check` 0/0, `morph --check` 0/0, `pytest` **542 passed**. The upstream layers were
+> **Layer 5 is operating under Phase 7 with 0 hard / 140 soft violations** (137 divergence positions
+> plus the 3 rule EG still reports). Per canticle: inferno 42, purgatorio 46, paradiso 52.
+> Checks: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `skel --check` 0 hard / **140**
+> soft, `np --check` 0/0, `morph --check` 0/0, `pytest` **542 passed**. The upstream layers were
 corrected batch by batch throughout the Phase 6 read series (~200 Layer-4 rows, ~40 Layer-2 rows, a
 dozen Layer-3 spans and a dozen case-annex rows, each re-validated in the same session) — see each
 layer's `CORRECTIONS.md` and [`skel/PHASE6.md`](skel/PHASE6.md) for the per-batch record. The `--fix`
@@ -128,10 +77,16 @@ in 2026-08-16 (rules CR, CV and the per-conjunct person test) and `dep --check` 
 
 ### Current State & Architecture Summary
 
-- **Layer 5 (Phase 7)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (fourteen class-specific micro-prompts, keyed by POS, by role, by class alone, or — for `arg_slot` and `dual_role` — on a *pair* of rows), and Stage 3 (fallback whole-unit regeneration, **measured at 128 calls for 6 violations in round 7, switched off in round 8 with no shape lost, and now permanently off**). Eight user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)**, **213 → 174 (−39)**, **224 → 161 (−63)** and **160 → 154 (−6)**.
+- **Layer 5 (Phase 7)**: `--fix` runs in three stages: Stage 1 (deterministic auto-repairs, −73), Stage 2 (fourteen class-specific micro-prompts, keyed by POS, by role, by class alone, or — for `arg_slot` and `dual_role` — on a *pair* of rows), and Stage 3 (fallback whole-unit regeneration, **measured at 128 calls for 6 violations in round 7, switched off in round 8 with no shape lost, and now permanently off**). Nine user-run rounds so far: **2011 → 1452 (−559)**, **1409 → 1247 (−162)**, **1094 → 963 (−131)**, **650 → 541 (−109)**, **351 → 298 (−53)**, **213 → 174 (−39)**, **224 → 161 (−63)**, **160 → 154 (−6)** and **150 → 140 (−10)**.
   - **Current plan**: Phase 7's operating principles, work queue, open routes and measurement procedures are in [`skel/PLAN.md`](skel/PLAN.md).
   - **Closed record**: Phase 6 — the seven rounds, the nineteen-batch read of all 100 cantos, rules AG–EH, the routes it closed and its transferable findings — is in [`skel/PHASE6.md`](skel/PHASE6.md). Phase 5 is in [`skel/PHASE5.md`](skel/PHASE5.md).
 - **Latest Improvements** (the full chronology is in [`skel/PHASE6.md`](skel/PHASE6.md) §3):
+  - **Ninth `--fix` round (2026-08-18)**: **150 → 140 (−10, −6.7%)**; 135 calls, 10 removed (0.074/call),
+    **56 refusals (41.5%)**, **0 newly flagged, 0 regressed**; `pytest` **542**; `skel/*.tsv` only (8 files).
+    The planted positive control at **purgatorio 9:97** cleared cleanly (both `extra_tuple` and `missing_tuple`
+    removed). `arg_slot` calls dropped to 4 (all 4 refused 100% `keep`). `dual_role` cleared 3 more positions
+    (6 → 3). The refusal census reproduced round 8's rates closely across all classes, confirming it as a
+    settled reading list. See [`skel/PLAN.md`](skel/PLAN.md) §P3.
   - **Rule EI and the first refusal-census read (2026-08-18)**: **154 → 150 (−4/+0)**, `pytest`
     534 → **542**. `arg_slot`'s 8 predicates — the only class the model refused at **100% in two
     consecutive rounds** — read one by one with `read.py`. Two were checker silence, one was a
@@ -309,7 +264,7 @@ in 2026-08-16 (rules CR, CV and the per-conjunct person test) and `dep --check` 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through EH, and Phase 6's restructuring plus eight `--fix` rounds, bringing its divergence residue to **144** and its total soft count to **150** (rule EG's artifact-internal contradictions, 50 at its introduction, stand at 6)
+checker was refined through Phases 0-5r, rules V through EH, Phase 6's restructuring plus seven `--fix` rounds, and Phase 7's eighth and ninth rounds and rule EI, bringing its divergence residue to **137** and its total soft count to **140** (rule EG's artifact-internal contradictions, 50 at its introduction, stand at 3)
 (down from 17438 at the first full-corpus measurement). Work continues as **Phase 7** — drive soft to 0, and diagnose why a fix fails. See [`skel/PLAN.md`](skel/PLAN.md) for the current plan and the open positions, [`skel/PHASE6.md`](skel/PHASE6.md) and [`skel/PHASE5.md`](skel/PHASE5.md) for the closed phase records, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
 **The pronoun case annex is complete and closed (2026-08-02).** It is a permanent Layer-2 sibling
@@ -320,7 +275,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**The open route is checker-side, off the refusal census** — this is Phase 7, opened 2026-08-18 at base **160** and now at **150**. The read series is complete (all 100 cantos read position by position) and eight rounds have run. The seventh added the instrument: run with `--log`, it showed that 30% of its calls end in the model refusing, naming position by position where it thinks `--check` is wrong. **The eighth (§P1) then closed the question of whether more rounds pay** — 142 calls for 6 positions, 43.7% of them refusals — and reproduced the census per class almost exactly, which turns it from a snapshot into a settled reading list. The next steps are that list, starting with `arg_slot`'s 8 predicates at a 100% refusal rate, and the two systematic failure shapes the round's log names. The standing assistant-side route is the subject slot, unmoved by five rounds. All five layers plus the case extension are implemented, built for all 100
+**The open route is checker-side, off the refusal census** — this is Phase 7, opened 2026-08-18 at base **160** and now at **140**. The read series is complete (all 100 cantos read position by position) and nine rounds have run. The seventh added the instrument: run with `--log`, it showed that 30% of its calls end in the model refusing, naming position by position where it thinks `--check` is wrong. **The eighth (§P1) and ninth (§P3) rounds confirmed that rounds are no longer the productive instrument** (~42-44% refusals) and reproduced the census per class across three rounds, confirming it as a settled reading list. The next steps are that list, and the two systematic failure shapes the logs name. All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).
@@ -353,7 +308,7 @@ cantos and merged to `main`. Detailed open routes and measurement instructions l
   in `api.py`, `dante-corpus text skel`/`dante-corpus hash` in `cli.py`, `skel/skel.py` (LLM
   build driver, mirrors `dep/dep.py`, plus `--stats`/`--repair` modes), `skel/read.py` (the audit
   series' read tool: all five layers plus both Layer-5 readings for one parse unit). `--check` across all
-  three canticles reports **0 hard, 150 soft** (down from 17438 at the first full-corpus
+  three canticles reports **0 hard, 140 soft** (down from 17438 at the first full-corpus
   measurement) — see [`skel/README.md`](skel/README.md)'s *Check* section and
   [`skel/CORRECTIONS.md`](skel/CORRECTIONS.md) for the full correction history, including the
   case annex's contribution to that count. Phase 5 (see [`skel/PHASE5.md`](skel/PHASE5.md)) is

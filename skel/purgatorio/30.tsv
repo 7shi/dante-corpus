@@ -152,6 +152,8 @@ line	token	word	role	arg_line	arg_token
 59	7	ministra	obl:per	60	4
 60	8	far	subj	58	3
 60	8	far	obj	60	10
+60	10	incora	subj	58	3
+60	10	incora	obj	60	9
 61	0			0	0
 62	3	volsi	subj	0	0
 62	3	volsi	obj	62	2

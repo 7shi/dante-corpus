@@ -209,7 +209,6 @@ line	token	word	role	arg_line	arg_token
 67	1	Apri	obj	67	8
 67	1	Apri	obl:a	67	4
 67	6	viene	subj	67	5
-67	6	viene	subj	67	8
 68	2	sappi	subj	0	0
 69	6	perfetto	subj	69	2
 69	6	perfetto	obl:a	68	8

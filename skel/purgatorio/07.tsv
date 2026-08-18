@@ -170,7 +170,6 @@ line	token	word	role	arg_line	arg_token
 52	7	fregò	obl:in	52	6
 53	1	dicendo		0	0
 53	2	Vedi	subj	0	0
-53	2	Vedi	ccomp	54	2
 54	2	varcheresti	subj	0	0
 54	2	varcheresti	obj	53	5
 54	2	varcheresti	obl:dopo	54	6

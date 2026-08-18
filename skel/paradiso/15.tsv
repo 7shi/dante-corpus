@@ -128,7 +128,6 @@ line	token	word	role	arg_line	arg_token
 49	2	seguì	subj	0	0
 50	2	leggendo	subj	0	0
 50	2	leggendo	obl:di	50	5
-51	4	muta	subj	51	1
 51	4	muta	attr	51	6
 51	4	muta	attr	51	8
 52	1	solvuto	subj	0	0
