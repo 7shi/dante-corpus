@@ -264,10 +264,8 @@ line	token	word	role	arg_line	arg_token
 83	2	ebbe	obl:in	83	9
 84	2	fé	subj	83	1
 84	2	fé	iobj	84	4
-84	2	fé	ccomp	84	9
 84	9	loda	subj	84	6
-84	9	loda	obj	84	7
-84	9	loda	obl:di	84	8
+84	9	loda	obl	84	8
 85	3	tolse	subj	0	0
 85	3	tolse	obj	85	1
 85	3	tolse	iobj	85	2

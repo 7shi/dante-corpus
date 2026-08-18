@@ -263,10 +263,8 @@ line	token	word	role	arg_line	arg_token
 81	1	Usciteci	subj	0	0
 81	2	gridò	subj	80	6
 81	2	gridò	ccomp	81	1
-81	2	gridò	ccomp	81	4
 81	2	gridò	obl	80	4
 81	4	è	subj	81	6
-81	4	è	obl	81	3
 82	2	vidi	subj	82	1
 82	2	vidi	obj	82	5
 82	2	vidi	obl:su	82	9

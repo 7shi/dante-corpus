@@ -204,7 +204,6 @@ line	token	word	role	arg_line	arg_token
 71	0			0	0
 72	3	maravigliar	subj	70	2
 72	3	maravigliar	obj	72	2
-72	3	maravigliar	ccomp	72	7
 72	3	maravigliar	obl:con	71	8
 72	7	rincalzo	subj	72	5
 72	7	rincalzo	obj	72	6

@@ -1,5 +1,16 @@
 # skel — Layer 5 correction history
 
+## Four Divergence Positions Resolved via Assistant-Side Read Census, 91 → 87 (−4) (2026-08-18)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` positions in Inferno and Purgatorio (see [`PLAN.md`](../PLAN.md) §P13). Dropped spurious clause arguments (adverbial / paratactic clauses misregistered as complement clauses):
+
+1. [inferno 8:81](inferno/08.tsv): `81.2 gridò` in *«Usciteci», gridò: «qui è l'intrata»* had paratactic second direct speech clause *qui è l'intrata* registered as a second `ccomp`. Dropped `81 2 gridò ccomp 81 4` and spurious `è obl` row (cleared `extra_arg: 81.2 ccomp (81, 4)`).
+2. [inferno 22:84](inferno/22.tsv): `84.2 fé` in consecutive construction *e fé sì lor, che ciascun se ne loda* had consecutive adverbial clause `84.9 loda` registered as `ccomp`. Dropped `84 2 fé ccomp 84 9` and normalized `loda` arguments (cleared `extra_arg: 84.2 ccomp (84, 9)`).
+3. [purgatorio 9:72](purgatorio/09.tsv): `72.3 maravigliar` in conditional construction *non ti maravigliar s'io la rincalzo* had conditional clause `72.7 rincalzo` registered as `ccomp`. Dropped `72 3 maravigliar ccomp 72 7` (cleared `extra_arg: 72.3 ccomp (72, 7)`).
+4. [purgatorio 5:48](purgatorio/05.tsv): `48.1 venian` in *venian gridando* had circumstantial gerund `48.2 gridando` (`advcl`) registered as `xcomp`. Dropped `48 1 venian xcomp 48 2` and spurious adverb row (cleared `extra_arg: 48.1 xcomp (48, 2)`).
+
+Layer 5 soft violations stand at **87** (inferno 26, purgatorio 28, paradiso 33).
+
 ## Four Paradiso Positions Resolved via Assistant-Side Read Census, 96 → 91 (−5) (2026-08-18)
 
 Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` and `missing_arg` positions in Paradiso (see [`PLAN.md`](../PLAN.md) §P12). Dropped spurious rows, supplied missing arguments, and normalized predications across 4 positions:
