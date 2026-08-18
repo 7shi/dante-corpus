@@ -18,7 +18,7 @@ canon-neutral.
   - [`PORTABILITY.md`](PORTABILITY.md): Architectural roadmap toward a portable, modular Layer-5 checker (Rule Registry, language pack isolation, fixture tests).
   - [`HARNESS.md`](HARNESS.md): Specification for the autonomous grammatical parsing harness for local LLMs (Gemma 4).
 - **Rule Reference & Correction History**:
-  - [`RULES.md`](RULES.md): Formal Grammar Handbook & Rule Specification (all 130 rules systematized into a 6-branch hierarchical tree taxonomy with live census metrics and textual examples).
+  - [`RULES.md`](RULES.md) / [`RULES-ja.md`](RULES-ja.md): Formal Grammar Handbook & Rule Specification (all 130 rules systematized into a 6-branch hierarchical tree taxonomy with live census metrics and textual examples; Japanese edition with translated citations).
   - [`CORRECTIONS.md`](CORRECTIONS.md): Permanent record of hand corrections, checker rules (Rules A through EI), and verified structural exceptions.
 - **Phase Retrospectives (Closed Records)**:
   - [`PHASE7.md`](PHASE7.md): Phase 7 Retrospective — driving soft violations from 160 to 0 (refusal census, outlier resolution, §P1–§P15).
@@ -100,7 +100,7 @@ The Layer-5 checker (`validate_unit` in `dante_corpus/skel.py`) evaluates candid
 Over the course of Phases 4–7, **84 rule letters (A through EI)** were incrementally censused, measured by violation diff, tested, and landed.
 
 For the complete evidence, rationale, and per-rule documentation:
-- **Grammar Handbook & Tree Taxonomy**: See [`RULES.md`](RULES.md) for the complete 6-branch hierarchical specification of all 130 rules with UD formulations and corpus examples.
+- **Grammar Handbook & Tree Taxonomy**: See [`RULES.md`](RULES.md) (or [`RULES-ja.md`](RULES-ja.md) for the Japanese edition) for the complete 6-branch hierarchical specification of all 130 rules with UD formulations and corpus examples.
 - **Full Rule Catalogue & History**: See [`CORRECTIONS.md`](CORRECTIONS.md).
 - **Phase 5 Evolution (5,919 → 2,084 soft)**: Rules C–AF and the adoption of deterministic checker rules — see [`PHASE5.md`](PHASE5.md).
 - **Phase 6 Evolution (2,084 → 160 soft)**: Rules AG–EH and the 19-batch full-corpus read series — see [`PHASE6.md`](PHASE6.md).
