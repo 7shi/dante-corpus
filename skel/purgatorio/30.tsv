@@ -143,7 +143,6 @@ line	token	word	role	arg_line	arg_token
 58	0			0	0
 59	1	viene	subj	58	3
 59	1	viene	xcomp	59	3
-59	1	viene	xcomp	60	8
 59	1	viene	obl:in	58	5
 59	1	viene	obl:in	58	8
 59	3	veder	subj	58	3

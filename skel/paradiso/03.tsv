@@ -175,7 +175,6 @@ line	token	word	role	arg_line	arg_token
 59	2	risplende	subj	59	6
 59	2	risplende	obl:in	58	7
 59	4	so	subj	0	0
-59	4	so	obj	59	6
 60	3	trasmuta	subj	60	1
 60	3	trasmuta	obj	60	2
 60	3	trasmuta	obl:da	60	6

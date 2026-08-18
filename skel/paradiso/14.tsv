@@ -385,7 +385,6 @@ line	token	word	role	arg_line	arg_token
 136	2	puommi	subj	133	2
 136	2	puommi	xcomp	136	1
 136	8	accuso	subj	136	6
-136	8	accuso	obj	136	5
 136	8	accuso	obj	136	7
 137	2	escusarmi	subj	0	0
 137	4	vedermi	subj	0	0

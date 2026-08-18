@@ -1,5 +1,18 @@
 # skel — Layer 5 correction history
 
+## Six Spurious Argument Positions Resolved via Read Census, 111 → 104 (−7, total 112 → 104 with Layer 4) (2026-08-18)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` positions (see [`PLAN.md`](../PLAN.md) §P10). Dropped spurious rows and normalized predications across 6 positions:
+
+1. [purgatorio 30:59](purgatorio/30.tsv): `59.1 viene` in *viene a veder … e a ben far l'incora* had spurious duplicate `xcomp=(60,8)` (`far`). Dropped `59 1 viene xcomp 60 8` (cleared `extra_arg: 59.1 xcomp (60, 8)`).
+2. [purgatorio 10:60](purgatorio/10.tsv): `60.2 dir` in *faceva dir l'un 'No', l'altro 'Sì, canta'* had pseudo-predicative `attr` rows for 'Sì' and 'canta'. Dropped `attr 60 8`, `attr 60 9`, and orphan `60.9 canta` predicate, normalizing `dir` to `obj 60 5` ('No') (cleared `extra_arg: 60.2 xcomp (60, 8)` and `extra_arg: 60.2 xcomp (60, 9)`).
+3. [paradiso 7:25](paradiso/07.tsv): `25.8 vole` in *virtù che vole* had spurious direct object `obj=(26,1)` (`freno`, which belongs to `soffrire`). Dropped `25 8 vole obj 26 1` (cleared `extra_arg: 25.8 obj (26, 1)`).
+4. [paradiso 14:136](paradiso/14.tsv): `136.8 accuso` in *di quel ch'io m'accuso* had duplicate object `obj=(136,5)` (`che`) alongside reflexive `obj=(136,7)` (`m'`). Dropped `136 8 accuso obj 136 5` (cleared `extra_arg: 136.8 obj (136, 5)`).
+5. [paradiso 17:116](paradiso/17.tsv): `116.8 ridico` in *quel che s'io ridico, a molti fia sapor* had spurious object `obj=(116,5)` (`che`, which is subject of `fia`). Dropped `116 8 ridico obj 116 5` (cleared `extra_arg: 116.8 obj (116, 5)`).
+6. [paradiso 3:59](paradiso/03.tsv): `59.4 so` in idiom *non so che divino* had spurious object `obj=(59,6)` (`divino`). Dropped `59 4 so obj 59 6` (cleared `extra_arg: 59.4 obj (59, 6)`).
+
+Layer 5 soft violations stand at **104** (inferno 30, purgatorio 35, paradiso 39).
+
 ## Three Spurious Argument Rows Dropped from Round 10 Log Audits, 115 → 112 (−3) (2026-08-18)
 
 Investigated 2026-08-18 from Round 10's `--log` outputs. During the round, the model answered `drop` on three `extra_arg` / `extra_arg_subject` prompts, but the driver recorded `no usable answer` because `_find_arg_row` failed to match when `violation.arg` cited a slightly different head token than the committed TSV row. Dropping the spurious rows by hand cleared all 3 positions cleanly:

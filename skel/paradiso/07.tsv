@@ -70,7 +70,6 @@ line	token	word	role	arg_line	arg_token
 25	3	soffrire	obj	26	1
 25	3	soffrire	obl:a	25	6
 25	8	vole	subj	25	7
-25	8	vole	obj	26	1
 26	9	nacque	subj	26	7
 27	1	dannando	subj	0	0
 27	1	dannando	obj	27	2

@@ -309,7 +309,6 @@ line	token	word	role	arg_line	arg_token
 116	3	appreso	obl:per	115	5
 116	3	appreso	obl:di	115	7
 116	8	ridico	subj	116	7
-116	8	ridico	obj	116	5
 117	3	fia	subj	116	5
 117	3	fia	iobj	117	2
 117	3	fia	attr	117	4

@@ -1,5 +1,19 @@
 # dep — Layer 4 correction history
 
+## paradiso 7:25 — inverted prepositional argument attached to noun instead of verb (2026-08-18)
+
+Found during the audit of Layer 5 extra_arg positions (paradiso 7:25; see [`../skel/PLAN.md`](../skel/PLAN.md) §P10).
+
+> Per non soffrire **a la virtù che vole** / **freno** a suo prode, quell' uom che non nacque,  (paradiso 7:25-26)
+
+In the hyperbaton (*"Per non soffrire freno a suo prode a la virtù che vole"*), `25.6 virtù` (*a la virtù*) is an oblique argument of the infinitive `25.3 soffrire` (*non soffrire freno a la virtù*), not a modifier of the inverted direct object `26.1 freno`. Layer 4 attached `25.6 virtù` as `obl` of the noun `26.1 freno`. Because of this attachment, `derive_unit` did not derive `obl:a` for `soffrire`, causing the LLM's correct reading `soffrire: obl:a=(25,6)` to be flagged as `extra_arg: 25.3 obl:a (25, 6)`.
+
+Attaching `25.6 virtù` as `obl` of the verb `25.3 soffrire` aligned the derivation with clause syntax and cleared **1 soft violation** in Layer 5 (111 → 110).
+
+| token | was | now |
+|---|---|---|
+| 25.6 `virtù` | `obl` ← 26.1 `freno` | **`obl` ← 25.3 `soffrire`** |
+
 ## paradiso 11:127 — correlative comparative clause subject attached to subordinate verb (2026-08-18)
 
 Found during the audit of Round 10 log failures (`extra_arg_subject` at paradiso 11:129; see [`../skel/PLAN.md`](../skel/PLAN.md) §P9).
