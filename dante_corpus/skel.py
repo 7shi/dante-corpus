@@ -29,6 +29,8 @@ from __future__ import annotations
 
 import dataclasses
 import re
+from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -66,15 +68,222 @@ def canon_header(header: str) -> str | None:
 ROLES = frozenset({"subj", "obj", "iobj", "attr", "xcomp", "ccomp", "obl"})
 OBL_RE = re.compile(r"obl:[a-zàèéìòù']+")
 
-# Relative-pronoun word forms accepted by the membership soft check regardless of the frozen
-# Layer-2 POS tag: "che" is tagged inconsistently between `pronoun` and `conjunction` even in
-# its relative use (see `morph/CORRECTIONS.md`), so the word form itself is checked too.
-# "ch'" is che's elided form (trailing apostrophe replaces the final "e").
-_REL_PRONOUN_WORDS = frozenset({"che", "ch'", "cui", "qual", "quale", "chi"})
+
 
 
 def _role_valid(role: str) -> bool:
     return role == "" or role in ROLES or bool(OBL_RE.fullmatch(role))
+
+# --- Rule Registry & Data Model ----------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Rule:
+    """A registered Layer-5 skeleton derivation or verification rule."""
+
+    id: str
+    name: str
+    kind: str
+    description: str
+
+
+class RuleRegistry:
+    """Registry managing Layer-5 rules and their active status / execution metrics."""
+
+    def __init__(self) -> None:
+        self._rules: dict[str, Rule] = {}
+        self._disabled: set[str] = set()
+        self._hits: Counter[str] = Counter()
+
+    def register(self, id: str, name: str, kind: str, description: str) -> Rule:
+        rule = Rule(id=id, name=name, kind=kind, description=description)
+        self._rules[id] = rule
+        return rule
+
+    def is_enabled(self, id: str) -> bool:
+        return id not in self._disabled
+
+    def disable(self, id: str) -> None:
+        self._disabled.add(id)
+
+    def enable(self, id: str) -> None:
+        self._disabled.discard(id)
+
+    def reset_disabled(self) -> None:
+        self._disabled.clear()
+
+    def record_hit(self, id: str) -> None:
+        self._hits[id] += 1
+
+    def hit_count(self, id: str) -> int:
+        return self._hits[id]
+
+    def reset_hits(self) -> None:
+        self._hits.clear()
+
+    def get(self, id: str) -> Rule | None:
+        return self._rules.get(id)
+
+    def all_rules(self) -> list[Rule]:
+        return list(self._rules.values())
+
+    def rule(self, id: str, name: str, kind: str, description: str) -> Callable:
+        """Decorator for registering a rule function."""
+        rule = self.register(id, name, kind, description)
+
+        def decorator(fn: Callable) -> Callable:
+            fn._rule = rule  # type: ignore[attr-defined]
+            return fn
+
+        return decorator
+
+
+RULES = RuleRegistry()
+
+
+def rule_active(id: str) -> bool:
+    """Check if rule is enabled and record a hit for census metrics."""
+    if not RULES.is_enabled(id):
+        return False
+    RULES.record_hit(id)
+    return True
+
+
+# Populate rule registry with all Layer-5 rules (A through EI, plus 1 and 2)
+_RULES_CATALOG: list[tuple[str, str, str, str]] = [
+    ("1", "clause_head_predicate", "derivation", "Clause head token is a predicate"),
+    ("2", "verb_with_dependent_predicate", "derivation", "Non-auxiliary verb carrying argument dependent is a predicate"),
+    ("A", "coordination_collapse_base", "normalization", "Basic coordination argument mapping onto coordination head"),
+    ("C", "coordination_collapse", "normalization", "Map argument citations across conj edges onto coordination head"),
+    ("D", "drop_nmod_obliques", "normalization", "Drop nmod obliques whose parent nominal is cited as argument"),
+    ("I", "auxiliary_host_head", "extra_tuple", "Lexical head attached by aux/cop is the predicate head"),
+    ("J", "adverbial_oblique", "extra_arg", "Adverbial oblique in locative/directional slot"),
+    ("L", "oblique_lemma_refinement", "role_mismatch", "Refinement between bare obl and lemma-qualified obl:<prep>"),
+    ("M", "predicative_complement", "role_mismatch", "Predicative complement xcomp against derived obj/subj"),
+    ("N", "case_marked_object", "role_mismatch", "Case-marked oblique against direct object/subject"),
+    ("O", "co_present_preposition", "role_mismatch", "Co-present prepositional variants for one argument"),
+    ("P", "clausal_complement_flavor", "role_mismatch", "Flavor mismatch between ccomp and xcomp"),
+    ("Q", "clausal_object", "role_mismatch", "Clausal ccomp against derived direct object/subject"),
+    ("R", "predicative_advmod", "extra_arg", "Predicative adjective or adverb attached as advmod or secondary predicate"),
+    ("S", "nmod_complement_of_predicate", "extra_arg", "Prepositional nmod attached directly to predicate"),
+    ("T", "marked_adverbial_clause", "extra_arg", "Prepositional infinitive adverbial clause attached as advcl"),
+    ("U", "case_corroborated_role", "role_mismatch", "Role mismatch corroborated by Layer-2 case annex"),
+    ("V", "control_subject_inheritance", "subject_authority", "Non-finite verb control subject inheritance along head chain"),
+    ("W", "case_corroborated_swap", "role_mismatch", "Swap partner of a case-corroborated role assignment"),
+    ("X", "copular_hosted_argument", "extra_arg", "Argument cited on copula complement vs matrix predicate"),
+    ("Y", "copular_nominal_predication", "extra_tuple", "Copular nominal clause head attached under nominal deprel"),
+    ("Z", "verb_in_argument_slot", "extra_tuple", "Verb in argument/adjunct slot proposed as predicate"),
+    ("AA", "perception_depictive_small_clause", "extra_arg", "Perception or depictive small clause secondary predicate"),
+    ("AB", "reflexive_clitic_argument", "extra_arg", "Reflexive clitic argument of pronominal verb"),
+    ("AC", "inherited_subject_not_independent", "subject_authority", "Inherited subject across conj is not an independent assertion"),
+    ("AD", "copular_adverb_complement", "extra_arg", "Copular adverb complement accepted as predicative modifier"),
+    ("AE", "free_relative_head", "extra_arg", "Free relative clause cited by verb rather than relative pronoun"),
+    ("AF", "dep_argument_membership", "membership", "Layer-4 argument deprel position admissible as Layer-5 argument"),
+    ("AG", "conj_subject_person_mismatch", "subject_authority", "Drop conj-inherited subject when person/number disagrees"),
+    ("AH", "silent_derivation_after_subject_drop", "subject_authority", "Derivation remains silent when inherited subject is dropped"),
+    ("AI", "np_head_equivalence", "normalization", "Re-key given citation onto derived citation for same Layer-3 NP"),
+    ("AJ", "conj_shared_argument", "extra_arg", "Argument shared across coordinate conjuncts"),
+    ("AK", "comparative_come_complement", "role_mismatch", "Comparative come phrase as predicative complement"),
+    ("AL", "fused_clitic_dual_role", "role_mismatch", "Fused clitic pronoun legitimately filling two argument slots"),
+    ("AM", "cop_aux_stranded_arguments", "derivation", "Collect arguments stranded on cop/aux dependents"),
+    ("AN", "gapped_conjunct_remnant", "derivation", "Gapped conjunct carrying orphan fills predicate slots as remnants"),
+    ("AP", "coordination_head_walk", "normalization", "Walk conj chain to find coordination head"),
+    ("AQ", "auxiliary_citation_merge", "normalization", "Map argument citations landing on aux/cop onto lexical head"),
+    ("AR", "comparative_come_adjunct", "missing_arg", "Verbless comparative clause nominal in adjunct slot"),
+    ("AS", "fused_clitic_role_widening", "role_mismatch", "Widen role gate for fused clitic combinations"),
+    ("AT", "verb_only_conj_subject_inheritance", "derivation", "Only verbs inherit subjects across conj chains"),
+    ("AU", "adjective_secondary_predicate", "extra_arg", "Adjective attached amod to argument acting as secondary predicate"),
+    ("AV", "named_by_its_auxiliary", "missing_tuple", "Derived predicate named by auxiliary in LLM output"),
+    ("AW", "pronominal_verb_clitic_omitted", "missing_arg", "Pronominal verb clitic omitted in LLM reading"),
+    ("AX", "xcomp_control_partner_hosted", "extra_arg", "Argument hung on opposite end of xcomp edge"),
+    ("AY", "complemented_adjective_phrase", "extra_tuple", "Adjective phrase governing an argument proposed as predicate"),
+    ("AZ", "depictive_bare_oblique", "role_mismatch", "Depictive adjective attached as bare obl vs attr/xcomp"),
+    ("BA", "undecided_subject_slot", "missing_arg", "Derivation produced two subjects without disambiguating"),
+    ("BB", "coordinate_control_subjects", "subject_authority", "Accept all conjuncts of a coordinate controller"),
+    ("BC", "adverbial_oblique_pos_filter", "extra_arg", "Filter adverbial obliques by Layer-2 POS"),
+    ("BD", "pronominal_verb_clitic_mismatch", "role_mismatch", "Reflexive clitics in pronominal verbs with minor role discrepancy"),
+    ("BE", "coordination_head_cycle_guard", "normalization", "Cycle protection in coordination head walk"),
+    ("BF", "inverted_copula_complement", "extra_arg", "Inverted copula dependency structure"),
+    ("BH", "displaced_subject_pro_drop", "extra_arg", "Displaced pro-drop subject when subject is expressed elsewhere"),
+    ("BI", "accusative_and_infinitive", "extra_arg", "Accusative-and-infinitive subject/object sharing"),
+    ("BJ", "adverb_preposition_cluster", "normalization", "Merge multi-word adverb-preposition cluster citations"),
+    ("BK", "comparative_che_marker", "missing_arg", "Verbless comparative clause marked by che"),
+    ("BL", "comparative_si_come_marker", "missing_arg", "Verbless comparative clause marked by sì come"),
+    ("BM", "conjunction_oblique", "missing_arg", "Connective conjunction parked by Layer 4 in adjunct slot"),
+    ("BN", "conjunction_clause_head_predicate", "derivation", "Filter out conjunctions attached as clause heads without arguments"),
+    ("BO", "ordering_ai_before_d", "normalization", "Ordering gate: rule AI runs before rule D"),
+    ("BP", "hosts_child_aux_normalization", "normalization", "Normalize aux/cop dependencies in child host checks"),
+    ("BQ", "adverb_cluster_orders", "normalization", "Support alternative word orders in adverb-preposition clusters"),
+    ("BR", "nested_in_named_phrase", "missing_arg", "Argument nested inside a larger Layer-3 noun phrase named by LLM"),
+    ("BS", "copular_predication_via_aux", "extra_tuple", "Copular predication named by copula token"),
+    ("BT", "free_relative_matrix_head", "extra_arg", "Free relative clause attached under matrix predicate"),
+    ("BU", "coordination_last_conjunct_subject", "subject_authority", "Subject supplied by the last conjunct of a coordination"),
+    ("BV", "prep_stack_nominal", "normalization", "Normalize multi-word preposition fixed/case tokens onto nominal head"),
+    ("BW", "marker_slot_argument", "extra_arg", "Interrogative or relative marker token filling an argument slot"),
+    ("BX", "depictive_bare_oblique_omitted", "missing_arg", "Depictive bare oblique omitted in LLM reading"),
+    ("BY", "auxiliary_host_argument", "missing_arg", "Argument hung on this predicate's own aux/cop periphrasis"),
+    ("BZ", "finite_verb_conj_chain_walk", "derivation", "Conj chain subject propagation restricted to finite verbs"),
+    ("CA", "non_verb_conj_argument_test", "derivation", "Non-verb conjunct promoted only if it carries argument child"),
+    ("CB", "stranded_on_underived_complement", "extra_arg", "Argument attached to predicative complement underived in Layer 5"),
+    ("CC", "promoted_conjunct_argument", "extra_arg", "Coordinate nominal promoted to conj on predicate without slot"),
+    ("CD", "coordination_head_termination", "normalization", "Coordination head search termination condition"),
+    ("CE", "relative_pronoun_antecedent", "subject_authority", "Relative pronoun and antecedent co-indexing in control chain"),
+    ("CF", "fused_clitic_controller", "subject_authority", "Extract controller hidden inside fused clitic pronoun"),
+    ("CG", "gapped_coordinate_oblique", "extra_arg", "Elided coordinate oblique citable only by modifier"),
+    ("CH", "verb_in_adnominal_slot", "extra_tuple", "Participle or verb in amod/acl slot acting as reduced relative"),
+    ("CI", "host_position_coordination_resolution", "extra_arg", "Resolve host positions through coordination collapse"),
+    ("CJ", "oblique_controller", "subject_authority", "Controller in Layer 4 obl slot in control candidate walk"),
+    ("CK", "clause_named_by_marker", "missing_arg", "Subordinate clause cited by its marker/complementizer"),
+    ("CL", "fallback_control_subject_after_ag", "subject_authority", "Fall back to control subject when rule AG drops inherited subject"),
+    ("CM", "clitic_case_slot_mapping", "role_mismatch", "Map clitic pronoun to case annex slot"),
+    ("CN", "pro_drop_queue_back", "derivation", "Pro-drop null subject slot placed at back of queue"),
+    ("CP", "nominal_pos_classification", "extra_arg", "Identify adjective and noun POS for secondary predication"),
+    ("CQ", "marked_complement_clause", "role_mismatch", "Prepositional infinitive complement clause as xcomp"),
+    ("CS", "empty_derived_tuple", "missing_tuple", "Role-less empty derived tuple treated as non-asserting"),
+    ("CT", "copula_under_its_complement", "extra_arg", "Copula attached under its own predicate complement"),
+    ("CU", "pro_drop_and_concrete_double_listing", "subject_authority", "Accept double listing of pro-drop ∅ and concrete subject"),
+    ("CW", "gapped_second_term_argument", "missing_arg", "Second term of gapped comparison clause"),
+    ("CX", "wh_word_of_derived_clause", "extra_arg", "Interrogative wh-word opening a subordinate clause"),
+    ("CY", "clausal_complement_aux_double_listing", "missing_arg", "Clausal complement double-listed under auxiliary"),
+    ("CZ", "gapped_remnant_case_annex_slot", "derivation", "Gapped remnant case assignment via Layer-2 case annex"),
+    ("DA", "empty_derived_predicate_non_subj", "extra_arg", "Empty derived predicate cannot contradict non-subject arguments"),
+    ("DB", "prepositional_copular_complement", "role_mismatch", "Copular complement carrying prepositional marker"),
+    ("DC", "host_position_relative_resolution", "extra_arg", "Resolve host position through relative pronoun identity"),
+    ("DD", "relative_locative_adverb", "extra_arg", "Relative locative adverb attached as case on clause"),
+    ("DE", "head_names_own_role", "normalization", "Coordination head names its own role independently"),
+    ("DF", "control_candidate_np_normalization", "subject_authority", "Apply rule AI NP-head normalization to control candidates"),
+    ("DG", "membership_coordination_normalization", "membership", "Apply coordination collapse in raw membership check"),
+    ("DH", "gapped_first_term_argument", "missing_arg", "First term of gapped comparison clause"),
+    ("DI", "gapped_clause_read_as_predicate", "missing_arg", "Gapped clause headed on remnant read as predicate"),
+    ("DJ", "wh_word_identical_role", "extra_arg", "Wh-word opening clause with identical role"),
+    ("DK", "antecedent_for_relative_pronoun", "extra_arg", "Antecedent cited where derivation names relative pronoun"),
+    ("DL", "prepositional_copular_gate_pruning", "role_mismatch", "Pruned redundant gate in prepositional copular complement"),
+    ("DM", "comparative_particles_in_case_slot", "role_mismatch", "Comparison markers in Layer-4 case slot"),
+    ("DN", "raised_infinitive_subject", "missing_arg", "Subject written inside periphrasis by Layer 4"),
+    ("DO", "donor_predicate_disagrees", "subject_authority", "Donor predicate disagrees in person/number with target"),
+    ("DP", "relative_clause_relativizer_gate", "extra_arg", "Negative gate: clause relativized by non-pronoun particle"),
+    ("DQ", "impersonal_clausal_subject", "missing_arg", "Impersonal verb whose subject is its own che-clause"),
+    ("DR", "comparative_quasi_marker", "missing_arg", "Verbless comparison marked by quasi"),
+    ("DS", "membership_marker_slot_normalization", "membership", "Marker slot argument normalization in raw membership check"),
+    ("DT", "ordering_constraint_audit", "normalization", "Ordering constraint between classification rules"),
+    ("DU", "conj_subject_chain_cut_by_pro_drop", "derivation", "Conj subject chain cut by explicit pro-drop ∅"),
+    ("DV", "stranded_underived_via_au_host", "extra_arg", "Stranded complement read through rule AU adjective host"),
+    ("DW", "depictive_attr_omitted", "missing_arg", "Depictive attr omitted in LLM reading"),
+    ("DX", "predicative_advmod_adjective", "extra_arg", "Predicative adjective attached as advmod"),
+    ("DY", "relative_locative_lemmas", "extra_arg", "Relative locative markers identified by Layer-2 lemma"),
+    ("DZ", "conjunct_named_by_phrase_head", "extra_arg", "Rule AI NP-head equivalence read through rule C coordination collapse"),
+    ("EA", "speech_act_nominal", "extra_arg", "Elided speech verb parataxis on pronoun asserts lone ∅ subject"),
+    ("EB", "comparative_come_phrase_boundary", "missing_arg", "Boundary check for comparative come phrases"),
+    ("EC", "comparative_come_correlative", "missing_arg", "Correlative comparison marker in comparative come phrases"),
+    ("ED", "comparison_clause_host", "extra_arg", "Comparison clause headed on come with adjunct on matrix verb"),
+    ("EE", "prep_stack_fixed_child", "normalization", "Fixed child in multiword preposition stack"),
+    ("EF", "conj_subject_sibling_cut", "derivation", "Conj subject inheritance walk stops at sibling with subject"),
+    ("EG", "dual_role_artifact_contradiction", "dual_role", "One token filling two incompatible roles of one predicate"),
+    ("EH", "fused_clitic_lemma_alignment", "role_mismatch", "Positionally aligned lemma components for fused clitics"),
+    ("EI", "floating_quantifier_citation_merge", "normalization", "Re-key given floating quantifier citation onto derived nominal head"),
+]
+for _rid, _rname, _rkind, _rdesc in _RULES_CATALOG:
+    RULES.register(_rid, _rname, _rkind, _rdesc)
 
 
 # --- SkelRow (flat, stored) / SkelArg + SkelTuple (grouped, served) -----------------
@@ -187,15 +396,12 @@ def _prep_lemma(row: MorphRow) -> str:
 # (`attr`/`xcomp` for a copular complement, `iobj`/`obl:a` for the dative alternation) — in both
 # cases canonicalized to the derived side's convention, per PLAN.md's own instruction.
 
-# Written target-first: every key is a spelling of the value, never a different preposition.
-# Three kinds of key, all enumerated from what the corpus actually contains (the `case`-child
-# word forms of `dep/`, cross-checked against `--stats`'s role_mismatch pair table): archaic or
-# apocopated spellings (`sanz'`, `sovr'`, `ver'`, `'nnanzi`), preposition+article contractions
-# (`al`, `dal`, `nel`, `col`, `sul` — the LLM names the contraction, `derive_unit` the base
-# preposition, since Layer 2 lemmatizes these as `a+il` and `_prep_lemma` keeps the first part),
-# and univerbations Layer 2 analyses as a compound (`inver'` -> `in+verso`, so the derivation
-# reports `in`; the family is normalized onto that derived-side convention rather than onto
-# `verso`, exactly as this table's docstring above prescribes).
+# --- Language Pack Interface & Italian Constants ----------------------------------
+
+# 1. NP-head relative-pronoun word forms accepted by the membership soft check.
+_REL_PRONOUN_WORDS = frozenset({"che", "ch'", "cui", "qual", "quale", "chi"})
+
+# 2. Preposition normalization map (Layer-4 case-child word forms to canonical lemma).
 _PREP_LEMMA_NORM = {
     **{k: "senza" for k in ("sanza", "sanz", "sanz'", "sans")},
     **{k: "sopra" for k in ("sovra", "sovr'", "sovr", "sor", "sovresso")},
@@ -207,7 +413,6 @@ _PREP_LEMMA_NORM = {
     **{k: "per" for k in ("pel", "pei", "pe'")},
     **{k: "contro" for k in ("contra", "contr", "contr'")},
     **{k: "verso" for k in ("ver", "ver'")},
-    # `in`: article contractions, the apocopated `'n`, and the `in+verso`/`in+vero` compounds.
     **{k: "in" for k in ("nel", "nei", "ne", "ne'", "n'", "nella", "nello", "nelle", "'n",
                          "inver", "inver'", "'nver", "'nver'", "inverso", "'nverso", "invero")},
     **{k: "fino" for k in ("fin", "infin", "infine", "infino", "'nfino", "insin", "insino")},
@@ -219,6 +424,143 @@ _PREP_LEMMA_NORM = {
     "sott'": "sotto",
     "apo": "appresso",
 }
+
+# 3. Clausal relative-pronoun word forms (rules CE, DC, DK).
+_RELATIVE_PRONOUNS = ("che", "ch", "cui", "chi")
+
+# 4. Comparative particles in Layer-4 case slot (rules AK, DM).
+_COMPARATIVE_PARTICLES = ("come", "com", "qual", "quale", "quali")
+
+# 5. Comparative lemmas (rules AK, DM).
+_COMPARATIVE_LEMMAS = ("come", "quale")
+
+# 6. Clausal relativizers (rule DP negative gate).
+_RELATIVIZERS = _RELATIVE_PRONOUNS + ("qual", "quale", "quali", "quanto", "quanta", "quanti",
+                                      "quante", "quantunque", "onde", "dove", "ove", "u")
+
+# 7. Locative relative lemmas (rules DD, CX).
+_LOCATIVE_RELATIVE_LEMMAS = frozenset({"dove", "ove", "onde"})
+
+
+@dataclass(frozen=True)
+class LanguagePack:
+    """Language-specific constants for Layer 5 skeleton derivation and verification."""
+
+    prep_lemma_norm: dict[str, str]
+    rel_pronoun_words: frozenset[str]
+    relative_pronouns: tuple[str, ...]
+    relativizers: tuple[str, ...]
+    comparative_particles: tuple[str, ...]
+    comparative_lemmas: tuple[str, ...]
+    locative_relative_lemmas: frozenset[str]
+
+    def normalize_prep_lemma(self, lemma: str) -> str:
+        return self.prep_lemma_norm.get(lemma, lemma)
+
+
+ItalianLanguagePack = LanguagePack(
+    prep_lemma_norm=_PREP_LEMMA_NORM,
+    rel_pronoun_words=_REL_PRONOUN_WORDS,
+    relative_pronouns=_RELATIVE_PRONOUNS,
+    relativizers=_RELATIVIZERS,
+    comparative_particles=_COMPARATIVE_PARTICLES,
+    comparative_lemmas=_COMPARATIVE_LEMMAS,
+    locative_relative_lemmas=_LOCATIVE_RELATIVE_LEMMAS,
+)
+
+@dataclass
+class GrammarContext:
+    """Encapsulates multi-layer grammatical annotations (Layers 1-4) for a parse unit."""
+
+    nos: list[int]
+    texts: list[str]
+    morph_rows: dict[int, list[MorphRow]] | None = None
+    np_rows: dict[int, list[NPSpan]] | None = None
+    dep_rows: dict[int, list[DepRow]] | None = None
+    case_rows: dict[int, list[CaseRow]] | None = None
+    lang: LanguagePack = ItalianLanguagePack
+
+    def __post_init__(self) -> None:
+        self._dep_index: dict[tuple[int, int], DepRow] | None = None
+        self._children: dict[tuple[int, int], list[DepRow]] | None = None
+        self._morph_pos: dict[tuple[int, int], str] | None = None
+        self._morph_lemma: dict[tuple[int, int], str] | None = None
+        self._case_by_pos: dict[tuple[int, int], str] | None = None
+
+    @property
+    def dep_index(self) -> dict[tuple[int, int], DepRow]:
+        if self._dep_index is None:
+            self._dep_index = dep_index(self.dep_rows) if self.dep_rows is not None else {}
+        return self._dep_index
+
+    @property
+    def children(self) -> dict[tuple[int, int], list[DepRow]]:
+        if self._children is None:
+            self._children = {}
+            for r in self.dep_index.values():
+                self._children.setdefault((r.head_line, r.head_token), []).append(r)
+        return self._children
+
+    @property
+    def morph_pos(self) -> dict[tuple[int, int], str]:
+        if self._morph_pos is None:
+            self._morph_pos = {
+                (no, i + 1): r.pos for no, rows in (self.morph_rows or {}).items() for i, r in enumerate(rows)
+            }
+        return self._morph_pos
+
+    @property
+    def morph_lemma(self) -> dict[tuple[int, int], str]:
+        if self._morph_lemma is None:
+            self._morph_lemma = {
+                (no, i + 1): r.lemma or "" for no, rows in (self.morph_rows or {}).items() for i, r in enumerate(rows)
+            }
+        return self._morph_lemma
+
+    @property
+    def case_by_pos(self) -> dict[tuple[int, int], str]:
+        if self._case_by_pos is None:
+            self._case_by_pos = {
+                (r.line, r.token): r.slot for rows in (self.case_rows or {}).values() for r in rows
+            }
+        return self._case_by_pos
+
+    def dep_at(self, pos: tuple[int, int]) -> DepRow | None:
+        return self.dep_index.get(pos)
+
+    def morph_at(self, pos: tuple[int, int]) -> MorphRow | None:
+        if not self.morph_rows:
+            return None
+        rows = self.morph_rows.get(pos[0], [])
+        if 1 <= pos[1] <= len(rows):
+            return rows[pos[1] - 1]
+        return None
+
+    def head_of(self, pos: tuple[int, int]) -> tuple[int, int] | None:
+        row = self.dep_at(pos)
+        return (row.head_line, row.head_token) if row is not None else None
+
+    def deprel_of(self, pos: tuple[int, int]) -> str | None:
+        row = self.dep_at(pos)
+        return row.deprel if row is not None else None
+
+    def pos_tag(self, pos: tuple[int, int]) -> str:
+        return self.morph_pos.get(pos, "")
+
+    def is_verb(self, pos: tuple[int, int]) -> bool:
+        return "verb" in self.pos_tag(pos).lower()
+
+    def is_pronoun(self, pos: tuple[int, int]) -> bool:
+        tag = self.pos_tag(pos).lower()
+        if "pronoun" in tag:
+            return True
+        m = self.morph_at(pos)
+        return m is not None and m.word.lower() in self.lang.rel_pronoun_words
+
+    def case_slot(self, pos: tuple[int, int]) -> str | None:
+        return self.case_by_pos.get(pos)
+
+
 
 _ROLE_CANON = {"attr": "xcomp", "iobj": "obl:a"}
 
@@ -297,9 +639,10 @@ def derive_unit(
         pos = (row.line, row.token)
         morph = morph_at(row.line, row.token)
         if (morph is not None and "conjunction" in morph.pos.lower()
-                and not any(c.deprel in ARG_DEPRELS for c in children.get(pos, ()))):
+                and not any(c.deprel in ARG_DEPRELS for c in children.get(pos, ()))
+                and rule_active("BN")):
             continue
-        if pos in orphan_heads and (morph is None or not is_verb_pos(morph.pos)):
+        if pos in orphan_heads and (morph is None or not is_verb_pos(morph.pos)) and rule_active("AN"):
             continue
         predicate_positions.add(pos)
 
@@ -359,7 +702,8 @@ def derive_unit(
             # evidence rule Y reads on the acceptance side.
             if ((conj_morph is None or not is_verb_pos(conj_morph.pos))
                     and not any(c.deprel in ARG_DEPRELS or c.deprel in _AUX_DEPRELS
-                                for c in children.get(pos, ()))):
+                                for c in children.get(pos, ()))
+                    and rule_active("CA")):
                 continue
             if pos in gapped_conjuncts:
                 continue
@@ -398,7 +742,8 @@ def derive_unit(
     # **vender** dentro al templo", paradiso 18:122) yields an empty tuple no reading can fill —
     # the two shapes rules AN and BN stop elsewhere. A *finite* conjunct always has a subject,
     # overt or pro-drop, so its tuple is never empty.
-    promote_conjuncts(verbs_only=True)
+    if rule_active("BZ"):
+        promote_conjuncts(verbs_only=True)
 
     def argument_children(pos: tuple[int, int]) -> list[DepRow]:
         """Rule AM: a predicate's own argument children, plus any stranded on its `cop`/`aux`.
@@ -413,13 +758,14 @@ def derive_unit(
         """
         own = list(children.get(pos, ()))
         taken = {c.deprel for c in own}
-        for aux in children.get(pos, ()):
-            if aux.deprel not in _AUX_DEPRELS:
-                continue
-            for stranded in children.get((aux.line, aux.token), ()):
-                if (stranded.deprel in ARG_DEPRELS and stranded.deprel not in _SUBJ_DEPRELS
-                        and stranded.deprel not in taken):
-                    own.append(stranded)
+        if rule_active("AM"):
+            for aux in children.get(pos, ()):
+                if aux.deprel not in _AUX_DEPRELS:
+                    continue
+                for stranded in children.get((aux.line, aux.token), ()):
+                    if (stranded.deprel in ARG_DEPRELS and stranded.deprel not in _SUBJ_DEPRELS
+                            and stranded.deprel not in taken):
+                        own.append(stranded)
         return own
 
     def _oblique_role_of(child: DepRow) -> str:
@@ -460,7 +806,7 @@ def derive_unit(
         # root-position twin of the same frame ("E io: «Maestro, …»", 11:67) already derives.
         own_is_verb = is_verb_pos((morph_at(line, token) or MorphRow("")).pos)
         _subordinated = any(c.deprel == "mark" for c in children.get((line, token), ()))
-        if not has_subj and pred_row.deprel == "conj" and own_is_verb and not _subordinated:
+        if not has_subj and pred_row.deprel == "conj" and (own_is_verb or not rule_active("AT")) and not _subordinated:
             seen = {(line, token)}
             cur = index.get((pred_row.head_line, pred_row.head_token))
             while cur is not None and (cur.line, cur.token) not in seen:
@@ -487,7 +833,7 @@ def derive_unit(
                           if c.deprel == "conj" and (c.line, c.token) < (line, token)
                           and any(x.deprel in _SUBJ_DEPRELS
                                   for x in children.get((c.line, c.token), ()))]
-                if nearer:
+                if nearer and rule_active("EF"):
                     break
                 inherited = next(
                     (c for c in children.get((cur.line, cur.token), ()) if c.deprel in _SUBJ_DEPRELS),
@@ -499,9 +845,9 @@ def derive_unit(
                     )
                     has_subj = True
                     break
-                if cur.deprel != "conj" or any(
+                if cur.deprel != "conj" or (any(
                     c.deprel == "mark" for c in children.get((cur.line, cur.token), ())
-                ):
+                ) and rule_active("DU")):
                     break
                 cur = index.get((cur.head_line, cur.head_token))
 
@@ -549,7 +895,10 @@ def derive_unit(
                 bucket = (null_slots if (row_.arg_line, row_.arg_token) == (0, 0) else slots)
                 if row_.role not in slots and row_.role not in null_slots:
                     bucket.append(row_.role)
-            slots += null_slots
+            if rule_active("CN"):
+                slots += null_slots
+            else:
+                slots = null_slots + slots
             remnants = [conjunct] + sorted(
                 (c for c in children.get((conjunct.line, conjunct.token), ())
                  if c.deprel == "orphan"),
@@ -585,16 +934,17 @@ def derive_unit(
             # opinion moved to the one place in `derive_unit` that is openly guessing; unlike
             # rule U it runs in both directions, because here the annex is not overruling a
             # Layer-4 label — Layer 4 assigns a gapped remnant no role at all.
-            for remnant in list(remnants):
-                value = case_by_pos.get((remnant.line, remnant.token))
-                if not value or SLOT_SEP in value:
-                    continue
-                claimed = [s for s in slots if s in ("subj", "obj", "iobj")
-                           and _case_supports_role(value, s)]
-                if len(claimed) == 1:
-                    slots.remove(claimed[0])
-                    remnants.remove(remnant)
-                    assigned.append((claimed[0], remnant))
+            if rule_active("CZ"):
+                for remnant in list(remnants):
+                    value = case_by_pos.get((remnant.line, remnant.token))
+                    if not value or SLOT_SEP in value:
+                        continue
+                    claimed = [s for s in slots if s in ("subj", "obj", "iobj")
+                               and _case_supports_role(value, s)]
+                    if len(claimed) == 1:
+                        slots.remove(claimed[0])
+                        remnants.remove(remnant)
+                        assigned.append((claimed[0], remnant))
             assigned.extend(zip(slots, remnants))
             for role, remnant in assigned:
                 pred_args.append(
@@ -699,21 +1049,7 @@ def _subj_arg(by_arg_map: dict[tuple[int, int], str]) -> tuple[int, int] | None:
 
 _CONTROL_CHAIN_LIMIT = 8
 
-# The relative-pronoun word forms rules CE, DC and DK read (apostrophe-stripped, lowercased).
-_RELATIVE_PRONOUNS = ("che", "ch", "cui", "chi")
 
-# The comparative particles rules AK/DM read in a Layer-4 `case` slot (apostrophe-stripped,
-# lowercased). No layer calls any of them a preposition; `derive_unit`'s oblique refinement
-# mints `obl:<lemma>` out of them anyway.
-_COMPARATIVE_PARTICLES = ("come", "com", "qual", "quale", "quali")
-_COMPARATIVE_LEMMAS = ("come", "quale")
-
-# Rule DP's negative gate: every word this corpus uses to relativize a clause, not only the
-# pronouns rules CE/DC/DK read. Used to *refuse* the rule, so it is deliberately wider than
-# `_RELATIVE_PRONOUNS` — a clause with any of these has a relativizer of its own, and its head
-# noun is not silently one of its arguments.
-_RELATIVIZERS = _RELATIVE_PRONOUNS + ("qual", "quale", "quali", "quanto", "quanta", "quanti",
-                                      "quante", "quantunque", "onde", "dove", "ove", "u")
 
 
 def _control_subject_candidates(
@@ -904,6 +1240,8 @@ def _accept_control_subjects(
     morph_rows: dict[int, list[MorphRow]] | None,
     np_spans_by_line: "dict[int, list[NPSpan]] | None" = None,
 ) -> None:
+    if not rule_active("V"):
+        return
     """Rule V's acceptance, applied to every `subj` citation `g` holds for `pos`.
 
     Used where the derivation asserts **no** subject for a predicate: either because it is
@@ -965,7 +1303,7 @@ def _apply_subj_authority(
     # derived subject: a concrete subject the derivation contradicts is a claim, and stays
     # flagged. Censused at 6 predicates corpus-wide that list a ∅ beside another subject, 4 of
     # them beside the derived one.
-    if d_subj not in (None, (0, 0)) and g.get((0, 0)) == "subj" and g.get(d_subj) == "subj":
+    if d_subj not in (None, (0, 0)) and g.get((0, 0)) == "subj" and g.get(d_subj) == "subj" and rule_active("CU"):
         g.pop((0, 0), None)
     if d_subj == (0, 0):
         # Pro-drop antecedent: derive_unit only knows ∅; any concrete subject the LLM resolves is
@@ -988,10 +1326,10 @@ def _apply_subj_authority(
     elif (morph_rows is not None and children_by_pos is not None
           and _inherited_subject(pos, dep_index_by_pos)
           and _subj_arg(g) != d_subj
-          and (subject_agreement(d_subj, _finite_head_of(pos, children_by_pos, morph_rows),
-                                 morph_rows, children_by_pos)[0] == "disagree"
-               or _donor_predicate_disagrees(pos, d_subj, dep_index_by_pos, children_by_pos,
-                                             morph_rows))):
+          and ((subject_agreement(d_subj, _finite_head_of(pos, children_by_pos, morph_rows),
+                                 morph_rows, children_by_pos)[0] == "disagree" and rule_active("AG"))
+               or (_donor_predicate_disagrees(pos, d_subj, dep_index_by_pos, children_by_pos,
+                                             morph_rows) and rule_active("DO")))):
         # Rule AG: derive_unit's conj-subject-propagation (step 3) walks the conj chain
         # unconditionally, with no agreement gate — so it can inherit a subject whose Layer-2
         # person/number actively contradicts this predicate's own. "come tu vedi, a la pioggia
@@ -1011,7 +1349,8 @@ def _apply_subj_authority(
         # is dropped: a conjunct where the LLM resolved a *concrete* subject is making its own
         # claim about a slot the derivation no longer fills, and stays flagged.
         if _subj_arg(g) == (0, 0):
-            g.pop((0, 0), None)
+            if rule_active("AH"):
+                g.pop((0, 0), None)
         else:
             # Rule CL, AG's third leg. Dropping the inherited subject leaves the derivation in
             # exactly the state branch 2 describes — asserting no subject at all — so the slot
@@ -1020,8 +1359,9 @@ def _apply_subj_authority(
             # e tutti li sgomenta" (purgatorio 14:60): AG drops the 1sg "Io" that step 3
             # inherited onto the 3sg `sgomenta`, and the LLM's own reading of the subject was
             # then reported as `extra_arg` against a slot the derivation had just disclaimed.
-            _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows,
-                                 np_spans_by_line)
+            if rule_active("CL"):
+                _accept_control_subjects(g, pos, derived_by_pred, dep_index_by_pos, morph_rows,
+                                     np_spans_by_line)
     elif given_by_pred is not None and _inherited_subject(pos, dep_index_by_pos):
         # Rule AC: an inherited subject is not an independent assertion about *this* predicate.
         # `derive_unit`'s step 3 copies the coordination head's subject onto a conjunct that has
@@ -1039,7 +1379,7 @@ def _apply_subj_authority(
             ((r.arg_line, r.arg_token) for r in given_by_pred.get(head, ()) if r.role == "subj"),
             None,
         )
-        if head_given == g_subj:
+        if head_given == g_subj and rule_active("AC"):
             g.pop(g_subj, None)
             d.pop(d_subj, None)
             return
@@ -1054,7 +1394,7 @@ def _apply_subj_authority(
         # inherited (this branch's own condition), so a predicate with an `nsubj` child of its own
         # is untouched, and on the LLM having cited exactly that conjunct's subject. Censused at
         # 74 coordination heads whose conjunct carries the only overt subject.
-        if children_by_pos is not None and g_subj is not None:
+        if children_by_pos is not None and g_subj is not None and rule_active("BU"):
             for child in children_by_pos.get(pos, ()):
                 if child.deprel != "conj":
                     continue
@@ -2598,7 +2938,7 @@ _COMPLEMENT_ROLES = frozenset({"obj", "ccomp", "xcomp"})
 
 # Rule DY: the relative locative markers, by Layer-2 *lemma*. `onde` (whence) and `onda` (wave)
 # share a surface form and are separated here; `u'` lemmatizes to `ove`.
-_LOCATIVE_RELATIVE_LEMMAS = frozenset({"dove", "ove", "onde"})
+
 
 
 def _wh_word_of_derived_clause(
@@ -3704,9 +4044,9 @@ def _classify_divergence(
             if not is_verb_pos((morph_pos_by_position or {}).get(p, "")):
                 speech_act_nominal.add(p)
     for line, token in sorted(derived_preds - given_preds):
-        if (line, token) in empty_derived:
+        if (line, token) in empty_derived and rule_active("CS"):
             continue
-        if _named_by_its_auxiliary((line, token)):
+        if _named_by_its_auxiliary((line, token)) and rule_active("AV"):
             continue
         violations.append(Violation(line, "tag", f"missing_tuple: predicate {line}.{token} not proposed",
                                      predicate=(line, token)))
@@ -3778,10 +4118,13 @@ def _classify_divergence(
 
     for line, token in sorted(given_preds - derived_preds):
         pos = (line, token)
-        if (pos in double_listed or _elided_copula_nominal(pos)
-                or _aux_of_derived_predicate(pos) or _copular_predication(pos)
-                or _verb_in_argument_slot(pos) or _complemented_adjective_phrase(pos)
-                or _verb_in_adnominal_slot(pos)):
+        if (pos in double_listed
+                or (_elided_copula_nominal(pos) and rule_active("Y"))
+                or (_aux_of_derived_predicate(pos) and rule_active("I"))
+                or (_copular_predication(pos) and rule_active("Y"))
+                or (_verb_in_argument_slot(pos) and rule_active("Z"))
+                or (_complemented_adjective_phrase(pos) and rule_active("AY"))
+                or (_verb_in_adnominal_slot(pos) and rule_active("CH"))):
             continue
         violations.append(Violation(line, "tag", f"extra_tuple: predicate {line}.{token} not derived",
                                      predicate=(line, token)))
@@ -3812,15 +4155,19 @@ def _classify_divergence(
             _apply_subj_authority(g, d, pos, derived_by_pred, dep_index_by_pos, given_by_pred,
                                   morph_rows, children_by_pos, np_rows)
             derived_args = set(d)
-            g = _merge_auxiliary_citations(g, pos, dep_index_by_pos)
-            g = {
-                (_prep_stack_nominal(a, dep_index_by_pos) if a != (0, 0) else a): r
-                for a, r in g.items()
-            }  # rule BV: a `fixed`/`case` word of a multiword preposition names its nominal
-            g = _merge_adverb_cluster_citations(g, pos, dep_index_by_pos, children_by_pos,
-                                                morph_pos_by_position)
-            g = _collapse_coordination(g, pos, dep_index_by_pos, morph_pos_by_position)
-            d = _collapse_coordination(d, pos, dep_index_by_pos, morph_pos_by_position)
+            if rule_active("AQ"):
+                g = _merge_auxiliary_citations(g, pos, dep_index_by_pos)
+            if rule_active("BV"):
+                g = {
+                    (_prep_stack_nominal(a, dep_index_by_pos) if a != (0, 0) else a): r
+                    for a, r in g.items()
+                }  # rule BV: a `fixed`/`case` word of a multiword preposition names its nominal
+            if rule_active("BJ"):
+                g = _merge_adverb_cluster_citations(g, pos, dep_index_by_pos, children_by_pos,
+                                                    morph_pos_by_position)
+            if rule_active("C"):
+                g = _collapse_coordination(g, pos, dep_index_by_pos, morph_pos_by_position)
+                d = _collapse_coordination(d, pos, dep_index_by_pos, morph_pos_by_position)
             # Rule BO: rule AI runs **before** rule D. Both fire on a given citation the
             # derivation does not carry, and rule D is the weaker answer of the two: it drops the
             # citation as an accepted `nmod` adjunct, which silences the `extra_arg` half of the
@@ -3831,20 +4178,22 @@ def _classify_divergence(
             # citation onto the derived position and both halves go quiet. The 21-25 batch's
             # ordering finding in a third form: two rules that are each correct alone, in the
             # order that loses one of them.
-            if np_rows is not None:
+            if np_rows is not None and rule_active("AI"):
                 _merge_np_head_citations(g, d, np_rows)
             # Rule EI runs **after** rule AI and before rule D, for rule BO's reason: it is the
             # same citation convention on the pairs rule AI's single-span test cannot reach, and
             # rule D would otherwise drop the quantifier as an accepted adjunct and leave the
             # derivation's own position reported as a `missing_arg`.
-            _merge_floating_quantifier_citations(g, d, dep_index_by_pos,
-                                                 morph_lemma_by_position, morph_pos_by_position)
-            _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
+            if rule_active("EI"):
+                _merge_floating_quantifier_citations(g, d, dep_index_by_pos,
+                                                     morph_lemma_by_position, morph_pos_by_position)
+            if rule_active("D"):
+                _drop_nmod_obliques(g, d, derived_args, dep_index_by_pos)
         for arg, drole in sorted(d.items()):
             grole = g.get(arg)
             if grole is None:
                 if drole in ("ccomp", "xcomp") and (arg in given_preds
-                                                    or _aux_named_predicate(arg)):
+                                                    or _aux_named_predicate(arg)) and rule_active("CY"):
                     # Clausal-complement double-listing: the LLM lists the clause as its own
                     # tuple instead of also citing it as this predicate's argument.
                     #
@@ -3860,76 +4209,76 @@ def _classify_divergence(
                     # complements — so it is kept for consistency between the two directions of
                     # one gate rather than for its count.
                     continue
-                if arg in given_preds and _verb_in_argument_slot(arg):
+                if arg in given_preds and _verb_in_argument_slot(arg) and rule_active("Z"):
                     # Rule Z, host leg: the derivation reports the infinitive as this
                     # predicate's argument, the LLM gives it a tuple of its own — the same
                     # double-listing the ccomp/xcomp skip above already accepts.
                     continue
-                if _complement_hosted_argument(pos, arg, drole, given_by_pred):
+                if _complement_hosted_argument(pos, arg, drole, given_by_pred) and rule_active("X"):
                     continue  # rule X: the LLM hung it on this predicate's own complement
                 if _comparative_come_adjunct(pos, arg, drole, dep_index_by_pos, children_by_pos,
-                                             morph_pos_by_position, d):
+                                             morph_pos_by_position, d) and rule_active("AR"):
                     continue  # rule AR: a verbless comparative clause's nominal
-                if _conjunction_oblique(arg, drole, morph_pos_by_position):
+                if _conjunction_oblique(arg, drole, morph_pos_by_position) and rule_active("BM"):
                     continue  # rule BM: a connective Layer 4 parked in an adjunct slot
-                if _pronominal_verb_clitic(pos, arg, drole):
+                if _pronominal_verb_clitic(pos, arg, drole) and rule_active("AW"):
                     continue  # rule AW: rule AB's mirror leg
-                if _nested_in_named_phrase(arg, g, d, np_rows):
+                if _nested_in_named_phrase(arg, g, d, np_rows) and rule_active("BR"):
                     continue  # rule BR: the LLM named the phrase once, by its Layer-3 head
                 if _depictive_bare_oblique_omitted(pos, arg, drole, dep_index_by_pos,
-                                                   morph_pos_by_position, case_children):
+                                                   morph_pos_by_position, case_children) and rule_active("BX"):
                     continue  # rule BX: rule AZ's missing_arg leg
                 if _depictive_attr_omitted(pos, arg, drole, dep_index_by_pos, d,
-                                           morph_pos_by_position, case_children):
+                                           morph_pos_by_position, case_children) and rule_active("DW"):
                     continue  # rule DW: rule BX's `attr` leg
-                if _undecided_subject_slot(drole, arg, g, d):
+                if _undecided_subject_slot(drole, arg, g, d) and rule_active("BA"):
                     continue  # rule BA: the derivation offered two subjects and named neither
-                if _gapped_second_term_argument(arg, d):
+                if _gapped_second_term_argument(arg, d) and rule_active("CW"):
                     continue  # rule CW: rule BA's oblique leg — the elided clause's own argument
-                if _gapped_first_term_argument(arg, g, d):
+                if _gapped_first_term_argument(arg, g, d) and rule_active("DH"):
                     continue  # rule DH: rule CW's mirror — the LLM read the *second* clause
                 if _gapped_clause_read_as_predicate(pos, arg, dep_index_by_pos, children_by_pos,
-                                                    given_preds):
+                                                    given_preds) and rule_active("DI"):
                     continue  # rule DI: rule AN's acceptance leg — the gap headed on its remnant
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
-                                               hosts=_control_partners(pos)):
+                                               hosts=_control_partners(pos)) and rule_active("AX"):
                     continue  # rule AX: the LLM hung it on the other end of an `xcomp` edge
                 if _complement_hosted_argument(pos, arg, drole, given_by_pred,
-                                               hosts=_auxiliary_hosts(pos)):
+                                               hosts=_auxiliary_hosts(pos)) and rule_active("BY"):
                     continue  # rule BY: the LLM hung it on this predicate's own `aux`/`cop`
-                if _clause_named_by_marker(pos, arg, drole, dep_index_by_pos, g):
+                if _clause_named_by_marker(pos, arg, drole, dep_index_by_pos, g) and rule_active("CK"):
                     continue  # rule CK: the LLM named this clause by its complementizer
-                if _raised_infinitive_subject(pos, drole, g):
+                if _raised_infinitive_subject(pos, drole, g) and rule_active("DN"):
                     continue  # rule DN: the subject Layer 4 wrote inside the periphrasis
-                if _impersonal_clausal_subject(pos, drole, d):
+                if _impersonal_clausal_subject(pos, drole, d) and rule_active("DQ"):
                     continue  # rule DQ: an inherited subject against a lone clausal complement
                 violations.append(Violation(line, "tag", f"missing_arg: {line}.{token} {drole} {arg}",
                                              role=drole, arg=arg, predicate=pos))
             elif grole != drole:
-                if (_oblique_lemma_refinement(grole, drole, arg, case_children)
-                        or _predicative_complement(grole, drole)
-                        or _case_marked_object(grole, drole, arg, case_lemmas)
-                        or _co_present_preposition(grole, drole, arg, case_lemmas)
-                        or _clausal_complement_flavor(grole, drole)
-                        or _clausal_object(grole, drole, arg, morph_pos_by_position)
-                        or _case_corroborated_role(grole, drole, arg, case_by_position,
-                                                   morph_pos_by_position)
-                        or _case_corroborated_swap(grole, drole, arg, g, d, case_by_position,
-                                                   morph_pos_by_position)
-                        or _comparative_come_complement(grole, drole, arg, dep_index_by_pos,
-                                                        morph_pos_by_position)
-                        or _fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position,
-                                                   case_by_position, morph_lemma_by_position)
-                        or _depictive_bare_oblique(grole, drole, pos, arg, dep_index_by_pos,
-                                                   morph_pos_by_position, case_children)
-                        or _marked_complement_clause(pos, grole, drole, arg, dep_index_by_pos,
-                                                     marker_lemmas)
+                if ((_oblique_lemma_refinement(grole, drole, arg, case_children) and rule_active("L"))
+                        or (_predicative_complement(grole, drole) and rule_active("M"))
+                        or (_case_marked_object(grole, drole, arg, case_lemmas) and rule_active("N"))
+                        or (_co_present_preposition(grole, drole, arg, case_lemmas) and rule_active("O"))
+                        or (_clausal_complement_flavor(grole, drole) and rule_active("P"))
+                        or (_clausal_object(grole, drole, arg, morph_pos_by_position) and rule_active("Q"))
+                        or (_case_corroborated_role(grole, drole, arg, case_by_position,
+                                                    morph_pos_by_position) and rule_active("U"))
+                        or (_case_corroborated_swap(grole, drole, arg, g, d, case_by_position,
+                                                    morph_pos_by_position) and rule_active("W"))
+                        or (_comparative_come_complement(grole, drole, arg, dep_index_by_pos,
+                                                         morph_pos_by_position) and rule_active("AK"))
+                        or (_fused_clitic_dual_role(grole, drole, arg, morph_pos_by_position,
+                                                    case_by_position, morph_lemma_by_position) and rule_active("AL"))
+                        or (_depictive_bare_oblique(grole, drole, pos, arg, dep_index_by_pos,
+                                                    morph_pos_by_position, case_children) and rule_active("AZ"))
+                        or (_marked_complement_clause(pos, grole, drole, arg, dep_index_by_pos,
+                                                      marker_lemmas) and rule_active("CQ"))
                         # rule BD's mismatch leg: both readings park the same reflexive clitic in
                         # a slot a bare clitic can carry, and disagree only about which
-                        or (_pronominal_verb_clitic(pos, arg, grole)
-                            and _pronominal_verb_clitic(pos, arg, drole))
+                        or ((_pronominal_verb_clitic(pos, arg, grole)
+                             and _pronominal_verb_clitic(pos, arg, drole)) and rule_active("BD"))
                         # rule DB: rule AD's mismatch leg
-                        or _prepositional_copular_complement(pos, grole, drole, arg)):
+                        or (_prepositional_copular_complement(pos, grole, drole, arg) and rule_active("DB"))):
                     continue
                 violations.append(
                     Violation(line, "tag", f"role_mismatch: {line}.{token} arg {arg} {grole!r} vs {drole!r}",
@@ -3938,39 +4287,39 @@ def _classify_divergence(
         for arg, grole in sorted(g.items()):
             if arg not in d:
                 if dep_index_by_pos is not None and (
-                    _adverbial_oblique(pos, arg, grole, dep_index_by_pos, morph_pos_by_position)
-                    or _predicative_advmod(pos, arg, grole, dep_index_by_pos,
-                                           morph_pos_by_position)
-                    or _nmod_complement_of_predicate(pos, arg, grole, dep_index_by_pos,
-                                                     case_lemmas)
-                    or _marked_adverbial_clause(pos, arg, grole, dep_index_by_pos,
-                                                marker_lemmas)
-                    or _secondary_predicate_over_argument(pos, arg, grole, derived_args)
-                    or _displaced_subject_pro_drop(grole, arg, g, d)
-                    or _accusative_and_infinitive(pos, arg, grole, dep_index_by_pos,
-                                                  morph_tense_by_position)
-                    or _inverted_copula_complement(pos, arg, grole, dep_index_by_pos,
-                                                   morph_pos_by_position)
-                    or _reflexive_clitic_argument(pos, arg, grole)
-                    or _copular_adverb_complement(pos, arg, grole)
-                    or _free_relative_head(pos, arg, grole, d)
-                    or _free_relative_matrix_head(pos, arg)  # rule BT: rule AE's embedded side
-                    or _copula_under_its_complement(pos, arg, grole)  # rule CT
-                    or _marker_slot_argument(pos, arg, grole, dep_index_by_pos,
-                                             morph_pos_by_position)  # rule BW: rule BM's mirror
-                    or _conj_shared_argument(pos, arg, grole, dep_index_by_pos,
-                                             derived_by_pred, d)
+                    (_adverbial_oblique(pos, arg, grole, dep_index_by_pos, morph_pos_by_position) and rule_active("J"))
+                    or (_predicative_advmod(pos, arg, grole, dep_index_by_pos,
+                                           morph_pos_by_position) and rule_active("R"))
+                    or (_nmod_complement_of_predicate(pos, arg, grole, dep_index_by_pos,
+                                                     case_lemmas) and rule_active("S"))
+                    or (_marked_adverbial_clause(pos, arg, grole, dep_index_by_pos,
+                                                marker_lemmas) and rule_active("T"))
+                    or (_secondary_predicate_over_argument(pos, arg, grole, derived_args) and rule_active("AA"))
+                    or (_displaced_subject_pro_drop(grole, arg, g, d) and rule_active("BH"))
+                    or (_accusative_and_infinitive(pos, arg, grole, dep_index_by_pos,
+                                                  morph_tense_by_position) and rule_active("BI"))
+                    or (_inverted_copula_complement(pos, arg, grole, dep_index_by_pos,
+                                                   morph_pos_by_position) and rule_active("BF"))
+                    or (_reflexive_clitic_argument(pos, arg, grole) and rule_active("AB"))
+                    or (_copular_adverb_complement(pos, arg, grole) and rule_active("AD"))
+                    or (_free_relative_head(pos, arg, grole, d) and rule_active("AE"))
+                    or (_free_relative_matrix_head(pos, arg) and rule_active("BT"))  # rule BT: rule AE's embedded side
+                    or (_copula_under_its_complement(pos, arg, grole) and rule_active("CT"))  # rule CT
+                    or (_marker_slot_argument(pos, arg, grole, dep_index_by_pos,
+                                             morph_pos_by_position) and rule_active("BW"))  # rule BW: rule BM's mirror
+                    or (_conj_shared_argument(pos, arg, grole, dep_index_by_pos,
+                                             derived_by_pred, d) and rule_active("AJ"))
                     # rule X, mirror leg: derive_unit hung it on the copula this predicate
                     # is the complement of
-                    or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
-                                                   hosts=_copular_hosts(pos))
+                    or (_complement_hosted_argument(pos, arg, grole, derived_by_pred,
+                                                   hosts=_copular_hosts(pos)) and rule_active("X"))
                     # rule ED: rule AR's `extra_arg` leg — the comparison Layer 4 headed on
                     # `come`, whose adjunct the LLM lists on the matrix predicate
-                    or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
-                                                   hosts=_comparison_clause_hosts(pos))
+                    or (_complement_hosted_argument(pos, arg, grole, derived_by_pred,
+                                                   hosts=_comparison_clause_hosts(pos)) and rule_active("ED"))
                     # rule AX, mirror leg: derive_unit hung it on the other end of an `xcomp`
-                    or _complement_hosted_argument(pos, arg, grole, derived_by_pred,
-                                                   hosts=_control_partners(pos))
+                    or (_complement_hosted_argument(pos, arg, grole, derived_by_pred,
+                                                   hosts=_control_partners(pos)) and rule_active("AX"))
                     # rule CG: an elided coordinate oblique, citable only by its modifier
                     or _gapped_coordinate_oblique(pos, arg, grole, dep_index_by_pos,
                                                   children_by_pos, d)
@@ -3983,7 +4332,7 @@ def _classify_divergence(
                     or _stranded_on_underived_complement(pos, arg, grole, dep_index_by_pos,
                                                          derived_preds, case_lemmas)
                     # rule CK: this is the `mark` of a clause the derivation gives the same slot
-                    or _marker_of_derived_clause(pos, arg, grole, dep_index_by_pos, d)
+                    or (_marker_of_derived_clause(pos, arg, grole, dep_index_by_pos, d) and rule_active("CK"))
                     # rule CX: rule CK widened — the interrogative word that opens the clause
                     or _wh_word_of_derived_clause(pos, arg, grole, dep_index_by_pos,
                                                   morph_pos_by_position, children_by_pos, d)
@@ -4005,16 +4354,16 @@ def _classify_divergence(
                     # procedure runs for the other roles, where an empty tuple means only that
                     # Layer 4 gave the predicate no argument child. 17 positions, against the
                     # 23 the unrestricted form took.
-                    or (grole != "subj" and pos in empty_derived)
+                    or ((grole != "subj" and pos in empty_derived) and rule_active("DA"))
                     # rule DD: the relative locative adverb Layer 4 writes as a `case`
-                    or _relative_adverb_oblique(pos, arg, grole)
+                    or (_relative_adverb_oblique(pos, arg, grole) and rule_active("DD"))
                     # rule DK: the antecedent, where the derivation names its clause's pronoun
-                    or _antecedent_for_relative_pronoun(pos, arg, grole)
+                    or (_antecedent_for_relative_pronoun(pos, arg, grole) and rule_active("DK"))
                     # rule DZ: rule AI's NP head read through rule C's coordination collapse
                     or _conjunct_named_by_phrase_head(arg, grole, d, dep_index_by_pos,
                                                       morph_pos_by_position, np_rows)
                     # rule EA: the elided speech verb, whose derived tuple is a lone ∅ subject
-                    or (grole != "subj" and pos in speech_act_nominal)
+                    or ((grole != "subj" and pos in speech_act_nominal) and rule_active("EA"))
                 ):
                     continue
                 violations.append(Violation(line, "tag", f"extra_arg: {line}.{token} {grole} {arg}",
@@ -4398,7 +4747,7 @@ def validate_unit(
                 continue
             if (row.role == "obl" or row.role.startswith("obl:")) and arg in adverb_obl_positions:
                 continue
-            if arg in dep_argument_positions:
+            if arg in dep_argument_positions and rule_active("AF"):
                 continue
             # Rule AQ, applied where the citation is still raw: an argument named by the
             # `cop`/`aux` carrying its tense names the lexical head Layer 4 hung it on
@@ -4409,7 +4758,7 @@ def validate_unit(
             aux_head = _aux_head(arg, index)
             if aux_head != arg and (aux_head in np_head_positions or aux_head in pronoun_positions
                                     or aux_head in predicate_positions
-                                    or aux_head in dep_argument_positions):
+                                    or aux_head in dep_argument_positions) and rule_active("AQ"):
                 continue
             # **Rule DG**, the same finding one rule further on: rule C's coordination collapse,
             # applied where the citation is still raw. "cui più si convenia dicer 'Mal feci' /
@@ -4425,7 +4774,7 @@ def validate_unit(
             if coord_head != arg and (coord_head in np_head_positions
                                       or coord_head in pronoun_positions
                                       or coord_head in predicate_positions
-                                      or coord_head in dep_argument_positions):
+                                      or coord_head in dep_argument_positions) and rule_active("DG"):
                 continue
             # **Rule DS**, the same finding a third time: rule BW, applied where the citation is
             # still raw. Rule BW's own docstring cites "sappiendo … **quanto** costa" (paradiso
@@ -4439,13 +4788,13 @@ def validate_unit(
             # adjective or an adverb rather than a conjunction (rule BM's side of that line).
             # Censused at 325 `mark` rows corpus-wide whose POS is not a conjunction.
             if _marker_slot_argument((row.line, row.token), arg, row.role, index,
-                                     membership_morph_pos):
+                                     membership_morph_pos) and rule_active("DS"):
                 continue
             violations.append(
                 Violation(row.line, "tag", f"argument {arg} for role {row.role} heads no NP/pronoun/predicate")
             )
 
-    if morph_rows is not None:
+    if morph_rows is not None and rule_active("EG"):
         violations.extend(_dual_role_violations(all_rows, morph_rows, case_rows))
 
     if dep_rows is not None and morph_rows is not None:

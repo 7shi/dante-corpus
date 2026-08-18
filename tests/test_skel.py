@@ -1459,6 +1459,30 @@ def test_find_repairs_prep_stack_needs_dep_rows():
     assert skel._find_repairs(given, derived, violations) == []
 
 
+def test_language_pack_italian():
+    pack = skel.ItalianLanguagePack
+    assert isinstance(pack, skel.LanguagePack)
+    assert pack.normalize_prep_lemma("sanz'") == "senza"
+    assert "che" in pack.rel_pronoun_words
+    assert "che" in pack.relative_pronouns
+    assert "dove" in pack.locative_relative_lemmas
+    assert "come" in pack.comparative_lemmas
+
+
+def test_grammar_context():
+    nos, texts, dep_data, morph_data = _unit_1_3()
+    ctx = skel.GrammarContext(
+        nos=nos,
+        texts=texts,
+        morph_rows=morph_data,
+        dep_rows=dep_data,
+    )
+    assert ctx.is_verb((2, 2))
+    assert ctx.head_of((1, 1)) == (1, 2)
+    assert ctx.deprel_of((1, 1)) == "case"
+    assert ctx.dep_at((2, 2)).deprel == "root"
+
+
 def test_find_repairs_role_label_rejects_iobj_obj_reversal():
     derived = {2: [skel.SkelRow(2, 2, "pred", "obj", 1, 3)]}
     given = {2: [skel.SkelRow(2, 2, "pred", "iobj", 1, 3)]}

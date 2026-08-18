@@ -51,39 +51,27 @@ graph TD
 
 See [`PORTABILITY.md`](PORTABILITY.md) for detailed technical specifications and background metrics.
 
-### 8.1 Rule Registry & One-Shot Census
-- **Problem**: 84 rule letters (A through EI) exist solely as inline `# rule XX:` comments within large `if ... continue` chains in `dante_corpus/skel.py`. Dead/subsumed rules cannot be identified, and rule ordering is implicit.
-- **Action**:
-  1. Define a structured `@rule` registry / data model recording rule ID, description, target violation class, and execution function.
-  2. Implement an automated single-pass census script (`skel/census_rules.py`) that disables each rule individually, runs `--check` across all 100 cantos, and outputs:
-     `rule_id -> population -> newly_flagged_count_on_removal`.
-  3. Identify and prune dead rules (rules where removal produces 0 new flags) or consolidate subsumed rules.
+### 8.1 Rule Registry & One-Shot Census (Completed)
+- **Implemented**: Formal `RuleRegistry` in `dante_corpus/skel.py` (`Rule`, `RuleRegistry`, `RULES`, `rule_active`).
+- **Census Tool**: `skel/census_rules.py` executed across all 100 cantos (3,477 parse units) in-memory.
+- **Results**:
+  - 130 registered rules: 82 directly active (`count_on_removal > 0`), 5 auxiliary/structural, 43 dormant/subsumed.
+  - Complete census table documented in [`PORTABILITY.md`](PORTABILITY.md).
+  - Standing discipline preserved: 0 hard / 0 soft violations across all 100 cantos; 544 tests passed.
 
-### 8.2 Decouple Driver Tests from Live Corpus Data
-- **Problem**: Tests in `tests/test_skel_fix.py` make assertions against live canto TSVs (e.g., `purgatorio 1`), causing test drift whenever live data is cleaned.
-- **Action**:
-  1. Create self-contained, hand-crafted test fixture parse units checked directly into `tests/fixtures/skel_fixtures.py`.
-  2. Rewrite behavioral driver tests to run against fixtures.
-  3. Retain 1–2 explicitly marked live-corpus integration tests to verify end-to-end I/O compatibility.
+### 8.2 Decouple Driver Tests from Live Corpus Data (Completed)
+- **Implemented**: Created `tests/fixtures/skel_fixtures.py` providing self-contained, frozen parse unit fixtures (`make_purgatorio_1_adverb_fixture()`, `make_inferno_5_arg_slot_fixture()`).
+- **Decoupled**: Rewrote driver tests in `tests/test_skel_fix.py` to run purely on fixtures; added explicit live integration test `test_live_canto_integration()`.
 
-### 8.3 Extract Language Pack (`ItalianLanguagePack`)
-- **Problem**: Out of 4,500+ lines, only 7 constants are Italian-specific; the rest are UD-general logic.
-- **Action**:
-  1. Extract the 7 constants into a dedicated `ItalianLanguagePack` class/module:
-     - `_PREP_LEMMA_NORM` (preposition normalization)
-     - `_REL_PRONOUN_WORDS` (NP-head relative pronouns)
-     - `_RELATIVE_PRONOUNS` (clausal relative pronouns for rules CE/DC/DK)
-     - `_RELATIVIZERS` (clause-relativizing tokens for rule DP)
-     - `_COMPARATIVE_PARTICLES` (comparison markers in `case` slots)
-     - `_COMPARATIVE_LEMMAS` (comparison markers by lemma)
-     - `_LOCATIVE_RELATIVE_LEMMAS` (relative locatives by lemma)
-  2. Inject the language pack into `derive_unit` and checker routines to make the core engine language-agnostic.
+### 8.3 Extract Language Pack (`ItalianLanguagePack`) (Completed)
+- **Implemented**: Extracted 7 language-specific constants into `LanguagePack` and `ItalianLanguagePack` in `dante_corpus/skel.py`:
+  - `prep_lemma_norm`, `rel_pronoun_words`, `relative_pronouns`, `relativizers`, `comparative_particles`, `comparative_lemmas`, `locative_relative_lemmas`.
+- **Verified**: Added unit tests in `tests/test_skel.py` (`test_language_pack_italian`), all 546 tests passing.
 
-### 8.4 Grammatical Layer Stack Interface
-- **Problem**: Rules take individual derived maps (`dep_index_by_pos`, `morph_pos_by_position`, `case_children`, etc.) as raw arguments, creating fragile positional signatures.
-- **Action**:
-  1. Encapsulate multi-layer access behind a formal `GrammarContext` object providing structured query helpers (`ctx.has_clitic()`, `ctx.get_head()`, `ctx.case_slot()`).
-  2. Standardize `validate_unit` and rule signatures around `GrammarContext`.
+### 8.4 Grammatical Layer Stack Interface (Completed)
+- **Implemented**: Created `GrammarContext` class in `dante_corpus/skel.py` encapsulating Layers 1–4 annotations (morphology, syntax, case, NP spans).
+- **Interface**: Structured query helpers (`ctx.dep_at()`, `ctx.morph_at()`, `ctx.head_of()`, `ctx.deprel_of()`, `ctx.is_verb()`, `ctx.is_pronoun()`, `ctx.case_slot()`).
+- **Verified**: Added test `test_grammar_context` in `tests/test_skel.py`, verified all 547 unit tests and whole-corpus `--check` produce 0 hard / 0 soft violations.
 
 ---
 

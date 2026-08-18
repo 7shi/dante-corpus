@@ -15,6 +15,10 @@ from pathlib import Path
 import pytest
 
 from dante_corpus import dep, morph, skel
+from fixtures.skel_fixtures import (
+    make_inferno_5_arg_slot_fixture,
+    make_purgatorio_1_adverb_fixture,
+)
 
 _ROOT = Path(__file__).resolve().parent.parent
 _spec = importlib.util.spec_from_file_location("skel_driver", _ROOT / "skel" / "skel.py")
@@ -517,25 +521,29 @@ class _FakeClient:
         self._system = text
 
 
-def _stub_model(monkeypatch, reply):
-    """Point `_ask_class`'s `from llm7shi import Client` at a canned answer, and keep the run
-    from touching the committed artifact."""
+def _stub_model(monkeypatch, reply, fixture=None):
+    """Point `_ask_class`'s `from llm7shi import Client` at a canned answer, and mount
+    self-contained test fixtures so driver tests never read live corpus TSV files."""
+    if fixture is None:
+        fixture = make_purgatorio_1_adverb_fixture()
     import llm7shi
     _FakeClient.seen = []
     monkeypatch.setattr(llm7shi, "Client",
                         lambda *a, **k: _FakeClient(reply), raising=False)
     written: list = []
     monkeypatch.setattr(drv.skel, "write_skel", lambda *a, **k: written.append(a))
-    real_load_skel = drv.skel.load_skel
-    def mock_load_skel(canticle, number):
-        data = real_load_skel(canticle, number)
-        if canticle == "purgatorio" and number == 1:
-            d = dict(data)
-            # Fixture with missing_arg_adverb (100, 3) on 102.1 porta
-            d[102] = [r for r in d.get(102, []) if not (r.token == 1 and r.arg_line == 100 and r.arg_token == 3)]
-            return d
-        return data
-    monkeypatch.setattr(drv.skel, "load_skel", mock_load_skel)
+    monkeypatch.setattr(drv.skel, "has_skel", lambda c, n: True)
+    monkeypatch.setattr(drv.skel, "load_skel", lambda c, n: {k: list(v) for k, v in fixture.skel_rows.items()})
+    monkeypatch.setattr(drv, "_morph_rows", lambda c, n: {k: list(v) for k, v in fixture.morph_rows.items()})
+    monkeypatch.setattr(drv, "_np_rows", lambda c, n: {k: list(v) for k, v in fixture.np_rows.items()})
+    monkeypatch.setattr(drv, "_dep_rows", lambda c, n: {k: list(v) for k, v in fixture.dep_rows.items()})
+    monkeypatch.setattr(drv, "_case_rows", lambda c, n: {k: list(v) for k, v in fixture.case_rows.items()})
+
+    class FakeCanto:
+        def lines(self):
+            return fixture.lines
+
+    monkeypatch.setattr(drv.api, "canto", lambda c, n: FakeCanto())
     return written
 
 
@@ -544,11 +552,8 @@ def _stub_model(monkeypatch, reply):
 # routes to the `missing_arg_adverb` subclass — the position is itself one of the 82 locative-adverb
 # omissions that class was written for.
 #
-# **This test reads the live artifact, so a `--fix` round moves it.** Until the seventh round it
-# also covered the canto's two `dual_role` units (96.6, 133.7, rule EG); the round cleared both,
-# and purgatorio 1 now carries this one violation alone. Pinning driver behaviour to corpus state
-# is the structural defect here, not the number — see `skel/PORTABILITY.md`, which schedules the
-# separation for after the residue reaches 0.
+# **Decoupled via fixtures**: the test uses a frozen snapshot fixture so `--fix` rounds on live data
+# never perturb test assertions.
 def test_fix_canto_asks_only_the_flagged_class_and_keeps_a_refusal_harmless(monkeypatch):
     written = _stub_model(monkeypatch, "Q1: none")
     stats = drv._fix_canto("purgatorio", 1, 34, "fake", _FakeUI(), None, whole=False)
@@ -581,18 +586,8 @@ def _fix_canto_with(monkeypatch, answer):
 # `extra_arg subj (92,1)` on the predicate at 92.2 — one disagreement about which token is the
 # subject, which the driver must put to the model **once**.
 def test_fix_canto_asks_a_same_slot_pair_as_one_question(monkeypatch):
-    _stub_model(monkeypatch, "Q1: keep")
-    real_load_skel = drv.skel.load_skel
-    def mock_load_skel(canticle, number):
-        data = real_load_skel(canticle, number)
-        if canticle == "inferno" and number == 5:
-            d = dict(data)
-            d[92] = [skel.SkelRow(92, 2, "pregheremmo", "subj", 92, 1),
-                     skel.SkelRow(92, 2, "pregheremmo", "obj", 92, 3),
-                     skel.SkelRow(92, 2, "pregheremmo", "obl:de", 92, 7)]
-            return d
-        return data
-    monkeypatch.setattr(drv.skel, "load_skel", mock_load_skel)
+    fixture = make_inferno_5_arg_slot_fixture()
+    _stub_model(monkeypatch, "Q1: keep", fixture=fixture)
     stats = drv._fix_canto("inferno", 5, 34, "fake", _FakeUI(), None, whole=False)
     assert stats["units:flagged"] == 1
     assert stats["calls:arg_slot"] == 1
@@ -831,3 +826,19 @@ def test_find_arg_row_fallback_on_single_matching_role():
     r3 = skel.SkelRow(1, 3, "vede", "subj", 1, 5)
     rows_by_line_dup = {1: [r1, r2, r3]}
     assert drv._find_arg_row(rows_by_line_dup, (1, 3), "subj", (1, 99)) is None
+
+
+# --- explicit live-corpus integration check ---------------------------------------------------
+
+
+def test_live_canto_integration():
+    """Explicit live-corpus integration check verifying end-to-end I/O compatibility."""
+    assert drv.skel.has_skel("inferno", 1)
+    skel_data = drv.skel.load_skel("inferno", 1)
+    assert len(skel_data) > 0
+    morph_data = drv._morph_rows("inferno", 1)
+    assert len(morph_data) > 0
+    np_data = drv._np_rows("inferno", 1)
+    assert len(np_data) > 0
+    dep_data = drv._dep_rows("inferno", 1)
+    assert len(dep_data) > 0

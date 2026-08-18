@@ -3,23 +3,20 @@
 ## Handoff (2026-08-19) — resume here
 
 > **Current State & Baseline**:
-> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **544 passed**).
+> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **547 passed**).
 > - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). [`skel/PLAN.md`](skel/PLAN.md) is rewritten for post-zero architecture.
-> - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 544 tests.
+> - **Phase 8 Completed**: Full codebase restructuring and portability complete (Rule Registry & One-Shot Census, Decoupled Driver Tests, Language Pack extraction, `GrammarContext` interface).
+> - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 547 tests.
 >
-> **Immediate Next Tasks (Phase 8: Codebase Restructuring & Portability)**:
-> 1. **Phase 8.1: Rule Registry & One-Shot Census** ([`skel/PORTABILITY.md`](skel/PORTABILITY.md) & [`skel/PLAN.md`](skel/PLAN.md)):
->    - Convert the 84 rule letters (A through EI) in `dante_corpus/skel.py` from inline comments into a structured `@rule` registry / data model.
->    - Create and execute a single-pass census script (`skel/census_rules.py`) that disables each rule one by one across all 100 cantos to measure exact population and count on removal (`rule -> population -> count_on_removal`).
->    - Identify and eliminate dead/subsumed rules.
-> 2. **Phase 8.2: Decouple Driver Tests**:
->    - Replace live canto assertions in `tests/test_skel_fix.py` with standalone, self-contained test fixtures.
-> 3. **Phase 8.3: Language Pack Extraction**:
->    - Isolate the 7 Italian-specific constants into `ItalianLanguagePack`.
-> 4. **Phase 8.4: Grammar Stack Interface**:
->    - Encapsulate cross-layer data access into a clean `GrammarContext` object.
-> 5. **Phase 9: Local LLM Grammar Harness** ([`skel/HARNESS.md`](skel/HARNESS.md)):
->    - Implement autonomous grammatical parsing harness (`skel/harness.py`) for local models (Gemma 4).
+> **Immediate Next Tasks (Phase 9: Grammatical Parsing Harness for Local LLMs)**:
+> 1. **Phase 9.1: Multi-Layer Context Packager (`skel/harness.py`)** ([`skel/HARNESS.md`](skel/HARNESS.md)):
+>    - Build multi-layer prompt formatter bundling source lines, Layer 2 morphology + case features, and Layer 4 UD trees.
+> 2. **Phase 9.2: Autonomous Reasoning Protocol**:
+>    - Define 4-step CoT prompting for agreement, head token citation, oblique/clausal complement disambiguation, and multi-predicate TSV framing.
+> 3. **Phase 9.3: Interactive Validation & Self-Correction Feedback Loop**:
+>    - Execute `validate_unit()` in loop, passing exact diagnostic violation strings back to model until convergence.
+> 4. **Phase 9.4: Local Model (Gemma 4) Benchmark & Evaluation**:
+>    - Benchmark on historical divergence positions to verify autonomous convergence rate.
 
 ## Current Status (2026-08-18)
 
