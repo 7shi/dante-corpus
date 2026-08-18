@@ -18,7 +18,7 @@
     Full retrospective in [`PHASE7.md`](PHASE7.md).
   - **Phase 8**: Complete and closed — **Codebase Restructuring & Portability** (8.1 Rule Registry & Census,
     8.2 Fixture Decoupling, 8.3 Language Pack Extraction, 8.4 GrammarContext Interface, 8.5 Modular Decomposition into
-    `dante_corpus/skel/` and `skel/driver_*.py`). Full retrospective in [`PORTABILITY.md`](PORTABILITY.md).
+    `dante_corpus/skel/` and `skel/driver_*.py`). Full retrospective in [`PORTABILITY.md`](PORTABILITY.md) and complete grammar handbook in [`RULES.md`](RULES.md).
 
 ---
 
@@ -59,7 +59,7 @@ See [`PORTABILITY.md`](PORTABILITY.md) for detailed technical specifications and
 - **Census Tool**: `skel/census_rules.py` executed across all 100 cantos (3,477 parse units) in-memory.
 - **Results**:
   - 130 registered rules: 82 directly active (`count_on_removal > 0`), 5 auxiliary/structural, 43 dormant/subsumed.
-  - Complete census table documented in [`PORTABILITY.md`](PORTABILITY.md).
+  - Complete census table and 6-branch grammar hierarchy documented in [`RULES.md`](RULES.md) and [`PORTABILITY.md`](PORTABILITY.md).
   - Standing discipline preserved: 0 hard / 0 soft violations across all 100 cantos; 544 tests passed.
 
 ### 8.2 Decouple Driver Tests from Live Corpus Data (Completed)
@@ -136,7 +136,7 @@ See [`HARNESS.md`](HARNESS.md) for architectural diagrams and prompt templates.
 ## Next Session Handover / 引継ぎ事項
 
 ### 1. 完了した作業（Phase 8: Codebase Restructuring & Portability）
-- **Phase 8.1**: `RuleRegistry` 導入と全130ルールの動的センサス機構 (`skel/census_rules.py`) 実装・全100歌測定完了。
+- **Phase 8.1**: `RuleRegistry` 導入と全130ルールの動的センサス機構 (`skel/census_rules.py`) 実装・全100歌測定完了。文法書・木構造仕様 [`RULES.md`](RULES.md) を作成。
 - **Phase 8.2**: テストのライブコーパス依存を分離し、独立したフィクスチャ (`tests/fixtures/skel_fixtures.py`) へ移行。
 - **Phase 8.3**: 7つのイタリア語文法定数を `LanguagePack` / `ItalianLanguagePack` として抽出・単体テスト整備。
 - **Phase 8.4**: レイヤースタック・アノテーション統合クエリインターフェース `GrammarContext` 実装。

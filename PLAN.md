@@ -4,7 +4,7 @@
 
 > **Current State & Baseline**:
 > - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **547 passed**).
-> - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). [`skel/PLAN.md`](skel/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) updated with Phase 8.1–8.4 completion and census data.
+> - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`skel/PLAN.md`](skel/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) updated with Phase 8 completion and census data.
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 547 tests.
 >
 > **Immediate Next Priority: Phase 8.5 — Modular Decomposition of `dante_corpus/skel.py` and `skel/skel.py`**:
@@ -44,7 +44,7 @@
 - **Pronoun Case Annex**: 0 hard violations across all 100 cantos ([`case/README.md`](case/README.md)).
 - **Layer 3 — Noun Phrases**: 0 hard / 0 soft violations across all 100 cantos ([`np/README.md`](np/README.md)).
 - **Layer 4 — Dependency Trees**: 0 hard / 0 soft violations across all 100 cantos ([`dep/README.md`](dep/README.md)). Stacked prepositions normalized and subject-agreement residue closed (see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md)).
-- **Layer 5 — Predicate-Argument Skeleton**: **0 hard / 0 soft violations across all 100 cantos** ([`skel/README.md`](skel/README.md)).
+- **Layer 5 — Predicate-Argument Skeleton**: **0 hard / 0 soft violations across all 100 cantos** ([`skel/README.md`](skel/README.md), [`skel/RULES.md`](skel/RULES.md)).
 - **Test Suite**: `pytest` **544 passed** in ~2.3s.
 - **Layer 5 Divergence Residue**: **0** (Inferno 0, Purgatorio 0, Paradiso 0).
 
@@ -167,7 +167,7 @@ grammar; they are contested judgments, normalizations, or bindings to something 
 4. **Layer 4 (dependency)** — *Complete and verified* ([`dep/README.md`](dep/README.md)).
 5. **Layer 5 (skeleton)** — *Complete and verified at 0 hard / 0 soft* ([`skel/README.md`](skel/README.md), [`skel/PHASE5.md`](skel/PHASE5.md), [`skel/PHASE6.md`](skel/PHASE6.md), [`skel/PHASE7.md`](skel/PHASE7.md)).
 6. **Phase 8 (Codebase Restructuring & Portability)** — *Complete (8.1–8.5)* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/PORTABILITY.md`](skel/PORTABILITY.md)):
-   - Rule Registry & Census (130 rules registered, measured via `census_rules.py`).
+   - Rule Registry & Census (130 rules registered, measured via `census_rules.py`, documented in [`skel/RULES.md`](skel/RULES.md)).
    - Self-contained test fixtures (`tests/fixtures/skel_fixtures.py`).
    - Language pack extraction (`ItalianLanguagePack`).
    - Layer stack interface (`GrammarContext`).
