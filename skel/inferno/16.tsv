@@ -60,7 +60,6 @@ line	token	word	role	arg_line	arg_token
 20	9	giunti	subj	0	0
 20	9	giunti	obl:a	20	7
 21	1	fenno	subj	19	5
-21	1	fenno	subj	21	8
 21	1	fenno	obj	21	3
 22	2	sogliono	subj	22	4
 22	2	sogliono	xcomp	22	5

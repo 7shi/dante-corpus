@@ -1,5 +1,19 @@
 # dep — Layer 4 correction history
 
+## paradiso 11:127 — correlative comparative clause subject attached to subordinate verb (2026-08-18)
+
+Found during the audit of Round 10 log failures (`extra_arg_subject` at paradiso 11:129; see [`../skel/PLAN.md`](../skel/PLAN.md) §P9).
+
+> e quanto le sue **pecore** remote / e vagabunde più da esso vanno, / più **tornano** a l'ovil di latte vòte.  (paradiso 11:127-129)
+
+In the correlative comparative construction (*"e quanto le sue pecore … vanno, più tornano …"*), `127.5 pecore` (3pl) is the subject of the main correlative clause verb `129.2 tornano` (3pl), which was modified by the subordinate comparative clause `128.6 vanno` (3pl, `advcl`). Layer 4 attached `127.5 pecore` as `nsubj` of `128.6 vanno`. Because `129.2 tornano` was attached as `conj` to the earlier 3sg clause `125.2 fatto`, `derive_unit` propagated `124.4 pecuglio` (3sg) as the subject of `tornano`, flagging the LLM's correct reading `tornano: subj=(127,5)` as `extra_arg: 129.2 subj (127, 5)`.
+
+Attaching `127.5 pecore` as `nsubj` of the main matrix clause verb `129.2 tornano` aligned the derivation with the true clause syntax and cleared **1 soft violation** in Layer 5 (116 → 115).
+
+| token | was | now |
+|---|---|---|
+| 127.5 `pecore` | `nsubj` ← 128.6 `vanno` | **`nsubj` ← 129.2 `tornano`** |
+
 ## 2 rows from the Phase 7 refusal census audit (2026-08-18)
 
 Found during the per-position audit of the 38 standing Layer-5 refusal positions (`extra_arg`, `extra_arg_subject`, `missing_arg`; see [`../skel/PLAN.md`](../skel/PLAN.md) §P4). Two Layer-4 rows were mis-parsed. Both were applied and re-validated: `morph`/`np`/`dep`/`case --check` all 0 hard / 0 soft; `pytest` 542 passed; Layer 5 **−3 soft violations** (140 → 137).

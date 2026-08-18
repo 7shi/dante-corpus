@@ -173,7 +173,6 @@ line	token	word	role	arg_line	arg_token
 62	1	cascaron	subj	61	3
 62	1	cascaron	obl:a	61	7
 63	5	hanno	subj	63	4
-63	5	hanno	ccomp	64	2
 63	5	hanno	obl:per	63	7
 64	2	ristorar	subj	62	6
 64	2	ristorar	obl:di	64	4

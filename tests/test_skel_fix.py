@@ -793,3 +793,20 @@ def test_fix_summary_without_a_log_writes_no_file(tmp_path, capsys):
     drv._print_fix_summary(_SUMMARY_TOTALS, None)
     assert list(tmp_path.iterdir()) == []
     assert "dual_role" in capsys.readouterr().out
+
+
+def test_find_arg_row_fallback_on_single_matching_role():
+    """When violation normalization cites a slightly different head/pronoun token than the
+    committed row, but there is exactly one row for that predicate with that canonical role,
+    _find_arg_row still locates the row."""
+    r1 = skel.SkelRow(1, 3, "vede", "subj", 1, 2)
+    r2 = skel.SkelRow(1, 3, "vede", "obj", 2, 2)
+    rows_by_line = {1: [r1, r2]}
+    # Exact match:
+    assert drv._find_arg_row(rows_by_line, (1, 3), "subj", (1, 2)) == r1
+    # Fallback when arg differs (e.g. (1, 1) instead of (1, 2)):
+    assert drv._find_arg_row(rows_by_line, (1, 3), "subj", (1, 1)) == r1
+    # If multiple rows with the same role exist and none match exact arg, returns None:
+    r3 = skel.SkelRow(1, 3, "vede", "subj", 1, 5)
+    rows_by_line_dup = {1: [r1, r2, r3]}
+    assert drv._find_arg_row(rows_by_line_dup, (1, 3), "subj", (1, 99)) is None

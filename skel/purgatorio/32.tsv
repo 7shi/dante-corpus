@@ -177,7 +177,6 @@ line	token	word	role	arg_line	arg_token
 68	1	disegnerei	obl:come	67	2
 68	5	addormentai	subj	68	3
 69	3	vuol	subj	0	0
-69	3	vuol	ccomp	69	4
 69	4	sia	ccomp	69	9
 69	9	finga	obj	69	7
 70	2	trascorro	subj	0	0

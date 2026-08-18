@@ -1,5 +1,18 @@
 # skel — Layer 5 correction history
 
+## Three Spurious Argument Rows Dropped from Round 10 Log Audits, 115 → 112 (−3) (2026-08-18)
+
+Investigated 2026-08-18 from Round 10's `--log` outputs. During the round, the model answered `drop` on three `extra_arg` / `extra_arg_subject` prompts, but the driver recorded `no usable answer` because `_find_arg_row` failed to match when `violation.arg` cited a slightly different head token than the committed TSV row. Dropping the spurious rows by hand cleared all 3 positions cleanly:
+
+1. [inferno 16:21](inferno/16.tsv): `21.1 fenno: subj=(19,5), subj=(21,8), obj=(21,3)`. Dropped duplicate subject row `21 1 fenno subj 21 8` (cleared `extra_arg: 21.1 subj (21, 5)`).
+2. [inferno 29:63](inferno/29.tsv): `63.5 hanno` in parenthetical *secondo che i poeti hanno per fermo* had spurious `ccomp=(64,2)`. Dropped `63 5 hanno ccomp 64 2` (cleared `extra_arg: 63.5 ccomp (62, 1)`).
+3. [purgatorio 32:69](purgatorio/32.tsv): `69.3 vuol` in *qual vuol sia che l'assonnar ben finga* had spurious `ccomp=(69,4)`. Dropped `69 3 vuol ccomp 69 4` (cleared `extra_arg: 69.3 ccomp (68, 1)`).
+
+### Driver Fix: `_find_arg_row` Single-Role Fallback
+Updated `_find_arg_row` in `skel/skel.py` to fall back to matching the row when exactly one row with that canonical role exists for the predicate, allowing future `--fix` rounds to apply `drop` or role modifications even when violation normalization points to a slightly different head/pronoun token. Added `test_find_arg_row_fallback_on_single_matching_role` in `tests/test_skel_fix.py` (`pytest` **544 passed**).
+
+Layer 5 soft violations stand at **112** (inferno 30, purgatorio 37, paradiso 45).
+
 ## The Seven Outlier Positions (extra_tuple, missing_tuple, argument heads no NP), 126 → 119 (−7) (2026-08-18)
 
 Investigated 2026-08-18 as Phase 7 outlier census. All 7 positions resolved cleanly:

@@ -867,7 +867,7 @@ line	token	word	deprel	head_line	head_token
 127	2	quanto	advmod	128	6
 127	3	le	det	127	5
 127	4	sue	det:poss	127	5
-127	5	pecore	nsubj	128	6
+127	5	pecore	nsubj	129	2
 127	6	remote	amod	127	5
 128	1	e	cc	128	2
 128	2	vagabunde	amod	127	5

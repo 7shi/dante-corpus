@@ -2,16 +2,17 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 116 soft** violations across all 100
-  cantos — **all 116 standard argument divergence positions** (all structural outliers and artifact-internal
+- **Current State**: `make -C skel check` reports **0 hard, 112 soft** violations across all 100
+  cantos — **all 112 standard argument divergence positions** (all structural outliers and artifact-internal
   contradictions closed: 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`).
-  Per canticle: inferno 32, purgatorio 38, paradiso 46. Base as of 2026-08-18, after the tenth
-  `--fix` round (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7),
-  the final three `dual_role` positions (129 → 126, §P6), the eight `missing_tuple_nominal` positions
-  and subject splice guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4),
-  the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
+  Per canticle: inferno 30, purgatorio 37, paradiso 45. Base as of 2026-08-18, after Round 10 log audits &
+  driver fix (116 → 112, §P9), the tenth `--fix` round (119 → 116, §P8), resolving the seven structural
+  outlier positions (126 → 119, §P7), the final three `dual_role` positions (129 → 126, §P6), the eight
+  `missing_tuple_nominal` positions and subject splice guard (137 → 129, §P5), refusal census reads &
+  Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2)
+  and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
-  `morph --check` 0/0, `pytest` **543 passed**.
+  `morph --check` 0/0, `pytest` **544 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Complete and closed — 2,084 → 160 soft, with seven user-run `--fix` rounds (−1,157)
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
@@ -88,9 +89,12 @@ route** (see *Open Assistant-Side Routes*).
    `missing_tuple` (2), `argument heads no NP` (2) all resolved (126 → 119).
 6. ~~**The tenth `--fix` round, `--no-whole --log`**~~ — **run 2026-08-18, §P8**: 119 → 116 (−3, −2.5%,
    106 calls, 48 refusals). Cleared `paradiso 1:81` (`arg_slot`, 2 removed) and `purgatorio 21:36` (`missing_arg`, 1 removed).
-7. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
+7. ~~**Audit Round 10 log failures and driver `_find_arg_row` fix**~~ — **settled 2026-08-18, §P9**: 116 → 112 (−4, −3.4%).
+   One Layer-4 upstream retag (`paradiso 11:127 pecore`), three spurious argument rows dropped (`inferno 16:21`,
+   `inferno 29:63`, `purgatorio 32:69`), and `_find_arg_row` single-role fallback added to driver (`pytest` **544**).
+8. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`.
-8. **The standing open routes** below, which the reads named but did not settle.
+9. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
 
@@ -621,6 +625,24 @@ The three lines removed:
 
 **Result**: 119 → 116 soft violations (inferno 32, purgatorio 38, paradiso 46). All 116 are standard argument
 divergence positions (`missing_arg` 53, `extra_arg` 41, `role_mismatch` 22).
+
+### §P9 — Round 10 Log Audits, One Layer-4 Retag, Three Spurious Drops, and Driver Fix, 116 → 112 (−4, −3.4%)
+
+Investigated 2026-08-18 from Round 10's `--log` outputs and failure shapes.
+
+**1. One Layer-4 Upstream Retag at paradiso 11:127 (−1 soft)**:
+- [paradiso 11:127](paradiso/11.tsv): In the correlative comparative construction (*"e quanto le sue pecore … vanno, più tornano …"*), `127.5 pecore` (3pl) is the subject of the main correlative verb `129.2 tornano` (3pl). Layer 4 had attached `pecore` to `128.6 vanno` (`advcl`). Because `tornano` was attached as `conj` to 3sg `125.2 fatto`, `derive_unit` propagated 3sg `pecuglio` as subject of `tornano`, generating `extra_arg: 129.2 subj (127, 5)`. Retagging `127.5 pecore` as `nsubj<-129.2 tornano` in `dep/paradiso/11.tsv` cleared **1 soft violation** (116 → 115). See [`../dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+**2. Three Spurious Argument Rows Dropped from Round 10 Log Analysis (−3 soft)**:
+During Round 10, the model answered `drop` for three `extra_arg` questions, but the driver reported `no usable answer` because `_find_arg_row` looked for an exact `(arg_line, arg_token)` match while violation normalization cited a slightly different head/pronoun token. Dropped the spurious rows:
+- [inferno 16:21](inferno/16.tsv): `21.1 fenno: subj=(19,5), subj=(21,8), obj=(21,3)`. Dropped duplicate subject `21 1 fenno subj 21 8` (cleared `extra_arg: 21.1 subj (21, 5)`).
+- [inferno 29:63](inferno/29.tsv): `63.5 hanno` in parenthetical *secondo che i poeti hanno per fermo*. Dropped spurious `63 5 hanno ccomp 64 2` (cleared `extra_arg: 63.5 ccomp (62, 1)`).
+- [purgatorio 32:69](purgatorio/32.tsv): `69.3 vuol` in *qual vuol sia che l'assonnar ben finga*. Dropped spurious `69 3 vuol ccomp 69 4` (cleared `extra_arg: 69.3 ccomp (68, 1)`).
+
+**3. Driver Fix: `_find_arg_row` Single-Role Fallback**:
+- Updated `_find_arg_row` in `skel/skel.py` to fall back to matching when exactly one row with that canonical role exists for the predicate. Added unit tests in `tests/test_skel_fix.py` (`pytest` **544 passed**).
+
+**Result**: 116 → 112 soft violations (inferno 30, purgatorio 37, paradiso 45). All 112 are standard argument divergence positions (`missing_arg` 53, `extra_arg` 37, `role_mismatch` 22).
 
 ---
 

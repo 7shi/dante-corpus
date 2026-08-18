@@ -668,9 +668,15 @@ def _rows_of_predicate(rows_by_line, pos: tuple[int, int]) -> list[skel.SkelRow]
 def _find_arg_row(rows_by_line, pos: tuple[int, int], role: str, arg: tuple[int, int]):
     """The committed row a violation refers to. Roles are compared canonicalized, because a
     violation reports the canonical role while the row may hold any spelling of it."""
-    for row in _rows_of_predicate(rows_by_line, pos):
+    pred_rows = _rows_of_predicate(rows_by_line, pos)
+    for row in pred_rows:
         if (row.arg_line, row.arg_token) == arg and skel._canonicalize_role(row.role) == role:
             return row
+    # Fallback: if there is exactly one row for this predicate with this canonical role,
+    # match it (e.g. when violation normalization cites a slightly different head token)
+    matching_role = [r for r in pred_rows if skel._canonicalize_role(r.role) == role]
+    if len(matching_role) == 1:
+        return matching_role[0]
     return None
 
 
