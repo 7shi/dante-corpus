@@ -4,19 +4,36 @@
 
 > **Current State & Baseline**:
 > - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **547 passed**).
-> - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). [`skel/PLAN.md`](skel/PLAN.md) is rewritten for post-zero architecture.
-> - **Phase 8 Completed**: Full codebase restructuring and portability complete (Rule Registry & One-Shot Census, Decoupled Driver Tests, Language Pack extraction, `GrammarContext` interface).
+> - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). [`skel/PLAN.md`](skel/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) updated with Phase 8.1–8.4 completion and census data.
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 547 tests.
 >
-> **Immediate Next Tasks (Phase 9: Grammatical Parsing Harness for Local LLMs)**:
-> 1. **Phase 9.1: Multi-Layer Context Packager (`skel/harness.py`)** ([`skel/HARNESS.md`](skel/HARNESS.md)):
->    - Build multi-layer prompt formatter bundling source lines, Layer 2 morphology + case features, and Layer 4 UD trees.
-> 2. **Phase 9.2: Autonomous Reasoning Protocol**:
->    - Define 4-step CoT prompting for agreement, head token citation, oblique/clausal complement disambiguation, and multi-predicate TSV framing.
-> 3. **Phase 9.3: Interactive Validation & Self-Correction Feedback Loop**:
->    - Execute `validate_unit()` in loop, passing exact diagnostic violation strings back to model until convergence.
-> 4. **Phase 9.4: Local Model (Gemma 4) Benchmark & Evaluation**:
->    - Benchmark on historical divergence positions to verify autonomous convergence rate.
+> **Immediate Next Priority: Phase 8.5 — Modular Decomposition of `dante_corpus/skel.py` and `skel/skel.py`**:
+> *(Note: Phase 9 LLM Harness is deferred until this refactoring is complete).*
+>
+> `dante_corpus/skel.py` (~4,880 lines) and `skel/skel.py` (~2,130 lines) are monolithic and need to be decomposed into clean, focused submodules:
+>
+> 1. **Deconstruct `dante_corpus/skel.py` into `dante_corpus/skel/` subpackage**:
+>    - `dante_corpus/skel/__init__.py`: Public API export layer (`load_skel`, `write_skel`, `has_skel`, `validate_unit`, `derive_unit`, `SkelRow`, `GrammarContext`, `RULES`, `LanguagePack`, etc.) preserving 100% backward compatibility.
+>    - `dante_corpus/skel/models.py`: Core dataclasses (`SkelRow`, `Repair`, `Violation`, `LanguagePack`, `ItalianLanguagePack`, `GrammarContext`).
+>    - `dante_corpus/skel/registry.py`: Rule metadata and registry (`Rule`, `RuleRegistry`, `RULES`, `rule_active`).
+>    - `dante_corpus/skel/derive.py`: Deterministic Layer-5 predicate-argument derivation engine (`derive_unit`, non-finite control chain candidates, coordination argument mapping, gapped remnants).
+>    - `dante_corpus/skel/rules.py`: Divergence classification rules (Rules A–EI), subject authority handlers (`V`, `AG`, `AH`, `CL`, `DO`, `CU`, `BU`), and rule predicate helpers.
+>    - `dante_corpus/skel/validate.py`: Validation engine (`validate_unit`, token/position checks, predicate/clausal validity, nominal/argument membership checks, dual-role check `EG`).
+>    - `dante_corpus/skel/repairs.py`: Deterministic repair discovery and application (`_find_repairs`, `_apply_unit_repairs`, Tier A/B rules).
+>    - `dante_corpus/skel/io.py`: File serialization/deserialization (`load_skel`, `write_skel`, `has_skel`, `resolve_chunk`, markdown table parser).
+>
+> 2. **Deconstruct `skel/skel.py` driver into modular CLI components**:
+>    - `skel/skel.py`: Thin CLI entry point (`argparse`, subcommands: `check`, `repair`, `build`, `fix`, `stats`, `diff`).
+>    - `skel/driver_fix.py`: Stage 2 `--fix` driver, class prompts (`_CLASS_PROMPTS`), question generation, answer parsing, refusal classification, field notes logging.
+>    - `skel/driver_build.py`: Stage 3 / whole-unit regeneration, LLM integration, retry loop.
+>    - `skel/driver_ui.py`: Terminal UI, progress bar, formatted logging.
+>
+> 3. **Verify Refactoring**:
+>    - Ensure all 547 unit tests pass via `uv run pytest`.
+>    - Ensure whole-corpus check produces 0 hard / 0 soft violations via `uv run skel/skel.py inferno purgatorio paradiso --check`.
+>
+> 4. **Proceed to Phase 9**:
+>    - Once modularization is verified, implement the autonomous LLM grammar parsing harness ([`skel/HARNESS.md`](skel/HARNESS.md)).
 
 ## Current Status (2026-08-18)
 

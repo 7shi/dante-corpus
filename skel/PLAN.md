@@ -73,6 +73,26 @@ See [`PORTABILITY.md`](PORTABILITY.md) for detailed technical specifications and
 - **Interface**: Structured query helpers (`ctx.dep_at()`, `ctx.morph_at()`, `ctx.head_of()`, `ctx.deprel_of()`, `ctx.is_verb()`, `ctx.is_pronoun()`, `ctx.case_slot()`).
 - **Verified**: Added test `test_grammar_context` in `tests/test_skel.py`, verified all 547 unit tests and whole-corpus `--check` produce 0 hard / 0 soft violations.
 
+### 8.5 Modular Decomposition of `dante_corpus/skel.py` and `skel/skel.py`
+- **Problem**: `dante_corpus/skel.py` (~4,880 lines) and `skel/skel.py` (~2,130 lines) are oversized monoliths that combine data models, derivation logic, rule catalogs, validation engines, repair heuristics, I/O formats, and CLI fix drivers in single files.
+- **Action**:
+  1. **Convert `dante_corpus/skel.py` into a package `dante_corpus/skel/`**:
+     - `models.py`: `SkelRow`, `Repair`, `Violation`, `LanguagePack`, `ItalianLanguagePack`, `GrammarContext`
+     - `registry.py`: `Rule`, `RuleRegistry`, `RULES`, `rule_active`
+     - `derive.py`: `derive_unit`, non-finite control chain candidates, coordination subject inheritance, gapped remnant assignment
+     - `rules.py`: Divergence classification rules (Rules A–EI), subject authority handlers (`V`, `AG`, `AH`, `CL`, `DO`, `CU`, `BU`), and rule predicate helpers
+     - `validate.py`: Validation entry point (`validate_unit`, token/position checks, predicate/clausal validity, nominal/argument membership checks, dual-role check `EG`)
+     - `repairs.py`: Deterministic repair discovery and application (`_find_repairs`, `_apply_unit_repairs`, Tier A/B rules)
+     - `io.py`: File serialization/deserialization (`load_skel`, `write_skel`, `has_skel`, `resolve_chunk`, markdown table parser)
+     - `__init__.py`: Full re-export of all symbols to preserve 100% backward compatibility
+  2. **Modularize `skel/` driver scripts**:
+     - `skel/skel.py`: Thin CLI entry point (`argparse`, subcommands `check`, `repair`, `build`, `fix`, `stats`, `diff`)
+     - `skel/driver_fix.py`: Stage 2 `--fix` driver, class prompts (`_CLASS_PROMPTS`), question generation, answer parsing, refusal classification, field notes logging
+     - `skel/driver_build.py`: Stage 3 / whole-unit regeneration, LLM integration, retry loop
+     - `skel/driver_ui.py`: Terminal UI, progress bar, formatted logging
+  3. **Verification**:
+     - Maintain **0 hard / 0 soft violations** corpus-wide and all 547 pytest tests passing.
+
 ---
 
 ## Phase 9: Grammatical Parsing Harness for Local LLMs
