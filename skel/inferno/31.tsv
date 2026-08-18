@@ -59,7 +59,8 @@ line	token	word	role	arg_line	arg_token
 20	3	parve	iobj	20	2
 20	4	veder	subj	0	0
 20	4	veder	obj	20	7
-21	4	dì	subj	21	2
+21	2	io	subj	0	0
+21	2	io	ccomp	21	4
 21	4	dì	ccomp	21	7
 21	6	terra	subj	21	8
 21	7	è	subj	21	8

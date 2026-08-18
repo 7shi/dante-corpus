@@ -228,7 +228,8 @@ line	token	word	role	arg_line	arg_token
 71	3	ire	subj	70	8
 71	3	ire	obl:a	71	5
 71	3	ire	obl:per	71	8
-72	5	fa	subj	72	3
+72	3	io	subj	0	0
+72	3	io	ccomp	72	5
 72	5	fa	ccomp	72	8
 72	8	arrivi	subj	72	7
 72	8	arrivi	obl:da	73	4

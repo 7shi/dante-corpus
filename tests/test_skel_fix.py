@@ -249,6 +249,29 @@ def test_apply_missing_arg_allows_a_fused_clitic_to_fill_two_slots():
     assert skel.SkelRow(1, 3, "celai", "obl:a", 1, 2) in given[1]
 
 
+def test_apply_missing_arg_subject_splice_guard():
+    """Subject splice guard:
+    1. Pro-drop 0.0 against a concrete derived subject is rejected.
+    2. Pro-drop (0, 0) subject is replaced by a concrete subject without creating duplicate subjects.
+    3. An existing concrete subject is not duplicated by a second subject."""
+    # Case 1: Pro-drop 0.0 against concrete derived subject (1, 2)
+    given = _rows(skel.SkelRow(1, 3, "vede", "obj", 2, 2))
+    vs = [morph.Violation(1, "tag", "missing_arg: 1.3 subj (1, 2)",
+                          role="subj", arg=(1, 2), predicate=(1, 3))]
+    assert not drv._apply_missing_arg(_ctx(), vs, given, "Q1: 0.0")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "obj", 2, 2)]
+
+    # Case 2: Replace pro-drop (0, 0) with concrete subject (1, 2)
+    given = _rows(skel.SkelRow(1, 3, "vede", "subj", 0, 0), skel.SkelRow(1, 3, "vede", "obj", 2, 2))
+    assert drv._apply_missing_arg(_ctx(), vs, given, "Q1: 1.2")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "subj", 1, 2), skel.SkelRow(1, 3, "vede", "obj", 2, 2)]
+
+    # Case 3: Reject second concrete subject if concrete subject already exists
+    given = _rows(skel.SkelRow(1, 3, "vede", "subj", 1, 1), skel.SkelRow(1, 3, "vede", "obj", 2, 2))
+    assert not drv._apply_missing_arg(_ctx(), vs, given, "Q1: 1.2")
+    assert given[1] == [skel.SkelRow(1, 3, "vede", "subj", 1, 1), skel.SkelRow(1, 3, "vede", "obj", 2, 2)]
+
+
 # --- arg_slot: the two sides of one slot, merged into one question -------------------------------
 
 

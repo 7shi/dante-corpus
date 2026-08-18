@@ -1,5 +1,38 @@
 # skel — Layer 5 correction history
 
+## The Eight `missing_tuple_nominal` Positions and Subject Splice Guard, 137 → 129 (−8) (2026-08-18)
+
+Investigated per Phase 7 Work Queue item 3: `missing_tuple_nominal` had failed identically across all `--fix` rounds on the exact same 8 positions.
+
+### Why `missing_tuple_nominal` failed: prompt defect
+
+Reading all 8 positions with `read.py` showed that every single one is a verbless speech introduction (`«E io: "Maestro, …"»`, `«per ch'io: "…"»`, `«ond' io: "…"»`), where Layer 4 has `io` as root of an elided speech clause.
+
+The prompt in `_ask_missing_tuple_nominal` instructed:
+> *"Write its rows in that frame: the token as Pred, `subj` 0.0, the quotation's main verb as `ccomp`, and the addressee, if one is written, as `obl:a`."*
+
+Following this instruction, the model proposed `obl:a` for the vocative addressee `Maestro` / `Buon duca` / `Segnore`. In Layer 4, vocative addresses carry no preposition `a` and are tagged `vocative`, so `derive_unit` derives only `subj=(0,0)` and `ccomp=(...)`. The proposed `obl:a` was flagged as `extra_arg: obl:a`, causing the acceptance gate to reject the entire proposal every round.
+
+Updating the 8 TSVs with the standard verbless speech tuples (`io: subj=(0,0), ccomp=(...)`) cleared all 8 positions cleanly:
+- [inferno 7:49](inferno/07.tsv) (`49.2 io: subj=(0,0), ccomp=(50,4)`)
+- [inferno 8:52](inferno/08.tsv) (`52.2 io: subj=(0,0), ccomp=(52,6)`)
+- [inferno 8:70](inferno/08.tsv) (`70.2 io: subj=(0,0), ccomp=(71,7)`)
+- [inferno 10:19](inferno/10.tsv) (`19.2 io: subj=(0,0), ccomp=(19,6)`)
+- [inferno 11:67](inferno/11.tsv) (`67.2 io: subj=(0,0), ccomp=(67,6)`)
+- [inferno 24:72](inferno/24.tsv) (`72.3 io: subj=(0,0), ccomp=(72,5)`)
+- [inferno 31:21](inferno/31.tsv) (`21.2 io: subj=(0,0), ccomp=(21,4)`)
+- [purgatorio 6:49](purgatorio/06.tsv) (`49.2 io: subj=(0,0), ccomp=(49,4)`)
+
+### The Subject Splice Guard (`_apply_missing_arg`) and Prompt Clarification
+
+1. **`_apply_missing_arg` Splice Guard**:
+   - Rejects `0.0` answers when the derived subject is concrete (`v.arg != (0, 0)`), preventing spurious `extra_arg subj (0, 0)` insertions.
+   - Replaces existing `subj (0, 0)` rows when a concrete subject is provided, and rejects second concrete subject insertions to prevent duplicate subject rows.
+2. **`_ask_missing_tuple_nominal`**:
+   - Clarified that `obl:a` applies only to addressees introduced by `'a'` (e.g. `'Ed elli a me'`), not to vocatives like `'Maestro'`.
+
+`pytest` **543 passed**, `skel --check` **0 hard, 129 soft** (inferno 33, purgatorio 44, paradiso 52).
+
 ## Rule EI — the floating quantifier, 154 → 150, and one Layer-4 retag at net zero (2026-08-18)
 
 The first checker-side batch of Phase 7, and the first read chosen by the **refusal census** rather

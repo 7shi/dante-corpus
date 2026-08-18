@@ -154,7 +154,8 @@ line	token	word	role	arg_line	arg_token
 47	3	vedrai	obl:su	47	9
 48	4	ridere	subj	47	2
 48	6	felice	subj	47	2
-49	4	andiamo	subj	49	2
+49	2	io	subj	0	0
+49	2	io	ccomp	49	4
 49	4	andiamo	obl:a	49	7
 50	5	affatico	subj	0	0
 50	5	affatico	obj	50	4

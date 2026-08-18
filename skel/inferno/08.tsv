@@ -172,7 +172,8 @@ line	token	word	role	arg_line	arg_token
 51	3	lasciando	subj	0	0
 51	3	lasciando	obj	51	5
 51	3	lasciando	obl:di	51	2
-52	1	E	subj	52	2
+52	2	io	subj	0	0
+52	2	io	ccomp	52	6
 52	6	vago	subj	52	2
 52	6	vago	xcomp	53	2
 53	2	vederlo	subj	0	0
@@ -228,7 +229,8 @@ line	token	word	role	arg_line	arg_token
 68	6	ha	subj	68	5
 68	6	ha	obj	68	7
 69	0			0	0
-70	0			0	0
+70	2	io	subj	0	0
+70	2	io	ccomp	71	7
 71	7	cerno	subj	70	2
 71	7	cerno	obj	70	7
 71	7	cerno	obl:ne	71	6

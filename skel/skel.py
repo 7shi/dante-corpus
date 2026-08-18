@@ -959,11 +959,27 @@ def _apply_missing_arg(ctx, vs, rows_by_line, text: str) -> bool:
         arg = _token_ref(ans)
         if arg is None:
             continue
+        # **Splice guard for subject**:
+        # 1. Pro-drop (0, 0) against a concrete derived subject (v.arg != (0, 0)) is a refusal to
+        #    propose that subject; inserting (0, 0) creates a spurious extra_arg subj (0, 0).
+        if v.role == "subj" and arg == (0, 0) and v.arg != (0, 0):
+            continue
         line, token = v.predicate
         new = skel.SkelRow(line, token, ctx.word(v.predicate), v.role, arg[0], arg[1])
         rows = rows_by_line.setdefault(line, [])
         if new in rows:
             continue
+        # 2. Prevent duplicate/conflicting subject rows on the same predicate:
+        existing_subj = next((r for r in rows if (r.line, r.token) == (line, token) and r.role == "subj"), None)
+        if v.role == "subj" and existing_subj is not None:
+            if existing_subj.arg_line == 0 and existing_subj.arg_token == 0 and arg != (0, 0):
+                # Replace pro-drop subject with the concrete one
+                rows[rows.index(existing_subj)] = new
+                changed = True
+                continue
+            else:
+                # Already holds a concrete subject; do not append a second subject
+                continue
         # **Rule EG's splice guard.** This class appends a row and never removes the one it may
         # contradict, so answering "which token is its subj" with a token the predicate already
         # holds in another role writes one token into two roles of one predicate — the artifact
@@ -1162,8 +1178,9 @@ def _ask_missing_tuple_nominal(ctx: _UnitContext, vs: list[morph.Violation]) -> 
         "around it — above all a verb of speech ('Ed elli: «…»', 'E io: «Maestro, …»', with or "
         "without an addressee), and otherwise a predication with no copula written. Write its "
         "rows in that frame: the token as Pred, `subj` 0.0, the quotation's main verb as `ccomp`, "
-        "and the addressee, if one is written, as `obl:a`. Output nothing only if the token is "
-        "genuinely an argument of some other predicate already listed. Output rows for these "
+        "and an addressee introduced by 'a' (e.g. 'Ed elli a me'), if one is written, as `obl:a` "
+        "(do NOT list vocative address like 'Maestro' as an argument). Output nothing only if the "
+        "token is genuinely an argument of some other predicate already listed. Output rows for these "
         "tokens only — do not restate the rest of the sentence.\n\n"
         f"{targets}"
     )

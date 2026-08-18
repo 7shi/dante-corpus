@@ -2,13 +2,14 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 137 soft** violations across all 100
-  cantos — **134 divergence positions + 3 `dual_role`** (rule EG's artifact-internal contradiction).
-  Per canticle: inferno 40, purgatorio 45, paradiso 52. Base as of 2026-08-18, after refusal census
-  reads & Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3),
-  rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
+- **Current State**: `make -C skel check` reports **0 hard, 129 soft** violations across all 100
+  cantos — **126 divergence positions + 3 `dual_role`** (rule EG's artifact-internal contradiction).
+  Per canticle: inferno 33, purgatorio 44, paradiso 52. Base as of 2026-08-18, after the eight
+  `missing_tuple_nominal` positions and subject splice guard (137 → 129, §P5), refusal census reads &
+  Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2)
+  and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
-  `morph --check` 0/0, `pytest` **542 passed**.
+  `morph --check` 0/0, `pytest` **543 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
 - **Phase 6**: Complete and closed — 2,084 → 160 soft, with seven user-run `--fix` rounds (−1,157)
   and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model
@@ -74,22 +75,15 @@ route** (see *Open Assistant-Side Routes*).
 1. ~~**The eighth and ninth `--fix` rounds, `--no-whole`**~~ — **run 2026-08-18, §P1, §P3**: 160 → 154 → 140.
    Their finding is that the queue's other items are the work. The ninth round cleared the planted target
    (purgatorio 9:97) and confirmed the refusal census per class.
-2. **The refusal reading list — confirmed three times, and its first batch paid** (§P2: `arg_slot`'s 8
-   refusals read, 3 of them checker- or upstream-side, **−4 at zero model cost**, rule EI). **Next in
-   the list, in order**: `extra_arg`'s 14 `keep`s, `extra_arg_subject`'s 12, `missing_arg`'s 10
-   `none`, `missing_arg_adverb`'s 2. Read each with `read.py` and give it one of the five verdicts in
-   *How to Read a Batch*. **A refusal chooses a position and has no standing on what is wrong there**
-   — it is a hypothesis about the checker with exactly the standing a field note has about the corpus.
-   §P2's finding to carry in: ask of every standing pair whether an **existing** rule is one gate
-   away from taking it, because rule AI had already run on both rule-EI positions and declined.
-3. **Two systematic *failure* shapes rounds 8 and 9 confirm** (§P1, §P3), neither of them a refusal:
-   `missing_tuple_nominal` fails identically across all calls (`missing_tuple: predicate NN.2
-   not proposed` → `extra_arg: NN.2 obl:a`), and `missing_arg_subject` splices a fresh `extra_arg
-   subj` in the majority of its calls — check its applier against rule EG's splice guard.
+2. ~~**The refusal reading list**~~ — **audited 2026-08-18, §P2, §P4**: 38 positions read across `extra_arg`,
+   `extra_arg_subject`, `missing_arg`; 2 Layer-4 upstream retags landed (−3 soft, 140 → 137).
+3. ~~**Two systematic *failure* shapes**~~ — **settled 2026-08-18, §P5**:
+   - `missing_tuple_nominal` prompt defect resolved across all 8 positions (−8 soft, 137 → 129).
+   - `missing_arg_subject` splice guard implemented in `_apply_missing_arg` (tested in `tests/test_skel_fix.py`).
 4. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`. Rule EG found 56 such positions, **52 of them on lines
-   `--check` was silent about**, which is why 21 read batches walked past them. Any check of this kind
-   both raises the count honestly and produces questions the model can actually answer.
+   `--check` was silent about**, which is why 21 read batches walked past them. Settle the 3 standing
+   `dual_role` positions in Paradiso (paradiso 23:107, 29:105, 31:124).
 5. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
@@ -525,6 +519,28 @@ Conducted 2026-08-18 per Phase 7 Work Queue item 2. All refused positions across
 - All 12 positions confirmed as genuine reading disagreements (omitted speech complements, comparative `com'` clauses, transitive/intransitive interpretations).
 
 **Result**: 140 → 137 soft violations (inferno 40, purgatorio 45, paradiso 52). `dep` and other upstream layers remain **0 hard / 0 soft**. `pytest` **542 passed**.
+
+### §P5 — Eight `missing_tuple_nominal` Positions and Subject Splice Guard, 137 → 129 (−8, −5.8%)
+
+Investigated 2026-08-18 per Phase 7 Work Queue item 3.
+
+**1. Prompt defect in `missing_tuple_nominal` resolved across 8 positions (−8 soft)**:
+All 8 positions were verbless speech introductions (`E io: «…»`, `per ch'io: «…»`, `ond' io: «…»`). The prompt in `_ask_missing_tuple_nominal` erroneously instructed the model to output the addressee as `obl:a`, which caused the model to write `obl:a` for vocative addresses (`Maestro`, `Buon duca`, `Segnore`). Because Layer 4 tags vocatives without preposition `a` as `vocative`, `derive_unit` derives only `subj=(0,0)` and `ccomp=(...)`. The proposed `obl:a` created an `extra_arg` row that blocked acceptance in every round. Updating the 8 TSVs with standard verbless speech tuples (`io: subj=(0,0), ccomp=(...)`) cleared all 8 positions cleanly:
+- [inferno 7:49](inferno/07.tsv) (`49.2 io: subj=(0,0), ccomp=(50,4)`)
+- [inferno 8:52](inferno/08.tsv) (`52.2 io: subj=(0,0), ccomp=(52,6)`)
+- [inferno 8:70](inferno/08.tsv) (`70.2 io: subj=(0,0), ccomp=(71,7)`)
+- [inferno 10:19](inferno/10.tsv) (`19.2 io: subj=(0,0), ccomp=(19,6)`)
+- [inferno 11:67](inferno/11.tsv) (`67.2 io: subj=(0,0), ccomp=(67,6)`)
+- [inferno 24:72](inferno/24.tsv) (`72.3 io: subj=(0,0), ccomp=(72,5)`)
+- [inferno 31:21](inferno/31.tsv) (`21.2 io: subj=(0,0), ccomp=(21,4)`)
+- [purgatorio 6:49](purgatorio/06.tsv) (`49.2 io: subj=(0,0), ccomp=(49,4)`)
+
+**2. Subject Splice Guard (`_apply_missing_arg`) and Prompt Clarification**:
+- Added subject splice guard to `_apply_missing_arg`: rejects `0.0` answers when derived subject is concrete, preventing spurious `extra_arg subj (0, 0)` insertion; replaces pro-drop `(0, 0)` subjects when concrete subject is provided, and prevents duplicate concrete subjects on the same predicate.
+- Clarified `_ask_missing_tuple_nominal` prompt to specify that `obl:a` applies only to addressees introduced by `'a'`.
+- Added unit tests in `tests/test_skel_fix.py` (`test_apply_missing_arg_subject_splice_guard`). `pytest` **543 passed**.
+
+**Result**: 137 → 129 soft violations (inferno 33, purgatorio 44, paradiso 52). Divergence residue **126**, `dual_role` **3**.
 
 ---
 
