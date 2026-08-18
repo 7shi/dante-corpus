@@ -150,8 +150,6 @@ line	token	word	role	arg_line	arg_token
 53	3	fa	obj	53	2
 53	3	fa	xcomp	53	4
 53	4	degno	obl:di	53	8
-54	6	chieder	subj	0	0
-54	6	chieder	obj	54	5
 54	8	concede	subj	54	4
 54	8	concede	obj	54	6
 54	8	concede	iobj	54	7

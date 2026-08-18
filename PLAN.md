@@ -1,23 +1,23 @@
 ## Handoff (2026-08-18) — resume here
 
-> **Phase 7 is open, `dual_role` is closed (0 corpus-wide), and divergence residue is 126.** Layer 5 stands
-> at **0 hard / 126 soft** (all 126 divergence positions + 0 `dual_role`), `pytest` **543**,
-> every other layer 0/0. Phase 6's whole record — seven `--fix` rounds (2,084 → 160 with the reads),
-> the nineteen-batch per-position read of all 100 cantos, rules AG–EH, the routes it closed and its
-> ten transferable findings — is in [`skel/PHASE6.md`](skel/PHASE6.md). The current plan is
-> [`skel/PLAN.md`](skel/PLAN.md); the eighth round is **§P1**, rule EI is **§P2**, the ninth round
-> is **§P3**, the refusal census audit is **§P4**, the two systematic failure shapes is **§P5**, and
-> the final `dual_role` resolutions is **§P6**.
+> **Phase 7 is open, all structural outliers are closed, and divergence residue is 119.** Layer 5 stands
+> at **0 hard / 119 soft** (all 119 standard argument divergence positions; 0 `dual_role`, 0 `extra_tuple`,
+> 0 `missing_tuple`, 0 `argument heads no NP`), `pytest` **543**, every other layer 0/0. Phase 6's whole record —
+> seven `--fix` rounds (2,084 → 160 with the reads), the nineteen-batch per-position read of all 100 cantos,
+> rules AG–EH, the routes it closed and its ten transferable findings — is in [`skel/PHASE6.md`](skel/PHASE6.md).
+> The current plan is [`skel/PLAN.md`](skel/PLAN.md); the eighth round is **§P1**, rule EI is **§P2**, the ninth round
+> is **§P3**, the refusal census audit is **§P4**, the two systematic failure shapes is **§P5**, the final
+> `dual_role` resolutions is **§P6**, and the seven outlier positions is **§P7**.
 >
 > **Phase 7 is: drive soft to 0, and when a fix fails, find out why.** The ninth round went
 > **150 → 140** on **135 calls**, the refusal census audit resolved two upstream Layer-4 attachment errors
 > (**140 → 137**), the systematic failure shapes resolved the 8 `missing_tuple_nominal` positions and added a
-> subject splice guard (**137 → 129**), and the final 3 `dual_role` positions were cleared (**129 → 126**,
-> inferno 33, purgatorio 44, paradiso 49).
+> subject splice guard (**137 → 129**), the final 3 `dual_role` positions were cleared (**129 → 126**), and
+> the seven structural outlier positions were resolved (**126 → 119**, inferno 32, purgatorio 39, paradiso 48).
 >
 > **What the rounds & failure analyses settled, question by question**:
 >
-> - **`dual_role` is 0 across the entire corpus** (56 → 0).
+> - **All structural outliers and internal contradictions are 0**: `dual_role` (0), `extra_tuple` (0), `missing_tuple` (0), `argument heads no NP` (0).
 > - **The refusal census is fully audited.** 38 positions read across `extra_arg`, `extra_arg_subject`, `missing_arg`.
 >   2 upstream Layer-4 errors were corrected (−3 soft), 1 single-instance shape dropped, and 35 reading disagreements confirmed.
 > - **Two systematic failure shapes are settled**: `missing_tuple_nominal` prompt defect resolved across all 8 positions
@@ -30,10 +30,10 @@
 >
 > **The work is entirely assistant-side and checker-side now.** Next in queue:
 >
-> **1. Artifact-internal checks**:
-> - Look for more checks of rule EG's shape (contradictions the artifact contains without reference to `derive_unit`).
+> **1. The standing open routes** in [`skel/PLAN.md`](skel/PLAN.md) (copula/predicative nominals, coordination/coreference).
 >
-> **2. The standing open routes** in [`skel/PLAN.md`](skel/PLAN.md).
+> **2. Artifact-internal checks**:
+> - Look for more checks of rule EG's shape (contradictions the artifact contains without reference to `derive_unit`).
 >
 > **Not queued, deliberately**: further blind fix rounds (the refusal census is confirmed), prompt changes,
 > widening field notes, or restructuring `dante_corpus/skel.py`.
@@ -253,7 +253,7 @@ in 2026-08-16 (rules CR, CV and the per-conjunct person test) and `dep --check` 
 ## Status
 
 **All five layers are implemented, built for all 100 cantos, and merged to `main`.** Layer 5's
-checker was refined through Phases 0-5r, rules V through EH, Phase 6's restructuring plus seven `--fix` rounds, and Phase 7's eighth and ninth rounds, rule EI, census reads/retags, systematic failure shape fixes, and dual_role resolution, bringing its divergence residue to **126** and its total soft count to **126** (rule EG's artifact-internal contradictions, 50 at its introduction, stand at 0)
+checker was refined through Phases 0-5r, rules V through EH, Phase 6's restructuring plus seven `--fix` rounds, and Phase 7's eighth and ninth rounds, rule EI, census reads/retags, systematic failure shape fixes, dual_role resolution, and outlier position fixes, bringing its divergence residue to **119** and its total soft count to **119** (all structural outliers and internal contradictions are 0)
 (down from 17438 at the first full-corpus measurement). Work continues as **Phase 7** — drive soft to 0, and diagnose why a fix fails. See [`skel/PLAN.md`](skel/PLAN.md) for the current plan and the open positions, [`skel/PHASE6.md`](skel/PHASE6.md) and [`skel/PHASE5.md`](skel/PHASE5.md) for the closed phase records, and *The layers* below and [`skel/README.md`](skel/README.md) for the design and current status.
 
 **The pronoun case annex is complete and closed (2026-08-02).** It is a permanent Layer-2 sibling
@@ -264,7 +264,7 @@ rounds were measured and rejected against a verdict rule fixed in advance. See
 [`case/CORRECTIONS.md`](case/CORRECTIONS.md) for the full measurement history, including *Step 5 —
 the merge decision*.
 
-**The open route is checker-side, off the refusal census** — this is Phase 7, opened 2026-08-18 at base **160** and now at **126**. The read series is complete (all 100 cantos read position by position) and nine rounds have run. The seventh added the instrument: run with `--log`, it showed that 30% of its calls end in the model refusing, naming position by position where it thinks `--check` is wrong. **The eighth (§P1) and ninth (§P3) rounds confirmed that rounds are no longer the productive instrument** (~42-44% refusals) and reproduced the census per class across three rounds, confirming it as a settled reading list. The census audit (§P4) audited all 38 refusals, resolving two upstream Layer-4 attachment errors. The systematic failure shapes (§P5) resolved the 8 `missing_tuple_nominal` positions and added a subject splice guard, and §P6 resolved the remaining 3 `dual_role` positions. All five layers plus the case extension are implemented, built for all 100
+**The open route is checker-side, off the refusal census** — this is Phase 7, opened 2026-08-18 at base **160** and now at **119**. The read series is complete (all 100 cantos read position by position) and nine rounds have run. The seventh added the instrument: run with `--log`, it showed that 30% of its calls end in the model refusing, naming position by position where it thinks `--check` is wrong. **The eighth (§P1) and ninth (§P3) rounds confirmed that rounds are no longer the productive instrument** (~42-44% refusals) and reproduced the census per class across three rounds, confirming it as a settled reading list. The census audit (§P4) audited all 38 refusals, resolving two upstream Layer-4 attachment errors. The systematic failure shapes (§P5) resolved the 8 `missing_tuple_nominal` positions and added a subject splice guard, §P6 resolved the remaining 3 `dual_role` positions, and §P7 resolved the 7 structural outlier positions. All five layers plus the case extension are implemented, built for all 100
 cantos and merged to `main`. Detailed open routes and measurement instructions live in [`skel/PLAN.md`](skel/PLAN.md).
 
 - **Layer 1 — Tokens**: implemented (`dante_corpus/tokenizer.py`, served via `Line.tokens`).

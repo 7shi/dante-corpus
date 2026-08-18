@@ -65,7 +65,7 @@ line	token	word	role	arg_line	arg_token
 22	2	vid'	subj	22	3
 22	2	vid'	obj	23	4
 23	0			0	0
-24	8	avanza	subj	24	1
+24	8	avanza	subj	0	0
 24	8	avanza	obl:per	24	3
 25	1	Vedea	subj	0	0
 25	1	Vedea	obj	25	2

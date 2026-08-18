@@ -405,7 +405,6 @@ line	token	word	role	arg_line	arg_token
 119	3	lasciasse	obj	119	2
 120	2	ragionar	subj	0	0
 120	2	ragionar	obl:con	120	4
-120	7	appressarsi	subj	0	0
 121	3	èn	subj	121	5
 121	3	èn	obl	121	2
 121	9	rampogna	subj	122	3

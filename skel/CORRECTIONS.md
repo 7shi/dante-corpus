@@ -1,5 +1,24 @@
 # skel — Layer 5 correction history
 
+## The Seven Outlier Positions (extra_tuple, missing_tuple, argument heads no NP), 126 → 119 (−7) (2026-08-18)
+
+Investigated 2026-08-18 as Phase 7 outlier census. All 7 positions resolved cleanly:
+
+1. **`extra_tuple` (3 positions)**:
+   - [inferno 30:59](inferno/30.tsv): `59.5 perché: subj=(0,0)` was proposed on an interrogative adverb. Dropped spurious predicate.
+   - [purgatorio 9:58](purgatorio/09.tsv): `58.7 forme: subj=(58,6)` was proposed on an attributive adjective (`amod`). Dropped spurious predicate.
+   - [purgatorio 16:120](purgatorio/16.tsv): `120.7 appressarsi: subj=(0,0)` was proposed on a coordinate nominalized infinitive without dependents. Dropped spurious predicate.
+
+2. **`missing_tuple` (2 positions)**:
+   - [purgatorio 31:15](purgatorio/31.tsv): Copular nominal predicate `15.5 mestier: subj=(15,7)` was omitted in artifact, and `intender` role was mistagged. Added `mestier` and fixed `intender: obj=(15,2)`.
+   - [paradiso 22:21](paradiso/22.tsv): Conditional verb `21.7 redui: subj=(0,0), obj=(21,6)` was omitted in artifact. Added `redui`.
+
+3. **`argument ... heads no NP/pronoun/predicate` (2 positions)**:
+   - [purgatorio 12:24](purgatorio/12.tsv): Adverb `24.1 quanto` was cited as subject of `avanza`. Replaced with pro-drop `subj=(0,0)`.
+   - [paradiso 21:54](paradiso/21.tsv): Article `54.5 'l` was cited as object of nominalized infinitive `chieder`. Dropped spurious `chieder` predicate.
+
+`pytest` **543 passed**, `skel --check` **0 hard, 119 soft** (inferno 32, purgatorio 39, paradiso 48).
+
 ## The Final Three `dual_role` Positions in Paradiso, 129 → 126 (−3, `dual_role` 3 → 0) (2026-08-18)
 
 Investigated per Phase 7 Work Queue item 4. The 3 standing artifact-internal contradictions reported by rule EG were resolved by dropping the duplicate contradictory rows:

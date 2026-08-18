@@ -178,7 +178,6 @@ line	token	word	role	arg_line	arg_token
 58	7	siete	obl:sanz	58	6
 58	7	siete	obl:in	59	7
 59	3	so	subj	59	4
-59	5	perché	subj	0	0
 60	1	diss'	subj	60	2
 60	1	diss'	iobj	60	4
 60	5	guardate	subj	0	0

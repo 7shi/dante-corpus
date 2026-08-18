@@ -60,6 +60,8 @@ line	token	word	role	arg_line	arg_token
 20	5	vedrai	subj	0	0
 20	5	vedrai	obj	20	4
 21	4	dico	subj	21	3
+21	7	redui	subj	0	0
+21	7	redui	obj	21	6
 22	4	piacque	subj	0	0
 22	4	piacque	obl:a	22	3
 22	7	ritornai	subj	0	0

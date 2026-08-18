@@ -2,12 +2,14 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 126 soft** violations across all 100
-  cantos — **all 126 divergence positions + 0 `dual_role`** (rule EG's artifact-internal contradiction is closed).
-  Per canticle: inferno 33, purgatorio 44, paradiso 49. Base as of 2026-08-18, after resolving the final
-  three `dual_role` positions in Paradiso (129 → 126, §P6), the eight `missing_tuple_nominal` positions
-  and subject splice guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4),
-  the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
+- **Current State**: `make -C skel check` reports **0 hard, 119 soft** violations across all 100
+  cantos — **all 119 standard argument divergence positions** (all structural outliers and artifact-internal
+  contradictions closed: 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`).
+  Per canticle: inferno 32, purgatorio 39, paradiso 48. Base as of 2026-08-18, after resolving the seven
+  structural outlier positions (126 → 119, §P7), the final three `dual_role` positions (129 → 126, §P6),
+  the eight `missing_tuple_nominal` positions and subject splice guard (137 → 129, §P5), refusal census reads &
+  Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2)
+  and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **543 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -550,6 +552,25 @@ Investigated 2026-08-18 per Phase 7 Work Queue item 4. The 3 remaining `dual_rol
 - [paradiso 31:124](paradiso/31.tsv): `124.6 aspetta` had both `subj` and `obj` on `(124, 8) temo` (passive `si`). Dropped duplicate `subj` row.
 
 `dual_role` is now **0 across the entire corpus** (56 → 0). Total Layer 5 soft violations stand at **126** (all divergence residue).
+
+### §P7 — Seven Outlier Positions (extra_tuple, missing_tuple, argument heads no NP), 126 → 119 (−7, −5.6%)
+
+Investigated 2026-08-18 as Phase 7 outlier census. All 7 structural outlier positions resolved cleanly:
+
+1. **`extra_tuple` (3 positions)**:
+   - [inferno 30:59](inferno/30.tsv): `59.5 perché: subj=(0,0)` was proposed on an interrogative adverb. Dropped spurious predicate.
+   - [purgatorio 9:58](purgatorio/09.tsv): `58.7 forme: subj=(58,6)` was proposed on an attributive adjective (`amod`). Dropped spurious predicate.
+   - [purgatorio 16:120](purgatorio/16.tsv): `120.7 appressarsi: subj=(0,0)` was proposed on a coordinate nominalized infinitive without dependents. Dropped spurious predicate.
+
+2. **`missing_tuple` (2 positions)**:
+   - [purgatorio 31:15](purgatorio/31.tsv): Copular nominal predicate `15.5 mestier: subj=(15,7)` was omitted in artifact, and `intender` role was mistagged. Added `mestier` and fixed `intender: obj=(15,2)`.
+   - [paradiso 22:21](paradiso/22.tsv): Conditional verb `21.7 redui: subj=(0,0), obj=(21,6)` was omitted in artifact. Added `redui`.
+
+3. **`argument ... heads no NP/pronoun/predicate` (2 positions)**:
+   - [purgatorio 12:24](purgatorio/12.tsv): Adverb `24.1 quanto` was cited as subject of `avanza`. Replaced with pro-drop `subj=(0,0)`.
+   - [paradiso 21:54](paradiso/21.tsv): Article `54.5 'l` was cited as object of nominalized infinitive `chieder`. Dropped spurious `chieder` predicate.
+
+**Result**: 126 → 119 soft violations (inferno 32, purgatorio 39, paradiso 48). All 119 are standard argument divergence positions (`missing_arg` 54, `extra_arg` 43, `role_mismatch` 22).
 
 ---
 
