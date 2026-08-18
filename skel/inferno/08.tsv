@@ -302,7 +302,8 @@ line	token	word	role	arg_line	arg_token
 92	7	rimarrai	subj	92	5
 92	7	rimarrai	obl	92	6
 93	4	iscorta	subj	93	1
-93	4	iscorta	obj	93	2
+93	4	iscorta	iobj	93	2
+93	4	iscorta	obj	93	7
 94	1	Pensa	subj	0	0
 94	1	Pensa	ccomp	94	6
 94	6	sconfortai	subj	94	4

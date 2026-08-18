@@ -90,10 +90,7 @@ line	token	word	role	arg_line	arg_token
 32	4	grave	subj	0	0
 32	4	grave	iobj	32	2
 32	4	grave	obl:a	31	5
-32	6	fieti	subj	33	1
-32	6	fieti	attr	32	7
-32	7	diletto	subj	0	0
-32	7	diletto	obl	33	1
+32	6	fieti	subj	32	7
 33	4	sentir	subj	0	0
 33	6	dispuose	subj	33	2
 33	6	dispuose	iobj	33	5

@@ -337,7 +337,6 @@ line	token	word	role	arg_line	arg_token
 107	2	gridar	obj	107	5
 107	2	gridar	obl:verso	107	8
 107	4	so	subj	0	0
-107	4	so	obj	107	5
 108	0			0	0
 109	2	pregano	subj	109	1
 109	7	risponde	subj	109	5

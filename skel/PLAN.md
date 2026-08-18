@@ -2,15 +2,16 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 104 soft** violations across all 100
-  cantos — **all 104 standard argument divergence positions** (all structural outliers and artifact-internal
+- **Current State**: `make -C skel check` reports **0 hard, 96 soft** violations across all 100
+  cantos — **all 96 standard argument divergence positions** (all structural outliers and artifact-internal
   contradictions closed: 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`).
-  Per canticle: inferno 30, purgatorio 35, paradiso 39. Base as of 2026-08-18, after the assistant-side read
-  census on `extra_arg` positions (112 → 104, §P10), Round 10 log audits & driver fix (116 → 112, §P9),
-  the tenth `--fix` round (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7),
-  the final three `dual_role` positions (129 → 126, §P6), the eight `missing_tuple_nominal` positions and
-  subject splice guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4),
-  the ninth `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
+  Per canticle: inferno 28, purgatorio 30, paradiso 38. Base as of 2026-08-18, after the second assistant-side
+  read census on `extra_arg` & `missing_arg` positions (104 → 96, §P11), the first read census on `extra_arg`
+  positions (112 → 104, §P10), Round 10 log audits & driver fix (116 → 112, §P9), the tenth `--fix` round
+  (119 → 116, §P8), resolving the seven structural outlier positions (126 → 119, §P7), the final three
+  `dual_role` positions (129 → 126, §P6), the eight `missing_tuple_nominal` positions and subject splice
+  guard (137 → 129, §P5), refusal census reads & Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix`
+  round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **544 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -92,12 +93,14 @@ route** (see *Open Assistant-Side Routes*).
 7. ~~**Audit Round 10 log failures and driver `_find_arg_row` fix**~~ — **settled 2026-08-18, §P9**: 116 → 112 (−4, −3.4%).
    One Layer-4 upstream retag (`paradiso 11:127 pecore`), three spurious argument rows dropped (`inferno 16:21`,
    `inferno 29:63`, `purgatorio 32:69`), and `_find_arg_row` single-role fallback added to driver (`pytest` **544**).
-8. ~~**Assistant-side read census across standing `extra_arg` positions**~~ — **settled 2026-08-18, §P10**: 112 → 104 (−8, −7.1%).
+8. ~~**First assistant-side read census across standing `extra_arg` positions**~~ — **settled 2026-08-18, §P10**: 112 → 104 (−8, −7.1%).
    One Layer-4 upstream retag (`paradiso 7:25 virtù`), six spurious argument positions resolved (`purgatorio 30:59`,
    `purgatorio 10:60`, `paradiso 7:25`, `paradiso 14:136`, `paradiso 17:116`, `paradiso 3:59`).
-9. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
-   contains without reference to `derive_unit`.
-10. **The standing open routes** below, which the reads named but did not settle.
+9. ~~**Second assistant-side read census across extra_arg and missing_arg positions**~~ — **settled 2026-08-18, §P11**: 104 → 96 (−8, −7.7%).
+   Seven positions resolved (`inferno 8:93`, `inferno 32:7`, `inferno 16:94`, `purgatorio 27:10`, `purgatorio 24:107`, `purgatorio 10:30`, `purgatorio 15:32`).
+10. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
+    contains without reference to `derive_unit`.
+11. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
 
@@ -663,6 +666,20 @@ Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `
 - [paradiso 3:59](paradiso/03.tsv): `59.4 so` in idiom *non so che divino* had spurious object `obj=(59,6)` (`divino`). Dropped `59 4 so obj 59 6` (cleared `extra_arg: 59.4 obj (59, 6)`).
 
 **Result**: 112 → 104 soft violations (inferno 30, purgatorio 35, paradiso 39). All 104 are standard argument divergence positions (`missing_arg` 53, `extra_arg` 30, `role_mismatch` 21).
+
+### §P11 — Second Assistant-Side Read Census Across extra_arg and missing_arg Positions, 104 → 96 (−8, −7.7%)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` and `missing_arg` positions. Dropped spurious rows, supplied missing arguments, and normalized predications across 7 positions:
+
+1. [inferno 8:93](inferno/08.tsv): `93.4 iscorta` in *che li ha' iscorta sì buia contrada* had direct object mistagged as `iobj` and missed the actual object `obj=(93,7)` (`contrada`). Added `obj=(93,7)` and changed `obj=(93,2)` to `iobj` (cleared `missing_arg: 93.4 obj (93, 7)`).
+2. [inferno 32:7](inferno/32.tsv): `7.6 pigliare` in *da pigliare a gabbo* (modifying noun *impresa*) had spurious object `obj=(7,4)` (`impresa`). Dropped `7 6 pigliare obj 7 4` (cleared `extra_arg: 7.6 obj (7, 4)`).
+3. [inferno 16:94](inferno/16.tsv): `94.5 ha` in *fiume c'ha proprio cammino* cited antecedent `fiume` as subject instead of relative pronoun `94.4 c'`. Fixed subject to `94.4` and dropped spurious `obl` row (cleared `extra_arg: 94.5 subj (94, 3)`).
+4. [purgatorio 27:10](purgatorio/27.tsv): `10.9 morde` in *se pria non morde, anime sante, il foco* had vocative addressee `anime sante` cited as direct object. Dropped `10 9 morde obj 11 1` (cleared `extra_arg: 10.9 obj (11, 1)`).
+5. [purgatorio 24:107](purgatorio/24.tsv): `107.4 so` in idiom *non so che* had spurious object `obj=(107,5)` (`che`). Dropped `107 4 so obj 107 5` (cleared `extra_arg: 107.4 obj (107, 5)`).
+6. [purgatorio 10:30](purgatorio/10.tsv): `30.5 aveva` in *che dritto di salita aveva manco* had adverbial modifier `manco` cited as object instead of `30.2 dritto`. Fixed `obj=(30,2)` (cleared `missing_arg: 30.5 obj (30, 2)` and `extra_arg: 30.5 obj (30, 6)`, −2 soft).
+7. [purgatorio 15:32](purgatorio/15.tsv): `32.6 fieti` in *ma fieti diletto quanto natura…* had adverbial `quanto` cited as subject and `diletto` as `attr` and predicate. Normalized `fieti` to `subj=(32,7)` (`diletto`) and dropped non-predicate `32.7 diletto` rows (cleared `extra_arg: 32.6 subj (33, 1)`).
+
+**Result**: 104 → 96 soft violations (inferno 28, purgatorio 30, paradiso 38). All 96 are standard argument divergence positions (`missing_arg` 52, `extra_arg` 23, `role_mismatch` 21).
 
 ---
 

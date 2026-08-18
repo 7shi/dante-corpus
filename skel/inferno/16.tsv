@@ -268,9 +268,8 @@ line	token	word	role	arg_line	arg_token
 93	3	parlar	subj	0	0
 93	7	uditi	subj	0	0
 93	7	uditi	obl:per	93	3
-94	5	ha	subj	94	3
+94	5	ha	subj	94	4
 94	5	ha	obj	94	7
-94	5	ha	obl	94	4
 94	5	ha	obl:da	95	3
 94	5	ha	obl:in	95	6
 94	5	ha	obl:da	96	4

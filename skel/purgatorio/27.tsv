@@ -23,7 +23,6 @@ line	token	word	role	arg_line	arg_token
 9	0			0	0
 10	5	va	subj	0	0
 10	9	morde	subj	11	4
-10	9	morde	obj	11	1
 11	5	intrate	subj	0	0
 11	5	intrate	obl:in	11	7
 12	8	sorde	subj	0	0

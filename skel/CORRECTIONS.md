@@ -1,5 +1,19 @@
 # skel — Layer 5 correction history
 
+## Seven Divergence Positions Resolved via Assistant-Side Read Census, 104 → 96 (−8) (2026-08-18)
+
+Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` and `missing_arg` positions (see [`PLAN.md`](../PLAN.md) §P11). Dropped spurious rows, supplied missing arguments, and normalized predications across 7 positions:
+
+1. [inferno 8:93](inferno/08.tsv): `93.4 iscorta` in *che li ha' iscorta sì buia contrada* had direct object mistagged as `iobj` and missed the actual object `obj=(93,7)` (`contrada`). Added `obj=(93,7)` and changed `obj=(93,2)` to `iobj` (cleared `missing_arg: 93.4 obj (93, 7)`).
+2. [inferno 32:7](inferno/32.tsv): `7.6 pigliare` in *da pigliare a gabbo* (modifying noun *impresa*) had spurious object `obj=(7,4)` (`impresa`). Dropped `7 6 pigliare obj 7 4` (cleared `extra_arg: 7.6 obj (7, 4)`).
+3. [inferno 16:94](inferno/16.tsv): `94.5 ha` in *fiume c'ha proprio cammino* cited antecedent `fiume` as subject instead of relative pronoun `94.4 c'`. Fixed subject to `94.4` and dropped spurious `obl` row (cleared `extra_arg: 94.5 subj (94, 3)`).
+4. [purgatorio 27:10](purgatorio/27.tsv): `10.9 morde` in *se pria non morde, anime sante, il foco* had vocative addressee `anime sante` cited as direct object. Dropped `10 9 morde obj 11 1` (cleared `extra_arg: 10.9 obj (11, 1)`).
+5. [purgatorio 24:107](purgatorio/24.tsv): `107.4 so` in idiom *non so che* had spurious object `obj=(107,5)` (`che`). Dropped `107 4 so obj 107 5` (cleared `extra_arg: 107.4 obj (107, 5)`).
+6. [purgatorio 10:30](purgatorio/10.tsv): `30.5 aveva` in *che dritto di salita aveva manco* had adverbial modifier `manco` cited as object instead of `30.2 dritto`. Fixed `obj=(30,2)` (cleared `missing_arg: 30.5 obj (30, 2)` and `extra_arg: 30.5 obj (30, 6)`, −2 soft).
+7. [purgatorio 15:32](purgatorio/15.tsv): `32.6 fieti` in *ma fieti diletto quanto natura…* had adverbial `quanto` cited as subject and `diletto` as `attr` and predicate. Normalized `fieti` to `subj=(32,7)` (`diletto`) and dropped non-predicate `32.7 diletto` rows (cleared `extra_arg: 32.6 subj (33, 1)`).
+
+Layer 5 soft violations stand at **96** (inferno 28, purgatorio 30, paradiso 38).
+
 ## Six Spurious Argument Positions Resolved via Read Census, 111 → 104 (−7, total 112 → 104 with Layer 4) (2026-08-18)
 
 Investigated 2026-08-18 per Phase 7 assistant-side read census across standing `extra_arg` positions (see [`PLAN.md`](../PLAN.md) §P10). Dropped spurious rows and normalized predications across 6 positions:

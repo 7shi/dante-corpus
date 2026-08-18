@@ -19,7 +19,6 @@ line	token	word	role	arg_line	arg_token
 7	3	è	attr	7	4
 7	3	è	obl:da	9	3
 7	6	pigliare	subj	0	0
-7	6	pigliare	obj	7	4
 7	6	pigliare	obl:a	7	8
 8	1	discriver	obj	8	2
 8	1	discriver	obl:a	8	6
