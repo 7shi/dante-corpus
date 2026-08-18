@@ -7,7 +7,7 @@
   0 `missing_tuple`, 0 `argument heads no NP`, 0 divergence residue). Per canticle: inferno 0, purgatorio 0,
   paradiso 0.
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
-  `morph --check` 0/0, `pytest` **544 passed**.
+  `morph --check` 0/0, `pytest` **547 passed**.
 - **Completed Phases**:
   - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full retrospective in [`PHASE5.md`](PHASE5.md).
   - **Phase 6**: Complete and closed — 2,084 → 160 soft, with seven user-run `--fix` rounds (−1,157)
@@ -16,6 +16,9 @@
   - **Phase 7**: Complete and closed — **160 → 0 soft violations** (100% clean corpus-wide).
     Refusal census audit, outlier elimination, upstream retags, and six assistant-side read censuses (§P1–§P15).
     Full retrospective in [`PHASE7.md`](PHASE7.md).
+  - **Phase 8**: Complete and closed — **Codebase Restructuring & Portability** (8.1 Rule Registry & Census,
+    8.2 Fixture Decoupling, 8.3 Language Pack Extraction, 8.4 GrammarContext Interface, 8.5 Modular Decomposition into
+    `dante_corpus/skel/` and `skel/driver_*.py`). Full retrospective in [`PORTABILITY.md`](PORTABILITY.md).
 
 ---
 
@@ -73,10 +76,10 @@ See [`PORTABILITY.md`](PORTABILITY.md) for detailed technical specifications and
 - **Interface**: Structured query helpers (`ctx.dep_at()`, `ctx.morph_at()`, `ctx.head_of()`, `ctx.deprel_of()`, `ctx.is_verb()`, `ctx.is_pronoun()`, `ctx.case_slot()`).
 - **Verified**: Added test `test_grammar_context` in `tests/test_skel.py`, verified all 547 unit tests and whole-corpus `--check` produce 0 hard / 0 soft violations.
 
-### 8.5 Modular Decomposition of `dante_corpus/skel.py` and `skel/skel.py`
-- **Problem**: `dante_corpus/skel.py` (~4,880 lines) and `skel/skel.py` (~2,130 lines) are oversized monoliths that combine data models, derivation logic, rule catalogs, validation engines, repair heuristics, I/O formats, and CLI fix drivers in single files.
+### 8.5 Modular Decomposition of `dante_corpus/skel.py` and `skel/skel.py` (Completed)
+- **Problem**: `dante_corpus/skel.py` (~4,880 lines) and `skel/skel.py` (~2,130 lines) were oversized monoliths that combined data models, derivation logic, rule catalogs, validation engines, repair heuristics, I/O formats, and CLI fix drivers in single files.
 - **Action**:
-  1. **Convert `dante_corpus/skel.py` into a package `dante_corpus/skel/`**:
+  1. **Converted `dante_corpus/skel.py` into a package `dante_corpus/skel/`**:
      - `models.py`: `SkelRow`, `Repair`, `Violation`, `LanguagePack`, `ItalianLanguagePack`, `GrammarContext`
      - `registry.py`: `Rule`, `RuleRegistry`, `RULES`, `rule_active`
      - `derive.py`: `derive_unit`, non-finite control chain candidates, coordination subject inheritance, gapped remnant assignment
@@ -85,13 +88,13 @@ See [`PORTABILITY.md`](PORTABILITY.md) for detailed technical specifications and
      - `repairs.py`: Deterministic repair discovery and application (`_find_repairs`, `_apply_unit_repairs`, Tier A/B rules)
      - `io.py`: File serialization/deserialization (`load_skel`, `write_skel`, `has_skel`, `resolve_chunk`, markdown table parser)
      - `__init__.py`: Full re-export of all symbols to preserve 100% backward compatibility
-  2. **Modularize `skel/` driver scripts**:
-     - `skel/skel.py`: Thin CLI entry point (`argparse`, subcommands `check`, `repair`, `build`, `fix`, `stats`, `diff`)
+  2. **Modularized `skel/` driver scripts**:
+     - `skel/skel.py`: Thin CLI entry point (`argparse`, subcommands `check`, `repair`, `build`, `fix`, `stats`, `clean`, `diff`)
      - `skel/driver_fix.py`: Stage 2 `--fix` driver, class prompts (`_CLASS_PROMPTS`), question generation, answer parsing, refusal classification, field notes logging
      - `skel/driver_build.py`: Stage 3 / whole-unit regeneration, LLM integration, retry loop
      - `skel/driver_ui.py`: Terminal UI, progress bar, formatted logging
   3. **Verification**:
-     - Maintain **0 hard / 0 soft violations** corpus-wide and all 547 pytest tests passing.
+     - Maintained **0 hard / 0 soft violations** corpus-wide and all 547 pytest tests passing. Rule census cleanly executed across 130 rules.
 
 ---
 
@@ -127,3 +130,34 @@ See [`HARNESS.md`](HARNESS.md) for architectural diagrams and prompt templates.
 2. **Mutation Testing for Rules**: Every rule in the registry must have at least one test fixture that fails when the rule is disabled.
 3. **UD-General vs. Language-Specific Separation**: Do not allow Italian lexical forms to leak into general UD dependency algorithms.
 4. **Deterministic Authority**: Ground all LLM interactions on deterministic derivation (`derive_unit`) and multi-layer validation checks.
+
+---
+
+## Next Session Handover / 引継ぎ事項
+
+### 1. 完了した作業（Phase 8: Codebase Restructuring & Portability）
+- **Phase 8.1**: `RuleRegistry` 導入と全130ルールの動的センサス機構 (`skel/census_rules.py`) 実装・全100歌測定完了。
+- **Phase 8.2**: テストのライブコーパス依存を分離し、独立したフィクスチャ (`tests/fixtures/skel_fixtures.py`) へ移行。
+- **Phase 8.3**: 7つのイタリア語文法定数を `LanguagePack` / `ItalianLanguagePack` として抽出・単体テスト整備。
+- **Phase 8.4**: レイヤースタック・アノテーション統合クエリインターフェース `GrammarContext` 実装。
+- **Phase 8.5**: 巨大単一ファイルのリファクタリング・モジュール分割:
+  - `dante_corpus/skel.py` (約4,900行) → `dante_corpus/skel/` サブパッケージ (`models.py`, `registry.py`, `derive.py`, `rules.py`, `repairs.py`, `validate.py`, `io.py`, `__init__.py`)
+  - `skel/skel.py` (約2,130行) → `skel/driver_ui.py`, `skel/driver_build.py`, `skel/driver_fix.py`, 薄いエントリポイント `skel/skel.py`
+  - 完全な後方互換性を維持し、`uv run pytest` (547 passed) および `uv run skel/skel.py inferno purgatorio paradiso --check` (0 hard / 0 soft) を達成。
+
+### 2. 現在のレグレッションゲート（健全性指標）
+- 全100歌コーパス: **0 hard / 0 soft violations** (100% CLEAN)
+- pytest: **547 passed**
+- ルールセンサス: 全130ルール (Active 82, Auxiliary 5, Dormant 43)
+
+### 3. 次期セッションで着手すべきタスク（Phase 9: Autonomous Grammar Harness）
+- 参照仕様: [`skel/HARNESS.md`](HARNESS.md)
+- **9.1 Multi-Layer Context Packager (`skel/harness.py`)**:
+  - 原文テキスト、Layer 2 形態素＋case、Layer 4 UD 依存構造ツリーを包含する構造化プロンプト生成器の実装。
+- **9.2 自律的推論プロトコル (CoT)**:
+  - 一致・態の判定、長距離斜格/節補部の捕捉、全体フレーム生成。
+- **9.3 対話的検証＆自己修正ループ**:
+  - LLM生成フレームに対して `skel.validate_unit()` を自動実行し、エラー診断文字列をフィードバックして 0-soft に収束させるループの実装。
+- **9.4 ローカルLLM (Gemma 4 等) ベンチマーク**:
+  - Phase 7 で扱った 87 箇所の乖離位置を対象とした自律収束率・トークン効率の評価。
+

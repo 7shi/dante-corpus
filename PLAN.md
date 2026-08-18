@@ -166,5 +166,11 @@ grammar; they are contested judgments, normalizations, or bindings to something 
 3. **Layer 3 (noun phrases)** — *Complete and verified* ([`np/README.md`](np/README.md)).
 4. **Layer 4 (dependency)** — *Complete and verified* ([`dep/README.md`](dep/README.md)).
 5. **Layer 5 (skeleton)** — *Complete and verified at 0 hard / 0 soft* ([`skel/README.md`](skel/README.md), [`skel/PHASE5.md`](skel/PHASE5.md), [`skel/PHASE6.md`](skel/PHASE6.md), [`skel/PHASE7.md`](skel/PHASE7.md)).
-6. **Phase 8 (Codebase Restructuring & Portability)** — *Active Plan* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/PORTABILITY.md`](skel/PORTABILITY.md)).
-7. **Phase 9 (Autonomous Local LLM Harness)** — *Active Plan* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/HARNESS.md`](skel/HARNESS.md)).
+6. **Phase 8 (Codebase Restructuring & Portability)** — *Complete (8.1–8.5)* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/PORTABILITY.md`](skel/PORTABILITY.md)):
+   - Rule Registry & Census (130 rules registered, measured via `census_rules.py`).
+   - Self-contained test fixtures (`tests/fixtures/skel_fixtures.py`).
+   - Language pack extraction (`ItalianLanguagePack`).
+   - Layer stack interface (`GrammarContext`).
+   - Modular decomposition: `dante_corpus/skel/` subpackage (models, registry, derive, rules, repairs, validate, io) & `skel/` CLI drivers (`driver_ui.py`, `driver_build.py`, `driver_fix.py`, `skel.py`).
+   - Verified at 0 hard / 0 soft violations and 547 pytest passing.
+7. **Phase 9 (Autonomous Local LLM Harness)** — *Next Active Step* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/HARNESS.md`](skel/HARNESS.md)).
