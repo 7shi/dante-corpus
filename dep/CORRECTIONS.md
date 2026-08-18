@@ -1,5 +1,29 @@
 # dep — Layer 4 correction history
 
+## 2 rows from the Phase 7 refusal census audit (2026-08-18)
+
+Found during the per-position audit of the 38 standing Layer-5 refusal positions (`extra_arg`, `extra_arg_subject`, `missing_arg`; see [`../skel/PLAN.md`](../skel/PLAN.md) §P4). Two Layer-4 rows were mis-parsed. Both were applied and re-validated: `morph`/`np`/`dep`/`case --check` all 0 hard / 0 soft; `pytest` 542 passed; Layer 5 **−3 soft violations** (140 → 137).
+
+### inferno 2:60 — temporal adverbial extent tagged as subject
+
+> di cui la fama ancor nel mondo dura, / e durerà quanto 'l **mondo** lontana  (inferno 2:59-60)
+
+Layer 4 tagged `60.5 mondo` as `nsubj` of `60.2 durerà`. In Italian comparative/temporal extent expressions (*"durerà [tanto] quanto [dura] 'l mondo"*), the bare noun phrase `mondo` is an adverbial temporal nominal (`obl`), not the subject of `durerà`. The subject of `durerà` is `59.4 fama`, shared across the coordination from `59.8 dura`. Tagging `mondo` as `nsubj` blocked subject propagation in `derive_unit` and generated two spurious Layer-5 soft violations (`extra_arg: 60.2 subj (59, 4)` and `role_mismatch: 60.2 arg (60, 5) 'obl' vs 'subj'`).
+
+| token | was | now |
+|---|---|---|
+| 60.5 `mondo` | `nsubj` ← 60.2 `durerà` | **`obl` ← 60.2 `durerà`** |
+
+### purgatorio 14:60 — 3sg coordinate relative attached to 1sg matrix root
+
+> Io veggio tuo nepote che diventa / cacciator di quei lupi … / e tutti li **sgomenta**.  (purgatorio 14:58-60)
+
+Layer 4 attached `60.7 sgomenta` (3sg present indicative) as `conj` of `58.2 veggio` (1sg present indicative), rather than to the coordinate relative clause verb `58.6 diventa` (3sg present indicative). Because of this cross-person attachment, `derive_unit`'s step 3 propagated `58.1 io` as the subject of `sgomenta`, whereas the true subject is `58.5 che/nepote`. The LLM's correct reading `sgomenta: subj=(58,5)` was then flagged as `extra_arg: 60.7 subj (58, 5)`.
+
+| token | was | now |
+|---|---|---|
+| 60.7 `sgomenta` | `conj` ← 58.2 `veggio` | **`conj` ← 58.6 `diventa`** |
+
 ## purgatorio 9:97 — the comparative standard made the root (2026-08-18)
 
 Found in Phase 7's first checker-side batch, reading the eight `arg_slot` positions the model

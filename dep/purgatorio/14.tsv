@@ -437,7 +437,7 @@ line	token	word	deprel	head_line	head_token
 60	4	e	cc	60	7
 60	5	tutti	det	60	6
 60	6	li	obj	60	7
-60	7	sgomenta	conj	58	2
+60	7	sgomenta	conj	58	6
 61	1	Vende	root	0	0
 61	2	la	det	61	3
 61	3	carne	obj	61	1

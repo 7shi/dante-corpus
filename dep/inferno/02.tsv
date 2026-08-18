@@ -430,7 +430,7 @@ line	token	word	deprel	head_line	head_token
 60	2	durerà	conj	59	8
 60	3	quanto	advmod	60	2
 60	4	'l	det	60	5
-60	5	mondo	nsubj	60	2
+60	5	mondo	obl	60	2
 60	6	lontana	amod	59	4
 61	1	l'	det	61	2
 61	2	amico	nsubj	62	6

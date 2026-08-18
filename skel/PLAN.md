@@ -2,11 +2,11 @@
 
 ## Status
 
-- **Current State**: `make -C skel check` reports **0 hard, 140 soft** violations across all 100
-  cantos — **137 divergence positions + 3 `dual_role`** (rule EG's artifact-internal contradiction).
-  Per canticle: inferno 42, purgatorio 46, paradiso 52. Base as of 2026-08-18, after the ninth
-  `--fix` round (150 → 140, §P3), rule EI (154 → 150, §P2) and the eighth `--fix` round before it
-  (160 → 154, §P1).
+- **Current State**: `make -C skel check` reports **0 hard, 137 soft** violations across all 100
+  cantos — **134 divergence positions + 3 `dual_role`** (rule EG's artifact-internal contradiction).
+  Per canticle: inferno 40, purgatorio 45, paradiso 52. Base as of 2026-08-18, after refusal census
+  reads & Layer-4 upstream retags (140 → 137, §P4), the ninth `--fix` round (150 → 140, §P3),
+  rule EI (154 → 150, §P2) and the eighth `--fix` round (160 → 154, §P1).
 - **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
   `morph --check` 0/0, `pytest` **542 passed**.
 - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full record in [`PHASE5.md`](PHASE5.md).
@@ -506,6 +506,25 @@ The ten lines removed:
 6. **Violation diff, always**: `0 newly flagged / 0 regressed` held for the ninth consecutive round.
 
 **Field notes**: 2 notes across 135 calls (inferno 10:91, paradiso 14:56). Single-digit rate maintained.
+
+### §P4 — Refusal Census Audit (`extra_arg`, `extra_arg_subject`, `missing_arg`), Two Upstream Retags, 140 → 137 (−3)
+
+Conducted 2026-08-18 per Phase 7 Work Queue item 2. All refused positions across `extra_arg` (14), `extra_arg_subject` (12), and `missing_arg` (12) were read with `skel/read.py` and evaluated under the 5 verdicts.
+
+**1. `extra_arg` batch (14 positions)**:
+- Quoted speech attached as `parataxis` (inferno 8:81 `gridò` + `è`): Censused at 1 position corpus-wide; dropped per Operating Principle 4 / Step 4.
+- Parenthetical idioms (`non so che`, purgatorio 24:107, paradiso 3:59): Dual reading of `che` as both matrix and embedded object; genuine reading disagreement.
+- Remaining 11 positions (result clauses `sì che`, aspectual `venire/udire + gerundio`, relative infinitives, Latin genitive predicative): Genuine reading disagreements with Layer 4 tree structure.
+
+**2. `extra_arg_subject` batch (12 positions) — Two Upstream Retags**:
+- **inferno 2:60** (`durerà quanto 'l mondo lontana`): Layer 4 had `60.5 mondo` tagged `nsubj<-60.2 durerà`. In Italian comparative/extent expressions, `mondo` is an adverbial temporal nominal (`obl`), not the subject of `durerà` (which shares `59.4 fama` via coordination). Retagging `mondo` from `nsubj` to `obl` in `dep/inferno/02.tsv` cleared **2 soft violations** (`extra_arg: 60.2 subj (59, 4)` and `role_mismatch: 60.2 arg (60, 5) 'obl' vs 'subj'`).
+- **purgatorio 14:60** (`Io veggio tuo nepote che diventa / cacciator … e tutti li sgomenta`): `60.7 sgomenta` (3sg) was attached `conj<-58.2 veggio` (1sg) rather than `conj<-58.6 diventa` (3sg). Correcting `head_line=58, head_token=6` in `dep/purgatorio/14.tsv` allowed `sgomenta` to inherit `58.5 che/nepote`, clearing **1 soft violation** (`extra_arg: 60.7 subj (58, 5)`).
+- Remaining 10 positions: Genuine reading disagreements (pro-drop ∅ assertions, inverted word orders, participial clauses).
+
+**3. `missing_arg` / `missing_arg_adverb` batch (12 positions)**:
+- All 12 positions confirmed as genuine reading disagreements (omitted speech complements, comparative `com'` clauses, transitive/intransitive interpretations).
+
+**Result**: 140 → 137 soft violations (inferno 40, purgatorio 45, paradiso 52). `dep` and other upstream layers remain **0 hard / 0 soft**. `pytest` **542 passed**.
 
 ---
 
