@@ -84,9 +84,13 @@ route** (see *Open Assistant-Side Routes*).
    - `missing_arg_subject` splice guard implemented in `_apply_missing_arg` (tested in `tests/test_skel_fix.py`).
 4. ~~**Settle standing `dual_role` positions**~~ — **settled 2026-08-18, §P6**: all 3 standing
    `dual_role` positions in Paradiso resolved (`dual_role` is now 0 corpus-wide, 129 → 126).
-5. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
+5. ~~**Settle seven structural outlier positions**~~ — **settled 2026-08-18, §P7**: `extra_tuple` (3),
+   `missing_tuple` (2), `argument heads no NP` (2) all resolved (126 → 119).
+6. **The tenth `--fix` round, `--no-whole --log`** — user-run with `uv run skel/skel.py inferno purgatorio paradiso --fix --no-whole --log`
+   from the 119 base (all structural outliers and internal contradictions 0).
+7. **Look for more artifact-internal checks** — rule EG's shape: a contradiction the artifact
    contains without reference to `derive_unit`.
-6. **The standing open routes** below, which the reads named but did not settle.
+8. **The standing open routes** below, which the reads named but did not settle.
 
 **Not queued, deliberately:**
 

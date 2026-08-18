@@ -28,24 +28,21 @@
 >
 > ### What the next session does
 >
-> **The work is entirely assistant-side and checker-side now.** Next in queue:
+> 1. **Run Round 10 with logs**: `uv run skel/skel.py inferno purgatorio paradiso --fix --no-whole --log`
+> 2. **Review logs & census**: check `skel/inferno.log`, `skel/purgatorio.log`, `skel/paradiso.log`.
+> 3. **The standing open routes** in [`skel/PLAN.md`](skel/PLAN.md) (copula/predicative nominals, coordination/coreference).
+> 4. **Artifact-internal checks**: look for more checks of rule EG's shape.
 >
-> **1. The standing open routes** in [`skel/PLAN.md`](skel/PLAN.md) (copula/predicative nominals, coordination/coreference).
+> **Not queued, deliberately**: prompt changes, widening field notes, or restructuring `dante_corpus/skel.py`.
 >
-> **2. Artifact-internal checks**:
-> - Look for more checks of rule EG's shape (contradictions the artifact contains without reference to `derive_unit`).
->
-> **Not queued, deliberately**: further blind fix rounds (the refusal census is confirmed), prompt changes,
-> widening field notes, or restructuring `dante_corpus/skel.py`.
->
-> **Layer 5 is operating under Phase 7 with 0 hard / 140 soft violations** (137 divergence positions
-> plus the 3 rule EG still reports). Per canticle: inferno 42, purgatorio 46, paradiso 52.
-> Checks: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `skel --check` 0 hard / **140**
-> soft, `np --check` 0/0, `morph --check` 0/0, `pytest` **542 passed**. The upstream layers were
-corrected batch by batch throughout the Phase 6 read series (~200 Layer-4 rows, ~40 Layer-2 rows, a
-dozen Layer-3 spans and a dozen case-annex rows, each re-validated in the same session) — see each
-layer's `CORRECTIONS.md` and [`skel/PHASE6.md`](skel/PHASE6.md) for the per-batch record. The `--fix`
-rounds touched `skel/*.tsv` only, so no other layer moved with them.
+> **Layer 5 is operating under Phase 7 with 0 hard / 119 soft violations** (all 119 standard argument
+> divergence positions; all structural outliers and artifact-internal contradictions 0). Per canticle:
+> inferno 32, purgatorio 39, paradiso 48. Checks: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard,
+> `skel --check` 0 hard / **119** soft, `np --check` 0/0, `morph --check` 0/0, `pytest` **543 passed**. The
+> upstream layers were corrected batch by batch throughout the Phase 6 read series (~200 Layer-4 rows,
+> ~40 Layer-2 rows, a dozen Layer-3 spans and a dozen case-annex rows, each re-validated in the same
+> session) — see each layer's `CORRECTIONS.md` and [`skel/PHASE6.md`](skel/PHASE6.md) for the per-batch
+> record. The `--fix` rounds touched `skel/*.tsv` only, so no other layer moved with them.
 
 **Layer 4's stacked prepositions are normalized (2026-08-14).** 161 multiword-preposition
 clusters (196 rows, 74 files) rewritten to the UD convention — opening word `case`→ nominal,
