@@ -4,7 +4,7 @@
 This document outlines the architectural principles, achieved decouplings, and open long-term horizons for generalizing the Layer-5 (predicate-argument skeleton) derivation and validation engine across different languages and corpora.
 
 - **Phase 8 Milestone (Completed)**: Internal codebase restructuring, rule registry census, test fixture decoupling, `ItalianLanguagePack` extraction, `GrammarContext` interface, and modular decomposition are complete and verified at 0 hard / 0 soft violations corpus-wide. See [`PHASE8.md`](PHASE8.md) for the closed retrospective.
-- **Active Development Plan**: See [`PLAN.md`](PLAN.md) and [`HARNESS.md`](HARNESS.md).
+- **Active Development Plan**: See [`PLAN.md`](PLAN.md).
 - **Rule Specification & Census**: See [`RULES.md`](RULES.md) (or [`RULES-ja.md`](RULES-ja.md)).
 
 ---

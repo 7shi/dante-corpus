@@ -16,7 +16,6 @@ canon-neutral.
 - **Active Plans & Future Architecture**:
   - [`PLAN.md`](PLAN.md): Current post-zero development plan (Phase 9 autonomous local LLM grammar harness).
   - [`PORTABILITY.md`](PORTABILITY.md): Architectural roadmap and long-term design guide for Layer-5 portability across languages and corpora.
-  - [`HARNESS.md`](HARNESS.md): Specification for the autonomous grammatical parsing harness for local LLMs (Gemma 4).
 - **Rule Reference & Correction History**:
   - [`RULES.md`](RULES.md) / [`RULES-ja.md`](RULES-ja.md): Formal Grammar Handbook & Rule Specification (all 130 rules systematized into a 6-branch hierarchical tree taxonomy with live census metrics and textual examples; Japanese edition with translated citations).
   - [`CORRECTIONS.md`](CORRECTIONS.md): Permanent record of hand corrections, checker rules (Rules A through EI), and verified structural exceptions.

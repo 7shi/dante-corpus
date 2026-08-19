@@ -8,7 +8,7 @@ This document provides a comprehensive post-mortem and reference report on Layer
   - Phase 5: 5,919 → 2,084 soft violations — [`PHASE5.md`](PHASE5.md).
   - Phase 6: 2,084 → 160 soft violations (Rounds 1–7, nineteen read batches) — [`PHASE6.md`](PHASE6.md).
   - Phase 7: 160 → 0 soft violations (100% clean corpus-wide) — [`PHASE7.md`](PHASE7.md).
-  - Future Roadmap & Local LLM Harness: [`PLAN.md`](PLAN.md), [`PORTABILITY.md`](PORTABILITY.md), [`HARNESS.md`](HARNESS.md).
+  - Future Roadmap & Local LLM Harness: [`PLAN.md`](PLAN.md), [`PORTABILITY.md`](PORTABILITY.md).
   - Grammar Handbook: [`RULES.md`](RULES.md) (Japanese edition: [`RULES-ja.md`](RULES-ja.md)).
 
 ---
@@ -125,4 +125,4 @@ At the conclusion of Phase 8:
 - **Other Layers**: `dep --check` 0/0, `case --check` 0, `np --check` 0/0, `morph --check` 0/0.
 - **Test Suite**: `pytest` **547 passed** in ~1.5s across all 12 test modules.
 - **Backward Compatibility**: All external imports (`from dante_corpus.skel import ...`) operate identically.
-- **Phase Status**: Phase 8 is formally closed. Development transitions to Phase 9 (Autonomous Grammar Parsing Harness for Local LLMs, [`HARNESS.md`](HARNESS.md)).
+- **Phase Status**: Phase 8 is formally closed. Development transitions to Phase 9 (Autonomous Grammar Agent Harness for Local LLMs, [`PLAN.md`](PLAN.md)).

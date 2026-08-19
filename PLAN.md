@@ -7,22 +7,23 @@
 > - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`skel/PLAN.md`](skel/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 547 tests.
 >
-> **Immediate Next Priority: Phase 9 — Grammatical Parsing Harness for Local LLMs**:
-> *(Full architectural specifications and templates: [`skel/HARNESS.md`](skel/HARNESS.md) and [`skel/PLAN.md`](skel/PLAN.md)).*
+> **Immediate Next Priority: Phase 9 — Grammatical Agent Harness for Local LLMs (Gemma 4)**:
+> *(Full architectural specifications and tool definitions: [`skel/PLAN.md`](skel/PLAN.md)).*
 >
-> 1. **9.1 Multi-Layer Context Packager (`skel/harness.py`)**:
->    - Build context builder providing local models (e.g. **Gemma 4**) with integrated 5-layer diagnostic context (text + morphology + case annex + NP spans + UD dependency trees).
->    - Render structured markdown/JSON prompts that present full syntax context without withholding evidence.
+> 1. **9.1 Dedicated Toolset & Context API (`dante_corpus/skel/harness/tools.py`)**:
+>    - Expose multi-layer context via [`dante_corpus/api.py`](dante_corpus/api.py) (text + quotes + morphology + case annex + NP spans + UD trees).
+>    - Enforce strict masking of Layer 5 (`canto.skel()`), the 130-rule registry, and manual correction records ([`CORRECTIONS.md`](skel/CORRECTIONS.md)) for fair autonomous reconstruction, with logged exception oracle fallback (`inject_oracle`).
+>    - Implement dedicated tool API for LLM Function Calling: `read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton`.
 >
-> 2. **9.2 Autonomous Reasoning Protocol (CoT)**:
->    - Implement structured chain-of-thought prompt templates (Agreement & Voice, Head Token Citation, Complement vs. Adjunct, Full Frame Generation).
+> 2. **9.2 Autonomous Multi-Turn Agent Runner (`skel/harness.py`)**:
+>    - Implement autonomous agent loop for local models (e.g. **Gemma 4 31B**) without free-form bash execution.
+>    - Structured 4-step grammatical reasoning protocol (Agreement & Voice, Head Citation, Complement vs. Adjunct, Candidate Frame).
 >
-> 3. **9.3 Interactive Validation & Self-Correction Loop**:
->    - Harness executes `validate_unit()` in-process on model-generated frames.
->    - Automatically feed back diagnostic strings to the LLM for autonomous multi-turn repair until 0-soft is reached.
+> 3. **9.3 Historical Residue Benchmark (87 Phase 7 Positions)**:
+>    - Benchmark Gemma 4 against the 87 historical divergence positions to evaluate 1-shot accuracy, autonomous convergence, and oracle intervention rates.
 >
-> 4. **9.4 Gemma 4 Benchmarking & Evaluation**:
->    - Benchmark Gemma 4 against the 87 historical Phase 7 divergence positions.
+> 4. **9.4 Production CLI & Full Canto Reconstruction Pipeline**:
+>    - Provide interactive debugging CLI and canto-wide autonomous reconstruction mode.
 
 ## Current Status (2026-08-19)
 
@@ -45,15 +46,15 @@
 
 ---
 
-## Next Steps: Autonomous Local LLM Grammar Harness
+## Next Steps: Autonomous Local LLM Grammar Agent Harness
 
 With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructuring completed in Phase 8, the active 0-soft regression gate enables downstream tooling:
 
-1. **Autonomous Grammar Parsing Harness for Local LLMs (Phase 9)**:
-   - Build a specialized CLI harness (`skel/harness.py`) providing local models (e.g. **Gemma 4**) with integrated 5-layer diagnostic context (text + morphology + dependency trees).
-   - Implement autonomous reasoning protocol (CoT) and interactive validation/self-correction loops.
-   - Benchmark Gemma 4 on the historical Phase 7 divergence dataset.
-   - *Details*: [`skel/HARNESS.md`](skel/HARNESS.md) and [`skel/PLAN.md`](skel/PLAN.md).
+1. **Dedicated Grammar Agent Harness for Local LLMs (Phase 9)**:
+   - Build a specialized agent harness (`skel/harness.py`) providing local models (e.g. **Gemma 4 31B**) with structured 5-layer context via [`dante_corpus/api.py`](dante_corpus/api.py) and a closed toolset (`read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton`).
+   - Implement autonomous reasoning protocol (CoT) and multi-turn self-correction loop without free bash execution.
+   - Benchmark Gemma 4 on the historical Phase 7 divergence dataset (87 positions).
+   - *Details*: [`skel/PLAN.md`](skel/PLAN.md).
 
 2. **Long-Term Portability & Cross-Corpus Extensions**:
    - Declarative rule scheduling DAG, additional language packs (Latin, etc.).
@@ -160,4 +161,4 @@ grammar; they are contested judgments, normalizations, or bindings to something 
    - Layer stack interface (`GrammarContext`).
    - Modular decomposition: `dante_corpus/skel/` subpackage (models, registry, derive, rules, repairs, validate, io) & `skel/` CLI drivers (`driver_ui.py`, `driver_build.py`, `driver_fix.py`, `skel.py`).
    - Verified at 0 hard / 0 soft violations and 547 pytest passing.
-7. **Phase 9 (Autonomous Local LLM Harness)** — *Next Active Step* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/HARNESS.md`](skel/HARNESS.md)).
+7. **Phase 9 (Autonomous Local LLM Harness)** — *Next Active Step* ([`skel/PLAN.md`](skel/PLAN.md)).
