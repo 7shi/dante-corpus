@@ -7,20 +7,21 @@ semantic frame, no coreference, no vocabulary normalization.** Role labels are *
 (`subj`/`obj`/`iobj`/`attr`/`xcomp`/`ccomp`/`obl:<preposition lemma>`), not semantic, so the
 canon-neutral.
 
-**Status: built for all 100 cantos and verified at 0 hard / 0 soft violations corpus-wide. Checker refined through Phase 5 (5,919 → 2,084 soft), Phase 6 (2,084 → 160 soft), and Phase 7 (160 → 0 soft).**
+**Status: built for all 100 cantos and verified at 0 hard / 0 soft violations corpus-wide. Refined through Phase 5 (5,919 → 2,084 soft), Phase 6 (2,084 → 160 soft), Phase 7 (160 → 0 soft), and Phase 8 (modular restructuring & Rule Registry).**
 
 `make -C skel check`: **0 hard, 0 soft** violations across all 100 cantos (100% clean corpus-wide; 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`, 0 divergence residue).
 
 ## Documents & Layer 5 Roadmap
 
 - **Active Plans & Future Architecture**:
-  - [`PLAN.md`](PLAN.md): Current post-zero development plan (Phase 8 refactoring & Phase 9 autonomous grammar harness).
-  - [`PORTABILITY.md`](PORTABILITY.md): Architectural roadmap toward a portable, modular Layer-5 checker (Rule Registry, language pack isolation, fixture tests).
+  - [`PLAN.md`](PLAN.md): Current post-zero development plan (Phase 9 autonomous local LLM grammar harness).
+  - [`PORTABILITY.md`](PORTABILITY.md): Architectural roadmap and long-term design guide for Layer-5 portability across languages and corpora.
   - [`HARNESS.md`](HARNESS.md): Specification for the autonomous grammatical parsing harness for local LLMs (Gemma 4).
 - **Rule Reference & Correction History**:
   - [`RULES.md`](RULES.md) / [`RULES-ja.md`](RULES-ja.md): Formal Grammar Handbook & Rule Specification (all 130 rules systematized into a 6-branch hierarchical tree taxonomy with live census metrics and textual examples; Japanese edition with translated citations).
   - [`CORRECTIONS.md`](CORRECTIONS.md): Permanent record of hand corrections, checker rules (Rules A through EI), and verified structural exceptions.
 - **Phase Retrospectives (Closed Records)**:
+  - [`PHASE8.md`](PHASE8.md): Phase 8 Retrospective — Codebase Restructuring & Modular Decomposition (Rule Registry & Census, Fixture Decoupling, `ItalianLanguagePack`, `GrammarContext`, modular `dante_corpus/skel/` and `skel/driver_*.py`).
   - [`PHASE7.md`](PHASE7.md): Phase 7 Retrospective — driving soft violations from 160 to 0 (refusal census, outlier resolution, §P1–§P15).
   - [`PHASE6.md`](PHASE6.md): Phase 6 Retrospective — 2,084 → 160 soft violations (7 `--fix` rounds, 19-batch full-corpus read series, Rules AG–EH).
   - [`PHASE5.md`](PHASE5.md): Phase 5 Retrospective — 5,919 → 2,084 soft violations (deterministic elimination vs monolithic LLM regeneration).
@@ -31,7 +32,7 @@ Unlike Layers 2-4, this layer's artifact is LLM-authored but **checked by a dete
 derivation**: one LLM pass per parse unit (the same sentence-grouped units as Layer 4, see
 `dep.sentence_groups`) proposes, independently, a Markdown table listing every predicate token
 and its arguments — the model is deliberately **not shown the Layer-4 parse**, so its reading is
-its own. `derive_unit` (`dante_corpus/skel.py`) computes the same predicate-argument structure
+its own. `derive_unit` (`dante_corpus/skel/derive.py`) computes the same predicate-argument structure
 *mechanically* from the frozen Layer 2-4 artifacts, and `validate_unit`'s soft checks report
 every place the LLM's tuple set diverges from that derivation. A purely deterministic Layer 5
 would just be `f(dep)` and could never disagree with Layer 4; giving the LLM an independent read
@@ -85,19 +86,22 @@ line	token	word	role	arg_line	arg_token
 
 ### Checker Architecture & Core Principles
 
-The Layer-5 checker (`validate_unit` in `dante_corpus/skel.py`) evaluates candidate tuples against `derive_unit` using five structural pillars:
+The Layer-5 checker (`validate_unit` in `dante_corpus/skel/validate.py`) evaluates candidate tuples against `derive_unit` using modular structural pillars:
 
-1. **Normalization Layer (`_canonicalize_role`/`_normalize_prep_lemma`)**: Canonicalizes orthographic variants (`sanza` → `senza`), labeling conventions (`attr` ≡ `xcomp`, `iobj` ≡ `obl:a`), and multiword preposition clusters.
-2. **Authority Model (`_apply_subj_authority`)**: Delegates mechanically underdetermined subject slots to the LLM within candidate sets (pro-drop antecedents, non-finite null subjects, and control/participial propagation via Rule V).
-3. **Deterministic Auto-Repairs (`--repair` / Stage 1 of `--fix`)**:
+1. **Language Pack Isolation (`LanguagePack` / `ItalianLanguagePack`)**: Isolates the 7 language-specific constants (preposition normalizations, relative pronouns, comparative particles) from UD syntax logic.
+2. **Grammatical Layer Stack Interface (`GrammarContext`)**: Encapsulates multi-layer token queries (Layers 1–4) behind a unified, queryable interface.
+3. **Rule Registry (`RuleRegistry`, `@rule`)**: Introspectable catalog of all 130 rules with live in-memory census capabilities (`skel/census_rules.py`).
+4. **Normalization Layer (`_canonicalize_role`/`_normalize_prep_lemma`)**: Canonicalizes orthographic variants (`sanza` → `senza`), labeling conventions (`attr` ≡ `xcomp`, `iobj` ≡ `obl:a`), and multiword preposition clusters.
+5. **Authority Model (`_apply_subj_authority`)**: Delegates mechanically underdetermined subject slots to the LLM within candidate sets (pro-drop antecedents, non-finite null subjects, and control/participial propagation via Rule V).
+6. **Deterministic Auto-Repairs (`--repair` / Stage 1 of `--fix`)**:
    - **Tier A (No Reading Asserted)**: Mechanics-only repairs like `role_label` and `prep_stack`.
    - **Tier B (Corroborated Reading)**: Repairs requiring independent corroboration from Layer 2 morphology (e.g. `null_subject` gated on `dep.subject_agreement`).
-4. **Third-Opinion Case Annex Integration (`_case_corroborated_role`)**: Adjudicates disputed clitic roles by reading the frozen `case/` annex as a third arbiter (Phase 5r, Rule U).
-5. **Artifact-Internal Contradiction Checks (`dual_role`, Rule EG)**: Validates that one token does not fill two conflicting roles on the same predicate unless licensed as a fused clitic (Rule AL/CM).
+7. **Third-Opinion Case Annex Integration (`_case_corroborated_role`)**: Adjudicates disputed clitic roles by reading the frozen `case/` annex as a third arbiter (Phase 5r, Rule U).
+8. **Artifact-Internal Contradiction Checks (`dual_role`, Rule EG)**: Validates that one token does not fill two conflicting roles on the same predicate unless licensed as a fused clitic (Rule AL/CM).
 
 ### Rule Catalogue & Chronological Evolution
 
-Over the course of Phases 4–7, **84 rule letters (A through EI)** were incrementally censused, measured by violation diff, tested, and landed.
+Over the course of Phases 4–8, **84 rule letters (A through EI) and 130 total rules** were incrementally censused, measured by violation diff, tested, systematized into the `@rule` registry, and modularized into `dante_corpus/skel/`.
 
 For the complete evidence, rationale, and per-rule documentation:
 - **Grammar Handbook & Tree Taxonomy**: See [`RULES.md`](RULES.md) (or [`RULES-ja.md`](RULES-ja.md) for the Japanese edition) for the complete 6-branch hierarchical specification of all 130 rules with UD formulations and corpus examples.
@@ -105,6 +109,7 @@ For the complete evidence, rationale, and per-rule documentation:
 - **Phase 5 Evolution (5,919 → 2,084 soft)**: Rules C–AF and the adoption of deterministic checker rules — see [`PHASE5.md`](PHASE5.md).
 - **Phase 6 Evolution (2,084 → 160 soft)**: Rules AG–EH and the 19-batch full-corpus read series — see [`PHASE6.md`](PHASE6.md).
 - **Phase 7 Evolution (160 → 0 soft)**: Rule EI, refusal census reads, outlier resolution, and complete residue closure — see [`PHASE7.md`](PHASE7.md).
+- **Phase 8 Restructuring**: Rule Registry, test fixture decoupling, `ItalianLanguagePack`, `GrammarContext`, and modular decomposition — see [`PHASE8.md`](PHASE8.md).
 
 ### Measured Progression Across Phases
 
@@ -115,6 +120,7 @@ For the complete evidence, rationale, and per-rule documentation:
 | **Phase 5** | Deterministic rules (Rules C–AF), Case Annex (Rule U), Control subjects (Rule V) | 5,919 → 2,084 |
 | **Phase 6** | Three-stage `--fix` (Rounds 1–7: −1,157), Full-corpus read series (Rules AG–EH: −793), Refusal split | 2,084 → 160 |
 | **Phase 7** | Refusal census reads, Rule EI, outlier elimination, upstream retags, 6 read censuses | 160 → **0** |
+| **Phase 8** | Codebase restructuring, Rule Registry (130 rules), test fixtures, LanguagePack, GrammarContext, modular decomposition | **0** (547 tests) |
 
 ## `--fix`'s three stages (Phase 6)
 

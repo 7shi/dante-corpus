@@ -1,163 +1,104 @@
-# skel — Layer 5 Plan: Post-Zero Refactoring, Portability & Grammar Harness
+# skel — Layer 5 Plan: Post-Zero Grammar Parsing Harness & Future Architecture
 
-## Status
+## Status & Baseline
 
-- **Current State**: `make -C skel check` reports **0 hard, 0 soft** violations across all 100
-  cantos — **100% CLEAN** across the entire corpus (0 hard, 0 soft, 0 `dual_role`, 0 `extra_tuple`,
-  0 `missing_tuple`, 0 `argument heads no NP`, 0 divergence residue). Per canticle: inferno 0, purgatorio 0,
-  paradiso 0.
-- **Other Layers**: `dep --check` **0 hard / 0 soft**, `case --check` 0 hard, `np --check` 0/0,
-  `morph --check` 0/0, `pytest` **547 passed**.
-- **Completed Phases**:
-  - **Phase 5**: Complete and closed — 5,919 → 2,084 soft. Full retrospective in [`PHASE5.md`](PHASE5.md).
-  - **Phase 6**: Complete and closed — 2,084 → 160 soft, with seven user-run `--fix` rounds (−1,157)
-    and a per-position read of all 100 cantos in nineteen batches (rules AG–EH, −793, at zero model cost).
-    Full retrospective in [`PHASE6.md`](PHASE6.md).
-  - **Phase 7**: Complete and closed — **160 → 0 soft violations** (100% clean corpus-wide).
-    Refusal census audit, outlier elimination, upstream retags, and six assistant-side read censuses (§P1–§P15).
-    Full retrospective in [`PHASE7.md`](PHASE7.md).
-  - **Phase 8**: Complete and closed — **Codebase Restructuring & Portability** (8.1 Rule Registry & Census,
-    8.2 Fixture Decoupling, 8.3 Language Pack Extraction, 8.4 GrammarContext Interface, 8.5 Modular Decomposition into
-    `dante_corpus/skel/` and `skel/driver_*.py`). Full retrospective in [`PORTABILITY.md`](PORTABILITY.md) and complete grammar handbook in [`RULES.md`](RULES.md).
+- **Current State**: `make -C skel check` reports **0 hard, 0 soft** violations across all 100 cantos — **100% CLEAN** across the entire corpus (Inferno 0, Purgatorio 0, Paradiso 0; 0 `dual_role`, 0 `extra_tuple`, 0 `missing_tuple`, 0 `argument heads no NP`, 0 divergence residue).
+- **All Layers & Tests**: `dep --check` 0/0, `case --check` 0, `np --check` 0/0, `morph --check` 0/0, `pytest` **547 passed**.
+- **Historical Phase Retrospectives (Closed)**:
+  - **Phase 5**: 5,919 → 2,084 soft violations ([`PHASE5.md`](PHASE5.md)).
+  - **Phase 6**: 2,084 → 160 soft violations ([`PHASE6.md`](PHASE6.md)).
+  - **Phase 7**: 160 → 0 soft violations (100% clean corpus-wide) ([`PHASE7.md`](PHASE7.md)).
+  - **Phase 8**: Codebase Restructuring & Modular Portability ([`PHASE8.md`](PHASE8.md)).
+- **Grammar Specification**: Full 130-rule handbook with dynamic census metrics in [`RULES.md`](RULES.md) (Japanese edition: [`RULES-ja.md`](RULES-ja.md)).
+- **Long-Term Portability Vision**: [`PORTABILITY.md`](PORTABILITY.md).
 
 ---
 
-## Overview & Next Strategic Directions
-
-With **0 hard / 0 soft violations achieved across the entire *Divina Commedia***, the 0-soft count functions as an active **regression gate**. The project shifts from manual residue elimination to:
-
-1. **Phase 8: Codebase Restructuring & Portability** ([`PORTABILITY.md`](PORTABILITY.md)) — Refactoring `dante_corpus/skel.py` (4,500+ lines, 84 rule letters) into a data-driven rule registry, decoupling tests into self-contained fixtures, isolating the 7 Italian language constants into a language pack, and establishing a clean layer stack interface.
-2. **Phase 9: Grammatical Parsing Harness for Local LLMs** ([`HARNESS.md`](HARNESS.md)) — Developing an autonomous multi-layer grammar harness (`skel/harness.py`) that equips local models (e.g., Gemma 4) with integrated morphology, syntax trees, and self-correcting validation loops.
+## Strategic Focus: Upcoming Phases
 
 ```mermaid
 graph TD
-    P7["Phase 7 (Complete)<br/>0 Hard / 0 Soft Across 100 Cantos"] --> Gate["0-Soft Regression Gate Active"]
+    Gate["0-Soft Regression Gate (Active & Clean)"] --> P9["Phase 9: Autonomous Grammar Harness (Active Priority)"]
     
-    subgraph "Phase 8: Refactoring & Portability"
-        Gate --> P8_1["8.1 Rule Registry & One-Shot Census"]
-        P8_1 --> P8_2["8.2 Test Fixture Decoupling"]
-        P8_2 --> P8_3["8.3 Language Pack Extraction"]
-        P8_3 --> P8_4["8.4 Grammatical Layer Stack Interface"]
-    end
-    
-    subgraph "Phase 9: Autonomous Grammar Harness"
-        P8_4 --> P9_1["9.1 Context Packager (Multi-Layer Views)"]
+    subgraph "Phase 9: Local LLM Autonomous Parsing Harness"
+        P9 --> P9_1["9.1 Multi-Layer Context Packager (skel/harness.py)"]
         P9_1 --> P9_2["9.2 Autonomous Reasoning Protocol (CoT)"]
         P9_2 --> P9_3["9.3 Interactive Validation Feedback Loop"]
         P9_3 --> P9_4["9.4 Local LLM Benchmarking (Gemma 4)"]
+        P9_4 --> P9_5["9.5 Production CLI & Batch Inference"]
+    end
+    
+    subgraph "Future Track: Cross-Corpus Portability"
+        P9 --> Port_DAG["Declarative Rule Scheduling DAG"]
+        P9 --> Port_Lang["New Language Packs (Latin, Romance)"]
     end
 ```
 
 ---
 
-## Phase 8: Codebase Restructuring & Portability
+## Active Priority: Phase 9 — Grammatical Parsing Harness for Local LLMs
 
-See [`PORTABILITY.md`](PORTABILITY.md) for detailed technical specifications and background metrics.
+See [`HARNESS.md`](HARNESS.md) for detailed architectural designs, prompt structures, and evaluation benchmarks.
 
-### 8.1 Rule Registry & One-Shot Census (Completed)
-- **Implemented**: Formal `RuleRegistry` in `dante_corpus/skel.py` (`Rule`, `RuleRegistry`, `RULES`, `rule_active`).
-- **Census Tool**: `skel/census_rules.py` executed across all 100 cantos (3,477 parse units) in-memory.
-- **Results**:
-  - 130 registered rules: 82 directly active (`count_on_removal > 0`), 5 auxiliary/structural, 43 dormant/subsumed.
-  - Complete census table and 6-branch grammar hierarchy documented in [`RULES.md`](RULES.md) and [`PORTABILITY.md`](PORTABILITY.md).
-  - Standing discipline preserved: 0 hard / 0 soft violations across all 100 cantos; 544 tests passed.
+### 9.1 Multi-Layer Context Packager (`skel/harness.py`)
+- **Objective**: Implement context extraction and packaging module providing local models (e.g. **Gemma 4**) with structured 5-layer diagnostic context.
+- **Components**:
+  - Extract source Italian verse, Layer 2 morphology (POS, inflection), pronoun case annex, Layer 3 noun phrases, and Layer 4 UD syntax trees for any target parse unit.
+  - Render compact markdown/JSON prompts that expose full syntactic evidence (eliminating the blind "Independence Rule" trap that caused earlier `--fix` rounds to stall).
 
-### 8.2 Decouple Driver Tests from Live Corpus Data (Completed)
-- **Implemented**: Created `tests/fixtures/skel_fixtures.py` providing self-contained, frozen parse unit fixtures (`make_purgatorio_1_adverb_fixture()`, `make_inferno_5_arg_slot_fixture()`).
-- **Decoupled**: Rewrote driver tests in `tests/test_skel_fix.py` to run purely on fixtures; added explicit live integration test `test_live_canto_integration()`.
+### 9.2 Autonomous Reasoning Protocol (CoT)
+- **Objective**: Implement structured chain-of-thought prompt templates guiding local LLMs through a systematic 4-step grammatical reasoning workflow:
+  1. **Morphological Agreement & Voice**: Match subject person/number with finite verbs; identify passive/reflexive `si`.
+  2. **Head Token Citation**: Distinguish heads from modifiers in idioms and prepositional clusters.
+  3. **Complement vs. Adjunct Discrimination**: Correctly classify `ccomp`, `xcomp`, and long-distance `obl` arguments.
+  4. **Full Frame Generation**: Emit clean, well-formed markdown/TSV proposition tables.
 
-### 8.3 Extract Language Pack (`ItalianLanguagePack`) (Completed)
-- **Implemented**: Extracted 7 language-specific constants into `LanguagePack` and `ItalianLanguagePack` in `dante_corpus/skel.py`:
-  - `prep_lemma_norm`, `rel_pronoun_words`, `relative_pronouns`, `relativizers`, `comparative_particles`, `comparative_lemmas`, `locative_relative_lemmas`.
-- **Verified**: Added unit tests in `tests/test_skel.py` (`test_language_pack_italian`), all 546 tests passing.
+### 9.3 Interactive Validation & Self-Correction Feedback Loop
+- **Objective**: Build an automated interactive refinement loop between the local LLM and `validate_unit()`.
+- **Workflow**:
+  1. Local LLM proposes candidate proposition rows.
+  2. Harness runs deterministic `validate_unit(unit, candidate_rows)` in-process.
+  3. If violations occur (hard or soft), extract precise diagnostic violation strings (e.g., `role_mismatch`, `missing_arg`) and pass them back to the LLM as targeted correction turns.
+  4. Terminate when 0 hard / 0 soft violations are achieved or retry budget is exhausted.
 
-### 8.4 Grammatical Layer Stack Interface (Completed)
-- **Implemented**: Created `GrammarContext` class in `dante_corpus/skel.py` encapsulating Layers 1–4 annotations (morphology, syntax, case, NP spans).
-- **Interface**: Structured query helpers (`ctx.dep_at()`, `ctx.morph_at()`, `ctx.head_of()`, `ctx.deprel_of()`, `ctx.is_verb()`, `ctx.is_pronoun()`, `ctx.case_slot()`).
-- **Verified**: Added test `test_grammar_context` in `tests/test_skel.py`, verified all 547 unit tests and whole-corpus `--check` produce 0 hard / 0 soft violations.
+### 9.4 Local LLM Benchmarking & Evaluation
+- **Objective**: Evaluate Gemma 4 (and other open-weights models) on historical grammatical parsing tasks.
+- **Evaluation Dataset**:
+  - Benchmark against the **87 historical Phase 7 divergence positions** and representative parse units across all three canticles.
+  - Metrics: One-shot accuracy, multi-turn convergence rate, token efficiency, and violation resolution distribution.
 
-### 8.5 Modular Decomposition of `dante_corpus/skel.py` and `skel/skel.py` (Completed)
-- **Problem**: `dante_corpus/skel.py` (~4,880 lines) and `skel/skel.py` (~2,130 lines) were oversized monoliths that combined data models, derivation logic, rule catalogs, validation engines, repair heuristics, I/O formats, and CLI fix drivers in single files.
-- **Action**:
-  1. **Converted `dante_corpus/skel.py` into a package `dante_corpus/skel/`**:
-     - `models.py`: `SkelRow`, `Repair`, `Violation`, `LanguagePack`, `ItalianLanguagePack`, `GrammarContext`
-     - `registry.py`: `Rule`, `RuleRegistry`, `RULES`, `rule_active`
-     - `derive.py`: `derive_unit`, non-finite control chain candidates, coordination subject inheritance, gapped remnant assignment
-     - `rules.py`: Divergence classification rules (Rules A–EI), subject authority handlers (`V`, `AG`, `AH`, `CL`, `DO`, `CU`, `BU`), and rule predicate helpers
-     - `validate.py`: Validation entry point (`validate_unit`, token/position checks, predicate/clausal validity, nominal/argument membership checks, dual-role check `EG`)
-     - `repairs.py`: Deterministic repair discovery and application (`_find_repairs`, `_apply_unit_repairs`, Tier A/B rules)
-     - `io.py`: File serialization/deserialization (`load_skel`, `write_skel`, `has_skel`, `resolve_chunk`, markdown table parser)
-     - `__init__.py`: Full re-export of all symbols to preserve 100% backward compatibility
-  2. **Modularized `skel/` driver scripts**:
-     - `skel/skel.py`: Thin CLI entry point (`argparse`, subcommands `check`, `repair`, `build`, `fix`, `stats`, `clean`, `diff`)
-     - `skel/driver_fix.py`: Stage 2 `--fix` driver, class prompts (`_CLASS_PROMPTS`), question generation, answer parsing, refusal classification, field notes logging
-     - `skel/driver_build.py`: Stage 3 / whole-unit regeneration, LLM integration, retry loop
-     - `skel/driver_ui.py`: Terminal UI, progress bar, formatted logging
-  3. **Verification**:
-     - Maintained **0 hard / 0 soft violations** corpus-wide and all 547 pytest tests passing. Rule census cleanly executed across 130 rules.
+### 9.5 Production CLI & Batch Inference
+- **Objective**: Expose the harness via a clean CLI interface (`skel/harness.py`) with support for single unit debugging, whole canto evaluation, and automated batch processing.
 
 ---
 
-## Phase 9: Grammatical Parsing Harness for Local LLMs
+## Future Track: Cross-Corpus Portability & Long-Term Extensions
 
-See [`HARNESS.md`](HARNESS.md) for architectural diagrams and prompt templates.
+See [`PORTABILITY.md`](PORTABILITY.md) for architectural details.
 
-### 9.1 Multi-Layer Context Packager (`skel/harness.py`)
-- Package source text, Layer 2 morphology + case features, and Layer 4 UD dependency trees into structured markdown/JSON prompts.
-- Present exact candidate discrepancies without withholding syntax, avoiding the blind "Independence Rule" trap that caused `--fix` to stall.
-
-### 9.2 Autonomous Reasoning Protocol
-- Instruct the local LLM (e.g., Gemma 4) to follow a 4-step chain-of-thought protocol:
-  1. **Agreement & Voice Analysis**: Strict verb-subject number/person matching.
-  2. **Head Token Citation**: Disambiguating heads from dependents in complex idioms.
-  3. **Oblique & Clausal Complements**: Disambiguating `advcl` from `ccomp` and capturing long-distance obliques.
-  4. **Full-Unit Frame Generation**: Emitting coherent multi-predicate TSV frames.
-
-### 9.3 Interactive Validation & Self-Correction Feedback Loop
-- Harness automatically executes `validate_unit()` on LLM-generated frames.
-- If hard/soft violations occur, feed exact diagnostic strings back to the LLM for self-correction.
-- Accept and commit only frames achieving 0 hard / 0 soft violations.
-
-### 9.4 Gemma 4 Benchmark & Evaluation
-- Benchmark Gemma 4 against the 87 historical Phase 7 divergence positions.
-- Evaluate autonomous convergence rate, token efficiency, and error recovery capability.
+1. **Declarative Rule Scheduling DAG**:
+   - Transition procedural `rules.py` execution into a declarative dependency graph with explicit precedence declarations (`precedes`, `requires`).
+2. **Additional Language Packs**:
+   - Construct language packs for Latin, Old French, and Modern Italian based on the abstract `LanguagePack` class.
+3. **Standalone Linter Mode**:
+   - Decouple intrinsic well-formedness validation (duplicate argument slots, cycle checks) from comparative derivation auditing.
 
 ---
 
 ## Standing Invariants & Disciplines
 
-1. **0-Soft Regression Gate**: All refactoring, rule reordering, or modularization must maintain **0 hard / 0 soft violations** corpus-wide.
+1. **0-Soft Regression Gate**: Any refactoring or layer update must preserve **0 hard / 0 soft violations** corpus-wide and pass all 547 unit tests.
 2. **Mutation Testing for Rules**: Every rule in the registry must have at least one test fixture that fails when the rule is disabled.
 3. **UD-General vs. Language-Specific Separation**: Do not allow Italian lexical forms to leak into general UD dependency algorithms.
 4. **Deterministic Authority**: Ground all LLM interactions on deterministic derivation (`derive_unit`) and multi-layer validation checks.
 
 ---
 
-## Next Session Handover / 引継ぎ事項
+## Next Session Handover / Action Items
 
-### 1. 完了した作業（Phase 8: Codebase Restructuring & Portability）
-- **Phase 8.1**: `RuleRegistry` 導入と全130ルールの動的センサス機構 (`skel/census_rules.py`) 実装・全100歌測定完了。文法書・木構造仕様 [`RULES.md`](RULES.md) を作成。
-- **Phase 8.2**: テストのライブコーパス依存を分離し、独立したフィクスチャ (`tests/fixtures/skel_fixtures.py`) へ移行。
-- **Phase 8.3**: 7つのイタリア語文法定数を `LanguagePack` / `ItalianLanguagePack` として抽出・単体テスト整備。
-- **Phase 8.4**: レイヤースタック・アノテーション統合クエリインターフェース `GrammarContext` 実装。
-- **Phase 8.5**: 巨大単一ファイルのリファクタリング・モジュール分割:
-  - `dante_corpus/skel.py` (約4,900行) → `dante_corpus/skel/` サブパッケージ (`models.py`, `registry.py`, `derive.py`, `rules.py`, `repairs.py`, `validate.py`, `io.py`, `__init__.py`)
-  - `skel/skel.py` (約2,130行) → `skel/driver_ui.py`, `skel/driver_build.py`, `skel/driver_fix.py`, 薄いエントリポイント `skel/skel.py`
-  - 完全な後方互換性を維持し、`uv run pytest` (547 passed) および `uv run skel/skel.py inferno purgatorio paradiso --check` (0 hard / 0 soft) を達成。
-
-### 2. 現在のレグレッションゲート（健全性指標）
-- 全100歌コーパス: **0 hard / 0 soft violations** (100% CLEAN)
-- pytest: **547 passed**
-- ルールセンサス: 全130ルール (Active 82, Auxiliary 5, Dormant 43)
-
-### 3. 次期セッションで着手すべきタスク（Phase 9: Autonomous Grammar Harness）
-- 参照仕様: [`skel/HARNESS.md`](HARNESS.md)
-- **9.1 Multi-Layer Context Packager (`skel/harness.py`)**:
-  - 原文テキスト、Layer 2 形態素＋case、Layer 4 UD 依存構造ツリーを包含する構造化プロンプト生成器の実装。
-- **9.2 自律的推論プロトコル (CoT)**:
-  - 一致・態の判定、長距離斜格/節補部の捕捉、全体フレーム生成。
-- **9.3 対話的検証＆自己修正ループ**:
-  - LLM生成フレームに対して `skel.validate_unit()` を自動実行し、エラー診断文字列をフィードバックして 0-soft に収束させるループの実装。
-- **9.4 ローカルLLM (Gemma 4 等) ベンチマーク**:
-  - Phase 7 で扱った 87 箇所の乖離位置を対象とした自律収束率・トークン効率の評価。
-
+### Immediate Priority: Phase 9.1 (`skel/harness.py` Context Packager)
+- [ ] Create `skel/harness.py` with multi-layer parse unit context builder.
+- [ ] Implement markdown formatting for 5-layer diagnostic prompts (text + morph + case + dep + candidate frame).
+- [ ] Integrate with local LLM client runner (via `llm7shi` / Ollama / local inference).
+- [ ] Implement the `validate_unit` self-correction feedback loop.
+- [ ] Run initial benchmark against historical Phase 7 divergence cases.
