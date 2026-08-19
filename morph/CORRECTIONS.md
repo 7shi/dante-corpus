@@ -1,5 +1,17 @@
 # Manual Layer-2 corrections
 
+Layer 2 (`morph/`) is build-time output — an LLM pass per chunk, frozen to `morph/<canticle>/NN.tsv`
+and never touched at runtime (see [`README.md`](README.md)). Its own `--check` only enforces
+structural/closed-tag correctness (one row per token, closed vocabularies for gender/number/person);
+it cannot catch a token that's *structurally* fine but tagged the wrong part of speech.
+
+This file is the record of every manual correction and retag applied to Layer-2 morphology: what was
+retagged, to what, and why — each one verified against an existing precedent row elsewhere in the
+corpus before being applied. Every correction was made directly in the committed
+`morph/<canticle>/NN.tsv` artifacts (no model call), and `morph --check` was re-run after each batch
+to confirm 0 hard / 0 soft throughout.
+
+
 ## 6 rows from the Layer-5 Paradiso 26-33 read (2026-08-17)
 
 Found in the per-position read of Paradiso 26-33 (see
@@ -215,28 +227,6 @@ against every layer's `--check` (all 0) and `pytest` (311).
 | inferno 23:138.8 | `soperchia` | `soperchio` adjective, f. sg. | `soperchiare` verb, sg. 3 present indicative | "che giace in costa e nel fondo **soperchia**" — the second conjunct's verb |
 | inferno 24:22.3 | `aperse` | `aperto` adjective, f. pl. | `aprire` verb, sg. 3 remote past indicative | "**Le braccia aperse**" = "he opened his arms" |
 
-Layer 2 (`morph/`) is build-time output — an LLM pass per chunk, frozen to `morph/<canticle>/NN.tsv`
-and never touched at runtime (see [`README.md`](README.md)). Its own `--check` only enforces
-structural/closed-tag correctness (one row per token, closed vocabularies for gender/number/person);
-it cannot catch a token that's *structurally* fine but tagged the wrong part of speech.
-
-Those mistakes surfaced instead through **Layer 3**'s (`np/`) soft-check policy: `np/np.py --check`
-flags every NP span whose head is a function-word POS (article/conjunction/preposition/
-interjection/determiner), since a genuine noun phrase's head must be a content POS. Most such
-flags are Dante using a function word substantively (`'l più basso`, `un de' tuoi`) — correct as
-flagged, nothing to fix. But a recurring minority turned out to be Layer 2 itself mistagging a
-token that was actually functioning as a pronoun/verb/adjective/adverb/noun. This file is the
-record of every one of those corrections: what was retagged, to what, and why — each one verified
-against an existing precedent row elsewhere in the corpus before being applied, never guessed.
-
-Every correction below was made directly in the committed `morph/<canticle>/NN.tsv` artifacts —
-no model call, no Layer-2 rebuild — and `morph --check` was re-run after each batch to confirm
-0 hard / 0 soft throughout. Several of the same review passes *also* found genuine Layer-3 span
-errors (over-inclusion, wrong head index, missing merges) sitting alongside the Layer-2 mistags on
-the same flagged lines; those are only summarized here for context — see
-[`../np/CORRECTIONS.md`](../np/CORRECTIONS.md) for the Layer-3 side and the
-running soft-violation counts.
-
 ## `fiacco` mistag correction (2026-08-13)
 
 Found during a Layer-5 per-position read of Inferno 4-6 (see
@@ -383,28 +373,6 @@ comma-separated convention the corpus already uses for multi-note rows (`reflexi
 an NP as exempt if `NO_NP` is among them. This is a targeted, hand-verified exemption — each of the
 25 lines was checked against its terzina context (see the classification above) before flagging —
 not a blanket rule for these word forms in general.
-
-Layer 3's `--check` count is now **47** soft (down from 72: 25 idiom-flagged noun-coverage gaps
-removed by the `NO_NP` exemption, leaving 30 title/proper-name span-merge gaps, 12 unspanned single
-content words, 3 `ben`/`bene` cases, the `dia` at paradiso 26:10, and the accepted `Osanna` exception).
-
-## Layer-2-POS-aware generation prompt resolves `Osanna` (2026-07-04)
-
-The `Osanna` exception noted throughout this file (function-word-head cluster review, above) and
-in `np/README.md`/`PLAN.md` as "an accepted soft violation with no fix on either layer" is now
-resolved — not by a Layer-2 change, but by making Layer 3's generation prompt aware of Layer 2's
-POS data in the first place (see `PLAN.md`'s Layer 3 check status for the design). Given a
-"Function words (never choose as Head)" hint listing `Osanna (interjection)`, the local model
-regenerated paradiso 7:1 without ever choosing `Osanna` as a head, and — as a side effect — also
-added a nested single-token span for `sabaòth`, closing what would otherwise have become a new
-noun-coverage gap.
-
-Running `--fix` with the new hint across all 47 then-flagged lines improved 4 of them: `Osanna`
-itself, plus three unrelated noun-coverage gaps that incidentally picked up a nested single-token
-span for their previously-unspanned noun (inferno 16:95 `Viso`, inferno 28:55 `fra`, paradiso
-6:134 `Ramondo`). The other 43 lines regenerated but were rejected by `--fix`'s no-worse-off
-guarantee (same violation count, sometimes on a different token) and kept their original artifact.
-Layer 3's `--check` count is now **43** soft (down from 47).
 
 ## `Rife` mistag correction (2026-07-04)
 

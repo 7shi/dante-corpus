@@ -206,8 +206,8 @@ from round 7's own output.
 ### 6. Rules AH–AL and the Inferno 7–10 Read (2026-08-14)
 
 Per-position read of all **37** soft violations in Inferno 7–10. **1247 → 1091 (−156, −12.5%)**,
-zero model calls; Inferno 7–10 itself went 37 → 17. Full write-up, with the evidence line for each
-rule, in [`CORRECTIONS.md`](CORRECTIONS.md).
+zero model calls; Inferno 7–10 itself went 37 → 17. Full grammar specification in
+[`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | population | moved |
 |---|---|---:|---:|
@@ -283,8 +283,8 @@ settled all three — the licence was the real defect, the other two moved nothi
 ### 8. Rules AM–AT and the Inferno 11–15 Read (2026-08-15)
 
 Per-position read of all **37** soft violations in Inferno 11–15. **963 → 888 (−75, −7.8%)**, zero
-model calls; Inferno 11–15 itself 37 → 17. Full write-up, with the evidence line for each rule and
-the variant measurements, in [`CORRECTIONS.md`](CORRECTIONS.md).
+model calls; Inferno 11–15 itself 37 → 17. Full grammar specification in [`RULES.md`](RULES.md);
+upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | moved |
 |---|---|---:|
@@ -318,9 +318,8 @@ repeated-slot convention, and a `_fix_hint` branch that had been missing since r
 ### 9. Rules AU–AY and the Inferno 16–20 Read (2026-08-15)
 
 Per-position read of all **47** soft violations in Inferno 16–20. **888 → 834 (−54, −6.1%)**, zero
-model calls, **zero newly-flagged positions**; Inferno 16–20 itself 47 → 31. Full write-up, with
-the evidence line for each rule and the rule that was censused and dropped, in
-[`CORRECTIONS.md`](CORRECTIONS.md).
+model calls, **zero newly-flagged positions**; Inferno 16–20 itself 47 → 31. Full grammar specification
+in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | moved |
 |---|---|---:|---:|
@@ -354,9 +353,8 @@ checker-side or upstream.
 ### 10. Rules AZ–BI and the Inferno 21–25 Read (2026-08-15)
 
 Per-position read of all **44** soft violations in Inferno 21–25. **834 → 691 (−143, −17.1%)**,
-zero model calls; Inferno 21–25 itself 44 → 16. The largest batch of the series. Full write-up,
-with the evidence line for each rule, the two rules censused and dropped, and the honest trades
-the upstream retags make, in [`CORRECTIONS.md`](CORRECTIONS.md).
+zero model calls; Inferno 21–25 itself 44 → 16. The largest batch of the series. Full grammar
+specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -402,9 +400,8 @@ upstream.
 ### 11. Rules BJ–BN and the Inferno 26–30 Read (2026-08-15)
 
 Per-position read of all **23** soft violations in Inferno 26–30. **691 → 650 (−41, −5.9%)**,
-zero model calls; Inferno 26–30 itself 23 → 11. Full write-up, with the evidence line for each
-rule, the rules censused and dropped, and the two deliberate net-zero trades, in
-[`CORRECTIONS.md`](CORRECTIONS.md).
+zero model calls; Inferno 26–30 itself 23 → 11. Full grammar specification in [`RULES.md`](RULES.md);
+upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -533,7 +530,8 @@ Per-position read of all **37** soft violations in Inferno 31-34. **541 → 506 
 zero model calls; Inferno 31-34 itself 37 → 16 (31: 20 → 8, 32: 8 → 5, 33: 4 → 2, 34: 5 → 1).
 The first batch measured against a base a `--fix` round has moved, which is the cost §12 recorded:
 these numbers are not comparable with the AG-BN series', because the easy positions of every class
-round 4's prompts cover are already gone. Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+round 4's prompts cover are already gone. Full grammar specification in [`RULES.md`](RULES.md);
+upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -582,7 +580,7 @@ or upstream.
 Per-position read of all **14** soft violations in Purgatorio 1-5. **506 → 481 (−25, −4.9%)**,
 zero model calls; Purgatorio 1-5 itself 14 → 10 (1: 1 → 1, 2: 4 → 3, 3: 1 → 0, 4: 2 → 3,
 5: 6 → 3). The first batch outside Inferno, and the smallest of the series by base count. Full
-write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -627,8 +625,8 @@ one is `advcl`-read-as-complement residue.
 
 Per-position read of all **35** soft violations in Purgatorio 6-10. **481 → 448 (−33, −6.9%)**,
 zero model calls; Purgatorio 6-10 itself 35 → 19 (6: 3 → 2, 7: 3 → 1, 8: 6 → 2, 9: 13 → 7,
-10: 10 → 7). Ten rules, the largest count of any batch. Full write-up in
-[`CORRECTIONS.md`](CORRECTIONS.md).
+10: 10 → 7). Ten rules, the largest count of any batch. Full grammar specification in
+[`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -680,7 +678,7 @@ trades two violations for two or three and the line does not decide between them
 
 Per-position read of all **30** soft violations in Purgatorio 11-15. **448 → 427 (−21, −4.7%)**,
 zero model calls; Purgatorio 11-15 itself 30 → 15 (11: 5 → 4, 12: 3 → 2, 13: 1 → 1, 14: 15 → 3,
-15: 6 → 5). Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+15: 6 → 5). Full grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -734,7 +732,7 @@ found 1), a Latin quotation as a passive subject (15:39), and rule CK's own role
 
 Per-position read of all **26** soft violations in Purgatorio 16-20. **427 → 409 (−18, −4.2%)**,
 zero model calls; Purgatorio 16-20 itself 26 → 14 (16: 11 → 6, 17: 1 → 0, 18: 3 → 1, 19: 6 → 4,
-20: 5 → 3). Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+20: 5 → 3). Full grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -790,7 +788,7 @@ measured defect: it is worth a convention clause and a round to test, on the sam
 
 Per-position read of all **33** soft violations in Purgatorio 21-25. **409 → 388 (−21, −5.1%)**,
 zero model calls; Purgatorio 21-25 itself 33 → 24 (21: 9 → 5, 22: 6 → 6, 23: 2 → 1, 24: 7 → 1,
-25: 9 → 11). Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+25: 9 → 11). Full grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -849,7 +847,7 @@ time or place remains the fifth round's one candidate.
 
 Per-position read of all **33** soft violations in Purgatorio 26-30. **388 → 358 (−30, −7.7%)**,
 zero model calls; Purgatorio 26-30 itself 33 → 22 (26: 6 → 5, 27: 6 → 2, 28: 9 → 5, 29: 4 → 3,
-30: 8 → 7). Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+30: 8 → 7). Full grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -937,7 +935,7 @@ being written against the base, and two prompt clauses are on the scale.
 Per-position read of all **14** soft violations in Purgatorio 31-33, the batch that finishes
 Purgatorio. **358 → 351 (−7, −2.0%)**, zero model calls; Purgatorio 31-33 itself went 14 → 11
 (31: 3 → 2, 32: 7 → 4, 33: 4 → 5). `pytest` **441 passed**, 0 hard, all other layers 0/0. Full
-write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | moved |
 |---|---|---:|---:|
@@ -1054,7 +1052,7 @@ audit found in the source: there is no untested defect currently in the prompt.
 Per-position read of all **26** soft violations in Paradiso 1-5, the first batch of the Paradiso
 series. **298 → 288 (−10, −3.4%)**, zero model calls; Paradiso 1-5 itself 26 → 18 (1: 11 → 10,
 2: 2 → 0, 3: 5 → 4, 4: 4 → 2, 5: 4 → 2). `pytest` **449 passed**, 0 hard, all other layers 0/0.
-Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+Full grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md).
 
 | rule | shape | census | net |
 |---|---|---:|---:|
@@ -1110,7 +1108,7 @@ correct all four of its divergences surface. The fourth batch in the series to r
 Per-position read of all **18** soft violations in Paradiso 6-10, the second batch of the Paradiso
 series. **288 → 261 (−27, −9.4%)**, zero model calls; Paradiso 6-10 itself 18 → 6 (6: 0 → 0,
 7: 7 → 4, 8: 5 → 1, 9: 5 → 1, 10: 1 → 0). `pytest` **465 passed**, 0 hard, all other layers 0/0.
-Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md). Eight rules is the second-largest count of
+Full grammar specification in [`RULES.md`](RULES.md); upstream retags in [`CORRECTIONS.md`](CORRECTIONS.md). Eight rules is the second-largest count of
 the series, after the Purgatorio 6-10 batch's ten.
 
 | rule | shape | census | net |
@@ -1476,7 +1474,7 @@ below for what it is owed.
 
 The sixth round's own findings, landed the same day. One checker rule that **raises** the count by
 50, and two prompt repairs its measurements pointed at. `pytest` **511 passed** (17 new), 0 hard,
-all other layers 0/0, `skel/*.tsv` untouched. Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+all other layers 0/0, `skel/*.tsv` untouched. Full grammar specification in [`RULES.md`](RULES.md).
 
 | change | shape | census | net |
 |---|---|---:|---:|

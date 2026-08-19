@@ -37,6 +37,16 @@ line	word	lemma	pos	gender	number	person	tense	mood	note
 2	ritrovai	ritrovare	verb		sg.	1	remote past	indicative	
 ```
 
+### Note column conventions & machine-readable flags
+
+The `note` column holds comma-separated descriptor flags. In addition to descriptive linguistic labels (`contraction`, `elision`, `apocope`, `archaic`, `reflexive`, `enclitic pronoun`, `Latin`), several machine-readable flags provide targeted exemptions for downstream layers:
+
+- **`NO_NP`** (Layer 3): Exemption flag for noun tokens that appear only as fixed pieces of idioms (`fin che`, `inver' di`, `allotta`) and never head standalone referring expressions.
+- **`CONT_NEXT`** (Layer 3): Exemption flag for split words spanning enjambed line breaks (`dia` at *Paradiso* 26:10).
+- **`RELCL_HEAD`** (Layer 4): Exemption flag for non-nominal tokens that legitimately serve as antecedents of `acl:relcl` relative clauses.
+- **`AD_SENSUM`** (Layer 4): Exemption flag for notional agreement (e.g. collective singulars under plural verbs or plural aggregates under singular verbs).
+- **`FOREIGN`** (Layer 4): Exemption flag for non-Italian passages (e.g. Occitan, Latin, distortion) where Italian morphosyntactic agreement rules do not apply.
+
 ## Check
 
 `--check` validates every committed artifact against the deterministic tokens, with **no model

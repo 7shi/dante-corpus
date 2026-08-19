@@ -1,5 +1,14 @@
 # Layer 3 soft-violation correction history
 
+Layer 3 (`np/`) freezes its soft-check policy (`_can_head_np`/`_needs_np` in `dante_corpus/np.py`)
+against a corpus-wide count, then works that count down to 0 through a sequence of hand reviews,
+code fixes, and targeted `--fix` reruns (see [`README.md`](README.md)'s *Check* section for what
+each check means and how `--fix`/`--fix-repeats`/`--fix-clitics` work). This file is the
+chronological record of every pass, so the running count in `README.md` and `../PLAN.md` is
+traceable back to what actually changed and why. Layer-2 mistags found along the way are recorded
+in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
+side: span fixes, clitic mentions, and classification of what's left.
+
 ## 4 spans from the Layer-5 Paradiso 26-33 read (2026-08-17)
 
 Found in the per-position read of Paradiso 26-33 (see
@@ -65,15 +74,6 @@ nominals equivalent.
   nominal the multiword preposition `dinanzi a` governs.
 
 `np --check` stays 0/0.
-
-Layer 3 (`np/`) freezes its soft-check policy (`_can_head_np`/`_needs_np` in `dante_corpus/np.py`)
-against a corpus-wide count, then works that count down to 0 through a sequence of hand reviews,
-code fixes, and targeted `--fix` reruns (see [`README.md`](README.md)'s *Check* section for what
-each check means and how `--fix`/`--fix-repeats`/`--fix-clitics` work). This file is the
-chronological record of every pass, so the running count in `README.md` and `../PLAN.md` is
-traceable back to what actually changed and why. Layer-2 mistags found along the way are recorded
-in [`../morph/CORRECTIONS.md`](../morph/CORRECTIONS.md) instead — this file covers the Layer-3
-side: code/policy changes, span fixes, and classification of what's left.
 
 ## One span from Layer 5's Purgatorio 16-20 read (2026-08-16)
 

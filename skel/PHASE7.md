@@ -103,7 +103,7 @@ The first batch chosen by the **refusal census** instead of canto order. `arg_sl
 | paradiso 1:81 `fece` subj | `pioggia` (80.7) | `alcun` (81.4) | reading disagreement |
 | purgatorio 10:30 `aveva` obj | `dritto` (30.2) | `manco` (30.6) | reading disagreement |
 
-- **Rule EI (Floating Quantifier)**: Accepted quantifier pronouns/adjectives (`tutta quanta`, `tutti quanti`) when modifying the derived subject noun across `conj` chains. Full write-up in [`CORRECTIONS.md`](CORRECTIONS.md).
+- **Rule EI (Floating Quantifier)**: Accepted quantifier pronouns/adjectives (`tutta quanta`, `tutti quanti`) when modifying the derived subject noun across `conj` chains. Full grammar specification in [`RULES.md`](RULES.md).
 - **Layer-4 Retag at purgatorio 9:97**: Retagged comparative standard `perso` in `dep/purgatorio/09.tsv`.
 
 ---
