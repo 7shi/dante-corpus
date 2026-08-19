@@ -27,17 +27,23 @@ canon-neutral.
 
 ## What it does
 
-Unlike Layers 2-4, this layer's artifact is LLM-authored but **checked by a deterministic
-derivation**: one LLM pass per parse unit (the same sentence-grouped units as Layer 4, see
-`dep.sentence_groups`) proposes, independently, a Markdown table listing every predicate token
-and its arguments — the model is deliberately **not shown the Layer-4 parse**, so its reading is
-its own. `derive_unit` (`dante_corpus/skel/derive.py`) computes the same predicate-argument structure
-*mechanically* from the frozen Layer 2-4 artifacts, and `validate_unit`'s soft checks report
-every place the LLM's tuple set diverges from that derivation. A purely deterministic Layer 5
-would just be `f(dep)` and could never disagree with Layer 4; giving the LLM an independent read
-means a divergence can surface a genuine Layer-4 mis-parse, not just an LLM slip — Layer 5
-doubles as an audit of Layer 4, triaged with the same measure-then-freeze discipline as
-[`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+Layer 5 binds Layers 2–4 into bare predicate-argument propositions, **checked by a deterministic
+derivation** (`derive_unit` in `dante_corpus/skel/derive.py`).
+
+**Historical Construction (Phases 4–7)**:
+During the initial creation of the Layer-5 artifacts, one LLM pass per parse unit (the same
+sentence-grouped units as Layer 4, see `dep.sentence_groups`) proposed a Markdown table listing every
+predicate token and its arguments. At that stage, the model was deliberately **not shown the Layer-4
+parse** because Layer 4 had just been constructed and its reliability was still unproven. An independent
+reading meant that divergences from `derive_unit` could surface genuine Layer-4 mis-parses, triaged
+and corrected upstream in [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
+
+**Current Baseline & Post-Zero Tooling (Phase 9 onwards)**:
+With all 100 cantos fully refined and verified at **0 hard / 0 soft violations**, Layer 4 (Universal
+Dependencies) has reached maturity and audit stability. In subsequent tooling and autonomous grammar
+agents (such as Phase 9), Layer 4 is treated as an authoritative input layer alongside Layers 1–3 and
+the pronoun case annex. `derive_unit` serves as the deterministic structural ground truth against
+which candidate frames and reconstructions are verified.
 
 Worked example, Inferno I.1-9 (verified by hand against the frozen `dep`/`np`/`morph` artifacts;
 reproduced exactly by `derive_unit`, see `tests/test_skel.py::test_derive_unit_inferno_1_1_9`):

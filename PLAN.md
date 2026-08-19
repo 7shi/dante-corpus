@@ -11,19 +11,20 @@
 > *(Full architectural specifications and tool definitions: [`skel/PLAN.md`](skel/PLAN.md)).*
 >
 > 1. **9.1 Dedicated Toolset & Context API (`dante_corpus/skel/harness/tools.py`)**:
->    - Expose multi-layer context via [`dante_corpus/api.py`](dante_corpus/api.py) (text + quotes + morphology + case annex + NP spans + UD trees).
->    - Enforce strict masking of Layer 5 (`canto.skel()`), the 130-rule registry, and manual correction records ([`CORRECTIONS.md`](skel/CORRECTIONS.md)) for fair autonomous reconstruction, with logged exception oracle fallback (`inject_oracle`).
->    - Implement dedicated tool API for LLM Function Calling: `read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton`.
+>    - Expose multi-layer grammatical context via [`GrammarContext`](dante_corpus/skel/models.py) (text, quotes, morphology, pronoun case annex, NP spans, UD syntax trees).
+>    - Enforce strict masking of Layer 5 (`skel/`), the 130-rule registry, and manual correction records ([`CORRECTIONS.md`](skel/CORRECTIONS.md)).
+>    - Implement dedicated tool API for LLM Function Calling: `read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton` (with structured upstream feedback support).
 >
 > 2. **9.2 Autonomous Multi-Turn Agent Runner (`skel/harness.py`)**:
->    - Implement autonomous agent loop for local models (e.g. **Gemma 4 31B**) without free-form bash execution.
->    - Structured 4-step grammatical reasoning protocol (Agreement & Voice, Head Citation, Complement vs. Adjunct, Candidate Frame).
+>    - Implement autonomous agent loop for local models (e.g. **Gemma 4 31B** via `llm7shi.Client`) with multi-layer CoT reasoning without free-form bash execution.
+>    - Initial spike: verify Gemma 4 Function Calling stability under QAT quantization.
 >
-> 3. **9.3 Historical Residue Benchmark (87 Phase 7 Positions)**:
->    - Benchmark Gemma 4 against the 87 historical divergence positions to evaluate 1-shot accuracy, autonomous convergence, and oracle intervention rates.
+> 3. **9.3 Syntactic Benchmark & Complexity Evaluation Suite**:
+>    - Benchmark Gemma 4 on curated syntactic challenge fixtures and historical case units.
+>    - Evaluate 1-shot accuracy, multi-turn convergence rate, role F1, and upstream defect feedback logging.
 >
-> 4. **9.4 Production CLI & Full Canto Reconstruction Pipeline**:
->    - Provide interactive debugging CLI and canto-wide autonomous reconstruction mode.
+> 4. **9.4 Production Pipeline & Gated Corpus Reconstruction**:
+>    - Provide interactive debugging CLI and canto-wide gated reconstruction with token assertions, 0-soft verification, and content hash updates.
 
 ## Current Status (2026-08-19)
 
@@ -51,9 +52,9 @@
 With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructuring completed in Phase 8, the active 0-soft regression gate enables downstream tooling:
 
 1. **Dedicated Grammar Agent Harness for Local LLMs (Phase 9)**:
-   - Build a specialized agent harness (`skel/harness.py`) providing local models (e.g. **Gemma 4 31B**) with structured 5-layer context via [`dante_corpus/api.py`](dante_corpus/api.py) and a closed toolset (`read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton`).
-   - Implement autonomous reasoning protocol (CoT) and multi-turn self-correction loop without free bash execution.
-   - Benchmark Gemma 4 on the historical Phase 7 divergence dataset (87 positions).
+   - Build a specialized agent harness (`skel/harness.py`) providing local models (e.g. **Gemma 4 31B**) with structured multi-layer context via [`GrammarContext`](dante_corpus/skel/models.py) and a closed toolset (`read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton`).
+   - Implement autonomous reasoning protocol (multi-layer CoT) and multi-turn self-correction loop without free-form bash execution.
+   - Benchmark Gemma 4 on curated syntactic challenge fixtures and historical test cases against the 0-soft ground truth.
    - *Details*: [`skel/PLAN.md`](skel/PLAN.md).
 
 2. **Long-Term Portability & Cross-Corpus Extensions**:
@@ -76,8 +77,10 @@ With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructur
 ## Why this lives in the corpus
 
 `dante-corpus` is the queryable, **canon-neutral source of truth** for the *Commedia*: it serves
-the normalized Italian text, the token stream, and the nested quote-span tree, all derived from
-the poem itself with no external ontology. Today it stops at tokens and quotes.
+the normalized Italian text, the token stream, the nested quote-span tree, morphology, pronoun case,
+noun phrases, dependency syntax trees, and predicate-argument skeletons, all derived from
+the poem itself with no external ontology. All five layers and the pronoun case annex are now fully
+computed, frozen, and verified at **0 hard / 0 soft violations across all 100 cantos** (`pytest` 547 passed).
 
 Downstream projects each need to *read the source grammatically* before they can do their own
 work — the formalization layer (`dante-analyze`) to extract entities and relations, the
