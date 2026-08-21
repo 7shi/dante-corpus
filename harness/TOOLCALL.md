@@ -2,15 +2,42 @@
 
 ## 1. Status & Scope
 
-**Status: PLAN ONLY — implementation deferred.** This is a standalone sub-project to be
-designed, built, and validated independently of the Stage 1 agent loop (`harness/runner/PLAN.md`
-§4 / milestone 1.2). Nothing in `tools.py` depends on it yet; `GrammarToolkit` and
-`GrammarToolkit.dispatch()` are already final and protocol-agnostic.
+**Status: T1–T3 IMPLEMENTED as the `harness/toolcall/` library (2026-08-22); T4 live probe
+pending; T5 deferred.** The sub-project is a standalone library between the model and
+`GrammarToolkit`; nothing in `tools.py` depends on it, and `GrammarToolkit.dispatch()` is
+unchanged. T4 (live Gemma probing) is executed by the human operator; the measurement
+script ships with the library (`python -m harness.toolcall.probe`).
 
 The sub-project delivers one thing: a **reliable conversion from what Gemma can actually
 produce (prompt-instructed XML) into the OpenAI-compatible tool-call representation**, so that
 the agent loop never knows which transport was used and a later migration to native tool
 calling becomes a transport swap with zero loop changes.
+
+### 1.1 Implemented layout (supersedes §4 placement)
+
+| Component | File |
+| :--- | :--- |
+| `parse_tool_calls` / `format_tool_result` / `is_parse_error` | `harness/toolcall/parser.py` |
+| XML output contract + few-shot exchange + `tool_specs_section` | `harness/toolcall/prompts.py` |
+| `Transport` interface, `PromptXmlTransport`, `StubTransport` | `harness/toolcall/transports.py` |
+| Loop, turn budget, `execute_tool_calls`, `LoopResult` | `harness/toolcall/loop.py` |
+| Live-probe CLI (T4 measurement script) | `harness/toolcall/probe.py` |
+| Deterministic tests (§5.1) | `tests/test_harness_toolcall.py` |
+
+Design decisions taken during implementation (resolving parts of §7):
+
+- **Parse errors are envelopes, not exceptions**: malformed blocks surface as
+  `{"ok": False, "tool": ..., "error": ...}` — the same shape as `dispatch` errors — and
+  ride through `execute_tool_calls` into `<tool_result ok="false">` feedback verbatim.
+- **Parser validates arguments JSON eagerly**; canonical calls out of `parse_tool_calls`
+  always carry valid JSON strings.
+- **Termination**: a response with zero tool calls ends the loop (final answer);
+  `max_turns` exhaustion returns `LoopResult(exhausted=True)`. The `submit_candidate`
+  question (§7.1) stays open at the protocol layer — the loop itself needs no
+  termination tool.
+- **Multiple calls per turn are allowed** (§7.3): parser preserves order, the loop
+  executes sequentially and embeds all `<tool_result>` blocks in one user message.
+- **Streaming**: not needed for benchmark runs (§7.2 resolved: non-streaming).
 
 ---
 
@@ -36,23 +63,24 @@ Consequences:
 
 ## 3. Protocol Design (Interim: XML)
 
-### 3.1 Wire format — JSON-in-XML
+### 3.1 Wire format — one JSON object per block
 
 ```xml
 <tool_call>
-  <name>read_unit</name>
-  <arguments>{"canticle": "inferno", "canto": 1, "line_start": 1}</arguments>
+{"name": "read_unit", "arguments": {"canticle": "inferno", "canto": 1, "line_start": 1}}
 </tool_call>
 ```
 
-Rationale:
+Rationale (revised after live probing — see T4 in §6):
 
-- **Arguments stay JSON inside `<arguments>` tags** rather than being expanded into pure XML.
-  Skeleton rows (`candidate_rows`) are arrays of objects; expressing them in pure XML would be
-  verbose and error-prone. With JSON-in-XML, the model writes exactly the JSON it would have
-  written for a native tool call — the tags are only extraction anchors.
-- Tags make extraction robust against surrounding prose and markdown code fences, which must be
-  assumed present even when the prompt forbids them.
+- The block body is a **single JSON object in native tool-call shape**: the model writes
+  exactly what it would have written for a native call; the tags are only extraction
+  anchors that keep extraction robust against surrounding prose and markdown fences.
+- Only **one tag pair to close**, and JSON validity already has to hold anyway — the two
+  failure modes of the original nested layout (`</name>` / `</arguments>` omissions) are
+  structurally eliminated. Live probe run 2 caught Gemma forgetting `</arguments>` on the
+  argument-heaviest tool, which motivated this simplification. (The original layout was
+  never released, so it was removed outright rather than kept as a tolerated alias.)
 
 ### 3.2 Canonical internal representation
 
@@ -73,9 +101,9 @@ same shape ollama/OpenAI put on `message.tool_calls`:
   `GrammarToolkit.dispatch()`'s job — no double parsing logic.
 - Zero or more `<tool_call>` blocks are accepted. Zero calls = pure thinking text → nudge or
   turn-budget handling by the loop.
-- Malformed cases (unparsable arguments JSON, missing `<name>`, unknown tool name) surface as
-  structured per-call errors that the loop feeds back verbatim, mirroring `dispatch`'s error
-  envelope — never exceptions across the loop boundary.
+- Malformed cases (non-object body, missing `"name"`, unparsable JSON, unknown tool
+  name) surface as structured per-call errors that the loop feeds back verbatim,
+  mirroring `dispatch`'s error envelope — never exceptions across the loop boundary.
 
 ### 3.3 Results back to the model
 
@@ -107,13 +135,8 @@ agent.py loop (transport-agnostic: history, turn budget, termination)
 GrammarToolkit.dispatch(name, arguments)     ← unchanged from milestone 1.1
 ```
 
-Placement:
-
-| Component | File |
-| :--- | :--- |
-| `parse_tool_calls` / `format_tool_result` (pure functions) | `harness/runner/tools.py` (or a sibling `toolcalls.py` if tools.py grows too large) |
-| XML output-contract prompt + few-shot example | `harness/runner/prompts.py` |
-| Transports + loop + turn budget | `harness/runner/agent.py` |
+Placement: implemented as the `harness/toolcall/` library — see §1.1 for the module map
+(the per-file split below `runner/` was superseded during implementation).
 
 ---
 
@@ -160,10 +183,10 @@ protocols later never touches the loop again.
 
 ## 6. Milestones
 
-- [ ] **T1 Parser & formatter**: `parse_tool_calls` / `format_tool_result` + deterministic unit tests.
-- [ ] **T2 Prompt contract**: system-prompt section instructing the XML format + few-shot exchange (in `prompts.py`, importable independently).
-- [ ] **T3 Stub loop**: minimal agent loop over `StubTransport` proving dispatch/feedback convergence deterministically.
-- [ ] **T4 Live probe**: parse-success-rate measurement script over fixtures; go/no-go vs §5.2 gate; document results here.
+- [x] **T1 Parser & formatter**: `parse_tool_calls` / `format_tool_result` + deterministic unit tests. *(Complete 2026-08-22: `harness/toolcall/parser.py`; error envelopes mirror `dispatch`.)*
+- [x] **T2 Prompt contract**: system-prompt section instructing the XML format + few-shot exchange. *(Complete 2026-08-22: `harness/toolcall/prompts.py` — `XML_CONTRACT`, `few_shot_messages`, `tool_specs_section`; few-shot kept parse-consistent by test.)*
+- [x] **T3 Stub loop**: agent loop over `StubTransport` proving dispatch/feedback convergence deterministically. *(Complete 2026-08-22: `harness/toolcall/loop.py` + `transports.py`; scripted multi-turn convergence against the real `GrammarToolkit`, incl. parse-error recovery, hallucinated-tool feedback, multi-call turns, budget exhaustion — 29 tests, suite 612 passed.)*
+- [x] **T4 Live probe**: parse-success-rate measurement over scenarios; go/no-go vs §5.2 gate; document results here. *(Complete 2026-08-22. History: nested-tag format, `ollama:n4:31b-it-qat` — run 1: 10 turns, 1.000; run 2: 10 turns, 0.900 (unclosed `<arguments>`, recovered next turn) → motivated the one-JSON-object format (§3.1). **Final-format pooled run** (`google:gemma-4-31b-it`, `--repeat 5`, log `harness/probe.log`): 20 scenarios, **47 turns, parse success rate 0.9574 — GATE PASS**; 26 calls, 0 hallucinated tools, 0 dispatch errors; failures = 1 malformed-but-recoverable (truncated JSON body, self-corrected in `read_then_validate#1`) + 1 no-call turn (`read_unit#4`, answered in prose). Both classes are prompt-side, not parser-side. Caveats for milestone 1.2: (a) n=47 leaves a wide binomial CI around the 0.95 threshold — keep measuring during benchmark runs; (b) final answers still echo the few-shot demo's 'cammin' content despite contract rule 7 — replace the demonstration with non-colliding content when building the runner prompts.)*
 - [ ] **T5 (deferred)** `OllamaNativeTransport` + migration parity check (§5.3).
 
 ## 7. Open Questions

@@ -41,6 +41,46 @@ graph TD
 
 ## 1.5 Current Status & Handoff (2026-08-22)
 
+### Handoff — read this first
+
+**Where we are.** The Tool Call Protocol sub-project ([`TOOLCALL.md`](TOOLCALL.md)) is
+complete through its live-probe gate (**T1–T4 done, GATE PASSED**) and is cleared for
+wiring into the Stage 1 runner. Milestone 1.1 (Grammar Tool API) was already complete.
+
+**Next action — milestone 1.2 `runner/agent.py`:**
+- System prompt per unit = 5-step CoT reasoning protocol (`runner/prompts.py`, to be
+  written) + `toolcall.xml_contract_section()` + `toolcall.tool_specs_section(TOOL_SPECS)`.
+- Drive each session through `toolcall.run_tool_loop(...)` with a
+  `PromptXmlTransport`; `probe.py`'s `_system_prompt` / `llm7shi_generate` are proven
+  adapters to copy from (both Ollama and Gemini paths exercised).
+- `LoopResult` (final text, outcome envelopes, full transcript) is what milestone 1.3's
+  benchmark will consume; design trace logging around it.
+
+**Carry-over issues from live probing** (details in [`TOOLCALL.md`](TOOLCALL.md) T4):
+1. **Few-shot echo contamination**: every probed final answer repeated the demonstration
+   exchange's 'cammin' search content despite contract rule 7. When writing the runner
+   prompts, replace the few-shot demo (`toolcall.prompts.few_shot_messages`) with
+   non-colliding content.
+2. **Gate margin is thin**: pooled run = 47 turns at 0.957 vs 0.95 gate (wide binomial
+   CI). Keep measuring parse success inside 1.3/1.4 benchmark runs rather than treating
+   the gate as permanently closed.
+3. **No-call turns happen** (1 of 47): the model sometimes answers in prose without
+   calling tools. The loop currently treats zero calls as the final answer; decide
+   whether 1.2 needs a nudge policy instead — this interacts with open question §7.1
+   (a `submit_candidate` termination tool).
+
+**Environment & artifacts.**
+- Default model: `ollama:gemma4:31b-it-qat` (Gemini path `google:gemma-4-31b-it` also
+  validated end-to-end).
+- Live probe: `uv run python -m harness.toolcall.probe --model <model> --repeat N --log
+  harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
+  summary record last (a log without the summary line = interrupted run);
+  `*.log` is gitignored.
+- Test suite: **621 passed** (547 pre-existing + 36 `test_harness_tools.py` +
+  38 `tests/test_harness_toolcall.py`).
+
+### Milestone ledger
+
 **Milestone 1.1 — Dedicated Grammar Tool API (`runner/tools.py`): COMPLETE.**
 
 - `GrammarToolkit` serves multi-layer context (L1 tokens/texts, quotes hierarchy, L2
@@ -58,20 +98,26 @@ graph TD
     and `GrammarToolkit.dispatch()` (accepts dict or JSON-string arguments, coerces numeric
     strings, never raises into the loop — errors return as structured payloads).
 - Tests: `tests/test_harness_tools.py` — 36 deterministic tests incl. poisoning
-  `skel.io.load_skel` / `skel.registry.rule_active` to prove masking. Full suite:
-  **583 passed** (547 existing + 36).
+  `skel.io.load_skel` / `skel.registry.rule_active` to prove masking.
 
-**Tool Call Protocol sub-project — PLANNED, IMPLEMENTATION DEFERRED**: see
-[`TOOLCALL.md`](TOOLCALL.md). Gemma cannot use native tool calling on the Gemini API path and
-its structured output is unreliable there, so the interim protocol is prompt-instructed XML
-(JSON-in-XML `<tool_call>` blocks) converted into OpenAI-compatible tool-call dicts;
-native Ollama tool calling arrives later as a pure transport swap. To be validated
-independently (parse-success-rate gate ≥ 95%) before wiring into the runner.
+**Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T4 COMPLETE, GATE PASSED.**
 
-**Next up**: milestone 1.2 `agent.py` — transport-agnostic loop per [`TOOLCALL.md`](TOOLCALL.md)
-§4 (`PromptXmlTransport` / `OllamaNativeTransport` / `StubTransport`) — then 1.3 `benchmark.py`
-and 1.4 evaluation runs. Open design questions are collected in [`TOOLCALL.md`](TOOLCALL.md) §7
-(`submit_candidate` termination tool, streaming, multi-call turns).
+Gemma cannot use native tool calling on the Gemini API path and its structured output is
+unreliable there, so the interim protocol is prompt-instructed `<tool_call>` blocks (one
+JSON object per block) converted into OpenAI-compatible tool-call dicts; native Ollama
+tool calling later is a pure transport swap (`OllamaNativeTransport`, T5, deferred).
+Deliverables: parser/formatter (`parser.py`), prompt contract + few-shot (`prompts.py`),
+transports (`transports.py`), transport-agnostic loop (`loop.py`), live-probe CLI
+(`probe.py`); 38 deterministic tests in `tests/test_harness_toolcall.py`. Live probing
+motivated a wire-format simplification from nested tags to one JSON object per block
+([`TOOLCALL.md`](TOOLCALL.md) §3.1); **final-format pooled run on `google:gemma-4-31b-it`
+(--repeat 5): 20 scenarios, 47 turns, parse success rate 0.957 ≥ 0.95 gate**, 0
+hallucinated tools, 0 dispatch errors, both observed failure classes benign and
+prompt-side.
+
+**Remaining milestones**: 1.2 agent loop (see Handoff above), 1.3 benchmark suite, 1.4
+evaluation runs; deferred T5 native transport parity check ([`TOOLCALL.md`](TOOLCALL.md)
+§5.3). Open design question: §7.1 termination tool.
 
 ---
 
@@ -108,7 +154,14 @@ dante-corpus/
 │
 ├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
 │   ├── PLAN.md                    # Master Plan (Architecture, Two-Stage Strategy, Handoff)
-│   ├── TOOLCALL.md                # Tool Call Protocol Sub-Project (XML interim → native; plan only)
+│   ├── TOOLCALL.md                # Tool Call Protocol Sub-Project (XML interim → native)
+│   │
+│   ├── toolcall/                  # [Protocol Library] XML interim ↔ canonical tool calls
+│   │   ├── parser.py              # parse_tool_calls / format_tool_result (T1)
+│   │   ├── prompts.py             # XML output contract + few-shot exchange (T2)
+│   │   ├── transports.py          # Transport interface, PromptXml / Stub transports
+│   │   ├── loop.py                # Transport-agnostic loop + turn budget (T3)
+│   │   └── probe.py               # Live-probe CLI for the §5.2 gate (T4, operator-run)
 │   │
 │   ├── runner/                    # [Stage 1] Autonomous Inference Agent & Benchmark
 │   │   ├── PLAN.md                # Stage 1 Specification (Toolset, Agent, Benchmark)
@@ -128,7 +181,8 @@ dante-corpus/
 │       └── challenge_cases.py     # Syntactic Challenge Fixtures (Hyperbaton, Control, Quotes)
 │
 └── tests/
-    └── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
+    ├── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
+    └── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
 ```
 
 ---

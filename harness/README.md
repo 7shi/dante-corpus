@@ -27,6 +27,14 @@ harness/
 ├── README.md                      # Overview and navigation (this document)
 ├── PLAN.md                        # Master architectural plan
 │
+├── toolcall/                      # [Protocol Library] Tool Call Protocol (XML interim → native)
+│   ├── README.md                  # Protocol library overview
+│   ├── parser.py                  # <tool_call> wire format ↔ canonical tool-call dicts
+│   ├── prompts.py                 # XML output contract + few-shot exchange
+│   ├── transports.py              # Transport interface (PromptXml / Stub)
+│   ├── loop.py                    # Transport-agnostic multi-turn loop
+│   └── probe.py                   # Live-probe CLI (parse-success-rate gate)
+│
 ├── runner/                        # [Stage 1] Autonomous Inference & Benchmark
 │   ├── README.md                  # Stage 1 overview
 │   ├── PLAN.md                    # Stage 1 specification (tools, agent, benchmark)
