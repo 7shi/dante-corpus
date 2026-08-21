@@ -44,30 +44,36 @@ graph TD
 ### Handoff — read this first
 
 **Where we are.** The Tool Call Protocol sub-project ([`TOOLCALL.md`](TOOLCALL.md)) is
-complete through its live-probe gate (**T1–T4 done, GATE PASSED**) and is cleared for
-wiring into the Stage 1 runner. Milestone 1.1 (Grammar Tool API) was already complete.
+complete through its live-probe gate (**T1–T4 done, GATE PASSED**) and is wired into
+Stage 1: **Milestone 1.2 (`runner/agent.py` + `runner/prompts.py`) is complete**, so a
+full autonomous grammar session runs end-to-end on top of the gated protocol.
 
-**Next action — milestone 1.2 `runner/agent.py`:**
-- System prompt per unit = 5-step CoT reasoning protocol (`runner/prompts.py`, to be
-  written) + `toolcall.xml_contract_section()` + `toolcall.tool_specs_section(TOOL_SPECS)`.
-- Drive each session through `toolcall.run_tool_loop(...)` with a
-  `PromptXmlTransport`; `probe.py`'s `_system_prompt` / `llm7shi_generate` are proven
-  adapters to copy from (both Ollama and Gemini paths exercised).
-- `LoopResult` (final text, outcome envelopes, full transcript) is what milestone 1.3's
-  benchmark will consume; design trace logging around it.
+**Next action — milestone 1.3 `runner/benchmark.py`:**
+- Consume `UnitResult` from `agent.run_unit(...)`: it already carries everything the
+  benchmark needs — final text, outcome envelopes, full transcript, candidate rows
+  parsed back from the last `validate_candidate` submission, validation outcomes,
+  protocol-compliance flags (`protocol_complete`, `valid_seen`, `nudges`,
+  `exhausted`) — plus `trace_record()` for Stage 2 mining.
+- Curate the challenge fixtures (`harness/fixtures/challenge_cases.py`) and compare
+  candidates against the 0-soft Gold Standard per Stage-1 plan §5.2 metrics
+  (1-shot exact match, multi-turn convergence ≤ 5 turns, role-level F1,
+  upstream-feedback precision).
+- **Keep measuring parse success inside benchmark runs**: the T4 gate margin was thin
+  (47 turns at 0.957 vs 0.95, wide binomial CI), so treat it as still under
+  observation, not permanently closed.
 
 **Carry-over issues from live probing** (details in [`TOOLCALL.md`](TOOLCALL.md) T4):
-1. **Few-shot echo contamination**: every probed final answer repeated the demonstration
-   exchange's 'cammin' search content despite contract rule 7. When writing the runner
-   prompts, replace the few-shot demo (`toolcall.prompts.few_shot_messages`) with
-   non-colliding content.
-2. **Gate margin is thin**: pooled run = 47 turns at 0.957 vs 0.95 gate (wide binomial
-   CI). Keep measuring parse success inside 1.3/1.4 benchmark runs rather than treating
-   the gate as permanently closed.
-3. **No-call turns happen** (1 of 47): the model sometimes answers in prose without
-   calling tools. The loop currently treats zero calls as the final answer; decide
-   whether 1.2 needs a nudge policy instead — this interacts with open question §7.1
-   (a `submit_candidate` termination tool).
+1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
+   own demonstration exchange with deliberately non-colliding content (a foreign-lemma
+   search returning an empty hit list); nothing fixture-shaped remains to echo.
+2. **Gate margin is thin** — STILL OPEN as a measurement discipline (see next action).
+3. ~~**No-call turns happen**~~ — RESOLVED in 1.2 via the nudge policy in
+   `agent.run_unit`: a final answer with zero successful `validate_candidate` dispatches
+   earns up to one protocol reminder (resuming the same transcript through a fresh loop
+   run under the shared turn budget); give-ups *after* failed validations are never
+   nudged so convergence metrics stay honest. This resolves the practical half of
+   TOOLCALL.md §7.1 for Stage 1 — `validate_candidate` doubles as the acceptance gate;
+   a dedicated `submit_candidate` termination tool stays open at the protocol layer.
 
 **Environment & artifacts.**
 - Default model: `ollama:gemma4:31b-it-qat` (Gemini path `google:gemma-4-31b-it` also
@@ -76,8 +82,10 @@ wiring into the Stage 1 runner. Milestone 1.1 (Grammar Tool API) was already com
   harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
   summary record last (a log without the summary line = interrupted run);
   `*.log` is gitignored.
-- Test suite: **621 passed** (547 pre-existing + 36 `test_harness_tools.py` +
-  38 `tests/test_harness_toolcall.py`).
+- Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
+  --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
+- Test suite: **639 passed** (547 pre-existing + 36 `test_harness_tools.py` +
+  38 `tests/test_harness_toolcall.py` + 18 `tests/test_harness_agent.py`).
 
 ### Milestone ledger
 
@@ -115,9 +123,29 @@ motivated a wire-format simplification from nested tags to one JSON object per b
 hallucinated tools, 0 dispatch errors, both observed failure classes benign and
 prompt-side.
 
-**Remaining milestones**: 1.2 agent loop (see Handoff above), 1.3 benchmark suite, 1.4
-evaluation runs; deferred T5 native transport parity check ([`TOOLCALL.md`](TOOLCALL.md)
-§5.3). Open design question: §7.1 termination tool.
+**Milestone 1.2 — Agent Runner (`harness/runner/agent.py`, `runner/prompts.py`): COMPLETE.**
+
+- `runner/prompts.py`: per-unit system prompt = role intro + skeleton-row conventions +
+  the 5-step reasoning protocol (quotes → predicates/agreement → case/UD → NP/control →
+  validate & self-correct) + `toolcall.xml_contract_section()` +
+  `toolcall.tool_specs_section(TOOL_SPECS)`; `unit_task(...)` opens each session; a
+  non-colliding few-shot demo replaces the probe's 'cammin' exchange (T4 carry-over 1).
+- `runner/agent.py`: `run_unit(...)` drives one parse-unit session through
+  `toolcall.run_tool_loop` over a `PromptXmlTransport` (proven `llm7shi_generate`
+  adapter copied from `probe.py`); no-call nudge policy as described in the Handoff;
+  `UnitResult` wraps the loop's final text / outcome envelopes / full transcript and
+  derives candidate rows (re-parsed from the last `validate_candidate` submission),
+  validation outcomes, upstream-feedback records, compliance flags, and a
+  Stage-2-ready `trace_record()`; operator CLI (`python -m harness.runner.agent`) for
+  live single-unit smoke runs with optional JSONL trace.
+- Tests: `tests/test_harness_agent.py` — 18 deterministic tests over `StubTransport` +
+  the real toolkit and prompts: prompt assembly, nudge policy (nudge-once-then-converge,
+  no nudge on capability give-up or exhaustion, shared turn budget), transcript-derived
+  candidate rows, trace round-trip, adapter forwarding.
+
+**Remaining milestones**: 1.3 benchmark suite, 1.4 evaluation runs; deferred T5 native
+transport parity check ([`TOOLCALL.md`](TOOLCALL.md) §5.3). Open design question: §7.1
+termination tool (practical half resolved by the nudge policy — see Handoff).
 
 ---
 
@@ -166,8 +194,8 @@ dante-corpus/
 │   ├── runner/                    # [Stage 1] Autonomous Inference Agent & Benchmark
 │   │   ├── PLAN.md                # Stage 1 Specification (Toolset, Agent, Benchmark)
 │   │   ├── tools.py               # Dedicated Grammar Tool API — IMPLEMENTED (Milestone 1.1)
-│   │   ├── agent.py               # Gemma 4 31B Multi-Turn CoT Loop (next: Milestone 1.2)
-│   │   ├── prompts.py             # 5-Step Grammatical Reasoning Protocol Prompts
+│   │   ├── agent.py               # Per-unit session runner over run_tool_loop — IMPLEMENTED (Milestone 1.2)
+│   │   ├── prompts.py             # 5-Step Grammatical Reasoning Protocol Prompts — IMPLEMENTED (Milestone 1.2)
 │   │   └── benchmark.py           # Syntactic Challenge & Historical Case Evaluation Suite
 │   │
 │   ├── extractor/                 # [Stage 2] Rule & Lexicon Extraction & Hybridization

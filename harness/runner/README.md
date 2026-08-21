@@ -19,6 +19,21 @@ Rather than giving the model an unconstrained bash environment, Stage 1 equips t
 
 ---
 
+## Usage
+
+One autonomous session per parse unit (live model; see `../PLAN.md` §1.5):
+
+```bash
+uv run python -m harness.runner.agent --canticle inferno --canto 1 --line-start 1 \
+    [--line-end 3] [--model ollama:gemma4:31b-it-qat] [--trace trace.jsonl]
+```
+
+Programmatically, `agent.run_unit(...)` returns a `UnitResult` with candidate rows,
+validation outcomes, compliance flags, and `trace_record()` — the contract consumed by
+`benchmark.py` (Milestone 1.3).
+
+---
+
 ## Detailed Plan & Master Documentation
 
 - **Stage 1 Specification**: [`PLAN.md`](PLAN.md)
