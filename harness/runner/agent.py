@@ -40,13 +40,15 @@ from harness.toolcall import (
     run_tool_loop,
 )
 
-from .prompts import few_shot_messages, system_prompt, unit_task
+from .prompts import WORKFLOWS, few_shot_messages, system_prompt, unit_task
 from .tools import GrammarToolkit, tool_specs
 
 __all__ = [
     "DEFAULT_MODEL",
     "SESSION_MAX_TURNS",
+    "MAX_NUDGES",
     "NUDGE_MESSAGE",
+    "WORKFLOWS",
     "UnitResult",
     "llm7shi_generate",
     "run_unit",
@@ -105,6 +107,7 @@ class UnitResult:
     turns: int = 0  # total model turns across the original run plus nudged resumes
     exhausted: bool = False
     nudges: int = 0  # protocol reminders issued
+    workflow: str = "unit"  # validation granularity taught by the system prompt
     outcomes: list[dict] = field(default_factory=list)  # every envelope, in call order
     messages: list[dict] = field(default_factory=list)  # full transcript incl. nudges
     opening_len: int = 0  # prompt-side messages (system + demo + task) before turn 1
@@ -174,6 +177,7 @@ class UnitResult:
         record = {
             "record": "session",
             "unit": self.unit,
+            "workflow": self.workflow,
             "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "turns": self.turns,
             "nudges": self.nudges,
@@ -244,10 +248,11 @@ def _opening_messages(
     canto: int,
     line_start: int,
     line_end: int | None,
+    workflow: str = "unit",
 ) -> list[dict]:
     """System prompt (protocol + contract + specs), non-colliding demo, task."""
     messages: list[dict] = [
-        {"role": "system", "content": system_prompt(specs)},
+        {"role": "system", "content": system_prompt(specs, workflow)},
         *few_shot_messages(),
         {
             "role": "user",
@@ -268,17 +273,22 @@ def run_unit(
     specs: Sequence[dict] | None = None,
     max_turns: int = SESSION_MAX_TURNS,
     max_nudges: int = MAX_NUDGES,
+    workflow: str = "unit",
 ) -> UnitResult:
     """Run one autonomous grammar session for a single parse unit.
 
-    Opens the conversation with the 5-step protocol prompt, drives it through
-    `run_tool_loop`, and enforces the no-call nudge policy: a final answer given
-    with zero successful `validate_candidate` dispatches earns up to `max_nudges`
-    reminders, each resuming the very same transcript through a fresh loop run
-    under the shared turn budget. The loop library itself is left untouched.
+    Opens the conversation with the reasoning-protocol prompt (`workflow` selects
+    "unit" whole-unit validation vs "predicate" per-predicate interleaved
+    validation), drives it through `run_tool_loop`, and enforces the no-call nudge
+    policy: a final answer given with zero successful `validate_candidate`
+    dispatches earns up to `max_nudges` reminders, each resuming the very same
+    transcript through a fresh loop run under the shared turn budget. The loop
+    library itself is left untouched.
     """
     specs = tool_specs() if specs is None else list(specs)
-    opening = _opening_messages(specs, canticle, canto, line_start, line_end)
+    opening = _opening_messages(
+        specs, canticle, canto, line_start, line_end, workflow
+    )
     result = UnitResult(
         unit={
             "canticle": canticle,
@@ -286,6 +296,7 @@ def run_unit(
             "line_start": line_start,
             "line_end": line_end,
         },
+        workflow=workflow,
         opening_len=len(opening),
     )
 
@@ -341,6 +352,13 @@ def main(argv=None) -> int:
     parser.add_argument("--max-turns", type=int, default=SESSION_MAX_TURNS)
     parser.add_argument("--max-nudges", type=int, default=MAX_NUDGES)
     parser.add_argument(
+        "--workflow",
+        choices=WORKFLOWS,
+        default="unit",
+        help="validation granularity: whole unit in one call (unit) or one "
+        "predicate per call (predicate)",
+    )
+    parser.add_argument(
         "--trace",
         help="write this session's trace record (JSONL, one line) to this file",
     )
@@ -362,6 +380,7 @@ def main(argv=None) -> int:
         line_end=args.line_end,
         max_turns=args.max_turns,
         max_nudges=args.max_nudges,
+        workflow=args.workflow,
     )
 
     if args.trace:

@@ -447,3 +447,131 @@ def test_run_benchmark_sequential_cases_share_the_toolkit_cache(toolkit):
     report = run_benchmark([first, second], transport, toolkit=toolkit)
     assert len(report) == 2
     assert report.metrics()["one_shot_exact_match_rate"] == 1.0
+
+
+# --- workflow granularity (predicate accumulation) ---------------------------------------
+
+
+def _gold_by_predicate(case):
+    by_pred = {}
+    for key in sorted(
+        gold_row_keys(case.canticle, case.canto, case.line_start, case.line_end)
+    ):
+        by_pred.setdefault(key[:2], []).append(key)
+    return by_pred
+
+
+def _rows_for(keys):
+    # Coordinates alone identify tokens: word anchors are optional now.
+    return [
+        {"line": k[0], "token": k[1], "role": k[2], "arg_line": k[3], "arg_token": k[4]}
+        for k in keys
+    ]
+
+
+def _session_script(case, submissions):
+    script = [
+        _block(
+            "read_unit",
+            json.dumps(
+                {
+                    "canticle": case.canticle,
+                    "canto": case.canto,
+                    "line_start": case.line_start,
+                }
+            ),
+        )
+    ]
+    script.extend(
+        _validate_block(rows, case.canticle, case.canto, case.line_start)
+        for rows in submissions
+    )
+    script.append("Done.")
+    return script
+
+
+def test_evaluate_accumulates_union_across_submissions(toolkit):
+    case = case_by_id("rel-inf01-007")
+    by_pred = _gold_by_predicate(case)
+    assert len(by_pred) >= 3  # a real multi-predicate unit
+    # One validate_candidate call per predicate, in text order.
+    submissions = [_rows_for(keys) for _, keys in sorted(by_pred.items())]
+    result = run_unit(
+        transport=StubTransport(_session_script(case, submissions)),
+        toolkit=toolkit,
+        canticle=case.canticle,
+        canto=case.canto,
+        line_start=case.line_start,
+        line_end=case.line_end,
+        workflow="predicate",
+    )
+
+    accumulated = evaluate_unit(result, case=case, accumulate=True)
+    assert accumulated.accumulate is True
+    assert accumulated.workflow == "predicate"
+    # No single submission covered gold; the per-predicate latest states do.
+    assert accumulated.exact_first is False
+    assert accumulated.exact_final is True
+    assert accumulated.missing == [] and accumulated.extra == []
+    # Unit-level convergence keeps its turn-budget semantics; a 6-predicate
+    # interleaved session legitimately exceeds it (the per-predicate first-pass
+    # rate is the fine-grained convergence signal for this workflow).
+    assert accumulated.converged == (result.turns <= CONVERGENCE_TURN_BUDGET)
+    assert result.turns > CONVERGENCE_TURN_BUDGET
+    # Every predicate's first (and only) coverage was exact.
+    assert accumulated.preds_total == len(by_pred)
+    assert accumulated.preds_first_pass == len(by_pred)
+
+    # Without accumulation the last submission alone is compared, as before.
+    plain = evaluate_unit(result, case=case)
+    assert plain.accumulate is False
+    assert plain.exact_final is False
+
+
+def test_predicate_first_pass_uses_first_coverage_not_the_final_union(toolkit):
+    case = case_by_id("rel-inf01-007")
+    by_pred = _gold_by_predicate(case)
+    p1 = min(by_pred)
+    submissions = [_rows_for(keys) for pred, keys in sorted(by_pred.items())]
+    broken_first = [dict(submissions[0][0], role="obj")]  # wrong first frame
+    submissions[0:1] = [broken_first, _rows_for(by_pred[p1])]  # then corrected
+    result = run_unit(
+        transport=StubTransport(_session_script(case, submissions)),
+        toolkit=toolkit,
+        canticle=case.canticle,
+        canto=case.canto,
+        line_start=case.line_start,
+        line_end=case.line_end,
+        workflow="predicate",
+    )
+
+    evaluation = evaluate_unit(result, case=case, accumulate=True)
+    assert evaluation.exact_final is True  # the union covers gold completely
+    assert evaluation.preds_total == len(by_pred)
+    assert evaluation.preds_first_pass == len(by_pred) - 1  # only p1's first try broke
+    assert 0.0 < evaluation.predicate_first_pass_rate < 1.0
+
+
+def test_case_record_serializes_workflow_and_predicate_metrics():
+    data = UnitEvaluation(case_id="x", category="control", unit={}).to_dict()
+    assert data["workflow"] == "unit" and data["accumulate"] is False
+    assert data["preds_first_pass"] == 0 and data["preds_total"] == 0
+    assert data["predicate_first_pass_rate"] is None
+
+    rated = UnitEvaluation(
+        case_id="y", category="control", unit={}, preds_first_pass=3, preds_total=4
+    ).to_dict()
+    assert rated["predicate_first_pass_rate"] == 0.75
+
+
+def test_report_aggregates_pooled_predicate_first_pass_rate():
+    report = BenchmarkReport()
+    report.add(
+        UnitEvaluation(case_id="a", category="control", unit={},
+                       preds_first_pass=1, preds_total=2)
+    )
+    report.add(
+        UnitEvaluation(case_id="b", category="control", unit={},
+                       preds_first_pass=3, preds_total=4)
+    )
+    assert report.metrics()["predicate_first_pass_rate"] == round(4 / 6, 4)

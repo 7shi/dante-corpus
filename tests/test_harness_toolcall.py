@@ -3,25 +3,40 @@
 Covers the validation plan of `harness/TOOLCALL.md` §5.1: parser/formatter edge cases,
 prompt-contract self-consistency, transport stubs, and scripted multi-turn convergence
 through the real loop code with the real `GrammarToolkit` — no network, no model.
+The T5 section adds native-transport normalization, history re-attachment, and the
+§5.3 parity machinery over stubbed transports.
 """
 
 import json
+from types import SimpleNamespace
 
 import pytest
 
 from harness.runner.tools import GrammarToolkit, TOOL_SPECS
 from harness.toolcall import (
     LoopResult,
+    OllamaNativeTransport,
     PromptXmlTransport,
     StubTransport,
     execute_tool_calls,
     few_shot_messages,
+    format_tool_call,
     format_tool_result,
     is_parse_error,
+    normalize_tool_calls,
     parse_tool_calls,
     run_tool_loop,
     tool_specs_section,
     xml_contract_section,
+)
+from harness.toolcall.parity import (
+    RecordingTransport,
+    call_sequences,
+    canonical_groups,
+    candidate_rows as parity_candidate_rows,
+    interop_ok,
+    ollama_chat,
+    run_parity,
 )
 
 
@@ -471,3 +486,405 @@ def test_expand_scenarios_repeat_with_selection():
         "read_unit#2",
         "read_unit#3",
     ]
+
+
+# --- T5: format_tool_call (canonical -> XML wire) ---------------------------------------
+
+
+def test_format_tool_call_round_trips_through_parser():
+    call = _call("read_unit", '{"canticle": "inferno", "canto": 1}')
+    assert parse_tool_calls(format_tool_call(call)) == [call]
+
+
+def test_format_tool_call_keeps_unicode_literal():
+    call = _call("search_corpus", '{"query": {"word": "selva oscura"}}')
+    block = format_tool_call(call)
+    assert "selva oscura" in block and "\\u" not in block
+    assert parse_tool_calls(block) == [call]
+
+
+def test_format_tool_call_accepts_dict_arguments_directly():
+    call = {
+        "type": "function",
+        "function": {"name": "read_unit", "arguments": {"canto": 1}},
+    }
+    parsed = parse_tool_calls(format_tool_call(call))
+    assert json.loads(parsed[0]["function"]["arguments"]) == {"canto": 1}
+
+
+def test_format_tool_call_rejects_non_object_arguments():
+    with pytest.raises(ValueError):
+        format_tool_call(_call("read_unit", "[1, 2]"))
+    with pytest.raises(ValueError):
+        format_tool_call({"function": {"name": "", "arguments": {}}})
+
+
+# --- T5: normalize_tool_calls -------------------------------------------------------------
+
+
+def _native_call(name: str, arguments) -> SimpleNamespace:
+    """ollama-style ToolCall shape: objects all the way down."""
+    return SimpleNamespace(function=SimpleNamespace(name=name, arguments=arguments))
+
+
+def _native_message(content=None, tool_calls=None) -> SimpleNamespace:
+    return SimpleNamespace(content=content, tool_calls=tool_calls)
+
+
+class _FakeChat:
+    """Scripted chat backend recording every request it received."""
+
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.received = []
+
+    def __call__(self, messages, tools):
+        self.received.append(
+            ([dict(m) for m in messages], [dict(t) for t in tools])
+        )
+        if not self.responses:
+            raise AssertionError("_FakeChat script exhausted")
+        return self.responses.pop(0)
+
+
+def test_normalize_ollama_style_objects():
+    items = normalize_tool_calls([_native_call("read_unit", {"canto": 1})])
+    assert items == [_call("read_unit", '{"canto": 1}')]
+
+
+def test_normalize_plain_dicts_with_dict_arguments():
+    item = {
+        "function": {
+            "name": "search_corpus",
+            "arguments": {"query": {"lemma": "cammin"}},
+        }
+    }
+    items = normalize_tool_calls([item])
+    assert len(items) == 1 and not is_parse_error(items[0])
+    assert json.loads(items[0]["function"]["arguments"])["query"] == {
+        "lemma": "cammin"
+    }
+
+
+def test_normalize_flat_dicts_without_function_nesting():
+    items = normalize_tool_calls([{"name": "read_unit", "arguments": {"canto": 1}}])
+    assert items == [_call("read_unit", '{"canto": 1}')]
+
+
+def test_normalize_canonical_input_normalizes_arguments_whitespace():
+    # Same normalization discipline as parse_tool_calls: one canonical form.
+    items = normalize_tool_calls([_call("read_unit", '{"canticle":"inferno"}')])
+    assert items == [_call("read_unit", '{"canticle": "inferno"}')]
+
+
+def test_normalize_missing_name_is_error_envelope():
+    items = normalize_tool_calls([{"function": {"arguments": {}}}])
+    assert is_parse_error(items[0]) and "name" in items[0]["error"]
+
+
+def test_normalize_non_string_name_is_error_envelope():
+    items = normalize_tool_calls([{"function": {"name": 7, "arguments": {}}}])
+    assert is_parse_error(items[0])
+
+
+def test_normalize_bad_arguments_type_is_error_envelope():
+    items = normalize_tool_calls([_native_call("read_unit", 5)])
+    assert is_parse_error(items[0])
+    assert items[0]["tool"] == "read_unit" and "object" in items[0]["error"]
+
+
+def test_normalize_empty_input_yields_empty_list():
+    assert normalize_tool_calls([]) == []
+
+
+# --- T5: OllamaNativeTransport -------------------------------------------------------------
+
+OPENING = [
+    {"role": "system", "content": "sys"},
+    {"role": "assistant", "content": "<demo/>"},
+    {"role": "user", "content": "task"},
+]
+
+
+def test_native_single_turn_normalizes_and_forwards_specs():
+    chat = _FakeChat(
+        [_native_message("thinking...", [_native_call("read_unit", {"canto": 1})])]
+    )
+    transport = OllamaNativeTransport(chat=chat)
+    response = transport.complete([dict(m) for m in OPENING], TOOL_SPECS)
+    assert response.text == "thinking..."
+    assert response.tool_calls == (_call("read_unit", '{"canto": 1}'),)
+
+    messages_out, tools_out = chat.received[0]
+    assert tools_out == [dict(t) for t in TOOL_SPECS]
+    assert all("tool_calls" not in m for m in messages_out)
+
+
+def test_native_content_none_and_no_calls_means_final_answer():
+    chat = _FakeChat([_native_message(None, None)])
+    response = OllamaNativeTransport(chat=chat).complete(
+        [dict(m) for m in OPENING], TOOL_SPECS
+    )
+    assert response.text == "" and response.tool_calls == ()
+
+
+def test_native_accepts_dict_messages_from_backend():
+    chat = _FakeChat(
+        [
+            {
+                "content": "hi",
+                "tool_calls": [
+                    {"function": {"name": "read_unit", "arguments": {"canto": 2}}}
+                ],
+            }
+        ]
+    )
+    response = OllamaNativeTransport(chat=chat).complete(
+        [dict(m) for m in OPENING], TOOL_SPECS
+    )
+    assert response.text == "hi"
+    assert response.tool_calls == (_call("read_unit", '{"canto": 2}'),)
+
+
+def test_native_rebuilds_history_with_prior_turns_calls():
+    chat = _FakeChat(
+        [
+            _native_message("reading", [_native_call("read_unit", {"canto": 1})]),
+            _native_message("final answer", None),
+        ]
+    )
+    transport = OllamaNativeTransport(chat=chat)
+
+    transcript = [dict(m) for m in OPENING]
+    first = transport.complete(transcript, TOOL_SPECS)
+    transcript.append({"role": "assistant", "content": first.text})
+    transcript.append({"role": "user", "content": '<tool_result tool="read_unit"/>'})
+    second = transport.complete(transcript, TOOL_SPECS)
+    assert second.text == "final answer" and not second.tool_calls
+
+    rebuilt = chat.received[1][0]
+    demo = next(m for m in rebuilt if m["content"] == "<demo/>")
+    assert "tool_calls" not in demo  # opening prompt stays untouched
+
+    session_turn = rebuilt[-2]
+    assert session_turn["role"] == "assistant"
+    assert session_turn["tool_calls"] == [
+        {"function": {"name": "read_unit", "arguments": {"canto": 1}}}
+    ]
+    # the caller's transcript is never mutated
+    assert "tool_calls" not in transcript[-2]
+
+
+def test_native_multi_call_turn_attached_in_order():
+    chat = _FakeChat(
+        [
+            _native_message(
+                "",
+                [
+                    _native_call("read_unit", {"canto": 1}),
+                    _native_call("search_corpus", {"limit": 2}),
+                ],
+            ),
+            _native_message("done", None),
+        ]
+    )
+    transport = OllamaNativeTransport(chat=chat)
+    transcript = [dict(m) for m in OPENING]
+    transport.complete(transcript, TOOL_SPECS)
+    transcript.append({"role": "assistant", "content": ""})
+    transcript.append({"role": "user", "content": "results"})
+    transport.complete(transcript, TOOL_SPECS)
+
+    attached = chat.received[1][0][-2]["tool_calls"]
+    assert [call["function"]["name"] for call in attached] == [
+        "read_unit",
+        "search_corpus",
+    ]
+    assert attached[1]["function"]["arguments"] == {"limit": 2}
+
+
+def test_native_ledger_is_per_conversation():
+    chat = _FakeChat(
+        [
+            _native_message("a", [_native_call("read_unit", {"canto": 1})]),
+            _native_message("b", None),
+        ]
+    )
+    transport = OllamaNativeTransport(chat=chat)
+    conv_a = [dict(m) for m in OPENING]
+    transport.complete(conv_a, TOOL_SPECS)
+
+    conv_b = [dict(m) for m in OPENING]
+    transport.complete(conv_b, TOOL_SPECS)
+    assert all("tool_calls" not in m for m in chat.received[1][0])
+
+
+def test_native_error_envelopes_are_not_reattached():
+    chat = _FakeChat(
+        [
+            # A native item without a usable name surfaces as an error envelope...
+            _native_message("", [{"function": {"arguments": {}}}]),
+            _native_message("recovered", None),
+        ]
+    )
+    transport = OllamaNativeTransport(chat=chat)
+    transcript = [dict(m) for m in OPENING]
+    first = transport.complete(transcript, TOOL_SPECS)
+    assert is_parse_error(first.tool_calls[0])
+
+    transcript.append({"role": "assistant", "content": first.text})
+    transcript.append({"role": "user", "content": "feedback"})
+    transport.complete(transcript, TOOL_SPECS)
+    assert all("tool_calls" not in m for m in chat.received[1][0])
+
+
+# --- T5: parity machinery (TOOLCALL.md §5.3) ----------------------------------------------
+
+
+def test_ollama_chat_factory_returns_callable_without_importing_backend():
+    # The ollama import happens inside the closure; factory time stays dependency-free.
+    assert callable(ollama_chat("ollama:gemma4:31b-it-qat"))
+
+
+def test_recording_transport_captures_sequences_from_both_script_styles():
+    script = [
+        # XML wire style: one well-formed block + one unparsable body.
+        _block("read_unit", '{"canto": 1}') + "\n<tool_call>\nnot json\n</tool_call>",
+        # Native delivery style: canonical dicts bypassing any parser.
+        {
+            "text": "",
+            "tool_calls": [
+                _call(
+                    "validate_candidate",
+                    json.dumps({"canticle": "inferno", "candidate_rows": GOOD_ROWS}),
+                )
+            ],
+        },
+        "done",
+    ]
+    recorder = RecordingTransport(StubTransport(script))
+    for _ in range(3):
+        recorder.complete([], TOOL_SPECS)
+
+    sequences, errors = call_sequences(recorder)
+    assert errors == 1
+    assert sequences == [
+        [{"name": "read_unit", "arguments": {"canto": 1}}],
+        [
+            {
+                "name": "validate_candidate",
+                "arguments": {
+                    "canticle": "inferno",
+                    "candidate_rows": GOOD_ROWS,
+                },
+            }
+        ],
+        [],
+    ]
+    assert parity_candidate_rows(sequences) == GOOD_ROWS
+
+
+def test_interop_ok_holds_for_recorded_canonical_calls():
+    recorder = RecordingTransport(
+        StubTransport([_block("read_unit", '{"canto": 1}'), "done"])
+    )
+    recorder.complete([], TOOL_SPECS)
+    recorder.complete([], TOOL_SPECS)
+    groups = canonical_groups(recorder)
+    assert groups and interop_ok(groups)
+
+
+def test_interop_ok_fails_when_a_call_is_not_round_trippable():
+    assert not interop_ok([[_call("read_unit", "[1]")]])
+
+
+def _xml_script(rows):
+    return [
+        _block("read_unit", '{"canticle": "inferno", "canto": 1, "line_start": 1}'),
+        _block(
+            "validate_candidate",
+            json.dumps(
+                {
+                    "canticle": "inferno",
+                    "canto": 1,
+                    "line_start": 1,
+                    "candidate_rows": rows,
+                }
+            ),
+        ),
+        "Done.",
+    ]
+
+
+def _native_script(rows):
+    arguments = json.dumps(
+        {
+            "canticle": "inferno",
+            "canto": 1,
+            "line_start": 1,
+            "candidate_rows": rows,
+        }
+    )
+    return [
+        {
+            "text": "reading",
+            "tool_calls": [
+                _call("read_unit", '{"canticle": "inferno", "canto": 1, "line_start": 1}')
+            ],
+        },
+        {"text": "", "tool_calls": [_call("validate_candidate", arguments)]},
+        {"text": "Done.", "tool_calls": []},
+    ]
+
+
+def test_run_parity_matches_sequences_and_rows_over_stubs():
+    import io
+
+    scenarios = [{"name": "unit", "task": "Solve Inferno I lines 1-3."}]
+    sink = io.StringIO()
+    report = run_parity(
+        scenarios,
+        xml_transport_fn=lambda: StubTransport(_xml_script(GOOD_ROWS)),
+        native_transport_fn=lambda: StubTransport(_native_script(GOOD_ROWS)),
+        toolkit_fn=GrammarToolkit,
+        tools=TOOL_SPECS,
+        sink=sink,
+    )
+
+    record = report.records[0]
+    comparison = record["comparison"]
+    assert comparison["interop_xml"] and comparison["interop_native"]
+    assert comparison["names_equal"] and comparison["rows_equal"]
+    assert report.parity_pass is True
+    assert record["xml"]["candidate_rows"] == GOOD_ROWS
+    assert record["native"]["candidate_rows"] == GOOD_ROWS
+
+    logged = sink.getvalue().splitlines()
+    assert len(logged) == 1 and json.loads(logged[0])["record"] == "scenario"
+
+
+def test_run_parity_reports_behavioral_mismatch_without_failing_interop():
+    scenarios = [{"name": "divergent", "task": "Solve Inferno I lines 1-3."}]
+    divergent_native = [
+        {
+            "text": "",
+            "tool_calls": [
+                _call("search_corpus", '{"query": {"lemma": "cammin"}}')
+            ],
+        },
+        {"text": "Done.", "tool_calls": []},
+    ]
+    report = run_parity(
+        scenarios,
+        xml_transport_fn=lambda: StubTransport(_xml_script(GOOD_ROWS)),
+        native_transport_fn=lambda: StubTransport(divergent_native),
+        toolkit_fn=GrammarToolkit,
+        tools=TOOL_SPECS,
+    )
+
+    comparison = report.records[0]["comparison"]
+    # §5.3: sequences need not match turn-for-turn; only interop is gated.
+    assert comparison["names_equal"] is False
+    assert comparison["rows_equal"] is False
+    assert comparison["interop_xml"] and comparison["interop_native"]
+    assert report.parity_pass is True

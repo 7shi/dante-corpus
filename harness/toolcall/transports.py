@@ -3,12 +3,17 @@
 A transport turns a message history into one model turn and normalizes it to
 `TransportResponse(text, tool_calls)`, where `tool_calls` are canonical OpenAI-format
 tool-call dicts (possibly interleaved with parse-error envelopes from `parser.py`). The
-agent loop above this module is transport-agnostic; migrating from the interim XML path
-to native Ollama tool calling later is a pure transport swap.
+agent loop above this module is transport-agnostic: swapping the interim XML path for
+native Ollama tool calling touches only this layer.
 
 - `PromptXmlTransport`: interim path. Sends the conversation as plain messages through an
   injected generate function (e.g. an adapter over `llm7shi`) and parses the XML wire
   format out of the reply.
+- `OllamaNativeTransport`: native path. Sends the conversation through an injected chat
+  backend (e.g. an adapter over the `ollama` package's `chat(tools=...)`) and normalizes
+  the response's native tool calls into the same canonical dicts. Because the loop keeps
+  only assistant *text* in the transcript, this transport re-attaches each session turn's
+  calls when rebuilding the request, so the model sees its own call structure in history.
 - `StubTransport`: deterministic scripted responses for tests — no network, no model.
   Scripted raw strings go through the real parser, so tests exercise the actual protocol.
 
@@ -18,20 +23,33 @@ the library core stays dependency-free and importable in any environment.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
-from typing import Callable, Protocol, Sequence
+from typing import Any, Callable, Protocol, Sequence
 
 from .parser import parse_tool_calls
 
 __all__ = [
+    "ChatFn",
+    "OllamaNativeTransport",
     "PromptXmlTransport",
     "StubTransport",
     "Transport",
     "TransportResponse",
+    "normalize_tool_calls",
 ]
 
 Generate = Callable[[list[dict]], str]
 """A stateless text backend: full OpenAI-format message list -> completion text."""
+
+ChatFn = Callable[[Sequence[dict], Sequence[dict]], Any]
+"""A native chat backend: `(messages, tools) -> response message`.
+
+The message carries the model turn in native shape: text under `.content`
+(attribute or mapping access) and native tool calls under `.tool_calls`. See
+`harness.toolcall.parity.ollama_chat` for the live adapter over the `ollama`
+package; tests inject deterministic fakes.
+"""
 
 
 @dataclass(frozen=True)
@@ -58,7 +76,7 @@ class PromptXmlTransport:
     completion text (see `harness.toolcall.probe.llm7shi_generate` for the llm7shi
     adapter). The tool specs are not serialized here — embedding them in the system
     prompt is the caller's job (system prompt + `prompts.xml_contract_section()`); they
-    are accepted to keep the transport interface identical for the future native path.
+    are accepted to keep the transport interface identical for the native path.
     """
 
     generate: Generate
@@ -66,6 +84,153 @@ class PromptXmlTransport:
     def complete(self, messages: list[dict], tools: Sequence[dict]) -> TransportResponse:
         text = self.generate(messages)
         return TransportResponse(text=text, tool_calls=tuple(parse_tool_calls(text)))
+
+
+def _error(name: str, message: str) -> dict:
+    """A parse-error envelope shaped exactly like `GrammarToolkit.dispatch`'s."""
+    return {"ok": False, "tool": name, "error": message}
+
+
+def _get_field(message: Any, name: str) -> Any:
+    """Read `name` off a response message via attribute or mapping access."""
+    if isinstance(message, dict):
+        return message.get(name)
+    return getattr(message, name, None)
+
+
+def normalize_tool_calls(items: Sequence[Any]) -> list[dict]:
+    """Normalize native tool-call items into canonical OpenAI-format dicts.
+
+    Accepts what real backends put on a response message: ollama-style objects with
+    `.function.name` / `.function.arguments`, plain dicts of the same shape, and
+    already-canonical dicts with JSON-string arguments. `arguments` mappings are
+    serialized to compact JSON (non-ASCII kept literal); anything that cannot be
+    converted — missing/blank name, non-object arguments — surfaces as a structured
+    error envelope instead of raising, mirroring the parser's discipline.
+    """
+    canonical: list[dict] = []
+    for item in items:
+        function = _get_field(item, "function")
+        if function is None and isinstance(item, dict) and "function" not in item:
+            function = item  # tolerate flat dicts: {"name": ..., "arguments": ...}
+        if isinstance(function, dict):
+            name = function.get("name")
+            arguments = function.get("arguments", {})
+        else:
+            name = _get_field(function, "name")
+            arguments = _get_field(function, "arguments")
+        if not isinstance(name, str) or not name.strip():
+            canonical.append(
+                _error("", f"native tool call without a usable name: {item!r}")
+            )
+            continue
+        name = name.strip()
+        if isinstance(arguments, str):
+            try:
+                arguments_obj = json.loads(arguments)
+            except json.JSONDecodeError as exc:
+                canonical.append(
+                    _error(
+                        name,
+                        f"tool call {name!r} has unparsable arguments JSON ({exc})",
+                    )
+                )
+                continue
+        elif isinstance(arguments, dict):
+            arguments_obj = arguments
+        else:
+            canonical.append(
+                _error(
+                    name,
+                    f"tool call {name!r}: arguments must be an object, "
+                    f"got {type(arguments).__name__}",
+                )
+            )
+            continue
+        canonical.append(
+            {
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "arguments": json.dumps(arguments_obj, ensure_ascii=False),
+                },
+            }
+        )
+    return canonical
+
+
+def _native_history_call(call: dict) -> dict | None:
+    """Reshape one canonical call for re-attachment on an assistant history message.
+
+    Ollama's request schema wants assistant `tool_calls` entries as
+    `{"function": {"name": ..., "arguments": <object>}}`; the canonical JSON-string
+    form is decoded back to an object here. Returns None for error envelopes.
+    """
+    if call.get("ok") is False or call.get("type") != "function":
+        return None
+    try:
+        arguments_obj = json.loads(call["function"].get("arguments", "{}"))
+    except (KeyError, TypeError, json.JSONDecodeError):
+        return None
+    return {
+        "function": {"name": call["function"]["name"], "arguments": arguments_obj}
+    }
+
+
+@dataclass
+class OllamaNativeTransport:
+    """Native transport over an injected chat backend (`TOOLCALL.md` T5).
+
+    `chat(messages, tools)` returns one response message in native shape (see
+    `ChatFn`). The loop keeps only assistant *text* in the transcript, so this
+    transport remembers each session turn's calls per conversation — keyed by the
+    transcript list identity, which is stable for a conversation's lifetime — and
+    re-attaches them when rebuilding subsequent requests; opening-prompt assistant
+    messages (the few-shot demo) stay untouched. Conversations are sequential
+    (one shared transport drives sessions one at a time), so a dead conversation's
+    id is never seen again.
+
+    Known limitation: when the runner nudges a no-call session it resumes through a
+    fresh transcript copy, whose pre-nudge turns therefore keep text-only history.
+    """
+
+    chat: ChatFn
+    _openings: dict[int, int] = field(default_factory=dict, init=False)
+    _turns: dict[int, list[list[dict]]] = field(default_factory=dict, init=False)
+
+    def complete(self, messages: list[dict], tools: Sequence[dict]) -> TransportResponse:
+        key = id(messages)
+        if key not in self._openings:
+            self._openings[key] = sum(
+                1 for m in messages if m.get("role") == "assistant"
+            )
+        turn_calls = self._turns.setdefault(key, [])
+
+        rebuilt: list[dict] = []
+        session_index = 0
+        for message in messages:
+            if message.get("role") != "assistant":
+                rebuilt.append(dict(message))
+                continue
+            offset = session_index - self._openings[key]
+            session_index += 1
+            attached: list[dict] = []
+            if 0 <= offset < len(turn_calls):
+                attached = [
+                    shaped
+                    for call in turn_calls[offset]
+                    if (shaped := _native_history_call(call))
+                ]
+            if attached:
+                rebuilt.append({**message, "tool_calls": attached})
+            else:
+                rebuilt.append(dict(message))
+
+        raw_message = self.chat(rebuilt, tools)
+        calls = normalize_tool_calls(_get_field(raw_message, "tool_calls") or ())
+        turn_calls.append(calls)
+        text = _get_field(raw_message, "content") or ""
+        return TransportResponse(text=text, tool_calls=tuple(calls))
 
 
 @dataclass

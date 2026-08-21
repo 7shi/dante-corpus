@@ -2,11 +2,12 @@
 
 ## 1. Status & Scope
 
-**Status: T1–T3 IMPLEMENTED as the `harness/toolcall/` library (2026-08-22); T4 live probe
-pending; T5 deferred.** The sub-project is a standalone library between the model and
-`GrammarToolkit`; nothing in `tools.py` depends on it, and `GrammarToolkit.dispatch()` is
-unchanged. T4 (live Gemma probing) is executed by the human operator; the measurement
-script ships with the library (`python -m harness.toolcall.probe`).
+**Status: T1–T5 IMPLEMENTED as the `harness/toolcall/` library (2026-08-22); the T4 live
+gate is PASSED; the T5 live parity run is pending (operator-run).** The sub-project is a
+standalone library between the model and `GrammarToolkit`; nothing in `tools.py` depends
+on it, and `GrammarToolkit.dispatch()` is unchanged. The live probe (§5.2) and migration
+parity check (§5.3) are executed by the human operator; both measurement scripts ship
+with the library (`python -m harness.toolcall.probe` / `python -m harness.toolcall.parity`).
 
 The sub-project delivers one thing: a **reliable conversion from what Gemma can actually
 produce (prompt-instructed XML) into the OpenAI-compatible tool-call representation**, so that
@@ -17,12 +18,13 @@ calling becomes a transport swap with zero loop changes.
 
 | Component | File |
 | :--- | :--- |
-| `parse_tool_calls` / `format_tool_result` / `is_parse_error` | `harness/toolcall/parser.py` |
+| `parse_tool_calls` / `format_tool_call` / `format_tool_result` / `is_parse_error` | `harness/toolcall/parser.py` |
 | XML output contract + few-shot exchange + `tool_specs_section` | `harness/toolcall/prompts.py` |
-| `Transport` interface, `PromptXmlTransport`, `StubTransport` | `harness/toolcall/transports.py` |
+| Transport interface, `PromptXmlTransport`, `OllamaNativeTransport`, `StubTransport` | `harness/toolcall/transports.py` |
 | Loop, turn budget, `execute_tool_calls`, `LoopResult` | `harness/toolcall/loop.py` |
 | Live-probe CLI (T4 measurement script) | `harness/toolcall/probe.py` |
-| Deterministic tests (§5.1) | `tests/test_harness_toolcall.py` |
+| Migration parity CLI (§5.3, T5) | `harness/toolcall/parity.py` |
+| Deterministic tests (§5.1 + T5) | `tests/test_harness_toolcall.py` |
 
 Design decisions taken during implementation (resolving parts of §7):
 
@@ -128,7 +130,7 @@ agent.py loop (transport-agnostic: history, turn budget, termination)
    │
    ▼ complete(messages, tools) -> {text, tool_calls}      ← Transport interface
         ├─ PromptXmlTransport    (interim): prompt contract + parse_tool_calls()
-        ├─ OllamaNativeTransport (future): ollama package directly, native tool_calls
+        ├─ OllamaNativeTransport (native): ollama package directly, native tool_calls
         └─ StubTransport         (tests): scripted responses, fully deterministic
    │
    ▼ OpenAI-format tool_calls (canonical)
@@ -164,13 +166,20 @@ units:
   hallucinated-tool rate, arguments-type-error rate tolerated by `dispatch` coercion.
 - **Decision gate**: below target, fall back to **Plan B** (§6).
 
-### 5.3 Migration verification (XML → native, later)
+### 5.3 Migration verification (XML → native)
 
 For a fixed sample of units, run both transports and compare the resulting tool-call
 sequences (name + parsed arguments) and final candidate rows. Sequences need not be identical
 turn-for-turn (the model may behave differently), but the *protocol* is verified by: every
 call sequence produced under native mode is accepted unchanged by the same loop under XML
 mode's parser, and vice versa via the canonical representation.
+
+Implemented as `harness/toolcall/parity.py` (T5): the hard gate checks that every canonical
+call recorded under either transport survives the `format_tool_call` → `parse_tool_calls`
+round trip unchanged; call-name sequence and candidate-row equality between transports are
+reported observationally, not gated. Each variant gets its idiomatic opening — XML contract
++ few-shot demo vs bare native specs (`ollama.chat(tools=...)`) — so neither side is taught
+the other's wire format.
 
 ### 5.4 Plan B (fallback if XML compliance is insufficient)
 
@@ -187,7 +196,21 @@ protocols later never touches the loop again.
 - [x] **T2 Prompt contract**: system-prompt section instructing the XML format + few-shot exchange. *(Complete 2026-08-22: `harness/toolcall/prompts.py` — `XML_CONTRACT`, `few_shot_messages`, `tool_specs_section`; few-shot kept parse-consistent by test.)*
 - [x] **T3 Stub loop**: agent loop over `StubTransport` proving dispatch/feedback convergence deterministically. *(Complete 2026-08-22: `harness/toolcall/loop.py` + `transports.py`; scripted multi-turn convergence against the real `GrammarToolkit`, incl. parse-error recovery, hallucinated-tool feedback, multi-call turns, budget exhaustion — 29 tests, suite 612 passed.)*
 - [x] **T4 Live probe**: parse-success-rate measurement over scenarios; go/no-go vs §5.2 gate; document results here. *(Complete 2026-08-22. History: nested-tag format, `ollama:n4:31b-it-qat` — run 1: 10 turns, 1.000; run 2: 10 turns, 0.900 (unclosed `<arguments>`, recovered next turn) → motivated the one-JSON-object format (§3.1). **Final-format pooled run** (`google:gemma-4-31b-it`, `--repeat 5`, log `harness/probe.log`): 20 scenarios, **47 turns, parse success rate 0.9574 — GATE PASS**; 26 calls, 0 hallucinated tools, 0 dispatch errors; failures = 1 malformed-but-recoverable (truncated JSON body, self-corrected in `read_then_validate#1`) + 1 no-call turn (`read_unit#4`, answered in prose). Both classes are prompt-side, not parser-side. Caveats for milestone 1.2: (a) n=47 leaves a wide binomial CI around the 0.95 threshold — keep measuring during benchmark runs; (b) final answers still echo the few-shot demo's 'cammin' content despite contract rule 7 — replace the demonstration with non-colliding content when building the runner prompts.)*
-- [ ] **T5 (deferred)** `OllamaNativeTransport` + migration parity check (§5.3).
+- [x] **T5 `OllamaNativeTransport` + migration parity check (§5.3)**. *(Implemented
+  2026-08-22: `transports.OllamaNativeTransport` over an injected chat backend — the
+  library core still never imports ollama; `normalize_tool_calls` converts ollama-style
+  objects/dicts into canonical dicts with compact JSON-string arguments, error envelopes
+  instead of raising. Because the loop keeps only assistant text in transcripts, the
+  transport re-attaches each session turn's calls when rebuilding requests — per-
+  conversation ledger keyed by transcript identity, opening-prompt demo turns untouched;
+  known limitation: nudged resumes start a fresh transcript whose pre-nudge turns keep
+  text-only history. `parser.format_tool_call` is the canonical→wire inverse used by the
+  parity criterion. `parity.py` runs every probe scenario through both transports with a
+  fresh toolkit per session: hard gate = canonical round-trip interop on both sides;
+  observational = call-name sequences + final candidate rows; streaming JSONL log like
+  the probe. Live run pending — operator:
+  `uv run python -m harness.toolcall.parity --model ollama:gemma4:31b-it-qat --repeat 3
+  --log harness/parity.log`.)*
 
 ## 7. Open Questions
 

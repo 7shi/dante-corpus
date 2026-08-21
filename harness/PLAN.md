@@ -46,17 +46,40 @@ graph TD
 **Where we are.** The Tool Call Protocol sub-project ([`TOOLCALL.md`](TOOLCALL.md)) is
 complete through its live-probe gate (**T1–T4 done, GATE PASSED**) and is wired into
 Stage 1: **Milestone 1.2 (`runner/agent.py` + `runner/prompts.py`) is complete**, so a
-full autonomous grammar session runs end-to-end on top of the gated protocol, and
+full autonomous grammar session runs end-to-end on top of the gated protocol,
 **Milestone 1.3 (`runner/benchmark.py` + `fixtures/challenge_cases.py`) is complete**:
 the evaluation harness scores finished sessions against the 0-soft Gold Standard with
-the §5.2 metric suite over a curated 87-case fixture table.
+the §5.2 metric suite over a curated 87-case fixture table, and **T5 is implemented**
+(`toolcall/transports.OllamaNativeTransport` + `toolcall/parity.py`, deterministic tests
+only) so the deferred native-transport parity check now awaits its operator run.
 
 **Next action — milestone 1.4 evaluation runs (operator-run):**
-- Run the benchmark CLI against Gemma 4 over the fixtures and persist traces:
+> **Session close 2026-08-22:** the code side is complete and frozen at suite
+> **700 passed** — nothing below needs further implementation; the next session starts
+> by running the two pilots, comparing wall-clock/turns/`predicate_first_pass_rate`,
+> then committing to a workflow for the full runs. Note `*.log` files are gitignored:
+> `harness/bench-strict-validator-baseline.log` exists on disk only.
+- **Pilot first, both workflows**: the first live run (interrupted after 4 cases,
+  preserved as `harness/bench-strict-validator-baseline.log`) exposed a structural
+  validator defect (carry-over 4) and motivated an A/B workflow comparison. Before the
+  full 87-case commitment, run a small pilot per mode and compare cost/behavior:
   `uv run python -m harness.runner.benchmark --model ollama:gemma4:31b-it-qat \
-   --log harness/bench.log` (optionally `--category historical` first — it is the
-  hardest subset; `--list` previews the selection). Log semantics mirror the probe:
-  one case record per line as it completes, summary record last.
+   --workflow unit --case-id hist-inf14-124 --case-id hist-inf22-097 --log pilot-unit.log`
+  and the same with `--workflow predicate` (expect more turns; give it `--max-turns 24`).
+  The predicate mode validates one predicate per call and is scored as each
+  predicate's latest submission; its fine-grained signal is the pooled
+  `predicate_first_pass_rate`. Unit-level `convergence_rate` keeps its ≤5-turn
+  semantics, so multi-predicate predicate-mode sessions legitimately stay below it.
+  hist-inf14-124 is the unit whose upstream_feedback complaint exposed carry-over 4;
+  under the fixed validator its gold rows validate cleanly, so it doubles as the
+  regression check for the fix.
+- Then the full runs (one log file per attempt — the CLI truncates on startup):
+  `uv run python -m harness.runner.benchmark --model <model> --workflow <mode> \
+   --log bench-<mode>.log`.
+- Optionally, while at it: the T5 live parity check over the same model —
+  `uv run python -m harness.toolcall.parity --model ollama:gemma4:31b-it-qat \
+   --repeat 3 --log harness/parity.log`. Hard criterion: canonical round-trip interop
+  on both transports (`parity_pass`); name/row sequence equality is observational.
 - Keep measuring parse success inside benchmark runs: the T4 gate margin was thin
   (47 turns at 0.957 vs 0.95, wide binomial CI), so treat it as still under
   observation, not permanently closed. Every case record carries per-session
@@ -74,6 +97,26 @@ the §5.2 metric suite over a curated 87-case fixture table.
    nudged so convergence metrics stay honest. This resolves the practical half of
    TOOLCALL.md §7.1 for Stage 1 — `validate_candidate` doubles as the acceptance gate;
    a dedicated `submit_candidate` termination tool stays open at the protocol layer.
+4. ~~**Validator rejects gold-correct complement rows**~~ — RESOLVED (2026-08-22,
+   after the first live run): the interrupted benchmark surfaced a model
+   `upstream_feedback` report proving `validate_candidate`'s citation rule rejected
+   gold-style rows (`elli ccomp←sai`, `sai ccomp←tondo`, `de' xcomp←addur`). Root
+   cause: the implementation applied the NP-head/pronoun requirement to *every*
+   argument, while the spec (`runner/PLAN.md` §3.3 item 2, and the agent prompt) scopes
+   it to **nominal** arguments. A corpus-wide scan put 71% of all rejections on
+   non-nominal roles (ccomp/xcomp/attr anchor on predicate tokens by nature; bare
+   `obl` is gold's adverbial marker). Fix: `tools.requires_nominal_anchor()` — the
+   requirement now covers only subj/obj/iobj/obl:<prep>; clausal roles and bare obl
+   pass with existence checks; `word` anchors became optional (~40% smaller calls).
+   Residual: nominal-role rows whose anchors are genuinely non-nominal (clausal
+   subjects etc.) still reject — measured at 527 rows / 1.7% of anchored nominal rows,
+   touching ~100 of 3477 parse units; these stay documented ceilings funneled through
+   upstream_feedback rather than spec-violating over-reach.
+5. **Submission granularity** — OPEN as an A/B measurement question: whole-unit
+   submission (workflow `unit`) vs per-predicate interleaved validation (workflow
+   `predicate`; scored via per-predicate-latest accumulation + `predicate_first_pass_rate`).
+   The first live run showed unit-mode sessions carrying long CoT plus one large
+   validate call per correction cycle; decide the default from the pilot runs above.
 
 **Environment & artifacts.**
 - Default model: `ollama:gemma4:31b-it-qat` (Gemini path `google:gemma-4-31b-it` also
@@ -82,13 +125,16 @@ the §5.2 metric suite over a curated 87-case fixture table.
   harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
   summary record last (a log without the summary line = interrupted run);
   `*.log` is gitignored.
+- Migration parity check (T5, live run pending): `uv run python -m harness.toolcall.parity
+  --model <model> [--repeat N] [--log harness/parity.log]` — same log semantics; hard
+  gate = canonical interop on both transports.
 - Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
   --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
 - Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
   C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
-- Test suite: **663 passed** (547 pre-existing + 36 `test_harness_tools.py` +
-  38 `tests/test_harness_toolcall.py` + 20 `tests/test_harness_agent.py` +
-  22 `tests/test_harness_benchmark.py`).
+- Test suite: **700 passed** (547 pre-existing + 41 `test_harness_tools.py` +
+  63 `tests/test_harness_toolcall.py` + 23 `tests/test_harness_agent.py` +
+  26 `tests/test_harness_benchmark.py`).
 
 ### Milestone ledger
 
@@ -111,20 +157,42 @@ the §5.2 metric suite over a curated 87-case fixture table.
 - Tests: `tests/test_harness_tools.py` — 36 deterministic tests incl. poisoning
   `skel.io.load_skel` / `skel.registry.rule_active` to prove masking.
 
-**Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T4 COMPLETE, GATE PASSED.**
+**Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T4 COMPLETE, GATE PASSED;
+T5 IMPLEMENTED (live parity run pending).**
 
 Gemma cannot use native tool calling on the Gemini API path and its structured output is
 unreliable there, so the interim protocol is prompt-instructed `<tool_call>` blocks (one
 JSON object per block) converted into OpenAI-compatible tool-call dicts; native Ollama
-tool calling later is a pure transport swap (`OllamaNativeTransport`, T5, deferred).
-Deliverables: parser/formatter (`parser.py`), prompt contract + few-shot (`prompts.py`),
-transports (`transports.py`), transport-agnostic loop (`loop.py`), live-probe CLI
-(`probe.py`); 38 deterministic tests in `tests/test_harness_toolcall.py`. Live probing
-motivated a wire-format simplification from nested tags to one JSON object per block
-([`TOOLCALL.md`](TOOLCALL.md) §3.1); **final-format pooled run on `google:gemma-4-31b-it`
-(--repeat 5): 20 scenarios, 47 turns, parse success rate 0.957 ≥ 0.95 gate**, 0
-hallucinated tools, 0 dispatch errors, both observed failure classes benign and
-prompt-side.
+tool calling is a pure transport swap (`OllamaNativeTransport`, T5). Deliverables:
+parser/formatter (`parser.py`), prompt contract + few-shot (`prompts.py`), transports
+(`transports.py`), transport-agnostic loop (`loop.py`), live-probe CLI (`probe.py`),
+migration-parity CLI (`parity.py`); 63 deterministic tests in
+`tests/test_harness_toolcall.py`. Live probing motivated a wire-format simplification
+from nested tags to one JSON object per block ([`TOOLCALL.md`](TOOLCALL.md) §3.1);
+**final-format pooled run on `google:gemma-4-31b-it` (--repeat 5): 20 scenarios, 47
+turns, parse success rate 0.957 ≥ 0.95 gate**, 0 hallucinated tools, 0 dispatch errors,
+both observed failure classes benign and prompt-side.
+
+**T5 — Native Transport & Migration Parity (`toolcall/transports.py`,
+`toolcall/parity.py`): IMPLEMENTED, live run pending (operator-run).**
+
+- `OllamaNativeTransport` drives an injected chat backend (`(messages, tools) -> message`;
+  the library core still never imports ollama — the live adapter lives in
+  `parity.ollama_chat` over `ollama.chat(tools=...)`). `normalize_tool_calls` converts
+  ollama-style tool-call objects/dicts into canonical dicts with compact JSON-string
+  arguments; anything malformed surfaces as a structured error envelope, never a raise.
+  Because the loop keeps only assistant *text* in transcripts, the transport re-attaches
+  each session turn's calls when rebuilding requests (per-conversation ledger keyed by
+  transcript identity; opening-prompt demo turns untouched; nudged resumes start fresh
+  transcripts and keep text-only pre-nudge history — documented limitation).
+- `parser.format_tool_call(call)` is the canonical→wire inverse; together with
+  `parse_tool_calls` it backs the §5.3 interop criterion.
+- `parity.py`: runs every probe scenario through both transports (fresh toolkit per
+  session; XML side gets contract + demo, native side bare specs). Hard gate = canonical
+  round-trip interop on both sides (`ParityReport.parity_pass`); observational =
+  call-name sequences + final candidate rows. Streaming JSONL log mirrors the probe.
+- Tests: 25 new deterministic tests (normalization, history re-attachment, ledger
+  isolation, round-trip property, end-to-end stubbed parity); suite total 688 passed.
 
 **Milestone 1.2 — Agent Runner (`harness/runner/agent.py`, `runner/prompts.py`): COMPLETE.**
 
@@ -145,10 +213,6 @@ prompt-side.
   the real toolkit and prompts: prompt assembly, nudge policy (nudge-once-then-converge,
   no nudge on capability give-up or exhaustion, shared turn budget), transcript-derived
   candidate rows, trace round-trip, adapter forwarding.
-
-**Remaining milestones**: 1.4 evaluation execution & trace collection; deferred T5
-native transport parity check ([`TOOLCALL.md`](TOOLCALL.md) §5.3). Open design question:
-§7.1 termination tool (practical half resolved by the nudge policy — see Handoff).
 
 **Milestone 1.3 — Benchmark Suite (`harness/runner/benchmark.py`,
 `harness/fixtures/challenge_cases.py`): COMPLETE.**
@@ -179,6 +243,13 @@ native transport parity check ([`TOOLCALL.md`](TOOLCALL.md) §5.3). Open design 
   `StubTransport` + real gold data (fixture integrity incl. sentence-group snapping,
   gold comparison, probe-semantics parse stats, metric aggregation, streaming sink);
   suite total 663 passed.
+
+**Remaining milestones**: 1.4 evaluation execution & trace collection (operator-run;
+see the Handoff for the exact commands) plus the T5 live parity run
+([`TOOLCALL.md`](TOOLCALL.md) §5.3, implementation complete). Open design question:
+§7.1 termination tool (practical half resolved by the nudge policy — see Handoff).
+After 1.4 traces exist, Stage 2 (`harness/extractor/`, milestones 2.1–2.5 in
+[`extractor/PLAN.md`](extractor/PLAN.md)) is next.
 
 ---
 
@@ -218,11 +289,12 @@ dante-corpus/
 │   ├── TOOLCALL.md                # Tool Call Protocol Sub-Project (XML interim → native)
 │   │
 │   ├── toolcall/                  # [Protocol Library] XML interim ↔ canonical tool calls
-│   │   ├── parser.py              # parse_tool_calls / format_tool_result (T1)
+│   │   ├── parser.py              # parse_tool_calls / format_tool_call / format_tool_result (T1)
 │   │   ├── prompts.py             # XML output contract + few-shot exchange (T2)
-│   │   ├── transports.py          # Transport interface, PromptXml / Stub transports
+│   │   ├── transports.py          # Transport interface, PromptXml / OllamaNative / Stub (T5)
 │   │   ├── loop.py                # Transport-agnostic loop + turn budget (T3)
-│   │   └── probe.py               # Live-probe CLI for the §5.2 gate (T4, operator-run)
+│   │   ├── probe.py               # Live-probe CLI for the §5.2 gate (T4, operator-run)
+│   │   └── parity.py              # Migration-parity CLI, XML vs native (§5.3/T5, operator-run)
 │   │
 │   ├── runner/                    # [Stage 1] Autonomous Inference Agent & Benchmark
 │   │   ├── PLAN.md                # Stage 1 Specification (Toolset, Agent, Benchmark)

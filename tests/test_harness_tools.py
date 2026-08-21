@@ -15,6 +15,7 @@ from harness.runner.tools import (
     MAX_UNIT_LINES,
     TOOL_SPECS,
     GrammarToolkit,
+    requires_nominal_anchor,
     tool_specs,
 )
 
@@ -237,6 +238,67 @@ def test_validate_candidate_rejects_argument_not_np_head_nor_pronoun(toolkit):
     assert any(
         "neither a Layer 3 NP head nor a pronoun" in error for error in result["errors"]
     )
+
+
+def test_requires_nominal_anchor_scope():
+    assert requires_nominal_anchor("subj")
+    assert requires_nominal_anchor("iobj")
+    assert requires_nominal_anchor("obl:di")
+    # Clausal / predicative roles and gold's adverbial marker are exempt.
+    assert not requires_nominal_anchor("attr")
+    assert not requires_nominal_anchor("ccomp")
+    assert not requires_nominal_anchor("xcomp")
+    assert not requires_nominal_anchor("obl")
+    assert not requires_nominal_anchor("")
+
+
+def test_validate_candidate_accepts_predicate_anchored_clausal_roles(toolkit):
+    # Gold rows from Inferno XIV 124-129: complements cite their clause's own
+    # predicate-head token (sai -> tondo; de' -> addur), which the nominal rule
+    # used to reject — the exact upstream_feedback complaint from the first live
+    # benchmark run (harness/bench-strict-validator-baseline.log).
+    rows = [
+        _row(124, 2, "elli", "ccomp", 124, 6, "sai"),
+        _row(124, 6, "sai", "ccomp", 124, 11, "tondo"),
+        _row(129, 2, "de'", "xcomp", 129, 3, "addur"),
+    ]
+    result = toolkit.validate_candidate("inferno", 14, 124, rows)
+    assert result["valid"] is True
+    assert result["errors"] == []
+
+
+def test_validate_candidate_still_rejects_non_nominal_anchor_on_nominal_role(toolkit):
+    # "tondo" (adjective) anchors sai's clausal complement fine, but as a *subject*
+    # citation on a nominal role it still fails the NP-head/pronoun requirement.
+    rows = [_row(124, 6, "sai", "subj", 124, 11, "tondo")]
+    result = toolkit.validate_candidate("inferno", 14, 124, rows)
+    assert result["valid"] is False
+    assert any(
+        "neither a Layer 3 NP head nor a pronoun" in error for error in result["errors"]
+    )
+
+
+def test_validate_candidate_accepts_attr_and_adverbial_obl_anchors(toolkit):
+    # Gold usage: attr anchors on a predicative adjective (era <- dura), bare obl
+    # on an adverb (ripigneva <- quivi-style locative).
+    result = toolkit.validate_candidate(
+        "inferno", 1, 4, [_row(4, 6, "", "attr", 4, 5, "")]
+    )
+    assert result["valid"] is True
+    result = toolkit.validate_candidate(
+        "inferno", 1, 60, [_row(60, 2, "", "obl", 60, 3, "")]
+    )
+    assert result["valid"] is True
+
+
+def test_validate_candidate_word_fields_are_optional(toolkit):
+    # Coordinates alone identify tokens; word/arg_word are optional anchors now.
+    rows = [
+        {"line": 2, "token": 2, "role": "obj", "arg_line": 2, "arg_token": 5},
+        {"line": 2, "token": 2, "role": "subj", "arg_line": 0, "arg_token": 0},
+    ]
+    result = toolkit.validate_candidate("inferno", 1, 1, rows)
+    assert result["valid"] is True
 
 
 def test_validate_candidate_accepts_pronoun_argument(toolkit):

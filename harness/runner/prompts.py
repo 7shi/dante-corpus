@@ -39,16 +39,22 @@ pair.
 
 Skeleton row conventions:
 
-- Each row names a predicate by (line, token, word) and one argument by role plus \
-(arg_line, arg_token, arg_word).
+- Each row names a predicate by (line, token) plus optionally its word, and one \
+argument by role plus (arg_line, arg_token); word / arg_word are optional \
+verification anchors — coordinates alone identify the token, so omit them to \
+keep calls compact.
 - Roles come from the frozen vocabulary: subj, obj, iobj, attr, xcomp, ccomp, \
-obl:<prep> (e.g. obl:di), or "" (a zero-argument predicate's single row).
+obl (an adverbial oblique), obl:<prep> (e.g. obl:di), or "" (a zero-argument \
+predicate's single row).
 - A pro-drop argument (unexpressed subject, omitted clitic complement) cites \
-(0, 0, "").
-- Nominal arguments must cite the head token of their Layer 3 noun phrase; pronouns \
-and clitics cite their own token and take their case from the annex."""
+(0, 0).
+- Nominal arguments (subj, obj, iobj, obl:<prep>) must cite the head token of \
+their Layer 3 noun phrase; pronouns and clitics cite their own token and take \
+their case from the annex. Clausal roles anchor elsewhere by nature: xcomp / \
+ccomp / attr cite the complement's own predicate-head token, and bare obl cites \
+its adverb — no NP-head requirement applies there."""
 
-REASONING_PROTOCOL = """\
+STEPS_1_TO_4 = """\
 ## 5-step reasoning protocol
 
 Work through these steps in order for every parse unit. Think step by step in \
@@ -85,8 +91,10 @@ record with your validation call instead of forcing a reading.
 Cite nominal arguments at their exact Layer 3 phrase-head tokens. Attach \
 infinitival complements as `xcomp` when the complement subject is controlled by \
 the matrix predicate, as `ccomp` otherwise; trace control chains across the whole \
-unit so no predicate loses its arguments.
+unit so no predicate loses its arguments."""
 
+
+STEP5_UNIT = """\
 ### Step 5 - Intrinsic validation & self-correction
 
 Submit all rows of the unit in one `validate_candidate` call. Read ok="false" \
@@ -96,13 +104,40 @@ give your final answer: a short summary of the predicates, their roles, and any 
 upstream feedback you filed. Never answer in prose alone without having validated \
 a candidate."""
 
+STEP5_PREDICATE = """\
+### Step 5 - Per-predicate validation & self-correction
 
-def system_prompt(specs: Sequence[dict]) -> str:
-    """Assemble the per-unit system prompt: protocol + wire contract + tool specs."""
+Work through the predicates you enumerated in Step 2, one at a time, in text \
+order. For each predicate: state its frame briefly (a sentence or two — which \
+arguments, which case), then call `validate_candidate` with only that \
+predicate's rows. Never batch several predicates into one call. Read ok="false" \
+payloads and error diagnostics literally and repair exactly what they name; if a \
+frame cannot be made well-formed at all, say so and file an `upstream_feedback` \
+record with that predicate's validation call instead of dropping rows silently. \
+After the last predicate, stop working and give your final answer: a short list \
+of the validated predicates (predicate token -> roles) plus any upstream \
+feedback you filed. Never answer in prose alone without having validated every \
+predicate."""
+
+REASONING_PROTOCOL = STEPS_1_TO_4 + "\n\n" + STEP5_UNIT
+PREDICATE_PROTOCOL = STEPS_1_TO_4 + "\n\n" + STEP5_PREDICATE
+
+WORKFLOWS = ("unit", "predicate")
+
+_PROTOCOLS = {"unit": REASONING_PROTOCOL, "predicate": PREDICATE_PROTOCOL}
+
+
+def system_prompt(specs: Sequence[dict], workflow: str = "unit") -> str:
+    """Assemble the per-unit system prompt: protocol + wire contract + tool specs.
+
+    `workflow` selects the validation granularity taught by Step 5: "unit" submits
+    every row of the unit in one call; "predicate" validates one predicate's rows
+    per call, interleaving reasoning and feedback.
+    """
     return "\n\n".join(
         [
             ROLE_INTRO,
-            REASONING_PROTOCOL,
+            _PROTOCOLS[workflow],
             xml_contract_section(),
             tool_specs_section(specs),
         ]

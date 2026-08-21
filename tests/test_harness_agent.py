@@ -362,3 +362,27 @@ def test_llm7shi_generate_builds_stateless_adapter(monkeypatch):
     assert generate([{"role": "user", "content": "hi"}]) == "reply"
     assert captured["model"] == "ollama:m"
     assert captured["temperature"] == 0.3
+
+
+# --- workflow selection ------------------------------------------------------------------
+
+
+def test_default_workflow_teaches_whole_unit_validation(toolkit):
+    result = _run(["Done.", "Still done."], toolkit)
+    assert result.workflow == "unit"
+    system = result.messages[0]["content"]
+    assert "Submit all rows of the unit in one `validate_candidate` call" in system
+
+
+def test_predicate_workflow_selects_per_predicate_protocol(toolkit):
+    result = _run(["Done.", "Still done."], toolkit, workflow="predicate")
+    assert result.workflow == "predicate"
+    system = result.messages[0]["content"]
+    assert "one at a time" in system
+    assert "Never batch several predicates into one call" in system
+    assert result.trace_record(include_transcript=False)["workflow"] == "predicate"
+
+
+def test_unknown_workflow_fails_loudly(toolkit):
+    with pytest.raises(KeyError):
+        _run(["Done.", "Still done."], toolkit, workflow="verse")

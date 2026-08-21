@@ -16,11 +16,12 @@ and renders outcomes back as `<tool_result>` blocks.
 
 | Module | Responsibility |
 | :--- | :--- |
-| `parser.py` | `parse_tool_calls(text)` → canonical OpenAI-format calls + parse-error envelopes; `format_tool_result(outcome)` → `<tool_result>` block |
+| `parser.py` | `parse_tool_calls(text)` → canonical OpenAI-format calls + parse-error envelopes; `format_tool_call(call)` → wire block (canonical inverse); `format_tool_result(outcome)` → `<tool_result>` block |
 | `prompts.py` | `XML_CONTRACT` output rules, `few_shot_messages()`, `tool_specs_section(specs)` |
-| `transports.py` | `Transport` interface; `PromptXmlTransport` (interim), `StubTransport` (deterministic tests) |
+| `transports.py` | `Transport` interface; `PromptXmlTransport` (interim), `OllamaNativeTransport` (native, T5), `StubTransport` (deterministic tests) |
 | `loop.py` | `run_tool_loop(...)`: history, turn budget, termination, dispatch/feedback |
 | `probe.py` | Live-probe CLI measuring parse success rate against a real model (§5.2 gate) |
+| `parity.py` | Migration parity check CLI comparing XML vs native over shared scenarios (§5.3) |
 
 Error discipline: nothing here ever raises into the loop — malformed wire input becomes
 `{"ok": False, "tool": ..., "error": ...}` envelopes, mirroring `dispatch`, and is fed
@@ -28,7 +29,8 @@ back to the model verbatim for self-correction.
 
 Masking discipline: the library core (`parser` / `prompts` / `transports` / `loop`) never
 imports runner code or touches Layer 5 gold data — it is protocol plumbing only. Only the
-probe CLI imports `GrammarToolkit` so live experiments exercise the real closed toolset.
+probe / parity CLIs import `GrammarToolkit` so live experiments exercise the real closed
+toolset.
 
 ## Usage
 
@@ -61,4 +63,19 @@ Measures the §5.2 go/no-go gate (parse success rate ≥ 0.95) over four scripte
 uv run python -m harness.toolcall.probe --model ollama:gemma4:31b-it-qat --log probe.jsonl
 ```
 
-Tests: `tests/test_harness_toolcall.py` — 38 deterministic tests, no network, no model.
+## Migration parity check (operator-run, §5.3 / T5)
+
+Runs every probe scenario twice — once through `PromptXmlTransport`, once through
+`OllamaNativeTransport` (`ollama.chat(tools=...)` directly) — and verifies one protocol
+across both wire formats. Hard criterion: every canonical call either side produces
+round-trips through `format_tool_call` → `parse_tool_calls` unchanged; call-name
+sequences and final candidate rows are compared observationally (turn-for-turn equality
+is not required). Each variant gets its idiomatic opening: XML contract + demo vs bare
+native specs.
+
+```bash
+uv run python -m harness.toolcall.parity --model ollama:gemma4:31b-it-qat \
+    --repeat 3 --log parity.jsonl
+```
+
+Tests: `tests/test_harness_toolcall.py` — 63 deterministic tests, no network, no model.

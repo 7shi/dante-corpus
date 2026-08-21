@@ -41,13 +41,32 @@ __all__ = [
 
 # The role vocabulary a candidate may speak: the frozen core roles, the empty marker for a
 # zero-argument predicate's single row, and `obl:<prep>` for preposition-governed obliques.
+# (`ROLES` already carries the bare `obl` marker gold uses for adverbial obliques.)
 VALID_ROLES = frozenset(ROLES)
+
+# Roles whose fillers are nominal: their arguments must cite a Layer 3 NP head or a
+# pronoun (`runner/PLAN.md` §3.3 item 2 — "Nominal argument tokens..."). Clausal /
+# predicative roles (`attr`, `ccomp`, `xcomp`) naturally anchor on predicate tokens, and
+# bare `obl` is gold's adverbial-oblique marker, so none of them is held to the nominal
+# citation rule (existence and word-anchor checks still apply everywhere).
+NOMINAL_ANCHOR_ROLES = frozenset({"subj", "obj", "iobj"})
+
+
+def requires_nominal_anchor(role: str) -> bool:
+    """True when `role` demands an NP-head/pronoun citation for its arguments."""
+    return role in NOMINAL_ANCHOR_ROLES or (
+        role.startswith("obl:") and OBL_RE.fullmatch(role) is not None
+    )
 
 # Fields `search_corpus` accepts; everything else is rejected rather than ignored, so a
 # typo'd query fails loudly instead of silently matching everything.
 _QUERY_FIELDS = frozenset({"word", "lemma", "pos", "deprel", "case"})
 
 _ROW_FIELDS = ("line", "token", "word", "role", "arg_line", "arg_token")
+
+# Fields a candidate row cannot do without; `word` is an optional verification anchor
+# (coordinates alone identify the token, so wire payloads may omit it).
+_REQUIRED_ROW_FIELDS = ("line", "token", "role", "arg_line", "arg_token")
 
 # --- Tool-call specifications ---------------------------------------------------------
 #
@@ -73,19 +92,22 @@ _CANDIDATE_ROW_SCHEMA = {
     "properties": {
         "line": {"type": "integer", "description": "Predicate line."},
         "token": {"type": "integer", "description": "Predicate token index (1-based)."},
-        "word": {"type": "string", "description": "Predicate word (verification anchor)."},
+        "word": {
+            "type": "string",
+            "description": "Predicate word (optional verification anchor).",
+        },
         "role": {
             "type": "string",
             "description": (
-                "subj | obj | iobj | attr | xcomp | ccomp | obl:<prep>, or '' for a "
-                "zero-argument predicate."
+                "subj | obj | iobj | attr | xcomp | ccomp | obl | obl:<prep>, or '' "
+                "for a zero-argument predicate."
             ),
         },
         "arg_line": {"type": "integer", "description": "Argument line (0 for pro-drop)."},
         "arg_token": {"type": "integer", "description": "Argument token index (0 for pro-drop)."},
         "arg_word": {"type": "string", "description": "Argument word anchor ('' for pro-drop)."},
     },
-    "required": list(_ROW_FIELDS),
+    "required": list(_REQUIRED_ROW_FIELDS),
     "additionalProperties": False,
 }
 
@@ -164,10 +186,12 @@ TOOL_SPECS: tuple[dict, ...] = (
             "name": "validate_candidate",
             "description": (
                 "Validate intrinsic syntactic well-formedness of your candidate skeleton "
-                "rows: predicate tokens exist in Layer 1, arguments cite Layer 3 NP heads "
-                "or pronouns, slots are unique per predicate (dual roles need clitic "
-                "licensing), and roles use the frozen vocabulary. Also records "
-                "upstream_feedback about irreconcilable L2/L4 defects you identified."
+                "rows: predicate tokens exist in Layer 1, nominal arguments (subj, obj, "
+                "iobj, obl:<prep>) cite Layer 3 NP heads or pronouns — clausal roles "
+                "(attr, xcomp, ccomp) and bare obl may anchor on any token — slots are "
+                "unique per predicate (dual roles need clitic licensing), and roles use "
+                "the frozen vocabulary. Also records upstream_feedback about "
+                "irreconcilable L2/L4 defects you identified."
             ),
             "parameters": {
                 "type": "object",
@@ -532,14 +556,19 @@ class GrammarToolkit:
         """Validate intrinsic syntactic well-formedness of candidate skeleton rows.
 
         Checks (see `harness/runner/PLAN.md` §3.3):
-        1. every predicate token exists in Layer 1 and matches its word anchor;
-        2. every nominal argument cites a valid Layer 3 NP head or a Layer 1 pronoun
-           (or `(0, 0)` for pro-drop);
+        1. every predicate token exists in Layer 1 and matches its word anchor when one
+           is given;
+        2. every nominal argument (subj, obj, iobj, obl:<prep>) cites a valid Layer 3 NP
+           head or a Layer 1 pronoun (or `(0, 0)` for pro-drop). Clausal / predicative
+           roles (`attr`, `ccomp`, `xcomp`) and bare `obl` — gold's adverbial-oblique
+           marker — may anchor on any existing token: complements cite their clause's
+           predicate head by nature, so holding them to the nominal rule would reject
+           correct analyses;
         3. slots are unique per predicate — duplicate citations are rejected, and one
            argument filling two roles requires clitic licensing (a multi-slot case annex
            row such as fused `gliel'`);
         4. every role belongs to the frozen vocabulary (`subj`, `obj`, `iobj`, `attr`,
-           `xcomp`, `ccomp`, `obl:<prep>`, or the zero-argument `""` marker).
+           `xcomp`, `ccomp`, `obl`, `obl:<prep>`, or the zero-argument `""` marker).
 
         `upstream_feedback` records (irreconcilable L2/L4 defects spotted by the model)
         are accepted, logged verbatim for human triage, and reported back; malformed
@@ -560,7 +589,7 @@ class GrammarToolkit:
             if not isinstance(raw, dict):
                 errors.append(f"{where}: not a dict")
                 continue
-            missing = [key for key in _ROW_FIELDS if key not in raw]
+            missing = [key for key in _REQUIRED_ROW_FIELDS if key not in raw]
             if missing:
                 errors.append(f"{where}: missing field(s) {missing}")
                 continue
@@ -580,7 +609,7 @@ class GrammarToolkit:
                     index=index,
                     line=ints["line"],
                     token=ints["token"],
-                    word=str(raw["word"]),
+                    word=str(raw.get("word", "")),
                     role=str(raw["role"]),
                     arg_line=ints["arg_line"],
                     arg_token=ints["arg_token"],
@@ -621,7 +650,7 @@ class GrammarToolkit:
                     f"(line has {len(tokens)} tokens)"
                 )
             else:
-                if not _words_match(row.word, tokens[row.token - 1]):
+                if row.word and not _words_match(row.word, tokens[row.token - 1]):
                     errors.append(
                         f"{where}: predicate word {row.word!r} does not match Layer 1 "
                         f"token {row.line}.{row.token} {tokens[row.token - 1]!r}"
@@ -650,12 +679,15 @@ class GrammarToolkit:
                             f"{arg_tokens[row.arg_token - 1]!r}"
                         )
                     if (
-                        row.arg not in data.np_heads
+                        requires_nominal_anchor(row.role)
+                        and row.arg not in data.np_heads
                         and not data.ctx.is_pronoun(row.arg)
                     ):
                         errors.append(
                             f"{where}: argument {row.arg_line}.{row.arg_token} cites "
-                            f"neither a Layer 3 NP head nor a pronoun"
+                            f"neither a Layer 3 NP head nor a pronoun "
+                            f"(nominal role {row.role!r} requires one; clausal and "
+                            f"adverbial roles may anchor on any token)"
                         )
                     if not start <= row.arg_line <= end:
                         warnings.append(

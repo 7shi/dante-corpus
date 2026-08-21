@@ -56,6 +56,7 @@ from .agent import (
     DEFAULT_MODEL,
     MAX_NUDGES,
     SESSION_MAX_TURNS,
+    WORKFLOWS,
     UnitResult,
     llm7shi_generate,
     run_unit,
@@ -245,7 +246,10 @@ class UnitEvaluation:
     valid_seen: bool = False
     validations: int = 0
     submissions: int = 0
-    # Gold comparison (final submission unless noted).
+    workflow: str = "unit"
+    # Gold comparison (final submission unless noted; the union of all submissions
+    # when `accumulate` — predicate-workflow sessions build the skeleton piecemeal).
+    accumulate: bool = False
     gold_rows: int = 0
     predicted_rows: int = 0
     exact_first: bool = False
@@ -255,6 +259,10 @@ class UnitEvaluation:
     extra: list[RowKey] = field(default_factory=list)
     malformed_rows: int = 0
     out_of_unit_rows: int = 0
+    # Predicate-level first-attempt exactness: gold predicates whose FIRST coverage
+    # (first submission touching them) matched gold exactly for that predicate.
+    preds_first_pass: int = 0
+    preds_total: int = 0
     # Upstream discrepancy channel.
     upstream_feedback: list[dict] = field(default_factory=list)
     upstream_wellformed: int = 0
@@ -272,6 +280,13 @@ class UnitEvaluation:
             return None
         return self.upstream_wellformed / len(self.upstream_feedback)
 
+    @property
+    def predicate_first_pass_rate(self) -> float | None:
+        """First-coverage exactness over the unit's gold predicates; None if no gold."""
+        if not self.preds_total:
+            return None
+        return self.preds_first_pass / self.preds_total
+
     def to_dict(self) -> dict:
         data = {
             "record": "case",
@@ -285,6 +300,8 @@ class UnitEvaluation:
             "valid_seen": self.valid_seen,
             "validations": self.validations,
             "submissions": self.submissions,
+            "workflow": self.workflow,
+            "accumulate": self.accumulate,
             "gold_rows": self.gold_rows,
             "predicted_rows": self.predicted_rows,
             "exact_first": self.exact_first,
@@ -294,6 +311,8 @@ class UnitEvaluation:
             "extra": [list(k) for k in self.extra],
             "malformed_rows": self.malformed_rows,
             "out_of_unit_rows": self.out_of_unit_rows,
+            "preds_first_pass": self.preds_first_pass,
+            "preds_total": self.preds_total,
             "upstream_feedback": self.upstream_feedback,
             "upstream_wellformed": self.upstream_wellformed,
             "parse_success_turns": self.parse_success_turns,
@@ -301,6 +320,8 @@ class UnitEvaluation:
         }
         precision = self.upstream_feedback_precision
         data["upstream_feedback_precision"] = None if precision is None else round(precision, 4)
+        rate = self.predicate_first_pass_rate
+        data["predicate_first_pass_rate"] = None if rate is None else round(rate, 4)
         return data
 
 
@@ -309,11 +330,20 @@ def evaluate_unit(
     *,
     case: ChallengeCase | None = None,
     convergence_turn_budget: int = CONVERGENCE_TURN_BUDGET,
+    accumulate: bool = False,
 ) -> UnitEvaluation:
     """Score one finished agent session against the 0-soft Gold Standard.
 
     `case` supplies the fixture identity (case id, category, canonical bounds);
     without it the evaluation still runs on the session's own unit coordinates.
+
+    `accumulate` changes what counts as the final submission: False compares the
+    last submission only (unit workflow); True compares, per predicate, its
+    LATEST submission's rows (predicate workflow builds the skeleton one
+    predicate at a time and may re-validate after corrections — taking the
+    latest per predicate lets a repaired frame replace its earlier attempt,
+    while a plain union would keep every superseded mistake as an extra row).
+    The predicate-level first-pass metric is computed regardless of mode.
     """
     if case is not None:
         canticle, canto = case.canticle, case.canto
@@ -331,13 +361,31 @@ def evaluate_unit(
 
     gold = gold_row_keys(canticle, canto, line_start, line_end)
 
-    subs = result.submissions
-    first_keys, _, _ = candidate_keys(subs[0] if subs else [], line_start, line_end)
-    final_rows = subs[-1] if subs else []
-    final, malformed, out_of_unit = candidate_keys(final_rows, line_start, line_end)
+    per_submission = [
+        candidate_keys(rows, line_start, line_end)
+        for rows in result.submissions
+    ]
+    if not per_submission:
+        final, malformed, out_of_unit = set(), 0, 0
+    elif accumulate:
+        latest_by_pred: dict[tuple[int, int], set[RowKey]] = {}
+        malformed = out_of_unit = 0
+        for keys, sub_malformed, sub_out_of_unit in per_submission:
+            malformed += sub_malformed
+            out_of_unit += sub_out_of_unit
+            this_pass: dict[tuple[int, int], set[RowKey]] = {}
+            for key in keys:
+                this_pass.setdefault(key[:2], set()).add(key)
+            latest_by_pred.update(this_pass)
+        final = (
+            set().union(*latest_by_pred.values()) if latest_by_pred else set()
+        )
+    else:
+        final, malformed, out_of_unit = per_submission[-1]
 
     missing, extra = _diff(final, gold)
     parse_ok, parse_bad = _parse_turn_stats(result)
+    preds_first_pass, preds_total = _predicate_first_pass(per_submission, gold)
 
     return UnitEvaluation(
         case_id=case_id,
@@ -354,13 +402,15 @@ def evaluate_unit(
         protocol_complete=result.protocol_complete,
         valid_seen=result.valid_seen,
         validations=len(result.validations),
-        submissions=len(subs),
+        submissions=len(result.submissions),
+        workflow=result.workflow,
+        accumulate=accumulate,
         gold_rows=len(gold),
         predicted_rows=len(final),
-        exact_first=bool(subs) and first_keys == gold,
-        exact_final=bool(subs) and final == gold,
+        exact_first=bool(per_submission) and per_submission[0][0] == gold,
+        exact_final=bool(result.submissions) and final == gold,
         converged=(
-            bool(subs)
+            bool(result.submissions)
             and final == gold
             and not result.exhausted
             and result.turns <= convergence_turn_budget
@@ -369,6 +419,8 @@ def evaluate_unit(
         extra=extra,
         malformed_rows=malformed,
         out_of_unit_rows=out_of_unit,
+        preds_first_pass=preds_first_pass,
+        preds_total=preds_total,
         upstream_feedback=list(result.upstream_feedback),
         upstream_wellformed=_feedback_validity(result.upstream_feedback)[0],
         parse_success_turns=parse_ok,
@@ -376,6 +428,35 @@ def evaluate_unit(
         gold_key_set=frozenset(gold),
         final_key_set=frozenset(final),
     )
+
+
+def _predicate_first_pass(
+    per_submission: list[tuple[set[RowKey], int, int]],
+    gold: set[RowKey],
+) -> tuple[int, int]:
+    """`(first_pass_preds, total_gold_preds)` at predicate granularity.
+
+    A predicate's *first coverage* is its rows in the earliest submission that
+    touches it; it passes when those rows equal gold's rows for that predicate.
+    Predicates never covered count as failures via `total`.
+    """
+    gold_by_pred: dict[tuple[int, int], set[RowKey]] = {}
+    for key in gold:
+        gold_by_pred.setdefault(key[:2], set()).add(key)
+
+    seen: set[tuple[int, int]] = set()
+    first_pass = 0
+    for keys, _, _ in per_submission:
+        by_pred: dict[tuple[int, int], set[RowKey]] = {}
+        for key in keys:
+            by_pred.setdefault(key[:2], set()).add(key)
+        for pred, pred_keys in by_pred.items():
+            if pred in seen:
+                continue
+            seen.add(pred)
+            if pred_keys == gold_by_pred.get(pred):
+                first_pass += 1
+    return first_pass, len(gold_by_pred)
 
 
 # --- aggregate report -------------------------------------------------------------------
@@ -446,6 +527,8 @@ class BenchmarkReport:
                 }
         parse_success = sum(ev.parse_success_turns for ev in evals)
         parse_failure = sum(ev.parse_failure_turns for ev in evals)
+        preds_total = sum(ev.preds_total for ev in evals)
+        preds_first_pass = sum(ev.preds_first_pass for ev in evals)
         return {
             "units": units,
             "protocol_complete_rate": round(
@@ -457,6 +540,9 @@ class BenchmarkReport:
             "convergence_rate": round(sum(ev.converged for ev in evals) / units, 4)
             if units
             else 0.0,
+            "predicate_first_pass_rate": round(preds_first_pass / preds_total, 4)
+            if preds_total
+            else None,
             "exhausted_sessions": sum(ev.exhausted for ev in evals),
             "no_submission_units": sum(ev.submissions == 0 for ev in evals),
             "role_micro": micro.to_dict(),
@@ -486,6 +572,8 @@ class BenchmarkReport:
             f" (exhausted: {m['exhausted_sessions']}, no submission: {m['no_submission_units']})",
             f"role F1: micro={m['role_micro']['f1']:.3f} macro={m['role_macro_f1']:.3f}",
         ]
+        if m["predicate_first_pass_rate"] is not None:
+            lines.append(f"predicate first-pass exact: {m['predicate_first_pass_rate']:.3f}")
         for role, rm in m["roles"].items():
             lines.append(f"    {role}: P={rm['precision']:.3f} R={rm['recall']:.3f} F1={rm['f1']:.3f}")
         precision = m["upstream_feedback_precision"]
@@ -514,15 +602,19 @@ def run_benchmark(
     specs: list[dict] | None = None,
     max_turns: int = SESSION_MAX_TURNS,
     max_nudges: int = MAX_NUDGES,
+    workflow: str = "unit",
     sink=None,
     include_transcript: bool = False,
 ) -> BenchmarkReport:
     """Run every case through a fresh session and score it against gold.
 
     One shared `GrammarToolkit` caches canto loads across sessions (sequential
-    runs only: the active-unit guard tracks one unit at a time). `sink`, when
-    given, receives one JSONL record per completed case — flushed immediately so
-    an interrupted run keeps everything already finished — followed by nothing;
+    runs only: the active-unit guard tracks one unit at a time). `workflow`
+    selects the validation granularity taught to the agent ("unit": whole-unit
+    submission, compared last-submission-vs-gold; "predicate": per-predicate
+    interleaved submissions, compared as their union). `sink`, when given,
+    receives one JSONL record per completed case — flushed immediately so an
+    interrupted run keeps everything already finished — followed by nothing;
     the caller writes the summary record (see CLI main, mirroring `probe.py`).
     """
     toolkit = GrammarToolkit() if toolkit is None else toolkit
@@ -539,8 +631,11 @@ def run_benchmark(
             specs=specs,
             max_turns=max_turns,
             max_nudges=max_nudges,
+            workflow=workflow,
         )
-        evaluation = evaluate_unit(result, case=case)
+        evaluation = evaluate_unit(
+            result, case=case, accumulate=(workflow == "predicate")
+        )
         report.add(evaluation)
         if sink is not None:
             record = evaluation.to_dict()
@@ -563,6 +658,13 @@ def main(argv=None) -> int:
     parser.add_argument("--temperature", type=float, default=None)
     parser.add_argument("--max-turns", type=int, default=SESSION_MAX_TURNS)
     parser.add_argument("--max-nudges", type=int, default=MAX_NUDGES)
+    parser.add_argument(
+        "--workflow",
+        choices=WORKFLOWS,
+        default="unit",
+        help="validation granularity: whole unit in one call (unit) or one "
+        "predicate per call (predicate; scored as the union of submissions)",
+    )
     parser.add_argument("--category", action="append", choices=CATEGORIES)
     parser.add_argument("--case-id", action="append")
     parser.add_argument("--limit", type=int, help="evaluate only the first N selected cases")
@@ -603,7 +705,8 @@ def main(argv=None) -> int:
     )
 
     print(
-        f"benchmark: model={args.model} cases={[c.case_id for c in cases][:5]}"
+        f"benchmark: model={args.model} workflow={args.workflow} "
+        f"cases={[c.case_id for c in cases][:5]}"
         + (" ..." if len(cases) > 5 else "")
     )
     started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -615,6 +718,7 @@ def main(argv=None) -> int:
             transport,
             max_turns=args.max_turns,
             max_nudges=args.max_nudges,
+            workflow=args.workflow,
             sink=sink,
             include_transcript=args.full_transcript,
         )
@@ -622,6 +726,7 @@ def main(argv=None) -> int:
             summary = {
                 "record": "summary",
                 "model": args.model,
+                "workflow": args.workflow,
                 "temperature": args.temperature,
                 "max_turns": args.max_turns,
                 "started_at": started_at,

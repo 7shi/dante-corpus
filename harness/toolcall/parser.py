@@ -32,6 +32,7 @@ import json
 __all__ = [
     "TOOL_CALL_CLOSE",
     "TOOL_CALL_OPEN",
+    "format_tool_call",
     "format_tool_result",
     "is_parse_error",
     "parse_tool_calls",
@@ -169,6 +170,41 @@ def parse_tool_calls(text: str) -> list[dict]:
             continue
         _parse_json_body(raw, items)
     return items
+
+
+def format_tool_call(call: dict) -> str:
+    """Render one canonical tool-call dict as a `<tool_call>` block.
+
+    The inverse of `parse_tool_calls` for a single well-formed call: canonical
+    OpenAI-format dicts — as produced by this parser, by native transports, or by
+    real ollama/OpenAI responses — come back as a wire block whose re-parse yields
+    the identical canonical dict (`TOOLCALL.md` §5.3 interop criterion). The block
+    body is compact JSON with non-ASCII characters kept literal (the corpus is
+    Italian). Raises ValueError for a call that is not canonically shaped with
+    JSON-object arguments — a programmer error on this side of the wire, never a
+    model-output condition.
+    """
+    function = call.get("function", {})
+    name = function.get("name")
+    arguments = function.get("arguments", {})
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError(f"canonical tool call needs a string name: {call!r}")
+    if isinstance(arguments, str):
+        try:
+            arguments_obj = json.loads(arguments)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"canonical tool call {name!r} has unparsable arguments JSON: {exc}"
+            ) from exc
+    else:
+        arguments_obj = arguments
+    if not isinstance(arguments_obj, dict):
+        raise ValueError(
+            f"canonical tool call {name!r} arguments must be a JSON object, "
+            f"got {type(arguments_obj).__name__}"
+        )
+    body = json.dumps({"name": name, "arguments": arguments_obj}, ensure_ascii=False)
+    return f"{TOOL_CALL_OPEN}\n{body}\n{TOOL_CALL_CLOSE}"
 
 
 def format_tool_result(outcome: dict) -> str:
