@@ -108,7 +108,7 @@ The agent follows an interactive 5-step reasoning protocol:
 
 ## 6. Implementation Milestones
 
-- [ ] **1.1 Toolset Implementation (`harness/runner/tools.py`)**: Implement and unit-test `read_unit`, `search_corpus`, and `validate_candidate`.
-- [ ] **1.2 Gemma 4 Runner Implementation (`harness/runner/agent.py`)**: Multi-turn agent loop using `llm7shi.Client` and `ollama:gemma4:31b-it-qat`.
+- [x] **1.1 Toolset Implementation (`harness/runner/tools.py`)**: Implement and unit-test `read_unit`, `search_corpus`, and `validate_candidate`. *(Complete 2026-08-22: `GrammarToolkit` with structural Layer-5 masking, Anti-Leakage Guard, `TOOL_SPECS` + `dispatch`; 36 tests, suite 583 passed.)*
+- [ ] **1.2 Gemma 4 Runner Implementation (`harness/runner/agent.py`)**: Multi-turn agent loop using `llm7shi.Client` and `ollama:gemma4:31b-it-qat`. *(Transport design per [`../TOOLCALL.md`](../TOOLCALL.md): prompt-driven XML interim, native Ollama tool calling later.)*
 - [ ] **1.3 Benchmark Suite Implementation (`harness/runner/benchmark.py`)**: Evaluation harness with gold comparison and trace logging.
 - [ ] **1.4 Evaluation Execution & Trace Collection**: Benchmark Gemma 4 across challenge fixtures and persist structured inference traces for Stage 2.

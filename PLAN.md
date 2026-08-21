@@ -8,17 +8,7 @@
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 547 tests.
 >
 > **Immediate Next Priority: Dedicated Grammar Agent Harness (Two-Stage Bottom-Up Plan)**:
-> *(Master plan: [`harness/PLAN.md`](harness/PLAN.md), Stage 1: [`harness/runner/PLAN.md`](harness/runner/PLAN.md), Stage 2: [`harness/extractor/PLAN.md`](harness/extractor/PLAN.md)).*
->
-> 1. **Stage 1 — Autonomous Inference & Benchmark (`harness/runner/`)**:
->    - Expose multi-layer grammatical context via [`GrammarContext`](dante_corpus/skel/models.py) with strict masking of Layer 5 (`skel/`) and the 130-rule registry.
->    - Implement dedicated Tool API for LLM Function Calling: `read_unit`, `search_corpus`, `validate_candidate`.
->    - Build autonomous multi-turn CoT runner (`harness/runner/agent.py`) for Gemma 4 31B and evaluate on syntactic challenge fixtures.
->
-> 2. **Stage 2 — Bottom-Up Rule Extraction & Hybrid Engine (`harness/extractor/`)**:
->    - Mine Stage 1 inference logs for deterministic syntax patterns (`syntax_miner.py`) and verb valency profiles (`lexicon_builder.py`).
->    - Build high-speed hybrid engine (`hybrid_engine.py`) combining fast-path rules/lexicon with agent fallback.
->    - Provide production gated reconstruction pipeline (`reconstruct.py`) with token assertions, 0-soft verification, and content hash updates.
+> *All harness planning, current progress, and the tool-call protocol sub-project are consolidated in [`harness/PLAN.md`](harness/PLAN.md) — refer to it (and only it) for harness work; it links the per-stage specifications.*
 
 ## Current Status (2026-08-19)
 
@@ -48,7 +38,7 @@ With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructur
 1. **Dedicated Grammar Agent Harness for Local LLMs (`harness/`)**:
    - Build a specialized agent harness in `harness/` adopting the two-stage bottom-up architecture (Stage 1: Autonomous Inference `runner/` ➔ Stage 2: Rule & Lexicon Extraction `extractor/`).
    - Benchmark Gemma 4 on curated syntactic challenge fixtures against the 0-soft ground truth (`skel/`).
-   - *Details*: Master Plan in [`harness/PLAN.md`](harness/PLAN.md), Stage 1 in [`harness/runner/PLAN.md`](harness/runner/PLAN.md), Stage 2 in [`harness/extractor/PLAN.md`](harness/extractor/PLAN.md).
+   - *Details, current status & handoff*: [`harness/PLAN.md`](harness/PLAN.md) — the single reference for all harness work.
 
 2. **Long-Term Portability & Cross-Corpus Extensions**:
    - Declarative rule scheduling DAG, additional language packs (Latin, etc.).

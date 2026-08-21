@@ -39,6 +39,42 @@ graph TD
 
 ---
 
+## 1.5 Current Status & Handoff (2026-08-22)
+
+**Milestone 1.1 — Dedicated Grammar Tool API (`runner/tools.py`): COMPLETE.**
+
+- `GrammarToolkit` serves multi-layer context (L1 tokens/texts, quotes hierarchy, L2
+  morphology, pronoun case annex, L3 noun phrases, L4 UD trees) through three closed tools,
+  with Layer 5 masked **structurally**: `tools.py` never imports `skel.io` / `skel.registry`
+  and no code path opens a file under `skel/`.
+  - `read_unit`: parse-unit snapping via `dep.sentence_groups` (`MAX_UNIT_LINES = 12`);
+    boundary-crossing ranges are rejected with the actual unit bounds.
+  - `search_corpus`: conjunctive `word` / `lemma` / `pos` / `deprel` / `case` search with an
+    **Anti-Leakage Guard** excluding the active canto (tracked toolkit state, not model-supplied).
+  - `validate_candidate`: intrinsic well-formedness — predicate existence + word anchors,
+    L3 NP-head / pronoun citations, slot uniqueness with clitic licensing (multi-slot case
+    annex rows), frozen role vocabulary — plus an `upstream_feedback` discrepancy log.
+  - Tool-call layer: `TOOL_SPECS` / `tool_specs()` (OpenAI-function JSON Schema, prompt-ready)
+    and `GrammarToolkit.dispatch()` (accepts dict or JSON-string arguments, coerces numeric
+    strings, never raises into the loop — errors return as structured payloads).
+- Tests: `tests/test_harness_tools.py` — 36 deterministic tests incl. poisoning
+  `skel.io.load_skel` / `skel.registry.rule_active` to prove masking. Full suite:
+  **583 passed** (547 existing + 36).
+
+**Tool Call Protocol sub-project — PLANNED, IMPLEMENTATION DEFERRED**: see
+[`TOOLCALL.md`](TOOLCALL.md). Gemma cannot use native tool calling on the Gemini API path and
+its structured output is unreliable there, so the interim protocol is prompt-instructed XML
+(JSON-in-XML `<tool_call>` blocks) converted into OpenAI-compatible tool-call dicts;
+native Ollama tool calling arrives later as a pure transport swap. To be validated
+independently (parse-success-rate gate ≥ 95%) before wiring into the runner.
+
+**Next up**: milestone 1.2 `agent.py` — transport-agnostic loop per [`TOOLCALL.md`](TOOLCALL.md)
+§4 (`PromptXmlTransport` / `OllamaNativeTransport` / `StubTransport`) — then 1.3 `benchmark.py`
+and 1.4 evaluation runs. Open design questions are collected in [`TOOLCALL.md`](TOOLCALL.md) §7
+(`submit_candidate` termination tool, streaming, multi-call turns).
+
+---
+
 ## 2. Two-Stage Bottom-Up Strategy
 
 In contrast to the top-down methodology used in Phases 5–8 (where frontier LLMs deduced abstract rules applied top-down in local environments), `harness/` adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)**.
@@ -71,12 +107,13 @@ dante-corpus/
 │   └── ...                        # Active 0-Soft Regression Gate Target
 │
 ├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
-│   ├── PLAN.md                    # Master Plan (Architecture & Two-Stage Strategy)
+│   ├── PLAN.md                    # Master Plan (Architecture, Two-Stage Strategy, Handoff)
+│   ├── TOOLCALL.md                # Tool Call Protocol Sub-Project (XML interim → native; plan only)
 │   │
 │   ├── runner/                    # [Stage 1] Autonomous Inference Agent & Benchmark
 │   │   ├── PLAN.md                # Stage 1 Specification (Toolset, Agent, Benchmark)
-│   │   ├── tools.py               # Dedicated Grammar Tool API (read, search, validate)
-│   │   ├── agent.py               # Gemma 4 31B Multi-Turn CoT Loop
+│   │   ├── tools.py               # Dedicated Grammar Tool API — IMPLEMENTED (Milestone 1.1)
+│   │   ├── agent.py               # Gemma 4 31B Multi-Turn CoT Loop (next: Milestone 1.2)
 │   │   ├── prompts.py             # 5-Step Grammatical Reasoning Protocol Prompts
 │   │   └── benchmark.py           # Syntactic Challenge & Historical Case Evaluation Suite
 │   │
@@ -89,6 +126,9 @@ dante-corpus/
 │   │
 │   └── fixtures/                  # Benchmark Challenge Fixtures & Historical Case Units
 │       └── challenge_cases.py     # Syntactic Challenge Fixtures (Hyperbaton, Control, Quotes)
+│
+└── tests/
+    └── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
 ```
 
 ---
