@@ -32,6 +32,20 @@ Programmatically, `agent.run_unit(...)` returns a `UnitResult` with candidate ro
 validation outcomes, compliance flags, and `trace_record()` — the contract consumed by
 `benchmark.py` (Milestone 1.3).
 
+Benchmark over the curated fixture table (87 cases: historical outliers + control /
+coordination / relative-chain / quote / hyperbaton challenges; see
+`../fixtures/challenge_cases.py`):
+
+```bash
+uv run python -m harness.runner.benchmark --list                 # preview selection
+uv run python -m harness.runner.benchmark --category historical \
+    --log bench.log [--full-transcript]                          # run + streaming JSONL
+```
+
+Metrics per case and in aggregate (`BenchmarkReport.metrics()`): 1-shot exact match,
+convergence ≤ 5 turns, role-level P/R/F1, upstream-feedback precision, and probe-style
+parse success kept against the 0.95 gate.
+
 ---
 
 ## Detailed Plan & Master Documentation

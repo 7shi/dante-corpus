@@ -104,11 +104,18 @@ The agent follows an interactive 5-step reasoning protocol:
 - **Role-Level F1**: Precision, Recall, and F1 across argument roles (`subj`, `obj`, `obl:<prep>`, `xcomp`, `ccomp`).
 - **Upstream Feedback Precision**: Accuracy and validity of model-reported `upstream_feedback` anomalies.
 
+Operational definitions (implemented in Milestone 1.3):
+- Row identity for comparison is `(line, token, role, arg_line, arg_token)`; word anchors are verification-only and excluded. Both sides are restricted to the parse unit's line range (out-of-unit submissions are counted separately).
+- *Converged* = final submission exactly matches gold ∧ the session did not exhaust its turn budget ∧ total turns ≤ `CONVERGENCE_TURN_BUDGET` (5). *1-shot* uses the first submission only.
+- Role-level P/R/F1 is computed per role label over pooled row keys, plus micro-averaged P/R/F1 and macro-F1 across labels.
+- *Upstream feedback precision* measures form-validity (dict record naming a layer plus a description/issue); semantic correctness of the reported defects still requires human triage.
+- Parse success is measured inside every benchmark run with the probe's per-turn classification (T4 gate kept under observation — see `harness/PLAN.md` §1.5).
+
 ---
 
 ## 6. Implementation Milestones
 
 - [x] **1.1 Toolset Implementation (`harness/runner/tools.py`)**: Implement and unit-test `read_unit`, `search_corpus`, and `validate_candidate`. *(Complete 2026-08-22: `GrammarToolkit` with structural Layer-5 masking, Anti-Leakage Guard, `TOOL_SPECS` + `dispatch`; 36 tests, suite 583 passed.)*
 - [x] **1.2 Gemma 4 Runner Implementation (`harness/runner/agent.py`)**: Multi-turn agent loop using `llm7shi.Client` and `ollama:gemma4:31b-it-qat`. *(Complete 2026-08-22: `run_unit(...)` drives one parse-unit session through `toolcall.run_tool_loop` over `PromptXmlTransport` with the proven `llm7shi_generate` adapter; per-unit system prompt in new `prompts.py` = role intro + row conventions + 5-step protocol + wire contract + tool specs; no-call nudge policy (one reminder only when zero successful validations happened) resolves the practical half of TOOLCALL.md §7.1; `UnitResult.trace_record()` is the Stage 2 trace contract; operator CLI `python -m harness.runner.agent`; 18 deterministic tests, suite 639 passed.)*
-- [ ] **1.3 Benchmark Suite Implementation (`harness/runner/benchmark.py`)**: Evaluation harness with gold comparison and trace logging.
+- [x] **1.3 Benchmark Suite Implementation (`harness/runner/benchmark.py`)**: Evaluation harness with gold comparison and trace logging. *(Complete 2026-08-22: `evaluate_unit` scores a finished `UnitResult` against the gold artifact — row keys are `(line, token, role, arg_line, arg_token)`, word anchors excluded as verification-only — reporting exact-first/exact-final/converged (`CONVERGENCE_TURN_BUDGET = 5`, not exhausted), per-role P/R/F1 via `BenchmarkReport.role_table` + micro/macro aggregates, upstream-feedback form-validity precision, and probe-style per-turn parse success measured from `UnitResult.session_messages` (T4 gate kept under observation); curated fixture table in `harness/fixtures/challenge_cases.py` — 87 cases (48 historical from CORRECTIONS.md censuses §P15/§P13/§P5, plus control/coordination/relative_chain/quotes/hyperbaton balanced across all three canticles), frozen verbatim data validated at test time against sentence groups and gold; streaming JSONL CLI `python -m harness.runner.benchmark` (`--category/--case-id/--limit/--list/--log/--full-transcript`) mirroring probe.py log semantics; `agent.UnitResult` gained `submissions` / `first_candidate_rows` / `opening_len` / `session_messages` for the 1-shot metric; 22 deterministic tests, suite 663 passed.)*
 - [ ] **1.4 Evaluation Execution & Trace Collection**: Benchmark Gemma 4 across challenge fixtures and persist structured inference traces for Stage 2.

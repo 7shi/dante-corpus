@@ -292,6 +292,27 @@ def test_candidate_rows_reflect_the_last_submission(toolkit):
     assert result.candidate_rows == GOOD_ROWS
 
 
+def test_submissions_preserve_first_to_last_order(toolkit):
+    """The 1-shot metric reads submissions[0]; candidate_rows stays the last."""
+    other = [_row(2, 2, "ritrovai", "obj")]
+    script = [
+        _validate_block(other),
+        _validate_block(BAD_ROWS),
+        _validate_block(GOOD_ROWS),
+        "done",
+    ]
+    result = _run(script, toolkit)
+    assert result.submissions == [other, BAD_ROWS, GOOD_ROWS]
+    assert result.first_candidate_rows == other
+    assert result.candidate_rows == GOOD_ROWS
+
+
+def test_submissions_empty_without_validate_calls(toolkit):
+    result = _run(["prose only"], toolkit, max_nudges=0)
+    assert result.submissions == []
+    assert result.first_candidate_rows == []
+
+
 # --- trace record ---------------------------------------------------------------------------
 
 

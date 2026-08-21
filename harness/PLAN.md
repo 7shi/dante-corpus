@@ -46,21 +46,21 @@ graph TD
 **Where we are.** The Tool Call Protocol sub-project ([`TOOLCALL.md`](TOOLCALL.md)) is
 complete through its live-probe gate (**T1–T4 done, GATE PASSED**) and is wired into
 Stage 1: **Milestone 1.2 (`runner/agent.py` + `runner/prompts.py`) is complete**, so a
-full autonomous grammar session runs end-to-end on top of the gated protocol.
+full autonomous grammar session runs end-to-end on top of the gated protocol, and
+**Milestone 1.3 (`runner/benchmark.py` + `fixtures/challenge_cases.py`) is complete**:
+the evaluation harness scores finished sessions against the 0-soft Gold Standard with
+the §5.2 metric suite over a curated 87-case fixture table.
 
-**Next action — milestone 1.3 `runner/benchmark.py`:**
-- Consume `UnitResult` from `agent.run_unit(...)`: it already carries everything the
-  benchmark needs — final text, outcome envelopes, full transcript, candidate rows
-  parsed back from the last `validate_candidate` submission, validation outcomes,
-  protocol-compliance flags (`protocol_complete`, `valid_seen`, `nudges`,
-  `exhausted`) — plus `trace_record()` for Stage 2 mining.
-- Curate the challenge fixtures (`harness/fixtures/challenge_cases.py`) and compare
-  candidates against the 0-soft Gold Standard per Stage-1 plan §5.2 metrics
-  (1-shot exact match, multi-turn convergence ≤ 5 turns, role-level F1,
-  upstream-feedback precision).
-- **Keep measuring parse success inside benchmark runs**: the T4 gate margin was thin
+**Next action — milestone 1.4 evaluation runs (operator-run):**
+- Run the benchmark CLI against Gemma 4 over the fixtures and persist traces:
+  `uv run python -m harness.runner.benchmark --model ollama:gemma4:31b-it-qat \
+   --log harness/bench.log` (optionally `--category historical` first — it is the
+  hardest subset; `--list` previews the selection). Log semantics mirror the probe:
+  one case record per line as it completes, summary record last.
+- Keep measuring parse success inside benchmark runs: the T4 gate margin was thin
   (47 turns at 0.957 vs 0.95, wide binomial CI), so treat it as still under
-  observation, not permanently closed.
+  observation, not permanently closed. Every case record carries per-session
+  parse-success turn counts for pooled re-checks.
 
 **Carry-over issues from live probing** (details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
@@ -84,8 +84,11 @@ full autonomous grammar session runs end-to-end on top of the gated protocol.
   `*.log` is gitignored.
 - Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
   --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
-- Test suite: **639 passed** (547 pre-existing + 36 `test_harness_tools.py` +
-  38 `tests/test_harness_toolcall.py` + 18 `tests/test_harness_agent.py`).
+- Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
+  C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
+- Test suite: **663 passed** (547 pre-existing + 36 `test_harness_tools.py` +
+  38 `tests/test_harness_toolcall.py` + 20 `tests/test_harness_agent.py` +
+  22 `tests/test_harness_benchmark.py`).
 
 ### Milestone ledger
 
@@ -143,9 +146,39 @@ prompt-side.
   no nudge on capability give-up or exhaustion, shared turn budget), transcript-derived
   candidate rows, trace round-trip, adapter forwarding.
 
-**Remaining milestones**: 1.3 benchmark suite, 1.4 evaluation runs; deferred T5 native
-transport parity check ([`TOOLCALL.md`](TOOLCALL.md) §5.3). Open design question: §7.1
-termination tool (practical half resolved by the nudge policy — see Handoff).
+**Remaining milestones**: 1.4 evaluation execution & trace collection; deferred T5
+native transport parity check ([`TOOLCALL.md`](TOOLCALL.md) §5.3). Open design question:
+§7.1 termination tool (practical half resolved by the nudge policy — see Handoff).
+
+**Milestone 1.3 — Benchmark Suite (`harness/runner/benchmark.py`,
+`harness/fixtures/challenge_cases.py`): COMPLETE.**
+
+- `fixtures/challenge_cases.py`: 87 curated challenge cases, frozen as verbatim data
+  (mined deterministically from the corpus at authoring time): 48 **historical** units
+  hosting positions from `skel/CORRECTIONS.md` censuses (§P15 residue closure,
+  §P13 spurious clausal complements, §P5 verbless speech frames) plus balanced core
+  categories across all three canticles — control (`xcomp`), coordination, relative
+  chains (≥2 `acl:relcl`), quotes, and hyperbaton (argument cited ≥45 linear tokens
+  from its predicate). Coordinates only; no gold rows are stored, and nothing under
+  `runner/` reads the fixtures.
+- `runner/benchmark.py`: `evaluate_unit` scores a finished session against gold read
+  operator-side (`skel.io.load_skel`; agent-side masking untouched) on row keys
+  `(line, token, role, arg_line, arg_token)` restricted to unit bounds; per-unit record
+  carries exact-first / exact-final / converged (`CONVERGENCE_TURN_BUDGET = 5`),
+  missing/extra diffs, malformed and out-of-unit counts, upstream-feedback
+  form-validity precision, and probe-style parse-success turn stats.
+  `BenchmarkReport` aggregates the §5.2 suite: one-shot exact-match rate, convergence
+  rate, role-level P/R/F1 (per-label + micro/macro), upstream feedback precision,
+  pooled parse success vs the 0.95 gate, and per-category breakdowns; streaming JSONL
+  CLI mirrors `probe.py` log semantics (case records flushed as they complete,
+  summary last).
+- Agent-side support: `UnitResult` gained `submissions` / `first_candidate_rows`
+  (1-shot metric reads the first submission), plus `opening_len` / `session_messages`
+  so turn-level consumers skip the few-shot demo exchange in the opening prompt.
+- Tests: `tests/test_harness_benchmark.py` — 22 deterministic tests over
+  `StubTransport` + real gold data (fixture integrity incl. sentence-group snapping,
+  gold comparison, probe-semantics parse stats, metric aggregation, streaming sink);
+  suite total 663 passed.
 
 ---
 
@@ -196,7 +229,7 @@ dante-corpus/
 │   │   ├── tools.py               # Dedicated Grammar Tool API — IMPLEMENTED (Milestone 1.1)
 │   │   ├── agent.py               # Per-unit session runner over run_tool_loop — IMPLEMENTED (Milestone 1.2)
 │   │   ├── prompts.py             # 5-Step Grammatical Reasoning Protocol Prompts — IMPLEMENTED (Milestone 1.2)
-│   │   └── benchmark.py           # Syntactic Challenge & Historical Case Evaluation Suite
+│   │   └── benchmark.py           # Gold Comparison & §5.2 Metric Suite — IMPLEMENTED (Milestone 1.3)
 │   │
 │   ├── extractor/                 # [Stage 2] Rule & Lexicon Extraction & Hybridization
 │   │   ├── PLAN.md                # Stage 2 Specification (Mining, Lexicon, Hybrid Engine)
@@ -206,11 +239,15 @@ dante-corpus/
 │   │   └── reconstruct.py         # Canto-Wide Gated Reconstruction Pipeline
 │   │
 │   └── fixtures/                  # Benchmark Challenge Fixtures & Historical Case Units
-│       └── challenge_cases.py     # Syntactic Challenge Fixtures (Hyperbaton, Control, Quotes)
+│       ├── __init__.py            # Public fixture accessors — IMPLEMENTED (Milestone 1.3)
+│       └── challenge_cases.py     # Frozen 87-Case Table (historical/control/coordination/
+│                                  #   relative_chain/quotes/hyperbaton) — IMPLEMENTED (1.3)
 │
 └── tests/
     ├── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
-    └── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
+    ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
+    ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
+    └── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
 ```
 
 ---

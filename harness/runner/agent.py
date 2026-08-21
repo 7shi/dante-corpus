@@ -50,6 +50,7 @@ __all__ = [
     "UnitResult",
     "llm7shi_generate",
     "run_unit",
+    "_validate_calls",
 ]
 
 DEFAULT_MODEL = "ollama:gemma4:31b-it-qat"  # model.mk default: Gemma 4 31B QAT via Ollama
@@ -106,6 +107,17 @@ class UnitResult:
     nudges: int = 0  # protocol reminders issued
     outcomes: list[dict] = field(default_factory=list)  # every envelope, in call order
     messages: list[dict] = field(default_factory=list)  # full transcript incl. nudges
+    opening_len: int = 0  # prompt-side messages (system + demo + task) before turn 1
+
+    @property
+    def session_messages(self) -> list[dict]:
+        """The transcript from the model's first turn on (prompt-side stripped).
+
+        Turn-level consumers (benchmark parse-success measurement, Stage 2 mining)
+        must use this, not `messages`: the few-shot demo exchange inside the
+        opening prompt contains a well-formed tool call that is not a model turn.
+        """
+        return self.messages[self.opening_len:]
 
     @property
     def validations(self) -> list[dict]:
@@ -127,12 +139,25 @@ class UnitResult:
         return bool(self.text) and not self.exhausted and bool(self.validations)
 
     @property
-    def candidate_rows(self) -> list[dict]:
-        """Candidate rows from the last `validate_candidate` call in the transcript.
+    def submissions(self) -> list[list[dict]]:
+        """Candidate rows from every `validate_candidate` call, in submission order.
 
         Parsed back out of the assistant turns (the dispatch envelope does not echo
-        arguments), so this reflects exactly what the model submitted last.
+        arguments), so this reflects exactly what the model submitted, first to last.
+        The 1-shot exact-match metric reads `submissions[0]`; `candidate_rows`
+        (the final submission) is `submissions[-1]`.
         """
+        return [call.get("candidate_rows", []) for call in _validate_calls(self.messages)]
+
+    @property
+    def first_candidate_rows(self) -> list[dict]:
+        """Candidate rows from the *first* `validate_candidate` submission."""
+        subs = self.submissions
+        return subs[0] if subs else []
+
+    @property
+    def candidate_rows(self) -> list[dict]:
+        """Candidate rows from the last `validate_candidate` call in the transcript."""
         call = _last_validate_call(self.messages)
         return call.get("candidate_rows", []) if call else []
 
@@ -182,16 +207,17 @@ class UnitResult:
         return "\n".join(lines)
 
 
-def _last_validate_call(messages: list[dict]) -> dict | None:
-    """Arguments dict of the last well-formed `validate_candidate` call, or None.
+def _validate_calls(messages: list[dict]) -> list[dict]:
+    """Arguments dicts of every well-formed `validate_candidate` call, in order.
 
-    Assistant turns are scanned newest-first; within a turn the last block wins
-    (the parser preserves emission order).
+    Assistant turns are scanned in emission order; within a turn the parser
+    preserves block order. Malformed JSON is skipped (dispatch would have errored).
     """
-    for message in reversed(messages):
+    calls: list[dict] = []
+    for message in messages:
         if message.get("role") != "assistant":
             continue
-        for item in reversed(parse_tool_calls(message.get("content", ""))):
+        for item in parse_tool_calls(message.get("content", "")):
             if is_parse_error(item):
                 continue
             function = item.get("function", {})
@@ -200,10 +226,16 @@ def _last_validate_call(messages: list[dict]) -> dict | None:
             try:
                 arguments = json.loads(function.get("arguments", "{}"))
             except json.JSONDecodeError:
-                continue  # dispatch would have errored; keep scanning backwards
+                continue  # dispatch would have errored; keep scanning
             if isinstance(arguments, dict):
-                return arguments
-    return None
+                calls.append(arguments)
+    return calls
+
+
+def _last_validate_call(messages: list[dict]) -> dict | None:
+    """Arguments dict of the last well-formed `validate_candidate` call, or None."""
+    calls = _validate_calls(messages)
+    return calls[-1] if calls else None
 
 
 def _opening_messages(
@@ -253,7 +285,8 @@ def run_unit(
             "canto": canto,
             "line_start": line_start,
             "line_end": line_end,
-        }
+        },
+        opening_len=len(opening),
     )
 
     transcript = [dict(m) for m in opening]
