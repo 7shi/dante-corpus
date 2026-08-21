@@ -2,9 +2,9 @@
 
 This document is the authoritative record of all **manual corrections**, **hand-applied TSV edits**, **structural outlier resolutions**, and **upstream cross-layer retags** for Layer 5 (predicate-argument skeleton).
 
-> **Context for Phase 9 (Grammar Agent Harness)**:
+> **Context for Grammar Agent Harness (`harness/`)**:
 > The entries documented in this file represent grammatical positions and phenomena that lay **outside the static deterministic rule system** (and required manual/agentic correction in Phase 7).
-> In the Phase 9 autonomous grammar harness, **this file is strictly excluded from LLM context and reference tools** (`read_unit`, `search_corpus`).
+> In the autonomous grammar harness (`harness/`), **this file is strictly excluded from LLM context and reference tools** (`read_unit`, `search_corpus`).
 > Instead, these challenging positions serve as a primary benchmark to test whether an autonomous agent with multi-layer reasoning (Gemma 4 31B) can **self-resolve** them from linguistic first principles without cheat-sheets.
 > For chronological phase retrospectives and rule development logs, see [`PHASE5.md`](PHASE5.md), [`PHASE6.md`](PHASE6.md), and [`PHASE7.md`](PHASE7.md).
 

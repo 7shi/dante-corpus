@@ -8,7 +8,7 @@ This project uses the following Italian text source:
 
 ## Layout
 
-- `dante_corpus/` — Python package
+- `dante_corpus/` — Python package (`api.py`, `models.py`, `tokenizer.py`, CLI)
 - `src/` — normalized Italian source text, one `.txt` per canto. The normalization separates
   **quotation marks** (guillemets `«»` marking speech) from **elisions** (contractions like
   `l'altra`), and standardizes elision apostrophes to **U+0027** (ASCII `'`) throughout, so
@@ -17,13 +17,14 @@ This project uses the following Italian text source:
   whom, embedded reported speech). Generated from the guillemet spans in `src/` by
   `quotes/quotes.py` (see [`quotes/README.md`](quotes/README.md)); consumed by dante-analyze for
   speaker/edge attribution.
+- `morph/`, `case/`, `np/`, `dep/`, `skel/` — frozen grammatical layers (morphology, pronoun case, noun phrases, dependency trees, and predicate-argument skeletons; see [`skel/README.md`](skel/README.md)).
+- `harness/` — Autonomous Grammar Agent Harness for Local LLMs (see [`harness/README.md`](harness/README.md) and [`harness/PLAN.md`](harness/PLAN.md)).
 
 ## Plan
 
 [PLAN.md](PLAN.md) lays out the roadmap to extend the corpus from tokens and quotes into a
 shared, canon-neutral **grammatical-analysis stack** (morphology, noun phrases, dependency, and a
-predicate-argument skeleton) that downstream projects consume instead of each re-deriving the same
-parse.
+predicate-argument skeleton) and the post-zero Grammar Agent Harness (`harness/`).
 
 ## Usage
 

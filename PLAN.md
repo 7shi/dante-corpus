@@ -4,27 +4,21 @@
 
 > **Current State & Baseline**:
 > - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **547 passed**).
-> - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`skel/PLAN.md`](skel/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
+> - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`harness/PLAN.md`](harness/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all 547 tests.
 >
-> **Immediate Next Priority: Phase 9 — Grammatical Agent Harness for Local LLMs (Gemma 4)**:
-> *(Full architectural specifications and tool definitions: [`skel/PLAN.md`](skel/PLAN.md)).*
+> **Immediate Next Priority: Dedicated Grammar Agent Harness (Two-Stage Bottom-Up Plan)**:
+> *(Master plan: [`harness/PLAN.md`](harness/PLAN.md), Stage 1: [`harness/runner/PLAN.md`](harness/runner/PLAN.md), Stage 2: [`harness/extractor/PLAN.md`](harness/extractor/PLAN.md)).*
 >
-> 1. **9.1 Dedicated Toolset & Context API (`dante_corpus/skel/harness/tools.py`)**:
->    - Expose multi-layer grammatical context via [`GrammarContext`](dante_corpus/skel/models.py) (text, quotes, morphology, pronoun case annex, NP spans, UD syntax trees).
->    - Enforce strict masking of Layer 5 (`skel/`), the 130-rule registry, and manual correction records ([`CORRECTIONS.md`](skel/CORRECTIONS.md)).
->    - Implement dedicated tool API for LLM Function Calling: `read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton` (with structured upstream feedback support).
+> 1. **Stage 1 — Autonomous Inference & Benchmark (`harness/runner/`)**:
+>    - Expose multi-layer grammatical context via [`GrammarContext`](dante_corpus/skel/models.py) with strict masking of Layer 5 (`skel/`) and the 130-rule registry.
+>    - Implement dedicated Tool API for LLM Function Calling: `read_unit`, `search_corpus`, `validate_candidate`.
+>    - Build autonomous multi-turn CoT runner (`harness/runner/agent.py`) for Gemma 4 31B and evaluate on syntactic challenge fixtures.
 >
-> 2. **9.2 Autonomous Multi-Turn Agent Runner (`skel/harness.py`)**:
->    - Implement autonomous agent loop for local models (e.g. **Gemma 4 31B** via `llm7shi.Client`) with multi-layer CoT reasoning without free-form bash execution.
->    - Initial spike: verify Gemma 4 Function Calling stability under QAT quantization.
->
-> 3. **9.3 Syntactic Benchmark & Complexity Evaluation Suite**:
->    - Benchmark Gemma 4 on curated syntactic challenge fixtures and historical case units.
->    - Evaluate 1-shot accuracy, multi-turn convergence rate, role F1, and upstream defect feedback logging.
->
-> 4. **9.4 Production Pipeline & Gated Corpus Reconstruction**:
->    - Provide interactive debugging CLI and canto-wide gated reconstruction with token assertions, 0-soft verification, and content hash updates.
+> 2. **Stage 2 — Bottom-Up Rule Extraction & Hybrid Engine (`harness/extractor/`)**:
+>    - Mine Stage 1 inference logs for deterministic syntax patterns (`syntax_miner.py`) and verb valency profiles (`lexicon_builder.py`).
+>    - Build high-speed hybrid engine (`hybrid_engine.py`) combining fast-path rules/lexicon with agent fallback.
+>    - Provide production gated reconstruction pipeline (`reconstruct.py`) with token assertions, 0-soft verification, and content hash updates.
 
 ## Current Status (2026-08-19)
 
@@ -51,11 +45,10 @@
 
 With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructuring completed in Phase 8, the active 0-soft regression gate enables downstream tooling:
 
-1. **Dedicated Grammar Agent Harness for Local LLMs (Phase 9)**:
-   - Build a specialized agent harness (`skel/harness.py`) providing local models (e.g. **Gemma 4 31B**) with structured multi-layer context via [`GrammarContext`](dante_corpus/skel/models.py) and a closed toolset (`read_unit`, `search_corpus`, `validate_candidate`, `apply_skeleton`).
-   - Implement autonomous reasoning protocol (multi-layer CoT) and multi-turn self-correction loop without free-form bash execution.
-   - Benchmark Gemma 4 on curated syntactic challenge fixtures and historical test cases against the 0-soft ground truth.
-   - *Details*: [`skel/PLAN.md`](skel/PLAN.md).
+1. **Dedicated Grammar Agent Harness for Local LLMs (`harness/`)**:
+   - Build a specialized agent harness in `harness/` adopting the two-stage bottom-up architecture (Stage 1: Autonomous Inference `runner/` ➔ Stage 2: Rule & Lexicon Extraction `extractor/`).
+   - Benchmark Gemma 4 on curated syntactic challenge fixtures against the 0-soft ground truth (`skel/`).
+   - *Details*: Master Plan in [`harness/PLAN.md`](harness/PLAN.md), Stage 1 in [`harness/runner/PLAN.md`](harness/runner/PLAN.md), Stage 2 in [`harness/extractor/PLAN.md`](harness/extractor/PLAN.md).
 
 2. **Long-Term Portability & Cross-Corpus Extensions**:
    - Declarative rule scheduling DAG, additional language packs (Latin, etc.).
@@ -157,11 +150,11 @@ grammar; they are contested judgments, normalizations, or bindings to something 
 3. **Layer 3 (noun phrases)** — *Complete and verified* ([`np/README.md`](np/README.md)).
 4. **Layer 4 (dependency)** — *Complete and verified* ([`dep/README.md`](dep/README.md)).
 5. **Layer 5 (skeleton)** — *Complete and verified at 0 hard / 0 soft* ([`skel/README.md`](skel/README.md), [`skel/PHASE5.md`](skel/PHASE5.md), [`skel/PHASE6.md`](skel/PHASE6.md), [`skel/PHASE7.md`](skel/PHASE7.md)).
-6. **Phase 8 (Codebase Restructuring & Portability)** — *Complete (8.1–8.5)* ([`skel/PLAN.md`](skel/PLAN.md), [`skel/PORTABILITY.md`](skel/PORTABILITY.md)):
+6. **Phase 8 (Codebase Restructuring & Portability)** — *Complete (8.1–8.5)* ([`skel/PHASE8.md`](skel/PHASE8.md), [`skel/PORTABILITY.md`](skel/PORTABILITY.md)):
    - Rule Registry & Census (130 rules registered, measured via `census_rules.py`, documented in [`skel/RULES.md`](skel/RULES.md)).
    - Self-contained test fixtures (`tests/fixtures/skel_fixtures.py`).
    - Language pack extraction (`ItalianLanguagePack`).
    - Layer stack interface (`GrammarContext`).
    - Modular decomposition: `dante_corpus/skel/` subpackage (models, registry, derive, rules, repairs, validate, io) & `skel/` CLI drivers (`driver_ui.py`, `driver_build.py`, `driver_fix.py`, `skel.py`).
    - Verified at 0 hard / 0 soft violations and 547 pytest passing.
-7. **Phase 9 (Autonomous Local LLM Harness)** — *Next Active Step* ([`skel/PLAN.md`](skel/PLAN.md)).
+7. **Dedicated Grammar Agent Harness (`harness/`)** — *Next Active Step* ([`harness/PLAN.md`](harness/PLAN.md)).

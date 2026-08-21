@@ -13,8 +13,7 @@ canon-neutral.
 
 ## Documents & Layer 5 Roadmap
 
-- **Active Plans & Future Architecture**:
-  - [`PLAN.md`](PLAN.md): Current post-zero development plan (Phase 9 autonomous local LLM grammar harness).
+- **Portability & Architecture**:
   - [`PORTABILITY.md`](PORTABILITY.md): Architectural roadmap and long-term design guide for Layer-5 portability across languages and corpora.
 - **Rule Reference & Correction History**:
   - [`RULES.md`](RULES.md) / [`RULES-ja.md`](RULES-ja.md): Formal Grammar Handbook & Rule Specification (all 130 rules systematized into a 6-branch hierarchical tree taxonomy with live census metrics and textual examples; Japanese edition with translated citations).
@@ -38,10 +37,9 @@ parse** because Layer 4 had just been constructed and its reliability was still 
 reading meant that divergences from `derive_unit` could surface genuine Layer-4 mis-parses, triaged
 and corrected upstream in [`dep/CORRECTIONS.md`](../dep/CORRECTIONS.md).
 
-**Current Baseline & Post-Zero Tooling (Phase 9 onwards)**:
+**Current Baseline & Verification**:
 With all 100 cantos fully refined and verified at **0 hard / 0 soft violations**, Layer 4 (Universal
-Dependencies) has reached maturity and audit stability. In subsequent tooling and autonomous grammar
-agents (such as Phase 9), Layer 4 is treated as an authoritative input layer alongside Layers 1–3 and
+Dependencies) has reached maturity and audit stability. Layer 4 is treated as an authoritative input layer alongside Layers 1–3 and
 the pronoun case annex. `derive_unit` serves as the deterministic structural ground truth against
 which candidate frames and reconstructions are verified.
 

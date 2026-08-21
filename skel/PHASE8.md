@@ -125,4 +125,4 @@ At the conclusion of Phase 8:
 - **Other Layers**: `dep --check` 0/0, `case --check` 0, `np --check` 0/0, `morph --check` 0/0.
 - **Test Suite**: `pytest` **547 passed** in ~1.5s across all 12 test modules.
 - **Backward Compatibility**: All external imports (`from dante_corpus.skel import ...`) operate identically.
-- **Phase Status**: Phase 8 is formally closed. Development transitions to Phase 9 (Autonomous Grammar Agent Harness for Local LLMs, [`PLAN.md`](PLAN.md)).
+- **Phase Status**: Phase 8 is formally closed. Development transitions to the independent Grammar Agent Harness for Local LLMs ([`../harness/PLAN.md`](../harness/PLAN.md)).

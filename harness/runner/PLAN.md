@@ -1,0 +1,114 @@
+# Stage 1 Plan: Autonomous Inference Agent & Benchmark (`harness/runner/`)
+
+## 1. Overview & Objectives
+
+Stage 1 implements an autonomous execution environment where a local LLM (**Gemma 4 31B** via `llm7shi.Client`) receives multi-layer grammatical context (Layer 1 tokens/text, quotes hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrases, and Layer 4 UD syntax trees) and autonomously solves Layer 5 predicate-argument skeletons on the fly.
+
+### Primary Objectives
+1. **Dedicated Context & Tool Calling API (`tools.py`)**: Expose multi-layer syntax while strictly masking gold Layer 5 data and the 130-rule registry.
+2. **Multi-Turn CoT Reasoning Loop (`agent.py`)**: Execute an interactive, self-correcting 5-step grammatical reasoning protocol without free-form bash execution.
+3. **Syntactic Benchmark Suite (`benchmark.py`)**: Benchmark the local model against curated syntactic challenge fixtures and historical outlier units, logging detailed reasoning traces for Stage 2.
+
+```mermaid
+graph TD
+    subgraph "Stage 1: Autonomous Agent Loop (harness/runner/)"
+        LLM["Gemma 4 31B (ollama via llm7shi.Client)"]
+        
+        subgraph "Dedicated Grammar Tool API (Closed Context)"
+            T_Read["read_unit<br/>Extract parse-unit context (L1-L4, case, quotes; skel masked)"]
+            T_Search["search_corpus<br/>Scoped search for grammatical patterns (skel masked)"]
+            T_Val["validate_candidate<br/>Intrinsic syntactic well-formedness & upstream feedback"]
+        end
+        
+        LLM <--> T_Read
+        LLM <--> T_Search
+        LLM <--> T_Val
+    end
+    
+    T_Val --> ValEngine["Intrinsic Syntactic Validator"]
+    T_Val --> UpstreamLog["Upstream Discrepancy Log (L2/L4 Anomaly Records)"]
+    LLM --> LogStore["Inference Logs & CoT Traces (Input to Stage 2)"]
+```
+
+---
+
+## 2. Input Context Boundaries & Masking Policy
+
+All multi-layer grammatical data is served via `dante_corpus.skel.models.GrammarContext` and `dante_corpus.api`:
+
+| Layer / Component | Scope & Content Provided | Masking Policy |
+| :--- | :--- | :--- |
+| **Layer 1: Tokens / Texts** | Verse text, line numbers, alpha token streams | **Provided** |
+| **Quotes Hierarchy** | Direct speech spans, speaker bounds, quote hierarchy | **Provided** |
+| **Layer 2: Morphology** | Lemma, POS, inflectional features (person, number, gender, tense, mood) | **Provided** |
+| **Case Annex** | Pronominal and clitic grammatical case labels (`nom`, `acc`, `dat`, etc.) | **Provided** |
+| **Layer 3: Noun Phrases** | Explicit NP spans, head token indices, nested phrase containment | **Provided** |
+| **Layer 4: UD Syntax** | Universal Dependencies trees, head attachments, deprel labels | **Provided (Authoritative Baseline)** |
+| **Layer 5: Skeleton (Target)** | `skel/<canticle>/NN.tsv` | **STRICTLY MASKED (Inference Target)** |
+| **Grammar Rule Registry** | Rules A–EI (`skel/RULES.md`) | **STRICTLY MASKED (Hidden)** |
+| **Manual Corrections** | `skel/CORRECTIONS.md` | **STRICTLY MASKED (Evaluation Reference)** |
+
+---
+
+## 3. Dedicated Grammar Tool Calling API (`harness/runner/tools.py`)
+
+Free-form bash execution is strictly disabled. The agent interacts exclusively through closed JSON/Python Function Calling:
+
+### 3.1 `read_unit(canticle: str, canto: int, line_start: int, line_end: int = None) -> dict`
+- Bounded by `dep.sentence_groups` (`MAX_UNIT_LINES = 12`): returns the complete multi-layer grammatical context covering the requested parse unit.
+- Layer 5 skeleton rows and rule annotations are strictly masked out.
+
+### 3.2 `search_corpus(query: dict, limit: int = 10) -> list[dict]`
+- Scoped search for analogous grammatical and case constructions (e.g., matching `lemma`, `pos`, `deprel`) across other cantos.
+- Anti-Leakage Guard: strictly excludes the current canto and target unit, and excludes Layer 5 data.
+
+### 3.3 `validate_candidate(canticle: str, canto: int, line_start: int, candidate_rows: list[dict], upstream_feedback: list[dict] = None) -> dict`
+- Validates **intrinsic syntactic well-formedness** against candidate rows (`SkelRow.to_dict()` format):
+  1. All predicate tokens must exist in Layer 1.
+  2. Nominal argument tokens must cite valid Layer 3 NP heads or Layer 1 pronouns.
+  3. Enforces slot uniqueness per predicate (no duplicate arguments without clitic licensing).
+  4. Enforces valid role vocabulary (`subj`, `obj`, `iobj`, `attr`, `xcomp`, `ccomp`, `obl:<prep>`).
+- Accepts `upstream_feedback` records when the model identifies irreconcilable upstream defects in L2 or L4.
+- Returns: `{"valid": bool, "errors": [...], "diagnostics": "..."}`.
+
+---
+
+## 4. Autonomous 5-Step CoT Protocol (`harness/runner/prompts.py`)
+
+The agent follows an interactive 5-step reasoning protocol:
+
+1. **Step 1: Discourse & Quote Boundaries (Quotes Hierarchy)**
+   - Identify direct speech spans and speaker boundaries to distinguish vocatives from clausal complementation.
+2. **Step 2: Predicate Agreement & Voice (Layer 2 Morphology)**
+   - Check finite verb person/number against candidate arguments to identify explicit subjects vs. pro-drop (`(0, 0)`). Identify passive constructions and reflexive `si`.
+3. **Step 3: Case & Core Argument Discrimination (Case Annex + Layer 4 UD)**
+   - Resolve clitic arguments using explicit morphological case (`nom`, `acc`, `dat`). Map UD relations (`nsubj`, `obj`, `obl:<prep>`) to skeleton role tuples.
+4. **Step 4: NP Heads, Clausal Complements & Control (Layer 3 NPs + Layer 4 Clauses)**
+   - Ensure nominal arguments cite exact Layer 3 phrase heads. Trace subject control and infinitival complement propagation (`xcomp`, `ccomp`).
+5. **Step 5: Intrinsic Validation & Self-Correction**
+   - Call `validate_candidate`. If validation errors are returned, interpret diagnostic feedback and iterate to convergence.
+
+---
+
+## 5. Syntactic Benchmark & Evaluation Suite (`harness/runner/benchmark.py`)
+
+### 5.1 Datasets
+- **Core Challenge Fixtures (50–100 units)**:
+  - Long-distance hyperbaton, coordinated predicates, control verbs, embedded quotes, relative clause chains.
+- **Historical Case Units**:
+  - Historical outlier cases documented in [`skel/CORRECTIONS.md`](../../skel/CORRECTIONS.md).
+
+### 5.2 Metrics
+- **1-Shot Exact Match Rate**: Percentage of units exactly matching the 0-soft Gold Standard on the first candidate submission.
+- **Autonomous Convergence Rate**: Percentage of units achieving 0 divergence after multi-turn self-correction (≤ 5 turns).
+- **Role-Level F1**: Precision, Recall, and F1 across argument roles (`subj`, `obj`, `obl:<prep>`, `xcomp`, `ccomp`).
+- **Upstream Feedback Precision**: Accuracy and validity of model-reported `upstream_feedback` anomalies.
+
+---
+
+## 6. Implementation Milestones
+
+- [ ] **1.1 Toolset Implementation (`harness/runner/tools.py`)**: Implement and unit-test `read_unit`, `search_corpus`, and `validate_candidate`.
+- [ ] **1.2 Gemma 4 Runner Implementation (`harness/runner/agent.py`)**: Multi-turn agent loop using `llm7shi.Client` and `ollama:gemma4:31b-it-qat`.
+- [ ] **1.3 Benchmark Suite Implementation (`harness/runner/benchmark.py`)**: Evaluation harness with gold comparison and trace logging.
+- [ ] **1.4 Evaluation Execution & Trace Collection**: Benchmark Gemma 4 across challenge fixtures and persist structured inference traces for Stage 2.
