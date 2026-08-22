@@ -29,7 +29,7 @@ import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
-from .loop import run_tool_loop
+from .loop import progress_printer, progress_separator, run_tool_loop
 from .parser import is_parse_error, parse_tool_calls
 from .prompts import few_shot_messages, tool_specs_section, xml_contract_section
 from .transports import PromptXmlTransport
@@ -155,16 +155,21 @@ class ProbeReport:
 
 
 def run_probe(
-    transport, toolkit, specs, scenarios=None, max_turns=4, sink=None
+    transport, toolkit, specs, scenarios=None, max_turns=4, sink=None, progress=False
 ) -> ProbeReport:
     """Run every scenario through the real loop code and measure protocol compliance.
 
     `sink` is an optional writable text file: each scenario record is appended and
     flushed the moment it completes, so an interrupted run still leaves every finished
     scenario on disk for post-mortem (a log without a summary record = incomplete run).
+    `progress` prints one stderr line per model turn, labeled with the scenario name
+    (see `toolcall.progress_printer`) so long live runs stay watchable.
     """
     report = ProbeReport()
-    for scenario in scenarios or SCENARIOS:
+    scenario_list = list(scenarios) if scenarios is not None else SCENARIOS
+    for pos, scenario in enumerate(scenario_list, 1):
+        if progress:
+            progress_separator(scenario["name"], pos, len(scenario_list))
         messages = [{"role": "system", "content": _system_prompt(specs)}]
         messages.extend(few_shot_messages())
         messages.append({"role": "user", "content": scenario["task"]})
@@ -176,6 +181,9 @@ def run_probe(
             messages=messages,
             tools=specs,
             max_turns=budget,
+            on_turn=(
+                progress_printer(f"{scenario['name']}", budget) if progress else None
+            ),
         )
 
         scenario_calls = 0
@@ -233,6 +241,7 @@ def run_probe(
             "record": "scenario",
             "name": scenario["name"],
             "turns": len(turn_texts),
+            "turn_seconds": result.turn_seconds,
             "exhausted": result.exhausted,
             "final_text": result.text[:500],
             "outcomes": result.outcomes,
@@ -320,7 +329,10 @@ def main(argv=None) -> int:
     # "w" mode: the log is truncated at startup so runs never append across attempts.
     sink = open(args.log, "w", encoding="utf-8") if args.log else None
     try:
-        report = run_probe(transport, GrammarToolkit(), specs, scenarios, args.max_turns, sink=sink)
+        report = run_probe(
+            transport, GrammarToolkit(), specs, scenarios, args.max_turns, sink=sink,
+            progress=True,
+        )
         if sink is not None:
             summary = {
                 "record": "summary",

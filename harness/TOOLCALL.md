@@ -2,8 +2,12 @@
 
 ## 1. Status & Scope
 
-**Status: T1–T5 IMPLEMENTED as the `harness/toolcall/` library (2026-08-22); the T4 live
-gate is PASSED; the T5 live parity run is pending (operator-run).** The sub-project is a
+**Status: T1–T5 COMPLETE (2026-08-22); T4 live gate PASSED; T5 live parity run PASSED
+(twice). Adoption decision: the prompt-instructed XML protocol is the OFFICIAL
+production wire format — the Gemini API executes it roughly 3x faster than local
+Ollama; native Ollama tool calling stays implemented and gated but is reserved for
+comparison experiments.**
+The sub-project is a
 standalone library between the model and `GrammarToolkit`; nothing in `tools.py` depends
 on it, and `GrammarToolkit.dispatch()` is unchanged. The live probe (§5.2) and migration
 parity check (§5.3) are executed by the human operator; both measurement scripts ship
@@ -40,6 +44,20 @@ Design decisions taken during implementation (resolving parts of §7):
 - **Multiple calls per turn are allowed** (§7.3): parser preserves order, the loop
   executes sequentially and embeds all `<tool_result>` blocks in one user message.
 - **Streaming**: not needed for benchmark runs (§7.2 resolved: non-streaming).
+- **Turn-level observability**: `run_tool_loop` records per-turn wall-clock durations
+  (`LoopResult.turn_seconds`, propagated into probe/parity/benchmark JSONL records and
+  agent traces) and takes an optional `on_turn(turn, response, outcomes)` callback;
+  `progress_printer` builds one that prints a stderr line per turn showing each call's
+  compact return value (`outcome_brief`) — identical for XML and native calls, since
+  outcomes come from the shared loop. `progress_separator` announces each session with
+  its `[index/total]` position so multi-hour runs stay navigable, and
+  `progress_subseparator` divides a session's named passes with minor `-----` lines
+  (parity's xml → native). All live CLIs enable
+  both by default. Native-side streaming display comes from
+  `parity.ollama_chat(echo=True)`: ollama is driven in stream mode and rendered through
+  llm7shi's own `StreamProcessor` — the same 🤔 Thinking / 💡 Answer separation the XML
+  side shows, fed from ollama's split fields (`message.thinking` vs `message.content`);
+  only the answer text is assembled back into the transport (thoughts are display-only).
 
 ---
 
@@ -208,9 +226,28 @@ protocols later never touches the loop again.
   parity criterion. `parity.py` runs every probe scenario through both transports with a
   fresh toolkit per session: hard gate = canonical round-trip interop on both sides;
   observational = call-name sequences + final candidate rows; streaming JSONL log like
-  the probe. Live run pending — operator:
-  `uv run python -m harness.toolcall.parity --model ollama:gemma4:31b-it-qat --repeat 3
-  --log harness/parity.log`.)*
+  the probe. **Live run PASSED** (`ollama:gemma4:31b-it-qat`, `--repeat 3`, log
+  `harness/parity.log`): 12 scenarios (4 × 3), **interop 24/24 checks — GATE PASS**;
+  observational names-equal 7/12, rows-equal 6/12 (expected to differ across wire
+  formats); xml turns=29/calls=18 vs native turns=31/calls=19, 0 parse errors,
+  0 exhausted — wall-clock parity too (~148 min total). Fix during bring-up:
+  `parity.resolve_ollama_model` strips the CLI's provider prefix before handing the
+  name to the native transport (the XML side's llm7shi parses prefixes itself).
+  **Second run (same model/--repeat 3, first with per-turn `turn_seconds`)**: interop
+  24/24 PASS again; observational names-equal 5/12, rows-equal 4/12 (run-to-run
+  variance, not gated). Wall clock xml 3769s vs native 4993s (+32%) — fully explained
+  by turn structure, not transport cost: matched first turns are equal (~103–125 s on
+  both sides) and same-shape scenarios tie (`search_corpus#1-3` within ±5%); the gap is
+  native overshooting the scripted intent (extra `validate_candidate` passes in
+  `read_unit#1-3`, +1098 s; a duplicated validation in `read_then_validate#1`, +466 s),
+  partly offset by an xml-side duplicate (`read_then_validate#2`, −194 s) and two
+  **native empty-response sessions** (`validate_candidate#1/#3`: one turn, zero calls,
+  empty final text after ~150 s of generation — protocol-legitimate but would score
+  zero downstream; the runner's nudge policy recovers these, so track their occurrence
+  rate in milestone 1.4 logs). **Adoption decision (2026-08-22): the Gemini API path
+  executes the XML protocol roughly 3x faster than local Ollama, so the XML protocol is
+  adopted as the official Stage 1/2 wire format; `OllamaNativeTransport` and this parity
+  check remain implemented and gated but are reserved for comparison experiments.**)*
 
 ## 7. Open Questions
 

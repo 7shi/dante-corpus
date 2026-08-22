@@ -50,6 +50,8 @@ from harness.toolcall import (
     Transport,
     is_parse_error,
     parse_tool_calls,
+    progress_printer,
+    progress_separator,
 )
 
 from .agent import (
@@ -605,6 +607,7 @@ def run_benchmark(
     workflow: str = "unit",
     sink=None,
     include_transcript: bool = False,
+    progress: bool = False,
 ) -> BenchmarkReport:
     """Run every case through a fresh session and score it against gold.
 
@@ -616,11 +619,15 @@ def run_benchmark(
     receives one JSONL record per completed case — flushed immediately so an
     interrupted run keeps everything already finished — followed by nothing;
     the caller writes the summary record (see CLI main, mirroring `probe.py`).
+    `progress` prints one stderr line per model turn, labeled with the running
+    case id (see `toolcall.progress_printer`) so long live runs stay watchable.
     """
     toolkit = GrammarToolkit() if toolkit is None else toolkit
     specs = tool_specs() if specs is None else specs
     report = BenchmarkReport()
-    for case in cases:
+    for pos, case in enumerate(cases, 1):
+        if progress:
+            progress_separator(case.case_id, pos, len(cases))
         result = run_unit(
             transport=transport,
             toolkit=toolkit,
@@ -632,6 +639,9 @@ def run_benchmark(
             max_turns=max_turns,
             max_nudges=max_nudges,
             workflow=workflow,
+            on_turn=(
+                progress_printer(f"{case.case_id}", max_turns) if progress else None
+            ),
         )
         evaluation = evaluate_unit(
             result, case=case, accumulate=(workflow == "predicate")
@@ -640,6 +650,7 @@ def run_benchmark(
         if sink is not None:
             record = evaluation.to_dict()
             record["final_text"] = result.text
+            record["turn_seconds"] = result.turn_seconds
             record["trace"] = result.trace_record(include_transcript=include_transcript)
             record["trace"].pop("candidate_rows", None)  # already in the case record
             sink.write(json.dumps(record, ensure_ascii=False) + "\n")
@@ -721,6 +732,7 @@ def main(argv=None) -> int:
             workflow=args.workflow,
             sink=sink,
             include_transcript=args.full_transcript,
+            progress=True,
         )
         if sink is not None:
             summary = {

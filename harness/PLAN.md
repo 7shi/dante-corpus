@@ -44,21 +44,49 @@ graph TD
 ### Handoff — read this first
 
 **Where we are.** The Tool Call Protocol sub-project ([`TOOLCALL.md`](TOOLCALL.md)) is
-complete through its live-probe gate (**T1–T4 done, GATE PASSED**) and is wired into
+complete (**T1–T5 done, both gates PASSED** — T4 live probe and the T5 live parity run
+over `ollama:gemma4:31b-it-qat` with interop 24/24 checks) and is wired into
 Stage 1: **Milestone 1.2 (`runner/agent.py` + `runner/prompts.py`) is complete**, so a
 full autonomous grammar session runs end-to-end on top of the gated protocol,
 **Milestone 1.3 (`runner/benchmark.py` + `fixtures/challenge_cases.py`) is complete**:
 the evaluation harness scores finished sessions against the 0-soft Gold Standard with
-the §5.2 metric suite over a curated 87-case fixture table, and **T5 is implemented**
-(`toolcall/transports.OllamaNativeTransport` + `toolcall/parity.py`, deterministic tests
-only) so the deferred native-transport parity check now awaits its operator run.
+the §5.2 metric suite over a curated 87-case fixture table.
+
+**Transport policy (2026-08-22).** The Gemini API executes the XML protocol roughly 3x
+faster than local Ollama, so **XML (`PromptXmlTransport`) is the officially adopted
+wire format for Stage 1/2 production runs; native Ollama tool calling
+(`OllamaNativeTransport`) stays implemented and gated but is reserved for comparison
+experiments** (re-run `harness.toolcall.parity` when revisiting local-only deployments).
+Backend choice remains free: `google:gemma-4-31b-it` when wall clock matters,
+`ollama:gemma4:31b-it-qat` for offline/cost-constrained work — both ride the same XML
+protocol unchanged.
+
+All live CLIs (`probe` / `parity` / `benchmark` / `runner.agent`) now print one stderr
+progress line per model turn (label, turn counter, each call's compact return value via
+`toolcall.outcome_brief`, elapsed seconds), announce each session with its
+`[index/total]` position (`progress_separator`), and stream the native path's output as
+it arrives (`ollama_chat(echo=True)` through llm7shi's `StreamProcessor`, so native
+turns show the same 🤔 Thinking / 💡 Answer display as llm7shi does on the XML side);
+every JSONL record / trace carries per-turn wall-clock durations (`turn_seconds`) for
+post-run profiling. This is codified as standing invariant **§4 item 5** — future live
+CLIs (Stage 2 included) inherit it.
 
 **Next action — milestone 1.4 evaluation runs (operator-run):**
-> **Session close 2026-08-22:** the code side is complete and frozen at suite
-> **700 passed** — nothing below needs further implementation; the next session starts
+> **Session close 2026-08-22 (final):** the Tool Call Protocol sub-project is declared
+> **implementation-complete as specified** — T1–T5 done, both live gates PASSED (probe
+> 0.957; parity interop 24/24 twice), transport policy recorded (XML official, native
+> comparison-only), live-run observability codified as standing invariant §4 item 5.
+> No further toolcall work is scheduled. Suite frozen at **711 passed** — nothing below
+> needs further implementation; the next session starts
 > by running the two pilots, comparing wall-clock/turns/`predicate_first_pass_rate`,
 > then committing to a workflow for the full runs. Note `*.log` files are gitignored:
-> `harness/bench-strict-validator-baseline.log` exists on disk only.
+> `harness/bench-strict-validator-baseline.log` and `harness/parity.log` exist on disk
+> only.
+> **Watch items for milestone 1.4**: (a) the native-only empty-response pattern seen in
+> parity run 2 (`validate_candidate#1/#3` native ended on one no-call empty turn) —
+> track occurrence rate in benchmark logs; the runner's nudge policy should recover
+> these, but they must not silently inflate failure metrics without attribution;
+> (b) keep measuring parse success inside benchmark runs per carry-over 2 below.
 - **Pilot first, both workflows**: the first live run (interrupted after 4 cases,
   preserved as `harness/bench-strict-validator-baseline.log`) exposed a structural
   validator defect (carry-over 4) and motivated an A/B workflow comparison. Before the
@@ -73,13 +101,20 @@ only) so the deferred native-transport parity check now awaits its operator run.
   hist-inf14-124 is the unit whose upstream_feedback complaint exposed carry-over 4;
   under the fixed validator its gold rows validate cleanly, so it doubles as the
   regression check for the fix.
-- Then the full runs (one log file per attempt — the CLI truncates on startup):
+- Then the full runs (one log file per attempt — the CLI truncates on startup;
+  roughly 6–9 h per workflow mode on the local 31B model, or ~3x faster via the
+  Gemini API under the adopted XML protocol — see Transport policy):
   `uv run python -m harness.runner.benchmark --model <model> --workflow <mode> \
    --log bench-<mode>.log`.
-- Optionally, while at it: the T5 live parity check over the same model —
-  `uv run python -m harness.toolcall.parity --model ollama:gemma4:31b-it-qat \
-   --repeat 3 --log harness/parity.log`. Hard criterion: canonical round-trip interop
-  on both transports (`parity_pass`); name/row sequence equality is observational.
+- ~~Optionally, while at it: the T5 live parity check over the same model~~ — DONE,
+  twice (2026-08-22). Run 1: interop 24/24 checks PASS, observational names-equal 7/12,
+  rows-equal 6/12, xml 29 turns/18 calls vs native 31 turns/19 calls, ~148 min total.
+  Run 2 (first with per-turn timings): interop 24/24 again; native +32% wall clock,
+  fully explained by extra validation turns rather than transport cost, plus a
+  native-only empty-response pattern to watch in milestone 1.4 — details in
+  [`TOOLCALL.md`](TOOLCALL.md) T5. Bring-up fix: `parity.resolve_ollama_model` strips
+  the provider prefix for the native transport. Outcome: XML adopted as the official
+  wire format; native kept for comparison experiments only.
 - Keep measuring parse success inside benchmark runs: the T4 gate margin was thin
   (47 turns at 0.957 vs 0.95, wide binomial CI), so treat it as still under
   observation, not permanently closed. Every case record carries per-session
@@ -119,21 +154,25 @@ only) so the deferred native-transport parity check now awaits its operator run.
    validate call per correction cycle; decide the default from the pilot runs above.
 
 **Environment & artifacts.**
-- Default model: `ollama:gemma4:31b-it-qat` (Gemini path `google:gemma-4-31b-it` also
-  validated end-to-end).
+- Wire format: XML protocol (`PromptXmlTransport`) — official for all Stage 1/2 runs
+  (see Transport policy above). Native Ollama transport: comparison experiments only.
+- Models: `google:gemma-4-31b-it` (Gemini API, ~3x faster — preferred when wall clock
+  matters) and `ollama:gemma4:31b-it-qat` (local, offline/cost-constrained); both are
+  validated end-to-end over the XML protocol.
 - Live probe: `uv run python -m harness.toolcall.probe --model <model> --repeat N --log
   harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
   summary record last (a log without the summary line = interrupted run);
   `*.log` is gitignored.
-- Migration parity check (T5, live run pending): `uv run python -m harness.toolcall.parity
+- Migration parity check (T5, live run PASSED 2026-08-22): `uv run python -m
+  harness.toolcall.parity
   --model <model> [--repeat N] [--log harness/parity.log]` — same log semantics; hard
   gate = canonical interop on both transports.
 - Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
   --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
 - Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
   C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
-- Test suite: **700 passed** (547 pre-existing + 41 `test_harness_tools.py` +
-  63 `tests/test_harness_toolcall.py` + 23 `tests/test_harness_agent.py` +
+- Test suite: **711 passed** (547 pre-existing + 41 `test_harness_tools.py` +
+  74 `tests/test_harness_toolcall.py` + 23 `tests/test_harness_agent.py` +
   26 `tests/test_harness_benchmark.py`).
 
 ### Milestone ledger
@@ -157,8 +196,8 @@ only) so the deferred native-transport parity check now awaits its operator run.
 - Tests: `tests/test_harness_tools.py` — 36 deterministic tests incl. poisoning
   `skel.io.load_skel` / `skel.registry.rule_active` to prove masking.
 
-**Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T4 COMPLETE, GATE PASSED;
-T5 IMPLEMENTED (live parity run pending).**
+**Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T5 COMPLETE, BOTH LIVE GATES
+PASSED (T4 probe, T5 parity).**
 
 Gemma cannot use native tool calling on the Gemini API path and its structured output is
 unreliable there, so the interim protocol is prompt-instructed `<tool_call>` blocks (one
@@ -166,7 +205,7 @@ JSON object per block) converted into OpenAI-compatible tool-call dicts; native 
 tool calling is a pure transport swap (`OllamaNativeTransport`, T5). Deliverables:
 parser/formatter (`parser.py`), prompt contract + few-shot (`prompts.py`), transports
 (`transports.py`), transport-agnostic loop (`loop.py`), live-probe CLI (`probe.py`),
-migration-parity CLI (`parity.py`); 63 deterministic tests in
+migration-parity CLI (`parity.py`); 74 deterministic tests in
 `tests/test_harness_toolcall.py`. Live probing motivated a wire-format simplification
 from nested tags to one JSON object per block ([`TOOLCALL.md`](TOOLCALL.md) §3.1);
 **final-format pooled run on `google:gemma-4-31b-it` (--repeat 5): 20 scenarios, 47
@@ -174,7 +213,7 @@ turns, parse success rate 0.957 ≥ 0.95 gate**, 0 hallucinated tools, 0 dispatc
 both observed failure classes benign and prompt-side.
 
 **T5 — Native Transport & Migration Parity (`toolcall/transports.py`,
-`toolcall/parity.py`): IMPLEMENTED, live run pending (operator-run).**
+`toolcall/parity.py`): COMPLETE — live parity run PASSED (2026-08-22).**
 
 - `OllamaNativeTransport` drives an injected chat backend (`(messages, tools) -> message`;
   the library core still never imports ollama — the live adapter lives in
@@ -191,6 +230,16 @@ both observed failure classes benign and prompt-side.
   session; XML side gets contract + demo, native side bare specs). Hard gate = canonical
   round-trip interop on both sides (`ParityReport.parity_pass`); observational =
   call-name sequences + final candidate rows. Streaming JSONL log mirrors the probe.
+- **Live verdict (2026-08-22, `ollama:gemma4:31b-it-qat`, `--repeat 3`)**: 12 scenarios,
+  interop 24/24 checks — PASS; names-equal 7/12, rows-equal 6/12 (observational);
+  xml turns=29/calls=18 vs native turns=31/calls=19, 0 parse errors, 0 exhausted,
+  ~148 min wall clock. Bring-up fix: `resolve_ollama_model` strips the CLI provider
+  prefix before it reaches the native transport. **Second run** (first with per-turn
+  `turn_seconds`): interop 24/24 again; native +32% wall clock fully explained by extra
+  validation turns (matched turns are equally fast) plus a native-only empty-response
+  pattern; observational equality fluctuates between runs (names 5/12, rows 4/12).
+  **Adoption decision: XML is the official wire format (Gemini API ≈3x faster than
+  local); native stays for comparison experiments.**
 - Tests: 25 new deterministic tests (normalization, history re-attachment, ledger
   isolation, round-trip property, end-to-end stubbed parity); suite total 688 passed.
 
@@ -245,8 +294,8 @@ both observed failure classes benign and prompt-side.
   suite total 663 passed.
 
 **Remaining milestones**: 1.4 evaluation execution & trace collection (operator-run;
-see the Handoff for the exact commands) plus the T5 live parity run
-([`TOOLCALL.md`](TOOLCALL.md) §5.3, implementation complete). Open design question:
+see the Handoff for the exact commands) — the T5 live parity run is done (both protocol
+gates PASSED). Open design question:
 §7.1 termination tool (practical half resolved by the nudge policy — see Handoff).
 After 1.4 traces exist, Stage 2 (`harness/extractor/`, milestones 2.1–2.5 in
 [`extractor/PLAN.md`](extractor/PLAN.md)) is next.
@@ -334,3 +383,7 @@ dante-corpus/
    - Benchmark and evaluation modes operate strictly in-memory or write to scratch buffers; gold TSVs in `skel/` are never overwritten during benchmark runs.
 4. **Upstream Discrepancy Channel**:
    - Discrepancies identified in upstream layers (Layer 2 morphology or Layer 4 UD syntax) are emitted as structured `upstream_feedback` records for human audit and triage.
+5. **Live-Run Observability — separators & streaming**:
+   - LLM-in-the-loop runs are inherently slow (minutes per turn on local models, hours per benchmark), and an unwatchable run is an unusable run: every operator-facing CLI must keep progress **visible by default**, not silent-until-finished.
+   - Concretely (implemented in `toolcall.loop`): stream model output to stderr as it arrives (llm7shi does this natively on the XML path; `parity.ollama_chat(echo=True)` replays it via llm7shi's `StreamProcessor` on the native path); print one stderr progress line per turn with each call's compact return value (`outcome_brief`) and elapsed seconds (`progress_printer`); announce every session with its `[index/total]` position via major `=====` separators and divide named passes inside a session with minor `-----` ones (`progress_separator` / `progress_subseparator`). Per-turn wall-clock durations ride in the JSONL logs (`turn_seconds`) for post-run profiling.
+   - This is a standing requirement, not a one-off patch: new live entry points (Stage 2's `extractor/` CLIs included) must ship the same observability from day one, all human-facing output goes to stderr so JSONL logs stay machine-clean, and any future transport must preserve it.

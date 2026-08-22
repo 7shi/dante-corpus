@@ -16,7 +16,15 @@ The Stage 1 runner (`harness/runner`) consumes this library; nothing here import
 runner code or touches Layer 5 gold data.
 """
 
-from .loop import LoopResult, execute_tool_calls, run_tool_loop
+from .loop import (
+    LoopResult,
+    execute_tool_calls,
+    outcome_brief,
+    progress_printer,
+    progress_separator,
+    progress_subseparator,
+    run_tool_loop,
+)
 from .parser import (
     format_tool_call,
     format_tool_result,
@@ -54,7 +62,11 @@ __all__ = [
     "format_tool_result",
     "is_parse_error",
     "normalize_tool_calls",
+    "outcome_brief",
     "parse_tool_calls",
+    "progress_printer",
+    "progress_separator",
+    "progress_subseparator",
     "run_tool_loop",
     "tool_specs_section",
     "xml_contract_section",

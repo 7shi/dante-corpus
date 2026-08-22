@@ -78,4 +78,8 @@ uv run python -m harness.toolcall.parity --model ollama:gemma4:31b-it-qat \
     --repeat 3 --log parity.jsonl
 ```
 
-Tests: `tests/test_harness_toolcall.py` — 63 deterministic tests, no network, no model.
+Tests: `tests/test_harness_toolcall.py` — 68 deterministic tests, no network, no model.
+
+All live CLIs print one stderr progress line per model turn (label, turn counter, each
+call's compact return value via `loop.outcome_brief`, elapsed seconds) and record
+per-turn durations (`turn_seconds`) in their JSONL logs.

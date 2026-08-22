@@ -33,8 +33,14 @@ import json
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
-from .loop import run_tool_loop
+from .loop import (
+    progress_printer,
+    progress_separator,
+    progress_subseparator,
+    run_tool_loop,
+)
 from .parser import format_tool_call, is_parse_error, parse_tool_calls
 from .prompts import few_shot_messages, tool_specs_section, xml_contract_section
 from .transports import (
@@ -45,19 +51,39 @@ from .transports import (
     TransportResponse,
 )
 
-__all__ = ["ParityReport", "RecordingTransport", "ollama_chat", "run_parity"]
+__all__ = ["ParityReport", "RecordingTransport", "ollama_chat", "resolve_ollama_model", "run_parity"]
 
 FINAL_TEXT_LIMIT = 500
 
 
+def resolve_ollama_model(model: str) -> str:
+    """Strip the provider prefix from a CLI model spec (`ollama:name` -> `name`).
+
+    The XML side hands the full spec to `llm7shi`, which parses provider prefixes
+    itself; the native side talks to the ollama server directly, which rejects
+    prefixed names as invalid.
+    """
+    return model.removeprefix("ollama:")
+
+
 def ollama_chat(
-    model: str, temperature: float | None = None, options: dict | None = None
+    model: str,
+    temperature: float | None = None,
+    options: dict | None = None,
+    echo: bool = False,
+    stream=None,
 ) -> ChatFn:
     """Build a native chat backend over the `ollama` package's `chat(tools=...)`.
 
-    Returns `(messages, tools) -> response message`; non-streaming. Import is lazy so
-    the module stays importable without ollama installed (deterministic tests inject
-    fakes instead).
+    Returns `(messages, tools) -> response message`. With `echo=False` (tests) the
+    call is non-streaming, so a 31B turn blocks silently for minutes; with `echo=True`
+    (live CLIs) ollama is driven in stream mode and displayed through llm7shi's own
+    `StreamProcessor` — the same 🤔 Thinking / 💡 Answer separation the XML side shows,
+    fed from ollama's split fields (`message.thinking` vs `message.content`). Only the
+    answer text is assembled into the returned message (thoughts are display-only),
+    plus every tool call. The echo sink is stderr by default (`stream` overrides),
+    keeping JSONL logs clean. Imports are lazy so the module stays importable without
+    ollama/llm7shi installed (deterministic tests inject fakes instead).
     """
     from ollama import chat as _chat
 
@@ -72,7 +98,32 @@ def ollama_chat(
             opts.setdefault("temperature", temperature)
         if opts:
             kwargs["options"] = opts
-        return _chat(**kwargs).message
+        if not echo:
+            return _chat(**kwargs).message
+
+        from llm7shi.monitor import StreamProcessor
+
+        kwargs["stream"] = True
+        processor = StreamProcessor(file=stream or sys.stderr)
+        parts: list[str] = []
+        calls: list = []
+        try:
+            for chunk in _chat(**kwargs):
+                message = getattr(chunk, "message", chunk)
+                thinking = getattr(message, "thinking", None)
+                if thinking and not processor.add_thought(thinking):
+                    break  # monitor stop (repetition/length), mirroring llm7shi
+                delta = getattr(message, "content", None)
+                if delta:
+                    parts.append(delta)
+                    if not processor.add_text(delta):
+                        break
+                chunk_calls = getattr(message, "tool_calls", None)
+                if chunk_calls:
+                    calls.extend(chunk_calls)
+        finally:
+            processor.finalize()
+        return SimpleNamespace(content="".join(parts), tool_calls=calls or None)
 
     return chat
 
@@ -171,7 +222,7 @@ def _opening_messages(variant: str, task: str, tools) -> list[dict]:
     return messages
 
 
-def _run_side(variant, make_transport, task, toolkit_factory, tools, max_turns) -> dict:
+def _run_side(variant, make_transport, task, toolkit_factory, tools, max_turns, on_turn=None) -> dict:
     """One session for one variant; returns its measurement block."""
     recorder = RecordingTransport(make_transport())
     result = run_tool_loop(
@@ -180,10 +231,12 @@ def _run_side(variant, make_transport, task, toolkit_factory, tools, max_turns) 
         messages=_opening_messages(variant, task, tools),
         tools=tools,
         max_turns=max_turns,
+        on_turn=on_turn,
     )
     sequences, parse_errors = call_sequences(recorder)
     stats = {
         "turns": result.turns,
+        "turn_seconds": result.turn_seconds,
         "exhausted": result.exhausted,
         "final_text": result.text[:FINAL_TEXT_LIMIT],
         "calls": sum(len(turn) for turn in sequences),
@@ -203,6 +256,7 @@ def run_parity(
     tools,
     max_turns: int = 6,
     sink=None,
+    progress: bool = False,
 ) -> "ParityReport":
     """Run every scenario through both transports and compare.
 
@@ -211,13 +265,28 @@ def run_parity(
     toolkit (the grammar toolkit tracks one active unit, so sharing one across
     sessions would couple the two runs). `sink`, when given, receives one JSONL
     record per completed scenario, flushed immediately (interrupted runs keep
-    everything already finished); the caller writes the summary record.
+    everything already finished); the caller writes the summary record. `progress`
+    prints one stderr line per model turn, labeled `scenario/variant` (see
+    `toolcall.progress_printer`) so long live runs stay watchable; a major
+    `=====` separator announces each scenario and minor `-----` ones divide its
+    xml / native passes (`progress_separator` / `progress_subseparator`).
     """
     report = ParityReport()
-    for scenario in scenarios:
+    for pos, scenario in enumerate(scenarios, 1):
+        if progress:
+            progress_separator(scenario["name"], pos, len(scenarios))
+            progress_subseparator("xml")
+        def side_on_turn(variant):
+            if not progress:
+                return None
+            return progress_printer(f"{scenario['name']}/{variant}", max_turns)
+
         xml_stats, xml_groups = _run_side(
-            "xml", xml_transport_fn, scenario["task"], toolkit_fn, tools, max_turns
+            "xml", xml_transport_fn, scenario["task"], toolkit_fn, tools, max_turns,
+            on_turn=side_on_turn("xml"),
         )
+        if progress:
+            progress_subseparator("native")
         native_stats, native_groups = _run_side(
             "native",
             native_transport_fn,
@@ -225,6 +294,7 @@ def run_parity(
             toolkit_fn,
             tools,
             max_turns,
+            on_turn=side_on_turn("native"),
         )
 
         xml_names = [c["name"] for turn in xml_stats["sequences"] for c in turn]
@@ -273,6 +343,9 @@ class ParityReport:
         def side(key: str) -> dict:
             return {
                 "turns": sum(r[key]["turns"] for r in self.records),
+                "seconds": round(
+                    sum(sum(r[key]["turn_seconds"]) for r in self.records), 1
+                ),
                 "calls": sum(r[key]["calls"] for r in self.records),
                 "parse_errors": sum(r[key]["parse_errors"] for r in self.records),
                 "exhausted": sum(r[key]["exhausted"] for r in self.records),
@@ -299,9 +372,11 @@ class ParityReport:
             f"(observational)",
             f"candidate rows equal: {m['rows_equal_scenarios']}/{m['scenarios']} "
             f"(observational)",
-            f"xml: turns={m['xml']['turns']} calls={m['xml']['calls']} "
+            f"xml: turns={m['xml']['turns']} seconds={m['xml']['seconds']} "
+            f"calls={m['xml']['calls']} "
             f"parse_errors={m['xml']['parse_errors']} exhausted={m['xml']['exhausted']}",
-            f"native: turns={m['native']['turns']} calls={m['native']['calls']} "
+            f"native: turns={m['native']['turns']} seconds={m['native']['seconds']} "
+            f"calls={m['native']['calls']} "
             f"parse_errors={m['native']['parse_errors']} "
             f"exhausted={m['native']['exhausted']}",
         ]
@@ -343,7 +418,9 @@ def main(argv=None) -> int:
         )
 
     def native_transport_fn():
-        return OllamaNativeTransport(chat=ollama_chat(args.model, args.temperature))
+        return OllamaNativeTransport(
+            chat=ollama_chat(resolve_ollama_model(args.model), args.temperature, echo=True)
+        )
 
     print(f"parity: model={args.model} scenarios={[s['name'] for s in scenarios]}")
     started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -358,6 +435,7 @@ def main(argv=None) -> int:
             tools=specs,
             max_turns=args.max_turns,
             sink=sink,
+            progress=True,
         )
         if sink is not None:
             summary = {

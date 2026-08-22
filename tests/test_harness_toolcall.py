@@ -18,13 +18,16 @@ from harness.toolcall import (
     OllamaNativeTransport,
     PromptXmlTransport,
     StubTransport,
+    TransportResponse,
     execute_tool_calls,
     few_shot_messages,
     format_tool_call,
     format_tool_result,
     is_parse_error,
     normalize_tool_calls,
+    outcome_brief,
     parse_tool_calls,
+    progress_printer,
     run_tool_loop,
     tool_specs_section,
     xml_contract_section,
@@ -36,6 +39,7 @@ from harness.toolcall.parity import (
     candidate_rows as parity_candidate_rows,
     interop_ok,
     ollama_chat,
+    resolve_ollama_model,
     run_parity,
 )
 
@@ -445,6 +449,152 @@ def test_loop_does_not_mutate_opening_messages(toolkit):
     assert messages == snapshot
 
 
+# --- on_turn observability ---------------------------------------------------------------
+
+
+def test_loop_on_turn_fires_per_turn_with_outcomes(toolkit, capsys):
+    script = [
+        _block("read_unit", '{"canticle": "inferno", "canto": 1, "line_start": 1}'),
+        _block("validate_candidate", json.dumps({
+            "canticle": "inferno",
+            "canto": 1,
+            "line_start": 1,
+            "candidate_rows": GOOD_ROWS,
+        })),
+        "The end.",
+    ]
+    seen = []
+    result = run_tool_loop(
+        transport=StubTransport(script),
+        toolkit=toolkit,
+        messages=_opening_messages(),
+        tools=TOOL_SPECS,
+        on_turn=lambda turn, response, outcomes: seen.append((turn, outcomes)),
+    )
+
+    assert [turn for turn, _ in seen] == [1, 2, 3]
+    assert [o["tool"] for o in seen[0][1]] == ["read_unit"]
+    assert seen[1][1][0]["result"]["valid"] is True
+    assert seen[2][1] == []  # the final-answer turn reports no outcomes
+    assert result.turns == 3
+    assert len(result.turn_seconds) == 3
+    assert all(dt >= 0.0 for dt in result.turn_seconds)
+    assert capsys.readouterr().err == ""  # raw callbacks print nothing by themselves
+
+
+def test_progress_printer_reports_turns_values_and_final_answer(toolkit, capsys):
+    script = [
+        '<tool_call>\nnot json\n</tool_call>',  # parse-error envelope keeps a label
+        _block("validate_candidate", json.dumps({
+            "canticle": "inferno",
+            "canto": 1,
+            "line_start": 1,
+            "candidate_rows": GOOD_ROWS,
+        })),
+        "The end.",
+    ]
+    printer = progress_printer("case-x", 3)
+    run_tool_loop(
+        transport=StubTransport(script),
+        toolkit=toolkit,
+        messages=_opening_messages(),
+        tools=TOOL_SPECS,
+        max_turns=3,
+        on_turn=printer,
+    )
+    import re
+
+    err = capsys.readouterr().err
+    lines = err.strip().splitlines()
+    assert len(lines) == 3
+    assert re.fullmatch(r"\[case-x\] turn 1/3 \?=ERROR:.*\(\+\d+s\)", lines[0])
+    assert re.fullmatch(
+        r"\[case-x\] turn 2/3 validate_candidate=valid \(\+\d+s\)", lines[1]
+    )
+    assert re.fullmatch(r"\[case-x\] turn 3/3 final answer \(\+\d+s\)", lines[2])
+
+
+def test_progress_printer_writes_to_given_stream():
+    import io
+
+    stream = io.StringIO()
+    printer = progress_printer("s", 9, stream=stream)
+    printer(4, TransportResponse(text="done"), [])
+    out = stream.getvalue()
+    assert out.startswith("[s] turn 4/9 final answer (+")
+    assert out.endswith("s)\n")
+
+
+def test_progress_separator_announces_position_in_run(capsys):
+    from harness.toolcall import progress_separator
+
+    progress_separator("read_unit#2", 3, 12)
+    err = capsys.readouterr().err
+    assert err == "\n===== [3/12] read_unit#2 =====\n"
+
+    import io
+
+    stream = io.StringIO()
+    progress_separator("x", 1, 4, stream=stream)
+    assert stream.getvalue() == "\n===== [1/4] x =====\n"
+
+
+def test_progress_subseparator_marks_minor_boundary(capsys):
+    from harness.toolcall import progress_subseparator
+
+    progress_subseparator("xml")
+    assert capsys.readouterr().err == "\n----- xml -----\n"
+
+    import io
+
+    stream = io.StringIO()
+    progress_subseparator("native", stream=stream)
+    assert stream.getvalue() == "\n----- native -----\n"
+
+
+def test_outcome_brief_summarizes_each_tool_shape():
+    assert (
+        outcome_brief({
+            "ok": True,
+            "tool": "validate_candidate",
+            "result": {
+                "valid": False,
+                "errors": ["e1", "e2"],
+                "warnings": ["w1"],
+                "upstream_feedback": [{"layer": "morph"}],
+            },
+        })
+        == "validate_candidate=INVALID 2err 1warn +1uf"
+    )
+    assert (
+        outcome_brief({
+            "ok": True,
+            "tool": "read_unit",
+            "result": {
+                "unit": {
+                    "canticle": "inferno",
+                    "canto": 14,
+                    "line_start": 112,
+                    "line_end": 123,
+                }
+            },
+        })
+        == "read_unit=inf 14 L112-123"
+    )
+    assert outcome_brief(
+        {"ok": True, "tool": "search_corpus", "result": [{}, {}, {}]}
+    ) == "search_corpus=3 hits"
+    assert (
+        outcome_brief({"ok": False, "tool": "read_unit", "error": "boom"})
+        == "read_unit=ERROR:boom"
+    )
+    long_error = "abc " * 40 + "EVIDENCE-TAIL"
+    brief = outcome_brief({"ok": False, "tool": "x", "error": long_error})
+    assert brief.startswith("x=ERROR:" + long_error[:30] + "…")
+    assert brief.endswith("EVIDENCE-TAIL")
+    assert len(brief) <= len("x=ERROR:") + 91
+
+
 # --- probe scenario selection ---------------------------------------------------------
 
 
@@ -746,6 +896,97 @@ def test_ollama_chat_factory_returns_callable_without_importing_backend():
     assert callable(ollama_chat("ollama:gemma4:31b-it-qat"))
 
 
+def test_ollama_chat_echo_streams_deltas_and_assembles_message(monkeypatch):
+    import io
+    import sys
+    import types
+
+    tool_call = types.SimpleNamespace(
+        function=types.SimpleNamespace(name="read_unit", arguments={"canto": 1})
+    )
+    chunks = [
+        types.SimpleNamespace(
+            message=types.SimpleNamespace(content="hel", tool_calls=None)
+        ),
+        # A chunk may carry no text (tool calls usually arrive on their own).
+        types.SimpleNamespace(message=types.SimpleNamespace(content=None, tool_calls=[tool_call])),
+        types.SimpleNamespace(
+            message=types.SimpleNamespace(content="lo", tool_calls=None)
+        ),
+    ]
+    captured = {}
+
+    def fake_chat(**kwargs):
+        captured.update(kwargs)
+        return iter(chunks)
+
+    monkeypatch.setitem(sys.modules, "ollama", types.SimpleNamespace(chat=fake_chat))
+
+    stream = io.StringIO()
+    fn = ollama_chat("ollama:m", echo=True, stream=stream)
+    message = fn([{"role": "user", "content": "hi"}], [])
+
+    assert message.content == "hello"
+    assert list(message.tool_calls) == [tool_call]
+    assert captured["stream"] is True
+    assert stream.getvalue() == "hello\n"
+
+
+def test_ollama_chat_echo_separates_thinking_from_answer(monkeypatch):
+    import io
+    import re
+    import sys
+    import types
+
+    chunks = [
+        types.SimpleNamespace(
+            message=types.SimpleNamespace(content=None, thinking="let me think")
+        ),
+        types.SimpleNamespace(
+            message=types.SimpleNamespace(content="the answer", thinking="more")
+        ),
+    ]
+
+    def fake_chat(**kwargs):
+        assert kwargs["stream"] is True
+        return iter(chunks)
+
+    monkeypatch.setitem(sys.modules, "ollama", types.SimpleNamespace(chat=fake_chat))
+    stream = io.StringIO()
+    message = ollama_chat("ollama:m", echo=True, stream=stream)(
+        [{"role": "user", "content": "hi"}], []
+    )
+
+    plain = re.sub(r"\x1b\[[0-9;]*m", "", stream.getvalue())
+    assert "Thinking..." in plain and "let me thinkmore" in plain
+    assert "Answer:" in plain and "the answer" in plain
+    # Only the answer rides back into the transport; thoughts are display-only.
+    assert message.content == "the answer"
+
+
+def test_ollama_chat_without_echo_stays_non_streaming(monkeypatch):
+    import sys
+    import types
+
+    captured = {}
+
+    def fake_chat(**kwargs):
+        captured.update(kwargs)
+        return types.SimpleNamespace(message=types.SimpleNamespace(content="done"))
+
+    monkeypatch.setitem(sys.modules, "ollama", types.SimpleNamespace(chat=fake_chat))
+    message = ollama_chat("ollama:m")([], [])
+    assert "stream" not in captured
+    assert message.content == "done"
+
+
+def test_resolve_ollama_model_strips_provider_prefix_only():
+    assert resolve_ollama_model("ollama:gemma4:31b-it-qat") == "gemma4:31b-it-qat"
+    # Unprefixed names and other providers pass through unchanged.
+    assert resolve_ollama_model("gemma4:31b-it-qat") == "gemma4:31b-it-qat"
+    assert resolve_ollama_model("google:gemma-4-31b-it") == "google:gemma-4-31b-it"
+
+
 def test_recording_transport_captures_sequences_from_both_script_styles():
     script = [
         # XML wire style: one well-formed block + one unparsable body.
@@ -861,6 +1102,34 @@ def test_run_parity_matches_sequences_and_rows_over_stubs():
 
     logged = sink.getvalue().splitlines()
     assert len(logged) == 1 and json.loads(logged[0])["record"] == "scenario"
+
+
+def test_run_parity_progress_announces_each_scenario_position(capsys):
+    import io
+
+    scenarios = [
+        {"name": "first", "task": "Solve Inferno I lines 1-3."},
+        {"name": "second", "task": "Solve Inferno I lines 4-6."},
+    ]
+    report = run_parity(
+        scenarios,
+        xml_transport_fn=lambda: StubTransport(_xml_script(GOOD_ROWS)),
+        native_transport_fn=lambda: StubTransport(_native_script(GOOD_ROWS)),
+        toolkit_fn=GrammarToolkit,
+        tools=TOOL_SPECS,
+        progress=True,
+    )
+    assert len(report.records) == 2
+    err = capsys.readouterr().err
+    assert "\n===== [1/2] first =====\n" in err
+    assert "\n===== [2/2] second =====\n" in err
+    # Minor separators divide each scenario's xml / native passes.
+    assert err.count("\n----- xml -----\n") == 2
+    assert err.count("\n----- native -----\n") == 2
+    assert err.index("\n===== [1/2] first =====\n") < err.index("\n----- xml -----\n")
+    assert err.index("\n----- xml -----\n", err.index("first")) < err.index(
+        "\n----- native -----\n"
+    )
 
 
 def test_run_parity_reports_behavioral_mismatch_without_failing_interop():

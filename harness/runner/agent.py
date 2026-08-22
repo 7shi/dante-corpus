@@ -37,6 +37,7 @@ from harness.toolcall import (
     Transport,
     is_parse_error,
     parse_tool_calls,
+    progress_printer,
     run_tool_loop,
 )
 
@@ -111,6 +112,7 @@ class UnitResult:
     outcomes: list[dict] = field(default_factory=list)  # every envelope, in call order
     messages: list[dict] = field(default_factory=list)  # full transcript incl. nudges
     opening_len: int = 0  # prompt-side messages (system + demo + task) before turn 1
+    turn_seconds: list[float] = field(default_factory=list)  # wall clock per model turn
 
     @property
     def session_messages(self) -> list[dict]:
@@ -180,6 +182,7 @@ class UnitResult:
             "workflow": self.workflow,
             "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "turns": self.turns,
+            "turn_seconds": self.turn_seconds,
             "nudges": self.nudges,
             "exhausted": self.exhausted,
             "protocol_complete": self.protocol_complete,
@@ -274,6 +277,7 @@ def run_unit(
     max_turns: int = SESSION_MAX_TURNS,
     max_nudges: int = MAX_NUDGES,
     workflow: str = "unit",
+    on_turn=None,
 ) -> UnitResult:
     """Run one autonomous grammar session for a single parse unit.
 
@@ -283,7 +287,9 @@ def run_unit(
     policy: a final answer given with zero successful `validate_candidate`
     dispatches earns up to `max_nudges` reminders, each resuming the very same
     transcript through a fresh loop run under the shared turn budget. The loop
-    library itself is left untouched.
+    library itself is left untouched. `on_turn` (see `toolcall.progress_printer`)
+    is forwarded to every loop run with the turn number offset so nudged resumes
+    keep counting session-wide.
     """
     specs = tool_specs() if specs is None else list(specs)
     opening = _opening_messages(
@@ -305,14 +311,21 @@ def run_unit(
     nudges_left = max_nudges
 
     while remaining_budget > 0:
+        turns_before = result.turns
+
+        def loop_on_turn(turn, response, outcomes, offset=turns_before):
+            on_turn(turn + offset, response, outcomes)
+
         loop_result = run_tool_loop(
             transport=transport,
             toolkit=toolkit,
             messages=transcript,
             tools=specs,
             max_turns=remaining_budget,
+            on_turn=loop_on_turn if on_turn is not None else None,
         )
         result.turns += loop_result.turns
+        result.turn_seconds.extend(loop_result.turn_seconds)
         result.outcomes.extend(loop_result.outcomes)
         result.text = loop_result.text
         result.exhausted = loop_result.exhausted
@@ -381,6 +394,9 @@ def main(argv=None) -> int:
         max_turns=args.max_turns,
         max_nudges=args.max_nudges,
         workflow=args.workflow,
+        on_turn=progress_printer(
+            f"{args.canticle} {args.canto} {args.line_start}", args.max_turns
+        ),
     )
 
     if args.trace:
