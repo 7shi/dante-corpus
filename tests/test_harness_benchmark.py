@@ -387,6 +387,27 @@ def test_report_metrics_on_empty_report_is_defined():
     assert m["units"] == 0 and m["one_shot_exact_match_rate"] == 0.0
     assert m["parse_success_rate"] is None
     assert m["upstream_feedback_precision"] is None
+    assert m["session_turns"] == 0 and m["slow_turns"] == 0
+    assert m["wall_clock_seconds"] == 0.0
+    assert m["mean_turn_seconds"] is None and m["max_turn_seconds"] is None
+
+
+def test_report_metrics_aggregate_per_turn_timing_and_count_slow_turns():
+    """§4 item 5: wall clock rolls up per turn; brooding turns surface as slow_turns."""
+    report = BenchmarkReport()
+    for seconds in ([10.0, 305.5], [2.25]):
+        ev = UnitEvaluation(case_id="x", category="historical", unit={})
+        ev.turn_seconds = seconds
+        ev.turns = len(seconds)
+        report.add(ev)
+    m = report.metrics()
+    assert m["session_turns"] == 3
+    assert m["wall_clock_seconds"] == 317.8
+    assert m["mean_turn_seconds"] == 105.9
+    assert m["max_turn_seconds"] == 305.5
+    assert m["slow_turns"] == 1  # SLOW_TURN_SECONDS = 300
+    text = report.summary()
+    assert "turns: 3 in 318s" in text and "slow(>= 300s): 1" in text
 
 
 # --- run_benchmark (streaming sink) -----------------------------------------------------------------
@@ -416,6 +437,7 @@ def test_run_benchmark_streams_case_records_and_scores_real_fixture(toolkit):
     rec = records[0]
     assert rec["case_id"] == case.case_id and rec["category"] == "quotes"
     assert rec["exact_first"] is True and rec["converged"] is True
+    assert isinstance(rec["turn_seconds"], list) and len(rec["turn_seconds"]) >= 1
     assert rec["trace"]["record"] == "session"
     assert "messages" not in rec["trace"]  # slim by default
     assert rec["trace"]["outcomes"][0]["ok"] is True
@@ -447,6 +469,28 @@ def test_run_benchmark_sequential_cases_share_the_toolkit_cache(toolkit):
     report = run_benchmark([first, second], transport, toolkit=toolkit)
     assert len(report) == 2
     assert report.metrics()["one_shot_exact_match_rate"] == 1.0
+
+
+def test_run_benchmark_progress_announces_each_case_position(toolkit, capsys):
+    """§4 item 5: watched runs announce every case with its [index/total]."""
+    first = case_by_id("ctl-inf01-010")
+    second = case_by_id("quo-pur01-046")
+    scripts = []
+    for case in (first, second):
+        rows = _gold_rows_as_dicts(case.canticle, case.canto, case.line_start, case.line_end)
+        scripts.append(
+            [
+                _validate_block(rows, case.canticle, case.canto, case.line_start),
+                "solved",
+            ]
+        )
+    transport = StubTransport(scripts[0] + scripts[1])
+    run_benchmark([first, second], transport, toolkit=toolkit, progress=True)
+    err = capsys.readouterr().err
+    assert "\n===== [1/2] ctl-inf01-010 =====\n" in err
+    assert "\n===== [2/2] quo-pur01-046 =====\n" in err
+    # Turn lines follow each announcement (progress_printer is wired too).
+    assert f"[ctl-inf01-010] turn" in err and f"[quo-pur01-046] turn" in err
 
 
 # --- workflow granularity (predicate accumulation) ---------------------------------------

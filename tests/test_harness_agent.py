@@ -264,6 +264,48 @@ def test_nudged_resume_shares_the_turn_budget(toolkit):
     assert result.protocol_complete is False
 
 
+# --- live-run observability (harness/PLAN.md §4 item 5) -----------------------------------
+
+
+def test_nudged_resume_marks_a_minor_pass_boundary_when_watched(toolkit, capsys):
+    script = [
+        "prose answer without any tool work",
+        _validate_block(GOOD_ROWS),
+        "Validated now.",
+    ]
+    result = _run(script, toolkit, progress=True)
+    assert result.nudges == 1
+    err = capsys.readouterr().err
+    assert "\n----- nudged resume -----\n" in err
+
+
+def test_run_unit_prints_nothing_without_the_progress_flag(toolkit, capsys):
+    script = [
+        "prose answer without any tool work",
+        _validate_block(GOOD_ROWS),
+        "Validated now.",
+    ]
+    result = _run(script, toolkit)
+    assert result.nudges == 1
+    assert capsys.readouterr().err == ""
+
+
+def test_agent_cli_announces_its_single_session(monkeypatch, capsys):
+    """Every live CLI announces each session with its [index/total] position."""
+    import harness.runner.agent as agent_module
+
+    def fake_transport(generate=None):
+        return StubTransport([_validate_block(GOOD_ROWS), "Validated now."])
+
+    monkeypatch.setattr(agent_module, "PromptXmlTransport", fake_transport)
+    rc = agent_module.main(
+        ["--canticle", "inferno", "--canto", "1", "--line-start", "1"]
+    )
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "\n===== [1/1] inferno 1 1 =====\n" in err
+
+
 # --- transcript-derived facts ---------------------------------------------------------------
 
 
@@ -342,7 +384,10 @@ def test_default_session_constants_leave_room_for_correction():
 
 
 def test_llm7shi_generate_builds_stateless_adapter(monkeypatch):
-    """The proven probe adapter must keep forwarding model/temperature verbatim."""
+    """The proven probe adapter must keep forwarding model/temperature verbatim,
+    and pin the streaming display to stderr (§4 item 5; llm7shi defaults stdout)."""
+    import sys
+
     import harness.runner.agent as agent_module
 
     captured = {}
@@ -362,6 +407,17 @@ def test_llm7shi_generate_builds_stateless_adapter(monkeypatch):
     assert generate([{"role": "user", "content": "hi"}]) == "reply"
     assert captured["model"] == "ollama:m"
     assert captured["temperature"] == 0.3
+    assert captured["file"] is sys.stderr
+
+
+def test_summary_reports_per_turn_timing(toolkit):
+    script = [
+        _validate_block(GOOD_ROWS),
+        "final answer",
+    ]
+    result = _run(script, toolkit)
+    summary = result.summary()
+    assert "turn seconds:" in summary and "max=" in summary
 
 
 # --- workflow selection ------------------------------------------------------------------

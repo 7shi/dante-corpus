@@ -3,7 +3,7 @@
 ### Handoff (2026-08-22) — resume here
 
 > **Current State & Baseline**:
-> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **711 passed** — 547 corpus + 164 harness).
+> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **717 passed** — 547 corpus + 170 harness).
 > - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`harness/PLAN.md`](harness/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
 > - **Tool Call Protocol sub-project COMPLETE** (T1–T5; both live gates PASSED): the prompt-instructed XML protocol is the officially adopted wire format (Gemini API executes it ~3x faster than local Ollama); native Ollama tool calling stays implemented and gated but reserved for comparison experiments. Details in [`harness/TOOLCALL.md`](harness/TOOLCALL.md).
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all tests.
@@ -21,7 +21,7 @@
 - **Layer 3 — Noun Phrases**: 0 hard / 0 soft violations across all 100 cantos ([`np/README.md`](np/README.md)).
 - **Layer 4 — Dependency Trees**: 0 hard / 0 soft violations across all 100 cantos ([`dep/README.md`](dep/README.md)). Stacked prepositions normalized and subject-agreement residue closed (see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md)).
 - **Layer 5 — Predicate-Argument Skeleton**: **0 hard / 0 soft violations across all 100 cantos** ([`skel/README.md`](skel/README.md), [`skel/RULES.md`](skel/RULES.md)).
-- **Test Suite**: `pytest` **711 passed** (547 corpus + 164 harness; corpus tests ~1.5 s, full suite ~12 s).
+- **Test Suite**: `pytest` **717 passed** (547 corpus + 170 harness; corpus tests ~1.5 s, full suite ~12 s).
 - **Layer 5 Divergence Residue**: **0** (Inferno 0, Purgatorio 0, Paradiso 0).
 
 ### Layer 5 Phase Retrospectives
@@ -39,7 +39,7 @@ With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructur
 1. **Dedicated Grammar Agent Harness for Local LLMs (`harness/`)**:
    - Build a specialized agent harness in `harness/` adopting the two-stage bottom-up architecture (Stage 1: Autonomous Inference `runner/` ➔ Stage 2: Rule & Lexicon Extraction `extractor/`).
    - Benchmark Gemma 4 on curated syntactic challenge fixtures against the 0-soft ground truth (`skel/`).
-   - *Progress (2026-08-22)*: Tool Call Protocol T1–T5 complete with both live gates passed; Stage 1 milestones 1.1–1.3 complete (toolset, agent runner, 87-case benchmark suite). Next: milestone 1.4 evaluation runs (operator-run pilots, then full runs).
+   - *Progress (2026-08-22)*: Tool Call Protocol T1–T5 complete with both live gates passed; Stage 1 milestones 1.1–1.3 complete (toolset, agent runner, 87-case benchmark suite); milestone-1.4 pre-flight observability hardened per §4 item 5. Next: milestone 1.4 evaluation runs (operator-run pilots, then full runs) — session handoff & exact commands in [`harness/PLAN.md`](harness/PLAN.md).
    - *Details, current status & handoff*: [`harness/PLAN.md`](harness/PLAN.md) — the single reference for all harness work.
 
 2. **Long-Term Portability & Cross-Corpus Extensions**:
@@ -66,7 +66,7 @@ the normalized Italian text, the token stream, the nested quote-span tree, morph
 noun phrases, dependency syntax trees, and predicate-argument skeletons, all derived from
 the poem itself with no external ontology. All five layers and the pronoun case annex are now fully
 computed, frozen, and verified at **0 hard / 0 soft violations across all 100 cantos** (suite now
-at `pytest` 711 passed including the harness).
+at `pytest` 717 passed including the harness).
 
 Downstream projects each need to *read the source grammatically* before they can do their own
 work — the formalization layer (`dante-analyze`) to extract entities and relations, the

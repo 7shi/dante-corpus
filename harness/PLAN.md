@@ -1,181 +1,80 @@
 # Grammar Agent Harness: Overall Architecture & Master Plan
 
-## 1. Overview & Paradigm Shift: Generalizable Layer 5 Reconstruction
+## Handoff — resume here
 
-`harness/` is a dedicated **Grammar Agent Harness for Local LLMs** (e.g., **Gemma 4 31B**), designed to systematically reconstruct Layer 5 predicate-argument skeletons (`skel/`) from multi-layer grammatical contexts (Layer 1 text/tokens, quotes hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrase spans, and Layer 4 Universal Dependencies syntax trees).
+Temporary notes for the next session; durable state lives in **Current Status**
+and the **Milestone Ledger** below.
 
-### Motivation & Rationale
-1. **Historical Context & Limitations of `skel/`**:
-   - Layer 5 (`skel/`) was historically constructed through Phases 5–7 using an interactive, semi-manual process: a frontier LLM (Claude Opus 5, later switched to Gemini 3.7 Flash at the end of Phase 8) and human operators iteratively triaged outlier positions to formulate 130 deterministic rules (Rules A–EI).
-   - Although this successfully produced a 100% clean corpus (**0 hard / 0 soft violations across all 100 cantos**, 547 pytest passing), the **construction methodology itself was ad hoc, bespoke to Dante's Italian, and insufficiently automated**.
-   - As a result, the Phase 5–8 methodology cannot be directly generalized to other texts, genres, or languages (such as Latin).
-2. **Mission of `harness/`**:
-   - `harness/` solves this limitation by creating a **reproducible, fully automated, and generalizable reconstruction pipeline**.
-   - Preserving `skel/` as an **immutable Gold Standard (Ground Truth)** for benchmark evaluation, `harness/` demonstrates how local LLMs can autonomously project Layer 4 UD syntax onto predicate-argument frames (Stage 1) and empirically induce syntax rules and valency lexicons (Stage 2).
+**Next action — milestone 1.4 evaluation runs (operator-run):**
 
-```mermaid
-graph TD
-    subgraph "Dante Corpus (Ground Truth Layers)"
-        L1["Layer 1: Tokens / Texts"]
-        L2["Layer 2: Morphology + Case"]
-        L3["Layer 3: Noun Phrases"]
-        L4["Layer 4: UD Syntax Trees"]
-        L5_Gold["Layer 5: skel/ (0-Soft Gold Reference, 547 tests)"]
-    end
+- **Pilot first, both workflows** — the A/B below decides the default workflow:
 
-    subgraph "harness/ (Two-Stage Bottom-Up Architecture)"
-        L1 & L2 & L3 & L4 --> Stage1["Stage 1: Autonomous Inference (runner/)<br/>・Dedicated Grammar Toolset<br/>・Multi-Layer CoT Reasoning<br/>・Syntactic Challenge Benchmark"]
-        
-        Stage1 --> Logs["Execution Logs & Reasoning Traces<br/>(Exact matches, ambiguities, lexical decisions)"]
-        
-        Logs --> Stage2["Stage 2: Bottom-Up Extraction (extractor/)<br/>・Syntax Pattern Mining (Deterministic Fast Path)<br/>・Verb Valency / Lexicon Profile Extraction<br/>・Hybrid Execution Engine (Fast-path + Fallback)"]
-        
-        Stage2 --> GatedBuild["Production Pipeline & Gated Reconstruction<br/>(Token assertions, content hashes, 0-soft verification)"]
-    end
+  ```bash
+  uv run python -m harness.runner.benchmark --model ollama:gemma4:31b-it-qat \
+   --workflow unit --case-id hist-inf14-124 --case-id hist-inf22-097 \
+   --log pilot-unit.log
+  uv run python -m harness.runner.benchmark --model ollama:gemma4:31b-it-qat \
+   --workflow predicate --case-id hist-inf14-124 --case-id hist-inf22-097 \
+   --max-turns 24 --log pilot-predicate.log
+  ```
 
-    Stage1 -.->|Benchmark & Diff Evaluation| L5_Gold
-    GatedBuild -.->|Verification & Audit| L5_Gold
-```
+  Compare wall clock / turns / `predicate_first_pass_rate` / `slow_turns`.
+  Predicate mode validates one predicate per call and is scored as each
+  predicate’s latest submission; unit-level `convergence_rate` keeps its
+  ≤5-turn semantics, so multi-predicate predicate-mode sessions legitimately
+  stay below it. hist-inf14-124 doubles as the regression check for the
+  carry-over-4 validator fix (its gold rows validate cleanly under the scoped rule).
+- **Then the full runs** (one log per attempt — the CLI truncates on startup;
+  roughly 6–9 h per workflow mode locally, ~3× faster via the Gemini API):
+
+  ```bash
+  uv run python -m harness.runner.benchmark --model <model> --workflow <mode> \
+   --log bench-<mode>.log
+  ```
+
+- **Watch items**: (a) empty-response turns (seen native-side in parity run 2)
+  must not silently inflate failure metrics without attribution — the nudge
+  policy should recover them; (b) parse success stays under observation (T4 gate
+  margin was thin: 47 turns at 0.957 vs 0.95) — case records carry per-session
+  parse stats for pooled re-checks; (c) any multi-minute single turn is a
+  prompt/workflow smell — reconsider rather than accept (§4 item 5
+  turn-granularity discipline).
+- `*.log` files are gitignored; `harness/bench-strict-validator-baseline.log`
+  and `harness/parity.log` exist on disk only. Traces collected by these runs
+  feed Stage 2 next.
 
 ---
 
-## 1.5 Current Status & Handoff (2026-08-22)
+## Current Status
 
-### Handoff — read this first
+- [x] **Tool Call Protocol sub-project (T1–T5)** — prompt-instructed XML
+      protocol; both live gates PASSED (probe 0.957 ≥ 0.95 over 47 turns;
+      parity interop 24/24 twice). Details in [`TOOLCALL.md`](TOOLCALL.md) + Ledger.
+- [x] **Milestone 1.1 — Dedicated Grammar Tool API** (`runner/tools.py`; Layer 5
+      masked structurally; anti-leakage search; intrinsic validation).
+- [x] **Milestone 1.2 — Agent Runner** (`runner/agent.py` + `runner/prompts.py`;
+      autonomous grammar sessions incl. the no-call nudge policy).
+- [x] **Milestone 1.3 — Benchmark Suite** (`runner/benchmark.py` +
+      `fixtures/challenge_cases.py`: 87 curated cases; gold comparison + §5.2
+      metric suite; streaming JSONL CLI).
+- [x] **Milestone 1.4 pre-flight** — §4-item-5 live-run observability complete
+      on every CLI (session separators incl. nudge-resume boundaries, per-turn
+      stderr lines with timings, streaming pinned to stderr, JSONL summaries
+      carrying total elapsed time + `slow_turns`).
+- [ ] **Milestone 1.4 — Evaluation execution & trace collection** (operator-run;
+      commands in the Handoff above) → produces the traces Stage 2 mines.
+- [ ] **Stage 2 — Rule & Lexicon Extraction** (`harness/extractor/`, milestones
+      2.1–2.5 in [`extractor/PLAN.md`](extractor/PLAN.md)).
+- Open design question: §7.1 termination tool — the practical half is resolved
+  by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
+  tool stays open at the protocol layer.
+- Test suite: **717 passed** (547 corpus + 41 `test_harness_tools.py` +
+  74 `test_harness_toolcall.py` + 27 `test_harness_agent.py` +
+  28 `test_harness_benchmark.py`).
 
-**Where we are.** The Tool Call Protocol sub-project ([`TOOLCALL.md`](TOOLCALL.md)) is
-complete (**T1–T5 done, both gates PASSED** — T4 live probe and the T5 live parity run
-over `ollama:gemma4:31b-it-qat` with interop 24/24 checks) and is wired into
-Stage 1: **Milestone 1.2 (`runner/agent.py` + `runner/prompts.py`) is complete**, so a
-full autonomous grammar session runs end-to-end on top of the gated protocol,
-**Milestone 1.3 (`runner/benchmark.py` + `fixtures/challenge_cases.py`) is complete**:
-the evaluation harness scores finished sessions against the 0-soft Gold Standard with
-the §5.2 metric suite over a curated 87-case fixture table.
+---
 
-**Transport policy (2026-08-22).** The Gemini API executes the XML protocol roughly 3x
-faster than local Ollama, so **XML (`PromptXmlTransport`) is the officially adopted
-wire format for Stage 1/2 production runs; native Ollama tool calling
-(`OllamaNativeTransport`) stays implemented and gated but is reserved for comparison
-experiments** (re-run `harness.toolcall.parity` when revisiting local-only deployments).
-Backend choice remains free: `google:gemma-4-31b-it` when wall clock matters,
-`ollama:gemma4:31b-it-qat` for offline/cost-constrained work — both ride the same XML
-protocol unchanged.
-
-All live CLIs (`probe` / `parity` / `benchmark` / `runner.agent`) now print one stderr
-progress line per model turn (label, turn counter, each call's compact return value via
-`toolcall.outcome_brief`, elapsed seconds), announce each session with its
-`[index/total]` position (`progress_separator`), and stream the native path's output as
-it arrives (`ollama_chat(echo=True)` through llm7shi's `StreamProcessor`, so native
-turns show the same 🤔 Thinking / 💡 Answer display as llm7shi does on the XML side);
-every JSONL record / trace carries per-turn wall-clock durations (`turn_seconds`) for
-post-run profiling. This is codified as standing invariant **§4 item 5** — future live
-CLIs (Stage 2 included) inherit it.
-
-**Next action — milestone 1.4 evaluation runs (operator-run):**
-> **Session close 2026-08-22 (final):** the Tool Call Protocol sub-project is declared
-> **implementation-complete as specified** — T1–T5 done, both live gates PASSED (probe
-> 0.957; parity interop 24/24 twice), transport policy recorded (XML official, native
-> comparison-only), live-run observability codified as standing invariant §4 item 5.
-> No further toolcall work is scheduled. Suite frozen at **711 passed** — nothing below
-> needs further implementation; the next session starts
-> by running the two pilots, comparing wall-clock/turns/`predicate_first_pass_rate`,
-> then committing to a workflow for the full runs. Note `*.log` files are gitignored:
-> `harness/bench-strict-validator-baseline.log` and `harness/parity.log` exist on disk
-> only.
-> **Watch items for milestone 1.4**: (a) the native-only empty-response pattern seen in
-> parity run 2 (`validate_candidate#1/#3` native ended on one no-call empty turn) —
-> track occurrence rate in benchmark logs; the runner's nudge policy should recover
-> these, but they must not silently inflate failure metrics without attribution;
-> (b) keep measuring parse success inside benchmark runs per carry-over 2 below.
-- **Pilot first, both workflows**: the first live run (interrupted after 4 cases,
-  preserved as `harness/bench-strict-validator-baseline.log`) exposed a structural
-  validator defect (carry-over 4) and motivated an A/B workflow comparison. Before the
-  full 87-case commitment, run a small pilot per mode and compare cost/behavior:
-  `uv run python -m harness.runner.benchmark --model ollama:gemma4:31b-it-qat \
-   --workflow unit --case-id hist-inf14-124 --case-id hist-inf22-097 --log pilot-unit.log`
-  and the same with `--workflow predicate` (expect more turns; give it `--max-turns 24`).
-  The predicate mode validates one predicate per call and is scored as each
-  predicate's latest submission; its fine-grained signal is the pooled
-  `predicate_first_pass_rate`. Unit-level `convergence_rate` keeps its ≤5-turn
-  semantics, so multi-predicate predicate-mode sessions legitimately stay below it.
-  hist-inf14-124 is the unit whose upstream_feedback complaint exposed carry-over 4;
-  under the fixed validator its gold rows validate cleanly, so it doubles as the
-  regression check for the fix.
-- Then the full runs (one log file per attempt — the CLI truncates on startup;
-  roughly 6–9 h per workflow mode on the local 31B model, or ~3x faster via the
-  Gemini API under the adopted XML protocol — see Transport policy):
-  `uv run python -m harness.runner.benchmark --model <model> --workflow <mode> \
-   --log bench-<mode>.log`.
-- ~~Optionally, while at it: the T5 live parity check over the same model~~ — DONE,
-  twice (2026-08-22). Run 1: interop 24/24 checks PASS, observational names-equal 7/12,
-  rows-equal 6/12, xml 29 turns/18 calls vs native 31 turns/19 calls, ~148 min total.
-  Run 2 (first with per-turn timings): interop 24/24 again; native +32% wall clock,
-  fully explained by extra validation turns rather than transport cost, plus a
-  native-only empty-response pattern to watch in milestone 1.4 — details in
-  [`TOOLCALL.md`](TOOLCALL.md) T5. Bring-up fix: `parity.resolve_ollama_model` strips
-  the provider prefix for the native transport. Outcome: XML adopted as the official
-  wire format; native kept for comparison experiments only.
-- Keep measuring parse success inside benchmark runs: the T4 gate margin was thin
-  (47 turns at 0.957 vs 0.95, wide binomial CI), so treat it as still under
-  observation, not permanently closed. Every case record carries per-session
-  parse-success turn counts for pooled re-checks.
-
-**Carry-over issues from live probing** (details in [`TOOLCALL.md`](TOOLCALL.md) T4):
-1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
-   own demonstration exchange with deliberately non-colliding content (a foreign-lemma
-   search returning an empty hit list); nothing fixture-shaped remains to echo.
-2. **Gate margin is thin** — STILL OPEN as a measurement discipline (see next action).
-3. ~~**No-call turns happen**~~ — RESOLVED in 1.2 via the nudge policy in
-   `agent.run_unit`: a final answer with zero successful `validate_candidate` dispatches
-   earns up to one protocol reminder (resuming the same transcript through a fresh loop
-   run under the shared turn budget); give-ups *after* failed validations are never
-   nudged so convergence metrics stay honest. This resolves the practical half of
-   TOOLCALL.md §7.1 for Stage 1 — `validate_candidate` doubles as the acceptance gate;
-   a dedicated `submit_candidate` termination tool stays open at the protocol layer.
-4. ~~**Validator rejects gold-correct complement rows**~~ — RESOLVED (2026-08-22,
-   after the first live run): the interrupted benchmark surfaced a model
-   `upstream_feedback` report proving `validate_candidate`'s citation rule rejected
-   gold-style rows (`elli ccomp←sai`, `sai ccomp←tondo`, `de' xcomp←addur`). Root
-   cause: the implementation applied the NP-head/pronoun requirement to *every*
-   argument, while the spec (`runner/PLAN.md` §3.3 item 2, and the agent prompt) scopes
-   it to **nominal** arguments. A corpus-wide scan put 71% of all rejections on
-   non-nominal roles (ccomp/xcomp/attr anchor on predicate tokens by nature; bare
-   `obl` is gold's adverbial marker). Fix: `tools.requires_nominal_anchor()` — the
-   requirement now covers only subj/obj/iobj/obl:<prep>; clausal roles and bare obl
-   pass with existence checks; `word` anchors became optional (~40% smaller calls).
-   Residual: nominal-role rows whose anchors are genuinely non-nominal (clausal
-   subjects etc.) still reject — measured at 527 rows / 1.7% of anchored nominal rows,
-   touching ~100 of 3477 parse units; these stay documented ceilings funneled through
-   upstream_feedback rather than spec-violating over-reach.
-5. **Submission granularity** — OPEN as an A/B measurement question: whole-unit
-   submission (workflow `unit`) vs per-predicate interleaved validation (workflow
-   `predicate`; scored via per-predicate-latest accumulation + `predicate_first_pass_rate`).
-   The first live run showed unit-mode sessions carrying long CoT plus one large
-   validate call per correction cycle; decide the default from the pilot runs above.
-
-**Environment & artifacts.**
-- Wire format: XML protocol (`PromptXmlTransport`) — official for all Stage 1/2 runs
-  (see Transport policy above). Native Ollama transport: comparison experiments only.
-- Models: `google:gemma-4-31b-it` (Gemini API, ~3x faster — preferred when wall clock
-  matters) and `ollama:gemma4:31b-it-qat` (local, offline/cost-constrained); both are
-  validated end-to-end over the XML protocol.
-- Live probe: `uv run python -m harness.toolcall.probe --model <model> --repeat N --log
-  harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
-  summary record last (a log without the summary line = interrupted run);
-  `*.log` is gitignored.
-- Migration parity check (T5, live run PASSED 2026-08-22): `uv run python -m
-  harness.toolcall.parity
-  --model <model> [--repeat N] [--log harness/parity.log]` — same log semantics; hard
-  gate = canonical interop on both transports.
-- Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
-  --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
-- Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
-  C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
-- Test suite: **711 passed** (547 pre-existing + 41 `test_harness_tools.py` +
-  74 `tests/test_harness_toolcall.py` + 23 `tests/test_harness_agent.py` +
-  26 `tests/test_harness_benchmark.py`).
-
-### Milestone ledger
+## Milestone Ledger
 
 **Milestone 1.1 — Dedicated Grammar Tool API (`runner/tools.py`): COMPLETE.**
 
@@ -252,7 +151,7 @@ both observed failure classes benign and prompt-side.
   non-colliding few-shot demo replaces the probe's 'cammin' exchange (T4 carry-over 1).
 - `runner/agent.py`: `run_unit(...)` drives one parse-unit session through
   `toolcall.run_tool_loop` over a `PromptXmlTransport` (proven `llm7shi_generate`
-  adapter copied from `probe.py`); no-call nudge policy as described in the Handoff;
+  adapter copied from `probe.py`); no-call nudge policy (carry-over 3 in the record below);
   `UnitResult` wraps the loop's final text / outcome envelopes / full transcript and
   derives candidate rows (re-parsed from the last `validate_candidate` submission),
   validation outcomes, upstream-feedback records, compliance flags, and a
@@ -293,12 +192,78 @@ both observed failure classes benign and prompt-side.
   gold comparison, probe-semantics parse stats, metric aggregation, streaming sink);
   suite total 663 passed.
 
-**Remaining milestones**: 1.4 evaluation execution & trace collection (operator-run;
-see the Handoff for the exact commands) — the T5 live parity run is done (both protocol
-gates PASSED). Open design question:
-§7.1 termination tool (practical half resolved by the nudge policy — see Handoff).
-After 1.4 traces exist, Stage 2 (`harness/extractor/`, milestones 2.1–2.5 in
-[`extractor/PLAN.md`](extractor/PLAN.md)) is next.
+
+### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
+1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
+   own demonstration exchange with deliberately non-colliding content (a foreign-lemma
+   search returning an empty hit list); nothing fixture-shaped remains to echo.
+2. **Gate margin is thin** — STILL OPEN as a measurement discipline (tracked in the Handoff watch items).
+3. ~~**No-call turns happen**~~ — RESOLVED in 1.2 via the nudge policy in
+   `agent.run_unit`: a final answer with zero successful `validate_candidate` dispatches
+   earns up to one protocol reminder (resuming the same transcript through a fresh loop
+   run under the shared turn budget); give-ups *after* failed validations are never
+   nudged so convergence metrics stay honest. This resolves the practical half of
+   TOOLCALL.md §7.1 for Stage 1 — `validate_candidate` doubles as the acceptance gate;
+   a dedicated `submit_candidate` termination tool stays open at the protocol layer.
+4. ~~**Validator rejects gold-correct complement rows**~~ — RESOLVED (2026-08-22,
+   after the first live run): the interrupted benchmark surfaced a model
+   `upstream_feedback` report proving `validate_candidate`'s citation rule rejected
+   gold-style rows (`elli ccomp←sai`, `sai ccomp←tondo`, `de' xcomp←addur`). Root
+   cause: the implementation applied the NP-head/pronoun requirement to *every*
+   argument, while the spec (`runner/PLAN.md` §3.3 item 2, and the agent prompt) scopes
+   it to **nominal** arguments. A corpus-wide scan put 71% of all rejections on
+   non-nominal roles (ccomp/xcomp/attr anchor on predicate tokens by nature; bare
+   `obl` is gold's adverbial marker). Fix: `tools.requires_nominal_anchor()` — the
+   requirement now covers only subj/obj/iobj/obl:<prep>; clausal roles and bare obl
+   pass with existence checks; `word` anchors became optional (~40% smaller calls).
+   Residual: nominal-role rows whose anchors are genuinely non-nominal (clausal
+   subjects etc.) still reject — measured at 527 rows / 1.7% of anchored nominal rows,
+   touching ~100 of 3477 parse units; these stay documented ceilings funneled through
+   upstream_feedback rather than spec-violating over-reach.
+5. **Submission granularity** — OPEN as an A/B measurement question: whole-unit
+   submission (workflow `unit`) vs per-predicate interleaved validation (workflow
+   `predicate`; scored via per-predicate-latest accumulation + `predicate_first_pass_rate`).
+   The first live run showed unit-mode sessions carrying long CoT plus one large
+   validate call per correction cycle; default decided by the milestone-1.4 pilots (Handoff watch items).
+
+---
+
+## 1. Overview & Paradigm Shift: Generalizable Layer 5 Reconstruction
+
+`harness/` is a dedicated **Grammar Agent Harness for Local LLMs** (e.g., **Gemma 4 31B**), designed to systematically reconstruct Layer 5 predicate-argument skeletons (`skel/`) from multi-layer grammatical contexts (Layer 1 text/tokens, quotes hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrase spans, and Layer 4 Universal Dependencies syntax trees).
+
+### Motivation & Rationale
+1. **Historical Context & Limitations of `skel/`**:
+   - Layer 5 (`skel/`) was historically constructed through Phases 5–7 using an interactive, semi-manual process: a frontier LLM (Claude Opus 5, later switched to Gemini 3.7 Flash at the end of Phase 8) and human operators iteratively triaged outlier positions to formulate 130 deterministic rules (Rules A–EI).
+   - Although this successfully produced a 100% clean corpus (**0 hard / 0 soft violations across all 100 cantos**, 547 pytest passing), the **construction methodology itself was ad hoc, bespoke to Dante's Italian, and insufficiently automated**.
+   - As a result, the Phase 5–8 methodology cannot be directly generalized to other texts, genres, or languages (such as Latin).
+2. **Mission of `harness/`**:
+   - `harness/` solves this limitation by creating a **reproducible, fully automated, and generalizable reconstruction pipeline**.
+   - Preserving `skel/` as an **immutable Gold Standard (Ground Truth)** for benchmark evaluation, `harness/` demonstrates how local LLMs can autonomously project Layer 4 UD syntax onto predicate-argument frames (Stage 1) and empirically induce syntax rules and valency lexicons (Stage 2).
+
+```mermaid
+graph TD
+    subgraph "Dante Corpus (Ground Truth Layers)"
+        L1["Layer 1: Tokens / Texts"]
+        L2["Layer 2: Morphology + Case"]
+        L3["Layer 3: Noun Phrases"]
+        L4["Layer 4: UD Syntax Trees"]
+        L5_Gold["Layer 5: skel/ (0-Soft Gold Reference, 547 tests)"]
+    end
+
+    subgraph "harness/ (Two-Stage Bottom-Up Architecture)"
+        L1 & L2 & L3 & L4 --> Stage1["Stage 1: Autonomous Inference (runner/)<br/>・Dedicated Grammar Toolset<br/>・Multi-Layer CoT Reasoning<br/>・Syntactic Challenge Benchmark"]
+        
+        Stage1 --> Logs["Execution Logs & Reasoning Traces<br/>(Exact matches, ambiguities, lexical decisions)"]
+        
+        Logs --> Stage2["Stage 2: Bottom-Up Extraction (extractor/)<br/>・Syntax Pattern Mining (Deterministic Fast Path)<br/>・Verb Valency / Lexicon Profile Extraction<br/>・Hybrid Execution Engine (Fast-path + Fallback)"]
+        
+        Stage2 --> GatedBuild["Production Pipeline & Gated Reconstruction<br/>(Token assertions, content hashes, 0-soft verification)"]
+    end
+
+    Stage1 -.->|Benchmark & Diff Evaluation| L5_Gold
+    GatedBuild -.->|Verification & Audit| L5_Gold
+```
 
 ---
 
@@ -322,6 +287,18 @@ In contrast to the top-down methodology used in Phases 5–8 (where frontier LLM
   - Maximize cross-corpus consistency and reduce inference latency and token overhead (targeting >80% fast-path coverage).
   - Provide a gated production pipeline that reconstructs cantos under strict 0-soft regression verification and content hash updating.
 - **Specification**: [`harness/extractor/PLAN.md`](extractor/PLAN.md).
+
+### Transport & backend policy (2026-08-22)
+
+The Gemini API executes the XML protocol roughly 3× faster than local Ollama,
+so **XML (`PromptXmlTransport`) is the officially adopted wire format for Stage
+1/2 production runs; native Ollama tool calling (`OllamaNativeTransport`) stays
+implemented and gated but is reserved for comparison experiments** (re-run
+`harness.toolcall.parity` when revisiting local-only deployments). Backend choice
+remains free: `google:gemma-4-31b-it` when wall clock matters,
+`ollama:gemma4:31b-it-qat` for offline/cost-constrained work — both ride the
+same XML protocol unchanged; both were validated end-to-end over the XML protocol
+during the T4/T5 gates.
 
 ---
 
@@ -373,6 +350,23 @@ dante-corpus/
 
 ---
 
+## Environment & Artifacts (reference)
+
+- Live probe: `uv run python -m harness.toolcall.probe --model <model> --repeat N --log
+  harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
+  summary record last (a log without the summary line = interrupted run);
+  `*.log` is gitignored.
+- Migration parity check (T5, live run PASSED 2026-08-22): `uv run python -m
+  harness.toolcall.parity
+  --model <model> [--repeat N] [--log harness/parity.log]` — same log semantics;
+  hard gate = canonical interop on both transports.
+- Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
+  --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
+- Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
+  C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
+
+---
+
 ## 4. Standing Invariants & Disciplines
 
 1. **Strict Masking of Gold Layer 5**:
@@ -385,5 +379,9 @@ dante-corpus/
    - Discrepancies identified in upstream layers (Layer 2 morphology or Layer 4 UD syntax) are emitted as structured `upstream_feedback` records for human audit and triage.
 5. **Live-Run Observability — separators & streaming**:
    - LLM-in-the-loop runs are inherently slow (minutes per turn on local models, hours per benchmark), and an unwatchable run is an unusable run: every operator-facing CLI must keep progress **visible by default**, not silent-until-finished.
-   - Concretely (implemented in `toolcall.loop`): stream model output to stderr as it arrives (llm7shi does this natively on the XML path; `parity.ollama_chat(echo=True)` replays it via llm7shi's `StreamProcessor` on the native path); print one stderr progress line per turn with each call's compact return value (`outcome_brief`) and elapsed seconds (`progress_printer`); announce every session with its `[index/total]` position via major `=====` separators and divide named passes inside a session with minor `-----` ones (`progress_separator` / `progress_subseparator`). Per-turn wall-clock durations ride in the JSONL logs (`turn_seconds`) for post-run profiling.
-   - This is a standing requirement, not a one-off patch: new live entry points (Stage 2's `extractor/` CLIs included) must ship the same observability from day one, all human-facing output goes to stderr so JSONL logs stay machine-clean, and any future transport must preserve it.
+    - Concretely (implemented in `toolcall.loop`): stream model output to stderr as it arrives (llm7shi does this natively on the XML path; `parity.ollama_chat(echo=True)` replays it via llm7shi's `StreamProcessor` on the native path); print one stderr progress line per turn with each call's compact return value (`outcome_brief`) and elapsed seconds (`progress_printer`); announce every session with its `[index/total]` position via major `=====` separators and divide named passes inside a session with minor `-----` ones (`progress_separator` / `progress_subseparator`). Per-turn wall-clock durations ride in the JSONL logs (`turn_seconds`) for post-run profiling.
+    - **Per-turn logging & timing are a measurement instrument, not decoration**: the per-turn stderr lines and `turn_seconds` arrays exist so per-turn cost is visible live *and* auditable after the run, and run summaries must aggregate them (probe / parity / benchmark roll per-turn seconds up into their `summary` records).
+    - **Turn-granularity discipline — keep turns small**: one healthy model turn is one reasoning step plus its dispatches. Prefer many short turns over few long ones; a single turn that sits thinking for many minutes signals that too much work was bundled into one response (e.g., whole-unit CoT ending in one giant validate call) and the prompt or workflow must be **reconsidered, not the latency accepted**. To make brooding measurable, benchmark reports count turns ≥ `SLOW_TURN_SECONDS = 300` as `slow_turns`, and the milestone 1.4 pilot comparison reads these timings when choosing between the unit and predicate workflows.
+    - **Log durability never relies on shell redirection**: every live CLI opens and writes its own artifact files (`--log`, `--trace`), so where the human-facing stream display lands is immaterial — stdout or stderr both stay out of any machine-facing record. Current code pins streaming sinks to stderr as a harmless convention (llm7shi defaults to stdout; `parity.ollama_chat(echo=True)` feeds llm7shi's `StreamProcessor`); keep it, but nothing downstream may *depend* on it.
+    - **Streaming JSONL log contract** (as implemented by `probe` / `parity` / `benchmark`, binding for all future live CLIs): append one JSON object per completed unit of work (`scenario` / comparison / `case` / `session` record) and flush it immediately, so an interrupted run keeps everything already finished on disk; write a final `summary` record carrying the aggregate metrics **including total elapsed time** (run-level wall clock plus rolled-up per-turn seconds / mean / max). The log truncates on startup (`"w"` mode: one file per attempt, runs never append across attempts), and a file without its summary line marks an interrupted run.
+    - This is a standing requirement, not a one-off patch: new live entry points (Stage 2's `extractor/` CLIs included) must ship the same observability from day one, keep the human-facing progress display on stderr by convention (JSONL logs go to their own `--log` files, never to redirected console output), and any future transport must preserve it.

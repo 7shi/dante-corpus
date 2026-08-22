@@ -78,6 +78,13 @@ __all__ = [
 # PLAN §5.2: "0 divergence after multi-turn self-correction (<= 5 turns)".
 CONVERGENCE_TURN_BUDGET = 5
 
+# Turn-granularity discipline (harness/PLAN.md §4 item 5): one healthy model turn
+# is one reasoning step plus its dispatches. A turn that sits thinking for many
+# minutes means too much work was bundled into one response and the prompt or
+# workflow must be reconsidered, not the latency accepted. Reports count turns at
+# or over this threshold as `slow_turns` so brooding shows up in the aggregates.
+SLOW_TURN_SECONDS = 300
+
 # Row identity for comparison: indices + role. Word anchors are verification-only
 # (never stored in the artifact), so they are excluded from exact matching.
 RowKey = tuple[int, int, str, int, int]
@@ -271,6 +278,8 @@ class UnitEvaluation:
     # Protocol health (probe semantics, kept under observation per T4).
     parse_success_turns: int = 0
     parse_failure_turns: int = 0
+    # Wall-clock seconds per completed model turn (mirrors UnitResult).
+    turn_seconds: list[float] = field(default_factory=list)
     # Key sets backing the role-level aggregation (not serialized).
     gold_key_set: frozenset[RowKey] = frozenset()
     final_key_set: frozenset[RowKey] = frozenset()
@@ -319,6 +328,7 @@ class UnitEvaluation:
             "upstream_wellformed": self.upstream_wellformed,
             "parse_success_turns": self.parse_success_turns,
             "parse_failure_turns": self.parse_failure_turns,
+            "turn_seconds": self.turn_seconds,
         }
         precision = self.upstream_feedback_precision
         data["upstream_feedback_precision"] = None if precision is None else round(precision, 4)
@@ -427,6 +437,7 @@ def evaluate_unit(
         upstream_wellformed=_feedback_validity(result.upstream_feedback)[0],
         parse_success_turns=parse_ok,
         parse_failure_turns=parse_bad,
+        turn_seconds=list(result.turn_seconds),
         gold_key_set=frozenset(gold),
         final_key_set=frozenset(final),
     )
@@ -531,6 +542,10 @@ class BenchmarkReport:
         parse_failure = sum(ev.parse_failure_turns for ev in evals)
         preds_total = sum(ev.preds_total for ev in evals)
         preds_first_pass = sum(ev.preds_first_pass for ev in evals)
+        # Per-turn wall clock (§4 item 5): aggregated so brooding turns surface
+        # in the run totals instead of hiding inside per-case records.
+        turn_seconds = [s for ev in evals for s in ev.turn_seconds]
+        total_seconds = sum(turn_seconds)
         return {
             "units": units,
             "protocol_complete_rate": round(
@@ -560,6 +575,13 @@ class BenchmarkReport:
             "parse_success_rate": round(parse_success / (parse_success + parse_failure), 4)
             if parse_success + parse_failure
             else None,
+            "session_turns": sum(ev.turns for ev in evals),
+            "wall_clock_seconds": round(total_seconds, 1),
+            "mean_turn_seconds": round(total_seconds / len(turn_seconds), 1)
+            if turn_seconds
+            else None,
+            "max_turn_seconds": round(max(turn_seconds), 1) if turn_seconds else None,
+            "slow_turns": sum(1 for s in turn_seconds if s >= SLOW_TURN_SECONDS),
             "categories": categories,
         }
 
@@ -585,6 +607,12 @@ class BenchmarkReport:
         )
         if m["parse_success_rate"] is not None:
             lines.append(f"parse success rate: {m['parse_success_rate']:.3f} (gate >= 0.95)")
+        if m["session_turns"]:
+            lines.append(
+                f"turns: {m['session_turns']} in {m['wall_clock_seconds']:.0f}s "
+                f"(mean {m['mean_turn_seconds']:.1f}s, max {m['max_turn_seconds']:.1f}s, "
+                f"slow(>= {SLOW_TURN_SECONDS}s): {m['slow_turns']})"
+            )
         for category, stats in sorted(m["categories"].items()):
             lines.append(
                 f"    [{category}] n={stats['units']} "
@@ -619,8 +647,11 @@ def run_benchmark(
     receives one JSONL record per completed case — flushed immediately so an
     interrupted run keeps everything already finished — followed by nothing;
     the caller writes the summary record (see CLI main, mirroring `probe.py`).
-    `progress` prints one stderr line per model turn, labeled with the running
-    case id (see `toolcall.progress_printer`) so long live runs stay watchable.
+    `progress` keeps long live runs watchable (harness/PLAN.md §4 item 5): it
+    announces each case with its `[index/total]` position (`toolcall.progress_separator`),
+    prints one stderr line per model turn labeled with the running case id
+    (`toolcall.progress_printer`), and marks nudged resumes inside a session with a
+    minor separator (`toolcall.progress_subseparator`, via `agent.run_unit`).
     """
     toolkit = GrammarToolkit() if toolkit is None else toolkit
     specs = tool_specs() if specs is None else specs
@@ -639,6 +670,7 @@ def run_benchmark(
             max_turns=max_turns,
             max_nudges=max_nudges,
             workflow=workflow,
+            progress=progress,
             on_turn=(
                 progress_printer(f"{case.case_id}", max_turns) if progress else None
             ),
@@ -650,7 +682,6 @@ def run_benchmark(
         if sink is not None:
             record = evaluation.to_dict()
             record["final_text"] = result.text
-            record["turn_seconds"] = result.turn_seconds
             record["trace"] = result.trace_record(include_transcript=include_transcript)
             record["trace"].pop("candidate_rows", None)  # already in the case record
             sink.write(json.dumps(record, ensure_ascii=False) + "\n")

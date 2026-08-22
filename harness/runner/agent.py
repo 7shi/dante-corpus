@@ -1,6 +1,6 @@
 """Stage 1 agent runner: one autonomous grammar session per parse unit (Milestone 1.2).
 
-Wires the proven pieces together (`harness/PLAN.md` §1.5 Handoff):
+Wires the proven pieces together (`harness/PLAN.md` Handoff):
 
 - system prompt per unit = 5-step CoT reasoning protocol (`runner.prompts`) +
   the tool-call wire contract + the closed tool specs;
@@ -38,6 +38,8 @@ from harness.toolcall import (
     is_parse_error,
     parse_tool_calls,
     progress_printer,
+    progress_separator,
+    progress_subseparator,
     run_tool_loop,
 )
 
@@ -82,7 +84,9 @@ def llm7shi_generate(
     """Build a stateless generate function over `llm7shi.compat.generate_with_schema`.
 
     Proven adapter copied from `harness.toolcall.probe` (both the Ollama and the
-    Gemini path were exercised end-to-end during the T4 gate).
+    Gemini path were exercised end-to-end during the T4 gate). The stream sink is
+    pinned to stderr (§4 item 5): llm7shi defaults to stdout, which would mix the
+    🤔 Thinking / 💡 Answer display into machine-facing output.
     """
     from llm7shi.compat import generate_with_schema
 
@@ -93,6 +97,7 @@ def llm7shi_generate(
             model=model,
             temperature=temperature,
             show_params=not quiet,
+            file=sys.stderr,
         )
         return response.text
 
@@ -208,6 +213,11 @@ class UnitResult:
             f"candidate rows: {len(self.candidate_rows)}",
             f"upstream feedback records: {len(self.upstream_feedback)}",
         ]
+        if self.turn_seconds:
+            lines.append(
+                f"turn seconds: total={sum(self.turn_seconds):.0f} "
+                f"max={max(self.turn_seconds):.0f}"
+            )
         if self.validations:
             diagnostics = self.validations[-1].get("result", {}).get("diagnostics")
             lines.append(f"last diagnostics: {diagnostics}")
@@ -278,6 +288,7 @@ def run_unit(
     max_nudges: int = MAX_NUDGES,
     workflow: str = "unit",
     on_turn=None,
+    progress: bool = False,
 ) -> UnitResult:
     """Run one autonomous grammar session for a single parse unit.
 
@@ -289,7 +300,9 @@ def run_unit(
     transcript through a fresh loop run under the shared turn budget. The loop
     library itself is left untouched. `on_turn` (see `toolcall.progress_printer`)
     is forwarded to every loop run with the turn number offset so nudged resumes
-    keep counting session-wide.
+    keep counting session-wide. `progress` keeps multi-pass sessions watchable
+    (harness/PLAN.md §4 item 5): each nudged resume is announced with a minor
+    `toolcall.progress_subseparator` before the pass starts.
     """
     specs = tool_specs() if specs is None else list(specs)
     opening = _opening_messages(
@@ -344,6 +357,8 @@ def run_unit(
 
         nudges_left -= 1
         result.nudges += 1
+        if progress:
+            progress_subseparator("nudged resume")
         transcript = loop_result.messages + [{"role": "user", "content": NUDGE_MESSAGE}]
 
     return result
@@ -384,6 +399,8 @@ def main(argv=None) -> int:
     transport = PromptXmlTransport(
         generate=llm7shi_generate(args.model, args.temperature, quiet=not args.verbose)
     )
+    # §4 item 5: a live CLI announces its (single) session before turn lines start.
+    progress_separator(f"{args.canticle} {args.canto} {args.line_start}", 1, 1)
     result = run_unit(
         transport=transport,
         toolkit=GrammarToolkit(),
@@ -397,6 +414,7 @@ def main(argv=None) -> int:
         on_turn=progress_printer(
             f"{args.canticle} {args.canto} {args.line_start}", args.max_turns
         ),
+        progress=True,
     )
 
     if args.trace:

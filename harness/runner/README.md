@@ -21,7 +21,7 @@ Rather than giving the model an unconstrained bash environment, Stage 1 equips t
 
 ## Usage
 
-One autonomous session per parse unit (live model; see `../PLAN.md` §1.5):
+One autonomous session per parse unit (live model; see `../PLAN.md` Handoff):
 
 ```bash
 uv run python -m harness.runner.agent --canticle inferno --canto 1 --line-start 1 \

@@ -128,6 +128,7 @@ class ProbeReport:
 
     def metrics(self) -> dict:
         """Machine-readable measurements, as embedded in the `--log` summary record."""
+        seconds = [s for record in self.scenarios for s in record["turn_seconds"]]
         return {
             "turns": self.turns,
             "parse_success_turns": self.parse_success_turns,
@@ -138,6 +139,13 @@ class ProbeReport:
             "calls": self.calls,
             "hallucinated_calls": self.hallucinated_calls,
             "dispatch_errors": self.dispatch_errors,
+            # §4 item 5: the summary record carries the run's total model time so
+            # post-run profiling reads one line instead of summing per-scenario.
+            "wall_clock_seconds": round(sum(seconds), 1),
+            "mean_turn_seconds": round(sum(seconds) / len(seconds), 1)
+            if seconds
+            else None,
+            "max_turn_seconds": round(max(seconds), 1) if seconds else None,
         }
 
     def summary(self) -> str:
@@ -151,6 +159,12 @@ class ProbeReport:
             f"(hallucinated: {self.hallucinated_calls}, "
             f"dispatch errors: {self.dispatch_errors})",
         ]
+        if metrics["wall_clock_seconds"]:
+            lines.append(
+                f"model time: {metrics['wall_clock_seconds']:.0f}s "
+                f"(mean {metrics['mean_turn_seconds']:.1f}s, "
+                f"max {metrics['max_turn_seconds']:.1f}s)"
+            )
         return "\n".join(lines)
 
 
@@ -274,7 +288,12 @@ def expand_scenarios(
 
 
 def llm7shi_generate(model: str, temperature: float | None = None, quiet: bool = True):
-    """Build a stateless generate function over `llm7shi.compat.generate_with_schema`."""
+    """Build a stateless generate function over `llm7shi.compat.generate_with_schema`.
+
+    The stream sink is pinned to stderr (harness/PLAN.md §4 item 5): llm7shi
+    defaults to stdout, which would mix the 🤔 Thinking / 💡 Answer display into
+    machine-facing output.
+    """
     from llm7shi.compat import generate_with_schema
 
     def generate(messages: list[dict]) -> str:
@@ -284,6 +303,7 @@ def llm7shi_generate(model: str, temperature: float | None = None, quiet: bool =
             model=model,
             temperature=temperature,
             show_params=not quiet,
+            file=sys.stderr,
         )
         return response.text
 
