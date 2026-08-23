@@ -17,6 +17,7 @@ from dante_corpus import api
 from harness.fixtures import CATEGORIES, CHALLENGE_CASES, case_by_id, cases_for
 from harness.fixtures.challenge_cases import ChallengeCase
 from harness.runner.agent import run_unit
+from harness.runner import benchmark as bench_module
 from harness.runner.benchmark import (
     CONVERGENCE_TURN_BUDGET,
     BenchmarkReport,
@@ -27,7 +28,10 @@ from harness.runner.benchmark import (
     _retry_snapshot,
     candidate_keys,
     evaluate_unit,
+    evaluation_from_record,
     gold_row_keys,
+    load_log,
+    prepare_resume,
     resolve_unit_bounds,
     run_benchmark,
 )
@@ -553,6 +557,60 @@ def test_run_benchmark_status_bar_tracks_the_separator_positions(toolkit, capsys
     assert capsys.readouterr().err == ""
 
 
+def test_run_benchmark_resume_offset_spans_the_whole_run(toolkit, capsys):
+    """Resumed runs keep whole-run positions: `[offset+i/offset+N]`, bar from offset."""
+    done = case_by_id("ctl-inf01-010")
+    case = case_by_id("quo-pur01-046")
+    rows = _gold_rows_as_dicts(case.canticle, case.canto, case.line_start, case.line_end)
+    script = [_validate_block(rows, case.canticle, case.canto, case.line_start), "solved"]
+
+    seeded = BenchmarkReport()
+    seeded.add(
+        UnitEvaluation(
+            case_id=done.case_id, category=done.category,
+            unit={"canticle": done.canticle, "canto": done.canto,
+                  "line_start": done.line_start, "line_end": done.line_end},
+            turn_seconds=[100.0],
+        )
+    )
+
+    updates = []
+
+    class _Bar:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def update(self, completed):
+            updates.append(completed)
+
+    class _FakeStatusLine:
+        def __init__(self):
+            self.stream = io.StringIO()
+
+        def progress(self, total, start=0, label=None):
+            assert (total, start) == (2, 1)  # 1 resumed + 1 to run
+            return _Bar()
+
+    fake = _FakeStatusLine()
+    report = run_benchmark(
+        [case],
+        StubTransport(script),
+        toolkit=toolkit,
+        progress=True,
+        status_line=fake,
+        report=seeded,
+        resume_offset=1,
+    )
+    # The separator counts the resumed case; the bar starts past it.
+    assert "===== [2/2] quo-pur01-046 =====" in fake.stream.getvalue()
+    assert updates == [2]
+    assert len(report) == 2
+    assert capsys.readouterr().err == ""
+
+
 def test_harness_status_line_stream_is_markup_safe(capsys):
     """Forwarded corpus/model text must never be parsed as Rich markup.
 
@@ -742,3 +800,187 @@ def test_report_aggregates_pooled_predicate_first_pass_rate():
                        preds_first_pass=3, preds_total=4)
     )
     assert report.metrics()["predicate_first_pass_rate"] == round(4 / 6, 4)
+
+
+# --- resume support (interrupted --log files) ---------------------------------------------------------
+
+
+def _perfect_script_for(case):
+    rows = _gold_rows_as_dicts(case.canticle, case.canto, case.line_start, case.line_end)
+    return [
+        _block("read_unit",
+               json.dumps({"canticle": case.canticle, "canto": case.canto,
+                           "line_start": case.line_start})),
+        _validate_block(rows, case.canticle, case.canto, case.line_start),
+        "The unit is solved.",
+    ]
+
+
+def test_evaluation_from_record_rebuilds_identical_aggregates(toolkit):
+    """A logged case record rejoins a resumed report with identical metrics."""
+    case = case_by_id("rel-inf01-007")
+    result = _run(_perfect_script_for(case), toolkit,
+                  canticle=case.canticle, canto=case.canto,
+                  line_start=case.line_start, line_end=case.line_end)
+    evaluation = evaluate_unit(result, case=case)
+    evaluation.turn_seconds = [12.5, 130.0]
+    evaluation.api_retries, evaluation.api_retry_seconds = 2, 40.0
+
+    record = json.loads(json.dumps(evaluation.to_dict()))
+    rebuilt = evaluation_from_record(record)
+
+    assert rebuilt.case_id == evaluation.case_id
+    assert rebuilt.exact_first and rebuilt.exact_final and rebuilt.converged
+    assert rebuilt.turn_seconds == [12.5, 130.0]
+    assert rebuilt.api_retries == 2 and rebuilt.api_retry_seconds == 40.0
+    assert rebuilt.gold_key_set == evaluation.gold_key_set
+    assert rebuilt.final_key_set == evaluation.final_key_set
+
+    solo, resumed = BenchmarkReport(), BenchmarkReport()
+    solo.add(evaluation)
+    resumed.add(rebuilt)
+    assert solo.metrics() == resumed.metrics()
+    assert solo.role_table() == resumed.role_table()
+
+
+def test_load_log_skips_blank_and_torn_lines(tmp_path):
+    log = tmp_path / "bench.log"
+    good = {"record": "case", "case_id": "x"}
+    log.write_text(json.dumps(good) + "\n\n" + '{"record": "case", "case_i')
+    assert load_log(str(log)) == [good]
+
+
+def test_prepare_resume_filters_selection_and_workflow():
+    first = case_by_id("ctl-inf01-010")
+    second = case_by_id("quo-pur01-046")
+    done = {
+        "record": "case",
+        "case_id": first.case_id,
+        "workflow": "unit",
+        "unit": {"canticle": first.canticle, "canto": first.canto,
+                 "line_start": first.line_start, "line_end": first.line_end},
+        "exact_final": True,
+    }
+    records = [
+        done,
+        {**done, "case_id": second.case_id, "workflow": "predicate"},  # other scoring
+        {**done, "case_id": "no-such-case"},  # outside this selection
+        {"record": "summary"},
+    ]
+    loaded, remaining = prepare_resume(records, [first, second], "unit")
+    assert [ev.case_id for ev in loaded] == [first.case_id]
+    assert [case.case_id for case in remaining] == [second.case_id]
+
+
+def test_prepare_resume_reruns_unrebuildable_records(toolkit, capsys):
+    """A record whose gold artifact cannot be reloaded is re-run, not dropped."""
+    case = case_by_id("ctl-inf01-010")
+    broken = {
+        "record": "case",
+        "case_id": case.case_id,
+        "workflow": "unit",
+        "unit": {"canticle": "inferno", "canto": 99999,
+                 "line_start": 1, "line_end": 3},
+    }
+    loaded, remaining = prepare_resume([broken], [case], "unit")
+    assert loaded == []
+    assert [c.case_id for c in remaining] == [case.case_id]
+    assert "could not reload" in capsys.readouterr().err
+
+
+def test_run_benchmark_seeds_resumed_report_into_the_aggregate(toolkit):
+    prior_case = case_by_id("ctl-inf01-010")
+    gold = frozenset(gold_row_keys(prior_case.canticle, prior_case.canto,
+                                   prior_case.line_start, prior_case.line_end))
+    prior = UnitEvaluation(
+        case_id=prior_case.case_id,
+        category=prior_case.category,
+        unit={"canticle": prior_case.canticle, "canto": prior_case.canto,
+              "line_start": prior_case.line_start, "line_end": prior_case.line_end},
+        turns=2, submissions=2, exact_first=False, exact_final=True, converged=True,
+        turn_seconds=[100.0],
+        gold_key_set=gold,
+        final_key_set=gold,
+    )
+    report = BenchmarkReport()
+    report.add(prior)
+
+    case = case_by_id("quo-pur01-046")
+    rows = _gold_rows_as_dicts(case.canticle, case.canto, case.line_start, case.line_end)
+    script = [_validate_block(rows, case.canticle, case.canto, case.line_start), "solved"]
+    result = run_benchmark([case], StubTransport(script), toolkit=toolkit, report=report)
+
+    assert len(result) == 2
+    metrics = result.metrics()
+    assert metrics["units"] == 2
+    assert metrics["one_shot_exact_match_rate"] == 0.5
+    # The resumed session's wall clock counts toward the summed total.
+    assert metrics["wall_clock_seconds"] >= 100.0
+
+
+def test_main_resumes_existing_log_appends_and_sums_session_time(
+    toolkit, tmp_path, monkeypatch, capsys
+):
+    """Re-running an interrupted log skips finished cases and appends the rest.
+
+    The summary must carry no start/end span (idle time between attempts would
+    poison it) — only summed per-session durations via the aggregate metrics.
+    """
+    first = case_by_id("ctl-inf01-010")
+    second = case_by_id("quo-pur01-046")
+
+    log = tmp_path / "bench.log"
+    with log.open("w", encoding="utf-8") as sink:
+        run_benchmark([first], StubTransport(_perfect_script_for(first)),
+                      toolkit=toolkit, sink=sink)
+    with log.open("a", encoding="utf-8") as sink:  # stale completion marker
+        sink.write(json.dumps({"record": "summary"}) + "\n")
+
+    captured = {}
+
+    def fake_run(cases_, transport, *, sink=None, report=None, **kwargs):
+        captured["cases"] = cases_
+        captured["seeded"] = [ev.case_id for ev in report.evaluations]
+        for case in cases_:
+            gold = frozenset(gold_row_keys(case.canticle, case.canto,
+                                           case.line_start, case.line_end))
+            ev = UnitEvaluation(
+                case_id=case.case_id, category=case.category,
+                unit={"canticle": case.canticle, "canto": case.canto,
+                      "line_start": case.line_start, "line_end": case.line_end},
+                turns=1, submissions=1, exact_first=True, exact_final=True,
+                converged=True, turn_seconds=[7.0],
+                gold_key_set=gold, final_key_set=gold,
+            )
+            if sink is not None:
+                record = ev.to_dict()
+                record["final_text"] = "solved"
+                record["trace"] = {"record": "session"}
+                sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+            report.add(ev)
+        return report
+
+    monkeypatch.setattr(bench_module, "run_benchmark", fake_run)
+    monkeypatch.setattr(bench_module, "HarnessStatusLine", None)
+    monkeypatch.setattr(bench_module, "PromptXmlTransport", lambda **kw: None)
+    monkeypatch.setattr(bench_module, "llm7shi_generate", lambda *a, **k: None)
+
+    rc = bench_module.main([
+        "--model", "stub", "--log", str(log),
+        "--case-id", first.case_id, "--case-id", second.case_id,
+    ])
+
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert f"resume: 1 completed case(s) loaded from {log}" in out
+    assert [c.case_id for c in captured["cases"]] == [second.case_id]
+    assert captured["seeded"] == [first.case_id]
+
+    records = [json.loads(line) for line in log.read_text().splitlines()]
+    assert [r["record"] for r in records] == ["case", "case", "summary"]
+    summary = records[-1]
+    prior_turns = sum(records[0]["turn_seconds"])
+    assert summary["units"] == 2
+    assert summary["one_shot_exact_match_rate"] == 1.0  # both sessions hit gold first
+    assert summary["wall_clock_seconds"] == round(prior_turns + 7.0, 1)
+    assert "started_at" not in summary  # no start/end span: meaningless across attempts

@@ -26,6 +26,13 @@ Live usage (Milestone 1.4, operator-run):
 
     uv run python -m harness.runner.benchmark --category historical --log bench.log
 
+An existing `--log` file is resumed, not restarted: its completed case records
+are loaded into the aggregate (so the final summary covers every session across
+attempts), those cases are skipped, and fresh records append after them. The
+summary's timing is therefore the **sum of per-session durations** (`turn_seconds`
+rolled up over all cases), never a start-to-end wall span — with interruptions
+in between, such a span would measure idle time, not work.
+
 Deterministic tests script sessions via `StubTransport` + real gold data.
 """
 
@@ -34,7 +41,9 @@ from __future__ import annotations
 import argparse
 import contextlib
 import json
+import os
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
@@ -73,7 +82,10 @@ __all__ = [
     "RoleMetrics",
     "UnitEvaluation",
     "evaluate_unit",
+    "evaluation_from_record",
     "gold_row_keys",
+    "load_log",
+    "prepare_resume",
     "run_benchmark",
 ]
 
@@ -483,6 +495,156 @@ def _predicate_first_pass(
     return first_pass, len(gold_by_pred)
 
 
+# --- resume support ---------------------------------------------------------------------
+
+
+def load_log(path: str) -> list[dict]:
+    """Parse a previous attempt's streaming JSONL log into records.
+
+    The stall/interrupt that motivates resuming may cut the final line
+    mid-write, so unparsable lines are skipped rather than fatal; blank lines
+    are ignored. Both `case` and `summary` records come back in file order.
+    """
+    records: list[dict] = []
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            try:
+                record = json.loads(stripped)
+            except json.JSONDecodeError:
+                continue  # torn tail from a killed run: keep what completed
+            if isinstance(record, dict):
+                records.append(record)
+    return records
+
+
+def evaluation_from_record(record: dict) -> UnitEvaluation:
+    """Rebuild a reportable `UnitEvaluation` from a logged `case` record.
+
+    Resume support (`prepare_resume`): the record carries every scalar metric,
+    but the role-table backing key sets were never serialized — they are
+    reconstructed exactly as `evaluate_unit` computed them, reloading the
+    frozen gold artifact for the unit and inverting the stored diffs
+    (`final = (gold - missing) ∪ extra`).
+    """
+    unit = record["unit"]
+    missing = [tuple(key) for key in record.get("missing") or []]
+    extra = [tuple(key) for key in record.get("extra") or []]
+    gold = frozenset(
+        gold_row_keys(
+            unit["canticle"], unit["canto"], unit["line_start"], unit["line_end"]
+        )
+    )
+    final = frozenset((gold - frozenset(missing)) | frozenset(extra))
+    return UnitEvaluation(
+        case_id=record.get("case_id", ""),
+        category=record.get("category", ""),
+        unit=dict(unit),
+        turns=int(record.get("turns") or 0),
+        nudges=int(record.get("nudges") or 0),
+        exhausted=bool(record.get("exhausted")),
+        protocol_complete=bool(record.get("protocol_complete")),
+        valid_seen=bool(record.get("valid_seen")),
+        validations=int(record.get("validations") or 0),
+        submissions=int(record.get("submissions") or 0),
+        workflow=record.get("workflow", "unit"),
+        accumulate=bool(record.get("accumulate")),
+        gold_rows=int(record.get("gold_rows") or len(gold)),
+        predicted_rows=int(record.get("predicted_rows") or len(final)),
+        exact_first=bool(record.get("exact_first")),
+        exact_final=bool(record.get("exact_final")),
+        converged=bool(record.get("converged")),
+        missing=missing,
+        extra=extra,
+        malformed_rows=int(record.get("malformed_rows") or 0),
+        out_of_unit_rows=int(record.get("out_of_unit_rows") or 0),
+        preds_first_pass=int(record.get("preds_first_pass") or 0),
+        preds_total=int(record.get("preds_total") or 0),
+        upstream_feedback=list(record.get("upstream_feedback") or []),
+        upstream_wellformed=int(record.get("upstream_wellformed") or 0),
+        parse_success_turns=int(record.get("parse_success_turns") or 0),
+        parse_failure_turns=int(record.get("parse_failure_turns") or 0),
+        turn_seconds=[float(s) for s in record.get("turn_seconds") or []],
+        api_retries=record.get("api_retries"),
+        api_retry_seconds=record.get("api_retry_seconds"),
+        gold_key_set=gold,
+        final_key_set=final,
+    )
+
+
+def prepare_resume(
+    records: list[dict],
+    cases: list[ChallengeCase],
+    workflow: str,
+) -> tuple[list[UnitEvaluation], list[ChallengeCase]]:
+    """Split a previous attempt's records into `(loaded_evaluations, remaining_cases)`.
+
+    A `case` record resumes the run when its id is in the current selection and
+    its workflow matches (`unit` vs `predicate` scoring aggregates are not
+    comparable); anything else stays untouched in the file but cannot pollute
+    this run's summary. Records that fail to rebuild (e.g. a unit whose gold
+    artifact is gone) are re-run instead of silently dropped.
+    """
+    selected = {case.case_id: case for case in cases}
+    loaded: list[UnitEvaluation] = []
+    seen: set[str] = set()
+    for record in records:
+        if record.get("record") != "case":
+            continue
+        case_id = record.get("case_id")
+        if (
+            case_id not in selected
+            or record.get("workflow") != workflow
+            or case_id in seen
+        ):
+            continue
+        try:
+            loaded.append(evaluation_from_record(record))
+        except (KeyError, TypeError, ValueError, OSError) as exc:
+            print(
+                f"resume: could not reload {case_id} ({exc}); rerunning it",
+                file=sys.stderr,
+            )
+            continue
+        seen.add(case_id)
+    remaining = [case for case in cases if case.case_id not in seen]
+    return loaded, remaining
+
+
+def _jsonl_record_is(line: str, kind: str) -> bool:
+    stripped = line.strip()
+    if not stripped:
+        return False
+    try:
+        return json.loads(stripped).get("record") == kind
+    except json.JSONDecodeError:
+        return False
+
+
+def _strip_stale_summary(path: str) -> None:
+    """Drop summary records from an existing log (atomic replace).
+
+    Resuming a *completed* log would otherwise append a fresh summary after the
+    old one; stripping superseded summaries keeps the streaming contract's
+    completion marker exact — the log ends with a summary iff the latest
+    attempt finished.
+    """
+    with open(path, encoding="utf-8") as fh:
+        kept = [line for line in fh if not _jsonl_record_is(line, "summary")]
+    directory = os.path.dirname(os.path.abspath(path))
+    fd, tmp = tempfile.mkstemp(dir=directory, prefix=".bench-log-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as dst:
+            dst.writelines(kept)
+        os.replace(tmp, path)
+    except BaseException:
+        with contextlib.suppress(OSError):
+            os.unlink(tmp)
+        raise
+
+
 # --- aggregate report -------------------------------------------------------------------
 
 
@@ -682,6 +844,8 @@ def run_benchmark(
     include_transcript: bool = False,
     progress: bool = False,
     status_line=None,
+    report: BenchmarkReport | None = None,
+    resume_offset: int = 0,
 ) -> BenchmarkReport:
     """Run every case through a fresh session and score it against gold.
 
@@ -693,6 +857,12 @@ def run_benchmark(
     receives one JSONL record per completed case — flushed immediately so an
     interrupted run keeps everything already finished — followed by nothing;
     the caller writes the summary record (see CLI main, mirroring `probe.py`).
+    `report`, when given, seeds the returned aggregate with previously
+    evaluated cases (resume support: the CLI reloads an interrupted log's case
+    records so the final summary aggregates every session across attempts).
+    `resume_offset` counts those already-completed cases so the progress
+    display spans the whole run, not just this attempt: separators read
+    `[offset+i/offset+N]` and the status bar starts at `offset/offset+N`.
     `progress` keeps long live runs watchable (harness/PLAN.md §4 item 5): it
     announces each case with its `[index/total]` position (`toolcall.progress_separator`),
     prints one stderr line per model turn labeled with the running case id
@@ -707,18 +877,20 @@ def run_benchmark(
     """
     toolkit = GrammarToolkit() if toolkit is None else toolkit
     specs = tool_specs() if specs is None else specs
-    report = BenchmarkReport()
+    if report is None:
+        report = BenchmarkReport()
     ui_stream = status_line.stream if status_line is not None else None
+    total = resume_offset + len(cases)
     bar = (
-        status_line.progress(len(cases), label=f"bench:{workflow}")
+        status_line.progress(total, start=resume_offset, label=f"bench:{workflow}")
         if status_line is not None
         else contextlib.nullcontext()
     )
     with bar as prog:
-        for pos, case in enumerate(cases, 1):
+        for pos, case in enumerate(cases, resume_offset + 1):
             retry_before = _retry_snapshot(status_line)
             if progress:
-                progress_separator(case.case_id, pos, len(cases), stream=ui_stream)
+                progress_separator(case.case_id, pos, total, stream=ui_stream)
                 if prog is not None:
                     prog.update(pos)
             result = run_unit(
@@ -785,7 +957,9 @@ def main(argv=None) -> int:
         "--log",
         help=(
             "streaming JSONL log: one case record per line as it completes; "
-            "summary record last (a file without it = interrupted run)"
+            "summary record last. An existing file is resumed rather than "
+            "truncated: its completed cases are reloaded into the aggregate "
+            "and skipped, fresh records append"
         ),
     )
     parser.add_argument("--full-transcript", action="store_true")
@@ -820,14 +994,33 @@ def main(argv=None) -> int:
         )
     )
 
+    # Resume, don't restart: an existing log's completed case records seed the
+    # aggregate and their cases are skipped, so a stalled run continues where
+    # it stopped instead of discarding hours of finished sessions.
+    prior_report = BenchmarkReport()
+    if args.log and os.path.exists(args.log):
+        records = load_log(args.log)
+        loaded, cases = prepare_resume(records, cases, args.workflow)
+        for evaluation in loaded:
+            prior_report.add(evaluation)
+        # A superseded summary record would break "ends with summary = complete".
+        if any(record.get("record") == "summary" for record in records):
+            _strip_stale_summary(args.log)
+        if loaded:
+            print(
+                f"resume: {len(loaded)} completed case(s) loaded from {args.log}; "
+                f"continuing at {len(loaded) + 1}/{len(loaded) + len(cases)} "
+                f"({len(cases)} left to run)"
+            )
+
     print(
         f"benchmark: model={args.model} workflow={args.workflow} "
         f"cases={[c.case_id for c in cases][:5]}"
         + (" ..." if len(cases) > 5 else "")
     )
-    started_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    # "w" mode: the log is truncated at startup so runs never append across attempts.
-    sink = open(args.log, "w", encoding="utf-8") if args.log else None
+    # Append mode: fresh case records continue after the loaded ones; the
+    # summary lands last, covering every session of every attempt.
+    sink = open(args.log, "a", encoding="utf-8") if args.log else None
     try:
         report = run_benchmark(
             cases,
@@ -839,15 +1032,19 @@ def main(argv=None) -> int:
             include_transcript=args.full_transcript,
             progress=True,
             status_line=status_line,
+            report=prior_report,
+            resume_offset=len(prior_report),
         )
         if sink is not None:
+            # No started_at/timestamp span on purpose: with resumed runs the
+            # gap between attempts is idle time, so total duration is summed
+            # per session instead (wall_clock_seconds et al. below).
             summary = {
                 "record": "summary",
                 "model": args.model,
                 "workflow": args.workflow,
                 "temperature": args.temperature,
                 "max_turns": args.max_turns,
-                "started_at": started_at,
                 "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 **report.metrics(),
             }

@@ -5,26 +5,46 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — finish the in-flight instrumented unit re-run, then Stage 2:**
+**Next action — finish the two in-flight instrumented re-runs, then Stage 2:**
 
-- **In flight (operator-run, started 2026-08-23): the unit-mode full benchmark
-  re-run on `google:gemma-4-31b-it` — first run with api-retry instrumentation
-  AND the Client-backed transport adapter** (`--workflow unit`; disk-only JSONL,
-  gitignored like all run logs). On resume:
-  1. Check completion per the streaming contract: the log must end with a
-     `summary` record over 87 cases (no summary line = interrupted; finished
-     case records are kept either way).
-  2. Read out `api_retries` / `api_retry_seconds` and compare against the
-     predicate run's measured quota tax (103 backoffs / 3,526 s across 40 of
-     87 cases), then decompose BOTH workflows into compute vs quota wait —
-     this closes the Current Status operational issue's unit-side numbers.
-  3. Quality numbers of this re-run are NOT directly comparable to the first
-     unit run (run variance plus two behavior changes shipped since: the
-     status-bar instrumentation, and the `llm7shi.Client` adapter whose
-     quality-retry loop regenerates empty/repetitive replies). Watch whether
-     protocol_complete stays at 1.0 and whether any empty final still slips
-     through despite the quality retry.
-  4. Record durable numbers in this file (never log filenames), then proceed.
+- **In flight (operator-run, started 2026-08-23; session closed while they
+   run): BOTH benchmark re-runs on `google:gemma-4-31b-it` — api-retry
+   instrumentation AND the Client-backed transport adapter** (disk-only JSONL,
+   gitignored like all run logs). The 2026-08-23 unit attempt stalled at
+   28/87 cases — transient server-side stall (a minimal probe afterwards
+   connected fine); llm7shi streams have **no read timeout**, so a silent
+   hang blocks the process forever and interrupting it is the only out. That
+   is now safe: completed cases are flushed to disk per case, and the
+   benchmark CLI resumes an existing `--log` (completed cases reload into the
+   aggregate and are skipped, fresh records append; progress positions span
+   the whole run, e.g. `[29/87]`; the status bar starts at the offset). On
+   resume of each run:
+   1. Unit (`--workflow unit`): continues the stalled log (28 loaded / 59 to
+      run at restart). Check completion per the streaming contract: the log
+      must end with a `summary` record over 87 cases (no summary line =
+      interrupted; finished case records are kept either way and resume picks
+      them up — after any new stall, just re-run the same command).
+   2. Predicate (`--workflow predicate --max-turns 24`, fresh log): same
+      turn budget as the first instrumented predicate run, so turn counts /
+      `slow_turns` / exhausted sessions stay directly comparable. Resume
+      filters records by workflow, so this log never absorbs unit records even
+      if the commands interleave.
+   3. For BOTH: read out `api_retries` / `api_retry_seconds` and compare
+      against the predicate run's measured quota tax (103 backoffs / 3,526 s
+      across 40 of 87 cases), then decompose BOTH workflows into compute vs
+      quota wait — this closes the Current Status operational issue's
+      unit side and adds Client-adapter predicate-side numbers.
+   4. Quality numbers of these re-runs are NOT directly comparable to the
+      originals (run variance plus two behavior changes shipped since: the
+      status-bar instrumentation, and the `llm7shi.Client` adapter whose
+      quality-retry loop regenerates empty/repetitive replies). Watch whether
+      protocol_complete stays at 1.0 (unit) / ≥ 0.977 (predicate) and whether
+      any empty final still slips through despite the quality retry.
+   5. Record durable numbers in this file (never log filenames), then proceed.
+   Summary timing note for the readout: summary records now carry **summed
+   per-session durations** (`wall_clock_seconds` et al. over all cases across
+   attempts; no `started_at` field) — resume makes a start-to-end span
+   meaningless.
 - **Stage 2 kickoff afterwards** (`harness/extractor/`, milestones 2.1–2.5 in
   [`extractor/PLAN.md`](extractor/PLAN.md)): mine the traces collected by the
   milestone-1.4 runs into syntax fast-path rules + verb valency lexicon.
@@ -37,14 +57,21 @@ and the **Milestone Ledger** below.
   are the top noise sources; the unit run's 19 well-formed `upstream_feedback`
   records await human triage before any upstream-retag decisions (the
   predicate pass filed only 4 — unit remains the primary discovery channel).
-- Session housekeeping: this session left UNCOMMITTED working-tree changes —
-  new `runner/statusline.py`, Client-backed `agent.llm7shi_generate` with
-  explicit `transport.reset()` per session (native ledger flush included),
-  benchmark status bar + retry counters + reset plumbing, tests at 725 passed,
-  and the PLAN.md updates below. Commit hygiene is the operator's call.
-- `*.log` files are gitignored; `harness/bench-strict-validator-baseline.log`
-  and `harness/parity.log` exist on disk only, as do the milestone-1.4 run
-  logs and the in-flight re-run's log. Durable numbers live in this file.
+- Session housekeeping: TWO sessions' UNCOMMITTED working-tree changes now sit
+   in the tree. The earlier session added new `runner/statusline.py`,
+   Client-backed `agent.llm7shi_generate` with explicit `transport.reset()` per
+   session (native ledger flush included), and benchmark status-bar + retry
+   counters + reset plumbing. This session added benchmark **resume**
+   (`load_log` / `evaluation_from_record` / `prepare_resume` with
+   selection+workflow filtering and torn-tail tolerance, stale-summary strip
+   keeping "ends with summary ⇔ complete"; `run_benchmark(report=...,
+   resume_offset=...)` so separators read `[offset+i/offset+N]` and the status
+   bar starts at the offset), and changed summary timing to **summed
+   per-session durations** (`started_at` dropped). Tests at 732 passed, plus
+   the PLAN.md / runner-README updates. Commit hygiene is the operator's call.
+- `*.log` files are gitignored; `harness/bench-strict-validator-baseline.log`,
+   `harness/parity.log`, the milestone-1.4 run logs, and the two in-flight
+   retry logs exist on disk only. Durable numbers live in this file.
 
 ---
 
@@ -93,9 +120,9 @@ and the **Milestone Ledger** below.
   run): 103 backoffs / 3,526 s across 40 of 87 cases, worst session 14
   backoffs / 670 s over 19 turns; excluding backoff, its compute matched the
   unit run (~18.8 ks vs 18.7 ks) — the entire +19% wall clock was quota wait.
-- Test suite: **725 passed** (547 corpus + 41 `test_harness_tools.py` +
+- Test suite: **732 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
-  32 `test_harness_benchmark.py`).
+  39 `test_harness_benchmark.py`).
 
 ---
 
@@ -453,6 +480,8 @@ single source, not duplicated here. The boundaries it encodes:
   --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
 - Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
   C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
+  An existing `--log` resumes: completed cases reload into the aggregate and are
+  skipped; the summary sums per-session durations across all attempts.
 
 ---
 
@@ -473,5 +502,5 @@ single source, not duplicated here. The boundaries it encodes:
     - **Per-turn logging & timing are a measurement instrument, not decoration**: the per-turn stderr lines and `turn_seconds` arrays exist so per-turn cost is visible live *and* auditable after the run, and run summaries must aggregate them (probe / parity / benchmark roll per-turn seconds up into their `summary` records).
     - **Turn-granularity discipline — keep turns small**: one healthy model turn is one reasoning step plus its dispatches. Prefer many short turns over few long ones; a single turn that sits thinking for many minutes signals that too much work was bundled into one response (e.g., whole-unit CoT ending in one giant validate call) and the prompt or workflow must be **reconsidered, not the latency accepted**. To make brooding measurable, benchmark reports count turns ≥ `SLOW_TURN_SECONDS = 300` as `slow_turns`, and the milestone 1.4 pilot comparison reads these timings when choosing between the unit and predicate workflows.
     - **Log durability never relies on shell redirection**: every live CLI opens and writes its own artifact files (`--log`, `--trace`), so where the human-facing stream display lands is immaterial — stdout or stderr both stay out of any machine-facing record. Current code pins streaming sinks to stderr as a harmless convention (llm7shi defaults to stdout; `parity.ollama_chat(echo=True)` feeds llm7shi's `StreamProcessor`); keep it, but nothing downstream may *depend* on it.
-    - **Streaming JSONL log contract** (as implemented by `probe` / `parity` / `benchmark`, binding for all future live CLIs): append one JSON object per completed unit of work (`scenario` / comparison / `case` / `session` record) and flush it immediately, so an interrupted run keeps everything already finished on disk; write a final `summary` record carrying the aggregate metrics **including total elapsed time** (run-level wall clock plus rolled-up per-turn seconds / mean / max). The log truncates on startup (`"w"` mode: one file per attempt, runs never append across attempts), and a file without its summary line marks an interrupted run.
+    - **Streaming JSONL log contract** (as implemented by `probe` / `parity` / `benchmark`, binding for all future live CLIs): append one JSON object per completed unit of work (`scenario` / comparison / `case` / `session` record) and flush it immediately, so an interrupted run keeps everything already finished on disk; write a final `summary` record carrying the aggregate metrics **including total elapsed time** (summed per-session / per-turn seconds plus mean / max — never a start-to-end wall span, which interruptions render meaningless). A file whose last line is the summary record is complete. `benchmark` additionally **resumes**: an existing `--log` is loaded at startup, its completed case records rejoin the aggregate (role tables reconstructed from the stored missing/extra diffs), those cases are skipped, fresh records append, and any superseded summary record is stripped so "ends with summary ⇔ complete" stays exact. `probe` / `parity` still truncate on startup (`"w"` mode: one file per attempt, runs never append across attempts).
     - This is a standing requirement, not a one-off patch: new live entry points (Stage 2's `extractor/` CLIs included) must ship the same observability from day one, keep the human-facing progress display on stderr by convention (JSONL logs go to their own `--log` files, never to redirected console output), and any future transport must preserve it.

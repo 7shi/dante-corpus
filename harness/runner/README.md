@@ -42,6 +42,11 @@ uv run python -m harness.runner.benchmark --category historical \
     --log bench.log [--full-transcript]                          # run + streaming JSONL
 ```
 
+An interrupted run is resumed by re-running the same command: the existing log's
+completed cases are reloaded into the aggregate (and skipped), fresh case records
+append, and the final summary covers every session across attempts — its timing is
+the sum of per-session durations, never a start-to-end span between attempts.
+
 Metrics per case and in aggregate (`BenchmarkReport.metrics()`): 1-shot exact match,
 convergence ≤ 5 turns, role-level P/R/F1, upstream-feedback precision, and probe-style
 parse success kept against the 0.95 gate.
