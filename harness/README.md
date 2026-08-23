@@ -15,6 +15,7 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 ## Documentation & Roadmap
 
 - **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and two-stage bottom-up strategy.
+- **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
 - **Stage 2 (Extraction & Hybrid Engine)**: [`extractor/README.md`](extractor/README.md) | [`extractor/PLAN.md`](extractor/PLAN.md)
 
@@ -22,35 +23,56 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 
 ## Directory Structure
 
+The single directory map for the harness — [`PLAN.md`](PLAN.md) and the stage
+plans reference this section instead of repeating it. Implementation status is
+tracked in [`PLAN.md`](PLAN.md) (Current Status / Milestone Ledger), not here.
+
 ```
-harness/
-├── README.md                      # Overview and navigation (this document)
-├── PLAN.md                        # Master architectural plan
+dante-corpus/
+├── skel/                          # [Protected] Layer 5 gold TSV & Phase 8 deterministic engine
+│   ├── RULES.md                   # 130 deterministic rule handbook (masked from agents)
+│   └── ...                        # Active 0-soft regression gate target
 │
-├── toolcall/                      # [Protocol Library] Tool Call Protocol (XML interim → native)
-│   ├── README.md                  # Protocol library overview
-│   ├── parser.py                  # <tool_call> wire format ↔ canonical tool-call dicts
-│   ├── prompts.py                 # XML output contract + few-shot exchange
-│   ├── transports.py              # Transport interface (PromptXml / Stub)
-│   ├── loop.py                    # Transport-agnostic multi-turn loop
-│   └── probe.py                   # Live-probe CLI (parse-success-rate gate)
+├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
+│   ├── README.md                  # Overview, navigation, and this directory map
+│   ├── PLAN.md                    # Master architectural plan (status, milestones, disciplines)
+│   ├── TOOLCALL.md                # Tool call protocol sub-project (XML interim → native)
+│   ├── FUTURE.md                  # Beyond Layer 5 (unscheduled design notes)
+│   │
+│   ├── toolcall/                  # [Protocol Library] XML interim ↔ canonical tool calls
+│   │   ├── README.md              # Protocol library overview
+│   │   ├── parser.py              # parse_tool_calls / format_tool_call / format_tool_result
+│   │   ├── prompts.py             # XML output contract + few-shot exchange
+│   │   ├── transports.py          # Transport interface (PromptXml / OllamaNative / Stub)
+│   │   ├── loop.py                # Transport-agnostic multi-turn loop + turn budget
+│   │   ├── probe.py               # Live-probe CLI, parse-success-rate gate (operator-run)
+│   │   └── parity.py              # Migration-parity CLI, XML vs native (operator-run)
+│   │
+│   ├── runner/                    # [Stage 1] Autonomous inference agent & benchmark
+│   │   ├── README.md              # Stage 1 overview
+│   │   ├── PLAN.md                # Stage 1 specification (toolset, agent, benchmark)
+│   │   ├── tools.py               # Dedicated Grammar Tool API (Layer 5 masked structurally)
+│   │   ├── agent.py               # Per-unit session runner over run_tool_loop
+│   │   ├── prompts.py             # 5-step CoT grammatical reasoning protocol
+│   │   ├── benchmark.py           # Gold comparison & metric suite
+│   │   └── statusline.py          # Rich live status bar for long operator-run sessions
+│   │
+│   ├── extractor/                 # [Stage 2] Rule & lexicon extraction, hybrid engine
+│   │   ├── README.md              # Stage 2 overview
+│   │   ├── PLAN.md                # Stage 2 specification (miner, lexicon, hybrid engine)
+│   │   ├── syntax_miner.py        # Syntax pattern mining engine
+│   │   ├── lexicon_builder.py     # Verb valency & lexicon profile aggregator
+│   │   ├── hybrid_engine.py       # Fast-path (rules/lexicon) + agent fallback router
+│   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline
+│   │
+│   └── fixtures/                  # Benchmark challenge fixtures & historical case units
+│       ├── __init__.py            # Public fixture accessors
+│       └── challenge_cases.py     # Frozen 87-case table (historical/control/coordination/
+│                                  #   relative_chain/quotes/hyperbaton)
 │
-├── runner/                        # [Stage 1] Autonomous Inference & Benchmark
-│   ├── README.md                  # Stage 1 overview
-│   ├── PLAN.md                    # Stage 1 specification (tools, agent, benchmark)
-│   ├── tools.py                   # Dedicated Grammar Tool API
-│   ├── agent.py                   # Gemma 4 31B Multi-Turn CoT Loop
-│   ├── prompts.py                 # 5-step CoT reasoning protocol
-│   └── benchmark.py               # Syntactic Challenge & Case Evaluation Suite
-│
-├── extractor/                     # [Stage 2] Bottom-Up Extraction & Hybrid Engine
-│   ├── README.md                  # Stage 2 overview
-│   ├── PLAN.md                    # Stage 2 specification (miner, lexicon, hybrid engine)
-│   ├── syntax_miner.py            # Syntax pattern mining engine
-│   ├── lexicon_builder.py         # Verb valency & lexicon profile aggregator
-│   ├── hybrid_engine.py           # Fast-path + agent fallback execution router
-│   └── reconstruct.py             # Canto-wide gated reconstruction pipeline
-│
-└── fixtures/                      # Curated Challenge Fixtures & Test Cases
-    └── challenge_cases.py         # Syntactic challenge fixtures (hyperbaton, control, etc.)
+└── tests/
+    ├── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
+    ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
+    ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
+    └── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
 ```

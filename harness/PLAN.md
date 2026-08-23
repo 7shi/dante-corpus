@@ -394,6 +394,15 @@ In contrast to the top-down methodology used in Phases 5–8 — where frontier 
   - Provide a gated production pipeline that reconstructs cantos under strict 0-soft regression verification and content hash updating.
 - **Specification**: [`harness/extractor/PLAN.md`](extractor/PLAN.md).
 
+### Beyond Layer 5 (design notes)
+
+Directions that open up **after** the `skel/` reconstruction — a layer swap
+(same machinery, different target layer), a vertical whole-stack slice, and the
+horizon of reconstructing grammar for a language with no available description
+— are kept out of this plan in [`FUTURE.md`](FUTURE.md). None of it is
+scheduled work; `PLAN.md` remains the source of truth for status and
+milestones.
+
 ### Transport & backend policy (2026-08-22)
 
 The Gemini API executes the XML protocol roughly 3× faster than local Ollama,
@@ -408,51 +417,25 @@ during the T4/T5 gates.
 
 ---
 
-## 3. Directory Structure & Separation of Concerns
+## 3. Separation of Concerns
 
-```
-dante-corpus/
-├── skel/                          # [Protected] Layer 5 Gold TSV & Phase 8 Deterministic Engine
-│   ├── RULES.md                   # 130 Deterministic Rule Handbook (Reference)
-│   └── ...                        # Active 0-Soft Regression Gate Target
-│
-├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
-│   ├── PLAN.md                    # Master Plan (Architecture, Two-Stage Strategy, Handoff)
-│   ├── TOOLCALL.md                # Tool Call Protocol Sub-Project (XML interim → native)
-│   │
-│   ├── toolcall/                  # [Protocol Library] XML interim ↔ canonical tool calls
-│   │   ├── parser.py              # parse_tool_calls / format_tool_call / format_tool_result (T1)
-│   │   ├── prompts.py             # XML output contract + few-shot exchange (T2)
-│   │   ├── transports.py          # Transport interface, PromptXml / OllamaNative / Stub (T5)
-│   │   ├── loop.py                # Transport-agnostic loop + turn budget (T3)
-│   │   ├── probe.py               # Live-probe CLI for the §5.2 gate (T4, operator-run)
-│   │   └── parity.py              # Migration-parity CLI, XML vs native (§5.3/T5, operator-run)
-│   │
-│   ├── runner/                    # [Stage 1] Autonomous Inference Agent & Benchmark
-│   │   ├── PLAN.md                # Stage 1 Specification (Toolset, Agent, Benchmark)
-│   │   ├── tools.py               # Dedicated Grammar Tool API — IMPLEMENTED (Milestone 1.1)
-│   │   ├── agent.py               # Per-unit session runner over run_tool_loop — IMPLEMENTED (Milestone 1.2)
-│   │   ├── prompts.py             # 5-Step Grammatical Reasoning Protocol Prompts — IMPLEMENTED (Milestone 1.2)
-│   │   └── benchmark.py           # Gold Comparison & §5.2 Metric Suite — IMPLEMENTED (Milestone 1.3)
-│   │
-│   ├── extractor/                 # [Stage 2] Rule & Lexicon Extraction & Hybridization
-│   │   ├── PLAN.md                # Stage 2 Specification (Mining, Lexicon, Hybrid Engine)
-│   │   ├── syntax_miner.py        # Syntax Pattern Mining Engine
-│   │   ├── lexicon_builder.py     # Verb Valency & Lexicon Profile Aggregator
-│   │   ├── hybrid_engine.py       # Fast Path (Rules/Lexicon) + Fallback (Agent) Router
-│   │   └── reconstruct.py         # Canto-Wide Gated Reconstruction Pipeline
-│   │
-│   └── fixtures/                  # Benchmark Challenge Fixtures & Historical Case Units
-│       ├── __init__.py            # Public fixture accessors — IMPLEMENTED (Milestone 1.3)
-│       └── challenge_cases.py     # Frozen 87-Case Table (historical/control/coordination/
-│                                  #   relative_chain/quotes/hyperbaton) — IMPLEMENTED (1.3)
-│
-└── tests/
-    ├── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
-    ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
-    ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
-    └── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
-```
+The directory map lives in [`README.md`](README.md#directory-structure) —
+single source, not duplicated here. The boundaries it encodes:
+
+- **`skel/` is protected, not a dependency.** Gold TSVs, the 130-rule registry,
+  and [`CORRECTIONS.md`](../skel/CORRECTIONS.md) are the evaluation reference
+  and are masked from agents structurally (§4 item 1); only operator-side
+  benchmark code reads them.
+- **`toolcall/` is a layer- and task-agnostic protocol library.** It knows
+  nothing about grammar: wire format, transports, and the multi-turn loop only.
+  Everything grammatical lives in `runner/`.
+- **`runner/` (Stage 1) produces traces; `extractor/` (Stage 2) consumes
+  them.** The contract between the stages is `UnitResult.trace_record()`, not
+  shared internals.
+- **`fixtures/` is data, read operator-side only.** Nothing under `runner/`
+  imports it, so the agent path cannot see the benchmark's case selection.
+- **Tests live at the repo root** (`tests/test_harness_*.py`) alongside the
+  corpus suite, so the harness stays inside one pytest run.
 
 ---
 
