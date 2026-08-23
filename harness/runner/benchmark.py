@@ -32,6 +32,7 @@ Deterministic tests script sessions via `StubTransport` + real gold data.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import sys
 from dataclasses import dataclass, field
@@ -63,6 +64,7 @@ from .agent import (
     llm7shi_generate,
     run_unit,
 )
+from .statusline import HarnessStatusLine
 from .tools import GrammarToolkit, tool_specs
 
 __all__ = [
@@ -280,6 +282,11 @@ class UnitEvaluation:
     parse_failure_turns: int = 0
     # Wall-clock seconds per completed model turn (mirrors UnitResult).
     turn_seconds: list[float] = field(default_factory=list)
+    # API-retry backoffs observed during this session. llm7shi auto-retries 429s
+    # silently, so without the status line's wait_retry counter these would be
+    # invisible post-run; None when no status line tracked them.
+    api_retries: int | None = None
+    api_retry_seconds: float | None = None
     # Key sets backing the role-level aggregation (not serialized).
     gold_key_set: frozenset[RowKey] = frozenset()
     final_key_set: frozenset[RowKey] = frozenset()
@@ -334,6 +341,10 @@ class UnitEvaluation:
         data["upstream_feedback_precision"] = None if precision is None else round(precision, 4)
         rate = self.predicate_first_pass_rate
         data["predicate_first_pass_rate"] = None if rate is None else round(rate, 4)
+        data["api_retries"] = self.api_retries
+        data["api_retry_seconds"] = (
+            None if self.api_retry_seconds is None else round(self.api_retry_seconds, 1)
+        )
         return data
 
 
@@ -546,6 +557,10 @@ class BenchmarkReport:
         # in the run totals instead of hiding inside per-case records.
         turn_seconds = [s for ev in evals for s in ev.turn_seconds]
         total_seconds = sum(turn_seconds)
+        retry_counts = [ev.api_retries for ev in evals if ev.api_retries is not None]
+        retry_secs = [
+            ev.api_retry_seconds for ev in evals if ev.api_retry_seconds is not None
+        ]
         return {
             "units": units,
             "protocol_complete_rate": round(
@@ -582,6 +597,10 @@ class BenchmarkReport:
             else None,
             "max_turn_seconds": round(max(turn_seconds), 1) if turn_seconds else None,
             "slow_turns": sum(1 for s in turn_seconds if s >= SLOW_TURN_SECONDS),
+            "api_retries": sum(retry_counts) if retry_counts else None,
+            "api_retry_seconds": (
+                round(sum(retry_secs), 1) if retry_secs else None
+            ),
             "categories": categories,
         }
 
@@ -613,6 +632,11 @@ class BenchmarkReport:
                 f"(mean {m['mean_turn_seconds']:.1f}s, max {m['max_turn_seconds']:.1f}s, "
                 f"slow(>= {SLOW_TURN_SECONDS}s): {m['slow_turns']})"
             )
+        if m["api_retries"] is not None:
+            lines.append(
+                f"api retries: {m['api_retries']} "
+                f"(~{m['api_retry_seconds']:.0f}s backoff)"
+            )
         for category, stats in sorted(m["categories"].items()):
             lines.append(
                 f"    [{category}] n={stats['units']} "
@@ -622,6 +646,27 @@ class BenchmarkReport:
 
 
 # --- runner ---------------------------------------------------------------------------
+
+
+def _retry_snapshot(status_line) -> tuple[int, float] | None:
+    """`(count, seconds)` of api-retry backoffs seen so far, or None if untracked."""
+    stream = getattr(status_line, "stream", None)
+    count = getattr(stream, "api_retries", None)
+    if count is None:
+        return None
+    return count, getattr(stream, "api_retry_seconds", 0.0)
+
+
+def _retry_delta(
+    snapshot: tuple[int, float] | None, status_line
+) -> tuple[int, float] | None:
+    """Backoff `(count, seconds)` accumulated since `snapshot`; None if untracked."""
+    if snapshot is None:
+        return None
+    now = _retry_snapshot(status_line)
+    if now is None:
+        return 0, 0.0
+    return max(now[0] - snapshot[0], 0), max(now[1] - snapshot[1], 0.0)
 
 
 def run_benchmark(
@@ -636,6 +681,7 @@ def run_benchmark(
     sink=None,
     include_transcript: bool = False,
     progress: bool = False,
+    status_line=None,
 ) -> BenchmarkReport:
     """Run every case through a fresh session and score it against gold.
 
@@ -652,40 +698,62 @@ def run_benchmark(
     prints one stderr line per model turn labeled with the running case id
     (`toolcall.progress_printer`), and marks nudged resumes inside a session with a
     minor separator (`toolcall.progress_subseparator`, via `agent.run_unit`).
+    `status_line`, when given (a `runner.statusline.HarnessStatusLine`), adds a
+    live progress bar whose numerator tracks exactly the separators' basis
+    (`pos/total`, updated as each session starts); separators, turn lines, and
+    nudge markers then route through its console, and the caller wires the same
+    console stream into the transport so streamed model output coexists with the
+    bar instead of clobbering it.
     """
     toolkit = GrammarToolkit() if toolkit is None else toolkit
     specs = tool_specs() if specs is None else specs
     report = BenchmarkReport()
-    for pos, case in enumerate(cases, 1):
-        if progress:
-            progress_separator(case.case_id, pos, len(cases))
-        result = run_unit(
-            transport=transport,
-            toolkit=toolkit,
-            canticle=case.canticle,
-            canto=case.canto,
-            line_start=case.line_start,
-            line_end=case.line_end,
-            specs=specs,
-            max_turns=max_turns,
-            max_nudges=max_nudges,
-            workflow=workflow,
-            progress=progress,
-            on_turn=(
-                progress_printer(f"{case.case_id}", max_turns) if progress else None
-            ),
-        )
-        evaluation = evaluate_unit(
-            result, case=case, accumulate=(workflow == "predicate")
-        )
-        report.add(evaluation)
-        if sink is not None:
-            record = evaluation.to_dict()
-            record["final_text"] = result.text
-            record["trace"] = result.trace_record(include_transcript=include_transcript)
-            record["trace"].pop("candidate_rows", None)  # already in the case record
-            sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-            sink.flush()
+    ui_stream = status_line.stream if status_line is not None else None
+    bar = (
+        status_line.progress(len(cases), label=f"bench:{workflow}")
+        if status_line is not None
+        else contextlib.nullcontext()
+    )
+    with bar as prog:
+        for pos, case in enumerate(cases, 1):
+            retry_before = _retry_snapshot(status_line)
+            if progress:
+                progress_separator(case.case_id, pos, len(cases), stream=ui_stream)
+                if prog is not None:
+                    prog.update(pos)
+            result = run_unit(
+                transport=transport,
+                toolkit=toolkit,
+                canticle=case.canticle,
+                canto=case.canto,
+                line_start=case.line_start,
+                line_end=case.line_end,
+                specs=specs,
+                max_turns=max_turns,
+                max_nudges=max_nudges,
+                workflow=workflow,
+                progress=progress,
+                progress_stream=ui_stream,
+                on_turn=(
+                    progress_printer(f"{case.case_id}", max_turns, stream=ui_stream)
+                    if progress
+                    else None
+                ),
+            )
+            evaluation = evaluate_unit(
+                result, case=case, accumulate=(workflow == "predicate")
+            )
+            delta = _retry_delta(retry_before, status_line)
+            if delta is not None:
+                evaluation.api_retries, evaluation.api_retry_seconds = delta
+            report.add(evaluation)
+            if sink is not None:
+                record = evaluation.to_dict()
+                record["final_text"] = result.text
+                record["trace"] = result.trace_record(include_transcript=include_transcript)
+                record["trace"].pop("candidate_rows", None)  # already in the case record
+                sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                sink.flush()
     return report
 
 
@@ -742,8 +810,14 @@ def main(argv=None) -> int:
     if not cases:
         parser.error("no cases selected")
 
+    status_line = HarnessStatusLine() if HarnessStatusLine is not None else None
     transport = PromptXmlTransport(
-        generate=llm7shi_generate(args.model, args.temperature, quiet=not args.verbose)
+        generate=llm7shi_generate(
+            args.model,
+            args.temperature,
+            quiet=not args.verbose,
+            file=status_line.stream if status_line is not None else None,
+        )
     )
 
     print(
@@ -764,6 +838,7 @@ def main(argv=None) -> int:
             sink=sink,
             include_transcript=args.full_transcript,
             progress=True,
+            status_line=status_line,
         )
         if sink is not None:
             summary = {

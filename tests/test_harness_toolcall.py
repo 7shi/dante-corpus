@@ -1157,3 +1157,31 @@ def test_run_parity_reports_behavioral_mismatch_without_failing_interop():
     assert comparison["rows_equal"] is False
     assert comparison["interop_xml"] and comparison["interop_native"]
     assert report.parity_pass is True
+
+
+# --- session reset (per-session state hygiene) ---------------------------------------------
+
+
+def test_prompt_xml_reset_forwards_to_stateful_generate_backend():
+    marks = []
+
+    def generate(messages):
+        return "done"
+
+    generate.reset = lambda: marks.append("reset")
+    PromptXmlTransport(generate=generate).reset()
+    assert marks == ["reset"]
+
+    # A backend without reset() is simply not told anything.
+    PromptXmlTransport(generate=lambda messages: "done").reset()
+
+
+def test_native_reset_clears_the_reattachment_ledgers():
+    chat = _FakeChat(
+        [_native_message("thinking...", [_native_call("read_unit", {"canto": 1})])]
+    )
+    transport = OllamaNativeTransport(chat=chat)
+    transport.complete([dict(m) for m in OPENING], TOOL_SPECS)
+    assert transport._openings and transport._turns
+    transport.reset()
+    assert not transport._openings and not transport._turns

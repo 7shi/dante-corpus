@@ -40,7 +40,13 @@ __all__ = [
 ]
 
 Generate = Callable[[list[dict]], str]
-"""A stateless text backend: full OpenAI-format message list -> completion text."""
+"""A text backend: full OpenAI-format message list -> completion text.
+
+Usually stateless (each call resends the whole conversation); a stateful
+adapter that mirrors the transcript into its own client (e.g. `runner.agent.
+llm7shi_generate` over `llm7shi.Client`'s history + quality-retry loop) is
+fine too — the transport only ever calls it with the loop's transcript.
+"""
 
 ChatFn = Callable[[Sequence[dict], Sequence[dict]], Any]
 """A native chat backend: `(messages, tools) -> response message`.
@@ -72,11 +78,13 @@ class Transport(Protocol):
 class PromptXmlTransport:
     """Interim transport: prompt-instructed XML parsed into canonical tool calls.
 
-    `generate` is any stateless backend taking the full message list and returning the
-    completion text (see `harness.toolcall.probe.llm7shi_generate` for the llm7shi
-    adapter). The tool specs are not serialized here — embedding them in the system
-    prompt is the caller's job (system prompt + `prompts.xml_contract_section()`); they
-    are accepted to keep the transport interface identical for the native path.
+    `generate` is any backend taking the full message list and returning the
+    completion text (see `harness.toolcall.probe.llm7shi_generate` for the
+    stateless llm7shi adapter, `runner.agent.llm7shi_generate` for the stateful
+    Client-based one; `reset()` forwards to backends exposing it). The tool
+    specs are not serialized here — embedding them in the system prompt is the
+    caller's job (system prompt + `prompts.xml_contract_section()`); they are
+    accepted to keep the transport interface identical for the native path.
     """
 
     generate: Generate
@@ -84,6 +92,14 @@ class PromptXmlTransport:
     def complete(self, messages: list[dict], tools: Sequence[dict]) -> TransportResponse:
         text = self.generate(messages)
         return TransportResponse(text=text, tool_calls=tuple(parse_tool_calls(text)))
+
+    def reset(self) -> None:
+        """Signal a session boundary: a generate backend keeping per-session
+        state (`runner.agent.llm7shi_generate`'s Client mirror) starts fresh on
+        the next call. Stateless backends need no `reset` attribute at all."""
+        reset = getattr(self.generate, "reset", None)
+        if callable(reset):
+            reset()
 
 
 def _error(name: str, message: str) -> dict:
@@ -231,6 +247,16 @@ class OllamaNativeTransport:
         turn_calls.append(calls)
         text = _get_field(raw_message, "content") or ""
         return TransportResponse(text=text, tool_calls=tuple(calls))
+
+    def reset(self) -> None:
+        """Drop the re-attachment ledgers of finished conversations.
+
+        Keys are transcript `id()`s that a sequential run never revisits, so
+        the entries would only accumulate memory; a session boundary is the
+        natural flush point.
+        """
+        self._openings.clear()
+        self._turns.clear()
 
 
 @dataclass

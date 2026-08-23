@@ -383,31 +383,149 @@ def test_default_session_constants_leave_room_for_correction():
     assert MAX_NUDGES >= 1
 
 
-def test_llm7shi_generate_builds_stateless_adapter(monkeypatch):
-    """The proven probe adapter must keep forwarding model/temperature verbatim,
-    and pin the streaming display to stderr (§4 item 5; llm7shi defaults stdout)."""
+def test_llm7shi_generate_rides_client_history(monkeypatch):
+    """The adapter mirrors the loop's transcript into a per-session Client:
+    system prompt, demo exchange, tool feedback, and a fresh Client whenever a
+    new session's shorter transcript breaks the sync invariant."""
     import sys
 
     import harness.runner.agent as agent_module
 
-    captured = {}
+    created = []
 
-    def fake_generate_with_schema(messages, schema=None, **kwargs):
-        captured.update(kwargs, schema=schema)
+    class FakeClient:
+        def __init__(self, model="", temperature=None, file=None, show_params=True,
+                     **kwargs):
+            self.model = model
+            self.temperature = temperature
+            self.file = file
+            self.show_params = show_params
+            self.history = []
+            created.append(self)
 
-        class Response:
-            text = "reply"
+        def set_system_prompt(self, prompt):
+            if self.history and self.history[0].get("role") == "system":
+                self.history[0]["content"] = prompt
+            else:
+                self.history.insert(0, {"role": "system", "content": prompt})
 
-        return Response()
+        def __call__(self, prompt):
+            class _Response:
+                text = f"reply:{len(self.history)}"
 
-    monkeypatch.setattr(
-        "llm7shi.compat.generate_with_schema", fake_generate_with_schema
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": _Response.text})
+            return _Response()
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    generate = agent_module.llm7shi_generate("ollama:m", temperature=0.3, quiet=True)
+
+    opening = [
+        {"role": "system", "content": "sys"},
+        {"role": "user", "content": "demo?"},
+        {"role": "assistant", "content": "demo!"},
+        {"role": "user", "content": "task-A"},
+    ]
+    first = generate([dict(m) for m in opening])
+    assert first == "reply:3"  # system + demo pair were mirrored before the call
+    client = created[-1]
+    assert client.model == "ollama:m" and client.temperature == 0.3
+    assert client.file is sys.stderr  # §4 item 5: streaming pinned to stderr
+    assert client.show_params is False
+    assert [m["role"] for m in client.history] == [
+        "system", "user", "assistant", "user", "assistant",
+    ]
+    assert client.history[3]["content"] == "task-A"
+
+    # Next loop turn: transcript grew by the reply plus a tool-result user message.
+    transcript = opening + [
+        {"role": "assistant", "content": first},
+        {"role": "user", "content": "<tool_result>feedback</tool_result>"},
+    ]
+    generate(transcript)
+    assert len(created) == 1  # same session, same Client
+    assert client.history[5]["content"] == "<tool_result>feedback</tool_result>"
+    assert client.history[6]["role"] == "assistant"
+
+    # A new session's shorter opening breaks the sync invariant -> fresh Client.
+    fresh = [dict(m) for m in opening]
+    fresh[3] = {"role": "user", "content": "task-B"}
+    generate(fresh)
+    assert len(created) == 2
+    assert created[-1].history[3]["content"] == "task-B"
+    # The previous session's history never leaked into the new one.
+    assert len(created[-1].history) == 5
+
+
+def test_llm7shi_generate_reset_regenerates_the_client(monkeypatch):
+    """Explicit reset() is the primary session signal: the next call builds a
+    fresh Client regardless of any length continuation."""
+    import harness.runner.agent as agent_module
+
+    created = []
+
+    class FakeClient:
+        def __init__(self, model="", file=None, **kwargs):
+            self.history = []
+            created.append(self)
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def __call__(self, prompt):
+            class _Response:
+                text = "ok"
+
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": "ok"})
+            return _Response()
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    generate = agent_module.llm7shi_generate("ollama:m")
+    generate([{"role": "user", "content": "one"}])
+    assert len(created) == 1
+
+    generate.reset()
+    # Same length as a legitimate continuation would have — reset wins anyway.
+    generate([
+        {"role": "user", "content": "one"},
+        {"role": "assistant", "content": "ok"},
+        {"role": "user", "content": "two"},
+    ])
+    assert len(created) == 2
+    assert [m["content"] for m in created[-1].history][-2:] == ["two", "ok"]
+
+
+def test_run_unit_resets_stateful_transports_at_session_start(toolkit):
+    """Each session opens with transport.reset() when the transport has one."""
+    from harness.toolcall import StubTransport
+
+    class ResettableStub(StubTransport):
+        resets: int = 0
+
+        def reset(self):
+            self.resets += 1
+
+    script = [
+        _validate_block(GOOD_ROWS),
+        "final answer",
+    ]
+    transport = ResettableStub(script + script)
+    run_unit(
+        transport=transport,
+        toolkit=toolkit,
+        canticle="inferno",
+        canto=1,
+        line_start=1,
     )
-    generate = agent_module.llm7shi_generate("ollama:m", temperature=0.3)
-    assert generate([{"role": "user", "content": "hi"}]) == "reply"
-    assert captured["model"] == "ollama:m"
-    assert captured["temperature"] == 0.3
-    assert captured["file"] is sys.stderr
+    run_unit(
+        transport=transport,
+        toolkit=toolkit,
+        canticle="inferno",
+        canto=1,
+        line_start=1,
+    )
+    assert transport.resets == 2
 
 
 def test_summary_reports_per_turn_timing(toolkit):

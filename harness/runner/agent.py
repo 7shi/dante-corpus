@@ -79,28 +79,67 @@ NUDGE_MESSAGE = (
 
 
 def llm7shi_generate(
-    model: str = DEFAULT_MODEL, temperature: float | None = None, quiet: bool = True
+    model: str = DEFAULT_MODEL,
+    temperature: float | None = None,
+    quiet: bool = True,
+    file=None,
 ):
-    """Build a stateless generate function over `llm7shi.compat.generate_with_schema`.
+    """Build a generate function over `llm7shi.Client` and its history management.
 
-    Proven adapter copied from `harness.toolcall.probe` (both the Ollama and the
-    Gemini path were exercised end-to-end during the T4 gate). The stream sink is
-    pinned to stderr (§4 item 5): llm7shi defaults to stdout, which would mix the
-    🤔 Thinking / 💡 Answer display into machine-facing output.
+    The loop's transcript stays the single source of truth; this adapter mirrors
+    it into a per-session `Client` (system prompt + history) so every model call
+    also rides `Client`'s quality-retry loop — empty replies and repetitive
+    output are regenerated instead of silently ending a session (the predicate
+    run's two empty-final sessions, 2026-08-23). Session boundaries are explicit:
+    the session runner calls ``transport.reset()`` (forwarded to ``generate.
+    reset``), which regenerates the Client instance for the next session. A
+    length sync invariant stays as a guard for callers that never reset: the
+    loop always calls with the newest user message last, and ``synced`` counts
+    the transcript messages already mirrored into ``client.history``; any
+    mismatch means a fresh (or first) session, so the Client is rebuilt — one
+    shared transport across a benchmark run therefore never leaks history
+    between cases either way. The stream sink defaults to stderr (§4 item 5);
+    a caller owning a Rich status line (`runner.statusline.HarnessStatusLine`)
+    passes its console stream so streamed output, retry countdowns, and the
+    live bar share one console.
     """
-    from llm7shi.compat import generate_with_schema
+    from llm7shi import Client
+
+    state = {"client": None, "synced": 0}
 
     def generate(messages: list[dict]) -> str:
-        response = generate_with_schema(
-            messages,
-            schema=None,
-            model=model,
-            temperature=temperature,
-            show_params=not quiet,
-            file=sys.stderr,
-        )
+        if state["client"] is None or state["synced"] != len(messages) - 1:
+            state["client"] = Client(
+                model=model,
+                temperature=temperature,
+                show_params=not quiet,
+                file=sys.stderr if file is None else file,
+            )
+            state["synced"] = 0
+        client = state["client"]
+
+        start = state["synced"]
+        if start == 0 and messages and messages[0].get("role") == "system":
+            client.set_system_prompt(messages[0]["content"])
+            start = 1
+        for message in messages[start : len(messages) - 1]:
+            client.history.append(
+                {"role": message["role"], "content": message["content"]}
+            )
+
+        response = client(messages[-1]["content"])
+        # Client appended the user prompt and its reply, so history mirrors
+        # transcript[0:N] once the loop records the reply; the next call must
+        # therefore arrive with N+1 messages (reply + newest user feedback).
+        state["synced"] = len(messages) + 1
         return response.text
 
+    def reset() -> None:
+        """Session boundary: the next call regenerates the Client instance."""
+        state["client"] = None
+        state["synced"] = 0
+
+    generate.reset = reset
     return generate
 
 
@@ -289,6 +328,7 @@ def run_unit(
     workflow: str = "unit",
     on_turn=None,
     progress: bool = False,
+    progress_stream=None,
 ) -> UnitResult:
     """Run one autonomous grammar session for a single parse unit.
 
@@ -300,9 +340,13 @@ def run_unit(
     transcript through a fresh loop run under the shared turn budget. The loop
     library itself is left untouched. `on_turn` (see `toolcall.progress_printer`)
     is forwarded to every loop run with the turn number offset so nudged resumes
-    keep counting session-wide. `progress` keeps multi-pass sessions watchable
+    keep counting session-wide. The session opens by calling ``transport.reset()``
+    when the transport provides it, so per-session backend state (the Client
+    adapter's history mirror, the native ledger) never carries across units.
+    `progress` keeps multi-pass sessions watchable
     (harness/PLAN.md §4 item 5): each nudged resume is announced with a minor
-    `toolcall.progress_subseparator` before the pass starts.
+    `toolcall.progress_subseparator` before the pass starts, written to
+    `progress_stream` when given (a status line's console stream) or stderr.
     """
     specs = tool_specs() if specs is None else list(specs)
     opening = _opening_messages(
@@ -318,6 +362,13 @@ def run_unit(
         workflow=workflow,
         opening_len=len(opening),
     )
+
+    # Session boundary: transports/backends keeping per-session state (the
+    # llm7shi Client adapter, the native transport's re-attachment ledger)
+    # start fresh; stateless ones (StubTransport) simply have no reset.
+    reset = getattr(transport, "reset", None)
+    if callable(reset):
+        reset()
 
     transcript = [dict(m) for m in opening]
     remaining_budget = max_turns
@@ -358,7 +409,7 @@ def run_unit(
         nudges_left -= 1
         result.nudges += 1
         if progress:
-            progress_subseparator("nudged resume")
+            progress_subseparator("nudged resume", stream=progress_stream)
         transcript = loop_result.messages + [{"role": "user", "content": NUDGE_MESSAGE}]
 
     return result

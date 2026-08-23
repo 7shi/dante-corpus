@@ -23,12 +23,15 @@ from harness.runner.benchmark import (
     RoleMetrics,
     UnitEvaluation,
     _parse_turn_stats,
+    _retry_delta,
+    _retry_snapshot,
     candidate_keys,
     evaluate_unit,
     gold_row_keys,
     resolve_unit_bounds,
     run_benchmark,
 )
+from harness.runner.statusline import HarnessStatusLine
 from harness.runner.tools import GrammarToolkit
 from harness.toolcall import StubTransport
 
@@ -491,6 +494,126 @@ def test_run_benchmark_progress_announces_each_case_position(toolkit, capsys):
     assert "\n===== [2/2] quo-pur01-046 =====\n" in err
     # Turn lines follow each announcement (progress_printer is wired too).
     assert f"[ctl-inf01-010] turn" in err and f"[quo-pur01-046] turn" in err
+
+
+def test_run_benchmark_status_bar_tracks_the_separator_positions(toolkit, capsys):
+    """§4 item 5: a status line's bar counts sessions on the separators' basis.
+
+    Separators and turn lines route through the status line's console stream
+    instead of stderr; the bar advances to `pos/total` as each session starts.
+    """
+    first = case_by_id("ctl-inf01-010")
+    second = case_by_id("quo-pur01-046")
+    scripts = []
+    for case in (first, second):
+        rows = _gold_rows_as_dicts(case.canticle, case.canto, case.line_start, case.line_end)
+        scripts.append(
+            [
+                _validate_block(rows, case.canticle, case.canto, case.line_start),
+                "solved",
+            ]
+        )
+    transport = StubTransport(scripts[0] + scripts[1])
+
+    updates = []
+
+    class _Bar:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def update(self, completed):
+            updates.append(completed)
+
+    class _FakeStatusLine:
+        def __init__(self):
+            self.stream = io.StringIO()
+
+        def progress(self, total, start=0, label=None):
+            assert (total, start) == (2, 0)
+            assert label == "bench:unit"
+            return _Bar()
+
+    fake = _FakeStatusLine()
+    run_benchmark(
+        [first, second],
+        transport,
+        toolkit=toolkit,
+        progress=True,
+        status_line=fake,
+    )
+    assert updates == [1, 2]
+    # Everything human-facing went through the status line's console...
+    display = fake.stream.getvalue()
+    assert "===== [1/2] ctl-inf01-010 =====" in display
+    assert "[ctl-inf01-010] turn" in display
+    # ...and stderr stayed clean.
+    assert capsys.readouterr().err == ""
+
+
+def test_harness_status_line_stream_is_markup_safe(capsys):
+    """Forwarded corpus/model text must never be parsed as Rich markup.
+
+    `[role=...]` citations used to vanish and closing-tag fragments raised
+    MarkupError; the harness stream renders both verbatim.
+    """
+    if HarnessStatusLine is None:  # pragma: no cover - rich ships via llm7shi extra
+        pytest.skip("llm7shi statusline extra not installed")
+    line = HarnessStatusLine()
+    dangerous = 'rows [obj] plus [/b] plus [obl:a=(126,3)] end'
+    line.stream.write(dangerous + "\n")
+    captured = capsys.readouterr()
+    assert dangerous in captured.err
+    assert captured.out == ""
+
+
+def test_harness_status_line_counts_api_retries(monkeypatch):
+    """Auto-retried 429 backoffs become countable through the stream's wait_retry."""
+    if HarnessStatusLine is None:  # pragma: no cover - rich ships via llm7shi extra
+        pytest.skip("llm7shi statusline extra not installed")
+    from llm7shi.statusline import StatusLineConsoleStream
+
+    monkeypatch.setattr(
+        StatusLineConsoleStream, "wait_retry", lambda self, delay, message="...": None
+    )
+    line = HarnessStatusLine()
+    line.stream.wait_retry(50)
+    line.stream.wait_retry(12)
+    assert line.stream.api_retries == 2
+    assert line.stream.api_retry_seconds == 62.0
+
+
+def test_api_retry_accounting_round_trip():
+    """Untracked runs stay None; snapshots measure per-case retry deltas."""
+    ev = UnitEvaluation(case_id="x", category="historical", unit={})
+    record = ev.to_dict()
+    assert record["api_retries"] is None and record["api_retry_seconds"] is None
+
+    # Without a status line nothing is tracked.
+    snap = _retry_snapshot(None)
+    assert snap is None and _retry_delta(snap, None) is None
+
+    class _Stream:
+        api_retries = 3
+        api_retry_seconds = 95.0
+
+    holder = type("Holder", (), {"stream": _Stream()})()
+    snap = _retry_snapshot(holder)
+    assert snap == (3, 95.0)
+    _Stream.api_retries, _Stream.api_retry_seconds = 5, 151.5
+    assert _retry_delta(snap, holder) == (2, 56.5)
+
+    report = BenchmarkReport()
+    report.add(
+        UnitEvaluation(case_id="a", category="historical", unit={},
+                       api_retries=2, api_retry_seconds=60.0)
+    )
+    report.add(UnitEvaluation(case_id="b", category="control", unit={}))
+    metrics = report.metrics()
+    assert metrics["api_retries"] == 2
+    assert metrics["api_retry_seconds"] == 60.0
 
 
 # --- workflow granularity (predicate accumulation) ---------------------------------------
