@@ -5,73 +5,45 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — finish the two in-flight instrumented re-runs, then Stage 2:**
+**Next action — Stage 2 kickoff** (`harness/extractor/`, milestones 2.1–2.5 in
+[`extractor/PLAN.md`](extractor/PLAN.md)): start at **milestone 2.1**
+(`syntax_miner.py` — log parsing + UD subtree clustering).
 
-- **In flight (operator-run, started 2026-08-23; session closed while they
-   run): BOTH benchmark re-runs on `google:gemma-4-31b-it` — api-retry
-   instrumentation AND the Client-backed transport adapter** (disk-only JSONL,
-   gitignored like all run logs). The 2026-08-23 unit attempt stalled at
-   28/87 cases — transient server-side stall (a minimal probe afterwards
-   connected fine); llm7shi streams have **no read timeout**, so a silent
-   hang blocks the process forever and interrupting it is the only out. That
-   is now safe: completed cases are flushed to disk per case, and the
-   benchmark CLI resumes an existing `--log` (completed cases reload into the
-   aggregate and are skipped, fresh records append; progress positions span
-   the whole run, e.g. `[29/87]`; the status bar starts at the offset). On
-   resume of each run:
-   1. Unit (`--workflow unit`): continues the stalled log (28 loaded / 59 to
-      run at restart). Check completion per the streaming contract: the log
-      must end with a `summary` record over 87 cases (no summary line =
-      interrupted; finished case records are kept either way and resume picks
-      them up — after any new stall, just re-run the same command).
-   2. Predicate (`--workflow predicate --max-turns 24`, fresh log): same
-      turn budget as the first instrumented predicate run, so turn counts /
-      `slow_turns` / exhausted sessions stay directly comparable. Resume
-      filters records by workflow, so this log never absorbs unit records even
-      if the commands interleave.
-   3. For BOTH: read out `api_retries` / `api_retry_seconds` and compare
-      against the predicate run's measured quota tax (103 backoffs / 3,526 s
-      across 40 of 87 cases), then decompose BOTH workflows into compute vs
-      quota wait — this closes the Current Status operational issue's
-      unit side and adds Client-adapter predicate-side numbers.
-   4. Quality numbers of these re-runs are NOT directly comparable to the
-      originals (run variance plus two behavior changes shipped since: the
-      status-bar instrumentation, and the `llm7shi.Client` adapter whose
-      quality-retry loop regenerates empty/repetitive replies). Watch whether
-      protocol_complete stays at 1.0 (unit) / ≥ 0.977 (predicate) and whether
-      any empty final still slips through despite the quality retry.
-   5. Record durable numbers in this file (never log filenames), then proceed.
-   Summary timing note for the readout: summary records now carry **summed
-   per-session durations** (`wall_clock_seconds` et al. over all cases across
-   attempts; no `started_at` field) — resume makes a start-to-end span
-   meaningless.
-- **Stage 2 kickoff afterwards** (`harness/extractor/`, milestones 2.1–2.5 in
-  [`extractor/PLAN.md`](extractor/PLAN.md)): mine the traces collected by the
-  milestone-1.4 runs into syntax fast-path rules + verb valency lexicon.
-- Standing observability requirements (§4 item 5) bind every new extractor
-  CLI from day one: streaming JSONL `--log`, stderr progress display, session
-  separators, per-turn timings rolled into summary records.
-- Error structure to mine around (details in the M1.4 Ledger entry):
-  systematic gold-convention divergence on verbless frames dominates
-  `historical` misses; bare-`obl` over-assignment and `xcomp` over-generation
-  are the top noise sources; the unit run's 19 well-formed `upstream_feedback`
-  records await human triage before any upstream-retag decisions (the
-  predicate pass filed only 4 — unit remains the primary discovery channel).
-- Session housekeeping: TWO sessions' UNCOMMITTED working-tree changes now sit
-   in the tree. The earlier session added new `runner/statusline.py`,
-   Client-backed `agent.llm7shi_generate` with explicit `transport.reset()` per
-   session (native ledger flush included), and benchmark status-bar + retry
-   counters + reset plumbing. This session added benchmark **resume**
-   (`load_log` / `evaluation_from_record` / `prepare_resume` with
-   selection+workflow filtering and torn-tail tolerance, stale-summary strip
-   keeping "ends with summary ⇔ complete"; `run_benchmark(report=...,
-   resume_offset=...)` so separators read `[offset+i/offset+N]` and the status
-   bar starts at the offset), and changed summary timing to **summed
-   per-session durations** (`started_at` dropped). Tests at 732 passed, plus
-   the PLAN.md / runner-README updates. Commit hygiene is the operator's call.
-- `*.log` files are gitignored; `harness/bench-strict-validator-baseline.log`,
-   `harness/parity.log`, the milestone-1.4 run logs, and the two in-flight
-   retry logs exist on disk only. Durable numbers live in this file.
+1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§2 components,
+   §5 milestones), then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
+   (observability + streaming-log contract bind every new extractor CLI from
+   day one: streaming JSONL `--log`, stderr progress display, session
+   separators, per-turn timings rolled into summary records). The Stage-1→2
+   interface is the trace contract, not runner internals:
+   `UnitResult.trace_record()` (`runner/agent.py`) embedded as `"trace"` in
+   every benchmark case record.
+2. **Mining inputs — four complete 87-case JSONL run logs on disk** (all
+   gitignored, disk-only; regenerate rather than re-mine if lost):
+   M1.4 originals (`harness/bench-unit.log`, `harness/bench-predicate.log`)
+   plus the instrumented re-runs (`harness/bench-unit-retry.log`,
+   `harness/bench-predicate-retry.log`; finished 2026-08-24 — quota tax now
+   measured on BOTH workflows, zero empty finals under the Client adapter;
+   full readout in the **Milestone 1.4 addendum** below). Each case record
+   carries the score diffs (`missing` / `extra` vs gold) and, under `trace`,
+   the full session: per-dispatch `outcomes` envelopes (the 2.1/2.2 raw
+   material), `turn_seconds`, nudge/exhaustion flags. Pool all four runs and
+   dedupe by unit + timestamp; re-run traces are the Client-adapter era,
+   originals predate it — both are valid mining samples.
+3. **Error structure to mine around** (details in the M1.4 Ledger entries):
+   systematic gold-convention divergence on verbless frames dominates
+   `historical` misses; bare-`obl` over-assignment (74 fps) and `xcomp`
+   over-generation are the top noise sources; `obl:di` / `obl:in` recall
+   0.54–0.60 feeds lexicon_builder directly. The 31 well-formed unit-side
+   `upstream_feedback` records await HUMAN triage — never auto-retag.
+4. **Boundaries that hold**: `extractor/` consumes traces + operator-side
+   gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1)
+   applies to anything that runs *as* an agent, not to extraction itself;
+   `fixtures/challenge_cases.py` stays data-only. Tests live at repo root
+   (`tests/test_harness_*.py`).
+5. **Session housekeeping**: the instrumentation/resume/adapter work is
+   COMMITTED (0014fda status bar + `llm7shi.Client` adapter; 1bf3a11
+   benchmark resume; fd13bcd ARCHITECTURE.md). Tree is clean except this
+   handoff rewrite. Tests at 732 passed.
 
 ---
 
@@ -118,8 +90,15 @@ and the **Milestone Ledger** below.
   so quota-affected turns inflate slow-turn counts unless read together with
   the retry counters. Measured on the predicate full run (first instrumented
   run): 103 backoffs / 3,526 s across 40 of 87 cases, worst session 14
-  backoffs / 670 s over 19 turns; excluding backoff, its compute matched the
-  unit run (~18.8 ks vs 18.7 ks) — the entire +19% wall clock was quota wait.
+   backoffs / 670 s over 19 turns; excluding backoff, its compute matched the
+   unit run (~18.8 ks vs 18.7 ks) — the entire +19% wall clock was quota wait.
+   Re-measured 2026-08-24 on both instrumented re-runs (Client adapter):
+   predicate 103 backoffs / 3,196 s across 47 of 87 cases (14.4% of wall)
+   reproduces the tax; the unit side is now measured for the first time at
+   55 backoffs / 1,659 s across 36 of 87 cases (8.4%) — half the predicate's
+   absolute quota wait, consistent with shorter unit sessions crossing the
+   per-minute ceiling less often. Compute-only totals nearly equal: unit
+   ≈18.1 ks vs predicate ≈19.0 ks (+5%).
 - Test suite: **732 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
   39 `test_harness_benchmark.py`).
@@ -304,6 +283,37 @@ XML path over the Gemini API backend).**
 - Run logs are gitignored disk-only artifacts; the durable numbers above are
   the record. Stage 2 mines traces from both runs.
 
+**Milestone 1.4 addendum — instrumented re-runs (finished 2026-08-24,
+`google:gemma-4-31b-it`): COMPLETE.** Both workflows re-run end-to-end with
+api-retry instrumentation and the `llm7shi.Client` transport adapter (same
+turn budgets as the originals); the unit attempt survived a mid-run server
+stall via log-resume, so summaries carry summed per-session durations across
+attempts. Readout:
+
+- **Quota tax closed on both sides** (see Current Status operational issue):
+  predicate 103 backoffs / 3,196 s across 47/87 cases vs the original
+  103 / 3,526 s across 40/87 — reproduces at scale; unit measured for the
+  first time at 55 backoffs / 1,659 s across 36/87. Compute-only totals:
+  unit ≈18.1 ks, predicate ≈19.0 ks.
+- **Empty-final failure mode eliminated**: zero empty final texts in either
+  run; `protocol_complete_rate` 1.0 on BOTH workflows (predicate was 0.977
+  before the Client adapter) — watch item a from the original predicate pass
+  closed in practice.
+- **Quality parity holds under variance** (re-runs not head-to-head with the
+  originals): unit micro F1 0.704 (P 0.690 / R 0.719), macro 0.489;
+  predicate micro F1 0.706 (P 0.687 / R 0.727), macro 0.521; pfpr 0.383 vs
+  0.408; one-shot exact = converged = 2/87 on unit, 0/87 and 2/87 on
+  predicate; gold 1458 vs predicted 1518 (missing 410 / extra 470, unit) and
+  1544 (398 / 484, predicate). No regression signal against M1.4.
+- **Protocol health**: unit parse success 286/287 (first sub-1.0 pooled rate,
+  still far above the 0.95 gate), predicate 337/337 = 1.0; slow turns 1
+  (max turn 338 s) vs 4 (max 532 s, retry-inflated); 0 exhausted / 0 nudges /
+  0 malformed / 0 out-of-unit rows on both; wall ≈19.8 ks (unit) vs ≈22.2 ks
+  (predicate), mean turn 68.9 s vs 65.8 s.
+- **Upstream channel**: unit 12 well-formed records from 8 units vs
+  predicate 6 from 5, form-validity precision 1.0 everywhere — unit stays
+  the primary discovery channel; all unit-side records now total 31 and await
+  human triage.
 
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
