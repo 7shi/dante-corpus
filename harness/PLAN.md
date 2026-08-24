@@ -5,43 +5,52 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 2, milestone 2.2** (`harness/extractor/lexicon_builder.py`,
-milestones 2.2–2.5 in [`extractor/PLAN.md`](extractor/PLAN.md)): the verb
-valency lexicon builder — aggregate verb-lemma × preposition × case decisions
-from the same pooled traces (the `obl:di` / `obl:in` recall gap 0.54–0.60 is
-its direct target).
+**Next action — Stage 2, milestone 2.3** (`harness/extractor/hybrid_engine.py`,
+milestones 2.3–2.5 in [`extractor/PLAN.md`](extractor/PLAN.md)): the hybrid
+execution engine — fast-path derivation from the mined rule table
+(`syntax_miner.py`) + valency lexicon (`lexicon_builder.py`) with fallback to
+Stage-1 agent inference.
 
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§2 components,
    §5 milestones), then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
    (observability + log contract bind new CLIs from day one — batch jobs scale
-   this down, they don't skip it; see `syntax_miner.py` for the proven shape).
+   this down, they don't skip it; see `syntax_miner.py` / `lexicon_builder.py`
+   for the proven shape).
    The Stage-1→2 interface stays the trace contract:
    `UnitResult.trace_record()` (`runner/agent.py`) embedded as `"trace"` in
    every benchmark case record.
+   For 2.3's inputs: no mined artifact is frozen on disk — regenerate the rule
+   table / lexicon JSONs deterministically via `syntax_miner --rules-out` /
+   `lexicon_builder --lexicon-out` (full builds run in seconds), or have the
+   engine call the mining modules directly.
 2. **Mining inputs — four complete 87-case JSONL run logs on disk** (all
    gitignored, disk-only; regenerate rather than re-mine if lost):
    M1.4 originals (`harness/bench-unit.log`, `harness/bench-predicate.log`)
    plus the instrumented re-runs (`harness/bench-unit-retry.log`,
    `harness/bench-predicate-retry.log`; finished 2026-08-24). Pool all four
    runs and dedupe by unit + workflow + timestamp. `syntax_miner.py`'s
-   `iter_case_records` / `collect_instances` / `_CantoViews` are the proven
-   loaders for exactly this — reuse or generalize them in `lexicon_builder.py`
+   `iter_case_records` / `iter_labeled_rows` / `_CantoViews` are the proven
+   loaders for exactly this — reuse them (`lexicon_builder.py` already does)
    instead of reinventing.
 3. **Error structure to mine around** (details in the M1.4 Ledger entries):
    systematic gold-convention divergence on verbless frames dominates
    `historical` misses; bare-`obl` over-assignment (74 fps) and `xcomp`
    over-generation are the top noise sources; `obl:di` / `obl:in` recall
-   0.54–0.60 feeds lexicon_builder directly. The 31 well-formed unit-side
-   `upstream_feedback` records await HUMAN triage — never auto-retag.
+   0.54–0.60 fed lexicon_builder directly (140 frames at 100% consistency
+   mined, incl. fare+di / avere+di / sedere+in — see the M2.2 Ledger entry).
+   The 31 well-formed unit-side `upstream_feedback` records await HUMAN
+   triage — never auto-retag.
 4. **Boundaries that hold**: `extractor/` consumes traces + operator-side
    gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1)
    applies to anything that runs *as* an agent, not to extraction itself;
    `fixtures/challenge_cases.py` stays data-only. Tests live at repo root
    (`tests/test_harness_*.py`).
-5. **Session housekeeping**: milestone 2.1 is complete and committed
-   (`extractor/syntax_miner.py` + `tests/test_harness_syntax_miner.py` +
-   plan/README updates — readout in the Ledger entry below). Tree is clean
-   except this handoff rewrite. Tests at 755 passed.
+5. **Session housekeeping**: milestones 2.1 and 2.2 are complete; this commit
+   carries the 2.2 deliverables (`extractor/lexicon_builder.py` +
+   `tests/test_harness_lexicon_builder.py`), the shared
+   `syntax_miner.iter_labeled_rows` loader extraction, and all plan/README
+   updates — readouts in the Ledger entries below. Tree starts clean. Tests at
+   772 passed.
 
 ---
 
@@ -72,6 +81,11 @@ its direct target).
         — COMPLETE (2026-08-24): row-level supervised UD-topology clustering
         over the pooled traces; 183 fast-path rules at 100% precision, corpus
         gold coverage 31.4%; details in the Ledger entry below.
+  - [x] **Milestone 2.2 — Verb Valency Lexicon Builder**
+        (`extractor/lexicon_builder.py`) — COMPLETE (2026-08-24): shared
+        row-level supervision over the same pooled traces; 140 verb×preposition
+        frames over 105 verbs at 100% consistency; details in the Ledger entry
+        below.
 - Open design question: §7.1 termination tool — the practical half is resolved
   by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
   tool stays open at the protocol layer.
@@ -101,9 +115,10 @@ its direct target).
    absolute quota wait, consistent with shorter unit sessions crossing the
    per-minute ceiling less often. Compute-only totals nearly equal: unit
    ≈18.1 ks vs predicate ≈19.0 ks (+5%).
-- Test suite: **755 passed** (547 corpus + 41 `test_harness_tools.py` +
+- Test suite: **772 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
-  39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py`).
+  39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
+  17 `test_harness_lexicon_builder.py`).
 
 ---
 
@@ -363,6 +378,57 @@ clustering of the pooled Stage-1 traces into executable fast-path rules
   coverage partition invariants, CLI end-to-end with summary-last marker, and
   a real-log integration test skipped when logs are absent. Suite total
   **755 passed**.
+
+**Milestone 2.2 — Verb Valency Lexicon Builder
+(`harness/extractor/lexicon_builder.py`): COMPLETE (2026-08-24).** Second
+Stage-2 deliverable: deterministic, no-model aggregation of the pooled Stage-1
+traces into executable verb×preposition argument frames
+(`extractor/PLAN.md` §2.2) — the direct lever on the M1.4 `obl:di` / `obl:in`
+recall gap (0.54–0.60).
+
+- **Shared loader extracted.** `syntax_miner.iter_labeled_rows` now carries the
+  proven session scan (pooled four-run JSONL, dedupe by unit + workflow +
+  timestamp, pro-drop counted never yielded, gold-vs-diff row labeling);
+  `collect_instances` consumes it unchanged (all 23 miner tests pass untouched)
+  and `collect_valency_instances` is the second consumer — one scan, two
+  miners.
+- **The observation** per labeled `obl:` row is `(verb_lemma at the predicate,
+  norm_prep(case child of the argument), role, ok)`; `norm_prep` splits fused
+  preposition+article lemmas (`a+il` → `a`, ~1.5k gold rows' largest
+  role-vs-case divergence family) and folds spacing/apostrophe variants. The
+  key is the UD observable so reconstruction-time lookups need no Layer-5 hint.
+- **Pair labeling discipline** (competing readings poison, as in 2.1):
+  correct rows agreeing with the case lemma are positives; wrong claims charge
+  their own asserted suffix (never the unrelated case lemma the UD showed);
+  correct role-vs-case spelling disagreements poison the case-lemma pair.
+  Bare-`obl` adjunct verdicts over case-bearing phrases count as negatives but
+  barely exist in gold (1 of 872). Out-of-scope rows (subj/obj/ccomp/... and
+  bare obl without case child): 4,164 of 5,340 resolved rows — counted, not
+  aggregated.
+- **Gate**: support ≥ 3 AND consistency = positives / (positives + rejected +
+  mismatches + adjuncts) ≥ 1.0. Result: 288 pairs → **140 `ValencyEntry`s
+  over 105 verbs at 100% consistency**, top by support: volgere+a 19/19,
+  fare+con 14/14, fare+di 13/13, avere+di 12/12, fare+in 11/11; the
+  recall-gap targets contribute 44 di/in frames (fare+di, avere+di,
+  sedere+in 8/8, apparire+di ...).
+- **Deterministic corpus probe** (lexicon looked up for every explicit-argument
+  gold `obl:` row of all 100 cantos): **1,381 / 8,889 = 15.5% reproduced**
+  (conflict 25, unmatched 7,483 — mining coverage tracks trace coverage, same
+  pattern as the rule table's 31.4%; no_preposition 366 rows are the lexicon's
+  blind spot by construction; adjunct conflict/unmatched 0/1).
+- **CLI & observability**: batch-scaled §4–§6 exactly like the miner — stderr
+  phase progress with `[lexicon_builder]` labels, streaming JSONL `--log`
+  (one `frame` record per entry, summary-last completion marker, truncated on
+  startup as a one-shot experiment under §5), durable `--lexicon-out` lexicon
+  JSON, dual-face `LexiconReport`. Deterministic end to end (~1 s full build +
+  corpus probe); nothing touches a model.
+- Tests: `tests/test_harness_lexicon_builder.py` — 17 deterministic tests:
+  prep normalization, in-scope labeling against real inferno-2 gold (incl. the
+  wrong-claim-charges-its-own-suffix asymmetry), unresolved counting, frame
+  gates (support, poisoned rejected/mismatch/adjunct buckets, relaxed
+  consistency), exporter round-trip, coverage partition invariants, report
+  faces, CLI end-to-end with summary-last marker, real-log integration
+  skipped when logs are absent. Suite total **772 passed**.
 
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its

@@ -92,7 +92,19 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
       (`ok / total-per-signature`, so competing readings poison the pattern) and emit
       as executable `SyntaxRule.matches(ctx)` predicates; deterministic corpus-wide
       gold coverage closes the report.
-- [ ] **2.2 Valency Lexicon Builder (`lexicon_builder.py`)**: Build verb-preposition co-occurrence aggregator and frame exporter.
+- [x] **2.2 Valency Lexicon Builder (`lexicon_builder.py`)**: Build verb-preposition
+      co-occurrence aggregator and frame exporter. — **COMPLETE (2026-08-24)**;
+      readout in the [`../PLAN.md`](../PLAN.md) Milestone Ledger. Shares the miner's
+      pooled row-level supervision through the new `syntax_miner.iter_labeled_rows`
+      loader; each labeled `obl:` row becomes a `(verb_lemma, norm_prep(case_child))`
+      observation where positives come from correct rows agreeing with the UD case
+      lemma, wrong claims poison their own asserted suffix, and role-vs-case spelling
+      mismatches poison the case-lemma pair (fused `a+il`-style lemmas normalize away,
+      ~1.5k gold rows). Pairs pass a support + consistency gate into executable
+      `ValencyEntry`s; a deterministic corpus-wide gold probe closes the report.
+      Reflexive `si` profiling stays open — in the data `si` surfaces as an ordinary
+      argument across many roles, so its classification needs clitic-licensing
+      context rather than co-occurrence counts.
 - [ ] **2.3 Hybrid Engine Router (`hybrid_engine.py`)**: Implement fast-path execution with seamless Stage 1 agent fallback.
 - [ ] **2.4 Gated Reconstruction Pipeline (`reconstruct.py`)**: Implement full CLI with hash validation and token assertions.
 - [ ] **2.5 Full-Corpus Gold Verification**: Reconstruct all 100 cantos through the hybrid engine and assert 100% equivalence with `skel/`.

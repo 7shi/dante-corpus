@@ -86,6 +86,7 @@ __all__ = [
     "RowInstance",
     "SyntaxRule",
     "collect_instances",
+    "iter_labeled_rows",
     "compute_coverage",
     "iter_case_records",
     "load_rule_table",
@@ -371,22 +372,28 @@ class _CantoViews:
         return self._gold[key]
 
 
-def collect_instances(
+def iter_labeled_rows(
     paths: list[Path],
     *,
     max_sessions: int | None = None,
     stats: InstanceStats | None = None,
+    views: _CantoViews | None = None,
     progress_stream: TextIO | None = sys.stderr,
-) -> tuple[list[RowInstance], InstanceStats]:
+    label: str = "syntax_miner",
+) -> Iterator[tuple[str, dict, RowKey, bool]]:
     """Pool labeled row decisions out of the given run logs.
 
-    Correct instances are the session's gold rows minus `missing`; wrong ones
-    are the `extra` keys with their (wrong) predicted roles. Pro-drop rows and
-    positions without resolvable L2/L4 context are counted, not clustered.
+    Yields `(run_id, unit_dict, row_key, ok)` per labeled row: correct rows are
+    the session's gold rows minus `missing`, wrong ones the `extra` keys with
+    their (wrong) predicted roles. Sessions are deduped by
+    (unit, workflow, timestamp); pro-drop rows (`arg == (0, 0)`) are counted
+    into `stats` and never yielded. Session-level counters (sessions /
+    duplicate_sessions / pro-drop) update here; per-row outcome counters stay
+    the consumer's business. Shared `views` cache gold across callers so pooled
+    runs revisiting one unit load it once.
     """
     stats = stats if stats is not None else InstanceStats()
-    instances: list[RowInstance] = []
-    views = _CantoViews()
+    views = views if views is not None else _CantoViews()
     seen: set[tuple] = set()
 
     for run_id, record in iter_case_records(paths):
@@ -409,7 +416,7 @@ def collect_instances(
         stats.sessions += 1
         if progress_stream is not None and stats.sessions % 20 == 0:
             print(
-                f"[syntax_miner] scanned {stats.sessions} sessions "
+                f"[{label}] scanned {stats.sessions} sessions "
                 f"(+{stats.duplicate_sessions} duplicates)",
                 file=progress_stream,
                 flush=True,
@@ -423,37 +430,66 @@ def collect_instances(
         }
         missing = {tuple(k) for k in record.get("missing") or []}
         extra = {tuple(k) for k in record.get("extra") or []}
-        dep_idx, morph_idx, children_idx = views.view(unit["canticle"], unit["canto"])
 
-        labeled = sorted(gold - missing)
-        wrong = sorted(extra)
-        for key, ok in [(k, True) for k in labeled] + [(k, False) for k in wrong]:
-            pline, ptok, role, aline, atok = key
-            if (aline, atok) == (0, 0):
+        for key, ok in [
+            *[(k, True) for k in sorted(gold - missing)],
+            *[(k, False) for k in sorted(extra)],
+        ]:
+            if key[3:] == (0, 0):
                 if ok:
                     stats.pro_drop_correct += 1
                 else:
                     stats.pro_drop_wrong += 1
                 continue
-            ctx = RowContext.build(
-                dep_idx, morph_idx, children_idx, (pline, ptok), (aline, atok)
+            yield run_id, unit, key, ok
+
+
+def collect_instances(
+    paths: list[Path],
+    *,
+    max_sessions: int | None = None,
+    stats: InstanceStats | None = None,
+    progress_stream: TextIO | None = sys.stderr,
+) -> tuple[list[RowInstance], InstanceStats]:
+    """Pool labeled row decisions out of the given run logs as topology instances.
+
+    Correct instances are the session's gold rows minus `missing`; wrong ones
+    are the `extra` keys with their (wrong) predicted roles. Pro-drop rows and
+    positions without resolvable L2/L4 context are counted, not clustered.
+    """
+    stats = stats if stats is not None else InstanceStats()
+    instances: list[RowInstance] = []
+    views = _CantoViews()
+
+    for run_id, unit, key, ok in iter_labeled_rows(
+        paths,
+        max_sessions=max_sessions,
+        stats=stats,
+        views=views,
+        progress_stream=progress_stream,
+    ):
+        pline, ptok, role, aline, atok = key
+        ctx = RowContext.build(
+            *(views.view(unit["canticle"], unit["canto"])),
+            (pline, ptok),
+            (aline, atok),
+        )
+        if ctx is None:
+            stats.unresolved += 1
+            continue
+        if ok:
+            stats.rows_correct += 1
+        else:
+            stats.rows_wrong += 1
+        instances.append(
+            RowInstance(
+                run_id=run_id,
+                unit=(unit["canticle"], unit["canto"], unit["line_start"], unit["line_end"]),
+                role=role,
+                ok=ok,
+                ctx=ctx,
             )
-            if ctx is None:
-                stats.unresolved += 1
-                continue
-            if ok:
-                stats.rows_correct += 1
-            else:
-                stats.rows_wrong += 1
-            instances.append(
-                RowInstance(
-                    run_id=run_id,
-                    unit=(unit["canticle"], unit["canto"], unit["line_start"], unit["line_end"]),
-                    role=role,
-                    ok=ok,
-                    ctx=ctx,
-                )
-            )
+        )
     return instances, stats
 
 
