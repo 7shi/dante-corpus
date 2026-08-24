@@ -260,3 +260,57 @@ protocols later never touches the loop again.
 3. **Multiple calls per turn**: allow parallel tool calls in one response, or force exactly one
    to keep transcripts simpler? (Native path permits multiple; the prompt contract should match
    whichever is chosen.)
+
+---
+
+## 8. Milestone Ledger (archived from `harness/PLAN.md`, 2026-08-24)
+
+Split out when `PLAN.md` was trimmed; content verbatim. Stage-1 milestone
+records live in [`STAGE1.md`](STAGE1.md).
+
+**Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T5 COMPLETE, BOTH LIVE GATES
+PASSED (T4 probe, T5 parity).**
+
+Gemma cannot use native tool calling on the Gemini API path and its structured output is
+unreliable there, so the interim protocol is prompt-instructed `<tool_call>` blocks (one
+JSON object per block) converted into OpenAI-compatible tool-call dicts; native Ollama
+tool calling is a pure transport swap (`OllamaNativeTransport`, T5). Deliverables:
+parser/formatter (`parser.py`), prompt contract + few-shot (`prompts.py`), transports
+(`transports.py`), transport-agnostic loop (`loop.py`), live-probe CLI (`probe.py`),
+migration-parity CLI (`parity.py`); 74 deterministic tests in
+`tests/test_harness_toolcall.py`. Live probing motivated a wire-format simplification
+from nested tags to one JSON object per block ([§3.1](#31-wire-format--one-json-object-per-block));
+**final-format pooled run on `google:gemma-4-31b-it` (--repeat 5): 20 scenarios, 47
+turns, parse success rate 0.957 ≥ 0.95 gate**, 0 hallucinated tools, 0 dispatch errors,
+both observed failure classes benign and prompt-side.
+
+**T5 — Native Transport & Migration Parity (`toolcall/transports.py`,
+`toolcall/parity.py`): COMPLETE — live parity run PASSED (2026-08-22).**
+
+- `OllamaNativeTransport` drives an injected chat backend (`(messages, tools) -> message`;
+  the library core still never imports ollama — the live adapter lives in
+  `parity.ollama_chat` over `ollama.chat(tools=...)`). `normalize_tool_calls` converts
+  ollama-style tool-call objects/dicts into canonical dicts with compact JSON-string
+  arguments; anything malformed surfaces as a structured error envelope, never a raise.
+  Because the loop keeps only assistant *text* in transcripts, the transport re-attaches
+  each session turn's calls when rebuilding requests (per-conversation ledger keyed by
+  transcript identity; opening-prompt demo turns untouched; nudged resumes start fresh
+  transcripts and keep text-only pre-nudge history — documented limitation).
+- `parser.format_tool_call(call)` is the canonical→wire inverse; together with
+  `parse_tool_calls` it backs the §5.3 interop criterion.
+- `parity.py`: runs every probe scenario through both transports (fresh toolkit per
+  session; XML side gets contract + demo, native side bare specs). Hard gate = canonical
+  round-trip interop on both sides (`ParityReport.parity_pass`); observational =
+  call-name sequences + final candidate rows. Streaming JSONL log mirrors the probe.
+- **Live verdict (2026-08-22, `ollama:gemma4:31b-it-qat`, `--repeat 3`)**: 12 scenarios,
+  interop 24/24 checks — PASS; names-equal 7/12, rows-equal 6/12 (observational);
+  xml turns=29/calls=18 vs native turns=31/calls=19, 0 parse errors, 0 exhausted,
+  ~148 min wall clock. Bring-up fix: `resolve_ollama_model` strips the CLI provider
+  prefix before it reaches the native transport. **Second run** (first with per-turn
+  `turn_seconds`): interop 24/24 again; native +32% wall clock fully explained by extra
+  validation turns (matched turns are equally fast) plus a native-only empty-response
+  pattern; observational equality fluctuates between runs (names 5/12, rows 4/12).
+  **Adoption decision: XML is the official wire format (Gemini API ≈3x faster than
+  local); native stays for comparison experiments.**
+- Tests: 25 new deterministic tests (normalization, history re-attachment, ledger
+  isolation, round-trip property, end-to-end stubbed parity); suite total 688 passed.

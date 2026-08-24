@@ -140,17 +140,21 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
       atomic compaction of stale summaries *and* orphaned partial-canto
       records). Dry readout: 0/100 cantos writable today, 43/3,477 units
       checker-clean — see the Ledger entry.
-- [ ] **2.5 Full-Corpus Gold Verification** (operator-run; target restated
-       against measured reality — the original "assert 100% equivalence with
-       `skel/`" is unreachable at current engine quality): reconstruct all
-       100 cantos through the hybrid engine, record exact-match / P-R-F1 per
-       canto via `--verify-gold`, confirm the gates keep every failing canto
-       unwritten (`written_cantos == 0`), and state what engine quality 100%
-       equivalence would require (0 hard / 0 soft on every unit — i.e. exact
-       checker-clean reconstruction, far beyond the agent's F1 ≈ 0.71–0.78).
+- [ ] **2.5 Gold Verification through the Recheck** (operator-run; scope
+       re-bounded 2026-08-24 — the 99-canto expansion + corpus-wide readout
+       moved to Stage 3): validate the live gated pipeline against gold at
+       single-canto scale and measure its operational cost honestly. The
+       original "assert 100% equivalence with `skel/`" target stays restated
+       against measured reality — it is unreachable at current engine quality
+       (0 hard / 0 soft on every unit, far beyond the agent's F1 ≈ 0.71–0.78),
+       so the deliverable is the exact/P-R-F1 record plus the confirmed
+       `written_cantos == 0` protection.
        Pilot DONE (2026-08-24, inferno 1, live fallback): sane — 18/34 units
        gate-pass, verify-gold micro P/R/F1 0.744/0.820/0.78 ≥ the Stage-1
        band, quota tax 9.4%, `written_cantos == 0`; the one fast-routed unit
-       failed (routing `complete` ≠ checker-clean). Remaining: the 99-canto
-       expansion (multi-day, resume at canto granularity) + corpus-wide
-       readout. Details in harness/PLAN.md's M2.5-pilot Ledger entry.
+        failed (routing `complete` ≠ checker-clean). Remaining: the inferno-1
+        recheck (log-extension live test + request-granularity 429 readout)
+        closes 2.5 and Stage 2 → archive to STAGE2.md; Stage 3 then opens
+        (compaction/pacing optimization, TPM-gated canticle-parallel 99-canto
+        expansion + corpus-wide readout). Details in harness/PLAN.md's
+        M2.5-pilot Ledger entry.
