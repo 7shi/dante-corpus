@@ -52,7 +52,17 @@ Dante lines as each parse unit starts — while the separators keep whole-run
 bar's console stream, and the live fallback's llm7shi sink shares that console
 so streamed model output coexists with the bar; auto-retried API backoffs are
 counted per canto through the stream's `wait_retry` hook (`api_retries` /
-`api_retry_seconds`) and rolled into the summary.
+`api_retry_seconds`) and rolled into the summary, and each `canto_complete`
+record carries the canto's `elapsed_seconds` (everything it cost:
+reconstruction, gates, gold comparison, commit) whose sum is the run's
+`wall_clock_seconds` — the benchmark's no-timestamp-span discipline, so idle
+gaps between resumed attempts never count. The same `--log` also
+carries the request-level cost records: the live fallback appends one JSONL
+pair per backend LLM call (`llm_request` before, `llm_response` after:
+timestamp, model, unit coordinates, transcript position, attempt,
+context/new/output sizes in UTF-8 bytes, duration). They are canto-scoped
+like every other record — never replayed into aggregates, and resume
+compaction keeps them exactly for completed cantos.
 Unlike the deterministic miners this CLI **resumes** rather than truncates
 (live fallback makes attempts hours long and worth keeping): completed cantos
 reload from an existing log and are skipped, and the log is compacted atomically
@@ -615,6 +625,7 @@ class ReconstructReport:
     soft_violations: int = 0
     violation_kinds: Counter = field(default_factory=Counter)
     fallback_seconds: list[float] = field(default_factory=list)
+    canto_seconds: list[float] = field(default_factory=list)
     api_retries: list[int] = field(default_factory=list)
     api_retry_seconds: list[float] = field(default_factory=list)
     cantos: int = 0
@@ -647,6 +658,12 @@ class ReconstructReport:
         commit_rec = record.get("commit")
         if commit_rec is not None:
             self.writes.append(commit_rec)
+        # Wall clock rides the canto records (sum-the-records architecture):
+        # like the benchmark's per-case turn sums, resumed attempts fold in
+        # per canto and idle gaps between attempts never count.
+        seconds = record.get("elapsed_seconds")
+        if seconds is not None:
+            self.canto_seconds.append(float(seconds))
         # §4 make-the-invisible-measurable: per-canto api-retry deltas fold in
         # only when the run tracked them (a status line owned the display).
         retries = record.get("api_retries")
@@ -673,6 +690,9 @@ class ReconstructReport:
             "fallback_seconds_total": round(sum(self.fallback_seconds), 1),
             "fallback_seconds_max": round(max(self.fallback_seconds), 1)
             if self.fallback_seconds
+            else None,
+            "wall_clock_seconds": round(sum(self.canto_seconds), 1)
+            if self.canto_seconds
             else None,
             "api_retries": sum(self.api_retries) if self.api_retries else None,
             "api_retry_seconds": (
@@ -720,6 +740,11 @@ class ReconstructReport:
             lines.append(
                 f"fallback sessions: {len(self.fallback_seconds)} in {total:.0f}s "
                 f"(max {max(self.fallback_seconds):.1f}s)"
+            )
+        if self.canto_seconds:
+            lines.append(
+                f"wall clock: {sum(self.canto_seconds):.0f}s across "
+                f"{len(self.canto_seconds)} canto(s)"
             )
         if self.api_retries:
             lines.append(
@@ -929,8 +954,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "--log",
         type=Path,
         help="streaming JSONL log: unit/gold/canto_complete records, summary "
-        "last. An existing file is resumed: completed cantos reload and are "
-        "skipped",
+        "last, plus llm_request/llm_response records from the live fallback. "
+        "An existing file is resumed: completed cantos reload and are skipped",
     )
     args = parser.parse_args(argv)
 
@@ -964,16 +989,6 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         bundle = mine_artifacts(args.run_logs, **kwargs)
         rules, entries = bundle.rules, bundle.entries
     engine = HybridEngine(rules, entries)
-
-    if fallback is None:
-        fallback_kwargs = {"model": args.model}
-        if args.max_turns is not None:
-            fallback_kwargs["max_turns"] = args.max_turns
-        fallback = agent_fallback(
-            verbose=args.verbose,
-            file=status_line.stream if status_line is not None else None,
-            **fallback_kwargs,
-        )
 
     wanted = _select_cantos(args)
     total = len(wanted)
@@ -1010,13 +1025,29 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     )
     print(header)
 
+    # One streaming log carries everything: unit/gold/canto_complete/summary
+    # records plus the live fallback's llm_request/llm_response records (the
+    # canto-scoped cost trail; resume compaction keeps them for completed
+    # cantos exactly like the unit records). Opened after compaction — the
+    # rewrite swaps the file, so an earlier handle would append into limbo.
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
+    if fallback is None:
+        fallback_kwargs = {"model": args.model}
+        if args.max_turns is not None:
+            fallback_kwargs["max_turns"] = args.max_turns
+        fallback = agent_fallback(
+            verbose=args.verbose,
+            file=status_line.stream if status_line is not None else None,
+            request_log=sink,
+            **fallback_kwargs,
+        )
     try:
         for index, (canticle, canto) in enumerate(wanted, start=resume_offset + 1):
             progress_separator(
                 f"{canticle} {canto}", index, total, stream=ui_stream
             )
             retry_before = _retry_snapshot(status_line)
+            canto_started = time.monotonic()
             recon = reconstruct_canto(
                 engine, canticle, canto,
                 fallback=fallback, status_line=status_line,
@@ -1048,6 +1079,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 complete["commit"] = commit_record
                 if sink is not None:
                     sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
+            # Wall clock of everything this canto cost (reconstruction,
+            # verification, gold comparison, commit) — sums into the summary
+            # and folds across resumed attempts via the record.
+            complete["elapsed_seconds"] = round(time.monotonic() - canto_started, 1)
             report.add_canto_complete(complete)
             if sink is not None:
                 sink.write(json.dumps(complete, ensure_ascii=False) + "\n")

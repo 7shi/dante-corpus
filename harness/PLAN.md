@@ -6,39 +6,39 @@ Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
 **Next action — Stage 2, milestone 2.5** (full-corpus gold verification,
-milestone 2.5 in [`extractor/PLAN.md`](extractor/PLAN.md) §5), **pilot first,
-then expand**; both steps OPERATOR-RUN (live agent fallback, hours long):
+milestone 2.5 in [`extractor/PLAN.md`](extractor/PLAN.md) §5): **the inferno-1
+pilot is DONE and SANE (2026-08-24, readout in the Ledger); the remaining
+action is the 99-canto expansion — OPERATOR-RUN** (live agent fallback; at the
+pilot's ~6.7 ks/canto this is a multi-day, interruptible run — the JSONL log
+resumes at canto granularity, so completed cantos are never re-run):
 
-1. **Pilot — inferno 1 only** (34 units / 136 lines; ~2 h at the M1.4 unit-run
-   rate of ~215 s/unit):
+```bash
+uv run python -m harness.extractor.reconstruct --all --verify-gold \
+    --model google:gemma-4-31b-it \
+    --log harness/recon-full.log
+```
 
-   ```bash
-   uv run python -m harness.extractor.reconstruct \
-       --canticle inferno --canto 1 --verify-gold \
-       --model google:gemma-4-31b-it \
-       --log harness/recon-pilot-inf1.log
-   ```
+The single streaming log also carries the request-level cost records
+(added 2026-08-24 after the pilot): the live fallback appends one
+`llm_request`/`llm_response` JSONL pair per backend LLM call — timestamp,
+model, session/unit coordinates, transcript position, attempt,
+context/new/output UTF-8 byte sizes, duration — closing the pilot's
+"turn counts were estimated, not measured" gap; join key
+`(session, messages, attempt)`, 429/quality retries inside `Client` stay
+with the `wait_retry` counters and correlate by timestamp. They are
+canto-scoped like every other record: never replayed into aggregates,
+kept by resume compaction exactly for completed cantos. Wall clock rides
+the records the same way: every `canto_complete` carries
+`elapsed_seconds` and the summary sums them into `wall_clock_seconds`
+(idle gaps between resumed attempts never count; the pilot log predates
+the key and reads as None).
 
-   Deliberately NO `--write`: this run only reports gate outcomes and the gold
-   comparison. What to watch: (a) gate pass rate across fast- vs agent-routed
-   units, (b) `--verify-gold` P/R/F1 vs the benchmark's micro F1 ≈ 0.70–0.71
-   (the pipeline must reproduce the Stage-1 numbers it inherits), (c) api-retry
-   backoffs over a long single-canto session stream — now measured directly:
-   `api_retries` / `api_retry_seconds` ride every `canto_complete` record and
-   roll into the summary.
-
-2. **Expand to the remaining 99 cantos** once the pilot is sane:
-   `uv run python -m harness.extractor.reconstruct --all --verify-gold ...`
-   with the same log semantics — the JSONL log resumes at canto granularity,
-   so completed cantos are never re-run.
-
-The milestone's "assert 100% equivalence with `skel/`" target needs re-stating
-against measured reality first: the fast path alone reproduces ~33% of gold
-rows and agent sessions score F1 ≈ 0.71, so equivalence cannot hold today.
-The honest form is: reconstruct corpus-wide, record exact-match/P-R-F1 per
-canto via `--verify-gold`, confirm the gates keep every failing canto
-unwritten (`written_cantos == 0`), and state what engine quality 100%
-equivalence would require.
+Pilot watch items all closed: (a) 18/34 units gate-pass, all agent-path (the
+one fast-routed unit failed — routing "complete" ≠ checker-clean);
+(b) `--verify-gold` micro P/R/F1 0.744/0.820/0.78 ≥ the Stage-1 band
+(0.711); (c) 15 backoffs / 630 s ≈ 9.4% of wall — consistent with the
+unit-benchmark quota tax. `written_cantos == 0`: gates kept the failing canto
+unwritten exactly as designed. Full readout in the M2.5-pilot Ledger entry.
 
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§3–§5), then
    [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6 (observability + log
@@ -73,17 +73,19 @@ equivalence would require.
    live at repo root (`tests/test_harness_*.py`). `skel/` is protected:
    reconstruction writes need the explicit `--write` flag on top of passing
    all three gates, canto-atomically.
-5. **Session housekeeping**: milestones 2.1–2.4 are complete; this commit
-   carries the 2.4 deliverables (`extractor/reconstruct.py` +
-   `tests/test_harness_reconstruct.py`) plus all plan updates — readout in
-   the Ledger entry below. The deterministic dry probe wrote nothing: 0/100
-   cantos pass the gates today. Milestone 2.5 is the first LIVE full-corpus
-   run and stays operator-run. `reconstruct.py` additionally ships the full
-   §4-item-5 display stack now (HarnessStatusLine bars naming the running
-   position Canticle Canto Line like the `skel/` drivers, shared
-   console for streamed model output, per-canto api-retry counters) — this is
-   the wiring pattern every future live CLI copies (see §4 item 5). Tree
-   starts clean. Tests at 827 passed.
+5. **Session housekeeping (2026-08-24, later session)**: the M2.5 inferno-1
+   pilot ran, read out sane, and is recorded in the Ledger entry below; the
+   2.5 milestone text in `extractor/PLAN.md` §5 is restated against measured
+   reality. This commit also carries the pilot-motivated observability
+   additions to the reconstruct log contract — per-request `llm_request` /
+   `llm_response` records riding `--log` (one pair per backend LLM call; see
+   the Handoff note above) and canto `elapsed_seconds` summing into summary
+   `wall_clock_seconds` — implemented in `runner/agent.py`
+   (`llm7shi_generate(request_log=...)` + the `_LLM_REQUEST_CONTEXT`
+   contextvar `run_unit` stamps), `extractor/hybrid_engine.py`
+   (`agent_fallback(request_log=...)`), and `extractor/reconstruct.py` (shared
+   sink wiring, opened after resume compaction). Tests at 833 passed; tree
+   starts clean. Next: the 99-canto expansion, operator-run.
 
 ---
 
@@ -126,11 +128,18 @@ equivalence would require.
         (target ≥80%), derivation P 0.925 / R 0.289; details in the Ledger
         entry below.
   - [x] **Milestone 2.4 — Gated Reconstruction Pipeline**
-        (`extractor/reconstruct.py`) — COMPLETE (2026-08-24): whole-canto
-        rebuild behind the three §4.1 gates (token-stream assertion, 0 hard /
-        0 soft via `validate_unit`, content-hash verified atomic commits);
-        deterministic dry probe: 0/100 cantos writable, 43/3,477 units
-        checker-clean; details in the Ledger entry below.
+         (`extractor/reconstruct.py`) — COMPLETE (2026-08-24): whole-canto
+         rebuild behind the three §4.1 gates (token-stream assertion, 0 hard /
+         0 soft via `validate_unit`, content-hash verified atomic commits);
+         deterministic dry probe: 0/100 cantos writable, 43/3,477 units
+         checker-clean; details in the Ledger entry below.
+  - [ ] **Milestone 2.5 — Full-Corpus Gold Verification** (operator-run).
+        - [x] Pilot (inferno 1, live fallback, 2026-08-24): SANE — 18/34
+              units gate-pass, verify-gold micro F1 0.78 ≥ the 0.70–0.71
+              Stage-1 band, quota tax 9.4%, `written_cantos == 0`; details in
+              the Ledger entry below.
+        - [ ] Expansion to the remaining 99 cantos (multi-day, resume at
+              canto granularity), then the corpus-wide readout.
 - Open design question: §7.1 termination tool — the practical half is resolved
   by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
   tool stays open at the protocol layer.
@@ -160,11 +169,11 @@ equivalence would require.
    absolute quota wait, consistent with shorter unit sessions crossing the
    per-minute ceiling less often. Compute-only totals nearly equal: unit
    ≈18.1 ks vs predicate ≈19.0 ks (+5%).
-- Test suite: **827 passed** (547 corpus + 41 `test_harness_tools.py` +
-  76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
+- Test suite: **833 passed** (547 corpus + 41 `test_harness_tools.py` +
+  76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
   17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-  28 `test_harness_reconstruct.py`).
+  31 `test_harness_reconstruct.py`).
 
 ---
 
@@ -633,8 +642,61 @@ three criteria.
    leaves seed bytes intact), status-line display routing (fake-bar canto
    tracking, resume offset spanning the bar, stderr kept clean), api-retry
    accounting (helpers, report folding, per-canto CLI deltas), capped
-   real-artifact integration. Suite total
-   **827 passed**.
+    real-artifact integration. Suite total
+    **827 passed**.
+
+**Milestone 2.5 pilot — live gated reconstruction, inferno 1 (operator-run):
+COMPLETE (2026-08-24, `google:gemma-4-31b-it`, `harness/recon-pilot-inf1.log`,
+gitignored disk-only; no `--write`).** First live `reconstruct` run: 34 units /
+136 lines, all three watch items from the handoff closed.
+
+- **Routing & gates (watch a).** 33 agent-routed (`pro_drop_suspects`) / 1
+  fast (`complete`) — the M2.3 7% fast share holds canto-side. **18/34 units
+  passed all gates (52.9%)**, 16 blocked; the canto as a whole failed →
+  `written_cantos == 0` — the gates keep every failing canto unwritten,
+  exactly the honest-output design. Contrast with the deterministic dry probe
+  (1.2% units passing): the live agent is what lifts unit-level pass rates.
+  Two structural findings: (1) the single **fast-routed unit failed** —
+  routing reason `complete` means "derivation finished", not "checker-clean";
+  its missing `obl:a` row is a rule/lexicon coverage gap the router cannot
+  see. (2) All 8 hard violations are agent-originated: 6 `dup` ("argument
+  cites its own predicate") + 2 `position` (`obj` on (0,0)) — error classes
+  invisible to the benchmark's row-key scoring but caught by Gate 2; soft
+  violations replay the known M1.4 shapes (bare-`obl` / `obl:<prep>`
+  role-mismatch, `subj (0,0)` where gold wants the ∅ convention,
+  missing_tuple on skipped predicates).
+- **Gold comparison (watch b).** `--verify-gold` micro P/R/F1 =
+  **0.744 / 0.820 / 0.78**, exact 2/34 units; gold 389 rows vs 429 predicted
+  (tp 319 / fp 110 / fn 70). Exceeds the inherited Stage-1 band (M1.4 unit
+  micro F1 0.711, P 0.693 / R 0.729) with both P and R higher — the pipeline
+  reproduces its Stage-1 inheritance on this canto. Caveat recorded: the
+  challenge-case benchmark is a curated-hard distribution, inferno 1 a normal
+  one (and hosted the benchmark's only exact-match units), so this is
+  reproduction, not improvement evidence.
+- **Quota tax (watch c).** 15 backoffs / 630 s over the canto
+  (`api_retries` / `api_retry_seconds` on `canto_complete` as designed);
+  fallback sessions totaled 6,068 s (~178 s/unit — consistent with the
+  ~215 s/unit M1.4 rate; max unit 985.6 s). Backoff ≈ 9.4% of wall,
+  consistent with the unit-benchmark's 8.4%: the single-canto session stream
+  shows no new retry pathology.
+- **Verdict: pilot sane → expansion sanctioned.** At the pilot rate the
+  remaining 99 cantos cost ~186 ks ≈ 7–8 days wall clock (corpus mean ≈ 35
+  units/canto, inferno 1 exactly at it); the log resumes at canto granularity
+  so the run is freely interruptible. The milestone's original "assert 100%
+  equivalence" target stays restated honestly: even at F1 0.78 no canto is
+  writable (0 hard / 0 soft per unit is far stricter than gold similarity);
+  the expansion's deliverable is the corpus-wide exact/P-R-F1 record plus the
+  confirmed `written_cantos == 0` protection, not writes.
+- **Post-pilot instrumentation (same day, in response to the pilot's two
+  measurement gaps).** The pilot log carried no request counts and no wall
+  clock, so both quantities had to be estimated from per-unit fallback
+  seconds. The expansion will measure them directly: (1) every backend LLM
+  call now appends an `llm_request`/`llm_response` pair to the same `--log`
+  (contextvar-stamped with session + unit coordinates from `run_unit`; join
+  key `(session, messages, attempt)`), and (2) every `canto_complete`
+  carries `elapsed_seconds`, summed into summary `wall_clock_seconds`
+  (sum-the-records: resumed attempts fold in per canto, idle gaps never
+  count). 6 new deterministic tests; suite 833 passed.
 
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its

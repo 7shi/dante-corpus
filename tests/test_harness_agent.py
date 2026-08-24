@@ -560,3 +560,169 @@ def test_predicate_workflow_selects_per_predicate_protocol(toolkit):
 def test_unknown_workflow_fails_loudly(toolkit):
     with pytest.raises(KeyError):
         _run(["Done.", "Still done."], toolkit, workflow="verse")
+
+
+# --- request-level observability (llm7shi_generate request_log) ---------------------------
+
+
+def test_llm7shi_generate_writes_request_response_log(monkeypatch, tmp_path):
+    """Every backend call appends an llm_request/llm_response pair: timestamp,
+    model, session/unit coordinates from the request context, transcript
+    position, attempt, UTF-8 byte sizes; the response adds duration, output
+    bytes, and the empty flag. Join key across the pair is
+    (session, messages, attempt)."""
+    import harness.runner.agent as agent_module
+
+    class FakeClient:
+        def __init__(self, model="", file=None, **kwargs):
+            self.model = model
+            self.history = []
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def __call__(self, prompt):
+            class _Response:
+                text = "risposta"
+
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": "risposta"})
+            return _Response()
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    log = tmp_path / "requests.jsonl"
+    with log.open("w", encoding="utf-8") as sink:
+        generate = agent_module.llm7shi_generate(
+            "ollama:m", request_log=sink
+        )
+        opening = [
+            {"role": "system", "content": "sistema"},
+            {"role": "user", "content": "demo?"},
+            {"role": "assistant", "content": "demo!"},
+            {"role": "user", "content": "compito-A"},
+        ]
+        generate([dict(m) for m in opening])
+        transcript = opening + [
+            {"role": "assistant", "content": "risposta"},
+            {"role": "user", "content": "<tool_result>x</tool_result>"},
+        ]
+        generate(transcript)
+
+    records = [
+        json.loads(line)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    assert [r["record"] for r in records] == [
+        "llm_request", "llm_response",
+        "llm_request", "llm_response",
+    ]
+    first_req, first_resp = records[0], records[1]
+    # Join key: identical across the request/response pair.
+    for field in ("session", "messages", "attempt", "model"):
+        assert first_req[field] == first_resp[field]
+    assert first_req["model"] == "ollama:m"
+    assert first_req["session"] is None  # outside run_unit: no context
+    assert first_req["canticle"] is None and first_req["canto"] is None
+    assert first_req["messages"] == 4
+    assert first_req["attempt"] == 1
+    expected_context = sum(
+        len(m["content"].encode("utf-8")) for m in opening
+    )
+    assert first_req["context_bytes"] == expected_context
+    assert first_req["new_bytes"] == len("compito-A".encode("utf-8"))
+    assert first_req["timestamp"] and first_resp["timestamp"]
+    assert first_resp["duration_seconds"] >= 0
+    assert first_resp["output_bytes"] == len("risposta".encode("utf-8"))
+    assert first_resp["empty"] is False
+    # Second turn: transcript grew by two messages, new_bytes is the newest
+    # user message only, attempt stays 1 (first try at that position).
+    second_req = records[2]
+    assert second_req["messages"] == 6
+    assert second_req["attempt"] == 1
+    assert (
+        second_req["context_bytes"]
+        == expected_context
+        + len("risposta".encode("utf-8"))
+        + len("<tool_result>x</tool_result>".encode("utf-8"))
+    )
+    assert second_req["new_bytes"] == len(
+        "<tool_result>x</tool_result>".encode("utf-8")
+    )
+
+
+def test_llm7shi_generate_request_log_attempts_reset_per_session(
+    monkeypatch, tmp_path
+):
+    """A repeated call at the same transcript position counts as an attempt;
+    reset() clears the counters with the session (the agent_fallback wiring
+    builds one adapter per unit, and run_unit resets shared transports)."""
+    import harness.runner.agent as agent_module
+
+    class FakeClient:
+        def __init__(self, model="", file=None, **kwargs):
+            self.history = []
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def __call__(self, prompt):
+            class _Response:
+                text = "ok"
+
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": "ok"})
+            return _Response()
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    log = tmp_path / "requests.jsonl"
+    with log.open("w", encoding="utf-8") as sink:
+        generate = agent_module.llm7shi_generate(
+            "ollama:m", request_log=sink
+        )
+        opening = [{"role": "user", "content": "uno"}]
+        generate([dict(m) for m in opening])
+        generate([dict(m) for m in opening])  # same position: attempt 2
+        generate.reset()
+        generate([dict(m) for m in opening])  # fresh session: attempt 1
+
+    records = [
+        json.loads(line)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    requests = [r for r in records if r["record"] == "llm_request"]
+    assert len(requests) == 3
+    assert [r["attempt"] for r in requests] == [1, 2, 1]
+
+
+def test_run_unit_stamps_llm_request_context(toolkit):
+    """run_unit tags its session's model calls with the unit coordinates and a
+    monotonically increasing session number; the context is cleared on exit."""
+    from harness.toolcall import PromptXmlTransport
+
+    import harness.runner.agent as agent_module
+
+    seen = []
+
+    def generate(messages):
+        seen.append(agent_module._LLM_REQUEST_CONTEXT.get())
+        return _validate_block(GOOD_ROWS) if len(seen) == 1 else "final answer"
+
+    transport = PromptXmlTransport(generate=generate)
+    for line_start in (1, 4):
+        run_unit(
+            transport=transport,
+            toolkit=toolkit,
+            canticle="inferno",
+            canto=1,
+            line_start=line_start,
+        )
+    assert agent_module._LLM_REQUEST_CONTEXT.get() is None
+    assert seen and all(ctx for ctx in seen)
+    assert {ctx["canticle"] for ctx in seen} == {"inferno"}
+    assert {ctx["canto"] for ctx in seen} == {1}
+    sessions = [ctx["session"] for ctx in seen]
+    assert sessions[0] < sessions[-1]  # counter advances per session
+    line_starts = {ctx["line_start"] for ctx in seen}
+    assert line_starts == {1, 4}

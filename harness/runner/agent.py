@@ -26,8 +26,11 @@ acceptance gate; a dedicated `submit_candidate` termination tool stays open.
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import sys
+import time
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Sequence
@@ -77,12 +80,22 @@ NUDGE_MESSAGE = (
     "may you give your final answer."
 )
 
+# Request-level observability (§4 make-the-invisible-measurable): every live
+# LLM request flows through `llm7shi_generate`, which reads this context to
+# stamp its JSONL records with the session/unit that issued the call. `run_unit`
+# sets it around the session loop; outside a session it reads as None.
+_LLM_REQUEST_CONTEXT: ContextVar[dict | None] = ContextVar(
+    "llm_request_context", default=None
+)
+_SESSION_SEQ = itertools.count(1)
+
 
 def llm7shi_generate(
     model: str = DEFAULT_MODEL,
     temperature: float | None = None,
     quiet: bool = True,
     file=None,
+    request_log=None,
 ):
     """Build a generate function over `llm7shi.Client` and its history management.
 
@@ -94,18 +107,41 @@ def llm7shi_generate(
     the session runner calls ``transport.reset()`` (forwarded to ``generate.
     reset``), which regenerates the Client instance for the next session. A
     length sync invariant stays as a guard for callers that never reset: the
-    loop always calls with the newest user message last, and ``synced`` counts
-    the transcript messages already mirrored into ``client.history``; any
+    loop always calls with the newest user message last, and `synced` counts
+    the transcript messages already mirrored into `client.history`; any
     mismatch means a fresh (or first) session, so the Client is rebuilt — one
     shared transport across a benchmark run therefore never leaks history
     between cases either way. The stream sink defaults to stderr (§4 item 5);
     a caller owning a Rich status line (`runner.statusline.HarnessStatusLine`)
     passes its console stream so streamed output, retry countdowns, and the
     live bar share one console.
+
+    ``request_log`` (an open text sink, UTF-8 JSONL) makes every backend
+    request measurable: one `llm_request` record is appended just before the
+    call (timestamp, model, session/unit coordinates from the request
+    context, transcript position, same-turn attempt, context and
+    newest-message sizes in UTF-8 bytes) and one `llm_response` record after
+    it (duration, output bytes, empty flag). Join key across the pair:
+    ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs,
+    quality regeneration) stay invisible here by construction; they are
+    measured by the stream's `wait_retry` counters and correlated by
+    timestamp. The reconstruct CLI points this at its own streaming `--log`
+    sink, so the cost records ride the same file as the unit records
+    (canto-scoped, resume-compacted with them).
     """
     from llm7shi import Client
 
-    state = {"client": None, "synced": 0}
+    state: dict = {"client": None, "synced": 0, "attempts": {}}
+
+    def _attempt(session, position: int) -> int:
+        key = (session, position)
+        state["attempts"][key] = state["attempts"].get(key, 0) + 1
+        return state["attempts"][key]
+
+    def _log(record: dict) -> None:
+        if request_log is not None:
+            request_log.write(json.dumps(record, ensure_ascii=False) + "\n")
+            request_log.flush()
 
     def generate(messages: list[dict]) -> str:
         if state["client"] is None or state["synced"] != len(messages) - 1:
@@ -127,17 +163,66 @@ def llm7shi_generate(
                 {"role": message["role"], "content": message["content"]}
             )
 
+        context = _LLM_REQUEST_CONTEXT.get() or {}
+        session = context.get("session")
+        position = len(messages)
+        attempt = _attempt(session, position)
+        _log(
+            {
+                "record": "llm_request",
+                "timestamp": datetime.now(timezone.utc).isoformat(
+                    timespec="milliseconds"
+                ),
+                "model": model,
+                "session": session,
+                **{
+                    k: context.get(k)
+                    for k in ("canticle", "canto", "line_start", "line_end")
+                },
+                "messages": position,
+                "attempt": attempt,
+                "context_bytes": sum(
+                    len(str(m.get("content", "")).encode("utf-8"))
+                    for m in messages
+                ),
+                "new_bytes": len(
+                    str(messages[-1].get("content", "")).encode("utf-8")
+                ),
+            }
+        )
+        began = time.monotonic()
         response = client(messages[-1]["content"])
+        text = response.text
+        _log(
+            {
+                "record": "llm_response",
+                "timestamp": datetime.now(timezone.utc).isoformat(
+                    timespec="milliseconds"
+                ),
+                "model": model,
+                "session": session,
+                **{
+                    k: context.get(k)
+                    for k in ("canticle", "canto", "line_start", "line_end")
+                },
+                "messages": position,
+                "attempt": attempt,
+                "duration_seconds": round(time.monotonic() - began, 3),
+                "output_bytes": len(str(text).encode("utf-8")),
+                "empty": not str(text).strip(),
+            }
+        )
         # Client appended the user prompt and its reply, so history mirrors
         # transcript[0:N] once the loop records the reply; the next call must
         # therefore arrive with N+1 messages (reply + newest user feedback).
         state["synced"] = len(messages) + 1
-        return response.text
+        return text
 
     def reset() -> None:
         """Session boundary: the next call regenerates the Client instance."""
         state["client"] = None
         state["synced"] = 0
+        state["attempts"] = {}
 
     generate.reset = reset
     return generate
@@ -370,47 +455,64 @@ def run_unit(
     if callable(reset):
         reset()
 
+    # Stamp this session's LLM requests (llm7shi_generate's request_log) with
+    # the unit coordinates so request records join back to units.
+    context_token = _LLM_REQUEST_CONTEXT.set(
+        {
+            "session": next(_SESSION_SEQ),
+            "canticle": canticle,
+            "canto": canto,
+            "line_start": line_start,
+            "line_end": line_end,
+        }
+    )
+
     transcript = [dict(m) for m in opening]
     remaining_budget = max_turns
     nudges_left = max_nudges
 
-    while remaining_budget > 0:
-        turns_before = result.turns
+    try:
+        while remaining_budget > 0:
+            turns_before = result.turns
 
-        def loop_on_turn(turn, response, outcomes, offset=turns_before):
-            on_turn(turn + offset, response, outcomes)
+            def loop_on_turn(turn, response, outcomes, offset=turns_before):
+                on_turn(turn + offset, response, outcomes)
 
-        loop_result = run_tool_loop(
-            transport=transport,
-            toolkit=toolkit,
-            messages=transcript,
-            tools=specs,
-            max_turns=remaining_budget,
-            on_turn=loop_on_turn if on_turn is not None else None,
-        )
-        result.turns += loop_result.turns
-        result.turn_seconds.extend(loop_result.turn_seconds)
-        result.outcomes.extend(loop_result.outcomes)
-        result.text = loop_result.text
-        result.exhausted = loop_result.exhausted
-        result.messages = loop_result.messages
-        remaining_budget -= loop_result.turns
+            loop_result = run_tool_loop(
+                transport=transport,
+                toolkit=toolkit,
+                messages=transcript,
+                tools=specs,
+                max_turns=remaining_budget,
+                on_turn=loop_on_turn if on_turn is not None else None,
+            )
+            result.turns += loop_result.turns
+            result.turn_seconds.extend(loop_result.turn_seconds)
+            result.outcomes.extend(loop_result.outcomes)
+            result.text = loop_result.text
+            result.exhausted = loop_result.exhausted
+            result.messages = loop_result.messages
+            remaining_budget -= loop_result.turns
 
-        if loop_result.exhausted:
-            break  # budget spent; a reminder cannot help
-        if any(
-            o.get("ok") and o.get("tool") == VALIDATE_TOOL
-            for o in loop_result.outcomes
-        ):
-            break  # worked through validation; prose ending is legitimate
-        if nudges_left == 0 or remaining_budget <= 0:
-            break  # still no validation: capability failure, measured as-is
+            if loop_result.exhausted:
+                break  # budget spent; a reminder cannot help
+            if any(
+                o.get("ok") and o.get("tool") == VALIDATE_TOOL
+                for o in loop_result.outcomes
+            ):
+                break  # worked through validation; prose ending is legitimate
+            if nudges_left == 0 or remaining_budget <= 0:
+                break  # still no validation: capability failure, measured as-is
 
-        nudges_left -= 1
-        result.nudges += 1
-        if progress:
-            progress_subseparator("nudged resume", stream=progress_stream)
-        transcript = loop_result.messages + [{"role": "user", "content": NUDGE_MESSAGE}]
+            nudges_left -= 1
+            result.nudges += 1
+            if progress:
+                progress_subseparator("nudged resume", stream=progress_stream)
+            transcript = loop_result.messages + [
+                {"role": "user", "content": NUDGE_MESSAGE}
+            ]
+    finally:
+        _LLM_REQUEST_CONTEXT.reset(context_token)
 
     return result
 

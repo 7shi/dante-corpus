@@ -483,11 +483,118 @@ def test_cli_main_streams_log_with_summary_last(tmp_path, monkeypatch):
     assert kinds.count("gold") == 34
     assert kinds.count("canto_complete") == 1
     assert "commit" not in kinds  # dry-run default writes nothing
+    complete = lines[-2]
+    assert complete["elapsed_seconds"] >= 0  # canto wall clock on the record
     summary = lines[-1]
     assert summary["units"] == 34
     assert summary["cantos_passed"] == 1
     assert summary["written_cantos"] == 0
+    assert summary["wall_clock_seconds"] >= 0  # summed from canto records
     assert summary["gold"]["exact_rate"] == 1.0
+
+
+def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
+    """The live fallback's request_log is the very sink behind --log: one
+    streaming file carries unit/gold/canto_complete/summary plus the
+    llm_request/llm_response cost records. Injected deterministic fallbacks
+    never see it."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    _write_log(run_log, [_case_record()])
+    out_log = tmp_path / "recon.log"
+
+    captured = {}
+
+    def spy_fallback(**kwargs):
+        captured.update(kwargs)
+        return _gold_fallback()
+
+    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    exit_code = rc.main(
+        [
+            "--canticle", "inferno", "--canto", "1",
+            "--run-log", str(run_log),
+            "--min-support", "99",
+            "--log", str(out_log),
+        ],
+    )
+    assert exit_code == 0
+    sink = captured.get("request_log")
+    assert sink is not None
+    assert sink.closed  # closed with the run
+    assert "a" in sink.mode
+    assert sink.name == str(out_log)
+    # The deterministic stub fallback issued no LLM calls, so the shared log
+    # holds the normal records only.
+    records = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines()
+        if l.strip()
+    ]
+    assert all(r["record"] != "llm_request" for r in records)
+    assert any(r["record"] == "canto_complete" for r in records)
+
+
+def test_request_records_ride_resume_semantics(tmp_path):
+    """llm_request/llm_response records are canto-scoped log citizens: never
+    replayed into aggregates (prepare_resume skips them), kept by compaction
+    for completed cantos, dropped for incomplete ones alongside their units."""
+    lines = [
+        {"record": "llm_request", "canticle": "inferno", "canto": 1,
+         "session": 1, "messages": 4, "attempt": 1},
+        {"record": "llm_response", "canticle": "inferno", "canto": 1,
+         "session": 1, "messages": 4, "attempt": 1, "duration_seconds": 0.1},
+        {"record": "unit", "canticle": "inferno", "canto": 1, "passed": True},
+        {"record": "canto_complete", "canticle": "inferno", "canto": 1,
+         "passed": True},
+        {"record": "llm_request", "canticle": "inferno", "canto": 2,
+         "session": 2, "messages": 4, "attempt": 1},
+        {"record": "summary", "cantos": 1},
+    ]
+    log = tmp_path / "recon.log"
+    with log.open("w", encoding="utf-8") as fh:
+        for record in lines:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+    replay, remaining = rc.prepare_resume(
+        lines, [("inferno", 1), ("inferno", 2)]
+    )
+    # Aggregates only ever fold unit/gold/commit/canto_complete records.
+    assert [r["record"] for r in replay] == ["unit", "canto_complete"]
+    assert remaining == [("inferno", 2)]
+
+    rc.compact_log(log, {("inferno", 1)})
+    kept = [
+        json.loads(l)
+        for l in log.read_text(encoding="utf-8").splitlines()
+        if l.strip()
+    ]
+    assert [r["record"] for r in kept] == [
+        "llm_request", "llm_response", "unit", "canto_complete",
+    ]
+    assert all((r["canticle"], r["canto"]) == ("inferno", 1) for r in kept)
+
+
+def test_report_sums_canto_wall_clock_from_records():
+    """elapsed_seconds rides canto_complete records and sums into the summary
+    (sum-the-records architecture); resumed replays fold in per canto, and
+    records without the key (e.g. the pre-measurement pilot log) stay
+    graceful."""
+    report = rc.ReconstructReport()
+    base = {"record": "canto_complete", "passed": True}
+    report.add_canto_complete({**base, "canticle": "inferno", "canto": 1,
+                               "elapsed_seconds": 6068.0})
+    report.add_canto_complete({**base, "canticle": "inferno", "canto": 2,
+                               "elapsed_seconds": 7000.0})
+    report.add_canto_complete({**base, "canticle": "inferno", "canto": 3})
+    metrics = report.metrics()
+    assert metrics["cantos"] == 3
+    assert metrics["wall_clock_seconds"] == 13068.0
+    # The third record carries no elapsed_seconds: 3 cantos, 2 measured.
+    assert "wall clock: 13068s across 2 canto(s)" in report.summary()
+    empty = rc.ReconstructReport()
+    assert empty.metrics()["wall_clock_seconds"] is None
+    assert "wall clock" not in empty.summary()
 
 
 def test_cli_write_refused_when_gates_block(tmp_path, monkeypatch):
