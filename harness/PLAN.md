@@ -5,30 +5,28 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 2 kickoff** (`harness/extractor/`, milestones 2.1–2.5 in
-[`extractor/PLAN.md`](extractor/PLAN.md)): start at **milestone 2.1**
-(`syntax_miner.py` — log parsing + UD subtree clustering).
+**Next action — Stage 2, milestone 2.2** (`harness/extractor/lexicon_builder.py`,
+milestones 2.2–2.5 in [`extractor/PLAN.md`](extractor/PLAN.md)): the verb
+valency lexicon builder — aggregate verb-lemma × preposition × case decisions
+from the same pooled traces (the `obl:di` / `obl:in` recall gap 0.54–0.60 is
+its direct target).
 
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§2 components,
    §5 milestones), then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
-   (observability + streaming-log contract bind every new extractor CLI from
-   day one: streaming JSONL `--log`, stderr progress display, session
-   separators, per-turn timings rolled into summary records). The Stage-1→2
-   interface is the trace contract, not runner internals:
+   (observability + log contract bind new CLIs from day one — batch jobs scale
+   this down, they don't skip it; see `syntax_miner.py` for the proven shape).
+   The Stage-1→2 interface stays the trace contract:
    `UnitResult.trace_record()` (`runner/agent.py`) embedded as `"trace"` in
    every benchmark case record.
 2. **Mining inputs — four complete 87-case JSONL run logs on disk** (all
    gitignored, disk-only; regenerate rather than re-mine if lost):
    M1.4 originals (`harness/bench-unit.log`, `harness/bench-predicate.log`)
    plus the instrumented re-runs (`harness/bench-unit-retry.log`,
-   `harness/bench-predicate-retry.log`; finished 2026-08-24 — quota tax now
-   measured on BOTH workflows, zero empty finals under the Client adapter;
-   full readout in the **Milestone 1.4 addendum** below). Each case record
-   carries the score diffs (`missing` / `extra` vs gold) and, under `trace`,
-   the full session: per-dispatch `outcomes` envelopes (the 2.1/2.2 raw
-   material), `turn_seconds`, nudge/exhaustion flags. Pool all four runs and
-   dedupe by unit + timestamp; re-run traces are the Client-adapter era,
-   originals predate it — both are valid mining samples.
+   `harness/bench-predicate-retry.log`; finished 2026-08-24). Pool all four
+   runs and dedupe by unit + workflow + timestamp. `syntax_miner.py`'s
+   `iter_case_records` / `collect_instances` / `_CantoViews` are the proven
+   loaders for exactly this — reuse or generalize them in `lexicon_builder.py`
+   instead of reinventing.
 3. **Error structure to mine around** (details in the M1.4 Ledger entries):
    systematic gold-convention divergence on verbless frames dominates
    `historical` misses; bare-`obl` over-assignment (74 fps) and `xcomp`
@@ -40,10 +38,10 @@ and the **Milestone Ledger** below.
    applies to anything that runs *as* an agent, not to extraction itself;
    `fixtures/challenge_cases.py` stays data-only. Tests live at repo root
    (`tests/test_harness_*.py`).
-5. **Session housekeeping**: the instrumentation/resume/adapter work is
-   COMMITTED (0014fda status bar + `llm7shi.Client` adapter; 1bf3a11
-   benchmark resume; fd13bcd ARCHITECTURE.md). Tree is clean except this
-   handoff rewrite. Tests at 732 passed.
+5. **Session housekeeping**: milestone 2.1 is complete and committed
+   (`extractor/syntax_miner.py` + `tests/test_harness_syntax_miner.py` +
+   plan/README updates — readout in the Ledger entry below). Tree is clean
+   except this handoff rewrite. Tests at 755 passed.
 
 ---
 
@@ -70,6 +68,10 @@ and the **Milestone Ledger** below.
       mines.
 - [ ] **Stage 2 — Rule & Lexicon Extraction** (`harness/extractor/`, milestones
       2.1–2.5 in [`extractor/PLAN.md`](extractor/PLAN.md)).
+  - [x] **Milestone 2.1 — Syntax Pattern Miner** (`extractor/syntax_miner.py`)
+        — COMPLETE (2026-08-24): row-level supervised UD-topology clustering
+        over the pooled traces; 183 fast-path rules at 100% precision, corpus
+        gold coverage 31.4%; details in the Ledger entry below.
 - Open design question: §7.1 termination tool — the practical half is resolved
   by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
   tool stays open at the protocol layer.
@@ -99,9 +101,9 @@ and the **Milestone Ledger** below.
    absolute quota wait, consistent with shorter unit sessions crossing the
    per-minute ceiling less often. Compute-only totals nearly equal: unit
    ≈18.1 ks vs predicate ≈19.0 ks (+5%).
-- Test suite: **732 passed** (547 corpus + 41 `test_harness_tools.py` +
+- Test suite: **755 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
-  39 `test_harness_benchmark.py`).
+  39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py`).
 
 ---
 
@@ -315,6 +317,53 @@ attempts. Readout:
   the primary discovery channel; all unit-side records now total 31 and await
   human triage.
 
+**Milestone 2.1 — Syntax Pattern Miner (`harness/extractor/syntax_miner.py`):
+COMPLETE (2026-08-24).** First Stage-2 deliverable: deterministic, no-model
+clustering of the pooled Stage-1 traces into executable fast-path rules
+(`extractor/PLAN.md` §2.1).
+
+- **Design decision — row-level supervision.** Unit-level 1-shot exact match is
+  statistically starved (3/87), so supervision comes from every case record's
+  final diff instead: gold − `missing` labels a correct predicted row, each
+  `extra` key labels a wrong one *with its wrong role kept*. All four runs pool
+  (dedupe by unit + workflow + timestamp; 348 sessions, 0 duplicates) →
+  **3,793 correct / 1,542 wrong labeled rows**, plus pro-drop 427/335 and 5
+  unresolved positions — counted, never clustered.
+- **The mined pattern** is a UD-topology signature per row:
+  `(pred_pos_class, pred_deprel, arg_attachment, arg_deprel, arg_pos_class,
+  case_lemma)` where `arg_attachment ∈ {direct, conj, other}` walks `conj`
+  chains up to the predicate and `case_lemma` reads the argument's `case`
+  child (the preposition that separates `obl:a` / `obl:di` / … from bare
+  adverbial `obl`). Pro-drop rows are morphology's business, not syntax rules'.
+- **Cluster gate**: support ≥ 3 AND precision = ok / total-per-signature ≥ 1.0;
+  the denominator spans *every* role ever predicted under the signature, so a
+  competing reading poisons the pattern instead of slipping through (the
+  bare-`obl` noise suppresses its own clusters). Result: 601 clusters →
+  **183 `SyntaxRule`s at 100% precision**, top by support:
+  advcl←direct:nsubj[noun]→subj 154/154, advcl←nsubj[pronoun]→subj 113/113,
+  root←nsubj[pronoun]→subj 86/86, advcl←obj[pronoun]→obj 60/60,
+  ccomp←nsubj[pronoun]→subj 59/59.
+- **Deterministic coverage probe** (rule table applied to every gold row of all
+  100 cantos): **10,968 / 34,959 gold rows = 31.4% reproduced exactly**;
+  356 conflicts (signature known, role differs — genuine ambiguity signal for
+  the hybrid engine), 23,635 unmatched (constructions absent from the 87-unit
+  trace pool — mining coverage tracks trace coverage), and 5,305 pro-drop rows
+  (15.2% of gold) no syntax rule can own → the morphology tier / agent fallback
+  owns those.
+- **CLI & observability**: batch-scaled per ARCHITECTURE.md §4–§6 — stderr
+  phase progress, streaming JSONL `--log` (one `rule` record per rule,
+  summary-last completion marker; truncated on startup as a deliberate
+  one-shot-experiment choice under §5), durable `--rules-out` rule table JSON,
+  dual-face `MineReport`. Deterministic end to end; nothing here touches a
+  model, so it runs inside assistant sessions freely.
+- Tests: `tests/test_harness_syntax_miner.py` — 23 deterministic tests over
+  synthetic run logs + real frozen artifacts: torn-line/dedupe log parsing,
+  TP/FP labeling against real gold, topology features (incl. conj-chain walk
+  and case-lemma join), cluster gates (purity, support, relaxed precision),
+  coverage partition invariants, CLI end-to-end with summary-last marker, and
+  a real-log integration test skipped when logs are absent. Suite total
+  **755 passed**.
+
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
    own demonstration exchange with deliberately non-colliding content (a foreign-lemma
@@ -483,6 +532,12 @@ single source, not duplicated here. The boundaries it encodes:
 
 ## Environment & Artifacts (reference)
 
+- **Python always runs through `uv`** (`uv run python ...`, `uv run pytest ...`);
+  never invoke a bare `python3`. Every command below follows this.
+- **Session division of labor**: assistant sessions execute deterministic,
+  LLM-free work only (tests, extraction/mining, artifact inspection); every
+  LLM-in-the-loop command (the probe / parity / benchmark / agent /
+  reconstruction CLIs) is run by the human operator, not by the assistant.
 - Live probe: `uv run python -m harness.toolcall.probe --model <model> --repeat N --log
   harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
   summary record last (a log without the summary line = interrupted run);

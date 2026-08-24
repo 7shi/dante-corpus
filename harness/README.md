@@ -60,7 +60,7 @@ dante-corpus/
 │   ├── extractor/                 # [Stage 2] Rule & lexicon extraction, hybrid engine
 │   │   ├── README.md              # Stage 2 overview
 │   │   ├── PLAN.md                # Stage 2 specification (miner, lexicon, hybrid engine)
-│   │   ├── syntax_miner.py        # Syntax pattern mining engine
+│   │   ├── syntax_miner.py        # Syntax pattern miner: UD-topology rules from traces
 │   │   ├── lexicon_builder.py     # Verb valency & lexicon profile aggregator
 │   │   ├── hybrid_engine.py       # Fast-path (rules/lexicon) + agent fallback router
 │   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline
@@ -74,5 +74,6 @@ dante-corpus/
     ├── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
     ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
     ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
-    └── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
+    ├── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
+    └── test_harness_syntax_miner.py  # Stage 2 miner tests (clustering, rules, coverage)
 ```

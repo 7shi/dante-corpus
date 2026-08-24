@@ -82,7 +82,16 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
 
 ## 5. Implementation Milestones
 
-- [ ] **2.1 Pattern Mining Module (`syntax_miner.py`)**: Implement log parsing and UD subtree clustering.
+- [x] **2.1 Pattern Mining Module (`syntax_miner.py`)**: Implement log parsing and UD
+      subtree clustering. — **COMPLETE (2026-08-24)**; readout in the
+      [`../PLAN.md`](../PLAN.md) Milestone Ledger. Supervision is row-level: the four
+      pooled run logs' `missing`/`extra` diffs label every predicted row, sessions are
+      deduped by (unit, workflow, timestamp), and each row becomes a UD-topology
+      signature `(pred_pos_class, pred_deprel, arg_attachment, arg_deprel,
+      arg_pos_class, case_lemma)`. Clusters pass a support + precision gate
+      (`ok / total-per-signature`, so competing readings poison the pattern) and emit
+      as executable `SyntaxRule.matches(ctx)` predicates; deterministic corpus-wide
+      gold coverage closes the report.
 - [ ] **2.2 Valency Lexicon Builder (`lexicon_builder.py`)**: Build verb-preposition co-occurrence aggregator and frame exporter.
 - [ ] **2.3 Hybrid Engine Router (`hybrid_engine.py`)**: Implement fast-path execution with seamless Stage 1 agent fallback.
 - [ ] **2.4 Gated Reconstruction Pipeline (`reconstruct.py`)**: Implement full CLI with hash validation and token assertions.
