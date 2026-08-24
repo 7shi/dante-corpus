@@ -105,6 +105,22 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
       Reflexive `si` profiling stays open — in the data `si` surfaces as an ordinary
       argument across many roles, so its classification needs clitic-licensing
       context rather than co-occurrence counts.
-- [ ] **2.3 Hybrid Engine Router (`hybrid_engine.py`)**: Implement fast-path execution with seamless Stage 1 agent fallback.
+- [x] **2.3 Hybrid Engine Router (`hybrid_engine.py`)**: Implement fast-path execution with seamless Stage 1 agent fallback. —
+      **COMPLETE (2026-08-24)**; readout in the [`../PLAN.md`](../PLAN.md)
+      Milestone Ledger. The fast path enumerates only UD-attached pairs
+      (direct / conj-chain) of a parse unit and decides them from the rule
+      table first, the valency lexicon second (`obl:<prep>` frames); pairs
+      where both sources disagree are recorded as conflicts and derive
+      nothing. The mined `other`-attachment rules are *not* executable here —
+      measured P 0.42 all-pairs vs 0.95 attached on inferno 1–5, they fire on
+      grammatically unrelated fresh pairs and stay ambiguity signals for
+      mining. Routing defaults conservative: conflicts → no rows → pro-drop
+      suspects (finite personal verb without a derived subj, cop/aux heads
+      exempt) each route the unit to the Stage-1 agent; `run_unit(...,
+      fallback=...)` accepts any unit-coordinate callable (its submission is
+      normalized with the benchmark's own `candidate_keys`),
+      `agent_fallback(model=...)` is the lazy live factory, `fallback=None`
+      stays dry mode. Execution never reads gold (adversarially tested);
+      `evaluate_fast_path` + CLI probe score it operator-side corpus-wide.
 - [ ] **2.4 Gated Reconstruction Pipeline (`reconstruct.py`)**: Implement full CLI with hash validation and token assertions.
 - [ ] **2.5 Full-Corpus Gold Verification**: Reconstruct all 100 cantos through the hybrid engine and assert 100% equivalence with `skel/`.

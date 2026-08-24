@@ -5,33 +5,32 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 2, milestone 2.3** (`harness/extractor/hybrid_engine.py`,
-milestones 2.3–2.5 in [`extractor/PLAN.md`](extractor/PLAN.md)): the hybrid
-execution engine — fast-path derivation from the mined rule table
-(`syntax_miner.py`) + valency lexicon (`lexicon_builder.py`) with fallback to
-Stage-1 agent inference.
+**Next action — Stage 2, milestone 2.4** (`harness/extractor/reconstruct.py`,
+milestone 2.4 in [`extractor/PLAN.md`](extractor/PLAN.md) §4): the gated
+reconstruction pipeline — drive `HybridEngine.run_unit` (fallback wired to
+`agent_fallback`, operator-run) over whole cantos, gating every disk write on
+the three §4.1 criteria: token-stream assertion against Layer 1, 0-soft
+regression verification via the proven checker machinery
+(`skel.derive.derive_unit` + `skel.validate.validate_unit`: 0 hard / 0 soft),
+and content-hash recomputation (`dante_corpus.hashes.canto_hashes`).
 
-1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§2 components,
-   §5 milestones), then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
-   (observability + log contract bind new CLIs from day one — batch jobs scale
-   this down, they don't skip it; see `syntax_miner.py` / `lexicon_builder.py`
-   for the proven shape).
+1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§3–§5), then
+   [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6 (observability + log
+   contract bind new CLIs from day one — batch jobs scale this down, they
+   don't skip it; see `syntax_miner.py` / `lexicon_builder.py` /
+   `hybrid_engine.py` for the proven shape).
    The Stage-1→2 interface stays the trace contract:
    `UnitResult.trace_record()` (`runner/agent.py`) embedded as `"trace"` in
-   every benchmark case record.
-   For 2.3's inputs: no mined artifact is frozen on disk — regenerate the rule
-   table / lexicon JSONs deterministically via `syntax_miner --rules-out` /
-   `lexicon_builder --lexicon-out` (full builds run in seconds), or have the
-   engine call the mining modules directly.
+   every benchmark case record. The hybrid seam is callable-level:
+   `HybridEngine.run_unit(..., fallback=agent_fallback(model=...))`; its
+   deterministic probe (`--log`) already streams per-unit records.
 2. **Mining inputs — four complete 87-case JSONL run logs on disk** (all
    gitignored, disk-only; regenerate rather than re-mine if lost):
    M1.4 originals (`harness/bench-unit.log`, `harness/bench-predicate.log`)
    plus the instrumented re-runs (`harness/bench-unit-retry.log`,
-   `harness/bench-predicate-retry.log`; finished 2026-08-24). Pool all four
-   runs and dedupe by unit + workflow + timestamp. `syntax_miner.py`'s
-   `iter_case_records` / `iter_labeled_rows` / `_CantoViews` are the proven
-   loaders for exactly this — reuse them (`lexicon_builder.py` already does)
-   instead of reinventing.
+   `harness/bench-predicate-retry.log`; finished 2026-08-24). The engine's
+   `mine_artifacts()` regenerates rule table + lexicon from them in seconds;
+   no mined artifact needs to be frozen on disk.
 3. **Error structure to mine around** (details in the M1.4 Ledger entries):
    systematic gold-convention divergence on verbless frames dominates
    `historical` misses; bare-`obl` over-assignment (74 fps) and `xcomp`
@@ -42,15 +41,17 @@ Stage-1 agent inference.
    triage — never auto-retag.
 4. **Boundaries that hold**: `extractor/` consumes traces + operator-side
    gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1)
-   applies to anything that runs *as* an agent, not to extraction itself;
-   `fixtures/challenge_cases.py` stays data-only. Tests live at repo root
-   (`tests/test_harness_*.py`).
-5. **Session housekeeping**: milestones 2.1 and 2.2 are complete; this commit
-   carries the 2.2 deliverables (`extractor/lexicon_builder.py` +
-   `tests/test_harness_lexicon_builder.py`), the shared
-   `syntax_miner.iter_labeled_rows` loader extraction, and all plan/README
-   updates — readouts in the Ledger entries below. Tree starts clean. Tests at
-   772 passed.
+   applies to anything that runs *as* an agent — the engine's execution face
+   never opens gold at all (adversarially tested), only its evaluation face
+   does; `fixtures/challenge_cases.py` stays data-only. Tests live at repo
+   root (`tests/test_harness_*.py`).
+5. **Session housekeeping**: milestones 2.1–2.3 are complete; this commit
+   carries the 2.3 deliverables (`extractor/hybrid_engine.py` +
+   `tests/test_harness_hybrid_engine.py`) plus all plan updates — readout in
+   the Ledger entry below. Fast-path share is 7.0% corpus-wide today (pro-drop
+   suspects route 87.5% of units to the agent): milestone 2.4 must treat agent
+   fallback as the primary path and the fast path as the growing optimization,
+   not the reverse. Tree starts clean. Tests at 799 passed.
 
 ---
 
@@ -86,6 +87,12 @@ Stage-1 agent inference.
         row-level supervision over the same pooled traces; 140 verb×preposition
         frames over 105 verbs at 100% consistency; details in the Ledger entry
         below.
+  - [x] **Milestone 2.3 — Hybrid Engine Router** (`extractor/hybrid_engine.py`)
+        — COMPLETE (2026-08-24): attached-pair fast path over rule table +
+        lexicon with conflict detection, conservative pro-drop-aware routing,
+        and a callable agent-fallback seam; corpus probe: fast-path share 7.0%
+        (target ≥80%), derivation P 0.925 / R 0.289; details in the Ledger
+        entry below.
 - Open design question: §7.1 termination tool — the practical half is resolved
   by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
   tool stays open at the protocol layer.
@@ -115,10 +122,10 @@ Stage-1 agent inference.
    absolute quota wait, consistent with shorter unit sessions crossing the
    per-minute ceiling less often. Compute-only totals nearly equal: unit
    ≈18.1 ks vs predicate ≈19.0 ks (+5%).
-- Test suite: **772 passed** (547 corpus + 41 `test_harness_tools.py` +
+- Test suite: **799 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
-  17 `test_harness_lexicon_builder.py`).
+  17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py`).
 
 ---
 
@@ -429,6 +436,77 @@ recall gap (0.54–0.60).
   consistency), exporter round-trip, coverage partition invariants, report
   faces, CLI end-to-end with summary-last marker, real-log integration
   skipped when logs are absent. Suite total **772 passed**.
+
+**Milestone 2.3 — Hybrid Engine Router
+(`harness/extractor/hybrid_engine.py`): COMPLETE (2026-08-24).** Third
+Stage-2 deliverable: the two-tier engine of `extractor/PLAN.md` §3 — Tier-1
+deterministic derivation from the mined artifacts, Tier-2 routing to the
+Stage-1 agent runner through an injected callable.
+
+- **Tier 1 — fast path over attached pairs only.** For every ordered token
+  pair inside the parse unit whose argument reaches the predicate via a UD
+  edge or a `conj` chain (`RowContext.arg_attachment` direct/conj), the rule
+  table decides first and the valency lexicon second (`(verb_lemma,
+  norm_prep(case lemma))` → `obl:<prep>`); both sources are consulted
+  independently so agreement reinforces (`reinforced_pairs`) and disagreement
+  records a `PairConflict` that derives nothing — ambiguity routes upward.
+  **Design finding: the mined `other`-attachment rules are not executable.**
+  They were learned from gold-row-shaped pairs; on fresh pairs they fire on
+  grammatically unrelated tokens — measured P 0.418 all-pairs vs 0.952
+  attached-only on inferno 1–5 (840 fps from 18 low-support rules). Their
+  signatures stay mining-side ambiguity signals; derivation enumerates
+  structurally attached pairs only.
+- **Routing — conservative by default** (`RoutePolicy`, checks ordered):
+  conflicts → zero derived rows → pro-drop suspects → else fast. A pro-drop
+  suspect is a finite personal verb (L2 mood indicative/subjunctive/
+  imperative with person) carrying no derived `subj` row — cop/aux heads
+  exempt (their subject attaches to the content predicate). Bias is
+  deliberately toward the agent: over-routing costs turns, under-routing
+  silently loses rows; until the morphology tier exists this keeps fast-path
+  output trustworthy.
+- **Tier 2 — the fallback seam.** `HybridEngine.run_unit(..., fallback=...)`
+  takes any `(canticle=..., canto=..., line_start=..., line_end=...) ->
+  UnitResult` callable; open-ended line numbers snap to parse-unit bounds via
+  the benchmark's `resolve_unit_bounds`. The agent submission is normalized
+  by the benchmark's own `candidate_keys` (malformed / out-of-unit counted),
+  so hybrid-scored units are judged exactly like Stage-1 benchmark cases.
+  `agent_fallback(model=...)` is the live factory (lazy imports per
+  ARCHITECTURE.md §2, one transport/toolkit pair across units);
+  `fallback=None` stays dry mode (derivation + decision only).
+- **Two gold disciplines in one module.** Execution (`derive_unit`,
+  `run_unit`) loads L2/L4 only and never opens a gold artifact — proven
+  adversarially by poisoning `load_skel` in both namespaces it could reach;
+  evaluation (`evaluate_fast_path` + CLI probe) reads gold operator-side like
+  `benchmark.py`. The probe iterates real parse units (`dep.sentence_groups`)
+  — the same shape `reconstruct.py` will drive in 2.4.
+- **Corpus readout (all 100 cantos, 3,477 units, ~13 s wall)**: fast-path
+  share **245 / 3,477 = 7.0%** against the §1 target ≥80% — MISS, honestly
+  measured; routing reasons: complete 245, pro-drop suspects 3,041 (87.5% of
+  units host at least one), no_rows 185, conflicts 6 corpus-wide (the two
+  sources almost never disagree). Derived rows 12,593 at P 0.925 / R 0.289 /
+  F1 0.441; tp 11,653 = **33.3% of the 34,959 gold rows** (the miner's 31.4%
+  rule coverage plus the lexicon's prepositional frames);
+  fast-routed units only: **P 0.968**, R 0.425 — where the router says fast,
+  derivation is near-clean. Conclusion recorded for 2.4: agent fallback is
+  today's primary path; the fast path is the growing optimization.
+- CLI & observability: batch-scaled §4–§6 exactly like the miners — stderr
+  phase progress with `[hybrid_engine]` labels, streaming JSONL `--log` (one
+  `unit` record per probed parse unit with route/reason + tp/fp/fn, summary
+  record last as completion marker, truncated on startup under §5), dual-face
+  `EngineReport` whose summary prints the coverage gate
+  `(target >= 0.80: PASS|MISS)`. Artifacts load from `--rules-in` /
+  `--lexicon-in` or regenerate deterministically via `mine_artifacts()` /
+  fresh mining (seconds). Deterministic end to end; nothing here touches a
+  model.
+- Tests: `tests/test_harness_hybrid_engine.py` — 27 deterministic tests:
+  derivation precedence/reinforcement/conflicts on real inferno-2 topology,
+  attachment accounting incl. unresolved pairs (stubbed views), pro-drop
+  suspect classification (pure + real hosts, cop/aux exemption), routing
+  branches and policy toggles, fallback seam (fast path skips the agent,
+  agent path normalizes submissions, dry mode, bound snapping),
+  masked-gold execution face, artifact mining/loading round-trips, probe
+  partition invariants + report faces, CLI end-to-end with summary-last
+  marker, capped real-log integration. Suite total **799 passed**.
 
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
