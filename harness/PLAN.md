@@ -7,16 +7,11 @@ and the **Milestone Ledger** below.
 
 **Next action — Stage 2, milestone 2.5** (full-corpus gold verification,
 milestone 2.5 in [`extractor/PLAN.md`](extractor/PLAN.md) §5): **the inferno-1
-pilot is DONE and SANE (2026-08-24, readout in the Ledger); the remaining
-action is the 99-canto expansion — OPERATOR-RUN** (live agent fallback; at the
-pilot's ~6.7 ks/canto this is a multi-day, interruptible run — the JSONL log
-resumes at canto granularity, so completed cantos are never re-run):
-
-```bash
-uv run python -m harness.extractor.reconstruct --all --verify-gold \
-    --model google:gemma-4-31b-it \
-    --log harness/recon-full.log
-```
+pilot is DONE and SANE (2026-08-24, readout in the Ledger). Remaining actions,
+all OPERATOR-RUN: (1) a shakedown re-run of inferno 1 as the live test of the
+log-function extension below, (2) the 429 readout + compaction decision that
+re-run feeds, then (3) the 99-canto expansion as three canticle-parallel
+runs.**
 
 The single streaming log also carries the request-level cost records
 (added 2026-08-24 after the pilot): the live fallback appends one
@@ -32,6 +27,53 @@ the records the same way: every `canto_complete` carries
 `elapsed_seconds` and the summary sums them into `wall_clock_seconds`
 (idle gaps between resumed attempts never count; the pilot log predates
 the key and reads as None).
+
+1. **Shakedown re-run of inferno 1 — the extension's live test.** Same
+   single-canto scope as the pilot but a *fresh* `--log` path: the pilot
+   log already carries inferno 1's `canto_complete` marker, so reusing it
+   would resume-skip the canto:
+
+   ```bash
+   uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 \
+       --verify-gold --model google:gemma-4-31b-it \
+       --log harness/recon-inf1-recheck.log
+   ```
+
+   Pass criteria: the log carries one `llm_request`/`llm_response` pair
+   per backend LLM call, every `canto_complete` an `elapsed_seconds`, and
+   the summary a summed `wall_clock_seconds`; the aggregate readout
+   cross-checks the pilot's (~34 units, ~6.7 ks wall, quota tax ~9.4%,
+   verify-gold micro F1 0.78) — a large deviation is an instrumentation
+   bug first, a corpus finding only second.
+2. **429 readout → compaction decision — gated by the parallel plan.**
+   The per-request records make the quota situation measurable per call
+   for the first time: context byte sizes + timestamps give the
+   single-stream input-token rate, to be set against the `gemma-4-31b`
+   16k input-tokens/min ceiling and correlated with the `wait_retry`
+   backoffs by timestamp (Current Status operational issue). The
+   expansion below runs three canticles in parallel against that one
+   shared per-model quota, so the decision rule is concrete: **unless
+   measured single-stream rate × 3 fits under 16k tokens/min with
+   margin, transcript compaction (or client-side pacing) is *required*
+   before launch, not optional.** The pilot's single-stream 9.4%-of-wall
+   tax already suggests one stream alone flirts with the ceiling, so
+   expect compaction to earn a design. Standing constraint unchanged:
+   compaction changes session semantics — designed and adopted *between*
+   runs, never mid-run.
+3. **99-canto expansion — three canticle-parallel runs** (live agent
+   fallback; the serial estimate was ~660 ks ≈ 7–8 days; parallel bounds
+   wall clock by the longest canticle, ~34 × 6.7 ks ≈ 230 ks ≈ 2.5–3
+   days, *if* the quota holds). Three concurrent operator shells, one per
+   canticle, each with its own log — resume stays canto-granular and
+   independent per file:
+
+   ```bash
+   uv run python -m harness.extractor.reconstruct --canticle inferno --all \
+       --verify-gold --model google:gemma-4-31b-it \
+       --log harness/recon-inferno.log
+   # likewise --canticle purgatorio → harness/recon-purgatorio.log
+   # and    --canticle paradiso  → harness/recon-paradiso.log
+   ```
 
 Pilot watch items all closed: (a) 18/34 units gate-pass, all agent-path (the
 one fast-routed unit failed — routing "complete" ≠ checker-clean);
@@ -84,8 +126,10 @@ unwritten exactly as designed. Full readout in the M2.5-pilot Ledger entry.
    (`llm7shi_generate(request_log=...)` + the `_LLM_REQUEST_CONTEXT`
    contextvar `run_unit` stamps), `extractor/hybrid_engine.py`
    (`agent_fallback(request_log=...)`), and `extractor/reconstruct.py` (shared
-   sink wiring, opened after resume compaction). Tests at 833 passed; tree
-   starts clean. Next: the 99-canto expansion, operator-run.
+    sink wiring, opened after resume compaction). Tests at 833 passed; tree
+    starts clean. Next: the inferno-1 shakedown re-run (log-extension live
+    test + 429 readout feeding the compaction decision), then the 99-canto
+    expansion as three canticle-parallel runs, operator-run.
 
 ---
 
@@ -138,8 +182,10 @@ unwritten exactly as designed. Full readout in the M2.5-pilot Ledger entry.
               units gate-pass, verify-gold micro F1 0.78 ≥ the 0.70–0.71
               Stage-1 band, quota tax 9.4%, `written_cantos == 0`; details in
               the Ledger entry below.
-        - [ ] Expansion to the remaining 99 cantos (multi-day, resume at
-              canto granularity), then the corpus-wide readout.
+        - [ ] Expansion to the remaining 99 cantos (planned as three
+               canticle-parallel runs gated on the TPM headroom check —
+               Handoff steps 2–3; resume at canto granularity), then the
+               corpus-wide readout.
 - Open design question: §7.1 termination tool — the practical half is resolved
   by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
   tool stays open at the protocol layer.
@@ -162,13 +208,21 @@ unwritten exactly as designed. Full readout in the M2.5-pilot Ledger entry.
   run): 103 backoffs / 3,526 s across 40 of 87 cases, worst session 14
    backoffs / 670 s over 19 turns; excluding backoff, its compute matched the
    unit run (~18.8 ks vs 18.7 ks) — the entire +19% wall clock was quota wait.
-   Re-measured 2026-08-24 on both instrumented re-runs (Client adapter):
-   predicate 103 backoffs / 3,196 s across 47 of 87 cases (14.4% of wall)
-   reproduces the tax; the unit side is now measured for the first time at
-   55 backoffs / 1,659 s across 36 of 87 cases (8.4%) — half the predicate's
-   absolute quota wait, consistent with shorter unit sessions crossing the
-   per-minute ceiling less often. Compute-only totals nearly equal: unit
-   ≈18.1 ks vs predicate ≈19.0 ks (+5%).
+    Re-measured 2026-08-24 on both instrumented re-runs (Client adapter):
+    predicate 103 backoffs / 3,196 s across 47 of 87 cases (14.4% of wall)
+    reproduces the tax; the unit side is now measured for the first time at
+    55 backoffs / 1,659 s across 36 of 87 cases (8.4%) — half the predicate's
+    absolute quota wait, consistent with shorter unit sessions crossing the
+    per-minute ceiling less often. Compute-only totals nearly equal: unit
+     ≈18.1 ks vs predicate ≈19.0 ks (+5%). Measurement now moves to request
+     granularity: the post-extension inferno-1 re-run (Handoff step 1) logs
+     per-call context byte sizes, so transcript growth per turn lands
+     directly against the per-minute input ceiling and the 429 timestamps —
+     the data the compaction-vs-pacing decision has been waiting for. That
+     decision is now load-bearing: the expansion is planned as three
+     canticle-parallel streams sharing the one per-model quota (Handoff
+     step 3), so the launch gate is 3 × single-stream input rate ≤ 16k
+     tokens/min with margin.
 - Test suite: **833 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
@@ -680,7 +734,7 @@ gitignored disk-only; no `--write`).** First live `reconstruct` run: 34 units /
   consistent with the unit-benchmark's 8.4%: the single-canto session stream
   shows no new retry pathology.
 - **Verdict: pilot sane → expansion sanctioned.** At the pilot rate the
-  remaining 99 cantos cost ~186 ks ≈ 7–8 days wall clock (corpus mean ≈ 35
+  remaining 99 cantos cost ~660 ks ≈ 7–8 days wall clock (corpus mean ≈ 35
   units/canto, inferno 1 exactly at it); the log resumes at canto granularity
   so the run is freely interruptible. The milestone's original "assert 100%
   equivalence" target stays restated honestly: even at F1 0.78 no canto is
