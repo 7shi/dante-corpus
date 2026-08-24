@@ -5,25 +5,48 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 2, milestone 2.4** (`harness/extractor/reconstruct.py`,
-milestone 2.4 in [`extractor/PLAN.md`](extractor/PLAN.md) §4): the gated
-reconstruction pipeline — drive `HybridEngine.run_unit` (fallback wired to
-`agent_fallback`, operator-run) over whole cantos, gating every disk write on
-the three §4.1 criteria: token-stream assertion against Layer 1, 0-soft
-regression verification via the proven checker machinery
-(`skel.derive.derive_unit` + `skel.validate.validate_unit`: 0 hard / 0 soft),
-and content-hash recomputation (`dante_corpus.hashes.canto_hashes`).
+**Next action — Stage 2, milestone 2.5** (full-corpus gold verification,
+milestone 2.5 in [`extractor/PLAN.md`](extractor/PLAN.md) §5), **pilot first,
+then expand**; both steps OPERATOR-RUN (live agent fallback, hours long):
+
+1. **Pilot — inferno 1 only** (34 units / 136 lines; ~2 h at the M1.4 unit-run
+   rate of ~215 s/unit):
+
+   ```bash
+   uv run python -m harness.extractor.reconstruct \
+       --canticle inferno --canto 1 --verify-gold \
+       --model google:gemma-4-31b-it \
+       --log harness/recon-pilot-inf1.log
+   ```
+
+   Deliberately NO `--write`: this run only reports gate outcomes and the gold
+   comparison. What to watch: (a) gate pass rate across fast- vs agent-routed
+   units, (b) `--verify-gold` P/R/F1 vs the benchmark's micro F1 ≈ 0.70–0.71
+   (the pipeline must reproduce the Stage-1 numbers it inherits), (c) api-retry
+   backoffs over a long single-canto session stream.
+
+2. **Expand to the remaining 99 cantos** once the pilot is sane:
+   `uv run python -m harness.extractor.reconstruct --all --verify-gold ...`
+   with the same log semantics — the JSONL log resumes at canto granularity,
+   so completed cantos are never re-run.
+
+The milestone's "assert 100% equivalence with `skel/`" target needs re-stating
+against measured reality first: the fast path alone reproduces ~33% of gold
+rows and agent sessions score F1 ≈ 0.71, so equivalence cannot hold today.
+The honest form is: reconstruct corpus-wide, record exact-match/P-R-F1 per
+canto via `--verify-gold`, confirm the gates keep every failing canto
+unwritten (`written_cantos == 0`), and state what engine quality 100%
+equivalence would require.
 
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§3–§5), then
    [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6 (observability + log
-   contract bind new CLIs from day one — batch jobs scale this down, they
-   don't skip it; see `syntax_miner.py` / `lexicon_builder.py` /
-   `hybrid_engine.py` for the proven shape).
+   contract; `reconstruct.py` already ships it incl. resume).
    The Stage-1→2 interface stays the trace contract:
    `UnitResult.trace_record()` (`runner/agent.py`) embedded as `"trace"` in
    every benchmark case record. The hybrid seam is callable-level:
-   `HybridEngine.run_unit(..., fallback=agent_fallback(model=...))`; its
-   deterministic probe (`--log`) already streams per-unit records.
+   `HybridEngine.run_unit(..., fallback=agent_fallback(model=...))`;
+   `reconstruct.main(..., fallback=...)` accepts an injected callable for
+   deterministic work.
 2. **Mining inputs — four complete 87-case JSONL run logs on disk** (all
    gitignored, disk-only; regenerate rather than re-mine if lost):
    M1.4 originals (`harness/bench-unit.log`, `harness/bench-predicate.log`)
@@ -42,16 +65,18 @@ and content-hash recomputation (`dante_corpus.hashes.canto_hashes`).
 4. **Boundaries that hold**: `extractor/` consumes traces + operator-side
    gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1)
    applies to anything that runs *as* an agent — the engine's execution face
-   never opens gold at all (adversarially tested), only its evaluation face
-   does; `fixtures/challenge_cases.py` stays data-only. Tests live at repo
-   root (`tests/test_harness_*.py`).
-5. **Session housekeeping**: milestones 2.1–2.3 are complete; this commit
-   carries the 2.3 deliverables (`extractor/hybrid_engine.py` +
-   `tests/test_harness_hybrid_engine.py`) plus all plan updates — readout in
-   the Ledger entry below. Fast-path share is 7.0% corpus-wide today (pro-drop
-   suspects route 87.5% of units to the agent): milestone 2.4 must treat agent
-   fallback as the primary path and the fast path as the growing optimization,
-   not the reverse. Tree starts clean. Tests at 799 passed.
+   and `reconstruct.py`'s execution/commit faces never open gold at all
+   (adversarially tested), only evaluation faces (`evaluate_fast_path`,
+   `--verify-gold`) do; `fixtures/challenge_cases.py` stays data-only. Tests
+   live at repo root (`tests/test_harness_*.py`). `skel/` is protected:
+   reconstruction writes need the explicit `--write` flag on top of passing
+   all three gates, canto-atomically.
+5. **Session housekeeping**: milestones 2.1–2.4 are complete; this commit
+   carries the 2.4 deliverables (`extractor/reconstruct.py` +
+   `tests/test_harness_reconstruct.py`) plus all plan updates — readout in
+   the Ledger entry below. The deterministic dry probe wrote nothing: 0/100
+   cantos pass the gates today. Milestone 2.5 is the first LIVE full-corpus
+   run and stays operator-run. Tree starts clean. Tests at 822 passed.
 
 ---
 
@@ -93,6 +118,12 @@ and content-hash recomputation (`dante_corpus.hashes.canto_hashes`).
         and a callable agent-fallback seam; corpus probe: fast-path share 7.0%
         (target ≥80%), derivation P 0.925 / R 0.289; details in the Ledger
         entry below.
+  - [x] **Milestone 2.4 — Gated Reconstruction Pipeline**
+        (`extractor/reconstruct.py`) — COMPLETE (2026-08-24): whole-canto
+        rebuild behind the three §4.1 gates (token-stream assertion, 0 hard /
+        0 soft via `validate_unit`, content-hash verified atomic commits);
+        deterministic dry probe: 0/100 cantos writable, 43/3,477 units
+        checker-clean; details in the Ledger entry below.
 - Open design question: §7.1 termination tool — the practical half is resolved
   by the nudge policy (Ledger, M1.2); a dedicated `submit_candidate` termination
   tool stays open at the protocol layer.
@@ -122,10 +153,11 @@ and content-hash recomputation (`dante_corpus.hashes.canto_hashes`).
    absolute quota wait, consistent with shorter unit sessions crossing the
    per-minute ceiling less often. Compute-only totals nearly equal: unit
    ≈18.1 ks vs predicate ≈19.0 ks (+5%).
-- Test suite: **799 passed** (547 corpus + 41 `test_harness_tools.py` +
+- Test suite: **822 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
-  17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py`).
+  17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
+  23 `test_harness_reconstruct.py`).
 
 ---
 
@@ -507,6 +539,75 @@ Stage-1 agent runner through an injected callable.
   masked-gold execution face, artifact mining/loading round-trips, probe
   partition invariants + report faces, CLI end-to-end with summary-last
   marker, capped real-log integration. Suite total **799 passed**.
+
+**Milestone 2.4 — Gated Reconstruction Pipeline
+(`harness/extractor/reconstruct.py`): COMPLETE (2026-08-24).** Fourth
+Stage-2 deliverable: whole-canto Layer-5 rebuild through
+`HybridEngine.run_unit`, every disk write gated on extractor/PLAN.md §4.1's
+three criteria.
+
+- **Gate 1 — token-stream assertion.** `build_rows` anchors every accepted
+  row key verbatim on the canto's Layer-1 alpha-token stream (predicate and
+  argument positions must index it inside the unit bounds); words are taken
+  from L1 itself so alignment holds by construction, and bad positions are
+  dropped with a report, never raised. Dry corpus probe: 0 assertion errors
+  on all 3,477 units — derived rows are always well-anchored.
+- **Gate 2 — 0-soft verification.** Each parse unit is checked through the
+  proven checker (`skel.validate.validate_unit` running `derive_unit` inside)
+  with L2/L3/L4 + the case annex attached, split hard/soft exactly like the
+  Phase 5–8 drivers (`driver_ui._classify_violations`: `tag` → soft). A unit
+  passes only at **0 hard / 0 soft** — the same standard the committed gold
+  meets corpus-wide. This is deliberately stricter than gold comparison:
+  candidates must satisfy the *checker*, not merely resemble gold.
+- **Gate 3 — content-hash verified commits.** `commit` renders the full-canto
+  payload byte-exactly (`render_tsv`, a mirror of `skel.io.write_skel`'s
+  format incl. per-line sentinels; parity pinned by a dedicated test),
+  digests it *before* writing, lands it through the canonical writer, then
+  requires `hashes.canto_hashes()["skel"]` to recompute that digest — proving
+  disk now holds byte-for-byte what the gates validated. A mismatch rolls the
+  artifact back to its previous bytes (or removes a freshly created file).
+  The commit record carries before/after hashes as the audit trail.
+- **Design decisions.** (1) Commits are **canto-atomic**: a canto writes only
+  when every one of its parse units passes, so an artifact is always wholly
+  checker-clean — never a mix of derived and previously-frozen units.
+  (2) Writes additionally require explicit `--write`: the plan sketch's bare
+  `--all` would have implied writing, but `skel/` is protected gold
+  (harness/PLAN.md §3), so the default run reconstructs, verifies, and
+  reports without touching disk (`--dry-run` accepted as its explicit
+  spelling). (3) Gold discipline mirrors the engine's two faces: execution +
+  commit never open a gold artifact (adversarially tested against poisoned
+  `load_skel`); `--verify-gold` reads gold operator-side like
+  `benchmark.py` and is strictly observational — it never feeds gating or
+  writes. (4) The CLI **resumes at canto granularity**: each finished canto
+  emits a terminal `canto_complete` marker; on restart completed cantos
+  replay into the aggregate and are skipped, and `compact_log` atomically
+  strips stale summaries *and* orphaned records of incomplete cantos (so a
+  partially-run canto can never double-count after finishing on a later
+  attempt) — the M1.4 mid-run-stall lesson applied to Stage 2's longest runs.
+  (5) `main(..., fallback=...)` accepts an injected callable, keeping the
+  whole pipeline deterministic-testable; without injection it wires the live
+  `agent_fallback` factory, so the CLI stays operator-run by construction.
+- **Deterministic dry readout (all 100 cantos, 3,477 units, ~18 s, mined
+  artifacts, `fallback=None`)**: **0/100 cantos writable today**; 43/3,477
+  units pass all gates (1.2%) — all among the 245 fast-routed units, i.e.
+  only where rules+lexicon reproduce a unit's whole derivation does the
+  checker stay silent; elsewhere 16,874 soft violations (dominated by the
+  uncovered-derivation divergences: `missing_tuple` / `missing_arg`) plus 3
+  hard. Confirms, at gate granularity, the M2.3 conclusion: agent fallback is
+  the primary path, and until engine quality rises the pipeline's honest
+  output is protection — gold stays untouched. Milestone 2.5 will measure the
+  live-agent variant operator-side.
+- Tests: `tests/test_harness_reconstruct.py` — 23 deterministic tests: row
+  building + token assertions (anchors, out-of-stream/bounds positions, ∅
+  subjects), unit partition invariants, gold-validates-clean through the
+  pipeline wiring, hard/soft split on crafted breakage, end-to-end pass with
+  a gold-serving stub fallback, poisoned-gold execution face, dry-mode
+  blocking, refusal to commit blocked cantos, hash-verified write + rollback
+  on induced digest mismatch, `render_tsv`↔`write_skel` byte parity, exact /
+  degraded gold comparison, report faces incl. record replay, log resume +
+  compaction, CLI end-to-end (summary-last, no-write default, refused write
+  leaves seed bytes intact), capped real-artifact integration. Suite total
+  **822 passed**.
 
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its

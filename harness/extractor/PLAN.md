@@ -122,5 +122,22 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
       `agent_fallback(model=...)` is the lazy live factory, `fallback=None`
       stays dry mode. Execution never reads gold (adversarially tested);
       `evaluate_fast_path` + CLI probe score it operator-side corpus-wide.
-- [ ] **2.4 Gated Reconstruction Pipeline (`reconstruct.py`)**: Implement full CLI with hash validation and token assertions.
+- [x] **2.4 Gated Reconstruction Pipeline (`reconstruct.py`)**: Implement full CLI with hash validation and token assertions. —
+      **COMPLETE (2026-08-24)**; readout in the [`../PLAN.md`](../PLAN.md)
+      Milestone Ledger. Drives `HybridEngine.run_unit` over every parse unit of
+      whole cantos and gates each canto on the three §4.1 criteria: rows are
+      anchored verbatim on the Layer-1 token stream (assertion errors reported,
+      never raised), every unit is verified through `skel.validate.validate_unit`
+      with all four frozen layers attached and split hard/soft like the drivers
+      (`tag` → soft) at a required **0 hard / 0 soft**, and commits render the
+      payload byte-exactly, digest it *before* writing, and require
+      `hashes.canto_hashes()["skel"]` to recompute that digest after
+      `write_skel` lands it — mismatch rolls back. Commits are canto-atomic
+      (every unit must pass) and need explicit `--write`; the default run never
+      touches disk. Execution stays gold-blind (adversarially tested);
+      `--verify-gold` compares accepted rows against gold observationally. The
+      JSONL log resumes at canto granularity (`canto_complete` markers,
+      atomic compaction of stale summaries *and* orphaned partial-canto
+      records). Dry readout: 0/100 cantos writable today, 43/3,477 units
+      checker-clean — see the Ledger entry.
 - [ ] **2.5 Full-Corpus Gold Verification**: Reconstruct all 100 cantos through the hybrid engine and assert 100% equivalence with `skel/`.

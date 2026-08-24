@@ -1,0 +1,978 @@
+"""Gated reconstruction pipeline: whole-canto Layer-5 rebuild behind three gates (Milestone 2.4).
+
+Fourth Stage-2 deliverable (`harness/extractor/PLAN.md` §4): drive
+`HybridEngine.run_unit` over every parse unit of whole cantos — the mined fast
+path deciding what it can, the Stage-1 agent fallback (operator-run, live)
+deciding the rest — and gate every disk write on the three §4.1 criteria:
+
+1. **Token-stream assertion** against Layer 1: every candidate row's predicate
+   and argument positions must index the canto's alpha-token stream, and each
+   row's word anchor is taken verbatim from that stream.
+2. **0-soft regression verification** through the proven checker machinery:
+   `skel.validate.validate_unit` (which runs `skel.derive.derive_unit` inside
+   it) over the assembled candidate rows with all four frozen layers attached,
+   split hard/soft exactly like the Phase 5–8 drivers do (`tag` -> soft) — a
+   unit passes only at **0 hard / 0 soft**, the same standard the committed
+   gold artifacts meet corpus-wide.
+3. **Content-hash verification** via `dante_corpus.hashes.canto_hashes`: the
+   bytes about to be committed are digested first; after `write_skel` lands
+   them, the recomputed `skel` hash must equal that digest — proving the file
+   on disk is byte-for-byte the payload the gates validated. A mismatch rolls
+   the artifact back to its previous bytes.
+
+Two gold disciplines, as everywhere in the extractor:
+
+- **Execution** (`reconstruct_canto`, `commit`) never opens a gold artifact:
+  `CantoLayers` loads L1-L4 + the case annex only. Gates are intrinsic.
+- **Evaluation** (`--verify-gold`) reads gold operator-side exactly like
+  `runner/benchmark.py` to compare accepted rows against gold keys. It never
+  influences gating or writes.
+
+Commits are **canto-atomic**: a canto is written only when *every* parse unit
+passes all gates, so an artifact is always wholly checker-clean — never a mix
+of derived and previously-frozen units. Writes additionally require the
+explicit `--write` flag: `skel/` is protected gold (harness/PLAN.md §3), so
+the default run reconstructs, verifies, and reports without touching disk
+(`--dry-run` is accepted as the explicit spelling of that default).
+
+CLI (LLM-in-the-loop when agent fallback runs — operator-run only):
+
+    uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 --dry-run
+    uv run python -m harness.extractor.reconstruct --all --verify-gold [--write]
+
+Observability follows ARCHITECTURE.md §4-§6 scaled to a batch job: stderr
+progress per phase and per canto, a streaming JSONL `--log` (`unit` record per
+parse unit, optional `gold` records under `--verify-gold`, one `canto_complete`
+record per finished canto, `summary` record last — the completion marker).
+Unlike the deterministic miners this CLI **resumes** rather than truncates
+(live fallback makes attempts hours long and worth keeping): completed cantos
+reload from an existing log and are skipped, and the log is compacted atomically
+before appending — superseded summaries and orphaned records of incomplete
+cantos are dropped so a canto can never double-count across attempts.
+
+Deterministic tests inject stub fallbacks; nothing in the test suite touches a
+model.
+"""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import hashlib
+import json
+import os
+import sys
+import tempfile
+import time
+from collections import Counter
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Iterator, TextIO
+
+from dante_corpus import api, case as case_layer, dep as dep_layer, morph as morph_layer, np as np_layer
+from dante_corpus.morph import Violation
+from dante_corpus.skel.models import SkelRow, _row_sort_key
+from dante_corpus.skel.validate import validate_unit
+
+from harness.extractor.hybrid_engine import (
+    DEFAULT_EVAL_CANTICLES,
+    AgentFallback,
+    HybridEngine,
+    RoutePolicy,
+    agent_fallback,
+    load_lexicon_json,
+    load_rules_json,
+    mine_artifacts,
+)
+
+__all__ = [
+    "SAMPLE_VIOLATIONS",
+    "CantoLayers",
+    "CantoReconstruction",
+    "GoldReport",
+    "ReconstructReport",
+    "UnitOutcome",
+    "build_rows",
+    "commit",
+    "compact_log",
+    "completed_cantos",
+    "load_log",
+    "main",
+    "prepare_resume",
+    "reconstruct_canto",
+    "render_tsv",
+    "split_violations",
+]
+
+# Per-unit violation details kept in log records; the summary carries the full
+# kind histogram, so samples only need to seed triage.
+SAMPLE_VIOLATIONS = 10
+
+RowKey = tuple[int, int, str, int, int]
+
+_TSV_HEADER = ("line", "token", "word", "role", "arg_line", "arg_token")
+
+
+# --- frozen-layer bundle (execution face: no gold anywhere) ------------------------------
+
+
+@dataclass
+class CantoLayers:
+    """Everything the execution face may read for one canto: L1-L4 + case annex."""
+
+    canticle: str
+    canto: int
+    nos: list[int]
+    texts: list[str]
+    tokens: dict[int, list[str]]
+    morph_rows: dict[int, tuple]
+    np_rows: dict[int, tuple]
+    dep_rows: dict[int, tuple]
+    case_rows: dict[int, tuple]
+
+    @property
+    def text_by_no(self) -> dict[int, str]:
+        return dict(zip(self.nos, self.texts))
+
+    @classmethod
+    def load(cls, canticle: str, canto: int) -> "CantoLayers":
+        data = api.canto(canticle, canto)
+        lines = data.lines()
+        return cls(
+            canticle=canticle,
+            canto=canto,
+            nos=[line.no for line in lines],
+            texts=[line.text for line in lines],
+            tokens={line.no: list(line.tokens) for line in lines},
+            morph_rows=morph_layer.load_morph(canticle, canto),
+            np_rows=np_layer.load_np(canticle, canto),
+            dep_rows=dep_layer.load_dep(canticle, canto),
+            case_rows=case_layer.load_case(canticle, canto),
+        )
+
+    def units(self) -> list[list[int]]:
+        """Parse-unit line groups (`dep.sentence_groups`) covering every line once."""
+        return [
+            list(group)
+            for group in dep_layer.sentence_groups(self.nos, self.texts)
+        ]
+
+
+def split_violations(
+    violations: list[Violation],
+) -> tuple[list[Violation], list[Violation]]:
+    """`(hard, soft)` — the drivers' split (`driver_ui._classify_violations`)."""
+    hard: list[Violation] = []
+    soft: list[Violation] = []
+    for v in violations:
+        (soft if v.kind == "tag" else hard).append(v)
+    return hard, soft
+
+
+def build_rows(
+    keys: set[RowKey],
+    layers: CantoLayers,
+    line_start: int,
+    line_end: int,
+) -> tuple[dict[int, list[SkelRow]], list[str]]:
+    """§4.1 gate 1 — normalize accepted row keys onto the Layer-1 token stream.
+
+    Every predicate/argument position must index the canto's alpha-token
+    stream inside the unit's bounds; each row's word anchor is taken verbatim
+    from that stream, so token-for-token alignment holds by construction and
+    is asserted after construction. Bad positions are reported (and dropped),
+    never raised.
+    """
+    errors: list[str] = []
+    by_line: dict[int, list[SkelRow]] = {}
+    for key in sorted(keys):
+        pline, ptok, role, aline, atok = key
+        if not line_start <= pline <= line_end:
+            errors.append(f"predicate {pline}.{ptok} outside unit bounds")
+            continue
+        ptoks = layers.tokens.get(pline, [])
+        if not 1 <= ptok <= len(ptoks):
+            errors.append(
+                f"predicate {pline}.{ptok} outside the Layer-1 token stream"
+            )
+            continue
+        if (aline, atok) != (0, 0):
+            if not line_start <= aline <= line_end:
+                errors.append(f"argument {aline}.{atok} outside unit bounds")
+                continue
+            atoks = layers.tokens.get(aline, [])
+            if not 1 <= atok <= len(atoks):
+                errors.append(
+                    f"argument {aline}.{atok} outside the Layer-1 token stream"
+                )
+                continue
+        word = ptoks[ptok - 1]
+        by_line.setdefault(pline, []).append(
+            SkelRow(line=pline, token=ptok, word=word, role=role,
+                    arg_line=aline, arg_token=atok)
+        )
+    for rows in by_line.values():
+        rows.sort(key=_row_sort_key)
+    return by_line, errors
+
+
+def _violation_record(v: Violation) -> dict:
+    return {"line": v.line, "kind": v.kind, "detail": v.detail}
+
+
+@dataclass
+class UnitOutcome:
+    """One parse unit's reconstruction result plus its two intrinsic gates."""
+
+    unit: dict
+    route: str  # "fast" | "agent"
+    reason: str
+    origin: str  # "fast" | "agent" (dry mode keeps "agent" with no rows)
+    fallback_ran: bool
+    row_keys: frozenset[RowKey]
+    rows: dict[int, list[SkelRow]]
+    token_assertions: list[str]
+    hard: list[Violation]
+    soft: list[Violation]
+    fallback_seconds: float | None = None
+
+    @property
+    def passed(self) -> bool:
+        """§4.1 gates 1+2: clean assertions AND 0 hard / 0 soft violations."""
+        return not self.token_assertions and not self.hard and not self.soft
+
+    def to_dict(self) -> dict:
+        kinds = Counter(v.kind for v in self.hard + self.soft)
+        sample = [
+            _violation_record(v)
+            for v in (self.hard + self.soft)[:SAMPLE_VIOLATIONS]
+        ]
+        return {
+            "record": "unit",
+            **self.unit,
+            "route": self.route,
+            "reason": self.reason,
+            "origin": self.origin,
+            "fallback_ran": self.fallback_ran,
+            "accepted_rows": len(self.row_keys),
+            "token_assertion_errors": len(self.token_assertions),
+            "assertions": list(self.token_assertions[:SAMPLE_VIOLATIONS]),
+            "hard_violations": len(self.hard),
+            "soft_violations": len(self.soft),
+            "violation_kinds": dict(kinds),
+            "sample_violations": sample,
+            "passed": self.passed,
+            "fallback_seconds": (
+                None if self.fallback_seconds is None
+                else round(self.fallback_seconds, 1)
+            ),
+        }
+
+
+@dataclass
+class CantoReconstruction:
+    """Every unit outcome of one canto, plus the merged candidate artifact."""
+
+    canticle: str
+    canto: int
+    nos: list[int]
+    outcomes: list[UnitOutcome] = field(default_factory=list)
+
+    @property
+    def passed(self) -> bool:
+        """A canto commits only when every one of its units passes."""
+        return bool(self.outcomes) and all(o.passed for o in self.outcomes)
+
+    def rows_by_line(self) -> dict[int, list[SkelRow]]:
+        merged: dict[int, list[SkelRow]] = {}
+        for outcome in self.outcomes:
+            for no, rows in outcome.rows.items():
+                merged.setdefault(no, []).extend(rows)
+        for rows in merged.values():
+            rows.sort(key=_row_sort_key)
+        return merged
+
+
+def reconstruct_canto(
+    engine: HybridEngine,
+    canticle: str,
+    canto: int,
+    *,
+    fallback: AgentFallback | None = None,
+    policy: RoutePolicy | None = None,
+    progress_stream: TextIO | None = sys.stderr,
+) -> CantoReconstruction:
+    """Drive the hybrid engine over every parse unit of one canto, gated.
+
+    Execution face: loads frozen L1-L4 only; gold is never touched. Each unit
+    runs `engine.run_unit` (the live `fallback` callable when given), its
+    accepted rows are anchored on Layer 1 (gate 1), and the unit is verified
+    through `validate_unit` with all layers attached (gate 2).
+    """
+    layers = CantoLayers.load(canticle, canto)
+    recon = CantoReconstruction(
+        canticle=canticle, canto=canto, nos=list(layers.nos)
+    )
+    text_by_no = layers.text_by_no
+    units = layers.units()
+    for pos, group in enumerate(units, start=1):
+        if progress_stream is not None and pos % 5 == 0:
+            print(
+                f"[reconstruct] {canticle} {canto} units {pos}/{len(units)}",
+                file=progress_stream,
+                flush=True,
+            )
+        line_start, line_end = group[0], group[-1]
+        started = time.monotonic()
+        result = engine.run_unit(
+            canticle=canticle,
+            canto=canto,
+            line_start=line_start,
+            line_end=line_end,
+            policy=policy,
+            fallback=fallback,
+        )
+        elapsed = time.monotonic() - started
+        rows, assertions = build_rows(
+            result.row_keys, layers, line_start, line_end
+        )
+        unit_rows = {no: rows.get(no, []) for no in group}
+        violations = validate_unit(
+            group,
+            [text_by_no[no] for no in group],
+            unit_rows,
+            morph_rows=layers.morph_rows,
+            np_rows=layers.np_rows,
+            dep_rows=layers.dep_rows,
+            case_rows=layers.case_rows,
+        )
+        hard, soft = split_violations(violations)
+        fallback_seconds: float | None = None
+        agent_result = getattr(result, "agent_result", None)
+        turn_seconds = getattr(agent_result, "turn_seconds", None)
+        if result.fallback_ran and turn_seconds is not None:
+            fallback_seconds = sum(turn_seconds)
+        elif result.fallback_ran:
+            fallback_seconds = elapsed
+        recon.outcomes.append(
+            UnitOutcome(
+                unit={
+                    "canticle": canticle,
+                    "canto": canto,
+                    "line_start": line_start,
+                    "line_end": line_end,
+                },
+                route=result.decision.route,
+                reason=result.decision.reason,
+                origin=result.origin,
+                fallback_ran=result.fallback_ran,
+                row_keys=frozenset(result.row_keys),
+                rows=unit_rows,
+                token_assertions=assertions,
+                hard=hard,
+                soft=soft,
+                fallback_seconds=fallback_seconds,
+            )
+        )
+    return recon
+
+
+# --- commit (gate 3): canto-atomic write + hash verification -----------------------------
+
+
+def render_tsv(lines: list[tuple[int, list[SkelRow]]]) -> str:
+    """Byte-exact mirror of `skel.io.write_skel`'s payload for the same input.
+
+    Gate 3 digests the payload *before* writing and compares against the
+    recomputed content hash *after* writing, which requires rendering the
+    bytes independently of the writer. If `write_skel`'s format ever drifts
+    from this mirror the commit fails loudly instead of landing unverified
+    bytes — `test_render_tsv_matches_write_skel_bytes` pins the parity.
+    """
+    out = ["\t".join(_TSV_HEADER)]
+    for no, rows in lines:
+        if not rows:
+            out.append("\t".join((str(no), "0", "", "", "0", "0")))
+            continue
+        for row in sorted(rows, key=_row_sort_key):
+            out.append(
+                "\t".join((str(no), str(row.token), row.word, row.role,
+                           str(row.arg_line), str(row.arg_token)))
+            )
+    return "\n".join(out) + "\n"
+
+
+def commit(
+    recon: CantoReconstruction,
+    *,
+    progress_stream: TextIO | None = sys.stderr,
+) -> dict:
+    """§4.1 gate 3 — write the canto atomically, then verify the hashes.
+
+    Refuses blocked cantos outright (never partial writes). The payload is
+    rendered and digested first; `write_skel` lands it; `canto_hashes()` must
+    then recompute exactly that digest. Any mismatch rolls the artifact back
+    to its previous bytes (or removes a freshly created file). The returned
+    record is the commit audit trail: pre/post hashes and the verdict.
+    """
+    record: dict = {
+        "record": "commit",
+        "canticle": recon.canticle,
+        "canto": recon.canto,
+    }
+    if not recon.passed:
+        record.update(wrote=False, reason="gates_failed")
+        return record
+
+    from dante_corpus.hashes import canto_hashes
+    from dante_corpus.skel.io import write_skel
+
+    # Resolve the target through the writer's own path resolver, so test
+    # redirections and production agree on one file.
+    from dante_corpus.skel import io as skel_io
+
+    path = skel_io._artifact_path(recon.canticle, recon.canto)
+    merged = recon.rows_by_line()
+    lines = [(no, merged.get(no, [])) for no in sorted(recon.nos)]
+    payload = render_tsv(lines)
+    expected = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    before = canto_hashes(recon.canticle, recon.canto).get("skel")
+    old_bytes = path.read_bytes() if path.exists() else None
+
+    write_skel(recon.canticle, recon.canto, lines)
+    after = canto_hashes(recon.canticle, recon.canto).get("skel")
+    verified = after == expected
+    rolled_back = False
+    if not verified:
+        if progress_stream is not None:
+            print(
+                f"[reconstruct] hash verification failed for "
+                f"{recon.canticle} {recon.canto}; rolling back",
+                file=progress_stream,
+                flush=True,
+            )
+        if old_bytes is not None:
+            path.write_bytes(old_bytes)
+        else:
+            with contextlib.suppress(OSError):
+                path.unlink()
+        rolled_back = True
+    record.update(
+        wrote=verified,
+        reason=None if verified else "hash_mismatch",
+        units_passed=sum(o.passed for o in recon.outcomes),
+        units_total=len(recon.outcomes),
+        before_skel_hash=before,
+        expected_digest=expected,
+        after_skel_hash=after,
+        digest_verified=verified,
+        rolled_back=rolled_back,
+    )
+    return record
+
+
+# --- evaluation face: gold comparison (operator-side; reads gold) ------------------------
+
+
+@dataclass
+class GoldReport:
+    """Accepted-vs-gold agreement over reconstructed units."""
+
+    units: int = 0
+    exact_units: int = 0
+    tp: int = 0
+    fp: int = 0
+    fn: int = 0
+    roles: dict = field(default_factory=dict)  # role -> [tp, fp, fn]
+
+    def observe(self, keys: frozenset[RowKey], gold: set[RowKey]) -> dict:
+        u_tp = len(keys & gold)
+        u_fp = len(keys - gold)
+        u_fn = len(gold - keys)
+        self.units += 1
+        self.exact_units += int(keys == gold)
+        self.tp += u_tp
+        self.fp += u_fp
+        self.fn += u_fn
+        for key in keys:
+            bucket = self.roles.setdefault(key[2], [0, 0, 0])
+            bucket[0 if key in gold else 1] += 1
+        for key in gold - keys:
+            self.roles.setdefault(key[2], [0, 0, 0])[2] += 1
+        return {"tp": u_tp, "fp": u_fp, "fn": u_fn, "exact": keys == gold}
+
+    def add_record(self, record: dict) -> None:
+        """Resume support: fold a logged `gold` record back into the aggregate."""
+        self.units += 1
+        self.exact_units += int(bool(record.get("exact")))
+        self.tp += int(record.get("tp") or 0)
+        self.fp += int(record.get("fp") or 0)
+        self.fn += int(record.get("fn") or 0)
+
+    def metrics(self) -> dict:
+        precision = self.tp / (self.tp + self.fp) if self.tp + self.fp else 0.0
+        recall = self.tp / (self.tp + self.fn) if self.tp + self.fn else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
+        return {
+            "units": self.units,
+            "exact_units": self.exact_units,
+            "exact_rate": round(self.exact_units / self.units, 4) if self.units else 0.0,
+            "tp": self.tp,
+            "fp": self.fp,
+            "fn": self.fn,
+            "precision": round(precision, 4),
+            "recall": round(recall, 4),
+            "f1": round(f1, 4),
+        }
+
+    def summary(self) -> str:
+        m = self.metrics()
+        return (
+            f"gold comparison: exact units {m['exact_units']}/{m['units']} "
+            f"= {m['exact_rate']:.3f}, P={m['precision']:.3f} "
+            f"R={m['recall']:.3f} F1={m['f1']:.3f} "
+            f"(tp={m['tp']} fp={m['fp']} fn={m['fn']})"
+        )
+
+
+def verify_against_gold(
+    recon: CantoReconstruction,
+) -> tuple[GoldReport, Iterator[dict]]:
+    """Compare every unit's accepted rows against gold (evaluation face).
+
+    Reads the frozen artifacts exactly like `runner/benchmark.py`; purely
+    observational — the result never feeds gating or writes.
+    """
+    from dante_corpus.skel.io import load_skel
+
+    report = GoldReport()
+    cache: dict[tuple[str, int], dict] = {}
+
+    def records():
+        for outcome in recon.outcomes:
+            unit = outcome.unit
+            key = (unit["canticle"], unit["canto"])
+            if key not in cache:
+                cache[key] = load_skel(unit["canticle"], unit["canto"])
+            gold_rows = cache[key]
+            gold = {
+                (row.line, row.token, row.role, row.arg_line, row.arg_token)
+                for no in range(unit["line_start"], unit["line_end"] + 1)
+                for row in gold_rows.get(no, ())
+            }
+            counts = report.observe(outcome.row_keys, gold)
+            yield {"record": "gold", **unit, **counts}
+
+    return report, records()
+
+
+# --- aggregate report ---------------------------------------------------------------------
+
+
+@dataclass
+class ReconstructReport:
+    """Aggregates streamed records; ships both §6 reporting faces.
+
+    Fed identically from live results and replayed resume records via
+    `add_unit` / `add_gold` / `add_canto_complete`.
+    """
+
+    units: int = 0
+    passed_units: int = 0
+    routes: Counter = field(default_factory=Counter)
+    reasons: Counter = field(default_factory=Counter)
+    token_assertion_errors: int = 0
+    hard_violations: int = 0
+    soft_violations: int = 0
+    violation_kinds: Counter = field(default_factory=Counter)
+    fallback_seconds: list[float] = field(default_factory=list)
+    cantos: int = 0
+    cantos_passed: int = 0
+    writes: list[dict] = field(default_factory=list)
+    gold: GoldReport | None = None
+
+    def add_unit(self, record: dict) -> None:
+        self.units += 1
+        self.passed_units += int(bool(record.get("passed")))
+        self.routes[record.get("route", "?")] += 1
+        self.reasons[record.get("reason", "?")] += 1
+        self.token_assertion_errors += int(record.get("token_assertion_errors") or 0)
+        self.hard_violations += int(record.get("hard_violations") or 0)
+        self.soft_violations += int(record.get("soft_violations") or 0)
+        for kind, count in (record.get("violation_kinds") or {}).items():
+            self.violation_kinds[kind] += count
+        seconds = record.get("fallback_seconds")
+        if seconds is not None:
+            self.fallback_seconds.append(float(seconds))
+
+    def add_gold(self, record: dict) -> None:
+        if self.gold is None:
+            self.gold = GoldReport()
+        self.gold.add_record(record)
+
+    def add_canto_complete(self, record: dict) -> None:
+        self.cantos += 1
+        self.cantos_passed += int(bool(record.get("passed")))
+        commit_rec = record.get("commit")
+        if commit_rec is not None:
+            self.writes.append(commit_rec)
+
+    def metrics(self) -> dict:
+        metrics = {
+            "cantos": self.cantos,
+            "cantos_passed": self.cantos_passed,
+            "written_cantos": sum(1 for w in self.writes if w.get("wrote")),
+            "units": self.units,
+            "passed_units": self.passed_units,
+            "blocked_units": self.units - self.passed_units,
+            "routes": dict(self.routes),
+            "reasons": dict(self.reasons),
+            "token_assertion_errors": self.token_assertion_errors,
+            "hard_violations": self.hard_violations,
+            "soft_violations": self.soft_violations,
+            "violation_kinds": dict(self.violation_kinds),
+            "fallback_seconds_total": round(sum(self.fallback_seconds), 1),
+            "fallback_seconds_max": round(max(self.fallback_seconds), 1)
+            if self.fallback_seconds
+            else None,
+        }
+        if self.gold is not None:
+            metrics["gold"] = self.gold.metrics()
+        return metrics
+
+    def summary(self) -> str:
+        lines = [
+            f"cantos: {self.cantos} passing all gates "
+            f"{self.cantos_passed}/{self.cantos}"
+            + (
+                f", written {sum(1 for w in self.writes if w.get('wrote'))}"
+                if self.writes
+                else ""
+            ),
+            f"units: {self.units} passing {self.passed_units} "
+            f"(gate: every unit 0 hard / 0 soft)",
+            f"routing: "
+            + ", ".join(
+                f"{route}={count}" for route, count in sorted(self.routes.items())
+            ),
+            f"  reasons: "
+            + ", ".join(
+                f"{reason}={count}" for reason, count in sorted(self.reasons.items())
+            ),
+            f"violations: hard {self.hard_violations}, soft {self.soft_violations} "
+            f"(token assertions {self.token_assertion_errors})",
+        ]
+        if self.violation_kinds:
+            top = ", ".join(
+                f"{kind}={count}"
+                for kind, count in sorted(
+                    self.violation_kinds.items(), key=lambda kv: -kv[1]
+                )[:6]
+            )
+            lines.append(f"  top kinds: {top}")
+        if self.fallback_seconds:
+            total = sum(self.fallback_seconds)
+            lines.append(
+                f"fallback sessions: {len(self.fallback_seconds)} in {total:.0f}s "
+                f"(max {max(self.fallback_seconds):.1f}s)"
+            )
+        if self.gold is not None:
+            lines.append(self.gold.summary())
+        return "\n".join(lines)
+
+
+# --- streaming JSONL log: resume support ---------------------------------------------------
+
+
+def load_log(path: str | Path) -> list[dict]:
+    """Parse a previous attempt's log into records (torn tails skipped)."""
+    records: list[dict] = []
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            try:
+                record = json.loads(stripped)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(record, dict):
+                records.append(record)
+    return records
+
+
+def completed_cantos(records: list[dict]) -> set[tuple[str, int]]:
+    """Cantos whose terminal `canto_complete` marker is already on disk."""
+    return {
+        (record["canticle"], record["canto"])
+        for record in records
+        if record.get("record") == "canto_complete" and "canticle" in record
+    }
+
+
+def prepare_resume(
+    records: list[dict],
+    wanted: list[tuple[str, int]],
+) -> tuple[list[dict], list[tuple[str, int]]]:
+    """Split a previous attempt into `(records_to_replay, remaining_cantos)`.
+
+    Everything belonging to a completed canto replays into the aggregate;
+    those cantos are skipped. Records of incomplete cantos stay in the file
+    untouched but cannot pollute this attempt's aggregates — their cantos
+    re-run and re-log them.
+    """
+    done = completed_cantos(records)
+    replay: list[dict] = [
+        record
+        for record in records
+        if (record.get("canticle"), record.get("canto")) in done
+        and record.get("record") in ("unit", "gold", "commit", "canto_complete")
+    ]
+    remaining = [canto for canto in wanted if canto not in done]
+    return replay, remaining
+
+
+def compact_log(
+    path: str | Path, done: set[tuple[str, int]]
+) -> None:
+    """Keep only completed-cantos' records from an existing log (atomic replace).
+
+    Resume compaction serves the streaming contract twice at once: superseded
+    summary records are stripped (the completion marker stays exact), and any
+    orphaned records of *incomplete* cantos are dropped — those cantos re-run,
+    so letting their stale records survive would double-count them on the next
+    resume once their canto completes.
+    """
+    with open(path, encoding="utf-8") as fh:
+        kept = [
+            line
+            for line in fh
+            if _jsonl_record_is_complete(line, done)
+        ]
+    directory = os.path.dirname(os.path.abspath(path))
+    fd, tmp = tempfile.mkstemp(dir=directory, prefix=".reconstruct-log-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as dst:
+            dst.writelines(kept)
+        os.replace(tmp, path)
+    except BaseException:
+        with contextlib.suppress(OSError):
+            os.unlink(tmp)
+        raise
+
+
+def _jsonl_record_is(line: str, kind: str) -> bool:
+    stripped = line.strip()
+    if not stripped:
+        return False
+    try:
+        return json.loads(stripped).get("record") == kind
+    except json.JSONDecodeError:
+        return False
+
+
+def _jsonl_record_is_complete(line: str, done: set[tuple[str, int]]) -> bool:
+    stripped = line.strip()
+    if not stripped:
+        return False
+    try:
+        record = json.loads(stripped)
+    except json.JSONDecodeError:
+        return False  # torn tail: drop it
+    if record.get("record") == "summary":
+        return False
+    key = (record.get("canticle"), record.get("canto"))
+    return key in done
+
+
+# --- CLI ------------------------------------------------------------------------------------
+
+
+def _select_cantos(args) -> list[tuple[str, int]]:
+    canticles = args.canticles or list(DEFAULT_EVAL_CANTICLES)
+    if args.canto is not None:
+        return [(c, args.canto) for c in canticles]
+    wanted: list[tuple[str, int]] = []
+    for canticle in canticles:
+        for number in api.cantos(canticle):
+            wanted.append((canticle, number))
+    return wanted
+
+
+def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Gated whole-canto reconstruction through the hybrid engine "
+            "(harness/extractor PLAN.md milestone 2.4)."
+        )
+    )
+    parser.add_argument(
+        "--canticle",
+        action="append",
+        choices=("inferno", "purgatorio", "paradiso"),
+        dest="canticles",
+        help="restrict scope to these canticles (default: all)",
+    )
+    parser.add_argument("--canto", type=int, help="single canto number (with --canticle)")
+    parser.add_argument(
+        "--all", action="store_true", help="iterate every canto of the selected canticles"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="explicit no-write run (the default; skel/ is protected gold)",
+    )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="commit passing cantos to skel/ (canto-atomic, hash-verified)",
+    )
+    parser.add_argument(
+        "--verify-gold",
+        action="store_true",
+        help="also compare accepted rows against gold (observational only)",
+    )
+    parser.add_argument("--rules-in", type=Path)
+    parser.add_argument("--lexicon-in", type=Path)
+    parser.add_argument(
+        "--run-log",
+        action="append",
+        type=Path,
+        dest="run_logs",
+        help="input benchmark JSONL log for fresh mining (repeatable; defaults "
+        "to the four M1.4/re-run logs under harness/)",
+    )
+    parser.add_argument("--min-support", type=int, default=None)
+    parser.add_argument(
+        "--model",
+        default=None,
+        help="model for the Stage-1 agent fallback (default: runner default)",
+    )
+    parser.add_argument("--max-turns", type=int, default=None)
+    parser.add_argument("--verbose", action="store_true")
+    parser.add_argument(
+        "--log",
+        type=Path,
+        help="streaming JSONL log: unit/gold/canto_complete records, summary "
+        "last. An existing file is resumed: completed cantos reload and are "
+        "skipped",
+    )
+    args = parser.parse_args(argv)
+
+    if args.canto is not None and not args.canticles:
+        parser.error("--canto needs an explicit --canticle")
+    if (args.canto is None) == (not args.all):
+        parser.error("select exactly one of --canto N or --all")
+
+    if args.rules_in and args.lexicon_in:
+        rules = load_rules_json(args.rules_in)
+        entries = load_lexicon_json(args.lexicon_in)
+        print(
+            f"reconstruct: loaded {len(rules)} rules + {len(entries)} frames "
+            f"from artifacts"
+        )
+    else:
+        print("[reconstruct] regenerating artifacts from run logs...", file=sys.stderr, flush=True)
+        kwargs = {}
+        if args.min_support is not None:
+            kwargs["min_support"] = args.min_support
+        bundle = mine_artifacts(args.run_logs, **kwargs)
+        rules, entries = bundle.rules, bundle.entries
+    engine = HybridEngine(rules, entries)
+
+    if fallback is None:
+        fallback_kwargs = {"model": args.model}
+        if args.max_turns is not None:
+            fallback_kwargs["max_turns"] = args.max_turns
+        fallback = agent_fallback(verbose=args.verbose, **fallback_kwargs)
+
+    wanted = _select_cantos(args)
+    report = ReconstructReport()
+
+    prior_records: list[dict] = []
+    if args.log and os.path.exists(args.log):
+        prior_records = load_log(args.log)
+        replay, wanted = prepare_resume(prior_records, wanted)
+        for record in replay:
+            kind = record.get("record")
+            if kind == "unit":
+                report.add_unit(record)
+            elif kind == "gold":
+                report.add_gold(record)
+            elif kind == "canto_complete":
+                report.add_canto_complete(record)
+        # Compact before appending: stale summaries stripped, orphaned
+        # records of incomplete cantos dropped (their cantos re-run below).
+        compact_log(args.log, completed_cantos(prior_records))
+        if replay:
+            print(
+                f"resume: {len(completed_cantos(prior_records))} completed canto(s) "
+                f"loaded from {args.log}; continuing with {len(wanted)} left"
+            )
+
+    header = (
+        f"reconstruct: {'WRITE' if args.write else 'dry-run'} "
+        f"(gates: token stream, 0 hard / 0 soft, content hash)"
+        f"{', verify-gold' if args.verify_gold else ''}; "
+        f"{len(wanted)} canto(s) selected"
+    )
+    print(header)
+
+    sink = open(args.log, "a", encoding="utf-8") if args.log else None
+    try:
+        for index, (canticle, canto) in enumerate(wanted, start=1):
+            print(
+                f"[reconstruct] === canto [{index}/{len(wanted)}] "
+                f"{canticle} {canto} ===",
+                file=sys.stderr,
+                flush=True,
+            )
+            recon = reconstruct_canto(engine, canticle, canto, fallback=fallback)
+            for outcome in recon.outcomes:
+                record = outcome.to_dict()
+                report.add_unit(record)
+                if sink is not None:
+                    sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+            if args.verify_gold:
+                gold_report, gold_records = verify_against_gold(recon)
+                for record in gold_records:
+                    report.add_gold(record)
+                    if sink is not None:
+                        sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+            complete: dict = {
+                "record": "canto_complete",
+                "canticle": canticle,
+                "canto": canto,
+                "units": len(recon.outcomes),
+                "passed": recon.passed,
+            }
+            if args.write:
+                commit_record = commit(recon)
+                complete["commit"] = commit_record
+                if sink is not None:
+                    sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
+            report.add_canto_complete(complete)
+            if sink is not None:
+                sink.write(json.dumps(complete, ensure_ascii=False) + "\n")
+                sink.flush()
+        if sink is not None:
+            summary = {
+                "record": "summary",
+                "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                **report.metrics(),
+            }
+            sink.write(json.dumps(summary, ensure_ascii=False) + "\n")
+            sink.flush()
+    finally:
+        if sink is not None:
+            sink.close()
+
+    if args.log:
+        print(f"records written to {args.log}")
+    print(report.summary())
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

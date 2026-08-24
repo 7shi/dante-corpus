@@ -76,5 +76,7 @@ dante-corpus/
     ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
     ├── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
     ├── test_harness_syntax_miner.py  # Stage 2 miner tests (clustering, rules, coverage)
-    └── test_harness_lexicon_builder.py  # Stage 2 lexicon tests (frames, gating, coverage)
+    ├── test_harness_lexicon_builder.py  # Stage 2 lexicon tests (frames, gating, coverage)
+    ├── test_harness_hybrid_engine.py   # Stage 2 engine tests (derivation, routing, fallback)
+    └── test_harness_reconstruct.py     # Stage 2 gate tests (assertions, 0-soft, hash commit)
 ```
