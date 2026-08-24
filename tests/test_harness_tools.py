@@ -61,15 +61,22 @@ def test_read_unit_serves_multilayer_context(toolkit):
     }
     assert [line["no"] for line in unit["lines"]] == [1, 2, 3]
     assert unit["lines"][0]["tokens"][:3] == ["Nel", "mezzo", "del"]
-    # Layer 2 morphology aligned with Layer 1 tokens.
+    # Layer 2 morphology aligned with Layer 1 tokens, compact positional rows:
+    # [word, lemma, pos, gender, number, person, tense, mood] (+ note when set).
     assert len(unit["morphology"][1]) == len(unit["lines"][0]["tokens"])
-    assert unit["morphology"][2][1]["lemma"] == "ritrovare"
-    # Layer 4 dependencies present for every token.
+    # "ritrovai" (2.2): verb, sg., 1st person, remote past, indicative.
+    assert unit["morphology"][2][1] == [
+        "ritrovai", "ritrovare", "verb", "", "sg.", "1", "remote past", "indicative",
+    ]
+    # "mi" (2.1) carries a note: the 9th element, interior empties intact.
+    assert unit["morphology"][2][0] == [
+        "mi", "mi", "pronoun", "", "sg.", "1", "", "", "reflexive",
+    ]
+    # Layer 4 dependencies present for every token: [token, head_token, deprel].
     assert len(unit["dependencies"][2]) == len(unit["lines"][1]["tokens"])
-    # Layer 3 noun phrases with heads.
-    np_texts = {span["text"]: span["head"] for span in unit["noun_phrases"]}
-    assert np_texts["mezzo del cammin di nostra vita"] == 2
-    assert np_texts["la diritta via"] == 4
+    # Layer 3 noun phrases as [line, start, end, head] rows (nested spans flat).
+    assert [1, 2, 7, 2] in unit["noun_phrases"]  # "mezzo del cammin di nostra vita"
+    assert [3, 2, 4, 4] in unit["noun_phrases"]  # "la diritta via" -> via
 
 
 def test_read_unit_snaps_to_sentence_group_bounds(toolkit):
@@ -101,7 +108,8 @@ def test_read_unit_rejects_invalid_arguments(toolkit):
 
 
 def test_read_unit_includes_quotes_only_where_they_exist(toolkit):
-    assert toolkit.read_unit("inferno", 1, 1)["quotes"] == []
+    # Empty sections are omitted entirely (the compact contract).
+    assert "quotes" not in toolkit.read_unit("inferno", 1, 1)
     quoted = toolkit.read_unit("inferno", 1, 65)
     assert quoted["quotes"], "line 65 carries the first direct-speech quote"
     start = quoted["unit"]["line_start"]
@@ -123,16 +131,115 @@ def test_read_unit_strictly_masks_layer_5(toolkit, monkeypatch):
     serialized = json.dumps(unit)
     assert "role" not in serialized  # skeleton roles are Layer 5 vocabulary-in-use
     assert "skel" not in serialized
-    # The payload speaks only Layers 1-4 + quotes + case.
+    # The payload speaks only Layers 1-4 + quotes + case, in compact form.
     assert set(unit) == {
         "unit",
+        "legend",
         "lines",
-        "quotes",
         "morphology",
         "case",
         "noun_phrases",
         "dependencies",
     }
+
+
+# --- read_unit payload tiers (STAGE3.md §2.B) ---------------------------------------------
+
+
+def test_read_unit_r1_legend_makes_the_shapes_self_describing(toolkit):
+    unit = toolkit.read_unit("inferno", 1, 1)  # default tier: R1
+    assert toolkit.payload_tier == "R1"
+    legend = unit["legend"]
+    for fragment in (
+        "morphology",
+        "word,lemma,pos,gender,number,person,tense,mood",
+        "dependencies [token,head_token,deprel]",
+        "noun_phrases [line,start,end,head]",
+    ):
+        assert fragment in legend
+
+
+def test_read_unit_r1_rows_are_positional_and_sparse(toolkit):
+    unit = toolkit.read_unit("inferno", 1, 1)
+    for rows in unit["morphology"].values():
+        for row in rows:
+            assert isinstance(row, list)
+            assert 1 <= len(row) <= 9  # 8 fields + optional note
+            assert row[0]  # the word anchors the row
+    for rows in unit["dependencies"].values():
+        for row in rows:
+            assert isinstance(row, list) and 3 <= len(row) <= 4
+    for row in unit["noun_phrases"]:
+        assert isinstance(row, list) and len(row) == 4
+    # head_line rides only when it differs from line.
+    for line, rows in unit["dependencies"].items():
+        for row in rows:
+            if len(row) == 4:
+                assert row[3] != line
+
+
+def test_read_unit_s1_keeps_named_dicts_dropping_empties(toolkit):
+    s1 = GrammarToolkit(payload_tier="S1")
+    assert "legend" not in s1.read_unit("inferno", 1, 1)
+    unit = s1.read_unit("inferno", 1, 1)
+    for rows in unit["morphology"].values():
+        for row in rows:
+            assert isinstance(row, dict)
+            assert set(row) <= {
+                "word", "lemma", "pos", "gender", "number",
+                "person", "tense", "mood", "note",
+            }
+            assert all(row.values())  # no empty-valued keys survive
+    for rows in unit["dependencies"].values():
+        for row in rows:
+            assert isinstance(row, dict)
+    assert "quotes" not in unit  # empty section dropped
+
+
+def test_read_unit_tiers_cover_identical_content(toolkit):
+    """R1 and S1 serve the same facts in different shapes (the §5 tier
+    decision must not change what the model can know)."""
+    s1 = GrammarToolkit(payload_tier="S1")
+    for line_start in (1, 65, 112):  # plain, quoted, multi-line-heavy units
+        r1 = toolkit.read_unit("inferno", 1, line_start)
+        sparse = s1.read_unit("inferno", 1, line_start)
+        assert r1["unit"] == sparse["unit"]
+        assert r1["lines"] == sparse["lines"]
+        # Quotes: same spans (S1 drops empty-valued keys like children: []).
+        def _norm_quotes(quotes):
+            return [
+                {k: v for k, v in q.items() if v not in ([], None)}
+                for q in quotes or []
+            ]
+
+        assert _norm_quotes(r1.get("quotes")) == _norm_quotes(sparse.get("quotes"))
+        assert set(r1["morphology"]) == set(sparse["morphology"])
+        assert set(r1["dependencies"]) == set(sparse["dependencies"])
+        assert set(r1.get("case", {})) == set(sparse.get("case", {}))
+        for no in r1["morphology"]:
+            compact = r1["morphology"][no]
+            named = sparse["morphology"][no]
+            assert len(compact) == len(named)
+            words = [row[0] for row in compact]
+            assert words == [row["word"] for row in named]
+            for pos_row, named_row in zip(compact, named):
+                assert pos_row[1] == named_row.get("lemma", "")
+                assert pos_row[2] == named_row.get("pos", "")
+        for no in r1["dependencies"]:
+            compact = r1["dependencies"][no]
+            named = sparse["dependencies"][no]
+            assert [(row[0], row[2]) for row in compact] == [
+                (row["token"], row["deprel"]) for row in named
+            ]
+        assert [tuple(row) for row in r1["noun_phrases"]] == [
+            (row["line"], row["start"], row["end"], row["head"])
+            for row in sparse["noun_phrases"]
+        ]
+
+
+def test_toolkit_rejects_unknown_payload_tier():
+    with pytest.raises(ValueError, match="payload tier"):
+        GrammarToolkit(payload_tier="R2")
 
 
 # --- search_corpus ---------------------------------------------------------------------

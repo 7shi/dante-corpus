@@ -24,6 +24,7 @@ from harness.toolcall import tool_specs_section, xml_contract_section
 __all__ = [
     "ROLE_INTRO",
     "REASONING_PROTOCOL",
+    "continuation_system_prompt",
     "few_shot_messages",
     "system_prompt",
     "unit_task",
@@ -125,6 +126,7 @@ PREDICATE_PROTOCOL = STEPS_1_TO_4 + "\n\n" + STEP5_PREDICATE
 WORKFLOWS = ("unit", "predicate")
 
 _PROTOCOLS = {"unit": REASONING_PROTOCOL, "predicate": PREDICATE_PROTOCOL}
+_STEP5 = {"unit": STEP5_UNIT, "predicate": STEP5_PREDICATE}
 
 
 def system_prompt(specs: Sequence[dict], workflow: str = "unit") -> str:
@@ -138,6 +140,26 @@ def system_prompt(specs: Sequence[dict], workflow: str = "unit") -> str:
         [
             ROLE_INTRO,
             _PROTOCOLS[workflow],
+            xml_contract_section(),
+            tool_specs_section(specs),
+        ]
+    )
+
+
+def continuation_system_prompt(specs: Sequence[dict], workflow: str = "unit") -> str:
+    """The calls-2+ system prompt of the compacted session (STAGE3.md §2.A).
+
+    ROLE_INTRO + Step 5[workflow] + the XML wire contract + the **full** tool
+    specs. Dropped vs `system_prompt`: Steps 1-4 (planning is done once per
+    unit; the plan lives in the transcript) and the few-shot demo (the live
+    transcript itself demonstrates the format). The tool specs stay in full —
+    mid-session `validate_candidate` calls carry the most complex schema the
+    model emits, and Step 5 is load-bearing on repair turns.
+    """
+    return "\n\n".join(
+        [
+            ROLE_INTRO,
+            _STEP5[workflow],
             xml_contract_section(),
             tool_specs_section(specs),
         ]

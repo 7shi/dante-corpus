@@ -34,6 +34,8 @@ from dante_corpus.skel.models import GrammarContext, OBL_RE, ROLES
 __all__ = [
     "GrammarToolkit",
     "MAX_UNIT_LINES",
+    "PAYLOAD_LEGEND",
+    "PAYLOAD_TIERS",
     "TOOL_SPECS",
     "VALID_ROLES",
     "tool_specs",
@@ -67,6 +69,133 @@ _ROW_FIELDS = ("line", "token", "word", "role", "arg_line", "arg_token")
 # Fields a candidate row cannot do without; `word` is an optional verification anchor
 # (coordinates alone identify the token, so wire payloads may omit it).
 _REQUIRED_ROW_FIELDS = ("line", "token", "role", "arg_line", "arg_token")
+
+# --- read_unit payload tiers (STAGE3.md §2.B) -------------------------------------------
+#
+# The wire size of a `read_unit` result is the session's size tail (corpus wire
+# p50 7.1 / max 30.0 kB per unit), so the payload ships compact. Tier "R1"
+# (primary) serves positional one-line rows — a CoNLL-like columnar shape made
+# self-describing by the inline `PAYLOAD_LEGEND` inside every result. Tier "S1"
+# (fallback, near-zero comprehension risk) keeps today's named-dict schema,
+# dropping empty-valued keys and empty sections only. The confirmation run
+# (STAGE3.md §5) picks the tier; content coverage is identical by test.
+
+PAYLOAD_TIERS = ("R1", "S1")
+
+# MorphRow fields in compact positional order; `note` rides as an optional 9th
+# element when non-empty (26% of corpus rows carry one — 'reflexive', 'clitic',
+# 'apocope'... — and dropping live Layer-2 annotation to save ~1% of payload
+# bytes would change what the model can reason about, not just how it is packed).
+_MORPH_COMPACT_FIELDS = ("word", "lemma", "pos", "gender", "number", "person", "tense", "mood")
+
+PAYLOAD_LEGEND = (
+    "Compact shapes: morphology [word,lemma,pos,gender,number,person,tense,"
+    "mood], empty trailing fields omitted, 9th element = note when present; "
+    "dependencies [token,head_token,deprel] with 4th = head_line only when "
+    "it differs from line (head 0.0 = sentence root); noun_phrases "
+    "[line,start,end,head], 1-based token indexes into the lines token "
+    "lists. Empty sections are omitted."
+)
+
+
+def _sparse_dict(data: dict) -> dict:
+    """Drop empty-valued keys (tier S1's sparseness convention)."""
+    return {
+        key: value
+        for key, value in data.items()
+        if value not in ("", None, (), [], {})
+    }
+
+
+def _morph_row_compact(row: MorphRow) -> list:
+    fields = [getattr(row, name) for name in _MORPH_COMPACT_FIELDS]
+    if row.note:
+        # Keep interior empties as "" so positions stay unambiguous.
+        return fields + [row.note]
+    while fields and fields[-1] == "":
+        fields.pop()
+    return fields
+
+
+def _dep_row_compact(row: DepRow) -> list:
+    out = [row.token, row.head_token, row.deprel]
+    if row.head_line != row.line:
+        out.append(row.head_line)
+    return out
+
+
+def _np_row_compact(span: NPSpan) -> list:
+    return [span.line, span.start, span.end, span.head]
+
+
+def _render_payload(
+    data: "_CantoData",
+    unit_nos: list[int],
+    quotes: list[dict],
+    tier: str,
+) -> dict[str, object]:
+    """Render the `read_unit` result body in the requested payload tier."""
+    if tier == "R1":
+        payload: dict[str, object] = {
+            "legend": PAYLOAD_LEGEND,
+            "morphology": {
+                no: [_morph_row_compact(row) for row in data.morph.get(no, ())]
+                for no in unit_nos
+                if data.morph.get(no)
+            },
+            "noun_phrases": [
+                _np_row_compact(span)
+                for span in _flatten_np(data.np_forest)
+                if unit_nos[0] <= span.line <= unit_nos[-1]
+            ],
+            "dependencies": {
+                no: [_dep_row_compact(row) for row in data.dep.get(no, ())]
+                for no in unit_nos
+                if data.dep.get(no)
+            },
+        }
+        if quotes:
+            payload["quotes"] = quotes
+        case_rows = {
+            no: [_sparse_dict(row.to_dict()) for row in data.case.get(no, ())]
+            for no in unit_nos
+            if data.case.get(no)
+        }
+        if case_rows:
+            payload["case"] = case_rows
+        return payload
+    if tier == "S1":
+        payload = {
+            "morphology": {
+                no: [_sparse_dict(row.to_dict()) for row in data.morph.get(no, ())]
+                for no in unit_nos
+                if data.morph.get(no)
+            },
+            "noun_phrases": [
+                _sparse_dict(span.to_dict())
+                for span in _flatten_np(data.np_forest)
+                if unit_nos[0] <= span.line <= unit_nos[-1]
+            ],
+            "dependencies": {
+                no: [_sparse_dict(row.to_dict()) for row in data.dep.get(no, ())]
+                for no in unit_nos
+                if data.dep.get(no)
+            },
+        }
+        if quotes:
+            payload["quotes"] = [
+                _sparse_dict(quote) for quote in quotes
+            ]
+        case_rows = {
+            no: [_sparse_dict(row.to_dict()) for row in data.case.get(no, ())]
+            for no in unit_nos
+            if data.case.get(no)
+        }
+        if case_rows:
+            payload["case"] = case_rows
+        return payload
+    raise ValueError(f"unknown payload tier: {tier!r} (valid: {list(PAYLOAD_TIERS)})")
+
 
 # --- Tool-call specifications ---------------------------------------------------------
 #
@@ -347,7 +476,12 @@ class GrammarToolkit:
     guard without the agent having to pass exclusion arguments it could forget or forge.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, payload_tier: str = "R1") -> None:
+        if payload_tier not in PAYLOAD_TIERS:
+            raise ValueError(
+                f"unknown payload tier: {payload_tier!r} (valid: {list(PAYLOAD_TIERS)})"
+            )
+        self.payload_tier = payload_tier
         self._cache: dict[tuple[str, int], _CantoData] = {}
         self._active_unit: tuple[str, int, int, int] | None = None
         self.upstream_log: list[dict[str, object]] = []
@@ -418,8 +552,13 @@ class GrammarToolkit:
         annex are provided in full; Layer 5 skeleton rows and rule annotations are strictly
         masked (they are never read, let alone served).
 
-        Returns a JSON-ready dict with keys: `unit`, `lines`, `quotes`, `morphology`,
-        `case`, `noun_phrases`, `dependencies`.
+        The heavy per-line sections render in the toolkit's compact `payload_tier`
+        (STAGE3.md §2.B): "R1" serves positional rows plus an inline legend; "S1" serves
+        sparse named dicts. Content coverage is identical across tiers.
+
+        Returns a JSON-ready dict with keys: `unit`, `lines`, and — when non-empty —
+        `quotes`, `morphology`, `case`, `noun_phrases`, `dependencies` (plus `legend`
+        under R1).
         """
         data = self._canto(canticle, canto)
         start, end = self._unit_bounds(data, line_start, line_end)
@@ -447,19 +586,7 @@ class GrammarToolkit:
                 }
                 for no in unit_nos
             ],
-            "quotes": quotes,
-            "morphology": {
-                no: [row.to_dict() for row in data.morph.get(no, ())] for no in unit_nos
-            },
-            "case": {
-                no: [row.to_dict() for row in data.case.get(no, ())] for no in unit_nos
-            },
-            "noun_phrases": [
-                span.to_dict() for span in data.np_forest if start <= span.line <= end
-            ],
-            "dependencies": {
-                no: [row.to_dict() for row in data.dep.get(no, ())] for no in unit_nos
-            },
+            **_render_payload(data, unit_nos, quotes, self.payload_tier),
         }
 
     # --- tool 2: search_corpus ---------------------------------------------------------

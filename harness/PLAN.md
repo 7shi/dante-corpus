@@ -5,26 +5,39 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 3: implement the compaction/pacing design (S3.3).** The
-design is COMPLETE (2026-08-25, **record S3.2** in
-[`STAGE3.md`](STAGE3.md) — the stage-3 design + ledger home). Its measurement
-pass corrected S3.1's accounting (the physical input is `context_bytes`, which
-already includes the newest message: solo average **5.13k tok/min, ×3 =
-96%** — the gate still fails, at zero margin rather than 112%) and relabeled
-its burst (the 15–20.6 kB turn-2 messages are `read_unit` payloads; validator
-feedbacks are ≤ 0.5 kB): the input is **62% opening resend** (11.5 kB × every
-call), the payload rendering is the size tail (corpus max 30 kB), feedbacks
-are negligible. Design: **continuation wire view** (call 1 verbatim; calls 2+
-= 8.8 kB continuation system + task + payload/feedbacks/last-submission
-verbatim + one-line digests), **positional `read_unit` serving (R1)** with
-sparse-dict S1 as fallback tier, **35 s min inter-send** + a shared
-**12k tok/min / 6.5k tok bucket** for the launch. Deterministic gate
-re-check: **×3 average = 66% (PASS), peak call 38% solo (the ~30% target
-restated to ≤ 45% — infeasible on the real wire floor), solo rolling-60 58%**.
-Deliverables next: implementation per STAGE3.md §4, the live confirmation run
-(§5, operator), then the three-parallel-stream launch. Standing constraint
-unchanged: compaction changes session semantics — designed between runs,
-never mid-run.
+**Next action — Stage 3: the live confirmation run (§5 of
+[`STAGE3.md`](STAGE3.md), OPERATOR-run).** The implementation is COMPLETE
+(2026-08-25, record S3.3 in [`STAGE3.md`](STAGE3.md) — the stage-3 design +
+ledger home): all seven §4 items shipped (compact `read_unit` tiers R1/S1,
+`continuation_system_prompt` at the measured 8,831 B, the pure history
+policy in `runner/compact.py`, adapter fingerprint sync + pacing +
+`TokenBucket`, `agent_fallback` pass-through, `reconstruct` CLI flags),
+tests 833 → 867 passed. Three measured deviations from the S3.2
+counterfactuals are documented in the S3.3 record (note column kept as R1's
+9th morphology element; compact JSON separators on the `tool_result` wire —
+aligning the wire with the design's measurement basis; NP children
+flattened in both tiers): on the measured wire R1 is 11.3 MB corpus-wide,
+max unit 10.7 kB, tail view ≈ 43% solo — inside every restated gate. The
+confirmation run is one inferno-1 re-run, fresh `--log`, compact + interval
+35 + no bucket, same command shape as the M2.5 recheck:
+
+```bash
+uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 \
+       --verify-gold --model google:gemma-4-31b-it \
+       --log harness/recon-inf1-compact.log
+```
+
+(compaction and the 35 s interval are the defaults; `--no-compact`,
+`--payload-tier S1`, `--min-send-interval`, `--token-bucket` exist for the
+tier decision and the launch.) Pass criteria per §5: request records show
+`context_bytes ≪ uncompacted_bytes` with no request over ~24 kB;
+`--verify-gold` micro F1 inside the pilot/recheck band (floor 0.72); gate
+quantities on the fresh log (×3 average ≤ 80%, peak call ≤ 45% solo,
+rolling-60 ≤ 65%, api-retry tax ≤ ~5%); then the three canticle-parallel
+launch (command shape below) with `--min-send-interval 35 --token-bucket
+<shared path>` on all three shells. Standing constraint unchanged:
+compaction changes session semantics — designed between runs, never
+mid-run.
 
 The single streaming log also carries the request-level cost records (shipped
 post-pilot 2026-08-24, live-proven by the recheck): the fallback appends one
@@ -98,20 +111,19 @@ ceiling, not steady pressure).
    reconstruction writes need the explicit `--write` flag on top of passing
    all three gates, canto-atomically.
 5. **Session housekeeping (2026-08-25, this session)**: assistant session ran
-     the Stage-3 compaction/pacing design (record S3.2; design + stage ledger
-     in [`STAGE3.md`](STAGE3.md)) — deterministic measurement over the recheck
-     log at request granularity, the benchmark logs' trace outcomes, and a
-     fresh full-corpus `read_unit` scan (3,477 units). Two S3.1 corrections
-     documented (additive double-count; payload-vs-feedback mislabel; gate
-     conclusion unchanged), the design written (continuation view, positional
-     payload with fallback tier, interval + bucket pacing), and the
-     deterministic gate re-check computed (×3 average 66% PASS; peak-call
-     target restated to ≤ 45% and met at 38%). Docs-only; tests untouched at
-     833 passed. (Prior session, 2026-08-25: S3.1 correlation analysis.
-     Before that, 2026-08-24: operator ran the M2.5 recheck — readout passed
-     all criteria, reproduced the pilot, failed the Stage-3 launch gate;
-     Stage 2 closed and archived to [`STAGE2.md`](STAGE2.md).) Next: S3.3
-     implementation per STAGE3.md §4.
+      the S3.3 implementation (record S3.3; design + stage ledger in
+      [`STAGE3.md`](STAGE3.md)) — all seven §4 items of the compaction/pacing
+      design shipped deterministically (compact `read_unit` tiers, the pure
+      history policy, adapter fingerprint sync + interval + token bucket,
+      fallback pass-through, reconstruct CLI flags), with three measured
+      deviations documented in the S3.3 record and the wire re-measured
+      corpus-wide (R1 41% of the old wire, tail view 43% solo — inside the
+      restated gates). Tests 833 → 867 passed; no model touched. (Earlier
+      2026-08-25: S3.2 design + gate re-check; S3.1 correlation analysis.
+      2026-08-24: operator ran the M2.5 recheck — readout passed all
+      criteria, reproduced the pilot, failed the Stage-3 launch gate;
+      Stage 2 closed and archived to [`STAGE2.md`](STAGE2.md).) Next: the
+      §5 confirmation run (operator).
 
 ---
 
@@ -140,22 +152,28 @@ ceiling, not steady pressure).
       milestones, ledger, carry-overs, and the pilot/recheck readouts in
       [`STAGE2.md`](STAGE2.md); spec in [`extractor/PLAN.md`](extractor/PLAN.md).
 - [ ] **Stage 3 — Context Optimization & Full-Corpus Scale-Out**
-      (OPENED 2026-08-24 when the M2.5 recheck closed Stage 2): first task
-      DONE (2026-08-25) — the S3.1 correlation analysis (record superseded on
-      two accounting points by S3.2, see below). Second task DONE (2026-08-25):
-      **the compaction/pacing design + deterministic gate re-check — record
-      S3.2, design + stage ledger living in [`STAGE3.md`](STAGE3.md).**
-      Corrected headline: solo average 5.13k tok/min (32% of the 16k ceiling),
-      ×3 = 96% — gate fails at zero margin; input is 62% opening resend, the
-      size tail is the `read_unit` rendering (max 30 kB corpus-wide), validator
-      feedbacks are negligible (≤ 0.5 kB). Design: continuation wire view +
-      positional payload (R1, S1 fallback) + 35 s inter-send + shared
-      12k tok/min bucket; gate re-check PASSes restated (×3 average 66%, peak
-      call 38% solo ≤ restated 45%, rolling-60 58% solo). Next: implementation
-      (S3.3, STAGE3.md §4), live confirmation run on inferno 1 (§5,
-      operator-run), then the 99-canto three-parallel expansion + corpus-wide
-      readout. The standing constraint holds: compaction changes session
-      semantics — design first, never mid-run.
+      (OPENED 2026-08-24 when the M2.5 recheck closed Stage 2): the S3.1
+      correlation analysis (2026-08-25; two accounting points corrected by
+      S3.2), the **compaction/pacing design + deterministic gate re-check
+      (record S3.2)**, and **the implementation (record S3.3, 2026-08-25)**
+      are all COMPLETE — design, gate verdicts, implementation map,
+      deviations, and the stage ledger live in [`STAGE3.md`](STAGE3.md).
+      Shipped: continuation wire view (`runner/compact.py` +
+      `continuation_system_prompt` at the design's 8,831 B), positional
+      `read_unit` serving (tier R1 with S1 fallback), adapter fingerprint
+      sync + 35 s min-send interval + shared fcntl `TokenBucket` (12k
+      tok/min / 6.5k tok defaults), `reconstruct` CLI flags
+      (`--no-compact`, `--payload-tier`, `--min-send-interval`,
+      `--token-bucket`/`--bucket-rate`/`--bucket-depth`) with the
+      configuration announced in the header; `llm_request` records gained
+      `uncompacted_bytes` + `paced_seconds`. Measured wire (S3.3): R1
+      11.3 MB corpus-wide (41% of the old wire), max unit 10.7 kB, tail
+      view ≈ 43% solo — inside every restated gate. Remaining acts: the
+      live inferno-1 confirmation run (§5, operator — the Handoff's next
+      action), then the 99-canto expansion as three canticle-parallel runs
+      behind the existing gates, and the corpus-wide readout. The standing
+      constraint holds: compaction changes session semantics — design
+      first, never mid-run.
 - Open design question (protocol layer): a dedicated `submit_candidate`
   termination tool — the practical half is resolved by the nudge policy
   ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
@@ -202,11 +220,11 @@ ceiling, not steady pressure).
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **833 passed** (547 corpus + 41 `test_harness_tools.py` +
-  76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
-  39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
-  17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-  31 `test_harness_reconstruct.py`).
+- Test suite: **867 passed** (547 corpus + 46 `test_harness_tools.py` +
+   76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
+   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
+   17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
+   32 `test_harness_reconstruct.py` + 28 `test_harness_compact.py`).
 
 ---
 
@@ -368,19 +386,21 @@ In contrast to the top-down methodology used in Phases 5–8 — where frontier 
 
 Opened when the M2.5 recheck closed Stage 2. Done so far: the S3.1 correlation
 analysis (2026-08-25; two accounting points corrected by S3.2 — see the
-Milestone Ledger note) and **the compaction/pacing design + deterministic
-gate re-check (2026-08-25, record S3.2)** — spec, gate verdicts,
-implementation map, confirmation protocol, and the stage ledger live in
+Milestone Ledger note), **the compaction/pacing design + deterministic gate
+re-check (2026-08-25, record S3.2)**, and **the implementation (2026-08-25,
+record S3.3)** — spec, gate verdicts, implementation map, measured
+deviations, confirmation protocol, and the stage ledger live in
 [`STAGE3.md`](STAGE3.md): corrected headline ×3 average = 96% of the 16k
 tok/min ceiling (zero margin, gate fails); design = continuation wire view +
 positional `read_unit` serving (sparse-dict fallback tier) + 35 s min
 inter-send + shared 12k tok/min token bucket; re-check PASSes restated
 (×3 average 66%, peak call 38% solo with the ~30% target restated to ≤ 45%
-on the measured wire floor). Remaining acts: implementation (S3.3), the live
-inferno-1 confirmation run (operator), then the 99-canto expansion as three
-canticle-parallel runs behind the existing gates, and the corpus-wide
-readout. Scope and constraints tracked in Current Status + the Handoff;
-no code has changed yet.
+on the measured wire floor); implementation shipped as all seven §4 items
+(measured wire: R1 41% of the old wire corpus-wide, tail view 43% solo —
+inside every restated gate; tests 833 → 867). Remaining acts: the live
+inferno-1 confirmation run (§5, operator), then the 99-canto expansion as
+three canticle-parallel runs behind the existing gates, and the corpus-wide
+readout. Scope and constraints tracked in Current Status + the Handoff.
 
 ### Beyond Layer 5 (design notes)
 

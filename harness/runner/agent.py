@@ -46,15 +46,25 @@ from harness.toolcall import (
     run_tool_loop,
 )
 
-from .prompts import WORKFLOWS, few_shot_messages, system_prompt, unit_task
+from .prompts import (
+    WORKFLOWS,
+    few_shot_messages,
+    system_prompt,
+    unit_task,
+)
 from .tools import GrammarToolkit, tool_specs
 
 __all__ = [
+    "BYTES_PER_TOKEN",
+    "DEFAULT_BUCKET_DEPTH_TOKENS",
+    "DEFAULT_BUCKET_RATE_TOKENS_PER_MIN",
     "DEFAULT_MODEL",
+    "OPENING_MESSAGE_COUNT",
     "SESSION_MAX_TURNS",
     "MAX_NUDGES",
     "NUDGE_MESSAGE",
     "WORKFLOWS",
+    "TokenBucket",
     "UnitResult",
     "llm7shi_generate",
     "run_unit",
@@ -69,6 +79,10 @@ SESSION_MAX_TURNS = 12
 
 # Live probing saw ~2% no-call turns; one reminder is enough, more risks loops.
 MAX_NUDGES = 1
+
+# The prompt-side prefix of every session transcript: system + few-shot demo
+# exchange + task. The compaction policy and the adapter both key off this.
+OPENING_MESSAGE_COUNT = 1 + len(few_shot_messages()) + 1
 
 VALIDATE_TOOL = "validate_candidate"
 
@@ -89,6 +103,105 @@ _LLM_REQUEST_CONTEXT: ContextVar[dict | None] = ContextVar(
 )
 _SESSION_SEQ = itertools.count(1)
 
+# Pacing conventions (STAGE3.md §2.C): the TPM ceiling is a property of the
+# model API key shared by every parallel stream, so the launch paces through
+# one bucket file. Token amounts use the 3.5 bytes/token wire convention the
+# Stage-3 measurements were made in.
+BYTES_PER_TOKEN = 3.5
+DEFAULT_BUCKET_RATE_TOKENS_PER_MIN = 12000.0  # 42 kB/min: sustained <= 75% of the 16k ceiling
+DEFAULT_BUCKET_DEPTH_TOKENS = 6500.0  # >= max single call (STAGE3.md §3)
+
+
+class TokenBucket:
+    """Cross-process pacing bucket over an fcntl-locked JSON file.
+
+    State is `{"t": <unix seconds>, "tokens": <float>}`: refill continuous at
+    `rate_per_min` tokens/min up to `depth`, debit before send, sleep until
+    funded. The lock releases on process death (single machine, wall clock);
+    a missing or corrupt file recreates at full depth (STAGE3.md §6). All
+    waits are injectable (`clock`/`sleeper`) so tests pace deterministically.
+    """
+
+    def __init__(
+        self,
+        path,
+        *,
+        rate_per_min: float = DEFAULT_BUCKET_RATE_TOKENS_PER_MIN,
+        depth: float = DEFAULT_BUCKET_DEPTH_TOKENS,
+        clock=time.time,
+        sleeper=time.sleep,
+    ) -> None:
+        import fcntl
+        import pathlib
+
+        if rate_per_min <= 0 or depth <= 0:
+            raise ValueError(
+                "bucket rate and depth must be positive: "
+                f"rate_per_min={rate_per_min!r}, depth={depth!r}"
+            )
+        self.path = pathlib.Path(path)
+        self.rate_per_min = float(rate_per_min)
+        self.depth = float(depth)
+        self.clock = clock
+        self.sleeper = sleeper
+        self._fcntl = fcntl
+
+    def _parse(self, raw: str) -> dict:
+        """Decode persisted state; missing/corrupt recreates at full depth."""
+        try:
+            state = json.loads(raw)
+            if (
+                not isinstance(state, dict)
+                or not isinstance(state.get("t"), (int, float))
+                or not isinstance(state.get("tokens"), (int, float))
+            ):
+                raise ValueError("malformed bucket state")
+            return {"t": float(state["t"]), "tokens": float(state["tokens"])}
+        except (ValueError, TypeError):
+            return {"t": self.clock(), "tokens": self.depth}
+
+    def acquire(self, amount: float) -> float:
+        """Debit `amount` tokens, sleeping until funded; returns seconds waited.
+
+        A debit larger than `depth` can never be funded (refill caps at
+        depth): it drains the bucket and proceeds without waiting instead of
+        deadlocking — a misconfigured depth then shows up as an unpaced
+        burst, the same residual class the 429 backstop already absorbs.
+        The launch parameters keep depth >= any single call by design.
+        """
+        waited = 0.0
+        amount = min(float(amount), self.depth)
+        while True:
+            deficit = 0.0
+            with open(self.path, "a+", encoding="utf-8") as handle:
+                self._fcntl.flock(handle.fileno(), self._fcntl.LOCK_EX)
+                try:
+                    handle.seek(0)
+                    state = self._parse(handle.read())
+                    now = self.clock()
+                    # Continuous refill since the last touch (any process).
+                    elapsed = max(0.0, now - state["t"])
+                    state["tokens"] = min(
+                        self.depth,
+                        state["tokens"] + elapsed * self.rate_per_min / 60.0,
+                    )
+                    state["t"] = now
+                    if state["tokens"] >= amount:
+                        state["tokens"] -= amount
+                        handle.seek(0)
+                        handle.truncate()
+                        handle.write(json.dumps(state, ensure_ascii=False) + "\n")
+                        handle.flush()
+                        return waited
+                    deficit = amount - state["tokens"]
+                finally:
+                    self._fcntl.flock(handle.fileno(), self._fcntl.LOCK_UN)
+            # Starving: sleep the deficit off (small epsilon avoids tight
+            # re-lock loops), then retry — another process may have consumed.
+            pause = deficit / (self.rate_per_min / 60.0) + 0.05
+            self.sleeper(pause)
+            waited += pause
+
 
 def llm7shi_generate(
     model: str = DEFAULT_MODEL,
@@ -96,6 +209,11 @@ def llm7shi_generate(
     quiet: bool = True,
     file=None,
     request_log=None,
+    history_policy=None,
+    min_send_interval: float = 0.0,
+    token_bucket: TokenBucket | None = None,
+    clock=time.monotonic,
+    sleeper=time.sleep,
 ):
     """Build a generate function over `llm7shi.Client` and its history management.
 
@@ -105,33 +223,57 @@ def llm7shi_generate(
     output are regenerated instead of silently ending a session (the predicate
     run's two empty-final sessions, 2026-08-23). Session boundaries are explicit:
     the session runner calls ``transport.reset()`` (forwarded to ``generate.
-    reset``), which regenerates the Client instance for the next session. A
-    length sync invariant stays as a guard for callers that never reset: the
-    loop always calls with the newest user message last, and `synced` counts
-    the transcript messages already mirrored into `client.history`; any
-    mismatch means a fresh (or first) session, so the Client is rebuilt — one
-    shared transport across a benchmark run therefore never leaks history
-    between cases either way. The stream sink defaults to stderr (§4 item 5);
-    a caller owning a Rich status line (`runner.statusline.HarnessStatusLine`)
-    passes its console stream so streamed output, retry countdowns, and the
-    live bar share one console.
+    reset``), which regenerates the Client instance for the next session.
+
+    **Wire view (STAGE3.md §2.A)**: ``history_policy``, when given, maps the
+    transcript to what is physically sent (call 1 verbatim; calls 2+ the
+    continuation view — see `runner.compact`). The Client sync invariant is a
+    **content fingerprint** over the view prefix: the adapter remembers exactly
+    which `(role, content)` pairs the Client mirrors, appends when the new view
+    merely extends them, and rebuilds the Client from the view (system prompt +
+    history re-append) whenever the prefix legitimately changes — compaction
+    rewrites older assistant turns into digests, so length alone can no longer
+    detect staleness. A repeated call at the same transcript position finds the
+    mirror *ahead* of the view and rebuilds, exactly like the old length sync.
+
+    **Pacing (STAGE3.md §2.C)**, both at the single send point and deliberately
+    surviving ``reset()`` (session boundaries are sends too):
+
+    - ``min_send_interval`` (seconds, 0 = off): sleep until the last send
+      *start* is at least this far past — breaks the fast-response/big-send
+      pairing that stacks two sends into one rolling minute;
+    - ``token_bucket`` (a `TokenBucket`, shared file across processes):
+      debit the send's input tokens (view bytes / `BYTES_PER_TOKEN`) before
+      sending, sleeping until funded.
+
+    Every deliberate wait prints one line to the adapter's stream and lands as
+    ``paced_seconds`` on the ``llm_request`` record, keeping it separable from
+    429 backoffs (``api_retry_seconds``). ``clock``/``sleeper`` are injectable
+    for deterministic tests.
 
     ``request_log`` (an open text sink, UTF-8 JSONL) makes every backend
     request measurable: one `llm_request` record is appended just before the
     call (timestamp, model, session/unit coordinates from the request
-    context, transcript position, same-turn attempt, context and
-    newest-message sizes in UTF-8 bytes) and one `llm_response` record after
-    it (duration, output bytes, empty flag). Join key across the pair:
-    ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs,
-    quality regeneration) stay invisible here by construction; they are
-    measured by the stream's `wait_retry` counters and correlated by
-    timestamp. The reconstruct CLI points this at its own streaming `--log`
-    sink, so the cost records ride the same file as the unit records
-    (canto-scoped, resume-compacted with them).
+    context, transcript position, same-turn attempt, physically-sent
+    `context_bytes`, full-transcript `uncompacted_bytes` as the savings
+    audit, newest-message size, paced seconds) and one `llm_response` record
+    after it (duration, output bytes, empty flag). Join key across the pair:
+    ``(session, messages, attempt)`` — `messages` keeps its transcript-position
+    meaning under compaction. Retries inside `Client` (429 backoffs, quality
+    regeneration) stay invisible here by construction; they are measured by
+    the stream's `wait_retry` counters and correlated by timestamp. The
+    reconstruct CLI points this at its own streaming `--log` sink, so the
+    cost records ride the same file as the unit records (canto-scoped,
+    resume-compacted with them).
     """
     from llm7shi import Client
 
-    state: dict = {"client": None, "synced": 0, "attempts": {}}
+    state: dict = {
+        "client": None,
+        "mirrored": [],  # (role, content) pairs the Client's history holds
+        "attempts": {},
+        "last_send_start": None,
+    }
 
     def _attempt(session, position: int) -> int:
         key = (session, position)
@@ -143,30 +285,78 @@ def llm7shi_generate(
             request_log.write(json.dumps(record, ensure_ascii=False) + "\n")
             request_log.flush()
 
-    def generate(messages: list[dict]) -> str:
-        if state["client"] is None or state["synced"] != len(messages) - 1:
-            # A fresh `Client` starts its own stream mid-console: without a
-            # separating blank line its first "🤔 Thinking..." line runs
-            # straight onto whatever the previous Client (or progress line)
-            # last printed, e.g. `</tool_call>🤔 Thinking...`.
-            print(file=sys.stderr if file is None else file)
-            state["client"] = Client(
-                model=model,
-                temperature=temperature,
-                show_params=not quiet,
-                file=sys.stderr if file is None else file,
-            )
-            state["synced"] = 0
-        client = state["client"]
-
-        start = state["synced"]
-        if start == 0 and messages and messages[0].get("role") == "system":
-            client.set_system_prompt(messages[0]["content"])
+    def _sync_client(view: list[dict]):
+        """Mirror the view prefix into the Client: append the delta when the
+        view merely extends what is mirrored, rebuild on any change."""
+        prefix = [
+            (str(m.get("role", "")), str(m.get("content", ""))) for m in view[:-1]
+        ]
+        mirrored = state["mirrored"]
+        extends = len(mirrored) <= len(prefix) and mirrored == prefix[: len(mirrored)]
+        if state["client"] is not None and extends:
+            for role, content in prefix[len(mirrored):]:
+                state["client"].history.append({"role": role, "content": content})
+            state["mirrored"] = prefix
+            return state["client"]
+        # A fresh `Client` starts its own stream mid-console: without a
+        # separating blank line its first "🤔 Thinking..." line runs
+        # straight onto whatever the previous Client (or progress line)
+        # last printed, e.g. `</tool_call>🤔 Thinking...`.
+        print(file=sys.stderr if file is None else file)
+        client = Client(
+            model=model,
+            temperature=temperature,
+            show_params=not quiet,
+            file=sys.stderr if file is None else file,
+        )
+        start = 0
+        if view and view[0].get("role") == "system":
+            client.set_system_prompt(view[0]["content"])
             start = 1
-        for message in messages[start : len(messages) - 1]:
+        for message in view[start : len(view) - 1]:
             client.history.append(
                 {"role": message["role"], "content": message["content"]}
             )
+        state["client"] = client
+        state["mirrored"] = prefix
+        return client
+
+    def generate(messages: list[dict]) -> str:
+        view = history_policy(messages) if history_policy is not None else messages
+        client = _sync_client(view)
+
+        context_bytes = sum(
+            len(str(m.get("content", "")).encode("utf-8")) for m in view
+        )
+        uncompacted_bytes = sum(
+            len(str(m.get("content", "")).encode("utf-8")) for m in messages
+        )
+
+        # Pacing first, so the logged timestamp marks the physical send.
+        paced_seconds = 0.0
+        if min_send_interval > 0 and state["last_send_start"] is not None:
+            due = state["last_send_start"] + min_send_interval
+            now = clock()
+            if now < due:
+                pause = due - now
+                print(
+                    f"[pace] send interval: waiting {pause:.1f}s",
+                    file=sys.stderr if file is None else file,
+                    flush=True,
+                )
+                sleeper(pause)
+                paced_seconds += pause
+        if token_bucket is not None:
+            waited = token_bucket.acquire(context_bytes / BYTES_PER_TOKEN)
+            if waited > 0:
+                print(
+                    f"[pace] token bucket: waited {waited:.1f}s",
+                    file=sys.stderr if file is None else file,
+                    flush=True,
+                )
+                paced_seconds += waited
+        if min_send_interval > 0:
+            state["last_send_start"] = clock()
 
         context = _LLM_REQUEST_CONTEXT.get() or {}
         session = context.get("session")
@@ -186,17 +376,16 @@ def llm7shi_generate(
                 },
                 "messages": position,
                 "attempt": attempt,
-                "context_bytes": sum(
-                    len(str(m.get("content", "")).encode("utf-8"))
-                    for m in messages
-                ),
+                "context_bytes": context_bytes,
+                "uncompacted_bytes": uncompacted_bytes,
                 "new_bytes": len(
-                    str(messages[-1].get("content", "")).encode("utf-8")
+                    str(view[-1].get("content", "")).encode("utf-8")
                 ),
+                "paced_seconds": round(paced_seconds, 3),
             }
         )
         began = time.monotonic()
-        response = client(messages[-1]["content"])
+        response = client(view[-1]["content"])
         text = response.text
         _log(
             {
@@ -217,16 +406,23 @@ def llm7shi_generate(
                 "empty": not str(text).strip(),
             }
         )
-        # Client appended the user prompt and its reply, so history mirrors
-        # transcript[0:N] once the loop records the reply; the next call must
-        # therefore arrive with N+1 messages (reply + newest user feedback).
-        state["synced"] = len(messages) + 1
+        # Client appended the newest message and its reply, so the mirror is
+        # the full view plus the reply — exactly the transcript's next prefix
+        # whenever the loop records the reply verbatim (no compaction) and a
+        # prefix change (compaction digests) otherwise, which the next call's
+        # fingerprint check catches and rebuilds on.
+        state["mirrored"] = [
+            (str(m.get("role", "")), str(m.get("content", ""))) for m in view
+        ] + [("assistant", str(text))]
         return text
 
     def reset() -> None:
-        """Session boundary: the next call regenerates the Client instance."""
+        """Session boundary: the next call regenerates the Client instance.
+
+        Pacing state (last send start, the shared bucket) deliberately
+        survives — session boundaries are sends too (STAGE3.md §2.C)."""
         state["client"] = None
-        state["synced"] = 0
+        state["mirrored"] = []
         state["attempts"] = {}
 
     generate.reset = reset

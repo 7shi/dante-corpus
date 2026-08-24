@@ -5,8 +5,11 @@ file), the stage's milestone ledger as records accrue, and eventually the
 archived stage record at close. [`PLAN.md`](PLAN.md) keeps status and the
 handoff; numbers live here, never log filenames.
 
-**Status**: design COMPLETE (2026-08-25, deterministic log work + corpus
-scans; no code changed yet). Implementation is the next milestone (S3.3).
+**Status**: design COMPLETE (2026-08-25, record S3.2). **Implementation
+COMPLETE (2026-08-25, record S3.3 — this file's §4 map, all seven items
+shipped; measured deviations from the §2/§3 counterfactuals documented in the
+ledger's S3.3 record).** Next: the §5 confirmation run (operator), then the
+99-canto launch.
 
 ---
 
@@ -309,3 +312,51 @@ wire view, positional payload R1 with S1 fallback, 35 s interval + shared
 (38–45%), G3 PASS. No code changed; tests untouched at 833 passed. Next:
 S3.3 implementation per §4, then the §5 confirmation run (operator), then the
 launch.
+
+**Record S3.3 — compaction/pacing implementation (milestone per §4): COMPLETE
+(2026-08-25, assistant-run, deterministic; tests 833 → 867 passed, no model
+touched).** All seven §4 items shipped: `runner/tools.py` serves `read_unit`
+in tier R1 (positional rows + 373 B inline legend) with tier S1 (sparse named
+dicts) behind `GrammarToolkit(payload_tier=...)`; `runner/prompts.py` gains
+`continuation_system_prompt` (measured **8,831 B — exactly the §2.A design
+figure**); new `runner/compact.py` holds the pure history policy
+(`compact_view` + `digest_message` + `history_policy`); `runner/agent.py`'s
+`llm7shi_generate` takes `history_policy` / `min_send_interval` /
+`token_bucket` with the content-fingerprint Client sync (rebuild on
+view-prefix change; append-only prefixes still reuse the Client),
+`paced_seconds` + `uncompacted_bytes` on every `llm_request` (join key
+`messages` keeps transcript-position meaning), one stderr line per pacing
+wait, pacing state surviving `reset()`, and a `TokenBucket`
+(fcntl-locked JSON `{t, tokens}`, continuous refill, over-depth debits
+drain-and-proceed instead of deadlocking); `agent_fallback` passes everything
+through; `reconstruct` gained `--no-compact`, `--payload-tier`,
+`--min-send-interval` (default 35), `--token-bucket` + `--bucket-rate` /
+`--bucket-depth` (defaults 12k tok/min, 6.5k tok) and announces the
+configuration on a header line; 34 new tests (28 in
+`tests/test_harness_compact.py` + 5 tier tests in the tools suite + 1 CLI
+configuration test in the reconstruct suite), including an end-to-end
+compacted session over the real loop and corpus.
+
+- **Three deviations from the §2/§3 counterfactuals, all measured and gate-
+  preserving.** (1) The R1 morphology row keeps a 9th element for the Layer-2
+  `note` (26% of corpus rows carry one — 'reflexive', 'clitic', 'apocope'…);
+  the design's 8-field spec would have silently dropped live annotation the
+  Stage-1/2 wire always served, a capability change, not packing. (2)
+  `format_tool_result` now renders success payloads with compact JSON
+  separators — the design's §2.B sizes were measured that way, so this aligns
+  the physical wire with the measurement basis (validator feedbacks shrink
+  ~12% for free; parse tests are separator-agnostic). (3) Both tiers flatten
+  nested NP children into sibling rows (positional rows cannot nest; content
+  coverage is identical and test-pinned). Measured wire (envelope, 3,477
+  units): old 27.4 MB → **R1 11.3 MB (41%), p50 2.7 / p90 4.9 / max
+  10.7 kB**; S1 23.9 MB, p50 5.5 / max 23.5 kB. The design counterfactuals
+  (9.6 MB / 2.3 / 9.8) were computed pre-envelope and note-free; the delta is
+  the envelope overhead + the note column. **Corpus-wide tail check on the
+  measured wire: max view ≈ 8.8 + 0.4 + 10.7 + 3.8 + 0.5 ≈ 24.2 kB ≈ 6.9k tok
+  ≈ 43% solo — inside the restated ≤ 45% bound** (G2), and the average shift
+  is ~+1 pt on G1's 66% — margin intact.
+- **Confirmation-run inputs (§5) are all in place**: the tier decision runs
+  `--payload-tier S1` if R1 breaks the F1 band; `--no-compact` reverts the
+  whole package; `context_bytes ≪ uncompacted_bytes` is directly readable per
+  request record. Residual unchanged from §2.C: internal Client retries
+  bypass outer pacing (rare, counted by `wait_retry`).

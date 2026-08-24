@@ -60,6 +60,7 @@ dante-corpus/
 │   │   ├── tools.py               # Dedicated Grammar Tool API (Layer 5 masked structurally)
 │   │   ├── agent.py               # Per-unit session runner over run_tool_loop
 │   │   ├── prompts.py             # 5-step CoT grammatical reasoning protocol
+│   │   ├── compact.py             # Continuation wire view: pure history policy (Stage 3)
 │   │   ├── benchmark.py           # Gold comparison & metric suite
 │   │   └── statusline.py          # Rich live status bar for long operator-run sessions
 │   │
@@ -81,6 +82,7 @@ dante-corpus/
     ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
     ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
     ├── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
+    ├── test_harness_compact.py    # Stage 3 tests (wire view, fingerprint sync, pacing)
     ├── test_harness_syntax_miner.py  # Stage 2 miner tests (clustering, rules, coverage)
     ├── test_harness_lexicon_builder.py  # Stage 2 lexicon tests (frames, gating, coverage)
     ├── test_harness_hybrid_engine.py   # Stage 2 engine tests (derivation, routing, fallback)

@@ -535,6 +535,62 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
     assert any(r["record"] == "canto_complete" for r in records)
 
 
+def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeypatch, capsys):
+    """The Stage-3 flags (STAGE3.md §4 item 6): compaction default ON, pacing
+    defaults (35 s interval, bucket off), a header line announcing the live
+    configuration, and full pass-through into agent_fallback."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    _write_log(run_log, [_case_record()])
+    captured = {}
+
+    def spy_fallback(**kwargs):
+        captured.update(kwargs)
+        return _gold_fallback()
+
+    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+    ]
+    assert rc.main(argv) == 0
+    assert captured["compact"] is True
+    assert captured["payload_tier"] == "R1"
+    assert captured["min_send_interval"] == 35.0
+    assert captured["token_bucket"] is None
+    out = capsys.readouterr().out
+    assert "compaction ON (continuation wire view)" in out
+    assert "payload tier R1" in out
+    assert "min-send-interval 35s" in out
+    assert "token bucket off" in out
+
+    captured.clear()
+    bucket = tmp_path / "tokbucket.state"
+    argv += [
+        "--no-compact",
+        "--payload-tier", "S1",
+        "--min-send-interval", "0",
+        "--token-bucket", str(bucket),
+        "--bucket-rate", "6000",
+        "--bucket-depth", "3000",
+    ]
+    assert rc.main(argv) == 0
+    assert captured["compact"] is False
+    assert captured["payload_tier"] == "S1"
+    assert captured["min_send_interval"] == 0.0
+    bucket_obj = captured["token_bucket"]
+    assert bucket_obj is not None
+    assert bucket_obj.path == bucket
+    assert bucket_obj.rate_per_min == 6000.0
+    assert bucket_obj.depth == 3000.0
+    out = capsys.readouterr().out
+    assert "compaction OFF (--no-compact)" in out
+    assert "payload tier S1" in out
+    assert "min-send-interval 0s" in out
+    assert "rate 6000 tok/min, depth 3000 tok" in out
+
+
 def test_request_records_ride_resume_semantics(tmp_path):
     """llm_request/llm_response records are canto-scoped log citizens: never
     replayed into aggregates (prepare_resume skips them), kept by compaction

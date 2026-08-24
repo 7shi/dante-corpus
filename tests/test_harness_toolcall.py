@@ -353,7 +353,7 @@ def test_loop_converges_through_scripted_multi_turn_session(toolkit):
     assert '<tool_result tool="read_unit" ok="true">' in feedback
     validate_feedback = result.messages[4]["content"]
     assert '<tool_result tool="validate_candidate" ok="true">' in validate_feedback
-    assert '"valid": true' in validate_feedback
+    assert '"valid":true' in validate_feedback
 
 
 def test_loop_feeds_parse_errors_back_for_self_correction(toolkit):

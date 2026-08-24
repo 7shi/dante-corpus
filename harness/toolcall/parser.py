@@ -218,7 +218,15 @@ def format_tool_result(outcome: dict) -> str:
     ok = bool(outcome.get("ok"))
     tool = str(outcome.get("tool", ""))
     if ok:
-        payload = json.dumps(outcome.get("result"), ensure_ascii=False, sort_keys=True)
+        # Compact separators: these blocks are the session's size tail
+        # (read_unit payloads), and the whitespace buys nothing the model
+        # reads (STAGE3.md §2.B wire measurement basis).
+        payload = json.dumps(
+            outcome.get("result"),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
     else:
         payload = json.dumps({"error": str(outcome.get("error", ""))}, ensure_ascii=False)
     return (

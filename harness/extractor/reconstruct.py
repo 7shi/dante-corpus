@@ -951,6 +951,44 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
+        "--no-compact",
+        action="store_true",
+        help="disable the continuation wire view: send full transcripts "
+        "(STAGE3.md §2.A reverts with this one flag)",
+    )
+    parser.add_argument(
+        "--payload-tier",
+        choices=("R1", "S1"),
+        default="R1",
+        help="read_unit payload rendering: positional rows + legend (R1, "
+        "default) or sparse named dicts (S1 fallback tier)",
+    )
+    parser.add_argument(
+        "--min-send-interval",
+        type=float,
+        default=35.0,
+        help="minimum seconds between this stream's backend sends (0 = off; "
+        "breaks the fast-response/big-send pairing, STAGE3.md §2.C)",
+    )
+    parser.add_argument(
+        "--token-bucket",
+        type=Path,
+        help="shared pacing bucket file (fcntl-locked JSON shared by all "
+        "parallel streams; off by default)",
+    )
+    parser.add_argument(
+        "--bucket-rate",
+        type=float,
+        default=None,
+        help="bucket refill rate in tokens/min (default: 12000)",
+    )
+    parser.add_argument(
+        "--bucket-depth",
+        type=float,
+        default=None,
+        help="bucket capacity in tokens (default: 6500)",
+    )
+    parser.add_argument(
         "--log",
         type=Path,
         help="streaming JSONL log: unit/gold/canto_complete records, summary "
@@ -1025,6 +1063,30 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     )
     print(header)
 
+    # Stage-3 configuration line (STAGE3.md §4 item 6): compaction + pacing
+    # are live-run facts the operator must see announced before the hours run.
+    bucket_note = "off"
+    if args.token_bucket is not None:
+        rate = (
+            DEFAULT_BUCKET_RATE_TOKENS_PER_MIN
+            if args.bucket_rate is None
+            else args.bucket_rate
+        )
+        depth = (
+            DEFAULT_BUCKET_DEPTH_TOKENS
+            if args.bucket_depth is None
+            else args.bucket_depth
+        )
+        bucket_note = (
+            f"{args.token_bucket} (rate {rate:g} tok/min, depth {depth:g} tok)"
+        )
+    print(
+        f"reconstruct: compaction "
+        f"{'OFF (--no-compact)' if args.no_compact else 'ON (continuation wire view)'}, "
+        f"payload tier {args.payload_tier}; pacing: min-send-interval "
+        f"{args.min_send_interval:g}s, token bucket {bucket_note}"
+    )
+
     # One streaming log carries everything: unit/gold/canto_complete/summary
     # records plus the live fallback's llm_request/llm_response records (the
     # canto-scoped cost trail; resume compaction keeps them for completed
@@ -1032,7 +1094,34 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # rewrite swaps the file, so an earlier handle would append into limbo.
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
     if fallback is None:
-        fallback_kwargs = {"model": args.model}
+        bucket = None
+        if args.token_bucket is not None:
+            from harness.runner.agent import (
+                DEFAULT_BUCKET_DEPTH_TOKENS,
+                DEFAULT_BUCKET_RATE_TOKENS_PER_MIN,
+                TokenBucket,
+            )
+
+            bucket = TokenBucket(
+                args.token_bucket,
+                rate_per_min=(
+                    DEFAULT_BUCKET_RATE_TOKENS_PER_MIN
+                    if args.bucket_rate is None
+                    else args.bucket_rate
+                ),
+                depth=(
+                    DEFAULT_BUCKET_DEPTH_TOKENS
+                    if args.bucket_depth is None
+                    else args.bucket_depth
+                ),
+            )
+        fallback_kwargs = {
+            "model": args.model,
+            "compact": not args.no_compact,
+            "payload_tier": args.payload_tier,
+            "min_send_interval": args.min_send_interval,
+            "token_bucket": bucket,
+        }
         if args.max_turns is not None:
             fallback_kwargs["max_turns"] = args.max_turns
         fallback = agent_fallback(
