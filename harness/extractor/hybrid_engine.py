@@ -463,12 +463,17 @@ def agent_fallback(
     workflow: str = "unit",
     max_turns: int | None = None,
     verbose: bool = False,
+    file=None,
 ) -> AgentFallback:
     """Build the live Tier-2 callable over `runner.agent.run_unit`.
 
     Everything model-facing imports lazily so importing this module never
     touches a network. One transport/toolkit pair serves all units (the
     benchmark pattern); `run_unit` resets the transport per session.
+    `file`, when given (e.g. a status line's console stream per
+    ARCHITECTURE.md §4), becomes llm7shi's streaming sink so streamed model
+    output and retry countdowns share the caller's display instead of
+    clobbering it; the default stays plain stderr.
     """
     from harness.runner.agent import DEFAULT_MODEL, SESSION_MAX_TURNS
     from harness.runner.agent import llm7shi_generate, run_unit as agent_run_unit
@@ -482,7 +487,7 @@ def agent_fallback(
     def _run(*, canticle: str, canto: int, line_start: int, line_end: int):
         return agent_run_unit(
             transport=PromptXmlTransport(
-                generate=llm7shi_generate(model, quiet=not verbose)
+                generate=llm7shi_generate(model, quiet=not verbose, file=file)
             ),
             toolkit=GrammarToolkit(),
             canticle=canticle,

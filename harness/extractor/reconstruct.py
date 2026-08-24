@@ -44,6 +44,12 @@ Observability follows ARCHITECTURE.md §4-§6 scaled to a batch job: stderr
 progress per phase and per canto, a streaming JSONL `--log` (`unit` record per
 parse unit, optional `gold` records under `--verify-gold`, one `canto_complete`
 record per finished canto, `summary` record last — the completion marker).
+When Rich is available a `runner.statusline.HarnessStatusLine` bar counts the
+same cantos as the separators, every human-facing line routes through its
+console stream, and the live fallback's llm7shi sink shares that console so
+streamed model output coexists with the bar; auto-retried API backoffs are
+counted per canto through the stream's `wait_retry` hook (`api_retries` /
+`api_retry_seconds`) and rolled into the summary.
 Unlike the deterministic miners this CLI **resumes** rather than truncates
 (live fallback makes attempts hours long and worth keeping): completed cantos
 reload from an existing log and are skipped, and the log is compacted atomically
@@ -85,6 +91,8 @@ from harness.extractor.hybrid_engine import (
     load_rules_json,
     mine_artifacts,
 )
+from harness.runner.statusline import HarnessStatusLine
+from harness.toolcall.loop import progress_separator
 
 __all__ = [
     "SAMPLE_VIOLATIONS",
@@ -302,14 +310,18 @@ def reconstruct_canto(
     fallback: AgentFallback | None = None,
     policy: RoutePolicy | None = None,
     progress_stream: TextIO | None = sys.stderr,
+    status_line=None,
 ) -> CantoReconstruction:
     """Drive the hybrid engine over every parse unit of one canto, gated.
 
     Execution face: loads frozen L1-L4 only; gold is never touched. Each unit
     runs `engine.run_unit` (the live `fallback` callable when given), its
     accepted rows are anchored on Layer 1 (gate 1), and the unit is verified
-    through `validate_unit` with all layers attached (gate 2).
+    through `validate_unit` with all layers attached (gate 2). `status_line`,
+    when given (a `runner.statusline.HarnessStatusLine`), routes the per-unit
+    progress lines through its console stream so they coexist with the bar.
     """
+    stream = status_line.stream if status_line is not None else progress_stream
     layers = CantoLayers.load(canticle, canto)
     recon = CantoReconstruction(
         canticle=canticle, canto=canto, nos=list(layers.nos)
@@ -317,10 +329,10 @@ def reconstruct_canto(
     text_by_no = layers.text_by_no
     units = layers.units()
     for pos, group in enumerate(units, start=1):
-        if progress_stream is not None and pos % 5 == 0:
+        if stream is not None and pos % 5 == 0:
             print(
                 f"[reconstruct] {canticle} {canto} units {pos}/{len(units)}",
-                file=progress_stream,
+                file=stream,
                 flush=True,
             )
         line_start, line_end = group[0], group[-1]
@@ -587,6 +599,8 @@ class ReconstructReport:
     soft_violations: int = 0
     violation_kinds: Counter = field(default_factory=Counter)
     fallback_seconds: list[float] = field(default_factory=list)
+    api_retries: list[int] = field(default_factory=list)
+    api_retry_seconds: list[float] = field(default_factory=list)
     cantos: int = 0
     cantos_passed: int = 0
     writes: list[dict] = field(default_factory=list)
@@ -617,6 +631,14 @@ class ReconstructReport:
         commit_rec = record.get("commit")
         if commit_rec is not None:
             self.writes.append(commit_rec)
+        # §4 make-the-invisible-measurable: per-canto api-retry deltas fold in
+        # only when the run tracked them (a status line owned the display).
+        retries = record.get("api_retries")
+        if retries is not None:
+            self.api_retries.append(int(retries))
+            self.api_retry_seconds.append(
+                float(record.get("api_retry_seconds") or 0.0)
+            )
 
     def metrics(self) -> dict:
         metrics = {
@@ -636,6 +658,12 @@ class ReconstructReport:
             "fallback_seconds_max": round(max(self.fallback_seconds), 1)
             if self.fallback_seconds
             else None,
+            "api_retries": sum(self.api_retries) if self.api_retries else None,
+            "api_retry_seconds": (
+                round(sum(self.api_retry_seconds), 1)
+                if self.api_retry_seconds
+                else None
+            ),
         }
         if self.gold is not None:
             metrics["gold"] = self.gold.metrics()
@@ -676,6 +704,11 @@ class ReconstructReport:
             lines.append(
                 f"fallback sessions: {len(self.fallback_seconds)} in {total:.0f}s "
                 f"(max {max(self.fallback_seconds):.1f}s)"
+            )
+        if self.api_retries:
+            lines.append(
+                f"api retries: {sum(self.api_retries)} "
+                f"(~{sum(self.api_retry_seconds):.0f}s backoff)"
             )
         if self.gold is not None:
             lines.append(self.gold.summary())
@@ -789,6 +822,31 @@ def _jsonl_record_is_complete(line: str, done: set[tuple[str, int]]) -> bool:
 # --- CLI ------------------------------------------------------------------------------------
 
 
+def _retry_snapshot(status_line) -> tuple[int, float] | None:
+    """`(count, seconds)` of api-retry backoffs seen so far, or None if untracked.
+
+    Same contract as `runner.benchmark`'s helpers: llm7shi auto-retries 429
+    backoffs silently; the status line's stream counts them via `wait_retry`.
+    """
+    stream = getattr(status_line, "stream", None)
+    count = getattr(stream, "api_retries", None)
+    if count is None:
+        return None
+    return count, getattr(stream, "api_retry_seconds", 0.0)
+
+
+def _retry_delta(
+    snapshot: tuple[int, float] | None, status_line
+) -> tuple[int, float] | None:
+    """Backoff `(count, seconds)` accumulated since `snapshot`; None if untracked."""
+    if snapshot is None:
+        return None
+    now = _retry_snapshot(status_line)
+    if now is None:
+        return 0, 0.0
+    return max(now[0] - snapshot[0], 0), max(now[1] - snapshot[1], 0.0)
+
+
 def _select_cantos(args) -> list[tuple[str, int]]:
     canticles = args.canticles or list(DEFAULT_EVAL_CANTICLES)
     if args.canto is not None:
@@ -865,6 +923,12 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     if (args.canto is None) == (not args.all):
         parser.error("select exactly one of --canto N or --all")
 
+    # §4 optional Rich bar: created up front so every human-facing line and
+    # the live fallback's model stream can share its console; without the
+    # extra this stays None and plain stderr lines keep the run watchable.
+    status_line = HarnessStatusLine() if HarnessStatusLine is not None else None
+    ui_stream = status_line.stream if status_line is not None else None
+
     if args.rules_in and args.lexicon_in:
         rules = load_rules_json(args.rules_in)
         entries = load_lexicon_json(args.lexicon_in)
@@ -873,7 +937,11 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             f"from artifacts"
         )
     else:
-        print("[reconstruct] regenerating artifacts from run logs...", file=sys.stderr, flush=True)
+        print(
+            "[reconstruct] regenerating artifacts from run logs...",
+            file=ui_stream if ui_stream is not None else sys.stderr,
+            flush=True,
+        )
         kwargs = {}
         if args.min_support is not None:
             kwargs["min_support"] = args.min_support
@@ -885,12 +953,18 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         fallback_kwargs = {"model": args.model}
         if args.max_turns is not None:
             fallback_kwargs["max_turns"] = args.max_turns
-        fallback = agent_fallback(verbose=args.verbose, **fallback_kwargs)
+        fallback = agent_fallback(
+            verbose=args.verbose,
+            file=status_line.stream if status_line is not None else None,
+            **fallback_kwargs,
+        )
 
     wanted = _select_cantos(args)
+    total = len(wanted)
     report = ReconstructReport()
 
     prior_records: list[dict] = []
+    resume_offset = 0
     if args.log and os.path.exists(args.log):
         prior_records = load_log(args.log)
         replay, wanted = prepare_resume(prior_records, wanted)
@@ -906,8 +980,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         # records of incomplete cantos dropped (their cantos re-run below).
         compact_log(args.log, completed_cantos(prior_records))
         if replay:
+            resume_offset = total - len(wanted)
             print(
-                f"resume: {len(completed_cantos(prior_records))} completed canto(s) "
+                f"resume: {resume_offset} completed canto(s) "
                 f"loaded from {args.log}; continuing with {len(wanted)} left"
             )
 
@@ -920,42 +995,57 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     print(header)
 
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
+    bar = (
+        status_line.progress(total, start=resume_offset, label="reconstruct")
+        if status_line is not None
+        else contextlib.nullcontext()
+    )
     try:
-        for index, (canticle, canto) in enumerate(wanted, start=1):
-            print(
-                f"[reconstruct] === canto [{index}/{len(wanted)}] "
-                f"{canticle} {canto} ===",
-                file=sys.stderr,
-                flush=True,
-            )
-            recon = reconstruct_canto(engine, canticle, canto, fallback=fallback)
-            for outcome in recon.outcomes:
-                record = outcome.to_dict()
-                report.add_unit(record)
-                if sink is not None:
-                    sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-            if args.verify_gold:
-                gold_report, gold_records = verify_against_gold(recon)
-                for record in gold_records:
-                    report.add_gold(record)
+        # The bar counts the same units as the separators (§4): whole-run
+        # canto positions `[offset+i/offset+N]`, updated as each canto starts.
+        with bar as prog:
+            for index, (canticle, canto) in enumerate(wanted, start=resume_offset + 1):
+                progress_separator(
+                    f"{canticle} {canto}", index, total, stream=ui_stream
+                )
+                if prog is not None:
+                    prog.update(index)
+                retry_before = _retry_snapshot(status_line)
+                recon = reconstruct_canto(
+                    engine, canticle, canto,
+                    fallback=fallback, status_line=status_line,
+                )
+                retries = _retry_delta(retry_before, status_line)
+                for outcome in recon.outcomes:
+                    record = outcome.to_dict()
+                    report.add_unit(record)
                     if sink is not None:
                         sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-            complete: dict = {
-                "record": "canto_complete",
-                "canticle": canticle,
-                "canto": canto,
-                "units": len(recon.outcomes),
-                "passed": recon.passed,
-            }
-            if args.write:
-                commit_record = commit(recon)
-                complete["commit"] = commit_record
+                if args.verify_gold:
+                    gold_report, gold_records = verify_against_gold(recon)
+                    for record in gold_records:
+                        report.add_gold(record)
+                        if sink is not None:
+                            sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                complete: dict = {
+                    "record": "canto_complete",
+                    "canticle": canticle,
+                    "canto": canto,
+                    "units": len(recon.outcomes),
+                    "passed": recon.passed,
+                }
+                if retries is not None:
+                    complete["api_retries"] = retries[0]
+                    complete["api_retry_seconds"] = round(retries[1], 1)
+                if args.write:
+                    commit_record = commit(recon)
+                    complete["commit"] = commit_record
+                    if sink is not None:
+                        sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
+                report.add_canto_complete(complete)
                 if sink is not None:
-                    sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
-            report.add_canto_complete(complete)
-            if sink is not None:
-                sink.write(json.dumps(complete, ensure_ascii=False) + "\n")
-                sink.flush()
+                    sink.write(json.dumps(complete, ensure_ascii=False) + "\n")
+                    sink.flush()
         if sink is not None:
             summary = {
                 "record": "summary",

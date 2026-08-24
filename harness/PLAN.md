@@ -23,7 +23,9 @@ then expand**; both steps OPERATOR-RUN (live agent fallback, hours long):
    comparison. What to watch: (a) gate pass rate across fast- vs agent-routed
    units, (b) `--verify-gold` P/R/F1 vs the benchmark's micro F1 ≈ 0.70–0.71
    (the pipeline must reproduce the Stage-1 numbers it inherits), (c) api-retry
-   backoffs over a long single-canto session stream.
+   backoffs over a long single-canto session stream — now measured directly:
+   `api_retries` / `api_retry_seconds` ride every `canto_complete` record and
+   roll into the summary.
 
 2. **Expand to the remaining 99 cantos** once the pilot is sane:
    `uv run python -m harness.extractor.reconstruct --all --verify-gold ...`
@@ -76,7 +78,11 @@ equivalence would require.
    `tests/test_harness_reconstruct.py`) plus all plan updates — readout in
    the Ledger entry below. The deterministic dry probe wrote nothing: 0/100
    cantos pass the gates today. Milestone 2.5 is the first LIVE full-corpus
-   run and stays operator-run. Tree starts clean. Tests at 822 passed.
+   run and stays operator-run. `reconstruct.py` additionally ships the full
+   §4-item-5 display stack now (HarnessStatusLine bar over cantos, shared
+   console for streamed model output, per-canto api-retry counters) — this is
+   the wiring pattern every future live CLI copies (see §4 item 5). Tree
+   starts clean. Tests at 827 passed.
 
 ---
 
@@ -153,11 +159,11 @@ equivalence would require.
    absolute quota wait, consistent with shorter unit sessions crossing the
    per-minute ceiling less often. Compute-only totals nearly equal: unit
    ≈18.1 ks vs predicate ≈19.0 ks (+5%).
-- Test suite: **822 passed** (547 corpus + 41 `test_harness_tools.py` +
+- Test suite: **827 passed** (547 corpus + 41 `test_harness_tools.py` +
   76 `test_harness_toolcall.py` + 29 `test_harness_agent.py` +
   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
   17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-  23 `test_harness_reconstruct.py`).
+  28 `test_harness_reconstruct.py`).
 
 ---
 
@@ -597,7 +603,24 @@ three criteria.
   the primary path, and until engine quality rises the pipeline's honest
   output is protection — gold stays untouched. Milestone 2.5 will measure the
   live-agent variant operator-side.
-- Tests: `tests/test_harness_reconstruct.py` — 23 deterministic tests: row
+- **Live-run observability wired (2026-08-24 addendum).** The CLI now carries
+  the full §4-item-5 display stack, and this wiring is the standing template
+  for every future live entry point: an optional `HarnessStatusLine` Rich bar
+  created up front whose numerator counts exactly the canto separators
+  (whole-run positions `[offset+i/offset+N]`, resume-aware via
+  `progress(total, start=resume_offset)`); *every* human-facing line —
+  separators (`toolcall.progress_separator`), per-unit progress inside a
+  canto, the artifact-mining notice — routed through its markup-disabled
+  stderr console so nothing clobbers the bar; the live fallback's llm7shi
+  sink pointed at that same console via the new `agent_fallback(..., file=)`
+  parameter, so streamed model output and retry countdowns share one display;
+  and auto-retried API backoffs snapshotted/delta'd per unit of work through
+  the stream's `wait_retry` hook (`_retry_snapshot` / `_retry_delta`,
+  mirroring `runner/benchmark.py`) into `api_retries` / `api_retry_seconds`
+  on each `canto_complete` record, aggregated in summary metrics. Untracked
+  runs — deterministic injected fallbacks, no rich extra — stay display-free
+  and carry none of these keys.
+- Tests: `tests/test_harness_reconstruct.py` — 28 deterministic tests: row
   building + token assertions (anchors, out-of-stream/bounds positions, ∅
   subjects), unit partition invariants, gold-validates-clean through the
   pipeline wiring, hard/soft split on crafted breakage, end-to-end pass with
@@ -605,9 +628,12 @@ three criteria.
   blocking, refusal to commit blocked cantos, hash-verified write + rollback
   on induced digest mismatch, `render_tsv`↔`write_skel` byte parity, exact /
   degraded gold comparison, report faces incl. record replay, log resume +
-  compaction, CLI end-to-end (summary-last, no-write default, refused write
-  leaves seed bytes intact), capped real-artifact integration. Suite total
-  **822 passed**.
+   compaction, CLI end-to-end (summary-last, no-write default, refused write
+   leaves seed bytes intact), status-line display routing (fake-bar canto
+   tracking, resume offset spanning the bar, stderr kept clean), api-retry
+   accounting (helpers, report folding, per-canto CLI deltas), capped
+   real-artifact integration. Suite total
+   **827 passed**.
 
 ### Carry-over issues from live probing (record; details in [`TOOLCALL.md`](TOOLCALL.md) T4):
 1. ~~**Few-shot echo contamination**~~ — RESOLVED in 1.2: `runner/prompts.py` ships its
@@ -827,3 +853,17 @@ single source, not duplicated here. The boundaries it encodes:
       keep the human-facing progress display on stderr by convention (JSONL
       logs go to their own `--log` files, never to redirected console output),
       and any future transport must preserve it.
+    - Concrete wiring pattern to copy going forward (as shipped in
+      `reconstruct.py`, 2026-08-24): create the optional `HarnessStatusLine`
+      up front; give the bar the same numerator basis as the `[index/total]`
+      separators (whole-run positions, resume-aware via
+      `progress(total, start=offset)`); route *every* human-facing line through
+      its console stream (markup disabled); hand that stream to the
+      model-access layer (`llm7shi_generate(..., file=...)` via
+      `agent_fallback(..., file=...)`) so streamed model output shares the
+      display instead of clobbering the bar; and snapshot/delta the stream's
+      `wait_retry` counters per unit of work (`_retry_snapshot` /
+      `_retry_delta`, as in `runner/benchmark.py` and `reconstruct.py`) so
+      silent 429 backoffs land in records and summaries instead of hiding
+      inside `turn_seconds`. Deterministic runs (injected fallbacks, tests)
+      stay display-silent and untracked.

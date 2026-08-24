@@ -11,6 +11,7 @@ capped slice of the real M1.4 logs when present on disk and skips otherwise.
 """
 
 import hashlib
+import io
 import json
 from pathlib import Path
 
@@ -452,7 +453,10 @@ def _case_record():
     }
 
 
-def test_cli_main_streams_log_with_summary_last(tmp_path):
+def test_cli_main_streams_log_with_summary_last(tmp_path, monkeypatch):
+    # No Rich bar in deterministic tests (the dedicated status-line tests
+    # cover the display wiring over a fake).
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
     _write_log(run_log, [_case_record()])
@@ -487,6 +491,7 @@ def test_cli_main_streams_log_with_summary_last(tmp_path):
 def test_cli_write_refused_when_gates_block(tmp_path, monkeypatch):
     seed = b"protected gold stays\n"
     target = _patch_skel_target(monkeypatch, tmp_path, seed=seed)
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
     _write_log(run_log, [_case_record()])
@@ -521,7 +526,8 @@ def test_cli_write_refused_when_gates_block(tmp_path, monkeypatch):
     assert target.read_bytes() == seed  # protected artifact untouched
 
 
-def test_cli_resume_skips_completed_cantos(tmp_path):
+def test_cli_resume_skips_completed_cantos(tmp_path, monkeypatch):
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
     _write_log(run_log, [_case_record()])
@@ -549,6 +555,197 @@ def test_cli_resume_skips_completed_cantos(tmp_path):
     summaries = [r for r in lines if r["record"] == "summary"]
     assert len(summaries) == 1  # stale summary stripped atomically on resume
     assert lines[-1]["units"] == 34  # replayed records still aggregate
+
+
+# --- live-run observability: status bar + api-retry counters (§4) --------------------------------
+
+
+class _RecordingBar:
+    def __init__(self, owner):
+        self._owner = owner
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def update(self, completed):
+        self._owner.updates.append(completed)
+
+
+class _NullBar:
+    def __enter__(self):
+        return None
+
+    def __exit__(self, *exc):
+        return False
+
+
+class _FakeStatusLine:
+    """Bar + console-stream double over `runner.statusline.HarnessStatusLine`."""
+
+    def __init__(self):
+        self.stream = io.StringIO()
+        self.progress_calls = []
+        self.updates = []
+
+    def progress(self, total, start=0, label=None):
+        self.progress_calls.append((total, start, label))
+        return _RecordingBar(self)
+
+
+def _two_canto_argv(run_log):
+    return [
+        "--canticle", "inferno", "--canticle", "purgatorio", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+    ]
+
+
+def test_retry_helpers_measure_backoff_deltas():
+    """Untracked runs stay None; snapshots measure per-canto retry deltas."""
+    assert rc._retry_snapshot(None) is None
+    assert rc._retry_delta(None, None) is None
+
+    class _Stream:
+        api_retries = 3
+        api_retry_seconds = 95.0
+
+    holder = type("Holder", (), {"stream": _Stream()})()
+    snap = rc._retry_snapshot(holder)
+    assert snap == (3, 95.0)
+    _Stream.api_retries, _Stream.api_retry_seconds = 5, 151.5
+    assert rc._retry_delta(snap, holder) == (2, 56.5)
+
+
+def test_report_folds_per_canto_api_retries_into_metrics():
+    report = rc.ReconstructReport()
+    base = {"record": "canto_complete", "units": 34, "passed": False}
+    report.add_canto_complete(dict(base))  # untracked canto: no retry keys
+    metrics = report.metrics()
+    assert metrics["api_retries"] is None
+    assert metrics["api_retry_seconds"] is None
+    report.add_canto_complete({**base, "api_retries": 4, "api_retry_seconds": 120.5})
+    report.add_canto_complete({**base, "api_retries": 1, "api_retry_seconds": 30.0})
+    metrics = report.metrics()
+    assert metrics["api_retries"] == 5
+    assert metrics["api_retry_seconds"] == 150.5
+    assert "api retries: 5 (~150s backoff)" in report.summary()
+
+
+def test_cli_status_bar_counts_cantos_and_routes_display(tmp_path, monkeypatch, capsys):
+    """The bar spans the selection on the separators' basis; stderr stays clean."""
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+    fake = _FakeStatusLine()
+    monkeypatch.setattr(rc, "HarnessStatusLine", lambda: fake)
+
+    exit_code = rc.main(
+        [*_two_canto_argv(run_log), "--log", str(out_log)],
+        fallback=_gold_fallback(),
+    )
+
+    assert exit_code == 0
+    assert fake.progress_calls == [(2, 0, "reconstruct")]
+    assert fake.updates == [1, 2]
+    display = fake.stream.getvalue()
+    assert "===== [1/2] inferno 1 =====" in display
+    assert "===== [2/2] purgatorio 1 =====" in display
+    # Everything human-facing went through the status line's console...
+    assert capsys.readouterr().err == ""
+    lines = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    assert lines[-1]["record"] == "summary"
+    # No tracking without retry hooks: canto records carry no counters.
+    assert all("api_retries" not in r for r in lines if r["record"] == "canto_complete")
+
+
+def test_cli_resume_offset_spans_the_whole_bar(tmp_path, monkeypatch, capsys):
+    """Resumed runs keep whole-run positions: `[offset+i/offset+N]`, bar from offset."""
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+    # Inferno 1 already finished on an earlier attempt (its terminal marker
+    # is on disk); purgatorio 1 is still to run.
+    _write_log(
+        out_log,
+        [
+            {"record": "unit", "canticle": "inferno", "canto": 1,
+             "line_start": 1, "line_end": 3, "passed": True},
+            {"record": "canto_complete", "canticle": "inferno", "canto": 1,
+             "units": 1, "passed": True},
+        ],
+    )
+    fake = _FakeStatusLine()
+    monkeypatch.setattr(rc, "HarnessStatusLine", lambda: fake)
+    assert rc.main(
+        [*_two_canto_argv(run_log), "--log", str(out_log)],
+        fallback=_gold_fallback(),
+    ) == 0
+
+    # The bar starts past the replayed canto and only the remainder runs.
+    assert fake.progress_calls == [(2, 1, "reconstruct")]
+    assert fake.updates == [2]
+    display = fake.stream.getvalue()
+    assert "===== [2/2] purgatorio 1 =====" in display
+    assert "[1/2]" not in display
+    assert "resume: 1 completed canto(s)" in capsys.readouterr().out
+
+
+def test_cli_counts_api_retries_per_canto_through_the_stream(tmp_path, monkeypatch, capsys):
+    """Auto-retried backoffs surface as per-canto deltas and roll into the summary."""
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+
+    class _CountingStream(io.StringIO):
+        def __init__(self):
+            super().__init__()
+            self.api_retries = 0
+            self.api_retry_seconds = 0.0
+
+    class _CountingStatusLine:
+        def __init__(self):
+            self.stream = _CountingStream()
+
+        def progress(self, total, start=0, label=None):
+            return _NullBar()
+
+    fake = _CountingStatusLine()
+    monkeypatch.setattr(rc, "HarnessStatusLine", lambda: fake)
+
+    calls = []
+
+    def counting_fallback(**kw):
+        calls.append(kw)
+        fake.stream.api_retries += 1
+        fake.stream.api_retry_seconds += 7.5
+        return _StubResult([])
+
+    exit_code = rc.main(
+        [*_two_canto_argv(run_log), "--log", str(out_log)],
+        fallback=counting_fallback,
+    )
+
+    assert exit_code == 0
+    assert len(calls) > 0
+    lines = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    completes = [r for r in lines if r["record"] == "canto_complete"]
+    assert len(completes) == 2
+    assert all(r["api_retries"] > 0 for r in completes)
+    assert sum(r["api_retries"] for r in completes) == len(calls)
+    assert sum(r["api_retry_seconds"] for r in completes) == len(calls) * 7.5
+    summary = lines[-1]
+    assert summary["api_retries"] == len(calls)
+    assert summary["api_retry_seconds"] == len(calls) * 7.5
+    assert f"api retries: {len(calls)}" in capsys.readouterr().out
 
 
 # --- integration over real mined artifacts ------------------------------------------------------------
