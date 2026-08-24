@@ -16,6 +16,7 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 
 - **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stage 1–2 induction core + Stage-3 scale-out).
 - **Stage 1 Record**: [`STAGE1.md`](STAGE1.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
+- **Stage 2 Record**: [`STAGE2.md`](STAGE2.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
 - **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
 - **Stage 2 (Extraction & Hybrid Engine)**: [`extractor/README.md`](extractor/README.md) | [`extractor/PLAN.md`](extractor/PLAN.md)
@@ -37,7 +38,8 @@ dante-corpus/
 ├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
 │   ├── README.md                  # Overview, navigation, and this directory map
 │   ├── PLAN.md                    # Master architectural plan (status, milestones, disciplines)
-│   ├── STAGE1.md              # Archived Stage-1 record (milestones 1.1–1.4, carry-overs)
+│   ├── STAGE1.md                    # Archived Stage-1 record (milestones 1.1–1.4, carry-overs)
+│   ├── STAGE2.md                    # Archived Stage-2 record (milestones 2.1–2.5, pilot/recheck readouts)
 │   ├── TOOLCALL.md                # Tool call protocol sub-project (XML interim → native)
 │   ├── FUTURE.md                  # Beyond Layer 5 (unscheduled design notes)
 │   │

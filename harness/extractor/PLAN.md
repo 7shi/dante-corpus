@@ -140,7 +140,7 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
       atomic compaction of stale summaries *and* orphaned partial-canto
       records). Dry readout: 0/100 cantos writable today, 43/3,477 units
       checker-clean — see the Ledger entry.
-- [ ] **2.5 Gold Verification through the Recheck** (operator-run; scope
+- [x] **2.5 Gold Verification through the Recheck** (operator-run; scope
        re-bounded 2026-08-24 — the 99-canto expansion + corpus-wide readout
        moved to Stage 3): validate the live gated pipeline against gold at
        single-canto scale and measure its operational cost honestly. The
@@ -152,9 +152,15 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
        Pilot DONE (2026-08-24, inferno 1, live fallback): sane — 18/34 units
        gate-pass, verify-gold micro P/R/F1 0.744/0.820/0.78 ≥ the Stage-1
        band, quota tax 9.4%, `written_cantos == 0`; the one fast-routed unit
-        failed (routing `complete` ≠ checker-clean). Remaining: the inferno-1
-        recheck (log-extension live test + request-granularity 429 readout)
-        closes 2.5 and Stage 2 → archive to STAGE2.md; Stage 3 then opens
-        (compaction/pacing optimization, TPM-gated canticle-parallel 99-canto
-        expansion + corpus-wide readout). Details in harness/PLAN.md's
-        M2.5-pilot Ledger entry.
+        failed (routing `complete` ≠ checker-clean).
+       Recheck DONE (2026-08-24, same scope, fresh `--log` through the
+       extended contract): pass criteria all met (103/103 request/response
+       pairs under `(session, messages, attempt)`, `elapsed_seconds` /
+       `wall_clock_seconds` present), aggregates reproduce the pilot
+       (18/34 gate-pass, routing 33/1, micro F1 0.796, wall 6.4 ks vs ~6.7 ks
+       estimate), and the request-granularity readout **failed the Stage-3
+       launch gate** — single-stream average ≈ 5.1k tok/min (32% of the 16k
+       ceiling) but peak minutes ≈ 102% solo; 3 × average = 96% leaves no
+       margin; 61% of input bytes are transcript resends → compaction/pacing
+       REQUIRED before launch. **Milestone complete → Stage 2 closed;
+       full readouts in [`../STAGE2.md`](../STAGE2.md).**
