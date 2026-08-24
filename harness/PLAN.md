@@ -79,7 +79,8 @@ equivalence would require.
    the Ledger entry below. The deterministic dry probe wrote nothing: 0/100
    cantos pass the gates today. Milestone 2.5 is the first LIVE full-corpus
    run and stays operator-run. `reconstruct.py` additionally ships the full
-   §4-item-5 display stack now (HarnessStatusLine bar over cantos, shared
+   §4-item-5 display stack now (HarnessStatusLine bars naming the running
+   position Canticle Canto Line like the `skel/` drivers, shared
    console for streamed model output, per-canto api-retry counters) — this is
    the wiring pattern every future live CLI copies (see §4 item 5). Tree
    starts clean. Tests at 827 passed.
@@ -855,9 +856,12 @@ single source, not duplicated here. The boundaries it encodes:
       and any future transport must preserve it.
     - Concrete wiring pattern to copy going forward (as shipped in
       `reconstruct.py`, 2026-08-24): create the optional `HarnessStatusLine`
-      up front; give the bar the same numerator basis as the `[index/total]`
-      separators (whole-run positions, resume-aware via
-      `progress(total, start=offset)`); route *every* human-facing line through
+      up front; name the running position on the bar the way the `skel/`
+      drivers do — Canticle Canto Line: one bar per canto labeled
+      `{canticle} {canto}`, its numerator the running unit's first line over
+      the canto's line total — while the `[index/total]`
+      separators keep whole-run, resume-aware positions; route *every*
+      human-facing line through
       its console stream (markup disabled); hand that stream to the
       model-access layer (`llm7shi_generate(..., file=...)` via
       `agent_fallback(..., file=...)`) so streamed model output shares the

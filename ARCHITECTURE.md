@@ -74,8 +74,11 @@ hours per benchmark). An unwatchable run is an unusable run: progress must be
   minor ones (`progress_separator` / `progress_subseparator`, implemented in
   `toolcall.loop.py`).
 - Optional Rich status bar (`HarnessStatusLine`, wrapping
-  `llm7shi.statusline.StatusLine`): its bar counts the same units as the
-  separators, its console stays pinned to stderr by convention, forwarded text
+  `llm7shi.statusline.StatusLine`): the bar names where in the corpus the run
+  stands — extractor CLIs speak Canticle Canto Line, one bar per canto labeled
+  `{canticle} {canto}` whose numerator walks that canto's Dante lines (the
+  `skel/`-driver pattern), while `[index/total]` separators keep whole-run
+  positions; its console stays pinned to stderr by convention, forwarded text
   renders with Rich markup disabled (corpus text routinely contains bracket
   fragments that markup parsing would silently swallow or crash on), and the
   same console stream is handed to llm7shi as the streaming sink so model

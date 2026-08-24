@@ -44,10 +44,13 @@ Observability follows ARCHITECTURE.md §4-§6 scaled to a batch job: stderr
 progress per phase and per canto, a streaming JSONL `--log` (`unit` record per
 parse unit, optional `gold` records under `--verify-gold`, one `canto_complete`
 record per finished canto, `summary` record last — the completion marker).
-When Rich is available a `runner.statusline.HarnessStatusLine` bar counts the
-same cantos as the separators, every human-facing line routes through its
-console stream, and the live fallback's llm7shi sink shares that console so
-streamed model output coexists with the bar; auto-retried API backoffs are
+When Rich is available a `runner.statusline.HarnessStatusLine` bar names the
+running position the way the `skel/` drivers do — Canticle Canto Line: one bar
+per canto, labeled `{canticle} {canto}`, its numerator walking that canto's
+Dante lines as each parse unit starts — while the separators keep whole-run
+`[index/total]` canto positions. Every human-facing line routes through the
+bar's console stream, and the live fallback's llm7shi sink shares that console
+so streamed model output coexists with the bar; auto-retried API backoffs are
 counted per canto through the stream's `wait_retry` hook (`api_retries` /
 `api_retry_seconds`) and rolled into the summary.
 Unlike the deterministic miners this CLI **resumes** rather than truncates
@@ -318,8 +321,10 @@ def reconstruct_canto(
     runs `engine.run_unit` (the live `fallback` callable when given), its
     accepted rows are anchored on Layer 1 (gate 1), and the unit is verified
     through `validate_unit` with all layers attached (gate 2). `status_line`,
-    when given (a `runner.statusline.HarnessStatusLine`), routes the per-unit
-    progress lines through its console stream so they coexist with the bar.
+    when given (a `runner.statusline.HarnessStatusLine`), owns the display the
+    way the `skel/` drivers do: a bar labeled `{canticle} {canto}` counting the
+    canto's lines, advanced to each unit's first line, with the per-unit
+    progress lines routed through its console stream so they coexist with it.
     """
     stream = status_line.stream if status_line is not None else progress_stream
     layers = CantoLayers.load(canticle, canto)
@@ -328,65 +333,76 @@ def reconstruct_canto(
     )
     text_by_no = layers.text_by_no
     units = layers.units()
-    for pos, group in enumerate(units, start=1):
-        if stream is not None and pos % 5 == 0:
-            print(
-                f"[reconstruct] {canticle} {canto} units {pos}/{len(units)}",
-                file=stream,
-                flush=True,
+    # Skel-driver display (`driver_build._build_canto`): the bar's label names
+    # Canticle Canto and its numerator walks the canto's Dante lines as each
+    # parse unit starts; whole-run `[i/N]` positions stay with the separators.
+    bar = (
+        status_line.progress(len(layers.nos), label=f"{canticle} {canto}")
+        if status_line is not None
+        else contextlib.nullcontext()
+    )
+    with bar as prog:
+        for pos, group in enumerate(units, start=1):
+            if prog is not None:
+                prog.update(group[0])
+            if stream is not None and pos % 5 == 0:
+                print(
+                    f"[reconstruct] {canticle} {canto} units {pos}/{len(units)}",
+                    file=stream,
+                    flush=True,
+                )
+            line_start, line_end = group[0], group[-1]
+            started = time.monotonic()
+            result = engine.run_unit(
+                canticle=canticle,
+                canto=canto,
+                line_start=line_start,
+                line_end=line_end,
+                policy=policy,
+                fallback=fallback,
             )
-        line_start, line_end = group[0], group[-1]
-        started = time.monotonic()
-        result = engine.run_unit(
-            canticle=canticle,
-            canto=canto,
-            line_start=line_start,
-            line_end=line_end,
-            policy=policy,
-            fallback=fallback,
-        )
-        elapsed = time.monotonic() - started
-        rows, assertions = build_rows(
-            result.row_keys, layers, line_start, line_end
-        )
-        unit_rows = {no: rows.get(no, []) for no in group}
-        violations = validate_unit(
-            group,
-            [text_by_no[no] for no in group],
-            unit_rows,
-            morph_rows=layers.morph_rows,
-            np_rows=layers.np_rows,
-            dep_rows=layers.dep_rows,
-            case_rows=layers.case_rows,
-        )
-        hard, soft = split_violations(violations)
-        fallback_seconds: float | None = None
-        agent_result = getattr(result, "agent_result", None)
-        turn_seconds = getattr(agent_result, "turn_seconds", None)
-        if result.fallback_ran and turn_seconds is not None:
-            fallback_seconds = sum(turn_seconds)
-        elif result.fallback_ran:
-            fallback_seconds = elapsed
-        recon.outcomes.append(
-            UnitOutcome(
-                unit={
-                    "canticle": canticle,
-                    "canto": canto,
-                    "line_start": line_start,
-                    "line_end": line_end,
-                },
-                route=result.decision.route,
-                reason=result.decision.reason,
-                origin=result.origin,
-                fallback_ran=result.fallback_ran,
-                row_keys=frozenset(result.row_keys),
-                rows=unit_rows,
-                token_assertions=assertions,
-                hard=hard,
-                soft=soft,
-                fallback_seconds=fallback_seconds,
+            elapsed = time.monotonic() - started
+            rows, assertions = build_rows(
+                result.row_keys, layers, line_start, line_end
             )
-        )
+            unit_rows = {no: rows.get(no, []) for no in group}
+            violations = validate_unit(
+                group,
+                [text_by_no[no] for no in group],
+                unit_rows,
+                morph_rows=layers.morph_rows,
+                np_rows=layers.np_rows,
+                dep_rows=layers.dep_rows,
+                case_rows=layers.case_rows,
+            )
+            hard, soft = split_violations(violations)
+            fallback_seconds: float | None = None
+            agent_result = getattr(result, "agent_result", None)
+            turn_seconds = getattr(agent_result, "turn_seconds", None)
+            if result.fallback_ran and turn_seconds is not None:
+                fallback_seconds = sum(turn_seconds)
+            elif result.fallback_ran:
+                fallback_seconds = elapsed
+            recon.outcomes.append(
+                UnitOutcome(
+                    unit={
+                        "canticle": canticle,
+                        "canto": canto,
+                        "line_start": line_start,
+                        "line_end": line_end,
+                    },
+                    route=result.decision.route,
+                    reason=result.decision.reason,
+                    origin=result.origin,
+                    fallback_ran=result.fallback_ran,
+                    row_keys=frozenset(result.row_keys),
+                    rows=unit_rows,
+                    token_assertions=assertions,
+                    hard=hard,
+                    soft=soft,
+                    fallback_seconds=fallback_seconds,
+                )
+            )
     return recon
 
 
@@ -995,57 +1011,47 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     print(header)
 
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
-    bar = (
-        status_line.progress(total, start=resume_offset, label="reconstruct")
-        if status_line is not None
-        else contextlib.nullcontext()
-    )
     try:
-        # The bar counts the same units as the separators (§4): whole-run
-        # canto positions `[offset+i/offset+N]`, updated as each canto starts.
-        with bar as prog:
-            for index, (canticle, canto) in enumerate(wanted, start=resume_offset + 1):
-                progress_separator(
-                    f"{canticle} {canto}", index, total, stream=ui_stream
-                )
-                if prog is not None:
-                    prog.update(index)
-                retry_before = _retry_snapshot(status_line)
-                recon = reconstruct_canto(
-                    engine, canticle, canto,
-                    fallback=fallback, status_line=status_line,
-                )
-                retries = _retry_delta(retry_before, status_line)
-                for outcome in recon.outcomes:
-                    record = outcome.to_dict()
-                    report.add_unit(record)
+        for index, (canticle, canto) in enumerate(wanted, start=resume_offset + 1):
+            progress_separator(
+                f"{canticle} {canto}", index, total, stream=ui_stream
+            )
+            retry_before = _retry_snapshot(status_line)
+            recon = reconstruct_canto(
+                engine, canticle, canto,
+                fallback=fallback, status_line=status_line,
+            )
+            retries = _retry_delta(retry_before, status_line)
+            for outcome in recon.outcomes:
+                record = outcome.to_dict()
+                report.add_unit(record)
+                if sink is not None:
+                    sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+            if args.verify_gold:
+                gold_report, gold_records = verify_against_gold(recon)
+                for record in gold_records:
+                    report.add_gold(record)
                     if sink is not None:
                         sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-                if args.verify_gold:
-                    gold_report, gold_records = verify_against_gold(recon)
-                    for record in gold_records:
-                        report.add_gold(record)
-                        if sink is not None:
-                            sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-                complete: dict = {
-                    "record": "canto_complete",
-                    "canticle": canticle,
-                    "canto": canto,
-                    "units": len(recon.outcomes),
-                    "passed": recon.passed,
-                }
-                if retries is not None:
-                    complete["api_retries"] = retries[0]
-                    complete["api_retry_seconds"] = round(retries[1], 1)
-                if args.write:
-                    commit_record = commit(recon)
-                    complete["commit"] = commit_record
-                    if sink is not None:
-                        sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
-                report.add_canto_complete(complete)
+            complete: dict = {
+                "record": "canto_complete",
+                "canticle": canticle,
+                "canto": canto,
+                "units": len(recon.outcomes),
+                "passed": recon.passed,
+            }
+            if retries is not None:
+                complete["api_retries"] = retries[0]
+                complete["api_retry_seconds"] = round(retries[1], 1)
+            if args.write:
+                commit_record = commit(recon)
+                complete["commit"] = commit_record
                 if sink is not None:
-                    sink.write(json.dumps(complete, ensure_ascii=False) + "\n")
-                    sink.flush()
+                    sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
+            report.add_canto_complete(complete)
+            if sink is not None:
+                sink.write(json.dumps(complete, ensure_ascii=False) + "\n")
+                sink.flush()
         if sink is not None:
             summary = {
                 "record": "summary",

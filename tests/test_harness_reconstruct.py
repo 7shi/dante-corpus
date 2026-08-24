@@ -17,6 +17,8 @@ from pathlib import Path
 
 import pytest
 
+from dante_corpus import api
+from dante_corpus import dep as dep_layer
 from dante_corpus import hashes as hashes_module
 from dante_corpus.skel import io as skel_io
 from dante_corpus.skel.io import load_skel
@@ -595,6 +597,18 @@ class _FakeStatusLine:
         return _RecordingBar(self)
 
 
+def _unit_start_lines(canticle: str, canto: int) -> list[int]:
+    """First Dante line of each parse unit — the status bar's update basis."""
+    data = api.canto(canticle, canto)
+    lines = data.lines()
+    return [
+        group[0]
+        for group in dep_layer.sentence_groups(
+            [line.no for line in lines], [line.text for line in lines]
+        )
+    ]
+
+
 def _two_canto_argv(run_log):
     return [
         "--canticle", "inferno", "--canticle", "purgatorio", "--canto", "1",
@@ -634,8 +648,11 @@ def test_report_folds_per_canto_api_retries_into_metrics():
     assert "api retries: 5 (~150s backoff)" in report.summary()
 
 
-def test_cli_status_bar_counts_cantos_and_routes_display(tmp_path, monkeypatch, capsys):
-    """The bar spans the selection on the separators' basis; stderr stays clean."""
+def test_cli_status_bar_names_canticle_canto_line_and_routes_display(
+    tmp_path, monkeypatch, capsys
+):
+    """Skel-driver bars: one per canto, labeled `{canticle} {canto}`, the
+    numerator walking the canto's lines at unit starts; stderr stays clean."""
     run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
     _write_log(run_log, [_case_record()])
@@ -648,8 +665,13 @@ def test_cli_status_bar_counts_cantos_and_routes_display(tmp_path, monkeypatch, 
     )
 
     assert exit_code == 0
-    assert fake.progress_calls == [(2, 0, "reconstruct")]
-    assert fake.updates == [1, 2]
+    assert fake.progress_calls == [
+        (len(api.canto("inferno", 1).lines()), 0, "inferno 1"),
+        (len(api.canto("purgatorio", 1).lines()), 0, "purgatorio 1"),
+    ]
+    assert fake.updates == (
+        _unit_start_lines("inferno", 1) + _unit_start_lines("purgatorio", 1)
+    )
     display = fake.stream.getvalue()
     assert "===== [1/2] inferno 1 =====" in display
     assert "===== [2/2] purgatorio 1 =====" in display
@@ -664,8 +686,9 @@ def test_cli_status_bar_counts_cantos_and_routes_display(tmp_path, monkeypatch, 
     assert all("api_retries" not in r for r in lines if r["record"] == "canto_complete")
 
 
-def test_cli_resume_offset_spans_the_whole_bar(tmp_path, monkeypatch, capsys):
-    """Resumed runs keep whole-run positions: `[offset+i/offset+N]`, bar from offset."""
+def test_cli_resume_bars_only_remaining_cantos(tmp_path, monkeypatch, capsys):
+    """Resumed runs replay completed cantos without touching a bar; each
+    remaining canto gets its own `{canticle} {canto}` line-tracking bar."""
     run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
     _write_log(run_log, [_case_record()])
@@ -687,9 +710,11 @@ def test_cli_resume_offset_spans_the_whole_bar(tmp_path, monkeypatch, capsys):
         fallback=_gold_fallback(),
     ) == 0
 
-    # The bar starts past the replayed canto and only the remainder runs.
-    assert fake.progress_calls == [(2, 1, "reconstruct")]
-    assert fake.updates == [2]
+    # Only the remaining canto opens a bar; the replayed one never does.
+    assert fake.progress_calls == [
+        (len(api.canto("purgatorio", 1).lines()), 0, "purgatorio 1")
+    ]
+    assert fake.updates == _unit_start_lines("purgatorio", 1)
     display = fake.stream.getvalue()
     assert "===== [2/2] purgatorio 1 =====" in display
     assert "[1/2]" not in display
