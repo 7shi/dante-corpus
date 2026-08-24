@@ -430,17 +430,22 @@ horizon of reconstructing grammar for a language with no available description
 scheduled work; `PLAN.md` remains the source of truth for status and
 milestones.
 
-### Transport & backend policy (2026-08-22)
+### Transport & backend policy
 
-The Gemini API executes the XML protocol roughly 3× faster than local Ollama,
-so **XML (`PromptXmlTransport`) is the officially adopted wire format for Stage
-1/2 production runs; native Ollama tool calling (`OllamaNativeTransport`) stays
-implemented and gated but is reserved for comparison experiments** (re-run
-`harness.toolcall.parity` when revisiting local-only deployments). Backend choice
-remains free: `google:gemma-4-31b-it` when wall clock matters,
-`ollama:gemma4:31b-it-qat` for offline/cost-constrained work — both ride the
-same XML protocol unchanged; both were validated end-to-end over the XML protocol
-during the T4/T5 gates.
+Decision record (2026-08-22): measured at roughly 3× the local speed, **XML
+(`PromptXmlTransport`) was adopted as the official wire format for Stage 1/2
+production runs; native Ollama tool calling (`OllamaNativeTransport`) stays
+implemented and gated for comparison experiments** (re-run
+`harness.toolcall.parity` when revisiting local-only deployments). Backend
+choice remains free: `google:gemma-4-31b-it` when wall clock matters,
+`ollama:gemma4:31b-it-qat` for offline/cost-constrained work — both validated
+end-to-end over the XML protocol during the T4/T5 gates.
+
+Adapter policy (2026-08-24): the stateful `llm7shi.Client` adapter is the
+common model-access specification; the stateless probe/parity adapters and the
+skel drivers' disposable-Client pattern are legacy from the trial-and-error
+phase. The standing rules live in [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
+(§2 Model access, §3 Wire protocol).
 
 ---
 
@@ -495,12 +500,20 @@ single source, not duplicated here. The boundaries it encodes:
    - Benchmark and evaluation modes operate strictly in-memory or write to scratch buffers; gold TSVs in `skel/` are never overwritten during benchmark runs.
 4. **Upstream Discrepancy Channel**:
    - Discrepancies identified in upstream layers (Layer 2 morphology or Layer 4 UD syntax) are emitted as structured `upstream_feedback` records for human audit and triage.
-5. **Live-Run Observability — separators & streaming**:
-   - LLM-in-the-loop runs are inherently slow (minutes per turn on local models, hours per benchmark), and an unwatchable run is an unusable run: every operator-facing CLI must keep progress **visible by default**, not silent-until-finished.
-    - Concretely (implemented in `toolcall.loop`): stream model output to stderr as it arrives (llm7shi does this natively on the XML path; `parity.ollama_chat(echo=True)` replays it via llm7shi's `StreamProcessor` on the native path); print one stderr progress line per turn with each call's compact return value (`outcome_brief`) and elapsed seconds (`progress_printer`); announce every session with its `[index/total]` position via major `=====` separators and divide named passes inside a session with minor `-----` ones (`progress_separator` / `progress_subseparator`). Per-turn wall-clock durations ride in the JSONL logs (`turn_seconds`) for post-run profiling.
-    - **Optional Rich status bar**: live CLIs may attach a `HarnessStatusLine` (`runner/statusline.py`, the same wiring as the `skel/` build driver) whose bar counts the same units as the separators — the numerator advances to `[pos/total]` as each session starts. Separators, turn lines, and nudge markers then route through its console, and the same console stream is handed to llm7shi as the streaming sink so model output shares the display instead of clobbering the bar. Its console stays pinned to stderr by convention, and forwarded text renders with Rich markup disabled: corpus text routinely contains bracket fragments (`[obl:a=(126,3)]`, closing-tag lookalikes) that markup parsing would silently swallow or crash on mid-stream. The stream also counts llm7shi's automatic api-retry backoffs via its `wait_retry` hook (`api_retries` / `api_retry_seconds`, per case and rolled into summaries), so silent 429 handling stays measurable instead of only inflating `turn_seconds`.
-    - **Per-turn logging & timing are a measurement instrument, not decoration**: the per-turn stderr lines and `turn_seconds` arrays exist so per-turn cost is visible live *and* auditable after the run, and run summaries must aggregate them (probe / parity / benchmark roll per-turn seconds up into their `summary` records).
-    - **Turn-granularity discipline — keep turns small**: one healthy model turn is one reasoning step plus its dispatches. Prefer many short turns over few long ones; a single turn that sits thinking for many minutes signals that too much work was bundled into one response (e.g., whole-unit CoT ending in one giant validate call) and the prompt or workflow must be **reconsidered, not the latency accepted**. To make brooding measurable, benchmark reports count turns ≥ `SLOW_TURN_SECONDS = 300` as `slow_turns`, and the milestone 1.4 pilot comparison reads these timings when choosing between the unit and predicate workflows.
-    - **Log durability never relies on shell redirection**: every live CLI opens and writes its own artifact files (`--log`, `--trace`), so where the human-facing stream display lands is immaterial — stdout or stderr both stay out of any machine-facing record. Current code pins streaming sinks to stderr as a harmless convention (llm7shi defaults to stdout; `parity.ollama_chat(echo=True)` feeds llm7shi's `StreamProcessor`); keep it, but nothing downstream may *depend* on it.
-    - **Streaming JSONL log contract** (as implemented by `probe` / `parity` / `benchmark`, binding for all future live CLIs): append one JSON object per completed unit of work (`scenario` / comparison / `case` / `session` record) and flush it immediately, so an interrupted run keeps everything already finished on disk; write a final `summary` record carrying the aggregate metrics **including total elapsed time** (summed per-session / per-turn seconds plus mean / max — never a start-to-end wall span, which interruptions render meaningless). A file whose last line is the summary record is complete. `benchmark` additionally **resumes**: an existing `--log` is loaded at startup, its completed case records rejoin the aggregate (role tables reconstructed from the stored missing/extra diffs), those cases are skipped, fresh records append, and any superseded summary record is stripped so "ends with summary ⇔ complete" stays exact. `probe` / `parity` still truncate on startup (`"w"` mode: one file per attempt, runs never append across attempts).
-    - This is a standing requirement, not a one-off patch: new live entry points (Stage 2's `extractor/` CLIs included) must ship the same observability from day one, keep the human-facing progress display on stderr by convention (JSONL logs go to their own `--log` files, never to redirected console output), and any future transport must preserve it.
+5. **Live-Run Observability & Log Durability**:
+   - LLM-in-the-loop runs are inherently slow (minutes per turn on local
+     models, hours per benchmark), and an unwatchable run is an unusable run:
+     every operator-facing CLI must keep progress **visible by default**, not
+     silent-until-finished.
+    - The standing specification — stderr streaming, session separators and the
+      optional `HarnessStatusLine` status bar, per-turn timings rolled into
+      summaries (`turn_seconds`, `slow_turns`, `api_retries`), turn-granularity
+      discipline, log durability independent of shell redirection, and the
+      streaming JSONL log contract with its summary-last completion marker and
+      resume semantics — lives in [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
+      (§4 Live-run observability, §5 Streaming JSONL log contract, §6 Reporting
+      shape). It is a standing requirement, not a one-off patch: new live entry
+      points (Stage 2's `extractor/` CLIs included) must ship it from day one,
+      keep the human-facing progress display on stderr by convention (JSONL
+      logs go to their own `--log` files, never to redirected console output),
+      and any future transport must preserve it.

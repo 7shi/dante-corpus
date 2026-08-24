@@ -290,6 +290,11 @@ def expand_scenarios(
 def llm7shi_generate(model: str, temperature: float | None = None, quiet: bool = True):
     """Build a stateless generate function over `llm7shi.compat.generate_with_schema`.
 
+    Pre-Client variant: the common model-access specification is the stateful
+    `runner.agent.llm7shi_generate` over `llm7shi.Client`; this stateless form
+    stays only because this experiment CLI (and parity's XML side) predates it
+    (harness/PLAN.md §2 adapter policy).
+
     The stream sink is pinned to stderr (harness/PLAN.md §4 item 5): llm7shi
     defaults to stdout, which would mix the 🤔 Thinking / 💡 Answer display into
     machine-facing output.

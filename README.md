@@ -26,6 +26,11 @@ This project uses the following Italian text source:
 shared, canon-neutral **grammatical-analysis stack** (morphology, noun phrases, dependency, and a
 predicate-argument skeleton) and the post-zero Grammar Agent Harness (`harness/`).
 
+[ARCHITECTURE.md](ARCHITECTURE.md) collects the cross-cutting design patterns shared by the layer
+build drivers (`skel/`, `dep/`) and `harness/` — model access via llm7shi, wire protocol,
+live-run observability, the streaming JSONL log contract, testing discipline — binding guidance
+for any new LLM-in-the-loop entry point.
+
 ## Usage
 
 See [`dante_corpus/README.md`](dante_corpus/README.md) for the full CLI and API reference.

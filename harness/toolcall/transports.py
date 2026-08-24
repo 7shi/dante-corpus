@@ -42,10 +42,12 @@ __all__ = [
 Generate = Callable[[list[dict]], str]
 """A text backend: full OpenAI-format message list -> completion text.
 
-Usually stateless (each call resends the whole conversation); a stateful
-adapter that mirrors the transcript into its own client (e.g. `runner.agent.
-llm7shi_generate` over `llm7shi.Client`'s history + quality-retry loop) is
-fine too — the transport only ever calls it with the loop's transcript.
+The standard backend is the stateful Client adapter `runner.agent.
+llm7shi_generate` (`llm7shi.Client` history mirror + quality-retry loop, reset
+per session via `transport.reset()`); a plain stateless function works too —
+the transport only ever calls it with the loop's transcript. The stateless
+llm7shi adapters in `probe` / `parity` predate the Client adapter and remain
+as experiment tooling only (harness/PLAN.md §2 adapter policy).
 """
 
 ChatFn = Callable[[Sequence[dict], Sequence[dict]], Any]
@@ -79,9 +81,10 @@ class PromptXmlTransport:
     """Interim transport: prompt-instructed XML parsed into canonical tool calls.
 
     `generate` is any backend taking the full message list and returning the
-    completion text (see `harness.toolcall.probe.llm7shi_generate` for the
-    stateless llm7shi adapter, `runner.agent.llm7shi_generate` for the stateful
-    Client-based one; `reset()` forwards to backends exposing it). The tool
+    completion text. The standard choice is the stateful Client adapter
+    `runner.agent.llm7shi_generate`; `harness.toolcall.probe.llm7shi_generate`
+    is the older stateless variant kept for those experiment CLIs only;
+    `reset()` forwards to backends exposing it. The tool
     specs are not serialized here — embedding them in the system prompt is the
     caller's job (system prompt + `prompts.xml_contract_section()`); they are
     accepted to keep the transport interface identical for the native path.
