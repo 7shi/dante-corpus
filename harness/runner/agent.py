@@ -145,6 +145,11 @@ def llm7shi_generate(
 
     def generate(messages: list[dict]) -> str:
         if state["client"] is None or state["synced"] != len(messages) - 1:
+            # A fresh `Client` starts its own stream mid-console: without a
+            # separating blank line its first "🤔 Thinking..." line runs
+            # straight onto whatever the previous Client (or progress line)
+            # last printed, e.g. `</tool_call>🤔 Thinking...`.
+            print(file=sys.stderr if file is None else file)
             state["client"] = Client(
                 model=model,
                 temperature=temperature,

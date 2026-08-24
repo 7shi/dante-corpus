@@ -766,20 +766,9 @@ single source, not duplicated here. The boundaries it encodes:
       keep the human-facing progress display on stderr by convention (JSONL
       logs go to their own `--log` files, never to redirected console output),
       and any future transport must preserve it.
-    - Concrete wiring pattern to copy going forward (as shipped in
-      `reconstruct.py`, 2026-08-24): create the optional `HarnessStatusLine`
-      up front; name the running position on the bar the way the `skel/`
-      drivers do — Canticle Canto Line: one bar per canto labeled
-      `{canticle} {canto}`, its numerator the running unit's first line over
-      the canto's line total — while the `[index/total]`
-      separators keep whole-run, resume-aware positions; route *every*
-      human-facing line through
-      its console stream (markup disabled); hand that stream to the
-      model-access layer (`llm7shi_generate(..., file=...)` via
-      `agent_fallback(..., file=...)`) so streamed model output shares the
-      display instead of clobbering the bar; and snapshot/delta the stream's
-      `wait_retry` counters per unit of work (`_retry_snapshot` /
-      `_retry_delta`, as in `runner/benchmark.py` and `reconstruct.py`) so
-      silent 429 backoffs land in records and summaries instead of hiding
-      inside `turn_seconds`. Deterministic runs (injected fallbacks, tests)
-      stay display-silent and untracked.
+    - The concrete wiring — status-bar labeling (Canticle Canto Line),
+      markup-disabled shared console, the model-access layer sharing that
+      stream, `wait_retry` snapshot/delta accounting, and the new-`Client`
+      blank-line spacing — is the ARCHITECTURE.md §4 standard itself now, not
+      a pattern restated per plan; `reconstruct.py` (2026-08-24) is where it
+      first shipped end-to-end and stays the template to copy.

@@ -83,6 +83,12 @@ hours per benchmark). An unwatchable run is an unusable run: progress must be
   fragments that markup parsing would silently swallow or crash on), and the
   same console stream is handed to llm7shi as the streaming sink so model
   output shares the display instead of clobbering the bar.
+- **Session-boundary spacing**: each new `Client` instance starts its own
+  stream mid-console, so `runner.agent.llm7shi_generate` prints one blank
+  line to the shared stream right before constructing it — without this a
+  fresh session's first `🤔 Thinking...` line runs straight onto whatever the
+  previous Client (or a progress line) last printed
+  (e.g. `</tool_call>🤔 Thinking...`).
 - **Per-turn timing is a measurement instrument, not decoration**: per-turn
   wall-clock seconds ride in results (`LoopResult.turn_seconds`) and JSONL
   records; summaries must aggregate them (total / mean / max, plus
