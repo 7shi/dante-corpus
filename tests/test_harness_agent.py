@@ -893,3 +893,122 @@ def test_llm_response_record_measures_thinking_bytes(monkeypatch, tmp_path):
     assert responses[0]["thought_bytes"] == len(thoughts.encode("utf-8"))
     assert responses[0]["output_bytes"] == len("risposta".encode("utf-8"))
     assert responses[1]["thought_bytes"] == 0
+
+
+# --- generation-side runaway cap (max_length, STAGE3.md record S3.10) ----------------------
+
+
+def test_llm7shi_generate_max_length_counts_cap_retries(monkeypatch, tmp_path):
+    """`max_length` rides the Client constructor unchanged (chars — a stream
+    chunk is not necessarily one token). A cap-caused regeneration surfaces
+    through `should_retry` seeing `resp.max_length`; the wrapper counts those
+    attempts and the llm_response record carries them per call as
+    `max_length_retries`."""
+    import harness.runner.agent as agent_module
+
+    created = []
+
+    class FakeCappedClient:
+        def __init__(self, model="", file=None, max_length=None, **kwargs):
+            self.history = []
+            self.max_length_arg = max_length
+            self.cap_hits_left = 2  # two truncated attempts, then a clean one
+            created.append(self)
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def should_retry(self, resp, schema=None):
+            if self.cap_hits_left > 0:
+                self.cap_hits_left -= 1
+                resp.max_length = self.max_length_arg
+                return "max_length exceeded"
+            resp.max_length = None
+            return None
+
+        def __call__(self, prompt):
+            class _Response:
+                text = "risposta"
+                max_length = None
+
+            resp = _Response()
+            self.history.append({"role": "user", "content": prompt})
+            for _ in range(4):  # the real Client's quality-retry loop shape
+                if self.should_retry(resp, None) is None:
+                    break
+            self.history.append({"role": "assistant", "content": resp.text})
+            return resp
+
+    monkeypatch.setattr("llm7shi.Client", FakeCappedClient)
+    log = tmp_path / "requests.jsonl"
+    with log.open("w", encoding="utf-8") as sink:
+        generate = agent_module.llm7shi_generate(
+            "ollama:m", request_log=sink, max_length=6000
+        )
+        opening = [{"role": "user", "content": "compito"}]
+        generate([dict(m) for m in opening])
+        transcript = opening + [
+            {"role": "assistant", "content": "risposta"},
+            {"role": "user", "content": "<tool_result>x</tool_result>"},
+        ]
+        generate(transcript)
+        assert len(created) == 1
+        assert created[0].max_length_arg == 6000
+
+        # reset() is the session boundary: the counter starts over with the
+        # new Client, so stale hits can never leak into the next session.
+        generate.reset()
+        generate([dict(m) for m in opening])
+
+    assert len(created) == 2
+    records = [
+        json.loads(line)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    responses = [r for r in records if r["record"] == "llm_response"]
+    assert responses[0]["max_length_retries"] == 2
+    # Per-call delta: a clean call reports zero even though the session
+    # counter has accumulated.
+    assert responses[1]["max_length_retries"] == 0
+    assert responses[-1]["max_length_retries"] == 2
+
+
+def test_llm7shi_generate_default_has_no_cap(monkeypatch, tmp_path):
+    """Adapter default `None`: the Client is built uncapped and fakes without
+    `should_retry` keep working; the record still carries the field (zero)."""
+    import harness.runner.agent as agent_module
+
+    created = []
+
+    class FakeClient:  # no should_retry: the counting hook must stay off
+        def __init__(self, model="", file=None, max_length=None, **kwargs):
+            self.history = []
+            self.max_length_arg = max_length
+            created.append(self)
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def __call__(self, prompt):
+            class _Response:
+                text = "ok"
+                max_length = None
+
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": "ok"})
+            return _Response()
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    log = tmp_path / "requests.jsonl"
+    with log.open("w", encoding="utf-8") as sink:
+        generate = agent_module.llm7shi_generate("ollama:m", request_log=sink)
+        generate([{"role": "user", "content": "compito"}])
+
+    assert created[0].max_length_arg is None
+    response = next(
+        json.loads(line)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if json.loads(line)["record"] == "llm_response"
+    )
+    assert response["max_length_retries"] == 0

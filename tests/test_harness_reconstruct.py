@@ -595,6 +595,38 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     assert "rate 6000 tok/min, depth 3000 tok" in out
 
 
+def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch, capsys):
+    """The generation-side runaway cap (STAGE3.md record S3.10): the policy
+    default (6,000 answer-text chars) lives at this CLI and passes through to
+    agent_fallback; `--max-length 0` disables it; negatives are rejected."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    _write_log(run_log, [_case_record()])
+    captured = {}
+
+    def spy_fallback(**kwargs):
+        captured.update(kwargs)
+        return _gold_fallback()
+
+    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+    ]
+    assert rc.main(argv) == 0
+    assert captured["max_length"] == 6000
+    assert "max-length 6000 chars" in capsys.readouterr().out
+
+    captured.clear()
+    assert rc.main(argv + ["--max-length", "0"]) == 0
+    assert captured["max_length"] is None
+    assert "max-length off" in capsys.readouterr().out
+
+    with pytest.raises(SystemExit):
+        rc.main(argv + ["--max-length", "-1"])
+
+
 def test_request_records_ride_resume_semantics(tmp_path):
     """llm_request/llm_response records are canto-scoped log citizens: never
     replayed into aggregates (prepare_resume skips them), and compaction now

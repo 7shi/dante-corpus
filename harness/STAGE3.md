@@ -18,8 +18,10 @@ the bytes come out of the system prompt instead (10,706 → 8,954 B, no
 wording changed). §2.A is WITHDRAWN — read it as the record of why. Live
 levers: R1 payload serving (§2.B) + pacing (§2.C) + the prompt size.
 Re-run #2 ran clean and passed every quality criterion, its ×3 average being
-the first to pass unpaced (record S3.9); what remains is the
-launch-configuration call and the three canticle-parallel runs.**
+the first to pass unpaced (record S3.9); the generation-side runaway cap was
+then verified, decided at 6,000 chars and implemented (record S3.10); what
+remains is the inferno-1 cap experiment and the three canticle-parallel
+runs.**
 
 ---
 
@@ -716,3 +718,69 @@ shared `TokenBucket` for inter-stream coordination (sustained aggregate
 projection on measured pace (~155 s/unit): longest canticle ≈ 34 cantos ×
 5.28 ks ≈ 180 ks ≈ **2.1 days compute-only** — under the 2.8–3.2 day
 estimate even with bucket contention.
+
+**Stage 3, record S3.10 — generation-side runaway cap decided at 6,000
+chars, implemented, and staged for an inferno-1 experiment (assistant
+implementation, deterministic; tests 861 → 864; no model touched; operator
+decision 2026-08-25).** The design note's provisional 12,000-char line was
+**overturned by verification before any code change**: its "legitimate
+cross-run max 6,295 B" anchor was a misclassification.
+
+*The re-classification.* A turn-1 cross-run scan over all 99 sessions
+(33 × three inferno-1 runs) shows the session opener is structurally the
+~114 B `read_unit` call — median 114 B / p90 115 B in every run — with
+exactly two exceptions, both first turns of the verbatim run: the 17,739 B
+runaway **and** the 6,295 B response. Both >4 kB outputs are therefore the
+same turn-1 over-generation pathology, not two populations. Supporting
+evidence: the same unit (inferno 1, lines 109–111) opened at 115/116 B in
+compact/recheck vs 6,295 B in verbatim; its subsequent sends match the other
+runs almost byte-for-byte (1,197/1,201 B); and its gate outcome (hard `dup`)
+reproduces identically in all three runs — unit difficulty, not answer
+dependent. The natural (non-pathological) output maximum is **3,885 B ≈
+3,847 chars** (p99 over 308 responses).
+
+*Threshold verification* (`/tmp/opencode/max_length_sim.py`, ephemeral;
+framework validated by reproducing S3.9's recorded counterfactual exactly —
+cap >4 kB → 400 B ⇒ 2 triggers, max request context **22.3 kB**): with both
+large outputs classified pathological, caps 5,000/6,000 chars catch **2/2**
+with zero observed false positives (headroom ≥ 1.30× over the natural max),
+while 8,000/12,000 miss the 6.3 kB event entirely. Post-cap peak context is
+bounded by *organic* multi-turn sessions (~22.3–22.7 kB), so tighter caps do
+not lower peaks further on this evidence — the choice is purely about
+covering the observed failure family. Operator decision: **`max_length =
+6000`**.
+
+*Mechanics (confirmed in llm7shi source)*: `max_length` counts
+answer-text **characters only** — thinking excluded, and tokens unusable at
+runtime because a streaming chunk is not necessarily one token (provider
+counts land only after the response completes). Crossing it stops the stream
+at once (waste bounded by ~T chars + one chunk), `should_retry` fails the
+turn, and the quality-retry loop regenerates (`DEFAULT_LLM_RETRIES = 3`;
+a truncated reply enters history only if all retries also exceed — far below
+any plausible threshold). Thinking-only runaways remain uncaught by design.
+Byte↔char sensitivity: measured bytes/char = 1.000–1.011 on 87 agent texts,
+so chars ≈ bytes for this corpus; trigger sets were invariant across a
+r=1.00–1.02 sweep (matters for future non-Latin corpora).
+
+*Implementation map*: `runner/agent.py`'s `llm7shi_generate` takes
+`max_length=None` (adapter neutral — the benchmark stays uncapped until its
+own decision), hands it to `Client(max_length=...)`, and makes cap-caused
+regenerations durably observable: an instance-level `should_retry` wrapper
+counts attempts whose `Response.max_length` is set, and each `llm_response`
+record gains **`max_length_retries`** (per-call delta; `reset()` clears) —
+the one Client-internal retry made visible on the wire, because the
+experiment's readout needs a durable trigger count. 
+`extractor/hybrid_engine.agent_fallback(max_length=None)` passes through;
+the policy default lives at the operator-facing CLI:
+`reconstruct --max-length` (default **6000**, `0` disables, negatives
+rejected), announced in the configuration banner (`max-length 6000 chars` /
+`max-length off`). Tests +3 (`test_harness_agent.py` 39 → 41,
+`test_harness_reconstruct.py` 34 → 35).
+
+*Experiment protocol (operator-run, next action)*: inferno 1 dry-run on the
+new default — `uv run python -m harness.extractor.reconstruct --canticle
+inferno --canto 1 --verify-gold --model google:gemma-4-31b-it --log
+harness/recon-inf1-cap6k.log` (no `--write`; interval default 0, bucket off
+— solo arms stay comparable to re-run #2). Readout criteria: F1 within the
+0.744–0.796 band; Σ`max_length_retries` and which sessions triggered; peak
+request context vs re-run #2's 37.3 kB; wall clock vs 5,275.5 s.

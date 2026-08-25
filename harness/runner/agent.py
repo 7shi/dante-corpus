@@ -288,6 +288,7 @@ def llm7shi_generate(
     request_log=None,
     min_send_interval: float = 0.0,
     token_bucket: TokenBucket | None = None,
+    max_length: int | None = None,
     clock=time.monotonic,
     sleeper=time.sleep,
 ):
@@ -322,6 +323,19 @@ def llm7shi_generate(
       debit the send's input tokens (view bytes / `BYTES_PER_TOKEN`) before
       sending, sleeping until funded.
 
+    **Generation-side runaway cap (``max_length``, STAGE3.md record S3.10)**:
+    answer-text characters per call, handed straight to ``Client(max_length=)``
+    — the same currency llm7shi counts in, because a stream's chunk is not
+    necessarily one token and provider counts land only after the response
+    completes. Crossing the cap fails the turn inside ``should_retry`` and
+    the Client's quality-retry loop regenerates; only the final text enters
+    history. Thinking-only runaways are not caught by design (they never
+    reach history). ``None`` (the adapter default) disables the cap; callers
+    own the policy value. Every cap-caused regeneration is counted and lands
+    as ``max_length_retries`` on that call's ``llm_response`` record — the
+    one Client-internal retry made visible, because its experiment needs a
+    durable trigger count (the stderr warning alone is not durable).
+
     Every deliberate wait prints one line to the adapter's stream and lands as
     ``paced_seconds`` on the ``llm_request`` record, keeping it separable from
     429 backoffs (``api_retry_seconds``). ``clock``/``sleeper`` are injectable
@@ -336,9 +350,11 @@ def llm7shi_generate(
     backend's own token counts via `token_usage` — `None` where the provider reports
     none, and covering only the attempt whose text the Client returned,
     exactly like the byte figures). Join key across the pair:
-    ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs, quality
-    regeneration) stay invisible here by construction; they are measured by
-    the stream's `wait_retry` counters and correlated by timestamp. The
+    ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs,
+    empty/repetition regenerations) stay invisible here by construction; they
+    are measured by the stream's `wait_retry` counters and correlated by
+    timestamp — except the answer-length cap's regenerations, counted as
+    ``max_length_retries`` on the response record (S3.10). The
     reconstruct CLI points this at its own streaming `--log` sink, so the
     cost records ride the same file as the unit records (canto-scoped,
     resume-compacted with them).
@@ -350,6 +366,7 @@ def llm7shi_generate(
         "mirrored": [],  # (role, content) pairs the Client's history holds
         "attempts": {},
         "last_send_start": None,
+        "cap_hits": 0,  # cumulative should_retry hits on max_length (S3.10)
     }
 
     def _attempt(session, position: int) -> int:
@@ -385,7 +402,24 @@ def llm7shi_generate(
             temperature=temperature,
             show_params=not quiet,
             file=sys.stderr if file is None else file,
+            max_length=max_length,
         )
+        if max_length is not None and hasattr(client, "should_retry"):
+            # Count cap-caused regenerations without touching the retry loop:
+            # the instance-level wrapper sees exactly the attempts whose
+            # Response carries `max_length` (the truncated ones). Fakes in
+            # deterministic tests may not implement should_retry at all.
+            base_should_retry = client.should_retry
+
+            def _counting_should_retry(
+                resp, schema=None, _base=base_should_retry
+            ):
+                reason = _base(resp, schema)
+                if getattr(resp, "max_length", None) is not None:
+                    state["cap_hits"] += 1
+                return reason
+
+            client.should_retry = _counting_should_retry
         start = 0
         if view and view[0].get("role") == "system":
             client.set_system_prompt(view[0]["content"])
@@ -458,6 +492,7 @@ def llm7shi_generate(
             }
         )
         began = time.monotonic()
+        cap_hits_before = state["cap_hits"]
         response = client(view[-1]["content"])
         text = response.text
         _log(
@@ -486,6 +521,7 @@ def llm7shi_generate(
                 # Provider-reported, so the TPM ceiling can be read in its own
                 # currency instead of through the 3.5 B/token convention.
                 **token_usage(response),
+                "max_length_retries": state["cap_hits"] - cap_hits_before,
                 "empty": not str(text).strip(),
             }
         )
@@ -506,6 +542,7 @@ def llm7shi_generate(
         state["client"] = None
         state["mirrored"] = []
         state["attempts"] = {}
+        state["cap_hits"] = 0
 
     generate.reset = reset
     return generate

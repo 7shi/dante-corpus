@@ -5,8 +5,9 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 3: the OPERATOR decides the launch configuration and
-runs the three canticle-parallel runs (command shape below).** Confirmation
+**Next action — Stage 3: the OPERATOR runs the inferno-1 cap experiment
+(command in design note 1), then decides the launch configuration and runs
+the three canticle-parallel runs (command shape below).** Confirmation
 re-run #2 ran clean end-to-end and its readout is COMPLETE (record S3.9,
 2026-08-25): every quality criterion passed, the ×3 average gate passed for
 the first time (87%), and reactive-only pacing measured a 1.50% retry tax
@@ -147,32 +148,36 @@ self-citation, `position` (0,0)) surface only through the checker; quota tax
 varies run-to-run (9.4% pilot vs 2.5% recheck — burst contact with the TPM
 ceiling, not steady pressure).
 
-**Open design notes from the re-run #2 session (2026-08-25) — decision
-pending operator; recorded before any code change.**
+**Design notes from the re-run #2 session (2026-08-25); note 1 RESOLVED and
+implemented on 2026-08-25 (see its header), note 2 recorded, no action
+recommended.**
 
-1. **Generation-side runaway cap (`Client(max_length=...)`) — recommended
-   threshold 12,000 chars.** Motivation: re-run #2's peak context trace
-   (37.3 kB ≈ 13k tok, 81% of ceiling alone) traces to one runaway first
-   response (session 11: **17,739 B / 7,089 output tokens**, near-zero
-   thinking) that then rode history through the session's remaining sends.
-   llm7shi mechanics (verified in the installed source):
-   `max_length` counts **answer-text characters only** (thinking excluded);
-   crossing it makes `should_retry` fail the turn and the Client's quality-
-   retry loop **regenerates automatically**, printing one stderr warning.
-   Measured output-size distribution over all three inferno-1 runs (308
-   responses): median ~750 B, p90 ≤ 2.6 kB, legitimate cross-run max
-   **6,295 B**, the runaway at **17,739 B** — a ~3× natural gap. 12k chars
-   sits ≥ 1.9× above the legitimate maximum (headroom for corpus units
-   heavier than inferno-1) and cuts the observed runaway at 68% of its size;
-   a false positive costs one regeneration (~0.8 kB median re-bill), a miss
-   costs the full resend tail — asymmetric in favor of the lower line.
-   Counterfactual on this run's log: capping outputs > 4 kB at 400 B would
-   have held max context at 22.3 kB (60%) with 2 triggers; the cap prevents
-   the bloat at the source instead. Caveats: thinking-only runaways are not
-   caught (they bill but never enter history — acceptable); after retries
-   exhaust, a truncated reply could enter history (practically unreachable
-   at this threshold); implementation seam is `llm7shi_generate`'s
-   `Client(...)` construction, currently `max_length=None`.
+1. **Generation-side runaway cap (`Client(max_length=...)`) — RESOLVED
+   (2026-08-25): operator decision `max_length = 6000` chars, implemented
+   same day (record S3.10 in [`STAGE3.md`](STAGE3.md)); next act is the
+   operator's inferno-1 experiment.** The design note's provisional 12,000
+   line was overturned by verification: its "legitimate cross-run max 6,295
+   B" anchor was a misclassification — a turn-1 cross-run scan (99 sessions)
+   shows the opener is structurally the ~114 B `read_unit` call, and both
+   >4 kB outputs (17,739 B and 6,295 B) are verbatim-run turn-1 over-packs,
+   i.e. one pathology family. The natural output maximum is 3,885 B ≈ 3,847
+   chars; caps 5,000/6,000 catch both events with zero observed false
+   positives, 8,000/12,000 miss the 6.3 kB event; post-cap peaks are bounded
+   by organic multi-turn contexts (~22.3–22.7 kB) either way. Mechanics
+   confirmed in source: `max_length` counts answer-text **characters only**
+   (a streaming chunk is not necessarily one token; provider counts land only
+   post-stream), crossing it stops the stream and the Client regenerates
+   automatically (`DEFAULT_LLM_RETRIES = 3`). Implementation:
+   `llm7shi_generate(max_length=None)` hands it to `Client(...)` and counts
+   cap-caused regenerations as **`max_length_retries`** on each
+   `llm_response` record (the one Client-internal retry made visible — the
+   readout needs a durable trigger count); `agent_fallback(max_length=None)`
+   passes through; the policy default lives at `reconstruct --max-length`
+   (default 6000, `0` disables), announced in the banner. The benchmark stays
+   uncapped until its own decision. Experiment command (dry-run, solo arm
+   comparable to re-run #2):
+   `uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 \
+          --verify-gold --model google:gemma-4-31b-it --log harness/recon-inf1-cap6k.log`
 2. **Interim convention health check — tool calls answered by injecting
    return values (`<tool_result>` user messages): no malfunction signal,
    bloat already treated at the source.** Measured over the two instrumented
@@ -226,7 +231,7 @@ pending operator; recorded before any code change.**
    live at repo root (`tests/test_harness_*.py`). `skel/` is protected:
    reconstruction writes need the explicit `--write` flag on top of passing
    all three gates, canto-atomically.
-5. **Session housekeeping (2026-08-25, latest assistant session)**: read out
+5. **Session housekeeping (earlier 2026-08-25 session)**: read out
    confirmation re-run #2 into record S3.9 ([`STAGE3.md`](STAGE3.md)) —
    quality held (F1 0.7728, 18/34, zero empties), ×3 average **87% PASS**
    unpaced (first pass of that gate), reactive-only validated solo (retry
@@ -236,22 +241,41 @@ pending operator; recorded before any code change.**
    numbers the launch-configuration decision moved to RESOLVED-with-
    recommendation (interval default 0 + shared bucket), and S3.7's open
    whitespace→token question was **closed** by an operator-run offline probe
-   (`/tmp/opencode/spec_indent_tokens.py`, ephemeral; method recorded in
-   S3.9): −1,752 B/call = **−410 real tokens** (marginal 4.27 B/tok, 82%
-   survival vs the 3.5 convention — bucket debits conservative in the safe
-   direction), validated exactly against the log (byte parity 33/33; offline
-   opening count 2,436 tok = logged median 2,436). No code changed this
-   session — tests stand at 861 and the tree carries only PLAN/STAGE3 doc
-   updates. (Earlier 2026-08-25 sessions: the unit-level-resume fix (side
-   note above); S3.8 token records + live preflight; S3.5–S3.7 removals;
-   S3.2 design + gate re-check; S3.3 implementation; S3.1 analysis; run #1
-   wiring fix. 2026-08-24: the M2.5 recheck closed Stage 2.)
-   **Nothing is in flight on the assistant side — the next session starts
-   from the operator's launch call and the three canticle-parallel runs,
-   not from code.** Two open design notes below (the generation-side
-   `max_length` cap with its 12k-char recommendation, and the interim-
-   convention health check) await the operator's decision; neither blocks
-   the launch.
+    (`/tmp/opencode/spec_indent_tokens.py`, ephemeral; method recorded in
+    S3.9): −1,752 B/call = **−410 real tokens** (marginal 4.27 B/tok, 82%
+    survival vs the 3.5 convention — bucket debits conservative in the safe
+    direction), validated exactly against the log (byte parity 33/33; offline
+    opening count 2,436 tok = logged median 2,436). (Earlier 2026-08-25
+    sessions: the unit-level-resume fix (side
+    note above); S3.8 token records + live preflight; S3.5–S3.7 removals;
+    S3.2 design + gate re-check; S3.3 implementation; S3.1 analysis; run #1
+    wiring fix. 2026-08-24: the M2.5 recheck closed Stage 2.)
+    **Session housekeeping (2026-08-25, latest assistant session): the
+    `max_length` design note verified, resolved at 6,000 chars by operator
+    decision, and implemented — record S3.10** ([`STAGE3.md`](STAGE3.md)):
+    the provisional 12k line's "legitimate max" anchor was a misclassified
+    turn-1 over-pack (cross-run scan: openers are ~114 B in 97/99 sessions;
+    both >4 kB outputs are verbatim-run first turns), so 5–6k chars catches
+    every observed event with zero false positives while 8k+ misses one.
+    Shipped: `llm7shi_generate(max_length=...)` → `Client(max_length=...)`
+    with cap regenerations counted durably as `max_length_retries` on
+    `llm_response`; `agent_fallback(max_length=...)`; `reconstruct
+    --max-length` (default 6000, `0` off) with banner announcement; benchmark
+    deliberately uncapped for now. Tests 861 → 864; next act is the
+    operator's inferno-1 experiment (command in design note 1).
+   **Nothing is in flight on the assistant side. The operator's cap
+   experiment on inferno 1 is the act in progress; the next assistant
+   session starts from its readout** — `harness/recon-inf1-cap6k.log` into
+   a new ledger record ([`STAGE3.md`](STAGE3.md); criteria listed in
+   S3.10's experiment protocol): F1 within the 0.744–0.796 band, gate-pass
+   ~18/34, zero empties; Σ`max_length_retries` and which sessions triggered
+   (expected shape: turn-1 over-packs landing near ~115 B after one
+   regeneration); peak request context vs re-run #2's 37.3 kB; wall clock
+   vs 5,275.5 s. On a pass, the launch configuration for the three
+   canticle-parallel runs carries the 6,000-char cap by default (`--max-length
+   0` is the recorded off switch), and the expansion proceeds per the
+   recommended configuration below. One informational design note remains
+   below (the interim-convention health check — no action recommended).
 
 ---
 
@@ -328,7 +352,16 @@ pending operator; recorded before any code change.**
       `context_bytes/input_tokens` measured median 3.56 / aggregate 3.44 —
       the 3.5 convention stands; thought = 71% of generated tokens and
       duration tracks total_tokens r=+0.97, closing S3.1's
-      non-localizable-backoff negative result. Remaining acts: the 99-canto
+      non-localizable-backoff negative result. **Record S3.10 (same day)**
+      verified the generation-side runaway-cap design note, overturning its
+      provisional 12k line (the "legitimate max" anchor was a misclassified
+      turn-1 over-pack; natural output max 3,885 B), and shipped the cap at
+      the operator's decision of **6,000 chars**: `llm7shi_generate` /
+      `agent_fallback` take `max_length`, `reconstruct --max-length` defaults
+      it on with banner announcement, and cap regenerations land durably as
+      `max_length_retries` on `llm_response` records; benchmark uncapped
+      until its own decision. Remaining acts: the inferno-1 cap experiment
+      (operator-run), then the 99-canto
       expansion as three canticle-parallel runs behind the existing gates
       (launch configuration recommended on S3.9: interval default 0 + shared
       bucket), then the corpus-wide readout. The standing constraint holds:
@@ -410,12 +443,11 @@ pending operator; recorded before any code change.**
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **861 passed** (547 corpus + 46 `test_harness_tools.py` +
-   76 `test_harness_toolcall.py` + 37 `test_harness_agent.py` +
+- Test suite: **864 passed** (547 corpus + 46 `test_harness_tools.py` +
+   76 `test_harness_toolcall.py` + 39 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   33 `test_harness_reconstruct.py` (unit-level resume, side note above) +
-   16 `test_harness_pacing.py`).
+   34 `test_harness_reconstruct.py` + 16 `test_harness_pacing.py`).
 
 ---
 

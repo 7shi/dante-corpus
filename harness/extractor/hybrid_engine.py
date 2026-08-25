@@ -468,6 +468,7 @@ def agent_fallback(
     payload_tier: str = "R1",
     min_send_interval: float = 0.0,
     token_bucket=None,
+    max_length: int | None = None,
 ) -> AgentFallback:
     """Build the live Tier-2 callable over `runner.agent.run_unit`.
 
@@ -485,7 +486,10 @@ def agent_fallback(
     transcript compaction and the continuation prompt are both gone, so the
     wire carries the transcript verbatim): `payload_tier` selects
     `read_unit`'s rendering tier, and `min_send_interval` / `token_bucket`
-    (a `runner.agent.TokenBucket`) pace the single send point.
+    (a `runner.agent.TokenBucket`) pace the single send point. `max_length`
+    is the generation-side runaway cap in answer-text characters, handed to
+    `Client(max_length=)` unchanged (`None` = off here — the operator-facing
+    CLI owns the policy value; STAGE3.md record S3.10).
     """
     from harness.runner.agent import (
         DEFAULT_MODEL,
@@ -519,6 +523,7 @@ def agent_fallback(
             request_log=request_log,
             min_send_interval=min_send_interval,
             token_bucket=token_bucket,
+            max_length=max_length,
         )
     )
     toolkit = GrammarToolkit(payload_tier=payload_tier)

@@ -1054,6 +1054,15 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         help="bucket capacity in tokens (default: 6500)",
     )
     parser.add_argument(
+        "--max-length",
+        type=int,
+        default=6000,
+        help="generation-side runaway cap in answer-text characters per call "
+        "(llm7shi max_length: crossing it fails the turn and the Client "
+        "regenerates; thinking is not counted; 0 disables; default 6000, "
+        "STAGE3.md record S3.10)",
+    )
+    parser.add_argument(
         "--log",
         type=Path,
         help="streaming JSONL log: unit/gold/canto_complete records, summary "
@@ -1168,10 +1177,15 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         bucket_note = (
             f"{args.token_bucket} (rate {rate:g} tok/min, depth {depth:g} tok)"
         )
+    if args.max_length < 0:
+        parser.error("--max-length must be >= 0 (0 disables the cap)")
+    max_length = args.max_length or None
     print(
         f"reconstruct: transcripts verbatim, "
         f"payload tier {args.payload_tier}; pacing: min-send-interval "
-        f"{args.min_send_interval:g}s, token bucket {bucket_note}"
+        f"{args.min_send_interval:g}s, token bucket {bucket_note}; "
+        f"max-length "
+        f"{'off' if max_length is None else f'{max_length} chars'}"
     )
 
     # One streaming log carries everything: unit/gold/canto_complete/summary
@@ -1207,6 +1221,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             "payload_tier": args.payload_tier,
             "min_send_interval": args.min_send_interval,
             "token_bucket": bucket,
+            "max_length": max_length,
         }
         if args.max_turns is not None:
             fallback_kwargs["max_turns"] = args.max_turns
