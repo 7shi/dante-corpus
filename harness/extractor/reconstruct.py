@@ -1254,6 +1254,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 report.add_unit(record)
                 if sink is not None:
                     sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    sink.flush()  # §5: every completed unit is durable at once
             if args.verify_gold:
                 gold_report, gold_records = verify_against_gold(recon)
                 for outcome, record in zip(recon.outcomes, gold_records):
@@ -1262,6 +1263,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     report.add_gold(record)
                     if sink is not None:
                         sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                        sink.flush()
             complete: dict = {
                 "record": "canto_complete",
                 "canticle": canticle,
@@ -1277,6 +1279,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 complete["commit"] = commit_record
                 if sink is not None:
                     sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
+                    sink.flush()
             # Wall clock of everything this canto cost (reconstruction,
             # verification, gold comparison, commit) — sums into the summary
             # and folds across resumed attempts via the record.
