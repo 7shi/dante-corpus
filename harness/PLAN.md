@@ -147,6 +147,50 @@ self-citation, `position` (0,0)) surface only through the checker; quota tax
 varies run-to-run (9.4% pilot vs 2.5% recheck — burst contact with the TPM
 ceiling, not steady pressure).
 
+**Open design notes from the re-run #2 session (2026-08-25) — decision
+pending operator; recorded before any code change.**
+
+1. **Generation-side runaway cap (`Client(max_length=...)`) — recommended
+   threshold 12,000 chars.** Motivation: re-run #2's peak context trace
+   (37.3 kB ≈ 13k tok, 81% of ceiling alone) traces to one runaway first
+   response (session 11: **17,739 B / 7,089 output tokens**, near-zero
+   thinking) that then rode history through the session's remaining sends.
+   llm7shi mechanics (verified in the installed source):
+   `max_length` counts **answer-text characters only** (thinking excluded);
+   crossing it makes `should_retry` fail the turn and the Client's quality-
+   retry loop **regenerates automatically**, printing one stderr warning.
+   Measured output-size distribution over all three inferno-1 runs (308
+   responses): median ~750 B, p90 ≤ 2.6 kB, legitimate cross-run max
+   **6,295 B**, the runaway at **17,739 B** — a ~3× natural gap. 12k chars
+   sits ≥ 1.9× above the legitimate maximum (headroom for corpus units
+   heavier than inferno-1) and cuts the observed runaway at 68% of its size;
+   a false positive costs one regeneration (~0.8 kB median re-bill), a miss
+   costs the full resend tail — asymmetric in favor of the lower line.
+   Counterfactual on this run's log: capping outputs > 4 kB at 400 B would
+   have held max context at 22.3 kB (60%) with 2 triggers; the cap prevents
+   the bloat at the source instead. Caveats: thinking-only runaways are not
+   caught (they bill but never enter history — acceptable); after retries
+   exhaust, a truncated reply could enter history (practically unreachable
+   at this threshold); implementation seam is `llm7shi_generate`'s
+   `Client(...)` construction, currently `max_length=None`.
+2. **Interim convention health check — tool calls answered by injecting
+   return values (`<tool_result>` user messages): no malfunction signal,
+   bloat already treated at the source.** Measured over the two instrumented
+   benchmark logs (176 cases, 624 turns, 905 dispatched calls): parse
+   failures **2 / 1,248 turns (0.16%)**, dispatch errors **1 / 905**,
+   `read_unit` served **exactly once per session** (174/174 — no
+   re-dispatch pathology), and the INVALID→feedback→repair cycle worked as
+   designed (**42 / 726 = 5.8%** of validations returned INVALID and were
+   resubmitted). Size side: the heavyweight is the *return value* of
+   `read_unit` (pre-R1: median **12.5 kB**, p90 24 kB, max 27.9 kB per
+   serve, Σ 2.2 MB over 174 serves) — precisely what payload tier R1
+   already cut (p50 2.7 kB; corpus wire 27.4 → 11.3 MB, record S3.3);
+   `validate_candidate` verdicts are tiny (median **183 B**); assistant
+   `<tool_call>` bodies ride inside output text (median 784 B total) and
+   their pathological tail is design note 1's subject. Conclusion: no
+   action warranted on the convention itself; the remaining lever is the
+   generation cap above.
+
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§3–§5), then
    [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6 (observability + log
    contract; `reconstruct.py` already ships it incl. resume).
@@ -204,7 +248,10 @@ ceiling, not steady pressure).
    wiring fix. 2026-08-24: the M2.5 recheck closed Stage 2.)
    **Nothing is in flight on the assistant side — the next session starts
    from the operator's launch call and the three canticle-parallel runs,
-   not from code.**
+   not from code.** Two open design notes below (the generation-side
+   `max_length` cap with its 12k-char recommendation, and the interim-
+   convention health check) await the operator's decision; neither blocks
+   the launch.
 
 ---
 
