@@ -5,39 +5,54 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 3: the live confirmation run (§5 of
-[`STAGE3.md`](STAGE3.md), OPERATOR-run).** The implementation is COMPLETE
-(2026-08-25, record S3.3 in [`STAGE3.md`](STAGE3.md) — the stage-3 design +
-ledger home): all seven §4 items shipped (compact `read_unit` tiers R1/S1,
-`continuation_system_prompt` at the measured 8,831 B, the pure history
-policy in `runner/compact.py`, adapter fingerprint sync + pacing +
-`TokenBucket`, `agent_fallback` pass-through, `reconstruct` CLI flags),
-tests 833 → 867 passed. Three measured deviations from the S3.2
-counterfactuals are documented in the S3.3 record (note column kept as R1's
-9th morphology element; compact JSON separators on the `tool_result` wire —
-aligning the wire with the design's measurement basis; NP children
-flattened in both tiers): on the measured wire R1 is 11.3 MB corpus-wide,
-max unit 10.7 kB, tail view ≈ 43% solo — inside every restated gate. The
-confirmation run is one inferno-1 re-run, fresh `--log`, compact + interval
-35 + no bucket, same command shape as the M2.5 recheck:
+**Next action — Stage 3: confirmation re-run #2 readout (the OPERATOR ran
+it; paste/point at `harness/recon-inf1-results-only.log` and read out).**
+State at handoff (all records in [`STAGE3.md`](STAGE3.md), ledger S3.4–S3.5,
+2026-08-25):
+
+- Run #1 (`recon-inf1-compact.log`, compact R1 + interval 35) read out: F1
+  **0.7867** → R1 kept, 19/34 units, ×3 average 72%, peak call 34%, retry
+  tax 1.6% — solo rolling-60 **76% vs ≤65%**, root-caused to a wiring bug
+  (`agent_fallback` built a fresh generate closure per unit, so pacing state
+  never spanned sessions); fixed + regression-tested.
+- Operator decisions since: `--min-send-interval` defaults **0**
+  (reactive-only); **record S3.5** — the wire view re-sends only the newest
+  assistant turn verbatim (the pending submission = the model's repair
+  reference); older turns (thinking prose, old tool_call bodies) are never
+  re-sent; the opening rides verbatim. Opt-ins: `--assistant-turns digest`
+  (S3.3 digests), `--continuation-prompt` (calls-2+ prompt swap). A pure
+  results-only mode existed briefly and was **removed by operator verdict**
+  (repair-blind). Tests 868 → 871.
+- The run just executed: one inferno-1 pass, compact ON (default `last`),
+  interval 0, no bucket:
 
 ```bash
 uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 \
        --verify-gold --model google:gemma-4-31b-it \
-       --log harness/recon-inf1-compact.log
+       --log harness/recon-inf1-results-only.log
 ```
 
-(compaction and the 35 s interval are the defaults; `--no-compact`,
-`--payload-tier S1`, `--min-send-interval`, `--token-bucket` exist for the
-tier decision and the launch.) Pass criteria per §5: request records show
-`context_bytes ≪ uncompacted_bytes` with no request over ~24 kB;
-`--verify-gold` micro F1 inside the pilot/recheck band (floor 0.72); gate
-quantities on the fresh log (×3 average ≤ 80%, peak call ≤ 45% solo,
-rolling-60 ≤ 65%, api-retry tax ≤ ~5%); then the three canticle-parallel
-launch (command shape below) with `--min-send-interval 35 --token-bucket
-<shared path>` on all three shells. Standing constraint unchanged:
-compaction changes session semantics — designed between runs, never
-mid-run.
+Readout checklist for this log (deterministic; assistant-run):
+1. **Quality first**: verify-gold micro F1 inside the pilot/recheck band
+   0.744–0.796 (floor 0.72 — run #1 measured 0.7867 on the same canto);
+   gate-pass units ~18±noise of 34; empty responses 0. This isolates whether
+   repair-with-visible-submission + dropped older context holds quality.
+2. **Compaction live**: all position≥7 requests show
+   `context_bytes < uncompacted_bytes`; openings verbatim; no inversions.
+3. **Gate quantities (observational — §5 defined them for the paced
+   config)**: ×3 average (predicted ≈ **94%** unpaced: Σ ≈ 1,455 kB over a
+   ≈ 82 min compute-only span), peak single call (~38% solo), rolling-60,
+   api-retry tax vs run #1's paced 1.6% and the historical unpaced
+   2.5–9.4%. High retry tax here is EXPECTED, not a failure signal by
+   itself.
+4. Decide next: if quality holds → pick launch pacing (bucket mandatory for
+   three streams at these averages; `--continuation-prompt` recovers
+   ×3 ≈ 74% if bytes must come down) and launch the three canticle-parallel
+   runs (command shape below). If quality drops vs run #1's 0.7867 → try
+   `--assistant-turns digest` before touching anything else.
+
+Standing constraint unchanged: compaction changes session semantics —
+designed between runs, never mid-run.
 
 The single streaming log also carries the request-level cost records (shipped
 post-pilot 2026-08-24, live-proven by the recheck): the fallback appends one
@@ -67,6 +82,14 @@ uv run python -m harness.extractor.reconstruct --canticle inferno --all \
 # likewise --canticle purgatorio → harness/recon-purgatorio.log
 # and    --canticle paradiso  → harness/recon-paradiso.log
 ```
+
+**Open launch-configuration decision — PARTIALLY RESOLVED (2026-08-25):**
+the operator chose reactive-only as the new default (`--min-send-interval`
+now defaults 0, record S3.4) and the confirmation re-run exercises that arm;
+run #1's counterfactuals stand as the recorded comparison (interval ≈0 → ×3
+average 84% > G1's 80% by construction; interval-35 global → all gates
+pass). Still open at launch time: whether the three parallel shells carry a
+bucket, an interval, both, or neither — decide on the re-run's readout.
 
 Watch items carried from the closed Stage-2 runs (both inferno-1 runs, see
 [`STAGE2.md`](STAGE2.md)): the fast-routed unit fails Gate 2 (routing
@@ -168,12 +191,47 @@ ceiling, not steady pressure).
       configuration announced in the header; `llm_request` records gained
       `uncompacted_bytes` + `paced_seconds`. Measured wire (S3.3): R1
       11.3 MB corpus-wide (41% of the old wire), max unit 10.7 kB, tail
-      view ≈ 43% solo — inside every restated gate. Remaining acts: the
-      live inferno-1 confirmation run (§5, operator — the Handoff's next
-      action), then the 99-canto expansion as three canticle-parallel runs
-      behind the existing gates, and the corpus-wide readout. The standing
-      constraint holds: compaction changes session semantics — design
-      first, never mid-run.
+      view ≈ 43% solo — inside every restated gate. **Record S3.4
+      (2026-08-25)**: confirmation run #1 read out — F1 0.7867 (R1 kept),
+      19/34 units, ×3 average 72%, peak call 34%, retry tax 1.6%, but
+      solo rolling-60 **76% vs ≤65%**; root cause was a wiring bug
+      (`agent_fallback` built a fresh generate closure per unit, so
+      pacing state never spanned sessions) — fixed with a regression
+      test, and the operator set `--min-send-interval` default to 0.
+      **Record S3.5 (same day)**: the wire view re-sends only the newest
+      assistant turn (the pending submission / repair reference); older
+      turns are dropped; opt-ins `--assistant-turns digest`,
+      `--continuation-prompt`. Remaining acts: the confirmation **re-run
+      #2 readout** (`recon-inf1-results-only.log`, operator ran it — the
+      Handoff's next action has the checklist), then the 99-canto
+      expansion as three canticle-parallel runs behind the existing
+      gates, and the corpus-wide readout. The standing constraint holds:
+      compaction changes session semantics — design first, never mid-run.
+- Open decision, Stage 3 launch pacing (2026-08-25, raised while the live
+  confirmation run was in flight): **proactive vs reactive-only.** The
+  operator challenged the designed proactive interval (`[pace] send
+  interval: waiting 26.3s`) on the correct observation that 429s carry no
+  account penalty: if waiting is only ever needed *after* a 429 lands,
+  reactive-only (`--min-send-interval 0`, riding the proven Client
+  auto-retry backstop) may beat a deterministic +4.4% wall-clock tax.
+  Analysis held on both sides: (i) solo, reactive-only plausibly wins —
+  the unpaced tax is stochastic (2.5–9.4% run-to-run) and R1 compaction
+  already cuts the physical wire to 41%, lowering burst-contact
+  probability further; (ii) the three-parallel launch shares one
+  per-API-key ceiling and reactive-only has **no inter-stream
+  coordination** — independent per-Client backoff timers can re-collide
+  inside the same rolling minute, which is what the shared `TokenBucket`
+  exists to prevent (sustained aggregate ≤ 75% by construction);
+  (iii) 429 waits surface only as `wait_retry` / `turn_seconds`, never
+  `paced_seconds`, so the deliberate-vs-forced wait separation on the
+  wire records is lost. This reopens STAGE3.md §2.D's "no reacting to
+  429s" rejection **for the launch configuration only**. **Update (same
+  day, S3.4):** partially resolved — the operator set the interval default
+  to 0 and the re-run exercises reactive-only; run #1's counterfactuals
+  recorded for comparison (interval ≈0 → ×3 average 84% > G1's 80% by
+  construction; interval-35 enforced globally → all gates pass). The
+  launch combination (bucket / interval / both / neither) is decided on
+  the re-run readout.
 - Open design question (protocol layer): a dedicated `submit_candidate`
   termination tool — the practical half is resolved by the nudge policy
   ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
@@ -220,11 +278,11 @@ ceiling, not steady pressure).
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **867 passed** (547 corpus + 46 `test_harness_tools.py` +
+- Test suite: **871 passed** (547 corpus + 46 `test_harness_tools.py` +
    76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   32 `test_harness_reconstruct.py` + 28 `test_harness_compact.py`).
+   32 `test_harness_reconstruct.py` + 32 `test_harness_compact.py`).
 
 ---
 

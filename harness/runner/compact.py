@@ -8,16 +8,24 @@ llm7shi_generate`) applies at its single send point:
 
 - **Call 1** (transcript length == the opening length): the verbatim opening —
   planning semantics are exactly Stage-1/2's.
-- **Calls 2+**: `[continuation-system] [task] [compacted history] [newest]`:
+- **Calls 2+**: `[prefix] [compacted history] [newest]`:
 
-  - the continuation system prompt (see `runner.prompts.
-    continuation_system_prompt`) as message 0;
-  - the opening's task message verbatim (the unit assignment);
-  - the compacted history: the `read_unit` payload and every other
-    `<tool_result>` feedback **verbatim** (they ride in user messages, which
-    never shrink), the **last** assistant turn verbatim (the newest candidate
-    submission the model repairs from), and every older assistant turn as a
-    one-line digest (turn number, dispatched tool names, 80-char prose head);
+  - **prefix**: the continuation system prompt + task when
+    ``continuation_system`` is given (the S3.3 layout), otherwise the
+    opening's own system + demo + task verbatim (S3.5 default: no prompt
+    swap);
+  - **compacted history**: every user message (`<tool_result>` feedback,
+    `read_unit` payloads, nudges) **verbatim**; assistant turns per
+    ``assistant_mode``:
+
+    - ``"last"`` (S3.5 default): the newest assistant turn verbatim (the
+      pending candidate submission the model repairs from) and every older
+      one omitted — neither their thinking prose nor their old
+      ``<tool_call>`` bodies are re-sent;
+    - ``"digest"`` (the S3.3 layout): the last assistant turn verbatim and
+      every older one as a one-line digest (turn number, dispatched tool
+      names, 80-char prose head);
+
   - the newest transcript message verbatim, in last position — the loop's
     contract.
 
@@ -81,15 +89,24 @@ def compact_view(
     messages: list[dict],
     *,
     opening_len: int,
-    continuation_system: str,
+    continuation_system: str | None = None,
+    assistant_mode: str = "last",
 ) -> list[dict]:
-    """Render the wire view of one send (STAGE3.md §2.A); pure function.
+    """Render the wire view of one send (STAGE3.md §2.A, S3.5); pure function.
 
     `messages` is the loop's full transcript (opening first); `opening_len`
-    its prompt-side prefix length (system + demo + task); `continuation_system`
-    the calls-2+ system prompt. Returns a fresh message list — the input is
-    never mutated or aliased.
+    its prompt-side prefix length (system + demo + task). With
+    `continuation_system` the calls-2+ prefix becomes
+    `[continuation_system, task]`; without it the opening prefix is kept
+    verbatim. `assistant_mode` selects how session assistant turns render:
+    `"last"` keeps only the newest one verbatim (the repair reference),
+    `"digest"` keeps the last verbatim and digests older ones. Returns a fresh message list — the
+    input is never mutated or aliased.
     """
+    if assistant_mode not in ("last", "digest"):
+        raise ValueError(
+            f"assistant_mode must be 'last' or 'digest', got {assistant_mode!r}"
+        )
     if opening_len < 1:
         raise ValueError(f"opening_len must be positive, got {opening_len!r}")
     if len(messages) <= opening_len:
@@ -105,18 +122,25 @@ def compact_view(
         default=None,
     )
 
-    view: list[dict] = [
-        {"role": "system", "content": continuation_system},
-        {"role": "user", "content": str(task.get("content", ""))},
-    ]
-    turn = 0
+    if continuation_system is None:
+        # No prompt swap: the whole opening (system + demo + task) verbatim.
+        view: list[dict] = [dict(m) for m in messages[:opening_len]]
+    else:
+        view = [
+            {"role": "system", "content": continuation_system},
+            {"role": "user", "content": str(task.get("content", ""))},
+        ]
     for i, message in enumerate(history):
         content = str(message.get("content", ""))
         if message.get("role") == "assistant":
-            turn += 1
+            turn = sum(
+                1
+                for m in history[: i + 1]
+                if m.get("role") == "assistant"
+            )
             if i == last_assistant:
                 view.append({"role": "assistant", "content": content})
-            else:
+            elif assistant_mode == "digest":
                 view.append(
                     {"role": "assistant", "content": digest_message(content, turn)}
                 )
@@ -131,7 +155,10 @@ def compact_view(
 
 
 def history_policy(
-    opening_len: int, continuation_system: str
+    opening_len: int,
+    continuation_system: str | None = None,
+    *,
+    assistant_mode: str = "last",
 ) -> Callable[[list[dict]], list[dict]]:
     """Bind `compact_view` into the `messages -> wire view` callable the
     adapter takes as `history_policy`."""
@@ -141,6 +168,7 @@ def history_policy(
             messages,
             opening_len=opening_len,
             continuation_system=continuation_system,
+            assistant_mode=assistant_mode,
         )
 
     return policy

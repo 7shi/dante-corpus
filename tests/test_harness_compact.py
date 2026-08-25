@@ -105,7 +105,10 @@ def test_calls_two_plus_use_the_continuation_layout():
         {"role": "user", "content": '<tool_result tool="validate_candidate" ok="false">\n{"error": "row[0]: missing field"}\n</tool_result>'},
     ]
     view = compact_view(
-        transcript, opening_len=OPENING_LEN, continuation_system=CONT_SYSTEM
+        transcript,
+        opening_len=OPENING_LEN,
+        continuation_system=CONT_SYSTEM,
+        assistant_mode="digest",
     )
     roles = [m["role"] for m in view]
     assert roles == ["system", "user", "assistant", "user", "assistant", "user"]
@@ -142,7 +145,10 @@ def test_older_assistant_turns_digest_but_the_last_stays_verbatim():
         {"role": "user", "content": u3},
     ]
     view = compact_view(
-        transcript, opening_len=OPENING_LEN, continuation_system=CONT_SYSTEM
+        transcript,
+        opening_len=OPENING_LEN,
+        continuation_system=CONT_SYSTEM,
+        assistant_mode="digest",
     )
     session_view = view[2:]
     assert [m["content"] for m in session_view] == [
@@ -159,6 +165,31 @@ def test_older_assistant_turns_digest_but_the_last_stays_verbatim():
     assert "[turn 2; called search_corpus]" in digests[1]
 
 
+def test_last_mode_keeps_only_the_newest_submission():
+    """S3.5 default: older assistant turns are omitted entirely while the
+    newest submission rides verbatim as the repair reference."""
+    a1 = "reading.\n" + _block("read_unit", {"canticle": "inferno", "canto": 1, "line_start": 1})
+    u1 = '<tool_result tool="read_unit" ok="true">{}</tool_result>'
+    a2 = "submitting.\n" + _block("validate_candidate", {"candidate_rows": []})
+    u2 = '<tool_result tool="validate_candidate" ok="false">bad</tool_result>'
+    transcript = _opening() + [
+        {"role": "assistant", "content": a1},
+        {"role": "user", "content": u1},
+        {"role": "assistant", "content": a2},
+        {"role": "user", "content": u2},
+    ]
+    view = compact_view(transcript, opening_len=OPENING_LEN)
+    assert [m["role"] for m in view] == [
+        "system", "user", "assistant", "user", "user",
+        "user", "assistant", "user",
+    ]
+    # opening(5) + u1 + a2(last, verbatim) + u2(newest)
+    assert view[5]["content"] == u1
+    assert view[6]["content"] == a2
+    assert view[-1]["content"] == u2
+    assert a1 not in "".join(m["content"] for m in view)
+
+
 def test_nudge_transcripts_compact_with_the_reminder_verbatim():
     prose_answer = "I believe the answer is three predicates."
     nudge = "Do not answer in prose alone: validate a candidate."
@@ -169,7 +200,10 @@ def test_nudge_transcripts_compact_with_the_reminder_verbatim():
         {"role": "user", "content": '<tool_result tool="validate_candidate" ok="true">\n{"valid": true}\n</tool_result>'},
     ]
     view = compact_view(
-        transcript, opening_len=OPENING_LEN, continuation_system=CONT_SYSTEM
+        transcript,
+        opening_len=OPENING_LEN,
+        continuation_system=CONT_SYSTEM,
+        assistant_mode="digest",
     )
     # The pre-nudge prose answer is an *older* assistant turn: digested.
     assert view[2]["content"] == digest_message(prose_answer, 1)
@@ -302,10 +336,10 @@ def _session_transcript():
 
 
 def test_adapter_sends_the_wire_view_and_rebuilds_on_prefix_change(fake_llm):
-    """Compaction end-to-end through the adapter: call 1 verbatim opening,
-    calls 2+ continuation views, one rebuild per changed prefix, and the
-    Client's history always equals the view it was built from."""
-    policy = history_policy(OPENING_LEN, CONT_SYSTEM)
+    """Digest-mode compaction end-to-end through the adapter: call 1 verbatim
+    opening, calls 2+ continuation views, one rebuild per changed prefix, and
+    the Client's history always equals the view it was built from."""
+    policy = history_policy(OPENING_LEN, CONT_SYSTEM, assistant_mode="digest")
     generate = llm7shi_generate("ollama:m", history_policy=policy)
     opening, t2, t3 = _session_transcript()
 
@@ -364,6 +398,36 @@ def test_adapter_without_policy_keeps_one_client_per_session(fake_llm):
     # A repeated call at the same position finds the mirror ahead: rebuild.
     generate(t3)
     assert len(fake_llm) == 2
+
+
+def test_adapter_last_mode_reuses_until_the_submission_rotates(fake_llm):
+    """The S3.5 default over a continuation layout: each rotation of the
+    pending submission changes the view prefix, so the Client rebuilds per
+    call — and no older assistant turn is ever re-sent."""
+    policy = history_policy(OPENING_LEN, CONT_SYSTEM)
+    generate = llm7shi_generate("ollama:m", history_policy=policy)
+    opening, t2, t3 = _session_transcript()
+
+    generate([dict(m) for m in opening])
+    assert len(fake_llm) == 1
+    generate(t2)  # continuation layout change: rebuild
+    assert len(fake_llm) == 2
+    generate(t3)  # submission rotated to a2: prefix changed -> rebuild again
+    assert len(fake_llm) == 3
+
+    client = fake_llm[2]
+    sent = "".join(m["content"] for m in client.history)
+    # The older dispatch turn (a1) is gone; the newest submission (a2) rides
+    # verbatim as the repair reference; results ride verbatim, unduplicated.
+    a1, a2 = t2[OPENING_LEN]["content"], t3[OPENING_LEN + 2]["content"]
+    assert a1 not in sent
+    assert a2 in sent
+    assert sent.count(t2[OPENING_LEN + 1]["content"]) == 1
+    assert sent.count(t3[-1]["content"]) == 1
+    assert client.calls[0] == t3[-1]["content"]
+    # A repeated call at the same position finds the mirror ahead: rebuild.
+    generate(t3)
+    assert len(fake_llm) == 4
 
 
 def test_adapter_reset_regenerates_client_but_not_pacing_state(fake_llm):
@@ -456,10 +520,11 @@ def test_adapter_logs_uncompacted_and_paced_fields(fake_llm, tmp_path, capsys):
 
 
 def test_compacted_session_over_the_real_loop(monkeypatch):
-    """The whole §2.A package over `run_unit` with the real toolkit (inferno 1
+    """The S3.5 default over `run_unit` with the real toolkit (inferno 1
     served in R1), the real prompts, and the real adapter: call 1 sends the
-    verbatim opening, calls 2+ send continuation views whose read_unit payload
-    rides verbatim while older assistant turns digest — and the transcript
+    verbatim opening; calls 2+ send the opening plus the session's tool
+    results only — no thinking, no tool_call bodies — and one Client serves
+    the whole session via the mirror trim, while the transcript
     (UnitResult.messages) is untouched by any of it."""
     from harness.runner.agent import run_unit
     from harness.runner.tools import GrammarToolkit, tool_specs
@@ -509,12 +574,10 @@ def test_compacted_session_over_the_real_loop(monkeypatch):
     monkeypatch.setattr("llm7shi.Client", ScriptedClient)
 
     specs = tool_specs()
-    from harness.runner.prompts import continuation_system_prompt as csp
-
     transport = PromptXmlTransport(
         generate=llm7shi_generate(
             "ollama:m",
-            history_policy=history_policy(OPENING_MESSAGE_COUNT, csp(specs)),
+            history_policy=history_policy(OPENING_MESSAGE_COUNT),
         )
     )
     result = run_unit(
@@ -525,14 +588,113 @@ def test_compacted_session_over_the_real_loop(monkeypatch):
         line_start=1,
     )
     assert result.protocol_complete and result.turns == 3
-    assert len(created) == 3  # opening, continuation, digested continuation
+    # Call 1 builds the Client; call 2 extends the mirror; call 3 rebuilds
+    # once (the pending submission changed from a1 to a2) — then rides.
+    assert len(created) == 2
+    client = created[1]
+    assert client.history[0]["content"] == system_prompt(specs)
+    sent = "".join(m["content"] for m in client.history)
+    # The read_unit payload and validator feedback ride verbatim (R1 legend),
+    # the LAST submission stays as the repair reference...
+    assert '"legend"' in sent and '"morphology"' in sent
+    assert '"obl:per"' in sent  # inside a2, the newest submission
+    # ...while the OLDER dispatch turn never reaches the wire (only its
+    # result does) and the newest submission rides verbatim as the repair
+    # reference.
+    a1 = _block("read_unit", {"canticle": "inferno", "canto": 1, "line_start": 1})
+    a2 = _block(
+        "validate_candidate",
+        {
+            "canticle": "inferno",
+            "canto": 1,
+            "line_start": 1,
+            "candidate_rows": rows,
+        },
+    )
+    assert a1 not in sent
+    assert a2 in sent
+    # The final-answer prose exists only as the last exchange's own reply
+    # (recorded by the Client after generation), never in anything sent.
+    assert not any(
+        "The unit is solved" in m["content"]
+        for m in client.history
+        if m["role"] != "assistant"
+    )
+    # The loop's transcript keeps full fidelity regardless of the wire view.
+    assert result.messages[0]["content"] == system_prompt(specs)
+    assert '"candidate_rows"' in result.messages[OPENING_MESSAGE_COUNT + 2]["content"]
 
-    # Call 1: verbatim opening; system == the full system prompt.
-    first = created[0]
-    assert first.history[0]["content"] == system_prompt(specs)
 
-    # Call 2: continuation system (the measured 8,831 B prompt) + task, then
-    # the read_unit payload verbatim in a user message.
+def test_legacy_digest_session_over_the_real_loop(monkeypatch):
+    """The S3.3 layout (--continuation-prompt --assistant-digests): calls 2+
+    send the continuation system prompt with digested older assistant turns,
+    rebuilding per changed prefix."""
+    from harness.runner.agent import run_unit
+    from harness.runner.tools import GrammarToolkit, tool_specs
+    from harness.toolcall import PromptXmlTransport
+
+    script = iter(
+        [
+            _block("read_unit", {"canticle": "inferno", "canto": 1, "line_start": 1}),
+            _block(
+                "validate_candidate",
+                {
+                    "canticle": "inferno",
+                    "canto": 1,
+                    "line_start": 1,
+                    "candidate_rows": [],
+                },
+            ),
+            "The unit is solved.",
+        ]
+    )
+    created = []
+
+    class ScriptedClient:
+        def __init__(self, model="", **kw):
+            self.history = []
+            self.calls = []
+            created.append(self)
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def __call__(self, prompt):
+            reply = next(script)
+
+            class _Response:
+                text = reply
+
+            self.calls.append(prompt)
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": reply})
+            return _Response()
+
+    monkeypatch.setattr("llm7shi.Client", ScriptedClient)
+
+    specs = tool_specs()
+    from harness.runner.prompts import continuation_system_prompt as csp
+
+    transport = PromptXmlTransport(
+        generate=llm7shi_generate(
+            "ollama:m",
+            history_policy=history_policy(
+                OPENING_MESSAGE_COUNT,
+                csp(specs),
+                assistant_mode="digest",
+            ),
+        )
+    )
+    result = run_unit(
+        transport=transport,
+        toolkit=GrammarToolkit(),
+        canticle="inferno",
+        canto=1,
+        line_start=1,
+    )
+    assert result.protocol_complete and result.turns == 3
+    assert len(created) == 3  # every call rewrote the digest prefix: rebuild
+
     second = created[1]
     assert second.history[0]["content"] == csp(specs)
     assert len(second.history[0]["content"].encode()) == 8831
@@ -540,19 +702,10 @@ def test_compacted_session_over_the_real_loop(monkeypatch):
     assert payload.startswith('<tool_result tool="read_unit" ok="true">')
     assert '"legend"' in payload and '"morphology"' in payload
 
-    # Call 3: the read_unit dispatch turn digested — its JSON body is gone,
-    # the payload user message and the validator feedback stay verbatim.
     third = created[2]
     digest = third.history[2]["content"]
     assert "[turn 1; called read_unit]" in digest
     assert '"canticle"' not in digest
-    assert third.history[3]["content"] == second.history[3]["content"]
-    assert third.history[5]["content"].startswith(
-        '<tool_result tool="validate_candidate"'
-    )
-    # The loop's transcript keeps full fidelity regardless of the wire view.
-    assert result.messages[0]["content"] == system_prompt(specs)
-    assert '"candidate_rows"' in result.messages[OPENING_MESSAGE_COUNT + 2]["content"]
 
 
 # --- agent_fallback wiring (construction only; the callable is operator-run) -------------------
@@ -572,6 +725,33 @@ def test_agent_fallback_builds_with_stage3_parameters(tmp_path):
     assert callable(agent_fallback())
     with pytest.raises(TypeError):
         agent_fallback(token_bucket="not-a-bucket")
+
+
+def test_agent_fallback_shares_one_transport_across_units(monkeypatch):
+    """One transport/generate pair serves all units: pacing state lives in
+    the generate closure and session boundaries are sends too, so a fresh
+    closure per `_run` call would let every session-opening send skip the
+    min-send interval (the wiring bug behind confirmation-run #1's 76%
+    rolling-60 window — fixed by hoisting construction into the factory)."""
+    import harness.runner.agent as agent_mod
+
+    from harness.extractor.hybrid_engine import agent_fallback
+
+    seen = []
+
+    def spy_run_unit(**kwargs):
+        seen.append(kwargs["transport"])
+        return "unit-result"
+
+    monkeypatch.setattr(agent_mod, "run_unit", spy_run_unit)
+    fallback = agent_fallback(compact=True)
+    assert fallback(canticle="inferno", canto=1, line_start=1, line_end=3) == "unit-result"
+    assert fallback(canticle="inferno", canto=1, line_start=4, line_end=6) == "unit-result"
+    assert len(seen) == 2
+    assert seen[0] is seen[1]
+    # The shared generate exposes reset() so run_unit's per-session reset
+    # clears session state while pacing state survives it.
+    assert callable(getattr(seen[0].generate, "reset", None))
 
 
 # --- token bucket ---------------------------------------------------------------------------
@@ -659,7 +839,7 @@ def test_adapter_bucket_wait_logs_paced_seconds(fake_llm, tmp_path, capsys):
     # Depth covers the opening (the launch invariant: depth >= max single
     # call); the rate starves the second send.
     bucket = TokenBucket(path, rate_per_min=60.0, depth=100.0, clock=clock, sleeper=sleeper)
-    policy = history_policy(OPENING_LEN, CONT_SYSTEM)
+    policy = history_policy(OPENING_LEN, CONT_SYSTEM, assistant_mode="digest")
     log = tmp_path / "requests.jsonl"
     with log.open("w", encoding="utf-8") as sink:
         generate = llm7shi_generate(

@@ -536,9 +536,11 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
 
 
 def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeypatch, capsys):
-    """The Stage-3 flags (STAGE3.md §4 item 6): compaction default ON, pacing
-    defaults (35 s interval, bucket off), a header line announcing the live
-    configuration, and full pass-through into agent_fallback."""
+    """The Stage-3 flags (STAGE3.md §4 item 6): compaction default ON in the
+    minimal S3.5 form (drop thinking+calls; no prompt swap, no digests),
+    pacing defaults (interval off since record S3.4, bucket off), a header
+    line announcing the live configuration, and full pass-through into
+    agent_fallback."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
     _write_log(run_log, [_case_record()])
@@ -557,37 +559,45 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     assert rc.main(argv) == 0
     assert captured["compact"] is True
     assert captured["payload_tier"] == "R1"
-    assert captured["min_send_interval"] == 35.0
+    assert captured["continuation_prompt"] is False
+    assert captured["assistant_turns"] == "last"
+    assert captured["min_send_interval"] == 0.0
     assert captured["token_bucket"] is None
     out = capsys.readouterr().out
-    assert "compaction ON (continuation wire view)" in out
+    assert "compaction ON (results+last submission)" in out
     assert "payload tier R1" in out
-    assert "min-send-interval 35s" in out
+    assert "min-send-interval 0s" in out
     assert "token bucket off" in out
 
     captured.clear()
     bucket = tmp_path / "tokbucket.state"
     argv += [
-        "--no-compact",
+        "--continuation-prompt",
+        "--assistant-turns", "digest",
         "--payload-tier", "S1",
-        "--min-send-interval", "0",
+        "--min-send-interval", "45",
         "--token-bucket", str(bucket),
         "--bucket-rate", "6000",
         "--bucket-depth", "3000",
     ]
     assert rc.main(argv) == 0
-    assert captured["compact"] is False
+    assert captured["compact"] is True
     assert captured["payload_tier"] == "S1"
-    assert captured["min_send_interval"] == 0.0
+    assert captured["continuation_prompt"] is True
+    assert captured["assistant_turns"] == "digest"
+    assert captured["min_send_interval"] == 45.0
     bucket_obj = captured["token_bucket"]
     assert bucket_obj is not None
     assert bucket_obj.path == bucket
     assert bucket_obj.rate_per_min == 6000.0
     assert bucket_obj.depth == 3000.0
     out = capsys.readouterr().out
-    assert "compaction OFF (--no-compact)" in out
+    assert (
+        "compaction ON (assistant digests+last submission + continuation prompt)"
+        in out
+    )
     assert "payload tier S1" in out
-    assert "min-send-interval 0s" in out
+    assert "min-send-interval 45s" in out
     assert "rate 6000 tok/min, depth 3000 tok" in out
 
 

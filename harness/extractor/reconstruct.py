@@ -964,11 +964,28 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "default) or sparse named dicts (S1 fallback tier)",
     )
     parser.add_argument(
+        "--continuation-prompt",
+        action="store_true",
+        help="calls 2+ swap the system prompt for the 8.8 kB continuation "
+        "variant (Steps 1-4 and the few-shot demo dropped; off by default "
+        "-- the full opening is re-sent instead, STAGE3.md record S3.5)",
+    )
+    parser.add_argument(
+        "--assistant-turns",
+        choices=["last", "digest"],
+        default="last",
+        help="session assistant turns in the calls-2+ wire view: 'last' "
+        "keeps only the newest submission verbatim (repair reference; "
+        "'digest' keeps one-line digests of older turns "
+        "(STAGE3.md record S3.5)",
+    )
+    parser.add_argument(
         "--min-send-interval",
         type=float,
-        default=35.0,
-        help="minimum seconds between this stream's backend sends (0 = off; "
-        "breaks the fast-response/big-send pairing, STAGE3.md §2.C)",
+        default=0.0,
+        help="minimum seconds between this stream's backend sends (0 = off, "
+        "the default; pass e.g. 35 to break the fast-response/big-send "
+        "pairing, STAGE3.md §2.C)",
     )
     parser.add_argument(
         "--token-bucket",
@@ -1080,9 +1097,17 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         bucket_note = (
             f"{args.token_bucket} (rate {rate:g} tok/min, depth {depth:g} tok)"
         )
+    if args.no_compact:
+        history_note = "OFF (--no-compact)"
+    else:
+        shape = {
+            "last": "results+last submission",
+            "digest": "assistant digests+last submission",
+        }[args.assistant_turns]
+        swap = " + continuation prompt" if args.continuation_prompt else ""
+        history_note = f"ON ({shape}{swap})"
     print(
-        f"reconstruct: compaction "
-        f"{'OFF (--no-compact)' if args.no_compact else 'ON (continuation wire view)'}, "
+        f"reconstruct: compaction {history_note}, "
         f"payload tier {args.payload_tier}; pacing: min-send-interval "
         f"{args.min_send_interval:g}s, token bucket {bucket_note}"
     )
@@ -1119,6 +1144,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             "model": args.model,
             "compact": not args.no_compact,
             "payload_tier": args.payload_tier,
+            "continuation_prompt": args.continuation_prompt,
+            "assistant_turns": args.assistant_turns,
             "min_send_interval": args.min_send_interval,
             "token_bucket": bucket,
         }

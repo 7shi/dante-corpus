@@ -467,6 +467,8 @@ def agent_fallback(
     request_log=None,
     compact: bool = True,
     payload_tier: str = "R1",
+    continuation_prompt: bool = False,
+    assistant_turns: str = "last",
     min_send_interval: float = 0.0,
     token_bucket=None,
 ) -> AgentFallback:
@@ -482,11 +484,16 @@ def agent_fallback(
     (an open UTF-8 JSONL sink), receives one `llm_request` / `llm_response`
     record pair per backend call (see `runner.agent.llm7shi_generate`).
 
-    Stage-3 wiring (STAGE3.md §4 items 4-5) passes through to the adapter:
-    `compact` enables the continuation wire view (`runner.compact` over the
-    `continuation_system_prompt`), `payload_tier` selects `read_unit`'s
-    rendering tier, and `min_send_interval` / `token_bucket` (a
-    `runner.agent.TokenBucket`) pace the single send point.
+    Stage-3 wiring (STAGE3.md §4 items 4-5, reshaped by record S3.5) passes
+    through to the adapter: `compact` enables the history policy — the
+    default keeps only the newest assistant turn verbatim (the pending
+    candidate submission the model repairs from) while older turns are
+    omitted entirely; `assistant_turns="digest"` renders older turns as
+    one-line digests instead;
+    `continuation_prompt` opts into the calls-2+ system-prompt swap.
+    `payload_tier` selects `read_unit`'s rendering tier, and
+    `min_send_interval` / `token_bucket` (a `runner.agent.TokenBucket`)
+    pace the single send point.
     """
     from harness.runner.agent import (
         DEFAULT_MODEL,
@@ -506,9 +513,17 @@ def agent_fallback(
     specs = tool_specs()
     policy = None
     if compact:
+        if assistant_turns not in ("last", "digest"):
+            raise ValueError(
+                f"assistant_turns must be 'last' or 'digest', "
+                f"got {assistant_turns!r}"
+            )
         policy = history_policy(
             OPENING_MESSAGE_COUNT,
-            continuation_system_prompt(specs, workflow),
+            continuation_system_prompt(specs, workflow)
+            if continuation_prompt
+            else None,
+            assistant_mode=assistant_turns,
         )
     if token_bucket is not None and not isinstance(token_bucket, TokenBucket):
         raise TypeError(
@@ -516,20 +531,28 @@ def agent_fallback(
             f"got {type(token_bucket).__name__}"
         )
 
+    # One transport/toolkit pair serves ALL units (the benchmark pattern):
+    # built here, not per `_run` call, because pacing state lives in the
+    # generate closure and session boundaries must stay spaced too
+    # (`run_unit` resets the transport per session; reset() deliberately
+    # keeps `last_send_start`, STAGE3.md §2.C).
+    transport = PromptXmlTransport(
+        generate=llm7shi_generate(
+            model,
+            quiet=not verbose,
+            file=file,
+            request_log=request_log,
+            history_policy=policy,
+            min_send_interval=min_send_interval,
+            token_bucket=token_bucket,
+        )
+    )
+    toolkit = GrammarToolkit(payload_tier=payload_tier)
+
     def _run(*, canticle: str, canto: int, line_start: int, line_end: int):
         return agent_run_unit(
-            transport=PromptXmlTransport(
-                generate=llm7shi_generate(
-                    model,
-                    quiet=not verbose,
-                    file=file,
-                    request_log=request_log,
-                    history_policy=policy,
-                    min_send_interval=min_send_interval,
-                    token_bucket=token_bucket,
-                )
-            ),
-            toolkit=GrammarToolkit(payload_tier=payload_tier),
+            transport=transport,
+            toolkit=toolkit,
             canticle=canticle,
             canto=canto,
             line_start=line_start,

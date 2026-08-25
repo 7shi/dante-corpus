@@ -5,11 +5,18 @@ file), the stage's milestone ledger as records accrue, and eventually the
 archived stage record at close. [`PLAN.md`](PLAN.md) keeps status and the
 handoff; numbers live here, never log filenames.
 
-**Status**: design COMPLETE (2026-08-25, record S3.2). **Implementation
+**Status**: design COMPLETE (2026-08-25, record S3.2). Implementation
 COMPLETE (2026-08-25, record S3.3 — this file's §4 map, all seven items
-shipped; measured deviations from the §2/§3 counterfactuals documented in the
-ledger's S3.3 record).** Next: the §5 confirmation run (operator), then the
-99-canto launch.
+shipped; measured deviations from the §2/§3 counterfactuals documented in
+the ledger's S3.3 record). **Confirmation run #1 read out (record S3.4):
+every gate passes except solo rolling-60 (76% vs ≤65%), caused by a
+fallback-wiring bug since fixed; `--min-send-interval` now defaults to 0 by
+operator decision. Record S3.5 (same day): the wire view now re-sends only
+the newest assistant turn (the pending submission, the model's repair
+reference) — older turns, thinking prose and old tool_call bodies are never
+re-sent; the opening rides verbatim and digests are an opt-in
+(`--assistant-turns {last,digest}`, `--continuation-prompt`).
+Re-run #2 pending (operator).**
 
 ---
 
@@ -150,8 +157,9 @@ the next — bigger — send into the same rolling minute. Both mechanisms live 
 the adapter, at the single send point; pacing state deliberately survives
 `transport.reset()` (session boundaries are also sends).
 
-- **Per-stream min inter-send interval** (`min_send_interval`, default 35 s,
-  0 = off): sleep before the request until the last send *start* is ≥ interval
+- **Per-stream min inter-send interval** (`min_send_interval`, default 0 = off
+  since record S3.4 — pass e.g. `--min-send-interval 35` to enable):
+  sleep before the request until the last send *start* is ≥ interval
   past. Measured effect (recheck timeline, R1 views): solo rolling-60 max
   40.8 → 32.5 kB (73% → 58% of solo ceiling) at **+4.4% wall clock**.
   45 s costs +13%, 60 s +27% for no further rolling-max gain (two sends still
@@ -360,3 +368,93 @@ compacted session over the real loop and corpus.
   whole package; `context_bytes ≪ uncompacted_bytes` is directly readable per
   request record. Residual unchanged from §2.C: internal Client retries
   bypass outer pacing (rare, counted by `wait_retry`).
+
+**Record S3.4 — confirmation run #1 readout + wiring fix + pacing default
+change: COMPLETE (2026-08-25).** Run: `recon-inf1-compact.log` — inferno 1, compact R1 + interval
+35 + no bucket, 101 request/response pairs over 33 sessions, wall 5,761.8 s.
+Readout: verify-gold micro F1 **0.7867** (tp 319 / fp 103 / fn 70) — inside
+the pilot/recheck band → **tier decision: R1 kept**; gate-pass units **19/34**;
+empty responses 0/101; compaction live everywhere (all 68 position≥7 calls
+show `context_bytes < uncompacted_bytes`, openings verbatim ×33, zero
+inversions; max call **18,965 B ≤ 24 kB**; note: the ≈0.7 expected ratio does
+not reproduce on this basis because `uncompacted_bytes` now already carries
+R1-compacted payloads — the honest comparison is against the recheck log:
+Σinput 1,919.7 kB → 1,290.7 kB = **67% of the old wire**, better than the 71%
+counterfactual). Gate quantities: ×3 average **72%** ≤80% PASS; peak call
+**34%** ≤45% PASS; api-retry tax **1.6%** ≤~5% PASS; **solo rolling-60 max
+76% vs ≤65% FAIL**.
+
+- **Root cause of the rolling-60 miss — a fallback-wiring bug, not a design
+  miss.** `agent_fallback._run` built a fresh `PromptXmlTransport` +
+  `llm7shi_generate` closure per unit (`hybrid_engine.py`), so pacing state
+  never spanned sessions and every session-opening send skipped the interval
+  (25 measured gaps <35 s, all at session boundaries; the docstring's "one
+  transport/toolkit pair serves all units" and S3.3's "pacing state surviving
+  reset()" describe the intended wiring, and adapter-level tests exercise the
+  closure directly, so the suite could not catch it). Fix: construction
+  hoisted into the factory body — one shared pair per run; regression test
+  pins transport identity across two `_run` calls; tests 867 → 868 passed.
+- **Counterfactuals on run #1's own data** (same responses/durations, sends
+  retimed): interval-35 enforced globally (fixed wiring) → ×3 average 67%,
+  rolling-60 **54%, all gates pass**, +413 s wall over measured; interval ≈ 0
+  (reactive-only, the open decision above) → ×3 average **84% > G1's 80% by
+  construction**, rolling 77%, −797 s wall (= the waits).
+- **Operator decision with the fix**: `--min-send-interval` defaults to
+  **0** (was 35) — the re-run exercises the reactive-only arm of the A/B on
+  compaction alone; the paced configuration stays one flag away. Deliberate
+  waits in run #1 cost 795.6 s = 13.8% of wall across 29 calls (well above
+  §2.C's +4.4% estimate, which assumed globally-enforced spacing rather than
+  measuring it). §5's gate quantities were defined on the paced
+  configuration; on the unpaced re-run they become observational, with the
+  api-retry tax as the pressure indicator.
+
+**Record S3.5 — results-centric wire view with a repair reference (operator
+decision): implementation shipped (2026-08-25, deterministic; tests
+868 → 871 passed, no model touched); re-run #2 pending.** The operator reset
+the compaction defaults after the run #1 / S3.4 discussion: **stop re-sending
+thinking, stop re-sending old `<tool_call>` bodies**, then refined it with
+the observation that a results-only view leaves the model blind to its own
+pending submission — mid-session validator feedback would reference rows the
+model can no longer see, breaking repair by construction ("dropは使い物に
+ならない"). Final shape: assistant-turn handling has two modes,
+**default `"last"`**:
+
+- `"last"` (default): only the newest assistant turn rides verbatim — the
+  pending candidate submission, the model's repair reference; every older
+  turn is omitted entirely (thinking prose and old tool_call bodies are
+  never re-sent);
+- `"digest"`: the S3.3 layout (older turns as one-line digests).
+
+(A pure results-only `"drop"` mode was also implemented in the first cut and
+**removed by operator verdict the same day** — its counterfactual over run
+#1 traffic had measured Σ ≈ 1,396 kB / ×3 ≈ 90% unpaced, kept here only as
+decision evidence.)
+
+Implementation:
+
+- `runner/compact.py` — `compact_view`/`history_policy` gained
+  `assistant_mode="last"|"digest"` and `continuation_system=None` support
+  (None = keep the opening verbatim — system, few-shot demo, task — instead
+  of swapping to the continuation prompt).
+- `agent_fallback` gained `assistant_turns="last"` /
+  `continuation_prompt=False` pass-throughs. `--no-compact` still reverts
+  everything; `--payload-tier` unchanged.
+- `reconstruct` CLI gained `--assistant-turns {last,digest}` and
+  `--continuation-prompt`; the header announces the live shape ("compaction
+  ON (results+last submission)" by default).
+- Adapter (`runner/agent.py`): with `"last"`, result-only growth extends the
+  fingerprint mirror and reuses the Client; the mirror rebuilds when the
+  pending submission rotates (prefix change), which is the normal repair
+  cycle. A first-cut "mirror trim" branch proved dead code once `"drop"` was
+  removed and was deleted with it.
+
+Counterfactual sizing over run #1's own traffic (same responses, unpaced),
+for the **`last` default**: Σinput ≈ 1,455 kB = 113% of run #1 (the
+full-opening resend outweighs everything dropped) / 76% of the recheck wire;
+×3 average ≈ **94% of ceiling** unpaced — near-zero margin, so solo runs
+should expect stochastic 429 contact (pilot/recheck measured 2.5–9.4% tax)
+and the three-stream launch needs the shared bucket regardless of these
+choices. Adding `--continuation-prompt` recovers ≈ −246 kB → ×3 ≈ 74%. The
+open question re-run #2 answers is quality: does repairing against feedback
+whose referenced submission IS visible (`"last"`) hold the F1 band while
+older context stays dropped.
