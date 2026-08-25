@@ -17,7 +17,9 @@ shape bought ≤ 0.5% of the wire, so the transcript now rides verbatim and
 the bytes come out of the system prompt instead (10,706 → 8,954 B, no
 wording changed). §2.A is WITHDRAWN — read it as the record of why. Live
 levers: R1 payload serving (§2.B) + pacing (§2.C) + the prompt size.
-Re-run #2 pending (operator).**
+Re-run #2 ran clean and passed every quality criterion, its ×3 average being
+the first to pass unpaced (record S3.9); what remains is the
+launch-configuration call and the three canticle-parallel runs.**
 
 ---
 
@@ -614,3 +616,103 @@ records `thought_bytes` (`Response.thoughts`, 0 when the backend returns
 none), which makes the re-run's readout able to ask whether per-call
 duration tracks thinking rather than output — and whether the 429s become
 localizable once the real work is in the denominator. Tests 859 → 860.
+
+**Stage 3, record S3.9 — confirmation re-run #2 readout: verbatim transcripts
++ slim prompt pass every quality criterion solo, unpaced (assistant readout
+over the operator-run log; deterministic; no code changed, tests untouched at
+861).** Run: `recon-inf1-verbatim.log` — inferno 1 on the post-S3.7/S3.8
+state (transcripts verbatim, payload tier R1, flat-JSON system prompt,
+`--min-send-interval` default 0 = the reactive-only arm, no bucket):
+**104** request/response pairs over 33 sessions (+1 fast-routed unit), wall
+clock **5,275.5 s ≈ 88 min** (run #1, paced interval 35: 5,761.8 s — the
+unpaced arm finished ~8% faster).
+
+Quality (Handoff checklist 1) — PASS on every criterion:
+
+- verify-gold micro F1 **0.7728** (tp 318 / fp 116 / fn 71; P .7327 /
+  R .8175; exact units 1/34) — inside the pilot/recheck band 0.744–0.796,
+  floor 0.72 clear; −0.014 vs run #1's 0.7867 is noise-scale. The restored
+  session history held quality; the slimmer prompt is exonerated.
+- gate-pass units **18/34** (target ~18±noise); empty responses **0/104**;
+  token assertion errors 0; routes agent 33 / fast 1.
+- The Stage-2 watch items reproduce exactly: the fast-routed unit (L76)
+  fails Gate 2 (routing `complete` ≠ checker-clean); hard violations
+  dup 6 / position 1 surface only through the checker; soft 32 all tag.
+
+Prompt size live (checklist 2): first-call `context_bytes` median
+**9,769 B** (n=33, range 9,767–9,771 — only the ~250 B task varies)
+= run #1's 11,519 − **1,750 B**, matching S3.7's −1,752 design figure;
+consistent with system 8,954 + demo 563 + task ~252.
+
+Gate quantities (checklist 3) — the ×3 averages gate passes for the first
+time, with zero deliberate pacing:
+
+| quantity | re-run #2 (verbatim, interval 0, no bucket) | references |
+|---|---|---|
+| solo average input | **4,667 tok/min = 29%** of ceiling | corrected recheck 32%; pre-R1 37% |
+| 3 × average | **87% < 100% PASS** | corrected 96% (zero margin); pre-R1 112% |
+| peak single call | **12,999 tok = 81%** solo alone | pre-R1 max call 94%; the compacted design's G2 ≤45% bound was defined on a withdrawn wire view |
+| rolling-60 s max | **15,435 tok = 96%; wall-minutes ≥100%: 0** | recheck 132%, 14 calls ≥100%; run #1 76% FAIL |
+| api-retry tax | **2 backoffs / 79 s = 1.50%**, unpaced | run #1 paced 1.6%; historical unpaced 2.5–9.4% |
+
+Honest caveat kept in view: §3's gate table (G2 ≤45%, G3 ≤65%) was written
+for the since-withdrawn compacted configuration; on the shipped verbatim
+configuration the measured pressure quantities above are the operative
+gates, and they pass solo — but an 81%-alone peak call shows how little
+headroom an uncoordinated second stream would have (launch decision below).
+
+Tokens (S3.8 live) — provider counts landed on all 104 responses (zero
+missing):
+
+- `context_bytes / input_tokens`: median **3.56**, aggregate **3.44**
+  against `BYTES_PER_TOKEN = 3.5` → the shared bucket debits accurately;
+  the constant stays.
+- Σinput **409,321 tok**; generation split Σoutput 51,072 vs Σthought
+  **127,448** tok — thought is **71% of generated tokens** (thought_bytes
+  309 kB vs output_bytes 119 kB); the preflight's order-of-magnitude holds
+  at ~2.5× on real traffic.
+
+Duration analysis (S3.1's negative result, re-tested with real work in the
+denominator):
+
+- duration correlates **total_tokens r=+0.97**, thought_tokens +0.88,
+  output only +0.60–0.64 → per-call duration tracks **thinking**, not the
+  answer bytes S3.1 had.
+- effective generation rate `(thought+output)/duration`: median
+  **83.9 B/s**, quartiles 78.6–89.2 (±7%). With thinking counted the rate
+  spread collapses — S3.1's "non-localizable" 630 s excess was mis-modeled
+  generation (r0 = 13.9 B/s divided visible answer bytes by whole
+  durations), not hidden quota contact. This run's actual 429 waits are
+  fully visible where it matters: the counters (2 / 79 s).
+
+S3.7's open question — how much of −1,752 B/call survives as tokens — is
+**SETTLED** (operator-run offline probes, same day). Method: both renderings
+metered by 1-token `generateContent` probes reading
+`usage_metadata.prompt_token_count` (the same wire shape llm7shi sends,
+since the Developer API's `count_tokens` endpoint rejects
+`system_instruction`; `/tmp/opencode/spec_indent_tokens.py`, ephemeral).
+Validation is exact on both axes: byte parity of the rendered openings
+against the logged `context_bytes` is 33/33 sessions at delta 0, and the
+offline flat-opening count reproduces this run's logged first-call
+`input_tokens` median precisely (**2,436 vs 2,436 tok, delta +0**).
+
+Answer: the −1,752 B/call renders as **−410 real tokens** (specs body
+1,078 → 1,488 tok), the removed whitespace carrying a marginal
+**4.27 B/tok** — cheap in tokens, exactly the direction S3.7 suspected,
+but only mildly: **82% of the naive 3.5-convention value** (501 tok)
+survives. Per call −410 tok; over this run's 104 calls ≈ −42.6k tok ≈ 10%
+of Σinput. Directionally safe for pacing: the bucket, debiting bytes ÷ 3.5,
+slightly *overestimates* what indentation costs — conservatism, not error.
+Operationally the relief was already proven (×3 = 87%, zero ceiling-minutes);
+this closes the bookkeeping.
+
+Launch decision input (checklist 4): quality holds → expansion unblocked.
+Solo reactive-only is validated (1.50% tax ≈ run #1's paced 1.6%, zero
+deliberate-wait cost, wall clock −8%). But solo peaks reach 81% of the
+key's ceiling on one call and 96% within a rolling minute with zero
+coordination, so three parallel shells sharing one TPM ceiling need the
+shared `TokenBucket` for inter-stream coordination (sustained aggregate
+≤75% by construction; costs nothing while headroom exists). Wall-clock
+projection on measured pace (~155 s/unit): longest canticle ≈ 34 cantos ×
+5.28 ks ≈ 180 ks ≈ **2.1 days compute-only** — under the 2.8–3.2 day
+estimate even with bucket contention.

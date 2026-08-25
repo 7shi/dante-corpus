@@ -5,20 +5,22 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 3: the OPERATOR runs confirmation re-run #2 (command
-below), then this session reads it out.** The operator's first attempt
-(launched at the end of the 2026-08-25 session, from the code state
-committed as record S3.8) errored partway through; the operator restarted it
-before this session's unit-level-resume fix landed, so that restart's
-`harness/recon-inf1-verbatim.log` predates the fix and has since been
-**deleted**. **The operator is about to launch it again as this session
-closes**, now from the code state after the unit-level-resume fix below —
-**the next session's first job is still the readout below**, of whichever
-attempt's log is on disk (the log is gitignored — if it lacks its summary
-line, the run was interrupted, and per the fix, resuming it with the same
-command now only re-runs the units that log is missing, not the whole
-canto). State at handoff (all records in [`STAGE3.md`](STAGE3.md), ledger
-S3.4–S3.8, 2026-08-25):
+**Next action — Stage 3: the OPERATOR decides the launch configuration and
+runs the three canticle-parallel runs (command shape below).** Confirmation
+re-run #2 ran clean end-to-end and its readout is COMPLETE (record S3.9,
+2026-08-25): every quality criterion passed, the ×3 average gate passed for
+the first time (87%), and reactive-only pacing measured a 1.50% retry tax
+unpaced — equal to run #1's paced 1.6%. Readout-recommended launch
+configuration: `--min-send-interval` default 0 + the shared TokenBucket on
+all three shells (inter-stream coordination; solo peaks reach 81% of the
+key's ceiling on one call and 96% within a rolling minute, uncoordinated).
+One measurement closed since the readout: `/tmp/opencode/spec_indent_tokens.py`
+(ephemeral, operator-run) settles S3.7's open question — the −1,752 B/call
+renders as **−410 real tokens** (marginal 4.27 B/tok for the removed
+whitespace; 82% of the naive 3.5-convention value), with exact validation
+against this run's records (byte parity 33/33; offline opening count 2,436 tok
+= logged first-call median 2,436, delta +0). State at handoff (all records in
+[`STAGE3.md`](STAGE3.md), ledger S3.4–S3.9, 2026-08-25):
 
 - Run #1 (`recon-inf1-compact.log`, compact R1 + interval 35) read out: F1
   **0.7867** → R1 kept, 19/34 units, ×3 average 72%, peak call 34%, retry
@@ -60,48 +62,22 @@ S3.4–S3.8, 2026-08-25):
   Tests 855 → 860. `BYTES_PER_TOKEN = 3.5` deliberately unchanged: pacing
   parameters move between runs, and the bucket must estimate before the
   send, where only bytes exist.
-- The run to execute: one inferno-1 pass, verbatim transcripts, interval 0,
-  no bucket:
-
-```bash
-uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 \
-       --verify-gold --model google:gemma-4-31b-it \
-       --log harness/recon-inf1-verbatim.log
-```
-
-Readout checklist for that log (deterministic; assistant-run):
-1. **Quality first**: verify-gold micro F1 inside the pilot/recheck band
-   0.744–0.796 (floor 0.72 — run #1 measured 0.7867 on the same canto);
-   gate-pass units ~18±noise of 34; empty responses 0. With the session's own
-   history restored, quality should hold or improve; a drop points at the
-   slimmer prompt, not the wire.
-2. **Prompt size live**: first-call `context_bytes` ≈ 8,954 + demo + task
-   (was 11,519) — the flat-JSON reduction is visible on call 1 of every
-   session.
-3. **Gate quantities**: ×3 average, peak single call, rolling-60, api-retry
-   tax vs run #1's paced 1.6% and the historical unpaced 2.5–9.4%. Unpaced,
-   so a high retry tax is EXPECTED and is the pressure indicator, not a
-   failure by itself. **Open question this run settles**: how much of the
-   1,752 B/call byte reduction survives as *tokens* — indentation whitespace
-   tokenizes cheaply, so the quota relief may be well under the byte figure.
-   **Read it off the records, not from bytes** (record S3.8, shipped
-   2026-08-25): every `llm_response` now carries the backend's own
-   `input_tokens` / `output_tokens` / `thought_tokens` / `total_tokens`
-   (Gemini `usage_metadata`; all-`None` on a backend that reports none), so
-   this run's token quantities are measured, and `BYTES_PER_TOKEN = 3.5` —
-   what the shared bucket debits with — is checkable against
-   `context_bytes / input_tokens` per call. The constant stays untouched
-   until then: pacing parameters change between runs, never mid-run.
-   Also on the response records: `thought_bytes`. Thinking runs ~10× the
-   answer tokens (live preflight) and never reaches `text`, so ask this
-   log what per-call duration actually tracks — thinking, not
-   `output_bytes` — and re-test S3.1's non-localized backoffs with the
-   real work in the denominator.
-4. Decide next: if quality holds → pick launch pacing (the shared bucket is
-   mandatory for three streams at these averages) and launch the three
-   canticle-parallel runs (command shape below). If the TPM gate still fails
-   on tokens, the next lever is the prompt's remaining content (5.8 kB of
-   tool schemas), not the transcript.
+- **Record S3.9 (2026-08-25): re-run #2 read out — quality held, the ×3
+  average gate passed for the first time, and the token questions are
+  settled.** F1 0.7728 (band 0.744–0.796; run #1 0.7867), gate-pass 18/34,
+  empty responses 0/104; first-call `context_bytes` 9,769 B = design's
+  −1,750 B confirmed live. Solo average 29% of ceiling → ×3 = **87% PASS**;
+  rolling-60 max 96% with zero minutes ≥100%; api-retry tax **1.50%
+  unpaced** (≈ run #1's paced 1.6%) — reactive-only validated solo; wall
+  5,275.5 s vs run #1's 5,761.8 paced (−8%). Provider tokens landed on all
+  104 responses: `context_bytes/input_tokens` median 3.56 / aggregate 3.44
+  vs the 3.5 convention (bucket debits accurate; constant unchanged);
+  thought = 71% of generated tokens; duration tracks total_tokens r=+0.97 —
+  per-call duration is thinking time, closing S3.1's non-localizable-backoff
+  negative result (r0 was mis-specified). Open measurement closed: the
+  −1,752 B/call measures **−410 real tokens** (marginal 4.27 B/tok for the
+  removed whitespace; 82% survival vs the 3.5 convention — bucket debits are
+  conservative in the safe direction), validated exactly against the log.
 
 Standing constraint unchanged: compaction changes session semantics —
 designed between runs, never mid-run.
@@ -117,9 +93,9 @@ canto-granular only (`completed_cantos`/`prepare_resume` keyed on
 units from the log instead of re-invoking the fallback; `compact_log` no
 longer drops incomplete-canto records (only the superseded `summary` is
 ever stripped). No compatibility shim needed: no pre-fix log survives on
-disk (see the Handoff's opening paragraph — the operator's errored/deleted
-restart predates this fix, and the run about to launch as this session
-closes starts clean on the new schema). Tests 860 → 861
+disk (the operator's errored first re-run attempt predates this fix and was
+deleted; re-run #2 started clean on the new schema and is what record S3.9
+read out). Tests 860 → 861
 (`test_harness_reconstruct.py` 32 → 33). No model touched.
 
 The single streaming log also carries the request-level cost records (shipped
@@ -135,29 +111,34 @@ every `canto_complete` carries `elapsed_seconds` and the summary sums them
 into `wall_clock_seconds` (idle gaps between resumed attempts never count).
 
 **99-canto expansion — Stage 3 deployment, three canticle-parallel runs**
-(live agent fallback; launched only after the compaction/pacing design passes
-the TPM gate — parallel bounds wall clock by the longest canticle, ~34 ×
-6.4 ks ≈ 230 ks ≈ 2.5–3 days, ≈ 2.8–3.2 days with the launch pacing
-configuration, *if* the quota holds). Three concurrent
+(live agent fallback; the TPM gate now passes on re-run #2's measured
+quantities — parallel bounds wall clock by the longest canticle, measured
+~155 s/unit → ≈180 ks ≈ 2.1 days compute-only, under the earlier 2.5–3 day
+estimate even with bucket contention, *if* the quota holds). Three concurrent
 operator shells, one per canticle, each with its own log — resume stays
-canto-granular and independent per file:
+canto-granular and independent per file; commands show the readout-recommended
+configuration (interval default 0 + shared bucket):
 
 ```bash
 uv run python -m harness.extractor.reconstruct --canticle inferno --all \
        --verify-gold --model google:gemma-4-31b-it \
-       --min-send-interval 35 --token-bucket harness/tokbucket.state \
+       --token-bucket harness/tokbucket.state \
        --log harness/recon-inferno.log
 # likewise --canticle purgatorio → harness/recon-purgatorio.log
 # and    --canticle paradiso  → harness/recon-paradiso.log
 ```
 
-**Open launch-configuration decision — PARTIALLY RESOLVED (2026-08-25):**
-the operator chose reactive-only as the new default (`--min-send-interval`
-now defaults 0, record S3.4) and the confirmation re-run exercises that arm;
-run #1's counterfactuals stand as the recorded comparison (interval ≈0 → ×3
-average 84% > G1's 80% by construction; interval-35 global → all gates
-pass). Still open at launch time: whether the three parallel shells carry a
-bucket, an interval, both, or neither — decide on the re-run's readout.
+**Launch configuration — RESOLVED on the re-run #2 readout (2026-08-25,
+record S3.9): recommended interval 0 (the S3.4 default) + shared TokenBucket
+(defaults R = 12k tok/min / D = 6.5k tok) on all three shells.** Reactive-only
+won solo: unpaced retry tax 1.50% ≈ run #1's paced 1.6%, ×3 average 87%,
+rolling-60 max 96% with zero ceiling-minutes. But a single call peaked at 81%
+of the key's ceiling alone — with three streams sharing one TPM key and zero
+inter-stream coordination, independent per-Client backoff timers can
+re-collide inside the same rolling minute, which only the shared bucket
+prevents (sustained aggregate ≤75% by construction; no cost while headroom
+exists). Final call is the operator's at launch; run #1's counterfactuals
+stand as the recorded A/B.
 
 Watch items carried from the closed Stage-2 runs (both inferno-1 runs, see
 [`STAGE2.md`](STAGE2.md)): the fast-routed unit fails Gate 2 (routing
@@ -201,25 +182,29 @@ ceiling, not steady pressure).
    live at repo root (`tests/test_harness_*.py`). `skel/` is protected:
    reconstruction writes need the explicit `--write` flag on top of passing
    all three gates, canto-atomically.
-5. **Session housekeeping (2026-08-25, this session)**: assistant session ran
-      the S3.3 implementation and then, on operator decision, records
-      S3.5–S3.7 (all in [`STAGE3.md`](STAGE3.md)) — which ended by removing
-      the transcript-compaction half of the S3.3 work (`runner/compact.py`,
-      the continuation prompt, their CLI flags) and reducing the system
-      prompt instead. What S3.3 shipped and kept: compact `read_unit` tiers,
-      adapter fingerprint sync + interval + token bucket, fallback
-      pass-through, reconstruct CLI flags, with the wire re-measured
-      corpus-wide (R1 41% of the old wire, tail view 43% solo — inside the
-      restated gates), and record S3.8 added provider-reported token counts
-      to the `llm_response` records. Tests 833 → 867 → 855 (the removals)
-      → 860 (S3.8 + `thought_bytes`) passed; no model touched. (Earlier
-      2026-08-25: S3.2 design + gate re-check; S3.1 correlation analysis.
-      2026-08-24: operator ran the M2.5 recheck — readout passed all
-      criteria, reproduced the pilot, failed the Stage-3 launch gate;
-      Stage 2 closed and archived to [`STAGE2.md`](STAGE2.md).) The session
-      closed with the operator starting the §5 confirmation run; **nothing
-      is in flight on the assistant side — the working tree is clean and
-      the next session starts from the readout, not from code.**
+5. **Session housekeeping (2026-08-25, latest assistant session)**: read out
+   confirmation re-run #2 into record S3.9 ([`STAGE3.md`](STAGE3.md)) —
+   quality held (F1 0.7728, 18/34, zero empties), ×3 average **87% PASS**
+   unpaced (first pass of that gate), reactive-only validated solo (retry
+   tax 1.50%), provider tokens landed on all 104 responses (B/token 3.44–3.56,
+   convention stands), and per-call duration tracks thinking (total_tokens
+   r=+0.97), closing S3.1's non-localizable-backoff negative result. On those
+   numbers the launch-configuration decision moved to RESOLVED-with-
+   recommendation (interval default 0 + shared bucket), and S3.7's open
+   whitespace→token question was **closed** by an operator-run offline probe
+   (`/tmp/opencode/spec_indent_tokens.py`, ephemeral; method recorded in
+   S3.9): −1,752 B/call = **−410 real tokens** (marginal 4.27 B/tok, 82%
+   survival vs the 3.5 convention — bucket debits conservative in the safe
+   direction), validated exactly against the log (byte parity 33/33; offline
+   opening count 2,436 tok = logged median 2,436). No code changed this
+   session — tests stand at 861 and the tree carries only PLAN/STAGE3 doc
+   updates. (Earlier 2026-08-25 sessions: the unit-level-resume fix (side
+   note above); S3.8 token records + live preflight; S3.5–S3.7 removals;
+   S3.2 design + gate re-check; S3.3 implementation; S3.1 analysis; run #1
+   wiring fix. 2026-08-24: the M2.5 recheck closed Stage 2.)
+   **Nothing is in flight on the assistant side — the next session starts
+   from the operator's launch call and the three canticle-parallel runs,
+   not from code.**
 
 ---
 
@@ -286,12 +271,21 @@ ceiling, not steady pressure).
       confirmed the path (3.53 B/token on plain Italian) and exposed
       thinking at 10× the answer tokens, so `thought_bytes` joins the
       record — `output_bytes` never counted the bulk of what a call
-      generates, which is what S3.1's duration analysis lacked. Remaining acts: the confirmation
-      **re-run #2** (operator-run, then read out — the Handoff has the
-      command and the checklist), then the 99-canto expansion as three
-      canticle-parallel runs behind the existing gates, and the
-      corpus-wide readout. The standing constraint holds: session
-      semantics change between runs, never mid-run.
+      generates, which is what S3.1's duration analysis lacked. **Record
+      S3.9 (same day)** read out re-run #2 (`recon-inf1-verbatim.log`,
+      verbatim transcripts, interval 0, no bucket): F1 0.7728 in band,
+      gate-pass 18/34, empty responses 0/104; the prompt reduction confirmed
+      live (first call 11,519 → 9,769 B = design's −1,750 B); solo average
+      29% → ×3 = **87% PASS**, rolling-60 max 96% with zero ceiling-minutes,
+      api-retry tax **1.50% unpaced** (≈ run #1's paced 1.6%);
+      `context_bytes/input_tokens` measured median 3.56 / aggregate 3.44 —
+      the 3.5 convention stands; thought = 71% of generated tokens and
+      duration tracks total_tokens r=+0.97, closing S3.1's
+      non-localizable-backoff negative result. Remaining acts: the 99-canto
+      expansion as three canticle-parallel runs behind the existing gates
+      (launch configuration recommended on S3.9: interval default 0 + shared
+      bucket), then the corpus-wide readout. The standing constraint holds:
+      session semantics change between runs, never mid-run.
 - Open decision, Stage 3 launch pacing (2026-08-25, raised while the live
   confirmation run was in flight): **proactive vs reactive-only.** The
   operator challenged the designed proactive interval (`[pace] send
@@ -311,12 +305,18 @@ ceiling, not steady pressure).
   `paced_seconds`, so the deliberate-vs-forced wait separation on the
   wire records is lost. This reopens STAGE3.md §2.D's "no reacting to
   429s" rejection **for the launch configuration only**. **Update (same
-  day, S3.4):** partially resolved — the operator set the interval default
-  to 0 and the re-run exercises reactive-only; run #1's counterfactuals
-  recorded for comparison (interval ≈0 → ×3 average 84% > G1's 80% by
-  construction; interval-35 enforced globally → all gates pass). The
-  launch combination (bucket / interval / both / neither) is decided on
-  the re-run readout.
+   day, S3.4):** partially resolved — the operator set the interval default
+   to 0 and the re-run exercises reactive-only; run #1's counterfactuals
+   recorded for comparison (interval ≈0 → ×3 average 84% > G1's 80% by
+   construction; interval-35 enforced globally → all gates pass). **Update
+   (re-run #2 readout, S3.9): settled solo for reactive** — the unpaced tax
+   measured 1.50%, matching run #1's paced 1.6%, while ×3 average hit 87%
+   with zero ceiling-minutes. Argument (ii) survives as the reason the
+   launch still carries the shared bucket: solo rolling-60 peaked at 96% of
+   the key's ceiling with zero coordination, so three streams sharing one
+   key need the bucket's inter-stream coordination — giving the recommended
+   configuration interval 0 + shared bucket (final call: operator, at
+   launch).
 - Open design question (protocol layer): a dedicated `submit_candidate`
   termination tool — the practical half is resolved by the nudge policy
   ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
@@ -543,9 +543,11 @@ transcript compaction bought 0.5% of the wire and cost the model its own
 session history, so it was removed together with the continuation prompt,
 and the byte reduction moved into the system prompt itself (tool specs
 rendered flat: 10,706 → 8,954 B on every call, no wording changed). Live
-levers now: R1 payload serving + prompt size + pacing. Remaining acts: the
-live inferno-1 confirmation run (§5, operator), then the 99-canto expansion
-as three canticle-parallel runs behind the existing gates, and the
+levers now: R1 payload serving + prompt size + pacing. **Record S3.9
+(2026-08-25) read out the confirmation run: every criterion passed, ×3
+average 87% unpaced — first pass of that gate.** Remaining acts: the
+99-canto expansion as three canticle-parallel runs behind the existing gates
+(recommended configuration: interval default 0 + shared bucket), then the
 corpus-wide readout. Scope and constraints tracked in Current Status + the Handoff.
 
 ### Beyond Layer 5 (design notes)
