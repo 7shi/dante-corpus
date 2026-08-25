@@ -774,8 +774,8 @@ experiment's readout needs a durable trigger count.
 the policy default lives at the operator-facing CLI:
 `reconstruct --max-length` (default **6000**, `0` disables, negatives
 rejected), announced in the configuration banner (`max-length 6000 chars` /
-`max-length off`). Tests +3 (`test_harness_agent.py` 39 → 41,
-`test_harness_reconstruct.py` 34 → 35).
+`max-length off`). Tests +3 (`test_harness_agent.py` 37 → 39,
+`test_harness_reconstruct.py` 33 → 34).
 
 *Experiment protocol (operator-run, next action)*: inferno 1 dry-run on the
 new default — `uv run python -m harness.extractor.reconstruct --canticle

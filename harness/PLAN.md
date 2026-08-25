@@ -275,7 +275,34 @@ recommended.**
    canticle-parallel runs carries the 6,000-char cap by default (`--max-length
    0` is the recorded off switch), and the expansion proceeds per the
    recommended configuration below. One informational design note remains
-   below (the interim-convention health check — no action recommended).
+    below (the interim-convention health check — no action recommended).
+    **Session housekeeping (2026-08-25, docs-and-contract session):
+    ARCHITECTURE.md gained a §0 implementation checklist** (operator request:
+    prose-only patterns were not reliably reflected in implementations), and a
+    consistency audit taking `harness.extractor.reconstruct` as the reference
+    implementation adjusted three document wordings instead of code: §4's
+    timing bullet now states the two-tier aggregation actually shipped (CLIs
+    that own their turns — the benchmark — aggregate total/mean/max +
+    `slow_turns`; batch CLIs whose per-call durations land on request-
+    granularity records — `reconstruct` — roll up totals and maxima into the
+    summary, finer cuts stay offline readouts over the log); §9 marks
+    `--temperature` as operator-exposed only (experiment CLIs carry it;
+    comparability-pinned production CLIs pin the backend default);
+    the checklist's artifact-file item reads "e.g." (`--trace` is not
+    universal). **One code change rode along — `reconstruct.py` log
+    durability**: `unit`/`gold`/`commit` records now `sink.flush()` per
+    record; previously they rode the ~8 KB userspace buffer until the
+    `canto_complete`/`summary` flush, so a mid-canto kill could lose the
+    resume records of units already settled (`llm_request`/`llm_response`
+    pairs always flushed per record via `_log`). ARCHITECTURE §5's
+    append+flush-immediately contract is now fully honored. Also corrected
+    STAGE3.md record S3.10's logged test-suite numbers: "agent 39 → 41 /
+    reconstruct 34 → 35" were wrong absolutes — actuals are **agent 37 → 39 /
+    reconstruct 33 → 34** (deltas +2/+1 and the 861 → 864 total were right;
+    verified against commits `be80442`..`7a7c9a8` and pytest collection).
+    Tests unchanged at 864. **Nothing else is in flight: the operator's cap
+    experiment on inferno 1 remains the act in progress**, and the next
+    session starts from its readout exactly as recorded above.
 
 ---
 

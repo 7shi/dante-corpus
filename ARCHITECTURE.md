@@ -14,6 +14,49 @@ but never copy them into new code.
 
 ---
 
+## 0. Implementation checklist
+
+Tick every box before shipping a new entry point; each item links to its
+normative section.
+
+- [ ] All live model access goes through llm7shi; backends injected as
+      callables; llm7shi imports are lazy (inside functions) (§2).
+- [ ] Sessions use the stateful Client adapter (`runner.agent.llm7shi_generate`)
+      with quality retry; `transport.reset()` re-creates the Client at every
+      session boundary (§2).
+- [ ] Wire protocol is prompt-instructed `<tool_call>` XML
+      (`PromptXmlTransport`) unless the plan explicitly overrides it (§3).
+- [ ] Progress visible by default: streamed stderr output, one progress line
+      per turn (compact return value + elapsed seconds), `[index/total]`
+      major/minor separators (§4).
+- [ ] Optional status bar follows the wiring rules: the bar names where in
+      the corpus the run stands — extractor CLIs speak Canticle Canto Line,
+      one bar per canto labeled `{canticle} {canto}` whose numerator walks
+      that canto's Dante lines, never a bare run-level counter
+      (`reconstruct | i/N`) — console pinned to stderr, markup disabled,
+      shared stream handed to llm7shi; whole-run positions stay on the
+      `[index/total]` separators (§4).
+- [ ] One blank line printed to the shared stream before constructing each new
+      `Client` (session-boundary spacing) (§4).
+- [ ] Per-turn wall-clock seconds recorded in results/JSONL; summaries
+      aggregate them — total/max at minimum, plus mean/slow-turn counts
+      where the CLI owns per-turn totals (§4, §5).
+- [ ] The CLI opens its own artifact files (e.g. `--log`, `--trace`);
+      nothing depends on shell redirection for durability (§4, §5).
+- [ ] JSONL log contract honored: append+flush per completed unit, final
+      `summary` record as completion marker, summed (not span) timings,
+      resume-or-truncate chosen explicitly per CLI (§5).
+- [ ] Report classes ship both `metrics()` and `summary()`; gates shown with
+      thresholds (§6).
+- [ ] Errors never raise across boundaries: parse-error envelopes / structured
+      failure payloads fed back verbatim to the model (§7).
+- [ ] Tests use `StubTransport` over real frozen data; no model or network;
+      live adapters lazy-imported inside functions (§8).
+- [ ] CLI skeleton matches §9: standard flags, run header, `try/finally` sink
+      close, final `records written to ...` line then `report.summary()`.
+
+---
+
 ## 1. Lineage
 
 - **Build drivers (Phase 5–8)** — `skel/skel.py` (+ `driver_build.py`,
@@ -91,8 +134,12 @@ hours per benchmark). An unwatchable run is an unusable run: progress must be
   (e.g. `</tool_call>🤔 Thinking...`).
 - **Per-turn timing is a measurement instrument, not decoration**: per-turn
   wall-clock seconds ride in results (`LoopResult.turn_seconds`) and JSONL
-  records; summaries must aggregate them (total / mean / max, plus
-  `slow_turns` at `SLOW_TURN_SECONDS = 300`).
+  records; summaries must aggregate them. CLIs that own their turns
+  aggregate all four faces (total / mean / max, plus `slow_turns` at
+  `SLOW_TURN_SECONDS = 300`, the benchmark standard); batch CLIs whose
+  per-call durations land on request-granular records roll up totals and
+  maxima into the summary and leave finer cuts to offline readouts over the
+  log.
 - **Turn-granularity discipline**: one healthy model turn is one reasoning
   step plus its dispatches. A turn that sits thinking for many minutes means
   too much work was bundled into one response — reconsider the prompt or
@@ -160,6 +207,8 @@ can reach them).
 ## 9. CLI skeleton — Standard
 
 Shared shape for operator-run entry points: argparse with
-`--model` / `--temperature` / `--max-turns` / `--log` / `--verbose`; a header
+`--model` / `--max-turns` / `--log` / `--verbose` (`--temperature` where
+sampling is operator-exposed — the experiment CLIs; comparability-pinned
+production CLIs may pin it at the backend default); a header
 line announcing the run; `try/finally` sink close; final
 `records written to ...` line followed by `report.summary()` output.
