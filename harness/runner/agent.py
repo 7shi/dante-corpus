@@ -332,8 +332,8 @@ def llm7shi_generate(
     call (timestamp, model, session/unit coordinates from the request
     context, transcript position, same-turn attempt, `context_bytes`,
     newest-message size, paced seconds) and one `llm_response` record
-    after it (duration, output bytes, empty flag, and the backend's own
-    token counts via `token_usage` — `None` where the provider reports
+    after it (duration, output bytes, thinking bytes, empty flag, and the
+    backend's own token counts via `token_usage` — `None` where the provider reports
     none, and covering only the attempt whose text the Client returned,
     exactly like the byte figures). Join key across the pair:
     ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs, quality
@@ -476,6 +476,13 @@ def llm7shi_generate(
                 "attempt": attempt,
                 "duration_seconds": round(time.monotonic() - began, 3),
                 "output_bytes": len(str(text).encode("utf-8")),
+                # Thinking is most of what a call actually generates (live
+                # preflight: 139/203 thought tokens against 14/7 answer
+                # tokens) and none of it reaches `text`, so per-call duration
+                # is a function of this, not of `output_bytes`.
+                "thought_bytes": len(
+                    str(getattr(response, "thoughts", "") or "").encode("utf-8")
+                ),
                 # Provider-reported, so the TPM ceiling can be read in its own
                 # currency instead of through the 3.5 B/token convention.
                 **token_usage(response),

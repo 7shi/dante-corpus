@@ -590,3 +590,27 @@ falsifiable against `context_bytes / input_tokens` per call. The constant
 itself is deliberately left alone until the re-run measures it: pacing
 parameters are a between-runs decision (the standing constraint), and the
 bucket must estimate *before* the send, where only bytes are known.
+
+*Addendum (same day) — live preflight + `thought_bytes`.* The unit tests pin
+`token_usage` against fabricated chunk shapes, so one two-turn live call was
+run before committing the re-run to the change. It passed on every point
+that matters: usage is reported (17 → 37 `input_tokens` across the two
+turns, the growth being exactly the transcript resend), and the measured
+ratio was **3.53 / 3.54 B/token against the 3.5 convention** — on short
+Italian plain text, so it is a baseline for isolating what the harness's
+XML markup and JSON schemas cost, not a confirmation for the real traffic.
+
+The preflight also turned up something the byte records had been hiding:
+**`thought_tokens` 139 / 203 against `output_tokens` 14 / 7** — an order of
+magnitude more thinking than answer, none of which reaches `response.text`
+and therefore none of which `output_bytes` ever counted. Thinking is billed
+as output, so the 16k *input* tok/min ceiling and the whole pacing design
+are untouched. What it does change is S3.1's honest negative result: the
+backoff non-localization rested on a generation baseline r0 = 13.9 B/s
+derived from answer bytes alone, and the per-call rate spread it could not
+explain (7.6–19.5 B/s) is the expected signature of thinking volume varying
+call to call while the denominator ignores it. `llm_response` therefore also
+records `thought_bytes` (`Response.thoughts`, 0 when the backend returns
+none), which makes the re-run's readout able to ask whether per-call
+duration tracks thinking rather than output — and whether the 429s become
+localizable once the real work is in the denominator. Tests 859 → 860.

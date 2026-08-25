@@ -6,8 +6,12 @@ Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
 **Next action — Stage 3: the OPERATOR runs confirmation re-run #2 (command
-below), then this session reads it out.** State at handoff (all records in
-[`STAGE3.md`](STAGE3.md), ledger S3.4–S3.7, 2026-08-25):
+below), then this session reads it out.** The operator launched that run at
+the end of the 2026-08-25 session, from the code state committed as record
+S3.8, into `harness/recon-inf1-verbatim.log`; **the next session's first job
+is the readout below** (the log is gitignored — if it lacks its summary
+line, the run was interrupted). State at handoff (all records in
+[`STAGE3.md`](STAGE3.md), ledger S3.4–S3.8, 2026-08-25):
 
 - Run #1 (`recon-inf1-compact.log`, compact R1 + interval 35) read out: F1
   **0.7867** → R1 kept, 19/34 units, ×3 average 72%, peak call 34%, retry
@@ -30,6 +34,25 @@ below), then this session reads it out.** State at handoff (all records in
   `llm_request.uncompacted_bytes`. Kept: `--payload-tier` (R1), pacing
   (`--min-send-interval`, `--token-bucket`), `paced_seconds`. Tests 871 → 855
   (`test_harness_compact.py` → `test_harness_pacing.py`, 16 tests).
+- **Record S3.8 (2026-08-25, last change before the run): the wire records
+  now carry the backend's own token counts.** Every Stage-3 token figure so
+  far was bytes ÷ 3.5; the counts were never unavailable, only
+  provider-specific, and llm7shi keeps the raw stream chunks on
+  `Response.chunks`. `token_usage()` (`runner/agent.py`) normalizes Gemini
+  `usage_metadata` and Ollama eval counts into `input_tokens` /
+  `output_tokens` / `thought_tokens` / `total_tokens` on every
+  `llm_response` record — all-`None` for an unreporting backend, never
+  raising. A live two-turn preflight confirmed the path (input 17 → 37
+  across the resend; **3.53 B/token**, against the 3.5 convention, on short
+  Italian plain text) and exposed what the byte records had hidden:
+  **`thought_tokens` 139/203 vs `output_tokens` 14/7** — thinking is an
+  order of magnitude larger than the answer and never reaches
+  `response.text`, so `output_bytes` never counted the bulk of what a call
+  generates. Hence `thought_bytes` on the same record. Thinking bills as
+  output, so the 16k *input* tok/min ceiling and all pacing are untouched.
+  Tests 855 → 860. `BYTES_PER_TOKEN = 3.5` deliberately unchanged: pacing
+  parameters move between runs, and the bucket must estimate before the
+  send, where only bytes exist.
 - The run to execute: one inferno-1 pass, verbatim transcripts, interval 0,
   no bucket:
 
@@ -62,6 +85,11 @@ Readout checklist for that log (deterministic; assistant-run):
    what the shared bucket debits with — is checkable against
    `context_bytes / input_tokens` per call. The constant stays untouched
    until then: pacing parameters change between runs, never mid-run.
+   Also on the response records: `thought_bytes`. Thinking runs ~10× the
+   answer tokens (live preflight) and never reaches `text`, so ask this
+   log what per-call duration actually tracks — thinking, not
+   `output_bytes` — and re-test S3.1's non-localized backoffs with the
+   real work in the denominator.
 4. Decide next: if quality holds → pick launch pacing (the shared bucket is
    mandatory for three streams at these averages) and launch the three
    canticle-parallel runs (command shape below). If the TPM gate still fails
@@ -161,12 +189,14 @@ ceiling, not steady pressure).
       corpus-wide (R1 41% of the old wire, tail view 43% solo — inside the
       restated gates), and record S3.8 added provider-reported token counts
       to the `llm_response` records. Tests 833 → 867 → 855 (the removals)
-      → 859 (S3.8) passed; no model touched. (Earlier
+      → 860 (S3.8 + `thought_bytes`) passed; no model touched. (Earlier
       2026-08-25: S3.2 design + gate re-check; S3.1 correlation analysis.
       2026-08-24: operator ran the M2.5 recheck — readout passed all
       criteria, reproduced the pilot, failed the Stage-3 launch gate;
-      Stage 2 closed and archived to [`STAGE2.md`](STAGE2.md).) Next: the
-      §5 confirmation run (operator).
+      Stage 2 closed and archived to [`STAGE2.md`](STAGE2.md).) The session
+      closed with the operator starting the §5 confirmation run; **nothing
+      is in flight on the assistant side — the working tree is clean and
+      the next session starts from the readout, not from code.**
 
 ---
 
@@ -229,7 +259,11 @@ ceiling, not steady pressure).
       the provider's own token counts (`token_usage()` over llm7shi's raw
       stream chunks — Gemini `usage_metadata`, Ollama eval counts,
       all-`None` when unreported), so the re-run's TPM readout is measured
-      rather than derived from the 3.5 B/token convention. Remaining acts: the confirmation
+      rather than derived from the 3.5 B/token convention; a live preflight
+      confirmed the path (3.53 B/token on plain Italian) and exposed
+      thinking at 10× the answer tokens, so `thought_bytes` joins the
+      record — `output_bytes` never counted the bulk of what a call
+      generates, which is what S3.1's duration analysis lacked. Remaining acts: the confirmation
       **re-run #2** (operator-run, then read out — the Handoff has the
       command and the checklist), then the 99-canto expansion as three
       canticle-parallel runs behind the existing gates, and the
@@ -306,8 +340,8 @@ ceiling, not steady pressure).
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **859 passed** (547 corpus + 46 `test_harness_tools.py` +
-   76 `test_harness_toolcall.py` + 36 `test_harness_agent.py` +
+- Test suite: **860 passed** (547 corpus + 46 `test_harness_tools.py` +
+   76 `test_harness_toolcall.py` + 37 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
    32 `test_harness_reconstruct.py` + 16 `test_harness_pacing.py`).

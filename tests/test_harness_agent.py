@@ -849,3 +849,47 @@ def test_llm_response_record_carries_provider_token_counts(monkeypatch, tmp_path
     assert responses[1]["total_tokens"] is None
     # Byte accounting is untouched by the addition.
     assert responses[0]["output_bytes"] == len("risposta".encode("utf-8"))
+
+
+def test_llm_response_record_measures_thinking_bytes(monkeypatch, tmp_path):
+    """Thinking never reaches `text` but is most of what a call generates, so
+    the record measures it separately; a backend that returns no thoughts
+    logs 0 rather than breaking the schema."""
+    import harness.runner.agent as agent_module
+
+    thoughts = "Il soggetto è «io», il predicato «mi ritrovai»…"
+
+    class FakeClient:
+        def __init__(self, model="", file=None, **kwargs):
+            self.history = []
+            self.calls = 0
+
+        def __call__(self, prompt):
+            self.calls += 1
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": "risposta"})
+            return _Chunk(
+                text="risposta",
+                chunks=[],
+                thoughts=thoughts if self.calls == 1 else "",
+            )
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    log = tmp_path / "requests.jsonl"
+    with log.open("w", encoding="utf-8") as sink:
+        generate = agent_module.llm7shi_generate("google:m", request_log=sink)
+        generate([{"role": "user", "content": "compito"}])
+        generate([
+            {"role": "user", "content": "compito"},
+            {"role": "assistant", "content": "risposta"},
+            {"role": "user", "content": "ancora"},
+        ])
+
+    responses = [
+        json.loads(line)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if json.loads(line)["record"] == "llm_response"
+    ]
+    assert responses[0]["thought_bytes"] == len(thoughts.encode("utf-8"))
+    assert responses[0]["output_bytes"] == len("risposta".encode("utf-8"))
+    assert responses[1]["thought_bytes"] == 0
