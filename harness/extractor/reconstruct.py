@@ -111,6 +111,7 @@ from harness.extractor.hybrid_engine import (
     load_rules_json,
     mine_artifacts,
 )
+from harness.runner.agent import DEFAULT_BUCKET_DEPTH_TOKENS, DEFAULT_BUCKET_RATE_TOKENS_PER_MIN
 from harness.runner.statusline import HarnessStatusLine
 from harness.toolcall.loop import progress_separator
 
@@ -1197,11 +1198,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     if fallback is None:
         bucket = None
         if args.token_bucket is not None:
-            from harness.runner.agent import (
-                DEFAULT_BUCKET_DEPTH_TOKENS,
-                DEFAULT_BUCKET_RATE_TOKENS_PER_MIN,
-                TokenBucket,
-            )
+            from harness.runner.agent import TokenBucket
 
             bucket = TokenBucket(
                 args.token_bucket,
