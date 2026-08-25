@@ -54,6 +54,14 @@ Readout checklist for that log (deterministic; assistant-run):
    failure by itself. **Open question this run settles**: how much of the
    1,752 B/call byte reduction survives as *tokens* — indentation whitespace
    tokenizes cheaply, so the quota relief may be well under the byte figure.
+   **Read it off the records, not from bytes** (record S3.8, shipped
+   2026-08-25): every `llm_response` now carries the backend's own
+   `input_tokens` / `output_tokens` / `thought_tokens` / `total_tokens`
+   (Gemini `usage_metadata`; all-`None` on a backend that reports none), so
+   this run's token quantities are measured, and `BYTES_PER_TOKEN = 3.5` —
+   what the shared bucket debits with — is checkable against
+   `context_bytes / input_tokens` per call. The constant stays untouched
+   until then: pacing parameters change between runs, never mid-run.
 4. Decide next: if quality holds → pick launch pacing (the shared bucket is
    mandatory for three streams at these averages) and launch the three
    canticle-parallel runs (command shape below). If the TPM gate still fails
@@ -151,8 +159,9 @@ ceiling, not steady pressure).
       adapter fingerprint sync + interval + token bucket, fallback
       pass-through, reconstruct CLI flags, with the wire re-measured
       corpus-wide (R1 41% of the old wire, tail view 43% solo — inside the
-      restated gates). Tests 833 → 867 → 855 (the removals) passed; no
-      model touched. (Earlier
+      restated gates), and record S3.8 added provider-reported token counts
+      to the `llm_response` records. Tests 833 → 867 → 855 (the removals)
+      → 859 (S3.8) passed; no model touched. (Earlier
       2026-08-25: S3.2 design + gate re-check; S3.1 correlation analysis.
       2026-08-24: operator ran the M2.5 recheck — readout passed all
       criteria, reproduced the pilot, failed the Stage-3 launch gate;
@@ -215,7 +224,12 @@ ceiling, not steady pressure).
       prompt**: tool specs rendered flat instead of `indent=2` = −1,752 B
       on every call, 10,706 → **8,954 B**, no wording touched. Gone:
       `runner/compact.py`, `--no-compact`, `--continuation-prompt`,
-      `llm_request.uncompacted_bytes`. Remaining acts: the confirmation
+      `llm_request.uncompacted_bytes`. **Record S3.8 (same day)** answers
+      S3.7's token caveat at the source: `llm_response` records now carry
+      the provider's own token counts (`token_usage()` over llm7shi's raw
+      stream chunks — Gemini `usage_metadata`, Ollama eval counts,
+      all-`None` when unreported), so the re-run's TPM readout is measured
+      rather than derived from the 3.5 B/token convention. Remaining acts: the confirmation
       **re-run #2** (operator-run, then read out — the Handoff has the
       command and the checklist), then the 99-canto expansion as three
       canticle-parallel runs behind the existing gates, and the
@@ -292,8 +306,8 @@ ceiling, not steady pressure).
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **855 passed** (547 corpus + 46 `test_harness_tools.py` +
-   76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
+- Test suite: **859 passed** (547 corpus + 46 `test_harness_tools.py` +
+   76 `test_harness_toolcall.py` + 36 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
    32 `test_harness_reconstruct.py` + 16 `test_harness_pacing.py`).

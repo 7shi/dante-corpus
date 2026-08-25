@@ -726,3 +726,126 @@ def test_run_unit_stamps_llm_request_context(toolkit):
     assert sessions[0] < sessions[-1]  # counter advances per session
     line_starts = {ctx["line_start"] for ctx in seen}
     assert line_starts == {1, 4}
+
+
+# --- provider-reported token usage (token_usage) ------------------------------------------
+
+
+class _GeminiUsage:
+    """Shape of `google-genai`'s per-chunk usage_metadata."""
+
+    def __init__(self, prompt, candidates, thoughts, total):
+        self.prompt_token_count = prompt
+        self.candidates_token_count = candidates
+        self.thoughts_token_count = thoughts
+        self.total_token_count = total
+
+
+class _Chunk:
+    def __init__(self, **fields):
+        for key, value in fields.items():
+            setattr(self, key, value)
+
+
+def test_token_usage_reads_gemini_metadata_from_the_last_reporting_chunk():
+    """Gemini streams usage on the chunks; the final one carries the call's
+    totals, so the scan runs backwards and stops at the first report."""
+    from harness.runner.agent import token_usage
+
+    response = _Chunk(
+        chunks=[
+            _Chunk(usage_metadata=_GeminiUsage(1200, 5, 0, 1205)),
+            _Chunk(usage_metadata=_GeminiUsage(1200, 340, 96, 1636)),
+        ]
+    )
+    assert token_usage(response) == {
+        "input_tokens": 1200,
+        "output_tokens": 340,
+        "thought_tokens": 96,
+        "total_tokens": 1636,
+    }
+
+
+def test_token_usage_reads_ollama_eval_counts():
+    """Ollama reports `prompt_eval_count`/`eval_count` on the terminating
+    chunk and no total, which is derived."""
+    from harness.runner.agent import token_usage
+
+    response = _Chunk(
+        chunks=[_Chunk(done=False), {"prompt_eval_count": 900, "eval_count": 120}]
+    )
+    assert token_usage(response) == {
+        "input_tokens": 900,
+        "output_tokens": 120,
+        "thought_tokens": None,
+        "total_tokens": 1020,
+    }
+
+
+def test_token_usage_is_all_none_for_a_backend_that_reports_nothing():
+    """Cost accounting never breaks a live run: an unknown chunk shape, an
+    absent stream, or a changed provider field yields the uniform all-None
+    record instead of raising."""
+    from harness.runner.agent import token_usage
+
+    empty = {
+        "input_tokens": None,
+        "output_tokens": None,
+        "thought_tokens": None,
+        "total_tokens": None,
+    }
+    assert token_usage(_Chunk(chunks=[])) == empty
+    assert token_usage(_Chunk(text="no chunks attribute at all")) == empty
+    assert token_usage(_Chunk(chunks=[_Chunk(usage_metadata=_Chunk())])) == empty
+    assert token_usage(_Chunk(chunks=[{"eval_duration": 12}])) == empty
+
+
+def test_llm_response_record_carries_provider_token_counts(monkeypatch, tmp_path):
+    """The wire records read the ceiling in its own currency: `llm_response`
+    stamps the backend's token counts next to the byte sizes, uniformly
+    None-valued when the backend reports none."""
+    import harness.runner.agent as agent_module
+
+    class FakeClient:
+        def __init__(self, model="", file=None, **kwargs):
+            self.history = []
+            self.calls = 0
+
+        def set_system_prompt(self, prompt):
+            self.history.insert(0, {"role": "system", "content": prompt})
+
+        def __call__(self, prompt):
+            self.calls += 1
+            self.history.append({"role": "user", "content": prompt})
+            self.history.append({"role": "assistant", "content": "risposta"})
+            chunks = (
+                [_Chunk(usage_metadata=_GeminiUsage(2048, 64, 0, 2112))]
+                if self.calls == 1
+                else []
+            )
+            return _Chunk(text="risposta", chunks=chunks)
+
+    monkeypatch.setattr("llm7shi.Client", FakeClient)
+    log = tmp_path / "requests.jsonl"
+    with log.open("w", encoding="utf-8") as sink:
+        generate = agent_module.llm7shi_generate("google:m", request_log=sink)
+        opening = [{"role": "user", "content": "compito"}]
+        generate([dict(m) for m in opening])
+        generate(opening + [
+            {"role": "assistant", "content": "risposta"},
+            {"role": "user", "content": "ancora"},
+        ])
+
+    responses = [
+        json.loads(line)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if json.loads(line)["record"] == "llm_response"
+    ]
+    assert responses[0]["input_tokens"] == 2048
+    assert responses[0]["output_tokens"] == 64
+    assert responses[0]["total_tokens"] == 2112
+    # Uniform schema: the keys exist even when the backend reported nothing.
+    assert responses[1]["input_tokens"] is None
+    assert responses[1]["total_tokens"] is None
+    # Byte accounting is untouched by the addition.
+    assert responses[0]["output_bytes"] == len("risposta".encode("utf-8"))

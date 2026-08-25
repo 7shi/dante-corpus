@@ -68,6 +68,7 @@ __all__ = [
     "UnitResult",
     "llm7shi_generate",
     "run_unit",
+    "token_usage",
     "_validate_calls",
 ]
 
@@ -110,6 +111,82 @@ _SESSION_SEQ = itertools.count(1)
 BYTES_PER_TOKEN = 3.5
 DEFAULT_BUCKET_RATE_TOKENS_PER_MIN = 12000.0  # 42 kB/min: sustained <= 75% of the 16k ceiling
 DEFAULT_BUCKET_DEPTH_TOKENS = 6500.0  # >= max single call (STAGE3.md §3)
+
+
+def token_usage(response) -> dict:
+    """Provider-reported token counts for one backend call, best effort.
+
+    Byte sizes are the harness's portable currency, but the API ceiling the
+    Stage-3 pacing fights is denominated in *tokens*, and the bytes/token
+    ratio is neither constant nor ours to choose (JSON indentation, XML
+    markup and Italian text tokenize at very different rates). Providers do
+    report the real numbers, but only in provider-specific shapes on the raw
+    stream chunks, which llm7shi keeps verbatim on `Response.chunks`:
+
+    - Gemini (`google-genai`): a `usage_metadata` on the chunks — the final
+      one carries the call's totals (`prompt_token_count`,
+      `candidates_token_count`, `thoughts_token_count`, `total_token_count`);
+    - Ollama: `prompt_eval_count` / `eval_count` on the terminating chunk.
+
+    Returns the normalized keys `input_tokens` / `output_tokens` /
+    `thought_tokens` / `total_tokens` (values `None` where the backend does
+    not report them) so the log schema stays uniform across providers. An
+    unknown backend, a missing stream, or a chunk shape that has changed
+    yields all-`None` rather than raising: cost accounting must never break a
+    live run.
+    """
+    for chunk in reversed(list(getattr(response, "chunks", None) or [])):
+        usage = _chunk_usage(chunk)
+        if usage:
+            return usage
+    return dict(_EMPTY_USAGE)
+
+
+_EMPTY_USAGE = {
+    "input_tokens": None,
+    "output_tokens": None,
+    "thought_tokens": None,
+    "total_tokens": None,
+}
+
+
+def _field(source, name):
+    """Read `name` off a chunk that may be an object or a mapping."""
+    if isinstance(source, dict):
+        value = source.get(name)
+    else:
+        value = getattr(source, name, None)
+    return value if isinstance(value, int) else None
+
+
+def _chunk_usage(chunk) -> dict | None:
+    """Normalize one raw stream chunk, or None when it reports no usage."""
+    metadata = chunk.get("usage_metadata") if isinstance(chunk, dict) else getattr(
+        chunk, "usage_metadata", None
+    )
+    if metadata is not None:
+        prompt = _field(metadata, "prompt_token_count")
+        candidates = _field(metadata, "candidates_token_count")
+        thoughts = _field(metadata, "thoughts_token_count")
+        total = _field(metadata, "total_token_count")
+        if prompt is not None or total is not None:
+            return {
+                "input_tokens": prompt,
+                "output_tokens": candidates,
+                "thought_tokens": thoughts,
+                "total_tokens": total,
+            }
+        return None
+    prompt = _field(chunk, "prompt_eval_count")
+    output = _field(chunk, "eval_count")
+    if prompt is None and output is None:
+        return None
+    return {
+        "input_tokens": prompt,
+        "output_tokens": output,
+        "thought_tokens": None,
+        "total_tokens": None if prompt is None or output is None else prompt + output,
+    }
 
 
 class TokenBucket:
@@ -255,7 +332,10 @@ def llm7shi_generate(
     call (timestamp, model, session/unit coordinates from the request
     context, transcript position, same-turn attempt, `context_bytes`,
     newest-message size, paced seconds) and one `llm_response` record
-    after it (duration, output bytes, empty flag). Join key across the pair:
+    after it (duration, output bytes, empty flag, and the backend's own
+    token counts via `token_usage` — `None` where the provider reports
+    none, and covering only the attempt whose text the Client returned,
+    exactly like the byte figures). Join key across the pair:
     ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs, quality
     regeneration) stay invisible here by construction; they are measured by
     the stream's `wait_retry` counters and correlated by timestamp. The
@@ -396,6 +476,9 @@ def llm7shi_generate(
                 "attempt": attempt,
                 "duration_seconds": round(time.monotonic() - began, 3),
                 "output_bytes": len(str(text).encode("utf-8")),
+                # Provider-reported, so the TPM ceiling can be read in its own
+                # currency instead of through the 3.5 B/token convention.
+                **token_usage(response),
                 "empty": not str(text).strip(),
             }
         )

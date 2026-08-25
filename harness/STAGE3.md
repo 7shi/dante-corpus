@@ -554,3 +554,39 @@ retries), and `paced_seconds`. `tests/test_harness_compact.py` became
 `tests/test_harness_pacing.py` (16 tests: adapter sync, pacing, bucket,
 end-to-end verbatim session). The reconstruct header now announces
 `transcripts verbatim, payload tier R1`.
+
+**Stage 3, record S3.8 — the wire records now carry provider-reported token
+counts (operator observation): shipped 2026-08-25 (deterministic; 855 → 859
+tests passed, no model touched).** S3.7 closed with an unmeasured caveat —
+the quota is metered in tokens, the records were denominated in bytes, and
+every token figure in this stage (the 5.13k tok/min solo average, ×3 = 96%,
+the bucket's debits) came from the 3.5 B/token convention. The counts are
+not actually unavailable: they are provider-specific, and llm7shi keeps the
+raw stream chunks verbatim on `Response.chunks`, where Gemini reports
+`usage_metadata` (`prompt_token_count` / `candidates_token_count` /
+`thoughts_token_count` / `total_token_count`, the final chunk carrying the
+call's totals) and Ollama reports `prompt_eval_count` / `eval_count`.
+
+`runner/agent.py` gained `token_usage(response)`: it scans the chunks
+backwards, normalizes whichever shape it finds to `input_tokens` /
+`output_tokens` / `thought_tokens` / `total_tokens`, and returns those keys
+all-`None` for an unknown backend, an absent stream, or a changed provider
+field — cost accounting must never break a live run. `llm7shi_generate`
+stamps the result onto every `llm_response` record next to `output_bytes`,
+so the schema is uniform across providers and the join key is unchanged.
+Two limits are inherent, both identical to the byte figures the records
+already carried: the counts describe the attempt whose text `Client`
+returned (a quality regeneration's discarded attempt is invisible here, as
+it always was — `wait_retry` still measures those), and they land on the
+*response* record because the request record is written before the call.
+
+What this buys the re-run readout, at no cost to the run: §5's token
+quantities become measurements instead of byte-derived estimates, joined
+per call as `(session, messages, attempt)`; the open S3.7 question — how
+much of the −1,752 B/call flat-JSON reduction survives as tokens — is read
+straight off the first-call `input_tokens` instead of inferred; and
+`BYTES_PER_TOKEN = 3.5`, which the shared bucket debits with, becomes
+falsifiable against `context_bytes / input_tokens` per call. The constant
+itself is deliberately left alone until the re-run measures it: pacing
+parameters are a between-runs decision (the standing constraint), and the
+bucket must estimate *before* the send, where only bytes are known.
