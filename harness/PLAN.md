@@ -6,7 +6,7 @@ Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
 **Next action — Stage 4: the OPERATOR launches the full-corpus (100-canto)
-verification with `make -f harness/recon/Makefile -j3 inferno purgatorio
+verification with `make -C harness/recon -j3 inferno purgatorio
 paradiso` — three canticle-parallel streams; commands and contract in
 [`STAGE4.md`](STAGE4.md) — then the corpus-wide readout closes the stage.
 Nothing is in flight on the assistant side.**
@@ -161,6 +161,12 @@ historical TokenBucket records as-written (append-only ledgers); the Stage 4
 launch configuration in this file's Current Status/§2 is updated to drop the
 bucket. Test suite: 857 passed (down from 864 — seven `TokenBucket`-only
 tests in `test_harness_pacing.py` removed with the mechanism). Nothing else
+pending on the assistant side.
+
+**Session housekeeping (2026-08-26, operator decision): `harness/recon/
+Makefile` invocation changed + STAGE4.md doc catch-up on the TokenBucket
+removal — record S4.2 in [`STAGE4.md`](STAGE4.md)'s ledger, detail there.**
+This Handoff's Next-action command above is updated to match. Nothing else
 pending on the assistant side.
 
 ---
