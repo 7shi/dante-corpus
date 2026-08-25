@@ -19,9 +19,11 @@ wording changed). §2.A is WITHDRAWN — read it as the record of why. Live
 levers: R1 payload serving (§2.B) + pacing (§2.C) + the prompt size.
 Re-run #2 ran clean and passed every quality criterion, its ×3 average being
 the first to pass unpaced (record S3.9); the generation-side runaway cap was
-then verified, decided at 6,000 chars and implemented (record S3.10); what
-remains is the inferno-1 cap experiment and the three canticle-parallel
-runs.**
+then verified, decided at 6,000 chars and implemented (record S3.10); and the
+inferno-1 cap experiment PASSED every S3.10 criterion (record S3.11). **Stage
+3 CLOSED 2026-08-25 on record S3.11 (operator decision); the 99-canto
+expansion was re-scoped out of this stage into its own Stage 4
+([`STAGE4.md`](STAGE4.md)).**
 
 ---
 
@@ -307,12 +309,77 @@ One inferno-1 re-run, fresh `--log`, compact + interval 35 + no bucket
 
 ## Milestone Ledger (Stage 3)
 
-**Record S3.1 — context-growth × 429 correlation analysis: COMPLETE
-(2026-08-25, assistant-run).** As recorded in [`PLAN.md`](PLAN.md)'s ledger at
-the time; **two accounting corrections land in S3.2** (§1.1 double-count,
-§1.2 feedback mislabel). The record's mechanism findings stand: burst =
-fast-response + big-send pairing, backoffs = stochastic rolling-window
-contact, mitigation = under-the-ceiling by construction.
+**Record S3.1 — context-growth × 429 correlation analysis over
+`recon-inf1-recheck.log`: COMPLETE (2026-08-25, deterministic log work,
+assistant-run). Moved verbatim from PLAN.md's ledger at stage close
+(2026-08-25). Two accounting points superseded the same day by S3.2
+(§1.1: the additive `context+new` double-counts the newest message — true
+solo average 5.13k tok/min, ×3 = 96%; §1.2: the 15–20.6 kB turn-2 messages
+are `read_unit` payloads, not validator feedback); the gate conclusion
+(launch fails at zero margin) and the mechanism findings stand.** The
+Stage-3 opening task: localize the recheck's 7 backoffs
+(162 s) against transcript growth and minute-bucket rates, and resolve the
+pilot-9.4% vs recheck-2.5% anchor. Method: the 103 request/response pairs
+joined on `(session, messages, attempt)`; input accounted additively
+(`context_bytes + new_bytes`); generation baseline r0 = total output /
+compute = 13.9 B/s; rolling-60 s windows alongside wall minutes. Analysis
+script ephemeral (deterministic over the gitignored log; method above
+re-derives every number).
+
+- **Accounting correction to the M2.5 readout — its gate conclusion
+  unchanged, now stronger.** The readout's "input" summed `context_bytes`
+  only (1,919.7 kB); the physical request input is additive: **2,239.8 kB**
+  total, of which replayed context = **85.7%**. The readout's "61%
+  (1,167 kB)" reconciles exactly: Σcontext − Σ final-call contexts =
+  1,167.0 kB, the intermediate-call replay share of Σcontext. Corrected
+  solo rates: average **21.0 kB/min ≈ 6.0k tok/min ≈ 37%** of the 16k
+  ceiling — **3 × average = 112%**: the Stage-3 launch gate fails on
+  averages outright, not only peaks. Peaks: 3 wall-minutes over the solo
+  ceiling (115 / 113 / 107%), rolling-60 s max **132%**, 14 calls with
+  rolling window ≥ 100%, max single call **52.8 kB ≈ 15.1k tok ≈ 94% of the
+  ceiling alone**.
+- **The burst mechanism is structural, not stochastic.** Intra-session sends
+  fire **0–20 ms** after the previous response (raw timestamps: the client
+  streams the next request the moment a response lands), and the tripping
+  shape is the **turn-2 validator-feedback turn**: its `new_bytes` are the
+  run's five largest messages (15.0–20.6 kB; `new` p50 254 B / p90 8.3 kB),
+  layered on a grown context (e.g. S24#2: ctx 30.3 kB + new 18.7 kB). All
+  **15 calls ≥ 30 kB input are turn-2+ retries**; paired 12→38–53 kB — and
+  S10/S24/S29 pairing again at #3 (S10: 53 + 35 kB = 158%) — they stack
+  **86–158% of the solo ceiling into single minutes**. Two size levers
+  follow: transcript replay *and* validator-feedback size (the tool result
+  is harness-generated; its bloat is our choice, not the model's).
+  (§1.2 later corrected the feedback half of this lever.)
+- **Backoff non-localization — the honest negative result.** The 7 backoffs
+  / 162 s cannot be attributed from wire durations: naive duration-excess
+  (duration − output/r0) sums 630 s over the top-10 calls — generation-rate
+  variance (per-call rate quartiles 7.6–19.5 B/s) dwarfs the ~23 s/backoff
+  quanta. The 14 over-ceiling calls flowed at or above average rate
+  (excesses −79…+48 s; the run's three biggest inputs generated at
+  16.7–21.8 B/s), and the 11 slow small first-calls (>30 s for ~114 B
+  output) sat at 21–81% rolling windows — no quota contact. Pilot anchor
+  resolved: Spearman(pilot, recheck unit seconds) = **0.41** over 33 units
+  (work-driven floor, run-to-run noise dominant), and the pilot's entire
+  +630 s tax is one unit's episode (986 s pilot → 186 s recheck; the +800 s
+  outlier). The tax is **stochastic rolling-window burst contact**:
+  mitigation is keeping the stream under the ceiling by construction (size +
+  spacing), never reacting to 429s. (Re-tested with real work in the
+  denominator by S3.9: duration tracks thinking, r=+0.97 — the negative
+  result was mis-modeled generation, not hidden quota contact.)
+- **Measured parameters handed to the compaction/pacing design.** Fixed
+  per-call floor = unit context **11.8 kB** (irreducible L1–L4 payload;
+  not reproducible from any slice per §1.2 — superseded by §1.3's table).
+  Counterfactuals (floor + summary S + `new`): S=0 → ×3 average **77%** of
+  ceiling, S=1 82%, S=2 87%, S=4 98% — the summary budget must stay
+  ≲ 2 kB. Capping validator feedback at ~4 kB (measured counterfactual:
+  Σnew 320 → 147 kB) bounds any call at ~15.8 kB ≈ 4.5k tok ≈ **28% solo**
+  and holds ×3 average at **68%** (S=0) to 79% (S=2 with cap). Pacing
+  faces measured 0–20 ms inter-send gaps and self-pacing big calls (firsts
+  4–91 s, median 23.5; big turn-2s 70–212 s), so it only needs to break the
+  fast-pair stack: a min inter-send interval of 35–60 s per stream, or a
+  global token bucket (~11k tok/min across 3 streams), trading bounded wall
+  clock (median session = 3 calls ⇒ +70–120 s/session worst case) for
+  ceiling margin. The design decides; these are its inputs.
 
 **Record S3.2 — compaction/pacing design + deterministic gate re-check:
 COMPLETE (2026-08-25, assistant-run, this file).** Inputs: S3.1 (corrected),
@@ -784,3 +851,78 @@ harness/recon-inf1-cap6k.log` (no `--write`; interval default 0, bucket off
 — solo arms stay comparable to re-run #2). Readout criteria: F1 within the
 0.744–0.796 band; Σ`max_length_retries` and which sessions triggered; peak
 request context vs re-run #2's 37.3 kB; wall clock vs 5,275.5 s.
+
+**Stage 3, record S3.11 — cap experiment readout: PASS on every S3.10
+criterion; STAGE CLOSED on this record (assistant readout over the
+operator-run log; deterministic; no code changed, tests untouched at 864;
+operator close decision 2026-08-25).** Run: `recon-inf1-cap6k.log` — inferno 1
+dry-run on the post-S3.10 state (cap default 6000 chars, verbatim transcripts,
+payload tier R1, flat prompt, interval 0, no bucket): **106** request/response
+pairs over 34 sessions (+1 fast-routed unit), provider tokens landed on all
+106 responses, wall clock **6,260.3 s**.
+
+Criteria verdicts (S3.10's protocol):
+
+- **F1 within band — PASS.** verify-gold micro F1 **0.7600** (tp 315 /
+  fp 125 / fn 74; P .7159 / R .8098) inside 0.744–0.796 (floor 0.72 clear).
+- **Cap triggers — PASS, expected shape.** Σ`max_length_retries` = **1**:
+  session 21 (L82–84) attempt 1 crossed the cap and regenerated to a **114 B**
+  opener — exactly S3.10's predicted turn-1-over-pack shape. No response
+  exceeded 4 kB output anywhere in the run (natural max 3,885 B); both of
+  re-run #2's over-pack events are structurally impossible now.
+- **Peak request context — PASS.** max `context_bytes` **21,705 B** vs
+  re-run #2's 37,344 B (**−42%**), matching S3.10's predicted organic bound
+  (~22 kB multi-turn contexts).
+- **Wall clock — measured +19%.** 6,260.3 s vs 5,275.5 s, decomposed before
+  any conclusion: one thinking-heavy episode dominates — unit L106–108 ran
+  **816 s vs 124 s** in re-run #2 (max thought 6,344 tok in a single call);
+  median call duration actually *fell* (26.6 vs 29.6 s) and p90 rose only
+  131→143 s. Not quota: api-retry tax **0.24%** (1 backoff / 15 s). The cap
+  mechanism itself cost ~130 s once (session 21). Thought share rose to
+  **78%** of generated tokens (Σthought 147,763 vs 127,448) — a
+  thinking-heavier draw, consistent with a few extreme episodes also
+  weakening the duration correlations (r(total) +0.48 / r(generated) +0.57,
+  vs +0.76/+0.97).
+
+Pressure quantities improved across the board vs re-run #2: ×3 average
+**71%** (was 87%), peak single call **46% solo** (was 81%), rolling-60 s max
+**93%** (was 96%), wall-minutes ≥100%: **0**, empty responses **0/106**,
+B/token median 3.56 / aggregate 3.50 against the 3.5 convention.
+
+*Flag 1 — gate-pass 14/34 (usual 18–19): investigated same session, cap
+excluded.* All four flips are pass→fail with **soft `tag` only, zero hard**:
+(10–12) two extra `obl` rows from token 10.3 (fp 2→9; chronically volatile —
+per-unit F1 ranged 0.54–0.95 across the four logs); (13–18) one extra obl at
+13.11 with tp/fp/fn **identical** to re-run #2 (16/2/0) — same row mass, a
+row shape crossing an argument-structure rule; (46–48) a single extra obl at
+46.6; (91–99) pro-drop subject displacement pairs (missing subj (94,3) /
+extra subj (0,0)) on a unit that failed 3 of 4 runs anyway. Causality: the
+cap fired exactly once, in session 21, which none of the flipped units
+touches — mechanically excluded. Context: pass-set shuffles between ANY two
+of the four inferno-1 logs span 4–8 units (this one: 4, one-directional);
+the 0-soft gate is intentionally strict (one stray row fails a unit), best
+prior pass rate was 18/34 (53%), and `written_cantos == 0` protection held in
+every run. Row-level F1 stayed in band throughout — quality held; unit-granular
+pass counts are the noisy instrument.
+
+*Flag 2 — fp mass drifted monotonically across the four logs*
+(100→103→116→125, F1 0.7956→0.7867→0.7728→0.7600): recorded as observation.
+Every step but the last is confounded with config changes (R1 payloads,
+verbatim transcripts, slim prompt); the last step (verbatim→cap6k, config
+delta = the cap only) added +9 fp of which **+7 sit in (10–12)** alone.
+Single-run samples cannot separate model-side drift from draw variance.
+
+Launch consequence: the cap rides along by default (`--max-length 6000`;
+`--max-length 0` is the off switch), the launch configuration stands as
+recommended on S3.9 (interval default 0 + shared TokenBucket), and the
+99-canto expansion is unblocked — handed to **Stage 4**
+([`STAGE4.md`](STAGE4.md)) by operator re-scope the same day.
+
+Method note: readout via an ephemeral script (`/tmp/opencode/cap_readout.py`),
+validated to reproduce record S3.9's numbers exactly on
+`recon-inf1-verbatim.log` before use — Σinput 409,321 tok, solo average 4,667
+(last-request − first-request span basis), peak call 12,999 = 81%, sliding
+rolling-60 max-sum 15,435 = 96%, B/token 3.56/3.44, tax 1.50%, wall
+5,275.5 s. One correction surfaced during validation: S3.9's "+0.97" duration
+correlation is against **generated tokens (thought+output)**;
+r(total_tokens) measures +0.76 on that log.
