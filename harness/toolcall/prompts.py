@@ -62,7 +62,10 @@ def tool_specs_section(specs: Sequence[dict]) -> str:
     description, and JSON-Schema parameters.
     """
     functions = [spec.get("function", spec) for spec in specs]
-    body = json.dumps(functions, ensure_ascii=False, indent=2)
+    # Rendered WITHOUT indentation on purpose: the pretty-printed form measured
+    # 5,794 B against 4,042 B flat, and that 1,752 B/call of whitespace carries
+    # no meaning while riding every request (STAGE3.md record S3.7).
+    body = json.dumps(functions, ensure_ascii=False)
     return f"## Available tools\n\n```json\n{body}\n```"
 
 

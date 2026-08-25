@@ -465,10 +465,7 @@ def agent_fallback(
     verbose: bool = False,
     file=None,
     request_log=None,
-    compact: bool = True,
     payload_tier: str = "R1",
-    continuation_prompt: bool = False,
-    assistant_turns: str = "last",
     min_send_interval: float = 0.0,
     token_bucket=None,
 ) -> AgentFallback:
@@ -484,47 +481,25 @@ def agent_fallback(
     (an open UTF-8 JSONL sink), receives one `llm_request` / `llm_response`
     record pair per backend call (see `runner.agent.llm7shi_generate`).
 
-    Stage-3 wiring (STAGE3.md §4 items 4-5, reshaped by record S3.5) passes
-    through to the adapter: `compact` enables the history policy — the
-    default keeps only the newest assistant turn verbatim (the pending
-    candidate submission the model repairs from) while older turns are
-    omitted entirely; `assistant_turns="digest"` renders older turns as
-    one-line digests instead;
-    `continuation_prompt` opts into the calls-2+ system-prompt swap.
-    `payload_tier` selects `read_unit`'s rendering tier, and
-    `min_send_interval` / `token_bucket` (a `runner.agent.TokenBucket`)
-    pace the single send point.
+    Stage-3 wiring (STAGE3.md §4, reduced to two levers by record S3.7 —
+    transcript compaction and the continuation prompt are both gone, so the
+    wire carries the transcript verbatim): `payload_tier` selects
+    `read_unit`'s rendering tier, and `min_send_interval` / `token_bucket`
+    (a `runner.agent.TokenBucket`) pace the single send point.
     """
     from harness.runner.agent import (
         DEFAULT_MODEL,
-        OPENING_MESSAGE_COUNT,
         SESSION_MAX_TURNS,
         TokenBucket,
         llm7shi_generate,
         run_unit as agent_run_unit,
     )
-    from harness.runner.compact import history_policy
-    from harness.runner.prompts import continuation_system_prompt
     from harness.runner.tools import GrammarToolkit, tool_specs
     from harness.toolcall import PromptXmlTransport
 
     model = DEFAULT_MODEL if model is None else model
     max_turns = SESSION_MAX_TURNS if max_turns is None else max_turns
     specs = tool_specs()
-    policy = None
-    if compact:
-        if assistant_turns not in ("last", "digest"):
-            raise ValueError(
-                f"assistant_turns must be 'last' or 'digest', "
-                f"got {assistant_turns!r}"
-            )
-        policy = history_policy(
-            OPENING_MESSAGE_COUNT,
-            continuation_system_prompt(specs, workflow)
-            if continuation_prompt
-            else None,
-            assistant_mode=assistant_turns,
-        )
     if token_bucket is not None and not isinstance(token_bucket, TokenBucket):
         raise TypeError(
             "token_bucket must be a runner.agent.TokenBucket, "
@@ -542,7 +517,6 @@ def agent_fallback(
             quiet=not verbose,
             file=file,
             request_log=request_log,
-            history_policy=policy,
             min_send_interval=min_send_interval,
             token_bucket=token_bucket,
         )

@@ -557,14 +557,12 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
         "--min-support", "99",
     ]
     assert rc.main(argv) == 0
-    assert captured["compact"] is True
+    assert "compact" not in captured  # record S3.7: no compaction layer
     assert captured["payload_tier"] == "R1"
-    assert captured["continuation_prompt"] is False
-    assert captured["assistant_turns"] == "last"
     assert captured["min_send_interval"] == 0.0
     assert captured["token_bucket"] is None
     out = capsys.readouterr().out
-    assert "compaction ON (results+last submission)" in out
+    assert "transcripts verbatim" in out
     assert "payload tier R1" in out
     assert "min-send-interval 0s" in out
     assert "token bucket off" in out
@@ -572,8 +570,6 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     captured.clear()
     bucket = tmp_path / "tokbucket.state"
     argv += [
-        "--continuation-prompt",
-        "--assistant-turns", "digest",
         "--payload-tier", "S1",
         "--min-send-interval", "45",
         "--token-bucket", str(bucket),
@@ -581,10 +577,7 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
         "--bucket-depth", "3000",
     ]
     assert rc.main(argv) == 0
-    assert captured["compact"] is True
     assert captured["payload_tier"] == "S1"
-    assert captured["continuation_prompt"] is True
-    assert captured["assistant_turns"] == "digest"
     assert captured["min_send_interval"] == 45.0
     bucket_obj = captured["token_bucket"]
     assert bucket_obj is not None
@@ -592,10 +585,7 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     assert bucket_obj.rate_per_min == 6000.0
     assert bucket_obj.depth == 3000.0
     out = capsys.readouterr().out
-    assert (
-        "compaction ON (assistant digests+last submission + continuation prompt)"
-        in out
-    )
+    assert "transcripts verbatim" in out
     assert "payload tier S1" in out
     assert "min-send-interval 45s" in out
     assert "rate 6000 tok/min, depth 3000 tok" in out

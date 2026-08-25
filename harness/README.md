@@ -17,7 +17,7 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 - **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stage 1–2 induction core + Stage-3 scale-out).
 - **Stage 1 Record**: [`STAGE1.md`](STAGE1.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
 - **Stage 2 Record**: [`STAGE2.md`](STAGE2.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
-- **Stage 3 Design & Ledger**: [`STAGE3.md`](STAGE3.md) — Living Stage-3 home: compaction/pacing design (S3.2), gate re-check, implementation map, confirmation protocol; accrues the stage's milestone records.
+- **Stage 3 Design & Ledger**: [`STAGE3.md`](STAGE3.md) — Living Stage-3 home: the payload/pacing design (S3.2), gate re-check, implementation map, confirmation protocol, and the record of why transcript compaction was removed (S3.7); accrues the stage's milestone records.
 - **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
 - **Stage 2 (Extraction & Hybrid Engine)**: [`extractor/README.md`](extractor/README.md) | [`extractor/PLAN.md`](extractor/PLAN.md)
@@ -41,7 +41,7 @@ dante-corpus/
 │   ├── PLAN.md                    # Master architectural plan (status, milestones, disciplines)
 │   ├── STAGE1.md                    # Archived Stage-1 record (milestones 1.1–1.4, carry-overs)
 │   ├── STAGE2.md                    # Archived Stage-2 record (milestones 2.1–2.5, pilot/recheck readouts)
-│   ├── STAGE3.md                    # Stage-3 design + ledger (compaction/pacing, scale-out)
+│   ├── STAGE3.md                    # Stage-3 design + ledger (payload/pacing, scale-out)
 │   ├── TOOLCALL.md                # Tool call protocol sub-project (XML interim → native)
 │   ├── FUTURE.md                  # Beyond Layer 5 (unscheduled design notes)
 │   │
@@ -60,7 +60,6 @@ dante-corpus/
 │   │   ├── tools.py               # Dedicated Grammar Tool API (Layer 5 masked structurally)
 │   │   ├── agent.py               # Per-unit session runner over run_tool_loop
 │   │   ├── prompts.py             # 5-step CoT grammatical reasoning protocol
-│   │   ├── compact.py             # Continuation wire view: pure history policy (Stage 3)
 │   │   ├── benchmark.py           # Gold comparison & metric suite
 │   │   └── statusline.py          # Rich live status bar for long operator-run sessions
 │   │
@@ -82,7 +81,7 @@ dante-corpus/
     ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
     ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
     ├── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
-    ├── test_harness_compact.py    # Stage 3 tests (wire view, fingerprint sync, pacing)
+    ├── test_harness_pacing.py     # Stage 3 tests (Client sync, interval, token bucket)
     ├── test_harness_syntax_miner.py  # Stage 2 miner tests (clustering, rules, coverage)
     ├── test_harness_lexicon_builder.py  # Stage 2 lexicon tests (frames, gating, coverage)
     ├── test_harness_hybrid_engine.py   # Stage 2 engine tests (derivation, routing, fallback)

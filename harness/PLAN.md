@@ -5,10 +5,9 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 3: confirmation re-run #2 readout (the OPERATOR ran
-it; paste/point at `harness/recon-inf1-results-only.log` and read out).**
-State at handoff (all records in [`STAGE3.md`](STAGE3.md), ledger S3.4–S3.5,
-2026-08-25):
+**Next action — Stage 3: the OPERATOR runs confirmation re-run #2 (command
+below), then this session reads it out.** State at handoff (all records in
+[`STAGE3.md`](STAGE3.md), ledger S3.4–S3.7, 2026-08-25):
 
 - Run #1 (`recon-inf1-compact.log`, compact R1 + interval 35) read out: F1
   **0.7867** → R1 kept, 19/34 units, ×3 average 72%, peak call 34%, retry
@@ -16,40 +15,50 @@ State at handoff (all records in [`STAGE3.md`](STAGE3.md), ledger S3.4–S3.5,
   (`agent_fallback` built a fresh generate closure per unit, so pacing state
   never spanned sessions); fixed + regression-tested.
 - Operator decisions since: `--min-send-interval` defaults **0**
-  (reactive-only); **record S3.5** — the wire view re-sends only the newest
-  assistant turn verbatim (the pending submission = the model's repair
-  reference); older turns (thinking prose, old tool_call bodies) are never
-  re-sent; the opening rides verbatim. Opt-ins: `--assistant-turns digest`
-  (S3.3 digests), `--continuation-prompt` (calls-2+ prompt swap). A pure
-  results-only mode existed briefly and was **removed by operator verdict**
-  (repair-blind). Tests 868 → 871.
-- The run just executed: one inferno-1 pass, compact ON (default `last`),
-  interval 0, no bucket:
+  (reactive-only, S3.4); S3.5/S3.6 narrowed the wire view; **record S3.7
+  removed transcript compaction outright.** Measured over run #1's own
+  records, the digest bought 7.6 kB of 1,464 kB (**0.5%**) — and spent it in
+  the 4-call repair sessions, deleting the earlier submission the validator
+  feedback refers to. The continuation prompt went with it (changing what a
+  resend contains destabilizes behaviour). The reduction now comes from the
+  **system prompt itself**: the tool-specs JSON is rendered flat instead of
+  `indent=2`, which is 1,752 B/call of pure whitespace — 10,706 → **8,954 B**
+  with not one word of instruction removed, on *every* call. Net: verbatim
+  transcripts + slim prompt ≈ 1,287 kB over run #1's traffic vs the compacted
+  run's 1,290.7 kB — same wire, full session visibility. Gone:
+  `runner/compact.py`, `--no-compact`, `--continuation-prompt`,
+  `llm_request.uncompacted_bytes`. Kept: `--payload-tier` (R1), pacing
+  (`--min-send-interval`, `--token-bucket`), `paced_seconds`. Tests 871 → 855
+  (`test_harness_compact.py` → `test_harness_pacing.py`, 16 tests).
+- The run to execute: one inferno-1 pass, verbatim transcripts, interval 0,
+  no bucket:
 
 ```bash
 uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 \
        --verify-gold --model google:gemma-4-31b-it \
-       --log harness/recon-inf1-results-only.log
+       --log harness/recon-inf1-verbatim.log
 ```
 
-Readout checklist for this log (deterministic; assistant-run):
+Readout checklist for that log (deterministic; assistant-run):
 1. **Quality first**: verify-gold micro F1 inside the pilot/recheck band
    0.744–0.796 (floor 0.72 — run #1 measured 0.7867 on the same canto);
-   gate-pass units ~18±noise of 34; empty responses 0. This isolates whether
-   repair-with-visible-submission + dropped older context holds quality.
-2. **Compaction live**: all position≥7 requests show
-   `context_bytes < uncompacted_bytes`; openings verbatim; no inversions.
-3. **Gate quantities (observational — §5 defined them for the paced
-   config)**: ×3 average (predicted ≈ **94%** unpaced: Σ ≈ 1,455 kB over a
-   ≈ 82 min compute-only span), peak single call (~38% solo), rolling-60,
-   api-retry tax vs run #1's paced 1.6% and the historical unpaced
-   2.5–9.4%. High retry tax here is EXPECTED, not a failure signal by
-   itself.
-4. Decide next: if quality holds → pick launch pacing (bucket mandatory for
-   three streams at these averages; `--continuation-prompt` recovers
-   ×3 ≈ 74% if bytes must come down) and launch the three canticle-parallel
-   runs (command shape below). If quality drops vs run #1's 0.7867 → try
-   `--assistant-turns digest` before touching anything else.
+   gate-pass units ~18±noise of 34; empty responses 0. With the session's own
+   history restored, quality should hold or improve; a drop points at the
+   slimmer prompt, not the wire.
+2. **Prompt size live**: first-call `context_bytes` ≈ 8,954 + demo + task
+   (was 11,519) — the flat-JSON reduction is visible on call 1 of every
+   session.
+3. **Gate quantities**: ×3 average, peak single call, rolling-60, api-retry
+   tax vs run #1's paced 1.6% and the historical unpaced 2.5–9.4%. Unpaced,
+   so a high retry tax is EXPECTED and is the pressure indicator, not a
+   failure by itself. **Open question this run settles**: how much of the
+   1,752 B/call byte reduction survives as *tokens* — indentation whitespace
+   tokenizes cheaply, so the quota relief may be well under the byte figure.
+4. Decide next: if quality holds → pick launch pacing (the shared bucket is
+   mandatory for three streams at these averages) and launch the three
+   canticle-parallel runs (command shape below). If the TPM gate still fails
+   on tokens, the next lever is the prompt's remaining content (5.8 kB of
+   tool schemas), not the transcript.
 
 Standing constraint unchanged: compaction changes session semantics —
 designed between runs, never mid-run.
@@ -134,14 +143,16 @@ ceiling, not steady pressure).
    reconstruction writes need the explicit `--write` flag on top of passing
    all three gates, canto-atomically.
 5. **Session housekeeping (2026-08-25, this session)**: assistant session ran
-      the S3.3 implementation (record S3.3; design + stage ledger in
-      [`STAGE3.md`](STAGE3.md)) — all seven §4 items of the compaction/pacing
-      design shipped deterministically (compact `read_unit` tiers, the pure
-      history policy, adapter fingerprint sync + interval + token bucket,
-      fallback pass-through, reconstruct CLI flags), with three measured
-      deviations documented in the S3.3 record and the wire re-measured
+      the S3.3 implementation and then, on operator decision, records
+      S3.5–S3.7 (all in [`STAGE3.md`](STAGE3.md)) — which ended by removing
+      the transcript-compaction half of the S3.3 work (`runner/compact.py`,
+      the continuation prompt, their CLI flags) and reducing the system
+      prompt instead. What S3.3 shipped and kept: compact `read_unit` tiers,
+      adapter fingerprint sync + interval + token bucket, fallback
+      pass-through, reconstruct CLI flags, with the wire re-measured
       corpus-wide (R1 41% of the old wire, tail view 43% solo — inside the
-      restated gates). Tests 833 → 867 passed; no model touched. (Earlier
+      restated gates). Tests 833 → 867 → 855 (the removals) passed; no
+      model touched. (Earlier
       2026-08-25: S3.2 design + gate re-check; S3.1 correlation analysis.
       2026-08-24: operator ran the M2.5 recheck — readout passed all
       criteria, reproduced the pilot, failed the Stage-3 launch gate;
@@ -181,32 +192,35 @@ ceiling, not steady pressure).
       (record S3.2)**, and **the implementation (record S3.3, 2026-08-25)**
       are all COMPLETE — design, gate verdicts, implementation map,
       deviations, and the stage ledger live in [`STAGE3.md`](STAGE3.md).
-      Shipped: continuation wire view (`runner/compact.py` +
-      `continuation_system_prompt` at the design's 8,831 B), positional
-      `read_unit` serving (tier R1 with S1 fallback), adapter fingerprint
-      sync + 35 s min-send interval + shared fcntl `TokenBucket` (12k
-      tok/min / 6.5k tok defaults), `reconstruct` CLI flags
-      (`--no-compact`, `--payload-tier`, `--min-send-interval`,
+      Shipped and still live: positional `read_unit` serving (tier R1 with
+      S1 fallback), adapter fingerprint sync, 35 s min-send interval +
+      shared fcntl `TokenBucket` (12k tok/min / 6.5k tok defaults),
+      `reconstruct` CLI flags (`--payload-tier`, `--min-send-interval`,
       `--token-bucket`/`--bucket-rate`/`--bucket-depth`) with the
       configuration announced in the header; `llm_request` records gained
-      `uncompacted_bytes` + `paced_seconds`. Measured wire (S3.3): R1
-      11.3 MB corpus-wide (41% of the old wire), max unit 10.7 kB, tail
-      view ≈ 43% solo — inside every restated gate. **Record S3.4
-      (2026-08-25)**: confirmation run #1 read out — F1 0.7867 (R1 kept),
-      19/34 units, ×3 average 72%, peak call 34%, retry tax 1.6%, but
-      solo rolling-60 **76% vs ≤65%**; root cause was a wiring bug
-      (`agent_fallback` built a fresh generate closure per unit, so
-      pacing state never spanned sessions) — fixed with a regression
-      test, and the operator set `--min-send-interval` default to 0.
-      **Record S3.5 (same day)**: the wire view re-sends only the newest
-      assistant turn (the pending submission / repair reference); older
-      turns are dropped; opt-ins `--assistant-turns digest`,
-      `--continuation-prompt`. Remaining acts: the confirmation **re-run
-      #2 readout** (`recon-inf1-results-only.log`, operator ran it — the
-      Handoff's next action has the checklist), then the 99-canto
-      expansion as three canticle-parallel runs behind the existing
-      gates, and the corpus-wide readout. The standing constraint holds:
-      compaction changes session semantics — design first, never mid-run.
+      `paced_seconds`. Measured wire (S3.3): R1 11.3 MB corpus-wide (41% of
+      the old wire), max unit 10.7 kB. **Record S3.4 (2026-08-25)**:
+      confirmation run #1 read out — F1 0.7867 (R1 kept), 19/34 units,
+      ×3 average 72%, peak call 34%, retry tax 1.6%, but solo rolling-60
+      **76% vs ≤65%**; root cause was a wiring bug (`agent_fallback` built
+      a fresh generate closure per unit, so pacing state never spanned
+      sessions) — fixed with a regression test, and the operator set
+      `--min-send-interval` default to 0. **Records S3.5–S3.6 (same day)**
+      narrowed the transcript wire view twice; **record S3.7 (same day)
+      removed it entirely** — measured over run #1's own records the
+      digest bought 0.5% of the wire while deleting, in repair sessions,
+      the very submission the validator feedback refers to; the
+      continuation prompt fell with it (changing what a resend contains
+      destabilizes behaviour). The reduction moved into the **system
+      prompt**: tool specs rendered flat instead of `indent=2` = −1,752 B
+      on every call, 10,706 → **8,954 B**, no wording touched. Gone:
+      `runner/compact.py`, `--no-compact`, `--continuation-prompt`,
+      `llm_request.uncompacted_bytes`. Remaining acts: the confirmation
+      **re-run #2** (operator-run, then read out — the Handoff has the
+      command and the checklist), then the 99-canto expansion as three
+      canticle-parallel runs behind the existing gates, and the
+      corpus-wide readout. The standing constraint holds: session
+      semantics change between runs, never mid-run.
 - Open decision, Stage 3 launch pacing (2026-08-25, raised while the live
   confirmation run was in flight): **proactive vs reactive-only.** The
   operator challenged the designed proactive interval (`[pace] send
@@ -278,11 +292,11 @@ ceiling, not steady pressure).
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **871 passed** (547 corpus + 46 `test_harness_tools.py` +
+- Test suite: **855 passed** (547 corpus + 46 `test_harness_tools.py` +
    76 `test_harness_toolcall.py` + 32 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   32 `test_harness_reconstruct.py` + 32 `test_harness_compact.py`).
+   32 `test_harness_reconstruct.py` + 16 `test_harness_pacing.py`).
 
 ---
 
@@ -449,16 +463,18 @@ re-check (2026-08-25, record S3.2)**, and **the implementation (2026-08-25,
 record S3.3)** — spec, gate verdicts, implementation map, measured
 deviations, confirmation protocol, and the stage ledger live in
 [`STAGE3.md`](STAGE3.md): corrected headline ×3 average = 96% of the 16k
-tok/min ceiling (zero margin, gate fails); design = continuation wire view +
-positional `read_unit` serving (sparse-dict fallback tier) + 35 s min
-inter-send + shared 12k tok/min token bucket; re-check PASSes restated
-(×3 average 66%, peak call 38% solo with the ~30% target restated to ≤ 45%
-on the measured wire floor); implementation shipped as all seven §4 items
-(measured wire: R1 41% of the old wire corpus-wide, tail view 43% solo —
-inside every restated gate; tests 833 → 867). Remaining acts: the live
-inferno-1 confirmation run (§5, operator), then the 99-canto expansion as
-three canticle-parallel runs behind the existing gates, and the corpus-wide
-readout. Scope and constraints tracked in Current Status + the Handoff.
+tok/min ceiling (zero margin, gate fails); the design's three levers were
+positional `read_unit` serving (tier R1), transcript compaction, and pacing
+(35 s min inter-send + shared 12k tok/min token bucket). **Record S3.7
+(2026-08-25) cut the middle one**: measured against run #1's own records,
+transcript compaction bought 0.5% of the wire and cost the model its own
+session history, so it was removed together with the continuation prompt,
+and the byte reduction moved into the system prompt itself (tool specs
+rendered flat: 10,706 → 8,954 B on every call, no wording changed). Live
+levers now: R1 payload serving + prompt size + pacing. Remaining acts: the
+live inferno-1 confirmation run (§5, operator), then the 99-canto expansion
+as three canticle-parallel runs behind the existing gates, and the
+corpus-wide readout. Scope and constraints tracked in Current Status + the Handoff.
 
 ### Beyond Layer 5 (design notes)
 

@@ -951,33 +951,11 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
-        "--no-compact",
-        action="store_true",
-        help="disable the continuation wire view: send full transcripts "
-        "(STAGE3.md §2.A reverts with this one flag)",
-    )
-    parser.add_argument(
         "--payload-tier",
         choices=("R1", "S1"),
         default="R1",
         help="read_unit payload rendering: positional rows + legend (R1, "
         "default) or sparse named dicts (S1 fallback tier)",
-    )
-    parser.add_argument(
-        "--continuation-prompt",
-        action="store_true",
-        help="calls 2+ swap the system prompt for the 8.8 kB continuation "
-        "variant (Steps 1-4 and the few-shot demo dropped; off by default "
-        "-- the full opening is re-sent instead, STAGE3.md record S3.5)",
-    )
-    parser.add_argument(
-        "--assistant-turns",
-        choices=["last", "digest"],
-        default="last",
-        help="session assistant turns in the calls-2+ wire view: 'last' "
-        "keeps only the newest submission verbatim (repair reference; "
-        "'digest' keeps one-line digests of older turns "
-        "(STAGE3.md record S3.5)",
     )
     parser.add_argument(
         "--min-send-interval",
@@ -1080,7 +1058,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     )
     print(header)
 
-    # Stage-3 configuration line (STAGE3.md §4 item 6): compaction + pacing
+    # Stage-3 configuration line (STAGE3.md §4 item 6): payload tier + pacing
     # are live-run facts the operator must see announced before the hours run.
     bucket_note = "off"
     if args.token_bucket is not None:
@@ -1097,17 +1075,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         bucket_note = (
             f"{args.token_bucket} (rate {rate:g} tok/min, depth {depth:g} tok)"
         )
-    if args.no_compact:
-        history_note = "OFF (--no-compact)"
-    else:
-        shape = {
-            "last": "results+last submission",
-            "digest": "assistant digests+last submission",
-        }[args.assistant_turns]
-        swap = " + continuation prompt" if args.continuation_prompt else ""
-        history_note = f"ON ({shape}{swap})"
     print(
-        f"reconstruct: compaction {history_note}, "
+        f"reconstruct: transcripts verbatim, "
         f"payload tier {args.payload_tier}; pacing: min-send-interval "
         f"{args.min_send_interval:g}s, token bucket {bucket_note}"
     )
@@ -1142,10 +1111,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             )
         fallback_kwargs = {
             "model": args.model,
-            "compact": not args.no_compact,
             "payload_tier": args.payload_tier,
-            "continuation_prompt": args.continuation_prompt,
-            "assistant_turns": args.assistant_turns,
             "min_send_interval": args.min_send_interval,
             "token_bucket": bucket,
         }

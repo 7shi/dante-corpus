@@ -81,7 +81,7 @@ SESSION_MAX_TURNS = 12
 MAX_NUDGES = 1
 
 # The prompt-side prefix of every session transcript: system + few-shot demo
-# exchange + task. The compaction policy and the adapter both key off this.
+# exchange + task.
 OPENING_MESSAGE_COUNT = 1 + len(few_shot_messages()) + 1
 
 VALIDATE_TOOL = "validate_candidate"
@@ -209,7 +209,6 @@ def llm7shi_generate(
     quiet: bool = True,
     file=None,
     request_log=None,
-    history_policy=None,
     min_send_interval: float = 0.0,
     token_bucket: TokenBucket | None = None,
     clock=time.monotonic,
@@ -225,16 +224,16 @@ def llm7shi_generate(
     the session runner calls ``transport.reset()`` (forwarded to ``generate.
     reset``), which regenerates the Client instance for the next session.
 
-    **Wire view (STAGE3.md §2.A)**: ``history_policy``, when given, maps the
-    transcript to what is physically sent (call 1 verbatim; calls 2+ the
-    continuation view — see `runner.compact`). The Client sync invariant is a
-    **content fingerprint** over the view prefix: the adapter remembers exactly
-    which `(role, content)` pairs the Client mirrors, appends when the new view
-    merely extends them, and rebuilds the Client from the view (system prompt +
-    history re-append) whenever the prefix legitimately changes — compaction
-    rewrites older assistant turns into digests, so length alone can no longer
-    detect staleness. A repeated call at the same transcript position finds the
-    mirror *ahead* of the view and rebuilds, exactly like the old length sync.
+    **What is sent** (STAGE3.md record S3.7): the transcript verbatim, every
+    call. Transcript compaction was designed, implemented, measured and
+    **removed** — every shape of it (results-only, newest-turn-only, digests)
+    bought ≤ 0.5% of the wire while degrading the model's view of its own
+    session. The Client sync invariant is a **content fingerprint** over the
+    transcript prefix: the adapter remembers exactly which `(role, content)`
+    pairs the Client mirrors, appends when the new transcript merely extends
+    them, and rebuilds the Client (system prompt + history re-append) whenever
+    the prefix changes. A repeated call at the same transcript position finds
+    the mirror *ahead* and rebuilds, exactly like the old length sync.
 
     **Pacing (STAGE3.md §2.C)**, both at the single send point and deliberately
     surviving ``reset()`` (session boundaries are sends too):
@@ -254,12 +253,10 @@ def llm7shi_generate(
     ``request_log`` (an open text sink, UTF-8 JSONL) makes every backend
     request measurable: one `llm_request` record is appended just before the
     call (timestamp, model, session/unit coordinates from the request
-    context, transcript position, same-turn attempt, physically-sent
-    `context_bytes`, full-transcript `uncompacted_bytes` as the savings
-    audit, newest-message size, paced seconds) and one `llm_response` record
+    context, transcript position, same-turn attempt, `context_bytes`,
+    newest-message size, paced seconds) and one `llm_response` record
     after it (duration, output bytes, empty flag). Join key across the pair:
-    ``(session, messages, attempt)`` — `messages` keeps its transcript-position
-    meaning under compaction. Retries inside `Client` (429 backoffs, quality
+    ``(session, messages, attempt)``. Retries inside `Client` (429 backoffs, quality
     regeneration) stay invisible here by construction; they are measured by
     the stream's `wait_retry` counters and correlated by timestamp. The
     reconstruct CLI points this at its own streaming `--log` sink, so the
@@ -322,14 +319,11 @@ def llm7shi_generate(
         return client
 
     def generate(messages: list[dict]) -> str:
-        view = history_policy(messages) if history_policy is not None else messages
+        view = messages
         client = _sync_client(view)
 
         context_bytes = sum(
             len(str(m.get("content", "")).encode("utf-8")) for m in view
-        )
-        uncompacted_bytes = sum(
-            len(str(m.get("content", "")).encode("utf-8")) for m in messages
         )
 
         # Pacing first, so the logged timestamp marks the physical send.
@@ -377,7 +371,6 @@ def llm7shi_generate(
                 "messages": position,
                 "attempt": attempt,
                 "context_bytes": context_bytes,
-                "uncompacted_bytes": uncompacted_bytes,
                 "new_bytes": len(
                     str(view[-1].get("content", "")).encode("utf-8")
                 ),
@@ -407,10 +400,9 @@ def llm7shi_generate(
             }
         )
         # Client appended the newest message and its reply, so the mirror is
-        # the full view plus the reply — exactly the transcript's next prefix
-        # whenever the loop records the reply verbatim (no compaction) and a
-        # prefix change (compaction digests) otherwise, which the next call's
-        # fingerprint check catches and rebuilds on.
+        # the full view plus the reply — exactly the transcript's next prefix.
+        # Any divergence (a retry at the same position) is caught by the next
+        # call's fingerprint check, which rebuilds.
         state["mirrored"] = [
             (str(m.get("role", "")), str(m.get("content", ""))) for m in view
         ] + [("assistant", str(text))]

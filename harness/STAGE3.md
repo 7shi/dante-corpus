@@ -11,11 +11,12 @@ shipped; measured deviations from the §2/§3 counterfactuals documented in
 the ledger's S3.3 record). **Confirmation run #1 read out (record S3.4):
 every gate passes except solo rolling-60 (76% vs ≤65%), caused by a
 fallback-wiring bug since fixed; `--min-send-interval` now defaults to 0 by
-operator decision. Record S3.5 (same day): the wire view now re-sends only
-the newest assistant turn (the pending submission, the model's repair
-reference) — older turns, thinking prose and old tool_call bodies are never
-re-sent; the opening rides verbatim and digests are an opt-in
-(`--assistant-turns {last,digest}`, `--continuation-prompt`).
+operator decision. Records S3.5–S3.6 (same day) narrowed the wire view
+twice, and record S3.7 removed it entirely: transcript compaction in every
+shape bought ≤ 0.5% of the wire, so the transcript now rides verbatim and
+the bytes come out of the system prompt instead (10,706 → 8,954 B, no
+wording changed). §2.A is WITHDRAWN — read it as the record of why. Live
+levers: R1 payload serving (§2.B) + pacing (§2.C) + the prompt size.
 Re-run #2 pending (operator).**
 
 ---
@@ -89,7 +90,7 @@ Three levers plus launch hardening. Session semantics change **between runs**
 only (standing constraint); every lever ships behind explicit wiring and one
 confirmation run gates the whole package before the 99-canto launch.
 
-### 2.A Compaction — the continuation wire view
+### 2.A Compaction — the continuation wire view (WITHDRAWN by record S3.7)
 
 The loop's transcript stays the single source of truth (`LoopResult.messages`,
 traces, mining, nudge resumes unchanged). Only what the backend physically
@@ -409,7 +410,10 @@ counterfactual). Gate quantities: ×3 average **72%** ≤80% PASS; peak call
   api-retry tax as the pressure indicator.
 
 **Record S3.5 — results-centric wire view with a repair reference (operator
-decision): implementation shipped (2026-08-25, deterministic; tests
+decision). SUPERSEDED THE SAME DAY BY RECORD S3.6 (below) before re-run #2
+ever ran: the `last` mode and the `--assistant-turns` flag described here no
+longer exist; what survives is the verbatim newest assistant turn and the
+verbatim opening. Implementation shipped (2026-08-25, deterministic; tests
 868 → 871 passed, no model touched); re-run #2 pending.** The operator reset
 the compaction defaults after the run #1 / S3.4 discussion: **stop re-sending
 thinking, stop re-sending old `<tool_call>` bodies**, then refined it with
@@ -458,3 +462,95 @@ choices. Adding `--continuation-prompt` recovers ≈ −246 kB → ×3 ≈ 74%. 
 open question re-run #2 answers is quality: does repairing against feedback
 whose referenced submission IS visible (`"last"`) hold the F1 band while
 older context stays dropped.
+
+**Stage 3, record S3.6 — two modes only: digest, or no compaction
+(operator decision): implementation shipped (2026-08-25, deterministic;
+871 tests passed, no model touched).** S3.5's planned re-run configuration
+was `--assistant-turns last`, which omits every older assistant turn. The
+operator rejected it before the run on a structural argument: with only the
+newest turn on the wire, each send conditions on essentially one message —
+**a Markov chain**. The session's own history (what was already tried, what
+the earlier turns established, why the current submission looks the way it
+does) is gone from the model's view, and no per-run quality measurement can
+buy that back. The `last` mode is therefore **removed**, not demoted to an
+opt-in, joining the earlier `drop` mode in the record's evidence column.
+
+The wire view now has exactly two configurations:
+
+- **compaction on (default)** — §2.A's digest layout: user messages
+  (`read_unit` payloads, `<tool_result>` feedback, nudges) verbatim, the
+  newest assistant turn verbatim (the repair reference), every older
+  assistant turn as a one-line digest (~150 B). The opening still rides
+  verbatim unless `--continuation-prompt` swaps in the 8,831 B continuation
+  system prompt.
+- **compaction off** — `--no-compact`: the full transcript, Stage-1/2
+  semantics, the honest baseline to compare against.
+
+Implementation (the removal is a narrowing, so it deletes more than it
+adds): `compact_view` / `history_policy` lost `assistant_mode`;
+`agent_fallback` lost `assistant_turns`; `reconstruct` lost
+`--assistant-turns` and now announces "compaction ON (assistant
+digests+last submission)". `--no-compact`, `--payload-tier`,
+`--continuation-prompt` and the pacing flags are unchanged.
+
+Sizing: digests cost ~150 B per older assistant turn on top of S3.5's `last`
+counterfactual (Σ ≈ 1,455 kB, ×3 ≈ 94% unpaced) — sessions run 2–4 assistant
+turns, so this is a sub-percent addition and §5's predicted quantities carry
+over unchanged. `--continuation-prompt` remains the lever that recovers
+≈ −246 kB (×3 ≈ 74%) if the re-run's readout says bytes must come down.
+
+**Stage 3, record S3.7 — transcript compaction removed; the system prompt
+carries the reduction instead (operator decision): shipped 2026-08-25
+(deterministic; 871 → 855 tests passed, no model touched).** S3.6 left one
+compaction shape standing (digests). Measuring what it actually bought,
+over run #1's own `llm_request` records, ended the line of work:
+
+| transcript position | calls | measured `uncompacted − context` | attributable to |
+|---|---|---|---|
+| 5 (call 1) | 33 | 0 B | opening verbatim |
+| 7 (call 2) | 33 | 2,438 B | **entirely the continuation-prompt swap** (system −1,875, demo −563); no older assistant turn exists yet |
+| 9 (call 3) | 33 | 2,552 B | swap + **114 B** of digest |
+| 11 (call 4) | 2 | 4,363 B | swap + 1,925 B (two turns) |
+
+Run total: 1,464.1 → 1,290.7 kB. Of the 173.4 kB saved, **165.8 kB is the
+prompt swap and 7.6 kB is the digest — 0.5% of the wire.** And the 0.5% is
+spent in the worst possible place: sessions run a median of 3 calls (§1.4),
+so the median session digests only the `read_unit` dispatch turn (whose
+payload rides verbatim in the user message anyway — an information-free
+114 B deletion), while the ~960 B digests appear exactly in the 4-call
+sessions, where the deleted turn is **the earlier candidate submission the
+validator feedback is talking about**. Operator verdict: the mechanism pays
+its risk precisely in the repair sessions that need history most.
+
+The continuation prompt fell with it, on the operator's standing rule that
+**changing what a resend contains destabilizes behaviour**: swapping the
+system prompt from call 2 on is exactly that, for 2,438 B/call.
+
+Where the bytes actually were, re-measured: `system_prompt` = 10,706 B, of
+which the `tool_specs` JSON is 5,794 B — and **1,752 B of that is
+`json.dumps(..., indent=2)` whitespace carrying no meaning at all**
+(`toolcall/prompts.py`). Rendering the specs flat costs nothing semantic and
+runs on *every* call, call 1 included:
+
+| rendering | specs body | system prompt | per call | run #1 (101 calls) | 99-canto (~3,000 calls) |
+|---|---|---|---|---|---|
+| `indent=2` (was) | 5,794 B | 10,706 B | — | — | — |
+| flat (now) | 4,042 B | **8,954 B** | −1,752 B | −177 kB | ≈ −5.3 MB |
+
+Net effect on run #1's traffic: **full verbatim transcripts with the slim
+prompt ≈ 1,287 kB against the compacted run's actually-sent 1,290.7 kB** —
+the same wire, with the model's whole session visible again and no
+resend-time divergence anywhere. Caveat carried into the re-run: the quota
+is metered in *tokens*, and indentation whitespace tokenizes cheaply, so the
+byte reduction will under-deliver in tokens by an unmeasured factor; the
+re-run's request records are what settle it.
+
+Removed: `runner/compact.py` (module + `--no-compact`), `continuation_system_prompt`,
+`agent_fallback(compact=, continuation_prompt=)`, the CLI's `--no-compact` /
+`--continuation-prompt`, and `llm_request.uncompacted_bytes` (it now always
+equalled `context_bytes`). Kept: R1 payload serving, all pacing (interval +
+shared bucket), the fingerprint Client sync (it also catches same-position
+retries), and `paced_seconds`. `tests/test_harness_compact.py` became
+`tests/test_harness_pacing.py` (16 tests: adapter sync, pacing, bucket,
+end-to-end verbatim session). The reconstruct header now announces
+`transcripts verbatim, payload tier R1`.
