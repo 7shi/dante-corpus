@@ -62,12 +62,19 @@ pair per backend LLM call (`llm_request` before, `llm_response` after:
 timestamp, model, unit coordinates, transcript position, attempt,
 context/new/output sizes in UTF-8 bytes, duration). They are canto-scoped
 like every other record — never replayed into aggregates, and resume
-compaction keeps them exactly for completed cantos.
+compaction keeps them for both completed and in-progress cantos.
 Unlike the deterministic miners this CLI **resumes** rather than truncates
-(live fallback makes attempts hours long and worth keeping): completed cantos
-reload from an existing log and are skipped, and the log is compacted atomically
-before appending — superseded summaries and orphaned records of incomplete
-cantos are dropped so a canto can never double-count across attempts.
+(live fallback makes attempts hours long and worth keeping), down to the
+**parse unit**, not just the canto: completed cantos reload from an existing
+log and are skipped outright, and a canto interrupted mid-run reloads its
+already-logged `unit` records (each one carries its accepted `row_keys`) and
+replays them without re-invoking the fallback, resuming only the units that
+never finished — a canto killed partway through a live-fallback run never
+pays for its already-settled units twice. The log is compacted atomically
+before appending: only the (now superseded) `summary` record is ever
+dropped; every `unit`/`gold`/`commit`/`canto_complete`/`llm_request`/
+`llm_response` record survives so a subsequent resume can rebuild on top of
+it, and a unit is never re-emitted once replayed so nothing double-counts.
 
 Deterministic tests inject stub fallbacks; nothing in the test suite touches a
 model.
@@ -257,10 +264,19 @@ class UnitOutcome:
     hard: list[Violation]
     soft: list[Violation]
     fallback_seconds: float | None = None
+    # Unit-level resume (§ replay): a unit rebuilt from a previously logged
+    # `unit` record instead of re-running `engine.run_unit`/`validate_unit`.
+    # `passed` then trusts the logged verdict (no violation objects survive
+    # the log), and the caller must not re-emit it to the sink or aggregates
+    # — it is already there from the prior attempt.
+    replayed: bool = False
+    passed_override: bool | None = None
 
     @property
     def passed(self) -> bool:
         """§4.1 gates 1+2: clean assertions AND 0 hard / 0 soft violations."""
+        if self.passed_override is not None:
+            return self.passed_override
         return not self.token_assertions and not self.hard and not self.soft
 
     def to_dict(self) -> dict:
@@ -277,6 +293,10 @@ class UnitOutcome:
             "origin": self.origin,
             "fallback_ran": self.fallback_ran,
             "accepted_rows": len(self.row_keys),
+            # Persisted so an interrupted run can resume unit-by-unit: a
+            # future attempt rebuilds this unit's rows from these keys
+            # instead of re-running the (expensive, live) fallback.
+            "row_keys": [list(key) for key in sorted(self.row_keys)],
             "token_assertion_errors": len(self.token_assertions),
             "assertions": list(self.token_assertions[:SAMPLE_VIOLATIONS]),
             "hard_violations": len(self.hard),
@@ -289,6 +309,42 @@ class UnitOutcome:
                 else round(self.fallback_seconds, 1)
             ),
         }
+
+
+def _replay_unit_outcome(
+    record: dict, layers: "CantoLayers", group: list[int]
+) -> UnitOutcome:
+    """Rebuild a `UnitOutcome` from a previously logged `unit` record.
+
+    Unit-level resume: the row keys are the only thing the log needs to carry
+    for a full replay (rows re-anchor deterministically via `build_rows`;
+    the pass/fail verdict is trusted from the record rather than
+    re-validated, since no `Violation` objects survive the log).
+    """
+    line_start, line_end = group[0], group[-1]
+    row_keys = frozenset(tuple(key) for key in record.get("row_keys", []))
+    rows, assertions = build_rows(row_keys, layers, line_start, line_end)
+    unit_rows = {no: rows.get(no, []) for no in group}
+    return UnitOutcome(
+        unit={
+            "canticle": record["canticle"],
+            "canto": record["canto"],
+            "line_start": line_start,
+            "line_end": line_end,
+        },
+        route=record.get("route", "?"),
+        reason=record.get("reason", "?"),
+        origin=record.get("origin", "?"),
+        fallback_ran=bool(record.get("fallback_ran")),
+        row_keys=row_keys,
+        rows=unit_rows,
+        token_assertions=assertions,
+        hard=[],
+        soft=[],
+        fallback_seconds=record.get("fallback_seconds"),
+        replayed=True,
+        passed_override=bool(record.get("passed")),
+    )
 
 
 @dataclass
@@ -324,6 +380,7 @@ def reconstruct_canto(
     policy: RoutePolicy | None = None,
     progress_stream: TextIO | None = sys.stderr,
     status_line=None,
+    skip_units: dict[tuple[int, int], dict] | None = None,
 ) -> CantoReconstruction:
     """Drive the hybrid engine over every parse unit of one canto, gated.
 
@@ -335,6 +392,13 @@ def reconstruct_canto(
     way the `skel/` drivers do: a bar labeled `{canticle} {canto}` counting the
     canto's lines, advanced to each unit's first line, with the per-unit
     progress lines routed through its console stream so they coexist with it.
+
+    `skip_units`, when given, maps `(line_start, line_end)` to a previously
+    logged `unit` record: unit-level resume for a canto that was interrupted
+    mid-run. Matching units are rebuilt from the log (`_replay_unit_outcome`)
+    instead of re-running `engine.run_unit` — the caller (`main`) must not
+    re-emit them to the sink or aggregates, since the prior attempt already
+    did.
     """
     stream = status_line.stream if status_line is not None else progress_stream
     layers = CantoLayers.load(canticle, canto)
@@ -362,6 +426,14 @@ def reconstruct_canto(
                     flush=True,
                 )
             line_start, line_end = group[0], group[-1]
+            skip_record = (
+                skip_units.get((line_start, line_end)) if skip_units else None
+            )
+            if skip_record is not None:
+                recon.outcomes.append(
+                    _replay_unit_outcome(skip_record, layers, group)
+                )
+                continue
             started = time.monotonic()
             result = engine.run_unit(
                 canticle=canticle,
@@ -788,13 +860,17 @@ def completed_cantos(records: list[dict]) -> set[tuple[str, int]]:
 def prepare_resume(
     records: list[dict],
     wanted: list[tuple[str, int]],
-) -> tuple[list[dict], list[tuple[str, int]]]:
-    """Split a previous attempt into `(records_to_replay, remaining_cantos)`.
+) -> tuple[list[dict], list[tuple[str, int]], dict[tuple[str, int], dict[tuple[int, int], dict]]]:
+    """Split a previous attempt into
+    `(records_to_replay, remaining_cantos, pending_units)`.
 
     Everything belonging to a completed canto replays into the aggregate;
-    those cantos are skipped. Records of incomplete cantos stay in the file
-    untouched but cannot pollute this attempt's aggregates — their cantos
-    re-run and re-log them.
+    those cantos are skipped entirely. A canto still in `remaining` may
+    nonetheless carry logged `unit` records from an interrupted attempt —
+    unit-level resume: `pending_units` maps such a canto to its
+    `(line_start, line_end) -> unit record` table so `reconstruct_canto` can
+    skip re-running (and re-costing, for the live fallback) units already
+    settled, picking up only where the prior attempt broke off.
     """
     done = completed_cantos(records)
     replay: list[dict] = [
@@ -804,26 +880,32 @@ def prepare_resume(
         and record.get("record") in ("unit", "gold", "commit", "canto_complete")
     ]
     remaining = [canto for canto in wanted if canto not in done]
-    return replay, remaining
+    remaining_set = set(remaining)
+    pending_units: dict[tuple[str, int], dict[tuple[int, int], dict]] = {}
+    for record in records:
+        if record.get("record") != "unit":
+            continue
+        key = (record.get("canticle"), record.get("canto"))
+        if key not in remaining_set:
+            continue
+        pending_units.setdefault(key, {})[
+            (record.get("line_start"), record.get("line_end"))
+        ] = record
+    return replay, remaining, pending_units
 
 
-def compact_log(
-    path: str | Path, done: set[tuple[str, int]]
-) -> None:
-    """Keep only completed-cantos' records from an existing log (atomic replace).
+def compact_log(path: str | Path) -> None:
+    """Strip superseded `summary` records from an existing log (atomic replace).
 
-    Resume compaction serves the streaming contract twice at once: superseded
-    summary records are stripped (the completion marker stays exact), and any
-    orphaned records of *incomplete* cantos are dropped — those cantos re-run,
-    so letting their stale records survive would double-count them on the next
-    resume once their canto completes.
+    Every other record survives compaction, including `unit`/`gold` records
+    of a canto still in progress: unit-level resume (`prepare_resume`'s
+    `pending_units`) needs them on disk to skip already-settled units on the
+    next attempt. Only the completion marker is ever stale across attempts —
+    a `summary` reflects a prior (possibly now-superseded) run's aggregate —
+    so it alone is dropped.
     """
     with open(path, encoding="utf-8") as fh:
-        kept = [
-            line
-            for line in fh
-            if _jsonl_record_is_complete(line, done)
-        ]
+        kept = [line for line in fh if _jsonl_record_should_keep(line)]
     directory = os.path.dirname(os.path.abspath(path))
     fd, tmp = tempfile.mkstemp(dir=directory, prefix=".reconstruct-log-", suffix=".tmp")
     try:
@@ -836,17 +918,8 @@ def compact_log(
         raise
 
 
-def _jsonl_record_is(line: str, kind: str) -> bool:
-    stripped = line.strip()
-    if not stripped:
-        return False
-    try:
-        return json.loads(stripped).get("record") == kind
-    except json.JSONDecodeError:
-        return False
-
-
-def _jsonl_record_is_complete(line: str, done: set[tuple[str, int]]) -> bool:
+def _jsonl_record_should_keep(line: str) -> bool:
+    """Compaction predicate: valid JSON, not a (superseded) `summary` record."""
     stripped = line.strip()
     if not stripped:
         return False
@@ -854,10 +927,7 @@ def _jsonl_record_is_complete(line: str, done: set[tuple[str, int]]) -> bool:
         record = json.loads(stripped)
     except json.JSONDecodeError:
         return False  # torn tail: drop it
-    if record.get("record") == "summary":
-        return False
-    key = (record.get("canticle"), record.get("canto"))
-    return key in done
+    return record.get("record") != "summary"
 
 
 # --- CLI ------------------------------------------------------------------------------------
@@ -1029,9 +1099,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
 
     prior_records: list[dict] = []
     resume_offset = 0
+    pending_units: dict[tuple[str, int], dict[tuple[int, int], dict]] = {}
     if args.log and os.path.exists(args.log):
         prior_records = load_log(args.log)
-        replay, wanted = prepare_resume(prior_records, wanted)
+        replay, wanted, pending_units = prepare_resume(prior_records, wanted)
         for record in replay:
             kind = record.get("record")
             if kind == "unit":
@@ -1040,14 +1111,36 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 report.add_gold(record)
             elif kind == "canto_complete":
                 report.add_canto_complete(record)
-        # Compact before appending: stale summaries stripped, orphaned
-        # records of incomplete cantos dropped (their cantos re-run below).
-        compact_log(args.log, completed_cantos(prior_records))
-        if replay:
+        resumed_units = 0
+        for units_by_span in pending_units.values():
+            for record in units_by_span.values():
+                report.add_unit(record)
+                resumed_units += 1
+        # A canto still in progress may also carry logged `gold` records for
+        # the units above; fold them in too so --verify-gold's aggregate
+        # stays exact across the resume.
+        pending_cantos = set(pending_units)
+        for record in prior_records:
+            if record.get("record") == "gold" and (
+                record.get("canticle"), record.get("canto")
+            ) in pending_cantos:
+                report.add_gold(record)
+        # Compact before appending: only the (now superseded) summary is
+        # stripped. Everything else — including incomplete cantos' unit
+        # records — stays, so unit-level resume can skip them below.
+        compact_log(args.log)
+        if replay or resumed_units:
             resume_offset = total - len(wanted)
             print(
-                f"resume: {resume_offset} completed canto(s) "
-                f"loaded from {args.log}; continuing with {len(wanted)} left"
+                f"resume: {resume_offset} completed canto(s) loaded from "
+                f"{args.log}"
+                + (
+                    f" ({resumed_units} unit(s) already settled across "
+                    f"{len(pending_units)} in-progress canto(s))"
+                    if resumed_units
+                    else ""
+                )
+                + f"; continuing with {len(wanted)} left"
             )
 
     header = (
@@ -1133,16 +1226,24 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             recon = reconstruct_canto(
                 engine, canticle, canto,
                 fallback=fallback, status_line=status_line,
+                skip_units=pending_units.get((canticle, canto)),
             )
             retries = _retry_delta(retry_before, status_line)
+            # Replayed units were already folded into `report` and the log at
+            # startup (unit-level resume) — re-emitting them here would
+            # double-count and duplicate the sink.
             for outcome in recon.outcomes:
+                if outcome.replayed:
+                    continue
                 record = outcome.to_dict()
                 report.add_unit(record)
                 if sink is not None:
                     sink.write(json.dumps(record, ensure_ascii=False) + "\n")
             if args.verify_gold:
                 gold_report, gold_records = verify_against_gold(recon)
-                for record in gold_records:
+                for outcome, record in zip(recon.outcomes, gold_records):
+                    if outcome.replayed:
+                        continue
                     report.add_gold(record)
                     if sink is not None:
                         sink.write(json.dumps(record, ensure_ascii=False) + "\n")

@@ -6,12 +6,19 @@ Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
 **Next action — Stage 3: the OPERATOR runs confirmation re-run #2 (command
-below), then this session reads it out.** The operator launched that run at
-the end of the 2026-08-25 session, from the code state committed as record
-S3.8, into `harness/recon-inf1-verbatim.log`; **the next session's first job
-is the readout below** (the log is gitignored — if it lacks its summary
-line, the run was interrupted). State at handoff (all records in
-[`STAGE3.md`](STAGE3.md), ledger S3.4–S3.8, 2026-08-25):
+below), then this session reads it out.** The operator's first attempt
+(launched at the end of the 2026-08-25 session, from the code state
+committed as record S3.8) errored partway through; the operator restarted it
+before this session's unit-level-resume fix landed, so that restart's
+`harness/recon-inf1-verbatim.log` predates the fix and has since been
+**deleted**. **The operator is about to launch it again as this session
+closes**, now from the code state after the unit-level-resume fix below —
+**the next session's first job is still the readout below**, of whichever
+attempt's log is on disk (the log is gitignored — if it lacks its summary
+line, the run was interrupted, and per the fix, resuming it with the same
+command now only re-runs the units that log is missing, not the whole
+canto). State at handoff (all records in [`STAGE3.md`](STAGE3.md), ledger
+S3.4–S3.8, 2026-08-25):
 
 - Run #1 (`recon-inf1-compact.log`, compact R1 + interval 35) read out: F1
   **0.7867** → R1 kept, 19/34 units, ×3 average 72%, peak call 34%, retry
@@ -98,6 +105,22 @@ Readout checklist for that log (deterministic; assistant-run):
 
 Standing constraint unchanged: compaction changes session semantics —
 designed between runs, never mid-run.
+
+**Side note (2026-08-25, this session, deterministic code only): unit-level
+resume shipped for `reconstruct.py`.** Operator report: `--canto N` resume
+after an interruption restarted the whole canto from scratch — resume was
+canto-granular only (`completed_cantos`/`prepare_resume` keyed on
+`canto_complete`), so a single-canto run got no benefit at all. Fixed:
+`unit` log records now carry `row_keys`; `prepare_resume` returns a third
+`pending_units` map (canto → already-logged units for a canto still in
+`remaining`); `reconstruct_canto` accepts `skip_units` and rebuilds those
+units from the log instead of re-invoking the fallback; `compact_log` no
+longer drops incomplete-canto records (only the superseded `summary` is
+ever stripped). No compatibility shim needed: no pre-fix log survives on
+disk (see the Handoff's opening paragraph — the operator's errored/deleted
+restart predates this fix, and the run about to launch as this session
+closes starts clean on the new schema). Tests 860 → 861
+(`test_harness_reconstruct.py` 32 → 33). No model touched.
 
 The single streaming log also carries the request-level cost records (shipped
 post-pilot 2026-08-24, live-proven by the recheck): the fallback appends one
@@ -340,11 +363,12 @@ ceiling, not steady pressure).
       feedback (≤ 0.5 kB); the burst mechanism (fast response + next big send
       sharing a rolling minute) and the stochastic-backoff conclusion stand.
       The mitigation decision is S3.2's design: see the Stage-3 bullet above.
-- Test suite: **860 passed** (547 corpus + 46 `test_harness_tools.py` +
+- Test suite: **861 passed** (547 corpus + 46 `test_harness_tools.py` +
    76 `test_harness_toolcall.py` + 37 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   32 `test_harness_reconstruct.py` + 16 `test_harness_pacing.py`).
+   33 `test_harness_reconstruct.py` (unit-level resume, side note above) +
+   16 `test_harness_pacing.py`).
 
 ---
 

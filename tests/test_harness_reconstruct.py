@@ -411,7 +411,8 @@ def test_completed_cantos_and_prepare_resume_split(tmp_path):
     done_unit = {"record": "unit", "canticle": "inferno", "canto": 1,
                  "line_start": 1, "line_end": 5, "passed": True}
     open_unit = {"record": "unit", "canticle": "inferno", "canto": 2,
-                 "line_start": 1, "line_end": 4, "passed": False}
+                 "line_start": 1, "line_end": 4, "passed": False,
+                 "row_keys": []}
     records = [
         done_unit,
         {"record": "gold", "canticle": "inferno", "canto": 1, "tp": 1},
@@ -424,20 +425,23 @@ def test_completed_cantos_and_prepare_resume_split(tmp_path):
     _write_log(log, records)
     loaded = rc.load_log(log)
     assert rc.completed_cantos(loaded) == {("inferno", 1)}
-    replay, remaining = rc.prepare_resume(
+    replay, remaining, pending = rc.prepare_resume(
         loaded, [("inferno", 1), ("inferno", 2)]
     )
     assert remaining == [("inferno", 2)]
     assert {r["record"] for r in replay} == {"unit", "gold", "canto_complete"}
     assert all(r.get("canto") == 1 for r in replay)
+    # canto 2 is still in progress: its logged unit stays available for
+    # unit-level resume, keyed by (line_start, line_end).
+    assert pending == {("inferno", 2): {(1, 4): open_unit}}
 
-    # Compaction drops the summary AND the orphaned partial-canto records;
-    # re-running canto 2 later must not double-count them.
-    rc.compact_log(log, rc.completed_cantos(loaded))
+    # Compaction drops only the (superseded) summary; the open canto's unit
+    # record survives so the next attempt can skip it via `pending`.
+    rc.compact_log(log)
     kept = rc.load_log(log)
     assert all(r.get("record") != "summary" for r in kept)
-    assert all(r.get("canto") == 1 for r in kept)
-    assert len(kept) == 3
+    assert len(kept) == 4
+    assert open_unit in kept
 
 
 # --- CLI end-to-end (injected fallback; never a live model) ------------------------------------------
@@ -593,8 +597,9 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
 
 def test_request_records_ride_resume_semantics(tmp_path):
     """llm_request/llm_response records are canto-scoped log citizens: never
-    replayed into aggregates (prepare_resume skips them), kept by compaction
-    for completed cantos, dropped for incomplete ones alongside their units."""
+    replayed into aggregates (prepare_resume skips them), and compaction now
+    keeps them (and everything else) across the resume — only the superseded
+    `summary` is dropped."""
     lines = [
         {"record": "llm_request", "canticle": "inferno", "canto": 1,
          "session": 1, "messages": 4, "attempt": 1},
@@ -612,23 +617,23 @@ def test_request_records_ride_resume_semantics(tmp_path):
         for record in lines:
             fh.write(json.dumps(record, ensure_ascii=False) + "\n")
 
-    replay, remaining = rc.prepare_resume(
+    replay, remaining, pending = rc.prepare_resume(
         lines, [("inferno", 1), ("inferno", 2)]
     )
     # Aggregates only ever fold unit/gold/commit/canto_complete records.
     assert [r["record"] for r in replay] == ["unit", "canto_complete"]
     assert remaining == [("inferno", 2)]
+    assert pending == {}  # canto 2 has no logged `unit` record yet
 
-    rc.compact_log(log, {("inferno", 1)})
+    rc.compact_log(log)
     kept = [
         json.loads(l)
         for l in log.read_text(encoding="utf-8").splitlines()
         if l.strip()
     ]
     assert [r["record"] for r in kept] == [
-        "llm_request", "llm_response", "unit", "canto_complete",
+        "llm_request", "llm_response", "unit", "canto_complete", "llm_request",
     ]
-    assert all((r["canticle"], r["canto"]) == ("inferno", 1) for r in kept)
 
 
 def test_report_sums_canto_wall_clock_from_records():
@@ -720,6 +725,58 @@ def test_cli_resume_skips_completed_cantos(tmp_path, monkeypatch):
     summaries = [r for r in lines if r["record"] == "summary"]
     assert len(summaries) == 1  # stale summary stripped atomically on resume
     assert lines[-1]["units"] == 34  # replayed records still aggregate
+
+
+def test_cli_resume_skips_already_settled_units_within_an_incomplete_canto(
+    tmp_path, monkeypatch
+):
+    """Unit-level resume: a run interrupted mid-canto (no `canto_complete`
+    marker yet) must not re-run — and re-cost, for the live fallback — units
+    it had already settled before the crash."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+    calls = []
+
+    def counting_fallback(**kw):
+        calls.append(kw)
+        return _StubResult([])
+
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+        "--log", str(out_log),
+    ]
+    assert rc.main(argv, fallback=counting_fallback) == 0
+    all_lines = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    unit_records = [r for r in all_lines if r["record"] == "unit"]
+    assert len(unit_records) == 34
+    assert len(calls) == 34
+
+    # Simulate a crash partway through the canto: only the first half of its
+    # unit records made it to disk; no canto_complete, no summary.
+    _write_log(out_log, unit_records[:17])
+    calls.clear()
+
+    assert rc.main(argv, fallback=counting_fallback) == 0
+    # The already-settled units are skipped; only the rest re-run.
+    assert len(calls) == 34 - 17
+
+    lines = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    unit_records_after = [r for r in lines if r["record"] == "unit"]
+    assert len(unit_records_after) == 34  # 17 replayed + 17 freshly run
+    assert unit_records_after[:17] == unit_records[:17]  # replayed verbatim
+    assert lines[-1]["record"] == "summary"
+    assert lines[-1]["units"] == 34
+    assert any(r["record"] == "canto_complete" for r in lines)
 
 
 # --- live-run observability: status bar + api-retry counters (§4) --------------------------------
