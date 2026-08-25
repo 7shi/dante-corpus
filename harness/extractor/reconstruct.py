@@ -111,7 +111,6 @@ from harness.extractor.hybrid_engine import (
     load_rules_json,
     mine_artifacts,
 )
-from harness.runner.agent import DEFAULT_BUCKET_DEPTH_TOKENS, DEFAULT_BUCKET_RATE_TOKENS_PER_MIN
 from harness.runner.statusline import HarnessStatusLine
 from harness.toolcall.loop import progress_separator
 
@@ -1037,24 +1036,6 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "pairing, STAGE3.md §2.C)",
     )
     parser.add_argument(
-        "--token-bucket",
-        type=Path,
-        help="shared pacing bucket file (fcntl-locked JSON shared by all "
-        "parallel streams; off by default)",
-    )
-    parser.add_argument(
-        "--bucket-rate",
-        type=float,
-        default=None,
-        help="bucket refill rate in tokens/min (default: 12000)",
-    )
-    parser.add_argument(
-        "--bucket-depth",
-        type=float,
-        default=None,
-        help="bucket capacity in tokens (default: 6500)",
-    )
-    parser.add_argument(
         "--max-length",
         type=int,
         default=6000,
@@ -1163,28 +1144,13 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
 
     # Stage-3 configuration line (STAGE3.md §4 item 6): payload tier + pacing
     # are live-run facts the operator must see announced before the hours run.
-    bucket_note = "off"
-    if args.token_bucket is not None:
-        rate = (
-            DEFAULT_BUCKET_RATE_TOKENS_PER_MIN
-            if args.bucket_rate is None
-            else args.bucket_rate
-        )
-        depth = (
-            DEFAULT_BUCKET_DEPTH_TOKENS
-            if args.bucket_depth is None
-            else args.bucket_depth
-        )
-        bucket_note = (
-            f"{args.token_bucket} (rate {rate:g} tok/min, depth {depth:g} tok)"
-        )
     if args.max_length < 0:
         parser.error("--max-length must be >= 0 (0 disables the cap)")
     max_length = args.max_length or None
     print(
         f"reconstruct: transcripts verbatim, "
         f"payload tier {args.payload_tier}; pacing: min-send-interval "
-        f"{args.min_send_interval:g}s, token bucket {bucket_note}; "
+        f"{args.min_send_interval:g}s; "
         f"max-length "
         f"{'off' if max_length is None else f'{max_length} chars'}"
     )
@@ -1196,28 +1162,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # rewrite swaps the file, so an earlier handle would append into limbo.
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
     if fallback is None:
-        bucket = None
-        if args.token_bucket is not None:
-            from harness.runner.agent import TokenBucket
-
-            bucket = TokenBucket(
-                args.token_bucket,
-                rate_per_min=(
-                    DEFAULT_BUCKET_RATE_TOKENS_PER_MIN
-                    if args.bucket_rate is None
-                    else args.bucket_rate
-                ),
-                depth=(
-                    DEFAULT_BUCKET_DEPTH_TOKENS
-                    if args.bucket_depth is None
-                    else args.bucket_depth
-                ),
-            )
         fallback_kwargs = {
             "model": args.model,
             "payload_tier": args.payload_tier,
             "min_send_interval": args.min_send_interval,
-            "token_bucket": bucket,
             "max_length": max_length,
         }
         if args.max_turns is not None:

@@ -55,16 +55,12 @@ from .prompts import (
 from .tools import GrammarToolkit, tool_specs
 
 __all__ = [
-    "BYTES_PER_TOKEN",
-    "DEFAULT_BUCKET_DEPTH_TOKENS",
-    "DEFAULT_BUCKET_RATE_TOKENS_PER_MIN",
     "DEFAULT_MODEL",
     "OPENING_MESSAGE_COUNT",
     "SESSION_MAX_TURNS",
     "MAX_NUDGES",
     "NUDGE_MESSAGE",
     "WORKFLOWS",
-    "TokenBucket",
     "UnitResult",
     "llm7shi_generate",
     "run_unit",
@@ -103,15 +99,6 @@ _LLM_REQUEST_CONTEXT: ContextVar[dict | None] = ContextVar(
     "llm_request_context", default=None
 )
 _SESSION_SEQ = itertools.count(1)
-
-# Pacing conventions (STAGE3.md §2.C): the TPM ceiling is a property of the
-# model API key shared by every parallel stream, so the launch paces through
-# one bucket file. Token amounts use the 3.5 bytes/token wire convention the
-# Stage-3 measurements were made in.
-BYTES_PER_TOKEN = 3.5
-DEFAULT_BUCKET_RATE_TOKENS_PER_MIN = 12000.0  # 42 kB/min: sustained <= 75% of the 16k ceiling
-DEFAULT_BUCKET_DEPTH_TOKENS = 6500.0  # >= max single call (STAGE3.md §3)
-
 
 def token_usage(response) -> dict:
     """Provider-reported token counts for one backend call, best effort.
@@ -189,97 +176,6 @@ def _chunk_usage(chunk) -> dict | None:
     }
 
 
-class TokenBucket:
-    """Cross-process pacing bucket over an fcntl-locked JSON file.
-
-    State is `{"t": <unix seconds>, "tokens": <float>}`: refill continuous at
-    `rate_per_min` tokens/min up to `depth`, debit before send, sleep until
-    funded. The lock releases on process death (single machine, wall clock);
-    a missing or corrupt file recreates at full depth (STAGE3.md §6). All
-    waits are injectable (`clock`/`sleeper`) so tests pace deterministically.
-    """
-
-    def __init__(
-        self,
-        path,
-        *,
-        rate_per_min: float = DEFAULT_BUCKET_RATE_TOKENS_PER_MIN,
-        depth: float = DEFAULT_BUCKET_DEPTH_TOKENS,
-        clock=time.time,
-        sleeper=time.sleep,
-    ) -> None:
-        import fcntl
-        import pathlib
-
-        if rate_per_min <= 0 or depth <= 0:
-            raise ValueError(
-                "bucket rate and depth must be positive: "
-                f"rate_per_min={rate_per_min!r}, depth={depth!r}"
-            )
-        self.path = pathlib.Path(path)
-        self.rate_per_min = float(rate_per_min)
-        self.depth = float(depth)
-        self.clock = clock
-        self.sleeper = sleeper
-        self._fcntl = fcntl
-
-    def _parse(self, raw: str) -> dict:
-        """Decode persisted state; missing/corrupt recreates at full depth."""
-        try:
-            state = json.loads(raw)
-            if (
-                not isinstance(state, dict)
-                or not isinstance(state.get("t"), (int, float))
-                or not isinstance(state.get("tokens"), (int, float))
-            ):
-                raise ValueError("malformed bucket state")
-            return {"t": float(state["t"]), "tokens": float(state["tokens"])}
-        except (ValueError, TypeError):
-            return {"t": self.clock(), "tokens": self.depth}
-
-    def acquire(self, amount: float) -> float:
-        """Debit `amount` tokens, sleeping until funded; returns seconds waited.
-
-        A debit larger than `depth` can never be funded (refill caps at
-        depth): it drains the bucket and proceeds without waiting instead of
-        deadlocking — a misconfigured depth then shows up as an unpaced
-        burst, the same residual class the 429 backstop already absorbs.
-        The launch parameters keep depth >= any single call by design.
-        """
-        waited = 0.0
-        amount = min(float(amount), self.depth)
-        while True:
-            deficit = 0.0
-            with open(self.path, "a+", encoding="utf-8") as handle:
-                self._fcntl.flock(handle.fileno(), self._fcntl.LOCK_EX)
-                try:
-                    handle.seek(0)
-                    state = self._parse(handle.read())
-                    now = self.clock()
-                    # Continuous refill since the last touch (any process).
-                    elapsed = max(0.0, now - state["t"])
-                    state["tokens"] = min(
-                        self.depth,
-                        state["tokens"] + elapsed * self.rate_per_min / 60.0,
-                    )
-                    state["t"] = now
-                    if state["tokens"] >= amount:
-                        state["tokens"] -= amount
-                        handle.seek(0)
-                        handle.truncate()
-                        handle.write(json.dumps(state, ensure_ascii=False) + "\n")
-                        handle.flush()
-                        return waited
-                    deficit = amount - state["tokens"]
-                finally:
-                    self._fcntl.flock(handle.fileno(), self._fcntl.LOCK_UN)
-            # Starving: sleep the deficit off (small epsilon avoids tight
-            # re-lock loops), then retry — another process may have consumed.
-            pause = deficit / (self.rate_per_min / 60.0) + 0.05
-            self.sleeper(pause)
-            waited += pause
-
-
 def llm7shi_generate(
     model: str = DEFAULT_MODEL,
     temperature: float | None = None,
@@ -287,7 +183,6 @@ def llm7shi_generate(
     file=None,
     request_log=None,
     min_send_interval: float = 0.0,
-    token_bucket: TokenBucket | None = None,
     max_length: int | None = None,
     clock=time.monotonic,
     sleeper=time.sleep,
@@ -313,15 +208,15 @@ def llm7shi_generate(
     the prefix changes. A repeated call at the same transcript position finds
     the mirror *ahead* and rebuilds, exactly like the old length sync.
 
-    **Pacing (STAGE3.md §2.C)**, both at the single send point and deliberately
+    **Pacing (STAGE3.md §2.C)**, at the single send point and deliberately
     surviving ``reset()`` (session boundaries are sends too):
 
     - ``min_send_interval`` (seconds, 0 = off): sleep until the last send
       *start* is at least this far past — breaks the fast-response/big-send
-      pairing that stacks two sends into one rolling minute;
-    - ``token_bucket`` (a `TokenBucket`, shared file across processes):
-      debit the send's input tokens (view bytes / `BYTES_PER_TOKEN`) before
-      sending, sleeping until funded.
+      pairing that stacks two sends into one rolling minute.
+
+    Rate-limit responses (HTTP 429) are handled by `llm7shi.Client`'s own
+    backoff (``api_retry_seconds``), not by pre-emptive pacing here.
 
     **Generation-side runaway cap (``max_length``, STAGE3.md record S3.10)**:
     answer-text characters per call, handed straight to ``Client(max_length=)``
@@ -454,15 +349,6 @@ def llm7shi_generate(
                 )
                 sleeper(pause)
                 paced_seconds += pause
-        if token_bucket is not None:
-            waited = token_bucket.acquire(context_bytes / BYTES_PER_TOKEN)
-            if waited > 0:
-                print(
-                    f"[pace] token bucket: waited {waited:.1f}s",
-                    file=sys.stderr if file is None else file,
-                    flush=True,
-                )
-                paced_seconds += waited
         if min_send_interval > 0:
             state["last_send_start"] = clock()
 

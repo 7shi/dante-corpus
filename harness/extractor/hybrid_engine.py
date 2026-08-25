@@ -467,7 +467,6 @@ def agent_fallback(
     request_log=None,
     payload_tier: str = "R1",
     min_send_interval: float = 0.0,
-    token_bucket=None,
     max_length: int | None = None,
 ) -> AgentFallback:
     """Build the live Tier-2 callable over `runner.agent.run_unit`.
@@ -485,16 +484,16 @@ def agent_fallback(
     Stage-3 wiring (STAGE3.md §4, reduced to two levers by record S3.7 —
     transcript compaction and the continuation prompt are both gone, so the
     wire carries the transcript verbatim): `payload_tier` selects
-    `read_unit`'s rendering tier, and `min_send_interval` / `token_bucket`
-    (a `runner.agent.TokenBucket`) pace the single send point. `max_length`
-    is the generation-side runaway cap in answer-text characters, handed to
-    `Client(max_length=)` unchanged (`None` = off here — the operator-facing
-    CLI owns the policy value; STAGE3.md record S3.10).
+    `read_unit`'s rendering tier, and `min_send_interval` paces the single
+    send point (HTTP 429s are handled by `llm7shi.Client`'s own backoff, not
+    by pre-emptive pacing here). `max_length` is the generation-side runaway
+    cap in answer-text characters, handed to `Client(max_length=)` unchanged
+    (`None` = off here — the operator-facing CLI owns the policy value;
+    STAGE3.md record S3.10).
     """
     from harness.runner.agent import (
         DEFAULT_MODEL,
         SESSION_MAX_TURNS,
-        TokenBucket,
         llm7shi_generate,
         run_unit as agent_run_unit,
     )
@@ -504,11 +503,6 @@ def agent_fallback(
     model = DEFAULT_MODEL if model is None else model
     max_turns = SESSION_MAX_TURNS if max_turns is None else max_turns
     specs = tool_specs()
-    if token_bucket is not None and not isinstance(token_bucket, TokenBucket):
-        raise TypeError(
-            "token_bucket must be a runner.agent.TokenBucket, "
-            f"got {type(token_bucket).__name__}"
-        )
 
     # One transport/toolkit pair serves ALL units (the benchmark pattern):
     # built here, not per `_run` call, because pacing state lives in the
@@ -522,7 +516,6 @@ def agent_fallback(
             file=file,
             request_log=request_log,
             min_send_interval=min_send_interval,
-            token_bucket=token_bucket,
             max_length=max_length,
         )
     )

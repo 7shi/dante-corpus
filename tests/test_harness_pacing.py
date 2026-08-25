@@ -2,9 +2,10 @@
 
 Covers what survived record S3.7 (transcript compaction and the continuation
 prompt removed): the adapter sends the transcript verbatim and keeps one
-`llm7shi.Client` in sync with it by content fingerprint, the min-send interval
-(injected clock), and the shared token bucket (tmp file, sequential
-"processes"). No test touches a model: `llm7shi.Client` is faked.
+`llm7shi.Client` in sync with it by content fingerprint, and the min-send
+interval (injected clock). Rate-limit (HTTP 429) handling lives entirely in
+`llm7shi.Client`'s own backoff and is out of scope here. No test touches a
+model: `llm7shi.Client` is faked.
 """
 
 import json
@@ -12,11 +13,7 @@ import json
 import pytest
 
 from harness.runner.agent import (
-    BYTES_PER_TOKEN,
-    DEFAULT_BUCKET_DEPTH_TOKENS,
-    DEFAULT_BUCKET_RATE_TOKENS_PER_MIN,
     OPENING_MESSAGE_COUNT,
-    TokenBucket,
     llm7shi_generate,
 )
 from harness.runner.prompts import system_prompt
@@ -309,13 +306,10 @@ def test_agent_fallback_builds_with_stage3_parameters(tmp_path):
     fallback = agent_fallback(
         payload_tier="S1",
         min_send_interval=35.0,
-        token_bucket=TokenBucket(tmp_path / "bucket.state"),
     )
     assert callable(fallback)
     # Default build: R1, no pacing (the benchmark shape).
     assert callable(agent_fallback())
-    with pytest.raises(TypeError):
-        agent_fallback(token_bucket="not-a-bucket")
 
 
 def test_agent_fallback_shares_one_transport_across_units(monkeypatch):
@@ -343,124 +337,3 @@ def test_agent_fallback_shares_one_transport_across_units(monkeypatch):
     # The shared generate exposes reset() so run_unit's per-session reset
     # clears session state while pacing state survives it.
     assert callable(getattr(seen[0].generate, "reset", None))
-
-
-# --- token bucket ---------------------------------------------------------------------------
-
-
-def test_bucket_debits_and_refills_over_injected_clock(tmp_path):
-    path = tmp_path / "bucket.state"
-    now = {"t": 1000.0}
-
-    def clock():
-        return now["t"]
-
-    bucket = TokenBucket(path, rate_per_min=600.0, depth=100.0, clock=clock)
-    assert bucket.acquire(100.0) == 0.0  # full depth funds immediately
-    state = json.loads(path.read_text())
-    assert state["tokens"] == 0.0
-    # Starved: 25 tokens need 2.5 min at 600/min (plus the retry epsilon).
-    sleeps = []
-
-    def sleeper(seconds):
-        sleeps.append(seconds)
-        now["t"] += seconds  # time passes while sleeping
-
-    bucket.sleeper = sleeper
-    waited = bucket.acquire(25.0)
-    assert waited > 0 and sleeps  # slept until funded
-    state = json.loads(path.read_text())
-    # Refill overshoots by the sleep epsilon; the debit left the remainder
-    # of exactly that overshoot.
-    assert 0.0 <= state["tokens"] < 1.0
-
-
-def test_bucket_shares_state_across_processes(tmp_path):
-    """Sequential 'processes' (two instances, one file) see each other's
-    debits and the shared refill clock — the three-parallel-launch contract."""
-    path = tmp_path / "bucket.state"
-    now = {"t": 0.0}
-
-    def clock():
-        return now["t"]
-
-    a = TokenBucket(path, rate_per_min=600.0, depth=100.0, clock=clock)
-    b = TokenBucket(path, rate_per_min=600.0, depth=100.0, clock=clock)
-    assert a.acquire(100.0) == 0.0  # A drains the bucket
-    now["t"] += 30.0  # 30 s -> +300 tokens, capped at depth
-    assert b.acquire(100.0) == 0.0  # B refills and drains again
-    state = json.loads(path.read_text())
-    assert state["tokens"] == 0.0
-    assert state["t"] == 30.0
-
-
-def test_bucket_recreates_corrupt_state_at_full_depth(tmp_path):
-    path = tmp_path / "bucket.state"
-    path.write_text("not json at all{", encoding="utf-8")
-    bucket = TokenBucket(path, rate_per_min=600.0, depth=50.0, clock=lambda: 0.0)
-    assert bucket.acquire(50.0) == 0.0
-    path.write_text('{"t": "bogus", "tokens": []}', encoding="utf-8")
-    assert TokenBucket(path, rate_per_min=600.0, depth=50.0, clock=lambda: 0.0).acquire(50.0) == 0.0
-
-
-def test_bucket_rejects_nonpositive_parameters(tmp_path):
-    with pytest.raises(ValueError):
-        TokenBucket(tmp_path / "b", rate_per_min=0, depth=10)
-    with pytest.raises(ValueError):
-        TokenBucket(tmp_path / "b", rate_per_min=10, depth=0)
-
-
-def test_bucket_launch_defaults_match_the_design(tmp_path):
-    bucket = TokenBucket(tmp_path / "b")
-    assert bucket.rate_per_min == DEFAULT_BUCKET_RATE_TOKENS_PER_MIN == 12000.0
-    assert bucket.depth == DEFAULT_BUCKET_DEPTH_TOKENS == 6500.0
-    assert BYTES_PER_TOKEN == 3.5
-
-
-def test_adapter_bucket_wait_logs_paced_seconds(fake_llm, tmp_path, capsys):
-    path = tmp_path / "bucket.state"
-    now = {"t": 1000.0}
-
-    def clock():
-        return now["t"]
-
-    def sleeper(seconds):
-        now["t"] += seconds
-
-    # Depth covers the opening (the launch invariant: depth >= max single
-    # call); the rate starves the second send.
-    bucket = TokenBucket(path, rate_per_min=60.0, depth=100.0, clock=clock, sleeper=sleeper)
-    log = tmp_path / "requests.jsonl"
-    with log.open("w", encoding="utf-8") as sink:
-        generate = llm7shi_generate(
-            "ollama:m", token_bucket=bucket, request_log=sink
-        )
-        opening, t2, _ = _session_transcript()
-        generate(opening)
-        generate(t2)  # drains what refill gave: must wait for the rest
-    records = [
-        json.loads(line)
-        for line in log.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    requests = [r for r in records if r["record"] == "llm_request"]
-    opening_tokens = requests[0]["context_bytes"] / BYTES_PER_TOKEN
-    assert opening_tokens < 100.0  # funded from full depth: no wait
-    assert requests[0]["paced_seconds"] == 0.0
-    view_tokens = requests[1]["context_bytes"] / BYTES_PER_TOKEN
-    assert view_tokens > 100.0 - opening_tokens  # second send exceeds the remainder
-    assert requests[1]["paced_seconds"] > 0.0
-    err = capsys.readouterr().err
-    assert "[pace] token bucket: waited" in err
-
-
-def test_bucket_over_depth_debit_drains_and_proceeds(tmp_path):
-    """A debit larger than depth can never be funded: it drains and proceeds
-    (no deadlock) — misconfigured depth degrades to an unpaced burst."""
-    path = tmp_path / "bucket.state"
-    bucket = TokenBucket(
-        path, rate_per_min=60.0, depth=10.0, clock=lambda: 0.0, sleeper=lambda s: None
-    )
-    assert bucket.acquire(10_000.0) == 0.0
-    state = json.loads(path.read_text())
-    assert state["tokens"] == 0.0

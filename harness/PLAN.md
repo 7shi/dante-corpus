@@ -144,6 +144,25 @@ per the §5 method note when the runs land, validating against a complete
 single-canto file first. Nothing else pending on the assistant side; the
 operator's launch remains the next act.
 
+**Session housekeeping (2026-08-26, operator decision): the shared
+`TokenBucket` pre-emptive pacing mechanism removed entirely** —
+`harness/runner/agent.py`'s `TokenBucket` class, its
+`DEFAULT_BUCKET_RATE_TOKENS_PER_MIN`/`DEFAULT_BUCKET_DEPTH_TOKENS`/
+`BYTES_PER_TOKEN` constants, the `token_bucket` parameter threaded through
+`llm7shi_generate`/`agent_fallback`/`reconstruct.main`, the
+`--token-bucket`/`--bucket-rate`/`--bucket-depth` CLI flags, and the
+Makefile's `--token-bucket $(BUCKET)` wiring are all gone (`harness/recon/
+Makefile`'s help text and launch-configuration comment reworded to match).
+Operator's stated policy: rely on `llm7shi.Client`'s existing HTTP-429
+backoff (`api_retry_seconds`) alone — a "wait on 429" reactive discipline —
+rather than pre-emptive cross-process token-rate pacing; `--min-send-interval`
+(currently defaulting to 0) is untouched. STAGE3.md/STAGE4.md keep their
+historical TokenBucket records as-written (append-only ledgers); the Stage 4
+launch configuration in this file's Current Status/§2 is updated to drop the
+bucket. Test suite: 857 passed (down from 864 — seven `TokenBucket`-only
+tests in `test_harness_pacing.py` removed with the mechanism). Nothing else
+pending on the assistant side.
+
 ---
 
 ## Current Status
@@ -177,8 +196,9 @@ operator's launch remains the next act.
       scope is context optimization + launch hardening. Shipped and live:
       positional `read_unit` serving (tier R1 with S1 fallback), verbatim
       transcripts (compaction removed, S3.7), flat tool-spec JSON in the
-      system prompt, pacing instruments (`--min-send-interval`, shared fcntl
-      `TokenBucket`, `paced_seconds`), provider token counts +
+      system prompt, pacing instruments (`--min-send-interval`,
+      `paced_seconds`; the shared `TokenBucket` shipped here was removed
+      2026-08-26, see Handoff), provider token counts +
       `thought_bytes` on every `llm_response` (S3.8), and the
       generation-side runaway cap (`--max-length`, default 6000 chars,
       durable `max_length_retries`, S3.10). Confirmation arc: run #1 (S3.4)
@@ -192,8 +212,9 @@ operator's launch remains the next act.
       causally excluded; row-level quality in band), wall +19% is one
       thinking-heavy episode. Launch pacing settled: reactive-only wins solo
       (unpaced 1.50% ≈ run #1's paced 1.6%; ×3 = 87–71% across the two
-      unpaced runs); the shared bucket carries the three-stream launch for
-      inter-stream coordination. Records S3.1–S3.11 in
+      unpaced runs); the shared bucket that carried the three-stream launch
+      for inter-stream coordination was removed 2026-08-26 (see Handoff) in
+      favor of `llm7shi.Client`'s own 429 backoff. Records S3.1–S3.11 in
       [`STAGE3.md`](STAGE3.md). Standing constraint holds: session semantics
       change between runs, never mid-run.
 - [ ] **Stage 4 — Full-Corpus Verification (99-canto scale-out)**
@@ -206,7 +227,9 @@ operator's launch remains the next act.
       same command — behind every Stage-3 gate, gold
       immutable (`--write` stays off, `written_cantos == 0` expected).
       Launch configuration carried from S3.9/S3.11: interval default 0 +
-      shared TokenBucket (`harness/tokbucket.state`) + cap 6000 — final
+      cap 6000, reactive-only (the shared `TokenBucket` was removed
+      2026-08-26 — see Handoff; `llm7shi.Client`'s own 429 backoff is the
+      pacing backstop for all three streams) — final
       call: operator, at launch. Commands, watch items, and readout
       criteria live in [`STAGE4.md`](STAGE4.md); wall-clock projection
       ≈ 180 ks ≈ 2.1 days compute-only for the longest canticle. Closing
@@ -225,16 +248,19 @@ operator's launch remains the next act.
   and the corrected accounting + burst mechanism in
   [`STAGE3.md`](STAGE3.md) §1. Resolved through Stage 3: R1 payload
   serving, slim system prompt, reactive-only pacing with the proven Client
-  auto-retry backstop, and the shared bucket for parallel launches.
+  auto-retry backstop (the shared bucket that also carried parallel launches
+  was removed 2026-08-26; the Client backstop now covers those alone too).
   Historical quota-tax measurements: predicate 103 backoffs / 3,196 s =
   14.4% of wall vs unit 55 / 1,659 s = 8.4% (2026-08-24 instrumented
   re-runs); live-run range across all four inferno-1 confirmation logs
   0.24%–9.4%.
-- Test suite: **864 passed** (547 corpus + 46 `test_harness_tools.py` +
+- Test suite: **857 passed** (547 corpus + 46 `test_harness_tools.py` +
    76 `test_harness_toolcall.py` + 39 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   34 `test_harness_reconstruct.py` + 16 `test_harness_pacing.py`).
+   34 `test_harness_reconstruct.py` + 9 `test_harness_pacing.py` — down from
+   16 on 2026-08-26: seven `TokenBucket`-only tests removed with the
+   mechanism, see Handoff).
 
 ---
 
@@ -350,8 +376,9 @@ cap experiment — every criterion PASS — and closed the stage.**
 The 99-canto scale-out as its own stage: three canticle-parallel streams
 (inferno / purgatorio / paradiso) driven by `harness/recon/Makefile`,
 behind every Stage-3 gate, gold immutable,
-launch configuration carried from S3.9/S3.11 (interval default 0 + shared
-TokenBucket + cap 6000). Commands, watch items, readout criteria, and the
+launch configuration carried from S3.9/S3.11 (interval default 0 + cap 6000,
+reactive-only — the shared `TokenBucket` was removed 2026-08-26, see
+Handoff). Commands, watch items, readout criteria, and the
 stage ledger live in [`STAGE4.md`](STAGE4.md); scope and constraints tracked
 in Current Status + the Handoff.
 

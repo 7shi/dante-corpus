@@ -11,10 +11,11 @@
 # same make command.
 #
 # Launch configuration is the one carried from STAGE4.md §2 (S3.9/S3.11):
-# verbatim transcripts, payload tier R1, reactive-only pacing, shared
-# TokenBucket, max-length 6000 — all reconstruct.py defaults except
-# --verify-gold and the bucket, passed explicitly below. --write stays off:
-# skel/ remains immutable gold, written_cantos == 0 expected.
+# verbatim transcripts, payload tier R1, reactive-only pacing (HTTP 429s are
+# absorbed by llm7shi.Client's own backoff), max-length 6000 — all
+# reconstruct.py defaults except --verify-gold, passed explicitly below.
+# --write stays off: skel/ remains immutable gold, written_cantos == 0
+# expected.
 #
 ## make -f harness/recon/Makefile                 this help (run from anywhere)
 ## make -f harness/recon/Makefile inferno         all 34 inferno cantos, one log each
@@ -22,8 +23,8 @@
 ## make -f harness/recon/Makefile paradiso        all 33 paradiso cantos
 ## make -f .../Makefile -j3 inferno purgatorio paradiso
 ##                                     THE Stage-4 launch: three concurrent
-##                                     streams sharing harness/tokbucket.state
-##                                     (aggregate <=75% of TPM by construction);
+##                                     streams, each relying on the backend's
+##                                     own 429 backoff for pacing;
 ##                                     wall-clock projection assumes three.
 ## make -f .../Makefile harness/recon/inferno/12.log
 ##                                     a single canto (stem = <canticle>/NN)
@@ -32,7 +33,6 @@
 ROOT := $(patsubst %/,%,$(abspath $(dir $(lastword $(MAKEFILE_LIST)))/../..))
 
 LOGDIR := harness/recon
-BUCKET := harness/tokbucket.state
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
 
@@ -68,7 +68,6 @@ $(LOGDIR)/%.log: FORCE
 			--canticle $(*D) \
 			--canto $$((10#$(*F))) \
 			--verify-gold --model $(MODEL) \
-			--token-bucket $(BUCKET) \
 			--log $@; \
 	fi
 

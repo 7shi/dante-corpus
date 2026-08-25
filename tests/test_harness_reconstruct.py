@@ -542,9 +542,10 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
 def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeypatch, capsys):
     """The Stage-3 flags (STAGE3.md §4 item 6): compaction default ON in the
     minimal S3.5 form (drop thinking+calls; no prompt swap, no digests),
-    pacing defaults (interval off since record S3.4, bucket off), a header
-    line announcing the live configuration, and full pass-through into
-    agent_fallback."""
+    pacing defaults (interval off since record S3.4), a header line
+    announcing the live configuration, and full pass-through into
+    agent_fallback. Rate-limit handling is `llm7shi.Client`'s own 429
+    backoff, not a pre-emptive pacer wired through here."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
     _write_log(run_log, [_case_record()])
@@ -564,35 +565,23 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     assert "compact" not in captured  # record S3.7: no compaction layer
     assert captured["payload_tier"] == "R1"
     assert captured["min_send_interval"] == 0.0
-    assert captured["token_bucket"] is None
     out = capsys.readouterr().out
     assert "transcripts verbatim" in out
     assert "payload tier R1" in out
     assert "min-send-interval 0s" in out
-    assert "token bucket off" in out
 
     captured.clear()
-    bucket = tmp_path / "tokbucket.state"
     argv += [
         "--payload-tier", "S1",
         "--min-send-interval", "45",
-        "--token-bucket", str(bucket),
-        "--bucket-rate", "6000",
-        "--bucket-depth", "3000",
     ]
     assert rc.main(argv) == 0
     assert captured["payload_tier"] == "S1"
     assert captured["min_send_interval"] == 45.0
-    bucket_obj = captured["token_bucket"]
-    assert bucket_obj is not None
-    assert bucket_obj.path == bucket
-    assert bucket_obj.rate_per_min == 6000.0
-    assert bucket_obj.depth == 3000.0
     out = capsys.readouterr().out
     assert "transcripts verbatim" in out
     assert "payload tier S1" in out
     assert "min-send-interval 45s" in out
-    assert "rate 6000 tok/min, depth 3000 tok" in out
 
 
 def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch, capsys):
