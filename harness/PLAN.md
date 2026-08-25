@@ -5,9 +5,10 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 4: the OPERATOR launches the 99-canto verification as
-three canticle-parallel runs (commands and contract in
-[`STAGE4.md`](STAGE4.md)), then the corpus-wide readout closes the stage.
+**Next action — Stage 4: the OPERATOR launches the full-corpus (100-canto)
+verification with `make -f harness/recon/Makefile -j3 inferno purgatorio
+paradiso` — three canticle-parallel streams; commands and contract in
+[`STAGE4.md`](STAGE4.md) — then the corpus-wide readout closes the stage.
 Nothing is in flight on the assistant side.**
 
 Stage 3 CLOSED 2026-08-25 on record S3.11 ([`STAGE3.md`](STAGE3.md)): the
@@ -120,6 +121,29 @@ exactly before use (methods recorded in S3.11 and STAGE4.md §5 — recreate
 if lost). **Nothing is in flight on the assistant side; the operator's
 Stage-4 launch is the next act.**
 
+**Session housekeeping (2026-08-26, closing assistant session): pre-launch
+operation change shipped per operator request — record S4.1 in
+[`STAGE4.md`](STAGE4.md)'s ledger.** `harness/recon/Makefile` is now the
+launch interface: one streaming JSONL log per canto at
+`harness/recon/<canticle>/NN.log`, and the completion gate is each log's
+own summary record evaluated inside the recipe (`FORCE` prerequisite —
+make timestamps play no role), so resume is always "re-run the same
+command"; model override via `MODEL=`, single canto via full-path target.
+Verified LLM-free end to end (help text; 100-target expansion 34/33/33
+with sequential canto numbers; skip branch live-tested against a real
+complete log; run branch against a `uv` shim — the assistant executed no
+LLM CLI). Known hairline, accepted and documented in the Makefile: a
+summary line truncated mid-write by a crash could read as complete; the
+corpus-wide readout catches it. STAGE4.md §1/§3 rewritten around the
+driver; §5 gained the readout input contract — session numbers repeat
+across files, so joins are namespaced per file before any merge, and TPM
+pressure is only measurable from the cross-file timestamp merge; hygiene
+now requires all 100 logs present with parseable summaries. **The
+corpus-wide readout script does not exist yet** — recreate it ephemerally
+per the §5 method note when the runs land, validating against a complete
+single-canto file first. Nothing else pending on the assistant side; the
+operator's launch remains the next act.
+
 ---
 
 ## Current Status
@@ -174,9 +198,12 @@ Stage-4 launch is the next act.**
       change between runs, never mid-run.
 - [ ] **Stage 4 — Full-Corpus Verification (99-canto scale-out)**
       (OPENED 2026-08-25 by operator re-scope as Stage 3 closed): the gated
-      pipeline runs over all cantos as three canticle-parallel shells
-      (inferno / purgatorio / paradiso, one log each; resume canto-granular
-      per file, unit-level within a canto), behind every Stage-3 gate, gold
+      pipeline runs over all cantos as three canticle-parallel streams
+      (inferno / purgatorio / paradiso) driven by
+      [`harness/recon/Makefile`](recon/Makefile) — one log per canto
+      (`harness/recon/<canticle>/NN.log`), each log's summary record gates
+      completion, resume is unit-level within a canto via re-running the
+      same command — behind every Stage-3 gate, gold
       immutable (`--write` stays off, `written_cantos == 0` expected).
       Launch configuration carried from S3.9/S3.11: interval default 0 +
       shared TokenBucket (`harness/tokbucket.state`) + cap 6000 — final
@@ -320,8 +347,9 @@ cap experiment — every criterion PASS — and closed the stage.**
 
 ### Stage 4: Full-Corpus Verification (opened 2026-08-25)
 
-The 99-canto scale-out as its own stage: three canticle-parallel shells
-(inferno / purgatorio / paradiso) behind every Stage-3 gate, gold immutable,
+The 99-canto scale-out as its own stage: three canticle-parallel streams
+(inferno / purgatorio / paradiso) driven by `harness/recon/Makefile`,
+behind every Stage-3 gate, gold immutable,
 launch configuration carried from S3.9/S3.11 (interval default 0 + shared
 TokenBucket + cap 6000). Commands, watch items, readout criteria, and the
 stage ledger live in [`STAGE4.md`](STAGE4.md); scope and constraints tracked
