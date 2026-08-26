@@ -2,6 +2,9 @@
 
 Autonomous Grammar Agent Harness for Local LLMs (e.g., **Gemma 4 31B**), designed to systematically infer and reconstruct Layer 5 predicate-argument skeletons from multi-layer grammatical contexts (Layer 1 tokens, quotes hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrases, and Layer 4 UD syntax trees).
 
+### Design Philosophy: Autonomy Over Rigid Templates
+The harness favors letting the model decide for itself — when a candidate is ready to submit, when its work on a unit is actually done — over forcing it through a fixed, scripted procedure. Structured output isn't available for the models in use, so submission goes through a `validate_candidate` tool call instead; the model may call it any number of times as it revises, and the session ends the moment it answers in plain text with no further tool call, which the loop treats as the model's own completion signal rather than as a scripted turn count or an externally imposed cutoff (the turn budget exists only as a safety net). A model boxed into a rigid template is expected to underperform one given room to judge for itself when its work is done.
+
 ### Motivation: Generalizable Layer 5 Reconstruction
 While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cantos** in Phase 8, its historical construction had a small local LLM (`gemma4:31b-it-qat`) generate and repair the TSVs, while its residual errors required an ad hoc, semi-manual triage process (interactive audits with frontier LLMs — Claude Opus 5, switching to Gemini 3.7 Flash at the end of Phase 8 — plus hand-crafted rules and manual corrections) that was bespoke to Dante's Italian and difficult to generalize to new texts or languages.
 
