@@ -52,6 +52,17 @@ help:
 # Known hairline: a summary line truncated mid-write by a crash could still
 # contain the marker and read as complete; the corpus-wide readout catches
 # that case (a log without a parseable summary record is an interrupted run).
+#
+# .PRECIOUS on the pattern: without it, make deletes the target file it was
+# updating when make itself receives a fatal signal (Ctrl+C, SIGTERM) mid-recipe
+# — verified live: SIGINT to a running `make` deletes the target it was
+# writing. That would erase reconstruct.py's unit-level durability work (§5
+# durability seam) right along with it. Every already-settled unit record
+# streamed to $@ before the interrupt must survive so the next `make`
+# invocation's unit-level resume can see it. (A plain recipe failure, e.g. a
+# non-zero exit with no signal, does not trigger this deletion — only the
+# signal path does — but .PRECIOUS covers both.)
+.PRECIOUS: %.log
 %.log: FORCE
 	@mkdir -p $(@D) \
 	&& if [ -f $@ ] && tail -n 1 $@ | grep -q '"record": "summary"'; then \

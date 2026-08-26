@@ -50,7 +50,9 @@ normative section.
       finished work reach disk as each unit of work settles — streamed via
       callbacks/generators, never accumulated in memory until a phase or
       canto boundary flushes them — so a mid-run kill resumes from the last
-      settled unit instead of re-running (and re-costing) it (§5).
+      settled unit instead of re-running (and re-costing) it; any Make
+      wrapper around the CLI marks the log target `.PRECIOUS` so make's own
+      signal handling doesn't delete that streamed work (§5).
 - [ ] Report classes ship both `metrics()` and `summary()`; gates shown with
       thresholds (§6).
 - [ ] Errors never raise across boundaries: parse-error envelopes / structured
@@ -187,6 +189,18 @@ Binding for every live CLI that takes `--log FILE`:
   CLI, keep the contract exact either way.
 - Run logs are ephemeral artifacts (`*.log` is gitignored); durable numbers
   belong in the relevant PLAN file — record numbers, never log filenames.
+- **A Make wrapper around a CLI holding this contract must mark the log
+  target `.PRECIOUS`.** GNU Make deletes the target file a recipe was
+  updating when make itself receives a fatal signal (Ctrl+C, SIGTERM)
+  mid-recipe — verified live: SIGINT to a running `make` deletes the file
+  its recipe was writing, even though the file already holds everything the
+  streaming contract above flushed to disk. Without `.PRECIOUS` on the log
+  target's pattern (e.g. `.PRECIOUS: %.log`), a Make-driven interrupt
+  silently discards a CLI's entire streamed durability work at the wrapper
+  layer — the CLI-side resume logic never even gets to see the file. A plain
+  non-signal recipe failure (non-zero exit) does not trigger this deletion —
+  only the signal path does — but `.PRECIOUS` covers both and costs nothing
+  on the success path.
 
 ## 6. Reporting shape — Standard
 

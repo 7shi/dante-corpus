@@ -201,6 +201,26 @@ the in-flight unit. No STAGE4.md record was cut for this
 ledger). Nothing else pending on the assistant side; the operator's
 Stage-4 launch remains the next act.
 
+**Session housekeeping (2026-08-26, closing assistant session): `harness/
+recon/Makefile`'s per-canto log target marked `.PRECIOUS` (pre-launch
+hardening, follow-on to the mid-canto kill resilience fix above).** Auditing
+that fix surfaced a wrapper-layer gap: GNU Make deletes the target file a
+recipe was updating when make itself receives a fatal signal (Ctrl+C,
+SIGTERM) mid-recipe — verified live (SIGINT to a running `make` deletes the
+log it was writing) — which would discard `reconstruct.py`'s just-shipped
+streamed unit records at the Makefile layer, unit-level resume never even
+seeing the file on the next invocation. Fix: `.PRECIOUS: %.log` added to the
+pattern rule. Standing rule promoted to
+[`ARCHITECTURE.md`](../ARCHITECTURE.md) §5 (new bullet) + §0 checklist
+(interruption-resilience item extended): any Make wrapper around a CLI
+holding the streaming JSONL log contract must mark its log target
+`.PRECIOUS`, or a signal-interrupted `make` silently erases the CLI's own
+durability work before its resume logic ever sees the file. No STAGE4.md
+record cut for this (assistant-scope change, same as the reconstruct.py fix
+above; promote one if the operator wants it in the ledger). Nothing else
+pending on the assistant side; the operator's Stage-4 launch remains the
+next act.
+
 ---
 
 ## Current Status
