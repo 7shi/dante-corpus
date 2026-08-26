@@ -169,6 +169,38 @@ removal — record S4.2 in [`STAGE4.md`](STAGE4.md)'s ledger, detail there.**
 This Handoff's Next-action command above is updated to match. Nothing else
 pending on the assistant side.
 
+**Session housekeeping (2026-08-26, closing assistant session): mid-canto
+kill resilience shipped in `reconstruct.py` (pre-launch hardening for
+Stage 4).** Auditing `harness/recon/inferno/01.log` exposed a durability
+gap: `unit`/`gold` records reached disk only after `reconstruct_canto`
+returned for the whole canto, so a kill mid-canto lost every
+already-settled unit — `prepare_resume`'s unit-level resume never saw
+them and the next attempt re-ran (and re-costed, live fallback included)
+the whole canto, despite the module docstring's "never pays twice"
+claim. Fix: each settled outcome now streams out as it settles —
+`reconstruct_canto` gained an `emit_unit` callback (fired once per
+freshly computed outcome, never for replayed units), `main` passes a
+`settle` closure that writes + flushes the unit record immediately, and
+gold comparison moved per-unit (`GoldFace.observe(outcome)`;
+`verify_against_gold(recon)` stays as a compatibility wrapper). Log-read
+consequence: `unit` (and, with `--verify-gold`, `gold`) records now
+appear interleaved among the `llm_request`/`llm_response` trail while
+the canto runs, not as two post-canto blocks — record kinds/counts and
+the summary-last completion marker are unchanged, so the §5 readout
+contract holds. ARCHITECTURE.md gained the standing rule: §0 checklist
+item ("interruption resilience is structural") + §5 normative bullet
+(settled work reaches disk when it settles, not when an enclosing phase
+ends). New regression test pins it:
+`test_cli_mid_canto_kill_keeps_settled_units_on_disk` (kill inside unit
+18 leaves 17 settled units durable with no completion markers; resume
+replays them — fallback invocations total 18 + 17, no unit paid twice).
+Test suite: 858 passed (`test_harness_reconstruct.py` 34 → 35). Net
+Stage-4 effect: a crash during a hours-long live canto now loses at most
+the in-flight unit. No STAGE4.md record was cut for this
+(assistant-scope change; promote one if the operator wants it in the
+ledger). Nothing else pending on the assistant side; the operator's
+Stage-4 launch remains the next act.
+
 ---
 
 ## Current Status
@@ -260,13 +292,14 @@ pending on the assistant side.
   14.4% of wall vs unit 55 / 1,659 s = 8.4% (2026-08-24 instrumented
   re-runs); live-run range across all four inferno-1 confirmation logs
   0.24%–9.4%.
-- Test suite: **857 passed** (547 corpus + 46 `test_harness_tools.py` +
+- Test suite: **858 passed** (547 corpus + 46 `test_harness_tools.py` +
    76 `test_harness_toolcall.py` + 39 `test_harness_agent.py` +
    39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
    17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   34 `test_harness_reconstruct.py` + 9 `test_harness_pacing.py` — down from
+   35 `test_harness_reconstruct.py` + 9 `test_harness_pacing.py` — down from
    16 on 2026-08-26: seven `TokenBucket`-only tests removed with the
-   mechanism, see Handoff).
+   mechanism, see Handoff; reconstruct +1 on 2026-08-26: mid-canto kill
+   resilience test, see Handoff).
 
 ---
 

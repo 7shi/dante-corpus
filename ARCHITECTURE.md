@@ -46,6 +46,11 @@ normative section.
 - [ ] JSONL log contract honored: append+flush per completed unit, final
       `summary` record as completion marker, summed (not span) timings,
       resume-or-truncate chosen explicitly per CLI (§5).
+- [ ] Interruption resilience is structural, not incidental: records for
+      finished work reach disk as each unit of work settles — streamed via
+      callbacks/generators, never accumulated in memory until a phase or
+      canto boundary flushes them — so a mid-run kill resumes from the last
+      settled unit instead of re-running (and re-costing) it (§5).
 - [ ] Report classes ship both `metrics()` and `summary()`; gates shown with
       thresholds (§6).
 - [ ] Errors never raise across boundaries: parse-error envelopes / structured
@@ -160,6 +165,12 @@ Binding for every live CLI that takes `--log FILE`:
 - Append one JSON object per completed unit of work (`scenario` / comparison /
   `case` / `session`) and flush immediately — an interrupted run keeps
   everything already finished on disk.
+- Settled work must reach disk when it settles, not when an enclosing phase
+  ends. Multi-stage CLIs (per-canto loops, batch phases) hand each record to
+  the sink through a streaming callback or generator as its unit of work
+  finishes; accumulating results in memory until the boundary turns any
+  mid-phase kill into a full re-run — and, with a live model, a full re-cost
+  — of already-finished work.
 - Write a final `summary` record carrying the aggregate metrics including
   total elapsed time. **Completion marker: a log whose last line is the
   summary record is complete.**

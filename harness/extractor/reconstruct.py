@@ -70,7 +70,10 @@ log and are skipped outright, and a canto interrupted mid-run reloads its
 already-logged `unit` records (each one carries its accepted `row_keys`) and
 replays them without re-invoking the fallback, resuming only the units that
 never finished — a canto killed partway through a live-fallback run never
-pays for its already-settled units twice. The log is compacted atomically
+pays for its already-settled units twice. That promise holds mid-canto
+because settled units stream out as they settle (`emit_unit`): each unit's
+record reaches disk when the unit finishes, not when the canto does. The log
+is compacted atomically
 before appending: only the (now superseded) `summary` record is ever
 dropped; every `unit`/`gold`/`commit`/`canto_complete`/`llm_request`/
 `llm_response` record survives so a subsequent resume can rebuild on top of
@@ -94,7 +97,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterator, TextIO
+from typing import Callable, Iterator, TextIO
 
 from dante_corpus import api, case as case_layer, dep as dep_layer, morph as morph_layer, np as np_layer
 from dante_corpus.morph import Violation
@@ -381,6 +384,7 @@ def reconstruct_canto(
     progress_stream: TextIO | None = sys.stderr,
     status_line=None,
     skip_units: dict[tuple[int, int], dict] | None = None,
+    emit_unit: Callable[[UnitOutcome], None] | None = None,
 ) -> CantoReconstruction:
     """Drive the hybrid engine over every parse unit of one canto, gated.
 
@@ -392,6 +396,14 @@ def reconstruct_canto(
     way the `skel/` drivers do: a bar labeled `{canticle} {canto}` counting the
     canto's lines, advanced to each unit's first line, with the per-unit
     progress lines routed through its console stream so they coexist with it.
+
+    `emit_unit`, when given, is called with each freshly computed outcome the
+    moment it settles — before the next unit starts. This is §5's durability
+    seam: the caller streams the unit's records to disk here, so a kill
+    mid-canto leaves every already-settled unit on disk for unit-level resume
+    instead of losing them all to a post-canto flush. Replayed units are never
+    passed (their records already sit in the caller's log from the prior
+    attempt).
 
     `skip_units`, when given, maps `(line_start, line_end)` to a previously
     logged `unit` record: unit-level resume for a canto that was interrupted
@@ -465,26 +477,30 @@ def reconstruct_canto(
                 fallback_seconds = sum(turn_seconds)
             elif result.fallback_ran:
                 fallback_seconds = elapsed
-            recon.outcomes.append(
-                UnitOutcome(
-                    unit={
-                        "canticle": canticle,
-                        "canto": canto,
-                        "line_start": line_start,
-                        "line_end": line_end,
-                    },
-                    route=result.decision.route,
-                    reason=result.decision.reason,
-                    origin=result.origin,
-                    fallback_ran=result.fallback_ran,
-                    row_keys=frozenset(result.row_keys),
-                    rows=unit_rows,
-                    token_assertions=assertions,
-                    hard=hard,
-                    soft=soft,
-                    fallback_seconds=fallback_seconds,
-                )
+            outcome = UnitOutcome(
+                unit={
+                    "canticle": canticle,
+                    "canto": canto,
+                    "line_start": line_start,
+                    "line_end": line_end,
+                },
+                route=result.decision.route,
+                reason=result.decision.reason,
+                origin=result.origin,
+                fallback_ran=result.fallback_ran,
+                row_keys=frozenset(result.row_keys),
+                rows=unit_rows,
+                token_assertions=assertions,
+                hard=hard,
+                soft=soft,
+                fallback_seconds=fallback_seconds,
             )
+            recon.outcomes.append(outcome)
+            # §5 durability seam: hand the settled outcome to the caller while
+            # the canto is still running, so the record is on disk before the
+            # next unit's (possibly hours-long) fallback begins.
+            if emit_unit is not None:
+                emit_unit(outcome)
     return recon
 
 
@@ -646,6 +662,39 @@ class GoldReport:
         )
 
 
+@dataclass
+class GoldFace:
+    """Per-unit gold observation, streamable as units settle.
+
+    Each unit's tp/fp/fn depends only on that unit's accepted rows and its
+    canto's frozen skel rows, so the evaluation face can ride `reconstruct`'s
+    per-unit durability seam (`emit_unit`) instead of waiting for the canto
+    to finish — an interrupted run keeps every settled unit's gold record on
+    disk too. `verify_against_gold` wraps this face for callers holding a
+    finished `CantoReconstruction`. Purely observational — the result never
+    feeds gating or writes.
+    """
+
+    report: GoldReport = field(default_factory=GoldReport)
+    cache: dict[tuple[str, int], dict] = field(default_factory=dict)
+
+    def observe(self, outcome: UnitOutcome) -> dict:
+        from dante_corpus.skel.io import load_skel
+
+        unit = outcome.unit
+        key = (unit["canticle"], unit["canto"])
+        if key not in self.cache:
+            self.cache[key] = load_skel(unit["canticle"], unit["canto"])
+        gold_rows = self.cache[key]
+        gold = {
+            (row.line, row.token, row.role, row.arg_line, row.arg_token)
+            for no in range(unit["line_start"], unit["line_end"] + 1)
+            for row in gold_rows.get(no, ())
+        }
+        counts = self.report.observe(outcome.row_keys, gold)
+        return {"record": "gold", **unit, **counts}
+
+
 def verify_against_gold(
     recon: CantoReconstruction,
 ) -> tuple[GoldReport, Iterator[dict]]:
@@ -654,27 +703,13 @@ def verify_against_gold(
     Reads the frozen artifacts exactly like `runner/benchmark.py`; purely
     observational — the result never feeds gating or writes.
     """
-    from dante_corpus.skel.io import load_skel
-
-    report = GoldReport()
-    cache: dict[tuple[str, int], dict] = {}
+    face = GoldFace()
 
     def records():
         for outcome in recon.outcomes:
-            unit = outcome.unit
-            key = (unit["canticle"], unit["canto"])
-            if key not in cache:
-                cache[key] = load_skel(unit["canticle"], unit["canto"])
-            gold_rows = cache[key]
-            gold = {
-                (row.line, row.token, row.role, row.arg_line, row.arg_token)
-                for no in range(unit["line_start"], unit["line_end"] + 1)
-                for row in gold_rows.get(no, ())
-            }
-            counts = report.observe(outcome.row_keys, gold)
-            yield {"record": "gold", **unit, **counts}
+            yield face.observe(outcome)
 
-    return report, records()
+    return face.report, records()
 
 
 # --- aggregate report ---------------------------------------------------------------------
@@ -1183,32 +1218,37 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             )
             retry_before = _retry_snapshot(status_line)
             canto_started = time.monotonic()
-            recon = reconstruct_canto(
-                engine, canticle, canto,
-                fallback=fallback, status_line=status_line,
-                skip_units=pending_units.get((canticle, canto)),
-            )
-            retries = _retry_delta(retry_before, status_line)
-            # Replayed units were already folded into `report` and the log at
-            # startup (unit-level resume) — re-emitting them here would
-            # double-count and duplicate the sink.
-            for outcome in recon.outcomes:
-                if outcome.replayed:
-                    continue
+            # §5 durability seam: settled units stream out as they settle, so
+            # a mid-canto kill keeps every finished unit on disk and the next
+            # attempt resumes unit-by-unit instead of re-running (and
+            # re-costing, for the live fallback) the whole canto.
+            gold_face = GoldFace() if args.verify_gold else None
+
+            def settle(outcome: UnitOutcome) -> None:
                 record = outcome.to_dict()
                 report.add_unit(record)
                 if sink is not None:
                     sink.write(json.dumps(record, ensure_ascii=False) + "\n")
                     sink.flush()  # §5: every completed unit is durable at once
-            if args.verify_gold:
-                gold_report, gold_records = verify_against_gold(recon)
-                for outcome, record in zip(recon.outcomes, gold_records):
-                    if outcome.replayed:
-                        continue
-                    report.add_gold(record)
+                if gold_face is not None:
+                    gold_record = gold_face.observe(outcome)
+                    report.add_gold(gold_record)
                     if sink is not None:
-                        sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                        sink.write(
+                            json.dumps(gold_record, ensure_ascii=False) + "\n"
+                        )
                         sink.flush()
+
+            recon = reconstruct_canto(
+                engine, canticle, canto,
+                fallback=fallback, status_line=status_line,
+                skip_units=pending_units.get((canticle, canto)),
+                emit_unit=settle,
+            )
+            retries = _retry_delta(retry_before, status_line)
+            # Replayed units were already folded into `report` and the log at
+            # startup (unit-level resume) — `emit_unit` never sees them, so
+            # nothing here double-counts or duplicates the sink.
             complete: dict = {
                 "record": "canto_complete",
                 "canticle": canticle,

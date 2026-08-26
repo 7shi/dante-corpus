@@ -800,6 +800,63 @@ def test_cli_resume_skips_already_settled_units_within_an_incomplete_canto(
     assert any(r["record"] == "canto_complete" for r in lines)
 
 
+def test_cli_mid_canto_kill_keeps_settled_units_on_disk(tmp_path, monkeypatch):
+    """§5 durability under interruption: a settled unit's record reaches disk
+    while the canto is still running (`emit_unit`), so a kill mid-canto —
+    before any post-canto flush could happen — leaves every already-finished
+    unit on disk for the next attempt to replay instead of re-run."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+    calls = []
+
+    def dying_fallback(**kw):
+        calls.append(kw)
+        if len(calls) == 18:  # die inside unit 18; units 1-17 already settled
+            raise KeyboardInterrupt
+        return _StubResult([])
+
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+        "--log", str(out_log),
+    ]
+    with pytest.raises(KeyboardInterrupt):
+        rc.main(argv, fallback=dying_fallback)
+
+    # The kill left no completion markers, yet every unit settled before it
+    # is already durable — flushed as each finished, not at the canto end.
+    partial = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    partial_unit_records = [r for r in partial if r["record"] == "unit"]
+    assert not any(r["record"] == "canto_complete" for r in partial)
+    assert not any(r["record"] == "summary" for r in partial)
+    assert len(partial_unit_records) == 17
+
+    # Resume: the 17 settled units are skipped outright; only the rest run.
+    def plain_fallback(**kw):
+        calls.append(kw)
+        return _StubResult([])
+
+    assert rc.main(argv, fallback=plain_fallback) == 0
+    assert len(calls) == 18 + (34 - 17)  # died on the 18th; no unit paid twice
+
+    lines = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    unit_records = [r for r in lines if r["record"] == "unit"]
+    assert len(unit_records) == 34
+    assert unit_records[:17] == partial_unit_records  # survived verbatim
+    assert lines[-1]["record"] == "summary"
+    assert lines[-1]["units"] == 34
+    assert any(r["record"] == "canto_complete" for r in lines)
+
+
 # --- live-run observability: status bar + api-retry counters (§4) --------------------------------
 
 
