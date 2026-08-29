@@ -19,6 +19,8 @@ deterministic-rule methodology. Record S5.3 is the first reduction pass:
 two deterministic rules (`harness/recon/repair.py`) taking the corpus from
 **897 to 70 hard** violations, gated on gold agreement rather than on the
 violation count — §5 records why that distinction is the load-bearing one.
+Record S5.4 audits the classification behind the residual 70 before the
+clausal design pass opens ([`HARD.md`](HARD.md)); no artifact changed.
 
 ---
 
@@ -248,6 +250,18 @@ pass of its own, so the class waits for its own record. (Gold's reading of
 these positions is not the input to that design: this section deliberately
 does not quote it.)
 
+Before that design pass was opened, the *classification* producing those 70
+was itself audited — what the invariant asserts, where its authority comes
+from, whether `hard` is the consistent severity, and whether any of the 70
+is a checker misfire: [`HARD.md`](HARD.md) (2026-08-30, evidence record
+only; no rule designed, no artifact edited, every figure derived with gold
+unopened). It holds — the invariant is `derive.py`'s own promotion-then-cite
+closure restated as an admission condition — and it also names what the
+design pass inherits: 59 of the 70 have a derivable registration
+alternative, 43 cite an adjective where re-notating as `attr` is the second
+admissible option, and 11 need individual reading because L4 asserts a
+non-clausal relation there.
+
 ### The repair (`harness/recon/repair.py`)
 
     cd harness/recon && make repair        # apply both rules, in place
@@ -428,7 +442,8 @@ reads behind each rule, and the readout table live in §5; the ledger entry:
   record for a methodological reason, not a practical one: unlike the two
   repaired classes it has a derivable alternative, so deletion would destroy
   recoverable structure and the right repair has to be derived from L2/L4
-  rather than copied from the evaluation reference (§5).
+  rather than copied from the evaluation reference (§5). Their
+  classification is audited in [`HARD.md`](HARD.md) (S5.4).
 
 Test suite **895 → 916 passed** (21 new: per-rule classification incl. the
 `subj` and role-less exemptions, emptied-predicate reporting, both
@@ -437,3 +452,37 @@ idempotence, `--check` writes nothing / exits 1, missing-TSV skip; and for
 the gate — gold against itself scores 1.0, a spurious row costs precision
 but not recall and is healed exactly by the repair, a dropped gold row costs
 recall, an empty root scores 0).
+
+### S5.4 — The hard classification audited before the clausal design pass (2026-08-30)
+
+No code and no artifact change: an evidence record, [`HARD.md`](HARD.md),
+answering the question §5's discipline 1 makes load-bearing — the violation
+counter selects the work, so **is the classification that produces the 70
+sound?** Audited on the S5.3 tree (`6323d95`), gold-closed except for the
+sanctioned 0/0 calibration, and re-verified end to end by an independent
+second pass on 2026-08-30 (§7 there records what that pass corrected).
+
+- **The invariant is the derivation's own closure property.** `derive.py`
+  promotes every L4 clause-head deprel to a registered predicate *before*
+  `_DIRECT_ROLE_MAP` emits the `xcomp`/`ccomp` citation, so a citation it
+  emits always resolves. The hard check is that property restated as an
+  admission condition on a committed artifact: it may not assert a citation
+  whose referent it does not itself contain.
+- **The severity is consistent with the contract's taxonomy.** The nominal
+  membership check is soft *because* the contract publishes exceptions for
+  it (rules AF/AQ/DG/DS); a clausal argument has exactly one realization, so
+  an unresolved clausal citation has no reading at all. The `xcomp`-shaped
+  soft tolerances (rules M/P/Q/R) are *scoring*-register findings and never
+  admission permissions.
+- **Zero checker misfires in the 70.** No cited position is registered as a
+  predicate anywhere in the recon corpus — the unit-boundary false-positive
+  hypothesis is ruled out corpus-wide, not just in-unit.
+- **What the design pass inherits**: 59 rows one registration away from
+  resolving, 43 of which cite an adjective where `attr` (the canonical
+  equivalent that makes no registration claim) is a second admissible
+  option; 11 whose L4 deprel is not clausal and which need individual
+  reading. The choice between the two alternatives is decidable from L2/L4
+  alone.
+- **Documentation gap found**: [`../skel/README.md`](../skel/README.md)'s
+  hard bullet still describes only predicate existence and argument-position
+  validity; the `clausal` invariant it enforces is unpublished there.
