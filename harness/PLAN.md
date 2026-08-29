@@ -9,71 +9,42 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — the operator's inferno-1 live experiment.** Record S5.5
-(2026-08-30) changed where divergence gets fixed. Auditing
-`runner/tools.py`'s `validate_candidate` against
-`dante_corpus/skel/validate.py` showed the corpus's hard population is
-*exactly* the gap between the agent-side gate and the admission checker:
-486 self-argument + 341 null-position + 70 clausal = the 897 S5.2 measured,
-with no other source. All three missing checks are closed-world, so they
-went into the gate — the model is now told, inside its own session, that a
-row is schema-impossible and given both admissible repairs, instead of a
-post-hoc rule deciding on its behalf. With it, the gold-format TSV became
-the run's artifact *and* its resume state (`--tsv`, written unit by unit),
-and the log dropped to an append-only debug record.
+**Next action — decide what the inferno-1 result buys.** The operator's live
+re-run landed and is read out in full as record S5.6
+([`STAGE5.md`](STAGE5.md)); the short version:
 
-**IN FLIGHT: the operator is regenerating inferno 1 right now and will
-report the results at the start of the next session.** Everything S5.5 needs
-is committed and tested (925 passed); the live run is the measurement, and
-only the operator runs it (Environment & Artifacts, session division of
-labor). **So the next session opens by receiving those numbers and reading
-them — not by re-running anything, and not by starting new work first.**
+- **The gate holds.** `adopted_invalid` **0/34 units**, `final_submission_valid`
+  true on every one, turn cap never reached. `make check` on inferno 1: **0
+  hard** — the two row-local classes 0 by construction, as predicted — and
+  `make repair-check` reports nothing to repair, so S5.3's deletion rules are
+  unreachable at the source now.
+- **Gold agreement did not move.** agree F1 0.7737 vs S5.3's repaired 0.7738
+  (raw Stage-4 output: 0.7681). Same score, opposite shape: repair bought
+  precision by deleting rows, in-session correction bought **recall**
+  (0.8067 → 0.8196, tp 313 → 318) while keeping them. So schema-driven
+  correction is *level with* deletion here, not better — less than S5.5 hoped.
+- **Soft rose 34 → 48**, dominated by `extra_arg obl` 4 → 13 (the bare-`obl`
+  over-assignment below) — rows that deletion used to remove now stay and get
+  judged.
+- **Cost is fine**: 3.45 turns/unit (max 5), 6,268 s compute vs a Stage-4
+  corpus mean of ~5,531 s/canto. No inflation from the added gate errors.
+- **Resume confirmed live**: the operator interrupted after 5 settled units
+  and re-ran; `routes {agent 28, fast 1, tsv 5}` is that resume. The
+  middle-of-file deletion gesture is still unexercised.
 
-What the operator is running (from `harness/recon`, and the readout it
-produces — full rationale in [`STAGE5.md`](STAGE5.md) record S5.5):
+**The open question is unchanged and untested: clausal.** inferno 1's 6
+pre-repair hard rows were both row-local classes — it never held any of the
+70 — so this run measured nothing about clausal registration. The cheapest
+next measurement is **one canto that actually holds clausal violations**,
+re-run the same way. Densest are `paradiso 3` and `inferno 7` (3 each), then
+`inferno 9/10/17/23/26`, `purgatorio 2/5/6/19/22`, `paradiso 1/12/14/24` (2
+each) — from `make check`, and it is the operator who runs it.
 
-1. Baseline off the committed `inferno/01.tsv` — that file is the Stage-4
-   output and git keeps it, so `git show HEAD:harness/recon/inferno/01.tsv`
-   recovers it for comparison at any time. No manual backup was needed.
-2. `rm inferno/01.{tsv,log}` then `make inferno/01.tsv`.
-3. `make check` / `make stats` / `make agree`, plus the run's own log.
-
-**How to read the results when they arrive** — the experiment's question is
-*how much does in-session correction buy*, so the numbers that answer it,
-in order:
-
-- **`adopted_invalid` in the log's `unit` records** — units whose session
-  ended on rows its own gate had rejected (provisional adoption at the turn
-  cap). This is the primary metric: it is exactly the population the new
-  checks could not talk the model out of.
-- **`make check` on inferno 1**: the two row-local classes (`dup`
-  self-argument, `position` null-position) should be **0 by construction** —
-  if either is non-zero, the gate has a hole and that is the finding. The
-  `clausal` count against inferno 1's share of the old 70 is what
-  in-session correction actually bought.
-- **Cost of the correction**: turns and wall clock per unit against S4.3's
-  numbers. More gate errors means more turns; whether that is affordable at
-  99-canto scale is a real question this run answers.
-- **`make agree` afterwards, never as a criterion** (discipline 4 below).
-  These gate checks are transcriptions of `validate.py` written gold-closed,
-  so this is the first honest chance to see whether schema-driven correction
-  converges on gold — the claim S5.3 could not earn.
-- **`make repair-check` on inferno 1**: the same question from the other
-  side. S5.3 deleted 827 rows of two classes that should now be unreachable
-  at the source.
-
-Two mechanism checks worth doing while the canto is in hand (cheap, and they
-exercise paths only tests have covered so far): mid-run Ctrl+C then re-run →
-only unsettled units re-run; delete a middle unit's lines from the TSV then
-re-run → that unit alone regenerates, file back in line order.
-
-**Then decide** — the results choose the next move, so do not pre-commit to
-one: if in-session correction largely works, the question becomes what to do
-about the other 99 cantos, whose logs cannot be re-run (164 h of live model
-time) and whose clausal class therefore still needs a deterministic pass or
-an explicit decision to leave it. If it does not, the next lever is
-prompt-side teaching (`runner/prompts.py`), deliberately left untouched so
-this run measures the gate alone.
+Re-running all 99 cantos cannot be justified on S5.6's evidence (164 h of
+live model time for a tie). If the clausal canto also comes back level, the
+remaining levers are prompt-side teaching (`runner/prompts.py`, deliberately
+untouched so S5.6 measured the gate alone) and a deterministic decision about
+the residual clausal rows.
 
 **Still queued behind all of it — the soft bulk, where the mass actually
 is**: `extra_arg` 2,075, `missing_arg` 1,653, `role_mismatch` 567,
@@ -114,10 +85,15 @@ corrections** ([`STAGE5.md`](STAGE5.md) §5):
 runs *after* `convert`, never before — re-running `make convert` regenerates
 from the logs and rolls the repairs back.
 
-**State at the S5.5 session's close (2026-08-30).** The S5.5 code is
-committed and the tree was clean at the handoff. **No committed artifact was
-touched** — the 100 TSVs are exactly as S5.3 left them, so `inferno/01.tsv`
-changing is the operator's live run, not a code side effect.
+**State at the S5.6 session's close (2026-08-30).** The S5.5 code is
+committed and the tree is clean. The one artifact that differs from S5.3's
+corpus is `recon/inferno/01.tsv`: the operator's live re-run (S5.6),
+**committed as that canto's output** on this record — 0 hard like the file it
+replaces, but 48 soft against 34, and its 13 extra rows are in-session
+repairs rather than S5.3's deletions. The other 99 TSVs are exactly as S5.3
+left them, so inferno 1 is now the corpus's one canto produced under the
+in-session gate. Its regenerated `01.log` is gitignored as always, and is the
+only copy of the run's telemetry.
 
 - **`make check` exits 1 by design** while the 70 clausal hard violations
   stand — that is the checker's contract (non-zero on any hard violation),
@@ -195,12 +171,19 @@ holds only what's still open.
       `validate_candidate` was missing (486 + 341 + 70 = 897), moved them
       into the agent's own session, and made the gold-format TSV the run's
       artifact and its resume state (`--tsv`, written unit by unit; the log
-      demoted to an append-only debug record). Remaining: the operator's
-      inferno-1 live experiment (Handoff), then the clausal class over the
-      other 99 cantos and the soft bulk.
+      demoted to an append-only debug record). Record S5.6 read out the
+      operator's inferno-1 live re-run of that mechanism: the gate holds
+      (`adopted_invalid` 0/34 units, 0 hard, nothing left for `repair`) at
+      3.45 turns/unit and no wall-clock inflation, but **gold agreement did
+      not move** (F1 0.7737 vs S5.3's repaired 0.7738; recall up, precision
+      down) and soft rose 34 → 48 — and inferno 1 held none of the 70 clausal
+      rows, so the class the design was aimed at is still unmeasured.
+      Remaining: one clausal-holding canto re-run as the next measurement
+      (Handoff), then the residual clausal rows over the other 99 cantos and
+      the soft bulk.
       Design decisions, the conversion contract, the divergence-reduction
       direction (§4), what the violation count is and is not (§5), and the
-      stage ledger (S5.1–S5.5) in [`STAGE5.md`](STAGE5.md).
+      stage ledger (S5.1–S5.6) in [`STAGE5.md`](STAGE5.md).
 - Test suite: **925 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5).
   Composition and history (TokenBucket removal,
@@ -432,7 +415,12 @@ are *exactly* the three schema checks the agent-side gate
 own session — it corrects its analysis with the unit in front of it, instead
 of a downstream rule deciding on its behalf — and the gold-format TSV became
 the run's artifact and its resume state, written unit by unit, with deleting
-a stretch's lines as the fix gesture. Design decisions, the conversion
+a stretch's lines as the fix gesture. Record S5.6 measured that mechanism on
+the operator's inferno-1 re-run: it works and is cheap — every unit settled
+on a submission its own gate accepted — but it scored level with the deletion
+rules it replaced against gold, so the case for re-running the corpus is not
+yet made, and the clausal class it was designed for happened not to occur in
+that canto. Design decisions, the conversion
 contract, and the stage ledger live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.

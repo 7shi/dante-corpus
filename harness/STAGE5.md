@@ -587,3 +587,76 @@ clausal count shows how much in-session correction actually buys — with
 `make agree` read afterwards, never as a criterion (§5). `make repair-check`
 on inferno 1 measures the same thing from the other side: S5.3 deleted 827
 rows of two classes that should now be unreachable at the source.
+
+### S5.6 — The inferno-1 live experiment: the gate holds, gold agreement does not move (2026-08-30)
+
+The operator re-ran inferno 1 under S5.5's gate (`rm inferno/01.{tsv,log}`,
+then `make inferno/01.tsv`) and this record reads the result. Three states of
+the same canto are comparable, because the pre-repair Stage-4 output is still
+in git (`6323d95^`) — that, not the repaired `HEAD` file, is the honest
+baseline for a run that never deletes rows:
+
+| inferno 1 | rows | hard | soft | agree F1 (P / R) |
+|---|---:|---:|---:|---|
+| Stage-4 raw output (`6323d95^`) | 427 | **6** | 34 | 0.7681 (0.7330 / 0.8067) |
+| S5.3 repair applied (`HEAD`) | 421 | 0 | 34 | 0.7738 (0.7435 / 0.8067) |
+| **S5.5 gate, re-run** | 434 | **0** | **48** | **0.7737 (0.7327 / 0.8196)** |
+
+**The gate holds.** `adopted_invalid` is **0 across all 34 units**, with
+`final_submission_valid` true on every one: no unit ended on rows its own
+gate had rejected, and the turn cap was never the reason a session ended.
+`make check` gives 0 hard — the two row-local classes are 0 by construction
+as predicted, and `make repair-check` confirms it from the other side
+(`nothing to repair`, 0 rows), so S5.3's two deletion rules are now
+unreachable at the source. **The clausal class was not measured here**:
+inferno 1's 6 pre-repair hard violations were both row-local classes, so this
+canto never held any of the 70, and the question S5.4/S5.5 opened about
+clausal registration is still open on the other 99 cantos.
+
+**Gold agreement did not move.** The re-run scores 0.7737 against S5.3's
+0.7738 — a tie to the fourth decimal, reached by an opposite route: repair
+raised precision by deleting 6 rows at unchanged recall, while in-session
+correction **kept the rows and moved recall instead** (0.8067 → 0.8196, tp
+313 → 318) at some cost in precision (0.7435 → 0.7327). Against the raw
+Stage-4 output both are a real gain (0.7681). Read as §5 requires — a readout
+taken afterwards, on checks that are gold-closed transcriptions of
+`validate.py` — the honest reading is that **schema-driven in-session
+correction is not better than deletion at converging on gold on this canto;
+it is level with it, and differently shaped.** That is the first such
+comparison the project can make honestly (the Handoff's carry-over caveat on
+S5.3's rules), and it earns less than S5.5 hoped for.
+
+**Soft violations rose 34 → 48**, which is the same trade seen from the
+other side: rows the deletion rules removed cannot violate a soft check
+either, and rows the model repaired in-session stay in the file to be judged.
+The increase is dominated by `extra_arg obl` (4 → 13) — the bare-`obl`
+over-assignment already queued as the next soft target (M1.4, Handoff) — plus
+one new `membership` finding (`1:59`, an `obl` argument heading no
+NP/pronoun/predicate). Soft findings are not reported into the session by
+design (S5.5), so nothing in this run addressed them.
+
+**Cost is affordable.** 114 model calls over 33 agent-routed units =
+**3.45 turns/unit** (22 units at 3, 7 at 4, 4 at 5; the cap never reached).
+Compute time totalled 6,267.7 s (~1 h 45 m) including 900.4 s from an
+interrupted first attempt; the resumed invocation's own wall clock was
+5,367.7 s, against a Stage-4 corpus mean of ~5,531 s/canto (6:09:58:51 over
+100 cantos). The added gate errors did not inflate the run.
+
+**The resume mechanism is confirmed live**, incidentally rather than as a
+staged check: the operator interrupted the first attempt after 5 settled
+units (lines 1–18) and re-ran the same command. The summary's
+`routes: {agent: 28, fast: 1, tsv: 5}` with `reasons: {"already settled in
+the artifact": 5}` is that resume — only unsettled units re-ran, and the
+settled ones were re-validated from the TSV at no model cost. The
+middle-of-file deletion gesture was not exercised.
+
+**Where this leaves the stage.** The mechanism works and is cheap, but it
+bought no gold convergence over the deletion rules it replaced, and it moved
+soft violations up. Re-running the other 99 cantos (164 h of live model time)
+cannot be justified on this evidence, and the canto that would test the
+remaining open question — clausal registration — was not among them. The
+cheapest next measurement is therefore **one canto that actually holds
+clausal violations**, re-run the same way; the levers behind it, unchanged,
+are prompt-side teaching (`runner/prompts.py`, deliberately untouched so this
+run measured the gate alone) and the deterministic soft work over the
+committed TSVs.
