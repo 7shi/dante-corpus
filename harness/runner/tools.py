@@ -51,7 +51,23 @@ VALID_ROLES = frozenset(ROLES)
 # predicative roles (`attr`, `ccomp`, `xcomp`) naturally anchor on predicate tokens, and
 # bare `obl` is gold's adverbial-oblique marker, so none of them is held to the nominal
 # citation rule (existence and word-anchor checks still apply everywhere).
+#
+# Exemption from the *nominal* rule is not exemption from the *registration* duty:
+# `ccomp`/`xcomp` claim clause-hood, and `CLAUSAL_ROLES` below carries that separate
+# obligation. Conflating the two is what let 70 unresolvable clausal citations into the
+# Stage-4 corpus (`harness/HARD.md`).
 NOMINAL_ANCHOR_ROLES = frozenset({"subj", "obj", "iobj"})
+
+# Roles that assert their argument is a clause: the cited position must itself be a
+# registered predicate among the submitted rows (`skel/validate.py` 115-121 restated as
+# an admission condition, and the closure property `skel/derive.py` 131-142 guarantees by
+# promoting every clause-head deprel to a predicate before emitting the citation).
+CLAUSAL_ROLES = frozenset({"ccomp", "xcomp"})
+
+# Roles that may cite the null position (0, 0): a dropped subject, and the zero-argument
+# marker's own row (`skel/validate.py` 109-111). Every other role naming (0, 0) is an
+# elision the format cannot express.
+NULL_ARG_ROLES = frozenset({"subj", ""})
 
 
 def requires_nominal_anchor(role: str) -> bool:
@@ -319,8 +335,13 @@ TOOL_SPECS: tuple[dict, ...] = (
                 "iobj, obl:<prep>) cite Layer 3 NP heads or pronouns — clausal roles "
                 "(attr, xcomp, ccomp) and bare obl may anchor on any token — slots are "
                 "unique per predicate (dual roles need clitic licensing), and roles use "
-                "the frozen vocabulary. Also records upstream_feedback about "
-                "irreconcilable L2/L4 defects you identified."
+                "the frozen vocabulary. Three further rules have no exceptions: no row "
+                "may cite its own predicate as its argument, only subj (and the "
+                "zero-argument marker) may cite (0, 0), and an xcomp/ccomp argument must "
+                "itself be a predicate you registered in the same submission — use attr "
+                "for a predicative complement you are not registering as a clause. Also "
+                "records upstream_feedback about irreconcilable L2/L4 defects you "
+                "identified."
             ),
             "parameters": {
                 "type": "object",
@@ -476,12 +497,20 @@ class GrammarToolkit:
     guard without the agent having to pass exclusion arguments it could forget or forge.
     """
 
-    def __init__(self, payload_tier: str = "R1") -> None:
+    def __init__(
+        self, payload_tier: str = "R1", clausal_registration: bool = True
+    ) -> None:
         if payload_tier not in PAYLOAD_TIERS:
             raise ValueError(
                 f"unknown payload tier: {payload_tier!r} (valid: {list(PAYLOAD_TIERS)})"
             )
         self.payload_tier = payload_tier
+        # The clausal registration check reads the submission as a set, so it is only
+        # sound when one call carries the whole unit (the "unit" workflow). Under the
+        # "predicate" workflow each call carries one predicate's rows, and a citation
+        # into a sibling clause would be flagged for an absence that is an artifact of
+        # the submission granularity, not of the analysis.
+        self.clausal_registration = clausal_registration
         self._cache: dict[tuple[str, int], _CantoData] = {}
         self._active_unit: tuple[str, int, int, int] | None = None
         self.upstream_log: list[dict[str, object]] = []
@@ -695,7 +724,18 @@ class GrammarToolkit:
            argument filling two roles requires clitic licensing (a multi-slot case annex
            row such as fused `gliel'`);
         4. every role belongs to the frozen vocabulary (`subj`, `obj`, `iobj`, `attr`,
-           `xcomp`, `ccomp`, `obl`, `obl:<prep>`, or the zero-argument `""` marker).
+           `xcomp`, `ccomp`, `obl`, `obl:<prep>`, or the zero-argument `""` marker);
+        5. the three schema impossibilities `skel/validate.py` treats as hard — no row
+           may cite its own predicate as its argument (107); only `subj` and the
+           zero-argument marker may cite the null position `(0, 0)` (109-111); and a
+           `ccomp`/`xcomp` argument must itself be a registered predicate in the
+           submission (115-121). Check 2's exemption covers the *nominal* citation rule
+           only: a clausal role is free to anchor on any token, but asserting
+           clause-hood still obliges the submission to carry that clause. These are
+           closed-world — the rows are read against themselves, no layer beyond L1 and
+           no derivation is consulted. The set-scoped third one is skipped when the
+           toolkit is built with `clausal_registration=False` (the per-predicate
+           workflow, whose calls do not carry the whole unit).
 
         `upstream_feedback` records (irreconcilable L2/L4 defects spotted by the model)
         are accepted, logged verbatim for human triage, and reported back; malformed
@@ -763,6 +803,28 @@ class GrammarToolkit:
                 errors.append(
                     f"{where}: zero-argument marker '' must cite arg (0, 0), "
                     f"got ({row.arg_line}, {row.arg_token})"
+                )
+
+            # 5a. self-argument: a predicate cannot be its own argument. The usual
+            # source is an enclitic host (`aiutami`, `trarrotti`): the clitic sits
+            # *inside* the verb token, so citing that token makes the predicate its
+            # own object. Layer 1 offers no separate position for the clitic.
+            if row.arg == row.pred:
+                errors.append(
+                    f"{where}: argument cites its own predicate "
+                    f"{row.line}.{row.token} — a predicate cannot fill its own "
+                    f"{role!r} slot. An enclitic pronoun inside the verb token has no "
+                    f"position of its own in Layer 1: cite the referent's own token "
+                    f"when the unit contains it, or drop the row"
+                )
+
+            # 5b. the null position is for a dropped subject only.
+            if row.arg == (0, 0) and role not in NULL_ARG_ROLES:
+                errors.append(
+                    f"{where}: role {role!r} may not cite (0, 0) — the null position "
+                    f"marks a dropped subject (and the zero-argument marker's own "
+                    f"row), not an elided {role!r}. Cite the argument's token, or "
+                    f"omit the row if it is not realized in this unit"
                 )
 
             # 1. predicate existence + word anchor.
@@ -835,6 +897,28 @@ class GrammarToolkit:
                     slots.append(slot)
                 if row.arg != (0, 0):
                     args_by_pair.setdefault((row.pred, row.arg), set()).add(role)
+
+        # 5c. clausal registration: `ccomp`/`xcomp` assert their argument is a clause,
+        # so the submission must contain that clause's own predicate frame. Set-scoped,
+        # hence gated on whole-unit submissions (see `clausal_registration`).
+        if self.clausal_registration:
+            predicate_positions = {row.pred for row in parsed if row.token > 0}
+            for row in parsed:
+                if row.token <= 0 or row.role not in CLAUSAL_ROLES:
+                    continue
+                if row.arg in predicate_positions:
+                    continue
+                errors.append(
+                    f"row[{row.index}]: {row.role} argument "
+                    f"{row.arg_line}.{row.arg_token} is not a predicate in this "
+                    f"submission — {row.role} claims the argument heads a clause, so "
+                    f"that clause must be registered here too. Either add a row for "
+                    f"{row.arg_line}.{row.arg_token} as a predicate in its own right "
+                    f"(with its subject, or '' if it takes no argument), or, if it is "
+                    f"a predicative adjective/participle rather than a clause head, "
+                    f"notate it 'attr' instead — attr makes no clause-hood claim and "
+                    f"needs no registration"
+                )
 
         # The zero-argument marker is a predicate's single row: it cannot coexist with
         # argument slots on the same predicate.

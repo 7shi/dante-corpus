@@ -60,24 +60,24 @@ gaps between resumed attempts never count. The same `--log` also
 carries the request-level cost records: the live fallback appends one JSONL
 pair per backend LLM call (`llm_request` before, `llm_response` after:
 timestamp, model, unit coordinates, transcript position, attempt,
-context/new/output sizes in UTF-8 bytes, duration). They are canto-scoped
-like every other record — never replayed into aggregates, and resume
-compaction keeps them for both completed and in-progress cantos.
-Unlike the deterministic miners this CLI **resumes** rather than truncates
-(live fallback makes attempts hours long and worth keeping), down to the
-**parse unit**, not just the canto: completed cantos reload from an existing
-log and are skipped outright, and a canto interrupted mid-run reloads its
-already-logged `unit` records (each one carries its accepted `row_keys`) and
-replays them without re-invoking the fallback, resuming only the units that
-never finished — a canto killed partway through a live-fallback run never
-pays for its already-settled units twice. That promise holds mid-canto
-because settled units stream out as they settle (`emit_unit`): each unit's
-record reaches disk when the unit finishes, not when the canto does. The log
-is compacted atomically
-before appending: only the (now superseded) `summary` record is ever
-dropped; every `unit`/`gold`/`commit`/`canto_complete`/`llm_request`/
-`llm_response` record survives so a subsequent resume can rebuild on top of
-it, and a unit is never re-emitted once replayed so nothing double-counts.
+context/new/output sizes in UTF-8 bytes, duration). The log is **append-only
+and never read back** — it is a debug record, so a resumed run's aggregates
+cover that attempt alone.
+
+Resume runs off the artifact instead (`--tsv`, `TsvArtifact`, `../STAGE5.md`
+record S5.5). The canto's gold-format TSV is written **unit by unit as units
+settle** (`emit_unit`), so a kill mid-canto leaves every finished unit on
+disk; the next run reads the file back, treats every unit whose lines are all
+present as settled, and re-runs only the rest — a canto killed partway through
+a live-fallback run never pays for its already-settled units twice. Settled
+units still go through the gates (deterministic and free), so their verdicts
+are measured on the bytes on disk rather than trusted from a log.
+
+That also makes the artifact the repair surface: **delete the lines of a
+stretch you want reconsidered and re-run**, and just that unit regenerates. A
+gap in the middle cannot be appended around, so the file is rewritten whole
+in line order whenever one exists — the streamed output stays byte-identical
+to a single-pass `render_tsv` either way.
 
 Deterministic tests inject stub fallbacks; nothing in the test suite touches a
 model.
@@ -123,14 +123,12 @@ __all__ = [
     "CantoReconstruction",
     "GoldReport",
     "ReconstructReport",
+    "TsvArtifact",
     "UnitOutcome",
     "build_rows",
     "commit",
-    "compact_log",
-    "completed_cantos",
     "load_log",
     "main",
-    "prepare_resume",
     "reconstruct_canto",
     "render_tsv",
     "split_violations",
@@ -267,19 +265,21 @@ class UnitOutcome:
     hard: list[Violation]
     soft: list[Violation]
     fallback_seconds: float | None = None
-    # Unit-level resume (§ replay): a unit rebuilt from a previously logged
-    # `unit` record instead of re-running `engine.run_unit`/`validate_unit`.
-    # `passed` then trusts the logged verdict (no violation objects survive
-    # the log), and the caller must not re-emit it to the sink or aggregates
-    # — it is already there from the prior attempt.
+    # Verdict the agent's own gate gave the submission that was adopted: None
+    # when nothing was validated (fast path, dry mode, or a session that never
+    # called the tool), False when the session ended on rows its gate rejected
+    # — a *provisional* adoption at the turn cap, and the primary readout of
+    # whether in-session correction converges (`../STAGE5.md` record S5.5).
+    final_submission_valid: bool | None = None
+    # Unit-level resume: a unit rebuilt from the TSV already on disk instead of
+    # re-running `engine.run_unit`. Its gates are still re-run (deterministic,
+    # no model cost), so `passed` is measured rather than trusted; the caller
+    # must not re-emit it to the sink, which already holds the artifact.
     replayed: bool = False
-    passed_override: bool | None = None
 
     @property
     def passed(self) -> bool:
         """§4.1 gates 1+2: clean assertions AND 0 hard / 0 soft violations."""
-        if self.passed_override is not None:
-            return self.passed_override
         return not self.token_assertions and not self.hard and not self.soft
 
     def to_dict(self) -> dict:
@@ -307,6 +307,9 @@ class UnitOutcome:
             "violation_kinds": dict(kinds),
             "sample_violations": sample,
             "passed": self.passed,
+            # True only when the session ended on rows its own gate rejected.
+            "adopted_invalid": self.final_submission_valid is False,
+            "final_submission_valid": self.final_submission_valid,
             "fallback_seconds": (
                 None if self.fallback_seconds is None
                 else round(self.fallback_seconds, 1)
@@ -314,39 +317,60 @@ class UnitOutcome:
         }
 
 
-def _replay_unit_outcome(
-    record: dict, layers: "CantoLayers", group: list[int]
-) -> UnitOutcome:
-    """Rebuild a `UnitOutcome` from a previously logged `unit` record.
+def _validate_rows(
+    layers: "CantoLayers", group: list[int], unit_rows: dict[int, list[SkelRow]]
+) -> tuple[list[Violation], list[Violation]]:
+    """§4.1 gate 2 over one unit's assembled rows -> `(hard, soft)`."""
+    text_by_no = layers.text_by_no
+    violations = validate_unit(
+        group,
+        [text_by_no[no] for no in group],
+        unit_rows,
+        morph_rows=layers.morph_rows,
+        np_rows=layers.np_rows,
+        dep_rows=layers.dep_rows,
+        case_rows=layers.case_rows,
+    )
+    return split_violations(violations)
 
-    Unit-level resume: the row keys are the only thing the log needs to carry
-    for a full replay (rows re-anchor deterministically via `build_rows`;
-    the pass/fail verdict is trusted from the record rather than
-    re-validated, since no `Violation` objects survive the log).
+
+def _replay_unit_outcome(
+    rows: dict[int, list[SkelRow]], layers: "CantoLayers", group: list[int]
+) -> UnitOutcome:
+    """Rebuild a `UnitOutcome` from the unit's rows already on disk in the TSV.
+
+    Unit-level resume: the artifact carries the rows, so nothing has to be
+    re-run through the (expensive, live) fallback. What the artifact does *not*
+    carry is telemetry — route, reason, timings all belong to the attempt that
+    produced it — so those read `tsv` rather than being invented. The gates,
+    by contrast, are re-run: they are deterministic and free, so the verdict
+    here is measured on the bytes on disk instead of trusted from a log.
     """
     line_start, line_end = group[0], group[-1]
-    row_keys = frozenset(tuple(key) for key in record.get("row_keys", []))
-    rows, assertions = build_rows(row_keys, layers, line_start, line_end)
-    unit_rows = {no: rows.get(no, []) for no in group}
+    unit_rows = {no: list(rows.get(no, [])) for no in group}
+    row_keys = frozenset(
+        (row.line, row.token, row.role, row.arg_line, row.arg_token)
+        for line_rows in unit_rows.values()
+        for row in line_rows
+    )
+    hard, soft = _validate_rows(layers, group, unit_rows)
     return UnitOutcome(
         unit={
-            "canticle": record["canticle"],
-            "canto": record["canto"],
+            "canticle": layers.canticle,
+            "canto": layers.canto,
             "line_start": line_start,
             "line_end": line_end,
         },
-        route=record.get("route", "?"),
-        reason=record.get("reason", "?"),
-        origin=record.get("origin", "?"),
-        fallback_ran=bool(record.get("fallback_ran")),
+        route="tsv",
+        reason="already settled in the artifact",
+        origin="tsv",
+        fallback_ran=False,
         row_keys=row_keys,
         rows=unit_rows,
-        token_assertions=assertions,
-        hard=[],
-        soft=[],
-        fallback_seconds=record.get("fallback_seconds"),
+        token_assertions=[],
+        hard=hard,
+        soft=soft,
         replayed=True,
-        passed_override=bool(record.get("passed")),
     )
 
 
@@ -383,7 +407,7 @@ def reconstruct_canto(
     policy: RoutePolicy | None = None,
     progress_stream: TextIO | None = sys.stderr,
     status_line=None,
-    skip_units: dict[tuple[int, int], dict] | None = None,
+    settled_units: dict[tuple[int, int], dict[int, list[SkelRow]]] | None = None,
     emit_unit: Callable[[UnitOutcome], None] | None = None,
 ) -> CantoReconstruction:
     """Drive the hybrid engine over every parse unit of one canto, gated.
@@ -405,19 +429,18 @@ def reconstruct_canto(
     passed (their records already sit in the caller's log from the prior
     attempt).
 
-    `skip_units`, when given, maps `(line_start, line_end)` to a previously
-    logged `unit` record: unit-level resume for a canto that was interrupted
-    mid-run. Matching units are rebuilt from the log (`_replay_unit_outcome`)
-    instead of re-running `engine.run_unit` — the caller (`main`) must not
-    re-emit them to the sink or aggregates, since the prior attempt already
-    did.
+    `settled_units`, when given, maps `(line_start, line_end)` to the rows a
+    previous attempt already wrote to the canto's TSV: unit-level resume off
+    the artifact itself (`TsvArtifact.settled`). Matching units are rebuilt
+    from those rows (`_replay_unit_outcome`, gates re-run) instead of
+    re-running `engine.run_unit` — the caller must not re-emit them, since the
+    artifact already holds them.
     """
     stream = status_line.stream if status_line is not None else progress_stream
     layers = CantoLayers.load(canticle, canto)
     recon = CantoReconstruction(
         canticle=canticle, canto=canto, nos=list(layers.nos)
     )
-    text_by_no = layers.text_by_no
     units = layers.units()
     # Skel-driver display (`driver_build._build_canto`): the bar's label names
     # Canticle Canto and its numerator walks the canto's Dante lines as each
@@ -438,12 +461,12 @@ def reconstruct_canto(
                     flush=True,
                 )
             line_start, line_end = group[0], group[-1]
-            skip_record = (
-                skip_units.get((line_start, line_end)) if skip_units else None
+            settled = (
+                settled_units.get((line_start, line_end)) if settled_units else None
             )
-            if skip_record is not None:
+            if settled is not None:
                 recon.outcomes.append(
-                    _replay_unit_outcome(skip_record, layers, group)
+                    _replay_unit_outcome(settled, layers, group)
                 )
                 continue
             started = time.monotonic()
@@ -460,16 +483,7 @@ def reconstruct_canto(
                 result.row_keys, layers, line_start, line_end
             )
             unit_rows = {no: rows.get(no, []) for no in group}
-            violations = validate_unit(
-                group,
-                [text_by_no[no] for no in group],
-                unit_rows,
-                morph_rows=layers.morph_rows,
-                np_rows=layers.np_rows,
-                dep_rows=layers.dep_rows,
-                case_rows=layers.case_rows,
-            )
-            hard, soft = split_violations(violations)
+            hard, soft = _validate_rows(layers, group, unit_rows)
             fallback_seconds: float | None = None
             agent_result = getattr(result, "agent_result", None)
             turn_seconds = getattr(agent_result, "turn_seconds", None)
@@ -494,6 +508,9 @@ def reconstruct_canto(
                 hard=hard,
                 soft=soft,
                 fallback_seconds=fallback_seconds,
+                final_submission_valid=getattr(
+                    result, "final_submission_valid", None
+                ),
             )
             recon.outcomes.append(outcome)
             # §5 durability seam: hand the settled outcome to the caller while
@@ -516,7 +533,17 @@ def render_tsv(lines: list[tuple[int, list[SkelRow]]]) -> str:
     from this mirror the commit fails loudly instead of landing unverified
     bytes — `test_render_tsv_matches_write_skel_bytes` pins the parity.
     """
-    out = ["\t".join(_TSV_HEADER)]
+    return "\t".join(_TSV_HEADER) + "\n" + _render_body(lines)
+
+
+def _render_body(lines: list[tuple[int, list[SkelRow]]]) -> str:
+    """`render_tsv`'s payload without the header — one line block per canto line.
+
+    Shared with `TsvArtifact.write_unit`, which appends these blocks a unit at
+    a time; keeping one renderer is what makes the streamed file byte-identical
+    to a whole-canto render.
+    """
+    out = []
     for no, rows in lines:
         if not rows:
             out.append("\t".join((str(no), "0", "", "", "0", "0")))
@@ -527,6 +554,122 @@ def render_tsv(lines: list[tuple[int, list[SkelRow]]]) -> str:
                            str(row.arg_line), str(row.arg_token)))
             )
     return "\n".join(out) + "\n"
+
+
+class TsvArtifact:
+    """A canto's gold-format TSV, written unit by unit and read back to resume.
+
+    The TSV — not the log — is the run's durable artifact and its resume state
+    (`../STAGE5.md` record S5.5). Two properties make that work:
+
+    - **Append-per-unit is byte-identical to the whole-canto render.** Parse
+      units come from `dep.sentence_groups` (the same call, with the same
+      default `MAX_UNIT_LINES`, that `recon/check.py` validates against), so
+      they are line-ordered, contiguous, and cover every line exactly once;
+      `render_tsv` emits a sentinel row for a line with no predicates. Writing
+      units in order therefore reproduces `render_tsv(whole canto)` exactly.
+    - **Line-number presence is the settled-unit test.** Every line of a
+      settled unit is in the file, sentinel or not, so a unit whose lines are
+      all present needs no rerun and a unit missing any of them is unsettled.
+
+    That second property is also the operator's fix gesture: delete the lines
+    of a stretch you want reconsidered and re-run — the unit regenerates. A
+    *partially* deleted unit counts as unsettled too, and its surviving rows
+    are dropped, so a half-edited unit never lands half old and half new.
+
+    Writes go through one of two paths. While the settled units form a prefix
+    of the canto, each newly settled unit is appended (durable per unit, like
+    the log sink). Once there is a gap in the middle — the fix case — the file
+    is rewritten whole, in line order, on every settle: append cannot express
+    an insertion, and the artifact must never be left in line-shuffled order.
+    """
+
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+        self.rows: dict[int, list[SkelRow]] = {}
+        self._append_only = True
+
+    # --- read ---------------------------------------------------------------------
+
+    def load(self) -> dict[int, list[SkelRow]]:
+        """Parse the artifact on disk (missing file = nothing settled yet).
+
+        Mirror of `skel.io.load_skel` over an arbitrary path: a sentinel row
+        (`token == 0`) registers its line as present without contributing a
+        row, which is exactly what the settled-unit test needs.
+        """
+        self.rows = {}
+        if not self.path.exists():
+            return self.rows
+        for index, text in enumerate(
+            self.path.read_text(encoding="utf-8").splitlines()
+        ):
+            if index == 0 or not text:  # header / blank
+                continue
+            cells = text.split("\t")
+            cells += [""] * (len(_TSV_HEADER) - len(cells))
+            no = int(cells[0])
+            token = int(cells[1])
+            bucket = self.rows.setdefault(no, [])
+            if token == 0:  # sentinel: line processed, no predicates
+                continue
+            bucket.append(
+                SkelRow(line=no, token=token, word=cells[2], role=cells[3],
+                        arg_line=int(cells[4]), arg_token=int(cells[5]))
+            )
+        return self.rows
+
+    def settled(
+        self, units: list[list[int]]
+    ) -> dict[tuple[int, int], dict[int, list[SkelRow]]]:
+        """`(line_start, line_end) -> rows` for every unit fully present on disk.
+
+        Units only partially present are *not* returned and their rows are
+        discarded from the in-memory artifact, so a rewrite never carries a
+        half-deleted unit's leftovers.
+        """
+        result: dict[tuple[int, int], dict[int, list[SkelRow]]] = {}
+        for group in units:
+            span = (group[0], group[-1])
+            if all(no in self.rows for no in group):
+                result[span] = {no: list(self.rows[no]) for no in group}
+            else:
+                for no in group:
+                    self.rows.pop(no, None)
+        # A gap anywhere but the tail means later settles cannot be appended.
+        settled_lines = {no for group in units for no in group if no in self.rows}
+        ordered = [no for group in units for no in group]
+        seen_missing = False
+        for no in ordered:
+            if no not in settled_lines:
+                seen_missing = True
+            elif seen_missing:
+                self._append_only = False
+                break
+        return result
+
+    # --- write --------------------------------------------------------------------
+
+    def write_unit(self, group: list[int], rows: dict[int, list[SkelRow]]) -> None:
+        """Land one settled unit, appending when possible and rewriting when not."""
+        for no in group:
+            self.rows[no] = list(rows.get(no, []))
+        if self._append_only:
+            new = not self.path.exists()
+            with open(self.path, "a", encoding="utf-8") as fh:
+                if new:
+                    fh.write("\t".join(_TSV_HEADER) + "\n")
+                fh.write(_render_body([(no, self.rows[no]) for no in group]))
+                fh.flush()  # durable per unit, like the log sink
+        else:
+            self.rewrite()
+
+    def rewrite(self) -> None:
+        """Write every settled line in line order (the post-gap path)."""
+        payload = render_tsv(
+            [(no, self.rows[no]) for no in sorted(self.rows)]
+        )
+        self.path.write_text(payload, encoding="utf-8")
 
 
 def commit(
@@ -883,88 +1026,6 @@ def load_log(path: str | Path) -> list[dict]:
     return records
 
 
-def completed_cantos(records: list[dict]) -> set[tuple[str, int]]:
-    """Cantos whose terminal `canto_complete` marker is already on disk."""
-    return {
-        (record["canticle"], record["canto"])
-        for record in records
-        if record.get("record") == "canto_complete" and "canticle" in record
-    }
-
-
-def prepare_resume(
-    records: list[dict],
-    wanted: list[tuple[str, int]],
-) -> tuple[list[dict], list[tuple[str, int]], dict[tuple[str, int], dict[tuple[int, int], dict]]]:
-    """Split a previous attempt into
-    `(records_to_replay, remaining_cantos, pending_units)`.
-
-    Everything belonging to a completed canto replays into the aggregate;
-    those cantos are skipped entirely. A canto still in `remaining` may
-    nonetheless carry logged `unit` records from an interrupted attempt —
-    unit-level resume: `pending_units` maps such a canto to its
-    `(line_start, line_end) -> unit record` table so `reconstruct_canto` can
-    skip re-running (and re-costing, for the live fallback) units already
-    settled, picking up only where the prior attempt broke off.
-    """
-    done = completed_cantos(records)
-    replay: list[dict] = [
-        record
-        for record in records
-        if (record.get("canticle"), record.get("canto")) in done
-        and record.get("record") in ("unit", "gold", "commit", "canto_complete")
-    ]
-    remaining = [canto for canto in wanted if canto not in done]
-    remaining_set = set(remaining)
-    pending_units: dict[tuple[str, int], dict[tuple[int, int], dict]] = {}
-    for record in records:
-        if record.get("record") != "unit":
-            continue
-        key = (record.get("canticle"), record.get("canto"))
-        if key not in remaining_set:
-            continue
-        pending_units.setdefault(key, {})[
-            (record.get("line_start"), record.get("line_end"))
-        ] = record
-    return replay, remaining, pending_units
-
-
-def compact_log(path: str | Path) -> None:
-    """Strip superseded `summary` records from an existing log (atomic replace).
-
-    Every other record survives compaction, including `unit`/`gold` records
-    of a canto still in progress: unit-level resume (`prepare_resume`'s
-    `pending_units`) needs them on disk to skip already-settled units on the
-    next attempt. Only the completion marker is ever stale across attempts —
-    a `summary` reflects a prior (possibly now-superseded) run's aggregate —
-    so it alone is dropped.
-    """
-    with open(path, encoding="utf-8") as fh:
-        kept = [line for line in fh if _jsonl_record_should_keep(line)]
-    directory = os.path.dirname(os.path.abspath(path))
-    fd, tmp = tempfile.mkstemp(dir=directory, prefix=".reconstruct-log-", suffix=".tmp")
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as dst:
-            dst.writelines(kept)
-        os.replace(tmp, path)
-    except BaseException:
-        with contextlib.suppress(OSError):
-            os.unlink(tmp)
-        raise
-
-
-def _jsonl_record_should_keep(line: str) -> bool:
-    """Compaction predicate: valid JSON, not a (superseded) `summary` record."""
-    stripped = line.strip()
-    if not stripped:
-        return False
-    try:
-        record = json.loads(stripped)
-    except json.JSONDecodeError:
-        return False  # torn tail: drop it
-    return record.get("record") != "summary"
-
-
 # --- CLI ------------------------------------------------------------------------------------
 
 
@@ -1082,9 +1143,16 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     parser.add_argument(
         "--log",
         type=Path,
-        help="streaming JSONL log: unit/gold/canto_complete records, summary "
-        "last, plus llm_request/llm_response records from the live fallback. "
-        "An existing file is resumed: completed cantos reload and are skipped",
+        help="streaming JSONL debug log: unit/gold/canto_complete records, "
+        "summary last, plus llm_request/llm_response records from the live "
+        "fallback. Append-only — never read back; resume state is the TSV",
+    )
+    parser.add_argument(
+        "--tsv",
+        type=Path,
+        help="gold-format TSV for the selected canto, written unit by unit as "
+        "units settle and read back on the next run to resume: units already "
+        "present are not re-run. Single-canto only (needs --canticle/--canto)",
     )
     args = parser.parse_args(argv)
 
@@ -1092,6 +1160,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         parser.error("--canto needs an explicit --canticle")
     if (args.canto is None) == (not args.all):
         parser.error("select exactly one of --canto N or --all")
+    # One TSV is one canto's artifact; a multi-canto run would interleave
+    # unrelated line numbers into it.
+    if args.tsv is not None and args.canto is None:
+        parser.error("--tsv needs a single canto (--canticle C --canto N)")
 
     # §4 optional Rich bar: created up front so every human-facing line and
     # the live fallback's model stream can share its console; without the
@@ -1123,50 +1195,23 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     total = len(wanted)
     report = ReconstructReport()
 
-    prior_records: list[dict] = []
-    resume_offset = 0
-    pending_units: dict[tuple[str, int], dict[tuple[int, int], dict]] = {}
-    if args.log and os.path.exists(args.log):
-        prior_records = load_log(args.log)
-        replay, wanted, pending_units = prepare_resume(prior_records, wanted)
-        for record in replay:
-            kind = record.get("record")
-            if kind == "unit":
-                report.add_unit(record)
-            elif kind == "gold":
-                report.add_gold(record)
-            elif kind == "canto_complete":
-                report.add_canto_complete(record)
-        resumed_units = 0
-        for units_by_span in pending_units.values():
-            for record in units_by_span.values():
-                report.add_unit(record)
-                resumed_units += 1
-        # A canto still in progress may also carry logged `gold` records for
-        # the units above; fold them in too so --verify-gold's aggregate
-        # stays exact across the resume.
-        pending_cantos = set(pending_units)
-        for record in prior_records:
-            if record.get("record") == "gold" and (
-                record.get("canticle"), record.get("canto")
-            ) in pending_cantos:
-                report.add_gold(record)
-        # Compact before appending: only the (now superseded) summary is
-        # stripped. Everything else — including incomplete cantos' unit
-        # records — stays, so unit-level resume can skip them below.
-        compact_log(args.log)
-        if replay or resumed_units:
-            resume_offset = total - len(wanted)
+    # Resume state is the artifact: units already written to the TSV are not
+    # re-run (`TsvArtifact`). The log plays no part — it is an append-only
+    # debug record now, never read back, so a resumed run's report aggregate
+    # covers this attempt only. Units resumed from the TSV are re-validated
+    # and counted with `route="tsv"`, so the artifact's own verdict is always
+    # measured rather than carried over from a prior attempt's log.
+    artifact = TsvArtifact(args.tsv) if args.tsv else None
+    settled_units: dict[tuple[int, int], dict[int, list[SkelRow]]] = {}
+    if artifact is not None:
+        artifact.load()
+        settled_units = artifact.settled(
+            CantoLayers.load(*wanted[0]).units()
+        )
+        if settled_units:
             print(
-                f"resume: {resume_offset} completed canto(s) loaded from "
-                f"{args.log}"
-                + (
-                    f" ({resumed_units} unit(s) already settled across "
-                    f"{len(pending_units)} in-progress canto(s))"
-                    if resumed_units
-                    else ""
-                )
-                + f"; continuing with {len(wanted)} left"
+                f"resume: {len(settled_units)} unit(s) already settled in "
+                f"{args.tsv}"
             )
 
     header = (
@@ -1212,7 +1257,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             **fallback_kwargs,
         )
     try:
-        for index, (canticle, canto) in enumerate(wanted, start=resume_offset + 1):
+        for index, (canticle, canto) in enumerate(wanted, start=1):
             progress_separator(
                 f"{canticle} {canto}", index, total, stream=ui_stream
             )
@@ -1227,6 +1272,13 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             def settle(outcome: UnitOutcome) -> None:
                 record = outcome.to_dict()
                 report.add_unit(record)
+                if artifact is not None:
+                    # The artifact lands first: it, not the log, is what the
+                    # next run resumes from, so it must never be the thing
+                    # missing after a kill between the two writes.
+                    artifact.write_unit(
+                        sorted(outcome.rows), outcome.rows
+                    )
                 if sink is not None:
                     sink.write(json.dumps(record, ensure_ascii=False) + "\n")
                     sink.flush()  # §5: every completed unit is durable at once
@@ -1242,13 +1294,22 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             recon = reconstruct_canto(
                 engine, canticle, canto,
                 fallback=fallback, status_line=status_line,
-                skip_units=pending_units.get((canticle, canto)),
+                settled_units=settled_units,
                 emit_unit=settle,
             )
             retries = _retry_delta(retry_before, status_line)
-            # Replayed units were already folded into `report` and the log at
-            # startup (unit-level resume) — `emit_unit` never sees them, so
-            # nothing here double-counts or duplicates the sink.
+            # Units resumed from the TSV never reach `emit_unit` — the artifact
+            # already holds their rows, and re-writing them would duplicate
+            # lines. They still belong in this run's aggregates, so they are
+            # folded in here, from the re-validated outcome rather than from
+            # any prior attempt's record. They are deliberately not appended to
+            # the log: the log records what this run actually did.
+            for outcome in recon.outcomes:
+                if not outcome.replayed:
+                    continue
+                report.add_unit(outcome.to_dict())
+                if gold_face is not None:
+                    report.add_gold(gold_face.observe(outcome))
             complete: dict = {
                 "record": "canto_complete",
                 "canticle": canticle,

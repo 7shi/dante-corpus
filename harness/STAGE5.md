@@ -21,6 +21,13 @@ two deterministic rules (`harness/recon/repair.py`) taking the corpus from
 violation count — §5 records why that distinction is the load-bearing one.
 Record S5.4 audits the classification behind the residual 70 before the
 clausal design pass opens ([`HARD.md`](HARD.md)); no artifact changed.
+Record S5.5 then relocates the whole question: the corpus's 897 hard
+violations decompose **exactly** into the three checks `validate_candidate`
+was missing, so the checks moved into the agent's own session (the model
+corrects its analysis instead of a rule correcting it afterwards), the
+gold-format TSV became the run's artifact *and* its resume state — written
+unit by unit, with deleting a stretch's lines as the fix gesture — and the
+log dropped to an append-only debug record.
 
 ---
 
@@ -486,3 +493,97 @@ second pass on 2026-08-30 (§7 there records what that pass corrected).
 - **Documentation gap found**: [`../skel/README.md`](../skel/README.md)'s
   hard bullet still describes only predicate existence and argument-position
   validity; the `clausal` invariant it enforces is unpublished there.
+
+### S5.5 — The hard checks move into the session; the TSV becomes the artifact and the resume state (2026-08-30)
+
+S5.4 asked whether the hard classification was sound. Reading
+[`runner/tools.py`](runner/tools.py)'s `validate_candidate` against
+[`../dante_corpus/skel/validate.py`](../dante_corpus/skel/validate.py)
+afterwards answered a larger question: **where the hard violations came from
+in the first place.** The corpus's entire hard population is the gap between
+the agent-side gate and the admission checker, exactly:
+
+| hard kind (`validate.py`) | the gate | committed violations |
+|---|---|---:|
+| `word`, `position` (predicate range), `dup` (identical row), `sentinel` | implemented | 0 |
+| `dup` — argument cites its own predicate (107) | **absent** | 486 |
+| `position` — `(0,0)` is for `subj`/`""` only (109–111) | **absent** | 341 |
+| `clausal` — `xcomp`/`ccomp` argument must be a registered predicate (115–121) | **exempted** | 70 |
+
+486 + 341 + 70 = **897**, S5.2's readout to the row. There is no other source.
+The `clausal` exemption was a conflation: clausal roles are rightly exempt
+from the *nominal* NP-head/pronoun rule, but that exemption was written wide
+enough to cover the *registration* duty, which is a different check. All
+three missing checks are closed-world — they read the submitted rows against
+themselves, needing no layer beyond L1 and no derivation.
+
+So the repair moves upstream, and its shape changes with it. A post-hoc rule
+would have to decide *on the model's behalf* which position to register —
+the top-down rails [`PLAN.md`](PLAN.md) §1 says `harness/` exists to replace.
+The gate instead reports the violation **to the model inside its own
+session**, naming both admissible repairs (register the clause, or notate the
+complement `attr`, which makes no clause-hood claim), and lets it fix its own
+analysis with the unit's full context in hand.
+
+**What shipped**
+
+- **Three checks in `validate_candidate`**, each a transcription of its
+  `validate.py` counterpart, with error text the model can act on. The
+  set-scoped clausal one is gated on `GrammarToolkit(clausal_registration=)`,
+  which `agent_fallback` sets from the workflow: whole-unit submissions get
+  it, the per-predicate workflow (benchmark-only, one predicate per call)
+  gets the two row-local checks alone. Deliberately **not** implemented by
+  calling `validate_unit` and filtering: that runs `derive_unit`, whose soft
+  findings are the derivation's own answer — feeding those back would hand
+  the agent the rule-based solution and void the autonomy premise. Only the
+  three schema checks cross into the session.
+- **`runner/prompts.py` is unchanged.** Teaching the rule up front and
+  reporting it after submission are two different levers; mixing them would
+  confound the inferno-1 measurement. Only the tool spec and docstring were
+  corrected, because they stated the exemption as blanket and that is now
+  false.
+- **`TsvArtifact` in `reconstruct.py` + `--tsv`**: the canto's gold-format
+  TSV is written unit by unit as units settle, and read back on the next run
+  as the resume state. Appending in unit order is byte-identical to a
+  whole-canto `render_tsv` (units are line-ordered, contiguous, cover every
+  line once, and an empty line still gets its sentinel row), so the streamed
+  file is the same file the post-hoc conversion produced — pinned by a test
+  that runs the CLI and compares against `recon.convert.convert_canto` over
+  the same run's log. Line-number presence is the settled-unit test, which
+  makes **deleting a stretch's lines** the fix gesture: that unit alone
+  regenerates. A gap in the middle cannot be appended around, so the file is
+  rewritten whole in line order whenever one exists, and a *partially*
+  deleted unit is unsettled with its survivors dropped.
+- **The log is demoted to an append-only debug record** — never read back.
+  `prepare_resume`, `completed_cantos`, `compact_log` and their startup
+  block are gone. Units resumed from the TSV are **re-validated** (free and
+  deterministic) rather than trusting a prior attempt's logged verdict, and
+  are folded into this run's aggregates as `route="tsv"`.
+- **`adopted_invalid`** on every `unit` record. Adopting the last submission
+  whatever its verdict was already the behavior (`UnitResult.candidate_rows`
+  takes the last `validate_candidate` call, valid or not); what was missing
+  was the record of it. `UnitResult.final_submission_valid` now carries the
+  verdict through `HybridResult` into the log. The TSV is gold-format and
+  cannot hold a flag, so this is where a provisional adoption at the turn cap
+  is visible — and it is the experiment's primary metric.
+- **`recon/Makefile`**: `%.tsv` runs reconstruct with `--tsv`; the separate
+  `%.log` goal and the conversion step are gone. Completion is decided inside
+  reconstruct by the artifact (a complete TSV settles every unit and costs no
+  model calls), so make needs no completion predicate. `convert`/
+  `convert-check` stay for the Stage-4 logs, with the new limit recorded:
+  they cross-check byte-for-byte only for a canto produced in one
+  uninterrupted run.
+
+Test suite **916 → 925 passed**. No committed artifact changed: this record
+ships the mechanism, and the inferno-1 experiment that measures it is the
+operator's live run.
+
+**What the experiment measures.** inferno 1 is the designated experiment
+canto. Baseline is its existing committed TSV (Stage-4 output, in git);
+after `rm inferno/01.tsv inferno/01.log && make inferno/01.tsv`, the
+readout is `adopted_invalid` counts and per-unit turns against `make check`
+— where the two row-local classes should be **0 by construction** and the
+clausal count shows how much in-session correction actually buys — with
+`make agree` read afterwards, never as a criterion (§5). `make repair-check`
+on inferno 1 measures the same thing from the other side: S5.3 deleted 827
+rows of two classes that should now be unreachable at the source.

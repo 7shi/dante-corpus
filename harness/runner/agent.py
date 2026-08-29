@@ -474,6 +474,21 @@ class UnitResult:
         return any(o.get("result", {}).get("valid") for o in self.validations)
 
     @property
+    def final_submission_valid(self) -> bool | None:
+        """Verdict on the submission that is actually adopted, or None if there was none.
+
+        `candidate_rows` takes the *last* `validate_candidate` submission whatever its
+        verdict — a session that spends its turn budget still hands its latest analysis
+        downstream (provisional adoption). This property is how the consumer can tell
+        that apart from an accepted one; `valid_seen` cannot, since it is true as soon
+        as *any* submission passed, including one later revised into an invalid state.
+        """
+        validations = self.validations
+        if not validations:
+            return None
+        return bool(validations[-1].get("result", {}).get("valid"))
+
+    @property
     def protocol_complete(self) -> bool:
         """Final answer given (not exhausted) after at least one successful validation."""
         return bool(self.text) and not self.exhausted and bool(self.validations)

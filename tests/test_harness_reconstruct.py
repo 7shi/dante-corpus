@@ -398,7 +398,7 @@ def test_report_faces_aggregate_streamed_records():
     assert "gold comparison:" in text
 
 
-# --- streaming log resume ------------------------------------------------------------------------------
+# --- the TSV artifact: streamed writes, resume state, the fix gesture ---------------------------
 
 
 def _write_log(path: Path, records) -> None:
@@ -407,41 +407,111 @@ def _write_log(path: Path, records) -> None:
             fh.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
-def test_completed_cantos_and_prepare_resume_split(tmp_path):
-    done_unit = {"record": "unit", "canticle": "inferno", "canto": 1,
-                 "line_start": 1, "line_end": 5, "passed": True}
-    open_unit = {"record": "unit", "canticle": "inferno", "canto": 2,
-                 "line_start": 1, "line_end": 4, "passed": False,
-                 "row_keys": []}
-    records = [
-        done_unit,
-        {"record": "gold", "canticle": "inferno", "canto": 1, "tp": 1},
-        {"record": "canto_complete", "canticle": "inferno", "canto": 1,
-         "units": 1, "passed": True},
-        open_unit,
-        {"record": "summary", "units": 2},
-    ]
-    log = tmp_path / "recon.log"
-    _write_log(log, records)
-    loaded = rc.load_log(log)
-    assert rc.completed_cantos(loaded) == {("inferno", 1)}
-    replay, remaining, pending = rc.prepare_resume(
-        loaded, [("inferno", 1), ("inferno", 2)]
-    )
-    assert remaining == [("inferno", 2)]
-    assert {r["record"] for r in replay} == {"unit", "gold", "canto_complete"}
-    assert all(r.get("canto") == 1 for r in replay)
-    # canto 2 is still in progress: its logged unit stays available for
-    # unit-level resume, keyed by (line_start, line_end).
-    assert pending == {("inferno", 2): {(1, 4): open_unit}}
+def _tsv_rows_for(layers, group):
+    """One plausible row per line of `group` (predicate token 1, no argument)."""
+    return {
+        no: [SkelRow(line=no, token=1, word=layers.tokens[no][0], role="",
+                        arg_line=0, arg_token=0)]
+        for no in group
+    }
 
-    # Compaction drops only the (superseded) summary; the open canto's unit
-    # record survives so the next attempt can skip it via `pending`.
-    rc.compact_log(log)
-    kept = rc.load_log(log)
-    assert all(r.get("record") != "summary" for r in kept)
-    assert len(kept) == 4
-    assert open_unit in kept
+
+def test_tsv_artifact_streams_units_byte_identically_to_a_whole_render(tmp_path):
+    """Unit-by-unit appends must reproduce `render_tsv` over the whole canto:
+    that equivalence is what lets the artifact be written live and still be
+    the same file the post-hoc conversion produced."""
+    layers = rc.CantoLayers.load("inferno", 1)
+    units = layers.units()
+    all_rows = {}
+    artifact = rc.TsvArtifact(tmp_path / "01.tsv")
+    for group in units:
+        rows = _tsv_rows_for(layers, group)
+        all_rows.update(rows)
+        artifact.write_unit(group, rows)
+
+    whole = rc.render_tsv([(no, all_rows[no]) for no in sorted(all_rows)])
+    assert (tmp_path / "01.tsv").read_text(encoding="utf-8") == whole
+
+
+def test_tsv_artifact_reads_back_settled_units_including_empty_lines(tmp_path):
+    """A line with no predicates is written as a sentinel row, so it still
+    registers as present — otherwise every empty line would look unsettled
+    and be re-run forever."""
+    layers = rc.CantoLayers.load("inferno", 1)
+    units = layers.units()
+    artifact = rc.TsvArtifact(tmp_path / "01.tsv")
+    artifact.write_unit(units[0], {})  # settled, produced nothing
+    artifact.write_unit(units[1], _tsv_rows_for(layers, units[1]))
+
+    reread = rc.TsvArtifact(tmp_path / "01.tsv")
+    reread.load()
+    settled = reread.settled(units)
+    assert set(settled) == {
+        (units[0][0], units[0][-1]), (units[1][0], units[1][-1])
+    }
+    assert all(rows == [] for rows in settled[(units[0][0], units[0][-1])].values())
+
+
+def test_tsv_artifact_treats_a_deleted_middle_unit_as_unsettled_and_rewrites(tmp_path):
+    """The operator's fix gesture: delete a stretch's lines, re-run, and that
+    unit alone regenerates — into a file that is still in line order."""
+    layers = rc.CantoLayers.load("inferno", 1)
+    units = layers.units()
+    path = tmp_path / "01.tsv"
+    artifact = rc.TsvArtifact(path)
+    for group in units[:4]:
+        artifact.write_unit(group, _tsv_rows_for(layers, group))
+
+    # Delete unit 2's lines by hand, exactly as the fix workflow does.
+    gone = set(units[1])
+    kept = [
+        line
+        for index, line in enumerate(path.read_text(encoding="utf-8").splitlines())
+        if index == 0 or int(line.split("\t")[0]) not in gone
+    ]
+    path.write_text("\n".join(kept) + "\n", encoding="utf-8")
+
+    reopened = rc.TsvArtifact(path)
+    reopened.load()
+    settled = reopened.settled(units)
+    assert (units[1][0], units[1][-1]) not in settled
+    assert (units[0][0], units[0][-1]) in settled
+    assert (units[3][0], units[3][-1]) in settled
+
+    # Re-settling it cannot be appended (it belongs in the middle): the file
+    # is rewritten whole, and lands byte-identical to a single-pass render.
+    reopened.write_unit(units[1], _tsv_rows_for(layers, units[1]))
+    expected_rows = {}
+    for group in units[:4]:
+        expected_rows.update(_tsv_rows_for(layers, group))
+    assert path.read_text(encoding="utf-8") == rc.render_tsv(
+        [(no, expected_rows[no]) for no in sorted(expected_rows)]
+    )
+
+
+def test_tsv_artifact_drops_a_half_deleted_units_leftovers(tmp_path):
+    """A unit only partly deleted is unsettled *and* loses its survivors, so a
+    regenerated unit never lands mixed with rows from the previous attempt."""
+    layers = rc.CantoLayers.load("inferno", 1)
+    units = layers.units()
+    path = tmp_path / "01.tsv"
+    artifact = rc.TsvArtifact(path)
+    for group in units[:2]:
+        artifact.write_unit(group, _tsv_rows_for(layers, group))
+
+    victim = units[1][0]  # remove one line of unit 2, leave the rest
+    kept = [
+        line
+        for index, line in enumerate(path.read_text(encoding="utf-8").splitlines())
+        if index == 0 or int(line.split("\t")[0]) != victim
+    ]
+    path.write_text("\n".join(kept) + "\n", encoding="utf-8")
+
+    reopened = rc.TsvArtifact(path)
+    reopened.load()
+    settled = reopened.settled(units)
+    assert (units[1][0], units[1][-1]) not in settled
+    assert all(no not in reopened.rows for no in units[1])
 
 
 # --- CLI end-to-end (injected fallback; never a live model) ------------------------------------------
@@ -616,45 +686,98 @@ def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch
         rc.main(argv + ["--max-length", "-1"])
 
 
-def test_request_records_ride_resume_semantics(tmp_path):
-    """llm_request/llm_response records are canto-scoped log citizens: never
-    replayed into aggregates (prepare_resume skips them), and compaction now
-    keeps them (and everything else) across the resume — only the superseded
-    `summary` is dropped."""
-    lines = [
-        {"record": "llm_request", "canticle": "inferno", "canto": 1,
-         "session": 1, "messages": 4, "attempt": 1},
-        {"record": "llm_response", "canticle": "inferno", "canto": 1,
-         "session": 1, "messages": 4, "attempt": 1, "duration_seconds": 0.1},
-        {"record": "unit", "canticle": "inferno", "canto": 1, "passed": True},
-        {"record": "canto_complete", "canticle": "inferno", "canto": 1,
-         "passed": True},
-        {"record": "llm_request", "canticle": "inferno", "canto": 2,
-         "session": 2, "messages": 4, "attempt": 1},
-        {"record": "summary", "cantos": 1},
-    ]
-    log = tmp_path / "recon.log"
-    with log.open("w", encoding="utf-8") as fh:
-        for record in lines:
-            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+def test_streamed_artifact_matches_the_post_hoc_log_conversion(tmp_path, monkeypatch):
+    """Same output, different algorithm: the TSV written live, unit by unit, is
+    byte-identical to the one `recon.convert` renders afterwards from the same
+    run's log — so the streamed path replaces the conversion step without
+    changing a single committed byte."""
+    from harness.recon import convert as rcv
 
-    replay, remaining, pending = rc.prepare_resume(
-        lines, [("inferno", 1), ("inferno", 2)]
-    )
-    # Aggregates only ever fold unit/gold/commit/canto_complete records.
-    assert [r["record"] for r in replay] == ["unit", "canto_complete"]
-    assert remaining == [("inferno", 2)]
-    assert pending == {}  # canto 2 has no logged `unit` record yet
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    tsv = tmp_path / "01.tsv"
+    _write_log(run_log, [_case_record()])
 
-    rc.compact_log(log)
-    kept = [
+    assert rc.main(
+        [
+            "--canticle", "inferno", "--canto", "1",
+            "--run-log", str(run_log), "--min-support", "99",
+            "--log", str(out_log), "--tsv", str(tsv),
+        ],
+        fallback=_gold_fallback(),
+    ) == 0
+
+    payload, stats = rcv.convert_canto(rc.load_log(out_log), "inferno", 1)
+    assert tsv.read_text(encoding="utf-8") == payload
+    assert stats["units"] == 34
+
+
+def test_unit_record_flags_a_provisionally_adopted_submission(tmp_path, monkeypatch):
+    """A session that spends its turn budget still hands its latest analysis
+    downstream — `candidate_rows` takes the last submission whatever its
+    verdict. `adopted_invalid` is how the run says so, and it is the readout
+    for whether in-session correction converges (record S5.5)."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+
+    class _Rejected(_StubResult):
+        final_submission_valid = False
+
+    assert rc.main(
+        [
+            "--canticle", "inferno", "--canto", "1",
+            "--run-log", str(run_log), "--min-support", "99",
+            "--log", str(out_log), "--tsv", str(tmp_path / "01.tsv"),
+        ],
+        fallback=lambda **kw: _Rejected(
+            [{"line": kw["line_start"], "token": 1, "role": "subj",
+              "arg_line": 0, "arg_token": 0}]
+        ),
+    ) == 0
+
+    units = [
         json.loads(l)
-        for l in log.read_text(encoding="utf-8").splitlines()
-        if l.strip()
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
     ]
-    assert [r["record"] for r in kept] == [
-        "llm_request", "llm_response", "unit", "canto_complete", "llm_request",
+    units = [r for r in units if r["record"] == "unit"]
+    assert units and all(r["adopted_invalid"] is True for r in units)
+    assert all(r["final_submission_valid"] is False for r in units)
+    # The rows were adopted anyway: provisional, not discarded.
+    assert all(r["accepted_rows"] == 1 for r in units)
+
+
+def test_log_is_append_only_and_never_read_back(tmp_path, monkeypatch):
+    """The log is a debug record now (record S5.5): a second run appends to it
+    without rewriting anything — no compaction, no stale-summary stripping —
+    and it has no say in what gets re-run."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    out_log = tmp_path / "recon.log"
+    _write_log(run_log, [_case_record()])
+    prior = [{"record": "summary", "cantos": 99, "note": "a prior attempt"}]
+    _write_log(out_log, prior)
+
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+        "--log", str(out_log),
+        "--tsv", str(tmp_path / "01.tsv"),
     ]
+    assert rc.main(argv, fallback=lambda **kw: _StubResult([])) == 0
+
+    lines = [
+        json.loads(l)
+        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
+    ]
+    # The prior attempt's (now superseded) summary is still the first line:
+    # nothing rewrites the log, so it accumulates attempts verbatim.
+    assert lines[0] == prior[0]
+    assert lines[-1]["record"] == "summary"
+    assert len([r for r in lines if r["record"] == "summary"]) == 2
 
 
 def test_report_sums_canto_wall_clock_from_records():
@@ -717,10 +840,14 @@ def test_cli_write_refused_when_gates_block(tmp_path, monkeypatch):
     assert target.read_bytes() == seed  # protected artifact untouched
 
 
-def test_cli_resume_skips_completed_cantos(tmp_path, monkeypatch):
+def test_cli_resume_reruns_nothing_when_the_artifact_is_complete(tmp_path, monkeypatch):
+    """A finished canto's TSV settles every unit, so re-running the same
+    command costs no model calls at all — the property a fresh checkout with
+    committed TSVs and no logs depends on."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
+    tsv = tmp_path / "01.tsv"
     _write_log(run_log, [_case_record()])
     calls = []
 
@@ -733,30 +860,37 @@ def test_cli_resume_skips_completed_cantos(tmp_path, monkeypatch):
         "--run-log", str(run_log),
         "--min-support", "99",
         "--log", str(out_log),
+        "--tsv", str(tsv),
     ]
     assert rc.main(argv, fallback=counting_fallback) == 0
     first_calls = len(calls)
     assert first_calls == 34
+    before = tsv.read_text(encoding="utf-8")
+
     assert rc.main(argv, fallback=counting_fallback) == 0
-    assert len(calls) == first_calls  # completed canto replayed, not re-run
+    assert len(calls) == first_calls  # every unit settled in the artifact
+    assert tsv.read_text(encoding="utf-8") == before  # and unchanged by it
+
     lines = [
         json.loads(l)
         for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
     ]
-    summaries = [r for r in lines if r["record"] == "summary"]
-    assert len(summaries) == 1  # stale summary stripped atomically on resume
-    assert lines[-1]["units"] == 34  # replayed records still aggregate
+    # Resumed units are re-validated and folded into this run's aggregate...
+    assert lines[-1]["units"] == 34
+    # ...but they are not re-emitted as log records: the log holds what each
+    # run actually did, and the second run ran nothing.
+    assert len([r for r in lines if r["record"] == "unit"]) == 34
 
 
-def test_cli_resume_skips_already_settled_units_within_an_incomplete_canto(
+def test_cli_regenerates_only_the_unit_whose_lines_were_deleted(
     tmp_path, monkeypatch
 ):
-    """Unit-level resume: a run interrupted mid-canto (no `canto_complete`
-    marker yet) must not re-run — and re-cost, for the live fallback — units
-    it had already settled before the crash."""
+    """The fix gesture end to end: delete a middle stretch from the committed
+    artifact, re-run, and exactly that unit is re-run — with the file coming
+    back in line order, byte-identical to an uninterrupted run."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
-    out_log = tmp_path / "recon.log"
+    tsv = tmp_path / "01.tsv"
     _write_log(run_log, [_case_record()])
     calls = []
 
@@ -768,46 +902,37 @@ def test_cli_resume_skips_already_settled_units_within_an_incomplete_canto(
         "--canticle", "inferno", "--canto", "1",
         "--run-log", str(run_log),
         "--min-support", "99",
-        "--log", str(out_log),
+        "--log", str(tmp_path / "recon.log"),
+        "--tsv", str(tsv),
     ]
     assert rc.main(argv, fallback=counting_fallback) == 0
-    all_lines = [
-        json.loads(l)
-        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
-    ]
-    unit_records = [r for r in all_lines if r["record"] == "unit"]
-    assert len(unit_records) == 34
     assert len(calls) == 34
+    whole = tsv.read_text(encoding="utf-8")
 
-    # Simulate a crash partway through the canto: only the first half of its
-    # unit records made it to disk; no canto_complete, no summary.
-    _write_log(out_log, unit_records[:17])
+    units = rc.CantoLayers.load("inferno", 1).units()
+    victim = set(units[10])
+    kept = [
+        line
+        for index, line in enumerate(whole.splitlines())
+        if index == 0 or int(line.split("\t")[0]) not in victim
+    ]
+    tsv.write_text("\n".join(kept) + "\n", encoding="utf-8")
     calls.clear()
 
     assert rc.main(argv, fallback=counting_fallback) == 0
-    # The already-settled units are skipped; only the rest re-run.
-    assert len(calls) == 34 - 17
-
-    lines = [
-        json.loads(l)
-        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
-    ]
-    unit_records_after = [r for r in lines if r["record"] == "unit"]
-    assert len(unit_records_after) == 34  # 17 replayed + 17 freshly run
-    assert unit_records_after[:17] == unit_records[:17]  # replayed verbatim
-    assert lines[-1]["record"] == "summary"
-    assert lines[-1]["units"] == 34
-    assert any(r["record"] == "canto_complete" for r in lines)
+    assert len(calls) == 1  # only the deleted unit
+    assert calls[0]["line_start"] == units[10][0]
+    assert tsv.read_text(encoding="utf-8") == whole  # rewritten in line order
 
 
-def test_cli_mid_canto_kill_keeps_settled_units_on_disk(tmp_path, monkeypatch):
-    """§5 durability under interruption: a settled unit's record reaches disk
-    while the canto is still running (`emit_unit`), so a kill mid-canto —
-    before any post-canto flush could happen — leaves every already-finished
-    unit on disk for the next attempt to replay instead of re-run."""
+def test_cli_mid_canto_kill_keeps_settled_units_in_the_artifact(tmp_path, monkeypatch):
+    """§5 durability under interruption, now on the artifact: each settled
+    unit's rows reach the TSV while the canto is still running, so a kill
+    mid-canto — before any post-canto flush could happen — leaves every
+    already-finished unit on disk for the next attempt to resume from."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
     run_log = tmp_path / "bench-x.log"
-    out_log = tmp_path / "recon.log"
+    tsv = tmp_path / "01.tsv"
     _write_log(run_log, [_case_record()])
     calls = []
 
@@ -821,21 +946,18 @@ def test_cli_mid_canto_kill_keeps_settled_units_on_disk(tmp_path, monkeypatch):
         "--canticle", "inferno", "--canto", "1",
         "--run-log", str(run_log),
         "--min-support", "99",
-        "--log", str(out_log),
+        "--log", str(tmp_path / "recon.log"),
+        "--tsv", str(tsv),
     ]
     with pytest.raises(KeyboardInterrupt):
         rc.main(argv, fallback=dying_fallback)
 
-    # The kill left no completion markers, yet every unit settled before it
-    # is already durable — flushed as each finished, not at the canto end.
-    partial = [
-        json.loads(l)
-        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
-    ]
-    partial_unit_records = [r for r in partial if r["record"] == "unit"]
-    assert not any(r["record"] == "canto_complete" for r in partial)
-    assert not any(r["record"] == "summary" for r in partial)
-    assert len(partial_unit_records) == 17
+    units = rc.CantoLayers.load("inferno", 1).units()
+    settled_lines = {no for group in units[:17] for no in group}
+    on_disk = rc.TsvArtifact(tsv)
+    on_disk.load()
+    assert set(on_disk.rows) == settled_lines
+    assert len(on_disk.settled(units)) == 17
 
     # Resume: the 17 settled units are skipped outright; only the rest run.
     def plain_fallback(**kw):
@@ -845,16 +967,9 @@ def test_cli_mid_canto_kill_keeps_settled_units_on_disk(tmp_path, monkeypatch):
     assert rc.main(argv, fallback=plain_fallback) == 0
     assert len(calls) == 18 + (34 - 17)  # died on the 18th; no unit paid twice
 
-    lines = [
-        json.loads(l)
-        for l in out_log.read_text(encoding="utf-8").splitlines() if l.strip()
-    ]
-    unit_records = [r for r in lines if r["record"] == "unit"]
-    assert len(unit_records) == 34
-    assert unit_records[:17] == partial_unit_records  # survived verbatim
-    assert lines[-1]["record"] == "summary"
-    assert lines[-1]["units"] == 34
-    assert any(r["record"] == "canto_complete" for r in lines)
+    complete = rc.TsvArtifact(tsv)
+    complete.load()
+    assert len(complete.settled(units)) == 34
 
 
 # --- live-run observability: status bar + api-retry counters (§4) --------------------------------
@@ -984,39 +1099,32 @@ def test_cli_status_bar_names_canticle_canto_line_and_routes_display(
     assert all("api_retries" not in r for r in lines if r["record"] == "canto_complete")
 
 
-def test_cli_resume_bars_only_remaining_cantos(tmp_path, monkeypatch, capsys):
-    """Resumed runs replay completed cantos without touching a bar; each
-    remaining canto gets its own `{canticle} {canto}` line-tracking bar."""
+def test_cli_resume_from_the_artifact_still_bars_the_canto(tmp_path, monkeypatch, capsys):
+    """Resume is per unit, not per canto: a canto with settled units still
+    opens its own `{canticle} {canto}` bar and walks its lines — the artifact
+    decides what re-runs, and the display keeps tracking the whole canto."""
     run_log = tmp_path / "bench-x.log"
-    out_log = tmp_path / "recon.log"
+    tsv = tmp_path / "01.tsv"
     _write_log(run_log, [_case_record()])
-    # Inferno 1 already finished on an earlier attempt (its terminal marker
-    # is on disk); purgatorio 1 is still to run.
-    _write_log(
-        out_log,
-        [
-            {"record": "unit", "canticle": "inferno", "canto": 1,
-             "line_start": 1, "line_end": 3, "passed": True},
-            {"record": "canto_complete", "canticle": "inferno", "canto": 1,
-             "units": 1, "passed": True},
-        ],
-    )
+
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log), "--min-support", "99",
+        "--log", str(tmp_path / "recon.log"), "--tsv", str(tsv),
+    ]
+    monkeypatch.setattr(rc, "HarnessStatusLine", lambda: _FakeStatusLine())
+    assert rc.main(argv, fallback=_gold_fallback()) == 0
+
     fake = _FakeStatusLine()
     monkeypatch.setattr(rc, "HarnessStatusLine", lambda: fake)
-    assert rc.main(
-        [*_two_canto_argv(run_log), "--log", str(out_log)],
-        fallback=_gold_fallback(),
-    ) == 0
+    assert rc.main(argv, fallback=_gold_fallback()) == 0
 
-    # Only the remaining canto opens a bar; the replayed one never does.
     assert fake.progress_calls == [
-        (len(api.canto("purgatorio", 1).lines()), 0, "purgatorio 1")
+        (len(api.canto("inferno", 1).lines()), 0, "inferno 1")
     ]
-    assert fake.updates == _unit_start_lines("purgatorio", 1)
-    display = fake.stream.getvalue()
-    assert "===== [2/2] purgatorio 1 =====" in display
-    assert "[1/2]" not in display
-    assert "resume: 1 completed canto(s)" in capsys.readouterr().out
+    assert fake.updates == _unit_start_lines("inferno", 1)
+    assert "===== [1/1] inferno 1 =====" in fake.stream.getvalue()
+    assert "resume: 34 unit(s) already settled" in capsys.readouterr().out
 
 
 def test_cli_counts_api_retries_per_canto_through_the_stream(tmp_path, monkeypatch, capsys):

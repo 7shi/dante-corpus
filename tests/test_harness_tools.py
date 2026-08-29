@@ -360,18 +360,78 @@ def test_requires_nominal_anchor_scope():
 
 
 def test_validate_candidate_accepts_predicate_anchored_clausal_roles(toolkit):
-    # Gold rows from Inferno XIV 124-129: complements cite their clause's own
-    # predicate-head token (sai -> tondo; de' -> addur), which the nominal rule
-    # used to reject — the exact upstream_feedback complaint from the first live
-    # benchmark run (harness/bench-strict-validator-baseline.log).
+    # Inferno XIV 124-129: complements cite their clause's own predicate-head
+    # token (sai -> tondo; de' -> addur), which the *nominal* rule used to
+    # reject — the exact upstream_feedback complaint from the first live
+    # benchmark run (harness/bench-strict-validator-baseline.log). Exemption
+    # from that rule stands; what the citation does incur is the registration
+    # duty, satisfied here by giving each cited clause head its own row.
     rows = [
         _row(124, 2, "elli", "ccomp", 124, 6, "sai"),
         _row(124, 6, "sai", "ccomp", 124, 11, "tondo"),
+        _row(124, 11, "tondo", "", 0, 0),
         _row(129, 2, "de'", "xcomp", 129, 3, "addur"),
+        _row(129, 3, "addur", "", 0, 0),
     ]
     result = toolkit.validate_candidate("inferno", 14, 124, rows)
     assert result["valid"] is True
     assert result["errors"] == []
+
+
+def test_validate_candidate_rejects_a_clausal_citation_it_does_not_register(toolkit):
+    """`skel/validate.py` 115-121 as an admission condition: asserting that an
+    argument heads a clause obliges the submission to carry that clause. The
+    error names both ways out, so the model can act on it."""
+    rows = [
+        _row(124, 6, "sai", "ccomp", 124, 11, "tondo"),  # tondo unregistered
+    ]
+    result = toolkit.validate_candidate("inferno", 14, 124, rows)
+    assert result["valid"] is False
+    error = next(e for e in result["errors"] if "not a predicate" in e)
+    assert "124.11" in error
+    assert "add a row" in error and "attr" in error
+
+    # Registering the clause resolves it; so does the weaker notation.
+    assert toolkit.validate_candidate(
+        "inferno", 14, 124, rows + [_row(124, 11, "tondo", "", 0, 0)]
+    )["valid"] is True
+    assert toolkit.validate_candidate(
+        "inferno", 14, 124, [_row(124, 6, "sai", "attr", 124, 11, "tondo")]
+    )["valid"] is True
+
+
+def test_validate_candidate_clausal_registration_is_off_per_predicate():
+    """The check reads one submission as a set, so the per-predicate workflow —
+    whose calls carry one predicate's rows at a time — gets the row-local
+    checks only; a sibling clause it has not submitted yet is not an error."""
+    toolkit = GrammarToolkit(clausal_registration=False)
+    rows = [_row(124, 6, "sai", "ccomp", 124, 11, "tondo")]
+    assert toolkit.validate_candidate("inferno", 14, 124, rows)["valid"] is True
+
+
+def test_validate_candidate_rejects_self_argument(toolkit):
+    """`skel/validate.py` 107: an enclitic host citing its own token makes the
+    predicate its own object — the format has no reading for that."""
+    rows = [_row(1, 1, "", "obj", 1, 1, "")]
+    result = toolkit.validate_candidate("inferno", 1, 1, rows)
+    assert result["valid"] is False
+    assert any("cites its own predicate" in e for e in result["errors"])
+
+
+def test_validate_candidate_restricts_the_null_position_to_subjects(toolkit):
+    """`skel/validate.py` 109-111: (0, 0) marks a dropped subject (and the
+    zero-argument marker's own row), not an elided object."""
+    assert toolkit.validate_candidate(
+        "inferno", 1, 1, [_row(1, 1, "", "subj", 0, 0, "")]
+    )["valid"] is True
+    assert toolkit.validate_candidate(
+        "inferno", 1, 1, [_row(1, 1, "", "", 0, 0, "")]
+    )["valid"] is True
+    result = toolkit.validate_candidate(
+        "inferno", 1, 1, [_row(1, 1, "", "obj", 0, 0, "")]
+    )
+    assert result["valid"] is False
+    assert any("may not cite (0, 0)" in e for e in result["errors"])
 
 
 def test_validate_candidate_still_rejects_non_nominal_anchor_on_nominal_role(toolkit):

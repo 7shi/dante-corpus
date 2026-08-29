@@ -391,6 +391,9 @@ class HybridEngine:
             agent_result.candidate_rows, line_start, line_end
         )
         result.agent_result = agent_result
+        result.final_submission_valid = getattr(
+            agent_result, "final_submission_valid", None
+        )
         result.row_keys = frozenset(keys)
         result.malformed_rows = malformed
         result.out_of_unit_rows = out_of_unit
@@ -452,6 +455,10 @@ class HybridResult:
     malformed_rows: int = 0
     out_of_unit_rows: int = 0
     agent_result: object | None = None
+    # Verdict on the submission actually adopted: True/False from the agent, None when
+    # no submission was validated (or the unit never routed to the agent at all). False
+    # is a *provisional* adoption — the session ended on rows its own gate rejected.
+    final_submission_valid: bool | None = None
 
 
 # --- live fallback factory (operator-run; lazy imports per ARCHITECTURE.md §2) -----------
@@ -519,7 +526,12 @@ def agent_fallback(
             max_length=max_length,
         )
     )
-    toolkit = GrammarToolkit(payload_tier=payload_tier)
+    # The clausal-registration check reads one submission as a set, which only holds
+    # when a call carries the whole unit; the per-predicate workflow gets the row-local
+    # checks alone (`runner/tools.py` `clausal_registration`).
+    toolkit = GrammarToolkit(
+        payload_tier=payload_tier, clausal_registration=(workflow == "unit")
+    )
 
     def _run(*, canticle: str, canto: int, line_start: int, line_end: int):
         return agent_run_unit(

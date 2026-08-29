@@ -9,28 +9,83 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — the clausal hard class, then the soft bulk.** Divergence
-reduction is underway: record S5.3 shipped two deterministic rules
-(`harness/recon/repair.py`) and the gold-agreement readout that reports on
-them after the fact (`harness/recon/agree.py`), taking the committed corpus
-from 897 hard / 5,267 soft to **70 hard / 4,988 soft** with gold-agreement
-F1 0.7235 → 0.7307 at unchanged recall. None of the 827 removed rows exists
-in gold, so the gain is pure precision. Two things follow for the next
-session:
+**Next action — the operator's inferno-1 live experiment.** Record S5.5
+(2026-08-30) changed where divergence gets fixed. Auditing
+`runner/tools.py`'s `validate_candidate` against
+`dante_corpus/skel/validate.py` showed the corpus's hard population is
+*exactly* the gap between the agent-side gate and the admission checker:
+486 self-argument + 341 null-position + 70 clausal = the 897 S5.2 measured,
+with no other source. All three missing checks are closed-world, so they
+went into the gate — the model is now told, inside its own session, that a
+row is schema-impossible and given both admissible repairs, instead of a
+post-hoc rule deciding on its behalf. With it, the gold-format TSV became
+the run's artifact *and* its resume state (`--tsv`, written unit by unit),
+and the log dropped to an append-only debug record.
 
-- **The residual 70 hard are one class**: `[clausal] xcomp/ccomp argument is
-  not a predicate` (58 + 12). Unlike the two classes S5.3 repaired, this one
-  has a derivable alternative, so deletion is the wrong repair: the fix has
-  to decide which position gets registered as a predicate and with what
-  subject, derived from L2/L4 and `derive.py`. That is a design pass of its
-  own ([`STAGE5.md`](STAGE5.md) §5).
-- **The soft 4,988 is where the mass is**: `extra_arg` 2,075, `missing_arg`
-  1,653, `role_mismatch` 567, `missing_tuple` 501. The top mismatch pairs
-  are bare `obl` where the derivation yields `obl:di` (130), `obl:in` (82),
-  `obl:come` (68) — the same bare-`obl` over-assignment Stage 1 measured in
-  M1.4 (Orientation §3 below), so a preposition-driven `obl:X` refinement
-  rule is the obvious next candidate, and `derive.py` already specifies the
-  mapping.
+**IN FLIGHT: the operator is regenerating inferno 1 right now and will
+report the results at the start of the next session.** Everything S5.5 needs
+is committed and tested (925 passed); the live run is the measurement, and
+only the operator runs it (Environment & Artifacts, session division of
+labor). **So the next session opens by receiving those numbers and reading
+them — not by re-running anything, and not by starting new work first.**
+
+What the operator is running (from `harness/recon`, and the readout it
+produces — full rationale in [`STAGE5.md`](STAGE5.md) record S5.5):
+
+1. Baseline off the committed `inferno/01.tsv` — that file is the Stage-4
+   output and git keeps it, so `git show HEAD:harness/recon/inferno/01.tsv`
+   recovers it for comparison at any time. No manual backup was needed.
+2. `rm inferno/01.{tsv,log}` then `make inferno/01.tsv`.
+3. `make check` / `make stats` / `make agree`, plus the run's own log.
+
+**How to read the results when they arrive** — the experiment's question is
+*how much does in-session correction buy*, so the numbers that answer it,
+in order:
+
+- **`adopted_invalid` in the log's `unit` records** — units whose session
+  ended on rows its own gate had rejected (provisional adoption at the turn
+  cap). This is the primary metric: it is exactly the population the new
+  checks could not talk the model out of.
+- **`make check` on inferno 1**: the two row-local classes (`dup`
+  self-argument, `position` null-position) should be **0 by construction** —
+  if either is non-zero, the gate has a hole and that is the finding. The
+  `clausal` count against inferno 1's share of the old 70 is what
+  in-session correction actually bought.
+- **Cost of the correction**: turns and wall clock per unit against S4.3's
+  numbers. More gate errors means more turns; whether that is affordable at
+  99-canto scale is a real question this run answers.
+- **`make agree` afterwards, never as a criterion** (discipline 4 below).
+  These gate checks are transcriptions of `validate.py` written gold-closed,
+  so this is the first honest chance to see whether schema-driven correction
+  converges on gold — the claim S5.3 could not earn.
+- **`make repair-check` on inferno 1**: the same question from the other
+  side. S5.3 deleted 827 rows of two classes that should now be unreachable
+  at the source.
+
+Two mechanism checks worth doing while the canto is in hand (cheap, and they
+exercise paths only tests have covered so far): mid-run Ctrl+C then re-run →
+only unsettled units re-run; delete a middle unit's lines from the TSV then
+re-run → that unit alone regenerates, file back in line order.
+
+**Then decide** — the results choose the next move, so do not pre-commit to
+one: if in-session correction largely works, the question becomes what to do
+about the other 99 cantos, whose logs cannot be re-run (164 h of live model
+time) and whose clausal class therefore still needs a deterministic pass or
+an explicit decision to leave it. If it does not, the next lever is
+prompt-side teaching (`runner/prompts.py`), deliberately left untouched so
+this run measures the gate alone.
+
+**Still queued behind all of it — the soft bulk, where the mass actually
+is**: `extra_arg` 2,075, `missing_arg` 1,653, `role_mismatch` 567,
+`missing_tuple` 501. The top mismatch pairs are bare `obl` where the
+derivation yields `obl:di` (130), `obl:in` (82), `obl:come` (68) — the same
+bare-`obl` over-assignment Stage 1 measured in M1.4 (Orientation §3 below),
+so a preposition-driven `obl:X` refinement is the obvious next candidate,
+and `derive.py` already specifies the mapping. Note that S5.5's result may
+change its shape too: soft findings are *not* reported into the session (they
+carry the derivation's own answer, [`STAGE5.md`](STAGE5.md) S5.5), so unlike
+the hard classes this one has no in-session route and stays deterministic
+work over the committed TSVs.
 
 **Standing discipline for any rule, established by S5.3's two operator
 corrections** ([`STAGE5.md`](STAGE5.md) §5):
@@ -59,33 +114,34 @@ corrections** ([`STAGE5.md`](STAGE5.md) §5):
 runs *after* `convert`, never before — re-running `make convert` regenerates
 from the logs and rolls the repairs back.
 
-**State at the S5.3 session's close (2026-08-29).** Everything below is
-committed; the working tree was clean at the handoff.
+**State at the S5.5 session's close (2026-08-30).** The S5.5 code is
+committed and the tree was clean at the handoff. **No committed artifact was
+touched** — the 100 TSVs are exactly as S5.3 left them, so `inferno/01.tsv`
+changing is the operator's live run, not a code side effect.
 
-- The repair is **applied to all 100 committed TSVs** and reproduces from
-  scratch: reverting them to the pre-repair convert output and re-running
-  `make repair` regenerates the same 827 deletions **byte-identically**
-  (verified by digesting the diff before and after). `make repair-check`
-  reports "artifacts up to date"; the full suite is 916 passed.
 - **`make check` exits 1 by design** while the 70 clausal hard violations
   stand — that is the checker's contract (non-zero on any hard violation),
-  not a broken build. It will keep failing until the clausal class is
-  repaired, so do not treat a red `make check` as a regression signal
-  without reading the count.
+  not a broken build. Do not treat a red `make check` as a regression signal
+  without reading the count. Corpus-wide it will keep failing on the 99
+  cantos regardless of how inferno 1 turns out; read inferno 1's own
+  numbers, not the total.
+- **`make convert` must not be run corpus-wide any more.** It regenerates
+  TSVs from the Stage-4 logs, which would roll back S5.3's repairs (the
+  standing ordering constraint above) *and*, for any canto re-run since
+  S5.5, produce a partial file — after a TSV resume the log holds only the
+  newly run units. It survives for the legacy Stage-4 logs only.
 - **Carry-over caveat on S5.3's own two rules** ([`STAGE5.md`](STAGE5.md)
   §5): they satisfy discipline 2–3 above and `repair.py` opens no gold file,
   but gold *was* consulted while they were being designed, before the
   operator's correction landed. Their agreement gain is therefore a
   consistency check, not independent evidence that schema-driven repair
-  converges on gold. **The next rule should be designed gold-closed from the
-  start so that claim can actually be earned** — that is the most valuable
-  thing the clausal pass can produce beyond the fix itself.
-- **Process note for the next session**: applying a rule to the committed
+  converges on gold. S5.5's gate checks are transcriptions of
+  `validate.py`, so they are gold-closed by construction — the inferno-1
+  run is the first chance to earn that convergence claim honestly.
+- **Process note, still standing**: applying anything to the committed
   corpus is a separate act from designing and implementing it, and needs its
-  own go-ahead. A reduction pass can always be measured without writing
-  (load the TSVs, apply the rules in memory, score) — show those numbers
-  first. In this session the rules were applied to 99 tracked files without
-  being asked, and the operator reverted them by hand.
+  own go-ahead. A reduction pass can always be measured without writing —
+  show those numbers first.
 
 Two things a fresh session should still know before touching
 `harness/recon/`:
@@ -96,12 +152,14 @@ Two things a fresh session should still know before touching
   numbers survive only as prose in [`STAGE5.md`](STAGE5.md) S5.1 and
   [`STAGE4.md`](STAGE4.md) S4.3. `recon/readout.py` still reads them while
   they exist.
-- `make <canticle>` is now TSV-goaled and **will not re-run a canto whose
-  TSV exists with no log beside it** — the normal state after a fresh clone.
-  Deleting a TSV is how you ask for that canto again; do it deliberately,
-  since a full canticle is tens of hours of live model time. Any divergence-
-  reduction work should read/edit the committed TSVs directly (or their
-  derivation), not relaunch the model.
+- `make <canticle>` is TSV-goaled and **will not re-run a canto whose TSV
+  exists with no log beside it** — the normal state after a fresh clone.
+  Since S5.5 the TSV is also the resume state, so a canto whose TSV is
+  complete costs no model calls even when its log is present. Deleting a TSV
+  (or a stretch of its lines) is how you ask for that canto back; do it
+  deliberately, since a full canticle is tens of hours of live model time.
+  Work on the other 99 cantos should still read/edit the committed TSVs
+  directly, not relaunch the model.
 
 ## Current Status
 
@@ -131,13 +189,20 @@ holds only what's still open.
       standing discipline (§4 item 1, Handoff): the violation counter
       selects work but is gameable by deletion, and **gold may not be the
       gate either** — rules derive from the layer's own schema/derivation
-      contract with gold unopened. Remaining: the clausal hard class (70)
-      and the soft bulk.
+      contract with gold unopened. Record S5.4 audited the classification
+      behind the residual 70 ([`HARD.md`](HARD.md)); record S5.5 then found
+      the corpus's whole hard population to be *exactly* the three checks
+      `validate_candidate` was missing (486 + 341 + 70 = 897), moved them
+      into the agent's own session, and made the gold-format TSV the run's
+      artifact and its resume state (`--tsv`, written unit by unit; the log
+      demoted to an append-only debug record). Remaining: the operator's
+      inferno-1 live experiment (Handoff), then the clausal class over the
+      other 99 cantos and the soft bulk.
       Design decisions, the conversion contract, the divergence-reduction
       direction (§4), what the violation count is and is not (§5), and the
-      stage ledger (S5.1–S5.3) in [`STAGE5.md`](STAGE5.md).
-- Test suite: **916 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
-  S5.3).
+      stage ledger (S5.1–S5.5) in [`STAGE5.md`](STAGE5.md).
+- Test suite: **925 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+  S5.3 + 9 from S5.5).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
@@ -192,10 +257,12 @@ any one session, so it survives across Handoff clearings.
    (`input/output/thought/total_tokens`), duration, `paced_seconds`,
    `max_length_retries`; join key `(session, messages, attempt)`;
    429/quality retries inside `Client` stay transparent to the wire records,
-   counted by the `wait_retry` counters. `unit` records carry `row_keys`
-   (unit-level resume); every `canto_complete` carries `elapsed_seconds`,
-   summed into the summary's `wall_clock_seconds`. All canto-scoped like
-   every other record.
+   counted by the `wait_retry` counters. Every `canto_complete` carries
+   `elapsed_seconds`, summed into the summary's `wall_clock_seconds`. All
+   canto-scoped like every other record. Since S5.5 the log is **append-only
+   and never read back** — resume state is the canto's TSV, and `unit`
+   records (`row_keys`, `adopted_invalid`, gate verdicts) are read afterwards
+   for analysis, not replayed.
 
 ---
 
@@ -347,7 +414,8 @@ byte-exact TSV format (so a plain `diff` against `skel/` is the run's
 divergence readout); deterministic, LLM-free and idempotent, so it is a
 repeatable step after any future corpus run rather than a one-time
 migration. `recon/Makefile`'s per-canto goal moved from the log to the TSV
-with it (reconstruct → convert in one target), and a canto whose TSV exists
+with it (reconstruct → convert in one target — since S5.5 reconstruct writes
+the TSV itself and the conversion step is gone), and a canto whose TSV exists
 with no log beside it is left alone, so a fresh checkout never re-runs the
 corpus for output it already has. The second deliverable was cut on operator
 review: the logs' remaining content is run telemetry, not corpus content,
@@ -358,7 +426,14 @@ soft. The method that record settled matters more than the number — the
 violation count is gameable by deletion, and gold is the benchmark rather
 than the target, so a rule's authority comes from the layer's own schema and
 derivation contract, with `make agree`'s gold score read only afterwards.
-Design decisions, the conversion contract, and the stage ledger live in
+Record S5.5 then relocated the work itself: the corpus's 897 hard violations
+are *exactly* the three schema checks the agent-side gate
+(`validate_candidate`) was missing, so those checks moved into the model's
+own session — it corrects its analysis with the unit in front of it, instead
+of a downstream rule deciding on its behalf — and the gold-format TSV became
+the run's artifact and its resume state, written unit by unit, with deleting
+a stretch's lines as the fix gesture. Design decisions, the conversion
+contract, and the stage ledger live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.
 
