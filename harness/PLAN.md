@@ -5,11 +5,16 @@
 Temporary notes for the next session; durable state lives in **Current Status**
 and the **Milestone Ledger** below.
 
-**Next action — Stage 4: the OPERATOR launches the full-corpus (100-canto)
-verification with `make -C harness/recon -j3 inferno purgatorio
-paradiso` — three canticle-parallel streams; commands and contract in
-[`STAGE4.md`](STAGE4.md) — then the corpus-wide readout closes the stage.
-Nothing is in flight on the assistant side.**
+**Next action — Stage 4: the launch is complete (all 100 logs present with
+parseable summaries) and the corpus-wide readout has been run
+(`harness/recon/readout.py`, see the 2026-08-29 session housekeeping entry
+below for full results). What remains is an OPERATOR judgment call, deferred
+to the next session: whether to close Stage 4 accepting inferno's
+corpus-wide F1 (0.7269) falling just under the established 0.744–0.796
+expected-variation range from the four single-canto confirmation runs, or to
+investigate the lowest-F1 cantos first (readout already names them: inferno
+10/31/33, purgatorio 11/15/2, paradiso 17/7/10). Nothing is in flight on the
+assistant side.**
 
 Stage 3 CLOSED 2026-08-25 on record S3.11 ([`STAGE3.md`](STAGE3.md)): the
 inferno-1 cap experiment (`harness/recon-inf1-cap6k.log`) passed every S3.10
@@ -221,7 +226,71 @@ above; promote one if the operator wants it in the ledger). Nothing else
 pending on the assistant side; the operator's Stage-4 launch remains the
 next act.
 
----
+**Session housekeeping (2026-08-29, closing assistant session): the operator
+launched and completed the full Stage-4 corpus run**
+(`make -C harness/recon -j3 inferno purgatorio paradiso`) — all 100 logs
+(34/33/33) present, each ending in a parseable `summary` record, confirmed
+2026-08-29 (timestamps span 2026-08-25T21:19Z → 2026-08-29T07:57Z). This
+session built the corpus-wide readout tool the closing act needs and ran it;
+Stage 4 itself is **not yet closed** — the readout surfaced one open
+question left for operator judgment (below), and no STAGE4.md ledger record
+was cut this session (deferred to whoever makes that call).
+
+New tool, committed (not the ephemeral `/tmp` pattern S3.11/STAGE4.md §5
+described — operator decided a 100-canto/Stage-4-closing readout warrants a
+durable, re-runnable script instead): `harness/recon/readout.py`
+(+ `harness/recon/__init__.py` to make it importable as
+`python -m harness.recon.readout`), tested by
+`tests/test_harness_recon_readout.py` (18 cases, pure aggregation math
+against synthetic in-memory records, no real logs read in the test suite).
+Test suite: 876 passed (858 + 18 new; up from 858 recorded on 2026-08-26).
+Reads every `harness/recon/<canticle>/NN.log`, LLM-free, and reports:
+hygiene (missing/incomplete logs, `written_cantos`, token-assertion errors,
+empty responses, missing provider tokens — all-clear on this run); per-
+canticle micro F1 (pooled tp/fp/fn, not a mean of per-canto F1s) plus the
+lowest-F1 outlier cantos; gate-pass rates (canto- and unit-level); pooled
+`violation_kinds` and routing/`reasons` breakdowns; TPM pressure — corrected
+mid-session from STAGE4.md §4/§5's "one shared quota across the three
+streams" assumption to the operator-confirmed reality that **each concurrent
+stream is rate-limited independently** (`STREAM_TPM_LIMIT = 16_000`
+tokens/min, checked per canticle, not on the three-stream merged timeline,
+which the script now labels informational-throughput-only); api-retry
+(429) counts/tax; peak single-request context size joined to its paired
+response's token counts; per-canto wall-clock total/mean/min/max plus the
+slowest single fallback-call outliers, all rendered `d:hh:mm:ss` (seconds
+alone read as illegible at this scale); and cap accounting
+(`max_length_retries`) flagging triggers whose regenerated output exceeds
+the expected ~114 B opener shape as anomalies.
+
+**Real-run readout results** (full text was shown to the operator in-session,
+not reproduced verbatim here — rerun `uv run python -m harness.recon.readout`
+for the live numbers): hygiene all-clear on every check. Per-canticle F1:
+inferno 0.7269, purgatorio 0.7186, paradiso 0.7201, corpus-wide 0.7219.
+**Open question for the operator, carried to the next session: inferno's
+0.7269 falls just under the 0.744–0.796 expected-variation range** established
+from the four single-canto confirmation runs (S3.4/S3.9/S3.10/S3.11) — unlike
+the gate-pass-count noise those records already characterized and dismissed,
+F1 was explicitly established as "the reliable judge," so this miss is not
+automatically dismissable the same way. Lowest-F1 cantos for follow-up if
+investigated: inferno 10/31/33, purgatorio 11/15/2, paradiso 17/7/10. Two
+cap-accounting anomalies flagged (inferno canto 7 session 15 and purgatorio
+canto 4 session 23 both regenerated to ~550 B instead of the expected ~115 B
+opener) — not yet investigated. Gate-pass rates ran low (units 30–34%, 0/100
+cantos canto-clean) but per standing policy are read as the noisy instrument,
+not the quality judge. Fast-path routing held at 7.0% corpus-wide, matching
+the original Stage-2 measurement. TPM: paradiso's stream spent 48.8% of its
+60-second windows over the (now-corrected) 16,000/min per-stream limit
+(inferno 18.2%, purgatorio 20.1%) — the operator separately noted they
+dropped the launch from 3-way to 2-way parallelism partway through the real
+run in response to this pressure; the logs carry no field recording when
+that switch happened, and by operator instruction this is not tracked
+further here (ad hoc investigation only, if ever needed). Compute-only wall
+time summed 6:09:58:51 across all three streams against an observed run span
+of 3:12:06:26 (~1.83× effective parallelism, not a "contention gap" — an
+earlier draft's inverted framing was corrected in-session). No STAGE4.md
+ledger record exists yet for any of this; next session picks up at the
+operator's F1 decision, then a closing S4.x record (or a follow-up
+investigation first).
 
 ## Current Status
 
