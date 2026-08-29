@@ -45,10 +45,6 @@ holds only what's still open.
       are committed; the stage stays open only on the question of whether
       anything further is wanted. Design decisions, the
       conversion contract, and the stage ledger in [`STAGE5.md`](STAGE5.md).
-- Open design question (protocol layer): a dedicated `submit_candidate`
-  termination tool — the practical half is resolved by the nudge policy
-  ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
-  [`TOOLCALL.md`](TOOLCALL.md) §7.1.
 - Test suite: **887 passed** (876 + 11 from S5.1's conversion tests).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in

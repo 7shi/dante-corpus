@@ -38,9 +38,8 @@ Design decisions taken during implementation (resolving parts of §7):
 - **Parser validates arguments JSON eagerly**; canonical calls out of `parse_tool_calls`
   always carry valid JSON strings.
 - **Termination**: a response with zero tool calls ends the loop (final answer);
-  `max_turns` exhaustion returns `LoopResult(exhausted=True)`. The `submit_candidate`
-  question (§7.1) stays open at the protocol layer — the loop itself needs no
-  termination tool.
+  `max_turns` exhaustion returns `LoopResult(exhausted=True)`. No dedicated
+  `submit_candidate` termination tool — decided against, see §7.1.
 - **Multiple calls per turn are allowed** (§7.3): parser preserves order, the loop
   executes sequentially and embeds all `<tool_result>` blocks in one user message.
 - **Streaming**: not needed for benchmark runs (§7.2 resolved: non-streaming).
@@ -251,15 +250,49 @@ protocols later never touches the loop again.
 
 ## 7. Open Questions
 
-1. **Termination tool**: introduce a 4th tool `submit_candidate(...)` (validates internally,
-   accepts on valid → loop ends; returns errors otherwise), keeping termination uniform across
-   XML and native paths? Alternative: reuse `validate_candidate` and treat validity as implicit
-   acceptance.
-2. **Streaming**: does the Stage 1 runner need llm7shi-style streaming/statusline output, or is
+1. **Streaming**: does the Stage 1 runner need llm7shi-style streaming/statusline output, or is
    non-streaming sufficient for benchmark runs? (Affects how much of llm7shi is worth wrapping.)
-3. **Multiple calls per turn**: allow parallel tool calls in one response, or force exactly one
+2. **Multiple calls per turn**: allow parallel tool calls in one response, or force exactly one
    to keep transcripts simpler? (Native path permits multiple; the prompt contract should match
    whichever is chosen.)
+
+### 7.1 Resolved: no dedicated termination tool (decided 2026-08-29)
+
+Closes the former item 1 (introduce a 4th tool `submit_candidate(...)` that validates
+internally and ends the loop on success, vs. reusing `validate_candidate` and treating
+validity as implicit acceptance). **Decision: keep the current design — no
+`submit_candidate`.** `validate_candidate` already doubles as the de-facto acceptance
+gate (`runner/agent.py`'s no-call nudge policy: a final answer with zero successful
+`validate_candidate` dispatches earns a protocol reminder; one or more successes let the
+loop's natural termination — a response with no tool calls — stand as acceptance). Two
+lines of evidence closed the question rather than just deferring it:
+
+- **Error-driven retry already converges without a dedicated tool.** In
+  `harness/bench-unit-retry.log` (87 benchmark cases), 14 cases had at least one invalid
+  `validate_candidate` call; all of them reached `valid: true` on a later call in the
+  same session, with `nudges == 0` throughout — the model reads row-level errors
+  (`row[N]: ...`) and self-corrects on the existing stateless contract. A dedicated
+  termination tool would not change this path.
+- **The natural follow-up — accept already-valid rows and have the model resubmit only
+  a diff — was considered and rejected**, for reasons that also bear on why
+  `submit_candidate` itself buys nothing:
+  1. Some `validate_candidate` checks are not row-local (e.g. slot uniqueness is
+     checked per predicate across the whole candidate), so a partial/diff submission
+     would need session-side state plus row-identity tracking across edits — real
+     complexity for an untested payoff.
+  2. Where a candidate is globally misaligned (e.g. `hist-pur09-064`: 6/6 rows wrong,
+     30 errors), the whole thing is rejected anyway, so there is no accepted remainder
+     to preserve — diffing buys nothing in exactly the case that generates the most
+     retries.
+  3. Where only one row was wrong (`hist-pur13-133`: 4 rows, 1 error), the *fix* turn
+     took longer than the *original* generation turn (182 s vs 145 s), even though only
+     one row changed. Turn duration is dominated by the model's reasoning over the
+     whole candidate, not by how many characters it emits — so neither a diff-only
+     submission nor a dedicated `submit_candidate` tool is expected to shorten the
+     turns that actually cost time.
+
+No code change follows from this; it documents why the existing
+`validate_candidate`-as-acceptance design is being kept rather than replaced.
 
 ---
 
