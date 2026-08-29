@@ -9,12 +9,26 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — operator: decide whether Stage 5 closes here.** Its
-deliverable 1 shipped and is committed (record S5.1: `recon/convert.py`, the
-TSV-goal Makefile, and the 100 `harness/recon/<canticle>/NN.tsv`);
-deliverable 2 was cut ([`STAGE5.md`](STAGE5.md) §2). Nothing is in flight on
-the assistant side and no work is half-done. Two things a fresh session
-should know before touching `harness/recon/`:
+**Next action — start reducing recon divergence.** Stage 5 is no longer
+just "decide whether to close": record S5.2 shipped `harness/recon/check.py`
+(`--check`/`--stats`, ported from `skel/skel.py` via a new `base_dir` param
+on `dante_corpus/skel/io.py`'s `load_skel`/`has_skel`) and read out the
+committed corpus at **897 hard, 5,267 soft** violations. Operator decision
+on the strength of that number ([`STAGE5.md`](STAGE5.md) §4): Stage 5's
+scope now extends to reducing this divergence, informed by (not repeating)
+[`../skel/PHASE5.md`](../skel/PHASE5.md)'s deterministic-rule methodology —
+deterministic checker/rule work first, per-position reads before aggregate
+re-classification, whole-unit LLM regeneration as a last resort. **No
+reduction work has started yet** — §4 records the direction only, not an
+implementation. A fresh session should start there: read a sample of the
+897 hard / 5,267 soft violations position-by-position (e.g.
+`uv run python -m harness.recon.check --canticle inferno --canto 1`,
+cross-referenced with `skel/read.py`) before writing any rule, the same
+discipline Phase 5 learned the hard way (§1.3, §5.2 there — aggregate stats
+misdiagnose root causes; per-position reads don't).
+
+Two things a fresh session should still know before touching
+`harness/recon/`:
 
 - The Stage-4 logs are still on this machine, gitignored. They are the only
   copy of the run's telemetry (cost accounting, per-unit routing and gate
@@ -25,7 +39,9 @@ should know before touching `harness/recon/`:
 - `make <canticle>` is now TSV-goaled and **will not re-run a canto whose
   TSV exists with no log beside it** — the normal state after a fresh clone.
   Deleting a TSV is how you ask for that canto again; do it deliberately,
-  since a full canticle is tens of hours of live model time.
+  since a full canticle is tens of hours of live model time. Any divergence-
+  reduction work should read/edit the committed TSVs directly (or their
+  derivation), not relaunch the model.
 
 ## Current Status
 
@@ -33,19 +49,24 @@ Stages 1–4 are COMPLETE/CLOSED; their status, dates, and record pointers
 live in §2's per-stage subsections below, not repeated here. This section
 holds only what's still open.
 
-- [ ] **Stage 5 — Corpus Durability** (OPENED 2026-08-29 by operator, on
-      Stage 4's close). Deliverable 1 shipped on record S5.1:
-      `harness/recon/convert.py` converts each per-canto log into a
-      gold-format `NN.tsv` beside it (idempotent, `make convert` /
-      `make convert-check`); the full corpus converted clean — 100 cantos,
-      3,477 units, 43,549 rows, 0 incomplete logs, 0 dropped row keys.
-      Deliverable 2 (a committed format for the logs' non-corpus content)
-      was CUT: run telemetry does not belong in the repository, so the
-      wire/cost and routing detail stays ephemeral in the logs. The 100 TSVs
-      are committed; the stage stays open only on the question of whether
-      anything further is wanted. Design decisions, the
-      conversion contract, and the stage ledger in [`STAGE5.md`](STAGE5.md).
-- Test suite: **887 passed** (876 + 11 from S5.1's conversion tests).
+- [ ] **Stage 5 — Corpus Durability, now also Divergence Reduction**
+      (OPENED 2026-08-29 by operator, on Stage 4's close). Deliverable 1
+      shipped on record S5.1: `harness/recon/convert.py` converts each
+      per-canto log into a gold-format `NN.tsv` beside it (idempotent,
+      `make convert` / `make convert-check`); the full corpus converted
+      clean — 100 cantos, 3,477 units, 43,549 rows, 0 incomplete logs, 0
+      dropped row keys. Deliverable 2 (a committed format for the logs'
+      non-corpus content) was CUT: run telemetry does not belong in the
+      repository, so the wire/cost and routing detail stays ephemeral in
+      the logs. Record S5.2 ported gold's `--check`/`--stats` to the recon
+      corpus (`harness/recon/check.py`, `make check` / `make stats`) and
+      read out **897 hard, 5,267 soft** violations corpus-wide — on that
+      number, the operator reopened the stage's scope to reducing it
+      (§4), informed by but not replaying `skel/PHASE5.md`'s methodology.
+      No reduction work has started. Design decisions, the conversion
+      contract, the divergence-reduction direction (§4), and the stage
+      ledger (S5.1, S5.2) in [`STAGE5.md`](STAGE5.md).
+- Test suite: **895 passed** (876 + 11 from S5.1 + 8 from S5.2).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.

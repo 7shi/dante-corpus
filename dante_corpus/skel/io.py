@@ -153,7 +153,9 @@ def pro_drop_features(
 _TSV_HEADER = ("line", "token", "word", "role", "arg_line", "arg_token")
 
 
-def _artifact_path(canticle: str, number: int) -> Path:
+def _artifact_path(canticle: str, number: int, base_dir: Path | None = None) -> Path:
+    if base_dir is not None:
+        return base_dir / canticle / f"{number:02d}.tsv"
     from .. import skel as _skel
     return _skel.SKEL_DIR / canticle / f"{number:02d}.tsv"
 
@@ -178,14 +180,20 @@ def write_skel(canticle: str, number: int, lines: list[tuple[int, list[SkelRow]]
     return path
 
 
-def has_skel(canticle: str, number: int) -> bool:
-    return _artifact_path(canticle, number).exists()
+def has_skel(canticle: str, number: int, base_dir: Path | None = None) -> bool:
+    return _artifact_path(canticle, number, base_dir).exists()
 
 
-def load_skel(canticle: str, number: int) -> dict[int, tuple[SkelRow, ...]]:
+def load_skel(
+    canticle: str, number: int, base_dir: Path | None = None
+) -> dict[int, tuple[SkelRow, ...]]:
     """Load a frozen skeleton artifact: line-number -> SkelRows (no model call). A `token == 0`
-    row is the sentinel (processed, no predicates) and is not returned as data."""
-    path = _artifact_path(canticle, number)
+    row is the sentinel (processed, no predicates) and is not returned as data.
+
+    `base_dir` reads from an alternate root laid out like `SKEL_DIR` (e.g. a reconstruction
+    run's output) instead of gold; the default reads gold as always.
+    """
+    path = _artifact_path(canticle, number, base_dir)
     if not path.exists():
         raise FileNotFoundError(path)
     grouped: dict[int, list[SkelRow]] = {}

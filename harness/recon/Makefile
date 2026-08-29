@@ -47,6 +47,13 @@
 ##                                     the logs, see ../STAGE5.md §2)
 ## make convert-check                  regenerate in memory only; non-zero exit
 ##                                     if a committed TSV has drifted
+## make check                          validate every committed TSV against the
+##                                     derived skeleton (hard/soft violations,
+##                                     no model call — same check as skel/skel.py
+##                                     --check, pointed at this canticle's root)
+## make stats                          soft-violation counts by class (and by
+##                                     role), no model call — same as
+##                                     skel/skel.py --stats
 
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
@@ -129,5 +136,11 @@ convert:
 convert-check:
 	uv run python -m harness.recon.convert --check
 
+check:
+	uv run python -m harness.recon.check
+
+stats:
+	uv run python -m harness.recon.check --stats
+
 FORCE:
-.PHONY: FORCE convert convert-check
+.PHONY: FORCE convert convert-check check stats

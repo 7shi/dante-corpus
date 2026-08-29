@@ -1513,6 +1513,24 @@ def test_write_load_round_trip(tmp_path, monkeypatch):
     assert loaded[2] == tuple(sorted(rows, key=skel._row_sort_key))
 
 
+def test_load_skel_base_dir_overrides_default_root(tmp_path, monkeypatch):
+    monkeypatch.setattr(skel, "SKEL_DIR", tmp_path / "empty")
+    assert not skel.has_skel("inferno", 1)  # nothing under the (empty) default root
+
+    other_root = tmp_path / "other"
+    path = other_root / "inferno" / "01.tsv"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        "line\ttoken\tword\trole\targ_line\targ_token\n2\t2\tritrovai\tsubj\t0\t0\n",
+        encoding="utf-8",
+    )
+
+    assert skel.has_skel("inferno", 1, base_dir=other_root)
+    assert not skel.has_skel("inferno", 1)  # default root is unaffected
+    loaded = skel.load_skel("inferno", 1, base_dir=other_root)
+    assert loaded[2] == (skel.SkelRow(2, 2, "ritrovai", "subj", 0, 0),)
+
+
 def test_tuples_canto_ids(tmp_path, monkeypatch):
     monkeypatch.setattr(skel, "SKEL_DIR", tmp_path)
     rows = [

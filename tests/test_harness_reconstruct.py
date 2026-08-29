@@ -76,7 +76,7 @@ def _patch_skel_target(monkeypatch, tmp_path, seed=None):
     target = tmp_path / "skel" / "inferno" / "01.tsv"
     target.parent.mkdir(parents=True, exist_ok=True)
 
-    def fake_path(canticle, number):
+    def fake_path(canticle, number, base_dir=None):
         return target
 
     monkeypatch.setattr(skel_io, "_artifact_path", fake_path)

@@ -10,7 +10,12 @@ PLAN.md and splitting off at close (the pattern Stages 1–4 used).
 Deliverable 1 shipped on record S5.1 (`harness/recon/convert.py`);
 deliverable 2 was **cut** on the same day (§2, operator decision). The
 script, the TSV-goaled Makefile, and all 100 generated TSVs are committed.
-The stage stays open only on whether anything further is wanted.
+Record S5.2 (same day) added a `--check`/`--stats` port
+(`harness/recon/check.py`) and read out the committed corpus's divergence
+from gold; §4 opens a new direction on the strength of that readout — Stage
+5 continues as a divergence-reduction effort over the recon TSVs, informed
+by (but not repeating) [`../skel/PHASE5.md`](../skel/PHASE5.md)'s
+deterministic-rule methodology.
 
 ---
 
@@ -119,6 +124,30 @@ counted; a log with no `summary` record still converts but is flagged
 record for the same span is superseded by the later one. Progress streams
 one line per canto on stderr, per PLAN.md §4 item 5.
 
+## 4. Reducing recon divergence (opened 2026-08-29, operator)
+
+S5.2's readout put the committed recon corpus at **897 hard, 5,267 soft**
+violations against the same `validate_unit`/`derive_unit` check gold is
+held to — measured, not estimated, by `harness/recon/check.py` over all 100
+committed TSVs (§3 below records the run). The soft count sits at roughly
+the same order of magnitude as `skel/`'s own starting point before Phase 5's
+reduction work began (**5,919**, [`PHASE5.md`](../skel/PHASE5.md) §2 opening
+figure) — a coincidence of scale, not of composition: the recon corpus was
+produced by an autonomous agent reasoning from first principles (PLAN.md
+§1), not the semi-manual small-model-on-rails process Phase 5 was cleaning
+up after, so the violation mix need not match.
+
+Operator decision: Stage 5's scope now extends to **reducing this
+divergence**, using Phase 5 (and its Phase 6 successor) as a reference for
+*method*, not a script to replay — deterministic, zero-LLM-cost checker/rule
+work first, per-position reads before aggregate re-classification, and
+brute-force whole-unit regeneration treated as a last resort given Phase 5's
+measured flat yield (§1.1 there). What actually transfers, and what Rules
+A–EI (if any) still apply unmodified to `harness/recon/`'s output, is
+determined by reading the recon violations themselves — not assumed from
+the gold-side ledger. No implementation has started; this section records
+the direction only.
+
 ---
 
 ## Milestone Ledger (Stage 5)
@@ -163,3 +192,46 @@ No gold artifact is touched, and the script itself commits nothing — the
 100 TSVs were committed separately by the operator on the same day, which
 is where Stage 5's durability goal is actually met: the Stage-4
 reconstruction now survives its logs.
+
+### S5.2 — `--check`/`--stats` ported to the recon corpus; full-corpus divergence read out (2026-08-29)
+
+The recon TSVs are byte-compatible with gold (S5.1), so gold's own
+`skel/skel.py --check`/`--stats` validation applies to them unchanged —
+only the artifact root differs. Rather than pointing `skel.py` itself at
+`harness/recon/` (its driver scripts, `skel/driver_ui.py` included, stay
+untouched per PLAN.md §3's directory boundaries), the path-selection gap
+was closed one layer down, in the shared package the driver already calls
+into:
+
+- `dante_corpus/skel/io.py`'s `_artifact_path`/`has_skel`/`load_skel` gained
+  an optional `base_dir` parameter (default `None` keeps every existing
+  caller reading gold's own `SKEL_DIR`, byte-for-byte unchanged — pinned by
+  a new test). This is the only change under `dante_corpus/`; nothing under
+  `skel/` was touched.
+- New `harness/recon/check.py` (+ `make check` / `make stats`,
+  `tests/test_harness_recon_check.py`) reimplements `skel.py`'s `check()`/
+  `stats()` loops against `base_dir=<recon root>`, calling
+  `dante_corpus.{api,dep,morph,np,case,skel}` directly rather than
+  `skel/driver_ui.py`'s private helpers — same result shape, no dependency
+  on gold's driver package. `--check` prints per-position hard/soft detail
+  and fails (exit 1) on any hard violation; `--stats` prints the
+  by-kind/by-role soft-violation breakdown instead (mirroring `skel.py
+  --stats`) and always exits 0 on soft-only findings.
+
+**Full-corpus readout** (`make check` / `make stats` over all 100 committed
+TSVs, no model call):
+
+```
+check complete: 897 hard, 5267 soft violation(s)
+stats complete: 5267 soft violation(s) (897 hard)
+```
+
+Both commands agree on the totals, as they must — same per-canto
+`check_canto` under the hood, `--stats` only changes how the results print.
+§4 opens what Stage 5 does with this number.
+
+Test suite **887 → 895 passed** (8 new: `base_dir` override + default-root
+isolation; clean-gold-in reports zero; a corrupted word is a hard `word`
+violation; a corrupted role is a soft-only `tag` violation;
+`run`/`main --check` over a synthetic root; `main --stats` exits 0 on
+soft-only findings; the by-kind stats breakdown finds the injected class).
