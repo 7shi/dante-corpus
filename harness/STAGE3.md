@@ -25,6 +25,18 @@ inferno-1 cap experiment PASSED every S3.10 criterion (record S3.11). **Stage
 expansion was re-scoped out of this stage into its own Stage 4
 ([`STAGE4.md`](STAGE4.md)).**
 
+**Same-day items, no ledger record cut at the time (folded in here during a
+later doc-organization pass)**: (1) unit-level resume shipped for
+`reconstruct.py` — `prepare_resume` returns `pending_units`,
+`reconstruct_canto` accepts `skip_units`, and each settled record flushes
+per-record, so a `--log` re-run skips already-completed units instead of
+re-running the whole canto. (2) An interim convention health check over the
+accumulated logs, informational only, no action warranted: parse failures
+2 / 1,248 turns (0.16%), dispatch errors 1 / 905, `read_unit` served exactly
+once per session (174/174), INVALID→repair 42 / 726 = 5.8% — the heavyweight
+case was the pre-R1 `read_unit` return value, already cut by the R1 payload
+work (§2.B).
+
 ---
 
 ## 1. Measured ground truth (and two corrections to S3.1)

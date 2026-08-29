@@ -5,10 +5,41 @@ runs' contract, in-run monitoring, the corpus-wide readout criteria, and the
 stage's milestone ledger. [`PLAN.md`](PLAN.md) keeps status and the handoff;
 numbers live here, never log filenames alone.
 
-**Status**: OPENED 2026-08-25 (operator re-scope: the 99-canto expansion
-moved out of Stage 3 — closed the same day on record S3.11 in
-[`STAGE3.md`](STAGE3.md)). The launch is the operator's act; nothing is in
-flight on the assistant side.
+**Status**: CLOSED 2026-08-29 on record S4.3 (opened 2026-08-25 — operator
+re-scope: the 99-canto expansion moved out of Stage 3, closed the same day
+on record S3.11 in [`STAGE3.md`](STAGE3.md)). Scope closed as **full-corpus
+run only**: the low-F1/cap-anomaly follow-up investigation named in S4.3 is
+deferred to Stage 5+, not part of this stage.
+
+**Pre-launch operation changes (2026-08-26, no ledger record cut at the
+time — folded in here during the Stage-4 doc-organization pass)**: (0) the
+shared `TokenBucket` pre-emptive pacing mechanism removed entirely
+(operator decision) — `harness/runner/agent.py`'s `TokenBucket` class and
+its constants, the `token_bucket` parameter threaded through
+`llm7shi_generate`/`agent_fallback`/`reconstruct.main`, the
+`--token-bucket`/`--bucket-rate`/`--bucket-depth` CLI flags, and the
+Makefile's `--token-bucket $(BUCKET)` wiring are all gone; rely on
+`llm7shi.Client`'s existing HTTP-429 backoff alone (a "wait on 429"
+reactive discipline) rather than pre-emptive cross-process token-rate
+pacing — `--min-send-interval` (default 0) is untouched. Test suite: 857
+passed (down from 864 — seven `TokenBucket`-only tests in
+`test_harness_pacing.py` removed with the mechanism). §2's table above
+reflects this as the launch configuration throughout.
+
+Two durability fixes also shipped ahead of the real launch, both promoted
+to standing rules in [`../ARCHITECTURE.md`](../ARCHITECTURE.md) (full
+technical detail lives there, not duplicated here). (1) Mid-canto kill resilience in
+`reconstruct.py`: settled units now stream to disk as they settle
+(`emit_unit` callback + a `settle` closure in `main`) instead of only after
+a whole canto returns, so a kill mid-canto no longer discards already-settled
+units; regression test
+`test_cli_mid_canto_kill_keeps_settled_units_on_disk` pins it. (2)
+`harness/recon/Makefile`'s per-canto log target marked `.PRECIOUS`, because
+GNU Make deletes the target file a recipe was updating on a fatal signal
+(verified live) — without the mark, a Ctrl+C/SIGTERM mid-run would erase
+`reconstruct.py`'s just-shipped streamed records before its own resume logic
+ever saw them. Test suite after both fixes: 858 passed (857 + 1, the
+mid-canto kill regression test).
 
 ---
 
@@ -187,7 +218,8 @@ then timestamp merge across streams for the TPM view. Python runs through
   described the shared `TokenBucket` (`--token-bucket`, `tokbucket.state`,
   bucket-contention monitoring/risk rows) as live launch configuration —
   stale since the mechanism's actual removal (commit predating this entry;
-  recorded in PLAN.md's 2026-08-26 Handoff) never propagated here. Brought
+  see the pre-launch operation-changes note above this ledger) never
+  propagated here. Brought
   in line: §2's table and rationale, §3's command block and flag list,
   §4's contention-monitoring bullet, §5's merge-rationale wording, and
   §6's risk table (the bucket-file-corruption row dropped, having no
@@ -197,3 +229,59 @@ then timestamp merge across streams for the TPM view. Python runs through
   Launch commands throughout now read `make -C harness/recon -j3 inferno
   purgatorio paradiso` (PLAN.md's Handoff updated to match). Nothing
   launched yet.
+- **S4.3 — 2026-08-29: corpus-wide readout tool + results; STAGE 4 CLOSED on
+  this record (operator decision: scope stays full-corpus run only).**
+  Between S4.2 and this record the operator launched and completed the full
+  run (`make -C harness/recon -j3 inferno purgatorio paradiso`, mid-run
+  switched 3-way → 2-way parallelism in response to TPM pressure, switch
+  time not logged/tracked by operator instruction): all 100 logs (34/33/33)
+  present, each ending in a parseable `summary` record, timestamps spanning
+  2026-08-25T21:19Z → 2026-08-29T07:57Z. New durable tool (committed, not
+  the ephemeral `/tmp` pattern §5 originally described — a corpus-wide,
+  stage-closing readout warranted a re-runnable script instead):
+  `harness/recon/readout.py` (+ `harness/recon/__init__.py`, importable as
+  `python -m harness.recon.readout`), tested by
+  `tests/test_harness_recon_readout.py` (18 cases, pure aggregation math on
+  synthetic in-memory records, no real logs read in the test suite). Test
+  suite: 876 passed (858 + 18). Reads every `harness/recon/<canticle>/NN.log`
+  LLM-free and reports hygiene, per-canticle micro F1 (pooled tp/fp/fn) +
+  lowest-F1 outlier cantos, gate-pass rates, pooled violation/routing
+  breakdowns, TPM pressure, api-retry tax, peak context/token joins,
+  per-canto wall-clock stats, and cap accounting.
+
+  **Results**: hygiene all-clear on every check (zero token-assertion
+  errors, zero empty responses, provider tokens present throughout,
+  `written_cantos == 0`, all 100 logs present/parseable). Per-canticle
+  verify-gold micro F1: inferno 0.7269, purgatorio 0.7186, paradiso 0.7201,
+  corpus-wide 0.7219. **Inferno's 0.7269 falls just under the 0.744–0.796
+  expected-variation band** established from the four single-canto
+  confirmation runs (S3.4/S3.9/S3.10/S3.11 in [`STAGE3.md`](STAGE3.md)) —
+  unlike gate-pass-count noise (already characterized/dismissed), F1 was
+  established as "the reliable judge," so this miss is not automatically
+  dismissable the same way; the operator's call, made on this record, is to
+  **accept it and close the stage rather than block on it**. Lowest-F1
+  cantos, carried forward for Stage 5+ investigation only (not acted on
+  here): inferno 10/31/33, purgatorio 11/15/2, paradiso 17/7/10. Two
+  cap-accounting anomalies flagged, also deferred: inferno canto 7 session
+  15 and purgatorio canto 4 session 23 both regenerated to ~550 B instead
+  of the expected ~115 B opener. Gate-pass rates ran low (units 30–34%,
+  0/100 cantos canto-clean) — read per standing policy as the noisy
+  instrument, not the quality judge. Fast-path routing held at 7.0%
+  corpus-wide, matching the original Stage-2 measurement. TPM: the §5
+  "one shared quota" framing was corrected in-session to the
+  operator-confirmed reality that **each concurrent stream is
+  rate-limited independently** (`STREAM_TPM_LIMIT = 16,000` tokens/min,
+  checked per canticle) — paradiso's stream spent 48.8% of its 60-second
+  windows over that limit (inferno 18.2%, purgatorio 20.1%); the merged
+  three-stream timeline stays informational-throughput-only, not a
+  contention measurement, under this correction. Compute-only wall time
+  summed 6:09:58:51 across all three streams against an observed run span
+  of 3:12:06:26 (~1.83× effective parallelism).
+
+  **Stage 4 scope decision (operator, this record): CLOSED as full-corpus
+  run only.** The low-F1-canto and cap-anomaly follow-ups above are
+  explicitly out of Stage 4's scope — carried forward as Stage 5+ candidate
+  work, not reopened here. Stage 5 itself opens on a different track first
+  (skel-compatible log→artifact conversion, since `harness/recon/*.log` is
+  gitignored/disk-only and would otherwise be lost); see PLAN.md §2 Stage 5
+  and Handoff for the opening scope.

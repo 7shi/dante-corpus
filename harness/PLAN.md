@@ -2,54 +2,41 @@
 
 ## Handoff — resume here
 
-Temporary notes for the next session; durable state lives in **Current Status**
-and the **Milestone Ledger** below.
+Working notes for the next session only — write what's in flight or about
+to start, and clear an entry once it's been acted on (folded into Current
+Status, §2, a stage document, or Orientation for Fresh Sessions). Durable
+state that should survive indefinitely does not belong here: it belongs in
+**Current Status**, **Orientation for Fresh Sessions**, the **Milestone
+Ledger**, or §2's per-stage records.
 
-**Next action — Stage 4: the launch is complete (all 100 logs present with
-parseable summaries) and the corpus-wide readout has been run
-(`harness/recon/readout.py`, see the 2026-08-29 session housekeeping entry
-below for full results). What remains is an OPERATOR judgment call, deferred
-to the next session: whether to close Stage 4 accepting inferno's
-corpus-wide F1 (0.7269) falling just under the established 0.744–0.796
-expected-variation range from the four single-canto confirmation runs, or to
-investigate the lowest-F1 cantos first (readout already names them: inferno
-10/31/33, purgatorio 11/15/2, paradiso 17/7/10). Nothing is in flight on the
-assistant side.**
+**Next action — Stage 5: start with a skel-compatible conversion script.**
+Opening scope and open design questions are in [`STAGE5.md`](STAGE5.md) —
+not repeated here. Nothing is in flight on the assistant side yet; no
+design has been started.
 
-Stage 3 CLOSED 2026-08-25 on record S3.11 ([`STAGE3.md`](STAGE3.md)): the
-inferno-1 cap experiment (`harness/recon-inf1-cap6k.log`) passed every S3.10
-criterion — F1 0.7600 in band, one cap trigger regenerating to the expected
-114 B opener, peak context 21.7 kB vs re-run #2's 37.3 kB (−42%), pressure
-margins widened across the board (×3 average 71%, peak call 46% solo,
-rolling-60 93%, api-retry tax 0.24%) — with two honestly-recorded flags:
-gate-pass 14/34 vs the usual 18–19 (four soft-tag-only flips in chronically
-volatile units; cap causally excluded; row-level quality in band — pass
-counts are the noisy instrument) and wall +19% (one thinking-heavy episode
-on L106–108, 816 s vs 124 s; median call time fell; not quota). Full
-decomposition, including the cross-run fp-drift observation
-(100→103→116→125, confounded with config changes), in S3.11.
+## Current Status
 
-**Scope change (operator decision, 2026-08-25): the 99-canto expansion moved
-out of Stage 3 into its own Stage 4.** Stage 3 delivered and closed: the
-design (S3.2), the implementation (S3.3), confirmation runs #1/#2
-(S3.4/S3.9), the compaction removals (S3.5–S3.7), the provider token records
-(S3.8), the generation-side runaway cap (S3.10), and the closing
-cap-experiment readout (S3.11). Launch configuration carried into Stage 4 as
-recommended on S3.9/S3.11: `--min-send-interval` default 0 (reactive-only) +
-the shared TokenBucket (`harness/tokbucket.state`) on all three shells +
-`--max-length` default 6000 chars — final call remains the operator's, at
-launch. Standing constraint holds: session semantics change between runs,
-never mid-run.
+Stages 1–4 are COMPLETE/CLOSED; their status, dates, and record pointers
+live in §2's per-stage subsections below, not repeated here. This section
+holds only what's still open.
 
-Watch items carried into Stage 4 (from all four inferno-1 logs): the
-fast-routed unit fails Gate 2 (routing `complete` ≠ checker-clean);
-agent-originated hard violations surface only through the checker; quota tax
-varies run-to-run (measured range 0.24%–9.4%); 0-soft unit pass counts
-fluctuate ±4–5 between runs while row-level F1 holds the band — judge quality
-by verify-gold F1, treat gate-pass counts as noisy; bucket-under-contention
-is measured here for the first time.
+- [ ] **Stage 5 — Corpus Durability** (OPENED 2026-08-29 by operator, on
+      Stage 4's close). Nothing shipped yet. Opening scope, open design
+      questions, and the stage ledger in [`STAGE5.md`](STAGE5.md).
+- Open design question (protocol layer): a dedicated `submit_candidate`
+  termination tool — the practical half is resolved by the nudge policy
+  ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
+  [`TOOLCALL.md`](TOOLCALL.md) §7.1.
+- Test suite: **876 passed**. Composition and history (TokenBucket removal,
+  mid-canto kill resilience, the readout tool's own tests) in
+  [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
 
-Orientation for fresh sessions (durable):
+---
+
+## Orientation for Fresh Sessions
+
+Durable context for picking up mining/extraction work cold — not tied to
+any one session, so it survives across Handoff clearings.
 
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§3–§5), then
    [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6 (observability + log
@@ -78,14 +65,15 @@ Orientation for fresh sessions (durable):
    The 31 well-formed unit-side `upstream_feedback` records await HUMAN
    triage — never auto-retag.
 4. **Boundaries that hold**: `extractor/` consumes traces + operator-side
-   gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1)
-   applies to anything that runs *as* an agent — the engine's execution face
-   and `reconstruct.py`'s execution/commit faces never open gold at all
-   (adversarially tested), only evaluation faces (`evaluate_fast_path`,
-   `--verify-gold`) do; `fixtures/challenge_cases.py` stays data-only. Tests
-   live at repo root (`tests/test_harness_*.py`). `skel/` is protected:
-   reconstruction writes need the explicit `--write` flag on top of passing
-   all three gates, canto-atomically.
+   gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1
+   of Standing Invariants below) applies to anything that runs *as* an
+   agent — the engine's execution face and `reconstruct.py`'s
+   execution/commit faces never open gold at all (adversarially tested),
+   only evaluation faces (`evaluate_fast_path`, `--verify-gold`) do;
+   `fixtures/challenge_cases.py` stays data-only. Tests live at repo root
+   (`tests/test_harness_*.py`). `skel/` is protected: reconstruction writes
+   need the explicit `--write` flag on top of passing all three gates,
+   canto-atomically.
 5. **Wire/cost instrumentation** (shipped across Stages 2–3, live-proven on
    every run): the fallback appends one `llm_request`/`llm_response` JSONL
    pair per backend LLM call — timestamps, model, session/unit coordinates,
@@ -97,302 +85,18 @@ Orientation for fresh sessions (durable):
    (unit-level resume); every `canto_complete` carries `elapsed_seconds`,
    summed into the summary's `wall_clock_seconds`. All canto-scoped like
    every other record.
-6. **Prior-session notes preserved from earlier handoffs** (full narratives
-   in the stage ledgers): unit-level resume shipped for `reconstruct.py`
-   (2026-08-25; `prepare_resume` returns `pending_units`,
-   `reconstruct_canto` accepts `skip_units`, per-record flush); the interim
-   convention health check (2026-08-25, informational, no action warranted:
-   parse failures 2 / 1,248 turns (0.16%), dispatch errors 1 / 905,
-   `read_unit` served exactly once per session (174/174), INVALID→repair
-   42 / 726 = 5.8%; the heavyweight was the pre-R1 `read_unit` return value —
-   already cut); ARCHITECTURE §0 implementation checklist added 2026-08-25;
-   Stage-3 session history 2026-08-24 → 2026-08-25 in
-   [`STAGE3.md`](STAGE3.md)'s ledger (S3.1–S3.11).
-
-**Session housekeeping (2026-08-25, closing assistant session): the cap
-experiment read out into record S3.11 and STAGE 3 CLOSED on it; the
-99-canto expansion re-scoped into Stage 4** ([`STAGE4.md`](STAGE4.md), new):
-launch configuration table, three-shell commands, watch items, corpus-wide
-readout criteria, empty S4.x ledger. Docs restructure: PLAN.md's Milestone
-Ledger no longer carries any full Stage-3 record — S3.1 moved verbatim into
-[`STAGE3.md`](STAGE3.md)'s ledger (with inline pointers to its later
-corrections), and PLAN.md keeps only summaries + pointers, mirroring the
-Stage-1/2 treatment. Open parked decisions carried visibly: the benchmark
-stays uncapped until its own `--max-length` decision (S3.10);
-`submit_candidate` protocol question at [`TOOLCALL.md`](TOOLCALL.md) §7.1;
-31 `upstream_feedback` records await HUMAN triage (item 3). Readout tooling:
-ephemeral `/tmp/opencode/cap_readout.py`, validated to reproduce S3.9
-exactly before use (methods recorded in S3.11 and STAGE4.md §5 — recreate
-if lost). **Nothing is in flight on the assistant side; the operator's
-Stage-4 launch is the next act.**
-
-**Session housekeeping (2026-08-26, closing assistant session): pre-launch
-operation change shipped per operator request — record S4.1 in
-[`STAGE4.md`](STAGE4.md)'s ledger.** `harness/recon/Makefile` is now the
-launch interface: one streaming JSONL log per canto at
-`harness/recon/<canticle>/NN.log`, and the completion gate is each log's
-own summary record evaluated inside the recipe (`FORCE` prerequisite —
-make timestamps play no role), so resume is always "re-run the same
-command"; model override via `MODEL=`, single canto via full-path target.
-Verified LLM-free end to end (help text; 100-target expansion 34/33/33
-with sequential canto numbers; skip branch live-tested against a real
-complete log; run branch against a `uv` shim — the assistant executed no
-LLM CLI). Known hairline, accepted and documented in the Makefile: a
-summary line truncated mid-write by a crash could read as complete; the
-corpus-wide readout catches it. STAGE4.md §1/§3 rewritten around the
-driver; §5 gained the readout input contract — session numbers repeat
-across files, so joins are namespaced per file before any merge, and TPM
-pressure is only measurable from the cross-file timestamp merge; hygiene
-now requires all 100 logs present with parseable summaries. **The
-corpus-wide readout script does not exist yet** — recreate it ephemerally
-per the §5 method note when the runs land, validating against a complete
-single-canto file first. Nothing else pending on the assistant side; the
-operator's launch remains the next act.
-
-**Session housekeeping (2026-08-26, operator decision): the shared
-`TokenBucket` pre-emptive pacing mechanism removed entirely** —
-`harness/runner/agent.py`'s `TokenBucket` class, its
-`DEFAULT_BUCKET_RATE_TOKENS_PER_MIN`/`DEFAULT_BUCKET_DEPTH_TOKENS`/
-`BYTES_PER_TOKEN` constants, the `token_bucket` parameter threaded through
-`llm7shi_generate`/`agent_fallback`/`reconstruct.main`, the
-`--token-bucket`/`--bucket-rate`/`--bucket-depth` CLI flags, and the
-Makefile's `--token-bucket $(BUCKET)` wiring are all gone (`harness/recon/
-Makefile`'s help text and launch-configuration comment reworded to match).
-Operator's stated policy: rely on `llm7shi.Client`'s existing HTTP-429
-backoff (`api_retry_seconds`) alone — a "wait on 429" reactive discipline —
-rather than pre-emptive cross-process token-rate pacing; `--min-send-interval`
-(currently defaulting to 0) is untouched. STAGE3.md/STAGE4.md keep their
-historical TokenBucket records as-written (append-only ledgers); the Stage 4
-launch configuration in this file's Current Status/§2 is updated to drop the
-bucket. Test suite: 857 passed (down from 864 — seven `TokenBucket`-only
-tests in `test_harness_pacing.py` removed with the mechanism). Nothing else
-pending on the assistant side.
-
-**Session housekeeping (2026-08-26, operator decision): `harness/recon/
-Makefile` invocation changed + STAGE4.md doc catch-up on the TokenBucket
-removal — record S4.2 in [`STAGE4.md`](STAGE4.md)'s ledger, detail there.**
-This Handoff's Next-action command above is updated to match. Nothing else
-pending on the assistant side.
-
-**Session housekeeping (2026-08-26, closing assistant session): mid-canto
-kill resilience shipped in `reconstruct.py` (pre-launch hardening for
-Stage 4).** Auditing `harness/recon/inferno/01.log` exposed a durability
-gap: `unit`/`gold` records reached disk only after `reconstruct_canto`
-returned for the whole canto, so a kill mid-canto lost every
-already-settled unit — `prepare_resume`'s unit-level resume never saw
-them and the next attempt re-ran (and re-costed, live fallback included)
-the whole canto, despite the module docstring's "never pays twice"
-claim. Fix: each settled outcome now streams out as it settles —
-`reconstruct_canto` gained an `emit_unit` callback (fired once per
-freshly computed outcome, never for replayed units), `main` passes a
-`settle` closure that writes + flushes the unit record immediately, and
-gold comparison moved per-unit (`GoldFace.observe(outcome)`;
-`verify_against_gold(recon)` stays as a compatibility wrapper). Log-read
-consequence: `unit` (and, with `--verify-gold`, `gold`) records now
-appear interleaved among the `llm_request`/`llm_response` trail while
-the canto runs, not as two post-canto blocks — record kinds/counts and
-the summary-last completion marker are unchanged, so the §5 readout
-contract holds. ARCHITECTURE.md gained the standing rule: §0 checklist
-item ("interruption resilience is structural") + §5 normative bullet
-(settled work reaches disk when it settles, not when an enclosing phase
-ends). New regression test pins it:
-`test_cli_mid_canto_kill_keeps_settled_units_on_disk` (kill inside unit
-18 leaves 17 settled units durable with no completion markers; resume
-replays them — fallback invocations total 18 + 17, no unit paid twice).
-Test suite: 858 passed (`test_harness_reconstruct.py` 34 → 35). Net
-Stage-4 effect: a crash during a hours-long live canto now loses at most
-the in-flight unit. No STAGE4.md record was cut for this
-(assistant-scope change; promote one if the operator wants it in the
-ledger). Nothing else pending on the assistant side; the operator's
-Stage-4 launch remains the next act.
-
-**Session housekeeping (2026-08-26, closing assistant session): `harness/
-recon/Makefile`'s per-canto log target marked `.PRECIOUS` (pre-launch
-hardening, follow-on to the mid-canto kill resilience fix above).** Auditing
-that fix surfaced a wrapper-layer gap: GNU Make deletes the target file a
-recipe was updating when make itself receives a fatal signal (Ctrl+C,
-SIGTERM) mid-recipe — verified live (SIGINT to a running `make` deletes the
-log it was writing) — which would discard `reconstruct.py`'s just-shipped
-streamed unit records at the Makefile layer, unit-level resume never even
-seeing the file on the next invocation. Fix: `.PRECIOUS: %.log` added to the
-pattern rule. Standing rule promoted to
-[`ARCHITECTURE.md`](../ARCHITECTURE.md) §5 (new bullet) + §0 checklist
-(interruption-resilience item extended): any Make wrapper around a CLI
-holding the streaming JSONL log contract must mark its log target
-`.PRECIOUS`, or a signal-interrupted `make` silently erases the CLI's own
-durability work before its resume logic ever sees the file. No STAGE4.md
-record cut for this (assistant-scope change, same as the reconstruct.py fix
-above; promote one if the operator wants it in the ledger). Nothing else
-pending on the assistant side; the operator's Stage-4 launch remains the
-next act.
-
-**Session housekeeping (2026-08-29, closing assistant session): the operator
-launched and completed the full Stage-4 corpus run**
-(`make -C harness/recon -j3 inferno purgatorio paradiso`) — all 100 logs
-(34/33/33) present, each ending in a parseable `summary` record, confirmed
-2026-08-29 (timestamps span 2026-08-25T21:19Z → 2026-08-29T07:57Z). This
-session built the corpus-wide readout tool the closing act needs and ran it;
-Stage 4 itself is **not yet closed** — the readout surfaced one open
-question left for operator judgment (below), and no STAGE4.md ledger record
-was cut this session (deferred to whoever makes that call).
-
-New tool, committed (not the ephemeral `/tmp` pattern S3.11/STAGE4.md §5
-described — operator decided a 100-canto/Stage-4-closing readout warrants a
-durable, re-runnable script instead): `harness/recon/readout.py`
-(+ `harness/recon/__init__.py` to make it importable as
-`python -m harness.recon.readout`), tested by
-`tests/test_harness_recon_readout.py` (18 cases, pure aggregation math
-against synthetic in-memory records, no real logs read in the test suite).
-Test suite: 876 passed (858 + 18 new; up from 858 recorded on 2026-08-26).
-Reads every `harness/recon/<canticle>/NN.log`, LLM-free, and reports:
-hygiene (missing/incomplete logs, `written_cantos`, token-assertion errors,
-empty responses, missing provider tokens — all-clear on this run); per-
-canticle micro F1 (pooled tp/fp/fn, not a mean of per-canto F1s) plus the
-lowest-F1 outlier cantos; gate-pass rates (canto- and unit-level); pooled
-`violation_kinds` and routing/`reasons` breakdowns; TPM pressure — corrected
-mid-session from STAGE4.md §4/§5's "one shared quota across the three
-streams" assumption to the operator-confirmed reality that **each concurrent
-stream is rate-limited independently** (`STREAM_TPM_LIMIT = 16_000`
-tokens/min, checked per canticle, not on the three-stream merged timeline,
-which the script now labels informational-throughput-only); api-retry
-(429) counts/tax; peak single-request context size joined to its paired
-response's token counts; per-canto wall-clock total/mean/min/max plus the
-slowest single fallback-call outliers, all rendered `d:hh:mm:ss` (seconds
-alone read as illegible at this scale); and cap accounting
-(`max_length_retries`) flagging triggers whose regenerated output exceeds
-the expected ~114 B opener shape as anomalies.
-
-**Real-run readout results** (full text was shown to the operator in-session,
-not reproduced verbatim here — rerun `uv run python -m harness.recon.readout`
-for the live numbers): hygiene all-clear on every check. Per-canticle F1:
-inferno 0.7269, purgatorio 0.7186, paradiso 0.7201, corpus-wide 0.7219.
-**Open question for the operator, carried to the next session: inferno's
-0.7269 falls just under the 0.744–0.796 expected-variation range** established
-from the four single-canto confirmation runs (S3.4/S3.9/S3.10/S3.11) — unlike
-the gate-pass-count noise those records already characterized and dismissed,
-F1 was explicitly established as "the reliable judge," so this miss is not
-automatically dismissable the same way. Lowest-F1 cantos for follow-up if
-investigated: inferno 10/31/33, purgatorio 11/15/2, paradiso 17/7/10. Two
-cap-accounting anomalies flagged (inferno canto 7 session 15 and purgatorio
-canto 4 session 23 both regenerated to ~550 B instead of the expected ~115 B
-opener) — not yet investigated. Gate-pass rates ran low (units 30–34%, 0/100
-cantos canto-clean) but per standing policy are read as the noisy instrument,
-not the quality judge. Fast-path routing held at 7.0% corpus-wide, matching
-the original Stage-2 measurement. TPM: paradiso's stream spent 48.8% of its
-60-second windows over the (now-corrected) 16,000/min per-stream limit
-(inferno 18.2%, purgatorio 20.1%) — the operator separately noted they
-dropped the launch from 3-way to 2-way parallelism partway through the real
-run in response to this pressure; the logs carry no field recording when
-that switch happened, and by operator instruction this is not tracked
-further here (ad hoc investigation only, if ever needed). Compute-only wall
-time summed 6:09:58:51 across all three streams against an observed run span
-of 3:12:06:26 (~1.83× effective parallelism, not a "contention gap" — an
-earlier draft's inverted framing was corrected in-session). No STAGE4.md
-ledger record exists yet for any of this; next session picks up at the
-operator's F1 decision, then a closing S4.x record (or a follow-up
-investigation first).
-
-## Current Status
-
-- [x] **Stage 1 — Autonomous Inference & Capability Benchmark: COMPLETE**
-      (toolcall T1–T5 + milestones 1.1–1.4 incl. the instrumented re-runs).
-      XML protocol adopted as official wire format (probe 0.957 ≥ 0.95,
-      parity interop 24/24 twice); 87-case benchmarks run for BOTH workflows
-      at quality parity (micro F1 0.711 unit vs 0.708 predicate; default
-      `unit`); traces pooled for Stage 2 mining. Record archived 2026-08-24:
-      milestones, ledger, and carry-over resolutions in
-      [`STAGE1.md`](STAGE1.md); protocol ledger in
-      [`TOOLCALL.md`](TOOLCALL.md) §8.
-- [x] **Stage 2 — Rule & Lexicon Extraction** (`harness/extractor/`,
-      milestones 2.1–2.5): COMPLETE (2026-08-24). Deterministic mining
-      delivered 183 fast-path rules at 100% precision (31.4% gold coverage)
-      and a 140-frame verb valency lexicon; the hybrid engine's fast path
-      covers only 7.0% of units, so agent fallback is the primary path;
-      the gated reconstruction pipeline verified live on inferno 1 twice
-      (pilot + recheck): 18/34 units gate-pass each run, verify-gold micro
-      F1 0.78 / 0.796 ≥ the Stage-1 band, `written_cantos == 0` protection
-      confirmed both times. The recheck's request-granularity readout closed
-      the quota question and **failed the Stage-3 launch gate**
-      (compaction/pacing required). Record archived 2026-08-24:
-      milestones, ledger, carry-overs, and the pilot/recheck readouts in
-      [`STAGE2.md`](STAGE2.md); spec in [`extractor/PLAN.md`](extractor/PLAN.md).
-- [x] **Stage 3 — Context Optimization: COMPLETE (2026-08-25, closed on
-      record S3.11)** — opened 2026-08-24 when the M2.5 recheck closed
-      Stage 2; re-scoped just before the close (operator decision): the
-      full-corpus expansion moved out into **Stage 4**, so the delivered
-      scope is context optimization + launch hardening. Shipped and live:
-      positional `read_unit` serving (tier R1 with S1 fallback), verbatim
-      transcripts (compaction removed, S3.7), flat tool-spec JSON in the
-      system prompt, pacing instruments (`--min-send-interval`,
-      `paced_seconds`; the shared `TokenBucket` shipped here was removed
-      2026-08-26, see Handoff), provider token counts +
-      `thought_bytes` on every `llm_response` (S3.8), and the
-      generation-side runaway cap (`--max-length`, default 6000 chars,
-      durable `max_length_retries`, S3.10). Confirmation arc: run #1 (S3.4)
-      caught the fallback-wiring bug → fixed with regression test; re-run #2
-      (S3.9) passed every criterion unpaced (F1 0.7728 in band, ×3 average
-      87% = first pass of that gate, retry tax 1.50%); the cap experiment
-      (S3.11) passed every S3.10 criterion (F1 0.7600 in band, one trigger
-      regenerating to the expected 114 B opener, peak context −42%, ×3
-      average 71%, tax 0.24%) — flags investigated and characterized:
-      gate-pass 14/34 is soft-tag noise in chronically volatile units (cap
-      causally excluded; row-level quality in band), wall +19% is one
-      thinking-heavy episode. Launch pacing settled: reactive-only wins solo
-      (unpaced 1.50% ≈ run #1's paced 1.6%; ×3 = 87–71% across the two
-      unpaced runs); the shared bucket that carried the three-stream launch
-      for inter-stream coordination was removed 2026-08-26 (see Handoff) in
-      favor of `llm7shi.Client`'s own 429 backoff. Records S3.1–S3.11 in
-      [`STAGE3.md`](STAGE3.md). Standing constraint holds: session semantics
-      change between runs, never mid-run.
-- [ ] **Stage 4 — Full-Corpus Verification (99-canto scale-out)**
-      (OPENED 2026-08-25 by operator re-scope as Stage 3 closed): the gated
-      pipeline runs over all cantos as three canticle-parallel streams
-      (inferno / purgatorio / paradiso) driven by
-      [`harness/recon/Makefile`](recon/Makefile) — one log per canto
-      (`harness/recon/<canticle>/NN.log`), each log's summary record gates
-      completion, resume is unit-level within a canto via re-running the
-      same command — behind every Stage-3 gate, gold
-      immutable (`--write` stays off, `written_cantos == 0` expected).
-      Launch configuration carried from S3.9/S3.11: interval default 0 +
-      cap 6000, reactive-only (the shared `TokenBucket` was removed
-      2026-08-26 — see Handoff; `llm7shi.Client`'s own 429 backoff is the
-      pacing backstop for all three streams) — final
-      call: operator, at launch. Commands, watch items, and readout
-      criteria live in [`STAGE4.md`](STAGE4.md); wall-clock projection
-      ≈ 180 ks ≈ 2.1 days compute-only for the longest canticle. Closing
-      act: the corpus-wide readout into STAGE4.md records (per-canticle F1
-      baselines — inferno against the 0.744–0.796 band, purgatorio /
-      paradiso establishing their own; gate-pass rates per canto; TPM
-      pressure under genuine three-stream bucket contention, measured here
-      for the first time).
-- Open design question (protocol layer): a dedicated `submit_candidate`
-  termination tool — the practical half is resolved by the nudge policy
-  ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
-  [`TOOLCALL.md`](TOOLCALL.md) §7.1.
-- Closed operational issue (2026-08-23, predicate full run): long agent
-  contexts tripped the Gemini API's per-model input-token quota — the
-  measurement trail lives in [`STAGE2.md`](STAGE2.md)'s M2.5-recheck entry
-  and the corrected accounting + burst mechanism in
-  [`STAGE3.md`](STAGE3.md) §1. Resolved through Stage 3: R1 payload
-  serving, slim system prompt, reactive-only pacing with the proven Client
-  auto-retry backstop (the shared bucket that also carried parallel launches
-  was removed 2026-08-26; the Client backstop now covers those alone too).
-  Historical quota-tax measurements: predicate 103 backoffs / 3,196 s =
-  14.4% of wall vs unit 55 / 1,659 s = 8.4% (2026-08-24 instrumented
-  re-runs); live-run range across all four inferno-1 confirmation logs
-  0.24%–9.4%.
-- Test suite: **858 passed** (547 corpus + 46 `test_harness_tools.py` +
-   76 `test_harness_toolcall.py` + 39 `test_harness_agent.py` +
-   39 `test_harness_benchmark.py` + 23 `test_harness_syntax_miner.py` +
-   17 `test_harness_lexicon_builder.py` + 27 `test_harness_hybrid_engine.py` +
-   35 `test_harness_reconstruct.py` + 9 `test_harness_pacing.py` — down from
-   16 on 2026-08-26: seven `TokenBucket`-only tests removed with the
-   mechanism, see Handoff; reconstruct +1 on 2026-08-26: mid-canto kill
-   resilience test, see Handoff).
 
 ---
 
 ## Milestone Ledger
+
+*Documentation convention (from Stage 5 on, decided 2026-08-29 as PLAN.md
+grew too large): each stage now writes design work, running detail, and
+its milestone ledger directly into its own `STAGE<N>.md` from the moment
+it opens, rather than accumulating in PLAN.md and splitting off at close
+(the pattern Stages 1–4 used, kept below for their archived records).
+PLAN.md stays the overall plan — Handoff and Current Status are kept
+current every session; per-stage detail is not duplicated here.*
 
 *Stage-1 records (toolcall T1–T5, milestones 1.1–1.4 + carry-over
 resolutions) live in [`STAGE1.md`](STAGE1.md) and [`TOOLCALL.md`](TOOLCALL.md)
@@ -400,8 +104,10 @@ resolutions) live in [`STAGE1.md`](STAGE1.md) and [`TOOLCALL.md`](TOOLCALL.md)
 pilot and the closing recheck readout — was split off on 2026-08-24 to
 [`STAGE2.md`](STAGE2.md). All Stage-3 records S3.1–S3.11 live in
 [`STAGE3.md`](STAGE3.md)'s ledger (S3.1 moved there verbatim at stage close,
-2026-08-25; stage closed on S3.11); Stage-4 records accrue in
-[`STAGE4.md`](STAGE4.md)'s ledger.*
+2026-08-25; stage closed on S3.11); all Stage-4 records S4.1–S4.3 live in
+[`STAGE4.md`](STAGE4.md)'s ledger (stage closed 2026-08-29 on S4.3);
+Stage-5 records accrue directly in [`STAGE5.md`](STAGE5.md)'s ledger from
+the start.*
 
 ---
 
@@ -458,7 +164,7 @@ graph TD
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
 
-In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25) and Stage 4 as the operational scale-out.
+In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), and Stage 5 opening the corpus-durability track (converting the run's ephemeral logs into committable, `skel/`-compatible artifacts).
 
 ### Stage 1: Autonomous Local Inference & Capability Benchmark (`harness/runner/`)
 - **Approach**: For each parse unit, the agent receives the multi-layer context (L1–L4, quotes, case) and autonomously solves predicate-argument frames on the fly using Chain-of-Thought (CoT) and a dedicated Tool Calling API (`validate_candidate`, etc.).
@@ -466,6 +172,11 @@ In contrast to the top-down methodology used in Phases 5–8 — where frontier 
   - Quantitatively benchmark local LLM capabilities (1-shot exact match rate, multi-turn self-correction convergence rate, role-level F1) against the 0-soft Gold Standard (`skel/`).
   - Capture comprehensive execution logs, successful syntax projections, and lexical decision traces (e.g., argument vs. adjunct discrimination, reflexive pronouns, control verbs).
 - **Specification**: [`harness/runner/PLAN.md`](runner/PLAN.md).
+- **Status**: COMPLETE (2026-08-24); record archived in [`STAGE1.md`](STAGE1.md)
+  — XML wire protocol adopted (probe 0.957 ≥ 0.95, parity interop 24/24
+  twice), 87-case benchmarks at quality parity for both workflows (micro F1
+  0.711 unit vs 0.708 predicate), traces pooled for Stage 2 mining. Protocol
+  ledger in [`TOOLCALL.md`](TOOLCALL.md) §8.
 
 ### Stage 2: Bottom-Up Rule & Lexicon Extraction (`harness/extractor/`)
 - **Approach**: Mine and aggregate the reasoning logs and decision trajectories from Stage 1 to:
@@ -499,16 +210,30 @@ average 87% unpaced — first pass of that gate**; **S3.10 added the
 generation-side runaway cap (6,000 chars default)**; **S3.11 read out the
 cap experiment — every criterion PASS — and closed the stage.**
 
-### Stage 4: Full-Corpus Verification (opened 2026-08-25)
+### Stage 4: Full-Corpus Verification (opened 2026-08-25, CLOSED 2026-08-29)
 
 The 99-canto scale-out as its own stage: three canticle-parallel streams
 (inferno / purgatorio / paradiso) driven by `harness/recon/Makefile`,
-behind every Stage-3 gate, gold immutable,
-launch configuration carried from S3.9/S3.11 (interval default 0 + cap 6000,
-reactive-only — the shared `TokenBucket` was removed 2026-08-26, see
-Handoff). Commands, watch items, readout criteria, and the
-stage ledger live in [`STAGE4.md`](STAGE4.md); scope and constraints tracked
-in Current Status + the Handoff.
+behind every Stage-3 gate, gold immutable, launch configuration carried
+from S3.9/S3.11 (interval default 0 + cap 6000, reactive-only — the shared
+`TokenBucket` was removed 2026-08-26). Closed on record S4.3: corpus-wide
+readout (`harness/recon/readout.py`) gave verify-gold micro F1 inferno
+0.7269 / purgatorio 0.7186 / paradiso 0.7201 / corpus-wide 0.7219, with
+inferno falling just under the 0.744–0.796 confirmation-run band — operator
+decision was to accept and close, scope held to the full-corpus run itself.
+Commands, watch items, full readout criteria/results, and the stage ledger
+(S4.1–S4.3) live in [`STAGE4.md`](STAGE4.md).
+
+### Stage 5: Corpus Durability (OPENED 2026-08-29 by operator, on Stage 4's close)
+
+The Stage-4 corpus run's 100 per-canto logs (`harness/recon/<canticle>/
+NN.log`) are gitignored, disk-only, and will eventually be lost. Opening
+scope: a script converting their settled reconstruction output into
+`skel/`-compatible, committable form, plus a separate format for whatever
+doesn't map into that shape, so nothing is silently dropped. Nothing
+shipped yet; open design questions and the stage ledger live in
+[`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
+document as work happens, rather than accruing here first.
 
 ### Beyond Layer 5 (design notes)
 
@@ -618,3 +343,8 @@ single source, not duplicated here. The boundaries it encodes:
       blank-line spacing — is the ARCHITECTURE.md §4 standard itself now, not
       a pattern restated per plan; `reconstruct.py` (2026-08-24) is where it
       first shipped end-to-end and stays the template to copy.
+6. **Session Semantics Stability**:
+   - Session semantics (prompt wording, tool schema, protocol behavior) may
+     change *between* runs but never *mid-run*: a live run's semantics stay
+     fixed for its whole duration once launched. Established during Stage 3's
+     launch hardening, standing for every later stage.

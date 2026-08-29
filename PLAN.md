@@ -1,17 +1,23 @@
 # Dante Corpus: Unified Grammatical Layers & Post-Zero Architecture Plan
 
-### Handoff (2026-08-22) — resume here
+### Handoff (2026-08-29) — resume here
 
 > **Current State & Baseline**:
-> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **717 passed** — 547 corpus + 170 harness).
+> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **876 passed** — 547 corpus + 329 harness).
 > - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`harness/PLAN.md`](harness/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
 > - **Tool Call Protocol sub-project COMPLETE** (T1–T5; both live gates PASSED): the prompt-instructed XML protocol is the officially adopted wire format (Gemini API executes it ~3x faster than local Ollama); native Ollama tool calling stays implemented and gated but reserved for comparison experiments. Details in [`harness/TOOLCALL.md`](harness/TOOLCALL.md).
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all tests.
 >
-> **Immediate Next Priority: Dedicated Grammar Agent Harness (Two-Stage Bottom-Up Plan)**:
-> *All harness planning, current progress, and the tool-call protocol sub-project are consolidated in [`harness/PLAN.md`](harness/PLAN.md) — refer to it (and only it) for harness work; it links the per-stage specifications.*
+> **Active work: Dedicated Grammar Agent Harness (`harness/`)**: Stages 1–4
+> (autonomous inference benchmark, rule/lexicon extraction, context
+> optimization, full-corpus verification) are complete; Stage 5 (corpus
+> durability) is open.
+> *All harness planning, progress, and stage records are consolidated in
+> [`harness/PLAN.md`](harness/PLAN.md) — refer to it (and only it) for
+> harness work. This file is not kept in sync with harness-internal
+> progress; it only reflects the coarse status above.*
 
-## Current Status (2026-08-22)
+## Current Status (2026-08-29)
 
 **All five grammatical layers and the pronoun case annex are fully implemented, built for all 100 cantos of the *Divina Commedia*, modularized, and merged to `main`.**
 
@@ -21,7 +27,7 @@
 - **Layer 3 — Noun Phrases**: 0 hard / 0 soft violations across all 100 cantos ([`np/README.md`](np/README.md)).
 - **Layer 4 — Dependency Trees**: 0 hard / 0 soft violations across all 100 cantos ([`dep/README.md`](dep/README.md)). Stacked prepositions normalized and subject-agreement residue closed (see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md)).
 - **Layer 5 — Predicate-Argument Skeleton**: **0 hard / 0 soft violations across all 100 cantos** ([`skel/README.md`](skel/README.md), [`skel/RULES.md`](skel/RULES.md)).
-- **Test Suite**: `pytest` **717 passed** (547 corpus + 170 harness; corpus tests ~1.5 s, full suite ~12 s).
+- **Test Suite**: `pytest` **876 passed** (547 corpus + 329 harness; corpus tests ~1.5 s).
 - **Layer 5 Divergence Residue**: **0** (Inferno 0, Purgatorio 0, Paradiso 0).
 
 ### Layer 5 Phase Retrospectives
@@ -37,10 +43,15 @@
 With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructuring completed in Phase 8, the active 0-soft regression gate enables downstream tooling:
 
 1. **Dedicated Grammar Agent Harness for Local LLMs (`harness/`)**:
-   - Build a specialized agent harness in `harness/` adopting the two-stage bottom-up architecture (Stage 1: Autonomous Inference `runner/` ➔ Stage 2: Rule & Lexicon Extraction `extractor/`).
-   - Benchmark Gemma 4 on curated syntactic challenge fixtures against the 0-soft ground truth (`skel/`).
-   - *Progress (2026-08-22)*: Tool Call Protocol T1–T5 complete with both live gates passed; Stage 1 milestones 1.1–1.3 complete (toolset, agent runner, 87-case benchmark suite); milestone-1.4 pre-flight observability hardened per §4 item 5. Next: milestone 1.4 evaluation runs (operator-run pilots, then full runs) — session handoff & exact commands in [`harness/PLAN.md`](harness/PLAN.md).
-   - *Details, current status & handoff*: [`harness/PLAN.md`](harness/PLAN.md) — the single reference for all harness work.
+   - A specialized agent harness in `harness/` adopting a staged bottom-up
+     architecture: Stage 1 autonomous inference (`runner/`) ➔ Stage 2 rule &
+     lexicon extraction (`extractor/`) ➔ Stage 3 context optimization ➔
+     Stage 4 full-corpus verification, with Stage 5 (corpus durability) open.
+   - Benchmarks and reconstructs against the 0-soft ground truth (`skel/`)
+     without ever writing to it.
+   - *Details, current status & handoff*: [`harness/PLAN.md`](harness/PLAN.md)
+     — the single reference for all harness work; not duplicated or kept in
+     sync here.
 
 2. **Long-Term Portability & Cross-Corpus Extensions**:
    - Declarative rule scheduling DAG, additional language packs (Latin, etc.).
@@ -66,7 +77,7 @@ the normalized Italian text, the token stream, the nested quote-span tree, morph
 noun phrases, dependency syntax trees, and predicate-argument skeletons, all derived from
 the poem itself with no external ontology. All five layers and the pronoun case annex are now fully
 computed, frozen, and verified at **0 hard / 0 soft violations across all 100 cantos** (suite now
-at `pytest` 717 passed including the harness).
+at `pytest` 876 passed including the harness).
 
 Downstream projects each need to *read the source grammatically* before they can do their own
 work — the formalization layer (`dante-analyze`) to extract entities and relations, the
@@ -150,4 +161,4 @@ grammar; they are contested judgments, normalizations, or bindings to something 
    - Layer stack interface (`GrammarContext`).
    - Modular decomposition: `dante_corpus/skel/` subpackage (models, registry, derive, rules, repairs, validate, io) & `skel/` CLI drivers (`driver_ui.py`, `driver_build.py`, `driver_fix.py`, `skel.py`).
    - Verified at 0 hard / 0 soft violations and 547 pytest passing.
-7. **Dedicated Grammar Agent Harness (`harness/`)** — *Next Active Step* ([`harness/PLAN.md`](harness/PLAN.md)).
+7. **Dedicated Grammar Agent Harness (`harness/`)** — *In progress* ([`harness/PLAN.md`](harness/PLAN.md), single reference for status).
