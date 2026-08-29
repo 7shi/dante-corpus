@@ -74,6 +74,12 @@ dante-corpus/
 │   │   ├── hybrid_engine.py       # Fast-path (rules/lexicon) + agent fallback router
 │   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline
 │   │
+│   ├── recon/                     # [Stage 4/5] Full-corpus run drivers & durable artifacts
+│   │   ├── Makefile               # 100-canto launch, resumable; goal = NN.tsv (log -> TSV)
+│   │   ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
+│   │   ├── convert.py             # [Stage 5] Logs -> committable gold-format NN.tsv
+│   │   └── <canticle>/            # NN.log (gitignored, telemetry) + NN.tsv (skel-compatible)
+│   │
 │   └── fixtures/                  # Benchmark challenge fixtures & historical case units
 │       ├── __init__.py            # Public fixture accessors
 │       └── challenge_cases.py     # Frozen 87-case table (historical/control/coordination/
@@ -88,5 +94,7 @@ dante-corpus/
     ├── test_harness_syntax_miner.py  # Stage 2 miner tests (clustering, rules, coverage)
     ├── test_harness_lexicon_builder.py  # Stage 2 lexicon tests (frames, gating, coverage)
     ├── test_harness_hybrid_engine.py   # Stage 2 engine tests (derivation, routing, fallback)
-    └── test_harness_reconstruct.py     # Stage 2 gate tests (assertions, 0-soft, hash commit)
+    ├── test_harness_reconstruct.py     # Stage 2 gate tests (assertions, 0-soft, hash commit)
+    ├── test_harness_recon_readout.py   # Stage 4 readout tests (aggregation math)
+    └── test_harness_recon_convert.py   # Stage 5 conversion tests (TSV shape, idempotence)
 ```

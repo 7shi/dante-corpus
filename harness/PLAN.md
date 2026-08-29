@@ -9,10 +9,23 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — Stage 5: start with a skel-compatible conversion script.**
-Opening scope and open design questions are in [`STAGE5.md`](STAGE5.md) —
-not repeated here. Nothing is in flight on the assistant side yet; no
-design has been started.
+**Next action — operator: decide whether Stage 5 closes here.** Its
+deliverable 1 shipped and is committed (record S5.1: `recon/convert.py`, the
+TSV-goal Makefile, and the 100 `harness/recon/<canticle>/NN.tsv`);
+deliverable 2 was cut ([`STAGE5.md`](STAGE5.md) §2). Nothing is in flight on
+the assistant side and no work is half-done. Two things a fresh session
+should know before touching `harness/recon/`:
+
+- The Stage-4 logs are still on this machine, gitignored. They are the only
+  copy of the run's telemetry (cost accounting, per-unit routing and gate
+  detail), which by §2's decision is accepted as ephemeral — the headline
+  numbers survive only as prose in [`STAGE5.md`](STAGE5.md) S5.1 and
+  [`STAGE4.md`](STAGE4.md) S4.3. `recon/readout.py` still reads them while
+  they exist.
+- `make <canticle>` is now TSV-goaled and **will not re-run a canto whose
+  TSV exists with no log beside it** — the normal state after a fresh clone.
+  Deleting a TSV is how you ask for that canto again; do it deliberately,
+  since a full canticle is tens of hours of live model time.
 
 ## Current Status
 
@@ -21,13 +34,23 @@ live in §2's per-stage subsections below, not repeated here. This section
 holds only what's still open.
 
 - [ ] **Stage 5 — Corpus Durability** (OPENED 2026-08-29 by operator, on
-      Stage 4's close). Nothing shipped yet. Opening scope, open design
-      questions, and the stage ledger in [`STAGE5.md`](STAGE5.md).
+      Stage 4's close). Deliverable 1 shipped on record S5.1:
+      `harness/recon/convert.py` converts each per-canto log into a
+      gold-format `NN.tsv` beside it (idempotent, `make convert` /
+      `make convert-check`); the full corpus converted clean — 100 cantos,
+      3,477 units, 43,549 rows, 0 incomplete logs, 0 dropped row keys.
+      Deliverable 2 (a committed format for the logs' non-corpus content)
+      was CUT: run telemetry does not belong in the repository, so the
+      wire/cost and routing detail stays ephemeral in the logs. The 100 TSVs
+      are committed; the stage stays open only on the question of whether
+      anything further is wanted. Design decisions, the
+      conversion contract, and the stage ledger in [`STAGE5.md`](STAGE5.md).
 - Open design question (protocol layer): a dedicated `submit_candidate`
   termination tool — the practical half is resolved by the nudge policy
   ([`STAGE1.md`](STAGE1.md) carry-over 3); tracked as
   [`TOOLCALL.md`](TOOLCALL.md) §7.1.
-- Test suite: **876 passed**. Composition and history (TokenBucket removal,
+- Test suite: **887 passed** (876 + 11 from S5.1's conversion tests).
+  Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
 
@@ -230,8 +253,18 @@ The Stage-4 corpus run's 100 per-canto logs (`harness/recon/<canticle>/
 NN.log`) are gitignored, disk-only, and will eventually be lost. Opening
 scope: a script converting their settled reconstruction output into
 `skel/`-compatible, committable form, plus a separate format for whatever
-doesn't map into that shape, so nothing is silently dropped. Nothing
-shipped yet; open design questions and the stage ledger live in
+doesn't map into that shape, so nothing is silently dropped. Record S5.1
+ships the first as `<canticle>/NN.tsv` written beside each log, in gold's
+byte-exact TSV format (so a plain `diff` against `skel/` is the run's
+divergence readout); deterministic, LLM-free and idempotent, so it is a
+repeatable step after any future corpus run rather than a one-time
+migration. `recon/Makefile`'s per-canto goal moved from the log to the TSV
+with it (reconstruct → convert in one target), and a canto whose TSV exists
+with no log beside it is left alone, so a fresh checkout never re-runs the
+corpus for output it already has. The second deliverable was cut on operator
+review: the logs' remaining content is run telemetry, not corpus content,
+and stays out of the repository — accepted as ephemeral. Design
+decisions, the conversion contract, and the stage ledger live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.
 
