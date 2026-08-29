@@ -68,7 +68,6 @@ line	token	word	role	arg_line	arg_token
 23	1	mostrav'	obj	23	6
 23	1	mostrav'	xcomp	22	4
 24	2	nascondea	subj	0	0
-24	2	nascondea	obj	0	0
 24	2	nascondea	obl:in	24	4
 24	7	balena	subj	0	0
 25	0			0	0
@@ -105,7 +104,6 @@ line	token	word	role	arg_line	arg_token
 35	2	arruncigliò	obj	35	5
 35	2	arruncigliò	iobj	35	1
 36	2	trassel	subj	34	2
-36	2	trassel	obj	36	2
 36	2	trassel	obl	36	3
 36	6	parve	subj	0	0
 36	6	parve	iobj	36	5
@@ -147,7 +145,6 @@ line	token	word	role	arg_line	arg_token
 46	6	accostò	iobj	46	4
 46	6	accostò	obl	46	7
 47	1	domandollo	subj	0	0
-47	1	domandollo	obj	47	1
 47	1	domandollo	ccomp	47	4
 47	4	fosse	subj	47	3
 47	4	fosse	obl	47	2
@@ -233,7 +230,6 @@ line	token	word	role	arg_line	arg_token
 71	1	disse	ccomp	70	5
 71	3	preseli	subj	0	0
 71	3	preseli	obj	71	5
-71	3	preseli	iobj	71	3
 71	3	preseli	obl:con	71	7
 72	3	stracciando	subj	0	0
 72	5	portò	subj	0	0
@@ -285,17 +281,14 @@ line	token	word	role	arg_line	arg_token
 85	3	tolse	obj	85	1
 85	3	tolse	iobj	85	2
 85	5	lasciolli	subj	0	0
-85	5	lasciolli	obj	85	5
 85	5	lasciolli	obl:di	85	7
 86	4	dice	subj	86	3
-86	4	dice	obj	0	0
 87	2	fu	subj	0	0
 87	2	fu	attr	87	1
 87	2	fu	attr	87	4
 87	2	fu	attr	87	6
 87	2	fu	obl:ne	86	9
 88	1	Usa	subj	88	4
-88	1	Usa	obj	0	0
 88	1	Usa	obl:con	88	3
 89	5	dir	subj	0	0
 89	5	dir	obl:di	89	7
@@ -313,7 +306,6 @@ line	token	word	role	arg_line	arg_token
 93	3	apparecchi	xcomp	93	5
 93	3	apparecchi	obl	93	1
 93	5	grattarmi	obj	93	7
-93	5	grattarmi	iobj	93	5
 94	5	vòlto	subj	94	4
 94	5	vòlto	obl:a	94	7
 95	2	stralunava	subj	95	1
@@ -323,7 +315,6 @@ line	token	word	role	arg_line	arg_token
 96	1	disse	subj	94	4
 96	1	disse	ccomp	96	2
 96	2	Fatti	subj	0	0
-96	2	Fatti	obj	0	0
 96	2	Fatti	obl:in	96	4
 97	3	volete	subj	97	2
 97	3	volete	xcomp	97	4
@@ -373,7 +364,6 @@ line	token	word	role	arg_line	arg_token
 108	4	pensata	obj	108	1
 108	4	pensata	xcomp	108	6
 108	6	gittarsi	subj	108	2
-108	6	gittarsi	obj	0	0
 108	6	gittarsi	obl	108	7
 109	4	avea	subj	109	3
 109	4	avea	obj	109	5
@@ -487,7 +477,6 @@ line	token	word	role	arg_line	arg_token
 141	1	cadder	subj	140	6
 142	5	fue	subj	142	3
 143	4	levarsi	subj	0	0
-143	4	levarsi	obj	0	0
 143	5	era	subj	0	0
 143	5	era	attr	143	6
 143	6	neente	xcomp	143	4

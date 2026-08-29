@@ -25,7 +25,6 @@ line	token	word	role	arg_line	arg_token
 7	10	corse	obl	7	8
 8	2	spira	subj	8	1
 8	4	conducemi	subj	8	5
-8	4	conducemi	obj	8	4
 9	5	dimostran	subj	9	3
 9	5	dimostran	obj	9	7
 9	5	dimostran	iobj	9	4
@@ -166,7 +165,6 @@ line	token	word	role	arg_line	arg_token
 48	8	remoto	obj	48	6
 48	8	remoto	obl:da	48	5
 49	2	ditemi	subj	0	0
-49	2	ditemi	iobj	49	2
 49	2	ditemi	ccomp	49	4
 49	4	son	subj	49	6
 49	4	son	attr	49	3
@@ -187,14 +185,12 @@ line	token	word	role	arg_line	arg_token
 53	4	disse	ccomp	55	4
 53	4	disse	ccomp	57	1
 54	6	diserra	subj	54	2
-54	6	diserra	obj	0	0
 54	6	diserra	obl	54	1
 55	4	dovrien	subj	55	7
 55	4	dovrien	obj	55	3
 55	4	dovrien	xcomp	55	5
 55	4	dovrien	obl	52	8
 55	5	punger	subj	0	0
-55	5	punger	obj	0	0
 56	0			0	0
 57	1	vedi	subj	0	0
 57	1	vedi	ccomp	57	5
@@ -202,7 +198,6 @@ line	token	word	role	arg_line	arg_token
 57	5	ha	obj	57	8
 58	2	dimmi	subj	0	0
 58	2	dimmi	obj	58	3
-58	2	dimmi	iobj	58	2
 58	9	pensi	subj	58	5
 58	9	pensi	obj	58	4
 58	9	pensi	obl:da	58	7
@@ -305,7 +300,6 @@ line	token	word	role	arg_line	arg_token
 93	0			0	0
 94	4	può	subj	95	1
 94	4	può	xcomp	94	5
-94	5	deliberarti	iobj	94	5
 94	5	deliberarti	obl:da	94	3
 95	6	provi	subj	0	0
 95	6	provi	obj	95	5
@@ -424,7 +418,6 @@ line	token	word	role	arg_line	arg_token
 132	1	prende	obj	132	3
 132	5	fassene	subj	130	3
 132	5	fassene	obj	132	6
-132	5	fassene	obl	132	5
 133	0			0	0
 134	5	conformate	subj	134	3
 134	5	conformate	obl:a	135	3

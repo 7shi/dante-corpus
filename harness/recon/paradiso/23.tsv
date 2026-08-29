@@ -32,10 +32,8 @@ line	token	word	role	arg_line	arg_token
 12	6	mostra	obj	12	8
 12	6	mostra	obl:sotto	12	3
 13	3	veggendola	subj	13	4
-13	3	veggendola	obj	13	3
 13	3	veggendola	xcomp	13	5
 14	1	fecimi	subj	0	0
-14	1	fecimi	obj	14	1
 14	1	fecimi	obl	14	3
 14	3	è	subj	14	4
 14	3	è	attr	14	2
@@ -58,7 +56,6 @@ line	token	word	role	arg_line	arg_token
 20	0			0	0
 21	0			0	0
 22	1	Pariemi	subj	0	0
-22	1	Pariemi	iobj	22	1
 22	1	Pariemi	ccomp	22	6
 22	6	ardesse	subj	22	5
 23	4	avea	subj	0	0
@@ -66,7 +63,6 @@ line	token	word	role	arg_line	arg_token
 23	4	avea	attr	23	8
 23	8	pieni	obl:di	23	6
 24	2	passarmen	subj	0	0
-24	2	passarmen	iobj	24	2
 24	2	passarmen	obl:sanza	24	5
 24	3	convien	subj	0	0
 24	3	convien	xcomp	24	2
@@ -112,7 +108,6 @@ line	token	word	role	arg_line	arg_token
 40	6	diserra	obj	40	5
 40	6	diserra	xcomp	41	2
 41	2	dilatarsi	subj	0	0
-41	2	dilatarsi	obj	0	0
 41	7	cape	subj	0	0
 41	7	cape	obl	41	6
 42	9	atterra	subj	40	2
@@ -128,7 +123,6 @@ line	token	word	role	arg_line	arg_token
 45	4	fesse	obj	45	3
 45	4	fesse	xcomp	45	5
 45	5	rimembrar	subj	0	0
-45	5	rimembrar	obj	0	0
 45	7	sape	subj	43	2
 45	7	sape	ccomp	45	4
 46	1	Apri	subj	0	0
@@ -155,7 +149,6 @@ line	token	word	role	arg_line	arg_token
 50	7	ingegna	obl	51	1
 51	3	ridurlasi	subj	0	0
 51	3	ridurlasi	obj	50	2
-51	3	ridurlasi	iobj	0	0
 51	3	ridurlasi	obl:a	51	6
 52	3	udi'	subj	52	2
 52	3	udi'	obj	52	5
@@ -171,7 +164,6 @@ line	token	word	role	arg_line	arg_token
 56	6	fero	obl:di	57	2
 57	0			0	0
 58	2	aiutarmi	subj	55	6
-58	2	aiutarmi	obj	58	2
 59	3	verria	subj	59	2
 59	3	verria	ccomp	60	6
 59	3	verria	obl:a	58	4
@@ -241,7 +233,6 @@ line	token	word	role	arg_line	arg_token
 86	3	essaltasti	xcomp	86	5
 86	5	largirmi	subj	0	0
 86	5	largirmi	obj	86	6
-86	5	largirmi	iobj	86	5
 87	8	eran	subj	87	5
 87	8	eran	attr	87	9
 87	8	eran	obl	87	7
@@ -268,10 +259,7 @@ line	token	word	role	arg_line	arg_token
 95	1	formata	obl:in	95	3
 95	1	formata	obl:a	95	5
 96	2	cinsela	subj	94	7
-96	2	cinsela	obj	0	0
-96	2	cinsela	obl	96	2
 96	4	girossi	subj	94	7
-96	4	girossi	obj	0	0
 96	4	girossi	obl:a	96	7
 97	5	suona	subj	97	2
 97	5	suona	obl	98	1
@@ -300,7 +288,6 @@ line	token	word	role	arg_line	arg_token
 105	2	fu	subj	105	1
 105	2	fu	attr	105	3
 106	2	girerommi	subj	0	0
-106	2	girerommi	obj	106	2
 107	2	seguirai	subj	0	0
 107	2	seguirai	obj	107	4
 107	6	farai	subj	0	0

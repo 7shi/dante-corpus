@@ -10,7 +10,6 @@ line	token	word	role	arg_line	arg_token
 4	3	faceva	attr	4	6
 4	3	faceva	obl:di	5	3
 5	8	face	subj	5	7
-5	8	face	obj	0	0
 6	2	temon	subj	0	0
 6	2	temon	obj	6	1
 6	3	gira	subj	6	1
@@ -117,7 +116,6 @@ line	token	word	role	arg_line	arg_token
 42	7	fosse	subj	42	3
 42	7	fosse	obl:di	42	6
 43	1	volsimi	subj	0	0
-43	1	volsimi	obj	43	1
 43	1	volsimi	obl:a	43	4
 43	1	volsimi	obl:con	43	6
 44	5	corre	subj	44	4
@@ -139,7 +137,6 @@ line	token	word	role	arg_line	arg_token
 49	5	lasciati	attr	49	6
 50	0			0	0
 51	7	die'	subj	0	0
-51	7	die'	obj	0	0
 51	7	die'	iobj	51	8
 51	7	die'	obl:a	51	3
 51	7	die'	obl:per	51	6
@@ -205,7 +202,6 @@ line	token	word	role	arg_line	arg_token
 72	7	reserva	obj	72	5
 72	7	reserva	obl	72	6
 73	1	Guardaci	subj	0	0
-73	1	Guardaci	obj	73	1
 73	4	son	subj	0	0
 73	4	son	attr	73	7
 73	6	son	subj	0	0
@@ -222,7 +218,6 @@ line	token	word	role	arg_line	arg_token
 76	4	cadder	obl	76	5
 76	4	cadder	obl:in	76	8
 77	2	veggendomi	subj	0	0
-77	2	veggendomi	obj	77	2
 77	2	veggendomi	obl:in	77	4
 77	6	trassi	subj	0	0
 77	6	trassi	obj	77	5
@@ -408,7 +403,6 @@ line	token	word	role	arg_line	arg_token
 137	5	eran	obl	138	3
 138	3	mostrarli	subj	0	0
 138	3	mostrarli	obj	138	6
-138	3	mostrarli	iobj	138	3
 139	3	visitai	subj	0	0
 139	3	visitai	obj	139	5
 139	3	visitai	obl:per	139	2

@@ -8,7 +8,6 @@ line	token	word	role	arg_line	arg_token
 4	6	avien	obl	4	5
 5	3	caler	subj	5	7
 6	3	traéli	subj	5	7
-6	3	traéli	obj	6	3
 6	3	traéli	obl	6	2
 6	3	traéli	obl	6	7
 7	6	vòlto	subj	7	8
@@ -53,9 +52,7 @@ line	token	word	role	arg_line	arg_token
 17	5	tornarsi	obl:a	18	9
 18	0			0	0
 19	6	salvarsi	subj	0	0
-19	6	salvarsi	obj	0	0
 20	1	volgesi	subj	20	2
-20	1	volgesi	obj	0	0
 20	1	volgesi	obl:sotto	19	4
 20	1	volgesi	obl	19	6
 20	5	gira	subj	20	2
@@ -65,7 +62,6 @@ line	token	word	role	arg_line	arg_token
 21	3	possa	subj	21	4
 21	3	possa	xcomp	21	7
 21	7	mutarsi	subj	0	0
-21	7	mutarsi	obj	0	0
 21	7	mutarsi	obl:in	21	6
 22	0			0	0
 23	2	procedeva	subj	23	1
@@ -142,7 +138,6 @@ line	token	word	role	arg_line	arg_token
 49	8	tirato	subj	49	6
 49	8	tirato	obj	49	5
 50	1	trasselo	subj	0	0
-50	1	trasselo	obj	50	1
 50	1	trasselo	obl:a	50	3
 51	7	lasciò	subj	0	0
 51	7	lasciò	obj	51	2
@@ -155,7 +150,6 @@ line	token	word	role	arg_line	arg_token
 54	2	raggia	subj	54	1
 54	2	raggia	obl:dietro	54	7
 55	2	fansi	subj	52	4
-55	2	fansi	obj	0	0
 55	2	fansi	attr	55	1
 55	6	rinovella	subj	56	4
 55	6	rinovella	obj	55	5
@@ -189,7 +183,6 @@ line	token	word	role	arg_line	arg_token
 64	6	assonnaro	subj	0	0
 64	6	assonnaro	obj	65	2
 65	4	udendo	subj	0	0
-65	4	udendo	obj	0	0
 65	4	udendo	obl:di	65	6
 66	6	vegghiar		0	0
 66	7	costò	subj	66	6
@@ -333,7 +326,6 @@ line	token	word	role	arg_line	arg_token
 107	5	era	obl	106	6
 107	5	era	obl:a	106	8
 108	8	volle	subj	108	7
-108	8	volle	obj	0	0
 108	9	diedi	subj	106	4
 108	9	diedi	obj	108	2
 108	9	diedi	obj	108	5
@@ -406,7 +398,6 @@ line	token	word	role	arg_line	arg_token
 131	6	vidi	obj	131	9
 131	6	vidi	xcomp	131	7
 131	7	uscirne	subj	131	9
-131	7	uscirne	obl	131	7
 132	8	fisse	subj	132	1
 132	8	fisse	obj	132	7
 132	8	fisse	obl:per	132	4
@@ -431,7 +422,6 @@ line	token	word	role	arg_line	arg_token
 139	2	ricoperse	obl:da	137	5
 139	4	funne	subj	140	3
 139	4	funne	attr	139	5
-139	4	funne	obl:da	139	4
 140	0			0	0
 141	3	tiene	subj	141	7
 141	3	tiene	obj	141	5
@@ -469,7 +459,6 @@ line	token	word	role	arg_line	arg_token
 152	1	vidi	obl:a	152	5
 152	1	vidi	obl	152	6
 153	2	basciavansi	subj	0	0
-153	2	basciavansi	obj	0	0
 153	2	basciavansi	obl	153	3
 153	2	basciavansi	obl	153	5
 154	0			0	0
@@ -484,7 +473,6 @@ line	token	word	role	arg_line	arg_token
 158	1	disciolse	subj	0	0
 158	1	disciolse	obj	158	3
 158	5	trassel	subj	0	0
-158	5	trassel	obj	158	5
 158	5	trassel	obl:per	158	8
 159	7	fece	subj	0	0
 159	7	fece	obj	159	8

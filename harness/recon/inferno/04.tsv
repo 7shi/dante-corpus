@@ -1,7 +1,6 @@
 line	token	word	role	arg_line	arg_token
 1	1	Ruppemi	subj	2	3
 1	1	Ruppemi	obj	1	4
-1	1	Ruppemi	iobj	1	1
 1	1	Ruppemi	obl:in	1	7
 1	1	Ruppemi	obl	2	8
 2	8	riscossi	subj	2	6
@@ -55,7 +54,6 @@ line	token	word	role	arg_line	arg_token
 18	6	esser	subj	17	5
 18	6	esser	attr	18	7
 18	6	esser	obl:a	18	5
-19	2	elli	subj	19	2
 19	2	elli	iobj	19	4
 19	2	elli	ccomp	20	8
 20	2	son	subj	20	1
@@ -151,10 +149,8 @@ line	token	word	role	arg_line	arg_token
 45	7	sospesi	subj	45	2
 45	7	sospesi	obl:in	45	5
 46	1	Dimmi	subj	0	0
-46	1	Dimmi	iobj	46	1
 46	1	Dimmi	ccomp	49	1
 46	4	dimmi	subj	0	0
-46	4	dimmi	iobj	46	4
 46	4	dimmi	ccomp	49	1
 47	1	comincia'	subj	47	2
 47	1	comincia'	ccomp	46	1
@@ -197,7 +193,6 @@ line	token	word	role	arg_line	arg_token
 60	7	fé	obl:per	60	5
 60	7	fé	obl	60	6
 61	5	feceli	subj	0	0
-61	5	feceli	obj	61	5
 61	5	feceli	attr	61	6
 62	2	vo'	subj	0	0
 62	2	vo'	ccomp	62	4
@@ -289,7 +284,6 @@ line	token	word	role	arg_line	arg_token
 92	4	sonò	obj	92	3
 93	1	fannomi	subj	0	0
 93	1	fannomi	obj	93	2
-93	1	fannomi	iobj	93	1
 93	6	fanno	subj	0	0
 93	6	fanno	obj	93	7
 93	6	fanno	obl:di	93	5
@@ -303,7 +297,6 @@ line	token	word	role	arg_line	arg_token
 96	7	vola	obl	96	5
 97	4	ragionato	subj	0	0
 98	1	volsersi	subj	0	0
-98	1	volsersi	obj	98	1
 98	1	volsersi	obl:a	98	3
 98	1	volsersi	obl:con	98	6
 99	5	sorrise	subj	99	4
@@ -353,7 +346,6 @@ line	token	word	role	arg_line	arg_token
 114	1	parlavan	obl	114	2
 114	1	parlavan	obl:con	114	4
 115	1	Traemmoci	subj	0	0
-115	1	Traemmoci	obj	115	1
 115	1	Traemmoci	obl	115	2
 115	1	Traemmoci	obl:da	115	5
 115	1	Traemmoci	obl:in	116	2

@@ -131,7 +131,6 @@ line	token	word	role	arg_line	arg_token
 44	7	chinò	obj	44	9
 44	7	chinò	obl	44	6
 45	4	disse	subj	0	0
-45	4	disse	obj	0	0
 45	6	rimase	subj	0	0
 45	6	rimase	attr	45	7
 46	2	divenimmo	subj	46	1
@@ -235,7 +234,6 @@ line	token	word	role	arg_line	arg_token
 75	9	aspetti	obj	74	5
 75	9	aspetti	obl:per	75	6
 76	1	ditene	subj	0	0
-76	1	ditene	obj	76	1
 76	1	ditene	ccomp	76	5
 76	1	ditene	obl:per	74	5
 76	5	giace	subj	76	4
@@ -246,7 +244,6 @@ line	token	word	role	arg_line	arg_token
 78	2	perder	subj	0	0
 78	2	perder	obj	78	3
 78	7	sa	subj	78	5
-78	7	sa	obj	0	0
 78	9	spiace	subj	78	2
 78	9	spiace	iobj	78	5
 79	4	escon	subj	79	3
@@ -348,7 +345,6 @@ line	token	word	role	arg_line	arg_token
 106	3	volsi	obj	106	2
 106	3	volsi	obl:verso	106	5
 106	7	guardail	subj	0	0
-106	7	guardail	obj	106	7
 106	7	guardail	obl	106	8
 107	2	era	subj	0	0
 107	2	era	attr	107	1
@@ -363,10 +359,8 @@ line	token	word	role	arg_line	arg_token
 110	6	disse	subj	110	5
 110	6	disse	ccomp	110	8
 110	8	vedi	subj	0	0
-110	8	vedi	obj	0	0
 111	2	mostrommi	subj	0	0
 111	2	mostrommi	obj	111	4
-111	2	mostrommi	iobj	111	2
 111	2	mostrommi	obl:a	111	6
 112	2	sorridendo	subj	0	0
 112	3	disse	subj	0	0
@@ -396,7 +390,6 @@ line	token	word	role	arg_line	arg_token
 119	7	rendei	obl:a	120	3
 120	1	piangendo	subj	0	0
 120	6	perdona	subj	120	4
-120	6	perdona	obj	0	0
 121	2	furon	subj	121	4
 121	2	furon	attr	121	1
 122	5	ha	subj	122	3

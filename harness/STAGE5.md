@@ -15,7 +15,10 @@ Record S5.2 (same day) added a `--check`/`--stats` port
 from gold; §4 opens a new direction on the strength of that readout — Stage
 5 continues as a divergence-reduction effort over the recon TSVs, informed
 by (but not repeating) [`../skel/PHASE5.md`](../skel/PHASE5.md)'s
-deterministic-rule methodology.
+deterministic-rule methodology. Record S5.3 is the first reduction pass:
+two deterministic rules (`harness/recon/repair.py`) taking the corpus from
+**897 to 70 hard** violations, gated on gold agreement rather than on the
+violation count — §5 records why that distinction is the load-bearing one.
 
 ---
 
@@ -145,8 +148,161 @@ brute-force whole-unit regeneration treated as a last resort given Phase 5's
 measured flat yield (§1.1 there). What actually transfers, and what Rules
 A–EI (if any) still apply unmodified to `harness/recon/`'s output, is
 determined by reading the recon violations themselves — not assumed from
-the gold-side ledger. No implementation has started; this section records
-the direction only.
+the gold-side ledger. §5 is the first implementation of that direction.
+
+## 5. What the violation count is, and what gold is not (2026-08-29)
+
+Two operator interventions shaped this section, and both are corrections to
+how the reduction work was first framed. They are recorded together because
+they pull in opposite directions and the resolution is the method.
+
+**First: is `hard` a trustworthy criterion?** As a *quality* measure, no.
+
+- **It is calibrated.** Pointing the same checker at gold
+  (`uv run python -m harness.recon.check --root skel`) reports **0 hard, 0
+  soft** across all 100 cantos. Passing it is a genuine necessary condition,
+  not an arbitrary bar.
+- **It is also gameable.** Every hard class is a property of the artifact
+  alone, and all of them are cleared by *deleting rows*. Optimizing the
+  counter rewards deletion, which would shrink the corpus toward vacuity
+  while the number improved.
+
+**Second: gold is the benchmark, not the target.** The first response to
+that gameability was to make row-level agreement with gold the gate that
+decides whether a rule ships. The operator rejected it, correctly: fitting
+repair rules to gold is teaching to the test. It destroys the meaning of
+every gold-referenced number `harness/` reports (Stage 1's micro F1,
+S4.3's verify-gold readout, `agree.py`'s own score), and it reinstates
+exactly the top-down methodology `harness/` exists to replace — a larger
+intelligence reading the answers and laying rails for the pipeline to run on
+(PLAN.md §1). Gold stays the immutable evaluation reference of §4 item 1,
+and "immutable" has to mean *unconsulted during construction*, not merely
+unwritten.
+
+**The resolution — where a repair rule's authority comes from.** Not from
+the violation counter (gameable) and not from gold (off limits), but from
+the layer's own published contract: `dante_corpus/skel/validate.py`'s schema
+invariants and `derive.py`'s derivation, the same L1–L4-driven machinery
+that produces the violations in the first place. A rule is admissible when
+the schema declares the current row impossible *and* the contract determines
+what may stand in its place; where the contract is silent, the conservative
+move is to withdraw the void assertion rather than invent one, and where a
+derivable alternative exists, deletion is the wrong repair. Gold agreement
+is then read *afterwards*, as a readout of where the gold-free work landed.
+
+This is a real constraint, not a formality: it is why the clausal class
+below is deferred rather than repaired, even though its gold reading is
+obvious.
+
+**Honest caveat on S5.3's own two rules.** They satisfy the standard —
+both are re-derivable from `validate.py` alone, and `repair.py` opens no
+gold file. But gold *was* consulted while they were being designed, before
+the operator's second intervention. The agreement gain they show therefore
+cannot be claimed as fully independent evidence that schema-driven repair
+converges on gold; that claim has to be earned by the next rule, designed
+gold-closed from the start.
+
+`agree.py` is operator-side, like `benchmark.py`: it reads gold, so nothing
+under `runner/` may import it (PLAN.md §4 item 1). It is read-only and
+writes nothing anywhere.
+
+### The hard 897, read position-by-position
+
+The count decomposes exactly into four classes:
+
+| class | count | what the agent did |
+| --- | ---: | --- |
+| `[dup] argument cites its own predicate` | 486 | gave an enclitic pronoun its own argument row pointing at the host verb token (`aiutami`, `trarrotti`, `venendomi`) |
+| `[position] role 'X' may not use (0,0)` | 341 | used the null position for an elided non-subject (323 `obj`, 12 `iobj`, 6 others) |
+| `[clausal] xcomp argument is not a predicate` | 57 | labelled a predicative adjective/participle `xcomp` |
+| `[clausal] ccomp argument is not a predicate` | 13 | same, with `ccomp` |
+
+The first two are void by schema, read position-by-position rather than in
+the aggregate:
+
+- `inferno 1:89` recon `89 1 aiutami obj 89 1` — the enclitic `-mi` is
+  inside the verb token, so the row makes the predicate its own object.
+  `validate.py`'s `arg == pos` test rejects it outright, and L1–L4 offer no
+  other position to cite: the clitic's referent is a resolution decision,
+  not a lookup. Same shape at `1:59`, `1:67`, `1:83`, `1:111`, `1:114`.
+- `inferno 2:6` recon `6 2 ritrarrà obj 0 0` — the null position is the
+  schema's notation for an unexpressed *subject* and is defined for no other
+  role; an elided object simply has no position to name. The class is
+  uniform: 323 `obj`, 12 `iobj`, 6 others, matching the violation total
+  exactly.
+
+In both classes the row asserts something the schema forbids while the
+frozen layers determine no replacement, so withdrawing the assertion is the
+only repair that does not fabricate one.
+
+The clausal class is deliberately left alone, and it is the case that shows
+the standard has teeth. Recon has `15 7 fanno xcomp 15 6` at `inferno
+10:15`: `xcomp` requires its argument to be a predicate in the unit, and
+`15 6` is not registered as one. Unlike the first two classes there *is* a
+derivable alternative — the L4 tree and the role vocabulary both admit
+treating the predicative participle as a predicate in its own right and
+relabelling the host's relation accordingly — so deleting the row would
+destroy recoverable structure, and the repair has to say which predicate
+gets registered with which subject. Deriving that from L2/L4 is a design
+pass of its own, so the class waits for its own record. (Gold's reading of
+these positions is not the input to that design: this section deliberately
+does not quote it.)
+
+### The repair (`harness/recon/repair.py`)
+
+    cd harness/recon && make repair        # apply both rules, in place
+    cd harness/recon && make repair-check  # non-zero exit if any row remains
+    cd harness/recon && make agree         # readout only: P/R/F1 against gold
+
+    uv run python -m harness.recon.repair [--root DIR] [--canticle C]
+                                          [--canto N] [--check]
+
+Two rules, both deletions, both idempotent:
+
+- `self_arg` — drop a role-bearing row whose `(arg_line, arg_token)` equals
+  its own predicate's `(line, token)`.
+- `null_nonsubj` — drop a role-bearing row whose role is not `subj` and
+  whose argument position is `(0,0)`. Role-less rows — the schema's way of
+  registering a predicate that takes no arguments — are never touched.
+
+**Written in place** (operator decision): the repairs edit
+`harness/recon/<canticle>/NN.tsv` directly, so the git history carries the
+"raw model output → rules applied" diff rather than splitting the corpus
+into two committed trees. The consequence is an ordering constraint —
+**repair runs after convert, never before**; re-running `make convert`
+regenerates from the logs and rolls the repairs back. The per-canto `%.tsv`
+make goal is deliberately left as convert-only rather than chaining repair
+into it, so `make <canticle>` and `make convert` cannot disagree about what
+a TSV contains.
+
+### The readout
+
+| | hard | soft | rows | P | R | F1 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| before | 897 | 5,267 | 43,531 | 0.6949 | 0.7545 | 0.7235 |
+| after | **70** | **4,988** | 42,704 | **0.7083** | 0.7545 | **0.7307** |
+
+827 rows removed — 486 `self_arg` + 341 `null_nonsubj`. The residual 70 hard
+are exactly the clausal class (58 `xcomp` + 12 `ccomp`; the split shifts by
+one from the pre-repair 57/13 because removing rows changes which positions
+count as registered predicates).
+
+The agreement columns are the readout, taken after the fact: **not one of
+the 827 removed rows exists in gold**, true positives hold at 30,249, and
+recall is unchanged to four decimals, so the entire effect is precision. As
+§5's caveat records, gold was consulted while these two rules were being
+designed, so this is a consistency check rather than independent evidence —
+but it does establish the shape of the claim a properly gold-closed rule
+should be able to make.
+
+Five predicates lost every row they had (`purgatorio 22:44.5`,
+`paradiso 3:63.3`, `paradiso 6:27.7`, `paradiso 24:120.5`,
+`paradiso 28:33.3`) — reported by the tool rather than discovered later.
+The `missing_tuple` soft count is unchanged at 501, so the derivation does
+not require those predicates to be registered; whether a repair should
+nevertheless leave a role-less row behind is a question for the contract
+(`derive.py`'s predicate registration), and is deliberately left open rather
+than settled by looking at what gold happens to write there.
 
 ---
 
@@ -235,3 +391,49 @@ isolation; clean-gold-in reports zero; a corrupted word is a hard `word`
 violation; a corrupted role is a soft-only `tag` violation;
 `run`/`main --check` over a synthetic root; `main --stats` exits 0 on
 soft-only findings; the by-kind stats breakdown finds the injected class).
+
+### S5.3 — First divergence-reduction pass: 897 → 70 hard, gated on gold agreement (2026-08-29)
+
+The first implementation of §4's direction, and the record that settles what
+the divergence numbers are *for*. Full design, the position-by-position
+reads behind each rule, and the readout table live in §5; the ledger entry:
+
+- **Two operator interventions set the method** (§5). First: is `hard`
+  trustworthy? Calibrated but gameable — gold scores 0/0 under the same
+  checker, yet every hard class clears by deleting rows. Second, on the
+  first answer's proposed fix: **gold may not be the gate.** Fitting rules
+  to the evaluation reference is teaching to the test and reinstates the
+  top-down methodology `harness/` exists to replace. A rule's authority
+  comes from the layer's own contract (`validate.py` / `derive.py`); gold
+  agreement is read afterwards as a readout.
+- **`harness/recon/agree.py`** (+ `make agree`) — row-level P/R/F1 of the
+  committed TSVs against gold. Measurement only, in the same family as
+  `benchmark.py`'s micro F1 and `--verify-gold`.
+- **`harness/recon/repair.py`** (+ `make repair` / `make repair-check`) —
+  two deterministic rules for the hard classes `validate.py` declares
+  impossible: `self_arg` (a row making a predicate its own argument — an
+  enclitic pronoun) and `null_nonsubj` (a non-`subj` role at the null
+  position, which the schema defines only for an unexpressed subject). Both
+  repair by withdrawing the void assertion, because L1–L4 determine no
+  replacement and inventing one would fabricate structure. LLM-free,
+  idempotent, in-place, never reads or writes `skel/`.
+- **Applied to the corpus**: 827 rows removed across 99 cantos, taking it
+  from **897 hard / 5,267 soft to 70 hard / 4,988 soft**. Readout after the
+  fact: gold agreement **F1 0.7235 → 0.7307** with recall unchanged at
+  0.7545 — none of the 827 removed rows exists in gold, so the gain is pure
+  precision and nothing true was thrown away. §5 records the caveat that
+  gold was consulted while these two rules were designed, so the agreement
+  is a consistency check rather than independent evidence.
+- **The residual 70 hard are entirely the clausal class**, left for its own
+  record for a methodological reason, not a practical one: unlike the two
+  repaired classes it has a derivable alternative, so deletion would destroy
+  recoverable structure and the right repair has to be derived from L2/L4
+  rather than copied from the evaluation reference (§5).
+
+Test suite **895 → 916 passed** (21 new: per-rule classification incl. the
+`subj` and role-less exemptions, emptied-predicate reporting, both
+injected-divergence removals end-to-end, hard violations actually cleared,
+idempotence, `--check` writes nothing / exits 1, missing-TSV skip; and for
+the gate — gold against itself scores 1.0, a spurious row costs precision
+but not recall and is healed exactly by the repair, a dropped gold row costs
+recall, an empty root scores 0).

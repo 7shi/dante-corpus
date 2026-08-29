@@ -67,7 +67,6 @@ line	token	word	role	arg_line	arg_token
 27	6	fosse	subj	0	0
 27	6	fosse	attr	27	7
 28	1	Fecesi	subj	0	0
-28	1	Fecesi	obj	28	1
 28	1	Fecesi	attr	28	2
 28	6	uscissi	subj	0	0
 28	6	uscissi	obl:per	29	4
@@ -83,7 +82,6 @@ line	token	word	role	arg_line	arg_token
 31	8	pate	subj	31	5
 31	8	pate	obj	31	10
 32	5	incominciommi	subj	0	0
-32	5	incominciommi	obj	32	5
 32	5	incominciommi	ccomp	33	5
 33	3	riguardar	subj	0	0
 33	5	vole	subj	31	2
@@ -239,7 +237,6 @@ line	token	word	role	arg_line	arg_token
 86	5	rispuose	iobj	86	4
 86	5	rispuose	obl:con	85	5
 87	3	tenermi	subj	0	0
-87	3	tenermi	obj	87	3
 87	3	tenermi	attr	87	6
 87	3	tenermi	obl:in	87	5
 87	5	ammirar	subj	0	0
@@ -318,7 +315,6 @@ line	token	word	role	arg_line	arg_token
 110	3	fatti	obl:a	110	5
 110	3	fatti	obl	110	7
 110	7	suscitarla	subj	110	2
-110	7	suscitarla	obj	110	7
 111	3	potesse	subj	111	5
 111	3	potesse	xcomp	111	7
 111	7	mossa	subj	111	5
@@ -334,7 +330,6 @@ line	token	word	role	arg_line	arg_token
 114	5	potëa	subj	0	0
 114	5	potëa	xcomp	114	6
 114	6	aiutarla	subj	0	0
-114	6	aiutarla	obj	114	6
 115	2	credendo	subj	0	0
 115	4	accese	subj	0	0
 115	4	accese	obl:in	115	7
@@ -371,7 +366,6 @@ line	token	word	role	arg_line	arg_token
 125	0			0	0
 126	2	riprendiene	subj	0	0
 126	2	riprendiene	obj	126	4
-126	2	riprendiene	obl	126	2
 127	5	fur	subj	127	3
 127	5	fur	iobj	127	4
 127	5	fur	obl:per	127	7
@@ -388,7 +382,6 @@ line	token	word	role	arg_line	arg_token
 132	6	veggion	subj	132	1
 132	6	veggion	obj	132	4
 133	4	tenetevi	subj	133	2
-133	4	tenetevi	obj	133	4
 133	4	tenetevi	attr	133	5
 133	4	tenetevi	xcomp	134	2
 134	2	giudicar	subj	0	0
@@ -398,7 +391,6 @@ line	token	word	role	arg_line	arg_token
 135	2	conosciamo	obj	135	6
 136	2	ènne	subj	0	0
 136	2	ènne	attr	136	3
-136	2	ènne	obl	136	2
 136	5	fatto	subj	0	0
 136	5	fatto	attr	136	6
 137	9	affina	subj	137	3

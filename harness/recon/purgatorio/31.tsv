@@ -87,7 +87,6 @@ line	token	word	role	arg_line	arg_token
 26	1	trovasti	obj	25	2
 26	1	trovasti	obj	25	6
 27	1	dovessiti	subj	0	0
-27	1	dovessiti	iobj	27	1
 27	1	dovessiti	xcomp	27	3
 27	3	spogliar	subj	0	0
 27	3	spogliar	obj	27	5
@@ -194,7 +193,6 @@ line	token	word	role	arg_line	arg_token
 63	7	saetta	obl:da	62	5
 64	3	vergognando	subj	64	2
 65	6	stannosi	subj	64	2
-65	6	stannosi	obj	65	6
 65	6	stannosi	obl:con	65	3
 65	6	stannosi	obl:a	65	5
 65	7	ascoltando	subj	64	2
@@ -231,7 +229,6 @@ line	token	word	role	arg_line	arg_token
 76	7	distese	subj	76	5
 77	1	posarsi	subj	77	4
 78	6	comprese	subj	78	5
-78	6	comprese	obj	0	0
 78	6	comprese	obl:da	78	3
 79	0			0	0
 80	1	vider	subj	79	4
@@ -242,7 +239,6 @@ line	token	word	role	arg_line	arg_token
 81	2	è	attr	81	5
 82	0			0	0
 83	1	vincer	subj	0	0
-83	2	pariemi	iobj	83	2
 83	2	pariemi	attr	83	4
 83	2	pariemi	ccomp	83	1
 83	2	pariemi	ccomp	84	1
@@ -271,15 +267,12 @@ line	token	word	role	arg_line	arg_token
 89	3	caddi	attr	89	4
 89	8	femmi	subj	89	2
 89	8	femmi	obj	89	6
-89	8	femmi	iobj	89	8
 90	1	salsi	subj	90	2
-90	1	salsi	iobj	90	1
 90	7	porse	subj	90	3
 90	7	porse	obj	90	5
 90	7	porse	iobj	90	6
 91	8	rendemmi	subj	91	4
 91	8	rendemmi	obj	91	5
-91	8	rendemmi	iobj	91	8
 91	8	rendemmi	obl:di	91	7
 92	5	avea	subj	92	4
 92	5	avea	obj	92	3
@@ -290,9 +283,7 @@ line	token	word	role	arg_line	arg_token
 93	5	dicea	subj	0	0
 93	5	dicea	ccomp	93	6
 93	6	Tiemmi	subj	0	0
-93	6	Tiemmi	obj	93	6
 93	7	tiemmi	subj	0	0
-93	7	tiemmi	obj	93	7
 94	1	Tratto	subj	0	0
 94	1	Tratto	obj	94	2
 94	1	Tratto	obl:in	94	5
@@ -321,7 +312,6 @@ line	token	word	role	arg_line	arg_token
 100	7	aprissi	obl:ne	100	6
 101	1	abbracciommi	subj	0	0
 101	1	abbracciommi	obj	101	3
-101	1	abbracciommi	iobj	101	1
 101	6	sommerse	subj	0	0
 101	6	sommerse	obj	101	5
 102	2	convenne	subj	0	0
@@ -356,7 +346,6 @@ line	token	word	role	arg_line	arg_token
 112	3	cominciaro	subj	0	0
 112	3	cominciaro	xcomp	112	2
 113	6	menarmi	subj	0	0
-113	6	menarmi	obj	113	6
 113	6	menarmi	obl:a	113	2
 113	6	menarmi	obl:con	113	5
 114	3	stava	subj	114	2
@@ -380,7 +369,6 @@ line	token	word	role	arg_line	arg_token
 118	0			0	0
 119	1	strinsermi	subj	118	2
 119	1	strinsermi	obj	119	3
-119	1	strinsermi	iobj	119	1
 119	1	strinsermi	obl:a	119	6
 120	6	stavan	subj	120	1
 120	6	stavan	attr	120	7
@@ -431,7 +419,6 @@ line	token	word	role	arg_line	arg_token
 134	1	era	subj	134	4
 134	1	era	attr	133	1
 135	3	vederti	subj	135	1
-135	3	vederti	obj	135	3
 135	5	mossi	subj	135	1
 135	5	mossi	obj	135	6
 135	5	mossi	obl:per	135	3

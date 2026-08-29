@@ -71,7 +71,6 @@ line	token	word	role	arg_line	arg_token
 21	5	dà	obj	21	8
 21	5	dà	iobj	21	4
 22	2	vid'	subj	22	3
-22	2	vid'	obj	0	0
 22	2	vid'	obl	22	4
 22	2	vid'	obl:di	22	8
 23	0			0	0
@@ -258,7 +257,6 @@ line	token	word	role	arg_line	arg_token
 74	8	speso	obl:per	73	5
 74	8	speso	obl:di	74	3
 75	3	stimava	subj	75	5
-75	3	stimava	obj	0	0
 76	6	atteso	subj	76	3
 77	1	andava	subj	76	3
 77	2	cominciò	subj	76	2
@@ -287,7 +285,6 @@ line	token	word	role	arg_line	arg_token
 82	8	addorna	obl:di	82	2
 83	6	'nvïarci	subj	83	4
 83	6	'nvïarci	obj	83	5
-83	6	'nvïarci	iobj	83	6
 83	6	'nvïarci	obl:in	83	8
 84	1	pensa	subj	0	0
 84	1	pensa	ccomp	84	7
@@ -302,7 +299,6 @@ line	token	word	role	arg_line	arg_token
 87	3	potea	xcomp	87	4
 87	3	potea	obl:in	87	1
 87	4	parlarmi	subj	0	0
-87	4	parlarmi	iobj	87	4
 87	4	parlarmi	attr	87	5
 88	3	venìa	subj	88	5
 88	3	venìa	obl:a	88	2

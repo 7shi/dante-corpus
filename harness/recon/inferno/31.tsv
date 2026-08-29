@@ -62,7 +62,6 @@ line	token	word	role	arg_line	arg_token
 21	4	dì	ccomp	21	7
 21	7	è	subj	21	8
 21	7	è	attr	21	6
-22	2	elli	subj	22	2
 22	2	elli	iobj	22	4
 22	2	elli	ccomp	24	1
 22	8	trascorri	subj	22	7
@@ -123,9 +122,7 @@ line	token	word	role	arg_line	arg_token
 38	4	appressando	subj	0	0
 38	4	appressando	obl:verso	38	7
 39	1	fuggiemi	subj	39	2
-39	1	fuggiemi	iobj	39	1
 39	4	cresciemi	subj	39	5
-39	4	cresciemi	iobj	39	4
 40	0			0	0
 41	5	corona	subj	41	1
 41	5	corona	obl:di	41	3
@@ -199,7 +196,6 @@ line	token	word	role	arg_line	arg_token
 66	7	affibbia	obl:da	66	2
 66	7	affibbia	obl	66	4
 67	4	zabì	subj	67	1
-67	4	zabì	obj	67	4
 68	1	cominciò	subj	68	6
 68	1	cominciò	xcomp	68	3
 68	3	gridar	subj	0	0
@@ -208,7 +204,6 @@ line	token	word	role	arg_line	arg_token
 69	4	convenia	iobj	69	1
 70	0			0	0
 71	1	tienti	subj	0	0
-71	1	tienti	obj	0	0
 71	1	tienti	obl:con	71	3
 71	8	disfoga	subj	0	0
 71	8	disfoga	obj	71	7
@@ -216,7 +211,6 @@ line	token	word	role	arg_line	arg_token
 72	7	tocca	subj	72	2
 72	7	tocca	obj	72	6
 73	1	Cércati	subj	0	0
-73	1	Cércati	obj	0	0
 73	1	Cércati	obl:a	73	3
 73	5	troverai	subj	0	0
 73	5	troverai	obj	73	7
@@ -242,7 +236,6 @@ line	token	word	role	arg_line	arg_token
 78	8	usa	obl:per	77	6
 78	8	usa	obl:in	78	5
 79	1	Lasciànlo	subj	0	0
-79	1	Lasciànlo	obj	79	1
 79	1	Lasciànlo	xcomp	79	2
 79	2	stare	subj	79	1
 79	5	parliamo	subj	0	0
@@ -270,7 +263,6 @@ line	token	word	role	arg_line	arg_token
 86	4	dir	subj	0	0
 86	4	dir	xcomp	85	2
 86	7	tenea	subj	86	6
-86	7	tenea	obj	0	0
 86	7	tenea	obl	87	3
 86	7	tenea	obl	87	7
 86	7	tenea	obl:di	88	3
@@ -338,7 +330,6 @@ line	token	word	role	arg_line	arg_token
 107	2	scotesse	subj	0	0
 107	2	scotesse	obj	107	4
 108	4	scuotersi	subj	0	0
-108	4	scuotersi	obj	0	0
 108	5	fu	subj	108	2
 108	5	fu	attr	108	6
 108	5	fu	xcomp	108	4
@@ -377,9 +368,7 @@ line	token	word	role	arg_line	arg_token
 120	8	creda	subj	0	0
 120	8	creda	ccomp	121	2
 121	2	avrebber	subj	121	5
-121	2	avrebber	obj	0	0
 122	1	mettine	subj	0	0
-122	1	mettine	obj	122	1
 122	1	mettine	obl	122	2
 122	5	ten	subj	0	0
 122	5	ten	ccomp	122	6
@@ -434,7 +423,6 @@ line	token	word	role	arg_line	arg_token
 134	1	disse	iobj	134	3
 134	1	disse	ccomp	134	4
 134	4	Fatti	subj	0	0
-134	4	Fatti	obj	0	0
 134	4	Fatti	obl	134	5
 134	10	prenda	subj	134	8
 134	10	prenda	obj	134	9
@@ -456,7 +444,6 @@ line	token	word	role	arg_line	arg_token
 139	7	stava	subj	139	3
 139	7	stava	obl:a	139	9
 140	2	vederlo	subj	0	0
-140	2	vederlo	obj	140	2
 140	2	vederlo	xcomp	140	3
 140	3	chinare	subj	140	2
 140	5	fu	subj	140	7

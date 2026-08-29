@@ -178,7 +178,6 @@ line	token	word	role	arg_line	arg_token
 58	3	fece	obj	58	2
 58	3	fece	attr	58	1
 59	2	venendomi	subj	0	0
-59	2	venendomi	iobj	59	2
 60	2	ripigneva	subj	0	0
 60	2	ripigneva	obj	60	1
 60	2	ripigneva	obl	60	3
@@ -202,7 +201,6 @@ line	token	word	role	arg_line	arg_token
 66	4	sii	subj	66	3
 66	4	sii	attr	66	1
 67	1	Rispuosemi	subj	0	0
-67	1	Rispuosemi	iobj	67	1
 67	1	Rispuosemi	ccomp	67	6
 67	6	fui	subj	0	0
 67	6	fui	attr	67	4
@@ -248,7 +246,6 @@ line	token	word	role	arg_line	arg_token
 83	1	vagliami	subj	0	0
 83	1	vagliami	obj	83	4
 83	1	vagliami	obj	83	8
-83	1	vagliami	iobj	83	1
 84	4	fatto	subj	84	1
 84	4	fatto	obj	84	2
 84	4	fatto	xcomp	84	5
@@ -271,7 +268,6 @@ line	token	word	role	arg_line	arg_token
 88	8	volsi	obj	88	7
 88	8	volsi	obl:per	88	5
 89	1	aiutami	subj	0	0
-89	1	aiutami	obj	89	1
 89	1	aiutami	obl:da	89	3
 90	4	fa	subj	90	2
 90	4	fa	iobj	90	3
@@ -349,7 +345,6 @@ line	token	word	role	arg_line	arg_token
 110	5	rimessa	obj	110	3
 110	5	rimessa	obl:ne	110	8
 111	5	dipartilla	subj	111	3
-111	5	dipartilla	obj	111	5
 111	5	dipartilla	obl	111	2
 112	7	penso	subj	112	2
 112	7	penso	obl:per	112	6
@@ -360,7 +355,6 @@ line	token	word	role	arg_line	arg_token
 113	7	sarò	subj	113	6
 113	7	sarò	attr	113	9
 114	2	trarrotti	subj	0	0
-114	2	trarrotti	obj	114	2
 114	2	trarrotti	obl	114	4
 114	2	trarrotti	obl:per	114	6
 115	2	udirai	subj	0	0

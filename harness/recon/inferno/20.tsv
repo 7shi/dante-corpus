@@ -103,7 +103,6 @@ line	token	word	role	arg_line	arg_token
 31	1	Drizza	subj	0	0
 31	1	Drizza	obj	31	3
 31	4	drizza	subj	0	0
-31	4	drizza	obj	0	0
 31	6	vedi	subj	0	0
 31	6	vedi	ccomp	32	2
 32	2	aperse	subj	32	10
@@ -145,7 +144,6 @@ line	token	word	role	arg_line	arg_token
 41	5	divenne	obl:di	41	3
 42	1	cangiandosi	subj	0	0
 42	1	cangiandosi	obj	42	3
-42	1	cangiandosi	iobj	0	0
 43	4	ribatter	subj	0	0
 43	4	ribatter	obj	44	3
 43	4	ribatter	obl:con	44	7
@@ -331,7 +329,6 @@ line	token	word	role	arg_line	arg_token
 102	5	sarien	iobj	102	4
 102	5	sarien	attr	102	6
 103	2	dimmi	subj	0	0
-103	2	dimmi	iobj	103	2
 103	2	dimmi	ccomp	104	4
 103	2	dimmi	obl:di	103	5
 103	7	procede	subj	103	6
@@ -398,7 +395,6 @@ line	token	word	role	arg_line	arg_token
 121	5	lasciaron	obj	122	2
 121	5	lasciaron	obj	122	5
 122	7	fecersi	subj	121	4
-122	7	fecersi	obj	122	7
 122	7	fecersi	attr	122	8
 123	1	fecer	subj	121	4
 123	1	fecer	obj	123	2

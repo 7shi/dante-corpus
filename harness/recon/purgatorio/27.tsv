@@ -7,7 +7,6 @@ line	token	word	role	arg_line	arg_token
 3	1	cadendo	subj	3	2
 3	1	cadendo	obl:sotto	3	6
 4	8	rïarse	subj	4	3
-4	8	rïarse	obj	0	0
 4	8	rïarse	obl:in	4	5
 4	8	rïarse	obl:da	4	7
 5	2	stava	subj	5	4
@@ -74,9 +73,7 @@ line	token	word	role	arg_line	arg_token
 21	3	esser	subj	21	4
 21	3	esser	subj	21	7
 22	1	Ricorditi	subj	0	0
-22	1	Ricorditi	obj	0	0
 22	2	ricorditi	subj	0	0
-22	2	ricorditi	obj	0	0
 23	1	sovresso	subj	22	5
 23	1	sovresso	obj	23	2
 23	4	guidai	subj	22	5
@@ -102,10 +99,8 @@ line	token	word	role	arg_line	arg_token
 28	9	inganni	subj	28	7
 28	9	inganni	obj	28	8
 29	1	fatti	subj	0	0
-29	1	fatti	obj	0	0
 29	1	fatti	obl:verso	29	3
 29	5	fatti	subj	0	0
-29	5	fatti	obj	0	0
 29	5	fatti	xcomp	29	6
 29	6	far	obj	29	7
 29	6	far	obl:con	30	4
@@ -118,7 +113,6 @@ line	token	word	role	arg_line	arg_token
 31	4	pon	obj	31	7
 31	4	pon	obl	31	5
 32	1	volgiti	subj	0	0
-32	1	volgiti	obj	32	1
 32	1	volgiti	obl	32	3
 32	5	vieni	subj	0	0
 32	6	entra	subj	0	0
@@ -140,7 +134,6 @@ line	token	word	role	arg_line	arg_token
 37	6	aperse	obj	37	8
 37	6	aperse	obl:a	37	3
 38	7	riguardolla	subj	38	1
-38	7	riguardolla	obj	38	7
 39	5	diventò	subj	39	4
 39	5	diventò	attr	39	6
 40	5	fatta	subj	40	4
@@ -184,11 +177,9 @@ line	token	word	role	arg_line	arg_token
 50	1	gittato	obj	50	2
 50	1	gittato	xcomp	50	5
 50	5	rinfrescarmi	subj	0	0
-50	5	rinfrescarmi	obj	50	5
 51	2	era	subj	51	5
 51	2	era	obl	51	3
 52	6	confortarmi	subj	52	3
-52	6	confortarmi	obj	52	6
 53	4	ragionando	subj	52	3
 53	4	ragionando	obl:di	53	3
 53	5	andava	subj	52	3
@@ -196,10 +187,8 @@ line	token	word	role	arg_line	arg_token
 54	1	dicendo	ccomp	54	7
 54	6	veder	subj	0	0
 54	6	veder	obj	54	3
-54	7	parmi	iobj	54	7
 54	7	parmi	ccomp	54	6
 55	1	Guidavaci	subj	55	3
-55	1	Guidavaci	obj	55	1
 55	5	cantava	subj	55	4
 55	5	cantava	obl	56	2
 56	0			0	0
@@ -226,7 +215,6 @@ line	token	word	role	arg_line	arg_token
 61	5	soggiunse	ccomp	61	4
 61	7	vien	subj	61	9
 62	3	arrestate	subj	0	0
-62	3	arrestate	obj	0	0
 62	3	arrestate	obl	62	2
 62	5	studiate	subj	0	0
 62	5	studiate	obj	62	7
@@ -338,9 +326,7 @@ line	token	word	role	arg_line	arg_token
 101	8	movendo	obl:a	102	5
 102	5	farmi	subj	101	2
 102	5	farmi	obj	102	7
-102	5	farmi	iobj	102	5
 103	2	piacermi	subj	0	0
-103	2	piacermi	iobj	103	2
 103	2	piacermi	obl:a	103	5
 103	8	addorno	subj	0	0
 103	8	addorno	obj	103	7
@@ -419,7 +405,6 @@ line	token	word	role	arg_line	arg_token
 128	5	se'	subj	0	0
 128	5	se'	obl:in	128	8
 129	8	discerno	subj	129	2
-129	8	discerno	obj	0	0
 129	8	discerno	obl	129	1
 129	8	discerno	obl:per	129	4
 129	8	discerno	obl	129	6

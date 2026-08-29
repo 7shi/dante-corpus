@@ -141,7 +141,6 @@ line	token	word	role	arg_line	arg_token
 50	7	era	subj	50	6
 50	7	era	attr	51	5
 51	8	volea	subj	51	7
-51	8	volea	obj	0	0
 52	5	venendo	subj	52	4
 52	5	venendo	attr	52	6
 53	5	intrava	subj	52	4
@@ -153,7 +152,6 @@ line	token	word	role	arg_line	arg_token
 55	7	fu	attr	55	8
 55	7	fu	obl	55	3
 56	4	mostra	subj	56	3
-56	4	mostra	obj	0	0
 56	9	cede	subj	56	5
 56	9	cede	obl:a	56	8
 57	2	cede	subj	57	4
@@ -196,7 +194,6 @@ line	token	word	role	arg_line	arg_token
 72	1	possa	subj	71	3
 72	1	possa	xcomp	72	2
 72	2	lasciare	subj	0	0
-72	2	lasciare	obj	0	0
 72	2	lasciare	obl:a	72	6
 73	3	tornare	subj	0	0
 73	3	tornare	obl:a	73	7
@@ -327,12 +324,10 @@ line	token	word	role	arg_line	arg_token
 112	7	avvalorava	obl:in	113	2
 113	3	guardando	subj	0	0
 114	1	mutandom'	subj	114	2
-114	1	mutandom'	obj	114	1
 114	6	travagliava	subj	113	6
 114	6	travagliava	obl:a	114	4
 115	0			0	0
 116	5	parvermi	subj	116	7
-116	5	parvermi	iobj	116	5
 116	5	parvermi	obl:in	115	6
 116	5	parvermi	obl:di	116	4
 117	0			0	0

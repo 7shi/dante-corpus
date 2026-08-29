@@ -51,7 +51,6 @@ line	token	word	role	arg_line	arg_token
 17	5	piacque	iobj	17	4
 17	7	mostrarmi	subj	0	0
 17	7	mostrarmi	obj	18	2
-17	7	mostrarmi	iobj	17	7
 18	4	ebbe	subj	18	3
 18	4	ebbe	obj	18	7
 19	5	tolse	subj	18	2
@@ -267,7 +266,6 @@ line	token	word	role	arg_line	arg_token
 79	6	avea	subj	79	5
 79	6	avea	obj	79	8
 80	2	aggrappossi	subj	78	2
-80	2	aggrappossi	obj	0	0
 80	2	aggrappossi	obl:a	80	4
 80	8	sale	subj	80	6
 81	6	credea	subj	81	5
@@ -308,7 +306,6 @@ line	token	word	role	arg_line	arg_token
 89	6	lasciato	subj	89	3
 89	6	lasciato	obj	89	4
 90	2	vidili	subj	0	0
-90	2	vidili	obj	90	2
 90	2	vidili	xcomp	90	7
 90	7	tenere	subj	90	2
 90	7	tenere	obj	90	4
@@ -350,7 +347,6 @@ line	token	word	role	arg_line	arg_token
 101	3	diss'	subj	101	4
 101	6	fui	subj	101	4
 101	6	fui	attr	101	7
-102	2	trarmi	obj	102	2
 102	2	trarmi	obl:di	102	4
 102	2	trarmi	obl	102	6
 102	8	favella	subj	0	0
@@ -366,7 +362,6 @@ line	token	word	role	arg_line	arg_token
 105	6	fatto	obj	105	9
 105	6	fatto	obl:da	105	2
 105	6	fatto	obl:a	105	4
-106	2	elli	subj	106	2
 106	2	elli	iobj	106	4
 106	2	elli	ccomp	106	6
 106	6	imagini	subj	106	5

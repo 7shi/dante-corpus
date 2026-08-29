@@ -9,7 +9,6 @@ line	token	word	role	arg_line	arg_token
 4	1	disse	xcomp	4	3
 4	1	disse	ccomp	4	6
 4	3	confortarmi	subj	0	0
-4	3	confortarmi	obj	4	3
 4	6	noccia	subj	5	3
 4	6	noccia	iobj	4	5
 5	8	abbia	subj	5	7
@@ -37,7 +36,6 @@ line	token	word	role	arg_line	arg_token
 14	1	caggiono	subj	13	6
 14	1	caggiono	obl:da	13	3
 14	7	fiacca	subj	14	6
-14	7	fiacca	obj	0	0
 15	2	cadde	subj	15	6
 15	2	cadde	obl:a	15	4
 16	2	scendemmo	subj	0	0
@@ -71,7 +69,6 @@ line	token	word	role	arg_line	arg_token
 26	0			0	0
 27	1	voltando	obl:per	27	4
 28	1	Percotëansi	subj	0	0
-28	1	Percotëansi	obj	0	0
 28	1	Percotëansi	obl:in	28	2
 29	2	rivolgea	subj	29	3
 29	2	rivolgea	obj	29	1
@@ -82,9 +79,7 @@ line	token	word	role	arg_line	arg_token
 30	1	gridando	ccomp	30	3
 30	1	gridando	ccomp	30	6
 30	3	tieni	subj	0	0
-30	3	tieni	obj	0	0
 30	6	burli	subj	0	0
-30	6	burli	obj	0	0
 31	2	tornavan	subj	0	0
 31	2	tornavan	obl:per	31	5
 31	2	tornavan	obl:da	32	3
@@ -92,7 +87,6 @@ line	token	word	role	arg_line	arg_token
 32	0			0	0
 33	1	gridandosi	subj	0	0
 33	1	gridandosi	obj	33	5
-33	1	gridandosi	iobj	0	0
 34	3	volgea	subj	34	4
 34	3	volgea	obj	34	2
 34	3	volgea	obl:per	35	5
@@ -113,7 +107,6 @@ line	token	word	role	arg_line	arg_token
 38	8	fuor	attr	38	9
 38	8	fuor	obl:a	39	5
 39	0			0	0
-40	2	elli	subj	40	2
 40	2	elli	iobj	40	4
 40	2	elli	ccomp	40	7
 40	7	fuor	subj	40	5
@@ -163,14 +156,11 @@ line	token	word	role	arg_line	arg_token
 56	2	resurgeranno	obl:con	57	7
 57	0			0	0
 58	2	dare	subj	0	0
-58	2	dare	obj	0	0
 58	5	tener	subj	0	0
 58	5	tener	obj	58	7
 59	2	tolto	subj	58	2
-59	2	tolto	obj	0	0
 59	2	tolto	iobj	59	3
 59	5	posti	subj	58	2
-59	5	posti	obj	0	0
 59	5	posti	obl:a	59	8
 60	3	sia	subj	60	2
 60	3	sia	attr	60	1
@@ -265,9 +255,7 @@ line	token	word	role	arg_line	arg_token
 85	4	ha	obj	85	5
 85	4	ha	obl:a	85	7
 86	2	provede	subj	86	1
-86	2	provede	obj	0	0
 86	3	giudica	subj	86	1
-86	3	giudica	obj	0	0
 86	5	persegue	subj	86	1
 86	5	persegue	obj	87	2
 87	0			0	0
@@ -294,7 +282,6 @@ line	token	word	role	arg_line	arg_token
 93	1	dandole	subj	92	4
 93	1	dandole	obj	93	2
 93	1	dandole	obj	93	7
-93	1	dandole	iobj	93	1
 93	1	dandole	obl:a	93	4
 94	4	è	subj	94	2
 94	4	è	attr	94	5

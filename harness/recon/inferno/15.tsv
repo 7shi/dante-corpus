@@ -28,7 +28,6 @@ line	token	word	role	arg_line	arg_token
 11	0			0	0
 12	4	fosse	subj	0	0
 12	7	félli	subj	12	6
-12	7	félli	obj	0	0
 13	6	rimossi	subj	0	0
 13	6	rimossi	obl:da	13	5
 14	6	visto	subj	14	3
@@ -47,13 +46,11 @@ line	token	word	role	arg_line	arg_token
 18	4	suol	xcomp	19	1
 18	4	suol	obl:da	18	6
 19	1	guardare	subj	19	3
-19	1	guardare	obj	0	0
 19	1	guardare	obl:sotto	19	6
 20	5	aguzzavan	subj	0	0
 20	5	aguzzavan	obj	20	7
 20	5	aguzzavan	obl:ver'	20	4
 21	5	fa	subj	21	4
-21	5	fa	obj	0	0
 21	5	fa	obl:ne	21	8
 22	2	adocchiato	subj	0	0
 22	2	adocchiato	obl:da	22	5
@@ -104,7 +101,6 @@ line	token	word	role	arg_line	arg_token
 35	8	asseggia	obj	35	7
 35	8	asseggia	obl:con	35	6
 36	1	faròl	subj	0	0
-36	1	faròl	obj	36	1
 36	3	piace	iobj	36	5
 36	3	piace	ccomp	36	7
 36	7	vo	subj	0	0
@@ -171,7 +167,6 @@ line	token	word	role	arg_line	arg_token
 53	4	tornand'	subj	53	5
 53	4	tornand'	obl:in	53	7
 54	2	reducemi	subj	0	0
-54	2	reducemi	obj	54	2
 54	2	reducemi	obl:a	54	4
 54	2	reducemi	obl:per	54	7
 55	7	segui	subj	55	6
@@ -326,7 +321,6 @@ line	token	word	role	arg_line	arg_token
 98	3	volse	obl:in	97	8
 98	3	volse	obl:in	98	5
 98	7	riguardommi	subj	0	0
-98	7	riguardommi	obj	98	7
 99	2	disse	subj	0	0
 99	2	disse	ccomp	99	4
 99	4	ascolta	subj	99	5
@@ -335,7 +329,6 @@ line	token	word	role	arg_line	arg_token
 100	6	parlando	subj	0	0
 100	6	parlando	obl:di	100	5
 100	7	vommi	subj	0	0
-100	7	vommi	iobj	100	7
 100	7	vommi	obl	100	3
 100	7	vommi	obl	100	6
 100	7	vommi	obl:con	101	3
@@ -389,7 +382,6 @@ line	token	word	role	arg_line	arg_token
 118	8	deggio	subj	0	0
 118	8	deggio	xcomp	118	6
 119	1	Sieti	subj	119	5
-119	1	Sieti	iobj	119	1
 120	4	vivo	subj	120	3
 120	4	vivo	obl:in	120	2
 120	9	cheggio	subj	120	3

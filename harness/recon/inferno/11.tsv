@@ -110,7 +110,6 @@ line	token	word	role	arg_line	arg_token
 35	4	danno	obl:in	35	8
 36	0			0	0
 37	7	fiere	subj	37	5
-37	7	fiere	obj	0	0
 38	5	tormenta	subj	39	2
 38	5	tormenta	obj	37	2
 38	5	tormenta	obj	37	4
@@ -184,7 +183,6 @@ line	token	word	role	arg_line	arg_token
 57	6	annida	subj	58	1
 57	6	annida	obl:in	57	3
 58	5	affattura	subj	58	4
-58	5	affattura	obj	0	0
 59	0			0	0
 60	0			0	0
 61	8	oblia	subj	61	6
@@ -207,7 +205,6 @@ line	token	word	role	arg_line	arg_token
 69	8	possiede	subj	69	6
 69	8	possiede	obj	69	7
 70	2	dimmi	subj	0	0
-70	2	dimmi	iobj	70	2
 70	2	dimmi	ccomp	74	3
 71	2	mena	subj	71	4
 71	2	mena	obj	71	1
@@ -277,7 +274,6 @@ line	token	word	role	arg_line	arg_token
 92	3	contenti	subj	92	1
 92	3	contenti	obj	92	2
 92	7	solvi	subj	92	6
-92	7	solvi	obj	0	0
 93	8	aggrata	subj	93	6
 93	8	aggrata	iobj	93	7
 94	7	rivolvi	subj	0	0
@@ -351,7 +347,6 @@ line	token	word	role	arg_line	arg_token
 111	6	pon	obj	111	8
 111	6	pon	obl:in	111	5
 112	2	seguimi	subj	0	0
-112	2	seguimi	obj	112	2
 112	8	piace	subj	112	6
 112	8	piace	iobj	112	7
 113	4	guizzan	subj	113	3

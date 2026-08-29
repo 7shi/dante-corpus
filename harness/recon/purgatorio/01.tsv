@@ -194,21 +194,16 @@ line	token	word	role	arg_line	arg_token
 67	7	lungo	subj	0	0
 67	7	lungo	xcomp	67	9
 67	9	dirti	subj	0	0
-67	9	dirti	obj	0	0
-67	9	dirti	iobj	67	9
 68	4	scende	subj	68	5
 68	4	scende	obl:di	68	3
 68	8	aiuta	subj	68	6
 68	8	aiuta	obj	68	7
 68	8	aiuta	xcomp	69	1
 69	1	conducerlo	subj	68	6
-69	1	conducerlo	obj	69	1
 69	1	conducerlo	xcomp	69	3
 69	1	conducerlo	xcomp	69	6
 69	3	vederti	subj	69	1
-69	3	vederti	obj	69	3
 69	6	udirti	subj	69	1
-69	6	udirti	obj	69	6
 70	3	piaccia	subj	0	0
 70	3	piaccia	iobj	70	2
 70	3	piaccia	xcomp	70	4
@@ -256,7 +251,6 @@ line	token	word	role	arg_line	arg_token
 81	9	piega	obl:per	81	4
 81	9	piega	obl:a	81	7
 82	1	Lasciane	subj	0	0
-82	1	Lasciane	obj	82	1
 82	1	Lasciane	xcomp	82	2
 82	2	andar	subj	82	1
 82	2	andar	obl:per	82	7
@@ -334,7 +328,6 @@ line	token	word	role	arg_line	arg_token
 103	5	facesse	subj	103	4
 103	5	facesse	obj	103	6
 104	2	indurasse	subj	103	4
-104	2	indurasse	obj	0	0
 104	4	puote	subj	103	3
 104	4	puote	xcomp	104	5
 104	5	aver	subj	0	0
@@ -369,7 +362,6 @@ line	token	word	role	arg_line	arg_token
 112	4	segui	subj	0	0
 112	4	segui	obj	112	7
 113	1	volgianci	subj	0	0
-113	1	volgianci	obj	113	1
 113	1	volgianci	obl	113	3
 113	7	dichina	subj	114	2
 113	7	dichina	obl	113	6

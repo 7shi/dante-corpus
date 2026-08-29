@@ -146,7 +146,6 @@ line	token	word	role	arg_line	arg_token
 48	4	fo	ccomp	48	9
 48	4	fo	obl:contra	48	3
 48	9	dimando	subj	48	7
-48	9	dimando	obj	0	0
 49	5	vedëa	subj	49	4
 49	5	vedëa	obj	49	7
 49	5	vedëa	obl:in	50	2
@@ -171,7 +170,6 @@ line	token	word	role	arg_line	arg_token
 55	5	stai	obl:a	56	5
 56	6	fammi	subj	0	0
 56	6	fammi	obj	57	2
-56	6	fammi	iobj	56	6
 56	6	fammi	attr	56	7
 56	6	fammi	obl:per	54	3
 57	8	ha	subj	57	3
@@ -208,7 +206,6 @@ line	token	word	role	arg_line	arg_token
 65	1	discesi	obl:con	66	6
 65	5	farti	subj	0	0
 65	5	farti	obj	65	6
-65	5	farti	iobj	65	5
 66	9	ammanta	subj	66	7
 66	9	ammanta	obj	66	8
 67	5	fece	subj	67	3
@@ -219,7 +216,6 @@ line	token	word	role	arg_line	arg_token
 68	8	ferve	subj	68	5
 68	8	ferve	obl	68	6
 69	6	manifesta	subj	69	4
-69	6	manifesta	obj	0	0
 69	6	manifesta	iobj	69	5
 70	7	fa	subj	70	5
 70	7	fa	obj	70	6
@@ -230,7 +226,6 @@ line	token	word	role	arg_line	arg_token
 72	1	sorteggia	obl	72	2
 72	1	sorteggia	obl	72	6
 72	6	osserve	subj	72	5
-72	6	osserve	obj	0	0
 73	2	veggio	subj	73	1
 73	2	veggio	obj	73	7
 73	4	diss'	subj	73	5
@@ -325,7 +320,6 @@ line	token	word	role	arg_line	arg_token
 101	4	può	subj	0	0
 101	4	può	obl	101	5
 102	4	pote	subj	102	2
-102	4	pote	obj	0	0
 102	4	pote	obl	102	9
 102	9	assumma	subj	102	7
 102	9	assumma	obj	102	8
@@ -338,7 +332,6 @@ line	token	word	role	arg_line	arg_token
 104	8	ritrassi	obj	104	7
 104	8	ritrassi	xcomp	105	2
 105	2	dimandarla	subj	0	0
-105	2	dimandarla	obj	105	2
 105	2	dimandarla	ccomp	105	5
 105	5	fue	subj	105	4
 106	6	surgon	subj	106	7
@@ -360,7 +353,6 @@ line	token	word	role	arg_line	arg_token
 111	4	disposto	obl:a	111	7
 112	2	ricominciommi	subj	0	0
 112	2	ricominciommi	obj	112	5
-112	2	ricominciommi	iobj	112	2
 113	3	continüando	subj	0	0
 113	4	disse	subj	0	0
 113	4	disse	ccomp	114	6
@@ -439,7 +431,6 @@ line	token	word	role	arg_line	arg_token
 137	5	scendere	obl:di	137	2
 137	5	scendere	obl:in	137	4
 137	7	girarsi	subj	0	0
-137	7	girarsi	obj	137	7
 138	5	facea	subj	138	3
 138	5	facea	obj	138	4
 138	5	facea	attr	138	7

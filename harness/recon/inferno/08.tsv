@@ -86,7 +86,6 @@ line	token	word	role	arg_line	arg_token
 23	9	rammarca	obj	23	7
 23	9	rammarca	obl	23	8
 24	1	fecesi	subj	24	2
-24	1	fecesi	obj	0	0
 24	1	fecesi	obl:ne	24	5
 25	4	discese	subj	25	2
 25	4	discese	obl:in	25	7
@@ -161,7 +160,6 @@ line	token	word	role	arg_line	arg_token
 43	8	cinse	obl:con	43	6
 44	1	basciommi	subj	0	0
 44	1	basciommi	obj	44	3
-44	1	basciommi	iobj	44	1
 44	5	disse	subj	0	0
 44	5	disse	ccomp	45	1
 45	1	benedetta	subj	45	2
@@ -174,7 +172,6 @@ line	token	word	role	arg_line	arg_token
 47	3	è	subj	47	1
 47	3	è	ccomp	47	7
 47	7	fregi	subj	47	6
-47	7	fregi	obj	0	0
 48	3	è	subj	48	5
 48	3	è	attr	48	8
 48	3	è	obl	48	1
@@ -261,7 +258,6 @@ line	token	word	role	arg_line	arg_token
 74	6	dimostra	obj	74	5
 74	6	dimostra	attr	74	7
 75	3	vedi	subj	75	2
-75	3	vedi	obj	0	0
 75	3	vedi	obl:in	75	7
 76	3	giugnemmo	subj	76	1
 76	3	giugnemmo	obl:a	76	8
@@ -278,7 +274,6 @@ line	token	word	role	arg_line	arg_token
 80	1	venimmo	xcomp	79	4
 80	1	venimmo	obl:in	80	3
 81	1	Usciteci	subj	0	0
-81	1	Usciteci	obl	81	1
 81	2	gridò	subj	80	6
 81	2	gridò	ccomp	81	1
 81	2	gridò	ccomp	81	4
@@ -335,7 +330,6 @@ line	token	word	role	arg_line	arg_token
 96	3	credetti	subj	0	0
 96	3	credetti	xcomp	96	4
 96	4	ritornarci	subj	0	0
-96	4	ritornarci	obl	96	4
 97	0			0	0
 98	5	renduta	subj	97	5
 98	5	renduta	obj	98	4

@@ -29,7 +29,6 @@ line	token	word	role	arg_line	arg_token
 10	4	va	obl	10	5
 10	4	va	obl:a	10	8
 11	3	smarrirsi	subj	0	0
-11	3	smarrirsi	obj	0	0
 11	7	dar	subj	0	0
 11	7	dar	obl:di	11	9
 11	7	dar	obl:in	12	2
@@ -157,10 +156,8 @@ line	token	word	role	arg_line	arg_token
 43	5	fosti	subj	43	4
 43	5	fosti	obl:anzi	43	8
 44	2	dilmi	subj	0	0
-44	2	dilmi	iobj	44	2
 44	2	dilmi	ccomp	44	7
 44	4	dimmi	subj	0	0
-44	4	dimmi	iobj	44	4
 44	4	dimmi	ccomp	44	7
 44	7	vo	subj	44	6
 44	7	vo	obl	44	8
@@ -313,7 +310,6 @@ line	token	word	role	arg_line	arg_token
 81	9	ha	obj	81	5
 81	9	ha	obl:in	81	12
 82	6	disvia	subj	82	4
-82	6	disvia	obj	0	0
 83	3	è	subj	83	5
 83	3	è	obl:in	83	2
 83	9	cheggia	subj	83	5
@@ -494,7 +490,6 @@ line	token	word	role	arg_line	arg_token
 137	1	rispuose	ccomp	136	5
 137	1	rispuose	obl	138	1
 137	5	parlandomi	subj	0	0
-137	5	parlandomi	iobj	137	5
 138	1	par	subj	0	0
 138	1	par	ccomp	138	7
 138	1	par	obl	137	5
@@ -521,7 +516,6 @@ line	token	word	role	arg_line	arg_token
 143	5	convien	iobj	143	4
 143	5	convien	xcomp	143	6
 143	6	partirmi	subj	0	0
-143	6	partirmi	obj	143	6
 144	3	è	subj	144	2
 144	3	è	obl	144	4
 144	9	paia	subj	144	7
@@ -531,4 +525,3 @@ line	token	word	role	arg_line	arg_token
 145	6	volle	subj	0	0
 145	6	volle	xcomp	145	7
 145	7	udirmi	subj	0	0
-145	7	udirmi	obj	145	7

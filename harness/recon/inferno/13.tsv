@@ -89,7 +89,6 @@ line	token	word	role	arg_line	arg_token
 30	6	faran	obl	30	5
 31	2	porsi	subj	0	0
 31	2	porsi	obj	31	4
-31	2	porsi	iobj	0	0
 31	2	porsi	obl	31	1
 31	2	porsi	obl	31	7
 32	2	colsi	subj	0	0
@@ -153,12 +152,10 @@ line	token	word	role	arg_line	arg_token
 50	6	fece	obj	50	5
 50	6	fece	xcomp	51	1
 51	1	indurlo	subj	50	5
-51	1	indurlo	obj	51	1
 51	1	indurlo	obl:a	51	3
 51	8	pesa	subj	51	4
 51	8	pesa	obl:a	51	6
 52	2	dilli	subj	0	0
-52	2	dilli	iobj	52	2
 52	2	dilli	ccomp	52	5
 52	2	dilli	obl	53	6
 52	5	fosti	subj	52	4
@@ -186,9 +183,7 @@ line	token	word	role	arg_line	arg_token
 59	8	volsi	subj	59	6
 59	8	volsi	obj	59	7
 60	1	serrando	subj	0	0
-60	1	serrando	obj	0	0
 60	3	diserrando	subj	0	0
-60	3	diserrando	obj	0	0
 61	8	tolsi	subj	0	0
 61	8	tolsi	obj	61	7
 61	8	tolsi	obl:di	61	3
@@ -261,7 +256,6 @@ line	token	word	role	arg_line	arg_token
 81	10	piace	subj	0	0
 81	10	piace	iobj	81	9
 82	5	Domandal	subj	82	6
-82	5	Domandal	obj	82	5
 82	5	Domandal	obl:di	83	2
 83	4	credi	subj	0	0
 83	4	credi	ccomp	83	8
@@ -279,11 +273,9 @@ line	token	word	role	arg_line	arg_token
 87	5	piaccia	subj	88	2
 87	5	piaccia	iobj	87	4
 88	2	dirne	subj	0	0
-88	2	dirne	obj	88	2
 88	7	lega	subj	88	5
 88	7	lega	obj	88	6
 89	5	dinne	subj	0	0
-89	5	dinne	obj	89	5
 89	8	puoi	subj	89	7
 89	8	puoi	xcomp	89	5
 90	8	spiega	subj	90	2
@@ -407,10 +399,8 @@ line	token	word	role	arg_line	arg_token
 129	3	portar	obj	129	5
 129	3	portar	obl	129	2
 130	1	Presemi	subj	130	5
-130	1	Presemi	obj	130	1
 130	1	Presemi	obl:per	130	7
 131	2	menommi	subj	130	5
-131	2	menommi	obj	131	2
 131	2	menommi	obl:a	131	4
 131	6	piangea	subj	131	5
 131	6	piangea	obl:per	132	3
@@ -436,7 +426,6 @@ line	token	word	role	arg_line	arg_token
 138	1	soffi	obj	138	5
 138	1	soffi	obl:per	137	7
 138	1	soffi	obl:con	138	3
-139	2	elli	subj	139	2
 139	2	elli	iobj	139	4
 139	2	elli	ccomp	142	1
 139	8	giunte	subj	139	7
@@ -449,7 +438,6 @@ line	token	word	role	arg_line	arg_token
 141	9	disgiunte	subj	141	5
 141	9	disgiunte	obl:da	141	8
 142	1	raccoglietele	subj	0	0
-142	1	raccoglietele	obj	142	1
 142	1	raccoglietele	obl:a	142	3
 143	2	fui	subj	143	1
 143	2	fui	obl:di	143	5

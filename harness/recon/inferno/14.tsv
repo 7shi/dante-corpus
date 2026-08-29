@@ -157,9 +157,7 @@ line	token	word	role	arg_line	arg_token
 57	1	chiamando	subj	0	0
 57	1	chiamando	ccomp	57	4
 57	4	aiuta	subj	0	0
-57	4	aiuta	obj	0	0
 57	5	aiuta	subj	0	0
-57	5	aiuta	obj	0	0
 58	4	fece	subj	58	3
 58	4	fece	obl:a	58	7
 59	3	saetti	subj	0	0
@@ -297,7 +295,6 @@ line	token	word	role	arg_line	arg_token
 100	3	scelse	obj	100	2
 100	3	scelse	obl:per	100	6
 101	6	celarlo	subj	100	1
-101	6	celarlo	obj	101	6
 102	2	piangea	subj	0	0
 102	4	facea	subj	0	0
 102	4	facea	xcomp	102	5
@@ -347,7 +344,6 @@ line	token	word	role	arg_line	arg_token
 120	3	vedrai	subj	120	1
 120	3	vedrai	obj	120	2
 120	8	conta	subj	0	0
-121	2	io	subj	121	2
 121	2	io	iobj	121	4
 121	2	io	ccomp	123	3
 122	2	diriva	subj	121	8
@@ -392,7 +388,6 @@ line	token	word	role	arg_line	arg_token
 137	3	vanno	xcomp	137	7
 137	3	vanno	obl	137	2
 137	7	lavarsi	subj	137	5
-137	7	lavarsi	obj	0	0
 138	6	rimossa	subj	138	3
 139	2	disse	subj	0	0
 139	2	disse	ccomp	139	4

@@ -183,7 +183,6 @@ line	token	word	role	arg_line	arg_token
 55	5	fu	obl:a	56	2
 55	5	fu	obl:con	57	5
 56	5	rendersi	subj	0	0
-56	5	rendersi	obj	56	5
 56	5	rendersi	obl:a	56	7
 57	0			0	0
 58	6	fec'	subj	58	7
@@ -193,7 +192,6 @@ line	token	word	role	arg_line	arg_token
 59	10	mise	obj	59	9
 59	10	mise	obl:in	59	8
 60	3	eclissò	subj	60	2
-60	3	eclissò	obj	0	0
 60	3	eclissò	obl:in	60	6
 61	3	dispiacque	subj	0	0
 61	3	dispiacque	iobj	61	2
@@ -312,7 +310,6 @@ line	token	word	role	arg_line	arg_token
 97	4	è	attr	97	8
 97	4	è	obl:a	97	6
 98	4	fummi	subj	97	1
-98	4	fummi	iobj	98	4
 98	4	fummi	attr	98	1
 98	4	fummi	attr	98	3
 99	1	è	subj	98	7

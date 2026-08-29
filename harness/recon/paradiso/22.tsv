@@ -58,14 +58,12 @@ line	token	word	role	arg_line	arg_token
 18	6	aspetta	subj	18	1
 18	6	aspetta	obj	18	5
 19	2	rivolgiti	subj	0	0
-19	2	rivolgiti	obj	0	0
 19	2	rivolgiti	obl:inverso	19	5
 19	2	rivolgiti	obl	20	5
 20	5	vedrai	subj	0	0
 20	5	vedrai	obj	20	4
 20	5	vedrai	obl	21	7
 21	4	dico	subj	21	3
-21	4	dico	obj	0	0
 21	7	redui	subj	0	0
 21	7	redui	obj	21	6
 21	7	redui	obl	21	4
@@ -225,7 +223,6 @@ line	token	word	role	arg_line	arg_token
 72	3	apparve	xcomp	72	7
 72	7	carca	obl:di	72	5
 73	3	salirla	subj	73	5
-73	3	salirla	obj	73	3
 73	6	diparte	subj	73	5
 73	6	diparte	obj	74	4
 73	6	diparte	obl:da	74	2
@@ -256,7 +253,6 @@ line	token	word	role	arg_line	arg_token
 83	1	è	obl:di	84	3
 83	1	è	obl:di	84	6
 83	8	dimanda	subj	83	5
-83	8	dimanda	obj	0	0
 83	8	dimanda	obl:per	83	7
 84	0			0	0
 85	8	blanda	subj	85	2
@@ -465,7 +461,6 @@ line	token	word	role	arg_line	arg_token
 151	5	fa	obj	151	4
 151	5	fa	attr	151	7
 152	1	volgendom'	subj	152	2
-152	1	volgendom'	obj	152	1
 152	1	volgendom'	obl:con	152	6
 153	3	apparve	subj	151	2
 153	3	apparve	iobj	153	2

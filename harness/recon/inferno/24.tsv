@@ -76,7 +76,6 @@ line	token	word	role	arg_line	arg_token
 23	3	riguardando	obl	24	1
 24	5	diedemi	subj	0	0
 24	5	diedemi	obj	24	7
-24	5	diedemi	iobj	24	5
 24	5	diedemi	obl:dopo	22	6
 25	5	adopera	subj	25	4
 25	7	estima	subj	25	4
@@ -140,7 +139,6 @@ line	token	word	role	arg_line	arg_token
 44	3	fui	subj	44	2
 44	3	fui	obl	44	4
 44	8	potea	subj	44	6
-44	8	potea	xcomp	0	0
 45	3	assisi	subj	0	0
 45	3	assisi	obj	45	2
 45	3	assisi	obl:in	45	7
@@ -190,7 +188,6 @@ line	token	word	role	arg_line	arg_token
 58	1	Leva'	subj	0	0
 58	1	Leva'	obj	58	2
 58	4	mostrandomi	subj	0	0
-58	4	mostrandomi	obj	58	4
 58	4	mostrandomi	xcomp	58	5
 58	5	fornito	subj	58	4
 58	5	fornito	obl	59	1
@@ -278,7 +275,6 @@ line	token	word	role	arg_line	arg_token
 81	4	fu	attr	81	7
 82	2	vidivi	subj	0	0
 82	2	vidivi	obj	82	5
-82	2	vidivi	obl	82	2
 83	0			0	0
 84	8	scipa	subj	84	3
 84	8	scipa	obj	84	5
@@ -412,7 +408,6 @@ line	token	word	role	arg_line	arg_token
 126	5	fu	iobj	126	4
 126	5	fu	attr	126	7
 127	5	Dilli	subj	0	0
-127	5	Dilli	iobj	127	5
 127	5	Dilli	ccomp	127	8
 127	8	mucci	subj	0	0
 128	2	domanda	subj	0	0

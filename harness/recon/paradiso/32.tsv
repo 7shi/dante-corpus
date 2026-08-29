@@ -25,7 +25,6 @@ line	token	word	role	arg_line	arg_token
 8	1	siede	obl	8	4
 8	1	siede	obl:con	9	2
 9	6	vedi	subj	9	5
-9	6	vedi	obj	0	0
 10	0			0	0
 11	2	fu	subj	10	6
 11	2	fu	attr	11	3
@@ -174,7 +173,6 @@ line	token	word	role	arg_line	arg_token
 65	1	creando	obj	64	2
 65	1	creando	obl:in	64	7
 65	7	dota	subj	61	2
-65	7	dota	obj	0	0
 65	7	dota	obl:a	65	4
 65	7	dota	obl:di	65	6
 65	7	dota	obl	66	1
@@ -214,7 +212,6 @@ line	token	word	role	arg_line	arg_token
 80	1	convenne	obl:a	80	3
 80	1	convenne	obl:a	80	7
 81	2	circuncidere	subj	0	0
-81	2	circuncidere	obj	0	0
 81	3	acquistar	subj	0	0
 81	3	acquistar	obj	81	4
 81	3	acquistar	obl	81	2
@@ -247,7 +244,6 @@ line	token	word	role	arg_line	arg_token
 90	3	trasvolar	subj	89	5
 90	3	trasvolar	obl:per	90	6
 91	5	visto	subj	91	3
-91	5	visto	obj	0	0
 91	5	visto	obl	91	6
 92	6	sospese	subj	0	0
 92	6	sospese	obj	92	5
@@ -292,10 +288,8 @@ line	token	word	role	arg_line	arg_token
 106	2	ricorsi	obl	106	3
 106	2	ricorsi	obl:a	106	6
 107	4	abbelliva	subj	107	3
-107	4	abbelliva	obj	0	0
 107	4	abbelliva	obl:di	107	6
 108	0			0	0
-109	2	elli	subj	109	2
 109	2	elli	iobj	109	4
 109	2	elli	ccomp	111	2
 110	2	esser	subj	0	0
@@ -388,7 +382,6 @@ line	token	word	role	arg_line	arg_token
 138	2	chinavi	obj	138	6
 138	2	chinavi	xcomp	138	4
 138	4	rovinar	subj	0	0
-138	4	rovinar	obj	0	0
 139	5	fugge	subj	139	4
 139	8	assonna	subj	139	6
 139	8	assonna	obj	139	7
@@ -418,7 +411,6 @@ line	token	word	role	arg_line	arg_token
 146	5	credendo	subj	0	0
 146	5	credendo	xcomp	146	6
 146	6	oltrarti	subj	0	0
-146	6	oltrarti	obj	146	6
 147	1	orando	subj	0	0
 147	1	orando	obj	147	2
 147	3	conven	subj	0	0
@@ -429,7 +421,6 @@ line	token	word	role	arg_line	arg_token
 148	5	puote	subj	148	4
 148	5	puote	xcomp	148	6
 148	6	aiutarti	subj	0	0
-148	6	aiutarti	obj	148	6
 149	4	seguirai	subj	149	2
 149	4	seguirai	obj	149	3
 149	4	seguirai	obl:con	149	7

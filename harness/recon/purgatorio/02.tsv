@@ -58,7 +58,6 @@ line	token	word	role	arg_line	arg_token
 20	4	domandar	subj	0	0
 20	4	domandar	obj	20	6
 21	1	rividil	subj	0	0
-21	1	rividil	obj	21	1
 21	1	rividil	xcomp	21	6
 21	1	rividil	obl:di	19	2
 21	6	fatto	subj	21	1
@@ -120,7 +119,6 @@ line	token	word	role	arg_line	arg_token
 39	8	sostenne	obj	39	7
 39	8	sostenne	obl	39	6
 40	2	chinail	subj	39	4
-40	2	chinail	obj	0	0
 40	2	chinail	obl	40	3
 40	7	venne	subj	40	5
 40	7	venne	obl	40	6
@@ -180,7 +178,6 @@ line	token	word	role	arg_line	arg_token
 60	1	mostratene	obj	60	3
 60	1	mostratene	xcomp	60	5
 60	1	mostratene	obl	59	8
-60	1	mostratene	obl	60	1
 60	5	gire	subj	0	0
 60	5	gire	obl:a	60	7
 61	3	rispuose	subj	61	2
@@ -193,7 +190,6 @@ line	token	word	role	arg_line	arg_token
 63	3	siam	subj	63	2
 63	3	siam	attr	63	4
 63	7	siete	subj	63	6
-63	7	siete	attr	0	0
 64	2	venimmo	subj	0	0
 64	2	venimmo	obl	64	1
 64	2	venimmo	obl	64	3
@@ -236,14 +232,12 @@ line	token	word	role	arg_line	arg_token
 75	4	ire	subj	74	1
 75	4	ire	xcomp	75	6
 75	6	farsi	subj	74	1
-75	6	farsi	obj	75	6
 75	6	farsi	attr	75	7
 76	2	vidi	subj	76	1
 76	2	vidi	obj	76	3
 76	6	trarresi	subj	76	3
 76	6	trarresi	obl	76	7
 77	2	abbracciarmi	subj	76	3
-77	2	abbracciarmi	obj	77	2
 77	2	abbracciarmi	obl:con	77	6
 78	2	mosse	subj	0	0
 78	2	mosse	obj	78	3
@@ -284,13 +278,11 @@ line	token	word	role	arg_line	arg_token
 86	6	pregai	subj	0	0
 86	6	pregai	ccomp	87	7
 87	3	parlarmi	subj	0	0
-87	3	parlarmi	iobj	87	3
 87	7	arrestasse	subj	0	0
 87	7	arrestasse	obj	87	6
 87	7	arrestasse	obl	87	3
 87	7	arrestasse	obl	87	5
 88	1	Rispuosemi	subj	0	0
-88	1	Rispuosemi	iobj	88	1
 88	1	Rispuosemi	ccomp	89	6
 88	6	amai	subj	88	4
 88	6	amai	obj	88	5
@@ -316,7 +308,6 @@ line	token	word	role	arg_line	arg_token
 94	8	fatto	obj	94	9
 94	8	fatto	iobj	94	6
 95	4	leva	subj	95	3
-95	4	leva	obj	0	0
 95	9	piace	subj	95	8
 95	9	piace	iobj	95	7
 96	5	negato	subj	95	2
@@ -401,7 +392,6 @@ line	token	word	role	arg_line	arg_token
 122	1	Correte	obl:a	122	3
 122	5	spogliarvi	subj	0	0
 122	5	spogliarvi	obj	122	7
-122	5	spogliarvi	iobj	122	5
 123	2	esser	subj	122	7
 123	2	esser	attr	123	8
 123	4	lascia	subj	123	7

@@ -194,12 +194,10 @@ line	token	word	role	arg_line	arg_token
 70	3	volsi	obj	70	2
 70	3	volsi	obl:a	70	5
 70	8	udio	subj	70	7
-70	8	udio	obj	0	0
 70	8	udio	obl	71	1
 71	4	parlassi	subj	71	3
 71	6	arrisemi	subj	0	0
 71	6	arrisemi	obj	71	8
-71	6	arrisemi	iobj	0	0
 72	2	fece	subj	72	1
 72	2	fece	xcomp	72	3
 72	3	crescer	subj	0	0
@@ -250,7 +248,6 @@ line	token	word	role	arg_line	arg_token
 87	3	facci	attr	87	7
 87	3	facci	obl:di	87	6
 88	7	compiacemmi	subj	88	6
-88	7	compiacemmi	obj	0	0
 88	7	compiacemmi	obl:in	88	5
 89	2	aspettando	subj	89	3
 89	4	fui	subj	89	3
@@ -258,7 +255,6 @@ line	token	word	role	arg_line	arg_token
 90	3	rispondendo	subj	0	0
 90	4	femmi	subj	0	0
 90	4	femmi	obj	90	2
-90	4	femmi	iobj	0	0
 91	3	disse	subj	0	0
 91	3	disse	iobj	91	2
 91	3	disse	ccomp	94	3
@@ -379,7 +375,6 @@ line	token	word	role	arg_line	arg_token
 131	0			0	0
 132	0			0	0
 133	3	diè	subj	133	1
-133	3	diè	obj	0	0
 133	3	diè	iobj	133	2
 133	3	diè	obl:a	131	1
 133	3	diè	obl:a	132	1

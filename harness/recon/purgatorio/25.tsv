@@ -51,7 +51,6 @@ line	token	word	role	arg_line	arg_token
 15	8	argomenta	obj	15	7
 15	8	argomenta	xcomp	15	6
 16	2	lasciò	subj	17	3
-16	2	lasciò	obj	0	0
 16	2	lasciò	obl:per	16	5
 16	7	fosse	subj	16	6
 16	7	fosse	attr	16	8
@@ -72,11 +71,9 @@ line	token	word	role	arg_line	arg_token
 20	5	può	subj	20	4
 20	5	può	xcomp	20	6
 20	6	far	subj	0	0
-20	6	far	obj	0	0
 20	6	far	attr	20	7
 20	6	far	obl	21	8
 21	6	nodrir	subj	0	0
-21	6	nodrir	obj	0	0
 21	8	tocca	subj	21	4
 21	8	tocca	obl	21	2
 22	3	ammentassi	subj	0	0
@@ -120,7 +117,6 @@ line	token	word	role	arg_line	arg_token
 33	1	discolpi	subj	0	0
 33	1	discolpi	obj	33	2
 33	4	potert'	subj	33	5
-33	4	potert'	iobj	33	4
 33	4	potert'	xcomp	33	6
 33	6	far	ccomp	33	1
 33	7	nego	subj	33	5
@@ -139,7 +135,6 @@ line	token	word	role	arg_line	arg_token
 36	3	fiero	obl	35	7
 36	3	fiero	obl:a	36	5
 36	8	die	subj	36	7
-36	8	die	obj	0	0
 37	7	beve	subj	37	3
 38	7	rimane	subj	37	3
 38	7	rimane	attr	39	2
@@ -153,7 +148,6 @@ line	token	word	role	arg_line	arg_token
 41	0			0	0
 42	3	farsi	subj	42	1
 42	3	farsi	obj	42	4
-42	3	farsi	iobj	42	3
 42	3	farsi	obl:per	42	7
 43	2	digesto	subj	0	0
 43	3	scende	subj	0	0
@@ -255,7 +249,6 @@ line	token	word	role	arg_line	arg_token
 73	7	tira	obj	73	2
 73	7	tira	obl:in	74	3
 74	5	fassi	subj	73	1
-74	5	fassi	obj	74	5
 74	5	fassi	attr	74	7
 75	2	vive	subj	75	1
 75	4	sente	subj	75	1
@@ -389,7 +382,6 @@ line	token	word	role	arg_line	arg_token
 119	3	tenere	obl:per	118	7
 119	3	tenere	obl:a	119	6
 120	3	errar	subj	0	0
-120	4	potrebbesi	subj	120	4
 120	4	potrebbesi	xcomp	120	3
 120	4	potrebbesi	obl:per	120	6
 121	0			0	0
@@ -430,7 +422,6 @@ line	token	word	role	arg_line	arg_token
 129	2	ricominciavan	attr	129	5
 129	2	ricominciavan	obl	129	1
 130	1	Finitolo	subj	0	0
-130	1	Finitolo	obj	130	1
 130	3	gridavano	subj	0	0
 130	3	gridavano	ccomp	131	2
 131	2	tenne	subj	131	3
@@ -438,7 +429,6 @@ line	token	word	role	arg_line	arg_token
 131	2	tenne	obl:a	130	5
 131	6	caccionne	subj	0	0
 131	6	caccionne	obj	131	5
-131	6	caccionne	obl	131	6
 132	5	sentito	subj	132	1
 132	5	sentito	obj	132	7
 132	5	sentito	obl:di	132	3

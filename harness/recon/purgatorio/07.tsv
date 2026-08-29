@@ -42,7 +42,6 @@ line	token	word	role	arg_line	arg_token
 14	3	ritornò	subj	13	3
 14	3	ritornò	obl:verso	14	5
 15	2	abbracciòl	subj	13	3
-15	2	abbracciòl	obj	15	2
 15	8	appiglia	subj	15	6
 15	8	appiglia	obj	15	7
 16	5	disse	subj	0	0
@@ -62,7 +61,6 @@ line	token	word	role	arg_line	arg_token
 20	5	udir	subj	20	2
 20	5	udir	obj	20	8
 21	1	dimmi	subj	0	0
-21	1	dimmi	iobj	21	1
 21	1	dimmi	ccomp	21	3
 21	3	vien	subj	0	0
 21	3	vien	obl:di	21	5
@@ -218,8 +216,6 @@ line	token	word	role	arg_line	arg_token
 60	7	tien	attr	60	8
 61	6	ammirando	subj	61	4
 62	1	Menane	subj	0	0
-62	1	Menane	obj	0	0
-62	1	Menane	obl	62	1
 62	2	disse	subj	61	4
 62	2	disse	ccomp	62	1
 62	2	disse	ccomp	62	6
@@ -255,7 +251,6 @@ line	token	word	role	arg_line	arg_token
 70	5	era	subj	70	7
 70	5	era	obl:tra	70	2
 71	3	condusse	subj	71	1
-71	3	condusse	obj	0	0
 71	3	condusse	obl	71	2
 71	3	condusse	obl:in	71	5
 72	7	muore	subj	72	9

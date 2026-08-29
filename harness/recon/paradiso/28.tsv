@@ -36,12 +36,10 @@ line	token	word	role	arg_line	arg_token
 10	6	ricorda	obj	10	5
 10	6	ricorda	ccomp	11	3
 11	3	feci	subj	11	2
-11	3	feci	obj	0	0
 11	3	feci	obl	11	4
 11	4	riguardando	subj	0	0
 11	4	riguardando	obl	11	7
 12	3	pigliarmi	subj	0	0
-12	3	pigliarmi	obj	12	3
 12	4	fece	subj	12	5
 12	4	fece	obj	12	7
 12	4	fece	xcomp	12	3
@@ -106,7 +104,6 @@ line	token	word	role	arg_line	arg_token
 31	6	sparto	subj	31	4
 31	6	sparto	obl:di	32	3
 32	0			0	0
-33	3	contenerlo	obj	33	3
 33	4	sarebbe	subj	32	6
 33	4	sarebbe	xcomp	33	3
 34	0			0	0
@@ -173,7 +170,6 @@ line	token	word	role	arg_line	arg_token
 54	6	ha	obl:per	54	8
 55	1	udir	subj	0	0
 55	1	udir	ccomp	56	5
-55	2	convienmi	iobj	55	2
 55	2	convienmi	xcomp	55	1
 56	5	vanno	subj	55	6
 56	5	vanno	subj	56	3
@@ -199,7 +195,6 @@ line	token	word	role	arg_line	arg_token
 62	7	vuo'	subj	0	0
 62	7	vuo'	xcomp	62	8
 62	8	saziarti	subj	0	0
-62	8	saziarti	obj	62	8
 63	6	assottiglia	subj	0	0
 63	6	assottiglia	obj	63	5
 63	6	assottiglia	obl:da	63	4
@@ -224,9 +219,7 @@ line	token	word	role	arg_line	arg_token
 71	5	corrisponde	subj	70	2
 71	5	corrisponde	obl:a	72	2
 72	5	ama	subj	72	3
-72	5	ama	obj	0	0
 72	9	sape	subj	72	7
-72	9	sape	obj	0	0
 73	8	circonde	subj	73	4
 73	8	circonde	obj	74	3
 73	8	circonde	obl:a	73	7
@@ -252,7 +245,6 @@ line	token	word	role	arg_line	arg_token
 82	6	risolve	subj	82	8
 82	6	risolve	obj	82	3
 83	3	turbava	subj	83	1
-83	3	turbava	obj	0	0
 83	3	turbava	obl	83	2
 83	9	ride	subj	83	7
 83	9	ride	obl	83	4
@@ -260,7 +252,6 @@ line	token	word	role	arg_line	arg_token
 83	9	ride	obl:con	84	3
 84	0			0	0
 85	2	fec'	subj	85	3
-85	2	fec'	obj	0	0
 85	2	fec'	obl	85	1
 85	7	provide	subj	86	2
 85	7	provide	iobj	85	6
@@ -292,7 +283,6 @@ line	token	word	role	arg_line	arg_token
 95	6	tiene	obj	95	5
 95	6	tiene	obl:a	95	9
 96	2	terrà	subj	95	4
-96	2	terrà	obj	0	0
 96	2	terrà	obl	96	3
 96	7	fuoro	subj	0	0
 96	7	fuoro	obl:in	96	5
@@ -310,7 +300,6 @@ line	token	word	role	arg_line	arg_token
 100	3	seguono	obl	100	2
 100	3	seguono	obl	101	2
 101	2	somigliarsi	subj	0	0
-101	2	somigliarsi	obj	0	0
 101	2	somigliarsi	obl:a	101	4
 101	2	somigliarsi	obl	101	6
 101	6	ponno	subj	0	0
@@ -349,11 +338,8 @@ line	token	word	role	arg_line	arg_token
 110	2	esser	subj	0	0
 110	2	esser	attr	110	3
 110	8	vede	subj	110	7
-110	8	vede	obj	0	0
 111	5	ama	subj	111	4
-111	5	ama	obj	0	0
 111	8	seconda	subj	111	6
-111	8	seconda	obj	0	0
 112	4	è	subj	112	6
 112	4	è	attr	112	5
 113	3	partorisce	subj	113	1

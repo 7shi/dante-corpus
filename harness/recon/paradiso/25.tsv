@@ -181,7 +181,6 @@ line	token	word	role	arg_line	arg_token
 56	1	vegna	xcomp	56	5
 56	1	vegna	obl:in	56	3
 56	5	vedere	subj	0	0
-56	5	vedere	obj	0	0
 57	6	sia	subj	57	4
 57	6	sia	iobj	57	5
 58	8	sapere	ccomp	60	5
@@ -243,7 +242,6 @@ line	token	word	role	arg_line	arg_token
 77	9	pieno	subj	77	7
 78	0			0	0
 79	3	diceva	subj	79	2
-79	3	diceva	obj	0	0
 80	4	tremolava	subj	80	6
 80	4	tremolava	obl:a	79	7
 80	4	tremolava	obl	81	1
@@ -329,7 +327,6 @@ line	token	word	role	arg_line	arg_token
 108	2	conveniesi	subj	0	0
 108	2	conveniesi	obl:a	108	6
 109	1	Misesi	subj	0	0
-109	1	Misesi	obj	0	0
 109	1	Misesi	obl	109	2
 109	1	Misesi	obl:in	109	4
 109	1	Misesi	obl:in	109	8
@@ -383,7 +380,6 @@ line	token	word	role	arg_line	arg_token
 124	3	è	attr	124	4
 124	3	è	obl:in	124	2
 124	9	saragli	subj	0	0
-124	9	saragli	iobj	124	9
 124	9	saragli	obl:con	125	4
 125	0			0	0
 126	6	agguagli	subj	125	7
@@ -422,7 +418,6 @@ line	token	word	role	arg_line	arg_token
 138	3	poter	subj	0	0
 138	3	poter	xcomp	138	4
 138	4	veder	subj	0	0
-138	4	veder	obj	0	0
 138	7	fossi	subj	138	6
 138	7	fossi	obl:presso	139	3
 138	7	fossi	obl:nel	139	6

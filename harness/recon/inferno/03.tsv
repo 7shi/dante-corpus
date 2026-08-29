@@ -13,7 +13,6 @@ line	token	word	role	arg_line	arg_token
 5	1	fecemi	subj	5	4
 5	1	fecemi	subj	6	3
 5	1	fecemi	subj	6	7
-5	1	fecemi	obj	5	1
 6	0			0	0
 7	5	fuor	subj	7	6
 7	5	fuor	obl	7	1
@@ -108,7 +107,6 @@ line	token	word	role	arg_line	arg_token
 39	9	fuoro	subj	0	0
 39	9	fuoro	obl:per	39	8
 40	1	Caccianli	subj	40	3
-40	1	Caccianli	obj	40	1
 40	1	Caccianli	xcomp	40	6
 40	6	esser	subj	0	0
 40	6	esser	attr	40	8
@@ -128,7 +126,6 @@ line	token	word	role	arg_line	arg_token
 45	1	Rispuose	subj	0	0
 45	1	Rispuose	ccomp	45	2
 45	2	Dicerolti	subj	0	0
-45	2	Dicerolti	iobj	45	2
 45	2	Dicerolti	obl	45	4
 46	3	hanno	subj	46	1
 46	3	hanno	obj	46	4
@@ -221,7 +218,6 @@ line	token	word	role	arg_line	arg_token
 74	5	parer	attr	74	7
 74	5	parer	xcomp	74	4
 75	3	discerno	subj	75	2
-75	3	discerno	obj	0	0
 75	3	discerno	obl:per	75	7
 76	8	fier	subj	76	6
 77	3	fermerem	subj	77	2
@@ -243,7 +239,6 @@ line	token	word	role	arg_line	arg_token
 85	4	veder	obj	85	6
 86	2	vegno	subj	86	1
 86	2	vegno	xcomp	86	4
-86	4	menarvi	obj	86	4
 86	4	menarvi	obl:a	86	8
 86	4	menarvi	obl:ne	87	3
 86	4	menarvi	obl:in	87	6

@@ -11,9 +11,7 @@ line	token	word	role	arg_line	arg_token
 4	2	cominciò	subj	4	5
 4	2	cominciò	xcomp	4	7
 4	7	parlarmi	subj	0	0
-4	7	parlarmi	iobj	4	7
 5	2	accennolle	subj	0	0
-5	2	accennolle	iobj	5	2
 5	2	accennolle	ccomp	5	4
 5	4	venisse	subj	0	0
 5	4	venisse	obl:a	5	6
@@ -189,7 +187,6 @@ line	token	word	role	arg_line	arg_token
 61	2	procedendo	obl:di	61	5
 62	1	vidine	subj	0	0
 62	1	vidine	obj	62	3
-62	1	vidine	obl	62	1
 63	1	mostrando	subj	62	3
 63	1	mostrando	obj	63	3
 64	0			0	0
@@ -244,7 +241,6 @@ line	token	word	role	arg_line	arg_token
 78	1	torna'	obl	78	4
 78	1	torna'	obl:da	78	7
 79	1	Trova'	subj	79	3
-79	1	Trova'	obj	0	0
 79	7	salito	subj	79	5
 79	7	salito	obl:su	80	4
 80	0			0	0
@@ -292,7 +288,6 @@ line	token	word	role	arg_line	arg_token
 92	3	dir	ccomp	93	4
 92	8	venne	subj	92	6
 93	3	credetti	subj	93	2
-93	3	credetti	obj	0	0
 93	4	Fa	subj	0	0
 93	4	Fa	ccomp	93	8
 93	8	abbracce	subj	93	6

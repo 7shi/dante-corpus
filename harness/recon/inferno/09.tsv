@@ -92,7 +92,6 @@ line	token	word	role	arg_line	arg_token
 26	5	intrar	obl:a	26	9
 27	2	trarne	subj	0	0
 27	2	trarne	obj	27	4
-27	2	trarne	obl	27	2
 28	2	è	subj	28	1
 28	2	è	attr	28	6
 28	2	è	attr	28	10
@@ -163,7 +162,6 @@ line	token	word	role	arg_line	arg_token
 49	5	fendea	obj	49	8
 49	5	fendea	obl:con	49	3
 50	1	battiensi	subj	0	0
-50	1	battiensi	obj	0	0
 50	1	battiensi	obl:a	50	3
 50	5	gridavan	subj	0	0
 50	5	gridavan	obl	50	7
@@ -185,7 +183,6 @@ line	token	word	role	arg_line	arg_token
 54	3	vengiammo	obl	54	1
 54	3	vengiammo	obl:in	54	5
 55	1	Volgiti	subj	0	0
-55	1	Volgiti	obj	55	1
 55	1	Volgiti	obl	55	3
 55	5	tien	subj	0	0
 55	5	tien	obj	55	7
@@ -290,7 +287,6 @@ line	token	word	role	arg_line	arg_token
 85	9	messo	subj	85	5
 85	9	messo	obl:da	85	8
 86	2	volsimi	subj	0	0
-86	2	volsimi	obj	86	2
 86	2	volsimi	obl:a	86	4
 86	7	fé	subj	86	6
 86	7	fé	obj	86	8

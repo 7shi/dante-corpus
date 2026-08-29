@@ -78,6 +78,9 @@ dante-corpus/
 │   │   ├── Makefile               # 100-canto launch, resumable; goal = NN.tsv (log -> TSV)
 │   │   ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
 │   │   ├── convert.py             # [Stage 5] Logs -> committable gold-format NN.tsv
+│   │   ├── check.py               # [Stage 5] Hard/soft violation check & stats over the TSVs
+│   │   ├── repair.py              # [Stage 5] Deterministic divergence-reduction rules
+│   │   ├── agree.py               # [Stage 5] Row-level P/R/F1 vs gold (readout, not a target)
 │   │   └── <canticle>/            # NN.log (gitignored, telemetry) + NN.tsv (skel-compatible)
 │   │
 │   └── fixtures/                  # Benchmark challenge fixtures & historical case units
@@ -96,5 +99,7 @@ dante-corpus/
     ├── test_harness_hybrid_engine.py   # Stage 2 engine tests (derivation, routing, fallback)
     ├── test_harness_reconstruct.py     # Stage 2 gate tests (assertions, 0-soft, hash commit)
     ├── test_harness_recon_readout.py   # Stage 4 readout tests (aggregation math)
-    └── test_harness_recon_convert.py   # Stage 5 conversion tests (TSV shape, idempotence)
+    ├── test_harness_recon_convert.py   # Stage 5 conversion tests (TSV shape, idempotence)
+    ├── test_harness_recon_check.py     # Stage 5 check tests (hard/soft split, base_dir)
+    └── test_harness_recon_repair.py    # Stage 5 repair + agreement-gate tests
 ```

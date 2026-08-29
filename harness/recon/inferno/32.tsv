@@ -70,7 +70,6 @@ line	token	word	role	arg_line	arg_token
 22	5	volsi	obj	22	4
 22	7	vidimi	subj	0	0
 22	7	vidimi	obj	23	6
-22	7	vidimi	iobj	22	7
 22	7	vidimi	obl	22	8
 22	7	vidimi	obl:sotto	23	4
 23	0			0	0
@@ -119,7 +118,6 @@ line	token	word	role	arg_line	arg_token
 40	7	visto	obl	40	5
 40	7	visto	obl	40	6
 41	1	volsimi	subj	0	0
-41	1	volsimi	obj	41	1
 41	1	volsimi	obl:a	41	3
 41	5	vidi	subj	0	0
 41	5	vidi	obj	41	6
@@ -129,7 +127,6 @@ line	token	word	role	arg_line	arg_token
 42	8	misto	subj	42	3
 42	8	misto	obl	42	7
 43	1	Ditemi	subj	43	2
-43	1	Ditemi	iobj	43	1
 43	1	Ditemi	ccomp	44	4
 43	5	strignete	subj	43	3
 43	5	strignete	obj	43	7
@@ -348,7 +345,6 @@ line	token	word	role	arg_line	arg_token
 101	3	dirò	ccomp	101	6
 101	6	sia	subj	101	5
 101	8	mosterrolti	subj	0	0
-101	8	mosterrolti	iobj	101	8
 101	8	mosterrolti	ccomp	101	6
 102	8	tomi	subj	0	0
 102	8	tomi	obj	102	7
@@ -455,7 +451,6 @@ line	token	word	role	arg_line	arg_token
 134	7	mangi	obj	134	4
 135	1	dimmi	subj	0	0
 135	1	dimmi	obj	135	3
-135	1	dimmi	iobj	135	1
 135	4	diss'	subj	135	5
 135	4	diss'	ccomp	135	1
 136	9	piangi	subj	136	3

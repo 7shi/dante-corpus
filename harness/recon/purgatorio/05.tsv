@@ -24,7 +24,6 @@ line	token	word	role	arg_line	arg_token
 7	3	rivolsi	obj	7	2
 7	3	rivolsi	obl:a	7	5
 8	2	vidile	subj	0	0
-8	2	vidile	obj	8	2
 8	2	vidile	xcomp	8	3
 8	3	guardar	subj	8	2
 8	3	guardar	obj	9	2
@@ -70,7 +69,6 @@ line	token	word	role	arg_line	arg_token
 19	4	ridir	obj	19	1
 19	8	vegno	subj	19	7
 20	1	Dissilo	subj	0	0
-20	1	Dissilo	obj	20	1
 20	1	Dissilo	obl:di	20	4
 21	2	fa	subj	21	1
 21	2	fa	obj	21	4
@@ -103,17 +101,13 @@ line	token	word	role	arg_line	arg_token
 29	1	corsero	obl:a	29	4
 29	6	dimandarne	subj	28	2
 29	6	dimandarne	ccomp	30	4
-29	6	dimandarne	obl	29	6
 30	4	fatene	subj	0	0
-30	4	fatene	obj	0	0
 30	4	fatene	attr	30	5
 30	4	fatene	obl:di	30	3
-30	4	fatene	obl	30	4
 31	6	potete	subj	31	5
 31	6	potete	xcomp	31	7
 31	6	potete	xcomp	32	2
 31	7	andarne	subj	0	0
-31	7	andarne	obl	31	7
 32	2	ritrarre	subj	0	0
 32	2	ritrarre	ccomp	33	6
 32	2	ritrarre	obl:a	32	4
@@ -132,7 +126,6 @@ line	token	word	role	arg_line	arg_token
 35	7	risposto	ccomp	36	5
 36	1	fàccianli	subj	0	0
 36	1	fàccianli	obj	36	2
-36	1	fàccianli	iobj	36	1
 36	4	esser	subj	0	0
 36	4	esser	iobj	36	6
 36	4	esser	attr	36	7
@@ -161,7 +154,6 @@ line	token	word	role	arg_line	arg_token
 43	7	è	subj	43	2
 43	7	è	attr	43	8
 44	2	vegnonti	subj	0	0
-44	2	vegnonti	obj	44	2
 44	2	vegnonti	xcomp	44	4
 44	5	disse	subj	44	7
 44	5	disse	ccomp	43	7
@@ -204,7 +196,6 @@ line	token	word	role	arg_line	arg_token
 52	2	fummo	obl:a	53	7
 53	0			0	0
 54	6	fece	subj	54	2
-54	6	fece	obj	0	0
 54	6	fece	xcomp	54	7
 54	6	fece	obl	54	5
 54	7	accorti	subj	0	0
@@ -215,7 +206,6 @@ line	token	word	role	arg_line	arg_token
 56	3	uscimmo	obl:di	56	2
 56	3	uscimmo	obl:a	56	5
 57	6	veder	subj	0	0
-57	6	veder	obj	0	0
 57	8	accora	subj	57	1
 57	8	accora	obj	57	7
 57	8	accora	obl:di	57	3
@@ -246,11 +236,9 @@ line	token	word	role	arg_line	arg_token
 64	6	fida	obl	65	5
 64	6	fida	obl	66	5
 65	5	giurarlo	subj	0	0
-65	5	giurarlo	obj	65	5
 66	5	nonpossa	subj	66	4
 66	5	nonpossa	xcomp	66	7
 66	7	ricida	subj	0	0
-66	7	ricida	obj	0	0
 67	9	parlo	subj	67	3
 67	9	parlo	obl:a	67	8
 68	2	priego	subj	67	2
@@ -432,7 +420,6 @@ line	token	word	role	arg_line	arg_token
 125	1	trovò	obj	124	2
 125	1	trovò	obl:in	124	8
 125	7	sospinse	subj	125	6
-125	7	sospinse	obj	0	0
 125	7	sospinse	obl:in	126	3
 126	5	sciolse	subj	0	0
 126	5	sciolse	obj	126	10
@@ -443,7 +430,6 @@ line	token	word	role	arg_line	arg_token
 127	10	vinse	subj	127	8
 127	10	vinse	obj	127	9
 128	1	voltòmmi	subj	0	0
-128	1	voltòmmi	obj	128	1
 128	1	voltòmmi	obl:per	128	4
 128	1	voltòmmi	obl:per	128	8
 129	6	coperse	subj	0	0
@@ -459,14 +445,12 @@ line	token	word	role	arg_line	arg_token
 132	1	seguitò	subj	132	4
 132	1	seguitò	obl:a	132	6
 133	1	ricorditi	subj	0	0
-133	1	ricorditi	obj	133	1
 133	1	ricorditi	obl:di	133	3
 133	5	son	subj	133	4
 133	5	son	attr	133	7
 134	3	fé	subj	134	1
 134	3	fé	obj	134	2
 134	4	disfecemi	subj	134	5
-134	4	disfecemi	obj	134	4
 135	1	salsi	subj	135	2
 136	1	disposando	subj	135	3
 136	1	disposando	obj	136	2

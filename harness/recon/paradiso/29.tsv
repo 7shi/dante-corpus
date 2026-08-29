@@ -17,7 +17,6 @@ line	token	word	role	arg_line	arg_token
 8	2	tacque	subj	8	3
 8	2	tacque	obj	8	1
 8	4	riguardando	subj	8	3
-8	4	riguardando	obj	0	0
 8	4	riguardando	obl:in	9	3
 9	7	vinto	subj	9	4
 9	7	vinto	obj	9	5
@@ -49,7 +48,6 @@ line	token	word	role	arg_line	arg_token
 15	4	Subsisto		0	0
 16	0			0	0
 17	5	comprender	subj	0	0
-17	5	comprender	obl:di	17	5
 17	8	piacque	subj	17	5
 17	8	piacque	iobj	17	7
 18	2	aperse	subj	18	8
@@ -201,7 +199,6 @@ line	token	word	role	arg_line	arg_token
 72	7	ricorda	obj	72	6
 72	9	vole	subj	71	6
 73	2	dirò	subj	0	0
-73	2	dirò	obj	0	0
 73	2	dirò	obl	71	2
 73	2	dirò	obl	73	5
 73	5	veggi	subj	73	4
@@ -248,7 +245,6 @@ line	token	word	role	arg_line	arg_token
 91	7	costa	subj	92	1
 91	7	costa	obj	91	6
 92	1	seminarla	subj	0	0
-92	1	seminarla	obj	92	1
 92	1	seminarla	obl:in	92	3
 92	6	piace	subj	93	1
 93	6	accosta	subj	93	1
@@ -291,7 +287,6 @@ line	token	word	role	arg_line	arg_token
 105	4	gridan	obj	104	4
 105	4	gridan	obl:in	105	2
 106	7	sanno	subj	106	5
-106	7	sanno	obj	0	0
 107	1	tornan	subj	106	4
 107	1	tornan	obl:di	107	3
 107	4	pasciute	subj	106	4

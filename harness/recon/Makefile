@@ -54,6 +54,15 @@
 ## make stats                          soft-violation counts by class (and by
 ##                                     role), no model call — same as
 ##                                     skel/skel.py --stats
+## make agree                          row-level P/R/F1 of the committed TSVs
+##                                     against gold — a READOUT, never a target:
+##                                     repair rules are derived from the layer's
+##                                     own schema with gold unopened, and this is
+##                                     read afterwards (../STAGE5.md §5)
+## make repair                         apply the deterministic repair rules to
+##                                     the committed TSVs, in place
+## make repair-check                   report unrepaired rows; non-zero exit if
+##                                     any remain
 
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
@@ -142,5 +151,24 @@ check:
 stats:
 	uv run python -m harness.recon.check --stats
 
+# Divergence reduction (STAGE5.md §5). Rules come from the layer's own schema
+# and derivation contract (dante_corpus/skel/validate.py, derive.py) — never
+# from reading gold and matching it: gold is harness/'s benchmark, and fitting
+# to it would void every gold-referenced number the project reports. `agree` is
+# therefore a readout run after the fact, not an acceptance criterion.
+#
+# `repair` edits the committed TSVs in
+# place, so the git history keeps the "raw model output -> rules applied" diff.
+# It must therefore run AFTER convert, never before: re-running convert
+# regenerates from the logs and rolls the repairs back.
+repair:
+	uv run python -m harness.recon.repair
+
+repair-check:
+	uv run python -m harness.recon.repair --check
+
+agree:
+	uv run python -m harness.recon.agree --per-canticle
+
 FORCE:
-.PHONY: FORCE convert convert-check check stats
+.PHONY: FORCE convert convert-check check stats repair repair-check agree

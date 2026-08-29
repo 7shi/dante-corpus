@@ -138,7 +138,6 @@ line	token	word	role	arg_line	arg_token
 51	8	abbia	obj	51	6
 52	2	dimmi	subj	0	0
 52	2	dimmi	obj	52	4
-52	2	dimmi	iobj	52	2
 52	2	dimmi	obl:di	52	6
 52	7	dì	subj	0	0
 52	7	dì	ccomp	52	9
@@ -151,7 +150,6 @@ line	token	word	role	arg_line	arg_token
 54	2	rimaner	subj	0	0
 54	2	rimaner	ccomp	54	7
 54	7	favelle	subj	54	4
-54	7	favelle	obj	0	0
 54	7	favelle	iobj	54	6
 55	6	lagrimai	subj	55	5
 55	6	lagrimai	obj	55	4
@@ -165,7 +163,6 @@ line	token	word	role	arg_line	arg_token
 57	1	rispuos'	iobj	57	3
 57	1	rispuos'	obl	57	4
 57	4	veggendola	subj	0	0
-57	4	veggendola	obj	57	4
 57	4	veggendola	attr	57	6
 58	3	dì	subj	0	0
 58	3	dì	iobj	58	2
@@ -239,10 +236,8 @@ line	token	word	role	arg_line	arg_token
 74	6	dire	subj	0	0
 74	6	dire	obj	74	7
 75	3	liberò	subj	0	0
-75	3	liberò	obj	0	0
 75	3	liberò	obl	75	2
 75	3	liberò	obl:con	75	7
-76	2	io	subj	76	2
 76	2	io	iobj	76	4
 76	2	io	ccomp	78	5
 77	3	mutasti	subj	0	0
@@ -398,7 +393,6 @@ line	token	word	role	arg_line	arg_token
 127	2	dice	xcomp	127	4
 127	2	dice	obl	128	3
 127	4	farmi	subj	0	0
-127	4	farmi	obj	127	4
 127	4	farmi	attr	127	6
 128	3	sarò	subj	128	2
 128	3	sarò	obl	128	4

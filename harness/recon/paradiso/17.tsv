@@ -5,7 +5,6 @@ line	token	word	role	arg_line	arg_token
 1	6	accertarsi	subj	0	0
 1	6	accertarsi	obl:di	2	2
 2	8	udito	subj	2	3
-2	8	udito	obj	0	0
 2	8	udito	obl	2	5
 2	8	udito	obl:a	2	7
 3	4	fa	subj	3	2
@@ -105,7 +104,6 @@ line	token	word	role	arg_line	arg_token
 39	2	è	subj	37	2
 39	2	è	obl:in	39	5
 40	5	prende	subj	40	1
-40	5	prende	obj	0	0
 40	5	prende	obl	41	3
 41	9	specchia	subj	42	1
 41	9	specchia	obj	41	8
@@ -295,7 +293,6 @@ line	token	word	role	arg_line	arg_token
 106	7	sprona	xcomp	107	7
 106	7	sprona	obl:verso	107	4
 107	7	darmi	subj	107	2
-107	7	darmi	iobj	107	7
 107	7	darmi	obl:per	107	6
 108	3	è	subj	108	1
 108	3	è	attr	108	5

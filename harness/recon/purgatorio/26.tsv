@@ -6,14 +6,12 @@ line	token	word	role	arg_line	arg_token
 2	3	andavamo	obl	2	1
 2	3	andavamo	obl	2	2
 3	1	diceami	subj	2	8
-3	1	diceami	iobj	3	1
 3	1	diceami	ccomp	3	2
 3	2	Guarda	subj	0	0
 3	3	giovi	ccomp	3	7
 3	7	scaltro	subj	3	5
 3	7	scaltro	obj	3	6
 4	1	feriami	subj	4	3
-4	1	feriami	obj	4	1
 4	1	feriami	obl:su	4	7
 5	3	raggiando	subj	4	3
 6	1	mutava	subj	5	1
@@ -74,7 +72,6 @@ line	token	word	role	arg_line	arg_token
 20	5	hanno	subj	21	5
 21	0			0	0
 22	1	Dinne	subj	0	0
-22	1	Dinne	obj	22	1
 22	1	Dinne	ccomp	22	3
 22	3	è	subj	0	0
 22	3	è	ccomp	22	5
@@ -176,7 +173,6 @@ line	token	word	role	arg_line	arg_token
 52	6	visto	attr	52	8
 52	6	visto	obl	52	4
 53	1	incominciai	subj	52	1
-53	1	incominciai	obj	0	0
 54	2	aver	subj	53	3
 54	2	aver	obj	54	8
 54	2	aver	obl	54	5
@@ -217,7 +213,6 @@ line	token	word	role	arg_line	arg_token
 63	10	spazia	subj	0	0
 63	10	spazia	attr	63	8
 64	1	ditemi	subj	0	0
-64	1	ditemi	iobj	64	1
 64	1	ditemi	ccomp	65	2
 64	1	ditemi	ccomp	65	6
 64	7	verghi	subj	0	0
@@ -302,11 +297,8 @@ line	token	word	role	arg_line	arg_token
 90	3	è	subj	90	1
 90	3	è	attr	90	5
 90	5	dire	subj	0	0
-90	5	dire	obj	0	0
 90	8	saprei	subj	0	0
-90	8	saprei	obj	0	0
 91	1	Farotti	subj	0	0
-91	1	Farotti	obj	91	1
 91	1	Farotti	xcomp	91	5
 91	5	volere	subj	91	1
 91	5	volere	obj	91	4
@@ -317,7 +309,6 @@ line	token	word	role	arg_line	arg_token
 92	7	purgo	obj	92	6
 92	7	purgo	obl	93	3
 93	3	dolermi	subj	0	0
-93	3	dolermi	obj	93	3
 93	3	dolermi	obl:a	93	8
 94	0			0	0
 95	2	fer	subj	95	4
@@ -360,9 +351,7 @@ line	token	word	role	arg_line	arg_token
 105	5	fa	subj	105	4
 105	5	fa	xcomp	105	6
 105	6	credere	subj	0	0
-105	6	credere	obj	0	0
 105	6	credere	iobj	105	7
-106	2	elli	subj	106	2
 106	2	elli	iobj	106	4
 106	2	elli	ccomp	106	6
 106	6	lasci	subj	106	5
@@ -381,7 +370,6 @@ line	token	word	role	arg_line	arg_token
 108	7	far	attr	108	8
 109	8	giuraro	subj	109	5
 110	1	dimmi	subj	0	0
-110	1	dimmi	iobj	110	1
 110	1	dimmi	ccomp	110	3
 110	3	è	subj	110	4
 110	3	è	attr	110	7
@@ -390,7 +378,6 @@ line	token	word	role	arg_line	arg_token
 110	7	dimostri	obl:in	111	2
 110	7	dimostri	obl:in	111	5
 111	7	avermi	subj	0	0
-111	7	avermi	obj	111	7
 111	7	avermi	attr	111	8
 112	0			0	0
 113	3	durerà	subj	113	5
@@ -432,7 +419,6 @@ line	token	word	role	arg_line	arg_token
 123	9	ascolti	subj	123	3
 123	9	ascolti	obl:per	123	7
 124	2	fer	subj	124	4
-124	2	fer	obj	0	0
 124	2	fer	obl	124	1
 125	7	dando	subj	0	0
 125	7	dando	obj	125	8
@@ -454,7 +440,6 @@ line	token	word	role	arg_line	arg_token
 129	3	è	obl:in	129	2
 129	3	è	obl:di	129	7
 130	1	falli	subj	0	0
-130	1	falli	obj	130	1
 130	1	falli	obj	130	5
 130	1	falli	obl:per	130	3
 131	2	bisogna	subj	0	0

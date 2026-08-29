@@ -126,7 +126,6 @@ line	token	word	role	arg_line	arg_token
 49	3	circunfulse	subj	49	4
 49	3	circunfulse	obj	49	2
 50	2	lasciommi	subj	0	0
-50	2	lasciommi	obj	50	2
 50	2	lasciommi	xcomp	50	3
 50	3	fasciato	subj	50	2
 50	3	fasciato	obl:di	50	6
@@ -135,7 +134,6 @@ line	token	word	role	arg_line	arg_token
 52	5	queta	subj	52	4
 52	5	queta	obj	52	7
 53	1	accoglie	subj	52	3
-53	1	accoglie	obj	0	0
 53	1	accoglie	xcomp	54	2
 53	1	accoglie	obl	52	1
 53	1	accoglie	obl:in	53	3
@@ -226,7 +224,6 @@ line	token	word	role	arg_line	arg_token
 85	5	far	subj	0	0
 85	5	far	obj	85	7
 86	5	chinandomi	subj	0	0
-86	5	chinandomi	obj	0	0
 86	5	chinandomi	obl:di	86	4
 86	5	chinandomi	obl:a	86	8
 87	3	deriva	subj	87	1
@@ -262,7 +259,6 @@ line	token	word	role	arg_line	arg_token
 98	0			0	0
 99	1	dammi	subj	0	0
 99	1	dammi	obj	99	2
-99	1	dammi	iobj	99	1
 99	1	dammi	xcomp	99	4
 99	4	dir	subj	0	0
 99	4	dir	ccomp	99	8
@@ -303,7 +299,6 @@ line	token	word	role	arg_line	arg_token
 110	2	specchia	obj	110	1
 110	2	specchia	obl:in	109	5
 110	5	vedersi	subj	0	0
-110	5	vedersi	obj	0	0
 110	5	vedersi	attr	110	6
 111	2	è	subj	0	0
 111	2	è	obl:in	111	4
@@ -313,7 +308,6 @@ line	token	word	role	arg_line	arg_token
 113	1	vidi	subj	0	0
 113	1	vidi	ccomp	113	2
 113	2	specchiarsi	subj	114	1
-113	2	specchiarsi	obj	0	0
 113	2	specchiarsi	obl:in	113	7
 114	6	fatto	subj	114	1
 114	6	fatto	obj	114	8
@@ -332,13 +326,11 @@ line	token	word	role	arg_line	arg_token
 119	6	prendeva	obj	120	5
 120	0			0	0
 121	6	pon	subj	0	0
-121	6	pon	obj	0	0
 121	6	pon	obl	121	1
 121	6	pon	obl	121	3
 121	6	pon	obl	121	4
 121	6	pon	obl	123	5
 121	8	leva	subj	0	0
-121	8	leva	obj	0	0
 121	8	leva	obl	121	1
 121	8	leva	obl	121	3
 121	8	leva	obl	121	4

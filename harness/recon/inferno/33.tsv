@@ -3,7 +3,6 @@ line	token	word	role	arg_line	arg_token
 1	3	sollevò	obj	1	2
 1	3	sollevò	obl:da	1	6
 2	3	forbendola	subj	2	2
-2	3	forbendola	obj	2	3
 2	3	forbendola	obl:a	2	5
 3	8	guasto	subj	3	4
 3	8	guasto	obj	3	3
@@ -32,7 +31,6 @@ line	token	word	role	arg_line	arg_token
 9	1	parlar	subj	0	0
 9	3	lagrimar	subj	0	0
 9	4	vedrai	subj	0	0
-9	4	vedrai	obj	0	0
 9	4	vedrai	xcomp	9	1
 9	4	vedrai	xcomp	9	3
 9	4	vedrai	obl	9	5
@@ -63,7 +61,6 @@ line	token	word	role	arg_line	arg_token
 15	6	son	attr	15	8
 16	0			0	0
 17	1	fidandomi	subj	17	4
-17	1	fidandomi	obj	0	0
 17	1	fidandomi	obl:di	17	3
 17	6	preso	subj	17	4
 18	3	morto	subj	17	4
@@ -222,7 +219,6 @@ line	token	word	role	arg_line	arg_token
 64	1	Queta'	subj	0	0
 64	1	Queta'	obj	64	2
 64	1	Queta'	xcomp	64	6
-64	6	farli	obj	64	6
 64	6	farli	attr	64	8
 65	6	stemmo	subj	0	0
 65	6	stemmo	attr	65	8
@@ -359,7 +355,6 @@ line	token	word	role	arg_line	arg_token
 111	3	data	subj	111	8
 112	1	levatemi	subj	0	0
 112	1	levatemi	obj	112	6
-112	1	levatemi	iobj	112	1
 112	1	levatemi	obl:da	112	3
 112	1	levatemi	obl	113	4
 113	4	sfoghi	subj	113	3
@@ -374,7 +369,6 @@ line	token	word	role	arg_line	arg_token
 115	11	sovvegna	subj	115	9
 115	11	sovvegna	obj	115	10
 116	1	dimmi	subj	0	0
-116	1	dimmi	iobj	116	1
 116	1	dimmi	ccomp	116	3
 116	1	dimmi	ccomp	117	8
 116	1	dimmi	obl	115	7
@@ -399,7 +393,6 @@ line	token	word	role	arg_line	arg_token
 120	3	riprendo	obl:per	120	6
 121	2	diss'	subj	121	3
 121	2	diss'	iobj	121	4
-122	2	elli	subj	122	2
 122	2	elli	iobj	122	4
 122	2	elli	ccomp	123	6
 122	9	stea	subj	122	8
@@ -415,7 +408,6 @@ line	token	word	role	arg_line	arg_token
 125	7	cade	obl	125	3
 125	7	cade	obl	126	6
 126	6	dea	subj	126	3
-126	6	dea	obj	0	0
 126	6	dea	iobj	126	5
 127	7	rade	subj	127	3
 127	7	rade	obj	128	3
@@ -426,9 +418,7 @@ line	token	word	role	arg_line	arg_token
 129	1	sappie	subj	0	0
 129	1	sappie	ccomp	130	9
 129	7	trade	subj	129	6
-129	7	trade	obj	0	0
 130	2	fec'	subj	130	3
-130	2	fec'	obj	0	0
 130	9	tolto	subj	130	5
 130	9	tolto	obj	130	7
 130	9	tolto	obl:da	131	3
@@ -485,7 +475,6 @@ line	token	word	role	arg_line	arg_token
 148	2	distendi	obl	148	5
 149	1	aprimi	subj	0	0
 149	1	aprimi	obj	149	3
-149	1	aprimi	iobj	149	1
 149	8	apersi	subj	149	5
 149	8	apersi	obj	149	7
 149	8	apersi	iobj	149	7

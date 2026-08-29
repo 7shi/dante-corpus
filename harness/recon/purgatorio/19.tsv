@@ -69,7 +69,6 @@ line	token	word	role	arg_line	arg_token
 21	2	son	xcomp	21	6
 21	2	son	obl:di	21	4
 21	6	sentir	subj	0	0
-21	6	sentir	obj	0	0
 22	2	volsi	subj	22	1
 22	2	volsi	obj	22	3
 22	2	volsi	obl:di	22	6
@@ -97,7 +96,6 @@ line	token	word	role	arg_line	arg_token
 29	5	venìa	obl:in	30	8
 30	0			0	0
 31	3	prendea	subj	31	2
-31	3	prendea	obj	0	0
 31	7	apria	subj	31	2
 31	7	apria	obj	31	6
 31	7	apria	obl	31	5
@@ -105,7 +103,6 @@ line	token	word	role	arg_line	arg_token
 32	1	fendendo	obj	32	3
 32	5	mostravami	subj	31	2
 32	5	mostravami	obj	32	7
-32	5	mostravami	iobj	32	5
 33	3	svegliò	subj	33	1
 33	3	svegliò	obj	33	2
 33	3	svegliò	obl:con	33	5
@@ -160,11 +157,9 @@ line	token	word	role	arg_line	arg_token
 46	6	parean	subj	46	5
 46	6	parean	obl:di	46	8
 47	1	volseci	subj	47	4
-47	1	volseci	obl	47	1
 47	1	volseci	obl	47	3
 47	1	volseci	obl:tra	48	3
 47	7	parlonne	subj	47	5
-47	7	parlonne	obj	47	7
 48	0			0	0
 49	1	Mosse	subj	0	0
 49	1	Mosse	obj	49	3
@@ -187,7 +182,6 @@ line	token	word	role	arg_line	arg_token
 53	4	incominciò	subj	53	2
 53	4	incominciò	xcomp	53	6
 53	6	dirmi	subj	53	2
-53	6	dirmi	iobj	53	6
 53	6	dirmi	ccomp	52	2
 54	6	sormontati	subj	54	2
 54	6	sormontati	obl:da	54	5
@@ -209,7 +203,6 @@ line	token	word	role	arg_line	arg_token
 60	8	slega	subj	60	4
 60	8	slega	obl:da	60	6
 61	1	Bastiti	subj	0	0
-61	1	Bastiti	iobj	0	0
 61	3	batti	subj	0	0
 61	3	batti	obj	61	7
 61	3	batti	obl:a	61	5
@@ -307,7 +300,6 @@ line	token	word	role	arg_line	arg_token
 88	7	fare	obj	88	6
 88	7	fare	obl:a	88	10
 89	1	trassimi	subj	0	0
-89	1	trassimi	obj	89	1
 89	1	trassimi	obl:sovra	89	4
 90	5	notar	subj	90	6
 90	5	notar	obj	90	3

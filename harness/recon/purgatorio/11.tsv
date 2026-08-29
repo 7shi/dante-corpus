@@ -31,7 +31,6 @@ line	token	word	role	arg_line	arg_token
 11	5	cantando	subj	0	0
 11	5	cantando	obj	11	6
 12	2	facciano	subj	12	4
-12	2	facciano	obj	0	0
 13	1	Dà	subj	0	0
 13	1	Dà	obj	13	7
 13	1	Dà	iobj	13	4
@@ -165,7 +164,6 @@ line	token	word	role	arg_line	arg_token
 54	2	portar	subj	0	0
 54	2	portar	obj	54	5
 54	3	convienmi	subj	0	0
-54	3	convienmi	iobj	54	3
 54	3	convienmi	xcomp	54	2
 55	4	vive	subj	55	2
 55	8	noma	subj	55	2
@@ -178,7 +176,6 @@ line	token	word	role	arg_line	arg_token
 56	8	conosco	subj	56	6
 56	8	conosco	obj	56	7
 57	3	farlo	subj	0	0
-57	3	farlo	obj	57	3
 57	3	farlo	xcomp	57	4
 57	3	farlo	obl:a	57	7
 58	2	fui	subj	58	1
@@ -209,7 +206,6 @@ line	token	word	role	arg_line	arg_token
 65	8	sanno	subj	65	7
 65	8	sanno	ccomp	65	4
 66	2	sallo	subj	66	6
-66	2	sallo	obj	66	2
 66	2	sallo	obl:in	66	4
 67	2	sono	subj	67	1
 67	2	sono	attr	67	3
@@ -245,11 +241,8 @@ line	token	word	role	arg_line	arg_token
 75	8	'mpaccia	subj	75	6
 75	8	'mpaccia	obj	75	7
 76	2	videmi	subj	74	2
-76	2	videmi	obj	76	2
 76	4	conobbemi	subj	74	2
-76	4	conobbemi	obj	76	4
 76	6	chiamava	subj	74	2
-76	6	chiamava	obj	0	0
 77	1	tenendo	subj	74	2
 77	1	tenendo	obj	77	3
 77	1	tenendo	attr	77	6
@@ -445,7 +438,6 @@ line	token	word	role	arg_line	arg_token
 141	5	potrai	subj	141	4
 141	5	potrai	xcomp	141	6
 141	6	chiosarlo	subj	141	4
-141	6	chiosarlo	obj	141	6
 142	4	tolse	subj	142	2
 142	4	tolse	obj	142	6
 142	4	tolse	iobj	142	3

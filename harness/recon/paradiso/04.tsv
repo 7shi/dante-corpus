@@ -22,7 +22,6 @@ line	token	word	role	arg_line	arg_token
 9	3	era	subj	0	0
 9	3	era	attr	9	4
 9	6	commendo	subj	0	0
-9	6	commendo	obj	0	0
 10	3	tacea	subj	10	1
 10	3	tacea	obj	10	2
 11	2	era	subj	10	7
@@ -86,7 +85,6 @@ line	token	word	role	arg_line	arg_token
 30	3	vuoli	subj	0	0
 30	3	vuoli	xcomp	30	2
 30	5	dico	subj	30	4
-30	5	dico	obj	0	0
 31	2	hanno	subj	28	4
 31	2	hanno	obj	31	8
 31	2	hanno	obl:in	31	5
@@ -210,7 +208,6 @@ line	token	word	role	arg_line	arg_token
 71	2	penetrare	subj	0	0
 71	2	penetrare	obl:a	71	5
 72	2	disiri	subj	0	0
-72	2	disiri	obj	0	0
 72	4	farò	subj	0	0
 72	4	farò	obj	72	3
 72	4	farò	attr	72	5
@@ -422,7 +419,6 @@ line	token	word	role	arg_line	arg_token
 136	7	può	subj	136	6
 136	7	può	xcomp	136	8
 136	8	sodisfarvi	subj	0	0
-136	8	sodisfarvi	obj	136	8
 137	3	manchi	subj	0	0
 137	3	manchi	obl:a	137	2
 137	3	manchi	obl:con	137	7

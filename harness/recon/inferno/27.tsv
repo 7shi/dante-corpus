@@ -41,7 +41,6 @@ line	token	word	role	arg_line	arg_token
 16	5	colto	obj	16	7
 17	5	dandole	subj	0	0
 17	5	dandole	obj	17	7
-17	5	dandole	iobj	17	5
 17	5	dandole	obl:per	17	4
 18	2	dato	subj	18	5
 18	2	dato	obj	18	1
@@ -84,7 +83,6 @@ line	token	word	role	arg_line	arg_token
 27	7	reco	obj	27	5
 27	7	reco	obl	27	2
 28	1	dimmi	subj	0	0
-28	1	dimmi	iobj	28	1
 28	1	dimmi	ccomp	28	4
 28	4	han	subj	28	3
 28	4	han	obj	28	5
@@ -211,7 +209,6 @@ line	token	word	role	arg_line	arg_token
 67	8	fui	subj	0	0
 67	8	fui	attr	67	9
 68	1	credendomi	subj	0	0
-68	1	credendomi	obj	68	1
 68	1	credendomi	xcomp	68	4
 68	4	fare	subj	0	0
 68	4	fare	obj	68	5
@@ -306,7 +303,6 @@ line	token	word	role	arg_line	arg_token
 97	2	guerir	obl:di	97	7
 98	1	domandommi	subj	0	0
 98	1	domandommi	obj	98	2
-98	1	domandommi	iobj	98	1
 98	5	tacetti	subj	98	4
 99	5	parver	subj	99	4
 99	5	parver	attr	99	6
@@ -331,7 +327,6 @@ line	token	word	role	arg_line	arg_token
 103	7	diserrare	subj	103	4
 103	7	diserrare	obj	103	2
 104	3	sai	subj	104	2
-104	3	sai	obj	0	0
 104	5	son	subj	104	8
 104	5	son	attr	104	6
 105	6	ebbe	subj	105	4
@@ -397,7 +392,6 @@ line	token	word	role	arg_line	arg_token
 122	3	prese	subj	0	0
 122	3	prese	obj	122	2
 122	4	dicendomi	subj	0	0
-122	4	dicendomi	iobj	122	4
 122	4	dicendomi	ccomp	123	3
 123	3	pensavi	subj	123	1
 123	3	pensavi	ccomp	123	7
@@ -421,7 +415,6 @@ line	token	word	role	arg_line	arg_token
 127	9	furo	subj	127	6
 127	9	furo	obl:di	127	8
 128	6	vedi	subj	0	0
-128	6	vedi	obj	0	0
 128	8	perduto	subj	128	3
 128	8	perduto	obl	128	4
 129	4	andando	subj	0	0

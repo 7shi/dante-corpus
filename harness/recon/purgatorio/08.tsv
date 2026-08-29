@@ -141,7 +141,6 @@ line	token	word	role	arg_line	arg_token
 45	2	fia	iobj	45	3
 45	2	fia	attr	45	1
 45	4	vedervi	subj	0	0
-45	4	vedervi	obj	45	4
 46	4	credo	subj	0	0
 46	4	credo	ccomp	46	7
 46	7	scendesse	subj	46	6
@@ -200,7 +199,6 @@ line	token	word	role	arg_line	arg_token
 59	4	sono	obl	60	7
 60	6	andando	subj	0	0
 60	7	acquisti	subj	60	4
-60	7	acquisti	obj	0	0
 60	7	acquisti	obl	60	6
 61	7	udita	subj	61	6
 62	7	raccolse	subj	62	3
@@ -240,7 +238,6 @@ line	token	word	role	arg_line	arg_token
 71	1	dì	iobj	71	3
 71	1	dì	ccomp	71	8
 71	8	chiami	subj	71	3
-71	8	chiami	obj	0	0
 71	8	chiami	obl:per	71	7
 72	7	risponde	subj	72	6
 72	7	risponde	iobj	72	5
@@ -276,7 +273,6 @@ line	token	word	role	arg_line	arg_token
 80	5	accampa	subj	80	4
 80	5	accampa	obj	80	3
 81	3	fatto	subj	81	5
-81	3	fatto	obj	0	0
 82	2	dicea	subj	0	0
 82	2	dicea	obl	82	1
 82	3	segnato	subj	0	0
@@ -298,7 +294,6 @@ line	token	word	role	arg_line	arg_token
 88	9	guarde	obj	88	6
 88	9	guarde	obl	88	7
 88	9	guarde	obl	88	8
-89	2	io	subj	89	2
 89	2	io	obj	89	8
 89	2	io	iobj	89	4
 90	9	arde	subj	90	4
@@ -342,7 +337,6 @@ line	token	word	role	arg_line	arg_token
 101	1	volgendo	obl:ad	101	3
 101	1	volgendo	obl:ad	101	5
 102	1	leccando	subj	0	0
-102	1	leccando	obj	0	0
 102	1	leccando	obl:come	102	3
 102	6	liscia	subj	102	4
 102	6	liscia	obj	102	5
@@ -396,7 +390,6 @@ line	token	word	role	arg_line	arg_token
 117	1	sai	subj	0	0
 117	1	sai	obj	115	4
 117	2	dillo	subj	0	0
-117	2	dillo	obj	117	2
 117	2	dillo	iobj	117	4
 117	2	dillo	obl	117	1
 117	9	era	subj	117	5
@@ -412,7 +405,6 @@ line	token	word	role	arg_line	arg_token
 120	3	portai	obj	120	5
 120	3	portai	obl:a	120	2
 120	8	raffina	subj	120	6
-120	8	raffina	obj	0	0
 121	2	diss'	subj	121	3
 121	2	diss'	iobj	121	4
 121	2	diss'	ccomp	122	4

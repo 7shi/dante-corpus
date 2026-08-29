@@ -5,7 +5,6 @@ line	token	word	role	arg_line	arg_token
 2	2	colse	obj	2	1
 2	2	colse	obl:in	1	7
 2	7	vedessi	subj	0	0
-2	7	vedessi	obj	0	0
 2	7	vedessi	obl:per	2	6
 2	7	vedessi	obl:per	3	6
 3	0			0	0
@@ -50,10 +49,8 @@ line	token	word	role	arg_line	arg_token
 16	2	move	obj	16	3
 16	2	move	obl	16	9
 16	9	porge	subj	16	6
-16	9	porge	obj	0	0
 16	9	porge	iobj	16	8
 17	1	Moveti	subj	0	0
-17	1	Moveti	obj	17	1
 17	1	Moveti	obl:per	18	2
 17	1	Moveti	obl:per	18	5
 17	7	informa	subj	17	3
@@ -117,7 +114,6 @@ line	token	word	role	arg_line	arg_token
 36	6	esser	subj	0	0
 36	6	esser	attr	36	7
 37	1	Ancisa	subj	37	2
-37	1	Ancisa	obj	0	0
 37	1	Ancisa	obl	37	6
 37	6	perder	subj	0	0
 37	6	perder	obj	37	7
@@ -223,7 +219,6 @@ line	token	word	role	arg_line	arg_token
 67	1	senti'	obj	67	6
 67	1	senti'	iobj	67	2
 68	2	ventarmi	subj	0	0
-68	2	ventarmi	iobj	68	2
 68	2	ventarmi	obl:in	68	4
 68	6	dir	subj	0	0
 68	6	dir	ccomp	68	7
@@ -280,7 +275,6 @@ line	token	word	role	arg_line	arg_token
 83	7	semo	obl	83	6
 84	5	stanno	subj	84	3
 84	7	stea	subj	84	9
-85	2	elli	subj	85	2
 85	2	elli	iobj	85	4
 85	2	elli	ccomp	86	6
 86	6	ristora	subj	85	6
@@ -427,7 +421,6 @@ line	token	word	role	arg_line	arg_token
 128	4	queti	obj	128	3
 128	4	queti	obl:in	128	2
 128	8	disira	subj	127	1
-128	8	disira	obj	0	0
 129	4	giugner	subj	129	6
 129	4	giugner	obj	129	5
 129	7	contende	subj	129	6

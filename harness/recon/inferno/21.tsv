@@ -18,7 +18,6 @@ line	token	word	role	arg_line	arg_token
 4	3	veder	obj	5	6
 5	0			0	0
 6	2	vidila	subj	0	0
-6	2	vidila	obj	6	2
 6	2	vidila	attr	6	4
 7	0			0	0
 8	1	bolle	subj	8	3
@@ -97,7 +96,6 @@ line	token	word	role	arg_line	arg_token
 27	5	sgagliarda	subj	27	3
 27	5	sgagliarda	iobj	27	2
 28	3	veder	subj	28	1
-28	3	veder	obj	0	0
 28	5	indugia	subj	28	1
 28	5	indugia	obj	28	7
 29	2	vidi	subj	0	0
@@ -130,7 +128,6 @@ line	token	word	role	arg_line	arg_token
 37	4	disse	obl:di	37	3
 38	1	ecco	obj	38	2
 39	1	Mettetel	subj	0	0
-39	1	Mettetel	obj	39	1
 39	1	Mettetel	obl	39	2
 39	5	torno	subj	39	4
 39	5	torno	obl:per	39	7
@@ -257,11 +254,9 @@ line	token	word	role	arg_line	arg_token
 73	7	pigli	subj	73	4
 73	7	pigli	obj	73	6
 74	1	traggasi	subj	74	4
-74	1	traggasi	obj	74	1
 74	9	oda	subj	74	7
 74	9	oda	obj	74	8
 75	4	arruncigliarmi	subj	0	0
-75	4	arruncigliarmi	obj	75	4
 75	6	consigli	subj	0	0
 75	6	consigli	obj	75	5
 75	6	consigli	xcomp	75	4
@@ -280,7 +275,6 @@ line	token	word	role	arg_line	arg_token
 79	1	Credi	subj	79	2
 79	1	Credi	xcomp	79	5
 79	5	vedermi	subj	79	2
-79	5	vedermi	obj	79	5
 79	5	vedermi	xcomp	80	2
 80	2	venuto	subj	79	5
 80	2	venuto	xcomp	81	1
@@ -311,7 +305,6 @@ line	token	word	role	arg_line	arg_token
 87	2	disse	iobj	87	5
 87	2	disse	ccomp	87	9
 87	9	feruto	subj	0	0
-88	3	duca	subj	88	3
 88	3	duca	iobj	88	6
 88	3	duca	ccomp	90	6
 88	10	siedi	subj	88	9
@@ -473,14 +466,12 @@ line	token	word	role	arg_line	arg_token
 132	6	minaccian	obj	132	7
 132	6	minaccian	obl:con	132	4
 132	6	minaccian	obl	132	5
-133	2	elli	subj	133	2
 133	2	elli	iobj	133	4
 133	2	elli	ccomp	133	6
 133	6	vo'	subj	0	0
 133	6	vo'	ccomp	133	9
 133	9	paventi	subj	133	8
 134	1	lasciali	subj	0	0
-134	1	lasciali	obj	134	1
 134	1	lasciali	xcomp	134	2
 134	2	digrignar	subj	134	1
 134	2	digrignar	obl:a	134	6

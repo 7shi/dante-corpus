@@ -73,7 +73,6 @@ line	token	word	role	arg_line	arg_token
 28	1	Compié	subj	28	3
 28	1	Compié	subj	28	6
 29	2	attesersi	subj	29	7
-29	2	attesersi	obj	0	0
 29	2	attesersi	obl:a	29	4
 30	1	felicitando	subj	0	0
 30	1	felicitando	obj	30	2
@@ -168,7 +167,6 @@ line	token	word	role	arg_line	arg_token
 59	2	specchiato	subj	58	6
 59	2	specchiato	obl:in	59	5
 60	2	rimanendosi	subj	55	4
-60	2	rimanendosi	obj	60	2
 60	2	rimanendosi	attr	60	3
 61	2	discende	subj	0	0
 61	2	discende	obl	61	1
@@ -336,7 +334,6 @@ line	token	word	role	arg_line	arg_token
 112	4	sia	attr	112	6
 112	4	sia	obl:a	112	8
 113	2	farti	subj	0	0
-113	2	farti	obj	113	2
 113	2	farti	xcomp	113	3
 113	3	mover	subj	113	2
 113	3	mover	obl	113	4
@@ -347,10 +344,8 @@ line	token	word	role	arg_line	arg_token
 115	3	è	obl:tra	115	6
 115	3	è	obl:a	115	9
 116	4	afferma	subj	116	1
-116	4	afferma	obj	0	0
 116	4	afferma	obl	116	3
 116	6	nega	subj	116	1
-116	6	nega	obj	0	0
 116	6	nega	obl	116	3
 117	0			0	0
 118	3	'ncontra	subj	118	2
@@ -381,7 +376,6 @@ line	token	word	role	arg_line	arg_token
 126	6	sapëan	subj	126	2
 126	6	sapëan	obl	126	7
 127	2	fé	subj	127	8
-127	2	fé	obj	0	0
 128	2	furon	subj	128	1
 128	2	furon	attr	128	4
 128	2	furon	xcomp	129	2
@@ -426,7 +420,6 @@ line	token	word	role	arg_line	arg_token
 140	2	vedere	obj	140	4
 140	2	vedere	obj	140	6
 141	1	vederli	subj	139	7
-141	1	vederli	obj	141	1
 141	1	vederli	obl:a	141	4
 142	3	può	subj	142	2
 142	3	può	xcomp	142	4

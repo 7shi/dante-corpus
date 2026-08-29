@@ -264,7 +264,6 @@ line	token	word	role	arg_line	arg_token
 83	7	esser	obl:con	83	8
 84	2	tardavali	subj	84	4
 84	2	tardavali	subj	84	7
-84	2	tardavali	obj	84	2
 85	3	giunti	subj	0	0
 86	2	rimiraron	subj	0	0
 86	2	rimiraron	obj	86	1
@@ -299,7 +298,6 @@ line	token	word	role	arg_line	arg_token
 93	6	avere	subj	0	0
 93	6	avere	xcomp	93	1
 93	6	avere	obl:in	93	8
-94	2	io	subj	94	2
 94	2	io	iobj	94	4
 94	2	io	ccomp	94	7
 94	7	nato	subj	94	5
@@ -383,7 +381,6 @@ line	token	word	role	arg_line	arg_token
 118	2	è	xcomp	118	1
 118	2	è	obl:ne	118	6
 119	3	vedi	subj	119	2
-119	3	vedi	obj	0	0
 119	3	vedi	obl	119	1
 119	5	è	subj	0	0
 119	5	è	attr	119	6
@@ -417,7 +414,6 @@ line	token	word	role	arg_line	arg_token
 128	6	lece	subj	0	0
 128	6	lece	iobj	128	5
 128	7	dirci	subj	0	0
-128	7	dirci	iobj	128	7
 128	7	dirci	ccomp	129	6
 129	6	giace	subj	129	8
 129	6	giace	obl:a	129	4
@@ -425,14 +421,12 @@ line	token	word	role	arg_line	arg_token
 130	4	possiamo	xcomp	130	5
 130	4	possiamo	obl	130	1
 130	5	uscirci	subj	130	2
-130	5	uscirci	obj	130	5
 131	2	costrigner	subj	130	2
 131	2	costrigner	obl:di	131	5
 132	2	vegnan	subj	132	1
 132	2	vegnan	xcomp	132	7
 132	2	vegnan	obl:di	132	5
 132	7	dipartirci	subj	132	1
-132	7	dipartirci	obj	132	7
 133	1	Rispuose	subj	0	0
 133	1	Rispuose	ccomp	134	2
 133	7	speri	subj	133	5

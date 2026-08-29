@@ -26,7 +26,6 @@ line	token	word	role	arg_line	arg_token
 9	2	ha	obl:in	9	6
 10	0			0	0
 11	5	cingon	subj	11	7
-11	5	cingon	obj	0	0
 12	4	son	subj	0	0
 12	5	rende	subj	12	2
 12	5	rende	obj	12	6
@@ -49,10 +48,8 @@ line	token	word	role	arg_line	arg_token
 19	7	scossi	subj	0	0
 19	7	scossi	obl:de	19	6
 20	3	trovammoci	subj	0	0
-20	3	trovammoci	obj	20	3
 20	3	trovammoci	obl:in	19	3
 21	1	tenne	subj	20	6
-21	1	tenne	obj	0	0
 21	1	tenne	obl:a	21	3
 21	8	mossi	subj	21	5
 21	8	mossi	obj	21	7
@@ -117,7 +114,6 @@ line	token	word	role	arg_line	arg_token
 41	7	dissi	subj	41	4
 42	0			0	0
 43	5	figurarlo	subj	0	0
-43	5	figurarlo	obj	43	5
 43	8	affissi	subj	43	3
 43	8	affissi	obj	43	7
 43	8	affissi	xcomp	43	5
@@ -149,7 +145,6 @@ line	token	word	role	arg_line	arg_token
 52	8	dico	subj	0	0
 52	8	dico	obj	52	7
 53	2	sforzami	subj	53	6
-53	2	sforzami	obj	53	2
 54	3	fa	subj	54	1
 54	3	fa	obj	54	2
 54	3	fa	xcomp	54	4
@@ -215,7 +210,6 @@ line	token	word	role	arg_line	arg_token
 75	3	disse	ccomp	75	4
 75	3	disse	ccomp	75	6
 75	4	Attienti	subj	0	0
-75	4	Attienti	obj	0	0
 75	6	fa	subj	0	0
 75	6	fa	ccomp	75	8
 75	8	feggia	subj	76	2
@@ -274,7 +268,6 @@ line	token	word	role	arg_line	arg_token
 93	7	ingannate	obj	93	6
 93	7	ingannate	obl	93	2
 94	1	Lasciolla	subj	0	0
-94	1	Lasciolla	obj	94	1
 94	1	Lasciolla	obl	94	2
 94	1	Lasciolla	obl	94	3
 94	1	Lasciolla	obl	94	4

@@ -120,7 +120,6 @@ line	token	word	role	arg_line	arg_token
 41	8	facea	obl:tra	41	3
 42	3	udire	subj	0	0
 42	5	starmi	subj	0	0
-42	5	starmi	iobj	42	5
 42	5	starmi	attr	42	6
 43	6	ricrea	subj	43	4
 43	6	ricrea	obj	43	5
@@ -153,7 +152,6 @@ line	token	word	role	arg_line	arg_token
 54	5	fermato	subj	53	4
 54	5	fermato	obl:in	54	3
 55	2	volgeami	subj	0	0
-55	2	volgeami	obj	55	2
 55	2	volgeami	xcomp	56	2
 55	2	volgeami	obl:con	55	4
 56	2	domandar	subj	0	0
@@ -279,7 +277,6 @@ line	token	word	role	arg_line	arg_token
 92	2	parea	attr	91	6
 92	3	sorrise	subj	91	4
 92	5	riguardommi	subj	0	0
-92	5	riguardommi	obj	92	5
 93	3	tornò	subj	0	0
 93	3	tornò	obl:a	93	7
 94	8	assommi	subj	94	7
@@ -289,7 +286,6 @@ line	token	word	role	arg_line	arg_token
 95	2	disse	obl	94	8
 96	7	mandommi	subj	96	3
 96	7	mandommi	subj	96	5
-96	7	mandommi	obj	96	7
 96	7	mandommi	obl:a	96	2
 97	1	vola	subj	0	0
 97	1	vola	obl:con	97	4
@@ -408,7 +404,6 @@ line	token	word	role	arg_line	arg_token
 136	4	avessi	obj	136	8
 136	4	avessi	obl:in	136	6
 137	3	imaginar	subj	136	3
-137	3	imaginar	obj	0	0
 137	5	ardirei	subj	0	0
 137	5	ardirei	obj	138	3
 138	3	tentar	subj	0	0

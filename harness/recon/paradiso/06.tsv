@@ -65,7 +65,6 @@ line	token	word	role	arg_line	arg_token
 23	5	piacque	xcomp	23	7
 23	5	piacque	obl:per	23	4
 23	7	spirarmi	obj	24	3
-23	7	spirarmi	iobj	23	7
 24	9	diedi	subj	0	0
 24	9	diedi	obj	24	8
 24	9	diedi	obl:in	24	7
@@ -80,7 +79,6 @@ line	token	word	role	arg_line	arg_token
 27	3	fu	ccomp	27	6
 27	6	dovessi	subj	27	5
 27	6	dovessi	xcomp	27	7
-27	7	posarmi	obj	27	7
 28	8	appunta	subj	29	3
 28	8	appunta	obl:a	28	5
 29	0			0	0
@@ -112,7 +110,6 @@ line	token	word	role	arg_line	arg_token
 36	3	morì	obl:per	36	5
 36	5	darli	subj	36	2
 36	5	darli	obj	36	6
-36	5	darli	iobj	36	5
 37	2	sai	subj	37	1
 37	2	sai	ccomp	37	5
 37	5	fece	subj	37	4
@@ -197,7 +194,6 @@ line	token	word	role	arg_line	arg_token
 60	6	è	attr	60	7
 60	6	è	obl	60	4
 61	3	fé	subj	61	2
-61	3	fé	obj	0	0
 61	3	fé	obl	61	4
 61	7	uscì	subj	61	6
 61	7	uscì	obl:di	61	9
@@ -249,10 +245,8 @@ line	token	word	role	arg_line	arg_token
 75	5	fu	subj	75	2
 75	5	fu	attr	75	6
 76	1	Piangene	subj	76	5
-76	1	Piangene	obl	76	1
 76	1	Piangene	obl	76	2
 77	2	fuggendoli	subj	77	1
-77	2	fuggendoli	obj	77	2
 77	2	fuggendoli	obl	77	3
 78	3	prese	subj	77	1
 78	3	prese	obj	78	2
@@ -339,7 +333,6 @@ line	token	word	role	arg_line	arg_token
 102	10	falli	subj	102	7
 102	10	falli	obj	102	9
 103	1	Faccian	subj	103	3
-103	1	Faccian	obj	0	0
 103	4	faccian	subj	103	3
 103	4	faccian	obj	103	6
 104	6	segue	subj	105	2
@@ -393,7 +386,6 @@ line	token	word	role	arg_line	arg_token
 122	9	puote	subj	0	0
 122	9	puote	xcomp	123	1
 123	1	torcer	subj	0	0
-123	1	torcer	obj	0	0
 123	1	torcer	obl:ad	123	6
 124	3	fanno	subj	124	2
 124	3	fanno	obj	124	5

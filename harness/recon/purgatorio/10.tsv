@@ -34,7 +34,6 @@ line	token	word	role	arg_line	arg_token
 11	1	cominciò	subj	11	3
 11	1	cominciò	ccomp	10	3
 11	6	accostarsi	subj	0	0
-11	6	accostarsi	obj	0	0
 11	6	accostarsi	obl	12	2
 11	6	accostarsi	obl	12	4
 11	6	accostarsi	obl:a	12	6
@@ -226,7 +225,6 @@ line	token	word	role	arg_line	arg_token
 83	2	dir	ccomp	83	4
 83	4	fammi	subj	0	0
 83	4	fammi	obj	83	5
-83	4	fammi	iobj	83	4
 84	5	è	subj	84	4
 84	5	è	attr	84	6
 84	10	accoro	subj	84	8
@@ -275,7 +273,6 @@ line	token	word	role	arg_line	arg_token
 97	6	guardare	obj	98	2
 98	0			0	0
 99	7	veder	subj	0	0
-99	7	veder	obj	0	0
 99	7	veder	attr	99	8
 99	7	veder	obl:per	99	4
 100	5	fanno	subj	0	0
@@ -403,4 +400,3 @@ line	token	word	role	arg_line	arg_token
 139	3	dicer	subj	0	0
 139	3	dicer	ccomp	139	6
 139	6	posso	subj	0	0
-139	6	posso	obj	0	0

@@ -11,9 +11,7 @@ line	token	word	role	arg_line	arg_token
 5	7	piace	subj	0	0
 5	7	piace	iobj	5	6
 6	1	parlami	subj	0	0
-6	1	parlami	iobj	6	1
 6	3	sodisfammi	subj	0	0
-6	3	sodisfammi	obj	6	3
 6	3	sodisfammi	obl:a	6	6
 7	7	giace	subj	7	3
 7	7	giace	obl:per	7	6
@@ -50,7 +48,6 @@ line	token	word	role	arg_line	arg_token
 17	4	sarà	obl	17	2
 17	4	sarà	obl:a	18	3
 18	8	taci	subj	18	6
-18	8	taci	obj	0	0
 18	8	taci	iobj	18	7
 19	6	tegno	subj	19	2
 19	6	tegno	obj	20	4
@@ -74,7 +71,6 @@ line	token	word	role	arg_line	arg_token
 23	5	parlando	attr	23	6
 23	5	parlando	obl	23	4
 24	1	piacciati	subj	0	0
-24	1	piacciati	obj	0	0
 24	1	piacciati	xcomp	24	3
 24	3	restare	subj	0	0
 24	3	restare	obl:in	24	6
@@ -97,7 +93,6 @@ line	token	word	role	arg_line	arg_token
 31	4	disse	iobj	31	3
 31	4	disse	ccomp	31	5
 31	5	Volgiti	subj	0	0
-31	5	Volgiti	obj	31	5
 31	7	fai	subj	0	0
 31	7	fai	obj	31	6
 32	1	Vedi	subj	0	0
@@ -133,7 +128,6 @@ line	token	word	role	arg_line	arg_token
 40	9	fui	subj	40	2
 40	9	fui	obl:a	40	4
 41	1	guardommi	subj	0	0
-41	1	guardommi	obj	41	1
 41	1	guardommi	obl	41	3
 41	1	guardommi	obl	41	7
 42	2	dimandò	subj	0	0
@@ -261,14 +255,12 @@ line	token	word	role	arg_line	arg_token
 79	6	raccesa	subj	80	2
 79	6	raccesa	obl	79	4
 80	8	regge	subj	80	6
-80	8	regge	obj	0	0
 81	3	saprai	subj	81	2
 81	3	saprai	ccomp	81	7
 81	7	pesa	subj	81	6
 82	8	regge	subj	82	3
 82	8	regge	obl:in	82	7
 83	1	dimmi	subj	0	0
-83	1	dimmi	iobj	83	1
 83	1	dimmi	ccomp	83	5
 83	1	dimmi	obl	82	8
 83	5	è	subj	83	4
@@ -316,7 +308,6 @@ line	token	word	role	arg_line	arg_token
 95	1	prega'	ccomp	95	4
 95	4	solvetemi	subj	0	0
 95	4	solvetemi	obj	95	6
-95	4	solvetemi	iobj	95	4
 96	4	'nviluppata	subj	96	1
 96	4	'nviluppata	obj	96	6
 96	4	'nviluppata	obl	96	2
@@ -351,7 +342,6 @@ line	token	word	role	arg_line	arg_token
 103	7	è	subj	104	2
 103	7	è	attr	103	8
 104	8	apporta	subj	104	5
-104	8	apporta	obj	0	0
 104	8	apporta	iobj	104	7
 105	2	sapem	subj	0	0
 105	2	sapem	obj	105	1
@@ -404,7 +394,6 @@ line	token	word	role	arg_line	arg_token
 117	7	istava	subj	117	4
 117	7	istava	obl:con	117	6
 118	1	Dissemi	subj	0	0
-118	1	Dissemi	iobj	118	1
 118	1	Dissemi	ccomp	118	7
 118	7	giaccio	subj	0	0
 118	7	giaccio	obl	118	2

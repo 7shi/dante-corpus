@@ -17,7 +17,6 @@ line	token	word	role	arg_line	arg_token
 4	4	sostener	obl:di	5	8
 5	0			0	0
 6	2	ritrarrà	subj	6	4
-6	2	ritrarrà	obj	0	0
 6	7	erra	subj	6	5
 7	8	aiutate	subj	0	0
 7	8	aiutate	obj	7	7
@@ -87,9 +86,7 @@ line	token	word	role	arg_line	arg_token
 27	0			0	0
 28	1	Andovvi	subj	28	4
 28	1	Andovvi	xcomp	29	2
-28	1	Andovvi	obl	28	1
 29	2	recarne	obj	29	3
-29	2	recarne	obl	29	2
 29	2	recarne	obl:a	29	6
 30	2	è	subj	30	1
 30	2	è	attr	30	3
@@ -118,7 +115,6 @@ line	token	word	role	arg_line	arg_token
 37	6	disvuol	subj	37	5
 37	6	disvuol	obj	37	7
 37	9	volle	subj	37	8
-37	9	volle	obj	0	0
 38	5	cangia	subj	0	0
 38	5	cangia	obj	38	6
 38	5	cangia	obl:per	38	4
@@ -179,7 +175,6 @@ line	token	word	role	arg_line	arg_token
 55	1	Lucevan	subj	55	3
 55	1	Lucevan	obl	55	8
 56	2	cominciommi	subj	0	0
-56	2	cominciommi	iobj	56	2
 56	2	cominciommi	xcomp	56	4
 56	4	dir	subj	0	0
 57	0			0	0
@@ -259,10 +254,8 @@ line	token	word	role	arg_line	arg_token
 81	4	è	attr	81	5
 81	7	aprirmi	subj	0	0
 81	7	aprirmi	obj	81	10
-81	7	aprirmi	iobj	81	7
 82	2	dimmi	subj	0	0
 82	2	dimmi	obj	82	4
-82	2	dimmi	iobj	82	2
 82	8	guardi	subj	82	5
 82	8	guardi	obj	82	7
 82	8	guardi	obl:di	83	3
@@ -373,7 +366,6 @@ line	token	word	role	arg_line	arg_token
 112	1	venni	obl	112	3
 112	1	venni	obl:di	112	7
 113	1	fidandomi	subj	0	0
-113	1	fidandomi	obj	0	0
 113	1	fidandomi	obl:di	113	4
 114	2	onora	subj	114	1
 114	2	onora	obj	114	3

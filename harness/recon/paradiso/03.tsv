@@ -59,7 +59,6 @@ line	token	word	role	arg_line	arg_token
 22	3	vidi	subj	0	0
 22	3	vidi	obj	22	2
 22	5	ritorsili	subj	0	0
-22	5	ritorsili	obj	22	5
 22	5	ritorsili	obl	22	6
 22	5	ritorsili	obl	23	1
 22	5	ritorsili	obl:in	23	3
@@ -187,12 +186,10 @@ line	token	word	role	arg_line	arg_token
 62	9	dici	subj	62	7
 62	9	dici	obj	62	6
 62	9	dici	iobj	62	8
-63	3	raffigurar	obj	0	0
 63	5	è	subj	63	3
 63	5	è	iobj	63	4
 63	5	è	attr	63	7
 64	2	dimmi	subj	0	0
-64	2	dimmi	iobj	64	2
 64	2	dimmi	ccomp	65	1
 64	5	siete	subj	64	4
 64	5	siete	attr	64	7
@@ -204,7 +201,6 @@ line	token	word	role	arg_line	arg_token
 66	3	vedere	subj	0	0
 66	3	vedere	obl	66	2
 66	7	farvi	subj	0	0
-66	7	farvi	obj	66	7
 66	7	farvi	attr	66	8
 66	7	farvi	obl	66	6
 67	6	sorrise	subj	0	0
@@ -255,11 +251,9 @@ line	token	word	role	arg_line	arg_token
 79	2	è	attr	79	3
 79	2	è	obl:a	79	6
 80	1	tenersi	subj	0	0
-80	1	tenersi	obj	80	1
 80	1	tenersi	obl:a	80	6
 81	4	fansi	subj	81	6
 81	4	fansi	obj	81	3
-81	4	fansi	iobj	81	4
 82	5	sem	subj	82	4
 82	5	sem	obl:di	82	7
 82	5	sem	obl:in	82	9
@@ -338,7 +332,6 @@ line	token	word	role	arg_line	arg_token
 102	6	conforma	obj	102	2
 102	6	conforma	obl:a	102	5
 103	4	seguirla	subj	0	0
-103	4	seguirla	obj	103	4
 104	1	fuggi'	subj	0	0
 104	1	fuggi'	obj	104	2
 104	1	fuggi'	xcomp	103	4
@@ -390,7 +383,6 @@ line	token	word	role	arg_line	arg_token
 120	1	generò	obj	120	7
 120	1	generò	obl:di	119	4
 121	2	parlommi	subj	0	0
-121	2	parlommi	iobj	121	2
 121	5	cominciò	subj	0	0
 121	5	cominciò	obj	121	6
 121	5	cominciò	obl	122	2

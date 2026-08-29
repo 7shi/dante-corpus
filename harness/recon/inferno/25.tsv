@@ -7,7 +7,6 @@ line	token	word	role	arg_line	arg_token
 3	1	gridando	subj	1	8
 3	1	gridando	ccomp	3	2
 3	2	Togli	subj	0	0
-3	2	Togli	obj	0	0
 3	8	squadro	subj	0	0
 3	8	squadro	obj	3	7
 3	8	squadro	obl:a	3	6
@@ -24,7 +23,6 @@ line	token	word	role	arg_line	arg_token
 6	4	vo'	ccomp	6	7
 6	7	diche	subj	0	0
 7	8	rilegollo	subj	7	3
-7	8	rilegollo	obj	7	8
 7	8	rilegollo	obl:a	7	6
 8	1	ribadendo	subj	0	0
 8	1	ribadendo	obj	8	2
@@ -36,7 +34,6 @@ line	token	word	role	arg_line	arg_token
 10	6	stanzi	subj	0	0
 10	6	stanzi	xcomp	11	2
 11	2	incenerarti	subj	0	0
-11	2	incenerarti	obj	11	2
 11	7	duri	subj	0	0
 12	9	avanzi	subj	0	0
 12	9	avanzi	obj	12	7
@@ -191,7 +188,6 @@ line	token	word	role	arg_line	arg_token
 55	2	diretani	obl:a	55	5
 56	2	miseli	subj	0	0
 56	2	miseli	obj	56	4
-56	2	miseli	iobj	56	2
 56	2	miseli	obl:tra	56	6
 57	8	ritese	subj	0	0
 57	8	ritese	obj	57	7
@@ -470,7 +466,6 @@ line	token	word	role	arg_line	arg_token
 147	2	poter	subj	147	3
 147	2	poter	xcomp	147	4
 147	4	fuggirsi	subj	147	3
-147	4	fuggirsi	obj	0	0
 148	4	scorgessi	subj	148	2
 148	4	scorgessi	obj	148	6
 149	2	era	subj	149	3
