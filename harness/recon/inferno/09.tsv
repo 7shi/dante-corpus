@@ -186,7 +186,7 @@ line	token	word	role	arg_line	arg_token
 55	1	Volgiti	obl	55	3
 55	5	tien	subj	0	0
 55	5	tien	obj	55	7
-55	5	tien	xcomp	55	8
+55	5	tien	attr	55	8
 56	6	mostra	subj	56	4
 56	6	mostra	obj	56	5
 56	10	vedessi	subj	56	8
@@ -273,12 +273,13 @@ line	token	word	role	arg_line	arg_token
 82	3	rimovea	subj	0	0
 82	3	rimovea	obj	82	5
 82	3	rimovea	obl:di	82	2
+82	3	rimovea	obl	83	1
 83	1	menando	subj	0	0
 83	1	menando	obj	83	3
 83	1	menando	obl	83	4
 83	1	menando	obl	83	5
 84	6	parea	subj	0	0
-84	6	parea	xcomp	84	7
+84	6	parea	attr	84	7
 84	6	parea	obl	84	2
 84	6	parea	obl:di	84	5
 85	3	accorsi	subj	0	0

@@ -3,9 +3,10 @@ line	token	word	role	arg_line	arg_token
 2	1	facea	subj	1	3
 2	1	facea	subj	1	8
 2	1	facea	obj	1	9
-2	1	facea	xcomp	1	11
+2	1	facea	attr	1	11
 2	3	ragionando	subj	0	0
 2	4	andavam	subj	0	0
+2	4	andavam	obl	2	3
 2	4	andavam	obl	2	5
 3	4	pinta	subj	3	3
 3	4	pinta	obl:da	3	7
@@ -15,9 +16,8 @@ line	token	word	role	arg_line	arg_token
 6	1	traean	subj	4	3
 6	1	traean	obj	5	7
 6	1	traean	obl:per	5	3
-6	7	accorte	subj	4	3
-6	7	accorte	obl:di	6	3
-6	7	accorte	obl:di	6	6
+6	1	traean	obl:di	6	3
+6	1	traean	obl:di	6	6
 7	0			0	0
 8	1	dissi	subj	7	2
 8	4	va	subj	8	2

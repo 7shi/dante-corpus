@@ -63,10 +63,11 @@ line	token	word	role	arg_line	arg_token
 17	1	fidandomi	subj	17	4
 17	1	fidandomi	obl:di	17	3
 17	6	preso	subj	17	4
+17	6	preso	obl:per	16	4
 18	3	morto	subj	17	4
+18	4	dir	subj	0	0
 18	6	è	subj	0	0
 18	6	è	attr	18	7
-18	6	è	ccomp	18	4
 19	5	puoi	subj	0	0
 19	5	puoi	xcomp	19	7
 19	7	inteso	subj	0	0

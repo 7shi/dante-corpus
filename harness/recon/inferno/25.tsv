@@ -164,6 +164,7 @@ line	token	word	role	arg_line	arg_token
 49	3	tenea	obj	49	8
 49	3	tenea	xcomp	49	4
 49	3	tenea	obl:in	49	6
+49	4	levate	subj	49	8
 50	8	lancia	subj	50	3
 50	8	lancia	obj	50	7
 50	8	lancia	obl:con	50	6

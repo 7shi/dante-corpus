@@ -104,8 +104,10 @@ line	token	word	role	arg_line	arg_token
 31	6	sparto	subj	31	4
 31	6	sparto	obl:di	32	3
 32	0			0	0
-33	4	sarebbe	subj	32	6
-33	4	sarebbe	xcomp	33	3
+33	3	contenerlo	subj	32	6
+33	3	contenerlo	obj	31	4
+33	5	arto	subj	32	6
+33	5	arto	xcomp	33	3
 34	0			0	0
 35	4	movea	subj	34	8
 35	4	movea	obl	35	2

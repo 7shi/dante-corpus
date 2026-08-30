@@ -134,12 +134,14 @@ line	token	word	role	arg_line	arg_token
 42	1	distinse	subj	40	4
 42	1	distinse	obj	42	3
 42	1	distinse	obl:a	41	9
-43	2	poté	subj	40	3
+43	2	poté	subj	40	4
 43	2	poté	xcomp	43	6
-43	6	fare	subj	40	3
+43	2	poté	ccomp	45	2
+43	2	poté	obl:in	44	4
+43	6	fare	subj	40	4
 43	6	fare	obj	43	4
 43	6	fare	xcomp	43	7
-43	6	fare	obl	45	2
+43	7	impresso	subj	43	4
 44	0			0	0
 45	2	rimanesse	subj	44	8
 45	2	rimanesse	obl:in	45	5

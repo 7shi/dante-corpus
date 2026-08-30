@@ -528,3 +528,63 @@ def test_real_log_integration_capped():
     assert report.units > 30
     assert report.tp > 50  # the mined shapes reproduce real gold rows
     assert report.fp < report.tp  # derivation stays precision-dominated
+
+
+# --- schema gate on the fast path (S5.7) -----------------------------------------------------
+
+
+def _row(line, token, role, arg_line, arg_token):
+    return he.DerivedRow(line, token, role, arg_line, arg_token, source="rule",
+                         support=5, confidence=1.0)
+
+
+def test_schema_violations_flags_unregistered_clausal_argument():
+    # inferno 1.13-15: 'xcomp' pointing at a token no derived row makes a predicate.
+    nos = [13, 14, 15]
+    texts = ["che nel pensier rinova la paura!",
+             "Tant' è amara che poco è più morte;",
+             "ma per trattar del ben ch'i' vi trovai,"]
+    rows = [_row(13, 4, "xcomp", 13, 6)]
+    found = he.schema_violations(nos, texts, rows)
+    assert len(found) == 1 and "[clausal]" in found[0]
+    # registering the clause's own predicate satisfies the same check.
+    rows.append(_row(13, 6, "subj", 13, 5))
+    assert he.schema_violations(nos, texts, rows) == []
+
+
+def test_schema_violations_covers_the_two_row_local_classes():
+    nos, texts = [13], ["che nel pensier rinova la paura!"]
+    self_arg = he.schema_violations(nos, texts, [_row(13, 4, "obj", 13, 4)])
+    assert len(self_arg) == 1 and "[dup]" in self_arg[0]
+    null_pos = he.schema_violations(nos, texts, [_row(13, 4, "obj", 0, 0)])
+    assert len(null_pos) == 1 and "[position]" in null_pos[0]
+    assert he.schema_violations(nos, texts, [_row(13, 4, "subj", 0, 0)]) == []
+
+
+def test_schema_violations_drops_the_soft_tier():
+    # An unknown role is a `tag` finding: soft, and never a routing reason.
+    nos, texts = [13], ["che nel pensier rinova la paura!"]
+    assert he.schema_violations(nos, texts, [_row(13, 4, "nonsense", 13, 6)]) == []
+
+
+def test_route_schema_invalid_sends_a_confident_derivation_to_the_agent():
+    d = _derivation(rows=2)
+    assert he.route_derivation(d).route == "fast"
+    d.schema_violations = ["82 [clausal] xcomp argument (82, 7) is not a predicate"]
+    decision = he.route_derivation(d)
+    assert (decision.route, decision.reason) == ("agent", "schema_invalid")
+    relaxed = he.RoutePolicy(require_schema_valid=False)
+    assert he.route_derivation(d, relaxed).route == "fast"
+
+
+def test_route_conflicts_outrank_schema_invalid():
+    d = _derivation(rows=1, conflicts=1)
+    d.schema_violations = ["82 [dup] argument cites its own predicate (82, 8)"]
+    assert he.route_derivation(d).reason == "conflicts"
+
+
+def test_derive_unit_records_schema_violations():
+    engine = _engine()
+    d = engine.derive_unit("inferno", 1, 1, 3)
+    assert d.schema_violations == []
+    assert "schema_violations" in d.to_dict()

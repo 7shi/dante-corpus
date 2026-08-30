@@ -447,8 +447,10 @@ line	token	word	role	arg_line	arg_token
 131	2	bisogna	obl:di	131	7
 132	2	poter	subj	0	0
 132	2	poter	xcomp	132	3
+132	3	peccar	subj	0	0
 132	5	è	subj	132	2
 132	5	è	attr	132	7
+132	5	è	obl	132	1
 133	4	dar	subj	0	0
 133	4	dar	obj	133	5
 133	4	dar	iobj	133	6

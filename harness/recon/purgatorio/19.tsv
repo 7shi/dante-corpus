@@ -33,19 +33,15 @@ line	token	word	role	arg_line	arg_token
 12	6	facea	subj	12	3
 12	6	facea	obj	13	2
 12	6	facea	iobj	12	5
-12	6	facea	xcomp	12	7
-12	6	facea	obl	10	5
-12	6	facea	obl	12	1
+12	6	facea	attr	12	7
 13	7	drizzava	subj	0	0
 13	7	drizzava	obj	13	6
+13	7	drizzava	obl	14	2
 14	0			0	0
 15	3	vuol	subj	15	2
-15	3	vuol	ccomp	15	6
 15	6	colorava	subj	0	0
 15	6	colorava	obj	14	8
 15	6	colorava	iobj	15	5
-15	6	colorava	obl	15	1
-15	6	colorava	obl	15	4
 16	4	avea	subj	16	3
 16	4	avea	obj	16	6
 17	1	cominciava	subj	0	0
@@ -186,10 +182,16 @@ line	token	word	role	arg_line	arg_token
 54	6	sormontati	subj	54	2
 54	6	sormontati	obl:da	54	5
 55	6	fa	subj	56	2
-55	6	fa	xcomp	55	7
+55	6	fa	ccomp	55	7
 55	6	fa	obl:con	55	5
+55	7	irmi	subj	55	2
 56	7	piega	subj	56	3
-57	0			0	0
+56	7	piega	obj	56	6
+56	7	piega	obl:a	56	5
+57	5	posso	subj	57	3
+57	5	posso	xcomp	57	8
+57	8	partirmi	subj	57	3
+57	8	partirmi	obl:da	57	7
 58	1	Vedesti	subj	0	0
 58	1	Vedesti	obj	58	5
 58	2	disse	subj	0	0

@@ -214,7 +214,7 @@ line	token	word	role	arg_line	arg_token
 68	3	fé	obl:in	68	6
 69	3	fé	subj	69	1
 69	3	fé	obj	69	2
-69	3	fé	xcomp	69	4
+69	3	fé	attr	69	4
 69	3	fé	obl:in	69	6
 70	2	significar	subj	0	0
 70	2	significar	obj	70	1
@@ -330,9 +330,9 @@ line	token	word	role	arg_line	arg_token
 104	1	hanno	obl:tra	104	4
 104	7	è	subj	104	6
 104	7	è	attr	104	8
-105	6	fa	subj	105	3
-105	6	fa	obj	105	1
-105	6	fa	xcomp	105	7
+105	6	fa	subj	105	1
+105	6	fa	obj	105	3
+105	6	fa	attr	105	7
 105	6	fa	obl:a	105	5
 106	2	veggion	subj	106	5
 106	2	veggion	obj	106	7

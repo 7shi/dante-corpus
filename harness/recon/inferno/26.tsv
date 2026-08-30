@@ -385,28 +385,32 @@ line	token	word	role	arg_line	arg_token
 120	3	seguir	obj	120	6
 121	4	fec'	subj	121	5
 121	4	fec'	obj	121	3
-121	4	fec'	xcomp	121	7
+121	4	fec'	attr	121	7
 121	4	fec'	obl:con	122	3
 121	4	fec'	obl:a	122	6
+121	4	fec'	obl	123	6
 122	0			0	0
-123	7	ritenuti	subj	0	0
-123	7	ritenuti	obj	123	5
-123	7	ritenuti	obl:a	123	3
+123	6	avrei	subj	0	0
+123	6	avrei	obj	123	5
+123	6	avrei	obl:a	123	3
+123	6	avrei	obl	123	4
 124	2	volta	subj	124	4
 124	2	volta	obl:in	124	6
 125	3	facemmo	subj	0	0
 125	3	facemmo	obj	125	4
 125	3	facemmo	obl:di	125	2
 125	3	facemmo	obl:a	125	7
+125	3	facemmo	obl	126	2
 126	2	acquistando	subj	0	0
+126	2	acquistando	obl	126	1
 126	2	acquistando	obl:da	126	4
 127	0			0	0
 128	1	vedea	subj	128	3
 128	1	vedea	obj	127	3
 128	1	vedea	obj	128	6
 128	1	vedea	xcomp	128	8
+128	8	basso	subj	128	6
 129	3	surgëa	subj	0	0
-129	3	surgëa	obl	129	4
 129	3	surgëa	obl:di	129	7
 130	3	racceso	subj	0	0
 130	3	racceso	obj	131	2

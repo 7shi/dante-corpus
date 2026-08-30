@@ -660,3 +660,92 @@ clausal violations**, re-run the same way; the levers behind it, unchanged,
 are prompt-side teaching (`runner/prompts.py`, deliberately untouched so this
 run measured the gate alone) and the deterministic soft work over the
 committed TSVs.
+
+### S5.7 — Clausal cleared at the source; the fast path joins the schema gate; 0 hard corpus-wide (2026-08-30)
+
+S5.6 left the clausal class untested, because inferno 1 held none of the 70.
+This record tests it on the 52 cantos that do, finds the last 3 violations
+outside the gate's reach, and closes that gap — taking the recon corpus to
+**0 hard violations**, the first time since it was measured.
+
+**The fix gesture has line granularity, not row granularity.** The first
+attempt deleted the 70 violating *rows* (plus one cascade: `purgatorio 13`'s
+`101 7 dir ccomp 101 8` was the predicate its neighbouring `xcomp` cited, so
+removing it made a second row violate) and re-ran — and **not one model call
+was made**. `TsvArtifact`'s settled-unit test is line-number presence
+(`extractor/reconstruct.py`), so a line that still carries any other row is
+still present and its unit still settled. Deleting every row of the offending
+*line* is what unsettles the unit: 68 lines across 52 cantos, 277 rows in
+total. `make check` then reports those lines as hard `missing lines` — the
+deliberate pre-run state, and the signal that the re-run has something to do.
+
+**The re-run** (operator, three canticle streams): 64 units, 61 of them
+agent-routed, 225 model calls, **3.69 turns/unit** (32 at 3, 21 at 4, 6 at 5,
+one at 6, one at 9), 15,306.8 s of compute. `adopted_invalid` was **0 across
+all 64**, `final_submission_valid` never false — the same result S5.6 got on
+inferno 1, now on the units the design was actually aimed at. Corpus-wide:
+**70 hard → 3**, soft 5,002 → 5,025, agree F1 0.7307 → 0.7308.
+
+**The 3 survivors were never in a session.** All three carry
+`route="fast", reason="complete"` — the deterministic Stage-2 path, which
+skips `validate_candidate` by never opening a session. So the gate resolved
+**67 of the 67 clausal violations it could see**, and the residue is not a
+hole in the gate but a population outside it. Splitting the Stage-4 logs by
+route shows how the two sit relative to each other:
+
+| route | units | hard violations | units with any |
+|---|---:|---:|---:|
+| agent | 3,232 | 888 | 701 |
+| fast | 245 | 3 | 3 |
+
+The fast path is 7% of the corpus at 1.2% of its units carrying a hard
+violation against the agent's 21.7% — its output was never the problem, which
+is exactly why S5.5 put the checks in the session. Clearing the 888 is what
+made the 3 visible.
+
+**What shipped.** `hybrid_engine.schema_violations(nos, texts, rows)` runs
+`validate_unit` over a derivation's own rows **with L1 alone** — called that
+way the validator runs its closed-world schema checks and no derivation, so
+it is the admission contract, not a second opinion on the roles the fast path
+chose (`tag` findings, the soft tier, are dropped). `Derivation` carries the
+result, and `RoutePolicy.require_schema_valid` (on by default) routes a unit
+whose own output the schema rejects to the agent with
+`reason="schema_invalid"`, ordered after `conflicts` and before `no_rows`.
+Gold is not opened anywhere on that path. Six tests pin it (the three schema
+classes, the soft tier's exclusion, the routing decision and its toggle,
+severity order): **925 → 931 passed**.
+
+**The three units, re-run under it**: all three routed `agent /
+schema_invalid` as designed, and the session cleared each one — 0 hard,
+`adopted_invalid` false, 3/3/4 turns, 10 model calls and 13 minutes in total,
+with every other unit in those cantos replayed from the artifact. Corpus-wide
+readout afterwards:
+
+| | hard | soft | agree F1 (corpus) |
+|---|---:|---:|---|
+| S5.3's corpus (the starting point) | 70 | 5,002 | 0.7307 |
+| after the 52-canto clausal re-run | 3 | 5,025 | 0.7308 |
+| **after the fast-path schema gate** | **0** | **5,014** | **0.7309** |
+
+`make check` exits 0. Per-canticle agreement is inferno 0.7357 / purgatorio
+0.7282 / paradiso 0.7287 (rows 42,790, gold 40,091, tp 30,289).
+
+**What the three readouts together say.** Gold agreement moved 0.7307 →
+0.7309 across all of it — the third consecutive flat result, after S5.6's tie
+on inferno 1. In-session correction demonstrably *works* on what it is for:
+it clears the schema's hard classes at the source, cheaply (3.69 turns/unit,
+no wall-clock inflation) and without deleting rows, where S5.3's rules cleared
+them by deletion. It is not, however, a route to gold: hard-clean and
+gold-close are different targets, and the 5,014 soft findings — untouched by
+any of this, and never reported into a session by design — are where the
+remaining distance lives.
+
+**Also shipped, observability** (`PLAN.md` §4 item 5): the reconstruction path
+passed no `on_turn` at all, so a live run showed the model's streamed turn and
+nothing of what came back. `progress_printer(..., result_chars=N)` now echoes
+each call's rendered `<tool_result>` block — the very bytes the next user
+message carries — with the payload truncated (`read_unit` is the session's
+size tail); `agent_fallback(result_chars=)` wires it to the status line's
+console, and `reconstruct.py --tool-result-chars` (default 400, 0 = off) is
+the operator control. Display only: no prompt, tool schema, or wire change,
+so Standing Invariant 6 is untouched. Three more tests: **931 → 934 passed**.

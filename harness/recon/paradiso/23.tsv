@@ -32,9 +32,11 @@ line	token	word	role	arg_line	arg_token
 12	6	mostra	obj	12	8
 12	6	mostra	obl:sotto	12	3
 13	3	veggendola	subj	13	4
-13	3	veggendola	xcomp	13	5
+13	3	veggendola	attr	13	5
+13	3	veggendola	attr	13	7
 14	1	fecimi	subj	0	0
-14	1	fecimi	obl	14	3
+14	1	fecimi	obj	13	4
+14	1	fecimi	xcomp	14	3
 14	3	è	subj	14	4
 14	3	è	attr	14	2
 14	6	disïando	subj	14	5

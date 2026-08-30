@@ -13,15 +13,19 @@ line	token	word	role	arg_line	arg_token
 3	3	riprovando	obj	3	6
 4	4	confessar	subj	4	2
 4	4	confessar	obj	5	1
-5	6	convenne	subj	5	5
+4	4	confessar	attr	4	5
+4	4	confessar	attr	4	7
+5	6	convenne	subj	0	0
 6	1	leva'	subj	4	2
 6	1	leva'	obj	6	3
+6	1	leva'	xcomp	6	5
 6	5	proferer	subj	4	2
-6	5	proferer	xcomp	6	7
+6	5	proferer	attr	6	7
 7	3	apparve	subj	7	2
 7	5	ritenne	subj	7	4
 7	5	ritenne	obj	8	3
-7	5	ritenne	xcomp	8	5
+7	5	ritenne	attr	8	5
+7	5	ritenne	xcomp	8	7
 7	5	ritenne	obl:a	8	2
 8	7	vedersi	subj	7	4
 9	7	sovvenne	subj	0	0
@@ -128,10 +132,11 @@ line	token	word	role	arg_line	arg_token
 43	5	serra	subj	43	3
 43	5	serra	obj	43	6
 43	5	serra	obl:a	44	3
+43	5	serra	obl	44	7
 44	0			0	0
 45	2	vuol	subj	45	1
 45	2	vuol	obj	45	8
-45	2	vuol	xcomp	45	3
+45	2	vuol	attr	45	3
 45	2	vuol	obl:a	45	5
 46	2	fui	subj	46	1
 46	2	fui	attr	46	6

@@ -127,6 +127,7 @@ line	token	word	role	arg_line	arg_token
 42	8	misto	subj	42	3
 42	8	misto	obl	42	7
 43	1	Ditemi	subj	43	2
+43	1	Ditemi	iobj	44	2
 43	1	Ditemi	ccomp	44	4
 43	5	strignete	subj	43	3
 43	5	strignete	obj	43	7
@@ -138,7 +139,8 @@ line	token	word	role	arg_line	arg_token
 45	4	ebber	subj	0	0
 45	4	ebber	obj	45	6
 45	4	ebber	xcomp	45	9
-45	4	ebber	obl:a	45	8
+45	9	eretti	subj	45	6
+45	9	eretti	obl:a	45	8
 46	5	eran	subj	46	2
 46	5	eran	attr	46	9
 47	1	gocciar	subj	46	2
@@ -147,7 +149,6 @@ line	token	word	role	arg_line	arg_token
 47	9	strinse	obj	48	2
 47	9	strinse	obl:tra	48	4
 48	6	riserrolli	subj	47	8
-48	6	riserrolli	obj	48	2
 49	7	cinse	subj	0	0
 49	7	cinse	obj	49	4
 49	7	cinse	obl:con	49	2

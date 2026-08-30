@@ -198,11 +198,12 @@ line	token	word	role	arg_line	arg_token
 75	6	diè	obj	75	5
 76	0			0	0
 77	1	trovato	subj	0	0
-77	1	trovato	xcomp	76	4
-77	1	trovato	xcomp	76	6
+77	1	trovato	attr	76	4
+77	1	trovato	attr	76	6
 77	1	trovato	obl	76	2
 77	1	trovato	obl:in	77	3
 77	1	trovato	obl:da	77	7
+77	1	trovato	obl	78	2
 78	2	dicesse	subj	0	0
 78	2	dicesse	ccomp	78	5
 78	5	venuto	subj	78	3

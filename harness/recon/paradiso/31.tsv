@@ -371,18 +371,17 @@ line	token	word	role	arg_line	arg_token
 123	1	vincer	obl:di	123	3
 124	6	aspetta	subj	0	0
 124	6	aspetta	obj	124	8
-125	3	guidò	subj	125	1
-125	3	guidò	obj	125	4
-125	7	infiamma	subj	0	0
+125	3	guidò	subj	125	4
+125	3	guidò	obj	125	1
+125	7	infiamma	subj	124	8
+125	7	infiamma	obj	125	6
 126	8	fa	subj	126	6
-126	8	fa	xcomp	126	9
+126	8	fa	attr	126	9
 127	0			0	0
 128	4	avvivava	subj	127	4
-128	4	avvivava	obl:in	128	2
-128	4	avvivava	obl:di	128	8
-129	4	allentava	subj	127	4
+128	4	avvivava	obj	128	3
+129	4	allentava	subj	0	0
 129	4	allentava	obj	129	6
-129	4	allentava	obl:per	129	3
 130	0			0	0
 131	1	vid'	subj	131	2
 131	1	vid'	obj	131	6

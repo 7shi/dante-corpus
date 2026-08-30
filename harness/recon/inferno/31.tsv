@@ -293,15 +293,14 @@ line	token	word	role	arg_line	arg_token
 96	5	menò	obj	96	3
 96	9	move	subj	0	0
 96	9	move	obj	96	2
+97	6	esser		0	0
 97	7	puote	subj	0	0
 97	7	puote	xcomp	97	6
 97	9	vorrei	subj	97	8
 97	9	vorrei	ccomp	99	2
-97	9	vorrei	obl	97	7
 98	0			0	0
 99	2	avesser	subj	99	4
 99	2	avesser	obj	99	1
-99	2	avesser	obl:de	98	5
 100	3	rispuose	subj	100	2
 100	3	rispuose	ccomp	100	5
 100	5	vedrai	subj	100	4

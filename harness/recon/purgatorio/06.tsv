@@ -303,8 +303,7 @@ line	token	word	role	arg_line	arg_token
 97	5	abbandoni	subj	97	4
 97	5	abbandoni	obj	98	1
 98	4	fatta	subj	98	2
-98	4	fatta	xcomp	98	5
-98	4	fatta	xcomp	98	7
+98	4	fatta	attr	98	5
 99	2	dovresti	subj	0	0
 99	2	dovresti	xcomp	99	3
 99	3	inforcar	subj	0	0
@@ -314,10 +313,9 @@ line	token	word	role	arg_line	arg_token
 100	6	caggia	obl:sovra	101	4
 101	6	sia	subj	0	0
 101	6	sia	attr	101	7
-101	6	sia	attr	101	9
 102	8	aggia	subj	102	5
 102	8	aggia	obj	102	6
-102	8	aggia	obl:di	102	7
+102	8	aggia	obl	102	7
 103	8	sofferto	subj	103	3
 104	0			0	0
 105	8	diserto	subj	105	3

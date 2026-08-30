@@ -67,15 +67,27 @@ line	token	word	role	arg_line	arg_token
 21	1	fenno	subj	21	8
 21	1	fenno	obj	21	3
 21	1	fenno	obl:di	21	5
-22	5	far	subj	22	4
-22	5	far	xcomp	24	8
-23	0			0	0
-24	0			0	0
-25	0			0	0
+22	2	sogliono	subj	22	4
+22	2	sogliono	xcomp	22	5
+22	5	far	subj	0	0
+22	5	far	attr	22	6
+22	5	far	attr	22	8
+22	5	far	obl	22	1
+23	1	avvisando	subj	0	0
+23	1	avvisando	obj	23	3
+23	1	avvisando	obj	23	6
+24	6	battuti	subj	0	0
+24	6	battuti	obl:tra	24	5
+24	8	punti	subj	0	0
+24	8	punti	obl:tra	24	5
+25	2	rotando	subj	0	0
 26	1	drizzava	subj	25	3
 26	1	drizzava	obj	25	5
+26	1	drizzava	obl:a	26	3
 27	1	faceva	subj	26	9
+27	1	faceva	obj	27	5
 27	1	faceva	obl:in	26	7
+27	1	faceva	obl:a	27	3
 28	0			0	0
 29	1	rende	subj	28	3
 29	1	rende	obj	29	4

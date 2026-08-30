@@ -9,54 +9,55 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — decide what the inferno-1 result buys.** The operator's live
-re-run landed and is read out in full as record S5.6
-([`STAGE5.md`](STAGE5.md)); the short version:
+**Next action — the soft bulk, and nothing before it.** The hard track closed
+on record S5.7 ([`STAGE5.md`](STAGE5.md)): the recon corpus stands at **0 hard
+violations, 5,014 soft**, `make check` exits 0, and there is no hard work
+queued. What got it there, in one pass each:
 
-- **The gate holds.** `adopted_invalid` **0/34 units**, `final_submission_valid`
-  true on every one, turn cap never reached. `make check` on inferno 1: **0
-  hard** — the two row-local classes 0 by construction, as predicted — and
-  `make repair-check` reports nothing to repair, so S5.3's deletion rules are
-  unreachable at the source now.
-- **Gold agreement did not move.** agree F1 0.7737 vs S5.3's repaired 0.7738
-  (raw Stage-4 output: 0.7681). Same score, opposite shape: repair bought
-  precision by deleting rows, in-session correction bought **recall**
-  (0.8067 → 0.8196, tp 313 → 318) while keeping them. So schema-driven
-  correction is *level with* deletion here, not better — less than S5.5 hoped.
-- **Soft rose 34 → 48**, dominated by `extra_arg obl` 4 → 13 (the bare-`obl`
-  over-assignment below) — rows that deletion used to remove now stay and get
-  judged.
-- **Cost is fine**: 3.45 turns/unit (max 5), 6,268 s compute vs a Stage-4
-  corpus mean of ~5,531 s/canto. No inflation from the added gate errors.
-- **Resume confirmed live**: the operator interrupted after 5 settled units
-  and re-ran; `routes {agent 28, fast 1, tsv 5}` is that resume. The
-  middle-of-file deletion gesture is still unexercised.
+- **S5.6, inferno 1**: the in-session gate holds — `adopted_invalid` 0/34
+  units, 3.45 turns/unit, no wall-clock inflation — but clausal never occurred
+  in that canto, so the class the design targeted stayed untested.
+- **S5.7, the 52 cantos that hold clausal**: 64 units re-run, 3.69
+  turns/unit, `adopted_invalid` **0/64**, and **67 of the 67** clausal
+  violations the gate could see were cleared in-session. The 3 survivors were
+  `route="fast"` — the deterministic path never opens a session, so the gate
+  never saw them.
+- **S5.7's second half**: `RoutePolicy.require_schema_valid` now runs
+  `validate_unit` (L1 alone: schema checks, no derivation, no gold) over each
+  derivation and routes a schema-invalid one to the agent
+  (`reason="schema_invalid"`). Those 3 units re-ran through it in 13 minutes
+  and came back clean. Tests **934 passed**.
 
-**The open question is unchanged and untested: clausal.** inferno 1's 6
-pre-repair hard rows were both row-local classes — it never held any of the
-70 — so this run measured nothing about clausal registration. The cheapest
-next measurement is **one canto that actually holds clausal violations**,
-re-run the same way. Densest are `paradiso 3` and `inferno 7` (3 each), then
-`inferno 9/10/17/23/26`, `purgatorio 2/5/6/19/22`, `paradiso 1/12/14/24` (2
-each) — from `make check`, and it is the operator who runs it.
+**Read the gold numbers honestly before choosing anything next.** Agreement
+went 0.7307 → 0.7308 → 0.7309 across all of it — flat three times, matching
+S5.6's tie on inferno 1. In-session correction does what it is for (clears the
+schema's hard classes at the source, cheaply, without deleting rows) and is
+*not* a route to gold. Hard-clean and gold-close are different targets.
 
-Re-running all 99 cantos cannot be justified on S5.6's evidence (164 h of
-live model time for a tie). If the clausal canto also comes back level, the
-remaining levers are prompt-side teaching (`runner/prompts.py`, deliberately
-untouched so S5.6 measured the gate alone) and a deterministic decision about
-the residual clausal rows.
+**So the mass is now entirely soft, and it is deterministic work over the
+committed TSVs** — soft findings are never reported into a session by design
+([`STAGE5.md`](STAGE5.md) S5.5), so there is no in-session route to any of it
+and no reason to re-run cantos:
 
-**Still queued behind all of it — the soft bulk, where the mass actually
-is**: `extra_arg` 2,075, `missing_arg` 1,653, `role_mismatch` 567,
-`missing_tuple` 501. The top mismatch pairs are bare `obl` where the
-derivation yields `obl:di` (130), `obl:in` (82), `obl:come` (68) — the same
-bare-`obl` over-assignment Stage 1 measured in M1.4 (Orientation §3 below),
-so a preposition-driven `obl:X` refinement is the obvious next candidate,
-and `derive.py` already specifies the mapping. Note that S5.5's result may
-change its shape too: soft findings are *not* reported into the session (they
-carry the derivation's own answer, [`STAGE5.md`](STAGE5.md) S5.5), so unlike
-the hard classes this one has no in-session route and stays deterministic
-work over the committed TSVs.
+| class | count | | top `role_mismatch` (given vs derived) | |
+|---|---:|---|---|---:|
+| `extra_arg` | 2,114 | | `obl` vs `obl:di` | 129 |
+| `missing_arg` | 1,646 | | `obl` vs `obl:in` | 83 |
+| `role_mismatch` | 573 | | `obl` vs `obl:come` | 70 |
+| `missing_tuple` | 490 | | `obj` vs `subj` | 45 |
+| `membership` | 146 | | `subj` vs `obj` | 29 |
+| `extra_tuple` | 43 | | `obl` vs `obl:a` | 24 |
+
+The obvious first candidate is unchanged from M1.4 (Orientation §3 below):
+**bare-`obl` over-assignment**, 282 of the 573 mismatches in the three
+preposition pairs alone, with `derive.py` already specifying the mapping. Read
+positions before writing the rule (discipline 5), and remember discipline 1 —
+`extra_arg` is the class deletion games most easily.
+
+The prompt-side lever (`runner/prompts.py`) is still deliberately untouched.
+It stayed out of S5.5–S5.7 so those records measured the gate alone; it is now
+free to use, but on this evidence it should be aimed at something soft
+findings can actually judge, not at more hard-class work — there is none left.
 
 **Standing discipline for any rule, established by S5.3's two operator
 corrections** ([`STAGE5.md`](STAGE5.md) §5):
@@ -85,22 +86,16 @@ corrections** ([`STAGE5.md`](STAGE5.md) §5):
 runs *after* `convert`, never before — re-running `make convert` regenerates
 from the logs and rolls the repairs back.
 
-**State at the S5.6 session's close (2026-08-30).** The S5.5 code is
-committed and the tree is clean. The one artifact that differs from S5.3's
-corpus is `recon/inferno/01.tsv`: the operator's live re-run (S5.6),
-**committed as that canto's output** on this record — 0 hard like the file it
-replaces, but 48 soft against 34, and its 13 extra rows are in-session
-repairs rather than S5.3's deletions. The other 99 TSVs are exactly as S5.3
-left them, so inferno 1 is now the corpus's one canto produced under the
-in-session gate. Its regenerated `01.log` is gitignored as always, and is the
-only copy of the run's telemetry.
+**State at the S5.7 session's close (2026-08-30).** 55 of the 100 TSVs now
+carry in-session output: inferno 1 (S5.6) plus the 52 clausal cantos and the
+3 fast-path units of S5.7. The remaining 45 are exactly as S5.3 left them.
+Every regenerated `NN.log` is gitignored as always, and is the only copy of
+those runs' telemetry.
 
-- **`make check` exits 1 by design** while the 70 clausal hard violations
-  stand — that is the checker's contract (non-zero on any hard violation),
-  not a broken build. Do not treat a red `make check` as a regression signal
-  without reading the count. Corpus-wide it will keep failing on the 99
-  cantos regardless of how inferno 1 turns out; read inferno 1's own
-  numbers, not the total.
+- **`make check` now exits 0** — the corpus is hard-clean (0 hard, 5,014
+  soft), so from here a non-zero `make check` *is* a regression signal and
+  should be read as one. That is new: through S5.6 the checker's contract
+  (non-zero on any hard violation) kept it red by design.
 - **`make convert` must not be run corpus-wide any more.** It regenerates
   TSVs from the Stage-4 logs, which would roll back S5.3's repairs (the
   standing ordering constraint above) *and*, for any canto re-run since
@@ -111,9 +106,12 @@ only copy of the run's telemetry.
   but gold *was* consulted while they were being designed, before the
   operator's correction landed. Their agreement gain is therefore a
   consistency check, not independent evidence that schema-driven repair
-  converges on gold. S5.5's gate checks are transcriptions of
-  `validate.py`, so they are gold-closed by construction — the inferno-1
-  run is the first chance to earn that convergence claim honestly.
+  converges on gold. S5.5/S5.7's gate checks are transcriptions of
+  `validate.py` and gold-closed by construction, and S5.6–S5.7 answered the
+  convergence question honestly at last: agreement went 0.7307 → 0.7309 over
+  the whole hard track, so **no such claim is available** — the schema
+  contract and gold agree only about what is impossible, not about what is
+  right.
 - **Process note, still standing**: applying anything to the committed
   corpus is a separate act from designing and implementing it, and needs its
   own go-ahead. A reduction pass can always be measured without writing —
@@ -174,18 +172,22 @@ holds only what's still open.
       demoted to an append-only debug record). Record S5.6 read out the
       operator's inferno-1 live re-run of that mechanism: the gate holds
       (`adopted_invalid` 0/34 units, 0 hard, nothing left for `repair`) at
-      3.45 turns/unit and no wall-clock inflation, but **gold agreement did
-      not move** (F1 0.7737 vs S5.3's repaired 0.7738; recall up, precision
-      down) and soft rose 34 → 48 — and inferno 1 held none of the 70 clausal
-      rows, so the class the design was aimed at is still unmeasured.
-      Remaining: one clausal-holding canto re-run as the next measurement
-      (Handoff), then the residual clausal rows over the other 99 cantos and
-      the soft bulk.
+      3.45 turns/unit and no wall-clock inflation, but gold agreement did not
+      move and inferno 1 held none of the 70 clausal rows. Record S5.7 then
+      ran the 52 cantos that do hold them — 64 units, `adopted_invalid`
+      **0/64**, **67 of the 67** clausal violations the gate could see
+      cleared in-session — found the 3 survivors to be `route="fast"` units
+      that never open a session, and closed that gap with
+      `RoutePolicy.require_schema_valid` (a schema-invalid derivation now
+      routes to the agent). The corpus is **0 hard / 5,014 soft** and
+      `make check` exits 0. Gold agreement across the whole hard track:
+      0.7307 → 0.7309, flat. Remaining: the soft bulk, deterministic work
+      over the committed TSVs (Handoff).
       Design decisions, the conversion contract, the divergence-reduction
       direction (§4), what the violation count is and is not (§5), and the
-      stage ledger (S5.1–S5.6) in [`STAGE5.md`](STAGE5.md).
-- Test suite: **925 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
-  S5.3 + 9 from S5.5).
+      stage ledger (S5.1–S5.7) in [`STAGE5.md`](STAGE5.md).
+- Test suite: **934 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+  S5.3 + 9 from S5.5 + 9 from S5.7).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
@@ -415,12 +417,16 @@ are *exactly* the three schema checks the agent-side gate
 own session — it corrects its analysis with the unit in front of it, instead
 of a downstream rule deciding on its behalf — and the gold-format TSV became
 the run's artifact and its resume state, written unit by unit, with deleting
-a stretch's lines as the fix gesture. Record S5.6 measured that mechanism on
-the operator's inferno-1 re-run: it works and is cheap — every unit settled
-on a submission its own gate accepted — but it scored level with the deletion
-rules it replaced against gold, so the case for re-running the corpus is not
-yet made, and the clausal class it was designed for happened not to occur in
-that canto. Design decisions, the conversion
+a stretch's lines as the fix gesture. Records S5.6–S5.7 measured that
+mechanism on the operator's live re-runs — inferno 1 first, then the 52
+cantos that actually hold clausal violations. It works and is cheap: every
+unit settled on a submission its own gate accepted, and 67 of the 67 clausal
+violations the gate could see were cleared in-session. The 3 that survived
+were fast-path units that never open a session, so S5.7 gave the router the
+same schema check (`require_schema_valid`) and the corpus reached **0 hard**.
+Gold agreement stayed flat throughout (0.7307 → 0.7309), which is the stage's
+real finding: hard-clean and gold-close are different targets, and the
+remaining distance lives entirely in the 5,014 soft findings. Design decisions, the conversion
 contract, and the stage ledger live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.

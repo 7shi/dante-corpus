@@ -32,18 +32,23 @@ line	token	word	role	arg_line	arg_token
 12	0			0	0
 13	1	Diteli	subj	0	0
 13	1	Diteli	ccomp	14	3
-13	7	infiora	subj	14	2
-13	7	infiora	obl	13	4
+13	7	infiora	subj	13	4
+13	7	infiora	obj	14	2
+13	7	infiora	obl	13	5
 14	3	rimarrà	subj	13	4
 14	3	rimarrà	obl:con	14	5
 15	5	è	subj	15	4
 16	3	rimane	subj	0	0
 16	4	dite	subj	0	0
-16	4	dite	ccomp	16	5
+16	4	dite	ccomp	16	3
+16	4	dite	ccomp	17	2
 17	2	sarete	subj	0	0
 17	2	sarete	attr	17	3
 17	2	sarete	attr	17	4
-18	2	porà	subj	18	8
+18	1	esser	subj	18	8
+18	1	esser	obj	18	7
+18	1	esser	obl:a	18	5
+18	2	porà	subj	0	0
 18	2	porà	xcomp	18	1
 19	5	pinti	subj	20	4
 19	5	pinti	obl:da	19	4

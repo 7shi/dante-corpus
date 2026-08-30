@@ -253,6 +253,7 @@ line	token	word	role	arg_line	arg_token
 90	6	parver	subj	90	2
 90	6	parver	iobj	90	5
 90	6	parver	xcomp	90	7
+90	7	dette	subj	90	2
 91	1	DILIGITE	subj	0	0
 91	1	DILIGITE	obj	91	2
 92	1	fur	subj	0	0

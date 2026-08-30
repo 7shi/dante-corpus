@@ -203,13 +203,13 @@ line	token	word	role	arg_line	arg_token
 68	6	ripuose	obl:tra	69	8
 69	0			0	0
 70	3	appresso	subj	70	2
-70	3	appresso	ccomp	72	9
+70	3	appresso	ccomp	72	7
 71	3	largiscon	subj	71	1
 71	3	largiscon	obj	71	7
 71	3	largiscon	iobj	71	2
-71	3	largiscon	obl	71	4
 72	7	son	subj	70	6
 72	7	son	attr	72	9
+72	7	son	ccomp	73	6
 72	7	son	obl:a	72	3
 73	6	è	subj	73	3
 73	6	è	obl	73	5
@@ -346,21 +346,21 @@ line	token	word	role	arg_line	arg_token
 114	8	canta	obl	114	5
 114	8	canta	obl	114	6
 115	0			0	0
-116	1	essaminando	subj	115	3
-116	5	avea	subj	115	4
-116	5	avea	obj	116	4
+116	1	essaminando	subj	115	4
+116	3	tratto	subj	115	4
+116	3	tratto	obj	116	4
 117	6	appressavamo	subj	0	0
 117	6	appressavamo	obl:a	117	5
 118	1	ricominciò	subj	115	3
-118	1	ricominciò	ccomp	119	8
 118	5	donnea	subj	118	4
+118	5	donnea	obl:con	119	4
 119	8	aperse	subj	118	3
 119	8	aperse	obj	119	6
 119	8	aperse	iobj	119	7
-119	8	aperse	obl:con	119	4
-120	7	dovea	subj	120	6
+119	8	aperse	obl	120	3
+120	5	aprir	subj	0	0
+120	7	dovea	subj	0	0
 120	7	dovea	xcomp	120	5
-120	7	dovea	obl	120	3
 121	4	approvo	subj	121	3
 121	4	approvo	obj	121	5
 121	8	emerse	subj	121	6

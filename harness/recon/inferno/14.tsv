@@ -209,17 +209,19 @@ line	token	word	role	arg_line	arg_token
 72	1	sono	obl:a	72	4
 73	3	vien	subj	0	0
 73	3	vien	iobj	73	2
+73	3	vien	obl	73	1
 73	3	vien	obl	73	4
 73	6	guarda	subj	0	0
 73	6	guarda	ccomp	73	9
 73	9	metti	subj	0	0
 73	9	metti	obj	74	3
+73	9	metti	obl	73	8
 73	9	metti	obl	74	1
-73	9	metti	obl:ne	74	6
+73	9	metti	obl:in	74	6
 74	0			0	0
 75	5	tien	subj	0	0
 75	5	tien	obj	75	7
-75	5	tien	xcomp	75	8
+75	5	tien	attr	75	8
 75	5	tien	obl	75	2
 75	5	tien	obl:a	75	4
 76	1	Tacendo	subj	0	0

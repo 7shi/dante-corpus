@@ -150,14 +150,15 @@ line	token	word	role	arg_line	arg_token
 58	2	parea	obl	58	1
 59	1	partita	subj	58	3
 59	1	partita	obl:in	59	4
-59	1	partita	obl:a	59	8
 60	1	faceva	subj	58	3
-60	1	faceva	xcomp	60	2
+60	1	faceva	ccomp	60	2
+60	1	faceva	obl:a	59	8
 60	2	dir	subj	60	4
 60	2	dir	subj	60	7
-60	2	dir	ccomp	60	5
 60	2	dir	ccomp	60	9
+60	2	dir	obl	60	5
 60	9	canta	subj	0	0
+60	9	canta	obl	60	8
 61	0			0	0
 62	4	imaginato	subj	62	1
 62	4	imaginato	obl	62	2

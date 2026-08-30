@@ -1,13 +1,12 @@
 line	token	word	role	arg_line	arg_token
 1	0			0	0
 2	1	cominciò	subj	2	2
-2	1	cominciò	ccomp	1	1
 2	1	cominciò	obl:con	2	5
 3	7	seppe	subj	3	5
 3	7	seppe	obj	3	6
 4	1	disse	subj	3	3
-4	1	disse	xcomp	4	3
 4	1	disse	ccomp	4	6
+4	1	disse	obl	4	3
 4	3	confortarmi	subj	0	0
 4	6	noccia	subj	5	3
 4	6	noccia	iobj	4	5
@@ -15,6 +14,7 @@ line	token	word	role	arg_line	arg_token
 5	8	abbia	obj	5	5
 6	3	torrà	subj	6	5
 6	3	torrà	iobj	6	2
+6	3	torrà	obl	5	8
 6	5	scender	subj	0	0
 6	5	scender	obj	6	7
 7	3	rivolse	subj	0	0
@@ -141,10 +141,10 @@ line	token	word	role	arg_line	arg_token
 52	7	aduni	obj	52	6
 53	6	fé	subj	53	4
 53	6	fé	obj	53	5
-53	6	fé	xcomp	53	7
+53	6	fé	attr	53	7
 54	6	fa	subj	53	3
 54	6	fa	obj	54	5
-54	6	fa	xcomp	54	7
+54	6	fa	attr	54	7
 54	6	fa	obl:a	54	3
 55	3	verranno	subj	0	0
 55	3	verranno	obl:in	55	2

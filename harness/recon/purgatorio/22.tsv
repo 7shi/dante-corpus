@@ -132,16 +132,15 @@ line	token	word	role	arg_line	arg_token
 42	2	sentirei	subj	0	0
 42	2	sentirei	obj	42	4
 43	3	accorsi	subj	0	0
-43	3	accorsi	obj	43	2
 43	3	accorsi	ccomp	44	1
 43	3	accorsi	obl	43	1
+43	6	aprir	subj	0	0
 43	6	aprir	obj	43	8
-43	6	aprir	xcomp	44	5
-43	6	aprir	obl	43	5
 44	1	potean	subj	44	3
 44	1	potean	xcomp	43	6
+44	1	potean	xcomp	44	5
+44	5	spendere	subj	0	0
 44	7	pente'	subj	0	0
-44	7	pente'	obj	44	8
 44	7	pente'	obl	45	1
 44	7	pente'	obl:di	45	3
 44	7	pente'	obl:di	45	8
@@ -433,14 +432,15 @@ line	token	word	role	arg_line	arg_token
 138	3	spandeva	obl:per	138	6
 138	3	spandeva	obl	138	7
 139	8	appressaro	subj	139	3
+139	8	appressaro	obj	139	7
 139	8	appressaro	obl:a	139	6
 140	0			0	0
 141	1	gridò	subj	140	3
 141	1	gridò	ccomp	141	5
 141	1	gridò	obl:entro	140	7
 141	5	avrete	subj	0	0
-141	5	avrete	obj	141	4
-141	5	avrete	xcomp	141	6
+141	5	avrete	attr	141	6
+141	5	avrete	obl:di	141	4
 142	2	disse	subj	0	0
 142	2	disse	ccomp	142	4
 142	4	pensava	subj	142	5

@@ -327,7 +327,7 @@ line	token	word	role	arg_line	arg_token
 100	8	aspettava	obl:in	101	2
 101	5	volesse	subj	101	6
 101	5	volesse	xcomp	101	7
-101	7	dir	ccomp	101	8
+101	7	dir	obl	101	8
 102	9	levava	subj	0	0
 102	9	levava	obj	102	2
 102	9	levava	obl:a	102	4

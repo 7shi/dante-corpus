@@ -54,7 +54,6 @@ line	token	word	role	arg_line	arg_token
 18	3	rilega	obj	18	2
 18	3	rilega	obl:in	18	7
 19	2	diss'	subj	19	3
-19	2	diss'	ccomp	19	1
 19	6	andavam	subj	0	0
 19	6	andavam	obl	19	5
 19	6	andavam	obl	19	7
@@ -62,11 +61,9 @@ line	token	word	role	arg_line	arg_token
 20	3	siete	attr	20	4
 20	9	degni	subj	20	6
 20	9	degni	obj	20	5
-20	9	degni	obl	20	7
-21	3	ha	subj	21	1
-21	3	ha	obj	21	2
-21	3	ha	obj	21	9
-21	3	ha	obl:per	21	7
+21	9	scorte	subj	21	1
+21	9	scorte	obj	21	2
+21	9	scorte	obl:per	21	7
 22	7	riguardi	subj	22	6
 22	7	riguardi	obl:a	22	9
 23	3	porta	subj	23	2

@@ -26,22 +26,27 @@ line	token	word	role	arg_line	arg_token
 9	7	trasse	obl:in	9	5
 10	4	era	subj	10	2
 10	4	era	attr	10	5
+11	2	benigna	subj	11	7
 11	3	avea	subj	0	0
 11	3	avea	obj	11	7
 11	3	avea	obj	12	8
 11	3	avea	xcomp	11	2
-11	3	avea	obl	11	5
-11	3	avea	obl:di	12	4
 12	0			0	0
 13	3	avea	subj	0	0
 13	3	avea	obj	13	2
 13	3	avea	obl:insin	13	7
+13	4	pilose	subj	13	2
 14	0			0	0
+15	1	dipinti	subj	14	2
+15	1	dipinti	subj	14	5
+15	1	dipinti	subj	14	9
+15	1	dipinti	obl:di	15	4
+15	1	dipinti	obl:di	15	7
 15	2	avea	subj	0	0
 15	2	avea	obj	14	2
+15	2	avea	obj	14	5
+15	2	avea	obj	14	9
 15	2	avea	xcomp	15	1
-15	2	avea	obl:di	15	4
-15	2	avea	obl:di	15	7
 16	0			0	0
 17	2	fer	subj	0	0
 17	2	fer	obj	17	4

@@ -359,7 +359,7 @@ line	token	word	role	arg_line	arg_token
 112	9	imbianchi	subj	112	5
 112	9	imbianchi	obj	112	8
 113	7	veggio	subj	113	2
-113	7	veggio	xcomp	113	6
+113	7	veggio	attr	113	6
 113	7	veggio	ccomp	114	9
 114	7	è	subj	114	6
 114	7	è	attr	114	8

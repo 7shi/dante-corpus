@@ -248,7 +248,8 @@ line	token	word	role	arg_line	arg_token
 91	2	siam	attr	91	1
 91	6	vedi	subj	91	5
 91	6	vedi	obj	91	4
-91	6	vedi	xcomp	91	8
+91	6	vedi	attr	91	8
+91	6	vedi	obl	92	1
 92	3	rispuose	subj	92	5
 92	3	rispuose	ccomp	91	2
 92	6	piangendo	subj	92	5

@@ -34,6 +34,16 @@ conservative: over-routing costs agent turns, under-routing silently loses
 rows. Until the morphology tier exists this keeps fast-path output trustworthy;
 the probe reports what share of units that is today.
 
+The router's other duty is the schema: a derivation may be confident and still
+be inadmissible, and until S5.7 nothing checked that before writing it — the
+three closed-world checks S5.5 put in `validate_candidate` guard the *agent's*
+submissions, and a fast-routed unit never opens a session. `schema_violations`
+therefore runs `validate_unit` over the derived rows with L1 alone (schema
+checks, no derivation, no gold), and a unit whose own output the schema
+rejects routes to the agent (`reason="schema_invalid"`) instead of being
+committed. That was the source of the last 3 clausal violations in the
+recon corpus (`../STAGE5.md` record S5.7).
+
 **Tier 2 — the fallback seam**: `HybridEngine.run_unit(..., fallback=...)`
 takes any callable `(canticle=..., canto=..., line_start=..., line_end=...) ->
 UnitResult`; its final `validate_candidate` submission is normalized with the
@@ -77,6 +87,11 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Iterator, TextIO
+
+from dante_corpus import api
+from dante_corpus.skel.io import _alpha_tokens
+from dante_corpus.skel.models import SkelRow
+from dante_corpus.skel.validate import validate_unit
 
 from harness.extractor.lexicon_builder import (
     DEFAULT_MIN_CONSISTENCY,
@@ -126,6 +141,7 @@ __all__ = [
     "main",
     "mine_artifacts",
     "route_derivation",
+    "schema_violations",
 ]
 
 # extractor/PLAN.md §1 objective: ">80% fast-path coverage".
@@ -206,6 +222,7 @@ class Derivation:
     other_attachment_pairs: int = 0  # structurally unrelated: never decided
     unresolved_pairs: int = 0  # L2/L4 rows missing at one side
     reinforced_pairs: int = 0  # rule and lexicon agreed on the same role
+    schema_violations: list[str] = field(default_factory=list)  # hard, from validate_unit
 
     @property
     def keys(self) -> set[RowKey]:
@@ -222,7 +239,38 @@ class Derivation:
             "other_attachment_pairs": self.other_attachment_pairs,
             "unresolved_pairs": self.unresolved_pairs,
             "reinforced_pairs": self.reinforced_pairs,
+            "schema_violations": list(self.schema_violations),
         }
+
+
+def schema_violations(
+    nos: list[int], texts: list[str], rows: list[DerivedRow]
+) -> list[str]:
+    """The hard `validate_unit` findings against a derivation's own rows.
+
+    Called with L1 alone (`nos`/`texts`), `validate_unit` runs only its
+    closed-world schema checks — word anchoring, predicate/argument positions,
+    duplicate and self-citing rows, the null position, clausal registration —
+    and no derivation, so nothing here is a second opinion on the roles the
+    fast path chose: it is the admission contract every row must satisfy to
+    stand in `skel/` at all (`dante_corpus/skel/validate.py`; the same three
+    checks S5.5 gave the agent inside its session, which the fast path skips
+    by never opening one). `tag` findings are the soft tier and are dropped.
+    """
+    token_lists = {no: _alpha_tokens(text) for no, text in zip(nos, texts)}
+    rows_by_line: dict[int, list[SkelRow]] = {}
+    for row in rows:
+        tokens = token_lists.get(row.line, [])
+        word = tokens[row.token - 1] if 1 <= row.token <= len(tokens) else ""
+        rows_by_line.setdefault(row.line, []).append(
+            SkelRow(line=row.line, token=row.token, word=word, role=row.role,
+                    arg_line=row.arg_line, arg_token=row.arg_token)
+        )
+    return [
+        f"{v.line} [{v.kind}] {v.detail}"
+        for v in validate_unit(nos, texts, rows_by_line)
+        if v.kind != "tag"
+    ]
 
 
 def _is_finite_personal(morph) -> bool:
@@ -253,6 +301,16 @@ class HybridEngine:
         self.rule_table = load_rule_table(rules)
         self.lexicon = {(e.verb_lemma, e.prep): e for e in entries}
         self.views = views if views is not None else _CantoViews()
+        self._texts: dict[tuple[str, int], dict[int, str]] = {}
+
+    def _text_by_no(self, canticle: str, canto: int) -> dict[int, str]:
+        """Lazy per-canto L1 line texts — the schema check's only extra input."""
+        key = (canticle, canto)
+        if key not in self._texts:
+            self._texts[key] = {
+                line.no: line.text for line in api.canto(canticle, canto).lines()
+            }
+        return self._texts[key]
 
     def derive_unit(
         self, canticle: str, canto: int, line_start: int, line_end: int
@@ -340,6 +398,11 @@ class HybridEngine:
                 and dep.deprel not in NON_SUBJECT_HEAD_DEPRELS
             ):
                 d.pro_drop_suspects.append(pred)
+        text_by_no = self._text_by_no(canticle, canto)
+        nos = [no for no in range(line_start, line_end + 1) if no in text_by_no]
+        d.schema_violations = schema_violations(
+            nos, [text_by_no[no] for no in nos], d.rows
+        )
         return d
 
     def run_unit(
@@ -413,6 +476,7 @@ class RoutePolicy:
     """
 
     forbid_conflicts: bool = True
+    require_schema_valid: bool = True
     require_rows: bool = True
     require_explicit_subjects: bool = True
 
@@ -422,7 +486,8 @@ class RouteDecision:
     """`route` in {"fast", "agent"}; `reason` names the deciding check."""
 
     route: str
-    reason: str  # "complete" | "conflicts" | "no_rows" | "pro_drop_suspects"
+    reason: str  # "complete" | "conflicts" | "schema_invalid" | "no_rows" |
+    #             "pro_drop_suspects"
 
     def to_dict(self) -> dict:
         return {"route": self.route, "reason": self.reason}
@@ -435,6 +500,8 @@ def route_derivation(
     p = policy if policy is not None else RoutePolicy()
     if p.forbid_conflicts and d.conflicts:
         return RouteDecision("agent", "conflicts")
+    if p.require_schema_valid and d.schema_violations:
+        return RouteDecision("agent", "schema_invalid")
     if p.require_rows and not d.rows:
         return RouteDecision("agent", "no_rows")
     if p.require_explicit_subjects and d.pro_drop_suspects:

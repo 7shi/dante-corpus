@@ -147,8 +147,9 @@ line	token	word	role	arg_line	arg_token
 42	7	rampolla	obl:in	42	4
 43	3	crollò	subj	43	2
 43	3	crollò	obj	43	5
-43	7	disse	subj	0	0
+43	7	disse	subj	43	2
 43	7	disse	ccomp	43	8
+43	8	Come		0	0
 44	1	volenci	subj	0	0
 44	1	volenci	xcomp	44	2
 44	2	star	subj	0	0

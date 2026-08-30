@@ -254,6 +254,7 @@ line	token	word	role	arg_line	arg_token
 91	3	paia	subj	91	5
 91	3	paia	obl	91	4
 91	8	pare	subj	91	6
+91	8	pare	obl	91	7
 92	1	pensa	subj	0	0
 92	1	pensa	obj	92	6
 92	1	pensa	xcomp	93	6
@@ -261,8 +262,9 @@ line	token	word	role	arg_line	arg_token
 92	3	era	subj	92	2
 92	9	mosse	subj	92	7
 92	9	mosse	obj	92	8
-93	3	detto	ccomp	93	4
+93	3	detto	subj	93	4
 93	4	Chiedi	subj	0	0
+93	6	dimandare	subj	0	0
 94	3	parlato	subj	0	0
 94	3	parlato	obl	94	8
 94	3	parlato	obl	97	3

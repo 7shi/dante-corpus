@@ -40,12 +40,20 @@ line	token	word	role	arg_line	arg_token
 14	5	tossio	obl:a	15	3
 15	0			0	0
 16	2	cominciai	subj	16	1
+16	2	cominciai	ccomp	16	4
+16	4	siete	subj	16	3
+16	4	siete	attr	16	6
 17	3	date	subj	17	1
 17	3	date	iobj	17	2
 17	3	date	xcomp	17	5
+17	5	parlar	subj	0	0
+17	5	parlar	obj	17	7
 18	3	levate	subj	18	1
 18	3	levate	obj	18	2
+18	3	levate	obl	18	4
+18	3	levate	obl	18	7
 18	7	son	subj	18	6
+18	7	son	obl	18	8
 19	5	empie	subj	20	2
 19	5	empie	obl:per	19	3
 19	5	empie	obl:di	19	7
