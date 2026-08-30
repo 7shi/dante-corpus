@@ -5,6 +5,8 @@ Pure aggregation math against small synthetic in-memory record sets — no real
 running the script, per its own docstring).
 """
 
+import json
+
 import pytest
 
 from harness.recon import readout as ro
@@ -224,3 +226,57 @@ def test_is_complete_requires_summary_as_last_record():
     assert ro.is_complete([{"record": "unit"}, {"record": "summary"}]) is True
     assert ro.is_complete([{"record": "unit"}]) is False
     assert ro.is_complete([]) is False
+
+
+def test_last_run_returns_the_whole_file_for_a_canto_run_once():
+    records = [{"record": "unit"}, {"record": "unit"}, {"record": "summary"}]
+    assert ro.last_run(records) == records
+    # A torn tail (no summary at all) is still one attempt.
+    assert ro.last_run(records[:2]) == records[:2]
+
+
+def test_last_run_keeps_only_the_final_attempts_block():
+    records = [
+        {"record": "unit", "id": "stage4-a"},
+        {"record": "unit", "id": "stage4-b"},
+        {"record": "summary", "id": "stage4"},
+        {"record": "unit", "id": "rerun-a"},
+        {"record": "summary", "id": "rerun"},
+    ]
+    assert ro.last_run(records) == [
+        {"record": "unit", "id": "rerun-a"},
+        {"record": "summary", "id": "rerun"},
+    ]
+
+
+def test_last_run_keeps_the_last_of_three_attempts():
+    records = [
+        {"record": "summary", "id": "one"},
+        {"record": "summary", "id": "two"},
+        {"record": "unit", "id": "three-a"},
+        {"record": "summary", "id": "three"},
+    ]
+    assert [r["id"] for r in ro.last_run(records)] == ["three-a", "three"]
+
+
+def test_load_corpus_folds_one_attempt_per_log_and_flags_the_re_runs(tmp_path):
+    """The append-only log's regression guard: a re-run canto must not count twice."""
+    root = tmp_path
+    for canticle, count in ro.CANTICLE_COUNTS.items():
+        (root / canticle).mkdir()
+        for n in range(1, count + 1):
+            lines = [_summary(n, tp=1, fp=0, fn=0)]
+            if (canticle, n) == ("inferno", 1):
+                # Re-run since S5.5: the log holds Stage 4's block and the re-run's.
+                lines = [_summary(n, tp=99, fp=99, fn=99), _summary(n, tp=1, fp=0, fn=0)]
+            (root / canticle / f"{n:02d}.log").write_text(
+                "".join(json.dumps(r) + "\n" for r in lines), encoding="utf-8"
+            )
+
+    corpus = ro.load_corpus(root)
+    total = sum(ro.CANTICLE_COUNTS.values())
+    assert len(corpus.all_summaries()) == total  # not total + 1
+    assert corpus.resumed_logs == [root / "inferno" / "01.log"]
+    assert ro.hygiene_report(corpus)["resumed_logs"] == corpus.resumed_logs
+    # The discarded Stage-4 block's counts are nowhere in the aggregate.
+    assert ro.canticle_f1(corpus.summaries["inferno"])["fp"] == 0

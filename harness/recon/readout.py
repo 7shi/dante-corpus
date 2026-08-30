@@ -4,6 +4,12 @@ wall-clock, and cap-accounting numbers needed to write the closing ledger entry.
 
 Deterministic and LLM-free: reads logs only, never launches `reconstruct.py`.
 
+One log contributes one attempt: since S5.5 the logs are append-only, so a
+canto re-run after Stage 4 carries several `summary` blocks and only the last
+is aggregated (`last_run`). That block is a *partial*, TSV-resumed re-run for
+such a canto, and those logs are listed as `resumed_logs` in the hygiene
+section so a corpus-wide number is never read as canto-complete for them.
+
     uv run python -m harness.recon.readout [--root harness/recon]
 """
 
@@ -48,6 +54,28 @@ def is_complete(records: list[dict]) -> bool:
     return bool(records) and records[-1].get("record") == "summary"
 
 
+def last_run(records: list[dict]) -> list[dict]:
+    """The final attempt's records only — everything after the penultimate `summary`.
+
+    Since S5.5 the log is append-only and the TSV is the resume state, so a
+    canto re-run after Stage 4 holds *two or three* `summary` records and, with
+    each, its own block of `unit`/`gold`/`llm_request`/`llm_response` records.
+    Folding the whole file in would count that canto two or three times over
+    and mix a complete Stage-4 aggregate with a later partial one.
+
+    One block per log is the invariant this restores. Note what the last block
+    *is* for a re-run canto: the re-run resumed off the TSV, so its block
+    covers only the units it actually re-ran, not the whole canto. Such a log
+    is reported separately (`Corpus.resumed_logs`) so no reader mistakes a
+    partial attempt for a canto-wide one. For a canto run exactly once — the
+    majority — this is the whole file unchanged.
+    """
+    cuts = [i for i, r in enumerate(records) if r.get("record") == "summary"]
+    if len(cuts) < 2:
+        return records
+    return records[cuts[-2] + 1 :]
+
+
 @dataclass
 class Corpus:
     """Records grouped by canticle, keyed by kind. Populated from disk or, in tests, by hand."""
@@ -57,6 +85,9 @@ class Corpus:
     responses: dict[str, list[dict]] = field(default_factory=lambda: {c: [] for c in CANTICLE_COUNTS})
     missing_logs: list[Path] = field(default_factory=list)
     incomplete_logs: list[Path] = field(default_factory=list)
+    # Logs holding more than one attempt: only the last block is aggregated
+    # (`last_run`), and for these that block is a partial, resumed re-run.
+    resumed_logs: list[Path] = field(default_factory=list)
 
     def add(self, canticle: str, records: list[dict], canto: int | None = None) -> None:
         for r in records:
@@ -92,7 +123,10 @@ def load_corpus(root: Path) -> Corpus:
         records = load_log(path)
         if not is_complete(records):
             corpus.incomplete_logs.append(path)
-        corpus.add(canticle, records, canto=canto)
+        block = last_run(records)
+        if len(block) != len(records):
+            corpus.resumed_logs.append(path)
+        corpus.add(canticle, block, canto=canto)
     return corpus
 
 
@@ -109,6 +143,7 @@ def hygiene_report(corpus: Corpus) -> dict:
     return {
         "missing_logs": corpus.missing_logs,
         "incomplete_logs": corpus.incomplete_logs,
+        "resumed_logs": corpus.resumed_logs,
         "written_cantos_nonzero": written,
         "token_assertion_errors_total": sum(s.get("token_assertion_errors", 0) for s in summaries),
         "empty_responses": empty_responses,
@@ -353,6 +388,7 @@ def print_report(corpus: Corpus) -> None:
     for label, key in [
         ("missing logs", "missing_logs"),
         ("incomplete logs (no parseable summary)", "incomplete_logs"),
+        ("re-run logs (last attempt only, and it is partial)", "resumed_logs"),
         ("summaries with written_cantos != 0", "written_cantos_nonzero"),
         ("responses marked empty", "empty_responses"),
         ("responses missing provider token counts", "responses_missing_tokens"),

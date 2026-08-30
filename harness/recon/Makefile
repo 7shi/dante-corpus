@@ -12,13 +12,10 @@
 # (the file is rewritten in line order when the gap is not at the tail).
 #
 # Each canto also gets a streaming JSONL log under <canticle>/NN.log (unit /
-# gold / canto_complete / llm_request|response / summary records). It is an
-# append-only debug record — never read back, no part in resume.
-#
-# Because the logs are gitignored and the TSVs are committed, a fresh
-# checkout has the artifacts but none of the logs. That must NOT re-run a
-# 164-hour corpus: a canto whose TSV exists and whose log is gone is left
-# alone. Deleting a TSV is therefore the way to ask for that canto again.
+# gold / canto_complete / llm_request|response / summary records). It is a
+# pure by-product: append-only, gitignored, never read back, no part in
+# resume and no part in any goal or prerequisite here. Deleting the logs —
+# all of them, at any time — changes nothing this Makefile does.
 #
 # Launch configuration is the one carried from STAGE4.md §2 (S3.9/S3.11):
 # verbatim transcripts, payload tier R1, reactive-only pacing (HTTP 429s are
@@ -37,20 +34,17 @@
 ##                                     own 429 backoff for pacing;
 ##                                     wall-clock projection assumes three.
 ## make inferno/12.tsv                a single canto (stem = <canticle>/NN);
-##                                     units already in the TSV are not re-run;
-##                                     already present with no log = left alone
+##                                     units already in the TSV are not re-run,
+##                                     so a complete TSV costs no model calls;
+##                                     delete a stretch's lines to ask for it back
 ## Model override:  make ... inferno MODEL=ollama:gemma4:31b-it-qat
 ##
-## Legacy log conversion (LLM-free; for the Stage-4 logs, whose cantos predate
-## the streamed writer — a canto run since then already has its TSV):
-## make convert                        every existing log -> its TSV
-##                                     (gold-format skel; telemetry stays in
-##                                     the logs, see ../STAGE5.md §2)
-## make convert-check                  regenerate in memory only; non-zero exit
-##                                     if a committed TSV has drifted. Valid
-##                                     only for a canto produced in ONE
-##                                     uninterrupted run: after a resume the
-##                                     log holds just the newly run units
+## make clean-log                      delete the by-product logs
+##                                     (<canticle>/NN.log). Touches no TSV and
+##                                     changes nothing any target does — but
+##                                     the logs are the only copy of their
+##                                     run's telemetry, so it is irreversible
+##
 ## make check                          validate every committed TSV against the
 ##                                     derived skeleton (hard/soft violations,
 ##                                     no model call — same check as skel/skel.py
@@ -84,57 +78,58 @@ paradiso:   $(foreach n,$(shell seq -w 1 33),paradiso/$(n).tsv)
 help:
 	@sed -n 's/^## //p' $(HELPFILE)
 
-# .PRECIOUS on the log too: without it, make deletes the target file it was
-# updating when make itself receives a fatal signal (Ctrl+C, SIGTERM) mid-recipe
-# — verified live: SIGINT to a running `make` deletes the target it was
-# writing. Every already-settled unit streamed to disk before the interrupt
-# must survive so the next `make` invocation's unit-level resume can see it.
-# (A plain recipe failure, e.g. a non-zero exit with no signal, does not
-# trigger this deletion — only the signal path does — but .PRECIOUS covers
-# both.)
-.PRECIOUS: %.log
-
 # The per-canto goal: reconstruct writes the TSV itself, unit by unit as units
 # settle (`--tsv`, ../STAGE5.md record S5.5). There is no separate conversion
-# step and no `%.log` prerequisite: completion is decided *inside* reconstruct
-# by the artifact — a TSV whose lines are all present settles every unit, so
-# the run costs no model calls and exits fast. That makes a re-invocation the
-# way to regenerate whatever is missing, and the fix gesture is to delete a
-# stretch's lines from the TSV before re-running.
+# step, and the log is neither goal nor prerequisite — completion is decided
+# *inside* reconstruct by the artifact alone: a TSV whose lines are all
+# present settles every unit, so the run costs no model calls and exits after
+# the deterministic re-validation. That makes a re-invocation the way to
+# regenerate whatever is missing, and the fix gesture is to delete a stretch's
+# lines from the TSV before re-running — which now works the same whether or
+# not a log happens to sit beside it.
 #
-# The guard below is defense in depth for the fresh-checkout state (committed
-# TSVs, no logs): reconstruct would do nothing there anyway, but skipping the
-# launch entirely keeps a clone from paying for artifact loads it does not
-# need.
+# The fresh-checkout state (committed TSVs, no logs) therefore needs no guard:
+# every unit is settled, reconstruct calls no model, and the only cost is the
+# artifact mining each invocation does at startup.
 #
-# .PRECIOUS for the same reason as %.log: a fatal signal to make mid-recipe
-# must not delete a committed artifact it was in the middle of refreshing.
+# .PRECIOUS: without it, make deletes the target file it was updating when
+# make itself receives a fatal signal (Ctrl+C, SIGTERM) mid-recipe — verified
+# live: SIGINT to a running `make` deletes the target it was writing. Every
+# already-settled unit streamed to disk before the interrupt must survive so
+# the next invocation's unit-level resume can see it, and a committed artifact
+# must not be destroyed mid-refresh. (A plain recipe failure with no signal
+# does not trigger the deletion — only the signal path does — but .PRECIOUS
+# covers both.)
 .PRECIOUS: %.tsv
 %.tsv: FORCE
-	@mkdir -p $(@D) \
-	&& if [ -f $@ ] && [ ! -f $*.log ]; then \
-		echo "$@: present and its log is gone — keeping it, nothing to run"; \
-	else \
-		echo "=== $@ ==="; \
-		uv run python -m harness.extractor.reconstruct \
-			--canticle $(*D) \
-			--canto $$((10#$(*F))) \
-			--verify-gold --model $(MODEL) \
-			--log $*.log --tsv $@; \
-	fi
+	@mkdir -p $(@D)
+	@echo "=== $@ ==="
+	uv run python -m harness.extractor.reconstruct \
+		--canticle $(*D) \
+		--canto $$((10#$(*F))) \
+		--verify-gold --model $(MODEL) \
+		--log $*.log --tsv $@
 
-# Stage-5 conversion over whatever logs are on disk, without touching the
-# model: the logs are gitignored and disk-only, so their settled
-# reconstruction is converted into a committable gold-format TSV beside each
-# one. Only the corpus content is committed — the run telemetry the logs also
-# carry (routing, gate verdicts, gold scores, wire/cost records) is not.
-# Idempotent — regenerating from unchanged logs reproduces byte-identical
-# files, so this is a repeatable step after any corpus run, not a migration.
-convert:
-	uv run python -m harness.recon.convert
+# The logs are a by-product (header): nothing here reads them, and their
+# absence is the normal fresh-checkout state, so sweeping them changes nothing
+# any target does. It is not recoverable, though — a log carries its run's
+# telemetry and nothing else holds it, accepted as ephemeral by ../STAGE5.md
+# §2's decision rather than committed.
+LOGS := $(CANTICLES:%=%/*.log)
+clean-log:
+	@n=$$(ls $(LOGS) 2>/dev/null | wc -l); \
+	rm -f $(LOGS); \
+	echo "clean-log: removed $$n log(s); TSVs untouched"
 
-convert-check:
-	uv run python -m harness.recon.convert --check
+# `harness.recon.convert` (log -> gold-format TSV, ../STAGE5.md record S5.1)
+# has NO target here any more, deliberately (2026-08-30). Since S5.5
+# reconstruct writes the TSV itself, so conversion is dead for anything run
+# since; and over the committed corpus it is actively destructive — it
+# regenerates from the logs, which rolls back S5.3's repairs and, for a canto
+# resumed off its TSV, writes a file holding only the newly run units. The
+# module and its tests stay for the legacy Stage-4 logs; invoke it directly and
+# narrowly, knowing both hazards:
+#   uv run python -m harness.recon.convert --canticle C --canto N [--check]
 
 check:
 	uv run python -m harness.recon.check
@@ -150,8 +145,8 @@ stats:
 #
 # `repair` edits the committed TSVs in
 # place, so the git history keeps the "raw model output -> rules applied" diff.
-# It must therefore run AFTER convert, never before: re-running convert
-# regenerates from the logs and rolls the repairs back.
+# Anything that regenerates a TSV from its log therefore rolls the repairs
+# back — which is half of why `convert` no longer has a target here (above).
 repair:
 	uv run python -m harness.recon.repair
 
@@ -162,4 +157,4 @@ agree:
 	uv run python -m harness.recon.agree --per-canticle
 
 FORCE:
-.PHONY: FORCE convert convert-check check stats repair repair-check agree
+.PHONY: FORCE check stats repair repair-check agree clean-log

@@ -82,35 +82,25 @@ corrections** ([`STAGE5.md`](STAGE5.md) §5):
    discipline Phase 5 learned the hard way
    ([`../skel/PHASE5.md`](../skel/PHASE5.md) §1.3, §5.2).
 
-**Ordering constraint**: `repair` edits the committed TSVs in place, so it
-runs *after* `convert`, never before — re-running `make convert` regenerates
-from the logs and rolls the repairs back.
+**Ordering constraint** (now largely moot, kept as the reason): `repair`
+edits the committed TSVs in place, so anything that regenerates a TSV from a
+log rolls its repairs back. That is half of why `convert` lost its Makefile
+target on 2026-08-30 — and the logs themselves are gone, so nothing can
+regenerate a committed TSV today.
 
-**State at the S5.7 session's close (2026-08-30).** The tree is clean and the
-suite passes (934). 55 of the 100 TSVs now carry in-session output: inferno 1
-(S5.6) plus the 52 clausal cantos and the 3 fast-path units of S5.7. The
-remaining 45 are exactly as S5.3 left them. Every regenerated `NN.log` is
-gitignored as always, and is the only copy of those runs' telemetry.
+**State at the S5.8 session's close (2026-08-30).** The tree is clean, the
+suite passes (938), and the corpus is untouched by this session: `make check`
+still reports 0 hard / 5,014 soft. 55 of the 100 TSVs carry in-session output
+— inferno 1 (S5.6) plus the 52 clausal cantos and the 3 fast-path units of
+S5.7; the remaining 45 are exactly as S5.3 left them. S5.8 was housekeeping
+around the corpus rather than on it: the log demoted to a by-product, the
+`convert` target removed, `readout`'s re-run double-count fixed, and all 100
+logs swept ([`STAGE5.md`](STAGE5.md) S5.8).
 
-- **The session's three commits are pushed** (`876a22c` S5.6 / `779a0e8` the
-  tool-result console echo / `d3a0e9a` S5.7); `origin/main` is at S5.7. The
-  middle one was split out deliberately on the operator's call: it is
-  display-only and shares `hybrid_engine.py` with S5.7, so
-  `hybrid_engine.py` was staged in two passes.
-- **`recon/readout.py` now double-counts the re-run cantos.** The logs are
-  append-only, so a canto re-run since S5.5 holds *two or three* `summary`
-  records, and `add()` appends every one it sees. Any later corpus-wide
-  readout must take the last block per log (records after the penultimate
-  `summary`) or it will mix a Stage-4 aggregate with a partial re-run
-  aggregate for the same canto. Not fixed here — S4.3's numbers are already
-  prose, and nothing this session needed the tool.
 - **The fix gesture has line granularity.** Deleting a violating *row* leaves
   its line present, and `TsvArtifact`'s settled-unit test is line-number
   presence — so the canto re-runs nothing and no model is called. Delete
   every row of the line. S5.7 hit this first time round and lost a run to it.
-- **The middle-of-file deletion path is now exercised live** (it was the last
-  unexercised mechanism at S5.6's close): 68 lines deleted mid-file across 52
-  cantos regenerated their units and the files came back in line order.
 - **The tool-result console echo is on by default** (400 payload chars,
   `reconstruct.py --tool-result-chars`, 0 = off). It takes effect from the
   next run, and `recon/Makefile`'s `%.tsv` recipe does not pass the flag — so
@@ -119,11 +109,6 @@ gitignored as always, and is the only copy of those runs' telemetry.
   soft), so from here a non-zero `make check` *is* a regression signal and
   should be read as one. That is new: through S5.6 the checker's contract
   (non-zero on any hard violation) kept it red by design.
-- **`make convert` must not be run corpus-wide any more.** It regenerates
-  TSVs from the Stage-4 logs, which would roll back S5.3's repairs (the
-  standing ordering constraint above) *and*, for any canto re-run since
-  S5.5, produce a partial file — after a TSV resume the log holds only the
-  newly run units. It survives for the legacy Stage-4 logs only.
 - **Carry-over caveat on S5.3's own two rules** ([`STAGE5.md`](STAGE5.md)
   §5): they satisfy discipline 2–3 above and `repair.py` opens no gold file,
   but gold *was* consulted while they were being designed, before the
@@ -143,20 +128,23 @@ gitignored as always, and is the only copy of those runs' telemetry.
 Two things a fresh session should still know before touching
 `harness/recon/`:
 
-- The Stage-4 logs are still on this machine, gitignored. They are the only
-  copy of the run's telemetry (cost accounting, per-unit routing and gate
-  detail), which by §2's decision is accepted as ephemeral — the headline
-  numbers survive only as prose in [`STAGE5.md`](STAGE5.md) S5.1 and
-  [`STAGE4.md`](STAGE4.md) S4.3. `recon/readout.py` still reads them while
-  they exist.
-- `make <canticle>` is TSV-goaled and **will not re-run a canto whose TSV
-  exists with no log beside it** — the normal state after a fresh clone.
-  Since S5.5 the TSV is also the resume state, so a canto whose TSV is
-  complete costs no model calls even when its log is present. Deleting a TSV
-  (or a stretch of its lines) is how you ask for that canto back; do it
-  deliberately, since a full canticle is tens of hours of live model time.
-  Work on the other 99 cantos should still read/edit the committed TSVs
-  directly, not relaunch the model.
+- **There are no logs on this machine** (`make clean-log`, S5.8), and with
+  them went all run telemetry — cost accounting, per-unit routing, gate
+  detail. §2 had accepted that as ephemeral, so it was that decision carried
+  out rather than a new one, but it is irreversible: the headline numbers now
+  survive *only* as prose in [`STAGE5.md`](STAGE5.md) S5.1/S5.5–S5.7 and
+  [`STAGE4.md`](STAGE4.md) S4.3. `recon/readout.py` and `recon/convert.py`
+  are kept and tested but have no input until a future run writes new logs,
+  and neither has a Makefile target that touches the corpus.
+- `make <canticle>` is **TSV-goaled and TSV-gated: the log is neither goal
+  nor prerequisite, only a by-product** (S5.8). Since S5.5 the TSV is the
+  resume state, so a complete TSV costs no model calls whether or not a log
+  sits beside it, and a fresh clone re-runs nothing — it only pays
+  reconstruct's startup mining per invocation. Deleting a TSV (or a stretch
+  of its lines) is how you ask for that canto back; do it deliberately, since
+  a full canticle is tens of hours of live model time. Work on the other 99
+  cantos should still read/edit the committed TSVs directly, not relaunch the
+  model.
 
 ## Current Status
 
@@ -204,13 +192,20 @@ holds only what's still open.
       `RoutePolicy.require_schema_valid` (a schema-invalid derivation now
       routes to the agent). The corpus is **0 hard / 5,014 soft** and
       `make check` exits 0. Gold agreement across the whole hard track:
-      0.7307 → 0.7309, flat. Remaining: the soft bulk, deterministic work
+      0.7307 → 0.7309, flat. Record S5.8 is housekeeping around that corpus
+      rather than on it (no TSV touched): the per-canto log became a pure
+      by-product — `recon/Makefile`'s recipe no longer consults it, which had
+      silently disabled S5.5's line-deletion fix gesture whenever a log was
+      missing — `convert` lost its Makefile target, `readout.py`'s re-run
+      double-count was fixed, and all 100 logs were swept by the new
+      `make clean-log`, ending the run telemetry §2 had accepted as
+      ephemeral. Remaining: the soft bulk, deterministic work
       over the committed TSVs (Handoff).
       Design decisions, the conversion contract, the divergence-reduction
       direction (§4), what the violation count is and is not (§5), and the
-      stage ledger (S5.1–S5.7) in [`STAGE5.md`](STAGE5.md).
-- Test suite: **934 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
-  S5.3 + 9 from S5.5 + 9 from S5.7).
+      stage ledger (S5.1–S5.8) in [`STAGE5.md`](STAGE5.md).
+- Test suite: **938 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+  S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
@@ -423,9 +418,10 @@ divergence readout); deterministic, LLM-free and idempotent, so it is a
 repeatable step after any future corpus run rather than a one-time
 migration. `recon/Makefile`'s per-canto goal moved from the log to the TSV
 with it (reconstruct → convert in one target — since S5.5 reconstruct writes
-the TSV itself and the conversion step is gone), and a canto whose TSV exists
-with no log beside it is left alone, so a fresh checkout never re-runs the
-corpus for output it already has. The second deliverable was cut on operator
+the TSV itself and the conversion step is gone), and since 2026-08-30 the TSV
+alone decides what runs: a settled unit is never re-run, so a fresh checkout
+never re-runs the corpus for output it already has, and the log is a
+by-product with no role in any goal or gate. The second deliverable was cut on operator
 review: the logs' remaining content is run telemetry, not corpus content,
 and stays out of the repository — accepted as ephemeral. The stage's scope
 then extended to **divergence reduction** on S5.2's 897-hard/5,267-soft
@@ -449,7 +445,11 @@ were fast-path units that never open a session, so S5.7 gave the router the
 same schema check (`require_schema_valid`) and the corpus reached **0 hard**.
 Gold agreement stayed flat throughout (0.7307 → 0.7309), which is the stage's
 real finding: hard-clean and gold-close are different targets, and the
-remaining distance lives entirely in the 5,014 soft findings. Design decisions, the conversion
+remaining distance lives entirely in the 5,014 soft findings. Record S5.8 then
+settled the artifact story the stage opened with: the per-canto log is a pure
+by-product with no role in any goal or gate, `convert` lost its target, and
+the 100 logs were swept — the ephemerality §2 decided on, finally carried out.
+Design decisions, the conversion
 contract, and the stage ledger live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.

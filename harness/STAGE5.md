@@ -749,3 +749,67 @@ size tail); `agent_fallback(result_chars=)` wires it to the status line's
 console, and `reconstruct.py --tool-result-chars` (default 400, 0 = off) is
 the operator control. Display only: no prompt, tool schema, or wire change,
 so Standing Invariant 6 is untouched. Three more tests: **931 → 934 passed**.
+
+### S5.8 — The log demoted to a by-product, then swept; `readout` de-duplicated (2026-08-30)
+
+A housekeeping record with one real contract change behind it. Nothing about
+the corpus moved: `make check` reports **0 hard / 5,014 soft** before and
+after, and no TSV was touched.
+
+**The question that opened it** was whether the per-canto logs could simply be
+deleted. The audit said yes — 10.9 MB across 100 files, 7.3 MB of it
+`llm_request`/`llm_response` telemetry; since S5.5 the log is append-only,
+never read back, and no part of resume; the only readers left were
+`convert.py` and `readout.py`, both already fenced off from corpus-wide use.
+But the audit also turned up a trap, and that is what made this more than a
+`rm`.
+
+**The trap: `recon/Makefile`'s `%.tsv` recipe still consulted the log.** It
+skipped any canto whose TSV existed with no log beside it —
+
+```make
+if [ -f $@ ] && [ ! -f $*.log ]; then echo "keeping it, nothing to run"
+```
+
+— which meant that **deleting the logs would have silently disabled S5.5's fix
+gesture**. Delete a stretch's lines from a TSV, re-run, and the guard would
+answer "nothing to run" instead of regenerating the unit. The failure is
+quiet: `make` exits 0 and prints a reassuring line.
+
+The guard was defense in depth and its own comment said so — reconstruct does
+nothing in the fresh-checkout state anyway, because `TsvArtifact` settles
+every unit and no model is called; the guard only saved the startup mining. So
+it is gone, on the operator's call, and the recipe is unconditional. **The TSV
+alone now decides what runs**, which is what S5.5 intended and what the header
+had already been claiming. The log is passed to `--log` and is otherwise a
+by-product with no role in any goal, prerequisite or gate. `.PRECIOUS: %.log`
+went with it: `%.log` was never a make target, so the line had no effect.
+
+**`convert` lost its Makefile target** (module and its 11 tests kept). Two
+hazards had accumulated around it and only prose was holding them back: over
+the committed corpus it rolls back S5.3's repairs, and for any canto resumed
+off its TSV since S5.5 it writes a file holding just the newly run units.
+Since S5.5 reconstruct writes the TSV itself, so it has no role in current
+runs either. It survives for legacy logs, invoked directly and narrowly
+(`--canticle C --canto N`).
+
+**`readout.py`'s double-count is fixed.** The logs being append-only, a canto
+re-run since S5.5 carried two or three `summary` records and `add()` folded in
+every one — mixing a complete Stage-4 aggregate with a partial re-run
+aggregate for the same canto. `last_run()` now keeps one attempt per log (the
+records after the penultimate `summary`). Taking the last block is not free of
+its own bias, though: for a re-run canto that block is *partial*, since the
+re-run resumed off the TSV and only covers units it actually re-ran. So those
+logs are collected as `Corpus.resumed_logs` and printed in the hygiene
+section, and no reader can mistake a partial attempt for a canto-wide one. 4
+tests: **934 → 938 passed**.
+
+**Then `make clean-log` shipped and ran.** It removes
+`{inferno,purgatorio,paradiso}/*.log` and reports the count; TSVs are not in
+its glob. 100 logs deleted. With them went every run's telemetry — Stage 4's
+cost accounting, per-unit routing, gate detail — which §2 had already accepted
+as ephemeral, so this is that decision carried out rather than a new one. The
+headline numbers survive as prose in S5.1 and S4.3; nothing else does.
+`readout.py` and `convert.py` therefore have no input until a future run
+writes new logs. Both are kept, tested, and neither has a target that touches
+the corpus.
