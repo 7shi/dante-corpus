@@ -87,6 +87,19 @@
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
 
+# The run's true start, held across every canto recipe of one invocation
+# (including the three -j3 canticle streams) — each canto still runs
+# reconstruct.py as its own process, so reconstruct's own per-process clock
+# alone cannot show this; passed through as --started-at so the status bar's
+# label-side elapsed time reads the run's cumulative time instead of just
+# this canto's. `?=` + `export`, not `:=`, because fix-inferno/-purgatorio/
+# -paradiso recurse into `$(MAKE) fix-canto` per canto (FIX_CANTICLE below):
+# without the export, that child make would re-run `date +%s` on every
+# canto and lose the cumulative value; `?=` lets the exported one from the
+# parent invocation win instead of being recomputed.
+STARTED_AT ?= $(shell date +%s)
+export STARTED_AT
+
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
@@ -130,6 +143,7 @@ help:
 		--canticle $(*D) \
 		--canto $$((10#$(*F))) \
 		--verify-gold --model $(MODEL) \
+		--started-at $(STARTED_AT) \
 		--log $*.log --tsv $@
 
 # The logs are a by-product (header): nothing here reads them, and their
@@ -217,6 +231,7 @@ fix-canto:
 		--canto $$((10#$(CANTO))) \
 		--fix $(FIX) \
 		--verify-gold --model $(MODEL) \
+		--started-at $(STARTED_AT) \
 		--log $(CANTICLE)/$$n.log --tsv $(CANTICLE)/$$n.tsv
 
 # One canticle, canto by canto. Sequential by design: each canto is a live

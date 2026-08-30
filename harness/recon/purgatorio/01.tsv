@@ -275,15 +275,16 @@ line	token	word	role	arg_line	arg_token
 87	7	fei	subj	0	0
 87	7	fei	obj	87	3
 88	8	dimora	subj	0	0
-88	8	dimora	obl	88	4
+88	8	dimora	obl:da	88	7
 89	2	muover	subj	0	0
 89	2	muover	obj	89	4
 89	5	può	subj	0	0
 89	5	può	xcomp	89	2
 89	5	può	obl:per	89	8
-90	2	fatta	subj	90	1
+90	3	fu	subj	90	1
+90	3	fu	attr	90	2
 90	7	usci'	subj	90	5
-90	7	usci'	obl:da	90	6
+90	7	usci'	obl	90	6
 90	7	usci'	obl	90	8
 91	7	move	subj	91	3
 91	7	move	obj	91	6
@@ -335,7 +336,7 @@ line	token	word	role	arg_line	arg_token
 105	7	seconda	subj	0	0
 105	7	seconda	obl:a	105	5
 106	3	sia	subj	106	7
-106	3	sia	obl	106	5
+106	3	sia	attr	106	5
 107	4	mosterrà	subj	107	2
 107	4	mosterrà	iobj	107	3
 107	4	mosterrà	xcomp	108	1
@@ -362,9 +363,9 @@ line	token	word	role	arg_line	arg_token
 112	4	segui	subj	0	0
 112	4	segui	obj	112	7
 113	1	volgianci	subj	0	0
-113	1	volgianci	obl	113	3
+113	1	volgianci	obl:in	113	3
 113	7	dichina	subj	114	2
-113	7	dichina	obl	113	6
+113	7	dichina	obl:di	113	6
 113	7	dichina	obl:a	114	5
 114	0			0	0
 115	3	vinceva	subj	115	2

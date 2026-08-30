@@ -1345,6 +1345,17 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "reduce the level's findings, or introduces a new violation class keeps "
         "its recorded rows",
     )
+    parser.add_argument(
+        "--started-at",
+        type=float,
+        default=None,
+        help="unix timestamp (seconds) the enclosing run started, e.g. "
+        "harness/recon/Makefile's $STARTED_AT: shown as the status bar's "
+        "label-side elapsed time. Needed because that Makefile launches one "
+        "reconstruct.py process per canto, so this process's own clock alone "
+        "can only show that canto's elapsed time, never the run's cumulative "
+        "one — omit for a bare single-canto invocation",
+    )
     args = parser.parse_args(argv)
 
     if args.fix is not None:
@@ -1367,6 +1378,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # the live fallback's model stream can share its console; without the
     # extra this stays None and plain stderr lines keep the run watchable.
     status_line = HarnessStatusLine() if HarnessStatusLine is not None else None
+    if status_line is not None and args.started_at is not None:
+        status_line.run_started_at = args.started_at
     ui_stream = status_line.stream if status_line is not None else None
 
     if args.rules_in and args.lexicon_in:

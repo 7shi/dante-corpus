@@ -20,10 +20,46 @@ and callers fall back to plain stderr lines.
 from __future__ import annotations
 
 import sys
+import time
 
 try:
-    from llm7shi.statusline import StatusLine, StatusLineConsoleStream
+    from llm7shi.statusline import (
+        StatusLine,
+        StatusLineConsoleStream,
+        _MofNColumn,
+        _ProcessElapsedColumn,
+        _ProgressContext,
+    )
+    from rich.progress import (
+        BarColumn,
+        Progress,
+        ProgressColumn,
+        SpinnerColumn,
+        TaskProgressColumn,
+        TextColumn,
+    )
     from rich.text import Text
+
+    class _ExternalElapsedColumn(ProgressColumn):
+        """Elapsed time since a caller-supplied unix timestamp — the run's
+        true start, when that run spans more than this process (e.g.
+        `harness/recon/Makefile` launches one `reconstruct.py` process per
+        canto, so `_ProcessElapsedColumn`'s per-process clock cannot show
+        the make invocation's cumulative time on its own; the Makefile
+        exports `STARTED_AT` once and each canto passes it through as
+        `--started-at`). Unlike `_ProcessElapsedColumn`, this has no
+        llm7shi counterpart to subclass against — it is genuinely local."""
+
+        def __init__(self, started_at: float):
+            super().__init__()
+            self._started_at = started_at
+
+        def render(self, task) -> Text:
+            elapsed = time.time() - self._started_at
+            m, s = divmod(int(elapsed), 60)
+            h, m = divmod(m, 60)
+            text = f"{h}:{m:02d}:{s:02d}" if h else f"{m}:{s:02d}"
+            return Text(text, style="progress.elapsed")
 
     class _PlainConsoleStream(StatusLineConsoleStream):
         """Forwarded text renders as-is: no Rich markup interpretation."""
@@ -54,6 +90,41 @@ try:
                 pass
             super().wait_retry(delay, message)
 
+    class _HarnessProgressContext(_ProgressContext):
+        """`llm7shi.statusline._ProgressContext`, with an elapsed-time column
+        inserted right after the label so `inferno 2 xx:xx | ...` carries a
+        second clock up front, alongside llm7shi's own per-bar elapsed column
+        at the far right (`_ProcessElapsedColumn`, this process's own
+        clock — correct as *this canto's* elapsed since `harness/recon/
+        Makefile` launches one process per canto). The label-side clock is
+        `_ExternalElapsedColumn(started_at)` when the caller supplied the
+        enclosing run's start time (`HarnessStatusLine.run_started_at`, e.g.
+        the Makefile's `STARTED_AT` threaded through `--started-at`), so it
+        reads the run's true cumulative time instead of repeating the
+        per-process one; without it, it falls back to `_ProcessElapsedColumn`
+        (a bare single-canto invocation has no other clock to show).
+        `__enter__`/`__exit__`/`update` are unchanged from the base class;
+        only the column layout built in `__init__` differs, and
+        `_ProgressContext` has no smaller hook to override for that."""
+
+        def __init__(self, status_line, total, completed, label, started_at=None):
+            columns = [SpinnerColumn()]
+            if label:
+                columns.append(TextColumn("[bold cyan]{task.description}"))
+                columns.append(
+                    _ExternalElapsedColumn(started_at) if started_at is not None
+                    else _ProcessElapsedColumn()
+                )
+                columns.append(TextColumn("|"))
+            columns += [_MofNColumn(), BarColumn(), TaskProgressColumn(), _ProcessElapsedColumn()]
+
+            self._status_line = status_line
+            self._progress = Progress(*columns, console=status_line.console)
+            self._total = total
+            self._completed = completed
+            self._label = label
+            self._task = None
+
     class HarnessStatusLine(StatusLine):
         """StatusLine whose console lives on stderr and whose stream never
         interprets markup."""
@@ -62,6 +133,13 @@ try:
             super().__init__()
             self.console.file = sys.stderr
             self.stream = _PlainConsoleStream(self.console, self)
+            # Set by the caller (e.g. reconstruct.py's --started-at) when the
+            # enclosing run spans more than this process, so progress() can
+            # show the run's true cumulative time next to the label.
+            self.run_started_at: float | None = None
+
+        def progress(self, total: int, start: int = 0, label: str | None = None):
+            return _HarnessProgressContext(self, total, start, label, self.run_started_at)
 
 except ImportError:  # pragma: no cover - rich ships via llm7shi[statusline]
     HarnessStatusLine = None

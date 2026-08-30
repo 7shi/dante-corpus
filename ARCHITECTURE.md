@@ -132,7 +132,43 @@ hours per benchmark). An unwatchable run is an unusable run: progress must be
   renders with Rich markup disabled (corpus text routinely contains bracket
   fragments that markup parsing would silently swallow or crash on), and the
   same console stream is handed to llm7shi as the streaming sink so model
-  output shares the display instead of clobbering the bar.
+  output shares the display instead of clobbering the bar. The bar shows two
+  elapsed clocks, not one: right after the label
+  (`inferno 2 xx:xx | ...`) and at the far right where llm7shi's own per-bar
+  elapsed column already puts it. These read the same only by accident of a
+  bare single-canto invocation — in general they answer different questions,
+  and conflating them is the bug this pattern exists to avoid. The far-right
+  column is always this *process's* own elapsed time
+  (`_ProcessElapsedColumn`); it equals "this canto's elapsed time" only
+  because `harness/recon/Makefile` launches one `reconstruct.py` process per
+  canto (§5's per-canto artifact model), so a single process never spans more
+  than one canto. The label-side column is the *run's* cumulative elapsed
+  time, which such a per-process CLI cannot derive from its own clock at
+  all — it must be threaded in from outside: the driving Makefile computes
+  the start time once (`STARTED_AT ?= $(shell date +%s)`, `export
+  STARTED_AT` so recursive `$(MAKE)` sub-invocations — e.g. `fix-inferno`'s
+  per-canto `$(MAKE) fix-canto` — inherit the same value instead of each
+  recomputing its own) and every per-canto recipe passes it through as
+  `--started-at $(STARTED_AT)`; the CLI stores it on
+  `HarnessStatusLine.run_started_at` before opening the bar, and the label
+  column falls back to the process clock when it's absent (a bare
+  single-canto invocation has no other clock to show, which is the
+  "same by accident" case above). **Extending an llm7shi bar without forking
+  llm7shi**: subclass `llm7shi.statusline._ProgressContext`, override only
+  `__init__` to rebuild the column list (it has no smaller hook — the column
+  list is assembled inline, not behind an overridable method); import
+  llm7shi's own private column classes (e.g. `_MofNColumn`,
+  `_ProcessElapsedColumn`) to reuse rather than re-derive their exact
+  format/semantics, reserved for a column that is genuinely llm7shi-anchored
+  (elapsed-since-process-start, reused verbatim for the far-right column);
+  a column with its own semantics not derivable from llm7shi at all (the
+  externally-threaded run clock above) has nothing to subclass against and
+  is simplest as a fully local `ProgressColumn`. `__enter__`/`__exit__`/
+  `update` need no override either way. (An upstream change that would let
+  llm7shi bars take a custom column without subclassing at all — factor
+  column construction into an overridable hook, and let `progress()` accept
+  an injectable label-side column/factory — is under consideration on the
+  llm7shi side, not yet actioned or requested upstream.)
 - **Session-boundary spacing**: each new `Client` instance starts its own
   stream mid-console, so `runner.agent.llm7shi_generate` prints one blank
   line to the shared stream right before constructing it — without this a
