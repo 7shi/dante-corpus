@@ -93,6 +93,7 @@ from dante_corpus.skel.io import _alpha_tokens
 from dante_corpus.skel.models import SkelRow
 from dante_corpus.skel.validate import validate_unit
 
+from harness.extractor import fixlevel
 from harness.extractor.lexicon_builder import (
     DEFAULT_MIN_CONSISTENCY,
     ValencyEntry,
@@ -479,6 +480,10 @@ class RoutePolicy:
     require_schema_valid: bool = True
     require_rows: bool = True
     require_explicit_subjects: bool = True
+    # Stage-6 `--fix`: a unit selected for repair must reach the model. The fast
+    # path would hand it `derive_unit`'s own rows, which clears any divergence
+    # class by definition and measures nothing (`../STAGE6.md`).
+    force_fallback: bool = False
 
 
 @dataclass(frozen=True)
@@ -487,7 +492,7 @@ class RouteDecision:
 
     route: str
     reason: str  # "complete" | "conflicts" | "schema_invalid" | "no_rows" |
-    #             "pro_drop_suspects"
+    #             "pro_drop_suspects" | "fix"
 
     def to_dict(self) -> dict:
         return {"route": self.route, "reason": self.reason}
@@ -498,6 +503,8 @@ def route_derivation(
 ) -> RouteDecision:
     """Apply the policy checks, most severe first."""
     p = policy if policy is not None else RoutePolicy()
+    if p.force_fallback:
+        return RouteDecision("agent", "fix")
     if p.forbid_conflicts and d.conflicts:
         return RouteDecision("agent", "conflicts")
     if p.require_schema_valid and d.schema_violations:
@@ -543,6 +550,8 @@ def agent_fallback(
     min_send_interval: float = 0.0,
     max_length: int | None = None,
     result_chars: int = 0,
+    fix_level: int | None = None,
+    revision_for: Callable[[str, int, int, int], str | None] | None = None,
 ) -> AgentFallback:
     """Build the live Tier-2 callable over `runner.agent.run_unit`.
 
@@ -565,6 +574,13 @@ def agent_fallback(
     cap in answer-text characters, handed to `Client(max_length=)` unchanged
     (`None` = off here — the operator-facing CLI owns the policy value;
     STAGE3.md record S3.10).
+
+    Stage-6 wiring: `fix_level`, when given, adds that level's own bar to the
+    session gate (`extractor/fixlevel.py` `toolkit_flags`) on top of the three
+    schema checks, and `revision_for(canticle, canto, line_start, line_end)`
+    supplies the per-unit revision block — the unit's recorded rows plus the
+    invariants they break — appended to the opening task. Both default off, so an
+    ordinary generation run is unchanged.
 
     `result_chars` > 0 echoes each tool call's returned block to the same console
     (`toolcall.progress_printer`), one turn line plus the truncated payload, so a
@@ -602,8 +618,11 @@ def agent_fallback(
     # The clausal-registration check reads one submission as a set, which only holds
     # when a call carries the whole unit; the per-predicate workflow gets the row-local
     # checks alone (`runner/tools.py` `clausal_registration`).
+    gate_flags = fixlevel.toolkit_flags(fix_level) if fix_level else {}
     toolkit = GrammarToolkit(
-        payload_tier=payload_tier, clausal_registration=(workflow == "unit")
+        payload_tier=payload_tier,
+        clausal_registration=(workflow == "unit"),
+        **gate_flags,
     )
 
     def _run(*, canticle: str, canto: int, line_start: int, line_end: int):
@@ -617,6 +636,11 @@ def agent_fallback(
             if result_chars > 0
             else None
         )
+        revision = (
+            revision_for(canticle, canto, line_start, line_end)
+            if revision_for is not None
+            else None
+        )
         return agent_run_unit(
             transport=transport,
             toolkit=toolkit,
@@ -627,6 +651,7 @@ def agent_fallback(
             specs=specs,
             max_turns=max_turns,
             workflow=workflow,
+            revision=revision,
             on_turn=on_turn,
         )
 

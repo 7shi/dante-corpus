@@ -27,9 +27,10 @@ from pathlib import Path
 from typing import TextIO
 
 from dante_corpus import api, case, dep, morph, np, skel
+from harness.extractor import fixlevel
 from harness.recon.readout import CANTICLE_COUNTS
 
-_DIVERGENCE_KINDS = ("missing_tuple", "extra_tuple", "missing_arg", "extra_arg", "role_mismatch")
+_DIVERGENCE_KINDS = fixlevel._DIVERGENCE_KINDS
 
 
 def _morph_rows(canticle: str, number: int) -> dict[int, list]:
@@ -170,16 +171,9 @@ def print_report(results: list[dict], *, stream: TextIO = sys.stdout) -> None:
 
 
 def _violation_class(v: morph.Violation) -> str:
-    prefix = v.detail.split(":", 1)[0]
-    if prefix in _DIVERGENCE_KINDS:
-        return prefix
-    if prefix == "dual_role":
-        return "dual_role"
-    if "heads no NP" in v.detail:
-        return "membership"
-    if "not in frozen vocabulary" in v.detail:
-        return "unknown_role"
-    return "other"
+    """The class a soft finding is counted under — one implementation, shared with
+    the Stage-6 fix levels (`harness/extractor/fixlevel.py`)."""
+    return fixlevel.violation_class(v)
 
 
 def print_stats(results: list[dict], *, stream: TextIO = sys.stdout) -> None:
@@ -219,6 +213,27 @@ def print_stats(results: list[dict], *, stream: TextIO = sys.stdout) -> None:
     print(f"\nstats complete: {len(all_soft)} soft violation(s) ({hard} hard)", file=stream)
 
 
+def print_fix_level(results: list[dict], level: int, *, stream: TextIO = sys.stdout) -> None:
+    """Per-canto counts of the findings a `reconstruct --fix <level>` run acts on.
+
+    The selection readout for Stage 6: which cantos carry work at this level, and
+    how much. Deterministic and free — it says what to launch, and (discipline 1)
+    nothing about what to do with it.
+    """
+    total = 0
+    print(f"Fix level {level} — "
+          f"{', '.join(c.name for c in fixlevel.classes_for(level))}:", file=stream)
+    for result in results:
+        found = fixlevel.select(
+            [v for v in result["violations"] if v.kind == "tag"], level
+        )
+        total += len(found)
+        if found:
+            print(f"  {result['canticle']:11s} {result['canto']:>2}  {len(found):5d}",
+                  file=stream)
+    print(f"\nfix-level {level}: {total} finding(s)", file=stream)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -235,11 +250,26 @@ def main(argv: list[str] | None = None) -> int:
         "--stats", action="store_true",
         help="soft-violation counts by class (and by role) instead of per-position detail",
     )
+    parser.add_argument(
+        "--fix-level", metavar="LEVEL",
+        help=f"per-canto counts of the soft findings a `reconstruct --fix LEVEL` run "
+             f"would act on (1..{fixlevel.MAX_LEVEL}, or 'max' for every level "
+             f"defined), instead of per-position detail",
+    )
     args = parser.parse_args(argv)
 
-    results = run(args.root, canticle=args.canticle, canto=args.canto, verbose=not args.stats)
+    if args.fix_level is not None:
+        try:
+            args.fix_level = fixlevel.resolve_level(args.fix_level)
+        except ValueError as exc:
+            parser.error(f"--fix-level: {exc}")
+
+    quiet = args.stats or args.fix_level is not None
+    results = run(args.root, canticle=args.canticle, canto=args.canto, verbose=not quiet)
     if args.stats:
         print_stats(results)
+    elif args.fix_level is not None:
+        print_fix_level(results, args.fix_level)
     else:
         print_report(results)
     return 1 if any(r["hard"] for r in results) else 0

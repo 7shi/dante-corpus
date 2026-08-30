@@ -87,6 +87,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import dataclasses
 import hashlib
 import json
 import os
@@ -104,6 +105,7 @@ from dante_corpus.morph import Violation
 from dante_corpus.skel.models import SkelRow, _row_sort_key
 from dante_corpus.skel.validate import validate_unit
 
+from harness.extractor import fixlevel
 from harness.extractor.hybrid_engine import (
     DEFAULT_EVAL_CANTICLES,
     AgentFallback,
@@ -335,6 +337,155 @@ def _validate_rows(
     return split_violations(violations)
 
 
+Span = tuple[int, int]
+
+
+@dataclass
+class FixPlan:
+    """Which settled units a `--fix <level>` run reopens, and what it shows them.
+
+    Selection only — the counter selects the work and never decides it
+    (`../PLAN.md` discipline 1). Each selected span keeps its rows on record so
+    the acceptance test in `settle()` can put them back unchanged when the
+    session's answer is not an improvement: a fix run must never leave the
+    artifact worse than it found it.
+    """
+
+    level: int
+    prior: dict[Span, dict[int, list[SkelRow]]] = field(default_factory=dict)
+    revisions: dict[Span, str] = field(default_factory=dict)
+    before: dict[Span, list[Violation]] = field(default_factory=dict)
+    before_hard: dict[Span, list[Violation]] = field(default_factory=dict)
+
+    def __bool__(self) -> bool:
+        return bool(self.prior)
+
+    @property
+    def findings(self) -> int:
+        return sum(
+            len(fixlevel.select(vs, self.level)) for vs in self.before.values()
+        )
+
+
+def plan_fix(
+    layers: CantoLayers,
+    settled_units: dict[Span, dict[int, list[SkelRow]]],
+    level: int,
+) -> FixPlan:
+    """Find the settled units carrying a level-`level` finding, gold-closed."""
+    plan = FixPlan(level=level)
+    groups = {(g[0], g[-1]): g for g in layers.units()}
+    for span, rows in settled_units.items():
+        group = groups.get(span)
+        if group is None:
+            continue
+        hard, soft = _validate_rows(layers, group, rows)
+        findings = fixlevel.select(soft, level)
+        if not findings:
+            continue
+        plan.prior[span] = {no: list(rows.get(no, [])) for no in group}
+        plan.before[span] = list(soft)
+        plan.before_hard[span] = list(hard)
+        plan.revisions[span] = fixlevel.revision_block(
+            plan.prior[span], findings, layers.dep_rows, level
+        )
+    return plan
+
+
+def fix_verdict(
+    before: list[Violation],
+    hard_after: list[Violation],
+    soft_after: list[Violation],
+    level: int,
+) -> tuple[bool, str]:
+    """Accept the re-solved unit, or say why the prior rows stand.
+
+    Three refusals, in the order they are checked: the submission is not
+    hard-clean; the level's own findings did not fall; or a violation class the
+    unit did not carry before is now present. The last is the acceptance gate
+    SOFT.md §6's dry run used — a repair may not trade its class for another.
+    """
+    if hard_after:
+        return False, "hard"
+    if len(fixlevel.select(soft_after, level)) >= len(
+        fixlevel.select(before, level)
+    ):
+        return False, "no_improvement"
+    seen = {fixlevel.violation_class(v) for v in before}
+    new = {fixlevel.violation_class(v) for v in soft_after} - seen
+    if new:
+        return False, f"new_class:{','.join(sorted(new))}"
+    return True, "accepted"
+
+
+def revert_outcome(
+    outcome: UnitOutcome, plan: FixPlan, span: Span
+) -> UnitOutcome:
+    """Restore the unit's recorded rows on a refused fix, verdicts included.
+
+    The rows go back byte-for-byte, and so do the gate results they were
+    measured with — a reverted unit must be reported as what is on disk, not as
+    the submission that was thrown away. Only the session telemetry (route,
+    timings, `final_submission_valid`) is left as this run produced it.
+    """
+    rows = {no: list(r) for no, r in plan.prior[span].items()}
+    keys = frozenset(
+        (r.line, r.token, r.role, r.arg_line, r.arg_token)
+        for rs in rows.values()
+        for r in rs
+    )
+    return dataclasses.replace(
+        outcome,
+        rows=rows,
+        row_keys=keys,
+        hard=list(plan.before_hard[span]),
+        soft=list(plan.before[span]),
+        token_assertions=[],
+    )
+
+
+def _fix_summary_line(level: int, stats: Counter[str]) -> str:
+    """One line naming the mechanism of a fix run (`../PLAN.md` discipline 6)."""
+    return (
+        f"[fix] level {level}: {stats['units']} unit(s) reopened, "
+        f"{stats['verdict:accepted']} accepted / "
+        f"{stats['units'] - stats['verdict:accepted']} reverted; "
+        f"level findings {stats['findings_before']} -> {stats['findings_after']}, "
+        f"soft {stats['soft_before']} -> {stats['soft_after']}; rows "
+        f"{stats['rows_relabelled']} relabelled, {stats['rows_added']} added, "
+        f"{stats['rows_removed']} removed"
+    )
+
+
+def row_delta(
+    before: dict[int, list[SkelRow]], after: dict[int, list[SkelRow]]
+) -> dict[str, int]:
+    """Row-level mechanism of one accepted fix (`../PLAN.md` discipline 6).
+
+    A delta on the violation count says nothing about how it was reached, so
+    every accepted unit reports what actually happened to its rows: how many were
+    added, removed, and relabelled in place (same predicate and argument, new
+    role).
+    """
+    def keyed(rows: dict[int, list[SkelRow]]) -> dict[tuple, str]:
+        return {
+            (r.line, r.token, r.arg_line, r.arg_token): r.role
+            for rows_ in rows.values()
+            for r in rows_
+        }
+
+    b, a = keyed(before), keyed(after)
+    return {
+        "rows_before": len(b),
+        "rows_after": len(a),
+        "rows_added": len(a.keys() - b.keys()),
+        "rows_removed": len(b.keys() - a.keys()),
+        "rows_relabelled": sum(
+            1 for key in b.keys() & a.keys() if b[key] != a[key]
+        ),
+    }
+
+
 def _replay_unit_outcome(
     rows: dict[int, list[SkelRow]], layers: "CantoLayers", group: list[int]
 ) -> UnitOutcome:
@@ -409,6 +560,7 @@ def reconstruct_canto(
     progress_stream: TextIO | None = sys.stderr,
     status_line=None,
     settled_units: dict[tuple[int, int], dict[int, list[SkelRow]]] | None = None,
+    fix_spans: set[Span] | None = None,
     emit_unit: Callable[[UnitOutcome], None] | None = None,
 ) -> CantoReconstruction:
     """Drive the hybrid engine over every parse unit of one canto, gated.
@@ -471,12 +623,19 @@ def reconstruct_canto(
                 )
                 continue
             started = time.monotonic()
+            # A unit reopened for repair must reach the model: the fast path
+            # would answer it with `derive_unit`'s own rows, clearing the class
+            # by definition and measuring nothing (`../STAGE6.md`).
+            unit_policy = policy
+            if fix_spans and (line_start, line_end) in fix_spans:
+                base = policy if policy is not None else RoutePolicy()
+                unit_policy = dataclasses.replace(base, force_fallback=True)
             result = engine.run_unit(
                 canticle=canticle,
                 canto=canto,
                 line_start=line_start,
                 line_end=line_end,
-                policy=policy,
+                policy=unit_policy,
                 fallback=fallback,
             )
             elapsed = time.monotonic() - started
@@ -664,6 +823,17 @@ class TsvArtifact:
                 fh.flush()  # durable per unit, like the log sink
         else:
             self.rewrite()
+
+    def reopen(self) -> None:
+        """Leave the append path for good — later writes rewrite the whole file.
+
+        A Stage-6 `--fix` run overwrites units that are already on disk, and an
+        overwrite in the middle of the file cannot be expressed by appending: the
+        rows would be added a second time rather than replaced. `settled` only
+        clears the append flag for *missing* lines, so a caller that intends to
+        replace present ones says so here.
+        """
+        self._append_only = False
 
     def rewrite(self) -> None:
         """Write every settled line in line order (the post-gap path)."""
@@ -1164,8 +1334,26 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "units settle and read back on the next run to resume: units already "
         "present are not re-run. Single-canto only (needs --canticle/--canto)",
     )
+    parser.add_argument(
+        "--fix",
+        metavar="LEVEL",
+        help="Stage-6 soft repair: reopen the units of the --tsv artifact that "
+        "carry a level-LEVEL soft finding, show the session their recorded rows "
+        "and the invariants those break, and replace the rows with what it "
+        f"re-solves (levels 1..{fixlevel.MAX_LEVEL}, cumulative, or 'max' for "
+        "every level defined). A unit whose answer is not hard-clean, does not "
+        "reduce the level's findings, or introduces a new violation class keeps "
+        "its recorded rows",
+    )
     args = parser.parse_args(argv)
 
+    if args.fix is not None:
+        if args.tsv is None:
+            parser.error("--fix repairs an existing artifact: pass --tsv")
+        try:
+            args.fix = fixlevel.resolve_level(args.fix)
+        except ValueError as exc:
+            parser.error(f"--fix: {exc}")
     if args.canto is not None and not args.canticles:
         parser.error("--canto needs an explicit --canticle")
     if (args.canto is None) == (not args.all):
@@ -1213,15 +1401,30 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # measured rather than carried over from a prior attempt's log.
     artifact = TsvArtifact(args.tsv) if args.tsv else None
     settled_units: dict[tuple[int, int], dict[int, list[SkelRow]]] = {}
+    fix_plan: FixPlan | None = None
     if artifact is not None:
         artifact.load()
-        settled_units = artifact.settled(
-            CantoLayers.load(*wanted[0]).units()
-        )
+        fix_layers = CantoLayers.load(*wanted[0])
+        settled_units = artifact.settled(fix_layers.units())
         if settled_units:
             print(
                 f"resume: {len(settled_units)} unit(s) already settled in "
                 f"{args.tsv}"
+            )
+        if args.fix is not None:
+            # Selection: settled units carrying a finding of this level are
+            # unsettled again, so the ordinary unit loop re-runs them — with
+            # their recorded rows kept for the acceptance test below. The
+            # replacement happens through `write_unit`, which needs the rewrite
+            # path once a unit in the middle of the file is overwritten.
+            fix_plan = plan_fix(fix_layers, settled_units, args.fix)
+            for span in fix_plan.prior:
+                settled_units.pop(span, None)
+            artifact.reopen()
+            print(
+                f"fix level {args.fix}: {len(fix_plan.prior)} unit(s) reopened, "
+                f"{fix_plan.findings} finding(s) of "
+                f"{', '.join(c.name for c in fixlevel.classes_for(args.fix))}"
             )
 
     header = (
@@ -1263,6 +1466,17 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         }
         if args.max_turns is not None:
             fallback_kwargs["max_turns"] = args.max_turns
+        if fix_plan is not None and fix_plan:
+            # The session sees two extra things under --fix, and only these two:
+            # the level's own bar added to its gate, and the unit's recorded rows
+            # with the invariants they break. No derived label crosses over
+            # (`../STAGE6.md`; `../STAGE5.md` S5.5 for the line being crossed).
+            fallback_kwargs["fix_level"] = args.fix
+            fallback_kwargs["revision_for"] = (
+                lambda canticle, canto, line_start, line_end, _plan=fix_plan: (
+                    _plan.revisions.get((line_start, line_end))
+                )
+            )
         fallback = agent_fallback(
             verbose=args.verbose,
             file=status_line.stream if status_line is not None else None,
@@ -1281,9 +1495,50 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             # attempt resumes unit-by-unit instead of re-running (and
             # re-costing, for the live fallback) the whole canto.
             gold_face = GoldFace() if args.verify_gold else None
+            fix_stats: Counter[str] = Counter()
 
             def settle(outcome: UnitOutcome) -> None:
+                span = (
+                    outcome.unit["line_start"], outcome.unit["line_end"]
+                )
+                fix_verdict_reason: str | None = None
+                if fix_plan is not None and span in fix_plan.prior:
+                    # Acceptance: a fix run may not leave the unit worse than it
+                    # found it, so a refused answer puts the recorded rows back
+                    # verbatim and the unit is reported as reverted.
+                    level = fix_plan.level
+                    before = fix_plan.before[span]
+                    accepted, fix_verdict_reason = fix_verdict(
+                        before, outcome.hard, outcome.soft, level
+                    )
+                    if accepted:
+                        for key, value in row_delta(
+                            fix_plan.prior[span], outcome.rows
+                        ).items():
+                            fix_stats[key] += value
+                    else:
+                        outcome = revert_outcome(outcome, fix_plan, span)
+                    fix_stats["units"] += 1
+                    fix_stats[f"verdict:{fix_verdict_reason.split(':')[0]}"] += 1
+                    fix_stats["findings_before"] += len(
+                        fixlevel.select(before, level)
+                    )
+                    fix_stats["findings_after"] += len(
+                        fixlevel.select(outcome.soft, level)
+                    )
+                    fix_stats["soft_before"] += len(before)
+                    fix_stats["soft_after"] += len(outcome.soft)
+                    print(
+                        f"[fix] {canticle} {canto} lines {span[0]}-{span[1]}: "
+                        f"{fix_verdict_reason}",
+                        file=ui_stream if ui_stream is not None else sys.stderr,
+                        flush=True,
+                    )
                 record = outcome.to_dict()
+                if fix_verdict_reason is not None:
+                    record["fix"] = {
+                        "level": fix_plan.level, "verdict": fix_verdict_reason,
+                    }
                 report.add_unit(record)
                 if artifact is not None:
                     # The artifact lands first: it, not the log, is what the
@@ -1308,6 +1563,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 engine, canticle, canto,
                 fallback=fallback, status_line=status_line,
                 settled_units=settled_units,
+                fix_spans=set(fix_plan.prior) if fix_plan else None,
                 emit_unit=settle,
             )
             retries = _retry_delta(retry_before, status_line)
@@ -1333,6 +1589,13 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             if retries is not None:
                 complete["api_retries"] = retries[0]
                 complete["api_retry_seconds"] = round(retries[1], 1)
+            if fix_plan is not None and fix_stats:
+                # Discipline 6 (`../PLAN.md`): a reduction is reported by its
+                # mechanism, not by its delta — how many units were reopened,
+                # how many answers were kept, and what happened to the rows.
+                complete["fix"] = {"level": fix_plan.level, **dict(fix_stats)}
+                print(_fix_summary_line(fix_plan.level, fix_stats), file=ui_stream
+                      if ui_stream is not None else sys.stderr, flush=True)
             if args.write:
                 commit_record = commit(recon)
                 complete["commit"] = commit_record

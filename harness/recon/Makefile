@@ -57,6 +57,28 @@
 ##                                     repair rules are derived from the layer's
 ##                                     own schema with gold unopened, and this is
 ##                                     read afterwards (../STAGE5.md §5)
+## make fix-level                      per-canto counts of the soft findings a
+##                                     fix run would act on — no model call,
+##                                     the selection readout
+## make fix-canto CANTICLE=inferno CANTO=12
+##                                     reopen that canto's units carrying a
+##                                     finding at the level in a live session
+##                                     and REPLACE their rows with what it
+##                                     re-solves; an answer that is not
+##                                     hard-clean, does not reduce the level's
+##                                     findings, or adds a violation class is
+##                                     refused and the recorded rows stand
+## make fix-inferno                    every canto of one canticle, in order
+##                                     (a canto with no findings at the level
+##                                     costs no model call)
+## make -j3 fix-inferno fix-purgatorio fix-paradiso
+##                                     the three streams in parallel, as the
+##                                     Stage-4 launch runs them
+## make fix                            all 100 cantos — hours of live model
+##                                     time over committed artifacts; read
+##                                     `make fix-level` first
+## Level:  FIX defaults to `max` (every level the contract has argued, today 1;
+##         levels are cumulative). Pin one with FIX=1 on any fix target.
 ## make repair                         apply the deterministic repair rules to
 ##                                     the committed TSVs, in place
 ## make repair-check                   report unrepaired rows; non-zero exit if
@@ -156,5 +178,70 @@ repair-check:
 agree:
 	uv run python -m harness.recon.agree --per-canticle
 
+# Stage-6 soft repair (../STAGE6.md record S6.2). `fix-level` is the free
+# selection readout: which cantos carry findings at this level, and how many.
+# The `fix*` targets then reopen exactly those units in a live session — the
+# model is shown its own recorded rows plus the invariants they break (never the
+# derivation's answer, ../SOFT.md §4.2) and its answer REPLACES them, unless it
+# is not hard-clean, does not reduce the level's findings, or introduces a new
+# violation class, in which case the recorded rows stand.
+#
+# Every fix target is live model time and edits committed TSVs in place, so they
+# are operator launches like the canticle targets. A canto with no findings at
+# the level costs no model call — reconstruct reopens nothing and exits — so the
+# aggregates are safe to point at everything and let the level decide.
+#
+# Deliberately NOT a pattern rule over file names: these targets do not produce
+# a file, and `fix/inferno/12` would read as a path that never appears on disk.
+# The canto is named the way the CLI names it, in variables.
+#
+# FIX defaults to `max`, resolved by the level table itself
+# (`harness/extractor/fixlevel.py`) rather than restated here, so the Makefile
+# carries no copy of how far repair currently reaches. Levels are cumulative, so
+# `max` means "every repair whose outcome has been argued from the contract" —
+# and it widens by itself when a level is added, which is the point. Pin
+# `FIX=<n>` to hold a run to one level; every run announces the level it
+# resolved, and each canto record stores it.
+FIX ?= max
+
+fix-level:
+	uv run python -m harness.recon.check --fix-level $(FIX)
+
+fix-canto:
+	@test -n "$(CANTICLE)" -a -n "$(CANTO)" || { \
+		echo "usage: make fix-canto CANTICLE=<canticle> CANTO=<n> [FIX=1]"; exit 2; }
+	@n=$$(printf %02d $$((10#$(CANTO)))); \
+	echo "=== fix level $(FIX): $(CANTICLE) $$n ==="; \
+	uv run python -m harness.extractor.reconstruct \
+		--canticle $(CANTICLE) \
+		--canto $$((10#$(CANTO))) \
+		--fix $(FIX) \
+		--verify-gold --model $(MODEL) \
+		--log $(CANTICLE)/$$n.log --tsv $(CANTICLE)/$$n.tsv
+
+# One canticle, canto by canto. Sequential by design: each canto is a live
+# session, and the three canticles are the parallel streams (make -j3), exactly
+# as the Stage-4 launch runs them.
+define FIX_CANTICLE
+	@for n in $$(seq -w 1 $(2)); do \
+		$(MAKE) --no-print-directory fix-canto \
+			CANTICLE=$(1) CANTO=$$n FIX=$(FIX) MODEL=$(MODEL) || exit $$?; \
+	done
+endef
+
+fix-inferno:
+	$(call FIX_CANTICLE,inferno,34)
+
+fix-purgatorio:
+	$(call FIX_CANTICLE,purgatorio,33)
+
+fix-paradiso:
+	$(call FIX_CANTICLE,paradiso,33)
+
+# The whole corpus at one level. Hours of live model time over 100 committed
+# artifacts: run `make fix-level` first and know what it is about to touch.
+fix: fix-inferno fix-purgatorio fix-paradiso
+
 FORCE:
-.PHONY: FORCE check stats repair repair-check agree clean-log
+.PHONY: FORCE check stats repair repair-check agree clean-log \
+        fix fix-level fix-canto fix-inferno fix-purgatorio fix-paradiso

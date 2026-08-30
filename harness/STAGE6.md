@@ -95,6 +95,13 @@ Eligibility, in the order the evidence supports:
    LLM-authoritative rather than derive-authoritative. Read that before
    rewriting anything there.
 
+**Levels (record S6.2).** The operator's frame for the reduction: soft classes
+are graded, and `reconstruct --fix <level>` repairs everything at that level and
+below. A class joins a level only once its outcome has been argued from the
+contract — the level table is where §2's three-outcome question is answered, once,
+in code (`harness/extractor/fixlevel.py`). Level 1 is
+`oblique_qualification`; nothing above it is defined yet.
+
 **One decision is open and is the operator's.** Is
 `dante_corpus/skel/repairs.py` an admissible authority under discipline 3? It
 opens no gold file and its two rewrites are re-derivable from `derive.py`
@@ -164,3 +171,95 @@ sweeps; §6 opens gold deliberately afterwards as a readout and decides nothing.
   general and does not transfer uniformly to every class inside it. The
   numbers decided nothing: a rule still needs its own contract-derived design,
   opened gold-closed.
+
+### S6.2 — Fix levels; `--fix 1` repairs the unqualified oblique in-session (2026-08-30)
+
+The stage's first reduction pass, and the mechanism the rest of it will reuse.
+Soft classes are **graded**: `reconstruct --fix <level>` reopens the units of a
+committed TSV that carry a finding at that level or below, shows the session its
+own recorded rows plus the invariants they break, and **replaces** those rows
+with what it re-solves. Nothing is deleted, no canto is regenerated wholesale,
+and a unit whose answer does not survive the acceptance test keeps the rows it
+had. Ships the machinery plus level 1; no committed artifact was touched.
+
+**Level 1 — `oblique_qualification`, 377 findings.** `role_mismatch` where the
+artifact wrote bare `obl` and the derivation determines `obl:<prep>`. Its
+authority is the contract's, read gold-closed: `derive.py`'s `_oblique_role_of`
+qualifies an oblique from its Layer-4 `case` child and leaves it bare only when
+there is none, and registry rule **L** (`rules.py` `_oblique_lemma_refinement`)
+tolerates strictly the *opposite* direction. The direction repaired here is one
+the registry deliberately does not excuse, the evidence is in the frozen layers,
+and the under-specified side is the artifact — §2's outcome 1. The selection
+readout (`make fix-level FIX=1`) reproduces the count exactly: **377**.
+
+**What crosses into the session, and what does not.** S5.5 kept soft findings out
+of the session because they are `derive_unit`'s own answer. This pass crosses
+that line **narrowly and deliberately**, and the record should say so plainly: the
+session is shown the unit's recorded rows, and per position the *invariant and
+the frozen-layer evidence* — "this oblique argument carries a Layer-4 `case`
+child (3.1 'come'); a bare 'obl' is reserved for an oblique with no case marker".
+The derived label is never rendered, in the notice or in the gate, and a test
+asserts its absence. The model re-derives the qualification itself; that is the
+measurement the autonomy premise asks for, and a transcription of `derive_unit`
+would not be.
+
+- **Selection** (`fixlevel.select` + `reconstruct.plan_fix`): settled units
+  carrying a level-1 finding are unsettled again, so the ordinary unit loop
+  re-runs them. `TsvArtifact.reopen()` leaves the append path — an overwrite in
+  the middle of the file cannot be appended, it would duplicate the lines.
+- **Routing** (`RoutePolicy.force_fallback`): a reopened unit must reach the
+  model. The fast path would answer it with `derive_unit`'s own rows, which
+  clears the class by definition and measures nothing.
+- **The gate** (`GrammarToolkit(oblique_case_qualification=True)`): the level's
+  own bar added to `validate_candidate` on top of S5.5's three schema checks —
+  the generation-time check *plus* the level, exactly as the hard track moved its
+  checks into the session. It reports the invariant and the case child's
+  position, never the qualified label, and stays silent when the case child
+  carries no Layer-2 lemma (the derivation leaves that oblique bare too, so
+  demanding a label there would be unsatisfiable).
+- **Acceptance** (`reconstruct.fix_verdict`): three refusals — the answer is not
+  hard-clean, the level's findings did not fall, or a violation class the unit
+  did not carry is now present. A refused unit is reverted to its recorded rows,
+  gate verdicts included, and reported as `verdict: no_improvement` /
+  `hard` / `new_class:<name>`. A fix run cannot leave the artifact worse than it
+  found it.
+- **Reporting** (discipline 6): every canto record carries units reopened,
+  accepted vs reverted, level findings and total soft before → after, and the
+  row-level mechanism — `rows_relabelled`, `rows_added`, `rows_removed`. A delta
+  alone is not a reportable result.
+
+**Measured before launch, over the committed corpus.** The notice and the gate
+answer to different masters and neither subsumes the other, which is worth having
+on record: the notice follows the **checker's selection** (377 positions), the
+gate states the **invariant** uniformly over whatever the session submits (504
+positions on today's rows, 369 of them shared). The 135 gate-only positions are
+bare obliques with a lemma-bearing case child that the checker scores under
+another class or excuses; the 4 selection-only ones are oblique clitics
+(`ci`/`ne`/`men` read as `obl:a`) with no `case` edge at all, which get a notice
+worded for that evidence instead. No unit is selected by the gate — selection is
+the checker's alone.
+
+Suite **938 → 955**. `make check` unchanged at **0 hard / 5,014 soft**: this
+record ships the mechanism, and applying it to the committed corpus is a separate
+act needing its own go-ahead. The pilot is one canto under `make fix-canto
+CANTICLE=<canticle> CANTO=<n> FIX=1`, with `make check` after it and `make agree`
+read afterwards only, never as the criterion.
+
+**The targets** (`recon/Makefile`): `fix-level` is the free readout; `fix-canto`
+takes the canto in variables the way the CLI does; `fix-inferno` /
+`fix-purgatorio` / `fix-paradiso` walk one canticle in order, and `fix` walks all
+100 — the three canticles are the parallel streams (`make -j3`), as in Stage 4. A
+canto with no findings at the level costs no model call, so the aggregates may be
+pointed at everything and the level decides what is touched. There is deliberately
+no pattern rule over file names: a fix target produces no file, and
+`fix/inferno/12` would read as a path that never exists on disk.
+
+**`FIX` defaults to `max`**, resolved by the level table itself
+(`fixlevel.resolve_level`; `--fix max` / `--fix-level max` on either CLI) rather
+than restated in the Makefile, which would drift the moment a level is added.
+Since levels are cumulative and a class joins one only after its outcome has been
+argued from the contract, `max` means "every repair this project can currently
+justify" — and it widens by itself as levels land, which is the intent. The cost
+is that `make fix` does not name a fixed scope, so every run announces the level
+it resolved and each canto record stores `fix.level`; pin `FIX=<n>` to hold a run
+to one level.

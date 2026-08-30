@@ -149,10 +149,18 @@ def unit_task(
     canto: int,
     line_start: int,
     line_end: int | None = None,
+    revision: str | None = None,
 ) -> str:
-    """The opening user message assigning one parse unit."""
+    """The opening user message assigning one parse unit.
+
+    `revision`, when given (a Stage-6 `--fix` run, `extractor/fixlevel.py`),
+    appends the unit's already-recorded rows plus one notice per position whose
+    invariant they break. The notices name the invariant and the frozen-layer
+    evidence only: the derivation's own answer never enters the session
+    (`../STAGE5.md` record S5.5, and the departure recorded in `../STAGE6.md`).
+    """
     span = f"lines {line_start}-{line_end}" if line_end else f"line {line_start}"
-    return (
+    task = (
         "<task>\n"
         f"Solve the parse unit containing {canticle} {canto}, {span}.\n"
         "Follow the 5-step reasoning protocol: read the unit, work out the "
@@ -160,6 +168,7 @@ def unit_task(
         "rows and iterate until they are well-formed.\n"
         "</task>"
     )
+    return task if revision is None else f"{task}\n\n{revision}"
 
 
 def few_shot_messages() -> list[dict]:

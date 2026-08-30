@@ -9,15 +9,70 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — design the first soft rule, from the contract, gold-closed.**
-**Stage 5 closed 2026-08-30 at 0 hard** ([`STAGE5.md`](STAGE5.md) S5.8) and
-**Stage 6 opened on the soft residue** ([`STAGE6.md`](STAGE6.md)), whose first
+**IN FLIGHT — the operator is running `make fix` over the whole corpus**
+(launched 2026-08-30, level `max` = 1). The next session's job is to **read out
+that run and write record S6.3**, not to design anything new. Nothing else should
+touch `harness/recon/*.tsv` until it lands.
+
+*Baseline it started from* (`ef0bf47` + the S6.2 commit, working tree clean):
+**0 hard / 5,014 soft**, level-1 findings **377**, and the run reopens
+**337 units across 95 cantos** (inferno 33 cantos/120 units/134 findings;
+purgatorio 32/140/156; paradiso 30/77/87). One live session per reopened unit;
+the other ~3,140 units cost no model call. Gold agreement stood at **0.7309** —
+a readout for afterwards, never a criterion (discipline 4).
+
+*Reading it out, in this order:*
+
+1. `make check` — **0 hard is the regression signal**; soft should fall from
+   5,014. Per S6.1 §4.4 the count is not a distance, so do not report the delta
+   alone.
+2. `make fix-level` — how many of the 377 survive. This is the level's own
+   measure, and the honest headline.
+3. The per-canto logs (`<canticle>/NN.log`, freshly written by this run and
+   gitignored — the first telemetry on disk since S5.8 swept everything):
+   `canto_complete.fix` carries units reopened, `verdict:accepted` vs the
+   refusals (`no_improvement` / `hard` / `new_class:<name>`), findings and soft
+   before → after, and `rows_relabelled` / `rows_added` / `rows_removed`. Every
+   `unit` record of a reopened span carries its own `fix.verdict`. **Read these
+   before the logs are lost** — nothing else holds the mechanism.
+4. `git diff --stat harness/recon` — the run edits committed TSVs in place, so
+   the diff *is* the artifact-level record of what changed. Expect only role
+   relabels on reopened units; an added or deleted row anywhere is a finding
+   worth explaining.
+5. `make agree` **last**, as a readout. It may not be cited as the reason the
+   level was shipped.
+6. Watch `adopted_invalid` (a session that ended on rows its own gate rejected)
+   and the revert rate: a high `no_improvement` share would say the notice or
+   the gate, not the model, is the limiting factor — that is the interesting
+   negative result, and it should be reported as one rather than retried away.
+
+Record S6.3 in [`STAGE6.md`](STAGE6.md) with the mechanism, not just the delta
+(discipline 6), and only then consider level 2.
+
+**Stage 5 closed 2026-08-30 at 0 hard** ([`STAGE5.md`](STAGE5.md) S5.8)
+and **Stage 6 opened on the soft residue** ([`STAGE6.md`](STAGE6.md)), whose first
 record S6.1 is the audit of the classification that would otherwise drive it
-([`SOFT.md`](SOFT.md)). The corpus stands at **0 hard violations, 5,014 soft**,
-`make check` exits 0, and nothing hard is queued. Soft findings are never
-reported into a session by design ([`STAGE5.md`](STAGE5.md) S5.5), so all of
-Stage 6 is deterministic work over the committed TSVs — there is no in-session
-route to it and no reason to re-run cantos.
+([`SOFT.md`](SOFT.md)). Record **S6.2** then shipped the reduction mechanism:
+soft classes are **graded**, and `reconstruct --fix <level>` reopens the units of
+a committed TSV carrying a finding at that level, shows the session its own
+recorded rows plus the invariants they break, and **replaces** those rows with
+what it re-solves — nothing deleted, and a unit whose answer fails the acceptance
+test keeps the rows it had. **Level 1 is `oblique_qualification`: 377 findings**,
+bare `obl` where the derivation determines `obl:<prep>`.
+
+The corpus was untouched by that record — **0 hard, 5,014 soft**, `make check`
+exits 0 — and the operator's `make fix` above is the separate act that applies
+it. `make fix-level` prints the per-canto launch list for free, and `FIX`
+defaults to `max`, resolved by the level table itself (`fixlevel.resolve_level`)
+so the Makefile carries no copy of how far repair reaches.
+
+This reverses one S5.5 decision on purpose and the reversal is scoped: soft
+findings do now reach a session, but only as **the invariant and the frozen-layer
+evidence** for a position ("this oblique argument carries a Layer-4 `case` child
+(3.1 'come')"). The derived label never crosses, in the notice or in the gate —
+a test asserts its absence — so the model re-derives the qualification rather
+than transcribing `derive_unit`. Everything else in Stage 6 remains deterministic
+work over the committed TSVs.
 
 | class | count | | top `role_mismatch` (given vs derived) | |
 |---|---:|---|---|---:|
@@ -140,7 +195,10 @@ so the soft work reads as the new stage it is.
   soft `tag` although it is an exception-free format impossibility with no
   tolerance behind it (0 occurrences today, so latent).
 
-- **The fix gesture has line granularity.** Deleting a violating *row* leaves
+- **Two fix gestures now.** `--fix <level>` replaces a unit's rows in place
+  (S6.2) and is the one to reach for on the soft side. Deletion still means
+  "regenerate this stretch from scratch", and there it has line granularity:
+  Deleting a violating *row* leaves
   its line present, and `TsvArtifact`'s settled-unit test is line-number
   presence — so the canto re-runs nothing and no model is called. Delete
   every row of the line. S5.7 hit this first time round and lost a run to it.
@@ -171,12 +229,14 @@ so the soft work reads as the new stage it is.
 Two things a fresh session should still know before touching
 `harness/recon/`:
 
-- **There are no logs on this machine** (`make clean-log`, S5.8), and with
-  them went all run telemetry — cost accounting, per-unit routing, gate
-  detail. §2 had accepted that as ephemeral, so it was that decision carried
-  out rather than a new one, but it is irreversible: the headline numbers now
-  survive *only* as prose in [`STAGE5.md`](STAGE5.md) S5.1/S5.5–S5.7 and
-  [`STAGE4.md`](STAGE4.md) S4.3. `recon/readout.py` and `recon/convert.py`
+- **There were no logs on this machine** (`make clean-log`, S5.8), and with
+  them went all Stage-4/5 run telemetry — cost accounting, per-unit routing,
+  gate detail. §2 had accepted that as ephemeral, so it was that decision
+  carried out rather than a new one, but it is irreversible: those headline
+  numbers survive *only* as prose in [`STAGE5.md`](STAGE5.md) S5.1/S5.5–S5.7
+  and [`STAGE4.md`](STAGE4.md) S4.3. **The `make fix` run in flight writes new
+  ones** for every canto it touches, and they are the only copy of that run's
+  mechanism — read them into S6.3 before anything sweeps them again. `recon/readout.py` and `recon/convert.py`
   are kept and tested but have no input until a future run writes new logs,
   and neither has a Makefile target that touches the corpus.
 - `make <canticle>` is **TSV-goaled and TSV-gated: the log is neither goal
@@ -212,11 +272,14 @@ holds only what's still open.
       Each class must therefore be resolved to one of three outcomes — the
       artifact is wrong, the derivation is silent (a *tolerance* is missing),
       or the notations are equivalent — and only the first licenses an edit.
-      Next: the first rule, designed from the contract with gold unopened;
-      one authority question is open for the operator. Scope, the standing
-      method, class eligibility and the ledger in [`STAGE6.md`](STAGE6.md).
-- Test suite: **938 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
-  S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8).
+      Record S6.2 then shipped the graded `--fix` mechanism and its first
+      level (`oblique_qualification`, 377 findings), corpus untouched.
+      Next: the operator's pilot canto, then a level 2 argued the same way;
+      one authority question is still open for the operator. Scope, the
+      standing method, class eligibility and the ledger in
+      [`STAGE6.md`](STAGE6.md).
+- Test suite: **955 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+  S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
@@ -472,9 +535,11 @@ document as work happens, rather than accruing here first.
 ### Stage 6: Soft Divergence Reduction (OPENED 2026-08-30 by operator, on Stage 5's close)
 
 What Stage 5 leaves: **0 hard, 5,014 soft** across the 100 committed recon
-TSVs. Soft findings are never reported into an agent session (S5.5), so this
-stage is deterministic work over the artifacts — no canto is re-run and no
-model is called. The nominal target is the bar gold meets, 0 soft; record S6.1
+TSVs. The stage's default mode is deterministic work over the artifacts, and
+record S6.2 added the one sanctioned exception: a `--fix <level>` run reopens
+just the units carrying that level's findings and repairs them **in session**,
+seeing the invariant and the frozen-layer evidence for a position but never the
+derivation's answer (the scoped reversal of S5.5's rule). The nominal target is the bar gold meets, 0 soft; record S6.1
 is why that target may not be pursued naively, and it is the stage's opening
 premise rather than a later discovery. Auditing the classification first — as
 S5.4 did for hard, with [`SOFT.md`](SOFT.md) as the evidence record — found the

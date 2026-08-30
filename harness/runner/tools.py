@@ -498,7 +498,10 @@ class GrammarToolkit:
     """
 
     def __init__(
-        self, payload_tier: str = "R1", clausal_registration: bool = True
+        self,
+        payload_tier: str = "R1",
+        clausal_registration: bool = True,
+        oblique_case_qualification: bool = False,
     ) -> None:
         if payload_tier not in PAYLOAD_TIERS:
             raise ValueError(
@@ -511,6 +514,11 @@ class GrammarToolkit:
         # into a sibling clause would be flagged for an absence that is an artifact of
         # the submission granularity, not of the analysis.
         self.clausal_registration = clausal_registration
+        # Stage-6 fix level 1 (`extractor/fixlevel.py`): an oblique argument that
+        # carries a Layer-4 `case` child must name that preposition. Off for
+        # ordinary generation — it is the level's own bar, added on top of the
+        # schema checks only while a `--fix 1` session is running.
+        self.oblique_case_qualification = oblique_case_qualification
         self._cache: dict[tuple[str, int], _CantoData] = {}
         self._active_unit: tuple[str, int, int, int] | None = None
         self.upstream_log: list[dict[str, object]] = []
@@ -980,6 +988,49 @@ class GrammarToolkit:
                 warnings.append(
                     f"upstream_feedback record should name 'layer' and a 'description': "
                     f"{record!r}"
+                )
+
+        # Fix-level 1 bar, active only under a `--fix 1` run: `derive.py`'s
+        # `_oblique_role_of` reserves bare `obl` for an oblique with no case
+        # marker, so an oblique argument carrying a Layer-4 `case` child must
+        # name that preposition. The check reports the invariant and the case
+        # child's position — the qualified label is the model's to derive.
+        if self.oblique_case_qualification:
+            for row in parsed:
+                if row.token <= 0 or row.role != "obl" or row.arg == (0, 0):
+                    continue
+                kids = [
+                    drow
+                    for rows in data.dep.values()
+                    for drow in rows
+                    if drow.deprel == "case"
+                    and (drow.head_line, drow.head_token) == row.arg
+                ]
+                if not kids:
+                    continue
+                kids.sort(key=lambda drow: (drow.line, drow.token))
+                # The invariant reaches only as far as the layers do: a case
+                # child with no Layer-2 lemma names no preposition, and the
+                # derivation leaves that oblique bare too. Demanding a label
+                # there would be a bar nothing can satisfy.
+                first = kids[0]
+                mrows = data.morph.get(first.line, ())
+                lemma = (
+                    mrows[first.token - 1].lemma
+                    if 1 <= first.token <= len(mrows)
+                    else ""
+                )
+                if not lemma.split("+")[0].strip():
+                    continue
+                listed = ", ".join(
+                    f"{drow.line}.{drow.token} {drow.word!r}" for drow in kids
+                )
+                errors.append(
+                    f"row[{row.index}]: oblique argument {row.arg_line}."
+                    f"{row.arg_token} carries a Layer-4 `case` child ({listed}), "
+                    f"so a bare 'obl' under-specifies it — qualify the role with "
+                    f"that preposition's Layer-2 lemma in its base, "
+                    f"non-articulated form ('obl:<lemma>')"
                 )
 
         parts: list[str] = []

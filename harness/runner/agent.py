@@ -607,6 +607,7 @@ def _opening_messages(
     line_start: int,
     line_end: int | None,
     workflow: str = "unit",
+    revision: str | None = None,
 ) -> list[dict]:
     """System prompt (protocol + contract + specs), non-colliding demo, task."""
     messages: list[dict] = [
@@ -614,7 +615,9 @@ def _opening_messages(
         *few_shot_messages(),
         {
             "role": "user",
-            "content": unit_task(canticle, canto, line_start, line_end),
+            "content": unit_task(
+                canticle, canto, line_start, line_end, revision=revision
+            ),
         },
     ]
     return messages
@@ -632,6 +635,7 @@ def run_unit(
     max_turns: int = SESSION_MAX_TURNS,
     max_nudges: int = MAX_NUDGES,
     workflow: str = "unit",
+    revision: str | None = None,
     on_turn=None,
     progress: bool = False,
     progress_stream=None,
@@ -649,6 +653,10 @@ def run_unit(
     keep counting session-wide. The session opens by calling ``transport.reset()``
     when the transport provides it, so per-session backend state (the Client
     adapter's history mirror, the native ledger) never carries across units.
+    `revision`, when given, is a Stage-6 `--fix` block appended to the opening
+    task: the unit's already-recorded rows plus the invariants they break
+    (`extractor/fixlevel.py`). It changes nothing else about the session — the
+    model re-solves the unit with its own tools, and no derived answer is shown.
     `progress` keeps multi-pass sessions watchable
     (harness/PLAN.md §4 item 5): each nudged resume is announced with a minor
     `toolcall.progress_subseparator` before the pass starts, written to
@@ -656,7 +664,7 @@ def run_unit(
     """
     specs = tool_specs() if specs is None else list(specs)
     opening = _opening_messages(
-        specs, canticle, canto, line_start, line_end, workflow
+        specs, canticle, canto, line_start, line_end, workflow, revision
     )
     result = UnitResult(
         unit={
