@@ -115,6 +115,7 @@ from harness.extractor.hybrid_engine import (
     mine_artifacts,
 )
 from harness.runner.statusline import HarnessStatusLine
+from harness.toolcall import DEFAULT_RESULT_CHARS
 from harness.toolcall.loop import progress_separator
 
 __all__ = [
@@ -1141,6 +1142,15 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "STAGE3.md record S3.10)",
     )
     parser.add_argument(
+        "--tool-result-chars",
+        type=int,
+        default=DEFAULT_RESULT_CHARS,
+        help="echo each tool call's returned block to the console, truncated to "
+        "this many payload characters (0 = off). The model's own turn streams "
+        "already; this is the other half of the exchange — the validator's "
+        "verdict and its errors — made watchable (PLAN.md §4 item 5)",
+    )
+    parser.add_argument(
         "--log",
         type=Path,
         help="streaming JSONL debug log: unit/gold/canto_complete records, "
@@ -1226,6 +1236,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # are live-run facts the operator must see announced before the hours run.
     if args.max_length < 0:
         parser.error("--max-length must be >= 0 (0 disables the cap)")
+    if args.tool_result_chars < 0:
+        parser.error("--tool-result-chars must be >= 0 (0 disables the echo)")
     max_length = args.max_length or None
     print(
         f"reconstruct: transcripts verbatim, "
@@ -1247,6 +1259,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             "payload_tier": args.payload_tier,
             "min_send_interval": args.min_send_interval,
             "max_length": max_length,
+            "result_chars": args.tool_result_chars,
         }
         if args.max_turns is not None:
             fallback_kwargs["max_turns"] = args.max_turns

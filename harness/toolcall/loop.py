@@ -26,6 +26,7 @@ from .parser import format_tool_result, is_parse_error
 from .transports import Transport, TransportResponse
 
 __all__ = [
+    "DEFAULT_RESULT_CHARS",
     "LoopResult",
     "execute_tool_calls",
     "outcome_brief",
@@ -117,8 +118,14 @@ def outcome_brief(outcome: dict) -> str:
     return f"{name}=ok"
 
 
+# Payload characters echoed per tool result on the console. Big enough for a
+# validation verdict with its errors, small enough that a `read_unit` payload
+# does not scroll the run away.
+DEFAULT_RESULT_CHARS = 400
+
+
 def progress_printer(
-    label: str, max_turns: int, stream=None
+    label: str, max_turns: int, stream=None, result_chars: int = 0
 ) -> Callable[[int, TransportResponse, list[dict]], None]:
     """Build an `on_turn` callback printing one stderr line per completed model turn.
 
@@ -128,6 +135,13 @@ def progress_printer(
     call with its compact return value (see `outcome_brief`), and seconds since the
     printer was created. Works unchanged over both wire formats: outcomes come from
     the shared loop, so native tool calls report exactly like XML ones.
+
+    `result_chars` > 0 additionally echoes each call's *rendered* result — the very
+    `<tool_result>` block the next user message carries — truncated to that many
+    characters of payload. The model's own turn is streamed to the console by the
+    backend, so without this the watcher sees the calls go out and never sees what
+    came back; `read_unit` payloads are the session's size tail, hence the cap
+    rather than the whole block.
     """
     stream = sys.stderr if stream is None else stream
     started = time.monotonic()
@@ -149,8 +163,21 @@ def progress_printer(
             file=stream,
             flush=True,
         )
+        if result_chars > 0:
+            for outcome in outcomes:
+                print(
+                    _result_preview(outcome, result_chars), file=stream, flush=True
+                )
 
     return on_turn
+
+
+def _result_preview(outcome: dict, limit: int) -> str:
+    """One `<tool_result>` block with its payload line truncated to `limit` chars."""
+    opening, payload, closing = format_tool_result(outcome).split("\n", 2)
+    if len(payload) > limit:
+        payload = f"{payload[:limit]}… (+{len(payload) - limit} chars)"
+    return f"  {opening}\n  {payload}\n  {closing}"
 
 
 def progress_separator(label: str, index: int, total: int, stream=None) -> None:

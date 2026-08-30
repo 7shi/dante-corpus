@@ -514,6 +514,45 @@ def test_progress_printer_reports_turns_values_and_final_answer(toolkit, capsys)
     assert re.fullmatch(r"\[case-x\] turn 3/3 final answer \(\+\d+s\)", lines[2])
 
 
+def test_progress_printer_echoes_tool_results_when_asked():
+    """`result_chars` shows the other half of the exchange: what came back."""
+    import io
+
+    stream = io.StringIO()
+    printer = progress_printer("s", 4, stream=stream, result_chars=200)
+    outcome = {"ok": True, "tool": "validate_candidate",
+               "result": {"valid": False, "errors": ["row[0]: boom"]}}
+    printer(1, TransportResponse(text="x", tool_calls=[]), [outcome])
+    out = stream.getvalue().splitlines()
+    assert out[0].startswith("[s] turn 1/4 validate_candidate=INVALID 1err")
+    # `ok` is the dispatch verdict; the validation verdict rides in the payload.
+    assert out[1].strip() == '<tool_result tool="validate_candidate" ok="true">'
+    assert '"errors":["row[0]: boom"]' in out[2] and '"valid":false' in out[2]
+    assert out[3].strip() == "</tool_result>"
+
+
+def test_progress_printer_truncates_a_long_result_payload():
+    import io
+
+    stream = io.StringIO()
+    printer = progress_printer("s", 4, stream=stream, result_chars=40)
+    outcome = {"ok": True, "tool": "read_unit", "result": {"text": "x" * 500}}
+    printer(1, TransportResponse(text="x", tool_calls=[]), [outcome])
+    payload = stream.getvalue().splitlines()[2]
+    assert "…" in payload and "chars)" in payload
+    assert len(payload) < 100
+
+
+def test_progress_printer_stays_quiet_about_results_by_default():
+    import io
+
+    stream = io.StringIO()
+    printer = progress_printer("s", 4, stream=stream)
+    printer(1, TransportResponse(text="x", tool_calls=[]),
+            [{"ok": True, "tool": "read_unit", "result": {"text": "x"}}])
+    assert len(stream.getvalue().splitlines()) == 1
+
+
 def test_progress_printer_writes_to_given_stream():
     import io
 

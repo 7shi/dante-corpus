@@ -475,6 +475,7 @@ def agent_fallback(
     payload_tier: str = "R1",
     min_send_interval: float = 0.0,
     max_length: int | None = None,
+    result_chars: int = 0,
 ) -> AgentFallback:
     """Build the live Tier-2 callable over `runner.agent.run_unit`.
 
@@ -497,6 +498,11 @@ def agent_fallback(
     cap in answer-text characters, handed to `Client(max_length=)` unchanged
     (`None` = off here — the operator-facing CLI owns the policy value;
     STAGE3.md record S3.10).
+
+    `result_chars` > 0 echoes each tool call's returned block to the same console
+    (`toolcall.progress_printer`), one turn line plus the truncated payload, so a
+    live run shows the validator's verdict and not just the model's side of the
+    exchange. 0 (the default) keeps the fallback silent as before.
     """
     from harness.runner.agent import (
         DEFAULT_MODEL,
@@ -505,7 +511,7 @@ def agent_fallback(
         run_unit as agent_run_unit,
     )
     from harness.runner.tools import GrammarToolkit, tool_specs
-    from harness.toolcall import PromptXmlTransport
+    from harness.toolcall import PromptXmlTransport, progress_printer
 
     model = DEFAULT_MODEL if model is None else model
     max_turns = SESSION_MAX_TURNS if max_turns is None else max_turns
@@ -534,6 +540,16 @@ def agent_fallback(
     )
 
     def _run(*, canticle: str, canto: int, line_start: int, line_end: int):
+        on_turn = (
+            progress_printer(
+                f"{canticle} {canto} L{line_start}-{line_end}",
+                max_turns,
+                stream=file,
+                result_chars=result_chars,
+            )
+            if result_chars > 0
+            else None
+        )
         return agent_run_unit(
             transport=transport,
             toolkit=toolkit,
@@ -544,6 +560,7 @@ def agent_fallback(
             specs=specs,
             max_turns=max_turns,
             workflow=workflow,
+            on_turn=on_turn,
         )
 
     return _run
