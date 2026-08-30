@@ -86,12 +86,35 @@ corrections** ([`STAGE5.md`](STAGE5.md) §5):
 runs *after* `convert`, never before — re-running `make convert` regenerates
 from the logs and rolls the repairs back.
 
-**State at the S5.7 session's close (2026-08-30).** 55 of the 100 TSVs now
-carry in-session output: inferno 1 (S5.6) plus the 52 clausal cantos and the
-3 fast-path units of S5.7. The remaining 45 are exactly as S5.3 left them.
-Every regenerated `NN.log` is gitignored as always, and is the only copy of
-those runs' telemetry.
+**State at the S5.7 session's close (2026-08-30).** The tree is clean and the
+suite passes (934). 55 of the 100 TSVs now carry in-session output: inferno 1
+(S5.6) plus the 52 clausal cantos and the 3 fast-path units of S5.7. The
+remaining 45 are exactly as S5.3 left them. Every regenerated `NN.log` is
+gitignored as always, and is the only copy of those runs' telemetry.
 
+- **The session's three commits are pushed** (`876a22c` S5.6 / `779a0e8` the
+  tool-result console echo / `d3a0e9a` S5.7); `origin/main` is at S5.7. The
+  middle one was split out deliberately on the operator's call: it is
+  display-only and shares `hybrid_engine.py` with S5.7, so
+  `hybrid_engine.py` was staged in two passes.
+- **`recon/readout.py` now double-counts the re-run cantos.** The logs are
+  append-only, so a canto re-run since S5.5 holds *two or three* `summary`
+  records, and `add()` appends every one it sees. Any later corpus-wide
+  readout must take the last block per log (records after the penultimate
+  `summary`) or it will mix a Stage-4 aggregate with a partial re-run
+  aggregate for the same canto. Not fixed here — S4.3's numbers are already
+  prose, and nothing this session needed the tool.
+- **The fix gesture has line granularity.** Deleting a violating *row* leaves
+  its line present, and `TsvArtifact`'s settled-unit test is line-number
+  presence — so the canto re-runs nothing and no model is called. Delete
+  every row of the line. S5.7 hit this first time round and lost a run to it.
+- **The middle-of-file deletion path is now exercised live** (it was the last
+  unexercised mechanism at S5.6's close): 68 lines deleted mid-file across 52
+  cantos regenerated their units and the files came back in line order.
+- **The tool-result console echo is on by default** (400 payload chars,
+  `reconstruct.py --tool-result-chars`, 0 = off). It takes effect from the
+  next run, and `recon/Makefile`'s `%.tsv` recipe does not pass the flag — so
+  changing it for corpus runs means editing the recipe.
 - **`make check` now exits 0** — the corpus is hard-clean (0 hard, 5,014
   soft), so from here a non-zero `make check` *is* a regression signal and
   should be read as one. That is new: through S5.6 the checker's contract
