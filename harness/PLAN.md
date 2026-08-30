@@ -9,35 +9,15 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Next action — the soft bulk, and nothing before it.** The hard track closed
-on record S5.7 ([`STAGE5.md`](STAGE5.md)): the recon corpus stands at **0 hard
-violations, 5,014 soft**, `make check` exits 0, and there is no hard work
-queued. What got it there, in one pass each:
-
-- **S5.6, inferno 1**: the in-session gate holds — `adopted_invalid` 0/34
-  units, 3.45 turns/unit, no wall-clock inflation — but clausal never occurred
-  in that canto, so the class the design targeted stayed untested.
-- **S5.7, the 52 cantos that hold clausal**: 64 units re-run, 3.69
-  turns/unit, `adopted_invalid` **0/64**, and **67 of the 67** clausal
-  violations the gate could see were cleared in-session. The 3 survivors were
-  `route="fast"` — the deterministic path never opens a session, so the gate
-  never saw them.
-- **S5.7's second half**: `RoutePolicy.require_schema_valid` now runs
-  `validate_unit` (L1 alone: schema checks, no derivation, no gold) over each
-  derivation and routes a schema-invalid one to the agent
-  (`reason="schema_invalid"`). Those 3 units re-ran through it in 13 minutes
-  and came back clean. Tests **934 passed**.
-
-**Read the gold numbers honestly before choosing anything next.** Agreement
-went 0.7307 → 0.7308 → 0.7309 across all of it — flat three times, matching
-S5.6's tie on inferno 1. In-session correction does what it is for (clears the
-schema's hard classes at the source, cheaply, without deleting rows) and is
-*not* a route to gold. Hard-clean and gold-close are different targets.
-
-**So the mass is now entirely soft, and it is deterministic work over the
-committed TSVs** — soft findings are never reported into a session by design
-([`STAGE5.md`](STAGE5.md) S5.5), so there is no in-session route to any of it
-and no reason to re-run cantos:
+**Next action — design the first soft rule, from the contract, gold-closed.**
+**Stage 5 closed 2026-08-30 at 0 hard** ([`STAGE5.md`](STAGE5.md) S5.8) and
+**Stage 6 opened on the soft residue** ([`STAGE6.md`](STAGE6.md)), whose first
+record S6.1 is the audit of the classification that would otherwise drive it
+([`SOFT.md`](SOFT.md)). The corpus stands at **0 hard violations, 5,014 soft**,
+`make check` exits 0, and nothing hard is queued. Soft findings are never
+reported into a session by design ([`STAGE5.md`](STAGE5.md) S5.5), so all of
+Stage 6 is deterministic work over the committed TSVs — there is no in-session
+route to it and no reason to re-run cantos.
 
 | class | count | | top `role_mismatch` (given vs derived) | |
 |---|---:|---|---|---:|
@@ -48,11 +28,48 @@ and no reason to re-run cantos:
 | `membership` | 146 | | `subj` vs `obj` | 29 |
 | `extra_tuple` | 43 | | `obl` vs `obl:a` | 24 |
 
-The obvious first candidate is unchanged from M1.4 (Orientation §3 below):
-**bare-`obl` over-assignment**, 282 of the 573 mismatches in the three
-preposition pairs alone, with `derive.py` already specifying the mapping. Read
-positions before writing the rule (discipline 5), and remember discipline 1 —
-`extra_arg` is the class deletion games most easily.
+**Read S6.1 before picking a class** ([`STAGE6.md`](STAGE6.md) §2–§3 carry the
+standing version; [`SOFT.md`](SOFT.md) the evidence). The short version: the findings are real
+and evidence-anchored (96.7% of `missing_arg` are arguments L4 itself attaches
+to the predicate; zero checker misfires), but **the counter's zero point is not
+neutral**. Gold reaches 0 soft only because 88 registry tolerance rules excuse
+the 3,250 positions where gold itself diverges from `derive_unit`, and those
+tolerances were written by measuring that diff — six of them fire exactly once
+on gold apiece. So soft is a *conformance* measure against derivation +
+registry, not a correctness measure, and it is not a distance either: one
+relocated argument scores twice, and registering a `missing_tuple` predicate
+(a strict improvement) *raises* the count at 227 of 490 positions.
+
+**What that makes eligible**, in order:
+
+1. `role_mismatch`'s 377 oblique-refinement findings (bare `obl` vs
+   `obl:<prep>`) and `missing_arg`'s 1,592 L4-anchored omissions — the
+   derivation determines the answer from the frozen layers, so discipline 3
+   applies cleanly. A dry run of the two rewrites
+   `dante_corpus/skel/repairs.py` already licenses (`role_label`,
+   `null_subject`) takes soft to **3,949** with 720 rewrites, nothing deleted.
+2. `extra_arg`'s 568 `advcl`-read-as-`obl` — a systematic argument/adjunct
+   disagreement sitting next to an existing tolerance (rule T). This is a
+   candidate for a *tolerance*, not a repair, and it is the exact shape
+   [`../skel/PHASE5.md`](../skel/PHASE5.md) §1.2 records Phase 5 misdiagnosing
+   as "LLM error" when the derivation was merely silent.
+3. The 614 pro-drop `subj (0,0)` `extra_arg` findings sit under
+   `_apply_subj_authority`, the contract's own declaration that the subject
+   slot is LLM-authoritative — read that before rewriting anything there.
+
+**One decision is open and is the operator's** ([`STAGE6.md`](STAGE6.md) §3).
+Is `dante_corpus/skel/repairs.py` an admissible authority under discipline 3?
+It opens no gold file and its rewrites are re-derivable from `derive.py`
+(`_oblique_role_of` determines `obl:<prep>`; `null_subject` is gated on
+`dep.subject_agreement`), but it is the same `skel/` toolchain that built gold.
+Either it is used directly, or the rules are re-derived independently in
+`harness/recon/repair.py` from `derive.py` alone.
+
+**A readout, not a criterion** (SOFT.md §6, gold opened deliberately
+afterwards): that same dry run moves gold agreement 0.7309 → **0.7475**
+(+0.0166, +687 rows; 687 of 720 rewrites land on a gold row), against
+0.7307 → 0.7309 flat across the entire hard track. It does not choose the rule
+and may not be cited as the reason to ship one.
 
 The prompt-side lever (`runner/prompts.py`) is still deliberately untouched.
 It stayed out of S5.5–S5.7 so those records measured the gate alone; it is now
@@ -81,6 +98,16 @@ corrections** ([`STAGE5.md`](STAGE5.md) §5):
 5. Read positions, not aggregates, before writing the rule — the same
    discipline Phase 5 learned the hard way
    ([`../skel/PHASE5.md`](../skel/PHASE5.md) §1.3, §5.2).
+6. **On the soft side the counter is a conformance measure, not a referee**
+   (added 2026-08-30 on record S6.1, [`SOFT.md`](SOFT.md) §4.2). Its zero is
+   "every disagreement with `derive_unit` has a shape the 130-rule registry
+   names", and those shapes were fitted by measuring gold's own diff. A soft
+   finding is therefore a report that two readings differ, and each candidate
+   class has three possible outcomes — the artifact is wrong, the derivation
+   is silent (a *tolerance* is missing), or the two notations are equivalent.
+   Only the first licenses editing the corpus. Report the mechanism with any
+   reduction, not just the delta: the count is non-monotonic under partial
+   completion and double-counts relocated arguments.
 
 **Ordering constraint** (now largely moot, kept as the reason): `repair`
 edits the committed TSVs in place, so anything that regenerates a TSV from a
@@ -88,14 +115,30 @@ log rolls its repairs back. That is half of why `convert` lost its Makefile
 target on 2026-08-30 — and the logs themselves are gone, so nothing can
 regenerate a committed TSV today.
 
-**State at the S5.8 session's close (2026-08-30).** The tree is clean, the
-suite passes (938), and the corpus is untouched by this session: `make check`
-still reports 0 hard / 5,014 soft. 55 of the 100 TSVs carry in-session output
-— inferno 1 (S5.6) plus the 52 clausal cantos and the 3 fast-path units of
-S5.7; the remaining 45 are exactly as S5.3 left them. S5.8 was housekeeping
-around the corpus rather than on it: the log demoted to a by-product, the
-`convert` target removed, `readout`'s re-run double-count fixed, and all 100
-logs swept ([`STAGE5.md`](STAGE5.md) S5.8).
+**State at the S6.1 session's close (2026-08-30).** The session was
+documentation only: new [`SOFT.md`](SOFT.md) and [`STAGE6.md`](STAGE6.md), plus
+edits to this file, [`STAGE5.md`](STAGE5.md) (closed, S5.9 moved out to S6.1),
+[`HARD.md`](HARD.md) (the §4.3 correction and the SOFT.md cross-link) and
+[`README.md`](README.md) (its doc index had stopped at Stage 3, and the
+`recon/` map still described pre-S5.8 log semantics). No code changed, the
+suite is unchanged at 938 (not re-run), and the corpus is untouched:
+`make check` still reports 0 hard / 5,014 soft. 55 of the 100 TSVs
+carry in-session output — inferno 1 (S5.6) plus the 52 clausal cantos and the 3
+fast-path units of S5.7; the remaining 45 are exactly as S5.3 left them. S5.8
+was housekeeping around the corpus rather than on it (the log demoted to a
+by-product, the `convert` target removed, `readout`'s re-run double-count
+fixed, all 100 logs swept) and closed Stage 5; S6.1 audited the soft
+classification without touching anything, and Stage 5's ledger was left at S5.8
+so the soft work reads as the new stage it is.
+
+- **Two corrections to earlier records, deliberately left unrepaired** (S6.1):
+  `derive_unit`'s own output carries one hard violation —
+  `paradiso 18:83 [clausal] xcomp argument (84,3) is not a predicate`, a
+  gapped-coordination `orphan` cited but never promoted — so
+  [`HARD.md`](HARD.md) §4.3's "impossible by construction" is falsified (the
+  closure holds at 3,476 of 3,477 units); and `unknown_role` is emitted as a
+  soft `tag` although it is an exception-free format impossibility with no
+  tolerance behind it (0 occurrences today, so latent).
 
 - **The fix gesture has line granularity.** Deleting a violating *row* leaves
   its line present, and `TsvArtifact`'s settled-unit test is line-number
@@ -148,62 +191,30 @@ Two things a fresh session should still know before touching
 
 ## Current Status
 
-Stages 1–4 are COMPLETE/CLOSED; their status, dates, and record pointers
+Stages 1–5 are COMPLETE/CLOSED; their status, dates, and record pointers
 live in §2's per-stage subsections below, not repeated here. This section
 holds only what's still open.
 
-- [ ] **Stage 5 — Corpus Durability, now also Divergence Reduction**
-      (OPENED 2026-08-29 by operator, on Stage 4's close). Deliverable 1
-      shipped on record S5.1: `harness/recon/convert.py` converts each
-      per-canto log into a gold-format `NN.tsv` beside it (idempotent,
-      `make convert` / `make convert-check`); the full corpus converted
-      clean — 100 cantos, 3,477 units, 43,549 rows, 0 incomplete logs, 0
-      dropped row keys. Deliverable 2 (a committed format for the logs'
-      non-corpus content) was CUT: run telemetry does not belong in the
-      repository, so the wire/cost and routing detail stays ephemeral in
-      the logs. Record S5.2 ported gold's `--check`/`--stats` to the recon
-      corpus (`harness/recon/check.py`, `make check` / `make stats`) and
-      read out **897 hard, 5,267 soft** violations corpus-wide — on that
-      number, the operator reopened the stage's scope to reducing it
-      (§4), informed by but not replaying `skel/PHASE5.md`'s methodology.
-      Record S5.3 is the first reduction pass: `harness/recon/repair.py`
-      (two deterministic deletion rules) plus `harness/recon/agree.py`
-      (row-level P/R/F1 against gold, a readout only) took the corpus to
-      **70 hard, 4,988 soft** at gold-agreement F1 0.7235 → 0.7307, recall
-      unchanged. Two operator corrections set the method and are now
-      standing discipline (§4 item 1, Handoff): the violation counter
-      selects work but is gameable by deletion, and **gold may not be the
-      gate either** — rules derive from the layer's own schema/derivation
-      contract with gold unopened. Record S5.4 audited the classification
-      behind the residual 70 ([`HARD.md`](HARD.md)); record S5.5 then found
-      the corpus's whole hard population to be *exactly* the three checks
-      `validate_candidate` was missing (486 + 341 + 70 = 897), moved them
-      into the agent's own session, and made the gold-format TSV the run's
-      artifact and its resume state (`--tsv`, written unit by unit; the log
-      demoted to an append-only debug record). Record S5.6 read out the
-      operator's inferno-1 live re-run of that mechanism: the gate holds
-      (`adopted_invalid` 0/34 units, 0 hard, nothing left for `repair`) at
-      3.45 turns/unit and no wall-clock inflation, but gold agreement did not
-      move and inferno 1 held none of the 70 clausal rows. Record S5.7 then
-      ran the 52 cantos that do hold them — 64 units, `adopted_invalid`
-      **0/64**, **67 of the 67** clausal violations the gate could see
-      cleared in-session — found the 3 survivors to be `route="fast"` units
-      that never open a session, and closed that gap with
-      `RoutePolicy.require_schema_valid` (a schema-invalid derivation now
-      routes to the agent). The corpus is **0 hard / 5,014 soft** and
-      `make check` exits 0. Gold agreement across the whole hard track:
-      0.7307 → 0.7309, flat. Record S5.8 is housekeeping around that corpus
-      rather than on it (no TSV touched): the per-canto log became a pure
-      by-product — `recon/Makefile`'s recipe no longer consults it, which had
-      silently disabled S5.5's line-deletion fix gesture whenever a log was
-      missing — `convert` lost its Makefile target, `readout.py`'s re-run
-      double-count was fixed, and all 100 logs were swept by the new
-      `make clean-log`, ending the run telemetry §2 had accepted as
-      ephemeral. Remaining: the soft bulk, deterministic work
-      over the committed TSVs (Handoff).
-      Design decisions, the conversion contract, the divergence-reduction
-      direction (§4), what the violation count is and is not (§5), and the
-      stage ledger (S5.1–S5.8) in [`STAGE5.md`](STAGE5.md).
+- [ ] **Stage 6 — Soft Divergence Reduction** (OPENED 2026-08-30 by
+      operator, on Stage 5's close). Everything left in the recon corpus is
+      soft: **5,014 findings**, deterministic work over the committed TSVs,
+      never reported into an agent session. Record S6.1 audited the
+      classification before letting it drive anything ([`SOFT.md`](SOFT.md)):
+      the findings are evidence-anchored and the checker does not misfire
+      (96.7% of `missing_arg` are arguments L4 itself attaches to the
+      predicate; `derive_unit`'s own output scores 0 soft), but **the
+      counter's zero point is tolerance-mediated** — gold reaches 0 only
+      because 88 of the 130 registry rules excuse the 3,250 positions where
+      gold itself diverges from `derive_unit`, and those tolerances were
+      fitted by measuring that diff. So soft is a conformance measure rather
+      than a correctness measure, and not a distance either (it double-counts
+      relocated arguments and rises when a missing predicate is registered).
+      Each class must therefore be resolved to one of three outcomes — the
+      artifact is wrong, the derivation is silent (a *tolerance* is missing),
+      or the notations are equivalent — and only the first licenses an edit.
+      Next: the first rule, designed from the contract with gold unopened;
+      one authority question is open for the operator. Scope, the standing
+      method, class eligibility and the ledger in [`STAGE6.md`](STAGE6.md).
 - Test suite: **938 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8).
   Composition and history (TokenBucket removal,
@@ -286,9 +297,10 @@ pilot and the closing recheck readout — was split off on 2026-08-24 to
 [`STAGE2.md`](STAGE2.md). All Stage-3 records S3.1–S3.11 live in
 [`STAGE3.md`](STAGE3.md)'s ledger (S3.1 moved there verbatim at stage close,
 2026-08-25; stage closed on S3.11); all Stage-4 records S4.1–S4.3 live in
-[`STAGE4.md`](STAGE4.md)'s ledger (stage closed 2026-08-29 on S4.3);
-Stage-5 records accrue directly in [`STAGE5.md`](STAGE5.md)'s ledger from
-the start.*
+[`STAGE4.md`](STAGE4.md)'s ledger (stage closed 2026-08-29 on S4.3); all
+Stage-5 records S5.1–S5.8 live in [`STAGE5.md`](STAGE5.md)'s ledger, written
+there from the start (stage closed 2026-08-30 on S5.8); Stage-6 records accrue
+the same way in [`STAGE6.md`](STAGE6.md).*
 
 ---
 
@@ -345,7 +357,7 @@ graph TD
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
 
-In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), and Stage 5 opening the corpus-durability track (converting the run's ephemeral logs into committable, `skel/`-compatible artifacts).
+In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), and Stage 6 as the soft divergence reduction that remains.
 
 ### Stage 1: Autonomous Local Inference & Capability Benchmark (`harness/runner/`)
 - **Approach**: For each parse unit, the agent receives the multi-layer context (L1–L4, quotes, case) and autonomously solves predicate-argument frames on the fly using Chain-of-Thought (CoT) and a dedicated Tool Calling API (`validate_candidate`, etc.).
@@ -405,7 +417,7 @@ decision was to accept and close, scope held to the full-corpus run itself.
 Commands, watch items, full readout criteria/results, and the stage ledger
 (S4.1–S4.3) live in [`STAGE4.md`](STAGE4.md).
 
-### Stage 5: Corpus Durability (OPENED 2026-08-29 by operator, on Stage 4's close)
+### Stage 5: Corpus Durability (opened 2026-08-29, CLOSED 2026-08-30)
 
 The Stage-4 corpus run's 100 per-canto logs (`harness/recon/<canticle>/
 NN.log`) are gitignored, disk-only, and will eventually be lost. Opening
@@ -449,10 +461,35 @@ remaining distance lives entirely in the 5,014 soft findings. Record S5.8 then
 settled the artifact story the stage opened with: the per-canto log is a pure
 by-product with no role in any goal or gate, `convert` lost its target, and
 the 100 logs were swept — the ephemerality §2 decided on, finally carried out.
-Design decisions, the conversion
-contract, and the stage ledger live in
+**The stage closed there** (2026-08-30, S5.8): its durability deliverable
+shipped and the corpus is hard-clean, so the operator re-scoped the soft
+residue — the part of §4's divergence-reduction extension that remains — out
+into Stage 6 rather than letting this stage's document keep growing. Design
+decisions, the conversion contract, and the stage ledger (S5.1–S5.8) live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.
+
+### Stage 6: Soft Divergence Reduction (OPENED 2026-08-30 by operator, on Stage 5's close)
+
+What Stage 5 leaves: **0 hard, 5,014 soft** across the 100 committed recon
+TSVs. Soft findings are never reported into an agent session (S5.5), so this
+stage is deterministic work over the artifacts — no canto is re-run and no
+model is called. The nominal target is the bar gold meets, 0 soft; record S6.1
+is why that target may not be pursued naively, and it is the stage's opening
+premise rather than a later discovery. Auditing the classification first — as
+S5.4 did for hard, with [`SOFT.md`](SOFT.md) as the evidence record — found the
+findings sound but the counter's zero point **tolerance-mediated**: gold clears
+this bar only because 88 of the 130 registry rules excuse the 3,250 positions
+where gold itself diverges from `derive_unit`, and those tolerances were fitted
+by measuring that diff. So the soft count is a conformance measure against
+derivation-plus-registry rather than a quality one, and it is not even a
+distance — it double-counts relocated arguments and *rises* when a missing
+predicate is registered. The burden that puts on every rule: resolve the class
+first to one of three outcomes — the artifact is wrong, the derivation is
+silent (a *tolerance* is missing, the mistake Phase 5 kept making), or the two
+notations are equivalent — and edit only on the first. Scope, the standing
+method, class eligibility, the open authority question and the ledger live in
+[`STAGE6.md`](STAGE6.md).
 
 ### Beyond Layer 5 (design notes)
 

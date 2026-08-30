@@ -17,10 +17,14 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 
 ## Documentation & Roadmap
 
-- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stage 1–2 induction core + Stage-3 scale-out).
+- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction). Keeps Current Status and the session handoff.
 - **Stage 1 Record**: [`STAGE1.md`](STAGE1.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
 - **Stage 2 Record**: [`STAGE2.md`](STAGE2.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
-- **Stage 3 Design & Ledger**: [`STAGE3.md`](STAGE3.md) — Living Stage-3 home: the payload/pacing design (S3.2), gate re-check, implementation map, confirmation protocol, and the record of why transcript compaction was removed (S3.7); accrues the stage's milestone records.
+- **Stage 3 Design & Ledger**: [`STAGE3.md`](STAGE3.md) — Stage-3 home: the payload/pacing design (S3.2), gate re-check, implementation map, confirmation protocol, and the record of why transcript compaction was removed (S3.7). CLOSED on S3.11.
+- **Stage 4 Record**: [`STAGE4.md`](STAGE4.md) — The 99-canto full-corpus scale-out: commands, watch items, readout criteria, and the ledger S4.1–S4.3. CLOSED on S4.3.
+- **Stage 5 Record**: [`STAGE5.md`](STAGE5.md) — Corpus durability (the run's logs turned into 100 committed gold-format TSVs) and the hard-divergence reduction that followed, incl. what the violation count is and what gold is not (§5). CLOSED on S5.8 at **0 hard**.
+- **Stage 6 Design & Ledger**: [`STAGE6.md`](STAGE6.md) — Living Stage-6 home: reducing the 5,014 soft findings, the standing method that record S6.1 forced on it, and class eligibility.
+- **Classification audits**: [`HARD.md`](HARD.md) (S5.4) and [`SOFT.md`](SOFT.md) (S6.1) — evidence records asking whether the checker's own hard/soft classification is sound, each filed before the design pass it would otherwise drive. Cross-linked to each other.
 - **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
 - **Stage 2 (Extraction & Hybrid Engine)**: [`extractor/README.md`](extractor/README.md) | [`extractor/PLAN.md`](extractor/PLAN.md)
@@ -42,9 +46,14 @@ dante-corpus/
 ├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
 │   ├── README.md                  # Overview, navigation, and this directory map
 │   ├── PLAN.md                    # Master architectural plan (status, milestones, disciplines)
-│   ├── STAGE1.md                    # Archived Stage-1 record (milestones 1.1–1.4, carry-overs)
-│   ├── STAGE2.md                    # Archived Stage-2 record (milestones 2.1–2.5, pilot/recheck readouts)
-│   ├── STAGE3.md                    # Stage-3 design + ledger (payload/pacing, scale-out)
+│   ├── STAGE1.md                  # Archived Stage-1 record (milestones 1.1–1.4, carry-overs)
+│   ├── STAGE2.md                  # Archived Stage-2 record (milestones 2.1–2.5, pilot/recheck readouts)
+│   ├── STAGE3.md                  # Stage-3 design + ledger (payload/pacing, launch hardening)
+│   ├── STAGE4.md                  # Stage-4 record (99-canto corpus run, readout, ledger)
+│   ├── STAGE5.md                  # Stage-5 record (corpus durability + hard reduction to 0)
+│   ├── STAGE6.md                  # Stage-6 design + ledger (soft divergence reduction)
+│   ├── HARD.md                    # Audit: is the hard classification sound? (S5.4)
+│   ├── SOFT.md                    # Audit: is the soft classification sound? (S6.1)
 │   ├── TOOLCALL.md                # Tool call protocol sub-project (XML interim → native)
 │   ├── FUTURE.md                  # Beyond Layer 5 (unscheduled design notes)
 │   │
@@ -74,14 +83,14 @@ dante-corpus/
 │   │   ├── hybrid_engine.py       # Fast-path (rules/lexicon) + agent fallback router
 │   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline
 │   │
-│   ├── recon/                     # [Stage 4/5] Full-corpus run drivers & durable artifacts
-│   │   ├── Makefile               # 100-canto launch, resumable; goal = NN.tsv (log -> TSV)
+│   ├── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
+│   │   ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv
 │   │   ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
-│   │   ├── convert.py             # [Stage 5] Logs -> committable gold-format NN.tsv
+│   │   ├── convert.py             # [Stage 5] Legacy logs -> gold-format NN.tsv (no make target)
 │   │   ├── check.py               # [Stage 5] Hard/soft violation check & stats over the TSVs
 │   │   ├── repair.py              # [Stage 5] Deterministic divergence-reduction rules
 │   │   ├── agree.py               # [Stage 5] Row-level P/R/F1 vs gold (readout, not a target)
-│   │   └── <canticle>/            # NN.log (gitignored, telemetry) + NN.tsv (skel-compatible)
+│   │   └── <canticle>/            # NN.tsv (skel-compatible, committed); NN.log = gitignored by-product
 │   │
 │   └── fixtures/                  # Benchmark challenge fixtures & historical case units
 │       ├── __init__.py            # Public fixture accessors

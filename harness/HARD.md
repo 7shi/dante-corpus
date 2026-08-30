@@ -1,5 +1,10 @@
 # The Hard Classification, Audited
 
+The soft counterpart is [`SOFT.md`](SOFT.md) (record S6.1), which asks the
+same four questions of the 5,014 soft findings and answers two of them
+differently — and which corrects one claim made here (§4.3's "impossible by
+construction"; see the note there).
+
 An evidence record for one question, asked before the clausal repair design
 pass was opened: **is the hard classification itself sound — not "is it
 correctly implemented", but "does its justification hold"?** The violation
@@ -201,6 +206,13 @@ principle and is classified **soft** (`tag`), while the clausal variant is
 - *Derivation conflict*: a case where `derive_unit` itself emits an
   unresolved clausal citation — none; the promotion-then-cite ordering
   (§4.1) makes it impossible by construction, verified on a live unit.
+  **Corrected 2026-08-30 by [`SOFT.md`](SOFT.md) §4.1**: sweeping the
+  derivation's own output over all 100 cantos found exactly one —
+  `paradiso 18:83 [clausal] xcomp argument (84, 3) is not a predicate`, a
+  gapped-coordination `orphan` remnant cited but never promoted, because the
+  gapping path bypasses the deprel-driven promotion §4.1 relies on. The
+  closure property holds at 3,476 of the 3,477 units and nothing else in §4
+  depends on it, but the unqualified "by construction" does not stand.
 - *Coverage loss*: a construction the invariant forbids expressing — none;
   gold expresses every construction in the corpus (including the
   resultative small clauses, via `attr`) at 0/0 (§2 calibration).

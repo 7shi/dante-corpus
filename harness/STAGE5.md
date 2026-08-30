@@ -6,8 +6,15 @@ status and the handoff; detail lives here, not there — this stage writes
 directly into this file as work happens, rather than accumulating in
 PLAN.md and splitting off at close (the pattern Stages 1–4 used).
 
-**Status**: OPENED 2026-08-29 (operator decision, on Stage 4's close).
-Deliverable 1 shipped on record S5.1 (`harness/recon/convert.py`);
+**Status**: OPENED 2026-08-29, **CLOSED 2026-08-30 on record S5.8** — the
+recon corpus is durable (100 committed TSVs, the logs' successor) and **hard-
+clean: 0 hard violations, `make check` exits 0**. The soft residue the stage's
+§4 scope extension had also covered was re-scoped out on the operator's call
+at close: reducing the 5,014 soft findings is its own stage,
+[`STAGE6.md`](STAGE6.md), which opens with an audit of the soft classification
+([`SOFT.md`](SOFT.md), record S6.1) exactly as S5.4 audited the hard one.
+
+The arc below, in one line each: deliverable 1 shipped on record S5.1 (`harness/recon/convert.py`);
 deliverable 2 was **cut** on the same day (§2, operator decision). The
 script, the TSV-goaled Makefile, and all 100 generated TSVs are committed.
 Record S5.2 (same day) added a `--check`/`--stats` port
@@ -27,7 +34,14 @@ was missing, so the checks moved into the agent's own session (the model
 corrects its analysis instead of a rule correcting it afterwards), the
 gold-format TSV became the run's artifact *and* its resume state — written
 unit by unit, with deleting a stretch's lines as the fix gesture — and the
-log dropped to an append-only debug record.
+log dropped to an append-only debug record. Records S5.6–S5.7 read out the
+operator's live re-runs of that mechanism (inferno 1, then the 52 cantos that
+hold clausal violations): the gate holds, 67 of the 67 clausal violations it
+could see were cleared in-session, and the 3 survivors — fast-path units that
+never open a session — were closed by giving the router the same schema check,
+taking the corpus to **0 hard**. Record S5.8 settled the artifact story the
+stage opened with (the log demoted to a pure by-product, `convert`'s target
+removed, all 100 logs swept) and **closed the stage**.
 
 ---
 
@@ -210,6 +224,12 @@ the operator's second intervention. The agreement gain they show therefore
 cannot be claimed as fully independent evidence that schema-driven repair
 converges on gold; that claim has to be earned by the next rule, designed
 gold-closed from the start.
+
+**The same two questions were later asked of the *soft* counter**, and the
+answers differ enough to have become Stage 6's opening premise rather than a
+line here: [`STAGE6.md`](STAGE6.md) §2, evidence in [`SOFT.md`](SOFT.md) §4.2.
+This section's resolution carries over unchanged — the authority is
+`validate.py`/`derive.py` and nothing else.
 
 `agree.py` is operator-side, like `benchmark.py`: it reads gold, so nothing
 under `runner/` may import it (PLAN.md §4 item 1). It is read-only and
