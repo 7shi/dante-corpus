@@ -263,3 +263,39 @@ justify" — and it widens by itself as levels land, which is the intent. The co
 is that `make fix` does not name a fixed scope, so every run announces the level
 it resolved and each canto record stores `fix.level`; pin `FIX=<n>` to hold a run
 to one level.
+
+### Infrastructure note — llm7shi 0.15.0 lands the status-bar hooks (2026-08-31)
+
+Not a milestone record and not stage work: no corpus artifact, no rule, no
+level. Filed here only so the next session isn't surprised that
+`runner/statusline.py` and the §4 display standard both moved while the
+`make fix` run was in flight. **S6.3 stays reserved for that run's readout.**
+
+The upstream change [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4 recorded as
+"under consideration on the llm7shi side, not yet actioned" shipped in llm7shi
+**0.15.0**, and the harness now sits on it:
+
+- **The bar needs no subclassing.** `progress(started_at=...)` places the run
+  clock beside the label, so `_HarnessProgressContext` and the local
+  elapsed-since-`STARTED_AT` column are gone, along with the imports of
+  llm7shi's private `_MofNColumn` / `_ProcessElapsedColumn` / `_ProgressContext`
+  (which 0.15.0 renames — the guarded import would otherwise have degraded the
+  bar to plain stderr lines *silently*, which is why this could not wait).
+  A bar that does need more now overrides `ProgressContext.columns()` and points
+  `StatusLine.progress_context_class` at it.
+- **Markup-off is upstream's default**, so the `print`/`error` overrides that
+  existed to keep `[obl:a=(126,3)]` from vanishing and `[/b]` from raising
+  `MarkupError` are deleted. The guarantee is unchanged and still tested.
+- **The console is no longer pinned to stderr.** It carries streamed model
+  output as well as the bar, so pinning it moved that too, and no artifact's
+  durability depends on where the display lands (§5's contract is about `--log`
+  files, not the console).
+- What remains local is the `wait_retry` retry accounting (`api_retries` /
+  `api_retry_seconds`) — application measurement, not a workaround.
+  `runner/statusline.py` is 102 → 61 lines.
+
+Docs updated to match: ARCHITECTURE.md §0 checklist + §4, and
+[`PLAN.md`](PLAN.md) §4 item 5's summary of it. Stage records are left as
+written — STAGE2.md's 2026-08-24 wiring description is a record of what shipped
+then. Suite **957 passed**, count unchanged by this work (one existing test's
+stderr expectation updated); `harness/recon/` untouched.

@@ -33,9 +33,8 @@ normative section.
       the corpus the run stands — extractor CLIs speak Canticle Canto Line,
       one bar per canto labeled `{canticle} {canto}` whose numerator walks
       that canto's Dante lines, never a bare run-level counter
-      (`reconstruct | i/N`) — console pinned to stderr, markup disabled,
-      shared stream handed to llm7shi; whole-run positions stay on the
-      `[index/total]` separators (§4).
+      (`reconstruct | i/N`) — shared stream handed to llm7shi; whole-run
+      positions stay on the `[index/total]` separators (§4).
 - [ ] One blank line printed to the shared stream before constructing each new
       `Client` (session-boundary spacing) (§4).
 - [ ] Per-turn wall-clock seconds recorded in results/JSONL; summaries
@@ -117,7 +116,8 @@ LLM-in-the-loop runs are inherently slow (minutes per turn on local models,
 hours per benchmark). An unwatchable run is an unusable run: progress must be
 **visible by default**, not silent-until-finished.
 
-- Stream model output to stderr as it arrives; print one stderr progress line
+- Stream model output to stderr as it arrives (the status-bar path instead
+  shares one console with the bar, below); print one stderr progress line
   per turn with each call's compact return value and elapsed seconds
   (`progress_printer`); announce every session with its `[index/total]`
   position via major separators and divide named passes inside a session with
@@ -128,47 +128,44 @@ hours per benchmark). An unwatchable run is an unusable run: progress must be
   stands — extractor CLIs speak Canticle Canto Line, one bar per canto labeled
   `{canticle} {canto}` whose numerator walks that canto's Dante lines (the
   `skel/`-driver pattern), while `[index/total]` separators keep whole-run
-  positions; its console stays pinned to stderr by convention, forwarded text
-  renders with Rich markup disabled (corpus text routinely contains bracket
-  fragments that markup parsing would silently swallow or crash on), and the
-  same console stream is handed to llm7shi as the streaming sink so model
-  output shares the display instead of clobbering the bar. The bar shows two
-  elapsed clocks, not one: right after the label
-  (`inferno 2 xx:xx | ...`) and at the far right where llm7shi's own per-bar
-  elapsed column already puts it. These read the same only by accident of a
-  bare single-canto invocation — in general they answer different questions,
-  and conflating them is the bug this pattern exists to avoid. The far-right
-  column is always this *process's* own elapsed time
-  (`_ProcessElapsedColumn`); it equals "this canto's elapsed time" only
-  because `harness/recon/Makefile` launches one `reconstruct.py` process per
-  canto (§5's per-canto artifact model), so a single process never spans more
-  than one canto. The label-side column is the *run's* cumulative elapsed
-  time, which such a per-process CLI cannot derive from its own clock at
-  all — it must be threaded in from outside: the driving Makefile computes
-  the start time once (`STARTED_AT ?= $(shell date +%s)`, `export
-  STARTED_AT` so recursive `$(MAKE)` sub-invocations — e.g. `fix-inferno`'s
-  per-canto `$(MAKE) fix-canto` — inherit the same value instead of each
-  recomputing its own) and every per-canto recipe passes it through as
-  `--started-at $(STARTED_AT)`; the CLI stores it on
-  `HarnessStatusLine.run_started_at` before opening the bar, and the label
-  column falls back to the process clock when it's absent (a bare
-  single-canto invocation has no other clock to show, which is the
-  "same by accident" case above). **Extending an llm7shi bar without forking
-  llm7shi**: subclass `llm7shi.statusline._ProgressContext`, override only
-  `__init__` to rebuild the column list (it has no smaller hook — the column
-  list is assembled inline, not behind an overridable method); import
-  llm7shi's own private column classes (e.g. `_MofNColumn`,
-  `_ProcessElapsedColumn`) to reuse rather than re-derive their exact
-  format/semantics, reserved for a column that is genuinely llm7shi-anchored
-  (elapsed-since-process-start, reused verbatim for the far-right column);
-  a column with its own semantics not derivable from llm7shi at all (the
-  externally-threaded run clock above) has nothing to subclass against and
-  is simplest as a fully local `ProgressColumn`. `__enter__`/`__exit__`/
-  `update` need no override either way. (An upstream change that would let
-  llm7shi bars take a custom column without subclassing at all — factor
-  column construction into an overridable hook, and let `progress()` accept
-  an injectable label-side column/factory — is under consideration on the
-  llm7shi side, not yet actioned or requested upstream.)
+  positions; the same console stream is handed to llm7shi as the streaming sink
+  so model output shares the display instead of clobbering the bar. Forwarded
+  text renders with Rich markup parsing off — corpus text routinely contains
+  bracket fragments that markup parsing would silently swallow or crash on —
+  which llm7shi does by default since 0.15.0, so no local override. The console
+  is not pinned to a stream: it carries streamed model output as well as the
+  bar, and per the last bullet of this section no artifact's durability depends
+  on where the display lands. The bar shows two elapsed clocks, not one: right
+  after the label (`inferno 2 xx:xx | ...`) and at the far right where llm7shi's
+  own per-bar elapsed column already puts it. These read the same only by
+  accident of a bare single-canto invocation — in general they answer different
+  questions, and conflating them is the bug this pattern exists to avoid. The
+  far-right column is always this *process's* own elapsed time
+  (`ProcessElapsedColumn`); it equals "this canto's elapsed time" only because
+  `harness/recon/Makefile` launches one `reconstruct.py` process per canto (§5's
+  per-canto artifact model), so a single process never spans more than one
+  canto. The label-side column is the *run's* cumulative elapsed time, which
+  such a per-process CLI cannot derive from its own clock at all — it must be
+  threaded in from outside: the driving Makefile computes the start time once
+  (`STARTED_AT ?= $(shell date +%s)`, `export STARTED_AT` so recursive
+  `$(MAKE)` sub-invocations — e.g. `fix-inferno`'s per-canto `$(MAKE)
+  fix-canto` — inherit the same value instead of each recomputing its own) and
+  every per-canto recipe passes it through as `--started-at $(STARTED_AT)`; the
+  CLI stores it on `HarnessStatusLine.run_started_at`, which the bar hands to
+  llm7shi as `progress(started_at=...)`. Absent it llm7shi simply omits the
+  column (a bare single-canto invocation has no other clock to show, which is
+  the "same by accident" case above). **Extending an llm7shi bar**: since
+  llm7shi 0.15.0 the run clock needs no subclassing at all — `started_at` is a
+  value the run has, and llm7shi decides where its column lands. A bar needing
+  something else overrides `ProgressContext.columns()` and points
+  `StatusLine.progress_context_class` at that subclass, locating insertion
+  points by column *type* (`index_of(columns, SeparatorColumn)`) rather than by
+  list position, so an upstream layout change carries the added column with it.
+  Reuse the public column classes (`MofNColumn`, `ElapsedColumn`,
+  `ProcessElapsedColumn`, `LabelColumn`, `SeparatorColumn`) instead of
+  re-deriving their format — and any hand-written replacement must honor the
+  task fields `remaining` and `show_elapsed`, which llm7shi's retry countdown
+  row sets. `__enter__`/`__exit__`/`update` need no override either way.
 - **Session-boundary spacing**: each new `Client` instance starts its own
   stream mid-console, so `runner.agent.llm7shi_generate` prints one blank
   line to the shared stream right before constructing it — without this a
@@ -191,8 +188,8 @@ hours per benchmark). An unwatchable run is an unusable run: progress must be
   count them via the status stream's `wait_retry` hook (`api_retries` /
   `api_retry_seconds`, per unit of work and rolled into summaries) so silent
   backoffs stay measurable instead of only inflating `turn_seconds`.
-- Human-facing streams go to stderr by convention, but **log durability never
-  relies on shell redirection**: every CLI opens and writes its own artifact
+- Human-facing streams go to stderr by convention, the status bar's shared
+  console excepted, but **log durability never relies on shell redirection**: every CLI opens and writes its own artifact
   files (`--log`, `--trace`); nothing downstream may depend on where the
   console display lands.
 

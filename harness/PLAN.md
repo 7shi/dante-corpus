@@ -669,15 +669,18 @@ single source, not duplicated here. The boundaries it encodes:
       (§4 Live-run observability, §5 Streaming JSONL log contract, §6 Reporting
       shape). It is a standing requirement, not a one-off patch: new live entry
       points (Stage 2's `extractor/` CLIs included) must ship it from day one,
-      keep the human-facing progress display on stderr by convention (JSONL
-      logs go to their own `--log` files, never to redirected console output),
-      and any future transport must preserve it.
-    - The concrete wiring — status-bar labeling (Canticle Canto Line),
-      markup-disabled shared console, the model-access layer sharing that
-      stream, `wait_retry` snapshot/delta accounting, and the new-`Client`
-      blank-line spacing — is the ARCHITECTURE.md §4 standard itself now, not
-      a pattern restated per plan; `reconstruct.py` (2026-08-24) is where it
-      first shipped end-to-end and stays the template to copy.
+      keep the human-facing progress display on stderr by convention — the
+      status bar's shared console excepted, since it carries streamed model
+      output too — (JSONL logs go to their own `--log` files, never to
+      redirected console output), and any future transport must preserve it.
+    - The concrete wiring — status-bar labeling (Canticle Canto Line), the
+      shared console the model-access layer streams into (markup parsing off,
+      llm7shi's own default since 0.15.0), the run clock threaded in as
+      `progress(started_at=...)`, `wait_retry` snapshot/delta accounting, and
+      the new-`Client` blank-line spacing — is the ARCHITECTURE.md §4 standard
+      itself now, not a pattern restated per plan; `reconstruct.py`
+      (2026-08-24) is where it first shipped end-to-end and stays the template
+      to copy.
 6. **Session Semantics Stability**:
    - Session semantics (prompt wording, tool schema, protocol behavior) may
      change *between* runs but never *mid-run*: a live run's semantics stay

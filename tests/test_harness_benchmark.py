@@ -615,7 +615,8 @@ def test_harness_status_line_stream_is_markup_safe(capsys):
     """Forwarded corpus/model text must never be parsed as Rich markup.
 
     `[role=...]` citations used to vanish and closing-tag fragments raised
-    MarkupError; the harness stream renders both verbatim.
+    MarkupError; the harness stream renders both verbatim. llm7shi 0.15.0 fixed
+    this upstream, so the harness no longer overrides `print`/`error` for it.
     """
     if HarnessStatusLine is None:  # pragma: no cover - rich ships via llm7shi extra
         pytest.skip("llm7shi statusline extra not installed")
@@ -623,8 +624,8 @@ def test_harness_status_line_stream_is_markup_safe(capsys):
     dangerous = 'rows [obj] plus [/b] plus [obl:a=(126,3)] end'
     line.stream.write(dangerous + "\n")
     captured = capsys.readouterr()
-    assert dangerous in captured.err
-    assert captured.out == ""
+    assert dangerous in captured.out
+    assert captured.err == ""
 
 
 def test_harness_status_line_counts_api_retries(monkeypatch):
