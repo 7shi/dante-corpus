@@ -189,7 +189,7 @@ line	token	word	role	arg_line	arg_token
 60	2	disse	subj	0	0
 60	2	disse	ccomp	60	3
 60	3	State	subj	0	0
-60	3	State	obl	60	5
+60	3	State	attr	60	5
 60	3	State	obl	60	9
 60	9	'nforco	subj	60	7
 60	9	'nforco	obj	60	8
@@ -484,18 +484,17 @@ line	token	word	role	arg_line	arg_token
 145	0			0	0
 146	3	fé	subj	145	1
 146	3	fé	obj	146	1
+146	3	fé	obj	146	2
 146	3	fé	xcomp	146	4
 146	3	fé	obl:con	145	4
-146	3	fé	obl	146	2
 146	4	volar	subj	146	1
 146	4	volar	obl:da	146	8
 146	4	volar	obl:con	147	4
-146	4	volar	obl	147	7
 147	0			0	0
 148	5	discesero	subj	0	0
 148	5	discesero	obl	147	7
-148	5	discesero	obl	148	2
-148	5	discesero	obl	148	4
+148	5	discesero	obl:di	148	2
+148	5	discesero	obl:di	148	4
 148	5	discesero	obl:a	148	8
 149	1	porser	subj	0	0
 149	1	porser	obj	149	3

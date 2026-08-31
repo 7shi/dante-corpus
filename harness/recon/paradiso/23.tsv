@@ -141,7 +141,7 @@ line	token	word	role	arg_line	arg_token
 48	4	sostener	subj	0	0
 48	4	sostener	obj	48	6
 49	2	era	subj	49	1
-49	2	era	obl	49	4
+49	2	era	obl:come	49	4
 49	7	risente	subj	49	5
 49	7	risente	obj	49	6
 49	7	risente	obl:di	50	2
@@ -151,6 +151,7 @@ line	token	word	role	arg_line	arg_token
 50	7	ingegna	obl	51	1
 51	3	ridurlasi	subj	0	0
 51	3	ridurlasi	obj	50	2
+51	3	ridurlasi	iobj	50	5
 51	3	ridurlasi	obl:a	51	6
 52	3	udi'	subj	52	2
 52	3	udi'	obj	52	5
@@ -331,15 +332,15 @@ line	token	word	role	arg_line	arg_token
 121	0			0	0
 122	1	tende	subj	121	4
 122	1	tende	obj	122	3
-122	1	tende	obl	121	7
+122	1	tende	obl:invero	121	7
+122	1	tende	obl:per	123	3
 122	8	prese	subj	0	0
 122	8	prese	obj	122	7
 123	9	infiamma	subj	123	4
 123	9	infiamma	obj	123	8
-123	9	infiamma	obl	123	7
+123	9	infiamma	obl:di	123	7
 124	8	stese	subj	124	1
 124	8	stese	obj	124	7
-124	8	stese	obl	124	6
 124	8	stese	obl:con	125	4
 125	0			0	0
 126	3	avieno	subj	126	2

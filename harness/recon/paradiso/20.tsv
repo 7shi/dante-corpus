@@ -253,14 +253,13 @@ line	token	word	role	arg_line	arg_token
 90	6	sono	subj	0	0
 90	6	sono	attr	90	7
 91	1	Fai	subj	0	0
-91	1	Fai	obl	91	3
+91	1	Fai	obl:come	91	3
 92	1	apprende	subj	91	4
 92	1	apprende	obj	91	6
 92	1	apprende	obl:per	91	8
-92	1	apprende	obl	92	2
 93	1	veder	subj	0	0
 93	1	veder	obj	92	6
-93	3	può	subj	0	0
+93	3	può	subj	91	4
 93	3	può	xcomp	93	1
 93	3	può	obl	93	8
 93	8	prome	subj	93	5
@@ -410,8 +409,8 @@ line	token	word	role	arg_line	arg_token
 143	1	fa	obl:a	142	5
 143	2	seguitar	subj	143	4
 144	8	acquista	subj	144	7
-144	8	acquista	obj	144	5
-144	8	acquista	obl	144	2
+144	8	acquista	obl:in	144	2
+144	8	acquista	obl:di	144	5
 145	5	parlò	subj	145	4
 145	8	ricorda	subj	0	0
 145	8	ricorda	iobj	145	7
@@ -419,7 +418,7 @@ line	token	word	role	arg_line	arg_token
 146	3	vidi	subj	146	2
 146	3	vidi	obj	146	6
 147	3	batter	subj	0	0
-147	3	batter	obj	147	5
+147	3	batter	obl:di	147	5
 147	7	concorda	subj	147	3
 148	4	mover	subj	0	0
 148	4	mover	obj	148	6

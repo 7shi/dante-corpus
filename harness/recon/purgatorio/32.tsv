@@ -315,7 +315,7 @@ line	token	word	role	arg_line	arg_token
 104	10	vedi	subj	0	0
 104	10	vedi	obj	104	9
 105	1	ritornato	subj	0	0
-105	1	ritornato	obl	105	3
+105	1	ritornato	obl:di	105	3
 105	4	fa	subj	0	0
 105	4	fa	ccomp	105	7
 105	7	scrive	subj	105	6
@@ -438,7 +438,7 @@ line	token	word	role	arg_line	arg_token
 145	3	eran	subj	145	2
 145	3	eran	attr	145	4
 145	4	cornute	subj	145	2
-145	4	cornute	obl	145	6
+145	4	cornute	obl:come	145	6
 146	7	avean	subj	146	3
 146	7	avean	obj	146	6
 146	7	avean	obl:per	146	9

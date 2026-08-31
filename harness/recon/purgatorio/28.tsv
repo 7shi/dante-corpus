@@ -80,9 +80,9 @@ line	token	word	role	arg_line	arg_token
 27	8	uscìo	obl:in	27	7
 28	5	son	subj	28	4
 28	5	son	attr	28	9
-28	5	son	obl	28	7
 29	1	parrieno	subj	28	3
 29	1	parrieno	xcomp	29	2
+29	1	parrieno	obl:verso	30	3
 29	2	avere	subj	0	0
 29	2	avere	obj	29	5
 29	2	avere	obl:in	29	4
@@ -417,14 +417,14 @@ line	token	word	role	arg_line	arg_token
 131	3	chiama	obl	130	3
 131	3	chiama	obl:da	130	7
 131	6	adopra	subj	0	0
-131	6	adopra	obl	132	8
+131	6	adopra	ccomp	132	8
 132	8	gustato	subj	0	0
 132	8	gustato	obl	132	2
 132	8	gustato	obl	132	4
 132	8	gustato	obl	132	5
 133	6	è	subj	133	5
+133	6	è	attr	133	8
 133	6	è	obl:a	133	4
-133	6	è	obl	133	8
 134	2	avvegna	subj	0	0
 134	2	avvegna	ccomp	134	5
 134	5	possa	subj	135	2
@@ -462,7 +462,7 @@ line	token	word	role	arg_line	arg_token
 144	7	dice	obl:di	144	5
 145	3	rivolsi	subj	145	1
 145	3	rivolsi	obj	145	2
-145	3	rivolsi	obl	145	5
+145	3	rivolsi	obl:in	145	5
 145	3	rivolsi	obl:a	146	3
 146	5	vidi	subj	0	0
 146	5	vidi	ccomp	147	2

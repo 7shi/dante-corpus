@@ -74,10 +74,10 @@ line	token	word	role	arg_line	arg_token
 25	4	è	subj	25	3
 25	4	è	attr	25	9
 26	2	spiace	subj	0	0
-26	2	spiace	obl	25	9
+26	2	spiace	obl	25	4
 26	2	spiace	obl:a	26	4
 26	7	stan	subj	27	2
-26	7	stan	obl	26	9
+26	7	stan	attr	26	9
 27	7	assale	subj	27	5
 27	7	assale	obj	27	6
 28	6	è	subj	28	5

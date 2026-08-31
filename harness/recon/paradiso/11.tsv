@@ -174,7 +174,8 @@ line	token	word	role	arg_line	arg_token
 62	6	fece	obl:coram	62	3
 63	7	amò	subj	0	0
 63	7	amò	obj	63	6
-63	7	amò	obl	63	5
+63	7	amò	obl:di	63	3
+63	7	amò	obl:in	63	5
 63	7	amò	obl	63	9
 64	2	privata	subj	64	1
 64	2	privata	obl:di	64	5

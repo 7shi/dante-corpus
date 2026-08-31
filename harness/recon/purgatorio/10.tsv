@@ -30,7 +30,7 @@ line	token	word	role	arg_line	arg_token
 10	3	conviene	obl	10	1
 10	4	usare	subj	0	0
 10	4	usare	obj	10	6
-10	4	usare	obl	11	6
+10	4	usare	xcomp	11	6
 11	1	cominciò	subj	11	3
 11	1	cominciò	ccomp	10	3
 11	6	accostarsi	subj	0	0
@@ -38,7 +38,6 @@ line	token	word	role	arg_line	arg_token
 11	6	accostarsi	obl	12	4
 11	6	accostarsi	obl:a	12	6
 12	9	parte	subj	12	7
-12	9	parte	obj	12	8
 13	3	fece	subj	13	2
 13	3	fece	obj	13	6
 13	3	fece	attr	13	7
@@ -128,7 +127,7 @@ line	token	word	role	arg_line	arg_token
 49	5	mossi	obl:con	49	7
 49	9	vedea	subj	0	0
 49	9	vedea	obj	52	3
-49	9	vedea	obl	50	2
+49	9	vedea	obl:di	50	2
 50	0			0	0
 51	3	era	subj	51	4
 51	3	era	iobj	51	2

@@ -61,10 +61,10 @@ line	token	word	role	arg_line	arg_token
 19	3	sentia	xcomp	19	5
 19	5	arricciar	subj	0	0
 19	5	arricciar	obj	19	7
+19	5	arricciar	obl:di	20	3
 20	5	stava	subj	0	0
 20	5	stava	attr	20	8
-20	5	stava	obl:di	20	3
-20	5	stava	obl	20	7
+20	5	stava	obl:in	20	7
 21	3	dissi	subj	21	2
 21	3	dissi	ccomp	21	7
 21	7	celi	subj	0	0
@@ -268,7 +268,8 @@ line	token	word	role	arg_line	arg_token
 86	2	rimiraron	subj	0	0
 86	2	rimiraron	obj	86	1
 86	2	rimiraron	obl:con	85	7
-86	2	rimiraron	obl	86	4
+86	2	rimiraron	obl:senza	86	5
+86	4	far	subj	0	0
 86	4	far	obj	86	5
 87	3	volsero	subj	0	0
 87	3	volsero	obj	87	2
@@ -283,9 +284,11 @@ line	token	word	role	arg_line	arg_token
 89	4	son	subj	89	3
 89	4	son	attr	89	5
 90	1	vanno	subj	0	0
-90	1	vanno	attr	90	2
+90	1	vanno	xcomp	90	2
 90	1	vanno	obl	89	4
-90	1	vanno	obl:de	90	6
+90	1	vanno	obl:per	89	8
+90	2	scoperti	subj	0	0
+90	2	scoperti	obl:di	90	6
 91	2	disser	subj	0	0
 91	2	disser	iobj	91	3
 91	2	disser	ccomp	93	6

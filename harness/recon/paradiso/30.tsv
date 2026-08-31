@@ -40,7 +40,7 @@ line	token	word	role	arg_line	arg_token
 15	6	costrinse	xcomp	14	3
 15	6	costrinse	xcomp	15	2
 16	9	dice	subj	16	2
-16	9	dice	obl	16	5
+16	9	dice	obl:a	16	5
 16	9	dice	obl:di	16	7
 17	2	conchiuso	subj	17	3
 17	2	conchiuso	obl:in	17	6
@@ -52,7 +52,7 @@ line	token	word	role	arg_line	arg_token
 19	5	vidi	subj	19	4
 19	5	vidi	obj	19	3
 19	7	trasmoda	subj	19	2
-19	7	trasmoda	obl	20	4
+19	7	trasmoda	obl:da	20	6
 20	10	credo	subj	20	9
 20	10	credo	ccomp	21	8
 21	8	goda	subj	21	5
@@ -244,7 +244,6 @@ line	token	word	role	arg_line	arg_token
 91	4	stata	obl:sotto	91	6
 92	2	pare	subj	92	1
 92	2	pare	attr	92	3
-92	2	pare	obl	92	5
 92	8	sveste	subj	93	2
 93	7	disparve	subj	0	0
 93	7	disparve	obl:in	93	6
@@ -275,11 +274,11 @@ line	token	word	role	arg_line	arg_token
 100	7	face	obl:a	101	5
 101	0			0	0
 102	5	vedere	subj	0	0
+102	5	vedere	obj	102	4
 102	5	vedere	obl	102	2
-102	5	vedere	obl:in	102	4
 102	6	ha	subj	102	1
 102	6	ha	obj	102	9
-102	6	ha	obl	102	5
+102	6	ha	xcomp	102	5
 103	3	distende	subj	0	0
 103	3	distende	obj	103	2
 103	3	distende	obl:in	103	6
@@ -373,8 +372,8 @@ line	token	word	role	arg_line	arg_token
 132	7	disira	obl	132	5
 133	11	tieni	subj	133	8
 133	11	tieni	obj	133	10
-133	11	tieni	obl:a	133	7
-134	7	è	subj	134	4
+133	11	tieni	obl:a	133	5
+134	7	è	subj	134	3
 134	7	è	attr	134	9
 135	7	ceni	subj	135	3
 135	7	ceni	obl:a	135	6
@@ -382,14 +381,14 @@ line	token	word	role	arg_line	arg_token
 136	1	sederà	obl:in	133	5
 136	1	sederà	obl:per	134	3
 136	1	sederà	obl	135	7
-136	5	fia	subj	136	4
+136	5	fia	subj	136	3
 136	5	fia	attr	136	7
 136	5	fia	obl	136	6
-137	7	drizzare	subj	137	5
+137	7	drizzare	subj	137	4
 137	7	drizzare	obj	137	8
-138	1	verrà	subj	137	5
+138	1	verrà	subj	137	4
 138	1	verrà	xcomp	137	7
-138	1	verrà	obl	138	3
+138	1	verrà	obl:in	138	3
 138	1	verrà	obl	138	6
 138	6	sia	subj	138	5
 138	6	sia	attr	138	7

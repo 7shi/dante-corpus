@@ -88,7 +88,7 @@ line	token	word	role	arg_line	arg_token
 28	6	rotata	subj	0	0
 28	6	rotata	obl	28	8
 29	4	discendesse	subj	0	0
-29	4	discendesse	obl	29	3
+29	4	discendesse	obl:come	29	3
 30	3	rapisse	subj	0	0
 30	3	rapisse	obj	30	2
 30	3	rapisse	obl	30	4
@@ -324,7 +324,7 @@ line	token	word	role	arg_line	arg_token
 99	1	crepata	obl:per	99	4
 99	1	crepata	obl:per	99	7
 100	7	ammassiccia	subj	100	3
-100	7	ammassiccia	obl	100	5
+100	7	ammassiccia	obl:di	100	5
 101	3	parea	subj	100	2
 101	3	parea	iobj	101	2
 101	3	parea	attr	101	1

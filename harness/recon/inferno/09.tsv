@@ -2,7 +2,7 @@ line	token	word	role	arg_line	arg_token
 1	8	pinse	subj	1	4
 1	8	pinse	obj	1	3
 1	8	pinse	iobj	1	7
-1	8	pinse	obl	1	6
+1	8	pinse	obl:di	1	6
 2	1	veggendo	subj	0	0
 2	1	veggendo	obj	2	3
 2	1	veggendo	xcomp	2	5
@@ -12,8 +12,7 @@ line	token	word	role	arg_line	arg_token
 3	7	ristrinse	obl	3	2
 3	7	ristrinse	obl:dentro	3	6
 4	3	fermò	subj	0	0
-4	3	fermò	obl	4	5
-4	3	fermò	obl	5	5
+4	3	fermò	obl:come	4	5
 4	7	ascolta	subj	4	6
 5	5	potea	subj	5	3
 5	5	potea	xcomp	5	6
@@ -183,7 +182,7 @@ line	token	word	role	arg_line	arg_token
 54	3	vengiammo	obl	54	1
 54	3	vengiammo	obl:in	54	5
 55	1	Volgiti	subj	0	0
-55	1	Volgiti	obl	55	3
+55	1	Volgiti	obl:in	55	3
 55	5	tien	subj	0	0
 55	5	tien	obj	55	7
 55	5	tien	attr	55	8

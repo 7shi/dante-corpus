@@ -210,7 +210,7 @@ line	token	word	role	arg_line	arg_token
 76	0			0	0
 77	1	volitando	subj	76	6
 77	2	cantavano	subj	76	6
-77	2	cantavano	obl	76	4
+77	2	cantavano	obl:a	76	4
 77	4	faciensi	subj	76	6
 77	4	faciensi	obj	78	2
 77	4	faciensi	obj	78	4

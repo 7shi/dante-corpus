@@ -36,7 +36,7 @@ line	token	word	role	arg_line	arg_token
 12	6	facea	attr	12	7
 13	7	drizzava	subj	0	0
 13	7	drizzava	obj	13	6
-13	7	drizzava	obl	14	2
+13	7	drizzava	obl:in	14	2
 14	0			0	0
 15	3	vuol	subj	15	2
 15	6	colorava	subj	0	0
@@ -153,7 +153,6 @@ line	token	word	role	arg_line	arg_token
 46	6	parean	subj	46	5
 46	6	parean	obl:di	46	8
 47	1	volseci	subj	47	4
-47	1	volseci	obl	47	3
 47	1	volseci	obl:tra	48	3
 47	7	parlonne	subj	47	5
 48	0			0	0
@@ -335,7 +334,7 @@ line	token	word	role	arg_line	arg_token
 95	11	impetri	subj	95	9
 95	11	impetri	obj	96	1
 95	11	impetri	iobj	95	10
-95	11	impetri	obl	96	3
+95	11	impetri	obl:di	96	3
 96	6	vivendo	subj	96	5
 96	7	mossi	subj	96	5
 96	7	mossi	obl	96	4
@@ -444,7 +443,6 @@ line	token	word	role	arg_line	arg_token
 130	3	disse	ccomp	130	8
 130	8	torse	subj	130	2
 130	8	torse	obj	130	7
-130	8	torse	obl	130	5
 131	0			0	0
 132	5	rimorse	subj	132	2
 132	5	rimorse	obj	132	4
@@ -489,7 +487,7 @@ line	token	word	role	arg_line	arg_token
 141	7	dicesti	obj	141	5
 142	2	ho	subj	142	3
 142	2	ho	obj	142	1
-142	2	ho	obl	142	5
+142	2	ho	obl:di	142	5
 142	7	ha	subj	142	6
 142	7	ha	obj	142	8
 143	0			0	0
@@ -499,4 +497,4 @@ line	token	word	role	arg_line	arg_token
 144	2	faccia	obl:per	144	5
 145	8	rimasa	subj	145	2
 145	8	rimasa	iobj	145	6
-145	8	rimasa	obl	145	5
+145	8	rimasa	obl:di	145	5

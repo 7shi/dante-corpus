@@ -10,7 +10,7 @@ line	token	word	role	arg_line	arg_token
 3	6	dismala	obj	3	5
 4	5	lega	subj	4	4
 4	5	lega	obj	5	3
-4	5	lega	obl	5	6
+4	5	lega	obl:come	5	6
 5	0			0	0
 6	9	piega	subj	6	5
 7	4	è	subj	7	1
@@ -26,14 +26,17 @@ line	token	word	role	arg_line	arg_token
 10	4	dimandar	subj	0	0
 10	4	dimandar	obj	10	5
 10	7	aspetta	subj	0	0
+10	7	aspetta	xcomp	10	4
 10	7	aspetta	obl	10	2
-10	7	aspetta	obl	10	4
 11	1	ragionava	subj	11	3
+11	1	ragionava	ccomp	11	5
 11	5	temo	subj	11	4
 11	5	temo	ccomp	12	3
 11	5	temo	obl	10	7
+11	5	temo	obl	11	6
 12	3	avrà	subj	12	7
 12	3	avrà	obj	12	5
+12	3	avrà	obl	12	2
 13	7	porse	subj	0	0
 13	7	porse	obj	13	6
 13	7	porse	obl	13	1
@@ -398,14 +401,15 @@ line	token	word	role	arg_line	arg_token
 118	1	Rotti	obl	118	2
 118	1	Rotti	obl	118	3
 118	5	vòlti	subj	0	0
-118	5	vòlti	obl:ne	119	1
+118	5	vòlti	obl:in	119	1
 119	5	veggendo	subj	0	0
 119	5	veggendo	obj	119	7
 120	2	presi	subj	0	0
 120	2	presi	obj	120	1
+120	2	presi	obl:a	120	5
 121	4	volsi	subj	121	3
 121	4	volsi	obj	121	9
-121	4	volsi	obl	121	6
+121	4	volsi	obl:in	121	6
 122	1	gridando	subj	0	0
 122	1	gridando	ccomp	122	8
 122	1	gridando	obl:a	122	3

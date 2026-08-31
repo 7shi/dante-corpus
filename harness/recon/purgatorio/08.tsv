@@ -146,7 +146,7 @@ line	token	word	role	arg_line	arg_token
 46	7	scendesse	subj	46	6
 46	7	scendesse	obj	46	3
 47	2	fui	subj	0	0
-47	2	fui	obl	47	4
+47	2	fui	attr	47	4
 47	6	vidi	subj	0	0
 47	6	vidi	obj	47	7
 47	9	mirava	subj	47	8
@@ -203,8 +203,8 @@ line	token	word	role	arg_line	arg_token
 61	7	udita	subj	61	6
 62	7	raccolse	subj	62	3
 62	7	raccolse	obj	62	6
-62	7	raccolse	obl	62	5
-62	7	raccolse	obl	63	2
+62	7	raccolse	obl:in	62	5
+62	7	raccolse	obl:come	63	2
 63	5	smarrita	subj	63	2
 64	11	volse	subj	64	2
 64	11	volse	subj	64	7
@@ -232,14 +232,15 @@ line	token	word	role	arg_line	arg_token
 69	8	è	subj	69	9
 69	8	è	obl	69	7
 70	2	sarai	subj	0	0
-70	2	sarai	obl	70	4
+70	2	sarai	obl:di	70	4
 70	2	sarai	obl:da	70	8
 71	1	dì	subj	0	0
 71	1	dì	iobj	71	3
 71	1	dì	ccomp	71	8
 71	8	chiami	subj	71	3
 71	8	chiami	obl:per	71	7
-72	7	risponde	subj	72	6
+71	8	chiami	obl	72	1
+72	7	risponde	subj	0	0
 72	7	risponde	iobj	72	5
 72	7	risponde	obl	72	1
 73	2	credo	subj	0	0
@@ -320,7 +321,6 @@ line	token	word	role	arg_line	arg_token
 96	2	drizzò	subj	0	0
 96	2	drizzò	obj	96	4
 96	8	guardasse	subj	0	0
-96	8	guardasse	obl	96	7
 97	6	ha	subj	98	3
 97	6	ha	obj	97	7
 98	4	era	subj	98	6
@@ -373,7 +373,8 @@ line	token	word	role	arg_line	arg_token
 110	2	chiamò	obl:per	110	6
 111	6	guardare	subj	111	5
 111	7	sciolta	subj	109	2
-111	7	sciolta	obl	111	6
+111	7	sciolta	xcomp	111	6
+111	7	sciolta	obl:da	111	5
 112	6	mena	subj	112	4
 112	6	mena	obj	112	5
 112	6	mena	obl:in	112	8
@@ -430,7 +431,7 @@ line	token	word	role	arg_line	arg_token
 127	4	giuro	iobj	127	3
 127	4	giuro	ccomp	128	7
 127	9	vada	subj	127	6
-127	9	vada	obl	127	8
+127	9	vada	obl:di	127	8
 128	7	sfregia	subj	128	3
 128	7	sfregia	obj	128	6
 128	7	sfregia	obl:di	129	2

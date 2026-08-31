@@ -127,13 +127,13 @@ line	token	word	role	arg_line	arg_token
 42	6	va	subj	42	5
 42	6	va	obl	42	7
 43	6	usciva	subj	44	1
-43	6	usciva	obl:de	43	4
+43	6	usciva	obl:di	43	4
 44	6	lasciai	subj	44	5
 44	6	lasciai	obj	44	8
 44	6	lasciai	xcomp	45	1
 45	1	cadere	subj	44	8
 45	3	stetti	subj	0	0
-45	3	stetti	obl	45	6
+45	3	stetti	obl:come	45	6
 45	8	teme	subj	45	7
 46	4	potuto	subj	46	2
 46	4	potuto	xcomp	46	5
@@ -304,7 +304,7 @@ line	token	word	role	arg_line	arg_token
 98	6	balestra	subj	98	4
 99	2	germoglia	subj	0	0
 99	2	germoglia	obl	99	1
-99	2	germoglia	obl	99	4
+99	2	germoglia	obl:come	99	4
 100	1	Surge	subj	0	0
 100	1	Surge	obl:in	100	3
 100	1	Surge	obl:in	100	6

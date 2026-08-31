@@ -260,7 +260,7 @@ line	token	word	role	arg_line	arg_token
 79	7	sedere	obl	80	2
 80	2	giudicar	subj	0	0
 80	2	giudicar	obj	80	6
-80	2	giudicar	obl	80	4
+80	2	giudicar	obl:di	80	4
 80	2	giudicar	obl:con	81	3
 81	0			0	0
 82	7	assottiglia	subj	82	4
@@ -294,22 +294,23 @@ line	token	word	role	arg_line	arg_token
 90	3	radïando	subj	90	2
 90	5	cagiona	subj	90	2
 90	5	cagiona	obj	90	4
-91	2	sovresso	subj	0	0
-91	2	sovresso	obl	91	4
+91	2	sovresso	subj	91	4
 91	6	rigira	subj	0	0
-91	6	rigira	obl	91	4
+91	6	rigira	obj	91	5
+91	6	rigira	obl:sovrasalire	91	4
 92	4	pasciuti	subj	92	6
 92	4	pasciuti	obj	92	8
 93	6	pasto	subj	93	4
 93	8	rimira	subj	93	3
 93	8	rimira	obj	93	7
 94	3	fece	subj	95	3
+94	3	fece	obj	94	2
+94	3	fece	attr	94	1
 94	6	leväi	subj	0	0
 94	6	leväi	obj	94	8
 95	0			0	0
 96	1	movea	subj	95	4
 96	1	movea	obj	95	6
-96	1	movea	obl:da	96	5
 96	2	sospinte	subj	95	6
 96	2	sospinte	obl:da	96	5
 97	1	Roteando	subj	0	0

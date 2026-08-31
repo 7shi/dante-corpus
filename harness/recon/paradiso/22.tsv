@@ -26,7 +26,7 @@ line	token	word	role	arg_line	arg_token
 8	8	è	subj	8	7
 8	8	è	attr	8	10
 9	6	fa	subj	9	3
-9	6	fa	obl	9	4
+9	6	fa	obl:in	9	4
 9	7	vien	subj	9	2
 9	7	vien	obl:da	9	10
 10	4	trasmutato	subj	10	6
@@ -294,8 +294,8 @@ line	token	word	role	arg_line	arg_token
 99	8	avvolse	subj	0	0
 99	8	avvolse	obj	99	7
 99	8	avvolse	obl	99	1
-99	8	avvolse	obl	99	3
-99	8	avvolse	obl	99	5
+99	8	avvolse	obl:come	99	3
+99	8	avvolse	obl:in	99	5
 99	8	avvolse	obl	99	6
 100	8	pinse	subj	100	3
 100	8	pinse	obj	100	7
@@ -378,7 +378,7 @@ line	token	word	role	arg_line	arg_token
 127	8	inlei	subj	127	5
 127	8	inlei	obj	127	7
 128	1	rimira	subj	0	0
-128	1	rimira	obl	128	3
+128	1	rimira	obl:in	128	3
 128	5	vedi	subj	0	0
 128	5	vedi	obj	128	7
 129	5	esser	subj	128	7

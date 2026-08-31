@@ -126,15 +126,12 @@ line	token	word	role	arg_line	arg_token
 40	6	portan	subj	40	4
 40	6	portan	obj	40	8
 40	6	portan	obl	40	5
+40	6	portan	obl:in	41	3
+40	6	portan	obl:a	41	5
 41	0			0	0
 42	0			0	0
 43	10	mena	subj	42	3
-43	10	mena	obj	42	5
 43	10	mena	obj	43	9
-43	10	mena	obl	43	2
-43	10	mena	obl	43	4
-43	10	mena	obl	43	6
-43	10	mena	obl	43	8
 44	4	conforta	subj	44	2
 44	4	conforta	obj	44	3
 44	4	conforta	obl	44	5
@@ -405,7 +402,7 @@ line	token	word	role	arg_line	arg_token
 125	5	hai	obj	125	7
 125	5	hai	xcomp	124	4
 126	1	dirò	subj	0	0
-126	1	dirò	obl	126	3
+126	1	dirò	obl:come	126	3
 126	5	piange	subj	126	4
 126	7	dice	subj	126	4
 127	2	leggiavamo	subj	127	1

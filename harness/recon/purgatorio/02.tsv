@@ -70,8 +70,8 @@ line	token	word	role	arg_line	arg_token
 23	3	sapeva	subj	0	0
 23	3	sapeva	attr	23	5
 24	9	uscìo	subj	24	6
-24	9	uscìo	obl	23	8
-24	9	uscìo	obl	24	2
+24	9	uscìo	obl:di	23	8
+24	9	uscìo	obl:a	24	2
 24	9	uscìo	obl:a	24	8
 25	6	facea	subj	25	3
 25	6	facea	obj	25	7
@@ -156,7 +156,7 @@ line	token	word	role	arg_line	arg_token
 53	1	parea	subj	52	2
 53	1	parea	attr	52	6
 53	1	parea	obl:di	53	3
-53	1	parea	obl	54	2
+53	1	parea	obl:come	54	2
 53	4	rimirando	subj	0	0
 53	4	rimirando	obl	53	5
 54	6	assaggia	subj	54	3
@@ -214,9 +214,9 @@ line	token	word	role	arg_line	arg_token
 69	2	diventaro	obl:per	68	3
 70	6	porta	subj	70	5
 70	6	porta	obj	70	7
-71	1	tragge	subj	70	5
-71	1	tragge	obj	71	3
-71	1	tragge	obl	71	5
+71	1	tragge	subj	71	3
+71	1	tragge	xcomp	71	5
+71	1	tragge	obl:a	70	4
 71	5	udir	subj	71	3
 71	5	udir	obj	71	6
 72	3	calcar	subj	72	4
@@ -315,7 +315,8 @@ line	token	word	role	arg_line	arg_token
 97	8	face	obl:di	97	4
 98	7	tolto	subj	98	5
 98	7	tolto	obj	99	1
-98	7	tolto	obl	99	7
+98	7	tolto	obl:da	98	4
+98	7	tolto	obl:con	99	7
 99	3	voluto	subj	99	1
 99	3	voluto	xcomp	99	4
 99	4	intrar	subj	99	1

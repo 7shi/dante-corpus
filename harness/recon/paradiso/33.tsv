@@ -329,13 +329,12 @@ line	token	word	role	arg_line	arg_token
 115	0			0	0
 116	5	parvermi	subj	116	7
 116	5	parvermi	obl:in	115	6
-116	5	parvermi	obl:di	116	4
 117	0			0	0
 118	0			0	0
 119	1	parea	subj	118	3
 119	1	parea	attr	119	2
 119	1	parea	obl:da	118	6
-119	1	parea	obl	118	8
+119	1	parea	obl:come	118	8
 119	6	parea	subj	119	5
 119	6	parea	attr	119	7
 120	7	spiri	subj	120	1
@@ -369,16 +368,18 @@ line	token	word	role	arg_line	arg_token
 126	6	arridi	obj	126	3
 127	5	concetta	subj	0	0
 128	1	pareva	subj	127	3
-128	1	pareva	attr	127	5
-128	1	pareva	attr	129	6
+128	1	pareva	xcomp	127	5
+128	1	pareva	xcomp	129	6
 128	1	pareva	obl:in	128	3
-128	1	pareva	obl	128	5
+128	1	pareva	obl:come	128	5
 129	6	circunspetta	subj	0	0
 129	6	circunspetta	obl:da	129	3
 130	0			0	0
 131	2	parve	subj	127	2
 131	2	parve	iobj	131	1
-131	2	parve	attr	131	3
+131	2	parve	xcomp	131	3
+131	2	parve	obl:da	130	3
+131	2	parve	obl:di	130	6
 131	3	pinta	subj	0	0
 131	3	pinta	obl:de	131	7
 132	10	messo	subj	132	5
@@ -421,7 +422,7 @@ line	token	word	role	arg_line	arg_token
 143	3	volgeva	subj	143	9
 143	3	volgeva	obj	145	2
 143	3	volgeva	obl	143	2
-143	3	volgeva	obl	144	3
+143	3	volgeva	obl:come	144	3
 144	7	mossa	subj	144	4
 144	7	mossa	obl	144	5
 145	4	move	subj	145	3

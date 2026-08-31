@@ -20,7 +20,7 @@ line	token	word	role	arg_line	arg_token
 6	4	può	subj	6	5
 6	4	può	xcomp	5	7
 6	9	discende	subj	6	5
-6	9	discende	obl	6	7
+6	9	discende	obl:di	6	7
 7	2	appressando	subj	8	2
 7	2	appressando	obj	7	3
 7	2	appressando	obl:a	7	6
@@ -49,14 +49,14 @@ line	token	word	role	arg_line	arg_token
 16	0			0	0
 17	3	fu	subj	16	6
 17	3	fu	iobj	17	2
-17	3	fu	obl	16	3
+17	3	fu	obl:a	16	3
 17	3	fu	obl	17	1
 18	2	è	subj	18	3
 18	2	è	iobj	18	1
 18	2	è	xcomp	18	4
 18	2	è	obl:con	17	7
 18	4	intrar	subj	0	0
-18	4	intrar	obl:ne	18	7
+18	4	intrar	obl:in	18	7
 19	1	Entra	subj	0	0
 19	1	Entra	obl:in	19	3
 19	6	spira	subj	0	0
@@ -297,9 +297,9 @@ line	token	word	role	arg_line	arg_token
 92	3	fuggendo	subj	92	2
 92	3	fuggendo	obj	92	6
 93	2	corse	subj	92	2
-93	2	corse	obl	93	4
+93	2	corse	obl:come	93	4
 93	8	riedi	subj	93	5
-93	8	riedi	obl:ad	93	7
+93	8	riedi	obl:a	93	7
 94	7	disvestito	subj	94	2
 94	7	disvestito	obl:di	94	6
 95	0			0	0

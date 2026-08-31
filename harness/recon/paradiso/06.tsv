@@ -9,8 +9,9 @@ line	token	word	role	arg_line	arg_token
 4	0			0	0
 5	7	ritenne	subj	4	8
 5	7	ritenne	obl:in	5	3
-5	7	ritenne	obl	6	3
+5	7	ritenne	obl:a	6	3
 6	7	uscìo	subj	0	0
+6	7	uscìo	obl:di	6	5
 7	0			0	0
 8	1	governò	subj	0	0
 8	1	governò	obj	8	3
@@ -230,7 +231,7 @@ line	token	word	role	arg_line	arg_token
 69	7	scosse	obl:per	69	4
 69	7	scosse	obl	69	5
 70	3	scese	subj	0	0
-70	3	scese	obl	70	2
+70	3	scese	obl:da	70	2
 70	3	scese	obl:a	70	6
 70	4	folgorando	subj	0	0
 71	3	volse	subj	0	0
@@ -373,7 +374,8 @@ line	token	word	role	arg_line	arg_token
 116	4	convien	ccomp	117	6
 117	6	poggin	subj	116	7
 117	6	poggin	attr	117	8
-117	6	poggin	obl	117	5
+117	6	poggin	obl:di	117	3
+117	6	poggin	obl:in	117	5
 118	3	commensurar	obl:di	118	7
 118	3	commensurar	obl:con	119	2
 119	3	è	subj	118	3

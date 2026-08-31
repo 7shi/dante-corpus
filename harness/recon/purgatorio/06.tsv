@@ -77,7 +77,7 @@ line	token	word	role	arg_line	arg_token
 22	8	proveggia	subj	23	6
 22	8	proveggia	obl	22	7
 23	2	è	subj	23	6
-23	2	è	obl	23	4
+23	2	è	attr	23	4
 24	5	sia	subj	0	0
 24	5	sia	attr	24	8
 25	3	fui	subj	0	0
@@ -143,7 +143,7 @@ line	token	word	role	arg_line	arg_token
 47	3	vedrai	subj	47	1
 47	3	vedrai	obj	47	2
 47	3	vedrai	xcomp	48	4
-47	3	vedrai	obl	47	5
+47	3	vedrai	obl:di	47	5
 47	3	vedrai	obl:in	47	9
 48	4	ridere	subj	47	2
 49	4	andiamo	subj	0	0

@@ -105,7 +105,7 @@ line	token	word	role	arg_line	arg_token
 36	2	dir	ccomp	36	4
 36	4	è	subj	36	3
 36	10	spicchi	subj	0	0
-36	10	spicchi	obl	36	8
+36	10	spicchi	obl:di	36	8
 37	2	elli	iobj	37	4
 37	6	è	subj	37	5
 37	6	è	attr	37	8
@@ -161,13 +161,14 @@ line	token	word	role	arg_line	arg_token
 55	1	faceva	xcomp	55	3
 55	3	tener	subj	55	2
 55	3	tener	obj	55	5
+55	3	tener	attr	55	6
 56	4	fa	subj	56	3
 56	4	fa	ccomp	57	11
 57	11	rinverte	subj	57	2
 57	11	rinverte	subj	57	8
 57	11	rinverte	obl:per	56	8
 57	11	rinverte	obl:verso	57	5
-57	11	rinverte	obl	57	10
+57	11	rinverte	obl:in	57	10
 58	7	siete	subj	58	3
 58	7	siete	obl:senza	58	6
 58	7	siete	obl:in	59	7
@@ -271,9 +272,9 @@ line	token	word	role	arg_line	arg_token
 91	6	son	subj	91	9
 91	6	son	attr	91	5
 92	2	fumman	subj	92	1
-92	2	fumman	obl	92	4
+92	2	fumman	obl:come	92	4
 92	5	bagnate	subj	92	4
-92	5	bagnate	obl	92	7
+92	5	bagnate	obl:lo	92	7
 93	1	giacendo	subj	0	0
 93	1	giacendo	xcomp	93	2
 93	1	giacendo	obl:a	93	6

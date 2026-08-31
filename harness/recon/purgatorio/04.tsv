@@ -312,7 +312,7 @@ line	token	word	role	arg_line	arg_token
 97	7	detta	subj	97	3
 97	7	detta	obj	97	6
 98	5	sonò	subj	98	2
-98	5	sonò	obl	98	4
+98	5	sonò	obl:di	98	4
 99	3	sedere	subj	0	0
 99	3	sedere	obl:in	99	5
 99	7	distretta	subj	0	0
@@ -424,7 +424,7 @@ line	token	word	role	arg_line	arg_token
 126	8	ripriso	subj	126	4
 126	8	ripriso	obj	126	6
 127	5	andar	subj	0	0
-127	5	andar	obl	127	7
+127	5	andar	obl:in	127	7
 127	9	porta	subj	127	5
 127	9	porta	obj	127	8
 128	4	lascerebbe	subj	129	2

@@ -208,12 +208,13 @@ line	token	word	role	arg_line	arg_token
 61	1	Vedeva	obl:in	61	4
 61	1	Vedeva	obl:in	61	7
 62	5	basso	subj	0	0
-62	5	basso	obl	62	4
+62	5	basso	obl:come	62	4
 62	7	vile	subj	0	0
-62	7	vile	obl	62	4
+62	7	vile	obl:come	62	4
 63	1	mostrava	subj	0	0
 63	1	mostrava	obj	63	3
 63	1	mostrava	xcomp	62	5
+63	1	mostrava	xcomp	62	7
 63	7	discerne	subj	63	4
 63	7	discerne	obl	63	5
 64	4	fu	subj	64	1
@@ -349,9 +350,9 @@ line	token	word	role	arg_line	arg_token
 101	6	soggioga	obl:sopra	102	5
 102	0			0	0
 103	2	rompe	subj	103	7
+103	2	rompe	xcomp	100	6
 103	2	rompe	obl	100	1
 103	2	rompe	obl:a	100	3
-103	2	rompe	obl	100	6
 103	2	rompe	obl:di	103	4
 103	2	rompe	obl:per	104	3
 104	6	fero	subj	104	4

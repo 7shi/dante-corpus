@@ -348,11 +348,11 @@ line	token	word	role	arg_line	arg_token
 118	3	vanno	obl:per	118	7
 119	7	discese	subj	0	0
 119	7	discese	obl	119	2
-119	7	discese	obl	119	6
+119	7	discese	obl:di	119	6
 120	7	auna	subj	120	5
 120	7	auna	obj	120	6
 120	7	auna	obl	120	1
-120	7	auna	obl	120	3
+120	7	auna	obl:di	120	3
 121	3	disse	subj	121	5
 121	3	disse	ccomp	123	2
 122	3	muoion	subj	122	2

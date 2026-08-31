@@ -118,8 +118,8 @@ line	token	word	role	arg_line	arg_token
 40	1	mostrate	subj	0	0
 40	1	mostrate	ccomp	41	2
 41	2	va	subj	0	0
-41	2	va	obl	40	4
-41	2	va	obl	40	7
+41	2	va	obl:da	40	4
+41	2	va	obl:in	40	7
 41	2	va	obl	41	4
 41	8	è	subj	41	12
 42	3	'nsegnate	subj	0	0

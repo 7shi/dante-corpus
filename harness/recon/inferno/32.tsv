@@ -106,7 +106,7 @@ line	token	word	role	arg_line	arg_token
 37	4	tenea	subj	37	1
 37	4	tenea	obj	37	7
 37	4	tenea	attr	37	5
-37	4	tenea	obl	37	3
+37	4	tenea	obl:in	37	3
 37	5	volta	subj	37	7
 38	0			0	0
 39	5	procaccia	subj	38	4
@@ -154,7 +154,7 @@ line	token	word	role	arg_line	arg_token
 49	7	cinse	obl:con	49	2
 50	0			0	0
 51	1	cozzaro	subj	50	4
-51	1	cozzaro	obl	50	7
+51	1	cozzaro	obl:come	50	7
 51	6	vinse	subj	51	4
 51	6	vinse	obj	51	5
 52	5	perduti	subj	52	3

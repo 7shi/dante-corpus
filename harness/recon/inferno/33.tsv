@@ -256,7 +256,7 @@ line	token	word	role	arg_line	arg_token
 75	6	poté	subj	75	8
 75	6	poté	obl	75	1
 75	6	poté	obl	75	2
-75	6	poté	obl	75	5
+75	6	poté	obl:che	75	5
 76	3	detto	subj	0	0
 76	3	detto	obj	76	4
 76	3	detto	obl:con	76	7
@@ -473,7 +473,7 @@ line	token	word	role	arg_line	arg_token
 148	2	distendi	subj	0	0
 148	2	distendi	obj	148	7
 148	2	distendi	obl	148	3
-148	2	distendi	obl	148	5
+148	2	distendi	obl:in	148	5
 149	1	aprimi	subj	0	0
 149	1	aprimi	obj	149	3
 149	8	apersi	subj	149	5

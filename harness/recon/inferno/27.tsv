@@ -366,6 +366,7 @@ line	token	word	role	arg_line	arg_token
 114	7	far	subj	0	0
 114	7	far	obj	114	8
 114	7	far	iobj	114	6
+115	1	Venir	subj	0	0
 115	1	Venir	obl:tra	115	8
 115	4	dee	subj	0	0
 115	4	dee	xcomp	115	1
@@ -373,8 +374,9 @@ line	token	word	role	arg_line	arg_token
 116	2	diede	obj	116	4
 117	5	stato	subj	117	6
 117	5	stato	obl:da	117	2
-117	5	stato	obl	117	4
+117	5	stato	obl:in	117	4
 117	5	stato	obl:a	117	9
+118	2	assolver	subj	0	0
 118	2	assolver	obj	118	6
 118	5	può	subj	118	6
 118	5	può	xcomp	118	2

@@ -149,7 +149,7 @@ line	token	word	role	arg_line	arg_token
 55	0			0	0
 56	2	veggion	subj	55	5
 56	2	veggion	obl:in	55	2
-56	2	veggion	obl	56	4
+56	2	veggion	obl:di	56	4
 56	2	veggion	obl:per	56	9
 57	7	giaci	subj	0	0
 58	0			0	0

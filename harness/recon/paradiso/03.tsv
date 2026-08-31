@@ -132,7 +132,7 @@ line	token	word	role	arg_line	arg_token
 43	5	serra	subj	43	3
 43	5	serra	obj	43	6
 43	5	serra	obl:a	44	3
-43	5	serra	obl	44	7
+43	5	serra	obl:come	44	7
 44	0			0	0
 45	2	vuol	subj	45	1
 45	2	vuol	obj	45	8
@@ -215,12 +215,12 @@ line	token	word	role	arg_line	arg_token
 68	4	rispuose	subj	0	0
 68	4	rispuose	iobj	68	3
 68	4	rispuose	attr	68	6
-68	4	rispuose	obl	68	2
+68	4	rispuose	obl:da	68	2
 69	2	arder	subj	0	0
+69	2	arder	obl:di	69	5
+69	2	arder	obl:in	69	8
 69	3	parea	subj	0	0
 69	3	parea	xcomp	69	2
-69	3	parea	obl:di	69	5
-69	3	parea	obl:in	69	8
 70	5	quïeta	subj	71	1
 70	5	quïeta	obj	70	4
 71	5	fa	subj	71	4
@@ -229,7 +229,7 @@ line	token	word	role	arg_line	arg_token
 71	6	volerne	obj	72	2
 72	4	avemo	subj	0	0
 72	4	avemo	obj	72	3
-72	10	asseta	subj	0	0
+72	10	asseta	subj	71	4
 72	10	asseta	obj	72	9
 72	10	asseta	obl:di	72	7
 73	2	disïassimo	subj	0	0

@@ -27,7 +27,8 @@ line	token	word	role	arg_line	arg_token
 10	2	è	attr	10	1
 11	2	vede	subj	10	4
 11	2	vede	obj	10	5
-11	2	vede	obl	10	7
+11	2	vede	obl:innanzi	10	7
+11	2	vede	obl	11	6
 11	6	maraviglia	subj	11	4
 11	6	maraviglia	obj	11	5
 12	2	crede	subj	10	4
@@ -42,6 +43,7 @@ line	token	word	role	arg_line	arg_token
 14	3	ritornò	subj	13	3
 14	3	ritornò	obl:verso	14	5
 15	2	abbracciòl	subj	13	3
+15	2	abbracciòl	obl	15	3
 15	8	appiglia	subj	15	6
 15	8	appiglia	obj	15	7
 16	5	disse	subj	0	0
@@ -93,7 +95,7 @@ line	token	word	role	arg_line	arg_token
 29	0			0	0
 30	2	suonan	subj	29	7
 30	2	suonan	obl	29	5
-30	2	suonan	obl	30	4
+30	2	suonan	obl:come	30	4
 30	6	son	subj	29	7
 30	6	son	attr	30	7
 31	2	sto	subj	31	3
@@ -197,7 +199,7 @@ line	token	word	role	arg_line	arg_token
 55	6	desse	subj	55	5
 55	6	desse	obj	55	7
 55	6	desse	xcomp	56	6
-55	6	desse	obl	56	4
+55	6	desse	obl:che	56	4
 56	6	ir	subj	0	0
 56	6	ir	obl	56	7
 57	6	intriga	subj	57	1
@@ -207,7 +209,7 @@ line	token	word	role	arg_line	arg_token
 58	3	poria	xcomp	58	6
 58	3	poria	xcomp	59	2
 58	6	tornare	obl:con	58	5
-58	6	tornare	obl	58	8
+58	6	tornare	obl:in	58	8
 59	2	passeggiar	obj	59	4
 59	2	passeggiar	obl	59	5
 59	6	errando	subj	0	0

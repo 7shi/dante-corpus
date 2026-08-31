@@ -220,12 +220,14 @@ line	token	word	role	arg_line	arg_token
 80	0			0	0
 81	1	son	subj	81	3
 81	1	son	attr	81	7
+81	1	son	obl	80	8
 81	1	son	obl	81	4
 81	1	son	obl:di	81	6
 82	9	inganni	subj	82	5
 82	9	inganni	obj	82	8
 83	1	parran	subj	83	2
-83	1	parran	obl	84	3
+83	1	parran	obl:di	83	6
+83	1	parran	obl:in	84	3
 84	3	curar	subj	0	0
 84	3	curar	obl:di	84	5
 84	3	curar	obl:di	84	8
@@ -364,7 +366,7 @@ line	token	word	role	arg_line	arg_token
 132	4	sarà	subj	0	0
 132	4	sarà	attr	132	5
 133	4	farà	subj	133	3
-133	4	farà	obl	133	6
+133	4	farà	obl:come	133	6
 134	7	percuote	subj	134	1
 134	7	percuote	obj	134	5
 135	4	fa	subj	135	2

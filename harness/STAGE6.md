@@ -299,3 +299,113 @@ Docs updated to match: ARCHITECTURE.md §0 checklist + §4, and
 written — STAGE2.md's 2026-08-24 wiring description is a record of what shipped
 then. Suite **957 passed**, count unchanged by this work (one existing test's
 stderr expectation updated); `harness/recon/` untouched.
+
+### S6.3 — `make fix` level 1 over the whole corpus: 294 of 377 cleared (2026-09-01)
+
+The operator's run of S6.2's mechanism over all 100 cantos, read out here. It is
+the first time a soft finding has reached a live session, and the first
+corpus-wide edit since S5.7. **The corpus moved; no code did.**
+
+**The numbers, against the S6.2 baseline (`007d973`, verified by re-checking
+that commit's TSVs rather than trusting the prose):**
+
+| | before | after |
+|---|---:|---:|
+| hard violations | 0 | **0** |
+| soft violations | 5,014 | **4,706** (−308) |
+| level-1 findings (`make fix-level`) | 377 | **83** (−294, 78.0%) |
+| cantos carrying a level-1 finding | 95 | 50 (45 cleared outright, **none worse**) |
+| gold agreement (readout, §5 discipline 4) | 0.7309 | 0.7372 |
+
+`make check` exits 0, so the regression signal the hard track leaves behind is
+intact. The level's own measure — how many of the 377 survive — is the honest
+headline: **83**, and no canto and no unit carries a level-1 finding it did not
+carry before.
+
+**Per soft class** (nothing rose): `role_mismatch` 573 → **287** (−286);
+`missing_arg` 1,646 → 1,636; `extra_arg` 2,114 → 2,107; `membership` 146 → 143;
+`missing_tuple` 490 → 488; `extra_tuple` 43 and `dual_role` 2 unchanged. The
+level's class carries −286 of the −308, and the other −22 are collateral gains
+in classes the run was not aiming at. Per §2 this near-agreement between −294
+findings and −308 soft is *not* evidence the two measure the same thing: soft is
+not a distance, and a relocated argument still scores twice.
+
+**The mechanism, from the 100 per-canto logs** (fix run only; 13 cantos were
+re-invoked after an interruption, so the aggregates below sum every fix
+invocation and the unit counts are deduplicated by span):
+
+- **337 unique units reopened across 95 cantos**, 360 unit records (22 units
+  reopened a second time by a re-invocation). Final verdict per unique unit:
+  **265 accepted (78.6%), 46 `new_class`, 26 `no_improvement`, 0 `hard`**.
+- **Zero `hard` refusals is the first result.** S5.5/S5.7 moved the schema
+  checks into the session, so a fix session's answers are hard-clean by
+  construction — the acceptance test's first refusal never fired once in 360
+  attempts, and the corpus is still 0 hard afterwards. The gate now costs
+  nothing and guards a real invariant; that is what a settled gate looks like.
+- **The dominant refusal is `new_class`, not `no_improvement`** (46 vs 26):
+  `missing_arg` 27, `extra_arg` 21, `membership` 7, `missing_tuple` 1 (a unit
+  may bring more than one). The limiting factor is therefore *not* the model failing
+  to derive the qualification from the notice — it derives it — but the fact
+  that it re-answers the **whole unit** while the level names a single row, and
+  the re-answer trades the cleared class for an argument-level one. That is the
+  interesting negative result, and it belongs to the design, not to the model:
+  §S6.2's "replaces those rows" is a whole-unit replacement.
+- **Row-level** (the diff against `007d973`, 93 files, +484/−455 lines):
+  **322 relabels, 188 rows added, 151 removed, net +37 rows.** Only **235** of
+  the relabels are the level's own `obl` → `obl:<prep>` (`obl:come` 68,
+  `obl:di` 56, `obl:in` 49, `obl:a` 10, `obl:che` 9, `obl:per`/`obl:da` 7 each,
+  …). The other 87 are the re-solve reaching past its brief: `obl` → `attr` 12,
+  `obl` → `xcomp` 12, `obl` → `ccomp` 7, `obl:ne` → `obl:in` 5, `subj` ↔ `obj`
+  8, plus normalisations of the preposition itself (`obl:col` → `obl:con` 3,
+  `obl:sovra` → `obl:sopra` 2, `obl:ad` → `obl:a` 2, `obl:de` → `obl:di` 2).
+- **So PLAN.md's readout expectation — "expect only role relabels; an added or
+  deleted row is a finding worth explaining" — is falsified, benignly.** The
+  explanation is the same whole-unit replacement: 339 rows moved without a
+  counterpart. One of them is worth naming, `purgatorio 21:87`, where the
+  empty-line placeholder (`87 0 <> 0 0`) was replaced by two rows for the
+  predicate `famoso` — a predicate *registered*, which §2 records as the exact
+  move that **raises** the soft count while being a strict improvement.
+
+**`adopted_invalid` means something different under `--fix`, and the number must
+not be compared across runs.** 99 of 360 attempts (27.5%) ended on rows the
+session's own gate rejected, 66 of them on units the acceptance test then
+accepted. There is no contradiction: the level-1 bar is added to
+`validate_candidate` as an **error**, so `valid: false` under `--fix 1` usually
+means "a bare `obl` with a lemma-bearing `case` child is still on the sheet",
+not the schema failure the S5.5-era number reported. It correlates with the
+refusals exactly as it should — 25 of the 30 `no_improvement` records are
+`adopted_invalid`, i.e. the session ran out of room still failing its own check.
+
+**Cost.** 2,287 LLM calls, **23.87 M tokens** (16.24 M input / 1.55 M output /
+6.08 M thought), **61.5 h** of summed per-canto elapsed (inferno 22.0 /
+purgatorio 28.5 / paradiso 10.9), so ≈28.5 h wall clock on the three `-j3`
+streams. 170 `api_retries` absorbing 6,469 s of 429 backoff, 21 max-length
+retries, 0 paced seconds. The ~3,140 units carrying no level-1 finding cost no
+model call, as designed.
+
+**Gold agreement, opened afterwards and cited as nothing else** (§5 discipline
+4): corpus-wide **0.7309 → 0.7372** (P 0.7079 → 0.7136, R 0.7555 → 0.7624;
++275 true positives on +38 rows); inferno 0.7357 → 0.7437, purgatorio
+0.7282 → 0.7343, paradiso 0.7287 → 0.7334. This is the largest agreement move
+the project has recorded — the whole hard track was 0.7307 → 0.7309 — which
+says only that the soft residue is where the remaining distance to gold lives,
+as S5.7 predicted. It is **not** the reason the level shipped: that was argued
+from `derive.py`'s contract in S6.2, gold-closed.
+
+**What the two available routes to this class now measure.** §3's dry run of
+`skel/repairs.py` (`role_label` + `null_subject`, two classes) projected soft
+5,014 → 3,949 with 720 rewrites and +0.0166 agreement, deterministically and in
+seconds. The live route cleared 294 findings of one class for ~28 h and
++0.0063. They are not the same scope and the comparison cannot decide the open
+authority question in §3 — but it does price it: the deterministic rewrite
+transcribes `derive_unit`, and this run is the measurement of a model
+re-deriving the qualification from the frozen layers, which is what §1 says the
+project exists to obtain.
+
+**State at close.** Corpus **0 hard / 4,706 soft**, 93 TSVs modified in the
+working tree and uncommitted; suite **957 passed** (unchanged — no code moved);
+the per-canto logs on disk are this run's only telemetry and everything above
+is read out of them. Level 2 is not opened: on this evidence its class must be
+argued from the contract first (§2's three outcomes), and the `new_class`
+refusal rate says the *unit* granularity of replacement, not the level table,
+is the next thing worth designing.

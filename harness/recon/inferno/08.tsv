@@ -14,10 +14,11 @@ line	token	word	role	arg_line	arg_token
 4	7	porre	subj	4	4
 5	6	render	subj	5	3
 5	6	render	obj	5	7
-5	6	render	obl	5	5
+5	6	render	obl:da	5	5
 6	6	potea	subj	6	8
 6	6	potea	xcomp	6	9
 6	6	potea	obl:a	6	4
+6	9	tòrre	subj	6	8
 6	9	tòrre	obj	6	5
 7	4	volsi	subj	7	2
 7	4	volsi	obj	7	3
@@ -180,9 +181,10 @@ line	token	word	role	arg_line	arg_token
 49	3	tegnon	obj	49	2
 49	3	tegnon	attr	49	8
 50	3	staranno	subj	50	1
-50	3	staranno	obl	50	5
+50	3	staranno	obl:come	50	5
 51	3	lasciando	subj	0	0
 51	3	lasciando	obj	51	5
+51	3	lasciando	obl:di	51	2
 52	0			0	0
 53	2	vederlo	xcomp	53	3
 53	3	attuffare	obl:in	53	6

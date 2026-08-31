@@ -297,7 +297,6 @@ line	token	word	role	arg_line	arg_token
 89	1	mostrò	obl:con	89	7
 89	1	mostrò	obl:con	90	3
 90	10	èe	subj	90	4
-90	10	èe	obl	90	6
 90	10	èe	obl:a	90	8
 91	0			0	0
 92	1	corrëan	subj	92	2
@@ -450,7 +449,6 @@ line	token	word	role	arg_line	arg_token
 136	8	chiedi	subj	136	7
 136	8	chiedi	obj	136	6
 137	4	messo	subj	0	0
-137	4	messo	obl	137	2
 137	8	fui	subj	137	7
 137	8	fui	attr	138	1
 138	0			0	0
@@ -459,7 +457,7 @@ line	token	word	role	arg_line	arg_token
 140	8	godi	subj	140	6
 140	8	godi	obl:di	140	5
 141	3	sarai	subj	0	0
-141	3	sarai	obl	141	5
+141	3	sarai	obl:di	141	5
 141	3	sarai	obl:da	141	7
 142	1	apri	subj	0	0
 142	1	apri	obj	142	3

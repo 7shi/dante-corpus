@@ -198,7 +198,7 @@ line	token	word	role	arg_line	arg_token
 65	1	rispuose	subj	0	0
 65	1	rispuose	ccomp	65	2
 65	2	Andiamo	subj	0	0
-65	2	Andiamo	obl	65	4
+65	2	Andiamo	obl:in	65	4
 65	2	Andiamo	obl	65	7
 65	7	vegnon	subj	65	6
 65	7	vegnon	obl	65	8
@@ -409,7 +409,7 @@ line	token	word	role	arg_line	arg_token
 130	3	bagna	obj	130	2
 130	7	move	subj	130	9
 130	7	move	obj	130	2
-130	7	move	obl	131	2
+130	7	move	obl:di	131	2
 130	7	move	obl:lungo	131	8
 131	0			0	0
 132	4	trasmutò	subj	0	0
@@ -432,8 +432,8 @@ line	token	word	role	arg_line	arg_token
 137	9	penta	obl:a	137	7
 138	1	star	subj	136	4
 138	1	star	obl:da	138	6
-138	1	star	obl	138	8
 138	1	star	obl:per	139	3
+138	3	convien	subj	0	0
 138	3	convien	iobj	138	2
 138	3	convien	xcomp	138	1
 139	7	stato	subj	139	5

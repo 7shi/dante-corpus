@@ -15,9 +15,9 @@ line	token	word	role	arg_line	arg_token
 5	6	esser	subj	6	5
 5	8	puote	subj	6	5
 5	8	puote	xcomp	5	6
-5	8	puote	obl	6	2
+5	8	puote	obl:senza	6	2
 6	2	gustar	subj	6	5
-6	2	gustar	obj	6	4
+6	2	gustar	obl:di	6	4
 6	7	rimira	subj	6	5
 6	7	rimira	obj	6	6
 7	1	Leva	subj	0	0

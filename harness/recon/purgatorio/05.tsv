@@ -48,10 +48,10 @@ line	token	word	role	arg_line	arg_token
 13	1	Vien	subj	0	0
 13	1	Vien	obl	13	2
 13	6	lascia	subj	0	0
-13	6	lascia	xcomp	13	7
+13	6	lascia	ccomp	13	7
 13	7	dir	subj	13	9
 14	1	sta	subj	0	0
-14	1	sta	obl	14	3
+14	1	sta	obl:come	14	3
 14	7	crolla	subj	14	5
 14	7	crolla	obj	15	4
 14	7	crolla	obl:per	15	6
@@ -59,9 +59,9 @@ line	token	word	role	arg_line	arg_token
 15	6	soffiar	obl:di	15	8
 16	8	rampolla	subj	16	7
 16	8	rampolla	obl:in	16	6
+16	8	rampolla	obl:sovra	17	2
 17	5	dilunga	subj	16	4
 17	5	dilunga	obj	17	7
-17	5	dilunga	obl:sovra	17	2
 17	5	dilunga	obl:da	17	4
 18	9	insolla	subj	18	3
 18	9	insolla	obj	18	5
@@ -164,7 +164,7 @@ line	token	word	role	arg_line	arg_token
 45	3	va	subj	0	0
 45	6	andando	subj	0	0
 45	7	ascolta	subj	0	0
-45	7	ascolta	obl	45	6
+45	7	ascolta	obl:in	45	6
 46	4	vai	subj	46	3
 46	4	vai	xcomp	46	6
 46	4	vai	obl:con	47	3
@@ -187,7 +187,7 @@ line	token	word	role	arg_line	arg_token
 50	8	porti	subj	49	3
 50	8	porti	obj	50	7
 50	8	porti	obl:di	50	4
-50	8	porti	obl	50	6
+50	8	porti	obl:di	50	6
 51	3	vai	subj	0	0
 51	3	vai	obl	51	2
 51	8	arresti	subj	0	0
@@ -291,8 +291,9 @@ line	token	word	role	arg_line	arg_token
 80	3	sovragiunto	subj	0	0
 80	3	sovragiunto	obl:a	80	5
 81	2	sarei	subj	0	0
-81	2	sarei	obl	81	4
+81	2	sarei	attr	81	4
 81	7	spira	subj	0	0
+81	7	spira	obl	81	5
 82	1	Corsi	subj	0	0
 82	1	Corsi	obl:a	82	3
 83	2	impigliar	subj	82	6

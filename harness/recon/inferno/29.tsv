@@ -76,7 +76,7 @@ line	token	word	role	arg_line	arg_token
 22	2	disse	ccomp	22	7
 22	2	disse	obl	22	1
 22	7	franga	subj	23	3
-22	7	franga	obl	23	6
+22	7	franga	obl:da	23	5
 22	7	franga	obl:sopra	23	8
 23	0			0	0
 24	1	Attendi	subj	0	0
@@ -387,14 +387,14 @@ line	token	word	role	arg_line	arg_token
 128	4	discoverse	subj	127	3
 128	4	discoverse	obj	127	5
 129	8	appicca	subj	129	6
-129	8	appicca	obl	129	4
+129	8	appicca	obl:in	129	3
 130	2	tra'	subj	0	0
 130	2	tra'	obj	130	5
 130	2	tra'	obl	130	3
 130	8	disperse	subj	131	1
 130	8	disperse	obj	131	5
 130	8	disperse	obj	131	9
-130	8	disperse	obl	130	7
+130	8	disperse	obl:in	130	7
 131	0			0	0
 132	6	proferse	subj	132	3
 132	6	proferse	obj	132	5

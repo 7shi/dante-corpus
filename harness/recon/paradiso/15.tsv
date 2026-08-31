@@ -138,14 +138,14 @@ line	token	word	role	arg_line	arg_token
 51	4	muta	obl	51	1
 52	2	hai	subj	0	0
 52	2	hai	obj	49	6
-52	2	hai	obl	52	7
+52	2	hai	obl:dentro	52	7
+52	2	hai	obl	53	6
 53	5	parlo	subj	53	3
 53	5	parlo	iobj	53	4
-53	5	parlo	obl	53	6
 54	7	vestì	subj	54	1
 54	7	vestì	obj	54	9
 54	7	vestì	iobj	54	6
-54	7	vestì	obl	54	5
+54	7	vestì	obl:a	54	5
 55	2	credi	subj	55	1
 55	2	credi	ccomp	55	8
 55	8	mei	subj	55	7
@@ -296,7 +296,7 @@ line	token	word	role	arg_line	arg_token
 102	2	fosse	xcomp	102	4
 102	4	veder	subj	0	0
 102	4	veder	obj	102	1
-102	4	veder	obl	102	8
+102	4	veder	obl:che	102	8
 103	2	faceva	subj	104	2
 103	2	faceva	obj	103	5
 103	2	faceva	obl	103	1

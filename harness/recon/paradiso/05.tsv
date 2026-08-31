@@ -241,7 +241,7 @@ line	token	word	role	arg_line	arg_token
 81	10	rida	obl:di	81	6
 81	10	rida	obl:tra	81	8
 82	2	fate	subj	0	0
-82	2	fate	obl	82	4
+82	2	fate	obl:come	82	4
 82	6	lascia	subj	82	5
 82	6	lascia	obj	82	8
 83	0			0	0
@@ -298,12 +298,12 @@ line	token	word	role	arg_line	arg_token
 99	2	son	attr	99	1
 99	2	son	obl:da	98	9
 99	2	son	obl:per	99	5
-100	5	è	subj	100	4
+100	5	è	subj	100	3
 100	5	è	attr	100	6
 101	1	traggonsi	subj	101	3
 101	1	traggonsi	obl:a	101	5
 101	7	vien	subj	101	6
-101	7	vien	obl	101	9
+101	7	vien	obl:di	101	9
 102	5	stimin	subj	0	0
 102	5	stimin	obj	102	4
 102	5	stimin	attr	102	7
@@ -420,7 +420,7 @@ line	token	word	role	arg_line	arg_token
 136	7	nascose	subj	137	6
 136	7	nascose	obj	136	6
 136	7	nascose	iobj	136	5
-136	7	nascose	obl	133	4
+136	7	nascose	obl:come	133	4
 136	7	nascose	obl:per	136	3
 136	7	nascose	obl:a	137	4
 137	0			0	0

@@ -138,7 +138,7 @@ line	token	word	role	arg_line	arg_token
 41	4	è	subj	41	2
 41	4	è	attr	41	5
 41	4	è	obl	41	3
-41	4	è	obl	41	8
+41	4	è	obl:fuori	41	8
 42	8	fa	subj	0	0
 42	8	fa	obj	42	9
 42	8	fa	obl:di	42	2
@@ -225,7 +225,6 @@ line	token	word	role	arg_line	arg_token
 63	4	fui	obl	63	3
 63	4	fui	obl:a	63	7
 64	2	passò	subj	0	0
-64	2	passò	obl	64	4
 64	2	passò	obl:da	64	6
 65	4	giunse	subj	65	3
 65	4	giunse	obl:in	65	8
@@ -236,7 +235,7 @@ line	token	word	role	arg_line	arg_token
 66	5	aver	obj	66	7
 67	0			0	0
 68	2	escono	subj	68	4
-68	2	escono	obl	68	6
+68	2	escono	obl:a	68	6
 69	4	chiede	subj	69	1
 69	4	chiede	ccomp	69	7
 69	7	arresta	subj	0	0
@@ -244,9 +243,9 @@ line	token	word	role	arg_line	arg_token
 70	1	usciron	subj	70	2
 70	1	usciron	obl:con	67	3
 70	1	usciron	obl:con	67	7
-70	1	usciron	obl	70	4
+70	1	usciron	obl:a	70	6
 71	2	volser	subj	71	7
-71	2	volser	obl:contra	71	4
+71	2	volser	obl:contro	71	4
 72	3	gridò	subj	72	2
 72	3	gridò	ccomp	72	7
 72	7	sia	subj	72	4
@@ -393,15 +392,14 @@ line	token	word	role	arg_line	arg_token
 113	0			0	0
 114	2	compié	subj	0	0
 114	2	compié	obj	114	1
-114	2	compié	obl	112	5
+114	2	compié	obl:oltre	112	5
 114	2	compié	obl	114	8
 114	8	rotta	subj	114	6
 114	8	rotta	obl	114	4
 115	2	mando	subj	115	1
 115	2	mando	obj	115	7
 115	2	mando	xcomp	116	2
-115	2	mando	obl	115	4
-116	2	riguardar	subj	0	0
+115	2	mando	obl:verso	115	4
 116	2	riguardar	ccomp	116	7
 116	7	sciorina	subj	116	4
 116	7	sciorina	obj	116	5

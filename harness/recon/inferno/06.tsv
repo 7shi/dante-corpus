@@ -47,8 +47,8 @@ line	token	word	role	arg_line	arg_token
 18	1	graffia	obj	18	3
 18	5	iscoia	subj	0	0
 18	7	isquatra	subj	0	0
-19	1	Urlar	subj	0	0
-19	1	Urlar	obl	19	7
+19	1	Urlar	subj	19	2
+19	1	Urlar	obl:come	19	7
 19	3	fa	subj	19	5
 19	3	fa	obj	19	2
 19	3	fa	xcomp	19	1
@@ -324,8 +324,8 @@ line	token	word	role	arg_line	arg_token
 94	4	disse	iobj	94	6
 94	4	disse	ccomp	94	10
 94	10	desta	subj	0	0
-94	10	desta	obl	95	2
-94	10	desta	obl	96	1
+94	10	desta	obl:da	95	4
+94	10	desta	obl	96	2
 95	0			0	0
 96	2	verrà	subj	96	5
 97	2	rivederà	subj	97	1
@@ -367,7 +367,7 @@ line	token	word	role	arg_line	arg_token
 110	7	vada	subj	109	4
 110	7	vada	obl:in	110	3
 111	7	essere	subj	0	0
-111	7	essere	obl	111	2
+111	7	essere	obl:di	111	2
 111	8	aspetta	subj	0	0
 111	8	aspetta	xcomp	111	7
 112	2	aggirammo	subj	112	1

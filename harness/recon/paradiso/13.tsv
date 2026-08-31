@@ -56,8 +56,10 @@ line	token	word	role	arg_line	arg_token
 21	7	era	subj	21	6
 21	7	era	obl	21	5
 22	3	è	subj	0	0
-22	3	è	obl	22	6
-22	3	è	obl	23	3
+22	3	è	attr	22	6
+22	3	è	attr	23	3
+22	3	è	obl:da	22	9
+22	3	è	obl:da	23	5
 23	0			0	0
 24	2	move	subj	24	4
 24	9	avanza	subj	24	5
@@ -266,19 +268,23 @@ line	token	word	role	arg_line	arg_token
 93	4	Chiedi	subj	0	0
 93	6	dimandare	subj	0	0
 94	3	parlato	subj	0	0
-94	3	parlato	obl	94	8
-94	3	parlato	obl	97	3
+94	3	parlato	ccomp	94	8
+94	3	parlato	ccomp	97	3
+94	3	parlato	obl	94	4
 94	8	posse	subj	94	6
 94	8	posse	xcomp	95	2
+95	2	veder	subj	0	0
 95	2	veder	ccomp	95	5
 95	5	fu	subj	95	4
 95	5	fu	attr	95	6
 95	8	chiese	subj	95	7
 95	8	chiese	obj	95	9
-95	8	chiese	obl	96	5
+95	8	chiese	ccomp	96	5
 96	5	fosse	subj	96	3
 96	5	fosse	attr	96	4
+97	3	sapere	subj	0	0
 97	3	sapere	obj	97	5
+97	3	sapere	ccomp	97	8
 97	3	sapere	ccomp	99	5
 97	8	enno	subj	98	2
 97	8	enno	obl:in	97	7
@@ -288,12 +294,14 @@ line	token	word	role	arg_line	arg_token
 99	5	fenno	obl:con	99	2
 100	3	est	subj	100	2
 100	3	est	xcomp	100	4
+100	4	dare	subj	0	0
 100	4	dare	obj	100	6
 100	4	dare	xcomp	100	7
 100	7	esse	subj	100	6
+101	6	far	subj	0	0
 101	6	far	obj	102	1
+101	6	far	ccomp	102	7
 101	6	far	obl:di	101	5
-101	6	far	obl	102	7
 101	8	puote	subj	101	7
 101	8	puote	xcomp	101	6
 102	7	avesse	subj	102	1
@@ -346,9 +354,9 @@ line	token	word	role	arg_line	arg_token
 115	3	è	obl:tra	115	6
 115	3	è	obl:a	115	9
 116	4	afferma	subj	116	1
-116	4	afferma	obl	116	3
+116	4	afferma	obl:senza	116	3
 116	6	nega	subj	116	1
-116	6	nega	obl	116	3
+116	6	nega	obl:senza	116	3
 117	0			0	0
 118	3	'ncontra	subj	118	2
 118	3	'ncontra	ccomp	118	7

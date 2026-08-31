@@ -67,7 +67,7 @@ line	token	word	role	arg_line	arg_token
 21	6	vedete	obj	21	5
 22	8	guardava	subj	22	5
 22	8	guardava	obj	22	1
-22	8	guardava	obl	22	3
+22	8	guardava	obl:in	22	3
 22	8	guardava	obl:in	22	7
 23	9	posa	subj	23	8
 23	9	posa	obl:in	23	4

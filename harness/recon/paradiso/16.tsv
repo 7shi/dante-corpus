@@ -216,7 +216,8 @@ line	token	word	role	arg_line	arg_token
 74	8	vanno	subj	75	5
 74	8	vanno	obj	74	6
 74	8	vanno	obl	74	7
-74	8	vanno	obl	75	2
+74	8	vanno	obl:di	75	2
+74	8	vanno	obl:ad	75	4
 75	0			0	0
 76	1	udir	subj	0	0
 76	1	udir	ccomp	76	6

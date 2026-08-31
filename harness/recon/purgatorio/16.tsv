@@ -8,11 +8,12 @@ line	token	word	role	arg_line	arg_token
 4	2	fece	subj	1	1
 4	2	fece	obj	4	8
 4	2	fece	iobj	4	4
-4	2	fece	obl	6	3
+4	2	fece	xcomp	6	3
+4	2	fece	obl	5	3
 5	7	coperse	subj	5	3
 5	7	coperse	obj	5	6
 5	7	coperse	obl	5	5
-6	3	sentir	obl:di	6	7
+6	3	sentir	obj	6	7
 7	4	stare	subj	7	3
 7	4	stare	attr	7	5
 7	7	sofferse	subj	7	3
@@ -273,7 +274,7 @@ line	token	word	role	arg_line	arg_token
 70	7	distrutto	obl:in	70	5
 71	5	fora	subj	71	6
 71	5	fora	obl:per	72	3
-71	5	fora	obl	72	7
+71	5	fora	obl:per	72	7
 72	7	aver	subj	0	0
 72	7	aver	obj	72	8
 72	7	aver	obl:per	72	6

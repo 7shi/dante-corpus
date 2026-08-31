@@ -100,7 +100,7 @@ line	token	word	role	arg_line	arg_token
 32	6	disviluppe	obl:da	31	9
 32	6	disviluppe	obl	33	4
 33	4	parli	subj	0	0
-33	4	parli	obl	33	7
+33	4	parli	obl:come	33	7
 33	9	sogna	subj	33	8
 34	1	Sappi	subj	0	0
 34	1	Sappi	ccomp	35	1
@@ -316,7 +316,7 @@ line	token	word	role	arg_line	arg_token
 105	8	fassi	subj	105	1
 105	8	fassi	obl	105	2
 105	8	fassi	obl	105	4
-105	8	fassi	obl	105	7
+105	8	fassi	obl:come	105	7
 106	3	affisser	subj	107	1
 106	3	affisser	obj	106	2
 106	7	affigge	subj	107	1
@@ -324,7 +324,6 @@ line	token	word	role	arg_line	arg_token
 107	2	va	subj	107	1
 107	2	va	obl	107	3
 107	2	va	obl:a	107	5
-107	2	va	obl:per	107	7
 108	2	trova	subj	107	1
 108	2	trova	obj	108	3
 108	2	trova	obj	108	6
@@ -334,7 +333,7 @@ line	token	word	role	arg_line	arg_token
 111	7	porta	obj	110	1
 111	7	porta	obl:sotto	110	3
 111	7	porta	obl:sotto	110	6
-111	7	porta	obl:sovra	111	4
+111	7	porta	obl:sopra	111	4
 112	0			0	0
 113	1	veder	subj	0	0
 113	1	veder	obj	112	6
@@ -362,10 +361,11 @@ line	token	word	role	arg_line	arg_token
 118	4	detto	subj	0	0
 118	4	detto	iobj	118	5
 118	4	detto	ccomp	118	7
-118	4	detto	obl	118	3
-118	7	Priega	subj	119	1
+118	4	detto	obl:per	118	3
+118	7	Priega	subj	0	0
+118	7	Priega	obj	119	1
 118	7	Priega	xcomp	119	5
-119	5	dica	subj	0	0
+119	5	dica	subj	119	1
 119	5	dica	obj	119	3
 119	5	dica	iobj	119	4
 119	8	rispuose	subj	121	3
@@ -379,7 +379,7 @@ line	token	word	role	arg_line	arg_token
 120	7	dislega	obl:da	120	5
 121	0			0	0
 122	1	dette	subj	121	7
-122	1	dette	obj	122	2
+122	1	dette	iobj	122	2
 122	1	dette	obl:per	122	5
 122	7	son	subj	0	0
 122	7	son	attr	122	8

@@ -77,15 +77,15 @@ line	token	word	role	arg_line	arg_token
 29	6	saliva	subj	29	1
 29	6	saliva	obl:da	29	4
 30	2	ricadeva	subj	29	1
-30	2	ricadeva	obl	30	4
+30	2	ricadeva	obl:in	30	4
 30	2	ricadeva	obl	30	5
 30	2	ricadeva	obl:di	30	8
 31	4	cinta	subj	32	1
-31	4	cinta	obl:sovra	31	3
 31	4	cinta	obl:di	31	6
 32	3	apparve	subj	32	1
 32	3	apparve	iobj	32	2
 32	3	apparve	obl:dentro	28	4
+32	3	apparve	obl:sovra	31	3
 32	3	apparve	obl:sotto	32	6
 33	1	vestita	subj	32	1
 33	1	vestita	obl:di	33	3
@@ -294,15 +294,16 @@ line	token	word	role	arg_line	arg_token
 102	1	volse	obj	102	4
 102	1	volse	ccomp	103	2
 102	1	volse	obl	101	3
+102	1	volse	obl	106	5
 103	2	vigilate	subj	103	1
 103	2	vigilate	ccomp	104	9
 103	2	vigilate	obl:in	103	6
 104	9	fura	subj	104	3
+104	9	fura	subj	104	5
 104	9	fura	attr	105	1
-104	9	fura	ccomp	106	5
 104	9	fura	obl:a	104	7
 105	3	faccia	subj	105	5
-105	3	faccia	obj	105	1
+105	3	faccia	obj	105	2
 105	3	faccia	obl:per	105	8
 106	5	è	subj	106	4
 106	5	è	ccomp	107	3
@@ -311,7 +312,7 @@ line	token	word	role	arg_line	arg_token
 107	3	intenda	obj	107	2
 107	3	intenda	ccomp	108	2
 107	8	piagne	subj	107	5
-107	8	piagne	obl	107	7
+107	8	piagne	obl:di	107	7
 108	2	sia	subj	0	0
 108	2	sia	attr	108	3
 109	0			0	0

@@ -32,7 +32,6 @@ line	token	word	role	arg_line	arg_token
 10	5	scese	subj	10	3
 10	5	scese	iobj	10	4
 10	5	scese	obl:in	10	7
-10	5	scese	obl	10	9
 11	2	apparve	subj	12	1
 11	2	apparve	xcomp	11	3
 11	2	apparve	obl	11	1
@@ -40,20 +39,21 @@ line	token	word	role	arg_line	arg_token
 11	3	esser	attr	11	4
 11	4	travolto	subj	12	1
 11	4	travolto	obl:tra	12	4
+11	4	travolto	obl:tra	12	7
 12	0			0	0
 13	6	tornato	subj	13	8
 13	6	tornato	obl:da	13	4
 14	4	venir	subj	0	0
 14	4	venir	obl	14	3
 14	6	convenia	iobj	14	5
-14	6	convenia	xcomp	14	4
+14	6	convenia	ccomp	14	4
 15	7	tolto	subj	15	3
 15	7	tolto	iobj	15	6
 15	7	tolto	obl	15	4
 16	6	parlasia	subj	17	4
 17	2	travolse	subj	17	4
 17	2	travolse	obl	16	1
-17	2	travolse	obl	16	3
+17	2	travolse	obl:per	16	3
 17	2	travolse	obl	16	4
 17	2	travolse	obl	17	3
 17	2	travolse	obl:di	17	6
@@ -79,7 +79,7 @@ line	token	word	role	arg_line	arg_token
 23	1	vidi	subj	0	0
 23	1	vidi	obj	22	4
 23	1	vidi	attr	23	3
-23	1	vidi	obl	22	6
+23	1	vidi	obl:di	22	6
 24	3	bagnava	subj	23	6
 24	3	bagnava	obj	24	2
 24	3	bagnava	obl:per	24	6
@@ -161,14 +161,12 @@ line	token	word	role	arg_line	arg_token
 47	7	ronca	subj	48	2
 47	7	ronca	obl:in	47	3
 48	6	alberga	subj	48	3
-48	6	alberga	obl	48	5
 49	1	ebbe	subj	47	1
 49	1	ebbe	obj	49	6
 49	1	ebbe	obl:tra	49	4
 49	1	ebbe	obl:per	50	3
-50	6	guardar	subj	51	5
+50	6	guardar	subj	0	0
 50	6	guardar	obj	50	8
-50	6	guardar	obj	51	3
 51	6	era	subj	51	8
 51	6	era	iobj	51	5
 51	6	era	attr	51	9
@@ -180,7 +178,7 @@ line	token	word	role	arg_line	arg_token
 53	4	vedi	obl:con	53	7
 54	2	ha	subj	52	3
 54	2	ha	obj	54	7
-54	2	ha	obl	54	4
+54	2	ha	obl:di	54	4
 55	2	fu	subj	52	2
 55	2	fu	attr	55	1
 55	4	cercò	subj	55	3

@@ -208,7 +208,7 @@ line	token	word	role	arg_line	arg_token
 55	6	diss'	ccomp	55	4
 56	8	ritenne	subj	56	1
 56	8	ritenne	obj	56	3
-56	8	ritenne	obl	57	2
+56	8	ritenne	obl:di	57	5
 57	9	odo	subj	57	8
 57	9	odo	obj	57	7
 58	2	veggio	subj	58	1
@@ -470,7 +470,7 @@ line	token	word	role	arg_line	arg_token
 139	10	piace	iobj	139	9
 139	10	piace	ccomp	140	1
 140	1	montare	subj	139	9
-140	1	montare	obl	140	3
+140	1	montare	obl:in	140	3
 140	6	convien	subj	0	0
 140	6	convien	xcomp	140	7
 140	6	convien	obl	140	4

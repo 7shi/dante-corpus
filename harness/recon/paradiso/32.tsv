@@ -22,7 +22,7 @@ line	token	word	role	arg_line	arg_token
 7	5	fanno	obj	7	4
 8	1	siede	subj	8	2
 8	1	siede	obl:in	7	3
-8	1	siede	obl	8	4
+8	1	siede	obl:da	8	6
 8	1	siede	obl:con	9	2
 9	6	vedi	subj	9	5
 10	0			0	0
@@ -388,9 +388,9 @@ line	token	word	role	arg_line	arg_token
 140	2	farem	subj	0	0
 140	2	farem	obj	140	3
 140	2	farem	obl	140	1
-140	2	farem	obl	140	6
+140	2	farem	obl:come	140	6
 141	4	ha	subj	141	3
-141	4	ha	obj	141	6
+141	4	ha	obl:di	141	6
 141	7	fa	subj	141	1
 141	7	fa	obj	141	9
 142	2	drizzeremo	subj	0	0

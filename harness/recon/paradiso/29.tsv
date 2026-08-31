@@ -61,8 +61,7 @@ line	token	word	role	arg_line	arg_token
 22	0			0	0
 23	1	usciro	subj	22	1
 23	1	usciro	xcomp	23	3
-23	1	usciro	obl	24	6
-23	3	esser	subj	0	0
+23	1	usciro	obl:come	24	6
 23	3	esser	ccomp	23	6
 23	6	avia	subj	0	0
 23	6	avia	obj	23	7
@@ -306,15 +305,15 @@ line	token	word	role	arg_line	arg_token
 111	2	diede	obj	111	5
 111	2	diede	iobj	111	3
 112	4	sonò	subj	112	2
-112	4	sonò	ccomp	114	4
 112	4	sonò	obl:in	112	8
+112	4	sonò	obl	114	4
 113	4	pugnar	subj	0	0
 113	4	pugnar	xcomp	113	6
 113	6	accender	subj	0	0
 113	6	accender	obj	113	8
 114	4	fero	subj	0	0
 114	4	fero	obj	114	5
-114	4	fero	obl	113	4
+114	4	fero	xcomp	113	4
 114	4	fero	obl:di	114	3
 115	3	va	subj	0	0
 115	3	va	xcomp	116	2

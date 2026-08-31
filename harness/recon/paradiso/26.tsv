@@ -59,14 +59,14 @@ line	token	word	role	arg_line	arg_token
 18	2	legge	obl	18	5
 18	2	legge	obl	18	7
 19	0			0	0
-20	3	avea	subj	19	4
+20	3	avea	subj	19	3
 20	3	avea	obj	19	5
 20	3	avea	iobj	20	2
 20	3	avea	obl:di	20	6
-21	2	ragionare	subj	21	4
-21	5	mise	subj	0	0
+21	2	ragionare	subj	0	0
+21	5	mise	subj	19	3
 21	5	mise	obj	21	4
-21	5	mise	obl	21	2
+21	5	mise	obl:di	21	2
 21	5	mise	obl:in	21	7
 22	2	disse	subj	0	0
 22	2	disse	ccomp	23	2
@@ -252,13 +252,12 @@ line	token	word	role	arg_line	arg_token
 85	5	flette	obj	85	7
 85	5	flette	obl:in	86	2
 86	8	leva	subj	85	4
-86	8	leva	obj	86	7
 86	8	leva	obl:per	87	4
 87	7	soblima	subj	87	5
 87	7	soblima	obj	87	6
 88	1	fec'	subj	88	2
 88	1	fec'	attr	89	1
-88	1	fec'	obl	85	3
+88	1	fec'	obl:come	85	3
 88	1	fec'	obl:in	88	4
 88	8	diceva	subj	88	7
 89	5	rifece	subj	90	2
@@ -266,7 +265,7 @@ line	token	word	role	arg_line	arg_token
 89	5	rifece	attr	89	6
 90	4	parlare		0	0
 90	7	ardeva	subj	90	6
-90	7	ardeva	obl	90	5
+90	7	ardeva	obl:onde	90	5
 91	2	cominciai	subj	0	0
 91	2	cominciai	ccomp	94	6
 92	3	fosti	subj	91	5

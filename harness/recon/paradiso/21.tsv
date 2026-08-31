@@ -43,7 +43,7 @@ line	token	word	role	arg_line	arg_token
 15	1	raggia	obl:di	15	7
 16	1	Ficca	subj	0	0
 16	1	Ficca	obj	16	9
-16	1	Ficca	obl	16	3
+16	1	Ficca	obl:di	16	3
 16	1	Ficca	obl:a	16	6
 17	2	fa	subj	0	0
 17	2	fa	obj	17	8

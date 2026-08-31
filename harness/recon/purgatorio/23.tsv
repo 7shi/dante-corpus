@@ -285,12 +285,11 @@ line	token	word	role	arg_line	arg_token
 92	6	amai	obj	92	4
 93	4	operare	subj	0	0
 93	4	operare	obl:in	93	3
-93	7	soletta	subj	0	0
-93	7	soletta	obl	93	4
+93	7	soletta	subj	93	4
 94	0			0	0
 95	7	pudica	subj	94	3
-95	7	pudica	obl:ne	95	3
-95	7	pudica	obl	96	3
+95	7	pudica	obl:in	95	3
+95	7	pudica	obl:che	96	3
 96	7	lasciai	subj	96	5
 96	7	lasciai	obj	96	6
 96	7	lasciai	obl	96	4

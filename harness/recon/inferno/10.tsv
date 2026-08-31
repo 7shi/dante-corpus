@@ -146,7 +146,7 @@ line	token	word	role	arg_line	arg_token
 44	7	apersi	iobj	44	6
 45	3	levò	subj	45	2
 45	3	levò	obj	45	5
-45	3	levò	obl	45	9
+45	3	levò	obl:in	45	9
 46	2	disse	subj	0	0
 46	2	disse	ccomp	46	4
 46	4	furo	subj	0	0
@@ -187,8 +187,8 @@ line	token	word	role	arg_line	arg_token
 58	2	disse	subj	0	0
 58	2	disse	ccomp	60	4
 59	2	vai	subj	0	0
-59	2	vai	obl	59	1
-59	2	vai	obl	59	4
+59	2	vai	obl:per	59	1
+59	2	vai	obl:per	59	4
 60	4	è	subj	60	2
 60	4	è	obl	60	3
 60	8	è	subj	0	0
@@ -251,7 +251,7 @@ line	token	word	role	arg_line	arg_token
 77	8	appresa	subj	77	5
 78	3	tormenta	subj	78	1
 78	3	tormenta	obj	78	2
-78	3	tormenta	obl	78	7
+78	3	tormenta	obl:che	78	7
 79	6	raccesa	subj	80	2
 79	6	raccesa	obl	79	4
 80	8	regge	subj	80	6

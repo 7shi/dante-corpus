@@ -141,14 +141,14 @@ line	token	word	role	arg_line	arg_token
 48	7	fa	obj	48	8
 48	7	fa	obl	48	6
 49	2	stava	subj	49	1
-49	2	stava	obl	49	5
+49	2	stava	obl:come	49	5
 49	7	confessa	subj	49	6
 49	7	confessa	obj	50	3
 50	8	fitto	subj	50	6
 51	1	richiama	subj	50	4
 51	1	richiama	obj	51	2
+51	1	richiama	ccomp	51	7
 51	1	richiama	obl	50	8
-51	1	richiama	obl	51	7
 51	7	cessa	subj	51	6
 52	3	gridò	subj	52	2
 52	3	gridò	attr	53	5
@@ -229,9 +229,7 @@ line	token	word	role	arg_line	arg_token
 72	8	misi	obl:in	72	10
 73	6	son	subj	73	9
 73	6	son	attr	75	7
-73	6	son	obl	73	2
 73	6	son	obl:a	73	4
-73	6	son	obl:per	75	3
 74	2	precedetter	subj	74	1
 74	2	precedetter	obj	74	3
 74	2	precedetter	obl	74	4

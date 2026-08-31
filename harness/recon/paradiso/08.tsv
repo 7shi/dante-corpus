@@ -198,7 +198,7 @@ line	token	word	role	arg_line	arg_token
 62	0			0	0
 63	8	sgorga	subj	63	3
 63	8	sgorga	subj	63	5
-63	8	sgorga	obl	63	2
+63	8	sgorga	obl:da	63	2
 63	8	sgorga	obl:in	63	7
 64	1	Fulgeami	subj	64	6
 64	1	Fulgeami	obl:in	64	4
