@@ -9,33 +9,75 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**READ OUT — the operator's corpus-wide `make fix` (level 1) landed, and record
-S6.3 is written** ([`STAGE6.md`](STAGE6.md)). The corpus moved and no code did:
-**0 hard / 4,706 soft** (from 5,014), level-1 findings **377 → 83**, 45 of the 95
-affected cantos cleared outright and none made worse; 93 TSVs are modified **in
-the working tree and not yet committed** — that commit is the operator's call and
-the next obvious step. Suite 957, unchanged.
+**IN FLIGHT: the operator is re-running `make fix` at level 1** on the S6.4
+mechanism committed just below, and **the next session reads out its result** as
+record **S6.5**. Nothing else is started. Do not touch `harness/recon/` while it
+runs, and do not re-derive its numbers from prose — read them from the logs.
 
-The mechanism, since the delta alone is not a result (discipline 6): 337 units
-reopened, **265 accepted / 46 `new_class` / 26 `no_improvement` / 0 `hard`**.
-Zero hard refusals is S5.5/S5.7 paying off — a fix session's answers are
-hard-clean by construction. The dominant refusal is `new_class`, so the model
-*does* derive the qualification; what costs it is that `--fix` replaces the
-**whole unit** while the level names one row, and the re-answer brings a
-`missing_arg`/`extra_arg` the unit did not carry. Only 235 of 322 relabels are
-the level's own `obl` → `obl:<prep>`; 188 rows were added and 151 removed, which
-falsifies the "expect only relabels" expectation for that same benign reason.
-`adopted_invalid` (99/360) does **not** mean what it meant on the hard track: the
-level bar is an *error* in `validate_candidate`, so it reads "an unqualified
-oblique is still on the sheet". Cost: 2,287 calls, 23.9 M tokens, ≈28.5 h wall
-clock across the three `-j3` streams. Gold agreement 0.7309 → **0.7372**, opened
-afterwards and citable as nothing but a readout (discipline 4).
+**What the re-run is for.** S6.3's corpus-wide run left **83** level-1 findings
+(from 377) and S6.4 measured where they sit: **52 of the 83 are inside the 46
+units whose answer was refused `new_class`**, and `fix_verdict`'s order (hard →
+`no_improvement` → `new_class`) proves every one of those 46 answers was
+hard-clean *and* did reduce the level's findings. So at least 46 of the 52 were
+repairs the level itself calls correct, thrown away with the unit around them.
+S6.4 stops that: a refused whole-unit answer is now spliced at just the rows its
+own findings name and re-measured by the same test. How much of the 46–52 band
+the re-run actually collects is the number **only this run can produce** — it
+could not be predicted from the S6.3 logs, because a refused unit was logged as
+the rows it kept, not as the answer that was discarded.
 
-Next, in this order: the operator commits the 93 TSVs; then **level 2 is a design
-question, not a queue item** — S6.3's evidence says the thing worth designing
-next is the *granularity of replacement* (unit-wide today), not another entry in
-the level table. Any level 2 still has to argue its class to one of §2's three
-outcomes from the contract, with gold unopened.
+**Reading the result (S6.5), in the order that keeps it honest:**
+
+1. `make check` — expected **0 hard**; soft is the delta to report, from 4,706.
+   A non-zero exit is a regression signal, not a finding.
+2. `make fix-level FIX=1` — the level's own count, from 83.
+3. The per-canto logs: `unit` records now carry `fix.verdict` including the new
+   **`salvaged`**, with `fix.unit_verdict` naming what the whole-unit answer was
+   refused for; `canto_complete.fix` carries `verdict:salvaged`,
+   findings/soft before→after and the row mechanism. Report the mechanism, not
+   just the delta (discipline 6) — how many units salvaged vs accepted vs
+   reverted, and what the surviving refusals are.
+4. **`make agree` only afterwards**, and only as a readout (discipline 4).
+
+**Caution when reading those logs**: the re-run *appends* to the same per-canto
+files S6.3 was read out of, and a unit reopened twice appears twice. Deduplicate
+`unit` records by `(canticle, canto, line_start, line_end)` keeping the last —
+that is how S6.4's table was produced and it reproduces S6.3's 265/26/46 exactly.
+
+**Record S6.4 (this commit) — replacement granularity, answered.** A level names
+a *row* while a session answers a *unit*, and acceptance now runs in both scopes:
+the whole answer first (taken entire when it passes, so S6.3's accepted units
+lose nothing), then a position-scoped splice at the rows the findings name
+(`FixClass.keys` → `reconstruct.salvage_rows`), re-measured by the same
+`fix_verdict` and reverted like any other refusal if it fails. Outside those keys
+no row is added or removed, so a salvage cannot import a class the unit never
+carried. Code only, corpus untouched, suite **960**; details in
+[`STAGE6.md`](STAGE6.md) S6.4.
+
+**State at this commit** (before the re-run lands anything): corpus **0 hard /
+4,706 soft**, `make check` exits 0, level-1 findings **83**. S6.3's own commit
+(`39fa17f`: 91 TSVs + PLAN.md + STAGE6.md) and this one are both **unpushed**.
+
+**After S6.5 is written, the queue is:**
+
+1. **Level 2** — a *design* question, not a queue item. Any candidate class
+   must first be argued to one of §2's three outcomes from `validate.py` /
+   `derive.py`, gold unopened, before it earns a level. §3 of
+   [`STAGE6.md`](STAGE6.md) carries the candidates; the eligibility list further
+   down this section is still current.
+2. **The open authority question** below (`skel/repairs.py` as an admissible
+   authority) is still the operator's and still unanswered. S6.3 prices it but
+   does not decide it: the deterministic route is larger and seconds-cheap but
+   transcribes `derive_unit`; the live route is what §1's autonomy premise
+   actually measures.
+
+**Two housekeeping facts.** The 100 per-canto logs are on disk and carry both
+runs — S6.3's is read entirely out of them, so `make clean-log` discards only
+what that record already carries, but **do not sweep them while S6.5 is
+unwritten**. And a `--fix` re-run over an already-fixed corpus cannot make it
+worse: only the 83 findings across 50 cantos are selectable at level 1, a unit
+whose answer fails the test keeps its rows, and 22 units were already reopened
+twice during S6.3 with no harm.
 
 **Stage 5 closed 2026-08-30 at 0 hard** ([`STAGE5.md`](STAGE5.md) S5.8)
 and **Stage 6 opened on the soft residue** ([`STAGE6.md`](STAGE6.md)), whose first
@@ -189,7 +231,8 @@ so the soft work reads as the new stage it is.
   tolerance behind it (0 occurrences today, so latent).
 
 - **Two fix gestures now.** `--fix <level>` replaces a unit's rows in place
-  (S6.2) and is the one to reach for on the soft side. Deletion still means
+  (S6.2 — or just the rows the findings name, when the whole answer is refused,
+  S6.4) and is the one to reach for on the soft side. Deletion still means
   "regenerate this stretch from scratch", and there it has line granularity:
   Deleting a violating *row* leaves
   its line present, and `TsvArtifact`'s settled-unit test is line-number
@@ -269,15 +312,18 @@ holds only what's still open.
       Record S6.2 then shipped the graded `--fix` mechanism and its first
       level (`oblique_qualification`, 377 findings), corpus untouched, and
       **S6.3 read out the operator's corpus-wide run of it**: 294 of the 377
-      cleared, 0 hard held, 93 TSVs edited in place and still uncommitted.
-      Next: commit those, then a level 2 argued the same way — with the
-      whole-unit granularity of `--fix` the more promising thing to design.
-      One authority question is still open for the operator. Scope, the
+      cleared, 0 hard held, 93 TSVs edited in place (committed as `39fa17f`).
+      Record **S6.4** then closed the granularity seam that run exposed: a
+      refused whole-unit answer is spliced at the rows its own findings name
+      instead of being discarded entire, which is where 52 of the 83 remaining
+      level-1 findings sit. The operator's `--fix 1` re-run on that mechanism
+      is **in flight**; S6.5 reads it out, and level 2 waits behind it. One
+      authority question is still open for the operator. Scope, the
       standing method, class eligibility and the ledger in
       [`STAGE6.md`](STAGE6.md).
-- Test suite: **957 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+- Test suite: **960 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
-  the llm7shi 0.15.0 status-bar rework; S6.3 added none).
+  the llm7shi 0.15.0 status-bar rework + 3 from S6.4; S6.3 added none).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.

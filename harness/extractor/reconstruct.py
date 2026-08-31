@@ -349,6 +349,10 @@ class FixPlan:
     the acceptance test in `settle()` can put them back unchanged when the
     session's answer is not an improvement: a fix run must never leave the
     artifact worse than it found it.
+
+    The canto's layers and each span's line group are kept too, so a refused
+    answer can be re-measured at position scope (`salvage_outcome`) without the
+    caller having to carry the layers into its settle callback.
     """
 
     level: int
@@ -356,6 +360,8 @@ class FixPlan:
     revisions: dict[Span, str] = field(default_factory=dict)
     before: dict[Span, list[Violation]] = field(default_factory=dict)
     before_hard: dict[Span, list[Violation]] = field(default_factory=dict)
+    groups: dict[Span, list[int]] = field(default_factory=dict)
+    layers: CantoLayers | None = None
 
     def __bool__(self) -> bool:
         return bool(self.prior)
@@ -373,7 +379,7 @@ def plan_fix(
     level: int,
 ) -> FixPlan:
     """Find the settled units carrying a level-`level` finding, gold-closed."""
-    plan = FixPlan(level=level)
+    plan = FixPlan(level=level, layers=layers)
     groups = {(g[0], g[-1]): g for g in layers.units()}
     for span, rows in settled_units.items():
         group = groups.get(span)
@@ -384,6 +390,7 @@ def plan_fix(
         if not findings:
             continue
         plan.prior[span] = {no: list(rows.get(no, [])) for no in group}
+        plan.groups[span] = list(group)
         plan.before[span] = list(soft)
         plan.before_hard[span] = list(hard)
         plan.revisions[span] = fixlevel.revision_block(
@@ -444,12 +451,78 @@ def revert_outcome(
     )
 
 
+def salvage_rows(
+    prior: dict[int, list[SkelRow]],
+    submitted: dict[int, list[SkelRow]],
+    keys: frozenset[fixlevel.RowKey],
+) -> dict[int, list[SkelRow]]:
+    """Position-scoped replacement: the answer stands at `keys`, the record elsewhere.
+
+    A level names a *row* while a session answers a whole *unit*, so the two
+    replacements a fix run can make are not the same size. `settle()` tries the
+    whole unit first — that is the answer the model actually stands behind, and
+    where it survives the acceptance test it is taken entire. This is what to do
+    when it does not: keep the recorded rows, and take from the answer only the
+    rows the findings themselves name. Rows outside `keys` are neither added nor
+    removed, so a repair cannot import a class the unit never carried, and the
+    result is still measured by `fix_verdict` rather than assumed.
+    """
+    out = {
+        no: [r for r in rows if _key_of(r) not in keys]
+        for no, rows in prior.items()
+    }
+    for no, rows in submitted.items():
+        if no not in out:
+            continue  # not a line of this unit; the artifact holds none of it
+        out[no].extend(r for r in rows if _key_of(r) in keys)
+    return out
+
+
+def _key_of(row: SkelRow) -> fixlevel.RowKey:
+    return (row.line, row.token, row.arg_line, row.arg_token)
+
+
+def salvage_outcome(
+    outcome: UnitOutcome, plan: FixPlan, span: Span
+) -> UnitOutcome | None:
+    """Re-measure the unit with the answer taken only at its findings' rows.
+
+    `None` when the salvage cannot be measured honestly: the plan carries no
+    layers to validate against, the level names no row for this unit, or the
+    submission's own token assertions failed — its words disagree with Layer 1,
+    so none of its rows may be spliced into the record.
+    """
+    if plan.layers is None or outcome.token_assertions:
+        return None
+    keys = fixlevel.governed_keys(
+        fixlevel.select(plan.before[span], plan.level), plan.level
+    )
+    if not keys:
+        return None
+    rows = salvage_rows(plan.prior[span], outcome.rows, keys)
+    hard, soft = _validate_rows(plan.layers, plan.groups[span], rows)
+    return dataclasses.replace(
+        outcome,
+        rows=rows,
+        row_keys=frozenset(
+            (r.line, r.token, r.role, r.arg_line, r.arg_token)
+            for rs in rows.values()
+            for r in rs
+        ),
+        hard=hard,
+        soft=soft,
+        token_assertions=[],
+    )
+
+
 def _fix_summary_line(level: int, stats: Counter[str]) -> str:
     """One line naming the mechanism of a fix run (`../PLAN.md` discipline 6)."""
     return (
         f"[fix] level {level}: {stats['units']} unit(s) reopened, "
         f"{stats['verdict:accepted']} accepted / "
-        f"{stats['units'] - stats['verdict:accepted']} reverted; "
+        f"{stats['verdict:salvaged']} salvaged / "
+        f"{stats['units'] - stats['verdict:accepted'] - stats['verdict:salvaged']}"
+        f" reverted; "
         f"level findings {stats['findings_before']} -> {stats['findings_after']}, "
         f"soft {stats['soft_before']} -> {stats['soft_after']}; rows "
         f"{stats['rows_relabelled']} relabelled, {stats['rows_added']} added, "
@@ -1342,8 +1415,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "and the invariants those break, and replace the rows with what it "
         f"re-solves (levels 1..{fixlevel.MAX_LEVEL}, cumulative, or 'max' for "
         "every level defined). A unit whose answer is not hard-clean, does not "
-        "reduce the level's findings, or introduces a new violation class keeps "
-        "its recorded rows",
+        "reduce the level's findings, or introduces a new violation class is "
+        "retried at position scope — the answer taken only at the rows the "
+        "findings name — and keeps its recorded rows if that fails the same "
+        "test",
     )
     parser.add_argument(
         "--started-at",
@@ -1515,15 +1590,32 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     outcome.unit["line_start"], outcome.unit["line_end"]
                 )
                 fix_verdict_reason: str | None = None
+                unit_verdict: str | None = None
                 if fix_plan is not None and span in fix_plan.prior:
-                    # Acceptance: a fix run may not leave the unit worse than it
-                    # found it, so a refused answer puts the recorded rows back
-                    # verbatim and the unit is reported as reverted.
+                    # Acceptance, in two scopes. The whole unit first: that is
+                    # the answer the session stands behind, and where it passes
+                    # it is taken entire. Where it does not, the same test runs
+                    # again over a position-scoped splice — the answer at the
+                    # rows the findings name, the record everywhere else — so a
+                    # repair the level itself calls correct is not thrown away
+                    # with the rest of the unit. Only if that fails too do the
+                    # recorded rows go back verbatim.
                     level = fix_plan.level
                     before = fix_plan.before[span]
                     accepted, fix_verdict_reason = fix_verdict(
                         before, outcome.hard, outcome.soft, level
                     )
+                    if not accepted:
+                        candidate = salvage_outcome(outcome, fix_plan, span)
+                        if candidate is not None:
+                            salvaged, _ = fix_verdict(
+                                before, candidate.hard, candidate.soft, level
+                            )
+                            if salvaged:
+                                accepted = True
+                                unit_verdict = fix_verdict_reason
+                                fix_verdict_reason = "salvaged"
+                                outcome = candidate
                     if accepted:
                         for key, value in row_delta(
                             fix_plan.prior[span], outcome.rows
@@ -1543,7 +1635,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     fix_stats["soft_after"] += len(outcome.soft)
                     print(
                         f"[fix] {canticle} {canto} lines {span[0]}-{span[1]}: "
-                        f"{fix_verdict_reason}",
+                        f"{fix_verdict_reason}"
+                        + (f" (unit: {unit_verdict})" if unit_verdict else ""),
                         file=ui_stream if ui_stream is not None else sys.stderr,
                         flush=True,
                     )
@@ -1552,6 +1645,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     record["fix"] = {
                         "level": fix_plan.level, "verdict": fix_verdict_reason,
                     }
+                    if unit_verdict is not None:
+                        # What the whole-unit answer was refused for, kept on
+                        # record: the salvage rate is only readable against it.
+                        record["fix"]["unit_verdict"] = unit_verdict
                 report.add_unit(record)
                 if artifact is not None:
                     # The artifact lands first: it, not the log, is what the

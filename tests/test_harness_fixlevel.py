@@ -305,6 +305,36 @@ def test_fix_verdict_refuses_hard_no_improvement_and_a_new_class():
     assert rc.fix_verdict(before, [], [], 1) == (True, "accepted")
 
 
+def test_level_1_governs_exactly_the_row_its_finding_names():
+    v = _soft("role_mismatch: 3.5 arg (3, 7) 'obl' vs 'obl:di'",
+              role="obl:di", given_role="obl", predicate=(3, 5), arg=(3, 7))
+    assert fixlevel.governed_keys([v], 1) == frozenset({(3, 5, 3, 7)})
+    # a finding of no class at this level governs nothing
+    assert fixlevel.governed_keys([_soft("missing_arg: 3.5 obj (3, 9)")], 1) == (
+        frozenset()
+    )
+
+
+def test_salvage_takes_the_answer_only_at_the_governed_rows():
+    prior = {
+        1: [SkelRow(1, 2, "w", "obl", 1, 4), SkelRow(1, 2, "w", "subj", 0, 0)]
+    }
+    submitted = {
+        1: [
+            SkelRow(1, 2, "w", "obl:di", 1, 4),   # the repair: governed
+            SkelRow(1, 2, "w", "obj", 1, 6),      # an addition: not governed
+        ]
+    }
+    salvaged = rc.salvage_rows(prior, submitted, frozenset({(1, 2, 1, 4)}))
+    assert sorted(
+        (r.role, r.arg_line, r.arg_token) for r in salvaged[1]
+    ) == [("obl:di", 1, 4), ("subj", 0, 0)]
+    # neither added nor removed outside the governed keys
+    delta = rc.row_delta(prior, salvaged)
+    assert delta["rows_added"] == delta["rows_removed"] == 0
+    assert delta["rows_relabelled"] == 1
+
+
 def test_row_delta_names_the_mechanism():
     before = {1: [SkelRow(1, 2, "w", "obl", 1, 4), SkelRow(1, 2, "w", "subj", 0, 0)]}
     after = {1: [SkelRow(1, 2, "w", "obl:di", 1, 4), SkelRow(1, 2, "w", "obj", 1, 5)]}
@@ -432,6 +462,80 @@ def test_fix_keeps_the_recorded_rows_when_the_answer_is_not_an_improvement(
     assert complete["fix"]["units"] == 1
     assert complete["fix"]["verdict:no_improvement"] == 1
     assert complete["fix"]["findings_before"] == complete["fix"]["findings_after"] == 1
+
+
+def _extra_row_that_trades_a_class(layers, group, rows, key):
+    """A row the unit did not carry that costs the whole answer its acceptance.
+
+    Located, not hard-coded, in the spirit of `_level1_target`: any row whose
+    presence makes `validate_unit` report a class the unit did not have, while
+    the answer stays hard-clean — the shape S6.3 measured 46 times.
+    """
+    pred_line, pred_token = key[0], key[1]
+    taken = {(r.arg_line, r.arg_token) for r in rows.get(pred_line, [])}
+    word = layers.tokens[pred_line][pred_token - 1]
+    for token in range(1, len(layers.tokens[pred_line]) + 1):
+        if (pred_line, token) in taken or token == pred_token:
+            continue
+        extra = SkelRow(pred_line, pred_token, word, "obl",
+                        pred_line, token)
+        candidate = {no: list(rs) for no, rs in rows.items()}
+        candidate[pred_line] = candidate.get(pred_line, []) + [extra]
+        hard, soft = rc._validate_rows(layers, group, candidate)
+        if hard:
+            continue
+        seen = {fixlevel.violation_class(v) for v in rc._validate_rows(
+            layers, group, rows)[1]}
+        if {fixlevel.violation_class(v) for v in soft} - seen:
+            return extra
+    pytest.skip("no class-trading row available in this unit")
+
+
+def test_fix_salvages_the_repair_when_the_whole_answer_trades_a_class(
+    tmp_path, monkeypatch
+):
+    """The granularity seam: a level names a row, a session answers a unit.
+
+    The answer qualifies the oblique correctly *and* brings a row the unit never
+    carried, so as a whole it is refused (S6.3's dominant refusal, 46 units). The
+    position-scoped splice keeps the repair and drops the rest, and the artifact
+    ends up exactly as the accepted-repair test leaves it.
+    """
+    tsv, layers, group, key, merged = _seed(tmp_path, monkeypatch)
+    gold = load_skel("inferno", 1)
+    repaired = {no: list(gold.get(no, [])) for no in layers.nos}
+    unit_rows = {no: list(repaired.get(no, [])) for no in group}
+    extra = _extra_row_that_trades_a_class(layers, group, unit_rows, key)
+    overreaching = {no: list(rs) for no, rs in repaired.items()}
+    overreaching[extra.line] = overreaching.get(extra.line, []) + [extra]
+
+    def fallback(**kw):
+        return _StubResult(
+            _rows_payload(overreaching, kw["line_start"], kw["line_end"])
+        )
+
+    assert rc.main(_fix_argv(tmp_path, tsv), fallback=fallback) == 0
+
+    # the repair landed; the row that came with it did not
+    assert tsv.read_text(encoding="utf-8") == rc.render_tsv(
+        [(no, repaired.get(no, [])) for no in sorted(layers.nos)]
+    )
+    records = [
+        json.loads(line)
+        for line in (tmp_path / "recon.log").read_text(encoding="utf-8").splitlines()
+    ]
+    unit = next(
+        r for r in records
+        if r.get("record") == "unit" and r.get("line_start") == group[0]
+    )
+    assert unit["fix"]["verdict"] == "salvaged"
+    assert unit["fix"]["unit_verdict"].startswith("new_class:")
+    complete = next(r for r in records if r.get("record") == "canto_complete")
+    assert complete["fix"]["verdict:salvaged"] == 1
+    assert complete["fix"]["findings_before"] == 1
+    assert complete["fix"]["findings_after"] == 0
+    assert complete["fix"]["rows_relabelled"] == 1
+    assert complete["fix"]["rows_added"] == complete["fix"]["rows_removed"] == 0
 
 
 def test_fix_summary_reports_the_mechanism_of_an_accepted_repair(

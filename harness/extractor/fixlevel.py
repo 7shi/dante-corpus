@@ -65,6 +65,11 @@ def case_children(
 # --- the classes ------------------------------------------------------------------------
 
 
+# One artifact row, identified the way `reconstruct.row_delta` identifies it:
+# predicate and argument, without the role — so a relabel keeps its key.
+RowKey = tuple[int, int, int, int]
+
+
 @dataclass(frozen=True)
 class FixClass:
     """One soft class a fix level acts on, with the notice that describes it."""
@@ -75,6 +80,12 @@ class FixClass:
     # Renders the position's notice: the invariant + the frozen-layer evidence,
     # never the derived label.
     notice: Callable[[Violation, dict[int, Iterable[DepRow]]], str]
+    # The artifact rows one finding of this class governs, as
+    # `(pred_line, pred_token, arg_line, arg_token)` keys. A level names a *row*
+    # while a session answers a whole *unit*, and this is where that difference
+    # is written down: a refused whole-unit answer may still be taken at exactly
+    # these keys and nowhere else (`reconstruct.salvage_rows`, `../STAGE6.md`).
+    keys: Callable[[Violation], frozenset[RowKey]]
 
 
 def _is_oblique_qualification(v: Violation) -> bool:
@@ -123,10 +134,23 @@ def _oblique_qualification_notice(
     )
 
 
+def _oblique_qualification_keys(v: Violation) -> frozenset[RowKey]:
+    """The single row the finding is about: this predicate's oblique argument.
+
+    The repair is a relabel in place — `obl` to `obl:<lemma>` at one predicate /
+    argument pair — so the finding governs exactly one key, and a position-scoped
+    replacement can neither add nor remove a row of this unit.
+    """
+    pred = v.predicate or (v.line, 0)
+    arg = v.arg or (0, 0)
+    return frozenset({(pred[0], pred[1], arg[0], arg[1])})
+
+
 OBLIQUE_QUALIFICATION = FixClass(
     name="oblique_qualification",
     matches=_is_oblique_qualification,
     notice=_oblique_qualification_notice,
+    keys=_oblique_qualification_keys,
 )
 
 # Cumulative: level N acts on levels 1..N. A class joins the table only once its
@@ -194,6 +218,22 @@ def select(violations: Iterable[Violation], level: int) -> list[Violation]:
 _DIVERGENCE_KINDS = (
     "missing_tuple", "extra_tuple", "missing_arg", "extra_arg", "role_mismatch"
 )
+
+
+def governed_keys(
+    findings: Iterable[Violation], level: int
+) -> frozenset[RowKey]:
+    """Every artifact row this run's own findings name, across their classes.
+
+    The scope a position-scoped replacement is confined to: outside these keys
+    the unit's recorded rows stand, whatever else the session's answer proposed.
+    """
+    keys: set[RowKey] = set()
+    for v in findings:
+        cls = class_of(v, level)
+        if cls is not None:
+            keys |= cls.keys(v)
+    return frozenset(keys)
 
 
 def violation_class(v: Violation) -> str:

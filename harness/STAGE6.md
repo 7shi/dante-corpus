@@ -102,6 +102,13 @@ contract — the level table is where §2's three-outcome question is answered, 
 in code (`harness/extractor/fixlevel.py`). Level 1 is
 `oblique_qualification`; nothing above it is defined yet.
 
+**Two scopes of replacement (record S6.4).** A level names a *row* and a session
+answers a *unit*, so acceptance runs twice: the whole answer first, and on
+refusal a splice that takes it only at the rows the findings themselves name
+(`FixClass.keys` → `salvage_rows`), re-measured by the same `fix_verdict` and
+reported as `verdict: salvaged`. A class joining the table therefore declares
+which rows its findings govern, alongside its matcher and its notice.
+
 **One decision is open and is the operator's.** Is
 `dante_corpus/skel/repairs.py` an admissible authority under discipline 3? It
 opens no gold file and its two rewrites are re-derivable from `derive.py`
@@ -409,3 +416,63 @@ is read out of them. Level 2 is not opened: on this evidence its class must be
 argued from the contract first (§2's three outcomes), and the `new_class`
 refusal rate says the *unit* granularity of replacement, not the level table,
 is the next thing worth designing.
+
+### S6.4 — Replacement granularity: a refused answer is salvaged at the rows its findings name (2026-09-01)
+
+S6.3 closed by naming the seam rather than a next level: **a level names a row,
+a session answers a unit**, and `--fix` could only take or leave the whole unit.
+This record narrows that, gold-closed, with no corpus edit — the mechanism
+changes what a *future* fix run does, and running it stays the operator's act.
+
+**What the seam costs, measured from the run's own logs** (100 per-canto logs,
+unit records deduplicated by span, last verdict wins — reproducing S6.3's
+337 reopened / 265 accepted / 26 `no_improvement` / 46 `new_class` exactly):
+
+| where the 83 remaining level-1 findings sit | findings |
+|---|---:|
+| in a unit reverted `new_class` | **52** |
+| in a unit reverted `no_improvement` | 28 |
+| in a unit whose repair was accepted | 3 |
+
+The classes those 46 answers brought with them: `missing_arg` 27, `extra_arg`
+21, `membership` 7, `missing_tuple` 1. `fix_verdict` checks in order — hard,
+then `no_improvement`, then `new_class` — so every one of those 46 submissions
+was **hard-clean and did reduce the level's own findings**. At least 46 of the
+52 were therefore repairs the level itself calls correct, discarded with the
+unit that carried them.
+
+**The mechanism.** A `FixClass` now also declares the artifact rows one of its
+findings governs (`fixlevel.FixClass.keys`; level 1 returns the single
+`(predicate, argument)` key it relabels, since its repair is a relabel in
+place). Acceptance runs in two scopes:
+
+1. **the whole unit**, exactly as before — the answer the session stands behind,
+   taken entire when it passes, so the row additions and removals S6.3 measured
+   on the 265 accepted units are untouched;
+2. on refusal, **a position-scoped splice** (`salvage_rows`): the recorded rows
+   stand everywhere except the governed keys, where the answer's rows replace
+   them. Outside those keys nothing is added or removed, so a salvage cannot
+   import a class the unit never carried — but that is a property of the
+   mechanism, not an assumption it makes: the spliced rows go back through
+   `_validate_rows` and the *same* `fix_verdict`, and a salvage that fails it is
+   reverted like any other refusal.
+
+Verdicts gain `salvaged`, with the whole-unit refusal kept beside it as
+`fix.unit_verdict` in the unit record — the salvage rate is only readable
+against what the unit answer was refused for — and `verdict:salvaged` in the
+canto's fix stats and the summary line. Salvage is refused outright when the
+submission's own token assertions failed: its words disagree with Layer 1, so
+none of its rows may be spliced into the record.
+
+**What this does not claim.** The 46 units' submissions are not in the logs
+(a refused unit is logged as the reverted rows it kept), so how many of the 52
+findings a salvage would actually have taken is **not measurable without a
+re-run** — 46 is the floor the verdict order guarantees, 52 the ceiling. The 26
+`no_improvement` units may be salvageable too (a level finding fixed at one
+position and lost at another scores no improvement unit-wide) and are equally
+unmeasurable from here. Nothing about the level table changed, no gold was
+opened, and no derived label crosses into a session.
+
+Suite **957 → 960** (the governed-key mapping, the splice, and one end-to-end
+`--fix` run whose stub answer repairs the oblique and brings an extra row).
+`harness/recon/` untouched: corpus still **0 hard / 4,706 soft**.
