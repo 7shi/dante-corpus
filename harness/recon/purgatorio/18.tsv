@@ -136,7 +136,7 @@ line	token	word	role	arg_line	arg_token
 42	5	fatto	xcomp	42	7
 42	7	dubbiar	subj	0	0
 43	9	offerto	subj	43	3
-43	9	offerto	obl	43	6
+43	9	offerto	obl:di	43	6
 43	9	offerto	obl:a	43	8
 44	5	va	subj	44	3
 44	5	va	obl:con	44	8

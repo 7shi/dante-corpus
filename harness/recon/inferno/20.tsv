@@ -33,10 +33,8 @@ line	token	word	role	arg_line	arg_token
 10	5	scese	iobj	10	4
 10	5	scese	obl:in	10	7
 11	2	apparve	subj	12	1
-11	2	apparve	xcomp	11	3
+11	2	apparve	xcomp	11	4
 11	2	apparve	obl	11	1
-11	3	esser	subj	12	1
-11	3	esser	attr	11	4
 11	4	travolto	subj	12	1
 11	4	travolto	obl:tra	12	4
 11	4	travolto	obl:tra	12	7
@@ -44,7 +42,8 @@ line	token	word	role	arg_line	arg_token
 13	6	tornato	subj	13	8
 13	6	tornato	obl:da	13	4
 14	4	venir	subj	0	0
-14	4	venir	obl	14	3
+14	4	venir	obl:in	14	3
+14	6	convenia	subj	0	0
 14	6	convenia	iobj	14	5
 14	6	convenia	ccomp	14	4
 15	7	tolto	subj	15	3

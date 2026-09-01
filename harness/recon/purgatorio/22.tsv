@@ -376,7 +376,7 @@ line	token	word	role	arg_line	arg_token
 119	7	era	obl:a	119	9
 120	1	drizzando	subj	119	6
 120	1	drizzando	obj	120	7
-120	1	drizzando	obl	120	4
+120	1	drizzando	obl:in	120	4
 121	6	credo	subj	121	5
 121	6	credo	ccomp	122	6
 122	4	volger	subj	122	5

@@ -245,7 +245,7 @@ line	token	word	role	arg_line	arg_token
 79	9	priega	obl:in	79	6
 80	8	tegni	subj	80	4
 80	8	tegni	obj	80	7
-80	8	tegni	obl	80	6
+80	8	tegni	attr	80	6
 81	9	piega	subj	0	0
 81	9	piega	obj	81	8
 81	9	piega	obl:per	81	4

@@ -695,3 +695,138 @@ the comparison worth making is the *refusal mix* (`no_improvement` /
 
 Suite **960 → 969**. `harness/recon/` untouched: corpus still **0 hard / 4,660
 soft**.
+
+### S6.7 — The `--fix 1` run under S6.6's two levers: 12 of 37 cleared, and the refusal mix moved the wrong way (2026-09-02)
+
+The operator's run of level 1 over all 100 cantos on the S6.6 loop and prompt,
+read out here. **The corpus moved; no code did.** S6.6 said in advance that the
+finding count could not judge these levers — a fresh pass gains by re-rolling
+alone — so the readout below leads with the refusal mix and treats the delta as
+context.
+
+**The numbers, against S6.5's close (`2fd689f`):**
+
+| | before | after |
+|---|---:|---:|
+| hard violations | 0 | **0** |
+| soft violations | 4,706 → 4,660 | **4,649** (−11) |
+| level-1 findings (`make fix-level`) | 37 | **25** (−12, 32.4%) |
+| cantos carrying a level-1 finding | 28 | 20 |
+| TSVs modified | — | 9 |
+| gold agreement (readout, §5 discipline 4) | 0.7382 | 0.7384 |
+
+`make check` exits 0. **Per soft class the entire −11 is `role_mismatch`**
+(242 → **231**); `extra_arg` 2,106, `missing_arg` 1,636, `missing_tuple` 488,
+`membership` 143, `extra_tuple` 43, `dual_role` 2 are all unchanged to the unit.
+As in S6.5 the level's own subset fell by one more than the class did, so one
+non-level-1 `role_mismatch` appeared. Soft is not a distance (§2); the
+near-coincidence is arithmetic.
+
+**A housekeeping fact first.** The per-canto logs were swept before this run:
+all 100 carry timestamps from 2026-09-01 06:36–15:36 UTC only, i.e. this run
+alone, the first record starting one minute after S6.6's commit. S6.3's and
+S6.5's telemetry is therefore gone from disk — the ephemerality §2 accepted,
+and both records were read out of it in full before it went. Ten purgatorio logs
+(01–10) carry **two** segments: the canticle stream was relaunched, and
+purgatorio 1, 3 and 10 have `unit` records in the earlier segment that the later
+one does not repeat. So S6.4's caution *did* bite this time, and in the opposite
+direction to the one the handoff warned about — taking the last segment per
+canto silently drops units. The numbers below dedupe `unit` records by
+`(canticle, canto, line_start, line_end)` across the whole file, keeping the
+last, which is the only rule that survives both shapes.
+
+**The refusal mix — the headline.** 33 units reopened across 27 cantos:
+
+| verdict | S6.5 (74 units) | S6.7 (33 units) | share |
+|---|---:|---:|---:|
+| `accepted` (whole unit) | 33 | **8** | 45% → 24% |
+| `salvaged` (S6.4's splice) | 9 | **3** | 12% → 9% |
+| `no_improvement` (reverted) | 17 | **7** | 23% → 21% |
+| `new_class` (reverted) | 15 | **15** | 20% → **45%** |
+| `hard` | 0 | **0** | — |
+
+**`new_class` did not move at all.** Its absolute count is identical across the
+two runs while the pool halved, so as a share of what is left it more than
+doubled — and lever 2 was aimed at it directly. Telling the session the
+acceptance rule in its own words bought nothing measurable. Worse for the
+diagnosis S6.6 wrote: every one of the 15 is `missing_arg`
+(13 `new_class:missing_arg`, 2 `new_class:extra_arg,missing_arg`), where S6.5's
+were `extra_arg`-dominant — the shape S6.4's splice was built for. That is why
+salvage collected 3 rather than 9: dropping an argument the re-answer brought is
+recoverable by a row splice; **an argument the re-answer removed is not, when
+the row the splice governs is the very row it moved.**
+
+**Lever 1 fired and did not convert.** `invalid_nudges` (added in S6.6 precisely
+so this would be visible) is 1 on **7** of the 33 units and 0 on the rest, and
+**all 7 still ended `adopted_invalid`** — the resume happened, the session
+re-submitted, and its own gate still said invalid. Against the target it was
+built for:
+
+| | S6.5 | S6.7 |
+|---|---:|---:|
+| `adopted_invalid` | 36 / 74 (49%) | **14 / 33 (42%)** |
+| …with turns unspent | 20 (27%) | **6 (18%)** |
+| …at the 12-turn ceiling | 16 | 8 |
+| `no_improvement` reaching the ceiling | 5 / 17 | 2 / 7 |
+
+So "ends early on rows its own gate rejected" fell from 27% to 18% of units, but
+the resume is not why: it fired 7 times, converted 0, and the 7 it fired on are
+counted in the 14. The honest reading is that lever 1 works mechanically and
+changes no verdict, and that `adopted_invalid` is **not** the same story it was
+in S6.5 — there it tracked the refusals (14 of 17 `no_improvement`), here **all
+8 `accepted` units are `adopted_invalid`**: the answer that reduced the findings
+was one its own gate rejected. `no_improvement` is no longer "ran out of room"
+either — 5 of its 7 stopped short of the ceiling.
+
+**Row-level** (the diff against `2fd689f`, 9 files): **19 rows removed, 19
+added, net 0** — 14 relabels in place, 3 arguments relocated, 2 rows added, 2
+removed. **11 of the 14 relabels are the level's own** (`obl` → `obl:di` 7,
+`obl:in` 3, `obl:a` 1), plus one level-1 position settled by dropping the
+oblique reading entirely (`purgatorio 1:80` `obl` → `attr`) — 12 findings
+cleared, one row each. The 2 off-brief relabels are `obl:sanza` → `obl:senza`
+and `obj` → `obl`. Attributed by verdict:
+
+- `salvaged` units (3): **exactly one row change each, nothing outside the
+  governed keys** — inferno 32:113, purgatorio 1:80, purgatorio 22:120. The
+  S6.4 invariant holds in the field for the second run running.
+- `accepted` units (8): the other 16 row changes, including every relocation,
+  both additions and both removals — the whole-unit replacement still reaches
+  past its brief, as in S6.3 and S6.5.
+
+**Cost.** 323 LLM calls, **4.00 M tokens** (2.77 M input / 0.27 M output /
+0.97 M thought), **10.4 h** of summed per-canto elapsed (inferno 3.5 /
+purgatorio 5.8 / paradiso 1.1). 57 `api_retries`, 0 max-length retries, 0 paced
+seconds. The 73 cantos with no finding cost no model call.
+
+**Gold agreement, opened afterwards and cited as nothing else** (§5 discipline
+4): corpus-wide **0.7382 → 0.7384**; inferno 0.7444 → 0.7447, purgatorio
+0.7356 → 0.7360, paradiso 0.7343 → 0.7343. Flat, as a 12-row change should be.
+
+**What this settles about the three levers S6.5 named.** Two are now measured
+and neither is the bottleneck: the stopping rule fires and changes no verdict,
+and stating the acceptance contract leaves `new_class` exactly where it was. The
+**row-scoped ask** is the one still untried, and this run sharpens the case for
+it rather than weakening it — the refusals are now overwhelmingly "the re-answer
+dropped an argument elsewhere in the unit", which is precisely what a whole-unit
+re-answer risks and a row-scoped one cannot. S6.6's objection to it (narrowing
+the ask suppresses the off-brief gains S6.3 measured) is now priced: this run's
+off-brief yield was **2 relabels, 2 rows added, 2 removed and 3 relocations** on
+8 accepted units, against 12 findings cleared. That is a much smaller thing to
+protect than S6.3's 87.
+
+**And a mechanism gap this record should not repeat.** Why an answer earned
+`new_class:missing_arg` — which argument it dropped, and whether the drop sits
+on the row the finding names — is *not in the logs*: `fix` carries only `level`
+and `verdict`. That is S6.4's mistake in a new place (S6.6 fixed it for
+`invalid_nudges` and not for this). Before any run is made on the row-scoped
+ask, the refused candidate's own rows, or a diff of them against the record,
+should be logged — otherwise the same question will be unanswerable a third
+time.
+
+**State at close.** Corpus **0 hard / 4,649 soft**, 9 TSVs modified in the
+working tree and uncommitted; suite **969**, unchanged and not re-run — no code
+moved. **Level 1 has now been run three times.** 377 → 83 → 37 → 25, with the
+third pass gaining 12 where the second gained 46; 25 findings across
+20 cantos have been refused by three independent sets of sessions. The
+convergence curve S6.5 called is confirmed, and a fourth run of the same
+mechanism is not the next move.

@@ -37,13 +37,14 @@ line	token	word	role	arg_line	arg_token
 13	1	Dà	obl	13	2
 14	0			0	0
 15	3	va	subj	15	4
-15	3	va	obl:sanza	14	3
+15	3	va	obl:senza	14	3
 15	3	va	obl:per	14	7
-15	3	va	obl	15	2
+15	3	va	obl:a	15	2
 15	7	gir	subj	15	4
 15	9	affanna	subj	15	4
 15	9	affanna	obj	15	8
 15	9	affanna	xcomp	15	7
+15	9	affanna	obl	15	5
 16	0			0	0
 17	1	perdoniamo	subj	16	3
 17	1	perdoniamo	obj	16	5
@@ -80,7 +81,7 @@ line	token	word	role	arg_line	arg_token
 30	1	purgando	subj	26	2
 30	1	purgando	obj	30	3
 31	9	dice	subj	0	0
-31	9	dice	obl	31	3
+31	9	dice	obl:di	31	3
 31	9	dice	obl	31	4
 31	9	dice	obl	31	5
 31	9	dice	obl:per	31	7
@@ -91,7 +92,7 @@ line	token	word	role	arg_line	arg_token
 32	10	puote	subj	0	0
 32	10	puote	xcomp	32	4
 32	10	puote	xcomp	32	6
-32	10	puote	obl	32	2
+32	10	puote	obl:di	32	2
 32	10	puote	obl:per	32	8
 32	10	puote	obl:da	33	2
 33	4	hanno	subj	33	3

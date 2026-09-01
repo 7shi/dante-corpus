@@ -449,7 +449,7 @@ line	token	word	role	arg_line	arg_token
 127	3	vedestù	obj	127	5
 127	3	vedestù	obl:sopra	127	2
 128	7	discende	subj	128	9
-128	7	discende	obl	128	4
+128	7	discende	obl:di	128	4
 128	7	discende	obl:da	128	6
 129	1	passando	subj	128	9
 129	1	passando	obl:per	129	4
