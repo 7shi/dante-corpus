@@ -830,3 +830,59 @@ third pass gaining 12 where the second gained 46; 25 findings across
 20 cantos have been refused by three independent sets of sessions. The
 convergence curve S6.5 called is confirmed, and a fourth run of the same
 mechanism is not the next move.
+
+### S6.8 — The refusal, on record: why an answer was refused, not just that it was (2026-09-02)
+
+S6.7's closing item, shipped. **Code only; the corpus is untouched and running
+anything over it stays the operator's act.** Three runs of level 1 have now
+reported *that* an answer introduced a class the unit did not carry, and none of
+them could say **which row it came from**. That single missing fact is what
+separates the two live hypotheses — the ask is too wide (the answer broke
+something beside the level's own row) versus the model is wrong at the position
+itself — and it is the hypothesis the untried row-scoped ask is aimed at. The
+next run cannot decide it without this, and S6.6 had already learned the lesson
+in the neighbouring case: `invalid_nudges` was added *before* the run that
+measured it, precisely so the run would be readable.
+
+**What is written, and when.** On a refused whole-unit answer — `no_improvement`,
+`new_class`, `hard`, and the refusals a splice later rescues — `record["fix"]`
+gains `refused`, from `reconstruct.fix_diagnosis`:
+
+| field | the question it answers |
+|---|---|
+| `rows.added` / `.removed` / `.relabelled` | what the answer actually proposed, each row marked `governed` (inside `fixlevel.governed_keys`) or not |
+| `governed_rows` | what the answer did with the rows the level *named*: `relabelled` / `removed` / `untouched` / `missing`, against `named` |
+| `introduced` | every violation class the answer brought that the unit did not carry, with the position it sits on and whether that position is one the level asked about |
+| `findings_before` / `_after`, `soft_before` / `_after`, `hard_after` | the verdict's own inputs, per unit rather than only in the canto aggregate |
+| `salvage` | what the position-scoped splice then made of it — its `fix_verdict` reason, or why it could not be measured (`token_assertions` / `no_governed_rows`) |
+
+Two smaller additions beside it. `record["fix"]["delta"]` now carries
+`row_delta` **per unit and under every verdict** (zeros on a reverted one), so an
+accepted unit's off-brief reach — the thing S6.3 measured at 87 relabels and
+S6.7 at 2 — is readable from the log instead of from a `git diff` against the
+right commit. And the `unit` record carries `final_validation_errors`: the gate
+errors on the submission the session handed downstream, read off the same last
+`validate_candidate` dispatch `final_submission_valid` reads its verdict from, so
+the two can never describe different submissions. S6.7's second finding needs
+it — all 8 of its accepted units were `adopted_invalid`, i.e. the answers that
+cleared findings were answers the session's own gate rejected, and nothing on
+record says what it was rejecting them over.
+
+The watched-run console line gains the same in one clause —
+`new_class:missing_arg [answer: ~1 +0 -1; 1 introduced, 0 on named rows]` — so
+the pattern is visible while the run is happening, not only in the readout.
+
+**What this does not do.** Nothing here reaches a session: the diagnosis is
+computed after `fix_verdict` has already decided, it is written to the log and
+nowhere else, and it changes no verdict, no acceptance rule, and no notice. The
+derived label stays out of the session exactly as before, and the tests that
+assert its absence are untouched. Suite **969 → 971**; `harness/recon/` untouched
+at **0 hard / 4,649 soft**.
+
+**The run this is for.** A `--fix 1` re-run under it, with the per-canto logs
+deliberately swept first (the operator's call, and the right one — S6.7 had to
+reconstruct which run a log belonged to from timestamps). Read it out as **S6.9**,
+and read `introduced[].governed` first: if the classes the answers introduce sit
+mostly *off* the named rows, the row-scoped ask is the mechanism to build next
+and this run is its baseline; if they sit *on* them, the ask's scope is not the
+problem and the level's own premise at those positions is what needs arguing.

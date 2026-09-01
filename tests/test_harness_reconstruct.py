@@ -780,6 +780,12 @@ def test_unit_record_flags_a_provisionally_adopted_submission(tmp_path, monkeypa
 
     class _Rejected(_StubResult):
         final_submission_valid = False
+        # What the gate actually said, read off the same last dispatch the
+        # verdict comes from (S6.7): `adopted_invalid` alone cannot say what
+        # the session was refusing over.
+        validations = [
+            {"result": {"valid": False, "errors": ["subj (0,0) is not a row"]}}
+        ]
 
     assert rc.main(
         [
@@ -802,6 +808,10 @@ def test_unit_record_flags_a_provisionally_adopted_submission(tmp_path, monkeypa
     assert all(r["final_submission_valid"] is False for r in units)
     # The rows were adopted anyway: provisional, not discarded.
     assert all(r["accepted_rows"] == 1 for r in units)
+    assert all(
+        r["final_validation_errors"] == ["subj (0,0) is not a row"]
+        for r in units
+    )
 
 
 def test_log_is_append_only_and_never_read_back(tmp_path, monkeypatch):

@@ -357,6 +357,71 @@ def test_salvage_takes_the_answer_only_at_the_governed_rows():
     assert delta["rows_relabelled"] == 1
 
 
+def test_fix_diagnosis_names_the_dropped_argument_and_where_it_sat():
+    """S6.7's unanswerable question, made answerable.
+
+    All 15 of that run's `new_class` refusals were `missing_arg` — the answer
+    dropped an argument — and the log could not say *which* one, nor whether the
+    drop was on the row the level named (the level's own job done badly) or
+    somewhere else in the unit (the ask being too wide). Both are recorded now,
+    and this is the second shape: the repair landed on the governed row, and a
+    different row of the unit went missing with it.
+    """
+    prior = {
+        1: [
+            SkelRow(1, 2, "w", "obl", 1, 4),    # the level's finding sits here
+            SkelRow(1, 2, "w", "subj", 1, 1),   # collateral
+        ]
+    }
+    submitted = {1: [SkelRow(1, 2, "w", "obl:di", 1, 4)]}
+    before = [_soft("role_mismatch: 1.2 arg (1, 4) 'obl' vs 'obl:di'",
+                    role="obl:di", given_role="obl",
+                    predicate=(1, 2), arg=(1, 4))]
+    after = [_soft("missing_arg: 1.2 subj (1, 1)",
+                   role="subj", predicate=(1, 2), arg=(1, 1))]
+
+    d = rc.fix_diagnosis(prior, submitted, before, [], after, 1)
+
+    assert d["rows_removed"] == 1 and d["rows_relabelled"] == 1
+    assert d["rows"]["removed"] == [
+        {"predicate": [1, 2], "argument": [1, 1], "role": "subj",
+         "governed": False},
+    ]
+    assert d["rows"]["relabelled"] == [
+        {"predicate": [1, 2], "argument": [1, 4], "role": ["obl", "obl:di"],
+         "governed": True},
+    ]
+    # the level's own row was answered; the class came from off-brief
+    assert d["governed_rows"] == {
+        "named": 1, "relabelled": 1, "removed": 0, "untouched": 0, "missing": 0,
+    }
+    assert d["findings_before"] == 1 and d["findings_after"] == 0
+    assert [(v["class"], v["governed"]) for v in d["introduced"]] == [
+        ("missing_arg", False)
+    ]
+
+
+def test_fix_diagnosis_marks_a_class_introduced_on_the_governed_row_itself():
+    """The other shape: the answer moved the very row the level named."""
+    prior = {1: [SkelRow(1, 2, "w", "obl", 1, 4)]}
+    submitted = {1: [SkelRow(1, 2, "w", "obl:di", 1, 6)]}  # relabelled *and* moved
+    before = [_soft("role_mismatch: 1.2 arg (1, 4) 'obl' vs 'obl:di'",
+                    role="obl:di", given_role="obl",
+                    predicate=(1, 2), arg=(1, 4))]
+    after = [_soft("missing_arg: 1.2 obl:di (1, 4)",
+                   role="obl:di", predicate=(1, 2), arg=(1, 4))]
+
+    d = rc.fix_diagnosis(prior, submitted, before, [], after, 1)
+
+    assert d["rows"]["removed"][0]["governed"] is True
+    assert d["rows"]["added"][0]["governed"] is False
+    assert d["governed_rows"]["removed"] == 1
+    assert d["governed_rows"]["missing"] == 1  # the named row did not come back
+    assert [(v["class"], v["governed"]) for v in d["introduced"]] == [
+        ("missing_arg", True)
+    ]
+
+
 def test_row_delta_names_the_mechanism():
     before = {1: [SkelRow(1, 2, "w", "obl", 1, 4), SkelRow(1, 2, "w", "subj", 0, 0)]}
     after = {1: [SkelRow(1, 2, "w", "obl:di", 1, 4), SkelRow(1, 2, "w", "obj", 1, 5)]}
@@ -479,7 +544,23 @@ def test_fix_keeps_the_recorded_rows_when_the_answer_is_not_an_improvement(
         r for r in records
         if r.get("record") == "unit" and r.get("line_start") == group[0]
     )
-    assert unit["fix"] == {"level": 1, "verdict": "no_improvement"}
+    assert unit["fix"]["level"] == 1
+    assert unit["fix"]["verdict"] == "no_improvement"
+    assert "unit_verdict" not in unit["fix"]
+    # the rows on disk are the recorded ones, so the delta is all zeros …
+    assert unit["fix"]["delta"]["rows_added"] == 0
+    assert unit["fix"]["delta"]["rows_removed"] == 0
+    assert unit["fix"]["delta"]["rows_relabelled"] == 0
+    # … while the diagnosis is about the answer that was thrown away (S6.7):
+    # it returned the record unchanged, so it left the governed row untouched
+    # and introduced nothing.
+    refused = unit["fix"]["refused"]
+    assert refused["governed_rows"] == {
+        "named": 1, "relabelled": 0, "removed": 0, "untouched": 1, "missing": 0,
+    }
+    assert refused["introduced"] == [] and refused["introduced_total"] == 0
+    assert refused["findings_before"] == refused["findings_after"] == 1
+    assert refused["salvage"] == "no_improvement"
     complete = next(r for r in records if r.get("record") == "canto_complete")
     assert complete["fix"]["units"] == 1
     assert complete["fix"]["verdict:no_improvement"] == 1
@@ -552,6 +633,18 @@ def test_fix_salvages_the_repair_when_the_whole_answer_trades_a_class(
     )
     assert unit["fix"]["verdict"] == "salvaged"
     assert unit["fix"]["unit_verdict"].startswith("new_class:")
+    # S6.7's missing evidence, now on record: *which* row the refused answer
+    # brought, whether it sat on a row the level named, and what the splice
+    # then made of it.
+    refused = unit["fix"]["refused"]
+    assert refused["rows_added"] == 1
+    added = refused["rows"]["added"]
+    assert [e["argument"] for e in added] == [[extra.arg_line, extra.arg_token]]
+    assert added[0]["governed"] is False  # off-brief: not a row the level named
+    assert refused["governed_rows"]["relabelled"] == 1  # the level's own job, done
+    assert refused["introduced_total"] >= 1
+    assert all(not v["governed"] for v in refused["introduced"])
+    assert refused["salvage"] == "accepted"
     complete = next(r for r in records if r.get("record") == "canto_complete")
     assert complete["fix"]["verdict:salvaged"] == 1
     assert complete["fix"]["findings_before"] == 1

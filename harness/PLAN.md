@@ -9,11 +9,57 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**NOTHING IS IN FLIGHT.** The operator's `--fix 1` run under S6.6's levers has
-landed and is read out below as **S6.7**; 9 TSVs are modified in the working
-tree and uncommitted. Nothing else is started.
+**IN FLIGHT: the operator is about to re-run `make fix` at level 1** on the
+S6.8 logging committed just below, **deliberately sweeping the per-canto logs
+first**. The next session reads that run out as record **S6.9**. Do not touch
+`harness/recon/` while it runs, and do not re-derive its numbers from prose —
+read them from the logs.
 
-**Record S6.7 (this session) — the two levers, measured: 37 → 25 findings, and
+**Read `refused.introduced[].governed` first.** That field is the whole reason
+the run is being made again: if the classes the answers introduce sit mostly
+*off* the rows the level named, the row-scoped ask is the mechanism to build
+next and this run is its baseline; if they sit *on* them, the ask's scope is not
+the problem and the level's own premise at those positions is what needs
+arguing. The finding count is context, not the test — a fresh pass gains by
+re-rolling alone (S6.5, S6.7).
+
+**Reading the result (S6.9), in the order that keeps it honest:**
+
+1. `make check` — expected **0 hard**; soft is the delta to report, from 4,649.
+   A non-zero exit is a regression signal, not a finding.
+2. `make fix-level FIX=1` — the level's own count, from 25.
+3. **The refusal mix, then its mechanism.** Against S6.7's 33 units —
+   8 `accepted` / 3 `salvaged` / 7 `no_improvement` / 15 `new_class`,
+   `adopted_invalid` 14 of 33 — report the mix first, then read what S6.8 added
+   and S6.7 could not:
+   - `refused.introduced[].governed`, the reading rule above;
+   - `refused.governed_rows`, i.e. whether the level's own row was answered at
+     all (`relabelled`) or went `missing` with the rest;
+   - `refused.salvage`, why a splice did or did not rescue it — S6.7's
+     `missing_arg` refusals are the shape it cannot;
+   - `final_validation_errors` on the `accepted` units, all 8 of which were
+     `adopted_invalid` in S6.7 — what was the session's own gate refusing?
+   - `fix.delta` per unit, which now gives the row-level attribution S6.5 and
+     S6.7 had to reconstruct from a `git diff`.
+4. **`make agree` only afterwards**, and only as a readout (discipline 4).
+
+**Record S6.8 (this commit) — the refusal, on record.** Three level-1 runs have
+reported *that* an answer introduced a class the unit did not carry and none
+could say **which row it came from**, which is exactly the fact separating the
+two live hypotheses. On any refused whole-unit answer `record["fix"]` now
+carries `refused` (`reconstruct.fix_diagnosis`): the rows the answer proposed
+(added / removed / relabelled, each marked `governed` or not), what it did with
+the rows the level *named* (`governed_rows`), every class it introduced with the
+position and whether that position was one the level asked about, the verdict's
+own inputs per unit, and what the splice then made of it (`salvage`). Beside it,
+`fix.delta` carries `row_delta` per unit under every verdict (so an accepted
+unit's off-brief reach needs no `git diff`), and the `unit` record carries
+`final_validation_errors` — the gate errors on the submission the session handed
+downstream, which S6.7's second finding needs. Nothing reaches a session: it is
+computed after `fix_verdict` has decided and written only to the log. Suite
+**969 → 971**, corpus untouched; details in [`STAGE6.md`](STAGE6.md) S6.8.
+
+**Record S6.7 (commit `7edf773`) — the two levers, measured: 37 → 25 findings, and
 the refusal mix moved the wrong way.** Corpus **4,660 → 4,649 soft**, 0 hard
 throughout, `make check` exits 0, gold agreement 0.7382 → 0.7384. The finding
 delta was never the test (a fresh pass gains by re-rolling alone), and the mix
@@ -36,19 +82,18 @@ row-level attribution and cost in [`STAGE6.md`](STAGE6.md) S6.7.
    own gate rejected — and 5 of the 7 `no_improvement` stopped short of the
    12-turn ceiling. The S6.5 reading ("ran out of room still failing its check")
    does not survive.
-3. **The logs cannot say why an answer was refused.** `fix` carries only `level`
-   and `verdict`; which argument the re-answer dropped is nowhere. This is S6.4's
-   mistake in a new place. **Log the refused candidate's rows (or their diff
-   against the record) before making the next run**, or the question is
-   unanswerable a third time.
+3. **The logs cannot say why an answer was refused** — `fix` carried only
+   `level` and `verdict`, so which argument the re-answer dropped was nowhere.
+   **Answered by S6.8 above**, which is what the next run is for.
 
 **Level 1 has now been run three times: 377 → 83 → 37 → 25**, the third pass
 gaining 12 where the second gained 46. A fourth run of the same mechanism is not
 the next move.
 
-**Two housekeeping facts about the logs.** They were **swept before this run** —
-all 100 carry timestamps from this run only, so S6.3's and S6.5's telemetry is
-gone from disk (both records were read out of it in full first, as §2 planned).
+**Two housekeeping facts about the logs.** They were swept before S6.7's run —
+all 100 carried timestamps from that run only, so S6.3's and S6.5's telemetry is
+gone from disk (both records were read out of it in full first, as §2 planned),
+and the coming run sweeps them again, deliberately, so its logs are unambiguous.
 And S6.4's dedup caution bit in the *opposite* direction to the one this file
 warned about: 10 purgatorio logs carry two segments and three of them hold
 `unit` records the later segment does not repeat, so **taking the last segment
@@ -59,13 +104,15 @@ last — the only rule that survives both shapes.
 **The queue:**
 
 1. **The row-scoped ask** — the last of S6.5's three levers, and the only one
-   still untried. S6.7 strengthens it: the refusals are now overwhelmingly "the
+   still untried; **S6.9 is its evidence**, per the reading rule at the top.
+   S6.7 strengthens it: the refusals are now overwhelmingly "the
    re-answer dropped an argument elsewhere in the unit", exactly what a
    whole-unit re-answer risks and a row-scoped one cannot. S6.6's objection
    (narrowing the ask suppresses the off-brief gains S6.3 measured) is now
    priced — this run's off-brief yield was 2 relabels, 2 rows added, 2 removed
    and 3 relocations across 8 accepted units, against 12 findings cleared, far
-   less to protect than S6.3's 87. Ship the refusal logging (finding 3) with it.
+   less to protect than S6.3's 87. Its refusal logging shipped ahead of it as
+   S6.8.
 2. **Level 2** — a *design* question, not a queue item. Any candidate class
    must first be argued to one of §2's three outcomes from `validate.py` /
    `derive.py`, gold unopened, before it earns a level. §3 of
@@ -133,15 +180,12 @@ no row is added or removed, so a salvage cannot import a class the unit never
 carried. Code only, corpus untouched, suite **960**; details in
 [`STAGE6.md`](STAGE6.md) S6.4.
 
-**State now**: corpus **0 hard / 4,649 soft**, `make check` exits 0, level-1
-findings **25**, suite **969** (unchanged, not re-run — no code moved). The 9
-TSVs the run touched are modified in the working tree and **uncommitted**, as is
-this documentation. `39fa17f` (S6.3), `b1ef280` (S6.4), `2fd689f` (S6.5) and
-`6e6586d` (S6.6) are all **unpushed**.
+**State at this commit** (before the run lands anything): corpus **0 hard /
+4,649 soft**, `make check` exits 0, level-1 findings **25**, suite **971**.
+`39fa17f` (S6.3), `b1ef280` (S6.4), `2fd689f` (S6.5), `6e6586d` (S6.6),
+`7edf773` (S6.7) and this one are all **unpushed**.
 
-**One more standing fact.** The 100 per-canto logs on disk are S6.7's run only,
-and S6.7 is read entirely out of them, so `make clean-log` now discards only
-what that record already carries. And a `--fix` re-run
+**One more standing fact.** A `--fix` re-run
 over an already-fixed corpus cannot make it worse: only the level's own findings
 are selectable, and a unit whose answer fails the acceptance test keeps its rows
 — S6.5 confirmed this on a second pass, with no canto and no unit ending worse
@@ -406,15 +450,22 @@ holds only what's still open.
       halved — 45% of what is left, all of them now `missing_arg`, the shape the
       S6.4 splice cannot rescue. **Level 1 has run three times, 377 → 83 → 37 →
       25**, so a fourth pass of the same mechanism is not the next move: the
-      row-scoped ask is the one lever still untried, and the refusal reason must
-      be logged before it is run. Level 2 waits behind that, and one
+      row-scoped ask is the one lever still untried, and it needs to know
+      *which* row each refused answer broke. Record **S6.8** puts that on
+      record — on any refused answer the log now carries the rows it proposed,
+      what it did with the rows the level named, and every class it introduced
+      with the position that carries it — code only, corpus untouched, suite
+      **969 → 971**. The operator's `--fix 1` re-run under it is **in flight**,
+      with the logs deliberately swept first; S6.9 reads it out, starting from
+      whether the introduced classes sit on the named rows or beside them.
+      Level 2 waits behind that, and one
       authority question is still open for the operator. Scope, the
       standing method, class eligibility and the ledger in
       [`STAGE6.md`](STAGE6.md).
-- Test suite: **969 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+- Test suite: **971 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
-  the llm7shi 0.15.0 status-bar rework + 3 from S6.4 + 9 from S6.6; S6.3 and
-  S6.5 added none, being corpus runs).
+  the llm7shi 0.15.0 status-bar rework + 3 from S6.4 + 9 from S6.6 + 2 from
+  S6.8; S6.3, S6.5 and S6.7 added none, being corpus runs).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.

@@ -253,6 +253,23 @@ def _violation_record(v: Violation) -> dict:
     return {"line": v.line, "kind": v.kind, "detail": v.detail}
 
 
+def _final_validation_errors(agent_result) -> list[str]:
+    """The gate errors on the submission the session actually handed downstream.
+
+    Read off the last `validate_candidate` dispatch, the same call
+    `final_submission_valid` reads its verdict from, so the two can never
+    describe different submissions. Empty when it passed, when no session ran,
+    or when the fallback is a stub without the attribute.
+    """
+    validations = getattr(agent_result, "validations", None) or []
+    if not validations:
+        return []
+    result = validations[-1].get("result", {})
+    if result.get("valid"):
+        return []
+    return [str(e) for e in result.get("errors", [])]
+
+
 @dataclass
 class UnitOutcome:
     """One parse unit's reconstruction result plus its two intrinsic gates."""
@@ -279,6 +296,13 @@ class UnitOutcome:
     # that policy's effect the per-canto log would not otherwise carry — the
     # transcript is not written, so a run could not be read out without it.
     invalid_nudges: int | None = None
+    # What the session's own gate said about the submission that was adopted,
+    # when it said no (S6.7). `final_submission_valid` records *that* it
+    # refused; without the errors themselves a run cannot say what it refused
+    # over — and S6.7 found every accepted fix sitting on such a submission, so
+    # the two verdicts disagreeing is now the thing to explain. Empty list when
+    # the gate passed or no session ran.
+    final_validation_errors: list[str] = dataclasses.field(default_factory=list)
     # Unit-level resume: a unit rebuilt from the TSV already on disk instead of
     # re-running `engine.run_unit`. Its gates are still re-run (deterministic,
     # no model cost), so `passed` is measured rather than trusted; the caller
@@ -319,6 +343,9 @@ class UnitOutcome:
             "adopted_invalid": self.final_submission_valid is False,
             "final_submission_valid": self.final_submission_valid,
             "invalid_nudges": self.invalid_nudges,
+            "final_validation_errors": self.final_validation_errors[
+                :SAMPLE_VIOLATIONS
+            ],
             "fallback_seconds": (
                 None if self.fallback_seconds is None
                 else round(self.fallback_seconds, 1)
@@ -521,6 +548,26 @@ def salvage_outcome(
     )
 
 
+def _refusal_note(diagnosis: dict | None) -> str:
+    """One clause naming what the refused answer did, for a watched run.
+
+    The log carries the whole diagnosis; this is the part a human reading the
+    stream needs to see the pattern forming — how far the answer reached, and
+    whether what it introduced sat on a row the level named or beside it.
+    """
+    if diagnosis is None:
+        return ""
+    introduced = diagnosis["introduced_total"]
+    governed = sum(1 for v in diagnosis["introduced"] if v["governed"])
+    note = (
+        f" [answer: ~{diagnosis['rows_relabelled']} "
+        f"+{diagnosis['rows_added']} -{diagnosis['rows_removed']}"
+    )
+    if introduced:
+        note += f"; {introduced} introduced, {governed} on named rows"
+    return note + "]"
+
+
 def _fix_summary_line(level: int, stats: Counter[str]) -> str:
     """One line naming the mechanism of a fix run (`../PLAN.md` discipline 6)."""
     return (
@@ -562,6 +609,99 @@ def row_delta(
         "rows_relabelled": sum(
             1 for key in b.keys() & a.keys() if b[key] != a[key]
         ),
+    }
+
+
+def _violation_position(v: Violation) -> fixlevel.RowKey | None:
+    """The artifact row a divergence finding names, in `governed_keys` shape."""
+    if v.predicate is None or v.arg is None:
+        return None
+    return (v.predicate[0], v.predicate[1], v.arg[0], v.arg[1])
+
+
+def fix_diagnosis(
+    prior: dict[int, list[SkelRow]],
+    submitted: dict[int, list[SkelRow]],
+    before: list[Violation],
+    hard_after: list[Violation],
+    soft_after: list[Violation],
+    level: int,
+) -> dict:
+    """Why a refused answer was refused, in the terms the verdict is decided in.
+
+    Record S6.7's own limit: `fix` carried `level` and `verdict` and nothing
+    else, so the run could report *that* 15 answers introduced a `missing_arg`
+    and never *which* argument they dropped, nor whether the drop sat on the row
+    the finding names — the one question that separates "the ask is too wide"
+    from "the model is wrong here". That is S6.4's mistake in a second place and
+    this closes it: the refused submission's own rows are diffed against the
+    record and each side is marked `governed` (inside `fixlevel.governed_keys`,
+    i.e. a row the level itself names) or not, and every violation class the
+    answer introduced is listed with the position that carries it.
+
+    Nothing here reaches a session — it is written to the log after the verdict
+    is already decided, and `fix_verdict` is not consulted about it. The
+    derivation's answer stays out of the notice exactly as before.
+    """
+    keys = fixlevel.governed_keys(fixlevel.select(before, level), level)
+
+    def keyed(rows: dict[int, list[SkelRow]]) -> dict[fixlevel.RowKey, str]:
+        return {_key_of(r): r.role for rs in rows.values() for r in rs}
+
+    b, a = keyed(prior), keyed(submitted)
+
+    def entry(key: fixlevel.RowKey, *roles: str) -> dict:
+        line, token, arg_line, arg_token = key
+        return {
+            "predicate": [line, token],
+            "argument": [arg_line, arg_token],
+            "role": list(roles) if len(roles) > 1 else roles[0],
+            "governed": key in keys,
+        }
+
+    added = sorted(a.keys() - b.keys())
+    removed = sorted(b.keys() - a.keys())
+    relabelled = sorted(k for k in b.keys() & a.keys() if b[k] != a[k])
+    seen = {fixlevel.violation_class(v) for v in before}
+    introduced = [v for v in soft_after if fixlevel.violation_class(v) not in seen]
+    return {
+        **row_delta(prior, submitted),
+        "rows": {
+            "added": [entry(k, a[k]) for k in added[:SAMPLE_VIOLATIONS]],
+            "removed": [entry(k, b[k]) for k in removed[:SAMPLE_VIOLATIONS]],
+            "relabelled": [
+                entry(k, b[k], a[k]) for k in relabelled[:SAMPLE_VIOLATIONS]
+            ],
+        },
+        # The rows the level itself named, and what the answer did with each —
+        # the level's own job, separated from everything the answer did beside
+        # it. `missing` is a governed row the answer did not return at all.
+        "governed_rows": {
+            "named": len(keys),
+            "relabelled": sum(1 for k in relabelled if k in keys),
+            "removed": sum(1 for k in removed if k in keys),
+            "untouched": sum(1 for k in keys if k in b and k in a and b[k] == a[k]),
+            "missing": sum(1 for k in keys if k not in a),
+        },
+        "findings_before": len(fixlevel.select(before, level)),
+        "findings_after": len(fixlevel.select(soft_after, level)),
+        "soft_before": len(before),
+        "soft_after": len(soft_after),
+        "hard_after": [_violation_record(v) for v in hard_after[:SAMPLE_VIOLATIONS]],
+        # The classes the answer brought that the unit did not carry — the
+        # `new_class` refusal, itemised, each with the position it sits on and
+        # whether that position is one the level asked about.
+        "introduced": [
+            {
+                **_violation_record(v),
+                "class": fixlevel.violation_class(v),
+                "governed": (
+                    (pos := _violation_position(v)) is not None and pos in keys
+                ),
+            }
+            for v in introduced[:SAMPLE_VIOLATIONS]
+        ],
+        "introduced_total": len(introduced),
     }
 
 
@@ -751,6 +891,7 @@ def reconstruct_canto(
                     result, "final_submission_valid", None
                 ),
                 invalid_nudges=getattr(agent_result, "invalid_nudges", None),
+                final_validation_errors=_final_validation_errors(agent_result),
             )
             recon.outcomes.append(outcome)
             # §5 durability seam: hand the settled outcome to the caller while
@@ -1609,6 +1750,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 )
                 fix_verdict_reason: str | None = None
                 unit_verdict: str | None = None
+                diagnosis: dict | None = None
                 if fix_plan is not None and span in fix_plan.prior:
                     # Acceptance, in two scopes. The whole unit first: that is
                     # the answer the session stands behind, and where it passes
@@ -1620,15 +1762,30 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     # recorded rows go back verbatim.
                     level = fix_plan.level
                     before = fix_plan.before[span]
+                    submitted = outcome.rows
                     accepted, fix_verdict_reason = fix_verdict(
                         before, outcome.hard, outcome.soft, level
                     )
                     if not accepted:
+                        # S6.7: the whole-unit answer was refused, so record
+                        # what it actually proposed before it is spliced or
+                        # thrown away. Decided already; this only reports.
+                        diagnosis = fix_diagnosis(
+                            fix_plan.prior[span], submitted, before,
+                            outcome.hard, outcome.soft, level,
+                        )
                         candidate = salvage_outcome(outcome, fix_plan, span)
-                        if candidate is not None:
-                            salvaged, _ = fix_verdict(
+                        if candidate is None:
+                            diagnosis["salvage"] = (
+                                "token_assertions"
+                                if outcome.token_assertions
+                                else "no_governed_rows"
+                            )
+                        else:
+                            salvaged, salvage_reason = fix_verdict(
                                 before, candidate.hard, candidate.soft, level
                             )
+                            diagnosis["salvage"] = salvage_reason
                             if salvaged:
                                 accepted = True
                                 unit_verdict = fix_verdict_reason
@@ -1654,7 +1811,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     print(
                         f"[fix] {canticle} {canto} lines {span[0]}-{span[1]}: "
                         f"{fix_verdict_reason}"
-                        + (f" (unit: {unit_verdict})" if unit_verdict else ""),
+                        + (f" (unit: {unit_verdict})" if unit_verdict else "")
+                        + _refusal_note(diagnosis),
                         file=ui_stream if ui_stream is not None else sys.stderr,
                         flush=True,
                     )
@@ -1667,6 +1825,16 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                         # What the whole-unit answer was refused for, kept on
                         # record: the salvage rate is only readable against it.
                         record["fix"]["unit_verdict"] = unit_verdict
+                    # What the rows on disk became, under every verdict (a
+                    # reverted unit reports zeros), so an accepted unit's
+                    # off-brief reach is readable without a git diff.
+                    record["fix"]["delta"] = row_delta(
+                        fix_plan.prior[span], outcome.rows
+                    )
+                    if diagnosis is not None:
+                        # Only where the whole-unit answer was refused, and
+                        # about that answer rather than about what was kept.
+                        record["fix"]["refused"] = diagnosis
                 report.add_unit(record)
                 if artifact is not None:
                     # The artifact lands first: it, not the log, is what the
