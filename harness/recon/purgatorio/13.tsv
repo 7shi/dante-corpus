@@ -68,7 +68,6 @@ line	token	word	role	arg_line	arg_token
 20	7	ponta	subj	20	3
 21	0			0	0
 22	8	conta	subj	22	1
-22	8	conta	obl	22	3
 22	8	conta	obl:per	22	6
 23	4	eravam	subj	23	5
 23	4	eravam	xcomp	23	7

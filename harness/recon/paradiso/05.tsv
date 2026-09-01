@@ -159,9 +159,9 @@ line	token	word	role	arg_line	arg_token
 55	3	trasmuti	obj	55	4
 55	3	trasmuti	obl:a	55	8
 55	3	trasmuti	obl:per	56	3
-55	3	trasmuti	obl:sanza	56	7
-55	3	trasmuti	obl:de	57	4
-55	3	trasmuti	obl:de	57	9
+55	3	trasmuti	obl:senza	56	7
+55	3	trasmuti	obl:di	57	4
+55	3	trasmuti	obl:di	57	9
 56	0			0	0
 57	0			0	0
 58	4	credi	subj	0	0
@@ -170,7 +170,7 @@ line	token	word	role	arg_line	arg_token
 59	4	dimessa	subj	59	3
 59	4	dimessa	obl:in	59	7
 60	8	raccolta	subj	59	3
-60	8	raccolta	obl	60	3
+60	8	raccolta	obl:come	60	3
 61	5	pesa	subj	61	3
 62	5	tragga	subj	61	3
 62	5	tragga	obj	62	7

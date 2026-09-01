@@ -199,7 +199,7 @@ line	token	word	role	arg_line	arg_token
 62	3	attende	obl	62	4
 62	8	mena	subj	62	1
 62	8	mena	obj	62	7
-62	8	mena	obl	62	6
+62	8	mena	obl:per	62	6
 63	5	ebbe	subj	63	3
 63	5	ebbe	obj	63	2
 63	5	ebbe	obl:a	63	7

@@ -155,7 +155,7 @@ line	token	word	role	arg_line	arg_token
 50	1	tirarti	subj	49	8
 50	1	tirarti	obl:verso	50	3
 50	7	suone	subj	50	6
-50	7	suone	obl	51	3
+50	7	suone	obl:con	51	3
 51	7	morde	subj	51	5
 51	7	morde	obj	51	6
 51	7	morde	obl:con	51	3

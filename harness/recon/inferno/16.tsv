@@ -134,7 +134,7 @@ line	token	word	role	arg_line	arg_token
 46	7	coperto	obl:da	46	6
 47	1	gittato	subj	0	0
 47	1	gittato	obl:tra	47	5
-47	1	gittato	obl	47	7
+47	1	gittato	obl:di	47	7
 48	2	credo	subj	0	0
 48	2	credo	ccomp	48	8
 48	8	sofferto	subj	48	5

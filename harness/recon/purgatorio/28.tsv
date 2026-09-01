@@ -104,7 +104,7 @@ line	token	word	role	arg_line	arg_token
 34	8	passai	xcomp	35	6
 34	8	passai	obl:con	34	2
 34	8	passai	obl:con	34	7
-34	8	passai	obl	35	2
+34	8	passai	obl:di	35	4
 35	6	mirare	obj	36	3
 36	0			0	0
 37	4	apparve	subj	40	2
@@ -383,7 +383,7 @@ line	token	word	role	arg_line	arg_token
 120	3	ha	obj	120	2
 120	3	ha	obl:in	120	5
 120	11	schianta	subj	120	6
-120	11	schianta	obl	120	8
+120	11	schianta	obl:di	120	8
 121	4	vedi	subj	0	0
 121	4	vedi	obj	121	3
 121	6	surge	subj	121	2

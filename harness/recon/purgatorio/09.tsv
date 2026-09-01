@@ -2,7 +2,7 @@ line	token	word	role	arg_line	arg_token
 1	0			0	0
 2	3	imbiancava	subj	1	2
 2	3	imbiancava	obl:a	2	5
-2	3	imbiancava	obl:di	3	4
+2	3	imbiancava	obl	3	1
 3	0			0	0
 4	6	era	subj	4	5
 4	6	era	attr	4	7
@@ -18,10 +18,10 @@ line	token	word	role	arg_line	arg_token
 8	2	avea	obj	8	3
 8	2	avea	obl:in	8	5
 8	7	eravamo	subj	0	0
-8	7	eravamo	obl	8	5
+8	7	eravamo	obl:in	8	5
 9	5	chinava	subj	9	3
 9	5	chinava	obj	9	9
-9	5	chinava	obl	9	7
+9	5	chinava	obl:in	9	7
 10	5	avea	subj	10	3
 10	5	avea	obj	10	7
 10	5	avea	obl:con	10	4

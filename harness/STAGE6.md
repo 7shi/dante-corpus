@@ -16,12 +16,16 @@ drive it ([`SOFT.md`](SOFT.md)), filed before any rule was designed.
 
 ## 1. What this stage does
 
-The corpus stands at **0 hard / 5,014 soft** and `make check` exits 0. Soft
+The corpus opened this stage at **0 hard / 5,014 soft** and stands at **0 hard /
+4,660 soft** (S6.5); `make check` exits 0 throughout. Soft
 findings are never reported into an agent session by design
-([`STAGE5.md`](STAGE5.md) S5.5), so unlike the hard track this is entirely
-deterministic work over the committed TSVs: no canto is re-run, no model is
-called, and the 164 hours of live model time behind the corpus are not spent
-again.
+([`STAGE5.md`](STAGE5.md) S5.5), so unlike the hard track the stage's **default
+mode** is deterministic work over the committed TSVs: no canto is re-run, no
+model is called, and the 164 hours of live model time behind the corpus are not
+spent again. Record S6.2 added the one sanctioned exception — `--fix <level>`
+reopens just the units carrying a level's findings, showing the invariant and
+the frozen-layer evidence but never the derivation's answer — and S6.3/S6.5 are
+the two runs of it.
 
 The nominal target is 0 soft — the bar gold meets. §2 is the reason that
 target may not be pursued naively, and it is the first thing this stage
@@ -476,3 +480,148 @@ opened, and no derived label crosses into a session.
 Suite **957 → 960** (the governed-key mapping, the splice, and one end-to-end
 `--fix` run whose stub answer repairs the oblique and brings an extra row).
 `harness/recon/` untouched: corpus still **0 hard / 4,706 soft**.
+
+### S6.5 — The `--fix 1` re-run on S6.4's mechanism: 46 of 83 cleared, 12 of them by salvage (2026-09-01)
+
+The operator's re-run of level 1 over all 100 cantos on the S6.4 splice,
+read out here. **The corpus moved; no code did.** The headline the re-run was
+launched for is the salvage yield, and it is much smaller than the delta:
+S6.4 could bound the 46–52 band but not predict how a *fresh set of live
+sessions* would partition it, and most of what moved this time moved for a
+different reason.
+
+**The numbers, against S6.3's close (`b1ef280`, re-checked from that commit's
+TSVs rather than trusted from prose):**
+
+| | before | after |
+|---|---:|---:|
+| hard violations | 0 | **0** |
+| soft violations | 4,706 | **4,660** (−46) |
+| level-1 findings (`make fix-level`) | 83 | **37** (−46, 55.4%) |
+| cantos carrying a level-1 finding | 50 | 28 (22 cleared outright, **none worse**) |
+| TSVs modified | — | 32 |
+| gold agreement (readout, §5 discipline 4) | 0.7372 | 0.7382 |
+
+`make check` exits 0.
+
+**Per soft class** (nothing rose): `role_mismatch` 287 → **242** (−45),
+`extra_arg` 2,107 → 2,106 (−1), everything else unchanged (`missing_arg` 1,636,
+`missing_tuple` 488, `membership` 143, `extra_tuple` 43, `dual_role` 2). Note
+the level's own subset fell by 46 while `role_mismatch` as a whole fell by 45:
+one *non*-level-1 `role_mismatch` appeared (204 → 205). Soft is not a distance
+(§2), so the −46/−46 coincidence is arithmetic, not corroboration.
+
+**The mechanism, from the 100 per-canto logs.** S6.4's deduplication caution did
+not bite: the run wrote exactly **one segment per canto** and no canto was
+re-invoked, so the 74 `unit` records are 74 distinct units, across the 50 cantos
+that carried a finding. Final verdicts:
+
+| verdict | units | findings before | after |
+|---|---:|---:|---:|
+| `accepted` (whole unit) | 33 | 34 | **0** |
+| `salvaged` (S6.4's splice) | 9 | 13 | **1** |
+| `no_improvement` (reverted) | 17 | 20 | 20 |
+| `new_class` (reverted) | 15 | 16 | 16 |
+| `hard` | 0 | — | — |
+
+**So the salvage mechanism collected 12 of the 46.** The other 34 came from the
+whole-unit answer simply passing this time on units S6.3's answer had failed —
+live-session variance, not S6.4. Zero `hard` refusals again, as in S6.3.
+
+**What happened to the 83, by where they sat in S6.3** (the question S6.4 could
+not answer without this run):
+
+| S6.3 verdict | → `accepted` | → `salvaged` | → `no_improvement` | → `new_class` |
+|---|---:|---:|---:|---:|
+| `new_class` (52) | 20 | 13 | 8 | 11 |
+| `no_improvement` (28) | 14 | — | 9 | 5 |
+| `accepted` (3) | — | — | 3 | — |
+
+**33 of S6.4's 52 cleared — but only 13 findings' worth went through the
+salvage path, and one of those survived it.** S6.4's "at least 46 of the 52 are
+repairs the level itself calls correct" was a claim about *S6.3's* discarded
+answers; those answers are not in the logs and were never re-offered, so the
+re-run could not collect them. It collected what its own sessions produced. The
+floor was a floor on a population that no longer exists — worth recording as the
+limit of what a refused-and-unlogged answer can be reasoned about at all.
+
+**Salvage's own rate: 9 of the 41 whole-unit refusals (22%)**, and every one of
+the 9 rescued a `new_class:extra_arg` refusal (`fix.unit_verdict`) — the splice
+is doing exactly the job it was designed for, dropping the extra argument the
+re-answer brought while keeping the relabel. No other refusal class was
+salvageable in this run.
+
+**Row-level** (the diff against `b1ef280`, 32 files): **44 relabels, 19 rows
+added, 21 removed, net −2.** **39 of the 44 relabels are the level's own**
+`obl` → `obl:<prep>` (`obl:di` 12, `obl:in` 8, `obl:a` 5, `obl:per` 4,
+`obl:come` 3, `obl:da`/`obl:con` 2 each, `obl:senza`/`obl:verso`/`obl:quale` 1
+each); the 5 others are `obl:de` → `obl:di` 2, `obl:sanza` → `obl:senza`,
+`subj` → `ccomp`, `attr` → `xcomp`. Attributed by verdict:
+
+- `accepted` units: 34 relabels, 19 added, 19 removed — the whole-unit
+  replacement still reaches past its brief, exactly as S6.3 recorded.
+- `salvaged` units: **10 relabels, 0 added, 2 removed, and nothing outside the
+  governed keys** — 12 row changes for 12 findings collected, one-to-one. That
+  is the S6.4 invariant holding in the field, not just in its tests.
+
+**`adopted_invalid`** (read as S6.3 defines it under `--fix`, not as the S5.5
+number): 36 of 74. It still tracks the refusals — 14 of the 17
+`no_improvement` sessions ended on rows their own gate rejected, against 1 of
+the 15 `new_class` — so `no_improvement` remains "the session ran out of room
+still failing its own check" while `new_class` is a session that satisfied
+itself and paid for it elsewhere.
+
+**Cost.** 584 LLM calls, **6.94 M tokens** (4.75 M input / 0.47 M output /
+1.72 M thought), **18.3 h** of summed per-canto elapsed (inferno 6.0 /
+purgatorio 9.7 / paradiso 2.6). 75 `api_retries` absorbing 2,799 s of 429
+backoff, 4 max-length retries, 0 paced seconds. The 50 cantos with no finding
+cost no model call.
+
+**Gold agreement, opened afterwards and cited as nothing else** (§5 discipline
+4): corpus-wide **0.7372 → 0.7382** (P 0.7136 → 0.7146, R 0.7624 → 0.7633;
++39 true positives on −2 rows); inferno 0.7437 → 0.7444, purgatorio
+0.7343 → 0.7356, paradiso 0.7334 → 0.7343. A tenth of S6.3's move, on a tenth
+of the findings.
+
+**State at close.** Corpus **0 hard / 4,660 soft**, 32 TSVs modified in the
+working tree and uncommitted; suite **960**, unchanged and not re-run — no code
+moved. The per-canto logs now carry both fix runs; everything above is read out
+of them, and S6.3's record is read out of the same files, so `make clean-log`
+discards only what the two records already carry.
+
+**What this says about level 1.** 32 units and 36 findings are refused twice
+over, by two independent sets of sessions, and the second pass gained 46 mostly
+by re-rolling the first pass's dice rather than by the new mechanism. A third
+`--fix 1` run would likely gain again and by less; that is a convergence curve,
+not progress.
+
+**And the residue is a fact about the mechanism, not a worklist.** The
+temptation a twice-refused position invites is to settle it by hand — read it,
+argue its outcome from the contract, and write the row. That is precisely the
+frontier-LLM/human triage loop of Phases 5–8 that `../PLAN.md` §1 says this
+harness exists to replace, and being deterministic and contract-derived does not
+rescue it: the point of the autonomy premise is that the *model* reaches the
+position, so a repair we apply on its behalf measures nothing.
+
+**But "the agent cannot reach it" is the wrong conclusion** (operator's
+correction on this record: *if an assistant session can settle these, the agent
+can in principle be made to*). That is the right way round, and it makes what an
+assistant could do here a **specification for the mechanism**. Decomposed
+against this run's own logs:
+
+| what a frontier session has here | transferable? | evidence in S6.5 |
+|---|---|---|
+| **the derived answer** (`check.py` prints `'obl' vs 'obl:di'`) | **no** — S6.2 keeps it out of the session by design, a test asserts its absence; crossing it makes the run a transcription of `derive_unit` | — |
+| **a one-row question** instead of a whole-unit re-answer | yes | 15 `new_class` refusals, only **1** `adopted_invalid`: the level's job was done and something else broke. S6.4 rescues this after the fact, 9 of 41 |
+| **not stopping while its own gate says invalid** | yes | 17 `no_improvement`, **14** `adopted_invalid` but only **5** at the 12-turn ceiling — sessions stop early, so the lever is the stopping rule, not the budget |
+| **the corpus-wide view of all 37 at once** | yes | a session sees one unit; feeding the level's own settled cases into the notice opens no gold and shows no derived label |
+
+So the untried mechanism change is to make the **ask** row-scoped, not just the
+acceptance — S6.4 narrowed the second and left the first alone — and to revisit
+why a session ends on rows it has itself judged invalid. Reading the 37 is
+admissible as design input under §5 discipline 5 on exactly that footing, and
+whatever comes of it, the corpus edit still comes from a session.
+
+**A correction this table forces**: the first draft of this record described
+`no_improvement` as the session "running out of room". The turn counts above do
+not support that for 12 of the 17.

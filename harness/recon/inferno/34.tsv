@@ -13,13 +13,12 @@ line	token	word	role	arg_line	arg_token
 6	1	par	subj	6	5
 6	1	par	obl	4	6
 6	1	par	obl	5	6
-6	1	par	obl	6	3
 6	9	gira	subj	6	8
 6	9	gira	obj	6	6
 7	1	veder	subj	0	0
-7	1	veder	ccomp	7	7
-7	3	parve	subj	7	1
+7	1	veder	obj	7	6
 7	3	parve	iobj	7	2
+7	3	parve	ccomp	7	1
 7	7	allotta	subj	7	6
 8	6	ristrinsi	subj	0	0
 8	6	ristrinsi	obj	8	5

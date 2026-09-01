@@ -72,7 +72,7 @@ line	token	word	role	arg_line	arg_token
 23	1	rispuose	ccomp	23	7
 23	7	venuto	subj	23	4
 23	7	venuto	obl:per	22	4
-23	7	venuto	obl	23	6
+23	7	venuto	obl:di	23	6
 24	5	mosse	subj	24	1
 24	5	mosse	obj	24	4
 24	9	vegno	subj	0	0

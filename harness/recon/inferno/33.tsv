@@ -6,7 +6,7 @@ line	token	word	role	arg_line	arg_token
 2	3	forbendola	obl:a	2	5
 3	8	guasto	subj	3	4
 3	8	guasto	obj	3	3
-3	8	guasto	obl	3	7
+3	8	guasto	obl:di	3	7
 4	2	cominciò	subj	0	0
 4	2	cominciò	ccomp	4	4
 4	4	vuo'	subj	4	3
@@ -432,7 +432,7 @@ line	token	word	role	arg_line	arg_token
 134	3	pare	obl	134	7
 135	9	verna	subj	135	4
 135	9	verna	obj	135	8
-135	9	verna	obl	135	7
+135	9	verna	obl:di	135	7
 136	3	dei	subj	136	1
 136	4	saper	obj	136	2
 136	7	vien	subj	136	6

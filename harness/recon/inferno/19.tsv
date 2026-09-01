@@ -130,7 +130,7 @@ line	token	word	role	arg_line	arg_token
 46	4	se'	attr	46	2
 46	9	tien	subj	46	5
 46	9	tien	obj	46	8
-46	9	tien	obl	46	11
+46	9	tien	obl:di	46	11
 47	0			0	0
 48	1	comincia'	subj	48	2
 48	1	comincia'	xcomp	48	4

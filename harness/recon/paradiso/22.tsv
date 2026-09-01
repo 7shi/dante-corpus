@@ -333,20 +333,19 @@ line	token	word	role	arg_line	arg_token
 111	6	fui	obl	111	7
 112	0			0	0
 113	7	riconosco	subj	113	6
-113	7	riconosco	obj	114	1
+113	7	riconosco	obj	114	8
 113	7	riconosco	obl:da	113	5
 114	5	sia	subj	114	2
 114	5	sia	obj	114	4
-115	3	nasceva	subj	114	8
+115	3	nasceva	subj	116	1
 115	3	nasceva	obl:con	115	2
-115	6	ascondeva	subj	114	8
+115	6	ascondeva	subj	116	1
 115	6	ascondeva	obj	115	5
 115	6	ascondeva	obl:con	115	7
 116	3	è	subj	116	2
 116	3	è	attr	116	4
 117	3	senti'	subj	117	2
 117	3	senti'	obj	117	7
-117	3	senti'	obl	117	5
 118	7	largita	subj	118	6
 118	7	largita	iobj	118	4
 118	7	largita	xcomp	119	2

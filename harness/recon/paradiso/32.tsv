@@ -102,7 +102,7 @@ line	token	word	role	arg_line	arg_token
 40	2	sappi	ccomp	42	6
 40	9	fiede	subj	40	8
 40	9	fiede	obj	41	7
-40	9	fiede	obl	41	2
+40	9	fiede	obl:a	41	2
 41	0			0	0
 42	6	siede	subj	0	0
 42	6	siede	obl:di	40	5

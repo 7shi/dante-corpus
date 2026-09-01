@@ -72,9 +72,10 @@ line	token	word	role	arg_line	arg_token
 22	3	fu	subj	22	6
 22	3	fu	attr	22	8
 22	3	fu	obl	22	2
-22	3	fu	obl	23	1
+22	8	ristretta	subj	22	6
+22	8	ristretta	obl	23	1
 23	8	venìa	subj	24	1
-23	8	venìa	obl	23	6
+23	8	venìa	obl:di	23	6
 24	3	fosse	subj	24	2
 24	3	fosse	attr	24	7
 24	3	fosse	obl:da	24	6
@@ -404,7 +405,7 @@ line	token	word	role	arg_line	arg_token
 125	2	piange	subj	124	3
 125	2	piange	obl	124	4
 125	2	piange	obl	124	5
-125	2	piange	obl	124	7
+125	2	piange	obl:di	124	7
 125	4	vo'	subj	0	0
 125	4	vo'	ccomp	125	10
 125	10	intende	subj	125	6

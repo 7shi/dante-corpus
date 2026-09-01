@@ -2,7 +2,7 @@ line	token	word	role	arg_line	arg_token
 1	0			0	0
 2	3	alzò	subj	1	8
 2	3	alzò	obj	2	2
-2	3	alzò	obl	1	2
+2	3	alzò	obl:a	1	2
 2	3	alzò	obl:con	2	7
 3	1	gridando	subj	1	8
 3	1	gridando	ccomp	3	2
@@ -389,12 +389,11 @@ line	token	word	role	arg_line	arg_token
 124	6	trasse	obj	124	5
 124	6	trasse	obl:verso	124	9
 125	8	venne	subj	125	5
-125	8	venne	obl	125	7
+125	8	venne	obl:in	125	7
 126	1	uscir	subj	126	3
-126	1	uscir	obl:di	125	4
 126	1	uscir	obl:di	126	6
 127	4	corse	subj	127	1
-127	4	corse	obl	127	6
+127	4	corse	obl:in	127	6
 127	9	ritenne	subj	127	1
 127	9	ritenne	obj	127	8
 128	4	fé	subj	0	0

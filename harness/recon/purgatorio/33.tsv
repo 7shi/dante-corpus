@@ -142,7 +142,7 @@ line	token	word	role	arg_line	arg_token
 46	0			0	0
 47	7	persuade	subj	46	6
 47	7	persuade	obj	47	6
-47	7	persuade	obl	47	2
+47	7	persuade	obl:quale	47	2
 47	7	persuade	obl	47	5
 48	7	attuia	subj	0	0
 48	7	attuia	obj	48	6

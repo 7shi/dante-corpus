@@ -118,7 +118,6 @@ line	token	word	role	arg_line	arg_token
 38	6	appariva	attr	38	5
 39	8	sostenne	subj	39	4
 39	8	sostenne	obj	39	7
-39	8	sostenne	obl	39	6
 40	2	chinail	subj	39	4
 40	2	chinail	obl	40	3
 40	7	venne	subj	40	5

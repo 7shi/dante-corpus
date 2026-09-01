@@ -257,7 +257,7 @@ line	token	word	role	arg_line	arg_token
 80	5	fece	obl:di	80	4
 81	1	girando	subj	0	0
 81	1	girando	obj	81	2
-81	1	girando	obl	81	5
+81	1	girando	obl:come	81	5
 82	2	rispuose	subj	82	4
 82	7	era	subj	82	5
 82	7	era	obl	82	8
@@ -268,6 +268,7 @@ line	token	word	role	arg_line	arg_token
 84	1	penetrando	obl:per	84	3
 84	8	inventro	subj	84	6
 84	8	inventro	obj	84	7
+84	8	inventro	obl:in	84	5
 85	7	congiunta	subj	85	3
 85	7	congiunta	obl:con	85	6
 86	2	leva	subj	85	3

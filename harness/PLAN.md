@@ -9,42 +9,72 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**IN FLIGHT: the operator is re-running `make fix` at level 1** on the S6.4
-mechanism committed just below, and **the next session reads out its result** as
-record **S6.5**. Nothing else is started. Do not touch `harness/recon/` while it
-runs, and do not re-derive its numbers from prose — read them from the logs.
+**NOTHING IS IN FLIGHT.** The operator's `--fix 1` re-run on the S6.4 mechanism
+has landed and is read out as record **S6.5**
+([`STAGE6.md`](STAGE6.md)); its 32 modified TSVs plus this file and STAGE6.md are
+**uncommitted**, along with the two unpushed commits `39fa17f` (S6.3) and
+`b1ef280` (S6.4).
 
-**What the re-run is for.** S6.3's corpus-wide run left **83** level-1 findings
-(from 377) and S6.4 measured where they sit: **52 of the 83 are inside the 46
-units whose answer was refused `new_class`**, and `fix_verdict`'s order (hard →
-`no_improvement` → `new_class`) proves every one of those 46 answers was
-hard-clean *and* did reduce the level's findings. So at least 46 of the 52 were
-repairs the level itself calls correct, thrown away with the unit around them.
-S6.4 stops that: a refused whole-unit answer is now spliced at just the rows its
-own findings name and re-measured by the same test. How much of the 46–52 band
-the re-run actually collects is the number **only this run can produce** — it
-could not be predicted from the S6.3 logs, because a refused unit was logged as
-the rows it kept, not as the answer that was discarded.
+**Record S6.5 — the re-run, and what it actually showed.** Corpus **4,706 →
+4,660 soft**, level-1 findings **83 → 37**, 0 hard throughout, `make check`
+exits 0, 32 TSVs touched. The important number is not the −46 but its
+decomposition: **12 of the 46 came from S6.4's salvage splice** (9 units, every
+one rescuing a `new_class:extra_arg` refusal, 10 relabels + 2 removals and
+nothing outside the governed keys — the invariant holding in the field); the
+other **34 came from the whole-unit answer simply passing this time** on units
+S6.3's answer had failed. Verdicts on the 74 units reopened across 50 cantos:
+33 accepted, 9 salvaged, 17 `no_improvement`, 15 `new_class`, **0 hard**. The
+S6.4 dedup caution did not bite — the run wrote one segment per canto and
+re-invoked none. Cost 584 calls / 6.94 M tokens / 18.3 h summed elapsed. Gold
+agreement, read afterwards only, 0.7372 → 0.7382.
 
-**Reading the result (S6.5), in the order that keeps it honest:**
+**S6.4's "46 of 52" floor did not survive contact and the reason is worth
+keeping**: it bounded *S6.3's* discarded answers, which were never logged and so
+were never re-offered. The re-run could only collect what its own sessions
+produced. Of S6.3's 52 `new_class` findings, 33 cleared — 13 findings' worth via
+salvage (one of which survived it), 20 by a whole-unit answer that passed this
+time.
 
-1. `make check` — expected **0 hard**; soft is the delta to report, from 4,706.
-   A non-zero exit is a regression signal, not a finding.
-2. `make fix-level FIX=1` — the level's own count, from 83.
-3. The per-canto logs: `unit` records now carry `fix.verdict` including the new
-   **`salvaged`**, with `fix.unit_verdict` naming what the whole-unit answer was
-   refused for; `canto_complete.fix` carries `verdict:salvaged`,
-   findings/soft before→after and the row mechanism. Report the mechanism, not
-   just the delta (discipline 6) — how many units salvaged vs accepted vs
-   reverted, and what the surviving refusals are.
-4. **`make agree` only afterwards**, and only as a readout (discipline 4).
+**So level 1 is at a convergence curve, not at progress.** 32 units and 36
+findings have now been refused twice by two independent sets of sessions, and a
+third run would likely gain again and by less.
 
-**Caution when reading those logs**: the re-run *appends* to the same per-canto
-files S6.3 was read out of, and a unit reopened twice appears twice. Deduplicate
-`unit` records by `(canticle, canto, line_start, line_end)` keeping the last —
-that is how S6.4's table was produced and it reproduces S6.3's 265/26/46 exactly.
+**What that does *not* license is hand-repairing the 37.** §1's whole premise is
+that the model reaches these positions itself; correcting them position by
+position — however deterministically, however well argued from the contract —
+is the frontier-LLM/human triage loop of Phases 5–8, i.e. the rails methodology
+`harness/` exists to replace.
 
-**Record S6.4 (this commit) — replacement granularity, answered.** A level names
+**And "the agent cannot reach them" would be an overclaim** (operator's
+correction, 2026-09-01: *if we can settle them, the agent can in principle be
+made to do the same*). It is the right way round: what an assistant session could
+do here is a **specification for the mechanism**, so decompose the advantage
+instead of exercising it.
+
+- **Not transferable — the derived answer.** The quickest route to settling one
+  of the 37 is `check.py`'s own line, which prints `'obl' vs 'obl:di'`: the
+  derivation's answer, which S6.2 deliberately keeps out of the session (a test
+  asserts its absence). Most of "we could settle it" is that asymmetry, not
+  capability, and closing it turns the run into transcription of `derive_unit`.
+- **Transferable, and the live candidate — the scope of the *ask*.** We would
+  answer one row; the session is asked to re-answer the whole unit. That is
+  measured: of the 15 `new_class` refusals only **1** is `adopted_invalid`, i.e.
+  the session did the level's job and broke something else. S6.4 rescues this
+  *after the fact* (9 of 41 refusals). Asking row-scoped in the first place,
+  with the unit re-validated as now, is the untried version.
+- **Transferable — the stopping condition.** Turn budget is **not** the
+  bottleneck: only **5 of the 17** `no_improvement` units reached the 12-turn
+  ceiling, while 14 of 17 ended `adopted_invalid`. So sessions stop while their
+  own gate still says invalid. That is a stopping-rule/notice question, not a
+  budget one.
+- **Transferable — the corpus-wide view.** We would see all 37 at once; a
+  session sees one unit. Feeding the level's own already-settled cases back into
+  the notice opens no gold and reveals no derived label.
+
+Reading the 37 is admissible as *design input* under discipline 5 on exactly
+that footing — never as a worklist.
+
+**Record S6.4 (commit `b1ef280`) — replacement granularity, answered.** A level names
 a *row* while a session answers a *unit*, and acceptance now runs in both scopes:
 the whole answer first (taken entire when it passes, so S6.3's accepted units
 lose nothing), then a position-scoped splice at the rows the findings name
@@ -54,30 +84,38 @@ no row is added or removed, so a salvage cannot import a class the unit never
 carried. Code only, corpus untouched, suite **960**; details in
 [`STAGE6.md`](STAGE6.md) S6.4.
 
-**State at this commit** (before the re-run lands anything): corpus **0 hard /
-4,706 soft**, `make check` exits 0, level-1 findings **83**. S6.3's own commit
-(`39fa17f`: 91 TSVs + PLAN.md + STAGE6.md) and this one are both **unpushed**.
+**State now**: corpus **0 hard / 4,660 soft**, `make check` exits 0, level-1
+findings **37**, suite **960** (unchanged, not re-run — no code moved in S6.5).
 
-**After S6.5 is written, the queue is:**
+**The queue:**
 
-1. **Level 2** — a *design* question, not a queue item. Any candidate class
+1. **Diagnose the twice-refused residue as a mechanism question**, with the 37
+   positions read as evidence and not as a worklist (no row is edited by hand).
+   The two shapes the S6.5 logs separate: `new_class` (15 units, only **1**
+   `adopted_invalid` — the session did the level's job and paid for it in
+   another class) and `no_improvement` (17 units, **14** `adopted_invalid` but
+   only **5** at the 12-turn ceiling — the session stops while its own gate
+   still says invalid). Different failures, different levers: **ask row-scoped**
+   for the first, **stopping rule / notice** for the second, and *not* a bigger
+   turn budget for either. The repair still comes from a session, not from us.
+2. **Level 2** — a *design* question, not a queue item. Any candidate class
    must first be argued to one of §2's three outcomes from `validate.py` /
    `derive.py`, gold unopened, before it earns a level. §3 of
    [`STAGE6.md`](STAGE6.md) carries the candidates; the eligibility list further
    down this section is still current.
-2. **The open authority question** below (`skel/repairs.py` as an admissible
+3. **The open authority question** below (`skel/repairs.py` as an admissible
    authority) is still the operator's and still unanswered. S6.3 prices it but
    does not decide it: the deterministic route is larger and seconds-cheap but
    transcribes `derive_unit`; the live route is what §1's autonomy premise
    actually measures.
 
 **Two housekeeping facts.** The 100 per-canto logs are on disk and carry both
-runs — S6.3's is read entirely out of them, so `make clean-log` discards only
-what that record already carries, but **do not sweep them while S6.5 is
-unwritten**. And a `--fix` re-run over an already-fixed corpus cannot make it
-worse: only the 83 findings across 50 cantos are selectable at level 1, a unit
-whose answer fails the test keeps its rows, and 22 units were already reopened
-twice during S6.3 with no harm.
+fix runs; S6.3 and S6.5 are each read entirely out of them, so `make clean-log`
+now discards only what those two records already carry. And a `--fix` re-run
+over an already-fixed corpus cannot make it worse: only the level's own findings
+are selectable, and a unit whose answer fails the acceptance test keeps its rows
+— S6.5 confirmed this on a second pass, with no canto and no unit ending worse
+than it started.
 
 **Stage 5 closed 2026-08-30 at 0 hard** ([`STAGE5.md`](STAGE5.md) S5.8)
 and **Stage 6 opened on the soft residue** ([`STAGE6.md`](STAGE6.md)), whose first
@@ -92,7 +130,8 @@ bare `obl` where the derivation determines `obl:<prep>`.
 
 The corpus was untouched by that record — 0 hard, 5,014 soft — and the
 operator's `make fix` above was the separate act that applied it, leaving
-**0 hard / 4,706 soft** with `make check` still exiting 0. `make fix-level`
+**0 hard / 4,706 soft** (S6.3), and the S6.5 re-run **0 hard / 4,660 soft**,
+with `make check` still exiting 0. `make fix-level`
 prints the per-canto launch list for free, and `FIX`
 defaults to `max`, resolved by the level table itself (`fixlevel.resolve_level`)
 so the Makefile carries no copy of how far repair reaches.
@@ -242,8 +281,8 @@ so the soft work reads as the new stage it is.
   `reconstruct.py --tool-result-chars`, 0 = off). It takes effect from the
   next run, and `recon/Makefile`'s `%.tsv` recipe does not pass the flag — so
   changing it for corpus runs means editing the recipe.
-- **`make check` now exits 0** — the corpus is hard-clean (0 hard, 4,706
-  soft since S6.3), so from here a non-zero `make check` *is* a regression signal and
+- **`make check` now exits 0** — the corpus is hard-clean (0 hard, 4,660
+  soft since S6.5), so from here a non-zero `make check` *is* a regression signal and
   should be read as one. That is new: through S5.6 the checker's contract
   (non-zero on any hard violation) kept it red by design.
 - **Carry-over caveat on S5.3's own two rules** ([`STAGE5.md`](STAGE5.md)
@@ -294,7 +333,7 @@ holds only what's still open.
 
 - [ ] **Stage 6 — Soft Divergence Reduction** (OPENED 2026-08-30 by
       operator, on Stage 5's close). Everything left in the recon corpus is
-      soft: **4,706 findings** after S6.3's level-1 run (5,014 at the stage's
+      soft: **4,660 findings** after S6.5's level-1 re-run (5,014 at the stage's
       open), mostly deterministic work over the committed TSVs. Record S6.1 audited the
       classification before letting it drive anything ([`SOFT.md`](SOFT.md)):
       the findings are evidence-anchored and the checker does not misfire
@@ -316,14 +355,25 @@ holds only what's still open.
       Record **S6.4** then closed the granularity seam that run exposed: a
       refused whole-unit answer is spliced at the rows its own findings name
       instead of being discarded entire, which is where 52 of the 83 remaining
-      level-1 findings sit. The operator's `--fix 1` re-run on that mechanism
-      is **in flight**; S6.5 reads it out, and level 2 waits behind it. One
+      level-1 findings sat. Record **S6.5** read out the operator's `--fix 1`
+      re-run on that mechanism: **83 → 37** findings and 4,706 → 4,660 soft,
+      but only **12 of the −46 came from the salvage splice** — the other 34
+      from whole-unit answers that happened to pass this time. 32 units are now
+      refused twice over by two independent sets of sessions, so level 1 is on a
+      convergence curve. The 37 survivors are **not** a hand-repair worklist —
+      that would be the Phase 5–8 rails methodology §1 exists to replace; they
+      are a specification for the mechanism, since what an assistant session
+      could do at those positions decomposes into one thing that may not cross
+      (the derived answer) and three that may: a row-scoped *ask*, a stopping
+      rule that does not end on rows the session's own gate rejected, and the
+      corpus-wide view. Level 2 waits behind that, and one
       authority question is still open for the operator. Scope, the
       standing method, class eligibility and the ledger in
       [`STAGE6.md`](STAGE6.md).
 - Test suite: **960 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
-  the llm7shi 0.15.0 status-bar rework + 3 from S6.4; S6.3 added none).
+  the llm7shi 0.15.0 status-bar rework + 3 from S6.4; S6.3 and S6.5 added
+  none, being corpus runs).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.

@@ -9,11 +9,11 @@ line	token	word	role	arg_line	arg_token
 5	3	caler	subj	5	7
 6	3	traéli	subj	5	7
 6	3	traéli	obl	6	2
-6	3	traéli	obl	6	7
+6	3	traéli	obl:con	6	7
 7	6	vòlto	subj	7	8
 7	6	vòlto	iobj	7	4
-7	6	vòlto	obl	7	3
-7	6	vòlto	obl	8	3
+7	6	vòlto	obl:per	7	3
+7	6	vòlto	obl:verso	8	3
 7	6	vòlto	obl:da	8	7
 8	0			0	0
 9	3	udi'	subj	9	2
@@ -25,7 +25,7 @@ line	token	word	role	arg_line	arg_token
 11	8	percossi	subj	11	3
 11	8	percossi	obl:da	11	7
 12	5	esser	subj	12	6
-12	5	esser	obl	12	3
+12	5	esser	obl:senza	12	3
 12	7	fée	subj	10	3
 12	7	fée	obj	12	6
 12	7	fée	xcomp	12	5

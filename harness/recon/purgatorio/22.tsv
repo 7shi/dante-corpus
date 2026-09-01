@@ -212,7 +212,7 @@ line	token	word	role	arg_line	arg_token
 66	6	alluminasti	obj	66	5
 66	6	alluminasti	obl:appresso	66	4
 67	1	Facesti	subj	0	0
-67	1	Facesti	obl	67	3
+67	1	Facesti	obl:come	67	3
 67	5	va	subj	67	4
 67	5	va	obl:di	67	7
 68	2	porta	subj	68	1
@@ -227,6 +227,7 @@ line	token	word	role	arg_line	arg_token
 70	2	dicesti	subj	0	0
 70	2	dicesti	ccomp	70	5
 70	5	rinova	subj	70	3
+70	5	rinova	obj	70	4
 71	1	torna	subj	71	2
 71	1	torna	subj	71	5
 72	3	scende	subj	72	2
@@ -370,7 +371,7 @@ line	token	word	role	arg_line	arg_token
 118	6	eran	subj	118	5
 118	6	eran	obl:di	118	8
 119	1	rimase	subj	118	5
-119	1	rimase	obl	119	3
+119	1	rimase	obl:a	119	3
 119	7	era	subj	119	6
 119	7	era	obl:a	119	9
 120	1	drizzando	subj	119	6

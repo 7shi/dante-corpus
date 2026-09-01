@@ -3,12 +3,12 @@ line	token	word	role	arg_line	arg_token
 2	5	seppe	subj	1	3
 2	5	seppe	obj	2	3
 2	5	seppe	obj	2	7
-2	5	seppe	obj	3	8
 3	0			0	0
 4	3	faceva	subj	1	3
 4	3	faceva	obj	4	5
-4	3	faceva	attr	4	6
-4	3	faceva	obl:di	5	3
+4	3	faceva	xcomp	4	6
+4	6	accorto	subj	4	5
+4	6	accorto	obl:di	5	3
 5	8	face	subj	5	7
 6	2	temon	subj	0	0
 6	2	temon	obj	6	1
@@ -25,7 +25,7 @@ line	token	word	role	arg_line	arg_token
 9	3	volse	subj	7	5
 9	3	volse	obj	9	4
 9	3	volse	obl:a	9	2
-9	3	volse	obl	9	8
+9	3	volse	obl:a	9	8
 10	8	messo	subj	10	2
 10	8	messo	obl:da	10	7
 11	1	Veni	subj	0	0
@@ -33,7 +33,6 @@ line	token	word	role	arg_line	arg_token
 11	5	cantando	subj	10	2
 11	5	cantando	ccomp	11	1
 12	1	gridò	subj	10	2
-12	1	gridò	subj	12	7
 12	1	gridò	obl	12	3
 13	0			0	0
 14	1	surgeran	subj	13	3
@@ -55,7 +54,7 @@ line	token	word	role	arg_line	arg_token
 19	5	venis	subj	19	4
 20	3	gittando	subj	19	1
 20	3	gittando	obj	20	2
-20	3	gittando	obl	20	6
+20	3	gittando	obl:di	20	6
 20	3	gittando	obl	20	8
 21	3	date	subj	0	0
 21	3	date	obj	21	4
@@ -183,7 +182,7 @@ line	token	word	role	arg_line	arg_token
 66	1	drizzar	subj	64	3
 66	1	drizzar	obj	66	3
 66	1	drizzar	obl:verso	66	5
-66	1	drizzar	obl	66	7
+66	1	drizzar	obl:da	66	9
 67	7	scendea	subj	67	4
 67	7	scendea	iobj	67	6
 67	7	scendea	obl:di	67	9

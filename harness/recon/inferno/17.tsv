@@ -379,7 +379,6 @@ line	token	word	role	arg_line	arg_token
 117	10	venta	subj	0	0
 117	10	venta	iobj	117	9
 117	10	venta	obl:a	117	5
-117	10	venta	obl	117	8
 118	2	sentia	subj	118	1
 118	2	sentia	obj	118	9
 118	2	sentia	xcomp	119	1

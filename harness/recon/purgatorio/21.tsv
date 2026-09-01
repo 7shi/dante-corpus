@@ -336,7 +336,7 @@ line	token	word	role	arg_line	arg_token
 99	4	fermai	obj	99	5
 99	4	fermai	obl:senza	99	2
 100	4	vivuto	subj	0	0
-100	4	vivuto	obl	100	6
+100	4	vivuto	obl:di	100	6
 100	4	vivuto	obl	101	1
 101	1	visse	subj	101	2
 101	3	assentirei	subj	0	0
@@ -435,7 +435,7 @@ line	token	word	role	arg_line	arg_token
 127	7	credesti	obj	127	2
 127	7	credesti	obl:a	127	6
 128	1	lasciala	subj	0	0
-128	1	lasciala	obl	128	4
+128	1	lasciala	obl:per	128	4
 128	6	esser	subj	129	2
 128	6	esser	attr	128	4
 128	7	credi	subj	0	0

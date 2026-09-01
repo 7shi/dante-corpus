@@ -42,7 +42,7 @@ line	token	word	role	arg_line	arg_token
 13	6	dirama	subj	14	3
 13	6	dirama	obj	13	5
 13	6	dirama	xcomp	15	2
-13	6	dirama	obl	13	4
+13	6	dirama	obl:da	13	4
 14	7	porta	subj	14	4
 14	7	porta	obj	14	6
 15	2	sodisfare	obl:a	15	4
@@ -445,9 +445,9 @@ line	token	word	role	arg_line	arg_token
 138	1	silogizzò	subj	137	1
 138	1	silogizzò	obj	138	3
 139	6	chiami	subj	139	4
-139	6	chiami	obl	140	3
+139	6	chiami	obl:in	140	3
 140	9	surge	subj	140	6
-140	9	surge	obl:di	140	8
+140	9	surge	obl	140	4
 141	2	mattinar	subj	0	0
 141	2	mattinar	obj	141	4
 141	2	mattinar	xcomp	140	9

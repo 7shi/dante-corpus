@@ -47,7 +47,7 @@ line	token	word	role	arg_line	arg_token
 13	4	disse	ccomp	13	5
 13	5	Volgi	subj	0	0
 13	5	Volgi	obj	13	7
-13	5	Volgi	obl	13	9
+13	5	Volgi	obl:in	13	9
 14	3	sarà	iobj	14	2
 14	3	sarà	attr	14	1
 14	3	sarà	ccomp	15	1
