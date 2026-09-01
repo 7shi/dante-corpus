@@ -9,11 +9,58 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**NOTHING IS IN FLIGHT.** The operator's `--fix 1` re-run on the S6.4 mechanism
-has landed and is read out as record **S6.5**
-([`STAGE6.md`](STAGE6.md)); its 32 modified TSVs plus this file and STAGE6.md are
-**uncommitted**, along with the two unpushed commits `39fa17f` (S6.3) and
-`b1ef280` (S6.4).
+**IN FLIGHT: the operator is running `make fix` at level 1** on the S6.6 levers
+committed just below, and **the next session reads out its result** as record
+**S6.7**. Nothing else is started. Do not touch `harness/recon/` while it runs,
+and do not re-derive its numbers from prose — read them from the logs.
+
+**Record S6.6 (this commit) — two levers from S6.5's table.** S6.5 asked why
+sessions stop while their own gate says invalid; the answer was in the loop, not
+the model: `run_unit` ends on any prose answer after *any* successful
+`validate_candidate`, and `candidate_rows` keeps the last submission whatever its
+verdict — so **77 units across the two fix runs shipped rows their own gate
+rejected, with turns unspent**. That is a deliberate Stage-1 *measurement*
+decision and stays the default (`MAX_INVALID_NUDGES = 0`,
+`test_giving_up_after_failed_validation_is_never_nudged`); the split is by caller
+instead — **`reconstruct.py` now defaults `--max-invalid-nudges 1`**, because it
+produces corpus, while `benchmark.py` never passes it and every Stage-1 number
+keeps its meaning. Lever 2: `revision_block` now tells the session **how its
+answer will be judged** (`fix_verdict` in its own words, S6.4's splice fallback
+included) — the acceptance contract, not the answer; the test asserting
+`derive_unit`'s label never crosses still passes. Suite **960 → 969**, corpus
+untouched; details in [`STAGE6.md`](STAGE6.md) S6.6.
+
+**What the run is for.** Both levers are **unmeasured** — no run has been made
+under them. The one thing S6.6 could establish without a run is that the run
+would be readable: the transcript is never logged, so `invalid_nudges` was added
+to the `unit` record (`UnitOutcome`) rather than repeating S6.4's mistake of
+shipping a mechanism whose effect the logs could not show.
+
+**Reading the result (S6.7), in the order that keeps it honest:**
+
+1. `make check` — expected **0 hard**; soft is the delta to report, from 4,660.
+   A non-zero exit is a regression signal, not a finding.
+2. `make fix-level FIX=1` — the level's own count, from 37.
+3. **The refusal mix is the headline, not the count.** S6.5 showed a fresh pass
+   gains something by re-rolling the dice alone (34 of its 46 were exactly
+   that), so the finding delta cannot separate these levers from variance.
+   What can: against S6.5's 74 units — 33 `accepted` / 9 `salvaged` /
+   17 `no_improvement` / 15 `new_class`, `adopted_invalid` 36 of 74, and 20 of
+   those with turns still unspent — report
+   - `adopted_invalid` **with budget left**, which lever 1 targets directly and
+     should approach 0; count `invalid_nudges > 0` beside it to see how often
+     the resume fired and whether it converted;
+   - the `new_class` share, which lever 2 targets; and
+   - `no_improvement`, where the two levers pull together.
+4. **`make agree` only afterwards**, and only as a readout (discipline 4).
+
+**Caution when reading those logs** (unchanged from S6.5, which did not hit it):
+the run *appends* to the same per-canto files S6.3 and S6.5 were read out of.
+Segment the runs by the `summary` record and pick the last segment per canto;
+a unit reopened twice within one run appears twice, so deduplicate `unit`
+records by `(canticle, canto, line_start, line_end)` keeping the last. S6.5's
+run wrote exactly one segment per canto and no duplicates — do not assume this
+one will.
 
 **Record S6.5 — the re-run, and what it actually showed.** Corpus **4,706 →
 4,660 soft**, level-1 findings **83 → 37**, 0 hard throughout, `make check`
@@ -84,20 +131,19 @@ no row is added or removed, so a salvage cannot import a class the unit never
 carried. Code only, corpus untouched, suite **960**; details in
 [`STAGE6.md`](STAGE6.md) S6.4.
 
-**State now**: corpus **0 hard / 4,660 soft**, `make check` exits 0, level-1
-findings **37**, suite **960** (unchanged, not re-run — no code moved in S6.5).
+**State at this commit** (before the run lands anything): corpus **0 hard /
+4,660 soft**, `make check` exits 0, level-1 findings **37**, suite **969**.
+`39fa17f` (S6.3), `b1ef280` (S6.4), `2fd689f` (S6.5) and this one are all
+**unpushed**.
 
-**The queue:**
+**After S6.7 is written, the queue is:**
 
-1. **Diagnose the twice-refused residue as a mechanism question**, with the 37
-   positions read as evidence and not as a worklist (no row is edited by hand).
-   The two shapes the S6.5 logs separate: `new_class` (15 units, only **1**
-   `adopted_invalid` — the session did the level's job and paid for it in
-   another class) and `no_improvement` (17 units, **14** `adopted_invalid` but
-   only **5** at the 12-turn ceiling — the session stops while its own gate
-   still says invalid). Different failures, different levers: **ask row-scoped**
-   for the first, **stopping rule / notice** for the second, and *not* a bigger
-   turn budget for either. The repair still comes from a session, not from us.
+1. **The row-scoped ask** — the third lever S6.5 named, deliberately *not*
+   shipped in S6.6 because narrowing the ask would also suppress the off-brief
+   gains S6.3 measured on accepted units (87 relabels beyond the level, plus the
+   `purgatorio 21:87` predicate registration §2 calls a strict improvement).
+   S6.7 is its control: if `new_class` stays high even with the rule stated,
+   the ask's scope is the remaining suspect.
 2. **Level 2** — a *design* question, not a queue item. Any candidate class
    must first be argued to one of §2's three outcomes from `validate.py` /
    `derive.py`, gold unopened, before it earns a level. §3 of
@@ -111,7 +157,8 @@ findings **37**, suite **960** (unchanged, not re-run — no code moved in S6.5)
 
 **Two housekeeping facts.** The 100 per-canto logs are on disk and carry both
 fix runs; S6.3 and S6.5 are each read entirely out of them, so `make clean-log`
-now discards only what those two records already carry. And a `--fix` re-run
+discards only what those two records already carry — but **do not sweep them
+while S6.7 is unwritten**. And a `--fix` re-run
 over an already-fixed corpus cannot make it worse: only the level's own findings
 are selectable, and a unit whose answer fails the acceptance test keeps its rows
 — S6.5 confirmed this on a second pass, with no canto and no unit ending worse
@@ -366,14 +413,21 @@ holds only what's still open.
       could do at those positions decomposes into one thing that may not cross
       (the derived answer) and three that may: a row-scoped *ask*, a stopping
       rule that does not end on rows the session's own gate rejected, and the
-      corpus-wide view. Level 2 waits behind that, and one
+      corpus-wide view. Record **S6.6** shipped two of those three, code only
+      and unmeasured: `reconstruct.py` now resumes a session that ends on rows
+      its own gate rejected with turns unspent (the Stage-1 benchmark keeps the
+      opposite default, since there the give-up is the measurement), and the
+      revision block now states the acceptance rule the session is judged by.
+      The operator's `--fix 1` run under them is **in flight**; S6.7 reads it
+      out by the refusal mix rather than the finding count, since a fresh pass
+      gains something by re-rolling alone. Level 2 waits behind that, and one
       authority question is still open for the operator. Scope, the
       standing method, class eligibility and the ledger in
       [`STAGE6.md`](STAGE6.md).
-- Test suite: **960 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+- Test suite: **969 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
-  the llm7shi 0.15.0 status-bar rework + 3 from S6.4; S6.3 and S6.5 added
-  none, being corpus runs).
+  the llm7shi 0.15.0 status-bar rework + 3 from S6.4 + 9 from S6.6; S6.3 and
+  S6.5 added none, being corpus runs).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.

@@ -12,6 +12,8 @@ import json
 import pytest
 
 from harness.runner.agent import (
+    INVALID_NUDGE_MESSAGE,
+    MAX_INVALID_NUDGES,
     MAX_NUDGES,
     NUDGE_MESSAGE,
     SESSION_MAX_TURNS,
@@ -251,6 +253,76 @@ def test_max_nudges_zero_disables_reminders(toolkit):
     assert result.text == "prose answer without any tool work"
     assert result.protocol_complete is False
     assert result.turns == 1
+
+
+# --- invalid-final nudge policy (S6.6) ----------------------------------------------------
+
+
+def test_invalid_final_is_not_nudged_by_default(toolkit):
+    """The Stage-1 default is unchanged: the give-up is the measurement."""
+    assert MAX_INVALID_NUDGES == 0
+    script = [_validate_block(BAD_ROWS), "Giving up."]
+    result = _run(script, toolkit)
+    assert result.invalid_nudges == 0
+    assert result.final_submission_valid is False
+    assert result.turns == 2
+
+
+def test_invalid_final_earns_one_resume_when_asked(toolkit):
+    script = [
+        _validate_block(BAD_ROWS),
+        "Giving up.",
+        _validate_block(GOOD_ROWS),
+        "Fixed after the reminder.",
+    ]
+    result = _run(script, toolkit, max_invalid_nudges=1)
+    assert result.invalid_nudges == 1
+    assert result.nudges == 0  # the no-call policy is a different counter
+    assert result.final_submission_valid is True
+    assert result.candidate_rows == GOOD_ROWS
+    contents = [m["content"] for m in result.messages if m["role"] == "user"]
+    assert any(INVALID_NUDGE_MESSAGE == c for c in contents)
+
+
+def test_invalid_final_resume_is_offered_once_and_shares_the_budget(toolkit):
+    script = [
+        _validate_block(BAD_ROWS),
+        "Giving up.",
+        _validate_block(BAD_ROWS),
+        "Still giving up.",
+        _validate_block(GOOD_ROWS),
+    ]
+    result = _run(script, toolkit, max_invalid_nudges=1)
+    # One resume only: the second give-up stands, and the third pass is unfunded.
+    assert result.invalid_nudges == 1
+    assert result.turns == 4
+    assert result.final_submission_valid is False
+    assert result.text == "Still giving up."
+
+
+def test_valid_final_is_never_resumed(toolkit):
+    script = [_validate_block(GOOD_ROWS), "Done."]
+    result = _run(script, toolkit, max_invalid_nudges=3)
+    assert result.invalid_nudges == 0 and result.turns == 2
+
+
+def test_exhausted_session_is_not_invalid_nudged(toolkit):
+    """No turns left is exactly the case a resume cannot help."""
+    script = [_validate_block(BAD_ROWS), _validate_block(BAD_ROWS)]
+    result = _run(script, toolkit, max_turns=2, max_invalid_nudges=3)
+    assert result.exhausted is True and result.invalid_nudges == 0
+
+
+def test_invalid_nudges_reach_the_trace_record(toolkit):
+    script = [
+        _validate_block(BAD_ROWS),
+        "Giving up.",
+        _validate_block(GOOD_ROWS),
+        "Fixed.",
+    ]
+    result = _run(script, toolkit, max_invalid_nudges=1)
+    assert result.trace_record(include_transcript=False)["invalid_nudges"] == 1
+    assert "invalid-final" in result.summary()
 
 
 def test_nudged_resume_shares_the_turn_budget(toolkit):

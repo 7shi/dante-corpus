@@ -21,6 +21,20 @@ have happened. Giving up after failed validations is a capability failure the
 benchmark must measure, so it is never nudged. This resolves the practical half
 of TOOLCALL.md §7.1 for Stage 1: `validate_candidate` doubles as the de-facto
 acceptance gate; a dedicated `submit_candidate` termination tool stays open.
+
+**Invalid-final nudge policy** (`max_invalid_nudges`, default 0 — off, added on
+`../STAGE6.md` S6.6): the paragraph above is a *measurement* decision and stays
+the default, because the benchmark's subject is exactly "did the model get
+there on its own". A production run has the opposite interest: `reconstruct.py`
+keeps the session's last submission whatever its verdict, so a session that ends
+early on rows its own gate called invalid hands those rows to the corpus while
+turns were still unspent. S6.5 measured it — 77 fix units across the two runs
+ended `adopted_invalid` with budget left. Where this is switched on, such an
+ending earns up to `max_invalid_nudges` resumes carrying `INVALID_NUDGE_MESSAGE`,
+which names the situation and nothing else: no derived answer, no invariant the
+model has not already been told by its own tool. Turned on only by
+`reconstruct.py`; `benchmark.py` never passes it, so every Stage-1 number keeps
+its meaning.
 """
 
 from __future__ import annotations
@@ -59,7 +73,9 @@ __all__ = [
     "OPENING_MESSAGE_COUNT",
     "SESSION_MAX_TURNS",
     "MAX_NUDGES",
+    "MAX_INVALID_NUDGES",
     "NUDGE_MESSAGE",
+    "INVALID_NUDGE_MESSAGE",
     "WORKFLOWS",
     "UnitResult",
     "llm7shi_generate",
@@ -77,6 +93,10 @@ SESSION_MAX_TURNS = 12
 # Live probing saw ~2% no-call turns; one reminder is enough, more risks loops.
 MAX_NUDGES = 1
 
+# Off by default: a give-up after failed validation is what the Stage-1
+# benchmark exists to measure (module docstring). Production runs turn it on.
+MAX_INVALID_NUDGES = 0
+
 # The prompt-side prefix of every session transcript: system + few-shot demo
 # exchange + task.
 OPENING_MESSAGE_COUNT = 1 + len(few_shot_messages()) + 1
@@ -89,6 +109,15 @@ NUDGE_MESSAGE = (
     "return to the task, decide your skeleton rows for the unit, and submit "
     "them with `validate_candidate`. Only after you have validated a candidate "
     "may you give your final answer."
+)
+
+INVALID_NUDGE_MESSAGE = (
+    "You ended the session on a candidate your own `validate_candidate` call "
+    "reported as invalid, and that is the candidate that will be kept. Turns "
+    "are still available. Re-read the errors that call returned, revise the "
+    "rows they name, and submit the full unit again with `validate_candidate`. "
+    "If you conclude the errors are wrong about this unit, say so explicitly in "
+    "your final answer and submit the rows you stand behind."
 )
 
 # Request-level observability (§4 make-the-invisible-measurable): every live
@@ -443,6 +472,7 @@ class UnitResult:
     turns: int = 0  # total model turns across the original run plus nudged resumes
     exhausted: bool = False
     nudges: int = 0  # protocol reminders issued
+    invalid_nudges: int = 0  # resumes issued on an invalid final submission
     workflow: str = "unit"  # validation granularity taught by the system prompt
     outcomes: list[dict] = field(default_factory=list)  # every envelope, in call order
     messages: list[dict] = field(default_factory=list)  # full transcript incl. nudges
@@ -534,6 +564,7 @@ class UnitResult:
             "turns": self.turns,
             "turn_seconds": self.turn_seconds,
             "nudges": self.nudges,
+            "invalid_nudges": self.invalid_nudges,
             "exhausted": self.exhausted,
             "protocol_complete": self.protocol_complete,
             "validations": len(self.validations),
@@ -553,7 +584,13 @@ class UnitResult:
             f"unit: {self.unit['canticle']} {self.unit['canto']} "
             f"line {self.unit['line_start']}"
             + (f"-{self.unit['line_end']}" if self.unit.get("line_end") else ""),
-            f"turns: {self.turns} (nudges: {self.nudges}, exhausted: {self.exhausted})",
+            f"turns: {self.turns} (nudges: {self.nudges}"
+            + (
+                f"+{self.invalid_nudges} invalid-final"
+                if self.invalid_nudges
+                else ""
+            )
+            + f", exhausted: {self.exhausted})",
             f"validations: {len(self.validations)} (any valid: {self.valid_seen})",
             f"candidate rows: {len(self.candidate_rows)}",
             f"upstream feedback records: {len(self.upstream_feedback)}",
@@ -634,6 +671,7 @@ def run_unit(
     specs: Sequence[dict] | None = None,
     max_turns: int = SESSION_MAX_TURNS,
     max_nudges: int = MAX_NUDGES,
+    max_invalid_nudges: int = MAX_INVALID_NUDGES,
     workflow: str = "unit",
     revision: str | None = None,
     on_turn=None,
@@ -650,7 +688,10 @@ def run_unit(
     transcript through a fresh loop run under the shared turn budget. The loop
     library itself is left untouched. `on_turn` (see `toolcall.progress_printer`)
     is forwarded to every loop run with the turn number offset so nudged resumes
-    keep counting session-wide. The session opens by calling ``transport.reset()``
+    keep counting session-wide. `max_invalid_nudges` (default 0) adds the second
+    policy in the module docstring: a session that ends with unspent turns on a
+    submission its own gate rejected is resumed with `INVALID_NUDGE_MESSAGE`.
+    The session opens by calling ``transport.reset()``
     when the transport provides it, so per-session backend state (the Client
     adapter's history mirror, the native ledger) never carries across units.
     `revision`, when given, is a Stage-6 `--fix` block appended to the opening
@@ -699,6 +740,7 @@ def run_unit(
     transcript = [dict(m) for m in opening]
     remaining_budget = max_turns
     nudges_left = max_nudges
+    invalid_nudges_left = max_invalid_nudges
 
     try:
         while remaining_budget > 0:
@@ -729,7 +771,27 @@ def run_unit(
                 o.get("ok") and o.get("tool") == VALIDATE_TOOL
                 for o in loop_result.outcomes
             ):
-                break  # worked through validation; prose ending is legitimate
+                # Worked through validation, so the protocol was followed and a
+                # prose ending is legitimate. It is still worth one resume when
+                # the kept submission is one the session's own gate rejected and
+                # turns remain — but only where the caller asked for it, since
+                # the benchmark's subject is precisely this give-up.
+                if (
+                    invalid_nudges_left > 0
+                    and remaining_budget > 0
+                    and result.final_submission_valid is False
+                ):
+                    invalid_nudges_left -= 1
+                    result.invalid_nudges += 1
+                    if progress:
+                        progress_subseparator(
+                            "invalid-final resume", stream=progress_stream
+                        )
+                    transcript = loop_result.messages + [
+                        {"role": "user", "content": INVALID_NUDGE_MESSAGE}
+                    ]
+                    continue
+                break
             if nudges_left == 0 or remaining_budget <= 0:
                 break  # still no validation: capability failure, measured as-is
 
@@ -762,6 +824,11 @@ def main(argv=None) -> int:
     parser.add_argument("--max-turns", type=int, default=SESSION_MAX_TURNS)
     parser.add_argument("--max-nudges", type=int, default=MAX_NUDGES)
     parser.add_argument(
+        "--max-invalid-nudges", type=int, default=MAX_INVALID_NUDGES,
+        help="resumes offered when the session ends on a submission its own "
+             "gate rejected (0 = off, the benchmark's measurement default)",
+    )
+    parser.add_argument(
         "--workflow",
         choices=WORKFLOWS,
         default="unit",
@@ -792,6 +859,7 @@ def main(argv=None) -> int:
         line_end=args.line_end,
         max_turns=args.max_turns,
         max_nudges=args.max_nudges,
+        max_invalid_nudges=args.max_invalid_nudges,
         workflow=args.workflow,
         on_turn=progress_printer(
             f"{args.canticle} {args.canto} {args.line_start}", args.max_turns

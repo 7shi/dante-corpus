@@ -274,6 +274,11 @@ class UnitOutcome:
     # — a *provisional* adoption at the turn cap, and the primary readout of
     # whether in-session correction converges (`../STAGE5.md` record S5.5).
     final_submission_valid: bool | None = None
+    # Resumes the session was given after ending on rows its own gate rejected
+    # (S6.6). None when no session ran. Logged because it is the only part of
+    # that policy's effect the per-canto log would not otherwise carry — the
+    # transcript is not written, so a run could not be read out without it.
+    invalid_nudges: int | None = None
     # Unit-level resume: a unit rebuilt from the TSV already on disk instead of
     # re-running `engine.run_unit`. Its gates are still re-run (deterministic,
     # no model cost), so `passed` is measured rather than trusted; the caller
@@ -313,6 +318,7 @@ class UnitOutcome:
             # True only when the session ended on rows its own gate rejected.
             "adopted_invalid": self.final_submission_valid is False,
             "final_submission_valid": self.final_submission_valid,
+            "invalid_nudges": self.invalid_nudges,
             "fallback_seconds": (
                 None if self.fallback_seconds is None
                 else round(self.fallback_seconds, 1)
@@ -744,6 +750,7 @@ def reconstruct_canto(
                 final_submission_valid=getattr(
                     result, "final_submission_valid", None
                 ),
+                invalid_nudges=getattr(agent_result, "invalid_nudges", None),
             )
             recon.outcomes.append(outcome)
             # §5 durability seam: hand the settled outcome to the caller while
@@ -1359,6 +1366,12 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         help="model for the Stage-1 agent fallback (default: runner default)",
     )
     parser.add_argument("--max-turns", type=int, default=None)
+    parser.add_argument(
+        "--max-invalid-nudges", type=int, default=1,
+        help="resumes offered when a session ends on rows its own gate "
+             "rejected while turns remain (default 1; 0 restores the "
+             "measure-as-is behaviour the Stage-1 benchmark keeps)",
+    )
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
         "--payload-tier",
@@ -1551,6 +1564,11 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             "min_send_interval": args.min_send_interval,
             "max_length": max_length,
             "result_chars": args.tool_result_chars,
+            # A production run keeps the session's last submission whatever its
+            # verdict, so ending early on rows the session itself rejected puts
+            # them in the artifact. Nudge instead (S6.6). The benchmark keeps
+            # the opposite default: there, the give-up is the measurement.
+            "max_invalid_nudges": args.max_invalid_nudges,
         }
         if args.max_turns is not None:
             fallback_kwargs["max_turns"] = args.max_turns

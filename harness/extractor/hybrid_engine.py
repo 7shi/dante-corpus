@@ -543,6 +543,7 @@ def agent_fallback(
     model: str | None = None,
     workflow: str = "unit",
     max_turns: int | None = None,
+    max_invalid_nudges: int | None = None,
     verbose: bool = False,
     file=None,
     request_log=None,
@@ -581,6 +582,13 @@ def agent_fallback(
     supplies the per-unit revision block — the unit's recorded rows plus the
     invariants they break — appended to the opening task. Both default off, so an
     ordinary generation run is unchanged.
+
+    `max_invalid_nudges` carries `run_unit`'s invalid-final policy (S6.6): a
+    session ending on a submission its own gate rejected, with turns unspent, is
+    resumed once per nudge instead of handing those rows straight to the
+    artifact. `None` keeps `run_unit`'s own default (off), so this callable is
+    unchanged for any caller that does not ask; `reconstruct.py` is the caller
+    that does, because it is producing corpus rather than measuring a session.
 
     `result_chars` > 0 echoes each tool call's returned block to the same console
     (`toolcall.progress_printer`), one turn line plus the truncated payload, so a
@@ -641,6 +649,10 @@ def agent_fallback(
             if revision_for is not None
             else None
         )
+        kwargs = (
+            {} if max_invalid_nudges is None
+            else {"max_invalid_nudges": max_invalid_nudges}
+        )
         return agent_run_unit(
             transport=transport,
             toolkit=toolkit,
@@ -653,6 +665,7 @@ def agent_fallback(
             workflow=workflow,
             revision=revision,
             on_turn=on_turn,
+            **kwargs,
         )
 
     return _run

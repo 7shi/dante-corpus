@@ -211,6 +211,28 @@ def test_revision_block_shows_the_rows_and_the_invariant_not_the_answer():
     assert f"{key[0]}\t{key[1]}\t" in block
 
 
+def test_revision_block_states_the_acceptance_rule_without_stating_an_answer():
+    """S6.6: the session is told how its answer will be judged (`fix_verdict`),
+    which is its own situation — not the derivation's label, which never crosses.
+    S6.5 measured why it matters: 15 of 74 units satisfied their own gate and were
+    refused for a class they introduced elsewhere, unaware that was the rule."""
+    group, key, rows = _level1_target()
+    layers = rc.CantoLayers.load("inferno", 1)
+    _hard, soft = rc._validate_rows(layers, group, rows)
+    block = fixlevel.revision_block(
+        rows, fixlevel.select(soft, 1), layers.dep_rows, 1
+    )
+    # the three refusals of `fix_verdict`, in the session's own words
+    assert "breaks no schema rule" in block
+    assert "settles the points listed" in block
+    assert "no *kind* of problem this unit did not already have" in block
+    # and the salvage fallback, so a partial answer is not a wasted one
+    assert "only the rows the points name are taken from it" in block
+    # still no derived label anywhere
+    derived = fixlevel.select(soft, 1)[0].role
+    assert derived.startswith("obl:") and derived not in block
+
+
 def test_notice_does_not_claim_a_case_child_when_there_is_none():
     """4 of the corpus's 377 level-1 findings are oblique clitics with no `case`
     edge (`ci`/`ne` read as `obl:a`). The notice must describe *that* evidence,

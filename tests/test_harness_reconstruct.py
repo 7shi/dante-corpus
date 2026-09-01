@@ -686,6 +686,61 @@ def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch
         rc.main(argv + ["--max-length", "-1"])
 
 
+def test_unit_record_carries_the_invalid_final_resumes(tmp_path):
+    """S6.6: the transcript is never logged, so without this field a run under
+    the invalid-final policy could not be read out at all — the S6.4 mistake."""
+    outcome = rc.UnitOutcome(
+        unit={"canticle": "inferno", "canto": 1,
+              "line_start": 1, "line_end": 3},
+        route="agent", reason="fix", origin="agent", fallback_ran=True,
+        row_keys=frozenset(), rows={}, token_assertions=[], hard=[], soft=[],
+        final_submission_valid=False, invalid_nudges=1,
+    )
+    assert outcome.to_dict()["invalid_nudges"] == 1
+    # A refused fix reverts the rows but keeps the session telemetry.
+    assert rc.UnitOutcome(
+        unit=outcome.unit, route="agent", reason="fix", origin="agent",
+        fallback_ran=True, row_keys=frozenset(), rows={}, token_assertions=[],
+        hard=[], soft=[],
+    ).to_dict()["invalid_nudges"] is None
+
+
+def test_cli_turns_the_invalid_final_nudge_on_where_the_benchmark_leaves_it_off(
+    tmp_path, monkeypatch
+):
+    """S6.6: producing corpus and measuring a session want opposite defaults.
+
+    `reconstruct.py` keeps a session's last submission whatever its verdict, so
+    ending early on rows the session itself rejected puts them in the artifact;
+    it therefore asks for one resume. `runner/agent.py` keeps 0, because the
+    give-up is exactly what the Stage-1 benchmark measures."""
+    from harness.runner.agent import MAX_INVALID_NUDGES
+
+    assert MAX_INVALID_NUDGES == 0
+
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    _write_log(run_log, [_case_record()])
+    captured = {}
+
+    def spy_fallback(**kwargs):
+        captured.update(kwargs)
+        return _gold_fallback()
+
+    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+    ]
+    assert rc.main(argv) == 0
+    assert captured["max_invalid_nudges"] == 1
+
+    captured.clear()
+    assert rc.main(argv + ["--max-invalid-nudges", "0"]) == 0
+    assert captured["max_invalid_nudges"] == 0
+
+
 def test_streamed_artifact_matches_the_post_hoc_log_conversion(tmp_path, monkeypatch):
     """Same output, different algorithm: the TSV written live, unit by unit, is
     byte-identical to the one `recon.convert` renders afterwards from the same

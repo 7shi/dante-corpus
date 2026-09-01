@@ -625,3 +625,73 @@ whatever comes of it, the corpus edit still comes from a session.
 **A correction this table forces**: the first draft of this record described
 `no_improvement` as the session "running out of room". The turn counts above do
 not support that for 12 of the 17.
+
+### S6.6 — Two levers from S6.5's table: the invalid-final resume, and the acceptance rule told to the session (2026-09-01)
+
+S6.5 ended by decomposing what an assistant session has at these positions into
+one thing that may not cross and three that may. This record ships the two that
+are cheapest and least speculative. **Code only; the corpus is untouched and
+running anything over it stays the operator's act.**
+
+**Why the session stops early — the actual mechanism, not an inference.**
+`run_unit`'s loop ends as soon as the model gives a prose answer after *any*
+successful `validate_candidate` dispatch (`agent.py`: "worked through
+validation; prose ending is legitimate"). Nothing checks the verdict of that
+last submission, and `candidate_rows` takes the last submission *whatever* its
+verdict. So a session can end on rows its own gate called invalid, with turns
+unspent, and those rows go to the artifact. Measured across both fix runs:
+**77 units ended `adopted_invalid` with budget left** (S6.5: 20 of 74; S6.3: 57
+of 337).
+
+**That behaviour is deliberate, and it stays the default.** The module docstring
+is explicit — "giving up after failed validations is a capability failure the
+benchmark must measure, so it is never nudged", with
+`test_giving_up_after_failed_validation_is_never_nudged` guarding it. The
+resolution is not to overrule it but to separate the two jobs:
+
+| | measuring a session | producing corpus |
+|---|---|---|
+| caller | `benchmark.py`, `agent.py --…` | `reconstruct.py` |
+| `max_invalid_nudges` | **0** (`MAX_INVALID_NUDGES`) | **1** (CLI default) |
+| rationale | the give-up *is* the measurement | the give-up ships to the artifact |
+
+**Lever 1 — the invalid-final resume.** Where switched on, a session that ends
+with turns remaining on a submission its own gate rejected is resumed once with
+`INVALID_NUDGE_MESSAGE`, which names only its own situation: your last
+validation reported invalid, that is the candidate that will be kept, turns
+remain, re-read *the errors that call returned* and resubmit — and, explicitly,
+"if you conclude the errors are wrong about this unit, say so and submit the
+rows you stand behind." It carries no derived label and no invariant the model's
+own tool has not already told it. Counted separately as `result.invalid_nudges`
+(trace record and CLI summary), so it can never be confused with the no-call
+nudge, and announced as its own pass boundary on a watched run.
+
+**Lever 2 — the session is told how its answer will be judged.** S6.5's sharpest
+number is that of the 15 `new_class` refusals only **1** was `adopted_invalid`:
+those sessions satisfied their own gate and were then refused for a class they
+introduced elsewhere — a rule they were never told. `revision_block` now states
+`fix_verdict` in the session's own words: the answer replaces the record only if
+it breaks no schema rule, settles the points listed, and raises no *kind* of
+problem the unit did not already have; and if it settles the points but brings a
+different kind, only the rows the points name are taken (S6.4's splice). This is
+the acceptance contract, not the answer — the test that asserts `derive_unit`'s
+label never appears in the block still passes, and a new test pins both halves.
+
+**Why not the row-scoped ask** (S6.5's own first suggestion): narrowing the ask
+to "change only these rows" would also suppress the off-brief gains S6.3
+measured on accepted units — 87 relabels beyond the level, and the
+`purgatorio 21:87` predicate registration §2 calls a strict improvement. Telling
+the session the rule instead is strictly more information and narrows nothing,
+so it is the version that ships. The row-scoped ask stays open, and is now an
+experiment with a control rather than a guess.
+
+**What this does not claim.** Both levers are prompt- and loop-side, gold-closed,
+and **unmeasured** — no run has been made. Their effect is a live-run question
+and the run is the operator's. Neither touches the level table, the classes, or
+the corpus; a `--fix 1` re-run under them is the experiment, and S6.5's caution
+applies to reading it: a third pass would gain something by re-rolling alone, so
+the comparison worth making is the *refusal mix* (`no_improvement` /
+`new_class` / `adopted_invalid`), not the finding count.
+
+Suite **960 → 969**. `harness/recon/` untouched: corpus still **0 hard / 4,660
+soft**.

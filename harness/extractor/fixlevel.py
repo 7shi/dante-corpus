@@ -309,5 +309,13 @@ def revision_block(
         "Re-solve the unit with that in hand. Keep every row your own reading "
         "still supports, change what the points above concern, and submit the "
         "whole unit — not just the changed rows — through validate_candidate.\n"
+        "\n"
+        "How your answer will be used: it replaces the rows above only if it "
+        "breaks no schema rule, actually settles the points listed, and raises "
+        "no *kind* of problem this unit did not already have. If it settles the "
+        "points but introduces a different kind elsewhere, only the rows the "
+        "points name are taken from it and the rest of the record stands. So "
+        "revise beyond those points where your reading genuinely supports it, "
+        "and not otherwise.\n"
         "</revision>"
     )
