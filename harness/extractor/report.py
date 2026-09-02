@@ -5,7 +5,7 @@ JSONL records the log carries (`add_unit` / `add_gold` / `add_canto_complete`),
 so the machine-readable `metrics()` and the human-readable `summary()` are two
 renderings of one aggregate and cannot drift from each other or from the log.
 `load_log` reads a previous attempt's records back for offline analysis — the
-log itself is append-only and never read back by a run (`../STAGE5.md` S5.5).
+log itself is append-only and never read back by a run (`../stages/05.md` S5.5).
 """
 
 from __future__ import annotations

@@ -93,7 +93,7 @@ def unit_task(
     appends the unit's already-recorded rows plus one notice per position whose
     invariant they break. The notices name the invariant and the frozen-layer
     evidence only: the derivation's own answer never enters the session
-    (`../STAGE5.md` record S5.5, and the departure recorded in `../STAGE6.md`).
+    (`../stages/05.md` record S5.5, and the departure recorded in `../stages/06.md`).
     """
     span = f"lines {line_start}-{line_end}" if line_end else f"line {line_start}"
     task = (

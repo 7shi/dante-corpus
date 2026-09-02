@@ -1,5 +1,5 @@
 """Stage-4 corpus-wide log readout: aggregates the 100 per-canto `harness/recon/<canticle>/NN.log`
-JSONL streams (`../STAGE4.md` §5's closing act) into the hygiene, F1, gate-pass, TPM-pressure,
+JSONL streams (`../stages/04.md` §5's closing act) into the hygiene, F1, gate-pass, TPM-pressure,
 wall-clock, and cap-accounting numbers needed to write the closing ledger entry.
 
 Deterministic and LLM-free: reads logs only, never launches `reconstruct.py`.
@@ -24,7 +24,7 @@ from pathlib import Path
 from statistics import median
 
 CANTICLE_COUNTS = {"inferno": 34, "purgatorio": 33, "paradiso": 33}
-# Established in STAGE3.md/STAGE4.md across four inferno-1 confirmation runs;
+# Established in ../stages/03.md/../stages/04.md across four inferno-1 confirmation runs;
 # purgatorio/paradiso have no prior band — this run establishes their baseline.
 INFERNO_F1_BAND = (0.744, 0.796)
 ROLLING_WINDOW_SECONDS = 60.0
@@ -200,7 +200,7 @@ def sum_counter_field(summaries: list[dict], field_name: str) -> Counter:
     return counter
 
 
-# S3.10/S3.11's own catch regenerated to a 114 B opener; STAGE4.md §4 expects the same rare,
+# S3.10/S3.11's own catch regenerated to a 114 B opener; ../stages/04.md §4 expects the same rare,
 # small-opener shape corpus-wide. A trigger regenerating to something much larger suggests the
 # cap caught a different failure mode than the expected turn-1 over-pack.
 CAP_ANOMALY_BYTES = 200

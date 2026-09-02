@@ -3,12 +3,12 @@
 The companion to [`HARD.md`](HARD.md), asked before the soft reduction pass is
 opened: **is the soft classification itself sound — not "is it correctly
 implemented", but "does its justification hold"?** The hard track closed at 0
-([`STAGE5.md`](STAGE5.md) S5.7), so the whole remaining mass is soft: 5,014
+([`stages/05.md`](stages/05.md) S5.7), so the whole remaining mass is soft: 5,014
 findings that would now select every remaining design pass. The counter selects
 work but never decides it (S5.4/S5.5 discipline 1), so the classification that
 produces those 5,014 was audited before being allowed to drive anything.
 
-**Status**: audit record only, filed as [`STAGE6.md`](STAGE6.md) record S6.1 —
+**Status**: audit record only, filed as [`stages/06.md`](stages/06.md) record S6.1 —
 Stage 6 opens on this audit, as Stage 5 opened its clausal work on
 [`HARD.md`](HARD.md)/S5.4. No repair rule was designed here, no artifact was
 edited, and no rule-choosing number was read off gold. Run 2026-08-30 against the
@@ -385,7 +385,7 @@ Three things follow, and none of them may be used to choose a rule:
   fact. §6's numbers decided nothing here, and the next design pass should still
   open gold-closed; if §6's result is what makes a rule attractive, that rule
   needs an independent derivation from the contract before it ships, and the
-  same S5.3-style transparency ([`STAGE5.md`](STAGE5.md) §5) applies to it.
+  same S5.3-style transparency ([`stages/05.md`](stages/05.md) §5) applies to it.
 - Two items are corrections to existing records rather than new findings, and
   both are recorded, not repaired: HARD.md §4.3's "impossible by construction"
   (§4.1, one counterexample at `paradiso 18:83`) and `unknown_role`'s severity

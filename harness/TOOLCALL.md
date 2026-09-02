@@ -299,7 +299,7 @@ No code change follows from this; it documents why the existing
 ## 8. Milestone Ledger (archived from `harness/PLAN.md`, 2026-08-24)
 
 Split out when `PLAN.md` was trimmed; content verbatim. Stage-1 milestone
-records live in [`STAGE1.md`](STAGE1.md).
+records live in [`stages/01.md`](stages/01.md).
 
 **Tool Call Protocol sub-project (`harness/toolcall/`) — T1–T5 COMPLETE, BOTH LIVE GATES
 PASSED (T4 probe, T5 parity).**

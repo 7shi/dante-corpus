@@ -2,7 +2,7 @@
 
 The Stage-4 corpus run left 100 streaming JSONL logs at
 `harness/recon/<canticle>/NN.log`. They are gitignored, disk-only, and
-nothing regenerates them (live LLM output, see `../STAGE5.md` §1). This
+nothing regenerates them (live LLM output, see `../stages/05.md` §1). This
 script converts each one's settled reconstruction into a committable file
 beside it:
 
@@ -17,7 +17,7 @@ skel/inferno/01.tsv` is the run's divergence readout.
 What the TSV cannot carry — routing, gate verdicts, violation detail, gold
 scores, and the `llm_request`/`llm_response` cost instrumentation — is run
 telemetry, not corpus content, and is deliberately **not** committed
-(operator decision 2026-08-29, `../STAGE5.md` §2). It is read from the logs
+(operator decision 2026-08-29, `../stages/05.md` §2). It is read from the logs
 on demand by `harness/recon/readout.py` for as long as they exist.
 
 Deterministic, idempotent and LLM-free: it reads logs plus the frozen L1-L4

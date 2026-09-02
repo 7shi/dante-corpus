@@ -220,7 +220,7 @@ def format_tool_result(outcome: dict) -> str:
     if ok:
         # Compact separators: these blocks are the session's size tail
         # (read_unit payloads), and the whitespace buys nothing the model
-        # reads (STAGE3.md §2.B wire measurement basis).
+        # reads (../stages/03.md §2.B wire measurement basis).
         payload = json.dumps(
             outcome.get("result"),
             ensure_ascii=False,

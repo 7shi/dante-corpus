@@ -23,7 +23,7 @@ of TOOLCALL.md §7.1 for Stage 1: `validate_candidate` doubles as the de-facto
 acceptance gate; a dedicated `submit_candidate` termination tool stays open.
 
 **Invalid-final nudge policy** (`max_invalid_nudges`, default 0 — off, added on
-`../STAGE6.md` S6.6): the paragraph above is a *measurement* decision and stays
+`../stages/06.md` S6.6): the paragraph above is a *measurement* decision and stays
 the default, because the benchmark's subject is exactly "did the model get
 there on its own". A production run has the opposite interest: `reconstruct.py`
 keeps the session's last submission whatever its verdict, so a session that ends
@@ -226,7 +226,7 @@ def llm7shi_generate(
     the session runner calls ``transport.reset()`` (forwarded to ``generate.
     reset``), which regenerates the Client instance for the next session.
 
-    **What is sent** (STAGE3.md record S3.7): the transcript verbatim, every
+    **What is sent** (../stages/03.md record S3.7): the transcript verbatim, every
     call. Transcript compaction was designed, implemented, measured and
     **removed** — every shape of it (results-only, newest-turn-only, digests)
     bought ≤ 0.5% of the wire while degrading the model's view of its own
@@ -237,7 +237,7 @@ def llm7shi_generate(
     the prefix changes. A repeated call at the same transcript position finds
     the mirror *ahead* and rebuilds, exactly like the old length sync.
 
-    **Pacing (STAGE3.md §2.C)**, at the single send point and deliberately
+    **Pacing (../stages/03.md §2.C)**, at the single send point and deliberately
     surviving ``reset()`` (session boundaries are sends too):
 
     - ``min_send_interval`` (seconds, 0 = off): sleep until the last send
@@ -247,7 +247,7 @@ def llm7shi_generate(
     Rate-limit responses (HTTP 429) are handled by `llm7shi.Client`'s own
     backoff (``api_retry_seconds``), not by pre-emptive pacing here.
 
-    **Generation-side runaway cap (``max_length``, STAGE3.md record S3.10)**:
+    **Generation-side runaway cap (``max_length``, ../stages/03.md record S3.10)**:
     answer-text characters per call, handed straight to ``Client(max_length=)``
     — the same currency llm7shi counts in, because a stream's chunk is not
     necessarily one token and provider counts land only after the response
@@ -453,7 +453,7 @@ def llm7shi_generate(
         """Session boundary: the next call regenerates the Client instance.
 
         Pacing state (last send start, the shared bucket) deliberately
-        survives — session boundaries are sends too (STAGE3.md §2.C)."""
+        survives — session boundaries are sends too (../stages/03.md §2.C)."""
         state["client"] = None
         state["mirrored"] = []
         state["attempts"] = {}

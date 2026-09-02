@@ -2,7 +2,7 @@
 derivation — the same hard/soft violation check (and soft-violation-by-class stats) gold gets
 from `skel/skel.py --check`/`--stats` — with no model call.
 
-The recon TSVs are byte-compatible with gold `skel/<canticle>/NN.tsv` (`../STAGE5.md` §1), so
+The recon TSVs are byte-compatible with gold `skel/<canticle>/NN.tsv` (`../stages/05.md` §1), so
 the same validation applies; only the artifact root differs. This wraps the common
 `dante_corpus.skel` validation directly (`validate_unit`, `load_skel(..., base_dir=...)`) rather
 than reusing gold's driver scripts under `skel/`, which stay untouched — `skel.py --check`/

@@ -967,7 +967,7 @@ def test_llm_response_record_measures_thinking_bytes(monkeypatch, tmp_path):
     assert responses[1]["thought_bytes"] == 0
 
 
-# --- generation-side runaway cap (max_length, STAGE3.md record S3.10) ----------------------
+# --- generation-side runaway cap (max_length, harness/stages/03.md record S3.10) ----------------------
 
 
 def test_llm7shi_generate_max_length_counts_cap_retries(monkeypatch, tmp_path):

@@ -71,7 +71,7 @@ class UnitOutcome:
     # when nothing was validated (fast path, dry mode, or a session that never
     # called the tool), False when the session ended on rows its gate rejected
     # — a *provisional* adoption at the turn cap, and the primary readout of
-    # whether in-session correction converges (`../STAGE5.md` record S5.5).
+    # whether in-session correction converges (`../stages/05.md` record S5.5).
     final_submission_valid: bool | None = None
     # Resumes the session was given after ending on rows its own gate rejected
     # (S6.6). None when no session ran. Logged because it is the only part of

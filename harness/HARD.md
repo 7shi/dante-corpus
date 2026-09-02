@@ -8,11 +8,11 @@ construction"; see the note there).
 An evidence record for one question, asked before the clausal repair design
 pass was opened: **is the hard classification itself sound — not "is it
 correctly implemented", but "does its justification hold"?** The violation
-counter selects work ([`STAGE5.md`](STAGE5.md) §5 discipline 1), so before
+counter selects work ([`stages/05.md`](stages/05.md) §5 discipline 1), so before
 letting 70 hard violations drive a design pass, the classification that
 produces them was audited rather than taken a priori.
 
-**Status**: audit record only, filed as [`STAGE5.md`](STAGE5.md) record
+**Status**: audit record only, filed as [`stages/05.md`](stages/05.md) record
 S5.4. No repair rule was designed here, no artifact was edited, and no
 rule-choosing number below was read off gold. Run 2026-08-30 against the
 tree at S5.3 (`6323d95`, working tree clean; suite 916 passed; `make check`
@@ -53,7 +53,7 @@ any reading of the 70 rows shows the checker misfiring.
   contrasts the clausal one against — so it cannot double as this
   invariant's authority.) The authority is therefore `validate.py` 115–122
   plus `derive.py`'s derivation (§4.1) — the contract
-  [`STAGE5.md`](STAGE5.md) §5 designates — and README's hard bullet lags
+  [`stages/05.md`](stages/05.md) §5 designates — and README's hard bullet lags
   the checker: a documentation gap recorded here, not a defect in the check.
 - **Parity with gold's checker.** `recon/check.py` wraps the same
   `validate_unit` (and the same tag→soft split) that `skel/skel.py --check`
@@ -62,7 +62,7 @@ any reading of the 70 rows shows the checker misfiring.
 - **Calibration.** Gold scores **0 hard / 0 soft** under this checker
   (re-verified live: `uv run python -m harness.recon.check --root skel
   --stats`). This is the sanctioned use of gold — calibration of the bar,
-  not a target ([`STAGE5.md`](STAGE5.md) §5) — and it establishes the
+  not a target ([`stages/05.md`](stages/05.md) §5) — and it establishes the
   invariant is satisfiable with the full constructional coverage of the
   corpus.
 
@@ -158,7 +158,7 @@ citation whose referent the artifact itself does not contain. It is the
 same family as `self_arg` and `dup` — an assertion the format cannot
 interpret — and the plan's discipline 3 already names this authority
 ("the schema declares the current row impossible", [`PLAN.md`](PLAN.md)
-§4; [`STAGE5.md`](STAGE5.md) §5).
+§4; [`stages/05.md`](stages/05.md) §5).
 
 ### 4.2 The severity assignment is consistent with the contract's own taxonomy
 
@@ -232,7 +232,7 @@ The hard/soft boundary is **contract-relative**. The tolerance registry is
 a published design decision, not a fact of nature; a skeptic who rejects
 the contract's authority reduces "hard" to "the contract says so". Within
 the project's designated authority — `validate.py`'s schema invariants and
-`derive.py`'s derivation ([`PLAN.md`](PLAN.md) §4 item 1, [`STAGE5.md`](STAGE5.md)
+`derive.py`'s derivation ([`PLAN.md`](PLAN.md) §4 item 1, [`stages/05.md`](stages/05.md)
 §5) — every leg tested here holds. The classification is not used a priori:
 its basis was made explicit, then checked, and it held at every
 independently testable point.
@@ -245,7 +245,7 @@ independently testable point.
   row stands. The derivation's promotion is *deprel*-driven, not
   head-driven, so this covers the 3 rows whose L4 head is another predicate
   (§3 reading 2) as well. This is discipline 3's "where a derivable alternative exists,
-  deletion is wrong" ([`STAGE5.md`](STAGE5.md) §5) applied with the
+  deletion is wrong" ([`stages/05.md`](stages/05.md) §5) applied with the
   contract, gold unopened.
 - **The 43-adjective sub-population has a second admissible alternative**:
   re-notate as `attr`, the canonical equivalent (§4.2) that makes no
@@ -289,7 +289,7 @@ independently testable point.
   10:15 (`base_dir=None` loads gold). The audit itself — the §3 table and
   every statistic — was produced before and after that print with gold
   unopened, no rule was designed from it, and the same S5.3-style
-  transparency ([`STAGE5.md`](STAGE5.md) §5's carry-over caveat) is applied
+  transparency ([`stages/05.md`](stages/05.md) §5's carry-over caveat) is applied
   here: the next session's design pass should still open gold-closed, and
   this record should not be read as having earned the convergence claim
   on its behalf.

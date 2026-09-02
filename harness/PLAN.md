@@ -16,13 +16,13 @@ level 1 closed at **0 findings**. No fix run is in flight and none is scheduled.
 **Stage 7 closed 2026-09-03** on S7.2's live confirmation — both items (S7.1
 knowledge-as-files, S7.2 the `reconstruct.py` split) done, committed and
 live-confirmed on the operator's inferno-1 re-run. Its whole record, the
-close, and the state at close live in [`STAGE7.md`](STAGE7.md); §2 below carries
+close, and the state at close live in [`stages/07.md`](stages/07.md); §2 below carries
 the one-paragraph summary. Unlike every earlier close this one did **not** open
-the next stage's document: **`STAGE8.md` does not exist, and opening it — with
+the next stage's document: **`stages/08.md` does not exist, and opening it — with
 whatever scope — is the operator's call.**
 
 **Three items wait for whichever stage opens next**, all written up in
-[`STAGE7.md`](STAGE7.md) §4 with their numbers; read that rather than
+[`stages/07.md`](stages/07.md) §4 with their numbers; read that rather than
 re-deriving them here:
 
 1. the **transcription-drift check**, investigated 2026-09-02 and deliberately
@@ -30,7 +30,7 @@ re-deriving them here:
    three options are recorded, so do not re-run them (the generated sweep costs
    38 s and 25.4 M comparisons);
 2. **soft level 2**, still a design question before it is a run — candidates and
-   eligibility in [`STAGE6.md`](STAGE6.md) §3, uninvalidated by the delay;
+   eligibility in [`stages/06.md`](stages/06.md) §3, uninvalidated by the delay;
 3. the **standing `skel/repairs.py` authority question**, still the operator's.
 
 ## Current Status
@@ -49,7 +49,7 @@ for it are listed in Handoff above.
       neutrality: behaviour-neutral, and byte-exact wherever the output is
       prompt text. State at close: suite 987, corpus 0 hard / 4,624 soft, the
       live path re-confirmed end-to-end. Both records, the close, the carried
-      items and the Warp-pattern argument live in [`STAGE7.md`](STAGE7.md); §2
+      items and the Warp-pattern argument live in [`stages/07.md`](stages/07.md); §2
       below summarizes. Unlike earlier closes it opened no successor document.
 - Test suite: **987 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
@@ -58,7 +58,7 @@ for it are listed in Handoff above.
   none, being corpus runs).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
-  [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
+  [`stages/04.md`](stages/04.md)'s pre-launch note and record S4.3.
 
 ---
 
@@ -84,12 +84,12 @@ any one session, so it survives across Handoff clearings.
    `mine_artifacts()` regenerates rule table + lexicon from them in seconds;
    no mined artifact needs to be frozen on disk.
 3. **Error structure to mine around** (details in
-   [`STAGE1.md`](STAGE1.md), M1.4 entries):
+   [`stages/01.md`](stages/01.md), M1.4 entries):
    systematic gold-convention divergence on verbless frames dominates
    `historical` misses; bare-`obl` over-assignment (74 fps) and `xcomp`
    over-generation are the top noise sources; `obl:di` / `obl:in` recall
    0.54–0.60 fed lexicon_builder directly (140 frames at 100% consistency
-   mined, incl. fare+di / avere+di / sedere+in — see [`STAGE2.md`](STAGE2.md),
+   mined, incl. fare+di / avere+di / sedere+in — see [`stages/02.md`](stages/02.md),
    M2.2 Ledger entry).
    The 31 well-formed unit-side `upstream_feedback` records await HUMAN
    triage — never auto-retag.
@@ -123,26 +123,36 @@ any one session, so it survives across Handoff clearings.
 
 *Documentation convention (from Stage 5 on, decided 2026-08-29 as PLAN.md
 grew too large): each stage now writes design work, running detail, and
-its milestone ledger directly into its own `STAGE<N>.md` from the moment
+its milestone ledger directly into its own `stages/<NN>.md` from the moment
 it opens, rather than accumulating in PLAN.md and splitting off at close
 (the pattern Stages 1–4 used, kept below for their archived records).
 PLAN.md stays the overall plan — Handoff and Current Status are kept
 current every session; per-stage detail is not duplicated here.*
 
+*File layout (2026-09-03, when the stage count was about to reach two
+digits): the per-stage documents live in `harness/stages/` as zero-padded
+`<NN>.md` — the directory keeps the growing archive out of `harness/`'s
+top level, and the padding keeps `01.md` … `10.md` in reading order. The
+record IDs stay unpadded (`S7.2`, and `S10.1` when it comes): they are cited
+in prose over a hundred times and the padding buys them nothing. Because
+`07.md` is not a distinctive string to grep for, **cite a stage document with
+its directory** — `stages/07.md` from `harness/`, `../stages/07.md` from a
+subpackage — even where the link target itself is shorter.*
+
 *Stage-1 records (toolcall T1–T5, milestones 1.1–1.4 + carry-over
-resolutions) live in [`STAGE1.md`](STAGE1.md) and [`TOOLCALL.md`](TOOLCALL.md)
+resolutions) live in [`stages/01.md`](stages/01.md) and [`TOOLCALL.md`](TOOLCALL.md)
 §8; the completed Stage-2 record — milestones 2.1–2.5 incl. the inferno-1
 pilot and the closing recheck readout — was split off on 2026-08-24 to
-[`STAGE2.md`](STAGE2.md). All Stage-3 records S3.1–S3.11 live in
-[`STAGE3.md`](STAGE3.md)'s ledger (S3.1 moved there verbatim at stage close,
+[`stages/02.md`](stages/02.md). All Stage-3 records S3.1–S3.11 live in
+[`stages/03.md`](stages/03.md)'s ledger (S3.1 moved there verbatim at stage close,
 2026-08-25; stage closed on S3.11); all Stage-4 records S4.1–S4.3 live in
-[`STAGE4.md`](STAGE4.md)'s ledger (stage closed 2026-08-29 on S4.3); all
-Stage-5 records S5.1–S5.8 live in [`STAGE5.md`](STAGE5.md)'s ledger, written
+[`stages/04.md`](stages/04.md)'s ledger (stage closed 2026-08-29 on S4.3); all
+Stage-5 records S5.1–S5.8 live in [`stages/05.md`](stages/05.md)'s ledger, written
 there from the start (stage closed 2026-08-30 on S5.8); Stage-6 records
-S6.1–S6.11 the same way in [`STAGE6.md`](STAGE6.md) (stage closed 2026-09-02 on
-S6.11); Stage-7 records S7.1–S7.2 the same way in [`STAGE7.md`](STAGE7.md)
+S6.1–S6.11 the same way in [`stages/06.md`](stages/06.md) (stage closed 2026-09-02 on
+S6.11); Stage-7 records S7.1–S7.2 the same way in [`stages/07.md`](stages/07.md)
 (stage closed 2026-09-03 on S7.2). Every close through Stage 6 was made by
-opening the next stage's document; Stage 7's was not — no `STAGE8.md` exists
+opening the next stage's document; Stage 7's was not — no `stages/08.md` exists
 yet, so the next stage opens one when the operator sets its scope.*
 
 ---
@@ -208,7 +218,7 @@ In contrast to the top-down methodology used in Phases 5–8 — where frontier 
   - Quantitatively benchmark local LLM capabilities (1-shot exact match rate, multi-turn self-correction convergence rate, role-level F1) against the 0-soft Gold Standard (`skel/`).
   - Capture comprehensive execution logs, successful syntax projections, and lexical decision traces (e.g., argument vs. adjunct discrimination, reflexive pronouns, control verbs).
 - **Specification**: [`harness/runner/PLAN.md`](runner/PLAN.md).
-- **Status**: COMPLETE (2026-08-24); record archived in [`STAGE1.md`](STAGE1.md)
+- **Status**: COMPLETE (2026-08-24); record archived in [`stages/01.md`](stages/01.md)
   — XML wire protocol adopted (probe 0.957 ≥ 0.95, parity interop 24/24
   twice), 87-case benchmarks at quality parity for both workflows (micro F1
   0.711 unit vs 0.708 predicate), traces pooled for Stage 2 mining. Protocol
@@ -224,7 +234,7 @@ In contrast to the top-down methodology used in Phases 5–8 — where frontier 
   - Provide a gated production pipeline that reconstructs cantos under strict 0-soft regression verification and content hash updating.
 - **Specification**: [`harness/extractor/PLAN.md`](extractor/PLAN.md).
 - **Status**: COMPLETE (2026-08-24); record archived in
-  [`STAGE2.md`](STAGE2.md) — the >80% fast-path target measured MISS at
+  [`stages/02.md`](stages/02.md) — the >80% fast-path target measured MISS at
   7.0%, so agent fallback remains the primary path and the gated pipeline's
   honest output is protection.
 
@@ -232,10 +242,10 @@ In contrast to the top-down methodology used in Phases 5–8 — where frontier 
 
 Closed on record S3.11 with the full-corpus expansion re-scoped out into
 Stage 4. The arc: the S3.1 correlation analysis (two accounting points
-corrected by S3.2 — [`STAGE3.md`](STAGE3.md) §1), **the compaction/pacing
+corrected by S3.2 — [`stages/03.md`](stages/03.md) §1), **the compaction/pacing
 design + deterministic gate re-check (record S3.2)**, and **the
 implementation (record S3.3)** — spec, gate verdicts, implementation map,
-measured deviations, and the stage ledger live in [`STAGE3.md`](STAGE3.md).
+measured deviations, and the stage ledger live in [`stages/03.md`](stages/03.md).
 **Record S3.7 cut transcript compaction from the design**: measured against
 run #1's own records it bought 0.5% of the wire and cost the model its own
 session history; the byte reduction moved into the system prompt itself
@@ -258,7 +268,7 @@ readout (`harness/recon/readout.py`) gave verify-gold micro F1 inferno
 inferno falling just under the 0.744–0.796 confirmation-run band — operator
 decision was to accept and close, scope held to the full-corpus run itself.
 Commands, watch items, full readout criteria/results, and the stage ledger
-(S4.1–S4.3) live in [`STAGE4.md`](STAGE4.md).
+(S4.1–S4.3) live in [`stages/04.md`](stages/04.md).
 
 ### Stage 5: Corpus Durability (opened 2026-08-29, CLOSED 2026-08-30)
 
@@ -309,7 +319,7 @@ shipped and the corpus is hard-clean, so the operator re-scoped the soft
 residue — the part of §4's divergence-reduction extension that remains — out
 into Stage 6 rather than letting this stage's document keep growing. Design
 decisions, the conversion contract, and the stage ledger (S5.1–S5.8) live in
-[`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
+[`stages/05.md`](stages/05.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.
 
 ### Stage 6: Soft Divergence Reduction (opened 2026-08-30, CLOSED 2026-09-02)
@@ -334,7 +344,7 @@ first to one of three outcomes — the artifact is wrong, the derivation is
 silent (a *tolerance* is missing, the mistake Phase 5 kept making), or the two
 notations are equivalent — and edit only on the first. Scope, the standing
 method, class eligibility, the open authority question and the ledger live in
-[`STAGE6.md`](STAGE6.md).
+[`stages/06.md`](stages/06.md).
 
 **Standing operational facts carried from the level-1 runs, for whichever
 level runs next:**
@@ -360,7 +370,7 @@ level runs next:**
   state (through S5.6 the checker's contract kept it red by design).
 - The **S5.3-era standing discipline for any rule** (gold-benchmark-not-target,
   schema/derivation authority, `make agree` as readout-only, read positions
-  before aggregates) is unchanged and lives in [`STAGE5.md`](STAGE5.md) §5 and
+  before aggregates) is unchanged and lives in [`stages/05.md`](stages/05.md) §5 and
   §4 below — not repeated here.
 
 ### Stage 7: Refactoring (opened 2026-09-02, CLOSED 2026-09-03)
@@ -391,7 +401,7 @@ frontier model rewriting the local model's prompt sits close to the Phase 5–8
 rails §1 says `harness/` exists to replace; what the stage took instead were the
 pattern's two prerequisites. Both records, that argument, the state at close and
 the three items carried forward (the transcription-drift sweeps, soft level 2,
-the `repairs.py` authority question) live in [`STAGE7.md`](STAGE7.md).
+the `repairs.py` authority question) live in [`stages/07.md`](stages/07.md).
 
 ### Beyond Layer 5 (design notes)
 
@@ -474,7 +484,7 @@ single source, not duplicated here. The boundaries it encodes:
    - `runner/` agents are strictly forbidden access to gold `skel/*.tsv`, the 130-rule registry, and historical correction records ([`CORRECTIONS.md`](../skel/CORRECTIONS.md)).
    - **Gold is the benchmark, never the target — and that binds operator-side
      work too** (added 2026-08-29 on the operator's correction during S5.3;
-     rationale in [`STAGE5.md`](STAGE5.md) §5). Structural masking keeps gold
+     rationale in [`stages/05.md`](stages/05.md) §5). Structural masking keeps gold
      out of the *agent's* inputs; this keeps it out of the *pipeline's
      construction* at every level. No deterministic rule, repair, threshold,
      or heuristic anywhere in `harness/` may be chosen by reading gold and

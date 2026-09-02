@@ -42,7 +42,7 @@ therefore runs `validate_unit` over the derived rows with L1 alone (schema
 checks, no derivation, no gold), and a unit whose own output the schema
 rejects routes to the agent (`reason="schema_invalid"`) instead of being
 committed. That was the source of the last 3 clausal violations in the
-recon corpus (`../STAGE5.md` record S5.7).
+recon corpus (`../stages/05.md` record S5.7).
 
 **Tier 2 — the fallback seam**: `HybridEngine.run_unit(..., fallback=...)`
 takes any callable `(canticle=..., canto=..., line_start=..., line_end=...) ->
@@ -482,7 +482,7 @@ class RoutePolicy:
     require_explicit_subjects: bool = True
     # Stage-6 `--fix`: a unit selected for repair must reach the model. The fast
     # path would hand it `derive_unit`'s own rows, which clears any divergence
-    # class by definition and measures nothing (`../STAGE6.md`).
+    # class by definition and measures nothing (`../stages/06.md`).
     force_fallback: bool = False
 
 
@@ -566,7 +566,7 @@ def agent_fallback(
     (an open UTF-8 JSONL sink), receives one `llm_request` / `llm_response`
     record pair per backend call (see `runner.agent.llm7shi_generate`).
 
-    Stage-3 wiring (STAGE3.md §4, reduced to two levers by record S3.7 —
+    Stage-3 wiring (../stages/03.md §4, reduced to two levers by record S3.7 —
     transcript compaction and the continuation prompt are both gone, so the
     wire carries the transcript verbatim): `payload_tier` selects
     `read_unit`'s rendering tier, and `min_send_interval` paces the single
@@ -574,7 +574,7 @@ def agent_fallback(
     by pre-emptive pacing here). `max_length` is the generation-side runaway
     cap in answer-text characters, handed to `Client(max_length=)` unchanged
     (`None` = off here — the operator-facing CLI owns the policy value;
-    STAGE3.md record S3.10).
+    ../stages/03.md record S3.10).
 
     Stage-6 wiring: `fix_level`, when given, adds that level's own bar to the
     session gate (`extractor/fixlevel.py` `toolkit_flags`) on top of the three
@@ -612,7 +612,7 @@ def agent_fallback(
     # built here, not per `_run` call, because pacing state lives in the
     # generate closure and session boundaries must stay spaced too
     # (`run_unit` resets the transport per session; reset() deliberately
-    # keeps `last_send_start`, STAGE3.md §2.C).
+    # keeps `last_send_start`, ../stages/03.md §2.C).
     transport = PromptXmlTransport(
         generate=llm7shi_generate(
             model,

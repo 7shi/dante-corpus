@@ -143,7 +143,7 @@ def test_read_unit_strictly_masks_layer_5(toolkit, monkeypatch):
     }
 
 
-# --- read_unit payload tiers (STAGE3.md §2.B) ---------------------------------------------
+# --- read_unit payload tiers (harness/stages/03.md §2.B) ---------------------------------------------
 
 
 def test_read_unit_r1_legend_makes_the_shapes_self_describing(toolkit):
@@ -442,7 +442,7 @@ def test_validate_candidate_admits_layer4_argument_as_nominal_anchor(toolkit):
     # `ccomp` — an argument relation — and `skel/validate.py` line 160 accepts an
     # argument position as any role's anchor. The gate transcribes that clause rather
     # than holding the NP-head/pronoun line alone: being stricter than the contract is
-    # what left a level asking for rows the session could not write (STAGE6.md S6.9).
+    # what left a level asking for rows the session could not write (harness/stages/06.md S6.9).
     rows = [_row(124, 6, "sai", "subj", 124, 11, "tondo")]
     assert toolkit.validate_candidate("inferno", 14, 124, rows)["valid"] is True
 

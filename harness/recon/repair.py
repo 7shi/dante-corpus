@@ -1,7 +1,7 @@
 """Stage-5 divergence reduction: deterministic repair of the committed recon TSVs.
 
 S5.2 measured the Stage-4 reconstruction at 897 hard / 5,267 soft violations
-(`../STAGE5.md` §4). Hard violations are **not** a diff against gold — they are the
+(`../stages/05.md` §4). Hard violations are **not** a diff against gold — they are the
 artifact failing the layer's own schema, checked against the frozen L1-L4 layers by
 `dante_corpus/skel/validate.py`. This script repairs the two classes the schema declares
 outright impossible, in place, over `harness/recon/<canticle>/NN.tsv`:
@@ -23,7 +23,7 @@ the layers do not support, so the conservative repair is to withdraw the void as
 leave the rest of the predicate's frame untouched. Both rules are derived from the schema
 alone; gold is not consulted anywhere in this file, and the agreement readout
 (`agree.py`) is run afterwards to see where the repair landed, never to choose it
-(`../STAGE5.md` §5).
+(`../stages/05.md` §5).
 
 The two remaining hard classes (`[clausal] xcomp/ccomp argument is not a predicate`) are
 NOT touched here: unlike these, they have a derivable alternative, so a conservative

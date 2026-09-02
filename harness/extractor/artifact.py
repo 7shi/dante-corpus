@@ -3,7 +3,7 @@
 Split out of `reconstruct.py` (S7.2). Two things live here, and they are one
 thing: the renderer that must stay byte-exact with `skel.io.write_skel`, and
 the file that is written through it unit by unit and read back to resume
-(`../STAGE5.md` record S5.5). Keeping them together is what keeps the streamed
+(`../stages/05.md` record S5.5). Keeping them together is what keeps the streamed
 file byte-identical to a single-pass `render_tsv` — the property `TsvArtifact`
 depends on and `test_render_tsv_matches_write_skel_bytes` pins.
 
@@ -57,7 +57,7 @@ class TsvArtifact:
     """A canto's gold-format TSV, written unit by unit and read back to resume.
 
     The TSV — not the log — is the run's durable artifact and its resume state
-    (`../STAGE5.md` record S5.5). Two properties make that work:
+    (`../stages/05.md` record S5.5). Two properties make that work:
 
     - **Append-per-unit is byte-identical to the whole-canto render.** Parse
       units come from `dep.sentence_groups` (the same call, with the same

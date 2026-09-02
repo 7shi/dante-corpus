@@ -83,7 +83,7 @@ context/new/output sizes in UTF-8 bytes, duration). The log is **append-only
 and never read back** — it is a debug record, so a resumed run's aggregates
 cover that attempt alone.
 
-Resume runs off the artifact instead (`--tsv`, `TsvArtifact`, `../STAGE5.md`
+Resume runs off the artifact instead (`--tsv`, `TsvArtifact`, `../stages/05.md`
 record S5.5). The canto's gold-format TSV is written **unit by unit as units
 settle** (`emit_unit`), so a kill mid-canto leaves every finished unit on
 disk; the next run reads the file back, treats every unit whose lines are all
@@ -262,7 +262,7 @@ def reconstruct_canto(
             started = time.monotonic()
             # A unit reopened for repair must reach the model: the fast path
             # would answer it with `derive_unit`'s own rows, clearing the class
-            # by definition and measuring nothing (`../STAGE6.md`).
+            # by definition and measuring nothing (`../stages/06.md`).
             unit_policy = policy
             if fix_spans and (line_start, line_end) in fix_spans:
                 base = policy if policy is not None else RoutePolicy()
@@ -501,7 +501,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         default=0.0,
         help="minimum seconds between this stream's backend sends (0 = off, "
         "the default; pass e.g. 35 to break the fast-response/big-send "
-        "pairing, STAGE3.md §2.C)",
+        "pairing, ../stages/03.md §2.C)",
     )
     parser.add_argument(
         "--max-length",
@@ -510,7 +510,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         help="generation-side runaway cap in answer-text characters per call "
         "(llm7shi max_length: crossing it fails the turn and the Client "
         "regenerates; thinking is not counted; 0 disables; default 6000, "
-        "STAGE3.md record S3.10)",
+        "../stages/03.md record S3.10)",
     )
     parser.add_argument(
         "--tool-result-chars",
@@ -651,7 +651,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     )
     print(header)
 
-    # Stage-3 configuration line (STAGE3.md §4 item 6): payload tier + pacing
+    # Stage-3 configuration line (../stages/03.md §4 item 6): payload tier + pacing
     # are live-run facts the operator must see announced before the hours run.
     if args.max_length < 0:
         parser.error("--max-length must be >= 0 (0 disables the cap)")
@@ -691,7 +691,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             # The session sees two extra things under --fix, and only these two:
             # the level's own bar added to its gate, and the unit's recorded rows
             # with the invariants they break. No derived label crosses over
-            # (`../STAGE6.md`; `../STAGE5.md` S5.5 for the line being crossed).
+            # (`../stages/06.md`; `../stages/05.md` S5.5 for the line being crossed).
             fallback_kwargs["fix_level"] = args.fix
             fallback_kwargs["revision_for"] = (
                 lambda canticle, canto, line_start, line_end, _plan=fix_plan: (

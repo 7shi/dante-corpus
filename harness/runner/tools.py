@@ -83,7 +83,7 @@ def requires_nominal_anchor(role: str) -> bool:
 # argument is an adverb the checker is silent while this gate refused the row, so under a
 # `--fix 1` run the level demanded `obl:<prep>` there and the gate refused it, leaving the
 # session no admissible label at all and deletion as its only gate-clean move
-# (`../STAGE6.md` S6.9, 12 of the 14 surviving level-1 findings). Transcribed here, with
+# (`../stages/06.md` S6.9, 12 of the 14 surviving level-1 findings). Transcribed here, with
 # `test_anchor_gate_never_stricter_than_validate` binding the two over the whole corpus.
 #
 # - adverbial oblique: `validate.py` 158, and unconditional there — no registry rule
@@ -111,7 +111,7 @@ _ROW_FIELDS = ("line", "token", "word", "role", "arg_line", "arg_token")
 # (coordinates alone identify the token, so wire payloads may omit it).
 _REQUIRED_ROW_FIELDS = ("line", "token", "role", "arg_line", "arg_token")
 
-# --- read_unit payload tiers (STAGE3.md §2.B) -------------------------------------------
+# --- read_unit payload tiers (../stages/03.md §2.B) -------------------------------------------
 #
 # The wire size of a `read_unit` result is the session's size tail (corpus wire
 # p50 7.1 / max 30.0 kB per unit), so the payload ships compact. Tier "R1"
@@ -119,7 +119,7 @@ _REQUIRED_ROW_FIELDS = ("line", "token", "role", "arg_line", "arg_token")
 # self-describing by the inline `PAYLOAD_LEGEND` inside every result. Tier "S1"
 # (fallback, near-zero comprehension risk) keeps today's named-dict schema,
 # dropping empty-valued keys and empty sections only. The confirmation run
-# (STAGE3.md §5) picks the tier; content coverage is identical by test.
+# (../stages/03.md §5) picks the tier; content coverage is identical by test.
 
 PAYLOAD_TIERS = ("R1", "S1")
 
@@ -653,7 +653,7 @@ class GrammarToolkit:
         masked (they are never read, let alone served).
 
         The heavy per-line sections render in the toolkit's compact `payload_tier`
-        (STAGE3.md §2.B): "R1" serves positional rows plus an inline legend; "S1" serves
+        (../stages/03.md §2.B): "R1" serves positional rows plus an inline legend; "S1" serves
         sparse named dicts. Content coverage is identical across tiers.
 
         Returns a JSON-ready dict with keys: `unit`, `lines`, and — when non-empty —

@@ -2,7 +2,7 @@
 #
 # The per-canto goal is <canticle>/NN.tsv, and reconstruct writes it directly:
 # each parse unit's rows are appended the moment the unit settles, so the
-# artifact IS the run's state (../STAGE5.md record S5.5). Resume needs nothing
+# artifact IS the run's state (../stages/05.md record S5.5). Resume needs nothing
 # else — a unit whose lines are already in the TSV is not re-run — so an
 # interrupted launch resumes by re-running the very same make command, and a
 # canto whose TSV is complete costs no model calls at all.
@@ -17,7 +17,7 @@
 # resume and no part in any goal or prerequisite here. Deleting the logs —
 # all of them, at any time — changes nothing this Makefile does.
 #
-# Launch configuration is the one carried from STAGE4.md §2 (S3.9/S3.11):
+# Launch configuration is the one carried from ../stages/04.md §2 (S3.9/S3.11):
 # verbatim transcripts, payload tier R1, reactive-only pacing (HTTP 429s are
 # absorbed by llm7shi.Client's own backoff), max-length 6000 — all
 # reconstruct.py defaults except --verify-gold, passed explicitly below.
@@ -56,7 +56,7 @@
 ##                                     against gold — a READOUT, never a target:
 ##                                     repair rules are derived from the layer's
 ##                                     own schema with gold unopened, and this is
-##                                     read afterwards (../STAGE5.md §5)
+##                                     read afterwards (../stages/05.md §5)
 ## make fix-level                      per-canto counts of the soft findings a
 ##                                     fix run would act on — no model call,
 ##                                     the selection readout
@@ -114,7 +114,7 @@ help:
 	@sed -n 's/^## //p' $(HELPFILE)
 
 # The per-canto goal: reconstruct writes the TSV itself, unit by unit as units
-# settle (`--tsv`, ../STAGE5.md record S5.5). There is no separate conversion
+# settle (`--tsv`, ../stages/05.md record S5.5). There is no separate conversion
 # step, and the log is neither goal nor prerequisite — completion is decided
 # *inside* reconstruct by the artifact alone: a TSV whose lines are all
 # present settles every unit, so the run costs no model calls and exits after
@@ -149,7 +149,7 @@ help:
 # The logs are a by-product (header): nothing here reads them, and their
 # absence is the normal fresh-checkout state, so sweeping them changes nothing
 # any target does. It is not recoverable, though — a log carries its run's
-# telemetry and nothing else holds it, accepted as ephemeral by ../STAGE5.md
+# telemetry and nothing else holds it, accepted as ephemeral by ../stages/05.md
 # §2's decision rather than committed.
 LOGS := $(CANTICLES:%=%/*.log)
 clean-log:
@@ -157,7 +157,7 @@ clean-log:
 	rm -f $(LOGS); \
 	echo "clean-log: removed $$n log(s); TSVs untouched"
 
-# `harness.recon.convert` (log -> gold-format TSV, ../STAGE5.md record S5.1)
+# `harness.recon.convert` (log -> gold-format TSV, ../stages/05.md record S5.1)
 # has NO target here any more, deliberately (2026-08-30). Since S5.5
 # reconstruct writes the TSV itself, so conversion is dead for anything run
 # since; and over the committed corpus it is actively destructive — it
@@ -173,7 +173,7 @@ check:
 stats:
 	uv run python -m harness.recon.check --stats
 
-# Divergence reduction (STAGE5.md §5). Rules come from the layer's own schema
+# Divergence reduction (../stages/05.md §5). Rules come from the layer's own schema
 # and derivation contract (dante_corpus/skel/validate.py, derive.py) — never
 # from reading gold and matching it: gold is harness/'s benchmark, and fitting
 # to it would void every gold-referenced number the project reports. `agree` is
@@ -192,7 +192,7 @@ repair-check:
 agree:
 	uv run python -m harness.recon.agree --per-canticle
 
-# Stage-6 soft repair (../STAGE6.md record S6.2). `fix-level` is the free
+# Stage-6 soft repair (../stages/06.md record S6.2). `fix-level` is the free
 # selection readout: which cantos carry findings at this level, and how many.
 # The `fix*` targets then reopen exactly those units in a live session — the
 # model is shown its own recorded rows plus the invariants they break (never the

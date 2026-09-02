@@ -719,7 +719,7 @@ def test_select_declines_a_finding_whose_row_the_artifact_lacks():
     citations can collapse onto one key with one role silently replacing the other.
     The finding then names a position whose artifact row already carries the
     qualified role, and the notice built from it describes a row that does not
-    exist (`../harness/STAGE6.md` S6.9). `select` declines it when the rows are in
+    exist (`../harness/stages/06.md` S6.9). `select` declines it when the rows are in
     hand, and is unchanged without them: `fix_verdict` compares a before-count with
     an after-count and must apply one definition to two different sets of rows.
     """

@@ -610,7 +610,7 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
 
 
 def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeypatch, capsys):
-    """The Stage-3 flags (STAGE3.md §4 item 6): compaction default ON in the
+    """The Stage-3 flags (harness/stages/03.md §4 item 6): compaction default ON in the
     minimal S3.5 form (drop thinking+calls; no prompt swap, no digests),
     pacing defaults (interval off since record S3.4), a header line
     announcing the live configuration, and full pass-through into
@@ -655,7 +655,7 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
 
 
 def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch, capsys):
-    """The generation-side runaway cap (STAGE3.md record S3.10): the policy
+    """The generation-side runaway cap (harness/stages/03.md record S3.10): the policy
     default (6,000 answer-text chars) lives at this CLI and passes through to
     agent_fallback; `--max-length 0` disables it; negatives are rejected."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)

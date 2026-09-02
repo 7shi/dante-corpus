@@ -13,7 +13,7 @@ teaching to the test, would make this very number meaningless, and would reinsta
 top-down "rails" methodology `harness/` exists to replace. Repair rules are therefore
 derived from the layer's own schema and derivation contract (`dante_corpus/skel/validate.py`,
 `derive.py`) with gold unopened, and this score is read *afterwards* to see where the
-gold-free work landed — it may not decide what ships (`../STAGE5.md` §5).
+gold-free work landed — it may not decide what ships (`../stages/05.md` §5).
 
 Operator-side only, like `benchmark.py`: it reads gold, so nothing under `runner/` may
 import it (PLAN.md §4 item 1). Read-only and LLM-free — it writes nothing anywhere.

@@ -163,4 +163,4 @@ uv run python -m harness.extractor.reconstruct --all --verify-gold
        ceiling) but peak minutes ≈ 102% solo; 3 × average = 96% leaves no
        margin; 61% of input bytes are transcript resends → compaction/pacing
        REQUIRED before launch. **Milestone complete → Stage 2 closed;
-       full readouts in [`../STAGE2.md`](../STAGE2.md).**
+       full readouts in [`../stages/02.md`](../stages/02.md).**

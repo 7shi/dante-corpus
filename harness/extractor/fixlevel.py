@@ -1,6 +1,6 @@
 """Stage-6 soft repair levels: which soft findings a `--fix <level>` run acts on.
 
-The recon corpus is hard-clean and everything left is soft (`../STAGE6.md`), but
+The recon corpus is hard-clean and everything left is soft (`../stages/06.md`), but
 [`../SOFT.md`](../SOFT.md) record S6.1 established that the soft counter is a
 *conformance* measure, not a referee: each class must first be resolved to one of
 three outcomes — the artifact is wrong, the derivation is silent (a tolerance is
@@ -84,12 +84,12 @@ class FixClass:
     # `(pred_line, pred_token, arg_line, arg_token)` keys. A level names a *row*
     # while a session answers a whole *unit*, and this is where that difference
     # is written down: a refused whole-unit answer may still be taken at exactly
-    # these keys and nowhere else (`reconstruct.salvage_rows`, `../STAGE6.md`).
+    # these keys and nowhere else (`reconstruct.salvage_rows`, `../stages/06.md`).
     keys: Callable[[Violation], frozenset[RowKey]]
     # Does the artifact actually hold the row this class would repair? A repair
     # level acts on a row, so a finding naming a row the artifact does not have
     # is not work this level can do — the precondition `select` applies wherever
-    # the rows are in hand (`../STAGE6.md` S6.9).
+    # the rows are in hand (`../stages/06.md` S6.9).
     holds: Callable[[Violation, dict[int, list[SkelRow]]], bool]
 
 
@@ -164,7 +164,7 @@ def _oblique_qualification_holds(
     The finding then reports `'obl' vs 'obl:<prep>'` at a position whose artifact
     row already *is* `obl:<prep>`, and the notice built from it describes a row
     that does not exist — the session reads its own rows in the same block, sees
-    the work already done, and correctly changes nothing (`../STAGE6.md` S6.9:
+    the work already done, and correctly changes nothing (`../stages/06.md` S6.9:
     both of the two non-deadlocked survivors, and 2 of the 14 in total).
 
     Whether the artifact is over-complete at those positions or the two notations
@@ -188,7 +188,7 @@ OBLIQUE_QUALIFICATION = FixClass(
 )
 
 # Cumulative: level N acts on levels 1..N. A class joins the table only once its
-# outcome has been argued from the contract (`../STAGE6.md` §2).
+# outcome has been argued from the contract (`../stages/06.md` §2).
 LEVELS: dict[int, tuple[FixClass, ...]] = {
     1: (OBLIQUE_QUALIFICATION,),
 }
