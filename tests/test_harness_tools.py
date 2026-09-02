@@ -338,12 +338,15 @@ def test_validate_candidate_rejects_word_anchor_mismatch(toolkit):
 
 
 def test_validate_candidate_rejects_argument_not_np_head_nor_pronoun(toolkit):
-    # "oscura" (2.6) belongs to the NP "una selva oscura" but is not its head (5).
+    # "oscura" (2.6) belongs to the NP "una selva oscura" but is not its head (5), and
+    # its `amod` deprel is not an argument relation either — so `validate.py` refuses it
+    # as an anchor too, and the gate may.
     rows = [_row(2, 2, "ritrovai", "obj", 2, 6, "oscura")]
     result = toolkit.validate_candidate("inferno", 1, 1, rows)
     assert result["valid"] is False
     assert any(
-        "neither a Layer 3 NP head nor a pronoun" in error for error in result["errors"]
+        "not a position a nominal role may anchor on" in error
+        for error in result["errors"]
     )
 
 
@@ -434,15 +437,14 @@ def test_validate_candidate_restricts_the_null_position_to_subjects(toolkit):
     assert any("may not cite (0, 0)" in e for e in result["errors"])
 
 
-def test_validate_candidate_still_rejects_non_nominal_anchor_on_nominal_role(toolkit):
-    # "tondo" (adjective) anchors sai's clausal complement fine, but as a *subject*
-    # citation on a nominal role it still fails the NP-head/pronoun requirement.
+def test_validate_candidate_admits_layer4_argument_as_nominal_anchor(toolkit):
+    # "tondo" (adjective, 124.11) heads no NP and is no pronoun, but Layer 4 makes it a
+    # `ccomp` — an argument relation — and `skel/validate.py` line 160 accepts an
+    # argument position as any role's anchor. The gate transcribes that clause rather
+    # than holding the NP-head/pronoun line alone: being stricter than the contract is
+    # what left a level asking for rows the session could not write (STAGE6.md S6.9).
     rows = [_row(124, 6, "sai", "subj", 124, 11, "tondo")]
-    result = toolkit.validate_candidate("inferno", 14, 124, rows)
-    assert result["valid"] is False
-    assert any(
-        "neither a Layer 3 NP head nor a pronoun" in error for error in result["errors"]
-    )
+    assert toolkit.validate_candidate("inferno", 14, 124, rows)["valid"] is True
 
 
 def test_validate_candidate_accepts_attr_and_adverbial_obl_anchors(toolkit):
@@ -693,3 +695,75 @@ _GOOD_WITHOUT_PRED = [
     _row(2, 2, "ritrovai", "obl:in", 1, 2, "mezzo"),
     _row(2, 2, "ritrovai", "obl:per", 2, 5, "selva"),
 ]
+
+
+# --- the gate against the contract it transcribes --------------------------------------
+
+
+def test_validate_candidate_admits_a_qualified_adverbial_oblique(toolkit):
+    """`obl:<prep>` on an adverb is admissible: `skel/validate.py` line 158 exempts it.
+
+    The concrete position record S6.9 was stuck on — `riguardando ... giuso` with the
+    Layer-4 `case` child 53.4 'in'. Under a `--fix 1` run the level's own bar refuses
+    the bare `obl` here, so refusing the qualified form as well left the session no
+    admissible label at all and deletion as its only gate-clean move. 12 of the 14
+    surviving level-1 findings sat in that contradiction.
+    """
+    rows = [_row(53, 3, "", "obl:in", 53, 5, "")]
+    assert toolkit.validate_candidate("inferno", 9, 52, rows)["valid"] is True
+
+
+def test_anchor_gate_is_never_stricter_than_validate():
+    """No row the session's anchor rule refuses may be one `validate.py` accepts.
+
+    The property whose absence produced S6.9's deadlock, asserted over committed
+    artifacts rather than over invented rows: where the two disagree in this
+    direction, a repair level can demand a row the session may not write, and the
+    session's only gate-clean answer is to delete it. Checked on the twelve cantos
+    that carried the deadlock plus one control; `harness/runner/tools.py`'s
+    `ARG_DEPRELS` note records which of `validate.py`'s clauses are transcribed.
+    """
+    import re
+
+    from harness.recon import check as recon_check
+    from harness.runner.tools import _load_canto, anchor_admits
+
+    membership = re.compile(
+        r"argument \((\d+), (\d+)\) for role (\S+) heads no NP/pronoun/predicate"
+    )
+    root = recon_check.Path(recon_check.__file__).parent
+    targets = [
+        ("inferno", 1), ("inferno", 9), ("inferno", 12), ("inferno", 18),
+        ("inferno", 26), ("inferno", 33), ("purgatorio", 10), ("purgatorio", 13),
+        ("purgatorio", 14), ("purgatorio", 17), ("purgatorio", 22),
+        ("purgatorio", 30), ("paradiso", 6),
+    ]
+    checked = 0
+    for canticle, number in targets:
+        result = recon_check.check_canto(canticle, number, root)
+        contract_rejects = {
+            ((int(m.group(1)), int(m.group(2))), m.group(3))
+            for v in result["violations"]
+            if (m := membership.search(v.detail))
+        }
+        data = _load_canto(canticle, number)
+        rows = result["rows"]
+        predicates = frozenset(
+            (r.line, r.token) for rs in rows.values() for r in rs if r.token > 0
+        )
+        for rs in rows.values():
+            for row in rs:
+                arg = (row.arg_line, row.arg_token)
+                if row.token == 0 or arg in ((0, 0), (row.line, row.token)):
+                    continue
+                if not requires_nominal_anchor(row.role):
+                    continue
+                checked += 1
+                if anchor_admits(data, predicates, row.role, arg):
+                    continue
+                assert (arg, row.role) in contract_rejects, (
+                    f"{canticle} {number}: the gate refuses {row.role} at {arg} "
+                    f"where validate.py accepts it — a level asking for this row "
+                    f"would leave the session no writable answer"
+                )
+    assert checked > 1000

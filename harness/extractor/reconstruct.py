@@ -419,7 +419,7 @@ def plan_fix(
         if group is None:
             continue
         hard, soft = _validate_rows(layers, group, rows)
-        findings = fixlevel.select(soft, level)
+        findings = fixlevel.select(soft, level, rows)
         if not findings:
             continue
         plan.prior[span] = {no: list(rows.get(no, [])) for no in group}
@@ -528,7 +528,7 @@ def salvage_outcome(
     if plan.layers is None or outcome.token_assertions:
         return None
     keys = fixlevel.governed_keys(
-        fixlevel.select(plan.before[span], plan.level), plan.level
+        fixlevel.select(plan.before[span], plan.level, plan.prior[span]), plan.level
     )
     if not keys:
         return None
@@ -643,7 +643,7 @@ def fix_diagnosis(
     is already decided, and `fix_verdict` is not consulted about it. The
     derivation's answer stays out of the notice exactly as before.
     """
-    keys = fixlevel.governed_keys(fixlevel.select(before, level), level)
+    keys = fixlevel.governed_keys(fixlevel.select(before, level, prior), level)
 
     def keyed(rows: dict[int, list[SkelRow]]) -> dict[fixlevel.RowKey, str]:
         return {_key_of(r): r.role for rs in rows.values() for r in rs}

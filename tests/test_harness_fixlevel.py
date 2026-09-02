@@ -709,3 +709,56 @@ def test_a_reopened_unit_never_takes_the_fast_path():
         clean, dataclasses.replace(lenient, force_fallback=True)
     )
     assert (decision.route, decision.reason) == ("agent", "fix")
+
+
+def test_select_declines_a_finding_whose_row_the_artifact_lacks():
+    """A repair level acts on a *row*, so it may not act where the row is absent.
+
+    `rules.py`'s divergence classifier compares two maps keyed by argument position,
+    and registry rules C / BJ rewrite those keys first — two of the artifact's own
+    citations can collapse onto one key with one role silently replacing the other.
+    The finding then names a position whose artifact row already carries the
+    qualified role, and the notice built from it describes a row that does not
+    exist (`../harness/STAGE6.md` S6.9). `select` declines it when the rows are in
+    hand, and is unchanged without them: `fix_verdict` compares a before-count with
+    an after-count and must apply one definition to two different sets of rows.
+    """
+    v = _violation(
+        "role_mismatch: 37.5 arg (38, 3) 'obl' vs 'obl:per'",
+        line=37, role="obl:per", given_role="obl",
+        predicate=(37, 5), arg=(38, 3),
+    )
+    assert fixlevel.select([v], 1) == [v]
+
+    qualified = {38: [SkelRow(37, 5, "fece", "obl:per", 38, 3)]}
+    assert fixlevel.select([v], 1, qualified) == []
+
+    bare = {38: [SkelRow(37, 5, "fece", "obl", 38, 3)]}
+    assert fixlevel.select([v], 1, bare) == [v]
+
+    assert fixlevel.select([v], 1, {}) == []
+
+
+def test_fix_level_readout_and_plan_agree_on_the_pool():
+    """`make fix-level` must count exactly the units a run would reopen.
+
+    Both go through `fixlevel.select` with the artifact's rows, so the precondition
+    above cannot make the readout and the plan disagree — the failure mode would be
+    a launch list naming cantos the run then declines to touch.
+    """
+    root = recon_check.Path(recon_check.__file__).parent
+    results = recon_check.run(root, canticle="paradiso", canto=6, stream=None)
+    counted = sum(
+        len(fixlevel.select(
+            [v for v in r["violations"] if v.kind == "tag"], 1, r.get("rows")
+        ))
+        for r in results
+    )
+    rows = load_skel("paradiso", 6, base_dir=root)
+    planned = sum(
+        len(fixlevel.select(
+            [v for v in r["violations"] if v.kind == "tag"], 1, rows
+        ))
+        for r in results
+    )
+    assert counted == planned

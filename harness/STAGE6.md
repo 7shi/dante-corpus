@@ -1075,3 +1075,96 @@ evidence** — `validate.py` permits the row, `derive.py` determines it, and onl
 `tools.py` objects — and (2) would leave the same disagreement live everywhere
 else the gate is narrower than the contract, where no level has looked yet. The
 choice, and whether a fifth level-1 run follows it, is the operator's.
+
+### S6.10 — The gate made a faithful transcription, and the level given a precondition (2026-09-02)
+
+S6.9's two findings, answered. **Code and tests only; the corpus is untouched at
+0 hard / 4,640 soft and `dante_corpus/` is not modified** — both defects were in
+`harness/`'s own transcriptions of the contract, so both fixes are harness-side
+and the shared checker keeps its numbers.
+
+**Patch 1 — the anchor rule (`harness/runner/tools.py`), for the 12.**
+`requires_nominal_anchor` still says which *roles* demand an anchor; what counts
+*as* one now goes through `anchor_admits`, which transcribes `validate.py`
+155-179 rather than half of it:
+
+| clause | `validate.py` | before | after |
+|---|---|:-:|:-:|
+| Layer-3 NP head | 156 | ✓ | ✓ |
+| pronoun | 156 | ✓ | ✓ |
+| a predicate of the submission itself | 156 | — | ✓ |
+| an adverb under `obl`/`obl:*` (**unconditional**) | 158 | — | ✓ |
+| a Layer-4 argument position (`ARG_DEPRELS`, rule AF) | 160 | — | ✓ |
+| aux head (AQ) / coordination head (DG) / marker slot (DS) | 163-181 | — | — |
+
+The last row is a deliberate gap: those three are tree walks and no position in
+the committed corpus needs them. `ARG_DEPRELS` is transcribed as a literal rather
+than imported, because this module imports nothing from `skel/` but the frozen
+role vocabulary (its docstring's structural claim), and the symmetry test below
+is what keeps the copy honest. `_CantoData` carries the two new position sets,
+built once per canto beside the layers it already caches.
+
+**Measured over the 100 committed TSVs, 31,242 rows:** the gate now rejects **0**
+rows `validate.py` accepts, and accepts **0** it rejects. The untranscribed
+clauses cost nothing today, and the test says if that changes.
+
+At the 12 deadlocked positions the anchor error is gone — **12 of 12** — and with
+every level-1 governed row of a unit relabelled to the qualification the
+derivation determines, **8 of the 10 units now clear `validate_candidate`
+entirely**. The session has an admissible answer where before it had none.
+
+**Patch 2 — the level's precondition (`harness/extractor/fixlevel.py`), for
+the 2.** `FixClass` gains `holds`, and `select` takes the artifact's rows: a
+finding naming a row the artifact does not have is not work a repair level can
+do. For `oblique_qualification` that reads "there is a bare `obl` row at this
+key". `select` without rows is unchanged, deliberately — `fix_verdict` compares
+a before-count with an after-count and must apply one definition to two
+different sets of rows, so the precondition belongs at the *selection* points
+(`recon.check.print_fix_level`, `build_fix_plan`, and the keys a splice may
+touch) and not in the acceptance test. `check_canto` now returns the canto's
+rows so the readout and the plan cannot disagree about the pool.
+
+**`make fix-level FIX=1`: 14 → 12** across 10 cantos. Both declined findings are
+S6.9's mis-paired pair (purgatorio 30, paradiso 6), and this is a **selection**
+change, not a corpus one: `make check` still reports 0 hard / 4,640 soft and
+both positions remain soft `role_mismatch`. Whether the artifact is
+over-complete there or the two notations are equivalent is a §2 question nobody
+has argued, which is exactly why the level declines it rather than repairing it.
+
+**A second asymmetry, found while verifying and deliberately not fixed.** With
+the level's own answer written, two units still fail their gate — inferno 12
+(`132.4`, case child `132.1 'ove'`) and inferno 18 (`34.4`, case child
+`34.3 'di'`) — where `oblique_case_qualification` demands a qualification at a
+bare `obl` that `check.py` reports **no level-1 finding for**: the divergence
+classifier's registry tolerances excuse those positions and the session's
+level-1 bar carries no such tolerance. It is S6.9's asymmetry in the other rule,
+one grade milder — the session *can* satisfy both there, so it is off-brief
+pressure rather than a deadlock — and it is why 8 of 10 rather than 10 of 10.
+Recorded, not repaired: a level's bar and a level's selection ought to name the
+same positions, and arguing that is its own piece of work.
+
+**Tests: 971 → 975.**
+
+- `test_anchor_gate_is_never_stricter_than_validate` — over the twelve cantos
+  that carried the deadlock plus one control, every row the gate refuses must be
+  a row `validate.py` refuses too. **This is the guard the mechanism was
+  missing**: S6.2 added a level-1 bar to the session gate without checking it
+  against the rule already there, and three runs and ~29 findings' worth of
+  refusals went by before the contradiction was visible.
+- `test_validate_candidate_admits_a_qualified_adverbial_oblique` — the concrete
+  S6.9 position (`riguardando ... giuso`, `case` child 53.4 'in').
+- `test_select_declines_a_finding_whose_row_the_artifact_lacks` and
+  `test_fix_level_readout_and_plan_agree_on_the_pool`.
+- `test_validate_candidate_still_rejects_non_nominal_anchor_on_nominal_role`
+  became `test_validate_candidate_admits_layer4_argument_as_nominal_anchor`: it
+  asserted the gate holding the NP-head/pronoun line at a position Layer 4 makes
+  a `ccomp`, which is the bug, not the contract. The neighbouring test that a
+  non-argument adjective (`oscura`, `amod`) is still refused is unchanged apart
+  from the error's new wording.
+
+**What this is worth, stated as a prediction and not a result.** 12 findings are
+now writable that were not; nothing here makes the model choose the right lemma,
+and the fix run is the operator's. The evidence for optimism is that S6.9's
+accepted units produced exactly this relabel 12 times, and the level-1 bar's own
+error names the case child and its word. The evidence for caution is the second
+asymmetry above, which is live at 2 of the 10 units.

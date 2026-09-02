@@ -76,6 +76,31 @@ def requires_nominal_anchor(role: str) -> bool:
         role.startswith("obl:") and OBL_RE.fullmatch(role) is not None
     )
 
+
+# The positions `skel/validate.py` accepts as an argument's anchor *besides* an NP head
+# and a pronoun (lines 155-179). Keeping the NP-head/pronoun clause and dropping these is
+# what made the gate stricter than the contract it transcribes: at an oblique whose
+# argument is an adverb the checker is silent while this gate refused the row, so under a
+# `--fix 1` run the level demanded `obl:<prep>` there and the gate refused it, leaving the
+# session no admissible label at all and deletion as its only gate-clean move
+# (`../STAGE6.md` S6.9, 12 of the 14 surviving level-1 findings). Transcribed here, with
+# `test_anchor_gate_never_stricter_than_validate` binding the two over the whole corpus.
+#
+# - adverbial oblique: `validate.py` 158, and unconditional there — no registry rule
+#   gates it, so it is the contract itself rather than a tolerance.
+# - dep-argument position: `validate.py` 160, gated on registry rule AF. `ARG_DEPRELS` is
+#   transcribed rather than imported, because this module deliberately imports nothing
+#   from `skel/` but the frozen role vocabulary (see the module docstring); the symmetry
+#   test is what keeps the copy honest.
+#
+# `validate.py`'s three remaining clauses — the aux head (AQ), the coordination head (DG)
+# and the marker slot (DS) — are tree walks and no position in the corpus needs them
+# here, so they stay untranscribed and the symmetry test is what will say if that changes.
+ARG_DEPRELS = frozenset({
+    "attr", "ccomp", "csubj", "csubj:pass", "iobj", "nsubj", "nsubj:pass",
+    "obj", "obl", "obl:agent", "xcomp",
+})
+
 # Fields `search_corpus` accepts; everything else is rejected rather than ignored, so a
 # typo'd query fails loudly instead of silently matching everything.
 _QUERY_FIELDS = frozenset({"word", "lemma", "pos", "deprel", "case"})
@@ -413,6 +438,10 @@ class _CantoData:
     case_by_pos: dict[tuple[int, int], CaseRow]
     np_forest: tuple[NPSpan, ...]
     np_heads: dict[tuple[int, int], NPSpan]
+    # The two anchor exemptions `validate.py` grants beyond NP head / pronoun, precomputed
+    # once per canto like every other layer view above (`ARG_DEPRELS` and its note).
+    adverb_positions: frozenset[tuple[int, int]]
+    dep_argument_positions: frozenset[tuple[int, int]]
     quotes: tuple[api.QuoteSpan, ...]
     ctx: GrammarContext = field(repr=False)
 
@@ -484,8 +513,42 @@ def _load_canto(canticle: str, number: int) -> _CantoData:
         case_by_pos=case_by_pos,
         np_forest=forest,
         np_heads=np_heads,
+        adverb_positions=frozenset(
+            (no, i + 1)
+            for no, rows in morph.items()
+            for i, row in enumerate(rows)
+            if "adverb" in row.pos.lower()
+        ),
+        dep_argument_positions=frozenset(
+            (row.line, row.token)
+            for rows in dep.values()
+            for row in rows
+            if row.deprel in ARG_DEPRELS
+        ),
         quotes=canto.quotes(),
         ctx=ctx,
+    )
+
+
+def anchor_admits(
+    data: _CantoData,
+    submitted_predicates: frozenset[tuple[int, int]],
+    role: str,
+    arg: tuple[int, int],
+) -> bool:
+    """Would `skel/validate.py`'s anchor check accept `arg` as the filler of `role`?
+
+    The clauses are `validate.py` 155-179 in its own order: an NP head, a pronoun, a
+    predicate of the submission itself, an adverb under an oblique, or a dep-argument
+    position. See `ARG_DEPRELS` for what is transcribed here and what deliberately is not.
+    """
+    return (
+        arg in data.np_heads
+        or data.ctx.is_pronoun(arg)
+        or arg in submitted_predicates
+        or ((role == "obl" or role.startswith("obl:"))
+            and arg in data.adverb_positions)
+        or arg in data.dep_argument_positions
     )
 
 
@@ -795,6 +858,11 @@ class GrammarToolkit:
         seen_slots: dict[tuple[int, int], list[tuple[str, int, int]]] = {}
         args_by_pair: dict[tuple[tuple[int, int], tuple[int, int]], set[str]] = {}
 
+        # `validate.py` accepts a predicate of the artifact itself as any role's anchor
+        # (line 156), so the anchor check below needs the submission's own predicates.
+        # Same set 5c rebuilds for clausal registration, hoisted rather than duplicated.
+        submitted_predicates = frozenset(row.pred for row in parsed if row.token > 0)
+
         for row in parsed:
             where = f"row[{row.index}]"
             role = row.role
@@ -875,16 +943,16 @@ class GrammarToolkit:
                             f"Layer 1 token {row.arg_line}.{row.arg_token} "
                             f"{arg_tokens[row.arg_token - 1]!r}"
                         )
-                    if (
-                        requires_nominal_anchor(row.role)
-                        and row.arg not in data.np_heads
-                        and not data.ctx.is_pronoun(row.arg)
+                    if requires_nominal_anchor(row.role) and not anchor_admits(
+                        data, submitted_predicates, row.role, row.arg
                     ):
                         errors.append(
-                            f"{where}: argument {row.arg_line}.{row.arg_token} cites "
-                            f"neither a Layer 3 NP head nor a pronoun "
-                            f"(nominal role {row.role!r} requires one; clausal and "
-                            f"adverbial roles may anchor on any token)"
+                            f"{where}: argument {row.arg_line}.{row.arg_token} is not a "
+                            f"position a nominal role may anchor on — it heads no "
+                            f"Layer 3 NP and is neither a pronoun, a predicate of this "
+                            f"submission, nor an argument in the Layer 4 tree "
+                            f"(nominal role {row.role!r} requires one of those; clausal "
+                            f"and adverbial roles may anchor on any token)"
                         )
                     if not start <= row.arg_line <= end:
                         warnings.append(

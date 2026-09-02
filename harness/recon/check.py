@@ -108,8 +108,11 @@ def check_canto(canticle: str, number: int, root: Path) -> dict:
         violations.extend(soft_vs)
 
     status = "ok" if hard == 0 else "hard_violations"
+    # `rows` rides along for `print_fix_level`: a fix level acts on a row, so its
+    # selection needs the artifact and not only the findings (`fixlevel.select`).
     return {"canticle": canticle, "canto": number, "status": status,
-            "hard": hard, "soft": soft, "missing": missing, "violations": violations}
+            "hard": hard, "soft": soft, "missing": missing, "violations": violations,
+            "rows": {no: list(rows) for no, rows in data.items()}}
 
 
 def iter_targets(root: Path, canticle: str | None, canto: int | None):
@@ -225,7 +228,9 @@ def print_fix_level(results: list[dict], level: int, *, stream: TextIO = sys.std
           f"{', '.join(c.name for c in fixlevel.classes_for(level))}:", file=stream)
     for result in results:
         found = fixlevel.select(
-            [v for v in result["violations"] if v.kind == "tag"], level
+            [v for v in result["violations"] if v.kind == "tag"],
+            level,
+            result.get("rows"),
         )
         total += len(found)
         if found:

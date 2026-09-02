@@ -86,6 +86,11 @@ class FixClass:
     # is written down: a refused whole-unit answer may still be taken at exactly
     # these keys and nowhere else (`reconstruct.salvage_rows`, `../STAGE6.md`).
     keys: Callable[[Violation], frozenset[RowKey]]
+    # Does the artifact actually hold the row this class would repair? A repair
+    # level acts on a row, so a finding naming a row the artifact does not have
+    # is not work this level can do — the precondition `select` applies wherever
+    # the rows are in hand (`../STAGE6.md` S6.9).
+    holds: Callable[[Violation, dict[int, list[SkelRow]]], bool]
 
 
 def _is_oblique_qualification(v: Violation) -> bool:
@@ -146,11 +151,40 @@ def _oblique_qualification_keys(v: Violation) -> frozenset[RowKey]:
     return frozenset({(pred[0], pred[1], arg[0], arg[1])})
 
 
+def _oblique_qualification_holds(
+    v: Violation, rows_by_line: dict[int, list[SkelRow]]
+) -> bool:
+    """Is there a bare `obl` row at the position this finding names?
+
+    Normally yes — the finding *is* that row. But `rules.py`'s divergence classifier
+    compares two maps keyed by argument position, and registry rules C
+    (`_collapse_coordination`) and BJ (`_merge_adverb_cluster_citations`) rewrite
+    those keys before the comparison: two of the artifact's own citations can be
+    collapsed onto one key, where the surviving role silently replaces the other.
+    The finding then reports `'obl' vs 'obl:<prep>'` at a position whose artifact
+    row already *is* `obl:<prep>`, and the notice built from it describes a row
+    that does not exist — the session reads its own rows in the same block, sees
+    the work already done, and correctly changes nothing (`../STAGE6.md` S6.9:
+    both of the two non-deadlocked survivors, and 2 of the 14 in total).
+
+    Whether the artifact is over-complete at those positions or the two notations
+    are equivalent is a question for §2's three outcomes, unargued either way — so
+    this is not a repair to make quietly, and the level declines it.
+    """
+    key = next(iter(_oblique_qualification_keys(v)))
+    return any(
+        (r.line, r.token, r.arg_line, r.arg_token) == key and r.role == "obl"
+        for rows in rows_by_line.values()
+        for r in rows
+    )
+
+
 OBLIQUE_QUALIFICATION = FixClass(
     name="oblique_qualification",
     matches=_is_oblique_qualification,
     notice=_oblique_qualification_notice,
     keys=_oblique_qualification_keys,
+    holds=_oblique_qualification_holds,
 )
 
 # Cumulative: level N acts on levels 1..N. A class joins the table only once its
@@ -209,10 +243,31 @@ def toolkit_flags(level: int) -> dict[str, bool]:
     }
 
 
-def select(violations: Iterable[Violation], level: int) -> list[Violation]:
-    """The findings a `--fix level` run acts on, in the order they were reported."""
+def select(
+    violations: Iterable[Violation],
+    level: int,
+    rows_by_line: dict[int, list[SkelRow]] | None = None,
+) -> list[Violation]:
+    """The findings a `--fix level` run acts on, in the order they were reported.
+
+    With `rows_by_line`, each class's `holds` precondition is applied as well: a
+    finding naming a row the artifact does not have is not work this level can do.
+    Pass the rows wherever the *selection* is being made — which cantos to launch,
+    which units to reopen, which keys a splice may touch. The acceptance test
+    (`reconstruct.fix_verdict`) deliberately does not: it compares a before-count
+    with an after-count and must apply one definition to both sides, where the two
+    sides are different sets of rows.
+    """
     classes = classes_for(level)
-    return [v for v in violations if any(cls.matches(v) for cls in classes)]
+    return [
+        v
+        for v in violations
+        if any(
+            cls.matches(v)
+            and (rows_by_line is None or cls.holds(v, rows_by_line))
+            for cls in classes
+        )
+    ]
 
 
 _DIVERGENCE_KINDS = (
