@@ -9,27 +9,56 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Nothing is running and the working tree is clean.** Level 1 is closed at
-**0 findings** and the corpus sits at **0 hard / 4,627 soft**. No fix run is
-in flight and none is scheduled; suite **987 passed**. Stage 6 closed on
-S6.11 and **Stage 7 is open** ([`STAGE7.md`](STAGE7.md), 2026-09-02) — the
-operator re-scoped it to **refactoring** rather than level 2, so soft level 2
-keeps its candidates and eligibility list in [`STAGE6.md`](STAGE6.md) §3 and
-waits for a stage of its own; none of that analysis is invalidated by the
-delay.
+**Nothing is running.** Level 1 is closed at **0 findings** and the corpus
+sits at **0 hard / 4,627 soft**. No fix run is in flight and none is
+scheduled; suite **987 passed**. Stage 6 closed on S6.11 and **Stage 7 is
+open** ([`STAGE7.md`](STAGE7.md), 2026-09-02) — the operator re-scoped it to
+**refactoring** rather than level 2, so soft level 2 keeps its candidates and
+eligibility list in [`STAGE6.md`](STAGE6.md) §3 and waits for a stage of its
+own; none of that analysis is invalidated by the delay.
 
-**The one live next step: S7.2 — split `extractor/reconstruct.py` (1,928
-lines).** It is the whole of what remains in Stage 7. The seams are already
-visible in the module and need no fresh analysis: `FixPlan` / `plan_fix` /
-`fix_verdict` / `revert_outcome` / `salvage_*` / `fix_diagnosis` (the Stage-6
-fix machinery), `TsvArtifact` + `commit` + `render_tsv` (the durable
-artifact), `GoldReport` / `GoldFace` / `verify_against_gold` (the evaluation
-face, which must stay structurally separate from the execution face —
-Orientation item 4), `ReconstructReport` + `load_log` (reporting), and
-`main` + `_select_cantos` (the CLI). `reconstruct_canto` and `UnitOutcome`
-are the core the rest hangs off. **The stage's bar applies: the split must be
-argued behaviour-neutral**, so the 987-test suite passing unchanged is the
-evidence, not a code read.
+**Both of Stage 7's items are done and committed. S7.2** (2026-09-03) split
+`extractor/reconstruct.py`'s 1,934 lines into seven modules — `layers.py`,
+`outcome.py`, `artifact.py`, `fixrun.py`, `goldeval.py`, `report.py` and a
+907-line `reconstruct.py` holding the canto loop, gate 3 and the CLI. Every name
+moved verbatim and `reconstruct.py` re-exports its whole prior surface.
+Deterministic neutrality evidence, as the stage requires: suite **987 passed
+unchanged** (no test edited), `make check` still **0 hard / 4,627 soft**, and
+`--help` **byte-identical** to the pre-split CLI. The record is
+[`STAGE7.md`](STAGE7.md) S7.2.
+
+**The one thing in flight: the operator's live inferno-1 re-run, whose result
+the next session reports.** The suite reaches no model, so nothing above tests
+the *live* path; this is the check that it still runs after the split. Launched
+by the operator (assistant sessions never run LLM-in-the-loop commands):
+
+```
+rm -f harness/recon/inferno/01.tsv harness/recon/inferno/01.log
+cd harness/recon && make inferno/01.tsv
+```
+
+(the log is swept deliberately, per §2's standing operational fact, so the run's
+telemetry is unambiguous). What the result has to answer, in this order:
+
+1. **Did it run at all** — session start, status bar, streamed output, the
+   `--verify-gold` gold records, the per-unit TSV writes.
+2. **Did the canto come back equivalent** — `git diff --stat
+   harness/recon/inferno/01.tsv`, then `git diff` if it is non-empty. A diff is
+   *not* by itself a regression: the fallback is a live model and inferno 1 has
+   been re-run before (S5.6), so unit-level variation is expected. What would be
+   a regression is a *structural* one — units missing, lines out of order, a
+   sentinel row lost, or the file no longer parsing.
+3. **Does the log carry the whole contract** — `unit` records with `row_keys`
+   and gate verdicts, one `canto_complete` with `skill_digest`,
+   `elapsed_seconds` and `api_retries`, `summary` last, and the
+   `llm_request`/`llm_response` pairs.
+4. **`make check` still 0 hard** afterwards (soft may move with the run).
+
+Where it lands: fold the readout into [`STAGE7.md`](STAGE7.md)'s S7.2 record as
+the live confirmation the record already says was outstanding — a new record is
+not needed for a check that only confirms an existing one. If it fails, that is
+S7.3 and the split is what to suspect first. Nothing else in Stage 7 is in
+flight; **the stage is the operator's to close.**
 
 **S7.1 is done and committed** (`d70330a`): the agent's grammatical knowledge
 now lives in `runner/skills/grammar-agent/` behind `harness/skills.py`,
@@ -69,8 +98,10 @@ holds only what's still open.
       live-run work left behind: the agent's knowledge hidden in Python string
       literals (**S7.1, done** — now `runner/skills/grammar-agent/` behind
       `harness/skills.py`, byte-exact, with `skill_digest` in every
-      `canto_complete`) and `extractor/reconstruct.py`'s 1,928 lines (**S7.2,
-      next**). A third candidate — generalizing the `harness/` ↔
+      `canto_complete`) and `extractor/reconstruct.py`'s 1,934 lines (**S7.2,
+      done** — split into seven modules, the gold-reading evaluation face now a
+      file of its own; suite 987 unchanged, corpus unmoved, `--help`
+      byte-identical). A third candidate — generalizing the `harness/` ↔
       `dante_corpus/` transcription check — was investigated and **moved to
       Stage 8 or later**: it raises a §1 authority question rather than a
       tidying one, so it cannot meet this stage's neutrality bar; the sweeps
@@ -446,9 +477,22 @@ refuses, at least for now: the improver loop itself — **gold cannot be its
 tuning signal** without voiding every gold-referenced number the project reports
 (Standing Invariant §1), and a frontier model rewriting the local model's prompt
 sits uncomfortably close to the Phase 5–8 rails §1 says `harness/` exists to
-replace. That argument, the remaining scope (S7.2, the `reconstruct.py` split),
-and the transcription-drift sweeps carried out to Stage 8 live in
-[`STAGE7.md`](STAGE7.md).
+replace.
+
+**Record S7.2 (done)** split `extractor/reconstruct.py` along the seams already
+visible in it: `layers.py` (the frozen-layer bundle and gates 1–2), `outcome.py`
+(`UnitOutcome` / `CantoReconstruction` / unit-level resume), `artifact.py`
+(`render_tsv` + `TsvArtifact`), `fixrun.py` (the Stage-6 `--fix` machinery),
+`goldeval.py` (the evaluation face), `report.py`, and `reconstruct.py` itself —
+now the canto loop, gate 3 and the CLI. The dependency order is strictly
+downward and nothing was rewritten. The point beyond tidying is `goldeval.py`:
+the execution and commit faces import nothing from the module that opens gold,
+so Standing Invariant §4 item 1's boundary is now checkable by reading an import
+list. Neutrality is argued from three readouts rather than a code read — 987
+tests unchanged, `make check` unmoved, `--help` byte-identical.
+
+That argument, both records, and the transcription-drift sweeps carried out to
+Stage 8 live in [`STAGE7.md`](STAGE7.md).
 
 ### Beyond Layer 5 (design notes)
 

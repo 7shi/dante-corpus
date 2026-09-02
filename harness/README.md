@@ -88,7 +88,14 @@ dante-corpus/
 │   │   ├── syntax_miner.py        # Syntax pattern miner: UD-topology rules from traces
 │   │   ├── lexicon_builder.py     # Verb valency & lexicon profile aggregator
 │   │   ├── hybrid_engine.py       # Fast-path (rules/lexicon) + agent fallback router
-│   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline
+│   │   ├── layers.py              # Frozen L1-L4 bundle + gates 1-2 (no gold anywhere)
+│   │   ├── outcome.py             # UnitOutcome / CantoReconstruction + unit-level resume
+│   │   ├── artifact.py            # render_tsv + TsvArtifact: the run's durable artifact
+│   │   ├── fixlevel.py            # [Stage 6] Soft-finding levels, selection & revision blocks
+│   │   ├── fixrun.py              # [Stage 6] --fix machinery: plan, verdict, salvage, revert
+│   │   ├── goldeval.py            # Evaluation face — the only module that opens gold
+│   │   ├── report.py              # ReconstructReport + load_log (the §6 reporting faces)
+│   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline (loop, commit, CLI)
 │   │
 │   ├── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
 │   │   ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv

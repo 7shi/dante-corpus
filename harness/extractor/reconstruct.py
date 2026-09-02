@@ -11,7 +11,7 @@ deciding the rest — and gate every disk write on the three §4.1 criteria:
 2. **0-soft regression verification** through the proven checker machinery:
    `skel.validate.validate_unit` (which runs `skel.derive.derive_unit` inside
    it) over the assembled candidate rows with all four frozen layers attached,
-   split hard/soft exactly like the Phase 5–8 drivers do (`tag` -> soft) — a
+   split hard/soft exactly like the Phase 5-8 drivers do (`tag` -> soft) — a
    unit passes only at **0 hard / 0 soft**, the same standard the committed
    gold artifacts meet corpus-wide.
 3. **Content-hash verification** via `dante_corpus.hashes.canto_hashes`: the
@@ -27,6 +27,25 @@ Two gold disciplines, as everywhere in the extractor:
 - **Evaluation** (`--verify-gold`) reads gold operator-side exactly like
   `runner/benchmark.py` to compare accepted rows against gold keys. It never
   influences gating or writes.
+
+**Module layout (S7.2).** This file is the pipeline: the canto loop
+(`reconstruct_canto`), gate 3 (`commit`) and the CLI (`main`). Everything it
+drives sits in sibling modules, each importable on its own and each named for
+the one responsibility it holds:
+
+| Module | Holds |
+|---|---|
+| `layers.py` | `CantoLayers` + gates 1-2 (`build_rows`, `validate_rows`) |
+| `outcome.py` | `UnitOutcome`, `CantoReconstruction`, unit-level resume |
+| `artifact.py` | `render_tsv` + `TsvArtifact` — the durable artifact |
+| `fixrun.py` | the Stage-6 `--fix` machinery (plan, verdict, salvage, revert) |
+| `goldeval.py` | the evaluation face — **the only module that opens gold** |
+| `report.py` | `ReconstructReport` + `load_log` |
+
+That last row is why the split is more than tidying: the execution and commit
+faces now import nothing from the module that reads gold, so Standing Invariant
+§4 item 1's boundary is a file boundary rather than a comment. The public names
+this module exported before the split are re-exported here unchanged.
 
 Commits are **canto-atomic**: a canto is written only when *every* parse unit
 passes all gates, so an artifact is always wholly checker-clean — never a mix
@@ -90,22 +109,32 @@ import contextlib
 import dataclasses
 import hashlib
 import json
-import os
 import sys
-import tempfile
 import time
 from collections import Counter
-from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Iterator, TextIO
+from typing import Callable, TextIO
 
-from dante_corpus import api, case as case_layer, dep as dep_layer, morph as morph_layer, np as np_layer
-from dante_corpus.morph import Violation
-from dante_corpus.skel.models import SkelRow, _row_sort_key
-from dante_corpus.skel.validate import validate_unit
+from dante_corpus import api
+from dante_corpus.skel.models import SkelRow
 
 from harness.extractor import fixlevel
+from harness.extractor.artifact import TsvArtifact, render_tsv
+from harness.extractor.fixrun import (
+    FixPlan,
+    Span,
+    fix_diagnosis,
+    fix_summary_line,
+    fix_verdict,
+    plan_fix,
+    refusal_note,
+    revert_outcome,
+    row_delta,
+    salvage_outcome,
+    salvage_rows,
+)
+from harness.extractor.goldeval import GoldFace, GoldReport, verify_against_gold
 from harness.extractor.hybrid_engine import (
     DEFAULT_EVAL_CANTICLES,
     AgentFallback,
@@ -116,6 +145,21 @@ from harness.extractor.hybrid_engine import (
     load_rules_json,
     mine_artifacts,
 )
+from harness.extractor.layers import (
+    SAMPLE_VIOLATIONS,
+    CantoLayers,
+    RowKey,
+    build_rows,
+    split_violations,
+    validate_rows,
+)
+from harness.extractor.outcome import (
+    CantoReconstruction,
+    UnitOutcome,
+    final_validation_errors,
+    replay_unit_outcome,
+)
+from harness.extractor.report import ReconstructReport, load_log
 from harness.runner.prompts import skill_digest
 from harness.runner.statusline import HarnessStatusLine
 from harness.toolcall import DEFAULT_RESULT_CHARS
@@ -138,636 +182,9 @@ __all__ = [
     "split_violations",
 ]
 
-# Per-unit violation details kept in log records; the summary carries the full
-# kind histogram, so samples only need to seed triage.
-SAMPLE_VIOLATIONS = 10
-
-RowKey = tuple[int, int, str, int, int]
-
-_TSV_HEADER = ("line", "token", "word", "role", "arg_line", "arg_token")
-
-
-# --- frozen-layer bundle (execution face: no gold anywhere) ------------------------------
-
-
-@dataclass
-class CantoLayers:
-    """Everything the execution face may read for one canto: L1-L4 + case annex."""
-
-    canticle: str
-    canto: int
-    nos: list[int]
-    texts: list[str]
-    tokens: dict[int, list[str]]
-    morph_rows: dict[int, tuple]
-    np_rows: dict[int, tuple]
-    dep_rows: dict[int, tuple]
-    case_rows: dict[int, tuple]
-
-    @property
-    def text_by_no(self) -> dict[int, str]:
-        return dict(zip(self.nos, self.texts))
-
-    @classmethod
-    def load(cls, canticle: str, canto: int) -> "CantoLayers":
-        data = api.canto(canticle, canto)
-        lines = data.lines()
-        return cls(
-            canticle=canticle,
-            canto=canto,
-            nos=[line.no for line in lines],
-            texts=[line.text for line in lines],
-            tokens={line.no: list(line.tokens) for line in lines},
-            morph_rows=morph_layer.load_morph(canticle, canto),
-            np_rows=np_layer.load_np(canticle, canto),
-            dep_rows=dep_layer.load_dep(canticle, canto),
-            case_rows=case_layer.load_case(canticle, canto),
-        )
-
-    def units(self) -> list[list[int]]:
-        """Parse-unit line groups (`dep.sentence_groups`) covering every line once."""
-        return [
-            list(group)
-            for group in dep_layer.sentence_groups(self.nos, self.texts)
-        ]
-
-
-def split_violations(
-    violations: list[Violation],
-) -> tuple[list[Violation], list[Violation]]:
-    """`(hard, soft)` — the drivers' split (`driver_ui._classify_violations`)."""
-    hard: list[Violation] = []
-    soft: list[Violation] = []
-    for v in violations:
-        (soft if v.kind == "tag" else hard).append(v)
-    return hard, soft
-
-
-def build_rows(
-    keys: set[RowKey],
-    layers: CantoLayers,
-    line_start: int,
-    line_end: int,
-) -> tuple[dict[int, list[SkelRow]], list[str]]:
-    """§4.1 gate 1 — normalize accepted row keys onto the Layer-1 token stream.
-
-    Every predicate/argument position must index the canto's alpha-token
-    stream inside the unit's bounds; each row's word anchor is taken verbatim
-    from that stream, so token-for-token alignment holds by construction and
-    is asserted after construction. Bad positions are reported (and dropped),
-    never raised.
-    """
-    errors: list[str] = []
-    by_line: dict[int, list[SkelRow]] = {}
-    for key in sorted(keys):
-        pline, ptok, role, aline, atok = key
-        if not line_start <= pline <= line_end:
-            errors.append(f"predicate {pline}.{ptok} outside unit bounds")
-            continue
-        ptoks = layers.tokens.get(pline, [])
-        if not 1 <= ptok <= len(ptoks):
-            errors.append(
-                f"predicate {pline}.{ptok} outside the Layer-1 token stream"
-            )
-            continue
-        if (aline, atok) != (0, 0):
-            if not line_start <= aline <= line_end:
-                errors.append(f"argument {aline}.{atok} outside unit bounds")
-                continue
-            atoks = layers.tokens.get(aline, [])
-            if not 1 <= atok <= len(atoks):
-                errors.append(
-                    f"argument {aline}.{atok} outside the Layer-1 token stream"
-                )
-                continue
-        word = ptoks[ptok - 1]
-        by_line.setdefault(pline, []).append(
-            SkelRow(line=pline, token=ptok, word=word, role=role,
-                    arg_line=aline, arg_token=atok)
-        )
-    for rows in by_line.values():
-        rows.sort(key=_row_sort_key)
-    return by_line, errors
-
-
-def _violation_record(v: Violation) -> dict:
-    return {"line": v.line, "kind": v.kind, "detail": v.detail}
-
-
-def _final_validation_errors(agent_result) -> list[str]:
-    """The gate errors on the submission the session actually handed downstream.
-
-    Read off the last `validate_candidate` dispatch, the same call
-    `final_submission_valid` reads its verdict from, so the two can never
-    describe different submissions. Empty when it passed, when no session ran,
-    or when the fallback is a stub without the attribute.
-    """
-    validations = getattr(agent_result, "validations", None) or []
-    if not validations:
-        return []
-    result = validations[-1].get("result", {})
-    if result.get("valid"):
-        return []
-    return [str(e) for e in result.get("errors", [])]
-
-
-@dataclass
-class UnitOutcome:
-    """One parse unit's reconstruction result plus its two intrinsic gates."""
-
-    unit: dict
-    route: str  # "fast" | "agent"
-    reason: str
-    origin: str  # "fast" | "agent" (dry mode keeps "agent" with no rows)
-    fallback_ran: bool
-    row_keys: frozenset[RowKey]
-    rows: dict[int, list[SkelRow]]
-    token_assertions: list[str]
-    hard: list[Violation]
-    soft: list[Violation]
-    fallback_seconds: float | None = None
-    # Verdict the agent's own gate gave the submission that was adopted: None
-    # when nothing was validated (fast path, dry mode, or a session that never
-    # called the tool), False when the session ended on rows its gate rejected
-    # — a *provisional* adoption at the turn cap, and the primary readout of
-    # whether in-session correction converges (`../STAGE5.md` record S5.5).
-    final_submission_valid: bool | None = None
-    # Resumes the session was given after ending on rows its own gate rejected
-    # (S6.6). None when no session ran. Logged because it is the only part of
-    # that policy's effect the per-canto log would not otherwise carry — the
-    # transcript is not written, so a run could not be read out without it.
-    invalid_nudges: int | None = None
-    # What the session's own gate said about the submission that was adopted,
-    # when it said no (S6.7). `final_submission_valid` records *that* it
-    # refused; without the errors themselves a run cannot say what it refused
-    # over — and S6.7 found every accepted fix sitting on such a submission, so
-    # the two verdicts disagreeing is now the thing to explain. Empty list when
-    # the gate passed or no session ran.
-    final_validation_errors: list[str] = dataclasses.field(default_factory=list)
-    # Unit-level resume: a unit rebuilt from the TSV already on disk instead of
-    # re-running `engine.run_unit`. Its gates are still re-run (deterministic,
-    # no model cost), so `passed` is measured rather than trusted; the caller
-    # must not re-emit it to the sink, which already holds the artifact.
-    replayed: bool = False
-
-    @property
-    def passed(self) -> bool:
-        """§4.1 gates 1+2: clean assertions AND 0 hard / 0 soft violations."""
-        return not self.token_assertions and not self.hard and not self.soft
-
-    def to_dict(self) -> dict:
-        kinds = Counter(v.kind for v in self.hard + self.soft)
-        sample = [
-            _violation_record(v)
-            for v in (self.hard + self.soft)[:SAMPLE_VIOLATIONS]
-        ]
-        return {
-            "record": "unit",
-            **self.unit,
-            "route": self.route,
-            "reason": self.reason,
-            "origin": self.origin,
-            "fallback_ran": self.fallback_ran,
-            "accepted_rows": len(self.row_keys),
-            # Persisted so an interrupted run can resume unit-by-unit: a
-            # future attempt rebuilds this unit's rows from these keys
-            # instead of re-running the (expensive, live) fallback.
-            "row_keys": [list(key) for key in sorted(self.row_keys)],
-            "token_assertion_errors": len(self.token_assertions),
-            "assertions": list(self.token_assertions[:SAMPLE_VIOLATIONS]),
-            "hard_violations": len(self.hard),
-            "soft_violations": len(self.soft),
-            "violation_kinds": dict(kinds),
-            "sample_violations": sample,
-            "passed": self.passed,
-            # True only when the session ended on rows its own gate rejected.
-            "adopted_invalid": self.final_submission_valid is False,
-            "final_submission_valid": self.final_submission_valid,
-            "invalid_nudges": self.invalid_nudges,
-            "final_validation_errors": self.final_validation_errors[
-                :SAMPLE_VIOLATIONS
-            ],
-            "fallback_seconds": (
-                None if self.fallback_seconds is None
-                else round(self.fallback_seconds, 1)
-            ),
-        }
-
-
-def _validate_rows(
-    layers: "CantoLayers", group: list[int], unit_rows: dict[int, list[SkelRow]]
-) -> tuple[list[Violation], list[Violation]]:
-    """§4.1 gate 2 over one unit's assembled rows -> `(hard, soft)`."""
-    text_by_no = layers.text_by_no
-    violations = validate_unit(
-        group,
-        [text_by_no[no] for no in group],
-        unit_rows,
-        morph_rows=layers.morph_rows,
-        np_rows=layers.np_rows,
-        dep_rows=layers.dep_rows,
-        case_rows=layers.case_rows,
-    )
-    return split_violations(violations)
-
-
-Span = tuple[int, int]
-
-
-@dataclass
-class FixPlan:
-    """Which settled units a `--fix <level>` run reopens, and what it shows them.
-
-    Selection only — the counter selects the work and never decides it
-    (`../PLAN.md` discipline 1). Each selected span keeps its rows on record so
-    the acceptance test in `settle()` can put them back unchanged when the
-    session's answer is not an improvement: a fix run must never leave the
-    artifact worse than it found it.
-
-    The canto's layers and each span's line group are kept too, so a refused
-    answer can be re-measured at position scope (`salvage_outcome`) without the
-    caller having to carry the layers into its settle callback.
-    """
-
-    level: int
-    prior: dict[Span, dict[int, list[SkelRow]]] = field(default_factory=dict)
-    revisions: dict[Span, str] = field(default_factory=dict)
-    before: dict[Span, list[Violation]] = field(default_factory=dict)
-    before_hard: dict[Span, list[Violation]] = field(default_factory=dict)
-    groups: dict[Span, list[int]] = field(default_factory=dict)
-    layers: CantoLayers | None = None
-
-    def __bool__(self) -> bool:
-        return bool(self.prior)
-
-    @property
-    def findings(self) -> int:
-        return sum(
-            len(fixlevel.select(vs, self.level)) for vs in self.before.values()
-        )
-
-
-def plan_fix(
-    layers: CantoLayers,
-    settled_units: dict[Span, dict[int, list[SkelRow]]],
-    level: int,
-) -> FixPlan:
-    """Find the settled units carrying a level-`level` finding, gold-closed."""
-    plan = FixPlan(level=level, layers=layers)
-    groups = {(g[0], g[-1]): g for g in layers.units()}
-    for span, rows in settled_units.items():
-        group = groups.get(span)
-        if group is None:
-            continue
-        hard, soft = _validate_rows(layers, group, rows)
-        findings = fixlevel.select(soft, level, rows)
-        if not findings:
-            continue
-        plan.prior[span] = {no: list(rows.get(no, [])) for no in group}
-        plan.groups[span] = list(group)
-        plan.before[span] = list(soft)
-        plan.before_hard[span] = list(hard)
-        plan.revisions[span] = fixlevel.revision_block(
-            plan.prior[span], findings, layers.dep_rows, level
-        )
-    return plan
-
-
-def fix_verdict(
-    before: list[Violation],
-    hard_after: list[Violation],
-    soft_after: list[Violation],
-    level: int,
-) -> tuple[bool, str]:
-    """Accept the re-solved unit, or say why the prior rows stand.
-
-    Three refusals, in the order they are checked: the submission is not
-    hard-clean; the level's own findings did not fall; or a violation class the
-    unit did not carry before is now present. The last is the acceptance gate
-    SOFT.md §6's dry run used — a repair may not trade its class for another.
-    """
-    if hard_after:
-        return False, "hard"
-    if len(fixlevel.select(soft_after, level)) >= len(
-        fixlevel.select(before, level)
-    ):
-        return False, "no_improvement"
-    seen = {fixlevel.violation_class(v) for v in before}
-    new = {fixlevel.violation_class(v) for v in soft_after} - seen
-    if new:
-        return False, f"new_class:{','.join(sorted(new))}"
-    return True, "accepted"
-
-
-def revert_outcome(
-    outcome: UnitOutcome, plan: FixPlan, span: Span
-) -> UnitOutcome:
-    """Restore the unit's recorded rows on a refused fix, verdicts included.
-
-    The rows go back byte-for-byte, and so do the gate results they were
-    measured with — a reverted unit must be reported as what is on disk, not as
-    the submission that was thrown away. Only the session telemetry (route,
-    timings, `final_submission_valid`) is left as this run produced it.
-    """
-    rows = {no: list(r) for no, r in plan.prior[span].items()}
-    keys = frozenset(
-        (r.line, r.token, r.role, r.arg_line, r.arg_token)
-        for rs in rows.values()
-        for r in rs
-    )
-    return dataclasses.replace(
-        outcome,
-        rows=rows,
-        row_keys=keys,
-        hard=list(plan.before_hard[span]),
-        soft=list(plan.before[span]),
-        token_assertions=[],
-    )
-
-
-def salvage_rows(
-    prior: dict[int, list[SkelRow]],
-    submitted: dict[int, list[SkelRow]],
-    keys: frozenset[fixlevel.RowKey],
-) -> dict[int, list[SkelRow]]:
-    """Position-scoped replacement: the answer stands at `keys`, the record elsewhere.
-
-    A level names a *row* while a session answers a whole *unit*, so the two
-    replacements a fix run can make are not the same size. `settle()` tries the
-    whole unit first — that is the answer the model actually stands behind, and
-    where it survives the acceptance test it is taken entire. This is what to do
-    when it does not: keep the recorded rows, and take from the answer only the
-    rows the findings themselves name. Rows outside `keys` are neither added nor
-    removed, so a repair cannot import a class the unit never carried, and the
-    result is still measured by `fix_verdict` rather than assumed.
-    """
-    out = {
-        no: [r for r in rows if _key_of(r) not in keys]
-        for no, rows in prior.items()
-    }
-    for no, rows in submitted.items():
-        if no not in out:
-            continue  # not a line of this unit; the artifact holds none of it
-        out[no].extend(r for r in rows if _key_of(r) in keys)
-    return out
-
-
-def _key_of(row: SkelRow) -> fixlevel.RowKey:
-    return (row.line, row.token, row.arg_line, row.arg_token)
-
-
-def salvage_outcome(
-    outcome: UnitOutcome, plan: FixPlan, span: Span
-) -> UnitOutcome | None:
-    """Re-measure the unit with the answer taken only at its findings' rows.
-
-    `None` when the salvage cannot be measured honestly: the plan carries no
-    layers to validate against, the level names no row for this unit, or the
-    submission's own token assertions failed — its words disagree with Layer 1,
-    so none of its rows may be spliced into the record.
-    """
-    if plan.layers is None or outcome.token_assertions:
-        return None
-    keys = fixlevel.governed_keys(
-        fixlevel.select(plan.before[span], plan.level, plan.prior[span]), plan.level
-    )
-    if not keys:
-        return None
-    rows = salvage_rows(plan.prior[span], outcome.rows, keys)
-    hard, soft = _validate_rows(plan.layers, plan.groups[span], rows)
-    return dataclasses.replace(
-        outcome,
-        rows=rows,
-        row_keys=frozenset(
-            (r.line, r.token, r.role, r.arg_line, r.arg_token)
-            for rs in rows.values()
-            for r in rs
-        ),
-        hard=hard,
-        soft=soft,
-        token_assertions=[],
-    )
-
-
-def _refusal_note(diagnosis: dict | None) -> str:
-    """One clause naming what the refused answer did, for a watched run.
-
-    The log carries the whole diagnosis; this is the part a human reading the
-    stream needs to see the pattern forming — how far the answer reached, and
-    whether what it introduced sat on a row the level named or beside it.
-    """
-    if diagnosis is None:
-        return ""
-    introduced = diagnosis["introduced_total"]
-    governed = sum(1 for v in diagnosis["introduced"] if v["governed"])
-    note = (
-        f" [answer: ~{diagnosis['rows_relabelled']} "
-        f"+{diagnosis['rows_added']} -{diagnosis['rows_removed']}"
-    )
-    if introduced:
-        note += f"; {introduced} introduced, {governed} on named rows"
-    return note + "]"
-
-
-def _fix_summary_line(level: int, stats: Counter[str]) -> str:
-    """One line naming the mechanism of a fix run (`../PLAN.md` discipline 6)."""
-    return (
-        f"[fix] level {level}: {stats['units']} unit(s) reopened, "
-        f"{stats['verdict:accepted']} accepted / "
-        f"{stats['verdict:salvaged']} salvaged / "
-        f"{stats['units'] - stats['verdict:accepted'] - stats['verdict:salvaged']}"
-        f" reverted; "
-        f"level findings {stats['findings_before']} -> {stats['findings_after']}, "
-        f"soft {stats['soft_before']} -> {stats['soft_after']}; rows "
-        f"{stats['rows_relabelled']} relabelled, {stats['rows_added']} added, "
-        f"{stats['rows_removed']} removed"
-    )
-
-
-def row_delta(
-    before: dict[int, list[SkelRow]], after: dict[int, list[SkelRow]]
-) -> dict[str, int]:
-    """Row-level mechanism of one accepted fix (`../PLAN.md` discipline 6).
-
-    A delta on the violation count says nothing about how it was reached, so
-    every accepted unit reports what actually happened to its rows: how many were
-    added, removed, and relabelled in place (same predicate and argument, new
-    role).
-    """
-    def keyed(rows: dict[int, list[SkelRow]]) -> dict[tuple, str]:
-        return {
-            (r.line, r.token, r.arg_line, r.arg_token): r.role
-            for rows_ in rows.values()
-            for r in rows_
-        }
-
-    b, a = keyed(before), keyed(after)
-    return {
-        "rows_before": len(b),
-        "rows_after": len(a),
-        "rows_added": len(a.keys() - b.keys()),
-        "rows_removed": len(b.keys() - a.keys()),
-        "rows_relabelled": sum(
-            1 for key in b.keys() & a.keys() if b[key] != a[key]
-        ),
-    }
-
-
-def _violation_position(v: Violation) -> fixlevel.RowKey | None:
-    """The artifact row a divergence finding names, in `governed_keys` shape."""
-    if v.predicate is None or v.arg is None:
-        return None
-    return (v.predicate[0], v.predicate[1], v.arg[0], v.arg[1])
-
-
-def fix_diagnosis(
-    prior: dict[int, list[SkelRow]],
-    submitted: dict[int, list[SkelRow]],
-    before: list[Violation],
-    hard_after: list[Violation],
-    soft_after: list[Violation],
-    level: int,
-) -> dict:
-    """Why a refused answer was refused, in the terms the verdict is decided in.
-
-    Record S6.7's own limit: `fix` carried `level` and `verdict` and nothing
-    else, so the run could report *that* 15 answers introduced a `missing_arg`
-    and never *which* argument they dropped, nor whether the drop sat on the row
-    the finding names — the one question that separates "the ask is too wide"
-    from "the model is wrong here". That is S6.4's mistake in a second place and
-    this closes it: the refused submission's own rows are diffed against the
-    record and each side is marked `governed` (inside `fixlevel.governed_keys`,
-    i.e. a row the level itself names) or not, and every violation class the
-    answer introduced is listed with the position that carries it.
-
-    Nothing here reaches a session — it is written to the log after the verdict
-    is already decided, and `fix_verdict` is not consulted about it. The
-    derivation's answer stays out of the notice exactly as before.
-    """
-    keys = fixlevel.governed_keys(fixlevel.select(before, level, prior), level)
-
-    def keyed(rows: dict[int, list[SkelRow]]) -> dict[fixlevel.RowKey, str]:
-        return {_key_of(r): r.role for rs in rows.values() for r in rs}
-
-    b, a = keyed(prior), keyed(submitted)
-
-    def entry(key: fixlevel.RowKey, *roles: str) -> dict:
-        line, token, arg_line, arg_token = key
-        return {
-            "predicate": [line, token],
-            "argument": [arg_line, arg_token],
-            "role": list(roles) if len(roles) > 1 else roles[0],
-            "governed": key in keys,
-        }
-
-    added = sorted(a.keys() - b.keys())
-    removed = sorted(b.keys() - a.keys())
-    relabelled = sorted(k for k in b.keys() & a.keys() if b[k] != a[k])
-    seen = {fixlevel.violation_class(v) for v in before}
-    introduced = [v for v in soft_after if fixlevel.violation_class(v) not in seen]
-    return {
-        **row_delta(prior, submitted),
-        "rows": {
-            "added": [entry(k, a[k]) for k in added[:SAMPLE_VIOLATIONS]],
-            "removed": [entry(k, b[k]) for k in removed[:SAMPLE_VIOLATIONS]],
-            "relabelled": [
-                entry(k, b[k], a[k]) for k in relabelled[:SAMPLE_VIOLATIONS]
-            ],
-        },
-        # The rows the level itself named, and what the answer did with each —
-        # the level's own job, separated from everything the answer did beside
-        # it. `missing` is a governed row the answer did not return at all.
-        "governed_rows": {
-            "named": len(keys),
-            "relabelled": sum(1 for k in relabelled if k in keys),
-            "removed": sum(1 for k in removed if k in keys),
-            "untouched": sum(1 for k in keys if k in b and k in a and b[k] == a[k]),
-            "missing": sum(1 for k in keys if k not in a),
-        },
-        "findings_before": len(fixlevel.select(before, level)),
-        "findings_after": len(fixlevel.select(soft_after, level)),
-        "soft_before": len(before),
-        "soft_after": len(soft_after),
-        "hard_after": [_violation_record(v) for v in hard_after[:SAMPLE_VIOLATIONS]],
-        # The classes the answer brought that the unit did not carry — the
-        # `new_class` refusal, itemised, each with the position it sits on and
-        # whether that position is one the level asked about.
-        "introduced": [
-            {
-                **_violation_record(v),
-                "class": fixlevel.violation_class(v),
-                "governed": (
-                    (pos := _violation_position(v)) is not None and pos in keys
-                ),
-            }
-            for v in introduced[:SAMPLE_VIOLATIONS]
-        ],
-        "introduced_total": len(introduced),
-    }
-
-
-def _replay_unit_outcome(
-    rows: dict[int, list[SkelRow]], layers: "CantoLayers", group: list[int]
-) -> UnitOutcome:
-    """Rebuild a `UnitOutcome` from the unit's rows already on disk in the TSV.
-
-    Unit-level resume: the artifact carries the rows, so nothing has to be
-    re-run through the (expensive, live) fallback. What the artifact does *not*
-    carry is telemetry — route, reason, timings all belong to the attempt that
-    produced it — so those read `tsv` rather than being invented. The gates,
-    by contrast, are re-run: they are deterministic and free, so the verdict
-    here is measured on the bytes on disk instead of trusted from a log.
-    """
-    line_start, line_end = group[0], group[-1]
-    unit_rows = {no: list(rows.get(no, [])) for no in group}
-    row_keys = frozenset(
-        (row.line, row.token, row.role, row.arg_line, row.arg_token)
-        for line_rows in unit_rows.values()
-        for row in line_rows
-    )
-    hard, soft = _validate_rows(layers, group, unit_rows)
-    return UnitOutcome(
-        unit={
-            "canticle": layers.canticle,
-            "canto": layers.canto,
-            "line_start": line_start,
-            "line_end": line_end,
-        },
-        route="tsv",
-        reason="already settled in the artifact",
-        origin="tsv",
-        fallback_ran=False,
-        row_keys=row_keys,
-        rows=unit_rows,
-        token_assertions=[],
-        hard=hard,
-        soft=soft,
-        replayed=True,
-    )
-
-
-@dataclass
-class CantoReconstruction:
-    """Every unit outcome of one canto, plus the merged candidate artifact."""
-
-    canticle: str
-    canto: int
-    nos: list[int]
-    outcomes: list[UnitOutcome] = field(default_factory=list)
-
-    @property
-    def passed(self) -> bool:
-        """A canto commits only when every one of its units passes."""
-        return bool(self.outcomes) and all(o.passed for o in self.outcomes)
-
-    def rows_by_line(self) -> dict[int, list[SkelRow]]:
-        merged: dict[int, list[SkelRow]] = {}
-        for outcome in self.outcomes:
-            for no, rows in outcome.rows.items():
-                merged.setdefault(no, []).extend(rows)
-        for rows in merged.values():
-            rows.sort(key=_row_sort_key)
-        return merged
+# Gate 2 under the name it carried while it lived in this module — call sites
+# and tests that reach for it through the pipeline keep working after the split.
+_validate_rows = validate_rows
 
 
 def reconstruct_canto(
@@ -805,7 +222,7 @@ def reconstruct_canto(
     `settled_units`, when given, maps `(line_start, line_end)` to the rows a
     previous attempt already wrote to the canto's TSV: unit-level resume off
     the artifact itself (`TsvArtifact.settled`). Matching units are rebuilt
-    from those rows (`_replay_unit_outcome`, gates re-run) instead of
+    from those rows (`replay_unit_outcome`, gates re-run) instead of
     re-running `engine.run_unit` — the caller must not re-emit them, since the
     artifact already holds them.
     """
@@ -839,7 +256,7 @@ def reconstruct_canto(
             )
             if settled is not None:
                 recon.outcomes.append(
-                    _replay_unit_outcome(settled, layers, group)
+                    replay_unit_outcome(settled, layers, group)
                 )
                 continue
             started = time.monotonic()
@@ -863,7 +280,7 @@ def reconstruct_canto(
                 result.row_keys, layers, line_start, line_end
             )
             unit_rows = {no: rows.get(no, []) for no in group}
-            hard, soft = _validate_rows(layers, group, unit_rows)
+            hard, soft = validate_rows(layers, group, unit_rows)
             fallback_seconds: float | None = None
             agent_result = getattr(result, "agent_result", None)
             turn_seconds = getattr(agent_result, "turn_seconds", None)
@@ -892,7 +309,7 @@ def reconstruct_canto(
                     result, "final_submission_valid", None
                 ),
                 invalid_nudges=getattr(agent_result, "invalid_nudges", None),
-                final_validation_errors=_final_validation_errors(agent_result),
+                final_validation_errors=final_validation_errors(agent_result),
             )
             recon.outcomes.append(outcome)
             # §5 durability seam: hand the settled outcome to the caller while
@@ -904,165 +321,6 @@ def reconstruct_canto(
 
 
 # --- commit (gate 3): canto-atomic write + hash verification -----------------------------
-
-
-def render_tsv(lines: list[tuple[int, list[SkelRow]]]) -> str:
-    """Byte-exact mirror of `skel.io.write_skel`'s payload for the same input.
-
-    Gate 3 digests the payload *before* writing and compares against the
-    recomputed content hash *after* writing, which requires rendering the
-    bytes independently of the writer. If `write_skel`'s format ever drifts
-    from this mirror the commit fails loudly instead of landing unverified
-    bytes — `test_render_tsv_matches_write_skel_bytes` pins the parity.
-    """
-    return "\t".join(_TSV_HEADER) + "\n" + _render_body(lines)
-
-
-def _render_body(lines: list[tuple[int, list[SkelRow]]]) -> str:
-    """`render_tsv`'s payload without the header — one line block per canto line.
-
-    Shared with `TsvArtifact.write_unit`, which appends these blocks a unit at
-    a time; keeping one renderer is what makes the streamed file byte-identical
-    to a whole-canto render.
-    """
-    out = []
-    for no, rows in lines:
-        if not rows:
-            out.append("\t".join((str(no), "0", "", "", "0", "0")))
-            continue
-        for row in sorted(rows, key=_row_sort_key):
-            out.append(
-                "\t".join((str(no), str(row.token), row.word, row.role,
-                           str(row.arg_line), str(row.arg_token)))
-            )
-    return "\n".join(out) + "\n"
-
-
-class TsvArtifact:
-    """A canto's gold-format TSV, written unit by unit and read back to resume.
-
-    The TSV — not the log — is the run's durable artifact and its resume state
-    (`../STAGE5.md` record S5.5). Two properties make that work:
-
-    - **Append-per-unit is byte-identical to the whole-canto render.** Parse
-      units come from `dep.sentence_groups` (the same call, with the same
-      default `MAX_UNIT_LINES`, that `recon/check.py` validates against), so
-      they are line-ordered, contiguous, and cover every line exactly once;
-      `render_tsv` emits a sentinel row for a line with no predicates. Writing
-      units in order therefore reproduces `render_tsv(whole canto)` exactly.
-    - **Line-number presence is the settled-unit test.** Every line of a
-      settled unit is in the file, sentinel or not, so a unit whose lines are
-      all present needs no rerun and a unit missing any of them is unsettled.
-
-    That second property is also the operator's fix gesture: delete the lines
-    of a stretch you want reconsidered and re-run — the unit regenerates. A
-    *partially* deleted unit counts as unsettled too, and its surviving rows
-    are dropped, so a half-edited unit never lands half old and half new.
-
-    Writes go through one of two paths. While the settled units form a prefix
-    of the canto, each newly settled unit is appended (durable per unit, like
-    the log sink). Once there is a gap in the middle — the fix case — the file
-    is rewritten whole, in line order, on every settle: append cannot express
-    an insertion, and the artifact must never be left in line-shuffled order.
-    """
-
-    def __init__(self, path: str | Path):
-        self.path = Path(path)
-        self.rows: dict[int, list[SkelRow]] = {}
-        self._append_only = True
-
-    # --- read ---------------------------------------------------------------------
-
-    def load(self) -> dict[int, list[SkelRow]]:
-        """Parse the artifact on disk (missing file = nothing settled yet).
-
-        Mirror of `skel.io.load_skel` over an arbitrary path: a sentinel row
-        (`token == 0`) registers its line as present without contributing a
-        row, which is exactly what the settled-unit test needs.
-        """
-        self.rows = {}
-        if not self.path.exists():
-            return self.rows
-        for index, text in enumerate(
-            self.path.read_text(encoding="utf-8").splitlines()
-        ):
-            if index == 0 or not text:  # header / blank
-                continue
-            cells = text.split("\t")
-            cells += [""] * (len(_TSV_HEADER) - len(cells))
-            no = int(cells[0])
-            token = int(cells[1])
-            bucket = self.rows.setdefault(no, [])
-            if token == 0:  # sentinel: line processed, no predicates
-                continue
-            bucket.append(
-                SkelRow(line=no, token=token, word=cells[2], role=cells[3],
-                        arg_line=int(cells[4]), arg_token=int(cells[5]))
-            )
-        return self.rows
-
-    def settled(
-        self, units: list[list[int]]
-    ) -> dict[tuple[int, int], dict[int, list[SkelRow]]]:
-        """`(line_start, line_end) -> rows` for every unit fully present on disk.
-
-        Units only partially present are *not* returned and their rows are
-        discarded from the in-memory artifact, so a rewrite never carries a
-        half-deleted unit's leftovers.
-        """
-        result: dict[tuple[int, int], dict[int, list[SkelRow]]] = {}
-        for group in units:
-            span = (group[0], group[-1])
-            if all(no in self.rows for no in group):
-                result[span] = {no: list(self.rows[no]) for no in group}
-            else:
-                for no in group:
-                    self.rows.pop(no, None)
-        # A gap anywhere but the tail means later settles cannot be appended.
-        settled_lines = {no for group in units for no in group if no in self.rows}
-        ordered = [no for group in units for no in group]
-        seen_missing = False
-        for no in ordered:
-            if no not in settled_lines:
-                seen_missing = True
-            elif seen_missing:
-                self._append_only = False
-                break
-        return result
-
-    # --- write --------------------------------------------------------------------
-
-    def write_unit(self, group: list[int], rows: dict[int, list[SkelRow]]) -> None:
-        """Land one settled unit, appending when possible and rewriting when not."""
-        for no in group:
-            self.rows[no] = list(rows.get(no, []))
-        if self._append_only:
-            new = not self.path.exists()
-            with open(self.path, "a", encoding="utf-8") as fh:
-                if new:
-                    fh.write("\t".join(_TSV_HEADER) + "\n")
-                fh.write(_render_body([(no, self.rows[no]) for no in group]))
-                fh.flush()  # durable per unit, like the log sink
-        else:
-            self.rewrite()
-
-    def reopen(self) -> None:
-        """Leave the append path for good — later writes rewrite the whole file.
-
-        A Stage-6 `--fix` run overwrites units that are already on disk, and an
-        overwrite in the middle of the file cannot be expressed by appending: the
-        rows would be added a second time rather than replaced. `settled` only
-        clears the append flag for *missing* lines, so a caller that intends to
-        replace present ones says so here.
-        """
-        self._append_only = False
-
-    def rewrite(self) -> None:
-        """Write every settled line in line order (the post-gap path)."""
-        payload = render_tsv(
-            [(no, self.rows[no]) for no in sorted(self.rows)]
-        )
-        self.path.write_text(payload, encoding="utf-8")
 
 
 def commit(
@@ -1132,291 +390,6 @@ def commit(
         rolled_back=rolled_back,
     )
     return record
-
-
-# --- evaluation face: gold comparison (operator-side; reads gold) ------------------------
-
-
-@dataclass
-class GoldReport:
-    """Accepted-vs-gold agreement over reconstructed units."""
-
-    units: int = 0
-    exact_units: int = 0
-    tp: int = 0
-    fp: int = 0
-    fn: int = 0
-    roles: dict = field(default_factory=dict)  # role -> [tp, fp, fn]
-
-    def observe(self, keys: frozenset[RowKey], gold: set[RowKey]) -> dict:
-        u_tp = len(keys & gold)
-        u_fp = len(keys - gold)
-        u_fn = len(gold - keys)
-        self.units += 1
-        self.exact_units += int(keys == gold)
-        self.tp += u_tp
-        self.fp += u_fp
-        self.fn += u_fn
-        for key in keys:
-            bucket = self.roles.setdefault(key[2], [0, 0, 0])
-            bucket[0 if key in gold else 1] += 1
-        for key in gold - keys:
-            self.roles.setdefault(key[2], [0, 0, 0])[2] += 1
-        return {"tp": u_tp, "fp": u_fp, "fn": u_fn, "exact": keys == gold}
-
-    def add_record(self, record: dict) -> None:
-        """Resume support: fold a logged `gold` record back into the aggregate."""
-        self.units += 1
-        self.exact_units += int(bool(record.get("exact")))
-        self.tp += int(record.get("tp") or 0)
-        self.fp += int(record.get("fp") or 0)
-        self.fn += int(record.get("fn") or 0)
-
-    def metrics(self) -> dict:
-        precision = self.tp / (self.tp + self.fp) if self.tp + self.fp else 0.0
-        recall = self.tp / (self.tp + self.fn) if self.tp + self.fn else 0.0
-        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
-        return {
-            "units": self.units,
-            "exact_units": self.exact_units,
-            "exact_rate": round(self.exact_units / self.units, 4) if self.units else 0.0,
-            "tp": self.tp,
-            "fp": self.fp,
-            "fn": self.fn,
-            "precision": round(precision, 4),
-            "recall": round(recall, 4),
-            "f1": round(f1, 4),
-        }
-
-    def summary(self) -> str:
-        m = self.metrics()
-        return (
-            f"gold comparison: exact units {m['exact_units']}/{m['units']} "
-            f"= {m['exact_rate']:.3f}, P={m['precision']:.3f} "
-            f"R={m['recall']:.3f} F1={m['f1']:.3f} "
-            f"(tp={m['tp']} fp={m['fp']} fn={m['fn']})"
-        )
-
-
-@dataclass
-class GoldFace:
-    """Per-unit gold observation, streamable as units settle.
-
-    Each unit's tp/fp/fn depends only on that unit's accepted rows and its
-    canto's frozen skel rows, so the evaluation face can ride `reconstruct`'s
-    per-unit durability seam (`emit_unit`) instead of waiting for the canto
-    to finish — an interrupted run keeps every settled unit's gold record on
-    disk too. `verify_against_gold` wraps this face for callers holding a
-    finished `CantoReconstruction`. Purely observational — the result never
-    feeds gating or writes.
-    """
-
-    report: GoldReport = field(default_factory=GoldReport)
-    cache: dict[tuple[str, int], dict] = field(default_factory=dict)
-
-    def observe(self, outcome: UnitOutcome) -> dict:
-        from dante_corpus.skel.io import load_skel
-
-        unit = outcome.unit
-        key = (unit["canticle"], unit["canto"])
-        if key not in self.cache:
-            self.cache[key] = load_skel(unit["canticle"], unit["canto"])
-        gold_rows = self.cache[key]
-        gold = {
-            (row.line, row.token, row.role, row.arg_line, row.arg_token)
-            for no in range(unit["line_start"], unit["line_end"] + 1)
-            for row in gold_rows.get(no, ())
-        }
-        counts = self.report.observe(outcome.row_keys, gold)
-        return {"record": "gold", **unit, **counts}
-
-
-def verify_against_gold(
-    recon: CantoReconstruction,
-) -> tuple[GoldReport, Iterator[dict]]:
-    """Compare every unit's accepted rows against gold (evaluation face).
-
-    Reads the frozen artifacts exactly like `runner/benchmark.py`; purely
-    observational — the result never feeds gating or writes.
-    """
-    face = GoldFace()
-
-    def records():
-        for outcome in recon.outcomes:
-            yield face.observe(outcome)
-
-    return face.report, records()
-
-
-# --- aggregate report ---------------------------------------------------------------------
-
-
-@dataclass
-class ReconstructReport:
-    """Aggregates streamed records; ships both §6 reporting faces.
-
-    Fed identically from live results and replayed resume records via
-    `add_unit` / `add_gold` / `add_canto_complete`.
-    """
-
-    units: int = 0
-    passed_units: int = 0
-    routes: Counter = field(default_factory=Counter)
-    reasons: Counter = field(default_factory=Counter)
-    token_assertion_errors: int = 0
-    hard_violations: int = 0
-    soft_violations: int = 0
-    violation_kinds: Counter = field(default_factory=Counter)
-    fallback_seconds: list[float] = field(default_factory=list)
-    canto_seconds: list[float] = field(default_factory=list)
-    api_retries: list[int] = field(default_factory=list)
-    api_retry_seconds: list[float] = field(default_factory=list)
-    cantos: int = 0
-    cantos_passed: int = 0
-    writes: list[dict] = field(default_factory=list)
-    gold: GoldReport | None = None
-
-    def add_unit(self, record: dict) -> None:
-        self.units += 1
-        self.passed_units += int(bool(record.get("passed")))
-        self.routes[record.get("route", "?")] += 1
-        self.reasons[record.get("reason", "?")] += 1
-        self.token_assertion_errors += int(record.get("token_assertion_errors") or 0)
-        self.hard_violations += int(record.get("hard_violations") or 0)
-        self.soft_violations += int(record.get("soft_violations") or 0)
-        for kind, count in (record.get("violation_kinds") or {}).items():
-            self.violation_kinds[kind] += count
-        seconds = record.get("fallback_seconds")
-        if seconds is not None:
-            self.fallback_seconds.append(float(seconds))
-
-    def add_gold(self, record: dict) -> None:
-        if self.gold is None:
-            self.gold = GoldReport()
-        self.gold.add_record(record)
-
-    def add_canto_complete(self, record: dict) -> None:
-        self.cantos += 1
-        self.cantos_passed += int(bool(record.get("passed")))
-        commit_rec = record.get("commit")
-        if commit_rec is not None:
-            self.writes.append(commit_rec)
-        # Wall clock rides the canto records (sum-the-records architecture):
-        # like the benchmark's per-case turn sums, resumed attempts fold in
-        # per canto and idle gaps between attempts never count.
-        seconds = record.get("elapsed_seconds")
-        if seconds is not None:
-            self.canto_seconds.append(float(seconds))
-        # §4 make-the-invisible-measurable: per-canto api-retry deltas fold in
-        # only when the run tracked them (a status line owned the display).
-        retries = record.get("api_retries")
-        if retries is not None:
-            self.api_retries.append(int(retries))
-            self.api_retry_seconds.append(
-                float(record.get("api_retry_seconds") or 0.0)
-            )
-
-    def metrics(self) -> dict:
-        metrics = {
-            "cantos": self.cantos,
-            "cantos_passed": self.cantos_passed,
-            "written_cantos": sum(1 for w in self.writes if w.get("wrote")),
-            "units": self.units,
-            "passed_units": self.passed_units,
-            "blocked_units": self.units - self.passed_units,
-            "routes": dict(self.routes),
-            "reasons": dict(self.reasons),
-            "token_assertion_errors": self.token_assertion_errors,
-            "hard_violations": self.hard_violations,
-            "soft_violations": self.soft_violations,
-            "violation_kinds": dict(self.violation_kinds),
-            "fallback_seconds_total": round(sum(self.fallback_seconds), 1),
-            "fallback_seconds_max": round(max(self.fallback_seconds), 1)
-            if self.fallback_seconds
-            else None,
-            "wall_clock_seconds": round(sum(self.canto_seconds), 1)
-            if self.canto_seconds
-            else None,
-            "api_retries": sum(self.api_retries) if self.api_retries else None,
-            "api_retry_seconds": (
-                round(sum(self.api_retry_seconds), 1)
-                if self.api_retry_seconds
-                else None
-            ),
-        }
-        if self.gold is not None:
-            metrics["gold"] = self.gold.metrics()
-        return metrics
-
-    def summary(self) -> str:
-        lines = [
-            f"cantos: {self.cantos} passing all gates "
-            f"{self.cantos_passed}/{self.cantos}"
-            + (
-                f", written {sum(1 for w in self.writes if w.get('wrote'))}"
-                if self.writes
-                else ""
-            ),
-            f"units: {self.units} passing {self.passed_units} "
-            f"(gate: every unit 0 hard / 0 soft)",
-            f"routing: "
-            + ", ".join(
-                f"{route}={count}" for route, count in sorted(self.routes.items())
-            ),
-            f"  reasons: "
-            + ", ".join(
-                f"{reason}={count}" for reason, count in sorted(self.reasons.items())
-            ),
-            f"violations: hard {self.hard_violations}, soft {self.soft_violations} "
-            f"(token assertions {self.token_assertion_errors})",
-        ]
-        if self.violation_kinds:
-            top = ", ".join(
-                f"{kind}={count}"
-                for kind, count in sorted(
-                    self.violation_kinds.items(), key=lambda kv: -kv[1]
-                )[:6]
-            )
-            lines.append(f"  top kinds: {top}")
-        if self.fallback_seconds:
-            total = sum(self.fallback_seconds)
-            lines.append(
-                f"fallback sessions: {len(self.fallback_seconds)} in {total:.0f}s "
-                f"(max {max(self.fallback_seconds):.1f}s)"
-            )
-        if self.canto_seconds:
-            lines.append(
-                f"wall clock: {sum(self.canto_seconds):.0f}s across "
-                f"{len(self.canto_seconds)} canto(s)"
-            )
-        if self.api_retries:
-            lines.append(
-                f"api retries: {sum(self.api_retries)} "
-                f"(~{sum(self.api_retry_seconds):.0f}s backoff)"
-            )
-        if self.gold is not None:
-            lines.append(self.gold.summary())
-        return "\n".join(lines)
-
-
-# --- streaming JSONL log: resume support ---------------------------------------------------
-
-
-def load_log(path: str | Path) -> list[dict]:
-    """Parse a previous attempt's log into records (torn tails skipped)."""
-    records: list[dict] = []
-    with open(path, encoding="utf-8") as fh:
-        for line in fh:
-            stripped = line.strip()
-            if not stripped:
-                continue
-            try:
-                record = json.loads(stripped)
-            except json.JSONDecodeError:
-                continue
-            if isinstance(record, dict):
-                records.append(record)
-    return records
 
 
 # --- CLI ------------------------------------------------------------------------------------
@@ -1813,7 +786,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                         f"[fix] {canticle} {canto} lines {span[0]}-{span[1]}: "
                         f"{fix_verdict_reason}"
                         + (f" (unit: {unit_verdict})" if unit_verdict else "")
-                        + _refusal_note(diagnosis),
+                        + refusal_note(diagnosis),
                         file=ui_stream if ui_stream is not None else sys.stderr,
                         flush=True,
                     )
@@ -1896,7 +869,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 # mechanism, not by its delta — how many units were reopened,
                 # how many answers were kept, and what happened to the rows.
                 complete["fix"] = {"level": fix_plan.level, **dict(fix_stats)}
-                print(_fix_summary_line(fix_plan.level, fix_stats), file=ui_stream
+                print(fix_summary_line(fix_plan.level, fix_stats), file=ui_stream
                       if ui_stream is not None else sys.stderr, flush=True)
             if args.write:
                 commit_record = commit(recon)

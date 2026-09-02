@@ -22,7 +22,7 @@ and **only** these two — the stage is deliberately narrow (operator's decision
    it ran under. (**S7.1, done.**)
 2. **`extractor/reconstruct.py` is 1,928 lines** carrying the canto loop, fix
    planning, salvage, the TSV artifact, the gold face, reporting and the CLI in
-   one module. (**S7.2.**)
+   one module. (**S7.2, done.**)
 
 A third candidate — generalizing the `harness/` ↔ `dante_corpus/` transcription
 check S6.10 opened — **was investigated and then re-scoped out to Stage 8 or
@@ -163,16 +163,72 @@ call — is now possible and is deliberately **not** taken here: it changes what
 the model sees, so it is a measured experiment (S3.7's territory), not a
 refactor.
 
+### S7.2 — `reconstruct.py` splits along its own seams (2026-09-03)
+
+**What shipped.** The 1,934-line module became seven, each named for the one
+responsibility it holds. Nothing was rewritten: every function and class moved
+verbatim, and `reconstruct.py` keeps the whole public surface it exported before
+(`__all__` unchanged, plus the re-exports `harness/recon/convert.py` and
+`repair.py` import).
+
+| Module | Lines | Holds |
+|---|---|---|
+| `layers.py` | 162 | `CantoLayers` + gates 1-2 (`build_rows`, `validate_rows`) |
+| `outcome.py` | 199 | `UnitOutcome`, `CantoReconstruction`, unit-level resume |
+| `artifact.py` | 180 | `render_tsv` + `TsvArtifact` — the durable artifact |
+| `fixrun.py` | 381 | the Stage-6 `--fix` machinery (plan, verdict, salvage, revert) |
+| `goldeval.py` | 133 | the evaluation face — **the only module that opens gold** |
+| `report.py` | 185 | `ReconstructReport` + `load_log` |
+| `reconstruct.py` | 907 | the canto loop, gate 3 (`commit`), the CLI |
+
+The dependency order is strictly downward — `layers` → `outcome` → {`artifact`,
+`fixrun`, `goldeval`} → `report` → `reconstruct` — so no module imports one that
+imports it back, and each is importable on its own.
+
+**Why this is more than tidying.** The row that matters is `goldeval.py`. The
+execution and commit faces now import nothing from the module that reads gold,
+so Standing Invariant §4 item 1's boundary is a **file boundary rather than a
+comment**: it can be checked by reading an import list instead of by trusting a
+docstring. That boundary was already adversarially tested; it is now also
+structurally obvious.
+
+Four private helpers became public where the split made them shared
+(`_validate_rows` → `layers.validate_rows`, `_violation_record` →
+`violation_record`, `_final_validation_errors`, `_replay_unit_outcome`,
+`_refusal_note`, `_fix_summary_line`) — a name crossing a module boundary should
+not be spelled private. `reconstruct._validate_rows` is kept as an alias so the
+name the pipeline carried still resolves. Two dead imports (`os`, `tempfile`)
+went with the move.
+
+**Neutrality, as the stage requires it argued.** Three pieces of evidence, none
+of them a code read:
+
+- the suite passes **987, unchanged** — the same count, the same tests, not one
+  of them edited (they drive the CLI, the fix run, resume, salvage and commit
+  through `rc.<name>`, so the re-exports are exercised rather than assumed);
+- `make check` exits 0 at **0 hard / 4,627 soft**, the corpus number unmoved;
+- `--help` is **byte-identical** to the pre-split module's, which is the CLI
+  surface the operator and `recon/Makefile` actually drive.
+
+**Falsification.** This record would be wrong if any behaviour had moved with
+the code. The three readouts above are what rule that out at the level the stage
+asks for; the operator's live inferno-1 re-run (delete the canto's TSV, run it
+through the real fallback) is the remaining check that the *live* path — the one
+no test touches, because nothing in the suite reaches a model — still behaves,
+and it had not been run when this record was written.
+
+**Not done here.** No behaviour was added, removed or reordered, so nothing in
+the log contract, the gates, or the fix verdicts changed. `hybrid_engine.py`
+(the other large extractor module) was not touched: it is Stage 2's, not this
+stage's scope, and no one asked for it.
+
 ---
 
 ## 4. Remaining stage scope
 
-- **S7.2 (planned) — split `extractor/reconstruct.py`.** The responsibility
-  boundaries are already visible in the module (`FixPlan` / `fix_*` / `salvage_*`,
-  `TsvArtifact`, `GoldReport` / `GoldFace`, `ReconstructReport`, the CLI). Same
-  neutrality bar: the pipeline's behaviour must not move.
-
-That is the whole of the stage. The item below is **not** in it.
+Both items are done: **S7.1** (knowledge as files) and **S7.2** (the
+`reconstruct.py` split). That is the whole of the stage. The item below is
+**not** in it.
 
 ### Carried out of Stage 7: the transcription-drift check (→ Stage 8 or later)
 

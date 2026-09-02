@@ -36,7 +36,7 @@ from dante_corpus.dep import DepRow
 from dante_corpus.morph import Violation
 from dante_corpus.skel.models import OBL_RE, SkelRow
 
-# The TSV column names, mirrored from `reconstruct._TSV_HEADER` (imported there
+# The TSV column names, mirrored from `artifact._TSV_HEADER` (imported there
 # rather than here to keep this module free of the driver's import weight).
 _TABLE_HEADER = ("line", "token", "word", "role", "arg_line", "arg_token")
 
