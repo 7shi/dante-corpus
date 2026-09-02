@@ -17,7 +17,7 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 
 ## Documentation & Roadmap
 
-- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction). Keeps Current Status and the session handoff.
+- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2). Keeps Current Status and the session handoff.
 - **Stage 1 Record**: [`stages/01.md`](stages/01.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
 - **Stage 2 Record**: [`stages/02.md`](stages/02.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
 - **Stage 3 Design & Ledger**: [`stages/03.md`](stages/03.md) — Stage-3 home: the payload/pacing design (S3.2), gate re-check, implementation map, confirmation protocol, and the record of why transcript compaction was removed (S3.7). CLOSED on S3.11.
@@ -25,6 +25,7 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 - **Stage 5 Record**: [`stages/05.md`](stages/05.md) — Corpus durability (the run's logs turned into 100 committed gold-format TSVs) and the hard-divergence reduction that followed, incl. what the violation count is and what gold is not (§5). CLOSED on S5.8 at **0 hard**.
 - **Stage 6 Design & Ledger**: [`stages/06.md`](stages/06.md) — Reducing the 5,014 soft findings, the standing method that record S6.1 forced on it, and class eligibility. CLOSED on S6.11 with soft level 1 at 0 findings.
 - **Stage 7 Record**: [`stages/07.md`](stages/07.md) — Refactoring: the agent's knowledge moved into `runner/skills/` files (S7.1) and `extractor/reconstruct.py` split into seven modules (S7.2), both argued behaviour-neutral. CLOSED on S7.2's live confirmation; §4 lists what carries forward.
+- **Stage 8 Design & Ledger (open)**: [`stages/08.md`](stages/08.md) — Soft `--fix` level 2: what it must satisfy before it runs (S6.2 mechanism, S6.1 burden of proof, S6.10 alignment lesson), the baseline at open, and the two items carried in with it. No records yet.
 - **Classification audits**: [`HARD.md`](HARD.md) (S5.4) and [`SOFT.md`](SOFT.md) (S6.1) — evidence records asking whether the checker's own hard/soft classification is sound, each filed before the design pass it would otherwise drive. Cross-linked to each other.
 - **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
@@ -54,7 +55,8 @@ dante-corpus/
 │   │   ├── 04.md                  # Stage-4 record (99-canto corpus run, readout, ledger)
 │   │   ├── 05.md                  # Stage-5 record (corpus durability + hard reduction to 0)
 │   │   ├── 06.md                  # Stage-6 design + ledger (soft divergence reduction)
-│   │   └── 07.md                  # Stage-7 record (refactoring: skills as files + module split)
+│   │   ├── 07.md                  # Stage-7 record (refactoring: skills as files + module split)
+│   │   └── 08.md                  # Stage-8 design + ledger (soft fix level 2, open)
 │   ├── HARD.md                    # Audit: is the hard classification sound? (S5.4)
 │   ├── SOFT.md                    # Audit: is the soft classification sound? (S6.1)
 │   ├── TOOLCALL.md                # Tool call protocol sub-project (XML interim → native)

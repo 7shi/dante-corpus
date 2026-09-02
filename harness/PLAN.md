@@ -9,37 +9,67 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Nothing is running and no stage is open.** The corpus sits at **0 hard /
-4,624 soft** with `make check` exiting 0, the suite at **987 passed**, and soft
-level 1 closed at **0 findings**. No fix run is in flight and none is scheduled.
+**Nothing is running.** The corpus sits at **0 hard / 4,624 soft** with `make
+check` exiting 0, the suite at **987 passed**, and soft level 1 closed at **0
+findings**. No fix run is in flight and none is scheduled.
 
 **Stage 7 closed 2026-09-03** on S7.2's live confirmation — both items (S7.1
 knowledge-as-files, S7.2 the `reconstruct.py` split) done, committed and
-live-confirmed on the operator's inferno-1 re-run. Its whole record, the
-close, and the state at close live in [`stages/07.md`](stages/07.md); §2 below carries
-the one-paragraph summary. Unlike every earlier close this one did **not** open
-the next stage's document: **`stages/08.md` does not exist, and opening it — with
-whatever scope — is the operator's call.**
+live-confirmed on the operator's inferno-1 re-run. Its whole record, the close,
+and the state at close live in [`stages/07.md`](stages/07.md); §2 below carries
+the one-paragraph summary.
 
-**Three items wait for whichever stage opens next**, all written up in
-[`stages/07.md`](stages/07.md) §4 with their numbers; read that rather than
-re-deriving them here:
+**Stage 8 is open** ([`stages/08.md`](stages/08.md), 2026-09-03) **and its scope
+is soft `--fix` level 2 — design and implementation** (operator's decision, the
+same day). It is the item Stage 6 carried forward: level 1 closed at 0 findings
+on S6.11, level 2 was left a design question before it is a run. **The concrete
+content is the next session's work** — which class or classes level 2 selects,
+and how — and is deliberately undecided here.
 
-1. the **transcription-drift check**, investigated 2026-09-02 and deliberately
-   left unimplemented (no test written, no code changed) — both sweeps and the
-   three options are recorded, so do not re-run them (the generated sweep costs
-   38 s and 25.4 M comparisons);
-2. **soft level 2**, still a design question before it is a run — candidates and
-   eligibility in [`stages/06.md`](stages/06.md) §3, uninvalidated by the delay;
-3. the **standing `skel/repairs.py` authority question**, still the operator's.
+**Start that session from [`stages/08.md`](stages/08.md) §1**, which states what
+level 2 must satisfy before it runs, not from a blank page: the `--fix`
+mechanism already exists (S6.2), so what is needed is a class definition and a
+selection rule expressible in `extractor/fixlevel.py`; every candidate class
+must be argued to one of S6.1's three outcomes from `validate.py` / `derive.py`
+**with gold unopened** (candidates and eligibility in
+[`stages/06.md`](stages/06.md) §3); and level 1's lesson is to check the
+gate/contract alignment *first* — S6.10, not five runs in. §2 there carries the
+two items that bear on this scope: the **transcription-drift check** (already
+measured — do not re-run the sweeps; its third option is now directly a Stage 8
+question) and the standing **`skel/repairs.py` authority question**, which a
+level-2 class may force.
+
+**Session closed 2026-09-03; the working tree is clean and nothing is in
+flight.** What that session did, in order, so the next one need not reconstruct
+it from the log: read out the operator's live inferno-1 re-run and folded it into
+S7.2 as the live confirmation that record said was outstanding (`31cb3c7`);
+**closed Stage 7** and moved its record out of this file into
+[`stages/07.md`](stages/07.md) (`e180024`); **moved the seven stage documents
+into `stages/<NN>.md`** with all 192 references rewritten — the layout decision
+and its citation rule are in the Milestone Ledger note below, and are the one
+thing worth knowing before writing a new stage document (`cf24c20`); then
+**opened Stage 8** and set it to level 2 on the operator's decision. The corpus
+numbers did not move after the re-run: 0 hard / 4,624 soft, suite 987.
 
 ## Current Status
 
 Stages 1–7 are COMPLETE/CLOSED; their status, dates, and record pointers
-live in §2's per-stage subsections below, not repeated here. **No stage is
-open** — the next one is the operator's to open, and the three items waiting
-for it are listed in Handoff above.
+live in §2's per-stage subsections below, not repeated here. This section
+holds only what's still open.
 
+- [ ] **Stage 8 — Soft Level 2** (OPENED 2026-09-03 by operator, after Stage 7's
+      close rather than as part of it: the stage documents were about to move
+      into `stages/`, so the file was held back rather than created and renamed
+      the same day; scope set the same day). Scope: **designing and implementing
+      soft `--fix` level 2**, the item Stage 6 carried forward rather than
+      closed. **No records yet** — the concrete design is the next session's
+      work. [`stages/08.md`](stages/08.md) §1 states what it must satisfy first
+      (S6.2's mechanism, S6.1's three-outcome burden with gold unopened,
+      [`stages/06.md`](stages/06.md) §3's candidates, and S6.10's lesson about
+      checking gate/contract alignment early); §2 carries the two items that
+      bear on it — the measured transcription-drift check and the standing
+      `skel/repairs.py` authority question. State at open: 0 hard / 4,624 soft,
+      suite 987, live path confirmed.
 - [x] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator on Stage 6's
       close, scope re-decided the same day from "level 2" to refactoring and
       narrowed the same day to two items; **CLOSED 2026-09-03** on S7.2's live
@@ -151,9 +181,11 @@ Stage-5 records S5.1–S5.8 live in [`stages/05.md`](stages/05.md)'s ledger, wri
 there from the start (stage closed 2026-08-30 on S5.8); Stage-6 records
 S6.1–S6.11 the same way in [`stages/06.md`](stages/06.md) (stage closed 2026-09-02 on
 S6.11); Stage-7 records S7.1–S7.2 the same way in [`stages/07.md`](stages/07.md)
-(stage closed 2026-09-03 on S7.2). Every close through Stage 6 was made by
-opening the next stage's document; Stage 7's was not — no `stages/08.md` exists
-yet, so the next stage opens one when the operator sets its scope.*
+(stage closed 2026-09-03 on S7.2); Stage-8 records will accrue the same way in
+[`stages/08.md`](stages/08.md), which is open but empty. Every close through
+Stage 6 was made by opening the next stage's document; Stage 7's was not — the
+rename into `stages/` was pending, so `stages/08.md` was opened separately once
+it had landed, with its scope arriving in the same session.*
 
 ---
 
@@ -210,7 +242,7 @@ graph TD
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
 
-In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that paid down what six stages of live-run work had left behind (closed 2026-09-03). No stage is open after it.
+In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that paid down what six stages of live-run work had left behind (closed 2026-09-03), and Stage 8 opening the same day, scoped to soft `--fix` level 2.
 
 ### Stage 1: Autonomous Local Inference & Capability Benchmark (`harness/runner/`)
 - **Approach**: For each parse unit, the agent receives the multi-layer context (L1–L4, quotes, case) and autonomously solves predicate-argument frames on the fly using Chain-of-Thought (CoT) and a dedicated Tool Calling API (`validate_candidate`, etc.).
@@ -402,6 +434,32 @@ rails §1 says `harness/` exists to replace; what the stage took instead were th
 pattern's two prerequisites. Both records, that argument, the state at close and
 the three items carried forward (the transcription-drift sweeps, soft level 2,
 the `repairs.py` authority question) live in [`stages/07.md`](stages/07.md).
+
+### Stage 8: Soft Level 2 (opened 2026-09-03)
+
+Opened after Stage 7's close rather than as part of it — the one break in the
+convention that a close is performed by opening the successor's document, and a
+deliberate one: the stage files were about to move into `stages/`, so the file
+was held back rather than created and immediately renamed.
+
+Scope, set by the operator the same day: **the design and implementation of soft
+`--fix` level 2** — what Stage 6 carried forward when level 1 reached 0 findings
+on S6.11. The concrete content is the next session's work and is deliberately
+undecided; what [`stages/08.md`](stages/08.md) fixes now is the ground it starts
+from. The mechanism is not the deliverable — S6.2's graded `--fix` run already
+reopens a level's units in session, showing the invariant and the frozen-layer
+evidence but never the derivation's answer — so what level 2 owes is a class
+definition and a selection rule, argued to one of S6.1's three outcomes (the
+artifact is wrong / a tolerance is missing / the notations are equivalent) from
+`validate.py` and `derive.py` **with gold unopened**, since the soft counter
+measures conformance rather than quality. Candidates and eligibility are in
+[`stages/06.md`](stages/06.md) §3. Level 1's arc is the precedent worth reading
+first: five corpus-wide runs moved it 377 → 12, and what closed it was S6.10
+finding the agent's gate narrower than the contract it transcribed — an
+alignment check level 2 should make before its runs, not after them. The two
+items carried in with it (the already-measured transcription-drift check, whose
+third option is now a Stage 8 question, and the standing `skel/repairs.py`
+authority question) are in that document's §2.
 
 ### Beyond Layer 5 (design notes)
 
