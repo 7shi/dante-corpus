@@ -10,7 +10,7 @@ state that should survive indefinitely does not belong here: it belongs in
 Ledger**, or §2's per-stage records.
 
 **Nothing is running.** The corpus sits at **0 hard / 4,624 soft** with `make
-check` exiting 0, the suite at **987 passed**, and soft level 1 closed at **0
+check` exiting 0, the suite at **991 passed**, and soft level 1 closed at **0
 findings**. No fix run is in flight and none is scheduled.
 
 **Stage 7 closed 2026-09-03** on S7.2's live confirmation — both items (S7.1
@@ -49,7 +49,7 @@ into `stages/<NN>.md`** with all 192 references rewritten — the layout decisio
 and its citation rule are in the Milestone Ledger note below, and are the one
 thing worth knowing before writing a new stage document (`cf24c20`); then
 **opened Stage 8** and set it to level 2 on the operator's decision. The corpus
-numbers did not move after the re-run: 0 hard / 4,624 soft, suite 987.
+numbers did not move after the re-run: 0 hard / 4,624 soft, suite 991.
 
 ## Current Status
 
@@ -69,7 +69,7 @@ holds only what's still open.
       checking gate/contract alignment early); §2 carries the two items that
       bear on it — the measured transcription-drift check and the standing
       `skel/repairs.py` authority question. State at open: 0 hard / 4,624 soft,
-      suite 987, live path confirmed.
+      suite 991, live path confirmed.
 - [x] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator on Stage 6's
       close, scope re-decided the same day from "level 2" to refactoring and
       narrowed the same day to two items; **CLOSED 2026-09-03** on S7.2's live
@@ -77,15 +77,18 @@ holds only what's still open.
       behind — the agent's knowledge hidden in Python string literals (S7.1) and
       `extractor/reconstruct.py`'s 1,934 lines (S7.2) — under a standing rule of
       neutrality: behaviour-neutral, and byte-exact wherever the output is
-      prompt text. State at close: suite 987, corpus 0 hard / 4,624 soft, the
+      prompt text. State at close: suite 991, corpus 0 hard / 4,624 soft, the
       live path re-confirmed end-to-end. Both records, the close, the carried
       items and the Warp-pattern argument live in [`stages/07.md`](stages/07.md); §2
       below summarizes. Unlike earlier closes it opened no successor document.
-- Test suite: **987 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+- Test suite: **991 passed** (987 + 4 from the repo-wide Markdown link sweep,
+  `tests/test_docs_links.py`, added 2026-09-03 after `ee47f34` repaired 23
+  broken cross-document links; it is corpus-side, not harness-side).
+  The 987 before it: 876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
   the llm7shi 0.15.0 status-bar rework + 3 from S6.4 + 9 from S6.6 + 2 from
   S6.8 + 4 from S6.10 + 12 from S7.1; S6.3, S6.5, S6.7, S6.9 and S6.11 added
-  none, being corpus runs).
+  none, being corpus runs.
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`stages/04.md`](stages/04.md)'s pre-launch note and record S4.3.
