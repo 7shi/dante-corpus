@@ -76,9 +76,15 @@ class FixPlan:
         return bool(self.prior)
 
     @property
+    def dep_rows(self) -> dict:
+        """The canto's Layer-4 rows, for the classes whose definition reads them."""
+        return self.layers.dep_rows if self.layers is not None else {}
+
+    @property
     def findings(self) -> int:
         return sum(
-            len(fixlevel.select(vs, self.level)) for vs in self.before.values()
+            len(fixlevel.select(vs, self.level, dep_rows=self.dep_rows))
+            for vs in self.before.values()
         )
 
 
@@ -95,7 +101,7 @@ def plan_fix(
         if group is None:
             continue
         hard, soft = validate_rows(layers, group, rows)
-        findings = fixlevel.select(soft, level, rows)
+        findings = fixlevel.select(soft, level, rows, layers.dep_rows)
         if not findings:
             continue
         plan.prior[span] = {no: list(rows.get(no, [])) for no in group}
@@ -113,6 +119,7 @@ def fix_verdict(
     hard_after: list[Violation],
     soft_after: list[Violation],
     level: int,
+    dep_rows: dict | None = None,
 ) -> tuple[bool, str]:
     """Accept the re-solved unit, or say why the prior rows stand.
 
@@ -120,11 +127,16 @@ def fix_verdict(
     hard-clean; the level's own findings did not fall; or a violation class the
     unit did not carry before is now present. The last is the acceptance gate
     SOFT.md §6's dry run used — a repair may not trade its class for another.
+
+    `dep_rows` carries the canto's Layer 4 for the classes defined by the tree
+    (level 2). It is the class definition, not the `holds` precondition — the two
+    counts are taken over different sets of rows and must share one definition —
+    so it is passed to both sides here and the rows are passed to neither.
     """
     if hard_after:
         return False, "hard"
-    if len(fixlevel.select(soft_after, level)) >= len(
-        fixlevel.select(before, level)
+    if len(fixlevel.select(soft_after, level, dep_rows=dep_rows)) >= len(
+        fixlevel.select(before, level, dep_rows=dep_rows)
     ):
         return False, "no_improvement"
     seen = {fixlevel.violation_class(v) for v in before}
@@ -204,7 +216,11 @@ def salvage_outcome(
     if plan.layers is None or outcome.token_assertions:
         return None
     keys = fixlevel.governed_keys(
-        fixlevel.select(plan.before[span], plan.level, plan.prior[span]), plan.level
+        fixlevel.select(
+            plan.before[span], plan.level, plan.prior[span], plan.dep_rows
+        ),
+        plan.level,
+        plan.dep_rows,
     )
     if not keys:
         return None
@@ -302,6 +318,7 @@ def fix_diagnosis(
     hard_after: list[Violation],
     soft_after: list[Violation],
     level: int,
+    dep_rows: dict | None = None,
 ) -> dict:
     """Why a refused answer was refused, in the terms the verdict is decided in.
 
@@ -319,7 +336,9 @@ def fix_diagnosis(
     is already decided, and `fix_verdict` is not consulted about it. The
     derivation's answer stays out of the notice exactly as before.
     """
-    keys = fixlevel.governed_keys(fixlevel.select(before, level, prior), level)
+    keys = fixlevel.governed_keys(
+        fixlevel.select(before, level, prior, dep_rows), level, dep_rows
+    )
 
     def keyed(rows: dict[int, list[SkelRow]]) -> dict[fixlevel.RowKey, str]:
         return {_key_of(r): r.role for rs in rows.values() for r in rs}
@@ -359,8 +378,10 @@ def fix_diagnosis(
             "untouched": sum(1 for k in keys if k in b and k in a and b[k] == a[k]),
             "missing": sum(1 for k in keys if k not in a),
         },
-        "findings_before": len(fixlevel.select(before, level)),
-        "findings_after": len(fixlevel.select(soft_after, level)),
+        "findings_before": len(fixlevel.select(before, level, dep_rows=dep_rows)),
+        "findings_after": len(
+            fixlevel.select(soft_after, level, dep_rows=dep_rows)
+        ),
         "soft_before": len(before),
         "soft_after": len(soft_after),
         "hard_after": [violation_record(v) for v in hard_after[:SAMPLE_VIOLATIONS]],

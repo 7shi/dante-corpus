@@ -110,9 +110,13 @@ def check_canto(canticle: str, number: int, root: Path) -> dict:
     status = "ok" if hard == 0 else "hard_violations"
     # `rows` rides along for `print_fix_level`: a fix level acts on a row, so its
     # selection needs the artifact and not only the findings (`fixlevel.select`).
+    # `dep_rows` rides along for the same reason on the other side: a level-2 class
+    # is *defined* by the Layer-4 edge under the argument, so the readout cannot
+    # apply the definition without the tree the run applies it with.
     return {"canticle": canticle, "canto": number, "status": status,
             "hard": hard, "soft": soft, "missing": missing, "violations": violations,
-            "rows": {no: list(rows) for no, rows in data.items()}}
+            "rows": {no: list(rows) for no, rows in data.items()},
+            "dep_rows": dep_rows}
 
 
 def iter_targets(root: Path, canticle: str | None, canto: int | None):
@@ -231,6 +235,7 @@ def print_fix_level(results: list[dict], level: int, *, stream: TextIO = sys.std
             [v for v in result["violations"] if v.kind == "tag"],
             level,
             result.get("rows"),
+            result.get("dep_rows"),
         )
         total += len(found)
         if found:

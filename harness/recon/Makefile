@@ -77,7 +77,7 @@
 ## make fix                            all 100 cantos — hours of live model
 ##                                     time over committed artifacts; read
 ##                                     `make fix-level` first
-## Level:  FIX defaults to `max` (every level the contract has argued, today 1;
+## Level:  FIX defaults to `max` (every level the contract has argued, today 2;
 ##         levels are cumulative). Pin one with FIX=1 on any fix target.
 ## make repair                         apply the deterministic repair rules to
 ##                                     the committed TSVs, in place

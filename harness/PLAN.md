@@ -10,8 +10,24 @@ state that should survive indefinitely does not belong here: it belongs in
 Ledger**, or §2's per-stage records.
 
 **Nothing is running.** The corpus sits at **0 hard / 4,624 soft** with `make
-check` exiting 0, the suite at **991 passed**, and soft level 1 closed at **0
-findings**. No fix run is in flight and none is scheduled.
+check` exiting 0 and the suite at **999 passed**. No fix run is in flight and
+none is scheduled.
+
+**Soft `--fix` level 2 is defined and implemented** (S8.1, 2026-09-03,
+[`stages/08.md`](stages/08.md) §4): `omitted_l4_argument` — the artifact registers
+the predicate and omits an argument Layer 4 hangs on it under an `ARG_DEPRELS`
+edge, at a nominal role. **`make fix-level FIX=2` reports 1,128 findings across
+all 100 cantos** (1,126 of them level 2's own), in 770 units. **The corpus is
+untouched**: the level ships, and running it is the operator's act — budget a
+corpus-wide `--fix 2` at roughly 140 h summed elapsed / ~65 h wall on three
+`-j3` streams (extrapolated from S6.3, not measured). `FIX` defaults to `max`,
+which now resolves to **2**; pin `FIX=1` to hold a run to level 1.
+
+**Level 1 is no longer at 0**: `make fix-level FIX=1` reports **2**, both in
+`inferno 1`, re-introduced by the operator's live inferno-1 re-run at `31cb3c7`
+(the same run that took soft 4,627 → 4,624). Not repaired — a level's findings
+are cleared by a run, never by hand — and worth knowing generally: a closed level
+does not stay closed across later live runs of the same cantos.
 
 **Stage 7 closed 2026-09-03** on S7.2's live confirmation — both items (S7.1
 knowledge-as-files, S7.2 the `reconstruct.py` split) done, committed and
@@ -19,37 +35,62 @@ live-confirmed on the operator's inferno-1 re-run. Its whole record, the close,
 and the state at close live in [`stages/07.md`](stages/07.md); §2 below carries
 the one-paragraph summary.
 
-**Stage 8 is open** ([`stages/08.md`](stages/08.md), 2026-09-03) **and its scope
-is soft `--fix` level 2 — design and implementation** (operator's decision, the
-same day). It is the item Stage 6 carried forward: level 1 closed at 0 findings
-on S6.11, level 2 was left a design question before it is a run. **The concrete
-content is the next session's work** — which class or classes level 2 selects,
-and how — and is deliberately undecided here.
+**Stage 8 is open** ([`stages/08.md`](stages/08.md), 2026-09-03), scoped to soft
+`--fix` level 2, and its design-and-implementation half is done (S8.1, above).
+§1 there states the ground the level was held to; §2's two carried items are
+still open — the **transcription-drift check** (already measured: do not re-run
+the sweeps; S8.1 answered its third option for level 2 only, by refusing a
+session-side bar for this class) and the standing **`skel/repairs.py` authority
+question**, which level 2 did not force.
 
-**Start that session from [`stages/08.md`](stages/08.md) §1**, which states what
-level 2 must satisfy before it runs, not from a blank page: the `--fix`
-mechanism already exists (S6.2), so what is needed is a class definition and a
-selection rule expressible in `extractor/fixlevel.py`; every candidate class
-must be argued to one of S6.1's three outcomes from `validate.py` / `derive.py`
-**with gold unopened** (candidates and eligibility in
-[`stages/06.md`](stages/06.md) §3); and level 1's lesson is to check the
-gate/contract alignment *first* — S6.10, not five runs in. §2 there carries the
-two items that bear on this scope: the **transcription-drift check** (already
-measured — do not re-run the sweeps; its third option is now directly a Stage 8
-question) and the standing **`skel/repairs.py` authority question**, which a
-level-2 class may force.
+**The session before this one (2026-09-03)** read
+out the operator's live inferno-1 re-run into S7.2 (`31cb3c7`), **closed Stage
+7** into [`stages/07.md`](stages/07.md) (`e180024`), **moved the seven stage
+documents into `stages/<NN>.md`** with all 192 references rewritten — the layout
+decision and its citation rule are in the Milestone Ledger note below, and are
+the one thing worth knowing before writing a new stage document (`cf24c20`) —
+then **opened Stage 8** and set it to level 2 on the operator's decision.
 
-**Session closed 2026-09-03; the working tree is clean and nothing is in
-flight.** What that session did, in order, so the next one need not reconstruct
-it from the log: read out the operator's live inferno-1 re-run and folded it into
-S7.2 as the live confirmation that record said was outstanding (`31cb3c7`);
-**closed Stage 7** and moved its record out of this file into
-[`stages/07.md`](stages/07.md) (`e180024`); **moved the seven stage documents
-into `stages/<NN>.md`** with all 192 references rewritten — the layout decision
-and its citation rule are in the Milestone Ledger note below, and are the one
-thing worth knowing before writing a new stage document (`cf24c20`); then
-**opened Stage 8** and set it to level 2 on the operator's decision. The corpus
-numbers did not move after the re-run: 0 hard / 4,624 soft, suite 991.
+**In flight: the operator's `--fix 2` run. The next session's first job is to
+read it out as record S8.2** in [`stages/08.md`](stages/08.md) §4 — the run
+happened between sessions, so start from its logs and TSVs, not from a blank
+page.
+
+- **The baseline to measure against is this commit's tree**: 0 hard / **4,624
+  soft**, `make fix-level FIX=2` = **1,128** (1,126 level-2 + 2 level-1),
+  770 units, 100 cantos, suite 999. Re-verify the before-numbers from the
+  pre-run commit's TSVs the way S6.3 did rather than trusting this line.
+- **Read `fix.refused.governed_rows` first**, before the finding count — the
+  reading order S6.8/S6.9 established, and level 2's own risk sits there.
+  Level 1 governed a row the artifact *had*, so a refusal could be spliced;
+  level 2 governs a row it does **not** have, so `missing` (the answer declined
+  to write the named row) is the failure the splice cannot rescue by
+  construction. High `missing` ⇒ the level's premise needs arguing at those
+  positions, not more runs; high `introduced` off the named rows ⇒ the
+  whole-unit ask, as in S6.7.
+- **Then the refusal mix** (`accepted` / `salvaged` / `no_improvement` /
+  `new_class` / `hard`) against S6.11's 10-of-10, and `adopted_invalid`: level 2
+  adds **no** session-side bar (S8.1), so `adopted_invalid` here means an
+  ordinary schema failure, not the level's own demand — it does not carry S6.3's
+  `--fix` meaning.
+- **Per-class deltas, and the two arithmetic traps**: soft is not a distance
+  (§2 of [`stages/06.md`](stages/06.md)) — writing a `missing_arg` row can clear
+  an `extra_arg` at a relocated position (631 such pairs corpus-wide), so
+  `soft` may fall by *more* than the findings did, and that is not corroboration.
+  Registering nothing new should keep `missing_tuple` flat.
+- **Cost, against the estimate**: S8.1 budgeted ~140 h summed elapsed / ~65 h
+  wall on three `-j3` streams from S6.3's per-unit rate. Report what it actually
+  cost — the estimate is unmeasured and the first canticle prices it better.
+- **Gold agreement (`make agree`) is read afterwards and cited as nothing else**
+  (§4 item 1). Last readout: corpus-wide **0.7389** at S6.11.
+- Log hygiene: dedupe `unit` records by `(canticle, canto, line_start,
+  line_end)` keyed by the log's *path*, keeping the last (Stage 6's rule under
+  §2); if the logs were not swept before the run, say so in the record.
+
+**If the run has not happened yet**, the launch order is `make fix-level FIX=2`
+(free readout) → one canto with `make fix-canto CANTICLE=<c> CANTO=<n> FIX=2` →
+`make check` → only then a canticle-wide launch, sweeping the per-canto logs
+first.
 
 ## Current Status
 
@@ -62,14 +103,19 @@ holds only what's still open.
       into `stages/`, so the file was held back rather than created and renamed
       the same day; scope set the same day). Scope: **designing and implementing
       soft `--fix` level 2**, the item Stage 6 carried forward rather than
-      closed. **No records yet** — the concrete design is the next session's
-      work. [`stages/08.md`](stages/08.md) §1 states what it must satisfy first
-      (S6.2's mechanism, S6.1's three-outcome burden with gold unopened,
-      [`stages/06.md`](stages/06.md) §3's candidates, and S6.10's lesson about
-      checking gate/contract alignment early); §2 carries the two items that
-      bear on it — the measured transcription-drift check and the standing
-      `skel/repairs.py` authority question. State at open: 0 hard / 4,624 soft,
-      suite 991, live path confirmed.
+      closed. **Designed and implemented on S8.1** (2026-09-03): level 2 is
+      `omitted_l4_argument`,
+      1,126 findings in 770 units, argued to outcome 1 from `derive.py`'s step 2
+      with gold unopened, with S6.10's alignment check made before any run (the
+      row it asks for is admissible by construction; a session-side bar is
+      deliberately refused, measured at 2,089 demanded vs 1,126 selected). Code
+      and tests only — the corpus is untouched and the run is the operator's.
+      [`stages/08.md`](stages/08.md) §1 states what the level had to satisfy
+      first; §2 carries the two items that bear on it — the measured
+      transcription-drift check and the standing `skel/repairs.py` authority
+      question. State at open: 0 hard / 4,624 soft, suite 991, live path
+      confirmed. **Open next**: the operator's `--fix 2` run, to be read out as
+      S8.2 (Handoff carries the reading order).
 - [x] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator on Stage 6's
       close, scope re-decided the same day from "level 2" to refactoring and
       narrowed the same day to two items; **CLOSED 2026-09-03** on S7.2's live
@@ -81,9 +127,11 @@ holds only what's still open.
       live path re-confirmed end-to-end. Both records, the close, the carried
       items and the Warp-pattern argument live in [`stages/07.md`](stages/07.md); §2
       below summarizes. Unlike earlier closes it opened no successor document.
-- Test suite: **991 passed** (987 + 4 from the repo-wide Markdown link sweep,
+- Test suite: **999 passed** (991 + 8 from S8.1's level-2 class, its
+  gate-admissibility guard and the two end-to-end `--fix 2` runs).
+  The 991 before it: 987 + 4 from the repo-wide Markdown link sweep,
   `tests/test_docs_links.py`, added 2026-09-03 after `ee47f34` repaired 23
-  broken cross-document links; it is corpus-side, not harness-side).
+  broken cross-document links; it is corpus-side, not harness-side.
   The 987 before it: 876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
   the llm7shi 0.15.0 status-bar rework + 3 from S6.4 + 9 from S6.6 + 2 from
@@ -184,8 +232,8 @@ Stage-5 records S5.1–S5.8 live in [`stages/05.md`](stages/05.md)'s ledger, wri
 there from the start (stage closed 2026-08-30 on S5.8); Stage-6 records
 S6.1–S6.11 the same way in [`stages/06.md`](stages/06.md) (stage closed 2026-09-02 on
 S6.11); Stage-7 records S7.1–S7.2 the same way in [`stages/07.md`](stages/07.md)
-(stage closed 2026-09-03 on S7.2); Stage-8 records will accrue the same way in
-[`stages/08.md`](stages/08.md), which is open but empty. Every close through
+(stage closed 2026-09-03 on S7.2); Stage-8 records accrue the same way in
+[`stages/08.md`](stages/08.md), open, S8.1 written 2026-09-03. Every close through
 Stage 6 was made by opening the next stage's document; Stage 7's was not — the
 rename into `stages/` was pending, so `stages/08.md` was opened separately once
 it had landed, with its scope arriving in the same session.*
@@ -447,19 +495,35 @@ was held back rather than created and immediately renamed.
 
 Scope, set by the operator the same day: **the design and implementation of soft
 `--fix` level 2** — what Stage 6 carried forward when level 1 reached 0 findings
-on S6.11. The concrete content is the next session's work and is deliberately
-undecided; what [`stages/08.md`](stages/08.md) fixes now is the ground it starts
-from. The mechanism is not the deliverable — S6.2's graded `--fix` run already
+on S6.11. [`stages/08.md`](stages/08.md) §1 fixed the ground it had to start
+from, before any class was named. The mechanism was not the deliverable — S6.2's graded `--fix` run already
 reopens a level's units in session, showing the invariant and the frozen-layer
 evidence but never the derivation's answer — so what level 2 owes is a class
 definition and a selection rule, argued to one of S6.1's three outcomes (the
 artifact is wrong / a tolerance is missing / the notations are equivalent) from
 `validate.py` and `derive.py` **with gold unopened**, since the soft counter
 measures conformance rather than quality. Candidates and eligibility are in
-[`stages/06.md`](stages/06.md) §3. Level 1's arc is the precedent worth reading
+[`stages/06.md`](stages/06.md) §3. **Record S8.1 answers that**: level 2 is
+`omitted_l4_argument` — a `missing_arg` whose argument hangs on the citing
+predicate under an `ARG_DEPRELS` edge, at a nominal role, where the artifact
+registers the predicate and holds no row at the position. `derive.py`'s step 2
+collects exactly those children as a predicate's arguments and the registry's 20
+`missing_arg` tolerances have already declined the position, so the artifact is
+under-complete: outcome 1. It is **1,126 findings in 770 units across all 100
+cantos**, the largest class the contract decides on its own; the propagated
+subject (404), the clausal roles (74) and rule AM's stranded argument (1) are
+argued *out* rather than left unmentioned. S6.10's alignment check was made
+first and in both directions: the row the level asks for is admissible to the
+session gate by construction (its anchor *is* clause AF), and a session-side bar
+is refused because the only one it could carry would demand 2,089 positions
+where the level selects 1,126. The corpus was left untouched by that record: the
+first `--fix 2` run is the operator's, and reading it out is **S8.2**, the
+stage's open item (the Handoff carries its reading order and baseline).
+
+Level 1's arc is the precedent worth reading
 first: five corpus-wide runs moved it 377 → 12, and what closed it was S6.10
 finding the agent's gate narrower than the contract it transcribed — an
-alignment check level 2 should make before its runs, not after them. The two
+alignment check level 2 made before its runs rather than after them. The two
 items carried in with it (the already-measured transcription-drift check, whose
 third option is now a Stage 8 question, and the standing `skel/repairs.py`
 authority question) are in that document's §2.

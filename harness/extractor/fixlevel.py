@@ -19,6 +19,27 @@ argument with no case child. The direction repaired here is one the registry
 deliberately does not excuse, the evidence sits in the frozen layers (an L4 `case`
 edge plus its L2 lemma), and the under-specified side is the artifact. Outcome 1.
 
+**Level 2 — `omitted_l4_argument`.** The artifact registers the predicate but omits
+an argument Layer 4 attaches to it directly (1,126 findings, `../stages/08.md` S8.1).
+Its authority: `derive.py`'s step 2 collects a predicate's arguments as its own
+Layer-4 children under `ARG_DEPRELS`, so a child under one of those relations *is*
+an argument of that predicate on the frozen tree — and the 20 `missing_arg`
+tolerances of the registry have already been offered this position and declined it.
+The evidence is a single tree edge the model already reads, and the under-complete
+side is the artifact. Outcome 1.
+
+Two restrictions, both from the contract rather than from taste. **The argument must
+be the predicate's own Layer-4 child**: `derive_unit` also reaches arguments stranded
+on a `cop`/`aux` head (rule AM) and propagates a subject down a `conj` chain (step 3),
+but those are inferences of the derivation, not edges — 404 of the corpus's
+`missing_arg` findings are the propagated subject, and no reading of one tree edge
+settles them. **The derived role must be nominal**: a `ccomp`/`xcomp` citation is
+hard-invalid unless the argument is *also* registered as a predicate of the unit, so
+those 74 findings are a compound repair whose second half is `missing_tuple`'s
+unargued question. Every row this level asks for is anchored on a Layer-4 argument
+position, which is clause AF of `validate.py`'s own anchor rule — so the session's
+gate cannot refuse it, which is the alignment S6.10 says to check before running.
+
 **What may cross into a session.** S5.5 kept soft findings out of the agent's
 session because they are `derive_unit`'s own answer, and handing those back would
 void the autonomy premise (`../PLAN.md` §1). This module keeps that line: a notice
@@ -34,6 +55,7 @@ from typing import Callable, Iterable
 
 from dante_corpus.dep import DepRow
 from dante_corpus.morph import Violation
+from dante_corpus.skel.derive import ARG_DEPRELS
 from dante_corpus.skel.models import OBL_RE, SkelRow
 
 # The TSV column names, mirrored from `artifact._TSV_HEADER` (imported there
@@ -62,6 +84,31 @@ def case_children(
     return kids
 
 
+def argument_edge(
+    dep_rows: dict[int, Iterable[DepRow]],
+    predicate: tuple[int, int],
+    position: tuple[int, int],
+) -> DepRow | None:
+    """The Layer-4 edge making `position` an argument-child of `predicate`, if any.
+
+    The evidence `derive.py`'s step 2 reads to collect a predicate's arguments: a
+    child of the predicate under one of `ARG_DEPRELS`. Recomputed here from the
+    frozen layer rather than imported from the derivation, so a notice cites the
+    tree and not the answer. `None` when Layer 4 draws no such edge — including
+    when the derivation reached the position some other way (rule AM's `cop`/`aux`
+    stranding, the `conj` subject propagation), which level 2 does not select.
+    """
+    for rows in dep_rows.values():
+        for row in rows:
+            if (
+                (row.line, row.token) == position
+                and (row.head_line, row.head_token) == predicate
+                and row.deprel in ARG_DEPRELS
+            ):
+                return row
+    return None
+
+
 # --- the classes ------------------------------------------------------------------------
 
 
@@ -76,7 +123,13 @@ class FixClass:
 
     name: str
     # Selects the findings this class owns, out of `validate_unit`'s soft output.
-    matches: Callable[[Violation], bool]
+    # Takes the canto's Layer-4 rows too, because a class may be defined by the
+    # tree and not by the finding's own text (level 2 is: the same `missing_arg`
+    # detail is one class when the argument is the predicate's own argument-child
+    # and another when the derivation reached it by inference). Pass the layer
+    # wherever the definition is applied — `fix_verdict` included, since it must
+    # apply one definition to the before- and after-count.
+    matches: Callable[[Violation, dict[int, Iterable[DepRow]]], bool]
     # Renders the position's notice: the invariant + the frozen-layer evidence,
     # never the derived label.
     notice: Callable[[Violation, dict[int, Iterable[DepRow]]], str]
@@ -93,7 +146,9 @@ class FixClass:
     holds: Callable[[Violation, dict[int, list[SkelRow]]], bool]
 
 
-def _is_oblique_qualification(v: Violation) -> bool:
+def _is_oblique_qualification(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]] | None = None
+) -> bool:
     """`role_mismatch` where the artifact wrote bare `obl` and the derivation qualifies it.
 
     The direction rule L does *not* excuse (see the module docstring). `given_role`
@@ -187,10 +242,112 @@ OBLIQUE_QUALIFICATION = FixClass(
     holds=_oblique_qualification_holds,
 )
 
+
+# Roles a level-2 repair may not be asked for: `''` is the zero-argument marker,
+# `attr` needs no anchor, and a `ccomp`/`xcomp` citation is hard-invalid unless the
+# argument is registered as a predicate of the unit too (`validate.py`'s clausal
+# check) — a compound repair this level does not define.
+_NON_NOMINAL_ROLES = frozenset({"", "attr", "xcomp", "ccomp"})
+
+
+def _is_omitted_l4_argument(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]] | None = None
+) -> bool:
+    """`missing_arg` at a nominal role whose argument is the predicate's own L4 child.
+
+    The module docstring carries the argument; this is where its two restrictions
+    are enforced. Without the tree the class selects nothing — the finding's own
+    text cannot tell an argument-child from a position the derivation inferred, and
+    a class that cannot see its evidence declines rather than guesses.
+    """
+    if (
+        v.kind != "tag"
+        or not v.detail.startswith("missing_arg:")
+        or v.predicate is None
+        or v.arg is None
+        or v.role is None
+        or v.role in _NON_NOMINAL_ROLES
+    ):
+        return False
+    return argument_edge(dep_rows or {}, v.predicate, v.arg) is not None
+
+
+def _omitted_l4_argument_notice(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]]
+) -> str:
+    pred = v.predicate or (v.line, 0)
+    arg = v.arg or (0, 0)
+    edge = argument_edge(dep_rows, pred, arg)
+    word = f" {edge.word!r}" if edge is not None else ""
+    relation = f"`{edge.deprel}`" if edge is not None else "an argument relation"
+    return (
+        f"predicate {pred[0]}.{pred[1]}, argument {arg[0]}.{arg[1]}{word}: Layer 4 "
+        f"hangs this token on that predicate under {relation}, one of the relations "
+        f"that carries an argument of its head, and the analysis on record gives "
+        f"the predicate no argument at that position at all. An argument the tree "
+        f"attaches here belongs in the predicate's frame: cite it, with the role "
+        f"its relation and its own morphology support. If your reading makes it "
+        f"something the predicate does not govern, leave the frame as it stands."
+    )
+
+
+def _omitted_l4_argument_keys(v: Violation) -> frozenset[RowKey]:
+    """The row the finding asks for, and — for a subject — the null slot it fills.
+
+    The repair adds a row, so the governed key is one the artifact does not yet
+    hold; a position-scoped splice takes the answer's row there and nothing else.
+    A derived **subject** governs the predicate's `(0, 0)` key as well, because a
+    pro-drop `subj (0, 0)` on record and an overt subject the tree attaches are two
+    fillings of one slot: without that key a splice would keep both and leave the
+    predicate with two subjects. Every other role leaves `(0, 0)` alone — the null
+    position is for a dropped subject only (`validate.py`'s `NULL_ARG_ROLES`), so
+    it is never the slot an object or an oblique would vacate.
+    """
+    pred = v.predicate or (v.line, 0)
+    arg = v.arg or (0, 0)
+    keys = {(pred[0], pred[1], arg[0], arg[1])}
+    if v.role == "subj":
+        keys.add((pred[0], pred[1], 0, 0))
+    return frozenset(keys)
+
+
+def _omitted_l4_argument_holds(
+    v: Violation, rows_by_line: dict[int, list[SkelRow]]
+) -> bool:
+    """Is there a registered predicate here with no row at the named position?
+
+    Two preconditions, both about the row rather than the finding. The predicate
+    must be **registered**: an argument missing from a tuple the artifact never
+    wrote is `missing_tuple`'s question, and a level that adds the argument alone
+    would be inventing the frame. And the artifact must hold **no row at the named
+    position** for it: `rules.py`'s key rewrites (C, BJ, AI, BV, EI) can report a
+    `missing_arg` at a position whose citation the artifact does carry under a key
+    the classifier merged away, and the notice built from it would ask for a row
+    that is already there (the level-1 shape of this, `../stages/06.md` S6.9/S6.10).
+    """
+    pred = v.predicate or (v.line, 0)
+    arg = v.arg or (0, 0)
+    rows = [r for rs in rows_by_line.values() for r in rs]
+    registered = any((r.line, r.token) == pred for r in rows)
+    cited = any(
+        (r.line, r.token) == pred and (r.arg_line, r.arg_token) == arg for r in rows
+    )
+    return registered and not cited
+
+
+OMITTED_L4_ARGUMENT = FixClass(
+    name="omitted_l4_argument",
+    matches=_is_omitted_l4_argument,
+    notice=_omitted_l4_argument_notice,
+    keys=_omitted_l4_argument_keys,
+    holds=_omitted_l4_argument_holds,
+)
+
 # Cumulative: level N acts on levels 1..N. A class joins the table only once its
 # outcome has been argued from the contract (`../stages/06.md` §2).
 LEVELS: dict[int, tuple[FixClass, ...]] = {
     1: (OBLIQUE_QUALIFICATION,),
+    2: (OMITTED_L4_ARGUMENT,),
 }
 
 MAX_LEVEL = max(LEVELS)
@@ -236,6 +393,16 @@ def toolkit_flags(level: int) -> dict[str, bool]:
     model's own `validate_candidate` rejects the shape the level repairs, exactly
     as S5.5 moved the hard checks into the session. Each flag is a transcription
     of the level's published invariant, never a call into `derive_unit`.
+
+    **Level 2 deliberately adds none**, and that is the S6.10 alignment check made
+    before the runs rather than after four of them. A session-side bar sees the
+    frozen layers and not the registry, so the only bar it could carry is "cite
+    every Layer-4 argument-child of every predicate you register" — measured over
+    the committed corpus that demands **2,089** positions where the level selects
+    **1,126**, the rest being omissions the checker's own tolerances excuse. That
+    is S6.10's second asymmetry — a level's bar and its selection naming different
+    positions — at 46% of the pool instead of 2 units in 10, so level 2's ask stays
+    in the notice, which names exactly the positions the checker selected.
     """
     names = {cls.name for cls in classes_for(level)}
     return {
@@ -247,6 +414,7 @@ def select(
     violations: Iterable[Violation],
     level: int,
     rows_by_line: dict[int, list[SkelRow]] | None = None,
+    dep_rows: dict[int, Iterable[DepRow]] | None = None,
 ) -> list[Violation]:
     """The findings a `--fix level` run acts on, in the order they were reported.
 
@@ -257,13 +425,18 @@ def select(
     (`reconstruct.fix_verdict`) deliberately does not: it compares a before-count
     with an after-count and must apply one definition to both sides, where the two
     sides are different sets of rows.
+
+    `dep_rows` is the class *definition*'s input, not a precondition, so it belongs
+    everywhere the definition is applied — the acceptance test included. A class
+    that reads the tree selects nothing without it (`_is_omitted_l4_argument`), so
+    a caller that forgets it under-selects rather than mis-selects.
     """
     classes = classes_for(level)
     return [
         v
         for v in violations
         if any(
-            cls.matches(v)
+            cls.matches(v, dep_rows or {})
             and (rows_by_line is None or cls.holds(v, rows_by_line))
             for cls in classes
         )
@@ -276,7 +449,9 @@ _DIVERGENCE_KINDS = (
 
 
 def governed_keys(
-    findings: Iterable[Violation], level: int
+    findings: Iterable[Violation],
+    level: int,
+    dep_rows: dict[int, Iterable[DepRow]] | None = None,
 ) -> frozenset[RowKey]:
     """Every artifact row this run's own findings name, across their classes.
 
@@ -285,7 +460,7 @@ def governed_keys(
     """
     keys: set[RowKey] = set()
     for v in findings:
-        cls = class_of(v, level)
+        cls = class_of(v, level, dep_rows)
         if cls is not None:
             keys |= cls.keys(v)
     return frozenset(keys)
@@ -310,9 +485,13 @@ def violation_class(v: Violation) -> str:
     return "other"
 
 
-def class_of(v: Violation, level: int) -> FixClass | None:
+def class_of(
+    v: Violation,
+    level: int,
+    dep_rows: dict[int, Iterable[DepRow]] | None = None,
+) -> FixClass | None:
     for cls in classes_for(level):
-        if cls.matches(v):
+        if cls.matches(v, dep_rows or {}):
             return cls
     return None
 
@@ -350,7 +529,7 @@ def revision_block(
     """
     notices = []
     for v in findings:
-        cls = class_of(v, level)
+        cls = class_of(v, level, dep_rows)
         if cls is None:
             continue
         notices.append(f"- {cls.notice(v, dep_rows)}")

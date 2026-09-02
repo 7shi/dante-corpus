@@ -737,8 +737,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     level = fix_plan.level
                     before = fix_plan.before[span]
                     submitted = outcome.rows
+                    dep_rows = fix_plan.dep_rows
                     accepted, fix_verdict_reason = fix_verdict(
-                        before, outcome.hard, outcome.soft, level
+                        before, outcome.hard, outcome.soft, level, dep_rows
                     )
                     if not accepted:
                         # S6.7: the whole-unit answer was refused, so record
@@ -746,7 +747,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                         # thrown away. Decided already; this only reports.
                         diagnosis = fix_diagnosis(
                             fix_plan.prior[span], submitted, before,
-                            outcome.hard, outcome.soft, level,
+                            outcome.hard, outcome.soft, level, dep_rows,
                         )
                         candidate = salvage_outcome(outcome, fix_plan, span)
                         if candidate is None:
@@ -757,7 +758,8 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                             )
                         else:
                             salvaged, salvage_reason = fix_verdict(
-                                before, candidate.hard, candidate.soft, level
+                                before, candidate.hard, candidate.soft, level,
+                                dep_rows,
                             )
                             diagnosis["salvage"] = salvage_reason
                             if salvaged:
@@ -775,10 +777,10 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     fix_stats["units"] += 1
                     fix_stats[f"verdict:{fix_verdict_reason.split(':')[0]}"] += 1
                     fix_stats["findings_before"] += len(
-                        fixlevel.select(before, level)
+                        fixlevel.select(before, level, dep_rows=dep_rows)
                     )
                     fix_stats["findings_after"] += len(
-                        fixlevel.select(outcome.soft, level)
+                        fixlevel.select(outcome.soft, level, dep_rows=dep_rows)
                     )
                     fix_stats["soft_before"] += len(before)
                     fix_stats["soft_after"] += len(outcome.soft)

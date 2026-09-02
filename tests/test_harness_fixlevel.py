@@ -15,6 +15,7 @@ import json
 
 import pytest
 
+from dante_corpus.dep import DepRow
 from dante_corpus.morph import Violation
 from dante_corpus.skel.io import load_skel
 from dante_corpus.skel.models import OBL_RE, SkelRow
@@ -68,6 +69,29 @@ def _level1_target(canticle="inferno", canto=1):
     pytest.skip(f"no level-1 target in {canticle} {canto}")
 
 
+def _level2_target(canticle="inferno", canto=1):
+    """Find a gold row whose deletion yields exactly one level-2 finding.
+
+    The level-1 helper's trick in the other direction: gold scores 0 soft, so
+    dropping a row whose argument Layer 4 hangs on that very predicate manufactures
+    exactly one `omitted_l4_argument` — the artifact omits an argument the tree
+    attaches. Returns `(unit_group, deleted_row, rows_without_it)`.
+    """
+    layers = rc.CantoLayers.load(canticle, canto)
+    gold = load_skel(canticle, canto)
+    for group in layers.units():
+        rows = {no: list(gold.get(no, [])) for no in group}
+        for row in [r for rs in rows.values() for r in rs]:
+            candidate = {
+                no: [r for r in rs if r is not row] for no, rs in rows.items()
+            }
+            hard, soft = rc._validate_rows(layers, group, candidate)
+            found = fixlevel.select(soft, 2, candidate, layers.dep_rows)
+            if not hard and len(found) == 1:
+                return group, row, candidate
+    pytest.skip(f"no level-2 target in {canticle} {canto}")
+
+
 def _write_tsv(path, rows_by_line, nos):
     path.write_text(
         rc.render_tsv([(no, rows_by_line.get(no, [])) for no in sorted(nos)]),
@@ -117,8 +141,152 @@ def test_level_1_selects_only_the_unqualified_oblique_direction():
     assert fixlevel.select(others, 1) == []
 
 
+def _dep(line, token, word, deprel, head):
+    return DepRow(line=line, token=token, word=word, deprel=deprel,
+                  head_line=head[0], head_token=head[1])
+
+
+def _missing_arg(role, arg, predicate, line=3):
+    return _violation(f"missing_arg: {predicate[0]}.{predicate[1]} {role} {arg}",
+                      line=line, role=role, arg=arg, predicate=predicate)
+
+
+def test_level_2_selects_only_the_predicates_own_l4_argument_child():
+    """`derive.py` step 2 collects a predicate's arguments as its `ARG_DEPRELS`
+    children, and that edge is the whole of level 2's evidence. What the derivation
+    reaches by inference instead — rule AM's `cop`/`aux` stranding, the `conj`
+    subject propagation (404 of the corpus's `missing_arg` findings) — is not one
+    edge and is not selected."""
+    tree = {3: [
+        _dep(3, 7, "riva", "obl", (3, 5)),      # the predicate's own argument-child
+        _dep(3, 9, "onda", "obl", (3, 8)),      # an argument-child of *another* head
+        _dep(3, 11, "che", "det", (3, 5)),      # the predicate's child, not an argument
+    ]}
+    anchored = _missing_arg("obl:in", (3, 7), (3, 5))
+    assert fixlevel.select([anchored], 2, dep_rows=tree) == [anchored]
+
+    others = [
+        _missing_arg("subj", (3, 9), (3, 5)),   # derived elsewhere in the tree
+        _missing_arg("obl", (3, 11), (3, 5)),   # a non-argument deprel
+        _missing_arg("xcomp", (3, 7), (3, 5)),  # clausal: needs a registration too
+        _missing_arg("ccomp", (3, 7), (3, 5)),
+        _violation("extra_arg: 3.5 obl (3, 7)", role="obl", arg=(3, 7),
+                   predicate=(3, 5)),
+    ]
+    assert fixlevel.select(others, 2, dep_rows=tree) == []
+    # level 1 does not reach the class, and the class does not select without the
+    # tree it is defined by
+    assert fixlevel.select([anchored], 1, dep_rows=tree) == []
+    assert fixlevel.select([anchored], 2) == []
+
+
+def test_level_2_declines_an_unregistered_predicate_and_a_row_already_there():
+    """The precondition, `holds`: level 2 adds a row to a frame the artifact wrote.
+
+    A predicate the artifact never registered is `missing_tuple`'s question, not
+    this level's; and `rules.py`'s key rewrites can report the omission at a
+    position the artifact does cite, where the notice would ask for a row that
+    already exists (level 1's own version of this, S6.9/S6.10)."""
+    tree = {3: [_dep(3, 7, "riva", "obl", (3, 5))]}
+    v = _missing_arg("obl:in", (3, 7), (3, 5))
+
+    registered = {3: [SkelRow(3, 5, "va", "subj", 3, 1)]}
+    assert fixlevel.select([v], 2, registered, tree) == [v]
+
+    unregistered = {3: [SkelRow(3, 8, "sta", "subj", 3, 1)]}
+    assert fixlevel.select([v], 2, unregistered, tree) == []
+
+    already_cited = {3: [SkelRow(3, 5, "va", "obl", 3, 7)]}
+    assert fixlevel.select([v], 2, already_cited, tree) == []
+
+
+def test_level_2_governs_the_row_it_asks_for_and_a_subjects_null_slot():
+    """A splice takes the answer at the governed keys only, so an added row needs
+    its key named — and an overt subject needs the pro-drop `(0, 0)` row it
+    replaces named too, or the splice leaves the predicate with two subjects."""
+    tree = {3: [
+        _dep(3, 7, "riva", "obl", (3, 5)),
+        _dep(3, 2, "Virgilio", "nsubj", (3, 5)),
+    ]}
+    oblique = _missing_arg("obl:in", (3, 7), (3, 5))
+    assert fixlevel.governed_keys([oblique], 2, tree) == frozenset({(3, 5, 3, 7)})
+
+    subject = _missing_arg("subj", (3, 2), (3, 5))
+    assert fixlevel.governed_keys([subject], 2, tree) == frozenset(
+        {(3, 5, 3, 2), (3, 5, 0, 0)}
+    )
+
+    prior = {3: [SkelRow(3, 5, "va", "subj", 0, 0)]}
+    submitted = {3: [SkelRow(3, 5, "va", "subj", 3, 2),
+                     SkelRow(3, 5, "va", "obj", 3, 9)]}
+    salvaged = rc.salvage_rows(
+        prior, submitted, fixlevel.governed_keys([subject], 2, tree)
+    )
+    # the pro-drop row is gone, the overt subject is in, and the off-brief object
+    # never crossed the splice
+    assert [(r.role, r.arg_line, r.arg_token) for r in salvaged[3]] == [
+        ("subj", 3, 2)
+    ]
+
+
+def test_level_2_notice_names_the_edge_and_never_the_derived_role():
+    """S5.5's line, at level 2: the invariant plus the frozen-layer evidence (the
+    Layer-4 edge the model already reads), never `derive_unit`'s label."""
+    tree = {3: [_dep(3, 7, "riva", "obl", (3, 5))]}
+    v = _missing_arg("obl:in", (3, 7), (3, 5))
+    notice = fixlevel.OMITTED_L4_ARGUMENT.notice(v, tree)
+    assert "3.7" in notice and "riva" in notice and "`obl`" in notice
+    assert "obl:in" not in notice
+    block = fixlevel.revision_block(
+        {3: [SkelRow(3, 5, "va", "subj", 3, 1)]}, [v], tree, 2
+    )
+    assert "obl:in" not in block and "3.7" in block
+
+
+def test_toolkit_flags_add_no_session_bar_at_level_2():
+    """S6.10's lesson applied before the runs: a level's bar and its selection must
+    name the same positions. A session-side bar sees no registry, so the only one it
+    could carry demands 2,089 positions where the level selects 1,126 — so level 2
+    carries none, and its ask lives in the notice (`fixlevel.toolkit_flags`)."""
+    assert fixlevel.toolkit_flags(2) == fixlevel.toolkit_flags(1)
+
+
+def test_every_row_level_2_asks_for_is_admissible_to_the_session_gate():
+    """The alignment check S6.10 says to make first, and here it is structural.
+
+    Level 2 names only arguments that sit under a Layer-4 `ARG_DEPRELS` edge, which
+    is clause AF of `validate.py`'s anchor rule and of the gate's transcription of
+    it — so the session can always write the row the level asks for. S6.9's deadlock
+    (the level requiring a row its own gate refused) cannot arise here, and this
+    test is what says so if either side moves.
+    """
+    from harness.runner import tools
+
+    root = recon_check.Path(recon_check.__file__).parent
+    checked = 0
+    for canto in (1, 2):
+        result = recon_check.check_canto("inferno", canto, root)
+        findings = fixlevel.select(
+            [v for v in result["violations"] if v.kind == "tag"],
+            2, result["rows"], result["dep_rows"],
+        )
+        data = tools._load_canto("inferno", canto)
+        predicates = frozenset(
+            (r.line, r.token)
+            for rows in result["rows"].values() for r in rows if r.token > 0
+        )
+        for v in findings:
+            if fixlevel.OMITTED_L4_ARGUMENT.matches(v, result["dep_rows"]):
+                assert tools.anchor_admits(data, predicates, v.role, v.arg)
+                checked += 1
+    assert checked > 0
+
+
 def test_levels_are_cumulative_and_bounded():
     assert fixlevel.classes_for(1) == (fixlevel.OBLIQUE_QUALIFICATION,)
+    assert fixlevel.classes_for(2) == (
+        fixlevel.OBLIQUE_QUALIFICATION, fixlevel.OMITTED_L4_ARGUMENT,
+    )
     for level in range(1, fixlevel.MAX_LEVEL + 1):
         assert set(fixlevel.classes_for(level)) >= set(
             fixlevel.classes_for(level - 1) if level > 1 else ()
@@ -653,6 +821,93 @@ def test_fix_salvages_the_repair_when_the_whole_answer_trades_a_class(
     assert complete["fix"]["rows_added"] == complete["fix"]["rows_removed"] == 0
 
 
+def test_fix_level_2_reopens_the_unit_and_takes_the_argument_back(
+    tmp_path, monkeypatch
+):
+    """Level 2 end to end: the omitted argument is asked for, written, and accepted.
+
+    The discriminating test for the tree threading — `fix_verdict` applies the class
+    definition to a before- and an after-count, and a level-2 class that cannot see
+    Layer 4 counts 0 on both sides, refusing every answer as `no_improvement`. So a
+    reverted artifact here means the definition stopped reaching the acceptance test,
+    not that the model was wrong.
+    """
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    _write_log(tmp_path / "bench-x.log", [_case_record()])
+    layers = rc.CantoLayers.load("inferno", 1)
+    gold = load_skel("inferno", 1)
+    group, dropped, without = _level2_target()
+    merged = {no: list(gold.get(no, [])) for no in layers.nos}
+    merged.update(without)
+    tsv = tmp_path / "01.tsv"
+    _write_tsv(tsv, merged, layers.nos)
+
+    whole = {no: list(gold.get(no, [])) for no in layers.nos}
+    calls = []
+
+    def fallback(**kw):
+        calls.append((kw["line_start"], kw["line_end"]))
+        return _StubResult(_rows_payload(whole, kw["line_start"], kw["line_end"]))
+
+    assert rc.main(_fix_argv(tmp_path, tsv, level=2), fallback=fallback) == 0
+    assert calls == [(group[0], group[-1])]  # only the unit carrying the finding
+    assert tsv.read_text(encoding="utf-8") == rc.render_tsv(
+        [(no, whole.get(no, [])) for no in sorted(layers.nos)]
+    )
+
+    records = [
+        json.loads(line)
+        for line in (tmp_path / "recon.log").read_text(encoding="utf-8").splitlines()
+    ]
+    unit = next(
+        r for r in records
+        if r.get("record") == "unit" and r.get("line_start") == group[0]
+    )
+    assert unit["fix"] == {
+        "level": 2, "verdict": "accepted",
+        "delta": {"rows_before": unit["fix"]["delta"]["rows_before"],
+                  "rows_after": unit["fix"]["delta"]["rows_before"] + 1,
+                  "rows_added": 1, "rows_removed": 0, "rows_relabelled": 0},
+    }
+    complete = next(r for r in records if r.get("record") == "canto_complete")
+    assert complete["fix"]["findings_before"] == 1
+    assert complete["fix"]["findings_after"] == 0
+    assert complete["fix"]["rows_added"] == 1
+
+
+def test_fix_level_2_keeps_the_record_when_the_argument_is_not_written(
+    tmp_path, monkeypatch
+):
+    """The other half of the guarantee: a fix run cannot leave the artifact worse
+    than it found it, at level 2 as at level 1."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    _write_log(tmp_path / "bench-x.log", [_case_record()])
+    layers = rc.CantoLayers.load("inferno", 1)
+    gold = load_skel("inferno", 1)
+    group, dropped, without = _level2_target()
+    merged = {no: list(gold.get(no, [])) for no in layers.nos}
+    merged.update(without)
+    tsv = tmp_path / "01.tsv"
+    _write_tsv(tsv, merged, layers.nos)
+    before = tsv.read_text(encoding="utf-8")
+
+    def fallback(**kw):
+        return _StubResult(_rows_payload(merged, kw["line_start"], kw["line_end"]))
+
+    assert rc.main(_fix_argv(tmp_path, tsv, level=2), fallback=fallback) == 0
+    assert tsv.read_text(encoding="utf-8") == before
+
+    unit = next(
+        json.loads(line)
+        for line in (tmp_path / "recon.log").read_text(encoding="utf-8").splitlines()
+        if json.loads(line).get("record") == "unit"
+        and json.loads(line).get("line_start") == group[0]
+    )
+    assert unit["fix"]["verdict"] == "no_improvement"
+    # the row the level named never came back, and the diagnosis says so
+    assert unit["fix"]["refused"]["governed_rows"]["missing"] >= 1
+
+
 def test_fix_summary_reports_the_mechanism_of_an_accepted_repair(
     tmp_path, monkeypatch
 ):
@@ -748,17 +1003,23 @@ def test_fix_level_readout_and_plan_agree_on_the_pool():
     """
     root = recon_check.Path(recon_check.__file__).parent
     results = recon_check.run(root, canticle="paradiso", canto=6, stream=None)
-    counted = sum(
-        len(fixlevel.select(
-            [v for v in r["violations"] if v.kind == "tag"], 1, r.get("rows")
-        ))
-        for r in results
-    )
     rows = load_skel("paradiso", 6, base_dir=root)
-    planned = sum(
-        len(fixlevel.select(
-            [v for v in r["violations"] if v.kind == "tag"], 1, rows
-        ))
-        for r in results
-    )
-    assert counted == planned
+    layers = rc.CantoLayers.load("paradiso", 6)
+    for level in range(1, fixlevel.MAX_LEVEL + 1):
+        counted = sum(
+            len(fixlevel.select(
+                [v for v in r["violations"] if v.kind == "tag"],
+                level, r.get("rows"), r.get("dep_rows"),
+            ))
+            for r in results
+        )
+        # the plan's own inputs: the artifact as `plan_fix` loads it, and the
+        # layers the run validates against — the readout must not need less
+        planned = sum(
+            len(fixlevel.select(
+                [v for v in r["violations"] if v.kind == "tag"],
+                level, rows, layers.dep_rows,
+            ))
+            for r in results
+        )
+        assert counted == planned
