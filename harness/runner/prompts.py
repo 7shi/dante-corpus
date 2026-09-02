@@ -1,8 +1,13 @@
 """Prompt-side material for Stage 1 autonomous inference (`harness/runner/PLAN.md` §4).
 
+The grammatical knowledge itself is not written here: it lives as plain files in
+`skills/grammar-agent/` and loads through `harness.skills.Skill` (Stage 7). This
+module is the assembly layer — which sections a workflow gets, in what order,
+and how the opening user message is worded.
+
 `system_prompt(specs)` assembles the per-unit system prompt from three sections:
 
-1. the role framing and the 5-step grammatical reasoning protocol (this module),
+1. the role framing and the 5-step grammatical reasoning protocol (the skill),
 2. the tool-call wire contract (`toolcall.prompts.xml_contract_section`),
 3. the closed tool surface (`toolcall.prompts.tool_specs_section(TOOL_SPECS)`).
 
@@ -17,107 +22,28 @@ demo leaked into every final answer — see `harness/TOOLCALL.md` T4).
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Sequence
 
+from harness.skills import Skill
 from harness.toolcall import tool_specs_section, xml_contract_section
 
 __all__ = [
+    "GRAMMAR_SKILL",
     "ROLE_INTRO",
     "REASONING_PROTOCOL",
     "few_shot_messages",
+    "skill_digest",
     "system_prompt",
     "unit_task",
 ]
 
-ROLE_INTRO = """\
-You are a grammar analysis agent reconstructing Layer 5 predicate-argument \
-skeletons for the Divina Commedia. You receive multi-layer grammatical context \
-(Layer 1 tokens and verse text, quotes hierarchy, Layer 2 morphology, the pronoun \
-case annex, Layer 3 noun phrases, Layer 4 Universal Dependencies trees) through a \
-closed toolset, and you produce skeleton rows: one row per (predicate, argument) \
-pair.
+GRAMMAR_SKILL = Skill.load(Path(__file__).resolve().parent / "skills" / "grammar-agent")
 
-Skeleton row conventions:
-
-- Each row names a predicate by (line, token) plus optionally its word, and one \
-argument by role plus (arg_line, arg_token); word / arg_word are optional \
-verification anchors — coordinates alone identify the token, so omit them to \
-keep calls compact.
-- Roles come from the frozen vocabulary: subj, obj, iobj, attr, xcomp, ccomp, \
-obl (an adverbial oblique), obl:<prep> (e.g. obl:di), or "" (a zero-argument \
-predicate's single row).
-- A pro-drop argument (unexpressed subject, omitted clitic complement) cites \
-(0, 0).
-- Nominal arguments (subj, obj, iobj, obl:<prep>) must cite the head token of \
-their Layer 3 noun phrase; pronouns and clitics cite their own token and take \
-their case from the annex. Clausal roles anchor elsewhere by nature: xcomp / \
-ccomp / attr cite the complement's own predicate-head token, and bare obl cites \
-its adverb — no NP-head requirement applies there."""
-
-STEPS_1_TO_4 = """\
-## 5-step reasoning protocol
-
-Work through these steps in order for every parse unit. Think step by step in \
-plain prose between tool calls; never state a fact about the text that a tool did \
-not just show you.
-
-### Step 1 - Discourse & quote boundaries
-
-Call `read_unit` for the target unit. Read the quotes hierarchy first: direct \
-speech spans and speaker boundaries decide whether a name is a vocative inside a \
-quote or a subject of narration, and embedded quotes shift attribution. Note the \
-unit bounds; every citation you make later must fall inside them.
-
-### Step 2 - Predicates, agreement & voice
-
-From Layer 2 morphology, enumerate every verbal token in the unit (finite verbs, \
-participles, infinitives, gerunds). For each finite verb check person/number \
-agreement against candidate nominative arguments: agreement with nothing visible \
-means a pro-drop subject `(0, 0)`. Identify passive constructions and reflexive \
-`si` before assigning roles.
-
-### Step 3 - Case & core argument discrimination
-
-Resolve pronouns and clitics through the pronoun case annex: case (nom / acc / \
-dat / ...) decides `subj` vs `obj` vs `iobj`, not word order. Project Layer 4 UD \
-relations onto roles (`nsubj` to `subj`, `obj` to `obj`, `iobj` to `iobj`, \
-preposition-governed obliques to `obl:<prep>`). Use `search_corpus` when you need \
-analogous constructions from other cantos to disambiguate. If Layer 2 or Layer 4 \
-is defective beyond repair, say so explicitly and pass an `upstream_feedback` \
-record with your validation call instead of forcing a reading.
-
-### Step 4 - NP heads, clausal complements & control
-
-Cite nominal arguments at their exact Layer 3 phrase-head tokens. Attach \
-infinitival complements as `xcomp` when the complement subject is controlled by \
-the matrix predicate, as `ccomp` otherwise; trace control chains across the whole \
-unit so no predicate loses its arguments."""
-
-
-STEP5_UNIT = """\
-### Step 5 - Intrinsic validation & self-correction
-
-Submit all rows of the unit in one `validate_candidate` call. Read ok="false" \
-payloads and error diagnostics literally: repair exactly what they name and call \
-again. Iterate until the result reports `"valid": true`, then stop working and \
-give your final answer: a short summary of the predicates, their roles, and any \
-upstream feedback you filed. Never answer in prose alone without having validated \
-a candidate."""
-
-STEP5_PREDICATE = """\
-### Step 5 - Per-predicate validation & self-correction
-
-Work through the predicates you enumerated in Step 2, one at a time, in text \
-order. For each predicate: state its frame briefly (a sentence or two — which \
-arguments, which case), then call `validate_candidate` with only that \
-predicate's rows. Never batch several predicates into one call. Read ok="false" \
-payloads and error diagnostics literally and repair exactly what they name; if a \
-frame cannot be made well-formed at all, say so and file an `upstream_feedback` \
-record with that predicate's validation call instead of dropping rows silently. \
-After the last predicate, stop working and give your final answer: a short list \
-of the validated predicates (predicate token -> roles) plus any upstream \
-feedback you filed. Never answer in prose alone without having validated every \
-predicate."""
+ROLE_INTRO = GRAMMAR_SKILL.body
+STEPS_1_TO_4 = GRAMMAR_SKILL.resource("protocol.md")
+STEP5_UNIT = GRAMMAR_SKILL.resource("step5-unit.md")
+STEP5_PREDICATE = GRAMMAR_SKILL.resource("step5-predicate.md")
 
 REASONING_PROTOCOL = STEPS_1_TO_4 + "\n\n" + STEP5_UNIT
 PREDICATE_PROTOCOL = STEPS_1_TO_4 + "\n\n" + STEP5_PREDICATE
@@ -125,6 +51,16 @@ PREDICATE_PROTOCOL = STEPS_1_TO_4 + "\n\n" + STEP5_PREDICATE
 WORKFLOWS = ("unit", "predicate")
 
 _PROTOCOLS = {"unit": REASONING_PROTOCOL, "predicate": PREDICATE_PROTOCOL}
+
+
+def skill_digest() -> str:
+    """Fingerprint of the grammar skill's wording, recorded by live runs.
+
+    Standing Invariant §6 fixes a run's session semantics for its whole duration;
+    logging this digest is what lets that be checked after the fact, and what
+    tells two runs' records apart when the wording did change between them.
+    """
+    return GRAMMAR_SKILL.digest()
 
 
 def system_prompt(specs: Sequence[dict], workflow: str = "unit") -> str:

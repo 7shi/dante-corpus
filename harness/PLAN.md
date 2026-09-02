@@ -11,40 +11,38 @@ Ledger**, or §2's per-stage records.
 
 **Nothing is running.** Level 1 is closed at **0 findings** and the corpus
 sits at **0 hard / 4,627 soft**. No fix run is in flight and none is
-scheduled. The documentation consolidation this Handoff called for is done
-(2026-09-02, two passes): this file went 1028 → 520 lines, with the
-S6.3–S6.11 record detail living in [`STAGE6.md`](STAGE6.md)'s ledger alone —
-only short pointers stay here, as was already the model for S6.3/S6.4 — and
-`STAGE6.md` itself went 1293 → 1230 → **1116** lines, its repeated
-per-run explanation (the llm7shi infra note, S6.2's mechanism bullets,
-S6.1's evidence framing, and restated points across S6.3–S6.11) cut down to
-clauses-plus-pointers while every numbers table, verdict-mix table,
-row-level count, cost line, gold-agreement figure and falsification stayed
-intact. What each record established, its numbers, and its falsifications
-are all in [`STAGE6.md`](STAGE6.md) §"Milestone Ledger" and in **Current
-Status** below; nothing is duplicated in this section. **Next session starts
-Stage 7** — nothing further to tidy first.
+scheduled. Stage 6 closed on S6.11 and **Stage 7 is open**
+([`STAGE7.md`](STAGE7.md), 2026-09-02) — the operator re-scoped it to
+**refactoring** rather than level 2, so soft level 2 keeps its candidates and
+eligibility list in [`STAGE6.md`](STAGE6.md) §3 and waits for a stage of its
+own; none of that analysis is invalidated by the delay.
 
-**The one live next step: open Stage 7 for level 2** (operator's decision,
-2026-09-02 — level 2 gets **its own stage**, `STAGE7.md`, rather than
-continuing Stage 6; opening it is what closes Stage 6 on S6.11). It is still
-a *design* question before it is a run: any candidate class must be argued to
-one of §2's three outcomes from `validate.py` / `derive.py` with gold
-unopened, before it earns a level. §3 of [`STAGE6.md`](STAGE6.md) carries the
-candidates and the eligibility list, still current.
+**Where Stage 7 stands: S7.1 is done, S7.2 is next.** S7.1 moved the agent's
+grammatical knowledge out of `runner/prompts.py`'s string constants into
+`runner/skills/grammar-agent/` behind a new `harness/skills.py` loader,
+byte-exact across all eight assembled outputs, and made every
+`canto_complete` record carry a `skill_digest` so a run's wording is
+auditable after the fact (Standing Invariant §6). Suite **987 passed**. The
+stage's standing rule is neutrality: every step must be argued
+behaviour-neutral, and where the output is prompt text, proven byte-exact.
+S7.2 (generalize the transcription-drift check) and S7.3 (split
+`extractor/reconstruct.py`, 1,928 lines) are the remaining scope — detail,
+including the Warp self-improving-agent analysis the stage opened from and
+why its improver loop is **not** in scope, lives in
+[`STAGE7.md`](STAGE7.md).
 
-**Before tuning level 2's bar or its selection, apply level 1's one
-transferable lesson**: check that a level's bar and its selection name the
-same positions, and that both agree with `validate.py`. Level 1 ran five
-times (377 → 83 → 37 → 25 → 14 → 12 → 0) under four different mechanism
-changes — a salvage splice, two session-loop levers, refusal logging — and
-none of them moved the count; what closed it was S6.10 finding that
-`harness/`'s own transcription of `validate.py`'s anchor rule (in
+**S7.2 is also the check level 2 needs before it spends a live run.** Level 1
+ran five times (377 → 83 → 37 → 25 → 14 → 12 → 0) under four different
+mechanism changes — a salvage splice, two session-loop levers, refusal
+logging — and none of them moved the count; what closed it was S6.10 finding
+that `harness/`'s own transcription of `validate.py`'s anchor rule (in
 `runner/tools.py`) was narrower than the contract it was supposed to
 transcribe, so the session's gate was refusing rows the corpus itself
 permits. `test_anchor_gate_is_never_stricter_than_validate`
-(`tests/test_harness_*.py`, added S6.10) is the shape of the check to write
-for whatever level 2's bar turns out to be, before spending a live run on it.
+(`tests/test_harness_*.py`, added S6.10) covers that one rule;
+generalizing it to every constraint the gate transcribes is S7.2. So: check
+that a level's bar and its selection name the same positions, and that both
+agree with `validate.py`, before running it.
 
 **The standing authority question is still open and still the operator's**:
 is `dante_corpus/skel/repairs.py` an admissible authority under discipline 3?
@@ -63,7 +61,22 @@ Stages 1–5 are COMPLETE/CLOSED; their status, dates, and record pointers
 live in §2's per-stage subsections below, not repeated here. This section
 holds only what's still open.
 
-- [ ] **Stage 6 — Soft Divergence Reduction** (OPENED 2026-08-30 by
+- [ ] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator, on Stage 6's
+      close; scope re-decided the same day from "level 2" to refactoring).
+      Three weights six stages of live-run work left behind: the agent's
+      knowledge hidden in Python string literals (**S7.1, done** — now
+      `runner/skills/grammar-agent/` behind `harness/skills.py`, byte-exact,
+      with `skill_digest` in every `canto_complete`), the `harness/` ↔
+      `dante_corpus/` transcription drift that S6.10 exposed as a class rather
+      than a point (**S7.2, next**), and `extractor/reconstruct.py`'s 1,928
+      lines (**S7.3**). Standing rule: behaviour-neutral, and byte-exact
+      wherever the output is prompt text. The stage opened from a review of
+      Warp's self-improving-agent pattern; what it takes from that pattern
+      (knowledge as plain files, a reusable contract-derived observer) and what
+      it refuses (the improver loop itself, blocked by Standing Invariant §1 —
+      gold cannot be the tuning signal) is argued in
+      [`STAGE7.md`](STAGE7.md) §2.
+- [x] **Stage 6 — Soft Divergence Reduction** (OPENED 2026-08-30 by
       operator, on Stage 5's close). Everything left in the recon corpus is
       soft: **0 hard / 4,627 soft** (5,014 at the stage's open), mostly
       deterministic work over the committed TSVs. Record S6.1 audited the
@@ -80,17 +93,20 @@ holds only what's still open.
       transcribed. Full per-run numbers, mechanisms and falsifications
       (S6.1–S6.11) live only in [`STAGE6.md`](STAGE6.md)'s Milestone Ledger —
       not repeated here. Documentation was consolidated 2026-09-02 (this file
-      and `STAGE6.md` both trimmed back to working size). The one live item is
-      **level 2 as its own Stage 7** (operator's decision, 2026-09-02; opening
-      `STAGE7.md` is what closes Stage 6 on S6.11) — a design question, not a
-      run — and the standing authority question (`skel/repairs.py`). Scope,
-      the standing method, class eligibility and the ledger in
+      and `STAGE6.md` both trimmed back to working size). **CLOSED 2026-09-02
+      on S6.11**, by opening [`STAGE7.md`](STAGE7.md). Two items carry forward
+      rather than close: **soft level 2**, still a design question before it is
+      a run (any candidate class must be argued to one of §2's three outcomes
+      from `validate.py` / `derive.py` with gold unopened; candidates and
+      eligibility in [`STAGE6.md`](STAGE6.md) §3, still current), and the
+      standing authority question (`skel/repairs.py`, below). Scope, the
+      standing method, class eligibility and the ledger in
       [`STAGE6.md`](STAGE6.md).
-- Test suite: **975 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
+- Test suite: **987 passed** (876 + 11 from S5.1 + 8 from S5.2 + 21 from
   S5.3 + 9 from S5.5 + 9 from S5.7 + 4 from S5.8 + 17 from S6.2 + 2 around
   the llm7shi 0.15.0 status-bar rework + 3 from S6.4 + 9 from S6.6 + 2 from
-  S6.8 + 4 from S6.10; S6.3, S6.5, S6.7, S6.9 and S6.11 added none, being corpus
-  runs).
+  S6.8 + 4 from S6.10 + 12 from S7.1; S6.3, S6.5, S6.7, S6.9 and S6.11 added
+  none, being corpus runs).
   Composition and history (TokenBucket removal,
   mid-canto kill resilience, the readout tool's own tests) in
   [`STAGE4.md`](STAGE4.md)'s pre-launch note and record S4.3.
@@ -231,7 +247,7 @@ graph TD
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
 
-In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), and Stage 6 as the soft divergence reduction that remains.
+In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that remains.
 
 ### Stage 1: Autonomous Local Inference & Capability Benchmark (`harness/runner/`)
 - **Approach**: For each parse unit, the agent receives the multi-layer context (L1–L4, quotes, case) and autonomously solves predicate-argument frames on the fly using Chain-of-Thought (CoT) and a dedicated Tool Calling API (`validate_candidate`, etc.).
@@ -343,7 +359,7 @@ decisions, the conversion contract, and the stage ledger (S5.1–S5.8) live in
 [`STAGE5.md`](STAGE5.md) — the first stage to write directly into its own
 document as work happens, rather than accruing here first.
 
-### Stage 6: Soft Divergence Reduction (OPENED 2026-08-30 by operator, on Stage 5's close)
+### Stage 6: Soft Divergence Reduction (opened 2026-08-30, CLOSED 2026-09-02)
 
 What Stage 5 leaves: **0 hard, 5,014 soft** across the 100 committed recon
 TSVs. The stage's default mode is deterministic work over the artifacts, and
@@ -393,6 +409,39 @@ level runs next:**
   schema/derivation authority, `make agree` as readout-only, read positions
   before aggregates) is unchanged and lives in [`STAGE5.md`](STAGE5.md) §5 and
   §4 below — not repeated here.
+
+### Stage 7: Refactoring (OPENED 2026-09-02 by operator, on Stage 6's close)
+
+Six stages of live-run work left the harness working but top-heavy, and the
+operator re-scoped Stage 7 from soft level 2 to paying that down. Three weights,
+in the order agreed: the agent's domain knowledge hidden inside Python string
+literals, the `harness/` ↔ `dante_corpus/` transcription drift S6.10 exposed as
+a *class* rather than a point, and `extractor/reconstruct.py`'s 1,928 lines.
+The standing rule for the whole stage is neutrality — **every step must be
+argued behaviour-neutral, and where the output is prompt text, proven
+byte-exact**, because Standing Invariant §6 makes session semantics a
+run-scoped constant and a refactor that quietly reworded a prompt would break
+it while looking like tidying.
+
+**Record S7.1 (done)** moved `runner/prompts.py`'s four knowledge constants into
+`runner/skills/grammar-agent/` (`SKILL.md` + three resource files) behind a new
+task-agnostic loader, `harness/skills.py`; `prompts.py` is now assembly only.
+Prompt text is stored exactly as the model receives it, so a reviewer reads what
+the model reads and a wording change is a file diff rather than a code change.
+All eight assembled outputs were compared before and after and are identical
+byte for byte. Every `canto_complete` now carries `skill_digest`, which is what
+lets §6 be checked after a run instead of merely assumed. No dependency was
+added.
+
+The stage opened from a review of Warp's self-improving-agent pattern (inner
+skill / human feedback / scheduled improver skill). What it takes: knowledge as
+plain files, and a reusable observer reading contract-derived signal. What it
+refuses, at least for now: the improver loop itself — **gold cannot be its
+tuning signal** without voiding every gold-referenced number the project reports
+(Standing Invariant §1), and a frontier model rewriting the local model's prompt
+sits uncomfortably close to the Phase 5–8 rails §1 says `harness/` exists to
+replace. The argument, and the remaining scope (S7.2 transcription-drift check,
+S7.3 the `reconstruct.py` split), live in [`STAGE7.md`](STAGE7.md).
 
 ### Beyond Layer 5 (design notes)
 

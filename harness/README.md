@@ -66,12 +66,19 @@ dante-corpus/
 │   │   ├── probe.py               # Live-probe CLI, parse-success-rate gate (operator-run)
 │   │   └── parity.py              # Migration-parity CLI, XML vs native (operator-run)
 │   │
+│   ├── skills.py                  # [Stage 7] File-based skill loader (SKILL.md + resources)
+│   │
 │   ├── runner/                    # [Stage 1] Autonomous inference agent & benchmark
 │   │   ├── README.md              # Stage 1 overview
 │   │   ├── PLAN.md                # Stage 1 specification (toolset, agent, benchmark)
 │   │   ├── tools.py               # Dedicated Grammar Tool API (Layer 5 masked structurally)
 │   │   ├── agent.py               # Per-unit session runner over run_tool_loop
-│   │   ├── prompts.py             # 5-step CoT grammatical reasoning protocol
+│   │   ├── prompts.py             # Prompt assembly (the grammatical wording lives in skills/)
+│   │   ├── skills/grammar-agent/  # [Stage 7] The agent's domain knowledge as reviewable files
+│   │   │   ├── SKILL.md           # Role framing + skeleton row conventions
+│   │   │   ├── protocol.md        # Steps 1-4 of the reasoning protocol
+│   │   │   ├── step5-unit.md      # Step 5, "unit" workflow (one call per unit)
+│   │   │   └── step5-predicate.md # Step 5, "predicate" workflow (one call per predicate)
 │   │   ├── benchmark.py           # Gold comparison & metric suite
 │   │   └── statusline.py          # Rich live status bar for long operator-run sessions
 │   │

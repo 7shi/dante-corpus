@@ -116,6 +116,7 @@ from harness.extractor.hybrid_engine import (
     load_rules_json,
     mine_artifacts,
 )
+from harness.runner.prompts import skill_digest
 from harness.runner.statusline import HarnessStatusLine
 from harness.toolcall import DEFAULT_RESULT_CHARS
 from harness.toolcall.loop import progress_separator
@@ -1881,6 +1882,11 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 "canto": canto,
                 "units": len(recon.outcomes),
                 "passed": recon.passed,
+                # Which wording the canto ran under (Standing Invariant §6). The
+                # skill's files are the session semantics; recording their digest
+                # canto by canto is how a later reader tells two runs apart, and
+                # how a mid-run change would show up at all.
+                "skill_digest": skill_digest(),
             }
             if retries is not None:
                 complete["api_retries"] = retries[0]
