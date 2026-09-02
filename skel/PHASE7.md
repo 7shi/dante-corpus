@@ -7,7 +7,7 @@ This document provides a comprehensive post-mortem and reference report on Layer
 - **Related Phase records**:
   - Phase 5: 5,919 → 2,084 soft violations — [`PHASE5.md`](PHASE5.md).
   - Phase 6: 2,084 → 160 soft violations (Rounds 1–7, nineteen read batches) — [`PHASE6.md`](PHASE6.md).
-  - Future Roadmap & Refactoring: [`PLAN.md`](PLAN.md), [`PORTABILITY.md`](PORTABILITY.md).
+  - Future Roadmap & Refactoring: [`../PLAN.md`](../PLAN.md), [`PORTABILITY.md`](PORTABILITY.md).
 
 ---
 

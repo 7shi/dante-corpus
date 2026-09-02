@@ -8,7 +8,7 @@ This document provides a comprehensive post-mortem and reference report on Layer
   - Phase 5: 5,919 → 2,084 soft violations — [`PHASE5.md`](PHASE5.md).
   - Phase 6: 2,084 → 160 soft violations (Rounds 1–7, nineteen read batches) — [`PHASE6.md`](PHASE6.md).
   - Phase 7: 160 → 0 soft violations (100% clean corpus-wide) — [`PHASE7.md`](PHASE7.md).
-  - Future Roadmap & Local LLM Harness: [`PLAN.md`](PLAN.md), [`PORTABILITY.md`](PORTABILITY.md).
+  - Future Roadmap & Local LLM Harness: [`../PLAN.md`](../PLAN.md), [`PORTABILITY.md`](PORTABILITY.md).
   - Grammar Handbook: [`RULES.md`](RULES.md) (Japanese edition: [`RULES-ja.md`](RULES-ja.md)).
 
 ---

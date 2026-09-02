@@ -2,7 +2,7 @@
 
 ## purgatorio 20:93 — infinitive complement attached to consecutive clause rather than perception verb (2026-08-18)
 
-Found during the final Phase 7 census closing Layer 5 soft violations (purgatorio 20:93; see [`../skel/PLAN.md`](../skel/PLAN.md) §P15).
+Found during the final Phase 7 census closing Layer 5 soft violations (purgatorio 20:93; see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) §P15).
 
 > Veggio il novo Pilato sì crudele, / che ciò nol sazia, ma sanza decreto / **portar** nel Tempio le cupide vele.  (purgatorio 20:91-93)
 
@@ -16,7 +16,7 @@ Attaching `93.1 portar` as `xcomp` of `91.1 Veggio` aligned the derivation with 
 
 ## paradiso 7:25 — inverted prepositional argument attached to noun instead of verb (2026-08-18)
 
-Found during the audit of Layer 5 extra_arg positions (paradiso 7:25; see [`../skel/PLAN.md`](../skel/PLAN.md) §P10).
+Found during the audit of Layer 5 extra_arg positions (paradiso 7:25; see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) §P10).
 
 > Per non soffrire **a la virtù che vole** / **freno** a suo prode, quell' uom che non nacque,  (paradiso 7:25-26)
 
@@ -30,7 +30,7 @@ Attaching `25.6 virtù` as `obl` of the verb `25.3 soffrire` aligned the derivat
 
 ## paradiso 11:127 — correlative comparative clause subject attached to subordinate verb (2026-08-18)
 
-Found during the audit of Round 10 log failures (`extra_arg_subject` at paradiso 11:129; see [`../skel/PLAN.md`](../skel/PLAN.md) §P9).
+Found during the audit of Round 10 log failures (`extra_arg_subject` at paradiso 11:129; see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) §P9).
 
 > e quanto le sue **pecore** remote / e vagabunde più da esso vanno, / più **tornano** a l'ovil di latte vòte.  (paradiso 11:127-129)
 
@@ -44,7 +44,7 @@ Attaching `127.5 pecore` as `nsubj` of the main matrix clause verb `129.2 tornan
 
 ## 2 rows from the Phase 7 refusal census audit (2026-08-18)
 
-Found during the per-position audit of the 38 standing Layer-5 refusal positions (`extra_arg`, `extra_arg_subject`, `missing_arg`; see [`../skel/PLAN.md`](../skel/PLAN.md) §P4). Two Layer-4 rows were mis-parsed. Both were applied and re-validated: `morph`/`np`/`dep`/`case --check` all 0 hard / 0 soft; `pytest` 542 passed; Layer 5 **−3 soft violations** (140 → 137).
+Found during the per-position audit of the 38 standing Layer-5 refusal positions (`extra_arg`, `extra_arg_subject`, `missing_arg`; see [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md) §P4). Two Layer-4 rows were mis-parsed. Both were applied and re-validated: `morph`/`np`/`dep`/`case --check` all 0 hard / 0 soft; `pytest` 542 passed; Layer 5 **−3 soft violations** (140 → 137).
 
 ### inferno 2:60 — temporal adverbial extent tagged as subject
 
@@ -1084,7 +1084,8 @@ The 26 cantos' content hashes change, as expected for an artifact correction.
 structural decides the case), and the 30 mirror-direction instances where Layer 4 says `iobj`
 and the LLM says `obj` (`mi bagna`, `mi tormenta`, `ti conforta`, `m'avean pregato` — several
 of which look like genuine Layer-4 datives over accusatives). Both need a Layer-2 case feature
-or a clitic lexicon; see [`../skel/PLAN.md`](../skel/PLAN.md).
+or a clitic lexicon; see the since-retired `skel/PLAN.md` §1 *The clitic-case question*
+(dropped when Phase 5 was summarized into [`../skel/PHASE5.md`](../skel/PHASE5.md)).
 
 **A wider finding, not acted on here**: enumerating the whole corpus, **231** predicates carry
 two or more `obj` children — 84 of them involving a clitic, 147 not. The non-clitic majority is
@@ -1167,7 +1168,8 @@ procedure as the two rounds above). Two populations, 14 rows across 7 cantos, no
 `extra_arg` direct-child `advcl` bucket left 35 instances where Layer 4 attaches a clause as an
 adverbial (`advcl`) while the LLM — which never sees this parse — cites it as a complement
 (`ccomp` 18, `xcomp` 14, `subj` 2, `obj` 1) of the same predicate. The complement-vs-adjunct
-distinction is not mechanizable here (it needs a verb lexicon; see [`../skel/PLAN.md`](../skel/PLAN.md)),
+distinction is not mechanizable here (it needs a verb lexicon; see the since-retired
+`skel/PLAN.md` §1),
 so all 35 were read against their terzine with the whole dep sub-tree, and the corpus-wide
 convention was measured first: `ccomp` is a live tag for clauses marked by `che`/`ch'` (520),
 `se` (45) and `come` (48), and `csubj` for `che` (24), so each retag below uses a deprel the
@@ -1365,7 +1367,7 @@ paradiso 6:82.5, purgatorio 4:72.6.
 ### 11 rows — the mirror direction
 
 `dep`=`iobj`, `case`=`accusative`, `skel`=`obj`: the *mi bagna* / *mi tormenta* population
-[`../skel/PLAN.md`](../skel/PLAN.md) section 1 parked. Nine of ten were plain transitives and went
+the since-retired `skel/PLAN.md` section 1 parked. Nine of ten were plain transitives and went
 `iobj` → `obj`: inferno 3:132.6, 10:78.2; paradiso 3:62.3, 6:82.8, 12:96.3, 26:11.2; purgatorio
 17:2.1, 26:50.4, 29:39.2. One supporting row: paradiso 26:11.1, where `regïon` carried a `per`
 `case` child yet was tagged `obj`, so it went `obj` → `obl`.
@@ -1689,7 +1691,7 @@ the four `case` corrections recorded in [`../case/CORRECTIONS.md`](../case/CORRE
 
 ## The "at most one `obj` per predicate" rule, and the 203 predicates it flagged (2026-08-03)
 
-[`../skel/PLAN.md`](../skel/PLAN.md) section 1 had recorded, without acting on it, that
+The since-retired `skel/PLAN.md` section 1 had recorded, without acting on it, that
 corpus-wide a number of predicates carry two or more `obj` children — a shape UD does not allow.
 This round opened it: a new **soft check** in `validate_unit` reports any predicate with more than
 one `obj` child, and every position it flagged was read against its terzina and corrected.

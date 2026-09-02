@@ -8,7 +8,8 @@ cantos** in nineteen batches (rules AG–EH, **−793**, at zero model cost).
 
 This file is the closed record: the operating principles that produced it, the chronological
 write-up of every round and every read batch, the read series' schedule and results, and the routes
-Phase 6 closed. Current work is Phase 7 — see [`PLAN.md`](PLAN.md). Phase 5 is in
+Phase 6 closed. Phase 7 is in [`PHASE7.md`](PHASE7.md); the project's current plan is
+[`../PLAN.md`](../PLAN.md). Phase 5 is in
 [`PHASE5.md`](PHASE5.md).
 
 ---
@@ -1176,7 +1177,7 @@ to record that trade.
 ### 24. Rules DS-DW and the Paradiso 11-20 Read (2026-08-17)
 
 Per-position read of all **43** soft violations in Paradiso 11-20 — the third *and fourth* batches
-of the Paradiso series, read in one session — following *How to Read a Batch* ([`PLAN.md`](PLAN.md)). **261 → 245
+of the Paradiso series, read in one session — following *How to Read a Batch* (the since-retired `skel/PLAN.md`). **261 → 245
 (−16, −6.1%)**, zero model calls, 0 hard; Paradiso 11-20 itself **43 → 30** (11: 5 → 7, 12: 6 → 5,
 13: 4 → 2, 14: 6 → 4, 15: 7 → 5, 16: 6 → 1, 17: 4 → 3, 18: 1 → 1, 19: 3 → 1, 20: 1 → 1).
 `pytest` **475 passed**.
@@ -1238,7 +1239,7 @@ writes as a `case` on the nominal it relativizes (census 7, of which 1 is a rela
 
 ### 25. Rules DX-EA and the Paradiso 21-25 Read (2026-08-17)
 
-Per-position read of all **21** soft violations in Paradiso 21-25, following *How to Read a Batch* ([`PLAN.md`](PLAN.md))
+Per-position read of all **21** soft violations in Paradiso 21-25, following *How to Read a Batch* (the since-retired `skel/PLAN.md`)
 below. **245 → 234 (−11, −4.5%)**, zero model calls, 0 hard; Paradiso 21-25 itself **21 → 11**
 (21: 8 → 6, 22: 2 → 2, 23: 5 → 2, 24: 4 → 0, 25: 2 → 1). `pytest` **483 passed**.
 
@@ -1307,7 +1308,7 @@ non-verbs, which is precisely the population rule CS measured at +180.
 ### 26. Rules EB-EF and the Paradiso 26-33 Read (2026-08-17)
 
 Per-position read of all **32** soft violations in Paradiso 26-33 — the **last two batches of the
-read series**, taken in one session — following *How to Read a Batch* ([`PLAN.md`](PLAN.md)). **234 → 213 (−21,
+read series**, taken in one session — following *How to Read a Batch* (the since-retired `skel/PLAN.md`). **234 → 213 (−21,
 −9.0%)**, zero model calls, 0 hard; Paradiso 26-33 itself **32 → 14** (26: 4 → 3, 27: 1 → 1,
 28: 6 → 4, 29: 7 → 2, 30: 5 → 1, 31: 2 → 1, 32: 3 → 1, 33: 4 → 1). `pytest` **494 passed**.
 
@@ -1345,7 +1346,7 @@ positions and flags none.
 **2. A prompt verdict can be wrong, and it is the expensive kind of wrong.** One of rule EB's three
 positions is paradiso **23:10**, which the Paradiso 21-25 batch wrote up as an instance of
 `_CONV_ADJUNCT` — prompt work, queued for the sixth round. It is checker silence, and rule EB takes
-it for nothing. Of the five verdicts *How to Read a Batch* ([`PLAN.md`](PLAN.md)) offers, **prompt defect is the only one
+it for nothing. Of the five verdicts *How to Read a Batch* (the since-retired `skel/PLAN.md`) offers, **prompt defect is the only one
 that leaves no rule behind to be measured**: an acceptance, a derivation fix and an upstream retag
 all get a violation diff on the spot, while a prompt diagnosis is unfalsifiable until a round runs.
 So the standing form of the rule is: **before assigning a position to the prompt, ask whether any
@@ -1548,7 +1549,7 @@ its *rate* carries no information; only the population does.
 
 **3. A note is a hypothesis about the question, never evidence about the corpus.** It earns exactly
 one thing: a position to hand to `read.py`, chosen by something other than reading 100 cantos to
-find it. The verdict procedure in *How to Read a Batch* ([`PLAN.md`](PLAN.md)) is unchanged and still applies to every
+find it. The verdict procedure in *How to Read a Batch* (the since-retired `skel/PLAN.md`) is unchanged and still applies to every
 position a note names — and the five verdicts are what the notes should be censused against, since
 a note that repeats across dozens of positions is a prompt defect and a note that appears once is
 noise.
@@ -1739,7 +1740,7 @@ position — `--check` is identical before and after. What it produces is a **ce
 is all refusals is checker-side work rather than a prompt population, and the round's own log
 becomes a position-by-position list of where the model thinks `--check` is wrong. It does **not**
 make the model right. A refusal is a hypothesis about the checker with exactly the standing a field
-note has about the corpus (§29): it chooses a position, and *How to Read a Batch*'s five verdicts ([`PLAN.md`](PLAN.md))
+note has about the corpus (§29): it chooses a position, and *How to Read a Batch*'s five verdicts (the since-retired `skel/PLAN.md`)
 still decide what is wrong there.
 
 **4. The first reading list is already known**, from round 7 counted by hand: `arg_slot` 8 `keep`

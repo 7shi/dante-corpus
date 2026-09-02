@@ -109,7 +109,8 @@ All four match the state the plan was written at, so its counts still describe t
 ### Population
 
 Rebuilt with `case/population.py` (see *Harness* below) following
-[`../skel/PLAN.md`](../skel/PLAN.md)'s *How to measure a candidate rule* — the `stats()` loop
+[`../skel/PHASE5.md`](../skel/PHASE5.md) §7 *Measurement Methodology & Candidate Rule
+Harness* (then `skel/PLAN.md`'s *How to measure a candidate rule*) — the `stats()` loop
 with `dante_corpus.skel._classify_divergence` monkeypatched, run from `skel/`, positions read
 1-based over alpha-only tokens. The two disputed buckets come out at exactly the sizes
 the plan predicted:
@@ -1002,7 +1003,7 @@ The round's honest completion, and the one whose result was known in advance: **
 the plan offered two defensible outcomes here — run it, or stop after slice 2 and
 record the 325 as deliberately unspent. **Slice 3 was run**, because the deliverable is a more
 correct Layer 4 and because leaving a measured population with no verdict is the one shape
-[`../skel/PLAN.md`](../skel/PLAN.md)'s Phase 5 avoided for every route it opened. The count
+[`../skel/PHASE5.md`](../skel/PHASE5.md)'s Phase 5 avoided for every route it opened. The count
 movement is reported as expected, not as regression; the analysis is in
 [`../skel/CORRECTIONS.md`](../skel/CORRECTIONS.md).
 
@@ -1735,7 +1736,7 @@ error, and this project's standing rule is to correct those, not to let a "close
 for one. [[project_skel_soft_violations_goal]]
 
 **Scope: the 50 bare-clitic contradictions** (`mi ti ci vi si li` + elisions) out of the 258 — the
-population [`../skel/PLAN.md`](../skel/PLAN.md) section 1 calls "the clitic-case question" and
+population the since-retired `skel/PLAN.md` section 1 called "the clitic-case question" and
 Step 4 slice 2's "21 tier-A candidates were left alone" section already named eleven of by hand
 (*m'avea 'mmonito*, *mi giunse al rotto*, *mi lasciai Sibilia*, *omor mi rinfarcia*, *che sé ne
 presti*, *tu li raccorci* among them) without ever writing the fix into `case/*.tsv` — that round
