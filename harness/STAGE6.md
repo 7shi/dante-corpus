@@ -1168,3 +1168,126 @@ and the fix run is the operator's. The evidence for optimism is that S6.9's
 accepted units produced exactly this relabel 12 times, and the level-1 bar's own
 error names the case child and its word. The evidence for caution is the second
 asymmetry above, which is live at 2 of the 10 units.
+
+### S6.11 — The `--fix 1` run under S6.10's gate: 12 of 12 cleared, and level 1 closes (2026-09-02)
+
+The operator's fifth level-1 run, on the S6.10 gate and with the per-canto logs
+swept first. **The corpus moved; no code did.** S6.10 named three readings and a
+predicted residue in advance, so this record answers those before it reports the
+count.
+
+**The numbers, against S6.10's close (`a9c3b1c`):**
+
+| | before | after |
+|---|---:|---:|
+| hard violations | 0 | **0** |
+| soft violations | 4,649 → 4,640 | **4,627** (−13) |
+| level-1 findings (`make fix-level`) | 12 | **0** |
+| cantos carrying a level-1 finding | 10 | **0** |
+| TSVs modified | — | 10 |
+| gold agreement (readout, §5 discipline 4) | 0.7386 | 0.7389 |
+
+`make check` exits 0. The logs are unambiguous: all 100 carry timestamps from
+2026-09-02 07:26–07:46 UTC with one `summary` segment each, so the dedup rule
+applied below has nothing to do (it is still the right rule; S6.7's shape is the
+one that needs it). Cost: **34 model calls** across the 10 reopened units (3–4
+per unit), 224,423 tokens (151,564 in / 15,070 out / 57,789 thought), 2,065 s of
+session wall clock. The other 90 cantos reopened nothing, as `fix-level` said.
+
+**The refusal mix — there is none.** 10 units reopened across 10 cantos:
+
+| verdict | S6.9 (22 units) | S6.11 (10 units) |
+|---|---:|---:|
+| `accepted` (whole unit) | 10 | **10** |
+| `salvaged` (S6.4's splice) | 0 | 0 |
+| `no_improvement` (reverted) | 4 | **0** |
+| `new_class` (reverted) | 8 | **0** |
+| `hard` | 0 | **0** |
+| `adopted_invalid` | 11 / 22 | **0 / 10** |
+
+Every unit passed its own gate: `final_submission_valid` is true 10 of 10,
+`final_validation_errors` is empty on every one, and `invalid_nudges` is 0 — the
+S6.6 resume never had to fire. No answer was refused, so `fix.refused` is absent
+throughout and S6.8's diagnosis block has nothing to describe.
+
+**S6.10's three readings, in the order it set them.**
+
+1. **`refused.governed_rows.relabelled` becomes non-zero** — satisfied in the
+   limit case: there are no refused units, and `fix.delta` says the same thing
+   for the accepted ones. **15 rows relabelled, 1 removed, 0 added** across the
+   ten. S6.9's 12 refused answers relabelled a named row 0 times; here every
+   named row is relabelled to exactly the qualification the derivation
+   determines (below).
+2. **`new_class:missing_arg` collapses** — 0 introduced classes, and no unit
+   dropped a governed row. The deletion S6.9 saw was the gate refusing to write
+   the level's own row, and that reason is gone.
+3. **`adopted_invalid` stops tracking acceptance** — it stops occurring at all.
+   S6.9's anti-correlation (9 of 10 accepted units failing their own gate, every
+   error naming the one anchor rule) does not survive the transcription fix, as
+   S6.10 predicted it would not.
+
+**The 12 findings, position by position** (§5 discipline 5) — recomputed against
+the pre-run artifacts at `a9c3b1c`, so the pairing is measured and not inferred:
+
+| canto | finding | written |
+|---|---|---|
+| inferno 9 | `53.3 arg (53,5) 'obl' vs 'obl:in'` | `obl:in` |
+| inferno 12 | `130.10 arg (130,9) 'obl' vs 'obl:a'` | `obl:a` |
+| inferno 18 | `35.1 arg (34,2) 'obl' vs 'obl:di'` | `obl:di` |
+| inferno 26 | `140.4 arg (140,8) 'obl' vs 'obl:in'` | `obl:in` |
+| inferno 26 | `141.4 arg (141,6) 'obl' vs 'obl:in'` | `obl:in` |
+| inferno 33 | `96.2 arg (96,4) 'obl' vs 'obl:in'` | `obl:in` |
+| purgatorio 10 | `71.2 arg (71,4) 'obl' vs 'obl:da'` | `obl:da` |
+| purgatorio 10 | `72.7 arg (72,3) 'obl' vs 'obl:di'` | `obl:di` |
+| purgatorio 13 | `143.8 arg (144,2) 'obl' vs 'obl:di'` | `obl:di` |
+| purgatorio 14 | `66.7 arg (65,5) 'obl' vs 'obl:di'` | `obl:di` |
+| purgatorio 17 | `13.5 arg (14,4) 'obl' vs 'obl:di'` | `obl:di` |
+| purgatorio 22 | `85.9 arg (85,5) 'obl' vs 'obl:di'` | `obl:di` |
+
+**12 of 12, each to the preposition the derivation names** — without ever being
+shown it (S6.2's asymmetry holds; the session sees the case child, not
+`check.py`'s line). This is what S6.10 called the evidence for optimism, and it
+is now the result rather than the prediction.
+
+**The predicted residue did not appear.** S6.10 named the two units carrying its
+second asymmetry — inferno 12 (`132.4`, case child `132.1 'ove'`) and inferno 18
+(`34.4`, case child `34.3 'di'`) — and predicted they would be the only two of
+the ten to fail `validate_candidate`. **Both were accepted and both passed their
+own gate.** What the bar's extra demand produced was an off-brief relabel, not a
+deadlock: `131.8 (132,4) obl → obl:ove` and `35.1 (34,4) obl → obl:di`. The
+asymmetry is therefore confirmed as *real but benign* in the field, exactly the
+grade S6.10 assigned it ("the session can satisfy both there"), and the ten-unit
+run is the falsification test it asked for.
+
+**The off-brief reach, and where the −13 comes from** (`fix.delta.row_delta`
+under an accepted verdict, S6.8's addition, so no `git diff` is needed to see
+it). 15 relabels and 1 removal against 12 findings — 4 row changes lie off the
+level's rows:
+
+| off-brief change | soft effect |
+|---|---|
+| inferno 12 `131.8 (132,4) obl → obl:ove` | **−1** (it was an `extra_arg`; the relabel matches the derivation) |
+| inferno 18 `35.1 (34,4) obl → obl:di` | 0 (a tolerated position, tolerated still) |
+| purgatorio 14 `65.1 (66,7) obl → ccomp` | 0 (`role_mismatch` out, `extra_arg: 65.1 ccomp (66,7)` in) |
+| inferno 9 `54.3 (54,1) obl` removed | 0 (an untolerated row that carried no finding) |
+
+So **−12 from the governed rows and −1 from off-brief reach**, and the only
+class this run introduced anywhere is the one `extra_arg` above, inside an
+accepted unit. Two of the four off-brief changes are the second asymmetry's own
+positions, which is the mechanism S6.10 described doing exactly what it said.
+
+**Level 1 is closed: 377 → 83 → 37 → 25 → 14 → 12 → 0**, over five fix runs and
+four mechanism changes (S6.4's splice, S6.6's two levers, S6.8's logging,
+S6.10's transcription). Read against the stage's method, the decisive change was
+the last one and it was not a prompting change at all: the gate the session is
+judged by had to say what the corpus contract says. The three levers S6.5
+proposed are all measured and none of them moved the count; **the seam between
+`harness/`'s transcription and `skel/`'s contract did.** That is the transferable
+finding for level 2 — before a level is tuned, check that its bar and its
+selection name the same positions and that both agree with `validate.py`
+(`test_anchor_gate_is_never_stricter_than_validate` is the shape of that check).
+
+**Nothing here changes the tolerance-mediated zero point (S6.1).** 4,627 soft is
+a conformance number; level 1 removed the class it was argued for under §2's
+first outcome (the artifact is wrong) and nothing else. The next candidate class
+must be argued from `validate.py` / `derive.py` with gold unopened, as always.

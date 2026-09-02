@@ -308,7 +308,7 @@ line	token	word	role	arg_line	arg_token
 96	2	volge	subj	95	3
 96	2	volge	obj	96	1
 96	2	volge	xcomp	96	6
-96	2	volge	obl	96	4
+96	2	volge	obl:in	96	4
 96	6	far	subj	0	0
 96	6	far	xcomp	96	7
 96	7	crescer	subj	96	9

@@ -185,10 +185,10 @@ line	token	word	role	arg_line	arg_token
 70	9	stava	subj	70	8
 71	2	avvisar	subj	0	0
 71	2	avvisar	obj	71	7
-71	2	avvisar	obl	71	4
+71	2	avvisar	obl:da	71	4
 72	7	biancheggiava	subj	72	1
 72	7	biancheggiava	iobj	72	6
-72	7	biancheggiava	obl	72	3
+72	7	biancheggiava	obl:di	72	3
 73	3	storïata	subj	73	6
 73	3	storïata	obl	73	1
 73	3	storïata	obl:di	74	3

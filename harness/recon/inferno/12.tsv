@@ -444,10 +444,10 @@ line	token	word	role	arg_line	arg_token
 130	10	prema	subj	0	0
 130	10	prema	obj	131	2
 130	10	prema	obl:da	130	4
-130	10	prema	obl	130	9
+130	10	prema	obl:a	130	9
 130	10	prema	obl	131	8
 131	8	raggiunge	subj	131	6
-131	8	raggiunge	obl	132	4
+131	8	raggiunge	obl:ove	132	4
 132	4	convien	ccomp	132	6
 132	6	gema	subj	132	3
 133	6	punge	subj	133	3

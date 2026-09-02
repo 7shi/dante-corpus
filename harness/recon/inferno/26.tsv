@@ -450,9 +450,9 @@ line	token	word	role	arg_line	arg_token
 140	4	levar	subj	139	3
 140	4	levar	obj	140	6
 140	4	levar	obl:a	140	3
-140	4	levar	obl	140	8
+140	4	levar	obl:in	140	8
 141	4	ire	subj	141	3
-141	4	ire	obl	141	6
+141	4	ire	obl:in	141	6
 141	9	piacque	subj	0	0
 141	9	piacque	iobj	141	8
 142	8	richiuso	subj	142	4

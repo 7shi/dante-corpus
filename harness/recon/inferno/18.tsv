@@ -94,8 +94,8 @@ line	token	word	role	arg_line	arg_token
 34	0			0	0
 35	1	vidi	subj	0	0
 35	1	vidi	obj	35	2
-35	1	vidi	obl	34	2
-35	1	vidi	obl	34	4
+35	1	vidi	obl:di	34	2
+35	1	vidi	obl:di	34	4
 35	1	vidi	obl	34	5
 35	1	vidi	obl:per	34	8
 35	1	vidi	obl:con	35	6

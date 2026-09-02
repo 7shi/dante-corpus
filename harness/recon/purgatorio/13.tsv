@@ -475,7 +475,7 @@ line	token	word	role	arg_line	arg_token
 143	5	vuo'	ccomp	143	8
 143	8	mova	subj	143	7
 143	8	mova	obj	144	8
-143	8	mova	obl	144	2
+143	8	mova	obl:di	144	2
 143	8	mova	obl:per	144	4
 144	0			0	0
 145	3	è	subj	145	2

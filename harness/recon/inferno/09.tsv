@@ -176,10 +176,9 @@ line	token	word	role	arg_line	arg_token
 53	1	dicevan	ccomp	52	1
 53	1	dicevan	ccomp	54	3
 53	3	riguardando	subj	53	2
-53	3	riguardando	obl	53	5
+53	3	riguardando	obl:in	53	5
 54	3	vengiammo	subj	0	0
 54	3	vengiammo	obj	54	7
-54	3	vengiammo	obl	54	1
 54	3	vengiammo	obl:in	54	5
 55	1	Volgiti	subj	0	0
 55	1	Volgiti	obl:in	55	3

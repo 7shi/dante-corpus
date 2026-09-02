@@ -207,9 +207,9 @@ line	token	word	role	arg_line	arg_token
 64	2	esce	obl:di	64	6
 65	1	lasciala	subj	0	0
 65	1	lasciala	attr	65	2
-65	1	lasciala	obl	66	7
+65	1	lasciala	ccomp	66	7
 66	7	rinselva	subj	0	0
-66	7	rinselva	obl	65	5
+66	7	rinselva	obl:di	65	5
 66	7	rinselva	obl:a	65	8
 66	7	rinselva	obl:in	66	3
 67	0			0	0

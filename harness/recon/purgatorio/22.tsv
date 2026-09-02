@@ -267,7 +267,7 @@ line	token	word	role	arg_line	arg_token
 84	5	fur	subj	84	7
 84	5	fur	obl:sanza	84	3
 85	9	stette	subj	0	0
-85	9	stette	obl	85	5
+85	9	stette	obl:di	85	5
 85	9	stette	obl:per	85	7
 86	3	sovvenni	subj	86	1
 86	3	sovvenni	iobj	86	2
