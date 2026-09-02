@@ -279,7 +279,7 @@ line	token	word	role	arg_line	arg_token
 94	7	rivolvi	subj	0	0
 94	7	rivolvi	obj	94	6
 94	7	rivolvi	obl	94	1
-94	7	rivolvi	obl	94	3
+94	7	rivolvi	obl:in	94	3
 94	7	rivolvi	obl	94	5
 95	1	diss'	subj	95	2
 95	1	diss'	ccomp	94	7

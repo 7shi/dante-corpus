@@ -64,7 +64,7 @@ line	token	word	role	arg_line	arg_token
 25	1	fatt'	obl:di	25	4
 26	0			0	0
 27	2	cadde	subj	27	1
-27	2	cadde	obl	27	4
+27	2	cadde	obl:di	27	4
 27	9	placa	subj	26	9
 27	9	placa	obj	27	8
 27	9	placa	obl	27	6

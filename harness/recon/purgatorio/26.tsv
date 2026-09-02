@@ -321,7 +321,7 @@ line	token	word	role	arg_line	arg_token
 96	3	fec'	obj	96	2
 96	3	fec'	attr	96	1
 96	9	insurgo	subj	0	0
-96	9	insurgo	obl	96	8
+96	9	insurgo	obl:a	96	8
 97	3	odo	subj	97	2
 97	3	odo	ccomp	97	4
 97	4	nomar	subj	97	8
@@ -340,7 +340,7 @@ line	token	word	role	arg_line	arg_token
 102	9	appressai	subj	0	0
 102	9	appressai	obj	102	8
 102	9	appressai	obl:per	102	4
-102	9	appressai	obl	102	6
+102	9	appressai	obl:in	102	6
 103	4	riguardar	subj	0	0
 103	5	pasciuto	subj	0	0
 103	5	pasciuto	xcomp	103	4

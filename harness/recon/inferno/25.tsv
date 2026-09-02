@@ -12,8 +12,8 @@ line	token	word	role	arg_line	arg_token
 3	8	squadro	obl:a	3	6
 4	6	fuor	subj	4	8
 4	6	fuor	iobj	4	5
-4	6	fuor	obl	4	2
-4	6	fuor	obl	4	4
+4	6	fuor	obl:da	4	2
+4	6	fuor	obl:in	4	4
 5	5	avvolse	subj	5	2
 5	5	avvolse	obj	5	3
 5	5	avvolse	obl:a	5	8
@@ -23,6 +23,7 @@ line	token	word	role	arg_line	arg_token
 6	4	vo'	ccomp	6	7
 6	7	diche	subj	0	0
 7	8	rilegollo	subj	7	3
+7	8	rilegollo	obj	5	3
 7	8	rilegollo	obl:a	7	6
 8	1	ribadendo	subj	0	0
 8	1	ribadendo	obj	8	2

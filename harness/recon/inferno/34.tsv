@@ -303,10 +303,10 @@ line	token	word	role	arg_line	arg_token
 89	6	lasciato	subj	89	3
 89	6	lasciato	obj	89	4
 90	2	vidili	subj	0	0
+90	2	vidili	obj	90	4
 90	2	vidili	xcomp	90	7
-90	7	tenere	subj	90	2
-90	7	tenere	obj	90	4
-90	7	tenere	obl	90	6
+90	7	tenere	subj	90	4
+90	7	tenere	obl:in	90	6
 91	4	divenni	subj	91	3
 91	4	divenni	attr	91	6
 91	4	divenni	obl	91	5

@@ -333,7 +333,7 @@ line	token	word	role	arg_line	arg_token
 102	9	levava	subj	0	0
 102	9	levava	obj	102	2
 102	9	levava	obl:a	102	4
-102	9	levava	obl	102	8
+102	9	levava	obl:in	102	8
 103	2	diss'	subj	103	3
 103	2	diss'	ccomp	105	1
 103	6	salir	subj	103	4

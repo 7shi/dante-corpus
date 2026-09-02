@@ -886,3 +886,192 @@ and read `introduced[].governed` first: if the classes the answers introduce sit
 mostly *off* the named rows, the row-scoped ask is the mechanism to build next
 and this run is its baseline; if they sit *on* them, the ask's scope is not the
 problem and the level's own premise at those positions is what needs arguing.
+
+### S6.9 — The `--fix 1` run under S6.8's logging: 11 of 25 cleared, and level 1's own premise fails at the survivors (2026-09-02)
+
+The operator's fourth level-1 run over all 100 cantos, on the S6.8 logging and
+with the per-canto logs deliberately swept first. **The corpus moved; no code
+did.** S6.8 set the reading order in advance and named the question the run
+exists to answer, so this record follows it: `introduced[].governed` first, the
+finding count as context.
+
+**The numbers, against S6.7's close (`7edf773`):**
+
+| | before | after |
+|---|---:|---:|
+| hard violations | 0 | **0** |
+| soft violations | 4,649 | **4,640** (−9) |
+| level-1 findings (`make fix-level`) | 25 | **14** (−11, 44%) |
+| cantos carrying a level-1 finding | 20 | 12 |
+| TSVs modified | — | 10 |
+| gold agreement (readout, §5 discipline 4) | 0.7384 | 0.7386 |
+
+`make check` exits 0. The logs are unambiguous this time: all 100 carry
+timestamps from 2026-09-01 15:58–20:14 UTC, one `summary` segment each, no
+canticle stream relaunched — so the dedup rule still applied below has nothing
+to do. (It is still the right rule; S6.7's shape is the one that needs it.)
+
+**The refusal mix.** 22 units reopened across 20 cantos:
+
+| verdict | S6.7 (33 units) | S6.9 (22 units) | share |
+|---|---:|---:|---:|
+| `accepted` (whole unit) | 8 | **10** | 24% → 45% |
+| `salvaged` (S6.4's splice) | 3 | **0** | 9% → **0%** |
+| `no_improvement` (reverted) | 7 | **4** | 21% → 18% |
+| `new_class` (reverted) | 15 | **8** | 45% → 36% |
+| `hard` | 0 | **0** | — |
+
+Salvage collected nothing at all: the splice ran on all 12 refused units and
+`fix_verdict` refused every candidate — 7 still `new_class:missing_arg`, 5
+`no_improvement`. S6.7 predicted exactly this and the diagnosis now proves the
+mechanism rather than inferring it (below).
+
+**`refused.introduced[].governed` — the question S6.8 was built for.** The 12
+refused answers introduced **14** violations between them, itemised in full:
+
+| class | count | on a row the level named |
+|---|---:|---:|
+| `missing_arg` | 9 | **9** |
+| `extra_arg` | 4 | 0 |
+| `membership` | 1 | 0 |
+
+**Nine of the fourteen sit on the level's own rows**, and `governed_rows` says
+the same thing without the sampling:
+
+| | |
+|---|---:|
+| `named` (rows the level asked about, across the 12 units) | 14 |
+| `relabelled` | **0** |
+| `removed` | 10 |
+| `untouched` | 4 |
+| `missing` | 10 |
+
+**Not one refused answer ever relabelled a row the level named.** Every refused
+unit either dropped that row entirely — 10 of them, which is precisely the
+`missing_arg` it is then refused for — or left it exactly as it found it (4, the
+`no_improvement` units). That is why the splice cannot help: S6.4 splices *the
+answer's rows at the governed keys*, and at those keys the answer has no row.
+
+Read against S6.8's stated rule, the verdict is unambiguous: the introduced
+classes sit **on** the named rows, not beside them. **The row-scoped ask is not
+the mechanism this evidence calls for** — narrowing the brief to the row the
+level names cannot help when the row the level names is the one the session
+declines to write. What needs arguing is the level's own premise at those
+positions.
+
+**`final_validation_errors` — S6.7's second finding, answered.** 9 of the 10
+`accepted` units are `adopted_invalid`, and every error on every one of them is
+the *same* gate, `harness/runner/tools.py:879`:
+
+> `argument X.Y cites neither a Layer 3 NP head nor a pronoun (nominal role
+> 'obl:<prep>' requires one; clausal and adverbial roles may anchor on any
+> token)`
+
+Put beside the verdict, `adopted_invalid` is not noise — it is **anti-correlated
+with acceptance**:
+
+| session's own gate on the final submission | `accepted` | `no_improvement` | `new_class` |
+|---|---:|---:|---:|
+| passed (`final_submission_valid`) | 1 | 2 | **8** |
+| failed (`adopted_invalid`) | **9** | 2 | 0 |
+
+Every answer the session's gate passed was refused downstream on all but one
+unit; every answer that cleared findings but one was an answer its own gate
+rejected. The two gates are pulling in opposite directions, and the level is the
+thing between them.
+
+**Why, read as positions and not as aggregates** (§5 discipline 5). All 14
+surviving findings sit in the 12 refused units — the accepted units cleared
+every finding they were given. Taking each survivor's argument and applying the
+gate's own test:
+
+| | |
+|---|---:|
+| argument is neither an L3 NP head nor a pronoun | **12 / 14** |
+| Layer-2 POS of those 12 arguments | adverb 11, preposition 1 |
+
+They are `giuso`, `giù`, `qua`, `suso`, `entro`, `dietro`, `là`, `qui`, `fuor`,
+`presso` — the locative adverbs. `derive.py`'s `_oblique_role_of` qualifies such
+an oblique from its Layer-4 `case` child like any other, which is what makes it
+a level-1 finding; `validate.py`'s own anchor check then **explicitly exempts
+it** (line 158):
+
+```python
+if (row.role == "obl" or row.role.startswith("obl:")) and arg in adverb_obl_positions:
+    continue
+```
+
+`harness/runner/tools.py:requires_nominal_anchor` carries none of that. It
+admits an L3 NP head or a pronoun and nothing else, where `validate.py` also
+passes predicate positions, adverbial obliques, dep-argument positions (rule
+AF), aux heads (AQ), coordination heads (DG) and marker slots (DS). **The
+session's gate is strictly narrower than the layer's own contract, and the
+survivors sit in the gap.** At those 12 positions the row level 1 asks for is
+one the corpus contract permits and the session's own gate forbids, so the model
+has exactly two moves: drop the row (`new_class:missing_arg`, 10 of them) or
+override its gate and submit anyway (`adopted_invalid`, which is how the 9
+accepted units cleared their findings). Three independent sets of sessions have
+now produced both, and neither is a model error.
+
+The remaining 2 survivors are ordinary: `purgatorio 30` (`sogno`) and
+`paradiso 6` (`anni`) are nouns with an NP head, nothing blocks the row, and
+both units came back `no_improvement` — the session simply did not change them.
+
+**Row-level** (the diff against `7edf773`, 10 files): **20 rows added, 17
+removed, net +3**, every one of them from an `accepted` unit — `fix.delta` is
+zero on all 12 refused units, so the reverts are clean and no salvage happened.
+14 relabels in place, of which **12 are the level's own shape** (`obl` →
+`obl:in` 5, `obl:di` 4, `obl:a` 2, `obl:da` 1) against 11 findings cleared, and
+2 off-brief (`obl:di` → `obl` at paradiso 10:30, `obj` → `subj` at
+inferno 34:90). Beside them 6 rows added and 3 removed, three of the additions
+pairing with the removals as subject relocations. The level's relabels
+outnumbering the findings it cleared is the non-distance property of the counter
+again (§2), not an accounting error.
+
+**Lever 1, third measurement.** `invalid_nudges` is 1 on **7** of the 22 units
+and 0 on the rest; all 7 still ended `adopted_invalid`, as in S6.7. It fires,
+the session re-submits, its gate still says invalid — and on this evidence it
+never could, because at these positions the gate is refusing a row the level
+requires. 6 of those 7 nonetheless ended `accepted`.
+
+**Cost.** 202 LLM calls, **2.56 M tokens** (1.77 M input / 0.17 M output /
+0.62 M thought), **6.44 h** of summed per-canto elapsed (inferno 2.74 /
+purgatorio 2.20 / paradiso 1.50). 20 `api_retries`, 0 max-length retries, 0
+paced seconds. The 80 cantos with no finding cost no model call.
+
+**Gold agreement, opened afterwards and cited as nothing else** (§5 discipline
+4): corpus-wide **0.7384 → 0.7386**; inferno 0.7448, purgatorio 0.7363,
+paradiso 0.7345. Flat, as a 20-row change should be.
+
+**State at close.** Corpus **0 hard / 4,640 soft**, 10 TSVs modified; suite
+**971**, unchanged and not re-run — no code moved. **Level 1 has now been run
+four times: 377 → 83 → 37 → 25 → 14.**
+
+**What this settles, and what it opens.** All three of S6.5's transferable
+levers are now measured, and none of them is the bottleneck — the stopping rule
+fires and converts nothing, stating the acceptance rule moved `new_class` not at
+all, and the row-scoped ask is ruled out by its own intended evidence. The
+bottleneck is a **contract seam inside `harness/`**, not the ask, the loop, or
+the model: `requires_nominal_anchor` is a transcription of `validate.py`'s anchor
+rule that kept the NP-head/pronoun clause and dropped every exemption beside it,
+so the agent-side gate and the corpus-side checker disagree about which rows are
+writable. Two ways out, and they are §2's outcomes 1 and 2 wearing different
+clothes:
+
+1. **Widen the gate to what it transcribes.** `requires_nominal_anchor` (or the
+   check that calls it) admits what `validate.py` admits — at minimum the
+   `obl`/`obl:*` adverbial exemption, which is written for this exact shape. Its
+   authority is the layer's own contract read directly, discipline 3's
+   cleanest case, and it opens no gold. This is the move this record
+   recommends.
+2. **Narrow the level.** Declare the anchor-less oblique a position where the
+   derivation and the artifact format disagree — outcome 2, a missing
+   tolerance — and take those positions out of level 1's selection.
+
+They are not equivalent and the difference is the point: (1) says the harness
+mis-transcribed its own contract and the findings are real; (2) says the
+findings should never have been selected. **(1) is the honest reading of the
+evidence** — `validate.py` permits the row, `derive.py` determines it, and only
+`tools.py` objects — and (2) would leave the same disagreement live everywhere
+else the gate is narrower than the contract, where no level has looked yet. The
+choice, and whether a fifth level-1 run follows it, is the operator's.

@@ -93,7 +93,7 @@ line	token	word	role	arg_line	arg_token
 30	8	misura	subj	0	0
 30	8	misura	obj	30	6
 30	8	misura	obl:con	30	4
-30	8	misura	obl:di	30	7
+30	8	misura	obl	30	7
 31	7	rammenta	subj	31	4
 31	7	rammenta	obj	31	6
 31	7	rammenta	obl	31	5
@@ -109,7 +109,8 @@ line	token	word	role	arg_line	arg_token
 35	3	accors'	subj	35	4
 35	3	accors'	obj	35	2
 35	3	accors'	obl:di	34	8
-35	3	accors'	obl	36	4
+35	3	accors'	obl	35	10
+35	3	accors'	obl:di	36	4
 35	10	accorge	subj	35	8
 35	10	accorge	obj	35	9
 36	0			0	0

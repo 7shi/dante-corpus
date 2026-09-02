@@ -85,10 +85,10 @@ line	token	word	role	arg_line	arg_token
 30	1	guarda	obl:a	30	7
 31	4	venendo	subj	31	3
 31	4	venendo	obl:da	31	7
-32	7	cuopra	subj	32	1
+32	7	cuopra	subj	31	7
 32	7	cuopra	obl	32	3
 32	7	cuopra	obl:di	32	5
-33	1	rotante	subj	31	7
+33	1	rotante	subj	32	5
 33	1	rotante	obl:con	33	4
 33	7	è	subj	33	6
 33	7	è	attr	33	8
@@ -98,7 +98,7 @@ line	token	word	role	arg_line	arg_token
 35	1	stupefaciensi	subj	31	3
 36	5	andò	subj	35	3
 36	5	andò	obl:a	36	3
-36	5	andò	obl	36	7
+36	5	andò	obl:di	36	7
 37	0			0	0
 38	7	venuto	subj	37	2
 38	7	venuto	obl:a	37	4
