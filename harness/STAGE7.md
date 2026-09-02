@@ -1,4 +1,11 @@
-# Stage 7 — Refactoring (OPENED 2026-09-02 by operator, on Stage 6's close)
+# Stage 7 — Refactoring (opened 2026-09-02, CLOSED 2026-09-03)
+
+Opened by the operator on Stage 6's close and **closed on S7.2's live
+confirmation** (2026-09-03, operator's decision): both of the stage's two items
+shipped, and the live inferno-1 re-run that was the last outstanding check
+passed. Unlike every earlier close, this one does **not** open the next stage's
+document — Stage 8's scope is the operator's to decide, and §4 below is what it
+inherits.
 
 Opening this document is what closes Stage 6 on S6.11. The operator's decision
 of 2026-09-02 re-scoped Stage 7: it is **a refactoring stage**, not level 2 of
@@ -252,11 +259,38 @@ stage's scope, and no one asked for it.
 
 ---
 
-## 4. Remaining stage scope
+## 4. Stage close & what carries forward
 
-Both items are done: **S7.1** (knowledge as files) and **S7.2** (the
-`reconstruct.py` split). That is the whole of the stage. The item below is
-**not** in it.
+**Closed 2026-09-03.** Both items are done and committed: **S7.1** (the agent's
+knowledge as files under `runner/skills/grammar-agent/`, byte-exact, with
+`skill_digest` in every `canto_complete`) and **S7.2** (the `reconstruct.py`
+split into seven modules, live-confirmed on the operator's inferno-1 re-run).
+That is the whole of the stage; no S7.3 exists and nothing is in flight.
+
+State at close — the baseline the next stage starts from:
+
+- suite **987 passed** (975 + 12 from S7.1; S7.2 added none and edited none);
+- corpus **0 hard / 4,624 soft**, `make check` exits 0 (4,627 before S7.2's live
+  re-run moved inferno 1 from 46 to 43 soft);
+- the live path is confirmed working after the split, on real fallback traffic.
+
+Three items carry forward, none of them Stage 7's to answer:
+
+1. **The transcription-drift check** — investigated here, re-scoped out; the
+   measurement and the three options are below, so the next stage starts from
+   numbers rather than a repeated sweep.
+2. **Soft level 2** — still a design question before it is a run. Candidates and
+   the eligibility list stay in [`STAGE6.md`](STAGE6.md) §3, unchanged and
+   uninvalidated by the delay; any class must be argued to one of that stage's
+   three outcomes from `validate.py` / `derive.py` with gold unopened.
+3. **The standing authority question** — is `dante_corpus/skel/repairs.py` an
+   admissible authority under discipline 3? It opens no gold file and its
+   rewrites are re-derivable from `derive.py`, but it is the same `skel/`
+   toolchain that built gold. [`STAGE6.md`](STAGE6.md) S6.3 prices both routes
+   (deterministic through `repairs.py`, which transcribes `derive_unit`; or live,
+   a session re-deriving the answer, which is what §1's autonomy premise actually
+   measures). It is the operator's call, and item 1 below is a narrower instance
+   of the same question.
 
 ### Carried out of Stage 7: the transcription-drift check (→ Stage 8 or later)
 
