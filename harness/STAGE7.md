@@ -214,8 +214,36 @@ of them a code read:
 the code. The three readouts above are what rule that out at the level the stage
 asks for; the operator's live inferno-1 re-run (delete the canto's TSV, run it
 through the real fallback) is the remaining check that the *live* path — the one
-no test touches, because nothing in the suite reaches a model — still behaves,
-and it had not been run when this record was written.
+no test touches, because nothing in the suite reaches a model — still behaves.
+It had not been run when this record was written; it has been run since, and the
+readout is below.
+
+**Live confirmation — the operator's inferno-1 re-run (2026-09-02 18:10 →
+19:39 UTC, folded in 2026-09-03).** TSV and log were swept first, so the
+telemetry covers exactly one run. The live path behaves:
+
+- **It ran.** 34 units, contiguous over lines 1–136 with no span gap, routes
+  `agent` 33 / `fast` 1, 105 `llm_request`/`llm_response` pairs, 34
+  `--verify-gold` `gold` records, 89 minutes wall clock (`fallback_seconds_total`
+  5,334.6, max 389.2), `api_retries` 3 / 117.0 s.
+- **The canto came back equivalent, not identical.** `git diff --stat` is 50
+  insertions / 48 deletions on `harness/recon/inferno/01.tsv`, which is the
+  expected unit-level variation of a live model (inferno 1 was re-run before, at
+  S5.6), and *not* a structural change: 34 units all present, rows in
+  non-decreasing `(line, token)` order, 6 fields on every one of the 449 lines,
+  the same 13 sentinel rows over the same 136 source lines, and the log's 435
+  `row_keys` matching the TSV's 435 role-bearing rows exactly in both directions.
+- **The log carries the whole contract.** Every `unit` record has `row_keys` and
+  its gate verdicts; one `canto_complete` with `skill_digest`
+  (`b16c0639…397ffa`), `elapsed_seconds` and `api_retries`; `summary` last.
+- **`make check` still 0 hard**, and soft moved as a live run may: this canto
+  46 → 43, corpus-wide 4,627 → **4,624**.
+
+Gold agreement for the canto fell, 0.7780 → 0.7582 F1 (rows 432 → 435, tp
+319 → 312) — read as a readout after the fact, per §4 item 1, not as a criterion:
+the same run that lost 7 TPs cleared 3 soft findings, which is the Stage-5
+finding that hard-clean and gold-close are different targets showing up again at
+canto scale.
 
 **Not done here.** No behaviour was added, removed or reordered, so nothing in
 the log contract, the gates, or the fix verdicts changed. `hybrid_engine.py`

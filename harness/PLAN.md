@@ -10,7 +10,8 @@ state that should survive indefinitely does not belong here: it belongs in
 Ledger**, or §2's per-stage records.
 
 **Nothing is running.** Level 1 is closed at **0 findings** and the corpus
-sits at **0 hard / 4,627 soft**. No fix run is in flight and none is
+sits at **0 hard / 4,624 soft** (4,627 before the inferno-1 re-run below). No
+fix run is in flight and none is
 scheduled; suite **987 passed**. Stage 6 closed on S6.11 and **Stage 7 is
 open** ([`STAGE7.md`](STAGE7.md), 2026-09-02) — the operator re-scoped it to
 **refactoring** rather than level 2, so soft level 2 keeps its candidates and
@@ -27,38 +28,25 @@ unchanged** (no test edited), `make check` still **0 hard / 4,627 soft**, and
 `--help` **byte-identical** to the pre-split CLI. The record is
 [`STAGE7.md`](STAGE7.md) S7.2.
 
-**The one thing in flight: the operator's live inferno-1 re-run, whose result
-the next session reports.** The suite reaches no model, so nothing above tests
-the *live* path; this is the check that it still runs after the split. Launched
-by the operator (assistant sessions never run LLM-in-the-loop commands):
+**The live inferno-1 re-run is done and passed** (operator ran it 2026-09-02
+18:10→19:39 UTC; read out 2026-09-03 and folded into
+[`STAGE7.md`](STAGE7.md)'s S7.2 record, which is where the detail lives — no
+new record, since it only confirms an existing one). The suite reaches no
+model, so this was the only check that the *live* path still runs after the
+split. All four questions answered: it ran (34 units, 105
+`llm_request`/`llm_response` pairs, 34 gold records, 89 min); the canto came
+back **equivalent but not identical** (50/48 line diff — expected live-model
+variation, as at S5.6 — with no structural change: units all present and
+contiguous, order intact, sentinels intact, log `row_keys` matching the TSV's
+435 rows both ways); the log carries the whole contract (`row_keys` + gate
+verdicts on every `unit`, one `canto_complete` with `skill_digest`, `summary`
+last); and `make check` is **still 0 hard**, with soft moving as a live run may
+— this canto 46 → 43, corpus 4,627 → 4,624. Gold agreement for the canto fell
+0.7780 → 0.7582, read as a readout only.
 
-```
-rm -f harness/recon/inferno/01.tsv harness/recon/inferno/01.log
-cd harness/recon && make inferno/01.tsv
-```
-
-(the log is swept deliberately, per §2's standing operational fact, so the run's
-telemetry is unambiguous). What the result has to answer, in this order:
-
-1. **Did it run at all** — session start, status bar, streamed output, the
-   `--verify-gold` gold records, the per-unit TSV writes.
-2. **Did the canto come back equivalent** — `git diff --stat
-   harness/recon/inferno/01.tsv`, then `git diff` if it is non-empty. A diff is
-   *not* by itself a regression: the fallback is a live model and inferno 1 has
-   been re-run before (S5.6), so unit-level variation is expected. What would be
-   a regression is a *structural* one — units missing, lines out of order, a
-   sentinel row lost, or the file no longer parsing.
-3. **Does the log carry the whole contract** — `unit` records with `row_keys`
-   and gate verdicts, one `canto_complete` with `skill_digest`,
-   `elapsed_seconds` and `api_retries`, `summary` last, and the
-   `llm_request`/`llm_response` pairs.
-4. **`make check` still 0 hard** afterwards (soft may move with the run).
-
-Where it lands: fold the readout into [`STAGE7.md`](STAGE7.md)'s S7.2 record as
-the live confirmation the record already says was outstanding — a new record is
-not needed for a check that only confirms an existing one. If it fails, that is
-S7.3 and the split is what to suspect first. Nothing else in Stage 7 is in
-flight; **the stage is the operator's to close.**
+**Nothing is left in flight in Stage 7 — the stage is the operator's to close.**
+The one open working-tree change is the re-run's `harness/recon/inferno/01.tsv`,
+uncommitted and awaiting the operator's decision.
 
 **S7.1 is done and committed** (`d70330a`): the agent's grammatical knowledge
 now lives in `runner/skills/grammar-agent/` behind `harness/skills.py`,
@@ -115,7 +103,8 @@ holds only what's still open.
       [`STAGE7.md`](STAGE7.md) §2.
 - [x] **Stage 6 — Soft Divergence Reduction** (OPENED 2026-08-30 by
       operator, on Stage 5's close). Everything left in the recon corpus is
-      soft: **0 hard / 4,627 soft** (5,014 at the stage's open), mostly
+      soft: **0 hard / 4,624 soft** (5,014 at the stage's open; 4,627 at the
+      stage's close, moved by the S7.2 live re-run), mostly
       deterministic work over the committed TSVs. Record S6.1 audited the
       classification before letting it drive anything ([`SOFT.md`](SOFT.md);
       summary in §2 below): the counter's zero point is tolerance-mediated, so
