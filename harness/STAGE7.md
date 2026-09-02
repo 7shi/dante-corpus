@@ -10,23 +10,24 @@ that analysis is invalidated by the delay.
 
 ## 1. Scope & why now
 
-Six stages of live-run work left the harness working but top-heavy. Three
-specific weights, in the order they were agreed:
+Six stages of live-run work left the harness working but top-heavy. Two weights,
+and **only** these two — the stage is deliberately narrow (operator's decision,
+2026-09-02, on seeing where the third was heading):
 
 1. **The agent's domain knowledge is hidden inside Python string literals.**
    `runner/prompts.py` held the role framing, the skeleton row conventions and
    the whole 5-step reasoning protocol as module constants. Prompt wording is
    the most consequential thing in the project and it was the least reviewable:
    a change to it looked like a code change, and no run recorded which wording
-   it ran under.
-2. **The transcription drift between `harness/` and `dante_corpus/` is a class,
-   not a point.** S6.10 found `runner/tools.py`'s gate narrower than the
-   `validate.py` contract it transcribes, after five corpus-wide runs had been
-   spent on the symptom. One test now covers the anchor rule; the drift it
-   belongs to is not otherwise covered.
-3. **`extractor/reconstruct.py` is 1,928 lines** carrying the canto loop, fix
+   it ran under. (**S7.1, done.**)
+2. **`extractor/reconstruct.py` is 1,928 lines** carrying the canto loop, fix
    planning, salvage, the TSV artifact, the gold face, reporting and the CLI in
-   one module.
+   one module. (**S7.2.**)
+
+A third candidate — generalizing the `harness/` ↔ `dante_corpus/` transcription
+check S6.10 opened — **was investigated and then re-scoped out to Stage 8 or
+later**, because it turned out to raise an authority question rather than a
+tidying one. The measurement is recorded in §4 so it need not be redone.
 
 Nothing here changes what a run produces. The stage's standing rule: **every
 refactoring step must be argued to be behaviour-neutral, and where the output is
@@ -166,15 +167,65 @@ refactor.
 
 ## 4. Remaining stage scope
 
-- **S7.2 (planned) — generalize the transcription-drift check.** S6.10's
-  `test_anchor_gate_is_never_stricter_than_validate` covers one rule. Every
-  constraint `runner/tools.py`'s gate enforces should be checked against the
-  `validate.py` clause it transcribes, so a gate that refuses what the corpus
-  permits fails a test instead of costing corpus-wide runs. This is also the
-  reusable observer the Warp pattern's improver would need, minus the loop.
-  [`PLAN.md`](PLAN.md)'s Handoff names this as the check to write before level 2
-  spends a live run.
-- **S7.3 (planned) — split `extractor/reconstruct.py`.** The responsibility
+- **S7.2 (planned) — split `extractor/reconstruct.py`.** The responsibility
   boundaries are already visible in the module (`FixPlan` / `fix_*` / `salvage_*`,
   `TsvArtifact`, `GoldReport` / `GoldFace`, `ReconstructReport`, the CLI). Same
   neutrality bar: the pipeline's behaviour must not move.
+
+That is the whole of the stage. The item below is **not** in it.
+
+### Carried out of Stage 7: the transcription-drift check (→ Stage 8 or later)
+
+Investigated 2026-09-02 and deliberately left unimplemented — no test was
+written and no code changed. Recorded here so the next stage starts from the
+numbers rather than repeating the sweep.
+
+**Why it left the stage.** It stopped being refactoring. Generalizing S6.10's
+one-clause check turns out to require deciding *what the gate ought to be*, which
+is a live authority question under Standing Invariant §1, not a neutrality-bound
+tidy-up. Stage 7's rule is that every step is behaviour-neutral; this one cannot
+be.
+
+**What was measured.** Two sweeps, both over the committed corpus's frozen L1–L4
+layers:
+
+| Sweep | Scale | Result |
+|---|---|---|
+| Replay the 100 committed recon TSVs through `validate_candidate` | 3,477 units / 42,848 rows, 2.5 s | **0 refusals** |
+| Generate every (predicate, argument, nominal role) triple per unit and compare `anchor_admits` against `validate.py` 150–179 rebuilt from its own helpers | 25,369,120 triples, 38 s | gate **looser**: 0; gate **stricter**: 317,305 |
+
+The replay is cheap but **circular**: rows the gate refuses were never written
+into the artifact, so a gate that is too strict stays consistent with its own
+output. The generated sweep is the non-circular direction, and its verdict is
+clean in both halves — the gate never admits what `validate.py` rejects, and
+every position where it is stricter falls into exactly the three clauses
+`runner/tools.py` (the `ARG_DEPRELS` note) already declares untranscribed:
+**DG** coordination head 191,210, **AQ** aux head 125,342, **DS** marker slot
+753. **No unknown drift exists**: the five transcribed clauses are faithful and
+the gap is precisely the declared one.
+
+**The question that made it a Stage-8 item.** `tools.py`'s note says these three
+"are tree walks and no position in the corpus needs them here". The replay shows
+that is true of the *committed* corpus; the generated sweep shows 317,305
+positions outside it that do. Whether that matters is an authority question:
+AQ, DG and DS are all `rule_active()` registry rules — the gold-fitted
+tolerances S6.1 identified (88 of the 130 rules excusing 3,250 positions where
+gold itself diverges from `derive_unit`). Transcribing them would widen the
+*agent's* gate on the authority of a fit to gold. AF was transcribed on the same
+footing in S6.10, so there is precedent, but precedent is not a principle. The
+three options as they stand:
+
+1. **Pin the gap.** Leave the three untranscribed and add the generated sweep as
+   a test asserting the difference is *exactly* AQ/DG/DS and nothing else — new
+   drift fails, no tolerance enters the gate. (The assistant's recommendation at
+   the time; not acted on.)
+2. **Transcribe the three.** The gate then matches `validate.py` exactly and the
+   S6.9 deadlock becomes structurally impossible, at the cost of three more
+   gold-fitted tolerances inside the agent's gate.
+3. **Scope the property to what a `--fix` level can select.** S6.9's deadlock
+   was about a level's bar naming a position the gate refuses; that, not the
+   full cross-product, is the domain that actually matters.
+
+Whichever is chosen, the replay sweep is worth keeping as a cheap regression
+guard on its own (2.5 s, generalizing S6.10's thirteen cantos and one clause to
+all hundred and every transcribed clause).

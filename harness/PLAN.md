@@ -9,40 +9,42 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**Nothing is running.** Level 1 is closed at **0 findings** and the corpus
-sits at **0 hard / 4,627 soft**. No fix run is in flight and none is
-scheduled. Stage 6 closed on S6.11 and **Stage 7 is open**
-([`STAGE7.md`](STAGE7.md), 2026-09-02) — the operator re-scoped it to
-**refactoring** rather than level 2, so soft level 2 keeps its candidates and
-eligibility list in [`STAGE6.md`](STAGE6.md) §3 and waits for a stage of its
-own; none of that analysis is invalidated by the delay.
+**Nothing is running and the working tree is clean.** Level 1 is closed at
+**0 findings** and the corpus sits at **0 hard / 4,627 soft**. No fix run is
+in flight and none is scheduled; suite **987 passed**. Stage 6 closed on
+S6.11 and **Stage 7 is open** ([`STAGE7.md`](STAGE7.md), 2026-09-02) — the
+operator re-scoped it to **refactoring** rather than level 2, so soft level 2
+keeps its candidates and eligibility list in [`STAGE6.md`](STAGE6.md) §3 and
+waits for a stage of its own; none of that analysis is invalidated by the
+delay.
 
-**Where Stage 7 stands: S7.1 is done, S7.2 is next.** S7.1 moved the agent's
-grammatical knowledge out of `runner/prompts.py`'s string constants into
-`runner/skills/grammar-agent/` behind a new `harness/skills.py` loader,
-byte-exact across all eight assembled outputs, and made every
-`canto_complete` record carry a `skill_digest` so a run's wording is
-auditable after the fact (Standing Invariant §6). Suite **987 passed**. The
-stage's standing rule is neutrality: every step must be argued
-behaviour-neutral, and where the output is prompt text, proven byte-exact.
-S7.2 (generalize the transcription-drift check) and S7.3 (split
-`extractor/reconstruct.py`, 1,928 lines) are the remaining scope — detail,
-including the Warp self-improving-agent analysis the stage opened from and
-why its improver loop is **not** in scope, lives in
-[`STAGE7.md`](STAGE7.md).
+**The one live next step: S7.2 — split `extractor/reconstruct.py` (1,928
+lines).** It is the whole of what remains in Stage 7. The seams are already
+visible in the module and need no fresh analysis: `FixPlan` / `plan_fix` /
+`fix_verdict` / `revert_outcome` / `salvage_*` / `fix_diagnosis` (the Stage-6
+fix machinery), `TsvArtifact` + `commit` + `render_tsv` (the durable
+artifact), `GoldReport` / `GoldFace` / `verify_against_gold` (the evaluation
+face, which must stay structurally separate from the execution face —
+Orientation item 4), `ReconstructReport` + `load_log` (reporting), and
+`main` + `_select_cantos` (the CLI). `reconstruct_canto` and `UnitOutcome`
+are the core the rest hangs off. **The stage's bar applies: the split must be
+argued behaviour-neutral**, so the 987-test suite passing unchanged is the
+evidence, not a code read.
 
-**S7.2 is also the check level 2 needs before it spends a live run.** Level 1
-ran five times (377 → 83 → 37 → 25 → 14 → 12 → 0) under four different
-mechanism changes — a salvage splice, two session-loop levers, refusal
-logging — and none of them moved the count; what closed it was S6.10 finding
-that `harness/`'s own transcription of `validate.py`'s anchor rule (in
-`runner/tools.py`) was narrower than the contract it was supposed to
-transcribe, so the session's gate was refusing rows the corpus itself
-permits. `test_anchor_gate_is_never_stricter_than_validate`
-(`tests/test_harness_*.py`, added S6.10) covers that one rule;
-generalizing it to every constraint the gate transcribes is S7.2. So: check
-that a level's bar and its selection name the same positions, and that both
-agree with `validate.py`, before running it.
+**S7.1 is done and committed** (`d70330a`): the agent's grammatical knowledge
+now lives in `runner/skills/grammar-agent/` behind `harness/skills.py`,
+byte-exact across all eight assembled outputs, with `skill_digest` in every
+`canto_complete`. Nothing about it is in flight.
+
+**Do not reopen the transcription-drift check here** — it was investigated on
+2026-09-02 and the operator moved it to **Stage 8 or later**, because it
+raises a §1 authority question rather than a tidying one and so cannot meet
+Stage 7's neutrality bar. It was left deliberately unimplemented: no test was
+written and no code changed. Both sweeps, their numbers, and the three
+options the next stage will choose between are recorded in
+[`STAGE7.md`](STAGE7.md) §4 — read that rather than re-running them (the
+generated sweep costs 38 s and 25.4 M comparisons). It remains the check soft
+level 2 wants before it spends a live run.
 
 **The standing authority question is still open and still the operator's**:
 is `dante_corpus/skel/repairs.py` an admissible authority under discipline 3?
@@ -62,14 +64,18 @@ live in §2's per-stage subsections below, not repeated here. This section
 holds only what's still open.
 
 - [ ] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator, on Stage 6's
-      close; scope re-decided the same day from "level 2" to refactoring).
-      Three weights six stages of live-run work left behind: the agent's
-      knowledge hidden in Python string literals (**S7.1, done** — now
-      `runner/skills/grammar-agent/` behind `harness/skills.py`, byte-exact,
-      with `skill_digest` in every `canto_complete`), the `harness/` ↔
-      `dante_corpus/` transcription drift that S6.10 exposed as a class rather
-      than a point (**S7.2, next**), and `extractor/reconstruct.py`'s 1,928
-      lines (**S7.3**). Standing rule: behaviour-neutral, and byte-exact
+      close; scope re-decided the same day from "level 2" to refactoring, and
+      narrowed again the same day to two items). Two weights six stages of
+      live-run work left behind: the agent's knowledge hidden in Python string
+      literals (**S7.1, done** — now `runner/skills/grammar-agent/` behind
+      `harness/skills.py`, byte-exact, with `skill_digest` in every
+      `canto_complete`) and `extractor/reconstruct.py`'s 1,928 lines (**S7.2,
+      next**). A third candidate — generalizing the `harness/` ↔
+      `dante_corpus/` transcription check — was investigated and **moved to
+      Stage 8 or later**: it raises a §1 authority question rather than a
+      tidying one, so it cannot meet this stage's neutrality bar; the sweeps
+      are recorded in [`STAGE7.md`](STAGE7.md) §4. Standing rule:
+      behaviour-neutral, and byte-exact
       wherever the output is prompt text. The stage opened from a review of
       Warp's self-improving-agent pattern; what it takes from that pattern
       (knowledge as plain files, a reusable contract-derived observer) and what
@@ -440,8 +446,9 @@ refuses, at least for now: the improver loop itself — **gold cannot be its
 tuning signal** without voiding every gold-referenced number the project reports
 (Standing Invariant §1), and a frontier model rewriting the local model's prompt
 sits uncomfortably close to the Phase 5–8 rails §1 says `harness/` exists to
-replace. The argument, and the remaining scope (S7.2 transcription-drift check,
-S7.3 the `reconstruct.py` split), live in [`STAGE7.md`](STAGE7.md).
+replace. That argument, the remaining scope (S7.2, the `reconstruct.py` split),
+and the transcription-drift sweeps carried out to Stage 8 live in
+[`STAGE7.md`](STAGE7.md).
 
 ### Beyond Layer 5 (design notes)
 
