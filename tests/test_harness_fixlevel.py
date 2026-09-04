@@ -259,26 +259,36 @@ def test_every_row_level_2_asks_for_is_admissible_to_the_session_gate():
     it — so the session can always write the row the level asks for. S6.9's deadlock
     (the level requiring a row its own gate refused) cannot arise here, and this
     test is what says so if either side moves.
+
+    Findings are manufactured the way `_level2_target` does — a gold row deleted at
+    a time — rather than read off the live `harness/recon` artifact: gold is frozen
+    and the artifact is not (a corpus-wide `--fix` run rewrites it between sessions),
+    so a finding this test can rely on has to come from a source that does not.
     """
     from harness.runner import tools
 
-    root = recon_check.Path(recon_check.__file__).parent
     checked = 0
     for canto in (1, 2):
-        result = recon_check.check_canto("inferno", canto, root)
-        findings = fixlevel.select(
-            [v for v in result["violations"] if v.kind == "tag"],
-            2, result["rows"], result["dep_rows"],
-        )
+        layers = rc.CantoLayers.load("inferno", canto)
+        gold = load_skel("inferno", canto)
         data = tools._load_canto("inferno", canto)
         predicates = frozenset(
             (r.line, r.token)
-            for rows in result["rows"].values() for r in rows if r.token > 0
+            for rows in gold.values() for r in rows if r.token > 0
         )
-        for v in findings:
-            if fixlevel.OMITTED_L4_ARGUMENT.matches(v, result["dep_rows"]):
-                assert tools.anchor_admits(data, predicates, v.role, v.arg)
-                checked += 1
+        for group in layers.units():
+            rows = {no: list(gold.get(no, [])) for no in group}
+            for row in [r for rs in rows.values() for r in rs]:
+                candidate = {
+                    no: [r for r in rs if r is not row] for no, rs in rows.items()
+                }
+                hard, soft = rc._validate_rows(layers, group, candidate)
+                if hard:
+                    continue
+                for v in fixlevel.select(soft, 2, candidate, layers.dep_rows):
+                    if fixlevel.OMITTED_L4_ARGUMENT.matches(v, layers.dep_rows):
+                        assert tools.anchor_admits(data, predicates, v.role, v.arg)
+                        checked += 1
     assert checked > 0
 
 
