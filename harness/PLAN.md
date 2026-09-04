@@ -610,6 +610,10 @@ stage's actual problem and wants a candidate answer before the file is opened.
 on the measurements (the logs predate S5.5), the re-reading of S3.7 — which
 measured compaction against *total* wire when the binding quantity is the
 per-request *maximum* — and a candidate Standing Invariant §7 for the budget.
+Its §2.1 states the loop as types, where `fixrun.py`'s standing guarantee turns
+out to be the statement that every step is an endomorphism on $\Sigma$ whose
+failure case is the identity — a property a new mode inherits by construction
+or not at all.
 
 ### Beyond Layer 5 (design notes)
 
