@@ -131,6 +131,7 @@ from harness.extractor.fixrun import (
     refusal_note,
     revert_outcome,
     row_delta,
+    salvage_by_row,
     salvage_outcome,
     salvage_rows,
 )
@@ -767,6 +768,33 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                                 unit_verdict = fix_verdict_reason
                                 fix_verdict_reason = "salvaged"
                                 outcome = candidate
+                        if not accepted:
+                            # S8.3's third scope: the splice of every named row
+                            # was refused as one, so measure the named rows
+                            # one finding at a time — a row the level called
+                            # correct is not thrown away for a sibling's sake.
+                            per_row, taken, offered = salvage_by_row(
+                                outcome, fix_plan, span
+                            )
+                            if per_row is not None:
+                                salvaged, salvage_reason = fix_verdict(
+                                    before, per_row.hard, per_row.soft, level,
+                                    dep_rows,
+                                )
+                                diagnosis["salvage_by_row"] = {
+                                    "verdict": salvage_reason,
+                                    "taken": taken, "offered": offered,
+                                }
+                                if salvaged:
+                                    accepted = True
+                                    unit_verdict = fix_verdict_reason
+                                    fix_verdict_reason = "salvaged"
+                                    outcome = per_row
+                            elif offered:
+                                diagnosis["salvage_by_row"] = {
+                                    "verdict": "no_row_stands",
+                                    "taken": 0, "offered": offered,
+                                }
                     if accepted:
                         for key, value in row_delta(
                             fix_plan.prior[span], outcome.rows

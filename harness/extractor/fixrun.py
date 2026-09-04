@@ -4,8 +4,9 @@ Split out of `reconstruct.py` (S7.2). Everything a `--fix <level>` run decides
 lives here, in the order the run uses it: `plan_fix` selects the settled units
 carrying a finding of the level, `fix_verdict` decides whether the session's
 answer may replace the recorded rows, `salvage_outcome` re-measures the answer
-at position scope when the whole unit is refused, and `revert_outcome` puts the
-record back verbatim when neither passes. `fix_diagnosis` and `row_delta` report
+at position scope when the whole unit is refused, `salvage_by_row` re-measures it
+one finding's row at a time when that is refused too, and `revert_outcome` puts
+the record back verbatim when none of them passes. `fix_diagnosis` and `row_delta` report
 the mechanism (`../PLAN.md` discipline 6) after the verdict is already decided.
 
 The two disciplines this module exists to hold: selection never decides
@@ -42,6 +43,7 @@ __all__ = [
     "refusal_note",
     "revert_outcome",
     "row_delta",
+    "salvage_by_row",
     "salvage_outcome",
     "salvage_rows",
 ]
@@ -238,6 +240,83 @@ def salvage_outcome(
         soft=soft,
         token_assertions=[],
     )
+
+
+def salvage_by_row(
+    outcome: UnitOutcome, plan: FixPlan, span: Span
+) -> tuple[UnitOutcome | None, int, int]:
+    """The third scope: take the answer one *finding's* row at a time.
+
+    Why there is a scope below `salvage_outcome`'s. That one splices every row the
+    level named in this unit and measures the result as one, so a single row the
+    model labelled wrongly refuses the whole splice along with its correct
+    siblings. S8.2's residue is where that cost showed: at `purgatorio 10`
+    (13-21) the answer carried four named rows, three of them agreeing with the
+    derivation exactly, and all four were dropped because the fourth read
+    `xcomp` where the derivation reads `obl:per`. The unit was re-answered four
+    times over the run's relaunches and refused identically each time, so the
+    rows were not going to arrive by re-asking.
+
+    Each finding's rows are therefore spliced and measured on their own, in a
+    deterministic order, against the state accumulated so far: a step is kept
+    only when it stays hard-clean, introduces no class the unit did not carry,
+    and strictly lowers the level's own finding count. Every kept step is an
+    improvement that was measured, so the standing guarantee is unchanged — the
+    artifact cannot end worse than it started, and the whole result is still put
+    to `fix_verdict` by the caller rather than assumed.
+
+    Returns `(outcome | None, taken, offered)`: `None` when nothing finer than
+    the unit-scope splice is available (no layers, failed token assertions, fewer
+    than two findings carrying rows) or when no single row survived on its own.
+    """
+    if plan.layers is None or outcome.token_assertions:
+        return None, 0, 0
+    findings = fixlevel.select(
+        plan.before[span], plan.level, plan.prior[span], plan.dep_rows
+    )
+    offers = []
+    for v in findings:
+        keys = fixlevel.governed_keys([v], plan.level, plan.dep_rows)
+        if keys:
+            offers.append((sorted(keys), keys))
+    if len(offers) < 2:
+        # One finding's rows *are* the unit-scope splice; re-measuring them
+        # under another name would only repeat that verdict.
+        return None, 0, 0
+    offers.sort(key=lambda offer: offer[0])
+
+    seen = {fixlevel.violation_class(v) for v in plan.before[span]}
+    rows = {no: list(rs) for no, rs in plan.prior[span].items()}
+    hard, soft = list(plan.before_hard[span]), list(plan.before[span])
+    taken = 0
+    for _, keys in offers:
+        trial = salvage_rows(rows, outcome.rows, keys)
+        trial_hard, trial_soft = validate_rows(
+            plan.layers, plan.groups[span], trial
+        )
+        if trial_hard:
+            continue
+        if {fixlevel.violation_class(v) for v in trial_soft} - seen:
+            continue
+        if len(fixlevel.select(trial_soft, plan.level, dep_rows=plan.dep_rows)) \
+                >= len(fixlevel.select(soft, plan.level, dep_rows=plan.dep_rows)):
+            continue
+        rows, hard, soft = trial, trial_hard, trial_soft
+        taken += 1
+    if not taken:
+        return None, 0, len(offers)
+    return dataclasses.replace(
+        outcome,
+        rows=rows,
+        row_keys=frozenset(
+            (r.line, r.token, r.role, r.arg_line, r.arg_token)
+            for rs in rows.values()
+            for r in rs
+        ),
+        hard=hard,
+        soft=soft,
+        token_assertions=[],
+    ), taken, len(offers)
 
 
 def refusal_note(diagnosis: dict | None) -> str:

@@ -9,6 +9,7 @@ hard-coded — gold scores 0 soft, so downgrading one `obl:<lemma>` row to bare
 qualifies that oblique, and the test searches for the first such row.
 """
 
+import collections
 import dataclasses
 import io
 import json
@@ -90,6 +91,66 @@ def _level2_target(canticle="inferno", canto=1):
             if not hard and len(found) == 1:
                 return group, row, candidate
     pytest.skip(f"no level-2 target in {canticle} {canto}")
+
+
+def _level2_pair_target(canticle="inferno", canto=1):
+    """A unit two of whose deleted rows manufacture exactly two level-2 findings.
+
+    What `_level2_target` does, one row further: S8.3's scope only exists where a
+    unit carries more than one named row, since with one the per-row splice *is*
+    the unit-scope splice. Returns `(unit_group, kept, mislabelled, rows_without)`
+    — `kept` is the row the stub answer will get right, `mislabelled` the one it
+    will get wrong.
+    """
+    layers = rc.CantoLayers.load(canticle, canto)
+    gold = load_skel(canticle, canto)
+    for group in layers.units():
+        rows = {no: list(gold.get(no, [])) for no in group}
+        flat = [r for rs in rows.values() for r in rs]
+        for i, first in enumerate(flat):
+            for second in flat[i + 1:]:
+                candidate = {
+                    no: [r for r in rs if r is not first and r is not second]
+                    for no, rs in rows.items()
+                }
+                hard, soft = rc._validate_rows(layers, group, candidate)
+                if hard:
+                    continue
+                found = fixlevel.select(soft, 2, candidate, layers.dep_rows)
+                named = {(v.predicate, v.arg) for v in found}
+                wanted = {
+                    ((r.line, r.token), (r.arg_line, r.arg_token))
+                    for r in (first, second)
+                }
+                if len(found) == 2 and named == wanted:
+                    return group, first, second, candidate
+    pytest.skip(f"no level-2 pair in {canticle} {canto}")
+
+
+def _mislabelled(layers, group, rows, row):
+    """`row` under a role that costs the answer its acceptance, hard-clean.
+
+    Located rather than hard-coded, like `_extra_row_that_trades_a_class`: any
+    role at the same position that makes `validate_unit` report `role_mismatch`
+    — the class a wrong label trades a `missing_arg` for.
+    """
+    seen = {fixlevel.violation_class(v) for v in rc._validate_rows(
+        layers, group, rows)[1]}
+    for role in ("obj", "subj", "iobj", "obl", "attr", "obl:di", "obl:in"):
+        if role == row.role:
+            continue
+        wrong = SkelRow(row.line, row.token, row.word, role,
+                        row.arg_line, row.arg_token)
+        candidate = {no: list(rs) for no, rs in rows.items()}
+        candidate[row.line] = candidate.get(row.line, []) + [wrong]
+        hard, soft = rc._validate_rows(layers, group, candidate)
+        if hard:
+            continue
+        if "role_mismatch" in {
+            fixlevel.violation_class(v) for v in soft
+        } - seen:
+            return wrong
+    pytest.skip("no mislabelling of this row trades exactly one class")
 
 
 def _write_tsv(path, rows_by_line, nos):
@@ -251,23 +312,34 @@ def test_toolkit_flags_add_no_session_bar_at_level_2():
     assert fixlevel.toolkit_flags(2) == fixlevel.toolkit_flags(1)
 
 
-def test_every_row_level_2_asks_for_is_admissible_to_the_session_gate():
-    """The alignment check S6.10 says to make first, and here it is structural.
+def test_every_row_any_level_asks_for_is_admissible_to_the_session_gate():
+    """The alignment check S6.10 says to make first, generalized to the whole table.
 
-    Level 2 names only arguments that sit under a Layer-4 `ARG_DEPRELS` edge, which
-    is clause AF of `validate.py`'s anchor rule and of the gate's transcription of
-    it — so the session can always write the row the level asks for. S6.9's deadlock
-    (the level requiring a row its own gate refused) cannot arise here, and this
-    test is what says so if either side moves.
+    The standing property, decided in Stage 8 §2 (2026-09-05) as the third of the
+    transcription-drift options: **whatever a `--fix` level selects, the session gate
+    admits the row it asks for**. That is the domain where a gate/`validate.py` gap
+    can actually bite — S6.9's deadlock was a level requiring a row its own gate
+    refused — and it is scoped deliberately narrower than gate-equals-contract
+    everywhere, which would mean transcribing three gold-fitted tolerances (AQ, DG,
+    DS) into the agent's gate on the authority of a fit to gold.
 
-    Findings are manufactured the way `_level2_target` does — a gold row deleted at
-    a time — rather than read off the live `harness/recon` artifact: gold is frozen
-    and the artifact is not (a corpus-wide `--fix` run rewrites it between sessions),
-    so a finding this test can rely on has to come from a source that does not.
+    It holds structurally today for both classes: level 2 names only arguments under
+    a Layer-4 `ARG_DEPRELS` edge, which *is* clause AF of the anchor rule and of the
+    gate's transcription of it, and level 1 relabels a row already anchored there.
+    The loop is over `classes_for(MAX_LEVEL)` rather than over the two by name, so a
+    class joining the table inherits the requirement instead of being exempt from it
+    by omission — and every class must be *exercised*, so a level this fixture never
+    reaches fails loudly rather than passing vacuously.
+
+    Findings are manufactured the way `_level1_target` / `_level2_target` do — one
+    gold row downgraded or deleted at a time — rather than read off the live
+    `harness/recon` artifact: gold is frozen and the artifact is not (a corpus-wide
+    `--fix` run rewrites it between sessions), so a finding this test can rely on has
+    to come from a source that does not.
     """
     from harness.runner import tools
 
-    checked = 0
+    checked = collections.Counter()
     for canto in (1, 2):
         layers = rc.CantoLayers.load("inferno", canto)
         gold = load_skel("inferno", canto)
@@ -279,17 +351,30 @@ def test_every_row_level_2_asks_for_is_admissible_to_the_session_gate():
         for group in layers.units():
             rows = {no: list(gold.get(no, [])) for no in group}
             for row in [r for rs in rows.values() for r in rs]:
-                candidate = {
-                    no: [r for r in rs if r is not row] for no, rs in rows.items()
-                }
-                hard, soft = rc._validate_rows(layers, group, candidate)
-                if hard:
-                    continue
-                for v in fixlevel.select(soft, 2, candidate, layers.dep_rows):
-                    if fixlevel.OMITTED_L4_ARGUMENT.matches(v, layers.dep_rows):
-                        assert tools.anchor_admits(data, predicates, v.role, v.arg)
-                        checked += 1
-    assert checked > 0
+                key = (row.line, row.token, row.role, row.arg_line, row.arg_token)
+                candidates = [
+                    # deletion: the artifact omits a row (the `missing_arg` family)
+                    {no: [r for r in rs if r is not row] for no, rs in rows.items()},
+                    # downgrade: the row is there under a coarser role
+                    _downgraded_rows(rows, key),
+                ]
+                for candidate in candidates:
+                    hard, soft = rc._validate_rows(layers, group, candidate)
+                    if hard:
+                        continue
+                    for v in fixlevel.select(
+                        soft, fixlevel.MAX_LEVEL, candidate, layers.dep_rows
+                    ):
+                        for cls in fixlevel.classes_for(fixlevel.MAX_LEVEL):
+                            if not cls.matches(v, layers.dep_rows):
+                                continue
+                            assert tools.anchor_admits(
+                                data, predicates, v.role, v.arg
+                            ), f"{cls.name} asks for a row the gate refuses: {v.detail}"
+                            checked[cls.name] += 1
+    assert set(checked) == {
+        cls.name for cls in fixlevel.classes_for(fixlevel.MAX_LEVEL)
+    }
 
 
 def test_levels_are_cumulative_and_bounded():
@@ -916,6 +1001,114 @@ def test_fix_level_2_keeps_the_record_when_the_argument_is_not_written(
     assert unit["fix"]["verdict"] == "no_improvement"
     # the row the level named never came back, and the diagnosis says so
     assert unit["fix"]["refused"]["governed_rows"]["missing"] >= 1
+    # and below two named rows there is nothing finer than the unit-scope
+    # splice, so S8.3's per-row pass reports nothing rather than repeating that
+    # verdict under a second name
+    assert "salvage_by_row" not in unit["fix"]["refused"]
+
+
+def _pair_seed(tmp_path, monkeypatch):
+    """A level-2 unit carrying two named rows, seeded as a one-canto artifact."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    _write_log(tmp_path / "bench-x.log", [_case_record()])
+    layers = rc.CantoLayers.load("inferno", 1)
+    gold = load_skel("inferno", 1)
+    group, kept, wrong_one, without = _level2_pair_target()
+    merged = {no: list(gold.get(no, [])) for no in layers.nos}
+    merged.update(without)
+    tsv = tmp_path / "01.tsv"
+    _write_tsv(tsv, merged, layers.nos)
+    return tsv, layers, group, kept, wrong_one, merged
+
+
+def test_fix_takes_the_named_rows_one_at_a_time_when_a_sibling_row_is_wrong(
+    tmp_path, monkeypatch
+):
+    """S8.3's third scope, and the residue that motivated it.
+
+    The unit-scope splice takes every row the level named at once and measures
+    them as one, so a single wrong label refuses the correct rows with it. That
+    is what held three of S8.2's residual twelve: at `purgatorio 10` (13-21) the
+    answer named four rows, three agreeing with the derivation exactly, and all
+    four were dropped for the fourth's sake — over four independent attempts.
+
+    Here the answer restores one omitted argument correctly and writes the other
+    under a role the derivation does not give it. The whole answer is refused
+    (`new_class:role_mismatch`), the all-rows splice is refused for the same
+    reason, and the per-row pass keeps the correct row and leaves the other.
+    """
+    tsv, layers, group, kept, wrong_one, merged = _pair_seed(tmp_path, monkeypatch)
+    unit_rows = {no: list(merged.get(no, [])) for no in group}
+    wrong = _mislabelled(layers, group, unit_rows, wrong_one)
+
+    answer = {no: list(merged.get(no, [])) for no in layers.nos}
+    answer[kept.line] = answer.get(kept.line, []) + [kept]
+    answer[wrong.line] = answer.get(wrong.line, []) + [wrong]
+
+    def fallback(**kw):
+        return _StubResult(_rows_payload(answer, kw["line_start"], kw["line_end"]))
+
+    assert rc.main(_fix_argv(tmp_path, tsv, level=2), fallback=fallback) == 0
+
+    # the correct row landed; the mislabelled one did not
+    expected = {no: list(merged.get(no, [])) for no in layers.nos}
+    expected[kept.line] = expected.get(kept.line, []) + [kept]
+    assert tsv.read_text(encoding="utf-8") == rc.render_tsv(
+        [(no, expected.get(no, [])) for no in sorted(layers.nos)]
+    )
+
+    records = [
+        json.loads(line)
+        for line in (tmp_path / "recon.log").read_text(encoding="utf-8").splitlines()
+    ]
+    unit = next(
+        r for r in records
+        if r.get("record") == "unit" and r.get("line_start") == group[0]
+    )
+    assert unit["fix"]["verdict"] == "salvaged"
+    assert unit["fix"]["unit_verdict"].startswith("new_class:")
+    refused = unit["fix"]["refused"]
+    assert refused["salvage"].startswith("new_class:")  # the all-rows splice
+    assert refused["salvage_by_row"] == {
+        "verdict": "accepted", "taken": 1, "offered": 2,
+    }
+    complete = next(r for r in records if r.get("record") == "canto_complete")
+    assert complete["fix"]["verdict:salvaged"] == 1
+    assert complete["fix"]["findings_before"] == 2
+    assert complete["fix"]["findings_after"] == 1
+    assert complete["fix"]["rows_added"] == 1
+    assert complete["fix"]["rows_removed"] == 0
+
+
+def test_per_row_salvage_still_cannot_leave_the_unit_worse(tmp_path, monkeypatch):
+    """The standing guarantee, at the new scope: every kept step was measured.
+
+    Both named rows come back mislabelled, so no single row stands on its own and
+    the record goes back verbatim — the run's own diagnosis says the scope was
+    offered two rows and took none."""
+    tsv, layers, group, kept, wrong_one, merged = _pair_seed(tmp_path, monkeypatch)
+    before = tsv.read_text(encoding="utf-8")
+    unit_rows = {no: list(merged.get(no, [])) for no in group}
+    answer = {no: list(merged.get(no, [])) for no in layers.nos}
+    for row in (kept, wrong_one):
+        wrong = _mislabelled(layers, group, unit_rows, row)
+        answer[wrong.line] = answer.get(wrong.line, []) + [wrong]
+
+    def fallback(**kw):
+        return _StubResult(_rows_payload(answer, kw["line_start"], kw["line_end"]))
+
+    assert rc.main(_fix_argv(tmp_path, tsv, level=2), fallback=fallback) == 0
+    assert tsv.read_text(encoding="utf-8") == before
+
+    unit = next(
+        json.loads(line)
+        for line in (tmp_path / "recon.log").read_text(encoding="utf-8").splitlines()
+        if json.loads(line).get("record") == "unit"
+        and json.loads(line).get("line_start") == group[0]
+    )
+    assert unit["fix"]["verdict"].startswith("new_class:")
+    assert unit["fix"]["refused"]["salvage_by_row"]["taken"] == 0
+    assert unit["fix"]["refused"]["salvage_by_row"]["offered"] == 2
 
 
 def test_fix_summary_reports_the_mechanism_of_an_accepted_repair(
