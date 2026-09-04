@@ -142,6 +142,7 @@ line	token	word	role	arg_line	arg_token
 44	3	celai	obj	44	2
 44	3	celai	iobj	44	2
 44	7	apersi	subj	43	1
+44	7	apersi	obj	44	5
 44	7	apersi	obj	44	6
 44	7	apersi	iobj	44	6
 45	3	levò	subj	45	2
@@ -160,9 +161,13 @@ line	token	word	role	arg_line	arg_token
 48	7	dispersi	obl:per	48	5
 49	4	cacciati	subj	49	2
 49	6	tornar	subj	49	5
+49	6	tornar	obl:di	49	9
+49	6	tornar	obl	50	9
 50	1	rispuos'	subj	50	2
 50	1	rispuos'	iobj	50	3
+50	1	rispuos'	ccomp	49	6
 51	5	appreser	subj	51	3
+51	5	appreser	obj	51	8
 52	2	surse	subj	53	2
 52	2	surse	obl	52	1
 52	2	surse	obl:a	52	5
@@ -204,9 +209,11 @@ line	token	word	role	arg_line	arg_token
 63	5	ebbe	obj	63	2
 63	5	ebbe	obl:a	63	7
 64	0			0	0
+65	6	letto	subj	64	3
 65	6	letto	obj	65	8
 65	6	letto	iobj	65	1
-66	0			0	0
+66	2	fu	subj	66	4
+66	2	fu	attr	66	6
 67	3	drizzato	subj	0	0
 67	4	gridò	subj	0	0
 67	4	gridò	ccomp	67	5
@@ -292,12 +299,11 @@ line	token	word	role	arg_line	arg_token
 90	7	mosso	obl:sanza	90	2
 90	7	mosso	obl:con	90	5
 91	2	fu'	subj	91	3
-91	2	fu'	attr	91	4
-91	7	sofferto	subj	93	1
-91	7	sofferto	xcomp	92	5
+91	2	fu'	attr	93	1
+91	7	sofferto	subj	92	6
+91	7	sofferto	obl	91	6
 91	7	sofferto	obl:per	92	3
-92	5	tòrre	subj	92	3
-92	5	tòrre	obj	92	7
+92	0			0	0
 93	4	difesi	subj	93	2
 93	4	difesi	obj	93	3
 93	4	difesi	obl:a	93	6
@@ -425,6 +431,7 @@ line	token	word	role	arg_line	arg_token
 125	4	se'	attr	125	7
 126	4	sodisfeci	subj	126	2
 126	4	sodisfeci	obj	126	3
+126	4	sodisfeci	obl:a	126	7
 127	4	conservi	subj	127	2
 127	4	conservi	obj	127	5
 127	7	udito	subj	0	0
@@ -453,6 +460,7 @@ line	token	word	role	arg_line	arg_token
 134	1	lasciammo	obj	134	3
 134	5	gimmo	subj	0	0
 134	5	gimmo	obl:inver'	134	8
+134	5	gimmo	obl:per	135	3
 135	8	fiede	subj	135	4
 135	8	fiede	obl:a	135	7
 136	5	facea	subj	136	1

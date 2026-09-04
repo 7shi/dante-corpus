@@ -122,13 +122,13 @@ line	token	word	role	arg_line	arg_token
 37	8	accisma	subj	37	6
 37	8	accisma	obj	37	7
 37	8	accisma	obl	38	2
-37	8	accisma	obl:a	38	4
 37	8	accisma	obl	39	1
 37	8	accisma	obl	40	2
 37	8	accisma	obl	41	5
 38	0			0	0
 39	1	rimettendo	subj	0	0
 39	1	rimettendo	obj	39	2
+39	1	rimettendo	obl:a	38	4
 40	2	avem	subj	0	0
 40	2	avem	obj	40	6
 41	5	son	subj	41	4
@@ -167,6 +167,7 @@ line	token	word	role	arg_line	arg_token
 49	7	menarlo	subj	0	0
 49	7	menarlo	xcomp	48	3
 49	7	menarlo	obl:per	50	3
+49	7	menarlo	obl:di	50	7
 50	0			0	0
 51	3	è	subj	51	2
 51	3	è	attr	51	4
@@ -182,14 +183,15 @@ line	token	word	role	arg_line	arg_token
 53	2	arrestaron	xcomp	53	6
 53	2	arrestaron	obl:in	53	4
 53	6	riguardarmi	subj	0	0
+53	6	riguardarmi	obl:per	54	2
 54	3	oblïando	subj	0	0
 54	3	oblïando	obj	54	5
-54	3	oblïando	obl:per	54	2
 55	2	dì	subj	56	1
 55	2	dì	ccomp	55	9
 55	2	dì	obl:a	55	5
-55	9	armi	subj	55	5
+55	9	armi	subj	0	0
 55	9	armi	obj	55	8
+55	9	armi	obl:di	58	3
 56	4	vedra'	subj	56	2
 56	4	vedra'	obj	56	6
 56	4	vedra'	obl:in	56	8
@@ -241,7 +243,7 @@ line	token	word	role	arg_line	arg_token
 71	4	vidi	obl:in	71	7
 72	6	inganna	subj	72	3
 72	6	inganna	obj	72	5
-73	1	rimembriti	subj	0	0
+73	1	rimembriti	subj	70	4
 73	1	rimembriti	obl:di	73	3
 74	3	torni	subj	0	0
 74	3	torni	xcomp	74	5
@@ -274,22 +276,23 @@ line	token	word	role	arg_line	arg_token
 84	0			0	0
 85	4	vede	subj	85	3
 85	4	vede	obl:con	85	8
-86	2	tien	subj	85	3
+86	2	tien	subj	85	2
 86	2	tien	obj	86	4
-86	2	tien	obl:con	86	8
 87	1	vorrebbe	subj	86	5
 87	1	vorrebbe	xcomp	87	3
-87	3	vedere	subj	0	0
+87	1	vorrebbe	obl:con	86	8
+87	3	vedere	subj	86	5
 87	3	vedere	xcomp	87	4
 87	4	esser	subj	0	0
 87	4	esser	attr	87	5
 88	1	farà	subj	85	2
 88	1	farà	xcomp	88	2
+88	2	venirli	subj	0	0
 88	2	venirli	obl:a	88	4
 88	2	venirli	obl:con	88	5
 89	2	farà	subj	85	2
+89	2	farà	obj	89	3
 89	2	farà	ccomp	90	2
-89	2	farà	obl	89	3
 90	2	sarà	subj	90	4
 90	2	sarà	attr	90	5
 90	2	sarà	attr	90	7
@@ -318,8 +321,11 @@ line	token	word	role	arg_line	arg_token
 96	3	è	subj	96	2
 96	3	è	attr	96	4
 96	7	favella	subj	96	2
+97	2	scacciato	subj	97	1
 97	5	sommerse	subj	97	1
 97	5	sommerse	obj	97	4
+97	5	sommerse	obl:in	98	2
+98	3	affermando	subj	0	0
 98	3	affermando	ccomp	99	6
 99	6	sofferse	subj	98	6
 99	6	sofferse	obj	99	5
@@ -367,14 +373,16 @@ line	token	word	role	arg_line	arg_token
 113	6	avrei	subj	113	5
 113	6	avrei	obj	113	7
 113	6	avrei	xcomp	114	5
+113	6	avrei	obl:sanza	114	3
 114	5	contarla	subj	0	0
+114	5	contarla	obj	113	3
 115	6	assicura	subj	115	4
 115	6	assicura	obj	116	3
 115	6	assicura	iobj	115	5
-116	7	francheggia	subj	116	4
-116	7	francheggia	obj	116	6
+116	7	francheggia	subj	116	6
+116	7	francheggia	obj	116	4
 116	7	francheggia	obl:sotto	117	3
-117	5	sentirsi	subj	0	0
+117	5	sentirsi	subj	116	3
 117	5	sentirsi	attr	117	6
 118	2	vidi	subj	118	1
 118	2	vidi	obj	119	2
@@ -421,7 +429,7 @@ line	token	word	role	arg_line	arg_token
 129	2	appressarne	obj	129	4
 130	2	fuoro	subj	130	1
 130	2	fuoro	ccomp	130	4
-130	4	vedi	subj	0	0
+130	4	vedi	subj	131	1
 130	4	vedi	obj	130	6
 131	3	spirando	subj	131	2
 131	5	veggendo	subj	131	2
@@ -430,7 +438,7 @@ line	token	word	role	arg_line	arg_token
 132	1	vedi	ccomp	132	4
 132	4	è	subj	132	3
 132	4	è	attr	132	5
-132	4	è	obl	132	7
+132	4	è	obl:come	132	7
 133	7	porti	subj	133	3
 133	7	porti	obj	133	6
 133	7	porti	obl:di	133	5

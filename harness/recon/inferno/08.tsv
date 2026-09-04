@@ -69,9 +69,9 @@ line	token	word	role	arg_line	arg_token
 20	1	disse	subj	20	4
 20	1	disse	ccomp	19	4
 20	1	disse	ccomp	21	4
-20	1	disse	obl:a	20	7
 21	4	avrai	subj	0	0
 21	4	avrai	obj	21	3
+21	4	avrai	obl:a	20	7
 21	4	avrai	obl	21	1
 21	4	avrai	obl	21	2
 21	4	avrai	obl	21	7
@@ -273,12 +273,13 @@ line	token	word	role	arg_line	arg_token
 79	4	far	subj	0	0
 79	4	far	obj	79	6
 80	1	venimmo	subj	0	0
-80	1	venimmo	xcomp	79	4
+80	1	venimmo	obl:senza	79	4
 80	1	venimmo	obl:in	80	3
 81	1	Usciteci	subj	0	0
 81	2	gridò	subj	80	6
 81	2	gridò	ccomp	81	1
 81	2	gridò	ccomp	81	4
+81	2	gridò	obl	80	4
 81	4	è	subj	81	6
 81	4	è	obl	81	3
 82	2	vidi	subj	82	1

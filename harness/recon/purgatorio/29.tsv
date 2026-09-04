@@ -4,11 +4,10 @@ line	token	word	role	arg_line	arg_token
 2	1	continüò	subj	0	0
 2	1	continüò	ccomp	3	1
 2	1	continüò	obl:con	2	3
-3	1	Beati	subj	0	0
-3	4	sunt	subj	3	5
-3	4	sunt	attr	3	3
+3	1	Beati	subj	3	3
+3	3	tecta	subj	3	5
 4	6	givan	subj	4	3
-4	6	givan	obj	4	5
+4	6	givan	obl:per	5	4
 5	5	disïando	subj	4	3
 5	5	disïando	xcomp	6	3
 5	5	disïando	xcomp	6	6
@@ -18,12 +17,14 @@ line	token	word	role	arg_line	arg_token
 6	6	fuggir	obj	6	8
 7	3	mosse	subj	0	0
 7	3	mosse	obj	7	2
+7	3	mosse	obl:come	4	3
 7	3	mosse	obl:contra	7	6
 7	7	andando	subj	0	0
 7	7	andando	obl:per	8	4
 8	0			0	0
 9	5	seguitando	subj	8	6
 9	5	seguitando	obj	9	2
+9	5	seguitando	obl:con	9	4
 10	2	eran	subj	10	3
 10	2	eran	obl:tra	10	6
 11	5	dier	subj	11	3
@@ -142,7 +143,9 @@ line	token	word	role	arg_line	arg_token
 48	2	perdea	obl:per	48	4
 49	7	ammanna	subj	49	3
 49	7	ammanna	obl:a	49	6
-50	6	apprese	subj	50	3
+50	4	eran	subj	50	3
+50	4	eran	attr	50	5
+50	6	apprese	subj	49	2
 50	6	apprese	attr	50	5
 50	6	apprese	obl:ne	51	4
 51	0			0	0
@@ -162,7 +165,7 @@ line	token	word	role	arg_line	arg_token
 58	2	rendei	obj	58	4
 58	2	rendei	obl:a	58	8
 59	3	movieno	subj	59	1
-59	3	movieno	obl:a	59	6
+59	3	movieno	obl	59	4
 60	3	vinte	subj	0	0
 60	3	vinte	obl:da	60	6
 61	4	sgridò	subj	61	2
@@ -211,7 +214,7 @@ line	token	word	role	arg_line	arg_token
 72	6	diedi	obl:a	72	5
 73	2	vidi	subj	0	0
 73	2	vidi	obj	73	4
-73	2	vidi	ccomp	73	5
+73	2	vidi	xcomp	73	5
 73	5	andar	subj	73	4
 73	5	andar	obl	73	6
 74	1	lasciando	subj	0	0
@@ -224,6 +227,7 @@ line	token	word	role	arg_line	arg_token
 76	5	rimanea	attr	76	6
 76	5	rimanea	obl	76	3
 76	5	rimanea	obl	76	4
+76	5	rimanea	obl:di	77	3
 77	0			0	0
 78	2	fa	subj	78	6
 78	2	fa	subj	78	8
@@ -231,6 +235,8 @@ line	token	word	role	arg_line	arg_token
 78	2	fa	obj	78	10
 78	2	fa	obl	78	1
 79	6	maggiori	subj	79	2
+79	6	maggiori	obl:in	79	4
+79	6	maggiori	obl:che	80	4
 80	0			0	0
 81	3	distavan	subj	81	4
 81	3	distavan	obl	81	2
@@ -333,6 +339,8 @@ line	token	word	role	arg_line	arg_token
 114	7	miste	obl:di	114	6
 115	0			0	0
 116	1	rallegrasse	subj	115	3
+116	1	rallegrasse	obj	116	2
+116	1	rallegrasse	obl:di	115	5
 117	0			0	0
 118	0			0	0
 119	0			0	0
@@ -388,6 +396,7 @@ line	token	word	role	arg_line	arg_token
 138	4	fé	ccomp	138	7
 138	4	fé	obl:a	138	3
 138	7	ha	subj	138	6
+138	7	ha	obj	137	5
 138	7	ha	attr	138	9
 139	1	mostrava	subj	139	3
 139	1	mostrava	obj	139	6

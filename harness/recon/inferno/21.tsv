@@ -31,6 +31,7 @@ line	token	word	role	arg_line	arg_token
 10	4	ponno	xcomp	10	2
 11	2	fa	subj	11	1
 11	2	fa	obj	11	4
+11	2	fa	obl:in	10	7
 11	8	ristoppa	subj	11	7
 11	8	ristoppa	obj	12	2
 11	8	ristoppa	obl:a	12	4
@@ -80,6 +81,7 @@ line	token	word	role	arg_line	arg_token
 24	2	trasse	obl:a	24	4
 24	2	trasse	obl:di	24	6
 24	9	stava	subj	24	8
+24	9	stava	obl	24	7
 25	3	volsi	subj	0	0
 25	3	volsi	obj	25	2
 25	3	volsi	obl	25	6
@@ -106,6 +108,7 @@ line	token	word	role	arg_line	arg_token
 30	6	venire	subj	29	7
 30	6	venire	obl:per	30	5
 31	4	era	subj	31	3
+31	4	era	obl:in	31	7
 32	4	parea	subj	0	0
 32	4	parea	iobj	32	3
 32	4	parea	attr	33	9
@@ -121,8 +124,8 @@ line	token	word	role	arg_line	arg_token
 35	1	carcava	obl:con	35	7
 36	3	tenea	subj	36	2
 36	3	tenea	obj	36	8
-36	3	tenea	obl:di	36	5
 36	6	ghermito	subj	36	8
+36	6	ghermito	obl:di	36	5
 37	4	disse	subj	0	0
 37	4	disse	ccomp	38	1
 37	4	disse	obl:di	37	3
@@ -148,10 +151,11 @@ line	token	word	role	arg_line	arg_token
 43	4	buttò	obj	43	3
 43	4	buttò	obl	43	1
 43	4	buttò	obl	43	2
-43	4	buttò	obl:per	43	8
 44	2	volse	subj	0	0
 44	2	volse	obj	44	1
+44	2	volse	obl:per	43	8
 44	6	fu	subj	44	7
+44	6	fu	attr	44	8
 44	8	sciolto	subj	44	7
 44	8	sciolto	xcomp	45	5
 45	5	seguitar	subj	44	7
@@ -219,6 +223,7 @@ line	token	word	role	arg_line	arg_token
 61	8	fatta	subj	61	5
 61	8	fatta	iobj	61	6
 62	2	temer	subj	62	3
+62	2	temer	obl:per	61	4
 62	6	ho	subj	62	5
 62	6	ho	obj	62	8
 63	4	fui	subj	0	0
@@ -326,7 +331,7 @@ line	token	word	role	arg_line	arg_token
 94	2	vid'	subj	94	3
 94	2	vid'	xcomp	94	5
 94	5	temer	subj	94	7
-95	2	uscivan	subj	94	7
+95	2	uscivan	subj	95	1
 95	2	uscivan	attr	95	3
 95	2	uscivan	obl:di	95	5
 96	1	veggendo	subj	94	7

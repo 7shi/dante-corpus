@@ -21,8 +21,8 @@ line	token	word	role	arg_line	arg_token
 8	6	potem	obl:a	8	4
 8	6	potem	obl:da	8	8
 8	6	potem	obl	9	4
+8	6	potem	obl:con	9	8
 9	4	vien	subj	9	2
-9	4	vien	obl:con	9	8
 10	0			0	0
 11	1	fan	subj	10	6
 11	1	fan	obj	11	2
@@ -48,6 +48,7 @@ line	token	word	role	arg_line	arg_token
 16	0			0	0
 17	1	perdoniamo	subj	16	3
 17	1	perdoniamo	obj	16	5
+17	1	perdoniamo	obl:a	17	3
 17	6	perdona	subj	17	5
 18	0			0	0
 19	5	legger	subj	0	0
@@ -75,6 +76,8 @@ line	token	word	role	arg_line	arg_token
 26	3	orando	iobj	25	5
 26	4	andavan	subj	26	2
 26	4	andavan	obl:sotto	26	7
+26	4	andavan	obl:a	28	5
+26	4	andavan	obl:per	29	7
 27	7	sogna	subj	27	4
 28	0			0	0
 29	0			0	0
@@ -152,11 +155,11 @@ line	token	word	role	arg_line	arg_token
 49	3	detto	subj	0	0
 49	3	detto	ccomp	50	3
 50	3	venite	subj	0	0
+50	3	venite	obl:a	49	5
+50	3	venite	obl:per	49	9
 50	3	venite	obl:con	50	2
 50	5	troverete	subj	0	0
 50	5	troverete	obj	50	7
-50	5	troverete	obl:a	49	5
-50	5	troverete	obl:per	49	9
 51	3	salir	subj	51	4
 52	5	fossi	subj	52	3
 52	5	fossi	obl:di	52	8
@@ -255,8 +258,13 @@ line	token	word	role	arg_line	arg_token
 78	8	andava	obl:con	78	7
 79	2	diss'	subj	79	3
 79	2	diss'	iobj	79	4
+79	2	diss'	ccomp	79	6
+79	6	se'	subj	79	7
+79	6	se'	attr	79	8
 80	0			0	0
+81	3	chiamata	subj	81	1
 81	3	chiamata	obj	81	2
+81	3	chiamata	obl:in	81	6
 82	2	diss'	subj	82	3
 82	2	diss'	ccomp	82	5
 82	2	diss'	ccomp	84	3
@@ -301,9 +309,14 @@ line	token	word	role	arg_line	arg_token
 95	6	ha	obl	95	5
 96	7	è	subj	96	4
 96	7	è	attr	96	8
+97	3	tolto	subj	97	9
 97	3	tolto	obj	98	2
+97	3	tolto	iobj	97	5
+97	3	tolto	obl:a	97	8
 98	9	nato	subj	99	1
-99	7	caccerà	subj	99	6
+99	7	caccerà	subj	99	1
+99	7	caccerà	obj	99	3
+99	7	caccerà	obj	99	6
 99	7	caccerà	obl:di	99	9
 100	2	è	subj	100	5
 100	2	è	attr	100	6
@@ -336,6 +349,7 @@ line	token	word	role	arg_line	arg_token
 109	7	piglia	subj	109	1
 109	7	piglia	obj	109	4
 110	5	sonò	subj	109	1
+110	5	sonò	obl	110	1
 110	5	sonò	obl	110	4
 111	8	pispiglia	subj	109	1
 111	8	pispiglia	obj	111	7
@@ -406,6 +420,7 @@ line	token	word	role	arg_line	arg_token
 130	6	aita	iobj	130	4
 131	3	passi	subj	131	4
 131	6	visse	subj	0	0
+131	6	visse	obj	131	5
 132	6	largita	subj	132	4
 132	6	largita	iobj	132	5
 133	2	vivea	subj	0	0
@@ -437,7 +452,9 @@ line	token	word	role	arg_line	arg_token
 139	6	so	obl	139	5
 139	8	parlo	subj	0	0
 140	4	andrà	subj	140	3
+140	4	andrà	obl	141	1
 141	1	faranno	subj	140	7
+141	1	faranno	obj	141	2
 141	1	faranno	ccomp	141	5
 141	5	potrai	subj	141	4
 141	5	potrai	xcomp	141	6

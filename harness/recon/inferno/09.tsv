@@ -59,13 +59,13 @@ line	token	word	role	arg_line	arg_token
 18	5	ha	obl:per	18	4
 19	3	fec'	subj	19	4
 19	3	fec'	obj	19	2
-20	1	incontra	subj	0	0
+20	1	incontra	subj	21	4
 20	1	incontra	ccomp	21	1
 20	1	incontra	obl	19	8
 20	3	rispuose	subj	19	6
 20	3	rispuose	iobj	20	2
 20	3	rispuose	ccomp	20	1
-21	1	faccia	subj	21	4
+21	1	faccia	subj	20	4
 21	1	faccia	obj	21	3
 21	8	vado	subj	21	7
 21	8	vado	obl:per	21	6
@@ -308,8 +308,11 @@ line	token	word	role	arg_line	arg_token
 90	6	ebbe	obl	90	5
 91	0			0	0
 92	1	cominciò	subj	92	2
+92	1	cominciò	ccomp	93	7
+92	1	cominciò	obl:in	92	7
 93	7	alletta	subj	93	3
 93	7	alletta	obj	93	6
+93	7	alletta	obl:in	93	5
 94	2	recalcitrate	subj	0	0
 94	2	recalcitrate	obl:a	94	5
 95	4	puote	subj	95	6
@@ -356,16 +359,16 @@ line	token	word	role	arg_line	arg_token
 106	3	'ntrammo	obl	106	1
 106	3	'ntrammo	obl	106	2
 106	3	'ntrammo	obl:sanz	106	6
-107	4	avea	subj	107	2
+107	4	avea	subj	107	3
 107	4	avea	obj	107	7
 107	4	avea	xcomp	107	6
-107	6	riguardar	subj	107	2
+107	6	riguardar	subj	107	3
 107	6	riguardar	obj	108	2
 108	6	serra	subj	108	5
 108	6	serra	obj	108	3
 109	3	fui	subj	109	2
 109	3	fui	obl	109	4
-109	8	invio	subj	0	0
+109	8	invio	subj	107	2
 109	8	invio	obj	109	6
 109	8	invio	obl	109	7
 110	2	veggio	subj	0	0
@@ -381,6 +384,8 @@ line	token	word	role	arg_line	arg_token
 115	1	fanno	subj	115	3
 115	1	fanno	obj	115	6
 115	1	fanno	attr	115	7
+115	1	fanno	obl:a	112	4
+115	1	fanno	obl:a	113	4
 116	2	facevan	subj	0	0
 116	2	facevan	obl:di	116	6
 117	6	era	subj	117	4
@@ -388,7 +393,7 @@ line	token	word	role	arg_line	arg_token
 118	6	erano	subj	118	5
 118	6	erano	attr	118	7
 118	6	erano	obl:tra	118	4
-119	4	eran	subj	119	3
+119	4	eran	subj	0	0
 119	4	eran	attr	119	8
 120	5	chiede	subj	120	7
 120	5	chiede	obj	120	2

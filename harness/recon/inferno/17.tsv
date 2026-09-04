@@ -26,16 +26,16 @@ line	token	word	role	arg_line	arg_token
 9	7	trasse	obl:in	9	5
 10	4	era	subj	10	2
 10	4	era	attr	10	5
-11	2	benigna	subj	11	7
 11	3	avea	subj	0	0
 11	3	avea	obj	11	7
 11	3	avea	obj	12	8
-11	3	avea	xcomp	11	2
+11	3	avea	attr	11	2
+11	3	avea	obl:di	11	5
 12	0			0	0
 13	3	avea	subj	0	0
 13	3	avea	obj	13	2
+13	3	avea	attr	13	4
 13	3	avea	obl:insin	13	7
-13	4	pilose	subj	13	2
 14	0			0	0
 15	1	dipinti	subj	14	2
 15	1	dipinti	subj	14	5
@@ -323,15 +323,16 @@ line	token	word	role	arg_line	arg_token
 99	7	hai	obj	99	5
 100	4	esce	subj	100	3
 100	4	esce	obl:di	100	6
+100	4	esce	obl:in	101	2
 101	8	tolse	subj	0	0
 101	8	tolse	obj	101	7
-101	8	tolse	obl	101	2
+101	8	tolse	obl	101	6
 102	7	sentì	subj	0	0
 102	7	sentì	obj	102	6
 102	7	sentì	obl:a	102	5
 102	7	sentì	obl:a	102	9
 103	3	era	subj	103	5
-103	3	era	obl	103	1
+103	3	era	obl	103	2
 103	8	rivolse	subj	0	0
 103	8	rivolse	obj	103	7
 104	6	mosse	subj	104	2
@@ -347,11 +348,10 @@ line	token	word	role	arg_line	arg_token
 107	3	abbandonò	obj	107	5
 108	6	pare	subj	0	0
 108	9	cosse	subj	108	4
-108	9	cosse	obj	108	8
 109	0			0	0
 110	1	sentì	subj	109	3
 110	1	sentì	xcomp	110	2
-110	2	spennar	subj	109	3
+110	2	spennar	subj	109	6
 110	2	spennar	obl:per	110	6
 111	1	gridando	subj	111	3
 111	1	gridando	iobj	111	5
@@ -363,7 +363,7 @@ line	token	word	role	arg_line	arg_token
 112	6	vidi	subj	0	0
 112	6	vidi	ccomp	112	9
 112	9	era	subj	112	8
-112	9	era	obl:ne	113	3
+112	9	era	obl:in	113	3
 113	8	vidi	subj	0	0
 113	8	vidi	obj	114	2
 113	8	vidi	attr	113	9
@@ -379,6 +379,7 @@ line	token	word	role	arg_line	arg_token
 117	10	venta	subj	0	0
 117	10	venta	iobj	117	9
 117	10	venta	obl:a	117	5
+117	10	venta	obl:di	117	8
 118	2	sentia	subj	118	1
 118	2	sentia	obj	118	9
 118	2	sentia	xcomp	119	1
@@ -413,10 +414,10 @@ line	token	word	role	arg_line	arg_token
 126	3	appressavan	subj	126	1
 126	3	appressavan	obj	126	2
 126	3	appressavan	obl:da	126	6
-127	6	stato	subj	127	4
+127	6	stato	subj	127	3
 127	6	stato	obl:su	127	10
 128	3	veder	subj	0	0
-128	4	logoro	subj	0	0
+128	4	logoro	subj	128	1
 128	4	logoro	obj	128	6
 128	4	logoro	obl:senza	128	3
 129	1	fa	subj	128	1
@@ -425,8 +426,9 @@ line	token	word	role	arg_line	arg_token
 129	2	dire	subj	0	0
 129	2	dire	ccomp	129	7
 129	7	cali	subj	129	6
-130	1	discende	subj	0	0
+130	1	discende	subj	127	3
 130	5	move	subj	0	0
+130	5	move	obj	130	4
 131	8	pone	subj	0	0
 131	8	pone	obj	131	7
 131	8	pone	obl:per	131	3

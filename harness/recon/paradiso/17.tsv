@@ -78,22 +78,27 @@ line	token	word	role	arg_line	arg_token
 24	0			0	0
 25	7	contenta	subj	25	4
 26	7	appressa	subj	26	4
+26	7	appressa	iobj	26	5
 27	0			0	0
 28	2	diss'	subj	28	3
+28	2	diss'	obl:a	28	6
+29	5	parlato	subj	29	1
 29	5	parlato	iobj	29	3
 29	8	volle	subj	30	1
-30	0			0	0
+30	2	fu	subj	30	5
+30	2	fu	attr	30	6
 31	0			0	0
 32	3	inviscava	subj	31	7
 32	3	inviscava	obj	32	2
-32	3	inviscava	obl:per	31	3
 32	3	inviscava	obl:in	31	5
-32	3	inviscava	obl	32	4
-32	6	fosse	subj	33	2
+32	3	inviscava	obl	32	7
+32	7	anciso	subj	33	2
 33	8	tolle	subj	33	5
 33	8	tolle	obj	33	7
 34	0			0	0
 35	2	rispuose	subj	35	4
+35	2	rispuose	ccomp	39	2
+35	2	rispuose	obl:per	31	3
 35	2	rispuose	obl:per	34	4
 35	2	rispuose	obl:con	35	1
 36	0			0	0
@@ -102,21 +107,25 @@ line	token	word	role	arg_line	arg_token
 38	7	stende	obj	38	6
 38	7	stende	obl	37	4
 39	2	è	subj	37	2
+39	2	è	attr	39	3
 39	2	è	obl:in	39	5
 40	5	prende	subj	40	1
-40	5	prende	obl	41	3
+40	5	prende	obl:come	42	1
 41	9	specchia	subj	42	1
 41	9	specchia	obj	41	8
 41	9	specchia	obl:in	41	7
 42	6	discende	subj	42	2
+42	6	discende	obl:da	41	5
 42	6	discende	obl:per	42	4
 42	6	discende	obl	42	5
 43	5	viene	subj	44	2
 43	5	viene	obl:a	43	7
 44	6	viene	subj	45	4
 44	6	viene	iobj	44	5
+44	6	viene	obl:da	43	2
 44	6	viene	obl:a	45	2
 45	8	apparecchia	subj	45	5
+45	8	apparecchia	obj	45	7
 45	8	apparecchia	iobj	45	6
 46	3	partio	subj	46	4
 46	3	partio	obl	46	1
@@ -154,8 +163,13 @@ line	token	word	role	arg_line	arg_token
 57	8	saetta	obj	57	1
 57	8	saetta	obl	57	7
 58	2	proverai	subj	58	1
+58	2	proverai	ccomp	58	5
+58	2	proverai	ccomp	59	6
 58	5	sa	subj	59	2
-59	0			0	0
+58	5	sa	obl:di	58	7
+59	6	è	subj	60	2
+59	6	è	subj	60	5
+59	6	è	attr	59	8
 60	0			0	0
 61	6	graverà	subj	61	3
 61	6	graverà	obj	61	8
@@ -190,7 +204,7 @@ line	token	word	role	arg_line	arg_token
 72	6	porta	subj	72	1
 72	6	porta	obj	72	9
 72	6	porta	obl:su	72	5
-73	4	avrà	subj	0	0
+73	4	avrà	subj	73	1
 73	4	avrà	obj	73	7
 73	4	avrà	obl:in	73	3
 74	0			0	0
@@ -207,8 +221,9 @@ line	token	word	role	arg_line	arg_token
 76	3	vedrai	obl:con	76	2
 76	6	'mpresso	subj	76	5
 76	6	'mpresso	obl	77	1
+76	6	'mpresso	obl:da	77	5
+76	6	'mpresso	obl	78	3
 77	1	nascendo	subj	0	0
-77	1	nascendo	ccomp	78	3
 77	1	nascendo	obl:da	77	5
 78	3	fier	subj	78	5
 78	3	fier	attr	78	2
@@ -271,7 +286,7 @@ line	token	word	role	arg_line	arg_token
 97	2	vo'	obl	98	4
 98	4	infutura	subj	98	7
 98	4	infutura	obj	98	3
-98	4	infutura	obl	99	6
+98	4	infutura	obl	99	3
 99	6	punir	subj	0	0
 99	6	punir	obj	99	9
 100	3	tacendo	subj	0	0
@@ -280,12 +295,14 @@ line	token	word	role	arg_line	arg_token
 100	5	mostrò	xcomp	101	5
 101	5	metter	subj	101	2
 101	5	metter	obj	101	7
+101	5	metter	obl:in	102	3
 102	7	porsi	subj	102	5
 102	7	porsi	obj	102	3
 102	7	porsi	iobj	102	6
 103	2	cominciai	subj	103	1
+103	2	cominciai	obj	104	2
 103	6	brama	subj	103	5
-104	1	dubitando	subj	103	5
+104	1	dubitando	subj	103	1
 105	2	vede	subj	105	1
 105	4	vuol	subj	105	1
 105	7	ama	subj	105	1
@@ -295,13 +312,14 @@ line	token	word	role	arg_line	arg_token
 106	7	sprona	xcomp	107	7
 106	7	sprona	obl:verso	107	4
 107	7	darmi	subj	107	2
+107	7	darmi	obj	108	1
 107	7	darmi	obl:per	107	6
 108	3	è	subj	108	1
 108	3	è	attr	108	5
 108	10	abbandona	subj	108	7
 108	10	abbandona	obj	108	9
+109	5	è	subj	109	10
 109	5	è	attr	109	6
-109	5	è	ccomp	109	10
 109	5	è	obl:di	109	4
 109	10	armi	subj	109	8
 109	10	armi	obj	109	9
@@ -317,22 +335,24 @@ line	token	word	role	arg_line	arg_token
 114	8	levaro	obj	114	7
 114	8	levaro	obl:per	112	4
 114	8	levaro	obl:per	113	4
-114	8	levaro	obl:per	115	5
 115	0			0	0
 116	3	appreso	subj	116	2
 116	3	appreso	obj	116	4
+116	3	appreso	obl:per	115	5
+116	3	appreso	obl:di	115	7
 116	8	ridico	subj	116	7
 116	8	ridico	obj	116	5
 117	3	fia	subj	117	4
 117	3	fia	obl:a	117	2
 118	6	son	subj	118	3
 118	6	son	attr	118	8
+118	6	son	obl:a	118	5
 119	1	temo	subj	0	0
 119	1	temo	xcomp	119	3
 119	3	perder	subj	0	0
 119	3	perder	obj	119	4
-119	4	viver	subj	0	0
-119	4	viver	obl:tra	119	6
+119	3	perder	obl:tra	119	6
+119	4	viver		0	0
 120	4	chiameranno	subj	120	1
 120	4	chiameranno	obj	120	3
 120	4	chiameranno	attr	120	5

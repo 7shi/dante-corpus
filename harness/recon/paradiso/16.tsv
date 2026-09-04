@@ -97,16 +97,20 @@ line	token	word	role	arg_line	arg_token
 33	0			0	0
 34	1	dissemi	subj	0	0
 34	1	dissemi	ccomp	38	4
+34	1	dissemi	obl:con	32	3
+34	1	dissemi	obl:con	33	6
 34	6	fu	subj	34	8
 35	8	è	subj	35	6
 35	8	è	attr	35	10
 36	2	allevïò	subj	35	6
+36	2	allevïò	obl:in	35	4
 36	2	allevïò	obl:di	36	4
 36	6	era	subj	35	6
 36	6	era	attr	36	7
 37	0			0	0
 38	4	venne	subj	38	6
 38	4	venne	xcomp	39	2
+38	4	venne	obl:da	34	4
 38	4	venne	obl:a	37	3
 38	4	venne	obl	38	3
 39	2	rinfiammarsi	subj	38	6
@@ -170,7 +174,8 @@ line	token	word	role	arg_line	arg_token
 57	5	ha	subj	57	1
 57	5	ha	obj	57	7
 57	5	ha	obl	57	4
-58	0			0	0
+58	8	traligna	subj	58	4
+58	8	traligna	obl:a	58	6
 59	2	fosse	subj	58	3
 59	2	fosse	attr	59	6
 59	2	fosse	attr	60	3
@@ -185,6 +190,8 @@ line	token	word	role	arg_line	arg_token
 62	3	sarebbe	obj	62	2
 62	3	sarebbe	obl:a	62	6
 63	3	andava	subj	63	5
+63	3	andava	obl	63	1
+63	3	andava	obl	63	2
 63	3	andava	obl:a	63	8
 64	1	sariesi	subj	64	2
 64	1	sariesi	obl:di	64	5
@@ -301,10 +308,10 @@ line	token	word	role	arg_line	arg_token
 101	3	vuole	xcomp	101	1
 101	5	avea	subj	101	6
 101	5	avea	xcomp	102	1
+101	5	avea	obl:in	102	3
 102	1	dorata	subj	0	0
 102	1	dorata	obj	102	7
 102	1	dorata	obj	102	10
-102	1	dorata	obl:in	102	3
 103	2	era	subj	103	5
 103	2	era	attr	103	1
 103	2	era	obl	103	3
@@ -351,7 +358,7 @@ line	token	word	role	arg_line	arg_token
 118	2	venìa	subj	115	3
 118	2	venìa	obl	118	3
 118	2	venìa	obl:di	118	7
-119	4	piacque	subj	0	0
+119	4	piacque	subj	120	6
 119	4	piacque	iobj	119	6
 120	6	fé	subj	120	4
 120	6	fé	obj	120	5
@@ -443,6 +450,11 @@ line	token	word	role	arg_line	arg_token
 151	4	vid'	obj	152	4
 151	4	vid'	attr	151	6
 151	4	vid'	attr	152	2
+151	4	vid'	obl:con	151	3
 152	0			0	0
 153	6	posto	subj	152	9
+153	6	posto	obl:ad	153	4
+153	6	posto	obl:a	153	8
+154	4	fatto	subj	152	9
+154	4	fatto	obj	154	5
 154	4	fatto	obl:per	154	3

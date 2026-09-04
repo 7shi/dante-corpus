@@ -4,6 +4,7 @@ line	token	word	role	arg_line	arg_token
 2	5	comprenda	obj	2	1
 3	7	raccoglie	subj	3	2
 3	7	raccoglie	obj	3	6
+3	7	raccoglie	obl:per	1	3
 3	7	raccoglie	obl:ad	3	5
 4	1	par	subj	0	0
 4	1	par	ccomp	4	7
@@ -56,6 +57,7 @@ line	token	word	role	arg_line	arg_token
 18	1	gridaro	subj	17	4
 18	1	gridaro	iobj	18	3
 18	1	gridaro	ccomp	18	5
+18	1	gridaro	obl:ad	17	6
 18	5	è	subj	18	7
 18	5	è	obl	18	4
 19	5	impruna	subj	21	2
@@ -85,6 +87,7 @@ line	token	word	role	arg_line	arg_token
 27	10	voli	subj	27	9
 27	10	voli	obl:con	28	4
 27	10	voli	obl:con	28	9
+27	10	voli	obl:di	29	5
 28	1	dico	subj	0	0
 29	0			0	0
 30	4	dava	subj	30	1
@@ -216,8 +219,11 @@ line	token	word	role	arg_line	arg_token
 66	3	uscisse	obl:di	66	6
 67	3	sia	subj	67	2
 67	6	vuoi	subj	0	0
+67	6	vuoi	obj	67	5
 67	6	vuoi	xcomp	67	7
+67	7	poter	subj	0	0
 67	7	poter	xcomp	67	8
+67	8	pensare	subj	0	0
 67	8	pensare	obj	67	5
 68	3	imagina	subj	0	0
 68	3	imagina	obj	68	4
@@ -231,12 +237,14 @@ line	token	word	role	arg_line	arg_token
 71	0			0	0
 72	4	seppe	subj	72	6
 72	4	seppe	xcomp	72	5
+72	5	carreggiar	subj	72	6
 72	5	carreggiar	obj	72	1
 73	1	vedrai	subj	0	0
 73	1	vedrai	ccomp	73	5
+73	5	convien	subj	0	0
 73	5	convien	ccomp	73	7
 73	5	convien	obl:a	73	4
-73	7	vada	subj	73	4
+73	7	vada	subj	71	6
 73	7	vada	obl:da	74	3
 73	7	vada	obl:a	74	6
 73	7	vada	obl:da	74	10
@@ -258,9 +266,10 @@ line	token	word	role	arg_line	arg_token
 81	4	riman	obl:tra	81	7
 81	4	riman	obl:tra	81	10
 82	5	di'	subj	0	0
+82	5	di'	obj	82	4
 82	5	di'	ccomp	82	8
-82	8	parte	subj	0	0
-82	8	parte	obl	82	6
+82	8	parte	subj	79	4
+82	8	parte	obl:per	82	3
 82	8	parte	obl:verso	83	2
 83	0			0	0
 84	1	vedevan	subj	83	5
@@ -437,12 +446,13 @@ line	token	word	role	arg_line	arg_token
 130	2	convien	subj	0	0
 130	2	convien	ccomp	130	8
 130	2	convien	obl	130	1
-130	2	convien	obl	132	4
 130	2	convien	obl	133	7
 130	8	aggiri	subj	130	6
 130	8	aggiri	obj	130	7
+130	8	aggiri	obl:di	131	2
 130	8	aggiri	obl:da	131	4
 130	8	aggiri	obl	131	6
+130	8	aggiri	obl:per	132	4
 131	6	fece	subj	0	0
 131	6	fece	obl:in	131	8
 132	4	'ndugiai	subj	132	3
@@ -451,13 +461,14 @@ line	token	word	role	arg_line	arg_token
 133	7	aita	subj	133	2
 133	7	aita	obj	133	6
 133	7	aita	obl:in	133	4
+133	7	aita	obl	134	2
 134	2	surga	subj	0	0
 134	2	surga	obl	134	3
 134	2	surga	obl:di	134	5
 134	9	viva	subj	134	6
 134	9	viva	obl:in	134	8
 135	4	val	subj	135	3
-135	10	udita	subj	0	0
+135	10	udita	subj	135	2
 135	10	udita	obl:in	135	7
 136	7	saliva	subj	136	4
 136	7	saliva	obl	136	5

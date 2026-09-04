@@ -16,8 +16,13 @@ line	token	word	role	arg_line	arg_token
 6	7	state	subj	0	0
 6	7	state	obl:in	6	6
 7	0			0	0
+8	1	montati	subj	0	0
+8	1	montati	obl:a	7	6
+8	1	montati	obl:di	8	4
 8	1	montati	obl:in	8	7
 9	8	piomba	subj	9	1
+9	8	piomba	obl:a	9	3
+9	8	piomba	obl:sovra	9	5
 10	5	è	subj	10	7
 10	5	è	attr	10	4
 11	2	mostri	subj	11	1
@@ -35,6 +40,7 @@ line	token	word	role	arg_line	arg_token
 16	3	parean	iobj	16	2
 16	3	parean	attr	16	5
 16	3	parean	attr	16	7
+16	3	parean	obl	17	2
 17	4	son	subj	17	3
 17	4	son	obl:in	17	9
 18	1	fatti	subj	17	2
@@ -60,12 +66,20 @@ line	token	word	role	arg_line	arg_token
 24	8	stava	subj	24	6
 24	8	stava	obl	24	7
 25	6	accese	subj	25	2
+25	6	accese	obl:a	25	5
 26	5	guizzavan	subj	26	7
-27	0			0	0
+27	3	averien	subj	0	0
+27	3	averien	attr	27	2
+27	3	averien	attr	27	4
+27	3	averien	attr	27	6
 28	0			0	0
 29	1	muoversi	subj	28	4
 29	1	muoversi	obl:per	29	7
-30	2	era	subj	30	1
+30	2	era	subj	0	0
+30	2	era	attr	30	1
+30	2	era	obl	30	3
+30	2	era	obl:da	30	5
+30	2	era	obl:a	30	8
 31	2	è	subj	31	1
 31	2	è	attr	31	3
 31	7	cruccia	subj	31	5
@@ -204,6 +218,7 @@ line	token	word	role	arg_line	arg_token
 66	2	disse	subj	0	0
 66	2	disse	iobj	66	1
 66	2	disse	ccomp	66	7
+66	2	disse	obl:con	65	5
 66	7	richiedi	subj	0	0
 66	7	richiedi	obj	66	4
 66	7	richiedi	obl:a	66	6
@@ -269,15 +284,16 @@ line	token	word	role	arg_line	arg_token
 84	8	ricuopra	subj	83	5
 84	8	ricuopra	obj	84	5
 84	8	ricuopra	obj	84	7
-85	3	sarà	subj	85	2
-85	3	sarà	attr	85	1
+85	3	sarà	subj	0	0
+85	3	sarà	attr	85	2
 85	7	legge	subj	0	0
 85	7	legge	obl:di	85	5
+85	7	legge	obl:in	86	2
 86	7	fu	subj	87	2
 86	7	fu	attr	86	8
 86	7	fu	obl:a	86	6
 87	4	fia	subj	87	6
-87	4	fia	iobj	87	5
+87	4	fia	attr	87	5
 87	8	regge	subj	87	6
 87	8	regge	obj	87	7
 88	3	so	subj	88	1
@@ -357,11 +373,15 @@ line	token	word	role	arg_line	arg_token
 110	6	ebbe	obl:da	110	5
 111	7	piacque	subj	111	3
 111	7	piacque	obl:a	111	6
+112	1	Fatto	subj	0	0
 112	1	Fatto	obj	112	4
 112	1	Fatto	iobj	112	2
 113	4	è	subj	113	3
 113	4	è	obl:da	113	6
+113	4	è	obl:a	113	9
 114	9	orate	subj	114	7
+114	9	orate	obj	114	10
+114	9	orate	obl	114	8
 115	6	fu	subj	116	4
 115	6	fu	subj	116	7
 115	6	fu	attr	115	7

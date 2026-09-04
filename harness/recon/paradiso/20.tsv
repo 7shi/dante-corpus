@@ -9,6 +9,7 @@ line	token	word	role	arg_line	arg_token
 4	9	accende	obl:di	4	6
 5	3	rifà	subj	4	2
 5	3	rifà	attr	5	4
+5	3	rifà	obl:per	6	3
 6	7	risplende	subj	6	6
 6	7	risplende	obl:in	6	5
 7	7	venne	subj	7	3
@@ -35,14 +36,15 @@ line	token	word	role	arg_line	arg_token
 17	3	vidi	subj	17	2
 17	3	vidi	obj	17	7
 17	3	vidi	xcomp	17	4
+17	3	vidi	obl	17	1
 17	4	ingemmato	subj	17	7
 18	1	puoser	subj	16	7
 18	1	puoser	obj	18	2
 18	1	puoser	obl:a	18	6
 19	1	udir	subj	0	0
 19	1	udir	obj	19	5
+19	3	parve	subj	19	1
 19	3	parve	iobj	19	2
-19	3	parve	ccomp	19	1
 20	2	scende	subj	20	1
 20	2	scende	obl	20	3
 20	2	scende	obl	20	4
@@ -77,10 +79,12 @@ line	token	word	role	arg_line	arg_token
 30	8	scrissi	subj	30	6
 30	8	scrissi	obj	30	7
 30	8	scrissi	obl	30	5
-31	6	vede	subj	31	5
+31	6	vede	subj	31	2
 31	6	vede	obj	31	10
-31	8	pate	subj	31	5
+31	6	vede	obl:in	32	3
+31	8	pate	subj	31	2
 31	8	pate	obj	31	10
+31	8	pate	obl:in	32	3
 32	5	incominciommi	subj	0	0
 32	5	incominciommi	ccomp	33	5
 33	3	riguardar	subj	0	0
@@ -94,6 +98,7 @@ line	token	word	role	arg_line	arg_token
 35	8	scintilla	obl	35	2
 35	8	scintilla	obl:in	35	6
 36	6	son	subj	36	8
+36	6	son	obl:di	34	4
 36	6	son	obl:di	36	5
 37	3	luce	subj	37	2
 37	3	luce	obl:in	37	5
@@ -112,11 +117,11 @@ line	token	word	role	arg_line	arg_token
 41	4	fu	obl:per	42	3
 42	5	è	subj	42	4
 42	5	è	attr	42	6
-43	5	fan	subj	43	2
+43	5	fan	subj	43	3
 43	5	fan	obj	43	6
 43	5	fan	iobj	43	4
 43	5	fan	obl:per	43	8
-44	8	accosta	subj	44	1
+44	8	accosta	subj	44	2
 44	8	accosta	iobj	44	6
 44	8	accosta	obl:a	44	5
 45	3	consolò	subj	44	1
@@ -124,15 +129,16 @@ line	token	word	role	arg_line	arg_token
 45	3	consolò	obl:di	45	5
 46	2	conosce	subj	44	1
 46	2	conosce	ccomp	46	5
-46	5	costa	ccomp	47	2
+46	2	conosce	obl:per	47	6
+46	5	costa	subj	47	2
 46	5	costa	obl	46	3
 46	5	costa	obl	46	4
 47	2	seguir	subj	0	0
 47	2	seguir	obj	47	3
-47	2	seguir	obl:per	47	6
 48	0			0	0
 49	4	segue	subj	49	3
 49	4	segue	obl:in	49	7
+49	4	segue	obl:per	50	6
 50	3	ragiono	subj	0	0
 50	3	ragiono	obl:di	50	2
 51	2	indugiò	subj	51	1
@@ -142,14 +148,14 @@ line	token	word	role	arg_line	arg_token
 53	3	trasmuta	subj	52	5
 54	1	fa	subj	53	6
 54	1	fa	obj	54	2
-55	4	segue	subj	55	2
+55	4	segue	subj	55	3
 55	4	segue	obl:con	55	7
 55	4	segue	obl:con	55	9
-56	5	fé	subj	56	3
+56	5	fé	subj	56	4
 56	5	fé	obj	56	7
 57	2	cedere	subj	0	0
 57	2	cedere	obl:a	57	4
-57	6	fece	subj	0	0
+57	6	fece	subj	55	2
 57	6	fece	attr	57	7
 57	6	fece	obl:sotto	56	3
 57	6	fece	obl	57	2
@@ -183,8 +189,11 @@ line	token	word	role	arg_line	arg_token
 66	6	vedere	obj	66	4
 66	6	vedere	obl:a	65	8
 67	2	crederebbe	subj	67	1
+67	2	crederebbe	ccomp	69	3
+67	2	crederebbe	obl:in	67	5
 68	0			0	0
 69	3	quinta	subj	68	2
+69	3	quinta	obl:in	68	6
 70	2	conosce	subj	0	0
 70	2	conosce	obj	70	5
 70	2	conosce	obl	72	6
@@ -220,15 +229,16 @@ line	token	word	role	arg_line	arg_token
 80	9	veste	subj	80	8
 80	9	veste	obj	80	7
 81	2	aspettar	subj	0	0
+81	2	aspettar	obj	81	1
 81	2	aspettar	obl	81	3
-81	5	patio	subj	0	0
-81	5	patio	obj	81	1
+81	5	patio	subj	79	4
 81	5	patio	xcomp	81	2
 81	5	patio	obl	79	5
 82	7	son	subj	82	8
 82	7	son	attr	82	6
 83	2	pinse	subj	0	0
 83	2	pinse	obj	83	1
+83	2	pinse	obl:di	82	4
 83	2	pinse	obl:con	83	5
 84	6	vidi	subj	84	3
 84	6	vidi	obj	84	8
@@ -271,8 +281,9 @@ line	token	word	role	arg_line	arg_token
 95	0			0	0
 96	2	vince	subj	96	1
 96	2	vince	obj	96	5
+96	2	vince	obl:a	97	3
 97	10	sobranza	subj	97	6
-97	10	sobranza	obj	97	9
+97	10	sobranza	obl:a	97	9
 98	2	vince	subj	0	0
 98	2	vince	obj	98	3
 98	5	vuole	subj	0	0
@@ -301,8 +312,8 @@ line	token	word	role	arg_line	arg_token
 105	0			0	0
 106	10	riede	subj	0	0
 106	10	riede	obl	106	7
+106	10	riede	obl:a	107	5
 107	6	tornò	subj	106	3
-107	6	tornò	obl:a	107	5
 107	6	tornò	obl:a	107	9
 108	6	fu	subj	108	2
 108	6	fu	attr	108	7
@@ -312,8 +323,9 @@ line	token	word	role	arg_line	arg_token
 109	5	mise	obl:in	110	2
 110	3	fatti	subj	110	2
 110	3	fatti	obl:a	110	5
-110	3	fatti	obl	110	7
-110	7	suscitarla	subj	110	2
+110	3	fatti	obl:per	110	7
+110	7	suscitarla	subj	0	0
+110	7	suscitarla	obj	106	3
 111	3	potesse	subj	111	5
 111	3	potesse	xcomp	111	7
 111	7	mossa	subj	111	5
@@ -347,7 +359,9 @@ line	token	word	role	arg_line	arg_token
 120	2	pinse	obl:a	120	9
 121	6	pose	subj	118	2
 121	6	pose	obj	121	3
+121	6	pose	obl:per	118	4
 121	6	pose	obl	121	4
+121	6	pose	obl	121	5
 121	6	pose	obl:a	121	8
 122	9	aperse	subj	122	7
 122	9	aperse	obj	123	2
@@ -360,7 +374,7 @@ line	token	word	role	arg_line	arg_token
 124	3	credette	obl:in	124	5
 124	8	sofferse	subj	124	2
 124	8	sofferse	obj	125	4
-124	8	sofferse	obl	125	2
+124	8	sofferse	obl:da	125	2
 124	8	sofferse	obl:di	125	7
 125	0			0	0
 126	2	riprendiene	subj	0	0
@@ -386,9 +400,9 @@ line	token	word	role	arg_line	arg_token
 134	2	giudicar	subj	0	0
 134	7	vedemo	subj	134	5
 134	7	vedemo	obj	134	6
-135	2	conosciamo	subj	0	0
+135	2	conosciamo	subj	134	4
 135	2	conosciamo	obj	135	6
-136	2	ènne	subj	0	0
+136	2	ènne	subj	136	5
 136	2	ènne	attr	136	3
 136	5	fatto	subj	0	0
 136	5	fatto	attr	136	6
@@ -396,11 +410,12 @@ line	token	word	role	arg_line	arg_token
 137	9	affina	obj	137	8
 137	9	affina	obl:in	137	7
 138	4	vole	subj	138	5
-138	4	vole	obj	138	2
+138	4	vole	obj	138	3
 138	8	volemo	subj	138	7
 138	8	volemo	obj	138	2
 139	0			0	0
 140	0			0	0
+141	1	data	subj	141	5
 141	1	data	iobj	141	2
 141	1	data	obl:da	139	4
 142	0			0	0

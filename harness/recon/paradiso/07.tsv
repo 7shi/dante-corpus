@@ -33,12 +33,12 @@ line	token	word	role	arg_line	arg_token
 12	3	diseta	obl:con	12	7
 13	6	indonna	subj	13	4
 13	6	indonna	obl:di	14	3
-13	6	indonna	obl:per	14	6
-13	6	indonna	obl:per	14	9
 14	0			0	0
 15	2	richinava	subj	13	3
 15	2	richinava	obj	15	1
-15	2	richinava	obl	15	3
+15	2	richinava	obl:per	14	6
+15	2	richinava	obl:per	14	9
+15	2	richinava	obl:come	15	5
 15	7	assonna	subj	15	6
 16	2	sofferse	subj	16	5
 16	2	sofferse	obj	16	3
@@ -46,7 +46,7 @@ line	token	word	role	arg_line	arg_token
 17	2	cominciò	ccomp	21	7
 17	3	raggiandomi	subj	0	0
 17	3	raggiandomi	obl:di	17	6
-18	5	faria	subj	17	6
+18	5	faria	subj	18	2
 18	5	faria	obj	18	7
 18	5	faria	attr	18	8
 18	5	faria	obl:in	18	4
@@ -55,6 +55,7 @@ line	token	word	role	arg_line	arg_token
 21	1	punita	subj	20	3
 21	7	miso	subj	0	0
 21	7	miso	obj	21	3
+21	7	miso	obl:secondo	19	4
 21	7	miso	obl:in	21	6
 22	4	solverò	subj	22	2
 22	4	solverò	obj	22	7
@@ -63,7 +64,9 @@ line	token	word	role	arg_line	arg_token
 24	5	faran	subj	23	7
 24	5	faran	iobj	24	4
 24	5	faran	attr	24	6
+24	5	faran	obl:di	24	3
 25	3	soffrire	subj	0	0
+25	3	soffrire	obj	26	1
 25	3	soffrire	obl:a	25	6
 25	8	vole	subj	25	7
 25	8	vole	obj	26	1
@@ -82,8 +85,9 @@ line	token	word	role	arg_line	arg_token
 30	8	piacque	obl:a	30	4
 31	0			0	0
 32	3	allungata	subj	31	4
-32	3	allungata	obj	32	1
+32	3	allungata	obl:da	31	7
 32	4	unì	subj	31	3
+32	4	unì	obj	32	1
 32	4	unì	obl:a	32	6
 32	4	unì	obl:in	32	8
 32	4	unì	obl:con	33	3
@@ -297,9 +301,9 @@ line	token	word	role	arg_line	arg_token
 102	6	dischiuso	obl:per	101	7
 103	4	convenia	ccomp	104	1
 103	4	convenia	obl:a	103	3
-103	4	convenia	obl:con	103	7
 104	1	riparar	subj	0	0
 104	1	riparar	obj	104	3
+104	1	riparar	obl:con	103	7
 104	1	riparar	obl:a	104	7
 105	1	dico	subj	0	0
 105	1	dico	obl:con	105	4
@@ -395,13 +399,12 @@ line	token	word	role	arg_line	arg_token
 131	7	posson	subj	130	2
 131	7	posson	xcomp	131	5
 132	3	sono	subj	0	0
-132	3	sono	obl	132	2
 132	3	sono	obl:in	132	6
 133	7	nomati	subj	133	5
-133	7	nomati	obj	133	3
-134	8	fanno	subj	134	3
+133	7	nomati	obj	133	4
+134	8	fanno	subj	134	4
 134	8	fanno	obl:di	134	6
-135	5	informati	subj	0	0
+135	5	informati	subj	133	3
 135	5	informati	obl:da	135	3
 136	2	fu	subj	136	4
 136	7	hanno	subj	136	6

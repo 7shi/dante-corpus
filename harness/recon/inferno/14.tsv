@@ -79,6 +79,8 @@ line	token	word	role	arg_line	arg_token
 29	1	piovean	obl:sovra	28	4
 29	1	piovean	obl:di	28	7
 29	1	piovean	obl	30	1
+29	1	piovean	obl:di	30	3
+29	1	piovean	obl:in	30	5
 30	0			0	0
 31	0			0	0
 32	3	vide	subj	31	2
@@ -244,9 +246,14 @@ line	token	word	role	arg_line	arg_token
 81	7	giva	obl	81	5
 81	7	giva	obl	81	6
 82	0			0	0
+83	1	fatt'	subj	82	2
 83	1	fatt'	obl:in	83	4
+83	7	dallato	subj	83	6
 84	5	accorsi	subj	84	3
-84	10	lici	subj	84	8
+84	5	accorsi	obj	84	4
+84	5	accorsi	ccomp	84	9
+84	9	era	subj	84	8
+84	9	era	attr	84	10
 85	9	dimostrato	subj	85	6
 85	9	dimostrato	obj	85	5
 85	9	dimostrato	iobj	85	7
@@ -255,6 +262,7 @@ line	token	word	role	arg_line	arg_token
 87	7	negato	subj	87	3
 87	7	negato	obl:a	87	5
 88	8	scorta	subj	88	1
+88	8	scorta	obl:tra	85	4
 88	8	scorta	obl:da	88	7
 89	3	è	subj	89	6
 89	3	è	attr	89	1
@@ -314,11 +322,20 @@ line	token	word	role	arg_line	arg_token
 105	3	guarda	obj	105	2
 105	3	guarda	obl:come	105	6
 106	8	formata	subj	106	3
-107	0			0	0
-108	0			0	0
-109	0			0	0
-110	0			0	0
-111	0			0	0
+106	8	formata	obl:di	106	7
+107	4	son	subj	107	6
+107	4	son	subj	107	9
+107	4	son	attr	107	3
+108	2	è	subj	0	0
+108	2	è	obl:di	108	4
+108	2	è	obl:a	108	8
+109	5	è	subj	0	0
+109	5	è	attr	109	7
+110	6	è	subj	110	5
+110	6	è	attr	110	7
+111	12	eretto	subj	0	0
+111	12	eretto	obl:su	111	5
+111	12	eretto	obl:su	111	11
 112	7	è	subj	112	2
 112	7	è	attr	112	8
 112	7	è	obl	112	6
@@ -338,6 +355,7 @@ line	token	word	role	arg_line	arg_token
 117	3	van	obl	117	2
 117	3	van	obl	117	4
 117	3	van	obl:per	117	8
+117	3	van	obl	118	2
 118	7	dismonta	subj	0	0
 119	1	fanno	subj	0	0
 119	1	fanno	obj	119	2
@@ -346,6 +364,7 @@ line	token	word	role	arg_line	arg_token
 120	3	vedrai	subj	120	1
 120	3	vedrai	obj	120	2
 120	8	conta	subj	0	0
+120	8	conta	obl	120	5
 121	2	io	iobj	121	4
 121	2	io	ccomp	123	3
 122	2	diriva	subj	121	8
@@ -363,6 +382,7 @@ line	token	word	role	arg_line	arg_token
 126	5	calando	obl:a	126	7
 127	8	vòlto	obl:per	127	7
 128	6	apparisce	subj	128	4
+128	6	apparisce	obl	128	5
 129	0			0	0
 130	7	trova	subj	131	1
 130	7	trova	obl	130	5

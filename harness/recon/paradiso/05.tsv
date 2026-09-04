@@ -2,17 +2,17 @@ line	token	word	role	arg_line	arg_token
 1	4	fiammeggio	subj	1	2
 1	4	fiammeggio	iobj	1	3
 1	4	fiammeggio	obl:in	1	6
+1	4	fiammeggio	obl:di	2	2
 2	9	vede	subj	2	5
 2	9	vede	obl:in	2	7
 3	6	vinco	subj	0	0
 3	6	vinco	obj	3	8
-3	6	vinco	obl:di	3	4
 4	3	maravigliar	subj	0	0
 4	3	maravigliar	obj	4	2
 4	6	procede	subj	4	5
 4	6	procede	obl:da	5	3
 5	6	apprende	subj	5	4
-6	5	move	subj	0	0
+6	5	move	subj	5	4
 6	5	move	obj	6	7
 6	5	move	obl:in	6	3
 7	2	veggio	subj	7	1
@@ -48,9 +48,10 @@ line	token	word	role	arg_line	arg_token
 21	2	conformato	subj	19	4
 21	2	conformato	obl:a	20	7
 21	8	apprezza	subj	21	6
-21	8	apprezza	obj	21	4
-22	1	fu	subj	22	6
-22	1	fu	attr	19	3
+21	8	apprezza	obj	21	5
+22	1	fu	subj	19	3
+22	1	fu	attr	22	6
+22	1	fu	obl:di	22	4
 23	0			0	0
 24	5	fuoro	subj	23	4
 24	5	fuoro	attr	24	8
@@ -135,6 +136,7 @@ line	token	word	role	arg_line	arg_token
 47	3	servata	subj	0	0
 48	6	favella	subj	0	0
 48	6	favella	obl	47	5
+48	6	favella	obl:di	48	4
 49	2	necessitato	subj	0	0
 49	2	necessitato	xcomp	50	3
 50	3	offerere	subj	0	0
@@ -148,12 +150,12 @@ line	token	word	role	arg_line	arg_token
 52	7	è	iobj	52	6
 52	7	è	attr	52	8
 52	7	è	obl:per	52	5
-53	1	puote	subj	0	0
+53	1	puote	subj	52	2
 53	1	puote	xcomp	53	3
 53	3	esser	subj	0	0
 53	3	esser	attr	53	4
-53	8	falla	subj	53	7
-54	6	converta	subj	54	5
+53	8	falla	subj	0	0
+54	6	converta	subj	0	0
 54	6	converta	obl:con	54	4
 55	3	trasmuti	subj	0	0
 55	3	trasmuti	obj	55	4
@@ -172,9 +174,9 @@ line	token	word	role	arg_line	arg_token
 60	8	raccolta	subj	59	3
 60	8	raccolta	obl:come	60	3
 61	5	pesa	subj	61	3
-62	5	tragga	subj	61	3
+61	5	pesa	obl:per	62	3
+62	5	tragga	subj	62	3
 62	5	tragga	obj	62	7
-62	5	tragga	obl:per	62	3
 63	1	sodisfar	subj	0	0
 63	4	può	subj	0	0
 63	4	può	xcomp	63	1
@@ -261,7 +263,6 @@ line	token	word	role	arg_line	arg_token
 87	7	è	attr	87	9
 88	0			0	0
 89	1	puoser	subj	88	3
-89	1	puoser	subj	88	6
 89	1	puoser	obj	89	2
 89	1	puoser	obl:a	89	6
 90	5	avea	subj	90	1
@@ -273,6 +274,7 @@ line	token	word	role	arg_line	arg_token
 92	4	sia	subj	92	6
 92	4	sia	attr	92	7
 93	2	corremmo	subj	0	0
+93	2	corremmo	obl:come	91	4
 93	2	corremmo	obl:in	93	5
 94	5	vid'	subj	94	6
 94	5	vid'	obj	94	3
@@ -301,7 +303,9 @@ line	token	word	role	arg_line	arg_token
 100	5	è	subj	100	3
 100	5	è	attr	100	6
 101	1	traggonsi	subj	101	3
+101	1	traggonsi	obl:in	100	3
 101	1	traggonsi	obl:a	101	5
+101	1	traggonsi	obl:per	102	2
 101	7	vien	subj	101	6
 101	7	vien	obl:di	101	9
 102	5	stimin	subj	0	0
@@ -313,6 +317,7 @@ line	token	word	role	arg_line	arg_token
 104	1	trarsi	subj	103	8
 104	1	trarsi	obl:verso	104	3
 104	8	udia	subj	0	0
+104	8	udia	obj	105	1
 104	8	udia	ccomp	105	3
 104	8	udia	obl:in	104	6
 105	3	crescerà	subj	105	2
@@ -326,17 +331,17 @@ line	token	word	role	arg_line	arg_token
 109	1	Pensa	subj	0	0
 109	1	Pensa	ccomp	110	2
 109	8	inizia	subj	109	4
+109	8	inizia	obj	109	7
 110	2	procedesse	subj	109	4
-110	2	procedesse	obl	110	5
 110	5	avresti	subj	110	4
 110	5	avresti	obj	111	3
 111	0			0	0
 112	4	vederai	subj	0	0
 112	4	vederai	ccomp	113	2
-112	4	vederai	ccomp	114	7
 112	4	vederai	obl:per	112	3
 113	2	era	subj	0	0
 113	2	era	iobj	113	1
+113	2	era	obl:da	112	7
 113	2	era	obl:in	113	4
 113	6	udir	subj	0	0
 113	6	udir	obj	113	8

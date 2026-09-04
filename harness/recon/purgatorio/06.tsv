@@ -132,9 +132,16 @@ line	token	word	role	arg_line	arg_token
 42	6	era	attr	42	7
 42	6	era	obl:da	42	5
 43	0			0	0
+44	3	fermar	subj	0	0
+44	3	fermar	obj	44	2
+44	3	fermar	obl:a	43	5
 44	8	dice	subj	44	5
 44	8	dice	obj	44	6
-45	0			0	0
+44	8	dice	iobj	44	7
+44	8	dice	ccomp	45	3
+45	3	fia	subj	45	1
+45	3	fia	attr	45	2
+45	3	fia	obl:tra	45	6
 46	2	so	subj	0	0
 46	2	so	ccomp	46	4
 46	4	'ntendi	subj	0	0
@@ -274,6 +281,7 @@ line	token	word	role	arg_line	arg_token
 88	2	val	subj	88	1
 88	5	racconciasse	subj	89	1
 88	5	racconciasse	obj	88	7
+88	5	racconciasse	iobj	88	4
 89	0			0	0
 90	3	fora	subj	90	5
 90	3	fora	attr	90	6
@@ -437,8 +445,10 @@ line	token	word	role	arg_line	arg_token
 141	1	fecero	subj	139	1
 141	1	fecero	obj	141	7
 141	1	fecero	obl:a	141	3
+141	1	fecero	obl:verso	142	3
 142	5	fai	subj	142	4
 142	5	fai	obj	143	1
+142	5	fai	obl	144	2
 143	0			0	0
 144	2	giugne	subj	144	3
 144	2	giugne	obl:a	143	5

@@ -4,10 +4,12 @@ line	token	word	role	arg_line	arg_token
 1	6	volse	obl:contro	2	3
 2	8	seguio	subj	2	7
 2	8	seguio	obj	2	6
+2	8	seguio	obl:dietro	3	4
 3	7	tolse	subj	3	6
 3	7	tolse	obj	3	5
 4	0			0	0
 5	7	ritenne	subj	4	8
+5	7	ritenne	obl	4	4
 5	7	ritenne	obl:in	5	3
 5	7	ritenne	obl:a	6	3
 6	7	uscìo	subj	0	0
@@ -111,6 +113,7 @@ line	token	word	role	arg_line	arg_token
 35	4	cominciò	subj	0	0
 35	4	cominciò	obl:da	35	7
 36	3	morì	subj	36	2
+36	3	morì	obl	36	1
 36	3	morì	obl:per	36	5
 36	5	darli	subj	36	2
 36	5	darli	obj	36	6
@@ -141,7 +144,7 @@ line	token	word	role	arg_line	arg_token
 43	1	Sai	obj	43	2
 43	6	portato	subj	43	4
 43	6	portato	obj	43	3
-43	6	portato	obl:da	43	9
+43	6	portato	obl:da	44	1
 43	6	portato	obl	44	2
 43	6	portato	obl	44	5
 43	6	portato	obl	45	1
@@ -222,9 +225,10 @@ line	token	word	role	arg_line	arg_token
 67	6	mosse	obl	67	4
 68	1	rivide	subj	0	0
 68	1	rivide	obj	67	1
+68	1	rivide	obl	68	3
 68	7	cuba	subj	68	5
 68	7	cuba	obj	68	6
-68	7	cuba	obl	68	3
+68	7	cuba	obl	68	4
 69	7	scosse	subj	0	0
 69	7	scosse	obj	69	6
 69	7	scosse	obl	69	2
@@ -266,7 +270,7 @@ line	token	word	role	arg_line	arg_token
 80	3	puose	obl	81	3
 81	3	serrato	subj	81	8
 81	3	serrato	obl:a	81	5
-82	7	parlar		0	0
+82	7	parlar	subj	0	0
 82	9	face	subj	82	6
 82	9	face	obj	82	8
 82	9	face	xcomp	82	7
@@ -281,6 +285,8 @@ line	token	word	role	arg_line	arg_token
 85	1	diventa	obl:in	85	3
 86	8	mira	subj	0	0
 86	8	mira	obl:in	86	3
+86	8	mira	obl:con	87	2
+86	8	mira	obl:con	87	6
 87	0			0	0
 88	7	spira	subj	88	5
 88	7	spira	iobj	88	6
@@ -339,18 +345,18 @@ line	token	word	role	arg_line	arg_token
 103	1	Faccian	subj	103	3
 103	4	faccian	subj	103	3
 103	4	faccian	obj	103	6
+103	4	faccian	obl:sotto	104	3
 104	6	segue	subj	105	2
 104	6	segue	obj	104	7
-104	6	segue	obl:sotto	104	3
 105	7	diparte	subj	105	2
 105	7	diparte	obj	105	4
 105	7	diparte	obj	105	6
 106	4	abbatta	subj	106	6
 106	4	abbatta	obj	106	3
-106	4	abbatta	obl:con	107	2
-107	5	tema	subj	106	6
+106	4	abbatta	obl:coi	107	2
+107	5	tema	subj	0	0
 107	5	tema	obj	107	8
-108	6	trasser	subj	107	8
+108	6	trasser	subj	108	1
 108	6	trasser	obj	108	8
 108	6	trasser	obl:a	108	5
 109	4	pianser	subj	109	6
@@ -413,7 +419,7 @@ line	token	word	role	arg_line	arg_token
 132	3	fa	obl:di	132	7
 133	3	ebbe	subj	134	2
 133	3	ebbe	obj	133	2
-133	6	reina	subj	0	0
+133	6	reina	subj	133	5
 134	6	fece	subj	135	1
 134	6	fece	obj	134	4
 134	6	fece	iobj	134	5

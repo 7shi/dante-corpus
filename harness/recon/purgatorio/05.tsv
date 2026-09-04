@@ -8,6 +8,7 @@ line	token	word	role	arg_line	arg_token
 3	6	drizzando	obl	3	3
 4	2	gridò	subj	4	1
 4	2	gridò	ccomp	4	3
+4	2	gridò	obl:di	3	3
 4	3	Ve'	subj	0	0
 4	3	Ve'	ccomp	4	6
 4	6	par	subj	0	0
@@ -69,7 +70,7 @@ line	token	word	role	arg_line	arg_token
 19	4	ridir	obj	19	1
 19	8	vegno	subj	19	7
 20	1	Dissilo	subj	0	0
-20	1	Dissilo	obl:di	20	4
+20	1	Dissilo	obj	20	2
 21	2	fa	subj	21	1
 21	2	fa	obj	21	4
 21	2	fa	xcomp	21	8
@@ -98,6 +99,7 @@ line	token	word	role	arg_line	arg_token
 27	1	mutar	obl:in	27	6
 28	0			0	0
 29	1	corsero	subj	28	2
+29	1	corsero	obl:in	28	6
 29	1	corsero	obl:a	29	4
 29	6	dimandarne	subj	28	2
 29	6	dimandarne	ccomp	30	4
@@ -145,8 +147,9 @@ line	token	word	role	arg_line	arg_token
 41	2	giunti	obl	41	3
 41	9	dier	subj	0	0
 41	9	dier	obj	41	10
+41	9	dier	iobj	41	8
 41	9	dier	obl:con	41	6
-41	9	dier	obl:a	41	8
+41	9	dier	obl:come	42	2
 42	4	scorre	subj	42	3
 42	4	scorre	obl:sanza	42	6
 43	4	preme	subj	43	3
@@ -217,7 +220,7 @@ line	token	word	role	arg_line	arg_token
 59	2	riconosco	subj	58	2
 59	2	riconosco	obj	59	3
 59	2	riconosco	obl:in	58	6
-59	8	piace	subj	0	0
+59	8	piace	subj	60	1
 59	8	piace	iobj	59	7
 60	4	possa	subj	60	3
 60	4	possa	obj	60	2
@@ -227,6 +230,7 @@ line	token	word	role	arg_line	arg_token
 61	5	farò	obl:per	61	8
 62	0			0	0
 63	5	cercar	subj	63	6
+63	5	cercar	obj	62	1
 63	5	cercar	obl:di	63	2
 63	5	cercar	obl:in	63	4
 63	8	face	subj	0	0
@@ -302,6 +306,7 @@ line	token	word	role	arg_line	arg_token
 83	6	caddi	subj	83	5
 83	9	vid'	subj	83	10
 83	9	vid'	ccomp	84	5
+83	9	vid'	obl	83	8
 84	5	farsi	subj	0	0
 84	5	farsi	obj	84	8
 84	5	farsi	obl:di	84	4
@@ -330,6 +335,7 @@ line	token	word	role	arg_line	arg_token
 91	0			0	0
 92	2	travïò	subj	91	6
 92	2	travïò	obj	92	1
+92	2	travïò	obl	92	4
 93	4	seppe	subj	93	7
 94	2	rispuos'	subj	94	3
 94	2	rispuos'	ccomp	95	1

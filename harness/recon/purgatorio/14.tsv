@@ -64,8 +64,17 @@ line	token	word	role	arg_line	arg_token
 18	7	sazia	obj	18	6
 19	4	rech'	subj	19	5
 19	4	rech'	obj	19	7
+19	4	rech'	obl:sopra	19	3
+20	1	dirvi	ccomp	20	4
 20	4	sia	subj	20	3
+20	5	saria	subj	20	1
+20	5	saria	attr	20	6
+20	6	parlare	subj	20	1
+20	6	parlare	obl	20	7
 21	8	suona	subj	21	3
+21	8	suona	obl	21	5
+21	8	suona	obl	21	6
+21	8	suona	obl	21	7
 22	6	accarno	subj	0	0
 22	6	accarno	obj	22	4
 22	6	accarno	obl:con	23	3
@@ -87,18 +96,22 @@ line	token	word	role	arg_line	arg_token
 29	2	sdebitò	subj	28	3
 29	2	sdebitò	obj	29	1
 29	5	so	subj	0	0
+30	2	è	subj	30	9
 30	2	è	attr	29	7
-30	2	è	ccomp	30	9
 30	9	pèra	subj	30	5
 31	6	è	subj	32	3
 31	6	è	attr	31	8
 31	6	è	obl:da	31	3
+31	6	è	obl	31	5
 32	5	è	subj	32	7
 32	5	è	attr	32	6
+32	5	è	obl	32	4
 33	5	passa	subj	32	3
 33	5	passa	obl:in	33	4
 33	5	passa	obl:oltra	33	8
 34	5	rende	subj	0	0
+34	5	rende	obl	34	2
+34	5	rende	obl	34	3
 34	5	rende	obl:per	34	7
 35	9	asciuga	subj	35	5
 35	9	asciuga	obj	35	3
@@ -110,6 +123,7 @@ line	token	word	role	arg_line	arg_token
 36	7	va	obl:con	36	9
 37	6	fuga	subj	37	1
 37	6	fuga	obj	37	5
+37	6	fuga	obl:da	31	3
 37	6	fuga	obl	37	2
 37	6	fuga	obl:per	37	4
 37	6	fuga	obl:da	38	2
@@ -299,6 +313,7 @@ line	token	word	role	arg_line	arg_token
 91	0			0	0
 92	0			0	0
 93	3	richesto	obl:a	93	5
+94	7	ripieno	obl:a	94	5
 94	7	ripieno	obl:di	95	3
 95	0			0	0
 96	0			0	0
@@ -418,6 +433,7 @@ line	token	word	role	arg_line	arg_token
 131	6	fende	subj	131	1
 131	6	fende	obj	131	5
 132	3	giunse	subj	132	2
+132	3	giunse	obl:di	132	5
 132	6	dicendo	subj	132	2
 132	6	dicendo	ccomp	133	1
 133	1	Anciderammi	subj	0	0

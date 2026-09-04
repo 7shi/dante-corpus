@@ -75,6 +75,7 @@ line	token	word	role	arg_line	arg_token
 23	0			0	0
 24	1	avea	subj	23	7
 24	1	avea	attr	24	8
+24	1	avea	obl:per	23	9
 25	2	fece	subj	26	4
 25	2	fece	subj	27	2
 25	2	fece	obj	25	8
@@ -186,14 +187,14 @@ line	token	word	role	arg_line	arg_token
 59	2	cercare	obj	58	8
 59	5	troverai	subj	0	0
 59	5	troverai	obj	59	6
-59	5	troverai	obj	61	2
-59	5	troverai	obj	63	2
-59	5	troverai	obj	63	4
+60	4	esser	subj	59	6
+60	4	esser	attr	60	5
 60	5	fitta	subj	59	6
 60	5	fitta	obl:in	60	7
 61	6	rotto	subj	61	8
 61	6	rotto	subj	61	11
 61	6	rotto	obl:a	61	4
+61	6	rotto	obl:con	62	4
 62	0			0	0
 63	7	ingombra	subj	63	5
 63	7	ingombra	obj	63	6
@@ -285,7 +286,7 @@ line	token	word	role	arg_line	arg_token
 88	4	se'	subj	88	2
 88	4	se'	attr	88	3
 88	4	se'	ccomp	88	6
-88	6	vai	subj	0	0
+88	6	vai	subj	88	5
 88	6	vai	obl:per	88	9
 88	6	vai	obl	89	1
 89	1	percotendo	subj	0	0
@@ -353,8 +354,11 @@ line	token	word	role	arg_line	arg_token
 102	8	tomi	obl:su	102	6
 103	2	avea	subj	103	1
 103	2	avea	obj	103	5
-104	0			0	0
+104	2	tratti	subj	0	0
+104	2	tratti	obj	104	8
+104	2	tratti	iobj	104	3
 105	1	latrando	subj	105	2
+105	1	latrando	obl:con	105	5
 106	4	gridò	subj	106	3
 106	4	gridò	ccomp	106	6
 106	6	hai	subj	106	7
@@ -452,6 +456,7 @@ line	token	word	role	arg_line	arg_token
 134	7	mangi	obj	134	4
 135	1	dimmi	subj	0	0
 135	1	dimmi	obj	135	3
+135	1	dimmi	obl:per	135	8
 135	4	diss'	subj	135	5
 135	4	diss'	ccomp	135	1
 136	9	piangi	subj	136	3

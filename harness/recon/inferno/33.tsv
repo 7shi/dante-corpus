@@ -99,18 +99,32 @@ line	token	word	role	arg_line	arg_token
 27	5	squarciò	iobj	27	4
 27	5	squarciò	obl:di	27	3
 28	2	pareva	subj	28	1
-29	0			0	0
+28	2	pareva	attr	28	5
+28	2	pareva	obl:a	28	4
+29	1	cacciando	subj	0	0
+29	1	cacciando	obj	29	3
+29	1	cacciando	obl:a	29	7
+30	5	veder	subj	0	0
+30	5	veder	obj	30	6
 30	8	ponno	subj	30	4
+30	8	ponno	xcomp	30	5
 31	0			0	0
 32	0			0	0
+33	3	messi	subj	32	1
 33	3	messi	obj	33	1
+33	3	messi	obl:con	31	2
+33	3	messi	obl:con	32	3
+33	3	messi	obl:con	32	6
+33	3	messi	obl	33	4
+33	3	messi	obl:da	33	7
 34	5	parieno	subj	35	2
 34	5	parieno	iobj	34	4
 34	5	parieno	attr	34	6
 34	5	parieno	obl:in	34	3
 35	0			0	0
+36	2	parea	subj	36	4
 36	2	parea	iobj	36	1
-36	2	parea	ccomp	36	4
+36	2	parea	obl:con	35	9
 36	4	veder	subj	0	0
 36	4	veder	obj	36	3
 36	4	veder	xcomp	36	5
@@ -243,14 +257,18 @@ line	token	word	role	arg_line	arg_token
 70	7	vedi	subj	70	5
 70	7	vedi	obj	70	6
 71	1	vid'	subj	71	2
-71	1	vid'	ccomp	71	3
+71	1	vid'	xcomp	71	3
+71	1	vid'	obl:tra	72	4
 71	3	cascar	subj	71	5
+71	3	cascar	obl:ad	71	7
+71	3	cascar	obl:ad	71	9
 72	11	diedi	subj	72	9
 72	11	diedi	obj	72	10
 72	11	diedi	xcomp	73	4
 73	4	brancolar	obl:sovra	73	6
 74	5	chiamai	subj	0	0
 74	5	chiamai	obj	74	4
+74	5	chiamai	obl	74	3
 74	8	fur	subj	0	0
 74	8	fur	attr	74	9
 75	6	poté	subj	75	8
@@ -259,9 +277,9 @@ line	token	word	role	arg_line	arg_token
 75	6	poté	obl:che	75	5
 76	3	detto	subj	0	0
 76	3	detto	obj	76	4
-76	3	detto	obl:con	76	7
 77	1	riprese	subj	0	0
 77	1	riprese	obj	77	3
+77	1	riprese	obl:con	76	7
 77	1	riprese	obl:con	77	6
 78	2	furo	subj	78	1
 78	2	furo	attr	78	10
@@ -283,9 +301,15 @@ line	token	word	role	arg_line	arg_token
 84	4	annieghi	subj	84	3
 84	4	annieghi	obj	84	8
 84	4	annieghi	obl:in	84	6
-85	6	aveva	subj	85	5
-86	0			0	0
+85	6	aveva	subj	85	4
+85	6	aveva	obj	85	7
+86	3	tradita	subj	0	0
+86	3	tradita	obj	86	4
+86	3	tradita	obl:di	86	7
 87	2	dovei	subj	87	3
+87	2	dovei	xcomp	87	6
+87	6	porre	subj	87	3
+87	6	porre	obj	87	5
 87	6	porre	obl:a	87	9
 88	2	facea	subj	88	4
 88	2	facea	obj	88	1
@@ -298,6 +322,7 @@ line	token	word	role	arg_line	arg_token
 90	9	appella	obj	90	5
 91	2	passammo	subj	91	1
 92	5	fascia	subj	91	7
+92	5	fascia	obj	92	4
 93	0			0	0
 94	5	pianger	subj	0	0
 94	7	lascia	subj	94	2

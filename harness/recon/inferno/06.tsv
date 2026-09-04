@@ -11,6 +11,7 @@ line	token	word	role	arg_line	arg_token
 5	2	veggio	obj	4	2
 5	2	veggio	obj	4	5
 5	2	veggio	obj	5	1
+5	2	veggio	obl:a	1	2
 5	2	veggio	obl	5	3
 5	2	veggio	obl	5	8
 5	2	veggio	obl	6	5
@@ -21,8 +22,11 @@ line	token	word	role	arg_line	arg_token
 6	5	volga	obj	6	4
 6	10	guati	subj	6	9
 7	2	sono	subj	7	1
+7	2	sono	obl:a	7	5
 8	0			0	0
-9	0			0	0
+9	7	è	subj	9	1
+9	7	è	iobj	9	6
+9	7	è	attr	9	8
 10	0			0	0
 11	6	riversa	subj	10	1
 11	6	riversa	obl:per	11	3
@@ -157,10 +161,13 @@ line	token	word	role	arg_line	arg_token
 48	7	è	subj	48	6
 48	7	è	attr	48	9
 48	7	è	obl	48	4
+49	10	piena	subj	49	8
 49	10	piena	obl:di	50	2
 50	6	trabocca	subj	50	8
 51	3	tenne	subj	49	7
 51	3	tenne	obj	51	2
+51	3	tenne	obl	51	1
+51	3	tenne	obl:in	51	6
 52	4	chiamaste	subj	52	1
 52	4	chiamaste	obj	52	3
 52	4	chiamaste	attr	52	5
@@ -355,8 +362,8 @@ line	token	word	role	arg_line	arg_token
 105	5	saran	attr	105	7
 106	5	Ritorna	subj	0	0
 106	5	Ritorna	obl:a	106	8
-107	2	vuol	subj	106	8
-107	2	vuol	ccomp	108	2
+107	2	vuol	subj	107	1
+107	2	vuol	xcomp	108	2
 107	6	è	subj	107	5
 107	6	è	attr	107	8
 108	2	senta	subj	0	0
@@ -379,6 +386,7 @@ line	token	word	role	arg_line	arg_token
 114	1	venimmo	subj	0	0
 114	1	venimmo	obl:a	114	3
 114	6	digrada	subj	0	0
+114	6	digrada	obl	114	4
 115	2	trovammo	subj	0	0
 115	2	trovammo	obj	115	3
 115	2	trovammo	obl	115	1

@@ -22,6 +22,7 @@ line	token	word	role	arg_line	arg_token
 7	2	salavam	subj	7	1
 7	2	salavam	obl:per	7	5
 8	3	moveva	subj	8	1
+8	3	moveva	obl:di	8	6
 8	3	moveva	obl:di	8	10
 9	6	fugge	subj	9	5
 9	9	appressa	subj	9	5
@@ -73,12 +74,12 @@ line	token	word	role	arg_line	arg_token
 29	3	conobbi	obj	29	5
 29	3	conobbi	xcomp	31	1
 30	5	aveva	subj	30	1
-30	5	aveva	obj	30	6
+30	5	aveva	obj	30	2
+30	5	aveva	obl	30	6
 31	1	esser	subj	0	0
 31	1	esser	attr	31	6
 31	1	esser	obl:di	31	3
 32	0			0	0
-33	5	avrebbe	subj	32	7
 33	5	avrebbe	subj	33	3
 33	5	avrebbe	obj	33	6
 34	4	venne	subj	34	3
@@ -143,6 +144,7 @@ line	token	word	role	arg_line	arg_token
 54	8	disposta	subj	52	3
 54	8	disposta	obl:a	54	6
 55	2	intagliato	subj	56	2
+55	2	intagliato	obl:in	55	5
 56	0			0	0
 57	4	teme	subj	57	5
 58	2	parea	subj	58	3
@@ -221,6 +223,7 @@ line	token	word	role	arg_line	arg_token
 82	0			0	0
 83	1	pareva	subj	82	2
 83	1	pareva	xcomp	83	2
+83	1	pareva	obl:intra	82	5
 83	2	dir	subj	82	2
 83	2	dir	ccomp	83	4
 83	4	fammi	subj	0	0
@@ -244,6 +247,7 @@ line	token	word	role	arg_line	arg_token
 89	3	farà	subj	88	7
 89	3	farà	obj	89	1
 89	3	farà	iobj	89	2
+90	4	fia	subj	89	8
 90	4	fia	subj	90	3
 90	4	fia	obl:a	90	2
 90	8	metti	subj	0	0
@@ -269,13 +273,14 @@ line	token	word	role	arg_line	arg_token
 97	4	dilettava	subj	97	2
 97	4	dilettava	obj	97	3
 97	4	dilettava	xcomp	97	6
+97	4	dilettava	xcomp	99	7
 97	6	guardare	subj	0	0
 97	6	guardare	obj	98	2
 98	0			0	0
 99	7	veder	subj	0	0
 99	7	veder	attr	99	8
 99	7	veder	obl:per	99	4
-100	5	fanno	subj	0	0
+100	5	fanno	subj	101	5
 100	5	fanno	obj	100	7
 101	1	mormorava	subj	101	3
 101	1	mormorava	ccomp	100	5
@@ -326,6 +331,8 @@ line	token	word	role	arg_line	arg_token
 116	7	rannicchia	obj	116	6
 116	7	rannicchia	obl:a	116	5
 117	7	ebber	subj	117	4
+117	7	ebber	obj	117	8
+117	7	ebber	obl	117	6
 118	2	guarda	subj	0	0
 118	2	guarda	obl	118	3
 118	2	guarda	obl	118	4
@@ -364,11 +371,12 @@ line	token	word	role	arg_line	arg_token
 128	2	siete	obl:in	128	6
 129	7	falla	subj	129	6
 129	7	falla	obl:in	129	5
-130	3	sostentar	subj	131	5
+130	3	sostentar	subj	0	0
 130	3	sostentar	obj	130	4
 131	0			0	0
 132	2	vede	subj	131	5
 132	2	vede	xcomp	132	3
+132	2	vede	obl:per	131	2
 132	3	giugner	subj	131	5
 132	3	giugner	obj	132	5
 132	3	giugner	obl:a	132	7

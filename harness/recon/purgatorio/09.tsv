@@ -73,6 +73,7 @@ line	token	word	role	arg_line	arg_token
 24	3	ratto	subj	23	5
 25	3	pensava	subj	0	0
 25	3	pensava	ccomp	25	6
+25	3	pensava	obl:fra	25	2
 25	6	fiede	subj	25	5
 25	6	fiede	obl	26	2
 25	6	fiede	obl:per	26	4
@@ -109,7 +110,7 @@ line	token	word	role	arg_line	arg_token
 35	4	rivolgendo	obl:in	35	6
 36	3	sappiendo	subj	0	0
 36	3	sappiendo	ccomp	36	7
-36	7	fosse	subj	36	6
+36	7	fosse	subj	0	0
 36	7	fosse	obl	36	5
 37	0			0	0
 38	1	trafuggò	subj	37	3
@@ -126,13 +127,18 @@ line	token	word	role	arg_line	arg_token
 40	3	scoss'	obj	40	2
 41	2	fuggì	subj	41	4
 41	2	fuggì	iobj	41	1
+41	2	fuggì	obl:da	40	9
 41	6	diventa'	subj	0	0
 41	6	diventa'	attr	41	7
 42	2	fa	subj	42	4
 42	7	agghiaccia	subj	42	5
+43	1	Dallato	subj	43	7
 43	1	Dallato	iobj	43	2
-44	0			0	0
-45	0			0	0
+44	5	alto	subj	44	3
+44	5	alto	obl:che	44	10
+45	9	torto	subj	45	3
+45	9	torto	iobj	45	4
+45	9	torto	obl:a	45	8
 46	2	aver	subj	0	0
 46	2	aver	obj	46	3
 46	4	disse	subj	46	7
@@ -168,6 +174,8 @@ line	token	word	role	arg_line	arg_token
 54	5	è	obl	54	6
 54	5	è	obl	54	7
 55	1	venne	subj	55	3
+55	1	venne	obl:in	52	4
+55	1	venne	obl:sovra	54	3
 55	5	disse	subj	55	3
 55	5	disse	ccomp	55	7
 55	5	disse	ccomp	56	1
@@ -217,13 +225,13 @@ line	token	word	role	arg_line	arg_token
 66	7	discoperta	iobj	66	5
 67	2	cambia'	subj	67	3
 67	2	cambia'	obj	67	1
-67	2	cambia'	obl:sanza	67	7
+67	2	cambia'	obl:a	64	2
 68	1	vide	subj	68	4
 68	1	vide	obj	68	2
-68	1	vide	obl:per	68	9
+68	1	vide	obl:sanza	67	7
 69	2	mosse	subj	0	0
-69	2	mosse	subj	69	4
 69	2	mosse	obj	69	1
+69	2	mosse	obl:per	68	9
 69	2	mosse	obl:di	69	6
 69	2	mosse	obl:inver'	69	9
 70	3	vedi	subj	70	2

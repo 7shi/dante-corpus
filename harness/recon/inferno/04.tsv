@@ -31,9 +31,16 @@ line	token	word	role	arg_line	arg_token
 9	3	accoglie	subj	9	1
 9	3	accoglie	obj	9	6
 9	3	accoglie	obl	9	2
-10	0			0	0
-11	0			0	0
+10	4	era	subj	0	0
+10	4	era	attr	10	1
+10	4	era	attr	10	3
+10	4	era	attr	10	6
+11	4	ficcar	subj	12	1
+11	4	ficcar	obj	11	6
+11	4	ficcar	obl:a	11	8
 12	4	discernea	subj	12	1
+12	4	discernea	obj	12	6
+12	4	discernea	obl	12	3
 13	2	discendiam	subj	0	0
 13	2	discendiam	obl	13	1
 13	2	discendiam	obl	13	3
@@ -291,11 +298,12 @@ line	token	word	role	arg_line	arg_token
 94	2	vid'	subj	94	3
 94	2	vid'	xcomp	94	4
 94	2	vid'	obl	94	1
-94	4	adunar	subj	94	7
+94	4	adunar	subj	0	0
+94	4	adunar	obj	94	7
 95	0			0	0
 96	7	vola	subj	96	1
 96	7	vola	obl:sovra	96	4
-96	7	vola	obl	96	5
+96	7	vola	obl:come	96	6
 97	4	ragionato	subj	0	0
 98	1	volsersi	subj	0	0
 98	1	volsersi	obl:a	98	3

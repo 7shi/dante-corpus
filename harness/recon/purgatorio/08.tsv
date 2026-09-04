@@ -3,14 +3,14 @@ line	token	word	role	arg_line	arg_token
 1	6	volge	subj	1	5
 1	6	volge	obj	1	8
 1	6	volge	obl:ai	2	2
-2	4	'ntenerisce	subj	0	0
+2	4	'ntenerisce	subj	3	2
 2	4	'ntenerisce	obj	2	6
 3	5	detto	subj	3	3
 3	5	detto	obj	3	9
 3	5	detto	iobj	3	8
-3	5	detto	obl	3	2
 4	0			0	0
-5	1	punge	subj	4	5
+5	1	punge	subj	4	2
+5	1	punge	obj	4	5
 5	3	ode	subj	0	0
 5	3	ode	obj	5	4
 5	3	ode	obl:di	5	6
@@ -113,6 +113,7 @@ line	token	word	role	arg_line	arg_token
 35	8	smarria	subj	35	6
 35	8	smarria	obj	35	7
 35	8	smarria	obl:in	35	4
+35	8	smarria	obl:come	36	2
 36	7	confonda	subj	36	3
 36	7	confonda	obj	36	6
 36	7	confonda	obl:a	36	5
@@ -233,10 +234,10 @@ line	token	word	role	arg_line	arg_token
 69	8	è	obl	69	7
 70	2	sarai	subj	0	0
 70	2	sarai	obl:di	70	4
-70	2	sarai	obl:da	70	8
 71	1	dì	subj	0	0
 71	1	dì	iobj	71	3
 71	1	dì	ccomp	71	8
+71	1	dì	obl:per	67	8
 71	8	chiami	subj	71	3
 71	8	chiami	obl:per	71	7
 71	8	chiami	obl	72	1
@@ -321,6 +322,7 @@ line	token	word	role	arg_line	arg_token
 96	2	drizzò	subj	0	0
 96	2	drizzò	obj	96	4
 96	8	guardasse	subj	0	0
+96	8	guardasse	obl:in	96	7
 97	6	ha	subj	98	3
 97	6	ha	obj	97	7
 98	4	era	subj	98	6
@@ -334,9 +336,10 @@ line	token	word	role	arg_line	arg_token
 101	1	volgendo	subj	0	0
 101	1	volgendo	obj	101	7
 101	1	volgendo	obj	101	10
-101	1	volgendo	obl:ad	101	3
-101	1	volgendo	obl:ad	101	5
+101	1	volgendo	obl:a	101	3
+101	1	volgendo	obl:a	101	5
 102	1	leccando	subj	0	0
+102	1	leccando	obj	101	10
 102	1	leccando	obl:come	102	3
 102	6	liscia	subj	102	4
 102	6	liscia	obj	102	5
@@ -381,7 +384,7 @@ line	token	word	role	arg_line	arg_token
 113	1	truovi	subj	112	3
 113	1	truovi	obj	113	6
 113	1	truovi	obl:in	113	4
-114	2	è	subj	0	0
+114	2	è	subj	114	1
 114	2	è	attr	114	3
 114	2	è	obl:a	114	7
 115	1	cominciò	subj	115	2
@@ -391,6 +394,7 @@ line	token	word	role	arg_line	arg_token
 117	1	sai	subj	0	0
 117	1	sai	obj	115	4
 117	2	dillo	subj	0	0
+117	2	dillo	obj	115	4
 117	2	dillo	iobj	117	4
 117	2	dillo	obl	117	1
 117	9	era	subj	117	5

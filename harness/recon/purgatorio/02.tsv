@@ -111,18 +111,21 @@ line	token	word	role	arg_line	arg_token
 35	1	trattando	obj	35	3
 35	1	trattando	obl:con	35	7
 36	4	mutan	subj	36	1
-36	4	mutan	obl	36	5
+36	4	mutan	obj	36	3
+36	4	mutan	obl:come	36	7
 37	8	venne	subj	38	2
 37	8	venne	obl:verso	37	7
 38	6	appariva	subj	38	2
 38	6	appariva	attr	38	5
 39	8	sostenne	subj	39	4
 39	8	sostenne	obj	39	7
+39	8	sostenne	obl:da	39	6
 40	2	chinail	subj	39	4
 40	2	chinail	obl	40	3
 40	7	venne	subj	40	5
 40	7	venne	obl	40	6
 40	7	venne	obl:a	40	9
+40	7	venne	obl:con	41	3
 41	0			0	0
 42	7	'nghiottiva	subj	42	4
 42	7	'nghiottiva	obj	42	5
@@ -136,7 +139,12 @@ line	token	word	role	arg_line	arg_token
 45	7	sediero	obl	45	6
 46	0			0	0
 47	1	cantavan	subj	47	2
-48	0			0	0
+47	1	cantavan	obj	46	2
+47	1	cantavan	obl	47	3
+47	1	cantavan	obl:ad	47	6
+47	1	cantavan	obl:con	48	8
+48	8	scripto	subj	48	2
+48	8	scripto	obl	48	7
 49	2	fece	subj	0	0
 49	2	fece	obj	49	4
 49	2	fece	iobj	49	5
@@ -170,6 +178,7 @@ line	token	word	role	arg_line	arg_token
 57	0			0	0
 58	5	alzò	subj	58	4
 58	5	alzò	obj	58	7
+58	5	alzò	obl:verso	59	2
 59	3	dicendo	subj	58	4
 59	3	dicendo	iobj	59	5
 59	3	dicendo	ccomp	60	1
@@ -296,10 +305,12 @@ line	token	word	role	arg_line	arg_token
 90	3	arresto	obj	90	2
 90	7	vai	subj	90	5
 91	4	tornar	obl	91	6
+91	4	tornar	obl	92	1
 92	4	son	subj	92	3
 92	5	fo	subj	92	6
 92	5	fo	obj	92	8
 93	1	diss'	subj	93	2
+93	10	tolta	subj	93	9
 93	10	tolta	obl:a	93	5
 94	8	fatto	subj	94	5
 94	8	fatto	obj	94	9
@@ -310,6 +321,7 @@ line	token	word	role	arg_line	arg_token
 96	5	negato	subj	95	2
 96	5	negato	obj	96	7
 96	5	negato	iobj	96	3
+96	5	negato	obl	96	2
 97	8	face	subj	0	0
 97	8	face	obl:di	97	4
 98	7	tolto	subj	98	5
@@ -390,12 +402,14 @@ line	token	word	role	arg_line	arg_token
 122	1	Correte	obl:a	122	3
 122	5	spogliarvi	subj	0	0
 122	5	spogliarvi	obj	122	7
+122	5	spogliarvi	iobj	123	6
 123	2	esser	subj	122	7
 123	2	esser	attr	123	8
 123	4	lascia	subj	123	7
+123	4	lascia	obj	123	1
 123	4	lascia	iobj	123	6
 123	4	lascia	ccomp	123	2
-124	3	cogliendo	subj	125	2
+124	3	cogliendo	subj	0	0
 124	3	cogliendo	obj	124	4
 125	0			0	0
 126	3	mostrar	subj	125	2
@@ -405,20 +419,22 @@ line	token	word	role	arg_line	arg_token
 127	6	abbian	obj	127	7
 128	2	lasciano	subj	125	2
 128	2	lasciano	xcomp	128	3
+128	3	star	subj	125	2
 128	3	star	obj	128	5
-129	3	son	subj	0	0
-129	3	son	obl:da	129	6
+129	2	assaliti	subj	125	2
+129	2	assaliti	obl:da	129	6
 130	2	vid'	subj	130	3
 130	2	vid'	obj	130	5
 130	2	vid'	xcomp	131	1
 130	2	vid'	xcomp	131	5
-131	1	lasciar	subj	0	0
+130	2	vid'	obl	132	1
+131	1	lasciar	subj	130	5
 131	1	lasciar	obj	131	3
-131	5	fuggir	subj	0	0
+131	5	fuggir	subj	130	5
 131	5	fuggir	obl:verso	131	8
-132	4	va	subj	132	3
-132	6	sa	subj	132	3
+132	4	va	subj	132	2
+132	6	sa	subj	132	2
 132	6	sa	ccomp	132	8
-132	8	rïesca	subj	0	0
+132	8	rïesca	subj	132	2
 133	5	fu	subj	133	4
 133	5	fu	attr	133	7

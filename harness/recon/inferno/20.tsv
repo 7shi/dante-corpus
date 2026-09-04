@@ -85,8 +85,10 @@ line	token	word	role	arg_line	arg_token
 25	3	piangea	subj	25	2
 26	0			0	0
 27	2	disse	subj	26	8
+27	2	disse	iobj	27	1
 27	2	disse	ccomp	27	4
 27	4	se'	subj	27	5
+27	4	se'	obl:de	27	9
 28	2	vive	subj	28	4
 28	2	vive	obl	28	1
 28	6	è	subj	0	0
@@ -158,23 +160,26 @@ line	token	word	role	arg_line	arg_token
 46	9	atterga	iobj	46	7
 46	9	atterga	obl:a	46	6
 47	7	ronca	subj	48	2
-47	7	ronca	obl:in	47	3
+47	7	ronca	obl	47	6
 48	6	alberga	subj	48	3
+48	6	alberga	obl:di	48	5
 49	1	ebbe	subj	47	1
 49	1	ebbe	obj	49	6
+49	1	ebbe	obl:in	47	3
 49	1	ebbe	obl:tra	49	4
 49	1	ebbe	obl:per	50	3
 50	6	guardar	subj	0	0
 50	6	guardar	obj	50	8
+50	6	guardar	obj	51	3
 51	6	era	subj	51	8
 51	6	era	iobj	51	5
 51	6	era	attr	51	9
 51	6	era	xcomp	50	6
 52	4	ricuopre	subj	52	3
 52	4	ricuopre	obj	52	6
+52	4	ricuopre	obl:con	53	7
 53	4	vedi	subj	53	2
 53	4	vedi	obj	53	1
-53	4	vedi	obl:con	53	7
 54	2	ha	subj	52	3
 54	2	ha	obj	54	7
 54	2	ha	obl:di	54	4
@@ -218,11 +223,11 @@ line	token	word	role	arg_line	arg_token
 66	8	stagna	obl:in	66	7
 67	2	è	subj	67	1
 67	2	è	obl:in	67	4
-67	2	è	obl	67	6
 68	0			0	0
-69	1	segnar	subj	0	0
+69	1	segnar	subj	68	1
 69	2	poria	subj	68	1
 69	2	poria	xcomp	69	1
+69	2	poria	obl	67	6
 69	5	fesse	subj	69	4
 69	5	fesse	obj	69	7
 70	1	Siede	subj	70	2
@@ -243,13 +248,15 @@ line	token	word	role	arg_line	arg_token
 75	2	fassi	attr	75	3
 75	2	fassi	obl	75	4
 75	2	fassi	obl:per	75	7
-76	6	correr	subj	76	4
+76	6	correr	subj	0	0
 76	7	mette	subj	76	4
 76	7	mette	xcomp	76	6
 77	7	chiama	subj	0	0
 77	7	chiama	attr	77	3
 77	7	chiama	attr	77	5
+77	7	chiama	obl:a	78	3
 78	5	cade	subj	0	0
+78	5	cade	obl	78	4
 78	5	cade	obl:in	78	7
 79	4	corso	subj	0	0
 79	4	corso	obl	79	1
@@ -265,11 +272,10 @@ line	token	word	role	arg_line	arg_token
 81	6	essere	subj	0	0
 81	6	essere	attr	81	7
 81	6	essere	obl:di	81	4
-82	2	passando	subj	0	0
-82	2	passando	obj	82	4
-83	1	vide	subj	0	0
+82	2	passando	subj	82	4
+83	1	vide	subj	82	4
 83	1	vide	obj	83	2
-83	1	vide	obl	82	2
+83	1	vide	obl	82	1
 84	0			0	0
 85	3	fuggire	subj	0	0
 85	3	fuggire	obj	85	5
@@ -306,6 +312,7 @@ line	token	word	role	arg_line	arg_token
 94	8	spesse	subj	94	4
 95	0			0	0
 96	4	ricevesse	subj	95	4
+96	4	ricevesse	obj	96	3
 96	4	ricevesse	obl:da	96	2
 97	3	assenno	subj	0	0
 97	3	assenno	obj	97	2
@@ -339,6 +346,7 @@ line	token	word	role	arg_line	arg_token
 106	3	disse	ccomp	108	1
 107	1	porge	subj	106	5
 107	1	porge	obj	107	3
+107	1	porge	obl:da	106	8
 107	1	porge	obl:in	107	7
 108	1	fu	subj	106	4
 108	1	fu	attr	110	1
@@ -352,9 +360,9 @@ line	token	word	role	arg_line	arg_token
 110	3	diede	obj	110	5
 110	3	diede	xcomp	111	4
 110	3	diede	obl:con	110	7
+110	3	diede	obl:in	111	2
 111	4	tagliar	subj	106	4
 111	4	tagliar	obj	111	7
-111	4	tagliar	obl:in	111	2
 112	2	ebbe	subj	112	1
 112	2	ebbe	obj	112	3
 112	7	canta	subj	113	4
@@ -399,9 +407,9 @@ line	token	word	role	arg_line	arg_token
 123	1	fecer	obl:con	123	7
 124	2	vienne	subj	0	0
 124	2	vienne	obl	124	3
-124	6	tiene	subj	0	0
+124	6	tiene	subj	126	3
 124	6	tiene	obj	124	8
-125	6	tocca	subj	126	3
+125	6	tocca	subj	0	0
 125	6	tocca	obj	125	8
 125	6	tocca	obl:sotto	126	2
 126	0			0	0

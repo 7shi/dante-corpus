@@ -8,9 +8,8 @@ line	token	word	role	arg_line	arg_token
 4	2	fece	subj	1	1
 4	2	fece	obj	4	8
 4	2	fece	iobj	4	4
-4	2	fece	xcomp	6	3
-4	2	fece	obl	5	3
-5	7	coperse	subj	5	3
+4	2	fece	obl:a	6	3
+5	7	coperse	subj	5	4
 5	7	coperse	obj	5	6
 5	7	coperse	obl	5	5
 6	3	sentir	obj	6	7
@@ -150,6 +149,7 @@ line	token	word	role	arg_line	arg_token
 41	3	vuol	ccomp	41	6
 41	6	veggia	subj	41	5
 41	6	veggia	obj	41	9
+41	6	veggia	obl:per	42	2
 42	0			0	0
 43	3	celar	subj	0	0
 43	3	celar	iobj	43	2
@@ -295,7 +295,7 @@ line	token	word	role	arg_line	arg_token
 77	7	dura	subj	76	6
 77	7	dura	obl:in	77	4
 77	7	dura	obl:con	77	6
-78	2	vince	subj	76	3
+78	2	vince	subj	76	4
 78	2	vince	obj	78	3
 78	7	notrica	subj	76	3
 78	7	notrica	obj	78	6
@@ -384,9 +384,19 @@ line	token	word	role	arg_line	arg_token
 102	4	pasce	subj	100	4
 102	4	pasce	obl:di	102	2
 102	9	chiede	subj	100	4
-103	0			0	0
+103	2	puoi	subj	0	0
+103	2	puoi	xcomp	103	3
+103	3	veder	subj	0	0
+103	3	veder	ccomp	104	1
+104	1	è	subj	103	7
+104	1	è	subj	105	3
+104	1	è	attr	104	3
+104	8	fatto	subj	104	4
+104	8	fatto	obj	104	6
 104	8	fatto	attr	104	9
-105	0			0	0
+105	7	sia	subj	105	4
+105	7	sia	attr	105	8
+105	7	sia	obl:in	105	6
 106	1	Soleva	subj	106	2
 106	1	Soleva	xcomp	107	3
 106	7	feo	subj	106	3
@@ -406,9 +416,10 @@ line	token	word	role	arg_line	arg_token
 110	0			0	0
 111	5	convien	subj	0	0
 111	5	convien	ccomp	111	7
-111	5	convien	obl:per	111	3
 111	7	vada	subj	110	5
 111	7	vada	obl:con	110	8
+111	7	vada	obl	110	9
+111	7	vada	obl:per	111	3
 112	9	teme	subj	112	5
 112	9	teme	obj	112	7
 113	4	credi	subj	0	0

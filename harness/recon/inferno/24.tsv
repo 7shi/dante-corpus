@@ -17,6 +17,7 @@ line	token	word	role	arg_line	arg_token
 7	7	manca	iobj	7	4
 8	2	leva	subj	7	2
 8	2	leva	obj	8	1
+8	2	leva	obl:in	1	3
 8	4	guarda	subj	7	2
 8	6	vede	subj	7	2
 8	6	vede	obj	8	8
@@ -29,6 +30,7 @@ line	token	word	role	arg_line	arg_token
 10	1	ritorna	obl:in	10	3
 10	9	lagna	subj	9	4
 10	9	lagna	obj	10	8
+10	9	lagna	obl:come	11	3
 11	6	sa	subj	11	4
 11	6	sa	ccomp	11	9
 11	9	faccia	subj	0	0
@@ -38,9 +40,9 @@ line	token	word	role	arg_line	arg_token
 13	1	veggendo	ccomp	13	5
 13	5	cangiata	subj	13	3
 13	5	cangiata	obj	13	6
+13	5	cangiata	obl:in	14	2
 14	6	prende	subj	0	0
 14	6	prende	obj	14	8
-14	6	prende	obl:in	14	2
 15	6	pascer	subj	15	4
 15	7	caccia	subj	0	0
 15	7	caccia	obj	15	4
@@ -271,6 +273,7 @@ line	token	word	role	arg_line	arg_token
 79	2	discendemmo	obj	79	4
 79	2	discendemmo	obl:da	79	7
 80	3	aggiugne	subj	0	0
+80	3	aggiugne	obl	80	1
 80	3	aggiugne	obl:con	80	7
 81	4	fu	subj	81	6
 81	4	fu	iobj	81	3
@@ -357,8 +360,9 @@ line	token	word	role	arg_line	arg_token
 112	3	è	subj	112	2
 112	3	è	attr	112	4
 112	6	cade	subj	112	5
+112	6	cade	obl:per	113	2
 112	9	sa	subj	112	5
-112	9	sa	obl	112	10
+112	9	sa	obj	112	10
 113	9	tira	subj	113	5
 113	9	tira	obj	113	8
 113	9	tira	obl:a	113	7
@@ -449,6 +453,7 @@ line	token	word	role	arg_line	arg_token
 136	8	chiedi	subj	136	7
 136	8	chiedi	obj	136	6
 137	4	messo	subj	0	0
+137	4	messo	obl:in	137	2
 137	8	fui	subj	137	7
 137	8	fui	attr	138	1
 138	0			0	0

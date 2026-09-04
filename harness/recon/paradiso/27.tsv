@@ -38,20 +38,23 @@ line	token	word	role	arg_line	arg_token
 16	5	comparte	subj	16	3
 16	5	comparte	obj	17	1
 16	5	comparte	obl	16	4
-16	5	comparte	obl:in	17	6
 17	0			0	0
-18	2	posto	subj	0	0
+18	2	posto	subj	16	2
 18	2	posto	obj	18	1
+18	2	posto	obl:in	17	6
 18	2	posto	obl:da	18	6
 19	3	udi'	subj	19	2
-19	3	udi'	ccomp	19	7
+19	3	udi'	ccomp	20	3
 19	7	trascoloro	subj	19	5
 19	7	trascoloro	obj	19	6
 20	3	maravigliar	subj	0	0
 20	3	maravigliar	obj	20	2
+20	3	maravigliar	obl	19	7
+20	3	maravigliar	obl	21	1
 20	5	dicend'	subj	20	6
 21	1	vedrai	subj	0	0
 21	1	vedrai	xcomp	21	2
+21	1	vedrai	obl	20	5
 21	2	trascolorar	subj	21	4
 22	3	usurpa	subj	22	2
 22	3	usurpa	obj	22	7
@@ -77,15 +80,15 @@ line	token	word	role	arg_line	arg_token
 30	1	vid'	subj	30	2
 30	1	vid'	obj	30	6
 30	1	vid'	attr	30	7
-30	1	vid'	obl:di	28	3
 30	1	vid'	obl	30	3
 30	7	cosperso	subj	30	6
+30	7	cosperso	obl:di	28	3
 31	6	permane	subj	31	5
 31	6	permane	attr	32	3
 31	6	permane	obl:per	32	8
 32	0			0	0
 33	2	ascoltando	subj	0	0
-33	5	fane	subj	0	0
+33	5	fane	subj	31	3
 33	5	fane	obj	33	4
 33	5	fane	attr	33	3
 33	5	fane	obl	33	2
@@ -99,20 +102,21 @@ line	token	word	role	arg_line	arg_token
 36	2	patì	subj	0	0
 36	2	patì	obj	36	5
 37	2	procedetter	subj	37	4
+37	2	procedetter	ccomp	40	7
+37	2	procedetter	obl:con	38	2
 38	6	trasmutata	subj	38	2
 38	6	trasmutata	obl:da	38	5
 39	6	mutò	subj	39	3
 39	6	mutò	obj	39	5
 40	7	allevata	subj	40	4
 40	7	allevata	xcomp	42	7
-40	7	allevata	xcomp	43	6
 40	7	allevata	obl:di	41	2
+40	7	allevata	obl:per	43	3
 41	0			0	0
 42	7	usata	subj	0	0
 42	7	usata	obl:ad	42	4
 43	6	viver	subj	0	0
 43	6	viver	attr	43	7
-43	6	viver	obl:per	43	3
 44	0			0	0
 45	1	sparser	subj	44	2
 45	1	sparser	subj	44	4
@@ -180,9 +184,17 @@ line	token	word	role	arg_line	arg_token
 67	0			0	0
 68	0			0	0
 69	9	tocca	subj	68	8
+69	9	tocca	obl:con	69	7
 70	3	vid'	subj	70	4
 70	3	vid'	obj	70	7
-71	0			0	0
+70	3	vid'	xcomp	71	1
+70	3	vid'	xcomp	71	3
+70	3	vid'	obl:in	70	2
+71	1	farsi	subj	0	0
+71	3	fioccar	subj	0	0
+71	3	fioccar	obl:di	71	5
+72	2	fatto	subj	72	1
+72	2	fatto	obj	72	7
 72	2	fatto	obl:con	72	5
 73	4	seguiva	subj	73	2
 73	4	seguiva	obj	73	7
@@ -208,19 +220,21 @@ line	token	word	role	arg_line	arg_token
 80	2	vidi	subj	80	1
 80	2	vidi	obj	80	4
 80	2	vidi	xcomp	80	3
-80	2	vidi	obl:per	80	8
+80	2	vidi	obl:da	79	3
 80	3	mosso	subj	80	4
+80	3	mosso	obl:per	80	8
 81	2	fa	subj	81	1
 81	2	fa	obj	81	9
 81	2	fa	obl:da	81	4
 81	2	fa	obl:a	81	6
 82	4	vedea	subj	82	3
 82	4	vedea	obj	82	10
-82	4	vedea	obl:da	82	8
-82	4	vedea	obl:presso	83	9
+82	4	vedea	obj	83	9
+82	4	vedea	obl:di	82	6
+82	4	vedea	obl:di	83	6
 83	0			0	0
 84	4	fece	subj	84	5
-84	4	fece	attr	84	7
+84	4	fece	obj	84	7
 84	4	fece	obl:in	84	2
 85	5	discoverto	subj	85	7
 85	5	discoverto	iobj	85	3
@@ -229,24 +243,29 @@ line	token	word	role	arg_line	arg_token
 87	9	partito	obl:sotto	87	4
 88	5	donnea	subj	88	4
 88	5	donnea	obl:con	89	4
+89	7	ridure	subj	0	0
 89	7	ridure	obj	90	4
-89	7	ridure	obl:ad	90	2
-90	8	ardea	subj	88	4
+89	7	ridure	obl:a	90	2
+90	8	ardea	subj	88	2
 90	8	ardea	xcomp	89	7
 91	6	fé	subj	91	3
 91	6	fé	subj	91	5
 91	6	fé	obj	91	7
+91	6	fé	obl:in	93	2
+91	6	fé	obl:in	93	8
+92	2	pigliare	subj	0	0
 92	2	pigliare	obj	92	3
+92	5	aver	subj	0	0
 92	5	aver	obj	92	7
 93	0			0	0
 94	3	parrebber	subj	91	7
 94	3	parrebber	attr	94	4
-94	3	parrebber	obl:ver'	95	3
+94	3	parrebber	obl:verso	95	3
 95	7	refulse	subj	95	5
 95	7	refulse	iobj	95	6
 96	3	volsi	subj	0	0
 96	3	volsi	obj	96	2
-96	3	volsi	obl:al	96	6
+96	3	volsi	obl:a	96	6
 97	8	indulse	subj	97	6
 97	8	indulse	obj	97	4
 97	8	indulse	iobj	97	7
@@ -299,9 +318,12 @@ line	token	word	role	arg_line	arg_token
 114	6	intende	obj	113	8
 114	6	intende	obl	114	5
 115	7	distinto	subj	115	4
+115	7	distinto	obl:per	115	6
 116	0			0	0
 117	0			0	0
 118	5	tegna	subj	118	4
+118	5	tegna	obj	119	3
+118	5	tegna	obl:in	118	8
 119	0			0	0
 120	0			0	0
 121	6	affonde	subj	121	3
@@ -322,6 +344,7 @@ line	token	word	role	arg_line	arg_token
 125	5	converte	obl:in	126	2
 126	0			0	0
 127	5	reperte	subj	127	1
+127	5	reperte	obl:in	128	3
 128	0			0	0
 129	2	fugge	subj	128	5
 130	2	balbuzïendo	subj	130	1
@@ -364,6 +387,7 @@ line	token	word	role	arg_line	arg_token
 141	3	svïa	subj	141	6
 141	3	svïa	obl	141	1
 142	7	sverni	subj	142	4
+142	7	sverni	obl:per	143	3
 143	5	è	subj	143	4
 143	5	è	attr	143	8
 144	1	raggeran	subj	144	4

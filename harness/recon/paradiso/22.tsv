@@ -4,11 +4,13 @@ line	token	word	role	arg_line	arg_token
 2	2	volsi	subj	0	0
 2	2	volsi	obj	2	1
 2	2	volsi	obl:a	1	7
+2	2	volsi	obl:come	2	4
 2	6	ricorre	subj	2	5
 2	6	ricorre	obl	3	2
 3	6	confida	subj	0	0
 4	6	soccorre	subj	4	5
 4	6	soccorre	obl:a	5	3
+4	6	soccorre	obl:con	6	4
 5	0			0	0
 6	7	suol	subj	6	5
 6	7	suol	xcomp	6	9
@@ -16,6 +18,7 @@ line	token	word	role	arg_line	arg_token
 7	2	disse	subj	4	2
 7	2	disse	iobj	7	1
 7	2	disse	ccomp	7	4
+7	2	disse	obl:come	4	4
 7	4	sai	subj	7	5
 7	4	sai	ccomp	7	8
 7	8	se'	subj	7	7
@@ -160,10 +163,12 @@ line	token	word	role	arg_line	arg_token
 51	5	tennero	obj	51	7
 52	8	dimostri	subj	0	0
 52	8	dimostri	obj	52	7
+52	8	dimostri	obl	53	1
 53	2	parlando	subj	0	0
 53	2	parlando	obl:con	53	1
 54	3	veggio	subj	54	2
 54	3	veggio	obj	54	1
+54	3	veggio	obl:in	54	9
 54	5	noto	subj	54	2
 54	5	noto	obj	54	1
 54	5	noto	obl:in	54	9
@@ -191,7 +196,9 @@ line	token	word	role	arg_line	arg_token
 60	2	veggia	obl:con	60	4
 61	0			0	0
 62	2	adempierà	subj	61	7
+62	2	adempierà	obl:in	62	7
 63	3	adempion	subj	63	6
+63	3	adempion	subj	63	9
 63	3	adempion	obl	63	1
 64	2	è	subj	65	2
 64	2	è	attr	64	3
@@ -199,6 +206,7 @@ line	token	word	role	arg_line	arg_token
 64	2	è	attr	64	6
 65	0			0	0
 66	1	è	subj	66	3
+66	1	è	obl:in	65	4
 66	1	è	obl	66	4
 66	1	è	obl	66	7
 66	7	era	subj	0	0
@@ -257,6 +265,8 @@ line	token	word	role	arg_line	arg_token
 84	0			0	0
 85	8	blanda	subj	85	2
 86	4	basta	subj	86	6
+86	4	basta	obl:da	87	2
+86	4	basta	obl:a	87	7
 87	0			0	0
 88	2	cominciò	subj	88	1
 88	2	cominciò	subj	89	2
@@ -299,7 +309,7 @@ line	token	word	role	arg_line	arg_token
 99	8	avvolse	obl	99	6
 100	8	pinse	subj	100	3
 100	8	pinse	obj	100	7
-100	8	pinse	obl:a	100	6
+100	8	pinse	obl:dietro	100	6
 100	8	pinse	obl:con	101	4
 100	8	pinse	obl:per	101	8
 101	0			0	0
@@ -308,17 +318,17 @@ line	token	word	role	arg_line	arg_token
 103	7	monta	subj	0	0
 103	9	cala	subj	0	0
 104	2	fu	subj	104	5
+104	2	fu	obl	103	4
 105	2	agguagliar	subj	0	0
-105	2	agguagliar	obj	104	5
+105	2	agguagliar	obl:a	105	8
 105	4	potesse	subj	0	0
 105	4	potesse	xcomp	105	2
-105	4	potesse	obl:a	105	8
 106	3	torni	subj	106	2
 106	3	torni	obl:a	107	1
 107	6	piango	subj	107	5
+107	6	piango	obj	108	3
 107	6	piango	obl:per	107	4
 108	8	percuoto	subj	0	0
-108	8	percuoto	obj	108	3
 108	8	percuoto	obj	108	6
 108	8	percuoto	iobj	108	7
 109	8	messo	subj	109	1
@@ -346,6 +356,7 @@ line	token	word	role	arg_line	arg_token
 116	3	è	attr	116	4
 117	3	senti'	subj	117	2
 117	3	senti'	obj	117	7
+117	3	senti'	obl:di	117	5
 118	7	largita	subj	118	6
 118	7	largita	iobj	118	4
 118	7	largita	xcomp	119	2
