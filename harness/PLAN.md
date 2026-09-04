@@ -56,6 +56,12 @@ read it out as record S8.2** in [`stages/08.md`](stages/08.md) §4 — the run
 happened between sessions, so start from its logs and TSVs, not from a blank
 page.
 
+**A Stage 9 draft exists and is not in flight** ([`stages/09.md`](stages/09.md),
+2026-09-04): fixed-context execution, drafted on the operator's instruction and
+**not opened**. Stage 8 continues on the current architecture and nothing in that
+draft bears on it — do not act on it while S8.2 is outstanding. It is listed here
+only so a session that finds the file knows it is a forecast, not work.
+
 - **The baseline to measure against is this commit's tree**: 0 hard / **4,624
   soft**, `make fix-level FIX=2` = **1,128** (1,126 level-2 + 2 level-1),
   770 units, 100 cantos, suite 999. Re-verify the before-numbers from the
@@ -116,6 +122,24 @@ holds only what's still open.
       question. State at open: 0 hard / 4,624 soft, suite 991, live path
       confirmed. **Open next**: the operator's `--fix 2` run, to be read out as
       S8.2 (Handoff carries the reading order).
+- [ ] **Stage 9 — Fixed-Context Execution** (DRAFTED 2026-09-04 on the
+      operator's instruction, **not opened**; Stage 8 continues on the current
+      architecture). Provisional scope: replace the per-unit tool-calling
+      session, on the reconstruction and repair path, with a fixed-length
+      execution context — specification, frozen-layer evidence, the artifact's
+      current Layer-5 rows, and a verdict on them — whose only output is the
+      rewritten rows, and whose per-request size does not grow with the number
+      of iterations. The finding it rests on is measured, not proposed: the
+      **16 KB per-request ceiling both backends impose** (API: quota → 429;
+      local: prefill on a weak GPU) is what caps a session at ~3 turns, and the
+      tool apparatus (specs + wire contract + few-shot) is **6,176 B, 61.3%** of
+      the fixed prompt against 3,656 B of domain knowledge, while the unit's own
+      evidence is 2.8 KB. **The open problem is not the mechanism but the
+      verdict**: the loop needs a per-iteration improvement signal, and the
+      cheap one (soft findings) is registry-mediated and therefore inadmissible
+      under §4 item 1. Do not open this until that has a candidate answer.
+      [`stages/09.md`](stages/09.md) carries the measurements with their
+      provenance, the S3.7 re-reading, and a candidate Standing Invariant §7.
 - [x] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator on Stage 6's
       close, scope re-decided the same day from "level 2" to refactoring and
       narrowed the same day to two items; **CLOSED 2026-09-03** on S7.2's live
@@ -233,7 +257,11 @@ there from the start (stage closed 2026-08-30 on S5.8); Stage-6 records
 S6.1–S6.11 the same way in [`stages/06.md`](stages/06.md) (stage closed 2026-09-02 on
 S6.11); Stage-7 records S7.1–S7.2 the same way in [`stages/07.md`](stages/07.md)
 (stage closed 2026-09-03 on S7.2); Stage-8 records accrue the same way in
-[`stages/08.md`](stages/08.md), open, S8.1 written 2026-09-03. Every close through
+[`stages/08.md`](stages/08.md), open, S8.1 written 2026-09-03;
+[`stages/09.md`](stages/09.md) exists as a **draft with an empty ledger** —
+written 2026-09-04 before the stage was opened, which no earlier stage document
+did, so its §7 says explicitly that no record is written there until the operator
+opens it. Every close through
 Stage 6 was made by opening the next stage's document; Stage 7's was not — the
 rename into `stages/` was pending, so `stages/08.md` was opened separately once
 it had landed, with its scope arriving in the same session.*
@@ -293,7 +321,7 @@ graph TD
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
 
-In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that paid down what six stages of live-run work had left behind (closed 2026-09-03), and Stage 8 opening the same day, scoped to soft `--fix` level 2.
+In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that paid down what six stages of live-run work had left behind (closed 2026-09-03), and Stage 8 opening the same day, scoped to soft `--fix` level 2. Stage 9 exists only as a draft (2026-09-04, not opened): fixed-context execution, forecast rather than scheduled.
 
 ### Stage 1: Autonomous Local Inference & Capability Benchmark (`harness/runner/`)
 - **Approach**: For each parse unit, the agent receives the multi-layer context (L1–L4, quotes, case) and autonomously solves predicate-argument frames on the fly using Chain-of-Thought (CoT) and a dedicated Tool Calling API (`validate_candidate`, etc.).
@@ -527,6 +555,61 @@ alignment check level 2 made before its runs rather than after them. The two
 items carried in with it (the already-measured transcription-drift check, whose
 third option is now a Stage 8 question, and the standing `skel/repairs.py`
 authority question) are in that document's §2.
+
+### Stage 9: Fixed-Context Execution (drafted 2026-09-04, NOT OPENED)
+
+A forecast, recorded on the operator's instruction so that a later session opens
+it from a stated finding rather than re-deriving one. **Stage 8 is unaffected**
+and continues on the current architecture.
+
+The finding: **both backends punish a request past roughly 16 KB** — the Gemini
+API spends quota and pays it back as 429 retries, the local `ollama` path pays it
+in prefill on a weak GPU — and that ceiling, not `SESSION_MAX_TURNS = 12`, is
+what caps a unit's session. The arithmetic closes: the context floor is a
+constant 9,769 B (four bytes of spread across 33 sessions), of which the tool
+apparatus — specs, XML wire contract, format-demo few-shot — is **6,176 B
+(61.3%)** against 3,656 B of domain knowledge; growth is ~2,500 B per turn; so
+$(16{,}000-9{,}769)/2{,}500$ predicts ~3.5 turns against a measured mean of
+**3.3**. Meanwhile the tools that floor pays for are barely used — `read_unit`
+fires exactly once per session on coordinates the runtime already knows, and
+`search_corpus` appears in **4 calls across 348 sessions**. The apparatus is 3.5×
+the evidence it fetches (2.8 KB), and on the API path latency is insensitive to
+context altogether (52–57 s per KB of *output*, flat from 12 K to 36 K).
+
+So the harness does not iterate on a unit because iterating is priced out, not
+because three turns suffice. The proposed shape follows: no tools, a fixed
+context of specification + frozen-layer evidence + the artifact's current rows +
+a verdict, and the full rewritten rows as the only output — which also makes the
+schema gate a runtime step rather than a tool the model may decline to call, and
+collapses reconstruction and `--fix` into one loop distinguished by its initial
+state. The reading that made it applicable is the operator's: SKILL.state
+(arXiv 2608.26263v3) is not a memory architecture but an algorithm for improving
+a fixed object inside a fixed-length context — and its JSON state patch, whose
+merge accounts for 68% of Gemma-4-31B's failures in the paper's own taxonomy, is
+dropped in favour of rewriting the rows whole.
+
+**S7.1's skills are the piece that gains.** A skill *is* $P$ — the immutable
+specification — and it carries `digest()`, which is how Standing Invariant §6 is
+checked after a run. That digest currently covers **36.2%** of the fixed prompt;
+the rest is generated in Python and fingerprinted by nothing. Removing the
+apparatus brings essentially all of $P$ under it, so "which wording did this run
+use" becomes fully answerable rather than 36% answerable. `skills.py` is already
+task-agnostic and needs no change: a second mode loads a second skill directory
+with its own digest, and Stage 1's benchmark keeps measuring the tool-calling
+agent against the skill it was measured on. `SKILL.md`'s domain knowledge ports
+verbatim; the two `step5-*.md` files are the tool loop written as instructions,
+and are absorbed by the mechanism.
+
+**Why it is not open.** The loop needs a per-iteration signal that the rows
+improved, and the cheap one is inadmissible: the soft counter is registry-mediated
+and 88 of those 130 rules were fitted against gold's own divergence, so feeding it
+back each turn is §4 item 1 through one indirection. Schema verdicts and
+`derive.py` evidence are admissible; an $O$ that converges on those alone is the
+stage's actual problem and wants a candidate answer before the file is opened.
+[`stages/09.md`](stages/09.md) carries all of it, including the provenance limits
+on the measurements (the logs predate S5.5), the re-reading of S3.7 — which
+measured compaction against *total* wire when the binding quantity is the
+per-request *maximum* — and a candidate Standing Invariant §7 for the budget.
 
 ### Beyond Layer 5 (design notes)
 
