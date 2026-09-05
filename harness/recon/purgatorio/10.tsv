@@ -44,14 +44,25 @@ line	token	word	role	arg_line	arg_token
 13	3	fece	attr	13	7
 14	0			0	0
 15	1	rigiunse	subj	14	5
+15	1	rigiunse	obl:a	15	3
+15	1	rigiunse	obl:per	15	6
+15	6	ricorcarsi	subj	14	5
 16	3	fossimo	subj	16	2
-17	0			0	0
+16	3	fossimo	obl	16	4
+16	3	fossimo	obl:di	16	7
+17	3	fummo	subj	0	0
+17	3	fummo	attr	17	4
+17	3	fummo	attr	17	6
 18	8	rauna	subj	18	4
+18	8	rauna	obj	18	7
+18	8	rauna	obl:in	18	6
+19	2	stancato	subj	19	1
+19	5	incerti	subj	19	4
 19	5	incerti	obl:di	20	3
 20	4	restammo	subj	19	1
 20	4	restammo	subj	19	4
 20	4	restammo	obl:in	20	8
-21	0			0	0
+21	1	solingo	subj	19	1
 22	6	confina	subj	22	8
 22	6	confina	obl	22	5
 23	9	sale	subj	23	7

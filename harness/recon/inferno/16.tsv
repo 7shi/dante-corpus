@@ -228,6 +228,7 @@ line	token	word	role	arg_line	arg_token
 72	3	cruccia	obl:ne	72	2
 72	3	cruccia	obl:con	72	7
 73	0			0	0
+74	5	generata	subj	73	2
 74	5	generata	obj	74	1
 74	5	generata	obl:in	75	3
 75	9	piagni	subj	75	6

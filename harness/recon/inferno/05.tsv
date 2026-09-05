@@ -243,9 +243,9 @@ line	token	word	role	arg_line	arg_token
 75	6	esser	attr	75	7
 75	6	esser	obl:a	75	5
 76	5	Vedrai	subj	0	0
-76	5	Vedrai	obl	76	7
+76	5	Vedrai	ccomp	76	7
 76	7	saranno	subj	0	0
-76	7	saranno	obl:presso	77	4
+76	7	saranno	obl	77	2
 77	9	priega	subj	77	6
 77	9	priega	obj	77	8
 77	9	priega	obl	77	7

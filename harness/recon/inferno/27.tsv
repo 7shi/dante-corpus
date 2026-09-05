@@ -168,8 +168,8 @@ line	token	word	role	arg_line	arg_token
 52	6	bagna	obl	52	3
 53	4	sie'	subj	53	3
 53	4	sie'	obl:tra	53	7
-54	4	vive	subj	0	0
-54	4	vive	obl	53	4
+53	4	sie'	obl:tra	53	10
+54	4	vive	subj	52	2
 54	4	vive	obl:tra	54	2
 54	4	vive	obl:tra	54	6
 55	3	se'	subj	55	2

@@ -9,105 +9,53 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**A `--fix 2` pass is in flight.** The operator launched it on 2026-09-05 after
-this commit, over the 9 cantos holding the residual 12 findings, and **will
-report the result in the next session** — reading it out is **S8.4**, that
-session's work. It is the first run under S8.3's per-row salvage scope, so it is
-also that mechanism's first live test.
+**The second `--fix 2` pass landed and is read out as S8.4** (2026-09-05,
+[`stages/08.md`](stages/08.md) §4). `make fix-level FIX=2` fell **12 → 1**,
+`FIX=1` stayed **0**, corpus soft **3,160 → 3,139**, suite **1,001**, gold
+agreement 0.7605 → **0.7607**, and no canto regressed (checked against a `git
+worktree` of `b2d8db4`, which re-measured the 3,160 baseline exactly). The eight
+changed recon TSVs are committed alongside that readout. S8.3's per-row salvage
+scope got its live test and passed it: it fired once, at `purgatorio 10` (13-21),
+taking **3 of 4** offered rows exactly as simulated, and that unit — a third of
+the residue on its own — is now at 0.
 
-**State at launch** (the baseline S8.4 measures against): corpus **0 hard /
-3,160 soft**, `make check` exits 0, suite **1,001 passed**, `make fix-level
-FIX=2` **12 findings** in 9 cantos — inferno 5, 9, 16, 27, 32; purgatorio 7,
-10 (×4), 27; paradiso 31 — and `FIX=1` **0**.
+**Stage 8 is one finding from its close condition, and that finding is a label
+argument, not a run's work.** What is left is
+`purgatorio 27:37 missing_arg: 37.6 obl:su (38, 5)` (unit 37-42). The model put
+the argument at exactly `(38, 5)` on all **10** attempts and labelled it
+`obl:in` where the derivation reads `obl:su`; the splice therefore earns
+`role_mismatch` and the recorded rows stand. `salvage_by_row` cannot reach it —
+one finding, one row — and re-asking has been exhausted, because the level's
+notice deliberately never renders the derived role (S5.5's line).
 
-**Reading order for S8.4**, fixed in advance the way S8.1 and S8.2 fixed theirs:
+**So the open question is the one S8.3 framed, now with nothing else beside
+it**: which frozen-layer evidence may be shown to settle a *label*. Level 1's
+notice already renders the `case` child that qualifies an oblique — and `su` vs
+`in` is precisely a `case`-child reading — so the precedent is close, but it is
+an argument to make against S5.5's line, not an extension to reach for. Per S6.5
+the finding stays a run's work either way; a hand repair is not on the table.
 
-1. **`fix.refused.salvage_by_row`** first — the field S8.3 added, and the point
-   of this run. `taken` / `offered` per unit says whether the third scope did
-   what the simulation predicted (3 of the 12 on the run's *previous* answers);
-   a `verdict: no_row_stands` says the model's new answer had no row that stood
-   alone.
-2. **The verdict mix** (`accepted` / `salvaged` / `no_improvement` /
-   `new_class:*`), and whether any unit reached a `hard` verdict — none ever has.
-3. **`make fix-level FIX=2` and `FIX=1`**, both. Level 1 can re-open in any canto
-   a fresh session re-answers (S8.1's regression note: the level table is a
-   standing selection, not a one-time sweep), so `FIX=1` returning above 0 is
-   expected behaviour to record, not a regression to chase.
-4. **`make check`** and a canto-by-canto before/after comparison against this
-   commit — S8.2 did it from a `git worktree` checkout rather than trusting the
-   working tree, which is the pattern to repeat.
-5. **`make agree`** last, as a readout only (Standing Invariant §1). It stood at
-   **0.7605** corpus-wide after S8.2.
+**Operationally worth carrying:** repeating `make fix` corpus-wide is cheap, not
+expensive. The operator ran it about ten times in ~2 h wall (127 LLM requests, 0
+API retries) because a canto with no finding at the level costs no model call and
+closes in 0.1 s. What costs is re-asking a unit that will not move — `inferno 5`
+converged on its 8th attempt and `purgatorio 7` on its 10th, while `purgatorio
+27` reproduced the same governed row all ten times.
 
-**Log hygiene for this run.** The 100 per-canto logs on disk when it started were
-S8.2's, and S8.3 has already read everything it needed out of them, so nothing is
-lost by sweeping. If they were not swept, dedupe `unit` records by `(canticle,
-canto, line_start, line_end)` keyed by the log's *path*, keeping the last — and
-expect S8.2's records to still be in the same files for the 9 cantos touched.
-
-**If the residue does not reach 0**, the next question is already framed
-(`stages/08.md` S8.3, last paragraph): 3 of the 12 are disagreements about a
-*label*, and the level's notice deliberately never renders the derived role. What
-frozen-layer evidence may be shown to settle a label is an argument to make —
-level 1's notice already shows the `case` child that qualifies an oblique, so
-there is precedent — not an obvious extension to reach for.
-
-**The corpus-wide `--fix 2` run landed and is read out as S8.2**
-(2026-09-05, [`stages/08.md`](stages/08.md) §4). Soft fell **4,624 → 3,160**
-(−1,464), `make fix-level FIX=2` (cumulative) fell **1,128 → 12**, `FIX=1`
-alone is now **0** again (the two `inferno 1` level-1 findings this stage
-opened with were cleared by the run, not by hand), suite stayed **999**, and
-no canto regressed anywhere (checked against a `git worktree` of the pre-run
-commit). Gold agreement rose **0.7389 → 0.7605**. Cost came in at roughly a
-third of S8.1's estimate: **~46.4 h summed elapsed / ~16.3 h wall** on three
-`-j3` streams against the ~140 h / ~65 h budget. **The corpus TSV changes
-(100 files) are committed** in `e5680a6`, alongside this readout.
-
-**Stage 8 remains open, and its target is 0.** The operator set it 2026-09-05:
-the stage closes when `make fix-level FIX=2` reports **0 findings**, so the
-residual **12** are not the level's steady-state floor — they are what the next
-run has to clear. They stay a run's work, never a hand repair (S6.5's rule).
-They sit in 9 cantos — inferno 5/9/16/27/32, purgatorio 7, 10 (×4), 27,
-paradiso 31 — so the next pass is per-canto, not corpus-wide.
-
-**S8.3 read that residue before spending a run on it, and it is partly
-mechanical.** The S8.2 logs survive, so each of the 12 was traced to the `unit`
-record that produced it. `purgatorio 10` (13-21) carries 4 of them and was
-re-answered **four times** across the run's relaunches, refused identically each
-time — re-asking had already been tried there. Its answer named all four rows
-and **three of them agreed with the derivation exactly**, but none was written:
-the unit-scope splice takes every named row at once, so one `xcomp` where the
-derivation reads `obl:per` refused its correct siblings. Classified across the
-whole residue: **3 findings clear if their row is spliced alone**, 3 are label
-disagreements (`role_mismatch`), 1 is hard-invalid, 5 have no such row in the
-answer. So S8.3 added `fixrun.salvage_by_row`, a third acceptance scope that
-takes the answer one finding's rows at a time, each step measured (the
-cannot-get-worse guarantee is unchanged). Suite **999 → 1,001**; corpus and
-`fix-level` counts unmoved — nothing in selection changed and no artifact was
-written. The next per-canto pass therefore starts from a repaired mechanism, not
-from a repeat.
-
-**§2's two carried items are both settled** (2026-09-05, operator), so the
-stage's remaining work is the count alone.
-
-The **transcription-drift** question took **option 3** — the harness holds itself
-to *whatever a `--fix` level selects, the session gate admits*, rather than to
-gate-equals-contract everywhere, so AQ/DG/DS stay untranscribed and no
-gold-fitted tolerance enters the agent's gate. S8.1's level-2 admissibility test
-was generalized to every class in the level table
-(`test_every_row_any_level_asks_for_is_admissible_to_the_session_gate`, suite
-still 999); the property holds for both classes with no refusal. Only a level
-whose findings the gate refuses reopens it.
-
-The **`skel/repairs.py` authority** question is answered *not used*, and on
-scope rather than on authority: re-measured on today's corpus its remaining
-offer is one rule — `role_label` is at **0** (level 1 did that work live),
-leaving `null_subject` at 299 rewrites (soft 3,160 → 2,562) — and **297 of those
-299 sit outside level 2's selection**, in the `conj`-propagated subject
-population S8.1 argued out. It is therefore not a Stage 8 question at all; it
-returns only if a future level proposes to select that population, and then as a
-question about *that* class. Both records, with the numbers, are in
-[`stages/08.md`](stages/08.md) §2.
+**How Stage 8 got here**, in one paragraph — the detail is in
+[`stages/08.md`](stages/08.md) §4 and does not need re-reading to continue.
+**S8.1** defined level 2 as `omitted_l4_argument` (1,126 findings, 770 units).
+**S8.2** read out the first corpus-wide run: soft 4,624 → 3,160, the level 1,128
+→ 12, gold 0.7389 → 0.7605, no regression, ~46.4 h summed / ~16.3 h wall,
+committed with its 100 TSVs in `e5680a6`. **S8.3** traced the residual 12 through
+S8.2's own logs before re-running them, found a third of it mechanical rather
+than model-side, and added `fixrun.salvage_by_row` (suite 999 → 1,001). **S8.4**
+is the run above. §2's two carried items are both **settled** (2026-09-05,
+operator): transcription drift on **option 3** (the gate must admit whatever a
+level selects and nothing wider; AQ/DG/DS stay untranscribed), and
+`skel/repairs.py` **not used**, on scope — its residual offer is `null_subject`
+alone, 297 of whose 299 positions fall outside level 2's selection. Both records,
+with their numbers, are in that document's §2.
 
 **Stage 7 closed 2026-09-03** on S7.2's live confirmation — both items (S7.1
 knowledge-as-files, S7.2 the `reconstruct.py` split) done, committed and
@@ -123,18 +71,17 @@ decision and its citation rule are in the Milestone Ledger note below, and are
 the one thing worth knowing before writing a new stage document (`cf24c20`) —
 then **opened Stage 8** and set it to level 2 on the operator's decision.
 
-**This session (2026-09-05)** read out the operator's `--fix 2` run (which had
-stalled and been relaunched several times mid-run, between sessions) into
-S8.2: deduped the per-canto logs (14 logs, 28 duplicate `unit` records from the
-relaunches — collapsing to exactly the expected 770 units), verified the
-before/after canto-by-canto comparison against a `git worktree` checkout of the
-pre-run commit (no regressions), and wrote the record into
-[`stages/08.md`](stages/08.md) §4 and this Handoff/Current Status, committing
-the 100 changed recon TSVs with it (`e5680a6`). It then settled §2's two carried
-items on the operator's decisions (option 3; `repairs.py` not used), set the
-stage's close condition at 0, and — asked whether repeating the run would be
-enough — traced the residual 12 through those same logs and shipped **S8.3**'s
-third salvage scope, which is what the run now in flight is the first to use.
+**The session before this one (2026-09-05)** read out the first `--fix 2` run as
+S8.2 (`e5680a6`, with its 100 TSVs), settled §2's two carried items on the
+operator's decisions, set the stage's close condition at 0, and shipped
+**S8.3**'s per-row salvage scope (`467f435`).
+
+**This session (2026-09-05)** read out the second `--fix 2` pass as **S8.4**:
+segmented the nine touched logs at their `summary` records to separate this
+run from S8.2's (they were not swept, and needed no dedupe — the segments are
+disjoint), confirmed `salvage_by_row`'s single firing against S8.3's simulation,
+re-verified the canto-by-canto comparison from a `git worktree` of `b2d8db4`,
+and committed the record with the eight changed recon TSVs.
 
 **A Stage 9 draft exists and is not in flight** ([`stages/09.md`](stages/09.md),
 2026-09-04): fixed-context execution, drafted on the operator's instruction and
@@ -142,13 +89,16 @@ third salvage scope, which is what the run now in flight is the first to use.
 draft bears on it. It is listed here only so a session that finds the file knows
 it is a forecast, not work.
 
-- **Next open item — one**: read out the `--fix 2` pass now in flight as **S8.4**
-  (reading order above), and with it decide whether Stage 8 closes — its
-  condition is level 2 at 0 findings. Everything else opened on S8.2 is settled
-  (2026-09-05): the TSVs are committed (`e5680a6`), the stage closes at 0 rather
-  than on S8.2, and §2's two carried items are both answered. Whether to commit
-  whatever TSVs the run changes is the operator's call, like every write to
-  `skel/`-shaped output.
+- **Next open item — one, and it is a design argument rather than a run**:
+  decide whether the level-2 notice may render frozen-layer evidence that
+  settles a *label* — concretely, the `case` child behind `obl:su` vs `obl:in`
+  at `purgatorio 27:37` — and if so, on what authority against S5.5's line that
+  the notice never shows the derivation's answer. That one finding is all that
+  stands between Stage 8 and its close condition, ten identical attempts say a
+  further run will not move it, and S6.5 rules out reaching into the artifact
+  for it. If the argument fails, the alternative on the table is the operator's:
+  close Stage 8 at 1 rather than at 0, which is a decision to make explicitly
+  and not to drift into.
 
 ## Current Status
 
@@ -179,6 +129,11 @@ holds only what's still open.
       had already been re-answered 4 times identically — and added
       `fixrun.salvage_by_row`, a third acceptance scope taking the answer one
       finding's rows at a time (suite 999 → **1,001**, corpus untouched).
+      **The second pass read out on S8.4** (2026-09-05): `fix-level FIX=2`
+      **12 → 1**, `FIX=1` still 0, corpus 0 hard / **3,139 soft**, suite 1,001,
+      gold 0.7605 → **0.7607**, no canto regressed, ~2.6 h summed / ~2.0 h wall
+      over ten corpus-wide `make fix` loops. `salvage_by_row` fired once and
+      took 3 of 4 offered rows exactly as simulated, clearing `purgatorio 10`.
       [`stages/08.md`](stages/08.md) §1 states what the level had to satisfy
       first; §2's two carried items are **both settled 2026-09-05** — the
       transcription-drift check on option 3 (the gate must admit whatever a
@@ -188,9 +143,12 @@ holds only what's still open.
       residual offer is `null_subject` alone, 297 of whose 299 positions lie
       outside level 2's selection). **The stage's
       close condition, set by the operator 2026-09-05: `make fix-level FIX=2`
-      at 0 findings.** So S8.2 does not close it, and the residual 12 are the
-      next run's target rather than the level's floor — 9 cantos, so a
-      per-canto pass. **Open next**: that run, and nothing else.
+      at 0 findings.** It stands at **1** —
+      `purgatorio 27:37 missing_arg: 37.6 obl:su (38, 5)`, where the model
+      labelled the right position `obl:in` on all 10 attempts. **Open next**:
+      not a run — whether the notice may show the `case` evidence that settles
+      a label, argued against S5.5's line, or else an explicit operator
+      decision to close at 1.
 - [ ] **Stage 9 — Fixed-Context Execution** (DRAFTED 2026-09-04 on the
       operator's instruction, **not opened**; Stage 8 continues on the current
       architecture). Provisional scope: replace the per-unit tool-calling
@@ -628,7 +586,13 @@ row a level named at once, so one mislabelled row refuses its correct siblings �
 4 named rows at `purgatorio 10`, 3 of them right, none written, over 4 identical
 attempts. `fixrun.salvage_by_row` adds the scope below it, taking the answer one
 finding's rows at a time with every step measured, so the next pass starts from
-a repaired mechanism rather than from a repeat.
+a repaired mechanism rather than from a repeat. **Record S8.4** reads that pass
+out: **12 → 1**, corpus 3,160 → 3,139 soft, gold 0.7605 → 0.7607, no canto
+worse, and the new scope vindicated on its one eligible unit — 3 of 4 rows
+taken, exactly as simulated. What is left is a single finding at `purgatorio 27`
+where the model puts the argument at the right position and calls it `obl:in`
+against the derivation's `obl:su`, ten times running. The stage's remaining work
+is therefore an argument about what the notice may show, not another run.
 
 Level 1's arc is the precedent worth reading
 first: five corpus-wide runs moved it 377 → 12, and what closed it was S6.10

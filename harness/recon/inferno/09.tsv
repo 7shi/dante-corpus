@@ -395,6 +395,7 @@ line	token	word	role	arg_line	arg_token
 118	6	erano	obl:tra	118	4
 119	4	eran	subj	0	0
 119	4	eran	attr	119	8
+119	4	eran	obl:per	119	3
 120	5	chiede	subj	120	7
 120	5	chiede	obj	120	2
 121	5	eran	subj	121	4
