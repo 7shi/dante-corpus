@@ -419,15 +419,27 @@ def test_resolve_level_accepts_numbers_and_the_max_aliases():
 
 
 def test_cli_flags_take_max(tmp_path, monkeypatch):
-    """Both drivers resolve `max` the same way, and report the level they ran."""
+    """Both drivers resolve `max` the same way, and report the level they ran.
+
+    Runs `--root` against a gold-shaped copy in `tmp_path`, not the committed
+    `harness/recon/` artifact: that artifact is operator-mutable (a live
+    reconstruction or `--fix` pass can be rewriting it at any time this suite
+    runs), and a test asserting `== 0` against it is really asserting a fact
+    about the corpus, not about this CLI's flag handling. Gold itself is
+    frozen and scores 0 hard/0 soft, so it is a stable stand-in.
+    """
+    root = tmp_path / "root"
+    (root / "inferno").mkdir(parents=True)
+    layers = rc.CantoLayers.load("inferno", 1)
+    gold = load_skel("inferno", 1)
+    _write_tsv(root / "inferno" / "01.tsv", gold, layers.nos)
+
     assert recon_check.main(
-        ["--canticle", "inferno", "--canto", "1", "--fix-level", "max"]
+        ["--root", str(root), "--canticle", "inferno", "--canto", "1",
+         "--fix-level", "max"]
     ) == 0
     out = io.StringIO()
-    results = recon_check.run(
-        recon_check.Path(recon_check.__file__).parent,
-        canticle="inferno", canto=1, stream=None,
-    )
+    results = recon_check.run(root, canticle="inferno", canto=1, stream=None)
     recon_check.print_fix_level(results, fixlevel.MAX_LEVEL, stream=out)
     assert f"fix-level {fixlevel.MAX_LEVEL}:" in out.getvalue()
 
