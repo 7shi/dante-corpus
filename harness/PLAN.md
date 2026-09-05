@@ -8,245 +8,49 @@ here: it goes to **Current Status** (live numbers), **Orientation for Fresh
 Sessions** (context and operational facts that outlive any stage), §2's table
 (what a stage settled), or the stage's own `stages/<NN>.md` (everything else).
 
-**Stage 8 closed and Stage 9 opened, both 2026-09-05.** Level 2 reached its close
-condition (`make fix-level FIX=2` at 0) on S8.5; opening
-[`stages/09.md`](stages/09.md) performed the close. Details in
-[`stages/08.md`](stages/08.md) §5 and §2's table below — not repeated here.
+**STAGE 9 IS CLOSED AND STAGE 10 IS OPEN (2026-09-06).** The close was performed
+the usual way, by opening [`stages/10.md`](stages/10.md); Stage 9's own close is
+[`stages/09.md`](stages/09.md) §9, and its seven records S9.1–S9.7 are §8 of the
+same document. The gates were re-read before closing on them, not carried over
+from the previous session — the numbers are in Current Status below. Nothing
+from Stage 9 is repeated here.
 
-**A 2026-09-05 session** read out the second `--fix 2` pass as **S8.4**
-(`a466a43`, eight recon TSVs), wrote **S8.5** after the operator's re-run
-falsified S8.4's claim that the residue was unreachable (`c2cd5ec`), closed
-Stage 8 and opened Stage 9 (`2621264`), updated the root plan (`8902d81`), and
-reorganized this file so per-stage detail lives only in the stage documents
-(`78089bd`). A second 2026-09-05 session did Stage 9's first two records:
-**S9.1** classifies every `validate.py` finding by registry dependence and
-settles $O$ as (hard schema verdict) + (frozen-layer observation recomputed in
-`fixlevel.py`'s `case_children`/`argument_edge` style, never `derive.py`'s
-answer) + (fixed-point stopping rule, not a shrinking count) —
-[`stages/09.md`](stages/09.md) §8. **S9.2** discharged §1.4's provenance
-obligation under an operator correction: the stage's central "~16 KB" ceiling
-was stated in **bytes** where the actual per-request limit is in **tokens**
-("16KBではなく16Kトークン"), and every request on disk with a token count — 210
-of them — sits under 13,000 tokens, none over 16,000. S9.2 also measured the
-corpus-wide evidence/$\Sigma$ distribution `read_unit` would carry (median
-3,029 B, max 12,199 B) and reproduced §1.2's tool-apparatus fraction byte-exact
-against 2026-08-25 (6,176 B, 61.3%). Candidate Standing Invariant §7 was **not**
-promoted to this file's §4, per the operator's direction to keep observing
-rather than bind a number no live run has measured.
+**Stage 10's subject is soft `--fix` level 3, and it is provisional until a
+record in [`stages/10.md`](stages/10.md) fixes it.** Level 3 does not exist:
+`extractor/fixlevel.py` defines levels 1 and 2 only, so the first work is
+arguing a level-3 class from `validate.py`'s schema and `derive.py`'s derivation
+**with gold unopened** (Standing Invariant §1) — design work, not a switch to
+flip. `stages/10.md` §1 is what that work has to satisfy before it runs, and §2
+is the two unfinished Stage 9 items it inherits (no concurrent run has ever been
+made; the per-request ceiling is unmeasured).
 
-**A later 2026-09-05 session** did two more things, both prompted by the
-operator (committed as `a46bc09` and `897740d`):
-
-1. **Rewrote every "16 KB ceiling" assertion in `stages/09.md` in place.** The
-   prior session had left the original byte-framed claims standing and put the
-   correction in S9.2's ledger entry alone; the operator judged that a wrong
-   claim left in the body gets misread — "間違った主張が残っていると誤読され
-   る". §1.2, §1.3, §5, §6, and §7 of `stages/09.md` now state the corrected
-   fact at the point where the wrong one used to be, with S9.2 (§8) as the
-   record of how it was found; §7's withdrawn candidate invariant is kept
-   strikethrough rather than deleted, so the ledger's account of a proposal and
-   its retraction still has its subject. This file's own §2 Stage 9 paragraph
-   has the same fix applied. **There is no append-only rule for these
-   documents** — prose is corrected where it stands, and the ledger records
-   what changed and why. (Nothing in this project is append-only in that
-   sense: the run logs append only across a resume after a mid-run failure,
-   and a re-run under changed implementation deletes the log first — see
-   Orientation item 5.)
-2. **Found and fixed a real test-isolation bug**, unrelated to Stage 9's
-   substance but surfaced by an operator-run live regeneration overlapping this
-   session: `tests/test_harness_fixlevel.py::test_cli_flags_take_max` called
-   `recon_check.main`/`run` with no `--root`, defaulting to `harness/recon/`'s
-   own directory — the **live, operator-mutable committed corpus** — instead of
-   an isolated fixture, unlike every sibling test in the suite. It failed
-   mid-session when the operator started regenerating `inferno/01.tsv`. Fixed
-   to build a gold-shaped copy in `tmp_path` and pass `--root` explicitly,
-   **committed as `897740d`**, with that session's `stages/09.md`/`PLAN.md`
-   documentation edits committed separately as `a46bc09`.
-
-**Finished and read out as S9.3 (2026-09-05).** The operator's regeneration of
-`harness/recon/inferno/01.tsv` completed. It was **a pre-rework baseline**, not
-an ordinary corpus operation: taken under the current implementation so that
-Stage 9's rebuilt execution path has a committed prior state to diff against,
-and the canto will be deleted and regenerated again once the rework lands. Its
-numbers are the live ones in Current Status below and the full readout is
-[`stages/09.md`](stages/09.md) §8 (S9.3). Three results carry forward:
-re-running one canto under an **unchanged** implementation re-opened both fix
-levels (0 → 2 at level 1, 0 → 8 at level 2, all in inferno 1); soft rose 9
-while gold agreement moved +0.0001 corpus-wide, so a post-rework regeneration
-cannot be judged by its soft delta alone; and the run's per-canto log is the
-**first token-bearing log from the current implementation** — 108 requests, max
-**8,748 `input_tokens`**, none over 13,000, median 3 requests per session,
-B/token 2.83–4.03 (S9.2's 2.87–4.01 confirmed on fresh data). That bounds what
-the current path asks for, not what a provider tolerates, so the ceiling item
-below stays open.
-
-**THE FIXED-CONTEXT LOOP IS NOW THE DEFAULT (S9.6, 2026-09-05).** The operator
-took that decision on S9.5's readout, and it is implemented: every generation
-and fix target runs the bounded step with no flag at all. The old per-unit
-tool-calling session is now the opt-in one — `TOOLCALL=1`, or `--tool-calling`
-on the CLI — and is **slated for removal**, deferred rather than scheduled.
-
-```
-cd harness/recon
-make inferno/01.tsv                     # fixed context, no flag needed
-                                        # + FIXED_ITERATIONS=n to change the cap
-make fix                                # the same loop over committed artifacts
-make inferno/01.tsv TOOLCALL=1          # the old session, for comparison only
-```
-
-Deleting a canto's `.log` and `.tsv` before a re-run still applies whenever the
-implementation changed under it: the log then holds one implementation's
-behaviour, and a surviving TSV would leave its units settled and un-rerun.
-
-Three ways to see, from the first seconds, which mode is running — worth
-knowing in both directions now that the default has flipped: the configuration
-line reads `reconstruct: fixed context, 4 iteration(s) max, …` rather than
-`transcripts verbatim, …`; **no `<tool_call>` block ever appears**, and per-unit
-`[fixed] … iter 1: N row(s), accepted` lines do; and the log's `skill_digest`
-is `ee6f1a46…` rather than `b16c0639…`.
-
-*(For the record: **S9.4** built the loop as the opt-in `--fixed-context` /
-`FIXED=1`, tested with every `generate` stubbed. S9.6 inverted the flags and
-nothing else; `FIXED_ITERATIONS` deliberately keeps its name, because a renamed
-make variable fails silently.)*
-
-**THE FIRST LIVE RUN HAS RUN AND BEEN READ — written up as S9.5 (2026-09-05).**
-The operator regenerated `harness/recon/inferno/01.tsv` with
-`make inferno/01.tsv FIXED=1` and deferred the readout; this session did it.
-The full record is [`stages/09.md`](stages/09.md) §8 (S9.5) and the live numbers
-below are now that run's. In short:
-
-- **The mode and the attempt count were established from the log, not assumed.**
-  `01.log` carries one `skill_digest` (`ee6f1a46…`, `grammar-fixed`) and one
-  `summary`; the aborted no-`FIXED` launch left nothing behind, because the log
-  was deleted between the attempts. All 34 units are the fixed loop's, and
-  every `llm_request` reports `messages: 2`.
-- **The answer to the substantive question is yes, for one canto.** 22 units of
-  34 pass all three gates (was 18), level 1 closes 2 → 0 and level 2 falls
-  8 → 3, canto gold F1 rises 0.7887 → 0.8103 on precision and recall together,
-  soft 38 → 19 — at 51 requests instead of 108. 21 of 33 units settle in **one**
-  bounded step; 10 iterations were refused by the runtime gate, and 6 of the 7
-  units that drew a refusal settled afterwards.
-- **The bound holds and the token conversion in S9.4 was off.** `context_bytes`
-  6,383 / 8,511 / 13,940 (min/median/max) sits inside S9.4's corpus-wide
-  prediction, but `input_tokens` measured 1,757 / 2,677 / 5,093 against ≈ 2,200
-  predicted, because this prompt shape's ratio is **3.16 B/token**, not the
-  tool-calling path's 3.58. Within a unit the request now grows by a median
-  **+230** tokens across its iterations, against the tool-calling path's
-  **+2,018** — the growth term is the artifact being written, not the
-  transcript.
-- **The cost/time trade, and the operator's decision on it.** Total tokens
-  **615,448 → 369,915 (−40%)** while the canto's wall clock rose **5,638 →
-  6,006 s (+6.5%)** — the typical unit is 16% *faster*, the four-step tail is
-  what the total follows. Serially that is a trade; against the project's **16K
-  TPM** quota it is not, because the currency is tokens per minute and the
-  saving buys concurrency: **2.4 → 4.3 streams**, ≈ **1.56 → 2.60 cantos per
-  hour**, ~1.7× throughput. **The operator's judgement (2026-09-05) is that the
-  benefits outweigh the slowdown on exactly this ground.** No concurrent run has
-  been made yet, so the stream count is headroom, not a demonstrated
-  configuration.
-
-S9.5's readout was committed as `05ff38f`, together with the regenerated TSV.
-
-The standing commands, so any later readout starts from the same place:
-
-```
-cd harness/recon && make check                     # hard/soft, corpus-wide
-make fix-level FIX=1 && make fix-level FIX=2       # now 0 and 3
-make agree                                         # readout only, never a target
-cd ../.. && uv run pytest -q                       # 1,023
-grep -o '"skill_digest": "[0-9a-f]\{8\}' harness/recon/inferno/01.log | sort -u
-grep -c '"record": "summary"' harness/recon/inferno/01.log   # >1 = two attempts
-```
-
-**THE NEXT WORK IS THE OPERATOR'S: run `make fix` until level 2 reads 0, and
-Stage 9 closes on that.** The close condition set on 2026-09-05, with the mode
-now the default:
-
-```
-cd harness/recon
-make fix-level FIX=2        # where it stands — 3 today, all inferno 1
-make fix                    # repeat; a canto with no finding costs no model call
-```
-
-Read `make fix-level` at **both** levels after every pass, never only the one
-you ran (Orientation item 6: a closed level does not stay closed). Two standing
-facts make repetition the right shape rather than a sign of trouble: a `--fix`
-run cannot leave the corpus worse than it found it, and repeated identical
-refusals do not prove a residue unreachable — one unit settled on its eleventh
-attempt in S8.5. When `make fix-level FIX=2` reads 0, close Stage 9 by opening
-`stages/10.md` (the convention in the Milestone Ledger below).
-
-**Stage 10 opens on fix level 3.** It does not exist yet: `fixlevel.py` defines
-levels 1 and 2 only, so Stage 10's first work is arguing a level-3 class from
-`validate.py`/`derive.py` with gold unopened (Standing Invariant §1) — design
-work, not a switch.
-
-**Also still owed by Stage 9, and not close conditions.** S9.5 is one canto of
-100, run once, so nothing corpus-wide follows from it; the 1.7× throughput
-figure is that canto's rate divided into the 16K TPM quota, so **a concurrent
-run has still never been made** (contention, per-stream 429s and the pacing
-interval are all unmeasured). And the deliberate high-token run §5 of
-[`stages/09.md`](stages/09.md) waits on is untouched — S9.5 moved away from it,
-its largest request being 5,093 `input_tokens`.
-
-- **Next open item for Stage 9 — unchanged**: a live run at token volumes this
-  corpus's disk-only logs never reached, to find where the real per-request
-  ceiling sits (in tokens) and whether it binds at all — operator work, per
-  their direction. Until then the fixed-context loop's $O$/$\Sigma$ budget (§5
-  of [`stages/09.md`](stages/09.md)) cannot be sized with confidence: S9.2
-  found the corpus's worst-case unit (`purgatorio 10:82-93`, 12,199 B of
-  evidence alone) already exceeds the draft's entire $O$ allowance.
-
-**Two standing notes for whichever session picks Stage 9's real next step up:**
-
-1. **Read bytes and tokens as different quantities from here on.** The whole
-   correction this stage went through was that a byte figure had been read as
-   if it bounded tokens. The wire/cost instrumentation (Orientation item 5
-   below) logs `input_tokens` on every `llm_response` when the backend reports
-   it — use that field directly rather than a B/token ratio (2.83–4.03 across
-   S9.2's and S9.3's logs alike) when a live log is available; the ratio is an
-   estimate for when it is not. **Read the token counts off every new run's log
-   as part of reading the run** — S9.3's were left unread at first pass and had
-   to be gone back for.
-2. **The per-canto recon logs are still thin.** `harness/recon/` held 33
-   purgatorio logs only as of the 2026-09-05 handoff (inferno's and paradiso's
-   were swept before the last fix pass); S9.3's baseline regeneration added one
-   fresh inferno log, but a token-ceiling run needs a deliberate full sweep
-   first (Orientation item 6, "sweep the per-canto logs
-   before each corpus-wide fix run"), not whatever is left over from an
-   unrelated regeneration.
+Nothing is in flight. The next session starts from `stages/10.md`.
 
 ## Current Status
 
 Every stage's status, dates and outcome are in §2's table; this section holds
 the open stage and the live numbers only.
 
-- [ ] **Stage 9 — Fixed-Context Execution** — the open stage (drafted
-      2026-09-04, **OPENED 2026-09-05**). Replace the per-unit tool-calling
-      session, on the reconstruction and repair path, with a fixed-length
-      execution context whose per-request size does not grow with the number of
-      iterations. **$O$ is settled (S9.1)**, **the loop is implemented and
-      tested (S9.4)**, **the default execution mode since S9.6**, and **its
-      first live run is read out
-      (S9.5): on one canto the model answers the bounded step better than the
-      three-turn session, at half the requests and −40% total tokens — which
-      under the 16K TPM quota is ≈ 1.7× corpus throughput once run in
-      parallel.** What remains is scale — the concurrent run that figure
-      assumes, and a corpus-wide picture rather than one canto — plus the live
-      run at high token volumes that would measure the per-request ceiling the
-      budget must be sized against (S9.2), which S9.5 did not approach. §2 below
-      and
-      [`stages/09.md`](stages/09.md) carry the measurements it rests on and the
-      direction set at open.
-*Every number below is as of S9.5 — the first live fixed-context run, which
-regenerated inferno 1 on 2026-09-05. The TSV it produced is on disk and
-uncommitted; the S9.3 baseline it replaces is in `2f7e0b8`.*
+- [ ] **Stage 10 — Soft Level 3** — the open stage (**OPENED 2026-09-06**;
+      opening it closed Stage 9). Design and implement soft `--fix` level 3,
+      which does not exist yet: the class it selects must be argued from
+      `validate.py`'s schema and `derive.py`'s derivation with gold unopened,
+      resolved to one of S6.1's three outcomes before anything is edited, and
+      checked for gate/level alignment before its first run rather than after
+      four. Levels are cumulative, so whatever it selects is added to levels
+      1–2. It also inherits two unfinished Stage 9 items — never close
+      conditions for that stage and not done: **no concurrent run has ever been
+      made** (the ≈ 1.7× throughput is a projection from serial runs), and
+      **the per-request ceiling is unmeasured**, so the fixed-context loop's
+      budget cannot be sized. [`stages/10.md`](stages/10.md) carries both, and
+      §2 below has the prose.
 
-- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,128 soft**,
-  `make check` exits 0, `make fix-level` **0** at level 1 and **3** at level 2
-  (all inferno 1). S9.3's baseline had re-opened both levels on that canto
-  (2 and 8); the fixed-context regeneration closed level 1 and cut level 2.
+*Every number below was re-read on 2026-09-06 as Stage 9's close condition,
+against a corpus last touched by S9.7's `--fix` sweep (2026-09-05).*
+
+- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,126 soft**,
+  `make check` exits 0, `make fix-level` **0 at both levels** — the condition
+  Stage 9 closed on.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7610**
   corpus-wide — inferno 0.7651, purgatorio 0.7592, paradiso 0.7586.
 - **Test suite**: **1,023 passed** (S9.4 added 21 for the fixed-context loop,
@@ -312,7 +116,10 @@ any one session, so it survives across Handoff clearings.
    analysis, not replayed. **Appending is for resuming a run that failed
    part-way, not a durability rule**: a re-run under a changed implementation
    deletes the log first, so that the file holds one implementation's
-   behaviour rather than two spliced together.
+   behaviour rather than two spliced together. **Delete the canto's `.tsv` at
+   the same time**, for the same reason from the other side: a surviving TSV is
+   the run's resume state, so its units would be read as settled and never
+   re-run.
    **The quota these numbers are spent against is 16K TPM** — tokens per
    minute, aggregated across concurrent work (operator, 2026-09-05). The scarce
    quantity when planning a run is therefore *total tokens per unit of wall
@@ -360,6 +167,35 @@ any one session, so it survives across Handoff clearings.
      schema/derivation authority, `make agree` as readout-only, read positions
      before aggregates) is unchanged and lives in [`stages/05.md`](stages/05.md)
      §5 and §4 below — not repeated here.
+7. **The execution mode, and how to tell which one is running.** Since S9.6
+   (2026-09-05) the **fixed-context loop is the default**: every generation and
+   fix target runs the bounded step with no flag at all. The per-unit
+   tool-calling session is the opt-in one and is slated for removal.
+
+   ```
+   cd harness/recon
+   make inferno/01.tsv                     # fixed context, no flag needed
+                                           # + FIXED_ITERATIONS=n to change the cap
+   make fix                                # the same loop over committed artifacts
+   make inferno/01.tsv TOOLCALL=1          # the old session, for comparison only
+   ```
+
+   `FIXED_ITERATIONS` deliberately keeps its S9.4-era name — a renamed make
+   variable fails silently. Three ways to see which mode is running from the
+   first seconds, worth knowing in both directions now that the default has
+   flipped: the configuration line reads `reconstruct: fixed context, 4
+   iteration(s) max, …` rather than `transcripts verbatim, …`; **no
+   `<tool_call>` block ever appears**, and per-unit `[fixed] … iter 1: N row(s),
+   accepted` lines do; and the log's `skill_digest` is `ee6f1a46…` rather than
+   `b16c0639…`. The standing readout commands, so any session starts from the
+   same place:
+
+   ```
+   cd harness/recon && make check                     # 0 hard / 3,126 soft
+   make fix-level FIX=1 && make fix-level FIX=2       # both 0
+   make agree                                         # readout only, never a target
+   cd ../.. && uv run pytest -q                       # 1,023
+   ```
 
 ---
 
@@ -386,6 +222,15 @@ conventions that still bind:
 4. **A close is performed by opening the successor's document.** True of every
    stage but 7, whose close had to wait on the rename into `stages/`; Stage 8's
    close restored the convention.
+5. **There is no append-only rule for these documents** (operator, 2026-09-05:
+   "間違った主張が残っていると誤読される"). A claim later found wrong is
+   **corrected where it stands**, with the ledger recording what changed and
+   why — not left in the body with the correction filed only in a record. A
+   withdrawn proposal is kept struck through rather than deleted, so the
+   ledger's account of it still has its subject. Nothing in this project is
+   append-only in that sense: the run logs append only across a resume after a
+   mid-run failure, and a re-run under a changed implementation deletes the log
+   first (Orientation item 5).
 
 *Stage 1's records are the one split across two files: the toolcall gates T1–T5
 have their protocol ledger in [`TOOLCALL.md`](TOOLCALL.md) §8, alongside
@@ -453,7 +298,7 @@ adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern
 induction)** across Stages 1–2, then scales it out and holds it to the layer's
 own contract in the stages that follow.
 
-**Stages 1–8 are closed.** Each row's document holds the design work, the
+**Stages 1–9 are closed.** Each row's document holds the design work, the
 running detail and the milestone ledger; none of it is repeated here.
 
 | Stage | Period | What it settled | Record |
@@ -466,6 +311,7 @@ running detail and the milestone ledger; none of it is repeated here.
 | **6** Soft divergence reduction | 08-30 → 09-02 | The graded `--fix <level>` run, the one sanctioned in-session exception to S5.5; level 1 **377 → 0** over five corpus-wide runs, closed by S6.10 finding the agent's gate narrower than the contract it transcribed | [`stages/06.md`](stages/06.md) |
 | **7** Refactoring | 09-02 → 09-03 | The agent's knowledge moves from Python literals to skill files (byte-exact, digested); `reconstruct.py`'s 1,934 lines split into seven modules, putting gold behind a **file** boundary. Also: Warp's improver half refused, on Standing Invariant §1 | [`stages/07.md`](stages/07.md) |
 | **8** Soft level 2 | 09-03 → 09-05 | Level 2 = `omitted_l4_argument`, argued from `derive.py` with gold unopened; **1,128 → 0** findings, corpus **4,624 → 3,138** soft, gold agreement 0.7389 → 0.7607; `salvage_by_row` added as a third acceptance scope | [`stages/08.md`](stages/08.md) |
+| **9** Fixed-context execution | 09-05 → 09-06 | The per-unit tool-calling session replaced by a bounded step whose request size is a function of the unit, not the iteration — and made the default; $O$ admissible by argument (registry-free), $P$ 10,082 → 4,685 B all under the digest; better answers on half the requests and −40% tokens; the binding quantity re-read as a **rate** (16K TPM), not a per-request size | [`stages/09.md`](stages/09.md) |
 
 **Reading any soft number**: the count is a conformance measure against
 derivation-plus-registry, not a quality one — gold itself clears the bar only
@@ -476,91 +322,55 @@ when a missing predicate is registered. S6.1 established this and it governs
 every later stage; the evidence is in [`SOFT.md`](SOFT.md) and
 [`stages/06.md`](stages/06.md).
 
-### Stage 9: Fixed-Context Execution (drafted 2026-09-04, OPENED 2026-09-05)
+### Stage 10: Soft Level 3 (OPENED 2026-09-06)
 
-**The open stage**, and the only one with prose here. Opening it closed Stage 8.
+**The open stage**, and the only one with prose here. Opening it closed Stage 9.
 
-**The finding it rests on**, measured rather than proposed: both backends
-degrade a request as it grows — the API spends quota and pays it back as 429
-retries, the local `ollama` path pays it in prefill on a weak GPU — and this
-degradation, not `SESSION_MAX_TURNS = 12`, is what caps a unit's session at ~3
-turns. **The real per-request ceiling, in tokens, is unmeasured**: S9.2 read
-the only logs carrying provider token counts and found not one of 210 requests
-reaches even 13,000 `input_tokens` (max 12,999), and S9.3's fresh log from the
-current implementation stays lower still (108 requests, max 8,748), so the
-draft's "roughly 16 KB" was a byte figure standing in for a token limit that
-has never been tested;
-only a live run at token volumes this corpus's disk-only logs never reached can
-establish it. The tool
-apparatus this unmeasured ceiling is spent on is **6,176 B, 61.3%** of a
-9,769 B fixed prompt — this fraction *is* confirmed, byte-exact, against
-current code (S9.2) — against 3,656 B of domain knowledge and (corpus-wide,
-not just one canto) a median 3,029 B / max 12,199 B of the unit's own evidence.
-The tools the apparatus buys are barely used (`search_corpus`: 4 calls across
-348 sessions). So the harness does not iterate on a unit because iterating is
-priced out by degradation — the mechanism is real, its threshold is not yet a
-number.
+**The scope, provisional until a record in [`stages/10.md`](stages/10.md) fixes
+it**: design and implement soft `--fix` level 3. It does not exist —
+`extractor/fixlevel.py` defines levels 1 and 2, both now at 0 findings — so the
+work is an argument before it is a run, and the argument has to be made the way
+level 2's was.
 
-**The shape**: no tools; a fixed context of specification + frozen-layer evidence
-+ the artifact's current rows + a verdict; the rewritten rows as the only output.
-That also makes the schema gate a runtime step rather than a tool the model may
-decline to call, and collapses reconstruction and `--fix` into one loop
-distinguished only by its initial state.
+**What that means concretely**, all of it standing method rather than new
+constraint. The class or classes level 3 selects must be argued from
+`dante_corpus/skel/validate.py`'s schema invariants and `derive.py`'s derivation
+**with gold unopened** (Standing Invariant §1), and every candidate resolved to
+one of S6.1's three outcomes — the artifact is wrong (the only one that licenses
+a fix), a tolerance is missing, or the two notations are equivalent — *before*
+anything is edited. The gate/level alignment check comes first, not after four
+corpus-wide runs: whatever a level selects, the session gate must admit the row
+it asks for (S6.10 is the counterexample that cost level 1 five runs).
+Levels are cumulative, so level 3 adds to what 1–2 close rather than replacing
+it. The candidate list is [`stages/06.md`](stages/06.md) §3, minus what levels
+1–2 have already taken; most of the corpus's 3,126 remaining soft findings have
+never been inside any level, which is not the same as being wrong — that is what
+S6.1's three outcomes are for.
 
-**Built (S9.4, 2026-09-05)**: that shape is now what `reconstruct.py` runs by
-default (S9.6; built as the opt-in `--fixed-context` / `FIXED=1`, and the old
-session is now `--tool-calling` / `TOOLCALL=1`), with $P$ as a skill directory of its own, the
-observation half of $O$ recomputed from Layers 2-4 in `extractor/observe.py`,
-and the loop in `extractor/fixedcontext.py` — 21 deterministic tests, no model
-call. $P$ is **4,685 B, all of it under the digest** (against 10,082 B of which
-6,176 was unfingerprinted tool apparatus), and the whole per-request context is
-**5,890 / 7,922 / 17,092 B** min/median/max across all 3,477 units — bounded by
-the unit, not by the iteration. What no test can answer is whether the model
-*answers* this shape as well as a session does; that is the live run.
+**What it inherits from Stage 9, unfinished and never that stage's close
+conditions** (details in [`stages/10.md`](stages/10.md) §2):
 
-**Run live (S9.5, 2026-09-05)**: inferno 1 regenerated under the fixed-context
-loop. Against
-the S9.3 baseline on the same canto, 22 units of 34 clear all three gates (was
-18), level 1 closes and level 2 falls 8 → 3, canto gold F1 goes 0.7887 →
-0.8103, soft 38 → 19 — on 51 requests instead of 108, each of them exactly two
-messages. 21 of 33 units settle in one bounded step. The per-request bound holds
-as claimed, and the request stops growing within a unit (+230 tokens median
-against +2,018). Total tokens fall 40% while the canto's wall clock rises 6.5%
-— a trade serially, but **not against the 16K TPM quota**, where the saving
-buys concurrency: 2.4 → 4.3 streams, ≈ 1.7× corpus throughput, which is the
-ground the operator judged the mode worth it on. The per-request ceiling
-question is untouched (largest request 5,093 `input_tokens`), and no concurrent
-run has been made yet. One canto, run once: nothing corpus-wide follows.
+1. **No concurrent run has ever been made.** The ≈ 1.7× corpus throughput the
+   fixed-context mode was adopted on is one canto's `total_tokens ÷
+   elapsed_seconds` divided into the 16K TPM quota (2.4 → 4.3 streams).
+   Contention, per-stream 429s and the pacing interval are unmeasured, so it is
+   a projection from serial runs.
+2. **The per-request ceiling is unmeasured**, and until it is, the fixed-context
+   loop's $|P| + |\Sigma| + |O|$ budget ([`stages/09.md`](stages/09.md) §5)
+   cannot be sized. Every Stage 9 run moved away from it — largest requests
+   5,093 and 4,085 `input_tokens` — so this needs a deliberate run at token
+   volumes this corpus's disk-only logs have never reached, and its own log
+   sweep first. S9.2's worst-case unit (`purgatorio 10:82-93`, 12,199 B of
+   evidence alone) is why the answer is substantive.
+3. **The tool-calling session is slated for removal**, deferred rather than
+   scheduled. Removing it deletes the only comparison baseline this project has
+   for the mode it now runs on, so it is a decision rather than a cleanup.
 
-**Set at open (2026-09-05)**: the fixed context carries **all** the evidence the
-masking rule permits — drawing the gold boundary once, rather than re-arguing per
-`--fix` class which frozen-layer evidence a notice may render, as Stage 8 had to
-do twice.
-
-**Settled (S9.1, 2026-09-05)**: an admissible per-iteration signal $O$. The
-cheap one is not — the soft counter is registry-mediated (see the caveat above
-§2's table), so feeding it back each turn is §4 item 1 through one indirection.
-$O$ is hard schema verdicts plus a frozen-layer observation recomputed
-`fixlevel.py`-style (never `derive.py`'s own answer), converging on a fixed
-point rather than a shrinking count. The draft made this a precondition for
-opening; the operator opened the stage regardless, so it was work rather than a
-gate someone else passed.
-
-**Open, and it moved here from $O$ (S9.2, 2026-09-05)**: sizing the budget
-against the ceiling above, once a live run measures it (operator work, per
-their direction). S9.2 also found the corpus's worst-case unit's evidence alone
-(12,199 B, `purgatorio 10:82-93`) already exceeds the draft's whole $O$
-allowance, so the budget question is substantive, not a formality once a number
-arrives.
-
-[`stages/09.md`](stages/09.md) carries everything else: the measurements with
-their provenance limits (the logs predate S5.5), what S7.1's skills gain (the
-run-wording digest goes from 36.2% coverage to essentially all of it), the
-re-reading of S3.7, a candidate Standing Invariant §7 for the budget (not
-promoted to §4 below — S9.2), and §2.1's statement of the loop as types — where
-`fixrun.py`'s standing guarantee turns out to be that every step is an
-endomorphism on $\Sigma$ whose failure case is the
-identity, a property a new mode inherits by construction or not at all.
+**One question from Stage 6 is still open and is the operator's**: whether
+`dante_corpus/skel/repairs.py` is an admissible authority. Stage 8 answered it
+**on scope, not on principle** — 297 of its 299 remaining positions lay outside
+level 2's selection — so it becomes live again the moment level 3 proposes to
+select that population.
 
 ### Beyond Layer 5 (design notes)
 
