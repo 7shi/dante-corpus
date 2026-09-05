@@ -87,15 +87,45 @@ carries what was built, the four properties it is tested on, and the
 corpus-wide request sizes. As of this commit it had **never been run against a
 model** — every test stubs `generate`.
 
-**IN FLIGHT — the first live run of the fixed-context loop (started
-2026-09-05, right after this commit).** The operator is deleting
-`harness/recon/inferno/01.tsv` and regenerating it, and will report the result
-in the next session. This is the run S9.3's baseline exists to be compared
-against. **Do not read any inferno-1 or corpus-wide number in this file as
-current until that report arrives** — the live ones below describe the
-baseline, which the run replaces.
+**The fixed-context mode is opt-in, and the plain targets do not use it.** Every
+committed TSV was produced by the tool-calling session, so `make inferno/01.tsv`
+and `make fix-canto ...` keep running that; the Stage-9 loop needs `FIXED=1`
+(or `--fixed-context` on the CLI). The launch, in full:
 
-When the report comes, before anything else:
+```
+cd harness/recon
+rm -f inferno/01.log inferno/01.tsv     # a re-run under a changed
+                                        # implementation deletes the log first,
+                                        # and a surviving TSV would leave those
+                                        # units settled and un-rerun
+make inferno/01.tsv FIXED=1             # + FIXED_ITERATIONS=n to change the cap
+```
+
+Three ways to see, from the first seconds, that it is actually the mode
+running — the first live launch of it was made without the flag and had to be
+restarted: the configuration line reads `reconstruct: fixed context, 4
+iteration(s) max, …` rather than `transcripts verbatim, …`; **no `<tool_call>`
+block ever appears**, and per-unit `[fixed] … iter 1: N row(s), accepted` lines
+do; and the log's `skill_digest` is `ee6f1a46…`.
+
+**THE FIRST LIVE RUN HAS RUN — and nothing about it has been read yet
+(2026-09-05).** The operator regenerated `harness/recon/inferno/01.tsv` from
+scratch after this session implemented S9.4, and **deliberately deferred the
+readout to the next session**: no number from it has been looked at, by anyone,
+and none is recorded anywhere in this file or in `stages/09.md`. What is on
+disk is a rewritten `harness/recon/inferno/01.tsv` (unstaged, against the S9.3
+baseline in `2f7e0b8`) and a fresh `harness/recon/inferno/01.log`.
+
+One thing about the launch that the readout must account for: **the first
+attempt was started without `FIXED=1`, in the tool-calling mode, and was
+stopped** (that is what the opt-in note above exists for). So the very first
+question is not "what did it produce" but "what produced it" — step 1 below,
+and step 2 for whether the aborted attempt's records are in the log too.
+
+**Do not read any inferno-1 or corpus-wide number in this file as current**:
+the live ones below are the S9.3 baseline, which this run replaces.
+
+The readout, in order, and none of it is done yet:
 
 1. **Establish which mode actually ran, from the log rather than from
    assumption.** Every `canto_complete` carries `skill_digest`:
@@ -104,11 +134,15 @@ When the report comes, before anything else:
    records also carry a `fixed` block (per-step rows in/out, accepted or
    refused and why, the observations open at each step, the stop reason) and its
    `llm_request` records sit one per session instead of ~3.
-2. **Check that `harness/recon/inferno/01.log` was deleted before the run**
-   (Orientation item 5: a re-run under a changed implementation deletes the log
-   first). If both implementations' records are spliced into one file, segment
-   it at its `summary` records and say so in the readout rather than reporting
-   mixed aggregates.
+2. **Check whether the log holds one attempt or two.** The stopped tool-calling
+   attempt wrote into `inferno/01.log` before it was killed, so unless the file
+   was deleted between the two launches it carries both (Orientation item 5: a
+   re-run under a changed implementation deletes the log first). Segment at the
+   `summary` records, keep the fixed-context segment, and say in the readout
+   which it was rather than reporting a mixed aggregate. The same question
+   applies to the TSV: units the stopped attempt had already settled would have
+   been treated as settled and never re-run, so check that the rows are one
+   mode's — the `unit` records name every span the fixed loop actually ran.
 3. Then the standing three: `cd harness/recon && make check` (hard/soft),
    `uv run pytest -q` from the root (1,022), `make fix-level` at **both** levels
    — the baseline left inferno 1 at 2 and 8, so those numbers are what a
@@ -125,7 +159,22 @@ When the report comes, before anything else:
    from the gates, not from the soft delta alone — S9.3 measured ~9 soft of
    run-to-run variation on this very canto under an *unchanged* implementation.
 6. Write it up as **S9.5** in [`stages/09.md`](stages/09.md), and only then
-   decide what to commit.
+   decide what to commit. The regenerated TSV is an independent change from
+   whatever documentation the readout produces; stage and commit as the operator
+   directs.
+
+The commands for steps 1-4, so the readout starts from the same place every
+time:
+
+```
+cd harness/recon && make check                     # hard/soft, corpus-wide
+make fix-level FIX=1 && make fix-level FIX=2       # baseline: 2 and 8, both inferno 1
+make agree                                         # readout only, never a target
+cd ../.. && uv run pytest -q                       # 1,022
+grep -c '"record": "unit"' harness/recon/inferno/01.log
+grep -o '"skill_digest": "[0-9a-f]\{8\}' harness/recon/inferno/01.log | sort -u
+grep -c '"record": "summary"' harness/recon/inferno/01.log   # >1 = two attempts
+```
 
 - **Next open item for Stage 9 — unchanged**: a live run at token volumes this
   corpus's disk-only logs never reached, to find where the real per-request
@@ -170,9 +219,10 @@ the open stage and the live numbers only.
       which no deterministic test can say. §2 below and
       [`stages/09.md`](stages/09.md) carry the measurements it rests on and the
       direction set at open.
-*Every number below is the S9.3 baseline, and inferno 1 is being regenerated
-live as of 2026-09-05 (see the Handoff): treat them as the state the in-flight
-run is measured against, not as the current corpus.*
+*Every number below is the S9.3 baseline. inferno 1 was regenerated live on
+2026-09-05 by the first fixed-context run and **that run has not been read**
+(see the Handoff): these are the state it is measured against, not the current
+corpus.*
 
 - **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,147 soft**,
   `make check` exits 0, `make fix-level` **2** at level 1 and **8** at level 2
