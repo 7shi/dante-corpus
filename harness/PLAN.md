@@ -19,28 +19,32 @@ scope got its live test and passed it: it fired once, at `purgatorio 10` (13-21)
 taking **3 of 4** offered rows exactly as simulated, and that unit — a third of
 the residue on its own — is now at 0.
 
-**Stage 8 is one finding from its close condition, and that finding is a label
-argument, not a run's work.** What is left is
-`purgatorio 27:37 missing_arg: 37.6 obl:su (38, 5)` (unit 37-42). The model put
-the argument at exactly `(38, 5)` on all **10** attempts and labelled it
-`obl:in` where the derivation reads `obl:su`; the splice therefore earns
-`role_mismatch` and the recorded rows stand. `salvage_by_row` cannot reach it —
-one finding, one row — and re-asking has been exhausted, because the level's
-notice deliberately never renders the derived role (S5.5's line).
+**Level 2 reached 0 on the eleventh attempt, and S8.5 records it** (2026-09-05,
+[`stages/08.md`](stages/08.md) §4). S8.4 had claimed the last finding —
+`purgatorio 27:37 missing_arg: 37.6 obl:su (38, 5)` — was out of a run's reach
+after ten identical answers; **the operator re-ran the canto to test that claim
+and the eleventh attempt answered `obl:su`**. The unit splice was still refused
+(the answer added an ungoverned `extra_arg`) and the position-scoped salvage took
+the governed row alone. `make fix-level FIX=2` **1 → 0**, `FIX=1` 0, corpus
+**0 hard / 3,138 soft**, suite 1,001, gold 0.7607. **Stage 8's close condition is
+met.**
 
-**So the open question is the one S8.3 framed, now with nothing else beside
-it**: which frozen-layer evidence may be shown to settle a *label*. Level 1's
-notice already renders the `case` child that qualifies an oblique — and `su` vs
-`in` is precisely a `case`-child reading — so the precedent is close, but it is
-an argument to make against S5.5's line, not an extension to reach for. Per S6.5
-the finding stays a run's work either way; a hand repair is not on the table.
+**The correction that outlives the number** (S8.5, and worth carrying into any
+later stage): repeated identical refusals lower a residue's estimated
+per-attempt success rate but never establish that it is zero. Only a *mechanism*
+argument — a row the splice cannot take, a gate that refuses what a level asks —
+establishes unreachability, which is what S6.10 and S8.3 each actually produced.
+S8.4's "re-asking is exhausted" was an inference from ten samples and it was
+wrong.
 
-**Operationally worth carrying:** repeating `make fix` corpus-wide is cheap, not
-expensive. The operator ran it about ten times in ~2 h wall (127 LLM requests, 0
-API retries) because a canto with no finding at the level costs no model call and
-closes in 0.1 s. What costs is re-asking a unit that will not move — `inferno 5`
-converged on its 8th attempt and `purgatorio 7` on its 10th, while `purgatorio
-27` reproduced the same governed row all ten times.
+**Two things settled alongside it.** (1) The label-evidence question is answered
+as a design ruling — **evidence already shown at one `--fix` level may be shown
+at another**, which is this module's own line rather than an exception to it
+(`fixlevel.case_children()` exists to cite the tree and not the answer). It was
+**not implemented**: the finding cleared without it, and Stage 9 subsumes it.
+(2) Operationally, repeating `make fix` corpus-wide is cheap — a canto with no
+finding at the level costs no model call and closes in 0.1 s — while re-asking
+one unit is what costs.
 
 **How Stage 8 got here**, in one paragraph — the detail is in
 [`stages/08.md`](stages/08.md) §4 and does not need re-reading to continue.
@@ -81,24 +85,22 @@ segmented the nine touched logs at their `summary` records to separate this
 run from S8.2's (they were not swept, and needed no dedupe — the segments are
 disjoint), confirmed `salvage_by_row`'s single firing against S8.3's simulation,
 re-verified the canto-by-canto comparison from a `git worktree` of `b2d8db4`,
-and committed the record with the eight changed recon TSVs.
+and committed the record with the eight changed recon TSVs (`a466a43`). The
+operator then re-ran `purgatorio` to test S8.4's claim that the residue was out
+of reach, the eleventh attempt cleared it, and the session wrote **S8.5** —
+the readout, the correction to S8.4's inference, and the operator's ruling on
+level-to-level evidence.
 
-**A Stage 9 draft exists and is not in flight** ([`stages/09.md`](stages/09.md),
-2026-09-04): fixed-context execution, drafted on the operator's instruction and
-**not opened**. Stage 8 continues on the current architecture and nothing in that
-draft bears on it. It is listed here only so a session that finds the file knows
-it is a forecast, not work.
+**Stage 9's direction is now stated** ([`stages/09.md`](stages/09.md) §5, still a
+draft at the time of writing): the fixed context carries **all** the evidence the
+masking rule permits, and the loop runs on top of that. That is what subsumes the
+label-evidence question — instead of arguing per class which frozen-layer evidence
+a notice may render, the boundary is drawn once (`derive.py`'s answer out, frozen
+layers in). §1.2's arithmetic leaves room: the apparatus being removed is 6,176 B
+against a 2.8 KB full payload. The stage's actual open problem is unchanged —
+a per-iteration signal $O$ that converges without becoming a gold proxy.
 
-- **Next open item — one, and it is a design argument rather than a run**:
-  decide whether the level-2 notice may render frozen-layer evidence that
-  settles a *label* — concretely, the `case` child behind `obl:su` vs `obl:in`
-  at `purgatorio 27:37` — and if so, on what authority against S5.5's line that
-  the notice never shows the derivation's answer. That one finding is all that
-  stands between Stage 8 and its close condition, ten identical attempts say a
-  further run will not move it, and S6.5 rules out reaching into the artifact
-  for it. If the argument fails, the alternative on the table is the operator's:
-  close Stage 8 at 1 rather than at 0, which is a decision to make explicitly
-  and not to drift into.
+- **Next open item**: close Stage 8 on its met condition and open Stage 9.
 
 ## Current Status
 
@@ -143,12 +145,13 @@ holds only what's still open.
       residual offer is `null_subject` alone, 297 of whose 299 positions lie
       outside level 2's selection). **The stage's
       close condition, set by the operator 2026-09-05: `make fix-level FIX=2`
-      at 0 findings.** It stands at **1** —
-      `purgatorio 27:37 missing_arg: 37.6 obl:su (38, 5)`, where the model
-      labelled the right position `obl:in` on all 10 attempts. **Open next**:
-      not a run — whether the notice may show the `case` evidence that settles
-      a label, argued against S5.5's line, or else an explicit operator
-      decision to close at 1.
+      at 0 findings.** **S8.5 met it the same day**: the operator re-ran
+      `purgatorio` to test S8.4's claim that the last finding was out of a run's
+      reach, and the **eleventh** attempt answered `obl:su` — position-scoped
+      salvage took the governed row, `FIX=2` **1 → 0**, `FIX=1` 0, corpus
+      **0 hard / 3,138 soft**, gold 0.7607. S8.4's inference is corrected there:
+      repeated identical refusals never establish unreachability; only a
+      mechanism argument does. **Open next**: the stage's close.
 - [ ] **Stage 9 — Fixed-Context Execution** (DRAFTED 2026-09-04 on the
       operator's instruction, **not opened**; Stage 8 continues on the current
       architecture). Provisional scope: replace the per-unit tool-calling
@@ -589,10 +592,16 @@ finding's rows at a time with every step measured, so the next pass starts from
 a repaired mechanism rather than from a repeat. **Record S8.4** reads that pass
 out: **12 → 1**, corpus 3,160 → 3,139 soft, gold 0.7605 → 0.7607, no canto
 worse, and the new scope vindicated on its one eligible unit — 3 of 4 rows
-taken, exactly as simulated. What is left is a single finding at `purgatorio 27`
-where the model puts the argument at the right position and calls it `obl:in`
-against the derivation's `obl:su`, ten times running. The stage's remaining work
-is therefore an argument about what the notice may show, not another run.
+taken, exactly as simulated. What was left was a single finding at `purgatorio
+27` where the model put the argument at the right position and called it
+`obl:in` against the derivation's `obl:su`, ten times running — and S8.4 read
+that as out of a run's reach. **Record S8.5** shows it was not: the operator
+re-ran the canto to test the claim and the **eleventh** attempt answered
+`obl:su`, the position-scoped salvage took the governed row, and `make fix-level
+FIX=2` reached **0**. The lesson it fixes in place is about inference, not about
+this level — repeated identical refusals bound a residue's success rate from
+above but never at zero, and only a mechanism argument establishes
+unreachability.
 
 Level 1's arc is the precedent worth reading
 first: five corpus-wide runs moved it 377 → 12, and what closed it was S6.10

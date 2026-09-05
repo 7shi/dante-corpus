@@ -133,6 +133,7 @@ line	token	word	role	arg_line	arg_token
 37	6	aperse	subj	38	1
 37	6	aperse	obj	37	8
 37	6	aperse	obl:a	37	3
+37	6	aperse	obl:su	38	5
 38	7	riguardolla	subj	38	1
 39	5	diventò	subj	39	4
 39	5	diventò	attr	39	6
