@@ -9,98 +9,59 @@ state that should survive indefinitely does not belong here: it belongs in
 **Current Status**, **Orientation for Fresh Sessions**, the **Milestone
 Ledger**, or §2's per-stage records.
 
-**The second `--fix 2` pass landed and is read out as S8.4** (2026-09-05,
-[`stages/08.md`](stages/08.md) §4). `make fix-level FIX=2` fell **12 → 1**,
-`FIX=1` stayed **0**, corpus soft **3,160 → 3,139**, suite **1,001**, gold
-agreement 0.7605 → **0.7607**, and no canto regressed (checked against a `git
-worktree` of `b2d8db4`, which re-measured the 3,160 baseline exactly). The eight
-changed recon TSVs are committed alongside that readout. S8.3's per-row salvage
-scope got its live test and passed it: it fired once, at `purgatorio 10` (13-21),
-taking **3 of 4** offered rows exactly as simulated, and that unit — a third of
-the residue on its own — is now at 0.
+**Stage 8 closed and Stage 9 opened, both 2026-09-05 on the operator's
+decision.** Level 2 reached its close condition — `make fix-level FIX=2` at 0 —
+on S8.5, and opening [`stages/09.md`](stages/09.md) is what performed the close,
+the convention every stage but 7 has followed. Stage 8's whole record, its close
+and the state at close live in [`stages/08.md`](stages/08.md); §2 below carries
+the summary and nothing here repeats it.
 
-**Level 2 reached 0 on the eleventh attempt, and S8.5 records it** (2026-09-05,
-[`stages/08.md`](stages/08.md) §4). S8.4 had claimed the last finding —
-`purgatorio 27:37 missing_arg: 37.6 obl:su (38, 5)` — was out of a run's reach
-after ten identical answers; **the operator re-ran the canto to test that claim
-and the eleventh attempt answered `obl:su`**. The unit splice was still refused
-(the answer added an ungoverned `extra_arg`) and the position-scoped salvage took
-the governed row alone. `make fix-level FIX=2` **1 → 0**, `FIX=1` 0, corpus
-**0 hard / 3,138 soft**, suite 1,001, gold 0.7607. **Stage 8's close condition is
-met.**
+**State handed to Stage 9**: corpus **0 hard / 3,138 soft** (4,624 at Stage 8's
+open), `make fix-level` **0** at both levels, `make check` exits 0, suite
+**1,001 passed**, gold agreement **0.7607** as a readout (0.7389 at open).
 
-**The correction that outlives the number** (S8.5, and worth carrying into any
-later stage): repeated identical refusals lower a residue's estimated
-per-attempt success rate but never establish that it is zero. Only a *mechanism*
-argument — a row the splice cannot take, a gate that refuses what a level asks —
-establishes unreachability, which is what S6.10 and S8.3 each actually produced.
-S8.4's "re-asking is exhausted" was an inference from ten samples and it was
-wrong.
+**Stage 9 is open with its central question unanswered, deliberately.** The
+draft's §5 named an admissible per-iteration signal $O$ as the reason *not* to
+open it; the operator opened it anyway, so answering that is the stage's first
+work rather than a precondition someone else met. What the operator did settle
+(2026-09-05) is the direction: **the fixed context carries all the evidence the
+masking rule permits**, and the loop runs on top of that. That draws the
+gold-masking boundary once — `derive.py`'s answer out, frozen layers in — instead
+of re-arguing per `--fix` class which frozen-layer evidence a notice may render,
+which Stage 8 had to do twice. §1.2's arithmetic leaves room for it: the tool
+apparatus being removed is 6,176 B against a 2.8 KB full L1–L4 payload.
 
-**Two things settled alongside it.** (1) The label-evidence question is answered
-as a design ruling — **evidence already shown at one `--fix` level may be shown
-at another**, which is this module's own line rather than an exception to it
-(`fixlevel.case_children()` exists to cite the tree and not the answer). It was
-**not implemented**: the finding cleared without it, and Stage 9 subsumes it.
-(2) Operationally, repeating `make fix` corpus-wide is cheap — a canto with no
-finding at the level costs no model call and closes in 0.1 s — while re-asking
-one unit is what costs.
+**The correction Stage 8 ended on, carried here because Stage 9 will meet the
+same shape** (S8.5): repeated identical refusals bound a residue's per-attempt
+success rate from above but **never at zero**. S8.4 claimed a residue was out of
+a run's reach after ten identical answers; the operator re-ran it and the
+eleventh attempt cleared it. Only a *mechanism* argument — a row the splice
+cannot take (S8.3), a gate that refuses what a level asks (S6.10) — establishes
+that a run cannot reach something.
 
-**How Stage 8 got here**, in one paragraph — the detail is in
-[`stages/08.md`](stages/08.md) §4 and does not need re-reading to continue.
-**S8.1** defined level 2 as `omitted_l4_argument` (1,126 findings, 770 units).
-**S8.2** read out the first corpus-wide run: soft 4,624 → 3,160, the level 1,128
-→ 12, gold 0.7389 → 0.7605, no regression, ~46.4 h summed / ~16.3 h wall,
-committed with its 100 TSVs in `e5680a6`. **S8.3** traced the residual 12 through
-S8.2's own logs before re-running them, found a third of it mechanical rather
-than model-side, and added `fixrun.salvage_by_row` (suite 999 → 1,001). **S8.4**
-is the run above. §2's two carried items are both **settled** (2026-09-05,
-operator): transcription drift on **option 3** (the gate must admit whatever a
-level selects and nothing wider; AQ/DG/DS stay untranscribed), and
-`skel/repairs.py` **not used**, on scope — its residual offer is `null_subject`
-alone, 297 of whose 299 positions fall outside level 2's selection. Both records,
-with their numbers, are in that document's §2.
+**The re-roll cost that same residue exposed** is Stage 9's own motivating
+number, recorded in [`stages/09.md`](stages/09.md) §5: eleven independent
+sessions for one row at `purgatorio 27`, ten at `purgatorio 7`, eight at
+`inferno 5` — each discarding the previous answer and the verdict that refused
+it, because a session that kept them would grow past the 16 KB ceiling §1
+measures. The harness is not iterating on those units; it is re-rolling them.
 
-**Stage 7 closed 2026-09-03** on S7.2's live confirmation — both items (S7.1
-knowledge-as-files, S7.2 the `reconstruct.py` split) done, committed and
-live-confirmed on the operator's inferno-1 re-run. Its whole record, the close,
-and the state at close live in [`stages/07.md`](stages/07.md); §2 below carries
-the one-paragraph summary.
+**This session (2026-09-05)** read out the second `--fix 2` pass as **S8.4**
+(`a466a43`, with eight recon TSVs), then — after the operator re-ran `purgatorio`
+to test that record's claim and the eleventh attempt cleared it — wrote **S8.5**
+with the correction and the operator's level-to-level evidence ruling
+(`c2cd5ec`), and **closed Stage 8 / opened Stage 9**, moving Stage 8's detail out
+of this file into [`stages/08.md`](stages/08.md). The two sessions before it
+(both 2026-09-05 and 2026-09-03) read out S8.2, shipped S8.3, and closed Stage 7
+respectively; their detail is in the stage documents.
 
-**The session before this one (2026-09-03)** read
-out the operator's live inferno-1 re-run into S7.2 (`31cb3c7`), **closed Stage
-7** into [`stages/07.md`](stages/07.md) (`e180024`), **moved the seven stage
-documents into `stages/<NN>.md`** with all 192 references rewritten — the layout
-decision and its citation rule are in the Milestone Ledger note below, and are
-the one thing worth knowing before writing a new stage document (`cf24c20`) —
-then **opened Stage 8** and set it to level 2 on the operator's decision.
-
-**The session before this one (2026-09-05)** read out the first `--fix 2` run as
-S8.2 (`e5680a6`, with its 100 TSVs), settled §2's two carried items on the
-operator's decisions, set the stage's close condition at 0, and shipped
-**S8.3**'s per-row salvage scope (`467f435`).
-
-**This session (2026-09-05)** read out the second `--fix 2` pass as **S8.4**:
-segmented the nine touched logs at their `summary` records to separate this
-run from S8.2's (they were not swept, and needed no dedupe — the segments are
-disjoint), confirmed `salvage_by_row`'s single firing against S8.3's simulation,
-re-verified the canto-by-canto comparison from a `git worktree` of `b2d8db4`,
-and committed the record with the eight changed recon TSVs (`a466a43`). The
-operator then re-ran `purgatorio` to test S8.4's claim that the residue was out
-of reach, the eleventh attempt cleared it, and the session wrote **S8.5** —
-the readout, the correction to S8.4's inference, and the operator's ruling on
-level-to-level evidence.
-
-**Stage 9's direction is now stated** ([`stages/09.md`](stages/09.md) §5, still a
-draft at the time of writing): the fixed context carries **all** the evidence the
-masking rule permits, and the loop runs on top of that. That is what subsumes the
-label-evidence question — instead of arguing per class which frozen-layer evidence
-a notice may render, the boundary is drawn once (`derive.py`'s answer out, frozen
-layers in). §1.2's arithmetic leaves room: the apparatus being removed is 6,176 B
-against a 2.8 KB full payload. The stage's actual open problem is unchanged —
-a per-iteration signal $O$ that converges without becoming a gold proxy.
-
-- **Next open item**: close Stage 8 on its met condition and open Stage 9.
+- **Next open item — one**: Stage 9's $O$. A candidate per-iteration improvement
+  signal that is admissible under Standing Invariant §4 item 1 — the soft counter
+  is not, being registry-mediated with 88 of its 130 rules fitted against gold's
+  own divergence. Schema verdicts and `derive.py` observations are.
+  [`stages/09.md`](stages/09.md) §5 states the question; §8's empty ledger states
+  what a first record owes before it acts on §1's measurements (they predate
+  S5.5 and want re-measuring).
 
 ## Current Status
 
@@ -108,53 +69,9 @@ Stages 1–7 are COMPLETE/CLOSED; their status, dates, and record pointers
 live in §2's per-stage subsections below, not repeated here. This section
 holds only what's still open.
 
-- [ ] **Stage 8 — Soft Level 2** (OPENED 2026-09-03 by operator, after Stage 7's
-      close rather than as part of it: the stage documents were about to move
-      into `stages/`, so the file was held back rather than created and renamed
-      the same day; scope set the same day). Scope: **designing and implementing
-      soft `--fix` level 2**, the item Stage 6 carried forward rather than
-      closed. **Designed and implemented on S8.1** (2026-09-03): level 2 is
-      `omitted_l4_argument`,
-      1,126 findings in 770 units, argued to outcome 1 from `derive.py`'s step 2
-      with gold unopened, with S6.10's alignment check made before any run (the
-      row it asks for is admissible by construction; a session-side bar is
-      deliberately refused, measured at 2,089 demanded vs 1,126 selected). Code
-      and tests only — the corpus is untouched and the run is the operator's.
-      **The first corpus-wide `--fix 2` run read out on S8.2** (2026-09-05):
-      0 hard / **3,160 soft** (4,624 → 3,160), `fix-level FIX=2` cumulative
-      1,128 → **12** (`FIX=1` alone back to 0), suite 999, gold agreement
-      0.7389 → **0.7605**, no canto regressed, cost ~46.4 h summed elapsed /
-      ~16.3 h wall against the ~140 h / ~65 h estimate. Committed with that
-      readout in `e5680a6`. **S8.3** then read the residual 12 out of those
-      logs before re-running them — 3 are rows the model got right and the
-      unit-scope splice discarded for a mislabelled sibling's sake, and one unit
-      had already been re-answered 4 times identically — and added
-      `fixrun.salvage_by_row`, a third acceptance scope taking the answer one
-      finding's rows at a time (suite 999 → **1,001**, corpus untouched).
-      **The second pass read out on S8.4** (2026-09-05): `fix-level FIX=2`
-      **12 → 1**, `FIX=1` still 0, corpus 0 hard / **3,139 soft**, suite 1,001,
-      gold 0.7605 → **0.7607**, no canto regressed, ~2.6 h summed / ~2.0 h wall
-      over ten corpus-wide `make fix` loops. `salvage_by_row` fired once and
-      took 3 of 4 offered rows exactly as simulated, clearing `purgatorio 10`.
-      [`stages/08.md`](stages/08.md) §1 states what the level had to satisfy
-      first; §2's two carried items are **both settled 2026-09-05** — the
-      transcription-drift check on option 3 (the gate must admit whatever a
-      level selects, and nothing wider: AQ/DG/DS stay untranscribed, the
-      level-2 admissibility test generalized to the whole level table), and
-      `skel/repairs.py` **not used**, on scope rather than authority (its
-      residual offer is `null_subject` alone, 297 of whose 299 positions lie
-      outside level 2's selection). **The stage's
-      close condition, set by the operator 2026-09-05: `make fix-level FIX=2`
-      at 0 findings.** **S8.5 met it the same day**: the operator re-ran
-      `purgatorio` to test S8.4's claim that the last finding was out of a run's
-      reach, and the **eleventh** attempt answered `obl:su` — position-scoped
-      salvage took the governed row, `FIX=2` **1 → 0**, `FIX=1` 0, corpus
-      **0 hard / 3,138 soft**, gold 0.7607. S8.4's inference is corrected there:
-      repeated identical refusals never establish unreachability; only a
-      mechanism argument does. **Open next**: the stage's close.
-- [ ] **Stage 9 — Fixed-Context Execution** (DRAFTED 2026-09-04 on the
-      operator's instruction, **not opened**; Stage 8 continues on the current
-      architecture). Provisional scope: replace the per-unit tool-calling
+- [ ] **Stage 9 — Fixed-Context Execution** (drafted 2026-09-04 on the
+      operator's instruction, **OPENED 2026-09-05**, and opening it is what
+      closed Stage 8). Provisional scope: replace the per-unit tool-calling
       session, on the reconstruction and repair path, with a fixed-length
       execution context — specification, frozen-layer evidence, the artifact's
       current Layer-5 rows, and a verdict on them — whose only output is the
@@ -167,9 +84,35 @@ holds only what's still open.
       evidence is 2.8 KB. **The open problem is not the mechanism but the
       verdict**: the loop needs a per-iteration improvement signal, and the
       cheap one (soft findings) is registry-mediated and therefore inadmissible
-      under §4 item 1. Do not open this until that has a candidate answer.
+      under §4 item 1. The draft said not to open the stage until that had a
+      candidate answer; the operator opened it regardless on 2026-09-05, so
+      **finding an admissible $O$ is the stage's first work**, not a
+      precondition it inherited. Also set at open: the fixed context carries
+      **all** the evidence the masking rule permits, which draws the gold
+      boundary once rather than per `--fix` class.
       [`stages/09.md`](stages/09.md) carries the measurements with their
-      provenance, the S3.7 re-reading, and a candidate Standing Invariant §7.
+      provenance (they predate S5.5 and want re-measuring), the S3.7 re-reading,
+      a candidate Standing Invariant §7, and an empty ledger stating what a first
+      record owes. State at open: 0 hard / 3,138 soft, both fix levels at 0,
+      suite 1,001, gold 0.7607.
+- [x] **Stage 8 — Soft Level 2** (OPENED 2026-09-03 by operator after Stage 7's
+      close rather than as part of it — the stage documents were about to move
+      into `stages/`, so the file was held back rather than created and renamed
+      the same day; **CLOSED 2026-09-05** on S8.5, on the operator's condition of
+      `make fix-level FIX=2` at 0 findings). It designed and implemented soft
+      `--fix` level 2 — `omitted_l4_argument`, argued to outcome 1 from
+      `derive.py` with gold unopened, 1,126 findings in 770 units (S8.1) — read
+      out the operator's two corpus-wide runs (S8.2, S8.4), repaired the
+      acceptance mechanism between them with a third scope, `salvage_by_row`
+      (S8.3), and cleared the last finding on an eleventh attempt (S8.5). Corpus
+      **4,624 → 3,138 soft** at 0 hard, the level's own count 1,128 → **0**,
+      suite 991 → 1,001, gold agreement 0.7389 → **0.7607** (readout only). Both
+      items Stage 7 carried in are answered: transcription drift on **option 3**,
+      and `skel/repairs.py` **not used**, on scope. The correction S8.5 leaves
+      standing for later stages: repeated identical refusals never establish that
+      a residue is out of a run's reach — only a mechanism argument does. Records,
+      close and carried items live in [`stages/08.md`](stages/08.md); §2 below
+      summarizes.
 - [x] **Stage 7 — Refactoring** (OPENED 2026-09-02 by operator on Stage 6's
       close, scope re-decided the same day from "level 2" to refactoring and
       narrowed the same day to two items; **CLOSED 2026-09-03** on S7.2's live
@@ -288,15 +231,16 @@ Stage-5 records S5.1–S5.8 live in [`stages/05.md`](stages/05.md)'s ledger, wri
 there from the start (stage closed 2026-08-30 on S5.8); Stage-6 records
 S6.1–S6.11 the same way in [`stages/06.md`](stages/06.md) (stage closed 2026-09-02 on
 S6.11); Stage-7 records S7.1–S7.2 the same way in [`stages/07.md`](stages/07.md)
-(stage closed 2026-09-03 on S7.2); Stage-8 records accrue the same way in
-[`stages/08.md`](stages/08.md), open, S8.1 written 2026-09-03;
-[`stages/09.md`](stages/09.md) exists as a **draft with an empty ledger** —
-written 2026-09-04 before the stage was opened, which no earlier stage document
-did, so its §7 says explicitly that no record is written there until the operator
-opens it. Every close through
+(stage closed 2026-09-03 on S7.2); all Stage-8 records S8.1–S8.5 the same way in
+[`stages/08.md`](stages/08.md) (stage closed 2026-09-05 on S8.5);
+[`stages/09.md`](stages/09.md) is the open stage and its ledger is still
+**empty** — the document was written 2026-09-04 as a draft, a day before the
+stage opened, which no earlier stage document did, so its §8 states what a first
+record owes rather than holding a record. Every close through
 Stage 6 was made by opening the next stage's document; Stage 7's was not — the
 rename into `stages/` was pending, so `stages/08.md` was opened separately once
-it had landed, with its scope arriving in the same session.*
+it had landed, with its scope arriving in the same session. Stage 8's close
+returns to the convention: opening `stages/09.md` is what performed it.*
 
 ---
 
@@ -353,7 +297,7 @@ graph TD
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
 
-In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that paid down what six stages of live-run work had left behind (closed 2026-09-03), and Stage 8 opening the same day, scoped to soft `--fix` level 2. Stage 9 exists only as a draft (2026-09-04, not opened): fixed-context execution, forecast rather than scheduled.
+In contrast to the top-down methodology used in Phases 5–8 — where frontier LLMs deduced abstract rules that the local executor then followed mechanically, without autonomy of its own — `harness/` hands agency to the local model and adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern induction)** across Stages 1–2, with Stage 3 as context optimization + launch hardening (closed 2026-08-25), Stage 4 as the operational scale-out (closed 2026-08-29), Stage 5 as the corpus-durability track that also took the corpus hard-clean (closed 2026-08-30), Stage 6 as the soft divergence reduction that took level 1 to zero (closed 2026-09-02), and Stage 7 as the refactoring stage that paid down what six stages of live-run work had left behind (closed 2026-09-03), and Stage 8 as soft `--fix` level 2, which took that level from 1,128 findings to 0 and the corpus to 3,138 soft (opened 2026-09-03, closed 2026-09-05). **Stage 9 is the open one** (drafted 2026-09-04, opened 2026-09-05): fixed-context execution — replacing the per-unit tool-calling session with a fixed-length context and a loop.
 
 ### Stage 1: Autonomous Local Inference & Capability Benchmark (`harness/runner/`)
 - **Approach**: For each parse unit, the agent receives the multi-layer context (L1–L4, quotes, case) and autonomously solves predicate-argument frames on the fly using Chain-of-Thought (CoT) and a dedicated Tool Calling API (`validate_candidate`, etc.).
@@ -495,7 +439,17 @@ level runs next:**
 - **A `--fix` run cannot leave the corpus worse than it found it.** Only the
   level's own findings are selectable, and a unit whose answer fails the
   acceptance test keeps its recorded rows — confirmed on repeat passes (S6.5,
-  S6.9) with no canto and no unit ending worse than it started.
+  S6.9) with no canto and no unit ending worse than it started, and re-confirmed
+  across level 2's two corpus-wide runs (S8.2, S8.4).
+- **Repeating `make fix` corpus-wide is cheap; re-asking one unit is what
+  costs** (S8.4). A canto with no finding at the level makes no model call and
+  closes in 0.1 s, so ten whole-corpus passes came to ~2 h wall and 127 requests.
+  Budget a residue by the units in it, not by the cantos swept.
+- **Repeated identical refusals do not mean a residue is out of reach** (S8.5).
+  They bound its per-attempt success rate from above, never at zero — one unit
+  settled on its eleventh attempt after ten identical answers. Only a mechanism
+  argument (a row the splice cannot take, a gate that refuses what a level asks)
+  establishes unreachability.
 - **Sweep the per-canto logs before each corpus-wide fix run**, deliberately,
   so the run's telemetry is unambiguous (S6.7's logs mixed two runs and had to
   be reconstructed from timestamps; S6.9 and S6.11 swept first and needed no
@@ -546,82 +500,53 @@ pattern's two prerequisites. Both records, that argument, the state at close and
 the three items carried forward (the transcription-drift sweeps, soft level 2,
 the `repairs.py` authority question) live in [`stages/07.md`](stages/07.md).
 
-### Stage 8: Soft Level 2 (opened 2026-09-03)
+### Stage 8: Soft Level 2 (opened 2026-09-03, CLOSED 2026-09-05)
 
-Opened after Stage 7's close rather than as part of it — the one break in the
-convention that a close is performed by opening the successor's document, and a
-deliberate one: the stage files were about to move into `stages/`, so the file
-was held back rather than created and immediately renamed.
+Soft `--fix` level 2 — the item Stage 6 carried forward when level 1 reached 0
+on S6.11 — designed, implemented, run twice over the whole corpus, and closed on
+the operator's condition of **level 2 at 0 findings**. The class is
+`omitted_l4_argument`: a `missing_arg` whose argument hangs on the citing
+predicate under an `ARG_DEPRELS` edge at a nominal role, where the artifact
+registers the predicate and holds no row at the position. Its authority is
+`derive.py`'s step 2 alone, argued with gold unopened to S6.1's outcome 1, and
+the populations it excludes — the `conj`-propagated subject (404), the clausal
+roles (74), rule AM's stranded argument (1) — are argued out rather than left
+unmentioned. Level 1's arc is what shaped its method: five corpus-wide runs moved
+that level 377 → 12, and what closed it was S6.10 finding the agent's gate
+narrower than the contract it transcribed, so level 2 made that alignment check
+*before* its runs rather than after four of them.
 
-Scope, set by the operator the same day: **the design and implementation of soft
-`--fix` level 2** — what Stage 6 carried forward when level 1 reached 0 findings
-on S6.11. [`stages/08.md`](stages/08.md) §1 fixed the ground it had to start
-from, before any class was named. The mechanism was not the deliverable — S6.2's graded `--fix` run already
-reopens a level's units in session, showing the invariant and the frozen-layer
-evidence but never the derivation's answer — so what level 2 owes is a class
-definition and a selection rule, argued to one of S6.1's three outcomes (the
-artifact is wrong / a tolerance is missing / the notations are equivalent) from
-`validate.py` and `derive.py` **with gold unopened**, since the soft counter
-measures conformance rather than quality. Candidates and eligibility are in
-[`stages/06.md`](stages/06.md) §3. **Record S8.1 answers that**: level 2 is
-`omitted_l4_argument` — a `missing_arg` whose argument hangs on the citing
-predicate under an `ARG_DEPRELS` edge, at a nominal role, where the artifact
-registers the predicate and holds no row at the position. `derive.py`'s step 2
-collects exactly those children as a predicate's arguments and the registry's 20
-`missing_arg` tolerances have already declined the position, so the artifact is
-under-complete: outcome 1. It is **1,126 findings in 770 units across all 100
-cantos**, the largest class the contract decides on its own; the propagated
-subject (404), the clausal roles (74) and rule AM's stranded argument (1) are
-argued *out* rather than left unmentioned. S6.10's alignment check was made
-first and in both directions: the row the level asks for is admissible to the
-session gate by construction (its anchor *is* clause AF), and a session-side bar
-is refused because the only one it could carry would demand 2,089 positions
-where the level selects 1,126. The corpus was left untouched by that record: the
-first `--fix 2` run is the operator's, and **record S8.2 reads it out**
-(2026-09-05) — 4,624 → 3,160 soft, the level's own count 1,128 → 12, no canto
-worse, gold agreement 0.7389 → 0.7605, at about a third of the budgeted cost.
-The stage does not close there. The operator's close condition, set the same
-day, is **level 2 at 0 findings**, so the residual 12 — spread over 9 cantos —
-are the next run's target rather than the level's floor. **Record S8.3** read
-that residue out of S8.2's own logs before spending a run on it, and found a
-third of it mechanical rather than model-side: the unit-scope splice takes every
-row a level named at once, so one mislabelled row refuses its correct siblings —
-4 named rows at `purgatorio 10`, 3 of them right, none written, over 4 identical
-attempts. `fixrun.salvage_by_row` adds the scope below it, taking the answer one
-finding's rows at a time with every step measured, so the next pass starts from
-a repaired mechanism rather than from a repeat. **Record S8.4** reads that pass
-out: **12 → 1**, corpus 3,160 → 3,139 soft, gold 0.7605 → 0.7607, no canto
-worse, and the new scope vindicated on its one eligible unit — 3 of 4 rows
-taken, exactly as simulated. What was left was a single finding at `purgatorio
-27` where the model put the argument at the right position and called it
-`obl:in` against the derivation's `obl:su`, ten times running — and S8.4 read
-that as out of a run's reach. **Record S8.5** shows it was not: the operator
-re-ran the canto to test the claim and the **eleventh** attempt answered
-`obl:su`, the position-scoped salvage took the governed row, and `make fix-level
-FIX=2` reached **0**. The lesson it fixes in place is about inference, not about
-this level — repeated identical refusals bound a residue's success rate from
-above but never at zero, and only a mechanism argument establishes
-unreachability.
+Outcome: corpus **4,624 → 3,138 soft** at 0 hard, the level's own count
+**1,128 → 0**, suite 991 → 1,001, gold agreement 0.7389 → **0.7607** (readout
+only, Standing Invariant §1). Both items Stage 7 carried in are answered —
+transcription drift on **option 3** (whatever a `--fix` level selects, the
+session gate admits; AQ/DG/DS stay untranscribed so no gold-fitted tolerance
+enters the agent's gate), and `skel/repairs.py` **not used**, on scope rather
+than authority.
 
-Level 1's arc is the precedent worth reading
-first: five corpus-wide runs moved it 377 → 12, and what closed it was S6.10
-finding the agent's gate narrower than the contract it transcribed — an
-alignment check level 2 made before its runs rather than after them. Of the two
-items carried in with it, the already-measured transcription-drift check was
-**settled on option 3** (2026-09-05): the property scoped to what a `--fix`
-level can select, AQ/DG/DS left untranscribed so no gold-fitted tolerance enters
-the agent's gate, and S8.1's one-level admissibility test generalized to every
-class in the table. The standing `skel/repairs.py` authority question was
-answered the same day — **not used**, and on scope: what the module still offers
-after level 1 ran live is `null_subject` alone, and 297 of those 299 positions
-are outside level 2's selection, so it is not this stage's question. Both are in
-that document's §2.
+Two findings outlive the count, and both are about mechanism rather than
+prompting:
 
-### Stage 9: Fixed-Context Execution (drafted 2026-09-04, NOT OPENED)
+- **The splice's scope is a repair surface of its own.** A level names a *row*
+  while a session answers a whole *unit*, so an answer's one wrong row can refuse
+  its correct siblings. S8.3 added `fixrun.salvage_by_row` — take the answer one
+  finding's rows at a time, each step measured — and the runs justified it three
+  times, including the case it was built for (3 of 4 rows at `purgatorio 10`,
+  after four identical refusals) and the final finding of the stage.
+- **Repeated identical refusals prove nothing.** S8.4 declared a residue out of
+  a run's reach after ten identical answers; the operator re-ran it and the
+  **eleventh** cleared it (S8.5). Only a mechanism argument — a row the splice
+  cannot take, a gate that refuses what a level asks — establishes
+  unreachability.
 
-A forecast, recorded on the operator's instruction so that a later session opens
-it from a stated finding rather than re-deriving one. **Stage 8 is unaffected**
-and continues on the current architecture.
+Records S8.1–S8.5, the close, the state at close and what carries forward live in
+[`stages/08.md`](stages/08.md); nothing of it is duplicated here.
+
+### Stage 9: Fixed-Context Execution (drafted 2026-09-04, OPENED 2026-09-05)
+
+Drafted a day before it opened — which no earlier stage document was — so the
+stage starts from a stated finding rather than a fresh discussion. Opening it is
+what closed Stage 8.
 
 The finding: **both backends punish a request past roughly 16 KB** — the Gemini
 API spends quota and pays it back as 429 retries, the local `ollama` path pays it
@@ -661,12 +586,25 @@ agent against the skill it was measured on. `SKILL.md`'s domain knowledge ports
 verbatim; the two `step5-*.md` files are the tool loop written as instructions,
 and are absorbed by the mechanism.
 
-**Why it is not open.** The loop needs a per-iteration signal that the rows
+**What it opened without.** The loop needs a per-iteration signal that the rows
 improved, and the cheap one is inadmissible: the soft counter is registry-mediated
 and 88 of those 130 rules were fitted against gold's own divergence, so feeding it
 back each turn is §4 item 1 through one indirection. Schema verdicts and
 `derive.py` evidence are admissible; an $O$ that converges on those alone is the
-stage's actual problem and wants a candidate answer before the file is opened.
+stage's actual problem. The draft made a candidate answer the precondition for
+opening; the operator opened the stage anyway, so it is the stage's **first
+work** instead. The direction set at open is that the fixed context carries all
+the evidence the masking rule permits — which draws the gold boundary once
+rather than per `--fix` class, and subsumes the notice-evidence argument Stage 8
+had to make twice.
+
+**What the stage's motivating cost now is, measured rather than projected.**
+Stage 8's residue took eleven independent sessions to settle one row at
+`purgatorio 27`, ten at `purgatorio 7`, eight at `inferno 5` — each discarding
+the previous answer and the verdict that refused it, because a session that kept
+them would grow past the ceiling above. That is re-rolling, not iterating, and it
+is what the loop is meant to replace.
+
 [`stages/09.md`](stages/09.md) carries all of it, including the provenance limits
 on the measurements (the logs predate S5.5), the re-reading of S3.7 — which
 measured compaction against *total* wire when the binding quantity is the
