@@ -90,6 +90,13 @@ class UnitOutcome:
     # no model cost), so `passed` is measured rather than trusted; the caller
     # must not re-emit it to the sink, which already holds the artifact.
     replayed: bool = False
+    # Stage 9 (`--fixed-context`): what the bounded loop did — how many steps it
+    # took, why it stopped, and what each step's answer was accepted or refused
+    # for (`fixedcontext.FixedUnitResult.to_dict`). None under the tool-calling
+    # session, whose per-turn record is the transcript instead. Kept here rather
+    # than in the fix block because it describes the *mechanism* that produced
+    # the rows, in both fresh and repair runs.
+    fixed: dict | None = None
 
     @property
     def passed(self) -> bool:
@@ -98,6 +105,7 @@ class UnitOutcome:
 
     def to_dict(self) -> dict:
         kinds = Counter(v.kind for v in self.hard + self.soft)
+        extra = {} if self.fixed is None else {"fixed": self.fixed}
         sample = [
             violation_record(v)
             for v in (self.hard + self.soft)[:SAMPLE_VIOLATIONS]
@@ -132,6 +140,7 @@ class UnitOutcome:
                 None if self.fallback_seconds is None
                 else round(self.fallback_seconds, 1)
             ),
+            **extra,
         }
 
 

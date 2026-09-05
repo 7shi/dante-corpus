@@ -121,6 +121,12 @@ from dante_corpus.skel.models import SkelRow
 
 from harness.extractor import fixlevel
 from harness.extractor.artifact import TsvArtifact, render_tsv
+from harness.extractor.fixedcontext import (
+    MAX_ITERATIONS as FIXED_MAX_ITERATIONS,
+    FixedUnitResult,
+    fixed_fallback,
+    rows_from_skel,
+)
 from harness.extractor.fixrun import (
     FixPlan,
     Span,
@@ -161,7 +167,7 @@ from harness.extractor.outcome import (
     replay_unit_outcome,
 )
 from harness.extractor.report import ReconstructReport, load_log
-from harness.runner.prompts import skill_digest
+from harness.runner.prompts import fixed_skill_digest, skill_digest
 from harness.runner.statusline import HarnessStatusLine
 from harness.toolcall import DEFAULT_RESULT_CHARS
 from harness.toolcall.loop import progress_separator
@@ -311,6 +317,14 @@ def reconstruct_canto(
                 ),
                 invalid_nudges=getattr(agent_result, "invalid_nudges", None),
                 final_validation_errors=final_validation_errors(agent_result),
+                # Present only under `--fixed-context`: the loop's own record of
+                # what each step did (`fixedcontext.FixedUnitResult`). The
+                # tool-calling session has no `to_dict`, so this stays None there.
+                fixed=(
+                    agent_result.to_dict()
+                    if isinstance(agent_result, FixedUnitResult)
+                    else None
+                ),
             )
             recon.outcomes.append(outcome)
             # §5 durability seam: hand the settled outcome to the caller while
@@ -550,6 +564,25 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "test",
     )
     parser.add_argument(
+        "--fixed-context",
+        action="store_true",
+        help="Stage-9 fixed-context execution: replace the per-unit tool-calling "
+        "session with a bounded step the runtime iterates — specification + "
+        "frozen-layer evidence + the unit's current rows + a verdict in, the "
+        "rewritten rows out, with the schema gate run by the runtime rather than "
+        "elected by the model. Per-request size stops growing with the iteration "
+        "count (../stages/09.md §2). Works for a fresh canto and under --fix "
+        "alike: the two differ only in the rows the first step is given",
+    )
+    parser.add_argument(
+        "--fixed-iterations",
+        type=int,
+        default=FIXED_MAX_ITERATIONS,
+        help=f"cap on steps per unit under --fixed-context (default "
+        f"{FIXED_MAX_ITERATIONS}). A cap on cost, not a target: a unit settles "
+        f"when its verdict is empty or when it comes back unchanged",
+    )
+    parser.add_argument(
         "--started-at",
         type=float,
         default=None,
@@ -660,8 +693,12 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         parser.error("--tool-result-chars must be >= 0 (0 disables the echo)")
     max_length = args.max_length or None
     print(
-        f"reconstruct: transcripts verbatim, "
-        f"payload tier {args.payload_tier}; pacing: min-send-interval "
+        (
+            f"reconstruct: fixed context, {args.fixed_iterations} iteration(s) max, "
+            if args.fixed_context
+            else "reconstruct: transcripts verbatim, "
+        )
+        + f"payload tier {args.payload_tier}; pacing: min-send-interval "
         f"{args.min_send_interval:g}s; "
         f"max-length "
         f"{'off' if max_length is None else f'{max_length} chars'}"
@@ -673,6 +710,30 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # cantos exactly like the unit records). Opened after compaction — the
     # rewrite swaps the file, so an earlier handle would append into limbo.
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
+    if fallback is None and args.fixed_context:
+        if args.fixed_iterations < 1:
+            parser.error("--fixed-iterations must be >= 1")
+        # Under --fix the reopened unit's recorded rows are $\Sigma_0$; a fresh
+        # unit starts empty. That is the whole difference between the two modes
+        # here — one loop, two initial states (../stages/09.md §2).
+        rows_for = None
+        if fix_plan is not None and fix_plan:
+            rows_for = (
+                lambda canticle, canto, line_start, line_end, _plan=fix_plan: (
+                    rows_from_skel(_plan.prior.get((line_start, line_end)))
+                )
+            )
+        fallback = fixed_fallback(
+            model=args.model,
+            verbose=args.verbose,
+            file=status_line.stream if status_line is not None else None,
+            request_log=sink,
+            payload_tier=args.payload_tier,
+            min_send_interval=args.min_send_interval,
+            max_length=max_length,
+            max_iterations=args.fixed_iterations,
+            rows_for=rows_for,
+        )
     if fallback is None:
         fallback_kwargs = {
             "model": args.model,
@@ -889,7 +950,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 # skill's files are the session semantics; recording their digest
                 # canto by canto is how a later reader tells two runs apart, and
                 # how a mid-run change would show up at all.
-                "skill_digest": skill_digest(),
+                "skill_digest": (
+                    fixed_skill_digest() if args.fixed_context else skill_digest()
+                ),
             }
             if retries is not None:
                 complete["api_retries"] = retries[0]

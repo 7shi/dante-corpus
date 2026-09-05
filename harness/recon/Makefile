@@ -38,6 +38,19 @@
 ##                                     so a complete TSV costs no model calls;
 ##                                     delete a stretch's lines to ask for it back
 ## Model override:  make ... inferno MODEL=ollama:gemma4:31b-it-qat
+## Execution mode:  make ... FIXED=1
+##                                     Stage-9 fixed-context execution instead
+##                                     of the per-unit tool-calling session:
+##                                     one bounded step (specification +
+##                                     frozen-layer evidence + the unit's rows
+##                                     + a verdict -> the rewritten rows),
+##                                     iterated by the runtime, whose per-request
+##                                     size does not grow with the iteration
+##                                     count (../stages/09.md §2). Applies to
+##                                     every generation and fix target alike —
+##                                     the two are one loop differing in the
+##                                     rows the first step is given. Cap the
+##                                     steps per unit with FIXED_ITERATIONS=n
 ##
 ## make clean-log                      delete the by-product logs
 ##                                     (<canticle>/NN.log). Touches no TSV and
@@ -86,6 +99,15 @@
 
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
+
+# Stage-9 execution mode (header). Off by default: the tool-calling session is
+# what every committed TSV was produced under, so switching modes is a
+# deliberate operator choice, announced by reconstruct's own configuration line
+# and recorded per canto by the skill digest (which differs between the two
+# modes, so a log says which one ran without being asked).
+FIXED ?=
+FIXED_ITERATIONS ?=
+FIXED_FLAGS := $(if $(FIXED),--fixed-context)$(if $(FIXED_ITERATIONS), --fixed-iterations $(FIXED_ITERATIONS))
 
 # The run's true start, held across every canto recipe of one invocation
 # (including the three -j3 canticle streams) — each canto still runs
@@ -142,7 +164,7 @@ help:
 	uv run python -m harness.extractor.reconstruct \
 		--canticle $(*D) \
 		--canto $$((10#$(*F))) \
-		--verify-gold --model $(MODEL) \
+		--verify-gold --model $(MODEL) $(FIXED_FLAGS) \
 		--started-at $(STARTED_AT) \
 		--log $*.log --tsv $@
 
@@ -230,7 +252,7 @@ fix-canto:
 		--canticle $(CANTICLE) \
 		--canto $$((10#$(CANTO))) \
 		--fix $(FIX) \
-		--verify-gold --model $(MODEL) \
+		--verify-gold --model $(MODEL) $(FIXED_FLAGS) \
 		--started-at $(STARTED_AT) \
 		--log $(CANTICLE)/$$n.log --tsv $(CANTICLE)/$$n.tsv
 
@@ -240,7 +262,8 @@ fix-canto:
 define FIX_CANTICLE
 	@for n in $$(seq -w 1 $(2)); do \
 		$(MAKE) --no-print-directory fix-canto \
-			CANTICLE=$(1) CANTO=$$n FIX=$(FIX) MODEL=$(MODEL) || exit $$?; \
+			CANTICLE=$(1) CANTO=$$n FIX=$(FIX) MODEL=$(MODEL) \
+			FIXED=$(FIXED) FIXED_ITERATIONS=$(FIXED_ITERATIONS) || exit $$?; \
 	done
 endef
 

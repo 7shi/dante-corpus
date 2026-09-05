@@ -80,6 +80,53 @@ B/token 2.83–4.03 (S9.2's 2.87–4.01 confirmed on fresh data). That bounds wh
 the current path asks for, not what a provider tolerates, so the ceiling item
 below stays open.
 
+**Stage 9's loop is implemented (S9.4, this session, 2026-09-05).**
+`reconstruct.py --fixed-context` (`make ... FIXED=1`) runs the bounded step over
+a canto, for a fresh reconstruction and under `--fix` alike; `stages/09.md` §8
+carries what was built, the four properties it is tested on, and the
+corpus-wide request sizes. As of this commit it had **never been run against a
+model** — every test stubs `generate`.
+
+**IN FLIGHT — the first live run of the fixed-context loop (started
+2026-09-05, right after this commit).** The operator is deleting
+`harness/recon/inferno/01.tsv` and regenerating it, and will report the result
+in the next session. This is the run S9.3's baseline exists to be compared
+against. **Do not read any inferno-1 or corpus-wide number in this file as
+current until that report arrives** — the live ones below describe the
+baseline, which the run replaces.
+
+When the report comes, before anything else:
+
+1. **Establish which mode actually ran, from the log rather than from
+   assumption.** Every `canto_complete` carries `skill_digest`:
+   `ee6f1a46…` (`grammar-fixed`) is the fixed-context loop, `b16c0639…`
+   (`grammar-agent`) is the tool-calling session. A fixed-context run's `unit`
+   records also carry a `fixed` block (per-step rows in/out, accepted or
+   refused and why, the observations open at each step, the stop reason) and its
+   `llm_request` records sit one per session instead of ~3.
+2. **Check that `harness/recon/inferno/01.log` was deleted before the run**
+   (Orientation item 5: a re-run under a changed implementation deletes the log
+   first). If both implementations' records are spliced into one file, segment
+   it at its `summary` records and say so in the readout rather than reporting
+   mixed aggregates.
+3. Then the standing three: `cd harness/recon && make check` (hard/soft),
+   `uv run pytest -q` from the root (1,022), `make fix-level` at **both** levels
+   — the baseline left inferno 1 at 2 and 8, so those numbers are what a
+   fixed-context regeneration moves.
+4. **Read the token counts off the new log** (standing note 1 below): this is
+   the first log of a mode whose per-request size is bounded by construction,
+   and S9.4 predicted 5,890 / 7,922 / 17,092 B min/median/max for the whole
+   request corpus-wide — ≈ 2,200 tokens median at S9.3's measured 3.58 B/token.
+   That prediction is now checkable against `input_tokens` directly.
+5. The substantive question, and the one no test could answer: **does the model
+   answer one bounded step as well as it answers a three-turn session?** Read it
+   from the `fixed` blocks (how many units settle, how many stop at a fixed
+   point with observations still open, how many exhaust the 4-step budget) and
+   from the gates, not from the soft delta alone — S9.3 measured ~9 soft of
+   run-to-run variation on this very canto under an *unchanged* implementation.
+6. Write it up as **S9.5** in [`stages/09.md`](stages/09.md), and only then
+   decide what to commit.
+
 - **Next open item for Stage 9 — unchanged**: a live run at token volumes this
   corpus's disk-only logs never reached, to find where the real per-request
   ceiling sits (in tokens) and whether it binds at all — operator work, per
@@ -116,18 +163,24 @@ the open stage and the live numbers only.
       2026-09-04, **OPENED 2026-09-05**). Replace the per-unit tool-calling
       session, on the reconstruction and repair path, with a fixed-length
       execution context whose per-request size does not grow with the number of
-      iterations. **$O$ is settled (S9.1)**; what remains is sizing the budget
-      against a correctly-measured (token, not byte) ceiling that only a live
-      run can establish (S9.2) — see the Handoff's open item. §2 below and
-      [`stages/09.md`](stages/09.md) carry the measurement it rests on and the
+      iterations. **$O$ is settled (S9.1)** and **the loop is implemented and
+      tested (S9.4, `--fixed-context`)**; what remains is a live run — both to
+      measure the ceiling the budget must be sized against (S9.2) and to find
+      out whether the model answers this prompt shape as well as a session does,
+      which no deterministic test can say. §2 below and
+      [`stages/09.md`](stages/09.md) carry the measurements it rests on and the
       direction set at open.
+*Every number below is the S9.3 baseline, and inferno 1 is being regenerated
+live as of 2026-09-05 (see the Handoff): treat them as the state the in-flight
+run is measured against, not as the current corpus.*
+
 - **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,147 soft**,
   `make check` exits 0, `make fix-level` **2** at level 1 and **8** at level 2
   — all of them in inferno 1, re-opened by S9.3's baseline regeneration of that
   canto (both levels read 0 before it).
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7608**
   corpus-wide — inferno 0.7644, purgatorio 0.7592, paradiso 0.7586.
-- **Test suite**: **1,001 passed**. Its composition and full history live in
+- **Test suite**: **1,022 passed** (S9.4 added 21 for the fixed-context loop). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
 
@@ -376,6 +429,16 @@ number.
 That also makes the schema gate a runtime step rather than a tool the model may
 decline to call, and collapses reconstruction and `--fix` into one loop
 distinguished only by its initial state.
+
+**Built (S9.4, 2026-09-05)**: that shape is now `reconstruct.py --fixed-context`
+(`recon/Makefile`: `FIXED=1`), with $P$ as a skill directory of its own, the
+observation half of $O$ recomputed from Layers 2-4 in `extractor/observe.py`,
+and the loop in `extractor/fixedcontext.py` — 21 deterministic tests, no model
+call. $P$ is **4,685 B, all of it under the digest** (against 10,082 B of which
+6,176 was unfingerprinted tool apparatus), and the whole per-request context is
+**5,890 / 7,922 / 17,092 B** min/median/max across all 3,477 units — bounded by
+the unit, not by the iteration. What no test can answer is whether the model
+*answers* this shape as well as a session does; that is the live run.
 
 **Set at open (2026-09-05)**: the fixed context carries **all** the evidence the
 masking rule permits — drawing the gold boundary once, rather than re-arguing per

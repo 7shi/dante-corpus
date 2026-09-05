@@ -14,6 +14,14 @@ and how the opening user message is worded.
 `unit_task(unit)` renders the one user message that opens a session: solve exactly
 one parse unit and finish with validated candidate rows.
 
+Stage 9 adds a second assembly beside it, for the fixed-context loop
+(`extractor/fixedcontext.py`): `fixed_system_prompt()` is the whole of that
+mode's $P$ — role, protocol, answer contract — and it comes entirely from the
+sibling `skills/grammar-fixed/` directory, so `fixed_skill_digest()` covers
+every byte of it rather than the 36.2% its tool-calling counterpart reaches
+(`../stages/09.md` §3). There is no tool-spec or wire-contract section: that
+mode has no tools.
+
 The few-shot demonstration is deliberately **non-colliding**: its search content is
 an empty-result lookup for a lemma far from any fixture unit, so an echo of it in a
 final answer is both harmless and instantly diagnosable (the live probe's 'cammin'
@@ -29,16 +37,28 @@ from harness.skills import Skill
 from harness.toolcall import tool_specs_section, xml_contract_section
 
 __all__ = [
+    "FIXED_SKILL",
     "GRAMMAR_SKILL",
     "ROLE_INTRO",
     "REASONING_PROTOCOL",
     "few_shot_messages",
+    "fixed_skill_digest",
+    "fixed_system_prompt",
     "skill_digest",
     "system_prompt",
     "unit_task",
 ]
 
-GRAMMAR_SKILL = Skill.load(Path(__file__).resolve().parent / "skills" / "grammar-agent")
+_SKILLS = Path(__file__).resolve().parent / "skills"
+
+GRAMMAR_SKILL = Skill.load(_SKILLS / "grammar-agent")
+# Stage 9's $P$: the same domain knowledge with the tool step removed and the
+# answer contract in its place (`../stages/09.md` §3). It is a sibling skill
+# rather than a variant of the one above because the two modes differ in
+# wording that is domain-facing — "through a closed toolset", Step 3's
+# `search_corpus` clause, all of Step 5 — and a skill is read as the model
+# reads it, so a conditional inside one file would be neither.
+FIXED_SKILL = Skill.load(_SKILLS / "grammar-fixed")
 
 ROLE_INTRO = GRAMMAR_SKILL.body
 STEPS_1_TO_4 = GRAMMAR_SKILL.resource("protocol.md")
@@ -61,6 +81,32 @@ def skill_digest() -> str:
     tells two runs' records apart when the wording did change between them.
     """
     return GRAMMAR_SKILL.digest()
+
+
+def fixed_skill_digest() -> str:
+    """Fingerprint of the fixed-context skill's wording (Standing Invariant §6).
+
+    Its counterpart above covers 36.2% of the tool-calling mode's fixed prompt —
+    the rest is tool specs and the wire contract, generated in Python and
+    fingerprinted by nothing (`../stages/09.md` §3). Here the skill *is* $P$, so
+    this digest covers the prompt entire.
+    """
+    return FIXED_SKILL.digest()
+
+
+def fixed_system_prompt() -> str:
+    """Assemble $P$ for the fixed-context loop: role + protocol + answer contract.
+
+    No tool specs and no wire contract — there are no tools — so every byte of
+    this string comes from the skill directory and rides its digest.
+    """
+    return "\n\n".join(
+        [
+            FIXED_SKILL.body,
+            FIXED_SKILL.resource("protocol.md"),
+            FIXED_SKILL.resource("answer.md"),
+        ]
+    )
 
 
 def system_prompt(specs: Sequence[dict], workflow: str = "unit") -> str:
