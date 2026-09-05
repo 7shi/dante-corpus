@@ -18,9 +18,11 @@
 # all of them, at any time — changes nothing this Makefile does.
 #
 # Launch configuration is the one carried from ../stages/04.md §2 (S3.9/S3.11):
-# verbatim transcripts, payload tier R1, reactive-only pacing (HTTP 429s are
-# absorbed by llm7shi.Client's own backoff), max-length 6000 — all
-# reconstruct.py defaults except --verify-gold, passed explicitly below.
+# payload tier R1, reactive-only pacing (HTTP 429s are absorbed by
+# llm7shi.Client's own backoff), max-length 6000 — all reconstruct.py defaults
+# except --verify-gold, passed explicitly below. Its execution mode is no longer
+# that launch's: the fixed-context loop replaced the verbatim tool-calling
+# transcript as the default in S9.5 (see Execution mode, below).
 # --write stays off: skel/ remains immutable gold, written_cantos == 0
 # expected.
 #
@@ -38,19 +40,21 @@
 ##                                     so a complete TSV costs no model calls;
 ##                                     delete a stretch's lines to ask for it back
 ## Model override:  make ... inferno MODEL=ollama:gemma4:31b-it-qat
-## Execution mode:  make ... FIXED=1
-##                                     Stage-9 fixed-context execution instead
-##                                     of the per-unit tool-calling session:
+## Execution mode:  Stage-9 fixed-context execution is the DEFAULT for every
+##                                     generation and fix target (since S9.5):
 ##                                     one bounded step (specification +
 ##                                     frozen-layer evidence + the unit's rows
 ##                                     + a verdict -> the rewritten rows),
 ##                                     iterated by the runtime, whose per-request
 ##                                     size does not grow with the iteration
-##                                     count (../stages/09.md §2). Applies to
-##                                     every generation and fix target alike —
-##                                     the two are one loop differing in the
+##                                     count (../stages/09.md §2). Generation and
+##                                     fix are one loop differing only in the
 ##                                     rows the first step is given. Cap the
 ##                                     steps per unit with FIXED_ITERATIONS=n
+##                  make ... TOOLCALL=1
+##                                     run the pre-Stage-9 tool-calling session
+##                                     instead — a comparison option, SLATED FOR
+##                                     REMOVAL (../stages/09.md §8, S9.6)
 ##
 ## make clean-log                      delete the by-product logs
 ##                                     (<canticle>/NN.log). Touches no TSV and
@@ -100,14 +104,15 @@
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
 
-# Stage-9 execution mode (header). Off by default: the tool-calling session is
-# what every committed TSV was produced under, so switching modes is a
-# deliberate operator choice, announced by reconstruct's own configuration line
+# Stage-9 execution mode (header). The fixed-context loop is the default since
+# S9.5 measured it on inferno 1; TOOLCALL=1 asks for the pre-Stage-9
+# tool-calling session, which is kept only for comparison runs and is slated for
+# removal. Whichever runs is announced by reconstruct's own configuration line
 # and recorded per canto by the skill digest (which differs between the two
 # modes, so a log says which one ran without being asked).
-FIXED ?=
+TOOLCALL ?=
 FIXED_ITERATIONS ?=
-FIXED_FLAGS := $(if $(FIXED),--fixed-context)$(if $(FIXED_ITERATIONS), --fixed-iterations $(FIXED_ITERATIONS))
+MODE_FLAGS := $(if $(TOOLCALL),--tool-calling)$(if $(FIXED_ITERATIONS), --fixed-iterations $(FIXED_ITERATIONS))
 
 # The run's true start, held across every canto recipe of one invocation
 # (including the three -j3 canticle streams) — each canto still runs
@@ -164,7 +169,7 @@ help:
 	uv run python -m harness.extractor.reconstruct \
 		--canticle $(*D) \
 		--canto $$((10#$(*F))) \
-		--verify-gold --model $(MODEL) $(FIXED_FLAGS) \
+		--verify-gold --model $(MODEL) $(MODE_FLAGS) \
 		--started-at $(STARTED_AT) \
 		--log $*.log --tsv $@
 
@@ -252,7 +257,7 @@ fix-canto:
 		--canticle $(CANTICLE) \
 		--canto $$((10#$(CANTO))) \
 		--fix $(FIX) \
-		--verify-gold --model $(MODEL) $(FIXED_FLAGS) \
+		--verify-gold --model $(MODEL) $(MODE_FLAGS) \
 		--started-at $(STARTED_AT) \
 		--log $(CANTICLE)/$$n.log --tsv $(CANTICLE)/$$n.tsv
 
@@ -263,7 +268,7 @@ define FIX_CANTICLE
 	@for n in $$(seq -w 1 $(2)); do \
 		$(MAKE) --no-print-directory fix-canto \
 			CANTICLE=$(1) CANTO=$$n FIX=$(FIX) MODEL=$(MODEL) \
-			FIXED=$(FIXED) FIXED_ITERATIONS=$(FIXED_ITERATIONS) || exit $$?; \
+			TOOLCALL=$(TOOLCALL) FIXED_ITERATIONS=$(FIXED_ITERATIONS) || exit $$?; \
 	done
 endef
 

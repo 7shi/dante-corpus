@@ -80,33 +80,35 @@ B/token 2.83–4.03 (S9.2's 2.87–4.01 confirmed on fresh data). That bounds wh
 the current path asks for, not what a provider tolerates, so the ceiling item
 below stays open.
 
-**Stage 9's loop is implemented (S9.4, this session, 2026-09-05).**
-`reconstruct.py --fixed-context` (`make ... FIXED=1`) runs the bounded step over
-a canto, for a fresh reconstruction and under `--fix` alike; `stages/09.md` §8
-carries what was built, the four properties it is tested on, and the
-corpus-wide request sizes. As of this commit it had **never been run against a
-model** — every test stubs `generate`.
-
-**The fixed-context mode is opt-in, and the plain targets do not use it.** Every
-committed TSV was produced by the tool-calling session, so `make inferno/01.tsv`
-and `make fix-canto ...` keep running that; the Stage-9 loop needs `FIXED=1`
-(or `--fixed-context` on the CLI). The launch, in full:
+**THE FIXED-CONTEXT LOOP IS NOW THE DEFAULT (S9.6, 2026-09-05).** The operator
+took that decision on S9.5's readout, and it is implemented: every generation
+and fix target runs the bounded step with no flag at all. The old per-unit
+tool-calling session is now the opt-in one — `TOOLCALL=1`, or `--tool-calling`
+on the CLI — and is **slated for removal**, deferred rather than scheduled.
 
 ```
 cd harness/recon
-rm -f inferno/01.log inferno/01.tsv     # a re-run under a changed
-                                        # implementation deletes the log first,
-                                        # and a surviving TSV would leave those
-                                        # units settled and un-rerun
-make inferno/01.tsv FIXED=1             # + FIXED_ITERATIONS=n to change the cap
+make inferno/01.tsv                     # fixed context, no flag needed
+                                        # + FIXED_ITERATIONS=n to change the cap
+make fix                                # the same loop over committed artifacts
+make inferno/01.tsv TOOLCALL=1          # the old session, for comparison only
 ```
 
-Three ways to see, from the first seconds, that it is actually the mode
-running — the first live launch of it was made without the flag and had to be
-restarted: the configuration line reads `reconstruct: fixed context, 4
-iteration(s) max, …` rather than `transcripts verbatim, …`; **no `<tool_call>`
-block ever appears**, and per-unit `[fixed] … iter 1: N row(s), accepted` lines
-do; and the log's `skill_digest` is `ee6f1a46…`.
+Deleting a canto's `.log` and `.tsv` before a re-run still applies whenever the
+implementation changed under it: the log then holds one implementation's
+behaviour, and a surviving TSV would leave its units settled and un-rerun.
+
+Three ways to see, from the first seconds, which mode is running — worth
+knowing in both directions now that the default has flipped: the configuration
+line reads `reconstruct: fixed context, 4 iteration(s) max, …` rather than
+`transcripts verbatim, …`; **no `<tool_call>` block ever appears**, and per-unit
+`[fixed] … iter 1: N row(s), accepted` lines do; and the log's `skill_digest`
+is `ee6f1a46…` rather than `b16c0639…`.
+
+*(For the record: **S9.4** built the loop as the opt-in `--fixed-context` /
+`FIXED=1`, tested with every `generate` stubbed. S9.6 inverted the flags and
+nothing else; `FIXED_ITERATIONS` deliberately keeps its name, because a renamed
+make variable fails silently.)*
 
 **THE FIRST LIVE RUN HAS RUN AND BEEN READ — written up as S9.5 (2026-09-05).**
 The operator regenerated `harness/recon/inferno/01.tsv` with
@@ -144,12 +146,7 @@ below are now that run's. In short:
   been made yet, so the stream count is headroom, not a demonstrated
   configuration.
 
-**Two things are on disk and uncommitted**, for the operator to stage as they
-see fit: the regenerated `harness/recon/inferno/01.tsv` (54 ins / 51 del
-against `2f7e0b8`) and this readout's documentation edits. `01.log.orig` is the
-operator's preserved copy of the S9.3 tool-calling log, kept for the two-mode
-comparison in S9.5 and **slated for deletion once this work is committed** —
-it is untracked and gitignored either way.
+S9.5's readout was committed as `05ff38f`, together with the regenerated TSV.
 
 The standing commands, so any later readout starts from the same place:
 
@@ -157,19 +154,41 @@ The standing commands, so any later readout starts from the same place:
 cd harness/recon && make check                     # hard/soft, corpus-wide
 make fix-level FIX=1 && make fix-level FIX=2       # now 0 and 3
 make agree                                         # readout only, never a target
-cd ../.. && uv run pytest -q                       # 1,022
+cd ../.. && uv run pytest -q                       # 1,023
 grep -o '"skill_digest": "[0-9a-f]\{8\}' harness/recon/inferno/01.log | sort -u
 grep -c '"record": "summary"' harness/recon/inferno/01.log   # >1 = two attempts
 ```
 
-**What Stage 9 still owes, after S9.5.** The result is one canto of 100, run
-once, so nothing corpus-wide follows from it. The throughput figures are that
-canto's rate divided into the 16K TPM quota, so **the concurrent run itself is
-the next thing to actually do** — 4.3 streams is headroom on paper, and
-contention, per-stream 429s and the pacing interval are unmeasured. Beyond
-that, the operator's calls: whether the fixed-context mode becomes the default
-for the plain targets (it is not today — `FIXED=1` is opt-in), and when to do
-the deliberate high-token run §5 of [`stages/09.md`](stages/09.md) waits on.
+**THE NEXT WORK IS THE OPERATOR'S: run `make fix` until level 2 reads 0, and
+Stage 9 closes on that.** The close condition set on 2026-09-05, with the mode
+now the default:
+
+```
+cd harness/recon
+make fix-level FIX=2        # where it stands — 3 today, all inferno 1
+make fix                    # repeat; a canto with no finding costs no model call
+```
+
+Read `make fix-level` at **both** levels after every pass, never only the one
+you ran (Orientation item 6: a closed level does not stay closed). Two standing
+facts make repetition the right shape rather than a sign of trouble: a `--fix`
+run cannot leave the corpus worse than it found it, and repeated identical
+refusals do not prove a residue unreachable — one unit settled on its eleventh
+attempt in S8.5. When `make fix-level FIX=2` reads 0, close Stage 9 by opening
+`stages/10.md` (the convention in the Milestone Ledger below).
+
+**Stage 10 opens on fix level 3.** It does not exist yet: `fixlevel.py` defines
+levels 1 and 2 only, so Stage 10's first work is arguing a level-3 class from
+`validate.py`/`derive.py` with gold unopened (Standing Invariant §1) — design
+work, not a switch.
+
+**Also still owed by Stage 9, and not close conditions.** S9.5 is one canto of
+100, run once, so nothing corpus-wide follows from it; the 1.7× throughput
+figure is that canto's rate divided into the 16K TPM quota, so **a concurrent
+run has still never been made** (contention, per-stream 429s and the pacing
+interval are all unmeasured). And the deliberate high-token run §5 of
+[`stages/09.md`](stages/09.md) waits on is untouched — S9.5 moved away from it,
+its largest request being 5,093 `input_tokens`.
 
 - **Next open item for Stage 9 — unchanged**: a live run at token volumes this
   corpus's disk-only logs never reached, to find where the real per-request
@@ -208,7 +227,8 @@ the open stage and the live numbers only.
       session, on the reconstruction and repair path, with a fixed-length
       execution context whose per-request size does not grow with the number of
       iterations. **$O$ is settled (S9.1)**, **the loop is implemented and
-      tested (S9.4, `--fixed-context`)**, and **its first live run is read out
+      tested (S9.4)**, **the default execution mode since S9.6**, and **its
+      first live run is read out
       (S9.5): on one canto the model answers the bounded step better than the
       three-turn session, at half the requests and −40% total tokens — which
       under the 16K TPM quota is ≈ 1.7× corpus throughput once run in
@@ -229,7 +249,8 @@ uncommitted; the S9.3 baseline it replaces is in `2f7e0b8`.*
   (2 and 8); the fixed-context regeneration closed level 1 and cut level 2.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7610**
   corpus-wide — inferno 0.7651, purgatorio 0.7592, paradiso 0.7586.
-- **Test suite**: **1,022 passed** (S9.4 added 21 for the fixed-context loop). Its composition and full history live in
+- **Test suite**: **1,023 passed** (S9.4 added 21 for the fixed-context loop,
+  S9.6 one for the mode default). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
 
@@ -486,8 +507,9 @@ That also makes the schema gate a runtime step rather than a tool the model may
 decline to call, and collapses reconstruction and `--fix` into one loop
 distinguished only by its initial state.
 
-**Built (S9.4, 2026-09-05)**: that shape is now `reconstruct.py --fixed-context`
-(`recon/Makefile`: `FIXED=1`), with $P$ as a skill directory of its own, the
+**Built (S9.4, 2026-09-05)**: that shape is now what `reconstruct.py` runs by
+default (S9.6; built as the opt-in `--fixed-context` / `FIXED=1`, and the old
+session is now `--tool-calling` / `TOOLCALL=1`), with $P$ as a skill directory of its own, the
 observation half of $O$ recomputed from Layers 2-4 in `extractor/observe.py`,
 and the loop in `extractor/fixedcontext.py` — 21 deterministic tests, no model
 call. $P$ is **4,685 B, all of it under the digest** (against 10,082 B of which
@@ -496,7 +518,8 @@ call. $P$ is **4,685 B, all of it under the digest** (against 10,082 B of which
 the unit, not by the iteration. What no test can answer is whether the model
 *answers* this shape as well as a session does; that is the live run.
 
-**Run live (S9.5, 2026-09-05)**: inferno 1 regenerated under `FIXED=1`. Against
+**Run live (S9.5, 2026-09-05)**: inferno 1 regenerated under the fixed-context
+loop. Against
 the S9.3 baseline on the same canto, 22 units of 34 clear all three gates (was
 18), level 1 closes and level 2 falls 8 → 3, canto gold F1 goes 0.7887 →
 0.8103, soft 38 → 19 — on 51 requests instead of 108, each of them exactly two

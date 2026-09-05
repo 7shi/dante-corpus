@@ -317,9 +317,10 @@ def reconstruct_canto(
                 ),
                 invalid_nudges=getattr(agent_result, "invalid_nudges", None),
                 final_validation_errors=final_validation_errors(agent_result),
-                # Present only under `--fixed-context`: the loop's own record of
-                # what each step did (`fixedcontext.FixedUnitResult`). The
-                # tool-calling session has no `to_dict`, so this stays None there.
+                # The fixed-context loop's own record of what each step did
+                # (`fixedcontext.FixedUnitResult`). Absent under
+                # `--tool-calling`: that session has no `to_dict`, so this stays
+                # None there.
                 fixed=(
                     agent_result.to_dict()
                     if isinstance(agent_result, FixedUnitResult)
@@ -564,23 +565,22 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "test",
     )
     parser.add_argument(
-        "--fixed-context",
+        "--tool-calling",
         action="store_true",
-        help="Stage-9 fixed-context execution: replace the per-unit tool-calling "
-        "session with a bounded step the runtime iterates — specification + "
-        "frozen-layer evidence + the unit's current rows + a verdict in, the "
-        "rewritten rows out, with the schema gate run by the runtime rather than "
-        "elected by the model. Per-request size stops growing with the iteration "
-        "count (../stages/09.md §2). Works for a fresh canto and under --fix "
-        "alike: the two differ only in the rows the first step is given",
+        help="run the pre-Stage-9 per-unit tool-calling session instead of the "
+        "default fixed-context loop: a multi-turn transcript in which the model "
+        "elects its own tool calls, including the schema gate. Kept as an "
+        "option for comparison runs after S9.5 made the fixed-context loop the "
+        "default, and SLATED FOR REMOVAL (../stages/09.md §8, S9.6)",
     )
     parser.add_argument(
         "--fixed-iterations",
         type=int,
         default=FIXED_MAX_ITERATIONS,
-        help=f"cap on steps per unit under --fixed-context (default "
-        f"{FIXED_MAX_ITERATIONS}). A cap on cost, not a target: a unit settles "
-        f"when its verdict is empty or when it comes back unchanged",
+        help=f"cap on steps per unit in the default fixed-context loop (default "
+        f"{FIXED_MAX_ITERATIONS}; ignored under --tool-calling). A cap on cost, "
+        f"not a target: a unit settles when its verdict is empty or when it "
+        f"comes back unchanged",
     )
     parser.add_argument(
         "--started-at",
@@ -694,9 +694,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     max_length = args.max_length or None
     print(
         (
-            f"reconstruct: fixed context, {args.fixed_iterations} iteration(s) max, "
-            if args.fixed_context
-            else "reconstruct: transcripts verbatim, "
+            "reconstruct: transcripts verbatim, "
+            if args.tool_calling
+            else f"reconstruct: fixed context, {args.fixed_iterations} iteration(s) max, "
         )
         + f"payload tier {args.payload_tier}; pacing: min-send-interval "
         f"{args.min_send_interval:g}s; "
@@ -710,7 +710,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # cantos exactly like the unit records). Opened after compaction — the
     # rewrite swaps the file, so an earlier handle would append into limbo.
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
-    if fallback is None and args.fixed_context:
+    if fallback is None and not args.tool_calling:
         if args.fixed_iterations < 1:
             parser.error("--fixed-iterations must be >= 1")
         # Under --fix the reopened unit's recorded rows are $\Sigma_0$; a fresh
@@ -951,7 +951,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 # canto by canto is how a later reader tells two runs apart, and
                 # how a mid-run change would show up at all.
                 "skill_digest": (
-                    fixed_skill_digest() if args.fixed_context else skill_digest()
+                    skill_digest() if args.tool_calling else fixed_skill_digest()
                 ),
             }
             if retries is not None:

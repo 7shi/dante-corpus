@@ -590,6 +590,7 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
             "--run-log", str(run_log),
             "--min-support", "99",
             "--log", str(out_log),
+            "--tool-calling",
         ],
     )
     assert exit_code == 0
@@ -630,6 +631,7 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
         "--canticle", "inferno", "--canto", "1",
         "--run-log", str(run_log),
         "--min-support", "99",
+        "--tool-calling",
     ]
     assert rc.main(argv) == 0
     assert "compact" not in captured  # record S3.7: no compaction layer
@@ -654,6 +656,61 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     assert "min-send-interval 45s" in out
 
 
+def test_cli_execution_mode_defaults_to_the_fixed_context_loop(
+    tmp_path, monkeypatch, capsys
+):
+    """S9.6: the fixed-context loop is the default and `--tool-calling` opts out.
+
+    The mode decides three things a live run is read by, so all three are
+    asserted together: which fallback gets built, what the configuration line
+    announces (the operator's first-seconds check, harness/PLAN.md), and which
+    skill digest the canto_complete records — the field a later reader uses to
+    tell two runs apart without being told."""
+    monkeypatch.setattr(rc, "HarnessStatusLine", None)
+    run_log = tmp_path / "bench-x.log"
+    _write_log(run_log, [_case_record()])
+    built: list[str] = []
+
+    def spy_agent(**kwargs):
+        built.append("agent")
+        return _gold_fallback()
+
+    def spy_fixed(**kwargs):
+        built.append("fixed")
+        return _gold_fallback()
+
+    monkeypatch.setattr(rc, "agent_fallback", spy_agent)
+    monkeypatch.setattr(rc, "fixed_fallback", spy_fixed)
+    argv = [
+        "--canticle", "inferno", "--canto", "1",
+        "--run-log", str(run_log),
+        "--min-support", "99",
+    ]
+
+    out_log = tmp_path / "default.log"
+    assert rc.main(argv + ["--log", str(out_log)]) == 0
+    assert built == ["fixed"]
+    assert "fixed context, 4 iteration(s) max" in capsys.readouterr().out
+    complete = [
+        json.loads(line)
+        for line in out_log.read_text(encoding="utf-8").splitlines()
+        if json.loads(line)["record"] == "canto_complete"
+    ]
+    assert complete and complete[0]["skill_digest"] == rc.fixed_skill_digest()
+
+    built.clear()
+    tool_log = tmp_path / "toolcall.log"
+    assert rc.main(argv + ["--tool-calling", "--log", str(tool_log)]) == 0
+    assert built == ["agent"]
+    assert "transcripts verbatim" in capsys.readouterr().out
+    complete = [
+        json.loads(line)
+        for line in tool_log.read_text(encoding="utf-8").splitlines()
+        if json.loads(line)["record"] == "canto_complete"
+    ]
+    assert complete and complete[0]["skill_digest"] == rc.skill_digest()
+
+
 def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch, capsys):
     """The generation-side runaway cap (harness/stages/03.md record S3.10): the policy
     default (6,000 answer-text chars) lives at this CLI and passes through to
@@ -672,6 +729,7 @@ def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch
         "--canticle", "inferno", "--canto", "1",
         "--run-log", str(run_log),
         "--min-support", "99",
+        "--tool-calling",
     ]
     assert rc.main(argv) == 0
     assert captured["max_length"] == 6000
@@ -732,6 +790,7 @@ def test_cli_turns_the_invalid_final_nudge_on_where_the_benchmark_leaves_it_off(
         "--canticle", "inferno", "--canto", "1",
         "--run-log", str(run_log),
         "--min-support", "99",
+        "--tool-calling",
     ]
     assert rc.main(argv) == 0
     assert captured["max_invalid_nudges"] == 1
