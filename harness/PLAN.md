@@ -13,18 +13,105 @@ condition (`make fix-level FIX=2` at 0) on S8.5; opening
 [`stages/09.md`](stages/09.md) performed the close. Details in
 [`stages/08.md`](stages/08.md) §5 and §2's table below — not repeated here.
 
-**This session (2026-09-05)** read out the second `--fix 2` pass as **S8.4**
+**A 2026-09-05 session** read out the second `--fix 2` pass as **S8.4**
 (`a466a43`, eight recon TSVs), wrote **S8.5** after the operator's re-run
 falsified S8.4's claim that the residue was unreachable (`c2cd5ec`), closed
 Stage 8 and opened Stage 9 (`2621264`), updated the root plan (`8902d81`), and
-reorganized this file so per-stage detail lives only in the stage documents.
+reorganized this file so per-stage detail lives only in the stage documents
+(`78089bd`). A second 2026-09-05 session did Stage 9's first two records:
+**S9.1** classifies every `validate.py` finding by registry dependence and
+settles $O$ as (hard schema verdict) + (frozen-layer observation recomputed in
+`fixlevel.py`'s `case_children`/`argument_edge` style, never `derive.py`'s
+answer) + (fixed-point stopping rule, not a shrinking count) —
+[`stages/09.md`](stages/09.md) §8. **S9.2** discharged §1.4's provenance
+obligation under an operator correction: the stage's central "~16 KB" ceiling
+was stated in **bytes** where the actual per-request limit is in **tokens**
+("16KBではなく16Kトークン"), and every request on disk with a token count — 210
+of them — sits under 13,000 tokens, none over 16,000. S9.2 also measured the
+corpus-wide evidence/$\Sigma$ distribution `read_unit` would carry (median
+3,029 B, max 12,199 B) and reproduced §1.2's tool-apparatus fraction byte-exact
+against 2026-08-25 (6,176 B, 61.3%). Candidate Standing Invariant §7 was **not**
+promoted to this file's §4, per the operator's direction to keep observing
+rather than bind a number no live run has measured.
 
-- **Next open item — one**: Stage 9's $O$, a per-iteration improvement signal
-  admissible under §4 item 1. The soft counter is **not** (registry-mediated;
-  88 of its 130 rules fitted against gold's own divergence); schema verdicts and
-  `derive.py` observations are. [`stages/09.md`](stages/09.md) §5 states the
-  question, §8 states what a first record owes — including that §1's
-  measurements predate S5.5 and want re-measuring before they are acted on.
+**This session (2026-09-05, continued)** did two more things, both prompted by
+the operator, neither yet committed:
+
+1. **Rewrote every "16 KB ceiling" assertion in `stages/09.md` in place.** The
+   prior session had left the original byte-framed claims standing and put the
+   correction in S9.2's ledger entry alone; the operator judged that a wrong
+   claim left in the body gets misread — "間違った主張が残っていると誤読され
+   る". §1.2, §1.3, §5, §6, and §7 of `stages/09.md` now state the corrected
+   fact at the point where the wrong one used to be, with S9.2 (§8) as the
+   record of how it was found; §7's withdrawn candidate invariant is kept
+   strikethrough rather than deleted, so the ledger's account of a proposal and
+   its retraction still has its subject. This file's own §2 Stage 9 paragraph
+   has the same fix applied. **There is no append-only rule for these
+   documents** — prose is corrected where it stands, and the ledger records
+   what changed and why. (Nothing in this project is append-only in that
+   sense: the run logs append only across a resume after a mid-run failure,
+   and a re-run under changed implementation deletes the log first — see
+   Orientation item 5.)
+2. **Found and fixed a real test-isolation bug**, unrelated to Stage 9's
+   substance but surfaced by an operator-run live regeneration overlapping this
+   session: `tests/test_harness_fixlevel.py::test_cli_flags_take_max` called
+   `recon_check.main`/`run` with no `--root`, defaulting to `harness/recon/`'s
+   own directory — the **live, operator-mutable committed corpus** — instead of
+   an isolated fixture, unlike every sibling test in the suite. It failed
+   mid-session when the operator started regenerating `inferno/01.tsv`. Fixed
+   to build a gold-shaped copy in `tmp_path` and pass `--root` explicitly,
+   **committed as `897740d`**. This is the one commit from this session; the
+   `stages/09.md`/`PLAN.md` documentation edits are still unstaged, and the
+   `harness/recon/inferno/01.tsv` change is the operator's in-progress live
+   regeneration, not this session's edit — see the note below.
+
+**In flight, not this session's to finish**: the operator is regenerating
+`harness/recon/inferno/01.tsv` from scratch (`make inferno/01.tsv`, after
+deleting the committed TSV) — an ordinary corpus operation, unrelated to Stage
+9's design work, that happened to overlap this session and is why the test bug
+above surfaced. Last reported progress: **14/136 rows** (was 10/136 one
+message earlier). **The operator said they will report when it finishes.**
+
+- **Next open item for Stage 9 — unchanged**: a live run at token volumes this
+  corpus's disk-only logs never reached, to find where the real per-request
+  ceiling sits (in tokens) and whether it binds at all — operator work, per
+  their direction. Until then the fixed-context loop's $O$/$\Sigma$ budget (§5
+  of [`stages/09.md`](stages/09.md)) cannot be sized with confidence: S9.2
+  found the corpus's worst-case unit (`purgatorio 10:82-93`, 12,199 B of
+  evidence alone) already exceeds the draft's entire $O$ allowance.
+
+**When the operator reports the regeneration finished, do this before anything
+else** (do not trust any corpus number cited earlier in this file or in
+`stages/09.md` until then):
+
+1. `cd harness/recon && make check` — confirm hard/soft counts (should return to
+   0 hard / 3,138 soft if inferno 1 regenerated cleanly; a different number is
+   the actual news to report, not a problem to silently reconcile).
+2. `uv run pytest -q` from the repo root — confirm 1,001 passed. The isolation
+   fix above means this no longer depends on `inferno/01.tsv`'s state, so it
+   should pass regardless, but run it anyway as the standing discipline.
+3. Only then decide what to commit. `harness/PLAN.md` and `harness/stages/09.md`
+   (this session's documentation) and `harness/recon/inferno/01.tsv` (the
+   operator's regeneration) are three independent, unstaged changes — stage and
+   commit them as the operator directs, not bundled by default (feedback:
+   commit scope follows staging, never an invented split or an invented
+   bundle).
+
+**Two standing notes for whichever session picks Stage 9's real next step up:**
+
+1. **Read bytes and tokens as different quantities from here on.** The whole
+   correction this stage went through was that a byte figure had been read as
+   if it bounded tokens. The wire/cost instrumentation (Orientation item 5
+   below) logs `input_tokens` on every `llm_response` when the backend reports
+   it — use that field directly rather than a B/token ratio (2.87–4.01, S9.2)
+   when a live log is available; the ratio is an estimate for when it is not.
+2. **The per-canto recon logs are still thin.** `harness/recon/` held 33
+   purgatorio logs only as of the 2026-09-05 handoff (inferno's and paradiso's
+   were swept before the last fix pass); the operator's in-progress inferno-1
+   regeneration will add one fresh inferno log, but a token-ceiling run needs a
+   deliberate full sweep first (Orientation item 6, "sweep the per-canto logs
+   before each corpus-wide fix run"), not whatever is left over from an
+   unrelated regeneration.
 
 ## Current Status
 
@@ -35,9 +122,9 @@ the open stage and the live numbers only.
       2026-09-04, **OPENED 2026-09-05**). Replace the per-unit tool-calling
       session, on the reconstruction and repair path, with a fixed-length
       execution context whose per-request size does not grow with the number of
-      iterations. **Its central question is deliberately unanswered at open**:
-      the loop needs an admissible per-iteration signal, and finding one is the
-      stage's first work rather than a precondition it inherited. §2 below and
+      iterations. **$O$ is settled (S9.1)**; what remains is sizing the budget
+      against a correctly-measured (token, not byte) ceiling that only a live
+      run can establish (S9.2) — see the Handoff's open item. §2 below and
       [`stages/09.md`](stages/09.md) carry the measurement it rests on and the
       direction set at open.
 - **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,138 soft**,
@@ -100,10 +187,13 @@ any one session, so it survives across Handoff clearings.
    429/quality retries inside `Client` stay transparent to the wire records,
    counted by the `wait_retry` counters. Every `canto_complete` carries
    `elapsed_seconds`, summed into the summary's `wall_clock_seconds`. All
-   canto-scoped like every other record. Since S5.5 the log is **append-only
-   and never read back** — resume state is the canto's TSV, and `unit`
-   records (`row_keys`, `adopted_invalid`, gate verdicts) are read afterwards
-   for analysis, not replayed.
+   canto-scoped like every other record. Since S5.5 the log is **write-only
+   within a run** — resume state is the canto's TSV, and `unit` records
+   (`row_keys`, `adopted_invalid`, gate verdicts) are read afterwards for
+   analysis, not replayed. **Appending is for resuming a run that failed
+   part-way, not a durability rule**: a re-run under a changed implementation
+   deletes the log first, so that the file holds one implementation's
+   behaviour rather than two spliced together.
 6. **Running a `--fix` level.** Standing operational facts from every level-1
    and level-2 run, for whichever level runs next. They belong here rather than
    under a stage because they held across Stages 6 and 8 alike:
@@ -264,15 +354,24 @@ every later stage; the evidence is in [`SOFT.md`](SOFT.md) and
 
 **The open stage**, and the only one with prose here. Opening it closed Stage 8.
 
-**The finding it rests on**, measured rather than proposed: **both backends
-punish a request past roughly 16 KB** — the API spends quota and pays it back as
-429 retries, the local `ollama` path pays it in prefill on a weak GPU — and that
-ceiling, not `SESSION_MAX_TURNS = 12`, is what caps a unit's session at ~3 turns.
-The tool apparatus the ceiling is spent on is **6,176 B, 61.3%** of a 9,769 B
-fixed prompt, against 3,656 B of domain knowledge and 2.8 KB of the unit's own
-evidence — and the tools it buys are barely used (`search_corpus`: 4 calls across
+**The finding it rests on**, measured rather than proposed: both backends
+degrade a request as it grows — the API spends quota and pays it back as 429
+retries, the local `ollama` path pays it in prefill on a weak GPU — and this
+degradation, not `SESSION_MAX_TURNS = 12`, is what caps a unit's session at ~3
+turns. **The real per-request ceiling, in tokens, is unmeasured**: S9.2 read
+the only logs carrying provider token counts and found not one of 210 requests
+reaches even 13,000 `input_tokens` (max 12,999), so the draft's "roughly 16 KB"
+was a byte figure standing in for a token limit that has never been tested;
+only a live run at token volumes this corpus's disk-only logs never reached can
+establish it. The tool
+apparatus this unmeasured ceiling is spent on is **6,176 B, 61.3%** of a
+9,769 B fixed prompt — this fraction *is* confirmed, byte-exact, against
+current code (S9.2) — against 3,656 B of domain knowledge and (corpus-wide,
+not just one canto) a median 3,029 B / max 12,199 B of the unit's own evidence.
+The tools the apparatus buys are barely used (`search_corpus`: 4 calls across
 348 sessions). So the harness does not iterate on a unit because iterating is
-priced out, not because three turns suffice.
+priced out by degradation — the mechanism is real, its threshold is not yet a
+number.
 
 **The shape**: no tools; a fixed context of specification + frozen-layer evidence
 + the artifact's current rows + a verdict; the rewritten rows as the only output.
@@ -285,19 +384,29 @@ masking rule permits — drawing the gold boundary once, rather than re-arguing 
 `--fix` class which frozen-layer evidence a notice may render, as Stage 8 had to
 do twice.
 
-**Open, and it is the stage's first work**: an admissible per-iteration signal
-$O$. The cheap one is not — the soft counter is registry-mediated (see the
-caveat above §2's table), so feeding it back each turn is §4 item 1 through one
-indirection. Schema verdicts and `derive.py` observations are admissible. The
-draft made this a precondition for opening; the operator opened the stage
-regardless, so it is work rather than a gate someone else passed.
+**Settled (S9.1, 2026-09-05)**: an admissible per-iteration signal $O$. The
+cheap one is not — the soft counter is registry-mediated (see the caveat above
+§2's table), so feeding it back each turn is §4 item 1 through one indirection.
+$O$ is hard schema verdicts plus a frozen-layer observation recomputed
+`fixlevel.py`-style (never `derive.py`'s own answer), converging on a fixed
+point rather than a shrinking count. The draft made this a precondition for
+opening; the operator opened the stage regardless, so it was work rather than a
+gate someone else passed.
+
+**Open, and it moved here from $O$ (S9.2, 2026-09-05)**: sizing the budget
+against the ceiling above, once a live run measures it (operator work, per
+their direction). S9.2 also found the corpus's worst-case unit's evidence alone
+(12,199 B, `purgatorio 10:82-93`) already exceeds the draft's whole $O$
+allowance, so the budget question is substantive, not a formality once a number
+arrives.
 
 [`stages/09.md`](stages/09.md) carries everything else: the measurements with
 their provenance limits (the logs predate S5.5), what S7.1's skills gain (the
 run-wording digest goes from 36.2% coverage to essentially all of it), the
-re-reading of S3.7, a candidate Standing Invariant §7 for the budget, and §2.1's
-statement of the loop as types — where `fixrun.py`'s standing guarantee turns out
-to be that every step is an endomorphism on $\Sigma$ whose failure case is the
+re-reading of S3.7, a candidate Standing Invariant §7 for the budget (not
+promoted to §4 below — S9.2), and §2.1's statement of the loop as types — where
+`fixrun.py`'s standing guarantee turns out to be that every step is an
+endomorphism on $\Sigma$ whose failure case is the
 identity, a property a new mode inherits by construction or not at all.
 
 ### Beyond Layer 5 (design notes)
