@@ -34,8 +34,8 @@ against 2026-08-25 (6,176 B, 61.3%). Candidate Standing Invariant §7 was **not*
 promoted to this file's §4, per the operator's direction to keep observing
 rather than bind a number no live run has measured.
 
-**This session (2026-09-05, continued)** did two more things, both prompted by
-the operator, neither yet committed:
+**A later 2026-09-05 session** did two more things, both prompted by the
+operator (committed as `a46bc09` and `897740d`):
 
 1. **Rewrote every "16 KB ceiling" assertion in `stages/09.md` in place.** The
    prior session had left the original byte-framed claims standing and put the
@@ -60,17 +60,25 @@ the operator, neither yet committed:
    an isolated fixture, unlike every sibling test in the suite. It failed
    mid-session when the operator started regenerating `inferno/01.tsv`. Fixed
    to build a gold-shaped copy in `tmp_path` and pass `--root` explicitly,
-   **committed as `897740d`**. This is the one commit from this session; the
-   `stages/09.md`/`PLAN.md` documentation edits are still unstaged, and the
-   `harness/recon/inferno/01.tsv` change is the operator's in-progress live
-   regeneration, not this session's edit — see the note below.
+   **committed as `897740d`**, with that session's `stages/09.md`/`PLAN.md`
+   documentation edits committed separately as `a46bc09`.
 
-**In flight, not this session's to finish**: the operator is regenerating
-`harness/recon/inferno/01.tsv` from scratch (`make inferno/01.tsv`, after
-deleting the committed TSV) — an ordinary corpus operation, unrelated to Stage
-9's design work, that happened to overlap this session and is why the test bug
-above surfaced. Last reported progress: **14/136 rows** (was 10/136 one
-message earlier). **The operator said they will report when it finishes.**
+**Finished and read out as S9.3 (2026-09-05).** The operator's regeneration of
+`harness/recon/inferno/01.tsv` completed. It was **a pre-rework baseline**, not
+an ordinary corpus operation: taken under the current implementation so that
+Stage 9's rebuilt execution path has a committed prior state to diff against,
+and the canto will be deleted and regenerated again once the rework lands. Its
+numbers are the live ones in Current Status below and the full readout is
+[`stages/09.md`](stages/09.md) §8 (S9.3). Three results carry forward:
+re-running one canto under an **unchanged** implementation re-opened both fix
+levels (0 → 2 at level 1, 0 → 8 at level 2, all in inferno 1); soft rose 9
+while gold agreement moved +0.0001 corpus-wide, so a post-rework regeneration
+cannot be judged by its soft delta alone; and the run's per-canto log is the
+**first token-bearing log from the current implementation** — 108 requests, max
+**8,748 `input_tokens`**, none over 13,000, median 3 requests per session,
+B/token 2.83–4.03 (S9.2's 2.87–4.01 confirmed on fresh data). That bounds what
+the current path asks for, not what a provider tolerates, so the ceiling item
+below stays open.
 
 - **Next open item for Stage 9 — unchanged**: a live run at token volumes this
   corpus's disk-only logs never reached, to find where the real per-request
@@ -80,36 +88,22 @@ message earlier). **The operator said they will report when it finishes.**
   found the corpus's worst-case unit (`purgatorio 10:82-93`, 12,199 B of
   evidence alone) already exceeds the draft's entire $O$ allowance.
 
-**When the operator reports the regeneration finished, do this before anything
-else** (do not trust any corpus number cited earlier in this file or in
-`stages/09.md` until then):
-
-1. `cd harness/recon && make check` — confirm hard/soft counts (should return to
-   0 hard / 3,138 soft if inferno 1 regenerated cleanly; a different number is
-   the actual news to report, not a problem to silently reconcile).
-2. `uv run pytest -q` from the repo root — confirm 1,001 passed. The isolation
-   fix above means this no longer depends on `inferno/01.tsv`'s state, so it
-   should pass regardless, but run it anyway as the standing discipline.
-3. Only then decide what to commit. `harness/PLAN.md` and `harness/stages/09.md`
-   (this session's documentation) and `harness/recon/inferno/01.tsv` (the
-   operator's regeneration) are three independent, unstaged changes — stage and
-   commit them as the operator directs, not bundled by default (feedback:
-   commit scope follows staging, never an invented split or an invented
-   bundle).
-
 **Two standing notes for whichever session picks Stage 9's real next step up:**
 
 1. **Read bytes and tokens as different quantities from here on.** The whole
    correction this stage went through was that a byte figure had been read as
    if it bounded tokens. The wire/cost instrumentation (Orientation item 5
    below) logs `input_tokens` on every `llm_response` when the backend reports
-   it — use that field directly rather than a B/token ratio (2.87–4.01, S9.2)
-   when a live log is available; the ratio is an estimate for when it is not.
+   it — use that field directly rather than a B/token ratio (2.83–4.03 across
+   S9.2's and S9.3's logs alike) when a live log is available; the ratio is an
+   estimate for when it is not. **Read the token counts off every new run's log
+   as part of reading the run** — S9.3's were left unread at first pass and had
+   to be gone back for.
 2. **The per-canto recon logs are still thin.** `harness/recon/` held 33
    purgatorio logs only as of the 2026-09-05 handoff (inferno's and paradiso's
-   were swept before the last fix pass); the operator's in-progress inferno-1
-   regeneration will add one fresh inferno log, but a token-ceiling run needs a
-   deliberate full sweep first (Orientation item 6, "sweep the per-canto logs
+   were swept before the last fix pass); S9.3's baseline regeneration added one
+   fresh inferno log, but a token-ceiling run needs a deliberate full sweep
+   first (Orientation item 6, "sweep the per-canto logs
    before each corpus-wide fix run"), not whatever is left over from an
    unrelated regeneration.
 
@@ -127,10 +121,12 @@ the open stage and the live numbers only.
       run can establish (S9.2) — see the Handoff's open item. §2 below and
       [`stages/09.md`](stages/09.md) carry the measurement it rests on and the
       direction set at open.
-- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,138 soft**,
-  `make check` exits 0, `make fix-level` **0** at both levels.
-- **Gold agreement** (readout only, Standing Invariant §1): **0.7607**
-  corpus-wide — inferno 0.7642, purgatorio 0.7592, paradiso 0.7586.
+- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,147 soft**,
+  `make check` exits 0, `make fix-level` **2** at level 1 and **8** at level 2
+  — all of them in inferno 1, re-opened by S9.3's baseline regeneration of that
+  canto (both levels read 0 before it).
+- **Gold agreement** (readout only, Standing Invariant §1): **0.7608**
+  corpus-wide — inferno 0.7644, purgatorio 0.7592, paradiso 0.7586.
 - **Test suite**: **1,001 passed**. Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
@@ -360,8 +356,10 @@ retries, the local `ollama` path pays it in prefill on a weak GPU — and this
 degradation, not `SESSION_MAX_TURNS = 12`, is what caps a unit's session at ~3
 turns. **The real per-request ceiling, in tokens, is unmeasured**: S9.2 read
 the only logs carrying provider token counts and found not one of 210 requests
-reaches even 13,000 `input_tokens` (max 12,999), so the draft's "roughly 16 KB"
-was a byte figure standing in for a token limit that has never been tested;
+reaches even 13,000 `input_tokens` (max 12,999), and S9.3's fresh log from the
+current implementation stays lower still (108 requests, max 8,748), so the
+draft's "roughly 16 KB" was a byte figure standing in for a token limit that
+has never been tested;
 only a live run at token volumes this corpus's disk-only logs never reached can
 establish it. The tool
 apparatus this unmeasured ceiling is spent on is **6,176 B, 61.3%** of a
