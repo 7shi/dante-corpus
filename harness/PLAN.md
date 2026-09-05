@@ -108,73 +108,68 @@ iteration(s) max, …` rather than `transcripts verbatim, …`; **no `<tool_call
 block ever appears**, and per-unit `[fixed] … iter 1: N row(s), accepted` lines
 do; and the log's `skill_digest` is `ee6f1a46…`.
 
-**THE FIRST LIVE RUN HAS RUN — and nothing about it has been read yet
-(2026-09-05).** The operator regenerated `harness/recon/inferno/01.tsv` from
-scratch after this session implemented S9.4, and **deliberately deferred the
-readout to the next session**: no number from it has been looked at, by anyone,
-and none is recorded anywhere in this file or in `stages/09.md`. What is on
-disk is a rewritten `harness/recon/inferno/01.tsv` (unstaged, against the S9.3
-baseline in `2f7e0b8`) and a fresh `harness/recon/inferno/01.log`.
+**THE FIRST LIVE RUN HAS RUN AND BEEN READ — written up as S9.5 (2026-09-05).**
+The operator regenerated `harness/recon/inferno/01.tsv` with
+`make inferno/01.tsv FIXED=1` and deferred the readout; this session did it.
+The full record is [`stages/09.md`](stages/09.md) §8 (S9.5) and the live numbers
+below are now that run's. In short:
 
-One thing about the launch that the readout must account for: **the first
-attempt was started without `FIXED=1`, in the tool-calling mode, and was
-stopped** (that is what the opt-in note above exists for). So the very first
-question is not "what did it produce" but "what produced it" — step 1 below,
-and step 2 for whether the aborted attempt's records are in the log too.
+- **The mode and the attempt count were established from the log, not assumed.**
+  `01.log` carries one `skill_digest` (`ee6f1a46…`, `grammar-fixed`) and one
+  `summary`; the aborted no-`FIXED` launch left nothing behind, because the log
+  was deleted between the attempts. All 34 units are the fixed loop's, and
+  every `llm_request` reports `messages: 2`.
+- **The answer to the substantive question is yes, for one canto.** 22 units of
+  34 pass all three gates (was 18), level 1 closes 2 → 0 and level 2 falls
+  8 → 3, canto gold F1 rises 0.7887 → 0.8103 on precision and recall together,
+  soft 38 → 19 — at 51 requests instead of 108. 21 of 33 units settle in **one**
+  bounded step; 10 iterations were refused by the runtime gate, and 6 of the 7
+  units that drew a refusal settled afterwards.
+- **The bound holds and the token conversion in S9.4 was off.** `context_bytes`
+  6,383 / 8,511 / 13,940 (min/median/max) sits inside S9.4's corpus-wide
+  prediction, but `input_tokens` measured 1,757 / 2,677 / 5,093 against ≈ 2,200
+  predicted, because this prompt shape's ratio is **3.16 B/token**, not the
+  tool-calling path's 3.58. Within a unit the request now grows by a median
+  **+230** tokens across its iterations, against the tool-calling path's
+  **+2,018** — the growth term is the artifact being written, not the
+  transcript.
+- **The cost/time trade, and the operator's decision on it.** Total tokens
+  **615,448 → 369,915 (−40%)** while the canto's wall clock rose **5,638 →
+  6,006 s (+6.5%)** — the typical unit is 16% *faster*, the four-step tail is
+  what the total follows. Serially that is a trade; against the project's **16K
+  TPM** quota it is not, because the currency is tokens per minute and the
+  saving buys concurrency: **2.4 → 4.3 streams**, ≈ **1.56 → 2.60 cantos per
+  hour**, ~1.7× throughput. **The operator's judgement (2026-09-05) is that the
+  benefits outweigh the slowdown on exactly this ground.** No concurrent run has
+  been made yet, so the stream count is headroom, not a demonstrated
+  configuration.
 
-**Do not read any inferno-1 or corpus-wide number in this file as current**:
-the live ones below are the S9.3 baseline, which this run replaces.
+**Two things are on disk and uncommitted**, for the operator to stage as they
+see fit: the regenerated `harness/recon/inferno/01.tsv` (54 ins / 51 del
+against `2f7e0b8`) and this readout's documentation edits. `01.log.orig` is the
+operator's preserved copy of the S9.3 tool-calling log, kept for the two-mode
+comparison in S9.5 and **slated for deletion once this work is committed** —
+it is untracked and gitignored either way.
 
-The readout, in order, and none of it is done yet:
-
-1. **Establish which mode actually ran, from the log rather than from
-   assumption.** Every `canto_complete` carries `skill_digest`:
-   `ee6f1a46…` (`grammar-fixed`) is the fixed-context loop, `b16c0639…`
-   (`grammar-agent`) is the tool-calling session. A fixed-context run's `unit`
-   records also carry a `fixed` block (per-step rows in/out, accepted or
-   refused and why, the observations open at each step, the stop reason) and its
-   `llm_request` records sit one per session instead of ~3.
-2. **Check whether the log holds one attempt or two.** The stopped tool-calling
-   attempt wrote into `inferno/01.log` before it was killed, so unless the file
-   was deleted between the two launches it carries both (Orientation item 5: a
-   re-run under a changed implementation deletes the log first). Segment at the
-   `summary` records, keep the fixed-context segment, and say in the readout
-   which it was rather than reporting a mixed aggregate. The same question
-   applies to the TSV: units the stopped attempt had already settled would have
-   been treated as settled and never re-run, so check that the rows are one
-   mode's — the `unit` records name every span the fixed loop actually ran.
-3. Then the standing three: `cd harness/recon && make check` (hard/soft),
-   `uv run pytest -q` from the root (1,022), `make fix-level` at **both** levels
-   — the baseline left inferno 1 at 2 and 8, so those numbers are what a
-   fixed-context regeneration moves.
-4. **Read the token counts off the new log** (standing note 1 below): this is
-   the first log of a mode whose per-request size is bounded by construction,
-   and S9.4 predicted 5,890 / 7,922 / 17,092 B min/median/max for the whole
-   request corpus-wide — ≈ 2,200 tokens median at S9.3's measured 3.58 B/token.
-   That prediction is now checkable against `input_tokens` directly.
-5. The substantive question, and the one no test could answer: **does the model
-   answer one bounded step as well as it answers a three-turn session?** Read it
-   from the `fixed` blocks (how many units settle, how many stop at a fixed
-   point with observations still open, how many exhaust the 4-step budget) and
-   from the gates, not from the soft delta alone — S9.3 measured ~9 soft of
-   run-to-run variation on this very canto under an *unchanged* implementation.
-6. Write it up as **S9.5** in [`stages/09.md`](stages/09.md), and only then
-   decide what to commit. The regenerated TSV is an independent change from
-   whatever documentation the readout produces; stage and commit as the operator
-   directs.
-
-The commands for steps 1-4, so the readout starts from the same place every
-time:
+The standing commands, so any later readout starts from the same place:
 
 ```
 cd harness/recon && make check                     # hard/soft, corpus-wide
-make fix-level FIX=1 && make fix-level FIX=2       # baseline: 2 and 8, both inferno 1
+make fix-level FIX=1 && make fix-level FIX=2       # now 0 and 3
 make agree                                         # readout only, never a target
 cd ../.. && uv run pytest -q                       # 1,022
-grep -c '"record": "unit"' harness/recon/inferno/01.log
 grep -o '"skill_digest": "[0-9a-f]\{8\}' harness/recon/inferno/01.log | sort -u
 grep -c '"record": "summary"' harness/recon/inferno/01.log   # >1 = two attempts
 ```
+
+**What Stage 9 still owes, after S9.5.** The result is one canto of 100, run
+once, so nothing corpus-wide follows from it. The throughput figures are that
+canto's rate divided into the 16K TPM quota, so **the concurrent run itself is
+the next thing to actually do** — 4.3 streams is headroom on paper, and
+contention, per-stream 429s and the pacing interval are unmeasured. Beyond
+that, the operator's calls: whether the fixed-context mode becomes the default
+for the plain targets (it is not today — `FIXED=1` is opt-in), and when to do
+the deliberate high-token run §5 of [`stages/09.md`](stages/09.md) waits on.
 
 - **Next open item for Stage 9 — unchanged**: a live run at token volumes this
   corpus's disk-only logs never reached, to find where the real per-request
@@ -212,24 +207,28 @@ the open stage and the live numbers only.
       2026-09-04, **OPENED 2026-09-05**). Replace the per-unit tool-calling
       session, on the reconstruction and repair path, with a fixed-length
       execution context whose per-request size does not grow with the number of
-      iterations. **$O$ is settled (S9.1)** and **the loop is implemented and
-      tested (S9.4, `--fixed-context`)**; what remains is a live run — both to
-      measure the ceiling the budget must be sized against (S9.2) and to find
-      out whether the model answers this prompt shape as well as a session does,
-      which no deterministic test can say. §2 below and
+      iterations. **$O$ is settled (S9.1)**, **the loop is implemented and
+      tested (S9.4, `--fixed-context`)**, and **its first live run is read out
+      (S9.5): on one canto the model answers the bounded step better than the
+      three-turn session, at half the requests and −40% total tokens — which
+      under the 16K TPM quota is ≈ 1.7× corpus throughput once run in
+      parallel.** What remains is scale — the concurrent run that figure
+      assumes, and a corpus-wide picture rather than one canto — plus the live
+      run at high token volumes that would measure the per-request ceiling the
+      budget must be sized against (S9.2), which S9.5 did not approach. §2 below
+      and
       [`stages/09.md`](stages/09.md) carry the measurements it rests on and the
       direction set at open.
-*Every number below is the S9.3 baseline. inferno 1 was regenerated live on
-2026-09-05 by the first fixed-context run and **that run has not been read**
-(see the Handoff): these are the state it is measured against, not the current
-corpus.*
+*Every number below is as of S9.5 — the first live fixed-context run, which
+regenerated inferno 1 on 2026-09-05. The TSV it produced is on disk and
+uncommitted; the S9.3 baseline it replaces is in `2f7e0b8`.*
 
-- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,147 soft**,
-  `make check` exits 0, `make fix-level` **2** at level 1 and **8** at level 2
-  — all of them in inferno 1, re-opened by S9.3's baseline regeneration of that
-  canto (both levels read 0 before it).
-- **Gold agreement** (readout only, Standing Invariant §1): **0.7608**
-  corpus-wide — inferno 0.7644, purgatorio 0.7592, paradiso 0.7586.
+- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,128 soft**,
+  `make check` exits 0, `make fix-level` **0** at level 1 and **3** at level 2
+  (all inferno 1). S9.3's baseline had re-opened both levels on that canto
+  (2 and 8); the fixed-context regeneration closed level 1 and cut level 2.
+- **Gold agreement** (readout only, Standing Invariant §1): **0.7610**
+  corpus-wide — inferno 0.7651, purgatorio 0.7592, paradiso 0.7586.
 - **Test suite**: **1,022 passed** (S9.4 added 21 for the fixed-context loop). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
@@ -293,6 +292,13 @@ any one session, so it survives across Handoff clearings.
    part-way, not a durability rule**: a re-run under a changed implementation
    deletes the log first, so that the file holds one implementation's
    behaviour rather than two spliced together.
+   **The quota these numbers are spent against is 16K TPM** — tokens per
+   minute, aggregated across concurrent work (operator, 2026-09-05). The scarce
+   quantity when planning a run is therefore *total tokens per unit of wall
+   clock*, not the size of any single request: read a mode's cost as
+   `total_tokens ÷ elapsed_seconds`, and read what a token saving buys as
+   parallel streams. S9.5 in [`stages/09.md`](stages/09.md) does that division
+   for both execution modes.
 6. **Running a `--fix` level.** Standing operational facts from every level-1
    and level-2 run, for whichever level runs next. They belong here rather than
    under a stage because they held across Stages 6 and 8 alike:
@@ -489,6 +495,19 @@ call. $P$ is **4,685 B, all of it under the digest** (against 10,082 B of which
 **5,890 / 7,922 / 17,092 B** min/median/max across all 3,477 units — bounded by
 the unit, not by the iteration. What no test can answer is whether the model
 *answers* this shape as well as a session does; that is the live run.
+
+**Run live (S9.5, 2026-09-05)**: inferno 1 regenerated under `FIXED=1`. Against
+the S9.3 baseline on the same canto, 22 units of 34 clear all three gates (was
+18), level 1 closes and level 2 falls 8 → 3, canto gold F1 goes 0.7887 →
+0.8103, soft 38 → 19 — on 51 requests instead of 108, each of them exactly two
+messages. 21 of 33 units settle in one bounded step. The per-request bound holds
+as claimed, and the request stops growing within a unit (+230 tokens median
+against +2,018). Total tokens fall 40% while the canto's wall clock rises 6.5%
+— a trade serially, but **not against the 16K TPM quota**, where the saving
+buys concurrency: 2.4 → 4.3 streams, ≈ 1.7× corpus throughput, which is the
+ground the operator judged the mode worth it on. The per-request ceiling
+question is untouched (largest request 5,093 `input_tokens`), and no concurrent
+run has been made yet. One canto, run once: nothing corpus-wide follows.
 
 **Set at open (2026-09-05)**: the fixed context carries **all** the evidence the
 masking rule permits — drawing the gold boundary once, rather than re-arguing per
