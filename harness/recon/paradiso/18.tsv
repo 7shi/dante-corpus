@@ -115,9 +115,15 @@ line	token	word	role	arg_line	arg_token
 37	2	vidi	subj	37	1
 37	2	vidi	obj	37	7
 37	2	vidi	obl:per	37	5
+37	8	tratto	subj	37	7
+37	8	tratto	obl:da	38	2
+38	2	nomar	subj	0	0
 38	2	nomar	obj	38	3
 38	7	feo	subj	38	5
-39	0			0	0
+38	7	feo	obj	38	6
+39	3	fu	subj	39	6
+39	3	fu	iobj	39	2
+39	3	fu	attr	39	4
 40	0			0	0
 41	1	vidi	subj	0	0
 41	1	vidi	obj	41	4

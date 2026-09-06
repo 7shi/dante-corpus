@@ -249,7 +249,9 @@ line	token	word	role	arg_line	arg_token
 82	5	venir	obl:verso	82	4
 82	5	venir	obl:per	82	7
 83	0			0	0
-84	0			0	0
+84	1	gridando	subj	83	2
+84	1	gridando	ccomp	84	2
+84	2	Guai	obl:a	84	4
 85	2	isperate	subj	0	0
 85	2	isperate	xcomp	85	4
 85	4	veder	obj	85	6

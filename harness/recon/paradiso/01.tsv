@@ -449,7 +449,11 @@ line	token	word	role	arg_line	arg_token
 138	5	scende	obl:a	138	8
 139	2	sarebbe	subj	139	1
 139	2	sarebbe	obl:in	139	4
-140	0			0	0
+139	6	privo	subj	140	4
+139	6	privo	obl:di	140	2
+140	6	assiso	subj	140	4
+140	6	assiso	obl	140	3
+140	6	assiso	obl	141	4
 141	0			0	0
 142	2	rivolse	subj	0	0
 142	2	rivolse	obj	142	7

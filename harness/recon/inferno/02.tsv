@@ -446,7 +446,12 @@ line	token	word	role	arg_line	arg_token
 135	7	porse	subj	0	0
 135	7	porse	obj	135	5
 135	7	porse	iobj	135	6
-136	0			0	0
+136	8	disposto	subj	136	1
+136	8	disposto	obj	136	7
+136	8	disposto	iobj	136	2
+136	8	disposto	obl:con	136	5
+136	8	disposto	obl:a	137	3
+136	8	disposto	obl:con	137	6
 137	0			0	0
 138	4	tornato	subj	138	2
 138	4	tornato	obl:in	138	7

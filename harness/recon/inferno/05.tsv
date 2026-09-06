@@ -162,9 +162,16 @@ line	token	word	role	arg_line	arg_token
 51	7	gastiga	subj	51	4
 51	7	gastiga	obj	51	2
 52	0			0	0
+53	2	vuo'	subj	53	1
+53	2	vuo'	xcomp	53	3
+53	3	saper	subj	53	1
+53	3	saper	obj	52	7
 53	5	disse	subj	53	6
 53	5	disse	iobj	53	4
-54	0			0	0
+53	5	disse	ccomp	54	1
+54	1	fu	subj	52	2
+54	1	fu	attr	54	2
+54	1	fu	obl:di	54	5
 55	7	rotta	subj	0	0
 55	7	rotta	obl:a	55	2
 55	7	rotta	obl	56	3

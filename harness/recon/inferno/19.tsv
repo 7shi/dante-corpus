@@ -34,8 +34,12 @@ line	token	word	role	arg_line	arg_token
 13	2	vidi	subj	13	1
 13	2	vidi	obj	14	3
 13	2	vidi	obl:per	13	5
-14	0			0	0
-15	0			0	0
+13	2	vidi	obl:per	13	9
+14	1	piena	subj	14	3
+14	1	piena	obl:di	14	6
+15	7	era	subj	15	4
+15	7	era	attr	15	8
+15	7	era	obl:di	15	3
 16	3	parean	subj	0	0
 16	3	parean	iobj	16	2
 16	3	parean	attr	16	5
@@ -165,7 +169,8 @@ line	token	word	role	arg_line	arg_token
 51	1	richiama	obl	50	8
 51	7	cessa	subj	51	6
 52	3	gridò	subj	52	2
-52	3	gridò	attr	53	5
+52	3	gridò	ccomp	52	8
+52	8	ritto	subj	52	5
 53	5	ritto	subj	53	2
 54	5	mentì	subj	54	7
 54	5	mentì	iobj	54	4

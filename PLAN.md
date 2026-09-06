@@ -13,12 +13,13 @@
 > optimization, full-corpus verification, corpus durability, soft divergence
 > reduction, refactoring, soft `--fix` level 2, fixed-context execution) are
 > complete; **Stage 10 is open** (opened 2026-09-06), scoped to soft `--fix`
-> level 3, which does not exist yet and has to be argued from the layer's own
-> contract before it is implemented. Stage 9 replaced the per-unit tool-calling
-> session with a bounded step whose request size is a function of the unit
-> rather than the iteration count, and made it the default execution mode. The
-> harness's own reconstruction of Layer 5 is hard-clean (0 hard / **3,126**
-> soft against the derivation contract) and does not touch gold `skel/`.
+> level 3 — `unregistered_predicate`, argued from the layer's own contract,
+> implemented, and now run once corpus-wide (334 → 225 findings). Stage 9
+> replaced the per-unit tool-calling session with a bounded step whose request
+> size is a function of the unit rather than the iteration count, and made it the
+> default execution mode. The harness's own reconstruction of Layer 5 is
+> hard-clean (0 hard / **2,982** soft against the derivation contract) and does
+> not touch gold `skel/`.
 > *All harness planning, progress, and stage records are consolidated in
 > [`harness/PLAN.md`](harness/PLAN.md) — refer to it (and only it) for
 > harness work. This file is not kept in sync with harness-internal

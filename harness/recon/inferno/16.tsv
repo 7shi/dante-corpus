@@ -98,6 +98,8 @@ line	token	word	role	arg_line	arg_token
 31	7	pieghi	subj	31	2
 31	7	pieghi	obj	31	6
 31	7	pieghi	obl	30	7
+32	2	dirne	subj	0	0
+32	2	dirne	ccomp	32	5
 32	5	se'	subj	32	4
 32	5	se'	attr	32	3
 33	6	freghi	subj	32	6
@@ -282,8 +284,13 @@ line	token	word	role	arg_line	arg_token
 90	7	partirsi	subj	0	0
 91	3	seguiva	subj	91	1
 91	3	seguiva	obj	91	2
-92	0			0	0
-93	0			0	0
+91	7	iti	subj	0	0
+92	8	era	subj	92	3
+92	8	era	attr	92	10
+92	8	era	obl	92	7
+93	3	parlar	subj	0	0
+93	7	uditi	subj	0	0
+93	7	uditi	obl:per	93	3
 94	5	ha	subj	94	4
 94	5	ha	obj	94	7
 94	5	ha	obl:da	95	3

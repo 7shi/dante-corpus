@@ -1,7 +1,8 @@
 line	token	word	role	arg_line	arg_token
 1	6	fissi	subj	1	4
 2	2	disbramarsi	obj	2	5
-3	0			0	0
+3	8	spenti	subj	3	4
+3	8	spenti	iobj	3	5
 4	6	avien	subj	4	2
 4	6	avien	obj	4	7
 4	6	avien	obl	4	3

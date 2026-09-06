@@ -43,7 +43,7 @@ line	token	word	role	arg_line	arg_token
 12	0			0	0
 13	2	andavam	subj	13	1
 13	2	andavam	obl:con	13	6
-14	0			0	0
+14	3	compagnia	obl:in	14	7
 15	0			0	0
 16	5	era	subj	16	8
 16	5	era	obl:a	16	4

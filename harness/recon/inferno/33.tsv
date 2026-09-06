@@ -323,7 +323,9 @@ line	token	word	role	arg_line	arg_token
 91	2	passammo	subj	91	1
 92	5	fascia	subj	91	7
 92	5	fascia	obj	92	4
-93	0			0	0
+93	2	volta	subj	92	4
+93	2	volta	obl:in	93	4
+93	7	riversata	subj	92	4
 94	5	pianger	subj	0	0
 94	7	lascia	subj	94	2
 94	7	lascia	xcomp	94	5
@@ -419,6 +421,8 @@ line	token	word	role	arg_line	arg_token
 120	3	riprendo	obl:per	120	6
 121	2	diss'	subj	121	3
 121	2	diss'	iobj	121	4
+121	2	diss'	ccomp	121	9
+121	9	morto	subj	121	7
 122	2	elli	iobj	122	4
 122	2	elli	ccomp	123	6
 122	9	stea	subj	122	8

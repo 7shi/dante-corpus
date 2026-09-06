@@ -181,17 +181,20 @@ line	token	word	role	arg_line	arg_token
 66	3	asconder	obj	66	4
 66	8	ascondo	subj	66	6
 66	8	ascondo	obj	66	5
-67	0			0	0
+67	6	fiocca	subj	68	4
+67	6	fiocca	obl:di	67	4
+67	6	fiocca	obl:in	68	2
 68	0			0	0
 69	9	tocca	subj	68	8
+69	9	tocca	obj	69	8
 69	9	tocca	obl:con	69	7
 70	3	vid'	subj	70	4
 70	3	vid'	obj	70	7
 70	3	vid'	xcomp	71	1
 70	3	vid'	xcomp	71	3
 70	3	vid'	obl:in	70	2
-71	1	farsi	subj	0	0
-71	3	fioccar	subj	0	0
+71	1	farsi	subj	70	7
+71	3	fioccar	subj	70	7
 71	3	fioccar	obl:di	71	5
 72	2	fatto	subj	72	1
 72	2	fatto	obj	72	7
@@ -276,8 +279,12 @@ line	token	word	role	arg_line	arg_token
 99	6	impulse	obj	99	5
 99	6	impulse	obl:in	99	3
 100	0			0	0
-101	2	uniforme	subj	100	2
+101	3	son	subj	100	2
+101	3	son	attr	101	2
 101	7	so	subj	101	5
+101	7	so	xcomp	101	8
+101	8	dire	subj	0	0
+101	8	dire	ccomp	102	6
 102	6	scelse	subj	102	2
 102	6	scelse	obj	102	5
 102	6	scelse	obl:per	102	4
@@ -347,6 +354,8 @@ line	token	word	role	arg_line	arg_token
 127	5	reperte	obl:in	128	3
 128	0			0	0
 129	2	fugge	subj	128	5
+129	2	fugge	obl	129	1
+129	7	coperte	subj	129	5
 130	2	balbuzïendo	subj	130	1
 130	4	digiuna	subj	130	1
 130	4	digiuna	obl	130	2

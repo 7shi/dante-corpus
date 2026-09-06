@@ -196,9 +196,12 @@ line	token	word	role	arg_line	arg_token
 63	1	mostrando	subj	62	3
 63	1	mostrando	obj	63	3
 64	0			0	0
-65	0			0	0
+65	2	avea	subj	64	3
+65	2	avea	obj	65	5
+65	2	avea	obl:di	64	6
 66	2	disse	subj	64	2
 66	2	disse	iobj	66	1
+66	2	disse	ccomp	66	4
 66	4	fai	subj	66	5
 66	4	fai	obj	66	3
 66	4	fai	obl:in	66	8

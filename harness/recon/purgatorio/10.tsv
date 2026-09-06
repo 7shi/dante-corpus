@@ -156,7 +156,7 @@ line	token	word	role	arg_line	arg_token
 54	8	disposta	obl:a	54	6
 55	2	intagliato	subj	56	2
 55	2	intagliato	obl:in	55	5
-56	0			0	0
+56	5	traendo	obj	56	7
 57	4	teme	subj	57	5
 58	2	parea	subj	58	3
 58	2	parea	obl	58	1
@@ -289,19 +289,33 @@ line	token	word	role	arg_line	arg_token
 97	6	guardare	obj	98	2
 98	0			0	0
 99	7	veder	subj	0	0
-99	7	veder	attr	99	8
+99	7	veder	obj	99	8
 99	7	veder	obl:per	99	4
+100	1	Ecco	subj	0	0
+100	1	Ecco	obl:di	100	3
 100	5	fanno	subj	101	5
 100	5	fanno	obj	100	7
 101	1	mormorava	subj	101	3
+101	1	mormorava	ccomp	100	1
 101	1	mormorava	ccomp	100	5
 101	1	mormorava	ccomp	102	3
 102	3	'nvïeranno	subj	102	1
 102	3	'nvïeranno	obj	102	2
 102	3	'nvïeranno	obl:a	102	7
-103	0			0	0
-104	0			0	0
-105	6	lenti	subj	103	2
+103	6	mirare	subj	0	0
+103	7	eran	subj	103	4
+103	7	eran	attr	103	8
+103	7	eran	xcomp	103	6
+104	2	veder	subj	0	0
+104	2	veder	obj	104	3
+104	6	son	subj	104	5
+104	6	son	attr	104	7
+104	6	son	obl	104	4
+105	1	volgendosi	subj	0	0
+105	1	volgendosi	obj	103	2
+105	1	volgendosi	obl:verso	105	3
+105	5	furon	subj	103	2
+105	5	furon	attr	105	6
 106	2	vo'	subj	0	0
 106	2	vo'	ccomp	106	8
 106	8	smaghi	subj	106	6

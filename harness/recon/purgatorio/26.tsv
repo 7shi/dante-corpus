@@ -73,7 +73,8 @@ line	token	word	role	arg_line	arg_token
 18	10	ardo	subj	18	4
 18	10	ardo	obl:in	18	6
 18	10	ardo	obl:in	18	9
-19	0			0	0
+19	9	uopo	subj	19	7
+19	9	uopo	obl:a	19	4
 20	5	hanno	subj	20	3
 20	5	hanno	subj	21	5
 21	0			0	0

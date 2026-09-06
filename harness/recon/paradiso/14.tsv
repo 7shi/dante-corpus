@@ -255,7 +255,9 @@ line	token	word	role	arg_line	arg_token
 84	0			0	0
 85	3	accors'	subj	85	4
 85	3	accors'	obj	85	2
+85	3	accors'	ccomp	85	9
 85	3	accors'	obl:per	86	4
+85	9	levato	subj	85	6
 86	0			0	0
 87	3	parea	subj	87	1
 87	3	parea	iobj	87	2

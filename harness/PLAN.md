@@ -15,50 +15,36 @@ same document. The gates were re-read before closing on them, not carried over
 from the previous session — the numbers are in Current Status below. Nothing
 from Stage 9 is repeated here.
 
-**IN FLIGHT: the operator is running level 3's first corpus-wide `--fix`
-(handed off 2026-09-06).** The level shipped in S10.1 and this commit is the
-tree it runs against: `unregistered_predicate`, selection **334**, levels 1 and
-2 at 0, suite 1,029, `make check` 0 hard / 3,126 soft, **no committed artifact
-touched yet**. The next session reads the result and writes it up as **S10.4** in
-[`stages/10.md`](stages/10.md).
+**Level 3's first corpus-wide `--fix` ran and is read out as S10.4** (run
+2026-09-06, written up the same day). Findings **334 → 225**, corpus
+**3,126 → 2,982 soft** at 0 hard, levels 1 and 2 still 0, suite 1,029, gold
+agreement 0.7610 → 0.7628 as a readout. The four things the handoff asked to be
+checked all came back clean and are argued in
+[`stages/10.md`](stages/10.md) §S10.4: `FixClass.exempts` fired live at exactly
+three units and only at predicates the level's own findings named, the five
+`new_class:extra_arg` refusals are all at *other* predicates and correct, no unit
+ended worse, and the corpus soft count **fell** where a rise was predicted — the
+mechanism behind the prediction is intact, only its aggregate direction was not
+guaranteed. Nothing is in flight.
 
-**Read the result this way** — the numbers first, then the two things this run is
-the first live test of:
+**The decisions now open**, none of them started:
 
-1. **Every level after the pass, not just the one that ran** (S8.1): `make check`,
-   `make fix-level FIX=1`, `FIX=2`, `FIX=3`, then `make agree` as a readout taken
-   afterwards and never as the criterion, then `uv run pytest -q`.
-2. **The soft count is expected to RISE, and that is not a regression.**
-   Registering a predicate exposes its frame — S6.1 measured 2+ new `missing_arg`
-   at 227 of the then-490 `missing_tuple` positions — so the number that says
-   whether the run worked is level 3's own finding count falling from 334, not
-   the corpus total. Report both, and say which is which.
-3. **`FixClass.exempts` has never run live.** S10.1 narrowed `fix_verdict`'s
-   new-class refusal so that a divergence at a predicate *this level itself
-   registered* counts as arithmetic rather than a traded class; without it the
-   correct answers would have been refused. Check in the per-canto logs that it
-   actually fired — accepted units whose `soft` rose at the registered predicate —
-   and that no `new_class:` refusal names a class at some *other* predicate that
-   should have been caught. If the exemption turns out to be wider than argued,
-   that is a mechanism finding, not a corpus one.
-4. **No unit may end worse than it started.** The standing guarantee is unchanged
-   by S10.1 and the per-canto records carry the mechanism (reopened, accepted vs
-   reverted, findings and soft before/after) to confirm it.
+- **Whether to re-run level 3 over its 225-finding residue.** 206 of the 293
+  reopened units returned no improvement on this single pass, which per S8.5
+  bounds a per-attempt rate and never establishes unreachability. Budget by
+  units, not cantos (Orientation item 6).
+- **S10.2** — the session gate never checks anchors for bare `obl`, where
+  `validate.py` does; all 133 `membership` violations are that shape, closing the
+  hole costs 0 false refusals corpus-wide, but 3 named positions would then
+  deadlock under a level-1 run, so the change is the operator's to schedule and it
+  changes live-run semantics (Standing Invariant §6).
+- **How wide concurrency can go.** S10.4 was the first concurrent run ever made —
+  three streams, measured 2.50× against the ≈ 1.7× projection, 0 `api_retries`,
+  ≈ 8,800 tokens/min against the 16K TPM quota. The headroom suggests a fourth
+  and fifth stream; nothing measures where contention starts.
 
-Sweep the per-canto logs before the run and delete a canto's `.log` with its
-`.tsv` if anything is re-run under a changed implementation (Orientation items 5
-and 6) — the acceptance test changed in this commit, so a log spanning both sides
-of it would not be one implementation's behaviour.
-
-**Not in flight, and not to be acted on without a decision** — both came out of
-S10.1's design pass and are recorded in [`stages/10.md`](stages/10.md):
-**S10.2** — the session gate never checks anchors for bare `obl`, where
-`validate.py` does; all 133 `membership` violations are that shape, closing the
-hole costs 0 false refusals corpus-wide, but 3 named positions would then
-deadlock under a level-1 run, so the change is the operator's to schedule and it
-changes live-run semantics (Standing Invariant §6).
-**S10.3** — levels 1 and 2 have no reachable residue; the 26 findings their
-classes still match are declined correctly and are not a to-do list.
+**S10.3** stands unchanged: levels 1 and 2 have no reachable residue, and the 26
+findings their classes still match are declined correctly, not a to-do list.
 
 ## Current Status
 
@@ -66,28 +52,28 @@ Every stage's status, dates and outcome are in §2's table; this section holds
 the open stage and the live numbers only.
 
 - [ ] **Stage 10 — Soft Level 3** — the open stage (**OPENED 2026-09-06**;
-      opening it closed Stage 9). Level 3 is **designed and implemented but not
-      run** (S10.1): `unregistered_predicate`, the clause head Layer 4 names and
-      the artifact never registers, argued from `derive.py`'s predicate census
-      with gold unopened, gate/level alignment measured before the run rather
-      than after four, and selecting **334** of the 401 `missing_tuple`
-      findings. Levels are cumulative, so it adds to levels 1–2. It also
-      inherits two unfinished Stage 9 items — never close
-      conditions for that stage and not done: **no concurrent run has ever been
-      made** (the ≈ 1.7× throughput is a projection from serial runs), and
-      **the per-request ceiling is unmeasured**, so the fixed-context loop's
-      budget cannot be sized. [`stages/10.md`](stages/10.md) carries both, and
-      §2 below has the prose.
+      opening it closed Stage 9). Level 3 is `unregistered_predicate` — the
+      clause head Layer 4 names and the artifact never registers, argued from
+      `derive.py`'s predicate census with gold unopened, gate/level alignment
+      measured before the run rather than after four (S10.1) — and it has now
+      **run once corpus-wide** (S10.4), taking its selection **334 → 225** of
+      the 401 `missing_tuple` findings. Levels are cumulative, so it adds to
+      levels 1–2. Of the two unfinished Stage 9 items it inherited — never close
+      conditions for that stage — S10.4 answered the *existence* half of the
+      first (**the first concurrent run, three streams, measured 2.50×**) and
+      left its width open, while **the per-request ceiling stays unmeasured**,
+      so the fixed-context loop's budget still cannot be sized.
+      [`stages/10.md`](stages/10.md) carries both, and §2 below has the prose.
 
-*Every number below was re-read on 2026-09-06 as Stage 9's close condition,
-against a corpus last touched by S9.7's `--fix` sweep (2026-09-05).*
+*Every number below was re-read on 2026-09-06 after S10.4's `--fix` run, which
+is what the corpus was last touched by.*
 
-- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,126 soft**,
+- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,982 soft**,
   `make check` exits 0, `make fix-level` **0 at levels 1 and 2** — the condition
-  Stage 9 closed on — and **334 at level 3**, which S10.1 added and no run has
-  yet acted on.
-- **Gold agreement** (readout only, Standing Invariant §1): **0.7610**
-  corpus-wide — inferno 0.7651, purgatorio 0.7592, paradiso 0.7586.
+  Stage 9 closed on, unchanged by the run — and **225 at level 3** (inferno 88,
+  purgatorio 77, paradiso 60), the residue S10.4 left.
+- **Gold agreement** (readout only, Standing Invariant §1): **0.7628**
+  corpus-wide — inferno 0.7672, purgatorio 0.7607, paradiso 0.7605.
 - **Test suite**: **1,029 passed** (S9.4 added 21 for the fixed-context loop,
   S9.6 one for the mode default, S10.1 six for level 3). Its composition and
   full history live in
@@ -227,9 +213,9 @@ any one session, so it survives across Handoff clearings.
    same place:
 
    ```
-   cd harness/recon && make check                     # 0 hard / 3,126 soft
+   cd harness/recon && make check                     # 0 hard / 2,982 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
-   make fix-level FIX=3                               # 334, never run
+   make fix-level FIX=3                               # 225, after S10.4's run
    make agree                                         # readout only, never a target
    cd ../.. && uv run pytest -q                       # 1,029
    ```
@@ -368,7 +354,8 @@ the predicate Layer 4 makes the head of a clause and the artifact never
 registers. Authority: `derive.py`'s step 1 promotes every token whose **own**
 deprel is in `CLAUSE_HEAD_DEPRELS`, so the evidence is one tree edge and the two
 registry `missing_tuple` tolerances (CS, AV) have already declined the position —
-S6.1's outcome 1. It selects **334** of the 401 `missing_tuple` findings; the 67
+S6.1's outcome 1. It selected **334** of the then-401 `missing_tuple` findings
+(225 today, after S10.4's run); the 67
 it declines are reached by the census's `conj` chain walk (58) or by a second
 pass needing a Layer-2 `pos` the class cannot see (9), the same restriction level
 2 makes against the propagated subject. It is also the continuation level 2 asked
@@ -378,19 +365,26 @@ reachable once that question is argued.
 
 **Two things a reader of the numbers must know.** The gate carries **no**
 level-3 bar — the only one it could carry demands 1,715 positions where the level
-selects 334 — so the ask lives in the notice, as at level 2. And the **soft count
-is expected to rise** on this level: registering a predicate exposes its frame
-(S6.1 measured 2+ new `missing_arg` at 227 of the then-490 positions), which is
-why `fix_verdict`'s new-class refusal now consults `FixClass.exempts` and treats
-a divergence at a predicate the level itself registered as arithmetic rather than
-a traded class. Every other refusal is unchanged and the standing guarantee
-holds: a fix run cannot leave the artifact worse than it found it.
+selects 334 — so the ask lives in the notice, as at level 2. And **the soft count
+may rise** on this level: registering a predicate exposes its frame (S6.1
+measured 2+ new `missing_arg` at 227 of the then-490 positions), which is why
+`fix_verdict`'s new-class refusal now consults `FixClass.exempts` and treats a
+divergence at a predicate the level itself registered as arithmetic rather than a
+traded class. Every other refusal is unchanged and the standing guarantee holds:
+a fix run cannot leave the artifact worse than it found it. *In the event S10.4's
+run moved the corpus the other way* — 3,126 → 2,982 — because the positions a
+registered predicate **resolves** outweighed the frames it exposed. The mechanism
+stands and the direction is not guaranteed either way; the criterion remains the
+level's own finding count.
 
-**It has never been run.** S10.1 ships the level the way S6.2 shipped level 1 —
-mechanism only, no committed artifact touched.
+**It has been run once, corpus-wide (S10.4, 2026-09-06).** S10.1 shipped the
+level the way S6.2 shipped level 1 — mechanism only, no committed artifact
+touched — and S10.4 is the run: findings **334 → 225**, 293 units reopened across
+94 cantos on three parallel streams, `FixClass.exempts` firing live at three of
+them and only at predicates the level's own findings named, no unit ending worse.
 
-**What the residue looks like after S10.1**, for whichever level comes next.
-Level 3 takes 334 of the 3,126; most of the rest have never been inside any
+**What the residue looks like after S10.4**, for whichever level comes next.
+Level 3 has 225 of the 2,982 left; most of the rest have never been inside any
 level, which is not the same as being wrong — that is what S6.1's three outcomes
 are for, and two of them were resolved in the same pass without becoming a level:
 
@@ -412,16 +406,17 @@ complete readout of what a level can still do.
 **What it inherits from Stage 9, unfinished and never that stage's close
 conditions** (details in [`stages/10.md`](stages/10.md) §2):
 
-1. **No concurrent run has ever been made.** The ≈ 1.7× corpus throughput the
-   fixed-context mode was adopted on is one canto's `total_tokens ÷
-   elapsed_seconds` divided into the 16K TPM quota (2.4 → 4.3 streams).
-   Contention, per-stream 429s and the pacing interval are unmeasured, so it is
-   a projection from serial runs.
+1. ~~**No concurrent run has ever been made.**~~ **S10.4's fix run was one** —
+   three canticle-parallel streams, 16.82 h of per-canto elapsed time in 6.72 h
+   wall (**2.50×**, against the ≈ 1.7× projection the mode was adopted on), with
+   0 `api_retries` and ≈ 8,800 tokens/min against the 16K TPM quota. Open still:
+   the *width*, since that headroom suggests a fourth and fifth stream and
+   nothing measures where contention starts.
 2. **The per-request ceiling is unmeasured**, and until it is, the fixed-context
    loop's $|P| + |\Sigma| + |O|$ budget ([`stages/09.md`](stages/09.md) §5)
-   cannot be sized. Every Stage 9 run moved away from it — largest requests
-   5,093 and 4,085 `input_tokens` — so this needs a deliberate run at token
-   volumes this corpus's disk-only logs have never reached, and its own log
+   cannot be sized. Every run so far moved away from it — largest requests
+   5,093, 4,085 and now 7,007 `input_tokens` — so this needs a deliberate run at
+   token volumes this corpus's disk-only logs have never reached, and its own log
    sweep first. S9.2's worst-case unit (`purgatorio 10:82-93`, 12,199 B of
    evidence alone) is why the answer is substantive.
 3. **The tool-calling session is slated for removal**, deferred rather than

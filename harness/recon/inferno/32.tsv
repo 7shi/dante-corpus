@@ -95,16 +95,20 @@ line	token	word	role	arg_line	arg_token
 30	7	fatto	subj	0	0
 30	7	fatto	obj	30	8
 30	7	fatto	obl:da	30	6
+31	4	gracidar	subj	0	0
 31	6	sta	subj	31	8
+31	6	sta	xcomp	31	4
 31	6	sta	obl:con	32	2
 32	8	sogna	subj	33	5
-33	0			0	0
-34	1	livide	subj	35	3
-34	1	livide	obl	34	3
-34	1	livide	obl:in	35	7
+32	8	sogna	xcomp	33	2
+33	2	spigolar	subj	33	5
 34	5	appar	subj	34	6
-35	0			0	0
-36	0			0	0
+35	1	eran	subj	35	3
+35	1	eran	attr	34	1
+35	1	eran	obl:in	35	7
+36	1	mettendo	subj	0	0
+36	1	mettendo	obj	36	3
+36	1	mettendo	obl:in	36	5
 37	4	tenea	subj	37	1
 37	4	tenea	obj	37	7
 37	4	tenea	attr	37	5

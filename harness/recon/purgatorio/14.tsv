@@ -310,13 +310,21 @@ line	token	word	role	arg_line	arg_token
 90	1	fatto	xcomp	90	4
 90	4	reda	subj	89	7
 90	4	reda	obl:di	90	8
-91	0			0	0
+91	8	fatto	subj	91	6
+91	8	fatto	attr	91	9
+91	8	fatto	obl:tra	92	3
+91	8	fatto	obl:di	93	2
 92	0			0	0
+93	3	richesto	subj	93	2
 93	3	richesto	obl:a	93	5
-94	7	ripieno	obl:a	94	5
+93	3	richesto	obl:a	93	8
+94	7	ripieno	subj	0	0
+94	7	ripieno	obl:dentro	94	5
 94	7	ripieno	obl:di	95	3
 95	0			0	0
-96	0			0	0
+96	2	coltivare	subj	0	0
+96	4	verrebber	subj	0	0
+96	4	verrebber	obl:per	96	2
 97	2	è	subj	97	5
 97	2	è	obl	97	1
 98	0			0	0
@@ -464,9 +472,14 @@ line	token	word	role	arg_line	arg_token
 141	3	feci	obl:in	141	2
 141	3	feci	obl	141	6
 142	8	queta	subj	142	4
+142	8	queta	obl:di	142	7
 143	4	disse	subj	143	2
 143	4	disse	iobj	143	3
-144	0			0	0
+143	4	disse	ccomp	143	9
+143	9	camo	subj	143	5
+144	5	tener	subj	144	4
+144	5	tener	obj	144	1
+144	5	tener	obl:a	144	9
 145	3	prendete	subj	145	2
 145	3	prendete	obj	145	5
 146	8	tira	subj	145	9

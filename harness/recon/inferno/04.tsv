@@ -48,7 +48,10 @@ line	token	word	role	arg_line	arg_token
 13	2	discendiam	obl:in	13	7
 14	1	cominciò	subj	14	3
 14	1	cominciò	ccomp	13	2
-15	7	secondo	subj	15	5
+15	2	sarò	subj	15	1
+15	2	sarò	attr	15	3
+15	6	sarai	subj	15	5
+15	6	sarai	attr	15	7
 16	8	accorto	subj	16	3
 16	8	accorto	obj	16	6
 16	8	accorto	obl:di	16	5

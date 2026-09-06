@@ -29,6 +29,8 @@ line	token	word	role	arg_line	arg_token
 12	2	conosciuto	subj	11	8
 12	5	traluce	subj	12	3
 13	2	vuo'	subj	13	1
+13	3	saper	subj	0	0
+13	3	saper	ccomp	14	6
 14	6	render	obl:con	13	7
 14	6	render	obl:per	14	3
 15	4	sicuri	subj	15	3

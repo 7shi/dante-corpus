@@ -83,6 +83,8 @@ line	token	word	role	arg_line	arg_token
 24	3	bagnava	obj	24	2
 24	3	bagnava	obl:per	24	6
 25	3	piangea	subj	25	2
+25	4	poggiato	subj	25	2
+25	4	poggiato	obl:a	25	6
 26	0			0	0
 27	2	disse	subj	26	8
 27	2	disse	iobj	27	1

@@ -64,7 +64,10 @@ line	token	word	role	arg_line	arg_token
 25	1	supplica	subj	22	2
 25	1	supplica	iobj	25	3
 25	1	supplica	obl:per	25	5
-26	0			0	0
+26	7	levarsi	subj	0	0
+26	7	levarsi	obl:con	26	6
+26	7	levarsi	obl	27	2
+26	7	levarsi	obl:verso	27	6
 27	0			0	0
 28	9	arsi	subj	28	3
 28	9	arsi	obl:per	28	7

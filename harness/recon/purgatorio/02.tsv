@@ -391,8 +391,12 @@ line	token	word	role	arg_line	arg_token
 117	4	toccasse	subj	117	5
 117	4	toccasse	obj	117	7
 117	4	toccasse	obl:a	117	3
-118	0			0	0
-119	0			0	0
+118	4	fissi	subj	118	1
+118	6	attenti	subj	118	1
+118	6	attenti	obl:a	119	4
+119	6	ecco	subj	119	8
+120	1	gridando	subj	119	8
+120	1	gridando	ccomp	120	3
 120	3	è	subj	120	2
 120	3	è	attr	120	4
 121	5	è	subj	121	6

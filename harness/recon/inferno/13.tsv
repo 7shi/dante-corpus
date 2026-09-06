@@ -22,11 +22,12 @@ line	token	word	role	arg_line	arg_token
 10	7	fanno	subj	10	4
 10	7	fanno	obj	10	6
 10	7	fanno	obl	10	1
-11	2	cacciar	subj	11	1
+11	2	cacciar	subj	0	0
 11	2	cacciar	obj	11	7
 11	2	cacciar	obl:di	11	5
-11	2	cacciar	obl:con	12	3
-12	0			0	0
+12	6	danno	subj	11	1
+12	6	danno	xcomp	11	2
+12	6	danno	obl:con	12	3
 13	0			0	0
 14	0			0	0
 15	1	fanno	subj	0	0

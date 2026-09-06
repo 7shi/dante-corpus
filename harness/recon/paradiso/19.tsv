@@ -447,8 +447,12 @@ line	token	word	role	arg_line	arg_token
 138	6	fatte	attr	138	7
 139	0			0	0
 140	3	conosceranno	subj	139	2
+140	3	conosceranno	subj	140	5
 140	3	conosceranno	obj	140	2
-141	0			0	0
+140	3	conosceranno	obl	140	1
+141	4	visto	subj	141	1
+141	4	visto	obj	141	6
+141	4	visto	obl	141	2
 142	7	lascia	subj	142	3
 142	7	lascia	xcomp	143	2
 143	2	malmenare	subj	0	0

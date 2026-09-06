@@ -67,9 +67,9 @@ line	token	word	role	arg_line	arg_token
 22	7	è	subj	22	6
 22	7	è	attr	22	8
 22	7	è	obl	22	4
+22	7	è	obl:di	23	5
 23	7	assisi	subj	24	1
 23	7	assisi	obl:da	22	3
-23	7	assisi	obl:di	23	5
 24	3	credettero	subj	24	2
 24	3	credettero	obl:in	24	5
 25	7	intercisi	subj	26	4
@@ -77,9 +77,10 @@ line	token	word	role	arg_line	arg_token
 25	7	intercisi	obl:di	26	2
 26	6	stanno	subj	27	1
 26	6	stanno	obl:da	25	4
+27	5	venuto	subj	27	2
+27	5	venuto	obl:a	27	4
 27	6	ebber	subj	27	2
 27	6	ebber	obj	27	8
-27	6	ebber	obl:a	27	4
 28	0			0	0
 29	0			0	0
 30	6	fanno	subj	28	6
@@ -200,7 +201,11 @@ line	token	word	role	arg_line	arg_token
 72	5	incappelli	obl:secondo	70	4
 72	5	incappelli	obl:di	71	3
 73	0			0	0
-74	0			0	0
+74	1	locati	subj	0	0
+74	1	locati	obl:sanza	73	3
+74	1	locati	obl:per	74	4
+74	1	locati	obl	75	2
+75	2	differendo	subj	0	0
 75	2	differendo	obl:in	75	5
 76	1	Bastavasi	subj	78	3
 76	1	Bastavasi	obl:in	76	3

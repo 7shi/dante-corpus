@@ -77,9 +77,10 @@ line	token	word	role	arg_line	arg_token
 23	7	senta	obl:a	24	4
 24	0			0	0
 25	7	contenta	subj	25	4
+26	2	intender	ccomp	26	7
 26	7	appressa	subj	26	4
 26	7	appressa	iobj	26	5
-27	0			0	0
+27	6	lenta	subj	27	2
 28	2	diss'	subj	28	3
 28	2	diss'	obl:a	28	6
 29	5	parlato	subj	29	1
@@ -281,12 +282,13 @@ line	token	word	role	arg_line	arg_token
 96	7	nascose	subj	96	1
 96	7	nascose	obl:dietro	96	5
 97	2	vo'	subj	0	0
-97	2	vo'	obj	97	8
-97	2	vo'	obl:a	97	7
+97	2	vo'	ccomp	97	8
 97	2	vo'	obl	98	4
+97	8	invidie	subj	0	0
+97	8	invidie	obl:a	97	7
 98	4	infutura	subj	98	7
-98	4	infutura	obj	98	3
 98	4	infutura	obl	99	3
+98	4	infutura	obl	99	6
 99	6	punir	subj	0	0
 99	6	punir	obj	99	9
 100	3	tacendo	subj	0	0

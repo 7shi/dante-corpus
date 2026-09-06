@@ -289,9 +289,15 @@ line	token	word	role	arg_line	arg_token
 93	2	vederai	xcomp	93	5
 93	5	fatto	subj	93	4
 93	5	fatto	attr	93	6
-94	0			0	0
+94	3	vòlto	subj	94	2
+94	4	retrorso	subj	94	2
+95	6	fuggir	subj	95	5
 95	9	volse	subj	95	8
-96	0			0	0
+96	1	mirabile	subj	95	6
+96	1	mirabile	xcomp	96	3
+96	3	veder	subj	0	0
+96	3	veder	ccomp	96	7
+96	7	soccorso	subj	0	0
 97	3	disse	subj	0	0
 97	3	disse	iobj	97	2
 97	3	disse	obl	97	1

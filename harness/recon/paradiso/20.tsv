@@ -414,10 +414,13 @@ line	token	word	role	arg_line	arg_token
 138	8	volemo	subj	138	7
 138	8	volemo	obj	138	2
 139	0			0	0
-140	0			0	0
+140	2	farmi	subj	0	0
+140	2	farmi	obj	140	7
+140	2	farmi	attr	140	3
 141	1	data	subj	141	5
 141	1	data	iobj	141	2
 141	1	data	obl:da	139	4
+141	1	data	obl:per	140	2
 142	0			0	0
 143	1	fa	subj	142	7
 143	1	fa	xcomp	143	2

@@ -166,6 +166,7 @@ line	token	word	role	arg_line	arg_token
 60	3	avea	xcomp	60	7
 60	7	intender	subj	60	2
 60	7	intender	obl	60	6
+60	8	presti	xcomp	60	7
 61	6	furo	subj	61	4
 61	6	furo	obl:con	62	2
 61	6	furo	obl:con	62	7
@@ -351,9 +352,13 @@ line	token	word	role	arg_line	arg_token
 123	5	correrebbe	subj	0	0
 123	5	correrebbe	obl:sanza	122	3
 123	5	correrebbe	obl:ad	123	3
+124	3	ingrassa	subj	124	7
 124	3	ingrassa	subj	125	2
-125	0			0	0
-126	0			0	0
+124	3	ingrassa	obl:di	124	2
+125	5	sono	subj	125	4
+125	5	sono	attr	125	8
+126	1	pagando	subj	0	0
+126	1	pagando	obl:di	126	3
 127	3	siam	subj	0	0
 127	3	siam	attr	127	4
 127	6	ritorci	subj	0	0

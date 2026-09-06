@@ -153,10 +153,14 @@ line	token	word	role	arg_line	arg_token
 48	3	guardar	obj	48	7
 49	2	vidi	subj	49	1
 49	2	vidi	obj	49	3
+49	4	fatto	subj	49	3
 49	4	fatto	obl:a	49	6
 50	5	avuta	subj	50	3
 50	5	avuta	obj	50	7
-51	0			0	0
+51	1	tronca	subj	50	7
+51	1	tronca	obl:da	51	4
+51	9	forcuto	subj	51	7
+51	9	forcuto	obj	51	5
 52	6	dispaia	subj	52	4
 52	6	dispaia	obj	53	2
 52	6	dispaia	obl:con	53	5

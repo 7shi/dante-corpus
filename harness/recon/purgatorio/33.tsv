@@ -439,6 +439,7 @@ line	token	word	role	arg_line	arg_token
 136	3	avessi	subj	136	2
 136	3	avessi	obj	136	7
 137	2	scrivere	subj	0	0
+137	2	scrivere	obj	136	7
 137	5	cantere'	subj	137	3
 137	5	cantere'	obj	138	3
 137	5	cantere'	obl:in	137	7
@@ -447,17 +448,20 @@ line	token	word	role	arg_line	arg_token
 138	8	avria	attr	138	9
 139	4	son	subj	139	7
 139	4	son	attr	139	3
-139	4	son	obl:a	140	4
-140	0			0	0
+140	1	ordite	subj	139	7
+140	1	ordite	obl:a	140	4
 141	3	lascia	subj	141	7
 141	3	lascia	obj	141	2
 141	3	lascia	xcomp	141	5
-141	5	ir	subj	0	0
+141	5	ir	subj	141	2
 142	2	ritornai	subj	142	1
 142	2	ritornai	obl:da	142	6
 143	1	rifatto	subj	142	1
 143	1	rifatto	obl:come	143	4
 144	1	rinovellate	subj	143	4
 144	1	rinovellate	obl:di	144	4
+145	1	puro	subj	142	1
+145	3	disposto	subj	142	1
+145	3	disposto	xcomp	145	5
 145	5	salire	subj	142	1
 145	5	salire	obl:a	145	8

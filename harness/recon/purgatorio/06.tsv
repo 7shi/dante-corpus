@@ -325,7 +325,9 @@ line	token	word	role	arg_line	arg_token
 102	8	aggia	obj	102	6
 102	8	aggia	obl	102	7
 103	8	sofferto	subj	103	3
-104	0			0	0
+103	8	sofferto	ccomp	105	8
+104	5	distretti	subj	103	3
+104	5	distretti	obl:per	104	2
 105	8	diserto	subj	105	3
 106	1	Vieni	subj	0	0
 106	1	Vieni	xcomp	106	3
@@ -374,9 +376,14 @@ line	token	word	role	arg_line	arg_token
 117	4	vien	subj	0	0
 117	4	vien	iobj	117	3
 117	4	vien	xcomp	117	2
-118	0			0	0
-119	0			0	0
+118	5	è	subj	0	0
+118	5	è	iobj	118	4
+118	5	è	attr	118	3
+119	7	crucifisso	subj	119	1
+119	7	crucifisso	obl:in	119	4
+119	7	crucifisso	obl:per	119	6
 120	6	rivolti	subj	120	4
+120	6	rivolti	obl	120	7
 121	2	è	subj	0	0
 121	2	è	attr	121	3
 122	4	fai	subj	0	0

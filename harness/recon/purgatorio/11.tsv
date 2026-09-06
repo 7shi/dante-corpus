@@ -45,7 +45,8 @@ line	token	word	role	arg_line	arg_token
 15	9	affanna	obj	15	8
 15	9	affanna	xcomp	15	7
 15	9	affanna	obl	15	5
-16	0			0	0
+16	8	sofferto	subj	0	0
+16	8	sofferto	obj	16	6
 17	1	perdoniamo	subj	16	3
 17	1	perdoniamo	obj	16	5
 17	1	perdoniamo	obl:a	17	3
@@ -254,6 +255,7 @@ line	token	word	role	arg_line	arg_token
 77	1	tenendo	obj	77	3
 77	1	tenendo	attr	77	6
 77	1	tenendo	obl:con	77	5
+77	6	fisi	obl:a	78	2
 78	8	andava	subj	78	3
 78	8	andava	obl:con	78	7
 79	2	diss'	subj	79	3
@@ -297,7 +299,9 @@ line	token	word	role	arg_line	arg_token
 90	5	volsi	obl	90	2
 90	5	volsi	obl:a	90	7
 91	0			0	0
-92	0			0	0
+92	3	verde	subj	0	0
+92	3	verde	obl:su	92	7
+93	4	giunta	subj	0	0
 93	4	giunta	obl:da	93	7
 94	1	Credette	subj	94	2
 94	1	Credette	xcomp	95	1

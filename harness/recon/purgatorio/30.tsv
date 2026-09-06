@@ -182,7 +182,7 @@ line	token	word	role	arg_line	arg_token
 64	1	vidi	obl:in	61	4
 64	7	appario	subj	64	4
 64	7	appario	iobj	64	6
-65	0			0	0
+65	1	velata	obl:sotto	65	5
 66	1	drizzar	subj	64	3
 66	1	drizzar	obj	66	3
 66	1	drizzar	obl:verso	66	5

@@ -111,6 +111,9 @@ line	token	word	role	arg_line	arg_token
 33	7	affisse	subj	32	5
 33	7	affisse	obj	33	6
 34	2	diss'	subj	34	3
+34	2	diss'	ccomp	34	7
+34	7	son	subj	34	8
+34	7	son	attr	34	6
 35	4	domandai	subj	35	3
 35	5	ecco	obj	35	7
 36	1	dicendo	subj	0	0

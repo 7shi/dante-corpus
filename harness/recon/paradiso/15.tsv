@@ -15,11 +15,17 @@ line	token	word	role	arg_line	arg_token
 6	6	allenta	obj	6	1
 6	8	tira	subj	6	3
 6	8	tira	obj	6	1
-7	6	sorde	subj	8	2
-7	6	sorde	obl:a	7	5
-8	0			0	0
+7	2	saranno	subj	8	2
+7	2	saranno	attr	7	6
+7	2	saranno	obl:a	7	5
+8	5	darmi	subj	8	3
+8	5	darmi	obj	8	6
 9	4	pregassi	subj	9	2
 9	4	pregassi	obj	9	3
+9	6	tacer	subj	8	3
+9	7	fur	subj	8	3
+9	7	fur	attr	9	8
+9	7	fur	obl:a	9	6
 10	2	è	ccomp	10	7
 10	7	doglia	subj	11	1
 10	7	doglia	obj	10	6
