@@ -64,31 +64,75 @@ Unchanged and re-read after the cut: `make check` **0 hard / 2,982 soft**,
 no model call and rewrites nothing. The suite is **734 passed** — the deleted
 modules' tests went with them; no surviving test was weakened to pass.
 
+**Live verification is OUTSTANDING.** Everything above is deterministic: no
+model was called, because assistant sessions do not call one (Environment &
+Artifacts). What has *not* been exercised since the cut is the path that
+actually reaches the model — a unit that is not already settled, under `run` and
+under `fix`. The operator is verifying both and **reports at the start of the
+next session** (operator, 2026-09-07). Until that report lands, treat the cut as
+unconfirmed at the seam most likely to have been broken by it:
+`fixedcontext.fixed_fallback` now builds its model closure from
+`runner/llm.py` rather than from the deleted `runner/agent.py`, and
+`reconstruct_canto` calls the fallback directly rather than through the deleted
+engine. **If either is broken, fixing it comes before the split below.**
+
 The `.md` files are kept as the record, so several of them now describe code
 that is gone: `TOOLCALL.md` entire, `runner/PLAN.md` and `extractor/PLAN.md` in
 large part, and every stage document by design. `README.md`'s directory map and
 roadmap were brought up to date and carry the removal note; the stage documents
 were not touched.
 
-### Next session: make `harness/` a library
+### Next session: decouple `harness/` from the Layer-5 implementation
 
-**The task, in one line: package `harness/` so `layers/` can depend on it through
-`uv` and drive it, instead of `layers/` being another directory inside the same
-flat tree.** The details are to be discussed at the start of that session; what
-follows is the cold-start context so the discussion does not have to re-derive
-it. **Nothing is in flight and nothing has been decided.**
+**The task, in one line: make `harness/` and the Layer-5-specific implementation
+loosely coupled, then separate them** (operator, 2026-09-07). This supersedes
+the "package `harness/` for `uv`" framing carried here since the Stage 10 close:
+packaging is downstream of the split, and the split is decided by *what is
+coupled to Layer 5*, not by what is convenient to package. **Nothing is in flight
+and nothing has been decided.**
 
-**Start from the inventory that already exists.** [`FUTURE.md`](FUTURE.md)'s
-layer-swap note did this work for a different reason and its conclusion applies
-directly: *"the current abstraction boundary is already the right seam"*. It
-names what is reusable unchanged (the whole `toolcall/` library, the
-observability frame, the benchmark skeleton, the `upstream_feedback` channel
-pattern) and what is Layer-5-specific (`runner/tools.py`'s three tools,
-`validate_candidate`'s schema, `ROLES`/`OBL_RE`). §3 of this file states the same
-boundaries from the other side. Read both before proposing a split.
+**Start the session by taking the operator's run/fix report** (above). A split
+argued over code whose live path is broken would be argued over the wrong thing.
 
-**Facts about the current packaging, checked 2026-09-07** (updated after the cut
-above):
+**The coupling, measured 2026-09-07 after the cut** — so the session does not
+re-derive it. Counting `dante_corpus` imports per module:
+
+| Module | Lines | Imports `dante_corpus` | Reads as |
+|---|---:|---:|---|
+| `runner/llm.py` | 374 | 0 | apparatus, already clean |
+| `runner/statusline.py` | 63 | 0 | apparatus, already clean |
+| `skills.py` | 132 | 0 | apparatus, already clean |
+| `extractor/report.py` | 175 | 0 | apparatus, already clean |
+| `recon/readout.py` | 507 | 0 | apparatus over *this* log format |
+| `runner/prompts.py` | 59 | 0 | apparatus; its **content** is Layer-5 (skill files) |
+| `extractor/artifact.py` | 180 | 1 | `SkelRow` only — the TSV shape is Layer 5's |
+| `recon/check.py` | 289 | 1 | Layer-5 subject |
+| `extractor/observe.py` | 220 | 2 | Layer-5 subject (`skel.derive.ARG_DEPRELS`) |
+| `extractor/outcome.py` | 208 | 2 | `SkelRow` only |
+| `extractor/fixrun.py` | 486 | 2 | `SkelRow` only; the *logic* is level-generic |
+| `extractor/fixedcontext.py` | 622 | 2 | the loop is generic; `SkelRow` + `dep` are not |
+| `extractor/fixlevel.py` | 807 | 4 | Layer-5 subject (the classes are `validate.py`'s) |
+| `extractor/layers.py` | 200 | 4 | Layer-5 subject (`skel.validate.validate_unit`) |
+| `extractor/reconstruct.py` | 886 | 5 | the pipeline is generic; every type it carries is not |
+| `runner/tools.py` | 845 | 6 | Layer-5 subject (roles, anchors, the whole gate) |
+
+**The seam is a type, not a directory.** `dante_corpus.skel.models.SkelRow` is
+imported by **8** of the surviving modules and is the unit every gate, artifact
+and log record is written in terms of; `RowKey` is its tuple form. Nothing in
+the apparatus is coupled to Layer 5 by *behaviour* — the loop, the gates' shape,
+the artifact/resume machinery, the fix-verdict logic are all indifferent to what
+a row means. They are coupled by carrying Layer 5's row type and calling Layer
+5's validator. That is the thing to abstract, and it is one thing.
+
+The three Layer-5 authorities the apparatus calls out to, all reachable from
+`extractor/layers.py` and `runner/tools.py`:
+`skel.validate.validate_unit` (gate 2), `skel.derive`'s `ARG_DEPRELS` /
+`CLAUSE_HEAD_DEPRELS` (the verdict and the levels), and `skel.models`'
+`ROLES` / `OBL_RE` / `GrammarContext` (the vocabulary). `skel.io.write_skel` and
+`hashes.canto_hashes` are gate 3's, and `recon/` is Layer-5 subject matter
+throughout.
+
+**Facts about the current packaging, checked 2026-09-07:**
 
 - The repo is one `uv` project (`pyproject.toml`, name `dante-corpus`, hatchling,
   no explicit package list — the build back end picks packages up implicitly).
@@ -105,25 +149,29 @@ above):
 **Questions the session will have to settle** — listed so they are not
 rediscovered, not because any has a preferred answer:
 
-1. **What is library and what is subject matter.** The bounded loop, the gates,
-   the observability frame and the artifact/resume machinery are the apparatus.
-   `recon/` is a Layer-5 artifact tree plus its Makefile and readouts — a
-   subject, not a tool — but its TSVs are also the corpus's committed
-   reconstruction, which is not obviously `layers/`' property either. The cut
-   above already removed the pieces whose classification was least clear
-   (`fixtures/`, the miners), so this question is narrower than it was.
-2. **Whether `harness/` becomes a separate distribution or stays a package in
-   this project** with `layers/` importing it in-tree. The second is much less
-   work and may be enough; the first is what "referenced through `uv`" most
-   naturally means. This is the first thing to decide, because everything else
-   follows from it.
-3. **Where the tests go**, given §3's reason for putting them at the root.
-4. **What this document becomes.** It is now the record of what the harness did
+1. **What replaces `SkelRow` at the boundary.** A protocol the subject
+   implements, a generic row type the subject parameterises, or an injected
+   codec — this is the first decision and everything else follows from it.
+   Whatever it is, `render_tsv` / `TsvArtifact` and the log record shape have to
+   go on speaking the same bytes, because the committed corpus is those bytes.
+2. **Whether the gate is injected or inverted.** Gate 2 is
+   `validate_unit(rows, layers)`; the apparatus needs *a* verdict function of
+   that shape, and `observe.py` + `fixlevel.py` need the classes it reports. The
+   question is whether the subject hands the apparatus a validator, or the
+   apparatus asks the subject to classify — S10.2 is the reason to be careful
+   here, since the classes themselves turned out to be proxies.
+3. **Where `recon/` goes.** It is a Layer-5 artifact tree plus its Makefile and
+   readouts — subject, not tool — but its TSVs are also the corpus's committed
+   reconstruction, which is not obviously the Layer-5 *package*'s property
+   either.
+4. **Whether `harness/` becomes a separate distribution or stays a package in
+   this project.** The second is much less work and may be enough for a first
+   pass; the first is what "referenced through `uv`" most naturally means. Now
+   downstream of 1–3 rather than ahead of them.
+5. **Where the tests go**, given §3's reason for putting them at the root.
+6. **What this document becomes.** It is now the record of what the harness did
    (§2's table plus ten stage documents). It should probably stop being called a
    plan.
-5. ~~**`README.md` is stale**~~ — brought up to date by the cut above (roadmap
-   through Stage 10, corrected directory map, removal note). What it should say
-   about the *split* still depends on answers 1–4.
 
 **One thing not to lose in a move.** The four 87-case benchmark run logs
 (Orientation item 2) are gitignored and disk-only. Nothing reads them since the
@@ -149,10 +197,12 @@ of these is a target.*
   purgatorio 77, paradiso 60), the residue S10.4 left and did not intend to
   chase.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7628**
-  corpus-wide — inferno 0.7672, purgatorio 0.7607, paradiso 0.7605.
-- **Test suite**: **1,029 passed** (S9.4 added 21 for the fixed-context loop,
-  S9.6 one for the mode default, S10.1 six for level 3). Its composition and
-  full history live in
+  corpus-wide — inferno 0.7672, purgatorio 0.7607, paradiso 0.7605. **This is
+  the last measurement and cannot be re-taken**: `recon/agree.py` was deleted on
+  2026-09-07 and nothing in `harness/` opens gold any more. Read it as a closing
+  number, not a current one.
+- **Test suite**: **734 passed** (2026-09-07, after the cut removed the deleted
+  modules' tests; it was 1,029 before). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
 
@@ -252,10 +302,6 @@ any one session, so it survives across Handoff clearings.
      duplicate spans — and key the dedup by the log's *path*, not its basename
      (`01.log` exists in all three canticles). An unswept log can still be read:
      it segments cleanly at its `summary` records (S8.4).
-   - **The tool-result console echo is on by default** (400 payload chars,
-     `reconstruct.py --tool-result-chars`, 0 = off); `recon/Makefile`'s `%.tsv`
-     recipe does not pass the flag, so changing it for corpus runs means editing
-     the recipe.
    - **`make check` exits 0** — the corpus has been hard-clean since S5.7, so a
      non-zero `make check` from here on is a regression signal, not an expected
      state (through S5.6 the checker's contract kept it red by design).
@@ -264,38 +310,33 @@ any one session, so it survives across Handoff clearings.
      re-open positions at either level (S8.1's regression note). Read
      `make fix-level` at every level after a pass, not just the one you ran.
    - The **S5.3-era standing discipline for any rule** (gold-benchmark-not-target,
-     schema/derivation authority, `make agree` as readout-only, read positions
-     before aggregates) is unchanged and lives in [`stages/05.md`](stages/05.md)
-     §5 and §4 below — not repeated here.
-7. **The execution mode, and how to tell which one is running.** Since S9.6
-   (2026-09-05) the **fixed-context loop is the default**: every generation and
-   fix target runs the bounded step with no flag at all. The per-unit
-   tool-calling session is the opt-in one and is slated for removal.
+     schema/derivation authority, read positions before aggregates) is unchanged
+     and lives in [`stages/05.md`](stages/05.md) §5 and §4 below — not repeated
+     here. Its `make agree`-as-readout-only clause has no subject any more: the
+     readout was deleted on 2026-09-07 and gold is not opened at all.
+7. **The execution mode.** Since S9.6 (2026-09-05) the fixed-context loop is the
+   default, and since the tool-calling session was deleted (2026-09-07) it is the
+   **only** mode: there is no flag, and nothing to tell apart any more.
 
    ```
    cd harness/recon
-   make inferno/01.tsv                     # fixed context, no flag needed
+   make inferno/01.tsv                     # one canto
                                            # + FIXED_ITERATIONS=n to change the cap
    make fix                                # the same loop over committed artifacts
-   make inferno/01.tsv TOOLCALL=1          # the old session, for comparison only
    ```
 
    `FIXED_ITERATIONS` deliberately keeps its S9.4-era name — a renamed make
-   variable fails silently. Three ways to see which mode is running from the
-   first seconds, worth knowing in both directions now that the default has
-   flipped: the configuration line reads `reconstruct: fixed context, 4
-   iteration(s) max, …` rather than `transcripts verbatim, …`; **no
-   `<tool_call>` block ever appears**, and per-unit `[fixed] … iter 1: N row(s),
-   accepted` lines do; and the log's `skill_digest` is `ee6f1a46…` rather than
-   `b16c0639…`. The standing readout commands, so any session starts from the
-   same place:
+   variable fails silently. What a healthy live run looks like in its first
+   seconds: the configuration line reads `reconstruct: fixed context, 4
+   iteration(s) max, …`, per-unit `[fixed] … iter 1: N row(s), accepted` lines
+   follow, and the canto's `skill_digest` is `ee6f1a46…`. The standing readout
+   commands, so any session starts from the same place:
 
    ```
    cd harness/recon && make check                     # 0 hard / 2,982 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
    make fix-level FIX=3                               # 225, after S10.4's run
-   make agree                                         # readout only, never a target
-   cd ../.. && uv run pytest -q                       # 1,029
+   cd ../.. && uv run pytest -q                       # 734
    ```
 
 ---
@@ -446,9 +487,9 @@ carries each in full and §5 says where it goes.
    $|P| + |\Sigma| + |O|$ budget ([`stages/09.md`](stages/09.md) §5) cannot be
    sized. Largest requests to date 5,093, 4,085 and 7,007 `input_tokens`, every
    one far from a refusal.
-3. **The tool-calling session is slated for removal**, deferred rather than
-   scheduled. It deletes the only comparison baseline for the mode now in use, so
-   it is a decision rather than a cleanup.
+3. ~~**The tool-calling session is slated for removal**, deferred rather than
+   scheduled.~~ **Done 2026-09-07** (Handoff), and it cost what this item said it
+   would: the only comparison baseline for the mode now in use is gone.
 
 ### Beyond Layer 5 (design notes)
 
@@ -463,20 +504,24 @@ the source of truth for what happens next.
 
 ### Transport & backend policy
 
-Decision record (2026-08-22): measured at roughly 3× the local speed, **XML
-(`PromptXmlTransport`) was adopted as the official wire format for Stage 1/2
-production runs; native Ollama tool calling (`OllamaNativeTransport`) stays
-implemented and gated for comparison experiments** (re-run
-`harness.toolcall.parity` when revisiting local-only deployments). Backend
-choice remains free: `google:gemma-4-31b-it` when wall clock matters,
-`ollama:gemma4:31b-it-qat` for offline/cost-constrained work — both validated
-end-to-end over the XML protocol during the T4/T5 gates.
+Decision record (2026-08-22), now **historical**: measured at roughly 3× the
+local speed, XML (`PromptXmlTransport`) was adopted as the official wire format
+for Stage 1/2 production runs, with native Ollama tool calling
+(`OllamaNativeTransport`) kept implemented and gated for comparison experiments.
+Both transports, and the parity check that compared them, were deleted on
+2026-09-07 — **there is no wire protocol to choose any more**: the fixed-context
+loop sends prose and reads back one `<rows>` block. The decision and its
+measurements stay readable in [`TOOLCALL.md`](TOOLCALL.md).
+
+Backend choice remains free and is the live part of this record:
+`google:gemma-4-31b-it` when wall clock matters, `ollama:gemma4:31b-it-qat` for
+offline/cost-constrained work — `recon/Makefile`'s `MODEL` selects it.
 
 Adapter policy (2026-08-24): the stateful `llm7shi.Client` adapter is the
-common model-access specification; the stateless probe/parity adapters and the
-skel drivers' disposable-Client pattern are legacy from the trial-and-error
-phase. The standing rules live in [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
-(§2 Model access, §3 Wire protocol).
+common model-access specification, and since the stateless probe/parity adapters
+were deleted it is the only one — `runner/llm.py` is where it lives. The
+standing rules live in [`../ARCHITECTURE.md`](../ARCHITECTURE.md) (§2 Model
+access, §3 Wire protocol).
 
 ---
 
@@ -485,18 +530,22 @@ phase. The standing rules live in [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 The directory map lives in [`README.md`](README.md#directory-structure) —
 single source, not duplicated here. The boundaries it encodes:
 
-- **`skel/` is protected, not a dependency.** Gold TSVs, the 130-rule registry,
-  and [`CORRECTIONS.md`](../skel/CORRECTIONS.md) are the evaluation reference
-  and are masked from agents structurally (§4 item 1); only operator-side
-  benchmark code reads them.
-- **`toolcall/` is a layer- and task-agnostic protocol library.** It knows
-  nothing about grammar: wire format, transports, and the multi-turn loop only.
-  Everything grammatical lives in `runner/`.
-- **`runner/` (Stage 1) produces traces; `extractor/` (Stage 2) consumes
-  them.** The contract between the stages is `UnitResult.trace_record()`, not
-  shared internals.
-- **`fixtures/` is data, read operator-side only.** Nothing under `runner/`
-  imports it, so the agent path cannot see the benchmark's case selection.
+- **`skel/` is protected, and since 2026-09-07 it is not read at all.** Gold
+  TSVs, the 130-rule registry and [`CORRECTIONS.md`](../skel/CORRECTIONS.md)
+  were the evaluation reference, masked from agents structurally (§4 item 1);
+  with every gold-referenced readout deleted, no code path in `harness/` opens
+  them. The masking boundary is now the package edge.
+- **`runner/` is what touches the model; `extractor/` is what drives it.**
+  `runner/` owns the evidence (`read_unit`), the gate (`validate_candidate`),
+  the prompt and the model adapter; `extractor/` owns the loop, the three gates
+  and the artifact. The contract between them is callable-level — a
+  `(canticle, canto, line_start, line_end) -> result` fallback — which is also
+  the seam every deterministic test injects at.
+- **The apparatus is coupled to Layer 5 by a type, not by behaviour.**
+  `dante_corpus.skel.models.SkelRow` is carried by 8 of the 19 surviving
+  modules; `skel.validate` / `skel.derive` are called by 4. Nothing else in the
+  loop, the gates or the artifact machinery knows what a row means. This is the
+  measurement the next session's split starts from (Handoff).
 - **Tests live at the repo root** (`tests/test_harness_*.py`) alongside the
   corpus suite, so the harness stays inside one pytest run.
 
@@ -507,23 +556,19 @@ single source, not duplicated here. The boundaries it encodes:
 - **Python always runs through `uv`** (`uv run python ...`, `uv run pytest ...`);
   never invoke a bare `python3`. Every command below follows this.
 - **Session division of labor**: assistant sessions execute deterministic,
-  LLM-free work only (tests, extraction/mining, artifact inspection); every
-  LLM-in-the-loop command (the probe / parity / benchmark / agent /
-  reconstruction CLIs) is run by the human operator, not by the assistant.
-- Live probe: `uv run python -m harness.toolcall.probe --model <model> --repeat N --log
-  harness/probe.log` — streaming JSONL: one scenario record per completed scenario,
-  summary record last (a log without the summary line = interrupted run);
-  `*.log` is gitignored.
-- Migration parity check (T5, live run PASSED 2026-08-22): `uv run python -m
-  harness.toolcall.parity
-  --model <model> [--repeat N] [--log harness/parity.log]` — same log semantics;
-  hard gate = canonical interop on both transports.
-- Single-unit session CLI (live smoke tests): `uv run python -m harness.runner.agent
-  --canticle inferno --canto 1 --line-start 1 [--line-end N] [--trace trace.jsonl]`.
-- Benchmark CLI (milestone 1.3): `uv run python -m harness.runner.benchmark [--category
-  C]... [--case-id ID]... [--limit N] [--list] [--log bench.log] [--full-transcript]`.
-  An existing `--log` resumes: completed cases reload into the aggregate and are
-  skipped; the summary sums per-session durations across all attempts.
+  LLM-free work only (tests, artifact inspection, log readouts); every
+  LLM-in-the-loop command is run by the human operator, not by the assistant.
+  This is why the cut of 2026-09-07 ships deterministically verified but
+  live-unverified (Handoff).
+- **There is one live entry point left**: `harness.extractor.reconstruct`, run
+  through [`recon/Makefile`](recon/Makefile). The probe, parity, single-unit
+  session and benchmark CLIs were deleted with the code under them; their
+  invocations are recorded in [`TOOLCALL.md`](TOOLCALL.md) and
+  [`stages/01.md`](stages/01.md) for reading, not for running.
+- Streaming JSONL log semantics are unchanged and standing: one record per
+  event, `summary` last as the completion marker (a log without it = interrupted
+  run), `*.log` gitignored. Resume state is the canto's TSV, never the log
+  (Orientation item 5).
 
 ---
 
@@ -539,7 +584,8 @@ single source, not duplicated here. The boundaries it encodes:
      or heuristic anywhere in `harness/` may be chosen by reading gold and
      matching it — that is teaching to the test: it voids every
      gold-referenced number the project reports (Stage 1's micro F1, S4.3's
-     verify-gold readout, `recon/agree.py`) and reinstates the top-down
+     verify-gold readout, `recon/agree.py` — all three since deleted, with
+     their closing values in Current Status) and reinstates the top-down
      rails methodology §1 says `harness/` exists to replace. Rules derive
      from the layer's own published contract instead —
      `dante_corpus/skel/validate.py`'s schema invariants and `derive.py`'s
