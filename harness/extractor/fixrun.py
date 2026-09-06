@@ -128,7 +128,11 @@ def fix_verdict(
     Three refusals, in the order they are checked: the submission is not
     hard-clean; the level's own findings did not fall; or a violation class the
     unit did not carry before is now present. The last is the acceptance gate
-    SOFT.md §6's dry run used — a repair may not trade its class for another.
+    SOFT.md §6's dry run used — a repair may not trade its class for another —
+    and `fixlevel.traded_classes` is where "traded" is defined, so that a level
+    whose repair necessarily exposes a class (level 3 registers a predicate and
+    its frame appears with it) is not refused for doing its own job. Every other
+    new class still refuses, and the two refusals above are untouched.
 
     `dep_rows` carries the canto's Layer 4 for the classes defined by the tree
     (level 2). It is the class definition, not the `holds` precondition — the two
@@ -141,8 +145,7 @@ def fix_verdict(
         fixlevel.select(before, level, dep_rows=dep_rows)
     ):
         return False, "no_improvement"
-    seen = {fixlevel.violation_class(v) for v in before}
-    new = {fixlevel.violation_class(v) for v in soft_after} - seen
+    new = fixlevel.traded_classes(before, soft_after, level, dep_rows)
     if new:
         return False, f"new_class:{','.join(sorted(new))}"
     return True, "accepted"
@@ -259,7 +262,8 @@ def salvage_by_row(
 
     Each finding's rows are therefore spliced and measured on their own, in a
     deterministic order, against the state accumulated so far: a step is kept
-    only when it stays hard-clean, introduces no class the unit did not carry,
+    only when it stays hard-clean, trades no class the unit did not carry
+    (`fixlevel.traded_classes`, the same definition `fix_verdict` applies),
     and strictly lowers the level's own finding count. Every kept step is an
     improvement that was measured, so the standing guarantee is unchanged — the
     artifact cannot end worse than it started, and the whole result is still put
@@ -285,7 +289,6 @@ def salvage_by_row(
         return None, 0, 0
     offers.sort(key=lambda offer: offer[0])
 
-    seen = {fixlevel.violation_class(v) for v in plan.before[span]}
     rows = {no: list(rs) for no, rs in plan.prior[span].items()}
     hard, soft = list(plan.before_hard[span]), list(plan.before[span])
     taken = 0
@@ -296,7 +299,9 @@ def salvage_by_row(
         )
         if trial_hard:
             continue
-        if {fixlevel.violation_class(v) for v in trial_soft} - seen:
+        if fixlevel.traded_classes(
+            plan.before[span], trial_soft, plan.level, plan.dep_rows
+        ):
             continue
         if len(fixlevel.select(trial_soft, plan.level, dep_rows=plan.dep_rows)) \
                 >= len(fixlevel.select(soft, plan.level, dep_rows=plan.dep_rows)):

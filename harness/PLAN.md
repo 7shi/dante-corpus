@@ -15,16 +15,50 @@ same document. The gates were re-read before closing on them, not carried over
 from the previous session — the numbers are in Current Status below. Nothing
 from Stage 9 is repeated here.
 
-**Stage 10's subject is soft `--fix` level 3, and it is provisional until a
-record in [`stages/10.md`](stages/10.md) fixes it.** Level 3 does not exist:
-`extractor/fixlevel.py` defines levels 1 and 2 only, so the first work is
-arguing a level-3 class from `validate.py`'s schema and `derive.py`'s derivation
-**with gold unopened** (Standing Invariant §1) — design work, not a switch to
-flip. `stages/10.md` §1 is what that work has to satisfy before it runs, and §2
-is the two unfinished Stage 9 items it inherits (no concurrent run has ever been
-made; the per-request ceiling is unmeasured).
+**IN FLIGHT: the operator is running level 3's first corpus-wide `--fix`
+(handed off 2026-09-06).** The level shipped in S10.1 and this commit is the
+tree it runs against: `unregistered_predicate`, selection **334**, levels 1 and
+2 at 0, suite 1,029, `make check` 0 hard / 3,126 soft, **no committed artifact
+touched yet**. The next session reads the result and writes it up as **S10.4** in
+[`stages/10.md`](stages/10.md).
 
-Nothing is in flight. The next session starts from `stages/10.md`.
+**Read the result this way** — the numbers first, then the two things this run is
+the first live test of:
+
+1. **Every level after the pass, not just the one that ran** (S8.1): `make check`,
+   `make fix-level FIX=1`, `FIX=2`, `FIX=3`, then `make agree` as a readout taken
+   afterwards and never as the criterion, then `uv run pytest -q`.
+2. **The soft count is expected to RISE, and that is not a regression.**
+   Registering a predicate exposes its frame — S6.1 measured 2+ new `missing_arg`
+   at 227 of the then-490 `missing_tuple` positions — so the number that says
+   whether the run worked is level 3's own finding count falling from 334, not
+   the corpus total. Report both, and say which is which.
+3. **`FixClass.exempts` has never run live.** S10.1 narrowed `fix_verdict`'s
+   new-class refusal so that a divergence at a predicate *this level itself
+   registered* counts as arithmetic rather than a traded class; without it the
+   correct answers would have been refused. Check in the per-canto logs that it
+   actually fired — accepted units whose `soft` rose at the registered predicate —
+   and that no `new_class:` refusal names a class at some *other* predicate that
+   should have been caught. If the exemption turns out to be wider than argued,
+   that is a mechanism finding, not a corpus one.
+4. **No unit may end worse than it started.** The standing guarantee is unchanged
+   by S10.1 and the per-canto records carry the mechanism (reopened, accepted vs
+   reverted, findings and soft before/after) to confirm it.
+
+Sweep the per-canto logs before the run and delete a canto's `.log` with its
+`.tsv` if anything is re-run under a changed implementation (Orientation items 5
+and 6) — the acceptance test changed in this commit, so a log spanning both sides
+of it would not be one implementation's behaviour.
+
+**Not in flight, and not to be acted on without a decision** — both came out of
+S10.1's design pass and are recorded in [`stages/10.md`](stages/10.md):
+**S10.2** — the session gate never checks anchors for bare `obl`, where
+`validate.py` does; all 133 `membership` violations are that shape, closing the
+hole costs 0 false refusals corpus-wide, but 3 named positions would then
+deadlock under a level-1 run, so the change is the operator's to schedule and it
+changes live-run semantics (Standing Invariant §6).
+**S10.3** — levels 1 and 2 have no reachable residue; the 26 findings their
+classes still match are declined correctly and are not a to-do list.
 
 ## Current Status
 
@@ -32,13 +66,13 @@ Every stage's status, dates and outcome are in §2's table; this section holds
 the open stage and the live numbers only.
 
 - [ ] **Stage 10 — Soft Level 3** — the open stage (**OPENED 2026-09-06**;
-      opening it closed Stage 9). Design and implement soft `--fix` level 3,
-      which does not exist yet: the class it selects must be argued from
-      `validate.py`'s schema and `derive.py`'s derivation with gold unopened,
-      resolved to one of S6.1's three outcomes before anything is edited, and
-      checked for gate/level alignment before its first run rather than after
-      four. Levels are cumulative, so whatever it selects is added to levels
-      1–2. It also inherits two unfinished Stage 9 items — never close
+      opening it closed Stage 9). Level 3 is **designed and implemented but not
+      run** (S10.1): `unregistered_predicate`, the clause head Layer 4 names and
+      the artifact never registers, argued from `derive.py`'s predicate census
+      with gold unopened, gate/level alignment measured before the run rather
+      than after four, and selecting **334** of the 401 `missing_tuple`
+      findings. Levels are cumulative, so it adds to levels 1–2. It also
+      inherits two unfinished Stage 9 items — never close
       conditions for that stage and not done: **no concurrent run has ever been
       made** (the ≈ 1.7× throughput is a projection from serial runs), and
       **the per-request ceiling is unmeasured**, so the fixed-context loop's
@@ -49,12 +83,14 @@ the open stage and the live numbers only.
 against a corpus last touched by S9.7's `--fix` sweep (2026-09-05).*
 
 - **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 3,126 soft**,
-  `make check` exits 0, `make fix-level` **0 at both levels** — the condition
-  Stage 9 closed on.
+  `make check` exits 0, `make fix-level` **0 at levels 1 and 2** — the condition
+  Stage 9 closed on — and **334 at level 3**, which S10.1 added and no run has
+  yet acted on.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7610**
   corpus-wide — inferno 0.7651, purgatorio 0.7592, paradiso 0.7586.
-- **Test suite**: **1,023 passed** (S9.4 added 21 for the fixed-context loop,
-  S9.6 one for the mode default). Its composition and full history live in
+- **Test suite**: **1,029 passed** (S9.4 added 21 for the fixed-context loop,
+  S9.6 one for the mode default, S10.1 six for level 3). Its composition and
+  full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
 
@@ -193,8 +229,9 @@ any one session, so it survives across Handoff clearings.
    ```
    cd harness/recon && make check                     # 0 hard / 3,126 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
+   make fix-level FIX=3                               # 334, never run
    make agree                                         # readout only, never a target
-   cd ../.. && uv run pytest -q                       # 1,023
+   cd ../.. && uv run pytest -q                       # 1,029
    ```
 
 ---
@@ -326,26 +363,51 @@ every later stage; the evidence is in [`SOFT.md`](SOFT.md) and
 
 **The open stage**, and the only one with prose here. Opening it closed Stage 9.
 
-**The scope, provisional until a record in [`stages/10.md`](stages/10.md) fixes
-it**: design and implement soft `--fix` level 3. It does not exist —
-`extractor/fixlevel.py` defines levels 1 and 2, both now at 0 findings — so the
-work is an argument before it is a run, and the argument has to be made the way
-level 2's was.
+**The scope, fixed by S10.1 (2026-09-06): level 3 is `unregistered_predicate`** —
+the predicate Layer 4 makes the head of a clause and the artifact never
+registers. Authority: `derive.py`'s step 1 promotes every token whose **own**
+deprel is in `CLAUSE_HEAD_DEPRELS`, so the evidence is one tree edge and the two
+registry `missing_tuple` tolerances (CS, AV) have already declined the position —
+S6.1's outcome 1. It selects **334** of the 401 `missing_tuple` findings; the 67
+it declines are reached by the census's `conj` chain walk (58) or by a second
+pass needing a Layer-2 `pos` the class cannot see (9), the same restriction level
+2 makes against the propagated subject. It is also the continuation level 2 asked
+for: the 52 `xcomp`/`ccomp` `missing_arg` findings level 2 deferred as "a
+compound repair whose second half is `missing_tuple`'s unargued question" become
+reachable once that question is argued.
 
-**What that means concretely**, all of it standing method rather than new
-constraint. The class or classes level 3 selects must be argued from
-`dante_corpus/skel/validate.py`'s schema invariants and `derive.py`'s derivation
-**with gold unopened** (Standing Invariant §1), and every candidate resolved to
-one of S6.1's three outcomes — the artifact is wrong (the only one that licenses
-a fix), a tolerance is missing, or the two notations are equivalent — *before*
-anything is edited. The gate/level alignment check comes first, not after four
-corpus-wide runs: whatever a level selects, the session gate must admit the row
-it asks for (S6.10 is the counterexample that cost level 1 five runs).
+**Two things a reader of the numbers must know.** The gate carries **no**
+level-3 bar — the only one it could carry demands 1,715 positions where the level
+selects 334 — so the ask lives in the notice, as at level 2. And the **soft count
+is expected to rise** on this level: registering a predicate exposes its frame
+(S6.1 measured 2+ new `missing_arg` at 227 of the then-490 positions), which is
+why `fix_verdict`'s new-class refusal now consults `FixClass.exempts` and treats
+a divergence at a predicate the level itself registered as arithmetic rather than
+a traded class. Every other refusal is unchanged and the standing guarantee
+holds: a fix run cannot leave the artifact worse than it found it.
+
+**It has never been run.** S10.1 ships the level the way S6.2 shipped level 1 —
+mechanism only, no committed artifact touched.
+
+**What the residue looks like after S10.1**, for whichever level comes next.
+Level 3 takes 334 of the 3,126; most of the rest have never been inside any
+level, which is not the same as being wrong — that is what S6.1's three outcomes
+are for, and two of them were resolved in the same pass without becoming a level:
+
+- **`extra_arg`'s 714 `advcl`-as-`obl` — outcome 2, declined on principle.** The
+  largest single population. `advcl` is not in `ARG_DEPRELS`, so `derive.py` is
+  silent and the only authority that speaks is registry rule T, a tolerance
+  fitted on gold; qualifying those obliques to satisfy it would derive a repair
+  rule from a fit to gold, which Standing Invariant §1 forbids.
+- **`membership`'s 133 — arguable, deferred.** The strongest authority available
+  (`validate.py`'s own anchor rule, not a diff), but 87 of them have an honest
+  outcome-2 competitor in rules J and R, which would leave the class at ~46.
+  Deferred to a later level; the gate defect it exposed is **S10.2**.
+
 Levels are cumulative, so level 3 adds to what 1–2 close rather than replacing
-it. The candidate list is [`stages/06.md`](stages/06.md) §3, minus what levels
-1–2 have already taken; most of the corpus's 3,126 remaining soft findings have
-never been inside any level, which is not the same as being wrong — that is what
-S6.1's three outcomes are for.
+it. And per **S10.3**, levels 1 and 2 have no reachable residue: the 26 findings
+their classes still match are declined correctly, so `make fix-level` at 0 is a
+complete readout of what a level can still do.
 
 **What it inherits from Stage 9, unfinished and never that stage's close
 conditions** (details in [`stages/10.md`](stages/10.md) §2):
@@ -369,8 +431,10 @@ conditions** (details in [`stages/10.md`](stages/10.md) §2):
 **One question from Stage 6 is still open and is the operator's**: whether
 `dante_corpus/skel/repairs.py` is an admissible authority. Stage 8 answered it
 **on scope, not on principle** — 297 of its 299 remaining positions lay outside
-level 2's selection — so it becomes live again the moment level 3 proposes to
-select that population.
+level 2's selection — so it becomes live again the moment a level proposes to
+select that population. **Level 3 does not**: `repairs.py`'s two rewrites are
+`role_label` and `null_subject`, neither of which registers a predicate, so the
+question stays where Stage 8 left it.
 
 ### Beyond Layer 5 (design notes)
 

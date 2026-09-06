@@ -40,6 +40,38 @@ unargued question. Every row this level asks for is anchored on a Layer-4 argume
 position, which is clause AF of `validate.py`'s own anchor rule — so the session's
 gate cannot refuse it, which is the alignment S6.10 says to check before running.
 
+**Level 3 — `unregistered_predicate`.** The artifact never registers a predicate
+Layer 4 makes the head of a clause (334 of the 401 `missing_tuple` findings,
+`../stages/10.md` S10.1). Its authority: `derive.py`'s step 1 promotes to a
+predicate every token whose own Layer-4 deprel is in `CLAUSE_HEAD_DEPRELS`, so a
+token under one of those relations *heads a clause* on the frozen tree, and the
+two `missing_tuple` tolerances of the registry (CS, AV) have already been offered
+this position and declined it. The evidence is again a single tree edge — the
+token's own — and the under-complete side is the artifact. Outcome 1.
+
+One restriction, the same one level 2 makes and for the same reason. **The
+predicate must be a clause head by its own deprel**: `derive_unit`'s census also
+promotes a conjunct whose `conj` chain resolves against the census (rules CA, AN,
+BZ) and, in a second pass, any non-auxiliary verb carrying an argument child, but
+the first is a chain walk rather than an edge and the second needs the Layer-2
+`pos` a class defined over the tree cannot see. 67 findings sit on those two
+routes — 58 `conj` and 9 elsewhere — and the level declines them rather than
+guessing, exactly as level 2 declines the propagated subject.
+
+**Why this level's repair is allowed to raise the soft count**, and what still
+holds it. Registering a predicate exposes its frame: S6.1 measured 2+ new
+`missing_arg` at 227 of the then-490 `missing_tuple` positions, which is why the
+soft counter is not a distance and rises on a strict improvement. `fix_verdict`'s
+third refusal — no violation *class* the unit did not carry before — would
+therefore refuse precisely the answers that do this repair correctly. `exempts` is
+where a class declares that narrowly: a new divergence finding **at a predicate
+this level's own findings named** is arithmetic, not a traded class, because that
+predicate contributed no findings of any of those classes before for the plain
+reason that it was not on record. A new class anywhere else is still a refusal,
+the submission must still be hard-clean, and the level's own findings must still
+strictly fall — so the standing guarantee is unchanged: a fix run cannot leave the
+artifact worse than it found it.
+
 **What may cross into a session.** S5.5 kept soft findings out of the agent's
 session because they are `derive_unit`'s own answer, and handing those back would
 void the autonomy premise (`../PLAN.md` §1). This module keeps that line: a notice
@@ -55,7 +87,7 @@ from typing import Callable, Iterable
 
 from dante_corpus.dep import DepRow
 from dante_corpus.morph import Violation
-from dante_corpus.skel.derive import ARG_DEPRELS
+from dante_corpus.skel.derive import ARG_DEPRELS, CLAUSE_HEAD_DEPRELS
 from dante_corpus.skel.models import OBL_RE, SkelRow
 
 # The TSV column names, mirrored from `artifact._TSV_HEADER` (imported there
@@ -109,6 +141,45 @@ def argument_edge(
     return None
 
 
+def clause_head_edge(
+    dep_rows: dict[int, Iterable[DepRow]], position: tuple[int, int]
+) -> DepRow | None:
+    """`position`'s own Layer-4 edge, when that edge makes it a clause head.
+
+    The evidence `derive.py`'s step 1 reads to promote a token to a predicate: its
+    own deprel is one of `CLAUSE_HEAD_DEPRELS`. Recomputed here from the frozen
+    layer rather than imported from the derivation, so a notice cites the tree and
+    not the answer. `None` when the token heads no clause by its own edge —
+    including when the census reached it some other way (the `conj` chain walk, the
+    second pass's argument-bearing verb), which level 3 does not select.
+    """
+    for rows in dep_rows.values():
+        for row in rows:
+            if (row.line, row.token) == position:
+                return row if row.deprel in CLAUSE_HEAD_DEPRELS else None
+    return None
+
+
+def argument_children(
+    dep_rows: dict[int, Iterable[DepRow]], predicate: tuple[int, int]
+) -> list[DepRow]:
+    """Every Layer-4 argument-child of `predicate`, in token order.
+
+    The frame `derive.py`'s step 2 would collect for a predicate — the positions a
+    newly registered predicate's rows may land on, which is what makes them the
+    keys level 3's findings govern.
+    """
+    kids = [
+        row
+        for rows in dep_rows.values()
+        for row in rows
+        if (row.head_line, row.head_token) == predicate
+        and row.deprel in ARG_DEPRELS
+    ]
+    kids.sort(key=lambda row: (row.line, row.token))
+    return kids
+
+
 # --- the classes ------------------------------------------------------------------------
 
 
@@ -138,12 +209,22 @@ class FixClass:
     # while a session answers a whole *unit*, and this is where that difference
     # is written down: a refused whole-unit answer may still be taken at exactly
     # these keys and nowhere else (`reconstruct.salvage_rows`, `../stages/06.md`).
-    keys: Callable[[Violation], frozenset[RowKey]]
+    # Takes the tree for the same reason `matches` does: level 3's row does not
+    # exist in the artifact yet, so the keys it may occupy have to be enumerated
+    # from the frozen layer rather than read off the rows.
+    keys: Callable[[Violation, dict[int, Iterable[DepRow]]], frozenset[RowKey]]
     # Does the artifact actually hold the row this class would repair? A repair
     # level acts on a row, so a finding naming a row the artifact does not have
     # is not work this level can do — the precondition `select` applies wherever
     # the rows are in hand (`../stages/06.md` S6.9).
     holds: Callable[[Violation, dict[int, list[SkelRow]]], bool]
+    # Is a violation class appearing only *after* the repair an arithmetic
+    # consequence of this class's own finding, rather than a class traded for
+    # another? Takes `(finding, new_violation)`. The default answer is no, which is
+    # `fix_verdict`'s third refusal unrelaxed and what levels 1 and 2 both want: a
+    # relabel and a single added row have no arithmetic of their own. Level 3 is the
+    # exception the field exists for — see the module docstring.
+    exempts: Callable[[Violation, Violation], bool] = lambda finding, new: False
 
 
 def _is_oblique_qualification(
@@ -194,7 +275,9 @@ def _oblique_qualification_notice(
     )
 
 
-def _oblique_qualification_keys(v: Violation) -> frozenset[RowKey]:
+def _oblique_qualification_keys(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]] | None = None
+) -> frozenset[RowKey]:
     """The single row the finding is about: this predicate's oblique argument.
 
     The repair is a relabel in place — `obl` to `obl:<lemma>` at one predicate /
@@ -291,7 +374,9 @@ def _omitted_l4_argument_notice(
     )
 
 
-def _omitted_l4_argument_keys(v: Violation) -> frozenset[RowKey]:
+def _omitted_l4_argument_keys(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]] | None = None
+) -> frozenset[RowKey]:
     """The row the finding asks for, and — for a subject — the null slot it fills.
 
     The repair adds a row, so the governed key is one the artifact does not yet
@@ -342,12 +427,132 @@ OMITTED_L4_ARGUMENT = FixClass(
     keys=_omitted_l4_argument_keys,
     holds=_omitted_l4_argument_holds,
 )
+def _is_unregistered_predicate(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]] | None = None
+) -> bool:
+    """`missing_tuple` at a token whose own Layer-4 deprel makes it a clause head.
+
+    The module docstring carries the argument; this is where its restriction is
+    enforced. Without the tree the class selects nothing — the finding's own text
+    cannot tell a clause head from a conjunct the census resolved by walking a
+    chain, and a class that cannot see its evidence declines rather than guesses.
+    """
+    if (
+        v.kind != "tag"
+        or not v.detail.startswith("missing_tuple:")
+        or v.predicate is None
+    ):
+        return False
+    return clause_head_edge(dep_rows or {}, v.predicate) is not None
+
+
+def _unregistered_predicate_notice(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]]
+) -> str:
+    pred = v.predicate or (v.line, 0)
+    edge = clause_head_edge(dep_rows, pred)
+    word = f" {edge.word!r}" if edge is not None else ""
+    relation = f"`{edge.deprel}`" if edge is not None else "a clause-head relation"
+    kids = argument_children(dep_rows, pred)
+    if kids:
+        frame = ", ".join(f"{r.line}.{r.token} {r.word!r} ({r.deprel})" for r in kids)
+        frame_note = (
+            f" Layer 4 hangs {len(kids)} argument-bearing dependent(s) on it "
+            f"({frame}); read them, and any the tree leaves implicit, as its frame."
+        )
+    else:
+        frame_note = (
+            " Layer 4 hangs no argument-bearing dependent on it, so its frame may "
+            "well be a dropped subject or nothing at all — say which."
+        )
+    return (
+        f"predicate {pred[0]}.{pred[1]}{word}: Layer 4 attaches this token under "
+        f"{relation}, one of the relations that makes a token the head of its own "
+        f"clause, and the analysis on record gives the unit no predicate at that "
+        f"position at all. A token heading a clause is a predicate of this unit: "
+        f"register it and give it its frame.{frame_note} If your reading makes it "
+        f"something other than a clause head, leave the analysis as it stands."
+    )
+
+
+def _unregistered_predicate_keys(
+    v: Violation, dep_rows: dict[int, Iterable[DepRow]] | None = None
+) -> frozenset[RowKey]:
+    """Every key a newly registered predicate's own rows may occupy — the tree's.
+
+    A level names a *row*, and this level's row does not exist yet, so the keys it
+    governs have to be enumerated from the frozen layer rather than read off the
+    artifact: the predicate paired with each of its Layer-4 argument-children, plus
+    its `(0, 0)` slot for a dropped subject or the zero-argument marker. A
+    position-scoped splice therefore takes the new predicate's frame exactly where
+    the tree attaches one and nowhere else — an argument the derivation reaches by
+    inference is `omitted_l4_argument`'s restriction all over again, and a splice
+    is not the place to relax it. The whole-unit acceptance path is unaffected: an
+    answer that survives `fix_verdict` entire is taken entire.
+
+    Without the tree only the null slot is named, which is `select`'s own rule for
+    a class that cannot see its evidence: under-reach rather than mis-reach.
+    """
+    dep_rows = dep_rows or {}
+    pred = v.predicate or (v.line, 0)
+    keys = {(pred[0], pred[1], 0, 0)}
+    for row in argument_children(dep_rows, pred):
+        keys.add((pred[0], pred[1], row.line, row.token))
+    return frozenset(keys)
+
+
+def _unregistered_predicate_holds(
+    v: Violation, rows_by_line: dict[int, list[SkelRow]]
+) -> bool:
+    """Is the predicate really absent from the artifact?
+
+    The mirror of level 2's precondition. `rules.py` compares two predicate
+    censuses, and its own key rewrites (I, AV) can report a `missing_tuple` at a
+    position the artifact does carry under a token the classifier merged away; the
+    notice built from such a finding would ask for a tuple that is already there.
+    """
+    pred = v.predicate or (v.line, 0)
+    return not any(
+        (r.line, r.token) == pred
+        for rows in rows_by_line.values()
+        for r in rows
+        if r.token > 0
+    )
+
+
+def _unregistered_predicate_exempts(finding: Violation, new: Violation) -> bool:
+    """Is `new` the exposed frame of the predicate `finding` asked to register?
+
+    The narrow exemption the module docstring argues for, keyed on the predicate
+    position and nothing else: a divergence finding at a predicate that was not on
+    record before is arithmetic the repair itself produced, not a class traded away.
+    Anything at another predicate, and anything outside the divergence family, is
+    refused as before.
+    """
+    return (
+        new.predicate is not None
+        and new.predicate == finding.predicate
+        and violation_class(new) in _DIVERGENCE_KINDS
+    )
+
+
+UNREGISTERED_PREDICATE = FixClass(
+    name="unregistered_predicate",
+    matches=_is_unregistered_predicate,
+    notice=_unregistered_predicate_notice,
+    keys=_unregistered_predicate_keys,
+    holds=_unregistered_predicate_holds,
+    exempts=_unregistered_predicate_exempts,
+)
+
+
 
 # Cumulative: level N acts on levels 1..N. A class joins the table only once its
 # outcome has been argued from the contract (`../stages/06.md` §2).
 LEVELS: dict[int, tuple[FixClass, ...]] = {
     1: (OBLIQUE_QUALIFICATION,),
     2: (OMITTED_L4_ARGUMENT,),
+    3: (UNREGISTERED_PREDICATE,),
 }
 
 MAX_LEVEL = max(LEVELS)
@@ -403,6 +608,19 @@ def toolkit_flags(level: int) -> dict[str, bool]:
     is S6.10's second asymmetry — a level's bar and its selection naming different
     positions — at 46% of the pool instead of 2 units in 10, so level 2's ask stays
     in the notice, which names exactly the positions the checker selected.
+
+    **Level 3 adds none either, on the same measurement and a wider margin.** The
+    only bar a session-side gate could carry is "register every clause-head token
+    of this unit as a predicate" — over the committed corpus that demands **1,715**
+    positions where the level selects **334**, a fivefold over-demand, because the
+    derivation's own census refuses clause heads its carve-outs (BN, AN) exclude
+    and the checker excuses two more classes (CS, AV) on top. A bar that wrong
+    would refuse the model's correct answers, which is S6.9's deadlock built on
+    purpose, so level 3's ask also stays in the notice. The alignment that *does*
+    matter for it — the gate admitting the row it asks for — is the easy direction
+    here: `validate.py` puts no anchor condition on a predicate token, only that
+    the token exists and matches its word, so a registration is admissible by
+    construction (`../stages/10.md` S10.1).
     """
     names = {cls.name for cls in classes_for(level)}
     return {
@@ -462,8 +680,42 @@ def governed_keys(
     for v in findings:
         cls = class_of(v, level, dep_rows)
         if cls is not None:
-            keys |= cls.keys(v)
+            keys |= cls.keys(v, dep_rows or {})
     return frozenset(keys)
+
+
+def traded_classes(
+    before: Iterable[Violation],
+    soft_after: Iterable[Violation],
+    level: int,
+    dep_rows: dict[int, Iterable[DepRow]] | None = None,
+) -> set[str]:
+    """Violation classes the answer introduced that the unit did not carry — minus
+    the ones this level's own repair necessarily exposes.
+
+    The one implementation of `fix_verdict`'s third refusal, shared with
+    `salvage_by_row`'s per-step copy of it so the two scopes cannot drift apart. A
+    class is *traded* unless some finding of this level's own selection declares it
+    arithmetic (`FixClass.exempts`) — which levels 1 and 2 never do, so for them
+    this is the plain set difference it has always been.
+    """
+    before = list(before)
+    seen = {violation_class(v) for v in before}
+    findings = select(before, level, dep_rows=dep_rows)
+    traded: set[str] = set()
+    for v in soft_after:
+        name = violation_class(v)
+        if name in seen:
+            continue
+        exempt = False
+        for finding in findings:
+            cls = class_of(finding, level, dep_rows)
+            if cls is not None and cls.exempts(finding, v):
+                exempt = True
+                break
+        if not exempt:
+            traded.add(name)
+    return traded
 
 
 def violation_class(v: Violation) -> str:

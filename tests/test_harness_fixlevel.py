@@ -304,6 +304,128 @@ def test_level_2_notice_names_the_edge_and_never_the_derived_role():
     assert "obl:in" not in block and "3.7" in block
 
 
+def _missing_tuple(predicate, line=3):
+    return _violation(
+        f"missing_tuple: predicate {predicate[0]}.{predicate[1]} not proposed",
+        line=line, predicate=predicate,
+    )
+
+
+def test_level_3_selects_only_a_clause_head_by_its_own_deprel():
+    """`derive.py` step 1 promotes every token whose own deprel is a clause-head
+    relation, and that edge is the whole of level 3's evidence. What the census
+    reaches otherwise — the `conj` chain walk (58 of the corpus's `missing_tuple`
+    findings) and pass 2's argument-bearing verb, which needs a Layer-2 `pos` this
+    class cannot see — is not one edge and is not selected."""
+    tree = {3: [
+        _dep(3, 5, "va", "advcl", (3, 1)),      # a clause head by its own deprel
+        _dep(3, 8, "sta", "conj", (3, 5)),      # reached by the chain walk
+        _dep(3, 9, "vede", "obj", (3, 5)),      # reached by pass 2, needs L2 pos
+    ]}
+    assert fixlevel.select([_missing_tuple((3, 5))], 3, dep_rows=tree) == [
+        _missing_tuple((3, 5))
+    ]
+    assert fixlevel.select([_missing_tuple((3, 8))], 3, dep_rows=tree) == []
+    assert fixlevel.select([_missing_tuple((3, 9))], 3, dep_rows=tree) == []
+    # without the tree the class declines rather than guesses
+    assert fixlevel.select([_missing_tuple((3, 5))], 3) == []
+    # and it is level 3's alone — levels 1 and 2 never reach a `missing_tuple`
+    assert fixlevel.select([_missing_tuple((3, 5))], 2, dep_rows=tree) == []
+
+
+def test_level_3_holds_declines_a_predicate_the_artifact_already_registers():
+    """The mirror of level 2's precondition: `rules.py`'s own key rewrites (I, AV)
+    can report a `missing_tuple` at a position the artifact does carry, and the
+    notice built from it would ask for a tuple that is already there."""
+    tree = {3: [_dep(3, 5, "va", "advcl", (3, 1))]}
+    v = _missing_tuple((3, 5))
+    absent = {3: [SkelRow(3, 1, "dice", "subj", 3, 2)]}
+    assert fixlevel.select([v], 3, absent, tree) == [v]
+
+    registered = {3: [SkelRow(3, 5, "va", "subj", 0, 0)]}
+    assert fixlevel.select([v], 3, registered, tree) == []
+
+
+def test_level_3_governs_the_tree_frame_and_the_null_slot():
+    """The row this level asks for does not exist yet, so its keys come from the
+    frozen layer: the predicate paired with each Layer-4 argument-child, plus the
+    `(0, 0)` slot. A splice takes the new frame there and nowhere else."""
+    tree = {3: [
+        _dep(3, 5, "va", "advcl", (3, 1)),
+        _dep(3, 2, "Virgilio", "nsubj", (3, 5)),
+        _dep(3, 7, "riva", "obl", (3, 5)),
+        _dep(3, 6, "presso", "case", (3, 7)),   # not an argument edge
+    ]}
+    v = _missing_tuple((3, 5))
+    assert fixlevel.governed_keys([v], 3, tree) == frozenset(
+        {(3, 5, 0, 0), (3, 5, 3, 2), (3, 5, 3, 7)}
+    )
+
+    prior = {3: [SkelRow(3, 1, "dice", "subj", 3, 2)]}
+    submitted = {3: [
+        SkelRow(3, 1, "dice", "subj", 3, 2),
+        SkelRow(3, 5, "va", "subj", 3, 2),
+        SkelRow(3, 5, "va", "obl:presso", 3, 7),
+        SkelRow(3, 5, "va", "obj", 3, 9),       # off the tree's frame
+    ]}
+    salvaged = rc.salvage_rows(prior, submitted, fixlevel.governed_keys([v], 3, tree))
+    assert [(r.line, r.token, r.role, r.arg_line, r.arg_token) for r in salvaged[3]] == [
+        (3, 1, "subj", 3, 2),
+        (3, 5, "subj", 3, 2),
+        (3, 5, "obl:presso", 3, 7),
+    ]
+
+
+def test_level_3_notice_names_the_edge_and_never_the_derived_frame():
+    """S5.5's line, at level 3: the invariant plus the frozen-layer evidence (the
+    token's own clause-head edge and the dependents Layer 4 hangs on it), never
+    `derive_unit`'s roles."""
+    tree = {3: [
+        _dep(3, 5, "va", "advcl", (3, 1)),
+        _dep(3, 7, "riva", "obl", (3, 5)),
+    ]}
+    v = _missing_tuple((3, 5))
+    notice = fixlevel.UNREGISTERED_PREDICATE.notice(v, tree)
+    assert "3.5" in notice and "va" in notice and "`advcl`" in notice
+    assert "3.7" in notice and "riva" in notice
+    assert "obl:" not in notice and "'subj'" not in notice
+
+
+def test_level_3_exempts_only_the_frame_of_the_predicate_it_registers():
+    """Registering a predicate exposes its frame — S6.1's non-monotonicity — so
+    `fix_verdict`'s third refusal would refuse the answers that do this repair
+    correctly. The exemption is keyed on the predicate position and nothing else."""
+    tree = {3: [_dep(3, 5, "va", "advcl", (3, 1))]}
+    before = [_missing_tuple((3, 5))]
+
+    exposed = [_missing_arg("obl:in", (3, 7), (3, 5))]
+    assert fixlevel.traded_classes(before, exposed, 3, tree) == set()
+    assert fix_verdict_ok(before, exposed, 3, tree)
+
+    elsewhere = [_missing_arg("obl:in", (3, 7), (3, 1))]
+    assert fixlevel.traded_classes(before, elsewhere, 3, tree) == {"missing_arg"}
+    assert not fix_verdict_ok(before, elsewhere, 3, tree)
+
+    # levels 1 and 2 declare no exemption, so the refusal is the plain difference
+    v = _missing_arg("obj", (3, 7), (3, 5))
+    tree2 = {3: [_dep(3, 7, "riva", "obj", (3, 5))]}
+    assert fixlevel.traded_classes(
+        [v], [_missing_tuple((3, 5))], 2, tree2
+    ) == {"missing_tuple"}
+
+
+def fix_verdict_ok(before, soft_after, level, tree):
+    ok, _ = rc.fix_verdict(before, [], soft_after, level, tree)
+    return ok
+
+
+def test_toolkit_flags_add_no_session_bar_at_level_3():
+    """The same measurement level 2 made, at a wider margin: the only bar a session
+    gate could carry — register every clause-head token — demands 1,715 positions
+    where level 3 selects 334, so the ask stays in the notice (S10.1)."""
+    assert fixlevel.toolkit_flags(3) == fixlevel.toolkit_flags(2)
+
+
 def test_toolkit_flags_add_no_session_bar_at_level_2():
     """S6.10's lesson applied before the runs: a level's bar and its selection must
     name the same positions. A session-side bar sees no registry, so the only one it
@@ -323,9 +445,13 @@ def test_every_row_any_level_asks_for_is_admissible_to_the_session_gate():
     everywhere, which would mean transcribing three gold-fitted tolerances (AQ, DG,
     DS) into the agent's gate on the authority of a fit to gold.
 
-    It holds structurally today for both classes: level 2 names only arguments under
-    a Layer-4 `ARG_DEPRELS` edge, which *is* clause AF of the anchor rule and of the
-    gate's transcription of it, and level 1 relabels a row already anchored there.
+    It holds structurally today for all three classes: level 2 names only arguments
+    under a Layer-4 `ARG_DEPRELS` edge, which *is* clause AF of the anchor rule and
+    of the gate's transcription of it, and level 1 relabels a row already anchored
+    there. Level 3 names a *predicate* and no argument at all, and the anchor rule
+    has nothing to say about a predicate token — `validate.py` asks only that it
+    exist and match its word — so its admissibility is checked as that, which is
+    the whole of what the gate can refuse a registration for.
     The loop is over `classes_for(MAX_LEVEL)` rather than over the two by name, so a
     class joining the table inherits the requirement instead of being exempt from it
     by omission — and every class must be *exercised*, so a level this fixture never
@@ -368,9 +494,20 @@ def test_every_row_any_level_asks_for_is_admissible_to_the_session_gate():
                         for cls in fixlevel.classes_for(fixlevel.MAX_LEVEL):
                             if not cls.matches(v, layers.dep_rows):
                                 continue
-                            assert tools.anchor_admits(
-                                data, predicates, v.role, v.arg
-                            ), f"{cls.name} asks for a row the gate refuses: {v.detail}"
+                            if v.arg is None:
+                                # a registration: the gate's only bar is existence
+                                line, token = v.predicate
+                                assert token <= len(data.tokens.get(line, ())), (
+                                    f"{cls.name} asks for a predicate the gate "
+                                    f"refuses: {v.detail}"
+                                )
+                            else:
+                                assert tools.anchor_admits(
+                                    data, predicates, v.role, v.arg
+                                ), (
+                                    f"{cls.name} asks for a row the gate refuses: "
+                                    f"{v.detail}"
+                                )
                             checked[cls.name] += 1
     assert set(checked) == {
         cls.name for cls in fixlevel.classes_for(fixlevel.MAX_LEVEL)
