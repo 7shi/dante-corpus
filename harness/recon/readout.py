@@ -1,6 +1,9 @@
 """Stage-4 corpus-wide log readout: aggregates the 100 per-canto `harness/recon/<canticle>/NN.log`
-JSONL streams (`../stages/04.md` §5's closing act) into the hygiene, F1, gate-pass, TPM-pressure,
+JSONL streams (`../stages/04.md` §5's closing act) into the hygiene, gate-pass, TPM-pressure,
 wall-clock, and cap-accounting numbers needed to write the closing ledger entry.
+
+The gold-referenced F1 sections went with `--verify-gold` (2026-09-07): a run
+records no `gold` block any more, so there is nothing here to aggregate.
 
 Deterministic and LLM-free: reads logs only, never launches `reconstruct.py`.
 
@@ -21,12 +24,8 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-from statistics import median
 
 CANTICLE_COUNTS = {"inferno": 34, "purgatorio": 33, "paradiso": 33}
-# Established in ../stages/03.md/../stages/04.md across four inferno-1 confirmation runs;
-# purgatorio/paradiso have no prior band — this run establishes their baseline.
-INFERNO_F1_BAND = (0.744, 0.796)
 ROLLING_WINDOW_SECONDS = 60.0
 
 
@@ -59,7 +58,7 @@ def last_run(records: list[dict]) -> list[dict]:
 
     Since S5.5 the log is append-only and the TSV is the resume state, so a
     canto re-run after Stage 4 holds *two or three* `summary` records and, with
-    each, its own block of `unit`/`gold`/`llm_request`/`llm_response` records.
+    each, its own block of `unit`/`llm_request`/`llm_response` records.
     Folding the whole file in would count that canto two or three times over
     and mix a complete Stage-4 aggregate with a later partial one.
 
@@ -151,39 +150,6 @@ def hygiene_report(corpus: Corpus) -> dict:
     }
 
 
-def canticle_f1(summaries: list[dict]) -> dict:
-    tp = fp = fn = 0
-    per_canto = []
-    for s in summaries:
-        gold = s.get("gold")
-        if not gold:
-            continue
-        tp += gold["tp"]
-        fp += gold["fp"]
-        fn += gold["fn"]
-        per_canto.append(gold["f1"])
-    precision = tp / (tp + fp) if (tp + fp) else 0.0
-    recall = tp / (tp + fn) if (tp + fn) else 0.0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
-    per_canto.sort()
-    return {
-        "tp": tp,
-        "fp": fp,
-        "fn": fn,
-        "precision": precision,
-        "recall": recall,
-        "f1": f1,
-        "per_canto_min": per_canto[0] if per_canto else None,
-        "per_canto_median": median(per_canto) if per_canto else None,
-        "per_canto_max": per_canto[-1] if per_canto else None,
-    }
-
-
-def f1_outliers(summaries: list[dict], n: int = 3) -> list[tuple[int | None, float]]:
-    """The n lowest-F1 cantos, named by canto number, for isolating a canto-level collapse."""
-    rows = [(s.get("_canto"), s["gold"]["f1"]) for s in summaries if s.get("gold")]
-    rows.sort(key=lambda row: row[1])
-    return rows[:n]
 
 
 def slow_units(summaries: list[dict], n: int = 3) -> list[tuple[int | None, float]]:
@@ -397,30 +363,9 @@ def print_report(corpus: Corpus) -> None:
         print(f"  {label}: {n}" + (f"  e.g. {hygiene[key][0]}" if n else ""))
     print(f"  token_assertion_errors (sum): {hygiene['token_assertion_errors_total']}")
 
-    print("\n=== Per-canticle F1 (micro, aggregated tp/fp/fn) ===")
     all_summaries = corpus.all_summaries()
-    for canticle in CANTICLE_COUNTS:
-        f1r = canticle_f1(corpus.summaries[canticle])
-        band_note = ""
-        if canticle == "inferno":
-            lo, hi = INFERNO_F1_BAND
-            band_note = f"  [{'IN BAND' if lo <= f1r['f1'] <= hi else 'OUT OF BAND'} {lo}-{hi}]"
-        print(
-            f"  {canticle}: f1={f1r['f1']:.4f} p={f1r['precision']:.4f} r={f1r['recall']:.4f} "
-            f"tp={f1r['tp']} fp={f1r['fp']} fn={f1r['fn']} "
-            f"per-canto[min/median/max]={f1r['per_canto_min']:.4f}/{f1r['per_canto_median']:.4f}/{f1r['per_canto_max']:.4f}"
-            f"{band_note}"
-        )
-    corpus_f1 = canticle_f1(all_summaries)
-    print(f"  corpus-wide: f1={corpus_f1['f1']:.4f} p={corpus_f1['precision']:.4f} r={corpus_f1['recall']:.4f}")
 
-    print("\n=== Lowest-F1 cantos (for isolating a canto-level collapse, §6) ===")
-    for canticle in CANTICLE_COUNTS:
-        outliers = f1_outliers(corpus.summaries[canticle])
-        rendered = ", ".join(f"canto {canto} f1={f1:.4f}" for canto, f1 in outliers)
-        print(f"  {canticle}: {rendered}")
-
-    print("\n=== Gate-pass rates (informational — F1 above is the reliable judge) ===")
+    print("\n=== Gate-pass rates ===")
     for canticle in CANTICLE_COUNTS:
         g = gate_pass_report(corpus.summaries[canticle])
         print(
@@ -437,20 +382,12 @@ def print_report(corpus: Corpus) -> None:
         print(f"  {canticle}: {rendered}")
     print(f"  corpus-wide: {dict(sum_counter_field(all_summaries, 'violation_kinds'))}")
 
-    print("\n=== Routing & reasons (fast-path vs agent-fallback coverage) ===")
+    print("\n=== Routes & reasons (agent / tsv-replay, generation / fix) ===")
     for canticle in CANTICLE_COUNTS:
         routes = sum_counter_field(corpus.summaries[canticle], "routes")
         reasons = sum_counter_field(corpus.summaries[canticle], "reasons")
-        total = sum(routes.values())
-        fast = routes.get("fast", 0)
-        print(
-            f"  {canticle}: routes={dict(routes)} (fast-path {fast}/{total} = {fast / total:.1%}), "
-            f"reasons={dict(reasons)}"
-        )
-    all_routes = sum_counter_field(all_summaries, "routes")
-    all_total = sum(all_routes.values())
-    all_fast = all_routes.get("fast", 0)
-    print(f"  corpus-wide: routes={dict(all_routes)} (fast-path {all_fast}/{all_total} = {all_fast / all_total:.1%})")
+        print(f"  {canticle}: routes={dict(routes)}, reasons={dict(reasons)}")
+    print(f"  corpus-wide: routes={dict(sum_counter_field(all_summaries, 'routes'))}")
 
     print(f"\n=== TPM pressure (each stream/canticle is metered independently at {STREAM_TPM_LIMIT:,}/min) ===")
     for canticle in CANTICLE_COUNTS:

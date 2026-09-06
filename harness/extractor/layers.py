@@ -26,6 +26,7 @@ __all__ = [
     "CantoLayers",
     "RowKey",
     "build_rows",
+    "candidate_keys",
     "split_violations",
     "validate_rows",
     "violation_record",
@@ -36,6 +37,43 @@ __all__ = [
 SAMPLE_VIOLATIONS = 10
 
 RowKey = tuple[int, int, str, int, int]
+
+
+
+def candidate_keys(
+    rows: list[dict], line_start: int, line_end: int
+) -> tuple[set[RowKey], int, int]:
+    """Normalize submitted rows to comparable keys.
+
+    Returns `(keys, malformed, out_of_unit)`: rows missing fields or carrying
+    non-integer coordinates cannot be compared and count as malformed;
+    well-formed rows whose predicate lies outside the parse unit are excluded
+    from comparison (the toolkit's validator already flags them) and counted
+    separately.
+    """
+    keys: set[RowKey] = set()
+    malformed = 0
+    out_of_unit = 0
+    for raw in rows or []:
+        if not isinstance(raw, dict):
+            malformed += 1
+            continue
+        try:
+            key = (
+                int(raw["line"]),
+                int(raw["token"]),
+                str(raw["role"]),
+                int(raw["arg_line"]),
+                int(raw["arg_token"]),
+            )
+        except (KeyError, TypeError, ValueError):
+            malformed += 1
+            continue
+        if not line_start <= key[0] <= line_end:
+            out_of_unit += 1
+            continue
+        keys.add(key)
+    return keys, malformed, out_of_unit
 
 
 # --- frozen-layer bundle (execution face: no gold anywhere) ------------------------------

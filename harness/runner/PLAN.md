@@ -1,33 +1,42 @@
-# Stage 1 Plan: Autonomous Inference Agent & Benchmark (`harness/runner/`)
+# `harness/runner/`: the model-facing half
 
-## 1. Overview & Objectives
+## 1. Overview
 
-Stage 1 implements an autonomous execution environment where a local LLM (**Gemma 4 31B** via `llm7shi.Client`) receives multi-layer grammatical context (Layer 1 tokens/text, quotes hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrases, and Layer 4 UD syntax trees) and autonomously solves Layer 5 predicate-argument skeletons on the fly.
+The evidence the model is shown, the wording it is shown it in, the gate its
+answer must pass, and the adapter that carries the request. What *drives* those
+pieces is [`../extractor/PLAN.md`](../extractor/PLAN.md)'s bounded loop; this
+document specifies the pieces themselves.
 
-### Primary Objectives
-1. **Dedicated Context & Tool Calling API (`tools.py`)**: Expose multi-layer syntax while strictly masking gold Layer 5 data and the 130-rule registry.
-2. **Multi-Turn CoT Reasoning Loop (`agent.py`)**: Execute an interactive, self-correcting 5-step grammatical reasoning protocol without free-form bash execution.
-3. **Syntactic Benchmark Suite (`benchmark.py`)**: Benchmark the local model against curated syntactic challenge fixtures and historical outlier units, logging detailed reasoning traces for Stage 2.
+**What this file is now.** It opened as the Stage-1 plan for an autonomous
+multi-turn agent, and Stage 1 delivered exactly that. Stage 9 replaced the
+session with a bounded fixed-context step, and on 2026-09-07 the session, its
+protocol library and its benchmark were deleted (`../PLAN.md` Handoff). This
+document was cut back to what still exists; the record of what Stage 1 built and
+measured is [`../stages/01.md`](../stages/01.md), which is untouched and stays
+the place to read it.
+
+| Module | Holds |
+|---|---|
+| `tools.py` | `read_unit` (the evidence) and `validate_candidate` (the gate) |
+| `prompts.py` | Assembly of $P$ from the skill files — no grammatical wording of its own |
+| `skills/grammar-fixed/` | The domain knowledge, as reviewable files under one digest |
+| `llm.py` | The `llm7shi.Client` adapter and the `llm_request`/`llm_response` wire log |
+| `statusline.py` | The Rich bar every operator-run CLI shares |
 
 ```mermaid
 graph TD
-    subgraph "Stage 1: Autonomous Agent Loop (harness/runner/)"
-        LLM["Gemma 4 31B (ollama via llm7shi.Client)"]
-        
-        subgraph "Dedicated Grammar Tool API (Closed Context)"
-            T_Read["read_unit<br/>Extract parse-unit context (L1-L4, case, quotes; skel masked)"]
-            T_Search["search_corpus<br/>Scoped search for grammatical patterns (skel masked)"]
-            T_Val["validate_candidate<br/>Intrinsic syntactic well-formedness & upstream feedback"]
-        end
-        
-        LLM <--> T_Read
-        LLM <--> T_Search
-        LLM <--> T_Val
+    subgraph "harness/runner/ (one bounded step)"
+        P["$P$: prompts.py + skills/grammar-fixed/<br/>role, 4-step protocol, answer contract"]
+        Ev["read_unit<br/>parse-unit evidence (L1-L4, case, quotes; skel masked)"]
+        LLM["Gemma 4 31B (llm.py -> llm7shi.Client)"]
+        Gate["validate_candidate<br/>intrinsic well-formedness & upstream feedback"]
     end
-    
-    T_Val --> ValEngine["Intrinsic Syntactic Validator"]
-    T_Val --> UpstreamLog["Upstream Discrepancy Log (L2/L4 Anomaly Records)"]
-    LLM --> LogStore["Inference Logs & CoT Traces (Input to Stage 2)"]
+
+    P --> LLM
+    Ev --> LLM
+    LLM -->|"&lt;rows&gt; block"| Gate
+    Gate --> UpstreamLog["Upstream Discrepancy Log (L2/L4 Anomaly Records)"]
+    Gate --> Rows["Accepted rows -> extractor/ gates 1-3"]
 ```
 
 ---
@@ -50,19 +59,20 @@ All multi-layer grammatical data is served via `dante_corpus.skel.models.Grammar
 
 ---
 
-## 3. Dedicated Grammar Tool Calling API (`harness/runner/tools.py`)
+## 3. Dedicated Grammar Tool API (`harness/runner/tools.py`)
 
-Free-form bash execution is strictly disabled. The agent interacts exclusively through closed JSON/Python Function Calling:
+Free-form bash execution is strictly disabled: the model never calls anything.
+The runtime calls these two on its behalf — `read_unit` to build the evidence
+block of each request, `validate_candidate` to judge the rows that come back.
+A third tool, `search_corpus` (scoped cross-canto pattern search behind an
+anti-leakage guard), existed only because a *session* could elect it, and went
+with the session on 2026-09-07.
 
 ### 3.1 `read_unit(canticle: str, canto: int, line_start: int, line_end: int = None) -> dict`
 - Bounded by `dep.sentence_groups` (`MAX_UNIT_LINES = 12`): returns the complete multi-layer grammatical context covering the requested parse unit.
 - Layer 5 skeleton rows and rule annotations are strictly masked out.
 
-### 3.2 `search_corpus(query: dict, limit: int = 10) -> list[dict]`
-- Scoped search for analogous grammatical and case constructions (e.g., matching `lemma`, `pos`, `deprel`) across other cantos.
-- Anti-Leakage Guard: strictly excludes the current canto and target unit, and excludes Layer 5 data.
-
-### 3.3 `validate_candidate(canticle: str, canto: int, line_start: int, candidate_rows: list[dict], upstream_feedback: list[dict] = None) -> dict`
+### 3.2 `validate_candidate(canticle: str, canto: int, line_start: int, candidate_rows: list[dict], upstream_feedback: list[dict] = None) -> dict`
 - Validates **intrinsic syntactic well-formedness** against candidate rows (`SkelRow.to_dict()` format):
   1. All predicate tokens must exist in Layer 1 (word anchors optional, matched when given).
   2. Nominal argument tokens (`subj`, `obj`, `iobj`, `obl:<prep>`) must cite valid Layer 3 NP heads or Layer 1 pronouns. Clausal / predicative roles (`attr`, `ccomp`, `xcomp`) and bare `obl` are exempt — complements cite their clause's own predicate head by nature, and bare `obl` is the adverbial-oblique marker; holding them to the nominal rule rejects correct analyses. *(Implemented as such after the first live run proved otherwise: see carry-over 4 in `harness/stages/01.md`. Residual documented ceilings: nominal-role rows with genuinely non-nominal anchors ≈1.7% of anchored rows, ~100/3477 units.)*
@@ -73,50 +83,62 @@ Free-form bash execution is strictly disabled. The agent interacts exclusively t
 
 ---
 
-## 4. Autonomous 5-Step CoT Protocol (`harness/runner/prompts.py`)
+## 4. The prompt $P$ (`harness/runner/prompts.py` + `skills/grammar-fixed/`)
 
-The agent follows an interactive 5-step reasoning protocol:
+**No grammatical wording lives in Python.** `fixed_system_prompt()` concatenates
+three files and nothing else, so `fixed_skill_digest()` fingerprints every byte
+of $P$ — which is what Standing Invariant §6 (session semantics fixed for a
+run's duration) is checked against after the fact.
+
+| File | Section |
+|---|---|
+| `SKILL.md` | Role framing + the skeleton row conventions |
+| `protocol.md` | The 4-step reasoning protocol |
+| `answer.md` | The answer contract: one `<rows>` block, the whole unit, every time |
+
+The protocol is grammatical reasoning only, with no tool step:
 
 1. **Step 1: Discourse & Quote Boundaries (Quotes Hierarchy)**
    - Identify direct speech spans and speaker boundaries to distinguish vocatives from clausal complementation.
-2. **Step 2: Predicate Agreement & Voice (Layer 2 Morphology)**
+2. **Step 2: Predicates, Agreement & Voice (Layer 2 Morphology)**
    - Check finite verb person/number against candidate arguments to identify explicit subjects vs. pro-drop (`(0, 0)`). Identify passive constructions and reflexive `si`.
 3. **Step 3: Case & Core Argument Discrimination (Case Annex + Layer 4 UD)**
    - Resolve clitic arguments using explicit morphological case (`nom`, `acc`, `dat`). Map UD relations (`nsubj`, `obj`, `obl:<prep>`) to skeleton role tuples.
 4. **Step 4: NP Heads, Clausal Complements & Control (Layer 3 NPs + Layer 4 Clauses)**
    - Ensure nominal arguments cite exact Layer 3 phrase heads. Trace subject control and infinitival complement propagation (`xcomp`, `ccomp`).
-5. **Step 5: Intrinsic Validation & Self-Correction**
-   - Call `validate_candidate`. If validation errors are returned, interpret diagnostic feedback and iterate to convergence.
+
+Where a fifth step used to stand — *call `validate_candidate`, read the errors,
+iterate to convergence* — the runtime now does the iterating: it recomputes the
+verdict from the frozen layers between steps and hands it back with the rows
+(`../extractor/observe.py`, `../stages/09.md` §2). Self-correction did not go
+away; it moved out of the model's turn budget.
 
 ---
 
-## 5. Syntactic Benchmark & Evaluation Suite (`harness/runner/benchmark.py`)
+## 5. Model access & observability (`llm.py`, `statusline.py`)
 
-### 5.1 Datasets
-- **Core Challenge Fixtures (50–100 units)**:
-  - Long-distance hyperbaton, coordinated predicates, control verbs, embedded quotes, relative clause chains.
-- **Historical Case Units**:
-  - Historical outlier cases documented in [`skel/CORRECTIONS.md`](../../skel/CORRECTIONS.md).
+`llm7shi_generate(model, ...)` is the one send point: it keeps a stateful
+`llm7shi.Client` in sync with the transcript by content fingerprint, paces sends
+by `min_send_interval`, caps generation length, and appends one
+`llm_request` / `llm_response` JSONL pair per backend call — timestamps, model,
+session/unit coordinates, attempt, byte sizes, provider token counts, duration.
+The join key is `(session, messages, attempt)`; the fixed-context loop takes a
+fresh session id per iteration, because each request there *is* an independent
+single-turn session. HTTP 429 backoff stays inside `Client` and is counted
+through the status line's `wait_retry` hook.
 
-### 5.2 Metrics
-- **1-Shot Exact Match Rate**: Percentage of units exactly matching the 0-soft Gold Standard on the first candidate submission.
-- **Autonomous Convergence Rate**: Percentage of units achieving 0 divergence after multi-turn self-correction (≤ 5 turns).
-- **Role-Level F1**: Precision, Recall, and F1 across argument roles (`subj`, `obj`, `obl:<prep>`, `xcomp`, `ccomp`).
-- **Upstream Feedback Precision**: Accuracy and validity of model-reported `upstream_feedback` anomalies.
-
-Operational definitions (implemented in Milestone 1.3):
-- Row identity for comparison is `(line, token, role, arg_line, arg_token)`; word anchors are verification-only and excluded. Both sides are restricted to the parse unit's line range (out-of-unit submissions are counted separately).
-- *Converged* = final submission exactly matches gold ∧ the session did not exhaust its turn budget ∧ total turns ≤ `CONVERGENCE_TURN_BUDGET` (5). *1-shot* uses the first submission only.
-- **Workflow granularity** (added after the first live run): `--workflow unit` keeps the definitions above; `--workflow predicate` validates one predicate per call and is scored with `accumulate=True` — each gold predicate is compared to its *latest* submission's rows (a repaired frame replaces its earlier attempt), plus a pooled **predicate first-pass rate**: fraction of gold predicates whose FIRST coverage (earliest submission touching them) matched gold exactly for that predicate. Unit-level convergence keeps its ≤5-turn semantics, so multi-predicate predicate-mode sessions legitimately fall below it — the per-predicate rate is this workflow's fine-grained convergence signal.
-- Role-level P/R/F1 is computed per role label over pooled row keys, plus micro-averaged P/R/F1 and macro-F1 across labels.
-- *Upstream feedback precision* measures form-validity (dict record naming a layer plus a description/issue); semantic correctness of the reported defects still requires human triage.
-- Parse success is measured inside every benchmark run with the probe's per-turn classification (T4 gate kept under observation — see the `harness/PLAN.md` Handoff watch items).
+The standing specification for all of this is
+[`../../ARCHITECTURE.md`](../../ARCHITECTURE.md) §2 and §4–§6; it is not
+restated here.
 
 ---
 
-## 6. Implementation Milestones
+## 6. Record
 
-- [x] **1.1 Toolset Implementation (`harness/runner/tools.py`)**: Implement and unit-test `read_unit`, `search_corpus`, and `validate_candidate`. *(Complete 2026-08-22: `GrammarToolkit` with structural Layer-5 masking, Anti-Leakage Guard, `TOOL_SPECS` + `dispatch`; 36 tests, suite 583 passed.)*
-- [x] **1.2 Gemma 4 Runner Implementation (`harness/runner/agent.py`)**: Multi-turn agent loop using `llm7shi.Client` and `ollama:gemma4:31b-it-qat`. *(Complete 2026-08-22: `run_unit(...)` drives one parse-unit session through `toolcall.run_tool_loop` over `PromptXmlTransport` with the proven `llm7shi_generate` adapter; per-unit system prompt in new `prompts.py` = role intro + row conventions + 5-step protocol + wire contract + tool specs; no-call nudge policy (one reminder only when zero successful validations happened) resolves the practical half of TOOLCALL.md §7.1; `UnitResult.trace_record()` is the Stage 2 trace contract; operator CLI `python -m harness.runner.agent`; 18 deterministic tests, suite 639 passed.)*
-- [x] **1.3 Benchmark Suite Implementation (`harness/runner/benchmark.py`)**: Evaluation harness with gold comparison and trace logging. *(Complete 2026-08-22: `evaluate_unit` scores a finished `UnitResult` against the gold artifact — row keys are `(line, token, role, arg_line, arg_token)`, word anchors excluded as verification-only — reporting exact-first/exact-final/converged (`CONVERGENCE_TURN_BUDGET = 5`, not exhausted), per-role P/R/F1 via `BenchmarkReport.role_table` + micro/macro aggregates, upstream-feedback form-validity precision, and probe-style per-turn parse success measured from `UnitResult.session_messages` (T4 gate kept under observation); curated fixture table in `harness/fixtures/challenge_cases.py` — 87 cases (48 historical from CORRECTIONS.md censuses §P15/§P13/§P5, plus control/coordination/relative_chain/quotes/hyperbaton balanced across all three canticles), frozen verbatim data validated at test time against sentence groups and gold; streaming JSONL CLI `python -m harness.runner.benchmark` (`--category/--case-id/--limit/--list/--log/--full-transcript`) mirroring probe.py log semantics; `agent.UnitResult` gained `submissions` / `first_candidate_rows` / `opening_len` / `session_messages` for the 1-shot metric; 22 deterministic tests, suite 663 passed.)*
-- [ ] **1.4 Evaluation Execution & Trace Collection**: Benchmark Gemma 4 across challenge fixtures and persist structured inference traces for Stage 2. *(First attempt 2026-08-22 interrupted after 4 cases: exposed the validator citation defect (carry-over 4 in `harness/stages/01.md`, since fixed) and motivated the `--workflow` A/B; the partial log is preserved as `harness/bench-strict-validator-baseline.log`. Re-run after a pilot comparing both workflows.)*
+Stage 1's milestones 1.1–1.4 — the toolset, the agent runner, the benchmark
+suite, and the 87-case evaluation that produced Stage 2's mining inputs — are
+recorded in full in [`../stages/01.md`](../stages/01.md), with the tool-call
+protocol gates T1–T5 in [`../TOOLCALL.md`](../TOOLCALL.md) §8. Both are kept as
+written. Of what they delivered, `tools.py` and `prompts.py` survive (with the
+changes above); `agent.py`, `benchmark.py`, `fixtures/` and the whole
+`toolcall/` library do not.

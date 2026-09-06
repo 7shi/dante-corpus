@@ -337,7 +337,8 @@ number suggests. Stated precisely:
 ## 6. Readout, taken afterwards: gold opened deliberately
 
 Everything above was produced gold-closed. This section is the sanctioned
-readout ([`recon/agree.py`](recon/agree.py)) run *after* the audit, on the
+readout (`recon/agree.py`, removed 2026-09-07 with the rest of the
+gold-referenced readouts) run *after* the audit, on the
 rewrite pass proposed in [`PLAN.md`](PLAN.md)'s Handoff — the two mechanical
 rewrites `dante_corpus/skel/repairs.py` licenses (`role_label`: bare `obl` →
 `obl:<lemma>` where a `case` child makes the preposition explicit; `null_subject`:

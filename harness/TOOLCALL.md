@@ -1,5 +1,25 @@
 # Tool Call Protocol: XML Interim with Native Migration Path (`harness/TOOLCALL.md`)
 
+> [!NOTE]
+> **The code this document specifies no longer exists.** `harness/toolcall/`
+> (parser, prompts, transports, loop, probe, parity), the per-unit session that
+> drove it (`runner/agent.py`), the `search_corpus` tool, and
+> `tests/test_harness_toolcall.py` were all deleted on **2026-09-07**, when
+> `harness/` was cut back to the run and fix paths it is actually driven by
+> ([`PLAN.md`](PLAN.md) Handoff).
+>
+> Stage 9 had already replaced the multi-turn tool-calling session with a bounded
+> fixed-context step, in which the model emits no tool calls at all
+> ([`stages/09.md`](stages/09.md)); `--tool-calling` kept the session available
+> for comparison runs until that option went too. **Removing it also removed the
+> only comparison baseline for the mode now in use** — that cost was accepted
+> knowingly, not overlooked.
+>
+> This file is kept unedited below as the record of what the sub-project decided
+> and measured: the T1–T5 gates, the wire-format simplification live probing
+> forced, and the adoption decision. Read it as history. Nothing in it describes
+> code you can run, and none of its file paths resolve.
+
 ## 1. Status & Scope
 
 **Status: T1–T5 COMPLETE (2026-08-22); T4 live gate PASSED; T5 live parity run PASSED

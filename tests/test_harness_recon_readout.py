@@ -30,18 +30,6 @@ def _summary(canto, tp, fp, fn, wall=10.0, api_retry_seconds=0.0, cantos_passed=
     }
 
 
-def test_canticle_f1_aggregates_tp_fp_fn_not_mean_of_per_canto_f1():
-    summaries = [_summary(1, tp=8, fp=2, fn=0), _summary(2, tp=0, fp=0, fn=10)]
-    result = ro.canticle_f1(summaries)
-    assert result["tp"] == 8
-    assert result["fp"] == 2
-    assert result["fn"] == 10
-    # micro F1 over pooled counts, not the mean of the two per-canto F1s (1.0 and 0.0)
-    assert 0.0 < result["f1"] < 1.0
-    assert result["per_canto_min"] == 0.0
-    assert result["per_canto_max"] == pytest.approx(8 / 9)  # 2*0.8*1.0/(0.8+1.0), canto 1's own f1
-
-
 def test_gate_pass_report_counts_cantos_and_units_separately():
     summaries = [
         _summary(1, tp=1, fp=0, fn=0, cantos_passed=1, units=3, passed_units=3),
@@ -121,16 +109,6 @@ def test_corpus_add_tags_summaries_with_their_canto_number():
     corpus = ro.Corpus()
     corpus.add("inferno", [_summary(1, tp=1, fp=0, fn=0)], canto=7)
     assert corpus.summaries["inferno"][0]["_canto"] == 7
-
-
-def test_f1_outliers_returns_the_lowest_n_sorted_ascending():
-    summaries = [_summary(1, tp=1, fp=0, fn=0)]  # f1 = 1.0
-    summaries[0]["_canto"] = 1
-    low = _summary(2, tp=1, fp=9, fn=9)
-    low["_canto"] = 2
-    summaries.append(low)
-    outliers = ro.f1_outliers(summaries, n=2)
-    assert [canto for canto, _ in outliers] == [2, 1]
 
 
 def test_slow_units_returns_the_largest_fallback_seconds_max_first():
@@ -279,4 +257,4 @@ def test_load_corpus_folds_one_attempt_per_log_and_flags_the_re_runs(tmp_path):
     assert corpus.resumed_logs == [root / "inferno" / "01.log"]
     assert ro.hygiene_report(corpus)["resumed_logs"] == corpus.resumed_logs
     # The discarded Stage-4 block's counts are nowhere in the aggregate.
-    assert ro.canticle_f1(corpus.summaries["inferno"])["fp"] == 0
+    assert ro.gate_pass_report(corpus.summaries["inferno"])["cantos"] == 34

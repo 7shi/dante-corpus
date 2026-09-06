@@ -13,7 +13,6 @@ from __future__ import annotations
 import pytest
 
 from harness.runner import prompts
-from harness.runner.tools import TOOL_SPECS
 from harness.skills import Skill, SkillError
 
 
@@ -106,26 +105,28 @@ def test_digest_covers_every_file_and_changes_with_the_wording(tmp_path):
     assert Skill.load(directory).digest() != before
 
 
-# --- the grammar skill -------------------------------------------------------------------
+# --- the fixed-context skill -------------------------------------------------------------
 
 
-def test_the_grammar_skill_declares_every_section_the_prompt_assembles():
-    skill = prompts.GRAMMAR_SKILL
-    assert skill.name == "grammar-agent"
-    assert set(skill.resources) == {"protocol.md", "step5-unit.md", "step5-predicate.md"}
+def test_the_fixed_skill_declares_every_section_the_prompt_assembles():
+    skill = prompts.FIXED_SKILL
+    assert skill.name == "grammar-fixed"
+    assert set(skill.resources) == {"protocol.md", "answer.md"}
 
 
-def test_the_system_prompt_is_assembled_from_the_skill_files_alone():
+def test_the_fixed_system_prompt_is_assembled_from_the_skill_files_alone():
     # Nothing grammatical is left in prompts.py: every section of the assembled
     # prompt traces back to a file, which is what makes a wording change a diff.
-    skill = prompts.GRAMMAR_SKILL
-    for workflow, step5 in (("unit", "step5-unit.md"), ("predicate", "step5-predicate.md")):
-        prompt = prompts.system_prompt(TOOL_SPECS, workflow)
-        for section in (skill.body, skill.resource("protocol.md"), skill.resource(step5)):
-            assert section in prompt
-    # ...and the two workflows differ by exactly their Step 5.
-    assert skill.resource("step5-predicate.md") not in prompts.system_prompt(TOOL_SPECS, "unit")
+    skill = prompts.FIXED_SKILL
+    prompt = prompts.fixed_system_prompt()
+    for section in (skill.body, skill.resource("protocol.md"), skill.resource("answer.md")):
+        assert section in prompt
+    # There is no tool-spec or wire-contract section: the mode has no tools, so
+    # the digest below covers the prompt entire.
+    assert len(prompt) == sum(
+        len(s) for s in (skill.body, skill.resource("protocol.md"), skill.resource("answer.md"))
+    ) + 4
 
 
-def test_skill_digest_is_the_grammar_skills_digest():
-    assert prompts.skill_digest() == prompts.GRAMMAR_SKILL.digest()
+def test_fixed_skill_digest_is_the_fixed_skills_digest():
+    assert prompts.fixed_skill_digest() == prompts.FIXED_SKILL.digest()

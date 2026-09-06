@@ -1,8 +1,14 @@
-# Stage 1: Autonomous Inference & Benchmark (`harness/runner/`)
+# `harness/runner/`: the model-facing half
 
-Stage 1 provides an autonomous execution environment for Local LLMs (**Gemma 4 31B** via `llm7shi.Client`) to infer Layer 5 predicate-argument skeletons on the fly from multi-layer grammatical contexts.
+Everything that touches the model: the evidence it is shown, the wording it is
+shown it in, the gate its answer must pass, and the adapter that carries the
+request. It is driven by [`../extractor/`](../extractor/), which owns the loop
+and the gates around it.
 
-Rather than giving the model an unconstrained bash environment, Stage 1 equips the model with a **closed, dedicated grammatical toolset (Tool Calling)** and a structured 5-step Chain-of-Thought (CoT) reasoning protocol.
+Rather than giving the model an unconstrained bash environment, it is given a
+**closed, dedicated grammatical toolset** and a structured Chain-of-Thought
+reasoning protocol. Nothing here executes shell commands, and nothing here opens
+Layer 5 gold.
 
 ---
 
@@ -10,51 +16,43 @@ Rather than giving the model an unconstrained bash environment, Stage 1 equips t
 
 - **Dedicated Grammar Tool API (`tools.py`)**:
   - `read_unit`: Retrieves multi-layer grammatical context (L1–L4, quotes, case) for a sentence group while strictly masking Layer 5 gold rows and rule definitions.
-  - `search_corpus`: Enables scoped searches for analogous syntactic constructions across other cantos (with anti-leakage guards).
   - `validate_candidate`: Evaluates intrinsic syntactic well-formedness (slot uniqueness, valid NP head citations, role vocabulary) and captures `upstream_feedback` records.
-- **Autonomous Multi-Turn Agent Runner (`agent.py`)**:
-  - Executes the 5-step CoT reasoning protocol (Quotes ➔ Morphology ➔ Case/UD ➔ NP/Control ➔ Self-Correction) using `ollama:gemma4:31b-it-qat`.
-- **Syntactic Challenge Benchmark Suite (`benchmark.py`)**:
-  - Evaluates 1-shot exact match rate, multi-turn convergence rate, and role-level F1 across challenge fixtures and historical outlier units, logging structured traces for Stage 2.
+- **Prompt assembly (`prompts.py`, `skills/grammar-fixed/`)**:
+  - `fixed_system_prompt()` concatenates three skill files and nothing else, so `fixed_skill_digest()` fingerprints every byte of the specification a run was launched under (Standing Invariant §6).
+  - The grammatical wording lives in the files, not in Python: a change to what the model is taught is a reviewable diff.
+- **Model access (`llm.py`)**:
+  - The `llm7shi.Client` adapter — transcript sync, pacing, the generation-length cap — and the `llm_request` / `llm_response` JSONL wire log every live run is costed from.
+- **Live status bar (`statusline.py`)**:
+  - The Rich bar and shared console every operator-run CLI streams into, with the `wait_retry` hook that counts API backoff.
+
+The Stage-1 pieces this directory was built around — the autonomous multi-turn
+session (`agent.py`), the `search_corpus` tool, and the syntactic challenge
+benchmark (`benchmark.py`) — were removed on 2026-09-07. What they built and
+measured is recorded in [`../stages/01.md`](../stages/01.md).
 
 ---
 
 ## Usage
 
-One autonomous session per parse unit (live model; see `../PLAN.md` Handoff):
+Nothing here has a CLI of its own: the operator-facing entry point is
+`harness.extractor.reconstruct`, run through
+[`../recon/Makefile`](../recon/Makefile).
 
 ```bash
-uv run python -m harness.runner.agent --canticle inferno --canto 1 --line-start 1 \
-    [--line-end 3] [--model ollama:gemma4:31b-it-qat] [--trace trace.jsonl]
+cd harness/recon
+make inferno/01.tsv            # one canto, through the fixed-context loop
+make fix                       # the same loop over the committed artifacts
 ```
 
-Programmatically, `agent.run_unit(...)` returns a `UnitResult` with candidate rows,
-validation outcomes, compliance flags, and `trace_record()` — the contract consumed by
-`benchmark.py` (Milestone 1.3).
-
-Benchmark over the curated fixture table (87 cases: historical outliers + control /
-coordination / relative-chain / quote / hyperbaton challenges; see
-`../fixtures/challenge_cases.py`):
-
-```bash
-uv run python -m harness.runner.benchmark --list                 # preview selection
-uv run python -m harness.runner.benchmark --category historical \
-    --log bench.log [--full-transcript]                          # run + streaming JSONL
-```
-
-An interrupted run is resumed by re-running the same command: the existing log's
-completed cases are reloaded into the aggregate (and skipped), fresh case records
-append, and the final summary covers every session across attempts — its timing is
-the sum of per-session durations, never a start-to-end span between attempts.
-
-Metrics per case and in aggregate (`BenchmarkReport.metrics()`): 1-shot exact match,
-convergence ≤ 5 turns, role-level P/R/F1, upstream-feedback precision, and probe-style
-parse success kept against the 0.95 gate.
+Programmatically, `fixedcontext.fixed_fallback(model=...)` builds the live
+per-unit callable over these pieces, and `reconstruct_canto(..., fallback=...)`
+takes any callable of the same shape — which is how the deterministic tests
+drive the pipeline without a model.
 
 ---
 
 ## Detailed Plan & Master Documentation
 
-- **Stage 1 Specification**: [`PLAN.md`](PLAN.md)
+- **Specification**: [`PLAN.md`](PLAN.md)
 - **Harness Master Plan**: [`../PLAN.md`](../PLAN.md)
 - **Harness Overview**: [`../README.md`](../README.md)

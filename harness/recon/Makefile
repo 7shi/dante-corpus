@@ -19,12 +19,11 @@
 #
 # Launch configuration is the one carried from ../stages/04.md §2 (S3.9/S3.11):
 # payload tier R1, reactive-only pacing (HTTP 429s are absorbed by
-# llm7shi.Client's own backoff), max-length 6000 — all reconstruct.py defaults
-# except --verify-gold, passed explicitly below. Its execution mode is no longer
-# that launch's: the fixed-context loop replaced the verbatim tool-calling
-# transcript as the default in S9.5 (see Execution mode, below).
-# --write stays off: skel/ remains immutable gold, written_cantos == 0
-# expected.
+# llm7shi.Client's own backoff), max-length 6000 — all reconstruct.py defaults.
+# Its execution mode is no longer that launch's: the fixed-context loop replaced
+# the verbatim tool-calling transcript in S9.5, and became the only mode when
+# the tool-calling session was removed (2026-09-07).
+# --write stays off: skel/ is held fixed, written_cantos == 0 expected.
 #
 ## make                                this help (run from harness/recon)
 ## make inferno                        all 34 inferno cantos, one TSV each
@@ -51,10 +50,6 @@
 ##                                     fix are one loop differing only in the
 ##                                     rows the first step is given. Cap the
 ##                                     steps per unit with FIXED_ITERATIONS=n
-##                  make ... TOOLCALL=1
-##                                     run the pre-Stage-9 tool-calling session
-##                                     instead — a comparison option, SLATED FOR
-##                                     REMOVAL (../stages/09.md §8, S9.6)
 ##
 ## make clean-log                      delete the by-product logs
 ##                                     (<canticle>/NN.log). Touches no TSV and
@@ -69,11 +64,6 @@
 ## make stats                          soft-violation counts by class (and by
 ##                                     role), no model call — same as
 ##                                     skel/skel.py --stats
-## make agree                          row-level P/R/F1 of the committed TSVs
-##                                     against gold — a READOUT, never a target:
-##                                     repair rules are derived from the layer's
-##                                     own schema with gold unopened, and this is
-##                                     read afterwards (../stages/05.md §5)
 ## make fix-level                      per-canto counts of the soft findings a
 ##                                     fix run would act on — no model call,
 ##                                     the selection readout
@@ -96,23 +86,15 @@
 ##                                     `make fix-level` first
 ## Level:  FIX defaults to `max` (every level the contract has argued, today 3;
 ##         levels are cumulative). Pin one with FIX=1 on any fix target.
-## make repair                         apply the deterministic repair rules to
-##                                     the committed TSVs, in place
-## make repair-check                   report unrepaired rows; non-zero exit if
-##                                     any remain
 
 MODEL ?= google:gemma-4-31b-it
 HELPFILE := $(lastword $(MAKEFILE_LIST))
 
-# Stage-9 execution mode (header). The fixed-context loop is the default since
-# S9.5 measured it on inferno 1; TOOLCALL=1 asks for the pre-Stage-9
-# tool-calling session, which is kept only for comparison runs and is slated for
-# removal. Whichever runs is announced by reconstruct's own configuration line
-# and recorded per canto by the skill digest (which differs between the two
-# modes, so a log says which one ran without being asked).
-TOOLCALL ?=
+# Stage-9 execution mode (header). The fixed-context loop is the only mode since
+# the tool-calling session was removed; reconstruct announces it on its own
+# configuration line and each canto's log records the skill digest behind it.
 FIXED_ITERATIONS ?=
-MODE_FLAGS := $(if $(TOOLCALL),--tool-calling)$(if $(FIXED_ITERATIONS), --fixed-iterations $(FIXED_ITERATIONS))
+MODE_FLAGS := $(if $(FIXED_ITERATIONS),--fixed-iterations $(FIXED_ITERATIONS))
 
 # The run's true start, held across every canto recipe of one invocation
 # (including the three -j3 canticle streams) — each canto still runs
@@ -169,7 +151,7 @@ help:
 	uv run python -m harness.extractor.reconstruct \
 		--canticle $(*D) \
 		--canto $$((10#$(*F))) \
-		--verify-gold --model $(MODEL) $(MODE_FLAGS) \
+		--model $(MODEL) $(MODE_FLAGS) \
 		--started-at $(STARTED_AT) \
 		--log $*.log --tsv $@
 
@@ -184,40 +166,11 @@ clean-log:
 	rm -f $(LOGS); \
 	echo "clean-log: removed $$n log(s); TSVs untouched"
 
-# `harness.recon.convert` (log -> gold-format TSV, ../stages/05.md record S5.1)
-# has NO target here any more, deliberately (2026-08-30). Since S5.5
-# reconstruct writes the TSV itself, so conversion is dead for anything run
-# since; and over the committed corpus it is actively destructive — it
-# regenerates from the logs, which rolls back S5.3's repairs and, for a canto
-# resumed off its TSV, writes a file holding only the newly run units. The
-# module and its tests stay for the legacy Stage-4 logs; invoke it directly and
-# narrowly, knowing both hazards:
-#   uv run python -m harness.recon.convert --canticle C --canto N [--check]
-
 check:
 	uv run python -m harness.recon.check
 
 stats:
 	uv run python -m harness.recon.check --stats
-
-# Divergence reduction (../stages/05.md §5). Rules come from the layer's own schema
-# and derivation contract (dante_corpus/skel/validate.py, derive.py) — never
-# from reading gold and matching it: gold is harness/'s benchmark, and fitting
-# to it would void every gold-referenced number the project reports. `agree` is
-# therefore a readout run after the fact, not an acceptance criterion.
-#
-# `repair` edits the committed TSVs in
-# place, so the git history keeps the "raw model output -> rules applied" diff.
-# Anything that regenerates a TSV from its log therefore rolls the repairs
-# back — which is half of why `convert` no longer has a target here (above).
-repair:
-	uv run python -m harness.recon.repair
-
-repair-check:
-	uv run python -m harness.recon.repair --check
-
-agree:
-	uv run python -m harness.recon.agree --per-canticle
 
 # Stage-6 soft repair (../stages/06.md record S6.2). `fix-level` is the free
 # selection readout: which cantos carry findings at this level, and how many.
@@ -257,7 +210,7 @@ fix-canto:
 		--canticle $(CANTICLE) \
 		--canto $$((10#$(CANTO))) \
 		--fix $(FIX) \
-		--verify-gold --model $(MODEL) $(MODE_FLAGS) \
+		--model $(MODEL) $(MODE_FLAGS) \
 		--started-at $(STARTED_AT) \
 		--log $(CANTICLE)/$$n.log --tsv $(CANTICLE)/$$n.tsv
 
@@ -268,7 +221,7 @@ define FIX_CANTICLE
 	@for n in $$(seq -w 1 $(2)); do \
 		$(MAKE) --no-print-directory fix-canto \
 			CANTICLE=$(1) CANTO=$$n FIX=$(FIX) MODEL=$(MODEL) \
-			TOOLCALL=$(TOOLCALL) FIXED_ITERATIONS=$(FIXED_ITERATIONS) || exit $$?; \
+			FIXED_ITERATIONS=$(FIXED_ITERATIONS) || exit $$?; \
 	done
 endef
 
@@ -286,5 +239,5 @@ fix-paradiso:
 fix: fix-inferno fix-purgatorio fix-paradiso
 
 FORCE:
-.PHONY: FORCE check stats repair repair-check agree clean-log \
+.PHONY: FORCE check stats clean-log \
         fix fix-level fix-canto fix-inferno fix-purgatorio fix-paradiso

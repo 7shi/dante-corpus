@@ -1,9 +1,12 @@
-"""Deterministic tests for the Stage 1 Grammar Tool API (`harness/runner/tools.py`).
+"""Deterministic tests for the Grammar Tool API (`harness/runner/tools.py`).
 
-No model calls. The masking and anti-leakage guarantees are enforced structurally by
-`tools.py`; here they are verified behaviorally, including by poisoning the Layer-5
-readers (`skel.io.load_skel`, `skel.registry.rule_active`) so that any accidental access
-fails the test instead of leaking silently.
+No model calls. The masking guarantee is enforced structurally by `tools.py`; here it
+is verified behaviorally, including by poisoning the Layer-5 readers
+(`skel.io.load_skel`, `skel.registry.rule_active`) so that any accidental access fails
+the test instead of leaking silently.
+
+The `search_corpus` and dispatch sections went with the tool-calling session
+(2026-09-07): what is left is the two tools the fixed-context loop uses.
 """
 
 import json
@@ -13,10 +16,8 @@ import pytest
 from dante_corpus import skel
 from harness.runner.tools import (
     MAX_UNIT_LINES,
-    TOOL_SPECS,
     GrammarToolkit,
     requires_nominal_anchor,
-    tool_specs,
 )
 
 
@@ -242,72 +243,6 @@ def test_toolkit_rejects_unknown_payload_tier():
         GrammarToolkit(payload_tier="R2")
 
 
-# --- search_corpus ---------------------------------------------------------------------
-
-
-def test_search_corpus_finds_lemma_and_word_hits(toolkit):
-    hits = toolkit.search_corpus({"word": "ritrovai"})
-    assert hits and hits[0]["canticle"] == "inferno" and hits[0]["canto"] == 1
-    assert hits[0]["line"] == 2 and hits[0]["token"] == 2
-    assert hits[0]["lemma"] == "ritrovare" and hits[0]["pos"] == "verb"
-
-    lemma_hits = toolkit.search_corpus({"lemma": "ritrovare"}, limit=5)
-    assert lemma_hits
-    assert all(hit["lemma"] == "ritrovare" for hit in lemma_hits)
-
-
-def test_search_corpus_matches_deprel_and_pos(toolkit):
-    hits = toolkit.search_corpus({"deprel": "root", "pos": "verb"}, limit=8)
-    assert hits
-    assert all(hit["deprel"] == "root" and "verb" in hit["pos"].lower() for hit in hits)
-
-
-def test_search_corpus_excludes_active_canto(toolkit):
-    toolkit.read_unit("inferno", 1, 1)  # sets the active unit -> active canto
-    hits = toolkit.search_corpus({"word": "ritrovai"})
-    assert all(
-        not (hit["canticle"] == "inferno" and hit["canto"] == 1) for hit in hits
-    ), "the Anti-Leakage Guard must exclude the active canto entirely"
-
-
-def test_search_corpus_respects_limit(toolkit):
-    hits = toolkit.search_corpus({"pos": "noun"}, limit=3)
-    assert len(hits) == 3
-    assert all("noun" in hit["pos"].lower() for hit in hits)
-
-
-def test_search_corpus_validates_query_and_limit(toolkit):
-    with pytest.raises(ValueError):
-        toolkit.search_corpus({})
-    with pytest.raises(ValueError):
-        toolkit.search_corpus({"role": "subj"})  # Layer 5 vocabulary is unsearchable
-    with pytest.raises(ValueError):
-        toolkit.search_corpus({"lemma": "amor"}, limit=0)
-
-
-def test_search_corpus_never_touches_layer_5(toolkit, monkeypatch):
-    def _poison(*args, **kwargs):
-        raise AssertionError("Layer 5 gold data was accessed")
-
-    monkeypatch.setattr(skel.io, "load_skel", _poison)
-    monkeypatch.setattr(skel.registry, "rule_active", _poison)
-    for hit in toolkit.search_corpus({"pos": "verb"}, limit=5):
-        assert set(hit) <= {
-            "canticle",
-            "canto",
-            "line",
-            "token",
-            "word",
-            "lemma",
-            "pos",
-            "deprel",
-            "head_line",
-            "head_token",
-            "case",
-        }
-
-
-# --- validate_candidate ------------------------------------------------------------------
 
 
 def test_validate_candidate_accepts_wellformed_rows(toolkit):
@@ -575,117 +510,6 @@ def test_validate_candidate_never_touches_layer_5(toolkit, monkeypatch):
     result = toolkit.validate_candidate("inferno", 1, 1, GOOD_ROWS)
     assert result["valid"] is True
 
-
-# --- tool-call specs & dispatch ---------------------------------------------------------
-
-
-def test_tool_specs_describe_the_closed_surface():
-    names = [spec["function"]["name"] for spec in TOOL_SPECS]
-    assert names == ["read_unit", "search_corpus", "validate_candidate"]
-    for spec in TOOL_SPECS:
-        fn = spec["function"]
-        assert fn["description"]
-        params = fn["parameters"]
-        assert params["type"] == "object"
-        assert params["required"], "every tool needs at least one required argument"
-        assert params["additionalProperties"] is False
-    # JSON-serializable verbatim (they are embedded into prompts).
-    json.dumps(TOOL_SPECS)
-
-
-def test_tool_specs_returns_mutable_copies():
-    specs = tool_specs()
-    specs[0]["function"]["name"] = "tampered"
-    assert TOOL_SPECS[0]["function"]["name"] == "read_unit"
-
-
-def test_dispatch_read_unit_round_trip(toolkit):
-    direct = toolkit.read_unit("inferno", 1, 1)
-    call = toolkit.dispatch("read_unit", {"canticle": "inferno", "canto": 1, "line_start": 1})
-    assert call["ok"] is True and call["tool"] == "read_unit"
-    assert call["result"] == direct
-    json.dumps(call)  # results must be JSON-ready for the next model turn
-
-
-def test_dispatch_accepts_json_string_arguments(toolkit):
-    call = toolkit.dispatch(
-        "read_unit", json.dumps({"canticle": "inferno", "canto": 1, "line_start": 1})
-    )
-    assert call["ok"] is True
-
-
-def test_dispatch_coerces_numeric_strings(toolkit):
-    call = toolkit.dispatch(
-        "read_unit", {"canticle": "inferno", "canto": "1", "line_start": "1"}
-    )
-    assert call["ok"] is True
-    assert call["result"]["unit"]["canto"] == 1
-
-
-def test_dispatch_search_and_validate(toolkit):
-    toolkit.read_unit("inferno", 1, 1)
-    search = toolkit.dispatch("search_corpus", {"query": {"word": "ritrovai"}})
-    assert search["ok"] is True
-    assert all(not (h["canticle"] == "inferno" and h["canto"] == 1) for h in search["result"])
-
-    validate = toolkit.dispatch(
-        "validate_candidate",
-        {
-            "canticle": "inferno",
-            "canto": 1,
-            "line_start": 1,
-            "candidate_rows": GOOD_ROWS,
-        },
-    )
-    assert validate["ok"] is True
-    assert validate["result"]["valid"] is True
-
-
-def test_dispatch_reports_errors_without_raising(toolkit):
-    unknown = toolkit.dispatch("bash", {"command": "rm -rf /"})
-    assert unknown["ok"] is False
-    assert "unknown tool" in unknown["error"]
-
-    bad_json = toolkit.dispatch("read_unit", "{not json")
-    assert bad_json["ok"] is False and "not valid JSON" in bad_json["error"]
-
-    not_object = toolkit.dispatch("read_unit", ["inferno", 1])
-    assert not_object["ok"] is False
-
-    missing = toolkit.dispatch("read_unit", {"canticle": "inferno"})
-    assert missing["ok"] is False and "line_start" in missing["error"]
-
-    rejected = toolkit.dispatch("search_corpus", {"query": {"lemma": "amor"}, "limit": 0})
-    assert rejected["ok"] is False and "limit" in rejected["error"]
-
-    crossing = toolkit.dispatch(
-        "read_unit",
-        {"canticle": "inferno", "canto": 1, "line_start": 1, "line_end": 4},
-    )
-    assert crossing["ok"] is False and "parse-unit boundary" in crossing["error"]
-
-
-def test_dispatch_never_touches_layer_5(toolkit, monkeypatch):
-    def _poison(*args, **kwargs):
-        raise AssertionError("Layer 5 gold data was accessed")
-
-    monkeypatch.setattr(skel.io, "load_skel", _poison)
-    monkeypatch.setattr(skel.registry, "rule_active", _poison)
-    for name, arguments in [
-        ("read_unit", {"canticle": "inferno", "canto": 1, "line_start": 1}),
-        ("search_corpus", {"query": {"pos": "verb"}, "limit": 3}),
-        (
-            "validate_candidate",
-            {
-                "canticle": "inferno",
-                "canto": 1,
-                "line_start": 1,
-                "candidate_rows": GOOD_ROWS,
-            },
-        ),
-    ]:
-        call = toolkit.dispatch(name, arguments)
-        assert call["ok"] is True, call
 
 
 # --- shared fixture bits -------------------------------------------------------------

@@ -1,7 +1,7 @@
 """Aggregate reporting: the run's two §6 faces, fed from streamed records.
 
 Split out of `reconstruct.py` (S7.2). `ReconstructReport` consumes the same
-JSONL records the log carries (`add_unit` / `add_gold` / `add_canto_complete`),
+JSONL records the log carries (`add_unit` / `add_canto_complete`),
 so the machine-readable `metrics()` and the human-readable `summary()` are two
 renderings of one aggregate and cannot drift from each other or from the log.
 `load_log` reads a previous attempt's records back for offline analysis — the
@@ -15,7 +15,6 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from harness.extractor.goldeval import GoldReport
 
 __all__ = ["ReconstructReport", "load_log"]
 
@@ -25,7 +24,7 @@ class ReconstructReport:
     """Aggregates streamed records; ships both §6 reporting faces.
 
     Fed identically from live results and replayed resume records via
-    `add_unit` / `add_gold` / `add_canto_complete`.
+    `add_unit` / `add_canto_complete`.
     """
 
     units: int = 0
@@ -43,7 +42,6 @@ class ReconstructReport:
     cantos: int = 0
     cantos_passed: int = 0
     writes: list[dict] = field(default_factory=list)
-    gold: GoldReport | None = None
 
     def add_unit(self, record: dict) -> None:
         self.units += 1
@@ -59,10 +57,6 @@ class ReconstructReport:
         if seconds is not None:
             self.fallback_seconds.append(float(seconds))
 
-    def add_gold(self, record: dict) -> None:
-        if self.gold is None:
-            self.gold = GoldReport()
-        self.gold.add_record(record)
 
     def add_canto_complete(self, record: dict) -> None:
         self.cantos += 1
@@ -113,8 +107,6 @@ class ReconstructReport:
                 else None
             ),
         }
-        if self.gold is not None:
-            metrics["gold"] = self.gold.metrics()
         return metrics
 
     def summary(self) -> str:
@@ -163,8 +155,6 @@ class ReconstructReport:
                 f"api retries: {sum(self.api_retries)} "
                 f"(~{sum(self.api_retry_seconds):.0f}s backoff)"
             )
-        if self.gold is not None:
-            lines.append(self.gold.summary())
         return "\n".join(lines)
 
 

@@ -309,7 +309,6 @@ def test_the_record_is_json_serializable():
 
 def test_the_pipeline_consumes_the_loop_like_any_fallback():
     """`reconstruct_canto` drives it unchanged, and the record carries the loop."""
-    from harness.extractor import hybrid_engine as he
     from harness.extractor import reconstruct as rc
 
     def fallback(*, canticle, canto, line_start, line_end):
@@ -322,9 +321,8 @@ def test_the_pipeline_consumes_the_loop_like_any_fallback():
             line_end=line_end,
         )
 
-    engine = he.HybridEngine([], [])
     recon = rc.reconstruct_canto(
-        engine, "inferno", 1, fallback=fallback, progress_stream=None
+        "inferno", 1, fallback=fallback, progress_stream=None
     )
     first = recon.outcomes[0]
     assert first.fallback_ran
@@ -350,4 +348,4 @@ def test_the_fixed_prompt_is_the_skill_and_carries_no_tools():
         prompts.FIXED_SKILL.resource("answer.md"),
     ):
         assert piece in text
-    assert prompts.fixed_skill_digest() != prompts.skill_digest()
+    assert prompts.fixed_skill_digest() == prompts.FIXED_SKILL.digest()

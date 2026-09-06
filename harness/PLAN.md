@@ -23,6 +23,53 @@ The close itself — what Stage 10 settled, its closing numbers, what carries
 forward and what ends — is [`stages/10.md`](stages/10.md) §5. Nothing about the
 stage is duplicated in this file any more; §2's table row is the index entry.
 
+### Done 2026-09-07: cut to the run and fix paths
+
+**Before the split, `harness/` was reduced to the minimal implementation the
+current `run` and `fix` are actually driven by, and everything else was
+deleted** (operator instruction). This is a deletion, not a redesign: no
+surviving behaviour changed except where the deletion itself is the change.
+
+What went, and what it costs:
+
+- **The Stage-1 per-unit tool-calling session and the protocol library under
+  it** — `toolcall/` entire (parser, transports, loop, prompts, probe, parity),
+  `runner/agent.py`, `runner/skills/grammar-agent/`, `tools.py`'s
+  `search_corpus` / `tool_specs` / `dispatch`, the `--tool-calling` flag and
+  `TOOLCALL=1`. This is §2's "slated for removal" item carried out, and it
+  costs what that item said it costs: **the comparison baseline for the mode now
+  in use is gone.** `runner/llm.py` is what survives of `agent.py` — the llm7shi
+  adapter and the wire log, which the fixed-context loop calls.
+- **The Stage-1 benchmark** — `runner/benchmark.py`, `fixtures/`. Its
+  `candidate_keys` moved to `extractor/layers.py`, which is the only piece the
+  pipeline used.
+- **The Stage-2 mined fast path** — `syntax_miner.py`, `lexicon_builder.py`,
+  `hybrid_engine.py`, and the `--run-log` / `--min-support` / `--rules-in`
+  mining flags. **Every unit now reaches the model.** S5.7 measured the fast
+  path at 7% of the corpus, so this is a behaviour change and not only a
+  deletion: a fresh generation run would pay for those units in model calls. It
+  also ends the startup mining phase, and with it the run path's dependence on
+  the four bench logs (Orientation item 2 — the logs are kept, but nothing reads
+  them now).
+- **Every gold-referenced readout** — `goldeval.py`, `--verify-gold`,
+  `recon/agree.py`, and `readout.py`'s F1 sections. **Gold is no longer opened
+  anywhere in `harness/`**, which is where `layers/PLAN.md` §3.1 item 2 leaves
+  the progress metric anyway.
+- **`recon/convert.py`** (no make target since 2026-08-30, destructive over the
+  committed corpus) and **`recon/repair.py`** with its `repair` /
+  `repair-check` targets.
+
+Unchanged and re-read after the cut: `make check` **0 hard / 2,982 soft**,
+`make fix-level FIX=3` **225**, a settled canto still resumes off its TSV with
+no model call and rewrites nothing. The suite is **734 passed** — the deleted
+modules' tests went with them; no surviving test was weakened to pass.
+
+The `.md` files are kept as the record, so several of them now describe code
+that is gone: `TOOLCALL.md` entire, `runner/PLAN.md` and `extractor/PLAN.md` in
+large part, and every stage document by design. `README.md`'s directory map and
+roadmap were brought up to date and carry the removal note; the stage documents
+were not touched.
+
 ### Next session: make `harness/` a library
 
 **The task, in one line: package `harness/` so `layers/` can depend on it through
@@ -40,29 +87,31 @@ pattern) and what is Layer-5-specific (`runner/tools.py`'s three tools,
 `validate_candidate`'s schema, `ROLES`/`OBL_RE`). §3 of this file states the same
 boundaries from the other side. Read both before proposing a split.
 
-**Facts about the current packaging, checked 2026-09-07:**
+**Facts about the current packaging, checked 2026-09-07** (updated after the cut
+above):
 
 - The repo is one `uv` project (`pyproject.toml`, name `dante-corpus`, hatchling,
   no explicit package list — the build back end picks packages up implicitly).
   `harness/` is not a distribution today; it is a top-level package imported as
   `harness.*` from inside the same tree.
-- Import surface, by directory: `tests/` 16 modules, `harness/extractor/` 9,
-  `harness/recon/` 4, `harness/runner/` 3, `harness/toolcall/` 2. Nothing outside
-  `harness/` and `tests/` imports it.
-- Top level: `toolcall/`, `runner/`, `extractor/`, `recon/`, `fixtures/`,
-  `stages/`, `skills.py`, and six `.md` files.
+- Import surface, by directory: `tests/` 8 modules, `harness/extractor/` 9,
+  `harness/runner/` 4, `harness/recon/` 2. Nothing outside `harness/` and
+  `tests/` imports it.
+- Top level: `runner/`, `extractor/`, `recon/`, `stages/`, `skills.py`, and six
+  `.md` files.
 - Tests are at the repo root (`tests/test_harness_*.py`) deliberately, so the
   harness stays inside one pytest run (§3). A split has to answer where they go.
 
 **Questions the session will have to settle** — listed so they are not
 rediscovered, not because any has a preferred answer:
 
-1. **What is library and what is subject matter.** `toolcall/` and the loop are
-   the apparatus. `recon/` is a Layer-5 artifact tree plus its Makefile and
-   readouts; `fixtures/` is the Layer-5 benchmark's case data; `extractor/` mines
-   Layer-5 traces. Those are subjects, not tools — but `recon/`'s TSVs are also
-   the corpus's committed reconstruction, which is not obviously `layers/`'
-   property either.
+1. **What is library and what is subject matter.** The bounded loop, the gates,
+   the observability frame and the artifact/resume machinery are the apparatus.
+   `recon/` is a Layer-5 artifact tree plus its Makefile and readouts — a
+   subject, not a tool — but its TSVs are also the corpus's committed
+   reconstruction, which is not obviously `layers/`' property either. The cut
+   above already removed the pieces whose classification was least clear
+   (`fixtures/`, the miners), so this question is narrower than it was.
 2. **Whether `harness/` becomes a separate distribution or stays a package in
    this project** with `layers/` importing it in-tree. The second is much less
    work and may be enough; the first is what "referenced through `uv`" most
@@ -72,14 +121,15 @@ rediscovered, not because any has a preferred answer:
 4. **What this document becomes.** It is now the record of what the harness did
    (§2's table plus ten stage documents). It should probably stop being called a
    plan.
-5. **`README.md` is stale** — it lists Stage 8 as the open stage and does not
-   mention `stages/09.md` or `stages/10.md`. Left deliberately untouched at the
-   Stage 10 close, because what it should say depends on answers 1–4.
+5. ~~**`README.md` is stale**~~ — brought up to date by the cut above (roadmap
+   through Stage 10, corrected directory map, removal note). What it should say
+   about the *split* still depends on answers 1–4.
 
 **One thing not to lose in a move.** The four 87-case benchmark run logs
-(Orientation item 2) are gitignored and disk-only. They are mining inputs, not
-artifacts, and are regenerable — but only by re-running the benchmarks, which
-costs model calls. A move that deletes them is a real cost, not a cleanup.
+(Orientation item 2) are gitignored and disk-only. Nothing reads them since the
+miners were deleted, and the benchmark that produced them is gone too — so they
+are no longer regenerable at all. They are kept deliberately (operator,
+2026-09-07); a move that deletes them destroys the only copy.
 
 ## Current Status
 
@@ -113,42 +163,42 @@ of these is a target.*
 Durable context for picking up mining/extraction work cold — not tied to
 any one session, so it survives across Handoff clearings.
 
-1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md) (§3–§5), then
-   [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6 (observability + log
-   contract; `reconstruct.py` already ships it incl. resume).
-   The Stage-1→2 interface stays the trace contract:
-   `UnitResult.trace_record()` (`runner/agent.py`) embedded as `"trace"` in
-   every benchmark case record. The hybrid seam is callable-level:
-   `HybridEngine.run_unit(..., fallback=agent_fallback(model=...))`;
-   `reconstruct.main(..., fallback=...)` accepts an injected callable for
-   deterministic work.
-2. **Mining inputs — four complete 87-case JSONL run logs on disk** (all
-   gitignored, disk-only; regenerate rather than re-mine if lost):
-   M1.4 originals (`harness/bench-unit.log`, `harness/bench-predicate.log`)
-   plus the instrumented re-runs (`harness/bench-unit-retry.log`,
-   `harness/bench-predicate-retry.log`; finished 2026-08-24). The engine's
-   `mine_artifacts()` regenerates rule table + lexicon from them in seconds;
-   no mined artifact needs to be frozen on disk.
-3. **Error structure to mine around** (details in
-   [`stages/01.md`](stages/01.md), M1.4 entries):
+1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md), then
+   [`runner/PLAN.md`](runner/PLAN.md) — between them they specify the whole
+   surviving apparatus — then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
+   (observability + log contract; `reconstruct.py` already ships it incl.
+   resume). The seam a caller reaches for is callable-level:
+   `reconstruct.main(..., fallback=...)` and `reconstruct_canto(...,
+   fallback=...)` accept an injected callable, which is how every deterministic
+   test runs the pipeline without a model. The live one is
+   `fixedcontext.fixed_fallback(model=...)`.
+2. **The four 87-case JSONL run logs on disk** — M1.4 originals
+   (`harness/bench-unit.log`, `harness/bench-predicate.log`) plus the
+   instrumented re-runs (`harness/bench-unit-retry.log`,
+   `harness/bench-predicate-retry.log`; finished 2026-08-24), all gitignored and
+   disk-only. They were Stage 2's mining inputs. **Nothing reads them since the
+   miners were deleted (2026-09-07), and the benchmark that produced them is
+   gone too, so they are no longer regenerable at all.** Kept deliberately
+   (operator, 2026-09-07): they are the only copy of what Stage 1 measured
+   beyond what `stages/01.md` records in prose.
+3. **Error structure the traces showed** (details in
+   [`stages/01.md`](stages/01.md), M1.4 entries) — a record of where the model
+   was weak, not a work list any more:
    systematic gold-convention divergence on verbless frames dominates
    `historical` misses; bare-`obl` over-assignment (74 fps) and `xcomp`
    over-generation are the top noise sources; `obl:di` / `obl:in` recall
-   0.54–0.60 fed lexicon_builder directly (140 frames at 100% consistency
-   mined, incl. fare+di / avere+di / sedere+in — see [`stages/02.md`](stages/02.md),
-   M2.2 Ledger entry).
+   0.54–0.60 fed the (since deleted) lexicon builder directly — 140 frames at
+   100% consistency mined, incl. fare+di / avere+di / sedere+in, see
+   [`stages/02.md`](stages/02.md), M2.2 Ledger entry.
    The 31 well-formed unit-side `upstream_feedback` records await HUMAN
    triage — never auto-retag.
-4. **Boundaries that hold**: `extractor/` consumes traces + operator-side
-   gold (`skel.io`) like `benchmark.py` does; agent-side masking (§4 item 1
-   of Standing Invariants below) applies to anything that runs *as* an
-   agent — the engine's execution face and `reconstruct.py`'s
-   execution/commit faces never open gold at all (adversarially tested),
-   only evaluation faces (`evaluate_fast_path`, `--verify-gold`) do;
-   `fixtures/challenge_cases.py` stays data-only. Tests live at repo root
-   (`tests/test_harness_*.py`). `skel/` is protected: reconstruction writes
-   need the explicit `--write` flag on top of passing all three gates,
-   canto-atomically.
+4. **Boundaries that hold**: agent-side masking (§4 item 1 of Standing
+   Invariants below) applies to anything that runs *as* an agent — and since
+   2026-09-07 **nothing in `harness/` opens gold at all**, evaluation faces
+   included, so the boundary is now the whole package rather than a line inside
+   it. Tests live at repo root (`tests/test_harness_*.py`). `skel/` is
+   protected: reconstruction writes need the explicit `--write` flag on top of
+   passing all three gates, canto-atomically.
 5. **Wire/cost instrumentation** (shipped across Stages 2–3, live-proven on
    every run): the fallback appends one `llm_request`/`llm_response` JSONL
    pair per backend LLM call — timestamps, model, session/unit coordinates,

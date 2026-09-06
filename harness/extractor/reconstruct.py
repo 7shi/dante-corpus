@@ -1,9 +1,8 @@
 """Gated reconstruction pipeline: whole-canto Layer-5 rebuild behind three gates (Milestone 2.4).
 
-Fourth Stage-2 deliverable (`harness/extractor/PLAN.md` §4): drive
-`HybridEngine.run_unit` over every parse unit of whole cantos — the mined fast
-path deciding what it can, the Stage-1 agent fallback (operator-run, live)
-deciding the rest — and gate every disk write on the three §4.1 criteria:
+Stage-2's fourth deliverable (`harness/extractor/PLAN.md` §3): drive the
+fixed-context loop (`fixedcontext.py`, operator-run, live) over every parse unit
+of whole cantos and gate every disk write on the three §4.1 criteria:
 
 1. **Token-stream assertion** against Layer 1: every candidate row's predicate
    and argument positions must index the canto's alpha-token stream, and each
@@ -20,13 +19,10 @@ deciding the rest — and gate every disk write on the three §4.1 criteria:
    on disk is byte-for-byte the payload the gates validated. A mismatch rolls
    the artifact back to its previous bytes.
 
-Two gold disciplines, as everywhere in the extractor:
-
-- **Execution** (`reconstruct_canto`, `commit`) never opens a gold artifact:
-  `CantoLayers` loads L1-L4 + the case annex only. Gates are intrinsic.
-- **Evaluation** (`--verify-gold`) reads gold operator-side exactly like
-  `runner/benchmark.py` to compare accepted rows against gold keys. It never
-  influences gating or writes.
+Gold is not opened anywhere in this pipeline. `CantoLayers` loads L1-L4 + the
+case annex only and the gates are intrinsic; the evaluation face that used to
+sit beside them (`--verify-gold`, `goldeval.py`) was removed with the rest of
+the gold-referenced readouts (2026-09-07, `../../layers/PLAN.md` §3.1 item 2).
 
 **Module layout (S7.2).** This file is the pipeline: the canto loop
 (`reconstruct_canto`), gate 3 (`commit`) and the CLI (`main`). Everything it
@@ -39,13 +35,11 @@ the one responsibility it holds:
 | `outcome.py` | `UnitOutcome`, `CantoReconstruction`, unit-level resume |
 | `artifact.py` | `render_tsv` + `TsvArtifact` — the durable artifact |
 | `fixrun.py` | the Stage-6 `--fix` machinery (plan, verdict, salvage, revert) |
-| `goldeval.py` | the evaluation face — **the only module that opens gold** |
+| `fixedcontext.py` | the bounded per-unit step and its live model closure |
 | `report.py` | `ReconstructReport` + `load_log` |
 
-That last row is why the split is more than tidying: the execution and commit
-faces now import nothing from the module that reads gold, so Standing Invariant
-§4 item 1's boundary is a file boundary rather than a comment. The public names
-this module exported before the split are re-exported here unchanged.
+The public names this module exported before the split are re-exported here
+unchanged.
 
 Commits are **canto-atomic**: a canto is written only when *every* parse unit
 passes all gates, so an artifact is always wholly checker-clean — never a mix
@@ -57,12 +51,11 @@ the default run reconstructs, verifies, and reports without touching disk
 CLI (LLM-in-the-loop when agent fallback runs — operator-run only):
 
     uv run python -m harness.extractor.reconstruct --canticle inferno --canto 1 --dry-run
-    uv run python -m harness.extractor.reconstruct --all --verify-gold [--write]
+    uv run python -m harness.extractor.reconstruct --all [--write]
 
 Observability follows ARCHITECTURE.md §4-§6 scaled to a batch job: stderr
 progress per phase and per canto, a streaming JSONL `--log` (`unit` record per
-parse unit, optional `gold` records under `--verify-gold`, one `canto_complete`
-record per finished canto, `summary` record last — the completion marker).
+parse unit, one `canto_complete` record per finished canto, `summary` record last — the completion marker).
 When Rich is available a `runner.statusline.HarnessStatusLine` bar names the
 running position the way the `skel/` drivers do — Canticle Canto Line: one bar
 per canto, labeled `{canticle} {canto}`, its numerator walking that canto's
@@ -73,7 +66,7 @@ so streamed model output coexists with the bar; auto-retried API backoffs are
 counted per canto through the stream's `wait_retry` hook (`api_retries` /
 `api_retry_seconds`) and rolled into the summary, and each `canto_complete`
 record carries the canto's `elapsed_seconds` (everything it cost:
-reconstruction, gates, gold comparison, commit) whose sum is the run's
+reconstruction, gates, commit) whose sum is the run's
 `wall_clock_seconds` — the benchmark's no-timestamp-span discipline, so idle
 gaps between resumed attempts never count. The same `--log` also
 carries the request-level cost records: the live fallback appends one JSONL
@@ -141,22 +134,12 @@ from harness.extractor.fixrun import (
     salvage_outcome,
     salvage_rows,
 )
-from harness.extractor.goldeval import GoldFace, GoldReport, verify_against_gold
-from harness.extractor.hybrid_engine import (
-    DEFAULT_EVAL_CANTICLES,
-    AgentFallback,
-    HybridEngine,
-    RoutePolicy,
-    agent_fallback,
-    load_lexicon_json,
-    load_rules_json,
-    mine_artifacts,
-)
 from harness.extractor.layers import (
     SAMPLE_VIOLATIONS,
     CantoLayers,
     RowKey,
     build_rows,
+    candidate_keys,
     split_violations,
     validate_rows,
 )
@@ -167,16 +150,32 @@ from harness.extractor.outcome import (
     replay_unit_outcome,
 )
 from harness.extractor.report import ReconstructReport, load_log
-from harness.runner.prompts import fixed_skill_digest, skill_digest
+from harness.runner.prompts import fixed_skill_digest
 from harness.runner.statusline import HarnessStatusLine
-from harness.toolcall import DEFAULT_RESULT_CHARS
-from harness.toolcall.loop import progress_separator
+
+# The scope every `--all` run covers unless `--canticle` narrows it.
+DEFAULT_EVAL_CANTICLES = ("inferno", "purgatorio", "paradiso")
+
+# `(canticle, canto, line_start, line_end) -> UnitResult`-shaped object. The live
+# one is `fixedcontext.fixed_fallback`; tests inject deterministic stubs.
+AgentFallback = Callable[..., object]
+
+
+def progress_separator(label: str, index: int, total: int, stream=None) -> None:
+    """Announce one canto's start with its position in the run.
+
+    A corpus run processes a hundred cantos over hours; without a marker between
+    them there is no way to tell where it currently is. The line goes to stderr
+    (JSONL logs stay clean) and names the canto plus its `[index/total]`
+    position.
+    """
+    stream = sys.stderr if stream is None else stream
+    print(f"\n===== [{index}/{total}] {label} =====", file=stream, flush=True)
 
 __all__ = [
     "SAMPLE_VIOLATIONS",
     "CantoLayers",
     "CantoReconstruction",
-    "GoldReport",
     "ReconstructReport",
     "TsvArtifact",
     "UnitOutcome",
@@ -195,23 +194,21 @@ _validate_rows = validate_rows
 
 
 def reconstruct_canto(
-    engine: HybridEngine,
     canticle: str,
     canto: int,
     *,
     fallback: AgentFallback | None = None,
-    policy: RoutePolicy | None = None,
     progress_stream: TextIO | None = sys.stderr,
     status_line=None,
     settled_units: dict[tuple[int, int], dict[int, list[SkelRow]]] | None = None,
     fix_spans: set[Span] | None = None,
     emit_unit: Callable[[UnitOutcome], None] | None = None,
 ) -> CantoReconstruction:
-    """Drive the hybrid engine over every parse unit of one canto, gated.
+    """Drive the fixed-context loop over every parse unit of one canto, gated.
 
-    Execution face: loads frozen L1-L4 only; gold is never touched. Each unit
-    runs `engine.run_unit` (the live `fallback` callable when given), its
-    accepted rows are anchored on Layer 1 (gate 1), and the unit is verified
+    Loads frozen L1-L4 only; gold is never touched. Each unit runs the
+    `fallback` callable, its accepted rows are anchored on Layer 1 (gate 1),
+    and the unit is verified
     through `validate_unit` with all layers attached (gate 2). `status_line`,
     when given (a `runner.statusline.HarnessStatusLine`), owns the display the
     way the `skel/` drivers do: a bar labeled `{canticle} {canto}` counting the
@@ -229,9 +226,12 @@ def reconstruct_canto(
     `settled_units`, when given, maps `(line_start, line_end)` to the rows a
     previous attempt already wrote to the canto's TSV: unit-level resume off
     the artifact itself (`TsvArtifact.settled`). Matching units are rebuilt
-    from those rows (`replay_unit_outcome`, gates re-run) instead of
-    re-running `engine.run_unit` — the caller must not re-emit them, since the
-    artifact already holds them.
+    from those rows (`replay_unit_outcome`, gates re-run) instead of being
+    re-solved — the caller must not re-emit them, since the artifact already
+    holds them.
+
+    With `fallback=None` no unit is solved at all: every unsettled unit records
+    empty rows. That is the dry mode the deterministic tests use.
     """
     stream = status_line.stream if status_line is not None else progress_stream
     layers = CantoLayers.load(canticle, canto)
@@ -267,33 +267,34 @@ def reconstruct_canto(
                 )
                 continue
             started = time.monotonic()
-            # A unit reopened for repair must reach the model: the fast path
-            # would answer it with `derive_unit`'s own rows, clearing the class
-            # by definition and measuring nothing (`../stages/06.md`).
-            unit_policy = policy
-            if fix_spans and (line_start, line_end) in fix_spans:
-                base = policy if policy is not None else RoutePolicy()
-                unit_policy = dataclasses.replace(base, force_fallback=True)
-            result = engine.run_unit(
-                canticle=canticle,
-                canto=canto,
-                line_start=line_start,
-                line_end=line_end,
-                policy=unit_policy,
-                fallback=fallback,
+            reason = (
+                "fix" if fix_spans and (line_start, line_end) in fix_spans
+                else "generate"
             )
+            agent_result = None
+            row_keys: frozenset[RowKey] = frozenset()
+            if fallback is not None:
+                agent_result = fallback(
+                    canticle=canticle,
+                    canto=canto,
+                    line_start=line_start,
+                    line_end=line_end,
+                )
+                keys, _malformed, _out_of_unit = candidate_keys(
+                    agent_result.candidate_rows, line_start, line_end
+                )
+                row_keys = frozenset(keys)
             elapsed = time.monotonic() - started
             rows, assertions = build_rows(
-                result.row_keys, layers, line_start, line_end
+                row_keys, layers, line_start, line_end
             )
             unit_rows = {no: rows.get(no, []) for no in group}
             hard, soft = validate_rows(layers, group, unit_rows)
             fallback_seconds: float | None = None
-            agent_result = getattr(result, "agent_result", None)
             turn_seconds = getattr(agent_result, "turn_seconds", None)
-            if result.fallback_ran and turn_seconds is not None:
+            if agent_result is not None and turn_seconds is not None:
                 fallback_seconds = sum(turn_seconds)
-            elif result.fallback_ran:
+            elif agent_result is not None:
                 fallback_seconds = elapsed
             outcome = UnitOutcome(
                 unit={
@@ -302,25 +303,24 @@ def reconstruct_canto(
                     "line_start": line_start,
                     "line_end": line_end,
                 },
-                route=result.decision.route,
-                reason=result.decision.reason,
-                origin=result.origin,
-                fallback_ran=result.fallback_ran,
-                row_keys=frozenset(result.row_keys),
+                route="agent",
+                reason=reason,
+                origin="agent",
+                fallback_ran=agent_result is not None,
+                row_keys=row_keys,
                 rows=unit_rows,
                 token_assertions=assertions,
                 hard=hard,
                 soft=soft,
                 fallback_seconds=fallback_seconds,
                 final_submission_valid=getattr(
-                    result, "final_submission_valid", None
+                    agent_result, "final_submission_valid", None
                 ),
                 invalid_nudges=getattr(agent_result, "invalid_nudges", None),
                 final_validation_errors=final_validation_errors(agent_result),
                 # The fixed-context loop's own record of what each step did
-                # (`fixedcontext.FixedUnitResult`). Absent under
-                # `--tool-calling`: that session has no `to_dict`, so this stays
-                # None there.
+                # (`fixedcontext.FixedUnitResult`). None when a test's stub
+                # fallback stands in for it.
                 fixed=(
                     agent_result.to_dict()
                     if isinstance(agent_result, FixedUnitResult)
@@ -414,8 +414,8 @@ def commit(
 def _retry_snapshot(status_line) -> tuple[int, float] | None:
     """`(count, seconds)` of api-retry backoffs seen so far, or None if untracked.
 
-    Same contract as `runner.benchmark`'s helpers: llm7shi auto-retries 429
-    backoffs silently; the status line's stream counts them via `wait_retry`.
+    llm7shi auto-retries 429 backoffs silently; the status line's stream counts
+    them via `wait_retry`.
     """
     stream = getattr(status_line, "stream", None)
     count = getattr(stream, "api_retries", None)
@@ -450,8 +450,8 @@ def _select_cantos(args) -> list[tuple[str, int]]:
 def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Gated whole-canto reconstruction through the hybrid engine "
-            "(harness/extractor PLAN.md milestone 2.4)."
+            "Gated whole-canto reconstruction through the fixed-context "
+            "loop (harness/extractor PLAN.md milestone 2.4)."
         )
     )
     parser.add_argument(
@@ -476,32 +476,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         help="commit passing cantos to skel/ (canto-atomic, hash-verified)",
     )
     parser.add_argument(
-        "--verify-gold",
-        action="store_true",
-        help="also compare accepted rows against gold (observational only)",
-    )
-    parser.add_argument("--rules-in", type=Path)
-    parser.add_argument("--lexicon-in", type=Path)
-    parser.add_argument(
-        "--run-log",
-        action="append",
-        type=Path,
-        dest="run_logs",
-        help="input benchmark JSONL log for fresh mining (repeatable; defaults "
-        "to the four M1.4/re-run logs under harness/)",
-    )
-    parser.add_argument("--min-support", type=int, default=None)
-    parser.add_argument(
         "--model",
         default=None,
-        help="model for the Stage-1 agent fallback (default: runner default)",
-    )
-    parser.add_argument("--max-turns", type=int, default=None)
-    parser.add_argument(
-        "--max-invalid-nudges", type=int, default=1,
-        help="resumes offered when a session ends on rows its own gate "
-             "rejected while turns remain (default 1; 0 restores the "
-             "measure-as-is behaviour the Stage-1 benchmark keeps)",
+        help="model for the live loop (default: runner default)",
     )
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
@@ -529,18 +506,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "../stages/03.md record S3.10)",
     )
     parser.add_argument(
-        "--tool-result-chars",
-        type=int,
-        default=DEFAULT_RESULT_CHARS,
-        help="echo each tool call's returned block to the console, truncated to "
-        "this many payload characters (0 = off). The model's own turn streams "
-        "already; this is the other half of the exchange — the validator's "
-        "verdict and its errors — made watchable (PLAN.md §4 item 5)",
-    )
-    parser.add_argument(
         "--log",
         type=Path,
-        help="streaming JSONL debug log: unit/gold/canto_complete records, "
+        help="streaming JSONL debug log: unit/canto_complete records, "
         "summary last, plus llm_request/llm_response records from the live "
         "fallback. Append-only — never read back; resume state is the TSV",
     )
@@ -565,22 +533,12 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
         "test",
     )
     parser.add_argument(
-        "--tool-calling",
-        action="store_true",
-        help="run the pre-Stage-9 per-unit tool-calling session instead of the "
-        "default fixed-context loop: a multi-turn transcript in which the model "
-        "elects its own tool calls, including the schema gate. Kept as an "
-        "option for comparison runs after S9.5 made the fixed-context loop the "
-        "default, and SLATED FOR REMOVAL (../stages/09.md §8, S9.6)",
-    )
-    parser.add_argument(
         "--fixed-iterations",
         type=int,
         default=FIXED_MAX_ITERATIONS,
-        help=f"cap on steps per unit in the default fixed-context loop (default "
-        f"{FIXED_MAX_ITERATIONS}; ignored under --tool-calling). A cap on cost, "
-        f"not a target: a unit settles when its verdict is empty or when it "
-        f"comes back unchanged",
+        help=f"cap on steps per unit in the fixed-context loop (default "
+        f"{FIXED_MAX_ITERATIONS}). A cap on cost, not a target: a unit settles "
+        f"when its verdict is empty or when it comes back unchanged",
     )
     parser.add_argument(
         "--started-at",
@@ -618,26 +576,6 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     if status_line is not None and args.started_at is not None:
         status_line.run_started_at = args.started_at
     ui_stream = status_line.stream if status_line is not None else None
-
-    if args.rules_in and args.lexicon_in:
-        rules = load_rules_json(args.rules_in)
-        entries = load_lexicon_json(args.lexicon_in)
-        print(
-            f"reconstruct: loaded {len(rules)} rules + {len(entries)} frames "
-            f"from artifacts"
-        )
-    else:
-        print(
-            "[reconstruct] regenerating artifacts from run logs...",
-            file=ui_stream if ui_stream is not None else sys.stderr,
-            flush=True,
-        )
-        kwargs = {}
-        if args.min_support is not None:
-            kwargs["min_support"] = args.min_support
-        bundle = mine_artifacts(args.run_logs, **kwargs)
-        rules, entries = bundle.rules, bundle.entries
-    engine = HybridEngine(rules, entries)
 
     wanted = _select_cantos(args)
     total = len(wanted)
@@ -679,8 +617,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
 
     header = (
         f"reconstruct: {'WRITE' if args.write else 'dry-run'} "
-        f"(gates: token stream, 0 hard / 0 soft, content hash)"
-        f"{', verify-gold' if args.verify_gold else ''}; "
+        f"(gates: token stream, 0 hard / 0 soft, content hash); "
         f"{len(wanted)} canto(s) selected"
     )
     print(header)
@@ -689,33 +626,27 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
     # are live-run facts the operator must see announced before the hours run.
     if args.max_length < 0:
         parser.error("--max-length must be >= 0 (0 disables the cap)")
-    if args.tool_result_chars < 0:
-        parser.error("--tool-result-chars must be >= 0 (0 disables the echo)")
     max_length = args.max_length or None
     print(
-        (
-            "reconstruct: transcripts verbatim, "
-            if args.tool_calling
-            else f"reconstruct: fixed context, {args.fixed_iterations} iteration(s) max, "
-        )
-        + f"payload tier {args.payload_tier}; pacing: min-send-interval "
+        f"reconstruct: fixed context, {args.fixed_iterations} iteration(s) max, "
+        f"payload tier {args.payload_tier}; pacing: min-send-interval "
         f"{args.min_send_interval:g}s; "
         f"max-length "
         f"{'off' if max_length is None else f'{max_length} chars'}"
     )
 
-    # One streaming log carries everything: unit/gold/canto_complete/summary
+    # One streaming log carries everything: unit/canto_complete/summary
     # records plus the live fallback's llm_request/llm_response records (the
     # canto-scoped cost trail; resume compaction keeps them for completed
     # cantos exactly like the unit records). Opened after compaction — the
     # rewrite swaps the file, so an earlier handle would append into limbo.
     sink = open(args.log, "a", encoding="utf-8") if args.log else None
-    if fallback is None and not args.tool_calling:
+    if fallback is None:
         if args.fixed_iterations < 1:
             parser.error("--fixed-iterations must be >= 1")
         # Under --fix the reopened unit's recorded rows are $\Sigma_0$; a fresh
-        # unit starts empty. That is the whole difference between the two modes
-        # here — one loop, two initial states (../stages/09.md §2).
+        # unit starts empty. That is the whole difference between generation and
+        # repair here — one loop, two initial states (../stages/09.md §2).
         rows_for = None
         if fix_plan is not None and fix_plan:
             rows_for = (
@@ -734,38 +665,6 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             max_iterations=args.fixed_iterations,
             rows_for=rows_for,
         )
-    if fallback is None:
-        fallback_kwargs = {
-            "model": args.model,
-            "payload_tier": args.payload_tier,
-            "min_send_interval": args.min_send_interval,
-            "max_length": max_length,
-            "result_chars": args.tool_result_chars,
-            # A production run keeps the session's last submission whatever its
-            # verdict, so ending early on rows the session itself rejected puts
-            # them in the artifact. Nudge instead (S6.6). The benchmark keeps
-            # the opposite default: there, the give-up is the measurement.
-            "max_invalid_nudges": args.max_invalid_nudges,
-        }
-        if args.max_turns is not None:
-            fallback_kwargs["max_turns"] = args.max_turns
-        if fix_plan is not None and fix_plan:
-            # The session sees two extra things under --fix, and only these two:
-            # the level's own bar added to its gate, and the unit's recorded rows
-            # with the invariants they break. No derived label crosses over
-            # (`../stages/06.md`; `../stages/05.md` S5.5 for the line being crossed).
-            fallback_kwargs["fix_level"] = args.fix
-            fallback_kwargs["revision_for"] = (
-                lambda canticle, canto, line_start, line_end, _plan=fix_plan: (
-                    _plan.revisions.get((line_start, line_end))
-                )
-            )
-        fallback = agent_fallback(
-            verbose=args.verbose,
-            file=status_line.stream if status_line is not None else None,
-            request_log=sink,
-            **fallback_kwargs,
-        )
     try:
         for index, (canticle, canto) in enumerate(wanted, start=1):
             progress_separator(
@@ -777,7 +676,6 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
             # a mid-canto kill keeps every finished unit on disk and the next
             # attempt resumes unit-by-unit instead of re-running (and
             # re-costing, for the live fallback) the whole canto.
-            gold_face = GoldFace() if args.verify_gold else None
             fix_stats: Counter[str] = Counter()
 
             def settle(outcome: UnitOutcome) -> None:
@@ -911,17 +809,9 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 if sink is not None:
                     sink.write(json.dumps(record, ensure_ascii=False) + "\n")
                     sink.flush()  # §5: every completed unit is durable at once
-                if gold_face is not None:
-                    gold_record = gold_face.observe(outcome)
-                    report.add_gold(gold_record)
-                    if sink is not None:
-                        sink.write(
-                            json.dumps(gold_record, ensure_ascii=False) + "\n"
-                        )
-                        sink.flush()
 
             recon = reconstruct_canto(
-                engine, canticle, canto,
+                canticle, canto,
                 fallback=fallback, status_line=status_line,
                 settled_units=settled_units,
                 fix_spans=set(fix_plan.prior) if fix_plan else None,
@@ -938,8 +828,6 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 if not outcome.replayed:
                     continue
                 report.add_unit(outcome.to_dict())
-                if gold_face is not None:
-                    report.add_gold(gold_face.observe(outcome))
             complete: dict = {
                 "record": "canto_complete",
                 "canticle": canticle,
@@ -950,9 +838,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                 # skill's files are the session semantics; recording their digest
                 # canto by canto is how a later reader tells two runs apart, and
                 # how a mid-run change would show up at all.
-                "skill_digest": (
-                    skill_digest() if args.tool_calling else fixed_skill_digest()
-                ),
+                "skill_digest": fixed_skill_digest(),
             }
             if retries is not None:
                 complete["api_retries"] = retries[0]
@@ -971,7 +857,7 @@ def main(argv=None, *, fallback: AgentFallback | None = None) -> int:
                     sink.write(json.dumps(commit_record, ensure_ascii=False) + "\n")
                     sink.flush()
             # Wall clock of everything this canto cost (reconstruction,
-            # verification, gold comparison, commit) — sums into the summary
+            # verification, commit) — sums into the summary
             # and folds across resumed attempts via the record.
             complete["elapsed_seconds"] = round(time.monotonic() - canto_started, 1)
             report.add_canto_complete(complete)

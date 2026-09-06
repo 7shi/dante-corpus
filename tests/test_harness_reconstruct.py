@@ -24,9 +24,7 @@ from dante_corpus.skel import io as skel_io
 from dante_corpus.skel.io import load_skel
 from dante_corpus.skel.models import SkelRow
 
-from harness.extractor import hybrid_engine as he
 from harness.extractor import reconstruct as rc
-from harness.extractor import syntax_miner as sm
 
 
 # --- fixtures & helpers ------------------------------------------------------------------
@@ -65,10 +63,6 @@ def _gold_fallback(canticle="inferno", canto=1, drop=None):
         return _StubResult(rows)
 
     return _run
-
-
-def _engine():
-    return he.HybridEngine([], [])
 
 
 def _patch_skel_target(monkeypatch, tmp_path, seed=None):
@@ -194,7 +188,7 @@ def test_split_violations_separates_hard_from_soft():
 
 def test_reconstruct_with_gold_stub_passes_all_gates():
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1,
+        "inferno", 1,
         fallback=_gold_fallback(), progress_stream=None,
     )
     assert recon.outcomes
@@ -214,16 +208,15 @@ def test_execution_face_never_touches_gold(monkeypatch):
         raise AssertionError("execution must not read gold skel/ artifacts")
 
     monkeypatch.setattr(skel_io, "load_skel", boom)
-    monkeypatch.setattr(sm, "load_skel", boom)
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1, fallback=fallback, progress_stream=None
+        "inferno", 1, fallback=fallback, progress_stream=None
     )
     assert recon.passed
 
 
 def test_dry_mode_blocks_every_agent_unit():
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1, fallback=None, progress_stream=None
+        "inferno", 1, fallback=None, progress_stream=None
     )
     assert recon.outcomes
     assert not recon.passed
@@ -236,7 +229,7 @@ def test_blocked_outcome_records_violation_samples():
     from collections import Counter
 
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1, fallback=None, progress_stream=None
+        "inferno", 1, fallback=None, progress_stream=None
     )
     outcome = next(o for o in recon.outcomes if o.hard or o.soft)
     record = outcome.to_dict()
@@ -255,7 +248,7 @@ def test_blocked_outcome_records_violation_samples():
 def test_commit_refuses_a_blocked_canto(monkeypatch, tmp_path):
     target = _patch_skel_target(monkeypatch, tmp_path)
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1, fallback=None, progress_stream=None
+        "inferno", 1, fallback=None, progress_stream=None
     )
     record = rc.commit(recon, progress_stream=None)
     assert record["wrote"] is False
@@ -270,7 +263,7 @@ def test_commit_writes_and_verifies_content_hash(monkeypatch, tmp_path):
     seed = b"stale artifact bytes\n"
     target = _patch_skel_target(monkeypatch, tmp_path, seed=seed)
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1, fallback=fallback, progress_stream=None,
+        "inferno", 1, fallback=fallback, progress_stream=None,
     )
     record = rc.commit(recon, progress_stream=None)
     assert record["wrote"] is True
@@ -292,7 +285,7 @@ def test_commit_rolls_back_on_hash_mismatch(monkeypatch, tmp_path):
     seed = b"previous committed bytes\n"
     target = _patch_skel_target(monkeypatch, tmp_path, seed=seed)
     recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1, fallback=fallback, progress_stream=None,
+        "inferno", 1, fallback=fallback, progress_stream=None,
     )
     real_render = rc.render_tsv
     monkeypatch.setattr(
@@ -316,43 +309,6 @@ def test_render_tsv_matches_write_skel_bytes(monkeypatch, tmp_path):
     assert target.read_text(encoding="utf-8") == rendered
 
 
-# --- evaluation face: gold comparison --------------------------------------------------------------
-
-
-def test_verify_against_gold_exact_for_gold_stub():
-    recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1,
-        fallback=_gold_fallback(), progress_stream=None,
-    )
-    report, records = rc.verify_against_gold(recon)
-    drained = list(records)
-    assert len(drained) == len(recon.outcomes)
-    assert report.units == len(recon.outcomes)
-    assert report.exact_units == report.units
-    assert report.fp == 0 and report.fn == 0
-    metrics = report.metrics()
-    assert metrics["exact_rate"] == 1.0
-    assert "exact units" in report.summary()
-
-
-def test_verify_against_gold_counts_missing_rows():
-    gold = load_skel("inferno", 1)
-    victim = next(
-        (row.line, row.token, row.role, row.arg_line, row.arg_token)
-        for rows in gold.values() for row in rows
-        if (row.line, row.arg_line, row.arg_token) != (row.line, 0, 0)
-    )
-    recon = rc.reconstruct_canto(
-        _engine(), "inferno", 1,
-        fallback=_gold_fallback(drop=victim), progress_stream=None,
-    )
-    report, records = rc.verify_against_gold(recon)
-    list(records)
-    assert report.fn >= 1
-    assert report.exact_units < report.units
-    assert report.tp > 0
-
-
 # --- aggregate report faces -------------------------------------------------------------------------
 
 
@@ -374,7 +330,6 @@ def test_report_faces_aggregate_streamed_records():
         "violation_kinds": {},
         "fallback_seconds": None,
     })
-    report.add_gold({"record": "gold", "tp": 5, "fp": 1, "fn": 2, "exact": False})
     report.add_canto_complete(
         {"record": "canto_complete", "canticle": "inferno", "canto": 1,
          "units": 2, "passed": False}
@@ -391,11 +346,9 @@ def test_report_faces_aggregate_streamed_records():
     assert metrics["written_cantos"] == 1
     assert metrics["token_assertion_errors"] == 1
     assert metrics["fallback_seconds_total"] == 3.5
-    assert metrics["gold"]["tp"] == 5
     text = report.summary()
     assert "0 hard / 0 soft" in text
     assert "written 1" in text
-    assert "gold comparison:" in text
 
 
 # --- the TSV artifact: streamed writes, resume state, the fix gesture ---------------------------
@@ -533,15 +486,10 @@ def test_cli_main_streams_log_with_summary_last(tmp_path, monkeypatch):
     # No Rich bar in deterministic tests (the dedicated status-line tests
     # cover the display wiring over a fake).
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
-    _write_log(run_log, [_case_record()])
     exit_code = rc.main(
         [
             "--canticle", "inferno", "--canto", "1",
-            "--run-log", str(run_log),
-            "--min-support", "99",
-            "--verify-gold",
             "--log", str(out_log),
         ],
         fallback=_gold_fallback(),
@@ -554,7 +502,6 @@ def test_cli_main_streams_log_with_summary_last(tmp_path, monkeypatch):
     assert lines[-1]["record"] == "summary"  # completion marker
     kinds = [record["record"] for record in lines[:-1]]
     assert kinds.count("unit") == 34
-    assert kinds.count("gold") == 34
     assert kinds.count("canto_complete") == 1
     assert "commit" not in kinds  # dry-run default writes nothing
     complete = lines[-2]
@@ -564,17 +511,14 @@ def test_cli_main_streams_log_with_summary_last(tmp_path, monkeypatch):
     assert summary["cantos_passed"] == 1
     assert summary["written_cantos"] == 0
     assert summary["wall_clock_seconds"] >= 0  # summed from canto records
-    assert summary["gold"]["exact_rate"] == 1.0
 
 
 def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
     """The live fallback's request_log is the very sink behind --log: one
-    streaming file carries unit/gold/canto_complete/summary plus the
+    streaming file carries unit/canto_complete/summary plus the
     llm_request/llm_response cost records. Injected deterministic fallbacks
     never see it."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
-    _write_log(run_log, [_case_record()])
     out_log = tmp_path / "recon.log"
 
     captured = {}
@@ -583,14 +527,11 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
         captured.update(kwargs)
         return _gold_fallback()
 
-    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    monkeypatch.setattr(rc, "fixed_fallback", spy_fallback)
     exit_code = rc.main(
         [
             "--canticle", "inferno", "--canto", "1",
-            "--run-log", str(run_log),
-            "--min-support", "99",
             "--log", str(out_log),
-            "--tool-calling",
         ],
     )
     assert exit_code == 0
@@ -611,34 +552,27 @@ def test_cli_request_log_shares_the_streaming_log(tmp_path, monkeypatch):
 
 
 def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeypatch, capsys):
-    """The Stage-3 flags (harness/stages/03.md §4 item 6): compaction default ON in the
-    minimal S3.5 form (drop thinking+calls; no prompt swap, no digests),
-    pacing defaults (interval off since record S3.4), a header line
-    announcing the live configuration, and full pass-through into
-    agent_fallback. Rate-limit handling is `llm7shi.Client`'s own 429
-    backoff, not a pre-emptive pacer wired through here."""
+    """The Stage-3 flags (harness/stages/03.md §4 item 6): pacing defaults
+    (interval off since record S3.4), a header line announcing the live
+    configuration, and full pass-through into `fixed_fallback`. Rate-limit
+    handling is `llm7shi.Client`'s own 429 backoff, not a pre-emptive pacer
+    wired through here."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
-    _write_log(run_log, [_case_record()])
     captured = {}
 
     def spy_fallback(**kwargs):
         captured.update(kwargs)
         return _gold_fallback()
 
-    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    monkeypatch.setattr(rc, "fixed_fallback", spy_fallback)
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
-        "--tool-calling",
     ]
     assert rc.main(argv) == 0
-    assert "compact" not in captured  # record S3.7: no compaction layer
     assert captured["payload_tier"] == "R1"
     assert captured["min_send_interval"] == 0.0
     out = capsys.readouterr().out
-    assert "transcripts verbatim" in out
+    assert "fixed context" in out
     assert "payload tier R1" in out
     assert "min-send-interval 0s" in out
 
@@ -651,44 +585,33 @@ def test_cli_stage3_configuration_announced_and_passed_through(tmp_path, monkeyp
     assert captured["payload_tier"] == "S1"
     assert captured["min_send_interval"] == 45.0
     out = capsys.readouterr().out
-    assert "transcripts verbatim" in out
+    assert "fixed context" in out
     assert "payload tier S1" in out
     assert "min-send-interval 45s" in out
 
 
-def test_cli_execution_mode_defaults_to_the_fixed_context_loop(
+def test_cli_records_the_fixed_skill_digest_on_every_canto(
     tmp_path, monkeypatch, capsys
 ):
-    """S9.6: the fixed-context loop is the default and `--tool-calling` opts out.
-
-    The mode decides three things a live run is read by, so all three are
-    asserted together: which fallback gets built, what the configuration line
-    announces (the operator's first-seconds check, harness/PLAN.md), and which
-    skill digest the canto_complete records — the field a later reader uses to
-    tell two runs apart without being told."""
+    """The mode decides two things a live run is read by, so both are asserted
+    together: what the configuration line announces (the operator's
+    first-seconds check, harness/PLAN.md), and which skill digest the
+    canto_complete record carries — the field a later reader uses to tell two
+    runs apart without being told. Since the tool-calling session was removed
+    there is only one mode, but the digest still moves with the wording, which
+    is what Standing Invariant §6 needs it for."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
-    _write_log(run_log, [_case_record()])
     built: list[str] = []
-
-    def spy_agent(**kwargs):
-        built.append("agent")
-        return _gold_fallback()
 
     def spy_fixed(**kwargs):
         built.append("fixed")
         return _gold_fallback()
 
-    monkeypatch.setattr(rc, "agent_fallback", spy_agent)
     monkeypatch.setattr(rc, "fixed_fallback", spy_fixed)
-    argv = [
-        "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
-    ]
-
     out_log = tmp_path / "default.log"
-    assert rc.main(argv + ["--log", str(out_log)]) == 0
+    assert rc.main([
+        "--canticle", "inferno", "--canto", "1", "--log", str(out_log),
+    ]) == 0
     assert built == ["fixed"]
     assert "fixed context, 4 iteration(s) max" in capsys.readouterr().out
     complete = [
@@ -698,38 +621,21 @@ def test_cli_execution_mode_defaults_to_the_fixed_context_loop(
     ]
     assert complete and complete[0]["skill_digest"] == rc.fixed_skill_digest()
 
-    built.clear()
-    tool_log = tmp_path / "toolcall.log"
-    assert rc.main(argv + ["--tool-calling", "--log", str(tool_log)]) == 0
-    assert built == ["agent"]
-    assert "transcripts verbatim" in capsys.readouterr().out
-    complete = [
-        json.loads(line)
-        for line in tool_log.read_text(encoding="utf-8").splitlines()
-        if json.loads(line)["record"] == "canto_complete"
-    ]
-    assert complete and complete[0]["skill_digest"] == rc.skill_digest()
-
 
 def test_cli_max_length_cap_default_disable_and_validation(tmp_path, monkeypatch, capsys):
     """The generation-side runaway cap (harness/stages/03.md record S3.10): the policy
     default (6,000 answer-text chars) lives at this CLI and passes through to
-    agent_fallback; `--max-length 0` disables it; negatives are rejected."""
+    `fixed_fallback`; `--max-length 0` disables it; negatives are rejected."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
-    _write_log(run_log, [_case_record()])
     captured = {}
 
     def spy_fallback(**kwargs):
         captured.update(kwargs)
         return _gold_fallback()
 
-    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
+    monkeypatch.setattr(rc, "fixed_fallback", spy_fallback)
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
-        "--tool-calling",
     ]
     assert rc.main(argv) == 0
     assert captured["max_length"] == 6000
@@ -763,79 +669,13 @@ def test_unit_record_carries_the_invalid_final_resumes(tmp_path):
     ).to_dict()["invalid_nudges"] is None
 
 
-def test_cli_turns_the_invalid_final_nudge_on_where_the_benchmark_leaves_it_off(
-    tmp_path, monkeypatch
-):
-    """S6.6: producing corpus and measuring a session want opposite defaults.
-
-    `reconstruct.py` keeps a session's last submission whatever its verdict, so
-    ending early on rows the session itself rejected puts them in the artifact;
-    it therefore asks for one resume. `runner/agent.py` keeps 0, because the
-    give-up is exactly what the Stage-1 benchmark measures."""
-    from harness.runner.agent import MAX_INVALID_NUDGES
-
-    assert MAX_INVALID_NUDGES == 0
-
-    monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
-    _write_log(run_log, [_case_record()])
-    captured = {}
-
-    def spy_fallback(**kwargs):
-        captured.update(kwargs)
-        return _gold_fallback()
-
-    monkeypatch.setattr(rc, "agent_fallback", spy_fallback)
-    argv = [
-        "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
-        "--tool-calling",
-    ]
-    assert rc.main(argv) == 0
-    assert captured["max_invalid_nudges"] == 1
-
-    captured.clear()
-    assert rc.main(argv + ["--max-invalid-nudges", "0"]) == 0
-    assert captured["max_invalid_nudges"] == 0
-
-
-def test_streamed_artifact_matches_the_post_hoc_log_conversion(tmp_path, monkeypatch):
-    """Same output, different algorithm: the TSV written live, unit by unit, is
-    byte-identical to the one `recon.convert` renders afterwards from the same
-    run's log — so the streamed path replaces the conversion step without
-    changing a single committed byte."""
-    from harness.recon import convert as rcv
-
-    monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
-    out_log = tmp_path / "recon.log"
-    tsv = tmp_path / "01.tsv"
-    _write_log(run_log, [_case_record()])
-
-    assert rc.main(
-        [
-            "--canticle", "inferno", "--canto", "1",
-            "--run-log", str(run_log), "--min-support", "99",
-            "--log", str(out_log), "--tsv", str(tsv),
-        ],
-        fallback=_gold_fallback(),
-    ) == 0
-
-    payload, stats = rcv.convert_canto(rc.load_log(out_log), "inferno", 1)
-    assert tsv.read_text(encoding="utf-8") == payload
-    assert stats["units"] == 34
-
-
 def test_unit_record_flags_a_provisionally_adopted_submission(tmp_path, monkeypatch):
     """A session that spends its turn budget still hands its latest analysis
     downstream — `candidate_rows` takes the last submission whatever its
     verdict. `adopted_invalid` is how the run says so, and it is the readout
     for whether in-session correction converges (record S5.5)."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
-    _write_log(run_log, [_case_record()])
 
     class _Rejected(_StubResult):
         final_submission_valid = False
@@ -849,7 +689,6 @@ def test_unit_record_flags_a_provisionally_adopted_submission(tmp_path, monkeypa
     assert rc.main(
         [
             "--canticle", "inferno", "--canto", "1",
-            "--run-log", str(run_log), "--min-support", "99",
             "--log", str(out_log), "--tsv", str(tmp_path / "01.tsv"),
         ],
         fallback=lambda **kw: _Rejected(
@@ -878,16 +717,12 @@ def test_log_is_append_only_and_never_read_back(tmp_path, monkeypatch):
     without rewriting anything — no compaction, no stale-summary stripping —
     and it has no say in what gets re-run."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
-    _write_log(run_log, [_case_record()])
     prior = [{"record": "summary", "cantos": 99, "note": "a prior attempt"}]
     _write_log(out_log, prior)
 
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
         "--log", str(out_log),
         "--tsv", str(tmp_path / "01.tsv"),
     ]
@@ -930,9 +765,7 @@ def test_cli_write_refused_when_gates_block(tmp_path, monkeypatch):
     seed = b"protected gold stays\n"
     target = _patch_skel_target(monkeypatch, tmp_path, seed=seed)
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
-    _write_log(run_log, [_case_record()])
 
     def garbage_fallback(*, canticle, canto, line_start, line_end):
         return _StubResult([
@@ -943,8 +776,6 @@ def test_cli_write_refused_when_gates_block(tmp_path, monkeypatch):
     exit_code = rc.main(
         [
             "--canticle", "inferno", "--canto", "1",
-            "--run-log", str(run_log),
-            "--min-support", "99",
             "--write",
             "--log", str(out_log),
         ],
@@ -969,10 +800,8 @@ def test_cli_resume_reruns_nothing_when_the_artifact_is_complete(tmp_path, monke
     command costs no model calls at all — the property a fresh checkout with
     committed TSVs and no logs depends on."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
     tsv = tmp_path / "01.tsv"
-    _write_log(run_log, [_case_record()])
     calls = []
 
     def counting_fallback(**kw):
@@ -981,8 +810,6 @@ def test_cli_resume_reruns_nothing_when_the_artifact_is_complete(tmp_path, monke
 
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
         "--log", str(out_log),
         "--tsv", str(tsv),
     ]
@@ -1013,9 +840,7 @@ def test_cli_regenerates_only_the_unit_whose_lines_were_deleted(
     artifact, re-run, and exactly that unit is re-run — with the file coming
     back in line order, byte-identical to an uninterrupted run."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     tsv = tmp_path / "01.tsv"
-    _write_log(run_log, [_case_record()])
     calls = []
 
     def counting_fallback(**kw):
@@ -1024,8 +849,6 @@ def test_cli_regenerates_only_the_unit_whose_lines_were_deleted(
 
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
         "--log", str(tmp_path / "recon.log"),
         "--tsv", str(tsv),
     ]
@@ -1055,9 +878,7 @@ def test_cli_mid_canto_kill_keeps_settled_units_in_the_artifact(tmp_path, monkey
     mid-canto — before any post-canto flush could happen — leaves every
     already-finished unit on disk for the next attempt to resume from."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    run_log = tmp_path / "bench-x.log"
     tsv = tmp_path / "01.tsv"
-    _write_log(run_log, [_case_record()])
     calls = []
 
     def dying_fallback(**kw):
@@ -1068,8 +889,6 @@ def test_cli_mid_canto_kill_keeps_settled_units_in_the_artifact(tmp_path, monkey
 
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
         "--log", str(tmp_path / "recon.log"),
         "--tsv", str(tsv),
     ]
@@ -1146,12 +965,8 @@ def _unit_start_lines(canticle: str, canto: int) -> list[int]:
     ]
 
 
-def _two_canto_argv(run_log):
-    return [
-        "--canticle", "inferno", "--canticle", "purgatorio", "--canto", "1",
-        "--run-log", str(run_log),
-        "--min-support", "99",
-    ]
+def _two_canto_argv():
+    return ["--canticle", "inferno", "--canticle", "purgatorio", "--canto", "1"]
 
 
 def test_retry_helpers_measure_backoff_deltas():
@@ -1190,14 +1005,12 @@ def test_cli_status_bar_names_canticle_canto_line_and_routes_display(
 ):
     """Skel-driver bars: one per canto, labeled `{canticle} {canto}`, the
     numerator walking the canto's lines at unit starts; stderr stays clean."""
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
-    _write_log(run_log, [_case_record()])
     fake = _FakeStatusLine()
     monkeypatch.setattr(rc, "HarnessStatusLine", lambda: fake)
 
     exit_code = rc.main(
-        [*_two_canto_argv(run_log), "--log", str(out_log)],
+        [*_two_canto_argv(), "--log", str(out_log)],
         fallback=_gold_fallback(),
     )
 
@@ -1227,13 +1040,10 @@ def test_cli_resume_from_the_artifact_still_bars_the_canto(tmp_path, monkeypatch
     """Resume is per unit, not per canto: a canto with settled units still
     opens its own `{canticle} {canto}` bar and walks its lines — the artifact
     decides what re-runs, and the display keeps tracking the whole canto."""
-    run_log = tmp_path / "bench-x.log"
     tsv = tmp_path / "01.tsv"
-    _write_log(run_log, [_case_record()])
 
     argv = [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(run_log), "--min-support", "99",
         "--log", str(tmp_path / "recon.log"), "--tsv", str(tsv),
     ]
     monkeypatch.setattr(rc, "HarnessStatusLine", lambda: _FakeStatusLine())
@@ -1253,9 +1063,7 @@ def test_cli_resume_from_the_artifact_still_bars_the_canto(tmp_path, monkeypatch
 
 def test_cli_counts_api_retries_per_canto_through_the_stream(tmp_path, monkeypatch, capsys):
     """Auto-retried backoffs surface as per-canto deltas and roll into the summary."""
-    run_log = tmp_path / "bench-x.log"
     out_log = tmp_path / "recon.log"
-    _write_log(run_log, [_case_record()])
 
     class _CountingStream(io.StringIO):
         def __init__(self):
@@ -1282,7 +1090,7 @@ def test_cli_counts_api_retries_per_canto_through_the_stream(tmp_path, monkeypat
         return _StubResult([])
 
     exit_code = rc.main(
-        [*_two_canto_argv(run_log), "--log", str(out_log)],
+        [*_two_canto_argv(), "--log", str(out_log)],
         fallback=counting_fallback,
     )
 
@@ -1301,27 +1109,3 @@ def test_cli_counts_api_retries_per_canto_through_the_stream(tmp_path, monkeypat
     assert summary["api_retries"] == len(calls)
     assert summary["api_retry_seconds"] == len(calls) * 7.5
     assert f"api retries: {len(calls)}" in capsys.readouterr().out
-
-
-# --- integration over real mined artifacts ------------------------------------------------------------
-
-
-@pytest.mark.skipif(
-    not (Path(__file__).resolve().parent.parent / "harness"
-         / "bench-unit-retry.log").exists(),
-    reason="M1.4 run logs are gitignored disk-only artifacts",
-)
-def test_real_artifacts_reconstruction_is_gate_honest():
-    bundle = he.mine_artifacts(progress_stream=None)
-    engine = he.HybridEngine(bundle.rules, bundle.entries)
-    recon = rc.reconstruct_canto(
-        engine, "inferno", 1, fallback=None, progress_stream=None
-    )
-    assert len(recon.outcomes) == 34
-    # Deterministic fast path alone cannot clear the 0-soft gate corpus-wide:
-    # mined rules cover a fraction of each unit's derivation, so blocked
-    # units are the honest majority and nothing may claim a pass it lacks.
-    passed = sum(o.passed for o in recon.outcomes)
-    assert passed < len(recon.outcomes)
-    assert all(o.route in ("fast", "agent") for o in recon.outcomes)
-    assert all(o.token_assertions == [] for o in recon.outcomes)

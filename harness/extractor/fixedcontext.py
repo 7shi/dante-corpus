@@ -48,7 +48,7 @@ request within a factor of two of any token limit anyone has tested, and sizing 
 against a real ceiling waits on a live run at higher volumes (`../stages/09.md` §5).
 
 Gold is not opened here, transitively or otherwise: the toolkit is the masked path
-`runner/agent.py` already uses, and `observe.py` reads Layers 2-4.
+`runner/llm.py` carries, and `observe.py` reads Layers 2-4.
 """
 
 from __future__ import annotations
@@ -303,7 +303,7 @@ class FixedUnitResult:
     """One unit's fixed-context run — the `UnitResult` surface `reconstruct.py` reads.
 
     `candidate_rows`, `final_submission_valid` and `validations` carry the same
-    meaning as their tool-calling counterparts, so `hybrid_engine.run_unit` and
+    meaning as their tool-calling counterparts had, so `reconstruct_canto` and
     `outcome.final_validation_errors` consume this unchanged. What has no
     counterpart is deliberate: there is no transcript, no nudge and no turn
     budget, because there is no session.
@@ -385,7 +385,7 @@ def run_unit_fixed(
     `toolkit` is a `runner.tools.GrammarToolkit` (the masked path: `read_unit`
     for the evidence, `validate_candidate` as the runtime gate). `generate` takes
     a `[system, user]` message list and returns the answer text — the same
-    callable `runner.agent.llm7shi_generate` builds, whose `reset()` is called
+    callable `runner.llm.llm7shi_generate` builds, whose `reset()` is called
     before every iteration so no history accumulates.
 
     `rows` is $\\Sigma_0$: the unit's recorded rows for a repair, empty (the
@@ -554,7 +554,7 @@ def fixed_fallback(
     `--fix`); without it every unit starts empty, which is a fresh reconstruction.
     Model-facing imports stay lazy, so importing this module touches no network.
     """
-    from harness.runner.agent import (
+    from harness.runner.llm import (
         _LLM_REQUEST_CONTEXT,
         _SESSION_SEQ,
         DEFAULT_MODEL,

@@ -17,7 +17,8 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 
 ## Documentation & Roadmap
 
-- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2). Keeps Current Status and the session handoff.
+- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2, Stage 9 fixed-context execution, Stage 10 soft level 3 — the last stage). Keeps Current Status and the session handoff.
+- **What happens next**: [`../layers/PLAN.md`](../layers/PLAN.md) — `harness/` is closed as a development subject and becomes a library; the layer stack's own description is the open question. Read it before anything here.
 - **Stage 1 Record**: [`stages/01.md`](stages/01.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
 - **Stage 2 Record**: [`stages/02.md`](stages/02.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
 - **Stage 3 Design & Ledger**: [`stages/03.md`](stages/03.md) — Stage-3 home: the payload/pacing design (S3.2), gate re-check, implementation map, confirmation protocol, and the record of why transcript compaction was removed (S3.7). CLOSED on S3.11.
@@ -25,7 +26,9 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 - **Stage 5 Record**: [`stages/05.md`](stages/05.md) — Corpus durability (the run's logs turned into 100 committed gold-format TSVs) and the hard-divergence reduction that followed, incl. what the violation count is and what gold is not (§5). CLOSED on S5.8 at **0 hard**.
 - **Stage 6 Design & Ledger**: [`stages/06.md`](stages/06.md) — Reducing the 5,014 soft findings, the standing method that record S6.1 forced on it, and class eligibility. CLOSED on S6.11 with soft level 1 at 0 findings.
 - **Stage 7 Record**: [`stages/07.md`](stages/07.md) — Refactoring: the agent's knowledge moved into `runner/skills/` files (S7.1) and `extractor/reconstruct.py` split into seven modules (S7.2), both argued behaviour-neutral. CLOSED on S7.2's live confirmation; §4 lists what carries forward.
-- **Stage 8 Design & Ledger (open)**: [`stages/08.md`](stages/08.md) — Soft `--fix` level 2: what it must satisfy before it runs (S6.2 mechanism, S6.1 burden of proof, S6.10 alignment lesson), the baseline at open, and the two items carried in with it. No records yet.
+- **Stage 8 Record**: [`stages/08.md`](stages/08.md) — Soft `--fix` level 2 (`omitted_l4_argument`), argued from `derive.py` with gold unopened: 1,128 → 0 findings. CLOSED.
+- **Stage 9 Record**: [`stages/09.md`](stages/09.md) — The per-unit tool-calling session replaced by a bounded fixed-context step whose request size does not grow with the iteration count, and made the default. CLOSED.
+- **Stage 10 Record**: [`stages/10.md`](stages/10.md) — Soft `--fix` level 3 (`unregistered_predicate`), the first concurrent corpus run, and S10.2's finding that `membership` cannot be decided inside Layer 5. CLOSED — **the last stage**.
 - **Classification audits**: [`HARD.md`](HARD.md) (S5.4) and [`SOFT.md`](SOFT.md) (S6.1) — evidence records asking whether the checker's own hard/soft classification is sound, each filed before the design pass it would otherwise drive. Cross-linked to each other.
 - **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
@@ -56,78 +59,66 @@ dante-corpus/
 │   │   ├── 05.md                  # Stage-5 record (corpus durability + hard reduction to 0)
 │   │   ├── 06.md                  # Stage-6 design + ledger (soft divergence reduction)
 │   │   ├── 07.md                  # Stage-7 record (refactoring: skills as files + module split)
-│   │   └── 08.md                  # Stage-8 design + ledger (soft fix level 2, open)
+│   │   ├── 08.md                  # Stage-8 record (soft fix level 2)
+│   │   ├── 09.md                  # Stage-9 record (fixed-context execution, made the default)
+│   │   └── 10.md                  # Stage-10 record (soft fix level 3 — the last stage)
 │   ├── HARD.md                    # Audit: is the hard classification sound? (S5.4)
 │   ├── SOFT.md                    # Audit: is the soft classification sound? (S6.1)
-│   ├── TOOLCALL.md                # Tool call protocol sub-project (XML interim → native)
+│   ├── TOOLCALL.md                # [Historical] Tool call protocol sub-project — the code it
+│   │                              #   documents (toolcall/) was removed on 2026-09-07
 │   ├── FUTURE.md                  # Beyond Layer 5 (unscheduled design notes)
-│   │
-│   ├── toolcall/                  # [Protocol Library] XML interim ↔ canonical tool calls
-│   │   ├── README.md              # Protocol library overview
-│   │   ├── parser.py              # parse_tool_calls / format_tool_call / format_tool_result
-│   │   ├── prompts.py             # XML output contract + few-shot exchange
-│   │   ├── transports.py          # Transport interface (PromptXml / OllamaNative / Stub)
-│   │   ├── loop.py                # Transport-agnostic multi-turn loop + turn budget
-│   │   ├── probe.py               # Live-probe CLI, parse-success-rate gate (operator-run)
-│   │   └── parity.py              # Migration-parity CLI, XML vs native (operator-run)
 │   │
 │   ├── skills.py                  # [Stage 7] File-based skill loader (SKILL.md + resources)
 │   │
-│   ├── runner/                    # [Stage 1] Autonomous inference agent & benchmark
+│   ├── runner/                    # The model-facing half: tools, prompt, model access
 │   │   ├── README.md              # Stage 1 overview
 │   │   ├── PLAN.md                # Stage 1 specification (toolset, agent, benchmark)
 │   │   ├── tools.py               # Dedicated Grammar Tool API (Layer 5 masked structurally)
-│   │   ├── agent.py               # Per-unit session runner over run_tool_loop
+│   │   ├── llm.py                 # llm7shi adapter + the llm_request/llm_response wire log
 │   │   ├── prompts.py             # Prompt assembly (the grammatical wording lives in skills/)
-│   │   ├── skills/grammar-agent/  # [Stage 7] The agent's domain knowledge as reviewable files
+│   │   ├── skills/grammar-fixed/  # [Stage 9] The model's domain knowledge as reviewable files
 │   │   │   ├── SKILL.md           # Role framing + skeleton row conventions
-│   │   │   ├── protocol.md        # Steps 1-4 of the reasoning protocol
-│   │   │   ├── step5-unit.md      # Step 5, "unit" workflow (one call per unit)
-│   │   │   └── step5-predicate.md # Step 5, "predicate" workflow (one call per predicate)
-│   │   ├── benchmark.py           # Gold comparison & metric suite
+│   │   │   ├── protocol.md        # The reasoning protocol
+│   │   │   └── answer.md          # The answer contract (<rows> …)
 │   │   └── statusline.py          # Rich live status bar for long operator-run sessions
 │   │
-│   ├── extractor/                 # [Stage 2] Rule & lexicon extraction, hybrid engine
+│   ├── extractor/                 # The pipeline: the bounded loop and the gates around it
 │   │   ├── README.md              # Stage 2 overview
 │   │   ├── PLAN.md                # Stage 2 specification (miner, lexicon, hybrid engine)
-│   │   ├── syntax_miner.py        # Syntax pattern miner: UD-topology rules from traces
-│   │   ├── lexicon_builder.py     # Verb valency & lexicon profile aggregator
-│   │   ├── hybrid_engine.py       # Fast-path (rules/lexicon) + agent fallback router
+│   │   ├── fixedcontext.py        # [Stage 9] The bounded per-unit step and its live closure
+│   │   ├── observe.py             # [Stage 9] The verdict: frozen-layer observations on the rows
 │   │   ├── layers.py              # Frozen L1-L4 bundle + gates 1-2 (no gold anywhere)
 │   │   ├── outcome.py             # UnitOutcome / CantoReconstruction + unit-level resume
 │   │   ├── artifact.py            # render_tsv + TsvArtifact: the run's durable artifact
 │   │   ├── fixlevel.py            # [Stage 6] Soft-finding levels, selection & revision blocks
 │   │   ├── fixrun.py              # [Stage 6] --fix machinery: plan, verdict, salvage, revert
-│   │   ├── goldeval.py            # Evaluation face — the only module that opens gold
 │   │   ├── report.py              # ReconstructReport + load_log (the §6 reporting faces)
 │   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline (loop, commit, CLI)
 │   │
-│   ├── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
-│   │   ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv
-│   │   ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
-│   │   ├── convert.py             # [Stage 5] Legacy logs -> gold-format NN.tsv (no make target)
-│   │   ├── check.py               # [Stage 5] Hard/soft violation check & stats over the TSVs
-│   │   ├── repair.py              # [Stage 5] Deterministic divergence-reduction rules
-│   │   ├── agree.py               # [Stage 5] Row-level P/R/F1 vs gold (readout, not a target)
-│   │   └── <canticle>/            # NN.tsv (skel-compatible, committed); NN.log = gitignored by-product
-│   │
-│   └── fixtures/                  # Benchmark challenge fixtures & historical case units
-│       ├── __init__.py            # Public fixture accessors
-│       └── challenge_cases.py     # Frozen 87-case table (historical/control/coordination/
-│                                  #   relative_chain/quotes/hyperbaton)
+│   └── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
+│       ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv
+│       ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
+│       ├── check.py               # [Stage 5] Hard/soft violation check, stats & fix-level readout
+│       └── <canticle>/            # NN.tsv (skel-compatible, committed); NN.log = gitignored by-product
 │
 └── tests/
-    ├── test_harness_tools.py      # Toolset unit tests (masking, anti-leakage, validation)
-    ├── test_harness_toolcall.py   # Tool-call protocol tests (parser, transports, loop)
-    ├── test_harness_agent.py      # Runner tests (nudge policy, submissions, traces)
-    ├── test_harness_benchmark.py  # Benchmark tests (gold comparison, metrics, fixtures)
+    ├── test_harness_tools.py      # Toolset unit tests (masking, validation)
+    ├── test_harness_skills.py     # [Stage 7] Skill loader + digest tests
     ├── test_harness_pacing.py     # Stage 3 tests (Client sync, interval, token bucket)
-    ├── test_harness_syntax_miner.py  # Stage 2 miner tests (clustering, rules, coverage)
-    ├── test_harness_lexicon_builder.py  # Stage 2 lexicon tests (frames, gating, coverage)
-    ├── test_harness_hybrid_engine.py   # Stage 2 engine tests (derivation, routing, fallback)
-    ├── test_harness_reconstruct.py     # Stage 2 gate tests (assertions, 0-soft, hash commit)
-    ├── test_harness_recon_readout.py   # Stage 4 readout tests (aggregation math)
-    ├── test_harness_recon_convert.py   # Stage 5 conversion tests (TSV shape, idempotence)
-    ├── test_harness_recon_check.py     # Stage 5 check tests (hard/soft split, base_dir)
-    └── test_harness_recon_repair.py    # Stage 5 repair + agreement-gate tests
+    ├── test_harness_fixedcontext.py     # Stage 9 tests (the bounded step, the verdict, $P$)
+    ├── test_harness_fixlevel.py         # Stage 6/8/10 tests (levels, selection, --fix end to end)
+    ├── test_harness_reconstruct.py      # Gate tests (assertions, 0-soft, hash commit, CLI)
+    ├── test_harness_recon_readout.py    # Stage 4 readout tests (aggregation math)
+    └── test_harness_recon_check.py      # Stage 5 check tests (hard/soft split, base_dir)
 ```
+
+**What was removed on 2026-09-07**, when the harness was cut down to the run and
+fix paths it is actually driven by: the Stage-1 per-unit tool-calling session
+and the protocol library under it (`toolcall/`, `runner/agent.py`, the
+`--tool-calling` flag and `TOOLCALL=1`), the Stage-1 benchmark and its fixtures
+(`runner/benchmark.py`, `fixtures/`), the Stage-2 mined fast path
+(`syntax_miner.py`, `lexicon_builder.py`, `hybrid_engine.py` — every unit now
+reaches the model), and every gold-referenced readout (`goldeval.py`,
+`--verify-gold`, `recon/agree.py`), together with `recon/convert.py` and
+`recon/repair.py`. Gold is no longer opened anywhere in `harness/`. The stage
+documents that describe those pieces are kept as the record of what was done.

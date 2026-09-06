@@ -658,14 +658,6 @@ def test_notice_does_not_claim_a_case_child_when_there_is_none():
     assert "case annex" in notice
 
 
-def test_unit_task_appends_the_revision_block_and_is_unchanged_without_one():
-    plain = prompts.unit_task("inferno", 1, 1, 4)
-    assert prompts.unit_task("inferno", 1, 1, 4, revision=None) == plain
-    with_block = prompts.unit_task("inferno", 1, 1, 4, revision="<revision>x</revision>")
-    assert with_block.startswith(plain)
-    assert with_block.endswith("<revision>x</revision>")
-
-
 # --- the session gate ---------------------------------------------------------------------
 
 
@@ -846,32 +838,9 @@ def test_row_delta_names_the_mechanism():
 # --- the CLI, end to end (stub fallback, no model) -----------------------------------------
 
 
-def _case_record():
-    """One mining input, in the shape `syntax_miner` expects (see
-    `test_harness_reconstruct.py`); `--min-support 99` keeps it mining nothing."""
-    return {
-        "record": "case",
-        "unit": {"canticle": "inferno", "canto": 2, "line_start": 82,
-                 "line_end": 84},
-        "workflow": "unit",
-        "missing": [],
-        "extra": [],
-        "trace": {"timestamp": "2026-08-24T00:00:00+00:00"},
-    }
-
-
-def _write_log(path, records):
-    path.write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in records) + "\n",
-        encoding="utf-8",
-    )
-
-
 def _fix_argv(tmp_path, tsv, level=1):
     return [
         "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(tmp_path / "bench-x.log"),
-        "--min-support", "99",
         "--log", str(tmp_path / "recon.log"),
         "--tsv", str(tsv),
         "--fix", str(level),
@@ -881,7 +850,6 @@ def _fix_argv(tmp_path, tsv, level=1):
 def _seed(tmp_path, monkeypatch):
     """A committed-style artifact carrying exactly one level-1 finding."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    _write_log(tmp_path / "bench-x.log", [_case_record()])
     layers = rc.CantoLayers.load("inferno", 1)
     gold = load_skel("inferno", 1)
     group, key, rows = _level1_target()
@@ -1077,7 +1045,6 @@ def test_fix_level_2_reopens_the_unit_and_takes_the_argument_back(
     not that the model was wrong.
     """
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    _write_log(tmp_path / "bench-x.log", [_case_record()])
     layers = rc.CantoLayers.load("inferno", 1)
     gold = load_skel("inferno", 1)
     group, dropped, without = _level2_target()
@@ -1125,7 +1092,6 @@ def test_fix_level_2_keeps_the_record_when_the_argument_is_not_written(
     """The other half of the guarantee: a fix run cannot leave the artifact worse
     than it found it, at level 2 as at level 1."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    _write_log(tmp_path / "bench-x.log", [_case_record()])
     layers = rc.CantoLayers.load("inferno", 1)
     gold = load_skel("inferno", 1)
     group, dropped, without = _level2_target()
@@ -1159,7 +1125,6 @@ def test_fix_level_2_keeps_the_record_when_the_argument_is_not_written(
 def _pair_seed(tmp_path, monkeypatch):
     """A level-2 unit carrying two named rows, seeded as a one-canto artifact."""
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    _write_log(tmp_path / "bench-x.log", [_case_record()])
     layers = rc.CantoLayers.load("inferno", 1)
     gold = load_skel("inferno", 1)
     group, kept, wrong_one, without = _level2_pair_target()
@@ -1289,33 +1254,13 @@ def test_fix_summary_reports_the_mechanism_of_an_accepted_repair(
 
 def test_fix_needs_an_artifact_and_a_known_level(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(rc, "HarnessStatusLine", None)
-    _write_log(tmp_path / "bench-x.log", [_case_record()])
-    base = [
-        "--canticle", "inferno", "--canto", "1",
-        "--run-log", str(tmp_path / "bench-x.log"), "--min-support", "99",
-    ]
+    base = ["--canticle", "inferno", "--canto", "1"]
     with pytest.raises(SystemExit):
         rc.main(base + ["--fix", "1"])
     assert "--tsv" in capsys.readouterr().err
     with pytest.raises(SystemExit):
         rc.main(base + ["--tsv", str(tmp_path / "01.tsv"), "--fix", "99"])
     assert "level" in capsys.readouterr().err
-
-
-def test_a_reopened_unit_never_takes_the_fast_path():
-    """The derivation's own rows would clear the class by definition, so a fix
-    unit must reach the model (`route_derivation`'s first check)."""
-    from harness.extractor.hybrid_engine import (
-        Derivation, RoutePolicy, route_derivation,
-    )
-
-    clean = Derivation(unit={})  # no conflicts, no schema violations
-    lenient = RoutePolicy(require_rows=False, require_explicit_subjects=False)
-    assert route_derivation(clean, lenient).route == "fast"
-    decision = route_derivation(
-        clean, dataclasses.replace(lenient, force_fallback=True)
-    )
-    assert (decision.route, decision.reason) == ("agent", "fix")
 
 
 def test_select_declines_a_finding_whose_row_the_artifact_lacks():

@@ -1,26 +1,26 @@
 """Dedicated Grammar Tool API for Stage 1 autonomous inference.
 
 Implements the closed toolset of `harness/runner/PLAN.md` §3. Free-form bash execution is
-disabled by design: the agent interacts with the corpus exclusively through the three tools
+disabled by design: the agent interacts with the corpus exclusively through the tools
 below, each of which serves multi-layer grammatical context (L1 tokens/texts, quotes
 hierarchy, L2 morphology, pronoun case annex, L3 noun phrases, L4 UD trees) while
 **strictly masking** Layer 5 gold data (`skel/*.tsv`), the 130-rule registry, and the
 correction records.
+
+Of the three tools the Stage-1 session had, two survive the removal of that session
+(2026-09-07): `read_unit` serves the fixed-context loop's evidence block and
+`validate_candidate` is its gate. `search_corpus`, the wire specs and the tool-call
+dispatcher went with the loop that called them.
 
 Masking discipline (enforced structurally, not by convention): this module never imports
 `dante_corpus.skel.io`, `dante_corpus.skel.registry`, or `dante_corpus.skel.rules`, and no
 code path here opens a file under `skel/`. The only Layer-5 artifact it touches is the
 frozen role vocabulary in `dante_corpus.skel.models` (public knowledge the agent needs to
 speak the skeleton language at all).
-
-Anti-Leakage Guard: `search_corpus` never returns a hit from the canto of the active parse
-unit (the unit most recently served by `read_unit` or validated by `validate_candidate`),
-so the agent cannot fish for gold-adjacent annotations of its own target.
 """
 
 from __future__ import annotations
 
-import copy
 import json
 from dataclasses import dataclass, field
 
@@ -36,9 +36,7 @@ __all__ = [
     "MAX_UNIT_LINES",
     "PAYLOAD_LEGEND",
     "PAYLOAD_TIERS",
-    "TOOL_SPECS",
     "VALID_ROLES",
-    "tool_specs",
 ]
 
 # The role vocabulary a candidate may speak: the frozen core roles, the empty marker for a
@@ -47,7 +45,7 @@ __all__ = [
 VALID_ROLES = frozenset(ROLES)
 
 # Roles whose fillers are nominal: their arguments must cite a Layer 3 NP head or a
-# pronoun (`runner/PLAN.md` §3.3 item 2 — "Nominal argument tokens..."). Clausal /
+# pronoun (`runner/PLAN.md` §3.2 item 2 — "Nominal argument tokens..."). Clausal /
 # predicative roles (`attr`, `ccomp`, `xcomp`) naturally anchor on predicate tokens, and
 # bare `obl` is gold's adverbial-oblique marker, so none of them is held to the nominal
 # citation rule (existence and word-anchor checks still apply everywhere).
@@ -100,10 +98,6 @@ ARG_DEPRELS = frozenset({
     "attr", "ccomp", "csubj", "csubj:pass", "iobj", "nsubj", "nsubj:pass",
     "obj", "obl", "obl:agent", "xcomp",
 })
-
-# Fields `search_corpus` accepts; everything else is rejected rather than ignored, so a
-# typo'd query fails loudly instead of silently matching everything.
-_QUERY_FIELDS = frozenset({"word", "lemma", "pos", "deprel", "case"})
 
 _ROW_FIELDS = ("line", "token", "word", "role", "arg_line", "arg_token")
 
@@ -236,172 +230,6 @@ def _render_payload(
             payload["case"] = case_rows
         return payload
     raise ValueError(f"unknown payload tier: {tier!r} (valid: {list(PAYLOAD_TIERS)})")
-
-
-# --- Tool-call specifications ---------------------------------------------------------
-#
-# `llm7shi.Client` speaks structured output (`schema=`), not native function calling, so the
-# agent loop embeds these specs in its prompt and parses the model's JSON tool call itself
-# (see `GrammarToolkit.dispatch`). The specs are plain JSON Schema in OpenAI function form,
-# which doubles as documentation of the closed tool surface.
-
-_CANTICLE_SCHEMA = {
-    "type": "string",
-    "enum": list(api.VALID_CANTICLES),
-    "description": "Canticle: inferno, purgatorio, or paradiso.",
-}
-
-_LINE_SCHEMA = {"type": "integer", "minimum": 1, "description": "1-based line number."}
-
-_CANDIDATE_ROW_SCHEMA = {
-    "type": "object",
-    "description": (
-        "One (predicate, argument) row, `SkelRow.to_dict()` shape. Cite (0, 0) for a "
-        "pro-drop argument; role '' marks a zero-argument predicate's single row."
-    ),
-    "properties": {
-        "line": {"type": "integer", "description": "Predicate line."},
-        "token": {"type": "integer", "description": "Predicate token index (1-based)."},
-        "word": {
-            "type": "string",
-            "description": "Predicate word (optional verification anchor).",
-        },
-        "role": {
-            "type": "string",
-            "description": (
-                "subj | obj | iobj | attr | xcomp | ccomp | obl | obl:<prep>, or '' "
-                "for a zero-argument predicate."
-            ),
-        },
-        "arg_line": {"type": "integer", "description": "Argument line (0 for pro-drop)."},
-        "arg_token": {"type": "integer", "description": "Argument token index (0 for pro-drop)."},
-        "arg_word": {"type": "string", "description": "Argument word anchor ('' for pro-drop)."},
-    },
-    "required": list(_REQUIRED_ROW_FIELDS),
-    "additionalProperties": False,
-}
-
-TOOL_SPECS: tuple[dict, ...] = (
-    {
-        "type": "function",
-        "function": {
-            "name": "read_unit",
-            "description": (
-                "Read the complete multi-layer grammatical context of one parse unit "
-                "(a sentence group of at most 12 lines): Layer 1 tokens/texts, quotes "
-                "hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrases, "
-                "and Layer 4 UD trees. A range crossing a sentence boundary is rejected "
-                "with the actual unit bounds. Layer 5 gold data is never served."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "canticle": _CANTICLE_SCHEMA,
-                    "canto": {"type": "integer", "minimum": 1, "description": "Canto number."},
-                    "line_start": _LINE_SCHEMA,
-                    "line_end": {
-                        **_LINE_SCHEMA,
-                        "description": (
-                            "Last line of the requested range; omit to read the whole "
-                            "parse unit containing line_start."
-                        ),
-                    },
-                },
-                "required": ["canticle", "canto", "line_start"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "search_corpus",
-            "description": (
-                "Search other cantos for analogous grammatical constructions. The query "
-                "conjoins any of: word (loose token match), lemma, pos (substring, e.g. "
-                "'verb'), deprel (exact), case (one slot of the pronoun case annex). The "
-                "canto of your active parse unit is excluded by an anti-leakage guard."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "object",
-                        "description": "Conjunctive match fields; at least one required.",
-                        "properties": {
-                            "word": {"type": "string"},
-                            "lemma": {"type": "string"},
-                            "pos": {"type": "string"},
-                            "deprel": {"type": "string"},
-                            "case": {"type": "string"},
-                        },
-                        "minProperties": 1,
-                        "additionalProperties": False,
-                    },
-                    "limit": {
-                        "type": "integer",
-                        "minimum": 1,
-                        "default": 10,
-                        "description": "Maximum number of hits to return.",
-                    },
-                },
-                "required": ["query"],
-                "additionalProperties": False,
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "validate_candidate",
-            "description": (
-                "Validate intrinsic syntactic well-formedness of your candidate skeleton "
-                "rows: predicate tokens exist in Layer 1, nominal arguments (subj, obj, "
-                "iobj, obl:<prep>) cite Layer 3 NP heads or pronouns — clausal roles "
-                "(attr, xcomp, ccomp) and bare obl may anchor on any token — slots are "
-                "unique per predicate (dual roles need clitic licensing), and roles use "
-                "the frozen vocabulary. Three further rules have no exceptions: no row "
-                "may cite its own predicate as its argument, only subj (and the "
-                "zero-argument marker) may cite (0, 0), and an xcomp/ccomp argument must "
-                "itself be a predicate you registered in the same submission — use attr "
-                "for a predicative complement you are not registering as a clause. Also "
-                "records upstream_feedback about irreconcilable L2/L4 defects you "
-                "identified."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "canticle": _CANTICLE_SCHEMA,
-                    "canto": {"type": "integer", "minimum": 1, "description": "Canto number."},
-                    "line_start": {
-                        **_LINE_SCHEMA,
-                        "description": "First line of the parse unit being solved.",
-                    },
-                    "candidate_rows": {
-                        "type": "array",
-                        "items": _CANDIDATE_ROW_SCHEMA,
-                        "description": "Your proposed skeleton rows for the unit.",
-                    },
-                    "upstream_feedback": {
-                        "type": "array",
-                        "items": {"type": "object"},
-                        "description": (
-                            "Optional records of upstream defects, each naming 'layer' "
-                            "('L2' or 'L4') and a 'description'."
-                        ),
-                    },
-                },
-                "required": ["canticle", "canto", "line_start", "candidate_rows"],
-                "additionalProperties": False,
-            },
-        },
-    },
-)
-
-
-def tool_specs() -> list[dict]:
-    """A fresh copy of the tool-call specifications, safe to mutate per prompt."""
-    return copy.deepcopy(list(TOOL_SPECS))
 
 
 def _check_canticle(canticle: str) -> str:
@@ -553,11 +381,11 @@ def anchor_admits(
 
 
 class GrammarToolkit:
-    """The closed toolset bound to one agent session.
+    """The closed toolset bound to one reconstruction run.
 
-    One instance per benchmark run / agent conversation. It tracks the *active unit* —
-    the parse unit currently being solved — so `search_corpus` can enforce the anti-leakage
-    guard without the agent having to pass exclusion arguments it could forget or forge.
+    One instance serves every unit of a run: `read_unit` renders the evidence block
+    the fixed-context loop sends, and `validate_candidate` is the gate its answers
+    must pass.
     """
 
     def __init__(
@@ -583,7 +411,6 @@ class GrammarToolkit:
         # schema checks only while a `--fix 1` session is running.
         self.oblique_case_qualification = oblique_case_qualification
         self._cache: dict[tuple[str, int], _CantoData] = {}
-        self._active_unit: tuple[str, int, int, int] | None = None
         self.upstream_log: list[dict[str, object]] = []
 
     # --- internals -----------------------------------------------------------------
@@ -625,21 +452,6 @@ class GrammarToolkit:
             )
         return line_start, line_end
 
-    def _iter_search_cantos(self):
-        """Yield cached-or-loaded cantos in canonical order, skipping the active one."""
-        for canticle in api.VALID_CANTICLES:
-            try:
-                numbers = api.cantos(canticle)
-            except FileNotFoundError:
-                continue  # unbuilt source tree: nothing to search in this canticle
-            for number in numbers:
-                if self._active_unit is not None and (
-                    canticle, number
-                ) == self._active_unit[:2]:
-                    continue  # Anti-Leakage Guard: never serve the target's own canto
-                yield self._canto(canticle, number)
-
-    # --- tool 1: read_unit -----------------------------------------------------------
 
     def read_unit(
         self, canticle: str, canto: int, line_start: int, line_end: int | None = None
@@ -662,7 +474,6 @@ class GrammarToolkit:
         """
         data = self._canto(canticle, canto)
         start, end = self._unit_bounds(data, line_start, line_end)
-        self._active_unit = (data.canticle, data.number, start, end)
 
         unit_nos = [no for no in data.nos if start <= no <= end]
         text_by_no = dict(zip(data.nos, data.texts))
@@ -689,88 +500,6 @@ class GrammarToolkit:
             **_render_payload(data, unit_nos, quotes, self.payload_tier),
         }
 
-    # --- tool 2: search_corpus ---------------------------------------------------------
-
-    def search_corpus(self, query: dict, limit: int = 10) -> list[dict]:
-        """Scoped search for analogous grammatical constructions outside the active canto.
-
-        `query` conjoins any of: `word` (loose token match), `lemma`, `pos` (substring,
-        e.g. `"verb"`), `deprel` (exact), `case` (one slot of the pronoun case annex).
-        Hits carry their location plus every layer field that resolved, and never any
-        Layer 5 information. The Anti-Leakage Guard excludes the active canto entirely —
-        the current canto and target unit are unsearchable by construction.
-        """
-        if not isinstance(query, dict) or not query:
-            raise ValueError("query must be a non-empty dict")
-        unknown = set(query) - _QUERY_FIELDS
-        if unknown:
-            raise ValueError(
-                f"unknown query fields: {sorted(unknown)} (valid: {sorted(_QUERY_FIELDS)})"
-            )
-        if not isinstance(limit, int) or isinstance(limit, bool) or limit < 1:
-            raise ValueError(f"limit must be a positive integer: {limit!r}")
-
-        wanted_word = query.get("word")
-        wanted_lemma = str(query.get("lemma", "")).lower()
-        wanted_pos = str(query.get("pos", "")).lower()
-        wanted_deprel = query.get("deprel")
-        wanted_case = str(query.get("case", "")).lower()
-
-        hits: list[dict] = []
-        for data in self._iter_search_cantos():
-            for no in data.nos:
-                morph_rows = data.morph.get(no, ())
-                dep_rows = data.dep.get(no, ())
-                for i, token in enumerate(data.tokens[no]):
-                    pos_index = (no, i + 1)
-                    mrow = morph_rows[i] if i < len(morph_rows) else None
-                    drow = dep_rows[i] if i < len(dep_rows) else None
-                    crow = data.case_by_pos.get(pos_index)
-
-                    if wanted_word is not None and not _words_match(
-                        str(wanted_word), token
-                    ):
-                        continue
-                    if wanted_lemma and (
-                        mrow is None or (mrow.lemma or "").lower() != wanted_lemma
-                    ):
-                        continue
-                    if wanted_pos and (
-                        mrow is None or wanted_pos not in mrow.pos.lower()
-                    ):
-                        continue
-                    if wanted_deprel is not None and (
-                        drow is None or drow.deprel != str(wanted_deprel)
-                    ):
-                        continue
-                    if query.get("case") and (
-                        crow is None
-                        or wanted_case not in [c.lower() for c in crow.cases()]
-                    ):
-                        continue
-
-                    hit: dict[str, object] = {
-                        "canticle": data.canticle,
-                        "canto": data.number,
-                        "line": no,
-                        "token": i + 1,
-                        "word": token,
-                    }
-                    if mrow is not None:
-                        hit["lemma"] = mrow.lemma
-                        hit["pos"] = mrow.pos
-                    if drow is not None:
-                        hit["deprel"] = drow.deprel
-                        hit["head_line"] = drow.head_line
-                        hit["head_token"] = drow.head_token
-                    if crow is not None:
-                        hit["case"] = crow.case
-                    hits.append(hit)
-                    if len(hits) >= limit:
-                        return hits
-        return hits
-
-    # --- tool 3: validate_candidate ------------------------------------------------------
 
     def validate_candidate(
         self,
@@ -782,7 +511,7 @@ class GrammarToolkit:
     ) -> dict[str, object]:
         """Validate intrinsic syntactic well-formedness of candidate skeleton rows.
 
-        Checks (see `harness/runner/PLAN.md` §3.3):
+        Checks (see `harness/runner/PLAN.md` §3.2):
         1. every predicate token exists in Layer 1 and matches its word anchor when one
            is given;
         2. every nominal argument (subj, obj, iobj, obl:<prep>) cites a valid Layer 3 NP
@@ -816,7 +545,6 @@ class GrammarToolkit:
         """
         data = self._canto(canticle, canto)
         start, end = self._unit_bounds(data, line_start, None)
-        self._active_unit = (data.canticle, data.number, start, end)
 
         errors: list[str] = []
         warnings: list[str] = []
@@ -1115,54 +843,3 @@ class GrammarToolkit:
             "diagnostics": diagnostics,
             "upstream_feedback": feedback_echo,
         }
-
-    # --- tool-call dispatch ---------------------------------------------------------
-
-    _TOOLS = ("read_unit", "search_corpus", "validate_candidate")
-
-    # Arguments the model may emit as numeric strings; coerced before dispatch so one
-    # sloppy JSON type does not burn a whole agent turn.
-    _INT_ARGUMENTS = frozenset({"canto", "line_start", "line_end", "limit"})
-
-    def dispatch(self, name: str, arguments: dict | str) -> dict[str, object]:
-        """Execute one model-emitted tool call; never raises into the agent loop.
-
-        `arguments` may be a dict or a JSON string (models emit both). Returns
-        `{"ok": True, "tool": ..., "result": ...}` on success, or
-        `{"ok": False, "tool": ..., "error": "..."}` for an unknown tool, unparsable or
-        mistyped arguments, or a rejected request — the error text is written to be fed
-        back to the model verbatim so it can self-correct on the next turn.
-        """
-        if isinstance(arguments, str):
-            try:
-                arguments = json.loads(arguments)
-            except json.JSONDecodeError as exc:
-                return self._dispatch_error(name, f"arguments are not valid JSON: {exc}")
-        if not isinstance(arguments, dict):
-            return self._dispatch_error(
-                name, f"arguments must be a JSON object, got {type(arguments).__name__}"
-            )
-        if name not in self._TOOLS:
-            return self._dispatch_error(
-                name, f"unknown tool {name!r} (available: {list(self._TOOLS)})"
-            )
-
-        coerced = dict(arguments)
-        for key in self._INT_ARGUMENTS & coerced.keys():
-            value = coerced[key]
-            if isinstance(value, str) and value.strip().lstrip("+").isdigit():
-                coerced[key] = int(value)
-
-        try:
-            result = getattr(self, name)(**coerced)
-        except TypeError as exc:
-            return self._dispatch_error(name, f"bad arguments for {name}: {exc}")
-        except ValueError as exc:
-            return self._dispatch_error(name, str(exc))
-        except Exception as exc:  # pragma: no cover - defensive: keep the loop alive
-            return self._dispatch_error(name, f"{type(exc).__name__}: {exc}")
-        return {"ok": True, "tool": name, "result": result}
-
-    @staticmethod
-    def _dispatch_error(name: str, message: str) -> dict[str, object]:
-        return {"ok": False, "tool": name, "error": message}
