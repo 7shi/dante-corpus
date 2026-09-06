@@ -27,21 +27,35 @@ ended worse, and the corpus soft count **fell** where a rise was predicted — t
 mechanism behind the prediction is intact, only its aggregate direction was not
 guaranteed. Nothing is in flight.
 
-**The decisions now open**, none of them started:
+**DEVELOPMENT OF `harness/` ENDS HERE (operator, 2026-09-07). The work moves to
+[`../layers/PLAN.md`](../layers/PLAN.md); `harness/` becomes a library that
+`layers/` drives.** The formal close — what gets packaged for `uv`, what moves,
+what this document becomes — is the next conversation and is not written yet.
+Read `layers/PLAN.md` before anything here.
 
-- **Whether to re-run level 3 over its 225-finding residue.** 206 of the 293
-  reopened units returned no improvement on this single pass, which per S8.5
-  bounds a per-attempt rate and never establishes unreachability. Budget by
-  units, not cantos (Orientation item 6).
-- **S10.2** — the session gate never checks anchors for bare `obl`, where
-  `validate.py` does; all 133 `membership` violations are that shape, closing the
-  hole costs 0 false refusals corpus-wide, but 3 named positions would then
-  deadlock under a level-1 run, so the change is the operator's to schedule and it
-  changes live-run semantics (Standing Invariant §6).
-- **How wide concurrency can go.** S10.4 was the first concurrent run ever made —
-  three streams, measured 2.50× against the ≈ 1.7× projection, 0 `api_retries`,
-  ≈ 8,800 tokens/min against the 16K TPM quota. The headroom suggests a fourth
-  and fifth stream; nothing measures where contention starts.
+**Why, in one line**: S10.4 showed the apparatus is stable, and the session that
+read it out then measured the layers and found the *description* undecided at the
+positions the next level would have acted on. Both findings are argued in
+`layers/PLAN.md` §1; neither is repeated here.
+
+**Two items this Handoff carried as open decisions are now answered, and the
+answers are recorded where the questions live:**
+
+- **S10.2 — do not schedule the gate change.** `validate.py:158`'s
+  `pos == adverb` condition is a proxy for a judgement (is this an adverbial
+  locution?) that the token-indexed layers cannot record; aligning the gate to it
+  would freeze the proxy. [`stages/10.md`](stages/10.md) §S10.2 carries the
+  resolution.
+- **Do not re-run level 3 over its 225.** A soft finding measures the artifact
+  against the *current description*, and the description is undecided at some of
+  these positions. The 225 and the 2,982 are a readout, not a to-do list
+  ([`stages/10.md`](stages/10.md) §S10.4).
+
+**Still genuinely open, and unaffected** — both are properties of the apparatus,
+which carries over: **how wide concurrency can go** (S10.4 measured 3 streams at
+2.50×, 0 `api_retries`, ≈ 8,800 tokens/min against the 16K TPM quota; the headroom
+suggests a fourth and fifth, and nothing measures where contention starts), and
+**the per-request ceiling** (largest request to date 7,007 `input_tokens`).
 
 **S10.3** stands unchanged: levels 1 and 2 have no reachable residue, and the 26
 findings their classes still match are declined correctly, not a to-do list.
@@ -284,7 +298,12 @@ milestones 1.1–1.4 in [`stages/01.md`](stages/01.md).*
 2. **Mission of `harness/`**:
    - The gist of `harness/` is to grant the local model that missing **autonomy**: remove the hand-laid rails and let it reason from linguistic first principles, deciding its own path through multi-layer context and closed tools instead of executing rules handed down by a larger model.
    - `harness/` embeds this autonomous agent in a **reproducible, fully automated, and generalizable reconstruction pipeline**.
-   - Preserving `skel/` as an **immutable Gold Standard (Ground Truth)** for benchmark evaluation, `harness/` demonstrates how local LLMs can autonomously project Layer 4 UD syntax onto predicate-argument frames (Stage 1) and empirically induce syntax rules and valency lexicons (Stage 2).
+   - Preserving `skel/` as a ~~**immutable Gold Standard (Ground Truth)**~~
+     **Gold Standard held fixed for the duration of this work** — gold was never
+     written to, and the immutability was an operating assumption of `harness/`,
+     not a property of the corpus (operator, 2026-09-07: gold is the product of
+     ad hoc work and carries no authority; see
+     [`../layers/PLAN.md`](../layers/PLAN.md) §2) — `harness/` demonstrates how local LLMs can autonomously project Layer 4 UD syntax onto predicate-argument frames (Stage 1) and empirically induce syntax rules and valency lexicons (Stage 2).
 
 ```mermaid
 graph TD
@@ -393,10 +412,15 @@ are for, and two of them were resolved in the same pass without becoming a level
   silent and the only authority that speaks is registry rule T, a tolerance
   fitted on gold; qualifying those obliques to satisfy it would derive a repair
   rule from a fit to gold, which Standing Invariant §1 forbids.
-- **`membership`'s 133 — arguable, deferred.** The strongest authority available
-  (`validate.py`'s own anchor rule, not a diff), but 87 of them have an honest
-  outcome-2 competitor in rules J and R, which would leave the class at ~46.
-  Deferred to a later level; the gate defect it exposed is **S10.2**.
+- **`membership`'s 133 — ~~arguable, deferred~~ outside Layer 5 (2026-09-07).**
+  It looked like the strongest authority available (`validate.py`'s own anchor
+  rule, not a diff), with an outcome-2 competitor in rules J and R at 87 of them.
+  Reading the positions instead of the counts showed why all three disagree:
+  each is a form-based proxy for one judgement — whether the phrase is a
+  lexicalised adverbial locution — that the token-indexed layers cannot record.
+  No level can select this class, because the class is a symptom of the
+  encoding. [`../layers/PLAN.md`](../layers/PLAN.md) §1.3–§1.5; the gate defect
+  it exposed is **S10.2**, resolved there as not to be scheduled.
 
 Levels are cumulative, so level 3 adds to what 1–2 close rather than replacing
 it. And per **S10.3**, levels 1 and 2 have no reachable residue: the 26 findings
@@ -524,6 +548,14 @@ single source, not duplicated here. The boundaries it encodes:
      `dante_corpus/skel/validate.py`'s schema invariants and `derive.py`'s
      L1–L4 derivation. Gold-referenced scores are **readouts taken
      afterwards**, never acceptance criteria.
+   - **The substitute authority is provisional as of 2026-09-07.** The
+     prohibition on fitting to gold is unchanged and binds anything built here.
+     What changed is the standing of the contract it points at: S10.2's
+     resolution found `validate.py` encoding a judgement it has no vocabulary
+     for, so the contract is the *current description* rather than an authority.
+     Rules are decided by linguistic argument from the primary text, and the
+     argument is recorded — [`../layers/PLAN.md`](../layers/PLAN.md) §2 and §3.1
+     item 1 carry the successor.
 2. **No Free-Form Bash Execution**:
    - Agents operate strictly via closed, structured Tool Calling (`tools.py`) without shell execution privileges.
 3. **Preservation of the 0-Soft Regression Gate**:

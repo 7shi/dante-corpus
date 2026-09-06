@@ -12,6 +12,19 @@ different target layer) → a **vertical slice** (the harness builds every layer
 itself over a narrow range) → the **horizon** (a language with no grammatical
 description available at all).
 
+**Standing correction (2026-09-07).** Every note below assumes the layer
+structure is given and only its *contents* are reconstructed — that a vertical
+slice would reproduce the current description. That assumption is dropped:
+`harness/` development ended and the work moved to
+[`../layers/PLAN.md`](../layers/PLAN.md), whose subject is the description
+itself. What survives here unchanged is the machinery inventory (what is
+layer-independent, what a swap costs, the feasibility gradient) and the
+own-precedent store. Two items are promoted rather than deferred: the horizon
+memo's **intrinsic settlement criterion** is now the working acceptance signal,
+not a future one, because a moving description leaves no stable soft count or
+gold agreement to measure progress by; and `upstream_feedback` becomes
+actionable at once rather than only inside a vertical slice.
+
 ---
 
 ## Layer-direction generalization (design note, 2026-08-23 — not scheduled work)
