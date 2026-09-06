@@ -8,84 +8,42 @@ here: it goes to **Current Status** (live numbers), **Orientation for Fresh
 Sessions** (context and operational facts that outlive any stage), §2's table
 (what a stage settled), or the stage's own `stages/<NN>.md` (everything else).
 
-**STAGE 9 IS CLOSED AND STAGE 10 IS OPEN (2026-09-06).** The close was performed
-the usual way, by opening [`stages/10.md`](stages/10.md); Stage 9's own close is
-[`stages/09.md`](stages/09.md) §9, and its seven records S9.1–S9.7 are §8 of the
-same document. The gates were re-read before closing on them, not carried over
-from the previous session — the numbers are in Current Status below. Nothing
-from Stage 9 is repeated here.
-
-**Level 3's first corpus-wide `--fix` ran and is read out as S10.4** (run
-2026-09-06, written up the same day). Findings **334 → 225**, corpus
-**3,126 → 2,982 soft** at 0 hard, levels 1 and 2 still 0, suite 1,029, gold
-agreement 0.7610 → 0.7628 as a readout. The four things the handoff asked to be
-checked all came back clean and are argued in
-[`stages/10.md`](stages/10.md) §S10.4: `FixClass.exempts` fired live at exactly
-three units and only at predicates the level's own findings named, the five
-`new_class:extra_arg` refusals are all at *other* predicates and correct, no unit
-ended worse, and the corpus soft count **fell** where a rise was predicted — the
-mechanism behind the prediction is intact, only its aggregate direction was not
-guaranteed. Nothing is in flight.
-
-**DEVELOPMENT OF `harness/` ENDS HERE (operator, 2026-09-07). The work moves to
-[`../layers/PLAN.md`](../layers/PLAN.md); `harness/` becomes a library that
-`layers/` drives.** The formal close — what gets packaged for `uv`, what moves,
-what this document becomes — is the next conversation and is not written yet.
-Read `layers/PLAN.md` before anything here.
+**STAGE 10 IS CLOSED (2026-09-07) AND IT IS THE LAST STAGE. DEVELOPMENT OF
+`harness/` ENDS HERE** (operator, 2026-09-07). The work moves to
+[`../layers/PLAN.md`](../layers/PLAN.md), whose subject is the layer structure
+rather than one layer's contents; `harness/` becomes a library that `layers/`
+drives. **Read `layers/PLAN.md` before anything here.**
 
 **Why, in one line**: S10.4 showed the apparatus is stable, and the session that
 read it out then measured the layers and found the *description* undecided at the
 positions the next level would have acted on. Both findings are argued in
 `layers/PLAN.md` §1; neither is repeated here.
 
-**Two items this Handoff carried as open decisions are now answered, and the
-answers are recorded where the questions live:**
+The close itself — what Stage 10 settled, its closing numbers, what carries
+forward and what ends — is [`stages/10.md`](stages/10.md) §5. Nothing about the
+stage is duplicated in this file any more; §2's table row is the index entry.
 
-- **S10.2 — do not schedule the gate change.** `validate.py:158`'s
-  `pos == adverb` condition is a proxy for a judgement (is this an adverbial
-  locution?) that the token-indexed layers cannot record; aligning the gate to it
-  would freeze the proxy. [`stages/10.md`](stages/10.md) §S10.2 carries the
-  resolution.
-- **Do not re-run level 3 over its 225.** A soft finding measures the artifact
-  against the *current description*, and the description is undecided at some of
-  these positions. The 225 and the 2,982 are a readout, not a to-do list
-  ([`stages/10.md`](stages/10.md) §S10.4).
-
-**Still genuinely open, and unaffected** — both are properties of the apparatus,
-which carries over: **how wide concurrency can go** (S10.4 measured 3 streams at
-2.50×, 0 `api_retries`, ≈ 8,800 tokens/min against the 16K TPM quota; the headroom
-suggests a fourth and fifth, and nothing measures where contention starts), and
-**the per-request ceiling** (largest request to date 7,007 `input_tokens`).
-
-**S10.3** stands unchanged: levels 1 and 2 have no reachable residue, and the 26
-findings their classes still match are declined correctly, not a to-do list.
+**Not written yet, and the next conversation**: the formal close of `harness/` —
+what gets packaged for `uv`, what moves to `layers/`, what this document becomes.
+Nothing is in flight in the meantime.
 
 ## Current Status
 
-Every stage's status, dates and outcome are in §2's table; this section holds
-the open stage and the live numbers only.
+Every stage's status, dates and outcome are in §2's table.
 
-- [ ] **Stage 10 — Soft Level 3** — the open stage (**OPENED 2026-09-06**;
-      opening it closed Stage 9). Level 3 is `unregistered_predicate` — the
-      clause head Layer 4 names and the artifact never registers, argued from
-      `derive.py`'s predicate census with gold unopened, gate/level alignment
-      measured before the run rather than after four (S10.1) — and it has now
-      **run once corpus-wide** (S10.4), taking its selection **334 → 225** of
-      the 401 `missing_tuple` findings. Levels are cumulative, so it adds to
-      levels 1–2. Of the two unfinished Stage 9 items it inherited — never close
-      conditions for that stage — S10.4 answered the *existence* half of the
-      first (**the first concurrent run, three streams, measured 2.50×**) and
-      left its width open, while **the per-request ceiling stays unmeasured**,
-      so the fixed-context loop's budget still cannot be sized.
-      [`stages/10.md`](stages/10.md) carries both, and §2 below has the prose.
+**No stage is open. Stages 1–10 are closed and there is no Stage 11.**
 
-*Every number below was re-read on 2026-09-06 after S10.4's `--fix` run, which
-is what the corpus was last touched by.*
+*The numbers below were re-read on 2026-09-06 after S10.4's `--fix` run, which is
+what the corpus was last touched by. They are the harness's final readouts, and
+they are readouts — per `layers/PLAN.md` §3.1 item 3 a soft count measures the
+artifact against the current description, which is itself under review, so none
+of these is a target.*
 
 - **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,982 soft**,
   `make check` exits 0, `make fix-level` **0 at levels 1 and 2** — the condition
   Stage 9 closed on, unchanged by the run — and **225 at level 3** (inferno 88,
-  purgatorio 77, paradiso 60), the residue S10.4 left.
+  purgatorio 77, paradiso 60), the residue S10.4 left and did not intend to
+  chase.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7628**
   corpus-wide — inferno 0.7672, purgatorio 0.7607, paradiso 0.7605.
 - **Test suite**: **1,029 passed** (S9.4 added 21 for the fixed-context loop,
@@ -163,9 +121,11 @@ any one session, so it survives across Handoff clearings.
    `total_tokens ÷ elapsed_seconds`, and read what a token saving buys as
    parallel streams. S9.5 in [`stages/09.md`](stages/09.md) does that division
    for both execution modes.
-6. **Running a `--fix` level.** Standing operational facts from every level-1
-   and level-2 run, for whichever level runs next. They belong here rather than
-   under a stage because they held across Stages 6 and 8 alike:
+6. **Running a `--fix` level.** Standing operational facts from every level-1,
+   level-2 and level-3 run. No further level will be defined here (Stage 10 was
+   the last), so read these as properties of the machinery rather than as
+   preparation for a next run. They belong here rather than under a stage because
+   they held across Stages 6, 8 and 10 alike:
    - **A `--fix` run cannot leave the corpus worse than it found it.** Only the
      level's own findings are selectable, and a unit whose answer fails the
      acceptance test keeps its recorded rows — confirmed on repeat passes (S6.5,
@@ -258,7 +218,9 @@ conventions that still bind:
    would resolve, because `07.md` is not a distinctive string to grep for.
 4. **A close is performed by opening the successor's document.** True of every
    stage but 7, whose close had to wait on the rename into `stages/`; Stage 8's
-   close restored the convention.
+   close restored the convention. **Stage 10's close keeps it with the successor
+   outside `stages/`**: there is no Stage 11, and the document that opened is
+   [`../layers/PLAN.md`](../layers/PLAN.md).
 5. **There is no append-only rule for these documents** (operator, 2026-09-05:
    "間違った主張が残っていると誤読される"). A claim later found wrong is
    **corrected where it stands**, with the ledger recording what changed and
@@ -340,8 +302,9 @@ adopts an empirical **bottom-up strategy (instance-level inference ➔ pattern
 induction)** across Stages 1–2, then scales it out and holds it to the layer's
 own contract in the stages that follow.
 
-**Stages 1–9 are closed.** Each row's document holds the design work, the
-running detail and the milestone ledger; none of it is repeated here.
+**Stages 1–10 are closed, and 10 was the last.** Each row's document holds the
+design work, the running detail and the milestone ledger; none of it is repeated
+here.
 
 | Stage | Period | What it settled | Record |
 |---|---|---|---|
@@ -354,6 +317,7 @@ running detail and the milestone ledger; none of it is repeated here.
 | **7** Refactoring | 09-02 → 09-03 | The agent's knowledge moves from Python literals to skill files (byte-exact, digested); `reconstruct.py`'s 1,934 lines split into seven modules, putting gold behind a **file** boundary. Also: Warp's improver half refused, on Standing Invariant §1 | [`stages/07.md`](stages/07.md) |
 | **8** Soft level 2 | 09-03 → 09-05 | Level 2 = `omitted_l4_argument`, argued from `derive.py` with gold unopened; **1,128 → 0** findings, corpus **4,624 → 3,138** soft, gold agreement 0.7389 → 0.7607; `salvage_by_row` added as a third acceptance scope | [`stages/08.md`](stages/08.md) |
 | **9** Fixed-context execution | 09-05 → 09-06 | The per-unit tool-calling session replaced by a bounded step whose request size is a function of the unit, not the iteration — and made the default; $O$ admissible by argument (registry-free), $P$ 10,082 → 4,685 B all under the digest; better answers on half the requests and −40% tokens; the binding quantity re-read as a **rate** (16K TPM), not a per-request size | [`stages/09.md`](stages/09.md) |
+| **10** Soft level 3 — **the last stage** | 09-06 → 09-07 | Level 3 = `unregistered_predicate`, alignment measured before the run rather than after four; **334 → 225** findings, corpus **3,126 → 2,982** soft, `FixClass.exempts` live-proven at exactly its three argued units; the first concurrent run (3 streams, **2.50×**, 0 `api_retries`). And S10.2: `membership`'s three candidate authorities are three proxies for a judgement the token-indexed layers cannot record — **the frame ends, not the level** | [`stages/10.md`](stages/10.md) |
 
 **Reading any soft number**: the count is a conformance measure against
 derivation-plus-registry, not a quality one — gold itself clears the bar only
@@ -364,105 +328,34 @@ when a missing predicate is registered. S6.1 established this and it governs
 every later stage; the evidence is in [`SOFT.md`](SOFT.md) and
 [`stages/06.md`](stages/06.md).
 
-### Stage 10: Soft Level 3 (OPENED 2026-09-06)
+### What the stage sequence left open
 
-**The open stage**, and the only one with prose here. Opening it closed Stage 9.
+Three items, all of them properties of the **apparatus** rather than of any
+level, so they survive the sequence ending. [`stages/10.md`](stages/10.md) §2
+carries each in full and §5 says where it goes.
 
-**The scope, fixed by S10.1 (2026-09-06): level 3 is `unregistered_predicate`** —
-the predicate Layer 4 makes the head of a clause and the artifact never
-registers. Authority: `derive.py`'s step 1 promotes every token whose **own**
-deprel is in `CLAUSE_HEAD_DEPRELS`, so the evidence is one tree edge and the two
-registry `missing_tuple` tolerances (CS, AV) have already declined the position —
-S6.1's outcome 1. It selected **334** of the then-401 `missing_tuple` findings
-(225 today, after S10.4's run); the 67
-it declines are reached by the census's `conj` chain walk (58) or by a second
-pass needing a Layer-2 `pos` the class cannot see (9), the same restriction level
-2 makes against the propagated subject. It is also the continuation level 2 asked
-for: the 52 `xcomp`/`ccomp` `missing_arg` findings level 2 deferred as "a
-compound repair whose second half is `missing_tuple`'s unargued question" become
-reachable once that question is argued.
-
-**Two things a reader of the numbers must know.** The gate carries **no**
-level-3 bar — the only one it could carry demands 1,715 positions where the level
-selects 334 — so the ask lives in the notice, as at level 2. And **the soft count
-may rise** on this level: registering a predicate exposes its frame (S6.1
-measured 2+ new `missing_arg` at 227 of the then-490 positions), which is why
-`fix_verdict`'s new-class refusal now consults `FixClass.exempts` and treats a
-divergence at a predicate the level itself registered as arithmetic rather than a
-traded class. Every other refusal is unchanged and the standing guarantee holds:
-a fix run cannot leave the artifact worse than it found it. *In the event S10.4's
-run moved the corpus the other way* — 3,126 → 2,982 — because the positions a
-registered predicate **resolves** outweighed the frames it exposed. The mechanism
-stands and the direction is not guaranteed either way; the criterion remains the
-level's own finding count.
-
-**It has been run once, corpus-wide (S10.4, 2026-09-06).** S10.1 shipped the
-level the way S6.2 shipped level 1 — mechanism only, no committed artifact
-touched — and S10.4 is the run: findings **334 → 225**, 293 units reopened across
-94 cantos on three parallel streams, `FixClass.exempts` firing live at three of
-them and only at predicates the level's own findings named, no unit ending worse.
-
-**What the residue looks like after S10.4**, for whichever level comes next.
-Level 3 has 225 of the 2,982 left; most of the rest have never been inside any
-level, which is not the same as being wrong — that is what S6.1's three outcomes
-are for, and two of them were resolved in the same pass without becoming a level:
-
-- **`extra_arg`'s 714 `advcl`-as-`obl` — outcome 2, declined on principle.** The
-  largest single population. `advcl` is not in `ARG_DEPRELS`, so `derive.py` is
-  silent and the only authority that speaks is registry rule T, a tolerance
-  fitted on gold; qualifying those obliques to satisfy it would derive a repair
-  rule from a fit to gold, which Standing Invariant §1 forbids.
-- **`membership`'s 133 — ~~arguable, deferred~~ outside Layer 5 (2026-09-07).**
-  It looked like the strongest authority available (`validate.py`'s own anchor
-  rule, not a diff), with an outcome-2 competitor in rules J and R at 87 of them.
-  Reading the positions instead of the counts showed why all three disagree:
-  each is a form-based proxy for one judgement — whether the phrase is a
-  lexicalised adverbial locution — that the token-indexed layers cannot record.
-  No level can select this class, because the class is a symptom of the
-  encoding. [`../layers/PLAN.md`](../layers/PLAN.md) §1.3–§1.5; the gate defect
-  it exposed is **S10.2**, resolved there as not to be scheduled.
-
-Levels are cumulative, so level 3 adds to what 1–2 close rather than replacing
-it. And per **S10.3**, levels 1 and 2 have no reachable residue: the 26 findings
-their classes still match are declined correctly, so `make fix-level` at 0 is a
-complete readout of what a level can still do.
-
-**What it inherits from Stage 9, unfinished and never that stage's close
-conditions** (details in [`stages/10.md`](stages/10.md) §2):
-
-1. ~~**No concurrent run has ever been made.**~~ **S10.4's fix run was one** —
-   three canticle-parallel streams, 16.82 h of per-canto elapsed time in 6.72 h
-   wall (**2.50×**, against the ≈ 1.7× projection the mode was adopted on), with
-   0 `api_retries` and ≈ 8,800 tokens/min against the 16K TPM quota. Open still:
-   the *width*, since that headroom suggests a fourth and fifth stream and
-   nothing measures where contention starts.
-2. **The per-request ceiling is unmeasured**, and until it is, the fixed-context
-   loop's $|P| + |\Sigma| + |O|$ budget ([`stages/09.md`](stages/09.md) §5)
-   cannot be sized. Every run so far moved away from it — largest requests
-   5,093, 4,085 and now 7,007 `input_tokens` — so this needs a deliberate run at
-   token volumes this corpus's disk-only logs have never reached, and its own log
-   sweep first. S9.2's worst-case unit (`purgatorio 10:82-93`, 12,199 B of
-   evidence alone) is why the answer is substantive.
+1. **How wide concurrency can go.** S10.4 made the first concurrent run — three
+   streams, measured **2.50×**, 0 `api_retries`, ≈ 8,800 tokens/min against the
+   16K TPM quota. The headroom suggests a fourth and fifth stream; nothing
+   measures where contention starts.
+2. **The per-request ceiling is unmeasured**, so the fixed-context loop's
+   $|P| + |\Sigma| + |O|$ budget ([`stages/09.md`](stages/09.md) §5) cannot be
+   sized. Largest requests to date 5,093, 4,085 and 7,007 `input_tokens`, every
+   one far from a refusal.
 3. **The tool-calling session is slated for removal**, deferred rather than
-   scheduled. Removing it deletes the only comparison baseline this project has
-   for the mode it now runs on, so it is a decision rather than a cleanup.
-
-**One question from Stage 6 is still open and is the operator's**: whether
-`dante_corpus/skel/repairs.py` is an admissible authority. Stage 8 answered it
-**on scope, not on principle** — 297 of its 299 remaining positions lay outside
-level 2's selection — so it becomes live again the moment a level proposes to
-select that population. **Level 3 does not**: `repairs.py`'s two rewrites are
-`role_label` and `null_subject`, neither of which registers a predicate, so the
-question stays where Stage 8 left it.
+   scheduled. It deletes the only comparison baseline for the mode now in use, so
+   it is a decision rather than a cleanup.
 
 ### Beyond Layer 5 (design notes)
 
 Directions that open up **after** the `skel/` reconstruction — a layer swap
 (same machinery, different target layer), a vertical whole-stack slice, and the
 horizon of reconstructing grammar for a language with no available description
-— are kept out of this plan in [`FUTURE.md`](FUTURE.md). None of it is
-scheduled work; `PLAN.md` remains the source of truth for status and
-milestones.
+— are kept out of this plan in [`FUTURE.md`](FUTURE.md), which carries a
+standing correction of its own as of 2026-09-07: the notes assumed the layer
+structure given, and that assumption is dropped. This file stays the source of
+truth for **what the harness did**; [`../layers/PLAN.md`](../layers/PLAN.md) is
+the source of truth for what happens next.
 
 ### Transport & backend policy
 
