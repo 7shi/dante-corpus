@@ -23,9 +23,63 @@ The close itself — what Stage 10 settled, its closing numbers, what carries
 forward and what ends — is [`stages/10.md`](stages/10.md) §5. Nothing about the
 stage is duplicated in this file any more; §2's table row is the index entry.
 
-**Not written yet, and the next conversation**: the formal close of `harness/` —
-what gets packaged for `uv`, what moves to `layers/`, what this document becomes.
-Nothing is in flight in the meantime.
+### Next session: make `harness/` a library
+
+**The task, in one line: package `harness/` so `layers/` can depend on it through
+`uv` and drive it, instead of `layers/` being another directory inside the same
+flat tree.** The details are to be discussed at the start of that session; what
+follows is the cold-start context so the discussion does not have to re-derive
+it. **Nothing is in flight and nothing has been decided.**
+
+**Start from the inventory that already exists.** [`FUTURE.md`](FUTURE.md)'s
+layer-swap note did this work for a different reason and its conclusion applies
+directly: *"the current abstraction boundary is already the right seam"*. It
+names what is reusable unchanged (the whole `toolcall/` library, the
+observability frame, the benchmark skeleton, the `upstream_feedback` channel
+pattern) and what is Layer-5-specific (`runner/tools.py`'s three tools,
+`validate_candidate`'s schema, `ROLES`/`OBL_RE`). §3 of this file states the same
+boundaries from the other side. Read both before proposing a split.
+
+**Facts about the current packaging, checked 2026-09-07:**
+
+- The repo is one `uv` project (`pyproject.toml`, name `dante-corpus`, hatchling,
+  no explicit package list — the build back end picks packages up implicitly).
+  `harness/` is not a distribution today; it is a top-level package imported as
+  `harness.*` from inside the same tree.
+- Import surface, by directory: `tests/` 16 modules, `harness/extractor/` 9,
+  `harness/recon/` 4, `harness/runner/` 3, `harness/toolcall/` 2. Nothing outside
+  `harness/` and `tests/` imports it.
+- Top level: `toolcall/`, `runner/`, `extractor/`, `recon/`, `fixtures/`,
+  `stages/`, `skills.py`, and six `.md` files.
+- Tests are at the repo root (`tests/test_harness_*.py`) deliberately, so the
+  harness stays inside one pytest run (§3). A split has to answer where they go.
+
+**Questions the session will have to settle** — listed so they are not
+rediscovered, not because any has a preferred answer:
+
+1. **What is library and what is subject matter.** `toolcall/` and the loop are
+   the apparatus. `recon/` is a Layer-5 artifact tree plus its Makefile and
+   readouts; `fixtures/` is the Layer-5 benchmark's case data; `extractor/` mines
+   Layer-5 traces. Those are subjects, not tools — but `recon/`'s TSVs are also
+   the corpus's committed reconstruction, which is not obviously `layers/`'
+   property either.
+2. **Whether `harness/` becomes a separate distribution or stays a package in
+   this project** with `layers/` importing it in-tree. The second is much less
+   work and may be enough; the first is what "referenced through `uv`" most
+   naturally means. This is the first thing to decide, because everything else
+   follows from it.
+3. **Where the tests go**, given §3's reason for putting them at the root.
+4. **What this document becomes.** It is now the record of what the harness did
+   (§2's table plus ten stage documents). It should probably stop being called a
+   plan.
+5. **`README.md` is stale** — it lists Stage 8 as the open stage and does not
+   mention `stages/09.md` or `stages/10.md`. Left deliberately untouched at the
+   Stage 10 close, because what it should say depends on answers 1–4.
+
+**One thing not to lose in a move.** The four 87-case benchmark run logs
+(Orientation item 2) are gitignored and disk-only. They are mining inputs, not
+artifacts, and are regenerable — but only by re-running the benchmarks, which
+costs model calls. A move that deletes them is a real cost, not a cleanup.
 
 ## Current Status
 
