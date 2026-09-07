@@ -15,9 +15,11 @@ line	token	word	role	arg_line	arg_token
 4	4	esser	attr	4	5
 5	4	avesse	subj	5	3
 5	4	avesse	obj	5	6
-5	4	avesse	obl:a	5	9
+5	4	avesse	xcomp	5	7
+5	7	vòlti	subj	5	6
+5	7	vòlti	obl:a	5	9
 6	2	fora	subj	6	7
-6	2	fora	attr	6	6
+6	2	fora	attr	6	1
 6	2	fora	obl:a	6	5
 7	2	salavam	subj	7	1
 7	2	salavam	obl:per	7	5

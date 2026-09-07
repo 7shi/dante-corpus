@@ -323,9 +323,9 @@ line	token	word	role	arg_line	arg_token
 93	2	caddi	subj	0	0
 93	2	caddi	obl:in	93	4
 93	2	caddi	obl:con	93	8
-94	4	fuor	subj	94	7
-94	4	fuor	attr	94	5
-94	4	fuor	obl:a	94	3
+94	5	seme	subj	94	7
+94	5	seme	obl:a	94	3
+94	5	seme	obl	94	4
 95	3	scaldar	subj	95	1
 95	3	scaldar	obj	95	2
 95	3	scaldar	obl:di	95	7

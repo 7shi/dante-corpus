@@ -65,6 +65,7 @@ line	token	word	role	arg_line	arg_token
 19	7	fé	obj	19	3
 19	7	fé	xcomp	19	8
 19	8	restarmi	subj	19	3
+20	1	Ecco	obj	20	2
 20	3	dicendo	subj	0	0
 21	2	convien	subj	0	0
 21	2	convien	ccomp	21	7

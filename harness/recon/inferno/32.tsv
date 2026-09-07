@@ -318,6 +318,8 @@ line	token	word	role	arg_line	arg_token
 93	3	metta	subj	93	2
 93	3	metta	obj	93	5
 93	3	metta	obl:tra	93	10
+94	2	elli	iobj	94	4
+94	2	elli	ccomp	94	7
 94	7	ho	subj	94	8
 94	7	ho	obj	94	9
 95	1	Lèvati	subj	0	0

@@ -64,17 +64,28 @@ Unchanged and re-read after the cut: `make check` **0 hard / 2,982 soft**,
 no model call and rewrites nothing. The suite is **734 passed** — the deleted
 modules' tests went with them; no surviving test was weakened to pass.
 
-**Live verification is OUTSTANDING.** Everything above is deterministic: no
+**Live verification PASSED** (operator, 2026-09-07; read out of the logs at the
+start of this session). Everything in the cut itself was deterministic — no
 model was called, because assistant sessions do not call one (Environment &
-Artifacts). What has *not* been exercised since the cut is the path that
-actually reaches the model — a unit that is not already settled, under `run` and
-under `fix`. The operator is verifying both and **reports at the start of the
-next session** (operator, 2026-09-07). Until that report lands, treat the cut as
-unconfirmed at the seam most likely to have been broken by it:
-`fixedcontext.fixed_fallback` now builds its model closure from
-`runner/llm.py` rather than from the deleted `runner/agent.py`, and
-`reconstruct_canto` calls the fallback directly rather than through the deleted
-engine. **If either is broken, fixing it comes before the split below.**
+Artifacts) — so what was outstanding was the path that actually reaches the
+model. Both halves of it were exercised, on three concurrent streams:
+
+- **`run` (generate)**: `inferno/01` regenerated from scratch with its TSV and
+  log deleted first (Orientation item 5). **34 units, all routed `agent` with
+  reason `generate`**, 0 token-assertion errors, 0 `api_retries`, 0 hard / 26
+  soft, 6,071.7 s. This is the path that had no live evidence at all since S9.6.
+- **`fix`**: corpus-wide `make fix` over all 100 cantos — **3,477 units, of
+  which 219 reached the model** (`fix`) and the rest resumed off their TSVs with
+  no model call (`already settled in the artifact`), 0 hard anywhere, 0
+  `api_retries`. **14 cantos' TSVs changed** and are uncommitted in the working
+  tree.
+
+So the two seams the cut was most likely to have broken are confirmed live:
+`fixedcontext.fixed_fallback` builds its model closure from `runner/llm.py`
+(the deleted `runner/agent.py` is not missed), and `reconstruct_canto` calls the
+fallback directly rather than through the deleted engine. **The cut is
+confirmed; nothing blocks the split below.** Post-run readouts are in Current
+Status.
 
 The `.md` files are kept as the record, so several of them now describe code
 that is gone: `TOOLCALL.md` entire, `runner/PLAN.md` and `extractor/PLAN.md` in
@@ -91,8 +102,8 @@ packaging is downstream of the split, and the split is decided by *what is
 coupled to Layer 5*, not by what is convenient to package. **Nothing is in flight
 and nothing has been decided.**
 
-**Start the session by taking the operator's run/fix report** (above). A split
-argued over code whose live path is broken would be argued over the wrong thing.
+**The operator's run/fix report has been taken** (above, 2026-09-07): the live
+path is sound, so the split is now argued over working code.
 
 **The coupling, measured 2026-09-07 after the cut** — so the session does not
 re-derive it. Counting `dante_corpus` imports per module:
@@ -185,17 +196,20 @@ Every stage's status, dates and outcome are in §2's table.
 
 **No stage is open. Stages 1–10 are closed and there is no Stage 11.**
 
-*The numbers below were re-read on 2026-09-06 after S10.4's `--fix` run, which is
-what the corpus was last touched by. They are the harness's final readouts, and
+*The numbers below were re-read on 2026-09-07 after the post-cut live
+verification run (Handoff), which is what the corpus was last touched by — the
+`inferno/01` regeneration plus the corpus-wide `make fix`. They are the
+harness's final readouts, and
 they are readouts — per `layers/PLAN.md` §3.1 item 3 a soft count measures the
 artifact against the current description, which is itself under review, so none
 of these is a target.*
 
-- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,982 soft**,
+- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,964 soft**,
   `make check` exits 0, `make fix-level` **0 at levels 1 and 2** — the condition
-  Stage 9 closed on, unchanged by the run — and **225 at level 3** (inferno 88,
-  purgatorio 77, paradiso 60), the residue S10.4 left and did not intend to
-  chase.
+  Stage 9 closed on, unchanged by either run — and **210 at level 3**, the
+  residue the verification run left and did not intend to chase (it was 2,982
+  soft and 225 at level 3 after S10.4; the 219 units the fix run reached moved
+  it). **These TSVs are uncommitted** as of the readout.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7628**
   corpus-wide — inferno 0.7672, purgatorio 0.7607, paradiso 0.7605. **This is
   the last measurement and cannot be re-taken**: `recon/agree.py` was deleted on
@@ -333,9 +347,9 @@ any one session, so it survives across Handoff clearings.
    commands, so any session starts from the same place:
 
    ```
-   cd harness/recon && make check                     # 0 hard / 2,982 soft
+   cd harness/recon && make check                     # 0 hard / 2,964 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
-   make fix-level FIX=3                               # 225, after S10.4's run
+   make fix-level FIX=3                               # 210, after the 09-07 run
    cd ../.. && uv run pytest -q                       # 734
    ```
 

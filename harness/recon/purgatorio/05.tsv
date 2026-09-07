@@ -347,9 +347,14 @@ line	token	word	role	arg_line	arg_token
 96	5	nasce	obl:sovra	96	4
 96	5	nasce	obl:in	96	7
 97	6	diventa	subj	97	4
+97	6	diventa	attr	97	7
 98	1	arriva'	subj	98	2
+98	3	forato	subj	98	2
+98	3	forato	obl:ne	98	6
 99	1	fuggendo	subj	0	0
 99	1	fuggendo	obl:a	99	3
+99	5	sanguinando	subj	0	0
+99	5	sanguinando	obj	99	7
 100	2	perdei	subj	0	0
 100	2	perdei	obj	100	4
 100	2	perdei	obj	100	7

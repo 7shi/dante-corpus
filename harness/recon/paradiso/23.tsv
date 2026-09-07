@@ -231,7 +231,7 @@ line	token	word	role	arg_line	arg_token
 77	6	rendei	obj	77	5
 77	6	rendei	obl:a	78	3
 78	0			0	0
-79	0			0	0
+79	7	puro	subj	79	6
 80	0			0	0
 81	1	vider	subj	81	6
 81	1	vider	obj	80	5
@@ -241,7 +241,7 @@ line	token	word	role	arg_line	arg_token
 81	2	coverti	obl:di	81	4
 82	1	vid'	subj	82	2
 82	1	vid'	obj	82	5
-82	1	vid'	obl:senza	84	2
+82	1	vid'	obl:sanza	84	2
 83	1	folgorate	subj	82	5
 83	1	folgorate	obl:di	83	3
 83	1	folgorate	obl:da	83	5

@@ -185,8 +185,12 @@ line	token	word	role	arg_line	arg_token
 51	3	lasciando	subj	0	0
 51	3	lasciando	obj	51	5
 51	3	lasciando	obl:di	51	2
-52	0			0	0
+52	5	sarei	subj	52	2
+52	5	sarei	attr	52	6
+52	5	sarei	xcomp	53	2
+53	2	vederlo	subj	0	0
 53	2	vederlo	xcomp	53	3
+53	3	attuffare	subj	0	0
 53	3	attuffare	obl:in	53	6
 54	4	uscissimo	subj	54	3
 54	4	uscissimo	obl:di	54	6

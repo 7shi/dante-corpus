@@ -288,8 +288,16 @@ line	token	word	role	arg_line	arg_token
 81	5	fui	subj	81	4
 81	5	fui	attr	81	6
 82	8	rïarso	subj	82	3
+82	8	rïarso	obl:di	82	6
 83	3	veduto	subj	83	5
+83	3	veduto	xcomp	83	6
+83	6	farsi	subj	83	5
+83	6	farsi	attr	83	7
+84	1	visto	subj	0	0
 84	1	visto	obj	84	2
+84	1	visto	xcomp	84	6
+84	6	sparso	subj	84	2
+84	6	sparso	obl:di	84	5
 85	6	mieto	subj	0	0
 85	6	mieto	obj	85	5
 85	6	mieto	obl:di	85	3

@@ -463,9 +463,12 @@ line	token	word	role	arg_line	arg_token
 135	9	verna	obj	135	8
 135	9	verna	obl:di	135	7
 136	3	dei	subj	136	1
+136	3	dei	xcomp	136	4
 136	4	saper	obj	136	2
+136	4	saper	ccomp	137	4
 136	7	vien	subj	136	6
-137	0			0	0
+137	4	Branca	subj	137	1
+138	2	passati	subj	137	9
 138	7	racchiuso	subj	138	4
 139	2	credo	subj	139	1
 139	2	credo	ccomp	139	9
