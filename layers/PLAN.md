@@ -15,17 +15,23 @@ layers beneath it are an **immutable** reference the pipeline reproduces.
 
 The division of labour from here:
 
-- **`harness/`** — a library, referenced through `uv`. The agent loop, the
-  tool-calling protocol, the fixed-context execution mode, the gates, the fix
-  levels, the observability contract. It is a tool, and it is finished
-  (see **§1**).
+- **`dante_corpus.harness`** — the library. The canto loop, the fixed-context
+  execution mode, the gates' shape, the `--fix` machinery, the artifact and
+  resume machinery, the observability contract. It is a tool, and it is finished
+  (see **§1**). Since 2026-09-07 it is literally a package: the apparatus was
+  split out of `harness/` and imports nothing else from `dante_corpus`, so it
+  ships with the distribution. What stays in top-level **`harness/`** is Layer
+  5's own side — the gates' content, the fix levels, the toolset, the skill
+  files, the CLI and the `recon/` artifacts — which is what a *subject* looks
+  like to this library.
 - **`layers/`** — this directory. Skills and loops that *use* that tool, aimed
   at the layer stack itself: what each layer can and cannot express, and what
   the description ought to say.
 
-The mechanics of the split — packaging `harness/` for `uv`, what moves and what
-stays — are a separate discussion held after this document is written. Nothing
-here specifies them.
+The mechanics of the split — what moves and what stays — were a separate
+discussion, held after this document was written and settled on 2026-09-07;
+[`../harness/PLAN.md`](../harness/PLAN.md)'s Handoff is the record. Nothing here
+specifies them.
 
 ---
 

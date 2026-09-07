@@ -8,13 +8,13 @@ is [`../runner/`](../runner/).
 
 ## Key Components
 
-- **Bounded per-unit step (`fixedcontext.py`, `observe.py`)**:
+- **Bounded per-unit step (`dante_corpus.harness.fixedcontext`, `observe.py`)**:
   - One request per iteration — specification, frozen-layer evidence, the unit's rows so far, and the verdict on them — whose size is a function of the unit, not of the iteration count. The runtime recomputes the verdict between steps; the model holds no transcript.
-- **Soft repair levels (`fixlevel.py`, `fixrun.py`)**:
+- **Soft repair levels (`fixlevel.py`, `dante_corpus.harness.fixrun`)**:
   - `--fix` reopens the units carrying a finding at a level, shows the model its own recorded rows and the invariants they break, and takes the answer only if it is hard-clean, reduces the level's findings, and adds no violation class.
 - **Frozen layers and gates 1–2 (`layers.py`)**:
   - `CantoLayers` loads L1–L4 plus the case annex and nothing else; rows are anchored on the Layer-1 token stream and verified through `validate_unit` at 0 hard / 0 soft.
-- **Durable artifact (`artifact.py`, `outcome.py`)**:
+- **Durable artifact (`dante_corpus.harness.artifact`, `.outcome`)**:
   - The canto's TSV is written unit by unit as units settle, and is also the run's resume state — deleting a stretch's lines is how you ask for that unit back.
 - **Gated production pipeline (`reconstruct.py`)**:
   - The canto loop, the canto-atomic commit behind a content-hash check and an explicit `--write`, and the CLI.

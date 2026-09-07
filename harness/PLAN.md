@@ -39,7 +39,8 @@ What went, and what it costs:
   `TOOLCALL=1`. This is §2's "slated for removal" item carried out, and it
   costs what that item said it costs: **the comparison baseline for the mode now
   in use is gone.** `runner/llm.py` is what survives of `agent.py` — the llm7shi
-  adapter and the wire log, which the fixed-context loop calls.
+  adapter and the wire log, which the fixed-context loop calls. (It became
+  `dante_corpus/harness/llm.py` in the split recorded below.)
 - **The Stage-1 benchmark** — `runner/benchmark.py`, `fixtures/`. Its
   `candidate_keys` moved to `extractor/layers.py`, which is the only piece the
   pipeline used.
@@ -82,7 +83,8 @@ model. Both halves of it were exercised, on three concurrent streams:
 
 So the two seams the cut was most likely to have broken are confirmed live:
 `fixedcontext.fixed_fallback` builds its model closure from `runner/llm.py`
-(the deleted `runner/agent.py` is not missed), and `reconstruct_canto` calls the
+(the deleted `runner/agent.py` is not missed; the adapter has since moved to
+`dante_corpus/harness/llm.py`), and `reconstruct_canto` calls the
 fallback directly rather than through the deleted engine. **The cut is
 confirmed; nothing blocks the split below.** Post-run readouts are in Current
 Status.
@@ -93,102 +95,125 @@ large part, and every stage document by design. `README.md`'s directory map and
 roadmap were brought up to date and carry the removal note; the stage documents
 were not touched.
 
-### Next session: decouple `harness/` from the Layer-5 implementation
+### Done 2026-09-07: the apparatus split out into `dante_corpus/harness/`
 
 **The task, in one line: make `harness/` and the Layer-5-specific implementation
-loosely coupled, then separate them** (operator, 2026-09-07). This supersedes
-the "package `harness/` for `uv`" framing carried here since the Stage 10 close:
-packaging is downstream of the split, and the split is decided by *what is
-coupled to Layer 5*, not by what is convenient to package. **Nothing is in flight
-and nothing has been decided.**
+loosely coupled, then separate them** (operator, 2026-09-07), with the generic
+half landing in `dante_corpus/harness/` and the tests staying at the repo root
+(operator, same day). Done. The premise the split was argued from is the one
+measured after the cut: **the apparatus was coupled to Layer 5 by a type it
+carried, not by anything it did** — `skel.models.SkelRow` in 8 of 19 modules,
+while the loop, the gates' shape, the artifact machinery and the fix verdicts
+were indifferent to what a row means.
 
-**The operator's run/fix report has been taken** (above, 2026-09-07): the live
-path is sound, so the split is now argued over working code.
+**The four seams**, which are the answer to open questions 1 and 2 above:
 
-**The coupling, measured 2026-09-07 after the cut** — so the session does not
-re-derive it. Counting `dante_corpus` imports per module:
+| seam | replaces | defined in | Layer 5's |
+|---|---|---|---|
+| `RowCodec` | `SkelRow`, `_row_sort_key`, the four copies of the TSV header | `harness/rows.py` | `layers.SKEL_CODEC` |
+| `Subject` | `CantoLayers.load` + `candidate_keys` + `build_rows` + `validate_rows` | `harness/pipeline.py` | `layers.SKEL_SUBJECT` |
+| `Criteria` | the `fixlevel` module's five entry points | `harness/fixrun.py` | the `fixlevel` module itself |
+| `Observer` | `observe_rows` + `render_observations` + the dep cache | `harness/fixedcontext.py` | `observe.SkelObserver` |
 
-| Module | Lines | Imports `dante_corpus` | Reads as |
-|---|---:|---:|---|
-| `runner/llm.py` | 374 | 0 | apparatus, already clean |
-| `runner/statusline.py` | 63 | 0 | apparatus, already clean |
-| `skills.py` | 132 | 0 | apparatus, already clean |
-| `extractor/report.py` | 175 | 0 | apparatus, already clean |
-| `recon/readout.py` | 507 | 0 | apparatus over *this* log format |
-| `runner/prompts.py` | 59 | 0 | apparatus; its **content** is Layer-5 (skill files) |
-| `extractor/artifact.py` | 180 | 1 | `SkelRow` only — the TSV shape is Layer 5's |
-| `recon/check.py` | 289 | 1 | Layer-5 subject |
-| `extractor/observe.py` | 220 | 2 | Layer-5 subject (`skel.derive.ARG_DEPRELS`) |
-| `extractor/outcome.py` | 208 | 2 | `SkelRow` only |
-| `extractor/fixrun.py` | 486 | 2 | `SkelRow` only; the *logic* is level-generic |
-| `extractor/fixedcontext.py` | 622 | 2 | the loop is generic; `SkelRow` + `dep` are not |
-| `extractor/fixlevel.py` | 807 | 4 | Layer-5 subject (the classes are `validate.py`'s) |
-| `extractor/layers.py` | 200 | 4 | Layer-5 subject (`skel.validate.validate_unit`) |
-| `extractor/reconstruct.py` | 886 | 5 | the pipeline is generic; every type it carries is not |
-| `runner/tools.py` | 845 | 6 | Layer-5 subject (roles, anchors, the whole gate) |
+Question 1 was settled **for a codec** and against both a row protocol and an
+apparatus-owned row type: a protocol carries neither a constructor nor an
+ordering, and an apparatus-owned type would have to be converted back at every
+crossing into the subject's own code — `validate_unit` and `write_skel` take
+`SkelRow` — which is the path gate 3 pins byte-exact. The codec keeps the
+subject's row type flowing end to end. Question 2 was settled **injected**: the
+subject hands over a validator, and what the gate *says* is untouched, because
+S10.2 found those classes to be proxies and freezing them is not this
+refactor's business.
 
-**The seam is a type, not a directory.** `dante_corpus.skel.models.SkelRow` is
-imported by **8** of the surviving modules and is the unit every gate, artifact
-and log record is written in terms of; `RowKey` is its tuple form. Nothing in
-the apparatus is coupled to Layer 5 by *behaviour* — the loop, the gates' shape,
-the artifact/resume machinery, the fix-verdict logic are all indifferent to what
-a row means. They are coupled by carrying Layer 5's row type and calling Layer
-5's validator. That is the thing to abstract, and it is one thing.
+**What moved**: `pipeline.py` (the canto loop), `fixedcontext.py`, `fixrun.py`,
+`outcome.py`, `artifact.py`, `report.py`, `llm.py`, `skills.py`,
+`statusline.py`, plus the new `rows.py`. **What stayed**: `layers.py`,
+`fixlevel.py`, `observe.py`, `runner/tools.py`, `runner/prompts.py` and the
+`grammar-fixed` skill files, `reconstruct.py` (gate 3, the CLI, the wiring), and
+`recon/` entire. `artifact.py`, `fixrun.py` and `fixedcontext.py` survive in
+`extractor/` as one-line bindings, which is what keeps every call site and test
+signature unchanged — including `python -m harness.extractor.reconstruct`, whose
+re-export surface is untouched, so `recon/Makefile` never learned about any of
+this.
 
-The three Layer-5 authorities the apparatus calls out to, all reachable from
-`extractor/layers.py` and `runner/tools.py`:
-`skel.validate.validate_unit` (gate 2), `skel.derive`'s `ARG_DEPRELS` /
-`CLAUSE_HEAD_DEPRELS` (the verdict and the levels), and `skel.models`'
-`ROLES` / `OBL_RE` / `GrammarContext` (the vocabulary). `skel.io.write_skel` and
-`hashes.canto_hashes` are gate 3's, and `recon/` is Layer-5 subject matter
-throughout.
+**The rule that makes it real**: nothing under `dante_corpus/harness/` imports
+anything else from `dante_corpus`. `tests/test_harness_boundary.py` reads the
+source with `ast` rather than checking `sys.modules`, because the imports that
+would break it are function-local (`fixed_fallback`'s lazy adapter import,
+`commit`'s lazy `hashes`), and because importing the package at all runs
+`dante_corpus/__init__.py`. It also holds the reverse: no other `dante_corpus`
+module imports the apparatus, so `llm7shi` stays off the corpus package's import
+path.
 
-**Facts about the current packaging, checked 2026-09-07:**
+**Answers to the remaining open questions above.** 3: `recon/` **stayed**, and so
+did `recon/readout.py` — it has no `dante_corpus` import but hard-codes
+`CANTICLE_COUNTS` and this operator's `STREAM_TPM_LIMIT`, which makes it this
+corpus's readout rather than apparatus. 4: **a package in this project**, not a
+separate distribution — `dante_corpus/harness/` ships with the wheel (hatchling
+picks it up implicitly, `pyproject.toml` needed no change) and top-level
+`harness/` deliberately does not. 5: tests stayed at the root, no file renamed,
+imports rewritten, one file added. 6: still open — this document is still called
+a plan.
 
-- The repo is one `uv` project (`pyproject.toml`, name `dante-corpus`, hatchling,
-  no explicit package list — the build back end picks packages up implicitly).
-  `harness/` is not a distribution today; it is a top-level package imported as
-  `harness.*` from inside the same tree.
-- Import surface, by directory: `tests/` 8 modules, `harness/extractor/` 9,
-  `harness/runner/` 4, `harness/recon/` 2. Nothing outside `harness/` and
-  `tests/` imports it.
-- Top level: `runner/`, `extractor/`, `recon/`, `stages/`, `skills.py`, and six
-  `.md` files.
-- Tests are at the repo root (`tests/test_harness_*.py`) deliberately, so the
-  harness stays inside one pytest run (§3). A split has to answer where they go.
+**Read out after the split, all unchanged**: `make check` **0 hard / 2,964
+soft**, `make fix-level` **0 / 0 / 210**, no committed TSV moved a byte, and a
+settled canto still resumes off its TSV in 0.6 s with **zero** `llm_request`
+records. The suite is **739 passed** (734 + the five boundary tests).
 
-**Questions the session will have to settle** — listed so they are not
-rediscovered, not because any has a preferred answer:
+### Next session: take the operator's run/fix report on the split
 
-1. **What replaces `SkelRow` at the boundary.** A protocol the subject
-   implements, a generic row type the subject parameterises, or an injected
-   codec — this is the first decision and everything else follows from it.
-   Whatever it is, `render_tsv` / `TsvArtifact` and the log record shape have to
-   go on speaking the same bytes, because the committed corpus is those bytes.
-2. **Whether the gate is injected or inverted.** Gate 2 is
-   `validate_unit(rows, layers)`; the apparatus needs *a* verdict function of
-   that shape, and `observe.py` + `fixlevel.py` need the classes it reports. The
-   question is whether the subject hands the apparatus a validator, or the
-   apparatus asks the subject to classify — S10.2 is the reason to be careful
-   here, since the classes themselves turned out to be proxies.
-3. **Where `recon/` goes.** It is a Layer-5 artifact tree plus its Makefile and
-   readouts — subject, not tool — but its TSVs are also the corpus's committed
-   reconstruction, which is not obviously the Layer-5 *package*'s property
-   either.
-4. **Whether `harness/` becomes a separate distribution or stays a package in
-   this project.** The second is much less work and may be enough for a first
-   pass; the first is what "referenced through `uv`" most naturally means. Now
-   downstream of 1–3 rather than ahead of them.
-5. **Where the tests go**, given §3's reason for putting them at the root.
-6. **What this document becomes.** It is now the record of what the harness did
-   (§2's table plus ten stage documents). It should probably stop being called a
-   plan.
+**The split is committed and live-unverified. The operator is running `run` and
+`fix` now and reports at the start of the next session** (operator,
+2026-09-07). Nothing else is in flight, and nothing else should start before
+that report lands: everything below is the same shape as the cut's verification
+one commit earlier, for the same reason — assistant sessions call no model
+(Environment & Artifacts), and the split rewired the only path that reaches one.
 
-**One thing not to lose in a move.** The four 87-case benchmark run logs
-(Orientation item 2) are gitignored and disk-only. Nothing reads them since the
-miners were deleted, and the benchmark that produced them is gone too — so they
-are no longer regenerable at all. They are kept deliberately (operator,
-2026-09-07); a move that deletes them destroys the only copy.
+**What was rewired, i.e. what the report is actually testing.** The deterministic
+half is already proven (739 tests, the readouts above, the resume path with zero
+`llm_request` records). What no test covers is the live closure:
+
+- `fixedcontext.run_unit_fixed` now takes its **system prompt** and its
+  **observer** injected instead of importing them; `fixed_fallback` now takes
+  its **toolkit** injected instead of constructing one. All three Layer-5
+  defaults are bound in `extractor/fixedcontext.py`, which is the file to read
+  first if a run misbehaves.
+- The per-run **dep cache** moved from `run_unit_fixed`'s `dep_cache` argument
+  into `observe.SkelObserver`. One observer is built per `fixed_fallback` call,
+  so it is still one cache per run — but that is an argument, not a measurement.
+- `verdict_block` renders observations through the injected `render`. A prompt
+  that came out subtly different would show as changed model behaviour, not as
+  an error.
+
+**What to check in the report, in order:**
+
+1. The configuration line still reads `reconstruct: fixed context, 4
+   iteration(s) max, …` and the canto's `skill_digest` is still **`ee6f1a46…`**
+   (Orientation item 7). The digest is the check that $P$ is byte-identical
+   across the split — if it moved, the prompt assembly changed and Standing
+   Invariant §6 is the thing that was broken.
+2. `[fixed] … iter 1: N row(s), accepted` lines appear, and units carry
+   `observation(s)` counts — an observer that silently returned nothing would
+   still let a run finish, just with the verdict half of $O$ empty.
+3. `routes` on the generate run are all `agent`/`generate`; on the fix run,
+   `fix` plus `already settled in the artifact`.
+4. 0 `token_assertion_errors`, 0 hard, and no canto ending worse than it started.
+
+**Then**: re-read `make check` / `make fix-level` / `pytest`, update Current
+Status if the run moved the corpus, and record the outcome here as a Done entry
+the way the cut's verification was recorded above. Only after that does the next
+piece of work start — and per the Milestone Ledger's convention that document is
+[`../layers/PLAN.md`](../layers/PLAN.md), not this one.
+
+**If it is broken**, the fix comes before anything else, and the three suspects
+are the three injections above. The apparatus itself is not in question: it is
+the same code, and `tests/test_harness_boundary.py` plus the 739-test suite say
+so deterministically.
+
+*(The "one thing not to lose in a move" caution that stood here — the four
+87-case benchmark run logs, gitignored, disk-only and no longer regenerable — is
+cleared: the move is done and did not touch them. Orientation item 2 carries it
+durably.)*
 
 ## Current Status
 
@@ -215,8 +240,9 @@ of these is a target.*
   the last measurement and cannot be re-taken**: `recon/agree.py` was deleted on
   2026-09-07 and nothing in `harness/` opens gold any more. Read it as a closing
   number, not a current one.
-- **Test suite**: **734 passed** (2026-09-07, after the cut removed the deleted
-  modules' tests; it was 1,029 before). Its composition and full history live in
+- **Test suite**: **739 passed** (2026-09-07, after the apparatus split added
+  `tests/test_harness_boundary.py`'s five; it was 734 after the cut and 1,029
+  before it). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
 
@@ -228,8 +254,10 @@ Durable context for picking up mining/extraction work cold — not tied to
 any one session, so it survives across Handoff clearings.
 
 1. **Read first**: [`extractor/PLAN.md`](extractor/PLAN.md), then
-   [`runner/PLAN.md`](runner/PLAN.md) — between them they specify the whole
-   surviving apparatus — then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
+   [`runner/PLAN.md`](runner/PLAN.md) — between them they specify Layer 5's
+   side, and each names which of its modules moved to `dante_corpus/harness/`
+   (the apparatus, whose own contract is `dante_corpus/harness/__init__.py`'s
+   docstring and the four seams in §3) — then [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §4–§6
    (observability + log contract; `reconstruct.py` already ships it incl.
    resume). The seam a caller reaches for is callable-level:
    `reconstruct.main(..., fallback=...)` and `reconstruct_canto(...,
@@ -350,7 +378,7 @@ any one session, so it survives across Handoff clearings.
    cd harness/recon && make check                     # 0 hard / 2,964 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
    make fix-level FIX=3                               # 210, after the 09-07 run
-   cd ../.. && uv run pytest -q                       # 734
+   cd ../.. && uv run pytest -q                       # 739
    ```
 
 ---
@@ -533,8 +561,8 @@ offline/cost-constrained work — `recon/Makefile`'s `MODEL` selects it.
 
 Adapter policy (2026-08-24): the stateful `llm7shi.Client` adapter is the
 common model-access specification, and since the stateless probe/parity adapters
-were deleted it is the only one — `runner/llm.py` is where it lives. The
-standing rules live in [`../ARCHITECTURE.md`](../ARCHITECTURE.md) (§2 Model
+were deleted it is the only one — `dante_corpus/harness/llm.py` is where it
+lives, on the apparatus's side of the split. The standing rules live in [`../ARCHITECTURE.md`](../ARCHITECTURE.md) (§2 Model
 access, §3 Wire protocol).
 
 ---
@@ -549,19 +577,30 @@ single source, not duplicated here. The boundaries it encodes:
   were the evaluation reference, masked from agents structurally (§4 item 1);
   with every gold-referenced readout deleted, no code path in `harness/` opens
   them. The masking boundary is now the package edge.
+- **`dante_corpus/harness/` is the apparatus; `harness/` is Layer 5.** Since
+  2026-09-07 the boundary is a package edge, not a convention: **nothing under
+  `dante_corpus/harness/` imports anything else from `dante_corpus`**, and
+  `tests/test_harness_boundary.py` reads the source to enforce it. The
+  apparatus holds the canto loop, the bounded step, the `--fix` machinery, the
+  artifact and resume machinery, the outcome records, the report, the model
+  adapter, the status bar and the skill loader. `harness/` holds what those
+  cannot know: the gates' content, the levels, the verdict, the toolset, the
+  skill files, the CLI and `recon/`.
+- **The four seams.** The apparatus asks a subject for exactly four things, and
+  the split is the list: `RowCodec` (the row type, its order, its columns —
+  `layers.SKEL_CODEC`), `Subject` (the frozen layers plus gates 1-2 —
+  `layers.SKEL_SUBJECT`), `Criteria` (the finding levels — the `fixlevel`
+  module, passed as itself), and `Observer` (the per-iteration verdict —
+  `observe.SkelObserver`). The callable-level fallback seam —
+  `(canticle, canto, line_start, line_end) -> result`, which every
+  deterministic test injects at — is unchanged and is a fifth.
 - **`runner/` is what touches the model; `extractor/` is what drives it.**
-  `runner/` owns the evidence (`read_unit`), the gate (`validate_candidate`),
-  the prompt and the model adapter; `extractor/` owns the loop, the three gates
-  and the artifact. The contract between them is callable-level — a
-  `(canticle, canto, line_start, line_end) -> result` fallback — which is also
-  the seam every deterministic test injects at.
-- **The apparatus is coupled to Layer 5 by a type, not by behaviour.**
-  `dante_corpus.skel.models.SkelRow` is carried by 8 of the 19 surviving
-  modules; `skel.validate` / `skel.derive` are called by 4. Nothing else in the
-  loop, the gates or the artifact machinery knows what a row means. This is the
-  measurement the next session's split starts from (Handoff).
+  `runner/` owns the evidence (`read_unit`), the gate (`validate_candidate`)
+  and the prompt; `extractor/` owns the subject bindings and gate 3. The model
+  adapter itself is the apparatus's (`dante_corpus.harness.llm`).
 - **Tests live at the repo root** (`tests/test_harness_*.py`) alongside the
-  corpus suite, so the harness stays inside one pytest run.
+  corpus suite, so the harness stays inside one pytest run — the apparatus's
+  tests included, since it is a subpackage of the same project.
 
 ---
 
@@ -572,8 +611,8 @@ single source, not duplicated here. The boundaries it encodes:
 - **Session division of labor**: assistant sessions execute deterministic,
   LLM-free work only (tests, artifact inspection, log readouts); every
   LLM-in-the-loop command is run by the human operator, not by the assistant.
-  This is why the cut of 2026-09-07 ships deterministically verified but
-  live-unverified (Handoff).
+  This is why both of 2026-09-07's changes — the cut and the apparatus split —
+  ship deterministically verified but live-unverified (Handoff).
 - **There is one live entry point left**: `harness.extractor.reconstruct`, run
   through [`recon/Makefile`](recon/Makefile). The probe, parity, single-unit
   session and benchmark CLIs were deleted with the code under them; their

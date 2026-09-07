@@ -24,21 +24,26 @@ case annex only and the gates are intrinsic; the evaluation face that used to
 sit beside them (`--verify-gold`, `goldeval.py`) was removed with the rest of
 the gold-referenced readouts (2026-09-07, `../../layers/PLAN.md` §3.1 item 2).
 
-**Module layout (S7.2).** This file is the pipeline: the canto loop
-(`reconstruct_canto`), gate 3 (`commit`) and the CLI (`main`). Everything it
-drives sits in sibling modules, each importable on its own and each named for
-the one responsibility it holds:
+**Module layout (S7.2, resplit when the apparatus moved out).** This file is
+what is Layer 5's: gate 3 (`commit`), the CLI (`main`), and the wiring that
+hands the subject to the apparatus. The apparatus itself is
+`dante_corpus.harness`, which imports nothing else from `dante_corpus` and
+knows what a row means only through the codec it is given.
 
-| Module | Holds |
-|---|---|
-| `layers.py` | `CantoLayers` + gates 1-2 (`build_rows`, `validate_rows`) |
-| `outcome.py` | `UnitOutcome`, `CantoReconstruction`, unit-level resume |
-| `artifact.py` | `render_tsv` + `TsvArtifact` — the durable artifact |
-| `fixrun.py` | the Stage-6 `--fix` machinery (plan, verdict, salvage, revert) |
-| `fixedcontext.py` | the bounded per-unit step and its live model closure |
-| `report.py` | `ReconstructReport` + `load_log` |
+| Module | Holds | Whose |
+|---|---|---|
+| `layers.py` | `CantoLayers`, gates 1-2, and `SKEL_CODEC` / `SKEL_SUBJECT` | Layer 5 |
+| `fixlevel.py` | the fix levels — the apparatus's `Criteria` | Layer 5 |
+| `observe.py` | the frozen-layer verdict — the apparatus's `Observer` | Layer 5 |
+| `artifact.py`, `fixrun.py`, `fixedcontext.py` | one-line bindings of the apparatus modules of the same name | Layer 5 |
+| `harness.pipeline` | the canto loop over the units, gates 1-2 applied | apparatus |
+| `harness.outcome` | `UnitOutcome`, `CantoReconstruction`, unit-level resume | apparatus |
+| `harness.artifact` | `render_tsv` + `TsvArtifact` — the durable artifact | apparatus |
+| `harness.fixrun` | the Stage-6 `--fix` machinery (plan, verdict, salvage, revert) | apparatus |
+| `harness.fixedcontext` | the bounded per-unit step and its live model closure | apparatus |
+| `harness.report` | `ReconstructReport` + `load_log` | apparatus |
 
-The public names this module exported before the split are re-exported here
+The public names this module exported before either split are re-exported here
 unchanged.
 
 Commits are **canto-atomic**: a canto is written only when *every* parse unit
@@ -116,7 +121,6 @@ from harness.extractor import fixlevel
 from harness.extractor.artifact import TsvArtifact, render_tsv
 from harness.extractor.fixedcontext import (
     MAX_ITERATIONS as FIXED_MAX_ITERATIONS,
-    FixedUnitResult,
     fixed_fallback,
     rows_from_skel,
 )
@@ -136,41 +140,26 @@ from harness.extractor.fixrun import (
 )
 from harness.extractor.layers import (
     SAMPLE_VIOLATIONS,
+    SKEL_SUBJECT,
     CantoLayers,
-    RowKey,
     build_rows,
-    candidate_keys,
     split_violations,
     validate_rows,
 )
-from harness.extractor.outcome import (
-    CantoReconstruction,
-    UnitOutcome,
-    final_validation_errors,
-    replay_unit_outcome,
+from dante_corpus.harness.outcome import CantoReconstruction, UnitOutcome
+from dante_corpus.harness import pipeline
+from dante_corpus.harness.pipeline import (
+    AgentFallback,
+    progress_separator,
+    retry_delta as _retry_delta,
+    retry_snapshot as _retry_snapshot,
 )
-from harness.extractor.report import ReconstructReport, load_log
+from dante_corpus.harness.report import ReconstructReport, load_log
 from harness.runner.prompts import fixed_skill_digest
-from harness.runner.statusline import HarnessStatusLine
+from dante_corpus.harness.statusline import HarnessStatusLine
 
 # The scope every `--all` run covers unless `--canticle` narrows it.
 DEFAULT_EVAL_CANTICLES = ("inferno", "purgatorio", "paradiso")
-
-# `(canticle, canto, line_start, line_end) -> UnitResult`-shaped object. The live
-# one is `fixedcontext.fixed_fallback`; tests inject deterministic stubs.
-AgentFallback = Callable[..., object]
-
-
-def progress_separator(label: str, index: int, total: int, stream=None) -> None:
-    """Announce one canto's start with its position in the run.
-
-    A corpus run processes a hundred cantos over hours; without a marker between
-    them there is no way to tell where it currently is. The line goes to stderr
-    (JSONL logs stay clean) and names the canto plus its `[index/total]`
-    position.
-    """
-    stream = sys.stderr if stream is None else stream
-    print(f"\n===== [{index}/{total}] {label} =====", file=stream, flush=True)
 
 __all__ = [
     "SAMPLE_VIOLATIONS",
@@ -200,140 +189,28 @@ def reconstruct_canto(
     fallback: AgentFallback | None = None,
     progress_stream: TextIO | None = sys.stderr,
     status_line=None,
-    settled_units: dict[tuple[int, int], dict[int, list[SkelRow]]] | None = None,
+    settled_units: dict[Span, dict[int, list[SkelRow]]] | None = None,
     fix_spans: set[Span] | None = None,
     emit_unit: Callable[[UnitOutcome], None] | None = None,
 ) -> CantoReconstruction:
-    """Drive the fixed-context loop over every parse unit of one canto, gated.
+    """`pipeline.reconstruct_canto` over Layer 5 (`layers.SKEL_SUBJECT`).
 
-    Loads frozen L1-L4 only; gold is never touched. Each unit runs the
-    `fallback` callable, its accepted rows are anchored on Layer 1 (gate 1),
-    and the unit is verified
-    through `validate_unit` with all layers attached (gate 2). `status_line`,
-    when given (a `runner.statusline.HarnessStatusLine`), owns the display the
-    way the `skel/` drivers do: a bar labeled `{canticle} {canto}` counting the
-    canto's lines, advanced to each unit's first line, with the per-unit
-    progress lines routed through its console stream so they coexist with it.
-
-    `emit_unit`, when given, is called with each freshly computed outcome the
-    moment it settles — before the next unit starts. This is §5's durability
-    seam: the caller streams the unit's records to disk here, so a kill
-    mid-canto leaves every already-settled unit on disk for unit-level resume
-    instead of losing them all to a post-canto flush. Replayed units are never
-    passed (their records already sit in the caller's log from the prior
-    attempt).
-
-    `settled_units`, when given, maps `(line_start, line_end)` to the rows a
-    previous attempt already wrote to the canto's TSV: unit-level resume off
-    the artifact itself (`TsvArtifact.settled`). Matching units are rebuilt
-    from those rows (`replay_unit_outcome`, gates re-run) instead of being
-    re-solved — the caller must not re-emit them, since the artifact already
-    holds them.
-
-    With `fallback=None` no unit is solved at all: every unsettled unit records
-    empty rows. That is the dry mode the deterministic tests use.
+    The loop itself is the apparatus's and knows no layer; everything it does
+    not know — the row codec, `CantoLayers`, gates 1 and 2 — is the subject it
+    is given here. The signature is the one every caller and test has used
+    since S7.2.
     """
-    stream = status_line.stream if status_line is not None else progress_stream
-    layers = CantoLayers.load(canticle, canto)
-    recon = CantoReconstruction(
-        canticle=canticle, canto=canto, nos=list(layers.nos)
+    return pipeline.reconstruct_canto(
+        canticle,
+        canto,
+        subject=SKEL_SUBJECT,
+        fallback=fallback,
+        progress_stream=progress_stream,
+        status_line=status_line,
+        settled_units=settled_units,
+        fix_spans=fix_spans,
+        emit_unit=emit_unit,
     )
-    units = layers.units()
-    # Skel-driver display (`driver_build._build_canto`): the bar's label names
-    # Canticle Canto and its numerator walks the canto's Dante lines as each
-    # parse unit starts; whole-run `[i/N]` positions stay with the separators.
-    bar = (
-        status_line.progress(len(layers.nos), label=f"{canticle} {canto}")
-        if status_line is not None
-        else contextlib.nullcontext()
-    )
-    with bar as prog:
-        for pos, group in enumerate(units, start=1):
-            if prog is not None:
-                prog.update(group[0])
-            if stream is not None and pos % 5 == 0:
-                print(
-                    f"[reconstruct] {canticle} {canto} units {pos}/{len(units)}",
-                    file=stream,
-                    flush=True,
-                )
-            line_start, line_end = group[0], group[-1]
-            settled = (
-                settled_units.get((line_start, line_end)) if settled_units else None
-            )
-            if settled is not None:
-                recon.outcomes.append(
-                    replay_unit_outcome(settled, layers, group)
-                )
-                continue
-            started = time.monotonic()
-            reason = (
-                "fix" if fix_spans and (line_start, line_end) in fix_spans
-                else "generate"
-            )
-            agent_result = None
-            row_keys: frozenset[RowKey] = frozenset()
-            if fallback is not None:
-                agent_result = fallback(
-                    canticle=canticle,
-                    canto=canto,
-                    line_start=line_start,
-                    line_end=line_end,
-                )
-                keys, _malformed, _out_of_unit = candidate_keys(
-                    agent_result.candidate_rows, line_start, line_end
-                )
-                row_keys = frozenset(keys)
-            elapsed = time.monotonic() - started
-            rows, assertions = build_rows(
-                row_keys, layers, line_start, line_end
-            )
-            unit_rows = {no: rows.get(no, []) for no in group}
-            hard, soft = validate_rows(layers, group, unit_rows)
-            fallback_seconds: float | None = None
-            turn_seconds = getattr(agent_result, "turn_seconds", None)
-            if agent_result is not None and turn_seconds is not None:
-                fallback_seconds = sum(turn_seconds)
-            elif agent_result is not None:
-                fallback_seconds = elapsed
-            outcome = UnitOutcome(
-                unit={
-                    "canticle": canticle,
-                    "canto": canto,
-                    "line_start": line_start,
-                    "line_end": line_end,
-                },
-                route="agent",
-                reason=reason,
-                origin="agent",
-                fallback_ran=agent_result is not None,
-                row_keys=row_keys,
-                rows=unit_rows,
-                token_assertions=assertions,
-                hard=hard,
-                soft=soft,
-                fallback_seconds=fallback_seconds,
-                final_submission_valid=getattr(
-                    agent_result, "final_submission_valid", None
-                ),
-                invalid_nudges=getattr(agent_result, "invalid_nudges", None),
-                final_validation_errors=final_validation_errors(agent_result),
-                # The fixed-context loop's own record of what each step did
-                # (`fixedcontext.FixedUnitResult`). None when a test's stub
-                # fallback stands in for it.
-                fixed=(
-                    agent_result.to_dict()
-                    if isinstance(agent_result, FixedUnitResult)
-                    else None
-                ),
-            )
-            recon.outcomes.append(outcome)
-            # §5 durability seam: hand the settled outcome to the caller while
-            # the canto is still running, so the record is on disk before the
-            # next unit's (possibly hours-long) fallback begins.
-            if emit_unit is not None:
-                emit_unit(outcome)
-    return recon
 
 
 # --- commit (gate 3): canto-atomic write + hash verification -----------------------------
@@ -409,31 +286,6 @@ def commit(
 
 
 # --- CLI ------------------------------------------------------------------------------------
-
-
-def _retry_snapshot(status_line) -> tuple[int, float] | None:
-    """`(count, seconds)` of api-retry backoffs seen so far, or None if untracked.
-
-    llm7shi auto-retries 429 backoffs silently; the status line's stream counts
-    them via `wait_retry`.
-    """
-    stream = getattr(status_line, "stream", None)
-    count = getattr(stream, "api_retries", None)
-    if count is None:
-        return None
-    return count, getattr(stream, "api_retry_seconds", 0.0)
-
-
-def _retry_delta(
-    snapshot: tuple[int, float] | None, status_line
-) -> tuple[int, float] | None:
-    """Backoff `(count, seconds)` accumulated since `snapshot`; None if untracked."""
-    if snapshot is None:
-        return None
-    now = _retry_snapshot(status_line)
-    if now is None:
-        return 0, 0.0
-    return max(now[0] - snapshot[0], 0), max(now[1] - snapshot[1], 0.0)
 
 
 def _select_cantos(args) -> list[tuple[str, int]]:

@@ -78,9 +78,10 @@ normative section.
 
 - **llm7shi is the model-access layer.** Every live CLI reaches its model
   through llm7shi. Backends are always injected as callables — library cores
-  (`harness/toolcall/transports.py`) never import llm7shi or ollama themselves,
-  and llm7shi imports are lazy (inside functions), so importing a module never
-  touches a model or network.
+  (`dante_corpus/harness/fixedcontext.py`, whose loop takes a `generate`
+  callable) never import llm7shi or ollama themselves, and llm7shi imports are
+  lazy (inside functions), so importing a module never touches a model or
+  network. `dante_corpus/harness/llm.py` is where the adapter lives.
 - **The stateful Client adapter is the common specification**:
   `runner.agent.llm7shi_generate` mirrors the loop transcript into a
   per-session `llm7shi.Client` (history + system prompt) and wraps a

@@ -17,12 +17,18 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from dante_corpus import api, case as case_layer, dep as dep_layer, morph as morph_layer, np as np_layer
+from dante_corpus.harness.outcome import SAMPLE_VIOLATIONS, violation_record
+from dante_corpus.harness.pipeline import Subject
+from dante_corpus.harness.rows import RowCodec
 from dante_corpus.morph import Violation
+from dante_corpus.skel.io import _TSV_HEADER
 from dante_corpus.skel.models import SkelRow, _row_sort_key
 from dante_corpus.skel.validate import validate_unit
 
 __all__ = [
     "SAMPLE_VIOLATIONS",
+    "SKEL_CODEC",
+    "SKEL_SUBJECT",
     "CantoLayers",
     "RowKey",
     "build_rows",
@@ -32,9 +38,13 @@ __all__ = [
     "violation_record",
 ]
 
-# Per-unit violation details kept in log records; the summary carries the full
-# kind histogram, so samples only need to seed triage.
-SAMPLE_VIOLATIONS = 10
+# Layer 5's side of the apparatus boundary (`dante_corpus/harness/rows.py`): the
+# row type, its order, and the columns it is written in. Every one of the three
+# is the layer's, and the artifact's committed bytes are all three together —
+# `_row_sort_key` ranks by the Layer-5 role vocabulary and `_TSV_HEADER` is the
+# header `skel.io.write_skel` emits, so taking both from `skel` rather than
+# restating them is what keeps `render_tsv` byte-exact with the writer.
+SKEL_CODEC = RowCodec(make=SkelRow, sort_key=_row_sort_key, header=_TSV_HEADER)
 
 RowKey = tuple[int, int, str, int, int]
 
@@ -179,10 +189,6 @@ def build_rows(
     return by_line, errors
 
 
-def violation_record(v: Violation) -> dict:
-    return {"line": v.line, "kind": v.kind, "detail": v.detail}
-
-
 def validate_rows(
     layers: CantoLayers, group: list[int], unit_rows: dict[int, list[SkelRow]]
 ) -> tuple[list[Violation], list[Violation]]:
@@ -198,3 +204,14 @@ def validate_rows(
         case_rows=layers.case_rows,
     )
     return split_violations(violations)
+
+
+# Layer 5 as the canto loop's subject: its rows, its layers, and gates 1-2. The
+# loop is `dante_corpus.harness.pipeline`, which knows none of the three.
+SKEL_SUBJECT = Subject(
+    codec=SKEL_CODEC,
+    load_layers=CantoLayers.load,
+    candidate_keys=candidate_keys,
+    build_rows=build_rows,
+    validate=validate_rows,
+)

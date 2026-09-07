@@ -18,7 +18,7 @@ import json
 
 import pytest
 
-from harness.runner.llm import llm7shi_generate
+from dante_corpus.harness.llm import llm7shi_generate
 
 
 def _block(name, arguments):

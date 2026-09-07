@@ -13,7 +13,7 @@ from __future__ import annotations
 import pytest
 
 from harness.runner import prompts
-from harness.skills import Skill, SkillError
+from dante_corpus.harness.skills import Skill, SkillError
 
 
 def write_skill(root, *, front: str, body: str = "Body.", **resources: str):

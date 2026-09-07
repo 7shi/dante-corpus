@@ -17,17 +17,24 @@ measured is recorded in [`../stages/02.md`](../stages/02.md), which is untouched
 The pipeline that remains is Stage 2's fourth deliverable — the gated
 reconstruction — running Stage 9's execution mode.
 
-| Module | Holds |
-|---|---|
-| `reconstruct.py` | The canto loop, gate 3 (`commit`), and the CLI |
-| `fixedcontext.py` | [Stage 9] The bounded per-unit step and its live model closure |
-| `observe.py` | [Stage 9] The verdict: frozen-layer observations on the rows so far |
-| `layers.py` | `CantoLayers` (frozen L1-L4 + case annex) and gates 1-2 |
-| `outcome.py` | `UnitOutcome` / `CantoReconstruction` + unit-level resume |
-| `artifact.py` | `render_tsv` + `TsvArtifact`: the run's durable artifact |
-| `fixlevel.py` | [Stage 6/8/10] The soft-finding levels and their selection |
-| `fixrun.py` | [Stage 6] `--fix`: plan, verdict, salvage, revert |
-| `report.py` | `ReconstructReport` + `load_log` |
+**The apparatus moved out.** The machinery below is `dante_corpus.harness`,
+which imports nothing else from `dante_corpus` and knows what a row means only
+through the `RowCodec` it is handed. What stays here is Layer 5's: the gates'
+content, the levels, the verdict, and the wiring that hands all three over.
+
+| Module | Holds | Whose |
+|---|---|---|
+| `reconstruct.py` | Gate 3 (`commit`), the CLI, and the subject wiring | Layer 5 |
+| `layers.py` | `CantoLayers` (frozen L1-L4 + case annex), gates 1-2, `SKEL_CODEC` / `SKEL_SUBJECT` | Layer 5 |
+| `observe.py` | [Stage 9] The verdict: frozen-layer observations on the rows so far; `SkelObserver` | Layer 5 |
+| `fixlevel.py` | [Stage 6/8/10] The soft-finding levels and their selection — the apparatus's `Criteria` | Layer 5 |
+| `artifact.py`, `fixrun.py`, `fixedcontext.py` | One-line bindings of the apparatus modules of the same name | Layer 5 |
+| `harness.pipeline` | The canto loop over the parse units, gates 1-2 applied | apparatus |
+| `harness.fixedcontext` | [Stage 9] The bounded per-unit step and its live model closure | apparatus |
+| `harness.outcome` | `UnitOutcome` / `CantoReconstruction` + unit-level resume | apparatus |
+| `harness.artifact` | `render_tsv` + `TsvArtifact`: the run's durable artifact | apparatus |
+| `harness.fixrun` | [Stage 6] `--fix`: plan, verdict, salvage, revert | apparatus |
+| `harness.report` | `ReconstructReport` + `load_log` | apparatus |
 
 ```mermaid
 graph TD

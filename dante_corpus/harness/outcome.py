@@ -2,12 +2,17 @@
 
 Split out of `reconstruct.py` (S7.2). `UnitOutcome` is the reconstruction
 stack's central value: the canto loop produces it, the fix machinery rewrites
-it, the gold face observes it, and the log record is `to_dict()`. It sits below
-all of those so each can depend on it without depending on each other.
+it, and the log record is `to_dict()`. It sits below all of those so each can
+depend on it without depending on each other.
 
-`_replay_unit_outcome` is the same value rebuilt from rows already on disk —
+`replay_unit_outcome` is the same value rebuilt from rows already on disk —
 unit-level resume — with the gates re-run rather than trusted, so a replayed
 unit's verdict is measured on the bytes in the artifact.
+
+Nothing here reads a row: the subject's gate arrives as `validate` and its row
+facts as a `RowCodec`. The violation *record* shape, on the other hand, is the
+apparatus's own — it is the streaming JSONL log's vocabulary — so it is defined
+here and re-exported by the subject rather than the other way round.
 """
 
 from __future__ import annotations
@@ -15,24 +20,26 @@ from __future__ import annotations
 import dataclasses
 from collections import Counter
 from dataclasses import dataclass, field
+from typing import Any, Callable
 
-from dante_corpus.morph import Violation
-from dante_corpus.skel.models import SkelRow, _row_sort_key
-
-from harness.extractor.layers import (
-    SAMPLE_VIOLATIONS,
-    CantoLayers,
-    RowKey,
-    validate_rows,
-    violation_record,
-)
+from .rows import Row, RowCodec, RowKey, Violation, row_key
 
 __all__ = [
+    "SAMPLE_VIOLATIONS",
     "CantoReconstruction",
     "UnitOutcome",
     "final_validation_errors",
     "replay_unit_outcome",
+    "violation_record",
 ]
+
+# Per-unit violation details kept in log records; the summary carries the full
+# kind histogram, so samples only need to seed triage.
+SAMPLE_VIOLATIONS = 10
+
+
+def violation_record(v: Violation) -> dict:
+    return {"line": v.line, "kind": v.kind, "detail": v.detail}
 
 
 def final_validation_errors(agent_result) -> list[str]:
@@ -62,7 +69,7 @@ class UnitOutcome:
     origin: str  # "fast" | "agent" (dry mode keeps "agent" with no rows)
     fallback_ran: bool
     row_keys: frozenset[RowKey]
-    rows: dict[int, list[SkelRow]]
+    rows: dict[int, list[Row]]
     token_assertions: list[str]
     hard: list[Violation]
     soft: list[Violation]
@@ -145,7 +152,11 @@ class UnitOutcome:
 
 
 def replay_unit_outcome(
-    rows: dict[int, list[SkelRow]], layers: CantoLayers, group: list[int]
+    rows: dict[int, list[Row]],
+    layers: Any,
+    group: list[int],
+    *,
+    validate: Callable[..., tuple[list, list]],
 ) -> UnitOutcome:
     """Rebuild a `UnitOutcome` from the unit's rows already on disk in the TSV.
 
@@ -159,11 +170,9 @@ def replay_unit_outcome(
     line_start, line_end = group[0], group[-1]
     unit_rows = {no: list(rows.get(no, [])) for no in group}
     row_keys = frozenset(
-        (row.line, row.token, row.role, row.arg_line, row.arg_token)
-        for line_rows in unit_rows.values()
-        for row in line_rows
+        row_key(row) for line_rows in unit_rows.values() for row in line_rows
     )
-    hard, soft = validate_rows(layers, group, unit_rows)
+    hard, soft = validate(layers, group, unit_rows)
     return UnitOutcome(
         unit={
             "canticle": layers.canticle,
@@ -191,6 +200,7 @@ class CantoReconstruction:
     canticle: str
     canto: int
     nos: list[int]
+    codec: RowCodec
     outcomes: list[UnitOutcome] = field(default_factory=list)
 
     @property
@@ -198,11 +208,11 @@ class CantoReconstruction:
         """A canto commits only when every one of its units passes."""
         return bool(self.outcomes) and all(o.passed for o in self.outcomes)
 
-    def rows_by_line(self) -> dict[int, list[SkelRow]]:
-        merged: dict[int, list[SkelRow]] = {}
+    def rows_by_line(self) -> dict[int, list[Row]]:
+        merged: dict[int, list[Row]] = {}
         for outcome in self.outcomes:
             for no, rows in outcome.rows.items():
                 merged.setdefault(no, []).extend(rows)
         for rows in merged.values():
-            rows.sort(key=_row_sort_key)
+            rows.sort(key=self.codec.sort_key)
         return merged

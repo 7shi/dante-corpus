@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from harness.skills import Skill
+from dante_corpus.harness.skills import Skill
 
 __all__ = [
     "FIXED_SKILL",

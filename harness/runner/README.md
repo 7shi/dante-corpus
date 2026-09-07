@@ -20,9 +20,9 @@ Layer 5 gold.
 - **Prompt assembly (`prompts.py`, `skills/grammar-fixed/`)**:
   - `fixed_system_prompt()` concatenates three skill files and nothing else, so `fixed_skill_digest()` fingerprints every byte of the specification a run was launched under (Standing Invariant §6).
   - The grammatical wording lives in the files, not in Python: a change to what the model is taught is a reviewable diff.
-- **Model access (`llm.py`)**:
+- **Model access (`dante_corpus.harness.llm`)**:
   - The `llm7shi.Client` adapter — transcript sync, pacing, the generation-length cap — and the `llm_request` / `llm_response` JSONL wire log every live run is costed from.
-- **Live status bar (`statusline.py`)**:
+- **Live status bar (`dante_corpus.harness.statusline`)**:
   - The Rich bar and shared console every operator-run CLI streams into, with the `wait_retry` hook that counts API backoff.
 
 The Stage-1 pieces this directory was built around — the autonomous multi-turn

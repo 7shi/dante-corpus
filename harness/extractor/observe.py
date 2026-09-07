@@ -41,13 +41,14 @@ from __future__ import annotations
 
 from typing import Iterable, Sequence
 
-from dante_corpus.dep import DepRow
+from dante_corpus.dep import DepRow, load_dep
 from dante_corpus.skel.derive import ARG_DEPRELS
 
 from harness.extractor.fixlevel import case_children
 
 __all__ = [
     "Observation",
+    "SkelObserver",
     "observe_rows",
     "render_observations",
 ]
@@ -218,3 +219,42 @@ def observe_rows(
 def render_observations(observations: Sequence[Observation]) -> str:
     """The observation notices as the verdict's bullet list."""
     return "\n".join(f"- {o.text}" for o in observations)
+
+
+class SkelObserver:
+    """Layer 5 as the fixed-context loop's `Observer` (`dante_corpus.harness`).
+
+    The loop asks for points per unit and hands back the wording; both of those
+    are the layer's, so this is where they stay. It also owns the Layer-4 cache
+    the two observation functions read, which is why the loop no longer carries
+    a `dep_cache` of its own: one observer serves a whole run, and the cache is
+    warm for every unit of a canto after its first.
+    """
+
+    def __init__(self) -> None:
+        self._dep_cache: dict[tuple[str, int], dict] = {}
+
+    def dep_rows(self, canticle: str, canto: int) -> dict[int, Iterable[DepRow]]:
+        key = (canticle, canto)
+        if key not in self._dep_cache:
+            self._dep_cache[key] = load_dep(canticle, canto)
+        return self._dep_cache[key]
+
+    def observe(
+        self,
+        rows: Sequence[dict],
+        *,
+        canticle: str,
+        canto: int,
+        line_start: int,
+        line_end: int,
+    ) -> list[Observation]:
+        return observe_rows(
+            rows,
+            self.dep_rows(canticle, canto),
+            line_start=line_start,
+            line_end=line_end,
+        )
+
+    def render(self, observations: Sequence[Observation]) -> str:
+        return render_observations(observations)

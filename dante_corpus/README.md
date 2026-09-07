@@ -412,3 +412,30 @@ lines = ref("inferno 1:8-9")
 for line in lines:
     print(line.no, [t for t in tokenize(line.text) if has_alpha(t)])
 ```
+
+---
+
+## The reconstruction apparatus (`harness/`)
+
+`dante_corpus.harness` is the odd one out in this package: it is the only
+subpackage that is not *about* the Divina Commedia. It is the machinery that
+reconstructs a layer with a local LLM — the canto loop, the gates' shape, the
+bounded per-unit step, the `--fix` machinery, the artifact and resume machinery,
+the run report, the model adapter, the status bar and the skill loader — and it
+was built by reconstructing Layer 5, which is why it lives here.
+
+**It imports nothing else from `dante_corpus`**, and
+`tests/test_harness_boundary.py` enforces that by reading the source. What it
+cannot know it asks a subject for, through four seams:
+
+| seam | the subject supplies |
+|---|---|
+| `RowCodec` | its row type, that type's order, and the columns it is written in |
+| `Subject` | how to load a canto's frozen layers, and gates 1-2 over them |
+| `Criteria` | which findings each repair level names |
+| `Observer` | what the frozen layers raise against the rows on record |
+
+Layer 5's implementations of all four, and everything else that is Layer 5's —
+the toolset, the skill files, the CLI, the committed reconstruction — live in the
+repository's top-level `harness/`, which is not part of this distribution. See
+[`../harness/README.md`](../harness/README.md).

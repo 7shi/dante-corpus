@@ -48,6 +48,18 @@ dante-corpus/
 │   ├── RULES.md                   # 130 deterministic rule handbook (masked from agents)
 │   └── ...                        # Active 0-soft regression gate target
 │
+├── dante_corpus/harness/          # The apparatus, with no layer of its own
+│   ├── rows.py                    # The seam: RowCodec + the row/violation protocols
+│   ├── pipeline.py                # The canto loop + Subject (gates 1-2 applied)
+│   ├── fixedcontext.py            # The bounded per-unit step + Observer
+│   ├── fixrun.py                  # --fix: plan, verdict, salvage, revert + Criteria
+│   ├── outcome.py                 # UnitOutcome / CantoReconstruction + unit resume
+│   ├── artifact.py                # render_tsv + TsvArtifact (through the codec)
+│   ├── report.py                  # ReconstructReport + load_log
+│   ├── llm.py                     # llm7shi adapter + the llm_request/llm_response wire log
+│   ├── skills.py                  # File-based skill loader (SKILL.md + resources)
+│   └── statusline.py              # Rich live status bar for long operator-run sessions
+│
 ├── harness/                       # [Isolated] Grammar Agent Harness & Extraction Lab
 │   ├── README.md                  # Overview, navigation, and this directory map
 │   ├── PLAN.md                    # Master architectural plan (status, milestones, disciplines)
@@ -68,32 +80,26 @@ dante-corpus/
 │   │                              #   documents (toolcall/) was removed on 2026-09-07
 │   ├── FUTURE.md                  # Beyond Layer 5 (unscheduled design notes)
 │   │
-│   ├── skills.py                  # [Stage 7] File-based skill loader (SKILL.md + resources)
-│   │
-│   ├── runner/                    # The model-facing half: tools, prompt, model access
+│   ├── runner/                    # The model-facing half: the evidence, the gate, the wording
 │   │   ├── README.md              # Stage 1 overview
 │   │   ├── PLAN.md                # Stage 1 specification (toolset, agent, benchmark)
 │   │   ├── tools.py               # Dedicated Grammar Tool API (Layer 5 masked structurally)
-│   │   ├── llm.py                 # llm7shi adapter + the llm_request/llm_response wire log
 │   │   ├── prompts.py             # Prompt assembly (the grammatical wording lives in skills/)
-│   │   ├── skills/grammar-fixed/  # [Stage 9] The model's domain knowledge as reviewable files
-│   │   │   ├── SKILL.md           # Role framing + skeleton row conventions
-│   │   │   ├── protocol.md        # The reasoning protocol
-│   │   │   └── answer.md          # The answer contract (<rows> …)
-│   │   └── statusline.py          # Rich live status bar for long operator-run sessions
+│   │   └── skills/grammar-fixed/  # [Stage 9] The model's domain knowledge as reviewable files
+│   │       ├── SKILL.md           # Role framing + skeleton row conventions
+│   │       ├── protocol.md        # The reasoning protocol
+│   │       └── answer.md          # The answer contract (<rows> …)
 │   │
-│   ├── extractor/                 # The pipeline: the bounded loop and the gates around it
+│   ├── extractor/                 # Layer 5's side of the pipeline: the gates' content
 │   │   ├── README.md              # Stage 2 overview
 │   │   ├── PLAN.md                # Stage 2 specification (miner, lexicon, hybrid engine)
-│   │   ├── fixedcontext.py        # [Stage 9] The bounded per-unit step and its live closure
-│   │   ├── observe.py             # [Stage 9] The verdict: frozen-layer observations on the rows
-│   │   ├── layers.py              # Frozen L1-L4 bundle + gates 1-2 (no gold anywhere)
-│   │   ├── outcome.py             # UnitOutcome / CantoReconstruction + unit-level resume
-│   │   ├── artifact.py            # render_tsv + TsvArtifact: the run's durable artifact
-│   │   ├── fixlevel.py            # [Stage 6] Soft-finding levels, selection & revision blocks
-│   │   ├── fixrun.py              # [Stage 6] --fix machinery: plan, verdict, salvage, revert
-│   │   ├── report.py              # ReconstructReport + load_log (the §6 reporting faces)
-│   │   └── reconstruct.py         # Canto-wide gated reconstruction pipeline (loop, commit, CLI)
+│   │   ├── layers.py              # Frozen L1-L4 bundle + gates 1-2; SKEL_CODEC / SKEL_SUBJECT
+│   │   ├── observe.py             # [Stage 9] The frozen-layer verdict; SkelObserver
+│   │   ├── fixlevel.py            # [Stage 6] Soft-finding levels — the apparatus's Criteria
+│   │   ├── artifact.py            # \
+│   │   ├── fixrun.py              #  |- one-line bindings of the apparatus modules above
+│   │   ├── fixedcontext.py        # /
+│   │   └── reconstruct.py         # Gate 3 (commit), the CLI, and the subject wiring
 │   │
 │   └── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
 │       ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv
@@ -111,6 +117,19 @@ dante-corpus/
     ├── test_harness_recon_readout.py    # Stage 4 readout tests (aggregation math)
     └── test_harness_recon_check.py      # Stage 5 check tests (hard/soft split, base_dir)
 ```
+
+**What moved on 2026-09-07**, when the generic apparatus was split out of
+`harness/` into `dante_corpus/harness/`: the canto loop, the bounded per-unit
+step, the `--fix` machinery, the artifact and resume machinery, the outcome
+records, the run report, the model adapter, the status bar and the skill loader.
+They were coupled to Layer 5 by a *type* they carried (`skel.models.SkelRow`)
+rather than by anything they did, and that type is now a `RowCodec` the subject
+supplies. Four seams carry the rest — `RowCodec`, `Subject`, `Criteria`,
+`Observer` — and Layer 5's implementations of all four stay here, in
+`extractor/layers.py`, `fixlevel.py` and `observe.py`. `tests/test_harness_boundary.py`
+holds the rule that makes the split real: nothing under `dante_corpus/harness/`
+imports anything else from `dante_corpus`. The apparatus therefore ships with the
+distribution; `harness/` deliberately does not.
 
 **What was removed on 2026-09-07**, when the harness was cut down to the run and
 fix paths it is actually driven by: the Stage-1 per-unit tool-calling session

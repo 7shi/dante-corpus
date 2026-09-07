@@ -20,15 +20,18 @@ the place to read it.
 | `tools.py` | `read_unit` (the evidence) and `validate_candidate` (the gate) |
 | `prompts.py` | Assembly of $P$ from the skill files — no grammatical wording of its own |
 | `skills/grammar-fixed/` | The domain knowledge, as reviewable files under one digest |
-| `llm.py` | The `llm7shi.Client` adapter and the `llm_request`/`llm_response` wire log |
-| `statusline.py` | The Rich bar every operator-run CLI shares |
+
+Model access and the status bar are no longer here: `llm.py` and `statusline.py`
+are `dante_corpus.harness.llm` and `.statusline`, and the skill *loader* is
+`dante_corpus.harness.skills` — none of the three knows a layer. What stays is
+what is Layer 5's: the evidence, the gate, and the wording.
 
 ```mermaid
 graph TD
     subgraph "harness/runner/ (one bounded step)"
         P["$P$: prompts.py + skills/grammar-fixed/<br/>role, 4-step protocol, answer contract"]
         Ev["read_unit<br/>parse-unit evidence (L1-L4, case, quotes; skel masked)"]
-        LLM["Gemma 4 31B (llm.py -> llm7shi.Client)"]
+        LLM["Gemma 4 31B (harness.llm -> llm7shi.Client)"]
         Gate["validate_candidate<br/>intrinsic well-formedness & upstream feedback"]
     end
 
@@ -115,7 +118,7 @@ away; it moved out of the model's turn budget.
 
 ---
 
-## 5. Model access & observability (`llm.py`, `statusline.py`)
+## 5. Model access & observability (`dante_corpus.harness.llm` / `.statusline`)
 
 `llm7shi_generate(model, ...)` is the one send point: it keeps a stateful
 `llm7shi.Client` in sync with the transcript by content fingerprint, paces sends
