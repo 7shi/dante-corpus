@@ -264,7 +264,7 @@
 >
 > ```
 > uv run python -m layers.gen2.l2 inferno -c 1 \
->     -m google:gemma-4-31b-it --log layers/l2/inferno/01.log
+>     -m google:gemma-4-31b-it --log
 > uv run python -m layers.gen2.l2 inferno -c 1 --check
 > ```
 >
@@ -277,7 +277,9 @@
 > canticle's are facts of the corpus, so neither is a number the command line
 > asks anyone to supply; the nine-line pilot is the case that names a range, not
 > the other way round. A multi-canto run writes one artifact per canto over one
-> model connection and one log. Note the run **truncates** the log and rewrites the artifact for
+> model connection, each with **its own log**: `--log` takes no filename any
+> more and writes `NN.tsv`'s records to `NN.log` beside it, since a single named
+> file cannot hold a multi-canto run. Note the run **truncates** the log and rewrites the artifact for
 > the range given — it does not resume — so a widened run replaces 1:1-9's
 > output rather than extending it. That is deliberate (`L2.md`, §5
 > resume-or-truncate) but it means the nine-line output above is superseded,
