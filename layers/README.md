@@ -2,9 +2,15 @@
 
 The other layer directories each own an artifact: `morph/`, `case/`, `np/`,
 `dep/` and `skel/` hold a frozen annotation, the `--check` that validates it, and
-a `CORRECTIONS.md` recording every revision. This directory owns no artifact. Its
-subject is **the description those layers are written in** — what each layer can
-and cannot express, and what it ought to say.
+a `CORRECTIONS.md` recording every revision. This directory's subject is instead
+**the description those layers are written in** — what each layer can and cannot
+express, and what it ought to say.
+
+It owned no artifact until 2026-09-09, when the review turned into a rebuilt
+generation and that generation started producing one. The split is by kind:
+**[`gen2/`](gen2/) is code**, and nothing is written into it; the artifacts it
+builds sit beside it (`l2/<canticle>/NN.tsv`), in the same
+`<layer>/<canticle>/NN.tsv` shape the older layer directories use.
 
 It opened on 2026-09-07, when `harness/` closed. The harness reached its goal — a
 reproducible, automated reconstruction pipeline — but that goal presupposed the

@@ -10,10 +10,11 @@
 > **[`L1.md`](L1.md)** (L1's design, measurement, and implementation gathered
 > in one place, superseding the L1-specific detail that used to sit inline in
 > this handoff and in `REDESIGN.md` §2.1), and **[`L2.md`](L2.md)** (new this
-> session — L2's design gathered the same way, not yet implemented,
+> session — L2's design gathered the same way, with its first of three passes
+> now implemented,
 > superseding the L2-specific detail that used to sit inline in this handoff
-> and in `REDESIGN.md` §2.1) — plus **[`gen2/`](gen2/)** (see *L1 implemented*,
-> below), the code itself.
+> and in `REDESIGN.md` §2.1) — plus **[`gen2/`](gen2/)** (see *L1 implemented*
+> and *L2 step 1 implemented*, below), the code itself.
 > §4's five items remain unstarted **as written**; the work took the shape
 > described below instead, and §4 is deliberately not rewritten yet — the new
 > direction is still provisional pending an implementation trial (see
@@ -148,11 +149,10 @@
 > stack, per operator instruction: "コードをdante_corpusと統合する際に、テス
 > トもルートの tests/ と統合します."
 >
-> **This is a start, not yet a stack — only L1 is implemented.** L2 (the
-> split/POS/normalize trial) is still exactly as designed and unstarted; the
-> next session's first choice: begin the split/POS/normalize trial on
-> *Inf* 1:1-9 per [`L2.md`](L2.md)'s rollout plan (now with a working L1
-> under it to index against), or continue open review items first (G's real count net of
+> **This is a start, not yet a stack — L1, plus L2's first of three passes,
+> tried over nine lines.** See *L2 step 1 implemented* and *The live pass ran*,
+> below; steps 2 (POS) and 3 (normalize) are
+> still exactly as designed and unstarted. Open review items remain (G's real count net of
 > nested coordination, the *Inf* 4:5 all-layer read `PLAN.md` §4 item 4 asks
 > for, the quotes hierarchy, §4.1's cross-layer checker design, §4.3's
 > VP/Layer-5 relationship, or the external consumer survey `REDESIGN.md` §5
@@ -173,6 +173,146 @@
 > All are re-derivable from the frozen artifacts in minutes; none is
 > reproducible by re-running a committed artifact. The cross-layer checker of
 > §4.1 is where that gets fixed.
+>
+> **The `L2.md` extraction, committed (`2471807`).** Pulled L2's design —
+> split table, the `fixed`/merge boundary, the split → POS → normalize
+> pipeline, cost figures, execution mechanism, rollout plan — out of this
+> handoff and `REDESIGN.md` §2.1 into [`L2.md`](L2.md), mirroring the
+> earlier L1.md extraction; both documents above already reflect the dedupe.
+> No new finding.
+>
+> **L2 step 1 implemented (operator instruction: 「まず単語の分解だけ実装して
+> ください」).** [`gen2/l2.py`](gen2/l2.py) is the **split pass only** — no
+> POS, no apocope/elision restoration; the three-step ordering `L2.md`
+> designs is untouched and unprejudged. One bounded step per **chunk of
+> lines** (`--chunk`, default 3 — old Layer 2's own granularity,
+> `morph/morph.py --chunk 3`), **answers carrying only the tokens that split**,
+> keyed by the word and never by an index, no transcript across a chunk or a
+> retry, the gate in the runtime and refusal as the identity, and a
+> **line-by-line fallback** when a group never passes (`morph.py`'s own
+> degradation). Splits are recorded per occurrence, `(line, l1_index)`, so a
+> wordform reading two ways in one passage keeps both. The prompt is a file
+> ([`gen2/skills/l2-split/`](gen2/skills/l2-split/)) loaded through
+> `dante_corpus.harness.skills`; the model is reached through
+> `dante_corpus.harness.llm`. The CLI holds
+> [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §0's checklist — llm7shi adapter,
+> a status bar walking the canto's Dante lines on a stream shared with
+> llm7shi, streaming JSONL with summed (never spanned) timings, a report class
+> with both faces — with **one stated override: §3's `<tool_call>` XML, since
+> the fixed-context mode has no tools.** Full implementation and verification
+> detail live in [`L2.md`](L2.md), not here.
+> Tests: [`tests/test_gen2_l2.py`](tests/test_gen2_l2.py), 66 (79 with L1's,
+> `uv run pytest layers/tests`).
+>
+> **Two design points in `L2.md` were settled against it on the way, both
+> recorded there in place.** (1) It said both "old Layer 2's row is bootstrap
+> precedent in $O$" and "build with no view of old Layer 2, then diff" — the
+> second is adopted (operator, 2026-09-09), so old Layer 2 enters only through
+> the offline `--check` and agreement with it is evidence rather than an echo.
+> (2) Its *Execution mechanism* extended "no batching" from the three jobs to
+> the wordforms, one request each; **that is corrected** (operator,
+> 2026-09-09) — a wordform is too small a unit to spend a request on and the
+> pass hits request-rate limits before it hits anything interesting (*Inf*
+> 1:1-9 alone: 56 wordforms against 3 chunks; corpus-wide 442). The argument
+> against batching does not reach this case: a chunk is still *one job* over
+> more material, not three jobs merged, and there is no multi-key merge —
+> which is the failure mode `harness/stages/09.md` §2 actually measures. Two
+> things improved rather than degraded: keys resolve exactly against the L1
+> tokens the request lists — old Layer 2 needed `morph.split_table`'s tolerant
+> substring matching not for want of a token layer (`tokenizer.tokenize()`
+> predates both, and `morph.validate_line` checks against it) but because its
+> prompt asked the model to tokenize as well as analyse; and a wordform
+> recurring across chunks is now a free consistency check, each occurrence
+> keeping its own reading and a disagreement recorded as a conflict.
+>
+> **A third correction, from the first real model output (operator,
+> 2026-09-09).** The contract had asked for one row per token; a real answer
+> for *Inf* 1:7-9 came back as 27 rows of which one (`del:di+il`) said
+> anything. **The answer now carries differences only** — tokens with no row
+> are single words — and a key that names two places in the passage is refused
+> until the model prefixes it with the preceding tokens. That also made splits
+> per-occurrence rather than wordform-keyed, which is what lets `nel` read
+> `in+il` in one line and `ne+lo` in another. **What it gives up is stated in
+> `L2.md`:** one-row-per-token proved the model had judged every token, and an
+> empty block no longer can; the after-the-fact detector is `--check`.
+>
+> **The live pass ran, and it is clean** (operator, 2026-09-09;
+> `google:gemma-4-31b-it`). 3 requests, 0 refusals, 0 api retries, 47.3 s; the
+> model listed **exactly four rows** across the three answers — `Nel`/`del`
+> (1:1), `nel` (6:2), `del` (8:4) — and nothing else; 74 L1 tokens → 78 L2
+> entries; `--check` **56 agrees, 0 differs**. Hand-inspected, the silences are
+> as right as the rows: every elision (`ch'`, `i'`, `v'`, `Tant'`, `l'`) and
+> every apocope (`cammin`, `ben`, `trattar`, `pensier`, `dir`, `qual`) passed
+> through untouched, and `de` at 9:1 — the passage's nearest trap — was
+> correctly left whole. Full figures and the inspection: [`L2.md`](L2.md),
+> *The live pass over Inf 1:1-9*. So step 1 is implemented **and tried**, at
+> the rollout plan's first rung.
+>
+> ---
+>
+> ### Resume here
+>
+> **State at handoff.** Nothing is committed. Untracked: `layers/gen2/l2.py`,
+> `layers/gen2/skills/l2-split/`, `layers/tests/test_gen2_l2.py`, and
+> **`layers/l2/inferno/01.tsv` + `01.log`, the live run's own output** (the
+> `.log` is gitignored by the repo's `*.log` rule; the `.tsv` is the artifact
+> and is meant to be committed). Modified: `layers/L2.md`, `layers/PLAN.md`,
+> `layers/README.md`, `layers/gen2/__init__.py`. `uv run pytest layers/tests`
+> → **79 passed**.
+>
+> **The obvious next step: widen to the rest of *Inf* 1.**
+>
+> ```
+> uv run python -m layers.gen2.l2 --canticle inferno --canto 1 --lines 1-136 \
+>     --model google:gemma-4-31b-it --log layers/l2/inferno/01.log
+> uv run python -m layers.gen2.l2 --canticle inferno --canto 1 --lines 1-136 --check
+> ```
+>
+> 136 lines is ~46 chunks; at 1:1-9's rate (15.8 s per chunk) that is roughly
+> 12 minutes. Note the run **truncates** the log and rewrites the artifact for
+> the range given — it does not resume — so a widened run replaces 1:1-9's
+> output rather than extending it. That is deliberate (`L2.md`, §5
+> resume-or-truncate) but it means the nine-line output above is superseded,
+> not merged; its numbers already live in `L2.md`.
+>
+> **What to look for, and why it is different this time.** *Inf* 1:1-9 held
+> four splits and no hard case, so it could not exercise the two things the
+> current design is least sure of:
+>
+> 1. **The differences-only blind spot.** A token the model overlooked and a
+>    token it judged whole look identical in the answer. `--check` is the only
+>    mechanical detector, and at 1:1-9 it had nothing to catch. Over 136 lines
+>    it will have something to say — read `differs` and `absent` rows first.
+> 2. **Clitic compounds.** The canto holds `verb+pronoun` cases (*Inf* 1:59
+>    `venendomi`, and `L2.md`'s split table says 488 corpus-wide) that nine
+>    lines did not contain. Those are the class most likely to be either missed
+>    or over-split, and `vagliami`-shaped words are where a three-way split
+>    (`dir+te+lo`) could first appear.
+> 3. **A key that actually needs a prefix.** No answer at 1:1-9 needed
+>    disambiguating. Over three lines with a repeated `del` it will, and that
+>    path has only ever been exercised by tests.
+>
+> A `differs` row is evidence for one of `L2.md`'s two non-agreement outcomes
+> (precedent-is-wrong / genuine ambiguity) — decide which by argument from the
+> text and **record the argument in `L2.md`**, per premise 3.
+> `ours-ambiguous` means this pass answered one wordform two ways: a real
+> finding, not a bug. Record numbers, never log filenames
+> (`ARCHITECTURE.md` §5).
+>
+> **If a chunk misbehaves.** Refused chunks fall back to line-by-line
+> automatically and the summary counts them (`fallback_chunks`); a line no
+> attempt ever answered lands on `unresolved_lines` and fails the gate. A
+> systematically bad answer shape is a **prompt** fix in
+> `gen2/skills/l2-split/`, not a parser fix — the gate's refusal messages are
+> written to be handed back to the model, so read what it was told before
+> changing code. `--chunk 1` isolates a bad line; `--max-iterations` raises the
+> per-chunk cap.
+>
+> **Alternatives.** Steps 2 (POS) and 3 (normalize) of L2 are designed and
+> unstarted; the open review items two paragraphs up (G's real count, the
+> *Inf* 4:5 all-layer read, the quotes hierarchy, §4.1's cross-layer checker,
+> §4.3's VP/Layer-5 relationship, the external consumer survey) are all still
+> untouched.
 
 ## Why this directory exists
 
