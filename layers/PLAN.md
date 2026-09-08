@@ -30,8 +30,8 @@ The division of labour from here:
 
 The mechanics of the split — what moves and what stays — were a separate
 discussion, held after this document was written and settled on 2026-09-07;
-[`../harness/PLAN.md`](../harness/PLAN.md)'s Handoff is the record. Nothing here
-specifies them.
+[`../harness/PLAN.md`](../harness/PLAN.md) §2, *After the last stage*, is the
+record. Nothing here specifies them.
 
 ---
 

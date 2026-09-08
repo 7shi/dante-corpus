@@ -1,31 +1,41 @@
 # Dante Corpus: Unified Grammatical Layers & Post-Zero Architecture Plan
 
-### Handoff (2026-09-06) — resume here
+### Handoff (2026-09-08) — resume here
 
 > **Current State & Baseline**:
-> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **1,023 passed** — 552 corpus + 471 harness).
+> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **739 passed** — 552 corpus + 187 harness).
 > - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`harness/PLAN.md`](harness/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
-> - **Tool Call Protocol sub-project COMPLETE** (T1–T5; both live gates PASSED): the prompt-instructed XML protocol is the officially adopted wire format (Gemini API executes it ~3x faster than local Ollama); native Ollama tool calling stays implemented and gated but reserved for comparison experiments. Details in [`harness/TOOLCALL.md`](harness/TOOLCALL.md).
+> - **Tool Call Protocol sub-project COMPLETE** (T1–T5; both live gates PASSED), and now **historical**: the prompt-instructed XML protocol was the adopted wire format (Gemini API executed it ~3x faster than local Ollama), but both transports and the session that used them were deleted on 2026-09-07 — there is no wire protocol to choose any more. The record stays in [`harness/TOOLCALL.md`](harness/TOOLCALL.md).
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all tests.
 >
-> **Active work: Dedicated Grammar Agent Harness (`harness/`)**: Stages 1–9
-> (autonomous inference benchmark, rule/lexicon extraction, context
-> optimization, full-corpus verification, corpus durability, soft divergence
-> reduction, refactoring, soft `--fix` level 2, fixed-context execution) are
-> complete; **Stage 10 is open** (opened 2026-09-06), scoped to soft `--fix`
-> level 3 — `unregistered_predicate`, argued from the layer's own contract,
-> implemented, and now run once corpus-wide (334 → 225 findings). Stage 9
-> replaced the per-unit tool-calling session with a bounded step whose request
-> size is a function of the unit rather than the iteration count, and made it the
-> default execution mode. The harness's own reconstruction of Layer 5 is
-> hard-clean (0 hard / **2,982** soft against the derivation contract) and does
-> not touch gold `skel/`.
+> **`harness/` is CLOSED (2026-09-08); active work moves to `layers/`.** Stages
+> 1–10 all closed and Stage 10 was the last: autonomous inference benchmark,
+> rule/lexicon extraction, context optimization, full-corpus verification, corpus
+> durability, soft divergence reduction, refactoring, soft `--fix` levels 2 and 3,
+> and fixed-context execution — which replaced the per-unit tool-calling session
+> with a bounded step whose request size is a function of the unit rather than the
+> iteration count. Three pieces of closing work followed: the harness was **cut**
+> to the run and fix paths it is actually driven by, the generic apparatus was
+> **split out** into `dante_corpus/harness/` (a library that imports nothing else
+> from `dante_corpus`), and both changes were **verified live**. The harness's own
+> reconstruction of Layer 5 is hard-clean (0 hard / **2,954** soft against the
+> derivation contract) and never touched gold `skel/` — which since 2026-09-07 it
+> does not open at all.
 > *All harness planning, progress, and stage records are consolidated in
 > [`harness/PLAN.md`](harness/PLAN.md) — refer to it (and only it) for
 > harness work. This file is not kept in sync with harness-internal
 > progress; it only reflects the coarse status above.*
+>
+> **Active work: Layer Structure Review (`layers/`)** — opened 2026-09-07,
+> because the harness finished what it was built for and the thing it was
+> pointed at turned out to be undecided. Its subject is the layer structure
+> itself rather than one layer's contents: what each layer can and cannot
+> express, and what the description ought to say. The assumption it drops is the
+> one this file has carried throughout — that `skel/` and the layers beneath it
+> are an *immutable* reference. See [`layers/PLAN.md`](layers/PLAN.md), which is
+> the single reference for that work.
 
-## Current Status (2026-09-06)
+## Current Status (2026-09-08)
 
 **All five grammatical layers and the pronoun case annex are fully implemented, built for all 100 cantos of the *Divina Commedia*, modularized, and merged to `main`.**
 
@@ -35,7 +45,7 @@
 - **Layer 3 — Noun Phrases**: 0 hard / 0 soft violations across all 100 cantos ([`np/README.md`](np/README.md)).
 - **Layer 4 — Dependency Trees**: 0 hard / 0 soft violations across all 100 cantos ([`dep/README.md`](dep/README.md)). Stacked prepositions normalized and subject-agreement residue closed (see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md)).
 - **Layer 5 — Predicate-Argument Skeleton**: **0 hard / 0 soft violations across all 100 cantos** ([`skel/README.md`](skel/README.md), [`skel/RULES.md`](skel/RULES.md)).
-- **Test Suite**: `pytest` **1,023 passed** (552 corpus + 471 harness; corpus tests ~1 s).
+- **Test Suite**: `pytest` **739 passed** (552 corpus + 187 harness; corpus tests ~1 s). The harness count fell from 471 as the modules it covered were deleted on 2026-09-07; no surviving test was weakened.
 - **Layer 5 Divergence Residue**: **0** (Inferno 0, Purgatorio 0, Paradiso 0).
 
 ### Layer 5 Phase Retrospectives
@@ -46,25 +56,41 @@
 
 ---
 
-## Next Steps: Autonomous Local LLM Grammar Agent Harness
+## Next Steps: From the Harness to the Layer Structure
 
-With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructuring completed in Phase 8, the active 0-soft regression gate enables downstream tooling:
+With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructuring completed in Phase 8, the active 0-soft regression gate enabled downstream tooling. The first of those, the harness, is now finished; what it found is what opens the next item.
 
-1. **Dedicated Grammar Agent Harness for Local LLMs (`harness/`)**:
+1. **Dedicated Grammar Agent Harness for Local LLMs (`harness/`)** — *Closed
+   2026-09-08*:
    - A specialized agent harness in `harness/` adopting a staged bottom-up
      architecture: Stage 1 autonomous inference (`runner/`) ➔ Stage 2 rule &
      lexicon extraction (`extractor/`) ➔ Stage 3 context optimization ➔
      Stage 4 full-corpus verification ➔ Stage 5 corpus durability ➔ Stage 6
      soft divergence reduction ➔ Stage 7 refactoring ➔ Stage 8 soft
-     `--fix` level 2 ➔ Stage 9 fixed-context execution, all closed; Stage 10
-     (soft `--fix` level 3) is open.
-   - Benchmarks and reconstructs against the 0-soft ground truth (`skel/`)
-     without ever writing to it.
-   - *Details, current status & handoff*: [`harness/PLAN.md`](harness/PLAN.md)
+     `--fix` level 2 ➔ Stage 9 fixed-context execution ➔ Stage 10 soft
+     `--fix` level 3 — **all ten closed, and 10 was the last**.
+   - Reconstructed Layer 5 against the 0-soft ground truth (`skel/`) without
+     ever writing to it, and stopped reading it entirely on 2026-09-07.
+   - What survives is a **library**: the generic apparatus now lives in
+     `dante_corpus/harness/` and ships with the distribution, while top-level
+     `harness/` holds Layer 5's side of it — the gates' content, the fix
+     levels, the toolset, the skill files, the CLI and the `recon/` artifacts.
+   - *Details, closing readouts & records*: [`harness/PLAN.md`](harness/PLAN.md)
      — the single reference for all harness work; not duplicated or kept in
      sync here.
 
-2. **Long-Term Portability & Cross-Corpus Extensions**:
+2. **Layer Structure Review (`layers/`)** — *Active, opened 2026-09-07*:
+   - The harness met its mission (a reproducible, automated, generalizable
+     reconstruction pipeline) but not the assumption printed beside it: that the
+     layer stack it reconstructs is an immutable reference. Stage 10 closed on
+     a finding of exactly that shape — a class the token-indexed layers have no
+     vocabulary to decide.
+   - Subject: the layer structure itself — what each layer can and cannot
+     express, and what the description ought to say — with
+     `dante_corpus.harness` used as the tool rather than developed as one.
+   - *Details*: [`layers/PLAN.md`](layers/PLAN.md), the single reference.
+
+3. **Long-Term Portability & Cross-Corpus Extensions**:
    - Declarative rule scheduling DAG, additional language packs (Latin, etc.).
    - *Details*: [`skel/PORTABILITY.md`](skel/PORTABILITY.md).
 
@@ -88,7 +114,7 @@ the normalized Italian text, the token stream, the nested quote-span tree, morph
 noun phrases, dependency syntax trees, and predicate-argument skeletons, all derived from
 the poem itself with no external ontology. All five layers and the pronoun case annex are now fully
 computed, frozen, and verified at **0 hard / 0 soft violations across all 100 cantos** (suite now
-at `pytest` 1,023 passed including the harness).
+at `pytest` 739 passed including the harness).
 
 Downstream projects each need to *read the source grammatically* before they can do their own
 work — the formalization layer (`dante-analyze`) to extract entities and relations, the
@@ -172,4 +198,8 @@ grammar; they are contested judgments, normalizations, or bindings to something 
    - Layer stack interface (`GrammarContext`).
    - Modular decomposition: `dante_corpus/skel/` subpackage (models, registry, derive, rules, repairs, validate, io) & `skel/` CLI drivers (`driver_ui.py`, `driver_build.py`, `driver_fix.py`, `skel.py`).
    - Verified at 0 hard / 0 soft violations and 547 pytest passing.
-7. **Dedicated Grammar Agent Harness (`harness/`)** — *In progress* ([`harness/PLAN.md`](harness/PLAN.md), single reference for status).
+7. **Dedicated Grammar Agent Harness (`harness/`)** — *Complete and closed
+   (Stages 1–10, 2026-09-08)*; the generic apparatus split out into
+   `dante_corpus/harness/` as a library ([`harness/PLAN.md`](harness/PLAN.md),
+   single reference for status).
+8. **Layer Structure Review (`layers/`)** — *In progress* ([`layers/PLAN.md`](layers/PLAN.md), single reference for status).

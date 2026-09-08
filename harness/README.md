@@ -2,22 +2,34 @@
 
 Autonomous Grammar Agent Harness for Local LLMs (e.g., **Gemma 4 31B**), designed to systematically infer and reconstruct Layer 5 predicate-argument skeletons from multi-layer grammatical contexts (Layer 1 tokens, quotes hierarchy, Layer 2 morphology, pronoun case annex, Layer 3 noun phrases, and Layer 4 UD syntax trees).
 
+> **Status: CLOSED (2026-09-08).** Stages 1–10 ran and closed; Stage 10 was the
+> last, and development of `harness/` ends there. The generic apparatus was split
+> out into `dante_corpus/harness/`, both halves were verified deterministically
+> (739 tests) and live (`run` and `fix` on the real model), and `harness/` is now
+> a **library that [`../layers/PLAN.md`](../layers/PLAN.md) drives** rather than a
+> development subject of its own. Read that plan before anything here; read
+> [`PLAN.md`](PLAN.md) §2 for what the closing work settled.
+
 ### Design Philosophy: Autonomy Over Rigid Templates
-The harness favors letting the model decide for itself — when a candidate is ready to submit, when its work on a unit is actually done — over forcing it through a fixed, scripted procedure. Structured output isn't available for the models in use, so submission goes through a `validate_candidate` tool call instead; the model may call it any number of times as it revises, and the session ends the moment it answers in plain text with no further tool call, which the loop treats as the model's own completion signal rather than as a scripted turn count or an externally imposed cutoff (the turn budget exists only as a safety net). A model boxed into a rigid template is expected to underperform one given room to judge for itself when its work is done.
+The harness favors letting the model decide for itself — what a unit's frame contains, and when its work on that unit is actually done — over forcing it through a fixed, scripted procedure. Since Stage 9 the mechanism is a **bounded fixed-context step**: each iteration hands the model the same prompt plus the unit's own evidence and the previous iteration's rows, and it answers with one `<rows>` block. The loop stops when the model's answer stops changing — its own completion signal — with the iteration cap (`FIXED_ITERATIONS`, 4 by default) only a safety net; a request's size is therefore a function of the unit, not of how many times the model has revised. A model boxed into a rigid template is expected to underperform one given room to judge for itself when its work is done.
+
+*(Through Stage 8 the same philosophy ran as a per-unit tool-calling session that submitted through `validate_candidate` and ended when the model replied in plain text. That session was measured against the fixed-context step in Stage 9, lost, and was deleted on 2026-09-07; [`TOOLCALL.md`](TOOLCALL.md) is its record. `validate_candidate` itself survives as the gate.)*
 
 ### Motivation: Generalizable Layer 5 Reconstruction
 While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cantos** in Phase 8, its historical construction had a small local LLM (`gemma4:31b-it-qat`) generate and repair the TSVs, while its residual errors required an ad hoc, semi-manual triage process (interactive audits with frontier LLMs — Claude Opus 5, switching to Gemini 3.7 Flash at the end of Phase 8 — plus hand-crafted rules and manual corrections) that was bespoke to Dante's Italian and difficult to generalize to new texts or languages.
 
-`harness/` is the **systematic and fully automated reconstruction of Layer 5**. It treats `skel/` as an immutable **0-soft Gold Standard** and implements a **two-stage bottom-up architecture** to prove that a local LLM can autonomously reconstruct Layer 5 and generalize across grammatical domains:
+`harness/` is the **systematic and fully automated reconstruction of Layer 5**. It held `skel/` fixed as a **0-soft Gold Standard** for the duration of the work — a benchmark read afterwards, never a target, and since 2026-09-07 not opened at all — and was built as a **two-stage bottom-up architecture** to show that a local LLM can autonomously reconstruct Layer 5 and generalize across grammatical domains:
 
-1. **Stage 1: Autonomous Inference & Benchmark** ([`runner/`](runner/README.md)) — Evaluates local models using dedicated tool calling and 5-step CoT reasoning without free-form bash execution, logging rich inference traces.
-2. **Stage 2: Bottom-Up Extraction & Hybrid Engine** ([`extractor/`](extractor/README.md)) — Mines Stage 1 logs to formulate deterministic fast-path rules and verb valency lexicons, integrating them into a high-speed hybrid execution engine and gated production pipeline.
+1. **Stage 1: Autonomous Inference & Benchmark** ([`runner/`](runner/README.md)) — Evaluated local models using dedicated tool calling and multi-layer CoT reasoning without free-form bash execution, logging rich inference traces.
+2. **Stage 2: Bottom-Up Extraction & Hybrid Engine** ([`extractor/`](extractor/README.md)) — Mined those traces into deterministic fast-path rules and verb valency lexicons, behind a gated production pipeline.
+
+**Both stages' inference machinery is gone as of 2026-09-07**, and the two bullets are the record of what was built, not of what runs. Stage 2 measured the mined fast path at **7% of the corpus**, so it never became the primary path and was deleted with the benchmark that fed it; the surviving pipeline is L1–L4 → the fixed-context step → the three gates, with **every unit reaching the model**. What each stage settled is [`PLAN.md`](PLAN.md) §2's table.
 
 ---
 
 ## Documentation & Roadmap
 
-- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2, Stage 9 fixed-context execution, Stage 10 soft level 3 — the last stage). Keeps Current Status and the session handoff.
+- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2, Stage 9 fixed-context execution, Stage 10 soft level 3 — the last stage). Keeps the closing readouts (Current Status), the standing disciplines (§4), and — in §2's *After the last stage* — the cut, the apparatus split and the live verification that followed Stage 10.
 - **What happens next**: [`../layers/PLAN.md`](../layers/PLAN.md) — `harness/` is closed as a development subject and becomes a library; the layer stack's own description is the open question. Read it before anything here.
 - **Stage 1 Record**: [`stages/01.md`](stages/01.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
 - **Stage 2 Record**: [`stages/02.md`](stages/02.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
@@ -33,6 +45,13 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 - **Beyond Layer 5**: [`FUTURE.md`](FUTURE.md) — Unscheduled design notes on layer swaps, whole-stack vertical slices, and grammar reconstruction without a grammar book.
 - **Stage 1 (Inference & Benchmark)**: [`runner/README.md`](runner/README.md) | [`runner/PLAN.md`](runner/PLAN.md)
 - **Stage 2 (Extraction & Hybrid Engine)**: [`extractor/README.md`](extractor/README.md) | [`extractor/PLAN.md`](extractor/PLAN.md)
+
+Both subpackage plans specify Layer 5's side and name which of their modules
+moved to `dante_corpus/harness/`, but each also describes code deleted on
+2026-09-07 (the agent session and benchmark in `runner/PLAN.md`, the miners and
+hybrid engine in `extractor/PLAN.md`). The apparatus's own contract is
+`dante_corpus/harness/__init__.py`'s docstring plus the four seams in
+[`PLAN.md`](PLAN.md) §3; the directory map below is current.
 
 ---
 
@@ -115,7 +134,8 @@ dante-corpus/
     ├── test_harness_fixlevel.py         # Stage 6/8/10 tests (levels, selection, --fix end to end)
     ├── test_harness_reconstruct.py      # Gate tests (assertions, 0-soft, hash commit, CLI)
     ├── test_harness_recon_readout.py    # Stage 4 readout tests (aggregation math)
-    └── test_harness_recon_check.py      # Stage 5 check tests (hard/soft split, base_dir)
+    ├── test_harness_recon_check.py      # Stage 5 check tests (hard/soft split, base_dir)
+    └── test_harness_boundary.py         # The split's rule: no dante_corpus import either way
 ```
 
 **What moved on 2026-09-07**, when the generic apparatus was split out of
@@ -141,3 +161,15 @@ reaches the model), and every gold-referenced readout (`goldeval.py`,
 `--verify-gold`, `recon/agree.py`), together with `recon/convert.py` and
 `recon/repair.py`. Gold is no longer opened anywhere in `harness/`. The stage
 documents that describe those pieces are kept as the record of what was done.
+
+**Both changes were verified live on 2026-09-07/08**, once each, because neither
+could be proven by tests: assistant sessions call no model, and the two changes
+rewired the only path that reaches one. Each verification regenerated
+`inferno/01` from scratch and ran `make fix` over all 100 cantos. The post-split
+run held the prompt digest byte-identical (`ee6f1a46…` on all 101
+`canto_complete` records), showed the injected observer live (162 observations
+over 346 iterations), routed every unit as specified, and finished at **0 hard,
+0 token-assertion errors, no canto worse than it started**. Closing readouts:
+**0 hard / 2,954 soft**, `make fix-level` **0 / 0 / 206**, **739 tests**. The
+numbers and the four checks behind them are in [`PLAN.md`](PLAN.md) §2, *After
+the last stage*.

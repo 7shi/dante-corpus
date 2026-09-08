@@ -23,197 +23,15 @@ The close itself — what Stage 10 settled, its closing numbers, what carries
 forward and what ends — is [`stages/10.md`](stages/10.md) §5. Nothing about the
 stage is duplicated in this file any more; §2's table row is the index entry.
 
-### Done 2026-09-07: cut to the run and fix paths
+**Nothing is in flight.** The three pieces of work that followed the close — the
+cut to the run and fix paths, the apparatus split into `dante_corpus/harness/`,
+and the live verification of both — are done, verified and committed. They are
+recorded in §2's [After the last stage](#after-the-last-stage-the-cut-the-split-and-the-live-verification),
+not here, because they describe what `harness/` **is** now rather than what a
+next session should pick up. The next piece of work is
+[`../layers/PLAN.md`](../layers/PLAN.md).
 
-**Before the split, `harness/` was reduced to the minimal implementation the
-current `run` and `fix` are actually driven by, and everything else was
-deleted** (operator instruction). This is a deletion, not a redesign: no
-surviving behaviour changed except where the deletion itself is the change.
-
-What went, and what it costs:
-
-- **The Stage-1 per-unit tool-calling session and the protocol library under
-  it** — `toolcall/` entire (parser, transports, loop, prompts, probe, parity),
-  `runner/agent.py`, `runner/skills/grammar-agent/`, `tools.py`'s
-  `search_corpus` / `tool_specs` / `dispatch`, the `--tool-calling` flag and
-  `TOOLCALL=1`. This is §2's "slated for removal" item carried out, and it
-  costs what that item said it costs: **the comparison baseline for the mode now
-  in use is gone.** `runner/llm.py` is what survives of `agent.py` — the llm7shi
-  adapter and the wire log, which the fixed-context loop calls. (It became
-  `dante_corpus/harness/llm.py` in the split recorded below.)
-- **The Stage-1 benchmark** — `runner/benchmark.py`, `fixtures/`. Its
-  `candidate_keys` moved to `extractor/layers.py`, which is the only piece the
-  pipeline used.
-- **The Stage-2 mined fast path** — `syntax_miner.py`, `lexicon_builder.py`,
-  `hybrid_engine.py`, and the `--run-log` / `--min-support` / `--rules-in`
-  mining flags. **Every unit now reaches the model.** S5.7 measured the fast
-  path at 7% of the corpus, so this is a behaviour change and not only a
-  deletion: a fresh generation run would pay for those units in model calls. It
-  also ends the startup mining phase, and with it the run path's dependence on
-  the four bench logs (Orientation item 2 — the logs are kept, but nothing reads
-  them now).
-- **Every gold-referenced readout** — `goldeval.py`, `--verify-gold`,
-  `recon/agree.py`, and `readout.py`'s F1 sections. **Gold is no longer opened
-  anywhere in `harness/`**, which is where `layers/PLAN.md` §3.1 item 2 leaves
-  the progress metric anyway.
-- **`recon/convert.py`** (no make target since 2026-08-30, destructive over the
-  committed corpus) and **`recon/repair.py`** with its `repair` /
-  `repair-check` targets.
-
-Unchanged and re-read after the cut: `make check` **0 hard / 2,982 soft**,
-`make fix-level FIX=3` **225**, a settled canto still resumes off its TSV with
-no model call and rewrites nothing. The suite is **734 passed** — the deleted
-modules' tests went with them; no surviving test was weakened to pass.
-
-**Live verification PASSED** (operator, 2026-09-07; read out of the logs at the
-start of this session). Everything in the cut itself was deterministic — no
-model was called, because assistant sessions do not call one (Environment &
-Artifacts) — so what was outstanding was the path that actually reaches the
-model. Both halves of it were exercised, on three concurrent streams:
-
-- **`run` (generate)**: `inferno/01` regenerated from scratch with its TSV and
-  log deleted first (Orientation item 5). **34 units, all routed `agent` with
-  reason `generate`**, 0 token-assertion errors, 0 `api_retries`, 0 hard / 26
-  soft, 6,071.7 s. This is the path that had no live evidence at all since S9.6.
-- **`fix`**: corpus-wide `make fix` over all 100 cantos — **3,477 units, of
-  which 219 reached the model** (`fix`) and the rest resumed off their TSVs with
-  no model call (`already settled in the artifact`), 0 hard anywhere, 0
-  `api_retries`. **14 cantos' TSVs changed** and are uncommitted in the working
-  tree.
-
-So the two seams the cut was most likely to have broken are confirmed live:
-`fixedcontext.fixed_fallback` builds its model closure from `runner/llm.py`
-(the deleted `runner/agent.py` is not missed; the adapter has since moved to
-`dante_corpus/harness/llm.py`), and `reconstruct_canto` calls the
-fallback directly rather than through the deleted engine. **The cut is
-confirmed; nothing blocks the split below.** Post-run readouts are in Current
-Status.
-
-The `.md` files are kept as the record, so several of them now describe code
-that is gone: `TOOLCALL.md` entire, `runner/PLAN.md` and `extractor/PLAN.md` in
-large part, and every stage document by design. `README.md`'s directory map and
-roadmap were brought up to date and carry the removal note; the stage documents
-were not touched.
-
-### Done 2026-09-07: the apparatus split out into `dante_corpus/harness/`
-
-**The task, in one line: make `harness/` and the Layer-5-specific implementation
-loosely coupled, then separate them** (operator, 2026-09-07), with the generic
-half landing in `dante_corpus/harness/` and the tests staying at the repo root
-(operator, same day). Done. The premise the split was argued from is the one
-measured after the cut: **the apparatus was coupled to Layer 5 by a type it
-carried, not by anything it did** — `skel.models.SkelRow` in 8 of 19 modules,
-while the loop, the gates' shape, the artifact machinery and the fix verdicts
-were indifferent to what a row means.
-
-**The four seams**, which are the answer to open questions 1 and 2 above:
-
-| seam | replaces | defined in | Layer 5's |
-|---|---|---|---|
-| `RowCodec` | `SkelRow`, `_row_sort_key`, the four copies of the TSV header | `harness/rows.py` | `layers.SKEL_CODEC` |
-| `Subject` | `CantoLayers.load` + `candidate_keys` + `build_rows` + `validate_rows` | `harness/pipeline.py` | `layers.SKEL_SUBJECT` |
-| `Criteria` | the `fixlevel` module's five entry points | `harness/fixrun.py` | the `fixlevel` module itself |
-| `Observer` | `observe_rows` + `render_observations` + the dep cache | `harness/fixedcontext.py` | `observe.SkelObserver` |
-
-Question 1 was settled **for a codec** and against both a row protocol and an
-apparatus-owned row type: a protocol carries neither a constructor nor an
-ordering, and an apparatus-owned type would have to be converted back at every
-crossing into the subject's own code — `validate_unit` and `write_skel` take
-`SkelRow` — which is the path gate 3 pins byte-exact. The codec keeps the
-subject's row type flowing end to end. Question 2 was settled **injected**: the
-subject hands over a validator, and what the gate *says* is untouched, because
-S10.2 found those classes to be proxies and freezing them is not this
-refactor's business.
-
-**What moved**: `pipeline.py` (the canto loop), `fixedcontext.py`, `fixrun.py`,
-`outcome.py`, `artifact.py`, `report.py`, `llm.py`, `skills.py`,
-`statusline.py`, plus the new `rows.py`. **What stayed**: `layers.py`,
-`fixlevel.py`, `observe.py`, `runner/tools.py`, `runner/prompts.py` and the
-`grammar-fixed` skill files, `reconstruct.py` (gate 3, the CLI, the wiring), and
-`recon/` entire. `artifact.py`, `fixrun.py` and `fixedcontext.py` survive in
-`extractor/` as one-line bindings, which is what keeps every call site and test
-signature unchanged — including `python -m harness.extractor.reconstruct`, whose
-re-export surface is untouched, so `recon/Makefile` never learned about any of
-this.
-
-**The rule that makes it real**: nothing under `dante_corpus/harness/` imports
-anything else from `dante_corpus`. `tests/test_harness_boundary.py` reads the
-source with `ast` rather than checking `sys.modules`, because the imports that
-would break it are function-local (`fixed_fallback`'s lazy adapter import,
-`commit`'s lazy `hashes`), and because importing the package at all runs
-`dante_corpus/__init__.py`. It also holds the reverse: no other `dante_corpus`
-module imports the apparatus, so `llm7shi` stays off the corpus package's import
-path.
-
-**Answers to the remaining open questions above.** 3: `recon/` **stayed**, and so
-did `recon/readout.py` — it has no `dante_corpus` import but hard-codes
-`CANTICLE_COUNTS` and this operator's `STREAM_TPM_LIMIT`, which makes it this
-corpus's readout rather than apparatus. 4: **a package in this project**, not a
-separate distribution — `dante_corpus/harness/` ships with the wheel (hatchling
-picks it up implicitly, `pyproject.toml` needed no change) and top-level
-`harness/` deliberately does not. 5: tests stayed at the root, no file renamed,
-imports rewritten, one file added. 6: still open — this document is still called
-a plan.
-
-**Read out after the split, all unchanged**: `make check` **0 hard / 2,964
-soft**, `make fix-level` **0 / 0 / 210**, no committed TSV moved a byte, and a
-settled canto still resumes off its TSV in 0.6 s with **zero** `llm_request`
-records. The suite is **739 passed** (734 + the five boundary tests).
-
-### Done 2026-09-08: the split is live-verified
-
-**`run` and `fix` were both exercised on the split apparatus and PASSED**
-(operator, 2026-09-07 UTC; read out of the logs at the start of the 09-08
-session). This was the one thing outstanding — the deterministic half was
-already proven (739 tests, the readouts above, a resume with zero `llm_request`
-records), and what no test could cover was the live closure the split rewired:
-the injected **system prompt**, **observer** and **toolkit**, all three bound in
-`extractor/fixedcontext.py`, plus the dep cache's move into
-`observe.SkelObserver`. **None of the three was broken.**
-
-The four checks the previous session set, in its order:
-
-1. **`skill_digest` is `ee6f1a46…` on all 101 `canto_complete` records** — one
-   value, no other. $P$ is byte-identical across the split, so Standing
-   Invariant §6 held and the prompt assembly did not move.
-2. **The observer is live**: 240 units ran 346 iterations (174 settled on
-   iteration 1, 43 took 2, 6 took 3, 17 hit the cap), and **76 units carried 162
-   observations** across them — a silently empty observer would have shown as
-   346 = 240 with no observation anywhere. Stop reasons: 135 `settled`, 98
-   `fixed_point`, 7 `budget`.
-3. **Routes are exactly as specified.** Generate: `agent` ×34, reason
-   `generate` ×34. Fix: `agent`/`fix` ×206 plus `tsv`/`already settled in the
-   artifact` ×3,271.
-4. **0 `token_assertion_errors`, 0 hard violations, and no canto ended worse
-   than it started** — checked per canto on the `fix` block's
-   `soft_before`/`soft_after` and `findings_before`/`findings_after`, zero
-   regressions.
-
-The two runs themselves:
-
-- **`run` (generate)**: `inferno/01` from scratch — 34 units, 25 soft, 0 hard,
-  1 `api_retry` (15.0 s), 5,999.0 s.
-- **`fix`**: corpus-wide, all 100 cantos, **3,477 units of which 206 reached the
-  model**; 87 cantos carried a level-3 `fix` block, findings **211 → 206**, and
-  over the units touched soft **403 → 393** — verdicts 5 `accepted`, 3
-  `new_class`, 198 `no_improvement`, 7 `api_retries`.
-- **Concurrency**: 46,983 s of summed `wall_clock_seconds` inside a 5.86 h span
-  = **2.23×** on three streams, consistent with S10.4's 2.50× and still not a
-  measurement of where contention starts (§2's open item 1). Largest request
-  7,007 `input_tokens`, unchanged as the standing high-water mark (open item 2).
-
-**Five TSVs are uncommitted** as of the readout: `inferno/01` (regenerated),
-`inferno/07`, `inferno/14`, `paradiso/02`, `paradiso/19`. Post-run readouts are
-in Current Status.
-
-**`harness/` is now both deterministically and live verified, and its
-development is closed.** The next piece of work is
-[`../layers/PLAN.md`](../layers/PLAN.md); nothing is in flight here.
-
-*(The "one thing not to lose in a move" caution that stood here — the four
-87-case benchmark run logs, gitignored, disk-only and no longer regenerable — is
-cleared: the move is done and did not touch them. Orientation item 2 carries it
-durably.)*
+<!-- Handoff entries below this line: none. Clear an entry when it is acted on. -->
 
 ## Current Status
 
@@ -222,10 +40,9 @@ Every stage's status, dates and outcome are in §2's table.
 **No stage is open. Stages 1–10 are closed and there is no Stage 11.**
 
 *The numbers below were re-read on 2026-09-08 after the post-split live
-verification run (Handoff), which is what the corpus was last touched by — the
-`inferno/01` regeneration plus the corpus-wide `make fix`. They are the
-harness's final readouts, and
-they are readouts — per `layers/PLAN.md` §3.1 item 3 a soft count measures the
+verification run (§2, After the last stage), which is what the corpus was last
+touched by — the `inferno/01` regeneration plus the corpus-wide `make fix`. They
+are the harness's final readouts, and they are readouts — per `layers/PLAN.md` §3.1 item 3 a soft count measures the
 artifact against the current description, which is itself under review, so none
 of these is a target.*
 
@@ -242,9 +59,8 @@ of these is a target.*
   2026-09-07 and nothing in `harness/` opens gold any more. Read it as a closing
   number, not a current one.
 - **Test suite**: **739 passed** (re-read 2026-09-08; unchanged since the
-  apparatus split added
-  `tests/test_harness_boundary.py`'s five; it was 734 after the cut and 1,029
-  before it). Its composition and full history live in
+  apparatus split added `tests/test_harness_boundary.py`'s five; it was 734
+  after the cut and 1,029 before it). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
   arithmetic has always been kept.
 
@@ -480,6 +296,19 @@ graph TD
     GatedBuild -.->|Verification & Audit| L5_Gold
 ```
 
+**The diagram is the architecture as built, and is kept as the record — parts of
+it no longer exist.** Stage 2's mining path (fast-path rules, valency lexicons,
+the hybrid engine), Stage 1's benchmark, and both dotted arrows into `L5_Gold`
+were deleted on 2026-09-07 (§2, [After the last
+stage](#after-the-last-stage-the-cut-the-split-and-the-live-verification)). What
+runs today is L1–L4 → the fixed-context step → the gated build, with **every
+unit reaching the model** and **gold not opened at all**. The `.md` files are
+kept as the record for the same reason, so several of them now describe code
+that is gone: [`TOOLCALL.md`](TOOLCALL.md) entire,
+[`runner/PLAN.md`](runner/PLAN.md) and [`extractor/PLAN.md`](extractor/PLAN.md)
+in large part, and every stage document by design. This file and
+[`README.md`](README.md) are the two kept current.
+
 ---
 
 ## 2. Staged Strategy: Bottom-Up Core + Scale-Out
@@ -517,6 +346,93 @@ when a missing predicate is registered. S6.1 established this and it governs
 every later stage; the evidence is in [`SOFT.md`](SOFT.md) and
 [`stages/06.md`](stages/06.md).
 
+### After the last stage: the cut, the split, and the live verification
+
+Three pieces of work followed Stage 10's close, on 2026-09-07 and 09-08. None of
+them is a stage — no level was defined and no rule was decided; together they are
+what turned a development subject into a library. Their full argument is in the
+commits (`57de24a`, `5372ee9`, `393874c`); what follows is the durable summary.
+
+**1. The cut to the run and fix paths** (2026-09-07, operator instruction).
+`harness/` was reduced to the minimal implementation the current `run` and `fix`
+are actually driven by, and everything else was deleted — a deletion, not a
+redesign. What went, and what it cost:
+
+- **The Stage-1 per-unit tool-calling session and its protocol library** —
+  `toolcall/` entire, `runner/agent.py`, `runner/skills/grammar-agent/`, the
+  `search_corpus` / `tool_specs` / `dispatch` half of `tools.py`, the
+  `--tool-calling` flag. **The comparison baseline for the mode now in use is
+  gone**, which is exactly what the open item that scheduled this said it would
+  cost. `runner/llm.py` survives of `agent.py` and is now
+  `dante_corpus/harness/llm.py`.
+- **The Stage-1 benchmark** (`runner/benchmark.py`, `fixtures/`); its
+  `candidate_keys` moved to `extractor/layers.py`.
+- **The Stage-2 mined fast path** (`syntax_miner.py`, `lexicon_builder.py`,
+  `hybrid_engine.py` and the mining flags). **Every unit now reaches the model** —
+  a behaviour change, not only a deletion, since S5.7 measured the fast path at
+  7% of the corpus. It also ends the startup mining phase and the run path's
+  dependence on the four bench logs (Orientation item 2).
+- **Every gold-referenced readout** (`goldeval.py`, `--verify-gold`,
+  `recon/agree.py`, `readout.py`'s F1 sections). **Gold is no longer opened
+  anywhere in `harness/`**, so §4 item 1's masking boundary is the package edge.
+- `recon/convert.py` and `recon/repair.py` with their make targets.
+
+**2. The apparatus split into `dante_corpus/harness/`** (2026-09-07, operator
+instruction: make the two loosely coupled, then separate them; generic half into
+the package, tests at the repo root). The premise was measured after the cut:
+**the apparatus was coupled to Layer 5 by a type it carried, not by anything it
+did** — `skel.models.SkelRow` in 8 of 19 modules, while the loop, the gates'
+shape, the artifact machinery and the fix verdicts were indifferent to what a row
+means. Four seams replace that coupling, and §3 carries them as the standing
+contract:
+
+| seam | replaces | defined in | Layer 5's |
+|---|---|---|---|
+| `RowCodec` | `SkelRow`, `_row_sort_key`, the four copies of the TSV header | `harness/rows.py` | `layers.SKEL_CODEC` |
+| `Subject` | `CantoLayers.load` + `candidate_keys` + `build_rows` + `validate_rows` | `harness/pipeline.py` | `layers.SKEL_SUBJECT` |
+| `Criteria` | the `fixlevel` module's five entry points | `harness/fixrun.py` | the `fixlevel` module itself |
+| `Observer` | `observe_rows` + `render_observations` + the dep cache | `harness/fixedcontext.py` | `observe.SkelObserver` |
+
+A **codec** rather than a row protocol or an apparatus-owned row type: a protocol
+carries neither a constructor nor an ordering, and an apparatus-owned type would
+have to be converted back at every crossing into the subject's own code —
+`validate_unit` and `write_skel` take `SkelRow` — which is the path gate 3 pins
+byte-exact. The validator is **injected**, and what the gate *says* is untouched:
+S10.2 found those classes to be proxies, and freezing them was not the refactor's
+business. `artifact.py`, `fixrun.py` and `fixedcontext.py` survive in
+`extractor/` as one-line bindings, which is what keeps every call site, test
+signature and `recon/Makefile` invocation unchanged. **The rule that makes it
+real**: nothing under `dante_corpus/harness/` imports anything else from
+`dante_corpus`, and no other `dante_corpus` module imports the apparatus (so
+`llm7shi` stays off the corpus package's import path) — `tests/test_harness_boundary.py`
+enforces both by reading the source with `ast`, because the imports that would
+break it are function-local. The apparatus ships with the wheel; top-level
+`harness/` deliberately does not.
+
+**3. Live verification of both** (run by the operator 2026-09-07 UTC, read out of
+the logs 09-08). Everything above was deterministic, and assistant sessions call
+no model (Environment & Artifacts), so what was outstanding was the path that
+actually reaches one — for the cut, the model closure and the fallback call site;
+for the split, the injected system prompt, observer and toolkit plus the dep
+cache's move into `observe.SkelObserver`. **Both runs PASSED, twice** — once
+after the cut, once after the split. The post-split run:
+
+- `skill_digest` **`ee6f1a46…` on all 101 `canto_complete` records** — one value,
+  no other, so $P$ is byte-identical across the split and §6 held.
+- The observer is live: 240 units ran **346 iterations** (174 settled on the
+  first, 43 took 2, 6 took 3, 17 hit the cap; stop reasons 135 `settled`, 98
+  `fixed_point`, 7 `budget`) and **76 of them carried 162 observations**.
+- Routes exactly as specified — generate: `agent`/`generate` ×34; fix:
+  `agent`/`fix` ×206 plus `tsv`/`already settled in the artifact` ×3,271.
+- **0 `token_assertion_errors`, 0 hard, and no canto ended worse than it
+  started**, checked per canto on the `fix` block's before/after counts.
+- The two runs: `inferno/01` regenerated from scratch (34 units, 25 soft, 5,999 s)
+  and corpus-wide `make fix` (3,477 units, 206 reaching the model, findings
+  211 → 206). Concurrency **2.23×** on three streams — 46,983 s of summed
+  `wall_clock_seconds` inside a 5.86 h span, consistent with S10.4's 2.50×.
+
+**`harness/` is therefore both deterministically and live verified, and closed.**
+
 ### What the stage sequence left open
 
 Three items, all of them properties of the **apparatus** rather than of any
@@ -532,8 +448,9 @@ carries each in full and §5 says where it goes.
    sized. Largest requests to date 5,093, 4,085 and 7,007 `input_tokens`, every
    one far from a refusal.
 3. ~~**The tool-calling session is slated for removal**, deferred rather than
-   scheduled.~~ **Done 2026-09-07** (Handoff), and it cost what this item said it
-   would: the only comparison baseline for the mode now in use is gone.
+   scheduled.~~ **Done 2026-09-07** (§2, After the last stage), and it cost what
+   this item said it would: the only comparison baseline for the mode now in use
+   is gone.
 
 ### Beyond Layer 5 (design notes)
 
@@ -615,7 +532,8 @@ single source, not duplicated here. The boundaries it encodes:
   LLM-in-the-loop command is run by the human operator, not by the assistant.
   This is why both of 2026-09-07's changes — the cut and the apparatus split —
   shipped deterministically verified, each with its live `run`/`fix` verification
-  run by the operator and read out by the following session (Handoff).
+  run by the operator and read out by the following session (§2, After the
+  last stage).
 - **There is one live entry point left**: `harness.extractor.reconstruct`, run
   through [`recon/Makefile`](recon/Makefile). The probe, parity, single-unit
   session and benchmark CLIs were deleted with the code under them; their
