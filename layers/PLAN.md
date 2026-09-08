@@ -2,15 +2,18 @@
 
 ### Handoff (2026-09-09) — resume here
 
-> **Where this stands.** The directory holds four documents and, as of this
+> **Where this stands.** The directory holds six documents and, as of this
 > session, a first piece of code — [`README.md`](README.md) (stable
 > orientation), this plan, **[`REDESIGN.md`](REDESIGN.md)** (the design
 > proposal, now §1–§10), [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md) (the pilot
 > read, updated in place this session with this session's follow-ups),
-> **[`gen2/`](gen2/)** (new this session — see *L1 implemented*, below), and
-> **[`L1.md`](L1.md)** (new this session — L1's design, measurement, and
-> implementation gathered in one place, superseding the L1-specific detail
-> that used to sit inline in this handoff and in `REDESIGN.md` §2.1).
+> **[`L1.md`](L1.md)** (L1's design, measurement, and implementation gathered
+> in one place, superseding the L1-specific detail that used to sit inline in
+> this handoff and in `REDESIGN.md` §2.1), and **[`L2.md`](L2.md)** (new this
+> session — L2's design gathered the same way, not yet implemented,
+> superseding the L2-specific detail that used to sit inline in this handoff
+> and in `REDESIGN.md` §2.1) — plus **[`gen2/`](gen2/)** (see *L1 implemented*,
+> below), the code itself.
 > §4's five items remain unstarted **as written**; the work took the shape
 > described below instead, and §4 is deliberately not rewritten yet — the new
 > direction is still provisional pending an implementation trial (see
@@ -125,39 +128,15 @@
 >
 > ---
 >
-> **L1/L2 design, decided but none implemented (`REDESIGN.md` §2.1–§2.2,
-> §5).** 1. Premise 3 as above. 2. **L1** = `tokenize()`'s full output,
-> punctuation included, own numbering — design, measurement, and (as of this
-> session) implementation: [`L1.md`](L1.md). 3. **L2** = grammatical words as
-> `(l1_index, text)` pairs, only splits, never merges (composite tokens
-> 1:many, e.g. `nel`→`(0,in),(0,il)`; the `fixed` many:1 direction stays a
-> relation one layer up, over L2 entries, because 37 of 170 `fixed` groups
-> overlap a composite split). 4. **L2 is a three-step pipeline**: split → POS
-> classify → normalize (apocope/elision to the surface form, not the lemma);
-> normalization needs step 2's POS first for 159 cross-POS wordforms, which
-> is why the steps are ordered, not carved into exceptions. Step 2 itself
-> should be staged (coarse POS first, then per-category refinement), with
-> the participle/adjective boundary pinned by an explicit rule or one-shot
-> example — staging alone would just relocate the three-way split (§6) to a
-> new boundary. Step 1's output should be keyed by the word
-> (`nel:in+il`), not by echoing `l1_index` back, with a retry only on
-> genuine ambiguity (`nel`'s two-way split). 5. **Build order**: L4
-> (dependency) precedes L3 (phrases) — L3 must project from generation 2's
-> own L4, never from old Layer 4. 6. **Concrete task**: build the
-> 442-wordform split table, per-entry POS classification, and
-> ~1,686-wordform normalization table as three independent passes, diff each
-> against old Layer 2 as precedent (agree / old-generation-is-wrong / genuine
-> ambiguity), via `harness/stages/09.md` §2's fixed-context step, one
-> wordform per job, no batching.
->
-> **Rollout decided (`REDESIGN.md` §2.1, operator 2026-09-09): Canto 1
-> first, starting at *Inf* 1:1-9 and widening gradually, before any pass runs
-> corpus-wide.** Run all three passes over *Inf* 1:1-9 only, hand-inspect
-> every wordform's split/POS/normalization against the source, widen to all
-> of *Inf* 1 (136 lines), only then the full corpus. Corpus-wide numbers
-> already justify the design; a single-canto pass is what would catch a
-> systematic prompt or ordering error before it's baked into
-> 442 + ~1,686 wordforms' worth of calls.
+> **L1/L2 design, decided; only L1 implemented (`REDESIGN.md` §2.1–§2.2,
+> §5).** Premise 3 as above. **L1** = `tokenize()`'s full output, punctuation
+> included, own numbering — design, measurement, and implementation:
+> [`L1.md`](L1.md). **L2** = grammatical words as `(l1_index, text)` pairs,
+> split → POS-classify → normalize, only splits and never merges (the `fixed`
+> many:1 direction stays a relation one layer up, over L2 entries) — full
+> design, cost figures, and rollout plan: [`L2.md`](L2.md), not repeated
+> here. **Build order**: L4 (dependency) precedes L3 (phrases) — L3 must
+> project from generation 2's own L4, never from old Layer 4.
 >
 > **L1 implemented (this session, operator instruction: "gen2/ にL1を実装して
 > ください").** [`gen2/l1.py`](gen2/l1.py) implements §2.1's L1 in full and is
@@ -172,8 +151,8 @@
 > **This is a start, not yet a stack — only L1 is implemented.** L2 (the
 > split/POS/normalize trial) is still exactly as designed and unstarted; the
 > next session's first choice: begin the split/POS/normalize trial on
-> *Inf* 1:1-9 per the rollout plan above (now with a working L1 under it to
-> index against), or continue open review items first (G's real count net of
+> *Inf* 1:1-9 per [`L2.md`](L2.md)'s rollout plan (now with a working L1
+> under it to index against), or continue open review items first (G's real count net of
 > nested coordination, the *Inf* 4:5 all-layer read `PLAN.md` §4 item 4 asks
 > for, the quotes hierarchy, §4.1's cross-layer checker design, §4.3's
 > VP/Layer-5 relationship, or the external consumer survey `REDESIGN.md` §5
