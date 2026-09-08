@@ -2,156 +2,182 @@
 
 ### Handoff (2026-09-09) — resume here
 
-> **Where this stands.** The directory holds four documents and no code:
-> [`README.md`](README.md) (stable orientation), this plan (the source of truth,
-> and the file that gets updated), **[`REDESIGN.md`](REDESIGN.md)** — new, a
-> design proposal with its own measurements — and `reads/`, still one all-layer
-> read ([`reads/inf-1-1-9.md`](reads/inf-1-1-9.md)). §4's five items remain
-> unstarted **as written**, but the work has taken a shape §4 does not describe;
-> see *Method* below. §4 is not rewritten yet, deliberately — the new direction is
-> provisional.
+> **Where this stands.** The directory holds four documents and no code —
+> [`README.md`](README.md) (stable orientation), this plan, **[`REDESIGN.md`](REDESIGN.md)**
+> (the design proposal, now §1–§10), and [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md)
+> (the pilot read, updated in place this session with this session's follow-ups).
+> §4's five items remain unstarted **as written**; the work took the shape
+> described below instead, and §4 is deliberately not rewritten yet — the new
+> direction is still provisional pending an implementation trial (see
+> *Rollout*, below).
 >
-> **Two premises were set by the operator (2026-09-09)**, and are recorded at the
-> head of [`REDESIGN.md`](REDESIGN.md) rather than in §2, because they constrain
-> the redesign rather than the review:
-> 1. **Preserving the frozen artifacts is not a constraint.** Regenerating a layer
->    is acceptable even where it overlaps what is frozen, and the time cost is
->    accepted. This supersedes the earlier working assumption — held for most of
->    the 2026-09-09 session — that the TSVs stay fixed and the API only grows
->    additively. Terminal renumbering is therefore on the table.
-> 2. **Stop at phrases.** The redesign enumerates phrases and does **not** build a
->    complete tree rooted at the sentence. The argument is `REDESIGN.md` §3; the
->    price is §4.1.
+> **Premises (operator, 2026-09-07 and 2026-09-09), recorded at the head of
+> `REDESIGN.md`:** (1) preserving frozen artifacts is not a constraint —
+> regenerating a layer is accepted cost, terminal renumbering is on the table;
+> (2) stop at phrases — no complete tree rooted at the sentence (`REDESIGN.md`
+> §3 argues it, §4.1 prices it); (3) generation 2 must not depend on
+> generation 1 at rebuild time — old Layers 1–5 are bootstrap-only, never a
+> named input a generation-2 layer's *definition* reads.
 >
-> **Method now in use.** Layers 1–4 are examined **one at a time**, each against
-> *Inferno* 1:1–3, quoting concrete positions, with every observation measured
-> corpus-wide before it is written down. This replaces the previous handoff's
-> question 4 (*which passage gets the next all-layer read*): the axis of iteration
-> is now the layer, not the passage. `reads/` keeps its own purpose and its
-> promotion rule; the layer-by-layer notes have so far gone into `REDESIGN.md`
-> rather than into `reads/`.
->
-> **Layer 1 is done. It corrected two things this plan and the pilot read both
-> got wrong:**
-> - **Nothing is discarded at Layer 1.** `Line.text` holds the normalized source
->   verbatim, punctuation and guillemets included (`api.py:249`); only the
->   `Line.tokens` view filters non-alpha (`api.py:52`). The defect is not loss but
->   **address**: punctuation has no token index, so no layer can cite it.
-> - **The sentence unit already exists.** `dante_corpus/dep.py:200`
->   `sentence_groups` splits on line-final `.`/`!`/`?`, sub-splits at `;`/`:`, caps
->   at 12 lines with a hard-split fallback. **Layer 4 was built inside these
->   units.** It is not stored in `dep/*.tsv`, not on `Canto`, not in `__all__` — a
->   consumer must import a private function and recompute it. It needs storing and
->   exposing, not designing; the 12-line cap should be dropped.
->
-> **And it sharpened §1.3's diagnosis.** "Flat encoding" is imprecise: Layer 4 *is*
-> a tree. The accurate statement is **the tree's nodes are tokens; no node stands
-> for a constituent** — and Layer 3 is already a partial constituent layer, in the
-> right shape (enumeration, nesting by containment), stopped at NPs and at the
-> line. `REDESIGN.md` §1 carries this.
->
-> **The previous handoff's four questions.** (1) Prioritise (iii), hand (i)/(ii)
-> to the per-layer `CORRECTIONS.md` files — **still open**. (2) Design §4-1 as a
-> cross-layer readout — **answered by force**: `REDESIGN.md` §4.1 makes the
-> cross-layer checker part of the design, since enumeration has no tree to enforce
-> coherence. (3) State the hypothesis up front — **answered**: `REDESIGN.md` states
-> it and §6 lists what would falsify it. (4) Next passage — **superseded** by
-> *Method* above.
->
-> **"Next: Layer 2" happened, but not as a review — see below.** The composite
-> POS inventory (2,681 tokens) and the `note`-field noise are now consumed by
-> the L1/L2 design work below; the participle POS split, the `che` mistag
-> (finding B's 225), the unfrozen POS vocabulary, and `case/`'s sparseness are
-> **still untouched** and remain candidates either for an old-Layer-2 review
-> write-up or for absorption into L2's POS-classification step — not decided.
->
-> **Deferred, deliberately, and now partly settled.** How generation 1 is shown
-> to the model while generation 2 is built — which frozen layers are safe input
-> and which are the undecided positions it must not anchor to. A split was
-> drafted 2026-09-09 (safe: tokens, lemma decomposition, Layer-4 bracketing,
-> `sentence_groups`; contaminated: `cop`/`attr` 953:357, the locution
-> `obl`:`advmod`:`nmod`:`conj` 217:68:30:13, Layer-3 granularity, participle POS,
-> `che` POS, `expl`), with the unresolved question of whether Layer-4 bracketing
-> can be "safe" when the `advmod`/`obl` choice moves the brackets themselves.
-> **Premise 3 below settles the general shape** (bootstrap-only, never a
-> rebuild-time input); the specific safe/contaminated split above is still
-> unrevisited against it. `REDESIGN.md`'s Status records the residue as
-> unwritten.
+> **Method: each layer examined on its own against concrete *Inferno* 1
+> positions, every observation measured corpus-wide before being written
+> down.** All five old layers plus `case/` have now been reviewed this way;
+> each review is its own numbered section in `REDESIGN.md`, source-cited, and
+> summarized below. None of the findings are corrected in the frozen
+> artifacts — this is review, not repair.
 >
 > ---
 >
-> **L1/L2 design (2026-09-09, same session, continued past Layer 1).** The
-> *Method* above says Layers 1–4 are reviewed one at a time against the old
-> generation; in practice, once Layer 1's review turned up the punctuation and
-> `l1_index` questions, the work did not stay a review of old Layer 2 — it
-> became direct design of the **rebuilt** `L1`/`L2` (terminology: `L1`, `L2`, …
-> name the rebuilt layers from here on; `Layer 1`, `Layer 2`, … keep naming the
-> frozen generation). Old Layer 2's known material (composite POS, the `che`
-> mistag, participle POS, the `note`-field noise) fed this as precedent, not as
-> a standalone review write-up — **the `che` mistag and the participle POS
-> split are still not separately reviewed**, and may end up folded into L2's
-> POS-classification step below rather than written up as old-Layer-2
-> corrections; that is not decided.
+> **Layer 1 (done, earlier this session).** Two corrections to this plan's
+> own prior diagnosis: (1) nothing is discarded at Layer 1 — `Line.text`
+> keeps punctuation verbatim (`api.py:249`); only `Line.tokens` filters it
+> (`api.py:52`) — the defect is *address*, not loss. (2) the sentence unit
+> already exists (`dante_corpus/dep.py:200` `sentence_groups`, Layer 4 is
+> built inside it) but isn't stored or exposed. Also sharpened §1.3's
+> diagnosis: Layer 4 *is* a tree; the defect is that its nodes are tokens,
+> none stands for a constituent (`REDESIGN.md` §1).
 >
-> Decisions recorded in `REDESIGN.md`, **none implemented**:
+> **Old Layer 2 review (`REDESIGN.md` §6).** Entry point *Inf* 1:3
+> `smarrita`. Past participles are encoded three incompatible ways
+> (`pos=verb`+`mood=participle` 724 / standalone `pos=participle` 25 /
+> `pos=adjective` 573+, the last splitting its own lemma between the
+> adjective form and the verb infinitive for 104 wordforms, `smarrito` itself
+> 4/4). The `pos` column holds 39 values, not a closed set (subtype leakage —
+> `relative pronoun`/`pronoun`, `proper noun`/`noun` — plus spacing
+> duplicates and singletons). Checked `case/`'s sparseness against this and
+> found it's **not** a `case/` coverage gap — `case/` is complete and closed
+> (13,157 rows, exact match) — but a pass-through of Layer 2's `pos` column
+> read verbatim (`case/case.py:11`): a `che` mistagged `conjunction` (finding
+> B's 225 positions, `reads/inf-1-1-9.md`) never reaches `case/`'s build step
+> at all. The working assumption that "later layers don't lean heavily on
+> `pos`" does not hold for `case/` specifically — recorded as a correction to
+> avoid deprioritizing a `pos`-vocabulary fix without checking the consumer.
 >
-> 1. **Premise 3 (new): generation 2 must not depend on generation 1 at rebuild
->    time.** Old Layer 1–5 may be used once, as bootstrap material during
->    construction (a warm start, a precedent to diff against) — never as a
->    named input a generation-2 layer's *definition* reads. (§Status,
->    `REDESIGN.md`)
-> 2. **L1 = `tokenize()`'s full output, punctuation included, own numbering.**
->    Diverges from old Layer 1's `Line.tokens` (`api.py:52` drops punctuation
->    before indexing), by design — this is what makes punctuation citable at
->    all. 17,434 punctuation terminals newly addressable; quote-mark pairs
->    exactly balanced (`«`/`»` 1,062/1,062, `‘`/`’` 109/109, `“`/`”` 51/51),
->    which is the address the open survey item "the quotes hierarchy" (§4 item
->    1 below) has been missing. (`REDESIGN.md` §2.1)
-> 3. **L2 = grammatical words, as `(l1_index, text)` pairs, only splits, never
->    merges.** 1:many for composite tokens (`nel` → `(0,in),(0,il)`), 1:1
->    otherwise. Many:1 (e.g. `fixed`'s complex prepositions, 170 groups) stays
->    a relation one layer up, over L2 entries, because 37 of those 170 groups
->    (21.8%) have a member that is itself a composite split and a tuple
->    `l1_index` would misattribute part of a token. (`REDESIGN.md` §2.1)
-> 4. **L2 is a three-step pipeline: split → POS classify → normalize.**
->    Normalization (apocope/elision restored to the inflected *surface* form,
->    stopping short of lemma — `i'`→`io`, `son`→`sono` while `essere` stays the
->    lemma) needs step 2's POS for wordforms spanning more than one POS (`l'` →
->    `lo`/`la` depending on gender, 159 such wordforms) — desk-checked by hand
->    against *Inf* 1:1 and *Inf* 1:25, which is what showed this is an ordering
->    consequence, not a special case. Scope: split table 442 wordforms (423
->    deterministic), normalization tables 300 wordforms (apostrophe-marked) +
->    1,386 (apocope without apostrophe, 477 of which need a lemma-independent
->    reconstruction). (`REDESIGN.md` §2.1)
-> 5. **Build order: L4 (dependency) precedes L3 (phrases), despite the
->    numbering.** L3 must project from generation 2's own L4, never from old
->    Layer 4, or L3 stays permanently dependent on the old file (premise 3).
->    Old Layer 4's 40,654 projectable subtree groups remain useful as the
->    bootstrap case for building L4 itself. (`REDESIGN.md` §2.2, §5)
-> 6. **Concrete next task, decided but not started:** build the split table,
->    the per-L2-entry POS classification, and the normalization tables as
->    three independent passes (no view of old Layer 2 while building), then
->    diff each against old Layer 2 as the precedent check — three outcomes,
->    same methodology as every `*/CORRECTIONS.md` (agree / old-generation-is-
->    wrong, e.g. `dal`'s `di+il` / genuine synchronic ambiguity, e.g. `nel`).
->    Execution mechanism: `harness/stages/09.md` §2's fixed-context step
->    (`P -> O -> State Σ ()`), **one step per wordform per job, no batching**
->    — batching is exactly where the paper `09.md` reviews places 68% of its
->    failures, and wall-clock cost is not a constraint this project is short
->    on. (`REDESIGN.md` §2.1, end)
+> **Old Layer 3 review (`REDESIGN.md` §2.2, inline).** `np/`'s
+> fused-enclitic-pronoun mechanism (`clitic_mentions()`, the `"+lemma"`
+> sentinel span, e.g. *Inf* 1:59 `venendomi` → `np/inferno/01.tsv:59` `+mi`)
+> compensates for old Layer 1 having no position for a bound pronoun. §2.1's
+> L2 split table covers exactly this shape (`verb+pronoun`, 488/372
+> wordforms), so under the rebuilt stack the pronoun becomes an ordinary L2
+> entry and the whole synthetic-mention apparatus has nothing left to
+> compensate for. Separately, corrected an overstatement made mid-session:
+> rebuilt NP is not "narrower" than old Layer 3 — finding H's own example
+> already folds a relative clause into one NP span (*Inf* 1:9) — the
+> participle-object question is a second instance of finding H's real defect
+> (no explicit hierarchy rule), folded into §4.2's bound rather than treated
+> as a separate axis.
 >
-> **This is a plan, not a start.** The operator's instruction closing this
-> session: record the decisions, do not implement. The next session's first
-> choice is whether to begin the split/POS/normalize tables, continue the
-> Layer 1–4 review method into old Layer 2/3/4, or design L3/L4 further first.
+> **Old Layer 4 review (`REDESIGN.md` §7).** Entry point *Inf* 1:2
+> `mi ritrovai` (`mi` tagged `expl`, discarded as a non-argument, 1,466
+> occurrences corpus-wide) — this doubled as the falsification test
+> `REDESIGN.md` had left open for its own grammatical-word hypothesis.
+> **96 of 170 verb lemmas (56.5%) underlying `verb+pronoun`'s 488 fused
+> tokens also occur as a separate `expl` construction with the same
+> reflexive clitic** (`andare+si`, `fare+si`, `muovere+si`, …) — the
+> fused/separate split is spelling, not grammar, so the hypothesis survives.
+> But the two treatments are not equally good: composite POS at least records
+> the pronoun, `expl` discards it outright. Once L2 splits every fused case,
+> `vagliami` and `mi ritrovai` become structurally identical, so whatever
+> generation 2's dependency layer turns out to be has no structural reason
+> left to treat them differently — recorded as a constraint on that
+> not-yet-designed layer, not a decision about it (only L1/L2 are concretely
+> proposed; "L4" is a placeholder label, not a designed layer).
+>
+> **`case/` review (`REDESIGN.md` §8).** Entry point *Inf* 1:22 `quei`
+> ("*E come **quei** che con lena affannata, … si volge*"): `case/`
+> independently reads it `nominative`; `dep/` attaches it `obl` to `volse`
+> two lines down — one of 25 corpus-wide "impossible pairings" (`--stats`),
+> all the same shape: a nominative-form pronoun heads a relative clause and
+> the whole pronoun-plus-clause unit fills an oblique/comparative slot up the
+> tree (also *Par* 1:93 `tu`, plus a dozen `colui`/`quel`/`quella`/`questo`/
+> `quello` instances). Neither layer is wrong — this is finding H's
+> missing-hierarchy defect surfacing a third time, visible only because
+> `case/` was generated blind and independently. `case/` needs no fix; where
+> the rebuilt stack writes this fact is folded into §4.2.
+>
+> **Old Layer 5 / `skel/` gold review (`REDESIGN.md` §9, gold treated as
+> benchmark per premise 1, never as authority).** Confirms the two findings
+> above reach `derive_unit` **unrepaired, by design**: `mi` in
+> *Inf* 1:2 produces no skeleton row at all — `derive.py` never references
+> `"expl"` as a deprel. *Inf* 1:26's `obl:come=(22,3)` (citing `quei`) is
+> derived purely from `dep`'s `case`+`obl` chain — `derive_unit`'s own
+> docstring (`derive.py:86-89`) states `case_rows_by_line` is read "at
+> exactly one place" (rule CZ), not this one. Neither is a Layer-5 defect (a
+> checker inheriting Layers 2/4's decisions is its job); the consequence runs
+> upward — whatever a rebuilt dependency layer decides about `expl` or the
+> relative-clause case will pass through unrepaired unless caught at
+> generation time or by a cross-layer check (§4.1).
+>
+> **`reads/inf-1-1-9.md` updated in place** with this session's follow-ups,
+> noted at each finding rather than rewritten: B corrected (the `case/`
+> mechanism above), C extended (the three-way participle split), F resolved
+> (the hypothesis survives, plus the Layer-5 confirmation), H upgraded from
+> "least confidence" to a three-times-confirmed load-bearing pattern (line 9's
+> own relative clause, the participle-object question, the `case`/`dep`
+> pairings). The Axes table gained a follow-up note: F was axis (iii)
+> *resolved*, not open; H reads closer to axis (iii) than to axis (i) now.
+> "What this read does not settle" updated accordingly — G's count and the
+> *Inf* 4:5 read are still untouched.
 >
 > ---
+>
+> **L1/L2 design, decided but none implemented (`REDESIGN.md` §2.1–§2.2,
+> §5).** 1. Premise 3 as above. 2. **L1** = `tokenize()`'s full output,
+> punctuation included, own numbering (17,434 newly addressable punctuation
+> terminals; quote pairs exactly balanced). 3. **L2** = grammatical words as
+> `(l1_index, text)` pairs, only splits, never merges (composite tokens
+> 1:many, e.g. `nel`→`(0,in),(0,il)`; the `fixed` many:1 direction stays a
+> relation one layer up, over L2 entries, because 37 of 170 `fixed` groups
+> overlap a composite split). 4. **L2 is a three-step pipeline**: split → POS
+> classify → normalize (apocope/elision to the surface form, not the lemma);
+> normalization needs step 2's POS first for 159 cross-POS wordforms, which
+> is why the steps are ordered, not carved into exceptions. Step 2 itself
+> should be staged (coarse POS first, then per-category refinement), with
+> the participle/adjective boundary pinned by an explicit rule or one-shot
+> example — staging alone would just relocate the three-way split (§6) to a
+> new boundary. Step 1's output should be keyed by the word
+> (`nel:in+il`), not by echoing `l1_index` back, with a retry only on
+> genuine ambiguity (`nel`'s two-way split). 5. **Build order**: L4
+> (dependency) precedes L3 (phrases) — L3 must project from generation 2's
+> own L4, never from old Layer 4. 6. **Concrete task**: build the
+> 442-wordform split table, per-entry POS classification, and
+> ~1,686-wordform normalization table as three independent passes, diff each
+> against old Layer 2 as precedent (agree / old-generation-is-wrong / genuine
+> ambiguity), via `harness/stages/09.md` §2's fixed-context step, one
+> wordform per job, no batching.
+>
+> **Rollout decided (`REDESIGN.md` §2.1, operator 2026-09-09): Canto 1
+> first, starting at *Inf* 1:1-9 and widening gradually, before any pass runs
+> corpus-wide.** Run all three passes over *Inf* 1:1-9 only, hand-inspect
+> every wordform's split/POS/normalization against the source, widen to all
+> of *Inf* 1 (136 lines), only then the full corpus. Corpus-wide numbers
+> already justify the design; a single-canto pass is what would catch a
+> systematic prompt or ordering error before it's baked into
+> 442 + ~1,686 wordforms' worth of calls.
+>
+> **This is a plan, not a start — nothing above is implemented.** The next
+> session's first choice: begin the split/POS/normalize trial on *Inf* 1:1-9
+> per the rollout plan above, or continue open review items first (G's real
+> count net of nested coordination, the *Inf* 4:5 all-layer read `PLAN.md`
+> §4 item 4 asks for, the quotes hierarchy, §4.1's cross-layer checker
+> design, §4.3's VP/Layer-5 relationship, or the external consumer survey
+> `REDESIGN.md` §5 flags as the one genuinely unknown cost figure).
+>
+> **Still deferred, unrevisited against premise 3: the bootstrap safe/
+> contaminated split.** Which frozen layers are safe to show the model even
+> as a one-time warm start (tentatively tokens, lemma decomposition, Layer-4
+> bracketing, `sentence_groups`) and which are contaminated positions it must
+> not anchor to (`cop`/`attr` 953:357, the locution `obl`:`advmod`:`nmod`:`conj`
+> 217:68:30:13, Layer-3 granularity, participle POS, `che` POS, `expl`) —
+> including whether Layer-4 bracketing can be "safe" when the `advmod`/`obl`
+> choice moves the brackets themselves. Premise 3 settles the general shape;
+> this specific split does not yet reflect the layer reviews above.
 >
 > **A caveat that still stands.** Every measurement in `reads/` and in
-> `REDESIGN.md` came from ad hoc scripts run in a scratchpad and **not kept**. All
-> are re-derivable from the frozen artifacts in minutes; none is reproducible by
-> re-running a committed artifact. The cross-layer checker of §4.1 is where that
-> gets fixed.
+> `REDESIGN.md` came from ad hoc scripts run in a scratchpad and **not kept**.
+> All are re-derivable from the frozen artifacts in minutes; none is
+> reproducible by re-running a committed artifact. The cross-layer checker of
+> §4.1 is where that gets fixed.
 
 ## Why this directory exists
 

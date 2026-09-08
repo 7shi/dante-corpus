@@ -245,6 +245,33 @@ The other 1,527 wordforms just have a trivial step 2 → step 3 dependency (the
 POS doesn't change the answer), which is not a different mechanism, only a
 simpler case of the same one.
 
+**Step 2 itself should be staged, not one classification (operator,
+2026-09-09).** Old Layer 2 asked for the whole row — POS, gender, number,
+person, tense, mood — in a single judgment, and §6's participle finding is
+what that produces: deciding `verb`, `present participle`, `m.`, `sg.`
+together gives the model enough surface area to substitute `adjective` for
+`verb`+participle right at the one boundary where the two readings overlap (a
+participle used predicatively reads like an adjective). The fix is not asking
+for less, it is asking **in stages** — a coarse category first, from a closed
+set, then a further classification *within* that category (verb:
+tense/mood/person/number; noun: gender/number; …), with the granularity of
+the second stage decided separately, later. A coarse-only first pass is also
+what would have kept §6's 39-value drift closed in the first place.
+
+**The participle/adjective boundary needs pinning down explicitly, not just
+staging (operator, 2026-09-09).** Staging alone does not settle it: a
+participle stays `verb` at the coarse stage only if the coarse-stage prompt
+or a one-shot example states the rule, because "is this a verb or an
+adjective" is exactly the judgment §6 shows the model already answers both
+ways for the identical wordform (`smarrito` split 4/4). A bare few-shot with
+no participle example would just relocate the same three-way split from a
+`pos` value to a coarse/fine boundary instead of closing it. The design needs
+a stated convention — participles are `verb` at the coarse stage regardless
+of predicative or attributive use, with the surface reading recorded as a
+fine-grained tag under `verb`, never by relabeling the coarse category — and
+a one-shot example enforcing it, not left implicit the way old Layer 2 left
+it.
+
 **Concrete task, following from the above (operator, 2026-09-09).** Build the
 442-wordform split table, the per-L2-entry POS classification, and the
 ~1,686-wordform normalization table as **three separate passes in that order**,
@@ -260,6 +287,25 @@ the 159 cross-POS wordforms above, now resolved by pipeline order rather than a
 carve-out). Because normalization only ever consumes step 2's POS and never the
 other way around, a disagreement is never confounded with a POS-tagging
 mistake — the failure surface this task exists to keep small.
+
+**Rollout: Canto 1 first, starting at lines 1-9 and widening gradually
+(operator, 2026-09-09) — before any of the three passes runs corpus-wide.**
+Every measurement in this file was corpus-wide from the start, but running
+the three-step pipeline itself corpus-wide first would repeat the mistake
+premise-checking exists to avoid: 442 + ~1,686 wordforms is enough surface
+area that a systematic prompt or pipeline-ordering error could pass a spot
+check and still be wrong at scale. `reads/inf-1-1-9.md` already established
+the same discipline for reading — nine lines, findings measured corpus-wide
+only *after* being seen concretely — and the split/POS/normalize build
+should follow it rather than start from the opposite end. Concretely: run
+all three passes over *Inf* 1:1-9 only, inspect every wordform's split, POS,
+and normalization by hand against the source (the same worked examples
+above, *Inf* 1:1 and 1:25, are the first two data points), widen to the rest
+of *Inf* 1 (136 lines, still small enough to read end to end), and only then
+move to the full corpus. Corpus-wide numbers already justify the design;
+what a single-canto pass buys is catching a systematic error — a prompt
+that's subtly wrong in a way a handful of wordforms won't reveal — before
+it's baked into 442 + ~1,686 calls' worth of output.
 
 **The execution mechanism already exists (operator, 2026-09-09): `harness/`'s
 fixed-context step** ([`../harness/stages/09.md`](../harness/stages/09.md) §2).
@@ -288,6 +334,23 @@ batch here: this work already runs as repeated loops across a stage history
 spanning weeks (`harness/stages/01.md` through `10.md`, 2026-08 to 2026-09), so
 shaving one more pass does not change the project's actual timeline, and is not
 worth trading away the isolation a one-job-per-step design buys.
+
+**The split step's output should be keyed by the word, not by `l1_index`
+(operator, 2026-09-09).** Writing the answer as `1:in`, `1:il` — echoing the
+numeric index back for each half of the split — puts load on the model that
+the task doesn't need: getting the split right and copying a number
+correctly are two different failure modes bundled into one answer, and only
+the first is what step 1 is actually asking. The step should instead ask for
+`nel:in+il` — the surface word as the key, its split as the value — with
+`l1_index` attached by code afterward from the wordform's own position, the
+same way alignment already anchors Layer 3 spans to tokens without asking
+the model to state indices. **Retry only on ambiguity, not by default**: if
+a wordform's split isn't uniquely determined in isolation (the `nel`
+two-way case, §2.1 above), the single retry turn says so explicitly and asks
+the model to pick, rather than building index-correctness into every one of
+the 442 calls to cover the rare case. This is an implementation detail of
+step 1 specifically — it does not change the split table's scope or the
+three-step ordering.
 
 The cost of splitting is small and exactly known:
 
@@ -379,10 +442,53 @@ for annotating L4 itself (the projection counts above stand as the size of that
 bootstrap's payoff), just not an input L3 reads. What neither old nor new Layer
 4 supplies on its own is the category label and the level count.
 
+**Old Layer 3's fused-enclitic-pronoun mechanism is a compensation for old
+Layer 1, and L2's split table already removes what it compensates for.**
+`np/README.md` (*What it does*, *Output*, *Check*) describes a dedicated
+device: because a token like `venendomi` (*Inf* 1:59, `morph/inferno/01.tsv:59`
+`venire+mi`, `pos=verb+pronoun`) is one Layer-1 token with no position of its
+own for the bound pronoun, Layer 3 generates a synthetic single-token mention
+— `np/inferno/01.tsv:59` stores `2 2 2 +mi`, a row whose `text` is not a
+source substring by construction and is checked against the host's Layer-2
+lemma components instead of the tokens (`clitic_mentions()`,
+`dante_corpus/np.py`; a dedicated hard-check branch and a `--fix-clitics`
+reconciliation exist solely for this row shape). **This is the same class of
+device §1's table already names** — a composite-POS token folding several
+grammatical words into one — worked around one layer up because Layer 1 has
+nowhere to put the second word. Under §2.1's design, `venire+mi` is exactly
+the `verb+pronoun` shape the L2 split table covers (488 tokens, 372 distinct
+wordforms, part of the 442-wordform table) and it becomes **two ordinary L2
+entries** — `(58,venire)`, `(58,mi)` in `(l1_index, text)` form — each with a
+real address. L3, rebuilt over L2 rather than over old Layer 1 tokens, would
+enumerate the pronoun as an ordinary entry the way it enumerates any other
+one-word NP; there is no missing position left to synthesize a mention for,
+and the `"+"`-prefixed sentinel, its separate hard-check branch, and
+`--fix-clitics` have no counterpart to build. Old Layer 3's own design notes
+call this "Layer 3's first build-time dependency on Layer 2 that touches the
+artifact itself" — under premise 3 that dependency is gone too, absorbed into
+L2's own split step before L3 ever runs.
+
 **NP exists** (Layer 3). **PP is mechanical** — a `case` child marks it.
 **VP has no counterpart anywhere in the corpus**; Layer 5 holds
 predicate-argument tuples, which are argument structure, not a verb phrase.
 Introducing VP requires deciding its relation to Layer 5 (§4.3).
+
+**Not a narrower NP — a second instance of finding H's own problem (operator,
+corrected 2026-09-09) — deferred.** Finding H's diagnosis was never "NP is
+too small," it was **old Layer 3 never had an explicit rule for what
+hierarchy to build**: *Inf* 1:9 gets a relative clause folded straight into
+one NP span (`np/inferno/01.tsv` enumerates `l'altre cose ch'i' v'ho scorte`
+as a single nested NP, clause and all) while a sibling line gets a flatter
+reading, and nothing in the layer says which is the rule. **The participle
+case is the same gap surfacing again, not a second, unrelated axis**: whether
+a participle-headed phrase's object nests inside the NP the way *Inf* 1:9's
+relative clause does, sits outside it as a separate constituent, or is left
+to Layer 4's edges the way §2.4 already treats clauses, is exactly the
+undefined choice §4.2 ("'All projections' needs a bound") is waiting to
+settle — this is one more concrete case for that section to resolve, not a
+new question next to it. **Deferred to a later session, not decided here**:
+folding the participle-object question into §4.2's bound, alongside the
+relative-clause case, once both are on the table together.
 
 ### 2.3 The verse line is not a boundary, and barely needs to be crossed
 
@@ -594,16 +700,299 @@ consumer's.
 
 ---
 
-## 6. What would falsify this
+## 6. Old Layer 2 review, continued past the pilot (2026-09-09)
+
+`PLAN.md`'s *Method* — examine a layer against a concrete passage, measure
+every observation corpus-wide before writing it down — was applied to old
+Layer 2 (`morph/`), the review deferred when the session turned to designing
+L1/L2 instead (`PLAN.md`:83-94). Entry point: *Inf* 1:3 `smarrita`.
+
+**Finding: past participles are encoded three incompatible ways.** The same
+grammatical function — a past participle, whether verbal (passive/compound
+tense) or adjectival (predicative) — appears under three different `pos`
+values corpus-wide:
+
+| encoding | rows | example |
+|---|---:|---|
+| `pos=verb`, `tense=past`, `mood=participle` | 724 | the majority convention |
+| `pos=participle` (the POS column itself holds "participle"; `tense`/`mood` empty) | 25 | *Inf* 5:49 `portate`, 10:88/90 `mosso`, 17:34 `venuti`, 34:16 `fatti` |
+| `pos=adjective` | 573+ | *Inf* 1:3 `smarrita` |
+
+Within the third encoding, the **lemma itself splits**: some rows lemmatize to
+the adjective's own form (`smarrito`), others to the verb infinitive
+(`smarrire`), for the identical wordform. **104 distinct wordforms carry both
+treatments** with no visible criterion — `smarrito` itself is split 4/4
+(`inferno/02.tsv:64`, `24.tsv:116` → lemma `smarrito`; `05.tsv:72`,
+`10.tsv:125`, `13.tsv:24`, `purgatorio/12.tsv:35` → lemma `smarrire`). One row
+(`purgatorio/08.tsv:63` `smarrita`) even keeps `mood=past participle` while
+`pos=adjective`, crossing the second and third encodings in a single row.
+
+**Finding: the POS vocabulary is not closed, beyond what `README.md` already
+disclosed.** `--check` collects `pos` but does not enforce it
+(measure-then-freeze, `morph/README.md` "Check"). Measured directly, the
+column holds **39 distinct values**, not a stable open set:
+
+- subtype leakage onto the main axis: `relative pronoun` (176) beside
+  `pronoun` (12,316) — `che` alone splits `pronoun` 1,953 / `relative pronoun`
+  116 / `conjunction` 1,618 / `adjective` 10, with no distinguishing rule
+  found; `proper noun` (807) beside `noun` (17,673); `possessive adjective`
+  (6) and `demonstrative adjective` (1) beside `adjective`
+- spacing duplicates: `verb+pronoun` 488 vs `verb + pronoun` 2;
+  `preposition+article` 1,984 vs `preposition + article` 1 (already noted as
+  Layer-2 hygiene in §2.1)
+- singleton mistags: `determiner` (2), `particle` (1), `number` (1)
+
+The participle split and the vocabulary drift are one phenomenon seen from
+two sides: `participle` and `past participle` are used inconsistently as
+*both* a `pos` value and a `mood` value for the same grammatical fact.
+
+**Context from the operator (2026-09-09), recorded because it bears on
+priority, not on the measurement above — and then corrected by the very next
+finding.** This was never reviewed because the early build prioritized
+establishing a corpus-wide picture over per-tag precision, on the working
+assumption that later layers don't lean heavily on the `pos` field. **`case/`
+is a direct counterexample** (operator, 2026-09-09): its build step reads
+Layer 2's `pos` column verbatim as the gate for which tokens it ever sees
+(`case/case.py:11`), so the `che` mistag below is not inert drift — it
+silently narrows `case/`'s coverage, exactly as `reads/inf-1-1-9.md` finding
+B already noted before this file corrected *how*. The general claim
+("downstream barely uses `pos`") does not hold for every consumer and should
+not be used to deprioritize a `pos`-vocabulary fix without checking the
+specific consumer first. Whether it is worth fixing old Layer 2 on its own,
+or only matters once folded into rebuilt L2's POS-classification step (§2.1
+step 2), is not decided here.
+
+**`che`'s mistag and `case/`'s sparseness are the same root cause, not two
+items.** [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md) finding B already measured
+**225 positions** where `che`/`ch'` fills a nominal role (`nsubj`/`obj`/`obl`)
+but is tagged `pos=conjunction` instead of `pronoun`/`relative pronoun` — the
+same three-way POS split as above, on the corpus's single highest-frequency
+function word. That read states the consequence as "the case annex is sparse
+over pronoun-POS tokens" — checked here and **imprecise**: `case/` is not
+sparse over pronoun-POS tokens at all. Measured directly, every token whose
+Layer-2 `pos` contains `pronoun` (plain `pronoun` 12,316, `relative pronoun`
+176, and every composite carrying it — `verb+pronoun` 488, `pronoun+pronoun`
+61, …) has **exactly one** `case/` row, matching `case/README.md`'s own
+"complete and closed" claim (13,157 keys, an exact match to that count) and
+`case/case.py:11`'s stated construction: *"one pronoun-POS token, read off
+Layer 2's own `pos` column."* **The gate is Layer 2's `pos` tag itself, read
+verbatim, not a coverage gap inside `case/`.** A `che` mistagged `conjunction`
+is not a pronoun short one case value; it is never presented to `case/`'s
+build step at all, because that step only ever sees what Layer 2 already
+called a pronoun. `case/`'s own sparseness (one row per pronoun, not per
+token) is by design and is complete on its own terms; what reaches it is
+what Layer 2's POS split already decided upstream.
+
+**Status: measured, not corrected.** The participle split, the POS-vocabulary
+drift, and the `che`/`case` gating are three faces of one thing — old Layer
+2's `pos` column is not a closed vocabulary, and everything downstream that
+keys off it (here, `case/`'s build gate) inherits whatever the column
+decided, silently. Where this gets written up permanently
+(`morph/CORRECTIONS.md`, a dedicated old-Layer-2 review note, or absorption
+into rebuilt L2's POS-classification step, §2.1 step 2) is still open.
+
+---
+
+## 7. Old Layer 4 review (2026-09-09)
+
+Method applied to old Layer 4 (`dep/`): *Inf* 1:2 `mi ritrovai` (`dep/inferno/01.tsv:67-68`)
+tags `mi` `deprel=expl`, `head=(2,2)` — the same token, the same relation
+`PLAN.md` §1.3's device table (§1 above) already lists as **discarding a
+token that belongs to a constituent's head**, 1,466 occurrences corpus-wide.
+This is the entry point for the measurement §10 (below) asked for as the
+hypothesis's own falsification test.
+
+**Measured: `expl` and composite-POS `verb+pronoun` are largely the same
+verbs, split by clitic attachment, not by grammar — the hypothesis
+survives.** Every `expl` token's head lemma, paired with the `expl` token's
+own lemma, gives **687 distinct (verb, pronoun) pairs across 582 verb
+lemmas** — `fare+si` 68, `muovere+si` 40, `potere+si` 30, `volgere+si` 26,
+`vedere+si` 21, … Comparing verb lemmas against the 170 distinct verbs
+underlying `verb+pronoun`'s 488 fused tokens: **96 of 170 (56.5%) also occur
+as a separate `expl` construction with the same verb**, e.g. `andare+si`
+appears both fused (`vassi`-type enclitics) and as a separate `expl` pronoun
+(`si andò`-type). The same lemma, the same reflexive clitic, attaches
+enclitically in one line and proclitically in another — an orthographic fact
+about Old Italian spelling, not a different grammatical construction. This
+is the result §10's bullet below asked for and updates.
+
+**But this also means `expl` and composite POS are two different
+compensations for the *same* fact, not just two names for it — and only one
+of them keeps the information.** Composite POS (`verb+pronoun`) at least
+records that the pronoun exists, folded into one token; `expl` **discards**
+it — the relation exists only to say "this token is not an argument," and
+the pronoun's own referential content (reflexive, reciprocal, or genuinely
+expletive — UD distinguishes these; old Layer 4 does not) goes unrecorded
+either way. `ritrovarsi` and `vagliami` are the identical construction
+written two ways, and old Layer 4 currently preserves the fact for neither:
+the fused case loses it to a flat composite tag, the separate case loses it
+to `expl`'s blanket discard.
+
+**Consequence for whatever generation 2's dependency layer turns out to be,
+following directly from §2.1's L2 design — a constraint on that future
+design, not a design of it.** Only L1 and L2 have a concrete proposal in
+this file; the label "L4" used elsewhere here (§2.2's build-order note, the
+device table in §1) names *generation 2's dependency layer* as a
+placeholder, borrowed from old Layer 4's position in the stack, not a
+layer whose relation vocabulary or behavior has been designed — `PLAN.md` §4
+item 2 still lists "where a hierarchical judgement gets written" as
+undecided, and nothing here settles it. What this finding does establish,
+independent of that layer's numbering or eventual shape: once L2 splits
+every fused `verb+pronoun` token into two ordinary entries (§2.1), the
+orthographic distinction old Layer 4 currently treats so differently — fold
+into one token vs. leave as two — disappears at the terminal level;
+`vagliami` and `mi ritrovai` become an ordinary verb entry plus an ordinary
+pronoun entry, indistinguishable in shape. **Whatever assigns dependency
+relations over L2 no longer has a structural reason to treat them
+differently** the way old Layer 4 does (one spelling gets a composite POS
+tag, the other gets `expl`) — that asymmetry was forced by old Layer 1's
+token shape, not by anything about the construction itself. This is a
+constraint worth carrying into that layer's design, whenever it happens, not
+an argument about what its relation vocabulary should be.
+
+**Status: measured, not corrected — resolves §10's falsification bullet;
+the design question it opens belongs to a not-yet-designed layer, not to L4
+specifically.**
+
+---
+
+## 8. `case/` review (2026-09-09)
+
+Method applied to `case/`, the pronoun-case annex. §6 already found one
+`case/` finding while reviewing old Layer 2 (the `che` mistag silently gates
+`case/`'s coverage, since scope is read verbatim off Layer 2's `pos`). This
+section is `case/`'s own review, on its own terms, using `--stats`'s
+adjudication against `dep` — the one cross-check `case/README.md` says
+exists (*Check*: "there is no deterministic checker for case").
+
+**Finding: 25 of `--stats`'s "impossible pairings" are one construction, and
+it is finding H's problem again, one level down.** Entry point *Inf* 1:22
+`quei` — "*E come **quei** che con lena affannata, … si volge*" — `case/`
+reads `quei` `nominative`; `dep/` attaches it `obl` to `volse` (line 26,
+`dep/inferno/01.tsv:22-26`), an "impossible pairing" by `--stats`'s own
+count (`obl` cannot govern a nominative). Corpus-wide, `--stats` lists 25
+such pairings, all `nominative` vs `dep=obl`, and the ones checked
+(`inferno` 1:22 `quei`, `paradiso` 1:93 `tu`, plus `colui`/`quel`/`quella`/
+`questo`/`quello` instances at `inferno` 16:45, 19:17, 20:29, 24:25/63, 26:87,
+31:104; `purgatorio` 2:54, 7:107, 12:127, 17:45, 23:126, 24:13, 25:41, 30:71,
+31:25; `paradiso` 1:62, 1:93, 3:44) share one shape: **a nominative-form
+pronoun heads a relative clause (`acl:relcl`), and the whole
+pronoun-plus-clause unit fills a comparative or oblique slot one level up**
+— *Inf* 1:22's `quei` is simultaneously the antecedent `che` (22:4, `nsubj`
+of `volge`, 24:2) refers back to, and the standard of comparison `come`
+introduces for the main verb `volse` (26:2); *Par* 1:93's `tu` is
+simultaneously what `ch'` (93:5, `nsubj` of `riedi`, 93:8) refers back to,
+and what `come` attaches obliquely to `corse` (93:2).
+
+**Neither layer is wrong; there is no token to write the fact on.** The
+pronoun's own case is correctly nominative — it is coreferential with the
+clause's subject — and the whole `[pronoun + relative clause]` constituent's
+external role is correctly oblique. A flat, token-indexed dependency tree can
+only attach one deprel to `quei` itself, so it picks the external role
+(`obl`) and the internal one (the nominative reading `case/`'s independent
+read still recorded) becomes structurally invisible to `dep/` — visible only
+because a *second*, independently-generated column happens to disagree.
+`case/README.md`'s own design principle — generate blind, adjudicate after —
+is what surfaced this at all; a merged `morph/*.tsv` column read against
+`dep` at build time never would have.
+
+**This is the same missing-hierarchy defect already on the table, not a
+third, unrelated finding.** §2.2's participle-object note (added earlier
+this session, itself finding H's defect recurring) already named the general
+shape: old Layer 3 never had an explicit rule for what a phrase node should
+contain, so a relative clause sometimes folds into an NP span (*Inf* 1:9) and
+sometimes doesn't. Here the same absence of a constituent node — nothing
+stands for "`quei che si volge`" as a unit — forces `dep/` to pick one of two
+true facts about `quei` and let the other one only survive because `case/`
+was generated independently. **A phrase/clause node for the relative-clause
+unit would hold both facts at once**: `nominative` (or whatever case) at the
+unit's head, `obl` on the unit as a whole. This is one more concrete case for
+§4.2's bound to resolve, and arguably the clearest evidence yet that
+enumeration (§2.2, §3) needs to reach at least this far — a bare NP/PP
+enumeration with clauses left entirely to `dep/`'s edges (§2.4) would
+reproduce this exact contradiction in the rebuilt stack too.
+
+**Status: measured, not corrected.** `case/` itself needs no fix — its
+"impossible pairing" list already does the diagnostic work it was designed
+to do (`README.md`'s *Independence* section states this is the annex's whole
+value). What's open is where the rebuilt stack writes the fact `case/` is
+catching here, and that question is now folded into §4.2's, not separate
+from it.
+
+---
+
+## 9. Old Layer 5 (`skel/` gold) review (2026-09-09)
+
+Method applied to `skel/`. Per standing premise 1 (`PLAN.md` §2), gold is a
+benchmark, not a target — this reviews `derive_unit` (`dante_corpus/skel/derive.py`),
+the deterministic derivation `skel/`'s own artifact is checked against, not
+gold as an authority to fit. Entry point: the same *Inf* 1:1-3/22-26 material
+§7 and §8 already opened.
+
+**Finding: §7's `expl` discard and §8's case/dep tension both reach Layer 5
+unchanged, because `derive_unit` is a narrow function of Layers 2 and 4 by
+design, and touches `case/` at exactly one rule.**
+
+- **`expl` (§7) produces no skeleton row at all, not just no argument slot.**
+  `skel/inferno/01.tsv:2` gives `ritrovai` (2.2) `subj=∅` (pro-drop),
+  `obl:in=(1,2)`, `obl:per=(2,5)` — no row of any kind cites `mi` (2.1,
+  `deprel=expl`). `derive.py` never references `"expl"` as a deprel at all
+  (checked directly in the source): the token is not filtered out by a rule,
+  it is simply never matched by anything that mints a tuple. §7's "discarded
+  outright" is confirmed one layer further down — the reflexive clitic's
+  content doesn't survive as far as a skeleton position either.
+- **§8's case/dep tension is invisible to Layer 5 by explicit design, not by
+  accident.** `derive_unit`'s own docstring (`derive.py:86-89`) states
+  `case_rows_by_line` is "read at exactly one place — rule CZ's slot claim
+  for a gapped-clause remnant. Everywhere else the derivation stays a
+  function of Layers 2 and 4 alone." *Inf* 1:26 confirms it directly:
+  `skel/inferno/01.tsv:26` derives `volse`'s `obl:come = (22,3)` — citing
+  `quei` as the argument — purely from `dep`'s `case`+`obl` chain (`case` on
+  `quei` at 22:2→22:3, `obl` from 22:3 to 26:2); `case/`'s own independent
+  `nominative` reading of `quei` (§8) is never consulted for this tuple.
+  Layer 5 does not resolve the tension §8 found; it simply never looks at
+  the column that would raise it.
+
+**Neither finding is a Layer-5 defect — both are consequences of `derive_unit`
+inheriting whatever Layer 4 already decided, which is exactly what a
+*checker* should do (it is derived from Layers 2/4, never authored against
+gold, per the module's own docstring at `derive.py:82-84`).** The
+consequence worth recording is upward, not downward: **whatever a rebuilt
+dependency layer decides about `expl` (§7) or about the relative-clause
+antecedent case (§8) will pass through to whatever derives skeleton tuples
+from it unchanged, with no independent correction available at that stage**
+— `case/`-style independent generation is the only mechanism in the current
+stack that ever surfaces such a tension at all, and it does so for exactly
+one narrow rule (CZ). If the redesign wants these phenomena caught rather
+than silently inherited, the catching has to happen where they are
+generated (the dependency/relation layer itself, or a cross-layer check per
+§4.1) — not assumed to surface later at whatever plays Layer 5's role.
+
+**Status: measured, not corrected.** No new finding independent of §7/§8;
+this section's contribution is confirming, with source citations, that both
+already-found compensations propagate through `derive_unit` unchanged rather
+than being caught or repaired there.
+
+---
+
+## 10. What would falsify this
 
 - **The checks cannot replace the tree.** §4.1 is the load-bearing bet. If no
   practical set of cross-layer checks catches the incoherences a tree would have
   made unrepresentable, enumeration reproduces finding H at three phrase types
   instead of one, and the tree is worth its cost after all.
-- **The grammatical-word hypothesis fails on a full family.** `reads/`'s next
-  read should measure the pronominal verbs in full (`expl` 1,466 vs
+- **The grammatical-word hypothesis fails on a full family.** ~~`reads/`'s
+  next read should measure the pronominal verbs in full (`expl` 1,466 vs
   `verb+pronoun` 488). If the split turns out to be conditioned by something
-  grammatical rather than by the scribe's spacing, §2.1 loses its motivation.
+  grammatical rather than by the scribe's spacing, §2.1 loses its
+  motivation.~~ **Measured, §7: the hypothesis survives.** 96 of 170 verb
+  lemmas underlying `verb+pronoun` also occur as a separate `expl`
+  construction with the same reflexive clitic — the fused/separate split is
+  conditioned by spelling, not grammar. §7 also surfaces a distinct,
+  unresolved question this bullet did not anticipate: `expl` discards the
+  pronoun's content outright rather than folding it, so the two old-Layer-4
+  treatments of the same fact are not just differently shaped, one of them
+  loses information the other keeps.
 - **The 2.73% is in the wrong places.** §4.4's `nsubj` 365 and `obj` 289 are what
   downstream needs most. If the discontinuous cases are disproportionately the
   ones a knowledge graph or a translation must resolve, a bounded average loss is
