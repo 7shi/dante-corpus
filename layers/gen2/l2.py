@@ -57,6 +57,16 @@ tools — this is the fixed-context mode (`harness/stages/09.md` §2), where the
 the gate and the model's whole output is one `<split>` block, the same way Layer 5's is one
 `<rows>` block.
 
+The command line is the corpus's own driver shape (`skel/skel.py`, `dep/dep.py`):
+canticles positional, `-c` a canto spec resolved by `api.select_cantos`, and every
+selection a filter over what the corpus has rather than a count anyone has to know.
+
+    uv run python -m layers.gen2.l2 inferno -m ...        # all of Inferno
+    uv run python -m layers.gen2.l2 inferno -c 1 -m ...   # just canto 1
+    uv run python -m layers.gen2.l2 inferno -c 12- -m ... # canto 12 on
+    uv run python -m layers.gen2.l2 inferno -c 1 --lines 1-9 -m ...  # a line range
+    uv run python -m layers.gen2.l2 inferno --check       # code-only, no model
+
 **Bootstrap status (premise 3).** The running split reads L1 and nothing else: no old-layer
 file is named as an input, and the model is shown no old Layer 2 row. Old Layer 2 enters
 once, afterwards and offline, through `--check`, which diffs this artifact against
@@ -891,16 +901,16 @@ def _skill_digest() -> str:
     return Skill.load(SKILL_DIR).digest()
 
 
-def _run_check(args, l1_lines, line_range) -> int:
+def _run_check(args, canticle: str, number: int, l1_lines, line_range) -> int:
     from dante_corpus.morph import load_morph
 
-    path = Path(args.out) if args.out else artifact_path(args.canticle, args.canto)
+    path = Path(args.out) if args.out else artifact_path(canticle, number)
     if not path.is_file():
         print(f"no artifact at {path} — run the split pass first")
         return 1
     l2_lines = parse_artifact(path.read_text(encoding="utf-8"))
     rows = check_against_precedent(
-        l1_lines, l2_lines, load_morph(args.canticle, args.canto), line_range=line_range
+        l1_lines, l2_lines, load_morph(canticle, number), line_range=line_range
     )
     surface = {
         wordform_key(token.text): token.text
@@ -927,16 +937,33 @@ def _run_check(args, l1_lines, line_range) -> int:
     return 0
 
 
+def _selected_lines(canticle: str, number: int, line_range) -> list[L1Line]:
+    """The canto's L1 lines a `--lines` filter selects; all of them when it is `None`."""
+    return [
+        line
+        for line in l1_canto(canticle, number)
+        if line_range is None or line_range[0] <= line.no <= line_range[1]
+    ]
+
+
 def _main(argv=None) -> int:
     import argparse
     import sys
 
+    from dante_corpus import api
+
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--canticle", default="inferno")
-    parser.add_argument("--canto", type=int, default=1)
-    parser.add_argument("--lines", default="1-9",
-                        help="line range, e.g. '1-9' or '1-136' (default: 1-9)")
-    parser.add_argument("--model", default=DEFAULT_MODEL)
+    # The corpus's own driver shape (`skel/skel.py`, `dep/dep.py`): canticles positional,
+    # `-c` a canto *spec* rather than a number — `12-`, `-20`, `1,3-5,11-` — resolved by
+    # `api.select_cantos` against the cantos the canticle actually has. A canticle's
+    # length and a canto's are both facts of the corpus, so neither is asked for.
+    parser.add_argument("canticles", nargs="+", help="canticle names, e.g. inferno")
+    parser.add_argument("-c", "--canto", metavar="SPEC", help=api.CANTO_SPEC_HELP)
+    parser.add_argument("--lines", default=None,
+                        help="line range within a single canto, e.g. '1-9' or '10' "
+                             "(default: the whole canto)")
+    parser.add_argument("-m", "--model", default=DEFAULT_MODEL,
+                        help=f"LLM, e.g. {DEFAULT_MODEL} (the default)")
     parser.add_argument("--temperature", type=float, default=None)
     parser.add_argument("--chunk", type=int, default=CHUNK_SIZE,
                         help=f"lines per request (default {CHUNK_SIZE}, old Layer 2's)")
@@ -950,38 +977,41 @@ def _main(argv=None) -> int:
                         help="offline: diff an existing artifact against old Layer 2")
     args = parser.parse_args(argv)
 
-    line_range = _parse_range(args.lines)
-    if line_range[0] > line_range[1] or line_range[0] < 1:
+    if err := api.check_canto_spec(args.canticles, args.canto):
+        parser.error(err)
+    targets = [
+        (canticle, number)
+        for canticle in args.canticles
+        for number in api.select_cantos(canticle, args.canto)
+    ]
+
+    # A canto's length is its own; a range asked for by default would have to be
+    # looked up per canto, so the default is the canto itself and `None` means
+    # exactly that everywhere below (`our_splits`, `precedent_splits`). For the same
+    # reason a line range only means anything against one canto.
+    line_range = _parse_range(args.lines) if args.lines else None
+    if line_range is not None and (line_range[0] > line_range[1] or line_range[0] < 1):
         parser.error(f"--lines {args.lines!r} is not a range")
+    if line_range is not None and len(targets) != 1:
+        parser.error("--lines applies to one canto; narrow -c")
+    if args.out and len(targets) != 1:
+        parser.error("--out names one file; narrow -c")
     if args.max_iterations < 1:
         parser.error("--max-iterations must be >= 1")
     if args.chunk < 1:
         parser.error("--chunk must be >= 1")
 
-    l1_lines = [
-        line
-        for line in l1_canto(args.canticle, args.canto)
-        if line_range[0] <= line.no <= line_range[1]
-    ]
-    if not l1_lines:
-        parser.error(f"{args.canticle} {args.canto} has no lines in {args.lines}")
-
     if args.check:
-        return _run_check(args, l1_lines, line_range)
-
-    from contextlib import nullcontext
+        status = 0
+        for canticle, number in targets:
+            l1_lines = _selected_lines(canticle, number, line_range)
+            if len(targets) > 1:
+                print(f"== {canticle} {number} ==")
+            status |= _run_check(args, canticle, number, l1_lines, line_range)
+        return status
 
     from dante_corpus.harness.llm import llm7shi_generate
-    from dante_corpus.harness.pipeline import (
-        progress_separator,
-        retry_delta,
-        retry_snapshot,
-    )
     from dante_corpus.harness.statusline import HarnessStatusLine
-
-    out_path = Path(args.out) if args.out else artifact_path(args.canticle, args.canto)
-    wordforms = distinct_wordforms(l1_lines)
-    label = f"{args.canticle} {args.canto}"
 
     status_line = HarnessStatusLine() if HarnessStatusLine is not None else None
     if status_line is not None and args.started_at is not None:
@@ -991,22 +1021,91 @@ def _main(argv=None) -> int:
     # there is no bar and everything falls back to plain stderr.
     ui_stream = status_line.stream if status_line is not None else sys.stderr
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
     if args.log:
         Path(args.log).parent.mkdir(parents=True, exist_ok=True)
     # §5 resume-or-truncate, chosen explicitly: this is a one-shot pass over a closed
     # vocabulary, so it truncates — one file per attempt. The split table is not
     # incrementally repairable the way a canto's rows are, and a half-built table must
-    # never be mistaken for a finished one.
+    # never be mistaken for a finished one. The unit truncated is the *run*, not the
+    # canto: a run over several cantos writes all of them to the one log.
     sink = open(args.log, "w", encoding="utf-8") if args.log else None
+
+    generate = llm7shi_generate(
+        model=args.model,
+        temperature=args.temperature,
+        quiet=not args.verbose,
+        file=ui_stream,
+        request_log=sink,
+    )
+    status = 0
+    try:
+        for index, (canticle, number) in enumerate(targets, start=1):
+            status |= _build_canto(
+                args,
+                canticle,
+                number,
+                index,
+                len(targets),
+                line_range=line_range,
+                generate=generate,
+                sink=sink,
+                ui_stream=ui_stream,
+                status_line=status_line,
+            )
+    finally:
+        if sink is not None:
+            sink.close()
+    if args.log:
+        print(f"records written to {args.log}", file=sys.stderr)
+    return status
+
+
+def _build_canto(
+    args,
+    canticle: str,
+    number: int,
+    index: int,
+    total: int,
+    *,
+    line_range,
+    generate,
+    sink,
+    ui_stream,
+    status_line,
+) -> int:
+    """One canto's split pass: its own artifact, its own bar, its own summary.
+
+    The run's shared things — the model, the log, the status line — are passed in, so a
+    multi-canto run is one connection and one log over several artifacts.
+    """
+    import sys
+    from contextlib import nullcontext
+
+    from dante_corpus.harness.pipeline import (
+        progress_separator,
+        retry_delta,
+        retry_snapshot,
+    )
+
+    l1_lines = _selected_lines(canticle, number, line_range)
+    if not l1_lines:
+        print(f"{canticle} {number}: no lines to build", file=sys.stderr)
+        return 1
+    # What the run actually covers, for the log and the header: the range asked for
+    # is a filter, the lines are the fact.
+    line_span = (min(line.no for line in l1_lines), max(line.no for line in l1_lines))
+    out_path = Path(args.out) if args.out else artifact_path(canticle, number)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    wordforms = distinct_wordforms(l1_lines)
+    label = f"{canticle} {number}"
 
     report = SplitReport(
         context={
             "record": "summary",
-            "canticle": args.canticle,
-            "canto": args.canto,
-            "line_start": line_range[0],
-            "line_end": line_range[1],
+            "canticle": canticle,
+            "canto": number,
+            "line_start": line_span[0],
+            "line_end": line_span[1],
             "model": args.model,
             "skill_digest": _skill_digest(),
         }
@@ -1015,95 +1114,83 @@ def _main(argv=None) -> int:
     report.wordforms = len(wordforms)
     planned = chunks(l1_lines, args.chunk)
     results: list[ChunkResult] = []
-    try:
-        # §4's major separator names the corpus position; §9's header line, right
-        # under it, announces what the run is about to do. Keeping the counts off
-        # the separator keeps it one line at any console width.
-        progress_separator(
-            f"{label} lines {line_range[0]}-{line_range[1]}", 1, 1, stream=ui_stream
-        )
-        print(
-            f"[l2-split] {report.l1_tokens} L1 tokens, {len(wordforms)} distinct "
-            f"wordforms, {len(planned)} chunk(s) of {args.chunk} line(s), "
-            f"model={args.model}, max {args.max_iterations} attempt(s) each",
-            file=ui_stream,
-            flush=True,
-        )
-        generate = llm7shi_generate(
-            model=args.model,
-            temperature=args.temperature,
-            quiet=not args.verbose,
-            file=ui_stream,
-            request_log=sink,
-        )
-        retries_before = retry_snapshot(status_line)
 
-        # One bar for this canto, labelled by its corpus position, its numerator walking
-        # this canto's Dante lines as each chunk settles — the `skel/`-driver pattern
-        # §4 names. `[index/total]` separators keep whole-run positions.
-        settled_lines: set[int] = set()
-        bar = (
-            status_line.progress(len(l1_lines), label=label)
-            if status_line is not None
-            else nullcontext()
-        )
-        with bar as progress:
-            def settled(result: ChunkResult) -> None:
-                results.append(result)
-                record = result.to_dict()
-                report.add_chunk(record)
-                span = (
-                    f"{result.lines[0]}-{result.lines[-1]}"
-                    if len(result.lines) > 1 else f"{result.lines[0]}"
-                )
-                if result.accepted:
-                    settled_lines.update(result.lines)
-                    found = (
-                        ", ".join(
-                            f"{token.text}={'+'.join(parts)}"
-                            for token, parts in result.pairs()
-                        )
-                        or "nothing splits"
-                    )
-                    mark = found + (" [line-by-line]" if result.fallback else "")
-                else:
-                    mark = f"REFUSED ({result.stop_reason})"
-                print(
-                    f"[{len(results)}] lines {span}: {mark}  "
-                    f"({result.seconds:.1f}s, {len(result.attempts)} attempt(s))",
-                    file=ui_stream,
-                    flush=True,
-                )
-                if progress is not None:
-                    progress.update(len(settled_lines))
-                if sink is not None:
-                    sink.write(json.dumps(record, ensure_ascii=False) + "\n")
-                    sink.flush()
+    # §4's major separator names the corpus position; §9's header line, right
+    # under it, announces what the run is about to do. Keeping the counts off
+    # the separator keeps it one line at any console width.
+    progress_separator(
+        f"{label} lines {line_span[0]}-{line_span[1]}", index, total, stream=ui_stream
+    )
+    print(
+        f"[l2-split] {report.l1_tokens} L1 tokens, {len(wordforms)} distinct "
+        f"wordforms, {len(planned)} chunk(s) of {args.chunk} line(s), "
+        f"model={args.model}, max {args.max_iterations} attempt(s) each",
+        file=ui_stream,
+        flush=True,
+    )
+    retries_before = retry_snapshot(status_line)
 
-            splits = build_splits(
-                l1_lines,
-                generate=generate,
-                system_prompt=_system_prompt(),
-                chunk_size=args.chunk,
-                max_iterations=args.max_iterations,
-                on_settled=settled,
+    # One bar for this canto, labelled by its corpus position, its numerator walking
+    # this canto's Dante lines as each chunk settles — the `skel/`-driver pattern
+    # §4 names. `[index/total]` separators keep whole-run positions.
+    settled_lines: set[int] = set()
+    bar = (
+        status_line.progress(len(l1_lines), label=label)
+        if status_line is not None
+        else nullcontext()
+    )
+    with bar as progress:
+        def settled(result: ChunkResult) -> None:
+            results.append(result)
+            record = result.to_dict()
+            report.add_chunk(record)
+            span = (
+                f"{result.lines[0]}-{result.lines[-1]}"
+                if len(result.lines) > 1 else f"{result.lines[0]}"
             )
-        report.add_retries(retry_delta(retries_before, status_line))
+            if result.accepted:
+                settled_lines.update(result.lines)
+                found = (
+                    ", ".join(
+                        f"{token.text}={'+'.join(parts)}"
+                        for token, parts in result.pairs()
+                    )
+                    or "nothing splits"
+                )
+                mark = found + (" [line-by-line]" if result.fallback else "")
+            else:
+                mark = f"REFUSED ({result.stop_reason})"
+            print(
+                f"[{len(results)}] lines {span}: {mark}  "
+                f"({result.seconds:.1f}s, {len(result.attempts)} attempt(s))",
+                file=ui_stream,
+                flush=True,
+            )
+            if progress is not None:
+                progress.update(len(settled_lines))
+            if sink is not None:
+                sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                sink.flush()
 
-        l2_lines = [apply_splits(line, splits) for line in l1_lines]
-        report.l2_entries = sum(len(line.entries) for line in l2_lines)
-        out_path.write_text(render_artifact(l2_lines), encoding="utf-8")
+        splits = build_splits(
+            l1_lines,
+            generate=generate,
+            system_prompt=_system_prompt(),
+            chunk_size=args.chunk,
+            max_iterations=args.max_iterations,
+            on_settled=settled,
+        )
+    report.add_retries(retry_delta(retries_before, status_line))
 
-        if sink is not None:
-            sink.write(json.dumps(report.metrics(), ensure_ascii=False) + "\n")
-            sink.flush()
-    finally:
-        if sink is not None:
-            sink.close()
+    l2_lines = [apply_splits(line, splits) for line in l1_lines]
+    report.l2_entries = sum(len(line.entries) for line in l2_lines)
+    out_path.write_text(render_artifact(l2_lines), encoding="utf-8")
+
+    if sink is not None:
+        sink.write(json.dumps(report.metrics(), ensure_ascii=False) + "\n")
+        sink.flush()
 
     print(f"artifact written to {out_path}", file=sys.stderr)
-    if args.log:
-        print(f"records written to {args.log}", file=sys.stderr)
     print(report.summary(), file=sys.stderr)
     metrics = report.metrics()
     for no in metrics["unresolved_lines"]:

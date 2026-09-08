@@ -263,13 +263,21 @@
 > **The obvious next step: widen to the rest of *Inf* 1.**
 >
 > ```
-> uv run python -m layers.gen2.l2 --canticle inferno --canto 1 --lines 1-136 \
->     --model google:gemma-4-31b-it --log layers/l2/inferno/01.log
-> uv run python -m layers.gen2.l2 --canticle inferno --canto 1 --lines 1-136 --check
+> uv run python -m layers.gen2.l2 inferno -c 1 \
+>     -m google:gemma-4-31b-it --log layers/l2/inferno/01.log
+> uv run python -m layers.gen2.l2 inferno -c 1 --check
 > ```
 >
 > 136 lines is ~46 chunks; at 1:1-9's rate (15.8 s per chunk) that is roughly
-> 12 minutes. Note the run **truncates** the log and rewrites the artifact for
+> 12 minutes. **The CLI now takes the corpus's own driver shape** (operator,
+> 2026-09-09, citing `skel/skel.py`): canticles positional, `-c` a canto *spec*
+> (`1`, `12-`, `1,3-5,11-`) through `api.select_cantos`/`check_canto_spec`, `-m`
+> for the model, and `--lines` optional — defaulting to the whole canto, and
+> accepted only when the selection is one canto. A canto's length and a
+> canticle's are facts of the corpus, so neither is a number the command line
+> asks anyone to supply; the nine-line pilot is the case that names a range, not
+> the other way round. A multi-canto run writes one artifact per canto over one
+> model connection and one log. Note the run **truncates** the log and rewrites the artifact for
 > the range given — it does not resume — so a widened run replaces 1:1-9's
 > output rather than extending it. That is deliberate (`L2.md`, §5
 > resume-or-truncate) but it means the nine-line output above is superseded,
