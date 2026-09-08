@@ -252,15 +252,25 @@
 >
 > ### Resume here
 >
-> **State at handoff.** Nothing is committed. Untracked: `layers/gen2/l2.py`,
-> `layers/gen2/skills/l2-split/`, `layers/tests/test_gen2_l2.py`, and
-> **`layers/l2/inferno/01.tsv` + `01.log`, the live run's own output** (the
-> `.log` is gitignored by the repo's `*.log` rule; the `.tsv` is the artifact
-> and is meant to be committed). Modified: `layers/L2.md`, `layers/PLAN.md`,
-> `layers/README.md`, `layers/gen2/__init__.py`. `uv run pytest layers/tests`
-> → **79 passed**.
+> **State at handoff (2026-09-09, session close).** **Everything is committed
+> and the working tree is clean.** Five commits this session, in order:
+> `8b8101a` step 1 itself (`gen2/l2.py`, `gen2/skills/l2-split/`,
+> `tests/test_gen2_l2.py`, and `layers/l2/inferno/01.tsv` — the nine-line live
+> run's artifact; its `.log` is gitignored by the repo's `*.log` rule),
+> `dca102f` the driver command line, `268c953` the per-canto log, `822f3bd` the
+> log on by default, and this one (artifact resume + append-only log + the
+> withdrawn "deliberate" claim). `uv run pytest layers/tests` → **79 passed**;
+> `uv run python -m layers.gen2.l2 inferno -c 1 --check` → 51 agrees, 0 differs,
+> 5 precedent-ambiguous, 455 absent (the 455 are simply the lines 1:10-136 that
+> the artifact does not hold yet).
 >
-> **The obvious next step: widen to the rest of *Inf* 1.**
+> **Nothing was run against a model this session.** Everything after the
+> nine-line pass is CLI shape, resume and logging; the four splits in
+> `01.tsv` are still the only live output that exists.
+>
+> **The next step, and the operator's own statement of it (2026-09-09):
+> *inferno 1 全体の生成は次のセッションで報告します*** — the run below is the
+> operator's to make, and its result is what the next session opens with.
 >
 > ```
 > uv run python -m layers.gen2.l2 inferno -c 1 \
@@ -268,8 +278,10 @@
 > uv run python -m layers.gen2.l2 inferno -c 1 --check
 > ```
 >
-> 136 lines is ~46 chunks; at 1:1-9's rate (15.8 s per chunk) that is roughly
-> 12 minutes. **The CLI now takes the corpus's own driver shape** (operator,
+> 136 lines is **46 chunks of 3** (the last holding line 136 alone), of which
+> **3 are already in the artifact and will be skipped**, so the run asks **43**;
+> at 1:1-9's rate (15.8 s per chunk) that is roughly **11 minutes**.
+> **The CLI now takes the corpus's own driver shape** (operator,
 > 2026-09-09, citing `skel/skel.py`): canticles positional, `-c` a canto *spec*
 > (`1`, `12-`, `1,3-5,11-`) through `api.select_cantos`/`check_canto_spec`, `-m`
 > for the model, and `--lines` optional — defaulting to the whole canto, and
@@ -281,11 +293,21 @@
 > no filename any more and lands at `NN.log` beside `NN.tsv`, since a single
 > named file cannot hold a multi-canto run and a run reported by its numbers
 > should not need a flag to keep them. `--no-log` turns it off.
-> Note the run **truncates** the log and rewrites the artifact for
-> the range given — it does not resume — so a widened run replaces 1:1-9's
-> output rather than extending it. That is deliberate (`L2.md`, §5
-> resume-or-truncate) but it means the nine-line output above is superseded,
-> not merged; its numbers already live in `L2.md`.
+> **The run now resumes** (operator, 2026-09-09: chunks already in the TSV were
+> not being skipped): the committed artifact is read back and every chunk whose
+> lines it already answers is skipped before any request, its entries carried
+> through verbatim, so widening to 1:1-136 costs the 43 chunks it has not yet
+> asked and not the 3 it has. Chunk boundaries are cut over the whole
+> selection, so they do not shift on a resumed run; `--force` asks again from
+> the first line. **The log is append-only** (operator, 2026-09-09): nothing but
+> an explicit delete shortens it, `--force` included, because a truncating log
+> loses the record of a failed attempt and the retry that fixed it. One
+> `summary` record per attempt therefore accumulates, the last being current.
+> **This handoff's earlier claim that not resuming was "deliberate (`L2.md` §5
+> resume-or-truncate)" was wrong** and is withdrawn: that rule
+> (`ARCHITECTURE.md` §5) governs the log file, not the artifact. Nothing had
+> decided the artifact's behaviour; `ARCHITECTURE.md` §0's interruption-
+> resilience item was simply unmet. `L2.md` records the correction in place.
 >
 > **What to look for, and why it is different this time.** *Inf* 1:1-9 held
 > four splits and no hard case, so it could not exercise the two things the

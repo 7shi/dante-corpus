@@ -65,8 +65,13 @@ selection a filter over what the corpus has rather than a count anyone has to kn
     uv run python -m layers.gen2.l2 inferno -c 1 -m ...   # just canto 1
     uv run python -m layers.gen2.l2 inferno -c 12- -m ... # canto 12 on
     uv run python -m layers.gen2.l2 inferno -c 1 --lines 1-9 -m ...  # a line range
+    uv run python -m layers.gen2.l2 inferno -c 1 -m ... --force  # ask again, from line 1
     uv run python -m layers.gen2.l2 inferno -c 1 -m ... --no-log  # no log at all
     uv run python -m layers.gen2.l2 inferno --check       # code-only, no model
+
+A run **resumes**: the committed artifact is read back and a chunk every one of whose
+lines it already answers is skipped before any request, its entries carried through
+verbatim. `--force` is how a run is made to ask from the first line again.
 
 The log is written **by default** and names no file: each canto's records go beside its
 own artifact, `NN.tsv` to `NN.log`. A run whose numbers were never recorded cannot be
@@ -525,6 +530,8 @@ def build_splits(
     chunk_size: int = CHUNK_SIZE,
     max_iterations: int = MAX_ITERATIONS,
     on_settled: Callable[[ChunkResult], None] | None = None,
+    already_answered: Callable[[Sequence[L1Line]], bool] | None = None,
+    on_skipped: Callable[[Sequence[L1Line]], None] | None = None,
 ) -> dict[Position, list[str]]:
     """Every split these lines contain, by position: one bounded step per chunk of lines.
 
@@ -541,6 +548,14 @@ def build_splits(
 
     `on_settled` is called as each chunk settles, so the run's records reach disk when they
     settle rather than when the pass ends (`ARCHITECTURE.md` §5).
+
+    `already_answered` is the resume test, asked once per chunk **before** any request: a
+    chunk every one of whose lines the artifact already holds costs nothing and is reported
+    through `on_skipped`. The chunk boundaries do not move when a run resumes — they are cut
+    over all the lines selected, answered or not — so the chunk is the unit of resumption as
+    well as of asking, and a chunk only *partly* on disk is asked again whole rather than
+    half-asked. The caller keeps the answered lines' entries: this function returns splits
+    only for what it asked about.
     """
     splits: dict[Position, list[str]] = {}
     first_reading: dict[str, list[str]] = {}
@@ -559,6 +574,10 @@ def build_splits(
             on_settled(result)
 
     for chunk in chunks(lines, chunk_size):
+        if already_answered is not None and already_answered(chunk):
+            if on_skipped is not None:
+                on_skipped(chunk)
+            continue
         result = split_chunk(
             chunk,
             generate=generate,
@@ -782,6 +801,8 @@ class SplitReport:
     settled_chunks: int = 0
     unresolved_chunks: int = 0
     fallback_chunks: int = 0
+    skipped_chunks: int = 0
+    skipped_lines: list[int] = field(default_factory=list)
     unresolved_lines: list[int] = field(default_factory=list)
     tokens_answered: int = 0
     split: int = 0
@@ -823,6 +844,13 @@ class SplitReport:
         if seconds is not None:
             self.step_seconds.append(float(seconds))
 
+    def add_skipped(self, record: dict) -> None:
+        """A chunk the artifact already answers: counted, never a request, never an
+        attempt. It is not a settled chunk — nothing was asked — so it stays out of the
+        request and token figures, which describe *this* run and not the file."""
+        self.skipped_chunks += 1
+        self.skipped_lines.extend(record.get("lines") or [])
+
     def add_retries(self, delta) -> None:
         """§4 make-the-invisible-measurable: 429 backoffs, when a status line saw them."""
         if delta is None:
@@ -839,6 +867,8 @@ class SplitReport:
             "settled_chunks": self.settled_chunks,
             "unresolved_chunks": self.unresolved_chunks,
             "fallback_chunks": self.fallback_chunks,
+            "skipped_chunks": self.skipped_chunks,
+            "skipped_lines": sorted(set(self.skipped_lines)),
             "unresolved_lines": sorted(set(self.unresolved_lines)),
             "tokens_answered": self.tokens_answered,
             "split": self.split,
@@ -869,7 +899,8 @@ class SplitReport:
         lines = [
             f"chunks: {m['chunks']} — {m['settled_chunks']} settled, "
             f"{m['unresolved_chunks']} refused, {m['fallback_chunks']} line-by-line "
-            f"after a group failed",
+            f"after a group failed, {m['skipped_chunks']} already in the artifact "
+            f"({len(m['skipped_lines'])} line(s))",
             f"tokens: {m['tokens_answered']} answered — {m['split']} split, "
             f"{m['passed_through']} left whole; {m['wordforms']} distinct wordforms, "
             f"{len(m['conflicts'])} answered two ways",
@@ -975,6 +1006,9 @@ def _main(argv=None) -> int:
                         help=f"lines per request (default {CHUNK_SIZE}, old Layer 2's)")
     parser.add_argument("--max-iterations", type=int, default=MAX_ITERATIONS)
     parser.add_argument("--out", help="artifact TSV (default: layers/l2/<canticle>/NN.tsv)")
+    parser.add_argument("--force", action="store_true",
+                        help="ask again from the first line, ignoring what the artifact "
+                             "already answers (default: resume, skipping those chunks)")
     parser.add_argument("--log", action=argparse.BooleanOptionalAction, default=True,
                         help="write each canto's streaming JSONL log beside its artifact, "
                              "same path with .log, e.g. layers/l2/<canticle>/NN.log "
@@ -1118,11 +1152,23 @@ def _build_canto(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     wordforms = distinct_wordforms(l1_lines)
     label = f"{canticle} {number}"
-    # The log is the artifact's own: `NN.tsv` -> `NN.log`, truncated per attempt
-    # (§5 resume-or-truncate, chosen explicitly — this is a one-shot pass over a
-    # closed vocabulary, and a half-built table must never look finished).
+    # `ARCHITECTURE.md` §0's interruption resilience: a canto is ~46 chunks and a dozen
+    # minutes, so a run interrupted part-way must not have to buy its answered lines
+    # again. What is on disk is read back and every chunk it already answers is skipped;
+    # `--force` is how a run is made to ask again from the first line.
+    done = (
+        {line.no: line for line in parse_artifact(out_path.read_text(encoding="utf-8"))}
+        if out_path.is_file() and not args.force
+        else {}
+    )
+    # The log follows the artifact — `NN.tsv` -> `NN.log` — and §5's resume-or-truncate
+    # choice, which is about this file, is **append, always** (operator, 2026-09-09):
+    # truncating would erase exactly the records worth keeping, an attempt that failed
+    # and the attempt that then fixed it. Nothing but an explicit delete shortens this
+    # file, `--force` included. A file therefore holds several `summary` records, one
+    # per attempt at the canto; the last one is the current state.
     log_path = out_path.with_suffix(".log") if args.log else None
-    sink = open(log_path, "w", encoding="utf-8") if log_path is not None else None
+    sink = open(log_path, "a", encoding="utf-8") if log_path is not None else None
     if relay is not None:
         relay.sink = sink
 
@@ -1149,9 +1195,11 @@ def _build_canto(
         progress_separator(
             f"{label} lines {line_span[0]}-{line_span[1]}", index, total, stream=ui_stream
         )
+        pending = sum(1 for chunk in planned if not all(line.no in done for line in chunk))
         print(
             f"[l2-split] {report.l1_tokens} L1 tokens, {len(wordforms)} distinct "
-            f"wordforms, {len(planned)} chunk(s) of {args.chunk} line(s), "
+            f"wordforms, {pending} of {len(planned)} chunk(s) of {args.chunk} line(s) "
+            f"to ask ({len(planned) - pending} already in the artifact), "
             f"model={args.model}, max {args.max_iterations} attempt(s) each",
             file=ui_stream,
             flush=True,
@@ -1200,6 +1248,20 @@ def _build_canto(
                     sink.write(json.dumps(record, ensure_ascii=False) + "\n")
                     sink.flush()
 
+            def skipped(chunk: Sequence[L1Line]) -> None:
+                record = {
+                    "record": "chunk",
+                    "lines": [line.no for line in chunk],
+                    "skipped": True,
+                }
+                report.add_skipped(record)
+                settled_lines.update(record["lines"])
+                if progress is not None:
+                    progress.update(len(settled_lines))
+                if sink is not None:
+                    sink.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    sink.flush()
+
             splits = build_splits(
                 l1_lines,
                 generate=generate,
@@ -1207,10 +1269,19 @@ def _build_canto(
                 chunk_size=args.chunk,
                 max_iterations=args.max_iterations,
                 on_settled=settled,
+                already_answered=lambda chunk: all(line.no in done for line in chunk),
+                on_skipped=skipped,
             )
         report.add_retries(retry_delta(retries_before, status_line))
 
-        l2_lines = [apply_splits(line, splits) for line in l1_lines]
+        # A skipped line keeps the entries the artifact already holds, verbatim: this run
+        # never asked about it, so `splits` says nothing about it and applying them would
+        # silently un-split it. Every other line is built from this run's answers.
+        kept = set(report.skipped_lines)
+        l2_lines = [
+            done[line.no] if line.no in kept else apply_splits(line, splits)
+            for line in l1_lines
+        ]
         report.l2_entries = sum(len(line.entries) for line in l2_lines)
         out_path.write_text(render_artifact(l2_lines), encoding="utf-8")
 
