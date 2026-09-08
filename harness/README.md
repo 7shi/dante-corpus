@@ -5,10 +5,11 @@ Autonomous Grammar Agent Harness for Local LLMs (e.g., **Gemma 4 31B**), designe
 > **Status: CLOSED (2026-09-08).** Stages 1–10 ran and closed; Stage 10 was the
 > last, and development of `harness/` ends there. The generic apparatus was split
 > out into `dante_corpus/harness/`, both halves were verified deterministically
-> (739 tests) and live (`run` and `fix` on the real model), and `harness/` is now
-> a **library that [`../layers/PLAN.md`](../layers/PLAN.md) drives** rather than a
-> development subject of its own. Read that plan before anything here; read
-> [`PLAN.md`](PLAN.md) §2 for what the closing work settled.
+> (739 tests) and live (`run` and `fix` on the real model), and the tests were
+> then parted so that only the apparatus's stay in the maintained suite. What is
+> left is a **library that [`../layers/PLAN.md`](../layers/PLAN.md) drives**
+> rather than a development subject of its own. Read that plan before anything
+> here; read [`PLAN.md`](PLAN.md) §2 for the four pieces of closing work.
 
 ### Design Philosophy: Autonomy Over Rigid Templates
 The harness favors letting the model decide for itself — what a unit's frame contains, and when its work on that unit is actually done — over forcing it through a fixed, scripted procedure. Since Stage 9 the mechanism is a **bounded fixed-context step**: each iteration hands the model the same prompt plus the unit's own evidence and the previous iteration's rows, and it answers with one `<rows>` block. The loop stops when the model's answer stops changing — its own completion signal — with the iteration cap (`FIXED_ITERATIONS`, 4 by default) only a safety net; a request's size is therefore a function of the unit, not of how many times the model has revised. A model boxed into a rigid template is expected to underperform one given room to judge for itself when its work is done.
@@ -29,7 +30,7 @@ While Layer 5 (`skel/`) reached **0 hard / 0 soft violations across all 100 cant
 
 ## Documentation & Roadmap
 
-- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2, Stage 9 fixed-context execution, Stage 10 soft level 3 — the last stage). Keeps the closing readouts (Current Status), the standing disciplines (§4), and — in §2's *After the last stage* — the cut, the apparatus split and the live verification that followed Stage 10.
+- **Master Plan**: [`PLAN.md`](PLAN.md) — Comprehensive architectural specification and staged bottom-up strategy (Stages 1–2 induction core, Stage 3 context optimization, Stage 4 corpus scale-out, Stages 5–6 corpus durability and divergence reduction, Stage 7 refactoring, Stage 8 soft level 2, Stage 9 fixed-context execution, Stage 10 soft level 3 — the last stage). Keeps the closing readouts (Current Status), the standing disciplines (§4), and — in §2's *After the last stage* — the four pieces of closing work that followed Stage 10: the cut, the apparatus split, the live verification, and the parting of the tests.
 - **What happens next**: [`../layers/PLAN.md`](../layers/PLAN.md) — `harness/` is closed as a development subject and becomes a library; the layer stack's own description is the open question. Read it before anything here.
 - **Stage 1 Record**: [`stages/01.md`](stages/01.md) — Archived milestones, ledger, and carry-over resolutions for the completed Stage 1 (split from PLAN.md).
 - **Stage 2 Record**: [`stages/02.md`](stages/02.md) — Archived milestones, ledger, and carry-overs for the completed Stage 2, incl. the inferno-1 pilot/recheck readouts (split from PLAN.md).
@@ -120,23 +121,50 @@ dante-corpus/
 │   │   ├── fixedcontext.py        # /
 │   │   └── reconstruct.py         # Gate 3 (commit), the CLI, and the subject wiring
 │   │
-│   └── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
-│       ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv
-│       ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
-│       ├── check.py               # [Stage 5] Hard/soft violation check, stats & fix-level readout
-│       └── <canticle>/            # NN.tsv (skel-compatible, committed); NN.log = gitignored by-product
+│   ├── recon/                     # [Stage 4–6] Full-corpus run drivers & durable artifacts
+│   │   ├── Makefile               # 100-canto launch, resumable; goal & resume state = NN.tsv
+│   │   ├── readout.py             # [Stage 4] Corpus-wide log aggregation & closing readout
+│   │   ├── check.py               # [Stage 5] Hard/soft violation check, stats & fix-level readout
+│   │   └── <canticle>/            # NN.tsv (skel-compatible, committed); NN.log = gitignored by-product
+│   │
+│   └── tests/                     # Layer 5's own tests — closed; not in the default pytest run
+│       ├── test_harness_tools.py      # Toolset unit tests (masking, validation)
+│       ├── test_harness_skills.py     # [Stage 7/9] The grammar-fixed skill files + the prompt
+│       ├── test_harness_fixedcontext.py   # Stage 9 tests (the bounded step, the verdict, $P$)
+│       ├── test_harness_fixlevel.py       # Stage 6/8/10 tests (levels, selection, --fix end to end)
+│       ├── test_harness_reconstruct.py    # Gate tests (assertions, 0-soft, hash commit, CLI)
+│       ├── test_harness_recon_readout.py  # Stage 4 readout tests (aggregation math)
+│       └── test_harness_recon_check.py    # Stage 5 check tests (hard/soft split, base_dir)
 │
-└── tests/
-    ├── test_harness_tools.py      # Toolset unit tests (masking, validation)
-    ├── test_harness_skills.py     # [Stage 7] Skill loader + digest tests
+└── tests/                         # The maintained suite: the corpus + the apparatus
+    ├── test_harness_apparatus.py  # The apparatus with no subject (loader, Σ, report, row delta)
     ├── test_harness_pacing.py     # Stage 3 tests (Client sync, interval, token bucket)
-    ├── test_harness_fixedcontext.py     # Stage 9 tests (the bounded step, the verdict, $P$)
-    ├── test_harness_fixlevel.py         # Stage 6/8/10 tests (levels, selection, --fix end to end)
-    ├── test_harness_reconstruct.py      # Gate tests (assertions, 0-soft, hash commit, CLI)
-    ├── test_harness_recon_readout.py    # Stage 4 readout tests (aggregation math)
-    ├── test_harness_recon_check.py      # Stage 5 check tests (hard/soft split, base_dir)
-    └── test_harness_boundary.py         # The split's rule: no dante_corpus import either way
+    └── test_harness_boundary.py   # The split's rule: no dante_corpus import either way
 ```
+
+**Where the tests live** (2026-09-08, operator). The close leaves two bodies of
+code with opposite futures — `harness/` finished, `dante_corpus/harness/` still
+to be driven by [`../layers/PLAN.md`](../layers/PLAN.md) — so the one suite that
+covered both was split by a mechanical criterion: **does the test import from
+top-level `harness/`?**
+
+- `harness/tests/` — **163** tests in seven files, everything that reaches the
+  apparatus *through* Layer 5's bindings. Kept as the record of what the closed
+  work verified, not as a suite this repository keeps green.
+- `tests/` — **24** harness tests in three files, the apparatus with no subject:
+  `test_harness_apparatus.py` (skill loader, the bounded step's row parsing and
+  rendering, the report's aggregation, the fix machinery's row delta),
+  `test_harness_pacing.py` (model adapter), `test_harness_boundary.py` (the
+  import rule). These stay in the maintained suite, because `layers/` reaches
+  exactly this code.
+
+`pyproject.toml`'s `testpaths = ["tests"]` keeps the closed half out of a bare
+`uv run pytest` (**576**); naming the directory still runs it
+(`uv run pytest harness/tests` → 163), and both together are the same **739** as
+before — nothing was dropped or weakened. What the arrangement costs is in
+[`PLAN.md`](PLAN.md) §2, item 4: the apparatus's behavioural coverage lives
+mostly on the closed side, so a bare `pytest` would not catch a regression in
+the canto loop or the `--fix` verdicts.
 
 **What moved on 2026-09-07**, when the generic apparatus was split out of
 `harness/` into `dante_corpus/harness/`: the canto loop, the bounded per-unit
@@ -170,6 +198,7 @@ run held the prompt digest byte-identical (`ee6f1a46…` on all 101
 `canto_complete` records), showed the injected observer live (162 observations
 over 346 iterations), routed every unit as specified, and finished at **0 hard,
 0 token-assertion errors, no canto worse than it started**. Closing readouts:
-**0 hard / 2,954 soft**, `make fix-level` **0 / 0 / 206**, **739 tests**. The
+**0 hard / 2,954 soft**, `make fix-level` **0 / 0 / 206**, **739 tests** (576 +
+163 since the parting above). The
 numbers and the four checks behind them are in [`PLAN.md`](PLAN.md) §2, *After
 the last stage*.

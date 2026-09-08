@@ -2,7 +2,7 @@
 
 No model calls anywhere: `generate` is a stub list of canned answers, and every
 run reads the real frozen layers of inferno 1 through the masked toolkit. The
-tests are organized around the four properties `../harness/stages/09.md` §2 and
+tests are organized around the four properties `../stages/09.md` §2 and
 §2.1 argue the design *has*, rather than around the functions:
 
 1. the context is fixed — every request is `[system, user]`, with no transcript
@@ -77,43 +77,6 @@ def _run(answers, **kwargs):
 
 
 # --- $\Sigma$ in and out -----------------------------------------------------------------
-
-
-def test_parse_rows_reads_the_block_and_skips_the_furniture():
-    text = (
-        "reasoning\n<rows>\n"
-        "line\ttoken\tword\trole\targ_line\targ_token\n"
-        "2\t2\tritrovai\tsubj\t0\t0\n"
-        "3\t0\t\t\t0\t0\n"  # the artifact's empty-line filler: not a row
-        "garbage line without fields\n"
-        "</rows>\ntrailing prose"
-    )
-    rows = fx.parse_rows(text)
-    assert rows == [
-        {
-            "line": 2,
-            "token": 2,
-            "word": "ritrovai",
-            "role": "subj",
-            "arg_line": 0,
-            "arg_token": 0,
-        }
-    ]
-
-
-def test_parse_rows_accepts_space_separated_rows_and_refuses_no_block():
-    assert fx.parse_rows("<rows>\n2 2 ritrovai subj 0 0\n</rows>")[0]["role"] == "subj"
-    assert fx.parse_rows("I decline to answer") == []
-    assert fx.parse_rows("") == []
-
-
-def test_render_sigma_is_the_artifact_table():
-    assert "no rows on record" in fx.render_sigma([])
-    text = fx.render_sigma(
-        [{"line": 2, "token": 2, "word": "x", "role": "obj", "arg_line": 2, "arg_token": 5}]
-    )
-    assert text.splitlines()[0].split("\t") == list(fx._TSV_HEADER)
-    assert text.splitlines()[1] == "2\t2\tx\tobj\t2\t5"
 
 
 def test_rows_from_skel_round_trips_the_artifact_rows():

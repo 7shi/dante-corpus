@@ -309,48 +309,6 @@ def test_render_tsv_matches_write_skel_bytes(monkeypatch, tmp_path):
     assert target.read_text(encoding="utf-8") == rendered
 
 
-# --- aggregate report faces -------------------------------------------------------------------------
-
-
-def test_report_faces_aggregate_streamed_records():
-    report = rc.ReconstructReport()
-    unit_record = {
-        "record": "unit", "canticle": "inferno", "canto": 1,
-        "line_start": 1, "line_end": 5, "route": "agent", "reason": "no_rows",
-        "passed": False, "token_assertion_errors": 1, "hard_violations": 1,
-        "soft_violations": 2, "violation_kinds": {"tag": 2}, "fallback_seconds": 3.5,
-    }
-    report.add_unit(unit_record)
-    report.add_unit({
-        **unit_record,
-        "passed": True,
-        "token_assertion_errors": 0,
-        "hard_violations": 0,
-        "soft_violations": 0,
-        "violation_kinds": {},
-        "fallback_seconds": None,
-    })
-    report.add_canto_complete(
-        {"record": "canto_complete", "canticle": "inferno", "canto": 1,
-         "units": 2, "passed": False}
-    )
-    report.add_canto_complete(
-        {"record": "canto_complete", "canticle": "inferno", "canto": 2,
-         "units": 1, "passed": True,
-         "commit": {"wrote": True}}
-    )
-    metrics = report.metrics()
-    assert metrics["units"] == 2 and metrics["passed_units"] == 1
-    assert metrics["blocked_units"] == 1
-    assert metrics["cantos_passed"] == 1
-    assert metrics["written_cantos"] == 1
-    assert metrics["token_assertion_errors"] == 1
-    assert metrics["fallback_seconds_total"] == 3.5
-    text = report.summary()
-    assert "0 hard / 0 soft" in text
-    assert "written 1" in text
-
-
 # --- the TSV artifact: streamed writes, resume state, the fix gesture ---------------------------
 
 

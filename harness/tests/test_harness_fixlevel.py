@@ -826,15 +826,6 @@ def test_fix_diagnosis_marks_a_class_introduced_on_the_governed_row_itself():
     ]
 
 
-def test_row_delta_names_the_mechanism():
-    before = {1: [SkelRow(1, 2, "w", "obl", 1, 4), SkelRow(1, 2, "w", "subj", 0, 0)]}
-    after = {1: [SkelRow(1, 2, "w", "obl:di", 1, 4), SkelRow(1, 2, "w", "obj", 1, 5)]}
-    assert rc.row_delta(before, after) == {
-        "rows_before": 2, "rows_after": 2,
-        "rows_added": 1, "rows_removed": 1, "rows_relabelled": 1,
-    }
-
-
 # --- the CLI, end to end (stub fallback, no model) -----------------------------------------
 
 
@@ -1271,7 +1262,7 @@ def test_select_declines_a_finding_whose_row_the_artifact_lacks():
     citations can collapse onto one key with one role silently replacing the other.
     The finding then names a position whose artifact row already carries the
     qualified role, and the notice built from it describes a row that does not
-    exist (`../harness/stages/06.md` S6.9). `select` declines it when the rows are in
+    exist (`../stages/06.md` S6.9). `select` declines it when the rows are in
     hand, and is unchanged without them: `fix_verdict` compares a before-count with
     an after-count and must apply one definition to two different sets of rows.
     """

@@ -23,12 +23,14 @@ The close itself — what Stage 10 settled, its closing numbers, what carries
 forward and what ends — is [`stages/10.md`](stages/10.md) §5. Nothing about the
 stage is duplicated in this file any more; §2's table row is the index entry.
 
-**Nothing is in flight.** The three pieces of work that followed the close — the
+**Nothing is in flight.** The four pieces of work that followed the close — the
 cut to the run and fix paths, the apparatus split into `dante_corpus/harness/`,
-and the live verification of both — are done, verified and committed. They are
-recorded in §2's [After the last stage](#after-the-last-stage-the-cut-the-split-and-the-live-verification),
-not here, because they describe what `harness/` **is** now rather than what a
-next session should pick up. The next piece of work is
+the live verification of both, and the parting of the tests that took
+`harness/`'s out of the maintained suite — are done, verified and committed.
+They are recorded in §2's [After the last
+stage](#after-the-last-stage-the-four-pieces-of-closing-work), not here, because
+they describe what `harness/` **is** now rather than what a next session should
+pick up. **The close is complete**; the next piece of work is
 [`../layers/PLAN.md`](../layers/PLAN.md).
 
 <!-- Handoff entries below this line: none. Clear an entry when it is acted on. -->
@@ -42,9 +44,9 @@ Every stage's status, dates and outcome are in §2's table.
 *The numbers below were re-read on 2026-09-08 after the post-split live
 verification run (§2, After the last stage), which is what the corpus was last
 touched by — the `inferno/01` regeneration plus the corpus-wide `make fix`. They
-are the harness's final readouts, and they are readouts — per `layers/PLAN.md` §3.1 item 3 a soft count measures the
-artifact against the current description, which is itself under review, so none
-of these is a target.*
+are the harness's final readouts, and they are readouts — per `layers/PLAN.md`
+§3.1 item 3 a soft count measures the artifact against the current description,
+which is itself under review, so none of these is a target.*
 
 - **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,954 soft**,
   `make check` exits 0, `make fix-level` **0 at levels 1 and 2** — the condition
@@ -58,11 +60,12 @@ of these is a target.*
   the last measurement and cannot be re-taken**: `recon/agree.py` was deleted on
   2026-09-07 and nothing in `harness/` opens gold any more. Read it as a closing
   number, not a current one.
-- **Test suite**: **739 passed** (re-read 2026-09-08; unchanged since the
-  apparatus split added `tests/test_harness_boundary.py`'s five; it was 734
-  after the cut and 1,029 before it). Its composition and full history live in
-  [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
-  arithmetic has always been kept.
+- **Test suite**: **739 passed**, now in two halves — a bare `uv run pytest`
+  runs **576** (the corpus plus the apparatus's 24), and `uv run pytest
+  harness/tests` runs the closed **163** (§2, item 4). The total is unchanged by
+  the parting; it was 734 after the cut and 1,029 before it. Composition and
+  full history live in [`stages/04.md`](stages/04.md)'s pre-launch note, which
+  is where that arithmetic has always been kept.
 
 ---
 
@@ -106,7 +109,8 @@ any one session, so it survives across Handoff clearings.
    Invariants below) applies to anything that runs *as* an agent — and since
    2026-09-07 **nothing in `harness/` opens gold at all**, evaluation faces
    included, so the boundary is now the whole package rather than a line inside
-   it. Tests live at repo root (`tests/test_harness_*.py`). `skel/` is
+   it. Layer 5's tests live in `harness/tests/` and the apparatus's at the repo
+   root, and only the root ones run by default (§3, and §2 item 4). `skel/` is
    protected: reconstruction writes need the explicit `--write` flag on top of
    passing all three gates, canto-atomically.
 5. **Wire/cost instrumentation** (shipped across Stages 2–3, live-proven on
@@ -196,7 +200,8 @@ any one session, so it survives across Handoff clearings.
    cd harness/recon && make check                     # 0 hard / 2,954 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
    make fix-level FIX=3                               # 206, after the 09-08 run
-   cd ../.. && uv run pytest -q                       # 739
+   cd ../.. && uv run pytest -q                       # 576 (the maintained suite)
+   uv run pytest -q harness/tests                     # 163 (closed; kept as record)
    ```
 
 ---
@@ -346,12 +351,15 @@ when a missing predicate is registered. S6.1 established this and it governs
 every later stage; the evidence is in [`SOFT.md`](SOFT.md) and
 [`stages/06.md`](stages/06.md).
 
-### After the last stage: the cut, the split, and the live verification
+### After the last stage: the four pieces of closing work
 
-Three pieces of work followed Stage 10's close, on 2026-09-07 and 09-08. None of
-them is a stage — no level was defined and no rule was decided; together they are
-what turned a development subject into a library. Their full argument is in the
-commits (`57de24a`, `5372ee9`, `393874c`); what follows is the durable summary.
+Four pieces of work followed Stage 10's close, on 2026-09-07 and 09-08: the
+**cut**, the **split**, the **live verification** of both, and the **parting of
+the tests**. None of them is a stage — no level was defined and no rule was
+decided; together they are what turned a development subject into a library, and
+**the close is complete at the end of the fourth, not before it**. The full
+argument is in the commits (`57de24a`, `5372ee9`, `393874c`, and this one); what
+follows is the durable summary.
 
 **1. The cut to the run and fix paths** (2026-09-07, operator instruction).
 `harness/` was reduced to the minimal implementation the current `run` and `fix`
@@ -431,7 +439,41 @@ after the cut, once after the split. The post-split run:
   211 → 206). Concurrency **2.23×** on three streams — 46,983 s of summed
   `wall_clock_seconds` inside a 5.86 h span, consistent with S10.4's 2.50×.
 
-**`harness/` is therefore both deterministically and live verified, and closed.**
+**4. The tests part company** (2026-09-08, operator instruction: move the tests
+about `harness/`'s implementation out of the root suite, because it no longer
+needs maintaining; then exclude them, then move the subject-independent part
+back). The close leaves two bodies of code with opposite futures — `harness/`
+finished, `dante_corpus/harness/` still to be driven by `layers/` — and until
+now one test suite covered both. It is now split by a mechanical criterion,
+**does the test import from top-level `harness/`**:
+
+- **`harness/tests/`** (163 tests, 7 files) — everything that reaches the
+  apparatus *through* Layer 5's bindings: the toolset, the skill files, the
+  levels and their verdicts, the three gates, the canto loop over real frozen
+  layers, `recon/`. Kept as the record of what the closed work verified.
+- **`tests/`** (24 harness tests, 3 files) — the apparatus with no subject:
+  `test_harness_apparatus.py` (the skill loader, the bounded step's $\Sigma$
+  parsing and rendering, the run report's aggregation, the fix machinery's row
+  delta), `test_harness_pacing.py` (the model adapter) and
+  `test_harness_boundary.py` (the import rule). These stay in the suite this
+  repository keeps green, because `layers/` will reach exactly this code.
+- **`pyproject.toml` gains its first `[tool.pytest.ini_options]`**:
+  `testpaths = ["tests"]`, so a bare `uv run pytest` collects **576** and not
+  the closed 163. `testpaths` applies only when no argument is given, so
+  `uv run pytest harness/tests` still runs them, and `uv run pytest tests
+  harness/tests` is still 739 — the same 739, no test was dropped or weakened
+  in the split.
+
+What this costs, stated plainly: the apparatus's *behavioural* coverage is
+thinner at the root than the count suggests. The canto loop, the resume
+machinery, the artifact's byte-exactness and the `--fix` verdicts are exercised
+only through Layer 5's bindings, so a bare `pytest` would not catch a
+regression in them. Testing those without a subject means writing new tests
+against fake seams rather than moving existing ones, which is
+[`../layers/PLAN.md`](../layers/PLAN.md)'s to schedule if it wants them.
+
+**With that, `harness/` is deterministically verified, live verified, and its
+tests are parted from the maintained suite: it is closed.**
 
 ### What the stage sequence left open
 
@@ -517,9 +559,14 @@ single source, not duplicated here. The boundaries it encodes:
   `runner/` owns the evidence (`read_unit`), the gate (`validate_candidate`)
   and the prompt; `extractor/` owns the subject bindings and gate 3. The model
   adapter itself is the apparatus's (`dante_corpus.harness.llm`).
-- **Tests live at the repo root** (`tests/test_harness_*.py`) alongside the
-  corpus suite, so the harness stays inside one pytest run — the apparatus's
-  tests included, since it is a subpackage of the same project.
+- **Tests sit with what they cover, and the maintained suite is the root one.**
+  `harness/tests/` holds the seven files that reach the apparatus through Layer
+  5's bindings; `tests/` keeps the three that cover the apparatus alone —
+  `test_harness_apparatus.py`, `test_harness_pacing.py`,
+  `test_harness_boundary.py` — alongside the corpus suite they are maintained
+  with. `pyproject.toml`'s `testpaths = ["tests"]` keeps the closed 163 out of a
+  bare `uv run pytest`; naming the directory still runs them. The criterion, and
+  what the arrangement costs, are §2 item 4.
 
 ---
 

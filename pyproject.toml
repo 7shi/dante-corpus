@@ -18,3 +18,11 @@ llm7shi = { git = "https://github.com/7shi/llm7shi.git" }
 
 [project.scripts]
 dante-corpus = "dante_corpus.cli:main"
+
+[tool.pytest.ini_options]
+# `harness/` closed on 2026-09-08 (see harness/PLAN.md): its tests are kept as
+# the record of what that work verified, not as a suite this repository keeps
+# green. They still run on demand — `uv run pytest harness/tests` — and the
+# apparatus's own tests, which do not need Layer 5 to say what they say, stayed
+# in `tests/` where the maintained suite is.
+testpaths = ["tests"]

@@ -3,7 +3,7 @@
 ### Handoff (2026-09-08) — resume here
 
 > **Current State & Baseline**:
-> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `pytest` **739 passed** — 552 corpus + 187 harness).
+> - **All five layers & pronoun case annex**: **0 hard / 0 soft violations across all 100 cantos** (Inferno 0, Purgatorio 0, Paradiso 0; `uv run pytest` **576 passed** — 552 corpus + 24 apparatus; the closed harness's 163 run on demand, see below).
 > - **Documentation reorganized**: Phase 7 completed record is closed in [`skel/PHASE7.md`](skel/PHASE7.md). Phase 8 refactoring record is closed in [`skel/PHASE8.md`](skel/PHASE8.md). [`skel/RULES.md`](skel/RULES.md) compiles the full 130-rule grammar handbook and tree taxonomy. [`harness/PLAN.md`](harness/PLAN.md) and [`skel/PORTABILITY.md`](skel/PORTABILITY.md) organized for upcoming work and portability design.
 > - **Tool Call Protocol sub-project COMPLETE** (T1–T5; both live gates PASSED), and now **historical**: the prompt-instructed XML protocol was the adopted wire format (Gemini API executed it ~3x faster than local Ollama), but both transports and the session that used them were deleted on 2026-09-07 — there is no wire protocol to choose any more. The record stays in [`harness/TOOLCALL.md`](harness/TOOLCALL.md).
 > - **Active Regression Gate**: The **0-soft regression gate** is active corpus-wide. Any refactoring must preserve 0 hard / 0 soft violations and pass all tests.
@@ -14,10 +14,15 @@
 > durability, soft divergence reduction, refactoring, soft `--fix` levels 2 and 3,
 > and fixed-context execution — which replaced the per-unit tool-calling session
 > with a bounded step whose request size is a function of the unit rather than the
-> iteration count. Three pieces of closing work followed: the harness was **cut**
+> iteration count. Four pieces of closing work followed: the harness was **cut**
 > to the run and fix paths it is actually driven by, the generic apparatus was
 > **split out** into `dante_corpus/harness/` (a library that imports nothing else
-> from `dante_corpus`), and both changes were **verified live**. The harness's own
+> from `dante_corpus`), both changes were **verified live**, and the **tests were
+> parted**: `harness/tests/` keeps the 163 that reach the apparatus through Layer
+> 5's bindings, kept as the record and excluded from the default run by
+> `pyproject.toml`'s `testpaths`, while the 24 that need no subject stay in
+> `tests/` with the corpus suite. `uv run pytest harness/tests` still runs the
+> closed half; the two together are the same 739 as before. The harness's own
 > reconstruction of Layer 5 is hard-clean (0 hard / **2,954** soft against the
 > derivation contract) and never touched gold `skel/` — which since 2026-09-07 it
 > does not open at all.
@@ -45,7 +50,7 @@
 - **Layer 3 — Noun Phrases**: 0 hard / 0 soft violations across all 100 cantos ([`np/README.md`](np/README.md)).
 - **Layer 4 — Dependency Trees**: 0 hard / 0 soft violations across all 100 cantos ([`dep/README.md`](dep/README.md)). Stacked prepositions normalized and subject-agreement residue closed (see [`dep/CORRECTIONS.md`](dep/CORRECTIONS.md)).
 - **Layer 5 — Predicate-Argument Skeleton**: **0 hard / 0 soft violations across all 100 cantos** ([`skel/README.md`](skel/README.md), [`skel/RULES.md`](skel/RULES.md)).
-- **Test Suite**: `pytest` **739 passed** (552 corpus + 187 harness; corpus tests ~1 s). The harness count fell from 471 as the modules it covered were deleted on 2026-09-07; no surviving test was weakened.
+- **Test Suite**: a bare `uv run pytest` is **576 passed** (552 corpus + 24 apparatus; ~1 s). The closed harness's **163** are in `harness/tests/`, outside `testpaths`, and run when named — 739 in total. The harness count fell from 471 as the modules it covered were deleted on 2026-09-07; no surviving test was weakened, and none was dropped in the parting.
 - **Layer 5 Divergence Residue**: **0** (Inferno 0, Purgatorio 0, Paradiso 0).
 
 ### Layer 5 Phase Retrospectives
@@ -75,6 +80,7 @@ With **0 hard / 0 soft violations** achieved corpus-wide and codebase restructur
      `dante_corpus/harness/` and ships with the distribution, while top-level
      `harness/` holds Layer 5's side of it — the gates' content, the fix
      levels, the toolset, the skill files, the CLI and the `recon/` artifacts.
+     The tests split the same way, and only the apparatus's are maintained.
    - *Details, closing readouts & records*: [`harness/PLAN.md`](harness/PLAN.md)
      — the single reference for all harness work; not duplicated or kept in
      sync here.
@@ -114,7 +120,7 @@ the normalized Italian text, the token stream, the nested quote-span tree, morph
 noun phrases, dependency syntax trees, and predicate-argument skeletons, all derived from
 the poem itself with no external ontology. All five layers and the pronoun case annex are now fully
 computed, frozen, and verified at **0 hard / 0 soft violations across all 100 cantos** (suite now
-at `pytest` 739 passed including the harness).
+at `pytest` 576 passed including the apparatus, plus 163 kept for the closed harness).
 
 Downstream projects each need to *read the source grammatically* before they can do their own
 work — the formalization layer (`dante-analyze`) to extract entities and relations, the
