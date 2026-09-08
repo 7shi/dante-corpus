@@ -65,11 +65,13 @@ selection a filter over what the corpus has rather than a count anyone has to kn
     uv run python -m layers.gen2.l2 inferno -c 1 -m ...   # just canto 1
     uv run python -m layers.gen2.l2 inferno -c 12- -m ... # canto 12 on
     uv run python -m layers.gen2.l2 inferno -c 1 --lines 1-9 -m ...  # a line range
-    uv run python -m layers.gen2.l2 inferno -c 1 -m ... --log  # ... and its NN.log
+    uv run python -m layers.gen2.l2 inferno -c 1 -m ... --no-log  # no log at all
     uv run python -m layers.gen2.l2 inferno --check       # code-only, no model
 
-`--log` names no file: each canto's records go beside its own artifact, `NN.tsv` to
-`NN.log`, because one named file cannot hold a run over several cantos.
+The log is written **by default** and names no file: each canto's records go beside its
+own artifact, `NN.tsv` to `NN.log`. A run whose numbers were never recorded cannot be
+reported afterwards, and one named file could not hold a run over several cantos anyway.
+`--no-log` turns it off.
 
 **Bootstrap status (premise 3).** The running split reads L1 and nothing else: no old-layer
 file is named as an input, and the model is shown no old Layer 2 row. Old Layer 2 enters
@@ -973,9 +975,10 @@ def _main(argv=None) -> int:
                         help=f"lines per request (default {CHUNK_SIZE}, old Layer 2's)")
     parser.add_argument("--max-iterations", type=int, default=MAX_ITERATIONS)
     parser.add_argument("--out", help="artifact TSV (default: layers/l2/<canticle>/NN.tsv)")
-    parser.add_argument("--log", action="store_true",
+    parser.add_argument("--log", action=argparse.BooleanOptionalAction, default=True,
                         help="write each canto's streaming JSONL log beside its artifact, "
-                             "same path with .log (layers/l2/<canticle>/NN.log)")
+                             "same path with .log, e.g. layers/l2/<canticle>/NN.log "
+                             "(default: enabled)")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--started-at", type=float, default=None,
                         help="unix time the enclosing run began, for the bar's run clock")
