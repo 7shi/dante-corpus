@@ -28,6 +28,11 @@ evidence it cites.
 ## What is here
 
 - **[`PLAN.md`](PLAN.md)** — the plan. Start here.
+- **[`REDESIGN.md`](REDESIGN.md)** — a proposal, not a decision: decomposed
+  terminals and an enumeration of phrases, deliberately stopping short of a tree
+  rooted at the sentence, with the measurements that support it and the questions
+  it leaves open. It is what `PLAN.md` §4-2 would be replaced *by* if the read's
+  grammatical-word hypothesis survives; §4 stands as written until then.
 - **`reads/`** — all-layer reads. One short passage displayed at every layer at
   once, read for what the stack can and cannot say, with each observation
   measured corpus-wide before it is written down. Findings stay in the read that

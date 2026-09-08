@@ -1,65 +1,87 @@
 # Layer Structure Review: Plan
 
-### Handoff (2026-09-08) — resume here
+### Handoff (2026-09-09) — resume here
 
-> **Where this stands.** Nothing in §4 is started. The directory holds three
-> documents and no code: [`README.md`](README.md) (stable orientation, deliberately
-> carries no numbers), this plan (the source of truth, and the file that gets
-> updated), and `reads/` — one all-layer read,
-> [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md), written as a pilot rather than as
-> work on any §4 item.
+> **Where this stands.** The directory holds four documents and no code:
+> [`README.md`](README.md) (stable orientation), this plan (the source of truth,
+> and the file that gets updated), **[`REDESIGN.md`](REDESIGN.md)** — new, a
+> design proposal with its own measurements — and `reads/`, still one all-layer
+> read ([`reads/inf-1-1-9.md`](reads/inf-1-1-9.md)). §4's five items remain
+> unstarted **as written**, but the work has taken a shape §4 does not describe;
+> see *Method* below. §4 is not rewritten yet, deliberately — the new direction is
+> provisional.
 >
-> **What the pilot found.** Nine lines, **eight findings**, five corpus-wide
-> measurements. The density is itself a result: **§4-1 cannot be an enumeration** —
-> phenomena do not need hunting, so what needs designing is the classification.
-> The read proposes three axes: **(i)** the description is doubled (two conventions
-> for one thing — the copula analysed both as `cop` 953× and as an `attr`-taking
-> head 357×; participle POS; Layer-3 span granularity); **(ii)** the check is
-> missing (a convention documented and unimplemented — `conj` chaining, the `che`
-> mistag); **(iii)** there is nowhere to write it (`nel mezzo del`, `tanto…che`,
-> `mi ritrovai`). Only **(iii)** is this directory's own subject; (i) and (ii) are
-> within reach of the per-layer `CORRECTIONS.md` methodology.
+> **Two premises were set by the operator (2026-09-09)**, and are recorded at the
+> head of [`REDESIGN.md`](REDESIGN.md) rather than in §2, because they constrain
+> the redesign rather than the review:
+> 1. **Preserving the frozen artifacts is not a constraint.** Regenerating a layer
+>    is acceptable even where it overlaps what is frozen, and the time cost is
+>    accepted. This supersedes the earlier working assumption — held for most of
+>    the 2026-09-09 session — that the TSVs stay fixed and the API only grows
+>    additively. Terminal renumbering is therefore on the table.
+> 2. **Stop at phrases.** The redesign enumerates phrases and does **not** build a
+>    complete tree rooted at the sentence. The argument is `REDESIGN.md` §3; the
+>    price is §4.1.
 >
-> **The sharpest single number**: every layer's own `--check` reports 0 hard / 0
-> soft, while **1,335 positions** put a non-nominal Layer-2 POS in a nominal
-> Layer-4 role. The checks are layer-local; the inconsistencies are between
-> layers. A cross-layer checker is the first tool this directory needs.
+> **Method now in use.** Layers 1–4 are examined **one at a time**, each against
+> *Inferno* 1:1–3, quoting concrete positions, with every observation measured
+> corpus-wide before it is written down. This replaces the previous handoff's
+> question 4 (*which passage gets the next all-layer read*): the axis of iteration
+> is now the layer, not the passage. `reads/` keeps its own purpose and its
+> promotion rule; the layer-by-layer notes have so far gone into `REDESIGN.md`
+> rather than into `reads/`.
 >
-> **The hypothesis to falsify.** §1.3 diagnoses three devices with one direction
-> built out. The pilot suggests something sharper — **all three are keyed to token
-> boundaries, none to the boundary of a grammatical word**: `dietro a` is
-> expressible and `nel mezzo del` is not because of a contraction; `ritrovòmmi` is
-> expressible and `mi ritrovai` is not because of clitic position. Neither
-> difference is grammatical. If it holds, §4-2's "three homes, decided per
-> phenomenon" has the wrong shape and **one** device is wanted. It rests on three
-> positions in nine lines.
+> **Layer 1 is done. It corrected two things this plan and the pilot read both
+> got wrong:**
+> - **Nothing is discarded at Layer 1.** `Line.text` holds the normalized source
+>   verbatim, punctuation and guillemets included (`api.py:249`); only the
+>   `Line.tokens` view filters non-alpha (`api.py:52`). The defect is not loss but
+>   **address**: punctuation has no token index, so no layer can cite it.
+> - **The sentence unit already exists.** `dante_corpus/dep.py:200`
+>   `sentence_groups` splits on line-final `.`/`!`/`?`, sub-splits at `;`/`:`, caps
+>   at 12 lines with a hard-split fallback. **Layer 4 was built inside these
+>   units.** It is not stored in `dep/*.tsv`, not on `Canto`, not in `__all__` — a
+>   consumer must import a private function and recompute it. It needs storing and
+>   exposing, not designing; the 12-line cap should be dropped.
 >
-> **Not adopted.** The axes and the hypothesis belong to the read that produced
-> them, not to this plan. §4's five items stand as written. The promotion rule is
-> in [`README.md`](README.md): a finding moves here once it survives more than one
-> passage.
+> **And it sharpened §1.3's diagnosis.** "Flat encoding" is imprecise: Layer 4 *is*
+> a tree. The accurate statement is **the tree's nodes are tokens; no node stands
+> for a constituent** — and Layer 3 is already a partial constituent layer, in the
+> right shape (enumeration, nesting by containment), stopped at NPs and at the
+> line. `REDESIGN.md` §1 carries this.
 >
-> **Four questions, put to the operator 2026-09-08 and still open:**
-> 1. Prioritise **(iii)** here and hand **(i)** and **(ii)** to the per-layer
->    `CORRECTIONS.md` files? They are real findings but arguably not this
->    directory's subject.
-> 2. Design §4-1 as a **cross-layer readout that sorts into (i)/(ii)/(iii)**,
->    rather than as a survey that enumerates phenomena?
-> 3. State the grammatical-word hypothesis **up front and hunt for
->    counterexamples**, or collect phenomena first and judge afterwards? The
->    first is faster; it sits in tension with premise 3 (§2), which refuses an a
->    priori guiding principle.
-> 4. Which passage gets the **next** all-layer read? Recommendation: the
->    pronominal-verb family (finding F) — countable (`expl` **1,466** vs
->    `verb+pronoun` **488**), the orthographic claim is directly falsifiable, and
->    it strikes Layer 5 at predicate identification. §4-4 separately names
->    **Inf 4:5** as needing one.
+> **The previous handoff's four questions.** (1) Prioritise (iii), hand (i)/(ii)
+> to the per-layer `CORRECTIONS.md` files — **still open**. (2) Design §4-1 as a
+> cross-layer readout — **answered by force**: `REDESIGN.md` §4.1 makes the
+> cross-layer checker part of the design, since enumeration has no tree to enforce
+> coherence. (3) State the hypothesis up front — **answered**: `REDESIGN.md` states
+> it and §6 lists what would falsify it. (4) Next passage — **superseded** by
+> *Method* above.
 >
-> **A caveat for whoever resumes.** The pilot's five measurements were ad hoc
-> scripts run in a scratchpad and **not kept**. Every number is re-derivable from
-> the frozen layers through `dante_corpus.api` in a few minutes, but nothing is
-> reproducible by re-running a committed artifact. Whether that stays acceptable
-> is part of question 2.
+> **Next: Layer 2**, same method, *Inferno* 1:1–3. Known material waiting there —
+> the composite POS inventory (2,681 tokens, plus spacing variants like
+> `verb + pronoun`), the participle POS split (read finding C), the `che` mistag
+> (finding B's 225), the unfrozen POS vocabulary, `case/`'s sparseness as a
+> consequence of Layer-2 POS, and `MorphRow.note` carrying Layer-3 and Layer-4
+> exemption flags (`NO_NP`, `CONT_NEXT`, `RELCL_HEAD`, `AD_SENSUM`, `FOREIGN`)
+> alongside descriptive labels in one untyped string.
+>
+> **Deferred, deliberately.** How generation 1 is shown to the model while
+> generation 2 is built — which frozen layers are safe input and which are the
+> undecided positions it must not anchor to. A split was drafted 2026-09-09
+> (safe: tokens, lemma decomposition, Layer-4 bracketing, `sentence_groups`;
+> contaminated: `cop`/`attr` 953:357, the locution `obl`:`advmod`:`nmod`:`conj`
+> 217:68:30:13, Layer-3 granularity, participle POS, `che` POS, `expl`), with the
+> unresolved question of whether Layer-4 bracketing can be "safe" when the
+> `advmod`/`obl` choice moves the brackets themselves. **The operator's decision:
+> not now** — settle the direction first, then revisit against real examples.
+> `REDESIGN.md`'s Status records it as unwritten.
+>
+> **A caveat that still stands.** Every measurement in `reads/` and in
+> `REDESIGN.md` came from ad hoc scripts run in a scratchpad and **not kept**. All
+> are re-derivable from the frozen artifacts in minutes; none is reproducible by
+> re-running a committed artifact. The cross-layer checker of §4.1 is where that
+> gets fixed.
 
 ## Why this directory exists
 
