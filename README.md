@@ -18,7 +18,8 @@ This project uses the following Italian text source:
   `quotes/quotes.py` (see [`quotes/README.md`](quotes/README.md)); consumed by dante-analyze for
   speaker/edge attribution.
 - `morph/`, `case/`, `np/`, `dep/`, `skel/` — frozen grammatical layers (morphology, pronoun case, noun phrases, dependency trees, and predicate-argument skeletons; see [`skel/README.md`](skel/README.md)).
-- `harness/` — Autonomous Grammar Agent Harness for Local LLMs (see [`harness/README.md`](harness/README.md) and [`harness/PLAN.md`](harness/PLAN.md)).
+- `harness/` — Autonomous Grammar Agent Harness for Local LLMs (see [`harness/README.md`](harness/README.md) and [`harness/PLAN.md`](harness/PLAN.md)). Closed 2026-09-08; the generic apparatus now ships as `dante_corpus/harness/`.
+- `layers/` — review of the layer structure itself: what each layer can and cannot express, and what the description ought to say. The active work (see [`layers/README.md`](layers/README.md) and [`layers/PLAN.md`](layers/PLAN.md)).
 
 ## Plan
 

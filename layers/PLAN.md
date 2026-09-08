@@ -1,5 +1,66 @@
 # Layer Structure Review: Plan
 
+### Handoff (2026-09-08) — resume here
+
+> **Where this stands.** Nothing in §4 is started. The directory holds three
+> documents and no code: [`README.md`](README.md) (stable orientation, deliberately
+> carries no numbers), this plan (the source of truth, and the file that gets
+> updated), and `reads/` — one all-layer read,
+> [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md), written as a pilot rather than as
+> work on any §4 item.
+>
+> **What the pilot found.** Nine lines, **eight findings**, five corpus-wide
+> measurements. The density is itself a result: **§4-1 cannot be an enumeration** —
+> phenomena do not need hunting, so what needs designing is the classification.
+> The read proposes three axes: **(i)** the description is doubled (two conventions
+> for one thing — the copula analysed both as `cop` 953× and as an `attr`-taking
+> head 357×; participle POS; Layer-3 span granularity); **(ii)** the check is
+> missing (a convention documented and unimplemented — `conj` chaining, the `che`
+> mistag); **(iii)** there is nowhere to write it (`nel mezzo del`, `tanto…che`,
+> `mi ritrovai`). Only **(iii)** is this directory's own subject; (i) and (ii) are
+> within reach of the per-layer `CORRECTIONS.md` methodology.
+>
+> **The sharpest single number**: every layer's own `--check` reports 0 hard / 0
+> soft, while **1,335 positions** put a non-nominal Layer-2 POS in a nominal
+> Layer-4 role. The checks are layer-local; the inconsistencies are between
+> layers. A cross-layer checker is the first tool this directory needs.
+>
+> **The hypothesis to falsify.** §1.3 diagnoses three devices with one direction
+> built out. The pilot suggests something sharper — **all three are keyed to token
+> boundaries, none to the boundary of a grammatical word**: `dietro a` is
+> expressible and `nel mezzo del` is not because of a contraction; `ritrovòmmi` is
+> expressible and `mi ritrovai` is not because of clitic position. Neither
+> difference is grammatical. If it holds, §4-2's "three homes, decided per
+> phenomenon" has the wrong shape and **one** device is wanted. It rests on three
+> positions in nine lines.
+>
+> **Not adopted.** The axes and the hypothesis belong to the read that produced
+> them, not to this plan. §4's five items stand as written. The promotion rule is
+> in [`README.md`](README.md): a finding moves here once it survives more than one
+> passage.
+>
+> **Four questions, put to the operator 2026-09-08 and still open:**
+> 1. Prioritise **(iii)** here and hand **(i)** and **(ii)** to the per-layer
+>    `CORRECTIONS.md` files? They are real findings but arguably not this
+>    directory's subject.
+> 2. Design §4-1 as a **cross-layer readout that sorts into (i)/(ii)/(iii)**,
+>    rather than as a survey that enumerates phenomena?
+> 3. State the grammatical-word hypothesis **up front and hunt for
+>    counterexamples**, or collect phenomena first and judge afterwards? The
+>    first is faster; it sits in tension with premise 3 (§2), which refuses an a
+>    priori guiding principle.
+> 4. Which passage gets the **next** all-layer read? Recommendation: the
+>    pronominal-verb family (finding F) — countable (`expl` **1,466** vs
+>    `verb+pronoun` **488**), the orthographic claim is directly falsifiable, and
+>    it strikes Layer 5 at predicate identification. §4-4 separately names
+>    **Inf 4:5** as needing one.
+>
+> **A caveat for whoever resumes.** The pilot's five measurements were ad hoc
+> scripts run in a scratchpad and **not kept**. Every number is re-derivable from
+> the frozen layers through `dante_corpus.api` in a few minutes, but nothing is
+> reproducible by re-running a committed artifact. Whether that stays acceptable
+> is part of question 2.
+
 ## Why this directory exists
 
 `layers/` opens because `harness/` finished the thing it was actually built for
@@ -250,8 +311,10 @@ level was hard.
 [`../harness/FUTURE.md`](../harness/FUTURE.md)'s vertical-slice note already
 planned the first half — the harness building every layer over a narrow range —
 but assumed the second half away: it expected the current results to be
-reproduced. That assumption is dropped, and the note needs correcting where it
-stands (`PLAN.md` Milestone Ledger item 5: nothing here is append-only).
+reproduced. That assumption is dropped, and the correction stands in that file
+as a dated standing note at its head (2026-09-07), which also records what
+survives it unchanged — the machinery inventory, the swap costs, the
+feasibility gradient, and the own-precedent store.
 
 ### 3.1 What the change costs
 
@@ -283,6 +346,12 @@ Three things stop working, and each needs a successor.
 
 Nothing below is started. The order is not fixed either, except that the last
 one waits.
+
+One all-layer read exists, as a pilot rather than as work on any item:
+[`reads/inf-1-1-9.md`](reads/inf-1-1-9.md) — nine lines, eight findings, five
+corpus-wide measurements. It proposes a classification axis for item 3 and a
+hypothesis that would reshape item 2, and it is one passage, so neither is
+adopted here.
 
 1. **Which phenomena are hierarchical, and how many.** §1.3 measured one family
    (adverbial locutions, 330 positions). Others are visible and unmeasured:
@@ -319,7 +388,9 @@ one waits.
 - [`../harness/FUTURE.md`](../harness/FUTURE.md) — the layer swap, the vertical
   slice, and the horizon memo. §3 above promotes the horizon memo's intrinsic
   settlement criterion from future work to present need, and drops the vertical
-  slice's reproduce-the-current-results assumption.
+  slice's reproduce-the-current-results assumption; both are recorded there in
+  the standing correction at the file's head, so the notes below it are read
+  through it.
 - [`../harness/stages/10.md`](../harness/stages/10.md) — S10.1–S10.4 for level 3
   and its run; **S10.2** is the gate question this document answers by
   dissolving it, and that answer belongs in Stage 10's ledger as well as here.
