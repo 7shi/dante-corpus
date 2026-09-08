@@ -20,6 +20,16 @@ target structure being argued for, with the measurements that support it.
    new layer enumerates phrases. Clause and sentence structure are not rebuilt in
    a new formalism, because they already exist — see §2.4. §3 is the argument for
    this; §4.1 is what it costs.
+3. **Generation 2 must not depend on generation 1 at rebuild time (operator,
+   2026-09-09).** The finished corpus is generation 2 alone; a pipeline that can
+   only be re-run while the old files still exist has quietly turned "ship a
+   finished corpus" into "ship a finished corpus, plus keep the old one forever
+   so the new one stays reproducible." Old Layer 1–5 may be used **once**, as
+   bootstrap material during construction — a warm start for the model, a
+   precedent to check a fresh annotation against — but no generation-2 layer's
+   *definition* may name an old-generation file as an input. Where earlier
+   drafts of this file did that (§2.1's L2 split, §2.2's L3 projection), they are
+   corrected below.
 
 **Relation to the rest of the directory.** `PLAN.md` §4-2 asks *where a
 hierarchical judgement gets written* and offers three candidate homes, decided
@@ -29,10 +39,19 @@ and none to the boundary of a grammatical word, so **one** device is wanted. Thi
 file is that hypothesis carried forward into a design. It does not replace §4-2;
 it is the thing §4-2 would be replaced *by*, if the hypothesis survives.
 
-**Still unwritten.** How generation 1 is used while generation 2 is built —
-which of the frozen layers may be shown to the model as input, and which are the
-undecided positions it must not be anchored to. Discussed 2026-09-09, not yet
-settled, not recorded here.
+**Terminology (operator, 2026-09-09).** From here on, `L1`, `L2`, `L3`, … name
+the *rebuilt* layers this file designs. `Layer 1`, `Layer 2`, … keep naming the
+existing, frozen generation (`api.py`, `morph/*.tsv`, `dep/*.tsv`, …). The two
+numbering schemes are deliberately not required to line up token-for-token —
+see §2.1.
+
+**Still unwritten.** Premise 3 settles the general shape — bootstrap-only, never
+a rebuild-time input — but not the specific split PLAN.md's handoff drafted:
+which of the frozen layers are safe to show the model even as a one-time warm
+start (tentatively tokens, lemma decomposition, Layer-4 bracketing,
+`sentence_groups`) and which are contaminated positions it must not anchor to
+(`cop`/`attr`, the four-way locution split, Layer-3 granularity, participle POS,
+`che` POS, `expl`). Discussed 2026-09-09, not yet settled, not recorded here.
 
 **On the numbers.** Every figure is derived from the frozen artifacts
 (`morph/*/*.tsv`, `dep/*/*.tsv`, `src/*/*.txt`) and from
@@ -83,12 +102,192 @@ inside a single line, with the granularity rule left unwritten (read finding H:
 
 ## 2. The proposed structure
 
-### 2.1 Terminals — a token, decomposed
+### 2.1 Terminals — L1 (tokens, punctuation included) and L2 (grammatical words)
 
-The leaf is a single token, **except that contractions and clitic compounds are
-split into their grammatical words**. Layer 2 already records the decomposition
-in the lemma (`Nel → in+il`, `Rispuosemi → rispondere+mi`) but Layer 1 does not
-act on it, and every consequence lands downstream.
+**L1 is `tokenize()`'s full output, indexed** — alpha tokens and punctuation
+tokens alike, each with its own `(line, token)` address. This is not the same
+sequence as old Layer 1's `Line.tokens` (`api.py:52`), which applies `has_alpha`
+before indexing and so never assigns punctuation a position at all; L1's
+numbering therefore does not line up with old Layer 1's. See the punctuation
+measurement below.
+
+**L2 splits contractions and clitic compounds into their grammatical words, and
+carries a back-reference to the L1 token it came from.** Under premise 3 this is
+generation 2's own step, not a lookup into old Layer 2's lemma field — but it
+should also be **independent of grammatical analysis** (operator, 2026-09-09),
+kept out of the POS-tagging/dependency pass entirely, so a mistake in one is
+never entangled with a mistake in the other. That independence is not an
+aspiration; the vocabulary is closed enough to make it a fact. Old Layer 2's
+2,681 composite-POS tokens reduce to **442 distinct wordforms** (case-folded) —
+`del` 569, `al` 549, `nel` 310, `dal` 172, `col` 109, … — and **423 of 442
+(95.7%) have exactly one recorded split**, with no dependence on the sentence
+around them. Only 19 wordforms show more than one, and most of those are old
+Layer 2's own spelling noise on the same lemma (`dimmi` as `dire+me` /
+`dire+mi`) rather than real ambiguity; `dal` showing both `da+il` and `di+il` is
+very likely an outright error in the old annotation (`dal` is not a form of
+`di`), and `nel` genuinely splits two ways (`in+il` the ordinary contraction vs.
+`ne+lo` the pronoun compound) — real but rare. **L2 is therefore a static
+lookup table plus a handful of flagged exceptions, structurally the same device
+`tokenizer.py`'s `quote_cases.txt` already is for apostrophe normalization** —
+not a grammatical judgement, and not an LLM call. Old Layer 2's decomposition
+data is precedent for building and checking that table (§2.1's cost figures
+below are counted from it), not an input the running split reads. L2 is an
+ordered list of `(l1_index, text)` pairs —
+the L2 token number is the position in that list and is never stored separately,
+only `l1_index` is data. A composite L1 token produces **several** L2 entries
+sharing one `l1_index` (1:many); every other L1 token, including punctuation,
+carries straight through as exactly one L2 entry (1:1). Worked example, *Inf* 1:1
+`Nel mezzo del cammin di nostra vita`:
+
+```
+L1   0:Nel  1:mezzo  2:del  3:cammin  4:di  5:nostra  6:vita
+L2   (0,in) (0,il) (1,mezzo) (2,di) (2,il) (3,cammin) (4,di) (5,nostra) (6,vita)
+```
+
+`Nel` (L1 index 0) and `del` (L1 index 2) each yield two L2 entries; every other
+L1 token yields one. The mapping is recorded, not discarded — nothing downstream
+that needs the original token (old Layer 4's `head_line`/`head_token`, say) loses
+the ability to name it.
+
+**L2 only splits; it never merges (operator, 2026-09-09).** `l1_index` is always
+a single integer, never a tuple — so a many:1 direction (several L1 tokens = one
+grammatical word) is not a shape L2 takes, even though the corpus already has
+that phenomenon: old Layer 4's `fixed` relation, **170 groups**, almost all
+complex prepositions (`in su`, `dietro a`, `presso a`, `per entro`, …), 169 of
+size 2 and one of size 3 (*Par* 32:133 `Di contr'a`), every one contiguous.
+Merging was tried at this level and measured to conflict with splitting: **37 of
+170 fixed groups (21.8%) have a member that is itself a composite-POS token**.
+*Inf* 7:130 is the clean case —
+
+```
+130:7  al = a+il  (preposition+article), fixed head
+130:8  da          (preposition),        fixed child
+```
+
+— the multiword expression is `a da` ("at last"), not `al da`: only the `a` half
+of `al` participates, `il` does not. A tuple `l1_index` naming both L1 tokens
+would claim `il` belongs to the fixed group, which is false. Decomposition must
+therefore go all the way down first — every token split to its finest
+grammatical-word grain — before anything is put back together. **The merge
+stays exactly where the corpus already puts it: a `fixed`-style edge one layer
+up (L4, over L2 entries), not a second, conflicting join built into L2 itself.**
+L4 gets this cheaply for the 133 non-conflicting groups and correctly for the 37
+conflicting ones, because at the L2 level `a` and `il` are already two separate,
+addressable entries and the edge can point at exactly `a`.
+
+**L2 also normalizes apocope and elision — to the surface form, not the lemma
+(operator, 2026-09-09).** `i'` is `io` with its final vowel restored, and
+that stops at `io`; it does not continue on to a lemma, because for this
+wordform they happen to coincide. They do not always: `son` restores to
+`sono`, and `essere` stays where it already is, as the lemma a later,
+independent pass assigns. The scope is larger than the apostrophe-marked cases
+alone. Measured over old Layer 2's `apocope`/`elision`-noted, non-composite
+rows:
+
+```
+apostrophe-marked   (l', 'l, ch', d', s', m', t', 'n, com', i', …)   300 wordforms   7,047 tokens
+no apostrophe       (son, eran, avea, vuol, gran, cor, tal, …)     1,386 wordforms   6,909 tokens
+```
+
+The apostrophe-marked set is exactly as clean as §2.1's split table — the
+boundary is visible, restoration is one vowel, and lemma is usually the same
+closed-class word anyway. The no-apostrophe set is not: **477 of 1,510
+distinct (word, lemma, pos) rows have a lemma that is not a simple extension of
+the surface spelling** — `son`/`eran`/`avea`/`vuol`/`furon`/`convien` restore
+to inflected forms (`sono`, `erano`, `aveva`, `vuole`, `furono`, `conviene`)
+that the lemma (`essere`, `volere`, `convenire`, …) never records, because the
+lemma is the infinitive and the restored form is not. Old Layer 2 is therefore
+precedent for the split table but **not sufficient data** for the
+normalization table — the target text has to be constructed, not read off an
+existing column.
+
+**A further 159 wordforms cross more than one POS** (`l'` → `lo`/`la`, `fuor` →
+adverb `fuori` / verb, `qual` → four different POS across its occurrences), and
+for these the restored spelling depends on which reading applies — `l'`
+restores to `lo` or `la` only once gender is known.
+
+**Desk check, three lines (operator, 2026-09-09): the 159 are not an exception,
+they are the reason the pipeline has three steps in this order.** Worked by hand
+against *Inf* 1:1 and *Inf* 1:25, one step at a time, no batching (per the
+one-step-one-job principle above):
+
+```
+1. split          — L1 -> L2, closed-vocabulary, as designed above
+2. POS             — per L2 entry, independent grammatical classification
+3. normalize       — restore apocope/elision, keyed on (L2 text, POS from step 2)
+```
+
+*Inf* 1:1 `Nel mezzo del cammin di nostra vita`:
+
+```
+L1        0:Nel 1:mezzo 2:del 3:cammin 4:di 5:nostra 6:vita
+1.split   (0,in)(0,il) (1,mezzo) (2,di)(2,il) (3,cammin) (4,di) (5,nostra) (6,vita)
+2.POS     in=prep il=art mezzo=noun di=prep il=art cammin=noun di=prep nostra=adj vita=noun
+3.normal. in→in il→il mezzo→mezzo di→di il→il cammin→cammino di→di nostra→nostra vita→vita
+```
+
+*Inf* 1:25 `così l'animo mio, ch'ancor fuggiva,` — no composite tokens, so step 1
+is the identity, but step 3 needs step 2's answer for `l'`:
+
+```
+L1        0:così 1:l' 2:animo 3:mio 4:, 5:ch' 6:ancor 7:fuggiva 8:,
+2.POS     l'=article, gender/number undetermined until agreement with 2:animo
+          (masc.sg) is resolved in the same pass
+3.normal. l'→lo (only decidable once step 2 has fixed masc.sg); ch'→che;
+          ancor→ancora; everything else passes through unchanged
+```
+
+**So the 159 wordforms are not a scoped exception after all — normalizing
+strictly after POS, for every wordform, is simply step 3 following step 2 in a
+three-step pipeline.** No `(wordform, pos)`-keyed carve-out is needed; the
+ordering already gives every wordform its POS before normalization asks for it.
+The other 1,527 wordforms just have a trivial step 2 → step 3 dependency (the
+POS doesn't change the answer), which is not a different mechanism, only a
+simpler case of the same one.
+
+**Concrete task, following from the above (operator, 2026-09-09).** Build the
+442-wordform split table, the per-L2-entry POS classification, and the
+~1,686-wordform normalization table as **three separate passes in that order**,
+with no view of old Layer 2, then **diff each against old Layer 2's
+composite-POS/lemma field** as the precedent check — the same methodology
+already standing in `PLAN.md` §2 and every `*/CORRECTIONS.md`: classify by
+cause before touching anything, verify each row against an existing precedent
+row. Three outcomes fall out, not two: the new table agrees (423 wordforms for
+the split table, expected); the new table disagrees and old Layer 2 is the one
+that's wrong (`dal`'s `di+il` is the found candidate); or the disagreement is
+genuine synchronic ambiguity the table must keep both branches for (`nel`, and
+the 159 cross-POS wordforms above, now resolved by pipeline order rather than a
+carve-out). Because normalization only ever consumes step 2's POS and never the
+other way around, a disagreement is never confounded with a POS-tagging
+mistake — the failure surface this task exists to keep small.
+
+**The execution mechanism already exists (operator, 2026-09-09): `harness/`'s
+fixed-context step** ([`../harness/stages/09.md`](../harness/stages/09.md) §2).
+Each of the three steps above, for each wordform, is one step
+`P -> O -> State Σ ()`: $P$ the single instruction for that step ("split this
+token" / "classify this entry's POS" / "restore this entry's spelling"), $O$
+old Layer 2's row for it (bootstrap precedent, premise 3) plus, for step 3, step
+2's own output, $\Sigma$ the candidate entry, output the accepted text — and,
+per §9's design, **no transcript carries between steps or between wordforms**,
+because each is independent and a growing history buys nothing a stateless step
+doesn't already have. This is not chat-with-memory scaled down; it is the same
+architecture Stage 9 built for Layer-5 repair, pointed at a smaller, closed
+problem — up to 3 × (442 + ~1,686) steps, each with a verdict (agrees /
+precedent-is-wrong / genuine ambiguity) and no per-iteration context growth,
+exactly the shape §2's `step` signature already gives for free.
+
+**One step, one job, no batching (operator, 2026-09-09).** Neither the
+wordforms nor the three jobs are compressed into fewer, larger requests — one
+call doing several wordforms, or splitting-and-classifying-and-normalizing in
+one shot, is several chances for one bad output to contaminate the rest,
+against harness's own finding that batching is exactly where failures
+concentrate (`harness/stages/09.md` §2, "Full rows, not a patch": 68% of the
+paper it reviews attributes its failures to botched multi-key merges — errors
+from doing several updates in one step). Wall-clock cost is not a reason to
+batch here: this work already runs as repeated loops across a stage history
+spanning weeks (`harness/stages/01.md` through `10.md`, 2026-08 to 2026-09), so
+shaving one more pass does not change the project's actual timeline, and is not
+worth trading away the isolation a one-job-per-step design buys.
 
 The cost of splitting is small and exactly known:
 
@@ -123,9 +322,41 @@ The tail of the composite-POS inventory also contains spacing variants
 (`verb + pronoun` 2, `preposition + article` 1), which is Layer-2 hygiene rather
 than a design matter, but it belongs on the list.
 
-**This is the change that renumbers everything.** Splitting terminals invalidates
-every `(line, token)` reference in `dep/`, `np/`, `skel/` and `case/`. Under
-premise 1 that is a cost, not a blocker.
+**What this does and does not renumber.** Old Layer 1–5 keep the addressing they
+already have; nothing here edits `dep/`, `np/`, `skel/` or `case/` in place, and
+under premise 1 rebuilding a parallel generation rather than patching the old one
+is accepted cost, not a blocker. What *does* shift is L1 itself against old Layer
+1 — L1 has its own numbering (§2.1 above), not a superset or subset of
+`Line.tokens`'s, because punctuation occupies positions old Layer 1 never
+assigned. L2's split is not a second blind renumbering on top of that: every L2
+entry carries the `l1_index` it came from, so the old-to-new correspondence is
+data, not something a consumer has to reconstruct.
+
+**Punctuation is why L1 and old Layer 1 diverge (operator, 2026-09-09).**
+`tokenize()` (`tokenizer.py:53`) already splits punctuation into its own token
+strings; the only filter old Layer 1 applies is `has_alpha` at `api.py:52`,
+which drops them *before* indexing. `PLAN.md`'s Layer-1 finding — "punctuation
+has no token index, so no layer can cite it" — is therefore not a tokenization
+gap but an indexing one, and it is L1, not L2, that fixes it: L1 is
+`tokenize()`'s output taken whole. Since the design stops at phrases rather than
+a full sentence tree, punctuation belongs **beside** phrase-structure objects,
+not beneath them — a comma separates coordinated phrases, a colon introduces
+one, quotation marks bound a span of direct discourse; none of that is a
+property of any single token. Measured over the whole corpus:
+
+```
+alpha tokens (current Line.tokens)                       101,601
+punctuation tokens (tokenize(), non-alpha, non-space)      17,434
+  ,  8,513   .  3,275   ;  1,628   «/» 1,062/1,062   :    988
+  ?    278   !    232   ‘/’  109/109   “/”   51/51   '     51
+  —     18   (/)     3/3    -      1
+```
+
+**Every quotation-mark pair is exactly balanced** — `«`/`»` 1,062/1,062,
+`‘`/`’` 109/109, `“`/`”` 51/51. The closing partner Layer 1 would need to bound
+a quoted span as a terminal-delimited constituent already exists one-to-one;
+this is the address the open survey item "the quotes hierarchy" (`PLAN.md`
+§4-1) has been missing.
 
 ### 2.2 Phrases — enumerated, not a tree
 
@@ -134,11 +365,19 @@ over-inclusively, with nesting derived by containment, in the shape `np/` alread
 has. **There is no root, no requirement that every terminal belong to a phrase,
 and no requirement that the enumeration cover the sentence.**
 
-**Most of the bracketing is already latent in Layer 4.** Taking the subtree of
-every node in the dependency forest yields **40,654 groups of two or more
-tokens**. The spans do not need to be annotated from scratch; they need to be
-*projected*. What Layer 4 does not supply is the category label and the level
-count.
+**Most of the bracketing is latent in a dependency tree — old Layer 4 shows this,
+but L3 must not be built from it.** Taking the subtree of every node in old
+Layer 4's dependency forest yields **40,654 groups of two or more tokens**: the
+measurement that shows spans need not be annotated from scratch, they can be
+*projected*. Under premise 3, though, the pipeline that produces L3 has to
+project from **L4** — generation 2's own rebuilt dependency layer over L2's
+grammatical words — not from old Layer 4 over old tokens; a production route
+through the frozen file would make L3 permanently unreproducible without it.
+This puts L4 ahead of L3 in build order despite the numbering, and old Layer 4
+still earns its keep as premise 3's bootstrap case: it is a plausible warm start
+for annotating L4 itself (the projection counts above stand as the size of that
+bootstrap's payoff), just not an input L3 reads. What neither old nor new Layer
+4 supplies on its own is the category label and the level count.
 
 **NP exists** (Layer 3). **PP is mechanical** — a `case` child marks it.
 **VP has no counterpart anywhere in the corpus**; Layer 5 holds
@@ -336,12 +575,15 @@ and the crossing stays on Layer 4's edges, where it already is.
 
 | | |
 |---|---|
-| terminals to split | 2,681 tokens → 5,374 (+2.65% corpus size) |
-| references invalidated | every `(line, token)` in `dep/`, `np/`, `skel/`, `case/` |
-| spans to annotate from scratch | little — 40,654 groups are projectable from Layer 4 |
+| terminals to split (L1 → L2) | 2,681 L1 tokens → 5,374 L2 entries (+2,693), each carrying its `l1_index` back-reference |
+| multiword merges (`fixed`) | not L2's job — stays a relation over L2 entries at L4; 170 groups, 37 (21.8%) overlap a composite-POS split and need the finer L2 grain to attach correctly |
+| punctuation terminals to index (old Layer 1 → L1) | 17,434, currently unindexed; already tokenized, only `has_alpha` drops them — balanced quote pairs 1,062/1,062, 109/109, 51/51 |
+| old-generation artifacts | left as-is — `dep/`, `np/`, `skel/`, `case/` keep old Layer 1–5 addressing; the new generation is parallel, not an in-place edit |
+| build order | L4 (dependency) precedes L3 (phrases) despite the numbering — L3 projects from L4, not from old Layer 4 |
+| spans to annotate from scratch | little, once L4 exists — old Layer 4 shows 40,654 groups are projectable in principle, a bootstrap case for building L4, not an input L3 reads |
 | labels to assign | NP (have it), PP (mechanical), AdvP and VP (new) |
-| membership lost to contiguity | 9,495 of 347,287 (2.73%), in 1,522 spans |
-| clause level | not rebuilt — stays on Layer 4's edges |
+| membership lost to contiguity | 9,495 of 347,287 (2.73%), in 1,522 spans, measured on old Layer 4 as an estimate of L4's expected shape |
+| clause level | not rebuilt — stays on L4's edges |
 | sentence level | already computed (`sentence_groups`); needs storing and exposing |
 | in-repo API call sites touching layer accessors | **19** (`dep()` 6, `np()` 4, `morph()` 4, `case()` 3, `skel()` 2) |
 | external consumer | `dante-analyze` — dependency surface **not surveyed**; needed before any breaking change |

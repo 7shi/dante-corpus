@@ -58,24 +58,94 @@
 > it and §6 lists what would falsify it. (4) Next passage — **superseded** by
 > *Method* above.
 >
-> **Next: Layer 2**, same method, *Inferno* 1:1–3. Known material waiting there —
-> the composite POS inventory (2,681 tokens, plus spacing variants like
-> `verb + pronoun`), the participle POS split (read finding C), the `che` mistag
-> (finding B's 225), the unfrozen POS vocabulary, `case/`'s sparseness as a
-> consequence of Layer-2 POS, and `MorphRow.note` carrying Layer-3 and Layer-4
-> exemption flags (`NO_NP`, `CONT_NEXT`, `RELCL_HEAD`, `AD_SENSUM`, `FOREIGN`)
-> alongside descriptive labels in one untyped string.
+> **"Next: Layer 2" happened, but not as a review — see below.** The composite
+> POS inventory (2,681 tokens) and the `note`-field noise are now consumed by
+> the L1/L2 design work below; the participle POS split, the `che` mistag
+> (finding B's 225), the unfrozen POS vocabulary, and `case/`'s sparseness are
+> **still untouched** and remain candidates either for an old-Layer-2 review
+> write-up or for absorption into L2's POS-classification step — not decided.
 >
-> **Deferred, deliberately.** How generation 1 is shown to the model while
-> generation 2 is built — which frozen layers are safe input and which are the
-> undecided positions it must not anchor to. A split was drafted 2026-09-09
-> (safe: tokens, lemma decomposition, Layer-4 bracketing, `sentence_groups`;
-> contaminated: `cop`/`attr` 953:357, the locution `obl`:`advmod`:`nmod`:`conj`
-> 217:68:30:13, Layer-3 granularity, participle POS, `che` POS, `expl`), with the
-> unresolved question of whether Layer-4 bracketing can be "safe" when the
-> `advmod`/`obl` choice moves the brackets themselves. **The operator's decision:
-> not now** — settle the direction first, then revisit against real examples.
-> `REDESIGN.md`'s Status records it as unwritten.
+> **Deferred, deliberately, and now partly settled.** How generation 1 is shown
+> to the model while generation 2 is built — which frozen layers are safe input
+> and which are the undecided positions it must not anchor to. A split was
+> drafted 2026-09-09 (safe: tokens, lemma decomposition, Layer-4 bracketing,
+> `sentence_groups`; contaminated: `cop`/`attr` 953:357, the locution
+> `obl`:`advmod`:`nmod`:`conj` 217:68:30:13, Layer-3 granularity, participle POS,
+> `che` POS, `expl`), with the unresolved question of whether Layer-4 bracketing
+> can be "safe" when the `advmod`/`obl` choice moves the brackets themselves.
+> **Premise 3 below settles the general shape** (bootstrap-only, never a
+> rebuild-time input); the specific safe/contaminated split above is still
+> unrevisited against it. `REDESIGN.md`'s Status records the residue as
+> unwritten.
+>
+> ---
+>
+> **L1/L2 design (2026-09-09, same session, continued past Layer 1).** The
+> *Method* above says Layers 1–4 are reviewed one at a time against the old
+> generation; in practice, once Layer 1's review turned up the punctuation and
+> `l1_index` questions, the work did not stay a review of old Layer 2 — it
+> became direct design of the **rebuilt** `L1`/`L2` (terminology: `L1`, `L2`, …
+> name the rebuilt layers from here on; `Layer 1`, `Layer 2`, … keep naming the
+> frozen generation). Old Layer 2's known material (composite POS, the `che`
+> mistag, participle POS, the `note`-field noise) fed this as precedent, not as
+> a standalone review write-up — **the `che` mistag and the participle POS
+> split are still not separately reviewed**, and may end up folded into L2's
+> POS-classification step below rather than written up as old-Layer-2
+> corrections; that is not decided.
+>
+> Decisions recorded in `REDESIGN.md`, **none implemented**:
+>
+> 1. **Premise 3 (new): generation 2 must not depend on generation 1 at rebuild
+>    time.** Old Layer 1–5 may be used once, as bootstrap material during
+>    construction (a warm start, a precedent to diff against) — never as a
+>    named input a generation-2 layer's *definition* reads. (§Status,
+>    `REDESIGN.md`)
+> 2. **L1 = `tokenize()`'s full output, punctuation included, own numbering.**
+>    Diverges from old Layer 1's `Line.tokens` (`api.py:52` drops punctuation
+>    before indexing), by design — this is what makes punctuation citable at
+>    all. 17,434 punctuation terminals newly addressable; quote-mark pairs
+>    exactly balanced (`«`/`»` 1,062/1,062, `‘`/`’` 109/109, `“`/`”` 51/51),
+>    which is the address the open survey item "the quotes hierarchy" (§4 item
+>    1 below) has been missing. (`REDESIGN.md` §2.1)
+> 3. **L2 = grammatical words, as `(l1_index, text)` pairs, only splits, never
+>    merges.** 1:many for composite tokens (`nel` → `(0,in),(0,il)`), 1:1
+>    otherwise. Many:1 (e.g. `fixed`'s complex prepositions, 170 groups) stays
+>    a relation one layer up, over L2 entries, because 37 of those 170 groups
+>    (21.8%) have a member that is itself a composite split and a tuple
+>    `l1_index` would misattribute part of a token. (`REDESIGN.md` §2.1)
+> 4. **L2 is a three-step pipeline: split → POS classify → normalize.**
+>    Normalization (apocope/elision restored to the inflected *surface* form,
+>    stopping short of lemma — `i'`→`io`, `son`→`sono` while `essere` stays the
+>    lemma) needs step 2's POS for wordforms spanning more than one POS (`l'` →
+>    `lo`/`la` depending on gender, 159 such wordforms) — desk-checked by hand
+>    against *Inf* 1:1 and *Inf* 1:25, which is what showed this is an ordering
+>    consequence, not a special case. Scope: split table 442 wordforms (423
+>    deterministic), normalization tables 300 wordforms (apostrophe-marked) +
+>    1,386 (apocope without apostrophe, 477 of which need a lemma-independent
+>    reconstruction). (`REDESIGN.md` §2.1)
+> 5. **Build order: L4 (dependency) precedes L3 (phrases), despite the
+>    numbering.** L3 must project from generation 2's own L4, never from old
+>    Layer 4, or L3 stays permanently dependent on the old file (premise 3).
+>    Old Layer 4's 40,654 projectable subtree groups remain useful as the
+>    bootstrap case for building L4 itself. (`REDESIGN.md` §2.2, §5)
+> 6. **Concrete next task, decided but not started:** build the split table,
+>    the per-L2-entry POS classification, and the normalization tables as
+>    three independent passes (no view of old Layer 2 while building), then
+>    diff each against old Layer 2 as the precedent check — three outcomes,
+>    same methodology as every `*/CORRECTIONS.md` (agree / old-generation-is-
+>    wrong, e.g. `dal`'s `di+il` / genuine synchronic ambiguity, e.g. `nel`).
+>    Execution mechanism: `harness/stages/09.md` §2's fixed-context step
+>    (`P -> O -> State Σ ()`), **one step per wordform per job, no batching**
+>    — batching is exactly where the paper `09.md` reviews places 68% of its
+>    failures, and wall-clock cost is not a constraint this project is short
+>    on. (`REDESIGN.md` §2.1, end)
+>
+> **This is a plan, not a start.** The operator's instruction closing this
+> session: record the decisions, do not implement. The next session's first
+> choice is whether to begin the split/POS/normalize tables, continue the
+> Layer 1–4 review method into old Layer 2/3/4, or design L3/L4 further first.
+>
+> ---
 >
 > **A caveat that still stands.** Every measurement in `reads/` and in
 > `REDESIGN.md` came from ad hoc scripts run in a scratchpad and **not kept**. All
