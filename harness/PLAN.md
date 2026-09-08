@@ -160,55 +160,55 @@ soft**, `make fix-level` **0 / 0 / 210**, no committed TSV moved a byte, and a
 settled canto still resumes off its TSV in 0.6 s with **zero** `llm_request`
 records. The suite is **739 passed** (734 + the five boundary tests).
 
-### Next session: take the operator's run/fix report on the split
+### Done 2026-09-08: the split is live-verified
 
-**The split is committed and live-unverified. The operator is running `run` and
-`fix` now and reports at the start of the next session** (operator,
-2026-09-07). Nothing else is in flight, and nothing else should start before
-that report lands: everything below is the same shape as the cut's verification
-one commit earlier, for the same reason — assistant sessions call no model
-(Environment & Artifacts), and the split rewired the only path that reaches one.
+**`run` and `fix` were both exercised on the split apparatus and PASSED**
+(operator, 2026-09-07 UTC; read out of the logs at the start of the 09-08
+session). This was the one thing outstanding — the deterministic half was
+already proven (739 tests, the readouts above, a resume with zero `llm_request`
+records), and what no test could cover was the live closure the split rewired:
+the injected **system prompt**, **observer** and **toolkit**, all three bound in
+`extractor/fixedcontext.py`, plus the dep cache's move into
+`observe.SkelObserver`. **None of the three was broken.**
 
-**What was rewired, i.e. what the report is actually testing.** The deterministic
-half is already proven (739 tests, the readouts above, the resume path with zero
-`llm_request` records). What no test covers is the live closure:
+The four checks the previous session set, in its order:
 
-- `fixedcontext.run_unit_fixed` now takes its **system prompt** and its
-  **observer** injected instead of importing them; `fixed_fallback` now takes
-  its **toolkit** injected instead of constructing one. All three Layer-5
-  defaults are bound in `extractor/fixedcontext.py`, which is the file to read
-  first if a run misbehaves.
-- The per-run **dep cache** moved from `run_unit_fixed`'s `dep_cache` argument
-  into `observe.SkelObserver`. One observer is built per `fixed_fallback` call,
-  so it is still one cache per run — but that is an argument, not a measurement.
-- `verdict_block` renders observations through the injected `render`. A prompt
-  that came out subtly different would show as changed model behaviour, not as
-  an error.
+1. **`skill_digest` is `ee6f1a46…` on all 101 `canto_complete` records** — one
+   value, no other. $P$ is byte-identical across the split, so Standing
+   Invariant §6 held and the prompt assembly did not move.
+2. **The observer is live**: 240 units ran 346 iterations (174 settled on
+   iteration 1, 43 took 2, 6 took 3, 17 hit the cap), and **76 units carried 162
+   observations** across them — a silently empty observer would have shown as
+   346 = 240 with no observation anywhere. Stop reasons: 135 `settled`, 98
+   `fixed_point`, 7 `budget`.
+3. **Routes are exactly as specified.** Generate: `agent` ×34, reason
+   `generate` ×34. Fix: `agent`/`fix` ×206 plus `tsv`/`already settled in the
+   artifact` ×3,271.
+4. **0 `token_assertion_errors`, 0 hard violations, and no canto ended worse
+   than it started** — checked per canto on the `fix` block's
+   `soft_before`/`soft_after` and `findings_before`/`findings_after`, zero
+   regressions.
 
-**What to check in the report, in order:**
+The two runs themselves:
 
-1. The configuration line still reads `reconstruct: fixed context, 4
-   iteration(s) max, …` and the canto's `skill_digest` is still **`ee6f1a46…`**
-   (Orientation item 7). The digest is the check that $P$ is byte-identical
-   across the split — if it moved, the prompt assembly changed and Standing
-   Invariant §6 is the thing that was broken.
-2. `[fixed] … iter 1: N row(s), accepted` lines appear, and units carry
-   `observation(s)` counts — an observer that silently returned nothing would
-   still let a run finish, just with the verdict half of $O$ empty.
-3. `routes` on the generate run are all `agent`/`generate`; on the fix run,
-   `fix` plus `already settled in the artifact`.
-4. 0 `token_assertion_errors`, 0 hard, and no canto ending worse than it started.
+- **`run` (generate)**: `inferno/01` from scratch — 34 units, 25 soft, 0 hard,
+  1 `api_retry` (15.0 s), 5,999.0 s.
+- **`fix`**: corpus-wide, all 100 cantos, **3,477 units of which 206 reached the
+  model**; 87 cantos carried a level-3 `fix` block, findings **211 → 206**, and
+  over the units touched soft **403 → 393** — verdicts 5 `accepted`, 3
+  `new_class`, 198 `no_improvement`, 7 `api_retries`.
+- **Concurrency**: 46,983 s of summed `wall_clock_seconds` inside a 5.86 h span
+  = **2.23×** on three streams, consistent with S10.4's 2.50× and still not a
+  measurement of where contention starts (§2's open item 1). Largest request
+  7,007 `input_tokens`, unchanged as the standing high-water mark (open item 2).
 
-**Then**: re-read `make check` / `make fix-level` / `pytest`, update Current
-Status if the run moved the corpus, and record the outcome here as a Done entry
-the way the cut's verification was recorded above. Only after that does the next
-piece of work start — and per the Milestone Ledger's convention that document is
-[`../layers/PLAN.md`](../layers/PLAN.md), not this one.
+**Five TSVs are uncommitted** as of the readout: `inferno/01` (regenerated),
+`inferno/07`, `inferno/14`, `paradiso/02`, `paradiso/19`. Post-run readouts are
+in Current Status.
 
-**If it is broken**, the fix comes before anything else, and the three suspects
-are the three injections above. The apparatus itself is not in question: it is
-the same code, and `tests/test_harness_boundary.py` plus the 739-test suite say
-so deterministically.
+**`harness/` is now both deterministically and live verified, and its
+development is closed.** The next piece of work is
+[`../layers/PLAN.md`](../layers/PLAN.md); nothing is in flight here.
 
 *(The "one thing not to lose in a move" caution that stood here — the four
 87-case benchmark run logs, gitignored, disk-only and no longer regenerable — is
@@ -221,7 +221,7 @@ Every stage's status, dates and outcome are in §2's table.
 
 **No stage is open. Stages 1–10 are closed and there is no Stage 11.**
 
-*The numbers below were re-read on 2026-09-07 after the post-cut live
+*The numbers below were re-read on 2026-09-08 after the post-split live
 verification run (Handoff), which is what the corpus was last touched by — the
 `inferno/01` regeneration plus the corpus-wide `make fix`. They are the
 harness's final readouts, and
@@ -229,18 +229,20 @@ they are readouts — per `layers/PLAN.md` §3.1 item 3 a soft count measures th
 artifact against the current description, which is itself under review, so none
 of these is a target.*
 
-- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,964 soft**,
+- **Corpus** (the harness's own recon TSVs, not gold): **0 hard / 2,954 soft**,
   `make check` exits 0, `make fix-level` **0 at levels 1 and 2** — the condition
-  Stage 9 closed on, unchanged by either run — and **210 at level 3**, the
-  residue the verification run left and did not intend to chase (it was 2,982
-  soft and 225 at level 3 after S10.4; the 219 units the fix run reached moved
-  it). **These TSVs are uncommitted** as of the readout.
+  Stage 9 closed on, unchanged by any run since — and **206 at level 3**, the
+  residue the split's verification run left and did not intend to chase (2,982
+  soft / 225 after S10.4, 2,964 / 210 after the cut's run, 2,954 / 206 after
+  this one; the 206 units this fix run reached moved it). **Five TSVs are
+  uncommitted** as of the readout.
 - **Gold agreement** (readout only, Standing Invariant §1): **0.7628**
   corpus-wide — inferno 0.7672, purgatorio 0.7607, paradiso 0.7605. **This is
   the last measurement and cannot be re-taken**: `recon/agree.py` was deleted on
   2026-09-07 and nothing in `harness/` opens gold any more. Read it as a closing
   number, not a current one.
-- **Test suite**: **739 passed** (2026-09-07, after the apparatus split added
+- **Test suite**: **739 passed** (re-read 2026-09-08; unchanged since the
+  apparatus split added
   `tests/test_harness_boundary.py`'s five; it was 734 after the cut and 1,029
   before it). Its composition and full history live in
   [`stages/04.md`](stages/04.md)'s pre-launch note, which is where that
@@ -375,9 +377,9 @@ any one session, so it survives across Handoff clearings.
    commands, so any session starts from the same place:
 
    ```
-   cd harness/recon && make check                     # 0 hard / 2,964 soft
+   cd harness/recon && make check                     # 0 hard / 2,954 soft
    make fix-level FIX=1 && make fix-level FIX=2       # both 0
-   make fix-level FIX=3                               # 210, after the 09-07 run
+   make fix-level FIX=3                               # 206, after the 09-08 run
    cd ../.. && uv run pytest -q                       # 739
    ```
 
@@ -612,7 +614,8 @@ single source, not duplicated here. The boundaries it encodes:
   LLM-free work only (tests, artifact inspection, log readouts); every
   LLM-in-the-loop command is run by the human operator, not by the assistant.
   This is why both of 2026-09-07's changes — the cut and the apparatus split —
-  ship deterministically verified but live-unverified (Handoff).
+  shipped deterministically verified, each with its live `run`/`fix` verification
+  run by the operator and read out by the following session (Handoff).
 - **There is one live entry point left**: `harness.extractor.reconstruct`, run
   through [`recon/Makefile`](recon/Makefile). The probe, parity, single-unit
   session and benchmark CLIs were deleted with the code under them; their

@@ -453,9 +453,11 @@ line	token	word	role	arg_line	arg_token
 141	4	visto	subj	141	1
 141	4	visto	obj	141	6
 141	4	visto	obl	141	2
-142	7	lascia	subj	142	3
+142	2	beata	subj	142	3
+142	7	lascia	subj	0	0
 142	7	lascia	xcomp	143	2
 143	2	malmenare	subj	0	0
+143	4	beata	subj	143	5
 144	3	armasse	subj	143	5
 144	3	armasse	obj	144	2
 144	3	armasse	obl:di	144	5

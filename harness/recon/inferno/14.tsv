@@ -383,15 +383,23 @@ line	token	word	role	arg_line	arg_token
 123	3	appar	obl	123	1
 123	3	appar	obl	123	4
 123	3	appar	obl:a	123	7
+124	2	elli	subj	0	0
 124	2	elli	iobj	124	4
 124	2	elli	ccomp	124	6
 124	6	sai	subj	124	5
+124	6	sai	ccomp	124	11
+124	10	è		0	0
+124	11	tondo	subj	124	9
 125	6	venuto	subj	125	4
+126	5	calando	subj	0	0
 126	5	calando	obl:a	126	3
 126	5	calando	obl:a	126	7
+127	8	vòlto	subj	0	0
 127	8	vòlto	obl:per	127	7
 128	6	apparisce	subj	128	4
 128	6	apparisce	obl	128	5
+129	2	de'	subj	0	0
+129	2	de'	xcomp	129	3
 129	3	addur	subj	0	0
 129	3	addur	obj	129	4
 129	3	addur	obl:a	129	7
