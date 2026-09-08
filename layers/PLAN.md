@@ -2,10 +2,12 @@
 
 ### Handoff (2026-09-09) — resume here
 
-> **Where this stands.** The directory holds four documents and no code —
-> [`README.md`](README.md) (stable orientation), this plan, **[`REDESIGN.md`](REDESIGN.md)**
-> (the design proposal, now §1–§10), and [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md)
-> (the pilot read, updated in place this session with this session's follow-ups).
+> **Where this stands.** The directory holds four documents and, as of this
+> session, a first piece of code — [`README.md`](README.md) (stable
+> orientation), this plan, **[`REDESIGN.md`](REDESIGN.md)** (the design
+> proposal, now §1–§10), [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md) (the pilot
+> read, updated in place this session with this session's follow-ups), and
+> **[`gen2/`](gen2/)** (new this session — see *L1 implemented*, below).
 > §4's five items remain unstarted **as written**; the work took the shape
 > described below instead, and §4 is deliberately not rewritten yet — the new
 > direction is still provisional pending an implementation trial (see
@@ -155,13 +157,38 @@
 > systematic prompt or ordering error before it's baked into
 > 442 + ~1,686 wordforms' worth of calls.
 >
-> **This is a plan, not a start — nothing above is implemented.** The next
-> session's first choice: begin the split/POS/normalize trial on *Inf* 1:1-9
-> per the rollout plan above, or continue open review items first (G's real
-> count net of nested coordination, the *Inf* 4:5 all-layer read `PLAN.md`
-> §4 item 4 asks for, the quotes hierarchy, §4.1's cross-layer checker
-> design, §4.3's VP/Layer-5 relationship, or the external consumer survey
-> `REDESIGN.md` §5 flags as the one genuinely unknown cost figure).
+> **L1 implemented (this session, operator instruction: "gen2/ にL1を実装して
+> ください").** [`gen2/l1.py`](gen2/l1.py) is §2.1's L1 exactly as designed:
+> `tokenize()`'s full output (`dante_corpus.tokenizer.tokenize`), indexed,
+> with only the pure-whitespace tokens `tokenize()` also emits dropped —
+> alpha tokens and punctuation alike keep a position. `L1Token(index, text)`
+> / `L1Line(no, text, tokens)` are frozen dataclasses; `l1_line(no, text)`
+> indexes one line, `l1_canto(canticle, number)` indexes a whole canto by
+> reading raw source text through `dante_corpus.api.canto()` — the only thing
+> it touches in `dante_corpus`, and it is layer-0 (text), not old Layer 1, so
+> premise 3 holds. No model call, nothing persisted: L1 is a pure function of
+> the source text, computed on demand the same way old Layer 1's
+> `Line.tokens` already is. Verified against §2.1 directly: the *Inf* 1:1 and
+> 1:25 worked examples reproduce exactly, and a `--stats` corpus-wide census
+> (also pinned as a test) matches §2.1's own numbers bit for bit — 101,601
+> alpha terminals, 17,434 punctuation terminals with the same per-mark
+> breakdown, every quotation-mark pair exactly balanced (`«`/`»` 1,062/1,062,
+> `‘`/`’` 109/109, `“`/`”` 51/51). Tests live in
+> [`../layers/tests/test_gen2_l1.py`](tests/test_gen2_l1.py) (13 tests, `uv
+> run pytest layers/tests`) — parallel to `harness/tests`, not part of the
+> root suite (`pyproject.toml` `testpaths = ["tests"]`) until gen2 replaces
+> the old stack, per operator instruction: "コードをdante_corpusと統合する際
+> に、テストもルートの tests/ と統合します."
+>
+> **This is a start, not yet a stack — only L1 is implemented.** L2 (the
+> split/POS/normalize trial) is still exactly as designed and unstarted; the
+> next session's first choice: begin the split/POS/normalize trial on
+> *Inf* 1:1-9 per the rollout plan above (now with a working L1 under it to
+> index against), or continue open review items first (G's real count net of
+> nested coordination, the *Inf* 4:5 all-layer read `PLAN.md` §4 item 4 asks
+> for, the quotes hierarchy, §4.1's cross-layer checker design, §4.3's
+> VP/Layer-5 relationship, or the external consumer survey `REDESIGN.md` §5
+> flags as the one genuinely unknown cost figure).
 >
 > **Still deferred, unrevisited against premise 3: the bootstrap safe/
 > contaminated split.** Which frozen layers are safe to show the model even
