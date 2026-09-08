@@ -108,8 +108,9 @@ inside a single line, with the granularity rule left unwritten (read finding H:
 tokens alike, each with its own `(line, token)` address. This is not the same
 sequence as old Layer 1's `Line.tokens` (`api.py:52`), which applies `has_alpha`
 before indexing and so never assigns punctuation a position at all; L1's
-numbering therefore does not line up with old Layer 1's. See the punctuation
-measurement below.
+numbering therefore does not line up with old Layer 1's. Full diagnosis, the
+corpus-wide punctuation census, and (as of 2026-09-09) the implementation:
+[`L1.md`](L1.md).
 
 **L2 splits contractions and clitic compounds into their grammatical words, and
 carries a back-reference to the L1 token it came from.** Under premise 3 this is
@@ -388,38 +389,14 @@ than a design matter, but it belongs on the list.
 **What this does and does not renumber.** Old Layer 1–5 keep the addressing they
 already have; nothing here edits `dep/`, `np/`, `skel/` or `case/` in place, and
 under premise 1 rebuilding a parallel generation rather than patching the old one
-is accepted cost, not a blocker. What *does* shift is L1 itself against old Layer
-1 — L1 has its own numbering (§2.1 above), not a superset or subset of
-`Line.tokens`'s, because punctuation occupies positions old Layer 1 never
-assigned. L2's split is not a second blind renumbering on top of that: every L2
-entry carries the `l1_index` it came from, so the old-to-new correspondence is
-data, not something a consumer has to reconstruct.
-
-**Punctuation is why L1 and old Layer 1 diverge (operator, 2026-09-09).**
-`tokenize()` (`tokenizer.py:53`) already splits punctuation into its own token
-strings; the only filter old Layer 1 applies is `has_alpha` at `api.py:52`,
-which drops them *before* indexing. `PLAN.md`'s Layer-1 finding — "punctuation
-has no token index, so no layer can cite it" — is therefore not a tokenization
-gap but an indexing one, and it is L1, not L2, that fixes it: L1 is
-`tokenize()`'s output taken whole. Since the design stops at phrases rather than
-a full sentence tree, punctuation belongs **beside** phrase-structure objects,
-not beneath them — a comma separates coordinated phrases, a colon introduces
-one, quotation marks bound a span of direct discourse; none of that is a
-property of any single token. Measured over the whole corpus:
-
-```
-alpha tokens (current Line.tokens)                       101,601
-punctuation tokens (tokenize(), non-alpha, non-space)      17,434
-  ,  8,513   .  3,275   ;  1,628   «/» 1,062/1,062   :    988
-  ?    278   !    232   ‘/’  109/109   “/”   51/51   '     51
-  —     18   (/)     3/3    -      1
-```
-
-**Every quotation-mark pair is exactly balanced** — `«`/`»` 1,062/1,062,
-`‘`/`’` 109/109, `“`/`”` 51/51. The closing partner Layer 1 would need to bound
-a quoted span as a terminal-delimited constituent already exists one-to-one;
-this is the address the open survey item "the quotes hierarchy" (`PLAN.md`
-§4-1) has been missing.
+is accepted cost, not a blocker. L1's own numbering diverges from old Layer 1's
+because punctuation occupies positions old Layer 1 never assigned — the full
+diagnosis, the corpus-wide punctuation census, and why punctuation belongs
+beside phrase-structure objects rather than beneath them are in
+[`L1.md`](L1.md), not repeated here. L2's split is not a second blind
+renumbering on top of that: every L2 entry carries the `l1_index` it came
+from, so the old-to-new correspondence is data, not something a consumer has
+to reconstruct.
 
 ### 2.2 Phrases — enumerated, not a tree
 

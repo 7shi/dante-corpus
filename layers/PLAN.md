@@ -6,8 +6,11 @@
 > session, a first piece of code — [`README.md`](README.md) (stable
 > orientation), this plan, **[`REDESIGN.md`](REDESIGN.md)** (the design
 > proposal, now §1–§10), [`reads/inf-1-1-9.md`](reads/inf-1-1-9.md) (the pilot
-> read, updated in place this session with this session's follow-ups), and
-> **[`gen2/`](gen2/)** (new this session — see *L1 implemented*, below).
+> read, updated in place this session with this session's follow-ups),
+> **[`gen2/`](gen2/)** (new this session — see *L1 implemented*, below), and
+> **[`L1.md`](L1.md)** (new this session — L1's design, measurement, and
+> implementation gathered in one place, superseding the L1-specific detail
+> that used to sit inline in this handoff and in `REDESIGN.md` §2.1).
 > §4's five items remain unstarted **as written**; the work took the shape
 > described below instead, and §4 is deliberately not rewritten yet — the new
 > direction is still provisional pending an implementation trial (see
@@ -31,9 +34,8 @@
 > ---
 >
 > **Layer 1 (done, earlier this session).** Two corrections to this plan's
-> own prior diagnosis: (1) nothing is discarded at Layer 1 — `Line.text`
-> keeps punctuation verbatim (`api.py:249`); only `Line.tokens` filters it
-> (`api.py:52`) — the defect is *address*, not loss. (2) the sentence unit
+> own prior diagnosis: (1) nothing is discarded at Layer 1 — the defect is
+> *address*, not loss (full finding: [`L1.md`](L1.md)). (2) the sentence unit
 > already exists (`dante_corpus/dep.py:200` `sentence_groups`, Layer 4 is
 > built inside it) but isn't stored or exposed. Also sharpened §1.3's
 > diagnosis: Layer 4 *is* a tree; the defect is that its nodes are tokens,
@@ -125,8 +127,8 @@
 >
 > **L1/L2 design, decided but none implemented (`REDESIGN.md` §2.1–§2.2,
 > §5).** 1. Premise 3 as above. 2. **L1** = `tokenize()`'s full output,
-> punctuation included, own numbering (17,434 newly addressable punctuation
-> terminals; quote pairs exactly balanced). 3. **L2** = grammatical words as
+> punctuation included, own numbering — design, measurement, and (as of this
+> session) implementation: [`L1.md`](L1.md). 3. **L2** = grammatical words as
 > `(l1_index, text)` pairs, only splits, never merges (composite tokens
 > 1:many, e.g. `nel`→`(0,in),(0,il)`; the `fixed` many:1 direction stays a
 > relation one layer up, over L2 entries, because 37 of 170 `fixed` groups
@@ -158,27 +160,14 @@
 > 442 + ~1,686 wordforms' worth of calls.
 >
 > **L1 implemented (this session, operator instruction: "gen2/ にL1を実装して
-> ください").** [`gen2/l1.py`](gen2/l1.py) is §2.1's L1 exactly as designed:
-> `tokenize()`'s full output (`dante_corpus.tokenizer.tokenize`), indexed,
-> with only the pure-whitespace tokens `tokenize()` also emits dropped —
-> alpha tokens and punctuation alike keep a position. `L1Token(index, text)`
-> / `L1Line(no, text, tokens)` are frozen dataclasses; `l1_line(no, text)`
-> indexes one line, `l1_canto(canticle, number)` indexes a whole canto by
-> reading raw source text through `dante_corpus.api.canto()` — the only thing
-> it touches in `dante_corpus`, and it is layer-0 (text), not old Layer 1, so
-> premise 3 holds. No model call, nothing persisted: L1 is a pure function of
-> the source text, computed on demand the same way old Layer 1's
-> `Line.tokens` already is. Verified against §2.1 directly: the *Inf* 1:1 and
-> 1:25 worked examples reproduce exactly, and a `--stats` corpus-wide census
-> (also pinned as a test) matches §2.1's own numbers bit for bit — 101,601
-> alpha terminals, 17,434 punctuation terminals with the same per-mark
-> breakdown, every quotation-mark pair exactly balanced (`«`/`»` 1,062/1,062,
-> `‘`/`’` 109/109, `“`/`”` 51/51). Tests live in
-> [`../layers/tests/test_gen2_l1.py`](tests/test_gen2_l1.py) (13 tests, `uv
-> run pytest layers/tests`) — parallel to `harness/tests`, not part of the
-> root suite (`pyproject.toml` `testpaths = ["tests"]`) until gen2 replaces
-> the old stack, per operator instruction: "コードをdante_corpusと統合する際
-> に、テストもルートの tests/ と統合します."
+> ください").** [`gen2/l1.py`](gen2/l1.py) implements §2.1's L1 in full and is
+> verified against it; design, implementation, and verification detail all
+> live in [`L1.md`](L1.md) now, not here. Tests:
+> [`tests/test_gen2_l1.py`](tests/test_gen2_l1.py) (13 tests, `uv run pytest
+> layers/tests`) — parallel to `harness/tests`, not part of the root suite
+> (`pyproject.toml` `testpaths = ["tests"]`) until gen2 replaces the old
+> stack, per operator instruction: "コードをdante_corpusと統合する際に、テス
+> トもルートの tests/ と統合します."
 >
 > **This is a start, not yet a stack — only L1 is implemented.** L2 (the
 > split/POS/normalize trial) is still exactly as designed and unstarted; the
