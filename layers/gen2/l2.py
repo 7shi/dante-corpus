@@ -11,6 +11,14 @@ and never entangled. **This module is step 1 only.** Apocope and elision are ste
 business: `ch'` stays `ch'`, `i'` stays `i'`, `cammin` stays `cammin`. Nothing here assigns
 a part of speech or a lemma.
 
+**`-r` puts a step 0 in front of it** (`restore.py`, operator, 2026-09-09). Given that
+pass's artifact, each token is *asked about* in its restored spelling — `pel` is asked as
+`pelo` — because the split question is one about shape, and a truncation that happens to be
+`del`-shaped is exactly what shape cannot decide (three runs of this pass split `pel` as
+`per+il`, all three agreeing on the same wrong answer). Only the question moves: positions
+are unchanged, `apply_splits` still writes the L1 surface for every token that does not
+split, so restoring an entry's spelling remains step 3's.
+
 **What the model is asked, and what it is not shown.** One **chunk of lines** per step —
 `--chunk`, default 3 — which is old Layer 2's own granularity (`morph/morph.py`'s
 `--chunk 3`, "a Markdown word table per chunk of lines"). `L2.md`'s *Execution mechanism*
@@ -228,10 +236,24 @@ class Asked:
     text: str
 
 
-def asked_tokens(chunk: Sequence[L1Line]) -> list[Asked]:
-    """The chunk's splittable tokens in L1 order — the rows the answer must have."""
+def asked_tokens(
+    chunk: Sequence[L1Line], restored: Mapping[Position, str] | None = None
+) -> list[Asked]:
+    """The chunk's splittable tokens in L1 order — the rows the answer must have.
+
+    `restored` is step 0's artifact (`restore.py`), and where it has a position the token is
+    **asked about in its restored spelling**: `pel` is asked as `pelo`, so the split question
+    is never put to a form that merely looks like `del`. Nothing else moves — the position is
+    the token's own, and `apply_splits` writes the L1 surface for any token that does not
+    split, so a restoration only ever changes what was *decided*, never what is recorded for
+    an unsplit token. Restoring the spelling of an entry is step 3's, still.
+    """
     return [
-        Asked(line=line.no, l1_index=token.index, text=token.text)
+        Asked(
+            line=line.no,
+            l1_index=token.index,
+            text=(restored or {}).get((line.no, token.index), token.text),
+        )
         for line in chunk
         for token in line.tokens
         if is_splittable(token.text)
@@ -241,7 +263,12 @@ def asked_tokens(chunk: Sequence[L1Line]) -> list[Asked]:
 # --- $O$: the question, and the gate on the answer -------------------------------------
 
 
-def ask_message(chunk: Sequence[L1Line], *, refusal: str = "") -> str:
+def ask_message(
+    chunk: Sequence[L1Line],
+    *,
+    refusal: str = "",
+    restored: Mapping[Position, str] | None = None,
+) -> str:
     """The single user message for one attempt at one chunk.
 
     The lines are shown for context and the tokens are listed so the model never has to
@@ -251,11 +278,24 @@ def ask_message(chunk: Sequence[L1Line], *, refusal: str = "") -> str:
     answer to repair.
     """
     lines = "\n".join(f"{line.no} {line.text}" for line in chunk)
-    tokens = " ".join(token.text for token in asked_tokens(chunk))
+    tokens = " ".join(token.text for token in asked_tokens(chunk, restored))
     parts = [
         f"<lines>\n{lines}\n</lines>",
         f"<tokens>\n{tokens}\n</tokens>",
     ]
+    if restored and any(
+        (line.no, token.index) in restored for line in chunk for token in line.tokens
+    ):
+        # The verse is quoted as Dante wrote it and the token list is not, so the
+        # difference is named rather than left for the model to notice and "correct".
+        parts.append(
+            "<note>\n"
+            "Some tokens are listed with letters an earlier pass put back — a dropped "
+            "final syllable, or the letters an apostrophe stands for — so they read "
+            "differently here than in the lines above. Answer about the tokens as listed; "
+            "keys are copied from the token list.\n"
+            "</note>"
+        )
     if refusal:
         parts.append(
             "<verdict>\n"
@@ -472,6 +512,7 @@ def split_chunk(
     system_prompt: str,
     max_iterations: int = MAX_ITERATIONS,
     fallback: bool = False,
+    restored: Mapping[Position, str] | None = None,
 ) -> ChunkResult:
     """Ask one chunk until the gate accepts an answer, or the budget runs out.
 
@@ -479,7 +520,7 @@ def split_chunk(
     is a function of the chunk and never of the attempt count, and a refused attempt leaves
     the caller's table untouched.
     """
-    tokens = asked_tokens(chunk)
+    tokens = asked_tokens(chunk, restored)
     result = ChunkResult(lines=[line.no for line in chunk], tokens=tokens,
                          fallback=fallback)
     if not tokens:
@@ -490,7 +531,7 @@ def split_chunk(
     refusal = ""
     for attempt in range(1, max_iterations + 1):
         kind = "refused" if refusal else "ask"
-        message = ask_message(chunk, refusal=refusal)
+        message = ask_message(chunk, refusal=refusal, restored=restored)
         reset = getattr(generate, "reset", None)
         if reset is not None:
             reset()
@@ -532,6 +573,7 @@ def build_splits(
     on_settled: Callable[[ChunkResult], None] | None = None,
     already_answered: Callable[[Sequence[L1Line]], bool] | None = None,
     on_skipped: Callable[[Sequence[L1Line]], None] | None = None,
+    restored: Mapping[Position, str] | None = None,
 ) -> dict[Position, list[str]]:
     """Every split these lines contain, by position: one bounded step per chunk of lines.
 
@@ -583,6 +625,7 @@ def build_splits(
             generate=generate,
             system_prompt=system_prompt,
             max_iterations=max_iterations,
+            restored=restored,
         )
         absorb(result)
         if result.accepted or len(chunk) == 1:
@@ -596,6 +639,7 @@ def build_splits(
                     system_prompt=system_prompt,
                     max_iterations=max_iterations,
                     fallback=True,
+                    restored=restored,
                 )
             )
     return splits
@@ -1139,6 +1183,10 @@ def _main(argv=None) -> int:
                         help=f"lines per request (default {CHUNK_SIZE}, old Layer 2's)")
     parser.add_argument("--max-iterations", type=int, default=MAX_ITERATIONS)
     parser.add_argument("-o", "--out", help="artifact TSV (default: layers/l2/<canticle>/NN.tsv)")
+    parser.add_argument("-r", "--restored", metavar="TSV", default=None,
+                        help="step 0's artifact (layers.gen2.restore): ask about each "
+                             "token in its restored spelling, so a truncation that looks "
+                             "like a contraction (pel) is never put to the split question")
     parser.add_argument("--force", action="store_true",
                         help="ask again from the first line, ignoring what the artifact "
                              "already answers (default: resume, skipping those chunks)")
@@ -1172,6 +1220,8 @@ def _main(argv=None) -> int:
         parser.error("--lines applies to one canto; narrow -c")
     if args.out and len(targets) != 1:
         parser.error("--out names one file; narrow -c")
+    if args.restored and len(targets) != 1:
+        parser.error("--restored names one canto's file; narrow -c")
     if args.max_iterations < 1:
         parser.error("--max-iterations must be >= 1")
     if args.chunk < 1:
@@ -1283,6 +1333,13 @@ def _build_canto(
     line_span = (min(line.no for line in l1_lines), max(line.no for line in l1_lines))
     out_path = Path(args.out) if args.out else artifact_path(canticle, number)
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    # Step 0's answers, if this run is given them: only the positions it changed, so an
+    # absent file and a file that restored nothing ask exactly the same question.
+    restored: dict[Position, str] = {}
+    if getattr(args, "restored", None):
+        from .restore import load_restorations
+
+        restored = load_restorations(args.restored)
     wordforms = distinct_wordforms(l1_lines)
     label = f"{canticle} {number}"
     # `ARCHITECTURE.md` §0's interruption resilience: a canto is ~46 chunks and a dozen
@@ -1314,6 +1371,8 @@ def _build_canto(
             "line_end": line_span[1],
             "model": args.model,
             "skill_digest": _skill_digest(),
+            **({"restored_from": str(args.restored), "restored_tokens": len(restored)}
+               if restored else {}),
         }
     )
     report.l1_tokens = sum(len(line.tokens) for line in l1_lines)
@@ -1333,7 +1392,9 @@ def _build_canto(
             f"[l2-split] {report.l1_tokens} L1 tokens, {len(wordforms)} distinct "
             f"wordforms, {pending} of {len(planned)} chunk(s) of {args.chunk} line(s) "
             f"to ask ({len(planned) - pending} already in the artifact), "
-            f"model={args.model}, max {args.max_iterations} attempt(s) each",
+            f"model={args.model}, max {args.max_iterations} attempt(s) each"
+            + (f", {len(restored)} token(s) asked in a restored spelling" if restored
+               else ""),
             file=ui_stream,
             flush=True,
         )
@@ -1423,6 +1484,7 @@ def _build_canto(
                 on_settled=settled,
                 already_answered=lambda chunk: all(line.no in done for line in chunk),
                 on_skipped=skipped,
+                restored=restored,
             )
         report.add_retries(retry_delta(retries_before, status_line))
 

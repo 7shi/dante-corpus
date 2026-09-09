@@ -388,6 +388,168 @@
 > *Inf* 4:5 all-layer read, the quotes hierarchy, §4.1's cross-layer checker,
 > §4.3's VP/Layer-5 relationship, the external consumer survey) are all still
 > untouched.
+>
+> ---
+>
+> ### Handoff (2026-09-09, continued) — resume here
+>
+> **`gen2/l2.py` gained `-l`/`-o` short flags and per-chunk artifact writes**
+> (commit `b990378`). `-l`/`-o` shorten `--lines`/`--out`. The TSV now flushes
+> after every chunk settles or is skipped, not only once at the end of the
+> canto — closing a real gap between the interruption-resilience claim
+> (resuming reads the artifact back) and what had actually reached disk if a
+> run died mid-canto.
+>
+> **A three-run check answered the open question about `pel`, and found two
+> more positions (commit `f5bfbb7`, full text and argument in
+> [`L2.md`](L2.md), *Is a `differs` random or systematic?*).** One run cannot
+> distinguish a stochastic slip from a repeatable mistake, so *Inf* 1 was
+> generated twice more with the same model and prompt (`01-2.tsv`, `01-3.tsv`,
+> using the new `-o`), and the three files diffed against each other rather
+> than against old Layer 2:
+>
+> - **`pel`** (1:33) — all three runs agree on the same wrong split
+>   (`per+il`). Three-way agreement on a wrong answer is the signature of a
+>   **systematic** error: nothing in one chunk of lines tells the model that
+>   `pel` is `pelo` (fur) in all 7 corpus-wide occurrences. This closes the
+>   question left open in the previous handoff — it is not a fluke, and no
+>   amount of re-running would fix it by vote.
+> - **`de'`** (1:17) — `01.tsv`/`01-2.tsv` split `di+i` (agreeing with old
+>   Layer 2); `01-3.tsv` alone leaves it whole. Majority is right here.
+> - **`dipartilla`** (1:111, verb half) — `01.tsv`/`01-3.tsv` both read
+>   `diparta` (present subjunctive); `01-2.tsv` alone reads `dipartì`. Old
+>   Layer 2 records **remote past** at this token
+>   (`morph/inferno/01.tsv:808`), which is `dipartì` — **majority is wrong**
+>   here, and the one-vote minority is correct.
+>
+> **The conclusion, load-bearing for how this proceeds: majority vote across
+> repeated runs detects disagreement, it does not verify correctness.**
+> Three-way agreement is not proof of correctness (`pel`), and a 2:1 split
+> is not proof the majority is right (`dipartilla`) — every disagreement
+> still has to be argued from precedent, same as any other `differs`.
+>
+> **A standing position was reversed this session: hand-editing the artifact
+> is now adopted, not ruled out** (operator argument, recorded in `L2.md`
+> right after the three-run section: steering a one-shot prompt toward the
+> right answer and correcting the same answer by hand afterward put the
+> identical human judgment into the corpus by two different routes, and the
+> goal is a correct corpus, not one whose correctness was produced
+> unassisted). **`l2/CORRECTIONS.md` is adopted**, matching the Cross-Layer
+> Hygiene discipline `PLAN.md` §"Standing Disciplines" already states and the
+> precedent on disk (`morph/`, `dep/`, `case/`, `np/` each have one).
+>
+> **Not yet done, and the concrete next step: `l2/CORRECTIONS.md` itself is
+> still unwritten.** Its first three entries are already decided by the
+> argument above and just need recording, in the same classify/verify/
+> re-check form the other four files use:
+>
+> 1. **`pel`** (1:33) — systematic, not yet hand-corrected pending a decision
+>    on which mechanism should have caught it (step-1 prompt fix, corpus-wide
+>    consistency pass, or accepted noise for step 3) — record the finding
+>    even before that decision is made.
+> 2. **`de'`** (1:17) — hand-correct `layers/l2/inferno/01.tsv` to split
+>    `di+i`, verified against `01-2.tsv` + old Layer 2's `preposition+article`.
+> 3. **`dipartilla`** (1:111) — hand-correct `01.tsv`'s verb half from
+>    `diparta` to `dipartì`, verified against `01-2.tsv`'s minority reading +
+>    old Layer 2's `remote past` feature.
+>
+> After any hand correction to `01.tsv`, re-run `--check` per the standing
+> methodology. `01-2.tsv`/`01-3.tsv` are diagnostic artifacts from this
+> check, not a second and third canonical build — whether they stay on disk
+> or are cleaned up once `l2/CORRECTIONS.md` is written is undecided, and
+> should be settled explicitly rather than left to accumulate as more cantos
+> get this treatment.
+>
+> ---
+>
+> ### Handoff (2026-09-09, step 0 tried) — resume here
+>
+> **A pass was added *before* the split and run over all of *Inf* 1; it did
+> not do the job it was built for.** Full design, run, cost and conclusion:
+> [`L2.md`](L2.md), *Step 0: restoring dropped letters before the split*. The
+> short version:
+>
+> **Why it was built.** Old Layer 2 gets `pel` right because
+> `morph/morph.py` never asks whether a token splits — it asks for a lemma
+> *and* a POS in one row, so `di` + `preposition+article` is unwritable at
+> that position and the wrong answer is blocked by a second, contentful
+> column. Two ways to put that column back were identified: **step 2 revoking
+> a step-1 split**, or asking the contentful question **first** — *what word
+> is this?*, a choice of word form rather than a classification (operator: a
+> model selects word forms statistically and is not reliably conscious of
+> POS, so form-then-POS may be the more accurate order). The second was
+> taken.
+>
+> **What it is.** [`gen2/restore.py`](gen2/restore.py) +
+> [`gen2/skills/l2-restore/`](gen2/skills/l2-restore/), step 1's machinery
+> throughout (chunk per request, keys not indexes, runtime gate, refusal as
+> the identity, line-by-line fallback, resume, append-only log), artifact
+> `layers/l2/<canticle>/NN-restore.tsv`. Scope is stated as an operation on
+> letters and **never as "the standard form"** (operator: that phrasing
+> invites lexical substitution, and `sanza`/`core`/`giuso` are this
+> language's own words, not shortened ones). **The apostrophe is read as a
+> marker of *where* the letters go**, not stripped (operator) — so the gate
+> requires the token's letters to read straight through the answer *and* the
+> answer to grow only at an end the token's own spelling opens.
+> `l2.py -r` consumes it and **moves only the question**: positions are
+> unchanged and an unsplit token still records its L1 surface, so an
+> imperfect restoration cannot reach the split artifact. 42 tests (121 with
+> the rest).
+>
+> **A discipline, recorded because it was broken first: a wordform under
+> measurement must not appear in the prompt.** The first prompt used
+> `pel` -> `pelo` as its worked apocope example and the pass duly "solved"
+> `pel`; removing that one line, the same model left `pel` alone. Steering a
+> one-shot to the answer and hand-correcting afterwards are the same act
+> (operator), so an experiment whose prompt contains its own answer measures
+> nothing. The prompt was then stripped of **every** example, scope-bounding
+> ones included (operator: 「まず例は一切なしで実験です」). That is the version
+> that ran.
+>
+> **The run (`google:gemma-4-31b-it`).** 49 chunks, gate PASS, 993 tokens,
+> **136 restored**, 60 attempts / 12 refused. Working: every
+> leading-apostrophe case correct (`'ncontro`→`incontro`, `'nvidia`→
+> `invidia`, `'l`→`il`, …); the gate refused two real respellings
+> (`avea`→`aveva`, `parea`→`pareva`); the per-occurrence design fired for the
+> first time on real data (13 wordforms two ways, none an error — `l'` is
+> `le` at 9:2, `la`/`lo` elsewhere); all six clitic compounds untouched, which
+> is correct for this pass. **Not working: `pel` was not restored**, so step 1
+> met the same token and split it `per+il` again.
+>
+> **`01-4.tsv` (the split over the restored tokens).** 46 chunks, gate PASS.
+> `--check` is **identical to `01.tsv`'s** — 503 agrees, 8 differs, 0/0, the
+> same eight wordforms — so **nothing broke**: the clitics all split, `de'`
+> (restored to `dei`) still splits `di`+`i`, no new `differs`. Against the
+> three earlier runs the whole canto differs in **one** place: 1:111
+> `diparta` → `dipartì`, which is the correct reading (old Layer 2's *remote
+> past*), making `01-4` the best of the four. **But `01-2` reached the
+> identical output with no restoration at all**, so this run does not show the
+> restoration caused it — the three-run lesson applies unchanged.
+>
+> **The cost, and it is not context.** 89 min against the split's 14.5 min,
+> **6.2x** — and thought tokens are 177,071 against 28,581, the same 6.2x,
+> while the restore request is the *shorter* prompt (1,662 input tokens per
+> request against 2,033). Recognition of a closed pattern set is cheap;
+> open generation over every token, with no example left to imitate, is not.
+>
+> **What it settles.** The pass **works as normalization, not as a guard for
+> the split**: its output is real step-3 material, and moved to *after* the
+> split it is the pass the `far`+`ne` shape needs anyway (a truncation hidden
+> inside a fusion — `farsi` 8, `farne` 3, `farmi` 3, `dirne` 2, … — which no
+> pre-split pass can see). **`pel` returns to the other candidate: step 2
+> revoking a step-1 split** on a POS sequence that cannot be assigned in the
+> line. That is the mechanism old Layer 2 actually had; a restoration pass is
+> still one question about one token in isolation and does not carry the
+> contradiction. Its cost is a backward edge step 2 → step 1, bounded if the
+> revision runs once, step 1 is not re-run after it, and each revision is
+> recorded as its own event.
+>
+> **Unchanged by this session, still the concrete next step:**
+> `l2/CORRECTIONS.md` is **still unwritten**, and `01-4.tsv` adds a fourth
+> diagnostic artifact to the `01-2`/`01-3` pile whose disposition is still
+> undecided. Note `01-4` independently confirms `dipartì` at 1:111, so that
+> entry's verification now rests on two runs plus old Layer 2 rather than
+> one.
 
 ## Why this directory exists
 
