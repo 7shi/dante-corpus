@@ -1,29 +1,24 @@
-"""Generation 2, Layer 2, step 0: restore the letters a token drops at its ends.
+"""Generation 2, Layer 2: restore the letters a token drops at its ends.
 
-**Why there is a step before the split at all** (operator, 2026-09-09). Step 1 asks a
-question about *shape* — "is this token several grammatical words written together?" — and
-`pel` (*Inf* 1:33) is the proof that shape is not enough: it is `pelo` with its final vowel
-gone, and it looks exactly like `del`/`nel`/`col`. Three separate runs of step 1 split it
-`per+il`, all three agreeing on the same wrong answer, because nothing in a shape question
-can contradict it. Old Layer 2 got it right, and `L2.md` records why: `morph/morph.py`
-never asked whether a token splits — it asked for a lemma and a part of speech in the same
-row, and `di` + `preposition+article` is unwritable at that position, so the wrong answer
-was blocked by a second, contentful column.
+**Where this runs, and why it is not in front of the split any more** (operator,
+2026-09-09). It was built as a step 0: the split pass of the time asked a question about
+*shape* — "is this token several grammatical words written together?" — and `pel`
+(*Inf* 1:33) is the proof that shape is not enough, since it is `pelo` with its final vowel
+gone and looks exactly like `del`/`nel`/`col`. Restoring the letters first was one of two
+candidate guards. **It ran over all of *Inf* 1 and did not restore `pel`** (`L2.md`, *Step
+0*), at 6.2x the split's cost, and the other candidate was taken instead: `l2.py` now asks
+the words and their coarse part of speech in the same answer, so `di per il macolato` is
+contradicted by the tags in the line the way old Layer 2's second column contradicted it.
 
-This pass is the same mechanism, put *before* the split rather than after it, and asked as
-the question a language model answers best: **what word is this?** — a choice of word form,
-not a classification. Once `pel` has been restored to `pelo`, step 1 is never offered the
-trap: `pelo` is not `del`-shaped.
-
-**Restoration is needed at both ends of the split, not only before it.** A fused token can
-hide a truncation *inside* it — `farne` is `far`+`ne` and `far` is `fare` shortened, and
-that `far` only becomes visible once the token is split (the corpus has `farsi` 8, `farne`
-3, `farmi` 3, `dirne` 2, `udirti` 2, `vederti`, `vedervi`, … all of this shape). So this
-pass does not replace `L2.md`'s normalization step; it is a second instance of the same
-operation at the other end of the pipeline, and each catches what the other cannot:
-
-    before the split   a truncation masquerading as a fusion      pel -> pelo
-    after the split    a truncation hidden inside a fusion        far+ne -> fare+ne
+**And then the words pass absorbed the rest of it** (operator, 2026-09-09). What was left
+for a separate pass was the position *after* the split — a fused token can hide a
+truncation inside it (`farne` is `far`+`ne` and `far` is `fare` shortened; the corpus has
+`farsi` 8, `farne` 3, `farmi` 3, `dirne` 2, `udirti` 2, `vederti`, `vedervi`, … all of this
+shape), and nothing before the split can see it. But `l2.py` writes each part whole, so it
+answers that in the same row: `farne` -> `fare`+`ne`. **This module is therefore unused.**
+It stays because its run is measured work (`L2.md`, *Step 0*) and because its gate's
+criterion is the one `l2.py` now applies — `is_restoration` moved to `l2.py`, and this
+module imports it, so the two cannot drift on what counts as putting letters back.
 
 **The scope is stated as an operation on letters, never as "the standard form"**
 (operator, 2026-09-09): calling it alignment to a standard invites lexical substitution,
@@ -40,11 +35,12 @@ only grow at an end the token's own spelling opens (`ch'` -> `che`, never `ache`
 **What this pass does not decide.** It assigns no part of speech and no lemma, and it never
 splits: its answer is always one word. `nel` comes out of it as `nel`.
 
-The machinery is step 1's, deliberately: the same chunk of lines per request (`--chunk`,
-default 3), answers keyed by the word and never by an index, no transcript across a chunk
-or a retry, the gate in the runtime, refusal as the identity, and a line-by-line fallback
-when a group never passes. `l2.py`'s own primitives are imported rather than copied, so the
-two passes cannot drift on what a token is or on how a key names one.
+The machinery is `l2.py`'s, deliberately: the same chunk of lines per request (`--chunk`,
+default 3), no transcript across a chunk or a retry, the gate in the runtime, refusal as
+the identity, and a line-by-line fallback when a group never passes. `l2.py`'s own
+primitives are imported rather than copied, so the two passes cannot drift on what a token
+is. Answers here are keyed by the word (`locate_key`, which lives in this module now) —
+`l2.py` answers a row per token and matches by position instead.
 
     uv run python -m layers.gen2.restore inferno -c 1 -m ...
     uv run python -m layers.gen2.restore inferno -c 1 --lines 1-9 -m ...
@@ -52,8 +48,9 @@ two passes cannot drift on what a token is or on how a key names one.
 
 The artifact is `layers/l2/<canticle>/NN-restore.tsv`, one row per L1 token with the
 restored form beside it — every token, not only the changed ones, so the file says what was
-*considered* and a run can resume off it. `l2.py -r <that file>` is how the split pass
-consumes it.
+*considered* and a run can resume off it. Nothing consumes it yet: it was `l2.py -r`'s
+input while this pass ran in front of the split, and that option is gone with the step-0
+position.
 
 **Bootstrap status (premise 3).** This pass reads L1 and nothing else. No old-layer file is
 named as an input and the model is shown no old Layer 2 row; `morph/`'s own `apocope` notes
@@ -78,10 +75,12 @@ from .l2 import (
     Position,
     _LogRelay,
     chunks,
+    is_restoration,
     is_splittable,
-    locate_key,
+    letters_of,
     wordform_key,
 )
+from .l2 import _ascii_fold as _fold
 
 DEFAULT_MODEL = "google:gemma-4-31b-it"
 
@@ -92,63 +91,6 @@ ARTIFACT_HEADER = ("line", "l1_index", "text", "restored")
 SLOW_STEP_SECONDS = 60.0
 
 _RESTORE_BLOCK = re.compile(r"<restore>(.*?)</restore>", re.DOTALL | re.IGNORECASE)
-
-# Both apostrophes the corpus writes: the typewriter one it actually uses, and the
-# typographic one a model may answer with.
-_APOSTROPHES = "'’"
-
-
-# --- The gate's own criterion -------------------------------------------------------------
-
-
-def letters_of(token: str) -> str:
-    """The token's letters with its apostrophes removed — what a restoration must keep."""
-    return "".join(character for character in token if character not in _APOSTROPHES)
-
-
-def _fold(text: str) -> str:
-    """Case- and accent-insensitive comparison key, so `Tant'` -> `Tanto` reads through."""
-    decomposed = unicodedata.normalize("NFD", text.casefold())
-    return "".join(c for c in decomposed if not unicodedata.combining(c))
-
-
-def is_restoration(token: str, restored: str) -> bool:
-    """Is `restored` the same word with its dropped letters put back where they were dropped?
-
-    The token's own letters must read straight through the answer, unbroken and in order —
-    that is what keeps the pass off lexical substitution without enumerating the words it
-    must not touch (`pel` -> `pelo` reads through; `sanza` -> `senza` does not). But reading
-    through is not enough on its own, because it does not say **which end** grew: `ch'` ->
-    `ache` reads through just as well as `ch'` -> `che` does.
-
-    **The apostrophe is what says where the letters went** (operator, 2026-09-09), so it is
-    read as a marker rather than stripped and forgotten:
-
-    - a **leading** apostrophe stands for letters dropped at the start, so the answer must
-      grow there — `'l` -> `il`, `'ncontro` -> `incontro` — and no answer may grow at the
-      start without one, which is what refuses `ch'` -> `ache`;
-    - a **trailing** apostrophe stands for letters dropped at the end, so the answer must
-      grow there — `ch'` -> `che`, `l'` -> `lo`;
-    - the end may also grow with no apostrophe at all, because that is the other phenomenon
-      in scope: an unmarked dropped final syllable, `cammin` -> `cammino`, `pel` -> `pelo`.
-
-    A token elided at both ends is therefore allowed to grow at both, and only there.
-    """
-    stem = _fold(letters_of(token))
-    target = _fold(restored)
-    if not stem or not target or len(target) <= len(stem):
-        return False
-    leading = token[:1] in _APOSTROPHES
-    trailing = token[-1:] in _APOSTROPHES
-    start = target.find(stem)
-    while start != -1:
-        grew_at_start = start > 0
-        grew_at_end = start + len(stem) < len(target)
-        if grew_at_start == leading and (grew_at_end or not trailing):
-            return True
-        start = target.find(stem, start + 1)
-    return False
-
 
 # --- $O$: the question, and the gate on the answer -----------------------------------------
 
@@ -161,6 +103,46 @@ def asked_tokens(chunk: Sequence[L1Line]) -> list[Asked]:
         for token in line.tokens
         if is_splittable(token.text)
     ]
+
+
+def locate_key(key: str, tokens: Sequence[Asked]) -> tuple[int, str]:
+    """Which asked token a row's key names, or why it names none (or too many).
+
+    A key is one token, or a run of consecutive tokens **ending with** the one being
+    answered — `de'` normally, `trattar de'` when a bare `de'` would name two places.
+    Returns `(index into tokens, error)`; a non-empty error means the caller refuses the
+    answer.
+
+    Requiring the run to be unique is what lets the answer carry differences only. A bare
+    key matching two occurrences is refused rather than applied to both, because those two
+    occurrences are exactly where one wordform can genuinely read two ways. (This pass is
+    the only one that keys its answers: `l2.py` asks for a row per token and matches by
+    position, so the function lives here, with its user.)
+    """
+    words = key.split()
+    if not words:
+        return -1, "a row with an empty key"
+    span = len(words)
+    hits = [
+        start
+        for start in range(len(tokens) - span + 1)
+        if all(
+            wordform_key(tokens[start + offset].text) == wordform_key(words[offset])
+            for offset in range(span)
+        )
+    ]
+    if not hits:
+        return -1, (
+            f"{key!r} is not a run of consecutive tokens in this passage; keys must be "
+            "copied from the token list"
+        )
+    if len(hits) > 1:
+        places = ", ".join(f"line {tokens[start + span - 1].line}" for start in hits)
+        return -1, (
+            f"{key!r} names {len(hits)} places ({places}); put the tokens that come "
+            "before it in front of it until the key names exactly one"
+        )
+    return hits[0] + span - 1, ""
 
 
 def ask_message(chunk: Sequence[L1Line], *, refusal: str = "") -> str:
@@ -204,7 +186,7 @@ def parse_restore_answer(
     token's restored spelling. A non-empty `error` means nothing is recorded and the caller
     re-asks with it, so a refused answer is the identity on the table.
 
-    Keys are resolved by `locate_key` — step 1's own function — against the tokens the
+    Keys are resolved by `locate_key` — this module's own function — against the tokens the
     request listed, so a key either names exactly one token of this passage or the answer is
     refused. Values go through `is_restoration`, which is where the pass's whole scope lives.
     """
@@ -497,7 +479,7 @@ def parse_artifact(text: str) -> dict[Position, str]:
 def load_restorations(path: Path | str) -> dict[Position, str]:
     """The restore artifact as the split pass consumes it: only the tokens that changed.
 
-    `l2.py -r` substitutes these into the question it asks, so a position that restored to
+    Nothing consumes these yet (the `l2.py -r` reader is gone), so a position that restored to
     itself must not appear — it would be a no-op substitution that only slows the lookup.
     """
     text = Path(path).read_text(encoding="utf-8")

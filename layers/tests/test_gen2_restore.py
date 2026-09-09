@@ -1,4 +1,8 @@
-"""Tests for generation 2's Layer 2, step 0 — the restore (`layers/gen2/restore.py`).
+"""Tests for generation 2's Layer 2 restoration pass (`layers/gen2/restore.py`).
+
+The pass is no longer wired in front of the split: `l2.py` now asks the split and the
+coarse POS as one question, and `PLAN.md` settles the restoration's place as *after* the
+words are decided (`L2.md`, *Which order*). What is tested here is the pass itself.
 
 Run on demand — `uv run pytest layers/tests` — the same way `harness/tests` does; `layers/`
 is not yet part of the maintained root suite (`pyproject.toml` `testpaths`).
@@ -10,7 +14,7 @@ one the live run uses.
 
 import pytest
 
-from layers.gen2 import l1, l2, restore
+from layers.gen2 import l1, restore
 
 
 # --- The stub model -------------------------------------------------------------------------
@@ -261,46 +265,3 @@ def test_the_artifact_writes_every_token_and_reads_back_the_changed_ones(tmp_pat
     # pass's own loader keeps only what actually changed.
     assert restore.parse_artifact(text)[(1, 1)] == "mezzo"
     assert restore.load_restorations(path) == {(1, 3): "cammino"}
-
-
-# --- What the split pass does with it ----------------------------------------------------------
-
-
-def test_a_restored_token_is_asked_about_in_its_restored_spelling():
-    lines = [l1.l1_line(33, "che di pel macolato era coverta")]
-    plain = [token.text for token in l2.asked_tokens(lines)]
-    restored = [token.text for token in l2.asked_tokens(lines, {(33, 2): "pelo"})]
-    assert "pel" in plain and "pelo" not in plain
-    assert "pelo" in restored and "pel" not in restored
-    assert "pelo" in l2.ask_message(lines, restored={(33, 2): "pelo"})
-
-
-def test_the_question_says_that_the_token_list_differs_from_the_verse():
-    lines = [l1.l1_line(33, "che di pel macolato era coverta")]
-    message = l2.ask_message(lines, restored={(33, 2): "pelo"})
-    assert "<note>" in message
-    assert "<note>" not in l2.ask_message(lines)
-
-
-def test_a_token_left_whole_keeps_its_L1_surface_however_it_was_asked_about():
-    """The restoration moves the *question*, never what an unsplit entry records —
-    restoring an entry's spelling stays step 3's job."""
-    lines = [l1.l1_line(33, "che di pel macolato era coverta")]
-    generate = stub(["<split>\n</split>"])
-    splits = l2.build_splits(
-        lines, generate=generate, system_prompt="s", chunk_size=3,
-        restored={(33, 2): "pelo"},
-    )
-    assert splits == {}
-    l2_line = l2.apply_splits(lines[0], splits)
-    assert [entry.text for entry in l2_line.entries][2] == "pel"
-
-
-def test_the_split_answer_is_keyed_by_the_restored_token():
-    """A key is copied from the token list, which is the restored spelling — so `locate_key`
-    resolves against what the model was actually shown."""
-    lines = [l1.l1_line(1, "e ben ch' i' fossi")]
-    tokens = l2.asked_tokens(lines, {(1, 1): "bene"})
-    splits, error = l2.parse_split_answer("<split>\nbene:be+ne\n</split>", tokens=tokens)
-    assert error == ""
-    assert splits == {1: ["be", "ne"]}

@@ -550,6 +550,182 @@
 > undecided. Note `01-4` independently confirms `dipartì` at 1:111, so that
 > entry's verification now rests on two runs plus old Layer 2 rather than
 > one.
+>
+> **Provenance of `01-4.tsv`, checked rather than assumed** (operator asked;
+> both checks pass). The run's `summary` record carries
+> `restored_from = layers/l2/inferno/01-restore.tsv`, `restored_tokens = 136`
+> (matching the restore artifact's own changed-row count) and
+> `skipped_chunks = 0`, so all 46 chunks were asked with the restorations in
+> hand and nothing was resumed from a pre-existing file. Independently, the
+> model's answer keys are the **restored** spellings — 1:17 comes back as
+> `dei -> di+i`, not `de'` — which is only possible if the restored token list
+> is what the request carried, since keys must be copied verbatim from
+> `<tokens>`. The artifact itself still records the L1 surface, as designed.
+>
+> **Which order — settled, and the reason is not the experiment.** Asked
+> whether it matters which of the two passes runs first: for the split's
+> *output*, measurably not — the whole canto differs in one position and that
+> position was reached by `01-2` without any restoration. But the two
+> positions are **not interchangeable in what they can reach**, and that is
+> structural rather than measured:
+>
+> |  | a truncation masquerading as a fusion | a truncation hidden inside a fusion |
+> |---|---|---|
+> | **before** the split | reachable in principle (did not fire) | **invisible** — still one token |
+> | **after** the split | **impossible** — the split is already wrong | reachable |
+>
+> Cost is the same in either position (the same question over roughly the same
+> number of tokens), and the post-split question is the better-posed one — it
+> is asked of grammatical words, so a fused token never has to be recognised
+> and left alone at all. Since the pre-split position's *only* unique job is
+> the `pel` shape and it did not do it, **the pass goes after the split**, and
+> there is no case for paying for both. Moving it is not done.
+>
+> **A cheap measurement that should come before any new mechanism.** The whole
+> `pel` argument rests on one word (7 corpus-wide occurrences). **How many
+> `del`/`nel`-shaped tokens are there corpus-wide that are not contractions?**
+> That is answerable offline from the frozen layers in minutes, and it decides
+> the question the step-2 design is for: if the class has a handful of members,
+> `l2/CORRECTIONS.md` is cheaper than a mechanism; if it is large, step 2's
+> revocation earns its backward edge. Do this before widening past *Inf* 1.
+>
+> **Session close (2026-09-09, step 0).** One commit, `c9291d4` (the restore
+> pass, `-r`, both artifacts, `L2.md`'s new section, this handoff); working
+> tree clean afterwards. `uv run pytest layers/tests` → 121 passed. Nothing was
+> hand-corrected in any artifact this session.
+
+---
+
+### Handoff (2026-09-09, split and POS merged) — resume here
+
+**The pass was rebuilt: the split and a coarse POS are now one question**
+(operator: 「Layer 2のように、文法解析まで一気にやってしまう方が良さそうです。
+ただしlemmatizeは抜いた方が良いでしょう」). Full design, the argument, the
+mechanical diff and the contamination note: [`L2.md`](L2.md), *Split and POS
+become one pass*. The short version:
+
+**Why.** Once `pel` is written down as `per`+`il` the route back is closed —
+every later pass meets two grammatical words, not the trap — so no post-split
+mechanism can be the guard, and step 0 measured that the pre-split position
+does not do it either. What is left is the position old Layer 2 held: the
+contentful column answered **at the same position, in the same answer**. At
+*Inf* 1:33 `che di pel macolato era coverta` the wrong split is unwritable once
+tags are required, because it puts two prepositions and an article in a row and
+leaves `macolato` with no noun. **Lemmas stay out** (operator): the POS column
+alone carries the contradiction, while the lemma column brings the dictionary
+judgment that splits `smarrito`'s rows 4/4 (`REDESIGN.md` §6).
+
+**Restorations stay in, and that folds step 3 into the same answer** (operator:
+「ben→bene 禁止する必要はないのでは？restoreを包含しているので」). Refusing
+`ben` -> `bene` was over-wide: a restoration is not a lemma, and the boundary
+was already mechanical — `is_restoration`, moved from `restore.py` into
+`l2.py`, requires the token's own letters to read straight through the answer,
+growing only where its own spelling says letters were dropped. `ben` -> `bene`
+and `ch'` -> `che` pass; `sanza` -> `senza`, `smarrita` -> `smarrito`, `era` ->
+`essere` are refused, so gender, number, tense and mood cannot move. Because
+each *part* is written whole, this reaches `farne` -> `fare`+`ne` — the
+truncation hidden inside a fusion that the previous handoff's table showed no
+separate pass could reach — and **`gen2/restore.py` is left with no job**. It
+stays on disk (measured work; `l2.py` now owns its criterion and it imports it
+back), unused, its deletion undecided.
+
+**What it is.** [`gen2/l2.py`](gen2/l2.py) replaces the split-only module;
+[`gen2/skills/l2-words/`](gen2/skills/l2-words/) replaces `l2-split/`. The
+answer is a Markdown table in one `<words>` block, **one row per token, matched
+by position** — `| Line | Token | Words | Part of Speech |`, each word written
+whole — so the sparse contract's
+blind spot closes (a missing row is refused, not read as "single word") and
+keys disappear along with `locate_key`, which moves to `restore.py`, its only
+remaining user. Tags are a **closed set of ten**; subtypes and features stay a
+later stage, and a participle is `verb` by stated convention. The artifact
+gains a `pos` column (`line, l1_index, l2_index, text, pos`), and `--check` now
+reads all three decisions on their own grains: splits compared through
+`readings_agree` (putting letters back is not a split disagreement), a
+`[restored]` section of its own, and a `[pos differs]` section that compares
+tags only where both sides split the token the same way, folding old Layer 2's
+39-value vocabulary through `COARSE_POS` first. Everything else is unchanged: chunk of lines per request,
+runtime gate, refusal as the identity, line-by-line fallback, resume,
+append-only log, `-o`/`-l`, per-chunk artifact writes. Tests rewritten;
+`uv run pytest layers/tests` → **131 passed**.
+
+**The question hands over that table with its first two columns filled in**
+(operator: 表だけだと transformer が文章のイメージを構築できない可能性がある).
+The verse was always shown; the weakness was the flat token list under it,
+which stripped the line boundaries out of exactly the context `pel` needs. Now
+each row carries its line number, the row set is a fill-in rather than
+something to rebuild (and the gate checks the `Line` column, so a moved row is
+caught), and the prompt asks for the passage to be read as verse first.
+
+**`restore.py` is superseded, not deleted.** Its `-r` wiring into `l2.py` went
+with the step-0 position, and the post-split job the previous handoff reserved
+for it is now answered per part in the same row. The module and its artifact
+stay on disk, unused.
+
+**Every previous artifact was deleted with this commit, and the disposition
+question closes with them** (operator: 「これまでの01-*.tsvは削除して、01.tsvと
+して仕切り直します」). `layers/l2/inferno/` is empty: `01.tsv`, `01-2`, `01-3`,
+`01-4` and `01-restore.tsv` are gone, and so are their logs. They were all
+four-column split-only files (plus the restore pass's own), which this reader
+treats as holding nothing anyway; keeping them would only have invited a resume
+into a shape with no `pos`. **What they measured survives in prose** — the
+three-run check, step 0's run, the eight `differs` — in `L2.md` and in the
+handoffs above, which is where `ARCHITECTURE.md` §5 says the numbers belong.
+The next run therefore starts at line 1 and writes one canonical `01.tsv`.
+
+**Not run, and this is the session's whole open question.** No live model call
+has been made with the merged pass. Three things to read off the first run:
+
+1. **`pel` at *Inf* 1:33** — `che di pel macolato era coverta`. The whole
+   redesign is aimed at this position. If `--check` reports no `differs` there,
+   the mechanism worked; if it still splits `per`+`il`, the guard is not the
+   tag column and the argument in `L2.md` needs revisiting rather than
+   re-running.
+2. **The six clitic compounds** (`aiutami`, `dipartilla`, `Rispuosemi`,
+   `trarrotti`, `vagliami`, `venendomi`) — under the split-only pass these were
+   six of the eight `differs`, the designed surface/lemma gap. With the parts
+   now written whole they should agree, or the gap should at least shrink to
+   something the `[restored]` section explains.
+3. **Cost.** The answer is dense (68 rows for nine lines against four) and
+   carries the restored spellings step 0 spent 89 minutes on by itself, though
+   here they ride in a request that was being sent anyway, beside a tag column
+   that is recognition over a closed set. The split-only baseline is **14.8 min
+   for the canto**; step 0's was 89.
+
+**How to run it.** From the repo root, or `make all` / `make check` from
+`layers/l2/` (`MODEL` comes from `../../model.mk`):
+
+```
+uv run python -m layers.gen2.l2 inferno -c 1 -l 1-9 -m google:gemma-4-31b-it
+uv run python -m layers.gen2.l2 inferno -c 1    -m google:gemma-4-31b-it
+uv run python -m layers.gen2.l2 inferno -c 1 --check
+```
+
+The nine-line range first is the rollout plan's own first rung and costs three
+requests; it does **not** reach `pel` (line 33), so the full canto is what
+answers question 1. A run resumes, so the second command only asks the chunks
+the first did not — no `--force` needed, and `--force` is what to use if the
+prompt changes under an existing artifact. `--chunk 1` isolates a bad line and
+`--max-iterations` raises the per-chunk cap.
+
+**What to report back:** the summary block the run prints (chunks / tokens /
+terminals / tags / requests / seconds), and `--check`'s output — the per-line
+`[...]` view, `[differs]`, `[restored]`, `[pos differs]` and the counts.
+A systematically bad answer *shape* is a prompt fix in
+[`gen2/skills/l2-words/`](gen2/skills/l2-words/), never a parser fix: the gate's
+refusal messages are written to be handed back to the model, so read what it
+was told before changing code. A `differs` row is evidence for one of two
+outcomes (L2-is-wrong / layer2-is-wrong) — decide which by argument from the
+text and record the argument in `L2.md`, per premise 3.
+
+**Unchanged and still the standing next steps:** `l2/CORRECTIONS.md` is still
+unwritten — but its three decided entries were all verified against artifacts
+that no longer exist, so re-derive them from this run rather than from the
+deleted files (`pel` 1:33; `de'` 1:17 splits `di`+`i`; `dipartilla` 1:111 reads
+`dipartì`, not `diparta`, per old Layer 2's *remote past*). And the cheap
+corpus-wide measurement the previous handoff asked for — **how many
+`del`/`nel`-shaped tokens are not contractions** — is still the thing to do
+before any further mechanism, though its stakes drop if this run reads `pel`
+correctly.
 
 ## Why this directory exists
 
