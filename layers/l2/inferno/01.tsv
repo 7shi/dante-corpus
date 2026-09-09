@@ -115,7 +115,7 @@ line	l1_index	l2_index	text	pos
 13	10	11	giunto	verb
 13	11	12	,	
 14	0	0	là	adverb
-14	1	1	dove	adverb
+14	1	1	dove	pronoun
 14	2	2	terminava	verb
 14	3	3	quella	adjective
 14	4	4	valle	noun
@@ -157,7 +157,7 @@ line	l1_index	l2_index	text	pos
 19	2	2	la	article
 19	3	3	paura	noun
 19	4	4	un	article
-19	5	5	poco	adverb
+19	5	5	poco	noun
 19	6	6	queta	adjective
 19	7	7	,	
 20	0	0	che	pronoun
@@ -259,7 +259,7 @@ line	l1_index	l2_index	text	pos
 30	9	9	basso	adjective
 30	10	10	.	
 31	0	0	Ed	conjunction
-31	1	1	ecco	adverb
+31	1	1	ecco	interjection
 31	2	2	,	
 31	3	3	quasi	adverb
 31	4	4	a	preposition
@@ -279,7 +279,7 @@ line	l1_index	l2_index	text	pos
 33	0	0	che	pronoun
 33	1	1	di	preposition
 33	2	2	pelo	noun
-33	3	3	macolato	adjective
+33	3	3	macolato	verb
 33	4	4	era	verb
 33	5	5	coverta	verb
 33	6	6	;	
@@ -309,7 +309,7 @@ line	l1_index	l2_index	text	pos
 36	6	6	volte	noun
 36	7	7	vòlto	verb
 36	8	8	.	
-37	0	0	Tempo	noun
+37	0	0	tempo	noun
 37	1	1	era	verb
 37	2	2	da	preposition
 37	2	3	il	article
@@ -417,7 +417,7 @@ line	l1_index	l2_index	text	pos
 49	6	6	tutte	adjective
 49	7	7	brame	noun
 50	0	0	sembiava	verb
-50	1	1	carca	verb
+50	1	1	carca	adjective
 50	2	2	ne	preposition
 50	3	3	la	article
 50	4	4	sua	adjective
@@ -472,7 +472,7 @@ line	l1_index	l2_index	text	pos
 56	6	6	lo	pronoun
 56	7	7	face	verb
 56	8	8	,	
-57	0	0	che	pronoun
+57	0	0	che	conjunction
 57	1	1	in	preposition
 57	2	2	tutti	adjective
 57	3	3	suoi	adjective
@@ -482,7 +482,7 @@ line	l1_index	l2_index	text	pos
 57	7	7	si	pronoun
 57	8	8	attrista	verb
 57	9	9	;	
-58	0	0	tal	adjective
+58	0	0	tal	pronoun
 58	1	1	mi	pronoun
 58	2	2	fece	verb
 58	3	3	la	article
@@ -503,7 +503,7 @@ line	l1_index	l2_index	text	pos
 60	0	0	mi	pronoun
 60	1	1	ripigneva	verb
 60	2	2	là	adverb
-60	3	3	dove	adverb
+60	3	3	dove	pronoun
 60	4	4	il	article
 60	5	5	sole	noun
 60	6	6	tace	verb
@@ -666,7 +666,7 @@ line	l1_index	l2_index	text	pos
 79	1	1	Or	adverb
 79	2	2	sei	verb
 79	3	3	tu	pronoun
-79	4	4	quello	adjective
+79	4	4	quel	adjective
 79	5	5	Virgilio	noun
 79	6	6	e	conjunction
 79	7	7	quella	adjective
@@ -681,7 +681,7 @@ line	l1_index	l2_index	text	pos
 80	7	7	?	
 80	8	8	»	
 80	9	9	,	
-81	0	0	rispuoso	verb
+81	0	0	rispuosi	verb
 81	1	1	io	pronoun
 81	2	2	lui	pronoun
 81	3	3	con	preposition
@@ -791,7 +791,7 @@ line	l1_index	l2_index	text	pos
 92	7	7	,	
 93	0	0	«	
 93	1	1	se	conjunction
-93	2	2	vuole	verb
+93	2	2	vuoi	verb
 93	3	3	campare	verb
 93	4	4	di	preposition
 93	5	5	esto	adjective
@@ -945,7 +945,7 @@ line	l1_index	l2_index	text	pos
 111	4	4	dipartì	verb
 111	4	5	la	pronoun
 111	5	6	.	
-112	0	0	Onde	conjunction
+112	0	0	onde	conjunction
 112	1	1	io	pronoun
 112	2	2	per	preposition
 112	3	3	lo	article
@@ -1008,7 +1008,7 @@ line	l1_index	l2_index	text	pos
 119	4	5	sperano	verb
 119	5	6	di	preposition
 119	6	7	venire	verb
-120	0	0	quando	conjunction
+120	0	0	quando	adverb
 120	1	1	che	conjunction
 120	2	2	sia	verb
 120	3	3	a	preposition
@@ -1142,7 +1142,7 @@ line	l1_index	l2_index	text	pos
 134	4	4	la	article
 134	5	5	porta	noun
 134	6	6	di	preposition
-134	7	7	san	adjective
+134	7	7	san	noun
 134	8	8	Pietro	noun
 135	0	0	e	conjunction
 135	1	1	coloro	pronoun

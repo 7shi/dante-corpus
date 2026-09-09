@@ -42,106 +42,63 @@ and re-run the layer's `--check` afterwards. Old Layer 2 (`morph/`) is cited her
 purpose, the entry says so.
 
 
-## 8 rows from the first two runs of *Inferno* 1 (2026-09-10)
+## 3 rows, *Inferno* 1's third run under the participle-reason prompt (2026-09-10)
 
-*Inferno* 1 was generated twice under the merged split-and-POS pass
-(`google:gemma-4-31b-it`), the second time after the `Index` column was added. Positions
-that moved between the two runs cannot carry an argument on their own — repeated runs
-detect disagreement, they do not verify correctness — so each entry below is argued from
-the line and from corpus-wide precedent, and names which run it was found in.
+*Inferno* 1 was regenerated a third time (`--force`, `google:gemma-4-31b-it`), this time
+under the prompt that states the participle convention's *reason* rather than a bare
+prohibition (`../L2.md`, *The eleventh tag, declined*). Every prior entry in this file
+was checked against the new artifact first: **`poco` 1:7, `brame` 1:49, `tutte` 1:49,
+`Molti` 1:100, `imperador` 1:124, `disperate` 1:115 and `dolenti` 1:116 are all correct
+unaided this run** and are dropped, per this file's own rewrite rule — describing a
+position the artifact now gets right describes nothing. `me'` 1:112 survives, re-verified
+against the same argument as before. Two new entries, `pel` 1:33 and `dipartilla` 1:111,
+are added — not because the mechanism regressed, but because it is now clear it never
+fully closed (`../L2.md`, *A third run: the participle reason holds, `pel` and
+`dipartilla` wobble*): both positions had read correctly in each of the two prior runs,
+and both flipped to the wrong answer in this one, under a prompt that names neither word.
+Repeated runs detect disagreement, they do not verify correctness — the same lesson the
+tag column already carried is now confirmed at the two positions that most needed it.
 
-Applied to `layers/l2/inferno/01.tsv` (the run 2 artifact, committed at `30aee49` as the
-model produced it). `--check` before and after the batch:
+Applied to `layers/l2/inferno/01.tsv` (the third run's artifact, as the model produced
+it). `--check` before and after the batch:
 
 | | splits | tags | restorations |
 |---|---|---|---|
-| before | 507 agrees, 4 differs, 0/0 | 953 of 989 (96.4%) | 143 positions, 74 distinct |
-| after | **507 agrees, 4 differs, 0/0** | **956 of 989 (96.7%)** | **145 positions, 76 distinct** |
+| before | 505 agrees, 6 differs, 0/0 | 947 of 987 (95.98%) | 142 positions, 73 distinct |
+| after | **507 agrees, 4 differs, 0/0** | **950 of 989 (96.06%)** | **144 positions, 75 distinct** |
 
-No split moved — every correction here is in the `pos` column or is a restoration of a
-token that was already one grammatical word. The net gain of three tag agreements is
-five mistags removed against **two participles deliberately put *into* disagreement**
-with old Layer 2, so the headline figure understates the first group and should not be
-read as the batch's whole effect.
-
-### Tags contradicted by the word's own corpus-wide record
-
-**inferno 1:7 `poco`** — `pronoun` → `adverb`. "*Tant' è amara che **poco** è più
-morte*": so bitter that death is little more. `poco` is **never** a pronoun anywhere in
-the corpus — old Layer 2 reads it `adverb` 75×, `noun` 43×, `adjective` 26×, and
-`pronoun` **0×** — which is the shape `morph/CORRECTIONS.md` already treats as a mistag
-("*giuso* … the only one of 33 occurrences in the corpus tagged noun"). Run 1 read this
-position `adverb` and agreed with old Layer 2; run 2 alone introduced the error, and it
-is also what makes `poco` read three ways in run 2's `[two readings]` (`pronoun` ×4,
-`noun` ×3, `adverb` ×1).
-
-**inferno 1:49 `brame`** — `verb` → `noun`. "*Ed una lupa, che di tutte **brame** /
-sembiava carca ne la sua magrezza*": a she-wolf that seemed laden with every craving.
-`brame` is the plural of the noun *brama*, which old Layer 2 reads `noun` at **7 of 7**
-occurrences corpus-wide and never as a verb. Present in both runs.
-
-**inferno 1:49 `tutte`** — `pronoun` → `adjective`. Same line: `tutte` is attributive on
-`brame` — *di tutte brame* — not a pronoun standing for a noun, which is the boundary
-the prompt itself draws ("*a possessive or demonstrative modifier is `adjective`;
-standing on its own for a noun, it is `pronoun`*"). Old Layer 2 reads it `adjective`
-f. pl. Present in both runs.
-
-**inferno 1:100 `Molti`** — `pronoun` → `adjective`. "***Molti** son li animali a cui
-s'ammoglia*": the adjective is predicative, agreeing with `li animali`, and predicative
-use does not make an adjective a pronoun. Old Layer 2 reads `molto`/`molti` `adjective`
-62×, `adverb` 29×, `noun` 4×, `pronoun` 3× corpus-wide, and `adjective` at every
-occurrence of the plural `molti` in this predicative shape (*Inf* 4:61, 4:121, 29:105,
-*Par* 2:64, 7:29, 13:108, 13:125, 16:142, 17:117, 19:20, 19:106). Run 2 only.
-
-### Restorations the gate refused and the model then declined to make
-
-Both of these are apocope — old Layer 2 marks both `apocope` in its `note` column — so a
-restoration is owed. In each case the model first offered a **respelling**, the gate
-correctly refused it (`is_restoration` requires the token's own letters to read straight
-through the answer), and the retry then left the token whole rather than restoring it
-correctly. The gate was right both times; what is missing is the right answer, which is
-supplied here.
+### A restoration the gate refused and the model then declined to make
 
 **inferno 1:112 `me'`** — `me'` / `pronoun` → `meglio` / `noun`. "*Ond' io per lo tuo
-**me'** penso e discerno*": for your good. The model answered `me`, which the gate
-refused as a truncation rather than a restoration; `meglio` passes `is_restoration` (the
-apostrophe opens the end, and `me` reads straight through `meglio`). Old Layer 2 records
-lemma `meglio`, `noun` m. sg., note `apocope` — the nominalised comparative, not the
-pronoun *me*. Present in both runs.
+**me'** penso e discerno*": for your good. The model answered a truncation the gate
+correctly refused as not a restoration, and the retry left the token whole rather than
+restoring it correctly. `meglio` passes `is_restoration` (the apostrophe opens the end,
+and `me` reads straight through `meglio`). Old Layer 2 records lemma `meglio`, `noun`
+m. sg., note `apocope` — the nominalised comparative, not the pronoun *me*. Present in
+all three runs so far.
 
-**inferno 1:124 `imperador`** — `imperador` → `imperadore`; tag `noun` unchanged. "*ché
-quello **imperador** che là sù regna*". The model answered `imperatore`, and the gate
-refused it correctly: *imperatore* is the modern form and its `t` breaks the token's own
-letters, so it is a lexical substitution, not a restoration. The Tuscan form
-`imperadore` is what the dropped syllable restores (`is_restoration` passes), and it is
-the form Dante writes in full elsewhere. Old Layer 2 records `apocope` here, confirming
-letters are missing; its `lemma` column holds `imperatore`, but a lemma is not a
-restoration and this pass writes no lemmas. Run 2 only.
+### Systematic, not random: two positions the mechanism was supposed to close
 
-### Internal inconsistency against this pass's own stated convention
+**inferno 1:33 `pel`** — `per`+`il` → `pelo` (unsplit), `noun`. "*che di **pel** macolato
+era coverta*": covered with spotted fur. `pel` is the noun *pelo* (fur) in all 7
+corpus-wide occurrences and never a contraction — the split-only pass agreed with itself
+three times on `per`+`il` (`../L2.md`, *Is a `differs` random or systematic?*), and the
+merged pass's contentful POS column was built specifically to make that split unwritable
+(a preposition immediately followed by another preposition and an article, with
+`macolato` left with no noun). It did so **twice** and then produced the old wrong answer
+a third time, so the guard is real but not reliable — the failure is the model's sampling,
+not the mechanism's design. `macolato` itself is untouched by this entry: it reads `verb`
+in this run, which is the participle convention working correctly (old Layer 2's
+`adjective` is the encoding this pass departs from on purpose), not a side effect of the
+`pel` fix.
 
-**inferno 1:115 `disperate`** — `adjective` → `verb`, and
-**inferno 1:116 `dolenti`** — `adjective` → `verb`. "*ove udirai le **disperate**
-strida*" / "*vedrai li antichi spiriti **dolenti***". The prompt states the convention
-flatly — *a participle is `verb`, always … whether it stands in a compound tense,
-predicatively, or in front of a noun like an adjective; do not retag a participle
-`adjective` because it reads like one here* — and the same artifact applies it at
-`smarrita` (1:3), `giunto` (1:13), `compunto` (1:15), `vestite` (1:17), `affannata`
-(1:22), `vòlto` (1:36), `carca` (1:50), `combusto` (1:75) and `ribellante` (1:125).
-These two are the same shape treated differently in the same file, so they are corrected
-to the convention.
-
-**This is the one entry here that departs from precedent on purpose.** Old Layer 2 reads
-`disperato`/`dolente` `adjective` at **26 of 26** occurrences corpus-wide, so the
-correction puts this artifact against a unanimous precedent — deliberately, under
-premise 1, because the convention is this pass's own and its point is to keep a
-participle from being decided by how adjectival it happens to read.
-
-**These two positions are also the evidence in the open eleventh-tag question**
-(`../L2.md`, *The regeneration under `Index`*): run 1 read both `verb` and run 2 read
-both `adjective`, which is the model declining the convention at exactly the lexicalised
-boundary that produced old Layer 2's 573-row `adjective` bucket (`../REDESIGN.md` §6). The eleventh tag was **declined** on 2026-09-10 and the convention
-instead given its reason in the prompt, so these two positions are the first thing the
-next regeneration answers: if they come back `verb`, this entry is dropped as describing
-nothing; if they come back `adjective`, it is carried forward and the reason did not
-reach the model either.
+**inferno 1:111 `dipartilla`** — unsplit `verb` → `dipartì`+`la` (`verb`+`pronoun`). "*là
+onde 'nvidia prima **dipartilla***": whence envy first drove him away. Old Layer 2 records
+this lemma as **remote past** (`dipartì`), not present subjunctive (`diparta`) — confirmed
+twice over, by the three-run check's 2:1 majority under the split-only pass and
+independently by `01-4.tsv`'s restoration run (`../L2.md`, *Is a `differs` random or
+systematic?*, *`01-4.tsv`*). The merged pass had reproduced this correct split-and-lemma
+reading in both prior runs; this run left the token whole instead, the same
+"differs"-shaped regression as `pel` and, by the argument above, evidence of the same
+cause — sampling variance at a position the mechanism has already gotten right more than
+once, not a new defect to design against.
