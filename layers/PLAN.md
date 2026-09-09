@@ -837,6 +837,84 @@ corpus-wide measurement the previous handoff asked for — **how many
 before any further mechanism, though its stakes drop if this run reads `pel`
 correctly.
 
+---
+
+### Handoff (2026-09-10, corrections recorded, participle decided) — resume here
+
+**`l2/CORRECTIONS.md` exists and holds eight hand corrections to
+`layers/l2/inferno/01.tsv`** (commit `7f74680`), each verified against corpus-wide
+precedent, in three groups: four tags contradicted by the word's own record (`poco` 1:7
+`pronoun` → `adverb`, never a pronoun in 144 corpus occurrences; `brame` 1:49 → `noun`;
+`tutte` 1:49 → `adjective`; `Molti` 1:100 → `adjective`), two restorations the gate
+refused and the model then declined to make (`me'` 1:112 → `meglio`/`noun`, `imperador`
+1:124 → `imperadore` — in both the gate was right and only the answer was missing), and
+two participles corrected to this pass's own convention (`disperate` 1:115, `dolenti`
+1:116). `--check` after: splits unmoved at 507/4/0/0, tags 953 → 956 of 989,
+restorations 143 → 145.
+
+**The file's scope is fixed at its head in a `[!NOTE]`, and it is not append-only.** It
+records hand edits only — mechanism changes belong in `L2.md` and these handoffs and
+reach the artifact by regeneration. And **a regeneration rewrites it** (operator): a
+re-run does not reliably repeat the same mistakes at the same positions, so an entry the
+new artifact gets right is describing nothing and is dropped, while an entry whose
+problem survives is carried forward and re-verified. Deleted entries are not kept there
+as history — the argument lives in `L2.md`, and git holds the old versions. A gated
+re-apply script was considered and **declined** for the same reason.
+
+**The eleventh tag is decided: `participle` is NOT added** (operator, 2026-09-10; full
+argument in [`L2.md`](L2.md), *The eleventh tag, declined*). Old Layer 2's own numbers
+settle it — participle-hood is recorded as `pos=verb` plus the **`tense`** column at
+**722** rows against **31** that put it in `pos`, so an eleventh tag would build the
+23:1 minority encoding into generation 2. It also crosses this pass's stated boundary
+(tense is explicitly a later pass's), the tag column's designed job does not need the
+distinction, and adding it re-opens the lexicalised participle-versus-adjective judgment
+that produced §6's 573-row `adjective` bucket.
+
+**Instead the convention was given its reason in the prompt**
+([`gen2/skills/l2-words/SKILL.md`](gen2/skills/l2-words/SKILL.md)): a later pass can add
+*participle* to a `verb` but cannot recover a verb from an `adjective`, so `adjective` at
+a participle destroys a coarse judgment rather than recording a finer one. The four
+wordforms under measurement are deliberately **absent** from the new text, per the
+discipline this repository recorded after the `pel` → `pelo` incident, so the next run
+measures something.
+
+---
+
+### What the next session reports back
+
+The prompt changed, so a regeneration is owed: `--force`, and it will overwrite the eight
+hand corrections — which is expected, not a loss, since `CORRECTIONS.md` is rewritten
+against the new artifact.
+
+```
+uv run python -m layers.gen2.l2 inferno -c 1 -m google:gemma-4-31b-it --force
+uv run python -m layers.gen2.l2 inferno -c 1 --check
+```
+
+Read four things off it, in this order:
+
+1. **1:115 `disperate` and 1:116 `dolenti`** — the whole point of this session's prompt
+   change. `verb` means the reason reached the model and the convention needs no
+   mechanism. `adjective` means prose is not enough, and the eleventh tag returns to the
+   table on *different* grounds than the ones declined above (not "the category exists"
+   but "the convention is unenforceable").
+2. **`pel` 1:33 a third time**, plus `de'` 1:17 and `dipartilla` 1:111. Two runs have
+   agreed; a third is what makes it a property of the pass rather than of two draws.
+3. **Which of the eight corrections the new artifact needs again.** Run 1 and run 2
+   overlapped at only some positions, so this is also the third data point on how much
+   the tag column wobbles. Rewrite `l2/CORRECTIONS.md` against the new file: carry
+   forward what survives, drop what does not, re-verify each against precedent.
+4. **The `[two readings]` and `[pos differs]` counts** (16 and 36 last time, 33 after the
+   hand corrections), and the refusal count and class — all four refusals were
+   `is_restoration` in run 2, and that class is the one being left to hand correction
+   rather than to prompt examples.
+
+Then: the standing open items are unchanged — the corpus-wide `del`/`nel`-shaped
+measurement, and widening past *Inferno* 1, where `layer2-ambiguous` and `l2-ambiguous`
+have still never fired on real data.
+
+---
+
 ## Why this directory exists
 
 `layers/` opens because `harness/` finished the thing it was actually built for

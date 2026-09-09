@@ -10,8 +10,14 @@
 > contract — does not belong here, however many positions it moves. Those changes are
 > argued in [`../L2.md`](../L2.md) and recorded in [`../PLAN.md`](../PLAN.md)'s
 > handoffs, and their effect reaches the artifact by regeneration, not by editing.
-> If an entry below is later overturned by such a change, the entry stays as the
-> record of what was decided and when; it is not rewritten.
+>
+> **This file describes the artifact that is on disk, so a regeneration rewrites it**
+> (operator, 2026-09-10). A re-run does not reliably reproduce the same mistakes at the
+> same positions, so an entry naming a position the new artifact gets right is describing
+> nothing and is dropped; an entry whose problem survives is carried forward, re-verified
+> against the new file. What was deleted is not kept here as history — the argument for
+> each decision lives in `../L2.md`, which is where it survives a rewrite. Git holds the
+> previous versions of this file for anyone who needs them.
 
 Generation-2 Layer 2 (`layers/l2/`) is build-time output — one model call per chunk of
 lines, gated at the runtime, written to `layers/l2/<canticle>/NN.tsv` (`line`,
@@ -134,6 +140,8 @@ participle from being decided by how adjectival it happens to read.
 **These two positions are also the evidence in the open eleventh-tag question**
 (`../L2.md`, *The regeneration under `Index`*): run 1 read both `verb` and run 2 read
 both `adjective`, which is the model declining the convention at exactly the lexicalised
-boundary that produced old Layer 2's 573-row `adjective` bucket (`../REDESIGN.md` §6). If
-a `participle` tag is adopted, these positions are revisited **by regeneration**, and
-this entry stays as the record of what the convention was when the artifact was written.
+boundary that produced old Layer 2's 573-row `adjective` bucket (`../REDESIGN.md` §6). The eleventh tag was **declined** on 2026-09-10 and the convention
+instead given its reason in the prompt, so these two positions are the first thing the
+next regeneration answers: if they come back `verb`, this entry is dropped as describing
+nothing; if they come back `adjective`, it is carried forward and the reason did not
+reach the model either.
