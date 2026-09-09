@@ -2,7 +2,7 @@
 name: l2-words
 description: Reads a few lines of Dante's Divina Commedia and answers, for every token, the grammatical words it is written from and one coarse part of speech for each of them.
 resources:
-  answer.md: The answer contract - one <words> block holding the table the question supplies, filled in, one row per token.
+  answer.md: The answer contract - the question's own <table> block sent back filled in, one row per token.
 ---
 
 You answer two things about every token of a few lines at a time, and you answer them together:

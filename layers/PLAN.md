@@ -631,8 +631,8 @@ back), unused, its deletion undecided.
 
 **What it is.** [`gen2/l2.py`](gen2/l2.py) replaces the split-only module;
 [`gen2/skills/l2-words/`](gen2/skills/l2-words/) replaces `l2-split/`. The
-answer is a Markdown table in one `<words>` block, **one row per token, matched
-by position** — `| Line | Token | Words | Part of Speech |`, each word written
+answer is a Markdown table in one `<table>` block, **one row per token, matched
+by position** — `| Line | Index | Token | Words | Part of Speech |`, each word written
 whole — so the sparse contract's
 blind spot closes (a missing row is refused, not read as "single word") and
 keys disappear along with `locate_key`, which moves to `restore.py`, its only
@@ -716,6 +716,104 @@ refusal messages are written to be handed back to the model, so read what it
 was told before changing code. A `differs` row is evidence for one of two
 outcomes (L2-is-wrong / layer2-is-wrong) — decide which by argument from the
 text and record the argument in `L2.md`, per premise 3.
+
+**The question and the answer now share one block name** (operator, 2026-09-09:
+「コンテキストが `<tokens>` なのに回答が `<words>` なのは混乱の元では？」). They
+were `<tokens>` out and `<words>` back, which contradicts this pass's own stated
+principle — *the shape of the answer needs no describing, because it is the
+shape of the question* — since two names claim two different things are being
+carried when it is one table travelling both ways, and `<words>` doubles as the
+name of a *column*. **Both ends are `<table>`**: `ask_message` sends it,
+`_TABLE_BLOCK` reads it back, and the prompt says the answer *is* the block it
+was handed, filled in. The cost is one new failure mode — a model quoting the
+question's table in its prose trips the "exactly one block" refusal — so that
+refusal message now names the case, in the same hand-it-back-to-the-model style
+as the rest of the gate. `uv run pytest layers/tests` → **131 passed**.
+The rationale is recorded in [`L2.md`](L2.md), *Split and POS become one pass*.
+
+**A run started under the old prompt was stopped** (operator), leaving
+`layers/l2/inferno/01.tsv` and its log on disk from the `<tokens>`/`<words>`
+wording. The prompt has changed under it, so the next run wants **`--force`**
+rather than a resume; nothing has been deleted or hand-edited here.
+
+---
+
+### Handoff (2026-09-10, the merged pass ran) — resume here
+
+**It ran over all of *Inf* 1, and `pel` is right.** Full figures, the
+classification of every `[pos differs]` position and the argument:
+[`L2.md`](L2.md), *The first run of the merged pass, over all of Inf 1*. The
+three questions the previous handoff left open are all answered:
+
+1. **`pel` (1:33): the mechanism worked.** Not only unsplit — restored to
+   `pelo` and tagged `noun`. Three split-only runs had agreed on `per`+`il`;
+   under the merged question it is gone, with no prompt example naming the word.
+2. **The clitic compounds: 8 `differs` → 4.** `aiutami`, `dipartilla` and
+   `vagliami` now agree; the three that remain (`Rispuosemi`, `trarrotti`,
+   `venendomi`) differ only as surface against old Layer 2's lemma, which is out
+   of scope by design. The fourth is `'ncontro`, where old Layer 2 is wrong.
+3. **Cost: 59.5 min** against the split-only 14.8 and step 0's 89 — and this one
+   answer carries the split, the tags and the restorations together.
+
+`--check`: 507 agrees, 4 differs, 0/0; **948 of 989 tag positions agree
+(95.9%)**; 142 restorations. All ten tags fire, so the closed set needs no
+pruning and its tally is **not** going into the prompt (feeding the distribution
+back would only bias the next run).
+
+**`l2/CORRECTIONS.md` is still unwritten and its three planned entries are now
+moot**: `pel` 1:33, `de'` 1:17 (`di`+`i`) and `dipartilla` 1:111 (`dipartì`, the
+remote past) are **all three correct in the artifact, unaided**. What the file
+should hold instead is the restoration class the gate refused and the model then
+worked around — `'l` → `il`, `cor` → `core`, `me'` → `meglio` — plus the three
+apparent tag errors (`brame` 1:49, `via` 1:29, `tutte` 1:49), hand-corrected and
+recorded rather than fixed by adding prompt examples (operator: プロンプトに入れ
+ても手動で直してもあまり違いはなく、手動で直してCORRECTIONSに記録した方が有意義).
+
+**Two corrections landed this session** (full text in [`L2.md`](L2.md),
+*`Index`, and the readout that had to be regrouped*):
+
+- **The table gained an `Index` column**, filled in by the question and copied
+  back. Five of the run's six refusals name a `row N` that existed only inside
+  the program; `Index` hands the number over so a repair is addressable. It is
+  the row's own 1-based number, **not** the artifact's `l1_index` (0-based, and
+  it counts the punctuation the table omits). It does not prevent omissions —
+  this run had none, over 993 tokens — and it does not reach a swap of two
+  identical tokens inside one line, which nothing currently catches.
+- **`TWO READINGS` is kept and regrouped**: capitalisation folded out of the
+  comparison (22 of 76 conflicts were nothing else — the same case-fold artifact
+  the `--check` rework removed once already) and one line per **wordform with
+  counts** instead of one per occurrence. The same data reads as **17 lines**.
+  It stays because it is the pass's only intrinsic check, which is what §3.1
+  asks for and premise 3 requires; over this canto it independently surfaced
+  `via`, `tutte`, `poco` and `alto`.
+
+`uv run pytest layers/tests` → **135 passed**.
+
+**The prompt changed, so the artifact must be regenerated before anything is
+hand-corrected.** `layers/l2/inferno/01.tsv` was built without the `Index`
+column; a resume would mix two contracts. Run `--force`, then hand-correct the
+new artifact and write `l2/CORRECTIONS.md` against **that** file — the previous
+handoff already recorded once what it costs to verify entries against an
+artifact that no longer exists.
+
+```
+uv run python -m layers.gen2.l2 inferno -c 1 -m google:gemma-4-31b-it --force
+uv run python -m layers.gen2.l2 inferno -c 1 --check
+```
+
+**Still open, unchanged.** Whether to add `participle` as an eleventh tag: ten
+of the 41 `[pos differs]` positions are the `verb`-by-convention choice, and
+they bury the three real tag errors. The argument against it is weaker than it
+first looked — `REDESIGN.md` §6 measures old Layer 2's *inconsistency*, not the
+category — but the live risk is that `participle` vs `adjective` becomes a third
+judgment for lexicalised cases (`disperate`, `dolenti`), which is how old Layer
+2's 573-row `adjective` bucket happened. If it is added it must be mechanical
+(*if the form is a participle, `participle`*), and `COARSE_POS` has to move with
+it or every participle position becomes a `differs` on the next `--check`. And
+the corpus-wide `del`/`nel`-shaped measurement is still undone, though `pel`
+reading correctly drops its stakes further.
+
+---
 
 **Unchanged and still the standing next steps:** `l2/CORRECTIONS.md` is still
 unwritten — but its three decided entries were all verified against artifacts

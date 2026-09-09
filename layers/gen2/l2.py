@@ -67,7 +67,7 @@ and per-step progress on stderr (§4), the streaming JSONL `--log` contract with
 rather than raised (§7), stub-driven tests over frozen data (§8), and §9's CLI skeleton.
 **The override is §3's wire protocol**: there is no `<tool_call>` XML because there are no
 tools — this is the fixed-context mode (`harness/stages/09.md` §2), where the runtime holds
-the gate and the model's whole output is one `<words>` block.
+the gate and the model's whole output is one `<table>` block.
 
 The command line is the corpus's own driver shape (`skel/skel.py`, `dep/dep.py`):
 canticles positional, `-c` a canto spec resolved by `api.select_cantos`, and every
@@ -104,6 +104,7 @@ from __future__ import annotations
 import json
 import re
 import time
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Mapping, Sequence
@@ -165,7 +166,7 @@ SKILL_DIR = Path(__file__).resolve().parent / "skills" / "l2-words"
 
 ARTIFACT_HEADER = ("line", "l1_index", "l2_index", "text", "pos")
 
-_WORDS_BLOCK = re.compile(r"<words>(.*?)</words>", re.DOTALL | re.IGNORECASE)
+_TABLE_BLOCK = re.compile(r"<table>(.*?)</table>", re.DOTALL | re.IGNORECASE)
 
 
 # --- The L2 objects ------------------------------------------------------------------
@@ -212,6 +213,18 @@ class Analysis:
 
     def to_dict(self) -> dict[str, object]:
         return {"parts": list(self.parts), "pos": list(self.tags)}
+
+    @property
+    def reading(self) -> tuple[tuple[str, ...], tuple[str, ...]]:
+        """This analysis as a *reading*: the same judgment, with capitalisation dropped.
+
+        Two occurrences of a wordform are the same reading when they say the same words
+        and the same tags. A capital is not a judgment about anything — a line-initial
+        `Io` and a mid-line `io` are one reading — so it is folded out here rather than
+        left to make every sentence-opening word look like a disagreement (`Inf` 1 alone:
+        22 of 76 conflicts were capitalisation and nothing else).
+        """
+        return (tuple(part.casefold() for part in self.parts), self.tags)
 
 
 # --- Which tokens the model is asked about ----------------------------------------------
@@ -372,7 +385,7 @@ def asked_tokens(chunk: Sequence[L1Line]) -> list[Asked]:
 # --- $O$: the question, and the gate on the answer -------------------------------------
 
 
-TABLE_HEADER = ("Line", "Token", "Words", "Part of Speech")
+TABLE_HEADER = ("Line", "Index", "Token", "Words", "Part of Speech")
 
 
 def render_blank_table(tokens: Sequence[Asked]) -> str:
@@ -387,9 +400,21 @@ def render_blank_table(tokens: Sequence[Asked]) -> str:
     describing, because it is the shape of the question.
 
     Punctuation is not listed: it is neither split nor tagged (`is_splittable`).
+
+    **`Index` is the row's own number, 1-based over the rows listed here — not the
+    artifact's `l1_index`** (operator, 2026-09-10). The two differ: `l1_index` is 0-based
+    and counts the punctuation this table leaves out, so line 136's `Allor` is `Index` 1
+    and `l1_index` 0. The column exists because every refusal this gate writes names a
+    `row N` the model had no way to see; handing the number over makes a repair
+    addressable instead of something to count out by hand. Positions in the artifact are
+    still attached by the program from `Asked.l1_index` — the model copies this column and
+    never computes one.
     """
     rows = ["| " + " | ".join(TABLE_HEADER) + " |", "|" + "---|" * len(TABLE_HEADER)]
-    rows += [f"| {token.line} | {token.text} |  |  |" for token in tokens]
+    rows += [
+        f"| {token.line} | {position} | {token.text} |  |  |"
+        for position, token in enumerate(tokens, start=1)
+    ]
     return "\n".join(rows)
 
 
@@ -401,33 +426,40 @@ def ask_message(chunk: Sequence[L1Line], *, refusal: str = "") -> str:
     never has to re-tokenize (`ch'` and `i'` are two tokens, not one) nor rebuild the row
     set. Two shapes, and the wording says which, because the next move differs: a fresh
     question, and a refused answer to repair.
+
+    The question and the answer are **one `<table>` block under one name** (operator,
+    2026-09-09). Naming the two ends differently — `<tokens>` out, `<words>` back — said
+    that two different things were being carried when it is the same table travelling in
+    both directions, and it invited reading `<words>` as the `Words` column alone. The
+    answer is now literally the block it was handed, with the two blank columns filled.
     """
     lines = "\n".join(f"{line.no} {line.text}" for line in chunk)
     parts = [
         f"<lines>\n{lines}\n</lines>",
-        f"<tokens>\n{render_blank_table(asked_tokens(chunk))}\n</tokens>",
+        f"<table>\n{render_blank_table(asked_tokens(chunk))}\n</table>",
     ]
     if refusal:
         parts.append(
             "<verdict>\n"
             "The check refused your last answer, so nothing was recorded. It reported:\n"
             f"- {refusal}\n"
-            "Send the whole table again, corrected.\n"
+            "Send the whole table again, corrected, in one <table> block.\n"
             "</verdict>"
         )
     else:
         parts.append(
             "<verdict>\n"
-            "Nothing is on record for these lines. Answer one row for every token listed "
-            "above with its last two columns filled in: the grammatical words each token "
-            "is written from, and one part of speech for each of those words.\n"
+            "Nothing is on record for these lines. Send back the table above, in one "
+            "<table> block, with its last two columns filled in on every row: the "
+            "grammatical words each token is written from, and one part of speech for "
+            "each of those words.\n"
             "</verdict>"
         )
     return "\n\n".join(parts)
 
 
 def _table_rows(body: str) -> list[list[str]]:
-    """The pipe-table rows of a `<words>` block: cells stripped, rulers and headers gone."""
+    """The pipe-table rows of a `<table>` block: cells stripped, rulers and headers gone."""
     rows: list[list[str]] = []
     for raw in body.splitlines():
         line = raw.strip()
@@ -438,7 +470,7 @@ def _table_rows(body: str) -> list[list[str]]:
             continue
         if all(set(cell) <= set("-: ") and cell for cell in cells):
             continue  # the ruler under the header
-        if [cell.casefold() for cell in cells[:2]] == ["line", "token"]:
+        if [cell.casefold() for cell in cells[:3]] == ["line", "index", "token"]:
             continue  # the header, repeated or not
         rows.append(cells)
     return rows
@@ -447,7 +479,7 @@ def _table_rows(body: str) -> list[list[str]]:
 def parse_words_answer(
     text: str, *, tokens: Sequence[Asked]
 ) -> tuple[dict[int, Analysis], str]:
-    """The `<words>` table — the question's own table, filled in — or the gate's reason.
+    """The `<table>` block — the question's own table, filled in — or the gate's reason.
 
     Returns `(analyses, error)` where `analyses` maps an index into `tokens` to that
     token's grammatical words and their coarse tags. A non-empty `error` means nothing is
@@ -469,11 +501,14 @@ def parse_words_answer(
     letters read straight through, so `ben` -> `bene` passes and `sanza` -> `senza` or
     `smarrita` -> `smarrito` does not), and the tag column, one closed-set tag per part.
     """
-    matches = _WORDS_BLOCK.findall(text or "")
+    matches = _TABLE_BLOCK.findall(text or "")
     if not matches:
-        return {}, "no <words> block in the answer"
+        return {}, "no <table> block in the answer"
     if len(matches) > 1:
-        return {}, f"{len(matches)} <words> blocks in the answer; send exactly one"
+        return {}, (
+            f"{len(matches)} <table> blocks in the answer; send exactly one — do not "
+            "repeat the question's own table alongside your answer"
+        )
     rows = _table_rows(matches[0])
     if len(rows) != len(tokens):
         return {}, (
@@ -483,12 +518,18 @@ def parse_words_answer(
     analyses: dict[int, Analysis] = {}
     for index, (row, token) in enumerate(zip(rows, tokens)):
         position = index + 1
-        if len(row) != 4:
+        if len(row) != 5:
             return {}, (
                 f"row {position} has {len(row)} column(s); every row is "
                 "| " + " | ".join(TABLE_HEADER) + " |"
             )
-        line_no, written, words, tags = row
+        line_no, given_index, written, words, tags = row
+        if given_index.strip() != str(position):
+            return {}, (
+                f"row {position} says Index {given_index!r}; the rows come back in the "
+                "order they were given and the Index column is copied, so a row here is "
+                "out of place, missing, or repeated"
+            )
         if wordform_key(written) != wordform_key(token.text):
             return {}, (
                 f"row {position} says {written!r} where token {position} is "
@@ -717,7 +758,7 @@ def build_l2(
         for token, analysis in result.pairs():
             key = wordform_key(token.text)
             seen = first_reading.setdefault(key, analysis)
-            if seen != analysis:
+            if seen.reading != analysis.reading:
                 result.conflicts.append(
                     {"word": token.text, "line": token.line,
                      "first": seen.to_dict(), "here": analysis.to_dict()}
@@ -1262,6 +1303,43 @@ class L2Report:
             "api_retry_seconds": round(self.api_retry_seconds, 1),
         }
 
+    def two_readings(self) -> list[str]:
+        """The run's own consistency readout, one line per wordform rather than per hit.
+
+        This is the pass's only **intrinsic** check — it consults no other layer, so it is
+        the shape `PLAN.md` §3.1 names as the successor to the lost progress metric and
+        the one premise 3 allows at rebuild time. It stays; what changes is the grain.
+
+        Printed per occurrence it was unreadable (`Inf` 1: 76 lines, four of them real),
+        because a wordform legitimately read two ways reports itself once per later
+        occurrence — `che` alone accounted for 26. Grouped, each wordform says its whole
+        story in one line with counts, which is the same shape `--check`'s two ambiguous
+        sections settled on for the same reason. Capitalisation is already folded out
+        upstream (`Analysis.reading`), so every line here is a real difference of words or
+        of tags; whether it is an error or a correct distinction is a judgment for
+        `L2.md`, not for this report. A wordform whose readings collapse to one under the
+        fold is dropped here too, so a run resuming over a log written before the fold
+        reports what it would report today rather than that log's own noise.
+        """
+        readings: dict[str, Counter] = defaultdict(Counter)
+        for conflict in self.conflicts:
+            word = wordform_key(conflict["word"])
+            for side in ("first", "here"):
+                parts = tuple(p.casefold() for p in conflict[side]["parts"])
+                readings[word][(parts, tuple(conflict[side]["pos"]))] += 1
+        out = []
+        for word in sorted(readings):
+            if len(readings[word]) < 2:
+                continue  # one reading after folding: nothing was ever read two ways
+            spread = ", ".join(
+                f"{'+'.join(parts)} ({'+'.join(tags)}) x{count}"
+                for (parts, tags), count in sorted(
+                    readings[word].items(), key=lambda kv: (-kv[1], kv[0])
+                )
+            )
+            out.append(f"  {word:<12}  {spread}")
+        return out
+
     def summary(self) -> str:
         m = self.metrics()
         gate = "PASS" if not m["unresolved_lines"] else "FAIL"
@@ -1800,16 +1878,15 @@ def _build_canto(
         metrics = report.metrics()
         for no in metrics["unresolved_lines"]:
             print(f"NO ANSWER: line {no} — its tokens pass through untagged", file=sys.stderr)
-        for conflict in metrics["conflicts"]:
-            first = "+".join(conflict["first"]["parts"])
-            here = "+".join(conflict["here"]["parts"])
-            first_pos = "+".join(conflict["first"]["pos"])
-            here_pos = "+".join(conflict["here"]["pos"])
+        two_readings = report.two_readings()
+        if two_readings:
             print(
-                f"TWO READINGS: {conflict['word']} was {first} ({first_pos}) earlier and "
-                f"{here} ({here_pos}) at line {conflict['line']}; both stand",
+                f"\n[two readings]  ({len(two_readings)} wordform(s) this artifact read "
+                "more than one way; every reading stands)",
                 file=sys.stderr,
             )
+            for row in two_readings:
+                print(row, file=sys.stderr)
     finally:
         if relay is not None:
             relay.sink = None

@@ -25,14 +25,14 @@ COMPOSITE = {
 
 
 def asked_rows(user_message):
-    """The `(line, token)` pairs of the blank table the request supplied."""
-    block = user_message.split("<tokens>\n", 1)[1].split("\n</tokens>", 1)[0]
+    """The `(line, index, token)` triples of the blank table the request supplied."""
+    block = user_message.split("<table>\n", 1)[1].split("\n</table>", 1)[0]
     out = []
     for raw in block.splitlines():
         cells = [cell.strip() for cell in raw.strip().strip("|").split("|")]
-        if len(cells) != 4 or not cells[0].isdigit():
+        if len(cells) != 5 or not cells[0].isdigit():
             continue
-        out.append((cells[0], cells[1]))
+        out.append((cells[0], cells[1], cells[2]))
     return out
 
 
@@ -42,11 +42,11 @@ def answer_for(user_message, table=COMPOSITE, tag="noun"):
     A token the table knows is written as its parts and their tags; every other token
     repeats itself and takes a single default tag, which is all the gate asks of it.
     """
-    rows = ["| Line | Token | Words | Part of Speech |", "|---|---|---|---|"]
-    for line_no, token in asked_rows(user_message):
+    rows = ["| Line | Index | Token | Words | Part of Speech |", "|---|---|---|---|---|"]
+    for line_no, index, token in asked_rows(user_message):
         words, tags = table.get(token.casefold(), (token, tag))
-        rows.append(f"| {line_no} | {token} | {words} | {tags} |")
-    return "<words>\n" + "\n".join(rows) + "\n</words>"
+        rows.append(f"| {line_no} | {index} | {token} | {words} | {tags} |")
+    return "<table>\n" + "\n".join(rows) + "\n</table>"
 
 
 class StubGenerate:
@@ -92,13 +92,13 @@ def one(*parts_and_tags):
 
 
 def table(rows, line=1):
-    """A `<words>` block from `(token, words, tags)` triples — all on `line` unless a row
+    """A `<table>` block from `(token, words, tags)` triples — all on `line` unless a row
     names its own — header and ruler included."""
-    body = ["| Line | Token | Words | Part of Speech |", "|---|---|---|---|"]
-    for row in rows:
+    body = ["| Line | Index | Token | Words | Part of Speech |", "|---|---|---|---|---|"]
+    for index, row in enumerate(rows, start=1):
         no, token, words, tags = row if len(row) == 4 else (line, *row)
-        body.append(f"| {no} | {token} | {words} | {tags} |")
-    return "<words>\n" + "\n".join(body) + "\n</words>"
+        body.append(f"| {no} | {index} | {token} | {words} | {tags} |")
+    return "<table>\n" + "\n".join(body) + "\n</table>"
 
 
 # --- Chunking: old Layer 2's unit of work ----------------------------------------------------
@@ -205,7 +205,7 @@ def test_a_single_word_analysis_is_one_entry_carrying_its_tag():
 def test_the_ask_shows_the_lines_for_context_and_the_table_to_fill_in():
     message = l2.ask_message(inf1(1, 1))
     assert "1 Nel mezzo del cammin di nostra vita" in message
-    assert "| Line | Token | Words | Part of Speech |" in message
+    assert "| Line | Index | Token | Words | Part of Speech |" in message
     assert "| 1 | Nel |  |  |" in message
     assert "Nothing is on record" in message
 
@@ -214,9 +214,33 @@ def test_the_blank_table_carries_the_line_number_on_every_row():
     """A flat token list loses the line boundaries exactly where the analysis needs them
     (operator, 2026-09-09); the skeleton keeps each row attached to its verse."""
     blank = l2.render_blank_table(l2.asked_tokens(inf1(32, 33)))
-    assert "| 32 | lonza |  |  |" in blank
-    assert "| 33 | pel |  |  |" in blank
+    assert "| 32 | 2 | lonza |  |  |" in blank
+    assert "| 33 | 9 | pel |  |  |" in blank
     assert "," not in blank  # punctuation is not in the table at all
+
+
+def test_the_blank_table_numbers_its_rows_from_one_across_the_whole_chunk():
+    """The Index is the row's own number, not the artifact's `l1_index` (operator,
+    2026-09-10): it runs 1..n over the rows listed, unbroken across a line boundary and
+    skipping nothing, because a gap or a repeat is exactly what it exists to make visible.
+    """
+    tokens = l2.asked_tokens(inf1(32, 33))
+    blank = l2.render_blank_table(tokens)
+    numbers = [
+        row.strip().strip("|").split("|")[1].strip()
+        for row in blank.splitlines()[2:]
+    ]
+    assert numbers == [str(n) for n in range(1, len(tokens) + 1)]
+
+
+def test_a_row_whose_index_moved_is_refused():
+    """The Index column is copied, so a number out of step means a row is missing,
+    repeated, or out of place — caught before any of its content is read."""
+    tokens = l2.asked_tokens(inf1(1, 1))
+    rows = [(token.line, token.text, token.text, "noun") for token in tokens]
+    answer = table(rows).replace("| 1 | 3 |", "| 1 | 4 |", 1)
+    analyses, error = l2.parse_words_answer(answer, tokens=tokens)
+    assert analyses == {} and "Index" in error
 
 
 def test_a_row_whose_line_number_moved_is_refused():
@@ -362,10 +386,10 @@ def test_the_closed_set_is_ten_coarse_tags():
     "answer",
     [
         "no block at all",
-        "<words>\n| Nel | in+il | preposition+article |\n</words>\n<words>\n</words>",
-        "<words>\n| Nel | in+il |\n</words>",
-        "<words>\n| Nel | in+ | preposition+article |\n</words>",
-        "<words>\n| Nel | in il | preposition+article |\n</words>",
+        "<table>\n| 1 | 1 | Nel | in+il | preposition+article |\n</table>\n<table>\n</table>",
+        "<table>\n| 1 | 1 | Nel | in+il |\n</table>",
+        "<table>\n| 1 | 1 | Nel | in+ | preposition+article |\n</table>",
+        "<table>\n| 1 | 1 | Nel | in il | preposition+article |\n</table>",
     ],
 )
 def test_parse_words_answer_refuses_every_malformed_shape(answer):
@@ -402,7 +426,7 @@ def test_a_refused_answer_records_nothing_and_the_budget_is_a_cap():
 
 
 def test_the_refusal_reason_is_fed_back_verbatim_on_the_retry():
-    stub = StubGenerate(script={(1,): ["<words>\n| Nel | bene | noun |\n</words>", None]})
+    stub = StubGenerate(script={(1,): ["<table>\n| 1 | 1 | Nel | bene | noun |\n</table>", None]})
 
     def generate(messages):
         user = messages[1]["content"]
@@ -502,6 +526,26 @@ def test_a_wordform_answered_two_ways_keeps_both_and_is_recorded_as_a_conflict()
     assert found[(6, 1)].parts == ("ne", "lo")
     assert [c["word"] for c in conflicts] == ["nel"]
     assert conflicts[0]["first"]["parts"] == ["in", "il"]
+
+
+def test_the_same_reading_in_two_capitalisations_is_not_a_conflict():
+    """A line-initial capital is not a judgment about anything (operator, 2026-09-10):
+    `Nel` at 1:1 and `nel` at 6:2, read the same way, are one reading. Folding this out is
+    what keeps every sentence-opening word from reporting itself as a disagreement — 22 of
+    `Inf` 1's 76 conflicts were capitalisation and nothing else."""
+    conflicts = []
+
+    def generate(messages):
+        user = messages[1]["content"]
+        return answer_for(user, {"nel": ("In+il", "preposition+article")}
+                          if "1 Nel" in user else {"nel": ("in+il", "preposition+article")})
+
+    found = l2.build_l2(
+        inf1(1, 6), generate=generate, system_prompt=SYSTEM,
+        on_settled=lambda r: conflicts.extend(r.conflicts),
+    )
+    assert found[(1, 0)].parts == ("In", "il") and found[(6, 1)].parts == ("in", "il")
+    assert conflicts == []
 
 
 # --- The artifact ----------------------------------------------------------------------------
@@ -813,6 +857,25 @@ def test_conflicts_reach_the_metrics_and_the_summary_line():
     assert "1 answered two ways" in report.summary()
 
 
+def test_two_readings_reports_one_line_per_wordform_not_one_per_occurrence():
+    """Printed per occurrence the readout was unreadable (`Inf` 1: 76 lines, four of them
+    real) because a wordform read two ways reports itself again at every later occurrence.
+    Grouped, each wordform says its whole story once, with counts."""
+    report = l2.L2Report()
+    pronoun = {"parts": ["che"], "pos": ["pronoun"]}
+    conjunction = {"parts": ["che"], "pos": ["conjunction"]}
+    for line in (7, 12, 13):
+        report.add_chunk({
+            "resolved": True, "lines": [line], "tokens": 1, "attempts": [],
+            "conflicts": [{"word": "che", "line": line,
+                           "first": pronoun, "here": conjunction}],
+        })
+    rows = report.two_readings()
+    assert len(rows) == 1
+    assert "che" in rows[0]
+    assert "che (pronoun) x3" in rows[0] and "che (conjunction) x3" in rows[0]
+
+
 # --- The prompt is a file, and it loads ------------------------------------------------------
 
 
@@ -821,7 +884,7 @@ def test_the_skill_loads_with_its_declared_resource():
 
     skill = Skill.load(l2.SKILL_DIR)
     assert skill.name == "l2-words"
-    assert "<words>" in skill.resource("answer.md")
+    assert "<table>" in skill.resource("answer.md")
     assert skill.digest()
 
 
