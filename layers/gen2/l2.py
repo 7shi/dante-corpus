@@ -663,7 +663,7 @@ class PrecedentRow:
     wordform: str
     ours: tuple[tuple[str, ...], ...]
     theirs: tuple[tuple[str, ...], ...]
-    verdict: str  # agrees | differs | ours-ambiguous | precedent-ambiguous | absent
+    verdict: str  # agrees | differs | l2-ambiguous | layer2-ambiguous | absent
 
     def to_dict(self) -> dict:
         return {
@@ -744,6 +744,44 @@ def our_splits(
     return {key: tuple(sorted(readings)) for key, readings in out.items()}
 
 
+def _positionally_mismatched_wordforms(
+    l1_lines: Sequence[L1Line],
+    l2_lines: Sequence[L2Line],
+    morph_rows: Mapping[int, Sequence[object]],
+    *,
+    line_range: tuple[int, int] | None = None,
+) -> set[str]:
+    """Wordforms with at least one occurrence whose reading, matched positionally to old
+    Layer 2's row for the same place in the line (`render_check_lines`'s own pairing), disagrees
+    with it. A wordform this artifact answers two ways is only in here if one of those answers
+    is the one that lost that positional comparison — never for two readings that each agree
+    with old Layer 2 at their own position (a `di`/`a`-style case-folding artifact of pooling by
+    wordform, not a real disagreement).
+    """
+    l2_by_line = {line.no: line for line in l2_lines}
+    mismatched: set[str] = set()
+    for line in l1_lines:
+        if line_range is not None and not (line_range[0] <= line.no <= line_range[1]):
+            continue
+        l2_line = l2_by_line.get(line.no)
+        grouped: dict[int, list[str]] = {}
+        if l2_line is not None:
+            for entry in l2_line.entries:
+                grouped.setdefault(entry.l1_index, []).append(entry.text)
+        rows_iter = iter(morph_rows.get(line.no, ()))
+        for token in line.tokens:
+            if not is_splittable(token.text):
+                continue
+            row = next(rows_iter, None)
+            if row is None:
+                continue
+            theirs = _row_reading(row)
+            parts = tuple(grouped.get(token.index, [token.text]))
+            if parts != theirs:
+                mismatched.add(wordform_key(token.text))
+    return mismatched
+
+
 def check_against_precedent(
     l1_lines: Sequence[L1Line],
     l2_lines: Sequence[L2Line],
@@ -753,27 +791,42 @@ def check_against_precedent(
 ) -> list[PrecedentRow]:
     """Diff this artifact's splits against old Layer 2's, wordform by wordform.
 
-    Reports what is the case; it does not adjudicate. `L2.md` names three outcomes —
-    agrees, precedent-is-wrong, genuine ambiguity — and only the first is mechanical. A
-    `differs` row is the evidence for one of the other two, and which one it is is a
-    judgment recorded in `L2.md` by a person.
+    Two verdicts are properties of one side alone, checked before `differs`, each
+    case-folded so `A`/`a` never count as two readings:
+
+    - **`l2-ambiguous`**: this wordform's own readings, in this artifact, are genuinely
+      distinct somewhere in `line_range` — independent of whether either of them agrees with
+      old Layer 2 at its own position, so a wordform this artifact correctly reads two
+      different ways in two different contexts is `l2-ambiguous` even where old Layer 2 agrees
+      with both.
+    - **`layer2-ambiguous`**: symmetric, but old Layer 2's own readings for the wordform are
+      the ones genuinely distinct within the same `line_range` — visible because both readings
+      are positions this run actually compared, not old Layer 2 disagreeing with itself
+      somewhere this artifact never looked.
+
+    `differs` is what is left once both are ruled out: neither side is internally ambiguous, but
+    `_positionally_mismatched_wordforms` finds a real disagreement at an actual position — the
+    same pairing `render_check_lines` marks with `[...]`.
     """
     ours = our_splits(l1_lines, l2_lines, line_range=line_range)
     theirs = precedent_splits(morph_rows, line_range)
+    mismatched = _positionally_mismatched_wordforms(
+        l1_lines, l2_lines, morph_rows, line_range=line_range
+    )
     rows: list[PrecedentRow] = []
     for key in sorted(set(ours) | set(theirs)):
         mine = ours.get(key, ())
         readings = theirs.get(key, ())
         if not mine or not readings:
             verdict = "absent"
-        elif len(mine) > 1:
-            verdict = "ours-ambiguous"
-        elif len(readings) > 1:
-            verdict = "precedent-ambiguous"
-        elif _fold(mine[0]) == _fold(readings[0]):
-            verdict = "agrees"
-        else:
+        elif len({_fold(reading) for reading in mine}) > 1:
+            verdict = "l2-ambiguous"
+        elif len({_fold(reading) for reading in readings}) > 1:
+            verdict = "layer2-ambiguous"
+        elif key in mismatched:
             verdict = "differs"
+        else:
+            verdict = "agrees"
         rows.append(
             PrecedentRow(wordform=key, ours=mine, theirs=readings, verdict=verdict)
         )
@@ -938,6 +991,66 @@ def _skill_digest() -> str:
     return Skill.load(SKILL_DIR).digest()
 
 
+def _row_reading(row: object) -> tuple[str, ...]:
+    """Old Layer 2's split for one morph row: `+` in `lemma` means composite, else the word."""
+    lemma = str(getattr(row, "lemma", "") or "")
+    word = str(getattr(row, "word", "") or "")
+    return tuple(lemma.split("+")) if "+" in lemma else (word,)
+
+
+def render_check_lines(
+    l1_lines: Sequence[L1Line],
+    l2_lines: Sequence[L2Line],
+    morph_rows: Mapping[int, Sequence[object]],
+    *,
+    line_range: tuple[int, int] | None = None,
+) -> str:
+    """One line per source line with at least one mismatch, tokens joined by a plain space
+    (punctuation untouched); a line where every token agrees is omitted.
+
+    A token this artifact splits shows its reading as `word(parts)`. A `[...]` is appended when
+    *this exact occurrence* differs from old Layer 2 at the same position — matched purely by
+    position, this line's `n`-th splittable L1 token against old Layer 2's `n`-th row for the
+    line, uniformly for every occurrence (no notion of "first" or "already seen") — compared
+    exactly, no case-folding: a genuine case difference is a difference. Old Layer 2 has no row
+    for punctuation, so its rows are zipped against this line's splittable tokens only, in the
+    order they occur (checked 1:1 corpus-wide against `is_splittable`'s own filter). A wordform's
+    own cross-occurrence disagreement (`l2-ambiguous` in the table below) is a different, non-
+    positional grain and is not reconstructed here.
+    """
+    l2_by_line = {line.no: line for line in l2_lines}
+    out: list[str] = []
+    for line in l1_lines:
+        if line_range is not None and not (line_range[0] <= line.no <= line_range[1]):
+            continue
+        l2_line = l2_by_line.get(line.no)
+        grouped: dict[int, list[str]] = {}
+        if l2_line is not None:
+            for entry in l2_line.entries:
+                grouped.setdefault(entry.l1_index, []).append(entry.text)
+        rows_iter = iter(morph_rows.get(line.no, ()))
+        theirs_by_index = {
+            token.index: _row_reading(next(rows_iter))
+            for token in line.tokens
+            if is_splittable(token.text)
+        }
+        pieces: list[str] = []
+        mismatch = False
+        for token in line.tokens:
+            parts = tuple(grouped.get(token.index, [token.text]))
+            piece = token.text
+            if len(parts) > 1:
+                piece += f"({' '.join(parts)})"
+            theirs = theirs_by_index.get(token.index)
+            if theirs is not None and parts != theirs:
+                piece += f"[{'+'.join(theirs)}]"
+                mismatch = True
+            pieces.append(piece)
+        if mismatch:
+            out.append(f"{line.no:3d} {' '.join(pieces)}")
+    return "\n".join(out)
+
+
 def _run_check(args, canticle: str, number: int, l1_lines, line_range) -> int:
     from dante_corpus.morph import load_morph
 
@@ -946,25 +1059,45 @@ def _run_check(args, canticle: str, number: int, l1_lines, line_range) -> int:
         print(f"no artifact at {path} — run the split pass first")
         return 1
     l2_lines = parse_artifact(path.read_text(encoding="utf-8"))
-    rows = check_against_precedent(
-        l1_lines, l2_lines, load_morph(canticle, number), line_range=line_range
-    )
+    morph_rows = load_morph(canticle, number)
+    rows = check_against_precedent(l1_lines, l2_lines, morph_rows, line_range=line_range)
+    print(render_check_lines(l1_lines, l2_lines, morph_rows, line_range=line_range))
+    print("\nword(parts) = this artifact's split   [...] = old Layer 2's reading, where it differs\n")
     surface = {
         wordform_key(token.text): token.text
         for line in l1_lines
         for token in line.tokens
     }
     counts: dict[str, int] = {}
-    print(f"{'wordform':<14}{'ours':<22}{'old Layer 2':<22}verdict")
     for row in rows:
         counts[row.verdict] = counts.get(row.verdict, 0) + 1
-        shown = surface.get(row.wordform, row.wordform)
-        ours_text = " / ".join("+".join(reading) for reading in row.ours)
-        theirs = " / ".join("+".join(reading) for reading in row.theirs)
-        print(f"{shown:<14}{ours_text or '-':<22}{theirs or '-':<22}{row.verdict}")
-    print()
-    for verdict in ("agrees", "differs", "ours-ambiguous", "precedent-ambiguous",
-                    "absent"):
+
+    differs_rows = [row for row in rows if row.verdict == "differs"]
+    if differs_rows:
+        print("[differs]")
+        print(f"{'wordform':<14}{'L2':<22}old Layer 2")
+        for row in differs_rows:
+            shown = surface.get(row.wordform, row.wordform)
+            l2_text = " / ".join("+".join(reading) for reading in row.ours)
+            theirs_text = " / ".join("+".join(reading) for reading in row.theirs)
+            print(f"{shown:<14}{l2_text:<22}{theirs_text}")
+        print()
+
+    for label, verdict, field in (
+        ("L2 ambiguous", "l2-ambiguous", "ours"),
+        ("Layer 2 ambiguous", "layer2-ambiguous", "theirs"),
+    ):
+        ambiguous_rows = [row for row in rows if row.verdict == verdict]
+        if not ambiguous_rows:
+            continue
+        print(f"[{label}]")
+        for row in ambiguous_rows:
+            shown = surface.get(row.wordform, row.wordform)
+            readings = ", ".join(" ".join(reading) for reading in getattr(row, field))
+            print(f"{shown}: {readings}")
+        print()
+
+    for verdict in ("agrees", "differs", "l2-ambiguous", "layer2-ambiguous", "absent"):
         print(f"{verdict:<22}{counts.get(verdict, 0)}")
     print(
         "\n'differs' rows are evidence for one of L2.md's two non-agreement outcomes "

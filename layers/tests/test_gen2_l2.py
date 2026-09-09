@@ -533,11 +533,14 @@ def test_a_wordform_this_artifact_splits_two_ways_is_reported_not_hidden():
     rows = l2.check_against_precedent(lines, l2_lines, load_morph("inferno", 1),
                                       line_range=(1, 6))
     row = next(r for r in rows if r.wordform == "nel")
-    assert row.verdict == "ours-ambiguous"
+    assert row.verdict == "l2-ambiguous"
     assert row.ours == (("in", "il"), ("ne", "lo"))
 
 
-def test_check_against_precedent_never_collapses_two_recorded_readings():
+def test_a_wordform_this_artifact_reads_one_way_is_layer2_ambiguous_if_old_layer_2_is_not():
+    """Symmetric to the `l2-ambiguous` case: old Layer 2 itself records two different
+    readings for a wordform (within `line_range`, or all of `morph_rows` when unset, as
+    `precedent_splits` already does) — a real disagreement, not folded into `differs`."""
     class Row:
         def __init__(self, word, lemma):
             self.word, self.lemma = word, lemma
@@ -548,7 +551,7 @@ def test_check_against_precedent_never_collapses_two_recorded_readings():
         {1: (Row("nel", "in+il"),), 2: (Row("nel", "ne+lo"),)},
     )
     row = next(r for r in rows if r.wordform == "nel")
-    assert row.verdict == "precedent-ambiguous"
+    assert row.verdict == "layer2-ambiguous"
     assert row.theirs == (("in", "il"), ("ne", "lo"))
 
 
