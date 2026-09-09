@@ -1,0 +1,1165 @@
+line	l1_index	l2_index	text	pos
+1	0	0	in	preposition
+1	0	1	il	article
+1	1	2	mezzo	noun
+1	2	3	di	preposition
+1	2	4	il	article
+1	3	5	cammino	noun
+1	4	6	di	preposition
+1	5	7	nostra	adjective
+1	6	8	vita	noun
+2	0	0	mi	pronoun
+2	1	1	ritrovai	verb
+2	2	2	per	preposition
+2	3	3	una	article
+2	4	4	selva	noun
+2	5	5	oscura	adjective
+2	6	6	,	
+3	0	0	ché	conjunction
+3	1	1	la	article
+3	2	2	diritta	adjective
+3	3	3	via	noun
+3	4	4	era	verb
+3	5	5	smarrita	verb
+3	6	6	.	
+4	0	0	Ahi	interjection
+4	1	1	quanto	adverb
+4	2	2	a	preposition
+4	3	3	dire	verb
+4	4	4	quale	pronoun
+4	5	5	era	verb
+4	6	6	è	verb
+4	7	7	cosa	noun
+4	8	8	dura	adjective
+5	0	0	esta	adjective
+5	1	1	selva	noun
+5	2	2	selvaggia	adjective
+5	3	3	e	conjunction
+5	4	4	aspra	adjective
+5	5	5	e	conjunction
+5	6	6	forte	adjective
+6	0	0	che	pronoun
+6	1	1	in	preposition
+6	1	2	il	article
+6	2	3	pensiero	noun
+6	3	4	rinova	verb
+6	4	5	la	article
+6	5	6	paura	noun
+6	6	7	!	
+7	0	0	Tanto	adverb
+7	1	1	è	verb
+7	2	2	amara	adjective
+7	3	3	che	conjunction
+7	4	4	poco	pronoun
+7	5	5	è	verb
+7	6	6	più	adverb
+7	7	7	morte	noun
+7	8	8	;	
+8	0	0	ma	conjunction
+8	1	1	per	preposition
+8	2	2	trattare	verb
+8	3	3	di	preposition
+8	3	4	il	article
+8	4	5	bene	noun
+8	5	6	che	pronoun
+8	6	7	io	pronoun
+8	7	8	vi	pronoun
+8	8	9	trovai	verb
+8	9	10	,	
+9	0	0	dirò	verb
+9	1	1	de	preposition
+9	2	2	le	article
+9	3	3	altre	adjective
+9	4	4	cose	noun
+9	5	5	che	pronoun
+9	6	6	io	pronoun
+9	7	7	vi	pronoun
+9	8	8	ho	verb
+9	9	9	scorte	verb
+9	10	10	.	
+10	0	0	Io	pronoun
+10	1	1	non	adverb
+10	2	2	so	verb
+10	3	3	bene	adverb
+10	4	4	ridire	verb
+10	5	5	come	adverb
+10	6	6	io	pronoun
+10	7	7	vi	pronoun
+10	8	8	intrai	verb
+10	9	9	,	
+11	0	0	tanto	adverb
+11	1	1	era	verb
+11	2	2	pieno	adjective
+11	3	3	di	preposition
+11	4	4	sonno	noun
+11	5	5	a	preposition
+11	6	6	quel	adjective
+11	7	7	punto	noun
+12	0	0	che	conjunction
+12	1	1	la	article
+12	2	2	verace	adjective
+12	3	3	via	noun
+12	4	4	abbandonai	verb
+12	5	5	.	
+13	0	0	Ma	conjunction
+13	1	1	poi	adverb
+13	2	2	che	conjunction
+13	3	3	io	pronoun
+13	4	4	fui	verb
+13	5	5	a	preposition
+13	5	6	il	article
+13	6	7	piè	noun
+13	7	8	di	preposition
+13	8	9	un	article
+13	9	10	colle	noun
+13	10	11	giunto	verb
+13	11	12	,	
+14	0	0	là	adverb
+14	1	1	dove	adverb
+14	2	2	terminava	verb
+14	3	3	quella	adjective
+14	4	4	valle	noun
+15	0	0	che	pronoun
+15	1	1	mi	pronoun
+15	2	2	avea	verb
+15	3	3	di	preposition
+15	4	4	paura	noun
+15	5	5	il	article
+15	6	6	core	noun
+15	7	7	compunto	verb
+15	8	8	,	
+16	0	0	guardai	verb
+16	1	1	in	preposition
+16	2	2	alto	noun
+16	3	3	e	conjunction
+16	4	4	vidi	verb
+16	5	5	le	article
+16	6	6	sue	adjective
+16	7	7	spalle	noun
+17	0	0	vestite	verb
+17	1	1	già	adverb
+17	2	2	di	preposition
+17	2	3	i	article
+17	3	4	raggi	noun
+17	4	5	di	preposition
+17	4	6	il	article
+17	5	7	pianeta	noun
+18	0	0	che	pronoun
+18	1	1	mena	verb
+18	2	2	dritto	adverb
+18	3	3	altrui	pronoun
+18	4	4	per	preposition
+18	5	5	ogne	adjective
+18	6	6	calle	noun
+18	7	7	.	
+19	0	0	allora	adverb
+19	1	1	fu	verb
+19	2	2	la	article
+19	3	3	paura	noun
+19	4	4	un	article
+19	5	5	poco	adverb
+19	6	6	queta	adjective
+19	7	7	,	
+20	0	0	che	pronoun
+20	1	1	in	preposition
+20	1	2	il	article
+20	2	3	lago	noun
+20	3	4	di	preposition
+20	3	5	il	article
+20	4	6	core	noun
+20	5	7	mi	pronoun
+20	6	8	era	verb
+20	7	9	durata	verb
+21	0	0	la	article
+21	1	1	notte	noun
+21	2	2	che	pronoun
+21	3	3	io	pronoun
+21	4	4	passai	verb
+21	5	5	con	preposition
+21	6	6	tanta	adjective
+21	7	7	pieta	noun
+21	8	8	.	
+22	0	0	E	conjunction
+22	1	1	come	conjunction
+22	2	2	quei	pronoun
+22	3	3	che	pronoun
+22	4	4	con	preposition
+22	5	5	lena	noun
+22	6	6	affannata	verb
+22	7	7	,	
+23	0	0	uscito	verb
+23	1	1	fuori	adverb
+23	2	2	di	preposition
+23	2	3	il	article
+23	3	4	pelago	noun
+23	4	5	a	preposition
+23	5	6	la	article
+23	6	7	riva	noun
+23	7	8	,	
+24	0	0	si	pronoun
+24	1	1	volge	verb
+24	2	2	a	preposition
+24	3	3	la	article
+24	4	4	acqua	noun
+24	5	5	perigliosa	adjective
+24	6	6	e	conjunction
+24	7	7	guata	verb
+24	8	8	,	
+25	0	0	così	adverb
+25	1	1	lo	article
+25	2	2	animo	noun
+25	3	3	mio	adjective
+25	4	4	,	
+25	5	5	che	pronoun
+25	6	6	ancora	adverb
+25	7	7	fuggiva	verb
+25	8	8	,	
+26	0	0	si	pronoun
+26	1	1	volse	verb
+26	2	2	a	preposition
+26	3	3	retro	adverb
+26	4	4	a	preposition
+26	5	5	rimirare	verb
+26	6	6	lo	article
+26	7	7	passo	noun
+27	0	0	che	pronoun
+27	1	1	non	adverb
+27	2	2	lasciò	verb
+27	3	3	già	adverb
+27	4	4	mai	adverb
+27	5	5	persona	noun
+27	6	6	viva	adjective
+27	7	7	.	
+28	0	0	Poi	adverb
+28	1	1	che	conjunction
+28	2	2	èi	pronoun
+28	3	3	posato	verb
+28	4	4	un	article
+28	5	5	poco	noun
+28	6	6	il	article
+28	7	7	corpo	noun
+28	8	8	lasso	adjective
+28	9	9	,	
+29	0	0	ripresi	verb
+29	1	1	via	noun
+29	2	2	per	preposition
+29	3	3	la	article
+29	4	4	piaggia	noun
+29	5	5	diserta	adjective
+29	6	6	,	
+30	0	0	sì	adverb
+30	1	1	che	conjunction
+30	2	2	il	article
+30	3	3	piè	noun
+30	4	4	fermo	adjective
+30	5	5	sempre	adverb
+30	6	6	era	verb
+30	7	7	il	article
+30	8	8	più	adverb
+30	9	9	basso	adjective
+30	10	10	.	
+31	0	0	Ed	conjunction
+31	1	1	ecco	adverb
+31	2	2	,	
+31	3	3	quasi	adverb
+31	4	4	a	preposition
+31	4	5	il	article
+31	5	6	cominciare	verb
+31	6	7	de	preposition
+31	7	8	la	article
+31	8	9	erta	noun
+31	9	10	,	
+32	0	0	una	article
+32	1	1	lonza	noun
+32	2	2	leggera	adjective
+32	3	3	e	conjunction
+32	4	4	presta	adjective
+32	5	5	molto	adverb
+32	6	6	,	
+33	0	0	che	pronoun
+33	1	1	di	preposition
+33	2	2	pelo	noun
+33	3	3	macolato	adjective
+33	4	4	era	verb
+33	5	5	coverta	verb
+33	6	6	;	
+34	0	0	e	conjunction
+34	1	1	non	adverb
+34	2	2	mi	pronoun
+34	3	3	si	pronoun
+34	4	4	partia	verb
+34	5	5	dinanzi	adverb
+34	6	6	a	preposition
+34	6	7	il	article
+34	7	8	volto	noun
+34	8	9	,	
+35	0	0	anzi	adverb
+35	1	1	impediva	verb
+35	2	2	tanto	adverb
+35	3	3	il	article
+35	4	4	mio	adjective
+35	5	5	cammino	noun
+35	6	6	,	
+36	0	0	che	conjunction
+36	1	1	io	pronoun
+36	2	2	fui	verb
+36	3	3	per	preposition
+36	4	4	ritornare	verb
+36	5	5	più	adverb
+36	6	6	volte	noun
+36	7	7	vòlto	verb
+36	8	8	.	
+37	0	0	Tempo	noun
+37	1	1	era	verb
+37	2	2	da	preposition
+37	2	3	il	article
+37	3	4	principio	noun
+37	4	5	di	preposition
+37	4	6	il	article
+37	5	7	mattino	noun
+37	6	8	,	
+38	0	0	e	conjunction
+38	1	1	il	article
+38	2	2	sole	noun
+38	3	3	montava	verb
+38	4	4	in	preposition
+38	5	5	sù	adverb
+38	6	6	con	preposition
+38	7	7	quelle	adjective
+38	8	8	stelle	noun
+39	0	0	che	pronoun
+39	1	1	erano	verb
+39	2	2	con	preposition
+39	3	3	lui	pronoun
+39	4	4	quando	conjunction
+39	5	5	lo	article
+39	6	6	amore	noun
+39	7	7	divino	adjective
+40	0	0	mosse	verb
+40	1	1	di	preposition
+40	2	2	prima	adverb
+40	3	3	quelle	adjective
+40	4	4	cose	noun
+40	5	5	belle	adjective
+40	6	6	;	
+41	0	0	sì	adverb
+41	1	1	che	conjunction
+41	2	2	a	preposition
+41	3	3	bene	adverb
+41	4	4	sperare	verb
+41	5	5	mi	pronoun
+41	6	6	era	verb
+41	7	7	cagione	noun
+42	0	0	di	preposition
+42	1	1	quella	adjective
+42	2	2	fiera	noun
+42	3	3	a	preposition
+42	4	4	la	article
+42	5	5	gaetta	adjective
+42	6	6	pelle	noun
+43	0	0	la	article
+43	1	1	ora	noun
+43	2	2	di	preposition
+43	2	3	il	article
+43	3	4	tempo	noun
+43	4	5	e	conjunction
+43	5	6	la	article
+43	6	7	dolce	adjective
+43	7	8	stagione	noun
+43	8	9	;	
+44	0	0	ma	conjunction
+44	1	1	non	adverb
+44	2	2	sì	adverb
+44	3	3	che	conjunction
+44	4	4	paura	noun
+44	5	5	non	adverb
+44	6	6	mi	pronoun
+44	7	7	desse	verb
+45	0	0	la	article
+45	1	1	vista	noun
+45	2	2	che	pronoun
+45	3	3	mi	pronoun
+45	4	4	apparve	verb
+45	5	5	di	preposition
+45	6	6	un	article
+45	7	7	leone	noun
+45	8	8	.	
+46	0	0	Questi	pronoun
+46	1	1	parea	verb
+46	2	2	che	conjunction
+46	3	3	contra	preposition
+46	4	4	me	pronoun
+46	5	5	venisse	verb
+47	0	0	con	preposition
+47	1	1	la	article
+47	2	2	testa	noun
+47	3	3	alta	adjective
+47	4	4	e	conjunction
+47	5	5	con	preposition
+47	6	6	rabbiosa	adjective
+47	7	7	fame	noun
+47	8	8	,	
+48	0	0	sì	adverb
+48	1	1	che	conjunction
+48	2	2	parea	verb
+48	3	3	che	conjunction
+48	4	4	lo	article
+48	5	5	aere	noun
+48	6	6	ne	pronoun
+48	7	7	tremesse	verb
+48	8	8	.	
+49	0	0	Ed	conjunction
+49	1	1	una	article
+49	2	2	lupa	noun
+49	3	3	,	
+49	4	4	che	pronoun
+49	5	5	di	preposition
+49	6	6	tutte	pronoun
+49	7	7	brame	verb
+50	0	0	sembiava	verb
+50	1	1	carca	verb
+50	2	2	ne	preposition
+50	3	3	la	article
+50	4	4	sua	adjective
+50	5	5	magrezza	noun
+50	6	6	,	
+51	0	0	e	conjunction
+51	1	1	molte	adjective
+51	2	2	genti	noun
+51	3	3	fé	verb
+51	4	4	già	adverb
+51	5	5	vivere	verb
+51	6	6	grame	adjective
+51	7	7	,	
+52	0	0	questa	pronoun
+52	1	1	mi	pronoun
+52	2	2	porse	verb
+52	3	3	tanto	pronoun
+52	4	4	di	preposition
+52	5	5	gravezza	noun
+53	0	0	con	preposition
+53	1	1	la	article
+53	2	2	paura	noun
+53	3	3	che	pronoun
+53	4	4	uscia	verb
+53	5	5	di	preposition
+53	6	6	sua	adjective
+53	7	7	vista	noun
+53	8	8	,	
+54	0	0	che	conjunction
+54	1	1	io	pronoun
+54	2	2	perdei	verb
+54	3	3	la	article
+54	4	4	speranza	noun
+54	5	5	de	preposition
+54	6	6	la	article
+54	7	7	altezza	noun
+54	8	8	.	
+55	0	0	E	conjunction
+55	1	1	quale	pronoun
+55	2	2	è	verb
+55	3	3	quei	pronoun
+55	4	4	che	pronoun
+55	5	5	volontieri	adverb
+55	6	6	acquista	verb
+55	7	7	,	
+56	0	0	e	conjunction
+56	1	1	giugne	verb
+56	2	2	il	article
+56	3	3	tempo	noun
+56	4	4	che	pronoun
+56	5	5	perdere	verb
+56	6	6	lo	pronoun
+56	7	7	face	verb
+56	8	8	,	
+57	0	0	che	pronoun
+57	1	1	in	preposition
+57	2	2	tutti	adjective
+57	3	3	suoi	adjective
+57	4	4	pensiero	noun
+57	5	5	piange	verb
+57	6	6	e	conjunction
+57	7	7	si	pronoun
+57	8	8	attrista	verb
+57	9	9	;	
+58	0	0	tal	adjective
+58	1	1	mi	pronoun
+58	2	2	fece	verb
+58	3	3	la	article
+58	4	4	bestia	noun
+58	5	5	sanza	preposition
+58	6	6	pace	noun
+58	7	7	,	
+59	0	0	che	conjunction
+59	1	1	,	
+59	2	2	venendo	verb
+59	2	3	mi	pronoun
+59	3	4	incontro	noun
+59	4	5	,	
+59	5	6	a	preposition
+59	6	7	poco	noun
+59	7	8	a	preposition
+59	8	9	poco	noun
+60	0	0	mi	pronoun
+60	1	1	ripigneva	verb
+60	2	2	là	adverb
+60	3	3	dove	adverb
+60	4	4	il	article
+60	5	5	sole	noun
+60	6	6	tace	verb
+60	7	7	.	
+61	0	0	Mentre	conjunction
+61	1	1	che	conjunction
+61	2	2	io	pronoun
+61	3	3	rovinava	verb
+61	4	4	in	preposition
+61	5	5	basso	adjective
+61	6	6	loco	noun
+61	7	7	,	
+62	0	0	dinanzi	adverb
+62	1	1	a	preposition
+62	2	2	li	article
+62	3	3	occhi	noun
+62	4	4	mi	pronoun
+62	5	5	si	pronoun
+62	6	6	fu	verb
+62	7	7	offerto	verb
+63	0	0	chi	pronoun
+63	1	1	per	preposition
+63	2	2	lungo	adjective
+63	3	3	silenzio	noun
+63	4	4	parea	verb
+63	5	5	fioco	adjective
+63	6	6	.	
+64	0	0	Quando	conjunction
+64	1	1	vidi	verb
+64	2	2	costui	pronoun
+64	3	3	in	preposition
+64	3	4	il	article
+64	4	5	grande	adjective
+64	5	6	diserto	noun
+64	6	7	,	
+65	0	0	«	
+65	1	1	Miserere	verb
+65	2	2	di	preposition
+65	3	3	me	pronoun
+65	4	4	»	
+65	5	5	,	
+65	6	6	gridai	verb
+65	7	7	a	preposition
+65	8	8	lui	pronoun
+65	9	9	,	
+66	0	0	«	
+66	1	1	quale	pronoun
+66	2	2	che	pronoun
+66	3	3	tu	pronoun
+66	4	4	sii	verb
+66	5	5	,	
+66	6	6	od	conjunction
+66	7	7	ombra	noun
+66	8	8	od	conjunction
+66	9	9	omo	noun
+66	10	10	certo	adjective
+66	11	11	!	
+66	12	12	»	
+66	13	13	.	
+67	0	0	rispuose	verb
+67	0	1	mi	pronoun
+67	1	2	:	
+67	2	3	«	
+67	3	4	non	adverb
+67	4	5	omo	noun
+67	5	6	,	
+67	6	7	omo	noun
+67	7	8	già	adverb
+67	8	9	fui	verb
+67	9	10	,	
+68	0	0	e	conjunction
+68	1	1	li	article
+68	2	2	parenti	noun
+68	3	3	miei	adjective
+68	4	4	furono	verb
+68	5	5	lombardi	adjective
+68	6	6	,	
+69	0	0	mantoani	adjective
+69	1	1	per	preposition
+69	2	2	patrïa	noun
+69	3	3	ambedui	pronoun
+69	4	4	.	
+70	0	0	Nacqui	verb
+70	1	1	sub	preposition
+70	2	2	Iulio	noun
+70	3	3	,	
+70	4	4	ancora	adverb
+70	5	5	che	conjunction
+70	6	6	fosse	verb
+70	7	7	tardi	adverb
+70	8	8	,	
+71	0	0	e	conjunction
+71	1	1	vissi	verb
+71	2	2	a	preposition
+71	3	3	Roma	noun
+71	4	4	sotto	preposition
+71	5	5	il	article
+71	6	6	buono	adjective
+71	7	7	Augusto	noun
+72	0	0	in	preposition
+72	0	1	il	article
+72	1	2	tempo	noun
+72	2	3	de	preposition
+72	3	4	li	article
+72	4	5	dèi	noun
+72	5	6	falsi	adjective
+72	6	7	e	conjunction
+72	7	8	bugiardi	adjective
+72	8	9	.	
+73	0	0	Poeta	noun
+73	1	1	fui	verb
+73	2	2	,	
+73	3	3	e	conjunction
+73	4	4	cantai	verb
+73	5	5	di	preposition
+73	6	6	quel	adjective
+73	7	7	giusto	adjective
+74	0	0	figliuolo	noun
+74	1	1	di	preposition
+74	2	2	Anchise	noun
+74	3	3	che	pronoun
+74	4	4	venne	verb
+74	5	5	di	preposition
+74	6	6	Troia	noun
+74	7	7	,	
+75	0	0	poi	adverb
+75	1	1	che	conjunction
+75	2	2	il	article
+75	3	3	superbo	adjective
+75	4	4	Ilïón	noun
+75	5	5	fu	verb
+75	6	6	combusto	verb
+75	7	7	.	
+76	0	0	Ma	conjunction
+76	1	1	tu	pronoun
+76	2	2	perché	adverb
+76	3	3	ritorni	verb
+76	4	4	a	preposition
+76	5	5	tanta	adjective
+76	6	6	noia	noun
+76	7	7	?	
+77	0	0	perché	adverb
+77	1	1	non	adverb
+77	2	2	sali	verb
+77	3	3	il	article
+77	4	4	dilettoso	adjective
+77	5	5	monte	noun
+78	0	0	che	pronoun
+78	1	1	è	verb
+78	2	2	principio	noun
+78	3	3	e	conjunction
+78	4	4	cagione	noun
+78	5	5	di	preposition
+78	6	6	tutta	adjective
+78	7	7	gioia	noun
+78	8	8	?	
+78	9	9	»	
+78	10	10	.	
+79	0	0	«	
+79	1	1	Or	adverb
+79	2	2	sei	verb
+79	3	3	tu	pronoun
+79	4	4	quello	adjective
+79	5	5	Virgilio	noun
+79	6	6	e	conjunction
+79	7	7	quella	adjective
+79	8	8	fonte	noun
+80	0	0	che	pronoun
+80	1	1	spandi	verb
+80	2	2	di	preposition
+80	3	3	parlare	verb
+80	4	4	sì	adverb
+80	5	5	largo	adjective
+80	6	6	fiume	noun
+80	7	7	?	
+80	8	8	»	
+80	9	9	,	
+81	0	0	rispuoso	verb
+81	1	1	io	pronoun
+81	2	2	lui	pronoun
+81	3	3	con	preposition
+81	4	4	vergognosa	adjective
+81	5	5	fronte	noun
+81	6	6	.	
+82	0	0	«	
+82	1	1	O	interjection
+82	2	2	de	preposition
+82	3	3	li	article
+82	4	4	altri	adjective
+82	5	5	poeti	noun
+82	6	6	onore	noun
+82	7	7	e	conjunction
+82	8	8	lume	noun
+82	9	9	,	
+83	0	0	vaglia	verb
+83	0	1	mi	pronoun
+83	1	2	il	article
+83	2	3	lungo	adjective
+83	3	4	studio	noun
+83	4	5	e	conjunction
+83	5	6	il	article
+83	6	7	grande	adjective
+83	7	8	amore	noun
+84	0	0	che	pronoun
+84	1	1	mi	pronoun
+84	2	2	ha	verb
+84	3	3	fatto	verb
+84	4	4	cercare	verb
+84	5	5	lo	article
+84	6	6	tuo	adjective
+84	7	7	volume	noun
+84	8	8	.	
+85	0	0	Tu	pronoun
+85	1	1	sei	verb
+85	2	2	lo	article
+85	3	3	mio	adjective
+85	4	4	maestro	noun
+85	5	5	e	conjunction
+85	6	6	il	article
+85	7	7	mio	adjective
+85	8	8	autore	noun
+85	9	9	,	
+86	0	0	tu	pronoun
+86	1	1	sei	verb
+86	2	2	solo	adjective
+86	3	3	colui	pronoun
+86	4	4	da	preposition
+86	5	5	cui	pronoun
+86	6	6	io	pronoun
+86	7	7	tolsi	verb
+87	0	0	lo	article
+87	1	1	bello	adjective
+87	2	2	stilo	noun
+87	3	3	che	pronoun
+87	4	4	mi	pronoun
+87	5	5	ha	verb
+87	6	6	fatto	verb
+87	7	7	onore	noun
+87	8	8	.	
+88	0	0	Vedi	verb
+88	1	1	la	article
+88	2	2	bestia	noun
+88	3	3	per	preposition
+88	4	4	cui	pronoun
+88	5	5	io	pronoun
+88	6	6	mi	pronoun
+88	7	7	volsi	verb
+88	8	8	;	
+89	0	0	aiuta	verb
+89	0	1	mi	pronoun
+89	1	2	da	preposition
+89	2	3	lei	pronoun
+89	3	4	,	
+89	4	5	famoso	adjective
+89	5	6	saggio	noun
+89	6	7	,	
+90	0	0	che	conjunction
+90	1	1	ella	pronoun
+90	2	2	mi	pronoun
+90	3	3	fa	verb
+90	4	4	tremare	verb
+90	5	5	le	article
+90	6	6	vene	noun
+90	7	7	e	conjunction
+90	8	8	i	article
+90	9	9	polsi	noun
+90	10	10	»	
+90	11	11	.	
+91	0	0	«	
+91	1	1	A	preposition
+91	2	2	te	pronoun
+91	3	3	conviene	verb
+91	4	4	tenere	verb
+91	5	5	altro	adjective
+91	6	6	vïaggio	noun
+91	7	7	»	
+91	8	8	,	
+92	0	0	rispuose	verb
+92	1	1	,	
+92	2	2	poi	adverb
+92	3	3	che	conjunction
+92	4	4	lagrimare	verb
+92	5	5	mi	pronoun
+92	6	6	vide	verb
+92	7	7	,	
+93	0	0	«	
+93	1	1	se	conjunction
+93	2	2	vuole	verb
+93	3	3	campare	verb
+93	4	4	di	preposition
+93	5	5	esto	adjective
+93	6	6	loco	noun
+93	7	7	selvaggio	adjective
+93	8	8	;	
+94	0	0	ché	conjunction
+94	1	1	questa	adjective
+94	2	2	bestia	noun
+94	3	3	,	
+94	4	4	per	preposition
+94	5	5	la	article
+94	6	6	quale	pronoun
+94	7	7	tu	pronoun
+94	8	8	gride	verb
+94	9	9	,	
+95	0	0	non	adverb
+95	1	1	lascia	verb
+95	2	2	altrui	pronoun
+95	3	3	passare	verb
+95	4	4	per	preposition
+95	5	5	la	article
+95	6	6	sua	adjective
+95	7	7	via	noun
+95	8	8	,	
+96	0	0	ma	conjunction
+96	1	1	tanto	adverb
+96	2	2	lo	pronoun
+96	3	3	impedisce	verb
+96	4	4	che	conjunction
+96	5	5	lo	pronoun
+96	6	6	uccide	verb
+96	7	7	;	
+97	0	0	e	conjunction
+97	1	1	ha	verb
+97	2	2	natura	noun
+97	3	3	sì	adverb
+97	4	4	malvagia	adjective
+97	5	5	e	conjunction
+97	6	6	ria	adjective
+97	7	7	,	
+98	0	0	che	conjunction
+98	1	1	mai	adverb
+98	2	2	non	adverb
+98	3	3	empie	verb
+98	4	4	la	article
+98	5	5	bramosa	adjective
+98	6	6	voglia	noun
+98	7	7	,	
+99	0	0	e	conjunction
+99	1	1	dopo	preposition
+99	2	2	il	article
+99	3	3	pasto	noun
+99	4	4	ha	verb
+99	5	5	più	adverb
+99	6	6	fame	noun
+99	7	7	che	conjunction
+99	8	8	pria	adverb
+99	9	9	.	
+100	0	0	Molti	pronoun
+100	1	1	sono	verb
+100	2	2	li	article
+100	3	3	animali	noun
+100	4	4	a	preposition
+100	5	5	cui	pronoun
+100	6	6	si	pronoun
+100	7	7	ammoglia	verb
+100	8	8	,	
+101	0	0	e	conjunction
+101	1	1	più	adverb
+101	2	2	saranno	verb
+101	3	3	ancora	adverb
+101	4	4	,	
+101	5	5	infine	adverb
+101	6	6	che	conjunction
+101	7	7	il	article
+101	8	8	veltro	noun
+102	0	0	verrà	verb
+102	1	1	,	
+102	2	2	che	pronoun
+102	3	3	la	pronoun
+102	4	4	farà	verb
+102	5	5	morire	verb
+102	6	6	con	preposition
+102	7	7	doglia	noun
+102	8	8	.	
+103	0	0	Questi	pronoun
+103	1	1	non	adverb
+103	2	2	ciberà	verb
+103	3	3	terra	noun
+103	4	4	né	conjunction
+103	5	5	peltro	noun
+103	6	6	,	
+104	0	0	ma	conjunction
+104	1	1	sapïenza	noun
+104	2	2	,	
+104	3	3	amore	noun
+104	4	4	e	conjunction
+104	5	5	virtute	noun
+104	6	6	,	
+105	0	0	e	conjunction
+105	1	1	sua	adjective
+105	2	2	nazione	noun
+105	3	3	sarà	verb
+105	4	4	tra	preposition
+105	5	5	feltro	noun
+105	6	6	e	conjunction
+105	7	7	feltro	noun
+105	8	8	.	
+106	0	0	Di	preposition
+106	1	1	quella	adjective
+106	2	2	umile	adjective
+106	3	3	Italia	noun
+106	4	4	fia	verb
+106	5	5	salute	noun
+107	0	0	per	preposition
+107	1	1	cui	pronoun
+107	2	2	morì	verb
+107	3	3	la	article
+107	4	4	vergine	adjective
+107	5	5	Cammilla	noun
+107	6	6	,	
+108	0	0	Eurialo	noun
+108	1	1	e	conjunction
+108	2	2	Turno	noun
+108	3	3	e	conjunction
+108	4	4	Niso	noun
+108	5	5	di	preposition
+108	6	6	ferute	noun
+108	7	7	.	
+109	0	0	Questi	pronoun
+109	1	1	la	pronoun
+109	2	2	caccerà	verb
+109	3	3	per	preposition
+109	4	4	ogne	adjective
+109	5	5	villa	noun
+109	6	6	,	
+110	0	0	fino	adverb
+110	1	1	che	conjunction
+110	2	2	la	pronoun
+110	3	3	avrà	verb
+110	4	4	rimessa	verb
+110	5	5	ne	preposition
+110	6	6	lo	article
+110	7	7	inferno	noun
+110	8	8	,	
+111	0	0	là	adverb
+111	1	1	onde	pronoun
+111	2	2	invidia	noun
+111	3	3	prima	adverb
+111	4	4	dipartì	verb
+111	4	5	la	pronoun
+111	5	6	.	
+112	0	0	Onde	conjunction
+112	1	1	io	pronoun
+112	2	2	per	preposition
+112	3	3	lo	article
+112	4	4	tuo	adjective
+112	5	5	me'	pronoun
+112	6	6	penso	verb
+112	7	7	e	conjunction
+112	8	8	discerno	verb
+113	0	0	che	conjunction
+113	1	1	tu	pronoun
+113	2	2	mi	pronoun
+113	3	3	segui	verb
+113	4	4	,	
+113	5	5	e	conjunction
+113	6	6	io	pronoun
+113	7	7	sarò	verb
+113	8	8	tua	adjective
+113	9	9	guida	noun
+113	10	10	,	
+114	0	0	e	conjunction
+114	1	1	trarrò	verb
+114	1	2	ti	pronoun
+114	2	3	di	preposition
+114	3	4	qui	adverb
+114	4	5	per	preposition
+114	5	6	loco	noun
+114	6	7	etterno	adjective
+114	7	8	;	
+115	0	0	ove	adverb
+115	1	1	udirai	verb
+115	2	2	le	article
+115	3	3	disperate	adjective
+115	4	4	strida	noun
+115	5	5	,	
+116	0	0	vedrai	verb
+116	1	1	li	article
+116	2	2	antichi	adjective
+116	3	3	spiriti	noun
+116	4	4	dolenti	adjective
+116	5	5	,	
+117	0	0	che	pronoun
+117	1	1	a	preposition
+117	2	2	la	article
+117	3	3	seconda	numeral
+117	4	4	morte	noun
+117	5	5	ciascuno	pronoun
+117	6	6	grida	verb
+117	7	7	;	
+118	0	0	e	conjunction
+118	1	1	vederai	verb
+118	2	2	coloro	pronoun
+118	3	3	che	pronoun
+118	4	4	sono	verb
+118	5	5	contenti	adjective
+119	0	0	in	preposition
+119	0	1	il	article
+119	1	2	foco	noun
+119	2	3	,	
+119	3	4	perché	conjunction
+119	4	5	sperano	verb
+119	5	6	di	preposition
+119	6	7	venire	verb
+120	0	0	quando	conjunction
+120	1	1	che	conjunction
+120	2	2	sia	verb
+120	3	3	a	preposition
+120	4	4	le	article
+120	5	5	beate	adjective
+120	6	6	genti	noun
+120	7	7	.	
+121	0	0	A	preposition
+121	1	1	le	article
+121	2	2	quai	pronoun
+121	3	3	poi	adverb
+121	4	4	se	conjunction
+121	5	5	tu	pronoun
+121	6	6	vorrai	verb
+121	7	7	salire	verb
+121	8	8	,	
+122	0	0	anima	noun
+122	1	1	fia	verb
+122	2	2	a	preposition
+122	3	3	ciò	pronoun
+122	4	4	più	adverb
+122	5	5	di	preposition
+122	6	6	me	pronoun
+122	7	7	degna	adjective
+122	8	8	:	
+123	0	0	con	preposition
+123	1	1	lei	pronoun
+123	2	2	ti	pronoun
+123	3	3	lascerò	verb
+123	4	4	in	preposition
+123	4	5	il	article
+123	5	6	mio	adjective
+123	6	7	partire	noun
+123	7	8	;	
+124	0	0	ché	conjunction
+124	1	1	quello	adjective
+124	2	2	imperador	noun
+124	3	3	che	pronoun
+124	4	4	là	adverb
+124	5	5	sù	adverb
+124	6	6	regna	verb
+124	7	7	,	
+125	0	0	perché	conjunction
+125	1	1	io	pronoun
+125	2	2	fui	verb
+125	3	3	ribellante	verb
+125	4	4	a	preposition
+125	5	5	la	article
+125	6	6	sua	adjective
+125	7	7	legge	noun
+125	8	8	,	
+126	0	0	non	adverb
+126	1	1	vuole	verb
+126	2	2	che	conjunction
+126	3	3	in	preposition
+126	4	4	sua	adjective
+126	5	5	città	noun
+126	6	6	per	preposition
+126	7	7	me	pronoun
+126	8	8	si	pronoun
+126	9	9	vegna	verb
+126	10	10	.	
+127	0	0	In	preposition
+127	1	1	tutte	adjective
+127	2	2	parti	noun
+127	3	3	impera	verb
+127	4	4	e	conjunction
+127	5	5	quivi	adverb
+127	6	6	regge	verb
+127	7	7	;	
+128	0	0	quivi	adverb
+128	1	1	è	verb
+128	2	2	la	article
+128	3	3	sua	adjective
+128	4	4	città	noun
+128	5	5	e	conjunction
+128	6	6	lo	article
+128	7	7	alto	adjective
+128	8	8	seggio	noun
+128	9	9	:	
+129	0	0	oh	interjection
+129	1	1	felice	adjective
+129	2	2	colui	pronoun
+129	3	3	cui	pronoun
+129	4	4	ivi	adverb
+129	5	5	elegge	verb
+129	6	6	!	
+129	7	7	»	
+129	8	8	.	
+130	0	0	E	conjunction
+130	1	1	io	pronoun
+130	2	2	a	preposition
+130	3	3	lui	pronoun
+130	4	4	:	
+130	5	5	«	
+130	6	6	Poeta	noun
+130	7	7	,	
+130	8	8	io	pronoun
+130	9	9	ti	pronoun
+130	10	10	richeggio	verb
+131	0	0	per	preposition
+131	1	1	quello	adjective
+131	2	2	Dio	noun
+131	3	3	che	pronoun
+131	4	4	tu	pronoun
+131	5	5	non	adverb
+131	6	6	conoscesti	verb
+131	7	7	,	
+132	0	0	acciò	conjunction
+132	1	1	che	conjunction
+132	2	2	io	pronoun
+132	3	3	fugga	verb
+132	4	4	questo	adjective
+132	5	5	male	noun
+132	6	6	e	conjunction
+132	7	7	peggio	noun
+132	8	8	,	
+133	0	0	che	conjunction
+133	1	1	tu	pronoun
+133	2	2	mi	pronoun
+133	3	3	meni	verb
+133	4	4	là	adverb
+133	5	5	dove	adverb
+133	6	6	ora	adverb
+133	7	7	dicesti	verb
+133	8	8	,	
+134	0	0	sì	adverb
+134	1	1	che	conjunction
+134	2	2	io	pronoun
+134	3	3	veggia	verb
+134	4	4	la	article
+134	5	5	porta	noun
+134	6	6	di	preposition
+134	7	7	san	adjective
+134	8	8	Pietro	noun
+135	0	0	e	conjunction
+135	1	1	coloro	pronoun
+135	2	2	cui	pronoun
+135	3	3	tu	pronoun
+135	4	4	fai	verb
+135	5	5	cotanto	adverb
+135	6	6	mesti	adjective
+135	7	7	»	
+135	8	8	.	
+136	0	0	allora	adverb
+136	1	1	si	pronoun
+136	2	2	mosse	verb
+136	3	3	,	
+136	4	4	e	conjunction
+136	5	5	io	pronoun
+136	6	6	li	pronoun
+136	7	7	tenni	verb
+136	8	8	dietro	adverb
+136	9	9	.	

@@ -789,17 +789,29 @@ recorded rather than fixed by adding prompt examples (operator: プロンプト�
 
 `uv run pytest layers/tests` → **135 passed**.
 
-**The prompt changed, so the artifact must be regenerated before anything is
-hand-corrected.** `layers/l2/inferno/01.tsv` was built without the `Index`
-column; a resume would mix two contracts. Run `--force`, then hand-correct the
-new artifact and write `l2/CORRECTIONS.md` against **that** file — the previous
-handoff already recorded once what it costs to verify entries against an
-artifact that no longer exists.
+**The artifact was regenerated under the new prompt** (`--force`, operator,
+2026-09-10; full figures in [`L2.md`](L2.md), *The regeneration under `Index`,
+and what two runs of one canto show*). 46 chunks, gate PASS, 66.6 min; `--check`
+**507 agrees, 4 differs, 0/0**, **953 of 989 tags agree (96.4%)**, 143
+restorations. `pel`, `de'` and `dipartilla` all reproduce. Refusals 6 → 4, all
+four `is_restoration` again, and **not one refusal in either run was a row out
+of place** — which is `Index`'s honest measure: it prevents no omission, because
+none occurs; it makes the `row N` those refusals name visible to the model.
+`[two readings]` came back **16 wordforms, no capitalisation-only rows**.
 
-```
-uv run python -m layers.gen2.l2 inferno -c 1 -m google:gemma-4-31b-it --force
-uv run python -m layers.gen2.l2 inferno -c 1 --check
-```
+**The tag column wobbles between runs, and this is now the load-bearing
+finding.** Over an identical prompt and model the `[pos differs]` set moved
+41 → 36, nine positions leaving and four arriving; 32 are stable. `via` 1:29 was
+wrong in run 1 and right in run 2, `poco` 1:7 the reverse. The three-run lesson
+holds in the new column: repeated runs detect disagreement, they do not verify
+correctness — only the stable 32 can carry an argument.
+
+**The participle convention is being declined at the lexicalised cases.**
+`disperate` (1:115) and `dolenti` (1:116) came back `adjective` this run and
+`verb` last, against a prompt that states the convention flatly. That is the
+`participle` question ceasing to be hypothetical: the choice is already being
+made at these positions, inconsistently, at exactly the boundary that produced
+old Layer 2's 573-row `adjective` bucket.
 
 **Still open, unchanged.** Whether to add `participle` as an eleventh tag: ten
 of the 41 `[pos differs]` positions are the `verb`-by-convention choice, and
