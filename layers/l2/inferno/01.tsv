@@ -50,7 +50,7 @@ line	l1_index	l2_index	text	pos
 7	1	1	è	verb
 7	2	2	amara	adjective
 7	3	3	che	conjunction
-7	4	4	poco	pronoun
+7	4	4	poco	adverb
 7	5	5	è	verb
 7	6	6	più	adverb
 7	7	7	morte	noun
@@ -414,8 +414,8 @@ line	l1_index	l2_index	text	pos
 49	3	3	,	
 49	4	4	che	pronoun
 49	5	5	di	preposition
-49	6	6	tutte	pronoun
-49	7	7	brame	verb
+49	6	6	tutte	adjective
+49	7	7	brame	noun
 50	0	0	sembiava	verb
 50	1	1	carca	verb
 50	2	2	ne	preposition
@@ -851,7 +851,7 @@ line	l1_index	l2_index	text	pos
 99	7	7	che	conjunction
 99	8	8	pria	adverb
 99	9	9	.	
-100	0	0	Molti	pronoun
+100	0	0	Molti	adjective
 100	1	1	sono	verb
 100	2	2	li	article
 100	3	3	animali	noun
@@ -950,7 +950,7 @@ line	l1_index	l2_index	text	pos
 112	2	2	per	preposition
 112	3	3	lo	article
 112	4	4	tuo	adjective
-112	5	5	me'	pronoun
+112	5	5	meglio	noun
 112	6	6	penso	verb
 112	7	7	e	conjunction
 112	8	8	discerno	verb
@@ -977,14 +977,14 @@ line	l1_index	l2_index	text	pos
 115	0	0	ove	adverb
 115	1	1	udirai	verb
 115	2	2	le	article
-115	3	3	disperate	adjective
+115	3	3	disperate	verb
 115	4	4	strida	noun
 115	5	5	,	
 116	0	0	vedrai	verb
 116	1	1	li	article
 116	2	2	antichi	adjective
 116	3	3	spiriti	noun
-116	4	4	dolenti	adjective
+116	4	4	dolenti	verb
 116	5	5	,	
 117	0	0	che	pronoun
 117	1	1	a	preposition
@@ -1045,7 +1045,7 @@ line	l1_index	l2_index	text	pos
 123	7	8	;	
 124	0	0	ché	conjunction
 124	1	1	quello	adjective
-124	2	2	imperador	noun
+124	2	2	imperadore	noun
 124	3	3	che	pronoun
 124	4	4	là	adverb
 124	5	5	sù	adverb
