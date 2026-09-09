@@ -252,35 +252,28 @@
 >
 > ### Resume here
 >
-> **State at handoff (2026-09-09, session close).** **Everything is committed
-> and the working tree is clean.** Five commits this session, in order:
-> `8b8101a` step 1 itself (`gen2/l2.py`, `gen2/skills/l2-split/`,
-> `tests/test_gen2_l2.py`, and `layers/l2/inferno/01.tsv` — the nine-line live
-> run's artifact; its `.log` is gitignored by the repo's `*.log` rule),
-> `dca102f` the driver command line, `268c953` the per-canto log, `822f3bd` the
-> log on by default, and this one (artifact resume + append-only log + the
-> withdrawn "deliberate" claim). `uv run pytest layers/tests` → **79 passed**;
-> `uv run python -m layers.gen2.l2 inferno -c 1 --check` → 51 agrees, 0 differs,
-> 5 precedent-ambiguous, 455 absent (the 455 are simply the lines 1:10-136 that
-> the artifact does not hold yet).
->
-> **Nothing was run against a model this session.** Everything after the
-> nine-line pass is CLI shape, resume and logging; the four splits in
-> `01.tsv` are still the only live output that exists.
->
-> **The next step, and the operator's own statement of it (2026-09-09):
-> *inferno 1 全体の生成は次のセッションで報告します*** — the run below is the
-> operator's to make, and its result is what the next session opens with.
+> **Inferno 1 in full, run (2026-09-09, operator report).** The command below
+> was run to completion: 43 chunks asked (3 already held from 1:1-9), 0
+> refusals, 0 fallback, 1 api retry, ~14.8 min. `--check` over the whole canto:
+> **491 agrees, 8 differs, 12 ours-ambiguous, 0 precedent-ambiguous.** Full
+> figures and the analysis of every non-`agrees` row: [`L2.md`](L2.md), *The
+> live pass over the rest of Inf 1*. In short: the 12 `ours-ambiguous` rows are
+> a checker case-folding artifact (not a real finding), 6 of the 8 `differs`
+> are the designed surface/lemma gap (step 3 not run yet), and the remaining 2
+> resolve one each way — `'ncontro` (1:59) sides with old Layer 2's own
+> corpus-wide majority (precedent-is-wrong at this position), `pel` (1:33) is a
+> genuine model error (oversplit `per+il` where corpus-wide `pel` is always the
+> noun *pelo*, 7/7). **`layers/l2/inferno/01.tsv` is left as the model produced
+> it** — `pel`'s error is not hand-repaired in the artifact; whatever
+> mechanism is meant to catch it is still undesigned (`L2.md`'s *What is
+> still open*).
+> `uv run pytest layers/tests` → 79 passed, unaffected by this run.
 >
 > ```
 > uv run python -m layers.gen2.l2 inferno -c 1 \
 >     -m google:gemma-4-31b-it
 > uv run python -m layers.gen2.l2 inferno -c 1 --check
 > ```
->
-> 136 lines is **46 chunks of 3** (the last holding line 136 alone), of which
-> **3 are already in the artifact and will be skipped**, so the run asks **43**;
-> at 1:1-9's rate (15.8 s per chunk) that is roughly **11 minutes**.
 > **The CLI now takes the corpus's own driver shape** (operator,
 > 2026-09-09, citing `skel/skel.py`): canticles positional, `-c` a canto *spec*
 > (`1`, `12-`, `1,3-5,11-`) through `api.select_cantos`/`check_canto_spec`, `-m`
