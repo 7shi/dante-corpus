@@ -252,78 +252,126 @@
 >
 > ### Resume here
 >
-> **Inferno 1 in full, run (2026-09-09, operator report).** The command below
-> was run to completion: 43 chunks asked (3 already held from 1:1-9), 0
-> refusals, 0 fallback, 1 api retry, ~14.8 min. `--check` over the whole canto:
-> **491 agrees, 8 differs, 12 ours-ambiguous, 0 precedent-ambiguous.** Full
-> figures and the analysis of every non-`agrees` row: [`L2.md`](L2.md), *The
-> live pass over the rest of Inf 1*. In short: the 12 `ours-ambiguous` rows are
-> a checker case-folding artifact (not a real finding), 6 of the 8 `differs`
-> are the designed surface/lemma gap (step 3 not run yet), and the remaining 2
-> resolve one each way — `'ncontro` (1:59) sides with old Layer 2's own
-> corpus-wide majority (precedent-is-wrong at this position), `pel` (1:33) is a
-> genuine model error (oversplit `per+il` where corpus-wide `pel` is always the
-> noun *pelo*, 7/7). **`layers/l2/inferno/01.tsv` is left as the model produced
-> it** — `pel`'s error is not hand-repaired in the artifact; whatever
-> mechanism is meant to catch it is still undesigned (`L2.md`'s *What is
-> still open*).
-> `uv run pytest layers/tests` → 79 passed, unaffected by this run.
+> **Inferno 1 in full, run (2026-09-09, operator report, commit `b3828c7`).**
+> 43 chunks asked (3 already held from 1:1-9), 0 refusals, 0 fallback, 1 api
+> retry, ~14.8 min. The `--check` figures reported right after the run (491
+> agrees, 8 differs, 12 ours-ambiguous, 0 precedent-ambiguous) **are now
+> superseded by the checker rework below** — the wordform data didn't change,
+> only how it's read.
+>
+> **The checker was reworked, three times over, same session (operator,
+> 2026-09-09, commit `94796f1`).** Trigger: the 12 `ours-ambiguous` rows were
+> uninterpretable — no way to tell *which* occurrence of `di`/`a`/`e`/… was
+> supposedly ambiguous, and hand-inspection showed all 12 were a checker
+> artifact (wordform-level pooling let `A`/`a` case variants count as two
+> readings). Full history of the three corrections, in order, with what each
+> one broke and fixed: [`L2.md`](L2.md), the `check_against_precedent` bullet
+> and *The live pass over the rest of Inf 1*. The end state:
+>
+> - **`render_check_lines`** (new): a per-line view, plain `" ".join()`
+>   reconstruction, printing only lines with a real per-position mismatch —
+>   `word(parts)` for this artifact's own split, `[...]` for old Layer 2's
+>   reading at that *exact same position* when it disagrees. No case-folding
+>   (a case difference is a difference), no cross-occurrence aggregation, and
+>   no special-casing of "the first occurrence" — every position is checked
+>   the same way.
+> - **`check_against_precedent`'s verdict** is now three independent checks in
+>   order: **`l2-ambiguous`** (this artifact's own readings for a wordform are
+>   genuinely distinct, case-folded, independent of old Layer 2 — checked
+>   first so a wordform correctly read two different correct ways is never
+>   swallowed into `agrees`), **`layer2-ambiguous`** (the symmetric case: old
+>   Layer 2's own readings for the wordform disagree with themselves, within
+>   the range this run actually compared), then **`differs`** (neither side
+>   ambiguous, but `_positionally_mismatched_wordforms` finds a real
+>   disagreement). `precedent-ambiguous` is gone — old Layer 2 disagreeing
+>   with itself *outside* what this run compared is not this checker's
+>   business.
+> - **The report's three sections are never mixed** (operator: "differsと
+>   ambiguousは別々に表示する"): `[differs]` is a `wordform`/`L2`/`old Layer 2`
+>   table (one reading each side, by construction); `[L2 ambiguous]` and
+>   `[Layer 2 ambiguous]` are `wordform: reading, reading, …` lists, each
+>   header omitted when empty. Wordform-level aggregation now shows up only
+>   where it's meaningful — the two ambiguous sections — never for `differs`.
+> - The table column and verdict name **`ours`/`ours-ambiguous` are renamed
+>   `L2`/`l2-ambiguous`** throughout, matching how this artifact is named
+>   everywhere else in this document.
+>
+> **Re-run against the corrected checker, Inferno 1 reads: 503 agrees, 8
+> differs, 0 l2-ambiguous, 0 layer2-ambiguous** — same 8 real `differs` as
+> before, the 12 case-fold rows gone. Of those 8: 6 (`aiutami`, `dipartilla`,
+> `Rispuosemi`, `trarrotti`, `vagliami`, `venendomi`) are the designed
+> surface/lemma gap (step 3 not run yet, not a finding). The remaining 2 are
+> genuine, decided by argument from corpus-wide precedent (never gold), full
+> text in [`L2.md`](L2.md):
+>
+> - **`pel`** (*Inf* 1:33) — **L2 is wrong.** Oversplit `per+il`; corpus-wide
+>   `pel` is the noun *pelo* (fur) in all 7 occurrences, never a contraction.
+>   `layers/l2/inferno/01.tsv` is left as the model produced it — not
+>   hand-repaired; whatever mechanism should catch this (a step-1 prompt fix,
+>   a corpus-wide consistency pass, or accepted noise for step 3) is still
+>   undesigned.
+> - **`'ncontro`** (*Inf* 1:59) — **old Layer 2 is wrong.** L2 leaves it
+>   whole; old Layer 2 splits it here but leaves the same lexical item unsplit
+>   9 of 13 times corpus-wide. **The mechanical `layer2-ambiguous` check does
+>   not catch this, correctly**: within *this canto*, `'ncontro` occurs once,
+>   so there's nothing to pool against — the inconsistency is only visible
+>   corpus-wide, across four spellings of one word, outside a per-canto,
+>   exact-wordform checker's reach.
+>
+> `uv run pytest layers/tests` → 79 passed throughout all three corrections.
+>
+> **`layers/l2/Makefile` added (2026-09-09, commit `94796f1`).** `help`
+> (default target), `all` (generate via `layers.gen2.l2`, `MODEL` from
+> `../../model.mk`), `check` (`--check`), `clean` (deletes the run log, never
+> the artifact) — `CANTICLE`/`CANTO` fixed to `inferno`/`1` for now (the only
+> canto generated), overridable once more are.
 >
 > ```
 > uv run python -m layers.gen2.l2 inferno -c 1 \
 >     -m google:gemma-4-31b-it
 > uv run python -m layers.gen2.l2 inferno -c 1 --check
+> # or, equivalently, from layers/l2/:
+> make all
+> make check
 > ```
-> **The CLI now takes the corpus's own driver shape** (operator,
-> 2026-09-09, citing `skel/skel.py`): canticles positional, `-c` a canto *spec*
-> (`1`, `12-`, `1,3-5,11-`) through `api.select_cantos`/`check_canto_spec`, `-m`
-> for the model, and `--lines` optional — defaulting to the whole canto, and
-> accepted only when the selection is one canto. A canto's length and a
-> canticle's are facts of the corpus, so neither is a number the command line
-> asks anyone to supply; the nine-line pilot is the case that names a range, not
-> the other way round. A multi-canto run writes one artifact per canto over one
-> model connection, each with **its own log, written by default**: the log takes
-> no filename any more and lands at `NN.log` beside `NN.tsv`, since a single
-> named file cannot hold a multi-canto run and a run reported by its numbers
-> should not need a flag to keep them. `--no-log` turns it off.
-> **The run now resumes** (operator, 2026-09-09: chunks already in the TSV were
-> not being skipped): the committed artifact is read back and every chunk whose
-> lines it already answers is skipped before any request, its entries carried
-> through verbatim, so widening to 1:1-136 costs the 43 chunks it has not yet
-> asked and not the 3 it has. Chunk boundaries are cut over the whole
-> selection, so they do not shift on a resumed run; `--force` asks again from
-> the first line. **The log is append-only** (operator, 2026-09-09): nothing but
-> an explicit delete shortens it, `--force` included, because a truncating log
-> loses the record of a failed attempt and the retry that fixed it. One
-> `summary` record per attempt therefore accumulates, the last being current.
-> **This handoff's earlier claim that not resuming was "deliberate (`L2.md` §5
-> resume-or-truncate)" was wrong** and is withdrawn: that rule
-> (`ARCHITECTURE.md` §5) governs the log file, not the artifact. Nothing had
-> decided the artifact's behaviour; `ARCHITECTURE.md` §0's interruption-
-> resilience item was simply unmet. `L2.md` records the correction in place.
 >
-> **What to look for, and why it is different this time.** *Inf* 1:1-9 held
-> four splits and no hard case, so it could not exercise the two things the
-> current design is least sure of:
+> **The CLI takes the corpus's own driver shape** (operator, 2026-09-09,
+> citing `skel/skel.py`): canticles positional, `-c` a canto *spec* (`1`,
+> `12-`, `1,3-5,11-`) through `api.select_cantos`/`check_canto_spec`, `-m` for
+> the model, `--lines` optional (whole canto by default, one-canto only). A
+> multi-canto run writes one artifact per canto over one model connection,
+> each with its own log at `NN.log` beside `NN.tsv` (`--no-log` turns it off).
+> **The run resumes**: the committed artifact is read back and every chunk it
+> already answers is skipped before any request, so widening a canto's range
+> only costs the unanswered chunks; `--force` asks again from the first line.
+> **The log is append-only**: nothing but an explicit delete shortens it,
+> `--force` included, so a failed attempt's record survives its retry.
 >
-> 1. **The differences-only blind spot.** A token the model overlooked and a
->    token it judged whole look identical in the answer. `--check` is the only
->    mechanical detector, and at 1:1-9 it had nothing to catch. Over 136 lines
->    it will have something to say — read `differs` and `absent` rows first.
-> 2. **Clitic compounds.** The canto holds `verb+pronoun` cases (*Inf* 1:59
->    `venendomi`, and `L2.md`'s split table says 488 corpus-wide) that nine
->    lines did not contain. Those are the class most likely to be either missed
->    or over-split, and `vagliami`-shaped words are where a three-way split
->    (`dir+te+lo`) could first appear.
-> 3. **A key that actually needs a prefix.** No answer at 1:1-9 needed
->    disambiguating. Over three lines with a repeated `del` it will, and that
->    path has only ever been exercised by tests.
+> **Session close (2026-09-09).** Working tree clean; two commits this
+> session, `b3828c7` (the full Inferno 1 run) and `94796f1` (the checker
+> rework + Makefile). Nothing was corrected in the *artifact* — only in how
+> it's read back.
 >
-> A `differs` row is evidence for one of `L2.md`'s two non-agreement outcomes
-> (precedent-is-wrong / genuine ambiguity) — decide which by argument from the
-> text and **record the argument in `L2.md`**, per premise 3.
-> `ours-ambiguous` means this pass answered one wordform two ways: a real
-> finding, not a bug. Record numbers, never log filenames
+> **What to look for, widening past Inferno 1.** The checker rework means the
+> per-line `[...]` view and the three-way split are now the tool for this,
+> not the flat wordform table:
+>
+> 1. **`pel`'s failure mode is still uncaught.** Nothing yet stops another
+>    over-split trap word (a `del`/`nel`-shaped token that isn't a
+>    contraction) from reaching an artifact unflagged. Decide the mechanism
+>    before or while widening.
+> 2. **`layer2-ambiguous` needs a canto with real recurrence to prove itself
+>    live** — *Inf* 1 never exercises it (0 rows), same as `l2-ambiguous`
+>    (0 rows; `test_a_wordform_this_artifact_splits_two_ways_is_reported_not_hidden`
+>    is the only place the design is currently exercised). A wider run is
+>    where both either fire for real or stay unexercised in practice too.
+> 3. **Clitic compounds (`verb+pronoun`) are confirmed working** at the
+>    surface level — all 6 in this canto split correctly; the surface/lemma
+>    gap is step 3's to close, not a splitting defect.
+>
+> A `differs` row is evidence for one of two outcomes (L2-is-wrong /
+> layer2-is-wrong) — decide which by argument from the text and **record the
+> argument in `L2.md`**, per premise 3. Record numbers, never log filenames
 > (`ARCHITECTURE.md` §5).
 >
 > **If a chunk misbehaves.** Refused chunks fall back to line-by-line
@@ -336,7 +384,7 @@
 > per-chunk cap.
 >
 > **Alternatives.** Steps 2 (POS) and 3 (normalize) of L2 are designed and
-> unstarted; the open review items two paragraphs up (G's real count, the
+> unstarted; the open review items several paragraphs up (G's real count, the
 > *Inf* 4:5 all-layer read, the quotes hierarchy, §4.1's cross-layer checker,
 > §4.3's VP/Layer-5 relationship, the external consumer survey) are all still
 > untouched.
