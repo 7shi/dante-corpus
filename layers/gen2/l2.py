@@ -1129,7 +1129,7 @@ def _main(argv=None) -> int:
     # length and a canto's are both facts of the corpus, so neither is asked for.
     parser.add_argument("canticles", nargs="+", help="canticle names, e.g. inferno")
     parser.add_argument("-c", "--canto", metavar="SPEC", help=api.CANTO_SPEC_HELP)
-    parser.add_argument("--lines", default=None,
+    parser.add_argument("-l", "--lines", default=None,
                         help="line range within a single canto, e.g. '1-9' or '10' "
                              "(default: the whole canto)")
     parser.add_argument("-m", "--model", default=DEFAULT_MODEL,
@@ -1138,7 +1138,7 @@ def _main(argv=None) -> int:
     parser.add_argument("--chunk", type=int, default=CHUNK_SIZE,
                         help=f"lines per request (default {CHUNK_SIZE}, old Layer 2's)")
     parser.add_argument("--max-iterations", type=int, default=MAX_ITERATIONS)
-    parser.add_argument("--out", help="artifact TSV (default: layers/l2/<canticle>/NN.tsv)")
+    parser.add_argument("-o", "--out", help="artifact TSV (default: layers/l2/<canticle>/NN.tsv)")
     parser.add_argument("--force", action="store_true",
                         help="ask again from the first line, ignoring what the artifact "
                              "already answers (default: resume, skipping those chunks)")
@@ -1343,6 +1343,18 @@ def _build_canto(
         # this canto's Dante lines as each chunk settles — the `skel/`-driver pattern
         # §4 names. `[index/total]` separators keep whole-run positions.
         settled_lines: set[int] = set()
+        # Written back to `out_path` after every chunk, settled or skipped, so an
+        # interrupted run's answers up to that point are already on disk — not just in
+        # the log — rather than only at the very end.
+        line_by_no = {line.no: line for line in l1_lines}
+        built: dict[int, L2Line] = {}
+
+        def flush_artifact() -> None:
+            out_path.write_text(
+                render_artifact([built[line.no] for line in l1_lines if line.no in built]),
+                encoding="utf-8",
+            )
+
         bar = (
             status_line.progress(len(l1_lines), label=label)
             if status_line is not None
@@ -1353,6 +1365,10 @@ def _build_canto(
                 results.append(result)
                 record = result.to_dict()
                 report.add_chunk(record)
+                positions = result.positions()
+                for line_no in result.lines:
+                    built[line_no] = apply_splits(line_by_no[line_no], positions)
+                flush_artifact()
                 span = (
                     f"{result.lines[0]}-{result.lines[-1]}"
                     if len(result.lines) > 1 else f"{result.lines[0]}"
@@ -1388,6 +1404,9 @@ def _build_canto(
                     "skipped": True,
                 }
                 report.add_skipped(record)
+                for line in chunk:
+                    built[line.no] = done[line.no]
+                flush_artifact()
                 settled_lines.update(record["lines"])
                 if progress is not None:
                     progress.update(len(settled_lines))
