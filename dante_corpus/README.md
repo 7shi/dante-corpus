@@ -229,6 +229,80 @@ Format: `"<canticle> <canto>[:<start>[-<end>]]"`.
 
 ---
 
+### Canto selection (`api.py`)
+
+Build drivers that loop over cantos share one `-c` selection grammar, served by
+`api.py`. Four pieces:
+
+```python
+CANTO_SPEC_HELP: str
+```
+
+The one `-c` help string every build driver shows (`morph.py`, `np.py`,
+`dep.py`, `skel.py`, `case.py`, `layers/gen2/*.py`), so the selection syntax is
+documented identically in each driver's `--help`.
+
+```python
+parse_canto_spec(spec: str) -> tuple[tuple[int | None, int | None], ...]
+```
+
+Parses a spec into inclusive `(start, end)` bounds. The grammar is one
+comma-separated list of `N`, `N-M`, `N-` (open end) and `-M` (open start):
+`12-`, `-20`, `11-20`, `1,5,7`, `1,3-5,11-`. `None` on either side means
+unbounded, so the bound resolves against whichever cantos the canticle actually
+has — a spec is a **filter**, never an assertion that a numbered canto exists.
+Raises `ValueError` with a message naming the offending item.
+
+```python
+select_cantos(canticle: str, spec: str | None) -> tuple[int, ...]
+```
+
+The cantos of `canticle` a spec selects, in canto order; all of them when
+`spec` is `None`. Raises `ValueError` for an unparsable spec, or for one that
+matches no canto at all — a selection that would silently do nothing is a
+typo, not a no-op run.
+
+```python
+check_canto_spec(canticles: Iterable[str], spec: str | None) -> str | None
+```
+
+Validates a spec against every canticle a run names, up front: returns the
+message to hand to `parser.error`, or `None` when the spec is good.
+
+**Wiring a driver's `-c`** — the pattern every driver follows (and the
+downstream consumer repos on top of them, e.g. dante-commentary's
+`scripts/generate.py`):
+
+```python
+parser.add_argument("-c", "--canto", metavar="SPEC",
+                    help=dante_corpus.api.CANTO_SPEC_HELP)
+args = parser.parse_args()
+
+if err := dante_corpus.api.check_canto_spec([args.canticle], args.canto):
+    parser.error(err)  # a typo fails at the command line ...
+
+for canto in dante_corpus.api.select_cantos(args.canticle, args.canto):
+    process(canto)     # ... never part-way through a run
+```
+
+Know-how:
+
+- **Validate before any work.** Call `check_canto_spec` right after
+  `parse_args`, and pass *every* canticle a multi-canticle run names, so a bad
+  spec fails before the first canto is processed rather than mid-run.
+- **Omitting `-c` means every canto.** `select_cantos(canticle, None)` returns
+  all of them, so drivers need no default of their own.
+- **A spec is a filter, not an assertion.** `-99` does not demand that canto 99
+  exist; it selects whichever cantos the canticle has in that range. A spec
+  matching *nothing*, though, raises — a silently empty run hides typos.
+- **The grammar is reusable for other selectors.** Anything numbered and
+  ordered can take the same spec — dante-norton's `alignment/align.py` runs its
+  `-p` paragraph patcher through `parse_canto_spec` filtered against the
+  paragraph numbers on record. The error messages say "canto"; swap the word
+  when reusing (`str(exc).replace("canto", "paragraph")`).
+
+---
+
 ### Data classes
 
 ```python
