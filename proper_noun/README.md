@@ -77,7 +77,8 @@ Canto 1 -> `proper_noun/inferno/01.*`):
 
 Progress and errors are also printed to the console as the script runs, via
 a live `llm7shi.statusline.StatusLine` progress bar whose numerator walks
-the canto's Italian lines.
+the canto's Italian lines (see [`STATUSLINE.md`](STATUSLINE.md) for the
+wiring behind that display).
 
 ## Validation and retries
 

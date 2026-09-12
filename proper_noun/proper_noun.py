@@ -58,7 +58,8 @@ Progress display follows dante-corpus's ARCHITECTURE.md §4: one
 `{canticle} {canto}/{n_cantos}` and walking the canto's Italian lines, with
 every human-facing line sharing its console (`ui.log` /
 `ui.stream.error`) so streamed model output, the bar, and this script's
-own messages never clobber each other.
+own messages never clobber each other. See STATUSLINE.md for the full
+design rationale (client reuse, the bar's two elapsed clocks, notify()).
 
 The script stands on its own: it reads its text through `dante_corpus`,
 talks to the LLM through `llm7shi`, and assumes nothing about the
