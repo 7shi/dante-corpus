@@ -274,8 +274,7 @@ downstream consumer repos on top of them, e.g. dante-commentary's
 `scripts/generate.py`):
 
 ```python
-parser.add_argument("-c", "--canto", metavar="SPEC",
-                    help=dante_corpus.api.CANTO_SPEC_HELP)
+parser.add_argument("-c", "--canto", help=dante_corpus.api.CANTO_SPEC_HELP)
 args = parser.parse_args()
 
 if err := dante_corpus.api.check_canto_spec([args.canticle], args.canto):
